@@ -1,43 +1,115 @@
+/*
+ * Copyright (C) 2023 YTX
+ *
+ * This file is part of YTX.
+ *
+ * YTX is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * YTX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with YTX. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #ifndef NODE_H
 #define NODE_H
 
-#include <QList>
-#include <QString>
-
-QT_BEGIN_NAMESPACE
-namespace Tree {
-enum Column {
-    kName,
-    kID,
-    kDescription,
-    kRule,
-    kPlaceholder,
-    kTotal
-};
-}
-QT_END_NAMESPACE
+#include <QJsonObject>
+#include <QStringList>
+#include <QUuid>
 
 struct Node {
-public:
-    Node() = default;
-    ~Node();
-    Node(int id, const QString& name, const QString& description, double total, bool rule, bool placeholder);
-    void ResetToDefault();
-
-public:
-    int id { 0 };
     QString name {};
+    QUuid id {};
+    QString code {};
     QString description {};
-    bool rule { false };
-    bool placeholder { false };
-    double total { 0.0 };
+    QString note {};
+    int kind { 1 }; // TODO: 改为enum
+    bool direction_rule { true };
+    int unit {};
 
-    Node* parent { nullptr };
+    double final_total {};
+    double initial_total {};
+
+    QUuid user_id {};
+    QDateTime created_time {};
+    QUuid created_by {};
+    QDateTime updated_time {};
+    QUuid updated_by {};
+
+    Node* parent {};
     QList<Node*> children {};
 
-private:
-    Node(const Node& other) = delete;
-    Node& operator=(const Node& other) = delete;
+    virtual void ResetState();
+    virtual void InvertTotal();
+
+    virtual void ReadJson(const QJsonObject& object);
+    virtual QJsonObject WriteJson() const;
+
+    virtual ~Node() = default;
 };
+
+struct NodeF final : Node { };
+
+struct NodeI final : Node {
+    QString color {};
+    double unit_price {};
+    double commission {};
+
+    void ResetState() override;
+
+    void ReadJson(const QJsonObject& object) override;
+    QJsonObject WriteJson() const override;
+};
+
+struct NodeT final : Node {
+    QString color {};
+    QStringList document {};
+    QDateTime issued_time {};
+    bool is_finished {};
+
+    void ResetState() override;
+
+    void ReadJson(const QJsonObject& object) override;
+    QJsonObject WriteJson() const override;
+};
+
+struct NodeS final : Node {
+    int payment_term {};
+
+    void ResetState() override;
+
+    void ReadJson(const QJsonObject& object) override;
+    QJsonObject WriteJson() const override;
+};
+
+struct NodeO final : Node {
+    QUuid employee {};
+    QUuid party {};
+    QDateTime issued_time {};
+    double first_total {};
+    double second_total {};
+    double discount_total {};
+    bool is_finished {};
+    QUuid settlement_node {};
+
+    void ResetState() override;
+    void InvertTotal() override;
+
+    void ReadJson(const QJsonObject& object) override;
+    QJsonObject WriteJson() const override;
+};
+
+using NodeHash = QHash<QUuid, Node*>;
+using CNodeHash = const QHash<QUuid, Node*>;
+using NodeList = QList<Node*>;
+
+using NodeListO = QList<NodeO*>;
 
 #endif // NODE_H

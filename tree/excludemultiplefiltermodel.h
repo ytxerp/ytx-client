@@ -1,0 +1,56 @@
+/*
+ * Copyright (C) 2023 YTX
+ *
+ * This file is part of YTX.
+ *
+ * YTX is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * YTX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with YTX. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#ifndef EXCLUDEMULTIPLEFILTERMODEL_H
+#define EXCLUDEMULTIPLEFILTERMODEL_H
+
+#include <QSortFilterProxyModel>
+#include <QUuid>
+
+#include "tree/itemmodel.h"
+
+class ExcludeMultipleFilterModel : public QSortFilterProxyModel {
+    Q_OBJECT
+
+public slots:
+    void RSyncFilterModel() { invalidateRowsFilter(); }
+
+public:
+    explicit ExcludeMultipleFilterModel(const QUuid& leaf_id, const QSet<QUuid>* set, QObject* parent = nullptr)
+        : QSortFilterProxyModel { parent }
+        , set_ { set }
+        , leaf_id_ { leaf_id }
+    {
+    }
+
+protected:
+    bool filterAcceptsRow(int source_row, const QModelIndex& /*source_parent*/) const override
+    {
+        assert(dynamic_cast<ItemModel*>(sourceModel()));
+        auto id { static_cast<ItemModel*>(sourceModel())->ItemData(source_row, Qt::UserRole).toUuid() };
+
+        return !set_->contains(id) && leaf_id_ != id;
+    }
+
+private:
+    const QSet<QUuid>* set_ {};
+    const QUuid leaf_id_ {};
+};
+
+#endif // EXCLUDEMULTIPLEFILTERMODEL_H

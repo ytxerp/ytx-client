@@ -1,0 +1,172 @@
+#include "mainwindowutils.h"
+
+#include <QCoreApplication>
+#include <QDir>
+#include <QFile>
+#include <QProcess>
+#include <QTimer>
+
+QString MainWindowUtils::ResourceFile()
+{
+    QString path {};
+
+#ifdef Q_OS_WIN
+    path = QCoreApplication::applicationDirPath() + "/resource";
+
+    if (!QDir(path).exists() && !QDir().mkpath(path)) {
+        qDebug() << "Failed to create directory:" << path;
+        return {};
+    }
+
+    path += "/resource.brc";
+
+#if 0
+    QString command { "D:/Qt/6.9.2/llvm-mingw_64/bin/rcc.exe" };
+    QStringList arguments {};
+    arguments << "-binary"
+              << "E:/YTX/resource/resource.qrc"
+              << "-o" << path;
+
+    QProcess process {};
+
+    // 启动终端并执行命令
+    process.start(command, arguments);
+    process.waitForFinished();
+#endif
+
+#elif defined(Q_OS_MACOS)
+    path = QCoreApplication::applicationDirPath() + "/../Resources/resource.brc";
+
+#if 0
+    QString command { QDir::homePath() + "/Qt/6.9.2/macos/libexec/rcc" + " -binary " + QDir::homePath() + "/Documents/ytx-client/resource/resource.qrc -o "
+        + path };
+
+    QProcess process {};
+    process.start("zsh", QStringList() << "-c" << command);
+    process.waitForFinished();
+#endif
+
+#endif
+
+    return path;
+}
+
+void MainWindowUtils::ReadPrintTmplate(QMap<QString, QString>& print_template)
+{
+#ifdef Q_OS_MAC
+    constexpr auto folder_name { "../Resources/print_template" };
+#elif defined(Q_OS_WIN32)
+    constexpr auto folder_name { "print_template" };
+#else
+    return;
+#endif
+
+    const QString folder_path { QCoreApplication::applicationDirPath() + QDir::separator() + QString::fromUtf8(folder_name) };
+    QDir dir(folder_path);
+
+    if (!dir.exists()) {
+        return;
+    }
+
+    const QStringList name_filters { "*.ini" };
+    const QDir::Filters entry_filters { QDir::Files | QDir::NoSymLinks };
+    const QFileInfoList file_list { dir.entryInfoList(name_filters, entry_filters) };
+
+    for (const auto& fileInfo : file_list) {
+        print_template.insert(fileInfo.baseName(), fileInfo.absoluteFilePath());
+    }
+}
+
+bool MainWindowUtils::PrepareNewFile(QString& file_path, CString& suffix)
+{
+    if (file_path.isEmpty())
+        return false;
+
+    if (!file_path.endsWith(suffix, Qt::CaseInsensitive))
+        file_path += suffix;
+
+    if (QFile::exists(file_path)) {
+        qDebug() << "Destination file already exists. Overwriting:" << file_path;
+        QFile::remove(file_path);
+    }
+
+    return true;
+}
+
+bool MainWindowUtils::CheckFileValid(CString& file_path, CString& suffix)
+{
+    if (file_path.isEmpty())
+        return false;
+
+    const QFileInfo file_info(file_path);
+
+    if (!file_info.exists() || !file_info.isFile()) {
+        qDebug() << "The specified file does not exist or is not a valid file: " << file_path;
+        return false;
+    }
+
+    if (file_info.suffix().compare(suffix, Qt::CaseInsensitive) != 0) {
+        qDebug() << "The file extension does not match the expected type: " << file_path;
+        return false;
+    }
+
+    return true;
+}
+
+void MainWindowUtils::ExportExcel(CString& table, QSharedPointer<YXlsx::Worksheet> worksheet, bool where)
+{
+    if (!worksheet) {
+        return;
+    }
+
+    // QSqlDatabase source_db = PublicUtils::GetDatabase(kSourceConnection);
+    // if (!source_db.isValid())
+    //     return;
+
+    // QSqlQuery source_query(source_db);
+    // QString select_query = QString("SELECT * FROM %1 WHERE is_valid = TRUE;").arg(table);
+
+    // if (!where)
+    //     select_query = QString("SELECT * FROM %1;").arg(table);
+
+    // if (!source_query.exec(select_query)) {
+    //     qDebug() << "Failed to execute SELECT query for table in ExportExcel" << source_query.lastError().text();
+    //     return;
+    // }
+
+    // const int column { source_query.record().count() };
+    // QList<QVariantList> list(column);
+
+    // while (source_query.next()) {
+    //     for (int col = 0; col != column; ++col) {
+    //         list[col].append(source_query.value(col));
+    //     }
+    // }
+
+    // for (int col = 0; col != column; ++col) {
+    //     worksheet->WriteColumn(2, col + 1, list.at(col));
+    // }
+}
+
+void MainWindowUtils::Message(QMessageBox::Icon icon, CString& title, CString& text, int timeout)
+{
+    auto* box { new QMessageBox(icon, title, text, QMessageBox::NoButton) };
+    QTimer::singleShot(timeout, box, &QMessageBox::accept);
+    QObject::connect(box, &QMessageBox::finished, box, &QMessageBox::deleteLater);
+
+    box->setModal(false);
+    box->show();
+}
+
+void MainWindowUtils::SwitchDialog(const SectionContext* sc, bool enable)
+{
+    if (!sc)
+        return;
+
+    const auto& list { sc->dialog_list };
+    for (auto dialog : list) {
+        if (dialog) {
+            dialog->setVisible(enable);
+        }
+    }
+}

@@ -1,0 +1,444 @@
+/* Solarized Dark.qss */
+
+/*--------------------------------------*---------------------------------------------*/
+
+* {
+    color: #93A1A1;
+    background-color: #002B36;
+    alternate-background-color: #073642;
+    selection-color: #FDF6E3;
+    selection-background-color: #008C8C;
+    gridline-color: #657B83;
+    placeholder-text-color: #657B83;
+}
+
+*:focus { outline: none !important; }
+
+*::section, *::tab {
+    color: #93A1A1;
+}
+
+*:disabled {
+    color: #586E75;
+}
+
+*::checked {
+    color: #2BB3EB;
+}
+
+/*--------------------------------------border-------------------------------------------------*/
+
+QPushButton, QGroupBox, QPlainTextEdit,
+QTreeView, QTableView, QListView, QWidget#tableViewOSave,
+QHeaderView::section, QTabBar::tab, QWidget#widgetProperty,
+QToolBar, QToolTip {
+    border: 1px solid #657B83;
+}
+
+/*-------------------------------------border none-----------------------------------------------*/
+
+QComboBox, QSpinBox, QDoubleSpinBox, QDateEdit, QDateTimeEdit, QLineEdit {
+    border: none;
+}
+
+QTreeView#treeViewF, QTreeView#treeViewI, QGroupBox#treeGroupTO, QTableView#tableViewO {
+    border-bottom: none;
+}
+
+QGroupBox#treeGroup, QTableView#tableViewO, QTableView#settlementView, QTableView#settlementViewPrimary, QWidget#tableViewOSave
+{
+    border-top: none;
+}
+
+/*-------------------------------------border add-----------------------------------------------*/
+
+QGroupBox QComboBox, QGroupBox QSpinBox, QDialog QLineEdit, QDialog QComboBox, QComboBox#comboEmployee, QComboBox#comboParty {
+    border: 1px solid #657B83;
+}
+
+/*-------------------------------------hover color-----------------------------------------------*/
+
+QRadioButton:hover, QCheckBox:hover, QPushButton:hover {
+    color: #2BB3EB;
+}
+
+/*--------------------------------------spacing-------------------------------------------------*/
+
+QCheckBox, QRadioButton {
+    spacing: 4px;
+}
+
+/*--------------------------------------height-------------------------------------------------*/
+
+QTreeView::item {
+    height: 22px;
+}
+
+QListView::item {
+    height: 24px;
+}
+
+/*--------------------------------------min-width-------------------------------------------------*/
+
+QComboBox#comboDateFormat, QComboBox#comboDynamicLhs, QComboBox#comboDynamicRhs, QComboBox#comboLanguage,
+QComboBox#comboDefaultUnit
+{
+    min-width: 120px;
+}
+
+/*--------------------------------------background color----------------------------------------*/
+
+QDialog QCheckBox::indicator {
+    background-color: #002B36;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal, QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background-color: transparent;
+}
+
+QTreeView::item:selected, QTableView::item:selected, QListView::item:selected, QTreeView QCheckBox, QTableView QCheckBox, QTreeView::branch:selected {
+    background-color: #008C8C;
+}
+
+/*-------------------------------------QToolTip---------------------------------------------------*/
+
+QToolTip {
+    background-color: #002B36;
+    color: #93A1A1;
+}
+
+/*-------------------------------------------arrow--------------------------------------------------*/
+
+*::down-arrow {
+    image: url(:/solarized_dark/solarized_dark/down.png);
+}
+
+*::up-arrow {
+    image: url(:/solarized_dark/solarized_dark/up.png);
+}
+
+*:left-arrow {
+    image: url(:/solarized_dark/solarized_dark/left.png);
+}
+
+*::right-arrow {
+    image: url(:/solarized_dark/solarized_dark/right.png);
+}
+
+*::down-arrow:disabled {
+    image: url(:/solarized_dark/solarized_dark/down-disabled.png);
+}
+
+*::up-arrow:disabled {
+    image: url(:/solarized_dark/solarized_dark/up-disabled.png);
+}
+
+*:left-arrow:disabled {
+    image: url(:/solarized_dark/solarized_dark/left-disabled.png);
+}
+
+*::right-arrow:disabled {
+    image: url(:/solarized_dark/solarized_dark/right-disabled.png);
+}
+
+/*-------------------------------------------QMenuBar--------------------------------------------------*/
+
+QMenuBar::item {
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+QMenuBar::item:selected {
+    background-color: #002B36;
+    color: #2BB3EB;
+}
+
+QMenuBar {
+    spacing: 2px;
+}
+
+/*-------------------------------------------------------------indicator-----------------------------------------------------------*/
+
+*::indicator {
+    width: 16px;
+    height: 16px;
+}
+
+*::indicator:unchecked {
+    image: url(:/solarized_dark/solarized_dark/unchecked.png);
+}
+
+*::indicator:checked {
+    image: url(:/solarized_dark/solarized_dark/checked.png);
+}
+
+/*-------------------------------------------------------------QRadioButton-----------------------------------------------------------*/
+
+QGroupBox#groupBoxSection QRadioButton::indicator {
+    width: 0px;
+    height: 0px;
+}
+
+QDialog QRadioButton, QWidget#LeafWidgetO QRadioButton {
+    min-width: 3em;
+}
+
+/*--------------------------------------branch--------------------------------------------------*/
+
+QTreeView::branch:has-children:!has-siblings:closed,
+QTreeView::branch:closed:has-children:has-siblings {
+    border-image: none;
+    image: url(:/solarized_dark/solarized_dark/branch-close.png);
+    padding: 4px;
+}
+
+QTreeView::branch:open:has-children:!has-siblings,
+QTreeView::branch:open:has-children:has-siblings  {
+    border-image: none;
+    image: url(:/solarized_dark/solarized_dark/branch-open.png);
+    padding: 4px;
+}
+
+/*-------------------------------------QToolBar---------------------------------------------------*/
+
+QToolBar::separator:horizontal {
+    width: 1px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+QToolBar::separator:vertical {
+    height: 1px;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+QToolBar::handle {
+    width: 16px;
+    height: 16px;
+    margin: 8px;
+    image: url(:/solarized_dark/solarized_dark/handle-2.png)
+}
+
+QToolBar::separator {
+    background-color: #657B83;
+}
+
+QToolBar {
+    spacing: 2px;
+}
+
+/*---------------------------------------QTabBar::tab--------------------------------------------*/
+
+QTabBar::tab {
+    min-width: 60px;
+    padding: 2px 4px;
+    height: 18px;
+    border-bottom: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    margin-right: -1px;
+}
+
+QTabBar::tab:!selected {
+    margin-top: 2px;
+}
+
+QTabBar::tab:selected {
+    padding-bottom: 4px;
+}
+
+QTabBar::tab:selected {
+    color: #2BB3EB;
+}
+
+QTabBar::tab:hover {
+    color: #2BB3EB;
+}
+
+QTabBar::close-button {
+    subcontrol-position: right;
+    image: none;
+}
+
+QTabBar::close-button:hover {
+    image: url(:/solarized_dark/solarized_dark/close-hover.png);
+    width: 4px;
+    height: 4px;
+    margin: 2px 4px 2px 2px;
+}
+
+QTabBar::close-button:first {
+    image: none;
+    width: 0px;
+    height: 0px;
+}
+
+/*--------------------------------------------QButton-------------------------------------------------*/
+QPushButton {
+    background-color: transparent;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+QPushButton#pBtnDocumentDir {
+    text-align: left;
+}
+
+QPushButton:disabled {
+    color: #586E75;
+    border: 1px solid #586E75;
+}
+
+QRadioButton#rBtnNode, QRadioButton#rBtnEntry {
+    border: 1px solid #657B83;
+    background-color: transparent;
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+/*-----------------------------------------QScrollBar Horizontal-----------------------------------------------*/
+
+QScrollBar:horizontal {
+    height: 16px;
+    background: #002B36;
+    margin: 0px 24px 0 24px;
+}
+
+QScrollBar::handle:horizontal {
+    border: 1px solid #657B83;
+    border-bottom: none;
+    min-width: 24px;
+}
+
+QScrollBar::add-line:horizontal {
+    border: 1px solid #657B83;
+    border-right: none;
+    border-bottom: none;
+    width: 24px;
+    subcontrol-position: right;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:horizontal {
+    border: 1px solid #657B83;
+    border-left: none;
+    border-bottom: none;
+    width: 24px;
+    subcontrol-position: left;
+    subcontrol-origin: margin;
+}
+
+QScrollBar:left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+    width: 8px;
+    height: 8px;
+}
+
+/*-----------------------------------------QScrollBar Vertical-----------------------------------------------*/
+
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+    width: 8px;
+    height: 8px;
+}
+
+QScrollBar:vertical {
+    background: #002B36;
+    width: 16px;
+    margin: 24px 0 24px 0;
+}
+
+QScrollBar::handle:vertical {
+    border: 1px solid #657B83;
+    border-right: none;
+    min-height: 24px;
+}
+
+QScrollBar::sub-line:vertical {
+    border: 1px solid #657B83;
+    border-right: none;
+    border-top: none;
+    height: 24px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-line:vertical {
+    border: 1px solid #657B83;
+    border-right: none;
+    border-bottom: none;
+    height: 24px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+/*-------------------------------------corner------------------------------------------------------------*/
+
+QTableView::corner, QTreeView::corner {
+    border-left: 1px solid #657B83;
+    border-top: 1px solid #657B83;
+}
+
+/*-------------------------------------QTreeView#treeViewI, QTreeView#treeViewF----------------------------------------------*/
+
+QTreeView#treeViewI QScrollBar::add-line:vertical, QTreeView#treeViewF QScrollBar::add-line:vertical
+{
+    border-bottom: 1px solid #657B83;
+}
+
+QTreeView#treeViewI QScrollBar::handle:horizontal,
+QTreeView#treeViewI QScrollBar::add-line:horizontal,
+QTreeView#treeViewI QScrollBar::sub-line:horizontal,
+QTreeView#treeViewF QScrollBar::handle:horizontal,
+QTreeView#treeViewF QScrollBar::add-line:horizontal,
+QTreeView#treeViewF QScrollBar::sub-line:horizontal
+{
+    border-bottom: 1px solid #657B83;
+}
+
+QTreeView#treeViewI::corner, QTreeView#treeViewF::corner {
+    border-top: none;
+}
+
+/*-------------------------------------QSplitter------------------------------------------------------------*/
+
+QSplitter::handle {
+    image: url(:/solarized_dark/solarized_dark/handle-1.png);
+    margin: 2px;
+    width: 8px;
+    height: 8px;
+}
+
+/*-------------------------------------QHeaderView------------------------------------------------------------*/
+
+QHeaderView::section {
+    border-top: none;
+    border-left: none;
+    min-height: 24px;
+    max-height: 24px;
+    padding: 0px;
+    background-color: #002B36;
+}
+
+QHeaderView::section:last {
+    border-right: none;
+}
+
+QFileDialog QHeaderView::section:last {
+    border-right: 1px solid #657B83;
+}
+
+QHeaderView::section:horizontal {
+    min-width: 80px;
+}
+
+/*-------------------------------------SpinBox------------------------------------------------------------*/
+
+QSpinBox::up-button, QSpinBox::down-button,
+QDoubleSpinBox::up-button, QDoubleSpinBox::down-button {
+    width: 0px;
+    height: 0px;
+}
+
+DoubleSpinBox#dSpinGrossAmount {
+    font-size: 24pt;
+}
