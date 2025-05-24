@@ -26,12 +26,12 @@ TransWidgetO::TransWidgetO(CInsertNodeArgO& arg, const QMap<QString, QString>& p
     IniUnit(arg.node->unit);
     IniRuleGroup();
     IniUnitGroup();
-    IniRule(arg.node->rule);
+    IniRule(arg.node->direction_rule);
     IniData();
     IniDataCombo(arg.node->party, arg.node->employee);
     IniConnect();
 
-    const bool finished { arg.node->finished };
+    const bool finished { arg.node->is_finished };
     IniFinished(finished);
     LockWidgets(finished);
 }
@@ -55,11 +55,11 @@ void TransWidgetO::RSyncBoolNode(int node_id, int column, bool value)
     SignalBlocker blocker(this);
 
     switch (kColumn) {
-    case NodeEnumO::kRule:
+    case NodeEnumO::kDirectionRule:
         IniRule(value);
         IniLeafValue();
         break;
-    case NodeEnumO::kFinished:
+    case NodeEnumO::kIsFinished:
         IniFinished(value);
         LockWidgets(value);
         break;
@@ -104,7 +104,7 @@ void TransWidgetO::RSyncString(int node_id, int column, const QString& value)
     case NodeEnumO::kDescription:
         ui->lineDescription->setText(value);
         break;
-    case NodeEnumO::kDateTime:
+    case NodeEnumO::kIssuedTime:
         ui->dateTimeEdit->setDateTime(QDateTime::fromString(value, kDateTimeFST));
         break;
     default:
@@ -172,7 +172,7 @@ void TransWidgetO::IniData()
 
     ui->chkBoxBranch->setChecked(false);
     ui->lineDescription->setText(node_->description);
-    ui->dateTimeEdit->setDateTime(QDateTime::fromString(node_->date_time, kDateTimeFST));
+    ui->dateTimeEdit->setDateTime(QDateTime::fromString(node_->issued_time, kDateTimeFST));
 
     ui->tableViewO->setModel(order_trans_);
 }
@@ -345,7 +345,7 @@ void TransWidgetO::on_pBtnInsert_clicked()
         return;
 
     auto* node { ResourcePool<Node>::Instance().Allocate() };
-    node->rule = stakeholder_node_->Rule(-1);
+    node->direction_rule = stakeholder_node_->Rule(-1);
     stakeholder_node_->SetParent(node, -1);
     node->name = name;
 
@@ -359,8 +359,8 @@ void TransWidgetO::on_pBtnInsert_clicked()
 
 void TransWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
-    node_->date_time = date_time.toString(kDateTimeFST);
-    sql_->WriteField(party_info_, kDateTime, node_->date_time, node_id_);
+    node_->issued_time = date_time.toString(kDateTimeFST);
+    sql_->WriteField(party_info_, kIssuedTime, node_->issued_time, node_id_);
 }
 
 void TransWidgetO::on_lineDescription_editingFinished()
@@ -371,7 +371,7 @@ void TransWidgetO::on_lineDescription_editingFinished()
 
 void TransWidgetO::RRuleGroupClicked(int id)
 {
-    node_->rule = static_cast<bool>(id);
+    node_->direction_rule = static_cast<bool>(id);
 
     node_->first *= -1;
     node_->second *= -1;
@@ -381,11 +381,11 @@ void TransWidgetO::RRuleGroupClicked(int id)
 
     IniLeafValue();
 
-    sql_->WriteField(party_info_, kRule, node_->rule, node_id_);
+    sql_->WriteField(party_info_, kDirectionRule, node_->direction_rule, node_id_);
     sql_->UpdateLeafValue(node_);
     sql_->InvertTransValue(node_id_);
 
-    emit SSyncBoolTrans(node_id_, std::to_underlying(NodeEnumO::kRule), node_->rule);
+    emit SSyncBoolTrans(node_id_, std::to_underlying(NodeEnumO::kDirectionRule), node_->direction_rule);
 }
 
 void TransWidgetO::RUnitGroupClicked(int id)
@@ -416,11 +416,11 @@ void TransWidgetO::RUnitGroupClicked(int id)
 
 void TransWidgetO::on_pBtnFinishOrder_toggled(bool checked)
 {
-    node_->finished = checked;
-    sql_->WriteField(party_info_, kFinished, checked, node_id_);
+    node_->is_finished = checked;
+    sql_->WriteField(party_info_, kIsFinished, checked, node_id_);
 
-    emit SSyncBoolNode(node_id_, std::to_underlying(NodeEnumO::kFinished), checked);
-    emit SSyncBoolTrans(node_id_, std::to_underlying(NodeEnumO::kFinished), checked);
+    emit SSyncBoolNode(node_id_, std::to_underlying(NodeEnumO::kIsFinished), checked);
+    emit SSyncBoolTrans(node_id_, std::to_underlying(NodeEnumO::kIsFinished), checked);
 
     IniFinished(checked);
     LockWidgets(checked);
@@ -460,6 +460,6 @@ void TransWidgetO::PreparePrint()
         break;
     }
 
-    PrintData data { stakeholder_node_->Name(node_->party), node_->date_time, stakeholder_node_->Name(node_->employee), unit, node_->initial_total };
+    PrintData data { stakeholder_node_->Name(node_->party), node_->issued_time, stakeholder_node_->Name(node_->employee), unit, node_->initial_total };
     print_manager_->SetData(data, order_trans_->GetTransShadowList());
 }

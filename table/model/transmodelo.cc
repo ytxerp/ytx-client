@@ -69,14 +69,14 @@ void TransModelO::RSyncBoolWD(int node_id, int column, bool value)
 {
     assert(node_id_ == node_id && "Assertion failed: node_id_ must be equal to node_id");
 
-    if (NodeEnumO(column) == NodeEnumO::kFinished) {
+    if (NodeEnumO(column) == NodeEnumO::kIsFinished) {
         if (!value)
             return;
 
         PurifyTransShadow();
     }
 
-    if (NodeEnumO(column) == NodeEnumO::kRule) {
+    if (NodeEnumO(column) == NodeEnumO::kDirectionRule) {
         UpdateRule(node_id, value);
     }
 }

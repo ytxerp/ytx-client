@@ -126,9 +126,9 @@ Node* SqlO::ReadNode(int node_id)
     query.setForwardOnly(true);
 
     CString string { QString(R"(
-    SELECT name, id, description, rule, type, unit, party, employee, date_time, first, second, discount, finished, gross_amount, settlement, settlement_id
+    SELECT name, id, description, direction_rule, node_type, unit, party, employee, issued_time, first, second, discount, is_finished, gross_amount, settlement, settlement_id
     FROM %1
-    WHERE id = :node_id AND removed = 0
+    WHERE id = :node_id AND is_valid = TRUE
     )")
             .arg(info_.node) };
 
@@ -156,7 +156,7 @@ bool SqlO::SettlementReference(int settlement_id) const
 
     CString string { QString(R"(
     SELECT 1 FROM %1
-    WHERE settlement_id = :settlement_id AND removed = 0
+    WHERE settlement_id = :settlement_id AND is_valid = TRUE
     LIMIT 1
     )")
             .arg(info_.node) };
@@ -181,7 +181,7 @@ int SqlO::SettlementID(int node_id) const
 
     CString string { QString(R"(
     SELECT settlement_id FROM %1
-    WHERE id = :node_id AND removed = 0
+    WHERE id = :node_id AND is_valid = TRUE
     )")
             .arg(info_.node) };
 
@@ -305,12 +305,12 @@ bool SqlO::RemoveSettlement(int settlement_id)
     });
 }
 
-bool SqlO::ReadSettlementPrimary(NodeList& node_list, int party_id, int settlement_id, bool finished)
+bool SqlO::ReadSettlementPrimary(NodeList& node_list, int party_id, int settlement_id, bool is_finished)
 {
     QSqlQuery query(main_db_);
     query.setForwardOnly(true);
 
-    CString string { QSReadSettlementPrimary(finished) };
+    CString string { QSReadSettlementPrimary(is_finished) };
 
     query.prepare(string);
     query.bindValue(QStringLiteral(":party_id"), party_id);
@@ -401,7 +401,7 @@ bool SqlO::SyncPrice(int node_id)
 
     while (query.next()) {
         PriceS item {};
-        item.date_time = query.value("date_time").toString();
+        item.issued_time = query.value("issued_time").toString();
         item.lhs_node = query.value("lhs_node").toInt();
         item.inside_product = query.value("inside_product").toInt();
         item.unit_price = query.value("unit_price").toDouble();
@@ -573,11 +573,11 @@ bool SqlO::WriteTransRange(const QList<TransShadow*>& list)
  *
  * This SQL query retrieves records from the table specified in \a info_.node.
  * It includes:
- * - Branch nodes (\c type = 1)
- * - Unfinished nodes (\c finished = 0)
+ * - Branch nodes (\c node_type = 1)
+ * - Unfinished nodes (\c is_finished = 0)
  * - Pending nodes (\c unit = 2)
- * - Nodes within the specified date range (\c date_time BETWEEN :start AND :end)
- * - Excludes removed nodes (\c removed = 0)
+ * - Nodes within the specified date range (\c issued_time BETWEEN :start AND :end)
+ * - Excludes removed nodes (\c is_valid = TRUE)
  *
  * The table name is dynamically set by \a info_.node.
  *
@@ -586,9 +586,9 @@ bool SqlO::WriteTransRange(const QList<TransShadow*>& list)
 QString SqlO::QSReadNode() const
 {
     return QString(R"(
-    SELECT name, id, description, rule, type, unit, party, employee, date_time, first, second, discount, finished, gross_amount, settlement
+    SELECT name, id, description, direction_rule, node_type, unit, party, employee, issued_time, first, second, discount, is_finished, gross_amount, settlement
     FROM %1
-    WHERE ((date_time BETWEEN :start AND :end) OR type = 1 OR finished = false OR unit = 2) AND removed = false
+    WHERE ((issued_time BETWEEN :start AND :end) OR node_type = 1 OR is_finished = FALSE OR unit = 2) AND is_valid = TRUE
     )")
         .arg(info_.node);
 }
@@ -596,8 +596,8 @@ QString SqlO::QSReadNode() const
 QString SqlO::QSWriteNode() const
 {
     return QString(R"(
-    INSERT INTO %1 (name, description, rule, type, unit, party, employee, date_time, first, second, discount, finished, gross_amount, settlement)
-    VALUES (:name, :description, :rule, :type, :unit, :party, :employee, :date_time, :first, :second, :discount, :finished, :gross_amount, :settlement)
+    INSERT INTO %1 (name, description, direction_rule, node_type, unit, party, employee, issued_time, first, second, discount, is_finished, gross_amount, settlement)
+    VALUES (:name, :description, :direction_rule, :node_type, :unit, :party, :employee, :issued_time, :first, :second, :discount, :is_finished, :gross_amount, :settlement)
     )")
         .arg(info_.node);
 }
@@ -606,7 +606,7 @@ QString SqlO::QSRemoveNodeSecond() const
 {
     return QString(R"(
     UPDATE %1 SET
-        removed = true
+        is_valid = FALSE
     WHERE lhs_node = :node_id
     )")
         .arg(info_.trans);
@@ -617,7 +617,7 @@ QString SqlO::QSInternalReference() const
     return QString(R"(
     SELECT EXISTS(
         SELECT 1 FROM %1
-        WHERE lhs_node = :node_id AND removed = 0
+        WHERE lhs_node = :node_id AND is_valid = TRUE
     ) AS is_referenced
     )")
         .arg(info_.trans);
@@ -628,7 +628,7 @@ QString SqlO::QSExternalReference() const
     return QString(R"(
     SELECT EXISTS(
         SELECT 1 FROM %1
-        WHERE id = :node_id AND settlement_id <> 0 AND removed = 0
+        WHERE id = :node_id AND settlement_id <> 0 AND is_valid = TRUE
     ) AS is_referenced
     )")
         .arg(info_.node);
@@ -639,7 +639,7 @@ QString SqlO::QSReadTrans() const
     return QString(R"(
     SELECT id, code, inside_product, unit_price, second, description, lhs_node, first, gross_amount, discount, net_amount, outside_product, discount_price
     FROM %1
-    WHERE lhs_node = :node_id AND removed = 0
+    WHERE lhs_node = :node_id AND is_valid = TRUE
     )")
         .arg(info_.trans);
 }
@@ -660,7 +660,7 @@ QString SqlO::QSSearchTransValue() const
     FROM %1
     WHERE ((first BETWEEN :value - :tolerance AND :value + :tolerance)
         OR (second BETWEEN :value - :tolerance AND :value + :tolerance))
-        AND removed = 0
+        AND is_valid = TRUE
     )")
         .arg(info_.trans);
 }
@@ -670,7 +670,7 @@ QString SqlO::QSSearchTransText() const
     return QString(R"(
     SELECT id, code, inside_product, unit_price, second, description, lhs_node, first, gross_amount, discount, net_amount, outside_product, discount_price
     FROM %1
-    WHERE description LIKE :description AND removed = 0
+    WHERE description LIKE :description AND is_valid = TRUE
     )")
         .arg(info_.trans);
 }
@@ -689,7 +689,7 @@ QString SqlO::QSTransToRemove() const
 {
     return QString(R"(
     SELECT lhs_node AS node_id, id AS trans_id FROM %1
-    WHERE lhs_node = :node_id AND removed = 0
+    WHERE lhs_node = :node_id AND is_valid = TRUE
     )")
         .arg(info_.trans);
 }
@@ -702,12 +702,12 @@ QString SqlO::QSReadStatement(int unit) const
             WITH Statement AS (
                 SELECT
                     s.id AS party,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end THEN o.gross_amount ELSE 0 END) AS cgross_amount,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end THEN o.first        ELSE 0 END) AS cfirst,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end THEN o.second       ELSE 0 END) AS csecond
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.gross_amount ELSE 0 END) AS cgross_amount,
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.first        ELSE 0 END) AS cfirst,
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.second       ELSE 0 END) AS csecond
                 FROM stakeholder s
                 INNER JOIN %1 o ON s.id = o.party
-                WHERE o.unit = 0 AND o.finished = 1 AND o.removed = 0
+                WHERE o.unit = 0 AND o.is_finished = TRUE AND o.is_valid = TRUE
                 GROUP BY s.id
             )
             SELECT
@@ -727,15 +727,15 @@ QString SqlO::QSReadStatement(int unit) const
                 SELECT
                     s.id AS party,
 
-                    SUM(CASE WHEN o.date_time < :start AND o.settlement_id = 0 THEN o.gross_amount                 ELSE 0 END) AS pbalance,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end THEN o.gross_amount                          ELSE 0 END) AS cgross_amount,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end AND o.settlement_id != 0 THEN o.gross_amount ELSE 0 END) AS csettlement,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end THEN o.first                                 ELSE 0 END) AS cfirst,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end THEN o.second                                ELSE 0 END) AS csecond
+                    SUM(CASE WHEN o.issued_time < :start AND o.settlement_id = 0 THEN o.gross_amount                 ELSE 0 END) AS pbalance,
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.gross_amount                          ELSE 0 END) AS cgross_amount,
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end AND o.settlement_id != 0 THEN o.gross_amount ELSE 0 END) AS csettlement,
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.first                                 ELSE 0 END) AS cfirst,
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.second                                ELSE 0 END) AS csecond
 
                 FROM stakeholder s
                 INNER JOIN %1 o ON s.id = o.party
-                WHERE o.unit = 1 AND o.finished = 1 AND o.removed = 0
+                WHERE o.unit = 1 AND o.is_finished = TRUE AND o.is_valid = TRUE
                 GROUP BY s.id
             )
             SELECT
@@ -754,13 +754,13 @@ QString SqlO::QSReadStatement(int unit) const
             WITH Statement AS (
                 SELECT
                     s.id AS party,
-                    SUM(CASE WHEN o.date_time < :start THEN o.gross_amount                ELSE 0 END) AS pbalance,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end THEN o.gross_amount ELSE 0 END) AS cgross_amount,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end THEN o.first        ELSE 0 END) AS cfirst,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end THEN o.second       ELSE 0 END) AS csecond
+                    SUM(CASE WHEN o.issued_time < :start THEN o.gross_amount                ELSE 0 END) AS pbalance,
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.gross_amount ELSE 0 END) AS cgross_amount,
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.first        ELSE 0 END) AS cfirst,
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.second       ELSE 0 END) AS csecond
                 FROM stakeholder s
                 INNER JOIN %1 o ON s.id = o.party
-                WHERE o.unit = 2 AND o.removed = 0
+                WHERE o.unit = 2 AND o.is_valid = TRUE
                 GROUP BY s.id
             )
             SELECT
@@ -786,26 +786,26 @@ QString SqlO::QSReadBalance(int unit) const
         return QString(R"(
                 SELECT
 
-                    SUM(CASE WHEN o.date_time < :start AND o.settlement_id = 0 THEN o.gross_amount                 ELSE 0 END) AS pbalance,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end THEN o.gross_amount                          ELSE 0 END) AS cgross_amount,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end AND o.settlement_id != 0 THEN o.gross_amount ELSE 0 END) AS csettlement
+                    SUM(CASE WHEN o.issued_time < :start AND o.settlement_id = 0 THEN o.gross_amount                 ELSE 0 END) AS pbalance,
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.gross_amount                          ELSE 0 END) AS cgross_amount,
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end AND o.settlement_id != 0 THEN o.gross_amount ELSE 0 END) AS csettlement
 
                 FROM stakeholder s
                 INNER JOIN %1 o ON s.id = o.party
-                WHERE o.party = :party_id AND o.unit = 1 AND o.finished = 1 AND o.removed = 0
+                WHERE o.party = :party_id AND o.unit = 1 AND o.is_finished = TRUE AND o.is_valid = TRUE
             )")
             .arg(info_.node);
     case UnitO::kPEND:
         return QString(R"(
                 SELECT
 
-                    SUM(CASE WHEN o.date_time < :start THEN o.gross_amount                 ELSE 0 END) AS pbalance,
-                    SUM(CASE WHEN o.date_time BETWEEN :start AND :end THEN o.gross_amount  ELSE 0 END) AS cgross_amount,
+                    SUM(CASE WHEN o.issued_time < :start THEN o.gross_amount                 ELSE 0 END) AS pbalance,
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.gross_amount  ELSE 0 END) AS cgross_amount,
                     0 AS csettlement
 
                 FROM stakeholder s
                 INNER JOIN %1 o ON s.id = o.party
-                WHERE o.party = :party_id AND o.unit = 2 AND o.removed = 0
+                WHERE o.party = :party_id AND o.unit = 2 AND o.is_valid = TRUE
             )")
             .arg(info_.node);
     default:
@@ -816,32 +816,32 @@ QString SqlO::QSReadBalance(int unit) const
 QString SqlO::QSReadStatementPrimary(int unit) const
 {
     static const QString kBaseQuery = R"(
-        SELECT description, employee, date_time, first, second, gross_amount, %1 AS settlement
+        SELECT description, employee, issued_time, first, second, gross_amount, %1 AS settlement
         FROM %2
-        WHERE unit = :unit AND party = :party AND (date_time BETWEEN :start AND :end) %3 AND removed = 0
+        WHERE unit = :unit AND party = :party AND (issued_time BETWEEN :start AND :end) %3 AND is_valid = TRUE
     )";
 
     QString settlement_expr {};
-    QString finished_condition {};
+    QString is_finished_condition {};
 
     switch (UnitO(unit)) {
     case UnitO::kIS:
         settlement_expr = QStringLiteral("gross_amount");
-        finished_condition = QStringLiteral("AND finished = 1");
+        is_finished_condition = QStringLiteral("AND is_finished = TRUE");
         break;
     case UnitO::kMS:
         settlement_expr = QStringLiteral("0");
-        finished_condition = QStringLiteral("AND finished = 1");
+        is_finished_condition = QStringLiteral("AND is_finished = TRUE");
         break;
     case UnitO::kPEND:
         settlement_expr = QStringLiteral("0");
-        finished_condition = QLatin1String("");
+        is_finished_condition = QLatin1String("");
         break;
     default:
         return {};
     }
 
-    return kBaseQuery.arg(settlement_expr, info_.node, finished_condition);
+    return kBaseQuery.arg(settlement_expr, info_.node, is_finished_condition);
 }
 
 QString SqlO::QSReadStatementSecondary(int unit) const
@@ -856,33 +856,33 @@ QString SqlO::QSReadStatementSecondary(int unit) const
             trans.gross_amount,
             %1 AS settlement,
             trans.outside_product,
-            node.date_time
+            node.issued_time
         FROM %3 trans
         INNER JOIN %2 node ON trans.lhs_node = node.id
-        WHERE node.unit = :unit AND node.party = :party AND (node.date_time BETWEEN :start AND :end) %4 AND trans.removed = 0
+        WHERE node.unit = :unit AND node.party = :party AND (node.issued_time BETWEEN :start AND :end) %4 AND trans.is_valid = TRUE
     )";
 
     QString settlement_expr {};
-    QString finished_condition {};
+    QString is_finished_condition {};
 
     switch (UnitO(unit)) {
     case UnitO::kIS:
         settlement_expr = QStringLiteral("trans.gross_amount");
-        finished_condition = QStringLiteral("AND node.finished = 1");
+        is_finished_condition = QStringLiteral("AND node.is_finished = TRUE");
         break;
     case UnitO::kMS:
         settlement_expr = QStringLiteral("0");
-        finished_condition = QStringLiteral("AND node.finished = 1");
+        is_finished_condition = QStringLiteral("AND node.is_finished = TRUE");
         break;
     case UnitO::kPEND:
         settlement_expr = QStringLiteral("0");
-        finished_condition = QLatin1String("");
+        is_finished_condition = QLatin1String("");
         break;
     default:
         return {};
     }
 
-    return kBaseQuery.arg(settlement_expr, info_.node, info_.trans, finished_condition);
+    return kBaseQuery.arg(settlement_expr, info_.node, info_.trans, is_finished_condition);
 }
 
 QString SqlO::QSInvertTransValue() const
@@ -903,18 +903,18 @@ QString SqlO::QSInvertTransValue() const
 QString SqlO::QSSyncPriceFirst() const
 {
     return QString(R"(
-        INSERT INTO stakeholder_transaction(date_time, lhs_node, inside_product, unit_price)
+        INSERT INTO stakeholder_transaction(issued_time, lhs_node, inside_product, unit_price)
         SELECT
-            node.date_time,
+            node.issued_time,
             node.party AS lhs_node,
             trans.inside_product,
             trans.unit_price
         FROM %2 trans
         JOIN %1 node ON trans.lhs_node = node.id
         JOIN product p ON trans.inside_product = p.id
-        WHERE trans.lhs_node = :node_id AND trans.unit_price <> p.unit_price AND trans.removed = 0
+        WHERE trans.lhs_node = :node_id AND trans.unit_price <> p.unit_price AND trans.is_valid = TRUE
         ON CONFLICT(lhs_node, inside_product) DO UPDATE SET
-        date_time = excluded.date_time,
+        issued_time = excluded.issued_time,
         unit_price = excluded.unit_price;
     )")
         .arg(info_.node, info_.trans);
@@ -924,14 +924,14 @@ QString SqlO::QSSyncPriceSecond() const
 {
     return QString(R"(
         SELECT
-            node.date_time,
+            node.issued_time,
             node.party AS lhs_node,
             trans.inside_product,
             trans.unit_price
         FROM %2 trans
         JOIN %1 node ON trans.lhs_node = node.id
         JOIN product p ON trans.inside_product = p.id
-        WHERE trans.lhs_node = :node_id AND trans.unit_price <> p.unit_price AND trans.removed = 0
+        WHERE trans.lhs_node = :node_id AND trans.unit_price <> p.unit_price AND trans.is_valid = TRUE
     )")
         .arg(info_.node, info_.trans);
 }
@@ -939,8 +939,8 @@ QString SqlO::QSSyncPriceSecond() const
 QString SqlO::QSWriteSettlement() const
 {
     return QString(R"(
-    INSERT INTO %1 (date_time)
-    VALUES (:date_time)
+    INSERT INTO %1 (issued_time)
+    VALUES (:issued_time)
     )")
         .arg(info_.settlement);
 }
@@ -949,7 +949,7 @@ QString SqlO::QSRemoveSettlementFirst() const
 {
     return QString(R"(
     UPDATE %1 SET
-        removed = true
+        is_valid = FALSE
     WHERE id = :node_id
     )")
         .arg(info_.settlement);
@@ -966,16 +966,16 @@ QString SqlO::QSRemoveSettlementSecond() const
         .arg(info_.node);
 }
 
-QString SqlO::QSReadSettlementPrimary(bool finished) const
+QString SqlO::QSReadSettlementPrimary(bool is_finished) const
 {
-    CString finished_string { finished ? QString() : "OR settlement_id = 0" };
+    CString is_finished_string { is_finished ? QString() : "OR settlement_id = 0" };
 
     return QString(R"(
-    SELECT id, date_time, description, gross_amount, employee, settlement_id
+    SELECT id, issued_time, description, gross_amount, employee, settlement_id
     FROM %1
-    WHERE party = :party_id AND unit = 1 AND finished = 1 AND (settlement_id = :settlement_id %2) AND removed = 0
+    WHERE party = :party_id AND unit = 1 AND is_finished = TRUE AND (settlement_id = :settlement_id %2) AND is_valid = TRUE
     )")
-        .arg(info_.node, finished_string);
+        .arg(info_.node, is_finished_string);
 }
 
 void SqlO::ReadSettlementPrimaryQuery(NodeList& node_list, QSqlQuery& query)
@@ -987,9 +987,9 @@ void SqlO::ReadSettlementPrimaryQuery(NodeList& node_list, QSqlQuery& query)
         node->id = query.value(QStringLiteral("id")).toInt();
         node->employee = query.value(QStringLiteral("employee")).toInt();
         node->description = query.value(QStringLiteral("description")).toString();
-        node->date_time = query.value(QStringLiteral("date_time")).toString();
+        node->issued_time = query.value(QStringLiteral("issued_time")).toString();
         node->initial_total = query.value(QStringLiteral("gross_amount")).toDouble();
-        node->finished = query.value(QStringLiteral("settlement_id")).toInt() != 0;
+        node->is_finished = query.value(QStringLiteral("settlement_id")).toInt() != 0;
 
         node_list.emplaceBack(node);
     }
@@ -1021,7 +1021,7 @@ void SqlO::ReadStatementPrimaryQuery(NodeList& node_list, QSqlQuery& query) cons
 
         node->description = query.value(QStringLiteral("description")).toString();
         node->employee = query.value(QStringLiteral("employee")).toInt();
-        node->date_time = query.value(QStringLiteral("date_time")).toString();
+        node->issued_time = query.value(QStringLiteral("issued_time")).toString();
         node->first = query.value(QStringLiteral("first")).toDouble();
         node->second = query.value(QStringLiteral("second")).toDouble();
         node->initial_total = query.value(QStringLiteral("gross_amount")).toDouble();
@@ -1045,7 +1045,7 @@ void SqlO::ReadStatementSecondaryQuery(TransList& trans_list, QSqlQuery& query) 
         trans->rhs_credit = query.value(QStringLiteral("settlement")).toDouble();
         trans->support_id = query.value(QStringLiteral("outside_product")).toInt();
         trans->rhs_node = query.value(QStringLiteral("inside_product")).toInt();
-        trans->date_time = query.value(QStringLiteral("date_time")).toString();
+        trans->issued_time = query.value(QStringLiteral("issued_time")).toString();
 
         trans_list.emplaceBack(trans);
     }
@@ -1054,9 +1054,9 @@ void SqlO::ReadStatementSecondaryQuery(TransList& trans_list, QSqlQuery& query) 
 QString SqlO::QSReadSettlement() const
 {
     return QString(R"(
-    SELECT id, date_time, description, finished, gross_amount, party
+    SELECT id, issued_time, description, is_finished, gross_amount, party
     FROM %1
-    WHERE (date_time BETWEEN :start AND :end) AND removed = 0
+    WHERE (issued_time BETWEEN :start AND :end) AND is_valid = TRUE
     )")
         .arg(info_.settlement);
 }
@@ -1070,22 +1070,22 @@ void SqlO::ReadSettlementQuery(NodeList& node_list, QSqlQuery& query) const
         node->id = query.value(QStringLiteral("id")).toInt();
         node->party = query.value(QStringLiteral("party")).toInt();
         node->description = query.value(QStringLiteral("description")).toString();
-        node->date_time = query.value(QStringLiteral("date_time")).toString();
-        node->finished = query.value(QStringLiteral("finished")).toBool();
+        node->issued_time = query.value(QStringLiteral("issued_time")).toString();
+        node->is_finished = query.value(QStringLiteral("is_finished")).toBool();
         node->initial_total = query.value(QStringLiteral("gross_amount")).toDouble();
 
         node_list.emplaceBack(node);
     }
 }
 
-void SqlO::WriteSettlementBind(Node* node, QSqlQuery& query) const { query.bindValue(QStringLiteral(":date_time"), node->date_time); }
+void SqlO::WriteSettlementBind(Node* node, QSqlQuery& query) const { query.bindValue(QStringLiteral(":issued_time"), node->issued_time); }
 
 QString SqlO::QSSearchNode(CString& in_list) const
 {
     return QString(R"(
-    SELECT name, id, description, rule, type, unit, party, employee, date_time, first, second, discount, finished, gross_amount, settlement
+    SELECT name, id, description, direction_rule, node_type, unit, party, employee, issued_time, first, second, discount, is_finished, gross_amount, settlement
     FROM %1
-    WHERE party IN (%2) AND removed = 0
+    WHERE party IN (%2) AND is_valid = TRUE
     )")
         .arg(info_.node, in_list);
 }
@@ -1238,16 +1238,16 @@ void SqlO::ReadNodeQuery(Node* node, const QSqlQuery& query) const
     node->id = query.value(QStringLiteral("id")).toInt();
     node->name = query.value(QStringLiteral("name")).toString();
     node->description = query.value(QStringLiteral("description")).toString();
-    node->rule = query.value(QStringLiteral("rule")).toBool();
-    node->type = query.value(QStringLiteral("type")).toInt();
+    node->direction_rule = query.value(QStringLiteral("direction_rule")).toBool();
+    node->node_type = query.value(QStringLiteral("node_type")).toInt();
     node->unit = query.value(QStringLiteral("unit")).toInt();
     node->party = query.value(QStringLiteral("party")).toInt();
     node->employee = query.value(QStringLiteral("employee")).toInt();
-    node->date_time = query.value(QStringLiteral("date_time")).toString();
+    node->issued_time = query.value(QStringLiteral("issued_time")).toString();
     node->first = query.value(QStringLiteral("first")).toDouble();
     node->second = query.value(QStringLiteral("second")).toDouble();
     node->discount = query.value(QStringLiteral("discount")).toDouble();
-    node->finished = query.value(QStringLiteral("finished")).toBool();
+    node->is_finished = query.value(QStringLiteral("is_finished")).toBool();
     node->initial_total = query.value(QStringLiteral("gross_amount")).toDouble();
     node->final_total = query.value(QStringLiteral("settlement")).toDouble();
 }
@@ -1256,16 +1256,16 @@ void SqlO::WriteNodeBind(Node* node, QSqlQuery& query) const
 {
     query.bindValue(QStringLiteral(":name"), node->name);
     query.bindValue(QStringLiteral(":description"), node->description);
-    query.bindValue(QStringLiteral(":rule"), node->rule);
-    query.bindValue(QStringLiteral(":type"), node->type);
+    query.bindValue(QStringLiteral(":direction_rule"), node->direction_rule);
+    query.bindValue(QStringLiteral(":node_type"), node->node_type);
     query.bindValue(QStringLiteral(":unit"), node->unit);
     query.bindValue(QStringLiteral(":party"), node->party);
     query.bindValue(QStringLiteral(":employee"), node->employee);
-    query.bindValue(QStringLiteral(":date_time"), node->date_time);
+    query.bindValue(QStringLiteral(":issued_time"), node->issued_time);
     query.bindValue(QStringLiteral(":first"), node->first);
     query.bindValue(QStringLiteral(":second"), node->second);
     query.bindValue(QStringLiteral(":discount"), node->discount);
-    query.bindValue(QStringLiteral(":finished"), node->finished);
+    query.bindValue(QStringLiteral(":is_finished"), node->is_finished);
     query.bindValue(QStringLiteral(":gross_amount"), node->initial_total);
     query.bindValue(QStringLiteral(":settlement"), node->final_total);
 }

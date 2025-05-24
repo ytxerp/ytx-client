@@ -13,15 +13,15 @@ void NodeModelT::RSyncLeafValue(
     int node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta, double final_credit_delta, double /*settled*/)
 {
     auto* node { NodeModelUtils::GetNode(node_hash_, node_id) };
-    assert(node && node->type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
+    assert(node && node->node_type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
 
     if (initial_credit_delta == 0.0 && initial_debit_delta == 0.0 && final_debit_delta == 0.0 && final_credit_delta == 0.0)
         return;
 
-    bool rule { node->rule };
+    bool direction_rule { node->direction_rule };
 
-    double initial_delta { (rule ? 1 : -1) * (initial_credit_delta - initial_debit_delta) };
-    double final_delta { (rule ? 1 : -1) * (final_credit_delta - final_debit_delta) };
+    double initial_delta { (direction_rule ? 1 : -1) * (initial_credit_delta - initial_debit_delta) };
+    double final_delta { (direction_rule ? 1 : -1) * (final_credit_delta - final_debit_delta) };
 
     node->initial_total += initial_delta;
     node->final_total += final_delta;
@@ -40,7 +40,7 @@ void NodeModelT::RSyncDouble(int node_id, int column, double value)
         return;
 
     auto* node { node_hash_.value(node_id) };
-    assert(node && node->type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
+    assert(node && node->node_type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
 
     if (node->unit != std::to_underlying(UnitT::kProd))
         return;
@@ -59,7 +59,7 @@ QVariant NodeModelT::data(const QModelIndex& index, int role) const
         return QVariant();
 
     const NodeEnumT kColumn { index.column() };
-    const bool kIsLeaf { node->type == kTypeLeaf };
+    const bool kIsLeaf { node->node_type == kTypeLeaf };
 
     switch (kColumn) {
     case NodeEnumT::kName:
@@ -72,18 +72,18 @@ QVariant NodeModelT::data(const QModelIndex& index, int role) const
         return node->description;
     case NodeEnumT::kNote:
         return node->note;
-    case NodeEnumT::kRule:
-        return node->rule;
-    case NodeEnumT::kType:
-        return node->type;
+    case NodeEnumT::kDirectionRule:
+        return node->direction_rule;
+    case NodeEnumT::kNodeType:
+        return node->node_type;
     case NodeEnumT::kUnit:
         return node->unit;
     case NodeEnumT::kColor:
         return node->color;
-    case NodeEnumT::kDateTime:
-        return kIsLeaf ? node->date_time : QVariant();
-    case NodeEnumT::kFinished:
-        return kIsLeaf && node->finished ? node->finished : QVariant();
+    case NodeEnumT::kIssuedTime:
+        return kIsLeaf ? node->issued_time : QVariant();
+    case NodeEnumT::kIsFinished:
+        return kIsLeaf && node->is_finished ? node->is_finished : QVariant();
     case NodeEnumT::kUnitCost:
         return kIsLeaf && node->first != 0 ? node->first : QVariant();
     case NodeEnumT::kDocument:
@@ -118,24 +118,24 @@ bool NodeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumT::kNote:
         NodeModelUtils::UpdateField(sql_, node, info_.node, kNote, value.toString(), &Node::note);
         break;
-    case NodeEnumT::kRule:
+    case NodeEnumT::kDirectionRule:
         UpdateRule(node, value.toBool());
         emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumT::kQuantity)), index.siblingAtColumn(std::to_underlying(NodeEnumT::kAmount)));
         break;
-    case NodeEnumT::kType:
+    case NodeEnumT::kNodeType:
         UpdateType(node, value.toInt());
         break;
     case NodeEnumT::kColor:
         NodeModelUtils::UpdateField(sql_, node, info_.node, kColor, value.toString(), &Node::color, true);
         break;
-    case NodeEnumT::kDateTime:
-        NodeModelUtils::UpdateField(sql_, node, info_.node, kDateTime, value.toString(), &Node::date_time, true);
+    case NodeEnumT::kIssuedTime:
+        NodeModelUtils::UpdateField(sql_, node, info_.node, kIssuedTime, value.toString(), &Node::issued_time, true);
         break;
     case NodeEnumT::kUnit:
         UpdateUnit(node, value.toInt());
         break;
-    case NodeEnumT::kFinished:
-        NodeModelUtils::UpdateField(sql_, node, info_.node, kFinished, value.toBool(), &Node::finished, true);
+    case NodeEnumT::kIsFinished:
+        NodeModelUtils::UpdateField(sql_, node, info_.node, kIsFinished, value.toBool(), &Node::is_finished, true);
         break;
     default:
         return false;
@@ -160,20 +160,20 @@ void NodeModelT::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
         case NodeEnumT::kNote:
             return (order == Qt::AscendingOrder) ? (lhs->note < rhs->note) : (lhs->note > rhs->note);
-        case NodeEnumT::kRule:
-            return (order == Qt::AscendingOrder) ? (lhs->rule < rhs->rule) : (lhs->rule > rhs->rule);
-        case NodeEnumT::kType:
-            return (order == Qt::AscendingOrder) ? (lhs->type < rhs->type) : (lhs->type > rhs->type);
-        case NodeEnumT::kFinished:
-            return (order == Qt::AscendingOrder) ? (lhs->finished < rhs->finished) : (lhs->finished > rhs->finished);
+        case NodeEnumT::kDirectionRule:
+            return (order == Qt::AscendingOrder) ? (lhs->direction_rule < rhs->direction_rule) : (lhs->direction_rule > rhs->direction_rule);
+        case NodeEnumT::kNodeType:
+            return (order == Qt::AscendingOrder) ? (lhs->node_type < rhs->node_type) : (lhs->node_type > rhs->node_type);
+        case NodeEnumT::kIsFinished:
+            return (order == Qt::AscendingOrder) ? (lhs->is_finished < rhs->is_finished) : (lhs->is_finished > rhs->is_finished);
         case NodeEnumT::kUnit:
             return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
         case NodeEnumT::kColor:
             return (order == Qt::AscendingOrder) ? (lhs->color < rhs->color) : (lhs->color > rhs->color);
         case NodeEnumT::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
-        case NodeEnumT::kDateTime:
-            return (order == Qt::AscendingOrder) ? (lhs->date_time < rhs->date_time) : (lhs->date_time > rhs->date_time);
+        case NodeEnumT::kIssuedTime:
+            return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case NodeEnumT::kUnitCost:
             return (order == Qt::AscendingOrder) ? (lhs->first < rhs->first) : (lhs->first > rhs->first);
         case NodeEnumT::kQuantity:
@@ -205,18 +205,18 @@ Qt::ItemFlags NodeModelT::flags(const QModelIndex& index) const
     case NodeEnumT::kDescription:
     case NodeEnumT::kCode:
     case NodeEnumT::kNote:
-    case NodeEnumT::kType:
-    case NodeEnumT::kRule:
+    case NodeEnumT::kNodeType:
+    case NodeEnumT::kDirectionRule:
     case NodeEnumT::kUnit:
-    case NodeEnumT::kDateTime:
+    case NodeEnumT::kIssuedTime:
         flags |= Qt::ItemIsEditable;
         break;
     default:
         break;
     }
 
-    const bool finished { index.siblingAtColumn(std::to_underlying(NodeEnumT::kFinished)).data().toBool() };
-    if (finished)
+    const bool is_finished { index.siblingAtColumn(std::to_underlying(NodeEnumT::kIsFinished)).data().toBool() };
+    if (is_finished)
         flags &= ~Qt::ItemIsEditable;
 
     return flags;
@@ -255,10 +255,10 @@ bool NodeModelT::UpdateAncestorValue(Node* node, double initial_delta, double fi
     if (initial_delta == 0.0 && final_delta == 0.0)
         return false;
 
-    const bool kRule { node->rule };
+    const bool direction_rule { node->direction_rule };
 
     for (Node* current = node->parent; current && current != root_; current = current->parent) {
-        bool equal { current->rule == kRule };
+        bool equal { current->direction_rule == direction_rule };
 
         current->final_total += (equal ? 1 : -1) * final_delta;
         current->initial_total += (equal ? 1 : -1) * initial_delta;

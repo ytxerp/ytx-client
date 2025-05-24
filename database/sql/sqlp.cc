@@ -14,17 +14,17 @@ SqlP::SqlP(QSqlDatabase& main_db, CInfo& info, QObject* parent)
 QString SqlP::QSReadNode() const
 {
     return QStringLiteral(R"(
-    SELECT name, id, code, description, note, rule, type, unit, color, commission, unit_price, quantity, amount
+    SELECT name, id, code, description, note, direction_rule, node_type, unit, color, commission, unit_price, quantity, amount
     FROM product
-    WHERE removed = false
+    WHERE is_valid = TRUE
     )");
 }
 
 QString SqlP::QSWriteNode() const
 {
     return QStringLiteral(R"(
-    INSERT INTO product (name, code, description, note, rule, type, unit, color, commission, unit_price)
-    VALUES (:name, :code, :description, :note, :rule, :type, :unit, :color, :commission, :unit_price)
+    INSERT INTO product (name, code, description, note, direction_rule, node_type, unit, color, commission, unit_price)
+    VALUES (:name, :code, :description, :note, :direction_rule, :node_type, :unit, :color, :commission, :unit_price)
     )");
 }
 
@@ -32,8 +32,8 @@ QString SqlP::QSRemoveNodeSecond() const
 {
     return QStringLiteral(R"(
     UPDATE product_transaction SET
-        removed = true
-    WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND removed = 0
+        is_valid = FALSE
+    WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND is_valid = TRUE
     )");
 }
 
@@ -42,7 +42,7 @@ QString SqlP::QSInternalReference() const
     return QStringLiteral(R"(
     SELECT EXISTS(
         SELECT 1 FROM product_transaction
-        WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND removed = 0
+        WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND is_valid = TRUE
     ) AS is_referenced
     )");
 }
@@ -52,8 +52,8 @@ QString SqlP::QSExternalReference() const
     return QStringLiteral(R"(
    SELECT
         EXISTS(SELECT 1 FROM stakeholder_transaction WHERE inside_product = :node_id) OR
-        EXISTS(SELECT 1 FROM sales_transaction WHERE inside_product = :node_id AND removed = 0) OR
-        EXISTS(SELECT 1 FROM purchase_transaction WHERE inside_product = :node_id AND removed = 0)
+        EXISTS(SELECT 1 FROM sales_transaction WHERE inside_product = :node_id AND is_valid = TRUE) OR
+        EXISTS(SELECT 1 FROM purchase_transaction WHERE inside_product = :node_id AND is_valid = TRUE)
     AS is_referenced;
     )");
 }
@@ -62,7 +62,7 @@ QString SqlP::QSSupportReference() const
 {
     return QStringLiteral(R"(
     SELECT 1 FROM product_transaction
-    WHERE support_id = :support_id AND removed = 0
+    WHERE support_id = :support_id AND is_valid = TRUE
     LIMIT 1
     )");
 }
@@ -72,7 +72,7 @@ QString SqlP::QSReplaceSupport() const
     return QStringLiteral(R"(
     UPDATE product_transaction SET
         support_id = :new_node_id
-    WHERE support_id = :old_node_id AND removed = 0
+    WHERE support_id = :old_node_id AND is_valid = TRUE
     )");
 }
 
@@ -81,7 +81,7 @@ QString SqlP::QSRemoveSupport() const
     return QStringLiteral(R"(
     UPDATE product_transaction SET
         support_id = 0
-    WHERE support_id = :node_id AND removed = 0
+    WHERE support_id = :node_id AND is_valid = TRUE
     )");
 }
 
@@ -89,10 +89,10 @@ QString SqlP::QSTransToRemove() const
 {
     return QStringLiteral(R"(
     SELECT rhs_node AS node_id, id AS trans_id, support_id FROM product_transaction
-    WHERE lhs_node = :node_id AND removed = 0
+    WHERE lhs_node = :node_id AND is_valid = TRUE
     UNION ALL
     SELECT lhs_nod AS node_id, id AS trans_id, support_id FROM product_transaction
-    WHERE rhs_node = :node_id AND removed = 0
+    WHERE rhs_node = :node_id AND is_valid = TRUE
     )");
 }
 
@@ -106,7 +106,7 @@ QString SqlP::QSLeafTotal(int /*unit*/) const
             unit_cost * lhs_debit AS final_debit,
             unit_cost * lhs_credit AS final_credit
         FROM product_transaction
-        WHERE lhs_node = :node_id AND removed = 0
+        WHERE lhs_node = :node_id AND is_valid = TRUE
 
         UNION ALL
 
@@ -116,7 +116,7 @@ QString SqlP::QSLeafTotal(int /*unit*/) const
             unit_cost * rhs_debit,
             unit_cost * rhs_credit
         FROM product_transaction
-        WHERE rhs_node = :node_id AND removed = 0
+        WHERE rhs_node = :node_id AND is_valid = TRUE
     )
     SELECT
         SUM(initial_credit) - SUM(initial_debit) AS initial_balance,
@@ -131,8 +131,8 @@ void SqlP::WriteNodeBind(Node* node, QSqlQuery& query) const
     query.bindValue(QStringLiteral(":code"), node->code);
     query.bindValue(QStringLiteral(":description"), node->description);
     query.bindValue(QStringLiteral(":note"), node->note);
-    query.bindValue(QStringLiteral(":rule"), node->rule);
-    query.bindValue(QStringLiteral(":type"), node->type);
+    query.bindValue(QStringLiteral(":direction_rule"), node->direction_rule);
+    query.bindValue(QStringLiteral(":node_type"), node->node_type);
     query.bindValue(QStringLiteral(":unit"), node->unit);
     query.bindValue(QStringLiteral(":color"), node->color);
     query.bindValue(QStringLiteral(":commission"), node->second);
@@ -146,8 +146,8 @@ void SqlP::ReadNodeQuery(Node* node, const QSqlQuery& query) const
     node->code = query.value(QStringLiteral("code")).toString();
     node->description = query.value(QStringLiteral("description")).toString();
     node->note = query.value(QStringLiteral("note")).toString();
-    node->rule = query.value(QStringLiteral("rule")).toBool();
-    node->type = query.value(QStringLiteral("type")).toInt();
+    node->direction_rule = query.value(QStringLiteral("direction_rule")).toBool();
+    node->node_type = query.value(QStringLiteral("node_type")).toInt();
     node->unit = query.value(QStringLiteral("unit")).toInt();
     node->color = query.value(QStringLiteral("color")).toString();
     node->second = query.value(QStringLiteral("commission")).toDouble();
@@ -171,16 +171,16 @@ void SqlP::ReadTransQuery(Trans* trans, const QSqlQuery& query) const
     trans->code = query.value(QStringLiteral("code")).toString();
     trans->description = query.value(QStringLiteral("description")).toString();
     trans->document = query.value(QStringLiteral("document")).toString().split(kSemicolon, Qt::SkipEmptyParts);
-    trans->date_time = query.value(QStringLiteral("date_time")).toString();
-    trans->state = query.value(QStringLiteral("state")).toBool();
+    trans->issued_time = query.value(QStringLiteral("issued_time")).toString();
+    trans->is_checked = query.value(QStringLiteral("is_checked")).toBool();
     trans->support_id = query.value(QStringLiteral("support_id")).toInt();
 }
 
 void SqlP::WriteTransBind(TransShadow* trans_shadow, QSqlQuery& query) const
 {
-    query.bindValue(QStringLiteral(":date_time"), *trans_shadow->date_time);
+    query.bindValue(QStringLiteral(":issued_time"), *trans_shadow->issued_time);
     query.bindValue(QStringLiteral(":unit_cost"), *trans_shadow->lhs_ratio);
-    query.bindValue(QStringLiteral(":state"), *trans_shadow->state);
+    query.bindValue(QStringLiteral(":is_checked"), *trans_shadow->is_checked);
     query.bindValue(QStringLiteral(":description"), *trans_shadow->description);
     query.bindValue(QStringLiteral(":support_id"), *trans_shadow->support_id);
     query.bindValue(QStringLiteral(":code"), *trans_shadow->code);
@@ -220,7 +220,7 @@ void SqlP::ReadTransRefQuery(TransList& trans_list, QSqlQuery& query) const
         trans->rhs_debit = query.value(QStringLiteral("gross_amount")).toDouble();
         trans->support_id = query.value(QStringLiteral("outside_product")).toInt();
         trans->rhs_ratio = query.value(QStringLiteral("discount_price")).toDouble();
-        trans->date_time = query.value(QStringLiteral("date_time")).toString();
+        trans->issued_time = query.value(QStringLiteral("issued_time")).toString();
         trans->lhs_node = query.value(QStringLiteral("lhs_node")).toInt();
 
         trans_list.emplaceBack(trans);
@@ -282,9 +282,9 @@ bool SqlP::ReplaceLeaf(int old_node_id, int new_node_id, int node_unit)
 QString SqlP::QSReadTrans() const
 {
     return QStringLiteral(R"(
-    SELECT id, lhs_node, unit_cost, lhs_debit, lhs_credit, rhs_node, rhs_debit, rhs_credit, state, description, support_id, code, document, date_time
+    SELECT id, lhs_node, unit_cost, lhs_debit, lhs_credit, rhs_node, rhs_debit, rhs_credit, state, description, support_id, code, document, issued_time
     FROM product_transaction
-    WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND removed = 0
+    WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND is_valid = TRUE
     )");
 }
 
@@ -308,18 +308,18 @@ QString SqlP::QSWriteTrans() const
 {
     return QStringLiteral(R"(
     INSERT INTO product_transaction
-    (date_time, lhs_node, unit_cost, lhs_debit, lhs_credit, rhs_node, rhs_debit, rhs_credit, state, description, support_id, code, document)
+    (issued_time, lhs_node, unit_cost, lhs_debit, lhs_credit, rhs_node, rhs_debit, rhs_credit, state, description, support_id, code, document)
     VALUES
-    (:date_time, :lhs_node, :unit_cost, :lhs_debit, :lhs_credit, :rhs_node, :rhs_debit, :rhs_credit, :state, :description, :support_id, :code, :document)
+    (:issued_time, :lhs_node, :unit_cost, :lhs_debit, :lhs_credit, :rhs_node, :rhs_debit, :rhs_credit, :state, :description, :support_id, :code, :document)
     )");
 }
 
 QString SqlP::QSReadSupportTrans() const
 {
     return QStringLiteral(R"(
-    SELECT id, lhs_node, unit_cost, lhs_debit, lhs_credit, rhs_node, rhs_debit, rhs_credit, state, description, support_id, code, document, date_time
+    SELECT id, lhs_node, unit_cost, lhs_debit, lhs_credit, rhs_node, rhs_debit, rhs_credit, state, description, support_id, code, document, issued_time
     FROM product_transaction
-    WHERE support_id = :node_id AND removed = 0
+    WHERE support_id = :node_id AND is_valid = TRUE
     )");
 }
 
@@ -346,22 +346,22 @@ QString SqlP::QSUpdateTransValue() const
 QString SqlP::QSSearchTransValue() const
 {
     return QStringLiteral(R"(
-    SELECT id, lhs_node, unit_cost, lhs_debit, lhs_credit, rhs_node, rhs_debit, rhs_credit, state, description, support_id, code, document, date_time
+    SELECT id, lhs_node, unit_cost, lhs_debit, lhs_credit, rhs_node, rhs_debit, rhs_credit, state, description, support_id, code, document, issued_time
     FROM product_transaction
     WHERE ((lhs_debit BETWEEN :value - :tolerance AND :value + :tolerance)
         OR (lhs_credit BETWEEN :value - :tolerance AND :value + :tolerance)
         OR (rhs_debit BETWEEN :value - :tolerance AND :value + :tolerance)
         OR (rhs_credit BETWEEN :value - :tolerance AND :value + :tolerance))
-        AND removed = 0
+        AND is_valid = TRUE
     )");
 }
 
 QString SqlP::QSSearchTransText() const
 {
     return QStringLiteral(R"(
-    SELECT id, lhs_node, unit_cost, lhs_debit, lhs_credit, rhs_node, rhs_debit, rhs_credit, state, description, support_id, code, document, date_time
+    SELECT id, lhs_node, unit_cost, lhs_debit, lhs_credit, rhs_node, rhs_debit, rhs_credit, state, description, support_id, code, document, issued_time
     FROM product_transaction
-    WHERE description LIKE :description AND removed = 0
+    WHERE description LIKE :description AND is_valid = TRUE
     )");
 }
 
@@ -381,10 +381,10 @@ QString SqlP::QSReadTransRef(int /*unit*/) const
         st.outside_product,
         st.discount_price,
         sn.party,
-        sn.date_time
+        sn.issued_time
     FROM sales_transaction st
     INNER JOIN sales sn ON st.lhs_node = sn.id
-    WHERE st.inside_product = :node_id AND sn.finished = 1 AND (sn.date_time BETWEEN :start AND :end) AND st.removed = 0
+    WHERE st.inside_product = :node_id AND sn.is_finished = TRUE AND (sn.issued_time BETWEEN :start AND :end) AND st.is_valid = TRUE
 
     UNION ALL
 
@@ -401,10 +401,10 @@ QString SqlP::QSReadTransRef(int /*unit*/) const
         pt.outside_product,
         pt.discount_price,
         pn.party,
-        pn.date_time
+        pn.issued_time
     FROM purchase_transaction pt
     INNER JOIN purchase pn ON pt.lhs_node = pn.id
-    WHERE pt.inside_product = :node_id AND pn.finished = 1 AND (pn.date_time BETWEEN :start AND :end) AND pt.removed = 0;
+    WHERE pt.inside_product = :node_id AND pn.is_finished = TRUE AND (pn.issued_time BETWEEN :start AND :end) AND pt.is_valid = TRUE;
     )");
 }
 

@@ -73,12 +73,12 @@ QVariant SettlementModel::data(const QModelIndex& index, int role) const
     switch (kColumn) {
     case SettlementEnum::kID:
         return node->id;
-    case SettlementEnum::kDateTime:
-        return node->date_time;
+    case SettlementEnum::kIssuedTime:
+        return node->issued_time;
     case SettlementEnum::kDescription:
         return node->description;
-    case SettlementEnum::kFinished:
-        return node->finished ? node->finished : QVariant();
+    case SettlementEnum::kIsFinished:
+        return node->is_finished ? node->is_finished : QVariant();
     case SettlementEnum::kGrossAmount:
         return node->initial_total == 0 ? QVariant() : node->initial_total;
     case SettlementEnum::kParty:
@@ -99,8 +99,8 @@ bool SettlementModel::setData(const QModelIndex& index, const QVariant& value, i
     auto* node { node_list_.at(kRow) };
 
     switch (kColumn) {
-    case SettlementEnum::kDateTime:
-        NodeModelUtils::UpdateField(sql_, node, info_.settlement, kDateTime, value.toString(), &Node::date_time);
+    case SettlementEnum::kIssuedTime:
+        NodeModelUtils::UpdateField(sql_, node, info_.settlement, kIssuedTime, value.toString(), &Node::issued_time);
         break;
     case SettlementEnum::kDescription:
         NodeModelUtils::UpdateField(sql_, node, info_.settlement, kDescription, value.toString(), &Node::description);
@@ -108,7 +108,7 @@ bool SettlementModel::setData(const QModelIndex& index, const QVariant& value, i
     case SettlementEnum::kParty:
         UpdateParty(node, value.toInt());
         break;
-    case SettlementEnum::kFinished:
+    case SettlementEnum::kIsFinished:
         UpdateFinished(node, value.toBool());
         break;
     default:
@@ -136,7 +136,7 @@ Qt::ItemFlags SettlementModel::flags(const QModelIndex& index) const
     const SettlementEnum kColumn { index.column() };
 
     switch (kColumn) {
-    case SettlementEnum::kDateTime:
+    case SettlementEnum::kIssuedTime:
     case SettlementEnum::kDescription:
     case SettlementEnum::kParty:
         flags |= Qt::ItemIsEditable;
@@ -146,7 +146,7 @@ Qt::ItemFlags SettlementModel::flags(const QModelIndex& index) const
         break;
     }
 
-    const bool non_editable { index.siblingAtColumn(std::to_underlying(SettlementEnum::kFinished)).data().toBool() };
+    const bool non_editable { index.siblingAtColumn(std::to_underlying(SettlementEnum::kIsFinished)).data().toBool() };
     if (non_editable)
         flags &= ~Qt::ItemIsEditable;
 
@@ -164,12 +164,12 @@ void SettlementModel::sort(int column, Qt::SortOrder order)
         switch (kColumn) {
         case SettlementEnum::kParty:
             return (order == Qt::AscendingOrder) ? (lhs->party < rhs->party) : (lhs->party > rhs->party);
-        case SettlementEnum::kDateTime:
-            return (order == Qt::AscendingOrder) ? (lhs->date_time < rhs->date_time) : (lhs->date_time > rhs->date_time);
+        case SettlementEnum::kIssuedTime:
+            return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case SettlementEnum::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
-        case SettlementEnum::kFinished:
-            return (order == Qt::AscendingOrder) ? (lhs->finished < rhs->finished) : (lhs->finished > rhs->finished);
+        case SettlementEnum::kIsFinished:
+            return (order == Qt::AscendingOrder) ? (lhs->is_finished < rhs->is_finished) : (lhs->is_finished > rhs->is_finished);
         case SettlementEnum::kGrossAmount:
             return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
         default:
@@ -203,14 +203,14 @@ bool SettlementModel::insertRows(int row, int /*count*/, const QModelIndex& pare
     auto* node { ResourcePool<Node>::Instance().Allocate() };
     const bool is_empty { node_list_.isEmpty() };
 
-    node->date_time = QDateTime::currentDateTime().toString(kDateTimeFST);
+    node->issued_time = QDateTime::currentDateTime().toString(kDateTimeFST);
 
     beginInsertRows(parent, row, row);
     node_list_.emplaceBack(node);
     endInsertRows();
 
     if (is_empty)
-        emit SResizeColumnToContents(std::to_underlying(SettlementEnum::kDateTime));
+        emit SResizeColumnToContents(std::to_underlying(SettlementEnum::kIssuedTime));
 
     sql_->WriteSettlement(node);
     return true;
@@ -233,8 +233,8 @@ bool SettlementModel::UpdateFinished(Node* node, bool finished)
     if (node->party == 0)
         return false;
 
-    node->finished = finished;
-    sql_->WriteField(info_.settlement, kFinished, finished, node->id);
+    node->is_finished = finished;
+    sql_->WriteField(info_.settlement, kIsFinished, finished, node->id);
 
     emit SSyncFinished(node->party, node->id, finished);
     return true;

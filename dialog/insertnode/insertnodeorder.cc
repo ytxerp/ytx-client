@@ -66,13 +66,13 @@ void InsertNodeOrder::RSyncBoolNode(int node_id, int column, bool value)
     SignalBlocker blocker(this);
 
     switch (kColumn) {
-    case NodeEnumO::kRule:
+    case NodeEnumO::kDirectionRule:
         IniRule(value);
         IniLeafValue();
         break;
-    case NodeEnumO::kFinished: {
+    case NodeEnumO::kIsFinished: {
         IniFinished(value);
-        LockWidgets(value, node_->type == kTypeBranch);
+        LockWidgets(value, node_->node_type == kTypeBranch);
         break;
     }
     default:
@@ -116,7 +116,7 @@ void InsertNodeOrder::RSyncString(int node_id, int column, const QString& value)
     case NodeEnumO::kDescription:
         ui->lineDescription->setText(value);
         break;
-    case NodeEnumO::kDateTime:
+    case NodeEnumO::kIssuedTime:
         ui->dateTimeEdit->setDateTime(QDateTime::fromString(value, kDateTimeFST));
         break;
     default:
@@ -138,7 +138,7 @@ void InsertNodeOrder::IniDialog(CSectionConfig* section_settings)
 
     ui->dateTimeEdit->setDisplayFormat(kDateTimeFST);
     ui->dateTimeEdit->setDateTime(QDateTime::currentDateTime());
-    node_->date_time = ui->dateTimeEdit->dateTime().toString(kDateTimeFST);
+    node_->issued_time = ui->dateTimeEdit->dateTime().toString(kDateTimeFST);
     ui->comboParty->lineEdit()->setValidator(&LineEdit::kInputValidator);
 
     ui->dSpinDiscount->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
@@ -177,7 +177,7 @@ void InsertNodeOrder::accept()
         emit QDialog::accepted();
         node_id_ = node_->id;
 
-        if (node_->type == kTypeLeaf) {
+        if (node_->node_type == kTypeLeaf) {
             emit SSyncInt(node_id_, std::to_underlying(NodeEnumO::kID), node_id_);
             emit SSyncLeafValue(node_id_, node_->initial_total, node_->final_total, node_->first, node_->second, node_->discount);
         }
@@ -253,7 +253,7 @@ void InsertNodeOrder::PreparePrint()
         break;
     }
 
-    PrintData data { stakeholder_node_->Name(node_->party), node_->date_time, stakeholder_node_->Name(node_->employee), unit, node_->initial_total };
+    PrintData data { stakeholder_node_->Name(node_->party), node_->issued_time, stakeholder_node_->Name(node_->employee), unit, node_->initial_total };
     print_manager_->SetData(data, order_trans_->GetTransShadowList());
 }
 
@@ -395,7 +395,7 @@ void InsertNodeOrder::IniUnitGroup()
 
 void InsertNodeOrder::on_comboParty_editTextChanged(const QString& arg1)
 {
-    if (node_->type != kTypeBranch || arg1.isEmpty())
+    if (node_->node_type != kTypeBranch || arg1.isEmpty())
         return;
 
     node_->name = arg1;
@@ -410,7 +410,7 @@ void InsertNodeOrder::on_comboParty_editTextChanged(const QString& arg1)
 
 void InsertNodeOrder::on_comboParty_currentIndexChanged(int /*index*/)
 {
-    if (node_->type != kTypeLeaf)
+    if (node_->node_type != kTypeLeaf)
         return;
 
     static const QString title { windowTitle() };
@@ -449,11 +449,11 @@ void InsertNodeOrder::on_comboEmployee_currentIndexChanged(int /*index*/)
 void InsertNodeOrder::on_pBtnInsert_clicked()
 {
     const auto& name { ui->comboParty->currentText() };
-    if (node_->type == kTypeBranch || name.isEmpty() || ui->comboParty->currentIndex() != -1)
+    if (node_->node_type == kTypeBranch || name.isEmpty() || ui->comboParty->currentIndex() != -1)
         return;
 
     auto* node { ResourcePool<Node>::Instance().Allocate() };
-    node->rule = stakeholder_node_->Rule(-1);
+    node->direction_rule = stakeholder_node_->Rule(-1);
     stakeholder_node_->SetParent(node, -1);
     node->name = name;
 
@@ -467,26 +467,26 @@ void InsertNodeOrder::on_pBtnInsert_clicked()
 
 void InsertNodeOrder::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
-    node_->date_time = date_time.toString(kDateTimeFST);
+    node_->issued_time = date_time.toString(kDateTimeFST);
 
     if (node_id_ != 0)
-        sql_->WriteField(party_info_, kDateTime, node_->date_time, node_id_);
+        sql_->WriteField(party_info_, kIssuedTime, node_->issued_time, node_id_);
 }
 
 void InsertNodeOrder::on_pBtnFinishOrder_toggled(bool checked)
 {
     accept();
 
-    node_->finished = checked;
+    node_->is_finished = checked;
 
-    sql_->WriteField(party_info_, kFinished, checked, node_id_);
-    if (node_->type == kTypeLeaf) {
-        emit SSyncBoolNode(node_id_, std::to_underlying(NodeEnumO::kFinished), checked);
-        emit SSyncBoolTrans(node_id_, std::to_underlying(NodeEnumO::kFinished), checked);
+    sql_->WriteField(party_info_, kIsFinished, checked, node_id_);
+    if (node_->node_type == kTypeLeaf) {
+        emit SSyncBoolNode(node_id_, std::to_underlying(NodeEnumO::kIsFinished), checked);
+        emit SSyncBoolTrans(node_id_, std::to_underlying(NodeEnumO::kIsFinished), checked);
     }
 
     IniFinished(checked);
-    LockWidgets(checked, node_->type == kTypeBranch);
+    LockWidgets(checked, node_->node_type == kTypeBranch);
 
     if (checked)
         sql_->SyncPrice(node_id_);
@@ -495,7 +495,7 @@ void InsertNodeOrder::on_pBtnFinishOrder_toggled(bool checked)
 void InsertNodeOrder::on_chkBoxBranch_checkStateChanged(const Qt::CheckState& arg1)
 {
     bool enable { arg1 == Qt::Checked };
-    node_->type = enable;
+    node_->node_type = enable;
     LockWidgets(false, enable);
 
     ui->comboEmployee->setCurrentIndex(-1);
@@ -507,9 +507,9 @@ void InsertNodeOrder::on_chkBoxBranch_checkStateChanged(const Qt::CheckState& ar
     node_->party = 0;
     node_->employee = 0;
     if (enable)
-        node_->date_time.clear();
+        node_->issued_time.clear();
     else
-        node_->date_time = ui->dateTimeEdit->dateTime().toString(kDateTimeFST);
+        node_->issued_time = ui->dateTimeEdit->dateTime().toString(kDateTimeFST);
 
     ui->rBtnRefund->setChecked(false);
     ui->tableViewO->clearSelection();
@@ -518,7 +518,7 @@ void InsertNodeOrder::on_chkBoxBranch_checkStateChanged(const Qt::CheckState& ar
 
 void InsertNodeOrder::RRuleGroupClicked(int id)
 {
-    node_->rule = static_cast<bool>(id);
+    node_->direction_rule = static_cast<bool>(id);
 
     node_->first *= -1;
     node_->second *= -1;
@@ -529,12 +529,12 @@ void InsertNodeOrder::RRuleGroupClicked(int id)
     IniLeafValue();
 
     if (node_id_ != 0) {
-        sql_->WriteField(party_info_, kRule, node_->rule, node_id_);
+        sql_->WriteField(party_info_, kDirectionRule, node_->direction_rule, node_id_);
         sql_->UpdateLeafValue(node_);
         sql_->InvertTransValue(node_id_);
     }
 
-    emit SSyncBoolTrans(node_id_, std::to_underlying(NodeEnumO::kRule), node_->rule);
+    emit SSyncBoolTrans(node_id_, std::to_underlying(NodeEnumO::kDirectionRule), node_->direction_rule);
 }
 
 void InsertNodeOrder::RUnitGroupClicked(int id)

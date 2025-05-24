@@ -84,8 +84,8 @@ QVariant TransModelS::data(const QModelIndex& index, int role) const
     switch (kColumn) {
     case TransEnumS::kID:
         return *trans_shadow->id;
-    case TransEnumS::kDateTime:
-        return *trans_shadow->date_time;
+    case TransEnumS::kIssuedTime:
+        return *trans_shadow->issued_time;
     case TransEnumS::kCode:
         return *trans_shadow->code;
     case TransEnumS::kUnitPrice:
@@ -94,8 +94,8 @@ QVariant TransModelS::data(const QModelIndex& index, int role) const
         return *trans_shadow->description;
     case TransEnumS::kDocument:
         return trans_shadow->document->isEmpty() ? QVariant() : trans_shadow->document->size();
-    case TransEnumS::kState:
-        return *trans_shadow->state ? *trans_shadow->state : QVariant();
+    case TransEnumS::kIsChecked:
+        return *trans_shadow->is_checked ? *trans_shadow->is_checked : QVariant();
     case TransEnumS::kInsideProduct:
         return *trans_shadow->rhs_node == 0 ? QVariant() : *trans_shadow->rhs_node;
     case TransEnumS::kOutsideProduct:
@@ -121,8 +121,8 @@ bool TransModelS::setData(const QModelIndex& index, const QVariant& value, int r
     bool sup_changed { false };
 
     switch (kColumn) {
-    case TransEnumS::kDateTime:
-        TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kDateTime, value.toString(), &TransShadow::date_time);
+    case TransEnumS::kIssuedTime:
+        TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kIssuedTime, value.toString(), &TransShadow::issued_time);
         break;
     case TransEnumS::kCode:
         TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kCode, value.toString(), &TransShadow::code);
@@ -136,8 +136,8 @@ bool TransModelS::setData(const QModelIndex& index, const QVariant& value, int r
     case TransEnumS::kDescription:
         TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kDescription, value.toString(), &TransShadow::description, [this]() { emit SSearch(); });
         break;
-    case TransEnumS::kState:
-        TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kState, value.toBool(), &TransShadow::state);
+    case TransEnumS::kIsChecked:
+        TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kIsChecked, value.toBool(), &TransShadow::is_checked);
         break;
     case TransEnumS::kOutsideProduct:
         sup_changed = TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kOutsideProduct, value.toInt(), &TransShadow::support_id);
@@ -180,8 +180,8 @@ void TransModelS::sort(int column, Qt::SortOrder order)
         const TransEnumS kColumn { column };
 
         switch (kColumn) {
-        case TransEnumS::kDateTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->date_time < *rhs->date_time) : (*lhs->date_time > *rhs->date_time);
+        case TransEnumS::kIssuedTime:
+            return (order == Qt::AscendingOrder) ? (*lhs->issued_time < *rhs->issued_time) : (*lhs->issued_time > *rhs->issued_time);
         case TransEnumS::kCode:
             return (order == Qt::AscendingOrder) ? (*lhs->code < *rhs->code) : (*lhs->code > *rhs->code);
         case TransEnumS::kUnitPrice:
@@ -190,8 +190,8 @@ void TransModelS::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (*lhs->description < *rhs->description) : (*lhs->description > *rhs->description);
         case TransEnumS::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
-        case TransEnumS::kState:
-            return (order == Qt::AscendingOrder) ? (*lhs->state < *rhs->state) : (*lhs->state > *rhs->state);
+        case TransEnumS::kIsChecked:
+            return (order == Qt::AscendingOrder) ? (*lhs->is_checked < *rhs->is_checked) : (*lhs->is_checked > *rhs->is_checked);
         case TransEnumS::kOutsideProduct:
             return (order == Qt::AscendingOrder) ? (*lhs->support_id < *rhs->support_id) : (*lhs->support_id > *rhs->support_id);
         case TransEnumS::kInsideProduct:
@@ -217,7 +217,7 @@ Qt::ItemFlags TransModelS::flags(const QModelIndex& index) const
     switch (kColumn) {
     case TransEnumS::kID:
     case TransEnumS::kDocument:
-    case TransEnumS::kState:
+    case TransEnumS::kIsChecked:
         flags &= ~Qt::ItemIsEditable;
         break;
     default:

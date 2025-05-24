@@ -23,17 +23,18 @@
 #include "database/sql/sqlp.h"
 #include "database/sql/sqls.h"
 #include "database/sql/sqlt.h"
+#include "database/sqlite.h"
 #include "delegate/boolmap.h"
 #include "delegate/checkbox.h"
 #include "delegate/document.h"
 #include "delegate/doublespin.h"
 #include "delegate/line.h"
 #include "delegate/readonly/colorr.h"
-#include "delegate/readonly/datetimer.h"
 #include "delegate/readonly/doublespinr.h"
 #include "delegate/readonly/doublespinrnonezero.h"
 #include "delegate/readonly/doublespinunitr.h"
 #include "delegate/readonly/doublespinunitrps.h"
+#include "delegate/readonly/issuedtimer.h"
 #include "delegate/readonly/nodenamer.h"
 #include "delegate/readonly/nodepathr.h"
 #include "delegate/readonly/sectionr.h"
@@ -42,13 +43,13 @@
 #include "delegate/spin.h"
 #include "delegate/table/supportid.h"
 #include "delegate/table/tablecombo.h"
-#include "delegate/table/tabledatetime.h"
+#include "delegate/table/tableissuedtime.h"
 #include "delegate/tree/color.h"
 #include "delegate/tree/finance/financeforeignr.h"
 #include "delegate/tree/order/ordernamer.h"
 #include "delegate/tree/stakeholder/taxrate.h"
 #include "delegate/tree/treecombo.h"
-#include "delegate/tree/treedatetime.h"
+#include "delegate/tree/treeissuedtime.h"
 #include "delegate/tree/treeplaintext.h"
 #include "dialog/about.h"
 #include "dialog/editdocument.h"
@@ -63,6 +64,7 @@
 #include "dialog/preferences.h"
 #include "dialog/removenode.h"
 #include "document.h"
+#include "global/databasemanager.h"
 #include "global/leafsstation.h"
 #include "global/resourcepool.h"
 #include "global/supportsstation.h"
@@ -156,12 +158,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-bool MainWindow::RLoadDatabase()
+bool MainWindow::RLoadDatabase(const QString& cache_file)
 {
-    if (!license_config_.is_activated) {
-        QMessageBox::critical(this, tr("Activation Required"), tr("The software is not activated. Please activate it first."));
+    if (!MainWindowUtils::CheckFileValid(cache_file, "cache")) {
+        QFile::remove(cache_file);
+        Sqlite::NewFile(cache_file);
+    }
+
+    if (lock_file_) {
+        QProcess::startDetached(qApp->applicationFilePath(), QStringList { cache_file });
         return false;
     }
+
+    const QFileInfo file_info(cache_file);
+    if (!LockFile(file_info))
+        return false;
+
+    DatabaseManager::Instance().SetDatabaseName(cache_file);
 
     UpdateAccountInfo(login_info_.user, login_info_.database);
 
@@ -210,20 +223,20 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     if (index.column() != 0)
         return;
 
-    const int type { index.siblingAtColumn(std::to_underlying(NodeEnum::kType)).data().toInt() };
-    if (type == kTypeBranch)
+    const int node_type { index.siblingAtColumn(std::to_underlying(NodeEnum::kNodeType)).data().toInt() };
+    if (node_type == kTypeBranch)
         return;
 
     const int node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toInt() };
     assert(node_id >= 1 && "node_id must be greater than 0");
 
-    switch (type) {
+    switch (node_type) {
     case kTypeLeaf:
-        CreateLeafFunction(type, node_id);
+        CreateLeafFunction(node_type, node_id);
         SwitchToLeaf(node_id);
         break;
     case kTypeSupport:
-        CreateSupportFunction(type, node_id);
+        CreateSupportFunction(node_type, node_id);
         SwitchToSupport(node_id);
         break;
     default:
@@ -418,7 +431,7 @@ void MainWindow::SwitchToLeaf(int node_id, int trans_id) const
         return;
 
     view->setCurrentIndex(index);
-    view->scrollTo(index.siblingAtColumn(std::to_underlying(TransEnum::kDateTime)), QAbstractItemView::PositionAtCenter);
+    view->scrollTo(index.siblingAtColumn(std::to_underlying(TransEnum::kIssuedTime)), QAbstractItemView::PositionAtCenter);
     view->closePersistentEditor(index);
 }
 
@@ -553,7 +566,7 @@ void MainWindow::CreateLeafO(PNodeModel tree_model, TransWgtHash* trans_wgt_hash
 
     auto* sql { data->sql };
 
-    TransModelArg model_arg { sql, info, node_id, node->rule };
+    TransModelArg model_arg { sql, info, node_id, node->direction_rule };
     TransModelO* model { new TransModelO(model_arg, node, product_tree_->Model(), stakeholder_data_.sql, this) };
 
     auto print_manager = QSharedPointer<PrintManager>::create(app_config_, product_tree_->Model(), stakeholder_tree_->Model());
@@ -622,15 +635,15 @@ void MainWindow::TableConnectS(PTableView table_view, PTransModel table_model, P
 
 void MainWindow::TableDelegateFPTS(PTableView table_view, PNodeModel tree_model, CSectionConfig* settings) const
 {
-    auto* date_time { new TableDateTime(settings->date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(TransEnum::kDateTime), date_time);
+    auto* issued_time { new TableIssuedTime(settings->date_format, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(TransEnum::kIssuedTime), issued_time);
 
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(TransEnum::kDescription), line);
     table_view->setItemDelegateForColumn(std::to_underlying(TransEnum::kCode), line);
 
-    auto* state { new CheckBox(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(TransEnum::kState), state);
+    auto* is_checked { new CheckBox(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(TransEnum::kIsChecked), is_checked);
 
     auto* document { new Document(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(TransEnum::kDocument), document);
@@ -769,14 +782,14 @@ void MainWindow::TreeDelegate(PTreeView tree_view, CInfo& info) const
     auto* plain_text { new TreePlainText(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kNote), plain_text);
 
-    auto* rule { new BoolMap(info.rule_map, QEvent::MouseButtonDblClick, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kRule), rule);
+    auto* direction_rule { new BoolMap(info.rule_map, QEvent::MouseButtonDblClick, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kDirectionRule), direction_rule);
 
     auto* unit { new TreeCombo(info.unit_map, info.unit_model, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kUnit), unit);
 
-    auto* type { new TreeCombo(info.type_map, info.type_model, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kType), type);
+    auto* node_type { new TreeCombo(info.type_map, info.type_model, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kNodeType), node_type);
 }
 
 void MainWindow::TreeDelegateF(PTreeView tree_view, CInfo& info, CSectionConfig& settings) const
@@ -802,11 +815,11 @@ void MainWindow::TreeDelegateT(PTreeView tree_view, CSectionConfig& settings) co
     auto* color { new Color(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kColor), color);
 
-    auto* date_time { new TreeDateTime(settings.date_format, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kDateTime), date_time);
+    auto* issued_time { new TreeIssuedTime(settings.date_format, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kIssuedTime), issued_time);
 
-    auto* finished { new CheckBox(QEvent::MouseButtonDblClick, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kFinished), finished);
+    auto* is_finished { new CheckBox(QEvent::MouseButtonDblClick, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kIsFinished), is_finished);
 
     auto* document { new Document(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kDocument), document);
@@ -842,7 +855,7 @@ void MainWindow::TreeDelegateS(PTreeView tree_view, CSectionConfig& settings) co
     auto* tax_rate { new TaxRate(settings.amount_decimal, 0.0, std::numeric_limits<double>::max(), tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumS::kTaxRate), tax_rate);
 
-    auto* deadline { new TreeDateTime(kDD, tree_view) };
+    auto* deadline { new TreeIssuedTime(kDD, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumS::kDeadline), deadline);
 
     auto stakeholder_tree_model { stakeholder_tree_->Model() };
@@ -872,11 +885,11 @@ void MainWindow::TreeDelegateO(PTreeView tree_view, CSectionConfig& settings) co
     auto* name { new OrderNameR(stakeholder_tree_model, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kName), name);
 
-    auto* date_time { new TreeDateTime(settings.date_format, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDateTime), date_time);
+    auto* issued_time { new TreeIssuedTime(settings.date_format, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time);
 
-    auto* finished { new CheckBox(QEvent::MouseButtonDblClick, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kFinished), finished);
+    auto* is_finished { new CheckBox(QEvent::MouseButtonDblClick, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIsFinished), is_finished);
 }
 
 void MainWindow::TreeConnect(NodeWidget* node_widget, const Sql* sql) const
@@ -938,7 +951,7 @@ void MainWindow::InsertNodeFunction(const QModelIndex& parent, int parent_id, in
     auto model { node_widget_->Model() };
 
     auto* node { ResourcePool<Node>::Instance().Allocate() };
-    node->rule = model->Rule(parent_id);
+    node->direction_rule = model->Rule(parent_id);
     node->unit = parent_id == -1 ? section_config_->default_unit : model->Unit(parent_id);
     model->SetParent(node, parent_id);
 
@@ -986,7 +999,7 @@ void MainWindow::RemoveNode(NodeWidget* node_widget)
     assert(model && "model must be non-null");
 
     const int node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toInt() };
-    const int node_type { index.siblingAtColumn(std::to_underlying(NodeEnum::kType)).data().toInt() };
+    const int node_type { index.siblingAtColumn(std::to_underlying(NodeEnum::kNodeType)).data().toInt() };
 
     if (node_type == kTypeBranch) {
         RemoveBranch(model, index, node_id);
@@ -1030,6 +1043,25 @@ void MainWindow::RestoreTab(PNodeModel tree_model, TransWgtHash& trans_wgt_hash,
         if (tree_model->Contains(node_id) && tree_model->Type(node_id) == kTypeLeaf)
             CreateLeafFPTS(tree_model, &trans_wgt_hash, &data, &section_settings, node_id);
     }
+}
+
+bool MainWindow::LockFile(const QFileInfo& file_info)
+{
+    CString lock_file_path { file_info.absolutePath() + QDir::separator() + file_info.completeBaseName() + kDotSuffixLOCK };
+
+    lock_file_.reset(new QLockFile(lock_file_path));
+
+    if (!lock_file_->tryLock(100)) {
+        MainWindowUtils::Message(QMessageBox::Critical, tr("Lock Failed"),
+            tr("Unable to lock the file \"%1\". Please ensure no other instance of the application or process is accessing it and try again.")
+                .arg(file_info.absoluteFilePath()),
+            kThreeThousand);
+
+        lock_file_.reset();
+        return false;
+    }
+
+    return true;
 }
 
 void MainWindow::EnableAction(bool enable) const
@@ -1178,16 +1210,16 @@ void MainWindow::SetTableView(PTableView view, int stretch_column) const
 
     view->scrollToBottom();
     view->setCurrentIndex(QModelIndex());
-    view->sortByColumn(std::to_underlying(TransEnum::kDateTime), Qt::AscendingOrder); // will run function: AccumulateSubtotal while sorting
+    view->sortByColumn(std::to_underlying(TransEnum::kIssuedTime), Qt::AscendingOrder); // will run function: AccumulateSubtotal while sorting
 }
 
 void MainWindow::DelegateSupport(PTableView table_view, PNodeModel tree_model, CSectionConfig* settings) const
 {
-    auto* date_time { new TableDateTime(settings->date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(TransSearchEnum::kDateTime), date_time);
+    auto* issued_time { new TableIssuedTime(settings->date_format, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(TransSearchEnum::kIssuedTime), issued_time);
 
-    auto* state { new CheckBox(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(TransSearchEnum::kState), state);
+    auto* is_checked { new CheckBox(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(TransSearchEnum::kIsChecked), is_checked);
 
     auto* value { new DoubleSpinRNoneZero(settings->amount_decimal, kCoefficient8, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(TransSearchEnum::kLhsDebit), value);
@@ -1339,8 +1371,8 @@ void MainWindow::DelegateTransRef(PTableView table_view, CSectionConfig* setting
     auto* amount { new DoubleSpinRNoneZero(settings->amount_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(TransRefEnum::kGrossAmount), amount);
 
-    auto* date_time { new DateTimeR(sales_config_.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(TransRefEnum::kDateTime), date_time);
+    auto* issued_time { new IssuedTimeR(sales_config_.date_format, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(TransRefEnum::kIssuedTime), issued_time);
 
     auto stakeholder_tree_model { stakeholder_tree_->Model() };
     auto* outside_product { new NodePathR(stakeholder_tree_model, table_view) };
@@ -1415,14 +1447,14 @@ void MainWindow::DelegateSettlement(PTableView table_view, CSectionConfig* setti
     auto* amount { new DoubleSpinRNoneZero(settings->amount_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kGrossAmount), amount);
 
-    auto* finished { new CheckBox(QEvent::MouseButtonDblClick, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kFinished), finished);
+    auto* is_finished { new CheckBox(QEvent::MouseButtonDblClick, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIsFinished), is_finished);
 
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kDescription), line);
 
-    auto* date_time { new TreeDateTime(kDateFirst, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kDateTime), date_time);
+    auto* issued_time { new TreeIssuedTime(kDateFirst, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIssuedTime), issued_time);
 
     auto model { stakeholder_tree_->Model() };
     const int unit { start_ == Section::kSales ? std::to_underlying(UnitS::kCust) : std::to_underlying(UnitS::kVend) };
@@ -1440,11 +1472,11 @@ void MainWindow::DelegateSettlementPrimary(PTableView table_view, CSectionConfig
     auto* employee { new NodeNameR(stakeholder_tree_->Model(), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kParty), employee);
 
-    auto* state { new CheckBox(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kFinished), state);
+    auto* is_checked { new CheckBox(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIsFinished), is_checked);
 
-    auto* date_time { new DateTimeR(kDateFirst, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kDateTime), date_time);
+    auto* issued_time { new IssuedTimeR(kDateFirst, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIssuedTime), issued_time);
 }
 
 void MainWindow::DelegateStatementPrimary(PTableView table_view, CSectionConfig* settings) const
@@ -1460,11 +1492,11 @@ void MainWindow::DelegateStatementPrimary(PTableView table_view, CSectionConfig*
     auto* employee { new NodeNameR(stakeholder_tree_->Model(), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kEmployee), employee);
 
-    auto* state { new CheckBox(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kState), state);
+    auto* is_checked { new CheckBox(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kIsChecked), is_checked);
 
-    auto* date_time { new DateTimeR(sales_config_.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kDateTime), date_time);
+    auto* issued_time { new IssuedTimeR(sales_config_.date_format, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kIssuedTime), issued_time);
 }
 
 void MainWindow::DelegateStatementSecondary(PTableView table_view, CSectionConfig* settings) const
@@ -1478,11 +1510,11 @@ void MainWindow::DelegateStatementSecondary(PTableView table_view, CSectionConfi
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kSettlement), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kUnitPrice), amount);
 
-    auto* state { new CheckBox(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kState), state);
+    auto* is_checked { new CheckBox(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kIsChecked), is_checked);
 
-    auto* date_time { new DateTimeR(sales_config_.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kDateTime), date_time);
+    auto* issued_time { new IssuedTimeR(sales_config_.date_format, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kIssuedTime), issued_time);
 
     auto* outside_product { new NodePathR(stakeholder_tree_->Model(), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kOutsideProduct), outside_product);
@@ -1797,8 +1829,8 @@ void MainWindow::on_actionAppendNode_triggered()
     if (!parent_index.isValid())
         return;
 
-    const int type { parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kType)).data().toInt() };
-    if (type != kTypeBranch)
+    const int node_type { parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kNodeType)).data().toInt() };
+    if (node_type != kTypeBranch)
         return;
 
     const int parent_id { parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toInt() };
@@ -1871,7 +1903,7 @@ void MainWindow::SwitchToSupport(int node_id, int trans_id) const
         return;
 
     view->setCurrentIndex(index);
-    view->scrollTo(index.siblingAtColumn(std::to_underlying(TransEnumS::kDateTime)), QAbstractItemView::PositionAtCenter);
+    view->scrollTo(index.siblingAtColumn(std::to_underlying(TransEnumS::kIssuedTime)), QAbstractItemView::PositionAtCenter);
     view->closePersistentEditor(index);
 }
 
@@ -2000,11 +2032,11 @@ void MainWindow::InsertNodeFPTS(Node* node, const QModelIndex& parent, int paren
         dialog = new InsertNodeFinance(arg, this);
         break;
     case Section::kTask:
-        node->date_time = QDateTime::currentDateTime().toString(kDateTimeFST);
+        node->issued_time = QDateTime::currentDateTime().toString(kDateTimeFST);
         dialog = new InsertNodeTask(arg, section_config_->amount_decimal, section_config_->date_format, this);
         break;
     case Section::kStakeholder:
-        node->date_time = QDateTime::currentDateTime().toString(kDateTimeFST);
+        node->issued_time = QDateTime::currentDateTime().toString(kDateTimeFST);
         employee_model = tree_model->IncludeUnitModel(std::to_underlying(UnitS::kEmp));
         dialog = new InsertNodeStakeholder(arg, employee_model, section_config_->amount_decimal, this);
         break;
@@ -2404,8 +2436,8 @@ void MainWindow::ResizeColumn(QHeaderView* header, int stretch_column) const
 void MainWindow::VerifyActivationOffline()
 {
     // Initialize hardware UUID
-    license_config_.hardware_uuid = MainWindowUtils::GetHardwareUUID().toLower();
-    if (license_config_.hardware_uuid.isEmpty()) {
+    license_info_.hardware_uuid = MainWindowUtils::GetHardwareUUID().toLower();
+    if (license_info_.hardware_uuid.isEmpty()) {
         QMessageBox::critical(this, tr("Error"), tr("Failed to retrieve hardware UUID."));
         return;
     }
@@ -2415,8 +2447,8 @@ void MainWindow::VerifyActivationOffline()
         QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator() + kLicense + kDotSuffixINI, QSettings::IniFormat);
 
     license_settings_->beginGroup(kLicense);
-    license_config_.activation_code = license_settings_->value(kActivationCode, {}).toString();
-    license_config_.activation_url = license_settings_->value(kActivationUrl, "https://ytxerp.cc").toString();
+    license_info_.activation_code = license_settings_->value(kActivationCode, {}).toString();
+    license_info_.activation_url = license_settings_->value(kActivationUrl, "https://ytxerp.cc").toString();
 
     const QByteArray ciphertext { QByteArray::fromBase64(license_settings_->value(kSignatureCiphertext).toByteArray()) };
     const QByteArray iv { QByteArray::fromBase64(license_settings_->value(kSignatureIV).toByteArray()) };
@@ -2424,7 +2456,7 @@ void MainWindow::VerifyActivationOffline()
     license_settings_->endGroup();
 
     // Construct encryption key from hardware UUID
-    const QByteArray key { QCryptographicHash::hash(license_config_.hardware_uuid.toUtf8(), QCryptographicHash::Sha256).left(32) };
+    const QByteArray key { QCryptographicHash::hash(license_info_.hardware_uuid.toUtf8(), QCryptographicHash::Sha256).left(32) };
     SignatureEncryptor encryptor(key);
 
     // Decrypt signature
@@ -2434,29 +2466,29 @@ void MainWindow::VerifyActivationOffline()
         return;
     }
 
-    const QString payload { QString("%1:%2:%3").arg(license_config_.activation_code, license_config_.hardware_uuid, "true") };
+    const QString payload { QString("%1:%2:%3").arg(license_info_.activation_code, license_info_.hardware_uuid, "true") };
     const QByteArray payload_bytes { payload.toUtf8() };
 
     const QString pub_key_path(":/keys/public.pem");
-    license_config_.is_activated = Licence::VerifySignature(payload_bytes, decrypted_signature_bytes, pub_key_path);
+    license_info_.is_activated = Licence::VerifySignature(payload_bytes, decrypted_signature_bytes, pub_key_path);
 }
 
 void MainWindow::VerifyActivationOnline()
 {
     auto* network_manager_ { new QNetworkAccessManager(this) };
 
-    const QUrl url(license_config_.activation_url + "/" + kActivate);
+    const QUrl url(license_info_.activation_url + "/" + kActivate);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    const QJsonObject json { { "hardware_uuid", license_config_.hardware_uuid }, { "activation_code", license_config_.activation_code } };
+    const QJsonObject json { { "hardware_uuid", license_info_.hardware_uuid }, { "activation_code", license_info_.activation_code } };
     QNetworkReply* reply { network_manager_->post(request, QJsonDocument(json).toJson()) };
 
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         reply->deleteLater();
 
         auto fail = [this]() {
-            license_config_.is_activated = false;
+            license_info_.is_activated = false;
             license_settings_->beginGroup(kLicense);
             license_settings_->setValue(kSignatureCiphertext, {});
             license_settings_->setValue(kSignatureIV, {});
@@ -2480,7 +2512,7 @@ void MainWindow::VerifyActivationOnline()
         const QString signature { obj["signature"].toString() };
 
         // Construct payload in the same format as server
-        const QString payload { QString("%1:%2:%3").arg(license_config_.activation_code, license_config_.hardware_uuid, success ? "true" : "false") };
+        const QString payload { QString("%1:%2:%3").arg(license_info_.activation_code, license_info_.hardware_uuid, success ? "true" : "false") };
         const QByteArray payload_bytes { payload.toUtf8() };
         const QByteArray signature_bytes { QByteArray::fromBase64(signature.toUtf8()) };
 
@@ -2702,7 +2734,7 @@ void MainWindow::on_actionLicence_triggered()
     static Licence* dialog = nullptr;
 
     if (!dialog) {
-        dialog = new Licence(license_settings_, license_config_, this);
+        dialog = new Licence(license_settings_, license_info_, this);
         dialog->setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
         connect(dialog, &QDialog::finished, [=]() { dialog = nullptr; });
     }
@@ -2865,7 +2897,7 @@ void MainWindow::on_actionExportExcel_triggered()
 
 void MainWindow::on_actionLogin_triggered()
 {
-    auto* login { new Login(login_info_, app_settings_, this) };
+    auto* login { new Login(login_info_, license_info_, app_settings_, this) };
     connect(login, &Login::SLoadDatabase, this, &MainWindow::RLoadDatabase);
     login->exec();
 }

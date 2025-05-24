@@ -4,7 +4,7 @@
 #include <QString>
 
 struct PriceS {
-    QString date_time {};
+    QString issued_time {};
     int lhs_node {};
     int inside_product {};
     double unit_price {};

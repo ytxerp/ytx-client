@@ -72,12 +72,12 @@ void Search::HideTreeColumn(QTableView* view, Section section)
     case Section::kFinance:
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kParty), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kEmployee), true);
-        view->setColumnHidden(std::to_underlying(NodeSearchEnum::kDateTime), true);
+        view->setColumnHidden(std::to_underlying(NodeSearchEnum::kIssuedTime), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kColor), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kFirst), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kSecond), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kDiscount), true);
-        view->setColumnHidden(std::to_underlying(NodeSearchEnum::kFinished), true);
+        view->setColumnHidden(std::to_underlying(NodeSearchEnum::kIsFinished), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kDocument), true);
         break;
     case Section::kTask:
@@ -85,21 +85,21 @@ void Search::HideTreeColumn(QTableView* view, Section section)
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kEmployee), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kSecond), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kDiscount), true);
-        view->setColumnHidden(std::to_underlying(NodeSearchEnum::kFinished), true);
+        view->setColumnHidden(std::to_underlying(NodeSearchEnum::kIsFinished), true);
         break;
     case Section::kProduct:
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kParty), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kEmployee), true);
-        view->setColumnHidden(std::to_underlying(NodeSearchEnum::kDateTime), true);
+        view->setColumnHidden(std::to_underlying(NodeSearchEnum::kIssuedTime), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kDiscount), true);
-        view->setColumnHidden(std::to_underlying(NodeSearchEnum::kFinished), true);
+        view->setColumnHidden(std::to_underlying(NodeSearchEnum::kIsFinished), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kDocument), true);
         break;
     case Section::kStakeholder:
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kParty), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kColor), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kDiscount), true);
-        view->setColumnHidden(std::to_underlying(NodeSearchEnum::kFinished), true);
+        view->setColumnHidden(std::to_underlying(NodeSearchEnum::kIsFinished), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kInitialTotal), true);
         view->setColumnHidden(std::to_underlying(NodeSearchEnum::kDocument), true);
         break;
@@ -136,9 +136,9 @@ void Search::HideTableColumn(QTableView* view, Section section)
         break;
     case Section::kPurchase:
     case Section::kSales:
-        view->setColumnHidden(std::to_underlying(TransSearchEnum::kDateTime), true);
+        view->setColumnHidden(std::to_underlying(TransSearchEnum::kIssuedTime), true);
         view->setColumnHidden(std::to_underlying(TransSearchEnum::kDocument), true);
-        view->setColumnHidden(std::to_underlying(TransSearchEnum::kState), true);
+        view->setColumnHidden(std::to_underlying(TransSearchEnum::kIsChecked), true);
         view->setColumnHidden(std::to_underlying(TransSearchEnum::kLhsNode), true);
     default:
         break;
@@ -159,8 +159,8 @@ void Search::TreeViewDelegate(QTableView* view, SearchNodeModel* model)
     auto* unit { new StringMapR(info_.unit_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(NodeSearchEnum::kUnit), unit);
 
-    auto* rule { new StringMapR(info_.rule_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(NodeSearchEnum::kRule), rule);
+    auto* direction_rule { new StringMapR(info_.rule_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(NodeSearchEnum::kDirectionRule), direction_rule);
 
     auto* total { new DoubleSpinRNoneZero(settings_->amount_decimal, kCoefficient8, view) };
     view->setItemDelegateForColumn(std::to_underlying(NodeSearchEnum::kInitialTotal), total);
@@ -168,10 +168,10 @@ void Search::TreeViewDelegate(QTableView* view, SearchNodeModel* model)
     view->setItemDelegateForColumn(std::to_underlying(NodeSearchEnum::kDiscount), total);
 
     auto* check { new CheckBoxR(view) };
-    view->setItemDelegateForColumn(std::to_underlying(NodeSearchEnum::kFinished), check);
+    view->setItemDelegateForColumn(std::to_underlying(NodeSearchEnum::kIsFinished), check);
 
-    auto* type { new StringMapR(info_.type_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kType), type);
+    auto* node_type { new StringMapR(info_.type_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kNodeType), node_type);
 
     auto* name { new SearchPathTreeR(tree_, std::to_underlying(NodeSearchEnum::kID), view) };
     view->setItemDelegateForColumn(std::to_underlying(NodeSearchEnum::kName), name);
@@ -231,8 +231,8 @@ void Search::TableViewDelegate(QTableView* view, SearchTransModel* model)
         view->setItemDelegateForColumn(std::to_underlying(TransSearchEnum::kSupportID), support_id);
     }
 
-    auto* state { new CheckBoxR(view) };
-    view->setItemDelegateForColumn(std::to_underlying(TransSearchEnum::kState), state);
+    auto* is_checked { new CheckBoxR(view) };
+    view->setItemDelegateForColumn(std::to_underlying(TransSearchEnum::kIsChecked), is_checked);
 }
 
 void Search::IniView(QTableView* view)

@@ -22,8 +22,8 @@ QVariant TransModelP::data(const QModelIndex& index, int role) const
     switch (kColumn) {
     case TransEnumP::kID:
         return *trans_shadow->id;
-    case TransEnumP::kDateTime:
-        return *trans_shadow->date_time;
+    case TransEnumP::kIssuedTime:
+        return *trans_shadow->issued_time;
     case TransEnumP::kCode:
         return *trans_shadow->code;
     case TransEnumP::kUnitCost:
@@ -34,8 +34,8 @@ QVariant TransModelP::data(const QModelIndex& index, int role) const
         return *trans_shadow->support_id == 0 ? QVariant() : *trans_shadow->support_id;
     case TransEnumP::kRhsNode:
         return *trans_shadow->rhs_node == 0 ? QVariant() : *trans_shadow->rhs_node;
-    case TransEnumP::kState:
-        return *trans_shadow->state ? *trans_shadow->state : QVariant();
+    case TransEnumP::kIsChecked:
+        return *trans_shadow->is_checked ? *trans_shadow->is_checked : QVariant();
     case TransEnumP::kDocument:
         return trans_shadow->document->isEmpty() ? QVariant() : trans_shadow->document->size();
     case TransEnumP::kDebit:
@@ -67,14 +67,14 @@ bool TransModelP::setData(const QModelIndex& index, const QVariant& value, int r
     bool sup_changed { false };
 
     switch (kColumn) {
-    case TransEnumP::kDateTime:
-        TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kDateTime, value.toString(), &TransShadow::date_time);
+    case TransEnumP::kIssuedTime:
+        TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kIssuedTime, value.toString(), &TransShadow::issued_time);
         break;
     case TransEnumP::kCode:
         TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kCode, value.toString(), &TransShadow::code);
         break;
-    case TransEnumP::kState:
-        TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kState, value.toBool(), &TransShadow::state);
+    case TransEnumP::kIsChecked:
+        TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kIsChecked, value.toBool(), &TransShadow::is_checked);
         break;
     case TransEnumP::kDescription:
         TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kDescription, value.toString(), &TransShadow::description, [this]() { emit SSearch(); });
@@ -164,8 +164,8 @@ void TransModelP::sort(int column, Qt::SortOrder order)
         const TransEnumP kColumn { column };
 
         switch (kColumn) {
-        case TransEnumP::kDateTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->date_time < *rhs->date_time) : (*lhs->date_time > *rhs->date_time);
+        case TransEnumP::kIssuedTime:
+            return (order == Qt::AscendingOrder) ? (*lhs->issued_time < *rhs->issued_time) : (*lhs->issued_time > *rhs->issued_time);
         case TransEnumP::kCode:
             return (order == Qt::AscendingOrder) ? (*lhs->code < *rhs->code) : (*lhs->code > *rhs->code);
         case TransEnumP::kUnitCost:
@@ -176,8 +176,8 @@ void TransModelP::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (*lhs->support_id < *rhs->support_id) : (*lhs->support_id > *rhs->support_id);
         case TransEnumP::kRhsNode:
             return (order == Qt::AscendingOrder) ? (*lhs->rhs_node < *rhs->rhs_node) : (*lhs->rhs_node > *rhs->rhs_node);
-        case TransEnumP::kState:
-            return (order == Qt::AscendingOrder) ? (*lhs->state < *rhs->state) : (*lhs->state > *rhs->state);
+        case TransEnumP::kIsChecked:
+            return (order == Qt::AscendingOrder) ? (*lhs->is_checked < *rhs->is_checked) : (*lhs->is_checked > *rhs->is_checked);
         case TransEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
         case TransEnumP::kDebit:
@@ -208,7 +208,7 @@ Qt::ItemFlags TransModelP::flags(const QModelIndex& index) const
     case TransEnumP::kID:
     case TransEnumP::kSubtotal:
     case TransEnumP::kDocument:
-    case TransEnumP::kState:
+    case TransEnumP::kIsChecked:
         flags &= ~Qt::ItemIsEditable;
         break;
     default:

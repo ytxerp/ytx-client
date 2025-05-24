@@ -11,18 +11,18 @@ SqlS::SqlS(QSqlDatabase& main_db, CInfo& info, QObject* parent)
 {
 }
 
-void SqlS::RReplaceNode(int old_node_id, int new_node_id, int node_type, int node_unit)
+void SqlS::RReplaceNode(int old_node_id, int new_node_id, int node_node_type, int node_unit)
 {
-    emit SFreeWidget(old_node_id, node_type);
+    emit SFreeWidget(old_node_id, node_node_type);
     emit SRemoveNode(old_node_id);
 
-    if (node_type == kTypeLeaf) {
+    if (node_node_type == kTypeLeaf) {
         ReplaceLeaf(old_node_id, new_node_id, node_unit);
         emit SSyncStakeholder(old_node_id, new_node_id);
         emit SSyncMultiLeafValue({ new_node_id });
     }
 
-    if (node_type == kTypeSupport) {
+    if (node_node_type == kTypeSupport) {
         QSet<int> trans_id_set {};
         ReplaceSupportFunction(trans_id_set, old_node_id, new_node_id);
         emit SMoveMultiTransS(section_, 0, new_node_id, trans_id_set);
@@ -30,24 +30,24 @@ void SqlS::RReplaceNode(int old_node_id, int new_node_id, int node_type, int nod
         ReplaceSupport(old_node_id, new_node_id);
     }
 
-    RemoveNode(old_node_id, node_type);
+    RemoveNode(old_node_id, node_node_type);
 }
 
-void SqlS::RRemoveNode(int node_id, int node_type)
+void SqlS::RRemoveNode(int node_id, int node_node_type)
 {
     // This function is triggered when removing a node that has internal/support references.
-    emit SFreeWidget(node_id, node_type);
+    emit SFreeWidget(node_id, node_node_type);
     emit SRemoveNode(node_id);
 
-    if (node_type == kTypeSupport) {
+    if (node_node_type == kTypeSupport) {
         RemoveSupportFunction(node_id);
     }
 
-    if (node_type == kTypeLeaf) {
+    if (node_node_type == kTypeLeaf) {
         QMultiHash<int, int> leaf_trans {};
         QMultiHash<int, int> support_trans {};
 
-        TransToRemove(leaf_trans, support_trans, node_id, node_type);
+        TransToRemove(leaf_trans, support_trans, node_id, node_node_type);
 
         emit SSyncStakeholder(node_id, 0); // Update Stakeholder's employee
 
@@ -58,7 +58,7 @@ void SqlS::RRemoveNode(int node_id, int node_type)
     }
 
     // Remove node, path, trans from the sqlite3 database
-    RemoveNode(node_id, node_type);
+    RemoveNode(node_id, node_node_type);
 }
 
 void SqlS::RPriceSList(const QList<PriceS>& list)
@@ -76,7 +76,7 @@ void SqlS::RPriceSList(const QList<PriceS>& list)
         if (latest_trans) {
             latest_trans->lhs_ratio = list[i].unit_price;
             latest_trans->rhs_ratio = list[i].unit_price;
-            latest_trans->date_time = list[i].date_time;
+            latest_trans->issued_time = list[i].issued_time;
         }
     }
 
@@ -133,7 +133,7 @@ bool SqlS::ReadTransRange(const QSet<int>& set)
 
     CString placeholder { QStringList(set.size(), "?").join(", ") };
     CString string { QString(R"(
-    SELECT id, date_time, code, outside_product, lhs_node, unit_price, description, document, state, inside_product
+    SELECT id, issued_time, code, outside_product, lhs_node, unit_price, description, document, state, inside_product
     FROM stakeholder_transaction
     WHERE inside_product IN (%1)
     )")
@@ -287,17 +287,17 @@ bool SqlS::ReadTrans(int node_id)
 QString SqlS::QSReadNode() const
 {
     return QStringLiteral(R"(
-    SELECT name, id, code, description, note, type, unit, employee, deadline, payment_term, tax_rate, amount
+    SELECT name, id, code, description, note, node_type, unit, employee, deadline, payment_term, tax_rate, amount
     FROM stakeholder
-    WHERE removed = false
+    WHERE is_valid = TRUE
     )");
 }
 
 QString SqlS::QSWriteNode() const
 {
     return QStringLiteral(R"(
-    INSERT INTO stakeholder (name, code, description, note, type, unit, employee, deadline, payment_term, tax_rate, amount)
-    VALUES (:name, :code, :description, :note, :type, :unit, :employee, :deadline, :payment_term, :tax_rate, :amount)
+    INSERT INTO stakeholder (name, code, description, note, node_type, unit, employee, deadline, payment_term, tax_rate, amount)
+    VALUES (:name, :code, :description, :note, :node_type, :unit, :employee, :deadline, :payment_term, :tax_rate, :amount)
     )");
 }
 
@@ -307,10 +307,10 @@ void SqlS::WriteNodeBind(Node* node, QSqlQuery& query) const
     query.bindValue(QStringLiteral(":code"), node->code);
     query.bindValue(QStringLiteral(":description"), node->description);
     query.bindValue(QStringLiteral(":note"), node->note);
-    query.bindValue(QStringLiteral(":type"), node->type);
+    query.bindValue(QStringLiteral(":node_type"), node->node_type);
     query.bindValue(QStringLiteral(":unit"), node->unit);
     query.bindValue(QStringLiteral(":employee"), node->employee);
-    query.bindValue(QStringLiteral(":deadline"), node->date_time);
+    query.bindValue(QStringLiteral(":deadline"), node->issued_time);
     query.bindValue(QStringLiteral(":payment_term"), node->first);
     query.bindValue(QStringLiteral(":tax_rate"), node->second);
     query.bindValue(QStringLiteral(":amount"), node->final_total);
@@ -329,7 +329,7 @@ QString SqlS::QSInternalReference() const
     return QStringLiteral(R"(
     SELECT
     EXISTS(SELECT 1 FROM stakeholder_transaction WHERE lhs_node = :node_id) OR
-    EXISTS(SELECT 1 FROM stakeholder WHERE employee = :node_id AND removed = 0)
+    EXISTS(SELECT 1 FROM stakeholder WHERE employee = :node_id AND is_valid = TRUE)
     AS is_referenced;
     )");
 }
@@ -338,10 +338,10 @@ QString SqlS::QSExternalReference() const
 {
     return QStringLiteral(R"(
     SELECT
-        EXISTS(SELECT 1 FROM sales WHERE (party = :node_id OR employee = :node_id) AND removed = 0) OR
-        EXISTS(SELECT 1 FROM purchase WHERE (party = :node_id OR employee = :node_id) AND removed = 0) OR
-        EXISTS(SELECT 1 FROM sales_transaction WHERE outside_product = :node_id AND removed = 0) OR
-        EXISTS(SELECT 1 FROM purchase_transaction WHERE outside_product = :node_id AND removed = 0)
+        EXISTS(SELECT 1 FROM sales WHERE (party = :node_id OR employee = :node_id) AND is_valid = TRUE) OR
+        EXISTS(SELECT 1 FROM purchase WHERE (party = :node_id OR employee = :node_id) AND is_valid = TRUE) OR
+        EXISTS(SELECT 1 FROM sales_transaction WHERE outside_product = :node_id AND is_valid = TRUE) OR
+        EXISTS(SELECT 1 FROM purchase_transaction WHERE outside_product = :node_id AND is_valid = TRUE)
     AS is_referenced;
     )");
 }
@@ -391,7 +391,7 @@ QString SqlS::QSRemoveSupport() const
 QString SqlS::QSReadTrans() const
 {
     return QStringLiteral(R"(
-    SELECT id, date_time, code, outside_product, lhs_node, unit_price, description, document, state, inside_product
+    SELECT id, issued_time, code, outside_product, lhs_node, unit_price, description, document, state, inside_product
     FROM stakeholder_transaction
     WHERE lhs_node = :node_id
     )");
@@ -400,7 +400,7 @@ QString SqlS::QSReadTrans() const
 QString SqlS::QSReadSupportTrans() const
 {
     return QStringLiteral(R"(
-    SELECT id, date_time, code, outside_product, lhs_node, unit_price, description, document, state, inside_product
+    SELECT id, issued_time, code, outside_product, lhs_node, unit_price, description, document, state, inside_product
     FROM stakeholder_transaction
     WHERE outside_product = :node_id
     )");
@@ -410,9 +410,9 @@ QString SqlS::QSWriteTrans() const
 {
     return QStringLiteral(R"(
     INSERT INTO stakeholder_transaction
-    (date_time, code, outside_product, lhs_node, unit_price, description, document, state, inside_product)
+    (issued_time, code, outside_product, lhs_node, unit_price, description, document, state, inside_product)
     VALUES
-    (:date_time, :code, :outside_product, :lhs_node, :unit_price, :description, :document, :state, :inside_product)
+    (:issued_time, :code, :outside_product, :lhs_node, :unit_price, :description, :document, :state, :inside_product)
     )");
 }
 
@@ -464,7 +464,7 @@ QString SqlS::QSReplaceLeafOPP() const
 QString SqlS::QSSearchTransValue() const
 {
     return QStringLiteral(R"(
-    SELECT id, date_time, code, outside_product, lhs_node, unit_price, description, document, state, inside_product
+    SELECT id, issued_time, code, outside_product, lhs_node, unit_price, description, document, state, inside_product
     FROM stakeholder_transaction
     WHERE unit_price BETWEEN :value - :tolerance AND :value + :tolerance
     )");
@@ -473,7 +473,7 @@ QString SqlS::QSSearchTransValue() const
 QString SqlS::QSSearchTransText() const
 {
     return QStringLiteral(R"(
-    SELECT id, date_time, code, outside_product, lhs_node, unit_price, description, document, state, inside_product
+    SELECT id, issued_time, code, outside_product, lhs_node, unit_price, description, document, state, inside_product
     FROM stakeholder_transaction
     WHERE description LIKE :description
     )");
@@ -486,7 +486,7 @@ QString SqlS::QSRemoveNodeFirst() const
     SET
         removed = CASE WHEN id = :node_id THEN 1 ELSE removed END,
         employee = CASE WHEN employee = :node_id THEN NULL ELSE employee END
-    WHERE (id = :node_id OR employee = :node_id) AND removed = 0;
+    WHERE (id = :node_id OR employee = :node_id) AND is_valid = TRUE;
     )");
 }
 
@@ -512,10 +512,10 @@ QString SqlS::QSReadTransRef(int unit) const
             %1.gross_amount,
             %1.outside_product,
             %1.discount_price,
-            %2.date_time
+            %2.issued_time
         FROM %1
         INNER JOIN %2 ON %1.lhs_node = %2.id
-        WHERE %2.%3 = :node_id AND %2.finished = 1 AND (%2.date_time BETWEEN :start AND :end) AND %1.removed = 0;
+        WHERE %2.%3 = :node_id AND %2.is_finished = TRUE AND (%2.issued_time BETWEEN :start AND :end) AND %1.is_valid = TRUE;
     )");
 
     QString query_employee = QStringLiteral(R"(
@@ -530,10 +530,10 @@ QString SqlS::QSReadTransRef(int unit) const
             st.gross_amount,
             st.outside_product,
             st.discount_price,
-            sn.date_time
+            sn.issued_time
         FROM sales_transaction st
         INNER JOIN sales sn ON st.lhs_node = sn.id
-        WHERE sn.employee = :node_id AND sn.finished = 1 AND (sn.date_time BETWEEN :start AND :end) AND st.removed = 0
+        WHERE sn.employee = :node_id AND sn.is_finished = TRUE AND (sn.issued_time BETWEEN :start AND :end) AND st.is_valid = TRUE
 
         UNION ALL
 
@@ -548,10 +548,10 @@ QString SqlS::QSReadTransRef(int unit) const
             pt.gross_amount,
             pt.outside_product,
             pt.discount_price,
-            pn.date_time
+            pn.issued_time
         FROM purchase_transaction pt
         INNER JOIN purchase pn ON pt.lhs_node = pn.id
-        WHERE pn.employee = :node_id AND pn.finished = 1 AND (pn.date_time BETWEEN :start AND :end) AND pt.removed = 0
+        WHERE pn.employee = :node_id AND pn.is_finished = TRUE AND (pn.issued_time BETWEEN :start AND :end) AND pt.is_valid = TRUE
     )");
 
     QString node {};
@@ -596,14 +596,14 @@ QString SqlS::QSLeafTotal(int unit) const
         return QStringLiteral(R"(
         SELECT SUM(gross_amount) AS final_balance
         FROM sales
-        WHERE party = :node_id AND finished = 1 AND settlement_id = 0 AND unit = 1 AND removed = 0;
+        WHERE party = :node_id AND is_finished = TRUE AND settlement_id = 0 AND unit = 1 AND is_valid = TRUE;
         )");
         break;
     case UnitS::kVend:
         return QStringLiteral(R"(
         SELECT SUM(gross_amount) AS final_balance
         FROM purchase
-        WHERE party = :node_id AND finished = 1 AND settlement_id = 0 AND unit = 1 AND removed = 0;
+        WHERE party = :node_id AND is_finished = TRUE AND settlement_id = 0 AND unit = 1 AND is_valid = TRUE;
         )");
         break;
     default:
@@ -646,7 +646,7 @@ void SqlS::ReadTransRefQuery(TransList& trans_list, QSqlQuery& query) const
         trans->rhs_debit = query.value(QStringLiteral("gross_amount")).toDouble();
         trans->support_id = query.value(QStringLiteral("outside_product")).toInt();
         trans->rhs_ratio = query.value(QStringLiteral("discount_price")).toDouble();
-        trans->date_time = query.value(QStringLiteral("date_time")).toString();
+        trans->issued_time = query.value(QStringLiteral("issued_time")).toString();
         trans->lhs_node = query.value(QStringLiteral("lhs_node")).toInt();
 
         trans_list.emplaceBack(trans);
@@ -661,12 +661,12 @@ void SqlS::CalculateLeafTotal(Node* node, QSqlQuery& query) const
 
 void SqlS::WriteTransBind(TransShadow* trans_shadow, QSqlQuery& query) const
 {
-    query.bindValue(QStringLiteral(":date_time"), *trans_shadow->date_time);
+    query.bindValue(QStringLiteral(":issued_time"), *trans_shadow->issued_time);
     query.bindValue(QStringLiteral(":code"), *trans_shadow->code);
     query.bindValue(QStringLiteral(":lhs_node"), *trans_shadow->lhs_node);
     query.bindValue(QStringLiteral(":unit_price"), *trans_shadow->lhs_ratio);
     query.bindValue(QStringLiteral(":description"), *trans_shadow->description);
-    query.bindValue(QStringLiteral(":state"), *trans_shadow->state);
+    query.bindValue(QStringLiteral(":is_checked"), *trans_shadow->is_checked);
     query.bindValue(QStringLiteral(":document"), trans_shadow->document->join(kSemicolon));
     query.bindValue(QStringLiteral(":inside_product"), *trans_shadow->rhs_node);
     query.bindValue(QStringLiteral(":outside_product"), *trans_shadow->support_id);
@@ -679,10 +679,10 @@ void SqlS::ReadNodeQuery(Node* node, const QSqlQuery& query) const
     node->code = query.value(QStringLiteral("code")).toString();
     node->description = query.value(QStringLiteral("description")).toString();
     node->note = query.value(QStringLiteral("note")).toString();
-    node->type = query.value(QStringLiteral("type")).toInt();
+    node->node_type = query.value(QStringLiteral("node_type")).toInt();
     node->unit = query.value(QStringLiteral("unit")).toInt();
     node->employee = query.value(QStringLiteral("employee")).toInt();
-    node->date_time = query.value(QStringLiteral("deadline")).toString();
+    node->issued_time = query.value(QStringLiteral("deadline")).toString();
     node->first = query.value(QStringLiteral("payment_term")).toDouble();
     node->second = query.value(QStringLiteral("tax_rate")).toDouble();
     node->final_total = query.value(QStringLiteral("amount")).toDouble();
@@ -697,7 +697,7 @@ void SqlS::ReadTransQuery(Trans* trans, const QSqlQuery& query) const
     trans->rhs_ratio = trans->lhs_ratio;
     trans->code = query.value(QStringLiteral("code")).toString();
     trans->description = query.value(QStringLiteral("description")).toString();
-    trans->state = query.value(QStringLiteral("state")).toBool();
+    trans->is_checked = query.value(QStringLiteral("is_checked")).toBool();
     trans->document = query.value(QStringLiteral("document")).toString().split(kSemicolon, Qt::SkipEmptyParts);
-    trans->date_time = query.value(QStringLiteral("date_time")).toString();
+    trans->issued_time = query.value(QStringLiteral("issued_time")).toString();
 }

@@ -42,8 +42,8 @@ QVariant SearchTransModel::data(const QModelIndex& index, int role) const
     switch (kColumn) {
     case TransSearchEnum::kID:
         return trans->id;
-    case TransSearchEnum::kDateTime:
-        return trans->date_time;
+    case TransSearchEnum::kIssuedTime:
+        return trans->issued_time;
     case TransSearchEnum::kCode:
         return trans->code;
     case TransSearchEnum::kLhsNode:
@@ -62,8 +62,8 @@ QVariant SearchTransModel::data(const QModelIndex& index, int role) const
         return trans->discount == 0 ? QVariant() : trans->discount;
     case TransSearchEnum::kDocument:
         return trans->document.isEmpty() ? QVariant() : trans->document.size();
-    case TransSearchEnum::kState:
-        return trans->state ? trans->state : QVariant();
+    case TransSearchEnum::kIsChecked:
+        return trans->is_checked ? trans->is_checked : QVariant();
     case TransSearchEnum::kRhsCredit:
         return trans->rhs_credit == 0 ? QVariant() : trans->rhs_credit;
     case TransSearchEnum::kRhsDebit:
@@ -94,8 +94,8 @@ void SearchTransModel::sort(int column, Qt::SortOrder order)
         const TransSearchEnum kColumn { column };
 
         switch (kColumn) {
-        case TransSearchEnum::kDateTime:
-            return (order == Qt::AscendingOrder) ? (lhs->date_time < rhs->date_time) : (lhs->date_time > rhs->date_time);
+        case TransSearchEnum::kIssuedTime:
+            return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case TransSearchEnum::kCode:
             return (order == Qt::AscendingOrder) ? (lhs->code < rhs->code) : (lhs->code > rhs->code);
         case TransSearchEnum::kLhsNode:
@@ -114,8 +114,8 @@ void SearchTransModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->discount < rhs->discount) : (lhs->discount > rhs->discount);
         case TransSearchEnum::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
-        case TransSearchEnum::kState:
-            return (order == Qt::AscendingOrder) ? (lhs->state < rhs->state) : (lhs->state > rhs->state);
+        case TransSearchEnum::kIsChecked:
+            return (order == Qt::AscendingOrder) ? (lhs->is_checked < rhs->is_checked) : (lhs->is_checked > rhs->is_checked);
         case TransSearchEnum::kRhsCredit:
             return (order == Qt::AscendingOrder) ? (lhs->rhs_credit < rhs->rhs_credit) : (lhs->rhs_credit > rhs->rhs_credit);
         case TransSearchEnum::kRhsDebit:

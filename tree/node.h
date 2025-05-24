@@ -29,17 +29,17 @@ struct Node {
     QString code {};
     QString description {};
     QString note {};
-    QString date_time {};
+    int node_type {};
+    bool direction_rule { false };
+    int unit {};
+    QString issued_time {};
     QString color {};
     QStringList document {};
-    bool rule { false };
-    int type {};
-    int unit {};
+    bool is_finished {};
 
     double first {};
     double second {};
     double discount {};
-    bool finished {};
 
     // order and stakeholder
     int employee {};
@@ -61,15 +61,15 @@ struct Node {
         employee = 0;
         second = 0.0;
         discount = 0.0;
-        finished = false;
+        is_finished = false;
         first = 0.0;
-        date_time.clear();
+        issued_time.clear();
         description.clear();
         note.clear();
         color.clear();
         document.clear();
-        rule = false;
-        type = 0;
+        direction_rule = false;
+        node_type = 0;
         unit = 0;
         final_total = 0.0;
         initial_total = 0.0;

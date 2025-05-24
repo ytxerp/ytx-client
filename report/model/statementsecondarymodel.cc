@@ -56,8 +56,8 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
     const StatementSecondaryEnum kColumn { index.column() };
 
     switch (kColumn) {
-    case StatementSecondaryEnum::kDateTime:
-        return trans->date_time;
+    case StatementSecondaryEnum::kIssuedTime:
+        return trans->issued_time;
     case StatementSecondaryEnum::kInsideProduct:
         return trans->rhs_node;
     case StatementSecondaryEnum::kOutsideProduct:
@@ -74,8 +74,8 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
         return trans->rhs_debit == 0 ? QVariant() : trans->rhs_debit;
     case StatementSecondaryEnum::kSettlement:
         return trans->rhs_credit == 0 ? QVariant() : trans->rhs_credit;
-    case StatementSecondaryEnum::kState:
-        return trans->state ? trans->state : QVariant();
+    case StatementSecondaryEnum::kIsChecked:
+        return trans->is_checked ? trans->is_checked : QVariant();
     default:
         return QVariant();
     }
@@ -92,8 +92,8 @@ bool StatementSecondaryModel::setData(const QModelIndex& index, const QVariant& 
     auto* trans { trans_list_.at(kRow) };
 
     switch (kColumn) {
-    case StatementSecondaryEnum::kState:
-        trans->state = value.toBool();
+    case StatementSecondaryEnum::kIsChecked:
+        trans->is_checked = value.toBool();
         break;
     default:
         return false;
@@ -119,8 +119,8 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
         const StatementSecondaryEnum kColumn { column };
 
         switch (kColumn) {
-        case StatementSecondaryEnum::kDateTime:
-            return (order == Qt::AscendingOrder) ? (lhs->date_time < rhs->date_time) : (lhs->date_time > rhs->date_time);
+        case StatementSecondaryEnum::kIssuedTime:
+            return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case StatementSecondaryEnum::kInsideProduct:
             return (order == Qt::AscendingOrder) ? (lhs->rhs_node < rhs->rhs_node) : (lhs->rhs_node > rhs->rhs_node);
         case StatementSecondaryEnum::kOutsideProduct:
@@ -137,8 +137,8 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->rhs_credit < rhs->rhs_credit) : (lhs->rhs_credit > rhs->rhs_credit);
         case StatementSecondaryEnum::kGrossAmount:
             return (order == Qt::AscendingOrder) ? (lhs->rhs_debit < rhs->rhs_debit) : (lhs->rhs_debit > rhs->rhs_debit);
-        case StatementSecondaryEnum::kState:
-            return (order == Qt::AscendingOrder) ? (lhs->state < rhs->state) : (lhs->state > rhs->state);
+        case StatementSecondaryEnum::kIsChecked:
+            return (order == Qt::AscendingOrder) ? (lhs->is_checked < rhs->is_checked) : (lhs->is_checked > rhs->is_checked);
         default:
             return false;
         }
@@ -208,7 +208,7 @@ void StatementSecondaryModel::RExport(int unit, const QDateTime& start, const QD
 
             qsizetype row_index { 0 };
             for (const auto* trans : std::as_const(trans_list_)) {
-                list[row_index] << trans->date_time << product_leaf_.value(trans->rhs_node) << stakeholder_leaf_.value(trans->support_id) << trans->lhs_debit
+                list[row_index] << trans->issued_time << product_leaf_.value(trans->rhs_node) << stakeholder_leaf_.value(trans->support_id) << trans->lhs_debit
                                 << trans->lhs_credit << trans->lhs_ratio << trans->description << trans->rhs_debit;
                 ++row_index;
             }

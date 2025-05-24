@@ -81,9 +81,9 @@ void SettlementWidget::on_settlementView_doubleClicked(const QModelIndex& index)
         return;
 
     const int settlement_id { index.siblingAtColumn(std::to_underlying(SettlementEnum::kID)).data().toInt() };
-    const bool finished { index.siblingAtColumn(std::to_underlying(SettlementEnum::kFinished)).data().toBool() };
+    const bool is_finished { index.siblingAtColumn(std::to_underlying(SettlementEnum::kIsFinished)).data().toBool() };
 
-    settlement_primary_model_->RResetModel(party, settlement_id, finished);
+    settlement_primary_model_->RResetModel(party, settlement_id, is_finished);
 }
 
 void SettlementWidget::on_settlementViewPrimary_doubleClicked(const QModelIndex& index)

@@ -264,8 +264,8 @@ bool Sql::WriteNode(int parent_id, Node* node)
 
 void Sql::CalculateLeafTotal(Node* node, QSqlQuery& query) const
 {
-    bool rule { node->rule };
-    int sign = rule ? 1 : -1;
+    bool direction_rule { node->direction_rule };
+    int sign = direction_rule ? 1 : -1;
 
     if (query.next()) {
         const double initial_balance { query.value(QStringLiteral("initial_balance")).toDouble() };
@@ -280,7 +280,7 @@ bool Sql::ReadLeafTotal(Node* node) const
 {
     assert(node && "Node is null");
     assert(node->id >= 1 && "Node ID must be positive");
-    assert(node->type == kTypeLeaf && "Node type must be kTypeLeaf");
+    assert(node->node_type == kTypeLeaf && "Node type must be kTypeLeaf");
 
     CString string { QSLeafTotal() };
     if (string.isEmpty())
@@ -308,9 +308,9 @@ bool Sql::SearchNodeName(QSet<int>& node_id_set, CString& text) const
 
     QString string {};
     if (text.isEmpty())
-        string = QString("SELECT id FROM %1 WHERE removed = false").arg(info_.node);
+        string = QString("SELECT id FROM %1 WHERE is_valid = TRUE").arg(info_.node);
     else
-        string = QString("SELECT id FROM %1 WHERE removed = false AND name LIKE :text").arg(info_.node);
+        string = QString("SELECT id FROM %1 WHERE is_valid = TRUE AND name LIKE :text").arg(info_.node);
 
     query.prepare(string);
 
@@ -392,7 +392,7 @@ QString Sql::QSRemoveNodeFirst() const
 {
     return QString(R"(
             UPDATE %1
-            SET removed = true
+            SET is_valid = FALSE
             WHERE id = :node_id
             )")
         .arg(info_.node);
@@ -570,8 +570,8 @@ bool Sql::ReadTrans(TransShadowList& trans_shadow_list, int node_id)
 void Sql::ConvertTrans(Trans* trans, TransShadow* trans_shadow, bool left) const
 {
     trans_shadow->id = &trans->id;
-    trans_shadow->state = &trans->state;
-    trans_shadow->date_time = &trans->date_time;
+    trans_shadow->is_checked = &trans->is_checked;
+    trans_shadow->issued_time = &trans->issued_time;
     trans_shadow->code = &trans->code;
     trans_shadow->document = &trans->document;
     trans_shadow->description = &trans->description;
@@ -625,7 +625,7 @@ bool Sql::RemoveTrans(int trans_id)
 
 bool Sql::UpdateLeafValue(const Node* node) const
 {
-    if (node->type != kTypeLeaf)
+    if (node->node_type != kTypeLeaf)
         return false;
 
     CString string { QSUpdateLeafValue() };
@@ -907,7 +907,7 @@ QString Sql::QSRemoveTrans() const
 {
     return QString(R"(
     UPDATE %1
-    SET removed = true
+    SET is_valid = FALSE
     WHERE id = :trans_id
     )")
         .arg(info_.trans);
@@ -917,7 +917,7 @@ QString Sql::QSFreeView() const
 {
     return QString(R"(
     SELECT COUNT(*) FROM %1
-    WHERE ((lhs_node = :old_node_id AND rhs_node = :new_node_id) OR (rhs_node = :old_node_id AND lhs_node = :new_node_id)) AND removed = 0
+    WHERE ((lhs_node = :old_node_id AND rhs_node = :new_node_id) OR (rhs_node = :old_node_id AND lhs_node = :new_node_id)) AND is_valid = TRUE
     )")
         .arg(info_.trans);
 }

@@ -13,12 +13,12 @@ void NodeModelF::RSyncLeafValue(
     int node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta, double final_credit_delta, double /*settled*/)
 {
     auto* node { NodeModelUtils::GetNode(node_hash_, node_id) };
-    assert(node && node->type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
+    assert(node && node->node_type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
 
     if (initial_credit_delta == 0.0 && initial_debit_delta == 0.0 && final_debit_delta == 0.0 && final_credit_delta == 0.0)
         return;
 
-    bool rule { node->rule };
+    bool rule { node->direction_rule };
 
     double initial_delta { (rule ? 1 : -1) * (initial_credit_delta - initial_debit_delta) };
     double final_delta { (rule ? 1 : -1) * (final_credit_delta - final_debit_delta) };
@@ -39,7 +39,7 @@ void NodeModelF::UpdateDefaultUnit(int default_unit)
     root_->unit = default_unit;
 
     for (auto* node : std::as_const(node_hash_))
-        if (node->type == kTypeBranch && node->unit != default_unit)
+        if (node->node_type == kTypeBranch && node->unit != default_unit)
             NodeModelUtils::UpdateBranchUnit(root_, node);
 }
 
@@ -65,10 +65,10 @@ QVariant NodeModelF::data(const QModelIndex& index, int role) const
         return node->description;
     case NodeEnumF::kNote:
         return node->note;
-    case NodeEnumF::kRule:
-        return node->rule;
-    case NodeEnumF::kType:
-        return node->type;
+    case NodeEnumF::kDirectionRule:
+        return node->direction_rule;
+    case NodeEnumF::kNodeType:
+        return node->node_type;
     case NodeEnumF::kUnit:
         return node->unit;
     case NodeEnumF::kForeignTotal:
@@ -101,12 +101,12 @@ bool NodeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumF::kNote:
         NodeModelUtils::UpdateField(sql_, node, info_.node, kNote, value.toString(), &Node::note);
         break;
-    case NodeEnumF::kRule:
+    case NodeEnumF::kDirectionRule:
         UpdateRule(node, value.toBool());
         emit dataChanged(
             index.siblingAtColumn(std::to_underlying(NodeEnumF::kForeignTotal)), index.siblingAtColumn(std::to_underlying(NodeEnumF::kLocalTotal)));
         break;
-    case NodeEnumF::kType:
+    case NodeEnumF::kNodeType:
         UpdateType(node, value.toInt());
         break;
     case NodeEnumF::kUnit:
@@ -135,10 +135,10 @@ void NodeModelF::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
         case NodeEnumF::kNote:
             return (order == Qt::AscendingOrder) ? (lhs->note < rhs->note) : (lhs->note > rhs->note);
-        case NodeEnumF::kRule:
-            return (order == Qt::AscendingOrder) ? (lhs->rule < rhs->rule) : (lhs->rule > rhs->rule);
-        case NodeEnumF::kType:
-            return (order == Qt::AscendingOrder) ? (lhs->type < rhs->type) : (lhs->type > rhs->type);
+        case NodeEnumF::kDirectionRule:
+            return (order == Qt::AscendingOrder) ? (lhs->direction_rule < rhs->direction_rule) : (lhs->direction_rule > rhs->direction_rule);
+        case NodeEnumF::kNodeType:
+            return (order == Qt::AscendingOrder) ? (lhs->node_type < rhs->node_type) : (lhs->node_type > rhs->node_type);
         case NodeEnumF::kUnit:
             return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
         case NodeEnumF::kForeignTotal:
@@ -197,7 +197,7 @@ bool NodeModelF::UpdateUnit(Node* node, int value)
     node->unit = value;
     sql_->WriteField(info_.node, kUnit, value, node_id);
 
-    if (node->type == kTypeBranch)
+    if (node->node_type == kTypeBranch)
         NodeModelUtils::UpdateBranchUnit(root_, node);
 
     return true;
@@ -214,10 +214,10 @@ bool NodeModelF::UpdateAncestorValue(Node* node, double initial_delta, double fi
         return false;
 
     const int kUnit { node->unit };
-    const bool kRule { node->rule };
+    const bool kRule { node->direction_rule };
 
     for (Node* current = node->parent; current && current != root_; current = current->parent) {
-        bool equal { current->rule == kRule };
+        bool equal { current->direction_rule == kRule };
         current->final_total += (equal ? 1 : -1) * final_delta;
 
         if (current->unit == kUnit) {

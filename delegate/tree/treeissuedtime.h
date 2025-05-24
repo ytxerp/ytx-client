@@ -17,19 +17,24 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DATETIMER_H
-#define DATETIMER_H
+#ifndef TREEISSUEDTIME_H
+#define TREEISSUEDTIME_H
+
+#include <QDateTimeEdit>
 
 #include "delegate/styleditemdelegate.h"
 
-class DateTimeR final : public StyledItemDelegate {
+class TreeIssuedTime final : public StyledItemDelegate {
 public:
-    DateTimeR(const QString& date_format, QObject* parent);
+    TreeIssuedTime(const QString& date_format, QObject* parent);
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+    void setEditorData(QWidget* editor, const QModelIndex& index) const override;
+    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    const QString& date_format_ {};
+    const QString& date_format_;
 };
 
-#endif // DATETIMER_H
+#endif // TREEISSUEDTIME_H

@@ -17,16 +17,16 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEDATETIME_H
-#define TREEDATETIME_H
+#ifndef TABLEISSUEDTIME_H
+#define TABLEISSUEDTIME_H
 
 #include <QDateTimeEdit>
 
 #include "delegate/styleditemdelegate.h"
 
-class TreeDateTime final : public StyledItemDelegate {
+class TableIssuedTime final : public StyledItemDelegate {
 public:
-    TreeDateTime(const QString& date_format, QObject* parent);
+    TableIssuedTime(const QString& date_format, QObject* parent);
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
@@ -35,6 +35,7 @@ public:
 
 private:
     const QString& date_format_;
+    mutable QDateTime last_insert_ {};
 };
 
-#endif // TREEDATETIME_H
+#endif // TABLEISSUEDTIME_H

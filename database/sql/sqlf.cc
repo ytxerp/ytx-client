@@ -15,8 +15,8 @@ void SqlF::WriteNodeBind(Node* node, QSqlQuery& query) const
     query.bindValue(QStringLiteral(":code"), node->code);
     query.bindValue(QStringLiteral(":description"), node->description);
     query.bindValue(QStringLiteral(":note"), node->note);
-    query.bindValue(QStringLiteral(":rule"), node->rule);
-    query.bindValue(QStringLiteral(":type"), node->type);
+    query.bindValue(QStringLiteral(":direction_rule"), node->direction_rule);
+    query.bindValue(QStringLiteral(":node_type"), node->node_type);
     query.bindValue(QStringLiteral(":unit"), node->unit);
 }
 
@@ -27,8 +27,8 @@ void SqlF::ReadNodeQuery(Node* node, const QSqlQuery& query) const
     node->code = query.value(QStringLiteral("code")).toString();
     node->description = query.value(QStringLiteral("description")).toString();
     node->note = query.value(QStringLiteral("note")).toString();
-    node->rule = query.value(QStringLiteral("rule")).toBool();
-    node->type = query.value(QStringLiteral("type")).toInt();
+    node->direction_rule = query.value(QStringLiteral("direction_rule")).toBool();
+    node->node_type = query.value(QStringLiteral("node_type")).toInt();
     node->unit = query.value(QStringLiteral("unit")).toInt();
     node->initial_total = query.value(QStringLiteral("foreign_total")).toDouble();
     node->final_total = query.value(QStringLiteral("local_total")).toDouble();
@@ -49,14 +49,14 @@ void SqlF::ReadTransQuery(Trans* trans, const QSqlQuery& query) const
     trans->code = query.value(QStringLiteral("code")).toString();
     trans->description = query.value(QStringLiteral("description")).toString();
     trans->document = query.value(QStringLiteral("document")).toString().split(kSemicolon, Qt::SkipEmptyParts);
-    trans->date_time = query.value(QStringLiteral("date_time")).toString();
-    trans->state = query.value(QStringLiteral("state")).toBool();
+    trans->issued_time = query.value(QStringLiteral("issued_time")).toString();
+    trans->is_checked = query.value(QStringLiteral("is_checked")).toBool();
     trans->support_id = query.value(QStringLiteral("support_id")).toInt();
 }
 
 void SqlF::WriteTransBind(TransShadow* trans_shadow, QSqlQuery& query) const
 {
-    query.bindValue(QStringLiteral(":date_time"), *trans_shadow->date_time);
+    query.bindValue(QStringLiteral(":issued_time"), *trans_shadow->issued_time);
     query.bindValue(QStringLiteral(":lhs_node"), *trans_shadow->lhs_node);
     query.bindValue(QStringLiteral(":lhs_ratio"), *trans_shadow->lhs_ratio);
     query.bindValue(QStringLiteral(":lhs_debit"), *trans_shadow->lhs_debit);
@@ -65,7 +65,7 @@ void SqlF::WriteTransBind(TransShadow* trans_shadow, QSqlQuery& query) const
     query.bindValue(QStringLiteral(":rhs_ratio"), *trans_shadow->rhs_ratio);
     query.bindValue(QStringLiteral(":rhs_debit"), *trans_shadow->rhs_debit);
     query.bindValue(QStringLiteral(":rhs_credit"), *trans_shadow->rhs_credit);
-    query.bindValue(QStringLiteral(":state"), *trans_shadow->state);
+    query.bindValue(QStringLiteral(":is_checked"), *trans_shadow->is_checked);
     query.bindValue(QStringLiteral(":description"), *trans_shadow->description);
     query.bindValue(QStringLiteral(":code"), *trans_shadow->code);
     query.bindValue(QStringLiteral(":document"), trans_shadow->document->join(kSemicolon));
@@ -88,17 +88,17 @@ void SqlF::UpdateTransValueBind(const TransShadow* trans_shadow, QSqlQuery& quer
 QString SqlF::QSReadNode() const
 {
     return QStringLiteral(R"(
-    SELECT name, id, code, description, note, rule, type, unit, foreign_total, local_total
+    SELECT name, id, code, description, note, direction_rule, node_type, unit, foreign_total, local_total
     FROM finance
-    WHERE removed = false
+    WHERE is_valid = TRUE
     )");
 }
 
 QString SqlF::QSWriteNode() const
 {
     return QStringLiteral(R"(
-    INSERT INTO finance (name, code, description, note, rule, type, unit)
-    VALUES (:name, :code, :description, :note, :rule, :type, :unit)
+    INSERT INTO finance (name, code, description, note, direction_rule, node_type, unit)
+    VALUES (:name, :code, :description, :note, :direction_rule, :node_type, :unit)
     )");
 }
 
@@ -106,8 +106,8 @@ QString SqlF::QSRemoveNodeSecond() const
 {
     return QStringLiteral(R"(
     UPDATE finance_transaction SET
-        removed = true
-    WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND removed = 0
+        is_valid = FALSE
+    WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND is_valid = TRUE
     )");
 }
 
@@ -116,7 +116,7 @@ QString SqlF::QSInternalReference() const
     return QStringLiteral(R"(
     SELECT EXISTS(
         SELECT 1 FROM finance_transaction
-        WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND removed = 0
+        WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND is_valid = TRUE
     ) AS is_referenced
     )");
 }
@@ -125,7 +125,7 @@ QString SqlF::QSSupportReference() const
 {
     return QStringLiteral(R"(
     SELECT 1 FROM finance_transaction
-    WHERE support_id = :support_id AND removed = 0
+    WHERE support_id = :support_id AND is_valid = TRUE
     LIMIT 1
     )");
 }
@@ -135,7 +135,7 @@ QString SqlF::QSReplaceSupport() const
     return QStringLiteral(R"(
     UPDATE finance_transaction SET
         support_id = :new_node_id
-    WHERE support_id = :old_node_id AND removed = 0
+    WHERE support_id = :old_node_id AND is_valid = TRUE
     )");
 }
 
@@ -144,7 +144,7 @@ QString SqlF::QSRemoveSupport() const
     return QStringLiteral(R"(
     UPDATE finance_transaction SET
         support_id = 0
-    WHERE support_id = :node_id AND removed = 0
+    WHERE support_id = :node_id AND is_valid = TRUE
     )");
 }
 
@@ -158,7 +158,7 @@ QString SqlF::QSLeafTotal(int /*unit*/) const
             lhs_ratio * lhs_debit AS final_debit,
             lhs_ratio * lhs_credit AS final_credit
         FROM finance_transaction
-        WHERE lhs_node = :node_id AND removed = 0
+        WHERE lhs_node = :node_id AND is_valid = TRUE
 
         UNION ALL
 
@@ -168,7 +168,7 @@ QString SqlF::QSLeafTotal(int /*unit*/) const
             rhs_ratio * rhs_debit,
             rhs_ratio * rhs_credit
         FROM finance_transaction
-        WHERE rhs_node = :node_id AND removed = 0
+        WHERE rhs_node = :node_id AND is_valid = TRUE
     )
     SELECT
         SUM(initial_credit) - SUM(initial_debit) AS initial_balance,
@@ -181,28 +181,28 @@ QString SqlF::QSTransToRemove() const
 {
     return QStringLiteral(R"(
     SELECT rhs_node AS node_id, id AS trans_id, support_id FROM finance_transaction
-    WHERE lhs_node = :node_id AND removed = 0
+    WHERE lhs_node = :node_id AND is_valid = TRUE
     UNION ALL
     SELECT lhs_node AS node_id, id AS trans_id, support_id FROM finance_transaction
-    WHERE rhs_node = :node_id AND removed = 0
+    WHERE rhs_node = :node_id AND is_valid = TRUE
     )");
 }
 
 QString SqlF::QSReadTrans() const
 {
     return QStringLiteral(R"(
-    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document, date_time
+    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document, issued_time
     FROM finance_transaction
-    WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND removed = 0
+    WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND is_valid = TRUE
     )");
 }
 
 QString SqlF::QSReadSupportTrans() const
 {
     return QStringLiteral(R"(
-    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document, date_time
+    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document, issued_time
     FROM finance_transaction
-    WHERE support_id = :node_id AND removed = 0
+    WHERE support_id = :node_id AND is_valid = TRUE
     )");
 }
 
@@ -210,9 +210,9 @@ QString SqlF::QSWriteTrans() const
 {
     return QStringLiteral(R"(
     INSERT INTO finance_transaction
-    (date_time, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document)
+    (issued_time, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document)
     VALUES
-    (:date_time, :lhs_node, :lhs_ratio, :lhs_debit, :lhs_credit, :rhs_node, :rhs_ratio, :rhs_debit, :rhs_credit, :state, :description, :support_id, :code, :document)
+    (:issued_time, :lhs_node, :lhs_ratio, :lhs_debit, :lhs_credit, :rhs_node, :rhs_ratio, :rhs_debit, :rhs_credit, :state, :description, :support_id, :code, :document)
     )");
 }
 
@@ -255,21 +255,21 @@ void SqlF::UpdateLeafValueBind(const Node* node, QSqlQuery& query) const
 QString SqlF::QSSearchTransValue() const
 {
     return QStringLiteral(R"(
-    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document, date_time
+    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document, issued_time
     FROM finance_transaction
     WHERE ((lhs_debit BETWEEN :value - :tolerance AND :value + :tolerance)
         OR (lhs_credit BETWEEN :value - :tolerance AND :value + :tolerance)
         OR (rhs_debit BETWEEN :value - :tolerance AND :value + :tolerance)
         OR (rhs_credit BETWEEN :value - :tolerance AND :value + :tolerance))
-        AND removed = 0
+        AND is_valid = TRUE
     )");
 }
 
 QString SqlF::QSSearchTransText() const
 {
     return QStringLiteral(R"(
-    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document, date_time
+    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document, issued_time
     FROM finance_transaction
-    WHERE description LIKE :description AND removed = 0
+    WHERE description LIKE :description AND is_valid = TRUE
     )");
 }

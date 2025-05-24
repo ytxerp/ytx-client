@@ -41,15 +41,15 @@ enum class UnitP { kPos = 1 };
 enum class UnitT { kProd = 1 };
 
 // defining trans column
-enum class TransEnum { kDateTime, kID, kLhsRatio, kCode, kDescription, kSupportID, kDocument, kState, kRhsNode };
+enum class TransEnum { kIssuedTime, kID, kLhsRatio, kCode, kDescription, kSupportID, kDocument, kIsChecked, kRhsNode };
 
-enum class TransEnumF { kDateTime, kID, kLhsRatio, kCode, kDescription, kSupportID, kDocument, kState, kRhsNode, kDebit, kCredit, kSubtotal };
+enum class TransEnumF { kIssuedTime, kID, kLhsRatio, kCode, kDescription, kSupportID, kDocument, kIsChecked, kRhsNode, kDebit, kCredit, kSubtotal };
 
-enum class TransEnumT { kDateTime, kID, kUnitCost, kCode, kDescription, kSupportID, kDocument, kState, kRhsNode, kDebit, kCredit, kSubtotal };
+enum class TransEnumT { kIssuedTime, kID, kUnitCost, kCode, kDescription, kSupportID, kDocument, kIsChecked, kRhsNode, kDebit, kCredit, kSubtotal };
 
-enum class TransEnumP { kDateTime, kID, kUnitCost, kCode, kDescription, kSupportID, kDocument, kState, kRhsNode, kDebit, kCredit, kSubtotal };
+enum class TransEnumP { kIssuedTime, kID, kUnitCost, kCode, kDescription, kSupportID, kDocument, kIsChecked, kRhsNode, kDebit, kCredit, kSubtotal };
 
-enum class TransEnumS { kDateTime, kID, kUnitPrice, kCode, kDescription, kOutsideProduct, kDocument, kState, kInsideProduct };
+enum class TransEnumS { kIssuedTime, kID, kUnitPrice, kCode, kDescription, kOutsideProduct, kDocument, kIsChecked, kInsideProduct };
 
 enum class TransEnumO {
     kInsideProduct,
@@ -68,7 +68,7 @@ enum class TransEnumO {
 };
 
 enum class TransSearchEnum {
-    kDateTime,
+    kIssuedTime,
     kID,
     kCode,
     kLhsNode,
@@ -79,7 +79,7 @@ enum class TransSearchEnum {
     kSupportID,
     kDiscount,
     kDocument,
-    kState,
+    kIsChecked,
     kRhsCredit,
     kRhsDebit,
     kRhsRatio,
@@ -88,7 +88,7 @@ enum class TransSearchEnum {
 
 // kPP: kParty or kProduct
 enum class TransRefEnum {
-    kDateTime,
+    kIssuedTime,
     kOrderNode,
     kSection,
     kPP,
@@ -105,28 +105,44 @@ enum class TransRefEnum {
 enum class StatementEnum { kParty, kPBalance, kCFirst, kCSecond, kCGrossAmount, kCBalance, kPlaceholder, kCSettlement };
 
 enum class StatementSecondaryEnum {
-    kDateTime,
+    kIssuedTime,
     kInsideProduct,
     kFirst,
     kSecond,
     kUnitPrice,
     kGrossAmount,
-    kState,
+    kIsChecked,
     kDescription,
     kOutsideProduct,
     kSettlement,
 };
 
 // defining node column
-enum class NodeEnum { kName, kID, kCode, kDescription, kNote, kType, kRule, kUnit };
+enum class NodeEnum { kName, kID, kCode, kDescription, kNote, kNodeType, kDirectionRule, kUnit };
 
-enum class NodeEnumF { kName, kID, kCode, kDescription, kNote, kType, kRule, kUnit, kForeignTotal, kLocalTotal };
+enum class NodeEnumF { kName, kID, kCode, kDescription, kNote, kNodeType, kDirectionRule, kUnit, kForeignTotal, kLocalTotal };
 
-enum class NodeEnumT { kName, kID, kCode, kDescription, kNote, kType, kRule, kUnit, kDateTime, kColor, kDocument, kFinished, kUnitCost, kQuantity, kAmount };
+enum class NodeEnumT {
+    kName,
+    kID,
+    kCode,
+    kDescription,
+    kNote,
+    kNodeType,
+    kDirectionRule,
+    kUnit,
+    kIssuedTime,
+    kColor,
+    kDocument,
+    kIsFinished,
+    kUnitCost,
+    kQuantity,
+    kAmount
+};
 
-enum class NodeEnumP { kName, kID, kCode, kDescription, kNote, kType, kRule, kUnit, kColor, kUnitPrice, kCommission, kQuantity, kAmount };
+enum class NodeEnumP { kName, kID, kCode, kDescription, kNote, kNodeType, kDirectionRule, kUnit, kColor, kUnitPrice, kCommission, kQuantity, kAmount };
 
-enum class NodeEnumS { kName, kID, kCode, kDescription, kNote, kType, kPaymentTerm, kUnit, kDeadline, kEmployee, kTaxRate, kAmount };
+enum class NodeEnumS { kName, kID, kCode, kDescription, kNote, kNodeType, kPaymentTerm, kUnit, kDeadline, kEmployee, kTaxRate, kAmount };
 
 enum class NodeEnumO {
     kName,
@@ -134,13 +150,13 @@ enum class NodeEnumO {
     kParty,
     kDescription,
     kEmployee,
-    kType,
-    kRule,
+    kNodeType,
+    kDirectionRule,
     kUnit,
-    kDateTime,
+    kIssuedTime,
     kFirst,
     kSecond,
-    kFinished,
+    kIsFinished,
     kGrossAmount,
     kDiscount,
     kSettlement
@@ -152,25 +168,25 @@ enum class NodeSearchEnum {
     kCode,
     kDescription,
     kNote,
-    kType,
-    kRule,
+    kNodeType,
+    kDirectionRule,
     kUnit,
     kParty,
     kEmployee,
-    kDateTime,
+    kIssuedTime,
     kColor,
     kDocument,
     kFirst,
     kSecond,
     kDiscount,
-    kFinished,
+    kIsFinished,
     kInitialTotal,
     kFinalTotal
 };
 
-enum class StatementPrimaryEnum { kDateTime, kFirst, kSecond, kGrossAmount, kState, kDescription, kEmployee, kSettlement };
+enum class StatementPrimaryEnum { kIssuedTime, kFirst, kSecond, kGrossAmount, kIsChecked, kDescription, kEmployee, kSettlement };
 
-enum class SettlementEnum { kDateTime, kID, kParty, kDescription, kFinished, kGrossAmount };
+enum class SettlementEnum { kIssuedTime, kID, kParty, kDescription, kIsFinished, kGrossAmount };
 
 // Enum class defining check options
 enum class Check { kNone, kAll, kReverse };

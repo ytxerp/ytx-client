@@ -65,7 +65,7 @@ bool PrintManager::LoadIni(const QString& file_path)
         page_settings_[setting] = settings.value("page_settings/" + setting);
     }
 
-    const QList<QString> header_settings { "party", "date_time" };
+    const QList<QString> header_settings { "party", "issued_time" };
     const QList<QString> content_settings { "left_top", "heigh_width", "rows_columns" };
     const QList<QString> footer_settings { "employee", "unit", "gross_amount", "page_info" };
 
@@ -126,8 +126,8 @@ void PrintManager::DrawHeader(QPainter* painter)
         painter->drawText(party.x, party.y, data_.party);
     }
 
-    const auto& date_time { field_settings_.value("date_time") };
-    painter->drawText(date_time.x, date_time.y, data_.date_time);
+    const auto& issued_time { field_settings_.value("issued_time") };
+    painter->drawText(issued_time.x, issued_time.y, data_.issued_time);
 }
 
 void PrintManager::DrawTable(QPainter* painter, long long start_index, long long end_index)

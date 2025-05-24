@@ -28,7 +28,7 @@ void NodeModelS::RSyncDouble(int node_id, int column, double value)
         return;
 
     auto* node { node_hash_.value(node_id) };
-    if (!node || node == root_ || node->type != kTypeLeaf)
+    if (!node || node == root_ || node->node_type != kTypeLeaf)
         return;
 
     node->final_total += value;
@@ -42,7 +42,7 @@ void NodeModelS::RSyncMultiLeafValue(const QList<int>& node_list)
     for (int node_id : node_list) {
         auto* node { NodeModelUtils::GetNode(node_hash_, node_id) };
 
-        assert(node && node->type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
+        assert(node && node->node_type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
 
         const double old_final_total { node->final_total };
 
@@ -165,12 +165,12 @@ void NodeModelS::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
         case NodeEnumS::kNote:
             return (order == Qt::AscendingOrder) ? (lhs->note < rhs->note) : (lhs->note > rhs->note);
-        case NodeEnumS::kType:
-            return (order == Qt::AscendingOrder) ? (lhs->type < rhs->type) : (lhs->type > rhs->type);
+        case NodeEnumS::kNodeType:
+            return (order == Qt::AscendingOrder) ? (lhs->node_type < rhs->node_type) : (lhs->node_type > rhs->node_type);
         case NodeEnumS::kUnit:
             return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
         case NodeEnumS::kDeadline:
-            return (order == Qt::AscendingOrder) ? (lhs->date_time < rhs->date_time) : (lhs->date_time > rhs->date_time);
+            return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case NodeEnumS::kEmployee:
             return (order == Qt::AscendingOrder) ? (lhs->employee < rhs->employee) : (lhs->employee > rhs->employee);
         case NodeEnumS::kPaymentTerm:
@@ -199,7 +199,7 @@ QVariant NodeModelS::data(const QModelIndex& index, int role) const
         return QVariant();
 
     const NodeEnumS kColumn { index.column() };
-    const bool kIsLeaf { node->type == kTypeLeaf };
+    const bool kIsLeaf { node->node_type == kTypeLeaf };
 
     switch (kColumn) {
     case NodeEnumS::kName:
@@ -212,12 +212,12 @@ QVariant NodeModelS::data(const QModelIndex& index, int role) const
         return node->description;
     case NodeEnumS::kNote:
         return node->note;
-    case NodeEnumS::kType:
-        return node->type;
+    case NodeEnumS::kNodeType:
+        return node->node_type;
     case NodeEnumS::kUnit:
         return node->unit;
     case NodeEnumS::kDeadline:
-        return kIsLeaf && node->rule == kRuleMS ? node->date_time : QVariant();
+        return kIsLeaf && node->direction_rule == kRuleMS ? node->issued_time : QVariant();
     case NodeEnumS::kEmployee:
         return kIsLeaf && node->employee != 0 ? node->employee : QVariant();
     case NodeEnumS::kPaymentTerm:
@@ -252,14 +252,14 @@ bool NodeModelS::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumS::kNote:
         NodeModelUtils::UpdateField(sql_, node, info_.node, kNote, value.toString(), &Node::note);
         break;
-    case NodeEnumS::kType:
+    case NodeEnumS::kNodeType:
         UpdateType(node, value.toInt());
         break;
     case NodeEnumS::kUnit:
         UpdateUnit(node, value.toInt());
         break;
     case NodeEnumS::kDeadline:
-        NodeModelUtils::UpdateField(sql_, node, info_.node, kDeadline, value.toString(), &Node::date_time, true);
+        NodeModelUtils::UpdateField(sql_, node, info_.node, kDeadline, value.toString(), &Node::issued_time, true);
         break;
     case NodeEnumS::kEmployee:
         NodeModelUtils::UpdateField(sql_, node, info_.node, kEmployee, value.toInt(), &Node::employee, true);

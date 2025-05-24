@@ -15,12 +15,12 @@ void NodeModelP::RSyncLeafValue(
     int node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta, double final_credit_delta, double /*settled_delta*/)
 {
     auto* node { NodeModelUtils::GetNode(node_hash_, node_id) };
-    assert(node && node->type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
+    assert(node && node->node_type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
 
     if (initial_credit_delta == 0.0 && initial_debit_delta == 0.0 && final_debit_delta == 0.0 && final_credit_delta == 0.0)
         return;
 
-    bool rule { node->rule };
+    bool rule { node->direction_rule };
 
     double initial_delta { (rule ? 1 : -1) * (initial_credit_delta - initial_debit_delta) };
     double final_delta { (rule ? 1 : -1) * (final_credit_delta - final_debit_delta) };
@@ -56,10 +56,10 @@ bool NodeModelP::UpdateAncestorValue(Node* node, double initial_delta, double fi
     if (initial_delta == 0.0 && final_delta == 0.0)
         return false;
 
-    const bool kRule { node->rule };
+    const bool kRule { node->direction_rule };
 
     for (Node* current = node->parent; current && current != root_; current = current->parent) {
-        bool equal { current->rule == kRule };
+        bool equal { current->direction_rule == kRule };
 
         current->final_total += (equal ? 1 : -1) * final_delta;
         current->initial_total += (equal ? 1 : -1) * initial_delta;
@@ -83,10 +83,10 @@ void NodeModelP::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
         case NodeEnumP::kNote:
             return (order == Qt::AscendingOrder) ? (lhs->note < rhs->note) : (lhs->note > rhs->note);
-        case NodeEnumP::kRule:
-            return (order == Qt::AscendingOrder) ? (lhs->rule < rhs->rule) : (lhs->rule > rhs->rule);
-        case NodeEnumP::kType:
-            return (order == Qt::AscendingOrder) ? (lhs->type < rhs->type) : (lhs->type > rhs->type);
+        case NodeEnumP::kDirectionRule:
+            return (order == Qt::AscendingOrder) ? (lhs->direction_rule < rhs->direction_rule) : (lhs->direction_rule > rhs->direction_rule);
+        case NodeEnumP::kNodeType:
+            return (order == Qt::AscendingOrder) ? (lhs->node_type < rhs->node_type) : (lhs->node_type > rhs->node_type);
         case NodeEnumP::kUnit:
             return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
         case NodeEnumP::kColor:
@@ -119,7 +119,7 @@ QVariant NodeModelP::data(const QModelIndex& index, int role) const
         return QVariant();
 
     const NodeEnumP kColumn { index.column() };
-    const bool kIsLeaf { node->type == kTypeLeaf };
+    const bool kIsLeaf { node->node_type == kTypeLeaf };
 
     switch (kColumn) {
     case NodeEnumP::kName:
@@ -132,10 +132,10 @@ QVariant NodeModelP::data(const QModelIndex& index, int role) const
         return node->description;
     case NodeEnumP::kNote:
         return node->note;
-    case NodeEnumP::kRule:
-        return node->rule;
-    case NodeEnumP::kType:
-        return node->type;
+    case NodeEnumP::kDirectionRule:
+        return node->direction_rule;
+    case NodeEnumP::kNodeType:
+        return node->node_type;
     case NodeEnumP::kUnit:
         return node->unit;
     case NodeEnumP::kColor:
@@ -174,11 +174,11 @@ bool NodeModelP::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumP::kNote:
         NodeModelUtils::UpdateField(sql_, node, info_.node, kNote, value.toString(), &Node::note);
         break;
-    case NodeEnumP::kRule:
+    case NodeEnumP::kDirectionRule:
         UpdateRule(node, value.toBool());
         emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumP::kQuantity)), index.siblingAtColumn(std::to_underlying(NodeEnumP::kAmount)));
         break;
-    case NodeEnumP::kType:
+    case NodeEnumP::kNodeType:
         UpdateType(node, value.toInt());
         break;
     case NodeEnumP::kColor:

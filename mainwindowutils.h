@@ -63,6 +63,7 @@ public:
     static bool IsSupportWidget(const QWidget* widget) { return widget && widget->inherits("SupportWidget"); }
 
     static bool PrepareNewFile(QString& file_path, CString& suffix);
+    static bool CheckFileValid(CString& file_path, CString& suffix);
 
     static bool AddDatabase(QSqlDatabase& db, CString& db_path, CString& connection_name);
     static QSqlDatabase GetDatabase(CString& connection_name);
@@ -116,7 +117,7 @@ public:
             if (!model->insertRows(new_row, 1))
                 return;
 
-            target_index = model->index(new_row, std::to_underlying(TransEnum::kDateTime));
+            target_index = model->index(new_row, std::to_underlying(TransEnum::kIssuedTime));
         } else if (start != Section::kSales && start != Section::kPurchase)
             target_index = model->index(empty_row, std::to_underlying(TransEnum::kRhsNode));
 

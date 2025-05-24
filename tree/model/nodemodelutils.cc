@@ -10,7 +10,7 @@
 
 void NodeModelUtils::UpdateBranchUnit(const Node* root, Node* node)
 {
-    if (!node || node->type != kTypeBranch || node->unit == root->unit)
+    if (!node || node->node_type != kTypeBranch || node->unit == root->unit)
         return;
 
     QQueue<const Node*> queue {};
@@ -18,19 +18,19 @@ void NodeModelUtils::UpdateBranchUnit(const Node* root, Node* node)
 
     double initial_total { 0.0 };
     const int unit { node->unit };
-    const bool rule { node->rule };
+    const bool direction_rule { node->direction_rule };
 
     while (!queue.isEmpty()) {
         const auto* current { queue.dequeue() };
 
-        switch (current->type) {
+        switch (current->node_type) {
         case kTypeBranch: {
             for (const auto* child : current->children)
                 queue.enqueue(child);
         } break;
         case kTypeLeaf: {
             if (current->unit == unit)
-                initial_total += (current->rule == rule ? 1 : -1) * current->initial_total;
+                initial_total += (current->direction_rule == direction_rule ? 1 : -1) * current->initial_total;
         } break;
         default:
             break;
@@ -49,7 +49,7 @@ void NodeModelUtils::UpdatePath(StringHash& leaf, StringHash& branch, StringHash
         const auto* current { queue.dequeue() };
         const auto path { ConstructPath(root, current, separator) };
 
-        switch (current->type) {
+        switch (current->node_type) {
         case kTypeBranch:
             for (const auto* child : current->children)
                 queue.enqueue(child);
@@ -73,7 +73,7 @@ void NodeModelUtils::InitializeRoot(Node*& root, int default_unit)
     if (root == nullptr) {
         root = ResourcePool<Node>::Instance().Allocate();
         root->id = -1;
-        root->type = kTypeBranch;
+        root->node_type = kTypeBranch;
         root->unit = default_unit;
     }
 
@@ -274,7 +274,7 @@ void NodeModelUtils::UpdateModel(CStringHash& leaf, QStandardItemModel* leaf_mod
     while (!queue.isEmpty()) {
         const auto* current { queue.dequeue() };
 
-        switch (current->type) {
+        switch (current->node_type) {
         case kTypeBranch:
             for (const auto* child : current->children)
                 queue.enqueue(child);
