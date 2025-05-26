@@ -33,13 +33,13 @@ class RemoveNode final : public QDialog {
     Q_OBJECT
 
 public:
-    RemoveNode(CNodeModel* model, Section section, int node_id, int node_type, int unit, bool exteral_reference, QWidget* parent = nullptr);
+    RemoveNode(CNodeModel* model, Section section, const QUuid& node_id, int node_type, int unit, bool exteral_reference, QWidget* parent = nullptr);
     ~RemoveNode();
 
 signals:
     // send to sqlite
-    void SRemoveNode(int node_id, int node_type);
-    void SReplaceNode(int old_node_id, int new_node_id, int node_type, int node_unit);
+    void SRemoveNode(const QUuid& node_id, int node_type);
+    void SReplaceNode(const QUuid& old_node_id, const QUuid& new_node_id, int node_type, int node_unit);
 
 private slots:
     void on_pBtnOk_clicked();
@@ -56,7 +56,7 @@ private:
     Ui::RemoveNode* ui;
     QButtonGroup* option_group_ {};
 
-    int node_id_ {};
+    QUuid node_id_ {};
     int node_unit_ {};
     int node_type_ {};
 

@@ -11,7 +11,7 @@
 #include "mainwindowutils.h"
 
 StatementSecondaryModel::StatementSecondaryModel(
-    Sql* sql, CInfo& info, int party_id, CStringHash& product_leaf, PNodeModel stakeholder, CString& company_name, QObject* parent)
+    Sql* sql, CInfo& info, const QUuid& party_id, CStringHash& product_leaf, PNodeModel stakeholder, CString& company_name, QObject* parent)
     : QAbstractItemModel { parent }
     , sql_ { qobject_cast<SqlO*>(sql) }
     , info_ { info }
@@ -61,7 +61,7 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
     case StatementSecondaryEnum::kInsideProduct:
         return trans->rhs_node;
     case StatementSecondaryEnum::kOutsideProduct:
-        return trans->support_id == 0 ? QVariant() : trans->support_id;
+        return trans->support_id.isNull() ? QVariant() : trans->support_id;
     case StatementSecondaryEnum::kFirst:
         return trans->lhs_debit == 0 ? QVariant() : trans->lhs_debit;
     case StatementSecondaryEnum::kSecond:
@@ -151,7 +151,7 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
 
 void StatementSecondaryModel::RResetModel(int unit, const QDateTime& start, const QDateTime& end)
 {
-    if (party_id_ <= 0 || !start.isValid() || !end.isValid())
+    if (party_id_.isNull() || !start.isValid() || !end.isValid())
         return;
 
     beginResetModel();

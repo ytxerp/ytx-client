@@ -44,7 +44,7 @@ TransWidgetO::~TransWidgetO()
 
 QPointer<QTableView> TransWidgetO::View() const { return ui->tableViewO; }
 
-void TransWidgetO::RSyncBoolNode(int node_id, int column, bool value)
+void TransWidgetO::RSyncBoolNode(const QUuid& node_id, int column, bool value)
 {
     if (node_id != node_id_)
         return;
@@ -68,7 +68,7 @@ void TransWidgetO::RSyncBoolNode(int node_id, int column, bool value)
     }
 }
 
-void TransWidgetO::RSyncInt(int node_id, int column, int value)
+void TransWidgetO::RSyncInt(const QUuid& node_id, int column, int value)
 {
     if (node_id != node_id_)
         return;
@@ -91,7 +91,7 @@ void TransWidgetO::RSyncInt(int node_id, int column, int value)
     }
 }
 
-void TransWidgetO::RSyncString(int node_id, int column, const QString& value)
+void TransWidgetO::RSyncString(const QUuid& node_id, int column, const QString& value)
 {
     if (node_id != node_id_)
         return;
@@ -112,7 +112,8 @@ void TransWidgetO::RSyncString(int node_id, int column, const QString& value)
     }
 }
 
-void TransWidgetO::RSyncLeafValue(int node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
+void TransWidgetO::RSyncLeafValue(
+    const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
 {
     if (node_id_ != node_id)
         return;
@@ -183,7 +184,7 @@ void TransWidgetO::IniConnect()
     connect(unit_group_, &QButtonGroup::idClicked, this, &TransWidgetO::RUnitGroupClicked);
 }
 
-void TransWidgetO::IniDataCombo(int party, int employee)
+void TransWidgetO::IniDataCombo(const QUuid& party, const QUuid& employee)
 {
     int party_index { ui->comboParty->findData(party) };
     ui->comboParty->setCurrentIndex(party_index);
@@ -317,8 +318,8 @@ void TransWidgetO::IniUnitGroup()
 
 void TransWidgetO::on_comboParty_currentIndexChanged(int /*index*/)
 {
-    int party_id { ui->comboParty->currentData().toInt() };
-    if (party_id <= 0)
+    auto party_id { ui->comboParty->currentData().toUuid() };
+    if (party_id.isNull())
         return;
 
     node_->party = party_id;
@@ -334,7 +335,7 @@ void TransWidgetO::on_comboParty_currentIndexChanged(int /*index*/)
 
 void TransWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 {
-    node_->employee = ui->comboEmployee->currentData().toInt();
+    node_->employee = ui->comboEmployee->currentData().toUuid();
     sql_->WriteField(party_info_, kEmployee, node_->employee, node_id_);
 }
 
@@ -345,8 +346,8 @@ void TransWidgetO::on_pBtnInsert_clicked()
         return;
 
     auto* node { ResourcePool<Node>::Instance().Allocate() };
-    node->direction_rule = stakeholder_node_->Rule(-1);
-    stakeholder_node_->SetParent(node, -1);
+    node->direction_rule = stakeholder_node_->Rule({});
+    stakeholder_node_->SetParent(node, {});
     node->name = name;
 
     node->unit = party_unit_;

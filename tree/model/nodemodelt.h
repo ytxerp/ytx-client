@@ -30,9 +30,9 @@ public:
     ~NodeModelT() override;
 
 public slots:
-    void RSyncLeafValue(int node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta, double final_credit_delta,
+    void RSyncLeafValue(const QUuid& node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta, double final_credit_delta,
         double delta5 = 0.0) override;
-    void RSyncDouble(int node_id, int column, double value) override; // unit_cost
+    void RSyncDouble(const QUuid& node_id, int column, double value) override; // unit_cost
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

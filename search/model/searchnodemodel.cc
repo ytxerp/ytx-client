@@ -65,9 +65,9 @@ QVariant SearchNodeModel::data(const QModelIndex& index, int role) const
     case NodeSearchEnum::kUnit:
         return node->unit;
     case NodeSearchEnum::kParty:
-        return node->party == 0 ? QVariant() : node->party;
+        return node->party.isNull() ? QVariant() : node->party;
     case NodeSearchEnum::kEmployee:
-        return node->employee == 0 ? QVariant() : node->employee;
+        return node->employee.isNull() ? QVariant() : node->employee;
     case NodeSearchEnum::kIssuedTime:
         return node->issued_time;
     case NodeSearchEnum::kColor:
@@ -171,7 +171,7 @@ void SearchNodeModel::Query(const QString& text)
     case Section::kProduct:
     case Section::kTask:
     case Section::kStakeholder: {
-        QSet<int> node_id_set {};
+        QSet<QUuid> node_id_set {};
         sql_->SearchNodeName(node_id_set, text);
         tree_model_->SearchNode(node_list_, node_id_set);
     } break;

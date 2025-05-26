@@ -33,7 +33,7 @@ void NodeWidgetF::UpdateStaticStatus()
     ui->dspin_box_static_->setDecimals(section_settings_.amount_decimal);
     ui->lable_static_->setText(section_settings_.static_label);
 
-    const int static_node_id { section_settings_.static_node };
+    const auto static_node_id { section_settings_.static_node };
 
     if (!model_->Contains(static_node_id)) {
         ResetStatus(ui->dspin_box_static_, static_unit_is_default_);
@@ -54,8 +54,8 @@ void NodeWidgetF::UpdateDynamicStatus()
     ui->dspin_box_dynamic_->setDecimals(section_settings_.amount_decimal);
     ui->label_dynamic_->setText(section_settings_.dynamic_label);
 
-    const int dynamic_node_id_lhs { section_settings_.dynamic_node_lhs };
-    const int dynamic_node_id_rhs { section_settings_.dynamic_node_rhs };
+    const auto dynamic_node_id_lhs { section_settings_.dynamic_node_lhs };
+    const auto dynamic_node_id_rhs { section_settings_.dynamic_node_rhs };
 
     if (!model_->Contains(dynamic_node_id_lhs) && !model_->Contains(dynamic_node_id_rhs)) {
         ResetStatus(ui->dspin_box_dynamic_, dynamic_unit_is_not_default_but_equal_);
@@ -78,9 +78,9 @@ void NodeWidgetF::RSyncStatusValue()
     UpdateDynamicValue(section_settings_.dynamic_node_lhs, section_settings_.dynamic_node_rhs);
 }
 
-void NodeWidgetF::UpdateDynamicValue(int lhs_node_id, int rhs_node_id)
+void NodeWidgetF::UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id)
 {
-    if (lhs_node_id == 0 && rhs_node_id == 0)
+    if (lhs_node_id.isNull() && rhs_node_id.isNull())
         return;
 
     const double lhs_total { dynamic_unit_is_not_default_but_equal_ ? model_->InitialTotal(lhs_node_id) : model_->FinalTotal(lhs_node_id) };
@@ -92,9 +92,9 @@ void NodeWidgetF::UpdateDynamicValue(int lhs_node_id, int rhs_node_id)
     ui->dspin_box_dynamic_->setValue(total);
 }
 
-void NodeWidgetF::UpdateStaticValue(int node_id)
+void NodeWidgetF::UpdateStaticValue(const QUuid& node_id)
 {
-    if (node_id == 0)
+    if (node_id.isNull())
         return;
 
     ui->dspin_box_static_->setValue(static_unit_is_default_ ? model_->FinalTotal(node_id) : model_->InitialTotal(node_id));

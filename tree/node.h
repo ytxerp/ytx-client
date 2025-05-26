@@ -22,10 +22,11 @@
 
 #include <QList>
 #include <QString>
+#include <QUuid>
 
 struct Node {
     QString name {};
-    int id {};
+    QUuid id {};
     QString code {};
     QString description {};
     QString note {};
@@ -42,9 +43,9 @@ struct Node {
     double discount {};
 
     // order and stakeholder
-    int employee {};
+    QUuid employee {};
     // order
-    int party {};
+    QUuid party {};
 
     double final_total {};
     double initial_total {};
@@ -52,13 +53,14 @@ struct Node {
     Node* parent {};
     QList<Node*> children {};
 
-    void Reset()
+    void GenerateId() { id = QUuid::createUuidV7(); }
+    void ResetState()
     {
         name.clear();
-        id = 0;
+        id = QUuid();
         code.clear();
-        party = 0;
-        employee = 0;
+        party = QUuid();
+        employee = QUuid();
         second = 0.0;
         discount = 0.0;
         is_finished = false;
@@ -78,8 +80,8 @@ struct Node {
     }
 };
 
-using NodeHash = QHash<int, Node*>;
-using CNodeHash = const QHash<int, Node*>;
+using NodeHash = QHash<QUuid, Node*>;
+using CNodeHash = const QHash<QUuid, Node*>;
 using NodeList = QList<Node*>;
 
 #endif // NODE_H

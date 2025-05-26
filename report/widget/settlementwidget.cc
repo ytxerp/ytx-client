@@ -76,11 +76,11 @@ void SettlementWidget::on_settlementView_doubleClicked(const QModelIndex& index)
     if (index.column() != std::to_underlying(SettlementEnum::kGrossAmount))
         return;
 
-    const int party { index.siblingAtColumn(std::to_underlying(SettlementEnum::kParty)).data().toInt() };
-    if (party == 0)
+    const auto party { index.siblingAtColumn(std::to_underlying(SettlementEnum::kParty)).data().toUuid() };
+    if (party.isNull())
         return;
 
-    const int settlement_id { index.siblingAtColumn(std::to_underlying(SettlementEnum::kID)).data().toInt() };
+    const auto settlement_id { index.siblingAtColumn(std::to_underlying(SettlementEnum::kID)).data().toUuid() };
     const bool is_finished { index.siblingAtColumn(std::to_underlying(SettlementEnum::kIsFinished)).data().toBool() };
 
     settlement_primary_model_->RResetModel(party, settlement_id, is_finished);
@@ -91,6 +91,6 @@ void SettlementWidget::on_settlementViewPrimary_doubleClicked(const QModelIndex&
     if (index.column() != std::to_underlying(SettlementEnum::kGrossAmount))
         return;
 
-    const int node_id { index.siblingAtColumn(std::to_underlying(SettlementEnum::kID)).data().toInt() };
+    const auto node_id { index.siblingAtColumn(std::to_underlying(SettlementEnum::kID)).data().toUuid() };
     emit SNodeLocation(node_id);
 }

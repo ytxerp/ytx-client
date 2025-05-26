@@ -11,8 +11,8 @@ NodeModelP::NodeModelP(CNodeModelArg& arg, QObject* parent)
 
 NodeModelP::~NodeModelP() { qDeleteAll(node_hash_); }
 
-void NodeModelP::RSyncLeafValue(
-    int node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta, double final_credit_delta, double /*settled_delta*/)
+void NodeModelP::RSyncLeafValue(const QUuid& node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta,
+    double final_credit_delta, double /*settled_delta*/)
 {
     auto* node { NodeModelUtils::GetNode(node_hash_, node_id) };
     assert(node && node->node_type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
@@ -33,13 +33,13 @@ void NodeModelP::RSyncLeafValue(
     emit SSyncStatusValue();
 }
 
-void NodeModelP::RemoveUnitSet(int node_id, int unit)
+void NodeModelP::RemoveUnitSet(const QUuid& node_id, int unit)
 {
     if (unit == std::to_underlying(UnitP::kPos))
         pset_.remove(node_id);
 }
 
-void NodeModelP::InsertUnitSet(int node_id, int unit)
+void NodeModelP::InsertUnitSet(const QUuid& node_id, int unit)
 {
     if (unit == std::to_underlying(UnitP::kPos)) {
         pset_.insert(node_id);

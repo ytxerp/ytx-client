@@ -21,6 +21,7 @@
 #define CONFIG_H
 
 #include <QString>
+#include <QUuid>
 
 struct AppConfig {
     QString theme {};
@@ -50,11 +51,11 @@ struct FileConfig {
 
 struct SectionConfig {
     QString static_label {};
-    int static_node {};
+    QUuid static_node {};
     QString dynamic_label {};
-    int dynamic_node_lhs {};
+    QUuid dynamic_node_lhs {};
     QString operation {};
-    int dynamic_node_rhs {};
+    QUuid dynamic_node_rhs {};
     int default_unit {};
     QString document_path {};
     QString date_format {};

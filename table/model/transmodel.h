@@ -38,42 +38,42 @@ protected:
 
 signals:
     // send to TreeModel
-    void SSyncDouble(int node_id, int column, double value);
-    void SSyncLeafValue(int node_id, double delta1 = 0.0, double delta2 = 0.0, double delta3 = 0.0, double delta4 = 0.0, double delta5 = 0.0);
+    void SSyncDouble(const QUuid& node_id, int column, double value);
+    void SSyncLeafValue(const QUuid& node_id, double delta1 = 0.0, double delta2 = 0.0, double delta3 = 0.0, double delta4 = 0.0, double delta5 = 0.0);
     void SSearch();
 
     // send to LeafSStation
     void SAppendOneTransL(Section section, const TransShadow* trans_shadow);
-    void SRemoveOneTransL(Section section, int node_id, int trans_id);
-    void SSyncBalance(Section section, int node_id, int trans_id);
+    void SRemoveOneTransL(Section section, const QUuid& node_id, const QUuid& trans_id);
+    void SSyncBalance(Section section, const QUuid& node_id, const QUuid& trans_id);
 
     // send to SupportSStation
-    void SAppendOneTransS(Section section, int support_id, int trans_id);
-    void SRemoveOneTransS(Section section, int support_id, int trans_id);
+    void SAppendOneTransS(Section section, const QUuid& support_id, const QUuid& trans_id);
+    void SRemoveOneTransS(Section section, const QUuid& support_id, const QUuid& trans_id);
 
     // send to its table view
     void SResizeColumnToContents(int column);
 
 public slots:
     // receive from LeafSStation
-    void RRemoveMultiTransL(int node_id, const QSet<int>& trans_id_set);
-    void RAppendMultiTransL(int node_id, const QSet<int>& trans_id_set);
-    void RAppendMultiTrans(int node_id, const TransShadowList& trans_shadow_list);
+    void RRemoveMultiTransL(const QUuid& node_id, const QSet<QUuid>& trans_id_set);
+    void RAppendMultiTransL(const QUuid& node_id, const QSet<QUuid>& trans_id_set);
+    void RAppendMultiTrans(const QUuid& node_id, const TransShadowList& trans_shadow_list);
 
     void RAppendOneTransL(const TransShadow* trans_shadow);
-    void RRemoveOneTransL(int node_id, int trans_id);
-    void RSyncBalance(int node_id, int trans_id);
-    void RSyncRule(int node_id, bool rule);
+    void RRemoveOneTransL(const QUuid& node_id, const QUuid& trans_id);
+    void RSyncBalance(const QUuid& node_id, const QUuid& trans_id);
+    void RSyncRule(const QUuid& node_id, bool rule);
 
     // receive from TreeModel
-    virtual void RSyncBoolWD(int node_id, int column, bool value)
+    virtual void RSyncBoolWD(const QUuid& node_id, int column, bool value)
     {
         Q_UNUSED(node_id);
         Q_UNUSED(column);
         Q_UNUSED(value);
     }
 
-    virtual void RSyncInt(int node_id, int column, int value)
+    virtual void RSyncInt(const QUuid& node_id, int column, const QUuid& value)
     {
         Q_UNUSED(node_id);
         Q_UNUSED(column);
@@ -92,9 +92,9 @@ public:
     bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-    virtual int GetNodeRow(int node_id) const;
+    virtual int GetNodeRow(const QUuid& node_id) const;
 
-    QModelIndex GetIndex(int trans_id) const;
+    QModelIndex GetIndex(const QUuid& trans_id) const;
     QStringList* GetDocumentPointer(const QModelIndex& index) const;
 
     void UpdateAllState(Check state);
@@ -106,7 +106,7 @@ protected:
     virtual bool UpdateRatio(TransShadow* trans_shadow, double value);
 
     virtual void IniRatio(TransShadow* trans_shadow) const { Q_UNUSED(trans_shadow) }
-    virtual void UpdateUnitCost(int lhs_node, int rhs_node, double value)
+    virtual void UpdateUnitCost(const QUuid& lhs_node, const QUuid& rhs_node, double value)
     {
         Q_UNUSED(lhs_node)
         Q_UNUSED(rhs_node)
@@ -117,7 +117,7 @@ protected:
     Sql* sql_ {};
     CInfo& info_;
     bool node_rule_ {};
-    int node_id_ {};
+    QUuid node_id_ {};
     QMutex mutex_ {};
     const Section section_ {};
 

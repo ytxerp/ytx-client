@@ -18,7 +18,7 @@ void TransModelUtils::AccumulateSubtotal(QMutex& mutex, QList<TransShadow*>& tra
     });
 }
 
-bool TransModelUtils::UpdateRhsNode(TransShadow* trans_shadow, int value)
+bool TransModelUtils::UpdateRhsNode(TransShadow* trans_shadow, const QUuid& value)
 {
     if (*trans_shadow->rhs_node == value)
         return false;

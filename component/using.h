@@ -29,15 +29,15 @@
 using CStringMap = const QMap<int, QString>;
 using StringMap = QMap<int, QString>;
 
-using CStringHash = const QHash<int, QString>;
-using StringHash = QHash<int, QString>;
+using CStringHash = const QHash<QUuid, QString>;
+using StringHash = QHash<QUuid, QString>;
 
 using CString = const QString;
 using CVariant = const QVariant;
 using CStringList = const QStringList;
 using CDateTime = const QDateTime;
 
-using CIntSet = const QSet<int>;
+using CUuidSet = const QSet<QUuid>;
 using PDialog = QPointer<QDialog>;
 
 inline const QString kEmptyString {};

@@ -30,7 +30,7 @@ public:
     ~NodeModelP() override;
 
 public slots:
-    void RSyncLeafValue(int node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta, double final_credit_delta,
+    void RSyncLeafValue(const QUuid& node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta, double final_credit_delta,
         double delta5 = 0.0) override;
 
 public:
@@ -39,26 +39,26 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    const QString& Color(int node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::color); }
-    double First(int node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::first); }
+    const QString& Color(const QUuid& node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::color); }
+    double First(const QUuid& node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::first); }
 
     QSortFilterProxyModel* ExcludeUnitModel(int unit) override;
 
 protected:
-    void RemoveUnitSet(int node_id, int unit) override;
-    void InsertUnitSet(int node_id, int unit) override;
+    void RemoveUnitSet(const QUuid& node_id, int unit) override;
+    void InsertUnitSet(const QUuid& node_id, int unit) override;
 
     bool UpdateAncestorValue(
         Node* node, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0) override;
 
-    const QSet<int>* UnitSet(int unit) const override
+    const QSet<QUuid>* UnitSet(int unit) const override
     {
         Q_UNUSED(unit);
         return &pset_;
     }
 
 private:
-    QSet<int> pset_ {}; // Set of all nodes that are position-type units
+    QSet<QUuid> pset_ {}; // Set of all nodes that are position-type units
 };
 
 #endif // NODEMODELP_H

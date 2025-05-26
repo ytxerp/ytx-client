@@ -9,7 +9,7 @@
 TransModelS::TransModelS(CTransModelArg& arg, QObject* parent)
     : TransModel { arg, parent }
 {
-    assert(node_id_ >= 1 && "Assertion failed: node_id_ must be positive (>= 1)");
+    assert(!node_id_.isNull() && "Assertion failed: node_id_ must be positive (>= 1)");
     sql_->ReadTrans(trans_shadow_list_, node_id_);
     IniInsideSet();
 }
@@ -19,14 +19,14 @@ bool TransModelS::removeRows(int row, int /*count*/, const QModelIndex& parent)
     assert(row >= 0 && row <= rowCount(parent) - 1 && "Row must be in the valid range [0, rowCount(parent) - 1]");
 
     auto* trans_shadow { trans_shadow_list_.at(row) };
-    int rhs_node_id { *trans_shadow->rhs_node };
+    auto rhs_node_id { *trans_shadow->rhs_node };
 
     beginRemoveRows(parent, row, row);
     trans_shadow_list_.removeAt(row);
     endRemoveRows();
 
-    if (rhs_node_id != 0) {
-        if (int support_id = *trans_shadow->support_id; support_id != 0)
+    if (!rhs_node_id.isNull()) {
+        if (auto support_id = *trans_shadow->support_id; !support_id.isNull())
             emit SRemoveOneTransS(section_, support_id, *trans_shadow->id);
 
         sql_->RemoveTrans(*trans_shadow->id);
@@ -46,14 +46,14 @@ bool TransModelS::UpdateRatio(TransShadow* trans_shadow, double value)
     *trans_shadow->lhs_ratio = value;
     *trans_shadow->rhs_ratio = value;
 
-    if (*trans_shadow->rhs_node == 0)
+    if (trans_shadow->rhs_node->isNull())
         return false;
 
     sql_->WriteField(info_.trans, kUnitPrice, value, *trans_shadow->id);
     return true;
 }
 
-bool TransModelS::UpdateInsideProduct(TransShadow* trans_shadow, int value)
+bool TransModelS::UpdateInsideProduct(TransShadow* trans_shadow, const QUuid& value)
 {
     if (*trans_shadow->rhs_node == value || inside_set_.contains(value))
         return false;
@@ -97,9 +97,9 @@ QVariant TransModelS::data(const QModelIndex& index, int role) const
     case TransEnumS::kIsChecked:
         return *trans_shadow->is_checked ? *trans_shadow->is_checked : QVariant();
     case TransEnumS::kInsideProduct:
-        return *trans_shadow->rhs_node == 0 ? QVariant() : *trans_shadow->rhs_node;
+        return trans_shadow->rhs_node->isNull() ? QVariant() : *trans_shadow->rhs_node;
     case TransEnumS::kOutsideProduct:
-        return *trans_shadow->support_id == 0 ? QVariant() : *trans_shadow->support_id;
+        return trans_shadow->support_id->isNull() ? QVariant() : *trans_shadow->support_id;
     default:
         return QVariant();
     }
@@ -114,8 +114,8 @@ bool TransModelS::setData(const QModelIndex& index, const QVariant& value, int r
     const int kRow { index.row() };
 
     auto* trans_shadow { trans_shadow_list_.at(kRow) };
-    int old_rhs_node { *trans_shadow->rhs_node };
-    int old_sup_node { *trans_shadow->support_id };
+    auto old_rhs_node { *trans_shadow->rhs_node };
+    auto old_sup_node { *trans_shadow->support_id };
 
     bool rhs_changed { false };
     bool sup_changed { false };
@@ -128,7 +128,7 @@ bool TransModelS::setData(const QModelIndex& index, const QVariant& value, int r
         TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kCode, value.toString(), &TransShadow::code);
         break;
     case TransEnumS::kInsideProduct:
-        rhs_changed = UpdateInsideProduct(trans_shadow, value.toInt());
+        rhs_changed = UpdateInsideProduct(trans_shadow, value.toUuid());
         break;
     case TransEnumS::kUnitPrice:
         UpdateRatio(trans_shadow, value.toDouble());
@@ -140,17 +140,17 @@ bool TransModelS::setData(const QModelIndex& index, const QVariant& value, int r
         TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kIsChecked, value.toBool(), &TransShadow::is_checked);
         break;
     case TransEnumS::kOutsideProduct:
-        sup_changed = TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kOutsideProduct, value.toInt(), &TransShadow::support_id);
+        sup_changed = TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kOutsideProduct, value.toUuid(), &TransShadow::support_id);
         break;
     default:
         return false;
     }
 
     if (rhs_changed) {
-        if (old_rhs_node == 0) {
+        if (old_rhs_node.isNull()) {
             sql_->WriteTrans(trans_shadow);
 
-            if (*trans_shadow->support_id != 0) {
+            if (!trans_shadow->support_id->isNull()) {
                 emit SAppendOneTransS(section_, *trans_shadow->support_id, *trans_shadow->id);
             }
         } else
@@ -158,10 +158,10 @@ bool TransModelS::setData(const QModelIndex& index, const QVariant& value, int r
     }
 
     if (sup_changed) {
-        if (old_sup_node != 0)
+        if (!old_sup_node.isNull())
             emit SRemoveOneTransS(section_, old_sup_node, *trans_shadow->id);
 
-        if (*trans_shadow->support_id != 0 && *trans_shadow->id != 0) {
+        if (!trans_shadow->support_id->isNull() && !trans_shadow->id->isNull()) {
             emit SAppendOneTransS(section_, *trans_shadow->support_id, *trans_shadow->id);
         }
     }

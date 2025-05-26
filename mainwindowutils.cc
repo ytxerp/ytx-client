@@ -64,13 +64,13 @@ QVariantList MainWindowUtils::SaveTab(CTransWgtHash& trans_wgt_hash)
     const auto keys { trans_wgt_hash.keys() };
     QVariantList list {};
 
-    for (int node_id : keys)
+    for (const auto& node_id : keys)
         list.emplaceBack(node_id);
 
     return list;
 }
 
-QSet<int> MainWindowUtils::ReadSettings(QSharedPointer<QSettings> settings, CString& section, CString& property)
+QSet<QUuid> MainWindowUtils::ReadSettings(QSharedPointer<QSettings> settings, CString& section, CString& property)
 {
     assert(settings && "settings must be non-null");
 
@@ -79,11 +79,11 @@ QSet<int> MainWindowUtils::ReadSettings(QSharedPointer<QSettings> settings, CStr
     if (!variant.isValid() || !variant.canConvert<QVariantList>())
         return {};
 
-    QSet<int> set {};
+    QSet<QUuid> set {};
     const auto variant_list { variant.value<QVariantList>() };
 
     for (const auto& node_id : variant_list)
-        set.insert(node_id.toInt());
+        set.insert(node_id.toUuid());
 
     return set;
 }

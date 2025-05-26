@@ -40,33 +40,33 @@ protected:
 
 signals:
     // send to TreeModel
-    void SSyncMultiLeafValue(const QList<int>& node_id_list);
-    void SRemoveNode(int node_id);
+    void SSyncMultiLeafValue(const QList<QUuid>& node_id_list);
+    void SRemoveNode(const QUuid& node_id);
     // send to Mainwindow
-    void SFreeWidget(int node_id, int node_type);
+    void SFreeWidget(const QUuid& node_id, int node_type);
     // send to sql itsself
-    void SSyncProduct(int old_node_id, int new_node_id);
+    void SSyncProduct(const QUuid& old_node_id, const QUuid& new_node_id);
     // send to sql itsself and treemodel
-    void SSyncStakeholder(int old_node_id, int new_node_id);
+    void SSyncStakeholder(const QUuid& old_node_id, const QUuid& new_node_id);
     // send to LeafSStation, Stakeholder transactions are removed directly
-    void SRemoveMultiTransL(Section section, const QMultiHash<int, int>& leaf_trans);
-    void SMoveMultiTransL(Section section, int old_node_id, int new_node_id, const QSet<int>& trans_id_set);
-    void SAppendMultiTrans(Section section, int node_id, const TransShadowList& trans_shadow);
+    void SRemoveMultiTransL(Section section, const QMultiHash<QUuid, QUuid>& leaf_trans);
+    void SMoveMultiTransL(Section section, const QUuid& old_node_id, const QUuid& new_node_id, const QSet<QUuid>& trans_id_set);
+    void SAppendMultiTrans(Section section, const QUuid& node_id, const TransShadowList& trans_shadow);
     // send to SupportSStation
-    void SRemoveMultiTransS(Section section, const QMultiHash<int, int>& support_trans);
-    void SMoveMultiTransS(Section section, int old_node_id, int new_node_id, const QSet<int>& trans_id_set);
+    void SRemoveMultiTransS(Section section, const QMultiHash<QUuid, QUuid>& support_trans);
+    void SMoveMultiTransS(Section section, const QUuid& old_node_id, const QUuid& new_node_id, const QSet<QUuid>& trans_id_set);
 
 public slots:
     // receive from remove node dialog
-    virtual void RRemoveNode(int node_id, int node_type);
-    virtual void RReplaceNode(int old_node_id, int new_node_id, int node_type, int node_unit);
+    virtual void RRemoveNode(const QUuid& node_id, int node_type);
+    virtual void RReplaceNode(const QUuid& old_node_id, const QUuid& new_node_id, int node_type, int node_unit);
     // receive from sql
-    virtual void RSyncProduct(int old_node_id, int new_node_id) const
+    virtual void RSyncProduct(const QUuid& old_node_id, const QUuid& new_node_id) const
     {
         Q_UNUSED(old_node_id);
         Q_UNUSED(new_node_id);
     }
-    virtual void RSyncStakeholder(int old_node_id, int new_node_id) const
+    virtual void RSyncStakeholder(const QUuid& old_node_id, const QUuid& new_node_id) const
     {
         Q_UNUSED(old_node_id);
         Q_UNUSED(new_node_id);
@@ -75,34 +75,34 @@ public slots:
 public:
     // tree
     bool ReadNode(NodeHash& node_hash);
-    bool RemoveNode(int node_id, int node_type);
-    bool WriteNode(int parent_id, Node* node);
-    bool DragNode(int destination_node_id, int node_id);
-    bool InternalReference(int node_id) const;
-    bool ExternalReference(int node_id) const;
-    bool SupportReference(int support_id) const;
+    bool RemoveNode(const QUuid& node_id, int node_type);
+    bool WriteNode(const QUuid& parent_id, Node* node);
+    bool DragNode(const QUuid& destination_node_id, const QUuid& node_id);
+    bool InternalReference(const QUuid& node_id) const;
+    bool ExternalReference(const QUuid& node_id) const;
+    bool SupportReference(const QUuid& support_id) const;
     bool ReadLeafTotal(Node* node) const;
     bool UpdateLeafValue(const Node* node) const;
-    bool SearchNodeName(QSet<int>& node_id_set, CString& text) const;
+    bool SearchNodeName(QSet<QUuid>& node_id_set, CString& text) const;
 
     // table
-    bool ReadTrans(TransShadowList& trans_shadow_list, int node_id);
-    bool RetrieveTransRange(TransShadowList& trans_shadow_list, int node_id, const QSet<int>& trans_id_set);
+    bool ReadTrans(TransShadowList& trans_shadow_list, const QUuid& node_id);
+    bool RetrieveTransRange(TransShadowList& trans_shadow_list, const QUuid& node_id, const QSet<QUuid>& trans_id_set);
     bool WriteTrans(TransShadow* trans_shadow);
     bool UpdateTransValue(const TransShadow* trans_shadow) const;
     TransShadow* AllocateTransShadow();
 
     bool WriteState(Check state) const;
 
-    bool ReadSupportTrans(TransList& trans_list, int support_id);
-    bool RetrieveTransRange(TransList& trans_shadow_list, const QSet<int>& trans_id_set);
+    bool ReadSupportTrans(TransList& trans_list, const QUuid& support_id);
+    bool RetrieveTransRange(TransList& trans_shadow_list, const QSet<QUuid>& trans_id_set);
     bool SearchTrans(TransList& trans_list, CString& text);
-    bool RemoveTrans(int trans_id);
+    bool RemoveTrans(const QUuid& trans_id);
 
-    bool ReadTransRef(TransList& trans_list, int node_id, int unit, const QDateTime& start, const QDateTime& end) const;
+    bool ReadTransRef(TransList& trans_list, const QUuid& node_id, int unit, const QDateTime& start, const QDateTime& end) const;
 
     // common
-    bool WriteField(CString& table, CString& field, CVariant& value, int id) const;
+    bool WriteField(CString& table, CString& field, CVariant& value, const QUuid& id) const;
 
 protected:
     // QS means QueryString
@@ -146,12 +146,12 @@ protected:
     //
     bool DBTransaction(std::function<bool()> function);
     bool ReadRelationship(const NodeHash& node_hash, QSqlQuery& query) const;
-    bool WriteRelationship(int node_id, int parent_id, QSqlQuery& query) const;
-    bool RemoveNode(int old_node_id);
+    bool WriteRelationship(const QUuid& node_id, const QUuid& parent_id, QSqlQuery& query) const;
+    bool RemoveNode(const QUuid& node_id);
 
-    virtual bool ReplaceLeaf(int old_node_id, int new_node_id, int node_unit);
-    bool ReplaceSupport(int old_node_id, int new_node_id);
-    void ReplaceLeafFunction(QSet<int>& trans_id_set, int old_node_id, int new_node_id) const;
+    virtual bool ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id, int node_unit);
+    bool ReplaceSupport(const QUuid& old_node_id, const QUuid& new_node_id);
+    void ReplaceLeafFunction(QSet<QUuid>& trans_id_set, const QUuid& old_node_id, const QUuid& new_node_id) const;
 
     // table
     virtual QString QSReadTrans() const = 0;
@@ -180,20 +180,20 @@ protected:
         Q_UNUSED(query);
     };
 
-    virtual void ReadTransFunction(TransShadowList& trans_shadow_list, int node_id, QSqlQuery& query);
+    virtual void ReadTransFunction(TransShadowList& trans_shadow_list, const QUuid& node_id, QSqlQuery& query);
     virtual void CalculateLeafTotal(Node* node, QSqlQuery& query) const;
 
     //
     void ConvertTrans(Trans* trans, TransShadow* trans_shadow, bool left) const;
-    void TransToRemove(QMultiHash<int, int>& leaf_trans, QMultiHash<int, int>& support_trans, int node_id, int node_type) const;
-    void RemoveSupportFunction(int support_id) const;
-    void RemoveLeafFunction(const QMultiHash<int, int>& leaf_trans);
-    void ReplaceSupportFunction(QSet<int>& trans_id_set, int old_support_id, int new_support_id);
-    bool FreeView(int old_node_id, int new_node_id) const;
+    void TransToRemove(QMultiHash<QUuid, QUuid>& leaf_trans, QMultiHash<QUuid, QUuid>& support_trans, const QUuid& node_id, int node_type) const;
+    void RemoveSupportFunction(const QUuid& support_id) const;
+    void RemoveLeafFunction(const QMultiHash<QUuid, QUuid>& leaf_trans);
+    void ReplaceSupportFunction(QSet<QUuid>& trans_id_set, const QUuid& old_support_id, const QUuid& new_support_id);
+    bool FreeView(const QUuid& old_node_id, const QUuid& new_node_id) const;
     void ReadTransFunction(TransList& trans_list, QSqlQuery& query);
 
 protected:
-    QHash<int, Trans*> trans_hash_ {};
+    QHash<QUuid, Trans*> trans_hash_ {};
     Trans* last_trans_ {};
     const Section section_ {};
 

@@ -6,13 +6,13 @@ NodeModelS::NodeModelS(CNodeModelArg& arg, QObject* parent)
     : NodeModel(arg, parent)
 {
     IniModel();
-    NodeModelUtils::AppendItem(leaf_model_, 0, {});
+    NodeModelUtils::AppendItem(leaf_model_, {}, {});
     ConstructTree();
 }
 
 NodeModelS::~NodeModelS() { qDeleteAll(node_hash_); }
 
-void NodeModelS::RSyncStakeholder(int old_node_id, int new_node_id)
+void NodeModelS::RSyncStakeholder(const QUuid& old_node_id, const QUuid& new_node_id)
 {
     for (auto* node : std::as_const(node_hash_)) {
         if (node->employee == old_node_id)
@@ -20,9 +20,9 @@ void NodeModelS::RSyncStakeholder(int old_node_id, int new_node_id)
     }
 }
 
-void NodeModelS::RSyncDouble(int node_id, int column, double value)
+void NodeModelS::RSyncDouble(const QUuid& node_id, int column, double value)
 {
-    assert(node_id >= 1 && "node_id must be positive");
+    assert(!node_id.isNull() && "node_id must be positive");
 
     if (column != std::to_underlying(NodeEnumS::kAmount) || value == 0.0)
         return;
@@ -37,9 +37,9 @@ void NodeModelS::RSyncDouble(int node_id, int column, double value)
     UpdateAncestorValue(node, 0.0, value);
 }
 
-void NodeModelS::RSyncMultiLeafValue(const QList<int>& node_list)
+void NodeModelS::RSyncMultiLeafValue(const QList<QUuid>& node_list)
 {
-    for (int node_id : node_list) {
+    for (const auto& node_id : node_list) {
         auto* node { NodeModelUtils::GetNode(node_hash_, node_id) };
 
         assert(node && node->node_type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
@@ -55,9 +55,9 @@ void NodeModelS::RSyncMultiLeafValue(const QList<int>& node_list)
     }
 }
 
-QList<int> NodeModelS::PartyList(CString& text, int unit) const
+QList<QUuid> NodeModelS::PartyList(CString& text, int unit) const
 {
-    QList<int> list {};
+    QList<QUuid> list {};
 
     for (auto* node : node_hash_)
         if (node->unit == unit && node->name.contains(text))
@@ -66,7 +66,7 @@ QList<int> NodeModelS::PartyList(CString& text, int unit) const
     return list;
 }
 
-const QSet<int>* NodeModelS::UnitSet(int unit) const
+const QSet<QUuid>* NodeModelS::UnitSet(int unit) const
 {
     const UnitS kUnit { unit };
 
@@ -112,7 +112,7 @@ bool NodeModelS::UpdateAncestorValue(Node* node, double /*initial*/, double fina
     return true;
 }
 
-void NodeModelS::RemoveUnitSet(int node_id, int unit)
+void NodeModelS::RemoveUnitSet(const QUuid& node_id, int unit)
 {
     const UnitS kUnit { unit };
 
@@ -131,7 +131,7 @@ void NodeModelS::RemoveUnitSet(int node_id, int unit)
     }
 }
 
-void NodeModelS::InsertUnitSet(int node_id, int unit)
+void NodeModelS::InsertUnitSet(const QUuid& node_id, int unit)
 {
     const UnitS kUnit { unit };
 
@@ -219,7 +219,7 @@ QVariant NodeModelS::data(const QModelIndex& index, int role) const
     case NodeEnumS::kDeadline:
         return kIsLeaf && node->direction_rule == kRuleMS ? node->issued_time : QVariant();
     case NodeEnumS::kEmployee:
-        return kIsLeaf && node->employee != 0 ? node->employee : QVariant();
+        return kIsLeaf && !node->employee.isNull() ? node->employee : QVariant();
     case NodeEnumS::kPaymentTerm:
         return kIsLeaf && node->first != 0 ? node->first : QVariant();
     case NodeEnumS::kTaxRate:
@@ -262,7 +262,7 @@ bool NodeModelS::setData(const QModelIndex& index, const QVariant& value, int ro
         NodeModelUtils::UpdateField(sql_, node, info_.node, kDeadline, value.toString(), &Node::issued_time, true);
         break;
     case NodeEnumS::kEmployee:
-        NodeModelUtils::UpdateField(sql_, node, info_.node, kEmployee, value.toInt(), &Node::employee, true);
+        NodeModelUtils::UpdateField(sql_, node, info_.node, kEmployee, value.toUuid(), &Node::employee, true);
         break;
     case NodeEnumS::kPaymentTerm:
         NodeModelUtils::UpdateField(sql_, node, info_.node, kPaymentTerm, value.toDouble(), &Node::first, true);

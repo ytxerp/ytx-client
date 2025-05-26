@@ -78,6 +78,7 @@ private:
     void IniText(Section section);
 
     void IniData();
+    void IniDataCombo(QComboBox* combo, const QUuid& value);
     void IniDataCombo(QComboBox* combo, int value);
     void IniDataCombo(QComboBox* combo, CString& string);
 

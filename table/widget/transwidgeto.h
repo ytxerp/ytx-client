@@ -40,28 +40,28 @@ public:
 
 signals:
     // send to TableModelOrder, MainWindow
-    void SSyncInt(int node_id, int column, int value);
+    void SSyncInt(const QUuid& node_id, int column, const QUuid& value);
 
     // send to TreeModelOrder, finished
-    void SSyncBoolNode(int node_id, int column, bool value);
+    void SSyncBoolNode(const QUuid& node_id, int column, bool value);
 
     // send to TableModelOrder, finished, rule
-    void SSyncBoolTrans(int node_id, int column, bool value);
+    void SSyncBoolTrans(const QUuid& node_id, int column, bool value);
 
     // send to TreeModelOrder
-    void SSyncLeafValue(int node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta);
+    void SSyncLeafValue(const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta);
 
     // send to MainWindow
     void SEnableAction(bool finished);
 
 public slots:
     // receive from TreeModelOrder
-    void RSyncBoolNode(int node_id, int column, bool value);
-    void RSyncInt(int node_id, int column, int value);
-    void RSyncString(int node_id, int column, const QString& value);
+    void RSyncBoolNode(const QUuid& node_id, int column, bool value);
+    void RSyncInt(const QUuid& node_id, int column, int value);
+    void RSyncString(const QUuid& node_id, int column, const QString& value);
 
     // receive from TableModelOrder
-    void RSyncLeafValue(int node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta);
+    void RSyncLeafValue(const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta);
 
 public:
     QPointer<TransModel> Model() const override { return order_trans_; }
@@ -88,7 +88,7 @@ private:
     void IniWidget();
     void IniData();
     void IniConnect();
-    void IniDataCombo(int party, int employee);
+    void IniDataCombo(const QUuid& party, const QUuid& employee);
     void LockWidgets(bool finished);
     void IniUnit(int unit);
     void IniLeafValue();
@@ -113,7 +113,7 @@ private:
     QSortFilterProxyModel* emodel_ {};
     QSortFilterProxyModel* pmodel_ {};
 
-    const int node_id_ {};
+    const QUuid node_id_ {};
     const int party_unit_ {};
     const QString party_info_ {};
 

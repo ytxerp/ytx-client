@@ -11,17 +11,17 @@ TransModelO::TransModelO(CTransModelArg& arg, const Node* node, CNodeModel* prod
     , node_ { node }
     , party_id_ { node->party }
 {
-    if (node_id_ >= 1)
+    if (!node_id_.isNull())
         sql_->ReadTrans(trans_shadow_list_, node_id_);
 
-    if (party_id_ >= 1)
+    if (!party_id_.isNull())
         sqlite_stakeholder_->ReadTrans(party_id_);
 }
 
-void TransModelO::UpdateLhsNode(int node_id)
+void TransModelO::UpdateLhsNode(const QUuid& node_id)
 {
-    assert(node_id >= 1 && "Assertion failed: node_id must be positive (>= 1)");
-    assert(node_id_ == 0 && "Assertion failed: node_id_ must be 0");
+    assert(!node_id.isNull() && "Assertion failed: node_id must be positive (>= 1)");
+    assert(node_id_.isNull() && "Assertion failed: node_id_ must be 0");
 
     node_id_ = node_id;
     if (trans_shadow_list_.isEmpty())
@@ -33,7 +33,7 @@ void TransModelO::UpdateLhsNode(int node_id)
         sqlite_order_->WriteTransRange(trans_shadow_list_);
 }
 
-void TransModelO::UpdateParty(int node_id, int party_id)
+void TransModelO::UpdateParty(const QUuid& node_id, const QUuid& party_id)
 {
     assert(node_id_ == node_id && "Assertion failed: node_id_ must be equal to node_id");
     if (party_id_ == party_id)
@@ -43,7 +43,7 @@ void TransModelO::UpdateParty(int node_id, int party_id)
     sqlite_stakeholder_->ReadTrans(party_id);
 }
 
-void TransModelO::UpdateRule(int node_id, bool value)
+void TransModelO::UpdateRule(const QUuid& node_id, bool value)
 {
     assert(node_id_ == node_id && "Assertion failed: node_id_ must be equal to node_id");
     if (node_rule_ == value)
@@ -65,7 +65,7 @@ void TransModelO::UpdateRule(int node_id, bool value)
     endResetModel();
 }
 
-void TransModelO::RSyncBoolWD(int node_id, int column, bool value)
+void TransModelO::RSyncBoolWD(const QUuid& node_id, int column, bool value)
 {
     assert(node_id_ == node_id && "Assertion failed: node_id_ must be equal to node_id");
 
@@ -81,7 +81,7 @@ void TransModelO::RSyncBoolWD(int node_id, int column, bool value)
     }
 }
 
-void TransModelO::RSyncInt(int node_id, int column, int value)
+void TransModelO::RSyncInt(const QUuid& node_id, int column, const QUuid& value)
 {
     const NodeEnumO kColumn { column };
 
@@ -111,7 +111,7 @@ QVariant TransModelO::data(const QModelIndex& index, int role) const
     case TransEnumO::kCode:
         return *trans_shadow->code;
     case TransEnumO::kInsideProduct:
-        return *trans_shadow->rhs_node == 0 ? QVariant() : *trans_shadow->rhs_node;
+        return trans_shadow->rhs_node->isNull() ? QVariant() : *trans_shadow->rhs_node;
     case TransEnumO::kUnitPrice:
         return *trans_shadow->lhs_ratio == 0 ? QVariant() : *trans_shadow->lhs_ratio;
     case TransEnumO::kSecond:
@@ -119,7 +119,7 @@ QVariant TransModelO::data(const QModelIndex& index, int role) const
     case TransEnumO::kDescription:
         return *trans_shadow->description;
     case TransEnumO::kColor:
-        return *trans_shadow->rhs_node == 0 ? QVariant() : product_tree_->Color(*trans_shadow->rhs_node);
+        return trans_shadow->rhs_node->isNull() ? QVariant() : product_tree_->Color(*trans_shadow->rhs_node);
     case TransEnumO::kFirst:
         return *trans_shadow->lhs_debit == 0 ? QVariant() : *trans_shadow->lhs_debit;
     case TransEnumO::kNetAmount:
@@ -131,7 +131,7 @@ QVariant TransModelO::data(const QModelIndex& index, int role) const
     case TransEnumO::kDiscountPrice:
         return *trans_shadow->rhs_ratio == 0 ? QVariant() : *trans_shadow->rhs_ratio;
     case TransEnumO::kOutsideProduct:
-        return *trans_shadow->support_id == 0 ? QVariant() : *trans_shadow->support_id;
+        return trans_shadow->support_id->isNull() ? QVariant() : *trans_shadow->support_id;
     default:
         return QVariant();
     }
@@ -146,7 +146,7 @@ bool TransModelO::setData(const QModelIndex& index, const QVariant& value, int r
     const int kRow { index.row() };
 
     auto* trans_shadow { trans_shadow_list_.at(kRow) };
-    const int old_rhs_node { *trans_shadow->rhs_node };
+    const auto old_rhs_node { *trans_shadow->rhs_node };
     const double old_first { *trans_shadow->lhs_debit };
     const double old_second { *trans_shadow->lhs_credit };
     const double old_discount { *trans_shadow->discount };
@@ -169,7 +169,7 @@ bool TransModelO::setData(const QModelIndex& index, const QVariant& value, int r
         TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kDescription, value.toString(), &TransShadow::description);
         break;
     case TransEnumO::kInsideProduct:
-        ins_changed = UpdateInsideProduct(trans_shadow, value.toInt());
+        ins_changed = UpdateInsideProduct(trans_shadow, value.toUuid());
         break;
     case TransEnumO::kUnitPrice:
         uni_changed = UpdateUnitPrice(trans_shadow, value.toDouble());
@@ -184,7 +184,7 @@ bool TransModelO::setData(const QModelIndex& index, const QVariant& value, int r
         dis_changed = UpdateDiscountPrice(trans_shadow, value.toDouble());
         break;
     case TransEnumO::kOutsideProduct:
-        ins_changed = UpdateOutsideProduct(trans_shadow, value.toInt());
+        ins_changed = UpdateOutsideProduct(trans_shadow, value.toUuid());
         break;
     default:
         return false;
@@ -215,12 +215,12 @@ bool TransModelO::setData(const QModelIndex& index, const QVariant& value, int r
         emit SSyncLeafValue(*trans_shadow->lhs_node, 0.0, net_amount_delta, 0.0, 0.0, discount_delta);
     }
 
-    if (node_id_ == 0) {
+    if (node_id_.isNull()) {
         return false;
     }
 
     if (ins_changed) {
-        if (old_rhs_node == 0) {
+        if (old_rhs_node.isNull()) {
             sql_->WriteTrans(trans_shadow);
             emit SSyncLeafValue(*trans_shadow->lhs_node, *trans_shadow->rhs_debit, *trans_shadow->rhs_credit, *trans_shadow->lhs_debit,
                 *trans_shadow->lhs_credit, *trans_shadow->discount);
@@ -298,8 +298,8 @@ bool TransModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     assert(row >= 0 && row <= rowCount(parent) - 1 && "Row must be in the valid range [0, rowCount(parent) - 1]");
 
     auto* trans_shadow { trans_shadow_list_.at(row) };
-    const int lhs_node { *trans_shadow->lhs_node };
-    const int rhs_node { *trans_shadow->rhs_node };
+    const auto lhs_node { *trans_shadow->lhs_node };
+    const auto rhs_node { *trans_shadow->rhs_node };
 
     beginRemoveRows(parent, row, row);
     trans_shadow_list_.removeAt(row);
@@ -308,7 +308,7 @@ bool TransModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     emit SSyncLeafValue(
         lhs_node, -*trans_shadow->rhs_debit, -*trans_shadow->rhs_credit, -*trans_shadow->lhs_debit, -*trans_shadow->lhs_credit, -*trans_shadow->discount);
 
-    if (lhs_node != 0 && rhs_node != 0) {
+    if (!lhs_node.isNull() && !rhs_node.isNull()) {
         sql_->RemoveTrans(*trans_shadow->id);
     }
 
@@ -316,7 +316,7 @@ bool TransModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
-bool TransModelO::UpdateInsideProduct(TransShadow* trans_shadow, int value)
+bool TransModelO::UpdateInsideProduct(TransShadow* trans_shadow, const QUuid& value)
 {
     if (*trans_shadow->rhs_node == value)
         return false;
@@ -330,17 +330,17 @@ bool TransModelO::UpdateInsideProduct(TransShadow* trans_shadow, int value)
     return true;
 }
 
-bool TransModelO::UpdateOutsideProduct(TransShadow* trans_shadow, int value)
+bool TransModelO::UpdateOutsideProduct(TransShadow* trans_shadow, const QUuid& value)
 {
     if (*trans_shadow->support_id == value)
         return false;
 
-    const int old_rhs_node { *trans_shadow->rhs_node };
+    const auto old_rhs_node { *trans_shadow->rhs_node };
 
     *trans_shadow->support_id = value;
     CrossSearch(trans_shadow, value, false);
 
-    if (old_rhs_node) {
+    if (!old_rhs_node.isNull()) {
         sql_->WriteField(info_.trans, kOutsideProduct, value, *trans_shadow->id);
     }
 
@@ -364,7 +364,7 @@ bool TransModelO::UpdateUnitPrice(TransShadow* trans_shadow, double value)
     emit SResizeColumnToContents(std::to_underlying(TransEnumO::kGrossAmount));
     emit SResizeColumnToContents(std::to_underlying(TransEnumO::kNetAmount));
 
-    if (*trans_shadow->lhs_node == 0 || *trans_shadow->rhs_node == 0)
+    if (trans_shadow->lhs_node->isNull() || trans_shadow->rhs_node->isNull())
         return true;
 
     sql_->WriteField(info_.trans, kUnitPrice, value, *trans_shadow->id);
@@ -385,7 +385,7 @@ bool TransModelO::UpdateDiscountPrice(TransShadow* trans_shadow, double value)
     emit SResizeColumnToContents(std::to_underlying(TransEnumO::kDiscount));
     emit SResizeColumnToContents(std::to_underlying(TransEnumO::kNetAmount));
 
-    if (*trans_shadow->lhs_node == 0 || *trans_shadow->rhs_node == 0)
+    if (trans_shadow->lhs_node->isNull() || trans_shadow->rhs_node->isNull())
         return true;
 
     sql_->WriteField(info_.trans, kDiscountPrice, value, *trans_shadow->id);
@@ -409,7 +409,7 @@ bool TransModelO::UpdateSecond(TransShadow* trans_shadow, double value, int kCoe
     emit SResizeColumnToContents(std::to_underlying(TransEnumO::kDiscount));
     emit SResizeColumnToContents(std::to_underlying(TransEnumO::kNetAmount));
 
-    if (*trans_shadow->lhs_node == 0 || *trans_shadow->rhs_node == 0)
+    if (trans_shadow->lhs_node->isNull() || trans_shadow->rhs_node->isNull())
         // Return without writing data to SQLite
         return true;
 
@@ -426,29 +426,29 @@ bool TransModelO::UpdateFirst(TransShadow* trans_shadow, double value, int kCoef
     return true;
 }
 
-void TransModelO::PurifyTransShadow(int lhs_node_id)
+void TransModelO::PurifyTransShadow(const QUuid& lhs_node_id)
 {
     for (auto i = trans_shadow_list_.size() - 1; i >= 0; --i) {
         auto* trans_shadow { trans_shadow_list_[i] };
 
-        if (*trans_shadow->rhs_node == 0) {
+        if (trans_shadow->rhs_node->isNull()) {
             beginRemoveRows(QModelIndex(), i, i);
             ResourcePool<TransShadow>::Instance().Recycle(trans_shadow_list_.takeAt(i));
             endRemoveRows();
-        } else if (lhs_node_id != 0) {
+        } else if (!lhs_node_id.isNull()) {
             *trans_shadow->lhs_node = lhs_node_id;
         }
     }
 }
 
-void TransModelO::CrossSearch(TransShadow* trans_shadow, int product_id, bool is_inside) const
+void TransModelO::CrossSearch(TransShadow* trans_shadow, const QUuid& product_id, bool is_inside) const
 {
-    if (!trans_shadow || !sqlite_stakeholder_ || product_id <= 0)
+    if (!trans_shadow || !sqlite_stakeholder_ || product_id.isNull())
         return;
 
     if (sqlite_stakeholder_->CrossSearch(trans_shadow, party_id_, product_id, is_inside))
         return;
 
     *trans_shadow->lhs_ratio = is_inside ? product_tree_->First(product_id) : 0.0;
-    is_inside ? * trans_shadow->support_id = 0 : * trans_shadow->rhs_node = 0;
+    is_inside ? * trans_shadow->support_id = QUuid() : * trans_shadow->rhs_node = QUuid();
 }

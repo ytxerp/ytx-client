@@ -30,15 +30,15 @@ public:
     SqlS(QSqlDatabase& main_db, CInfo& info, QObject* parent = nullptr);
 
 public slots:
-    void RReplaceNode(int old_node_id, int new_node_id, int node_type, int node_unit) override;
-    void RRemoveNode(int node_id, int node_type) override;
-    void RSyncProduct(int old_node_id, int new_node_id) const override;
+    void RReplaceNode(const QUuid& old_node_id, const QUuid& new_node_id, int node_type, int node_unit) override;
+    void RRemoveNode(const QUuid& node_id, int node_type) override;
+    void RSyncProduct(const QUuid& old_node_id, const QUuid& new_node_id) const override;
 
     void RPriceSList(const QList<PriceS>& list);
 
 public:
-    bool CrossSearch(TransShadow* order_trans_shadow, int party_id, int product_id, bool is_inside) const;
-    bool ReadTrans(int node_id);
+    bool CrossSearch(TransShadow* order_trans_shadow, const QUuid& party_id, const QUuid& product_id, bool is_inside) const;
+    bool ReadTrans(const QUuid& node_id);
 
 protected:
     // tree
@@ -58,7 +58,7 @@ protected:
     void WriteTransBind(TransShadow* trans_shadow, QSqlQuery& query) const override;
     void ReadTransRefQuery(TransList& trans_list, QSqlQuery& query) const override;
     void CalculateLeafTotal(Node* node, QSqlQuery& query) const override;
-    bool ReplaceLeaf(int old_node_id, int new_node_id, int node_unit) override;
+    bool ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id, int node_unit) override;
 
     void UpdateLeafValueBind(const Node* node, QSqlQuery& query) const override;
 
@@ -77,11 +77,11 @@ protected:
 
 private:
     void ReadTransS(QSqlQuery& query);
-    bool ReadTransRange(const QSet<int>& set);
+    bool ReadTransRange(const QSet<QUuid>& set);
 
-    bool ReplaceLeafC(QSqlQuery& query, int old_node_id, int new_node_id);
-    bool ReplaceLeafE(QSqlQuery& query, int old_node_id, int new_node_id);
-    bool ReplaceLeafV(QSqlQuery& query, int old_node_id, int new_node_id);
+    bool ReplaceLeafC(QSqlQuery& query, const QUuid& old_node_id, const QUuid& new_node_id);
+    bool ReplaceLeafE(QSqlQuery& query, const QUuid& old_node_id, const QUuid& new_node_id);
+    bool ReplaceLeafV(QSqlQuery& query, const QUuid& old_node_id, const QUuid& new_node_id);
 
     QString QSReplaceLeafSE() const; // stakeholder employee
     QString QSReplaceLeafOSE() const; // order sales employee

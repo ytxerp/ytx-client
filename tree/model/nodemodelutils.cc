@@ -72,7 +72,7 @@ void NodeModelUtils::InitializeRoot(Node*& root, int default_unit)
 {
     if (root == nullptr) {
         root = ResourcePool<Node>::Instance().Allocate();
-        root->id = -1;
+        root->id = {};
         root->node_type = kTypeBranch;
         root->unit = default_unit;
     }
@@ -80,7 +80,7 @@ void NodeModelUtils::InitializeRoot(Node*& root, int default_unit)
     assert(root && "Root node should not be null after initialization");
 }
 
-Node* NodeModelUtils::GetNode(CNodeHash& hash, int node_id)
+Node* NodeModelUtils::GetNode(CNodeHash& hash, const QUuid& node_id)
 {
     if (auto it = hash.constFind(node_id); it != hash.constEnd())
         return it.value();
@@ -135,7 +135,7 @@ QString NodeModelUtils::ConstructPath(const Node* root, const Node* node, CStrin
     return tmp.join(separator);
 }
 
-bool NodeModelUtils::IsInternalReferenced(Sql* sql, int node_id, CString& message)
+bool NodeModelUtils::IsInternalReferenced(Sql* sql, const QUuid& node_id, CString& message)
 {
     if (sql->InternalReference(node_id)) {
         MainWindowUtils::Message(
@@ -147,7 +147,7 @@ bool NodeModelUtils::IsInternalReferenced(Sql* sql, int node_id, CString& messag
     return false;
 }
 
-bool NodeModelUtils::IsSupportReferenced(Sql* sql, int node_id, CString& message)
+bool NodeModelUtils::IsSupportReferenced(Sql* sql, const QUuid& node_id, CString& message)
 {
     if (sql->SupportReference(node_id)) {
         MainWindowUtils::Message(
@@ -158,7 +158,7 @@ bool NodeModelUtils::IsSupportReferenced(Sql* sql, int node_id, CString& message
     return false;
 }
 
-bool NodeModelUtils::IsExternalReferenced(Sql* sql, int node_id, CString& message)
+bool NodeModelUtils::IsExternalReferenced(Sql* sql, const QUuid& node_id, CString& message)
 {
     if (sql->ExternalReference(node_id)) {
         MainWindowUtils::Message(
@@ -180,7 +180,7 @@ bool NodeModelUtils::HasChildren(Node* node, CString& message)
     return false;
 }
 
-bool NodeModelUtils::IsOpened(CTransWgtHash& hash, int node_id, CString& message)
+bool NodeModelUtils::IsOpened(CTransWgtHash& hash, const QUuid& node_id, CString& message)
 {
     if (hash.contains(node_id)) {
         MainWindowUtils::Message(QMessageBox::Warning, QObject::tr("Operation Blocked"), QObject::tr("%1 because it is opened.").arg(message), kThreeThousand);
@@ -190,7 +190,7 @@ bool NodeModelUtils::IsOpened(CTransWgtHash& hash, int node_id, CString& message
     return false;
 }
 
-void NodeModelUtils::UpdateComboModel(QStandardItemModel* model, const QVector<std::pair<int, QString>>& items)
+void NodeModelUtils::UpdateComboModel(QStandardItemModel* model, const QVector<std::pair<QUuid, QString>>& items)
 {
     if (!model || items.isEmpty())
         return;
@@ -211,7 +211,7 @@ void NodeModelUtils::LeafPathBranchPathModel(CStringHash& leaf, CStringHash& bra
         return;
 
     auto future = QtConcurrent::run([&]() {
-        QVector<std::pair<int, QString>> items;
+        QVector<std::pair<QUuid, QString>> items;
         items.reserve(leaf.size() + branch.size());
 
         for (const auto& [id, path] : leaf.asKeyValueRange()) {
@@ -222,13 +222,13 @@ void NodeModelUtils::LeafPathBranchPathModel(CStringHash& leaf, CStringHash& bra
             items.emplaceBack(id, path);
         }
 
-        items.emplaceBack(0, QString());
+        items.emplaceBack(QUuid(), QString());
 
         return items;
     });
 
-    auto* watcher = new QFutureWatcher<QVector<std::pair<int, QString>>>(model);
-    QObject::connect(watcher, &QFutureWatcher<QVector<std::pair<int, QString>>>::finished, watcher, [watcher, model]() {
+    auto* watcher = new QFutureWatcher<QVector<std::pair<QUuid, QString>>>(model);
+    QObject::connect(watcher, &QFutureWatcher<QVector<std::pair<QUuid, QString>>>::finished, watcher, [watcher, model]() {
         NodeModelUtils::UpdateComboModel(model, watcher->result());
         watcher->deleteLater();
     });
@@ -236,7 +236,7 @@ void NodeModelUtils::LeafPathBranchPathModel(CStringHash& leaf, CStringHash& bra
     watcher->setFuture(future);
 }
 
-void NodeModelUtils::AppendItem(QStandardItemModel* model, int node_id, CString& path)
+void NodeModelUtils::AppendItem(QStandardItemModel* model, const QUuid& node_id, CString& path)
 {
     if (!model)
         return;
@@ -246,14 +246,14 @@ void NodeModelUtils::AppendItem(QStandardItemModel* model, int node_id, CString&
     model->appendRow(item);
 }
 
-void NodeModelUtils::RemoveItem(QStandardItemModel* model, int node_id)
+void NodeModelUtils::RemoveItem(QStandardItemModel* model, const QUuid& node_id)
 {
     if (!model)
         return;
 
     for (int row = 0; row != model->rowCount(); ++row) {
         QStandardItem* item { model->item(row) };
-        if (item && item->data(Qt::UserRole).toInt() == node_id) {
+        if (item && item->data(Qt::UserRole).toUuid() == node_id) {
             model->removeRow(row);
             return;
         }
@@ -268,8 +268,8 @@ void NodeModelUtils::UpdateModel(CStringHash& leaf, QStandardItemModel* leaf_mod
     QQueue<const Node*> queue {};
     queue.enqueue(node);
 
-    QSet<int> support_range {};
-    QSet<int> leaf_range {};
+    QSet<QUuid> support_range {};
+    QSet<QUuid> leaf_range {};
 
     while (!queue.isEmpty()) {
         const auto* current { queue.dequeue() };
@@ -314,12 +314,12 @@ void NodeModelUtils::UpdateModelSeparator(QStandardItemModel* model, CStringHash
         if (!item)
             continue;
 
-        int id = item->data(Qt::UserRole).toInt();
+        auto id = item->data(Qt::UserRole).toUuid();
         item->setText(source_path.value(id, QString {}));
     }
 }
 
-void NodeModelUtils::UpdateModelFunction(QStandardItemModel* model, CIntSet& update_range, CStringHash& source_path)
+void NodeModelUtils::UpdateModelFunction(QStandardItemModel* model, CUuidSet& update_range, CStringHash& source_path)
 {
     if (!model || update_range.isEmpty() || source_path.isEmpty())
         return;
@@ -329,7 +329,7 @@ void NodeModelUtils::UpdateModelFunction(QStandardItemModel* model, CIntSet& upd
         if (!item)
             continue;
 
-        int id = item->data(Qt::UserRole).toInt();
+        auto id = item->data(Qt::UserRole).toUuid();
         if (update_range.contains(id)) {
             item->setText(source_path.value(id, QString {}));
         }

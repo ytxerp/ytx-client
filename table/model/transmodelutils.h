@@ -51,7 +51,7 @@ public:
         *member_ptr = value;
 
         // If lhs_node or rhs_node is invalid, skip updating the database
-        if (!trans_shadow->lhs_node || !trans_shadow->rhs_node || *trans_shadow->lhs_node == 0 || *trans_shadow->rhs_node == 0) {
+        if (!trans_shadow->lhs_node || !trans_shadow->rhs_node || trans_shadow->lhs_node->isNull() || trans_shadow->rhs_node->isNull()) {
             return true; // Return without updating SQLite
         }
 
@@ -77,7 +77,7 @@ public:
 
     static void AccumulateSubtotal(QMutex& mutex, QList<TransShadow*>& trans_shadow_list, int start, bool rule);
     static double Balance(bool rule, double debit, double credit) { return (rule ? 1 : -1) * (credit - debit); };
-    static bool UpdateRhsNode(TransShadow* trans_shadow, int value);
+    static bool UpdateRhsNode(TransShadow* trans_shadow, const QUuid& value);
 };
 
 #endif // TRANSMODELUTILS_H

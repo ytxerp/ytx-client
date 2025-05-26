@@ -57,7 +57,7 @@ QVariant SearchTransModel::data(const QModelIndex& index, int role) const
     case TransSearchEnum::kDescription:
         return trans->description;
     case TransSearchEnum::kSupportID:
-        return trans->support_id == 0 ? QVariant() : trans->support_id;
+        return trans->support_id.isNull() ? QVariant() : trans->support_id;
     case TransSearchEnum::kDiscount:
         return trans->discount == 0 ? QVariant() : trans->discount;
     case TransSearchEnum::kDocument:

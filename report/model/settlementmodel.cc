@@ -14,7 +14,7 @@ SettlementModel::SettlementModel(Sql* sql, CInfo& info, QObject* parent)
 
 SettlementModel::~SettlementModel() { ResourcePool<Node>::Instance().Recycle(node_list_); }
 
-void SettlementModel::RSyncDouble(int node_id, int column, double delta1)
+void SettlementModel::RSyncDouble(const QUuid& node_id, int column, double delta1)
 {
     if (delta1 == 0.0 || column != std::to_underlying(SettlementEnum::kGrossAmount))
         return;
@@ -82,7 +82,7 @@ QVariant SettlementModel::data(const QModelIndex& index, int role) const
     case SettlementEnum::kGrossAmount:
         return node->initial_total == 0 ? QVariant() : node->initial_total;
     case SettlementEnum::kParty:
-        return node->party == 0 ? QVariant() : node->party;
+        return node->party.isNull() ? QVariant() : node->party;
     default:
         return QVariant();
     }
@@ -106,7 +106,7 @@ bool SettlementModel::setData(const QModelIndex& index, const QVariant& value, i
         NodeModelUtils::UpdateField(sql_, node, info_.settlement, kDescription, value.toString(), &Node::description);
         break;
     case SettlementEnum::kParty:
-        UpdateParty(node, value.toInt());
+        UpdateParty(node, value.toUuid());
         break;
     case SettlementEnum::kIsFinished:
         UpdateFinished(node, value.toBool());
@@ -194,7 +194,7 @@ bool SettlementModel::removeRows(int row, int /*count*/, const QModelIndex& pare
     sql_->RemoveSettlement(node->id);
     ResourcePool<Node>::Instance().Recycle(node);
 
-    emit SResetModel(0, 0, false);
+    emit SResetModel({}, {}, false);
     return true;
 }
 
@@ -216,7 +216,7 @@ bool SettlementModel::insertRows(int row, int /*count*/, const QModelIndex& pare
     return true;
 }
 
-bool SettlementModel::UpdateParty(Node* node, int party_id)
+bool SettlementModel::UpdateParty(Node* node, const QUuid& party_id)
 {
     if (sql_->SettlementReference(node->id) || node->party == party_id)
         return false;
@@ -230,7 +230,7 @@ bool SettlementModel::UpdateParty(Node* node, int party_id)
 
 bool SettlementModel::UpdateFinished(Node* node, bool finished)
 {
-    if (node->party == 0)
+    if (!node->party.isNull())
         return false;
 
     node->is_finished = finished;

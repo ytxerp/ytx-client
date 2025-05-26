@@ -32,7 +32,7 @@ void NodeWidgetPT::UpdateStaticStatus()
     ui->dspin_box_static_->setDecimals(section_settings_.common_decimal);
     ui->lable_static_->setText(section_settings_.static_label);
 
-    const int static_node_id { section_settings_.static_node };
+    const auto static_node_id { section_settings_.static_node };
 
     if (model_->Contains(static_node_id)) {
         UpdateStaticValue(static_node_id);
@@ -46,8 +46,8 @@ void NodeWidgetPT::UpdateDynamicStatus()
     ui->dspin_box_dynamic_->setDecimals(section_settings_.common_decimal);
     ui->label_dynamic_->setText(section_settings_.dynamic_label);
 
-    const int dynamic_node_id_lhs { section_settings_.dynamic_node_lhs };
-    const int dynamic_node_id_rhs { section_settings_.dynamic_node_rhs };
+    const auto dynamic_node_id_lhs { section_settings_.dynamic_node_lhs };
+    const auto dynamic_node_id_rhs { section_settings_.dynamic_node_rhs };
 
     if (model_->Contains(dynamic_node_id_lhs) || model_->Contains(dynamic_node_id_rhs)) {
         UpdateDynamicValue(dynamic_node_id_lhs, dynamic_node_id_rhs);
@@ -64,9 +64,9 @@ void NodeWidgetPT::RSyncStatusValue()
     UpdateDynamicValue(section_settings_.dynamic_node_lhs, section_settings_.dynamic_node_rhs);
 }
 
-void NodeWidgetPT::UpdateDynamicValue(int lhs_node_id, int rhs_node_id)
+void NodeWidgetPT::UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id)
 {
-    if (lhs_node_id == 0 && rhs_node_id == 0)
+    if (lhs_node_id.isNull() && rhs_node_id.isNull())
         return;
 
     const double lhs_total { model_->InitialTotal(lhs_node_id) };
@@ -78,9 +78,9 @@ void NodeWidgetPT::UpdateDynamicValue(int lhs_node_id, int rhs_node_id)
     ui->dspin_box_dynamic_->setValue(total);
 }
 
-void NodeWidgetPT::UpdateStaticValue(int node_id)
+void NodeWidgetPT::UpdateStaticValue(const QUuid& node_id)
 {
-    if (node_id == 0)
+    if (node_id.isNull())
         return;
 
     ui->dspin_box_static_->setValue(model_->InitialTotal(node_id));

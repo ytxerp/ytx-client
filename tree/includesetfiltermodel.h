@@ -22,6 +22,7 @@
 
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
+#include <QUuid>
 
 class IncludeSetFilterModel : public QSortFilterProxyModel {
     Q_OBJECT
@@ -30,7 +31,7 @@ public slots:
     void RSyncFilterModel() { invalidateRowsFilter(); }
 
 public:
-    explicit IncludeSetFilterModel(const QSet<int>* set, QObject* parent = nullptr)
+    explicit IncludeSetFilterModel(const QSet<QUuid>* set, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }
         , set_ { set }
     {
@@ -43,11 +44,11 @@ protected:
         auto* item { static_cast<QStandardItemModel*>(sourceModel())->item(source_row) };
         assert(item && "item is nullptr");
 
-        return set_->contains(item->data(Qt::UserRole).toInt());
+        return set_->contains(item->data(Qt::UserRole).toUuid());
     }
 
 private:
-    const QSet<int>* set_ {};
+    const QSet<QUuid>* set_ {};
 };
 
 #endif // INCLUDESETFILTERMODEL_H

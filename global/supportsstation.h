@@ -30,35 +30,35 @@ class SupportSStation final : public QObject {
 
 public:
     static SupportSStation& Instance();
-    void RegisterModel(Section section, int support_id, const SupportModel* model);
-    void DeregisterModel(Section section, int support_id);
-
-signals:
-    // send to SupportModel
-    void SAppendOneTransS(int support_id, int trans_id);
-    void SRemoveOneTransS(int support_id, int trans_id);
-    void SRemoveMultiTransS(int node_id, const QSet<int>& trans_id_set);
-    void SAppendMultiTransS(int node_id, const QSet<int>& trans_id_set);
-
-public slots:
-    // receive from TableModel
-    void RAppendOneTransS(Section section, int support_id, int trans_id);
-    void RRemoveOneTransS(Section section, int support_id, int trans_id);
-
-    // receive from Sqlite
-    void RRemoveMultiTransS(Section section, const QMultiHash<int, int>& support_trans);
-    void RMoveMultiTransS(Section section, int old_node_id, int new_node_id, const QSet<int>& trans_id_set);
-
-private:
-    SupportSStation() = default;
-    ~SupportSStation() { };
+    void RegisterModel(Section section, const QUuid& support_id, const SupportModel* model);
+    void DeregisterModel(Section section, const QUuid& support_id);
 
     SupportSStation(const SupportSStation&) = delete;
     SupportSStation& operator=(const SupportSStation&) = delete;
     SupportSStation(SupportSStation&&) = delete;
     SupportSStation& operator=(SupportSStation&&) = delete;
 
-    const SupportModel* FindModel(Section section, int node_id) const
+signals:
+    // send to SupportModel
+    void SAppendOneTransS(const QUuid& support_id, const QUuid& trans_id);
+    void SRemoveOneTransS(const QUuid& support_id, const QUuid& trans_id);
+    void SRemoveMultiTransS(const QUuid& node_id, const QSet<QUuid>& trans_id_set);
+    void SAppendMultiTransS(const QUuid& node_id, const QSet<QUuid>& trans_id_set);
+
+public slots:
+    // receive from TableModel
+    void RAppendOneTransS(Section section, const QUuid& support_id, const QUuid& trans_id);
+    void RRemoveOneTransS(Section section, const QUuid& support_id, const QUuid& trans_id);
+
+    // receive from Sqlite
+    void RRemoveMultiTransS(Section section, const QMultiHash<QUuid, QUuid>& support_trans);
+    void RMoveMultiTransS(Section section, const QUuid& old_node_id, const QUuid& new_node_id, const QSet<QUuid>& trans_id_set);
+
+private:
+    SupportSStation() = default;
+    ~SupportSStation() { };
+
+    const SupportModel* FindModel(Section section, const QUuid& node_id) const
     {
         auto it = model_hash_.constFind({ section, node_id });
         if (it == model_hash_.constEnd())
@@ -68,7 +68,7 @@ private:
     }
 
 private:
-    QHash<std::pair<Section, int>, const SupportModel*> model_hash_ {};
+    QHash<std::pair<Section, QUuid>, const SupportModel*> model_hash_ {};
 };
 
 #endif // SUPPORTSSTATION_H

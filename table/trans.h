@@ -21,12 +21,13 @@
 #define TRANS_H
 
 #include <QStringList>
+#include <QUuid>
 
 struct Trans {
-    int id {};
+    QUuid id {};
     QString issued_time {};
     QString code {};
-    int lhs_node {};
+    QUuid lhs_node {};
     double lhs_ratio {};
     double lhs_debit {};
     double lhs_credit {};
@@ -36,38 +37,39 @@ struct Trans {
     double rhs_credit {};
     double rhs_debit {};
     double rhs_ratio {};
-    int rhs_node {};
+    QUuid rhs_node {};
 
     // order
-    int support_id {};
+    QUuid support_id {};
     double discount {};
 
-    void Reset()
+    void GenerateId() { id = QUuid::createUuidV7(); }
+    void ResetState()
     {
-        id = 0;
+        id = QUuid();
         issued_time.clear();
         code.clear();
-        lhs_node = 0;
+        lhs_node = QUuid();
         lhs_ratio = 0.0;
         lhs_debit = 0.0;
         lhs_credit = 0.0;
         description.clear();
-        rhs_node = 0;
+        rhs_node = QUuid();
         rhs_ratio = 0.0;
         rhs_debit = 0.0;
         rhs_credit = 0.0;
         is_checked = false;
         document.clear();
-        support_id = 0;
+        support_id = QUuid();
         discount = 0.0;
     }
 };
 
 struct TransShadow {
-    int* id {};
+    QUuid* id {};
     QString* issued_time {};
     QString* code {};
-    int* lhs_node {};
+    QUuid* lhs_node {};
     double* lhs_ratio {};
     double* lhs_debit {};
     double* lhs_credit {};
@@ -77,13 +79,14 @@ struct TransShadow {
     double* rhs_credit {};
     double* rhs_debit {};
     double* rhs_ratio {};
-    int* rhs_node {};
-    int* support_id {};
+    QUuid* rhs_node {};
+    QUuid* support_id {};
     double* discount {};
 
     double subtotal {};
 
-    void Reset()
+    void GenerateId() { id = nullptr; }
+    void ResetState()
     {
         id = nullptr;
         issued_time = nullptr;

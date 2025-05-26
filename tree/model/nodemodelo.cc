@@ -9,7 +9,7 @@ NodeModelO::NodeModelO(CNodeModelArg& arg, QObject* parent)
     ConstructTree();
 }
 
-void NodeModelO::RSyncLeafValue(int node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
+void NodeModelO::RSyncLeafValue(const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
 {
     auto* node { node_hash_.value(node_id) };
     assert(node && node->node_type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
@@ -27,7 +27,7 @@ void NodeModelO::RSyncLeafValue(int node_id, double initial_delta, double final_
     }
 }
 
-void NodeModelO::RSyncBoolWD(int node_id, int column, bool value)
+void NodeModelO::RSyncBoolWD(const QUuid& node_id, int column, bool value)
 {
     if (column != std::to_underlying(NodeEnumO::kIsFinished))
         return;
@@ -71,7 +71,7 @@ void NodeModelO::UpdateTree(const QDateTime& start, const QDateTime& end)
     endResetModel();
 }
 
-QString NodeModelO::Path(int node_id) const
+QString NodeModelO::Path(const QUuid& node_id) const
 {
     if (auto it = node_hash_.constFind(node_id); it != node_hash_.constEnd())
         return it.value()->name;
@@ -79,9 +79,9 @@ QString NodeModelO::Path(int node_id) const
     return {};
 }
 
-void NodeModelO::ReadNode(int node_id)
+void NodeModelO::ReadNode(const QUuid& node_id)
 {
-    assert(node_id >= 1 && "node_id must be positive");
+    assert(!node_id.isNull() && "node_id must be positive");
 
     if (node_hash_.contains(node_id))
         return;
@@ -99,7 +99,7 @@ void NodeModelO::ReadNode(int node_id)
     endInsertRows();
 }
 
-Node* NodeModelO::GetNode(int node_id) const { return NodeModelUtils::GetNode(node_hash_, node_id); }
+Node* NodeModelO::GetNode(const QUuid& node_id) const { return NodeModelUtils::GetNode(node_hash_, node_id); }
 
 bool NodeModelO::UpdateRule(Node* node, bool value)
 {
@@ -339,9 +339,9 @@ QVariant NodeModelO::data(const QModelIndex& index, int role) const
     case NodeEnumO::kUnit:
         return node->unit;
     case NodeEnumO::kParty:
-        return node->party == 0 ? QVariant() : node->party;
+        return node->party.isNull() ? QVariant() : node->party;
     case NodeEnumO::kEmployee:
-        return node->employee == 0 ? QVariant() : node->employee;
+        return node->employee.isNull() ? QVariant() : node->employee;
     case NodeEnumO::kIssuedTime:
         return branch || node->issued_time.isEmpty() ? QVariant() : node->issued_time;
     case NodeEnumO::kFirst:
@@ -386,10 +386,10 @@ bool NodeModelO::setData(const QModelIndex& index, const QVariant& value, int ro
         emit SSyncInt(node->id, index.column(), value.toInt());
         break;
     case NodeEnumO::kParty:
-        NodeModelUtils::UpdateField(sql_, node, info_.node, kParty, value.toInt(), &Node::party);
+        NodeModelUtils::UpdateField(sql_, node, info_.node, kParty, value.toUuid(), &Node::party);
         break;
     case NodeEnumO::kEmployee:
-        NodeModelUtils::UpdateField(sql_, node, info_.node, kEmployee, value.toInt(), &Node::employee);
+        NodeModelUtils::UpdateField(sql_, node, info_.node, kEmployee, value.toUuid(), &Node::employee);
         emit SSyncInt(node->id, index.column(), value.toInt());
         break;
     case NodeEnumO::kIssuedTime:

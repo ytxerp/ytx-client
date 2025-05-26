@@ -35,7 +35,7 @@ class SettlementWidget final : public ReportWidget {
     Q_OBJECT
 
 signals:
-    void SNodeLocation(int node_id);
+    void SNodeLocation(const QUuid& node_id);
 
 public:
     SettlementWidget(

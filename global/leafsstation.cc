@@ -6,15 +6,15 @@ LeafSStation& LeafSStation::Instance()
     return instance;
 }
 
-void LeafSStation::RegisterModel(Section section, int node_id, const TransModel* model) { model_hash_.insert({ section, node_id }, model); }
+void LeafSStation::RegisterModel(Section section, const QUuid& node_id, const TransModel* model) { model_hash_.insert({ section, node_id }, model); }
 
-void LeafSStation::DeregisterModel(Section section, int node_id) { model_hash_.remove({ section, node_id }); }
+void LeafSStation::DeregisterModel(Section section, const QUuid& node_id) { model_hash_.remove({ section, node_id }); }
 
 void LeafSStation::RAppendOneTransL(Section section, const TransShadow* trans_shadow)
 {
     assert(trans_shadow && "trans_shadow must be non-null");
 
-    int rhs_node_id { *trans_shadow->rhs_node };
+    const auto rhs_node_id { *trans_shadow->rhs_node };
     const auto* model { FindModel(section, rhs_node_id) };
 
     if (!model)
@@ -24,7 +24,7 @@ void LeafSStation::RAppendOneTransL(Section section, const TransShadow* trans_sh
     emit SAppendOneTransL(trans_shadow);
 }
 
-void LeafSStation::RRemoveOneTransL(Section section, int node_id, int trans_id)
+void LeafSStation::RRemoveOneTransL(Section section, const QUuid& node_id, const QUuid& trans_id)
 {
     const auto* model { FindModel(section, node_id) };
     if (!model)
@@ -34,7 +34,7 @@ void LeafSStation::RRemoveOneTransL(Section section, int node_id, int trans_id)
     emit SRemoveOneTransL(node_id, trans_id);
 }
 
-void LeafSStation::RSyncBalance(Section section, int node_id, int trans_id)
+void LeafSStation::RSyncBalance(Section section, const QUuid& node_id, const QUuid& trans_id)
 {
     const auto* model { FindModel(section, node_id) };
     if (!model)
@@ -44,7 +44,7 @@ void LeafSStation::RSyncBalance(Section section, int node_id, int trans_id)
     emit SSyncBalance(node_id, trans_id);
 }
 
-void LeafSStation::RAppendMultiTrans(Section section, int node_id, const TransShadowList& trans_shadow_list)
+void LeafSStation::RAppendMultiTrans(Section section, const QUuid& node_id, const TransShadowList& trans_shadow_list)
 {
     if (trans_shadow_list.isEmpty())
         return;
@@ -57,7 +57,7 @@ void LeafSStation::RAppendMultiTrans(Section section, int node_id, const TransSh
     emit SAppendMultiTrans(node_id, trans_shadow_list);
 }
 
-void LeafSStation::RSyncRule(Section section, int node_id, bool rule)
+void LeafSStation::RSyncRule(Section section, const QUuid& node_id, bool rule)
 {
     const auto* model { FindModel(section, node_id) };
     if (!model)
@@ -67,24 +67,24 @@ void LeafSStation::RSyncRule(Section section, int node_id, bool rule)
     emit SSyncRule(node_id, rule);
 }
 
-void LeafSStation::RRemoveMultiTransL(Section section, const QMultiHash<int, int>& leaf_trans)
+void LeafSStation::RRemoveMultiTransL(Section section, const QMultiHash<QUuid, QUuid>& leaf_trans)
 {
     const auto keys { leaf_trans.uniqueKeys() };
 
-    for (int node_id : keys) {
+    for (const auto& node_id : keys) {
         const auto* model { FindModel(section, node_id) };
         if (!model)
             continue;
 
         const auto trans_id_list { leaf_trans.values(node_id) };
-        const QSet<int> trans_id_set { trans_id_list.cbegin(), trans_id_list.cend() };
+        const QSet<QUuid> trans_id_set { trans_id_list.cbegin(), trans_id_list.cend() };
 
         connect(this, &LeafSStation::SRemoveMultiTransL, model, &TransModel::RRemoveMultiTransL, Qt::SingleShotConnection);
         emit SRemoveMultiTransL(node_id, trans_id_set);
     }
 }
 
-void LeafSStation::RMoveMultiTransL(Section section, int old_node_id, int new_node_id, const QSet<int>& trans_id_set)
+void LeafSStation::RMoveMultiTransL(Section section, const QUuid& old_node_id, const QUuid& new_node_id, const QSet<QUuid>& trans_id_set)
 {
     const auto* old_model { FindModel(section, old_node_id) };
     if (old_model) {

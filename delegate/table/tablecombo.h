@@ -34,7 +34,7 @@ public:
     void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    mutable int last_insert_ {};
+    mutable QUuid last_insert_ {};
     CNodeModel* tree_model_ {};
     QSortFilterProxyModel* filter_model_ {};
 };

@@ -48,8 +48,8 @@ private:
     void UpdateStaticStatus();
     void UpdateDynamicStatus();
 
-    void UpdateDynamicValue(int lhs_node_id, int rhs_node_id);
-    void UpdateStaticValue(int node_id);
+    void UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id);
+    void UpdateStaticValue(const QUuid& node_id);
     double Operate(double lhs, double rhs, const QString& operation);
     void ResetStatus(QDoubleSpinBox* spin_box, bool& flags);
 

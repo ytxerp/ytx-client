@@ -28,7 +28,7 @@
 class StatementPrimaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    StatementPrimaryModel(Sql* sql, CInfo& info, int party_id, QObject* parent = nullptr);
+    StatementPrimaryModel(Sql* sql, CInfo& info, const QUuid& party_id, QObject* parent = nullptr);
     ~StatementPrimaryModel();
 
 public slots:
@@ -51,7 +51,7 @@ public:
 private:
     SqlO* sql_ {};
     CInfo& info_;
-    const int party_id_ {};
+    const QUuid party_id_ {};
 
     NodeList node_list_ {};
 };

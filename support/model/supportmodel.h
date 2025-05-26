@@ -29,15 +29,15 @@ class SupportModel final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    SupportModel(Sql* sql, int support_id, CInfo& info, QObject* parent = nullptr);
+    SupportModel(Sql* sql, const QUuid& support_id, CInfo& info, QObject* parent = nullptr);
     ~SupportModel() = default;
 
 public slots:
     // receive from SupportSStation
-    void RAppendOneTransS(int support_id, int trans_id);
-    void RRemoveOneTransS(int support_id, int trans_id);
-    void RRemoveMultiTransS(int support_id, const QSet<int>& trans_id_set);
-    void RAppendMultiTransS(int support_id, const QSet<int>& trans_id_set);
+    void RAppendOneTransS(const QUuid& support_id, const QUuid& trans_id);
+    void RRemoveOneTransS(const QUuid& support_id, const QUuid& trans_id);
+    void RRemoveMultiTransS(const QUuid& support_id, const QSet<QUuid>& trans_id_set);
+    void RAppendMultiTransS(const QUuid& support_id, const QSet<QUuid>& trans_id_set);
 
 public:
     inline int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return trans_list_.size(); }
@@ -51,12 +51,12 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-    QModelIndex GetIndex(int trans_id) const;
+    QModelIndex GetIndex(const QUuid& trans_id) const;
 
 private:
     Sql* sql_ {};
     CInfo& info_;
-    int support_id_ {};
+    const QUuid& support_id_ {};
 
     TransList trans_list_ {};
 };

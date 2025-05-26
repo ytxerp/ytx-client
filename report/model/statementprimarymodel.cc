@@ -3,7 +3,7 @@
 #include "component/enumclass.h"
 #include "global/resourcepool.h"
 
-StatementPrimaryModel::StatementPrimaryModel(Sql* sql, CInfo& info, int party_id, QObject* parent)
+StatementPrimaryModel::StatementPrimaryModel(Sql* sql, CInfo& info, const QUuid& party_id, QObject* parent)
     : QAbstractItemModel { parent }
     , sql_ { qobject_cast<SqlO*>(sql) }
     , info_ { info }
@@ -51,7 +51,7 @@ QVariant StatementPrimaryModel::data(const QModelIndex& index, int role) const
     case StatementPrimaryEnum::kDescription:
         return node->description;
     case StatementPrimaryEnum::kEmployee:
-        return node->employee == 0 ? QVariant() : node->employee;
+        return node->employee.isNull() ? QVariant() : node->employee;
     case StatementPrimaryEnum::kIssuedTime:
         return node->issued_time;
     case StatementPrimaryEnum::kFirst:
@@ -135,7 +135,7 @@ void StatementPrimaryModel::sort(int column, Qt::SortOrder order)
 
 void StatementPrimaryModel::RResetModel(int unit, const QDateTime& start, const QDateTime& end)
 {
-    if (party_id_ <= 0 || !start.isValid() || !end.isValid())
+    if (party_id_.isNull() || !start.isValid() || !end.isValid())
         return;
 
     beginResetModel();

@@ -22,10 +22,11 @@
 
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
+#include <QUuid>
 
 class ExcludeIntFilterModel : public QSortFilterProxyModel {
 public:
-    explicit ExcludeIntFilterModel(int leaf_id, QObject* parent = nullptr)
+    explicit ExcludeIntFilterModel(const QUuid& leaf_id, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }
         , leaf_id_ { leaf_id }
     {
@@ -38,11 +39,11 @@ protected:
         auto* item { static_cast<QStandardItemModel*>(sourceModel())->item(source_row) };
         assert(item && "item is nullptr");
 
-        return item->data(Qt::UserRole).toInt() != leaf_id_;
+        return item->data(Qt::UserRole).toUuid() != leaf_id_;
     }
 
 private:
-    const int leaf_id_ {};
+    const QUuid leaf_id_ {};
 };
 
 #endif // EXCLUDEINTFILTERMODEL_H

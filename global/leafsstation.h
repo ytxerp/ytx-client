@@ -31,45 +31,45 @@ class LeafSStation final : public QObject {
 
 public:
     static LeafSStation& Instance();
-    void RegisterModel(Section section, int node_id, const TransModel* model);
-    void DeregisterModel(Section section, int node_id);
-
-signals:
-    // send to TableModel
-    void SAppendOneTransL(const TransShadow* trans_shadow);
-    void SRemoveOneTransL(int node_id, int trans_id);
-    void SSyncBalance(int node_id, int trans_id);
-    void SSyncRule(int node_id, bool rule);
-    void SAppendMultiTrans(int node_id, const TransShadowList& trans_shadow_list);
-    void SRemoveMultiTransL(int node_id, const QSet<int>& trans_id_set);
-    void SAppendMultiTransL(int node_id, const QSet<int>& trans_id_set);
-
-public slots:
-    // receive from TableModel
-    void RAppendOneTransL(Section section, const TransShadow* trans_shadow);
-    void RRemoveOneTransL(Section section, int node_id, int trans_id);
-    void RSyncBalance(Section section, int node_id, int trans_id);
-
-    // receive from SqliteStakeholder
-
-    // receive from TreeModel
-    void RSyncRule(Section section, int node_id, bool rule);
-
-    // receive from Sqlite
-    void RRemoveMultiTransL(Section section, const QMultiHash<int, int>& leaf_trans);
-    void RMoveMultiTransL(Section section, int old_node_id, int new_node_id, const QSet<int>& trans_id_set);
-    void RAppendMultiTrans(Section section, int node_id, const TransShadowList& trans_shadow);
-
-private:
-    LeafSStation() = default;
-    ~LeafSStation() { };
+    void RegisterModel(Section section, const QUuid& node_id, const TransModel* model);
+    void DeregisterModel(Section section, const QUuid& node_id);
 
     LeafSStation(const LeafSStation&) = delete;
     LeafSStation& operator=(const LeafSStation&) = delete;
     LeafSStation(LeafSStation&&) = delete;
     LeafSStation& operator=(LeafSStation&&) = delete;
 
-    const TransModel* FindModel(Section section, int node_id) const
+signals:
+    // send to TableModel
+    void SAppendOneTransL(const TransShadow* trans_shadow);
+    void SRemoveOneTransL(const QUuid& node_id, const QUuid& trans_id);
+    void SSyncBalance(const QUuid& node_id, const QUuid& trans_id);
+    void SSyncRule(const QUuid& node_id, bool rule);
+    void SAppendMultiTrans(const QUuid& node_id, const TransShadowList& trans_shadow_list);
+    void SRemoveMultiTransL(const QUuid& node_id, const QSet<QUuid>& trans_id_set);
+    void SAppendMultiTransL(const QUuid& node_id, const QSet<QUuid>& trans_id_set);
+
+public slots:
+    // receive from TableModel
+    void RAppendOneTransL(Section section, const TransShadow* trans_shadow);
+    void RRemoveOneTransL(Section section, const QUuid& node_id, const QUuid& trans_id);
+    void RSyncBalance(Section section, const QUuid& node_id, const QUuid& trans_id);
+
+    // receive from SqliteStakeholder
+
+    // receive from TreeModel
+    void RSyncRule(Section section, const QUuid& node_id, bool rule);
+
+    // receive from Sqlite
+    void RRemoveMultiTransL(Section section, const QMultiHash<QUuid, QUuid>& leaf_trans);
+    void RMoveMultiTransL(Section section, const QUuid& old_node_id, const QUuid& new_node_id, const QSet<QUuid>& trans_id_set);
+    void RAppendMultiTrans(Section section, const QUuid& node_id, const TransShadowList& trans_shadow);
+
+private:
+    LeafSStation() = default;
+    ~LeafSStation() { };
+
+    const TransModel* FindModel(Section section, const QUuid& node_id) const
     {
         auto it = model_hash_.constFind({ section, node_id });
         if (it == model_hash_.constEnd())
@@ -79,7 +79,7 @@ private:
     }
 
 private:
-    QHash<std::pair<Section, int>, const TransModel*> model_hash_ {};
+    QHash<std::pair<Section, QUuid>, const TransModel*> model_hash_ {};
 };
 
 #endif // LEAFSSTATION_H

@@ -26,7 +26,7 @@
 struct NodeModelArg {
     Sql* sql {};
     const SectionInfo& info {};
-    const QHash<int, QPointer<TransWidget>>& leaf_wgt_hash {};
+    const QHash<QUuid, QPointer<TransWidget>>& leaf_wgt_hash {};
     const QString& separator {};
     int default_unit {};
 };

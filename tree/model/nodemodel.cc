@@ -18,7 +18,7 @@ NodeModel::NodeModel(CNodeModelArg& arg, QObject* parent)
 
 NodeModel::~NodeModel() { delete root_; }
 
-void NodeModel::RRemoveNode(int node_id)
+void NodeModel::RRemoveNode(const QUuid& node_id)
 {
     auto index { GetIndex(node_id) };
     int row { index.row() };
@@ -26,9 +26,9 @@ void NodeModel::RRemoveNode(int node_id)
     removeRows(row, 1, parent_index);
 }
 
-void NodeModel::RSyncMultiLeafValue(const QList<int>& node_list)
+void NodeModel::RSyncMultiLeafValue(const QList<QUuid>& node_list)
 {
-    for (int node_id : node_list) {
+    for (const auto& node_id : node_list) {
         auto* node { NodeModelUtils::GetNode(node_hash_, node_id) };
 
         assert(node && node->node_type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
@@ -55,11 +55,11 @@ QModelIndex NodeModel::parent(const QModelIndex& index) const
         return QModelIndex();
 
     auto* node { GetNodeByIndex(index) };
-    if (node->id == -1)
+    if (node->id.isNull())
         return QModelIndex();
 
     auto* parent_node { node->parent };
-    if (parent_node->id == -1)
+    if (parent_node->id.isNull())
         return QModelIndex();
 
     return createIndex(parent_node->parent->children.indexOf(parent_node), 0, parent_node);
@@ -102,7 +102,7 @@ bool NodeModel::removeRows(int row, int count, const QModelIndex& parent)
     auto* parent_node { GetNodeByIndex(parent) };
     auto* node { parent_node->children.at(row) };
 
-    const int node_id { node->id };
+    const auto node_id { node->id };
 
     beginRemoveRows(parent, row, row);
     parent_node->children.removeOne(node);
@@ -129,10 +129,10 @@ bool NodeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
     if (destination_parent->node_type != kTypeBranch)
         return false;
 
-    int node_id {};
+    QUuid node_id {};
 
     if (auto mime { data->data(kNodeID) }; !mime.isEmpty())
-        node_id = QVariant(mime).toInt();
+        node_id = QVariant(mime).toUuid();
 
     auto* node { NodeModelUtils::GetNode(node_hash_, node_id) };
     assert(node && "Node must be non-null");
@@ -179,7 +179,7 @@ bool NodeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*c
     return true;
 }
 
-QStringList* NodeModel::DocumentPointer(int node_id) const
+QStringList* NodeModel::DocumentPointer(const QUuid& node_id) const
 {
     auto it { node_hash_.constFind(node_id) };
     if (it == node_hash_.constEnd())
@@ -188,7 +188,7 @@ QStringList* NodeModel::DocumentPointer(int node_id) const
     return &it.value()->document;
 }
 
-QStringList NodeModel::ChildrenName(int node_id) const
+QStringList NodeModel::ChildrenName(const QUuid& node_id) const
 {
     auto it { node_hash_.constFind(node_id) };
 
@@ -219,11 +219,11 @@ void NodeModel::UpdateSeparator(CString& old_separator, CString& new_separator)
     NodeModelUtils::UpdateModelSeparator(support_model_, support_path_);
 }
 
-void NodeModel::SearchNode(QList<const Node*>& node_list, const QSet<int>& node_id_set) const
+void NodeModel::SearchNode(QList<const Node*>& node_list, const QSet<QUuid>& node_id_set) const
 {
     node_list.reserve(node_id_set.size());
 
-    for (int node_id : node_id_set) {
+    for (const auto& node_id : node_id_set) {
         auto it { node_hash_.constFind(node_id) };
         if (it != node_hash_.constEnd() && it.value()) {
             node_list.emplaceBack(it.value());
@@ -231,9 +231,9 @@ void NodeModel::SearchNode(QList<const Node*>& node_list, const QSet<int>& node_
     }
 }
 
-QModelIndex NodeModel::GetIndex(int node_id) const
+QModelIndex NodeModel::GetIndex(const QUuid& node_id) const
 {
-    if (node_id == -1)
+    if (node_id.isNull())
         return QModelIndex();
 
     auto it = node_hash_.constFind(node_id);
@@ -252,7 +252,7 @@ QModelIndex NodeModel::GetIndex(int node_id) const
     return createIndex(row, 0, node);
 }
 
-void NodeModel::UpdateName(int node_id, CString& new_name)
+void NodeModel::UpdateName(const QUuid& node_id, CString& new_name)
 {
     auto* node { node_hash_.value(node_id) };
     assert(node && "Node must be non-null");
@@ -261,7 +261,7 @@ void NodeModel::UpdateName(int node_id, CString& new_name)
     emit SSyncName(node->id, node->name, node->node_type == kTypeBranch);
 }
 
-QString NodeModel::Path(int node_id) const
+QString NodeModel::Path(const QUuid& node_id) const
 {
     if (auto it = leaf_path_.constFind(node_id); it != leaf_path_.constEnd())
         return it.value();
@@ -275,7 +275,7 @@ QString NodeModel::Path(int node_id) const
     return {};
 }
 
-QSortFilterProxyModel* NodeModel::ExcludeLeafModel(int leaf_id)
+QSortFilterProxyModel* NodeModel::ExcludeLeafModel(const QUuid& leaf_id)
 {
     auto* model { new ExcludeIntFilterModel(leaf_id, this) };
     model->setSourceModel(leaf_model_);
@@ -304,7 +304,7 @@ bool NodeModel::InsertNode(int row, const QModelIndex& parent, Node* node)
 
 void NodeModel::RemovePath(Node* node, Node* parent_node)
 {
-    const int node_id { node->id };
+    const auto node_id { node->id };
 
     switch (node->node_type) {
     case kTypeBranch: {
@@ -361,7 +361,7 @@ bool NodeModel::UpdateUnit(Node* node, int value)
     if (node->unit == value)
         return false;
 
-    const int node_id { node->id };
+    const auto node_id { node->id };
     QString message { tr("Cannot change %1 unit,").arg(Path(node_id)) };
 
     if (NodeModelUtils::HasChildren(node, message))
@@ -429,7 +429,7 @@ void NodeModel::IniModel()
     leaf_model_ = new QStandardItemModel(this);
     support_model_ = new QStandardItemModel(this);
 
-    NodeModelUtils::AppendItem(support_model_, 0, {});
+    NodeModelUtils::AppendItem(support_model_, {}, {});
 }
 
 bool NodeModel::UpdateRule(Node* node, bool value)
@@ -457,7 +457,7 @@ bool NodeModel::UpdateType(Node* node, int value)
     if (node->node_type == value)
         return false;
 
-    const int node_id { node->id };
+    const auto node_id { node->id };
     QString message { tr("Cannot change %1 type,").arg(Path(node_id)) };
 
     if (NodeModelUtils::HasChildren(node, message))
@@ -538,9 +538,9 @@ void NodeModel::InsertPath(Node* node)
     }
 }
 
-QSet<int> NodeModel::ChildrenID(int node_id) const
+QSet<QUuid> NodeModel::ChildrenID(const QUuid& node_id) const
 {
-    assert(node_id >= 1 && "node_id must be positive");
+    assert(!node_id.isNull() && "node_id must be positive");
 
     auto it { node_hash_.constFind(node_id) };
     if (it == node_hash_.constEnd() || !it.value())
@@ -553,7 +553,7 @@ QSet<int> NodeModel::ChildrenID(int node_id) const
     QQueue<const Node*> queue {};
     queue.enqueue(node);
 
-    QSet<int> set {};
+    QSet<QUuid> set {};
     while (!queue.isEmpty()) {
         auto* queue_node = queue.dequeue();
 

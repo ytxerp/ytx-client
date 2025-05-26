@@ -6,7 +6,7 @@
 #include "component/signalblocker.h"
 #include "ui_refwidget.h"
 
-RefWidget::RefWidget(QAbstractItemModel* model, int node_id, CDateTime& start, CDateTime& end, QWidget* parent)
+RefWidget::RefWidget(QAbstractItemModel* model, const QUuid& node_id, CDateTime& start, CDateTime& end, QWidget* parent)
     : ReportWidget(parent)
     , ui(new Ui::RefWidget)
     , start_ { start }

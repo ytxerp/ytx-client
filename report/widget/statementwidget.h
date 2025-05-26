@@ -22,6 +22,7 @@
 
 #include <QButtonGroup>
 #include <QDateTime>
+#include <QUuid>
 
 #include "component/using.h"
 #include "reportwidget.h"
@@ -34,8 +35,8 @@ class StatementWidget final : public ReportWidget {
     Q_OBJECT
 
 signals:
-    void SStatementPrimary(int party_id, int unit, const QDateTime& start, const QDateTime& end);
-    void SStatementSecondary(int party_id, int unit, const QDateTime& start, const QDateTime& end);
+    void SStatementPrimary(const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end);
+    void SStatementSecondary(const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end);
     void SResetModel(int unit, const QDateTime& start, const QDateTime& end);
     void SExport(int unit, const QDateTime& start, const QDateTime& end);
 

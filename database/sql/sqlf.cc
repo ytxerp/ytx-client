@@ -12,6 +12,7 @@ SqlF::SqlF(QSqlDatabase& main_db, CInfo& info, QObject* parent)
 void SqlF::WriteNodeBind(Node* node, QSqlQuery& query) const
 {
     query.bindValue(QStringLiteral(":name"), node->name);
+    query.bindValue(QStringLiteral(":id"), node->id.toRfc4122());
     query.bindValue(QStringLiteral(":code"), node->code);
     query.bindValue(QStringLiteral(":description"), node->description);
     query.bindValue(QStringLiteral(":note"), node->note);
@@ -22,7 +23,7 @@ void SqlF::WriteNodeBind(Node* node, QSqlQuery& query) const
 
 void SqlF::ReadNodeQuery(Node* node, const QSqlQuery& query) const
 {
-    node->id = query.value(QStringLiteral("id")).toInt();
+    node->id = QUuid::fromRfc4122(query.value(QStringLiteral("id")).toByteArray());
     node->name = query.value(QStringLiteral("name")).toString();
     node->code = query.value(QStringLiteral("code")).toString();
     node->description = query.value(QStringLiteral("description")).toString();
@@ -36,12 +37,12 @@ void SqlF::ReadNodeQuery(Node* node, const QSqlQuery& query) const
 
 void SqlF::ReadTransQuery(Trans* trans, const QSqlQuery& query) const
 {
-    trans->lhs_node = query.value(QStringLiteral("lhs_node")).toInt();
+    trans->lhs_node = QUuid::fromRfc4122(query.value(QStringLiteral("lhs_node")).toByteArray());
     trans->lhs_ratio = query.value(QStringLiteral("lhs_ratio")).toDouble();
     trans->lhs_debit = query.value(QStringLiteral("lhs_debit")).toDouble();
     trans->lhs_credit = query.value(QStringLiteral("lhs_credit")).toDouble();
 
-    trans->rhs_node = query.value(QStringLiteral("rhs_node")).toInt();
+    trans->rhs_node = QUuid::fromRfc4122(query.value(QStringLiteral("rhs_node")).toByteArray());
     trans->rhs_ratio = query.value(QStringLiteral("rhs_ratio")).toDouble();
     trans->rhs_debit = query.value(QStringLiteral("rhs_debit")).toDouble();
     trans->rhs_credit = query.value(QStringLiteral("rhs_credit")).toDouble();
@@ -51,17 +52,18 @@ void SqlF::ReadTransQuery(Trans* trans, const QSqlQuery& query) const
     trans->document = query.value(QStringLiteral("document")).toString().split(kSemicolon, Qt::SkipEmptyParts);
     trans->issued_time = query.value(QStringLiteral("issued_time")).toString();
     trans->is_checked = query.value(QStringLiteral("is_checked")).toBool();
-    trans->support_id = query.value(QStringLiteral("support_id")).toInt();
+    trans->support_id = QUuid::fromRfc4122(query.value(QStringLiteral("support_id")).toByteArray());
 }
 
 void SqlF::WriteTransBind(TransShadow* trans_shadow, QSqlQuery& query) const
 {
+    query.bindValue(QStringLiteral(":id"), trans_shadow->id->toRfc4122());
     query.bindValue(QStringLiteral(":issued_time"), *trans_shadow->issued_time);
-    query.bindValue(QStringLiteral(":lhs_node"), *trans_shadow->lhs_node);
+    query.bindValue(QStringLiteral(":lhs_node"), trans_shadow->lhs_node->toRfc4122());
     query.bindValue(QStringLiteral(":lhs_ratio"), *trans_shadow->lhs_ratio);
     query.bindValue(QStringLiteral(":lhs_debit"), *trans_shadow->lhs_debit);
     query.bindValue(QStringLiteral(":lhs_credit"), *trans_shadow->lhs_credit);
-    query.bindValue(QStringLiteral(":rhs_node"), *trans_shadow->rhs_node);
+    query.bindValue(QStringLiteral(":rhs_node"), trans_shadow->rhs_node->toRfc4122());
     query.bindValue(QStringLiteral(":rhs_ratio"), *trans_shadow->rhs_ratio);
     query.bindValue(QStringLiteral(":rhs_debit"), *trans_shadow->rhs_debit);
     query.bindValue(QStringLiteral(":rhs_credit"), *trans_shadow->rhs_credit);
@@ -69,20 +71,20 @@ void SqlF::WriteTransBind(TransShadow* trans_shadow, QSqlQuery& query) const
     query.bindValue(QStringLiteral(":description"), *trans_shadow->description);
     query.bindValue(QStringLiteral(":code"), *trans_shadow->code);
     query.bindValue(QStringLiteral(":document"), trans_shadow->document->join(kSemicolon));
-    query.bindValue(QStringLiteral(":support_id"), *trans_shadow->support_id);
+    query.bindValue(QStringLiteral(":support_id"), trans_shadow->support_id->toRfc4122());
 }
 
 void SqlF::UpdateTransValueBind(const TransShadow* trans_shadow, QSqlQuery& query) const
 {
-    query.bindValue(QStringLiteral(":lhs_node"), *trans_shadow->lhs_node);
+    query.bindValue(QStringLiteral(":lhs_node"), trans_shadow->lhs_node->toRfc4122());
     query.bindValue(QStringLiteral(":lhs_ratio"), *trans_shadow->lhs_ratio);
     query.bindValue(QStringLiteral(":lhs_debit"), *trans_shadow->lhs_debit);
     query.bindValue(QStringLiteral(":lhs_credit"), *trans_shadow->lhs_credit);
-    query.bindValue(QStringLiteral(":rhs_node"), *trans_shadow->rhs_node);
+    query.bindValue(QStringLiteral(":rhs_node"), trans_shadow->rhs_node->toRfc4122());
     query.bindValue(QStringLiteral(":rhs_ratio"), *trans_shadow->rhs_ratio);
     query.bindValue(QStringLiteral(":rhs_debit"), *trans_shadow->rhs_debit);
     query.bindValue(QStringLiteral(":rhs_credit"), *trans_shadow->rhs_credit);
-    query.bindValue(QStringLiteral(":trans_id"), *trans_shadow->id);
+    query.bindValue(QStringLiteral(":trans_id"), trans_shadow->id->toRfc4122());
 }
 
 QString SqlF::QSReadNode() const
@@ -97,8 +99,8 @@ QString SqlF::QSReadNode() const
 QString SqlF::QSWriteNode() const
 {
     return QStringLiteral(R"(
-    INSERT INTO finance (name, code, description, note, direction_rule, node_type, unit)
-    VALUES (:name, :code, :description, :note, :direction_rule, :node_type, :unit)
+    INSERT INTO finance (name, id, code, description, note, direction_rule, node_type, unit)
+    VALUES (:name, :id, :code, :description, :note, :direction_rule, :node_type, :unit)
     )");
 }
 
@@ -191,7 +193,7 @@ QString SqlF::QSTransToRemove() const
 QString SqlF::QSReadTrans() const
 {
     return QStringLiteral(R"(
-    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document, issued_time
+    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, is_checked, description, support_id, code, document, issued_time
     FROM finance_transaction
     WHERE (lhs_node = :node_id OR rhs_node = :node_id) AND is_valid = TRUE
     )");
@@ -200,7 +202,7 @@ QString SqlF::QSReadTrans() const
 QString SqlF::QSReadSupportTrans() const
 {
     return QStringLiteral(R"(
-    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document, issued_time
+    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, is_checked, description, support_id, code, document, issued_time
     FROM finance_transaction
     WHERE support_id = :node_id AND is_valid = TRUE
     )");
@@ -210,9 +212,9 @@ QString SqlF::QSWriteTrans() const
 {
     return QStringLiteral(R"(
     INSERT INTO finance_transaction
-    (issued_time, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document)
+    (id, issued_time, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, is_checked, description, support_id, code, document)
     VALUES
-    (:issued_time, :lhs_node, :lhs_ratio, :lhs_debit, :lhs_credit, :rhs_node, :rhs_ratio, :rhs_debit, :rhs_credit, :state, :description, :support_id, :code, :document)
+    (:id, :issued_time, :lhs_node, :lhs_ratio, :lhs_debit, :lhs_credit, :rhs_node, :rhs_ratio, :rhs_debit, :rhs_credit, :is_checked, :description, :support_id, :code, :document)
     )");
 }
 
@@ -249,13 +251,13 @@ void SqlF::UpdateLeafValueBind(const Node* node, QSqlQuery& query) const
 {
     query.bindValue(":foreign_total", node->initial_total);
     query.bindValue(":local_total", node->final_total);
-    query.bindValue(":node_id", node->id);
+    query.bindValue(":node_id", node->id.toRfc4122());
 }
 
 QString SqlF::QSSearchTransValue() const
 {
     return QStringLiteral(R"(
-    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document, issued_time
+    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, is_checked, description, support_id, code, document, issued_time
     FROM finance_transaction
     WHERE ((lhs_debit BETWEEN :value - :tolerance AND :value + :tolerance)
         OR (lhs_credit BETWEEN :value - :tolerance AND :value + :tolerance)
@@ -268,7 +270,7 @@ QString SqlF::QSSearchTransValue() const
 QString SqlF::QSSearchTransText() const
 {
     return QStringLiteral(R"(
-    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, state, description, support_id, code, document, issued_time
+    SELECT id, lhs_node, lhs_ratio, lhs_debit, lhs_credit, rhs_node, rhs_ratio, rhs_debit, rhs_credit, is_checked, description, support_id, code, document, issued_time
     FROM finance_transaction
     WHERE description LIKE :description AND is_valid = TRUE
     )");

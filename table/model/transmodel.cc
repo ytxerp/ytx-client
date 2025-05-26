@@ -18,7 +18,7 @@ TransModel::TransModel(CTransModelArg& arg, QObject* parent)
 
 TransModel::~TransModel() { ResourcePool<TransShadow>::Instance().Recycle(trans_shadow_list_); }
 
-void TransModel::RSyncRule(int node_id, bool rule)
+void TransModel::RSyncRule(const QUuid& node_id, bool rule)
 {
     assert(node_id_ == node_id && node_rule_ != rule && "node_id must match and node_rule must be different from rule");
 
@@ -62,7 +62,7 @@ void TransModel::RAppendOneTransL(const TransShadow* trans_shadow)
     new_trans_shadow->subtotal = TransModelUtils::Balance(node_rule_, *new_trans_shadow->lhs_debit, *new_trans_shadow->lhs_credit) + previous_balance;
 }
 
-void TransModel::RRemoveOneTransL(int node_id, int trans_id)
+void TransModel::RRemoveOneTransL(const QUuid& node_id, const QUuid& trans_id)
 {
     assert(node_id_ == node_id && "node_id must match");
 
@@ -78,7 +78,7 @@ void TransModel::RRemoveOneTransL(int node_id, int trans_id)
     TransModelUtils::AccumulateSubtotal(mutex_, trans_shadow_list_, row, node_rule_);
 }
 
-void TransModel::RSyncBalance(int node_id, int trans_id)
+void TransModel::RSyncBalance(const QUuid& node_id, const QUuid& trans_id)
 {
     assert(node_id_ == node_id && "node_id must match");
 
@@ -92,13 +92,13 @@ bool TransModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
     assert(row >= 0 && row <= rowCount(parent) - 1 && "Row must be in the valid range [0, rowCount(parent) - 1]");
 
     auto* trans_shadow { trans_shadow_list_.at(row) };
-    const int rhs_node_id { *trans_shadow->rhs_node };
+    const auto rhs_node_id { *trans_shadow->rhs_node };
 
     beginRemoveRows(parent, row, row);
     trans_shadow_list_.removeAt(row);
     endRemoveRows();
 
-    if (rhs_node_id != 0) {
+    if (!rhs_node_id.isNull()) {
         const double lhs_ratio { *trans_shadow->lhs_ratio };
         const double lhs_debit { *trans_shadow->lhs_debit };
         const double lhs_credit { *trans_shadow->lhs_credit };
@@ -109,13 +109,13 @@ bool TransModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
         const double rhs_credit { *trans_shadow->rhs_credit };
         emit SSyncLeafValue(*trans_shadow->rhs_node, -rhs_debit, -rhs_credit, -rhs_ratio * rhs_debit, -rhs_ratio * rhs_credit);
 
-        const int trans_id { *trans_shadow->id };
+        const auto trans_id { *trans_shadow->id };
         emit SRemoveOneTransL(section_, rhs_node_id, trans_id);
         TransModelUtils::AccumulateSubtotal(mutex_, trans_shadow_list_, row, node_rule_);
 
         UpdateUnitCost(node_id_, *trans_shadow->rhs_node, -lhs_ratio);
 
-        if (const int support_id = *trans_shadow->support_id; support_id != 0)
+        if (const auto support_id = *trans_shadow->support_id; !support_id.isNull())
             emit SRemoveOneTransS(section_, support_id, *trans_shadow->id);
 
         sql_->RemoveTrans(trans_id);
@@ -186,7 +186,7 @@ bool TransModel::UpdateDebit(TransShadow* trans_shadow, double value)
     *trans_shadow->rhs_debit = (*trans_shadow->lhs_credit) * lhs_ratio / rhs_ratio;
     *trans_shadow->rhs_credit = (*trans_shadow->lhs_debit) * lhs_ratio / rhs_ratio;
 
-    if (*trans_shadow->rhs_node == 0)
+    if (trans_shadow->rhs_node->isNull())
         return false;
 
     const double lhs_debit_delta { *trans_shadow->lhs_debit - lhs_debit };
@@ -220,7 +220,7 @@ bool TransModel::UpdateCredit(TransShadow* trans_shadow, double value)
     *trans_shadow->rhs_debit = (*trans_shadow->lhs_credit) * lhs_ratio / rhs_ratio;
     *trans_shadow->rhs_credit = (*trans_shadow->lhs_debit) * lhs_ratio / rhs_ratio;
 
-    if (*trans_shadow->rhs_node == 0)
+    if (trans_shadow->rhs_node->isNull())
         return false;
 
     const double lhs_debit_delta { *trans_shadow->lhs_debit - lhs_debit };
@@ -253,7 +253,7 @@ bool TransModel::UpdateRatio(TransShadow* trans_shadow, double value)
     *trans_shadow->rhs_debit *= proportion;
     *trans_shadow->rhs_credit *= proportion;
 
-    if (*trans_shadow->rhs_node == 0)
+    if (trans_shadow->rhs_node->isNull())
         return false;
 
     emit SSyncLeafValue(node_id_, 0, 0, *trans_shadow->lhs_debit * delta, *trans_shadow->lhs_credit * delta);
@@ -281,7 +281,7 @@ QVariant TransModel::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-int TransModel::GetNodeRow(int rhs_node_id) const
+int TransModel::GetNodeRow(const QUuid& rhs_node_id) const
 {
     int row { 0 };
 
@@ -294,7 +294,7 @@ int TransModel::GetNodeRow(int rhs_node_id) const
     return -1;
 }
 
-QModelIndex TransModel::GetIndex(int trans_id) const
+QModelIndex TransModel::GetIndex(const QUuid& trans_id) const
 {
     int row { 0 };
 
@@ -342,14 +342,14 @@ bool TransModel::insertRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
-void TransModel::RRemoveMultiTransL(int node_id, const QSet<int>& trans_id_set)
+void TransModel::RRemoveMultiTransL(const QUuid& node_id, const QSet<QUuid>& trans_id_set)
 {
     assert(node_id_ == node_id && "Node ID mismatch detected!");
 
     int min_row { std::numeric_limits<int>::max() };
 
     for (int i = trans_shadow_list_.size() - 1; i >= 0; --i) {
-        const int trans_id { *trans_shadow_list_[i]->id };
+        const auto trans_id { *trans_shadow_list_[i]->id };
 
         if (trans_id_set.contains(trans_id)) {
             min_row = i;
@@ -364,7 +364,7 @@ void TransModel::RRemoveMultiTransL(int node_id, const QSet<int>& trans_id_set)
         TransModelUtils::AccumulateSubtotal(mutex_, trans_shadow_list_, min_row, node_rule_);
 }
 
-void TransModel::RAppendMultiTransL(int node_id, const QSet<int>& trans_id_set)
+void TransModel::RAppendMultiTransL(const QUuid& node_id, const QSet<QUuid>& trans_id_set)
 {
     assert(node_id_ == node_id && "Node ID mismatch detected!");
 
@@ -379,7 +379,7 @@ void TransModel::RAppendMultiTransL(int node_id, const QSet<int>& trans_id_set)
     TransModelUtils::AccumulateSubtotal(mutex_, trans_shadow_list_, row, node_rule_);
 }
 
-void TransModel::RAppendMultiTrans(int node_id, const TransShadowList& trans_shadow_list)
+void TransModel::RAppendMultiTrans(const QUuid& node_id, const TransShadowList& trans_shadow_list)
 {
     assert(node_id_ == node_id && "Node ID mismatch detected!");
 

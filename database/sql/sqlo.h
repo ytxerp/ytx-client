@@ -35,34 +35,34 @@ signals:
     void SSyncPrice(const QList<PriceS>& list);
 
 public slots:
-    void RRemoveNode(int node_id, int node_type) override;
+    void RRemoveNode(const QUuid& node_id, int node_type) override;
 
-    void RSyncProduct(int old_node_id, int new_node_id) const override;
-    void RSyncStakeholder(int old_node_id, int new_node_id) const override;
+    void RSyncProduct(const QUuid& old_node_id, const QUuid& new_node_id) const override;
+    void RSyncStakeholder(const QUuid& old_node_id, const QUuid& new_node_id) const override;
 
 public:
     bool ReadNode(NodeHash& node_hash, const QDateTime& start, const QDateTime& end);
-    bool SearchNode(QList<const Node*>& node_list, const QList<int>& party_id_list);
-    Node* ReadNode(int node_id);
+    bool SearchNode(QList<const Node*>& node_list, const QList<QUuid>& party_id_list);
+    Node* ReadNode(QUuid node_id);
 
-    bool SettlementReference(int settlement_id) const;
-    int SettlementID(int node_id) const;
+    bool SettlementReference(const QUuid& settlement_id) const;
+    int SettlementID(const QUuid& node_id) const;
 
     bool ReadSettlement(NodeList& node_list, const QDateTime& start, const QDateTime& end) const;
     bool WriteSettlement(Node* node) const;
-    bool RemoveSettlement(int settlement_id);
+    bool RemoveSettlement(const QUuid& settlement_id);
 
-    bool ReadSettlementPrimary(NodeList& node_list, int party_id, int settlement_id, bool is_finished);
-    bool AddSettlementPrimary(int node_id, int settlement_id) const;
-    bool RemoveSettlementPrimary(int node_id) const;
+    bool ReadSettlementPrimary(NodeList& node_list, const QUuid& party_id, const QUuid& settlement_id, bool is_finished);
+    bool AddSettlementPrimary(const QUuid& node_id, const QUuid& settlement_id) const;
+    bool RemoveSettlementPrimary(const QUuid& node_id) const;
 
-    bool SyncPrice(int node_id);
-    bool InvertTransValue(int node_id) const;
+    bool SyncPrice(const QUuid& node_id);
+    bool InvertTransValue(const QUuid& node_id) const;
 
     bool ReadStatement(TransList& trans_list, int unit, const QDateTime& start, const QDateTime& end) const;
-    bool ReadBalance(double& pbalance, double& cdelta, int party_id, int unit, const QDateTime& start, const QDateTime& end) const;
-    bool ReadStatementPrimary(NodeList& node_list, int party_id, int unit, const QDateTime& start, const QDateTime& end) const;
-    bool ReadStatementSecondary(TransList& trans_list, int party_id, int unit, const QDateTime& start, const QDateTime& end) const;
+    bool ReadBalance(double& pbalance, double& cdelta, const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end) const;
+    bool ReadStatementPrimary(NodeList& node_list, const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end) const;
+    bool ReadStatementSecondary(TransList& trans_list, const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end) const;
 
     bool WriteTransRange(const QList<TransShadow*>& list);
 
@@ -79,7 +79,7 @@ protected:
 
     // table
     void WriteTransBind(TransShadow* trans_shadow, QSqlQuery& query) const override;
-    void ReadTransFunction(TransShadowList& trans_shadow_list, int node_id, QSqlQuery& query) override;
+    void ReadTransFunction(TransShadowList& trans_shadow_list, const QUuid& node_id, QSqlQuery& query) override;
     void ReadTransQuery(Trans* trans, const QSqlQuery& query) const override;
     void UpdateTransValueBind(const TransShadow* trans_shadow, QSqlQuery& query) const override;
 

@@ -41,7 +41,7 @@ protected:
 
 signals:
     // send to LeafSStation
-    void SSyncRule(Section seciton, int node_id, bool rule);
+    void SSyncRule(Section seciton, const QUuid& node_id, bool rule);
 
     // send to its view
     void SResizeColumnToContents(int column);
@@ -50,18 +50,18 @@ signals:
     void SSearch();
 
     // send to Mainwindow
-    void SSyncName(int node_id, const QString& name, bool branch);
+    void SSyncName(const QUuid& node_id, const QString& name, bool branch);
 
     // send to NodeWidget
     void SSyncStatusValue();
 
     // send to TreeModelStakeholder
-    void SSyncDouble(int node_id, int column, double value);
+    void SSyncDouble(const QUuid& node_id, int column, double value);
 
     // send to TableWidgetOrder and InsertNodeOrder
-    void SSyncBoolWD(int node_id, int column, bool value);
-    void SSyncInt(int node_id, int column, int value);
-    void SSyncString(int node_id, int column, const QString& value);
+    void SSyncBoolWD(const QUuid& node_id, int column, bool value);
+    void SSyncInt(const QUuid& node_id, int column, int value);
+    void SSyncString(const QUuid& node_id, int column, const QString& value);
 
     // send to FilterModel
     // Inserting or removing a node will trigger it automatically; manually trigger it only when changing the unit.
@@ -69,21 +69,21 @@ signals:
 
 public slots:
     // receive from Sqlite
-    void RRemoveNode(int node_id);
-    virtual void RSyncMultiLeafValue(const QList<int>& node_list);
+    void RRemoveNode(const QUuid& node_id);
+    virtual void RSyncMultiLeafValue(const QList<QUuid>& node_list);
 
     // receive from  TableModel
     void RSearch() { emit SSearch(); }
 
     // receive from TableWidgetOrder and InsertNodeOrder
-    virtual void RSyncBoolWD(int node_id, int column, bool value)
+    virtual void RSyncBoolWD(const QUuid& node_id, int column, bool value)
     {
         Q_UNUSED(node_id);
         Q_UNUSED(column);
         Q_UNUSED(value);
     }
 
-    virtual void RSyncLeafValue(int node_id, double delta1, double delta2, double delta3, double delta4, double delta5)
+    virtual void RSyncLeafValue(const QUuid& node_id, double delta1, double delta2, double delta3, double delta4, double delta5)
     {
         Q_UNUSED(node_id);
         Q_UNUSED(delta1);
@@ -94,14 +94,14 @@ public slots:
     }
 
     // receive from TreeModelOrder
-    virtual void RSyncDouble(int node_id, int column, double value)
+    virtual void RSyncDouble(const QUuid& node_id, int column, double value)
     {
         Q_UNUSED(node_id);
         Q_UNUSED(column);
         Q_UNUSED(value);
     }
 
-    virtual void RSyncStakeholder(int old_node_id, int new_node_id)
+    virtual void RSyncStakeholder(const QUuid& old_node_id, const QUuid& new_node_id)
     {
         Q_UNUSED(old_node_id);
         Q_UNUSED(new_node_id);
@@ -143,19 +143,19 @@ public:
 
     // Ytx's
     // Default implementations
-    double InitialTotal(int node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::initial_total); }
-    double FinalTotal(int node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::final_total); }
-    int Type(int node_id) { return NodeModelUtils::Value(node_hash_, node_id, &Node::node_type); }
-    int Unit(int node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::unit); }
-    bool Rule(int node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::direction_rule); }
-    bool Finished(int node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::is_finished); }
-    int Party(int node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::party); };
-    int Employee(int node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::employee); }
-    QString Name(int node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::name); }
+    double InitialTotal(QUuid node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::initial_total); }
+    double FinalTotal(QUuid node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::final_total); }
+    int Type(QUuid node_id) { return NodeModelUtils::Value(node_hash_, node_id, &Node::node_type); }
+    int Unit(QUuid node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::unit); }
+    bool Rule(QUuid node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::direction_rule); }
+    bool Finished(QUuid node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::is_finished); }
+    QUuid Party(QUuid node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::party); };
+    QUuid Employee(QUuid node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::employee); }
+    QString Name(QUuid node_id) const { return NodeModelUtils::Value(node_hash_, node_id, &Node::name); }
 
-    QStringList* DocumentPointer(int node_id) const;
-    QStringList ChildrenName(int node_id) const;
-    QSet<int> ChildrenID(int node_id) const;
+    QStringList* DocumentPointer(const QUuid& node_id) const;
+    QStringList ChildrenName(const QUuid& node_id) const;
+    QSet<QUuid> ChildrenID(const QUuid& node_id) const;
 
     inline QStandardItemModel* SupportModel() const { return support_model_; }
     inline QStandardItemModel* LeafModel() const { return leaf_model_; }
@@ -164,35 +164,35 @@ public:
 
     void LeafPathBranchPathModel(QStandardItemModel* model) const;
 
-    void SearchNode(QList<const Node*>& node_list, const QSet<int>& node_id_set) const;
+    void SearchNode(QList<const Node*>& node_list, const QSet<QUuid>& node_id_set) const;
 
-    void UpdateName(int node_id, CString& new_name);
+    void UpdateName(const QUuid& node_id, CString& new_name);
     void UpdateSeparator(CString& old_separator, CString& new_separator);
 
     bool InsertNode(int row, const QModelIndex& parent, Node* node);
 
-    inline bool Contains(int node_id) const { return node_hash_.contains(node_id); }
-    inline void SetParent(Node* node, int parent_id) const
+    inline bool Contains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
+    inline void SetParent(Node* node, const QUuid& parent_id) const
     {
         assert(node && "Node must be non-null");
         auto it { node_hash_.constFind(parent_id) };
         node->parent = it == node_hash_.constEnd() ? root_ : it.value();
     }
 
-    QModelIndex GetIndex(int node_id) const;
+    QModelIndex GetIndex(const QUuid& node_id) const;
 
     // virtual functions
-    virtual void ReadNode(int node_id) { Q_UNUSED(node_id); }
+    virtual void ReadNode(const QUuid& node_id) { Q_UNUSED(node_id); }
     virtual void UpdateDefaultUnit(int default_unit) { root_->unit = default_unit; }
 
-    virtual QString Path(int node_id) const;
-    virtual Node* GetNode(int node_id) const
+    virtual QString Path(const QUuid& node_id) const;
+    virtual Node* GetNode(const QUuid& node_id) const
     {
         Q_UNUSED(node_id)
         return nullptr;
     }
 
-    virtual QSortFilterProxyModel* ExcludeLeafModel(int node_id);
+    virtual QSortFilterProxyModel* ExcludeLeafModel(const QUuid& node_id);
 
     virtual QSortFilterProxyModel* IncludeUnitModel(int unit)
     {
@@ -217,19 +217,19 @@ protected:
     virtual void InsertPath(Node* node);
     virtual void RemovePath(Node* node, Node* parent_node);
 
-    virtual const QSet<int>* UnitSet(int unit) const
+    virtual const QSet<QUuid>* UnitSet(int unit) const
     {
         Q_UNUSED(unit)
         return nullptr;
     }
 
-    virtual void RemoveUnitSet(int node_id, int unit)
+    virtual void RemoveUnitSet(const QUuid& node_id, int unit)
     {
         Q_UNUSED(node_id)
         Q_UNUSED(unit)
     }
 
-    virtual void InsertUnitSet(int node_id, int unit)
+    virtual void InsertUnitSet(const QUuid& node_id, int unit)
     {
         Q_UNUSED(node_id)
         Q_UNUSED(unit)

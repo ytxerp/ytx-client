@@ -34,8 +34,8 @@ public:
     ~TransModelO() override = default;
 
 public slots:
-    void RSyncBoolWD(int node_id, int column, bool value) override; // kFinished, kRule
-    void RSyncInt(int node_id, int column, int value) override; // node_id, party_id
+    void RSyncBoolWD(const QUuid& node_id, int column, bool value) override; // kFinished, kRule
+    void RSyncInt(const QUuid& node_id, int column, const QUuid& value) override; // node_id, party_id
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -48,27 +48,27 @@ public:
     const QList<TransShadow*>& GetTransShadowList() { return trans_shadow_list_; }
 
 private:
-    bool UpdateInsideProduct(TransShadow* trans_shadow, int value);
-    bool UpdateOutsideProduct(TransShadow* trans_shadow, int value);
+    bool UpdateInsideProduct(TransShadow* trans_shadow, const QUuid& value);
+    bool UpdateOutsideProduct(TransShadow* trans_shadow, const QUuid& value);
 
     bool UpdateUnitPrice(TransShadow* trans_shadow, double value);
     bool UpdateDiscountPrice(TransShadow* trans_shadow, double value);
     bool UpdateSecond(TransShadow* trans_shadow, double value, int kCoefficient);
     bool UpdateFirst(TransShadow* trans_shadow, double value, int kCoefficient);
-    void PurifyTransShadow(int lhs_node_id = 0);
+    void PurifyTransShadow(const QUuid& lhs_node_id = QUuid());
 
-    void CrossSearch(TransShadow* trans_shadow, int product_id, bool is_inside) const;
+    void CrossSearch(TransShadow* trans_shadow, const QUuid& product_id, bool is_inside) const;
 
-    void UpdateLhsNode(int node_id);
-    void UpdateParty(int node_id, int party_id);
-    void UpdateRule(int node_id, bool value);
+    void UpdateLhsNode(const QUuid& node_id);
+    void UpdateParty(const QUuid& node_id, const QUuid& party_id);
+    void UpdateRule(const QUuid& node_id, bool value);
 
 private:
     const NodeModelP* product_tree_ {};
     SqlS* sqlite_stakeholder_ {};
     SqlO* sqlite_order_ {};
     const Node* node_ {};
-    int party_id_ {};
+    QUuid party_id_ {};
 };
 
 #endif // TRANSMODELO_H

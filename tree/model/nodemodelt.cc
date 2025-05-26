@@ -10,7 +10,7 @@ NodeModelT::NodeModelT(CNodeModelArg& arg, QObject* parent)
 NodeModelT::~NodeModelT() { qDeleteAll(node_hash_); }
 
 void NodeModelT::RSyncLeafValue(
-    int node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta, double final_credit_delta, double /*settled*/)
+    const QUuid& node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta, double final_credit_delta, double /*settled*/)
 {
     auto* node { NodeModelUtils::GetNode(node_hash_, node_id) };
     assert(node && node->node_type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
@@ -32,9 +32,9 @@ void NodeModelT::RSyncLeafValue(
     emit SSyncStatusValue();
 }
 
-void NodeModelT::RSyncDouble(int node_id, int column, double value)
+void NodeModelT::RSyncDouble(const QUuid& node_id, int column, double value)
 {
-    assert(node_id >= 1 && "node_id must be positive");
+    assert(!node_id.isNull() && "node_id must be positive");
 
     if (column != std::to_underlying(NodeEnumT::kUnitCost) || value == 0.0)
         return;
@@ -227,7 +227,7 @@ bool NodeModelT::UpdateUnit(Node* node, int value)
     if (node->unit == value)
         return false;
 
-    const int node_id { node->id };
+    const auto node_id { node->id };
     QString message { tr("Cannot change %1 unit,").arg(Path(node_id)) };
 
     if (NodeModelUtils::HasChildren(node, message))

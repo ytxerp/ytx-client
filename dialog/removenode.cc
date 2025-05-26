@@ -6,7 +6,7 @@
 #include "tree/excludeintfiltermodel.h"
 #include "ui_removenode.h"
 
-RemoveNode::RemoveNode(CNodeModel* model, Section section, int node_id, int node_type, int unit, bool exteral_reference, QWidget* parent)
+RemoveNode::RemoveNode(CNodeModel* model, Section section, const QUuid& node_id, int node_type, int unit, bool exteral_reference, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::RemoveNode)
     , node_id_ { node_id }
@@ -62,7 +62,7 @@ void RemoveNode::on_pBtnOk_clicked()
             emit SRemoveNode(node_id_, node_type_);
 
         if (ui->rBtnReplaceRecords->isChecked()) {
-            int new_node_id { ui->comboBox->currentData().toInt() };
+            const auto new_node_id { ui->comboBox->currentData().toUuid() };
             emit SReplaceNode(node_id_, new_node_id, node_type_, node_unit_);
         }
 
@@ -112,8 +112,8 @@ void RemoveNode::IniData(Section section, bool exteral_reference, int node_type)
 
 void RemoveNode::RcomboBoxCurrentIndexChanged(int /*index*/)
 {
-    int new_node_id { ui->comboBox->currentData().toInt() };
-    ui->pBtnOk->setEnabled(new_node_id != 0 && model_->Unit(new_node_id) == node_unit_);
+    const auto new_node_id { ui->comboBox->currentData().toUuid() };
+    ui->pBtnOk->setEnabled(!new_node_id.isNull() && model_->Unit(new_node_id) == node_unit_);
 }
 
 void RemoveNode::RButtonGroup(int id)

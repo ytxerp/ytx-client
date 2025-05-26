@@ -10,7 +10,7 @@ NodeModelF::NodeModelF(CNodeModelArg& arg, QObject* parent)
 NodeModelF::~NodeModelF() { qDeleteAll(node_hash_); }
 
 void NodeModelF::RSyncLeafValue(
-    int node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta, double final_credit_delta, double /*settled*/)
+    const QUuid& node_id, double initial_debit_delta, double initial_credit_delta, double final_debit_delta, double final_credit_delta, double /*settled*/)
 {
     auto* node { NodeModelUtils::GetNode(node_hash_, node_id) };
     assert(node && node->node_type == kTypeLeaf && "Node must be non-null and of type kTypeLeaf");
@@ -185,7 +185,7 @@ bool NodeModelF::UpdateUnit(Node* node, int value)
     if (node->unit == value)
         return false;
 
-    int node_id { node->id };
+    const auto node_id { node->id };
     auto message { tr("Cannot change %1 unit,").arg(Path(node_id)) };
 
     if (NodeModelUtils::IsInternalReferenced(sql_, node_id, message))

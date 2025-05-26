@@ -96,7 +96,7 @@ QString Sqlite::NodeFinance()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS finance (
-        id               TEXT PRIMARY KEY,
+        id               BLOB PRIMARY KEY,
         name             TEXT ,
         code             TEXT,
         description      TEXT,
@@ -104,13 +104,13 @@ QString Sqlite::NodeFinance()
         node_type        INTEGER ,
         direction_rule   BOOLEAN  DEFAULT FALSE,
         unit             INTEGER ,
-        foreign_total    NUMERIC(19,6),
-        local_total      NUMERIC(19,6),
-        user_id          TEXT ,
+        foreign_total    NUMERIC,
+        local_total      NUMERIC,
+        user_id          BLOB ,
         created_time     TEXT ,
-        created_by       TEXT ,
+        created_by       BLOB ,
         updated_time     TEXT ,
-        updated_by       TEXT ,
+        updated_by       BLOB ,
         version          INTEGER  DEFAULT 1,
         is_valid         BOOLEAN  DEFAULT TRUE
     );
@@ -121,7 +121,7 @@ QString Sqlite::NodeProduct()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS product (
-        id               TEXT PRIMARY KEY,
+        id               BLOB PRIMARY KEY,
         name             TEXT ,
         code             TEXT,
         description      TEXT,
@@ -130,15 +130,15 @@ QString Sqlite::NodeProduct()
         direction_rule   BOOLEAN  DEFAULT FALSE,
         unit             INTEGER ,
         color            TEXT,
-        unit_price       NUMERIC(19,6),
-        commission       NUMERIC(19,6),
-        quantity         NUMERIC(19,6),
-        amount           NUMERIC(19,6),
-        user_id          TEXT ,
+        unit_price       NUMERIC,
+        commission       NUMERIC,
+        quantity         NUMERIC,
+        amount           NUMERIC,
+        user_id          BLOB ,
         created_time     TEXT ,
-        created_by       TEXT ,
+        created_by       BLOB ,
         updated_time     TEXT ,
-        updated_by       TEXT ,
+        updated_by       BLOB ,
         version          INTEGER  DEFAULT 1,
         is_valid         BOOLEAN  DEFAULT TRUE
     );
@@ -149,7 +149,7 @@ QString Sqlite::NodeTask()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS task (
-        id               TEXT PRIMARY KEY,
+        id               BLOB PRIMARY KEY,
         name             TEXT ,
         code             TEXT,
         description      TEXT,
@@ -161,14 +161,14 @@ QString Sqlite::NodeTask()
         color            TEXT,
         document         TEXT,
         is_finished      BOOLEAN  DEFAULT FALSE,
-        unit_cost        NUMERIC(19,6),
-        quantity         NUMERIC(19,6),
-        amount           NUMERIC(19,6),
-        user_id          TEXT ,
+        unit_cost        NUMERIC,
+        quantity         NUMERIC,
+        amount           NUMERIC,
+        user_id          BLOB ,
         created_time     TEXT ,
-        created_by       TEXT ,
+        created_by       BLOB ,
         updated_time     TEXT ,
-        updated_by       TEXT ,
+        updated_by       BLOB ,
         version          INTEGER  DEFAULT 1,
         is_valid         BOOLEAN  DEFAULT TRUE
     );
@@ -179,7 +179,7 @@ QString Sqlite::NodeStakeholder()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS stakeholder (
-        id                TEXT PRIMARY KEY,
+        id                BLOB PRIMARY KEY,
         name              TEXT ,
         code              TEXT,
         description       TEXT,
@@ -188,14 +188,14 @@ QString Sqlite::NodeStakeholder()
         payment_term      INTEGER ,
         unit              INTEGER ,
         deadline          INTEGER CHECK (deadline BETWEEN 1 AND 31),
-        employee          TEXT,
-        tax_rate          NUMERIC(19,6),
-        amount            NUMERIC(19,6),
-        user_id           TEXT ,
-        created_time      TEXT ,
-        created_by        TEXT ,
-        updated_time      TEXT ,
-        updated_by        TEXT ,
+        employee          BLOB,
+        tax_rate          NUMERIC,
+        amount            NUMERIC,
+        user_id          BLOB ,
+        created_time     TEXT ,
+        created_by       BLOB ,
+        updated_time     TEXT ,
+        updated_by       BLOB ,
         version           INTEGER  DEFAULT 1,
         is_valid          BOOLEAN  DEFAULT TRUE
     );
@@ -206,27 +206,27 @@ QString Sqlite::NodeOrder(const QString& order)
 {
     return QString(R"(
     CREATE TABLE IF NOT EXISTS %1 (
-        id                TEXT PRIMARY KEY,
+        id                BLOB PRIMARY KEY,
         name              TEXT ,
-        party             TEXT ,
+        party             BLOB ,
         description       TEXT,
-        employee          TEXT,
+        employee          BLOB,
         node_type         INTEGER ,
         direction_rule    BOOLEAN  DEFAULT FALSE,
         unit              INTEGER ,
         issued_time       TEXT ,
-        first             NUMERIC(19,6),
-        second            NUMERIC(19,6),
+        first             NUMERIC,
+        second            NUMERIC,
         is_finished       BOOLEAN  DEFAULT FALSE,
-        gross_amount      NUMERIC(19,6),
-        discount          NUMERIC(19,6),
-        settlement        NUMERIC(19,6),
-        settlement_id     TEXT ,
-        user_id           TEXT ,
-        created_time      TEXT ,
-        created_by        TEXT ,
-        updated_time      TEXT ,
-        updated_by        TEXT ,
+        gross_amount      NUMERIC,
+        discount          NUMERIC,
+        settlement        NUMERIC,
+        settlement_id     BLOB ,
+        user_id          BLOB ,
+        created_time     TEXT ,
+        created_by       BLOB ,
+        updated_time     TEXT ,
+        updated_by       BLOB ,
         version           INTEGER  DEFAULT 1,
         is_valid          BOOLEAN  DEFAULT TRUE
     );
@@ -238,10 +238,10 @@ QString Sqlite::Path(const QString& table_name)
 {
     return QString(R"(
     CREATE TABLE IF NOT EXISTS %1_path (
-        ancestor      TEXT ,
-        descendant    TEXT ,
+        ancestor      BLOB ,
+        descendant    BLOB ,
         distance      INTEGER  CHECK (distance >= 0),
-        user_id       TEXT ,
+        user_id       BLOB ,
         version       INTEGER  DEFAULT 1
     );
 )")
@@ -252,26 +252,26 @@ QString Sqlite::TransFinance()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS finance_transaction (
-        id             TEXT PRIMARY KEY,
+        id             BLOB PRIMARY KEY,
         issued_time    TEXT ,
         code           TEXT,
-        lhs_node       TEXT ,
-        lhs_ratio      NUMERIC(19,6) CHECK (lhs_ratio   > 0),
-        lhs_debit      NUMERIC(19,6) CHECK (lhs_debit  >= 0),
-        lhs_credit     NUMERIC(19,6) CHECK (lhs_credit >= 0),
+        lhs_node       BLOB ,
+        lhs_ratio      NUMERIC CHECK (lhs_ratio   > 0),
+        lhs_debit      NUMERIC CHECK (lhs_debit  >= 0),
+        lhs_credit     NUMERIC CHECK (lhs_credit >= 0),
         description    TEXT,
-        support_id     TEXT,
+        support_id     BLOB,
         document       TEXT,
         is_checked     BOOLEAN  DEFAULT FALSE,
-        rhs_credit     NUMERIC(19,6) CHECK (rhs_credit >= 0),
-        rhs_debit      NUMERIC(19,6) CHECK (rhs_debit  >= 0),
-        rhs_ratio      NUMERIC(19,6) CHECK (rhs_ratio   > 0),
-        rhs_node       TEXT ,
-        user_id        TEXT ,
-        created_time   TEXT ,
-        created_by     TEXT ,
-        updated_time   TEXT ,
-        updated_by     TEXT ,
+        rhs_credit     NUMERIC CHECK (rhs_credit >= 0),
+        rhs_debit      NUMERIC CHECK (rhs_debit  >= 0),
+        rhs_ratio      NUMERIC CHECK (rhs_ratio   > 0),
+        rhs_node       BLOB ,
+        user_id          BLOB ,
+        created_time     TEXT ,
+        created_by       BLOB ,
+        updated_time     TEXT ,
+        updated_by       BLOB ,
         version        INTEGER  DEFAULT 1,
         is_valid       BOOLEAN  DEFAULT TRUE
     );
@@ -282,25 +282,25 @@ QString Sqlite::TransProduct()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS product_transaction (
-        id             TEXT PRIMARY KEY,
+        id             BLOB PRIMARY KEY,
         issued_time    TEXT ,
         code           TEXT,
-        lhs_node       TEXT ,
-        unit_cost      NUMERIC(19,6),
-        lhs_debit      NUMERIC(19,6) CHECK (lhs_debit  >= 0),
-        lhs_credit     NUMERIC(19,6) CHECK (lhs_credit >= 0),
+        lhs_node       BLOB ,
+        unit_cost      NUMERIC,
+        lhs_debit      NUMERIC CHECK (lhs_debit  >= 0),
+        lhs_credit     NUMERIC CHECK (lhs_credit >= 0),
         description    TEXT,
-        support_id     TEXT,
+        support_id     BLOB,
         document       TEXT,
         is_checked     BOOLEAN  DEFAULT FALSE,
-        rhs_credit     NUMERIC(19,6) CHECK (rhs_credit >= 0),
-        rhs_debit      NUMERIC(19,6) CHECK (rhs_debit  >= 0),
-        rhs_node       TEXT ,
-        user_id        TEXT ,
-        created_time   TEXT ,
-        created_by     TEXT ,
-        updated_time   TEXT ,
-        updated_by     TEXT ,
+        rhs_credit     NUMERIC CHECK (rhs_credit >= 0),
+        rhs_debit      NUMERIC CHECK (rhs_debit  >= 0),
+        rhs_node       BLOB ,
+        user_id          BLOB ,
+        created_time     TEXT ,
+        created_by       BLOB ,
+        updated_time     TEXT ,
+        updated_by       BLOB ,
         version        INTEGER  DEFAULT 1,
         is_valid       BOOLEAN  DEFAULT TRUE
     );
@@ -311,25 +311,25 @@ QString Sqlite::TransTask()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS task_transaction (
-        id             TEXT PRIMARY KEY,
+        id             BLOB PRIMARY KEY,
         issued_time    TEXT ,
         code           TEXT,
-        lhs_node       TEXT ,
-        unit_cost      NUMERIC(19,6),
-        lhs_debit      NUMERIC(19,6) CHECK (lhs_debit  >= 0),
-        lhs_credit     NUMERIC(19,6) CHECK (lhs_credit >= 0),
+        lhs_node       BLOB ,
+        unit_cost      NUMERIC,
+        lhs_debit      NUMERIC CHECK (lhs_debit  >= 0),
+        lhs_credit     NUMERIC CHECK (lhs_credit >= 0),
         description    TEXT,
-        support_id     TEXT,
+        support_id     BLOB,
         document       TEXT,
         is_checked     BOOLEAN  DEFAULT FALSE,
-        rhs_credit     NUMERIC(19,6) CHECK (rhs_credit >= 0),
-        rhs_debit      NUMERIC(19,6) CHECK (rhs_debit  >= 0),
-        rhs_node       TEXT ,
-        user_id        TEXT ,
-        created_time   TEXT ,
-        created_by     TEXT ,
-        updated_time   TEXT ,
-        updated_by     TEXT ,
+        rhs_credit     NUMERIC CHECK (rhs_credit >= 0),
+        rhs_debit      NUMERIC CHECK (rhs_debit  >= 0),
+        rhs_node       BLOB ,
+        user_id          BLOB ,
+        created_time     TEXT ,
+        created_by       BLOB ,
+        updated_time     TEXT ,
+        updated_by       BLOB ,
         version        INTEGER  DEFAULT 1,
         is_valid       BOOLEAN  DEFAULT TRUE
     );
@@ -340,21 +340,21 @@ QString Sqlite::TransStakeholder()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS stakeholder_transaction (
-        id                 TEXT PRIMARY KEY,
+        id                 BLOB PRIMARY KEY,
         issued_time        TEXT ,
         code               TEXT,
-        lhs_node           TEXT ,
-        unit_price         NUMERIC(19,6),
+        lhs_node           BLOB ,
+        unit_price         NUMERIC,
         description        TEXT,
-        outside_product    TEXT,
+        outside_product    BLOB,
         document           TEXT,
         is_checked         BOOLEAN  DEFAULT FALSE,
-        inside_product     TEXT ,
-        user_id            TEXT ,
-        created_time       TEXT ,
-        created_by         TEXT ,
-        updated_time       TEXT ,
-        updated_by         TEXT ,
+        inside_product     BLOB ,
+        user_id          BLOB ,
+        created_time     TEXT ,
+        created_by       BLOB ,
+        updated_time     TEXT ,
+        updated_by       BLOB ,
         version            INTEGER  DEFAULT 1,
         UNIQUE(lhs_node, inside_product)
     );
@@ -365,24 +365,24 @@ QString Sqlite::TransOrder(const QString& order)
 {
     return QString(R"(
     CREATE TABLE IF NOT EXISTS %1_transaction (
-        id                  TEXT PRIMARY KEY,
+        id                  BLOB PRIMARY KEY,
         code                TEXT,
-        lhs_node            TEXT ,
-        unit_price          NUMERIC(19,6),
-        first               NUMERIC(19,6),
-        second              NUMERIC(19,6),
+        lhs_node            BLOB ,
+        unit_price          NUMERIC,
+        first               NUMERIC,
+        second              NUMERIC,
         description         TEXT,
-        outside_product     TEXT,
-        discount            NUMERIC(19,6),
-        net_amount          NUMERIC(19,6),
-        gross_amount        NUMERIC(19,6),
-        discount_price      NUMERIC(19,6),
-        inside_product      TEXT ,
-        user_id             TEXT ,
-        created_time        TEXT ,
-        created_by          TEXT ,
-        updated_time        TEXT ,
-        updated_by          TEXT ,
+        outside_product     BLOB,
+        discount            NUMERIC,
+        net_amount          NUMERIC,
+        gross_amount        NUMERIC,
+        discount_price      NUMERIC,
+        inside_product      BLOB ,
+        user_id          BLOB ,
+        created_time     TEXT ,
+        created_by       BLOB ,
+        updated_time     TEXT ,
+        updated_by       BLOB ,
         version             INTEGER  DEFAULT 1,
         is_valid            BOOLEAN  DEFAULT TRUE
     );
@@ -394,17 +394,17 @@ QString Sqlite::SettlementOrder(const QString& order)
 {
     return QString(R"(
     CREATE TABLE IF NOT EXISTS %1_settlement (
-        id               TEXT PRIMARY KEY,
-        party            TEXT ,
+        id               BLOB PRIMARY KEY,
+        party            BLOB ,
         issued_time      TEXT ,
         description      TEXT,
         is_finished      BOOLEAN  DEFAULT FALSE,
-        gross_amount     NUMERIC(19,6),
-        user_id          TEXT ,
+        gross_amount     NUMERIC,
+        user_id          BLOB ,
         created_time     TEXT ,
-        created_by       TEXT ,
+        created_by       BLOB ,
         updated_time     TEXT ,
-        updated_by       TEXT ,
+        updated_by       BLOB ,
         version          INTEGER  DEFAULT 1,
         is_valid         BOOLEAN  DEFAULT TRUE
     );
@@ -417,7 +417,7 @@ QString Sqlite::NodeFinance()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS finance (
-        id               TEXT PRIMARY KEY,
+        id               BLOB PRIMARY KEY,
         name             TEXT NOT NULL,
         code             TEXT,
         description      TEXT,
@@ -425,13 +425,13 @@ QString Sqlite::NodeFinance()
         node_type        INTEGER NOT NULL,
         direction_rule   BOOLEAN NOT NULL DEFAULT FALSE,
         unit             INTEGER NOT NULL,
-        foreign_total    NUMERIC(19,6),
-        local_total      NUMERIC(19,6),
-        user_id          TEXT NOT NULL,
+        foreign_total    NUMERIC,
+        local_total      NUMERIC,
+        user_id          BLOB NOT NULL,
         created_time     TEXT NOT NULL,
-        created_by       TEXT NOT NULL,
+        created_by       BLOB NOT NULL,
         updated_time     TEXT NOT NULL,
-        updated_by       TEXT NOT NULL,
+        updated_by       BLOB NOT NULL,
         version          INTEGER NOT NULL DEFAULT 1,
         is_valid         BOOLEAN NOT NULL DEFAULT TRUE
     );
@@ -442,7 +442,7 @@ QString Sqlite::NodeProduct()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS product (
-        id               TEXT PRIMARY KEY,
+        id               BLOB PRIMARY KEY,
         name             TEXT NOT NULL,
         code             TEXT,
         description      TEXT,
@@ -451,15 +451,15 @@ QString Sqlite::NodeProduct()
         direction_rule   BOOLEAN NOT NULL DEFAULT FALSE,
         unit             INTEGER NOT NULL,
         color            TEXT,
-        unit_price       NUMERIC(19,6),
-        commission       NUMERIC(19,6),
-        quantity         NUMERIC(19,6),
-        amount           NUMERIC(19,6),
-        user_id          TEXT NOT NULL,
+        unit_price       NUMERIC,
+        commission       NUMERIC,
+        quantity         NUMERIC,
+        amount           NUMERIC,
+        user_id          BLOB NOT NULL,
         created_time     TEXT NOT NULL,
-        created_by       TEXT NOT NULL,
+        created_by       BLOB NOT NULL,
         updated_time     TEXT NOT NULL,
-        updated_by       TEXT NOT NULL,
+        updated_by       BLOB NOT NULL,
         version          INTEGER NOT NULL DEFAULT 1,
         is_valid         BOOLEAN NOT NULL DEFAULT TRUE
     );
@@ -470,7 +470,7 @@ QString Sqlite::NodeTask()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS task (
-        id               TEXT PRIMARY KEY,
+        id               BLOB PRIMARY KEY,
         name             TEXT NOT NULL,
         code             TEXT,
         description      TEXT,
@@ -482,14 +482,14 @@ QString Sqlite::NodeTask()
         color            TEXT,
         document         TEXT,
         is_finished      BOOLEAN NOT NULL DEFAULT FALSE,
-        unit_cost        NUMERIC(19,6),
-        quantity         NUMERIC(19,6),
-        amount           NUMERIC(19,6),
-        user_id          TEXT NOT NULL,
+        unit_cost        NUMERIC,
+        quantity         NUMERIC,
+        amount           NUMERIC,
+        user_id          BLOB NOT NULL,
         created_time     TEXT NOT NULL,
-        created_by       TEXT NOT NULL,
+        created_by       BLOB NOT NULL,
         updated_time     TEXT NOT NULL,
-        updated_by       TEXT NOT NULL,
+        updated_by       BLOB NOT NULL,
         version          INTEGER NOT NULL DEFAULT 1,
         is_valid         BOOLEAN NOT NULL DEFAULT TRUE
     );
@@ -500,7 +500,7 @@ QString Sqlite::NodeStakeholder()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS stakeholder (
-        id                TEXT PRIMARY KEY,
+        id                BLOB PRIMARY KEY,
         name              TEXT NOT NULL,
         code              TEXT,
         description       TEXT,
@@ -509,14 +509,14 @@ QString Sqlite::NodeStakeholder()
         payment_term      INTEGER NOT NULL,
         unit              INTEGER NOT NULL,
         deadline          INTEGER CHECK (deadline BETWEEN 1 AND 31),
-        employee          TEXT,
-        tax_rate          NUMERIC(19,6),
-        amount            NUMERIC(19,6),
-        user_id           TEXT NOT NULL,
+        employee          BLOB,
+        tax_rate          NUMERIC,
+        amount            NUMERIC,
+        user_id           BLOB NOT NULL,
         created_time      TEXT NOT NULL,
-        created_by        TEXT NOT NULL,
+        created_by        BLOB NOT NULL,
         updated_time      TEXT NOT NULL,
-        updated_by        TEXT NOT NULL,
+        updated_by        BLOB NOT NULL,
         version           INTEGER NOT NULL DEFAULT 1,
         is_valid          BOOLEAN NOT NULL DEFAULT TRUE
     );
@@ -527,27 +527,27 @@ QString Sqlite::NodeOrder(const QString& order)
 {
     return QString(R"(
     CREATE TABLE IF NOT EXISTS %1 (
-        id                TEXT PRIMARY KEY,
+        id                BLOB PRIMARY KEY,
         name              TEXT NOT NULL,
-        party             TEXT NOT NULL,
+        party             BLOB NOT NULL,
         description       TEXT,
-        employee          TEXT,
+        employee          BLOB,
         node_type         INTEGER NOT NULL,
         direction_rule    BOOLEAN NOT NULL DEFAULT FALSE,
         unit              INTEGER NOT NULL,
         issued_time       TEXT NOT NULL,
-        first             NUMERIC(19,6),
-        second            NUMERIC(19,6),
+        first             NUMERIC,
+        second            NUMERIC,
         is_finished       BOOLEAN NOT NULL DEFAULT FALSE,
-        gross_amount      NUMERIC(19,6),
-        discount          NUMERIC(19,6),
-        settlement        NUMERIC(19,6),
-        settlement_id     TEXT NOT NULL,
-        user_id           TEXT NOT NULL,
+        gross_amount      NUMERIC,
+        discount          NUMERIC,
+        settlement        NUMERIC,
+        settlement_id     BLOB NOT NULL,
+        user_id           BLOB NOT NULL,
         created_time      TEXT NOT NULL,
-        created_by        TEXT NOT NULL,
+        created_by        BLOB NOT NULL,
         updated_time      TEXT NOT NULL,
-        updated_by        TEXT NOT NULL,
+        updated_by        BLOB NOT NULL,
         version           INTEGER NOT NULL DEFAULT 1,
         is_valid          BOOLEAN NOT NULL DEFAULT TRUE
     );
@@ -559,10 +559,10 @@ QString Sqlite::Path(const QString& table_name)
 {
     return QString(R"(
     CREATE TABLE IF NOT EXISTS %1_path (
-        ancestor      TEXT NOT NULL,
-        descendant    TEXT NOT NULL,
+        ancestor      BLOB NOT NULL,
+        descendant    BLOB NOT NULL,
         distance      INTEGER NOT NULL CHECK (distance >= 0),
-        user_id       TEXT NOT NULL,
+        user_id       BLOB NOT NULL,
         version       INTEGER NOT NULL DEFAULT 1
     );
 )")
@@ -573,28 +573,28 @@ QString Sqlite::TransFinance()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS finance_transaction (
-        id             TEXT PRIMARY KEY,
-        issued_time    TEXT NOT NULL,
-        code           TEXT,
-        lhs_node       TEXT NOT NULL,
-        lhs_ratio      NUMERIC(19,6) CHECK (lhs_ratio   > 0),
-        lhs_debit      NUMERIC(19,6) CHECK (lhs_debit  >= 0),
-        lhs_credit     NUMERIC(19,6) CHECK (lhs_credit >= 0),
-        description    TEXT,
-        support_id     TEXT,
-        document       TEXT,
-        is_checked     BOOLEAN NOT NULL DEFAULT FALSE,
-        rhs_credit     NUMERIC(19,6) CHECK (rhs_credit >= 0),
-        rhs_debit      NUMERIC(19,6) CHECK (rhs_debit  >= 0),
-        rhs_ratio      NUMERIC(19,6) CHECK (rhs_ratio   > 0),
-        rhs_node       TEXT NOT NULL,
-        user_id        TEXT NOT NULL,
-        created_time   TEXT NOT NULL,
-        created_by     TEXT NOT NULL,
-        updated_time   TEXT NOT NULL,
-        updated_by     TEXT NOT NULL,
-        version        INTEGER NOT NULL DEFAULT 1,
-        is_valid       BOOLEAN NOT NULL DEFAULT TRUE
+        id               BLOB PRIMARY KEY,
+        issued_time      TEXT NOT NULL,
+        code             TEXT,
+        lhs_node         BLOB NOT NULL,
+        lhs_ratio        NUMERIC CHECK (lhs_ratio   > 0),
+        lhs_debit        NUMERIC CHECK (lhs_debit  >= 0),
+        lhs_credit       NUMERIC CHECK (lhs_credit >= 0),
+        description      TEXT,
+        support_id       BLOB,
+        document         TEXT,
+        is_checked       BOOLEAN NOT NULL DEFAULT FALSE,
+        rhs_credit       NUMERIC CHECK (rhs_credit >= 0),
+        rhs_debit        NUMERIC CHECK (rhs_debit  >= 0),
+        rhs_ratio        NUMERIC CHECK (rhs_ratio   > 0),
+        rhs_node         BLOB NOT NULL,
+        user_id          BLOB NOT NULL,
+        created_time     TEXT NOT NULL,
+        created_by       BLOB NOT NULL,
+        updated_time     TEXT NOT NULL,
+        updated_by       BLOB NOT NULL,
+        version          INTEGER NOT NULL DEFAULT 1,
+        is_valid         BOOLEAN NOT NULL DEFAULT TRUE
     );
     )");
 }
@@ -603,27 +603,27 @@ QString Sqlite::TransProduct()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS product_transaction (
-        id             TEXT PRIMARY KEY,
-        issued_time    TEXT NOT NULL,
-        code           TEXT,
-        lhs_node       TEXT NOT NULL,
-        unit_cost      NUMERIC(19,6),
-        lhs_debit      NUMERIC(19,6) CHECK (lhs_debit  >= 0),
-        lhs_credit     NUMERIC(19,6) CHECK (lhs_credit >= 0),
-        description    TEXT,
-        support_id     TEXT,
-        document       TEXT,
-        is_checked     BOOLEAN NOT NULL DEFAULT FALSE,
-        rhs_credit     NUMERIC(19,6) CHECK (rhs_credit >= 0),
-        rhs_debit      NUMERIC(19,6) CHECK (rhs_debit  >= 0),
-        rhs_node       TEXT NOT NULL,
-        user_id        TEXT NOT NULL,
-        created_time   TEXT NOT NULL,
-        created_by     TEXT NOT NULL,
-        updated_time   TEXT NOT NULL,
-        updated_by     TEXT NOT NULL,
-        version        INTEGER NOT NULL DEFAULT 1,
-        is_valid       BOOLEAN NOT NULL DEFAULT TRUE
+        id               BLOB PRIMARY KEY,
+        issued_time      TEXT NOT NULL,
+        code             TEXT,
+        lhs_node         BLOB NOT NULL,
+        unit_cost        NUMERIC,
+        lhs_debit        NUMERIC CHECK (lhs_debit  >= 0),
+        lhs_credit       NUMERIC CHECK (lhs_credit >= 0),
+        description      TEXT,
+        support_id       BLOB,
+        document         TEXT,
+        is_checked       BOOLEAN NOT NULL DEFAULT FALSE,
+        rhs_credit       NUMERIC CHECK (rhs_credit >= 0),
+        rhs_debit        NUMERIC CHECK (rhs_debit  >= 0),
+        rhs_node         BLOB NOT NULL,
+        user_id          BLOB NOT NULL,
+        created_time     TEXT NOT NULL,
+        created_by       BLOB NOT NULL,
+        updated_time     TEXT NOT NULL,
+        updated_by       BLOB NOT NULL,
+        version          INTEGER NOT NULL DEFAULT 1,
+        is_valid         BOOLEAN NOT NULL DEFAULT TRUE
     );
     )");
 }
@@ -632,27 +632,27 @@ QString Sqlite::TransTask()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS task_transaction (
-        id             TEXT PRIMARY KEY,
-        issued_time    TEXT NOT NULL,
-        code           TEXT,
-        lhs_node       TEXT NOT NULL,
-        unit_cost      NUMERIC(19,6),
-        lhs_debit      NUMERIC(19,6) CHECK (lhs_debit  >= 0),
-        lhs_credit     NUMERIC(19,6) CHECK (lhs_credit >= 0),
-        description    TEXT,
-        support_id     TEXT,
-        document       TEXT,
-        is_checked     BOOLEAN NOT NULL DEFAULT FALSE,
-        rhs_credit     NUMERIC(19,6) CHECK (rhs_credit >= 0),
-        rhs_debit      NUMERIC(19,6) CHECK (rhs_debit  >= 0),
-        rhs_node       TEXT NOT NULL,
-        user_id        TEXT NOT NULL,
-        created_time   TEXT NOT NULL,
-        created_by     TEXT NOT NULL,
-        updated_time   TEXT NOT NULL,
-        updated_by     TEXT NOT NULL,
-        version        INTEGER NOT NULL DEFAULT 1,
-        is_valid       BOOLEAN NOT NULL DEFAULT TRUE
+        id               BLOB PRIMARY KEY,
+        issued_time      TEXT NOT NULL,
+        code             TEXT,
+        lhs_node         BLOB NOT NULL,
+        unit_cost        NUMERIC,
+        lhs_debit        NUMERIC CHECK (lhs_debit  >= 0),
+        lhs_credit       NUMERIC CHECK (lhs_credit >= 0),
+        description      TEXT,
+        support_id       BLOB,
+        document         TEXT,
+        is_checked       BOOLEAN NOT NULL DEFAULT FALSE,
+        rhs_credit       NUMERIC CHECK (rhs_credit >= 0),
+        rhs_debit        NUMERIC CHECK (rhs_debit  >= 0),
+        rhs_node         BLOB NOT NULL,
+        user_id          BLOB NOT NULL,
+        created_time     TEXT NOT NULL,
+        created_by       BLOB NOT NULL,
+        updated_time     TEXT NOT NULL,
+        updated_by       BLOB NOT NULL,
+        version          INTEGER NOT NULL DEFAULT 1,
+        is_valid         BOOLEAN NOT NULL DEFAULT TRUE
     );
     )");
 }
@@ -661,21 +661,21 @@ QString Sqlite::TransStakeholder()
 {
     return QStringLiteral(R"(
     CREATE TABLE IF NOT EXISTS stakeholder_transaction (
-        id                 TEXT PRIMARY KEY,
+        id                 BLOB PRIMARY KEY,
         issued_time        TEXT NOT NULL,
         code               TEXT,
-        lhs_node           TEXT NOT NULL,
-        unit_price         NUMERIC(19,6),
+        lhs_node           BLOB NOT NULL,
+        unit_price         NUMERIC,
         description        TEXT,
-        outside_product    TEXT,
+        outside_product    BLOB,
         document           TEXT,
         is_checked         BOOLEAN NOT NULL DEFAULT FALSE,
-        inside_product     TEXT NOT NULL,
-        user_id            TEXT NOT NULL,
+        inside_product     BLOB NOT NULL,
+        user_id            BLOB NOT NULL,
         created_time       TEXT NOT NULL,
-        created_by         TEXT NOT NULL,
+        created_by         BLOB NOT NULL,
         updated_time       TEXT NOT NULL,
-        updated_by         TEXT NOT NULL,
+        updated_by         BLOB NOT NULL,
         version            INTEGER NOT NULL DEFAULT 1,
         UNIQUE(lhs_node, inside_product)
     );
@@ -686,24 +686,24 @@ QString Sqlite::TransOrder(const QString& order)
 {
     return QString(R"(
     CREATE TABLE IF NOT EXISTS %1_transaction (
-        id                  TEXT PRIMARY KEY,
+        id                  BLOB PRIMARY KEY,
         code                TEXT,
-        lhs_node            TEXT NOT NULL,
-        unit_price          NUMERIC(19,6),
-        first               NUMERIC(19,6),
-        second              NUMERIC(19,6),
+        lhs_node            BLOB NOT NULL,
+        unit_price          NUMERIC,
+        first               NUMERIC,
+        second              NUMERIC,
         description         TEXT,
-        outside_product     TEXT,
-        discount            NUMERIC(19,6),
-        net_amount          NUMERIC(19,6),
-        gross_amount        NUMERIC(19,6),
-        discount_price      NUMERIC(19,6),
-        inside_product      TEXT NOT NULL,
-        user_id             TEXT NOT NULL,
+        outside_product     BLOB,
+        discount            NUMERIC,
+        net_amount          NUMERIC,
+        gross_amount        NUMERIC,
+        discount_price      NUMERIC,
+        inside_product      BLOB NOT NULL,
+        user_id             BLOB NOT NULL,
         created_time        TEXT NOT NULL,
-        created_by          TEXT NOT NULL,
+        created_by          BLOB NOT NULL,
         updated_time        TEXT NOT NULL,
-        updated_by          TEXT NOT NULL,
+        updated_by          BLOB NOT NULL,
         version             INTEGER NOT NULL DEFAULT 1,
         is_valid            BOOLEAN NOT NULL DEFAULT TRUE
     );
@@ -715,17 +715,17 @@ QString Sqlite::SettlementOrder(const QString& order)
 {
     return QString(R"(
     CREATE TABLE IF NOT EXISTS %1_settlement (
-        id               TEXT PRIMARY KEY,
-        party            TEXT NOT NULL,
+        id               BLOB PRIMARY KEY,
+        party            BLOB NOT NULL,
         issued_time      TEXT NOT NULL,
         description      TEXT,
         is_finished      BOOLEAN NOT NULL DEFAULT FALSE,
-        gross_amount     NUMERIC(19,6),
-        user_id          TEXT NOT NULL,
+        gross_amount     NUMERIC,
+        user_id          BLOB NOT NULL,
         created_time     TEXT NOT NULL,
-        created_by       TEXT NOT NULL,
+        created_by       BLOB NOT NULL,
         updated_time     TEXT NOT NULL,
-        updated_by       TEXT NOT NULL,
+        updated_by       BLOB NOT NULL,
         version          INTEGER NOT NULL DEFAULT 1,
         is_valid         BOOLEAN NOT NULL DEFAULT TRUE
     );

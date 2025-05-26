@@ -35,7 +35,7 @@ public:
     ~TransRefModel();
 
 public slots:
-    void RResetModel(int node_id, const QDateTime& start, const QDateTime& end);
+    void RResetModel(const QUuid& node_id, const QDateTime& start, const QDateTime& end);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;

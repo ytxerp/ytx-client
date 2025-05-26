@@ -25,7 +25,8 @@
 
 template <typename T>
 concept Resettable = requires(T t) {
-    { t.Reset() } -> std::same_as<void>;
+    { t.ResetState() } -> std::same_as<void>;
+    { t.GenerateId() } -> std::same_as<void>;
 };
 
 template <typename Container>
@@ -41,14 +42,14 @@ public:
     void Recycle(T* resource);
     template <Iterable Container> void Recycle(Container& resource_list);
 
-private:
-    ResourcePool();
-    ~ResourcePool();
-
     ResourcePool(const ResourcePool&) = delete;
     ResourcePool& operator=(const ResourcePool&) = delete;
     ResourcePool(ResourcePool&&) = delete;
     ResourcePool& operator=(ResourcePool&&) = delete;
+
+private:
+    ResourcePool();
+    ~ResourcePool();
 
     void ExpandCapacity(int size);
 
@@ -74,12 +75,15 @@ template <Resettable T> T* ResourcePool<T>::Allocate()
     if (pool_.size() <= kExpandThreshold)
         ExpandCapacity(kSize);
 
+    T* resource { nullptr };
+
     if (pool_.empty()) {
-        return new T();
+        resource = new T();
+    } else {
+        resource = pool_.front();
+        pool_.pop_front();
     }
 
-    T* resource { pool_.front() };
-    pool_.pop_front();
     return resource;
 }
 
@@ -94,7 +98,7 @@ template <Resettable T> void ResourcePool<T>::Recycle(T* resource)
     }
 
     QMutexLocker locker(&mutex_);
-    resource->Reset();
+    resource->ResetState();
     pool_.push_back(resource);
 }
 
@@ -110,7 +114,7 @@ template <Resettable T> template <Iterable Container> void ResourcePool<T>::Recy
 
         for (T* resource : container) {
             if (resource) {
-                resource->Reset();
+                resource->ResetState();
                 pool_.push_back(resource);
             }
         }

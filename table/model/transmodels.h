@@ -41,11 +41,11 @@ protected:
     bool UpdateRatio(TransShadow* trans_shadow, double value) override;
 
 private:
-    bool UpdateInsideProduct(TransShadow* trans_shadow, int value);
+    bool UpdateInsideProduct(TransShadow* trans_shadow, const QUuid& value);
     void IniInsideSet();
 
 private:
-    QSet<int> inside_set_ {};
+    QSet<QUuid> inside_set_ {};
 };
 
 #endif // TRANSMODELS_H

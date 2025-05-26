@@ -17,7 +17,7 @@ Sql::Sql(QSqlDatabase& main_db, CInfo& info, QObject* parent)
 
 Sql::~Sql() { qDeleteAll(trans_hash_); }
 
-void Sql::RRemoveNode(int node_id, int node_type)
+void Sql::RRemoveNode(const QUuid& node_id, int node_type)
 {
     // This function is triggered when removing a node that has internal/support references.
     emit SFreeWidget(node_id, node_type);
@@ -28,8 +28,8 @@ void Sql::RRemoveNode(int node_id, int node_type)
     }
 
     if (node_type == kTypeLeaf) {
-        QMultiHash<int, int> leaf_trans {};
-        QMultiHash<int, int> support_trans {};
+        QMultiHash<QUuid, QUuid> leaf_trans {};
+        QMultiHash<QUuid, QUuid> support_trans {};
 
         TransToRemove(leaf_trans, support_trans, node_id, node_type);
 
@@ -50,7 +50,7 @@ void Sql::RRemoveNode(int node_id, int node_type)
     RemoveNode(node_id, node_type);
 }
 
-void Sql::TransToRemove(QMultiHash<int, int>& leaf_trans, QMultiHash<int, int>& support_trans, int node_id, int node_type) const
+void Sql::TransToRemove(QMultiHash<QUuid, QUuid>& leaf_trans, QMultiHash<QUuid, QUuid>& support_trans, const QUuid& node_id, int node_type) const
 {
     assert(node_type == kTypeLeaf && "node_type must be kTypeLeaf");
 
@@ -60,44 +60,44 @@ void Sql::TransToRemove(QMultiHash<int, int>& leaf_trans, QMultiHash<int, int>& 
     CString string { QSTransToRemove() };
     query.prepare(string);
 
-    query.bindValue(QStringLiteral(":node_id"), node_id);
+    query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
     if (!query.exec()) {
         qWarning() << "Failed in TransToRemove" << query.lastError().text();
         return;
     }
 
     while (query.next()) {
-        const int trans_id { query.value("trans_id").toInt() };
-        leaf_trans.emplace(query.value("node_id").toInt(), trans_id);
+        const QUuid trans_id { QUuid::fromRfc4122(query.value("trans_id").toByteArray()) };
+        leaf_trans.emplace(query.value("node_id").toUuid(), trans_id);
 
         if (section_ != Section::kSales && section_ != Section::kPurchase) {
-            const int support_id { query.value("support_id").toInt() };
-            if (support_id)
+            const QUuid support_id { QUuid::fromRfc4122(query.value("support_id").toByteArray()) };
+            if (!support_id.isNull())
                 support_trans.emplace(support_id, trans_id);
         }
     }
 }
 
-void Sql::RemoveSupportFunction(int support_id) const
+void Sql::RemoveSupportFunction(const QUuid& support_id) const
 {
     for (auto* trans : std::as_const(trans_hash_)) {
         if (trans->support_id == support_id) {
-            trans->support_id = 0;
+            trans->support_id = QUuid();
         }
     }
 }
 
-void Sql::RemoveLeafFunction(const QMultiHash<int, int>& leaf_trans)
+void Sql::RemoveLeafFunction(const QMultiHash<QUuid, QUuid>& leaf_trans)
 {
     // Recycle trans resources
     const auto trans_list { leaf_trans.values() };
 
-    for (int trans_id : trans_list) {
+    for (const auto& trans_id : trans_list) {
         ResourcePool<Trans>::Instance().Recycle(trans_hash_.take(trans_id));
     }
 }
 
-bool Sql::FreeView(int old_node_id, int new_node_id) const
+bool Sql::FreeView(const QUuid& old_node_id, const QUuid& new_node_id) const
 {
     QSqlQuery query(main_db_);
     CString string { QSFreeView() };
@@ -105,8 +105,8 @@ bool Sql::FreeView(int old_node_id, int new_node_id) const
     query.prepare(string);
     query.setForwardOnly(true);
 
-    query.bindValue(QStringLiteral(":new_node_id"), new_node_id);
-    query.bindValue(QStringLiteral(":old_node_id"), old_node_id);
+    query.bindValue(QStringLiteral(":new_node_id"), new_node_id.toRfc4122());
+    query.bindValue(QStringLiteral(":old_node_id"), old_node_id.toRfc4122());
     if (!query.exec()) {
         qWarning() << "Failed in RReplaceNode" << query.lastError().text();
         return false;
@@ -116,19 +116,19 @@ bool Sql::FreeView(int old_node_id, int new_node_id) const
     return query.value(0).toInt() == 0;
 }
 
-void Sql::RReplaceNode(int old_node_id, int new_node_id, int node_type, int node_unit)
+void Sql::RReplaceNode(const QUuid& old_node_id, const QUuid& new_node_id, int node_type, int node_unit)
 {
     assert(section_ != Section::kPurchase && section_ != Section::kSales && section_ != Section::kStakeholder
         && "Invalid section: should not be kPurchase, kSales or kStakeholder");
 
     const bool free { FreeView(old_node_id, new_node_id) };
-    QSet<int> trans_id_set {};
+    QSet<QUuid> trans_id_set {};
 
     if (node_type == kTypeSupport) {
         ReplaceSupport(old_node_id, new_node_id);
 
         ReplaceSupportFunction(trans_id_set, old_node_id, new_node_id);
-        emit SMoveMultiTransS(section_, 0, new_node_id, trans_id_set);
+        emit SMoveMultiTransS(section_, {}, new_node_id, trans_id_set);
     }
 
     if (node_type == kTypeLeaf) {
@@ -136,7 +136,7 @@ void Sql::RReplaceNode(int old_node_id, int new_node_id, int node_type, int node
         ReplaceLeafFunction(trans_id_set, old_node_id, new_node_id);
 
         emit SMoveMultiTransL(section_, old_node_id, new_node_id, trans_id_set);
-        emit SSyncMultiLeafValue(free ? QList<int> { new_node_id } : QList<int> { old_node_id, new_node_id });
+        emit SSyncMultiLeafValue(free ? QList<QUuid> { new_node_id } : QList<QUuid> { old_node_id, new_node_id });
 
         if (section_ == Section::kProduct && node_unit != std::to_underlying(UnitP::kPos)) {
             emit SSyncProduct(old_node_id, new_node_id);
@@ -150,14 +150,14 @@ void Sql::RReplaceNode(int old_node_id, int new_node_id, int node_type, int node
     }
 }
 
-bool Sql::ReplaceLeaf(int old_node_id, int new_node_id, int /*node_unit*/)
+bool Sql::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id, int /*node_unit*/)
 {
     QSqlQuery query(main_db_);
     QString string { QSReplaceLeaf() };
 
     query.prepare(string);
-    query.bindValue(QStringLiteral(":new_node_id"), new_node_id);
-    query.bindValue(QStringLiteral(":old_node_id"), old_node_id);
+    query.bindValue(QStringLiteral(":new_node_id"), new_node_id.toRfc4122());
+    query.bindValue(QStringLiteral(":old_node_id"), old_node_id.toRfc4122());
 
     if (!query.exec()) {
         qWarning() << "Failed in ReplaceTrans" << query.lastError().text();
@@ -167,15 +167,15 @@ bool Sql::ReplaceLeaf(int old_node_id, int new_node_id, int /*node_unit*/)
     return true;
 }
 
-bool Sql::ReplaceSupport(int old_node_id, int new_node_id)
+bool Sql::ReplaceSupport(const QUuid& old_node_id, const QUuid& new_node_id)
 {
     QSqlQuery query(main_db_);
 
     CString string { QSReplaceSupport() };
     query.prepare(string);
 
-    query.bindValue(QStringLiteral(":new_node_id"), new_node_id);
-    query.bindValue(QStringLiteral(":old_node_id"), old_node_id);
+    query.bindValue(QStringLiteral(":new_node_id"), new_node_id.toRfc4122());
+    query.bindValue(QStringLiteral(":old_node_id"), old_node_id.toRfc4122());
 
     if (!query.exec()) {
         qWarning() << "Failed in ReplaceSupport" << query.lastError().text();
@@ -185,7 +185,7 @@ bool Sql::ReplaceSupport(int old_node_id, int new_node_id)
     return true;
 }
 
-bool Sql::RemoveNode(int old_node_id)
+bool Sql::RemoveNode(const QUuid& node_id)
 {
     // Remove node and path, ignore trans
     QSqlQuery query(main_db_);
@@ -195,14 +195,14 @@ bool Sql::RemoveNode(int old_node_id)
 
     return DBTransaction([&]() {
         query.prepare(string_frist);
-        query.bindValue(QStringLiteral(":node_id"), old_node_id);
+        query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
         if (!query.exec()) {
             qWarning() << "Section: " << std::to_underlying(section_) << "Failed in ReplaceNode 1st" << query.lastError().text();
             return false;
         }
 
         query.prepare(string_third);
-        query.bindValue(QStringLiteral(":node_id"), old_node_id);
+        query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
         if (!query.exec()) {
             qWarning() << "Section: " << std::to_underlying(section_) << "Failed in ReplaceNode 3rd" << query.lastError().text();
             return false;
@@ -237,9 +237,9 @@ bool Sql::ReadNode(NodeHash& node_hash)
     return true;
 }
 
-bool Sql::WriteNode(int parent_id, Node* node)
+bool Sql::WriteNode(const QUuid& parent_id, Node* node)
 {
-    // root_'s id is -1
+    // root_'s id is QUuid()
     CString string { QSWriteNode() };
     if (string.isEmpty() || !node)
         return false;
@@ -254,8 +254,6 @@ bool Sql::WriteNode(int parent_id, Node* node)
             qWarning() << "Section: " << std::to_underlying(section_) << "Failed in WriteNode" << query.lastError().text();
             return false;
         }
-
-        node->id = query.lastInsertId().toInt();
 
         WriteRelationship(node->id, parent_id, query);
         return true;
@@ -279,7 +277,7 @@ void Sql::CalculateLeafTotal(Node* node, QSqlQuery& query) const
 bool Sql::ReadLeafTotal(Node* node) const
 {
     assert(node && "Node is null");
-    assert(node->id >= 1 && "Node ID must be positive");
+    assert(!node->id.isNull() && "Node ID must be positive");
     assert(node->node_type == kTypeLeaf && "Node type must be kTypeLeaf");
 
     CString string { QSLeafTotal() };
@@ -290,7 +288,7 @@ bool Sql::ReadLeafTotal(Node* node) const
     query.setForwardOnly(true);
 
     query.prepare(string);
-    query.bindValue(QStringLiteral(":node_id"), node->id);
+    query.bindValue(QStringLiteral(":node_id"), node->id.toRfc4122());
 
     if (!query.exec()) {
         qWarning() << "Section: " << std::to_underlying(section_) << "Failed in LeafTotal" << query.lastError().text();
@@ -301,7 +299,7 @@ bool Sql::ReadLeafTotal(Node* node) const
     return true;
 }
 
-bool Sql::SearchNodeName(QSet<int>& node_id_set, CString& text) const
+bool Sql::SearchNodeName(QSet<QUuid>& node_id_set, CString& text) const
 {
     QSqlQuery query(main_db_);
     query.setForwardOnly(true);
@@ -323,14 +321,14 @@ bool Sql::SearchNodeName(QSet<int>& node_id_set, CString& text) const
     }
 
     while (query.next()) {
-        int node_id { query.value(QStringLiteral("id")).toInt() };
+        const auto node_id { QUuid::fromRfc4122(query.value(QStringLiteral("id")).toByteArray()) };
         node_id_set.insert(node_id);
     }
 
     return true;
 }
 
-bool Sql::RemoveNode(int node_id, int node_type)
+bool Sql::RemoveNode(const QUuid& node_id, int node_type)
 {
     QSqlQuery query(main_db_);
 
@@ -354,21 +352,21 @@ bool Sql::RemoveNode(int node_id, int node_type)
 
     return DBTransaction([&]() {
         query.prepare(string_first);
-        query.bindValue(QStringLiteral(":node_id"), node_id);
+        query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
         if (!query.exec()) {
             qWarning() << "Section: " << std::to_underlying(section_) << "Failed in RemoveNode 1st" << query.lastError().text();
             return false;
         }
 
         query.prepare(string_second);
-        query.bindValue(QStringLiteral(":node_id"), node_id);
+        query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
         if (!query.exec()) {
             qWarning() << "Section: " << std::to_underlying(section_) << "Failed in RemoveNode 2nd" << query.lastError().text();
             return false;
         }
 
         query.prepare(string_third);
-        query.bindValue(QStringLiteral(":node_id"), node_id);
+        query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
         if (!query.exec()) {
             qWarning() << "Section: " << std::to_underlying(section_) << "Failed in RemoveNode 3rd" << query.lastError().text();
             return false;
@@ -378,7 +376,7 @@ bool Sql::RemoveNode(int node_id, int node_type)
     });
 }
 
-void Sql::ReplaceSupportFunction(QSet<int>& trans_id_set, int old_support_id, int new_support_id)
+void Sql::ReplaceSupportFunction(QSet<QUuid>& trans_id_set, const QUuid& old_support_id, const QUuid& new_support_id)
 {
     for (auto* trans : std::as_const(trans_hash_)) {
         if (trans->support_id == old_support_id) {
@@ -448,7 +446,7 @@ QString Sql::QSDragNodeSecond() const
         .arg(info_.path);
 }
 
-bool Sql::DragNode(int destination_node_id, int node_id)
+bool Sql::DragNode(const QUuid& destination_node_id, const QUuid& node_id)
 {
     QSqlQuery query(main_db_);
 
@@ -457,7 +455,7 @@ bool Sql::DragNode(int destination_node_id, int node_id)
 
     return DBTransaction([&]() {
         query.prepare(string_first);
-        query.bindValue(QStringLiteral(":node_id"), node_id);
+        query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
 
         if (!query.exec()) {
             qWarning() << "Failed in DragNode 1st" << query.lastError().text();
@@ -465,8 +463,8 @@ bool Sql::DragNode(int destination_node_id, int node_id)
         }
 
         query.prepare(string_second);
-        query.bindValue(QStringLiteral(":node_id"), node_id);
-        query.bindValue(QStringLiteral(":destination_node_id"), destination_node_id);
+        query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
+        query.bindValue(QStringLiteral(":destination_node_id"), destination_node_id.toRfc4122());
 
         if (!query.exec()) {
             qWarning() << "Failed in DragNode 2nd" << query.lastError().text();
@@ -477,9 +475,9 @@ bool Sql::DragNode(int destination_node_id, int node_id)
     });
 }
 
-bool Sql::InternalReference(int node_id) const
+bool Sql::InternalReference(const QUuid& node_id) const
 {
-    assert(node_id >= 1 && "Node ID must be positive");
+    assert(!node_id.isNull() && "Node ID must be positive");
 
     CString string { QSInternalReference() };
     if (string.isEmpty())
@@ -489,7 +487,7 @@ bool Sql::InternalReference(int node_id) const
     query.setForwardOnly(true);
 
     query.prepare(string);
-    query.bindValue(QStringLiteral(":node_id"), node_id);
+    query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
 
     if (!query.exec()) {
         qWarning() << "Section: " << std::to_underlying(section_) << "Failed in InternalReference" << query.lastError().text();
@@ -502,9 +500,9 @@ bool Sql::InternalReference(int node_id) const
     return false;
 }
 
-bool Sql::ExternalReference(int node_id) const
+bool Sql::ExternalReference(const QUuid& node_id) const
 {
-    assert(node_id >= 1 && "Node ID must be positive");
+    assert(!node_id.isNull() && "Node ID must be positive");
 
     CString string { QSExternalReference() };
     if (string.isEmpty())
@@ -514,7 +512,7 @@ bool Sql::ExternalReference(int node_id) const
     query.setForwardOnly(true);
 
     query.prepare(string);
-    query.bindValue(QStringLiteral(":node_id"), node_id);
+    query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
 
     if (!query.exec()) {
         qWarning() << "Section: " << std::to_underlying(section_) << "Failed in ExternalReference" << query.lastError().text();
@@ -527,9 +525,9 @@ bool Sql::ExternalReference(int node_id) const
     return false;
 }
 
-bool Sql::SupportReference(int support_id) const
+bool Sql::SupportReference(const QUuid& support_id) const
 {
-    assert(support_id >= 1 && "support_id must be positive");
+    assert(!support_id.isNull() && "support_id must be positive");
 
     CString string { QSSupportReference() };
     if (string.isEmpty())
@@ -539,7 +537,7 @@ bool Sql::SupportReference(int support_id) const
     query.setForwardOnly(true);
 
     query.prepare(string);
-    query.bindValue(QStringLiteral(":support_id"), support_id);
+    query.bindValue(QStringLiteral(":support_id"), support_id.toRfc4122());
 
     if (!query.exec()) {
         qWarning() << "Section: " << std::to_underlying(section_) << "Failed in SupportReference" << query.lastError().text();
@@ -549,17 +547,17 @@ bool Sql::SupportReference(int support_id) const
     return query.next();
 }
 
-bool Sql::ReadTrans(TransShadowList& trans_shadow_list, int node_id)
+bool Sql::ReadTrans(TransShadowList& trans_shadow_list, const QUuid& node_id)
 {
     QSqlQuery query(main_db_);
     query.setForwardOnly(true);
 
     CString string { QSReadTrans() };
     query.prepare(string);
-    query.bindValue(QStringLiteral(":node_id"), node_id);
+    query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
 
     if (!query.exec()) {
-        qWarning() << "Section: " << std::to_underlying(section_) << "Failed in ReadNodeTrans" << query.lastError().text();
+        qWarning() << "Section: " << std::to_underlying(section_) << "Failed in ReadTrans" << query.lastError().text();
         return false;
     }
 
@@ -602,18 +600,17 @@ bool Sql::WriteTrans(TransShadow* trans_shadow)
         return false;
     }
 
-    *trans_shadow->id = query.lastInsertId().toInt();
     trans_hash_.insert(*trans_shadow->id, last_trans_);
     return true;
 }
 
-bool Sql::RemoveTrans(int trans_id)
+bool Sql::RemoveTrans(const QUuid& trans_id)
 {
     QSqlQuery query(main_db_);
     CString part { QSRemoveTrans() };
 
     query.prepare(part);
-    query.bindValue(QStringLiteral(":trans_id"), trans_id);
+    query.bindValue(QStringLiteral(":trans_id"), trans_id.toRfc4122());
     if (!query.exec()) {
         qWarning() << "Failed in RemoveTrans" << query.lastError().text();
         return false;
@@ -664,7 +661,7 @@ bool Sql::UpdateTransValue(const TransShadow* trans_shadow) const
     return true;
 }
 
-bool Sql::WriteField(CString& table, CString& field, CVariant& value, int id) const
+bool Sql::WriteField(CString& table, CString& field, CVariant& value, const QUuid& id) const
 {
     QSqlQuery query(main_db_);
 
@@ -676,7 +673,7 @@ bool Sql::WriteField(CString& table, CString& field, CVariant& value, int id) co
                     .arg(table, field);
 
     query.prepare(part);
-    query.bindValue(QStringLiteral(":id"), id);
+    query.bindValue(QStringLiteral(":id"), id.toRfc4122());
     query.bindValue(QStringLiteral(":value"), value);
 
     if (!query.exec()) {
@@ -752,7 +749,7 @@ bool Sql::SearchTrans(TransList& trans_list, CString& text)
     return true;
 }
 
-bool Sql::ReadTransRef(TransList& trans_list, int node_id, int unit, const QDateTime& start, const QDateTime& end) const
+bool Sql::ReadTransRef(TransList& trans_list, const QUuid& node_id, int unit, const QDateTime& start, const QDateTime& end) const
 {
     QSqlQuery query(main_db_);
     query.setForwardOnly(true);
@@ -762,7 +759,7 @@ bool Sql::ReadTransRef(TransList& trans_list, int node_id, int unit, const QDate
         return false;
 
     query.prepare(string);
-    query.bindValue(QStringLiteral(":node_id"), node_id);
+    query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
     query.bindValue(QStringLiteral(":start"), start.toString(kDateTimeFST));
     query.bindValue(QStringLiteral(":end"), end.toString(kDateTimeFST));
 
@@ -776,12 +773,12 @@ bool Sql::ReadTransRef(TransList& trans_list, int node_id, int unit, const QDate
     return true;
 }
 
-bool Sql::RetrieveTransRange(TransShadowList& trans_shadow_list, int node_id, const QSet<int>& trans_id_set)
+bool Sql::RetrieveTransRange(TransShadowList& trans_shadow_list, const QUuid& node_id, const QSet<QUuid>& trans_id_set)
 {
-    if (trans_id_set.empty() || node_id <= 0)
+    if (trans_id_set.empty() || !node_id.isNull())
         return false;
 
-    for (int id : trans_id_set) {
+    for (const auto& id : trans_id_set) {
         auto* trans { trans_hash_.value(id) };
         auto* trans_shadow { ResourcePool<TransShadow>::Instance().Allocate() };
 
@@ -792,12 +789,12 @@ bool Sql::RetrieveTransRange(TransShadowList& trans_shadow_list, int node_id, co
     return true;
 }
 
-bool Sql::RetrieveTransRange(TransList& trans_shadow_list, const QSet<int>& trans_id_set)
+bool Sql::RetrieveTransRange(TransList& trans_shadow_list, const QSet<QUuid>& trans_id_set)
 {
     if (trans_id_set.empty())
         return false;
 
-    for (int id : trans_id_set) {
+    for (const auto& id : trans_id_set) {
         auto* trans { trans_hash_.value(id) };
         trans_shadow_list.emplaceBack(trans);
     }
@@ -805,7 +802,7 @@ bool Sql::RetrieveTransRange(TransList& trans_shadow_list, const QSet<int>& tran
     return true;
 }
 
-bool Sql::ReadSupportTrans(TransList& trans_list, int support_id)
+bool Sql::ReadSupportTrans(TransList& trans_list, const QUuid& support_id)
 {
     QSqlQuery query(main_db_);
     query.setForwardOnly(true);
@@ -815,7 +812,7 @@ bool Sql::ReadSupportTrans(TransList& trans_list, int support_id)
         return false;
 
     query.prepare(string);
-    query.bindValue(QStringLiteral(":node_id"), support_id);
+    query.bindValue(QStringLiteral(":node_id"), support_id.toRfc4122());
 
     if (!query.exec()) {
         qWarning() << "Section: " << std::to_underlying(section_) << "Failed in ReadSupportTrans" << query.lastError().text();
@@ -829,9 +826,11 @@ bool Sql::ReadSupportTrans(TransList& trans_list, int support_id)
 TransShadow* Sql::AllocateTransShadow()
 {
     last_trans_ = ResourcePool<Trans>::Instance().Allocate();
-    auto* trans_shadow { ResourcePool<TransShadow>::Instance().Allocate() };
+    last_trans_->GenerateId();
 
+    auto* trans_shadow { ResourcePool<TransShadow>::Instance().Allocate() };
     ConvertTrans(last_trans_, trans_shadow, true);
+
     return trans_shadow;
 }
 
@@ -864,8 +863,8 @@ bool Sql::ReadRelationship(const NodeHash& node_hash, QSqlQuery& query) const
     }
 
     while (query.next()) {
-        const int kAncestorID { query.value(QStringLiteral("ancestor")).toInt() };
-        const int kDescendantID { query.value(QStringLiteral("descendant")).toInt() };
+        const auto kAncestorID { QUuid::fromRfc4122(query.value(QStringLiteral("ancestor")).toByteArray()) };
+        const auto kDescendantID { QUuid::fromRfc4122(query.value(QStringLiteral("descendant")).toByteArray()) };
 
         Node* ancestor { node_hash.value(kAncestorID) };
         Node* descendant { node_hash.value(kDescendantID) };
@@ -880,7 +879,7 @@ bool Sql::ReadRelationship(const NodeHash& node_hash, QSqlQuery& query) const
     return true;
 }
 
-bool Sql::WriteRelationship(int node_id, int parent_id, QSqlQuery& query) const
+bool Sql::WriteRelationship(const QUuid& node_id, const QUuid& parent_id, QSqlQuery& query) const
 {
     auto part = QString(R"(
     INSERT INTO %1 (ancestor, descendant, distance)
@@ -892,8 +891,8 @@ bool Sql::WriteRelationship(int node_id, int parent_id, QSqlQuery& query) const
                     .arg(info_.path);
 
     query.prepare(part);
-    query.bindValue(QStringLiteral(":node_id"), node_id);
-    query.bindValue(QStringLiteral(":parent"), parent_id);
+    query.bindValue(QStringLiteral(":node_id"), node_id.toRfc4122());
+    query.bindValue(QStringLiteral(":parent"), parent_id.toRfc4122());
 
     if (!query.exec()) {
         qWarning() << "Failed in WriteRelationship" << query.lastError().text();
@@ -922,13 +921,13 @@ QString Sql::QSFreeView() const
         .arg(info_.trans);
 }
 
-void Sql::ReadTransFunction(TransShadowList& trans_shadow_list, int node_id, QSqlQuery& query)
+void Sql::ReadTransFunction(TransShadowList& trans_shadow_list, const QUuid& node_id, QSqlQuery& query)
 {
     TransShadow* trans_shadow {};
     Trans* trans {};
 
     while (query.next()) {
-        const int kID { query.value(QStringLiteral("id")).toInt() };
+        const auto kID { QUuid::fromRfc4122(query.value(QStringLiteral("id")).toByteArray()) };
 
         trans_shadow = ResourcePool<TransShadow>::Instance().Allocate();
 
@@ -952,7 +951,7 @@ void Sql::ReadTransFunction(TransList& trans_list, QSqlQuery& query)
     Trans* trans {};
 
     while (query.next()) {
-        const int kID { query.value(QStringLiteral("id")).toInt() };
+        const auto kID { QUuid::fromRfc4122(query.value(QStringLiteral("id")).toByteArray()) };
 
         if (auto it = trans_hash_.constFind(kID); it != trans_hash_.constEnd()) {
             trans = it.value();
@@ -972,7 +971,7 @@ void Sql::ReadTransFunction(TransList& trans_list, QSqlQuery& query)
     }
 }
 
-void Sql::ReplaceLeafFunction(QSet<int>& trans_id_set, int old_node_id, int new_node_id) const
+void Sql::ReplaceLeafFunction(QSet<QUuid>& trans_id_set, const QUuid& old_node_id, const QUuid& new_node_id) const
 {
     for (auto* trans : std::as_const(trans_hash_)) {
         if (trans->lhs_node == old_node_id && trans->rhs_node != new_node_id) {

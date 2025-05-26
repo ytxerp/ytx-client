@@ -2,11 +2,12 @@
 #define PRICES_H
 
 #include <QString>
+#include <QUuid>
 
 struct PriceS {
     QString issued_time {};
-    int lhs_node {};
-    int inside_product {};
+    QUuid lhs_node {};
+    QUuid inside_product {};
     double unit_price {};
 };
 

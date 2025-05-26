@@ -32,17 +32,17 @@ public:
     ~SettlementModel();
 
 signals:
-    void SResetModel(int party_id, int settlement_id, bool settlement_finished);
-    void SSyncFinished(int party_id, int settlement_id, bool settlement_finished);
+    void SResetModel(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished);
+    void SSyncFinished(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished);
 
     // send to its table view
     void SResizeColumnToContents(int column);
 
     // send to NodeModel
-    void SSyncDouble(int node_id, int column, double value);
+    void SSyncDouble(const QUuid& node_id, int column, double value);
 
 public slots:
-    void RSyncDouble(int node_id, int column, double delta1);
+    void RSyncDouble(const QUuid& node_id, int column, double delta1);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -63,7 +63,7 @@ public:
     void ResetModel(const QDateTime& start, const QDateTime& end);
 
 private:
-    bool UpdateParty(Node* node, int party_id);
+    bool UpdateParty(Node* node, const QUuid& party_id);
     bool UpdateFinished(Node* node, bool finished);
 
 private:

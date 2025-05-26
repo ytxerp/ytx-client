@@ -33,8 +33,9 @@ public:
     ~NodeModelO() override = default;
 
 public slots:
-    void RSyncLeafValue(int node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta) override;
-    void RSyncBoolWD(int node_id, int column, bool value) override; // kFinished
+    void RSyncLeafValue(
+        const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta) override;
+    void RSyncBoolWD(const QUuid& node_id, int column, bool value) override; // kFinished
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -44,10 +45,10 @@ public:
     bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild) override;
 
     void UpdateTree(const QDateTime& start, const QDateTime& end);
-    QString Path(int node_id) const override;
-    void ReadNode(int node_id) override;
+    QString Path(const QUuid& node_id) const override;
+    void ReadNode(const QUuid& node_id) override;
 
-    Node* GetNode(int node_id) const override;
+    Node* GetNode(const QUuid& node_id) const override;
 
 protected:
     bool UpdateRule(Node* node, bool value) override; // charge = 0, refund = 1

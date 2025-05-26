@@ -53,7 +53,7 @@ QVariant TransRefModel::data(const QModelIndex& index, int role) const
     case TransRefEnum::kOrderNode:
         return trans->lhs_node;
     case TransRefEnum::kOutsideProduct:
-        return trans->support_id == 0 ? QVariant() : trans->support_id;
+        return trans->support_id.isNull() ? QVariant() : trans->support_id;
     case TransRefEnum::kFirst:
         return trans->lhs_debit == 0 ? QVariant() : trans->lhs_debit;
     case TransRefEnum::kSecond:
@@ -116,16 +116,16 @@ void TransRefModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void TransRefModel::RResetModel(int node_id, const QDateTime& start, const QDateTime& end)
+void TransRefModel::RResetModel(const QUuid& node_id, const QDateTime& start, const QDateTime& end)
 {
-    if (node_id <= 0)
+    if (node_id.isNull())
         return;
 
     beginResetModel();
     if (!trans_list_.isEmpty())
         ResourcePool<Trans>::Instance().Recycle(trans_list_);
 
-    if (node_id >= 1)
+    if (!node_id.isNull())
         sql_->ReadTransRef(trans_list_, node_id, unit_, start, end);
 
     endResetModel();

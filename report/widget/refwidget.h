@@ -21,6 +21,7 @@
 #define REFWIDGET_H
 
 #include <QDateTime>
+#include <QUuid>
 
 #include "component/using.h"
 #include "reportwidget.h"
@@ -33,10 +34,10 @@ class RefWidget final : public ReportWidget {
     Q_OBJECT
 
 signals:
-    void SResetModel(int node_id, const QDateTime& start, const QDateTime& end);
+    void SResetModel(const QUuid& node_id, const QDateTime& start, const QDateTime& end);
 
 public:
-    RefWidget(QAbstractItemModel* model, int node_id, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
+    RefWidget(QAbstractItemModel* model, const QUuid& node_id, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
     ~RefWidget() override;
 
     QPointer<QTableView> View() const override;
@@ -55,7 +56,7 @@ private:
     QDateTime start_ {};
     QDateTime end_ {};
 
-    const int node_id_ {};
+    const QUuid node_id_ {};
 };
 
 #endif // REFWIDGET_H

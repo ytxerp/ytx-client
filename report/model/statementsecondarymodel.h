@@ -30,7 +30,7 @@ class StatementSecondaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
     StatementSecondaryModel(
-        Sql* sql, CInfo& info, int party_id, CStringHash& product_leaf, PNodeModel stakeholder, CString& company_name, QObject* parent = nullptr);
+        Sql* sql, CInfo& info, const QUuid& party_id, CStringHash& product_leaf, PNodeModel stakeholder, CString& company_name, QObject* parent = nullptr);
     ~StatementSecondaryModel();
 
 public slots:
@@ -54,7 +54,7 @@ public:
 private:
     SqlO* sql_ {};
     CInfo& info_;
-    const int party_id_ {};
+    const QUuid& party_id_ {};
     CStringHash& product_leaf_ {};
     CStringHash& stakeholder_leaf_ {};
     PNodeModel stakeholder_ {};

@@ -2,20 +2,20 @@
 
 #include "component/enumclass.h"
 
-SupportModel::SupportModel(Sql* sql, int support_id, CInfo& info, QObject* parent)
+SupportModel::SupportModel(Sql* sql, const QUuid& support_id, CInfo& info, QObject* parent)
     : QAbstractItemModel { parent }
     , sql_ { sql }
     , info_ { info }
     , support_id_ { support_id }
 {
-    assert(support_id >= 1 && "support_id must be positive");
+    assert(!support_id.isNull() && "support_id must be positive");
     sql_->ReadSupportTrans(trans_list_, support_id);
 }
 
-void SupportModel::RAppendOneTransS(int support_id, int trans_id)
+void SupportModel::RAppendOneTransS(const QUuid& support_id, const QUuid& trans_id)
 {
     assert(support_id_ == support_id && "support_id_ must match support_id");
-    assert(trans_id >= 1 && "trans_id must be positive");
+    assert(!trans_id.isNull() && "trans_id must be positive");
 
     auto row { trans_list_.size() };
     TransList trans_list {};
@@ -26,10 +26,10 @@ void SupportModel::RAppendOneTransS(int support_id, int trans_id)
     endInsertRows();
 }
 
-void SupportModel::RRemoveOneTransS(int support_id, int trans_id)
+void SupportModel::RRemoveOneTransS(const QUuid& support_id, const QUuid& trans_id)
 {
     assert(support_id_ == support_id && "support_id_ must match support_id");
-    assert(trans_id >= 1 && "trans_id must be positive");
+    assert(!trans_id.isNull() && "trans_id must be positive");
 
     auto idx { GetIndex(trans_id) };
     if (!idx.isValid())
@@ -41,7 +41,7 @@ void SupportModel::RRemoveOneTransS(int support_id, int trans_id)
     endRemoveRows();
 }
 
-void SupportModel::RAppendMultiTransS(int support_id, const QSet<int>& trans_id_set)
+void SupportModel::RAppendMultiTransS(const QUuid& support_id, const QSet<QUuid>& trans_id_set)
 {
     assert(support_id_ == support_id && "Support ID mismatch detected!");
 
@@ -161,12 +161,12 @@ QVariant SupportModel::headerData(int section, Qt::Orientation orientation, int 
     return QVariant();
 }
 
-void SupportModel::RRemoveMultiTransS(int support_id, const QSet<int>& trans_id_set)
+void SupportModel::RRemoveMultiTransS(const QUuid& support_id, const QSet<QUuid>& trans_id_set)
 {
     assert(support_id_ == support_id && "Support ID mismatch detected!");
 
     for (int i = trans_list_.size() - 1; i >= 0; --i) {
-        int trans_id { trans_list_[i]->id };
+        const QUuid trans_id { trans_list_[i]->id };
 
         if (trans_id_set.contains(trans_id)) {
             beginRemoveRows(QModelIndex(), i, i);
@@ -176,7 +176,7 @@ void SupportModel::RRemoveMultiTransS(int support_id, const QSet<int>& trans_id_
     }
 }
 
-QModelIndex SupportModel::GetIndex(int trans_id) const
+QModelIndex SupportModel::GetIndex(const QUuid& trans_id) const
 {
     int row { 0 };
 

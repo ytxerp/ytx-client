@@ -30,9 +30,9 @@ public:
     ~NodeModelS() override;
 
 public slots:
-    void RSyncStakeholder(int old_node_id, int new_node_id) override;
-    void RSyncDouble(int node_id, int column, double value) override; // amount
-    void RSyncMultiLeafValue(const QList<int>& node_list) override;
+    void RSyncStakeholder(const QUuid& old_node_id, const QUuid& new_node_id) override;
+    void RSyncDouble(const QUuid& node_id, int column, double value) override; // amount
+    void RSyncMultiLeafValue(const QList<QUuid>& node_list) override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -40,22 +40,22 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    QList<int> PartyList(CString& text, int unit) const;
+    QList<QUuid> PartyList(CString& text, int unit) const;
 
     QSortFilterProxyModel* IncludeUnitModel(int unit) override;
 
 protected:
-    const QSet<int>* UnitSet(int unit) const override;
-    void RemoveUnitSet(int node_id, int unit) override;
-    void InsertUnitSet(int node_id, int unit) override;
+    const QSet<QUuid>* UnitSet(int unit) const override;
+    void RemoveUnitSet(const QUuid& node_id, int unit) override;
+    void InsertUnitSet(const QUuid& node_id, int unit) override;
 
     bool UpdateAncestorValue(
         Node* node, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0) override;
 
 private:
-    QSet<int> cset_ {}; // Set of all nodes that are customer-type units
-    QSet<int> vset_ {}; // Set of all nodes that are vendor-type units
-    QSet<int> eset_ { 0 }; // Set of all nodes that are employee-type units
+    QSet<QUuid> cset_ {}; // Set of all nodes that are customer-type units
+    QSet<QUuid> vset_ {}; // Set of all nodes that are vendor-type units
+    QSet<QUuid> eset_ { QUuid() }; // Set of all nodes that are employee-type units
 };
 
 #endif // NODEMODELS_H

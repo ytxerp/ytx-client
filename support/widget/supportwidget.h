@@ -40,6 +40,6 @@ protected:
     }
 };
 
-using SupWgtHash = QHash<int, QPointer<SupportWidget>>;
+using SupWgtHash = QHash<QUuid, QPointer<SupportWidget>>;
 
 #endif // SUPPORTWIDGET_H

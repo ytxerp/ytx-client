@@ -42,8 +42,8 @@ protected:
     }
 };
 
-using TransWgtHash = QHash<int, QPointer<TransWidget>>;
-using CTransWgtHash = const QHash<int, QPointer<TransWidget>>;
+using TransWgtHash = QHash<QUuid, QPointer<TransWidget>>;
+using CTransWgtHash = const QHash<QUuid, QPointer<TransWidget>>;
 using PTableView = QPointer<QTableView>;
 
 #endif // TRANSWIDGET_H

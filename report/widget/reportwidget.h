@@ -40,6 +40,6 @@ protected:
     }
 };
 
-using RptWgtHash = QHash<int, QPointer<ReportWidget>>;
+using RptWgtHash = QHash<QUuid, QPointer<ReportWidget>>;
 
 #endif // REPORTWIDGET_H

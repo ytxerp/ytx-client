@@ -20,13 +20,14 @@
 #ifndef TAB_H
 #define TAB_H
 
+#include <QUuid>
 #include <tuple>
 
 #include "component/enumclass.h"
 
 struct Tab {
     Section section {};
-    int node_id {};
+    QUuid node_id {};
 
     // Equality operator overload to compare two Tab structs
     bool operator==(const Tab& other) const noexcept { return std::tie(section, node_id) == std::tie(other.section, other.node_id); }

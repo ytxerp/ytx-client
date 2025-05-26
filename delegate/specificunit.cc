@@ -24,7 +24,7 @@ QWidget* SpecificUnit::createEditor(QWidget* parent, const QStyleOptionViewItem&
 void SpecificUnit::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
-    int key { index.data().toInt() };
+    auto key { index.data().toUuid() };
     int item_index { cast_editor->findData(key) };
     cast_editor->setCurrentIndex(item_index);
 }
@@ -32,13 +32,13 @@ void SpecificUnit::setEditorData(QWidget* editor, const QModelIndex& index) cons
 void SpecificUnit::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
-    int key { cast_editor->currentData().toInt() };
+    const auto key { cast_editor->currentData().toUuid() };
     model->setData(index, key);
 }
 
 void SpecificUnit::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString& text { tree_model_->Path(index.data().toInt()) };
+    const QString& text { tree_model_->Path(index.data().toUuid()) };
     if (text.isEmpty())
         return QStyledItemDelegate::paint(painter, option, index);
 
@@ -47,13 +47,13 @@ void SpecificUnit::paint(QPainter* painter, const QStyleOptionViewItem& option, 
 
 QSize SpecificUnit::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString& text = tree_model_->Path(index.data().toInt());
+    const QString& text = tree_model_->Path(index.data().toUuid());
     return CalculateTextSize(text, option);
 }
 
 void SpecificUnit::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QSize text_size { CalculateTextSize(tree_model_->Path(index.data().toInt()), option) };
+    const QSize text_size { CalculateTextSize(tree_model_->Path(index.data().toUuid()), option) };
     const int width { std::max(option.rect.width(), text_size.width()) };
     const int height { std::max(option.rect.height(), text_size.height()) };
 

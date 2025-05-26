@@ -42,27 +42,27 @@ public:
 
 signals:
     // send to TableModelOrder
-    void SSyncInt(int node_id, int column, int value);
+    void SSyncInt(const QUuid& node_id, int column, const QUuid& value);
 
     // send to TableModelOrder, TreeModelOrder
-    void SSyncBoolNode(int node_id, int column, bool value);
+    void SSyncBoolNode(const QUuid& node_id, int column, bool value);
 
     // send to TableModelOrder
-    void SSyncBoolTrans(int node_id, int column, bool value);
+    void SSyncBoolTrans(const QUuid& node_id, int column, bool value);
 
     // send to TreeModelOrder
-    void SSyncLeafValue(int node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta);
+    void SSyncLeafValue(const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta);
 
 public slots:
     void accept() override;
 
     // receive from TableModelOrder
-    void RUpdateLeafValue(int node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta);
+    void RUpdateLeafValue(const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta);
 
     // receive from TreeModelOrder
-    void RSyncBoolNode(int node_id, int column, bool value);
-    void RSyncInt(int node_id, int column, int value);
-    void RSyncString(int node_id, int column, const QString& value);
+    void RSyncBoolNode(const QUuid& node_id, int column, bool value);
+    void RSyncInt(const QUuid& node_id, int column, int value);
+    void RSyncString(const QUuid& node_id, int column, const QString& value);
 
 public:
     QPointer<TransModel> Model();
@@ -92,7 +92,7 @@ private:
     void IniConnect();
     void IniUnit(int unit);
     void IniRule(bool rule);
-    void IniDataCombo(int party, int employee);
+    void IniDataCombo(const QUuid& party, const QUuid& employee);
     void IniLeafValue();
     void IniText(Section section);
     void IniFinished(bool finished);
@@ -128,7 +128,7 @@ private:
     const QMap<QString, QString>& print_template_ {};
     QSharedPointer<PrintManager> print_manager_ {};
 
-    int node_id_ {};
+    QUuid node_id_ {};
 };
 
 #endif // INSERTNODEORDER_H

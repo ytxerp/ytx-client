@@ -41,8 +41,8 @@ public:
     ~Search();
 
 signals:
-    void SNodeLocation(int node_id);
-    void STransLocation(int trans_id, int lhs_node_id, int rhs_node_id);
+    void SNodeLocation(const QUuid& node_id);
+    void STransLocation(const QUuid& trans_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
 
 public slots:
     void RSearch();

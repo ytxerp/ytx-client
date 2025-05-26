@@ -274,21 +274,21 @@ void Search::RSearch()
 
 void Search::RNodeDoubleClicked(const QModelIndex& index)
 {
-    int node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toInt() };
+    auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toUuid() };
     emit SNodeLocation(node_id);
 }
 
 void Search::RTransDoubleClicked(const QModelIndex& index)
 {
-    int lhs_node_id { index.siblingAtColumn(std::to_underlying(TransSearchEnum::kLhsNode)).data().toInt() };
-    int rhs_node_id { index.siblingAtColumn(std::to_underlying(TransSearchEnum::kRhsNode)).data().toInt() };
-    int trans_id { index.siblingAtColumn(std::to_underlying(TransSearchEnum::kID)).data().toInt() };
+    auto lhs_node_id { index.siblingAtColumn(std::to_underlying(TransSearchEnum::kLhsNode)).data().toUuid() };
+    auto rhs_node_id { index.siblingAtColumn(std::to_underlying(TransSearchEnum::kRhsNode)).data().toUuid() };
+    auto trans_id { index.siblingAtColumn(std::to_underlying(TransSearchEnum::kID)).data().toUuid() };
 
     switch (section_) {
     case Section::kStakeholder:
     case Section::kSales:
     case Section::kPurchase:
-        emit STransLocation(trans_id, lhs_node_id, 0);
+        emit STransLocation(trans_id, lhs_node_id, {});
         break;
     case Section::kFinance:
     case Section::kProduct:

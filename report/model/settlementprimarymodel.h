@@ -32,11 +32,11 @@ public:
     ~SettlementPrimaryModel();
 
 signals:
-    void SSyncDouble(int node_id, int column, double delta1);
+    void SSyncDouble(const QUuid& node_id, int column, double delta1);
 
 public slots:
-    void RSyncFinished(int party_id, int settlement_id, bool settlement_finished);
-    void RResetModel(int party_id, int settlement_id, bool settlement_finished);
+    void RSyncFinished(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished);
+    void RResetModel(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -54,14 +54,14 @@ public:
 
 private:
     void RemoveUnfinishedNode();
-    void UpdateSettlementInfo(int party_id, int settlement_id, bool settlement_finished);
+    void UpdateSettlementInfo(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished);
 
 private:
     SqlO* sql_ {};
     CInfo& info_;
 
-    int party_id_ {};
-    int settlement_id_ {};
+    QUuid party_id_ {};
+    QUuid settlement_id_ {};
     bool settlement_finished_ {};
 
     NodeList node_list_ {};

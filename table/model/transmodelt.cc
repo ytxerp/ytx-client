@@ -3,13 +3,12 @@
 #include <QTimer>
 
 #include "component/constvalue.h"
-#include "global/resourcepool.h"
 #include "transmodelutils.h"
 
 TransModelT::TransModelT(CTransModelArg& arg, QObject* parent)
     : TransModel { arg, parent }
 {
-    assert(node_id_ >= 1 && "Assertion failed: node_id_ must be positive (>= 1)");
+    assert(!node_id_.isNull() && "Assertion failed: node_id_ must be positive (>= 1)");
     sql_->ReadTrans(trans_shadow_list_, node_id_);
 }
 
@@ -33,9 +32,9 @@ QVariant TransModelT::data(const QModelIndex& index, int role) const
     case TransEnumT::kDescription:
         return *trans_shadow->description;
     case TransEnumT::kSupportID:
-        return *trans_shadow->support_id == 0 ? QVariant() : *trans_shadow->support_id;
+        return trans_shadow->support_id->isNull() ? QVariant() : *trans_shadow->support_id;
     case TransEnumT::kRhsNode:
-        return *trans_shadow->rhs_node == 0 ? QVariant() : *trans_shadow->rhs_node;
+        return trans_shadow->rhs_node->isNull() ? QVariant() : *trans_shadow->rhs_node;
     case TransEnumT::kIsChecked:
         return *trans_shadow->is_checked ? *trans_shadow->is_checked : QVariant();
     case TransEnumT::kDocument:
@@ -60,8 +59,8 @@ bool TransModelT::setData(const QModelIndex& index, const QVariant& value, int r
     const int kRow { index.row() };
 
     auto* trans_shadow { trans_shadow_list_.at(kRow) };
-    int old_rhs_node { *trans_shadow->rhs_node };
-    int old_sup_node { *trans_shadow->support_id };
+    auto old_rhs_node { *trans_shadow->rhs_node };
+    auto old_sup_node { *trans_shadow->support_id };
 
     bool rhs_changed { false };
     bool deb_changed { false };
@@ -82,13 +81,13 @@ bool TransModelT::setData(const QModelIndex& index, const QVariant& value, int r
         TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kDescription, value.toString(), &TransShadow::description, [this]() { emit SSearch(); });
         break;
     case TransEnumT::kSupportID:
-        sup_changed = TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kSupportID, value.toInt(), &TransShadow::support_id);
+        sup_changed = TransModelUtils::UpdateField(sql_, trans_shadow, info_.trans, kSupportID, value.toUuid(), &TransShadow::support_id);
         break;
     case TransEnumT::kUnitCost:
         UpdateRatio(trans_shadow, value.toDouble());
         break;
     case TransEnumT::kRhsNode:
-        rhs_changed = TransModelUtils::UpdateRhsNode(trans_shadow, value.toInt());
+        rhs_changed = TransModelUtils::UpdateRhsNode(trans_shadow, value.toUuid());
         break;
     case TransEnumT::kDebit:
         deb_changed = UpdateDebit(trans_shadow, value.toDouble());
@@ -100,7 +99,7 @@ bool TransModelT::setData(const QModelIndex& index, const QVariant& value, int r
         return false;
     }
 
-    if (old_rhs_node == 0 && rhs_changed) {
+    if (old_rhs_node.isNull() && rhs_changed) {
         sql_->WriteTrans(trans_shadow);
         TransModelUtils::AccumulateSubtotal(mutex_, trans_shadow_list_, kRow, node_rule_);
 
@@ -120,7 +119,7 @@ bool TransModelT::setData(const QModelIndex& index, const QVariant& value, int r
         credit = *trans_shadow->rhs_credit;
         emit SSyncLeafValue(*trans_shadow->rhs_node, debit, credit, ratio * debit, ratio * credit);
 
-        if (*trans_shadow->support_id != 0) {
+        if (!trans_shadow->support_id->isNull()) {
             emit SAppendOneTransS(section_, *trans_shadow->support_id, *trans_shadow->id);
         }
     }
@@ -135,15 +134,15 @@ bool TransModelT::setData(const QModelIndex& index, const QVariant& value, int r
     }
 
     if (sup_changed) {
-        if (old_sup_node != 0)
+        if (!old_sup_node.isNull())
             emit SRemoveOneTransS(section_, old_sup_node, *trans_shadow->id);
 
-        if (*trans_shadow->support_id != 0 && *trans_shadow->id != 0) {
+        if (!trans_shadow->support_id->isNull() && !trans_shadow->id->isNull()) {
             emit SAppendOneTransS(section_, *trans_shadow->support_id, *trans_shadow->id);
         }
     }
 
-    if (old_rhs_node != 0 && rhs_changed) {
+    if (!old_rhs_node.isNull() && rhs_changed) {
         sql_->UpdateTransValue(trans_shadow);
         emit SRemoveOneTransL(section_, old_rhs_node, *trans_shadow->id);
         emit SAppendOneTransL(section_, trans_shadow);
@@ -239,7 +238,7 @@ bool TransModelT::UpdateDebit(TransShadow* trans_shadow, double value)
     *trans_shadow->rhs_debit = *trans_shadow->lhs_credit;
     *trans_shadow->rhs_credit = *trans_shadow->lhs_debit;
 
-    if (*trans_shadow->rhs_node == 0)
+    if (trans_shadow->rhs_node->isNull())
         return false;
 
     const double unit_cost { *trans_shadow->lhs_ratio };
@@ -269,7 +268,7 @@ bool TransModelT::UpdateCredit(TransShadow* trans_shadow, double value)
     *trans_shadow->rhs_debit = *trans_shadow->lhs_credit;
     *trans_shadow->rhs_credit = *trans_shadow->lhs_debit;
 
-    if (*trans_shadow->rhs_node == 0)
+    if (trans_shadow->rhs_node->isNull())
         return false;
 
     const double unit_cost { *trans_shadow->lhs_ratio };
@@ -294,7 +293,7 @@ bool TransModelT::UpdateRatio(TransShadow* trans_shadow, double value)
     *trans_shadow->lhs_ratio = value;
     *trans_shadow->rhs_ratio = value;
 
-    if (*trans_shadow->rhs_node == 0)
+    if (trans_shadow->rhs_node->isNull())
         return false;
 
     sql_->WriteField(info_.trans, kUnitCost, value, *trans_shadow->id);
@@ -306,7 +305,7 @@ bool TransModelT::UpdateRatio(TransShadow* trans_shadow, double value)
     return true;
 }
 
-void TransModelT::UpdateUnitCost(int lhs_node, int rhs_node, double value)
+void TransModelT::UpdateUnitCost(const QUuid& lhs_node, const QUuid& rhs_node, double value)
 {
     emit SSyncDouble(rhs_node, std::to_underlying(NodeEnumT::kUnitCost), value);
     emit SSyncDouble(lhs_node, std::to_underlying(NodeEnumT::kUnitCost), value);

@@ -58,7 +58,7 @@ QVariant SettlementPrimaryModel::data(const QModelIndex& index, int role) const
     case SettlementEnum::kGrossAmount:
         return node->initial_total == 0 ? QVariant() : node->initial_total;
     case SettlementEnum::kParty:
-        return node->employee ? node->employee : QVariant();
+        return node->employee.isNull() ? QVariant() : node->employee;
     default:
         return QVariant();
     }
@@ -132,14 +132,14 @@ void SettlementPrimaryModel::RemoveUnfinishedNode()
     }
 }
 
-void SettlementPrimaryModel::UpdateSettlementInfo(int party_id, int settlement_id, bool settlement_finished)
+void SettlementPrimaryModel::UpdateSettlementInfo(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished)
 {
     party_id_ = party_id;
     settlement_id_ = settlement_id;
     settlement_finished_ = settlement_finished;
 }
 
-void SettlementPrimaryModel::RSyncFinished(int party_id, int settlement_id, bool settlement_finished)
+void SettlementPrimaryModel::RSyncFinished(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished)
 {
     UpdateSettlementInfo(party_id, settlement_id, settlement_finished);
 
@@ -149,7 +149,7 @@ void SettlementPrimaryModel::RSyncFinished(int party_id, int settlement_id, bool
         const bool is_empty { node_list_.isEmpty() };
 
         const long long first_add { node_list_.size() };
-        sql_->ReadSettlementPrimary(node_list_, party_id_, 0, true);
+        sql_->ReadSettlementPrimary(node_list_, party_id_, {}, true);
         const long long last_add { node_list_.size() - 1 };
 
         if (last_add >= first_add) {
@@ -162,7 +162,7 @@ void SettlementPrimaryModel::RSyncFinished(int party_id, int settlement_id, bool
     }
 }
 
-void SettlementPrimaryModel::RResetModel(int party_id, int settlement_id, bool settlement_finished)
+void SettlementPrimaryModel::RResetModel(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished)
 {
     UpdateSettlementInfo(party_id, settlement_id, settlement_finished);
 
@@ -172,7 +172,7 @@ void SettlementPrimaryModel::RResetModel(int party_id, int settlement_id, bool s
         node_list_.clear();
     }
 
-    if (party_id != 0)
+    if (!party_id.isNull())
         sql_->ReadSettlementPrimary(node_list_, party_id, settlement_id, settlement_finished);
 
     endResetModel();

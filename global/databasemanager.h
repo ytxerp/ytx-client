@@ -30,14 +30,14 @@ public:
     QString DatabaseName() const { return file_path_; }
     QSqlDatabase& GetDatabase();
 
-private:
-    DatabaseManager();
-    ~DatabaseManager();
-
     DatabaseManager(const DatabaseManager&) = delete;
     DatabaseManager& operator=(const DatabaseManager&) = delete;
     DatabaseManager(DatabaseManager&&) = delete;
     DatabaseManager& operator=(DatabaseManager&&) = delete;
+
+private:
+    DatabaseManager();
+    ~DatabaseManager();
 
     void LogError(const QString& message) const;
 

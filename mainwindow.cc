@@ -214,7 +214,7 @@ void MainWindow::on_actionInsertNode_triggered()
     auto parent_index { current_index.parent() };
     parent_index = parent_index.isValid() ? parent_index : QModelIndex();
 
-    const int parent_id { parent_index.isValid() ? parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toInt() : -1 };
+    const QUuid parent_id { parent_index.isValid() ? parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toUuid() : QUuid() };
     InsertNodeFunction(parent_index, parent_id, current_index.row() + 1);
 }
 
@@ -227,8 +227,8 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     if (node_type == kTypeBranch)
         return;
 
-    const int node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toInt() };
-    assert(node_id >= 1 && "node_id must be greater than 0");
+    const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toUuid() };
+    assert(!node_id.isNull() && "node_id must be greater than 0");
 
     switch (node_type) {
     case kTypeLeaf:
@@ -244,7 +244,7 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     }
 }
 
-void MainWindow::CreateLeafFunction(int type, int node_id)
+void MainWindow::CreateLeafFunction(int type, const QUuid& node_id)
 {
     assert(type == kTypeLeaf && "type must be kTypeLeaf");
 
@@ -258,7 +258,7 @@ void MainWindow::CreateLeafFunction(int type, int node_id)
     }
 }
 
-void MainWindow::CreateSupportFunction(int type, int node_id)
+void MainWindow::CreateSupportFunction(int type, const QUuid& node_id)
 {
     assert(type == kTypeSupport && "type must be kTypeSupport");
     assert(start_ != Section::kSales && start_ != Section::kPurchase && "start_ must not be kSales or kPurchase");
@@ -345,10 +345,10 @@ void MainWindow::RSectionGroup(int id)
 
 void MainWindow::RTransRefDoubleClicked(const QModelIndex& index)
 {
-    const int node_id { index.siblingAtColumn(std::to_underlying(TransRefEnum::kOrderNode)).data().toInt() };
+    const auto node_id { index.siblingAtColumn(std::to_underlying(TransRefEnum::kOrderNode)).data().toUuid() };
     const int kColumn { std::to_underlying(TransRefEnum::kGrossAmount) };
 
-    assert(node_id >= 1 && "node_id must be greater than 0");
+    assert(!node_id.isNull() && "node_id must be greater than 0");
 
     if (index.column() != kColumn)
         return;
@@ -357,7 +357,7 @@ void MainWindow::RTransRefDoubleClicked(const QModelIndex& index)
     OrderNodeLocation(section, node_id);
 }
 
-void MainWindow::RStatementPrimary(int party_id, int unit, const QDateTime& start, const QDateTime& end)
+void MainWindow::RStatementPrimary(const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     auto* sql { data_->sql };
     const auto& info { data_->info };
@@ -369,7 +369,8 @@ void MainWindow::RStatementPrimary(int party_id, int unit, const QDateTime& star
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
-    tab_bar->setTabData(tab_index, QVariant::fromValue(Tab { start_, report_id_ }));
+    const QUuid report_id { QUuid::createUuidV7() };
+    tab_bar->setTabData(tab_index, QVariant::fromValue(Tab { start_, report_id }));
     tab_bar->setTabToolTip(tab_index, name);
 
     auto view { widget->View() };
@@ -378,10 +379,10 @@ void MainWindow::RStatementPrimary(int party_id, int unit, const QDateTime& star
 
     connect(widget, &StatementWidget::SResetModel, model, &StatementPrimaryModel::RResetModel);
 
-    RegisterRptWgt(widget);
+    RegisterRptWgt(report_id, widget);
 }
 
-void MainWindow::RStatementSecondary(int party_id, int unit, const QDateTime& start, const QDateTime& end)
+void MainWindow::RStatementSecondary(const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     auto* sql { data_->sql };
     const auto& info { data_->info };
@@ -394,7 +395,8 @@ void MainWindow::RStatementSecondary(int party_id, int unit, const QDateTime& st
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
-    tab_bar->setTabData(tab_index, QVariant::fromValue(Tab { start_, report_id_ }));
+    const QUuid report_id { QUuid::createUuidV7() };
+    tab_bar->setTabData(tab_index, QVariant::fromValue(Tab { start_, report_id }));
     tab_bar->setTabToolTip(tab_index, name);
 
     auto view { widget->View() };
@@ -404,7 +406,7 @@ void MainWindow::RStatementSecondary(int party_id, int unit, const QDateTime& st
     connect(widget, &StatementWidget::SResetModel, model, &StatementSecondaryModel::RResetModel);
     connect(widget, &StatementWidget::SExport, model, &StatementSecondaryModel::RExport);
 
-    RegisterRptWgt(widget);
+    RegisterRptWgt(report_id, widget);
 }
 
 void MainWindow::REnableAction(bool finished)
@@ -413,7 +415,7 @@ void MainWindow::REnableAction(bool finished)
     ui->actionRemove->setEnabled(!finished);
 }
 
-void MainWindow::SwitchToLeaf(int node_id, int trans_id) const
+void MainWindow::SwitchToLeaf(const QUuid& node_id, const QUuid& trans_id) const
 {
     auto widget { trans_wgt_hash_->value(node_id, nullptr) };
     assert(widget && "widget must be non-null");
@@ -421,7 +423,7 @@ void MainWindow::SwitchToLeaf(int node_id, int trans_id) const
     ui->tabWidget->setCurrentWidget(widget);
     widget->activateWindow();
 
-    if (trans_id == 0)
+    if (trans_id.isNull())
         return;
 
     auto view { widget->View() };
@@ -435,7 +437,7 @@ void MainWindow::SwitchToLeaf(int node_id, int trans_id) const
     view->closePersistentEditor(index);
 }
 
-void MainWindow::OrderTransLocation(int node_id)
+void MainWindow::OrderTransLocation(const QUuid& node_id)
 {
     node_widget_->Model()->ReadNode(node_id);
 
@@ -444,7 +446,7 @@ void MainWindow::OrderTransLocation(int node_id)
     }
 }
 
-void MainWindow::CreateLeafFPTS(PNodeModel tree_model, TransWgtHash* trans_wgt_hash, CData* data, CSectionConfig* settings, int node_id)
+void MainWindow::CreateLeafFPTS(PNodeModel tree_model, TransWgtHash* trans_wgt_hash, CData* data, CSectionConfig* settings, const QUuid& node_id)
 {
     assert(tree_model && "tree_model must be non-null");
     assert(trans_wgt_hash && "trans_wgt_hash must be non-null");
@@ -510,7 +512,7 @@ void MainWindow::CreateLeafFPTS(PNodeModel tree_model, TransWgtHash* trans_wgt_h
     LeafSStation::Instance().RegisterModel(section, node_id, model);
 }
 
-void MainWindow::CreateSupport(PNodeModel tree_model, SupWgtHash* sup_wgt_hash, CData* data, CSectionConfig* settings, int node_id)
+void MainWindow::CreateSupport(PNodeModel tree_model, SupWgtHash* sup_wgt_hash, CData* data, CSectionConfig* settings, const QUuid& node_id)
 {
     assert(tree_model && "tree_model must be non-null");
     assert(sup_wgt_hash && "sup_wgt_hash must be non-null");
@@ -552,7 +554,7 @@ void MainWindow::CreateSupport(PNodeModel tree_model, SupWgtHash* sup_wgt_hash, 
     SupportSStation::Instance().RegisterModel(section, node_id, model);
 }
 
-void MainWindow::CreateLeafO(PNodeModel tree_model, TransWgtHash* trans_wgt_hash, CData* data, CSectionConfig* settings, int node_id)
+void MainWindow::CreateLeafO(PNodeModel tree_model, TransWgtHash* trans_wgt_hash, CData* data, CSectionConfig* settings, const QUuid& node_id)
 {
     const auto& info { data->info };
     const Section section { info.section };
@@ -560,9 +562,9 @@ void MainWindow::CreateLeafO(PNodeModel tree_model, TransWgtHash* trans_wgt_hash
     assert(section == Section::kSales || section == Section::kPurchase && "section must be kSales or kPurchase");
 
     Node* node { tree_model->GetNode(node_id) };
-    const int party_id { node->party };
+    const auto party_id { node->party };
 
-    assert(party_id >= 1 && "party_id must be greater than 0");
+    assert(!party_id.isNull() && "party_id must be greater than 0");
 
     auto* sql { data->sql };
 
@@ -656,7 +658,7 @@ void MainWindow::TableDelegateFPTS(PTableView table_view, PNodeModel tree_model,
     table_view->setItemDelegateForColumn(std::to_underlying(TransEnum::kSupportID), support_node);
 }
 
-void MainWindow::TableDelegateFPT(PTableView table_view, PNodeModel tree_model, CSectionConfig* settings, int node_id) const
+void MainWindow::TableDelegateFPT(PTableView table_view, PNodeModel tree_model, CSectionConfig* settings, const QUuid& node_id) const
 {
     auto* value { new DoubleSpin(
         settings->common_decimal, -std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), kCoefficient16, table_view) };
@@ -729,7 +731,7 @@ void MainWindow::CreateSection(NodeWidget* node_widget, TransWgtHash& trans_wgt_
     SetTreeDelegate(view, info, settings);
     TreeConnect(node_widget, data.sql);
 
-    tab_widget->tabBar()->setTabData(tab_widget->addTab(node_widget, name), QVariant::fromValue(Tab { info.section, 0 }));
+    tab_widget->tabBar()->setTabData(tab_widget->addTab(node_widget, name), QVariant::fromValue(Tab { info.section, {} }));
 
     switch (info.section) {
     case Section::kFinance:
@@ -946,13 +948,14 @@ void MainWindow::TreeConnectPSO(PNodeModel node_order, const Sql* sql_order) con
     connect(sqlite_order, &SqlO::SSyncPrice, sqlite_stakeholder, &SqlS::RPriceSList, Qt::UniqueConnection);
 }
 
-void MainWindow::InsertNodeFunction(const QModelIndex& parent, int parent_id, int row)
+void MainWindow::InsertNodeFunction(const QModelIndex& parent, const QUuid& parent_id, int row)
 {
     auto model { node_widget_->Model() };
 
     auto* node { ResourcePool<Node>::Instance().Allocate() };
+    node->GenerateId();
     node->direction_rule = model->Rule(parent_id);
-    node->unit = parent_id == -1 ? section_config_->default_unit : model->Unit(parent_id);
+    node->unit = parent_id.isNull() ? section_config_->default_unit : model->Unit(parent_id);
     model->SetParent(node, parent_id);
 
     if (start_ == Section::kSales || start_ == Section::kPurchase)
@@ -998,7 +1001,7 @@ void MainWindow::RemoveNode(NodeWidget* node_widget)
     auto model { node_widget->Model() };
     assert(model && "model must be non-null");
 
-    const int node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toInt() };
+    const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toUuid() };
     const int node_type { index.siblingAtColumn(std::to_underlying(NodeEnum::kNodeType)).data().toInt() };
 
     if (node_type == kTypeBranch) {
@@ -1024,7 +1027,7 @@ void MainWindow::RemoveNode(NodeWidget* node_widget)
     dialog->exec();
 }
 
-void MainWindow::RemoveNonBranch(PNodeModel tree_model, const QModelIndex& index, int node_id, int node_type)
+void MainWindow::RemoveNonBranch(PNodeModel tree_model, const QModelIndex& index, const QUuid& node_id, int node_type)
 {
     tree_model->removeRows(index.row(), 1, index.parent());
     data_->sql->RemoveNode(node_id, node_type);
@@ -1032,14 +1035,14 @@ void MainWindow::RemoveNonBranch(PNodeModel tree_model, const QModelIndex& index
     RFreeWidget(node_id, node_type);
 }
 
-void MainWindow::RestoreTab(PNodeModel tree_model, TransWgtHash& trans_wgt_hash, CIntSet& set, CData& data, CSectionConfig& section_settings)
+void MainWindow::RestoreTab(PNodeModel tree_model, TransWgtHash& trans_wgt_hash, CUuidSet& set, CData& data, CSectionConfig& section_settings)
 {
     assert(tree_model && "tree_model must be non-null");
 
     if (set.isEmpty() || data.info.section == Section::kSales || data.info.section == Section::kPurchase)
         return;
 
-    for (int node_id : set) {
+    for (const auto& node_id : set) {
         if (tree_model->Contains(node_id) && tree_model->Type(node_id) == kTypeLeaf)
             CreateLeafFPTS(tree_model, &trans_wgt_hash, &data, &section_settings, node_id);
     }
@@ -1108,7 +1111,7 @@ void MainWindow::IniSectionGroup()
     section_group_->addButton(ui->rBtnPurchase, 5);
 }
 
-void MainWindow::RemoveBranch(PNodeModel tree_model, const QModelIndex& index, int node_id)
+void MainWindow::RemoveBranch(PNodeModel tree_model, const QModelIndex& index, const QUuid& node_id)
 {
     QMessageBox msg {};
     msg.setIcon(QMessageBox::Question);
@@ -1127,7 +1130,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
     if (index == 0)
         return;
 
-    const int node_id { ui->tabWidget->tabBar()->tabData(index).value<Tab>().node_id };
+    const auto node_id { ui->tabWidget->tabBar()->tabData(index).value<Tab>().node_id };
 
     if (start_ != Section::kFinance && start_ != Section::kTask)
         MainWindowUtils::FreeWidgetFromHash(node_id, rpt_wgt_hash_);
@@ -1136,7 +1139,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
     RFreeWidget(node_id, node_type);
 }
 
-void MainWindow::RFreeWidget(int node_id, int node_type)
+void MainWindow::RFreeWidget(const QUuid& node_id, int node_type)
 {
     switch (node_type) {
     case kTypeLeaf:
@@ -1254,7 +1257,8 @@ void MainWindow::on_actionStatement_triggered()
     const int tab_index { ui->tabWidget->addTab(widget, tr("Statement")) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
-    tab_bar->setTabData(tab_index, QVariant::fromValue(Tab { start_, report_id_ }));
+    const QUuid report_id { QUuid::createUuidV7() };
+    tab_bar->setTabData(tab_index, QVariant::fromValue(Tab { start_, report_id }));
 
     auto view { widget->View() };
     SetStatementView(view, std::to_underlying(StatementEnum::kPlaceholder));
@@ -1264,7 +1268,7 @@ void MainWindow::on_actionStatement_triggered()
     connect(widget, &StatementWidget::SStatementSecondary, this, &MainWindow::RStatementSecondary);
     connect(widget, &StatementWidget::SResetModel, model, &StatementModel::RResetModel);
 
-    RegisterRptWgt(widget);
+    RegisterRptWgt(report_id, widget);
 }
 
 void MainWindow::on_actionSettlement_triggered()
@@ -1293,7 +1297,8 @@ void MainWindow::on_actionSettlement_triggered()
     const int tab_index { ui->tabWidget->addTab(settlement_widget_, tr("Settlement")) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
-    tab_bar->setTabData(tab_index, QVariant::fromValue(Tab { start_, report_id_ }));
+    const QUuid report_id { QUuid::createUuidV7() };
+    tab_bar->setTabData(tab_index, QVariant::fromValue(Tab { start_, report_id }));
 
     auto view { settlement_widget_->View() };
     auto primary_view { settlement_widget_->PrimaryView() };
@@ -1314,10 +1319,10 @@ void MainWindow::on_actionSettlement_triggered()
     connect(model, &SettlementModel::SSyncDouble, stakeholder_tree_->Model(), &NodeModel::RSyncDouble);
     connect(settlement_widget_, &SettlementWidget::SNodeLocation, this, &MainWindow::RNodeLocation);
 
-    RegisterRptWgt(settlement_widget_);
+    RegisterRptWgt(report_id, settlement_widget_);
 }
 
-void MainWindow::CreateTransRef(PNodeModel tree_model, CData* data, int node_id, int unit)
+void MainWindow::CreateTransRef(PNodeModel tree_model, CData* data, const QUuid& node_id, int unit)
 {
     assert(tree_model && "tree_model must be non-null");
     assert(tree_model->Contains(node_id) && "node_id must exist in tree_model");
@@ -1336,7 +1341,8 @@ void MainWindow::CreateTransRef(PNodeModel tree_model, CData* data, int node_id,
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
-    tab_bar->setTabData(tab_index, QVariant::fromValue(Tab { section, report_id_ }));
+    const QUuid report_id { QUuid::createUuidV7() };
+    tab_bar->setTabData(tab_index, QVariant::fromValue(Tab { section, report_id }));
 
     auto view { widget->View() };
     SetTableView(view, std::to_underlying(TransRefEnum::kDescription));
@@ -1345,17 +1351,14 @@ void MainWindow::CreateTransRef(PNodeModel tree_model, CData* data, int node_id,
     connect(view, &QTableView::doubleClicked, this, &MainWindow::RTransRefDoubleClicked);
     connect(widget, &RefWidget::SResetModel, model, &TransRefModel::RResetModel);
 
-    RegisterRptWgt(widget);
+    RegisterRptWgt(report_id, widget);
 }
 
-void MainWindow::RegisterRptWgt(ReportWidget* widget)
+void MainWindow::RegisterRptWgt(const QUuid& report_id, ReportWidget* widget)
 {
-    rpt_wgt_hash_->insert(report_id_, widget);
-
+    rpt_wgt_hash_->insert(report_id, widget);
     ui->tabWidget->setCurrentWidget(widget);
     widget->activateWindow();
-
-    --report_id_;
 }
 
 void MainWindow::DelegateTransRef(PTableView table_view, CSectionConfig* settings) const
@@ -1833,7 +1836,7 @@ void MainWindow::on_actionAppendNode_triggered()
     if (node_type != kTypeBranch)
         return;
 
-    const int parent_id { parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toInt() };
+    const auto parent_id { parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toUuid() };
     InsertNodeFunction(parent_index, parent_id, 0);
 }
 
@@ -1855,14 +1858,14 @@ void MainWindow::on_actionJump_triggered()
         return;
 
     int row { index.row() };
-    const int rhs_node_id { index.sibling(row, std::to_underlying(TransEnum::kRhsNode)).data().toInt() };
-    if (rhs_node_id == 0)
+    const auto rhs_node_id { index.sibling(row, std::to_underlying(TransEnum::kRhsNode)).data().toUuid() };
+    if (rhs_node_id.isNull())
         return;
 
     if (!trans_wgt_hash_->contains(rhs_node_id))
         CreateLeafFPTS(node_widget_->Model(), trans_wgt_hash_, data_, section_config_, rhs_node_id);
 
-    const int trans_id { index.sibling(row, std::to_underlying(TransEnum::kID)).data().toInt() };
+    const auto trans_id { index.sibling(row, std::to_underlying(TransEnum::kID)).data().toUuid() };
     SwitchToLeaf(rhs_node_id, trans_id);
 }
 
@@ -1882,7 +1885,7 @@ void MainWindow::on_actionSupportJump_triggered()
     }
 }
 
-void MainWindow::SwitchToSupport(int node_id, int trans_id) const
+void MainWindow::SwitchToSupport(const QUuid& node_id, const QUuid& trans_id) const
 {
     auto widget { sup_wgt_hash_->value(node_id, nullptr) };
     assert(widget && "widget must be non-null");
@@ -1893,7 +1896,7 @@ void MainWindow::SwitchToSupport(int node_id, int trans_id) const
     ui->tabWidget->setCurrentWidget(widget);
     widget->activateWindow();
 
-    if (trans_id == 0)
+    if (trans_id.isNull())
         return;
 
     auto view { widget->View() };
@@ -1922,17 +1925,17 @@ void MainWindow::LeafToSupport(TransWidget* widget)
     auto model { widget->Model() };
     assert(model && "model must be non-null");
 
-    const int id { index.siblingAtColumn(std::to_underlying(TransEnum::kSupportID)).data().toInt() };
+    const auto support_id { index.siblingAtColumn(std::to_underlying(TransEnum::kSupportID)).data().toUuid() };
 
-    if (id <= 0)
+    if (support_id.isNull())
         return;
 
-    if (!sup_wgt_hash_->contains(id)) {
-        CreateSupport(node_widget_->Model(), sup_wgt_hash_, data_, section_config_, id);
+    if (!sup_wgt_hash_->contains(support_id)) {
+        CreateSupport(node_widget_->Model(), sup_wgt_hash_, data_, section_config_, support_id);
     }
 
-    const int trans_id { index.siblingAtColumn(std::to_underlying(TransEnum::kID)).data().toInt() };
-    SwitchToSupport(id, trans_id);
+    const auto trans_id { index.siblingAtColumn(std::to_underlying(TransEnum::kID)).data().toUuid() };
+    SwitchToSupport(support_id, trans_id);
 }
 
 void MainWindow::SupportToLeaf(SupportWidget* widget)
@@ -1950,13 +1953,13 @@ void MainWindow::SupportToLeaf(SupportWidget* widget)
     auto model { widget->Model() };
     assert(model && "model must be non-null");
 
-    const int rhs_node { index.siblingAtColumn(std::to_underlying(TransSearchEnum::kRhsNode)).data().toInt() };
-    const int lhs_node { index.siblingAtColumn(std::to_underlying(TransSearchEnum::kLhsNode)).data().toInt() };
+    const auto rhs_node { index.siblingAtColumn(std::to_underlying(TransSearchEnum::kRhsNode)).data().toUuid() };
+    const auto lhs_node { index.siblingAtColumn(std::to_underlying(TransSearchEnum::kLhsNode)).data().toUuid() };
 
-    if (rhs_node == 0 || lhs_node == 0)
+    if (rhs_node.isNull() || lhs_node.isNull())
         return;
 
-    const int trans_id { index.siblingAtColumn(std::to_underlying(TransSearchEnum::kID)).data().toInt() };
+    const auto trans_id { index.siblingAtColumn(std::to_underlying(TransSearchEnum::kID)).data().toUuid() };
 
     RTransLocation(trans_id, lhs_node, rhs_node);
 }
@@ -1989,16 +1992,16 @@ void MainWindow::on_actionEditNode_triggered()
     if (!index.isValid())
         return;
 
-    const int node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toInt() };
+    const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toUuid() };
     EditNodeFPTS(index, node_id);
 }
 
-void MainWindow::EditNodeFPTS(const QModelIndex& index, int node_id)
+void MainWindow::EditNodeFPTS(const QModelIndex& index, const QUuid& node_id)
 {
     auto model { node_widget_->Model() };
 
     const auto& parent { index.parent() };
-    const int parent_id { parent.isValid() ? parent.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toInt() : -1 };
+    const auto parent_id { parent.isValid() ? parent.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toUuid() : QUuid() };
     auto parent_path { model->Path(parent_id) };
 
     if (!parent_path.isEmpty())
@@ -2012,7 +2015,7 @@ void MainWindow::EditNodeFPTS(const QModelIndex& index, int node_id)
     edit_name->exec();
 }
 
-void MainWindow::InsertNodeFPTS(Node* node, const QModelIndex& parent, int parent_id, int row)
+void MainWindow::InsertNodeFPTS(Node* node, const QModelIndex& parent, const QUuid& parent_id, int row)
 {
     auto tree_model { node_widget_->Model() };
     auto* unit_model { data_->info.unit_model };
@@ -2063,7 +2066,7 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
     auto tree_model { node_widget_->Model() };
     auto* sql { data_->sql };
 
-    TransModelArg model_arg { sql, data_->info, 0, 0 };
+    TransModelArg model_arg { sql, data_->info, {}, 0 };
     auto* table_model { new TransModelO(model_arg, node, product_tree_->Model(), stakeholder_data_.sql, this) };
 
     auto print_manager = QSharedPointer<PrintManager>::create(app_config_, product_tree_->Model(), stakeholder_tree_->Model());
@@ -2081,7 +2084,10 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
         }
     });
     connect(dialog, &QDialog::rejected, this, [=, this]() {
-        if (node->id == 0) {
+        /**
+         * @todo 需要调整逻辑
+         */
+        if (node->id.isNull()) {
             ResourcePool<Node>::Instance().Recycle(node);
             dialog_list_->removeOne(dialog);
         }
@@ -2115,7 +2121,7 @@ void MainWindow::REditTransDocument(const QModelIndex& index)
     assert(index.isValid() && "index must be valid");
 
     const auto document_path { section_config_->document_path };
-    const int trans_id { index.siblingAtColumn(std::to_underlying(TransEnum::kID)).data().toInt() };
+    const auto trans_id { index.siblingAtColumn(std::to_underlying(TransEnum::kID)).data().toUuid() };
 
     auto* document_pointer { leaf_widget->Model()->GetDocumentPointer(index) };
     assert(document_pointer && "document_pointer must be non-null");
@@ -2132,7 +2138,7 @@ void MainWindow::REditNodeDocument(const QModelIndex& index)
     assert(index.isValid() && "index must be valid");
 
     const auto document_dir { section_config_->document_path };
-    const int node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toInt() };
+    const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toUuid() };
 
     auto* document_pointer { node_widget_->Model()->DocumentPointer(node_id) };
     assert(document_pointer && "document_pointer must be non-null");
@@ -2145,7 +2151,7 @@ void MainWindow::REditNodeDocument(const QModelIndex& index)
 
 void MainWindow::RTransRef(const QModelIndex& index)
 {
-    const int node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toInt() };
+    const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kID)).data().toUuid() };
     const int unit { index.siblingAtColumn(std::to_underlying(NodeEnum::kUnit)).data().toInt() };
 
     assert(node_widget_ && "node_widget_ must be non-null");
@@ -2165,7 +2171,7 @@ void MainWindow::RTransRef(const QModelIndex& index)
     }
 }
 
-void MainWindow::TransRefP(int node_id, int unit)
+void MainWindow::TransRefP(const QUuid& node_id, int unit)
 {
     if (unit == std::to_underlying(UnitP::kPos) || start_ != Section::kProduct)
         return;
@@ -2173,7 +2179,7 @@ void MainWindow::TransRefP(int node_id, int unit)
     CreateTransRef(node_widget_->Model(), data_, node_id, unit);
 }
 
-void MainWindow::TransRefS(int node_id, int unit)
+void MainWindow::TransRefS(const QUuid& node_id, int unit)
 {
     if (start_ != Section::kStakeholder)
         return;
@@ -2181,7 +2187,7 @@ void MainWindow::TransRefS(int node_id, int unit)
     CreateTransRef(node_widget_->Model(), data_, node_id, unit);
 }
 
-void MainWindow::RSyncName(int node_id, const QString& name, bool branch)
+void MainWindow::RSyncName(const QUuid& node_id, const QString& name, bool branch)
 {
     auto model { node_widget_->Model() };
     auto* widget { ui->tabWidget };
@@ -2189,7 +2195,7 @@ void MainWindow::RSyncName(int node_id, const QString& name, bool branch)
     auto* tab_bar { widget->tabBar() };
     int count { widget->count() };
 
-    QSet<int> nodes;
+    QSet<QUuid> nodes;
 
     if (branch) {
         nodes = model->ChildrenID(node_id);
@@ -2206,7 +2212,7 @@ void MainWindow::RSyncName(int node_id, const QString& name, bool branch)
     QString path {};
 
     for (int index = 0; index != count; ++index) {
-        const int node_id { tab_bar->tabData(index).value<Tab>().node_id };
+        const auto node_id { tab_bar->tabData(index).value<Tab>().node_id };
 
         if (widget->isTabVisible(index) && nodes.contains(node_id)) {
             path = model->Path(node_id);
@@ -2349,7 +2355,7 @@ void MainWindow::ClearAccountInfo()
     ui->actionLogout->setEnabled(false);
 }
 
-void MainWindow::UpdateStakeholderReference(QSet<int> stakeholder_nodes, bool branch) const
+void MainWindow::UpdateStakeholderReference(const QSet<QUuid>& stakeholder_nodes, bool branch) const
 {
     auto* widget { ui->tabWidget };
     auto stakeholder_model { node_widget_->Model() };
@@ -2367,11 +2373,11 @@ void MainWindow::UpdateStakeholderReference(QSet<int> stakeholder_nodes, bool br
             bool update = data.section == Section::kSales || data.section == Section::kPurchase;
 
             if (!widget->isTabVisible(index) && update) {
-                int order_node_id = data.node_id;
-                if (order_node_id == 0)
+                const auto order_node_id = data.node_id;
+                if (order_node_id.isNull())
                     continue;
 
-                int order_party = order_model->Party(order_node_id);
+                const auto order_party = order_model->Party(order_node_id);
                 if (!stakeholder_nodes.contains(order_party))
                     continue;
 
@@ -2582,11 +2588,11 @@ void MainWindow::ReadSectionConfig(SectionConfig& section, CString& section_name
     file_settings_->beginGroup(section_name);
 
     section.static_label = file_settings_->value(kStaticLabel, {}).toString();
-    section.static_node = file_settings_->value(kStaticNode, 0).toInt();
+    section.static_node = file_settings_->value(kStaticNode, QUuid()).toUuid();
     section.dynamic_label = file_settings_->value(kDynamicLabel, {}).toString();
-    section.dynamic_node_lhs = file_settings_->value(kDynamicNodeLhs, 0).toInt();
+    section.dynamic_node_lhs = file_settings_->value(kDynamicNodeLhs, QUuid()).toUuid();
     section.operation = file_settings_->value(kOperation, kPlus).toString();
-    section.dynamic_node_rhs = file_settings_->value(kDynamicNodeRhs, 0).toInt();
+    section.dynamic_node_rhs = file_settings_->value(kDynamicNodeRhs, QUuid()).toUuid();
     section.default_unit = file_settings_->value(kDefaultUnit, 0).toInt();
     section.document_path = file_settings_->value(kDocumentPath, {}).toString();
     section.date_format = file_settings_->value(kDateFormat, kDateTimeFST).toString();
@@ -2610,10 +2616,10 @@ void MainWindow::on_actionSearch_triggered()
     dialog->show();
 }
 
-void MainWindow::RNodeLocation(int node_id)
+void MainWindow::RNodeLocation(const QUuid& node_id)
 {
     // Ignore report widget
-    if (node_id <= 0)
+    if (node_id.isNull())
         return;
 
     auto* widget { node_widget_ };
@@ -2628,11 +2634,11 @@ void MainWindow::RNodeLocation(int node_id)
     widget->View()->setCurrentIndex(index);
 }
 
-void MainWindow::RTransLocation(int trans_id, int lhs_node_id, int rhs_node_id)
+void MainWindow::RTransLocation(const QUuid& trans_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id)
 {
-    int id { lhs_node_id };
+    QUuid id { lhs_node_id };
 
-    auto Contains = [&](int node_id) {
+    auto Contains = [&](QUuid node_id) {
         if (trans_wgt_hash_->contains(node_id)) {
             id = node_id;
             return true;
@@ -2662,7 +2668,7 @@ void MainWindow::RTransLocation(int trans_id, int lhs_node_id, int rhs_node_id)
     SwitchToLeaf(id, trans_id);
 }
 
-void MainWindow::OrderNodeLocation(Section section, int node_id)
+void MainWindow::OrderNodeLocation(Section section, const QUuid& node_id)
 {
     switch (section) {
     case Section::kSales:
@@ -2686,12 +2692,12 @@ void MainWindow::OrderNodeLocation(Section section, int node_id)
     node_widget_->View()->setCurrentIndex(index);
 }
 
-void MainWindow::RSyncInt(int node_id, int column, const QVariant& value)
+void MainWindow::RSyncInt(const QUuid& node_id, int column, const QVariant& value)
 {
     if (column != std::to_underlying(NodeEnumO::kParty))
         return;
 
-    const int party_id { value.toInt() };
+    const auto party_id { value.toUuid() };
 
     auto model { stakeholder_tree_->Model() };
     auto* widget { ui->tabWidget };
@@ -2799,7 +2805,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
     bool finished {};
 
     if (is_leaf_order) {
-        const int node_id { ui->tabWidget->tabBar()->tabData(index).value<Tab>().node_id };
+        const auto node_id { ui->tabWidget->tabBar()->tabData(index).value<Tab>().node_id };
         finished = node_widget_->Model()->Finished(node_id);
     }
 

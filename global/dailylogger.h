@@ -29,6 +29,11 @@ public:
     static DailyLogger& Instance();
     void Install();
 
+    DailyLogger(const DailyLogger&) = delete;
+    DailyLogger& operator=(const DailyLogger&) = delete;
+    DailyLogger(DailyLogger&&) = delete;
+    DailyLogger& operator=(DailyLogger&&) = delete;
+
 private:
     DailyLogger();
     ~DailyLogger();

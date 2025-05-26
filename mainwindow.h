@@ -82,15 +82,15 @@ private slots:
     void on_tabWidget_tabCloseRequested(int index);
 
     bool RLoadDatabase(const QString& cache_file);
-    void RNodeLocation(int node_id);
-    void RTransLocation(int trans_id, int lhs_node_id, int rhs_node_id);
+    void RNodeLocation(const QUuid& node_id);
+    void RTransLocation(const QUuid& trans_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
 
     void RUpdateSettings(const AppConfig& app_settings, const FileConfig& file_settings, const SectionConfig& section_settings);
-    void RSyncInt(int node_id, int column, const QVariant& value);
-    void RSyncName(int node_id, const QString& name, bool branch);
+    void RSyncInt(const QUuid& node_id, int column, const QVariant& value);
+    void RSyncName(const QUuid& node_id, const QString& name, bool branch);
     void RUpdateState();
 
-    void RFreeWidget(int node_id, int node_type);
+    void RFreeWidget(const QUuid& node_id, int node_type);
     void REditTransDocument(const QModelIndex& index);
     void REditNodeDocument(const QModelIndex& index);
     void RTransRef(const QModelIndex& index);
@@ -101,8 +101,8 @@ private slots:
     void RSectionGroup(int id);
     void RTransRefDoubleClicked(const QModelIndex& index);
 
-    void RStatementPrimary(int party_id, int unit, const QDateTime& start, const QDateTime& end);
-    void RStatementSecondary(int party_id, int unit, const QDateTime& start, const QDateTime& end);
+    void RStatementPrimary(const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end);
+    void RStatementSecondary(const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end);
 
     void REnableAction(bool finished);
 
@@ -119,14 +119,14 @@ private:
     void SetSalesData();
     void SetPurchaseData();
 
-    void CreateLeafFunction(int type, int node_id);
-    void CreateSupportFunction(int type, int node_id);
+    void CreateLeafFunction(int type, const QUuid& node_id);
+    void CreateSupportFunction(int type, const QUuid& node_id);
 
-    void CreateLeafFPTS(PNodeModel tree_model, TransWgtHash* trans_wgt_hash, CData* data, CSectionConfig* settings, int node_id);
-    void CreateLeafO(PNodeModel tree_model, TransWgtHash* trans_wgt_hash, CData* data, CSectionConfig* settings, int node_id);
+    void CreateLeafFPTS(PNodeModel tree_model, TransWgtHash* trans_wgt_hash, CData* data, CSectionConfig* settings, const QUuid& node_id);
+    void CreateLeafO(PNodeModel tree_model, TransWgtHash* trans_wgt_hash, CData* data, CSectionConfig* settings, const QUuid& node_id);
 
     void TableDelegateFPTS(PTableView table_view, PNodeModel tree_model, CSectionConfig* settings) const;
-    void TableDelegateFPT(PTableView table_view, PNodeModel tree_model, CSectionConfig* settings, int node_id) const;
+    void TableDelegateFPT(PTableView table_view, PNodeModel tree_model, CSectionConfig* settings, const QUuid& node_id) const;
     void TableDelegateS(PTableView table_view) const;
     void TableDelegateO(PTableView table_view, CSectionConfig* settings) const;
 
@@ -135,10 +135,10 @@ private:
     void TableConnectS(PTableView table_view, PTransModel table_model, PNodeModel tree_model) const;
     void TableConnectO(PTableView table_view, TransModelO* table_model, PNodeModel tree_model, TransWidgetO* widget) const;
 
-    void CreateSupport(PNodeModel tree_model, SupWgtHash* sup_wgt_hash, CData* data, CSectionConfig* settings, int node_id);
+    void CreateSupport(PNodeModel tree_model, SupWgtHash* sup_wgt_hash, CData* data, CSectionConfig* settings, const QUuid& node_id);
     void DelegateSupport(PTableView table_view, PNodeModel tree_model, CSectionConfig* settings) const;
 
-    void CreateTransRef(PNodeModel tree_model, CData* data, int node_id, int unit);
+    void CreateTransRef(PNodeModel tree_model, CData* data, const QUuid& node_id, int unit);
     void DelegateTransRef(PTableView table_view, CSectionConfig* settings) const;
 
     void DelegateSupportS(PTableView table_view, PNodeModel tree_model, PNodeModel product_tree_model) const;
@@ -170,17 +170,17 @@ private:
     void TreeConnectS(PNodeModel node_model, const Sql* sql) const;
     void TreeConnectPSO(PNodeModel node_order, const Sql* sql_order) const;
 
-    void InsertNodeFunction(const QModelIndex& parent, int parent_id, int row);
-    void InsertNodeFPTS(Node* node, const QModelIndex& parent, int parent_id, int row); // Finance Product Stakeholder Task
+    void InsertNodeFunction(const QModelIndex& parent, const QUuid& parent_id, int row);
+    void InsertNodeFPTS(Node* node, const QModelIndex& parent, const QUuid& parent_id, int row); // Finance Product Stakeholder Task
     void InsertNodeO(Node* node, const QModelIndex& parent, int row); // Purchase Sales
 
-    void EditNodeFPTS(const QModelIndex& index, int node_id); // Finance Product Stakeholder Task
+    void EditNodeFPTS(const QModelIndex& index, const QUuid& node_id); // Finance Product Stakeholder Task
 
     void RemoveNode(NodeWidget* node_widget);
-    void RemoveNonBranch(PNodeModel tree_model, const QModelIndex& index, int node_id, int node_type);
-    void RemoveBranch(PNodeModel tree_model, const QModelIndex& index, int node_id);
+    void RemoveNonBranch(PNodeModel tree_model, const QModelIndex& index, const QUuid& node_id, int node_type);
+    void RemoveBranch(PNodeModel tree_model, const QModelIndex& index, const QUuid& node_id);
 
-    void UpdateStakeholderReference(QSet<int> stakeholder_nodes, bool branch) const;
+    void UpdateStakeholderReference(const QSet<QUuid>& stakeholder_nodes, bool branch) const;
 
     void LoadAndInstallTranslator(CString& language);
     void ResizeColumn(QHeaderView* header, int stretch_column) const;
@@ -196,7 +196,7 @@ private:
     void UpdateAccountInfo(const QString& user, const QString& database);
     void ClearAccountInfo();
 
-    void RestoreTab(PNodeModel tree_model, TransWgtHash& trans_wgt_hash, CIntSet& set, CData& data, CSectionConfig& section_settings);
+    void RestoreTab(PNodeModel tree_model, TransWgtHash& trans_wgt_hash, CUuidSet& set, CData& data, CSectionConfig& section_settings);
     bool LockFile(const QFileInfo& file_info);
 
     void EnableAction(bool enable) const;
@@ -204,18 +204,18 @@ private:
     QStandardItemModel* CreateModelFromMap(CStringMap& map, QObject* parent = nullptr);
 
     void IniSectionGroup();
-    void TransRefP(int node_id, int unit);
-    void TransRefS(int node_id, int unit);
-    void OrderNodeLocation(Section section, int node_id);
+    void TransRefP(const QUuid& node_id, int unit);
+    void TransRefS(const QUuid& node_id, int unit);
+    void OrderNodeLocation(Section section, const QUuid& node_id);
 
     void LeafToSupport(TransWidget* widget);
     void SupportToLeaf(SupportWidget* widget);
 
-    void SwitchToLeaf(int node_id, int trans_id = 0) const;
-    void SwitchToSupport(int node_id, int trans_id = 0) const;
+    void SwitchToLeaf(const QUuid& node_id, const QUuid& trans_id = {}) const;
+    void SwitchToSupport(const QUuid& node_id, const QUuid& trans_id = {}) const;
 
-    void OrderTransLocation(int node_id);
-    void RegisterRptWgt(ReportWidget* widget);
+    void OrderTransLocation(const QUuid& node_id);
+    void RegisterRptWgt(const QUuid& report_id, ReportWidget* widget);
 
     void VerifyActivationOffline();
     void VerifyActivationOnline();
@@ -224,7 +224,6 @@ private:
     Ui::MainWindow* ui {};
 
     Section start_ {};
-    int report_id_ { -1 };
     QSqlDatabase main_db_ {};
 
     QPointer<SettlementWidget> settlement_widget_ {};

@@ -21,8 +21,8 @@ void TableCombo::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
 
-    int key { index.data().toInt() };
-    if (key == 0)
+    auto key { index.data().toUuid() };
+    if (key.isNull())
         key = last_insert_;
 
     int item_index { cast_editor->findData(key) };
@@ -33,14 +33,14 @@ void TableCombo::setModelData(QWidget* editor, QAbstractItemModel* model, const 
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
 
-    int key { cast_editor->currentData().toInt() };
+    const auto key { cast_editor->currentData().toUuid() };
     last_insert_ = key;
     model->setData(index, key);
 }
 
 void TableCombo::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString path { tree_model_->Path(index.data().toInt()) };
+    const QString path { tree_model_->Path(index.data().toUuid()) };
     if (path.isEmpty())
         return QStyledItemDelegate::paint(painter, option, index);
 
@@ -54,13 +54,13 @@ void TableCombo::paint(QPainter* painter, const QStyleOptionViewItem& option, co
 
 QSize TableCombo::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString text = tree_model_->Path(index.data().toInt());
+    const QString text = tree_model_->Path(index.data().toUuid());
     return CalculateTextSize(text, option);
 }
 
 void TableCombo::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QSize text_size { CalculateTextSize(tree_model_->Path(index.data().toInt()), option) };
+    const QSize text_size { CalculateTextSize(tree_model_->Path(index.data().toUuid()), option) };
     const int width { std::max(option.rect.width(), text_size.width()) };
     const int height { std::max(option.rect.height(), text_size.height()) };
 

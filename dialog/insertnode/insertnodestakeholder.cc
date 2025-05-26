@@ -94,7 +94,7 @@ void InsertNodeStakeholder::on_dSpinTaxRate_editingFinished() { node_->second = 
 void InsertNodeStakeholder::on_comboEmployee_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    node_->employee = ui->comboEmployee->currentData().toInt();
+    node_->employee = ui->comboEmployee->currentData().toUuid();
 }
 
 void InsertNodeStakeholder::on_deadline_editingFinished() { node_->issued_time = ui->deadline->dateTime().toString(kDateTimeFST); }

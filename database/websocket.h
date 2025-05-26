@@ -39,7 +39,11 @@ public:
     void SendMessage(const QString& type, const QJsonObject& data);
     void SetReconnect(bool enabled = true, int max_attempts = 10);
 
-signals:
+    WebSocket(const WebSocket&) = delete;
+    WebSocket& operator=(const WebSocket&) = delete;
+    WebSocket(WebSocket&&) = delete;
+    WebSocket& operator=(WebSocket&&) = delete;
+
 signals:
     void SLoginResult(bool success);
 

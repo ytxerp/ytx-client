@@ -95,6 +95,12 @@ void Preferences::IniData()
     ResizeLine(ui->lineDynamic, section_.dynamic_label);
 }
 
+void Preferences::IniDataCombo(QComboBox* combo, const QUuid& value)
+{
+    int item_index { combo->findData(value) };
+    combo->setCurrentIndex(item_index);
+}
+
 void Preferences::IniDataCombo(QComboBox* combo, int value)
 {
     int item_index { combo->findData(value) };
@@ -181,19 +187,19 @@ void Preferences::on_comboDefaultUnit_currentIndexChanged(int index)
 void Preferences::on_comboStatic_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    section_.static_node = ui->comboStatic->currentData().toInt();
+    section_.static_node = ui->comboStatic->currentData().toUuid();
 }
 
 void Preferences::on_comboDynamicLhs_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    section_.dynamic_node_lhs = ui->comboDynamicLhs->currentData().toInt();
+    section_.dynamic_node_lhs = ui->comboDynamicLhs->currentData().toUuid();
 }
 
 void Preferences::on_comboDynamicRhs_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    section_.dynamic_node_rhs = ui->comboDynamicRhs->currentData().toInt();
+    section_.dynamic_node_rhs = ui->comboDynamicRhs->currentData().toUuid();
 }
 
 void Preferences::on_spinAmountDecimal_editingFinished() { section_.amount_decimal = ui->spinAmountDecimal->value(); }

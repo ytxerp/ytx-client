@@ -47,7 +47,7 @@ class MainWindowUtils {
 public:
     static QString ResourceFile();
     static QVariantList SaveTab(CTransWgtHash& trans_wgt_hash);
-    static QSet<int> ReadSettings(QSharedPointer<QSettings> settings, CString& section, CString& property);
+    static QSet<QUuid> ReadSettings(QSharedPointer<QSettings> settings, CString& section, CString& property);
 
     static void ReadPrintTmplate(QMap<QString, QString>& print_template);
     static QString GetHardwareUUID();
@@ -85,7 +85,7 @@ public:
         }
     }
 
-    template <InheritQWidget T> static void FreeWidgetFromHash(int node_id, QHash<int, QPointer<T>>* hash)
+    template <InheritQWidget T> static void FreeWidgetFromHash(const QUuid& node_id, QHash<QUuid, QPointer<T>>* hash)
     {
         assert(hash && "hash must be non-null");
 
@@ -107,8 +107,7 @@ public:
         auto model { widget->Model() };
         assert(model && "model must be non-null");
 
-        constexpr int ID_ZERO = 0;
-        const int empty_row = model->GetNodeRow(ID_ZERO);
+        const int empty_row = model->GetNodeRow({});
 
         QModelIndex target_index {};
 

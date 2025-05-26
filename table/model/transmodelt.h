@@ -39,7 +39,7 @@ protected:
     bool UpdateCredit(TransShadow* trans_shadow, double value) override;
     bool UpdateRatio(TransShadow* trans_shadow, double value) override;
 
-    void UpdateUnitCost(int lhs_node, int rhs_node, double value) override;
+    void UpdateUnitCost(const QUuid& lhs_node, const QUuid& rhs_node, double value) override;
 };
 
 #endif // TRANSMODELT_H

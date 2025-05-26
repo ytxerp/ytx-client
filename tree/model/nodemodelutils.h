@@ -51,21 +51,21 @@ public:
 
         current_value = value;
 
-        if (node->id != 0)
+        if (!node->id.isNull())
             sql->WriteField(table, field, value, node->id);
 
         return true;
     }
 
-    template <typename T> static const T& Value(CNodeHash& hash, int node_id, T Node::* member)
+    template <typename T> static const T& Value(CNodeHash& hash, const QUuid& node_id, T Node::* member)
     {
         if (auto it = hash.constFind(node_id); it != hash.constEnd())
             return std::invoke(member, *(it.value()));
 
         // If the node_id does not exist, return a static empty object to ensure a safe default value
         // Examples:
-        // double InitialTotal(int node_id) const { return GetValue(node_id, &Node::initial_total); }
-        // double FinalTotal(int node_id) const { return GetValue(node_id, &Node::final_total); }
+        // double InitialTotal(QUuid node_id) const { return GetValue(node_id, &Node::initial_total); }
+        // double FinalTotal(QUuid node_id) const { return GetValue(node_id, &Node::final_total); }
         // Note: In the SetStatus() function of TreeWidget,
         // a node_id of 0 may be passed, so empty{} is needed to prevent illegal access
         static const T empty {};
@@ -74,7 +74,7 @@ public:
 
     static void InitializeRoot(Node*& root, int default_unit);
 
-    static Node* GetNode(CNodeHash& hash, int node_id);
+    static Node* GetNode(CNodeHash& hash, const QUuid& node_id);
     static bool IsDescendant(const Node* lhs, const Node* rhs);
 
     static void SortIterative(Node* node, std::function<bool(const Node*, const Node*)> Compare);
@@ -84,25 +84,25 @@ public:
 
     static void LeafPathBranchPathModel(CStringHash& leaf, CStringHash& branch, QStandardItemModel* model);
 
-    static void AppendItem(QStandardItemModel* model, int node_id, CString& path);
-    static void RemoveItem(QStandardItemModel* model, int node_id);
+    static void AppendItem(QStandardItemModel* model, const QUuid& node_id, CString& path);
+    static void RemoveItem(QStandardItemModel* model, const QUuid& node_id);
 
     static void UpdateModel(CStringHash& leaf, QStandardItemModel* leaf_model, CStringHash& support, QStandardItemModel* support_model, const Node* node);
     static void UpdatePathSeparator(CString& old_separator, CString& new_separator, StringHash& source_path);
     static void UpdateModelSeparator(QStandardItemModel* model, CStringHash& source_path);
 
     static bool HasChildren(Node* node, CString& message);
-    static bool IsOpened(CTransWgtHash& hash, int node_id, CString& message);
+    static bool IsOpened(CTransWgtHash& hash, const QUuid& node_id, CString& message);
 
     static void UpdateBranchUnit(const Node* root, Node* node);
 
-    static bool IsInternalReferenced(Sql* sql, int node_id, CString& message);
-    static bool IsSupportReferenced(Sql* sql, int node_id, CString& message);
-    static bool IsExternalReferenced(Sql* sql, int node_id, CString& message);
+    static bool IsInternalReferenced(Sql* sql, const QUuid& node_id, CString& message);
+    static bool IsSupportReferenced(Sql* sql, const QUuid& node_id, CString& message);
+    static bool IsExternalReferenced(Sql* sql, const QUuid& node_id, CString& message);
 
 private:
-    static void UpdateModelFunction(QStandardItemModel* model, CIntSet& update_range, CStringHash& source_path);
-    static void UpdateComboModel(QStandardItemModel* model, const QVector<std::pair<int, QString>>& items);
+    static void UpdateModelFunction(QStandardItemModel* model, CUuidSet& update_range, CStringHash& source_path);
+    static void UpdateComboModel(QStandardItemModel* model, const QVector<std::pair<QUuid, QString>>& items);
 };
 
 #endif // NODEMODELUTILS_H
