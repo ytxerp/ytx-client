@@ -143,6 +143,7 @@ inline constexpr char kSplitter[] = "splitter";
 inline constexpr char kStart[] = "start";
 inline constexpr char kStartSection[] = "start/section";
 inline constexpr char kTheme[] = "theme";
+inline constexpr char kCache[] = "cache";
 
 // Constants for file's ini
 inline constexpr char kCompany[] = "company";

@@ -5,12 +5,13 @@
 #include <QTimer>
 
 #include "component/constvalue.h"
+#include "global/databasemanager.h"
 #include "global/resourcepool.h"
 
-Sql::Sql(QSqlDatabase& main_db, CInfo& info, QObject* parent)
+Sql::Sql(CInfo& info, QObject* parent)
     : QObject(parent)
     , section_ { info.section }
-    , main_db_ { main_db }
+    , main_db_ { DatabaseManager::Instance().GetDatabase() }
     , info_ { info }
 {
 }
@@ -67,11 +68,11 @@ void Sql::TransToRemove(QMultiHash<QUuid, QUuid>& leaf_trans, QMultiHash<QUuid, 
     }
 
     while (query.next()) {
-        const QUuid trans_id { QUuid::fromRfc4122(query.value("trans_id").toByteArray()) };
-        leaf_trans.emplace(query.value("node_id").toUuid(), trans_id);
+        const QUuid trans_id { QUuid::fromRfc4122(query.value(QStringLiteral("trans_id")).toByteArray()) };
+        leaf_trans.emplace(QUuid::fromRfc4122(query.value(QStringLiteral("node_id")).toByteArray()), trans_id);
 
         if (section_ != Section::kSales && section_ != Section::kPurchase) {
-            const QUuid support_id { QUuid::fromRfc4122(query.value("support_id").toByteArray()) };
+            const QUuid support_id { QUuid::fromRfc4122(query.value(QStringLiteral("support_id")).toByteArray()) };
             if (!support_id.isNull())
                 support_trans.emplace(support_id, trans_id);
         }
@@ -836,12 +837,24 @@ TransShadow* Sql::AllocateTransShadow()
 
 bool Sql::DBTransaction(std::function<bool()> function)
 {
-    if (main_db_.transaction() && function() && main_db_.commit()) {
-        return true;
-    } else {
+    if (!main_db_.transaction()) {
+        qWarning() << "Transaction begin failed:" << main_db_.lastError().text();
+        return false;
+    }
+
+    if (!function()) {
+        qWarning() << "Function in transaction returned false";
         main_db_.rollback();
         return false;
     }
+
+    if (!main_db_.commit()) {
+        qWarning() << "Transaction commit failed:" << main_db_.lastError().text();
+        main_db_.rollback();
+        return false;
+    }
+
+    return true;
 }
 
 bool Sql::ReadRelationship(const NodeHash& node_hash, QSqlQuery& query) const

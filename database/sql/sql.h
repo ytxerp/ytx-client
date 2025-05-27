@@ -36,7 +36,7 @@ public:
     virtual ~Sql();
 
 protected:
-    Sql(QSqlDatabase& main_db, CInfo& info, QObject* parent = nullptr);
+    Sql(CInfo& info, QObject* parent = nullptr);
 
 signals:
     // send to TreeModel

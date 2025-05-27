@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QSqlError>
 
+#include "component/constvalue.h"
 #include "mainwindowutils.h"
 
 DatabaseManager& DatabaseManager::Instance()
@@ -31,7 +32,7 @@ bool DatabaseManager::SetDatabaseName(const QString& file_path)
         return false;
     }
 
-    if (!MainWindowUtils::CheckFileValid(file_path, "cache"))
+    if (!MainWindowUtils::CheckFileValid(file_path, kCache))
         return false;
 
     db_.setDatabaseName(file_path);

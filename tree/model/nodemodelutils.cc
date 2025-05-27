@@ -72,7 +72,6 @@ void NodeModelUtils::InitializeRoot(Node*& root, int default_unit)
 {
     if (root == nullptr) {
         root = ResourcePool<Node>::Instance().Allocate();
-        root->id = {};
         root->node_type = kTypeBranch;
         root->unit = default_unit;
     }

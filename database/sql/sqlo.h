@@ -27,7 +27,7 @@ class SqlO final : public Sql {
     Q_OBJECT
 
 public:
-    SqlO(QSqlDatabase& main_db, CInfo& info, QObject* parent = nullptr);
+    SqlO(CInfo& info, QObject* parent = nullptr);
     ~SqlO();
 
 signals:

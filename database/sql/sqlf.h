@@ -24,7 +24,7 @@
 
 class SqlF final : public Sql {
 public:
-    SqlF(QSqlDatabase& main_db, CInfo& info, QObject* parent = nullptr);
+    SqlF(CInfo& info, QObject* parent = nullptr);
 
 protected:
     void WriteNodeBind(Node* node, QSqlQuery& query) const override;

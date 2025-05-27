@@ -6,8 +6,8 @@
 #include "component/constvalue.h"
 #include "global/resourcepool.h"
 
-SqlP::SqlP(QSqlDatabase& main_db, CInfo& info, QObject* parent)
-    : Sql(main_db, info, parent)
+SqlP::SqlP(CInfo& info, QObject* parent)
+    : Sql(info, parent)
 {
 }
 

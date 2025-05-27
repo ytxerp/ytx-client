@@ -24,7 +24,7 @@
 
 class SqlT final : public Sql {
 public:
-    SqlT(QSqlDatabase& main_db, CInfo& info, QObject* parent = nullptr);
+    SqlT(CInfo& info, QObject* parent = nullptr);
 
 protected:
     QString QSReadNode() const override;

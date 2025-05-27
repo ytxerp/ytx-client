@@ -4,8 +4,8 @@
 
 #include "component/constvalue.h"
 
-SqlT::SqlT(QSqlDatabase& main_db, CInfo& info, QObject* parent)
-    : Sql(main_db, info, parent)
+SqlT::SqlT(CInfo& info, QObject* parent)
+    : Sql(info, parent)
 {
 }
 

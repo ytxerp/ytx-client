@@ -27,7 +27,7 @@ class SqlS final : public Sql {
     Q_OBJECT
 
 public:
-    SqlS(QSqlDatabase& main_db, CInfo& info, QObject* parent = nullptr);
+    SqlS(CInfo& info, QObject* parent = nullptr);
 
 public slots:
     void RReplaceNode(const QUuid& old_node_id, const QUuid& new_node_id, int node_type, int node_unit) override;

@@ -45,6 +45,7 @@ void Login::on_pushButtonConnect_clicked()
     login_info_.user = ui->lineEditUser->text();
     login_info_.password = ui->lineEditPassword->text();
     login_info_.database = ui->lineEditDatabase->text();
+    this->close();
 
     emit SLoadDatabase(GetCacheFilePath(login_info_.user, login_info_.database));
 
@@ -90,7 +91,7 @@ QString Login::GetCacheFilePath(const QString& user, const QString& database)
 {
     const QString file_name { QString("%1@%2.cache").arg(user, database) };
     const QString base_path { QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) };
-    const QString cache_path { QDir(base_path).filePath("cache") };
+    const QString cache_path { QDir(base_path).filePath(kCache) };
 
     QDir().mkpath(cache_path);
     return QDir(cache_path).filePath(file_name);

@@ -24,7 +24,7 @@
 
 class SqlP final : public Sql {
 public:
-    SqlP(QSqlDatabase& main_db, CInfo& info, QObject* parent = nullptr);
+    SqlP(CInfo& info, QObject* parent = nullptr);
 
 protected:
     // tree

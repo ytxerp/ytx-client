@@ -160,7 +160,7 @@ MainWindow::~MainWindow()
 
 bool MainWindow::RLoadDatabase(const QString& cache_file)
 {
-    if (!MainWindowUtils::CheckFileValid(cache_file, "cache")) {
+    if (!MainWindowUtils::CheckFileValid(cache_file, kCache)) {
         QFile::remove(cache_file);
         Sqlite::NewFile(cache_file);
     }
@@ -1570,7 +1570,7 @@ void MainWindow::SetFinanceData()
 
     ReadSectionConfig(finance_config_, kFinance);
 
-    sql = new SqlF(main_db_, info, this);
+    sql = new SqlF(info, this);
 
     NodeModelArg arg { sql, info, finance_trans_wgt_hash_, app_config_.separator, finance_config_.default_unit };
     auto* model { new NodeModelF(arg, this) };
@@ -1609,7 +1609,7 @@ void MainWindow::SetProductData()
 
     ReadSectionConfig(product_config_, kProduct);
 
-    sql = new SqlP(main_db_, info, this);
+    sql = new SqlP(info, this);
 
     NodeModelArg arg { sql, info, product_trans_wgt_hash_, app_config_.separator, product_config_.default_unit };
     auto* model { new NodeModelP(arg, this) };
@@ -1643,7 +1643,7 @@ void MainWindow::SetStakeholderData()
 
     ReadSectionConfig(stakeholder_config_, kStakeholder);
 
-    sql = new SqlS(main_db_, info, this);
+    sql = new SqlS(info, this);
 
     NodeModelArg arg { sql, info, stakeholder_trans_wgt_hash_, app_config_.separator, stakeholder_config_.default_unit };
     auto* model { new NodeModelS(arg, this) };
@@ -1682,7 +1682,7 @@ void MainWindow::SetTaskData()
 
     ReadSectionConfig(task_config_, kTask);
 
-    sql = new SqlT(main_db_, info, this);
+    sql = new SqlT(info, this);
 
     NodeModelArg arg { sql, info, task_trans_wgt_hash_, app_config_.separator, task_config_.default_unit };
     auto* model { new NodeModelT(arg, this) };
@@ -1723,7 +1723,7 @@ void MainWindow::SetSalesData()
 
     ReadSectionConfig(sales_config_, kSales);
 
-    sql = new SqlO(main_db_, info, this);
+    sql = new SqlO(info, this);
 
     NodeModelArg arg { sql, info, sales_trans_wgt_hash_, app_config_.separator, sales_config_.default_unit };
     auto* model { new NodeModelO(arg, this) };
@@ -1766,7 +1766,7 @@ void MainWindow::SetPurchaseData()
 
     ReadSectionConfig(purchase_config_, kPurchase);
 
-    sql = new SqlO(main_db_, info, this);
+    sql = new SqlO(info, this);
 
     NodeModelArg arg { sql, info, purchase_trans_wgt_hash_, app_config_.separator, purchase_config_.default_unit };
     auto* model { new NodeModelO(arg, this) };
