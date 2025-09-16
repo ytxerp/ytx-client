@@ -4583,7 +4583,7 @@ Please ensure the service is running and your network is available.</source>
         <location line="+20"/>
         <location line="+8"/>
         <source>IssuedTime</source>
-        <translation>时间</translation>
+        <translation>日期</translation>
     </message>
     <message>
         <location line="-279"/>
