@@ -141,10 +141,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-bool MainWindow::RInitializeContext()
+bool MainWindow::RInitializeContext(const QString& expire_date)
 {
     LoginInfo& login_info { LoginInfo::Instance() };
-    UpdateAccountInfo(login_info.Email(), login_info.Workspace());
+    UpdateAccountInfo(login_info.Email(), login_info.Workspace(), expire_date);
 
     this->setWindowTitle(local_config_.company_name);
 
@@ -1206,9 +1206,6 @@ void MainWindow::ClearMainwindow()
     sc_s_.Clear();
     sc_sale_.Clear();
     sc_purchase_.Clear();
-
-    WebSocket::Instance().Clear();
-    LeafSStation::Instance().Clear();
 
     ui->tabWidget->clear();
 }
@@ -2393,10 +2390,11 @@ void MainWindow::UpdateGlobalConfig(CGlobalConfig& global)
     }
 }
 
-void MainWindow::UpdateAccountInfo(const QString& user, const QString& database)
+void MainWindow::UpdateAccountInfo(const QString& user, const QString& database, const QString& expire_date)
 {
     ui->actionEmail->setText(tr("Email") + ": " + user);
     ui->actionWorkspace->setText(tr("Workspace") + ": " + database);
+    ui->actionExpireDate->setText(tr("Expire Date") + ": " + expire_date);
     ui->actionLogin->setEnabled(false);
     ui->actionLogout->setEnabled(true);
 }
@@ -2405,6 +2403,7 @@ void MainWindow::ClearAccountInfo()
 {
     ui->actionEmail->setText(tr("Email"));
     ui->actionWorkspace->setText(tr("Workspace"));
+    ui->actionExpireDate->setText(tr("Expire Date"));
     ui->actionLogin->setEnabled(true);
     ui->actionLogout->setEnabled(false);
 }
@@ -2727,7 +2726,7 @@ void MainWindow::RUpdateState()
 void MainWindow::RConnectResult(bool result)
 {
     if (!result) {
-        ClearMainwindow();
+        on_actionLogout_triggered();
     }
 
     ui->actionReconnect->setDisabled(result);
@@ -2910,5 +2909,9 @@ void MainWindow::on_actionLogout_triggered()
 {
     ClearMainwindow();
     ClearAccountInfo();
-    WebSocket::Instance().Connect();
+
+    WebSocket::Instance().Clear();
+    LeafSStation::Instance().Clear();
+
+    EnableAction(false);
 }

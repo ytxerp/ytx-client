@@ -220,6 +220,7 @@
     <addaction name="separator"/>
     <addaction name="actionEmail"/>
     <addaction name="actionWorkspace"/>
+    <addaction name="actionExpireDate"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -487,6 +488,11 @@
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionExpireDate">
+   <property name="text">
+    <string>Expire Date</string>
    </property>
   </action>
  </widget>

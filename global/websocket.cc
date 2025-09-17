@@ -154,7 +154,8 @@ void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
 
 void WebSocket::Clear()
 {
-    if (socket_.state() == QAbstractSocket::ConnectedState) {
+    if (socket_.state() == QAbstractSocket::ConnectedState || socket_.state() == QAbstractSocket::ConnectingState) {
+        connect(&socket_, &QWebSocket::disconnected, this, [this]() { this->Connect(); }, Qt::SingleShotConnection);
         socket_.close();
     }
 
@@ -198,9 +199,11 @@ void WebSocket::AckLoginFailed(const QJsonObject& /*obj*/) { emit SLoginResult(f
 void WebSocket::AckLoginSuccess(const QJsonObject& obj)
 {
     session_id_ = obj[kSessionId].toString();
+    const auto expire_time = QDateTime::fromString(obj[kExpireTime].toString(), Qt::ISODate);
+    const auto expire_date = expire_time.date().toString(kDateFST);
 
     emit SLoginResult(true);
-    emit SInitializeContext();
+    emit SInitializeContext(expire_date);
 }
 
 void WebSocket::AckWorkspaceAccessPending(const QJsonObject& obj)

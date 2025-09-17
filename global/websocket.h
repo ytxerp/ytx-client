@@ -59,7 +59,7 @@ signals:
     void SWorkspaceAccessPending(const QString& email, const QString& workspace);
     void SRegisterResult(int result);
     void SConnectResult(bool result);
-    void SInitializeContext();
+    void SInitializeContext(const QString& expire_date);
     void SCreateUserResult(bool result);
     void SCreateDatabaseResult(bool result);
     void SInitializeDatabaseResult(bool result);

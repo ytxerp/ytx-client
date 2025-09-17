@@ -29,7 +29,8 @@ void Login::RLoginResult(bool result)
         SaveLoginConfig();
         this->close();
     } else {
-        QMessageBox::critical(this, tr("Login Failed"), tr("Unable to log in. Please verify your email, password, and workspace access."));
+        QMessageBox::critical(
+            this, tr("Login Failed"), tr("Unable to log in. Please verify your email, password, workspace access, or check if your account has expired."));
     }
 }
 

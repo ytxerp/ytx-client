@@ -2103,12 +2103,12 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
 <context>
     <name>LeafWidgetO</name>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="+233"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="+230"/>
         <source>Employee</source>
         <translation>职员</translation>
     </message>
     <message>
-        <location line="-184"/>
+        <location line="-181"/>
         <source>Party</source>
         <translation>合作</translation>
     </message>
@@ -2117,7 +2117,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">新增</translation>
     </message>
     <message>
-        <location line="+49"/>
+        <location line="+46"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -2181,7 +2181,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
     </message>
     <message>
         <location line="+238"/>
-        <location filename="../../table/widget/leafwidgeto.cc" line="+396"/>
+        <location filename="../../table/widget/leafwidgeto.cc" line="+362"/>
         <source>IS</source>
         <translation>现</translation>
     </message>
@@ -2199,7 +2199,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
     </message>
     <message>
         <location line="+71"/>
-        <location filename="../../table/widget/leafwidgeto.cc" line="-164"/>
+        <location filename="../../table/widget/leafwidgeto.cc" line="-161"/>
         <source>Finish</source>
         <translation>完成</translation>
     </message>
@@ -2435,14 +2435,18 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">无法连接到数据库，请检查 PostgreSQL 服务是否已启动，并确认用户名、密码和数据库名称是否正确。</translation>
     </message>
     <message>
-        <location filename="../../dialog/login.cc" line="+32"/>
+        <location filename="../../dialog/login.cc" line="+33"/>
         <source>Login Failed</source>
         <translation>登录失败</translation>
     </message>
     <message>
         <location line="+0"/>
+        <source>Unable to log in. Please verify your email, password, workspace access, or check if your account has expired.</source>
+        <translation type="unfinished">无法登录，请核对您的邮箱、密码、工区权限是否正确，亦或账号是否已过期。</translation>
+    </message>
+    <message>
         <source>Unable to log in. Please verify your email, password, and workspace access.</source>
-        <translation>无法登录，请核对您的邮箱、密码和工作区权限是否正确。</translation>
+        <translation type="vanished">无法登录，请核对您的邮箱、密码和工作区权限是否正确。</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -2483,7 +2487,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
     <name>MainWindow</name>
     <message>
         <location filename="../../mainwindow.ui" line="+85"/>
-        <location filename="../../mainwindow.cc" line="+168"/>
+        <location filename="../../mainwindow.cc" line="+163"/>
         <source>Finance</source>
         <translation>财务</translation>
     </message>
@@ -2496,7 +2500,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">销售</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+45"/>
         <location filename="../../mainwindow.cc" line="+3"/>
         <source>Task</source>
         <translation>任务</translation>
@@ -2510,7 +2514,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">仓库</translation>
     </message>
     <message>
-        <location line="+39"/>
+        <location line="+26"/>
         <location filename="../../mainwindow.cc" line="+2"/>
         <source>Purchase</source>
         <translation>采购</translation>
@@ -2534,13 +2538,13 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">报表</translation>
     </message>
     <message>
-        <location line="-65"/>
+        <location line="-78"/>
         <location filename="../../mainwindow.cc" line="-4"/>
         <source>Stakeholder</source>
         <translation>人脉</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+26"/>
         <location filename="../../mainwindow.cc" line="+3"/>
         <source>Sale</source>
         <translation>销售</translation>
@@ -2560,12 +2564,12 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation>帐户(&amp;A)</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+14"/>
         <source>View</source>
         <translation>视图</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+11"/>
         <source>toolBar</source>
         <translation>工具栏</translation>
     </message>
@@ -2598,18 +2602,18 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
     <message>
         <location line="+116"/>
         <location line="+3"/>
-        <location filename="../../mainwindow.cc" line="+2520"/>
-        <location line="+8"/>
+        <location filename="../../mainwindow.cc" line="+2228"/>
+        <location line="+9"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
     <message>
         <location line="+8"/>
         <location line="+3"/>
-        <location filename="../../mainwindow.cc" line="-7"/>
-        <location line="+8"/>
+        <location filename="../../mainwindow.cc" line="-8"/>
+        <location line="+9"/>
         <source>Workspace</source>
-        <translation>工作区</translation>
+        <translation>工区</translation>
     </message>
     <message>
         <location line="+19"/>
@@ -2632,17 +2636,22 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+16"/>
+        <location filename="../../mainwindow.cc" line="-8"/>
+        <location line="+9"/>
+        <source>Expire Date</source>
+        <translation>期限</translation>
+    </message>
+    <message>
         <source>SupportReference</source>
-        <translation>辅助引用</translation>
+        <translation type="vanished">辅助引用</translation>
     </message>
     <message>
-        <location line="+8"/>
         <source>RelatedReference</source>
-        <translation>关联引用</translation>
+        <translation type="vanished">关联引用</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="-8"/>
         <source>New Group</source>
         <translation>新建分组</translation>
     </message>
@@ -2655,7 +2664,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">创建数据库</translation>
     </message>
     <message>
-        <location line="-54"/>
+        <location line="-38"/>
         <location line="+3"/>
         <source>Reset Color</source>
         <translation>重置颜色</translation>
@@ -2706,13 +2715,13 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation>删除</translation>
     </message>
     <message>
-        <location line="-175"/>
-        <location filename="../../mainwindow.cc" line="-2531"/>
+        <location line="-174"/>
+        <location filename="../../mainwindow.cc" line="-2241"/>
         <source>Item</source>
         <translation>物品</translation>
     </message>
     <message>
-        <location line="+180"/>
+        <location line="+179"/>
         <location line="+87"/>
         <source>Append</source>
         <translation>追加</translation>
@@ -2808,7 +2817,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
     </message>
     <message>
         <location line="+8"/>
-        <location filename="../../mainwindow.cc" line="+1372"/>
+        <location filename="../../mainwindow.cc" line="+1189"/>
         <source>Statement</source>
         <translation>帐单</translation>
     </message>
@@ -3103,7 +3112,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">余额</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="-184"/>
+        <location filename="../../mainwindow.cc" line="-143"/>
         <source>Remove %1</source>
         <translation>删除 %1</translation>
     </message>
@@ -3253,7 +3262,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">平方英尺</translation>
     </message>
     <message>
-        <location line="+724"/>
+        <location line="+682"/>
         <location line="+54"/>
         <source>IS</source>
         <translation>现</translation>
@@ -3263,7 +3272,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">现结</translation>
     </message>
     <message>
-        <location line="+429"/>
+        <location line="+327"/>
         <source>Language Changed</source>
         <translation>语言已更改</translation>
     </message>
@@ -3289,7 +3298,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">文件</translation>
     </message>
     <message>
-        <location line="-2257"/>
+        <location line="-2025"/>
         <source>StatementPrimary-</source>
         <translation>一级明细-</translation>
     </message>
@@ -3299,7 +3308,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation>二级明细-</translation>
     </message>
     <message>
-        <location line="+953"/>
+        <location line="+870"/>
         <source>Update Failed</source>
         <translation>更新失败</translation>
     </message>
@@ -3308,7 +3317,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">无法更改 [%1] 版块的基准单位，因为已存在相关记录。</translation>
     </message>
     <message>
-        <location line="+287"/>
+        <location line="+241"/>
         <source>Record-</source>
         <translation>记录-</translation>
     </message>
@@ -3333,7 +3342,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">连接超时，请重试。</translation>
     </message>
     <message>
-        <location line="-287"/>
+        <location line="-241"/>
         <source>Cannot change the base unit for section Finance because related entries already exist.</source>
         <translation>无法更改财务版块的基准单位，因为已存在相关记录。</translation>
     </message>
@@ -3342,7 +3351,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">显示窗口</translation>
     </message>
     <message>
-        <location line="+665"/>
+        <location line="+618"/>
         <location line="+43"/>
         <source>INT</source>
         <translation>内</translation>
@@ -3376,7 +3385,7 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">正在后台运行，点击托盘可恢复窗口。</translation>
     </message>
     <message>
-        <location line="+1115"/>
+        <location line="+1009"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
@@ -3421,7 +3430,7 @@ Please ensure the service is running and your network is available.</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location line="-995"/>
+        <location line="-889"/>
         <location line="+54"/>
         <source>MS</source>
         <translation>月</translation>
@@ -4204,17 +4213,17 @@ Please ensure the service is running and your network is available.</source>
         <location line="+24"/>
         <location line="+20"/>
         <location line="+20"/>
-        <location line="+21"/>
+        <location line="+20"/>
         <location line="+18"/>
         <location line="+22"/>
         <location line="+22"/>
         <location line="+21"/>
-        <location line="+91"/>
+        <location line="+90"/>
         <source>CreatedTime</source>
         <translation>创建时间</translation>
     </message>
     <message>
-        <location line="-337"/>
+        <location line="-335"/>
         <location line="+18"/>
         <location line="+21"/>
         <location line="+22"/>
@@ -4222,17 +4231,17 @@ Please ensure the service is running and your network is available.</source>
         <location line="+24"/>
         <location line="+20"/>
         <location line="+20"/>
-        <location line="+21"/>
+        <location line="+20"/>
         <location line="+18"/>
         <location line="+22"/>
         <location line="+22"/>
         <location line="+21"/>
-        <location line="+91"/>
+        <location line="+90"/>
         <source>CreatedBy</source>
         <translation>创建者</translation>
     </message>
     <message>
-        <location line="-337"/>
+        <location line="-335"/>
         <location line="+18"/>
         <location line="+21"/>
         <location line="+22"/>
@@ -4240,17 +4249,17 @@ Please ensure the service is running and your network is available.</source>
         <location line="+24"/>
         <location line="+20"/>
         <location line="+20"/>
-        <location line="+21"/>
+        <location line="+20"/>
         <location line="+18"/>
         <location line="+22"/>
         <location line="+22"/>
         <location line="+21"/>
-        <location line="+91"/>
+        <location line="+90"/>
         <source>UpdatedTime</source>
         <translation>更新时间</translation>
     </message>
     <message>
-        <location line="-337"/>
+        <location line="-335"/>
         <location line="+18"/>
         <location line="+21"/>
         <location line="+22"/>
@@ -4258,12 +4267,12 @@ Please ensure the service is running and your network is available.</source>
         <location line="+24"/>
         <location line="+20"/>
         <location line="+20"/>
-        <location line="+21"/>
+        <location line="+20"/>
         <location line="+18"/>
         <location line="+22"/>
         <location line="+22"/>
         <location line="+21"/>
-        <location line="+91"/>
+        <location line="+90"/>
         <source>UpdatedBy</source>
         <translation>更新者</translation>
     </message>
@@ -4272,14 +4281,14 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">版本</translation>
     </message>
     <message>
-        <location line="-337"/>
+        <location line="-335"/>
         <location line="+18"/>
         <location line="+21"/>
         <location line="+22"/>
         <location line="+45"/>
         <location line="+20"/>
         <location line="+20"/>
-        <location line="+21"/>
+        <location line="+20"/>
         <location line="+38"/>
         <location line="+22"/>
         <location line="+21"/>
@@ -4287,20 +4296,20 @@ Please ensure the service is running and your network is available.</source>
         <translation>编号</translation>
     </message>
     <message>
-        <location line="-247"/>
+        <location line="-246"/>
         <location line="+18"/>
         <location line="+21"/>
         <location line="+22"/>
-        <location line="+17"/>
-        <location line="+28"/>
-        <location line="+20"/>
-        <location line="+20"/>
-        <location line="+21"/>
-        <location line="+16"/>
+        <location line="+19"/>
         <location line="+26"/>
-        <location line="+21"/>
-        <location line="+21"/>
+        <location line="+20"/>
+        <location line="+20"/>
+        <location line="+20"/>
+        <location line="+18"/>
         <location line="+24"/>
+        <location line="+21"/>
+        <location line="+21"/>
+        <location line="+23"/>
         <location line="+14"/>
         <location line="+12"/>
         <location line="+10"/>
@@ -4311,7 +4320,7 @@ Please ensure the service is running and your network is available.</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location line="-347"/>
+        <location line="-345"/>
         <location line="+18"/>
         <location line="+21"/>
         <location line="+22"/>
@@ -4330,8 +4339,8 @@ Please ensure the service is running and your network is available.</source>
         <location line="-58"/>
         <location line="+18"/>
         <location line="+21"/>
-        <location line="+21"/>
-        <location line="+17"/>
+        <location line="+22"/>
+        <location line="+18"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
@@ -4348,7 +4357,7 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">日期</translation>
     </message>
     <message>
-        <location line="+23"/>
+        <location line="+21"/>
         <source>FXRate</source>
         <translation>汇率</translation>
     </message>
@@ -4359,32 +4368,32 @@ Please ensure the service is running and your network is available.</source>
     <message>
         <location line="+3"/>
         <location line="+20"/>
-        <location line="+21"/>
-        <location line="+21"/>
-        <location line="+41"/>
+        <location line="+20"/>
+        <location line="+20"/>
+        <location line="+42"/>
         <location line="+22"/>
-        <location line="+22"/>
+        <location line="+21"/>
         <source>D</source>
         <translation></translation>
     </message>
     <message>
-        <location line="-145"/>
+        <location line="-143"/>
         <location line="+20"/>
-        <location line="+21"/>
+        <location line="+20"/>
         <source>RelatedNode</source>
         <translation>关联</translation>
     </message>
     <message>
-        <location line="-40"/>
+        <location line="-39"/>
         <location line="+20"/>
-        <location line="+21"/>
+        <location line="+20"/>
         <source>Debit</source>
         <translation>借方</translation>
     </message>
     <message>
-        <location line="-40"/>
+        <location line="-39"/>
         <location line="+20"/>
-        <location line="+21"/>
+        <location line="+20"/>
         <source>Credit</source>
         <translation>贷方</translation>
     </message>
@@ -4393,29 +4402,27 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">小计</translation>
     </message>
     <message>
-        <location line="-49"/>
+        <location line="-48"/>
         <location line="+20"/>
         <location line="+20"/>
-        <location line="+21"/>
-        <location line="+21"/>
         <location line="+20"/>
+        <location line="+23"/>
+        <location line="+18"/>
         <location line="+22"/>
         <location line="+21"/>
-        <location line="+19"/>
+        <location line="+18"/>
         <location line="+14"/>
         <source>LhsNode</source>
         <translation>左节点</translation>
     </message>
     <message>
-        <location line="-134"/>
-        <location line="+106"/>
         <source>SupportNode</source>
-        <translation>辅助</translation>
+        <translation type="vanished">辅助</translation>
     </message>
     <message>
-        <location line="-141"/>
+        <location line="-167"/>
         <location line="+20"/>
-        <location line="+21"/>
+        <location line="+20"/>
         <source>Balance</source>
         <translation>余额</translation>
     </message>
@@ -4441,26 +4448,26 @@ Please ensure the service is running and your network is available.</source>
     <message>
         <location line="-38"/>
         <location line="+22"/>
-        <location line="+22"/>
+        <location line="+21"/>
         <source>RhsCredit</source>
         <translation>右贷方</translation>
     </message>
     <message>
-        <location line="-43"/>
+        <location line="-42"/>
         <location line="+22"/>
-        <location line="+22"/>
+        <location line="+21"/>
         <source>RhsDebit</source>
         <translation>右借方</translation>
     </message>
     <message>
-        <location line="-43"/>
+        <location line="-42"/>
         <source>RhsFXRate</source>
         <translation>右汇率</translation>
     </message>
     <message>
         <location line="+1"/>
         <location line="+21"/>
-        <location line="+22"/>
+        <location line="+21"/>
         <source>RhsNode</source>
         <translation>右节点</translation>
     </message>
@@ -4523,24 +4530,24 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">R</translation>
     </message>
     <message>
-        <location line="-295"/>
+        <location line="-293"/>
         <location line="+18"/>
         <location line="+21"/>
-        <location line="+38"/>
+        <location line="+40"/>
         <source>DirectionRule</source>
         <translation>规则</translation>
     </message>
     <message>
-        <location line="-76"/>
+        <location line="-78"/>
         <location line="+18"/>
         <location line="+21"/>
-        <location line="+21"/>
-        <location line="+17"/>
+        <location line="+22"/>
+        <location line="+18"/>
         <source>Kind</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location line="-54"/>
+        <location line="-56"/>
         <location line="+22"/>
         <source>QuantityTotal</source>
         <translation>数量</translation>
@@ -4554,7 +4561,7 @@ Please ensure the service is running and your network is available.</source>
     <message>
         <location line="-2"/>
         <location line="+40"/>
-        <location line="+253"/>
+        <location line="+251"/>
         <source>IsFinished</source>
         <translation>完成</translation>
     </message>
@@ -4567,16 +4574,16 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">未付金额</translation>
     </message>
     <message>
-        <location line="-294"/>
-        <location line="+38"/>
-        <location line="+18"/>
+        <location line="-292"/>
+        <location line="+33"/>
+        <location line="+23"/>
         <location line="+20"/>
         <location line="+20"/>
-        <location line="+21"/>
+        <location line="+20"/>
         <location line="+40"/>
         <location line="+22"/>
         <location line="+21"/>
-        <location line="+20"/>
+        <location line="+19"/>
         <location line="+14"/>
         <location line="+26"/>
         <location line="+11"/>
@@ -4586,7 +4593,7 @@ Please ensure the service is running and your network is available.</source>
         <translation>日期</translation>
     </message>
     <message>
-        <location line="-279"/>
+        <location line="-277"/>
         <source>TradeTotal</source>
         <translation>交易额</translation>
     </message>
@@ -4628,11 +4635,11 @@ Please ensure the service is running and your network is available.</source>
     <message>
         <location line="+17"/>
         <location line="+20"/>
-        <location line="+21"/>
-        <location line="+21"/>
-        <location line="+41"/>
+        <location line="+20"/>
+        <location line="+20"/>
+        <location line="+42"/>
         <location line="+22"/>
-        <location line="+22"/>
+        <location line="+21"/>
         <location line="+55"/>
         <location line="+13"/>
         <location line="+26"/>
@@ -4645,17 +4652,16 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">外币</translation>
     </message>
     <message>
-        <location line="-181"/>
-        <location line="+16"/>
-        <location line="+86"/>
+        <location line="-162"/>
+        <location line="+83"/>
         <location line="+14"/>
         <source>ExternalItem</source>
         <translation>外部</translation>
     </message>
     <message>
         <location line="-113"/>
-        <location line="+10"/>
-        <location line="+102"/>
+        <location line="+11"/>
+        <location line="+101"/>
         <location line="+35"/>
         <source>Internal</source>
         <translation>内部</translation>
@@ -4666,7 +4672,8 @@ Please ensure the service is running and your network is available.</source>
         <translation>第二</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="-126"/>
+        <location line="+153"/>
         <source>External</source>
         <translation>外部</translation>
     </message>
@@ -4693,10 +4700,10 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">左比率</translation>
     </message>
     <message>
-        <location line="-276"/>
-        <location line="+141"/>
-        <location line="+17"/>
-        <location line="+91"/>
+        <location line="-274"/>
+        <location line="+140"/>
+        <location line="+19"/>
+        <location line="+88"/>
         <location line="+14"/>
         <location line="+34"/>
         <source>UnitPrice</source>
@@ -4707,14 +4714,14 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">右比率</translation>
     </message>
     <message>
-        <location line="-298"/>
+        <location line="-296"/>
         <location line="+21"/>
-        <location line="+145"/>
+        <location line="+144"/>
         <source>Color</source>
         <translation>颜色</translation>
     </message>
     <message>
-        <location line="-164"/>
+        <location line="-163"/>
         <source>Commission</source>
         <translation>提成</translation>
     </message>
@@ -4729,7 +4736,7 @@ Please ensure the service is running and your network is available.</source>
     <message>
         <location line="+99"/>
         <location line="+20"/>
-        <location line="+87"/>
+        <location line="+86"/>
         <location line="+21"/>
         <source>UnitCost</source>
         <translation>成本</translation>
@@ -4743,8 +4750,8 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">止期</translation>
     </message>
     <message>
-        <location line="-169"/>
-        <location line="+229"/>
+        <location line="-167"/>
+        <location line="+226"/>
         <location line="+35"/>
         <source>Employee</source>
         <translation>职员</translation>
@@ -4775,7 +4782,7 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">内部产品</translation>
     </message>
     <message>
-        <location line="-342"/>
+        <location line="-340"/>
         <source>ForeignTotal</source>
         <translation>外币</translation>
     </message>
@@ -4802,16 +4809,16 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">完成</translation>
     </message>
     <message>
-        <location line="+37"/>
-        <location line="+187"/>
+        <location line="+33"/>
+        <location line="+189"/>
         <location line="+26"/>
         <location line="+43"/>
         <source>Party</source>
         <translation>合作</translation>
     </message>
     <message>
-        <location line="-152"/>
-        <location line="+85"/>
+        <location line="-155"/>
+        <location line="+88"/>
         <location line="+14"/>
         <location line="+22"/>
         <location line="+12"/>
@@ -4819,8 +4826,8 @@ Please ensure the service is running and your network is available.</source>
         <translation>第一</translation>
     </message>
     <message>
-        <location line="-132"/>
-        <location line="+85"/>
+        <location line="-135"/>
+        <location line="+88"/>
         <location line="+14"/>
         <location line="+22"/>
         <location line="+12"/>
@@ -4828,13 +4835,13 @@ Please ensure the service is running and your network is available.</source>
         <translation>第二</translation>
     </message>
     <message>
-        <location line="-129"/>
+        <location line="-128"/>
         <source>Discount</source>
         <translation>优惠</translation>
     </message>
     <message>
         <location line="-1"/>
-        <location line="+86"/>
+        <location line="+85"/>
         <location line="+14"/>
         <location line="+19"/>
         <location line="+13"/>
@@ -4845,7 +4852,7 @@ Please ensure the service is running and your network is available.</source>
         <translation>总额</translation>
     </message>
     <message>
-        <location line="-357"/>
+        <location line="-355"/>
         <location line="+18"/>
         <location line="+21"/>
         <location line="+22"/>
@@ -4853,18 +4860,18 @@ Please ensure the service is running and your network is available.</source>
         <location line="+24"/>
         <location line="+20"/>
         <location line="+20"/>
-        <location line="+21"/>
+        <location line="+20"/>
         <location line="+18"/>
         <location line="+22"/>
         <location line="+22"/>
         <location line="+21"/>
-        <location line="+91"/>
+        <location line="+90"/>
         <location line="+15"/>
         <source>Id</source>
         <translation>Id</translation>
     </message>
     <message>
-        <location line="-352"/>
+        <location line="-350"/>
         <location line="+18"/>
         <location line="+21"/>
         <location line="+22"/>
@@ -4872,17 +4879,17 @@ Please ensure the service is running and your network is available.</source>
         <location line="+24"/>
         <location line="+20"/>
         <location line="+20"/>
-        <location line="+21"/>
+        <location line="+20"/>
         <location line="+18"/>
         <location line="+22"/>
         <location line="+22"/>
         <location line="+21"/>
-        <location line="+91"/>
+        <location line="+90"/>
         <source>UserId</source>
         <translation>用户Id</translation>
     </message>
     <message>
-        <location line="-140"/>
+        <location line="-139"/>
         <source>NetAmount</source>
         <translation>净额</translation>
     </message>
@@ -4900,7 +4907,7 @@ Please ensure the service is running and your network is available.</source>
     </message>
     <message>
         <location line="-4"/>
-        <location line="+86"/>
+        <location line="+85"/>
         <location line="+14"/>
         <source>DiscountPrice</source>
         <translation>优惠单价</translation>
@@ -4982,7 +4989,7 @@ Please ensure the service is running and your network is available.</source>
         <translation>购</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="-469"/>
+        <location filename="../../mainwindow.cc" line="-468"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
@@ -5932,14 +5939,12 @@ It is internal referenced.</source>
 <context>
     <name>TreeModelO</name>
     <message>
-        <location filename="../../tree/model/treemodelo.cc" line="+137"/>
         <source>Settled Order</source>
-        <translation>订单已结算</translation>
+        <translation type="vanished">订单已结算</translation>
     </message>
     <message>
-        <location line="+0"/>
         <source>This order has been settled and cannot be deleted or modified.</source>
-        <translation>该订单已结算，无法删除或修改。</translation>
+        <translation type="vanished">该订单已结算，无法删除或修改。</translation>
     </message>
 </context>
 <context>

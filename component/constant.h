@@ -231,6 +231,7 @@ inline const QString kOldId = QStringLiteral("old_id");
 inline const QString kNewId = QStringLiteral("new_id");
 inline const QString kNodeId = QStringLiteral("node_id");
 inline const QString kSessionId = QStringLiteral("session_id");
+inline const QString kExpireTime = QStringLiteral("expire_time");
 inline const QString kUserId = QStringLiteral("user_id");
 inline const QString kTabId = QStringLiteral("tab_id");
 inline const QString kSettlementNode = QStringLiteral("settlement_node");

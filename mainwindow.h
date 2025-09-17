@@ -85,7 +85,7 @@ private slots:
     void on_tabWidget_tabBarDoubleClicked(int index);
     void on_tabWidget_tabCloseRequested(int index);
 
-    bool RInitializeContext();
+    bool RInitializeContext(const QString& expire_date);
     void RNodeLocation(const QUuid& node_id);
     void REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
 
@@ -196,7 +196,7 @@ private:
     void UpdateSectionConfig(CSectionConfig& section);
     void UpdateGlobalConfig(CGlobalConfig& global);
 
-    void UpdateAccountInfo(const QString& user, const QString& database);
+    void UpdateAccountInfo(const QString& user, const QString& database, const QString& expire_date);
     void ClearAccountInfo();
 
     void EnableAction(bool enable) const;
