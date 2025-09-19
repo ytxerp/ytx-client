@@ -2033,6 +2033,7 @@ void MainWindow::SetAction() const
     ui->actionStatement->setIcon(QIcon(":/solarized_dark/solarized_dark/statement.png"));
     ui->actionSettlement->setIcon(QIcon(":/solarized_dark/solarized_dark/settle.png"));
     ui->actionResetColor->setIcon(QIcon(":/solarized_dark/solarized_dark/reset_color.png"));
+    ui->actionNewGroup->setIcon(QIcon(":/solarized_dark/solarized_dark/new-group.png"));
 
     ui->actionCheckAll->setProperty(kCheck, std::to_underlying(Check::kOn));
     ui->actionCheckNone->setProperty(kCheck, std::to_underlying(Check::kOff));

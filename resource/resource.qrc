@@ -14,7 +14,6 @@
         <file>solarized_dark/about.png</file>
         <file>solarized_dark/append.png</file>
         <file>solarized_dark/branch-open.png</file>
-        <file>solarized_dark/check.png</file>
         <file>solarized_dark/close-hover.png</file>
         <file>solarized_dark/close.png</file>
         <file>solarized_dark/insert.png</file>
@@ -41,5 +40,6 @@
         <file>solarized_dark/reset_color.png</file>
         <file>solarized_dark/checked.png</file>
         <file>solarized_dark/unchecked.png</file>
+        <file>solarized_dark/new-group.png</file>
     </qresource>
 </RCC>
