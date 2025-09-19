@@ -486,6 +486,9 @@
    <property name="text">
     <string>New Group</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+G</string>
+   </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
