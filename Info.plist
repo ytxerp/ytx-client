@@ -9,7 +9,7 @@
 		<key>CFBundleName</key>
 		<string>YTX</string>
 		<key>CFBundleIdentifier</key>
-		<string>com.github.YtxCash.YTX</string>
+		<string>cc.ytxerp.desktop</string>
 		<key>CFBundleExecutable</key>
 		<string>YTX</string>
 		<key>CFBundleVersion</key>
