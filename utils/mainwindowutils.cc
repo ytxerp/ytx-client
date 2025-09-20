@@ -170,3 +170,24 @@ void MainWindowUtils::SwitchDialog(const SectionContext* sc, bool enable)
         }
     }
 }
+
+int MainWindowUtils::CompareVersion(const QString& v1, const QString& v2)
+{
+    const QStringList parts1 = v1.split('.');
+    const QStringList parts2 = v2.split('.');
+
+    const int n = qMax(parts1.size(), parts2.size());
+
+    for (int i = 0; i != n; ++i) {
+        const int num1 = i < parts1.size() ? parts1[i].toInt() : 0;
+        const int num2 = i < parts2.size() ? parts2[i].toInt() : 0;
+
+        if (num1 < num2)
+            return -1;
+
+        if (num1 > num2)
+            return 1;
+    }
+
+    return 0; // equal
+}

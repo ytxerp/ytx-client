@@ -185,6 +185,7 @@
     </widget>
     <addaction name="actionAbout"/>
     <addaction name="actionPreferences"/>
+    <addaction name="actionCheckforUpdates"/>
     <addaction name="separator"/>
     <addaction name="menuExport_2"/>
     <addaction name="separator"/>
@@ -496,6 +497,14 @@
   <action name="actionExpireDate">
    <property name="text">
     <string>Expire Date</string>
+   </property>
+  </action>
+  <action name="actionCheckforUpdates">
+   <property name="text">
+    <string>Check for Updates</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::ApplicationSpecificRole</enum>
    </property>
   </action>
  </widget>

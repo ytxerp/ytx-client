@@ -21,6 +21,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QNetworkAccessManager>
 #include <QPointer>
 #include <QSettings>
 #include <QSystemTrayIcon>
@@ -72,10 +73,10 @@ private slots:
 
     void on_actionLogin_triggered();
     void on_actionLogout_triggered();
-
     void on_actionRegister_triggered();
     void on_actionReconnect_triggered();
 
+    void on_actionCheckforUpdates_triggered();
     void on_actionExportExcel_triggered();
 
     void on_actionStatement_triggered();
@@ -238,6 +239,7 @@ private:
 
     QSharedPointer<QSettings> local_settings_ {};
     QSharedPointer<QSettings> section_settings_ {};
+    QNetworkAccessManager* network_manager_ {};
 
     QButtonGroup* section_group_ {};
 

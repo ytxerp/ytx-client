@@ -1,6 +1,7 @@
 ﻿#include "mainwindow.h"
 
 #include <QCloseEvent>
+#include <QDesktopServices>
 #include <QFileDialog>
 #include <QFutureWatcher>
 #include <QHeaderView>
@@ -9,6 +10,7 @@
 #include <QQueue>
 #include <QResource>
 #include <QScrollBar>
+#include <QUrl>
 #include <QtConcurrent>
 
 #include "component/arg/insertnodeargfist.h"
@@ -106,6 +108,7 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , network_manager_(new QNetworkAccessManager(this))
 {
     QResource::registerResource(MainWindowUtils::ResourceFile());
     ReadLocalConfig();
@@ -2915,4 +2918,48 @@ void MainWindow::on_actionLogout_triggered()
     LeafSStation::Instance().Clear();
 
     EnableAction(false);
+}
+
+void MainWindow::on_actionCheckforUpdates_triggered()
+{
+    const QString url { "https://api.github.com/repos/ytxerp/ytx-client/releases/latest" };
+
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::UserAgentHeader, "YTX-Updater");
+
+    QNetworkReply* reply = network_manager_->get(request);
+
+    connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+        reply->deleteLater();
+
+        if (reply->error() != QNetworkReply::NoError) {
+            QMessageBox::warning(this, tr("Update Check"), tr("Failed to check updates:\n%1").arg(reply->errorString()));
+            return;
+        }
+
+        const QByteArray data = reply->readAll();
+        QJsonDocument doc = QJsonDocument::fromJson(data);
+        if (!doc.isObject()) {
+            QMessageBox::warning(this, tr("Update Check"), tr("Invalid update information received."));
+            return;
+        }
+
+        const QJsonObject obj = doc.object();
+        const QString latest_tag = obj.value("tag_name").toString();
+
+        const bool is_chinese { local_config_.language.startsWith("zh", Qt::CaseInsensitive) };
+        const QString download_url
+            = is_chinese ? "https://gitee.com/ytxerp/ytx-client/releases/latest" : "https://github.com/ytxerp/ytx-client/releases/latest";
+
+        if (MainWindowUtils::CompareVersion(latest_tag, QCoreApplication::applicationVersion()) > 0) {
+            QMessageBox::StandardButton btn = QMessageBox::information(
+                this, tr("Update Available"), tr("A new version %1 is available!\n\nDownload now?").arg(latest_tag), QMessageBox::Yes | QMessageBox::No);
+
+            if (btn == QMessageBox::Yes) {
+                QDesktopServices::openUrl(QUrl(download_url));
+            }
+        } else {
+            QMessageBox::information(this, tr("No Update"), tr("You are using the latest version."));
+        }
+    });
 }

@@ -2442,7 +2442,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
     <message>
         <location line="+0"/>
         <source>Unable to log in. Please verify your email, password, workspace access, or check if your account has expired.</source>
-        <translation type="unfinished">无法登录，请核对您的邮箱、密码、工区权限是否正确，亦或账号是否已过期。</translation>
+        <translation>无法登录，请核对您的邮箱、密码、工区权限是否正确，亦或账号是否已过期。</translation>
     </message>
     <message>
         <source>Unable to log in. Please verify your email, password, and workspace access.</source>
@@ -2487,7 +2487,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
     <name>MainWindow</name>
     <message>
         <location filename="../../mainwindow.ui" line="+85"/>
-        <location filename="../../mainwindow.cc" line="+163"/>
+        <location filename="../../mainwindow.cc" line="+166"/>
         <source>Finance</source>
         <translation>财务</translation>
     </message>
@@ -2529,7 +2529,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">历史记录</translation>
     </message>
     <message>
-        <location line="+17"/>
+        <location line="+18"/>
         <source>Edit</source>
         <translation>编辑</translation>
     </message>
@@ -2538,7 +2538,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">报表</translation>
     </message>
     <message>
-        <location line="-78"/>
+        <location line="-79"/>
         <location filename="../../mainwindow.cc" line="-4"/>
         <source>Stakeholder</source>
         <translation>人脉</translation>
@@ -2559,7 +2559,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">帮助(&amp;H)</translation>
     </message>
     <message>
-        <location line="+31"/>
+        <location line="+32"/>
         <source>&amp;Account</source>
         <translation>帐户(&amp;A)</translation>
     </message>
@@ -2602,7 +2602,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
     <message>
         <location line="+116"/>
         <location line="+3"/>
-        <location filename="../../mainwindow.cc" line="+2228"/>
+        <location filename="../../mainwindow.cc" line="+2229"/>
         <location line="+9"/>
         <source>Email</source>
         <translation>邮箱</translation>
@@ -2636,11 +2636,21 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation></translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="+11"/>
+        <source>Alt+G</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location line="+8"/>
         <location filename="../../mainwindow.cc" line="-8"/>
         <location line="+9"/>
         <source>Expire Date</source>
         <translation>期限</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Check for Updates</source>
+        <translation>检查更新</translation>
     </message>
     <message>
         <source>SupportReference</source>
@@ -2651,7 +2661,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">关联引用</translation>
     </message>
     <message>
-        <location line="-8"/>
+        <location line="-16"/>
         <source>New Group</source>
         <translation>新建分组</translation>
     </message>
@@ -2715,13 +2725,13 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation>删除</translation>
     </message>
     <message>
-        <location line="-174"/>
-        <location filename="../../mainwindow.cc" line="-2241"/>
+        <location line="-175"/>
+        <location filename="../../mainwindow.cc" line="-2242"/>
         <source>Item</source>
         <translation>物品</translation>
     </message>
     <message>
-        <location line="+179"/>
+        <location line="+180"/>
         <location line="+87"/>
         <source>Append</source>
         <translation>追加</translation>
@@ -3272,7 +3282,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">现结</translation>
     </message>
     <message>
-        <location line="+327"/>
+        <location line="+328"/>
         <source>Language Changed</source>
         <translation>语言已更改</translation>
     </message>
@@ -3298,7 +3308,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">文件</translation>
     </message>
     <message>
-        <location line="-2025"/>
+        <location line="-2026"/>
         <source>StatementPrimary-</source>
         <translation>一级明细-</translation>
     </message>
@@ -3385,7 +3395,7 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">正在后台运行，点击托盘可恢复窗口。</translation>
     </message>
     <message>
-        <location line="+1009"/>
+        <location line="+1010"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
@@ -3405,8 +3415,50 @@ Please ensure the service is running and your network is available.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
+        <location line="+74"/>
+        <location line="+7"/>
+        <source>Update Check</source>
+        <translation>检查更新</translation>
+    </message>
+    <message>
+        <location line="-7"/>
+        <source>Failed to check updates:
+%1</source>
+        <translation>检查更新失败：\n%1</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Invalid update information received.</source>
+        <translation>无效的更新信息。</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Update Available</source>
+        <translation>有可用更新</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>A new version %1 is available!
+
+Release notes:
+%2
+
+Download now?</source>
+        <translation>发现新版本 %1 可用！\n\n更新说明：\n%2\n\n现在下载？</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>No Update</source>
+        <translation>无需更新</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>You are using the latest version.</source>
+        <translation>您使用的已经是最新版本。</translation>
+    </message>
+    <message>
         <location filename="../../mainwindow.ui" line="+22"/>
-        <location filename="../../mainwindow.cc" line="-47"/>
+        <location filename="../../mainwindow.cc" line="-145"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
@@ -3430,7 +3482,7 @@ Please ensure the service is running and your network is available.</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location line="-889"/>
+        <location line="-890"/>
         <location line="+54"/>
         <source>MS</source>
         <translation>月</translation>
