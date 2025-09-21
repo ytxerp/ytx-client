@@ -48,8 +48,7 @@ void TreeModelO::AckTree(const QJsonObject& obj)
     const QJsonArray path_array { obj.value(kPath).toArray() };
 
     beginResetModel();
-    Clear();
-    TransferNode(node_hash_, node_cache_);
+    ResetModel();
 
     for (const QJsonValue& val : node_array) {
         const QJsonObject obj = val.toObject();
@@ -66,6 +65,7 @@ void TreeModelO::AckTree(const QJsonObject& obj)
         }
 
         node_hash_.insert(id, node);
+        node_cache_.insert(id, node);
     }
 
     if (!node_array.isEmpty())
@@ -85,7 +85,15 @@ QString TreeModelO::Path(const QUuid& node_id) const
     return {};
 }
 
-Node* TreeModelO::GetNode(const QUuid& node_id) const { return node_hash_.value(node_id); }
+Node* TreeModelO::GetNode(const QUuid& node_id) const
+{
+    auto* node = node_cache_.value(node_id);
+    if (!node) {
+        qInfo() << "node_id not found in node_cache_";
+    }
+
+    return node;
+}
 
 void TreeModelO::RemovePath(Node* node, Node* parent_node)
 {
@@ -163,16 +171,15 @@ void TreeModelO::HandleNode()
 
 void TreeModelO::ResetBranch(Node* node)
 {
-    if (node->kind == kBranch) {
-        node->children.clear();
+    assert(node->kind == kBranch && "ResetBranch: node must be of kind kBranch");
 
-        auto* d_node { DerivedPtr<NodeO>(node) };
-        d_node->first_total = 0.0;
-        d_node->second_total = 0.0;
-        d_node->initial_total = 0.0;
-        d_node->discount_total = 0.0;
-        d_node->final_total = 0.0;
-    }
+    auto* d_node { DerivedPtr<NodeO>(node) };
+    d_node->first_total = 0.0;
+    d_node->second_total = 0.0;
+    d_node->initial_total = 0.0;
+    d_node->discount_total = 0.0;
+    d_node->final_total = 0.0;
+    d_node->children.clear();
 }
 
 void TreeModelO::sort(int column, Qt::SortOrder order)

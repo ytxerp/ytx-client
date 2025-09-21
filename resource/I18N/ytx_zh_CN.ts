@@ -2366,7 +2366,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
     <message>
         <location filename="../../dialog/login.ui" line="+49"/>
         <source>Workspace</source>
-        <translation>工作区</translation>
+        <translation>工区</translation>
     </message>
     <message>
         <location line="+13"/>

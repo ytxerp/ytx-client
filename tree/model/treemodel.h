@@ -155,8 +155,8 @@ public:
     }
 
     QModelIndex GetIndex(const QUuid& node_id) const;
+    Node* GetNodeByIndex(const QModelIndex& index) const;
     QSortFilterProxyModel* ExcludeOneModel(const QUuid& leaf_id);
-    void Clear();
 
     // virtual functions
     virtual void UpdateName(const QUuid& node_id, CString& new_name);
@@ -191,13 +191,13 @@ public:
     }
 
 protected:
-    Node* GetNodeByIndex(const QModelIndex& index) const;
     void SortModel();
 
     void InitRoot(Node*& root, int default_unit);
 
     void BuildHierarchy(const QJsonArray& path_array);
-    void TransferNode(QHash<QUuid, Node*>& from, QHash<QUuid, Node*>& to);
+
+    void ResetModel();
 
     void RestartTimer(const QUuid& id);
     void EmitRowChanged(const QUuid& node_id, int start_column, int end_column);
@@ -212,7 +212,9 @@ protected:
 
     virtual void InsertPath(Node* node);
     virtual void RemovePath(Node* node, Node* parent_node);
-    virtual void ResetBranch(Node* node);
+    virtual void RegisterNode(Node* node) { node_hash_.insert(node->id, node); }
+
+    virtual void ResetBranch(Node* node) { Q_UNUSED(node) };
 
     virtual const QSet<QUuid>* UnitSet(int unit) const
     {

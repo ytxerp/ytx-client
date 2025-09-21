@@ -59,6 +59,11 @@ protected:
     bool UpdateAncestorValue(Node* node, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta) override;
     void HandleNode() override;
     void ResetBranch(Node* node) override;
+    void RegisterNode(Node* node) override
+    {
+        node_hash_.insert(node->id, node);
+        node_cache_.insert(node->id, node);
+    }
 
     std::pair<int, int> TotalColumnRange() const override
     {

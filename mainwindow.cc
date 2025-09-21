@@ -179,20 +179,6 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
     return true;
 }
 
-void MainWindow::on_actionInsertNode_triggered()
-{
-    assert(sc_->tree_widget);
-
-    auto current_index { sc_->tree_view->currentIndex() };
-    current_index = current_index.isValid() ? current_index : QModelIndex();
-
-    auto parent_index { current_index.parent() };
-    parent_index = parent_index.isValid() ? parent_index : QModelIndex();
-
-    const QUuid parent_id { parent_index.isValid() ? parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() : QUuid() };
-    InsertNodeFunction(parent_index, parent_id, current_index.row() + 1);
-}
-
 void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 {
     if (index.column() != 0)
@@ -1093,13 +1079,7 @@ void MainWindow::on_actionRemove_triggered()
 
 void MainWindow::RemoveNode()
 {
-    auto view { sc_->tree_view };
-    assert(view);
-
-    if (!WidgetUtils::HasSelection(view))
-        return;
-
-    const auto index { view->currentIndex() };
+    const auto index { sc_->tree_view->currentIndex() };
     if (!index.isValid())
         return;
 
@@ -2069,24 +2049,33 @@ void MainWindow::SetTreeView(QTreeView* tree_view, CSectionInfo& info) const
     header->setDefaultAlignment(Qt::AlignCenter);
 }
 
+void MainWindow::on_actionInsertNode_triggered()
+{
+    assert(sc_->tree_widget);
+
+    auto current_index { sc_->tree_view->currentIndex() };
+    if (!current_index.isValid())
+        return;
+
+    auto parent_index { current_index.parent() };
+    parent_index = parent_index.isValid() ? parent_index : QModelIndex();
+
+    const QUuid parent_id { parent_index.isValid() ? parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() : QUuid() };
+    InsertNodeFunction(parent_index, parent_id, current_index.row() + 1);
+}
+
 void MainWindow::on_actionAppendNode_triggered()
 {
     assert(sc_->tree_widget);
 
-    auto view { sc_->tree_view };
-    if (!WidgetUtils::HasSelection(view))
+    auto parent_index { sc_->tree_view->currentIndex() };
+    parent_index = parent_index.isValid() ? parent_index : QModelIndex();
+
+    auto* parent_node { sc_->tree_model->GetNodeByIndex(parent_index) };
+    if (parent_node->kind != kBranch)
         return;
 
-    const auto parent_index { view->currentIndex() };
-    if (!parent_index.isValid())
-        return;
-
-    const int kind { parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kKind)).data().toInt() };
-    if (kind != kBranch)
-        return;
-
-    const auto parent_id { parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
-    InsertNodeFunction(parent_index, parent_id, 0);
+    InsertNodeFunction(parent_index, parent_node->id, 0);
 }
 
 void MainWindow::on_actionJump_triggered()
@@ -2098,11 +2087,7 @@ void MainWindow::on_actionJump_triggered()
     if (!leaf_widget)
         return;
 
-    auto* view { leaf_widget->View() };
-    if (!WidgetUtils::HasSelection(view))
-        return;
-
-    const auto index { view->currentIndex() };
+    const auto index { leaf_widget->View()->currentIndex() };
     if (!index.isValid())
         return;
 
@@ -2141,11 +2126,7 @@ void MainWindow::on_actionEditName_triggered()
 
     assert(sc_->tree_widget);
 
-    auto view { sc_->tree_view };
-    if (!WidgetUtils::HasSelection(view))
-        return;
-
-    const auto index { view->currentIndex() };
+    const auto index { sc_->tree_view->currentIndex() };
     if (!index.isValid())
         return;
 
@@ -2889,11 +2870,7 @@ void MainWindow::on_actionResetColor_triggered()
 
     assert(sc_->tree_widget);
 
-    auto view { sc_->tree_view };
-    if (!WidgetUtils::HasSelection(view))
-        return;
-
-    const auto index { view->currentIndex() };
+    const auto index { sc_->tree_view->currentIndex() };
     if (!index.isValid())
         return;
 

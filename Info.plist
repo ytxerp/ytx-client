@@ -3,7 +3,7 @@
 <plist version="1.0">
         <dict>
 	        <key>CFBundleInfoDictionaryVersion</key>
-		<string>6.5</string>
+		<string>6.0</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleName</key>

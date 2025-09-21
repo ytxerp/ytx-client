@@ -619,12 +619,26 @@ QSortFilterProxyModel* TreeModel::ExcludeOneModel(const QUuid& leaf_id)
     return model;
 }
 
-void TreeModel::Clear()
+void TreeModel::ResetModel()
 {
+    // Clear tree structure and paths
     root_->children.clear();
     leaf_path_.clear();
     branch_path_.clear();
-    leaf_model_->Clear();
+    if (leaf_model_) {
+        leaf_model_->Clear();
+    }
+
+    // Clear non-branch nodes from node_hash_, keep branch nodes
+    for (auto it = node_hash_.begin(); it != node_hash_.end();) {
+        Node* node = it.value();
+        if (node->kind == kBranch) {
+            ResetBranch(node); // Reset branch node as needed
+            ++it;
+        } else {
+            it = node_hash_.erase(it);
+        }
+    }
 }
 
 void TreeModel::FetchOneNode(const QUuid& node_id)
@@ -659,15 +673,6 @@ void TreeModel::RemovePath(Node* node, Node* parent_node)
     } break;
     default:
         break;
-    }
-}
-
-void TreeModel::ResetBranch(Node* node)
-{
-    if (node->kind == kBranch) {
-        node->children.clear();
-        node->initial_total = 0.0;
-        node->final_total = 0.0;
     }
 }
 
@@ -773,7 +778,7 @@ void TreeModel::ApplyTree(const QJsonObject& data)
         const QJsonObject obj = val.toObject();
         auto* node = NodePool::Instance().Allocate(section_);
         node->ReadJson(obj);
-        node_hash_.insert(node->id, node);
+        RegisterNode(node);
     }
 
     BuildHierarchy(path_array);
@@ -850,23 +855,6 @@ void TreeModel::BuildHierarchy(const QJsonArray& path_array)
             ancestor->children.emplaceBack(descendant);
             descendant->parent = ancestor;
         }
-    }
-}
-
-void TreeModel::TransferNode(QHash<QUuid, Node*>& from, QHash<QUuid, Node*>& to)
-{
-    for (auto it = from.begin(); it != from.end();) {
-        Node* node = it.value();
-        to.insert(it.key(), node);
-
-        if (node->kind == kBranch) {
-            ResetBranch(node);
-
-            ++it;
-            continue;
-        }
-
-        it = from.erase(it);
     }
 }
 

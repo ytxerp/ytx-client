@@ -91,15 +91,9 @@ template <InheritQWidget T> void ClearWidgets(QHash<QUuid, QPointer<T>>& hash)
     hash.clear();
 }
 
-template <InheritQAbstractItemView T> bool HasSelection(QPointer<T> view)
-{
-    return view && view->selectionModel() && view->selectionModel()->hasSelection() && !view->selectionModel()->selectedIndexes().isEmpty();
-}
+template <InheritQAbstractItemView T> bool HasSelection(QPointer<T> view) { return view && view->selectionModel() && view->selectionModel()->hasSelection(); }
 
-template <InheritQAbstractItemView T> bool HasSelection(T* view)
-{
-    return view && view->selectionModel() && view->selectionModel()->hasSelection() && !view->selectionModel()->selectedIndexes().isEmpty();
-}
+template <InheritQAbstractItemView T> bool HasSelection(T* view) { return view && view->selectionModel() && view->selectionModel()->hasSelection(); }
 
 // For Finance / Item / Stakeholder / Task  (FIST) sections
 // Behavior:

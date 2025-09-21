@@ -223,8 +223,7 @@ void TreeModelT::AckTree(const QJsonObject& obj)
     const QJsonArray path_array { obj.value(kPath).toArray() };
 
     beginResetModel();
-    Clear();
-    TransferNode(node_hash_, node_cache_);
+    ResetModel();
 
     for (const QJsonValue& val : node_array) {
         const QJsonObject obj = val.toObject();
@@ -241,6 +240,7 @@ void TreeModelT::AckTree(const QJsonObject& obj)
         }
 
         node_hash_.insert(id, node);
+        node_cache_.insert(id, node);
     }
 
     if (!node_array.isEmpty())
@@ -266,4 +266,13 @@ void TreeModelT::UpdateIsFinished(NodeT* node, bool value)
 {
     if (node->is_finished == value)
         return;
+}
+
+void TreeModelT::ResetBranch(Node* node)
+{
+    assert(node->kind == kBranch && "ResetBranch: node must be of kind kBranch");
+
+    node->children.clear();
+    node->initial_total = 0.0;
+    node->final_total = 0.0;
 }

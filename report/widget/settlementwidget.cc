@@ -61,9 +61,6 @@ void SettlementWidget::on_pBtnRemoveSettlement_clicked()
 {
     auto* view { ui->settlementView };
 
-    if (!WidgetUtils::HasSelection(view))
-        return;
-
     const auto index { view->selectionModel()->selectedIndexes().first() };
     if (!index.isValid())
         return;
