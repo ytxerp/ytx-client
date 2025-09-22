@@ -2601,7 +2601,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
     <message>
         <location line="+116"/>
         <location line="+3"/>
-        <location filename="../../mainwindow.cc" line="+2210"/>
+        <location filename="../../mainwindow.cc" line="+2209"/>
         <location line="+9"/>
         <source>Email</source>
         <translation>邮箱</translation>
@@ -2725,7 +2725,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
     </message>
     <message>
         <location line="-178"/>
-        <location filename="../../mainwindow.cc" line="-2223"/>
+        <location filename="../../mainwindow.cc" line="-2222"/>
         <source>Item</source>
         <translation>物品</translation>
     </message>
@@ -3259,9 +3259,8 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">欧元</translation>
     </message>
     <message>
-        <location line="+553"/>
         <source>POS</source>
-        <translation>位</translation>
+        <translation type="vanished">位</translation>
     </message>
     <message>
         <source>PC</source>
@@ -3272,17 +3271,15 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">平方英尺</translation>
     </message>
     <message>
-        <location line="+129"/>
-        <location line="+54"/>
         <source>IS</source>
-        <translation>现</translation>
+        <translation type="vanished">现</translation>
     </message>
     <message>
         <source>IM</source>
         <translation type="vanished">现结</translation>
     </message>
     <message>
-        <location line="+329"/>
+        <location line="+1064"/>
         <source>Language Changed</source>
         <translation>语言已更改</translation>
     </message>
@@ -3308,7 +3305,7 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">文件</translation>
     </message>
     <message>
-        <location line="-2021"/>
+        <location line="-2020"/>
         <source>StatementPrimary-</source>
         <translation>一级明细-</translation>
     </message>
@@ -3361,16 +3358,12 @@ We reserve the right to modify these terms. Updated terms will apply the next ti
         <translation type="vanished">显示窗口</translation>
     </message>
     <message>
-        <location line="+618"/>
-        <location line="+43"/>
         <source>INT</source>
-        <translation>内</translation>
+        <translation type="vanished">内</translation>
     </message>
     <message>
-        <location line="-41"/>
-        <location line="+43"/>
         <source>EXT</source>
-        <translation>外</translation>
+        <translation type="vanished">外</translation>
     </message>
     <message>
         <source>Connection Failed</source>
@@ -3395,7 +3388,7 @@ Please ensure the service is running and your network is available.</source>
         <translation type="vanished">正在后台运行，点击托盘可恢复窗口。</translation>
     </message>
     <message>
-        <location line="+1011"/>
+        <location line="+1673"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
@@ -3490,19 +3483,16 @@ Download now?</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location line="-891"/>
-        <location line="+54"/>
         <source>MS</source>
-        <translation>月</translation>
+        <translation type="vanished">月</translation>
     </message>
     <message>
         <source>SupportID</source>
         <translation type="vanished">辅助</translation>
     </message>
     <message>
-        <location line="-95"/>
         <source>EMP</source>
-        <translation>职</translation>
+        <translation type="vanished">职</translation>
     </message>
     <message>
         <source>SupportNode</source>
@@ -3519,14 +3509,12 @@ Download now?</source>
         <translation type="vanished">月结</translation>
     </message>
     <message>
-        <location line="-1"/>
         <source>CUST</source>
-        <translation>客</translation>
+        <translation type="vanished">客</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>VEND</source>
-        <translation>供</translation>
+        <translation type="vanished">供</translation>
     </message>
     <message>
         <source>PROD</source>
@@ -3545,10 +3533,8 @@ Download now?</source>
         <translation type="vanished">退</translation>
     </message>
     <message>
-        <location line="+41"/>
-        <location line="+54"/>
         <source>PEND</source>
-        <translation>挂</translation>
+        <translation type="vanished">挂</translation>
     </message>
     <message>
         <source>PO</source>
@@ -5049,7 +5035,7 @@ Download now?</source>
         <translation>购</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="-468"/>
+        <location filename="../../mainwindow.cc" line="-1303"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>

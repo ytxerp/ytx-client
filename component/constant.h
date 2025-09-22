@@ -44,7 +44,8 @@ inline constexpr bool kIsHidden = true;
  * Order:
  *   Represents Refund Order (returned transaction)
  */
-inline constexpr bool kDDCI = false;
+inline constexpr bool kDDCI = true;
+inline constexpr bool kRO = true;
 
 /*
  * Finance/Item/Task:
@@ -52,7 +53,8 @@ inline constexpr bool kDDCI = false;
  * Order:
  *   Represents Trade Order (normal transaction)
  */
-inline constexpr bool kDICD = true;
+inline constexpr bool kDICD = false;
+inline constexpr bool kTO = false;
 
 // Maximum and minimum values for PostgreSQL NUMERIC(12,4)
 // Up to 8 digits before the decimal point and 4 digits after
@@ -104,8 +106,8 @@ inline const QString kSuffixXLSX = QStringLiteral("xlsx");
 inline const QString kRuleDDCI = QStringLiteral("DDCI");
 inline const QString kRuleDICD = QStringLiteral("DICD");
 
-inline const QString kOrderRuleSO = QStringLiteral("SO"); // Sales Order
-inline const QString kOrderRuleRO = QStringLiteral("RO"); // Return Order
+inline const QString kRuleTO = QStringLiteral("TO"); // Trade Order
+inline const QString kRuleRO = QStringLiteral("RO"); // Return Order
 
 inline const QString kBranchKind = QStringLiteral("B");
 inline const QString kLeafKind = QStringLiteral("L");

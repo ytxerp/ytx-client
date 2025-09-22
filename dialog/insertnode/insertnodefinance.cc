@@ -66,7 +66,7 @@ void InsertNodeFinance::IniRuleGroup()
     rule_group_->addButton(ui->rBtnDICD, static_cast<int>(kDICD));
 }
 
-void InsertNodeFinance::IniDirectionRule(bool rule) { (rule ? ui->rBtnDICD : ui->rBtnDDCI)->setChecked(true); }
+void InsertNodeFinance::IniDirectionRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }
 
 void InsertNodeFinance::RNameEdited(const QString& arg1)
 {

@@ -30,8 +30,8 @@ struct Node {
     QString code {};
     QString description {};
     QString note {};
-    int kind { 1 }; // TODO: 改为enum
-    bool direction_rule { true };
+    int kind {};
+    bool direction_rule {};
     int unit {};
 
     double final_total {};

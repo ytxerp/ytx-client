@@ -196,7 +196,7 @@ void LeafWidgetO::IniText(Section section)
     ui->labParty->setText(is_sale_section ? tr("CUST") : tr("VEND"));
 }
 
-void LeafWidgetO::IniRule(bool rule) { (rule ? ui->rBtnTO : ui->rBtnRO)->setChecked(true); }
+void LeafWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true); }
 
 void LeafWidgetO::IniFinished(bool finished)
 {
@@ -219,8 +219,8 @@ void LeafWidgetO::IniFinished(bool finished)
 void LeafWidgetO::IniRuleGroup()
 {
     rule_group_ = new QButtonGroup(this);
-    rule_group_->addButton(ui->rBtnRO, static_cast<int>(kDDCI));
-    rule_group_->addButton(ui->rBtnTO, static_cast<int>(kDICD));
+    rule_group_->addButton(ui->rBtnRO, static_cast<int>(kRO));
+    rule_group_->addButton(ui->rBtnTO, static_cast<int>(kTO));
 }
 
 void LeafWidgetO::IniUnitGroup()

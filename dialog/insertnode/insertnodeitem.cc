@@ -88,7 +88,7 @@ void InsertNodeItem::IniRuleGroup()
     rule_group_->addButton(ui->rBtnDICD, static_cast<int>(kDICD));
 }
 
-void InsertNodeItem::IniDirectionRule(bool rule) { (rule ? ui->rBtnDICD : ui->rBtnDDCI)->setChecked(true); }
+void InsertNodeItem::IniDirectionRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }
 
 void InsertNodeItem::RNameEdited(const QString& arg1)
 {

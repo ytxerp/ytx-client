@@ -87,7 +87,7 @@ void InsertNodeTask::IniRuleGroup()
     rule_group_->addButton(ui->rBtnDICD, static_cast<int>(kDICD));
 }
 
-void InsertNodeTask::IniRule(bool rule) { (rule ? ui->rBtnDICD : ui->rBtnDDCI)->setChecked(true); }
+void InsertNodeTask::IniRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }
 
 void InsertNodeTask::RNameEdited(const QString& arg1)
 {

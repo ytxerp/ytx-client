@@ -828,7 +828,7 @@ void TreeModel::InitRoot(Node*& root, int default_unit)
         root = NodePool::Instance().Allocate(section_);
         root->kind = kBranch;
         root->unit = default_unit;
-        root->direction_rule = true;
+        root->direction_rule = false;
         root->name = QString();
         root->id = QUuid();
         node_hash_.insert(QUuid(), root);

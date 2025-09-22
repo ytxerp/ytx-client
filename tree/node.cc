@@ -9,8 +9,8 @@ void Node::ResetState()
     code.clear();
     description.clear();
     note.clear();
-    direction_rule = true;
-    kind = 1;
+    direction_rule = false;
+    kind = 0;
     unit = 0;
     final_total = 0.0;
     initial_total = 0.0;

@@ -1907,8 +1907,8 @@ void MainWindow::InitContextSale()
     info.entry = kSaleEntry;
     info.settlement = kSaleSettlement;
 
-    info.rule_map.insert(true, "TO");
-    info.rule_map.insert(false, "RO");
+    info.rule_map.insert(kRO, kRuleRO);
+    info.rule_map.insert(kTO, kRuleTO);
 
     info.unit_map.insert(std::to_underlying(UnitO::kImmediate), kUnitImmediate);
     info.unit_map.insert(std::to_underlying(UnitO::kMonthly), kUnitMonthly);
@@ -1961,8 +1961,8 @@ void MainWindow::InitContextPurchase()
     info.entry = kPurchaseEntry;
     info.settlement = kPurchaseSettlement;
 
-    info.rule_map.insert(true, "TO");
-    info.rule_map.insert(false, "RO");
+    info.rule_map.insert(kRO, kRuleRO);
+    info.rule_map.insert(kTO, kRuleTO);
 
     info.unit_map.insert(std::to_underlying(UnitO::kImmediate), kUnitImmediate);
     info.unit_map.insert(std::to_underlying(UnitO::kMonthly), kUnitMonthly);
