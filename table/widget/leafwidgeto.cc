@@ -15,7 +15,7 @@ LeafWidgetO::LeafWidgetO(
     , config_ { arg.section_config }
     , is_insert_ { is_insert }
     , node_id_ { arg.node->id }
-    , party_unit_ { arg.section == Section::kSale ? std::to_underlying(UnitS::kCust) : std::to_underlying(UnitS::kVend) }
+    , party_unit_ { arg.section == Section::kSale ? std::to_underlying(UnitS::kCustomer) : std::to_underlying(UnitS::kVendor) }
     , print_template_ { print_template }
     , print_manager_ { print_manager }
 {
@@ -53,7 +53,7 @@ void LeafWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double 
     if (node_id_ != node_id)
         return;
 
-    const double adjusted_final_delta { node_->unit == std::to_underlying(UnitO::kIS) ? final_delta : 0.0 };
+    const double adjusted_final_delta { node_->unit == std::to_underlying(UnitO::kImmediate) ? final_delta : 0.0 };
 
     node_->first_total += first_delta;
     node_->second_total += second_delta;
@@ -70,7 +70,7 @@ void LeafWidgetO::IniWidget()
     ui->comboParty->setModel(pmodel_);
     ui->comboParty->setCurrentIndex(-1);
 
-    emodel_ = tree_model_stakeholder_->IncludeUnitModel(std::to_underlying(UnitS::kEmp));
+    emodel_ = tree_model_stakeholder_->IncludeUnitModel(std::to_underlying(UnitS::kEmployee));
     ui->comboEmployee->setModel(emodel_);
     ui->comboEmployee->setCurrentIndex(-1);
 
@@ -164,13 +164,13 @@ void LeafWidgetO::IniUnit(int unit)
     const UnitO kUnit { unit };
 
     switch (kUnit) {
-    case UnitO::kIS:
+    case UnitO::kImmediate:
         ui->rBtnIS->setChecked(true);
         break;
-    case UnitO::kMS:
+    case UnitO::kMonthly:
         ui->rBtnMS->setChecked(true);
         break;
-    case UnitO::kPEND:
+    case UnitO::kPending:
         ui->rBtnPEND->setChecked(true);
         break;
     default:
@@ -202,7 +202,7 @@ void LeafWidgetO::IniFinished(bool finished)
 {
     ui->pBtnFinishOrder->setChecked(finished);
     ui->pBtnFinishOrder->setText(finished ? tr("Edit") : tr("Finish"));
-    ui->pBtnFinishOrder->setEnabled(node_->unit != std::to_underlying(UnitO::kPEND));
+    ui->pBtnFinishOrder->setEnabled(node_->unit != std::to_underlying(UnitO::kPending));
     emit SEnableAction(finished);
 
     if (finished) {
@@ -226,9 +226,9 @@ void LeafWidgetO::IniRuleGroup()
 void LeafWidgetO::IniUnitGroup()
 {
     unit_group_ = new QButtonGroup(this);
-    unit_group_->addButton(ui->rBtnIS, std::to_underlying(UnitO::kIS));
-    unit_group_->addButton(ui->rBtnMS, std::to_underlying(UnitO::kMS));
-    unit_group_->addButton(ui->rBtnPEND, std::to_underlying(UnitO::kPEND));
+    unit_group_->addButton(ui->rBtnIS, std::to_underlying(UnitO::kImmediate));
+    unit_group_->addButton(ui->rBtnMS, std::to_underlying(UnitO::kMonthly));
+    unit_group_->addButton(ui->rBtnPEND, std::to_underlying(UnitO::kPending));
 }
 
 void LeafWidgetO::on_comboParty_currentIndexChanged(int /*index*/)
@@ -303,13 +303,13 @@ void LeafWidgetO::RUnitGroupClicked(int id)
     node_->final_total = 0.0;
 
     switch (unit) {
-    case UnitO::kIS:
+    case UnitO::kImmediate:
         node_->final_total = node_->initial_total - node_->discount_total;
         [[fallthrough]];
-    case UnitO::kMS:
+    case UnitO::kMonthly:
         ui->pBtnFinishOrder->setEnabled(true);
         break;
-    case UnitO::kPEND:
+    case UnitO::kPending:
         ui->pBtnFinishOrder->setEnabled(false);
         break;
     default:
@@ -355,13 +355,13 @@ void LeafWidgetO::PreparePrint()
 
     QString unit {};
     switch (UnitO(node_->unit)) {
-    case UnitO::kMS:
+    case UnitO::kMonthly:
         unit = tr("MS");
         break;
-    case UnitO::kIS:
+    case UnitO::kImmediate:
         unit = tr("IS");
         break;
-    case UnitO::kPEND:
+    case UnitO::kPending:
         unit = tr("PEND");
         break;
     default:

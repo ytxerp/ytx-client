@@ -17,7 +17,7 @@ void TreeModelI::RemoveUnitSet(const QUuid& node_id, int unit)
     const UnitI kUnit { unit };
 
     switch (kUnit) {
-    case UnitI::kPlaceholder:
+    case UnitI::kPosition:
         pos_set_.remove(node_id);
         break;
     case UnitI::kInternal:
@@ -36,7 +36,7 @@ void TreeModelI::InsertUnitSet(const QUuid& node_id, int unit)
     const UnitI kUnit { unit };
 
     switch (kUnit) {
-    case UnitI::kPlaceholder:
+    case UnitI::kPosition:
         pos_set_.insert(node_id);
         break;
     case UnitI::kInternal:
@@ -55,7 +55,7 @@ const QSet<QUuid>* TreeModelI::UnitSet(int unit) const
     const UnitI kUnit { unit };
 
     switch (kUnit) {
-    case UnitI::kPlaceholder:
+    case UnitI::kPosition:
         return &pos_set_;
     case UnitI::kInternal:
         return &int_set_;

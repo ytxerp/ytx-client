@@ -891,7 +891,7 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
 
     auto tree_model_s { sc_s_.tree_model };
 
-    auto* filter_model { tree_model_s->IncludeUnitModel(std::to_underlying(UnitS::kEmp)) };
+    auto* filter_model { tree_model_s->IncludeUnitModel(std::to_underlying(UnitS::kEmployee)) };
     auto* employee { new FilterUnit(tree_model_s, filter_model, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployee), employee);
 
@@ -1328,7 +1328,7 @@ void MainWindow::on_actionStatement_triggered()
 
     auto* model { new StatementModel(sc_->entry_hub, sc_->info, this) };
 
-    const int unit { std::to_underlying(UnitO::kMS) };
+    const int unit { std::to_underlying(UnitO::kMonthly) };
     const auto start { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime) };
     const auto end { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), QDate::currentDate().daysInMonth()), kEndTime) };
 
@@ -1629,7 +1629,7 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIssuedTime), issued_time);
 
     auto model { sc_s_.tree_model };
-    const int unit { start_ == Section::kSale ? std::to_underlying(UnitS::kCust) : std::to_underlying(UnitS::kVend) };
+    const int unit { start_ == Section::kSale ? std::to_underlying(UnitS::kCustomer) : std::to_underlying(UnitS::kVendor) };
 
     auto* filter_model { model->IncludeUnitModel(unit) };
     auto* node { new TableComboFilter(model, filter_model, table_view) };
@@ -1781,9 +1781,9 @@ void MainWindow::InitContextItem()
     info.path = kItemPath;
     info.entry = kItemEntry;
 
-    info.unit_map.insert(std::to_underlying(UnitI::kInternal), tr("INT"));
-    info.unit_map.insert(std::to_underlying(UnitI::kPlaceholder), {});
-    info.unit_map.insert(std::to_underlying(UnitI::kExternal), tr("EXT"));
+    info.unit_map.insert(std::to_underlying(UnitI::kInternal), kUnitInternal);
+    info.unit_map.insert(std::to_underlying(UnitI::kPosition), kUnitPosition);
+    info.unit_map.insert(std::to_underlying(UnitI::kExternal), kUnitExternal);
 
     info.rule_map.insert(kDDCI, kRuleDDCI);
     info.rule_map.insert(kDICD, kRuleDICD);
@@ -1824,9 +1824,8 @@ void MainWindow::InitContextTask()
     info.path = kTaskPath;
     info.entry = kTaskEntry;
 
-    info.unit_map.insert(std::to_underlying(UnitT::kInternal), tr("INT"));
-    info.unit_map.insert(std::to_underlying(UnitT::kPlaceholder), {});
-    info.unit_map.insert(std::to_underlying(UnitT::kExternal), tr("EXT"));
+    info.unit_map.insert(std::to_underlying(UnitT::kInternal), kUnitInternal);
+    info.unit_map.insert(std::to_underlying(UnitT::kExternal), kUnitExternal);
 
     info.rule_map.insert(kDDCI, kRuleDDCI);
     info.rule_map.insert(kDICD, kRuleDICD);
@@ -1870,9 +1869,9 @@ void MainWindow::InitContextStakeholder()
     info.path = kStakeholderPath;
     info.entry = kStakeholderEntry;
 
-    info.unit_map.insert(std::to_underlying(UnitS::kCust), tr("CUST"));
-    info.unit_map.insert(std::to_underlying(UnitS::kEmp), tr("EMP"));
-    info.unit_map.insert(std::to_underlying(UnitS::kVend), tr("VEND"));
+    info.unit_map.insert(std::to_underlying(UnitS::kCustomer), kUnitCustomer);
+    info.unit_map.insert(std::to_underlying(UnitS::kEmployee), kUnitEmployee);
+    info.unit_map.insert(std::to_underlying(UnitS::kVendor), kUnitVendor);
 
     info.kind_map.insert(kBranch, kBranchKind);
     info.kind_map.insert(kLeaf, kLeafKind);
@@ -1911,9 +1910,9 @@ void MainWindow::InitContextSale()
     info.rule_map.insert(true, "TO");
     info.rule_map.insert(false, "RO");
 
-    info.unit_map.insert(std::to_underlying(UnitO::kIS), tr("IS"));
-    info.unit_map.insert(std::to_underlying(UnitO::kMS), tr("MS"));
-    info.unit_map.insert(std::to_underlying(UnitO::kPEND), tr("PEND"));
+    info.unit_map.insert(std::to_underlying(UnitO::kImmediate), kUnitImmediate);
+    info.unit_map.insert(std::to_underlying(UnitO::kMonthly), kUnitMonthly);
+    info.unit_map.insert(std::to_underlying(UnitO::kPending), kUnitPending);
 
     info.kind_map.insert(kBranch, kBranchKind);
     info.kind_map.insert(kLeaf, kLeafKind);
@@ -1965,9 +1964,9 @@ void MainWindow::InitContextPurchase()
     info.rule_map.insert(true, "TO");
     info.rule_map.insert(false, "RO");
 
-    info.unit_map.insert(std::to_underlying(UnitO::kIS), tr("IS"));
-    info.unit_map.insert(std::to_underlying(UnitO::kMS), tr("MS"));
-    info.unit_map.insert(std::to_underlying(UnitO::kPEND), tr("PEND"));
+    info.unit_map.insert(std::to_underlying(UnitO::kImmediate), kUnitImmediate);
+    info.unit_map.insert(std::to_underlying(UnitO::kMonthly), kUnitMonthly);
+    info.unit_map.insert(std::to_underlying(UnitO::kPending), kUnitPending);
 
     info.kind_map.insert(kBranch, kBranchKind);
     info.kind_map.insert(kLeaf, kLeafKind);

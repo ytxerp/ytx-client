@@ -202,19 +202,19 @@ QString EntryHubS::QSReadTransRef(int unit) const
     QString section {};
 
     switch (UnitS(unit)) {
-    case UnitS::kCust:
+    case UnitS::kCustomer:
         node_trans = QStringLiteral("sale_transaction");
         node = QStringLiteral("sale_node");
         column = QStringLiteral("party");
         section = QStringLiteral("4");
         break;
-    case UnitS::kVend:
+    case UnitS::kVendor:
         node_trans = QStringLiteral("purchase_transaction");
         node = QStringLiteral("purchase_node");
         column = QStringLiteral("party");
         section = QStringLiteral("5");
         break;
-    case UnitS::kEmp:
+    case UnitS::kEmployee:
         return query_employee;
     default:
         return {};

@@ -30,10 +30,10 @@ enum NodeKind { kBranch = 0, kLeaf };
 enum class Section { kFinance = 0, kItem, kTask, kStakeholder, kSale, kPurchase };
 
 // defining section's unit
-enum class UnitO { kIS = 0, kMS, kPEND };
-enum class UnitS { kCust = 0, kEmp, kVend };
-enum class UnitI { kInternal = 0, kPlaceholder, kExternal };
-enum class UnitT { kExternal = 0, kPlaceholder, kInternal };
+enum class UnitO { kImmediate = 0, kMonthly, kPending };
+enum class UnitS { kCustomer = 0, kEmployee, kVendor };
+enum class UnitI { kInternal = 0, kExternal, kPosition };
+enum class UnitT { kExternal = 0, kInternal };
 
 // defining entry column
 enum class EntryEnum {

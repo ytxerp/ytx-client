@@ -43,11 +43,11 @@ const QSet<QUuid>* TreeModelS::UnitSet(int unit) const
     const UnitS kUnit { unit };
 
     switch (kUnit) {
-    case UnitS::kCust:
+    case UnitS::kCustomer:
         return &cset_;
-    case UnitS::kVend:
+    case UnitS::kVendor:
         return &vset_;
-    case UnitS::kEmp:
+    case UnitS::kEmployee:
         return &eset_;
     default:
         return nullptr;
@@ -68,13 +68,13 @@ void TreeModelS::RemoveUnitSet(const QUuid& node_id, int unit)
     const UnitS kUnit { unit };
 
     switch (kUnit) {
-    case UnitS::kCust:
+    case UnitS::kCustomer:
         cset_.remove(node_id);
         break;
-    case UnitS::kVend:
+    case UnitS::kVendor:
         vset_.remove(node_id);
         break;
-    case UnitS::kEmp:
+    case UnitS::kEmployee:
         eset_.remove(node_id);
         break;
     default:
@@ -87,13 +87,13 @@ void TreeModelS::InsertUnitSet(const QUuid& node_id, int unit)
     const UnitS kUnit { unit };
 
     switch (kUnit) {
-    case UnitS::kCust:
+    case UnitS::kCustomer:
         cset_.insert(node_id);
         break;
-    case UnitS::kVend:
+    case UnitS::kVendor:
         vset_.insert(node_id);
         break;
-    case UnitS::kEmp:
+    case UnitS::kEmployee:
         eset_.insert(node_id);
         break;
     default:

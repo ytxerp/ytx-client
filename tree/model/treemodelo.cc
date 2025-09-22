@@ -38,7 +38,7 @@ void TreeModelO::RSyncFinished(const QUuid& node_id, bool value)
     UpdateAncestorValue(node, coefficient * node->initial_total, coefficient * node->final_total, coefficient * node->first_total,
         coefficient * node->second_total, coefficient * node->discount_total);
 
-    if (node->unit == std::to_underlying(UnitO::kMS))
+    if (node->unit == std::to_underlying(UnitO::kMonthly))
         emit SUpdateAmount(node->party, coefficient * node->initial_total, coefficient * node->final_total);
 }
 
@@ -110,7 +110,7 @@ void TreeModelO::RemovePath(Node* node, Node* parent_node)
         if (d_node->is_finished) {
             UpdateAncestorValue(node, -d_node->initial_total, -d_node->final_total, -d_node->first_total, -d_node->second_total, -d_node->discount_total);
 
-            if (node->unit == std::to_underlying(UnitO::kMS))
+            if (node->unit == std::to_underlying(UnitO::kMonthly))
                 emit SUpdateAmount(d_node->party, -node->initial_total, -node->final_total);
         }
         break;

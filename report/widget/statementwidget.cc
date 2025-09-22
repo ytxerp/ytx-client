@@ -61,13 +61,13 @@ void StatementWidget::IniUnit(int unit)
     const UnitO kUnit { unit };
 
     switch (kUnit) {
-    case UnitO::kIS:
+    case UnitO::kImmediate:
         ui->rBtnIS->setChecked(true);
         break;
-    case UnitO::kMS:
+    case UnitO::kMonthly:
         ui->rBtnMS->setChecked(true);
         break;
-    case UnitO::kPEND:
+    case UnitO::kPending:
         ui->rBtnPEND->setChecked(true);
         break;
     default:

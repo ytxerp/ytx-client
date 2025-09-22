@@ -163,7 +163,7 @@ void StatementSecondaryModel::RExport(int unit, const QDateTime& start, const QD
     double pbalance { 0.0 };
     double cdelta { 0.0 };
 
-    if (unit != std::to_underlying(UnitO::kIS)) {
+    if (unit != std::to_underlying(UnitO::kImmediate)) {
         dbhub_->ReadBalance(pbalance, cdelta, party_id_, unit, start, end);
     }
 

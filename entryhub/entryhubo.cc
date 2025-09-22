@@ -458,7 +458,7 @@ bool EntryHubO::WriteTransRange(const QList<EntryShadow*>& list)
 QString EntryHubO::QSReadStatement(int unit) const
 {
     switch (UnitO(unit)) {
-    case UnitO::kIS:
+    case UnitO::kImmediate:
         return QString(R"(
             WITH Statement AS (
                 SELECT
@@ -482,7 +482,7 @@ QString EntryHubO::QSReadStatement(int unit) const
             FROM Statement
             )")
             .arg(info_.node);
-    case UnitO::kMS:
+    case UnitO::kMonthly:
         return QString(R"(
             WITH Statement AS (
                 SELECT
@@ -510,7 +510,7 @@ QString EntryHubO::QSReadStatement(int unit) const
             FROM Statement;
             )")
             .arg(info_.node);
-    case UnitO::kPEND:
+    case UnitO::kPending:
         return QString(R"(
             WITH Statement AS (
                 SELECT
@@ -543,7 +543,7 @@ QString EntryHubO::QSReadStatement(int unit) const
 QString EntryHubO::QSReadBalance(int unit) const
 {
     switch (UnitO(unit)) {
-    case UnitO::kMS:
+    case UnitO::kMonthly:
         return QString(R"(
                 SELECT
 
@@ -556,7 +556,7 @@ QString EntryHubO::QSReadBalance(int unit) const
                 WHERE o.party = :party_id AND o.unit = 1 AND o.is_finished = TRUE AND o.is_valid = TRUE
             )")
             .arg(info_.node);
-    case UnitO::kPEND:
+    case UnitO::kPending:
         return QString(R"(
                 SELECT
 
@@ -586,15 +586,15 @@ QString EntryHubO::QSReadStatementPrimary(int unit) const
     QString is_finished_condition {};
 
     switch (UnitO(unit)) {
-    case UnitO::kIS:
+    case UnitO::kImmediate:
         settlement_expr = QStringLiteral("initial_total");
         is_finished_condition = QStringLiteral("AND is_finished = TRUE");
         break;
-    case UnitO::kMS:
+    case UnitO::kMonthly:
         settlement_expr = QStringLiteral("0");
         is_finished_condition = QStringLiteral("AND is_finished = TRUE");
         break;
-    case UnitO::kPEND:
+    case UnitO::kPending:
         settlement_expr = QStringLiteral("0");
         is_finished_condition = QLatin1String("");
         break;
@@ -625,11 +625,11 @@ QString EntryHubO::QSReadStatementSecondary(int unit) const
     QString is_finished_condition {};
 
     switch (UnitO(unit)) {
-    case UnitO::kIS:
-    case UnitO::kMS:
+    case UnitO::kImmediate:
+    case UnitO::kMonthly:
         is_finished_condition = QStringLiteral("AND node.is_finished = TRUE");
         break;
-    case UnitO::kPEND:
+    case UnitO::kPending:
         is_finished_condition = QLatin1String("");
         break;
     default:

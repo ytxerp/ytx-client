@@ -100,7 +100,7 @@ inline const QString kDotSuffixXLSX = QStringLiteral(".xlsx");
 inline const QString kSuffixPERCENT = QStringLiteral("%");
 inline const QString kSuffixXLSX = QStringLiteral("xlsx");
 
-// Node rule, kind
+// Node rule, kind, unit
 inline const QString kRuleDDCI = QStringLiteral("DDCI");
 inline const QString kRuleDICD = QStringLiteral("DICD");
 
@@ -108,6 +108,17 @@ inline const QString kOrderRuleSO = QStringLiteral("SO"); // Sales Order
 inline const QString kOrderRuleRO = QStringLiteral("RO"); // Return Order
 
 inline const QString kBranchKind = QStringLiteral("B");
+inline const QString kLeafKind = QStringLiteral("L");
+
+inline const QString kUnitInternal = QStringLiteral("INT");
+inline const QString kUnitPosition = QStringLiteral("POS");
+inline const QString kUnitExternal = QStringLiteral("EXT");
+inline const QString kUnitCustomer = QStringLiteral("CUST");
+inline const QString kUnitEmployee = QStringLiteral("EMP");
+inline const QString kUnitVendor = QStringLiteral("VEND");
+inline const QString kUnitImmediate = QStringLiteral("IS");
+inline const QString kUnitMonthly = QStringLiteral("MS");
+inline const QString kUnitPending = QStringLiteral("PEND");
 
 // App ini keys
 inline const QString kGeometry = QStringLiteral("geometry");
@@ -145,7 +156,6 @@ inline const QString kOperation = QStringLiteral("operation");
 inline const QString kStaticLabel = QStringLiteral("static_label");
 inline const QString kStaticNode = QStringLiteral("static_node");
 
-inline const QString kLeafKind = QStringLiteral("L");
 inline const QString kLeafReference = QStringLiteral("leaf_reference");
 inline const QString kLeafRemove = QStringLiteral("leaf_remove");
 inline const QString kLeafReplace = QStringLiteral("leaf_replace");
