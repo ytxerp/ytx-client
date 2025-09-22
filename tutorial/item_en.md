@@ -4,7 +4,7 @@ Hello everyone! Today, I'll introduce how **YTX** manages items.
 
 In traditional manufacturing, knowing material location, quality, and availability directly affects inventory efficiency. **YTX** solves the problem of hard-to-find materials and greatly improves warehouse efficiency.
 
-Current software version: **0.2.4**
+Current software version: **0.2.5**
 
 ---
 
@@ -46,7 +46,7 @@ Each node has **three key attributes**:
 ### Nodes
 
 1. **Add a product branch node**
-   - Shortcut: `Alt + N`
+   - Shortcut: `Alt + P`
    - Name: "Apple", Type: "B", Unit: "Internal"
 
 2. **Add three leaf nodes under Apple**
@@ -65,8 +65,8 @@ Each node has **three key attributes**:
 
 **Notes:**
 
-- `Alt + P` **only appends children** to a branch node.
-- `Alt + N` inserts a node at the **same level**.
+- `Alt + P` Append a child node to the currently selected branch node; if no node is selected, append a child node to root, which becomes the top-level node visible in the interface.
+- `Alt + N` Insert a new node at the same level as the currently selected node; if no node is selected, no action is performed.
 - Type and unit **cannot be modified**; incorrect nodes must be deleted and re-added.
 - Branch nodes only aggregate leaf nodes with the **same unit**.
 
