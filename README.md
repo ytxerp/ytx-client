@@ -129,7 +129,6 @@ This is a pure Qt project. Only a compatible version of Qt and a compiler are re
     - node_type
         1. **B**: Branch nodes (grouping nodes; cannot record entry).
         2. **L**: Leaf nodes (used to record entry).
-        3. **S**: Support nodes (easy viewing; cannot record entry).
     - Unit(**U**)
         - Inherits its parent node’s unit by default.
 3. Entry

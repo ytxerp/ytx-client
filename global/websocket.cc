@@ -29,13 +29,13 @@ WebSocket& WebSocket::Instance()
 void WebSocket::ReadConfig(QSharedPointer<QSettings> local_settings)
 {
     local_settings->beginGroup(kServer);
-    const QString host = local_settings->value(kHost, "ytxerp.cc").toString();
-    const QString port = local_settings->value(kPort, "8080").toString();
+    const QString host = local_settings->value(kHost).toString();
+    const QString port = local_settings->value(kPort).toString();
     local_settings->endGroup();
 
-    const QString url_str = QString("ws://%1:%2").arg(host, port);
-    server_url_ = QUrl(url_str);
+    const QString url_str = (!host.isEmpty() && !port.isEmpty()) ? QString("ws://%1:%2").arg(host, port) : QString("wss://ytxerp.cc");
 
+    server_url_ = QUrl(url_str);
     if (!server_url_.isValid()) {
         qWarning() << "Invalid WebSocket URL constructed:" << url_str;
     }
