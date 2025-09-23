@@ -25,7 +25,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Add current directory to include path
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-add_subdirectory(external/YXlsx/YXlsx/)
+add_subdirectory(external/yxlsx/yxlsx/)
 
 # Collect all source files recursively
 file(GLOB_RECURSE PROJECT_SOURCES
