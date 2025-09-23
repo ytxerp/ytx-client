@@ -12,7 +12,7 @@ RegisterDialog::RegisterDialog(QWidget* parent)
     , ui(new Ui::RegisterDialog)
 {
     ui->setupUi(this);
-    connect(&WebSocket::Instance(), &WebSocket::SRegisterResult, this, &RegisterDialog::RRegisterResult);
+    connect(WebSocket::Instance(), &WebSocket::SRegisterResult, this, &RegisterDialog::RRegisterResult);
 }
 
 RegisterDialog::~RegisterDialog() { delete ui; }
@@ -53,5 +53,5 @@ void RegisterDialog::on_pushButtonSubmit_clicked()
         return;
     }
 
-    WebSocket::Instance().SendMessage(kRegister, JsonGen::Register(email, password));
+    WebSocket::Instance()->SendMessage(kRegister, JsonGen::Register(email, password));
 }

@@ -17,8 +17,8 @@ Login::Login(QSharedPointer<QSettings> local_settings, QWidget* parent)
     SignalBlocker blocker(this);
 
     IniDialog();
-    connect(&WebSocket::Instance(), &WebSocket::SLoginResult, this, &Login::RLoginResult, Qt::UniqueConnection);
-    connect(&WebSocket::Instance(), &WebSocket::SWorkspaceAccessPending, this, &Login::RWorkspaceAccessPending, Qt::UniqueConnection);
+    connect(WebSocket::Instance(), &WebSocket::SLoginResult, this, &Login::RLoginResult, Qt::UniqueConnection);
+    connect(WebSocket::Instance(), &WebSocket::SWorkspaceAccessPending, this, &Login::RWorkspaceAccessPending, Qt::UniqueConnection);
 }
 
 Login::~Login() { delete ui; }
@@ -50,7 +50,7 @@ void Login::on_pushButtonLogin_clicked()
     login_info.SetPassword(ui->lineEditPassword->text());
     login_info.SetWorkspace(ui->lineEditWorkspace->text());
 
-    WebSocket::Instance().SendMessage(kLogin, JsonGen::Login());
+    WebSocket::Instance()->SendMessage(kLogin, JsonGen::Login());
 }
 
 void Login::IniDialog()

@@ -29,7 +29,7 @@ RemoveLeafNodeDialog::~RemoveLeafNodeDialog() { delete ui; }
 
 void RemoveLeafNodeDialog::IniConnect()
 {
-    connect(&WebSocket::Instance(), &WebSocket::SReplaceResult, this, &RemoveLeafNodeDialog::RReplaceResult);
+    connect(WebSocket::Instance(), &WebSocket::SReplaceResult, this, &RemoveLeafNodeDialog::RReplaceResult);
     connect(option_group_, &QButtonGroup::idClicked, this, &RemoveLeafNodeDialog::RButtonGroup);
     connect(ui->comboBox, &QComboBox::currentIndexChanged, this, &RemoveLeafNodeDialog::RcomboBoxCurrentIndexChanged);
 }
@@ -69,7 +69,7 @@ void RemoveLeafNodeDialog::on_pBtnOk_clicked()
             emit SRemoveNode(node_id_);
 
             const auto message { JsonGen::RemoveLeafNode(info_.section_str, node_id_) };
-            WebSocket::Instance().SendMessage(kLeafRemove, message);
+            WebSocket::Instance()->SendMessage(kLeafRemove, message);
 
             accept();
         }
@@ -78,7 +78,7 @@ void RemoveLeafNodeDialog::on_pBtnOk_clicked()
             const auto new_node_id { ui->comboBox->currentData().toUuid() };
 
             const auto message { JsonGen::ReplaceLeafNode(info_.section_str, node_id_, new_node_id, external_reference_) };
-            WebSocket::Instance().SendMessage(kLeafReplace, message);
+            WebSocket::Instance()->SendMessage(kLeafReplace, message);
         }
     }
 }

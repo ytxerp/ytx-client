@@ -87,7 +87,7 @@ bool TreeModel::InsertNode(int row, const QModelIndex& parent, Node* node)
     assert(row >= 0 && row <= rowCount(parent));
 
     const auto message { JsonGen::InsertNode(section_str_, node, node->parent->id) };
-    WebSocket::Instance().SendMessage(kNodeInsert, message);
+    WebSocket::Instance()->SendMessage(kNodeInsert, message);
 
     auto* parent_node { GetNodeByIndex(parent) };
     InsertImpl(parent_node, row, node);
@@ -207,7 +207,7 @@ void TreeModel::UpdateDirectionRule(Node* node, bool value)
         return;
 
     QJsonObject message { JsonGen::NodeDirectionRule(section_str_, node->id, value) };
-    WebSocket::Instance().SendMessage(kDirectionRule, message);
+    WebSocket::Instance()->SendMessage(kDirectionRule, message);
 
     DirectionRuleImpl(node, value);
 }
@@ -444,7 +444,7 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
 
     if (moveRows(source_parent, source_row, 1, parent, destination_row)) {
         const auto message { JsonGen::DragNode(section_str_, node_id, destination_parent->id) };
-        WebSocket::Instance().SendMessage(kNodeDrag, message);
+        WebSocket::Instance()->SendMessage(kNodeDrag, message);
     }
 
     return true;
@@ -592,7 +592,7 @@ void TreeModel::UpdateName(const QUuid& node_id, CString& new_name)
     cache.insert(kName, new_name);
 
     const auto message { JsonGen::Update(section_str_, node_id, cache) };
-    WebSocket::Instance().SendMessage(kName, message);
+    WebSocket::Instance()->SendMessage(kName, message);
 
     NodeUtils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
     NodeUtils::UpdateModel(leaf_path_, leaf_model_, node);
@@ -644,7 +644,7 @@ void TreeModel::ResetModel()
 void TreeModel::FetchOneNode(const QUuid& node_id)
 {
     const auto message { JsonGen::OneNode(section_str_, node_id) };
-    WebSocket::Instance().SendMessage(kOneNode, message);
+    WebSocket::Instance()->SendMessage(kOneNode, message);
 }
 
 void TreeModel::RemovePath(Node* node, Node* parent_node)
@@ -748,7 +748,7 @@ void TreeModel::RestartTimer(const QUuid& id)
 
             if (!cache.isEmpty()) {
                 const auto message { JsonGen::Update(section_str_, id, cache) };
-                WebSocket::Instance().SendMessage(kNodeUpdate, message);
+                WebSocket::Instance()->SendMessage(kNodeUpdate, message);
             }
 
             timer->deleteLater();

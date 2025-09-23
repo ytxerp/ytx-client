@@ -29,7 +29,7 @@ bool LeafModelS::removeRows(int row, int /*count*/, const QModelIndex& parent)
         message.insert(kSessionId, QString());
         message.insert(kEntryId, entry_shadow->id->toString(QUuid::WithoutBraces));
 
-        WebSocket::Instance().SendMessage(kEntryRemove, message);
+        WebSocket::Instance()->SendMessage(kEntryRemove, message);
     }
 
     internal_set_.remove(rhs_node_id);

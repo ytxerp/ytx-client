@@ -1,12 +1,14 @@
 #include "websocket.h"
 
+#include <QCoreApplication>
 #include <QJsonArray>
 
 #include "component/constant.h"
 #include "component/using.h"
 #include "utils/jsongen.h"
 
-WebSocket::WebSocket()
+WebSocket::WebSocket(QObject* parent)
+    : QObject(parent)
 {
     InitHandler();
     InitConnect();
@@ -15,14 +17,22 @@ WebSocket::WebSocket()
 
 WebSocket::~WebSocket()
 {
+    if (ping_timer_) {
+        ping_timer_->stop();
+        ping_timer_->deleteLater();
+        ping_timer_ = nullptr;
+    }
+
     if (socket_.state() == QAbstractSocket::ConnectedState) {
         socket_.close();
     }
 }
 
-WebSocket& WebSocket::Instance()
+WebSocket* WebSocket::Instance()
 {
-    static WebSocket instance;
+    static WebSocket* instance = new WebSocket(qApp);
+
+    Q_ASSERT(instance != nullptr);
     return instance;
 }
 
@@ -43,24 +53,14 @@ void WebSocket::ReadConfig(QSharedPointer<QSettings> local_settings)
 
 void WebSocket::Connect()
 {
-    if (socket_.state() == QAbstractSocket::ConnectedState) {
-        qInfo() << "WebSocket: already connected, skipping new connection attempt.";
+    if (!server_url_.isValid()) {
+        qWarning() << "WebSocket: invalid URL, cannot connect.";
         return;
     }
 
-    if (socket_.state() == QAbstractSocket::ConnectingState) {
-        qInfo() << "WebSocket: connection attempt already in progress.";
+    if (socket_.state() == QAbstractSocket::ConnectedState || socket_.state() == QAbstractSocket::ConnectingState) {
+        qInfo() << "WebSocket: already connected or connecting.";
         return;
-    }
-
-    if (server_url_.isEmpty() || !server_url_.isValid()) {
-        qWarning() << "WebSocket: cannot connect, URL is invalid or empty.";
-        return;
-    }
-
-    if (socket_.state() != QAbstractSocket::UnconnectedState) {
-        qInfo() << "WebSocket: aborting previous connection before reconnecting.";
-        socket_.abort();
     }
 
     socket_.open(server_url_);
@@ -70,12 +70,20 @@ void WebSocket::RConnected()
 {
     emit SConnectResult(true);
     emit SActionLoginTriggered();
+
+    if (ping_timer_) {
+        ping_timer_->start();
+    }
 }
 
 void WebSocket::RDisconnected()
 {
     session_id_.clear();
     emit SConnectResult(false);
+
+    if (ping_timer_) {
+        ping_timer_->stop();
+    }
 }
 
 void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error) { qWarning() << "RErrorOccurred" << error << "-" << socket_.errorString(); }
@@ -127,16 +135,18 @@ void WebSocket::InitConnect()
 
 void WebSocket::InitTimer()
 {
-    ping_timer_.setInterval(30000);
-    ping_timer_.setParent(this);
+    if (!ping_timer_) {
+        ping_timer_ = new QTimer(this);
+        ping_timer_->setInterval(30000);
 
-    connect(&ping_timer_, &QTimer::timeout, this, [this]() {
-        if (socket_.state() == QAbstractSocket::ConnectedState) {
-            socket_.ping();
-        }
-    });
+        connect(ping_timer_, &QTimer::timeout, this, [this]() {
+            if (socket_.state() == QAbstractSocket::ConnectedState) {
+                socket_.ping();
+            }
+        });
+    }
 
-    ping_timer_.start();
+    Q_ASSERT(ping_timer_ != nullptr);
 }
 
 void WebSocket::SendMessage(const QString& type, const QJsonObject& value)

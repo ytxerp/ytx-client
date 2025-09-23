@@ -33,20 +33,18 @@ class WebSocket final : public QObject {
     Q_OBJECT
 
 public:
-    static WebSocket& Instance();
+    static WebSocket* Instance();
 
     void ReadConfig(QSharedPointer<QSettings> local_settings);
     void Connect();
-
     void SendMessage(const QString& msg_type, const QJsonObject& value);
+    void Clear();
 
     void RegisterTreeModel(const QString& section, QPointer<TreeModel> node) { tree_model_hash_.insert(section, node); }
     void UnregisterTreeNode(const QString& section) { tree_model_hash_.remove(section); }
 
     void RegisterEntryHub(const QString& section, QPointer<EntryHub> entry_hub) { entry_hub_hash_.insert(section, entry_hub); }
     void UnregisterEntryHub(const QString& section) { entry_hub_hash_.remove(section); }
-
-    void Clear();
 
     WebSocket(const WebSocket&) = delete;
     WebSocket& operator=(const WebSocket&) = delete;
@@ -79,7 +77,7 @@ private slots:
     void RErrorOccurred(QAbstractSocket::SocketError error);
 
 private:
-    explicit WebSocket();
+    explicit WebSocket(QObject* parent = nullptr);
     ~WebSocket();
 
     void InitHandler();
@@ -140,7 +138,7 @@ private:
 
     QUrl server_url_ {};
 
-    QTimer ping_timer_ {};
+    QTimer* ping_timer_ {};
 
     QHash<QString, std::function<void(const QJsonObject&)>> handler_obj_ {};
     QHash<QString, std::function<void(const QJsonArray&)>> handler_arr_ {};

@@ -44,5 +44,5 @@ void TreeWidgetTO::on_end_dateChanged(const QDate& date)
 void TreeWidgetTO::on_pBtnFetch_clicked()
 {
     const auto message { JsonGen::NodeDataAcked(section_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance().SendMessage(kTreeAcked, message);
+    WebSocket::Instance()->SendMessage(kTreeAcked, message);
 }

@@ -158,7 +158,7 @@ bool LeafModelF::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
             message.insert(kRhsDelta, rhs_delta);
         }
 
-        WebSocket::Instance().SendMessage(kEntryInsert, message);
+        WebSocket::Instance()->SendMessage(kEntryInsert, message);
 
         if (has_leaf_delta) {
             AccumulateBalance(row);
@@ -201,7 +201,7 @@ bool LeafModelF::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
         message.insert(kNewRhsId, new_rhs_id_str);
         message.insert(kField, field);
 
-        WebSocket::Instance().SendMessage(kEntryRhsNode, message);
+        WebSocket::Instance()->SendMessage(kEntryRhsNode, message);
 
         if (has_leaf_delta) {
             AccumulateBalance(row);
@@ -283,7 +283,7 @@ bool LeafModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
         message.insert(kRhsDelta, rhs_delta);
     }
 
-    WebSocket::Instance().SendMessage(kEntryNumeric, message);
+    WebSocket::Instance()->SendMessage(kEntryNumeric, message);
 
     if (has_leaf_delta) {
         AccumulateBalance(row);
@@ -356,7 +356,7 @@ bool LeafModelF::UpdateRate(EntryShadow* entry_shadow, double value)
         message.insert(kRhsDelta, rhs_delta);
     }
 
-    WebSocket::Instance().SendMessage(kEntryRate, message);
+    WebSocket::Instance()->SendMessage(kEntryRate, message);
 
     if (has_leaf_delta) {
         emit SUpdateBalance(rhs_id, *d_shadow->id);
@@ -483,7 +483,7 @@ bool LeafModelF::removeRows(int row, int /*count*/, const QModelIndex& parent)
             message.insert(kRhsDelta, rhs_delta);
         }
 
-        WebSocket::Instance().SendMessage(kEntryRemove, message);
+        WebSocket::Instance()->SendMessage(kEntryRemove, message);
 
         if (has_leaf_delta) {
             emit SSyncDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);

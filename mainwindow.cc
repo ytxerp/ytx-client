@@ -209,7 +209,7 @@ void MainWindow::CreateLeafWidget(const QUuid& node_id)
         return;
 
     const auto message { JsonGen::TableData(sc_->info.section_str, node_id) };
-    WebSocket::Instance().SendMessage(kLeafAcked, message);
+    WebSocket::Instance()->SendMessage(kLeafAcked, message);
 
     if (start_ == Section::kSale || start_ == Section::kPurchase) {
         CreateLeafO(sc_->tree_model, leaf_wgt_hash, sc_->info, sc_->section_config, node_id);
@@ -1096,7 +1096,7 @@ void MainWindow::RemoveNode()
     }
     case kLeaf: {
         const auto message { JsonGen::LeafCheckBeforeRemove(sc_->info.section_str, node_id) };
-        WebSocket::Instance().SendMessage(kLeafReference, message);
+        WebSocket::Instance()->SendMessage(kLeafReference, message);
         break;
     }
     default:
@@ -1234,7 +1234,7 @@ void MainWindow::RemoveBranchNode(TreeModel* tree_model, const QModelIndex& inde
 
     if (msg.exec() == QMessageBox::Ok) {
         const auto message { JsonGen::RemoveBranchNode(sc_->info.section_str, node_id) };
-        WebSocket::Instance().SendMessage(kBranchRemove, message);
+        WebSocket::Instance()->SendMessage(kBranchRemove, message);
         tree_model->removeRows(index.row(), 1, index.parent());
     }
 }
@@ -1708,14 +1708,14 @@ void MainWindow::SetUniqueConnection() const
 
     connect(section_group_, &QButtonGroup::idClicked, this, &MainWindow::RSectionGroup);
 
-    connect(&WebSocket::Instance(), &WebSocket::SInitializeContext, this, &MainWindow::RInitializeContext);
-    connect(&WebSocket::Instance(), &WebSocket::SRemoveLeafNode, this, &MainWindow::RRemoveLeafNode);
-    connect(&WebSocket::Instance(), &WebSocket::SGlobalConfig, this, &MainWindow::RGlobalConfig);
-    connect(&WebSocket::Instance(), &WebSocket::SDefaultUnit, this, &MainWindow::RDefaultUnit);
-    connect(&WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
-    connect(&WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
-    connect(&WebSocket::Instance(), &WebSocket::SConnectResult, this, &MainWindow::RConnectResult);
-    connect(&WebSocket::Instance(), &WebSocket::SActionLoginTriggered, this, &MainWindow::on_actionLogin_triggered);
+    connect(WebSocket::Instance(), &WebSocket::SInitializeContext, this, &MainWindow::RInitializeContext);
+    connect(WebSocket::Instance(), &WebSocket::SRemoveLeafNode, this, &MainWindow::RRemoveLeafNode);
+    connect(WebSocket::Instance(), &WebSocket::SGlobalConfig, this, &MainWindow::RGlobalConfig);
+    connect(WebSocket::Instance(), &WebSocket::SDefaultUnit, this, &MainWindow::RDefaultUnit);
+    connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
+    connect(WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
+    connect(WebSocket::Instance(), &WebSocket::SConnectResult, this, &MainWindow::RConnectResult);
+    connect(WebSocket::Instance(), &WebSocket::SActionLoginTriggered, this, &MainWindow::on_actionLogin_triggered);
 }
 
 void MainWindow::InitContextFinance()
@@ -1756,8 +1756,8 @@ void MainWindow::InitContextFinance()
     entry_hub = new EntryHubF(info, this);
     tree_model = new TreeModelF(info, local_config_.separator, global_config.default_unit, this);
 
-    WebSocket::Instance().RegisterTreeModel(kFinance, tree_model);
-    WebSocket::Instance().RegisterEntryHub(kFinance, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(kFinance, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(kFinance, entry_hub);
 
     tree_widget = new TreeWidgetF(tree_model, info, global_config, section_config, this);
     tree_view = tree_widget->View();
@@ -1799,8 +1799,8 @@ void MainWindow::InitContextItem()
     entry_hub = new EntryHubI(info, this);
     tree_model = new TreeModelI(info, local_config_.separator, global_config.default_unit, this);
 
-    WebSocket::Instance().RegisterTreeModel(kItem, tree_model);
-    WebSocket::Instance().RegisterEntryHub(kItem, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(kItem, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(kItem, entry_hub);
 
     tree_widget = new TreeWidgetI(tree_model, section_config, this);
     tree_view = tree_widget->View();
@@ -1841,8 +1841,8 @@ void MainWindow::InitContextTask()
     entry_hub = new EntryHubT(info, this);
     tree_model = new TreeModelT(info, local_config_.separator, global_config.default_unit, this);
 
-    WebSocket::Instance().RegisterTreeModel(kTask, tree_model);
-    WebSocket::Instance().RegisterEntryHub(kTask, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(kTask, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(kTask, entry_hub);
 
     const QDate today = QDate::currentDate();
     const QDate start_date = QDate(today.year() - 1, 1, 1);
@@ -1883,8 +1883,8 @@ void MainWindow::InitContextStakeholder()
     entry_hub = new EntryHubS(info, this);
     tree_model = new TreeModelS(info, local_config_.separator, global_config.default_unit, this);
 
-    WebSocket::Instance().RegisterTreeModel(kStakeholder, tree_model);
-    WebSocket::Instance().RegisterEntryHub(kStakeholder, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(kStakeholder, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(kStakeholder, entry_hub);
 
     tree_widget = new TreeWidgetS(tree_model, this);
     tree_view = tree_widget->View();
@@ -1934,8 +1934,8 @@ void MainWindow::InitContextSale()
     const QDateTime start_dt(today, kStartTime);
     const QDateTime end_dt(today, kEndTime);
 
-    WebSocket::Instance().RegisterTreeModel(kSale, tree_model);
-    WebSocket::Instance().RegisterEntryHub(kSale, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(kSale, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(kSale, entry_hub);
 
     tree_widget = new TreeWidgetTO(kSale, tree_model, start_dt, end_dt, this);
     tree_view = tree_widget->View();
@@ -1988,8 +1988,8 @@ void MainWindow::InitContextPurchase()
     const QDateTime start_dt(today, kStartTime);
     const QDateTime end_dt(today, kEndTime);
 
-    WebSocket::Instance().RegisterTreeModel(kPurchase, tree_model);
-    WebSocket::Instance().RegisterEntryHub(kPurchase, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(kPurchase, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(kPurchase, entry_hub);
 
     tree_widget = new TreeWidgetTO(kPurchase, tree_model, start_dt, end_dt, this);
     tree_view = tree_widget->View();
@@ -2364,13 +2364,13 @@ void MainWindow::UpdateGlobalConfig(CGlobalConfig& global)
 
     if (current_global.document_dir != global.document_dir) {
         const auto message { JsonGen::UpdateDocumentDir(sc_->info.section_str, global.document_dir) };
-        WebSocket::Instance().SendMessage(kDocumentDir, message);
+        WebSocket::Instance()->SendMessage(kDocumentDir, message);
         current_global.document_dir = global.document_dir;
     }
 
     if (current_global.default_unit != global.default_unit) {
         const auto message { JsonGen::UpdateDefaultUnit(sc_->info.section_str, global.default_unit) };
-        WebSocket::Instance().SendMessage(kDefaultUnit, message);
+        WebSocket::Instance()->SendMessage(kDefaultUnit, message);
     }
 }
 
@@ -2495,8 +2495,8 @@ void MainWindow::ReadLocalConfig()
     local_settings_->endGroup();
 
     LoginInfo::Instance().ReadConfig(local_settings_);
-    WebSocket::Instance().ReadConfig(local_settings_);
-    WebSocket::Instance().Connect();
+    WebSocket::Instance()->ReadConfig(local_settings_);
+    WebSocket::Instance()->Connect();
 
     LoadAndInstallTranslator(local_config_.language);
 
@@ -2605,7 +2605,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
 
     if (!Contains(lhs_node_id) && !Contains(rhs_node_id)) {
         const auto message { JsonGen::TableData(sc_->info.section_str, id) };
-        WebSocket::Instance().SendMessage(kLeafAcked, message);
+        WebSocket::Instance()->SendMessage(kLeafAcked, message);
 
         switch (start_) {
         case Section::kSale:
@@ -2883,14 +2883,14 @@ void MainWindow::on_actionRegister_triggered()
     regist->exec();
 }
 
-void MainWindow::on_actionReconnect_triggered() { WebSocket::Instance().Connect(); }
+void MainWindow::on_actionReconnect_triggered() { WebSocket::Instance()->Connect(); }
 
 void MainWindow::on_actionLogout_triggered()
 {
     ClearMainwindow();
     ClearAccountInfo();
 
-    WebSocket::Instance().Clear();
+    WebSocket::Instance()->Clear();
     LeafSStation::Instance().Clear();
 
     EnableAction(false);

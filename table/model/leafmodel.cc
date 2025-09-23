@@ -85,7 +85,7 @@ void LeafModel::RUpdateBalance(const QUuid& entry_id)
 void LeafModel::CheckAction(Check check)
 {
     QJsonObject message = JsonGen::CheckAction(info_.section_str, lhs_id_, std::to_underlying(check));
-    WebSocket::Instance().SendMessage(kCheckAction, message);
+    WebSocket::Instance()->SendMessage(kCheckAction, message);
 
     auto Update = [check](EntryShadow* entry_shadow) {
         switch (check) {
@@ -150,7 +150,7 @@ void LeafModel::RestartTimer(const QUuid& id)
             }
 
             QJsonObject message { JsonGen::Update(info_.section_str, id, cache) };
-            WebSocket::Instance().SendMessage(kEntryUpdate, message);
+            WebSocket::Instance()->SendMessage(kEntryUpdate, message);
             timer->deleteLater();
         });
         timers_[id] = timer;
