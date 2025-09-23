@@ -2453,7 +2453,7 @@ void MainWindow::LoadAndInstallTranslator(CString& language)
     if (language == kEnUS)
         return;
 
-    const QString ytx_language { QStringLiteral(":/I18N/I18N/ytx_%1.qm").arg(language) };
+    const QString ytx_language { QStringLiteral(":/I18N/I18N/YTX_%1.qm").arg(language) };
     if (ytx_translator_.load(ytx_language))
         qApp->installTranslator(&ytx_translator_);
 

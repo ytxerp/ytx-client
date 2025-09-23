@@ -40,7 +40,7 @@ With its **user-friendly interface** and **modular design**, YTX is an efficient
   - Add it in CMakeLists:
 
       ```cmake
-      add_subdirectory(external/yxlsx/yxlsx/)
+      add_subdirectory(external/yxlsx/)
       ```
 
 ## User Tutorial

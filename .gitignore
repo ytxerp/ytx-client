@@ -44,7 +44,6 @@ target_wrapper.*
 # QtCreator CMake
 *.user
 
-YXlsx/
 external/
 
 # QtCreator 4.8< compilation database
