@@ -1,9 +1,17 @@
 #include "global/leafsstation.h"
 
-LeafSStation& LeafSStation::Instance()
+#include <QCoreApplication>
+
+LeafSStation* LeafSStation::Instance()
 {
-    static LeafSStation instance {};
+    static LeafSStation* instance = new LeafSStation(qApp);
+    Q_ASSERT(instance != nullptr);
     return instance;
+}
+
+LeafSStation::LeafSStation(QObject* parent)
+    : QObject(parent)
+{
 }
 
 void LeafSStation::RegisterModel(const QUuid& leaf_id, const LeafModel* model) { model_hash_.insert(leaf_id, model); }

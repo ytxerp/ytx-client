@@ -28,7 +28,7 @@ class LeafSStation final : public QObject {
     Q_OBJECT
 
 public:
-    static LeafSStation& Instance();
+    static LeafSStation* Instance();
     void RegisterModel(const QUuid& leaf_id, const LeafModel* model);
     void DeregisterModel(const QUuid& leaf_id);
 
@@ -69,8 +69,8 @@ public slots:
     void RRefreshField(const QUuid& leaf_id, const QUuid& entry_id, int start, int end);
 
 private:
-    LeafSStation() = default;
-    ~LeafSStation() { };
+    explicit LeafSStation(QObject* parent = nullptr);
+    ~LeafSStation() = default;
 
     const LeafModel* FindModel(const QUuid& leaf_id) const
     {
