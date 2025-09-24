@@ -20,6 +20,8 @@
 #ifndef ENUMCLASS_H
 #define ENUMCLASS_H
 
+#include <array>
+
 // TODO: 改为 enum class
 enum NodeKind { kLeaf = 0, kBranch };
 
@@ -28,6 +30,9 @@ enum NodeKind { kLeaf = 0, kBranch };
 // Section values must start from 0 to maintain consistency.
 // Abbreviations: Finance -> F, Item -> I, Task -> T, Stakeholder -> S, Order -> O
 enum class Section { kFinance = 0, kItem, kTask, kStakeholder, kSale, kPurchase };
+
+inline constexpr std::array<Section, 6> kSections
+    = { Section::kFinance, Section::kItem, Section::kTask, Section::kStakeholder, Section::kSale, Section::kPurchase };
 
 // defining section's unit
 enum class UnitO { kImmediate = 0, kMonthly, kPending };

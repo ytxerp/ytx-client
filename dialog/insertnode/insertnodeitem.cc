@@ -84,8 +84,8 @@ void InsertNodeItem::IniKindGroup()
 void InsertNodeItem::IniRuleGroup()
 {
     rule_group_ = new QButtonGroup(this);
-    rule_group_->addButton(ui->rBtnDDCI, static_cast<int>(kDDCI));
-    rule_group_->addButton(ui->rBtnDICD, static_cast<int>(kDICD));
+    rule_group_->addButton(ui->rBtnDDCI, static_cast<int>(Rule::kDDCI));
+    rule_group_->addButton(ui->rBtnDICD, static_cast<int>(Rule::kDICD));
 }
 
 void InsertNodeItem::IniDirectionRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }

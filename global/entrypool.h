@@ -21,17 +21,29 @@
 #define ENTRYPOOL_H
 
 #include <QMutex>
-#include <QVector>
+#include <array>
+#include <deque>
 
+#include "component/constant.h"
 #include "component/enumclass.h"
 #include "concepts.h"
 #include "table/entry.h"
 
+/*
+ * EntryPool is a singleton object pool for Entry-derived objects.
+ *
+ * Features:
+ * 1. Thread-safe allocation and recycling using QMutex.
+ * 2. Supports pre-allocation and dynamic expansion of pools.
+ * 3. Avoids pool overgrowth by deleting objects when a threshold is exceeded.
+ * 4. Batch recycling is optimized: only one lock acquisition for all entries.
+ * 5. Modern C++ style using std::array for fixed-size section pools.
+ */
 class EntryPool {
 public:
     static EntryPool& Instance();
-
     Entry* Allocate(Section section);
+
     void Recycle(Entry* entry, Section section);
     template <Iterable Container> void Recycle(Container& container, Section section);
 
@@ -44,140 +56,128 @@ private:
     EntryPool();
     ~EntryPool();
 
-    void Expand(QVector<Entry*>& pool, Section section, int count);
-    QVector<Entry*>& GetPool(Section section);
+    static Entry* NewResource(Section section);
+    void Expand(std::deque<Entry*>& pool, Section section, qsizetype count);
 
-    QVector<Entry*> f_pool_;
-    QVector<Entry*> i_pool_;
-    QVector<Entry*> t_pool_;
-    QVector<Entry*> s_pool_;
-    QVector<Entry*> o_pool_; // 用于 kSale 和 kPurchase
-
-    QMutex mutex_;
-
-    static constexpr qsizetype kDefaultExpandSize { 100 };
-    static constexpr qsizetype kShrinkThreshold { 1000 };
+private:
+    std::array<std::deque<Entry*>, 6> pools_ {}; // Pools for each Section
+    QMutex mutex_ {}; // Mutex protecting all pools
 };
 
-template <Iterable Container> inline void EntryPool::Recycle(Container& container, Section section)
-{
-    if (container.isEmpty())
-        return;
-
-    auto& pool = GetPool(section);
-
-    if (pool.size() + container.size() >= kShrinkThreshold) {
-        qDeleteAll(container);
-    } else {
-        QMutexLocker locker(&mutex_);
-
-        for (Entry* resource : container) {
-            if (resource) {
-                resource->ResetState();
-                pool.push_back(resource);
-            }
-        }
-    }
-
-    container.clear();
-}
-
+// Singleton
 inline EntryPool& EntryPool::Instance()
 {
     static EntryPool instance;
     return instance;
 }
 
+// Constructor: pre-fill pools
 inline EntryPool::EntryPool()
 {
-    Expand(f_pool_, Section::kFinance, kDefaultExpandSize);
-    Expand(i_pool_, Section::kItem, kDefaultExpandSize);
-    Expand(t_pool_, Section::kTask, kDefaultExpandSize);
-    Expand(s_pool_, Section::kStakeholder, kDefaultExpandSize);
-    Expand(o_pool_, Section::kSale, kDefaultExpandSize);
-}
-
-inline EntryPool::~EntryPool()
-{
-    qDeleteAll(f_pool_);
-    qDeleteAll(i_pool_);
-    qDeleteAll(t_pool_);
-    qDeleteAll(s_pool_);
-    qDeleteAll(o_pool_);
-}
-
-inline void EntryPool::Expand(QVector<Entry*>& pool, Section section, int count)
-{
-    for (int i = 0; i != count; ++i) {
-        switch (section) {
-        case Section::kFinance:
-            pool.append(new EntryF());
-            break;
-        case Section::kItem:
-            pool.append(new EntryI());
-            break;
-        case Section::kTask:
-            pool.append(new EntryT());
-            break;
-        case Section::kStakeholder:
-            pool.append(new EntryS());
-            break;
-        case Section::kSale:
-        case Section::kPurchase:
-            pool.append(new EntryO());
-            break;
-        default:
-            Q_ASSERT(false);
-            break;
-        }
+    for (size_t i = 0; i != kSections.size(); ++i) {
+        Expand(pools_[i], kSections[i], Pool::kExpandSize);
     }
 }
 
-inline QVector<Entry*>& EntryPool::GetPool(Section section)
+// Destructor: delete remaining entries
+inline EntryPool::~EntryPool()
+{
+    for (auto& pool : pools_) {
+        qDeleteAll(pool);
+    }
+}
+
+// Expand pool with 'count' new entries
+inline void EntryPool::Expand(std::deque<Entry*>& pool, Section section, qsizetype count)
+{
+    for (qsizetype i = 0; i != count; ++i) {
+        pool.push_back(NewResource(section));
+    }
+}
+
+// Factory function: create a new entry based on section
+inline Entry* EntryPool::NewResource(Section section)
 {
     switch (section) {
     case Section::kFinance:
-        return f_pool_;
+        return new EntryF();
     case Section::kItem:
-        return i_pool_;
+        return new EntryI();
     case Section::kTask:
-        return t_pool_;
+        return new EntryT();
     case Section::kStakeholder:
-        return s_pool_;
+        return new EntryS();
     case Section::kSale:
+        return new EntryO();
     case Section::kPurchase:
-        return o_pool_;
+        return new EntryO();
     default:
         Q_UNREACHABLE();
     }
 }
 
+// Allocate one entry (LIFO)
 inline Entry* EntryPool::Allocate(Section section)
 {
     QMutexLocker locker(&mutex_);
+    auto& pool = pools_[static_cast<size_t>(section)];
 
-    auto& pool = GetPool(section);
-    if (pool.isEmpty()) {
-        Expand(pool, section, kDefaultExpandSize);
+    if (pool.empty()) {
+        Expand(pool, section, Pool::kExpandSize);
     }
-    return pool.takeLast();
+
+    if (pool.empty()) {
+        return NewResource(section);
+    }
+
+    Entry* e = pool.front();
+    pool.pop_front();
+
+    return e;
 }
 
+// Recycle one entry
 inline void EntryPool::Recycle(Entry* entry, Section section)
 {
     if (!entry)
         return;
 
-    auto& pool = GetPool(section);
+    QMutexLocker locker(&mutex_);
+    auto& pool = pools_[static_cast<size_t>(section)];
 
-    if (pool.size() >= kShrinkThreshold) {
+    if (static_cast<qsizetype>(pool.size()) + 1 >= Pool::kMaxSize) {
+        locker.unlock();
         delete entry;
         return;
     }
 
-    QMutexLocker locker(&mutex_);
     entry->ResetState();
-    pool.append(entry);
+    pool.push_back(entry);
+}
+
+// Batch recycle
+template <Iterable Container> inline void EntryPool::Recycle(Container& container, Section section)
+{
+    if (container.isEmpty())
+        return;
+
+    QMutexLocker locker(&mutex_);
+    auto& pool = pools_[static_cast<size_t>(section)];
+
+    if (static_cast<qsizetype>(pool.size()) + container.size() >= Pool::kMaxSize) {
+        locker.unlock();
+        qDeleteAll(container);
+        return;
+    }
+
+    for (Entry* e : container) {
+        if (e) {
+            e->ResetState();
+            pool.push_back(e);
+        }
+    }
+
+    container.clear();
 }
 
 #endif // ENTRYPOOL_H

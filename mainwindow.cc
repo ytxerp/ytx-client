@@ -1742,8 +1742,8 @@ void MainWindow::InitContextFinance()
         info.unit_symbol_map.insert(i, unit_symbol_list.at(i));
     }
 
-    info.rule_map.insert(kDDCI, kRuleDDCI);
-    info.rule_map.insert(kDICD, kRuleDICD);
+    info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
+    info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
 
     info.kind_map.insert(kBranch, kBranchKind);
     info.kind_map.insert(kLeaf, kLeafKind);
@@ -1785,8 +1785,8 @@ void MainWindow::InitContextItem()
     info.unit_map.insert(std::to_underlying(UnitI::kPosition), kUnitPosition);
     info.unit_map.insert(std::to_underlying(UnitI::kExternal), kUnitExternal);
 
-    info.rule_map.insert(kDDCI, kRuleDDCI);
-    info.rule_map.insert(kDICD, kRuleDICD);
+    info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
+    info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
 
     info.kind_map.insert(kBranch, kBranchKind);
     info.kind_map.insert(kLeaf, kLeafKind);
@@ -1827,8 +1827,8 @@ void MainWindow::InitContextTask()
     info.unit_map.insert(std::to_underlying(UnitT::kInternal), kUnitInternal);
     info.unit_map.insert(std::to_underlying(UnitT::kExternal), kUnitExternal);
 
-    info.rule_map.insert(kDDCI, kRuleDDCI);
-    info.rule_map.insert(kDICD, kRuleDICD);
+    info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
+    info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
 
     info.kind_map.insert(kBranch, kBranchKind);
     info.kind_map.insert(kLeaf, kLeafKind);
@@ -1907,8 +1907,8 @@ void MainWindow::InitContextSale()
     info.entry = kSaleEntry;
     info.settlement = kSaleSettlement;
 
-    info.rule_map.insert(kRO, kRuleRO);
-    info.rule_map.insert(kTO, kRuleTO);
+    info.rule_map.insert(Rule::kRO, Rule::kStrRO);
+    info.rule_map.insert(Rule::kTO, Rule::kStrTO);
 
     info.unit_map.insert(std::to_underlying(UnitO::kImmediate), kUnitImmediate);
     info.unit_map.insert(std::to_underlying(UnitO::kMonthly), kUnitMonthly);
@@ -1961,8 +1961,8 @@ void MainWindow::InitContextPurchase()
     info.entry = kPurchaseEntry;
     info.settlement = kPurchaseSettlement;
 
-    info.rule_map.insert(kRO, kRuleRO);
-    info.rule_map.insert(kTO, kRuleTO);
+    info.rule_map.insert(Rule::kRO, Rule::kStrRO);
+    info.rule_map.insert(Rule::kTO, Rule::kStrTO);
 
     info.unit_map.insert(std::to_underlying(UnitO::kImmediate), kUnitImmediate);
     info.unit_map.insert(std::to_underlying(UnitO::kMonthly), kUnitMonthly);

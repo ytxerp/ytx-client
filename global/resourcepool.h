@@ -23,6 +23,7 @@
 #include <QMutex>
 #include <deque>
 
+#include "component/constant.h"
 #include "concepts.h"
 
 template <Resettable T> class ResourcePool {
@@ -41,15 +42,11 @@ private:
     ResourcePool();
     ~ResourcePool();
 
-    void ExpandCapacity(int size);
+    void Expand(qsizetype size);
 
 private:
     std::deque<T*> pool_;
     QMutex mutex_;
-
-    static constexpr qsizetype kSize { 100 };
-    static constexpr qsizetype kExpandThreshold { 20 };
-    static constexpr qsizetype kShrinkThreshold { 1001 };
 };
 
 template <Resettable T> ResourcePool<T>& ResourcePool<T>::Instance()
@@ -62,8 +59,12 @@ template <Resettable T> T* ResourcePool<T>::Allocate()
 {
     QMutexLocker locker(&mutex_);
 
-    if (pool_.size() <= kExpandThreshold)
-        ExpandCapacity(kSize);
+    if (pool_.empty())
+        Expand(Pool::kExpandSize);
+
+    if (pool_.empty()) {
+        return new T();
+    }
 
     T* resource = pool_.front();
     pool_.pop_front();
@@ -76,12 +77,14 @@ template <Resettable T> void ResourcePool<T>::Recycle(T* resource)
     if (!resource)
         return;
 
-    if (pool_.size() >= kShrinkThreshold) {
+    QMutexLocker locker(&mutex_);
+
+    if (static_cast<qsizetype>(pool_.size()) + 1 >= Pool::kMaxSize) {
+        locker.unlock();
         delete resource;
         return;
     }
 
-    QMutexLocker locker(&mutex_);
     resource->ResetState();
     pool_.push_back(resource);
 }
@@ -91,35 +94,33 @@ template <Resettable T> template <Iterable Container> void ResourcePool<T>::Recy
     if (container.isEmpty())
         return;
 
-    if (pool_.size() + container.size() >= kShrinkThreshold) {
-        qDeleteAll(container);
-    } else {
-        QMutexLocker locker(&mutex_);
+    QMutexLocker locker(&mutex_);
 
-        for (T* resource : container) {
-            if (resource) {
-                resource->ResetState();
-                pool_.push_back(resource);
-            }
+    if (static_cast<qsizetype>(pool_.size()) + container.size() >= Pool::kMaxSize) {
+        locker.unlock();
+        qDeleteAll(container);
+        return;
+    }
+
+    for (T* resource : container) {
+        if (resource) {
+            resource->ResetState();
+            pool_.push_back(resource);
         }
     }
 
     container.clear();
 }
 
-template <Resettable T> ResourcePool<T>::ResourcePool() { ExpandCapacity(kSize); }
+template <Resettable T> ResourcePool<T>::ResourcePool() { Expand(Pool::kExpandSize); }
 
-template <Resettable T> void ResourcePool<T>::ExpandCapacity(int size)
+template <Resettable T> void ResourcePool<T>::Expand(qsizetype size)
 {
-    for (int i = 0; i != size; ++i) {
+    for (qsizetype i = 0; i != size; ++i) {
         pool_.push_back(new T());
     }
 }
 
-template <Resettable T> ResourcePool<T>::~ResourcePool()
-{
-    qDeleteAll(pool_);
-    pool_.clear();
-}
+template <Resettable T> ResourcePool<T>::~ResourcePool() { qDeleteAll(pool_); }
 
 #endif // RESOURCEPOOL_H

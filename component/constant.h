@@ -35,26 +35,31 @@ inline constexpr int kRowHeight = 24;
 inline constexpr int kThreeThousand = 3000;
 inline constexpr long long kBatchSize = 50;
 
+namespace Pool {
+inline constexpr qsizetype kExpandSize { 100 };
+inline constexpr qsizetype kMaxSize { 1000 };
+}
+
 // Boolean constants
 inline constexpr bool kIsHidden = true;
 
-/*
- * Finance/Item/Task:
- *   Credit increase, Debit decrease; calculation: credit - debit
- * Order:
- *   Represents Refund Order (returned transaction)
- */
+namespace Rule {
+// Finance/Item/Task: Credit increase, Debit decrease; calculation: credit - debit
+// Order: Refund Order (returned transaction)
 inline constexpr bool kDDCI = true;
 inline constexpr bool kRO = true;
 
-/*
- * Finance/Item/Task:
- *   Debit increase, Credit decrease; calculation: debit - credit
- * Order:
- *   Represents Trade Order (normal transaction)
- */
+// Finance/Item/Task: Debit increase, Credit decrease; calculation: debit - credit
+// Order: Trade Order (normal transaction)
 inline constexpr bool kDICD = false;
 inline constexpr bool kTO = false;
+
+inline const QString kStrDDCI = QStringLiteral("DDCI");
+inline const QString kStrDICD = QStringLiteral("DICD");
+
+inline const QString kStrTO = QStringLiteral("TO");
+inline const QString kStrRO = QStringLiteral("RO");
+}
 
 // Maximum and minimum values for PostgreSQL NUMERIC(12,4)
 // Up to 8 digits before the decimal point and 4 digits after
@@ -103,11 +108,6 @@ inline const QString kSuffixPERCENT = QStringLiteral("%");
 inline const QString kSuffixXLSX = QStringLiteral("xlsx");
 
 // Node rule, kind, unit
-inline const QString kRuleDDCI = QStringLiteral("DDCI");
-inline const QString kRuleDICD = QStringLiteral("DICD");
-
-inline const QString kRuleTO = QStringLiteral("TO"); // Trade Order
-inline const QString kRuleRO = QStringLiteral("RO"); // Return Order
 
 inline const QString kBranchKind = QStringLiteral("B");
 inline const QString kLeafKind = QStringLiteral("L");

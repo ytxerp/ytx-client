@@ -21,20 +21,40 @@
 #define NODEPOOL_H
 
 #include <QMutex>
-#include <QVector>
+#include <array>
+#include <deque>
 
+#include "component/constant.h"
 #include "component/enumclass.h"
 #include "concepts.h"
 #include "tree/node.h"
 
+/*
+ * NodePool is a singleton object pool for Node-derived objects.
+ *
+ * Features:
+ * 1. Thread-safe allocation and recycling using QMutex.
+ * 2. Supports pre-allocation and dynamic expansion of pools.
+ * 3. Avoids pool overgrowth by deleting objects when a threshold is exceeded.
+ * 4. Batch recycling is optimized: only one lock acquisition for all entries.
+ * 5. Modern C++ style using std::array for fixed-size section pools.
+ */
 class NodePool {
 public:
+    // Get the singleton instance
     static NodePool& Instance();
 
+    // Allocate a single Node object from the pool corresponding to the given section.
     Node* Allocate(Section section);
+
+    // Recycle a single Node object back to its pool.
     void Recycle(Node* node, Section section);
+
+    // Recycle multiple Node objects in a container back to their pool.
+    // Optimized: acquires the lock only once for all elements.
     template <Iterable Container> void Recycle(Container& container, Section section);
 
+    // Delete copy and move constructors/operators
     NodePool(const NodePool&) = delete;
     NodePool& operator=(const NodePool&) = delete;
     NodePool(NodePool&&) = delete;
@@ -44,43 +64,16 @@ private:
     NodePool();
     ~NodePool();
 
-    void Expand(QVector<Node*>& pool, Section section, int count);
-    QVector<Node*>& GetPool(Section section);
+    // Factory function to create a new Node instance for a given section
+    static Node* NewResource(Section section);
 
-    QVector<Node*> f_pool_;
-    QVector<Node*> i_pool_;
-    QVector<Node*> t_pool_;
-    QVector<Node*> s_pool_;
-    QVector<Node*> o_pool_; // 用于 kSale 和 kPurchase
+    // Expand the given pool by creating 'count' new Node objects
+    void Expand(std::deque<Node*>& pool, Section section, qsizetype count);
 
-    QMutex mutex_;
-
-    static constexpr qsizetype kDefaultExpandSize { 100 };
-    static constexpr qsizetype kShrinkThreshold { 1000 };
+private:
+    std::array<std::deque<Node*>, 6> pools_ {}; // Pools for each Section
+    QMutex mutex_ {}; // Mutex protecting all pools
 };
-
-template <Iterable Container> inline void NodePool::Recycle(Container& container, Section section)
-{
-    if (container.isEmpty())
-        return;
-
-    auto& pool = GetPool(section);
-
-    if (pool.size() + container.size() >= kShrinkThreshold) {
-        qDeleteAll(container);
-    } else {
-        QMutexLocker locker(&mutex_);
-
-        for (Node* resource : container) {
-            if (resource) {
-                resource->ResetState();
-                pool.push_back(resource);
-            }
-        }
-    }
-
-    container.clear();
-}
 
 inline NodePool& NodePool::Instance()
 {
@@ -90,63 +83,40 @@ inline NodePool& NodePool::Instance()
 
 inline NodePool::NodePool()
 {
-    Expand(f_pool_, Section::kFinance, kDefaultExpandSize);
-    Expand(i_pool_, Section::kItem, kDefaultExpandSize);
-    Expand(t_pool_, Section::kTask, kDefaultExpandSize);
-    Expand(s_pool_, Section::kStakeholder, kDefaultExpandSize);
-    Expand(o_pool_, Section::kSale, kDefaultExpandSize);
+    for (size_t i = 0; i != kSections.size(); ++i) {
+        Expand(pools_[i], kSections[i], Pool::kExpandSize);
+    }
 }
 
 inline NodePool::~NodePool()
 {
-    qDeleteAll(f_pool_);
-    qDeleteAll(i_pool_);
-    qDeleteAll(t_pool_);
-    qDeleteAll(s_pool_);
-    qDeleteAll(o_pool_);
-}
-
-inline void NodePool::Expand(QVector<Node*>& pool, Section section, int count)
-{
-    for (int i = 0; i != count; ++i) {
-        switch (section) {
-        case Section::kFinance:
-            pool.append(new NodeF());
-            break;
-        case Section::kItem:
-            pool.append(new NodeI());
-            break;
-        case Section::kTask:
-            pool.append(new NodeT());
-            break;
-        case Section::kStakeholder:
-            pool.append(new NodeS());
-            break;
-        case Section::kSale:
-        case Section::kPurchase:
-            pool.append(new NodeO());
-            break;
-        default:
-            Q_ASSERT(false);
-            break;
-        }
+    for (auto& pool : pools_) {
+        qDeleteAll(pool); // Delete all remaining Node objects
     }
 }
 
-inline QVector<Node*>& NodePool::GetPool(Section section)
+inline void NodePool::Expand(std::deque<Node*>& pool, Section section, qsizetype count)
+{
+    for (qsizetype i = 0; i != count; ++i) {
+        pool.push_back(NewResource(section));
+    }
+}
+
+inline Node* NodePool::NewResource(Section section)
 {
     switch (section) {
     case Section::kFinance:
-        return f_pool_;
+        return new NodeF();
     case Section::kItem:
-        return i_pool_;
+        return new NodeI();
     case Section::kTask:
-        return t_pool_;
+        return new NodeT();
     case Section::kStakeholder:
-        return s_pool_;
+        return new NodeS();
     case Section::kSale:
+        return new NodeO();
     case Section::kPurchase:
-        return o_pool_;
+        return new NodeO();
     default:
         Q_UNREACHABLE();
     }
@@ -155,12 +125,16 @@ inline QVector<Node*>& NodePool::GetPool(Section section)
 inline Node* NodePool::Allocate(Section section)
 {
     QMutexLocker locker(&mutex_);
+    auto& pool = pools_[static_cast<size_t>(section)];
 
-    auto& pool = GetPool(section);
-    if (pool.isEmpty()) {
-        Expand(pool, section, kDefaultExpandSize);
+    if (pool.empty()) {
+        Expand(pool, section, Pool::kExpandSize);
     }
-    return pool.takeLast();
+
+    Node* n = pool.front();
+    pool.pop_front();
+
+    return n;
 }
 
 inline void NodePool::Recycle(Node* node, Section section)
@@ -168,16 +142,42 @@ inline void NodePool::Recycle(Node* node, Section section)
     if (!node)
         return;
 
-    auto& pool = GetPool(section);
+    QMutexLocker locker(&mutex_);
+    auto& pool = pools_[static_cast<size_t>(section)];
 
-    if (pool.size() >= kShrinkThreshold) {
+    // If pool exceeds threshold, delete node instead of recycling
+    if (static_cast<qsizetype>(pool.size()) + 1 >= Pool::kMaxSize) {
+        locker.unlock();
         delete node;
         return;
     }
 
-    QMutexLocker locker(&mutex_);
     node->ResetState();
-    pool.append(node);
+    pool.push_back(node);
+}
+
+template <Iterable Container> inline void NodePool::Recycle(Container& container, Section section)
+{
+    if (container.isEmpty())
+        return;
+
+    QMutexLocker locker(&mutex_);
+    auto& pool = pools_[static_cast<size_t>(section)];
+
+    if (static_cast<qsizetype>(pool.size()) + container.size() >= Pool::kMaxSize) {
+        locker.unlock();
+        qDeleteAll(container);
+        return;
+    }
+
+    for (Node* n : container) {
+        if (n) {
+            n->ResetState();
+            pool.push_back(n);
+        }
+    }
+
+    container.clear();
 }
 
 #endif // NODEPOOL_H

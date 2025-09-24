@@ -219,8 +219,8 @@ void LeafWidgetO::IniFinished(bool finished)
 void LeafWidgetO::IniRuleGroup()
 {
     rule_group_ = new QButtonGroup(this);
-    rule_group_->addButton(ui->rBtnRO, static_cast<int>(kRO));
-    rule_group_->addButton(ui->rBtnTO, static_cast<int>(kTO));
+    rule_group_->addButton(ui->rBtnRO, static_cast<int>(Rule::kRO));
+    rule_group_->addButton(ui->rBtnTO, static_cast<int>(Rule::kTO));
 }
 
 void LeafWidgetO::IniUnitGroup()
