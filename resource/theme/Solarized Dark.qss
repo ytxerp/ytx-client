@@ -285,6 +285,13 @@ QPushButton#pBtnDocumentDir {
     text-align: left;
 }
 
+QPushButton:pressed {
+    border-top: 2px inset #586E75;
+    border-left: 2px inset #586E75;
+    border-right: 2px outset #586E75;
+    border-bottom: 2px outset #586E75;
+}
+
 QPushButton:disabled {
     color: #586E75;
     border: 1px solid #586E75;

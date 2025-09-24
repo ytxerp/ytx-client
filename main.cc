@@ -26,27 +26,38 @@
 
 int main(int argc, char* argv[])
 {
+    // Create the Qt application instance
     QApplication application(argc, argv);
+
+    // Use the Fusion style for a consistent cross-platform appearance
     application.setStyle("Fusion");
+
+    // Disable native file dialogs to ensure consistent behavior across platforms
     application.setAttribute(Qt::AA_DontUseNativeDialogs);
 
+    // Install global logging system (DailyLogger)
     DailyLogger::Instance().Install();
 
-    // Centralize config directory creation
+    // Ensure the configuration directory exists
     const QString config_location { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) };
     if (!QDir(config_location).exists() && !QDir().mkpath(config_location)) {
         qCritical() << "Failed to create config directory:" << config_location;
         return EXIT_FAILURE;
     }
 
+    // Ensure the application data directory exists
     const QString data_location { QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) };
     if (!QDir(data_location).exists() && !QDir().mkpath(data_location)) {
         qCritical() << "Failed to create data directory:" << data_location;
         return EXIT_FAILURE;
     }
 
+    // Create the main window of the application
     MainWindow mainwindow {};
 
+    // Show the main window
     mainwindow.show();
+
+    // Start the Qt event loop
     return application.exec();
 }

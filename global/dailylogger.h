@@ -20,6 +20,7 @@
 #ifndef DAILYLOGGER_H
 #define DAILYLOGGER_H
 
+#include <QDateTime>
 #include <QFile>
 #include <QMutex>
 #include <QTextStream>
@@ -42,11 +43,15 @@ private:
     void HandleMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg);
     static void MessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg);
 
+    void OpenLogFile(const QDate& date);
+
 private:
     QFile file_ {};
+    QString formatted_msg_ {};
     QTextStream log_stream_ {};
     QMutex mutex_ {};
     bool is_released_ { false };
+    QDate current_date_ {};
 };
 
 #endif // DAILYLOGGER_H
