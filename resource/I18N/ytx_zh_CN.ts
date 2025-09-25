@@ -527,7 +527,7 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="257"/>
         <source>RO</source>
-        <translation>退单</translation>
+        <translation>退回</translation>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="264"/>
@@ -535,14 +535,22 @@ Rage, rage against the dying of the light.</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="277"/>
         <source>First</source>
-        <translation>第一</translation>
+        <translation type="vanished">第一</translation>
+    </message>
+    <message>
+        <source>Second</source>
+        <translation type="vanished">第二</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/leafwidgeto.ui" line="277"/>
+        <source>Count</source>
+        <translation>计数</translation>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="303"/>
-        <source>Second</source>
-        <translation>第二</translation>
+        <source>Measure</source>
+        <translation>度量</translation>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="335"/>
@@ -553,19 +561,19 @@ Rage, rage against the dying of the light.</source>
         <location filename="../../table/widget/leafwidgeto.ui" line="352"/>
         <location filename="../../table/widget/leafwidgeto.cc" line="362"/>
         <source>IS</source>
-        <translation>现</translation>
+        <translation>现结</translation>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="359"/>
         <location filename="../../table/widget/leafwidgeto.cc" line="359"/>
         <source>MS</source>
-        <translation>月</translation>
+        <translation>月结</translation>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="366"/>
         <location filename="../../table/widget/leafwidgeto.cc" line="365"/>
         <source>PEND</source>
-        <translation>挂</translation>
+        <translation>挂帐</translation>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="389"/>
@@ -723,234 +731,237 @@ Rage, rage against the dying of the light.</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="185"/>
         <source>Export</source>
-        <translation>导出</translation>
+        <translation type="vanished">导出</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="199"/>
+        <location filename="../../mainwindow.ui" line="191"/>
         <source>Edit</source>
         <translation>编辑</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="217"/>
         <source>&amp;Account</source>
-        <translation>帐户(&amp;A)</translation>
+        <translation type="vanished">帐户(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="239"/>
+        <location filename="../../mainwindow.ui" line="209"/>
+        <source>Account</source>
+        <translation>帐户</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow.ui" line="231"/>
         <source>toolBar</source>
         <translation>工具栏</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="271"/>
+        <location filename="../../mainwindow.ui" line="263"/>
         <source>Insert</source>
         <translation>插入</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="274"/>
+        <location filename="../../mainwindow.ui" line="266"/>
         <source>Insert Node</source>
         <translation>插入节点</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="277"/>
+        <location filename="../../mainwindow.ui" line="269"/>
         <source>Alt+N</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="282"/>
+        <location filename="../../mainwindow.ui" line="274"/>
         <source>Remove</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="287"/>
-        <location filename="../../mainwindow.ui" line="374"/>
+        <location filename="../../mainwindow.ui" line="279"/>
+        <location filename="../../mainwindow.ui" line="366"/>
         <source>Append</source>
         <translation>追加</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="290"/>
+        <location filename="../../mainwindow.ui" line="282"/>
         <source>Append Node</source>
         <translation>追加节点</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="293"/>
+        <location filename="../../mainwindow.ui" line="285"/>
         <source>Alt+P</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="298"/>
-        <location filename="../../mainwindow.ui" line="301"/>
+        <location filename="../../mainwindow.ui" line="290"/>
+        <location filename="../../mainwindow.ui" line="293"/>
         <source>Jump</source>
         <translation>跳转</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="304"/>
+        <location filename="../../mainwindow.ui" line="296"/>
         <source>Ctrl+J</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="309"/>
-        <location filename="../../mainwindow.ui" line="312"/>
+        <location filename="../../mainwindow.ui" line="301"/>
+        <location filename="../../mainwindow.ui" line="304"/>
         <source>Edit Name</source>
         <translation>编辑名称</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="315"/>
+        <location filename="../../mainwindow.ui" line="307"/>
         <source>Alt+E</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="320"/>
+        <location filename="../../mainwindow.ui" line="312"/>
         <source>Search</source>
         <translation>搜索</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="323"/>
+        <location filename="../../mainwindow.ui" line="315"/>
         <source>Ctrl+F</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="328"/>
+        <location filename="../../mainwindow.ui" line="320"/>
         <source>Preferences...</source>
         <translation>首选项...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="331"/>
+        <location filename="../../mainwindow.ui" line="323"/>
         <source>Ctrl+,</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="339"/>
-        <location filename="../../mainwindow.ui" line="342"/>
+        <location filename="../../mainwindow.ui" line="331"/>
+        <location filename="../../mainwindow.ui" line="334"/>
         <source>About YTX</source>
         <translation>关于 YTX</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="350"/>
+        <location filename="../../mainwindow.ui" line="342"/>
         <source>CheckAll</source>
         <translation>全选</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="358"/>
+        <location filename="../../mainwindow.ui" line="350"/>
         <source>CheckNone</source>
         <translation>空选</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="366"/>
+        <location filename="../../mainwindow.ui" line="358"/>
         <source>CheckReverse</source>
         <translation>反选</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="377"/>
+        <location filename="../../mainwindow.ui" line="369"/>
         <source>Append Entry</source>
         <translation>追加记录</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="380"/>
+        <location filename="../../mainwindow.ui" line="372"/>
         <source>Ctrl+N</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="385"/>
+        <location filename="../../mainwindow.ui" line="377"/>
         <source>Export Excel...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="388"/>
+        <location filename="../../mainwindow.ui" line="380"/>
         <location filename="../../mainwindow.cc" line="2795"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="393"/>
+        <location filename="../../mainwindow.ui" line="385"/>
         <location filename="../../mainwindow.cc" line="1337"/>
         <source>Statement</source>
         <translation>帐单</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="401"/>
-        <location filename="../../mainwindow.ui" line="404"/>
+        <location filename="../../mainwindow.ui" line="393"/>
+        <location filename="../../mainwindow.ui" line="396"/>
         <location filename="../../mainwindow.cc" line="1374"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="412"/>
+        <location filename="../../mainwindow.ui" line="404"/>
         <source>Login...</source>
         <translation>登录...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="423"/>
+        <location filename="../../mainwindow.ui" line="415"/>
         <source>Logout</source>
         <translation>登出</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="431"/>
-        <location filename="../../mainwindow.ui" line="434"/>
+        <location filename="../../mainwindow.ui" line="423"/>
+        <location filename="../../mainwindow.ui" line="426"/>
         <location filename="../../mainwindow.cc" line="2379"/>
         <location filename="../../mainwindow.cc" line="2388"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="442"/>
-        <location filename="../../mainwindow.ui" line="445"/>
+        <location filename="../../mainwindow.ui" line="434"/>
+        <location filename="../../mainwindow.ui" line="437"/>
         <location filename="../../mainwindow.cc" line="2380"/>
         <location filename="../../mainwindow.cc" line="2389"/>
         <source>Workspace</source>
         <translation>工区</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="453"/>
-        <location filename="../../mainwindow.ui" line="456"/>
+        <location filename="../../mainwindow.ui" line="445"/>
+        <location filename="../../mainwindow.ui" line="448"/>
         <source>Reset Color</source>
         <translation>重置颜色</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="459"/>
+        <location filename="../../mainwindow.ui" line="451"/>
         <source>Alt+R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="464"/>
+        <location filename="../../mainwindow.ui" line="456"/>
         <source>Register...</source>
         <translation>注册...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="472"/>
+        <location filename="../../mainwindow.ui" line="464"/>
         <source>Reconnect</source>
         <translation>重连</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="480"/>
+        <location filename="../../mainwindow.ui" line="472"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="483"/>
+        <location filename="../../mainwindow.ui" line="475"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="491"/>
+        <location filename="../../mainwindow.ui" line="483"/>
         <source>New Group</source>
         <translation>创建分组</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="494"/>
+        <location filename="../../mainwindow.ui" line="486"/>
         <source>Alt+G</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="502"/>
+        <location filename="../../mainwindow.ui" line="494"/>
         <location filename="../../mainwindow.cc" line="2381"/>
         <location filename="../../mainwindow.cc" line="2390"/>
         <source>Expire Date</source>
         <translation>期限</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="507"/>
+        <location filename="../../mainwindow.ui" line="499"/>
         <source>Check for Updates</source>
         <translation>检查更新</translation>
     </message>
@@ -1514,13 +1525,31 @@ Download now?</source>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="101"/>
-        <source>FirstTotal</source>
-        <translation>第一</translation>
+        <source>CountTotal</source>
+        <translation>计数</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="102"/>
+        <source>MeasureTotal</source>
+        <translation>度量</translation>
+    </message>
+    <message>
+        <location filename="../../component/stringinitializer.cc" line="311"/>
+        <source>CCount</source>
+        <translation>计数</translation>
+    </message>
+    <message>
+        <location filename="../../component/stringinitializer.cc" line="312"/>
+        <source>CMeasure</source>
+        <translation>度量</translation>
+    </message>
+    <message>
+        <source>FirstTotal</source>
+        <translation type="vanished">第一</translation>
+    </message>
+    <message>
         <source>SecondTotal</source>
-        <translation>第二</translation>
+        <translation type="vanished">第二</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="104"/>
@@ -1637,22 +1666,12 @@ Download now?</source>
         <translation>外部</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="197"/>
-        <location filename="../../component/stringinitializer.cc" line="285"/>
-        <location filename="../../component/stringinitializer.cc" line="299"/>
-        <location filename="../../component/stringinitializer.cc" line="321"/>
-        <location filename="../../component/stringinitializer.cc" line="333"/>
         <source>First</source>
-        <translation>第一</translation>
+        <translation type="vanished">第一</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="198"/>
-        <location filename="../../component/stringinitializer.cc" line="286"/>
-        <location filename="../../component/stringinitializer.cc" line="300"/>
-        <location filename="../../component/stringinitializer.cc" line="322"/>
-        <location filename="../../component/stringinitializer.cc" line="334"/>
         <source>Second</source>
-        <translation>第二</translation>
+        <translation type="vanished">第二</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="201"/>
@@ -1683,6 +1702,32 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="206"/>
         <source>Discount</source>
         <translation>优惠</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation type="obsolete">规则</translation>
+    </message>
+    <message>
+        <source>Local</source>
+        <translation type="obsolete">本地</translation>
+    </message>
+    <message>
+        <location filename="../../component/stringinitializer.cc" line="197"/>
+        <location filename="../../component/stringinitializer.cc" line="285"/>
+        <location filename="../../component/stringinitializer.cc" line="299"/>
+        <location filename="../../component/stringinitializer.cc" line="321"/>
+        <location filename="../../component/stringinitializer.cc" line="333"/>
+        <source>Count</source>
+        <translation>计数</translation>
+    </message>
+    <message>
+        <location filename="../../component/stringinitializer.cc" line="198"/>
+        <location filename="../../component/stringinitializer.cc" line="286"/>
+        <location filename="../../component/stringinitializer.cc" line="300"/>
+        <location filename="../../component/stringinitializer.cc" line="322"/>
+        <location filename="../../component/stringinitializer.cc" line="334"/>
+        <source>Measure</source>
+        <translation>度量</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="207"/>
@@ -1746,14 +1791,12 @@ Download now?</source>
         <translation>期初余额</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="311"/>
         <source>CFirst</source>
-        <translation>第一</translation>
+        <translation type="vanished">第一</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="312"/>
         <source>CSecond</source>
-        <translation>第二</translation>
+        <translation type="vanished">第二</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="313"/>
@@ -2024,14 +2067,12 @@ Download now?</source>
         <translation>外部</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
         <source>First</source>
-        <translation>第一</translation>
+        <translation type="vanished">第一</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
         <source>Second</source>
-        <translation>第二</translation>
+        <translation type="vanished">第二</translation>
     </message>
     <message>
         <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
@@ -2042,6 +2083,16 @@ Download now?</source>
         <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
         <source>Description</source>
         <translation>描述</translation>
+    </message>
+    <message>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
+        <source>Count</source>
+        <translation>计数</translation>
+    </message>
+    <message>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
+        <source>Measure</source>
+        <translation>度量</translation>
     </message>
     <message>
         <location filename="../../report/model/statementsecondarymodel.cc" line="198"/>

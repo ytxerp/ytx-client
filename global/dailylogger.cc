@@ -39,7 +39,7 @@ void DailyLogger::MessageHandler(QtMsgType type, const QMessageLogContext& conte
     DailyLogger::Instance().HandleMessage(type, context, msg);
 }
 
-void DailyLogger::HandleMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg)
+void DailyLogger::HandleMessage(QtMsgType type, const QMessageLogContext&, const QString& msg)
 {
     QMutexLocker locker(&mutex_);
 
@@ -51,21 +51,13 @@ void DailyLogger::HandleMessage(QtMsgType type, const QMessageLogContext& contex
     if (is_released_ || !file_.isOpen())
         return;
 
-    QString location {};
-    if (context.file && context.line > 0) {
-        location = QString(" (%1:%2)").arg(context.file).arg(context.line);
-        if (context.function && *context.function) {
-            location += QString(" in %1").arg(context.function);
-        }
-    }
-
     static const char* levels[] = { "DEBUG", "INFO", "WARNING", "CRITICAL", "FATAL" };
     const char* level = levels[type];
 
     const QString date_time { QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss") };
 
     formatted_msg_.clear();
-    formatted_msg_.append(date_time).append(" [").append(level).append("] ").append(msg).append(location);
+    formatted_msg_.append(date_time).append(" [").append(level).append("] ").append(msg);
 
     log_stream_ << formatted_msg_ << '\n';
 

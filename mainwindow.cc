@@ -689,8 +689,8 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) 
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDiscountPrice), price);
 
     auto* quantity { new Double(config.amount_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient8, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kFirst), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kSecond), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kMeasure), quantity);
 
     auto* amount { new DoubleSpinRNoneZero(config.amount_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kInitial), amount);
@@ -886,8 +886,8 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDiscountTotal), amount);
 
     auto* quantity { new DoubleSpinRNoneZero(section.amount_decimal, kCoefficient16, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kSecondTotal), quantity);
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kFirstTotal), quantity);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kMeasureTotal), quantity);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kCountTotal), quantity);
 
     auto tree_model_s { sc_s_.tree_model };
 
@@ -1555,8 +1555,8 @@ void MainWindow::DelegateLeafExternalReference(QTableView* table_view, CSectionC
     table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kDiscountPrice), price);
 
     auto* quantity { new DoubleSpinRNoneZero(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kFirst), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kSecond), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kkCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kkMeasure), quantity);
 
     auto* amount { new DoubleSpinRNoneZero(config.amount_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kInitial), amount);
@@ -1601,8 +1601,8 @@ void MainWindow::SetStatementView(QTableView* view, int stretch_column) const
 void MainWindow::DelegateStatement(QTableView* table_view, CSectionConfig& config) const
 {
     auto* quantity { new DoubleSpinRNoneZero(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCFirst), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCSecond), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCMeasure), quantity);
 
     auto* amount { new DoubleSpinRNoneZero(config.amount_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCGrossAmount), amount);
@@ -1654,8 +1654,8 @@ void MainWindow::DelegateSettlementPrimary(QTableView* table_view, CSectionConfi
 void MainWindow::DelegateStatementPrimary(QTableView* table_view, CSectionConfig& config) const
 {
     auto* quantity { new DoubleSpinRNoneZero(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kFirst), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kSecond), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kMeasure), quantity);
 
     auto* amount { new DoubleSpinRNoneZero(config.amount_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kInitialTotal), amount);
@@ -1674,8 +1674,8 @@ void MainWindow::DelegateStatementPrimary(QTableView* table_view, CSectionConfig
 void MainWindow::DelegateStatementSecondary(QTableView* table_view, CSectionConfig& config) const
 {
     auto* quantity { new DoubleSpinRNoneZero(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kFirst), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kSecond), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kMeasure), quantity);
 
     auto* amount { new DoubleSpinRNoneZero(config.amount_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kInitialTotal), amount);
@@ -2024,8 +2024,10 @@ void MainWindow::SetAction() const
 
 void MainWindow::SetTreeView(QTreeView* tree_view, CSectionInfo& info) const
 {
-    if (info.section == Section::kSale || info.section == Section::kPurchase)
+    if (info.section == Section::kSale || info.section == Section::kPurchase) {
         tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kParty), kIsHidden);
+        tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kSettlementId), kIsHidden);
+    }
 
     tree_view->setColumnHidden(std::to_underlying(NodeEnum::kId), kIsHidden);
     tree_view->setColumnHidden(std::to_underlying(NodeEnum::kUserId), kIsHidden);
@@ -2453,7 +2455,7 @@ void MainWindow::LoadAndInstallTranslator(CString& language)
     if (language == kEnUS)
         return;
 
-    const QString ytx_language { QStringLiteral(":/I18N/I18N/YTX_%1.qm").arg(language) };
+    const QString ytx_language { QStringLiteral(":/I18N/I18N/ytx_%1.qm").arg(language) };
     if (ytx_translator_.load(ytx_language))
         qApp->installTranslator(&ytx_translator_);
 

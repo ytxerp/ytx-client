@@ -122,8 +122,8 @@ struct EntryShadowO final : EntryShadow {
     double* unit_price {};
     QUuid* external_item {};
 
-    double* first {};
-    double* second {};
+    double* count {};
+    double* measure {};
 
     double* initial {};
     double* final {};

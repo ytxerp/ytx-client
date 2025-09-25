@@ -231,8 +231,8 @@ void EntryShadowO::BindEntry(Entry* base, bool /* is_parallel */)
     unit_price = &entry->unit_price;
     external_item = &entry->external_item;
 
-    first = &entry->first;
-    second = &entry->second;
+    count = &entry->count;
+    measure = &entry->measure;
 
     initial = &entry->initial;
     final = &entry->final;
@@ -246,8 +246,8 @@ void EntryShadowO::ResetState()
 
     unit_price = nullptr;
     external_item = nullptr;
-    first = nullptr;
-    second = nullptr;
+    count = nullptr;
+    measure = nullptr;
     initial = nullptr;
     final = nullptr;
     discount = nullptr;
@@ -263,8 +263,8 @@ QJsonObject EntryShadowO::WriteJson() const
     obj.insert(kRhsNode, rhs_node->toString(QUuid::WithoutBraces));
 
     obj.insert(kUnitPrice, QString::number(*unit_price, 'f', kMaxNumericScale_4));
-    obj.insert(kFirst, QString::number(*first, 'f', kMaxNumericScale_4));
-    obj.insert(kSecond, QString::number(*second, 'f', kMaxNumericScale_4));
+    obj.insert(kCount, QString::number(*count, 'f', kMaxNumericScale_4));
+    obj.insert(kMeasure, QString::number(*measure, 'f', kMaxNumericScale_4));
     obj.insert(kInitial, QString::number(*initial, 'f', kMaxNumericScale_4));
     obj.insert(kFinal, QString::number(*final, 'f', kMaxNumericScale_4));
     obj.insert(kDiscount, QString::number(*discount, 'f', kMaxNumericScale_4));

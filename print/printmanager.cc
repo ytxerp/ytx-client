@@ -180,9 +180,9 @@ QString PrintManager::GetColumnText(int col, const EntryShadow* entry_shadow)
     case 2:
         return *entry_shadow->description;
     case 3:
-        return QString::number(*o_entry_shadow->first);
+        return QString::number(*o_entry_shadow->count);
     case 4:
-        return QString::number(*o_entry_shadow->second);
+        return QString::number(*o_entry_shadow->measure);
     case 5:
         return QString::number(*o_entry_shadow->unit_price);
     case 6:

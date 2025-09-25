@@ -20,8 +20,8 @@ void SearchDialogO::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kInitialTotal), value_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kFinalTotal), value_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDiscountTotal), value_);
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kFirstTotal), value_);
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kSecondTotal), value_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kCountTotal), value_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kMeasureTotal), value_);
 
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIsFinished), check_);
 
@@ -32,8 +32,8 @@ void SearchDialogO::TreeViewDelegate(QTableView* view)
 
 void SearchDialogO::TableViewDelegate(QTableView* view)
 {
-    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kFirst), value_);
-    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kSecond), value_);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kCount), value_);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kMeasure), value_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDiscount), value_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kInitial), value_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kFinal), value_);

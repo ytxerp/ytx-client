@@ -22,7 +22,7 @@ void TreeModelO::RSyncDelta(const QUuid& node_id, double initial_delta, double f
     // dbhub_o_->UpdateLeafValue(node);
 
     auto index { GetIndex(node->id) };
-    emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumO::kFirstTotal)), index.siblingAtColumn(std::to_underlying(NodeEnumO::kFinalTotal)));
+    emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumO::kCountTotal)), index.siblingAtColumn(std::to_underlying(NodeEnumO::kFinalTotal)));
 
     if (node->is_finished) {
         UpdateAncestorValue(node, initial_delta, final_delta, first_delta, second_delta, discount_delta);
@@ -35,8 +35,8 @@ void TreeModelO::RSyncFinished(const QUuid& node_id, bool value)
     assert(node);
 
     int coefficient = value ? 1 : -1;
-    UpdateAncestorValue(node, coefficient * node->initial_total, coefficient * node->final_total, coefficient * node->first_total,
-        coefficient * node->second_total, coefficient * node->discount_total);
+    UpdateAncestorValue(node, coefficient * node->initial_total, coefficient * node->final_total, coefficient * node->count_total,
+        coefficient * node->measure_total, coefficient * node->discount_total);
 
     if (node->unit == std::to_underlying(UnitO::kMonthly))
         emit SUpdateAmount(node->party, coefficient * node->initial_total, coefficient * node->final_total);
@@ -108,7 +108,7 @@ void TreeModelO::RemovePath(Node* node, Node* parent_node)
         break;
     case kLeaf:
         if (d_node->is_finished) {
-            UpdateAncestorValue(node, -d_node->initial_total, -d_node->final_total, -d_node->first_total, -d_node->second_total, -d_node->discount_total);
+            UpdateAncestorValue(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
 
             if (node->unit == std::to_underlying(UnitO::kMonthly))
                 emit SUpdateAmount(d_node->party, -node->initial_total, -node->final_total);
@@ -130,7 +130,7 @@ bool TreeModelO::UpdateAncestorValue(Node* node, double initial_delta, double fi
         return false;
 
     const int kUnit { node->unit };
-    const int kColumnBegin { std::to_underlying(NodeEnumO::kFirstTotal) };
+    const int kColumnBegin { std::to_underlying(NodeEnumO::kCountTotal) };
     int column_end { std::to_underlying(NodeEnumO::kFinalTotal) };
 
     // 确定需要更新的列范围
@@ -144,8 +144,8 @@ bool TreeModelO::UpdateAncestorValue(Node* node, double initial_delta, double fi
 
         auto* d_node { DerivedPtr<NodeO>(current) };
 
-        d_node->first_total += first_delta;
-        d_node->second_total += second_delta;
+        d_node->count_total += first_delta;
+        d_node->measure_total += second_delta;
         d_node->discount_total += discount_delta;
         d_node->initial_total += initial_delta;
         d_node->final_total += final_delta;
@@ -165,7 +165,7 @@ void TreeModelO::HandleNode()
         auto* d_node { DerivedPtr<NodeO>(node) };
 
         if (d_node->kind == kLeaf && d_node->is_finished)
-            UpdateAncestorValue(node, d_node->initial_total, d_node->final_total, d_node->first_total, d_node->second_total, d_node->discount_total);
+            UpdateAncestorValue(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
     }
 }
 
@@ -174,8 +174,8 @@ void TreeModelO::ResetBranch(Node* node)
     assert(node->kind == kBranch && "ResetBranch: node must be of kind kBranch");
 
     auto* d_node { DerivedPtr<NodeO>(node) };
-    d_node->first_total = 0.0;
-    d_node->second_total = 0.0;
+    d_node->count_total = 0.0;
+    d_node->measure_total = 0.0;
     d_node->initial_total = 0.0;
     d_node->discount_total = 0.0;
     d_node->final_total = 0.0;
@@ -218,10 +218,10 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (d_lhs->employee < d_rhs->employee) : (d_lhs->employee > d_rhs->employee);
         case NodeEnumO::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (d_lhs->issued_time < d_rhs->issued_time) : (d_lhs->issued_time > d_rhs->issued_time);
-        case NodeEnumO::kFirstTotal:
-            return (order == Qt::AscendingOrder) ? (d_lhs->first_total < d_rhs->first_total) : (d_lhs->first_total > d_rhs->first_total);
-        case NodeEnumO::kSecondTotal:
-            return (order == Qt::AscendingOrder) ? (d_lhs->second_total < d_rhs->second_total) : (d_lhs->second_total > d_rhs->second_total);
+        case NodeEnumO::kCountTotal:
+            return (order == Qt::AscendingOrder) ? (d_lhs->count_total < d_rhs->count_total) : (d_lhs->count_total > d_rhs->count_total);
+        case NodeEnumO::kMeasureTotal:
+            return (order == Qt::AscendingOrder) ? (d_lhs->measure_total < d_rhs->measure_total) : (d_lhs->measure_total > d_rhs->measure_total);
         case NodeEnumO::kDiscountTotal:
             return (order == Qt::AscendingOrder) ? (d_lhs->discount_total < d_rhs->discount_total) : (d_lhs->discount_total > d_rhs->discount_total);
         case NodeEnumO::kIsFinished:
@@ -281,10 +281,10 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return d_node->employee.isNull() ? QVariant() : d_node->employee;
     case NodeEnumO::kIssuedTime:
         return branch || !d_node->issued_time.isValid() ? QVariant() : d_node->issued_time;
-    case NodeEnumO::kFirstTotal:
-        return d_node->first_total == 0 ? QVariant() : d_node->first_total;
-    case NodeEnumO::kSecondTotal:
-        return d_node->second_total == 0 ? QVariant() : d_node->second_total;
+    case NodeEnumO::kCountTotal:
+        return d_node->count_total == 0 ? QVariant() : d_node->count_total;
+    case NodeEnumO::kMeasureTotal:
+        return d_node->measure_total == 0 ? QVariant() : d_node->measure_total;
     case NodeEnumO::kDiscountTotal:
         return d_node->discount_total == 0 ? QVariant() : d_node->discount_total;
     case NodeEnumO::kIsFinished:
@@ -334,14 +334,14 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*
     bool update_ancestor { node->kind == kBranch || node->is_finished };
 
     if (update_ancestor) {
-        UpdateAncestorValue(node, -node->initial_total, -node->final_total, -node->first_total, -node->second_total, -node->discount_total);
+        UpdateAncestorValue(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);
     }
 
     destination_parent->children.insert(destinationChild, node);
     node->parent = destination_parent;
 
     if (update_ancestor) {
-        UpdateAncestorValue(node, node->initial_total, node->final_total, node->first_total, node->second_total, node->discount_total);
+        UpdateAncestorValue(node, node->initial_total, node->final_total, node->count_total, node->measure_total, node->discount_total);
     }
 
     endMoveRows();

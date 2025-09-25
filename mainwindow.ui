@@ -180,17 +180,9 @@
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuExport_2">
-     <property name="title">
-      <string>Export</string>
-     </property>
-     <addaction name="actionExportExcel"/>
-    </widget>
     <addaction name="actionAbout"/>
     <addaction name="actionPreferences"/>
     <addaction name="actionCheckforUpdates"/>
-    <addaction name="separator"/>
-    <addaction name="menuExport_2"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -212,9 +204,9 @@
     <addaction name="actionJump"/>
     <addaction name="actionSearch"/>
    </widget>
-   <widget class="QMenu" name="menu_Account">
+   <widget class="QMenu" name="menuAccount">
     <property name="title">
-     <string>&amp;Account</string>
+     <string>Account</string>
     </property>
     <addaction name="actionLogin"/>
     <addaction name="actionLogout"/>
@@ -228,7 +220,7 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menu_Account"/>
+   <addaction name="menuAccount"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">

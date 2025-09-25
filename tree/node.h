@@ -93,8 +93,8 @@ struct NodeO final : Node {
     QUuid employee {};
     QUuid party {};
     QDateTime issued_time {};
-    double first_total {};
-    double second_total {};
+    double count_total {};
+    double measure_total {};
     double discount_total {};
     bool is_finished {};
     QUuid settlement_node {};

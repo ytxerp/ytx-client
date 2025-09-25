@@ -434,10 +434,6 @@ QFileDialog QHeaderView::section:last {
     border-right: 1px solid #657B83;
 }
 
-QHeaderView::section:horizontal {
-    min-width: 80px;
-}
-
 /*-------------------------------------SpinBox------------------------------------------------------------*/
 
 QSpinBox::up-button, QSpinBox::down-button,

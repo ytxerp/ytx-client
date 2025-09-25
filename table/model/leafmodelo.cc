@@ -85,14 +85,14 @@ QVariant LeafModelO::data(const QModelIndex& index, int role) const
         return d_shadow->rhs_node->isNull() ? QVariant() : *d_shadow->rhs_node;
     case EntryEnumO::kUnitPrice:
         return *d_shadow->unit_price == 0 ? QVariant() : *d_shadow->unit_price;
-    case EntryEnumO::kSecond:
-        return *d_shadow->second == 0 ? QVariant() : *d_shadow->second;
+    case EntryEnumO::kMeasure:
+        return *d_shadow->measure == 0 ? QVariant() : *d_shadow->measure;
     case EntryEnumO::kDescription:
         return *d_shadow->description;
     case EntryEnumO::kColor:
         return d_shadow->rhs_node->isNull() ? QVariant() : tree_model_item_->Color(*d_shadow->rhs_node);
-    case EntryEnumO::kFirst:
-        return *d_shadow->first == 0 ? QVariant() : *d_shadow->first;
+    case EntryEnumO::kCount:
+        return *d_shadow->count == 0 ? QVariant() : *d_shadow->count;
     case EntryEnumO::kFinal:
         return *d_shadow->final == 0 ? QVariant() : *d_shadow->final;
     case EntryEnumO::kDiscount:
@@ -122,8 +122,8 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     auto* d_shadow = DerivedPtr<EntryShadowO>(shadow);
 
     const auto old_rhs_node { *d_shadow->rhs_node };
-    const double old_first { *d_shadow->first };
-    const double old_second { *d_shadow->second };
+    const double old_first { *d_shadow->count };
+    const double old_second { *d_shadow->measure };
     const double old_discount { *d_shadow->discount };
     const double old_gross_amount { *d_shadow->initial };
     const double old_net_amount { *d_shadow->final };
@@ -152,10 +152,10 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     case EntryEnumO::kUnitPrice:
         uni_changed = UpdateRate(d_shadow, value.toDouble());
         break;
-    case EntryEnumO::kSecond:
+    case EntryEnumO::kMeasure:
         sec_changed = UpdateSecond(d_shadow, value.toDouble(), kCoefficient);
         break;
-    case EntryEnumO::kFirst:
+    case EntryEnumO::kCount:
         fir_changed = UpdateFirst(d_shadow, value.toDouble(), kCoefficient);
         break;
     case EntryEnumO::kDiscountPrice:
@@ -171,10 +171,10 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     emit SResizeColumnToContents(index.column());
 
     if (fir_changed)
-        emit SSyncDelta(*d_shadow->lhs_node, 0.0, 0.0, *d_shadow->first - old_first);
+        emit SSyncDelta(*d_shadow->lhs_node, 0.0, 0.0, *d_shadow->count - old_first);
 
     if (sec_changed) {
-        const double second_delta { *d_shadow->second - old_second };
+        const double second_delta { *d_shadow->measure - old_second };
         const double gross_amount_delta { *d_shadow->initial - old_gross_amount };
         const double discount_delta { *d_shadow->discount - old_discount };
         const double net_amount_delta { *d_shadow->final - old_net_amount };
@@ -220,10 +220,10 @@ void LeafModelO::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (*d_lhs->rhs_node < *d_rhs->rhs_node) : (*d_lhs->rhs_node > *d_rhs->rhs_node);
         case EntryEnumO::kUnitPrice:
             return (order == Qt::AscendingOrder) ? (*d_lhs->unit_price < *d_rhs->unit_price) : (*d_lhs->unit_price > *d_rhs->unit_price);
-        case EntryEnumO::kFirst:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->first < *d_rhs->first) : (*d_lhs->first > *d_rhs->first);
-        case EntryEnumO::kSecond:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->second < *d_rhs->second) : (*d_lhs->second > *d_rhs->second);
+        case EntryEnumO::kCount:
+            return (order == Qt::AscendingOrder) ? (*d_lhs->count < *d_rhs->count) : (*d_lhs->count > *d_rhs->count);
+        case EntryEnumO::kMeasure:
+            return (order == Qt::AscendingOrder) ? (*d_lhs->measure < *d_rhs->measure) : (*d_lhs->measure > *d_rhs->measure);
         case EntryEnumO::kFinal:
             return (order == Qt::AscendingOrder) ? (*d_lhs->final < *d_rhs->final) : (*d_lhs->final > *d_rhs->final);
         case EntryEnumO::kInitial:
@@ -299,7 +299,7 @@ bool LeafModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     shadow_list_.removeAt(row);
     endRemoveRows();
 
-    emit SSyncDelta(lhs_node, -*d_shadow->initial, -*d_shadow->final, -*d_shadow->first, -*d_shadow->second, -*d_shadow->discount);
+    emit SSyncDelta(lhs_node, -*d_shadow->initial, -*d_shadow->final, -*d_shadow->count, -*d_shadow->measure, -*d_shadow->discount);
 
     if (!lhs_node.isNull() && !rhs_node.isNull()) {
         // dbhub_->RemoveTrans(*d_shadow->id);
@@ -351,7 +351,7 @@ bool LeafModelO::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
         // const auto message { JsonGen::InsertEntry(info_->section_str, d_shadow, node_id_) };
         // WebSocket::Instance().SendMessage(kInsertEntry, message);
 
-        emit SSyncDelta(*d_shadow->lhs_node, *d_shadow->initial, *d_shadow->final, *d_shadow->first, *d_shadow->second, *d_shadow->discount);
+        emit SSyncDelta(*d_shadow->lhs_node, *d_shadow->initial, *d_shadow->final, *d_shadow->count, *d_shadow->measure, *d_shadow->discount);
     }
 
     if (!old_rhs_node.isNull()) {
@@ -368,7 +368,7 @@ bool LeafModelO::UpdateRate(EntryShadow* entry_shadow, double value)
     if (std::abs(*d_shadow->unit_price - value) < kTolerance)
         return false;
 
-    const double delta { *d_shadow->second * (value - *d_shadow->unit_price) };
+    const double delta { *d_shadow->measure * (value - *d_shadow->unit_price) };
     *d_shadow->final += delta;
     *d_shadow->initial += delta;
     *d_shadow->unit_price = value;
@@ -393,7 +393,7 @@ bool LeafModelO::UpdateDiscountPrice(EntryShadow* entry_shadow, double value)
     if (std::abs(*d_shadow->unit_price - value) < kTolerance)
         return false;
 
-    const double delta { *d_shadow->second * (value - *d_shadow->unit_price) };
+    const double delta { *d_shadow->measure * (value - *d_shadow->unit_price) };
     *d_shadow->final -= delta;
     *d_shadow->discount += delta;
     *d_shadow->unit_price = value;
@@ -412,15 +412,15 @@ bool LeafModelO::UpdateSecond(EntryShadow* entry_shadow, double value, int kCoef
 {
     auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
 
-    if (std::abs(*d_shadow->second - value) < kTolerance)
+    if (std::abs(*d_shadow->measure - value) < kTolerance)
         return false;
 
-    const double delta { value * kCoefficient - *d_shadow->second };
+    const double delta { value * kCoefficient - *d_shadow->measure };
     *d_shadow->initial += *d_shadow->unit_price * delta;
     *d_shadow->discount += *d_shadow->unit_price * delta;
     *d_shadow->final += (*d_shadow->unit_price - *d_shadow->unit_price) * delta;
 
-    *d_shadow->second = value * kCoefficient;
+    *d_shadow->measure = value * kCoefficient;
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kDiscount));
@@ -437,7 +437,7 @@ bool LeafModelO::UpdateFirst(EntryShadow* entry_shadow, double value, int kCoeff
 {
     auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
 
-    if (std::abs(*d_shadow->first - value) < kTolerance)
+    if (std::abs(*d_shadow->count - value) < kTolerance)
         return false;
 
     // EntryUtils::UpdateShadow(dbhub_, d_shadow, info_->trans, kFirst, value * kCoefficient, &OTransShadow::first);

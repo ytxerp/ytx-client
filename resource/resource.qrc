@@ -3,7 +3,7 @@
         <file>theme/Solarized Dark.qss</file>
     </qresource>
     <qresource prefix="/I18N">
-        <file>I18N/YTX_zh_CN.qm</file>
+        <file>I18N/ytx_zh_CN.qm</file>
         <file>I18N/qt_zh_CN.qm</file>
     </qresource>
     <qresource prefix="/logo">
