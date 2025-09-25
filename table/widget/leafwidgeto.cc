@@ -55,8 +55,8 @@ void LeafWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double 
 
     const double adjusted_final_delta { node_->unit == std::to_underlying(UnitO::kImmediate) ? final_delta : 0.0 };
 
-    node_->first_total += first_delta;
-    node_->second_total += second_delta;
+    node_->count_total += first_delta;
+    node_->measure_total += second_delta;
     node_->initial_total += initial_delta;
     node_->discount_total += discount_delta;
     node_->final_total += adjusted_final_delta;
@@ -148,9 +148,9 @@ void LeafWidgetO::LockWidgets(bool finished)
     ui->dateTimeEdit->setEnabled(enable);
 
     ui->dSpinFirstTotal->setEnabled(enable);
-    ui->labelFirstTotal->setEnabled(enable);
+    ui->labelCountTotal->setEnabled(enable);
     ui->dSpinSecondTotal->setEnabled(enable);
-    ui->labelSecondTotal->setEnabled(enable);
+    ui->labelMeasureTotal->setEnabled(enable);
 
     ui->rBtnRO->setEnabled(enable);
     ui->rBtnTO->setEnabled(enable);
@@ -182,8 +182,8 @@ void LeafWidgetO::IniLeafValue()
 {
     ui->dSpinFinalTotal->setValue(node_->final_total);
     ui->dSpinDiscountTotal->setValue(node_->discount_total);
-    ui->dSpinFirstTotal->setValue(node_->first_total);
-    ui->dSpinSecondTotal->setValue(node_->second_total);
+    ui->dSpinFirstTotal->setValue(node_->count_total);
+    ui->dSpinSecondTotal->setValue(node_->measure_total);
     ui->dSpinInitialTotal->setValue(node_->initial_total);
 }
 
@@ -284,8 +284,8 @@ void LeafWidgetO::RRuleGroupClicked(int id)
 {
     node_->direction_rule = static_cast<bool>(id);
 
-    node_->first_total *= -1;
-    node_->second_total *= -1;
+    node_->count_total *= -1;
+    node_->measure_total *= -1;
     node_->initial_total *= -1;
     node_->discount_total *= -1;
     node_->final_total *= -1;

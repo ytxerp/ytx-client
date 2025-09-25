@@ -266,7 +266,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="labelFirstTotal">
+         <widget class="QLabel" name="labelCountTotal">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -274,7 +274,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>First</string>
+           <string>Count</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -292,7 +292,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="labelSecondTotal">
+         <widget class="QLabel" name="labelMeasureTotal">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -300,7 +300,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Second</string>
+           <string>Measure</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -451,6 +451,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>DateTimeEdit</class>
+   <extends>QDateTimeEdit</extends>
+   <header location="global">widget/datetimeedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>LineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">widget/lineedit.h</header>
@@ -464,11 +469,6 @@
    <class>DoubleSpinBox</class>
    <extends>QDoubleSpinBox</extends>
    <header location="global">widget/doublespinbox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>DateTimeEdit</class>
-   <extends>QDateTimeEdit</extends>
-   <header location="global">widget/datetimeedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.1.1)
-project(YTX VERSION 0.2.5 LANGUAGES CXX)
+project(YTX VERSION 0.2.6 LANGUAGES CXX)
 
 # ------------------------
 # Qt setup
@@ -10,6 +10,10 @@ find_package(Qt6 REQUIRED COMPONENTS ${QT_MODULES})
 qt_standard_project_setup(REQUIRES 6.9)
 
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(QT_FORCE_CMP0156_TO_VALUE NEW)
 
 # Optionally enable debug build and flags
 # set(CMAKE_BUILD_TYPE Debug)
@@ -375,9 +379,8 @@ endif()
 #        File -> Release
 #        -> This will generate the corresponding .qm file.
 #   5. Use the .qm file in your application (via QTranslator).
-qt6_add_translations(${PROJECT_NAME} TS_FILES resource/I18N/YTX_zh_CN.ts)
+qt6_add_translations(${PROJECT_NAME} TS_FILES resource/I18N/ytx_zh_CN.ts)
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_sources(${PROJECT_NAME} PRIVATE
     ${SOURCES}

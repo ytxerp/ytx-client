@@ -161,8 +161,8 @@ void EntryO::ResetState()
     unit_price = 0.0;
     external_item = QUuid();
 
-    first = 0.0;
-    second = 0.0;
+    count = 0.0;
+    measure = 0.0;
 
     initial = 0.0;
     final = 0.0;
@@ -195,10 +195,10 @@ void EntryO::ReadJson(const QJsonObject& object)
         unit_price = object[kUnitPrice].toString().toDouble();
     if (object.contains(kExternalItem))
         external_item = QUuid(object[kExternalItem].toString());
-    if (object.contains(kFirst))
-        first = object[kFirst].toString().toDouble();
-    if (object.contains(kSecond))
-        second = object[kSecond].toString().toDouble();
+    if (object.contains(kCount))
+        count = object[kCount].toString().toDouble();
+    if (object.contains(kMeasure))
+        measure = object[kMeasure].toString().toDouble();
     if (object.contains(kInitial))
         initial = object[kInitial].toString().toDouble();
     if (object.contains(kFinal))

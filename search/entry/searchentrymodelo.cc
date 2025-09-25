@@ -28,10 +28,10 @@ QVariant SearchEntryModelO::data(const QModelIndex& index, int role) const
         return d_entry->external_item.isNull() ? QVariant() : d_entry->external_item;
     case EntryEnumO::kRhsNode:
         return d_entry->rhs_node;
-    case EntryEnumO::kFirst:
-        return d_entry->first == 0 ? QVariant() : d_entry->first;
-    case EntryEnumO::kSecond:
-        return d_entry->second == 0 ? QVariant() : d_entry->second;
+    case EntryEnumO::kCount:
+        return d_entry->count == 0 ? QVariant() : d_entry->count;
+    case EntryEnumO::kMeasure:
+        return d_entry->measure == 0 ? QVariant() : d_entry->measure;
     case EntryEnumO::kColor:
         return {};
     case EntryEnumO::kDiscountPrice:
@@ -61,12 +61,12 @@ void SearchEntryModelO::sort(int column, Qt::SortOrder order)
         switch (kColumn) {
         case EntryEnumO::kLhsNode:
             return (order == Qt::AscendingOrder) ? (lhs->lhs_node < rhs->lhs_node) : (lhs->lhs_node > rhs->lhs_node);
-        case EntryEnumO::kFirst:
-            return (order == Qt::AscendingOrder) ? (d_lhs->first < d_rhs->first) : (d_lhs->first > d_rhs->first);
+        case EntryEnumO::kCount:
+            return (order == Qt::AscendingOrder) ? (d_lhs->count < d_rhs->count) : (d_lhs->count > d_rhs->count);
         case EntryEnumO::kUnitPrice:
             return (order == Qt::AscendingOrder) ? (d_lhs->unit_price < d_rhs->unit_price) : (d_lhs->unit_price > d_rhs->unit_price);
-        case EntryEnumO::kSecond:
-            return (order == Qt::AscendingOrder) ? (d_lhs->second < d_rhs->second) : (d_lhs->second > d_rhs->second);
+        case EntryEnumO::kMeasure:
+            return (order == Qt::AscendingOrder) ? (d_lhs->measure < d_rhs->measure) : (d_lhs->measure > d_rhs->measure);
         case EntryEnumO::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
         case EntryEnumO::kExternalItem:

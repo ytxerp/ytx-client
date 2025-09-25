@@ -56,10 +56,10 @@ QVariant StatementPrimaryModel::data(const QModelIndex& index, int role) const
         return node->employee.isNull() ? QVariant() : node->employee;
     case StatementPrimaryEnum::kIssuedTime:
         return node->issued_time;
-    case StatementPrimaryEnum::kFirst:
-        return node->first == 0 ? QVariant() : node->first;
-    case StatementPrimaryEnum::kSecond:
-        return node->second == 0 ? QVariant() : node->second;
+    case StatementPrimaryEnum::kCount:
+        return node->count == 0 ? QVariant() : node->count;
+    case StatementPrimaryEnum::kMeasure:
+        return node->measure == 0 ? QVariant() : node->measure;
     case StatementPrimaryEnum::kIsChecked:
         return node->is_checked ? node->is_checked : QVariant();
     case StatementPrimaryEnum::kInitialTotal:
@@ -113,10 +113,10 @@ void StatementPrimaryModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->employee < rhs->employee) : (lhs->employee > rhs->employee);
         case StatementPrimaryEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
-        case StatementPrimaryEnum::kFirst:
-            return (order == Qt::AscendingOrder) ? (lhs->first < rhs->first) : (lhs->first > rhs->first);
-        case StatementPrimaryEnum::kSecond:
-            return (order == Qt::AscendingOrder) ? (lhs->second < rhs->second) : (lhs->second > rhs->second);
+        case StatementPrimaryEnum::kCount:
+            return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
+        case StatementPrimaryEnum::kMeasure:
+            return (order == Qt::AscendingOrder) ? (lhs->measure < rhs->measure) : (lhs->measure > rhs->measure);
         case StatementPrimaryEnum::kIsChecked:
             return (order == Qt::AscendingOrder) ? (lhs->is_checked < rhs->is_checked) : (lhs->is_checked > rhs->is_checked);
         case StatementPrimaryEnum::kFinalTotal:

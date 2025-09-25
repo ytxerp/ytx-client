@@ -54,10 +54,10 @@ QVariant EntryRefModel::data(const QModelIndex& index, int role) const
         return entry->order_id;
     case EntryRefEnum::kExternalItem:
         return entry->external_item.isNull() ? QVariant() : entry->external_item;
-    case EntryRefEnum::kFirst:
-        return entry->first == 0 ? QVariant() : entry->first;
-    case EntryRefEnum::kSecond:
-        return entry->second == 0 ? QVariant() : entry->second;
+    case EntryRefEnum::kkCount:
+        return entry->count == 0 ? QVariant() : entry->count;
+    case EntryRefEnum::kkMeasure:
+        return entry->measure == 0 ? QVariant() : entry->measure;
     case EntryRefEnum::kUnitPrice:
         return entry->unit_price == 0 ? QVariant() : entry->unit_price;
     case EntryRefEnum::kDiscountPrice:
@@ -96,10 +96,10 @@ void EntryRefModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->pi_id < rhs->pi_id) : (lhs->pi_id > rhs->pi_id);
         case EntryRefEnum::kUnitPrice:
             return (order == Qt::AscendingOrder) ? (lhs->unit_price < rhs->unit_price) : (lhs->unit_price > rhs->unit_price);
-        case EntryRefEnum::kFirst:
-            return (order == Qt::AscendingOrder) ? (lhs->first < rhs->first) : (lhs->first > rhs->first);
-        case EntryRefEnum::kSecond:
-            return (order == Qt::AscendingOrder) ? (lhs->second < rhs->second) : (lhs->second > rhs->second);
+        case EntryRefEnum::kkCount:
+            return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
+        case EntryRefEnum::kkMeasure:
+            return (order == Qt::AscendingOrder) ? (lhs->measure < rhs->measure) : (lhs->measure > rhs->measure);
         case EntryRefEnum::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
         case EntryRefEnum::kInitial:

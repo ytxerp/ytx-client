@@ -62,10 +62,10 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
         return entry->rhs_node;
     case StatementSecondaryEnum::kSupportNode:
         return entry->support_id.isNull() ? QVariant() : entry->support_id;
-    case StatementSecondaryEnum::kFirst:
-        return entry->first == 0 ? QVariant() : entry->first;
-    case StatementSecondaryEnum::kSecond:
-        return entry->second == 0 ? QVariant() : entry->second;
+    case StatementSecondaryEnum::kCount:
+        return entry->count == 0 ? QVariant() : entry->count;
+    case StatementSecondaryEnum::kMeasure:
+        return entry->measure == 0 ? QVariant() : entry->measure;
     case StatementSecondaryEnum::kUnitPrice:
         return entry->unit_price == 0 ? QVariant() : entry->unit_price;
     case StatementSecondaryEnum::kDescription:
@@ -123,10 +123,10 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->rhs_node < rhs->rhs_node) : (lhs->rhs_node > rhs->rhs_node);
         case StatementSecondaryEnum::kSupportNode:
             return (order == Qt::AscendingOrder) ? (lhs->support_id < rhs->support_id) : (lhs->support_id > rhs->support_id);
-        case StatementSecondaryEnum::kFirst:
-            return (order == Qt::AscendingOrder) ? (lhs->first < rhs->first) : (lhs->first > rhs->first);
-        case StatementSecondaryEnum::kSecond:
-            return (order == Qt::AscendingOrder) ? (lhs->second < rhs->second) : (lhs->second > rhs->second);
+        case StatementSecondaryEnum::kCount:
+            return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
+        case StatementSecondaryEnum::kMeasure:
+            return (order == Qt::AscendingOrder) ? (lhs->measure < rhs->measure) : (lhs->measure > rhs->measure);
         case StatementSecondaryEnum::kUnitPrice:
             return (order == Qt::AscendingOrder) ? (lhs->unit_price < rhs->unit_price) : (lhs->unit_price > rhs->unit_price);
         case StatementSecondaryEnum::kDescription:
@@ -194,7 +194,7 @@ void StatementSecondaryModel::RExport(int unit, const QDateTime& start, const QD
             sheet->Write(5, 1, tr("Current Balance"));
             sheet->Write(5, 3, pbalance + cdelta);
 
-            const QStringList header { tr("Date"), tr("Internal"), tr("External"), tr("First"), tr("Second"), tr("UnitPrice"), tr("Description"),
+            const QStringList header { tr("Date"), tr("Internal"), tr("External"), tr("Count"), tr("Measure"), tr("UnitPrice"), tr("Description"),
                 tr("GrossAmount") };
             sheet->WriteRow(7, 4, header);
 
@@ -204,8 +204,8 @@ void StatementSecondaryModel::RExport(int unit, const QDateTime& start, const QD
 
             qsizetype row_index { 0 };
             for (const auto* entry : std::as_const(statement_secondary_list_)) {
-                list[row_index] << entry->issued_time << item_leaf_.value(entry->rhs_node) << stakeholder_leaf_.value(entry->support_id) << entry->first
-                                << entry->second << entry->unit_price << entry->description << entry->initial;
+                list[row_index] << entry->issued_time << item_leaf_.value(entry->rhs_node) << stakeholder_leaf_.value(entry->support_id) << entry->count
+                                << entry->measure << entry->unit_price << entry->description << entry->initial;
                 ++row_index;
             }
 

@@ -31,8 +31,8 @@ struct EntryRef {
     int section {};
     QUuid pi_id {}; // party or item uuid
     QUuid external_item {};
-    double first {};
-    double second {};
+    double count {};
+    double measure {};
     double unit_price {};
     double discount_price {};
     double initial {};
@@ -48,8 +48,8 @@ inline void EntryRef::ResetState()
     section = 0;
     pi_id = QUuid();
     external_item = QUuid();
-    first = 0.0;
-    second = 0.0;
+    count = 0.0;
+    measure = 0.0;
     unit_price = 0.0;
     discount_price = 0.0;
     initial = 0.0;

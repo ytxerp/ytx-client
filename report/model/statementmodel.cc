@@ -59,10 +59,10 @@ QVariant StatementModel::data(const QModelIndex& index, int role) const
         return statement->csettlement == 0 ? QVariant() : statement->csettlement;
     case StatementEnum::kCBalance:
         return statement->cbalance == 0 ? QVariant() : statement->cbalance;
-    case StatementEnum::kCFirst:
-        return statement->cfirst == 0 ? QVariant() : statement->cfirst;
-    case StatementEnum::kCSecond:
-        return statement->csecond == 0 ? QVariant() : statement->csecond;
+    case StatementEnum::kCCount:
+        return statement->ccount == 0 ? QVariant() : statement->ccount;
+    case StatementEnum::kCMeasure:
+        return statement->cmeasure == 0 ? QVariant() : statement->cmeasure;
     default:
         return QVariant();
     }
@@ -95,10 +95,10 @@ void StatementModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->csettlement < rhs->csettlement) : (lhs->csettlement > rhs->csettlement);
         case StatementEnum::kCBalance:
             return (order == Qt::AscendingOrder) ? (lhs->cbalance < rhs->cbalance) : (lhs->cbalance > rhs->cbalance);
-        case StatementEnum::kCFirst:
-            return (order == Qt::AscendingOrder) ? (lhs->cfirst < rhs->cfirst) : (lhs->cfirst > rhs->cfirst);
-        case StatementEnum::kCSecond:
-            return (order == Qt::AscendingOrder) ? (lhs->csecond < rhs->csecond) : (lhs->csecond > rhs->csecond);
+        case StatementEnum::kCCount:
+            return (order == Qt::AscendingOrder) ? (lhs->ccount < rhs->ccount) : (lhs->ccount > rhs->ccount);
+        case StatementEnum::kCMeasure:
+            return (order == Qt::AscendingOrder) ? (lhs->cmeasure < rhs->cmeasure) : (lhs->cmeasure > rhs->cmeasure);
         default:
             return false;
         }

@@ -26,8 +26,8 @@
 struct Statement {
     QUuid party {};
     double pbalance {};
-    double cfirst {};
-    double csecond {};
+    double ccount {};
+    double cmeasure {};
     double cgross_amount {};
     double cbalance {};
     double csettlement {};
@@ -39,8 +39,8 @@ inline void Statement::ResetState()
 {
     party = QUuid();
     pbalance = 0.0;
-    cfirst = 0.0;
-    csecond = 0.0;
+    ccount = 0.0;
+    cmeasure = 0.0;
     cgross_amount = 0.0;
     cbalance = 0.0;
     csettlement = 0.0;
@@ -48,8 +48,8 @@ inline void Statement::ResetState()
 
 struct StatementPrimary {
     QDateTime issued_time {};
-    double first {};
-    double second {};
+    double count {};
+    double measure {};
     double initial_total {};
     bool is_checked {};
     QString description {};
@@ -62,8 +62,8 @@ struct StatementPrimary {
 inline void StatementPrimary::ResetState()
 {
     issued_time = {};
-    first = 0.0;
-    second = 0.0;
+    count = 0.0;
+    measure = 0.0;
     initial_total = 0.0;
     is_checked = false;
     description.clear();
@@ -74,8 +74,8 @@ inline void StatementPrimary::ResetState()
 struct StatementSecondary {
     QDateTime issued_time {};
     QUuid rhs_node {};
-    double first {};
-    double second {};
+    double count {};
+    double measure {};
     double unit_price {};
     double initial {};
     bool is_checked {};
@@ -88,8 +88,8 @@ struct StatementSecondary {
 inline void StatementSecondary::ResetState()
 {
     issued_time = {};
-    first = 0.0;
-    second = 0.0;
+    count = 0.0;
+    measure = 0.0;
     initial = 0.0;
     unit_price = 0.0;
     is_checked = false;

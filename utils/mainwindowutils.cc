@@ -21,7 +21,7 @@ QString MainWindowUtils::ResourceFile()
     path += "/resource.brc";
 
 #if 0
-    QString command { "D:/Qt/6.9.2/mingw_64/bin/rcc.exe" };
+    QString command { "D:/Qt/6.9.2/llvm-mingw_64/bin/rcc.exe" };
     QStringList arguments {};
     arguments << "-binary"
               << "E:/YTX/resource/resource.qrc"

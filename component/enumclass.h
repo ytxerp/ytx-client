@@ -149,8 +149,8 @@ enum class EntryEnumO {
     kUpdateTime,
     kUpdateBy,
     kRhsNode,
-    kFirst,
-    kSecond,
+    kCount,
+    kMeasure,
     kUnitPrice,
     kDescription,
     kExternalItem,
@@ -330,32 +330,32 @@ enum class NodeEnumO {
     kCreateBy,
     kUpdateTime,
     kUpdateBy,
-    kParty,
     kIssuedTime,
     kDescription,
     kDirectionRule,
     kKind,
     kUnit,
     kEmployee,
-    kFirstTotal,
-    kSecondTotal,
+    kCountTotal,
+    kMeasureTotal,
     kIsFinished,
     kInitialTotal,
     kDiscountTotal,
     kFinalTotal,
+    kParty,
     kSettlementId,
 };
 
 // P:Previous, C:Current, Statement
-enum class StatementEnum { kParty = 0, kPBalance, kCFirst, kCSecond, kCGrossAmount, kCBalance, kPlaceholder, kCSettlement };
+enum class StatementEnum { kParty = 0, kPBalance, kCCount, kCMeasure, kCGrossAmount, kCBalance, kPlaceholder, kCSettlement };
 
-enum class StatementPrimaryEnum { kIssuedTime = 0, kFirst, kSecond, kInitialTotal, kIsChecked, kDescription, kEmployee, kFinalTotal };
+enum class StatementPrimaryEnum { kIssuedTime = 0, kCount, kMeasure, kInitialTotal, kIsChecked, kDescription, kEmployee, kFinalTotal };
 
 enum class StatementSecondaryEnum {
     kIssuedTime = 0,
     kRhsNode,
-    kFirst,
-    kSecond,
+    kCount,
+    kMeasure,
     kUnitPrice,
     kInitialTotal,
     kIsChecked,
@@ -386,8 +386,8 @@ enum class EntryRefEnum {
     kSection,
     kPIId,
     kExternalItem,
-    kFirst,
-    kSecond,
+    kkCount,
+    kkMeasure,
     kUnitPrice,
     kDiscountPrice,
     kDescription,

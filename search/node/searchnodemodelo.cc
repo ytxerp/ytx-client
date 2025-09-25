@@ -36,10 +36,10 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
         return d_node->employee;
     case NodeEnumO::kIssuedTime:
         return d_node->issued_time;
-    case NodeEnumO::kFirstTotal:
-        return d_node->first_total;
-    case NodeEnumO::kSecondTotal:
-        return d_node->second_total;
+    case NodeEnumO::kCountTotal:
+        return d_node->count_total;
+    case NodeEnumO::kMeasureTotal:
+        return d_node->measure_total;
     case NodeEnumO::kDiscountTotal:
         return d_node->discount_total;
     case NodeEnumO::kIsFinished:
@@ -80,10 +80,10 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (d_lhs->employee < d_rhs->employee) : (d_lhs->employee > d_rhs->employee);
         case NodeEnumO::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (d_lhs->issued_time < d_rhs->issued_time) : (d_lhs->issued_time > d_rhs->issued_time);
-        case NodeEnumO::kFirstTotal:
-            return (order == Qt::AscendingOrder) ? (d_lhs->first_total < d_rhs->first_total) : (d_lhs->first_total > d_rhs->first_total);
-        case NodeEnumO::kSecondTotal:
-            return (order == Qt::AscendingOrder) ? (d_lhs->second_total < d_rhs->second_total) : (d_lhs->second_total > d_rhs->second_total);
+        case NodeEnumO::kCountTotal:
+            return (order == Qt::AscendingOrder) ? (d_lhs->count_total < d_rhs->count_total) : (d_lhs->count_total > d_rhs->count_total);
+        case NodeEnumO::kMeasureTotal:
+            return (order == Qt::AscendingOrder) ? (d_lhs->measure_total < d_rhs->measure_total) : (d_lhs->measure_total > d_rhs->measure_total);
         case NodeEnumO::kDiscountTotal:
             return (order == Qt::AscendingOrder) ? (d_lhs->discount_total < d_rhs->discount_total) : (d_lhs->discount_total > d_rhs->discount_total);
         case NodeEnumO::kIsFinished:

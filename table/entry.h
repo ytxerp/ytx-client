@@ -91,8 +91,8 @@ struct EntryS final : Entry {
 
 struct EntryO final : Entry {
     double unit_price {};
-    double first {};
-    double second {};
+    double count {};
+    double measure {};
 
     QUuid external_item {};
 
