@@ -35,7 +35,7 @@
 #include "report/widget/settlementwidget.h"
 #include "table/model/leafmodel.h"
 #include "table/model/leafmodelo.h"
-#include "table/widget/leafwidgetfist.h"
+#include "table/widget/leafwidgetfipt.h"
 #include "table/widget/leafwidgeto.h"
 #include "tree/model/treemodel.h"
 #include "tree/model/treemodelo.h"
@@ -126,7 +126,7 @@ private:
 
     void InitContextFinance();
     void InitContextItem();
-    void InitContextStakeholder();
+    void InitContextPartner();
     void InitContextTask();
     void InitContextSale();
     void InitContextPurchase();
@@ -169,23 +169,23 @@ private:
     void TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
     void TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
     void TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
-    void TreeDelegateS(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
+    void TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
     void TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
 
     void TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
-    void TreeConnectS(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
+    void TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectO(QTreeView* tree_view, TreeModel* tree_model) const;
 
     void InsertNodeFunction(const QModelIndex& parent, const QUuid& parent_id, int row);
-    void InsertNodeFIST(Node* node, const QModelIndex& parent, const QUuid& parent_id, int row); // Finance Item Stakeholder Task
+    void InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUuid& parent_id, int row); // Finance Item Partner Task
     void InsertNodeO(Node* node, const QModelIndex& parent, int row); // Purchase Sales
 
     void RemoveNode();
     void RemoveBranchNode(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id);
 
-    void UpdateStakeholderReference(const QSet<QUuid>& stakeholder_nodes, bool branch) const;
+    void UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool branch) const;
 
     void LoadAndInstallTranslator(CString& language);
     void ResizeColumn(QHeaderView* header, int stretch_column) const;
@@ -218,7 +218,7 @@ private:
     void SetAppFontByDpi();
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
-    inline bool IsLeafWidgetFIST(const QWidget* widget) { return widget && widget->inherits(kLeafWidgetFIST); }
+    inline bool IsLeafWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kLeafWidgetFIPT); }
     inline bool IsLeafWidgetO(const QWidget* widget) { return widget && widget->inherits(kLeafWidgetO); }
 
 private:
@@ -248,7 +248,7 @@ private:
     SectionContext sc_f_ {};
     SectionContext sc_i_ {};
     SectionContext sc_t_ {};
-    SectionContext sc_s_ {};
+    SectionContext sc_p_ {};
     SectionContext sc_sale_ {};
     SectionContext sc_purchase_ {};
 };

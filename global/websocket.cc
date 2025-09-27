@@ -395,7 +395,7 @@ void WebSocket::ApplyLeafReplace(const QJsonObject& obj)
     if (section == kItem && external_reference) {
         entry_hub_hash_.value(kSale)->ApplyItemReplace(old_id, new_id);
         entry_hub_hash_.value(kPurchase)->ApplyItemReplace(old_id, new_id);
-        entry_hub_hash_.value(kStakeholder)->ApplyItemReplace(old_id, new_id);
+        entry_hub_hash_.value(kPartner)->ApplyItemReplace(old_id, new_id);
     }
 
     auto tree_model = tree_model_hash_.value(section);

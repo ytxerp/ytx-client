@@ -26,7 +26,7 @@ void SettlementModel::RSyncDouble(const QUuid& settlement_id, int column, double
         if (settlement->id == settlement_id) {
             settlement->initial_total += delta1;
 
-            emit SUpdateAmount(settlement->party, 0.0, -delta1); // send to stakeholder
+            emit SUpdateAmount(settlement->party, 0.0, -delta1); // send to partner
             emit dataChanged(index(row, std::to_underlying(SettlementEnum::kInitialTotal)), index(row, std::to_underlying(SettlementEnum::kInitialTotal)));
 
             // dbhub_->WriteField(info_->settlement, kInitialTotal, settlement->initial_total, settlement->id);
@@ -92,7 +92,7 @@ QVariant SettlementModel::data(const QModelIndex& index, int role) const
         return settlement->is_finished ? settlement->is_finished : QVariant();
     case SettlementEnum::kInitialTotal:
         return settlement->initial_total == 0 ? QVariant() : settlement->initial_total;
-    case SettlementEnum::kStakeholder:
+    case SettlementEnum::kPartner:
         return settlement->party.isNull() ? QVariant() : settlement->party;
     default:
         return QVariant();
@@ -117,7 +117,7 @@ bool SettlementModel::setData(const QModelIndex& index, const QVariant& value, i
     case SettlementEnum::kDescription:
         NodeUtils::UpdateField(update_cache_, settlement, kDescription, value.toString(), &Settlement::description);
         break;
-    case SettlementEnum::kStakeholder:
+    case SettlementEnum::kPartner:
         UpdateParty(settlement, value.toUuid());
         break;
     case SettlementEnum::kIsFinished:
@@ -155,7 +155,7 @@ Qt::ItemFlags SettlementModel::flags(const QModelIndex& index) const
     switch (kColumn) {
     case SettlementEnum::kIssuedTime:
     case SettlementEnum::kDescription:
-    case SettlementEnum::kStakeholder:
+    case SettlementEnum::kPartner:
         flags |= Qt::ItemIsEditable;
         break;
     default:
@@ -179,7 +179,7 @@ void SettlementModel::sort(int column, Qt::SortOrder order)
         const SettlementEnum kColumn { column };
 
         switch (kColumn) {
-        case SettlementEnum::kStakeholder:
+        case SettlementEnum::kPartner:
             return (order == Qt::AscendingOrder) ? (lhs->party < rhs->party) : (lhs->party > rhs->party);
         case SettlementEnum::kUserId:
             return (order == Qt::AscendingOrder) ? (lhs->user_id < rhs->user_id) : (lhs->user_id > rhs->user_id);
@@ -216,7 +216,7 @@ bool SettlementModel::removeRows(int row, int /*count*/, const QModelIndex& pare
     endRemoveRows();
 
     if (settlement->initial_total != 0.0)
-        emit SUpdateAmount(settlement->party, std::to_underlying(NodeEnumS::kFinalTotal), settlement->initial_total);
+        emit SUpdateAmount(settlement->party, std::to_underlying(NodeEnumP::kFinalTotal), settlement->initial_total);
 
     dbhub_->RemoveSettlement(settlement->id);
     ResourcePool<Settlement>::Instance().Recycle(settlement);

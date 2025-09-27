@@ -8,10 +8,10 @@
 #include <QPrinterInfo>
 #include <QVariant>
 
-PrintManager::PrintManager(CLocalConfig& local_config, TreeModel* item, TreeModel* stakeholder)
+PrintManager::PrintManager(CLocalConfig& local_config, TreeModel* item, TreeModel* partner)
     : local_config_ { local_config }
     , item_ { item }
-    , stakeholder_ { stakeholder }
+    , partner_ { partner }
 {
 }
 

@@ -80,7 +80,7 @@ struct NodeT final : Node {
     QJsonObject WriteJson() const override;
 };
 
-struct NodeS final : Node {
+struct NodeP final : Node {
     int payment_term {};
 
     void ResetState() override;

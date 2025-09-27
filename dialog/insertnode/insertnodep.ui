@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>InsertNodeStakeholder</class>
- <widget class="QDialog" name="InsertNodeStakeholder">
+ <class>InsertNodeP</class>
+ <widget class="QDialog" name="InsertNodeP">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -372,7 +372,7 @@
   <connection>
    <sender>pBtnCancel</sender>
    <signal>clicked()</signal>
-   <receiver>InsertNodeStakeholder</receiver>
+   <receiver>InsertNodeP</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -388,7 +388,7 @@
   <connection>
    <sender>pBtnOk</sender>
    <signal>clicked()</signal>
-   <receiver>InsertNodeStakeholder</receiver>
+   <receiver>InsertNodeP</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">

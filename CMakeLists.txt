@@ -33,7 +33,7 @@ set(SOURCES
     mainwindow.cc
     tree/node.cc
     tree/itemmodel.cc
-    tree/widget/treewidgets.cc
+    tree/widget/treewidgetp.cc
     tree/widget/treewidgetto.cc
     tree/widget/treewidgetf.cc
     tree/widget/treewidgeti.cc
@@ -42,9 +42,9 @@ set(SOURCES
     tree/model/treemodel.cc
     tree/model/treemodeli.cc
     tree/model/treemodelo.cc
-    tree/model/treemodels.cc
+    tree/model/treemodelp.cc
     entryhub/entryhubo.cc
-    entryhub/entryhubs.cc
+    entryhub/entryhubp.cc
     entryhub/entryhubf.cc
     entryhub/entryhub.cc
     entryhub/entryhubi.cc
@@ -88,12 +88,12 @@ set(SOURCES
     print/printmanager.cc
     search/entry/searchentrymodelo.cc
     search/entry/searchentrymodel.cc
-    search/entry/searchentrymodels.cc
+    search/entry/searchentrymodelp.cc
     search/entry/searchentrymodeli.cc
     search/entry/searchentrymodelt.cc
     search/entry/searchentrymodelf.cc
     search/dialog/searchdialogo.cc
-    search/dialog/searchdialogs.cc
+    search/dialog/searchdialogp.cc
     search/dialog/searchdialogf.cc
     search/dialog/searchdialogt.cc
     search/dialog/searchdialogi.cc
@@ -102,7 +102,7 @@ set(SOURCES
     search/node/searchnodemodel.cc
     search/node/searchnodemodelt.cc
     search/node/searchnodemodelf.cc
-    search/node/searchnodemodels.cc
+    search/node/searchnodemodelp.cc
     search/node/searchnodemodelo.cc
     dialog/login.cc
     dialog/editdocument.cc
@@ -113,12 +113,12 @@ set(SOURCES
     dialog/removenode/removeleafnodedialog.cc
     dialog/insertnode/insertnodefinance.cc
     dialog/insertnode/insertnodeitem.cc
-    dialog/insertnode/insertnodestakeholder.cc
+    dialog/insertnode/insertnodep.cc
     dialog/insertnode/insertnodetask.cc
     dialog/insertnode/insertnodebranch.cc
     table/entry.cc
     table/entryshadow.cc
-    table/widget/leafwidgetfist.cc
+    table/widget/leafwidgetfipt.cc
     table/widget/leafwidgeto.cc
     table/model/leafmodeli.cc
     table/model/leafmodelt.cc
@@ -149,7 +149,7 @@ set(HEADERS
     tree/excludemultiplefiltermodel.h
     tree/node.h
     tree/itemmodel.h
-    tree/widget/treewidgets.h
+    tree/widget/treewidgetp.h
     tree/widget/treewidget.h
     tree/widget/treewidgetf.h
     tree/widget/treewidgetto.h
@@ -158,10 +158,10 @@ set(HEADERS
     tree/model/treemodeli.h
     tree/model/treemodelt.h
     tree/model/treemodelf.h
-    tree/model/treemodels.h
+    tree/model/treemodelp.h
     tree/model/treemodelo.h
     entryhub/entryhubo.h
-    entryhub/entryhubs.h
+    entryhub/entryhubp.h
     entryhub/entryhubf.h
     entryhub/entryhub.h
     entryhub/entryhubt.h
@@ -183,7 +183,7 @@ set(HEADERS
     component/info.h
     component/arg/entrymodelarg.h
     component/arg/insertnodeargo.h
-    component/arg/insertnodeargfist.h
+    component/arg/insertnodeargfipt.h
     delegate/dboolstring.h
     delegate/styleditemdelegate.h
     delegate/plaintextguard.h
@@ -226,18 +226,18 @@ set(HEADERS
     search/entry/searchentrymodeli.h
     search/entry/searchentrymodelt.h
     search/entry/searchentrymodelf.h
-    search/entry/searchentrymodels.h
+    search/entry/searchentrymodelp.h
     search/entry/searchentrymodelo.h
     search/dialog/searchdialog.h
     search/dialog/searchdialogf.h
     search/dialog/searchdialogt.h
     search/dialog/searchdialogo.h
-    search/dialog/searchdialogs.h
+    search/dialog/searchdialogp.h
     search/dialog/searchdialogi.h
     search/node/searchnodemodeli.h
     search/node/searchnodemodelo.h
     search/node/searchnodemodel.h
-    search/node/searchnodemodels.h
+    search/node/searchnodemodelp.h
     search/node/searchnodemodelf.h
     search/node/searchnodemodelt.h
     dialog/about.h
@@ -247,14 +247,14 @@ set(HEADERS
     dialog/registerdialog.h
     dialog/login.h
     dialog/removenode/removeleafnodedialog.h
-    dialog/insertnode/insertnodestakeholder.h
+    dialog/insertnode/insertnodep.h
     dialog/insertnode/insertnodebranch.h
     dialog/insertnode/insertnodeitem.h
     dialog/insertnode/insertnodetask.h
     dialog/insertnode/insertnodefinance.h
     table/entryshadow.h
     table/entry.h
-    table/widget/leafwidgetfist.h
+    table/widget/leafwidgetfipt.h
     table/widget/leafwidgeto.h
     table/widget/leafwidget.h
     table/model/leafmodels.h
@@ -292,7 +292,7 @@ set(UIS
     tree/widget/treewidgeti.ui
     tree/widget/treewidgetf.ui
     tree/widget/treewidgetto.ui
-    tree/widget/treewidgets.ui
+    tree/widget/treewidgetp.ui
     search/dialog/searchdialog.ui
     dialog/editnodename.ui
     dialog/about.ui
@@ -302,11 +302,11 @@ set(UIS
     dialog/login.ui
     dialog/removenode/removeleafnodedialog.ui
     dialog/insertnode/insertnodebranch.ui
-    dialog/insertnode/insertnodestakeholder.ui
+    dialog/insertnode/insertnodep.ui
     dialog/insertnode/insertnodetask.ui
     dialog/insertnode/insertnodeitem.ui
     dialog/insertnode/insertnodefinance.ui
-    table/widget/leafwidgetfist.ui
+    table/widget/leafwidgetfipt.ui
     table/widget/leafwidgeto.ui
     report/widget/statementwidget.ui
     report/widget/settlementwidget.ui

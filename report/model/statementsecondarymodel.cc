@@ -11,14 +11,14 @@
 #include "utils/mainwindowutils.h"
 
 StatementSecondaryModel::StatementSecondaryModel(
-    EntryHub* dbhub, CSectionInfo& info, const QUuid& party_id, CUuidString& item_leaf, TreeModel* stakeholder, CString& company_name, QObject* parent)
+    EntryHub* dbhub, CSectionInfo& info, const QUuid& party_id, CUuidString& item_leaf, TreeModel* partner, CString& company_name, QObject* parent)
     : QAbstractItemModel { parent }
     , dbhub_ { static_cast<EntryHubO*>(dbhub) }
     , info_ { info }
     , party_id_ { party_id }
     , item_leaf_ { item_leaf }
-    , stakeholder_leaf_ { stakeholder->LeafPath() }
-    , stakeholder_ { stakeholder }
+    , partner_leaf_ { partner->LeafPath() }
+    , partner_ { partner }
     , company_name_ { company_name }
 {
 }
@@ -167,7 +167,7 @@ void StatementSecondaryModel::RExport(int unit, const QDateTime& start, const QD
         dbhub_->ReadBalance(pbalance, cdelta, party_id_, unit, start, end);
     }
 
-    CString name { QDir::homePath() + QDir::separator() + stakeholder_->Name(party_id_) + QStringLiteral("-") + company_name_ + QStringLiteral("-")
+    CString name { QDir::homePath() + QDir::separator() + partner_->Name(party_id_) + QStringLiteral("-") + company_name_ + QStringLiteral("-")
         + end.toString(kMonthFST) };
 
     QString destination { QFileDialog::getSaveFileName(nullptr, tr("Export Excel"), name, QStringLiteral("*.xlsx")) };
@@ -183,7 +183,7 @@ void StatementSecondaryModel::RExport(int unit, const QDateTime& start, const QD
             book->AppendSheet(tr("Statement"));
             auto sheet { book->GetCurrentWorksheet() };
 
-            sheet->Write(1, 1, stakeholder_->Name(party_id_));
+            sheet->Write(1, 1, partner_->Name(party_id_));
             sheet->Write(2, 1, tr("Date"));
             sheet->Write(2, 2, start.toString(kDateFST));
             sheet->Write(2, 3, end.toString(kDateFST));
@@ -204,7 +204,7 @@ void StatementSecondaryModel::RExport(int unit, const QDateTime& start, const QD
 
             qsizetype row_index { 0 };
             for (const auto* entry : std::as_const(statement_secondary_list_)) {
-                list[row_index] << entry->issued_time << item_leaf_.value(entry->rhs_node) << stakeholder_leaf_.value(entry->support_id) << entry->count
+                list[row_index] << entry->issued_time << item_leaf_.value(entry->rhs_node) << partner_leaf_.value(entry->support_id) << entry->count
                                 << entry->measure << entry->unit_price << entry->description << entry->initial;
                 ++row_index;
             }

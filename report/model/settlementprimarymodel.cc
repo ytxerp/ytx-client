@@ -57,7 +57,7 @@ QVariant SettlementPrimaryModel::data(const QModelIndex& index, int role) const
         return settlement->is_finished ? settlement->is_finished : QVariant();
     case SettlementEnum::kInitialTotal:
         return settlement->initial_total == 0 ? QVariant() : settlement->initial_total;
-    case SettlementEnum::kStakeholder:
+    case SettlementEnum::kPartner:
         return settlement->employee.isNull() ? QVariant() : settlement->employee;
     default:
         return QVariant();
@@ -97,7 +97,7 @@ void SettlementPrimaryModel::sort(int column, Qt::SortOrder order)
         const SettlementEnum kColumn { column };
 
         switch (kColumn) {
-        case SettlementEnum::kStakeholder:
+        case SettlementEnum::kPartner:
             return (order == Qt::AscendingOrder) ? (lhs->employee < rhs->employee) : (lhs->employee > rhs->employee);
         case SettlementEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);

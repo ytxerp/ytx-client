@@ -330,10 +330,10 @@ inline const QString kSalePath = QStringLiteral("sale_path");
 inline const QString kSaleSettlement = QStringLiteral("sale_settlement");
 inline const QString kSaleEntry = QStringLiteral("sale_entry");
 
-inline const QString kStakeholder = QStringLiteral("stakeholder");
-inline const QString kStakeholderNode = QStringLiteral("stakeholder_node");
-inline const QString kStakeholderPath = QStringLiteral("stakeholder_path");
-inline const QString kStakeholderEntry = QStringLiteral("stakeholder_entry");
+inline const QString kPartner = QStringLiteral("partner");
+inline const QString kPartnerNode = QStringLiteral("partner_node");
+inline const QString kPartnerPath = QStringLiteral("partner_path");
+inline const QString kPartnerEntry = QStringLiteral("partner_entry");
 
 inline const QString kTask = QStringLiteral("task");
 inline const QString kTaskNode = QStringLiteral("task_node");

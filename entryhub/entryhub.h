@@ -38,7 +38,7 @@ protected:
     EntryHub(CSectionInfo& info, QObject* parent = nullptr);
 
 signals:
-    // send to LeafSStation; Stakeholder and order entries are removed directly
+    // send to LeafSStation; partner and order entries are removed directly
     void SRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash);
     void SRemoveMultiEntry(const QUuid& leaf_id, const QSet<QUuid>& entry_id_set);
     void SAppendMultiEntry(const QUuid& leaf_id, const EntryList& entry_list);

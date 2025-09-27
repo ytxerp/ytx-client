@@ -6,7 +6,7 @@
 #include "component/signalblocker.h"
 #include "ui_insertnodetask.h"
 
-InsertNodeTask::InsertNodeTask(CInsertNodeArgFIST& arg, QWidget* parent)
+InsertNodeTask::InsertNodeTask(CInsertNodeArgFIPT& arg, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::InsertNodeTask)
     , node_ { static_cast<NodeT*>(arg.node) }

@@ -30,7 +30,7 @@ struct InsertNodeArgO {
     Node* node {};
     EntryHub* dbhub {};
     LeafModel* leaf_model {};
-    TreeModel* tree_model_stakeholder {};
+    TreeModel* tree_model_partner {};
     CSectionConfig& section_config {};
     Section section {};
 };

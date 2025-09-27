@@ -179,16 +179,16 @@ QJsonObject EntryShadowT::WriteJson() const
     return obj;
 }
 
-void EntryShadowS::BindEntry(Entry* base, bool /* is_parallel */)
+void EntryShadowP::BindEntry(Entry* base, bool /* is_parallel */)
 {
-    EntryShadow::BindEntry(base, true); // Always parallel for EntryS
+    EntryShadow::BindEntry(base, true); // Always parallel for EntryP
 
-    auto* entry = static_cast<EntryS*>(base);
+    auto* entry = static_cast<EntryP*>(base);
     unit_price = &entry->unit_price;
     external_item = &entry->external_item;
 }
 
-void EntryShadowS::ResetState()
+void EntryShadowP::ResetState()
 {
     EntryShadow::ResetState();
 
@@ -196,7 +196,7 @@ void EntryShadowS::ResetState()
     external_item = nullptr;
 }
 
-QJsonObject EntryShadowS::WriteJson() const
+QJsonObject EntryShadowP::WriteJson() const
 {
     QJsonObject obj = EntryShadow::WriteJson();
     obj.insert(kUnitPrice, QString::number(*unit_price, 'f', kMaxNumericScale_4));

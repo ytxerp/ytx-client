@@ -17,20 +17,19 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHNODEMODELS_H
-#define SEARCHNODEMODELS_H
+#ifndef INSERTNODEARGFIPT_H
+#define INSERTNODEARGFIPT_H
 
-#include "searchnodemodel.h"
+#include "tree/itemmodel.h"
+#include "tree/node.h"
 
-class SearchNodeModelS final : public SearchNodeModel {
-    Q_OBJECT
-
-public:
-    SearchNodeModelS(CSectionInfo& info, CTreeModel* tree_model, QObject* parent = nullptr);
-
-public:
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    void sort(int column, Qt::SortOrder order) override;
+struct InsertNodeArgFIPT {
+    Node* node {};
+    ItemModel* unit_model {};
+    const QString& parent_path {};
+    const QStringList& name_list {};
 };
 
-#endif // SEARCHNODEMODELS_H
+using CInsertNodeArgFIPT = const InsertNodeArgFIPT;
+
+#endif // INSERTNODEARGFIPT_H

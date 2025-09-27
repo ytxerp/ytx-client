@@ -36,7 +36,7 @@ protected:
     std::pair<int, int> NumericColumnRange() const override { return { std::to_underlying(EntryEnumI::kDebit), std::to_underlying(EntryEnumI::kBalance) }; }
 
 private:
-    QString QSReplaceLeafSI() const; // stakeholder_node item_node
+    QString QSReplaceLeafSI() const; // partner_node item_node
     QString QSReplaceLeafOSI() const; // order sale_node item_node
     QString QSReplaceLeafOPI() const; // order purchase_node item_node
 };

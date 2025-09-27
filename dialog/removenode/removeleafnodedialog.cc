@@ -89,7 +89,7 @@ void RemoveLeafNodeDialog::IniData(Section section, bool exteral_reference)
     ui->pBtnCancel->setDefault(true);
     this->setWindowTitle(tr("Remove %1").arg(model_->Path(node_id_)));
 
-    if (section == Section::kSale || section == Section::kPurchase || section == Section::kStakeholder) {
+    if (section == Section::kSale || section == Section::kPurchase || section == Section::kPartner) {
         ui->rBtnReplace->setEnabled(false);
         return;
     }

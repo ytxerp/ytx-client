@@ -81,7 +81,7 @@ struct EntryT final : Entry {
     void ReadJson(const QJsonObject& object) override;
 };
 
-struct EntryS final : Entry {
+struct EntryP final : Entry {
     double unit_price {};
     QUuid external_item {};
 

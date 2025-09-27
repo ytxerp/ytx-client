@@ -1,20 +1,20 @@
-#include "entryhubs.h"
+#include "entryhubp.h"
 
-EntryHubS::EntryHubS(CSectionInfo& info, QObject* parent)
+EntryHubP::EntryHubP(CSectionInfo& info, QObject* parent)
     : EntryHub(info, parent)
 {
 }
 
-void EntryHubS::ApplyLeafRemove(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
+void EntryHubP::ApplyLeafRemove(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
 
-void EntryHubS::RPriceSList(const QList<PriceS>& list)
+void EntryHubP::RPriceSList(const QList<PriceS>& list)
 {
     for (int i = 0; i != list.size(); ++i) {
-        EntryS* latest_trans { nullptr };
+        EntryP* latest_trans { nullptr };
 
         for (auto* trans : std::as_const(entry_cache_)) {
             if (trans->lhs_node == list[i].lhs_node && trans->rhs_node == list[i].rhs_node) {
-                latest_trans = static_cast<EntryS*>(trans);
+                latest_trans = static_cast<EntryP*>(trans);
                 break;
             }
         }
@@ -34,10 +34,10 @@ void EntryHubS::RPriceSList(const QList<PriceS>& list)
     ReadTransRange(set);
 }
 
-void EntryHubS::ApplyItemReplace(const QUuid& old_item_id, const QUuid& new_item_id) const
+void EntryHubP::ApplyItemReplace(const QUuid& old_item_id, const QUuid& new_item_id) const
 {
     for (auto* entry : std::as_const(entry_cache_)) {
-        auto* d_entry = static_cast<EntryS*>(entry);
+        auto* d_entry = static_cast<EntryP*>(entry);
 
         if (d_entry->rhs_node == old_item_id)
             d_entry->rhs_node = new_item_id;
@@ -47,12 +47,12 @@ void EntryHubS::ApplyItemReplace(const QUuid& old_item_id, const QUuid& new_item
     }
 }
 
-bool EntryHubS::CrossSearch(EntryShadowO* order_entry_shadow, const QUuid& party_id, const QUuid& item_id, bool is_internal) const
+bool EntryHubP::CrossSearch(EntryShadowO* order_entry_shadow, const QUuid& party_id, const QUuid& item_id, bool is_internal) const
 {
-    const EntryS* latest_trans { nullptr };
+    const EntryP* latest_trans { nullptr };
 
     for (const auto* trans : std::as_const(entry_cache_)) {
-        auto* d_trans = static_cast<const EntryS*>(trans);
+        auto* d_trans = static_cast<const EntryP*>(trans);
 
         if (is_internal && d_trans->lhs_node == party_id && d_trans->rhs_node == item_id) {
             latest_trans = d_trans;
@@ -96,7 +96,7 @@ bool EntryHubS::CrossSearch(EntryShadowO* order_entry_shadow, const QUuid& party
 //     }
 // }
 
-bool EntryHubS::ReadTransRange(const QSet<QUuid>& set)
+bool EntryHubP::ReadTransRange(const QSet<QUuid>& set)
 {
     // QSqlQuery query(main_db_);
     // query.setForwardOnly(true);
@@ -140,7 +140,7 @@ bool EntryHubS::ReadTransRange(const QSet<QUuid>& set)
     return true;
 }
 
-QString EntryHubS::QSReadTransRef(int unit) const
+QString EntryHubP::QSReadTransRef(int unit) const
 {
     QString base_query = QStringLiteral(R"(
         SELECT

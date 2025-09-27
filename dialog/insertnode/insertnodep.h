@@ -17,25 +17,25 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INSERTNODESTAKEHOLDER_H
-#define INSERTNODESTAKEHOLDER_H
+#ifndef INSERTNODEP_H
+#define INSERTNODEP_H
 
 #include <QButtonGroup>
 #include <QDialog>
 
-#include "component/arg/insertnodeargfist.h"
+#include "component/arg/insertnodeargfipt.h"
 #include "component/using.h"
 
 namespace Ui {
-class InsertNodeStakeholder;
+class InsertNodeP;
 }
 
-class InsertNodeStakeholder final : public QDialog {
+class InsertNodeP final : public QDialog {
     Q_OBJECT
 
 public:
-    InsertNodeStakeholder(CInsertNodeArgFIST& arg, QWidget* parent = nullptr);
-    ~InsertNodeStakeholder();
+    InsertNodeP(CInsertNodeArgFIPT& arg, QWidget* parent = nullptr);
+    ~InsertNodeP();
 
 private slots:
     void RNameEdited(const QString& arg1);
@@ -57,12 +57,12 @@ private:
     void IniKindGroup();
 
 private:
-    Ui::InsertNodeStakeholder* ui;
-    NodeS* node_ {};
+    Ui::InsertNodeP* ui;
+    NodeP* node_ {};
     QButtonGroup* kind_group_ {};
 
     CString& parent_path_ {};
     CStringList& name_list_ {};
 };
 
-#endif // INSERTNODESTAKEHOLDER_H
+#endif // INSERTNODEP_H

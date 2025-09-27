@@ -34,7 +34,6 @@ public:
     EntryHubO(CSectionInfo& info, QObject* parent = nullptr);
 
 signals:
-    // send to sqlite stakeholder
     void SSyncPrice(const QList<PriceS>& list);
 
 public:

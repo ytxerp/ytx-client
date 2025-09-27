@@ -1,11 +1,11 @@
 #include "searchnodemodelo.h"
 
 #include "component/enumclass.h"
-#include "tree/model/treemodels.h"
+#include "tree/model/treemodelp.h"
 
-SearchNodeModelO::SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, CTreeModel* stakeholder_tree_model, QObject* parent)
+SearchNodeModelO::SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, CTreeModel* partner_tree_model, QObject* parent)
     : SearchNodeModel { info, tree_model, parent }
-    , stakeholder_node_ { stakeholder_tree_model }
+    , partner_tree_model_ { partner_tree_model }
 {
 }
 
@@ -106,10 +106,10 @@ void SearchNodeModelO::Search(CString& text)
 {
     node_list_.clear();
 
-    auto* stakeholder_tree { static_cast<const TreeModelS*>(stakeholder_node_) };
+    auto* partner_tree { static_cast<const TreeModelP*>(partner_tree_model_) };
     const int unit { info_.section == Section::kSale ? std::to_underlying(UnitS::kCustomer) : std::to_underlying(UnitS::kVendor) };
 
     beginResetModel();
-    // static_cast<EntryHubO*>(dbhub_)->SearchNode(node_list_, stakeholder_tree->PartyList(text, unit));
+    // static_cast<EntryHubO*>(dbhub_)->SearchNode(node_list_, partner_tree->PartyList(text, unit));
     endResetModel();
 }

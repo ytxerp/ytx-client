@@ -17,19 +17,28 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHENTRYMODELS_H
-#define SEARCHENTRYMODELS_H
+#ifndef TREEWIDGETP_H
+#define TREEWIDGETP_H
 
-#include "searchentrymodel.h"
+#include "tree/model/treemodel.h"
+#include "treewidget.h"
 
-class SearchEntryModelS final : public SearchEntryModel {
+namespace Ui {
+class TreeWidgetP;
+}
+
+class TreeWidgetP final : public TreeWidget {
     Q_OBJECT
-public:
-    SearchEntryModelS(CSectionInfo& info, QObject* parent = nullptr);
 
 public:
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    void sort(int column, Qt::SortOrder order) override;
+    TreeWidgetP(TreeModel* model, QWidget* parent = nullptr);
+    ~TreeWidgetP() override;
+
+    QTreeView* View() const override;
+
+private:
+    Ui::TreeWidgetP* ui;
+    TreeModel* model_ {};
 };
 
-#endif // SEARCHENTRYMODELS_H
+#endif // TREEWIDGETP_H

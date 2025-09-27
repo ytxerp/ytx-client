@@ -26,7 +26,7 @@ class SearchNodeModelO final : public SearchNodeModel {
     Q_OBJECT
 
 public:
-    SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, CTreeModel* stakeholder_tree_model, QObject* parent = nullptr);
+    SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, CTreeModel* partner_tree_model, QObject* parent = nullptr);
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -34,7 +34,7 @@ public:
     void Search(CString& text) override;
 
 private:
-    CTreeModel* stakeholder_node_ {};
+    CTreeModel* partner_tree_model_ {};
 };
 
 #endif // SEARCHNODEMODELO_H

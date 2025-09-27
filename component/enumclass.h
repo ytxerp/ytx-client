@@ -28,11 +28,11 @@ enum NodeKind { kLeaf = 0, kBranch };
 // - 4 corresponds to kSale
 // - 5 corresponds to kPurchase
 // Section values must start from 0 to maintain consistency.
-// Abbreviations: Finance -> F, Item -> I, Task -> T, Stakeholder -> S, Order -> O
-enum class Section { kFinance = 0, kItem, kTask, kStakeholder, kSale, kPurchase };
+// Abbreviations: Finance -> F, Inventory -> I, Task -> T, Partner -> P, Order -> O
+enum class Section { kFinance = 0, kItem, kTask, kPartner, kSale, kPurchase };
 
 inline constexpr std::array<Section, 6> kSections
-    = { Section::kFinance, Section::kItem, Section::kTask, Section::kStakeholder, Section::kSale, Section::kPurchase };
+    = { Section::kFinance, Section::kItem, Section::kTask, Section::kPartner, Section::kSale, Section::kPurchase };
 
 // defining section's unit
 enum class UnitO { kImmediate = 0, kMonthly, kPending };
@@ -121,8 +121,8 @@ enum class EntryEnumT {
     kBalance,
 };
 
-// FullEntryEnumS is same as EntryEnumS
-enum class EntryEnumS {
+// FullEntryEnumP is same as EntryEnumP
+enum class EntryEnumP {
     kId = 0,
     kUserId,
     kCreateTime,
@@ -304,7 +304,7 @@ enum class NodeEnumT {
     kFinalTotal,
 };
 
-enum class NodeEnumS {
+enum class NodeEnumP {
     kName = 0,
     kId,
     kUserId,
@@ -373,7 +373,7 @@ enum class SettlementEnum {
     kUpdateTime,
     kUpdateBy,
     kIssuedTime,
-    kStakeholder,
+    kPartner,
     kDescription,
     kIsFinished,
     kInitialTotal,

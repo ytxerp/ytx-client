@@ -73,7 +73,7 @@ void SettlementWidget::on_settlementView_doubleClicked(const QModelIndex& index)
     if (index.column() != std::to_underlying(SettlementEnum::kInitialTotal))
         return;
 
-    const auto party { index.siblingAtColumn(std::to_underlying(SettlementEnum::kStakeholder)).data().toUuid() };
+    const auto party { index.siblingAtColumn(std::to_underlying(SettlementEnum::kPartner)).data().toUuid() };
     if (party.isNull())
         return;
 

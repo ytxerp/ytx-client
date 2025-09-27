@@ -23,7 +23,7 @@
 #include <QButtonGroup>
 #include <QDialog>
 
-#include "component/arg/insertnodeargfist.h"
+#include "component/arg/insertnodeargfipt.h"
 #include "component/using.h"
 
 namespace Ui {
@@ -34,7 +34,7 @@ class InsertNodeItem final : public QDialog {
     Q_OBJECT
 
 public:
-    InsertNodeItem(CInsertNodeArgFIST& arg, int rate_decimal, QWidget* parent = nullptr);
+    InsertNodeItem(CInsertNodeArgFIPT& arg, int rate_decimal, QWidget* parent = nullptr);
     ~InsertNodeItem();
 
 private slots:

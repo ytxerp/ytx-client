@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>TreeWidgetS</class>
- <widget class="QWidget" name="TreeWidgetS">
+ <class>TreeWidgetP</class>
+ <widget class="QWidget" name="TreeWidgetP">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -30,7 +30,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTreeView" name="treeViewS"/>
+    <widget class="QTreeView" name="treeViewP"/>
    </item>
   </layout>
  </widget>

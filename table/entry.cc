@@ -136,7 +136,7 @@ void EntryT::ReadJson(const QJsonObject& object)
         rhs_credit = object[kRhsCredit].toString().toDouble();
 }
 
-void EntryS::ResetState()
+void EntryP::ResetState()
 {
     Entry::ResetState();
 
@@ -144,7 +144,7 @@ void EntryS::ResetState()
     external_item = QUuid();
 }
 
-void EntryS::ReadJson(const QJsonObject& object)
+void EntryP::ReadJson(const QJsonObject& object)
 {
     Entry::ReadJson(object);
 

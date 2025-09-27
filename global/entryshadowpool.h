@@ -111,8 +111,8 @@ inline EntryShadow* EntryShadowPool::NewResource(Section section)
         return new EntryShadowI();
     case Section::kTask:
         return new EntryShadowT();
-    case Section::kStakeholder:
-        return new EntryShadowS();
+    case Section::kPartner:
+        return new EntryShadowP();
     case Section::kSale:
         return new EntryShadowO();
     case Section::kPurchase:

@@ -180,7 +180,7 @@ void Preferences::IniText(Section section)
         ui->labelRateDecimal->setText(tr("FXRate Decimal"));
         ui->labelDefaultUnit->setText(tr("Base Currency"));
         break;
-    case Section::kStakeholder:
+    case Section::kPartner:
         ui->labelRateDecimal->setText(tr("Placeholder"));
         break;
     case Section::kTask:

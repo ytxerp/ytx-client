@@ -3,10 +3,10 @@
 #include "global/entryshadowpool.h"
 #include "utils/jsongen.h"
 
-LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_item, EntryHub* entry_hub_stakeholder, QObject* parent)
+LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_item, EntryHub* entry_hub_partner, QObject* parent)
     : LeafModel { arg, parent }
     , tree_model_item_ { static_cast<TreeModelI*>(tree_model_item) }
-    , entry_hub_stakeholder_ { static_cast<EntryHubS*>(entry_hub_stakeholder) }
+    , entry_hub_partner_ { static_cast<EntryHubP*>(entry_hub_partner) }
     , entry_hub_order_ { static_cast<EntryHubO*>(arg.entry_hub) }
     , party_id_ { static_cast<const NodeO*>(node)->party }
     , is_finished_ { static_cast<const NodeO*>(node)->is_finished }
@@ -31,7 +31,7 @@ void LeafModelO::UpdateParty(const QUuid& node_id, const QUuid& party_id)
         return;
 
     party_id_ = party_id;
-    // sql_stakeholder_->ReadTrans(party_id);
+    // sql_partner_->ReadTrans(party_id);
 }
 
 void LeafModelO::RSyncFinished(const QUuid& node_id, bool value)
@@ -459,12 +459,12 @@ void LeafModelO::PurifyEntryShadow()
 
 void LeafModelO::CrossSearch(EntryShadow* entry_shadow, const QUuid& item_id, bool is_internal) const
 {
-    if (!entry_shadow || !entry_hub_stakeholder_ || item_id.isNull())
+    if (!entry_shadow || !entry_hub_partner_ || item_id.isNull())
         return;
 
     auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
 
-    if (entry_hub_stakeholder_->CrossSearch(d_shadow, party_id_, item_id, is_internal))
+    if (entry_hub_partner_->CrossSearch(d_shadow, party_id_, item_id, is_internal))
         return;
 
     *d_shadow->unit_price = is_internal ? tree_model_item_->UnitPrice(item_id) : 0.0;

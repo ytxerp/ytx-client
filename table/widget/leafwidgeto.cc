@@ -11,7 +11,7 @@ LeafWidgetO::LeafWidgetO(
     , node_ { static_cast<NodeO*>(arg.node) }
     , sql_ { qobject_cast<EntryHubO*>(arg.dbhub) }
     , leaf_model_order_ { qobject_cast<LeafModelO*>(arg.leaf_model) }
-    , tree_model_stakeholder_ { arg.tree_model_stakeholder }
+    , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
     , is_insert_ { is_insert }
     , node_id_ { arg.node->id }
@@ -66,11 +66,11 @@ void LeafWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double 
 
 void LeafWidgetO::IniWidget()
 {
-    pmodel_ = tree_model_stakeholder_->IncludeUnitModel(party_unit_);
+    pmodel_ = tree_model_partner_->IncludeUnitModel(party_unit_);
     ui->comboParty->setModel(pmodel_);
     ui->comboParty->setCurrentIndex(-1);
 
-    emodel_ = tree_model_stakeholder_->IncludeUnitModel(std::to_underlying(UnitS::kEmployee));
+    emodel_ = tree_model_partner_->IncludeUnitModel(std::to_underlying(UnitS::kEmployee));
     ui->comboEmployee->setModel(emodel_);
     ui->comboEmployee->setCurrentIndex(-1);
 
@@ -256,12 +256,12 @@ void TransWidgetO::on_pBtnInsert_clicked()
         return;
 
     auto* node { ResourcePool<Node>::Instance().Allocate() };
-    stakeholder_node_->SetParent(node, {});
+    partner_node_->SetParent(node, {});
     node->name = name;
 
     node->unit = party_unit_;
 
-    stakeholder_node_->InsertNode(0, QModelIndex(), node);
+    partner_node_->InsertNode(0, QModelIndex(), node);
 
     int party_index { ui->comboParty->findData(node->id) };
     ui->comboParty->setCurrentIndex(party_index);
@@ -368,8 +368,8 @@ void LeafWidgetO::PreparePrint()
         break;
     }
 
-    PrintData data { tree_model_stakeholder_->Name(node_->party), node_->issued_time.toLocalTime().toString(kDateTimeFST),
-        tree_model_stakeholder_->Name(node_->employee), unit, node_->initial_total };
+    PrintData data { tree_model_partner_->Name(node_->party), node_->issued_time.toLocalTime().toString(kDateTimeFST),
+        tree_model_partner_->Name(node_->employee), unit, node_->initial_total };
     print_manager_->SetData(data, leaf_model_order_->GetEntryShadowList());
 }
 

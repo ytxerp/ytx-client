@@ -106,7 +106,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="rBtnStakeholder">
+         <widget class="QRadioButton" name="rBtnPartner">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
             <horstretch>0</horstretch>

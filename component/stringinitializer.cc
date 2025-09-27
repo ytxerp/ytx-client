@@ -1,7 +1,6 @@
 #include "stringinitializer.h"
 
-void StringInitializer::SetHeader(
-    SectionInfo& finance, SectionInfo& item, SectionInfo& task, SectionInfo& stakeholder, SectionInfo& sale, SectionInfo& purchase)
+void StringInitializer::SetHeader(SectionInfo& finance, SectionInfo& item, SectionInfo& task, SectionInfo& partner, SectionInfo& sale, SectionInfo& purchase)
 {
     // Node
     finance.node_header = {
@@ -65,7 +64,7 @@ void StringInitializer::SetHeader(
         QObject::tr("AmountTotal"),
     };
 
-    stakeholder.node_header = {
+    partner.node_header = {
         QObject::tr("Name"),
         QObject::tr("Id"),
         QObject::tr("UserId"),
@@ -168,7 +167,7 @@ void StringInitializer::SetHeader(
         QObject::tr("Balance"),
     };
 
-    stakeholder.entry_header = {
+    partner.entry_header = {
         QObject::tr("Id"),
         QObject::tr("UserId"),
         QObject::tr("CreatedTime"),
@@ -272,7 +271,7 @@ void StringInitializer::SetHeader(
         QObject::tr("RhsNode"),
     };
 
-    stakeholder.full_entry_header = stakeholder.entry_header;
+    partner.full_entry_header = partner.entry_header;
     sale.full_entry_header = sale.entry_header;
 
     // EntryRef
@@ -290,7 +289,7 @@ void StringInitializer::SetHeader(
         QObject::tr("GrossAmount"),
     };
 
-    stakeholder.entry_ref_header = {
+    partner.entry_ref_header = {
         QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
         QObject::tr("Section"),

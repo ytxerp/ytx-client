@@ -109,7 +109,7 @@ struct EntryShadowT final : EntryShadow {
     QJsonObject WriteJson() const override;
 };
 
-struct EntryShadowS final : EntryShadow {
+struct EntryShadowP final : EntryShadow {
     double* unit_price {};
     QUuid* external_item {};
 

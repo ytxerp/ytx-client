@@ -21,7 +21,7 @@
 #define LEAFMODELO_H
 
 #include "entryhub/entryhubo.h"
-#include "entryhub/entryhubs.h"
+#include "entryhub/entryhubp.h"
 #include "leafmodel.h"
 #include "tree/model/treemodel.h"
 #include "tree/model/treemodeli.h"
@@ -30,7 +30,7 @@ class LeafModelO final : public LeafModel {
     Q_OBJECT
 
 public:
-    LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_item, EntryHub* entry_hub_stakeholder, QObject* parent = nullptr);
+    LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_item, EntryHub* entry_hub_partner, QObject* parent = nullptr);
     ~LeafModelO() override = default;
 
 public slots:
@@ -65,7 +65,7 @@ private:
 
 private:
     TreeModelI* tree_model_item_ {};
-    EntryHubS* entry_hub_stakeholder_ {};
+    EntryHubP* entry_hub_partner_ {};
     EntryHubO* entry_hub_order_ {};
     QUuid party_id_ {};
     bool is_finished_ {};

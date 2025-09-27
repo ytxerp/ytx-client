@@ -17,33 +17,27 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LEAFWIDGETFIST_H
-#define LEAFWIDGETFIST_H
+#ifndef SEARCHDIALOGP_H
+#define SEARCHDIALOGP_H
 
-#include <QTableView>
+#include "searchdialog.h"
 
-#include "table/model/leafmodel.h"
-#include "table/widget/leafwidget.h"
-
-namespace Ui {
-class LeafWidgetFIST;
-}
-
-class LeafWidgetFIST final : public LeafWidget {
+class SearchDialogP final : public SearchDialog {
     Q_OBJECT
 
 public:
-    explicit LeafWidgetFIST(LeafModel* model, QWidget* parent = nullptr);
-    ~LeafWidgetFIST();
+    SearchDialogP(CTreeModel* node, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* item_node, CSectionConfig& config,
+        CSectionInfo& info, QWidget* parent = nullptr);
 
-    LeafModel* Model() const override { return model_; }
-    QTableView* View() const override;
+private slots:
+    void REntryDoubleClicked(const QModelIndex& index) override;
 
 private:
-    Ui::LeafWidgetFIST* ui;
-    LeafModel* model_ {};
+    void TreeViewDelegate(QTableView* view) override;
+    void TableViewDelegate(QTableView* view) override;
+
+private:
+    CTreeModel* item_node_ {};
 };
 
-inline const char* kLeafWidgetFIST = "LeafWidgetFIST";
-
-#endif // LEAFWIDGETFIST_H
+#endif // SEARCHDIALOGP_H

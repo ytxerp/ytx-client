@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LeafWidgetFIST</class>
- <widget class="QWidget" name="LeafWidgetFIST">
+ <class>LeafWidgetFIPT</class>
+ <widget class="QWidget" name="LeafWidgetFIPT">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -30,7 +30,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTableView" name="tableViewFIST"/>
+    <widget class="QTableView" name="tableViewFIPT"/>
    </item>
   </layout>
  </widget>

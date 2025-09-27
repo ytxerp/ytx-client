@@ -17,27 +17,19 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHDIALOGS_H
-#define SEARCHDIALOGS_H
+#ifndef SEARCHENTRYMODELP_H
+#define SEARCHENTRYMODELP_H
 
-#include "searchdialog.h"
+#include "searchentrymodel.h"
 
-class SearchDialogS final : public SearchDialog {
+class SearchEntryModelP final : public SearchEntryModel {
     Q_OBJECT
+public:
+    SearchEntryModelP(CSectionInfo& info, QObject* parent = nullptr);
 
 public:
-    SearchDialogS(CTreeModel* node, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* item_node, CSectionConfig& config,
-        CSectionInfo& info, QWidget* parent = nullptr);
-
-private slots:
-    void REntryDoubleClicked(const QModelIndex& index) override;
-
-private:
-    void TreeViewDelegate(QTableView* view) override;
-    void TableViewDelegate(QTableView* view) override;
-
-private:
-    CTreeModel* item_node_ {};
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    void sort(int column, Qt::SortOrder order) override;
 };
 
-#endif // SEARCHDIALOGS_H
+#endif // SEARCHENTRYMODELP_H

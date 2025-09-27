@@ -17,17 +17,17 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYHUBS_H
-#define ENTRYHUBS_H
+#ifndef ENTRYHUBP_H
+#define ENTRYHUBP_H
 
 #include "entryhub.h"
 #include "entryhub/prices.h"
 
-class EntryHubS final : public EntryHub {
+class EntryHubP final : public EntryHub {
     Q_OBJECT
 
 public:
-    EntryHubS(CSectionInfo& info, QObject* parent = nullptr);
+    EntryHubP(CSectionInfo& info, QObject* parent = nullptr);
 
 public slots:
     void RPriceSList(const QList<PriceS>& list);
@@ -47,4 +47,4 @@ private:
     bool ReadTransRange(const QSet<QUuid>& set);
 };
 
-#endif // ENTRYHUBS_H
+#endif // ENTRYHUBP_H

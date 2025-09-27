@@ -36,8 +36,8 @@ void EntryHub::RemoveLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
 
 void EntryHub::ApplyLeafReplace(const QUuid& old_leaf_id, const QUuid& new_leaf_id)
 {
-    assert(section_ != Section::kPurchase && section_ != Section::kSale && section_ != Section::kStakeholder
-        && "Invalid section: should not be kPurchase, kSales or kStakeholder");
+    assert(section_ != Section::kPurchase && section_ != Section::kSale && section_ != Section::kPartner
+        && "Invalid section: should not be kPurchase, kSales or kPartner");
 
     QSet<QUuid> entry_id_set {};
     EntryList entry_list {};

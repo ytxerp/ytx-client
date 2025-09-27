@@ -111,8 +111,8 @@ inline Node* NodePool::NewResource(Section section)
         return new NodeI();
     case Section::kTask:
         return new NodeT();
-    case Section::kStakeholder:
-        return new NodeS();
+    case Section::kPartner:
+        return new NodeP();
     case Section::kSale:
         return new NodeO();
     case Section::kPurchase:

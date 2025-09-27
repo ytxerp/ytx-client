@@ -21,7 +21,7 @@
 #define ENTRYREFMODEL_H
 
 // Leaf node referenced by entries
-// such as a item node linked to order entries or a stakeholder node associated with an order entry.
+// such as a item node linked to order entries or a partner node associated with an order entry.
 
 #include <QAbstractItemModel>
 

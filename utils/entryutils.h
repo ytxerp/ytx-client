@@ -35,8 +35,8 @@ inline int RhsNodeColumn(Section section)
         return std::to_underlying(EntryEnumF::kRhsNode);
     case Section::kTask:
         return std::to_underlying(EntryEnumT::kRhsNode);
-    case Section::kStakeholder:
-        return std::to_underlying(EntryEnumS::kRhsNode);
+    case Section::kPartner:
+        return std::to_underlying(EntryEnumP::kRhsNode);
     case Section::kItem:
         return std::to_underlying(EntryEnumI::kRhsNode);
     case Section::kSale:

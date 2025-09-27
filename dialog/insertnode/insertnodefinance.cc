@@ -4,7 +4,7 @@
 #include "component/signalblocker.h"
 #include "ui_insertnodefinance.h"
 
-InsertNodeFinance::InsertNodeFinance(CInsertNodeArgFIST& arg, QWidget* parent)
+InsertNodeFinance::InsertNodeFinance(CInsertNodeArgFIPT& arg, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::InsertNodeFinance)
     , node_ { static_cast<NodeF*>(arg.node) }

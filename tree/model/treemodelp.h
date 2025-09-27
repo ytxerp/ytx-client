@@ -17,17 +17,17 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEMODELS_H
-#define TREEMODELS_H
+#ifndef TREEMODELP_H
+#define TREEMODELP_H
 
 #include "tree/model/treemodel.h"
 
-class TreeModelS final : public TreeModel {
+class TreeModelP final : public TreeModel {
     Q_OBJECT
 
 public:
-    TreeModelS(CSectionInfo& info, CString& separator, int default_unit, QObject* parent = nullptr);
-    ~TreeModelS() override;
+    TreeModelP(CSectionInfo& info, CString& separator, int default_unit, QObject* parent = nullptr);
+    ~TreeModelP() override;
 
 public slots:
     void RUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta);
@@ -50,7 +50,7 @@ protected:
 
     std::pair<int, int> CacheColumnRange() const override
     {
-        return { std::to_underlying(NodeEnumS::kPaymentTerm), std::to_underlying(NodeEnumS::kPaymentTerm) };
+        return { std::to_underlying(NodeEnumP::kPaymentTerm), std::to_underlying(NodeEnumP::kPaymentTerm) };
     }
 
 private:
@@ -59,4 +59,4 @@ private:
     QSet<QUuid> eset_ { QUuid() }; // Set of all nodes that are employee unit
 };
 
-#endif // TREEMODELS_H
+#endif // TREEMODELP_H

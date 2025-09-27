@@ -143,13 +143,13 @@ QJsonObject NodeT::WriteJson() const
     return obj;
 }
 
-void NodeS::ResetState()
+void NodeP::ResetState()
 {
     Node::ResetState();
     payment_term = 0;
 }
 
-void NodeS::ReadJson(const QJsonObject& object)
+void NodeP::ReadJson(const QJsonObject& object)
 {
     if (object.contains(kName))
         name = object.value(kName).toString();
@@ -183,7 +183,7 @@ void NodeS::ReadJson(const QJsonObject& object)
         payment_term = object.value(kPaymentTerm).toInt();
 }
 
-QJsonObject NodeS::WriteJson() const
+QJsonObject NodeP::WriteJson() const
 {
     QJsonObject obj {};
     obj.insert(kName, name);

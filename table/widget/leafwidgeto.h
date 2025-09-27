@@ -100,7 +100,7 @@ private:
     NodeO* node_ {};
     EntryHubO* sql_ {};
     LeafModelO* leaf_model_order_ {};
-    TreeModel* tree_model_stakeholder_ {};
+    TreeModel* tree_model_partner_ {};
     CSectionConfig& config_ {};
     QButtonGroup* rule_group_ {};
     QButtonGroup* unit_group_ {};

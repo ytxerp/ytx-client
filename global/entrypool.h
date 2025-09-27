@@ -105,8 +105,8 @@ inline Entry* EntryPool::NewResource(Section section)
         return new EntryI();
     case Section::kTask:
         return new EntryT();
-    case Section::kStakeholder:
-        return new EntryS();
+    case Section::kPartner:
+        return new EntryP();
     case Section::kSale:
         return new EntryO();
     case Section::kPurchase:

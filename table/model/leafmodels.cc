@@ -42,7 +42,7 @@ bool LeafModelS::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
     if (value.isNull())
         return false;
 
-    auto* d_shadow = DerivedPtr<EntryShadowS>(entry_shadow);
+    auto* d_shadow = DerivedPtr<EntryShadowP>(entry_shadow);
 
     auto old_rhs_node { *d_shadow->rhs_node };
     if (old_rhs_node == value || internal_set_.contains(value))
@@ -74,40 +74,40 @@ QVariant LeafModelS::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* d_shadow = DerivedPtr<EntryShadowS>(shadow_list_.at(index.row()));
+    auto* d_shadow = DerivedPtr<EntryShadowP>(shadow_list_.at(index.row()));
 
-    const EntryEnumS kColumn { index.column() };
+    const EntryEnumP kColumn { index.column() };
 
     switch (kColumn) {
-    case EntryEnumS::kId:
+    case EntryEnumP::kId:
         return *d_shadow->id;
-    case EntryEnumS::kUserId:
+    case EntryEnumP::kUserId:
         return *d_shadow->user_id;
-    case EntryEnumS::kCreateTime:
+    case EntryEnumP::kCreateTime:
         return *d_shadow->created_time;
-    case EntryEnumS::kCreateBy:
+    case EntryEnumP::kCreateBy:
         return *d_shadow->created_by;
-    case EntryEnumS::kUpdateTime:
+    case EntryEnumP::kUpdateTime:
         return *d_shadow->updated_time;
-    case EntryEnumS::kUpdateBy:
+    case EntryEnumP::kUpdateBy:
         return *d_shadow->updated_by;
-    case EntryEnumS::kLhsNode:
+    case EntryEnumP::kLhsNode:
         return *d_shadow->lhs_node;
-    case EntryEnumS::kIssuedTime:
+    case EntryEnumP::kIssuedTime:
         return *d_shadow->issued_time;
-    case EntryEnumS::kCode:
+    case EntryEnumP::kCode:
         return *d_shadow->code;
-    case EntryEnumS::kUnitPrice:
+    case EntryEnumP::kUnitPrice:
         return *d_shadow->unit_price == 0 ? QVariant() : *d_shadow->unit_price;
-    case EntryEnumS::kDescription:
+    case EntryEnumP::kDescription:
         return *d_shadow->description;
-    case EntryEnumS::kDocument:
+    case EntryEnumP::kDocument:
         return d_shadow->document->isEmpty() ? QVariant() : *d_shadow->document;
-    case EntryEnumS::kIsChecked:
+    case EntryEnumP::kIsChecked:
         return *d_shadow->is_checked ? *d_shadow->is_checked : QVariant();
-    case EntryEnumS::kRhsNode:
+    case EntryEnumP::kRhsNode:
         return d_shadow->rhs_node->isNull() ? QVariant() : *d_shadow->rhs_node;
-    case EntryEnumS::kExternalItem:
+    case EntryEnumP::kExternalItem:
         return d_shadow->external_item->isNull() ? QVariant() : *d_shadow->external_item;
     default:
         return QVariant();
@@ -119,11 +119,11 @@ bool LeafModelS::setData(const QModelIndex& index, const QVariant& value, int ro
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    const EntryEnumS kColumn { index.column() };
+    const EntryEnumP kColumn { index.column() };
     const int kRow { index.row() };
 
     auto* shadow { shadow_list_.at(kRow) };
-    auto* d_shadow = DerivedPtr<EntryShadowS>(shadow);
+    auto* d_shadow = DerivedPtr<EntryShadowP>(shadow);
 
     auto old_rhs_node { *shadow->rhs_node };
 
@@ -135,29 +135,29 @@ bool LeafModelS::setData(const QModelIndex& index, const QVariant& value, int ro
     }
 
     switch (kColumn) {
-    case EntryEnumS::kIssuedTime:
+    case EntryEnumP::kIssuedTime:
         EntryUtils::UpdateShadowIssuedTime(cache, shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time);
         break;
-    case EntryEnumS::kCode:
+    case EntryEnumP::kCode:
         EntryUtils::UpdateShadowField(cache, shadow, kCode, value.toString(), &EntryShadow::code);
         break;
-    case EntryEnumS::kDocument:
+    case EntryEnumP::kDocument:
         EntryUtils::UpdateShadowDocument(cache, shadow, kDocument, value.toStringList(), &EntryShadow::document);
         break;
-    case EntryEnumS::kRhsNode:
+    case EntryEnumP::kRhsNode:
         UpdateRhsNode(shadow, value.toUuid(), kRow);
         break;
-    case EntryEnumS::kUnitPrice:
-        EntryUtils::UpdateShadowField(cache, d_shadow, kUnitPrice, value.toDouble(), &EntryShadowS::unit_price);
+    case EntryEnumP::kUnitPrice:
+        EntryUtils::UpdateShadowField(cache, d_shadow, kUnitPrice, value.toDouble(), &EntryShadowP::unit_price);
         break;
-    case EntryEnumS::kDescription:
+    case EntryEnumP::kDescription:
         EntryUtils::UpdateShadowField(cache, shadow, kDescription, value.toString(), &EntryShadow::description);
         break;
-    case EntryEnumS::kIsChecked:
+    case EntryEnumP::kIsChecked:
         EntryUtils::UpdateShadowField(cache, shadow, kIsChecked, value.toBool(), &EntryShadow::is_checked);
         break;
-    case EntryEnumS::kExternalItem:
-        EntryUtils::UpdateShadowUuid(cache, d_shadow, kExternalItem, value.toUuid(), &EntryShadowS::external_item);
+    case EntryEnumP::kExternalItem:
+        EntryUtils::UpdateShadowUuid(cache, d_shadow, kExternalItem, value.toUuid(), &EntryShadowP::external_item);
         break;
     default:
         return false;
@@ -174,37 +174,37 @@ void LeafModelS::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](EntryShadow* lhs, EntryShadow* rhs) -> bool {
-        const EntryEnumS kColumn { column };
+        const EntryEnumP kColumn { column };
 
-        auto* d_lhs { DerivedPtr<EntryShadowS>(lhs) };
-        auto* d_rhs { DerivedPtr<EntryShadowS>(rhs) };
+        auto* d_lhs { DerivedPtr<EntryShadowP>(lhs) };
+        auto* d_rhs { DerivedPtr<EntryShadowP>(rhs) };
 
         switch (kColumn) {
-        case EntryEnumS::kIssuedTime:
+        case EntryEnumP::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (*lhs->issued_time < *rhs->issued_time) : (*lhs->issued_time > *rhs->issued_time);
-        case EntryEnumS::kUserId:
+        case EntryEnumP::kUserId:
             return (order == Qt::AscendingOrder) ? (*lhs->user_id < *rhs->user_id) : (*lhs->user_id > *rhs->user_id);
-        case EntryEnumS::kCreateTime:
+        case EntryEnumP::kCreateTime:
             return (order == Qt::AscendingOrder) ? (*lhs->created_time < *rhs->created_time) : (*lhs->created_time > *rhs->created_time);
-        case EntryEnumS::kCreateBy:
+        case EntryEnumP::kCreateBy:
             return (order == Qt::AscendingOrder) ? (*lhs->created_by < *rhs->created_by) : (*lhs->created_by > *rhs->created_by);
-        case EntryEnumS::kUpdateTime:
+        case EntryEnumP::kUpdateTime:
             return (order == Qt::AscendingOrder) ? (*lhs->updated_time < *rhs->updated_time) : (*lhs->updated_time > *rhs->updated_time);
-        case EntryEnumS::kUpdateBy:
+        case EntryEnumP::kUpdateBy:
             return (order == Qt::AscendingOrder) ? (*lhs->updated_by < *rhs->updated_by) : (*lhs->updated_by > *rhs->updated_by);
-        case EntryEnumS::kCode:
+        case EntryEnumP::kCode:
             return (order == Qt::AscendingOrder) ? (*lhs->code < *rhs->code) : (*lhs->code > *rhs->code);
-        case EntryEnumS::kUnitPrice:
+        case EntryEnumP::kUnitPrice:
             return (order == Qt::AscendingOrder) ? (*d_lhs->unit_price < *d_rhs->unit_price) : (*d_lhs->unit_price > *d_rhs->unit_price);
-        case EntryEnumS::kDescription:
+        case EntryEnumP::kDescription:
             return (order == Qt::AscendingOrder) ? (*lhs->description < *rhs->description) : (*lhs->description > *rhs->description);
-        case EntryEnumS::kDocument:
+        case EntryEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
-        case EntryEnumS::kIsChecked:
+        case EntryEnumP::kIsChecked:
             return (order == Qt::AscendingOrder) ? (*lhs->is_checked < *rhs->is_checked) : (*lhs->is_checked > *rhs->is_checked);
-        case EntryEnumS::kExternalItem:
+        case EntryEnumP::kExternalItem:
             return (order == Qt::AscendingOrder) ? (*d_lhs->external_item < *d_rhs->external_item) : (*d_lhs->external_item > *d_rhs->external_item);
-        case EntryEnumS::kRhsNode:
+        case EntryEnumP::kRhsNode:
             return (order == Qt::AscendingOrder) ? (*lhs->rhs_node < *rhs->rhs_node) : (*lhs->rhs_node > *rhs->rhs_node);
         default:
             return false;
@@ -222,12 +222,12 @@ Qt::ItemFlags LeafModelS::flags(const QModelIndex& index) const
         return Qt::NoItemFlags;
 
     auto flags { QAbstractItemModel::flags(index) };
-    const EntryEnumS kColumn { index.column() };
+    const EntryEnumP kColumn { index.column() };
 
     switch (kColumn) {
-    case EntryEnumS::kId:
-    case EntryEnumS::kDocument:
-    case EntryEnumS::kIsChecked:
+    case EntryEnumP::kId:
+    case EntryEnumP::kDocument:
+    case EntryEnumP::kIsChecked:
         flags &= ~Qt::ItemIsEditable;
         break;
     default:

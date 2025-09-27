@@ -1,17 +1,17 @@
-#include "treemodels.h"
+#include "treemodelp.h"
 
 #include "global/nodepool.h"
 #include "tree/includemultiplefiltermodel.h"
 
-TreeModelS::TreeModelS(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
+TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
 {
     leaf_model_->AppendItem(QString(), QUuid());
 }
 
-TreeModelS::~TreeModelS() { NodePool::Instance().Recycle(node_hash_, section_); }
+TreeModelP::~TreeModelP() { NodePool::Instance().Recycle(node_hash_, section_); }
 
-void TreeModelS::RUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta)
+void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta)
 {
     assert(!node_id.isNull());
 
@@ -27,7 +27,7 @@ void TreeModelS::RUpdateAmount(const QUuid& node_id, double initial_delta, doubl
     UpdateAncestorValue(node, initial_delta, final_delta);
 }
 
-QList<QUuid> TreeModelS::PartyList(CString& text, int unit) const
+QList<QUuid> TreeModelP::PartyList(CString& text, int unit) const
 {
     QList<QUuid> list {};
 
@@ -38,7 +38,7 @@ QList<QUuid> TreeModelS::PartyList(CString& text, int unit) const
     return list;
 }
 
-const QSet<QUuid>* TreeModelS::UnitSet(int unit) const
+const QSet<QUuid>* TreeModelP::UnitSet(int unit) const
 {
     const UnitS kUnit { unit };
 
@@ -54,7 +54,7 @@ const QSet<QUuid>* TreeModelS::UnitSet(int unit) const
     }
 }
 
-QSortFilterProxyModel* TreeModelS::IncludeUnitModel(int unit)
+QSortFilterProxyModel* TreeModelP::IncludeUnitModel(int unit)
 {
     auto* set { UnitSet(unit) };
     auto* model { new IncludeMultipleFilterModel(set, this) };
@@ -63,7 +63,7 @@ QSortFilterProxyModel* TreeModelS::IncludeUnitModel(int unit)
     return model;
 }
 
-void TreeModelS::RemoveUnitSet(const QUuid& node_id, int unit)
+void TreeModelP::RemoveUnitSet(const QUuid& node_id, int unit)
 {
     const UnitS kUnit { unit };
 
@@ -82,7 +82,7 @@ void TreeModelS::RemoveUnitSet(const QUuid& node_id, int unit)
     }
 }
 
-void TreeModelS::InsertUnitSet(const QUuid& node_id, int unit)
+void TreeModelP::InsertUnitSet(const QUuid& node_id, int unit)
 {
     const UnitS kUnit { unit };
 
@@ -101,43 +101,43 @@ void TreeModelS::InsertUnitSet(const QUuid& node_id, int unit)
     }
 }
 
-void TreeModelS::sort(int column, Qt::SortOrder order)
+void TreeModelP::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0 && column < node_header_.size());
 
     auto Compare = [column, order](const Node* lhs, const Node* rhs) -> bool {
-        auto* d_lhs = DerivedPtr<NodeS>(lhs);
-        auto* d_rhs = DerivedPtr<NodeS>(rhs);
+        auto* d_lhs = DerivedPtr<NodeP>(lhs);
+        auto* d_rhs = DerivedPtr<NodeP>(rhs);
 
-        const NodeEnumS kColumn { column };
+        const NodeEnumP kColumn { column };
         switch (kColumn) {
-        case NodeEnumS::kName:
+        case NodeEnumP::kName:
             return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
-        case NodeEnumS::kUserId:
+        case NodeEnumP::kUserId:
             return (order == Qt::AscendingOrder) ? (lhs->user_id < rhs->user_id) : (lhs->user_id > rhs->user_id);
-        case NodeEnumS::kCreateTime:
+        case NodeEnumP::kCreateTime:
             return (order == Qt::AscendingOrder) ? (lhs->created_time < rhs->created_time) : (lhs->created_time > rhs->created_time);
-        case NodeEnumS::kCreateBy:
+        case NodeEnumP::kCreateBy:
             return (order == Qt::AscendingOrder) ? (lhs->created_by < rhs->created_by) : (lhs->created_by > rhs->created_by);
-        case NodeEnumS::kUpdateTime:
+        case NodeEnumP::kUpdateTime:
             return (order == Qt::AscendingOrder) ? (lhs->updated_time < rhs->updated_time) : (lhs->updated_time > rhs->updated_time);
-        case NodeEnumS::kUpdateBy:
+        case NodeEnumP::kUpdateBy:
             return (order == Qt::AscendingOrder) ? (lhs->updated_by < rhs->updated_by) : (lhs->updated_by > rhs->updated_by);
-        case NodeEnumS::kCode:
+        case NodeEnumP::kCode:
             return (order == Qt::AscendingOrder) ? (lhs->code < rhs->code) : (lhs->code > rhs->code);
-        case NodeEnumS::kDescription:
+        case NodeEnumP::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
-        case NodeEnumS::kNote:
+        case NodeEnumP::kNote:
             return (order == Qt::AscendingOrder) ? (lhs->note < rhs->note) : (lhs->note > rhs->note);
-        case NodeEnumS::kKind:
+        case NodeEnumP::kKind:
             return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
-        case NodeEnumS::kUnit:
+        case NodeEnumP::kUnit:
             return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
-        case NodeEnumS::kPaymentTerm:
+        case NodeEnumP::kPaymentTerm:
             return (order == Qt::AscendingOrder) ? (d_lhs->payment_term < d_rhs->payment_term) : (d_lhs->payment_term > d_rhs->payment_term);
-        case NodeEnumS::kInitialTotal:
+        case NodeEnumP::kInitialTotal:
             return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
-        case NodeEnumS::kFinalTotal:
+        case NodeEnumP::kFinalTotal:
             return (order == Qt::AscendingOrder) ? (lhs->final_total < rhs->final_total) : (lhs->final_total > rhs->final_total);
         default:
             return false;
@@ -149,82 +149,82 @@ void TreeModelS::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-QVariant TreeModelS::data(const QModelIndex& index, int role) const
+QVariant TreeModelP::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* d_node { DerivedPtr<NodeS>(GetNodeByIndex(index)) };
+    auto* d_node { DerivedPtr<NodeP>(GetNodeByIndex(index)) };
     if (d_node == root_)
         return QVariant();
 
-    const NodeEnumS kColumn { index.column() };
+    const NodeEnumP kColumn { index.column() };
     const bool kIsLeaf { d_node->kind == kLeaf };
 
     switch (kColumn) {
-    case NodeEnumS::kName:
+    case NodeEnumP::kName:
         return d_node->name;
-    case NodeEnumS::kId:
+    case NodeEnumP::kId:
         return d_node->id;
-    case NodeEnumS::kUserId:
+    case NodeEnumP::kUserId:
         return d_node->user_id;
-    case NodeEnumS::kCreateTime:
+    case NodeEnumP::kCreateTime:
         return d_node->created_time;
-    case NodeEnumS::kCreateBy:
+    case NodeEnumP::kCreateBy:
         return d_node->created_by;
-    case NodeEnumS::kUpdateTime:
+    case NodeEnumP::kUpdateTime:
         return d_node->updated_time;
-    case NodeEnumS::kUpdateBy:
+    case NodeEnumP::kUpdateBy:
         return d_node->updated_by;
-    case NodeEnumS::kCode:
+    case NodeEnumP::kCode:
         return d_node->code;
-    case NodeEnumS::kDescription:
+    case NodeEnumP::kDescription:
         return d_node->description;
-    case NodeEnumS::kNote:
+    case NodeEnumP::kNote:
         return d_node->note;
-    case NodeEnumS::kKind:
+    case NodeEnumP::kKind:
         return d_node->kind;
-    case NodeEnumS::kUnit:
+    case NodeEnumP::kUnit:
         return d_node->unit;
-    case NodeEnumS::kPaymentTerm:
+    case NodeEnumP::kPaymentTerm:
         return kIsLeaf && d_node->payment_term != 0 ? d_node->payment_term : QVariant();
-    case NodeEnumS::kInitialTotal:
+    case NodeEnumP::kInitialTotal:
         return d_node->initial_total;
-    case NodeEnumS::kFinalTotal:
+    case NodeEnumP::kFinalTotal:
         return d_node->final_total;
     default:
         return QVariant();
     }
 }
 
-bool TreeModelS::setData(const QModelIndex& index, const QVariant& value, int role)
+bool TreeModelP::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
     auto* node { GetNodeByIndex(index) };
-    auto* d_node { DerivedPtr<NodeS>(node) };
+    auto* d_node { DerivedPtr<NodeP>(node) };
 
     if (node == root_)
         return false;
 
-    const NodeEnumS kColumn { index.column() };
+    const NodeEnumP kColumn { index.column() };
     const QUuid id { node->id };
     auto& cache { caches_[id] };
 
     switch (kColumn) {
-    case NodeEnumS::kCode:
+    case NodeEnumP::kCode:
         NodeUtils::UpdateField(cache, node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
-    case NodeEnumS::kDescription:
+    case NodeEnumP::kDescription:
         NodeUtils::UpdateField(cache, node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
-    case NodeEnumS::kNote:
+    case NodeEnumP::kNote:
         NodeUtils::UpdateField(cache, node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
-    case NodeEnumS::kPaymentTerm:
+    case NodeEnumP::kPaymentTerm:
         if (d_node->kind == kLeaf)
-            NodeUtils::UpdateField(cache, d_node, kPaymentTerm, value.toInt(), &NodeS::payment_term, [id, this]() { RestartTimer(id); });
+            NodeUtils::UpdateField(cache, d_node, kPaymentTerm, value.toInt(), &NodeP::payment_term, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;
@@ -234,23 +234,23 @@ bool TreeModelS::setData(const QModelIndex& index, const QVariant& value, int ro
     return true;
 }
 
-Qt::ItemFlags TreeModelS::flags(const QModelIndex& index) const
+Qt::ItemFlags TreeModelP::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
 
     auto flags { QAbstractItemModel::flags(index) };
-    const NodeEnumS kColumn { index.column() };
+    const NodeEnumP kColumn { index.column() };
 
     switch (kColumn) {
-    case NodeEnumS::kName:
+    case NodeEnumP::kName:
         flags |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
         flags &= ~Qt::ItemIsEditable;
         break;
-    case NodeEnumS::kFinalTotal:
-    case NodeEnumS::kInitialTotal:
-    case NodeEnumS::kUnit:
-    case NodeEnumS::kKind:
+    case NodeEnumP::kFinalTotal:
+    case NodeEnumP::kInitialTotal:
+    case NodeEnumP::kUnit:
+    case NodeEnumP::kKind:
         flags &= ~Qt::ItemIsEditable;
         break;
     default:
