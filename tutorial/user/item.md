@@ -2,9 +2,7 @@
 
 Hello everyone! Today, I'll introduce how **YTX** manages items.
 
-In traditional manufacturing, knowing material location, quality, and availability directly affects inventory efficiency. **YTX** solves the problem of hard-to-find materials and greatly improves warehouse efficiency.
-
-Current software version: **0.2.5**
+Current software version: **0.2.6**
 
 ---
 
@@ -36,7 +34,7 @@ Each node has **three key attributes**:
 - **Unit**:
   - **Internal**: Own number
   - **External**: Mapping number
-  - **Empty**: Position
+  - **Postion**: Position
   - Internal number and position are used most; external numbers map relationships
 
 ---
