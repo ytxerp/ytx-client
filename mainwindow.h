@@ -125,7 +125,7 @@ private:
     void SetAction() const;
 
     void InitContextFinance();
-    void InitContextItem();
+    void InitContextInventory();
     void InitContextPartner();
     void InitContextTask();
     void InitContextSale();

@@ -32,7 +32,7 @@ enum NodeKind { kLeaf = 0, kBranch };
 enum class Section { kFinance = 0, kTask, kInventory, kPartner, kSale, kPurchase };
 
 inline constexpr std::array<Section, 6> kSections
-    = { Section::kFinance, Section::kInventory, Section::kTask, Section::kPartner, Section::kSale, Section::kPurchase };
+    = { Section::kFinance, Section::kTask, Section::kInventory, Section::kPartner, Section::kSale, Section::kPurchase };
 
 // defining section's unit
 enum class UnitO { kImmediate = 0, kMonthly, kPending };

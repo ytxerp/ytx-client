@@ -231,171 +231,305 @@ Rage, rage against the dying of the light.</source>
     </message>
 </context>
 <context>
-    <name>InsertNodeItem</name>
+    <name>InsertNodeI</name>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="44"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="44"/>
         <source>Debit Decrease, Credit Increase</source>
         <translation>借方减少，贷方增加</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="54"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="54"/>
         <source>Debit Increase, Credit Decrease</source>
         <translation>借方增加，贷方减少</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="80"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="80"/>
         <source>Code</source>
         <translation>编号</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="90"/>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="293"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="90"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="293"/>
         <source>Cannot be changed once set. Delete and recreate to modify.</source>
         <translation>设置后不可更改，如需修改、请删除后重新创建。</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="93"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="93"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="109"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="109"/>
         <source>Note</source>
         <translation>备注</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="128"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="128"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="145"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="145"/>
         <source>Property</source>
         <translation>属性</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="176"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="176"/>
         <source>Branch</source>
         <translation>枝节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="199"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="199"/>
         <source>Leaf</source>
         <translation>叶节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="231"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="231"/>
         <source>Ok</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="241"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="241"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="274"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="274"/>
         <source>Rule</source>
         <translation>规则</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="296"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="296"/>
         <source>Kind</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="325"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="325"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="373"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="373"/>
         <source>Color</source>
         <translation>颜色</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="401"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="401"/>
         <source>Commission</source>
         <translation>提成</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.ui" line="428"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="428"/>
         <source>UnitPrice</source>
         <translation>单价</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodeitem.cc" line="124"/>
+        <location filename="../../dialog/insertnode/insertnodei.cc" line="124"/>
         <source>Choose Color</source>
         <translation>选择颜色</translation>
     </message>
 </context>
 <context>
-    <name>InsertNodeStakeholder</name>
+    <name>InsertNodeItem</name>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="23"/>
+        <source>Debit Decrease, Credit Increase</source>
+        <translation type="vanished">借方减少，贷方增加</translation>
+    </message>
+    <message>
+        <source>Debit Increase, Credit Decrease</source>
+        <translation type="vanished">借方增加，贷方减少</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="vanished">编号</translation>
+    </message>
+    <message>
+        <source>Cannot be changed once set. Delete and recreate to modify.</source>
+        <translation type="vanished">设置后不可更改，如需修改、请删除后重新创建。</translation>
+    </message>
+    <message>
+        <source>Unit</source>
+        <translation type="vanished">单位</translation>
+    </message>
+    <message>
+        <source>Note</source>
+        <translation type="vanished">备注</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="vanished">取消</translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="vanished">属性</translation>
+    </message>
+    <message>
+        <source>Branch</source>
+        <translation type="vanished">枝节点</translation>
+    </message>
+    <message>
+        <source>Leaf</source>
+        <translation type="vanished">叶节点</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="vanished">确认</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation type="vanished">描述</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation type="vanished">规则</translation>
+    </message>
+    <message>
+        <source>Kind</source>
+        <translation type="vanished">类型</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="vanished">名称</translation>
+    </message>
+    <message>
+        <source>Color</source>
+        <translation type="vanished">颜色</translation>
+    </message>
+    <message>
+        <source>Commission</source>
+        <translation type="vanished">提成</translation>
+    </message>
+    <message>
+        <source>UnitPrice</source>
+        <translation type="vanished">单价</translation>
+    </message>
+    <message>
+        <source>Choose Color</source>
+        <translation type="vanished">选择颜色</translation>
+    </message>
+</context>
+<context>
+    <name>InsertNodeP</name>
+    <message>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="23"/>
         <source>Property</source>
         <translation>属性</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="33"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="33"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="100"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="100"/>
         <source>Leaf</source>
         <translation>叶节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="110"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="110"/>
         <source>Branch</source>
         <translation>枝节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="136"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="136"/>
         <source>Note</source>
         <translation>备注</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="155"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="155"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="171"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="171"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="184"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="184"/>
         <source>Ok</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="194"/>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="243"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="194"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="243"/>
         <source>Cannot be changed once set. Delete and recreate to modify.</source>
         <translation>设置后不可更改，如需修改、请删除后重新创建。</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="197"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="197"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="217"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="217"/>
         <source>Code</source>
         <translation>编号</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="246"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="246"/>
         <source>Kind</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodestakeholder.ui" line="337"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="337"/>
         <source>PaymentTerm</source>
         <translation>帐期</translation>
+    </message>
+</context>
+<context>
+    <name>InsertNodeStakeholder</name>
+    <message>
+        <source>Property</source>
+        <translation type="vanished">属性</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation type="vanished">描述</translation>
+    </message>
+    <message>
+        <source>Leaf</source>
+        <translation type="vanished">叶节点</translation>
+    </message>
+    <message>
+        <source>Branch</source>
+        <translation type="vanished">枝节点</translation>
+    </message>
+    <message>
+        <source>Note</source>
+        <translation type="vanished">备注</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="vanished">名称</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="vanished">取消</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="vanished">确认</translation>
+    </message>
+    <message>
+        <source>Cannot be changed once set. Delete and recreate to modify.</source>
+        <translation type="vanished">设置后不可更改，如需修改、请删除后重新创建。</translation>
+    </message>
+    <message>
+        <source>Unit</source>
+        <translation type="vanished">单位</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="vanished">编号</translation>
+    </message>
+    <message>
+        <source>Kind</source>
+        <translation type="vanished">类型</translation>
+    </message>
+    <message>
+        <source>PaymentTerm</source>
+        <translation type="vanished">帐期</translation>
     </message>
 </context>
 <context>
@@ -500,9 +634,8 @@ Rage, rage against the dying of the light.</source>
 <context>
     <name>LeafWidgetO</name>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="49"/>
         <source>Party</source>
-        <translation>合作</translation>
+        <translation type="vanished">合作</translation>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="95"/>
@@ -543,6 +676,11 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">第二</translation>
     </message>
     <message>
+        <location filename="../../table/widget/leafwidgeto.ui" line="49"/>
+        <source>Partner</source>
+        <translation>合作</translation>
+    </message>
+    <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="277"/>
         <source>Count</source>
         <translation>计数</translation>
@@ -559,19 +697,19 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="352"/>
-        <location filename="../../table/widget/leafwidgeto.cc" line="362"/>
+        <location filename="../../table/widget/leafwidgeto.cc" line="352"/>
         <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="359"/>
-        <location filename="../../table/widget/leafwidgeto.cc" line="359"/>
+        <location filename="../../table/widget/leafwidgeto.cc" line="349"/>
         <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="366"/>
-        <location filename="../../table/widget/leafwidgeto.cc" line="365"/>
+        <location filename="../../table/widget/leafwidgeto.cc" line="355"/>
         <source>PEND</source>
         <translation>挂帐</translation>
     </message>
@@ -592,42 +730,36 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="437"/>
-        <location filename="../../table/widget/leafwidgeto.cc" line="204"/>
+        <location filename="../../table/widget/leafwidgeto.cc" line="194"/>
         <source>Finish</source>
         <translation>完成</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.cc" line="194"/>
         <source>Sale</source>
-        <translation>销售</translation>
+        <translation type="vanished">销售</translation>
+    </message>
+    <message>
+        <source>Purchase</source>
+        <translation type="vanished">采购</translation>
+    </message>
+    <message>
+        <source>SO</source>
+        <translation type="vanished">售</translation>
+    </message>
+    <message>
+        <source>PO</source>
+        <translation type="vanished">购</translation>
+    </message>
+    <message>
+        <source>CUST</source>
+        <translation type="vanished">客户</translation>
+    </message>
+    <message>
+        <source>VEND</source>
+        <translation type="vanished">供应商</translation>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.cc" line="194"/>
-        <source>Purchase</source>
-        <translation>采购</translation>
-    </message>
-    <message>
-        <location filename="../../table/widget/leafwidgeto.cc" line="195"/>
-        <source>SO</source>
-        <translation>售</translation>
-    </message>
-    <message>
-        <location filename="../../table/widget/leafwidgeto.cc" line="195"/>
-        <source>PO</source>
-        <translation>购</translation>
-    </message>
-    <message>
-        <location filename="../../table/widget/leafwidgeto.cc" line="196"/>
-        <source>CUST</source>
-        <translation>客户</translation>
-    </message>
-    <message>
-        <location filename="../../table/widget/leafwidgeto.cc" line="196"/>
-        <source>VEND</source>
-        <translation>供应商</translation>
-    </message>
-    <message>
-        <location filename="../../table/widget/leafwidgeto.cc" line="204"/>
         <source>Edit</source>
         <translation>编辑</translation>
     </message>
@@ -696,22 +828,30 @@ Rage, rage against the dying of the light.</source>
         <translation>财务</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="104"/>
-        <location filename="../../mainwindow.cc" line="168"/>
         <source>Item</source>
-        <translation>物品</translation>
+        <translation type="vanished">物品</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="117"/>
-        <location filename="../../mainwindow.cc" line="167"/>
         <source>Stakeholder</source>
-        <translation>人脉</translation>
+        <translation type="vanished">人脉</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.ui" line="130"/>
+        <location filename="../../mainwindow.ui" line="104"/>
         <location filename="../../mainwindow.cc" line="169"/>
         <source>Task</source>
         <translation>任务</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow.ui" line="117"/>
+        <location filename="../../mainwindow.cc" line="168"/>
+        <source>Inventory</source>
+        <translation>存货</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow.ui" line="130"/>
+        <location filename="../../mainwindow.cc" line="167"/>
+        <source>Partner</source>
+        <translation>合作</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="143"/>

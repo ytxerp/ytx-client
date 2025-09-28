@@ -158,7 +158,7 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
 
     InitContextFinance();
     InitContextTask();
-    InitContextItem();
+    InitContextInventory();
     InitContextPartner();
     InitContextSale();
     InitContextPurchase();
@@ -1765,7 +1765,7 @@ void MainWindow::InitContextFinance()
     connect(tree_model, &TreeModel::SSyncStatusValue, tree_widget, &TreeWidget::RSyncStatusValue, Qt::UniqueConnection);
 }
 
-void MainWindow::InitContextItem()
+void MainWindow::InitContextInventory()
 {
     auto& info { sc_i_.info };
     auto& section_config { sc_i_.section_config };
