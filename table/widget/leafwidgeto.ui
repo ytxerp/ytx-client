@@ -38,7 +38,7 @@
       <item row="0" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QLabel" name="labParty">
+         <widget class="QLabel" name="labPartner">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -46,7 +46,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Party</string>
+           <string>Partner</string>
           </property>
           <property name="buddy">
            <cstring>comboParty</cstring>

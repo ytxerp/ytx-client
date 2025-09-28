@@ -87,7 +87,6 @@ private:
     void LockWidgets(bool finished);
     void IniUnit(int unit);
     void IniLeafValue();
-    void IniText(Section section);
     void IniRule(bool rule);
     void IniFinished(bool finished);
     void IniRuleGroup();

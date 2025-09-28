@@ -23,7 +23,6 @@ LeafWidgetO::LeafWidgetO(
     SignalBlocker blocker(this);
 
     IniWidget();
-    IniText(arg.section);
     IniUnit(arg.node->unit);
     IniRuleGroup();
     IniUnitGroup();
@@ -127,7 +126,7 @@ void LeafWidgetO::LockWidgets(bool finished)
 {
     const bool enable { !finished };
 
-    ui->labParty->setEnabled(enable);
+    ui->labPartner->setEnabled(enable);
     ui->comboParty->setEnabled(enable);
 
     ui->labelFinalTotal->setEnabled(enable);
@@ -185,15 +184,6 @@ void LeafWidgetO::IniLeafValue()
     ui->dSpinFirstTotal->setValue(node_->count_total);
     ui->dSpinSecondTotal->setValue(node_->measure_total);
     ui->dSpinInitialTotal->setValue(node_->initial_total);
-}
-
-void LeafWidgetO::IniText(Section section)
-{
-    const bool is_sale_section { section == Section::kSale };
-
-    setWindowTitle(is_sale_section ? tr("Sale") : tr("Purchase"));
-    ui->rBtnTO->setText(is_sale_section ? tr("SO") : tr("PO"));
-    ui->labParty->setText(is_sale_section ? tr("CUST") : tr("VEND"));
 }
 
 void LeafWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true); }
