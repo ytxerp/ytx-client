@@ -141,7 +141,7 @@ void EntryP::ResetState()
     Entry::ResetState();
 
     unit_price = 0.0;
-    external_item = QUuid();
+    external_sku = QUuid();
 }
 
 void EntryP::ReadJson(const QJsonObject& object)
@@ -150,8 +150,8 @@ void EntryP::ReadJson(const QJsonObject& object)
 
     if (object.contains(kUnitPrice))
         unit_price = object[kUnitPrice].toString().toDouble();
-    if (object.contains(kExternalItem))
-        external_item = QUuid(object[kExternalItem].toString());
+    if (object.contains(kExternalSku))
+        external_sku = QUuid(object[kExternalSku].toString());
 }
 
 void EntryO::ResetState()
@@ -159,7 +159,7 @@ void EntryO::ResetState()
     Entry::ResetState();
 
     unit_price = 0.0;
-    external_item = QUuid();
+    external_sku = QUuid();
 
     count = 0.0;
     measure = 0.0;
@@ -193,8 +193,8 @@ void EntryO::ReadJson(const QJsonObject& object)
         updated_by = QUuid(object.value(kUpdatedBy).toString());
     if (object.contains(kUnitPrice))
         unit_price = object[kUnitPrice].toString().toDouble();
-    if (object.contains(kExternalItem))
-        external_item = QUuid(object[kExternalItem].toString());
+    if (object.contains(kExternalSku))
+        external_sku = QUuid(object[kExternalSku].toString());
     if (object.contains(kCount))
         count = object[kCount].toString().toDouble();
     if (object.contains(kMeasure))

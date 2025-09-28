@@ -30,7 +30,7 @@ struct EntryRef {
     QUuid order_id {};
     int section {};
     QUuid pi_id {}; // party or item uuid
-    QUuid external_item {};
+    QUuid external_sku {};
     double count {};
     double measure {};
     double unit_price {};
@@ -47,7 +47,7 @@ inline void EntryRef::ResetState()
     order_id = QUuid();
     section = 0;
     pi_id = QUuid();
-    external_item = QUuid();
+    external_sku = QUuid();
     count = 0.0;
     measure = 0.0;
     unit_price = 0.0;

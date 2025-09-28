@@ -101,8 +101,8 @@ QVariant LeafModelO::data(const QModelIndex& index, int role) const
         return *d_shadow->initial == 0 ? QVariant() : *d_shadow->initial;
     case EntryEnumO::kDiscountPrice:
         return *d_shadow->unit_price == 0 ? QVariant() : *d_shadow->unit_price;
-    case EntryEnumO::kExternalItem:
-        return d_shadow->external_item->isNull() ? QVariant() : *d_shadow->external_item;
+    case EntryEnumO::kExternalSku:
+        return d_shadow->external_sku->isNull() ? QVariant() : *d_shadow->external_sku;
     default:
         return QVariant();
     }
@@ -161,7 +161,7 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     case EntryEnumO::kDiscountPrice:
         dis_changed = UpdateDiscountPrice(d_shadow, value.toDouble());
         break;
-    case EntryEnumO::kExternalItem:
+    case EntryEnumO::kExternalSku:
         UpdateExternalItem(d_shadow, value.toUuid());
         break;
     default:
@@ -230,8 +230,8 @@ void LeafModelO::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (*d_lhs->initial < *d_rhs->initial) : (*d_lhs->initial > *d_rhs->initial);
         case EntryEnumO::kDiscountPrice:
             return (order == Qt::AscendingOrder) ? (*d_lhs->unit_price < *d_rhs->unit_price) : (*d_lhs->unit_price > *d_rhs->unit_price);
-        case EntryEnumO::kExternalItem:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->external_item < *d_rhs->external_item) : (*d_lhs->external_item > *d_rhs->external_item);
+        case EntryEnumO::kExternalSku:
+            return (order == Qt::AscendingOrder) ? (*d_lhs->external_sku < *d_rhs->external_sku) : (*d_lhs->external_sku > *d_rhs->external_sku);
         case EntryEnumO::kDiscount:
             return (order == Qt::AscendingOrder) ? (*d_lhs->discount < *d_rhs->discount) : (*d_lhs->discount > *d_rhs->discount);
         default:
@@ -311,12 +311,12 @@ bool LeafModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
 bool LeafModelO::UpdateExternalItem(EntryShadowO* entry_shadow, const QUuid& value)
 {
-    if (*entry_shadow->external_item == value)
+    if (*entry_shadow->external_sku == value)
         return false;
 
     const auto old_rhs_node { *entry_shadow->rhs_node };
 
-    *entry_shadow->external_item = value;
+    *entry_shadow->external_sku = value;
     CrossSearch(entry_shadow, value, false);
 
     if (!old_rhs_node.isNull()) {
@@ -345,7 +345,7 @@ bool LeafModelO::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
 
     CrossSearch(entry_shadow, value, true);
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kUnitPrice));
-    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kExternalItem));
+    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kExternalSku));
 
     if (old_rhs_node.isNull()) {
         // const auto message { JsonGen::InsertEntry(info_->section_str, d_shadow, node_id_) };
@@ -468,5 +468,5 @@ void LeafModelO::CrossSearch(EntryShadow* entry_shadow, const QUuid& item_id, bo
         return;
 
     *d_shadow->unit_price = is_internal ? tree_model_item_->UnitPrice(item_id) : 0.0;
-    is_internal ? * d_shadow->external_item = QUuid() : * d_shadow->rhs_node = QUuid();
+    is_internal ? * d_shadow->external_sku = QUuid() : * d_shadow->rhs_node = QUuid();
 }

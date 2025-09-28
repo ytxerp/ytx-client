@@ -111,7 +111,7 @@ struct EntryShadowT final : EntryShadow {
 
 struct EntryShadowP final : EntryShadow {
     double* unit_price {};
-    QUuid* external_item {};
+    QUuid* external_sku {};
 
     void BindEntry(Entry* base, bool is_parallel) override;
     void ResetState() override;
@@ -120,7 +120,7 @@ struct EntryShadowP final : EntryShadow {
 
 struct EntryShadowO final : EntryShadow {
     double* unit_price {};
-    QUuid* external_item {};
+    QUuid* external_sku {};
 
     double* count {};
     double* measure {};

@@ -52,8 +52,8 @@ QVariant EntryRefModel::data(const QModelIndex& index, int role) const
         return entry->section;
     case EntryRefEnum::kOrderId:
         return entry->order_id;
-    case EntryRefEnum::kExternalItem:
-        return entry->external_item.isNull() ? QVariant() : entry->external_item;
+    case EntryRefEnum::kExternalSku:
+        return entry->external_sku.isNull() ? QVariant() : entry->external_sku;
     case EntryRefEnum::kkCount:
         return entry->count == 0 ? QVariant() : entry->count;
     case EntryRefEnum::kkMeasure:
@@ -88,8 +88,8 @@ void EntryRefModel::sort(int column, Qt::SortOrder order)
         const EntryRefEnum kColumn { column };
 
         switch (kColumn) {
-        case EntryRefEnum::kExternalItem:
-            return (order == Qt::AscendingOrder) ? (lhs->external_item < rhs->external_item) : (lhs->external_item > rhs->external_item);
+        case EntryRefEnum::kExternalSku:
+            return (order == Qt::AscendingOrder) ? (lhs->external_sku < rhs->external_sku) : (lhs->external_sku > rhs->external_sku);
         case EntryRefEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case EntryRefEnum::kPIId:

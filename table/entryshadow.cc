@@ -185,7 +185,7 @@ void EntryShadowP::BindEntry(Entry* base, bool /* is_parallel */)
 
     auto* entry = static_cast<EntryP*>(base);
     unit_price = &entry->unit_price;
-    external_item = &entry->external_item;
+    external_sku = &entry->external_sku;
 }
 
 void EntryShadowP::ResetState()
@@ -193,14 +193,14 @@ void EntryShadowP::ResetState()
     EntryShadow::ResetState();
 
     unit_price = nullptr;
-    external_item = nullptr;
+    external_sku = nullptr;
 }
 
 QJsonObject EntryShadowP::WriteJson() const
 {
     QJsonObject obj = EntryShadow::WriteJson();
     obj.insert(kUnitPrice, QString::number(*unit_price, 'f', kMaxNumericScale_4));
-    obj.insert(kExternalItem, external_item->toString(QUuid::WithoutBraces));
+    obj.insert(kExternalSku, external_sku->toString(QUuid::WithoutBraces));
     return obj;
 }
 
@@ -229,7 +229,7 @@ void EntryShadowO::BindEntry(Entry* base, bool /* is_parallel */)
 
     auto* entry = static_cast<EntryO*>(base);
     unit_price = &entry->unit_price;
-    external_item = &entry->external_item;
+    external_sku = &entry->external_sku;
 
     count = &entry->count;
     measure = &entry->measure;
@@ -245,7 +245,7 @@ void EntryShadowO::ResetState()
     EntryShadow::ResetState();
 
     unit_price = nullptr;
-    external_item = nullptr;
+    external_sku = nullptr;
     count = nullptr;
     measure = nullptr;
     initial = nullptr;
@@ -269,7 +269,7 @@ QJsonObject EntryShadowO::WriteJson() const
     obj.insert(kFinal, QString::number(*final, 'f', kMaxNumericScale_4));
     obj.insert(kDiscount, QString::number(*discount, 'f', kMaxNumericScale_4));
     obj.insert(kDiscountPrice, QString::number(*discount_price, 'f', kMaxNumericScale_4));
-    obj.insert(kExternalItem, external_item->toString(QUuid::WithoutBraces));
+    obj.insert(kExternalSku, external_sku->toString(QUuid::WithoutBraces));
 
     return obj;
 }

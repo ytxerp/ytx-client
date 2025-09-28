@@ -42,8 +42,8 @@ void EntryHubP::ApplyItemReplace(const QUuid& old_item_id, const QUuid& new_item
         if (d_entry->rhs_node == old_item_id)
             d_entry->rhs_node = new_item_id;
 
-        if (d_entry->external_item == old_item_id)
-            d_entry->external_item = new_item_id;
+        if (d_entry->external_sku == old_item_id)
+            d_entry->external_sku = new_item_id;
     }
 }
 
@@ -59,7 +59,7 @@ bool EntryHubP::CrossSearch(EntryShadowO* order_entry_shadow, const QUuid& party
             break;
         }
 
-        if (!is_internal && d_trans->lhs_node == party_id && d_trans->external_item == item_id) {
+        if (!is_internal && d_trans->lhs_node == party_id && d_trans->external_sku == item_id) {
             latest_trans = d_trans;
             break;
         }
@@ -72,7 +72,7 @@ bool EntryHubP::CrossSearch(EntryShadowO* order_entry_shadow, const QUuid& party
     *order_entry_shadow->unit_price = latest_trans->unit_price;
 
     if (is_internal) {
-        *order_entry_shadow->external_item = latest_trans->external_item;
+        *order_entry_shadow->external_sku = latest_trans->external_sku;
     } else {
         *order_entry_shadow->rhs_node = latest_trans->rhs_node;
     }

@@ -28,7 +28,7 @@ void SearchDialogP::TableViewDelegate(QTableView* view)
 
     auto* rhs_node_name { new SearchPathTableR(item_node_, view) };
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), rhs_node_name);
-    view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kExternalItem), rhs_node_name);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kExternalSku), rhs_node_name);
 
     auto* is_checked { new CheckBoxR(view) };
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIsChecked), is_checked);

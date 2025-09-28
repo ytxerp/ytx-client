@@ -165,7 +165,7 @@ inline const QString kLeafEntry = QStringLiteral("leaf_entry");
 
 inline const QString kExternalReference = QStringLiteral("external_reference");
 inline const QString kInternalReference = QStringLiteral("internal_reference");
-inline const QString kExternalItem = QStringLiteral("external_item");
+inline const QString kExternalSku = QStringLiteral("external_sku");
 
 inline const QString kNodeInsert = QStringLiteral("node_insert");
 inline const QString kNodeDrag = QStringLiteral("node_drag");

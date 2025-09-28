@@ -176,7 +176,7 @@ QString PrintManager::GetColumnText(int col, const EntryShadow* entry_shadow)
     case 0:
         return item_->Path(*entry_shadow->rhs_node);
     case 1:
-        return item_->Path(*o_entry_shadow->external_item);
+        return item_->Path(*o_entry_shadow->external_sku);
     case 2:
         return *entry_shadow->description;
     case 3:

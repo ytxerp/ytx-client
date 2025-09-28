@@ -24,8 +24,8 @@ QVariant SearchEntryModelO::data(const QModelIndex& index, int role) const
         return d_entry->unit_price == 0 ? QVariant() : d_entry->unit_price;
     case EntryEnumO::kDescription:
         return d_entry->description;
-    case EntryEnumO::kExternalItem:
-        return d_entry->external_item.isNull() ? QVariant() : d_entry->external_item;
+    case EntryEnumO::kExternalSku:
+        return d_entry->external_sku.isNull() ? QVariant() : d_entry->external_sku;
     case EntryEnumO::kRhsNode:
         return d_entry->rhs_node;
     case EntryEnumO::kCount:
@@ -69,8 +69,8 @@ void SearchEntryModelO::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (d_lhs->measure < d_rhs->measure) : (d_lhs->measure > d_rhs->measure);
         case EntryEnumO::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
-        case EntryEnumO::kExternalItem:
-            return (order == Qt::AscendingOrder) ? (d_lhs->external_item < d_rhs->external_item) : (d_lhs->external_item > d_rhs->external_item);
+        case EntryEnumO::kExternalSku:
+            return (order == Qt::AscendingOrder) ? (d_lhs->external_sku < d_rhs->external_sku) : (d_lhs->external_sku > d_rhs->external_sku);
         case EntryEnumO::kDiscountPrice:
             return (order == Qt::AscendingOrder) ? (d_lhs->discount_price < d_rhs->discount_price) : (d_lhs->discount_price > d_rhs->discount_price);
         case EntryEnumO::kInitial:

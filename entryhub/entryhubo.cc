@@ -142,8 +142,8 @@ void EntryHubO::ApplyItemReplace(const QUuid& old_item_id, const QUuid& new_item
         if (d_entry->rhs_node == old_item_id)
             d_entry->rhs_node = new_item_id;
 
-        if (d_entry->external_item == old_item_id)
-            d_entry->external_item = new_item_id;
+        if (d_entry->external_sku == old_item_id)
+            d_entry->external_sku = new_item_id;
     }
 }
 

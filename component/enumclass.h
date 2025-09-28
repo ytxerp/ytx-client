@@ -137,7 +137,7 @@ enum class EntryEnumP {
     kDocument,
     kIsChecked,
     kRhsNode,
-    kExternalItem,
+    kExternalSku,
 };
 
 // FullEntryEnumO is same as EntryEnumO
@@ -153,7 +153,7 @@ enum class EntryEnumO {
     kMeasure,
     kUnitPrice,
     kDescription,
-    kExternalItem,
+    kExternalSku,
     kLhsNode,
     kDiscountPrice,
     kColor,
@@ -385,7 +385,7 @@ enum class EntryRefEnum {
     kOrderId,
     kSection,
     kPIId,
-    kExternalItem,
+    kExternalSku,
     kkCount,
     kkMeasure,
     kUnitPrice,

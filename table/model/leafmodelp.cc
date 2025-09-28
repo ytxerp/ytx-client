@@ -1,4 +1,4 @@
-#include "leafmodels.h"
+#include "leafmodelp.h"
 
 #include <QDateTime>
 
@@ -7,12 +7,12 @@
 #include "global/websocket.h"
 #include "utils/jsongen.h"
 
-LeafModelS::LeafModelS(CLeafModelArg& arg, QObject* parent)
+LeafModelP::LeafModelP(CLeafModelArg& arg, QObject* parent)
     : LeafModel { arg, parent }
 {
 }
 
-bool LeafModelS::removeRows(int row, int /*count*/, const QModelIndex& parent)
+bool LeafModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
 
@@ -32,12 +32,12 @@ bool LeafModelS::removeRows(int row, int /*count*/, const QModelIndex& parent)
         WebSocket::Instance()->SendMessage(kEntryRemove, message);
     }
 
-    internal_set_.remove(rhs_node_id);
+    internal_sku_.remove(rhs_node_id);
     EntryShadowPool::Instance().Recycle(entry_shadow, section_);
     return true;
 }
 
-bool LeafModelS::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, int /*row*/)
+bool LeafModelP::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, int /*row*/)
 {
     if (value.isNull())
         return false;
@@ -45,11 +45,11 @@ bool LeafModelS::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
     auto* d_shadow = DerivedPtr<EntryShadowP>(entry_shadow);
 
     auto old_rhs_node { *d_shadow->rhs_node };
-    if (old_rhs_node == value || internal_set_.contains(value))
+    if (old_rhs_node == value || internal_sku_.contains(value))
         return false;
 
     *d_shadow->rhs_node = value;
-    internal_set_.insert(value);
+    internal_sku_.insert(value);
 
     const QUuid id { *d_shadow->id };
 
@@ -60,16 +60,16 @@ bool LeafModelS::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
     return true;
 }
 
-void LeafModelS::IniInternalSet()
+void LeafModelP::IniInternalSku()
 {
     std::ranges::for_each(shadow_list_, [this](const auto* shadow) {
         if (shadow->rhs_node) {
-            internal_set_.insert(*shadow->rhs_node);
+            internal_sku_.insert(*shadow->rhs_node);
         }
     });
 }
 
-QVariant LeafModelS::data(const QModelIndex& index, int role) const
+QVariant LeafModelP::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -107,14 +107,14 @@ QVariant LeafModelS::data(const QModelIndex& index, int role) const
         return *d_shadow->is_checked ? *d_shadow->is_checked : QVariant();
     case EntryEnumP::kRhsNode:
         return d_shadow->rhs_node->isNull() ? QVariant() : *d_shadow->rhs_node;
-    case EntryEnumP::kExternalItem:
-        return d_shadow->external_item->isNull() ? QVariant() : *d_shadow->external_item;
+    case EntryEnumP::kExternalSku:
+        return d_shadow->external_sku->isNull() ? QVariant() : *d_shadow->external_sku;
     default:
         return QVariant();
     }
 }
 
-bool LeafModelS::setData(const QModelIndex& index, const QVariant& value, int role)
+bool LeafModelP::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
         return false;
@@ -156,8 +156,8 @@ bool LeafModelS::setData(const QModelIndex& index, const QVariant& value, int ro
     case EntryEnumP::kIsChecked:
         EntryUtils::UpdateShadowField(cache, shadow, kIsChecked, value.toBool(), &EntryShadow::is_checked);
         break;
-    case EntryEnumP::kExternalItem:
-        EntryUtils::UpdateShadowUuid(cache, d_shadow, kExternalItem, value.toUuid(), &EntryShadowP::external_item);
+    case EntryEnumP::kExternalSku:
+        EntryUtils::UpdateShadowUuid(cache, d_shadow, kExternalSku, value.toUuid(), &EntryShadowP::external_sku);
         break;
     default:
         return false;
@@ -167,7 +167,7 @@ bool LeafModelS::setData(const QModelIndex& index, const QVariant& value, int ro
     return true;
 }
 
-void LeafModelS::sort(int column, Qt::SortOrder order)
+void LeafModelP::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0);
     if (column >= info_.entry_header.size() - 1)
@@ -202,8 +202,8 @@ void LeafModelS::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
         case EntryEnumP::kIsChecked:
             return (order == Qt::AscendingOrder) ? (*lhs->is_checked < *rhs->is_checked) : (*lhs->is_checked > *rhs->is_checked);
-        case EntryEnumP::kExternalItem:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->external_item < *d_rhs->external_item) : (*d_lhs->external_item > *d_rhs->external_item);
+        case EntryEnumP::kExternalSku:
+            return (order == Qt::AscendingOrder) ? (*d_lhs->external_sku < *d_rhs->external_sku) : (*d_lhs->external_sku > *d_rhs->external_sku);
         case EntryEnumP::kRhsNode:
             return (order == Qt::AscendingOrder) ? (*lhs->rhs_node < *rhs->rhs_node) : (*lhs->rhs_node > *rhs->rhs_node);
         default:
@@ -216,7 +216,7 @@ void LeafModelS::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-Qt::ItemFlags LeafModelS::flags(const QModelIndex& index) const
+Qt::ItemFlags LeafModelP::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;

@@ -90,7 +90,7 @@
 #include "search/node/searchnodemodelt.h"
 #include "table/model/leafmodelf.h"
 #include "table/model/leafmodeli.h"
-#include "table/model/leafmodels.h"
+#include "table/model/leafmodelp.h"
 #include "table/model/leafmodelt.h"
 #include "tree/model/treemodelf.h"
 #include "tree/model/treemodeli.h"
@@ -214,7 +214,7 @@ void MainWindow::CreateLeafWidget(const QUuid& node_id)
     if (start_ == Section::kSale || start_ == Section::kPurchase) {
         CreateLeafO(sc_->tree_model, leaf_wgt_hash, sc_->info, sc_->section_config, node_id);
     } else {
-        CreateLeafFIST(sc_->tree_model, sc_->entry_hub, leaf_wgt_hash, sc_->info, sc_->section_config, node_id);
+        CreateLeafFIPT(sc_->tree_model, sc_->entry_hub, leaf_wgt_hash, sc_->info, sc_->section_config, node_id);
     }
 }
 
@@ -323,7 +323,7 @@ void MainWindow::REnableAction(bool finished)
     ui->actionRemove->setEnabled(!finished);
 }
 
-void MainWindow::SwitchToLeaf(const QUuid& node_id, const QUuid& entry_id) const
+void MainWindow::SwitchToLeaf(const QUuid& node_id) const
 {
     auto widget { sc_->leaf_wgt_hash.value(node_id, nullptr) };
     assert(widget);
@@ -331,12 +331,18 @@ void MainWindow::SwitchToLeaf(const QUuid& node_id, const QUuid& entry_id) const
     ui->tabWidget->setCurrentWidget(widget);
     widget->activateWindow();
 
-    auto* view { widget->View() };
-    view->setCurrentIndex(QModelIndex());
+    widget->View()->setCurrentIndex(QModelIndex());
+}
 
+void MainWindow::ScrollToEntry(const QUuid& node_id, const QUuid& entry_id) const
+{
     if (entry_id.isNull())
         return;
 
+    auto widget { sc_->leaf_wgt_hash.value(node_id, nullptr) };
+    assert(widget);
+
+    auto* view { widget->View() };
     auto index { widget->Model()->GetIndex(entry_id) };
 
     if (!index.isValid())
@@ -347,7 +353,7 @@ void MainWindow::SwitchToLeaf(const QUuid& node_id, const QUuid& entry_id) const
     view->closePersistentEditor(index);
 }
 
-void MainWindow::CreateLeafFIST(TreeModel* tree_model, EntryHub* hub, LeafWgtHash& wgt_hash, CSectionInfo& info, CSectionConfig& config, CUuid& node_id)
+void MainWindow::CreateLeafFIPT(TreeModel* tree_model, EntryHub* hub, LeafWgtHash& wgt_hash, CSectionInfo& info, CSectionConfig& config, CUuid& node_id)
 {
     assert(tree_model);
     assert(tree_model->Contains(node_id));
@@ -370,7 +376,7 @@ void MainWindow::CreateLeafFIST(TreeModel* tree_model, EntryHub* hub, LeafWgtHas
         entry_model = new LeafModelT(arg, this);
         break;
     case Section::kPartner:
-        entry_model = new LeafModelS(arg, this);
+        entry_model = new LeafModelP(arg, this);
         break;
     default:
         break;
@@ -652,7 +658,7 @@ void MainWindow::TableDelegateS(QTableView* table_view, CSectionConfig& config) 
 
     auto* ext_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kExternal)) };
     auto* ext_item { new FilterUnit(tree_model_i, ext_filter_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kExternalItem), ext_item);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kExternalSku), ext_item);
 
     auto* document { new Document(sc_->global_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kDocument), document);
@@ -676,7 +682,7 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) 
     auto* ext_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kExternal)) };
     auto* ext_item { new FilterUnit(tree_model_i, ext_filter_model, table_view) };
 
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalItem), ext_item);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalSku), ext_item);
 
     auto* color { new ColorR(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kColor), color);
@@ -1565,8 +1571,8 @@ void MainWindow::DelegateLeafExternalReference(QTableView* table_view, CSectionC
     table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kIssuedTime), issued_time);
 
     auto partner_tree_model { sc_p_.tree_model };
-    auto* external_item { new NodePathR(partner_tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kExternalItem), external_item);
+    auto* external_sku { new NodePathR(partner_tree_model, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kExternalSku), external_sku);
 
     auto* section { new SectionR(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kSection), section);
@@ -1577,8 +1583,8 @@ void MainWindow::DelegateLeafExternalReference(QTableView* table_view, CSectionC
     }
 
     if (start_ == Section::kPartner) {
-        auto* internal_item { new NodeNameR(sc_i_.tree_model, table_view) };
-        table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kPIId), internal_item);
+        auto* internal_sku { new NodeNameR(sc_i_.tree_model, table_view) };
+        table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kPIId), internal_sku);
     }
 }
 
@@ -1688,15 +1694,15 @@ void MainWindow::DelegateStatementSecondary(QTableView* table_view, CSectionConf
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kIssuedTime), issued_time);
 
-    auto* external_item { new NodePathR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kSupportNode), external_item);
+    auto* external_sku { new NodePathR(sc_p_.tree_model, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kSupportNode), external_sku);
 
     auto tree_model_i { sc_i_.tree_model };
 
     auto* int_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kInternal)) };
-    auto* int_item { new FilterUnit(tree_model_i, int_filter_model, table_view) };
+    auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
 
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kRhsNode), int_item);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kRhsNode), internal_sku);
 }
 
 void MainWindow::SetUniqueConnection() const
@@ -2101,7 +2107,7 @@ void MainWindow::on_actionJump_triggered()
 
     const auto entry_id { index.sibling(row, std::to_underlying(EntryEnum::kId)).data().toUuid() };
     CreateLeafWidget(rhs_node_id);
-    SwitchToLeaf(rhs_node_id, entry_id);
+    SwitchToLeaf(rhs_node_id);
 }
 
 void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
@@ -2620,14 +2626,14 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
         case Section::kFinance:
         case Section::kInventory:
         case Section::kPartner:
-            CreateLeafFIST(sc_->tree_model, sc_->entry_hub, sc_->leaf_wgt_hash, sc_->info, sc_->section_config, id);
+            CreateLeafFIPT(sc_->tree_model, sc_->entry_hub, sc_->leaf_wgt_hash, sc_->info, sc_->section_config, id);
             break;
         default:
             break;
         }
     }
 
-    SwitchToLeaf(id, entry_id);
+    SwitchToLeaf(id);
 }
 
 void MainWindow::OrderNodeLocation(Section section, const QUuid& node_id)

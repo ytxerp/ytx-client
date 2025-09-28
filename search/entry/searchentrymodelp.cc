@@ -26,8 +26,8 @@ QVariant SearchEntryModelP::data(const QModelIndex& index, int role) const
         return d_entry->lhs_node;
     case EntryEnumP::kDescription:
         return d_entry->description;
-    case EntryEnumP::kExternalItem:
-        return d_entry->external_item.isNull() ? QVariant() : d_entry->external_item;
+    case EntryEnumP::kExternalSku:
+        return d_entry->external_sku.isNull() ? QVariant() : d_entry->external_sku;
     case EntryEnumP::kDocument:
         return d_entry->document.isEmpty() ? QVariant() : d_entry->document.size();
     case EntryEnumP::kIsChecked:
@@ -61,8 +61,8 @@ void SearchEntryModelP::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->lhs_node < rhs->lhs_node) : (lhs->lhs_node > rhs->lhs_node);
         case EntryEnumP::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
-        case EntryEnumP::kExternalItem:
-            return (order == Qt::AscendingOrder) ? (d_lhs->external_item < d_rhs->external_item) : (d_lhs->external_item > d_rhs->external_item);
+        case EntryEnumP::kExternalSku:
+            return (order == Qt::AscendingOrder) ? (d_lhs->external_sku < d_rhs->external_sku) : (d_lhs->external_sku > d_rhs->external_sku);
         case EntryEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case EntryEnumP::kIsChecked:

@@ -125,7 +125,7 @@ set(SOURCES
     table/model/leafmodelf.cc
     table/model/leafmodel.cc
     table/model/leafmodelo.cc
-    table/model/leafmodels.cc
+    table/model/leafmodelp.cc
     report/settlement.cc
     report/widget/refwidget.cc
     report/widget/statementwidget.cc
@@ -257,7 +257,7 @@ set(HEADERS
     table/widget/leafwidgetfipt.h
     table/widget/leafwidgeto.h
     table/widget/leafwidget.h
-    table/model/leafmodels.h
+    table/model/leafmodelp.h
     table/model/leafmodelo.h
     table/model/leafmodelt.h
     table/model/leafmodelf.h

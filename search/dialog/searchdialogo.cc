@@ -44,7 +44,7 @@ void SearchDialogO::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kLhsNode), node_name_);
 
     auto* item_name { new SearchPathTableR(item_node_, view) };
-    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalItem), item_name);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalSku), item_name);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kRhsNode), item_name);
 }
 

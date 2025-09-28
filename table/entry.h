@@ -83,7 +83,7 @@ struct EntryT final : Entry {
 
 struct EntryP final : Entry {
     double unit_price {};
-    QUuid external_item {};
+    QUuid external_sku {};
 
     void ResetState() override;
     void ReadJson(const QJsonObject& object) override;
@@ -94,7 +94,7 @@ struct EntryO final : Entry {
     double count {};
     double measure {};
 
-    QUuid external_item {};
+    QUuid external_sku {};
 
     double initial {};
     double final {};

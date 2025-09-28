@@ -17,17 +17,17 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LEAFMODELS_H
-#define LEAFMODELS_H
+#ifndef LEAFMODELP_H
+#define LEAFMODELP_H
 
 #include "leafmodel.h"
 
-class LeafModelS final : public LeafModel {
+class LeafModelP final : public LeafModel {
     Q_OBJECT
 
 public:
-    LeafModelS(CLeafModelArg& arg, QObject* parent = nullptr);
-    ~LeafModelS() override = default;
+    LeafModelP(CLeafModelArg& arg, QObject* parent = nullptr);
+    ~LeafModelP() override = default;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -41,10 +41,10 @@ protected:
     bool UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
 
 private:
-    void IniInternalSet();
+    void IniInternalSku();
 
 private:
-    QSet<QUuid> internal_set_ {};
+    QSet<QUuid> internal_sku_ {};
 };
 
-#endif // LEAFMODELS_H
+#endif // LEAFMODELP_H

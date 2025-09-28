@@ -133,7 +133,7 @@ private:
 
     void CreateLeafWidget(const QUuid& node_id);
 
-    void CreateLeafFIST(TreeModel* tree_model, EntryHub* dbhub, LeafWgtHash& entry_wgt_hash, CSectionInfo& info, CSectionConfig& config, const QUuid& node_id);
+    void CreateLeafFIPT(TreeModel* tree_model, EntryHub* dbhub, LeafWgtHash& entry_wgt_hash, CSectionInfo& info, CSectionConfig& config, const QUuid& node_id);
     void CreateLeafO(TreeModel* tree_model, LeafWgtHash& entry_wgt_hash, CSectionInfo& info, CSectionConfig& config, const QUuid& node_id);
 
     void TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
@@ -207,7 +207,8 @@ private:
     void LeafExternalReferenceS(const QUuid& node_id, int unit);
     void OrderNodeLocation(Section section, const QUuid& node_id);
 
-    void SwitchToLeaf(const QUuid& node_id, const QUuid& entry_id = {}) const;
+    void SwitchToLeaf(const QUuid& node_id) const;
+    void ScrollToEntry(const QUuid& node_id, const QUuid& entry_id) const;
 
     void RegisterRptWgt(const QUuid& report_id, ReportWidget* widget);
     void WriteConfig();
