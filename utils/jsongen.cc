@@ -108,21 +108,22 @@ QJsonObject ReplaceLeafNode(CString& section, CUuid& old_id, CUuid& new_id, bool
     return message;
 }
 
-QJsonObject TableData(CString& section, CUuid& node_id)
+QJsonObject LeafAcked(CString& section, CUuid& leaf_id, CUuid& entry_id)
 {
     QJsonObject message {};
     message.insert(kSection, section);
-    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kLeafId, leaf_id.toString(QUuid::WithoutBraces));
+    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
     message.insert(kEntryArray, QJsonArray());
     return message;
 }
 
-QJsonObject CheckAction(CString& section, CUuid& node_id, int check)
+QJsonObject CheckAction(CString& section, CUuid& leaf_id, int check)
 {
     QJsonObject message {};
     message.insert(kSection, section);
     message.insert(kSessionId, QString());
-    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kLeafId, leaf_id.toString(QUuid::WithoutBraces));
     message.insert(kCheck, check);
     message.insert(kMeta, QJsonObject());
 

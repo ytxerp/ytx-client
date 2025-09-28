@@ -305,11 +305,15 @@ void WebSocket::AckTree(const QJsonObject& obj)
 void WebSocket::AckLeaf(const QJsonObject& obj)
 {
     CString section = obj.value(kSection).toString();
-    const auto id = QUuid(obj.value(kNodeId).toString());
+    const auto leaf_id = QUuid(obj.value(kLeafId).toString());
+    const auto entry_id = QUuid(obj.value(kEntryId).toString());
     const QJsonArray array { obj.value(kEntryArray).toArray() };
 
     auto entry_hub = entry_hub_hash_.value(section);
-    entry_hub->AckLeafTable(id, array);
+    entry_hub->AckLeafTable(leaf_id, array);
+
+    if (!entry_id.isNull())
+        emit SScrollToEntry(leaf_id, entry_id);
 }
 
 void WebSocket::AckOneNode(const QJsonObject& obj)
@@ -657,7 +661,7 @@ void WebSocket::ApplyCheckAction(const QJsonObject& obj)
     CString section = obj.value(kSection).toString();
     CString session_id = obj.value(kSessionId).toString();
 
-    const auto node_id = QUuid(obj.value(kNodeId).toString());
+    const auto node_id = QUuid(obj.value(kLeafId).toString());
     const Check check = Check(obj.value(kCheck).toInt());
     const QJsonObject meta = obj.value(kMeta).toObject();
 

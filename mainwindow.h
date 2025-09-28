@@ -116,6 +116,7 @@ private slots:
     void RDocumentDir(const QString& section, const QString& document_dir);
     void RDefaultUnit(const QString& section, int unit);
     void RUpdateDefaultUnitFailed(const QString& section);
+    void RScrollToEntry(const QUuid& leaf_id, const QUuid& entry_id);
 
 private:
     void SetTabWidget();
@@ -131,7 +132,7 @@ private:
     void InitContextSale();
     void InitContextPurchase();
 
-    void CreateLeafWidget(const QUuid& node_id);
+    bool CreateLeafWidget(const QUuid& node_id, const QUuid& entry_id = {});
 
     void CreateLeafFIPT(TreeModel* tree_model, EntryHub* dbhub, LeafWgtHash& entry_wgt_hash, CSectionInfo& info, CSectionConfig& config, const QUuid& node_id);
     void CreateLeafO(TreeModel* tree_model, LeafWgtHash& entry_wgt_hash, CSectionInfo& info, CSectionConfig& config, const QUuid& node_id);
@@ -208,7 +209,6 @@ private:
     void OrderNodeLocation(Section section, const QUuid& node_id);
 
     void SwitchToLeaf(const QUuid& node_id) const;
-    void ScrollToEntry(const QUuid& node_id, const QUuid& entry_id) const;
 
     void RegisterRptWgt(const QUuid& report_id, ReportWidget* widget);
     void WriteConfig();

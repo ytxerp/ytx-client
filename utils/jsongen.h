@@ -37,10 +37,10 @@ QJsonObject RemoveBranchNode(CString& section, CUuid& node_id);
 QJsonObject LeafCheckBeforeRemove(CString& section, CUuid& node_id);
 QJsonObject ReplaceLeafNode(CString& section, CUuid& old_id, CUuid& new_id, bool external_reference);
 
-QJsonObject CheckAction(CString& section, CUuid& node_id, int check);
+QJsonObject CheckAction(CString& section, CUuid& leaf_id, int check);
 
 QJsonObject NodeDataAcked(CString& section, const QDateTime& start, const QDateTime& end);
-QJsonObject TableData(CString& section, CUuid& node_id);
+QJsonObject LeafAcked(CString& section, CUuid& leaf_id, CUuid& entry_id = {});
 QJsonObject OneNode(CString& section, CUuid& node_id);
 
 QJsonObject NodeDirectionRule(CString& section, CUuid& id, bool direction_rule);

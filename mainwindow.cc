@@ -201,14 +201,15 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     SwitchToLeaf(node_id);
 }
 
-void MainWindow::CreateLeafWidget(const QUuid& node_id)
+bool MainWindow::CreateLeafWidget(const QUuid& node_id, const QUuid& entry_id)
 {
     auto& leaf_wgt_hash { sc_->leaf_wgt_hash };
 
-    if (sc_->leaf_wgt_hash.contains(node_id))
-        return;
+    if (sc_->leaf_wgt_hash.contains(node_id)) {
+        return false;
+    }
 
-    const auto message { JsonGen::TableData(sc_->info.section_str, node_id) };
+    const auto message { JsonGen::LeafAcked(sc_->info.section_str, node_id, entry_id) };
     WebSocket::Instance()->SendMessage(kLeafAcked, message);
 
     if (start_ == Section::kSale || start_ == Section::kPurchase) {
@@ -216,6 +217,8 @@ void MainWindow::CreateLeafWidget(const QUuid& node_id)
     } else {
         CreateLeafFIPT(sc_->tree_model, sc_->entry_hub, leaf_wgt_hash, sc_->info, sc_->section_config, node_id);
     }
+
+    return true;
 }
 
 void MainWindow::RSectionGroup(int id)
@@ -332,25 +335,6 @@ void MainWindow::SwitchToLeaf(const QUuid& node_id) const
     widget->activateWindow();
 
     widget->View()->setCurrentIndex(QModelIndex());
-}
-
-void MainWindow::ScrollToEntry(const QUuid& node_id, const QUuid& entry_id) const
-{
-    if (entry_id.isNull())
-        return;
-
-    auto widget { sc_->leaf_wgt_hash.value(node_id, nullptr) };
-    assert(widget);
-
-    auto* view { widget->View() };
-    auto index { widget->Model()->GetIndex(entry_id) };
-
-    if (!index.isValid())
-        return;
-
-    view->setCurrentIndex(index);
-    view->scrollTo(index.siblingAtColumn(std::to_underlying(EntryEnum::kIssuedTime)), QAbstractItemView::PositionAtCenter);
-    view->closePersistentEditor(index);
 }
 
 void MainWindow::CreateLeafFIPT(TreeModel* tree_model, EntryHub* hub, LeafWgtHash& wgt_hash, CSectionInfo& info, CSectionConfig& config, CUuid& node_id)
@@ -1172,6 +1156,25 @@ void MainWindow::RUpdateDefaultUnitFailed(const QString& /*section*/)
     QMessageBox::warning(this, tr("Update Failed"), tr("Cannot change the base unit for section Finance because related entries already exist."));
 }
 
+void MainWindow::RScrollToEntry(const QUuid& leaf_id, const QUuid& entry_id)
+{
+    if (entry_id.isNull())
+        return;
+
+    auto widget { sc_->leaf_wgt_hash.value(leaf_id, nullptr) };
+    assert(widget);
+
+    auto* view { widget->View() };
+    auto index { widget->Model()->GetIndex(entry_id) };
+
+    if (!index.isValid())
+        return;
+
+    view->setCurrentIndex(index);
+    view->scrollTo(index.siblingAtColumn(std::to_underlying(EntryEnum::kIssuedTime)), QAbstractItemView::PositionAtCenter);
+    view->closePersistentEditor(index);
+}
+
 void MainWindow::ClearMainwindow()
 {
     WriteConfig();
@@ -1722,6 +1725,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
     connect(WebSocket::Instance(), &WebSocket::SConnectResult, this, &MainWindow::RConnectResult);
     connect(WebSocket::Instance(), &WebSocket::SActionLoginTriggered, this, &MainWindow::on_actionLogin_triggered);
+    connect(WebSocket::Instance(), &WebSocket::SScrollToEntry, this, &MainWindow::RScrollToEntry);
 }
 
 void MainWindow::InitContextFinance()
@@ -2106,8 +2110,14 @@ void MainWindow::on_actionJump_triggered()
         return;
 
     const auto entry_id { index.sibling(row, std::to_underlying(EntryEnum::kId)).data().toUuid() };
-    CreateLeafWidget(rhs_node_id);
+
+    const bool is_new = CreateLeafWidget(rhs_node_id, entry_id);
+
     SwitchToLeaf(rhs_node_id);
+
+    if (!is_new) {
+        RScrollToEntry(rhs_node_id, entry_id);
+    }
 }
 
 void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
@@ -2612,7 +2622,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
     };
 
     if (!Contains(lhs_node_id) && !Contains(rhs_node_id)) {
-        const auto message { JsonGen::TableData(sc_->info.section_str, id) };
+        const auto message { JsonGen::LeafAcked(sc_->info.section_str, id, entry_id) };
         WebSocket::Instance()->SendMessage(kLeafAcked, message);
 
         switch (start_) {
