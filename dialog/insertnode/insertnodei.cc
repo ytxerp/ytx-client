@@ -1,14 +1,14 @@
-#include "insertnodeitem.h"
+#include "insertnodei.h"
 
 #include <QColorDialog>
 
 #include "component/enumclass.h"
 #include "component/signalblocker.h"
-#include "ui_insertnodeitem.h"
+#include "ui_insertnodei.h"
 
-InsertNodeItem::InsertNodeItem(CInsertNodeArgFIPT& arg, int rate_decimal, QWidget* parent)
+InsertNodeI::InsertNodeI(CInsertNodeArgFIPT& arg, int rate_decimal, QWidget* parent)
     : QDialog(parent)
-    , ui(new Ui::InsertNodeItem)
+    , ui(new Ui::InsertNodeI)
     , node_ { static_cast<NodeI*>(arg.node) }
     , parent_path_ { arg.parent_path }
     , name_list_ { arg.name_list }
@@ -23,9 +23,9 @@ InsertNodeItem::InsertNodeItem(CInsertNodeArgFIPT& arg, int rate_decimal, QWidge
     IniConnect();
 }
 
-InsertNodeItem::~InsertNodeItem() { delete ui; }
+InsertNodeI::~InsertNodeI() { delete ui; }
 
-void InsertNodeItem::IniDialog(ItemModel* unit_model, int amount_decimal)
+void InsertNodeI::IniDialog(ItemModel* unit_model, int amount_decimal)
 {
     ui->lineEditName->setFocus();
     ui->lineEditName->setValidator(&LineEdit::kInputValidator);
@@ -40,14 +40,14 @@ void InsertNodeItem::IniDialog(ItemModel* unit_model, int amount_decimal)
     ui->dSpinBoxCommission->setDecimals(amount_decimal);
 }
 
-void InsertNodeItem::IniConnect()
+void InsertNodeI::IniConnect()
 {
-    connect(ui->lineEditName, &QLineEdit::textEdited, this, &InsertNodeItem::RNameEdited);
-    connect(rule_group_, &QButtonGroup::idClicked, this, &InsertNodeItem::RRuleGroupClicked);
-    connect(kind_group_, &QButtonGroup::idClicked, this, &InsertNodeItem::RKindGroupClicked);
+    connect(ui->lineEditName, &QLineEdit::textEdited, this, &InsertNodeI::RNameEdited);
+    connect(rule_group_, &QButtonGroup::idClicked, this, &InsertNodeI::RRuleGroupClicked);
+    connect(kind_group_, &QButtonGroup::idClicked, this, &InsertNodeI::RKindGroupClicked);
 }
 
-void InsertNodeItem::IniData(Node* node)
+void InsertNodeI::IniData(Node* node)
 {
     int unit_index { ui->comboUnit->findData(node->unit) };
     ui->comboUnit->setCurrentIndex(unit_index);
@@ -58,7 +58,7 @@ void InsertNodeItem::IniData(Node* node)
     ui->pBtnOk->setEnabled(false);
 }
 
-void InsertNodeItem::UpdateColor(QColor color)
+void InsertNodeI::UpdateColor(QColor color)
 {
     if (color.isValid()) {
         ui->pBtnColor->setStyleSheet(QString(R"(
@@ -74,48 +74,48 @@ void InsertNodeItem::UpdateColor(QColor color)
     }
 }
 
-void InsertNodeItem::IniKindGroup()
+void InsertNodeI::IniKindGroup()
 {
     kind_group_ = new QButtonGroup(this);
     kind_group_->addButton(ui->rBtnBranch, kBranch);
     kind_group_->addButton(ui->rBtnLeaf, kLeaf);
 }
 
-void InsertNodeItem::IniRuleGroup()
+void InsertNodeI::IniRuleGroup()
 {
     rule_group_ = new QButtonGroup(this);
     rule_group_->addButton(ui->rBtnDDCI, static_cast<int>(Rule::kDDCI));
     rule_group_->addButton(ui->rBtnDICD, static_cast<int>(Rule::kDICD));
 }
 
-void InsertNodeItem::IniDirectionRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }
+void InsertNodeI::IniDirectionRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }
 
-void InsertNodeItem::RNameEdited(const QString& arg1)
+void InsertNodeI::RNameEdited(const QString& arg1)
 {
     const auto& simplified { arg1.simplified() };
     this->setWindowTitle(parent_path_ + simplified);
     ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_list_.contains(simplified));
 }
 
-void InsertNodeItem::on_lineEditName_editingFinished() { node_->name = ui->lineEditName->text(); }
+void InsertNodeI::on_lineEditName_editingFinished() { node_->name = ui->lineEditName->text(); }
 
-void InsertNodeItem::on_lineEditCode_editingFinished() { node_->code = ui->lineEditCode->text(); }
+void InsertNodeI::on_lineEditCode_editingFinished() { node_->code = ui->lineEditCode->text(); }
 
-void InsertNodeItem::on_lineEditDescription_editingFinished() { node_->description = ui->lineEditDescription->text(); }
+void InsertNodeI::on_lineEditDescription_editingFinished() { node_->description = ui->lineEditDescription->text(); }
 
-void InsertNodeItem::on_comboUnit_currentIndexChanged(int index)
+void InsertNodeI::on_comboUnit_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
     node_->unit = ui->comboUnit->currentData().toInt();
 }
 
-void InsertNodeItem::on_plainTextEdit_textChanged() { node_->note = ui->plainTextEdit->toPlainText(); }
+void InsertNodeI::on_plainTextEdit_textChanged() { node_->note = ui->plainTextEdit->toPlainText(); }
 
-void InsertNodeItem::on_dSpinBoxUnitPrice_editingFinished() { node_->unit_price = ui->dSpinBoxUnitPrice->value(); }
+void InsertNodeI::on_dSpinBoxUnitPrice_editingFinished() { node_->unit_price = ui->dSpinBoxUnitPrice->value(); }
 
-void InsertNodeItem::on_dSpinBoxCommission_editingFinished() { node_->commission = ui->dSpinBoxCommission->value(); }
+void InsertNodeI::on_dSpinBoxCommission_editingFinished() { node_->commission = ui->dSpinBoxCommission->value(); }
 
-void InsertNodeItem::on_pBtnColor_clicked()
+void InsertNodeI::on_pBtnColor_clicked()
 {
     QColor color(node_->color);
     if (!color.isValid())
@@ -128,6 +128,6 @@ void InsertNodeItem::on_pBtnColor_clicked()
     }
 }
 
-void InsertNodeItem::RRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
+void InsertNodeI::RRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
 
-void InsertNodeItem::RKindGroupClicked(int id) { node_->kind = id; }
+void InsertNodeI::RKindGroupClicked(int id) { node_->kind = id; }

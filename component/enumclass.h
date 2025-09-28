@@ -29,10 +29,10 @@ enum NodeKind { kLeaf = 0, kBranch };
 // - 5 corresponds to kPurchase
 // Section values must start from 0 to maintain consistency.
 // Abbreviations: Finance -> F, Inventory -> I, Task -> T, Partner -> P, Order -> O
-enum class Section { kFinance = 0, kItem, kTask, kPartner, kSale, kPurchase };
+enum class Section { kFinance = 0, kTask, kInventory, kPartner, kSale, kPurchase };
 
 inline constexpr std::array<Section, 6> kSections
-    = { Section::kFinance, Section::kItem, Section::kTask, Section::kPartner, Section::kSale, Section::kPurchase };
+    = { Section::kFinance, Section::kInventory, Section::kTask, Section::kPartner, Section::kSale, Section::kPurchase };
 
 // defining section's unit
 enum class UnitO { kImmediate = 0, kMonthly, kPending };
@@ -379,7 +379,7 @@ enum class SettlementEnum {
     kInitialTotal,
 };
 
-// kPIId: kParty or kItem
+// kPIId: kParty or kInventory
 enum class EntryRefEnum {
     kIssuedTime = 0,
     kOrderId,

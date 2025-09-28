@@ -24,7 +24,7 @@
 
 class StringInitializer {
 public:
-    static void SetHeader(SectionInfo& finance, SectionInfo& item, SectionInfo& task, SectionInfo& partner, SectionInfo& sale, SectionInfo& purchase);
+    static void SetHeader(SectionInfo& finance, SectionInfo& inventory, SectionInfo& task, SectionInfo& partner, SectionInfo& sale, SectionInfo& purchase);
 };
 
 #endif // STRINGINITIALIZER_H

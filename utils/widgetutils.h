@@ -95,7 +95,7 @@ template <InheritQAbstractItemView T> bool HasSelection(QPointer<T> view) { retu
 
 template <InheritQAbstractItemView T> bool HasSelection(T* view) { return view && view->selectionModel() && view->selectionModel()->hasSelection(); }
 
-// For Finance / Item / Partner / Task  (FIPT) sections
+// For Finance / Inventory / Partner / Task  (FIPT) sections
 // Behavior:
 // - If no empty row exists: insert a new row and focus the IssuedTime column
 //   (so the user can first input the entry time).

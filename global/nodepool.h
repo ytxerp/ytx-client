@@ -107,7 +107,7 @@ inline Node* NodePool::NewResource(Section section)
     switch (section) {
     case Section::kFinance:
         return new NodeF();
-    case Section::kItem:
+    case Section::kInventory:
         return new NodeI();
     case Section::kTask:
         return new NodeT();

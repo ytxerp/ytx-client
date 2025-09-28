@@ -101,7 +101,7 @@ inline Entry* EntryPool::NewResource(Section section)
     switch (section) {
     case Section::kFinance:
         return new EntryF();
-    case Section::kItem:
+    case Section::kInventory:
         return new EntryI();
     case Section::kTask:
         return new EntryT();

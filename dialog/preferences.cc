@@ -49,7 +49,7 @@ void Preferences::IniDialog(ItemModel* unit_model, Section section)
 
     ui->comboDefaultUnit->setModel(unit_model);
 
-    const bool is_enable { section == Section::kFinance || section == Section::kItem };
+    const bool is_enable { section == Section::kFinance || section == Section::kInventory };
     ui->lineStatic->setEnabled(is_enable);
     ui->comboStatic->setEnabled(is_enable);
     ui->lineDynamic->setEnabled(is_enable);
@@ -85,7 +85,7 @@ void Preferences::IniData(Section section)
     IniDataCombo(ui->comboDefaultUnit, global_.default_unit);
     ui->pBtnDocumentDir->setText(global_.document_dir);
 
-    if (section == Section::kFinance || section == Section::kItem) {
+    if (section == Section::kFinance || section == Section::kInventory) {
         leaf_path_branch_path_model_ = new ItemModel(this);
         model_->LeafPathBranchPathModel(leaf_path_branch_path_model_);
         leaf_path_branch_path_model_->sort(0);
@@ -184,7 +184,7 @@ void Preferences::IniText(Section section)
         ui->labelRateDecimal->setText(tr("Placeholder"));
         break;
     case Section::kTask:
-    case Section::kItem:
+    case Section::kInventory:
     case Section::kSale:
     case Section::kPurchase:
         ui->labelRateDecimal->setText(tr("Quantity Decimal"));

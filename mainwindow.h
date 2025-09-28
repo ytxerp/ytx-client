@@ -179,7 +179,7 @@ private:
     void TreeConnectO(QTreeView* tree_view, TreeModel* tree_model) const;
 
     void InsertNodeFunction(const QModelIndex& parent, const QUuid& parent_id, int row);
-    void InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUuid& parent_id, int row); // Finance Item Partner Task
+    void InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUuid& parent_id, int row); // Finance Inventory Partner Task
     void InsertNodeO(Node* node, const QModelIndex& parent, int row); // Purchase Sales
 
     void RemoveNode();

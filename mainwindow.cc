@@ -48,7 +48,7 @@
 #include "dialog/editnodename.h"
 #include "dialog/insertnode/insertnodebranch.h"
 #include "dialog/insertnode/insertnodefinance.h"
-#include "dialog/insertnode/insertnodeitem.h"
+#include "dialog/insertnode/insertnodei.h"
 #include "dialog/insertnode/insertnodep.h"
 #include "dialog/insertnode/insertnodetask.h"
 #include "dialog/login.h"
@@ -165,7 +165,7 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
 
     CreateSection(sc_f_, tr("Finance"));
     CreateSection(sc_p_, tr("Partner"));
-    CreateSection(sc_i_, tr("Item"));
+    CreateSection(sc_i_, tr("Inventory"));
     CreateSection(sc_t_, tr("Task"));
     CreateSection(sc_sale_, tr("Sale"));
     CreateSection(sc_purchase_, tr("Purchase"));
@@ -191,7 +191,7 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 
     const int unit_column { NodeUtils::UnitColumn(start_) };
     const int unit { index.siblingAtColumn(unit_column).data().toInt() };
-    if (start_ == Section::kItem && unit == std::to_underlying(UnitI::kExternal))
+    if (start_ == Section::kInventory && unit == std::to_underlying(UnitI::kExternal))
         return;
 
     const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
@@ -233,7 +233,7 @@ void MainWindow::RSectionGroup(int id)
     case Section::kFinance:
         sc_ = &sc_f_;
         break;
-    case Section::kItem:
+    case Section::kInventory:
         sc_ = &sc_i_;
         break;
     case Section::kTask:
@@ -363,7 +363,7 @@ void MainWindow::CreateLeafFIST(TreeModel* tree_model, EntryHub* hub, LeafWgtHas
     case Section::kFinance:
         entry_model = new LeafModelF(arg, this);
         break;
-    case Section::kItem:
+    case Section::kInventory:
         entry_model = new LeafModelI(arg, this);
         break;
     case Section::kTask:
@@ -393,7 +393,7 @@ void MainWindow::CreateLeafFIST(TreeModel* tree_model, EntryHub* hub, LeafWgtHas
         TableDelegateF(view, tree_model, config, node_id);
         TableConnectF(view, entry_model, tree_model);
         break;
-    case Section::kItem:
+    case Section::kInventory:
         TableDelegateI(view, tree_model, config, node_id);
         TableConnectI(view, entry_model, tree_model);
         break;
@@ -735,7 +735,7 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
         TreeDelegateP(view, info, config);
         TreeConnectP(view, tree_model, entry_hub);
         break;
-    case Section::kItem:
+    case Section::kInventory:
         TreeDelegateI(view, info, config);
         TreeConnectI(view, tree_model, entry_hub);
         break;
@@ -1217,8 +1217,8 @@ void MainWindow::IniSectionGroup()
 {
     section_group_ = new QButtonGroup(this);
     section_group_->addButton(ui->rBtnFinance, 0);
-    section_group_->addButton(ui->rBtnItem, 1);
-    section_group_->addButton(ui->rBtnTask, 2);
+    section_group_->addButton(ui->rBtnTask, 1);
+    section_group_->addButton(ui->rBtnInventory, 2);
     section_group_->addButton(ui->rBtnPartner, 3);
     section_group_->addButton(ui->rBtnSale, 4);
     section_group_->addButton(ui->rBtnPurchase, 5);
@@ -1279,8 +1279,8 @@ void MainWindow::SetTabWidget()
     case Section::kPartner:
         ui->rBtnPartner->setChecked(true);
         break;
-    case Section::kItem:
-        ui->rBtnItem->setChecked(true);
+    case Section::kInventory:
+        ui->rBtnInventory->setChecked(true);
         break;
     case Section::kTask:
         ui->rBtnTask->setChecked(true);
@@ -1448,7 +1448,7 @@ void MainWindow::WriteConfig()
 
     if (section_settings_) {
         WidgetUtils::WriteConfig(sc_f_.tree_view->header(), &QHeaderView::saveState, section_settings_, kFinance, kHeaderState);
-        WidgetUtils::WriteConfig(sc_i_.tree_view->header(), &QHeaderView::saveState, section_settings_, kItem, kHeaderState);
+        WidgetUtils::WriteConfig(sc_i_.tree_view->header(), &QHeaderView::saveState, section_settings_, kInventory, kHeaderState);
         WidgetUtils::WriteConfig(sc_p_.tree_view->header(), &QHeaderView::saveState, section_settings_, kPartner, kHeaderState);
         WidgetUtils::WriteConfig(sc_t_.tree_view->header(), &QHeaderView::saveState, section_settings_, kTask, kHeaderState);
         WidgetUtils::WriteConfig(sc_sale_.tree_view->header(), &QHeaderView::saveState, section_settings_, kSale, kHeaderState);
@@ -1461,7 +1461,7 @@ SectionContext* MainWindow::GetSectionContex(const QString& section)
     const static QMap<QString, SectionContext*> section_map {
         { kFinance, &sc_f_ },
         { kPartner, &sc_p_ },
-        { kItem, &sc_i_ },
+        { kInventory, &sc_i_ },
         { kTask, &sc_t_ },
         { kSale, &sc_sale_ },
         { kPurchase, &sc_purchase_ },
@@ -1571,7 +1571,7 @@ void MainWindow::DelegateLeafExternalReference(QTableView* table_view, CSectionC
     auto* section { new SectionR(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kSection), section);
 
-    if (start_ == Section::kItem) {
+    if (start_ == Section::kInventory) {
         auto* name { new NodeNameR(partner_tree_model, table_view) };
         table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kPIId), name);
     }
@@ -1775,11 +1775,11 @@ void MainWindow::InitContextItem()
     auto& tree_view { sc_i_.tree_view };
     auto& tree_widget { sc_i_.tree_widget };
 
-    info.section = Section::kItem;
-    info.section_str = kItem;
-    info.node = kItemNode;
-    info.path = kItemPath;
-    info.entry = kItemEntry;
+    info.section = Section::kInventory;
+    info.section_str = kInventory;
+    info.node = kInventoryNode;
+    info.path = kInventoryPath;
+    info.entry = kInventoryEntry;
 
     info.unit_map.insert(std::to_underlying(UnitI::kInternal), kUnitInternal);
     info.unit_map.insert(std::to_underlying(UnitI::kPosition), kUnitPosition);
@@ -1794,13 +1794,13 @@ void MainWindow::InitContextItem()
     info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
     info.rule_model = MainWindowUtils::CreateModelFromMap(info.rule_map, this);
 
-    ReadSectionConfig(section_config, kItem);
+    ReadSectionConfig(section_config, kInventory);
 
     entry_hub = new EntryHubI(info, this);
     tree_model = new TreeModelI(info, local_config_.separator, global_config.default_unit, this);
 
-    WebSocket::Instance()->RegisterTreeModel(kItem, tree_model);
-    WebSocket::Instance()->RegisterEntryHub(kItem, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(kInventory, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(kInventory, entry_hub);
 
     tree_widget = new TreeWidgetI(tree_model, section_config, this);
     tree_view = tree_widget->View();
@@ -2174,8 +2174,8 @@ void MainWindow::InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUu
     case Section::kPartner:
         dialog = new InsertNodeP(arg, this);
         break;
-    case Section::kItem:
-        dialog = new InsertNodeItem(arg, sc_->section_config.rate_decimal, this);
+    case Section::kInventory:
+        dialog = new InsertNodeI(arg, sc_->section_config.rate_decimal, this);
         break;
     default:
         return NodePool::Instance().Recycle(node, start_);
@@ -2199,7 +2199,7 @@ void MainWindow::RLeafExternalReference(const QUuid& node_id, int unit)
         && "Node kind should be 'kLeafNode' at this point. The kind check should be performed in the delegate DoubleSpinUnitRPS.");
 
     switch (start_) {
-    case Section::kItem:
+    case Section::kInventory:
         LeafExternalReferenceI(node_id, unit);
         break;
     case Section::kPartner:
@@ -2212,7 +2212,7 @@ void MainWindow::RLeafExternalReference(const QUuid& node_id, int unit)
 
 void MainWindow::LeafExternalReferenceI(const QUuid& node_id, int unit)
 {
-    if (unit != std::to_underlying(UnitI::kInternal) || start_ != Section::kItem)
+    if (unit != std::to_underlying(UnitI::kInternal) || start_ != Section::kInventory)
         return;
 
     CreateLeafExternalReference(sc_->tree_model, sc_->info, node_id, unit);
@@ -2325,7 +2325,7 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
 
     section_settings_->beginGroup(sc_->info.section_str);
 
-    if (start_ == Section::kFinance || start_ == Section::kItem) {
+    if (start_ == Section::kFinance || start_ == Section::kInventory) {
         section_settings_->setValue(kStaticLabel, section.static_label);
         section_settings_->setValue(kStaticNode, section.static_node);
         section_settings_->setValue(kDynamicLabel, section.dynamic_label);
@@ -2511,7 +2511,7 @@ void MainWindow::ReadSectionConfig(SectionConfig& section, CString& section_name
 {
     section_settings_->beginGroup(section_name);
 
-    if (section_name == kFinance || section_name == kItem) {
+    if (section_name == kFinance || section_name == kInventory) {
         section.static_label = section_settings_->value(kStaticLabel, {}).toString();
         section.static_node = section_settings_->value(kStaticNode, QUuid()).toUuid();
         section.dynamic_label = section_settings_->value(kDynamicLabel, {}).toString();
@@ -2539,7 +2539,7 @@ void MainWindow::on_actionSearch_triggered()
         entry = new SearchEntryModelF(sc_->info, this);
         dialog = new SearchDialogF(sc_->tree_model, node, entry, sc_->section_config, sc_->info, this);
         break;
-    case Section::kItem:
+    case Section::kInventory:
         node = new SearchNodeModelI(sc_->info, sc_->tree_model, this);
         entry = new SearchEntryModelI(sc_->info, this);
         dialog = new SearchDialogI(sc_->tree_model, node, entry, sc_->section_config, sc_->info, this);
@@ -2618,7 +2618,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
         case Section::kTask:
             sc_->tree_model->FetchOneNode(lhs_node_id);
         case Section::kFinance:
-        case Section::kItem:
+        case Section::kInventory:
         case Section::kPartner:
             CreateLeafFIST(sc_->tree_model, sc_->entry_hub, sc_->leaf_wgt_hash, sc_->info, sc_->section_config, id);
             break;
@@ -2753,7 +2753,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
     const bool is_leaf_fist { IsLeafWidgetFIPT(widget) };
     const bool is_leaf_order { IsLeafWidgetO(widget) };
     const bool is_order_section { start_ == Section::kSale || start_ == Section::kPurchase };
-    const bool is_color_section { start_ == Section::kTask || start_ == Section::kItem };
+    const bool is_color_section { start_ == Section::kTask || start_ == Section::kInventory };
 
     bool finished {};
 
@@ -2866,7 +2866,7 @@ void MainWindow::on_actionLogin_triggered()
 
 void MainWindow::on_actionResetColor_triggered()
 {
-    if (start_ != Section::kItem && start_ != Section::kTask)
+    if (start_ != Section::kInventory && start_ != Section::kTask)
         return;
 
     assert(sc_->tree_widget);

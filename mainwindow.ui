@@ -93,7 +93,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="rBtnItem">
+         <widget class="QRadioButton" name="rBtnTask">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -101,7 +101,20 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Item</string>
+           <string>Task</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rBtnInventory">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Inventory</string>
           </property>
          </widget>
         </item>
@@ -114,20 +127,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Stakeholder</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="rBtnTask">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Task</string>
+           <string>Partner</string>
           </property>
          </widget>
         </item>

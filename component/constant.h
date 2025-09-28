@@ -44,12 +44,12 @@ inline constexpr qsizetype kMaxSize { 1000 };
 inline constexpr bool kIsHidden = true;
 
 namespace Rule {
-// Finance/Item/Task: Credit increase, Debit decrease; calculation: credit - debit
+// Finance/Inventory/Task: Credit increase, Debit decrease; calculation: credit - debit
 // Order: Refund Order (returned transaction)
 inline constexpr bool kDDCI = true;
 inline constexpr bool kRO = true;
 
-// Finance/Item/Task: Debit increase, Credit decrease; calculation: debit - credit
+// Finance/Inventory/Task: Debit increase, Credit decrease; calculation: debit - credit
 // Order: Trade Order (normal transaction)
 inline constexpr bool kDICD = false;
 inline constexpr bool kTO = false;
@@ -313,10 +313,10 @@ inline const QString kFinanceNode = QStringLiteral("finance_node");
 inline const QString kFinancePath = QStringLiteral("finance_path");
 inline const QString kFinanceEntry = QStringLiteral("finance_entry");
 
-inline const QString kItem = QStringLiteral("item");
-inline const QString kItemNode = QStringLiteral("item_node");
-inline const QString kItemPath = QStringLiteral("item_path");
-inline const QString kItemEntry = QStringLiteral("item_entry");
+inline const QString kInventory = QStringLiteral("inventory");
+inline const QString kInventoryNode = QStringLiteral("inventory_node");
+inline const QString kInventoryPath = QStringLiteral("inventory_path");
+inline const QString kInventoryEntry = QStringLiteral("inventory_entry");
 
 inline const QString kPurchase = QStringLiteral("purchase");
 inline const QString kPurchaseNode = QStringLiteral("purchase_node");

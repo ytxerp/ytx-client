@@ -1,6 +1,7 @@
 #include "stringinitializer.h"
 
-void StringInitializer::SetHeader(SectionInfo& finance, SectionInfo& item, SectionInfo& task, SectionInfo& partner, SectionInfo& sale, SectionInfo& purchase)
+void StringInitializer::SetHeader(
+    SectionInfo& finance, SectionInfo& inventory, SectionInfo& task, SectionInfo& partner, SectionInfo& sale, SectionInfo& purchase)
 {
     // Node
     finance.node_header = {
@@ -21,7 +22,7 @@ void StringInitializer::SetHeader(SectionInfo& finance, SectionInfo& item, Secti
         QObject::tr("LocalTotal"),
     };
 
-    item.node_header = {
+    inventory.node_header = {
         QObject::tr("Name"),
         QObject::tr("Id"),
         QObject::tr("UserId"),
@@ -127,7 +128,7 @@ void StringInitializer::SetHeader(SectionInfo& finance, SectionInfo& item, Secti
         QObject::tr("Balance"),
     };
 
-    item.entry_header = {
+    inventory.entry_header = {
         QObject::tr("Id"),
         QObject::tr("UserId"),
         QObject::tr("CreatedTime"),
@@ -229,7 +230,7 @@ void StringInitializer::SetHeader(SectionInfo& finance, SectionInfo& item, Secti
         QObject::tr("RhsNode"),
     };
 
-    item.full_entry_header = {
+    inventory.full_entry_header = {
         QObject::tr("Id"),
         QObject::tr("UserId"),
         QObject::tr("CreatedTime"),
@@ -275,7 +276,7 @@ void StringInitializer::SetHeader(SectionInfo& finance, SectionInfo& item, Secti
     sale.full_entry_header = sale.entry_header;
 
     // EntryRef
-    item.entry_ref_header = {
+    inventory.entry_ref_header = {
         QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
         QObject::tr("Section"),

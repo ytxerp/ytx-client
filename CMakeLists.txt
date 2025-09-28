@@ -112,7 +112,7 @@ set(SOURCES
     dialog/preferences.cc
     dialog/removenode/removeleafnodedialog.cc
     dialog/insertnode/insertnodefinance.cc
-    dialog/insertnode/insertnodeitem.cc
+    dialog/insertnode/insertnodei.cc
     dialog/insertnode/insertnodep.cc
     dialog/insertnode/insertnodetask.cc
     dialog/insertnode/insertnodebranch.cc
@@ -249,7 +249,7 @@ set(HEADERS
     dialog/removenode/removeleafnodedialog.h
     dialog/insertnode/insertnodep.h
     dialog/insertnode/insertnodebranch.h
-    dialog/insertnode/insertnodeitem.h
+    dialog/insertnode/insertnodei.h
     dialog/insertnode/insertnodetask.h
     dialog/insertnode/insertnodefinance.h
     table/entryshadow.h
@@ -304,7 +304,7 @@ set(UIS
     dialog/insertnode/insertnodebranch.ui
     dialog/insertnode/insertnodep.ui
     dialog/insertnode/insertnodetask.ui
-    dialog/insertnode/insertnodeitem.ui
+    dialog/insertnode/insertnodei.ui
     dialog/insertnode/insertnodefinance.ui
     table/widget/leafwidgetfipt.ui
     table/widget/leafwidgeto.ui

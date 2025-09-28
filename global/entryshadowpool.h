@@ -107,7 +107,7 @@ inline EntryShadow* EntryShadowPool::NewResource(Section section)
     switch (section) {
     case Section::kFinance:
         return new EntryShadowF();
-    case Section::kItem:
+    case Section::kInventory:
         return new EntryShadowI();
     case Section::kTask:
         return new EntryShadowT();

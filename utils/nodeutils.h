@@ -37,7 +37,7 @@ inline int KindColumn(Section section)
         return std::to_underlying(NodeEnumT::kKind);
     case Section::kPartner:
         return std::to_underlying(NodeEnumP::kKind);
-    case Section::kItem:
+    case Section::kInventory:
         return std::to_underlying(NodeEnumI::kKind);
     case Section::kSale:
     case Section::kPurchase:
@@ -56,7 +56,7 @@ inline int UnitColumn(Section section)
         return std::to_underlying(NodeEnumT::kUnit);
     case Section::kPartner:
         return std::to_underlying(NodeEnumP::kUnit);
-    case Section::kItem:
+    case Section::kInventory:
         return std::to_underlying(NodeEnumI::kUnit);
     case Section::kSale:
     case Section::kPurchase:

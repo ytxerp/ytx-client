@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INSERTNODEITEM_H
-#define INSERTNODEITEM_H
+#ifndef INSERTNODEI_H
+#define INSERTNODEI_H
 
 #include <QButtonGroup>
 #include <QDialog>
@@ -27,15 +27,15 @@
 #include "component/using.h"
 
 namespace Ui {
-class InsertNodeItem;
+class InsertNodeI;
 }
 
-class InsertNodeItem final : public QDialog {
+class InsertNodeI final : public QDialog {
     Q_OBJECT
 
 public:
-    InsertNodeItem(CInsertNodeArgFIPT& arg, int rate_decimal, QWidget* parent = nullptr);
-    ~InsertNodeItem();
+    InsertNodeI(CInsertNodeArgFIPT& arg, int rate_decimal, QWidget* parent = nullptr);
+    ~InsertNodeI();
 
 private slots:
     void RNameEdited(const QString& arg1);
@@ -64,7 +64,7 @@ private:
     void IniDirectionRule(bool rule);
 
 private:
-    Ui::InsertNodeItem* ui;
+    Ui::InsertNodeI* ui;
     NodeI* node_ {};
     QButtonGroup* rule_group_ {};
     QButtonGroup* kind_group_ {};
@@ -73,4 +73,4 @@ private:
     CStringList& name_list_ {};
 };
 
-#endif // INSERTNODEITEM_H
+#endif // INSERTNODEI_H

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>InsertNodeItem</class>
- <widget class="QDialog" name="InsertNodeItem">
+ <class>InsertNodeI</class>
+ <widget class="QDialog" name="InsertNodeI">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -446,14 +446,14 @@
    <header location="global">widget/combobox.h</header>
   </customwidget>
   <customwidget>
-   <class>PlainTextEdit</class>
-   <extends>QPlainTextEdit</extends>
-   <header location="global">widget/plaintextedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>DoubleSpinBox</class>
    <extends>QDoubleSpinBox</extends>
    <header location="global">widget/doublespinbox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PlainTextEdit</class>
+   <extends>QPlainTextEdit</extends>
+   <header location="global">widget/plaintextedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -468,7 +468,7 @@
   <connection>
    <sender>pBtnCancel</sender>
    <signal>clicked()</signal>
-   <receiver>InsertNodeItem</receiver>
+   <receiver>InsertNodeI</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -484,7 +484,7 @@
   <connection>
    <sender>pBtnOk</sender>
    <signal>clicked()</signal>
-   <receiver>InsertNodeItem</receiver>
+   <receiver>InsertNodeI</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
