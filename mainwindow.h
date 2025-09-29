@@ -135,7 +135,7 @@ private:
     void ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id = {});
 
     void CreateLeafFIPT(TreeModel* tree_model, EntryHub* dbhub, LeafWgtHash& entry_wgt_hash, CSectionInfo& info, CSectionConfig& config, const QUuid& node_id);
-    void CreateLeafO(TreeModel* tree_model, LeafWgtHash& entry_wgt_hash, CSectionInfo& info, CSectionConfig& config, const QUuid& node_id);
+    void CreateLeafO(SectionContext* sc, const QUuid& node_id);
 
     void TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
     void TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;

@@ -225,7 +225,7 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
     WebSocket::Instance()->SendMessage(kLeafAcked, message);
 
     if (start_ == Section::kSale || start_ == Section::kPurchase) {
-        CreateLeafO(sc_->tree_model, leaf_wgt_hash, sc_->info, sc_->section_config, node_id);
+        CreateLeafO(sc_, node_id);
     } else {
         CreateLeafFIPT(sc_->tree_model, sc_->entry_hub, leaf_wgt_hash, sc_->info, sc_->section_config, node_id);
     }
@@ -308,13 +308,13 @@ void MainWindow::RStatementPrimary(const QUuid& party_id, int unit, const QDateT
 
 void MainWindow::RStatementSecondary(const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end)
 {
-    auto tree_model_s { sc_p_.tree_model };
+    auto tree_model_p { sc_p_.tree_model };
 
     auto* model { new StatementSecondaryModel(
-        sc_->entry_hub, sc_->info, party_id, sc_i_.tree_model->LeafPath(), tree_model_s, local_config_.company_name, this) };
+        sc_->entry_hub, sc_->info, party_id, sc_i_.tree_model->LeafPath(), tree_model_p, local_config_.company_name, this) };
     auto* widget { new StatementWidget(model, unit, true, start, end, this) };
 
-    const QString name { tr("StatementSecondary-") + tree_model_s->Name(party_id) };
+    const QString name { tr("StatementSecondary-") + tree_model_p->Name(party_id) };
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
@@ -459,45 +459,51 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
     ActivateLeafTab(node_id);
 }
 
-void MainWindow::CreateLeafO(TreeModel* tree_model, LeafWgtHash& wgt_hash, CSectionInfo& info, CSectionConfig& config, const QUuid& node_id)
+void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 {
-    const Section section { info.section };
+    // Extract frequently used shortcuts
+    const auto section = sc->info.section;
+    auto& entry_hub = sc->entry_hub;
+    auto& section_config = sc->section_config;
+    auto* tab_widget = ui->tabWidget;
+    auto* tab_bar = tab_widget->tabBar();
 
-    auto* tree_model_o { static_cast<TreeModelO*>(tree_model) };
+    // Validate tree model and node
+    auto* tree_model_o = static_cast<TreeModelO*>(sc->tree_model.data());
     if (!tree_model_o)
         return;
 
-    NodeO* node { static_cast<NodeO*>(tree_model_o->GetNode(node_id)) };
+    auto* node = static_cast<NodeO*>(tree_model_o->GetNode(node_id));
     if (!node)
         return;
 
-    const auto party_id { node->party };
-
+    const auto party_id = node->party;
     assert(!party_id.isNull());
-    auto tree_model_s { sc_p_.tree_model };
-    auto tree_model_i { sc_i_.tree_model };
 
-    LeafModelArg model_arg { sc_->entry_hub, info, node_id, node->direction_rule };
-    LeafModelO* model { new LeafModelO(model_arg, node, tree_model_i, sc_p_.entry_hub, this) };
+    // Prepare dependencies
+    auto tree_model_p = sc_p_.tree_model;
+    auto tree_model_i = sc_i_.tree_model;
 
-    auto print_manager = QSharedPointer<PrintManager>::create(local_config_, tree_model_i, tree_model_s);
+    // Create model and widget
+    LeafModelArg model_arg { entry_hub, sc->info, node_id, node->direction_rule };
+    auto* model = new LeafModelO(model_arg, node, tree_model_i, sc_p_.entry_hub, this);
 
-    auto widget_arg { InsertNodeArgO { node, sc_->entry_hub, model, tree_model_s, sc_->section_config, section } };
-    LeafWidgetO* widget { new LeafWidgetO(widget_arg, false, print_template_, print_manager, this) };
+    auto print_manager = QSharedPointer<PrintManager>::create(local_config_, tree_model_i, tree_model_p);
+    InsertNodeArgO widget_arg { node, entry_hub, model, tree_model_p, section_config, section };
+    auto* widget = new LeafWidgetO(widget_arg, false, print_template_, print_manager, this);
 
-    const int tab_index { ui->tabWidget->addTab(widget, tree_model_s->Name(party_id)) };
-    auto* tab_bar { ui->tabWidget->tabBar() };
-
+    // Setup tab
+    const int tab_index = tab_widget->addTab(widget, tree_model_p->Name(party_id));
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, node_id }));
-    tab_bar->setTabToolTip(tab_index, tree_model_s->Path(party_id));
+    tab_bar->setTabToolTip(tab_index, tree_model_p->Path(party_id));
 
-    auto* view { widget->View() };
+    // Configure view
+    auto* view = widget->View();
     SetTableView(view, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
-
     TableConnectO(view, model, tree_model_o, widget);
-    TableDelegateO(view, config);
+    TableDelegateO(view, section_config);
 
-    wgt_hash.insert(node_id, widget);
+    sc->leaf_wgt_hash.insert(node_id, widget);
 }
 
 void MainWindow::TableConnectF(QTableView* table_view, LeafModel* table_model, TreeModel* tree_model) const
@@ -898,13 +904,13 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kMeasureTotal), quantity);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kCountTotal), quantity);
 
-    auto tree_model_s { sc_p_.tree_model };
+    auto tree_model_p { sc_p_.tree_model };
 
-    auto* filter_model { tree_model_s->IncludeUnitModel(std::to_underlying(UnitS::kEmployee)) };
-    auto* employee { new FilterUnit(tree_model_s, filter_model, tree_view) };
+    auto* filter_model { tree_model_p->IncludeUnitModel(std::to_underlying(UnitS::kEmployee)) };
+    auto* employee { new FilterUnit(tree_model_p, filter_model, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployee), employee);
 
-    auto* name { new OrderNameR(tree_model_s, tree_view) };
+    auto* name { new OrderNameR(tree_model_p, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kName), name);
 
     auto* issued_time { new TreeIssuedTime(section.date_format, tree_view) };
@@ -2649,7 +2655,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
         case Section::kSale:
         case Section::kPurchase:
             sc_->tree_model->FetchOneNode(lhs_node_id);
-            CreateLeafO(sc_->tree_model, sc_->leaf_wgt_hash, sc_->info, sc_->section_config, lhs_node_id);
+            CreateLeafO(sc_, lhs_node_id);
             break;
         case Section::kTask:
             sc_->tree_model->FetchOneNode(lhs_node_id);

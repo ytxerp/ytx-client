@@ -170,12 +170,6 @@ public:
     virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
 
     virtual QString Path(const QUuid& node_id) const;
-    virtual Node* GetNode(const QUuid& node_id) const
-    {
-        auto* node = node_hash_.value(node_id);
-        assert(node);
-        return node;
-    }
 
     virtual QSortFilterProxyModel* IncludeUnitModel(int unit)
     {
@@ -232,6 +226,13 @@ protected:
     {
         Q_UNUSED(node_id)
         Q_UNUSED(unit)
+    }
+
+    virtual Node* GetNode(const QUuid& node_id) const
+    {
+        auto* node = node_hash_.value(node_id);
+        assert(node);
+        return node;
     }
 
     virtual void HandleNode();
