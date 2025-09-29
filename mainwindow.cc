@@ -197,16 +197,28 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
     assert(!node_id.isNull());
 
-    CreateLeafWidget(node_id);
-    SwitchToLeaf(node_id);
+    ShowLeafWidget(node_id);
 }
 
-bool MainWindow::CreateLeafWidget(const QUuid& node_id, const QUuid& entry_id)
+// ShowLeafWidget - Show leaf widget (create and scroll as needed)
+// -------------------------------
+// Triggers:
+//  • Node double-click: entry_id empty → no scroll
+//  • Entry jump: entry_id valid → scroll to entry
+//
+// Flow:
+//  1. If leaf exists → switch and scroll (if applicable)
+//  2. If not exists → send request → create leaf → switch
+//
+// Note: Scrolling only occurs when entry_id is non-empty
+void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
 {
     auto& leaf_wgt_hash { sc_->leaf_wgt_hash };
 
-    if (sc_->leaf_wgt_hash.contains(node_id)) {
-        return false;
+    if (leaf_wgt_hash.contains(node_id)) {
+        ActivateLeafTab(node_id);
+        RScrollToEntry(node_id, entry_id);
+        return;
     }
 
     const auto message { JsonGen::LeafAcked(sc_->info.section_str, node_id, entry_id) };
@@ -218,7 +230,7 @@ bool MainWindow::CreateLeafWidget(const QUuid& node_id, const QUuid& entry_id)
         CreateLeafFIPT(sc_->tree_model, sc_->entry_hub, leaf_wgt_hash, sc_->info, sc_->section_config, node_id);
     }
 
-    return true;
+    ActivateLeafTab(node_id);
 }
 
 void MainWindow::RSectionGroup(int id)
@@ -326,7 +338,14 @@ void MainWindow::REnableAction(bool finished)
     ui->actionRemove->setEnabled(!finished);
 }
 
-void MainWindow::SwitchToLeaf(const QUuid& node_id) const
+// ActivateLeafTab - Activate and focus the leaf widget tab
+// -------------------------------
+// Used for:
+//  • Node double-click → navigate to node's tab
+//  • Entry jump → switch between different node tabs
+//
+// Note: Clears view selection after switching
+void MainWindow::ActivateLeafTab(const QUuid& node_id) const
 {
     auto widget { sc_->leaf_wgt_hash.value(node_id, nullptr) };
     assert(widget);
@@ -437,7 +456,7 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, node_id }));
 
     sc_->leaf_wgt_hash.insert(node_id, widget);
-    SwitchToLeaf(node_id);
+    ActivateLeafTab(node_id);
 }
 
 void MainWindow::CreateLeafO(TreeModel* tree_model, LeafWgtHash& wgt_hash, CSectionInfo& info, CSectionConfig& config, const QUuid& node_id)
@@ -1156,6 +1175,13 @@ void MainWindow::RUpdateDefaultUnitFailed(const QString& /*section*/)
     QMessageBox::warning(this, tr("Update Failed"), tr("Cannot change the base unit for section Finance because related entries already exist."));
 }
 
+// RScrollToEntry - Scroll to and select the specified entry (slot)
+// -------------------------------
+// Behavior:
+//  1. Skip if entry_id is null (no target to scroll to)
+//  2. Find and select the entry in the view
+//  3. Scroll to center the IssuedTime column
+//  4. Close any persistent editor on that row
 void MainWindow::RScrollToEntry(const QUuid& leaf_id, const QUuid& entry_id)
 {
     if (entry_id.isNull())
@@ -2111,13 +2137,7 @@ void MainWindow::on_actionJump_triggered()
 
     const auto entry_id { index.sibling(row, std::to_underlying(EntryEnum::kId)).data().toUuid() };
 
-    const bool is_new = CreateLeafWidget(rhs_node_id, entry_id);
-
-    SwitchToLeaf(rhs_node_id);
-
-    if (!is_new) {
-        RScrollToEntry(rhs_node_id, entry_id);
-    }
+    ShowLeafWidget(rhs_node_id, entry_id);
 }
 
 void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
@@ -2643,7 +2663,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
         }
     }
 
-    SwitchToLeaf(id);
+    ActivateLeafTab(id);
 }
 
 void MainWindow::OrderNodeLocation(Section section, const QUuid& node_id)
