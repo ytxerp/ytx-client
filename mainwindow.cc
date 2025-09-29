@@ -227,7 +227,7 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
     if (start_ == Section::kSale || start_ == Section::kPurchase) {
         CreateLeafO(sc_, node_id);
     } else {
-        CreateLeafFIPT(sc_->tree_model, sc_->entry_hub, leaf_wgt_hash, sc_->info, sc_->section_config, node_id);
+        CreateLeafFIPT(sc_, node_id);
     }
 
     ActivateLeafTab(node_id);
@@ -356,8 +356,13 @@ void MainWindow::ActivateLeafTab(const QUuid& node_id) const
     widget->View()->setCurrentIndex(QModelIndex());
 }
 
-void MainWindow::CreateLeafFIPT(TreeModel* tree_model, EntryHub* hub, LeafWgtHash& wgt_hash, CSectionInfo& info, CSectionConfig& config, CUuid& node_id)
+void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
 {
+    auto tree_model = sc->tree_model;
+    auto& entry_hub = sc->entry_hub;
+    const auto& info = sc->info;
+    const auto& section_config = sc->section_config;
+
     assert(tree_model);
     assert(tree_model->Contains(node_id));
 
@@ -365,27 +370,27 @@ void MainWindow::CreateLeafFIPT(TreeModel* tree_model, EntryHub* hub, LeafWgtHas
     const Section section { info.section };
     const bool rule { tree_model->Rule(node_id) };
 
-    LeafModel* entry_model {};
-    LeafModelArg arg { hub, info, node_id, rule };
+    LeafModel* leaf_model {};
+    LeafModelArg arg { entry_hub, info, node_id, rule };
 
     switch (section) {
     case Section::kFinance:
-        entry_model = new LeafModelF(arg, this);
+        leaf_model = new LeafModelF(arg, this);
         break;
     case Section::kInventory:
-        entry_model = new LeafModelI(arg, this);
+        leaf_model = new LeafModelI(arg, this);
         break;
     case Section::kTask:
-        entry_model = new LeafModelT(arg, this);
+        leaf_model = new LeafModelT(arg, this);
         break;
     case Section::kPartner:
-        entry_model = new LeafModelP(arg, this);
+        leaf_model = new LeafModelP(arg, this);
         break;
     default:
         break;
     }
 
-    LeafWidgetFIPT* widget { new LeafWidgetFIPT(entry_model, this) };
+    LeafWidgetFIPT* widget { new LeafWidgetFIPT(leaf_model, this) };
 
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };
@@ -399,27 +404,27 @@ void MainWindow::CreateLeafFIPT(TreeModel* tree_model, EntryHub* hub, LeafWgtHas
 
     switch (section) {
     case Section::kFinance:
-        TableDelegateF(view, tree_model, config, node_id);
-        TableConnectF(view, entry_model, tree_model);
+        TableDelegateF(view, tree_model, section_config, node_id);
+        TableConnectF(view, leaf_model, tree_model);
         break;
     case Section::kInventory:
-        TableDelegateI(view, tree_model, config, node_id);
-        TableConnectI(view, entry_model, tree_model);
+        TableDelegateI(view, tree_model, section_config, node_id);
+        TableConnectI(view, leaf_model, tree_model);
         break;
     case Section::kTask:
-        TableDelegateT(view, tree_model, config, node_id);
-        TableConnectT(view, entry_model, tree_model);
+        TableDelegateT(view, tree_model, section_config, node_id);
+        TableConnectT(view, leaf_model, tree_model);
         break;
     case Section::kPartner:
-        TableDelegateS(view, config);
-        TableConnectS(view, entry_model);
+        TableDelegateS(view, section_config);
+        TableConnectS(view, leaf_model);
         break;
     default:
         break;
     }
 
-    wgt_hash.insert(node_id, widget);
-    LeafSStation::Instance()->RegisterModel(node_id, entry_model);
+    sc->leaf_wgt_hash.insert(node_id, widget);
+    LeafSStation::Instance()->RegisterModel(node_id, leaf_model);
 }
 
 void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
@@ -553,9 +558,9 @@ void MainWindow::TableConnectO(QTableView* table_view, LeafModelO* leaf_model_or
     connect(widget, &LeafWidgetO::SEnableAction, this, &MainWindow::REnableAction);
 }
 
-void MainWindow::TableConnectS(QTableView* table_view, LeafModel* entry_model) const
+void MainWindow::TableConnectS(QTableView* table_view, LeafModel* leaf_model) const
 {
-    connect(entry_model, &LeafModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
+    connect(leaf_model, &LeafModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 }
 
 void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
@@ -2662,7 +2667,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
         case Section::kFinance:
         case Section::kInventory:
         case Section::kPartner:
-            CreateLeafFIPT(sc_->tree_model, sc_->entry_hub, sc_->leaf_wgt_hash, sc_->info, sc_->section_config, id);
+            CreateLeafFIPT(sc_, id);
             break;
         default:
             break;
