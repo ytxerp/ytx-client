@@ -63,7 +63,7 @@ signals:
     void SInitializeDatabaseResult(bool result);
     void SScrollToEntry(const QUuid& leaf_id, const QUuid& entry_id);
 
-    void SRemoveLeafNode(const QJsonObject& obj);
+    void SLeafRemoveCheck(const QJsonObject& obj);
     void SGlobalConfig(const QJsonArray& arr);
     void SDocumentDir(const QString& section, const QString& document_dir);
     void SDefaultUnit(const QString& section, int unit);
@@ -104,7 +104,7 @@ private:
     void AckOneNode(const QJsonObject& obj);
 
     void AckEntrySearch(const QJsonObject& obj);
-    void AckLeafReference(const QJsonObject& obj);
+    void AckLeafRemoveCheck(const QJsonObject& obj);
     void AckUpdateDefaultUnitFailed(const QJsonObject& obj);
 
     void AckWorkspaceAccessPending(const QJsonObject& obj);
@@ -117,7 +117,7 @@ private:
     void ApplyNodeUpdate(const QJsonObject& obj);
     void ApplyNodeDrag(const QJsonObject& obj);
     void ApplyLeafRemove(const QJsonObject& obj);
-    void ApplyUnreferencedNodeRemove(const QJsonObject& obj);
+    void ApplyLeafRemoveSafely(const QJsonObject& obj);
     void ApplyBranchRemove(const QJsonObject& obj);
 
     void ApplyLeafReplace(const QJsonObject& obj);

@@ -42,7 +42,7 @@ public:
 
 signals:
     // send to TableModelOrder, MainWindow
-    void SSyncParty(const QUuid& node_id, int column, const QUuid& value);
+    void SSyncPartner(const QUuid& node_id, int column, const QUuid& value);
 
     // send to TreeModelOrder
     void SSyncFinished(const QUuid& node_id, bool value);
@@ -63,7 +63,7 @@ public:
 
 private slots:
 
-    void on_comboParty_currentIndexChanged(int index);
+    void on_comboPartner_currentIndexChanged(int index);
     void on_comboEmployee_currentIndexChanged(int index);
 
     void on_pBtnFinishOrder_toggled(bool checked);
@@ -83,7 +83,7 @@ private slots:
 private:
     void IniWidget();
     void IniConnect();
-    void IniData(const QUuid& party, const QUuid& employee);
+    void IniData(const QUuid& partner, const QUuid& employee);
     void LockWidgets(bool finished);
     void IniUnit(int unit);
     void IniLeafValue();
@@ -110,7 +110,7 @@ private:
     bool is_insert_ {};
 
     const QUuid node_id_ {};
-    const int party_unit_ {};
+    const int partner_unit_ {};
 
     const QMap<QString, QString>& print_template_ {};
     QSharedPointer<PrintManager> print_manager_ {};

@@ -50,7 +50,7 @@ QJsonObject DragNode(CString& section, CUuid& node_id, CUuid& parent_id)
     return message;
 }
 
-QJsonObject RemoveLeafNode(CString& section, CUuid& node_id)
+QJsonObject LeafRemove(CString& section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, section);
@@ -62,7 +62,7 @@ QJsonObject RemoveLeafNode(CString& section, CUuid& node_id)
     return message;
 }
 
-QJsonObject RemoveBranchNode(CString& section, CUuid& node_id)
+QJsonObject BranchRemove(CString& section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, section);
@@ -84,24 +84,28 @@ QJsonObject Login()
     return message;
 }
 
-QJsonObject LeafCheckBeforeRemove(CString& section, CUuid& node_id)
+QJsonObject LeafRemoveCheck(CString& section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, section);
     message.insert(kId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kInternalReference, false);
-    message.insert(kExternalReference, false);
+    message.insert(kInternalNodeRef, false);
+    message.insert(kExternalLinkedRef, false);
+    message.insert(kExternalSkuRef, false);
+    message.insert(kExternalPartnerRef, false);
+    message.insert(kExternalEmployeeRef, false);
+    message.insert(kOrderSettlementRef, false);
 
     return message;
 }
 
-QJsonObject ReplaceLeafNode(CString& section, CUuid& old_id, CUuid& new_id, bool external_reference)
+QJsonObject LeafReplace(CString& section, CUuid& old_id, CUuid& new_id, bool external_reference)
 {
     QJsonObject message {};
     message.insert(kSection, section);
     message.insert(kSessionId, QString());
     message.insert(kStatus, false);
-    message.insert(kExternalReference, external_reference);
+    message.insert(kInventoryExternalRef, external_reference);
     message.insert(kOldId, old_id.toString(QUuid::WithoutBraces));
     message.insert(kNewId, new_id.toString(QUuid::WithoutBraces));
 

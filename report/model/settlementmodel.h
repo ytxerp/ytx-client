@@ -34,8 +34,8 @@ public:
     ~SettlementModel();
 
 signals:
-    void SResetModel(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished);
-    void SSyncFinished(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished);
+    void SResetModel(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished);
+    void SSyncFinished(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished);
 
     // send to its table view
     void SResizeColumnToContents(int column);
@@ -65,7 +65,7 @@ public:
     void ResetModel(const QDateTime& start, const QDateTime& end);
 
 private:
-    bool UpdateParty(Settlement* settlement, const QUuid& party_id);
+    bool UpdatePartner(Settlement* settlement, const QUuid& partner_id);
     bool UpdateFinished(Settlement* settlement, bool finished);
 
 private:

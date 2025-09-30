@@ -30,8 +30,8 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
         return d_node->kind;
     case NodeEnumO::kUnit:
         return d_node->unit;
-    case NodeEnumO::kParty:
-        return d_node->party;
+    case NodeEnumO::kPartner:
+        return d_node->partner;
     case NodeEnumO::kEmployee:
         return d_node->employee;
     case NodeEnumO::kIssuedTime:
@@ -74,8 +74,8 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
         case NodeEnumO::kUnit:
             return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
-        case NodeEnumO::kParty:
-            return (order == Qt::AscendingOrder) ? (d_lhs->party < d_rhs->party) : (d_lhs->party > d_rhs->party);
+        case NodeEnumO::kPartner:
+            return (order == Qt::AscendingOrder) ? (d_lhs->partner < d_rhs->partner) : (d_lhs->partner > d_rhs->partner);
         case NodeEnumO::kEmployee:
             return (order == Qt::AscendingOrder) ? (d_lhs->employee < d_rhs->employee) : (d_lhs->employee > d_rhs->employee);
         case NodeEnumO::kIssuedTime:

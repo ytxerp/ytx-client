@@ -91,7 +91,7 @@ private slots:
     void REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
 
     void RUpdateConfig(const LocalConfig& local, const GlobalConfig& global, const SectionConfig& section);
-    void RSyncParty(const QUuid& node_id, int column, const QVariant& value);
+    void RSyncPartner(const QUuid& node_id, int column, const QVariant& value);
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void RUpdateState();
     void RConnectResult(bool result);
@@ -105,12 +105,12 @@ private slots:
     void RSectionGroup(int id);
     void REntryRefDoubleClicked(const QModelIndex& index);
 
-    void RStatementPrimary(const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end);
-    void RStatementSecondary(const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end);
+    void RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
+    void RStatementSecondary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 
     void REnableAction(bool finished);
 
-    void RRemoveLeafNode(const QJsonObject& obj);
+    void RLeafRemoveCheck(const QJsonObject& obj);
     // void RRemoveSupportNode(const QJsonObject& obj);
     void RGlobalConfig(const QJsonArray& arr);
     void RDocumentDir(const QString& section, const QString& document_dir);
@@ -184,7 +184,7 @@ private:
     void InsertNodeO(Node* node, const QModelIndex& parent, int row); // Purchase Sales
 
     void RemoveNode();
-    void RemoveBranchNode(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id);
+    void BranchRemove(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id);
 
     void UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool branch) const;
 

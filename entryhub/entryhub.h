@@ -91,7 +91,7 @@ public:
         Q_UNUSED(is_parallel);
     }
 
-    virtual void ApplyItemReplace(const QUuid& old_item_id, const QUuid& new_item_id) const
+    virtual void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const
     {
         Q_UNUSED(old_item_id);
         Q_UNUSED(new_item_id);

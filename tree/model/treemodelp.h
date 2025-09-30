@@ -39,7 +39,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    QList<QUuid> PartyList(CString& text, int unit) const;
+    QList<QUuid> PartnerList(CString& text, int unit) const;
 
     QSortFilterProxyModel* IncludeUnitModel(int unit) override;
 

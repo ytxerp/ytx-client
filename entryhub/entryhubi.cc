@@ -162,7 +162,7 @@ void EntryHubI::ApplyEntryNumeric(const QUuid& entry_id, const QJsonObject& data
 //         auto* trans_ref { ResourcePool<EntryRef>::Instance().Allocate() };
 
 //         trans_ref->section = QStringLiteral("section").toInt();
-//         trans_ref->pi_id = query.value(QStringLiteral("party")).toUuid();
+//         trans_ref->pi_id = query.value(QStringLiteral("partner")).toUuid();
 //         trans_ref->unit_price = query.value(QStringLiteral("unit_price")).toDouble();
 //         trans_ref->second = query.value(QStringLiteral("second")).toDouble();
 //         trans_ref->description = query.value(QStringLiteral("description")).toString();
@@ -191,7 +191,7 @@ QString EntryHubI::QSReadTransRef(int /*unit*/) const
         st.final,
         st.support_id,
         st.discount_price,
-        sn.party,
+        sn.partner,
         sn.issued_time
     FROM sale_transaction st
     INNER JOIN sale_node sn ON st.lhs_node = sn.id
@@ -211,7 +211,7 @@ QString EntryHubI::QSReadTransRef(int /*unit*/) const
         pt.final,
         pt.support_id,
         pt.discount_price,
-        pn.party,
+        pn.partner,
         pn.issued_time
     FROM purchase_transaction pt
     INNER JOIN purchase_node pn ON pt.lhs_node = pn.id

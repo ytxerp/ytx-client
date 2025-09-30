@@ -29,7 +29,7 @@
 class StatementPrimaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    StatementPrimaryModel(EntryHub* dbhub, CSectionInfo& info, const QUuid& party_id, QObject* parent = nullptr);
+    StatementPrimaryModel(EntryHub* dbhub, CSectionInfo& info, const QUuid& partner_id, QObject* parent = nullptr);
     ~StatementPrimaryModel();
 
 public slots:
@@ -52,7 +52,7 @@ public:
 private:
     EntryHubO* dbhub_ {};
     CSectionInfo& info_;
-    const QUuid party_id_ {};
+    const QUuid partner_id_ {};
 
     StatementPrimaryList statement_primary_list_ {};
 };

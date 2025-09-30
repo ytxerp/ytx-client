@@ -8,7 +8,7 @@ LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_mod
     , tree_model_item_ { static_cast<TreeModelI*>(tree_model_item) }
     , entry_hub_partner_ { static_cast<EntryHubP*>(entry_hub_partner) }
     , entry_hub_order_ { static_cast<EntryHubO*>(arg.entry_hub) }
-    , party_id_ { static_cast<const NodeO*>(node)->party }
+    , partner_id_ { static_cast<const NodeO*>(node)->partner }
     , is_finished_ { static_cast<const NodeO*>(node)->is_finished }
 {
 }
@@ -24,14 +24,14 @@ void LeafModelO::RSaveOrder()
         entry_hub_order_->WriteTransRange(shadow_list_);
 }
 
-void LeafModelO::UpdateParty(const QUuid& node_id, const QUuid& party_id)
+void LeafModelO::UpdatePartner(const QUuid& node_id, const QUuid& partner_id)
 {
     assert(lhs_id_ == node_id);
-    if (party_id_ == party_id)
+    if (partner_id_ == partner_id)
         return;
 
-    party_id_ = party_id;
-    // sql_partner_->ReadTrans(party_id);
+    partner_id_ = partner_id;
+    // sql_partner_->ReadTrans(partner_id);
 }
 
 void LeafModelO::RSyncFinished(const QUuid& node_id, bool value)
@@ -45,13 +45,13 @@ void LeafModelO::RSyncFinished(const QUuid& node_id, bool value)
     PurifyEntryShadow();
 }
 
-void LeafModelO::RSyncParty(const QUuid& node_id, int column, const QUuid& value)
+void LeafModelO::RSyncPartner(const QUuid& node_id, int column, const QUuid& value)
 {
     const NodeEnumO kColumn { column };
 
     switch (kColumn) {
-    case NodeEnumO::kParty:
-        UpdateParty(node_id, value);
+    case NodeEnumO::kPartner:
+        UpdatePartner(node_id, value);
         break;
     default:
         break;
@@ -464,7 +464,7 @@ void LeafModelO::CrossSearch(EntryShadow* entry_shadow, const QUuid& item_id, bo
 
     auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
 
-    if (entry_hub_partner_->CrossSearch(d_shadow, party_id_, item_id, is_internal))
+    if (entry_hub_partner_->CrossSearch(d_shadow, partner_id_, item_id, is_internal))
         return;
 
     *d_shadow->unit_price = is_internal ? tree_model_item_->UnitPrice(item_id) : 0.0;

@@ -26,7 +26,7 @@ void SearchDialogO::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIsFinished), check_);
 
     auto* partner_name { new SearchPathTableR(partner_node_, view) };
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kParty), partner_name);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kPartner), partner_name);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployee), partner_name);
 }
 

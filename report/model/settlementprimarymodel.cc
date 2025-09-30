@@ -132,16 +132,16 @@ void SettlementPrimaryModel::RemoveUnfinishedNode()
     }
 }
 
-void SettlementPrimaryModel::UpdateSettlementInfo(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished)
+void SettlementPrimaryModel::UpdateSettlementInfo(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished)
 {
-    party_id_ = party_id;
+    partner_id_ = partner_id;
     settlement_id_ = settlement_id;
     settlement_finished_ = settlement_finished;
 }
 
-void SettlementPrimaryModel::RSyncFinished(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished)
+void SettlementPrimaryModel::RSyncFinished(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished)
 {
-    UpdateSettlementInfo(party_id, settlement_id, settlement_finished);
+    UpdateSettlementInfo(partner_id, settlement_id, settlement_finished);
 
     if (settlement_finished) {
         RemoveUnfinishedNode();
@@ -149,7 +149,7 @@ void SettlementPrimaryModel::RSyncFinished(const QUuid& party_id, const QUuid& s
         const bool is_empty { settlementList_list_.isEmpty() };
 
         const long long first_add { settlementList_list_.size() };
-        dbhub_->ReadSettlementPrimary(settlementList_list_, party_id_, {}, true);
+        dbhub_->ReadSettlementPrimary(settlementList_list_, partner_id_, {}, true);
         const long long last_add { settlementList_list_.size() - 1 };
 
         if (last_add >= first_add) {
@@ -162,16 +162,16 @@ void SettlementPrimaryModel::RSyncFinished(const QUuid& party_id, const QUuid& s
     }
 }
 
-void SettlementPrimaryModel::RResetModel(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished)
+void SettlementPrimaryModel::RResetModel(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished)
 {
-    UpdateSettlementInfo(party_id, settlement_id, settlement_finished);
+    UpdateSettlementInfo(partner_id, settlement_id, settlement_finished);
 
     beginResetModel();
     if (!settlementList_list_.isEmpty())
         ResourcePool<Settlement>::Instance().Recycle(settlementList_list_);
 
-    if (!party_id.isNull())
-        dbhub_->ReadSettlementPrimary(settlementList_list_, party_id, settlement_id, settlement_finished);
+    if (!partner_id.isNull())
+        dbhub_->ReadSettlementPrimary(settlementList_list_, partner_id, settlement_id, settlement_finished);
 
     endResetModel();
 }

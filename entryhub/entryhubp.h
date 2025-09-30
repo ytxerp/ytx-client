@@ -33,13 +33,13 @@ public slots:
     void RPriceSList(const QList<PriceS>& list);
 
 public:
-    bool CrossSearch(EntryShadowO* order_entry_shadow, const QUuid& party_id, const QUuid& item_id, bool is_internal) const;
+    bool CrossSearch(EntryShadowO* order_entry_shadow, const QUuid& partner_id, const QUuid& item_id, bool is_internal) const;
     void ApplyLeafRemove(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
     // void ApplyEntryRate(const QUuid& entry_id, const QJsonObject& data, bool is_parallel) override;
 
 protected:
     // table
-    void ApplyItemReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;
+    void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;
     QString QSReadTransRef(int unit) const override;
 
 private:

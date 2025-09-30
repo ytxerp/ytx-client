@@ -11,11 +11,11 @@
 #include "utils/mainwindowutils.h"
 
 StatementSecondaryModel::StatementSecondaryModel(
-    EntryHub* dbhub, CSectionInfo& info, const QUuid& party_id, CUuidString& item_leaf, TreeModel* partner, CString& company_name, QObject* parent)
+    EntryHub* dbhub, CSectionInfo& info, const QUuid& partner_id, CUuidString& item_leaf, TreeModel* partner, CString& company_name, QObject* parent)
     : QAbstractItemModel { parent }
     , dbhub_ { static_cast<EntryHubO*>(dbhub) }
     , info_ { info }
-    , party_id_ { party_id }
+    , partner_id_ { partner_id }
     , item_leaf_ { item_leaf }
     , partner_leaf_ { partner->LeafPath() }
     , partner_ { partner }
@@ -147,14 +147,14 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
 
 void StatementSecondaryModel::RResetModel(int unit, const QDateTime& start, const QDateTime& end)
 {
-    if (party_id_.isNull() || !start.isValid() || !end.isValid())
+    if (partner_id_.isNull() || !start.isValid() || !end.isValid())
         return;
 
     beginResetModel();
     if (!statement_secondary_list_.isEmpty())
         ResourcePool<StatementSecondary>::Instance().Recycle(statement_secondary_list_);
 
-    dbhub_->ReadStatementSecondary(statement_secondary_list_, party_id_, unit, start.toUTC(), end.toUTC());
+    dbhub_->ReadStatementSecondary(statement_secondary_list_, partner_id_, unit, start.toUTC(), end.toUTC());
     endResetModel();
 }
 
@@ -164,10 +164,10 @@ void StatementSecondaryModel::RExport(int unit, const QDateTime& start, const QD
     double cdelta { 0.0 };
 
     if (unit != std::to_underlying(UnitO::kImmediate)) {
-        dbhub_->ReadBalance(pbalance, cdelta, party_id_, unit, start, end);
+        dbhub_->ReadBalance(pbalance, cdelta, partner_id_, unit, start, end);
     }
 
-    CString name { QDir::homePath() + QDir::separator() + partner_->Name(party_id_) + QStringLiteral("-") + company_name_ + QStringLiteral("-")
+    CString name { QDir::homePath() + QDir::separator() + partner_->Name(partner_id_) + QStringLiteral("-") + company_name_ + QStringLiteral("-")
         + end.toString(kMonthFST) };
 
     QString destination { QFileDialog::getSaveFileName(nullptr, tr("Export Excel"), name, QStringLiteral("*.xlsx")) };
@@ -183,7 +183,7 @@ void StatementSecondaryModel::RExport(int unit, const QDateTime& start, const QD
             book->AppendSheet(tr("Statement"));
             auto sheet { book->GetCurrentWorksheet() };
 
-            sheet->Write(1, 1, partner_->Name(party_id_));
+            sheet->Write(1, 1, partner_->Name(partner_id_));
             sheet->Write(2, 1, tr("Date"));
             sheet->Write(2, 2, start.toString(kDateFST));
             sheet->Write(2, 3, end.toString(kDateFST));

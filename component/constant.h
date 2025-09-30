@@ -159,13 +159,27 @@ inline const QString kStaticLabel = QStringLiteral("static_label");
 inline const QString kStaticNode = QStringLiteral("static_node");
 
 inline const QString kLeafReference = QStringLiteral("leaf_reference");
+inline const QString kLeafRemoveCheck = QStringLiteral("leaf_remove_check");
 inline const QString kLeafRemove = QStringLiteral("leaf_remove");
 inline const QString kLeafReplace = QStringLiteral("leaf_replace");
 inline const QString kLeafEntry = QStringLiteral("leaf_entry");
 
-inline const QString kExternalReference = QStringLiteral("external_reference");
+inline const QString kInventoryExternalRef = QStringLiteral("inventory_external_ref");
 inline const QString kInternalReference = QStringLiteral("internal_reference");
 inline const QString kExternalSku = QStringLiteral("external_sku");
+
+// ---- Internal Leaf referenced by Entry within the same module ----
+inline const QString kInternalNodeRef = QStringLiteral("internal_node_ref");
+
+// ----Inventory Leaf referenced by Order Leaf and Partner Leaf  ----
+inline const QString kExternalLinkedRef = QStringLiteral("external_linked_ref");
+inline const QString kExternalSkuRef = QStringLiteral("external_sku_ref");
+
+// ----Partner Leaf referenced by Order Leaf  ----
+inline const QString kExternalPartnerRef = QStringLiteral("external_partner_ref");
+inline const QString kExternalEmployeeRef = QStringLiteral("external_employee_ref");
+
+inline const QString kOrderSettlementRef = QStringLiteral("order_settlement_ref");
 
 inline const QString kNodeInsert = QStringLiteral("node_insert");
 inline const QString kNodeDrag = QStringLiteral("node_drag");
@@ -215,7 +229,7 @@ inline const QString kNodeDelta = QStringLiteral("node_delta");
 inline const QString kDocumentDir = QStringLiteral("document_dir");
 inline const QString kDefaultUnit = QStringLiteral("default_unit");
 inline const QString kUpdateDefaultUnitFailed = QStringLiteral("update_default_unit_failed");
-inline const QString kUnreferencedNodeRemove = QStringLiteral("unreferenced_node_remove");
+inline const QString kLeafRemoveSafely = QStringLiteral("leaf_remove_safely");
 
 // Message fields
 inline const QString kValue = QStringLiteral("value");
@@ -283,7 +297,6 @@ inline const QString kIsSaved = QStringLiteral("is_saved");
 inline const QString kIssuedTime = QStringLiteral("issued_time");
 inline const QString kKind = QStringLiteral("kind");
 inline const QString kNote = QStringLiteral("note");
-inline const QString kParty = QStringLiteral("party");
 inline const QString kPaymentTerm = QStringLiteral("payment_term");
 inline const QString kRhsNode = QStringLiteral("rhs_node");
 inline const QString kLhsNode = QStringLiteral("lhs_node");

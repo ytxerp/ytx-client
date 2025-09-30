@@ -35,7 +35,7 @@ public:
 
 public slots:
     void RSyncFinished(const QUuid& node_id, bool value);
-    void RSyncParty(const QUuid& node_id, int column, const QUuid& value);
+    void RSyncPartner(const QUuid& node_id, int column, const QUuid& value);
     void RSaveOrder();
 
 public:
@@ -61,13 +61,13 @@ private:
 
     void CrossSearch(EntryShadow* entry_shadow, const QUuid& item_id, bool is_internal) const;
 
-    void UpdateParty(const QUuid& node_id, const QUuid& party_id);
+    void UpdatePartner(const QUuid& node_id, const QUuid& partner_id);
 
 private:
     TreeModelI* tree_model_item_ {};
     EntryHubP* entry_hub_partner_ {};
     EntryHubO* entry_hub_order_ {};
-    QUuid party_id_ {};
+    QUuid partner_id_ {};
     bool is_finished_ {};
 };
 

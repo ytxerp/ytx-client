@@ -26,7 +26,7 @@
 
 struct Settlement {
     QUuid id {};
-    QUuid party {};
+    QUuid partner {};
     QUuid employee {};
     QDateTime issued_time {};
     QString description {};

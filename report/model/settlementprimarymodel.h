@@ -36,8 +36,8 @@ signals:
     void SSyncDouble(const QUuid& settlement_id, int column, double delta1);
 
 public slots:
-    void RSyncFinished(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished);
-    void RResetModel(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished);
+    void RSyncFinished(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished);
+    void RResetModel(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -55,13 +55,13 @@ public:
 
 private:
     void RemoveUnfinishedNode();
-    void UpdateSettlementInfo(const QUuid& party_id, const QUuid& settlement_id, bool settlement_finished);
+    void UpdateSettlementInfo(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished);
 
 private:
     EntryHubO* dbhub_ {};
     CSectionInfo& info_;
 
-    QUuid party_id_ {};
+    QUuid partner_id_ {};
     QUuid settlement_id_ {};
     bool settlement_finished_ {};
 

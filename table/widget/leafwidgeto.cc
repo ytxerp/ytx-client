@@ -15,7 +15,7 @@ LeafWidgetO::LeafWidgetO(
     , config_ { arg.section_config }
     , is_insert_ { is_insert }
     , node_id_ { arg.node->id }
-    , party_unit_ { arg.section == Section::kSale ? std::to_underlying(UnitS::kCustomer) : std::to_underlying(UnitS::kVendor) }
+    , partner_unit_ { arg.section == Section::kSale ? std::to_underlying(UnitS::kCustomer) : std::to_underlying(UnitS::kVendor) }
     , print_template_ { print_template }
     , print_manager_ { print_manager }
 {
@@ -27,7 +27,7 @@ LeafWidgetO::LeafWidgetO(
     IniRuleGroup();
     IniUnitGroup();
     IniRule(arg.node->direction_rule);
-    IniData(node_->party, node_->employee);
+    IniData(node_->partner, node_->employee);
     IniConnect();
 
     const bool finished { node_->is_finished };
@@ -65,9 +65,9 @@ void LeafWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double 
 
 void LeafWidgetO::IniWidget()
 {
-    pmodel_ = tree_model_partner_->IncludeUnitModel(party_unit_);
-    ui->comboParty->setModel(pmodel_);
-    ui->comboParty->setCurrentIndex(-1);
+    pmodel_ = tree_model_partner_->IncludeUnitModel(partner_unit_);
+    ui->comboPartner->setModel(pmodel_);
+    ui->comboPartner->setCurrentIndex(-1);
 
     emodel_ = tree_model_partner_->IncludeUnitModel(std::to_underlying(UnitS::kEmployee));
     ui->comboEmployee->setModel(emodel_);
@@ -106,7 +106,7 @@ void LeafWidgetO::IniConnect()
     connect(unit_group_, &QButtonGroup::idClicked, this, &LeafWidgetO::RUnitGroupClicked);
 }
 
-void LeafWidgetO::IniData(const QUuid& party, const QUuid& employee)
+void LeafWidgetO::IniData(const QUuid& partner, const QUuid& employee)
 {
     if (is_insert_)
         return;
@@ -115,8 +115,8 @@ void LeafWidgetO::IniData(const QUuid& party, const QUuid& employee)
     ui->lineDescription->setText(node_->description);
     ui->dateTimeEdit->setDateTime(node_->issued_time.toLocalTime());
 
-    int party_index { ui->comboParty->findData(party) };
-    ui->comboParty->setCurrentIndex(party_index);
+    int partner_index { ui->comboPartner->findData(partner) };
+    ui->comboPartner->setCurrentIndex(partner_index);
 
     int employee_index { ui->comboEmployee->findData(employee) };
     ui->comboEmployee->setCurrentIndex(employee_index);
@@ -127,7 +127,7 @@ void LeafWidgetO::LockWidgets(bool finished)
     const bool enable { !finished };
 
     ui->labPartner->setEnabled(enable);
-    ui->comboParty->setEnabled(enable);
+    ui->comboPartner->setEnabled(enable);
 
     ui->labelFinalTotal->setEnabled(enable);
     ui->dSpinFinalTotal->setEnabled(enable);
@@ -221,53 +221,53 @@ void LeafWidgetO::IniUnitGroup()
     unit_group_->addButton(ui->rBtnPEND, std::to_underlying(UnitO::kPending));
 }
 
-void LeafWidgetO::on_comboParty_currentIndexChanged(int /*index*/)
+void LeafWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
 {
-    const QUuid party_id { ui->comboParty->currentData().toUuid() };
-    if (party_id.isNull())
+    const QUuid partner_id { ui->comboPartner->currentData().toUuid() };
+    if (partner_id.isNull())
         return;
 
-    node_->party = party_id;
-    // sql_->WriteField(party_info_, kParty, party_id.toString(QUuid::WithoutBraces), node_id_);
-    emit SSyncParty(node_id_, std::to_underlying(NodeEnumO::kParty), party_id);
+    node_->partner = partner_id;
+    // sql_->WriteField(partner_info_, kPartner, partner_id.toString(QUuid::WithoutBraces), node_id_);
+    emit SSyncPartner(node_id_, std::to_underlying(NodeEnumO::kPartner), partner_id);
 }
 
 void LeafWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 {
     node_->employee = ui->comboEmployee->currentData().toUuid();
-    // sql_->WriteField(party_info_, kEmployee, node_->employee.toString(QUuid::WithoutBraces), node_id_);
+    // sql_->WriteField(partner_info_, kEmployee, node_->employee.toString(QUuid::WithoutBraces), node_id_);
 }
 
 #if 0
 void TransWidgetO::on_pBtnInsert_clicked()
 {
-    const auto& name { ui->comboParty->currentText() };
-    if (name.isEmpty() || ui->comboParty->currentIndex() != -1)
+    const auto& name { ui->comboPartner->currentText() };
+    if (name.isEmpty() || ui->comboPartner->currentIndex() != -1)
         return;
 
     auto* node { ResourcePool<Node>::Instance().Allocate() };
     partner_node_->SetParent(node, {});
     node->name = name;
 
-    node->unit = party_unit_;
+    node->unit = partner_unit_;
 
     partner_node_->InsertNode(0, QModelIndex(), node);
 
-    int party_index { ui->comboParty->findData(node->id) };
-    ui->comboParty->setCurrentIndex(party_index);
+    int partner_index { ui->comboPartner->findData(node->id) };
+    ui->comboPartner->setCurrentIndex(partner_index);
 }
 #endif
 
 void LeafWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
     node_->issued_time = date_time.toUTC();
-    // sql_->WriteField(party_info_, kIssuedTime, node_->issued_time, node_id_);
+    // sql_->WriteField(partner_info_, kIssuedTime, node_->issued_time, node_id_);
 }
 
 void LeafWidgetO::on_lineDescription_editingFinished()
 {
     node_->description = ui->lineDescription->text();
-    // sql_->WriteField(party_info_, kDescription, node_->description, node_id_);
+    // sql_->WriteField(partner_info_, kDescription, node_->description, node_id_);
 }
 
 void LeafWidgetO::RRuleGroupClicked(int id)
@@ -282,7 +282,7 @@ void LeafWidgetO::RRuleGroupClicked(int id)
 
     IniLeafValue();
 
-    // sql_->WriteField(party_info_, kDirectionRule, node_->direction_rule, node_id_);
+    // sql_->WriteField(partner_info_, kDirectionRule, node_->direction_rule, node_id_);
     // sql_->UpdateLeafValue(node_);
     // sql_->InvertTransValue(node_id_);
 }
@@ -309,14 +309,14 @@ void LeafWidgetO::RUnitGroupClicked(int id)
     node_->unit = id;
     ui->dSpinFinalTotal->setValue(node_->final_total);
 
-    // sql_->WriteField(party_info_, kUnit, id, node_id_);
-    // sql_->WriteField(party_info_, kFinalTotal, node_->final_total, node_id_);
+    // sql_->WriteField(partner_info_, kUnit, id, node_id_);
+    // sql_->WriteField(partner_info_, kFinalTotal, node_->final_total, node_id_);
 }
 
 void LeafWidgetO::on_pBtnFinishOrder_toggled(bool checked)
 {
     node_->is_finished = checked;
-    // sql_->WriteField(party_info_, kIsFinished, checked, node_id_);
+    // sql_->WriteField(partner_info_, kIsFinished, checked, node_id_);
 
     emit SSyncFinished(node_id_, checked);
 
@@ -358,7 +358,7 @@ void LeafWidgetO::PreparePrint()
         break;
     }
 
-    PrintData data { tree_model_partner_->Name(node_->party), node_->issued_time.toLocalTime().toString(kDateTimeFST),
+    PrintData data { tree_model_partner_->Name(node_->partner), node_->issued_time.toLocalTime().toString(kDateTimeFST),
         tree_model_partner_->Name(node_->employee), unit, node_->initial_total };
     print_manager_->SetData(data, leaf_model_order_->GetEntryShadowList());
 }

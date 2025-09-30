@@ -50,7 +50,7 @@ public:
 
     Node* GetNode(const QUuid& node_id) const override;
     bool Finished(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeO::is_finished); }
-    QUuid Party(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeO::party); };
+    QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeO::partner); };
 
 protected:
     void UpdateName(const QUuid& /*node_id*/, CString& /*new_name*/) override { };

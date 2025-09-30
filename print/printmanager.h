@@ -34,7 +34,7 @@ struct FieldSettings {
 };
 
 struct PrintData {
-    QString party {};
+    QString partner {};
     QString issued_time {};
     QString employee {};
     QString unit {};

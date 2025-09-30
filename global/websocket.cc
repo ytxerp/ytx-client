@@ -108,7 +108,7 @@ void WebSocket::InitHandler()
     handler_obj_[kEntryUpdate] = [this](const QJsonObject& obj) { ApplyEntryUpdate(obj); };
     handler_obj_[kEntryRemove] = [this](const QJsonObject& obj) { ApplyEntryRemove(obj); };
     handler_obj_[kDirectionRule] = [this](const QJsonObject& obj) { ApplyDirectionRule(obj); };
-    handler_obj_[kLeafReference] = [this](const QJsonObject& obj) { AckLeafReference(obj); };
+    handler_obj_[kLeafReference] = [this](const QJsonObject& obj) { AckLeafRemoveCheck(obj); };
     handler_obj_[kNodeDrag] = [this](const QJsonObject& obj) { ApplyNodeDrag(obj); };
     handler_obj_[kCheckAction] = [this](const QJsonObject& obj) { ApplyCheckAction(obj); };
     handler_obj_[kDefaultUnit] = [this](const QJsonObject& obj) { ApplyDefaultUnit(obj); };
@@ -118,7 +118,7 @@ void WebSocket::InitHandler()
     handler_obj_[kEntryRhsNode] = [this](const QJsonObject& obj) { ApplyEntryRhsNode(obj); };
     handler_obj_[kEntryRate] = [this](const QJsonObject& obj) { ApplyEntryRate(obj); };
     handler_obj_[kEntryNumeric] = [this](const QJsonObject& obj) { ApplyEntryNumeric(obj); };
-    handler_obj_[kUnreferencedNodeRemove] = [this](const QJsonObject& obj) { ApplyUnreferencedNodeRemove(obj); };
+    handler_obj_[kLeafRemoveSafely] = [this](const QJsonObject& obj) { ApplyLeafRemoveSafely(obj); };
 
     handler_arr_[kGlobalConfig] = [this](const QJsonArray& arr) { ApplyGlobalConfig(arr); };
 }
@@ -349,7 +349,7 @@ void WebSocket::ApplyLeafRemove(const QJsonObject& obj)
         tree_model->RRemoveNode(QUuid(id));
 }
 
-void WebSocket::ApplyUnreferencedNodeRemove(const QJsonObject& obj)
+void WebSocket::ApplyLeafRemoveSafely(const QJsonObject& obj)
 {
     assert(obj.contains(kSection));
     assert(obj.contains(kId));
@@ -373,14 +373,14 @@ void WebSocket::ApplyBranchRemove(const QJsonObject& obj)
         tree_model->RRemoveNode(QUuid(id));
 }
 
-void WebSocket::AckLeafReference(const QJsonObject& obj) { emit SRemoveLeafNode(obj); }
+void WebSocket::AckLeafRemoveCheck(const QJsonObject& obj) { emit SLeafRemoveCheck(obj); }
 
 void WebSocket::ApplyLeafReplace(const QJsonObject& obj)
 {
     const CString section = obj.value(kSection).toString();
     CString session_id = obj.value(kSessionId).toString();
     const bool status = obj.value(kStatus).toBool();
-    const bool external_reference = obj.value(kExternalReference).toBool();
+    const bool inventory_external_ref = obj.value(kInventoryExternalRef).toBool();
     const QUuid old_id(obj.value(kOldId).toString());
     const QUuid new_id(obj.value(kNewId).toString());
 
@@ -396,10 +396,10 @@ void WebSocket::ApplyLeafReplace(const QJsonObject& obj)
     auto entry_hub = entry_hub_hash_.value(section);
     entry_hub->ApplyLeafReplace(old_id, new_id);
 
-    if (section == kInventory && external_reference) {
-        entry_hub_hash_.value(kSale)->ApplyItemReplace(old_id, new_id);
-        entry_hub_hash_.value(kPurchase)->ApplyItemReplace(old_id, new_id);
-        entry_hub_hash_.value(kPartner)->ApplyItemReplace(old_id, new_id);
+    if (section == kInventory && inventory_external_ref) {
+        entry_hub_hash_.value(kSale)->ApplyInventoryReplace(old_id, new_id);
+        entry_hub_hash_.value(kPurchase)->ApplyInventoryReplace(old_id, new_id);
+        entry_hub_hash_.value(kPartner)->ApplyInventoryReplace(old_id, new_id);
     }
 
     auto tree_model = tree_model_hash_.value(section);

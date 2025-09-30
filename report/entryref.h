@@ -29,7 +29,7 @@ struct EntryRef {
     QDateTime issued_time {};
     QUuid order_id {};
     int section {};
-    QUuid pi_id {}; // party or item uuid
+    QUuid pi_id {}; // partner or inventory uuid
     QUuid external_sku {};
     double count {};
     double measure {};

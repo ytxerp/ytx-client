@@ -27,7 +27,7 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta, doubl
     UpdateAncestorValue(node, initial_delta, final_delta);
 }
 
-QList<QUuid> TreeModelP::PartyList(CString& text, int unit) const
+QList<QUuid> TreeModelP::PartnerList(CString& text, int unit) const
 {
     QList<QUuid> list {};
 

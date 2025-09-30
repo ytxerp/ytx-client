@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef REMOVELEAFNODEDIALOG_H
-#define REMOVELEAFNODEDIALOG_H
+#ifndef LEAFREMOVEDIALOG_H
+#define LEAFREMOVEDIALOG_H
 
 #include <QButtonGroup>
 #include <QDialog>
@@ -26,18 +26,18 @@
 #include "tree/model/treemodel.h"
 
 namespace Ui {
-class RemoveLeafNodeDialog;
+class LeafRemoveDialog;
 }
 
-class RemoveLeafNodeDialog final : public QDialog {
+class LeafRemoveDialog final : public QDialog {
     Q_OBJECT
 
 signals:
     void SRemoveNode(const QUuid& node_id);
 
 public:
-    RemoveLeafNodeDialog(CTreeModel* model, CSectionInfo& info, const QUuid& node_id, int unit, bool exteral_reference, QWidget* parent = nullptr);
-    ~RemoveLeafNodeDialog();
+    LeafRemoveDialog(CTreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, int unit, QWidget* parent = nullptr);
+    ~LeafRemoveDialog();
 
 private slots:
     void on_pBtnOk_clicked();
@@ -46,21 +46,28 @@ private slots:
     void RReplaceResult(bool result);
 
 private:
-    void IniData(Section section, bool exteral_reference);
+    void IniData(Section section);
     void DisableRemove();
     void IniConnect();
     void IniOptionGroup();
+    void InitCheckBoxGroup();
 
 private:
-    Ui::RemoveLeafNodeDialog* ui;
+    Ui::LeafRemoveDialog* ui;
     QButtonGroup* option_group_ {};
 
     const QUuid node_id_ {};
     const int node_unit_ {};
-    const bool external_reference_ {};
+
+    const bool internal_node_ref_ {};
+    const bool external_linked_ref_ {};
+    const bool external_sku_ref_ {};
+    const bool external_partner_ref_ {};
+    const bool external_employee_ref_ {};
+    const bool order_settlement_ref_ {};
 
     CTreeModel* model_ {};
     CSectionInfo& info_ {};
 };
 
-#endif // REMOVELEAFNODEDIALOG_H
+#endif // LEAFREMOVEDIALOG_H

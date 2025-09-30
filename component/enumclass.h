@@ -342,12 +342,12 @@ enum class NodeEnumO {
     kInitialTotal,
     kDiscountTotal,
     kFinalTotal,
-    kParty,
+    kPartner,
     kSettlementId,
 };
 
 // P:Previous, C:Current, Statement
-enum class StatementEnum { kParty = 0, kPBalance, kCCount, kCMeasure, kCGrossAmount, kCBalance, kPlaceholder, kCSettlement };
+enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCGrossAmount, kCBalance, kPlaceholder, kCSettlement };
 
 enum class StatementPrimaryEnum { kIssuedTime = 0, kCount, kMeasure, kInitialTotal, kIsChecked, kDescription, kEmployee, kFinalTotal };
 
@@ -379,7 +379,7 @@ enum class SettlementEnum {
     kInitialTotal,
 };
 
-// kPIId: kParty or kInventory
+// kPIId: kPartner or kInventory
 enum class EntryRefEnum {
     kIssuedTime = 0,
     kOrderId,

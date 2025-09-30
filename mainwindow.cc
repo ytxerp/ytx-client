@@ -54,7 +54,7 @@
 #include "dialog/login.h"
 #include "dialog/preferences.h"
 #include "dialog/registerdialog.h"
-#include "dialog/removenode/removeleafnodedialog.h"
+#include "dialog/removenode/leafremovedialog.h"
 #include "document.h"
 #include "entryhub/entryhubf.h"
 #include "entryhub/entryhubi.h"
@@ -284,12 +284,12 @@ void MainWindow::REntryRefDoubleClicked(const QModelIndex& index)
     OrderNodeLocation(section, node_id);
 }
 
-void MainWindow::RStatementPrimary(const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end)
+void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
-    auto* model { new StatementPrimaryModel(sc_->entry_hub, sc_->info, party_id, this) };
+    auto* model { new StatementPrimaryModel(sc_->entry_hub, sc_->info, partner_id, this) };
     auto* widget { new StatementWidget(model, unit, false, start, end, this) };
 
-    const QString name { tr("StatementPrimary-") + sc_p_.tree_model->Name(party_id) };
+    const QString name { tr("StatementPrimary-") + sc_p_.tree_model->Name(partner_id) };
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
@@ -306,15 +306,15 @@ void MainWindow::RStatementPrimary(const QUuid& party_id, int unit, const QDateT
     RegisterRptWgt(report_id, widget);
 }
 
-void MainWindow::RStatementSecondary(const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end)
+void MainWindow::RStatementSecondary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     auto tree_model_p { sc_p_.tree_model };
 
     auto* model { new StatementSecondaryModel(
-        sc_->entry_hub, sc_->info, party_id, sc_i_.tree_model->LeafPath(), tree_model_p, local_config_.company_name, this) };
+        sc_->entry_hub, sc_->info, partner_id, sc_i_.tree_model->LeafPath(), tree_model_p, local_config_.company_name, this) };
     auto* widget { new StatementWidget(model, unit, true, start, end, this) };
 
-    const QString name { tr("StatementSecondary-") + tree_model_p->Name(party_id) };
+    const QString name { tr("StatementSecondary-") + tree_model_p->Name(partner_id) };
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
@@ -482,8 +482,8 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     if (!node)
         return;
 
-    const auto party_id = node->party;
-    assert(!party_id.isNull());
+    const auto partner_id = node->partner;
+    assert(!partner_id.isNull());
 
     // Prepare dependencies
     auto tree_model_p = sc_p_.tree_model;
@@ -498,9 +498,9 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     auto* widget = new LeafWidgetO(widget_arg, false, print_template_, print_manager, this);
 
     // Setup tab
-    const int tab_index = tab_widget->addTab(widget, tree_model_p->Name(party_id));
+    const int tab_index = tab_widget->addTab(widget, tree_model_p->Name(partner_id));
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, node_id }));
-    tab_bar->setTabToolTip(tab_index, tree_model_p->Path(party_id));
+    tab_bar->setTabToolTip(tab_index, tree_model_p->Path(partner_id));
 
     // Configure view
     auto* view = widget->View();
@@ -550,11 +550,11 @@ void MainWindow::TableConnectO(QTableView* table_view, LeafModelO* leaf_model_or
 
     connect(leaf_model_order, &LeafModel::SSyncDelta, widget, &LeafWidgetO::RSyncDelta);
 
-    connect(widget, &LeafWidgetO::SSyncParty, leaf_model_order, &LeafModelO::RSyncParty);
+    connect(widget, &LeafWidgetO::SSyncPartner, leaf_model_order, &LeafModelO::RSyncPartner);
     connect(widget, &LeafWidgetO::SSyncFinished, leaf_model_order, &LeafModelO::RSyncFinished);
     connect(widget, &LeafWidgetO::SSyncFinished, tree_model, &TreeModelO::RSyncFinished);
 
-    connect(widget, &LeafWidgetO::SSyncParty, this, &MainWindow::RSyncParty);
+    connect(widget, &LeafWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
     connect(widget, &LeafWidgetO::SEnableAction, this, &MainWindow::REnableAction);
 }
 
@@ -1111,12 +1111,12 @@ void MainWindow::RemoveNode()
 
     switch (kind) {
     case kBranch: {
-        RemoveBranchNode(model, index, node_id);
+        BranchRemove(model, index, node_id);
         break;
     }
     case kLeaf: {
-        const auto message { JsonGen::LeafCheckBeforeRemove(sc_->info.section_str, node_id) };
-        WebSocket::Instance()->SendMessage(kLeafReference, message);
+        const auto message { JsonGen::LeafRemoveCheck(sc_->info.section_str, node_id) };
+        WebSocket::Instance()->SendMessage(kLeafRemoveCheck, message);
         break;
     }
     default:
@@ -1124,12 +1124,10 @@ void MainWindow::RemoveNode()
     }
 }
 
-void MainWindow::RRemoveLeafNode(const QJsonObject& obj)
+void MainWindow::RLeafRemoveCheck(const QJsonObject& obj)
 {
     CString section = obj.value(kSection).toString();
     const auto id = QUuid(obj.value(kId).toString());
-
-    const bool exteral_reference { obj.value(kExternalReference).toBool() };
 
     auto* section_contex = GetSectionContex(section);
 
@@ -1138,12 +1136,12 @@ void MainWindow::RRemoveLeafNode(const QJsonObject& obj)
 
     const int unit { index.siblingAtColumn(std::to_underlying(NodeEnum::kUnit)).data().toInt() };
 
-    auto* dialog { new RemoveLeafNodeDialog(model, section_contex->info, id, unit, exteral_reference, this) };
+    auto* dialog { new LeafRemoveDialog(model, section_contex->info, obj, id, unit, this) };
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setModal(true);
     dialog->show();
 
-    connect(dialog, &RemoveLeafNodeDialog::SRemoveNode, model, &TreeModel::RRemoveNode, Qt::SingleShotConnection);
+    connect(dialog, &LeafRemoveDialog::SRemoveNode, model, &TreeModel::RRemoveNode, Qt::SingleShotConnection);
 }
 
 void MainWindow::RGlobalConfig(const QJsonArray& arr)
@@ -1270,7 +1268,7 @@ void MainWindow::IniSectionGroup()
     section_group_->addButton(ui->rBtnPurchase, 5);
 }
 
-void MainWindow::RemoveBranchNode(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id)
+void MainWindow::BranchRemove(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id)
 {
     QMessageBox msg {};
     msg.setIcon(QMessageBox::Question);
@@ -1279,7 +1277,7 @@ void MainWindow::RemoveBranchNode(TreeModel* tree_model, const QModelIndex& inde
     msg.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
 
     if (msg.exec() == QMessageBox::Ok) {
-        const auto message { JsonGen::RemoveBranchNode(sc_->info.section_str, node_id) };
+        const auto message { JsonGen::BranchRemove(sc_->info.section_str, node_id) };
         WebSocket::Instance()->SendMessage(kBranchRemove, message);
         tree_model->removeRows(index.row(), 1, index.parent());
     }
@@ -1657,7 +1655,7 @@ void MainWindow::DelegateStatement(QTableView* table_view, CSectionConfig& confi
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCBalance), amount);
 
     auto* name { new NodeNameR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kParty), name);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kPartner), name);
 }
 
 void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& config) const
@@ -1755,7 +1753,7 @@ void MainWindow::SetUniqueConnection() const
     connect(section_group_, &QButtonGroup::idClicked, this, &MainWindow::RSectionGroup);
 
     connect(WebSocket::Instance(), &WebSocket::SInitializeContext, this, &MainWindow::RInitializeContext);
-    connect(WebSocket::Instance(), &WebSocket::SRemoveLeafNode, this, &MainWindow::RRemoveLeafNode);
+    connect(WebSocket::Instance(), &WebSocket::SLeafRemoveCheck, this, &MainWindow::RLeafRemoveCheck);
     connect(WebSocket::Instance(), &WebSocket::SGlobalConfig, this, &MainWindow::RGlobalConfig);
     connect(WebSocket::Instance(), &WebSocket::SDefaultUnit, this, &MainWindow::RDefaultUnit);
     connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
@@ -2072,7 +2070,7 @@ void MainWindow::SetAction() const
 void MainWindow::SetTreeView(QTreeView* tree_view, CSectionInfo& info) const
 {
     if (info.section == Section::kSale || info.section == Section::kPurchase) {
-        tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kParty), kIsHidden);
+        tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kPartner), kIsHidden);
         tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kSettlementId), kIsHidden);
     }
 
@@ -2463,12 +2461,12 @@ void MainWindow::UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool b
                 if (order_node_id.isNull())
                     continue;
 
-                const auto order_party = order_model->Party(order_node_id);
-                if (!partner_nodes.contains(order_party))
+                const auto order_partner = order_model->Partner(order_node_id);
+                if (!partner_nodes.contains(order_partner))
                     continue;
 
-                QString name = partner_model->Name(order_party);
-                QString path = partner_model->Path(order_party);
+                QString name = partner_model->Name(order_partner);
+                QString path = partner_model->Path(order_partner);
 
                 // 收集需要更新的信息
                 updates.append(std::make_tuple(index, name, path));
@@ -2701,12 +2699,12 @@ void MainWindow::OrderNodeLocation(Section section, const QUuid& node_id)
     sc_->tree_view->setCurrentIndex(index);
 }
 
-void MainWindow::RSyncParty(const QUuid& node_id, int column, const QVariant& value)
+void MainWindow::RSyncPartner(const QUuid& node_id, int column, const QVariant& value)
 {
-    if (column != std::to_underlying(NodeEnumO::kParty))
+    if (column != std::to_underlying(NodeEnumO::kPartner))
         return;
 
-    const auto party_id { value.toUuid() };
+    const auto partner_id { value.toUuid() };
 
     auto model { sc_p_.tree_model };
     auto* widget { ui->tabWidget };
@@ -2715,8 +2713,8 @@ void MainWindow::RSyncParty(const QUuid& node_id, int column, const QVariant& va
 
     for (int index = 0; index != count; ++index) {
         if (widget->isTabVisible(index) && tab_bar->tabData(index).value<TabInfo>().id == node_id) {
-            tab_bar->setTabText(index, model->Name(party_id));
-            tab_bar->setTabToolTip(index, model->Path(party_id));
+            tab_bar->setTabText(index, model->Name(partner_id));
+            tab_bar->setTabToolTip(index, model->Path(partner_id));
         }
     }
 }

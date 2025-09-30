@@ -91,14 +91,14 @@ void StatementWidget::IniWidget(QAbstractItemModel* model, bool enable_excel)
 
 void StatementWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
-    const auto kParty { index.siblingAtColumn(std::to_underlying(StatementEnum::kParty)).data().toUuid() };
+    const auto partner { index.siblingAtColumn(std::to_underlying(StatementEnum::kPartner)).data().toUuid() };
 
-    if (index.column() == std::to_underlying(StatementEnum::kParty)) {
-        emit SStatementPrimary(kParty, unit_, start_, end_);
+    if (index.column() == std::to_underlying(StatementEnum::kPartner)) {
+        emit SStatementPrimary(partner, unit_, start_, end_);
     }
 
     if (index.column() == std::to_underlying(StatementEnum::kCSettlement)) {
-        emit SStatementSecondary(kParty, unit_, start_, end_);
+        emit SStatementSecondary(partner, unit_, start_, end_);
     }
 }
 

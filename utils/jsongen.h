@@ -31,11 +31,11 @@ QJsonObject Register(CString& email, CString& password);
 QJsonObject InsertNode(CString& section, const Node* node, CUuid& parent_id);
 QJsonObject DragNode(CString& section, CUuid& node_id, CUuid& parent_id);
 
-QJsonObject RemoveLeafNode(CString& section, CUuid& node_id);
-QJsonObject RemoveBranchNode(CString& section, CUuid& node_id);
+QJsonObject LeafRemove(CString& section, CUuid& node_id);
+QJsonObject BranchRemove(CString& section, CUuid& node_id);
 
-QJsonObject LeafCheckBeforeRemove(CString& section, CUuid& node_id);
-QJsonObject ReplaceLeafNode(CString& section, CUuid& old_id, CUuid& new_id, bool external_reference);
+QJsonObject LeafRemoveCheck(CString& section, CUuid& node_id);
+QJsonObject LeafReplace(CString& section, CUuid& old_id, CUuid& new_id, bool external_reference);
 
 QJsonObject CheckAction(CString& section, CUuid& leaf_id, int check);
 

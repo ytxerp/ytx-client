@@ -103,7 +103,7 @@ void StringInitializer::SetHeader(
         QObject::tr("InitialTotal"),
         QObject::tr("DiscountTotal"),
         QObject::tr("FinalTotal"),
-        QObject::tr("Party"),
+        QObject::tr("Partner"),
         QObject::tr("SettlementId"),
     };
 
@@ -280,7 +280,7 @@ void StringInitializer::SetHeader(
         QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
         QObject::tr("Section"),
-        QObject::tr("Party"),
+        QObject::tr("Partner"),
         QObject::tr("ExternalSku"),
         QObject::tr("Count"),
         QObject::tr("Measure"),
@@ -306,7 +306,7 @@ void StringInitializer::SetHeader(
 
     // Statement
     sale.statement_header = {
-        QObject::tr("Party"),
+        QObject::tr("Partner"),
         QObject::tr("PBalance"),
         QObject::tr("CCount"),
         QObject::tr("CMeasure"),
@@ -349,7 +349,7 @@ void StringInitializer::SetHeader(
         QObject::tr("UpdatedTime"),
         QObject::tr("UpdatedBy"),
         QObject::tr("IssuedTime"),
-        QObject::tr("Party"),
+        QObject::tr("Partner"),
         QObject::tr("Description"),
         QObject::tr("IsFinished"),
         QObject::tr("GrossAmount"),

@@ -49,8 +49,8 @@ QVariant StatementModel::data(const QModelIndex& index, int role) const
     auto* statement { statement_list_.at(index.row()) };
 
     switch (kColumn) {
-    case StatementEnum::kParty:
-        return statement->party;
+    case StatementEnum::kPartner:
+        return statement->partner;
     case StatementEnum::kPBalance:
         return statement->pbalance == 0 ? QVariant() : statement->pbalance;
     case StatementEnum::kCGrossAmount:
@@ -85,8 +85,8 @@ void StatementModel::sort(int column, Qt::SortOrder order)
         const StatementEnum kColumn { column };
 
         switch (kColumn) {
-        case StatementEnum::kParty:
-            return (order == Qt::AscendingOrder) ? (lhs->party < rhs->party) : (lhs->party > rhs->party);
+        case StatementEnum::kPartner:
+            return (order == Qt::AscendingOrder) ? (lhs->partner < rhs->partner) : (lhs->partner > rhs->partner);
         case StatementEnum::kPBalance:
             return (order == Qt::AscendingOrder) ? (lhs->pbalance < rhs->pbalance) : (lhs->pbalance > rhs->pbalance);
         case StatementEnum::kCGrossAmount:

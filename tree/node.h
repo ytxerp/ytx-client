@@ -91,7 +91,7 @@ struct NodeP final : Node {
 
 struct NodeO final : Node {
     QUuid employee {};
-    QUuid party {};
+    QUuid partner {};
     QDateTime issued_time {};
     double count_total {};
     double measure_total {};

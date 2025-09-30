@@ -65,7 +65,7 @@ bool PrintManager::LoadIni(const QString& file_path)
         page_settings_[setting] = settings.value("page_settings/" + setting);
     }
 
-    const QList<QString> header_settings { "party", "issued_time" };
+    const QList<QString> header_settings { "partner", "issued_time" };
     const QList<QString> content_settings { "left_top", "heigh_width", "rows_columns" };
     const QList<QString> footer_settings { "employee", "unit", "initial_total", "page_info" };
 
@@ -121,9 +121,9 @@ void PrintManager::DrawHeader(QPainter* painter)
 {
     // Example: Draw a header at the specified position
 
-    if (field_settings_.contains("party")) {
-        const auto& party { field_settings_.value("party") };
-        painter->drawText(party.x, party.y, data_.party);
+    if (field_settings_.contains("partner")) {
+        const auto& partner { field_settings_.value("partner") };
+        painter->drawText(partner.x, partner.y, data_.partner);
     }
 
     const auto& issued_time { field_settings_.value("issued_time") };

@@ -37,7 +37,7 @@ signals:
     void SSyncPrice(const QList<PriceS>& list);
 
 public:
-    bool SearchNode(QList<const Node*>& node_list, const QList<QUuid>& party_id_list);
+    bool SearchNode(QList<const Node*>& node_list, const QList<QUuid>& partner_id_list);
     void ApplyLeafRemove(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
 
     bool SettlementReference(const QUuid& settlement_id) const;
@@ -48,22 +48,22 @@ public:
     bool WriteSettlement(const Settlement* settlement) const;
     bool RemoveSettlement(const QUuid& settlement_id);
 
-    bool ReadSettlementPrimary(SettlementList& list, const QUuid& party_id, const QUuid& settlement_id, bool is_finished);
+    bool ReadSettlementPrimary(SettlementList& list, const QUuid& partner_id, const QUuid& settlement_id, bool is_finished);
     bool AddSettlementPrimary(const QUuid& node_id, const QUuid& settlement_id) const;
     bool RemoveSettlementPrimary(const QUuid& node_id) const;
 
     bool SyncPrice(const QUuid& node_id);
 
     bool ReadStatement(StatementList& list, int unit, const QDateTime& start, const QDateTime& end) const;
-    bool ReadBalance(double& pbalance, double& cdelta, const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end) const;
-    bool ReadStatementPrimary(StatementPrimaryList& list, const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end) const;
-    bool ReadStatementSecondary(StatementSecondaryList& list, const QUuid& party_id, int unit, const QDateTime& start, const QDateTime& end) const;
+    bool ReadBalance(double& pbalance, double& cdelta, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const;
+    bool ReadStatementPrimary(StatementPrimaryList& list, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const;
+    bool ReadStatementSecondary(StatementSecondaryList& list, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const;
 
     bool WriteTransRange(const QList<EntryShadow*>& list);
 
 protected:
     // table
-    void ApplyItemReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;
+    void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;
 
 private:
     QString QSSearchNode(CString& in_list) const;

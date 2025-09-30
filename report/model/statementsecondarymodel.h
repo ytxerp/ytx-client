@@ -30,7 +30,7 @@
 class StatementSecondaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    StatementSecondaryModel(EntryHub* dbhub, CSectionInfo& info, const QUuid& party_id, CUuidString& item_leaf, TreeModel* partner, CString& company_name,
+    StatementSecondaryModel(EntryHub* dbhub, CSectionInfo& info, const QUuid& partner_id, CUuidString& item_leaf, TreeModel* partner, CString& company_name,
         QObject* parent = nullptr);
     ~StatementSecondaryModel();
 
@@ -55,7 +55,7 @@ public:
 private:
     EntryHubO* dbhub_ {};
     CSectionInfo& info_;
-    const QUuid& party_id_ {};
+    const QUuid& partner_id_ {};
     CUuidString& item_leaf_ {};
     CUuidString& partner_leaf_ {};
     TreeModel* partner_ {};

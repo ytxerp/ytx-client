@@ -39,7 +39,7 @@ void TreeModelO::RSyncFinished(const QUuid& node_id, bool value)
         coefficient * node->measure_total, coefficient * node->discount_total);
 
     if (node->unit == std::to_underlying(UnitO::kMonthly))
-        emit SUpdateAmount(node->party, coefficient * node->initial_total, coefficient * node->final_total);
+        emit SUpdateAmount(node->partner, coefficient * node->initial_total, coefficient * node->final_total);
 }
 
 void TreeModelO::AckTree(const QJsonObject& obj)
@@ -111,7 +111,7 @@ void TreeModelO::RemovePath(Node* node, Node* parent_node)
             UpdateAncestorValue(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
 
             if (node->unit == std::to_underlying(UnitO::kMonthly))
-                emit SUpdateAmount(d_node->party, -node->initial_total, -node->final_total);
+                emit SUpdateAmount(d_node->partner, -node->initial_total, -node->final_total);
         }
         break;
     default:
@@ -212,8 +212,8 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
         case NodeEnumO::kUnit:
             return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
-        case NodeEnumO::kParty:
-            return (order == Qt::AscendingOrder) ? (d_lhs->party < d_rhs->party) : (d_lhs->party > d_rhs->party);
+        case NodeEnumO::kPartner:
+            return (order == Qt::AscendingOrder) ? (d_lhs->partner < d_rhs->partner) : (d_lhs->partner > d_rhs->partner);
         case NodeEnumO::kEmployee:
             return (order == Qt::AscendingOrder) ? (d_lhs->employee < d_rhs->employee) : (d_lhs->employee > d_rhs->employee);
         case NodeEnumO::kIssuedTime:
@@ -275,8 +275,8 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return d_node->kind;
     case NodeEnumO::kUnit:
         return d_node->unit;
-    case NodeEnumO::kParty:
-        return d_node->party.isNull() ? QVariant() : d_node->party;
+    case NodeEnumO::kPartner:
+        return d_node->partner.isNull() ? QVariant() : d_node->partner;
     case NodeEnumO::kEmployee:
         return d_node->employee.isNull() ? QVariant() : d_node->employee;
     case NodeEnumO::kIssuedTime:

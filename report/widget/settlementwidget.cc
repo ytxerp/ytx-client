@@ -73,14 +73,14 @@ void SettlementWidget::on_settlementView_doubleClicked(const QModelIndex& index)
     if (index.column() != std::to_underlying(SettlementEnum::kInitialTotal))
         return;
 
-    const auto party { index.siblingAtColumn(std::to_underlying(SettlementEnum::kPartner)).data().toUuid() };
-    if (party.isNull())
+    const auto partner { index.siblingAtColumn(std::to_underlying(SettlementEnum::kPartner)).data().toUuid() };
+    if (partner.isNull())
         return;
 
     const auto settlement_id { index.siblingAtColumn(std::to_underlying(SettlementEnum::kId)).data().toUuid() };
     const bool is_finished { index.siblingAtColumn(std::to_underlying(SettlementEnum::kIsFinished)).data().toBool() };
 
-    settlement_primary_model_->RResetModel(party, settlement_id, is_finished);
+    settlement_primary_model_->RResetModel(partner, settlement_id, is_finished);
 }
 
 void SettlementWidget::on_settlementViewPrimary_doubleClicked(const QModelIndex& index)

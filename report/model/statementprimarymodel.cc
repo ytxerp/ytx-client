@@ -5,11 +5,11 @@
 #include "component/enumclass.h"
 #include "global/resourcepool.h"
 
-StatementPrimaryModel::StatementPrimaryModel(EntryHub* dbhub, CSectionInfo& info, const QUuid& party_id, QObject* parent)
+StatementPrimaryModel::StatementPrimaryModel(EntryHub* dbhub, CSectionInfo& info, const QUuid& partner_id, QObject* parent)
     : QAbstractItemModel { parent }
     , dbhub_ { qobject_cast<EntryHubO*>(dbhub) }
     , info_ { info }
-    , party_id_ { party_id }
+    , partner_id_ { partner_id }
 {
 }
 
@@ -135,7 +135,7 @@ void StatementPrimaryModel::sort(int column, Qt::SortOrder order)
 
 void StatementPrimaryModel::RResetModel(int unit, const QDateTime& start, const QDateTime& end)
 {
-    if (party_id_.isNull() || !start.isValid() || !end.isValid())
+    if (partner_id_.isNull() || !start.isValid() || !end.isValid())
         return;
 
     beginResetModel();
@@ -143,6 +143,6 @@ void StatementPrimaryModel::RResetModel(int unit, const QDateTime& start, const 
     if (!statement_primary_list_.isEmpty())
         ResourcePool<StatementPrimary>::Instance().Recycle(statement_primary_list_);
 
-    dbhub_->ReadStatementPrimary(statement_primary_list_, party_id_, unit, start.toUTC(), end.toUTC());
+    dbhub_->ReadStatementPrimary(statement_primary_list_, partner_id_, unit, start.toUTC(), end.toUTC());
     endResetModel();
 }

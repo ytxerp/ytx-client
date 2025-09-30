@@ -24,7 +24,7 @@
 #include <QUuid>
 
 struct Statement {
-    QUuid party {};
+    QUuid partner {};
     double pbalance {};
     double ccount {};
     double cmeasure {};
@@ -37,7 +37,7 @@ struct Statement {
 
 inline void Statement::ResetState()
 {
-    party = QUuid();
+    partner = QUuid();
     pbalance = 0.0;
     ccount = 0.0;
     cmeasure = 0.0;

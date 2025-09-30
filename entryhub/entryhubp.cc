@@ -34,7 +34,7 @@ void EntryHubP::RPriceSList(const QList<PriceS>& list)
     ReadTransRange(set);
 }
 
-void EntryHubP::ApplyItemReplace(const QUuid& old_item_id, const QUuid& new_item_id) const
+void EntryHubP::ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const
 {
     for (auto* entry : std::as_const(entry_cache_)) {
         auto* d_entry = static_cast<EntryP*>(entry);
@@ -47,19 +47,19 @@ void EntryHubP::ApplyItemReplace(const QUuid& old_item_id, const QUuid& new_item
     }
 }
 
-bool EntryHubP::CrossSearch(EntryShadowO* order_entry_shadow, const QUuid& party_id, const QUuid& item_id, bool is_internal) const
+bool EntryHubP::CrossSearch(EntryShadowO* order_entry_shadow, const QUuid& partner_id, const QUuid& item_id, bool is_internal) const
 {
     const EntryP* latest_trans { nullptr };
 
     for (const auto* trans : std::as_const(entry_cache_)) {
         auto* d_trans = static_cast<const EntryP*>(trans);
 
-        if (is_internal && d_trans->lhs_node == party_id && d_trans->rhs_node == item_id) {
+        if (is_internal && d_trans->lhs_node == partner_id && d_trans->rhs_node == item_id) {
             latest_trans = d_trans;
             break;
         }
 
-        if (!is_internal && d_trans->lhs_node == party_id && d_trans->external_sku == item_id) {
+        if (!is_internal && d_trans->lhs_node == partner_id && d_trans->external_sku == item_id) {
             latest_trans = d_trans;
             break;
         }
@@ -205,13 +205,13 @@ QString EntryHubP::QSReadTransRef(int unit) const
     case UnitS::kCustomer:
         node_trans = QStringLiteral("sale_transaction");
         node = QStringLiteral("sale_node");
-        column = QStringLiteral("party");
+        column = QStringLiteral("partner");
         section = QStringLiteral("4");
         break;
     case UnitS::kVendor:
         node_trans = QStringLiteral("purchase_transaction");
         node = QStringLiteral("purchase_node");
-        column = QStringLiteral("party");
+        column = QStringLiteral("partner");
         section = QStringLiteral("5");
         break;
     case UnitS::kEmployee:
@@ -230,14 +230,14 @@ QString EntryHubP::QSReadTransRef(int unit) const
 //         return QStringLiteral(R"(
 //         SELECT SUM(initial) AS final_balance
 //         FROM sale_node
-//         WHERE party = :node_id AND is_finished = TRUE AND settlement_id = 0 AND unit = 1 AND is_valid = TRUE;
+//         WHERE partner = :node_id AND is_finished = TRUE AND settlement_id = 0 AND unit = 1 AND is_valid = TRUE;
 //         )");
 //         break;
 //     case UnitS::kVend:
 //         return QStringLiteral(R"(
 //         SELECT SUM(initial) AS final_balance
 //         FROM purchase_node
-//         WHERE party = :node_id AND is_finished = TRUE AND settlement_id = 0 AND unit = 1 AND is_valid = TRUE;
+//         WHERE partner = :node_id AND is_finished = TRUE AND settlement_id = 0 AND unit = 1 AND is_valid = TRUE;
 //         )");
 //         break;
 //     default:

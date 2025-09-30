@@ -110,7 +110,7 @@ set(SOURCES
     dialog/about.cc
     dialog/registerdialog.cc
     dialog/preferences.cc
-    dialog/removenode/removeleafnodedialog.cc
+    dialog/removenode/leafremovedialog.cc
     dialog/insertnode/insertnodefinance.cc
     dialog/insertnode/insertnodei.cc
     dialog/insertnode/insertnodep.cc
@@ -246,7 +246,7 @@ set(HEADERS
     dialog/preferences.h
     dialog/registerdialog.h
     dialog/login.h
-    dialog/removenode/removeleafnodedialog.h
+    dialog/removenode/leafremovedialog.h
     dialog/insertnode/insertnodep.h
     dialog/insertnode/insertnodebranch.h
     dialog/insertnode/insertnodei.h
@@ -300,7 +300,7 @@ set(UIS
     dialog/preferences.ui
     dialog/editdocument.ui
     dialog/login.ui
-    dialog/removenode/removeleafnodedialog.ui
+    dialog/removenode/leafremovedialog.ui
     dialog/insertnode/insertnodebranch.ui
     dialog/insertnode/insertnodep.ui
     dialog/insertnode/insertnodetask.ui
