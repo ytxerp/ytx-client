@@ -2836,8 +2836,7 @@ void MainWindow::on_actionAppendEntry_triggered()
 
 void MainWindow::on_actionExportExcel_triggered()
 {
-    LoginInfo& login_info { LoginInfo::Instance() };
-    CString& source { QString("%1@%2%3").arg(login_info.Email(), login_info.Workspace(), kDotSuffixCache) };
+    CString& source {};
 
     QString destination { QFileDialog::getSaveFileName(this, tr("Export Excel"), QDir::homePath(), QStringLiteral("*.xlsx")) };
     if (!MainWindowUtils::PrepareNewFile(destination, kDotSuffixXLSX))

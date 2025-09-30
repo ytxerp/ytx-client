@@ -92,12 +92,13 @@ struct NodeP final : Node {
 struct NodeO final : Node {
     QUuid employee {};
     QUuid partner {};
+    QUuid settlement {};
+
     QDateTime issued_time {};
     double count_total {};
     double measure_total {};
     double discount_total {};
     bool is_finished {};
-    QUuid settlement_node {};
 
     void ResetState() override;
     void InvertTotal() override;

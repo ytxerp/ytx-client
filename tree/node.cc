@@ -263,8 +263,8 @@ void NodeO::ReadJson(const QJsonObject& object)
         discount_total = object.value(kDiscountTotal).toString().toDouble();
     if (object.contains(kIsFinished))
         is_finished = object.value(kIsFinished).toBool();
-    if (object.contains(kSettlementNode))
-        settlement_node = QUuid(object.value(kSettlementNode).toString());
+    if (object.contains(kSettlement))
+        settlement = QUuid(object.value(kSettlement).toString());
 }
 
 QJsonObject NodeO::WriteJson() const
@@ -280,7 +280,7 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
     obj.insert(kEmployee, employee.toString(QUuid::WithoutBraces));
     obj.insert(kPartner, partner.toString(QUuid::WithoutBraces));
-    obj.insert(kSettlementNode, settlement_node.toString(QUuid::WithoutBraces));
+    obj.insert(kSettlement, settlement.toString(QUuid::WithoutBraces));
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kCountTotal, QString::number(count_total, 'f', kMaxNumericScale_4));
     obj.insert(kMeasureTotal, QString::number(measure_total, 'f', kMaxNumericScale_4));

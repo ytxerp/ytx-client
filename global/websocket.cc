@@ -108,7 +108,7 @@ void WebSocket::InitHandler()
     handler_obj_[kEntryUpdate] = [this](const QJsonObject& obj) { ApplyEntryUpdate(obj); };
     handler_obj_[kEntryRemove] = [this](const QJsonObject& obj) { ApplyEntryRemove(obj); };
     handler_obj_[kDirectionRule] = [this](const QJsonObject& obj) { ApplyDirectionRule(obj); };
-    handler_obj_[kLeafReference] = [this](const QJsonObject& obj) { AckLeafRemoveCheck(obj); };
+    handler_obj_[kLeafRemoveCheck] = [this](const QJsonObject& obj) { AckLeafRemoveCheck(obj); };
     handler_obj_[kNodeDrag] = [this](const QJsonObject& obj) { ApplyNodeDrag(obj); };
     handler_obj_[kCheckAction] = [this](const QJsonObject& obj) { ApplyCheckAction(obj); };
     handler_obj_[kDefaultUnit] = [this](const QJsonObject& obj) { ApplyDefaultUnit(obj); };
@@ -156,7 +156,7 @@ void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
         return;
     }
 
-    const QJsonValue message = QJsonObject { { kMsgType, type }, { kValue, value } };
+    const QJsonValue message = QJsonObject { { kKind, type }, { kValue, value } };
     const QByteArray json = message.toJson(QJsonDocument::Compact);
 
     socket_.sendTextMessage(QString::fromUtf8(json));
@@ -184,7 +184,7 @@ void WebSocket::RReceiveMessage(const QString& message)
     }
 
     const QJsonObject obj = root.toObject();
-    const QString msg_type = obj.value(kMsgType).toString();
+    const QString msg_type = obj.value(kKind).toString();
     const QJsonValue value = obj.value(kValue);
 
     if (value.isObject()) {

@@ -24,16 +24,13 @@
 #include <QTime>
 
 // Numeric constants
-inline constexpr int kCoefficient4 = 4;
 inline constexpr int kCoefficient5 = 5;
 inline constexpr int kCoefficient8 = 8;
 inline constexpr int kCoefficient16 = 16;
 inline constexpr double kTolerance = 1e-8;
 
-inline constexpr int kHundred = 100;
 inline constexpr int kRowHeight = 24;
 inline constexpr int kThreeThousand = 3000;
-inline constexpr long long kBatchSize = 50;
 
 namespace Pool {
 inline constexpr qsizetype kExpandSize { 100 };
@@ -100,12 +97,8 @@ inline const QString kMinux = QStringLiteral("-");
 inline const QString kPlus = QStringLiteral("+");
 
 // File suffixes
-inline const QString kDotSuffixCache = QStringLiteral(".cache");
 inline const QString kDotSuffixINI = QStringLiteral(".ini");
-inline const QString kDotSuffixLOCK = QStringLiteral(".lock");
 inline const QString kDotSuffixXLSX = QStringLiteral(".xlsx");
-inline const QString kSuffixPERCENT = QStringLiteral("%");
-inline const QString kSuffixXLSX = QStringLiteral("xlsx");
 
 // Node rule, kind, unit
 
@@ -158,7 +151,6 @@ inline const QString kOperation = QStringLiteral("operation");
 inline const QString kStaticLabel = QStringLiteral("static_label");
 inline const QString kStaticNode = QStringLiteral("static_node");
 
-inline const QString kLeafReference = QStringLiteral("leaf_reference");
 inline const QString kLeafRemoveCheck = QStringLiteral("leaf_remove_check");
 inline const QString kLeafRemove = QStringLiteral("leaf_remove");
 inline const QString kLeafReplace = QStringLiteral("leaf_replace");
@@ -233,7 +225,6 @@ inline const QString kLeafRemoveSafely = QStringLiteral("leaf_remove_safely");
 
 // Message fields
 inline const QString kValue = QStringLiteral("value");
-inline const QString kMsgType = QStringLiteral("msg_type");
 
 // Tree & table columns
 inline const QString kCode = QStringLiteral("code");
@@ -262,8 +253,7 @@ inline const QString kLeafId = QStringLiteral("leaf_id");
 inline const QString kSessionId = QStringLiteral("session_id");
 inline const QString kExpireTime = QStringLiteral("expire_time");
 inline const QString kUserId = QStringLiteral("user_id");
-inline const QString kTabId = QStringLiteral("tab_id");
-inline const QString kSettlementNode = QStringLiteral("settlement_node");
+inline const QString kSettlement = QStringLiteral("settlement");
 inline const QString kCache = QStringLiteral("cache");
 inline const QString kLhsDelta = QStringLiteral("lhs_delta");
 inline const QString kRhsDelta = QStringLiteral("rhs_delta");
@@ -290,8 +280,6 @@ inline const QString kDiscountTotal = QStringLiteral("discount_total");
 
 inline const QString kIsChecked = QStringLiteral("is_checked");
 inline const QString kIsFinished = QStringLiteral("is_finished");
-inline const QString kIsValid = QStringLiteral("is_valid");
-inline const QString kIsInsert = QStringLiteral("is_insert");
 inline const QString kIsSaved = QStringLiteral("is_saved");
 
 inline const QString kIssuedTime = QStringLiteral("issued_time");
@@ -300,12 +288,10 @@ inline const QString kNote = QStringLiteral("note");
 inline const QString kPaymentTerm = QStringLiteral("payment_term");
 inline const QString kRhsNode = QStringLiteral("rhs_node");
 inline const QString kLhsNode = QStringLiteral("lhs_node");
-inline const QString kSettlement = QStringLiteral("settlement");
 inline const QString kState = QStringLiteral("state");
 inline const QString kUnit = QStringLiteral("unit");
 inline const QString kUnitCost = QStringLiteral("unit_cost");
 inline const QString kUnitPrice = QStringLiteral("unit_price");
-inline const QString kVersion = QStringLiteral("version");
 
 inline const QString kCreatedTime = QStringLiteral("created_time");
 inline const QString kCreatedBy = QStringLiteral("created_by");
@@ -313,11 +299,9 @@ inline const QString kUpdatedTime = QStringLiteral("updated_time");
 inline const QString kUpdatedBy = QStringLiteral("updated_by");
 inline const QString kAncestor = QStringLiteral("ancestor");
 inline const QString kDescendant = QStringLiteral("descendant");
-inline const QString kDistance = QStringLiteral("distance");
 
 // Others
 inline const QString kYTX = QStringLiteral("ytx");
-inline const QString kError = QStringLiteral("error");
 inline const QString kCheckAction = QStringLiteral("check_action");
 inline const QString kField = QStringLiteral("field");
 
