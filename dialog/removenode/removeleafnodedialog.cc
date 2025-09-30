@@ -133,5 +133,5 @@ void RemoveLeafNodeDialog::RReplaceResult(bool result)
         this->accept();
     } else
         QMessageBox::critical(this, tr("Replacement Conflict"),
-            tr("A reference conflict exists between the related nodes of the old node and the new node. The replacement operation has been canceled."));
+            tr("A reference conflict exists between the linked nodes of the old node and the new node. The replacement operation has been canceled."));
 }

@@ -1088,7 +1088,7 @@ void MainWindow::on_actionRemove_triggered()
     auto* widget { ui->tabWidget->currentWidget() };
     assert(widget);
 
-    if (auto* tree_widget { dynamic_cast<TreeWidget*>(widget) }) {
+    if (dynamic_cast<TreeWidget*>(widget)) {
         RemoveNode();
     }
 
@@ -2398,7 +2398,7 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
             return;
         }
 
-        if (const auto* tree_widget = dynamic_cast<TreeWidget*>(current_widget)) {
+        if (dynamic_cast<TreeWidget*>(current_widget)) {
             auto* header { sc_->tree_view->header() };
             ResizeColumn(header, std::to_underlying(NodeEnum::kDescription));
         }

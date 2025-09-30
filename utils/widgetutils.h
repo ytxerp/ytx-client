@@ -99,8 +99,8 @@ template <InheritQAbstractItemView T> bool HasSelection(T* view) { return view &
 // Behavior:
 // - If no empty row exists: insert a new row and focus the IssuedTime column
 //   (so the user can first input the entry time).
-// - If an empty row exists: focus the RhsNode column
-//   (so the user can quickly continue linking the related node).
+// - If an empty row exists: focus the LinkedNode column
+//   (so the user can quickly continue linking the target node).
 template <EntryWidgetLike T> void AppendEntryFIST(T* widget, Section start)
 {
     assert(widget);
@@ -133,7 +133,7 @@ template <EntryWidgetLike T> void AppendEntryFIST(T* widget, Section start)
 // Behavior:
 // - If no empty row exists: insert a new row
 // - Regardless of whether a new row is created or not,
-//   always focus the RhsNode column (orders only care about related nodes).
+//   always focus the RhsNode column (orders only care about linked nodes).
 template <EntryWidgetLike T> void AppendEntryO(T* widget, Section start)
 {
     assert(widget);
