@@ -119,7 +119,7 @@ template <EntryWidgetLike T> void AppendEntryFIST(T* widget, Section start)
 
         target_index = model->index(new_row, std::to_underlying(EntryEnum::kIssuedTime));
     } else {
-        const int rhs_col = EntryUtils::RhsNodeColumn(start);
+        const int rhs_col = EntryUtils::LinkedNodeColumn(start);
         if (rhs_col != -1)
             target_index = model->index(empty_row, rhs_col);
     }
@@ -149,7 +149,7 @@ template <EntryWidgetLike T> void AppendEntryO(T* widget, Section start)
             return;
     }
 
-    const int rhs_col = EntryUtils::RhsNodeColumn(start);
+    const int rhs_col = EntryUtils::LinkedNodeColumn(start);
     QModelIndex target_index {};
 
     if (rhs_col != -1)

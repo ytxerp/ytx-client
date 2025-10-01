@@ -28,7 +28,7 @@
 
 namespace EntryUtils {
 
-inline int RhsNodeColumn(Section section)
+inline int LinkedNodeColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:
@@ -118,6 +118,30 @@ bool UpdateShadowDocument(
     }
 
     cache.insert(field, value.join(kSemicolon));
+    if (restart_timer)
+        restart_timer();
+
+    return true;
+}
+
+template <typename Field, typename T>
+bool UpdateShadowDouble(QJsonObject& cache, T* object, CString& field, const Field& value, Field* T::* member, std::function<void()> restart_timer = nullptr)
+{
+    assert(object);
+
+    Field* member_ptr { object->*member };
+
+    if (std::abs(*member_ptr - value) < kTolerance)
+        return false;
+
+    *member_ptr = value;
+
+    // If rhs_node is invalid, skip updating
+    if (!object->rhs_node || object->rhs_node->isNull()) {
+        return true;
+    }
+
+    cache.insert(field, QString::number(value, 'f', kMaxNumericScale_4));
     if (restart_timer)
         restart_timer();
 

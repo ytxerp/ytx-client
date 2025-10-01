@@ -39,12 +39,6 @@ public:
 
 protected:
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
-
-private:
-    void IniInternalSku();
-
-private:
-    QSet<QUuid> internal_sku_ {};
 };
 
 #endif // LEAFMODELP_H

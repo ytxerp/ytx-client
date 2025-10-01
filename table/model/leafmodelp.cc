@@ -32,7 +32,6 @@ bool LeafModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
         WebSocket::Instance()->SendMessage(kEntryRemove, message);
     }
 
-    internal_sku_.remove(rhs_node_id);
     EntryShadowPool::Instance().Recycle(entry_shadow, section_);
     return true;
 }
@@ -44,29 +43,39 @@ bool LeafModelP::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
 
     auto* d_shadow = DerivedPtr<EntryShadowP>(entry_shadow);
 
-    auto old_rhs_node { *d_shadow->rhs_node };
-    if (old_rhs_node == value || internal_sku_.contains(value))
+    auto old_node { *d_shadow->rhs_node };
+    if (old_node == value)
         return false;
 
     *d_shadow->rhs_node = value;
-    internal_sku_.insert(value);
 
-    const QUuid id { *d_shadow->id };
+    const QUuid entry_id { *d_shadow->id };
 
-    auto& cache { caches_[id] };
-    RestartTimer(id);
+    const QString old_node_id = old_node.toString(QUuid::WithoutBraces);
+    const QString new_node_id = value.toString(QUuid::WithoutBraces);
 
-    cache[kRhsNode] = value.toString(QUuid::WithoutBraces);
+    QJsonObject cache {};
+    cache = d_shadow->WriteJson();
+
+    QJsonObject message {};
+    message.insert(kSection, info_.section_str);
+    message.insert(kSessionId, QString());
+    message.insert(kEntry, cache);
+    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
+
+    if (old_node.isNull()) {
+        WebSocket::Instance()->SendMessage(kEntryInsert, message);
+    }
+
+    if (!old_node.isNull()) {
+        message.insert(kOldNodeId, old_node_id);
+        message.insert(kNewNodeId, new_node_id);
+        message.insert(kField, kRhsNode);
+
+        WebSocket::Instance()->SendMessage(kEntryLinkedNode, message);
+    }
+
     return true;
-}
-
-void LeafModelP::IniInternalSku()
-{
-    std::ranges::for_each(shadow_list_, [this](const auto* shadow) {
-        if (shadow->rhs_node) {
-            internal_sku_.insert(*shadow->rhs_node);
-        }
-    });
 }
 
 QVariant LeafModelP::data(const QModelIndex& index, int role) const
@@ -125,39 +134,32 @@ bool LeafModelP::setData(const QModelIndex& index, const QVariant& value, int ro
     auto* shadow { shadow_list_.at(kRow) };
     auto* d_shadow = DerivedPtr<EntryShadowP>(shadow);
 
-    auto old_rhs_node { *shadow->rhs_node };
-
     const QUuid id { *shadow->id };
-    auto& cache { caches_[id] };
-
-    if (!old_rhs_node.isNull()) {
-        RestartTimer(id);
-    }
 
     switch (kColumn) {
     case EntryEnumP::kIssuedTime:
-        EntryUtils::UpdateShadowIssuedTime(cache, shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time);
+        EntryUtils::UpdateShadowIssuedTime(caches_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kCode:
-        EntryUtils::UpdateShadowField(cache, shadow, kCode, value.toString(), &EntryShadow::code);
+        EntryUtils::UpdateShadowField(caches_[id], shadow, kCode, value.toString(), &EntryShadow::code, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kDocument:
-        EntryUtils::UpdateShadowDocument(cache, shadow, kDocument, value.toStringList(), &EntryShadow::document);
+        EntryUtils::UpdateShadowDocument(caches_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kRhsNode:
         UpdateLinkedNode(shadow, value.toUuid(), kRow);
         break;
     case EntryEnumP::kUnitPrice:
-        EntryUtils::UpdateShadowField(cache, d_shadow, kUnitPrice, value.toDouble(), &EntryShadowP::unit_price);
+        EntryUtils::UpdateShadowDouble(caches_[id], d_shadow, kUnitPrice, value.toDouble(), &EntryShadowP::unit_price, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kDescription:
-        EntryUtils::UpdateShadowField(cache, shadow, kDescription, value.toString(), &EntryShadow::description);
+        EntryUtils::UpdateShadowField(caches_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kMarkStatus:
-        EntryUtils::UpdateShadowField(cache, shadow, kMarkStatus, value.toBool(), &EntryShadow::mark_status);
+        EntryUtils::UpdateShadowField(caches_[id], shadow, kMarkStatus, value.toBool(), &EntryShadow::mark_status, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kExternalSku:
-        EntryUtils::UpdateShadowUuid(cache, d_shadow, kExternalSku, value.toUuid(), &EntryShadowP::external_sku);
+        EntryUtils::UpdateShadowUuid(caches_[id], d_shadow, kExternalSku, value.toUuid(), &EntryShadowP::external_sku, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;

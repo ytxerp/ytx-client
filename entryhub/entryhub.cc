@@ -80,13 +80,8 @@ void EntryHub::RemoveEntry(const QUuid& entry_id)
     if (it != entry_cache_.constEnd()) {
         auto* entry = it.value();
 
-        QHash<QUuid, QSet<QUuid>> leaf_entry {};
-        const QSet<QUuid> id_set { entry_id };
-
-        leaf_entry.insert(entry->lhs_node, id_set);
-        leaf_entry.insert(entry->rhs_node, id_set);
-
-        emit SRemoveEntryHash(leaf_entry);
+        emit SRemoveOneEntry(entry->lhs_node, entry_id);
+        emit SRemoveOneEntry(entry->rhs_node, entry_id);
 
         EntryPool::Instance().Recycle(entry, section_);
     }
@@ -146,7 +141,7 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QUuid& old_rhs_id, c
         entry->updated_time = QDateTime::fromString(data[kUpdatedTime].toString(), Qt::ISODate);
         entry->updated_by = QUuid(data[kUpdatedBy].toString());
 
-        const int rhs_node_column { EntryUtils::RhsNodeColumn(section_) };
+        const int rhs_node_column { EntryUtils::LinkedNodeColumn(section_) };
 
         emit SRemoveOneEntry(old_rhs_id, id);
         emit SRefreshField(lhs_node, id, rhs_node_column, rhs_node_column);
@@ -284,8 +279,8 @@ EntryShadow* EntryHub::AllocateEntryShadow()
 
 void EntryHub::AckLeafTable(const QUuid& node_id, const QJsonArray& array)
 {
-    EntryList list = ProcessEntryArray(array);
-    emit SAppendMultiEntry(node_id, list);
+    const EntryList entry_list = ProcessEntryArray(array);
+    emit SAppendMultiEntry(node_id, entry_list);
 }
 
 void EntryHub::SearchEntry(const QJsonArray& array)

@@ -1003,6 +1003,10 @@ void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const
     connect(tree_view, &QTreeView::doubleClicked, this, &MainWindow::RTreeViewDoubleClicked, Qt::UniqueConnection);
     connect(tree_view, &QTreeView::customContextMenuRequested, this, &MainWindow::RTreeViewCustomContextMenuRequested, Qt::UniqueConnection);
 
+    connect(entry_hub, &EntryHub::SAppendMultiEntry, LeafSStation::Instance(), &LeafSStation::RAppendMultiEntry, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SAppendOneEntry, LeafSStation::Instance(), &LeafSStation::RAppendOneEntry, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRemoveOneEntry, LeafSStation::Instance(), &LeafSStation::RRemoveOneEntry, Qt::UniqueConnection);
+
     connect(tree_model, &TreeModel::SUpdateName, this, &MainWindow::RUpdateName, Qt::UniqueConnection);
     connect(tree_model, &TreeModel::SFreeWidget, this, &MainWindow::RFreeWidget, Qt::UniqueConnection);
 
@@ -2150,7 +2154,7 @@ void MainWindow::on_actionJump_triggered()
         return;
 
     const int row { index.row() };
-    const int rhs_node_column { EntryUtils::RhsNodeColumn(start_) };
+    const int rhs_node_column { EntryUtils::LinkedNodeColumn(start_) };
 
     const auto rhs_node_id { index.sibling(row, rhs_node_column).data().toUuid() };
     if (rhs_node_id.isNull())
