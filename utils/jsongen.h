@@ -35,20 +35,20 @@ QJsonObject LeafRemove(CString& section, CUuid& node_id);
 QJsonObject BranchRemove(CString& section, CUuid& node_id);
 
 QJsonObject LeafRemoveCheck(CString& section, CUuid& node_id);
-QJsonObject LeafReplace(CString& section, CUuid& old_id, CUuid& new_id, bool external_reference);
+QJsonObject LeafReplace(CString& section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref);
 
-QJsonObject CheckAction(CString& section, CUuid& leaf_id, int check);
+QJsonObject CheckAction(CString& section, CUuid& node_id, int check);
 
 QJsonObject NodeDataAcked(CString& section, const QDateTime& start, const QDateTime& end);
-QJsonObject LeafAcked(CString& section, CUuid& leaf_id, CUuid& entry_id = {});
+QJsonObject LeafAcked(CString& section, CUuid& node_id, CUuid& entry_id = {});
 QJsonObject OneNode(CString& section, CUuid& node_id);
 
-QJsonObject NodeDirectionRule(CString& section, CUuid& id, bool direction_rule);
+QJsonObject NodeDirectionRule(CString& section, CUuid& node_id, bool direction_rule);
 QJsonObject Update(CString& section, CUuid& id, CJsonObject& cache);
 QJsonObject UpdateDocumentDir(CString& section, CString& document_dir);
 QJsonObject UpdateDefaultUnit(CString& section, int unit);
 
-QJsonObject LeafDelta(CUuid& leaf_id, double initial_delta, double final_delta);
+QJsonObject NodeDelta(CUuid& node_id, double initial_delta, double final_delta);
 QJsonObject SearchEntry(CString& section, CString& keyword);
 
 }

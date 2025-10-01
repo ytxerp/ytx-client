@@ -116,7 +116,7 @@ private slots:
     void RDocumentDir(const QString& section, const QString& document_dir);
     void RDefaultUnit(const QString& section, int unit);
     void RUpdateDefaultUnitFailed(const QString& section);
-    void RScrollToEntry(const QUuid& leaf_id, const QUuid& entry_id);
+    void RScrollToEntry(const QUuid& node_id, const QUuid& entry_id);
 
 private:
     void SetTabWidget();

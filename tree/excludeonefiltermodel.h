@@ -27,9 +27,9 @@
 
 class ExcludeOneFilterModel : public QSortFilterProxyModel {
 public:
-    explicit ExcludeOneFilterModel(const QUuid& leaf_id, QObject* parent = nullptr)
+    explicit ExcludeOneFilterModel(const QUuid& node_id, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }
-        , leaf_id_ { leaf_id }
+        , node_id_ { node_id }
     {
     }
 
@@ -39,11 +39,11 @@ protected:
         assert(dynamic_cast<ItemModel*>(sourceModel()));
         auto id { static_cast<ItemModel*>(sourceModel())->ItemData(source_row, Qt::UserRole).toUuid() };
 
-        return id != leaf_id_;
+        return id != node_id_;
     }
 
 private:
-    const QUuid leaf_id_ {};
+    const QUuid node_id_ {};
 };
 
 #endif // EXCLUDEONEFILTERMODEL_H

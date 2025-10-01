@@ -258,10 +258,10 @@ QSortFilterProxyModel* TreeModelI::IncludeUnitModel(int unit)
     return model;
 }
 
-QSortFilterProxyModel* TreeModelI::ExcludeMultipleModel(const QUuid& leaf_id, int unit)
+QSortFilterProxyModel* TreeModelI::ExcludeMultipleModel(const QUuid& node_id, int unit)
 {
     auto* set { UnitSet(unit) };
-    auto* model { new ExcludeMultipleFilterModel(leaf_id, set, this) };
+    auto* model { new ExcludeMultipleFilterModel(node_id, set, this) };
     model->setSourceModel(leaf_model_);
     QObject::connect(this, &TreeModel::SSyncFilterModel, model, &ExcludeMultipleFilterModel::RSyncFilterModel);
     return model;

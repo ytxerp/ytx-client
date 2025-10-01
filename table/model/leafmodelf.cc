@@ -114,17 +114,16 @@ bool LeafModelF::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
         return false;
 
     auto* d_shadow = DerivedPtr<EntryShadowF>(entry_shadow);
-    auto old_rhs_node { *d_shadow->rhs_node };
-    if (old_rhs_node == value)
+    auto old_node { *d_shadow->rhs_node };
+    if (old_node == value)
         return false;
 
     *d_shadow->rhs_node = value;
 
     const QUuid entry_id { *d_shadow->id };
 
-    const QString old_rhs_id_str = old_rhs_node.toString(QUuid::WithoutBraces);
-    const QString new_rhs_id_str = value.toString(QUuid::WithoutBraces);
-    const QString entry_id_str = entry_id.toString(QUuid::WithoutBraces);
+    const QString old_node_id = old_node.toString(QUuid::WithoutBraces);
+    const QString new_node_id = value.toString(QUuid::WithoutBraces);
 
     QJsonObject cache {};
     cache = d_shadow->WriteJson();
@@ -133,9 +132,9 @@ bool LeafModelF::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
     message.insert(kSection, info_.section_str);
     message.insert(kSessionId, QString());
     message.insert(kEntry, cache);
-    message.insert(kEntryId, entry_id_str);
+    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
 
-    if (old_rhs_node.isNull()) {
+    if (old_node.isNull()) {
         const double lhs_rate { *d_shadow->lhs_rate };
         const double rhs_rate { *d_shadow->rhs_rate };
 
@@ -151,8 +150,8 @@ bool LeafModelF::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
         const bool has_leaf_delta = std::abs(lhs_initial_delta) > kTolerance;
 
         if (has_leaf_delta) {
-            QJsonObject lhs_delta { JsonGen::LeafDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
-            QJsonObject rhs_delta { JsonGen::LeafDelta(value, rhs_initial_delta, rhs_final_delta) };
+            QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
+            QJsonObject rhs_delta { JsonGen::NodeDelta(value, rhs_initial_delta, rhs_final_delta) };
 
             message.insert(kLhsDelta, lhs_delta);
             message.insert(kRhsDelta, rhs_delta);
@@ -171,7 +170,7 @@ bool LeafModelF::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
         emit SAppendOneEntry(value, d_shadow->entry);
     }
 
-    if (!old_rhs_node.isNull()) {
+    if (!old_node.isNull()) {
         // Indicates whether the EntryShadow's lhs_node corresponds to the Entry's lhs_node.
         // If true, the node is not collapsed; if false, it has been collapsed and flipped.
         const bool is_parallel { d_shadow->is_parallel };
@@ -190,15 +189,15 @@ bool LeafModelF::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
         const bool has_leaf_delta = std::abs(rhs_initial_delta) > kTolerance;
 
         if (has_leaf_delta) {
-            QJsonObject new_rhs_delta { JsonGen::LeafDelta(value, rhs_initial_delta, rhs_final_delta) };
-            QJsonObject old_rhs_delta { JsonGen::LeafDelta(old_rhs_node, -rhs_initial_delta, -rhs_final_delta) };
+            QJsonObject new_node_delta { JsonGen::NodeDelta(value, rhs_initial_delta, rhs_final_delta) };
+            QJsonObject old_node_delta { JsonGen::NodeDelta(old_node, -rhs_initial_delta, -rhs_final_delta) };
 
-            message.insert(kOldRhsDelta, old_rhs_delta);
-            message.insert(kNewRhsDelta, new_rhs_delta);
+            message.insert(kOldNodeDelta, old_node_delta);
+            message.insert(kNewNodeDelta, new_node_delta);
         }
 
-        message.insert(kOldRhsId, old_rhs_id_str);
-        message.insert(kNewRhsId, new_rhs_id_str);
+        message.insert(kOldNodeId, old_node_id);
+        message.insert(kNewNodeId, new_node_id);
         message.insert(kField, field);
 
         WebSocket::Instance()->SendMessage(kEntryRhsNode, message);
@@ -208,10 +207,10 @@ bool LeafModelF::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
 
             emit SResizeColumnToContents(std::to_underlying(EntryEnumI::kBalance));
             emit SSyncDelta(value, rhs_initial_delta, rhs_final_delta);
-            emit SSyncDelta(old_rhs_node, -rhs_initial_delta, -rhs_final_delta);
+            emit SSyncDelta(old_node, -rhs_initial_delta, -rhs_final_delta);
         }
 
-        emit SRemoveOneEntry(old_rhs_node, entry_id);
+        emit SRemoveOneEntry(old_node, entry_id);
         emit SAppendOneEntry(value, d_shadow->entry);
     }
 
@@ -276,8 +275,8 @@ bool LeafModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
     const bool has_leaf_delta = std::abs(lhs_initial_delta) > kTolerance;
 
     if (has_leaf_delta) {
-        QJsonObject lhs_delta { JsonGen::LeafDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
-        QJsonObject rhs_delta { JsonGen::LeafDelta(*d_shadow->rhs_node, rhs_initial_delta, rhs_final_delta) };
+        QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
+        QJsonObject rhs_delta { JsonGen::NodeDelta(*d_shadow->rhs_node, rhs_initial_delta, rhs_final_delta) };
 
         message.insert(kLhsDelta, lhs_delta);
         message.insert(kRhsDelta, rhs_delta);
@@ -349,8 +348,8 @@ bool LeafModelF::UpdateRate(EntryShadow* entry_shadow, double value)
     const bool has_leaf_delta = std::abs(lhs_final_delta) > kTolerance;
 
     if (has_leaf_delta) {
-        QJsonObject lhs_delta { JsonGen::LeafDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
-        QJsonObject rhs_delta { JsonGen::LeafDelta(rhs_id, rhs_initial_delta, rhs_final_delta) };
+        QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
+        QJsonObject rhs_delta { JsonGen::NodeDelta(rhs_id, rhs_initial_delta, rhs_final_delta) };
 
         message.insert(kLhsDelta, lhs_delta);
         message.insert(kRhsDelta, rhs_delta);
@@ -476,8 +475,8 @@ bool LeafModelF::removeRows(int row, int /*count*/, const QModelIndex& parent)
         message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
 
         if (has_leaf_delta) {
-            QJsonObject lhs_delta { JsonGen::LeafDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
-            QJsonObject rhs_delta { JsonGen::LeafDelta(*d_shadow->rhs_node, rhs_initial_delta, rhs_final_delta) };
+            QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
+            QJsonObject rhs_delta { JsonGen::NodeDelta(*d_shadow->rhs_node, rhs_initial_delta, rhs_final_delta) };
 
             message.insert(kLhsDelta, lhs_delta);
             message.insert(kRhsDelta, rhs_delta);

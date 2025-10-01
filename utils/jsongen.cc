@@ -55,7 +55,7 @@ QJsonObject LeafRemove(CString& section, CUuid& node_id)
     QJsonObject message {};
     message.insert(kSection, section);
     message.insert(kSessionId, QString());
-    message.insert(kId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kLeafEntry, QJsonObject());
     message.insert(kNodeDelta, QJsonArray());
 
@@ -67,7 +67,7 @@ QJsonObject BranchRemove(CString& section, CUuid& node_id)
     QJsonObject message {};
     message.insert(kSection, section);
     message.insert(kSessionId, QString());
-    message.insert(kId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
 
     return message;
 }
@@ -88,7 +88,7 @@ QJsonObject LeafRemoveCheck(CString& section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, section);
-    message.insert(kId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kInternalNodeRef, false);
     message.insert(kExternalLinkedRef, false);
     message.insert(kExternalSkuRef, false);
@@ -99,35 +99,35 @@ QJsonObject LeafRemoveCheck(CString& section, CUuid& node_id)
     return message;
 }
 
-QJsonObject LeafReplace(CString& section, CUuid& old_id, CUuid& new_id, bool external_reference)
+QJsonObject LeafReplace(CString& section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref)
 {
     QJsonObject message {};
     message.insert(kSection, section);
     message.insert(kSessionId, QString());
     message.insert(kStatus, false);
-    message.insert(kInventoryExternalRef, external_reference);
-    message.insert(kOldId, old_id.toString(QUuid::WithoutBraces));
-    message.insert(kNewId, new_id.toString(QUuid::WithoutBraces));
+    message.insert(kInventoryExternalRef, inventory_external_ref);
+    message.insert(kOldNodeId, old_id.toString(QUuid::WithoutBraces));
+    message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
 
     return message;
 }
 
-QJsonObject LeafAcked(CString& section, CUuid& leaf_id, CUuid& entry_id)
+QJsonObject LeafAcked(CString& section, CUuid& node_id, CUuid& entry_id)
 {
     QJsonObject message {};
     message.insert(kSection, section);
-    message.insert(kLeafId, leaf_id.toString(QUuid::WithoutBraces));
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
     message.insert(kEntryArray, QJsonArray());
     return message;
 }
 
-QJsonObject CheckAction(CString& section, CUuid& leaf_id, int check)
+QJsonObject CheckAction(CString& section, CUuid& node_id, int check)
 {
     QJsonObject message {};
     message.insert(kSection, section);
     message.insert(kSessionId, QString());
-    message.insert(kLeafId, leaf_id.toString(QUuid::WithoutBraces));
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kCheck, check);
     message.insert(kMeta, QJsonObject());
 
@@ -160,12 +160,12 @@ QJsonObject UpdateDefaultUnit(CString& section, int unit)
     return message;
 }
 
-QJsonObject LeafDelta(CUuid& leaf_id, double initial_delta, double final_delta)
+QJsonObject NodeDelta(CUuid& node_id, double initial_delta, double final_delta)
 {
     QJsonObject delta {};
     delta.insert(kInitialDelta, QString::number(initial_delta, 'f', kMaxNumericScale_4));
     delta.insert(kFinalDelta, QString::number(final_delta, 'f', kMaxNumericScale_4));
-    delta.insert(kId, leaf_id.toString(QUuid::WithoutBraces));
+    delta.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
 
     return delta;
 }
@@ -200,12 +200,12 @@ QJsonObject OneNode(CString& section, CUuid& node_id)
     return message;
 }
 
-QJsonObject NodeDirectionRule(CString& section, CUuid& id, bool direction_rule)
+QJsonObject NodeDirectionRule(CString& section, CUuid& node_id, bool direction_rule)
 {
     QJsonObject message {};
     message.insert(kSection, section);
     message.insert(kSessionId, QString());
-    message.insert(kId, id.toString(QUuid::WithoutBraces));
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kDirectionRule, direction_rule);
     message.insert(kMeta, QJsonObject()); // Meta info will be appended in service
 

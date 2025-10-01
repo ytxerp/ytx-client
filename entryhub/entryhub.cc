@@ -34,7 +34,7 @@ void EntryHub::RemoveLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
     }
 }
 
-void EntryHub::ApplyLeafReplace(const QUuid& old_leaf_id, const QUuid& new_leaf_id)
+void EntryHub::ApplyLeafReplace(const QUuid& old_node_id, const QUuid& new_node_id)
 {
     assert(section_ != Section::kPurchase && section_ != Section::kSale && section_ != Section::kPartner
         && "Invalid section: should not be kPurchase, kSales or kPartner");
@@ -42,10 +42,10 @@ void EntryHub::ApplyLeafReplace(const QUuid& old_leaf_id, const QUuid& new_leaf_
     QSet<QUuid> entry_id_set {};
     EntryList entry_list {};
 
-    ReplaceLeafFunction(entry_id_set, entry_list, old_leaf_id, new_leaf_id);
+    ReplaceLeafFunction(entry_id_set, entry_list, old_node_id, new_node_id);
 
-    emit SRemoveMultiEntry(old_leaf_id, entry_id_set);
-    emit SAppendMultiEntry(new_leaf_id, entry_list);
+    emit SRemoveMultiEntry(old_node_id, entry_id_set);
+    emit SAppendMultiEntry(new_node_id, entry_list);
 }
 
 void EntryHub::ApplyEntryInsert(const QJsonObject& data)
@@ -282,10 +282,10 @@ EntryShadow* EntryHub::AllocateEntryShadow()
 //     return sql + kWhere + condition.join(kAnd);
 // }
 
-void EntryHub::AckLeafTable(const QUuid& leaf_id, const QJsonArray& array)
+void EntryHub::AckLeafTable(const QUuid& node_id, const QJsonArray& array)
 {
     EntryList list = ProcessEntryArray(array);
-    emit SAppendMultiEntry(leaf_id, list);
+    emit SAppendMultiEntry(node_id, list);
 }
 
 void EntryHub::AckEntrySearch(const QJsonArray& array)
@@ -321,7 +321,7 @@ EntryList EntryHub::ProcessEntryArray(const QJsonArray& array)
     return list;
 }
 
-void EntryHub::ApplyCheckAction(const QUuid& leaf_id, Check check, const QJsonObject& meta)
+void EntryHub::ApplyCheckAction(const QUuid& node_id, Check check, const QJsonObject& meta)
 {
     auto Update = [check](Entry* entry) {
         switch (check) {
@@ -340,20 +340,20 @@ void EntryHub::ApplyCheckAction(const QUuid& leaf_id, Check check, const QJsonOb
     };
 
     for (auto* entry : std::as_const(entry_cache_)) {
-        if (entry->lhs_node == leaf_id || entry->rhs_node == leaf_id) {
+        if (entry->lhs_node == node_id || entry->rhs_node == node_id) {
             Update(entry);
             entry->updated_by = QUuid(meta.value(kUpdatedBy).toString());
             entry->updated_time = QDateTime::fromString(meta.value(kUpdatedTime).toString(), Qt::ISODate);
         }
     }
 
-    emit SCheckAction(leaf_id);
+    emit SCheckAction(node_id);
 }
 
-void EntryHub::ApplyCheckActionMeta(const QUuid& leaf_id, const QJsonObject& meta)
+void EntryHub::ApplyCheckActionMeta(const QUuid& node_id, const QJsonObject& meta)
 {
     for (auto* entry : std::as_const(entry_cache_)) {
-        if (entry->lhs_node == leaf_id || entry->rhs_node == leaf_id) {
+        if (entry->lhs_node == node_id || entry->rhs_node == node_id) {
             entry->updated_by = QUuid(meta.value(kUpdatedBy).toString());
             entry->updated_time = QDateTime::fromString(meta.value(kUpdatedTime).toString(), Qt::ISODate);
         }

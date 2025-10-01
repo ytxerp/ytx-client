@@ -29,8 +29,8 @@ class LeafSStation final : public QObject {
 
 public:
     static LeafSStation* Instance();
-    void RegisterModel(const QUuid& leaf_id, const LeafModel* model);
-    void DeregisterModel(const QUuid& leaf_id);
+    void RegisterModel(const QUuid& node_id, const LeafModel* model);
+    void DeregisterModel(const QUuid& node_id);
 
     void Clear() { model_hash_.clear(); }
 
@@ -54,27 +54,27 @@ signals:
     void SRefreshField(const QUuid& entry_id, int start, int end);
 
 public slots:
-    void RAppendOneEntry(const QUuid& leaf_id, Entry* entry);
-    void RRemoveOneEntry(const QUuid& leaf_id, const QUuid& entry_id);
+    void RAppendOneEntry(const QUuid& node_id, Entry* entry);
+    void RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
-    void RSyncRule(const QUuid& leaf_id, bool rule);
-    void RCheckAction(const QUuid& leaf_id);
-    void RUpdateBalance(const QUuid& leaf_id, const QUuid& entry_id);
+    void RSyncRule(const QUuid& node_id, bool rule);
+    void RCheckAction(const QUuid& node_id);
+    void RUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
     // receive from EntryHub
     void RRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
-    void RRemoveMultiEntry(const QUuid& leaf_id, const QSet<QUuid>& entry_id_set);
-    void RAppendMultiEntry(const QUuid& leaf_id, const EntryList& entry_list);
+    void RRemoveMultiEntry(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
+    void RAppendMultiEntry(const QUuid& node_id, const EntryList& entry_list);
 
-    void RRefreshField(const QUuid& leaf_id, const QUuid& entry_id, int start, int end);
+    void RRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
 
 private:
     explicit LeafSStation(QObject* parent = nullptr);
     ~LeafSStation() = default;
 
-    const LeafModel* FindModel(const QUuid& leaf_id) const
+    const LeafModel* FindModel(const QUuid& node_id) const
     {
-        auto it = model_hash_.constFind(leaf_id);
+        auto it = model_hash_.constFind(node_id);
         if (it == model_hash_.constEnd())
             return nullptr;
 

@@ -39,7 +39,7 @@ public:
     double UnitPrice(const QUuid& node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeI::unit_price); }
 
     QSortFilterProxyModel* IncludeUnitModel(int unit) override;
-    QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& leaf_id, int unit) override;
+    QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& node_id, int unit) override;
     void ResetColor(const QModelIndex& index) override;
 
 protected:

@@ -44,7 +44,7 @@ protected:
 
 signals:
     // send to LeafSStation
-    void SSyncRule(const QUuid& leaf_id, bool rule);
+    void SSyncRule(const QUuid& node_id, bool rule);
 
     // send to its view
     void SResizeColumnToContents(int column);
@@ -66,7 +66,7 @@ public slots:
 
     // receive from EntryModel
     virtual void RSyncDelta(
-        const QUuid& leaf_id, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
+        const QUuid& node_id, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
 
 public:
     // Qt's
@@ -114,7 +114,7 @@ public:
     void ApplyNodeUpdate(const QUuid& node_id, const QJsonObject& data);
     void ApplyMetaUpdate(const QUuid& node_id, const QJsonObject& data);
 
-    void ApplyLeafReplace(const QUuid& old_leaf_id, const QUuid& new_leaf_id);
+    void ApplyLeafReplace(const QUuid& old_node_id, const QUuid& new_node_id);
     void ApplyNodeDrag(const QUuid& ancestor, const QUuid& descendant, const QJsonObject& data);
 
     void ApplyDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta);
@@ -156,7 +156,7 @@ public:
 
     QModelIndex GetIndex(const QUuid& node_id) const;
     Node* GetNodeByIndex(const QModelIndex& index) const;
-    QSortFilterProxyModel* ExcludeOneModel(const QUuid& leaf_id);
+    QSortFilterProxyModel* ExcludeOneModel(const QUuid& node_id);
 
     // virtual functions
     virtual void UpdateName(const QUuid& node_id, CString& new_name);
@@ -177,10 +177,10 @@ public:
         return nullptr;
     }
 
-    virtual QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& leaf_id, int unit)
+    virtual QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& node_id, int unit)
     {
         Q_UNUSED(unit)
-        Q_UNUSED(leaf_id)
+        Q_UNUSED(node_id)
         return nullptr;
     }
 

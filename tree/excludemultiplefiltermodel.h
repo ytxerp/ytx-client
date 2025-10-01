@@ -32,10 +32,10 @@ public slots:
     void RSyncFilterModel() { invalidateRowsFilter(); }
 
 public:
-    explicit ExcludeMultipleFilterModel(const QUuid& leaf_id, const QSet<QUuid>* set, QObject* parent = nullptr)
+    explicit ExcludeMultipleFilterModel(const QUuid& node_id, const QSet<QUuid>* set, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }
         , set_ { set }
-        , leaf_id_ { leaf_id }
+        , node_id_ { node_id }
     {
     }
 
@@ -45,12 +45,12 @@ protected:
         assert(dynamic_cast<ItemModel*>(sourceModel()));
         auto id { static_cast<ItemModel*>(sourceModel())->ItemData(source_row, Qt::UserRole).toUuid() };
 
-        return !set_->contains(id) && leaf_id_ != id;
+        return !set_->contains(id) && node_id_ != id;
     }
 
 private:
     const QSet<QUuid>* set_ {};
-    const QUuid leaf_id_ {};
+    const QUuid node_id_ {};
 };
 
 #endif // EXCLUDEMULTIPLEFILTERMODEL_H

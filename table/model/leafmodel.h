@@ -46,9 +46,9 @@ signals:
         const QUuid& node_id, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
 
     // send to LeafSStation
-    void SAppendOneEntry(const QUuid& leaf_id, Entry* entry);
-    void SRemoveOneEntry(const QUuid& leaf_id, const QUuid& entry_id);
-    void SUpdateBalance(const QUuid& leaf_id, const QUuid& entry_id);
+    void SAppendOneEntry(const QUuid& node_id, Entry* entry);
+    void SRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
+    void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
     // send to its table view
     void SResizeColumnToContents(int column);

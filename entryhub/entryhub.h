@@ -40,16 +40,16 @@ protected:
 signals:
     // send to LeafSStation; partner and order entries are removed directly
     void SRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash);
-    void SRemoveMultiEntry(const QUuid& leaf_id, const QSet<QUuid>& entry_id_set);
-    void SAppendMultiEntry(const QUuid& leaf_id, const EntryList& entry_list);
+    void SRemoveMultiEntry(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
+    void SAppendMultiEntry(const QUuid& node_id, const EntryList& entry_list);
 
-    void SAppendOneEntry(const QUuid& leaf_id, Entry* entry);
-    void SRemoveOneEntry(const QUuid& leaf_id, const QUuid& entry_id);
+    void SAppendOneEntry(const QUuid& node_id, Entry* entry);
+    void SRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
-    void SRefreshField(const QUuid& leaf_id, const QUuid& entry_id, int start, int end);
+    void SRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
 
     void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
-    void SCheckAction(const QUuid& leaf_id);
+    void SCheckAction(const QUuid& node_id);
 
     // send to SearchEntryModel
     void SSearchEntry(const EntryList& entry_list);
@@ -66,12 +66,12 @@ public:
     void ApplyEntryRhsNode(const QUuid& entry_id, const QUuid& old_rhs_id, const QUuid& new_rhs_id, const QJsonObject& data);
 
     // table
-    void AckLeafTable(const QUuid& leaf_id, const QJsonArray& array);
+    void AckLeafTable(const QUuid& node_id, const QJsonArray& array);
     void AckEntrySearch(const QJsonArray& array);
 
-    void ApplyCheckAction(const QUuid& leaf_id, Check check, const QJsonObject& meta);
-    void ApplyCheckActionMeta(const QUuid& leaf_id, const QJsonObject& meta);
-    void ApplyLeafReplace(const QUuid& old_leaf_id, const QUuid& new_leaf_id);
+    void ApplyCheckAction(const QUuid& node_id, Check check, const QJsonObject& meta);
+    void ApplyCheckActionMeta(const QUuid& node_id, const QJsonObject& meta);
+    void ApplyLeafReplace(const QUuid& old_node_id, const QUuid& new_node_id);
 
     EntryShadow* AllocateEntryShadow();
 

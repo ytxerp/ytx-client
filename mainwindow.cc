@@ -1191,12 +1191,12 @@ void MainWindow::RUpdateDefaultUnitFailed(const QString& /*section*/)
 //  2. Find and select the entry in the view
 //  3. Scroll to center the IssuedTime column
 //  4. Close any persistent editor on that row
-void MainWindow::RScrollToEntry(const QUuid& leaf_id, const QUuid& entry_id)
+void MainWindow::RScrollToEntry(const QUuid& node_id, const QUuid& entry_id)
 {
     if (entry_id.isNull())
         return;
 
-    auto widget { sc_->leaf_wgt_hash.value(leaf_id, nullptr) };
+    auto widget { sc_->leaf_wgt_hash.value(node_id, nullptr) };
     assert(widget);
 
     auto* view { widget->View() };

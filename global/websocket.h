@@ -61,7 +61,7 @@ signals:
     void SCreateUserResult(bool result);
     void SCreateDatabaseResult(bool result);
     void SInitializeDatabaseResult(bool result);
-    void SScrollToEntry(const QUuid& leaf_id, const QUuid& entry_id);
+    void SScrollToEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void SLeafRemoveCheck(const QJsonObject& obj);
     void SGlobalConfig(const QJsonArray& arr);

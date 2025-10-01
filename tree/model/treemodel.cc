@@ -27,9 +27,9 @@ void TreeModel::RRemoveNode(const QUuid& node_id)
 }
 
 void TreeModel::RSyncDelta(
-    const QUuid& leaf_id, double initial_delta, double final_delta, double /*first_delta*/, double /*second_delta*/, double /*discount_delta*/)
+    const QUuid& node_id, double initial_delta, double final_delta, double /*first_delta*/, double /*second_delta*/, double /*discount_delta*/)
 {
-    auto* node = GetNode(leaf_id);
+    auto* node = GetNode(node_id);
     if (!node)
         return;
 
@@ -50,7 +50,7 @@ void TreeModel::RSyncDelta(
     UpdateAncestorValue(node, adjust_initial_delta, adjust_final_delta);
 
     const auto [start_col, end_col] = TotalColumnRange();
-    EmitRowChanged(leaf_id, start_col, end_col);
+    EmitRowChanged(node_id, start_col, end_col);
 
     emit SSyncStatusValue();
 }
@@ -242,10 +242,10 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value)
     emit SSyncStatusValue();
 }
 
-void TreeModel::ApplyLeafReplace(const QUuid& old_leaf_id, const QUuid& new_leaf_id)
+void TreeModel::ApplyLeafReplace(const QUuid& old_node_id, const QUuid& new_node_id)
 {
-    auto* old_node { GetNode(old_leaf_id) };
-    auto* new_node { GetNode(new_leaf_id) };
+    auto* old_node { GetNode(old_node_id) };
+    auto* new_node { GetNode(new_node_id) };
 
     if (!old_node || !new_node)
         return;
@@ -258,7 +258,7 @@ void TreeModel::ApplyLeafReplace(const QUuid& old_leaf_id, const QUuid& new_leaf
     new_node->final_total += final_delta;
 
     UpdateAncestorValue(new_node, initial_delta, final_delta);
-    RRemoveNode(old_leaf_id);
+    RRemoveNode(old_node_id);
 }
 
 void TreeModel::ApplyName(const QUuid& node_id, const QJsonObject& data)
@@ -612,9 +612,9 @@ QString TreeModel::Path(const QUuid& node_id) const
     return {};
 }
 
-QSortFilterProxyModel* TreeModel::ExcludeOneModel(const QUuid& leaf_id)
+QSortFilterProxyModel* TreeModel::ExcludeOneModel(const QUuid& node_id)
 {
-    auto* model { new ExcludeOneFilterModel(leaf_id, this) };
+    auto* model { new ExcludeOneFilterModel(node_id, this) };
     model->setSourceModel(leaf_model_);
     return model;
 }

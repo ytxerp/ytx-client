@@ -14,13 +14,13 @@ LeafSStation::LeafSStation(QObject* parent)
 {
 }
 
-void LeafSStation::RegisterModel(const QUuid& leaf_id, const LeafModel* model) { model_hash_.insert(leaf_id, model); }
+void LeafSStation::RegisterModel(const QUuid& node_id, const LeafModel* model) { model_hash_.insert(node_id, model); }
 
-void LeafSStation::DeregisterModel(const QUuid& leaf_id) { model_hash_.remove(leaf_id); }
+void LeafSStation::DeregisterModel(const QUuid& node_id) { model_hash_.remove(node_id); }
 
-void LeafSStation::RAppendOneEntry(const QUuid& leaf_id, Entry* entry)
+void LeafSStation::RAppendOneEntry(const QUuid& node_id, Entry* entry)
 {
-    const auto* model { FindModel(leaf_id) };
+    const auto* model { FindModel(node_id) };
 
     if (!model)
         return;
@@ -29,9 +29,9 @@ void LeafSStation::RAppendOneEntry(const QUuid& leaf_id, Entry* entry)
     emit SAppendOneEntry(entry);
 }
 
-void LeafSStation::RRemoveOneEntry(const QUuid& leaf_id, const QUuid& entry_id)
+void LeafSStation::RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id)
 {
-    const auto* model { FindModel(leaf_id) };
+    const auto* model { FindModel(node_id) };
     if (!model)
         return;
 
@@ -39,9 +39,9 @@ void LeafSStation::RRemoveOneEntry(const QUuid& leaf_id, const QUuid& entry_id)
     emit SRemoveOneEntry(entry_id);
 }
 
-void LeafSStation::RUpdateBalance(const QUuid& leaf_id, const QUuid& entry_id)
+void LeafSStation::RUpdateBalance(const QUuid& node_id, const QUuid& entry_id)
 {
-    const auto* model { FindModel(leaf_id) };
+    const auto* model { FindModel(node_id) };
     if (!model)
         return;
 
@@ -49,12 +49,12 @@ void LeafSStation::RUpdateBalance(const QUuid& leaf_id, const QUuid& entry_id)
     emit SUpdateBalance(entry_id);
 }
 
-void LeafSStation::RAppendMultiEntry(const QUuid& leaf_id, const EntryList& entry_list)
+void LeafSStation::RAppendMultiEntry(const QUuid& node_id, const EntryList& entry_list)
 {
     if (entry_list.isEmpty())
         return;
 
-    const auto* model { FindModel(leaf_id) };
+    const auto* model { FindModel(node_id) };
     if (!model)
         return;
 
@@ -62,9 +62,9 @@ void LeafSStation::RAppendMultiEntry(const QUuid& leaf_id, const EntryList& entr
     emit SAppendMultiEntry(entry_list);
 }
 
-void LeafSStation::RCheckAction(const QUuid& leaf_id)
+void LeafSStation::RCheckAction(const QUuid& node_id)
 {
-    const auto* model { FindModel(leaf_id) };
+    const auto* model { FindModel(node_id) };
     if (!model)
         return;
 
@@ -72,9 +72,9 @@ void LeafSStation::RCheckAction(const QUuid& leaf_id)
     emit SCheckAction();
 }
 
-void LeafSStation::RRefreshField(const QUuid& leaf_id, const QUuid& entry_id, int start, int end)
+void LeafSStation::RRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end)
 {
-    const auto* model { FindModel(leaf_id) };
+    const auto* model { FindModel(node_id) };
     if (!model)
         return;
 
@@ -82,9 +82,9 @@ void LeafSStation::RRefreshField(const QUuid& leaf_id, const QUuid& entry_id, in
     emit SRefreshField(entry_id, start, end);
 }
 
-void LeafSStation::RSyncRule(const QUuid& leaf_id, bool rule)
+void LeafSStation::RSyncRule(const QUuid& node_id, bool rule)
 {
-    const auto* model { FindModel(leaf_id) };
+    const auto* model { FindModel(node_id) };
     if (!model)
         return;
 
@@ -95,10 +95,10 @@ void LeafSStation::RSyncRule(const QUuid& leaf_id, bool rule)
 void LeafSStation::RRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
 {
     for (auto it = leaf_entry.constBegin(); it != leaf_entry.constEnd(); ++it) {
-        const QUuid& leaf_id = it.key();
+        const QUuid& node_id = it.key();
         const QSet<QUuid>& entry_id_set = it.value();
 
-        const auto* model = FindModel(leaf_id);
+        const auto* model = FindModel(node_id);
         if (!model)
             continue;
 
@@ -107,9 +107,9 @@ void LeafSStation::RRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
     }
 }
 
-void LeafSStation::RRemoveMultiEntry(const QUuid& leaf_id, const QSet<QUuid>& entry_id_set)
+void LeafSStation::RRemoveMultiEntry(const QUuid& node_id, const QSet<QUuid>& entry_id_set)
 {
-    const auto* old_model { FindModel(leaf_id) };
+    const auto* old_model { FindModel(node_id) };
     if (old_model) {
         connect(this, &LeafSStation::SRemoveMultiEntry, old_model, &LeafModel::RRemoveMultiEntry, Qt::SingleShotConnection);
         emit SRemoveMultiEntry(entry_id_set);
