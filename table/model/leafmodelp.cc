@@ -103,8 +103,8 @@ QVariant LeafModelP::data(const QModelIndex& index, int role) const
         return *d_shadow->description;
     case EntryEnumP::kDocument:
         return d_shadow->document->isEmpty() ? QVariant() : *d_shadow->document;
-    case EntryEnumP::kIsChecked:
-        return *d_shadow->is_checked ? *d_shadow->is_checked : QVariant();
+    case EntryEnumP::kMarkStatus:
+        return *d_shadow->mark_status ? *d_shadow->mark_status : QVariant();
     case EntryEnumP::kRhsNode:
         return d_shadow->rhs_node->isNull() ? QVariant() : *d_shadow->rhs_node;
     case EntryEnumP::kExternalSku:
@@ -153,8 +153,8 @@ bool LeafModelP::setData(const QModelIndex& index, const QVariant& value, int ro
     case EntryEnumP::kDescription:
         EntryUtils::UpdateShadowField(cache, shadow, kDescription, value.toString(), &EntryShadow::description);
         break;
-    case EntryEnumP::kIsChecked:
-        EntryUtils::UpdateShadowField(cache, shadow, kIsChecked, value.toBool(), &EntryShadow::is_checked);
+    case EntryEnumP::kMarkStatus:
+        EntryUtils::UpdateShadowField(cache, shadow, kMarkStatus, value.toBool(), &EntryShadow::mark_status);
         break;
     case EntryEnumP::kExternalSku:
         EntryUtils::UpdateShadowUuid(cache, d_shadow, kExternalSku, value.toUuid(), &EntryShadowP::external_sku);
@@ -200,8 +200,8 @@ void LeafModelP::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (*lhs->description < *rhs->description) : (*lhs->description > *rhs->description);
         case EntryEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
-        case EntryEnumP::kIsChecked:
-            return (order == Qt::AscendingOrder) ? (*lhs->is_checked < *rhs->is_checked) : (*lhs->is_checked > *rhs->is_checked);
+        case EntryEnumP::kMarkStatus:
+            return (order == Qt::AscendingOrder) ? (*lhs->mark_status < *rhs->mark_status) : (*lhs->mark_status > *rhs->mark_status);
         case EntryEnumP::kExternalSku:
             return (order == Qt::AscendingOrder) ? (*d_lhs->external_sku < *d_rhs->external_sku) : (*d_lhs->external_sku > *d_rhs->external_sku);
         case EntryEnumP::kRhsNode:
@@ -227,7 +227,7 @@ Qt::ItemFlags LeafModelP::flags(const QModelIndex& index) const
     switch (kColumn) {
     case EntryEnumP::kId:
     case EntryEnumP::kDocument:
-    case EntryEnumP::kIsChecked:
+    case EntryEnumP::kMarkStatus:
         flags &= ~Qt::ItemIsEditable;
         break;
     default:

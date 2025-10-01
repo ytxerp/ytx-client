@@ -54,7 +54,7 @@ enum class EntryEnum {
     kCode,
     kDescription,
     kDocument,
-    kIsChecked,
+    kMarkStatus,
     kRhsNode,
     kDebit,
     kCredit,
@@ -74,7 +74,7 @@ enum class EntryEnumF {
     kCode,
     kDescription,
     kDocument,
-    kIsChecked,
+    kMarkStatus,
     kRhsNode,
     kDebit,
     kCredit,
@@ -94,7 +94,7 @@ enum class EntryEnumI {
     kCode,
     kDescription,
     kDocument,
-    kIsChecked,
+    kMarkStatus,
     kRhsNode,
     kDebit,
     kCredit,
@@ -114,7 +114,7 @@ enum class EntryEnumT {
     kCode,
     kDescription,
     kDocument,
-    kIsChecked,
+    kMarkStatus,
     kRhsNode,
     kDebit,
     kCredit,
@@ -135,7 +135,7 @@ enum class EntryEnumP {
     kCode,
     kDescription,
     kDocument,
-    kIsChecked,
+    kMarkStatus,
     kRhsNode,
     kExternalSku,
 };
@@ -177,7 +177,7 @@ enum class FullEntryEnumF {
     kLhsCredit,
     kDescription,
     kDocument,
-    kIsChecked,
+    kMarkStatus,
     kRhsCredit,
     kRhsDebit,
     kRhsRate,
@@ -199,7 +199,7 @@ enum class FullEntryEnumI {
     kDescription,
     kUnitCost,
     kDocument,
-    kIsChecked,
+    kMarkStatus,
     kRhsCredit,
     kRhsDebit,
     kRhsNode,
@@ -220,7 +220,7 @@ enum class FullEntryEnumT {
     kDescription,
     kUnitCost,
     kDocument,
-    kIsChecked,
+    kMarkStatus,
     kRhsCredit,
     kRhsDebit,
     kRhsNode,
@@ -349,7 +349,7 @@ enum class NodeEnumO {
 // P:Previous, C:Current, Statement
 enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCGrossAmount, kCBalance, kPlaceholder, kCSettlement };
 
-enum class StatementPrimaryEnum { kIssuedTime = 0, kCount, kMeasure, kInitialTotal, kIsChecked, kDescription, kEmployee, kFinalTotal };
+enum class StatementPrimaryEnum { kIssuedTime = 0, kCount, kMeasure, kInitialTotal, kMarkStatus, kDescription, kEmployee, kFinalTotal };
 
 enum class StatementSecondaryEnum {
     kIssuedTime = 0,
@@ -358,7 +358,7 @@ enum class StatementSecondaryEnum {
     kMeasure,
     kUnitPrice,
     kInitialTotal,
-    kIsChecked,
+    kMarkStatus,
     kDescription,
     kSupportNode,
     kFinalTotal
@@ -394,7 +394,7 @@ enum class EntryRefEnum {
     kInitial,
 };
 
-// Enum class defining check options
-enum class Check { kOff = 0, kOn, kFlip };
+// Enum class defining entry actions
+enum class EntryAction { kMarkNone = 0, kMarkAll, kMarkToggle };
 
 #endif // ENUMCLASS_H

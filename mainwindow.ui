@@ -250,9 +250,9 @@
    <addaction name="separator"/>
    <addaction name="actionRemove"/>
    <addaction name="separator"/>
-   <addaction name="actionCheckAll"/>
-   <addaction name="actionCheckReverse"/>
-   <addaction name="actionCheckNone"/>
+   <addaction name="actionMarkAll"/>
+   <addaction name="actionMarkToggle"/>
+   <addaction name="actionMarkNone"/>
    <addaction name="separator"/>
    <addaction name="actionStatement"/>
    <addaction name="actionSettlement"/>
@@ -337,25 +337,25 @@
     <enum>QAction::MenuRole::AboutRole</enum>
    </property>
   </action>
-  <action name="actionCheckAll">
+  <action name="actionMarkAll">
    <property name="text">
-    <string>CheckAll</string>
+    <string>MarkAll</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionCheckNone">
+  <action name="actionMarkNone">
    <property name="text">
-    <string>CheckNone</string>
+    <string>MarkNone</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionCheckReverse">
+  <action name="actionMarkToggle">
    <property name="text">
-    <string>CheckReverse</string>
+    <string>MarkToggle</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

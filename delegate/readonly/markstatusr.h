@@ -17,15 +17,15 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CHECKBOXR_H
-#define CHECKBOXR_H
+#ifndef MARKSTATUSR_H
+#define MARKSTATUSR_H
 
 #include "delegate/styleditemdelegate.h"
 
-class CheckBoxR final : public StyledItemDelegate {
+class MarkStatusR final : public StyledItemDelegate {
 public:
-    explicit CheckBoxR(QObject* parent = nullptr);
+    explicit MarkStatusR(QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
 
-#endif // CHECKBOXR_H
+#endif // MARKSTATUSR_H

@@ -122,19 +122,19 @@ QJsonObject LeafAcked(CString& section, CUuid& node_id, CUuid& entry_id)
     return message;
 }
 
-QJsonObject CheckAction(CString& section, CUuid& node_id, int check)
+QJsonObject EntryAction(CString& section, CUuid& node_id, int action)
 {
     QJsonObject message {};
     message.insert(kSection, section);
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kCheck, check);
+    message.insert(kAction, action);
     message.insert(kMeta, QJsonObject());
 
     return message;
 }
 
-QJsonObject NodeDataAcked(CString& section, const QDateTime& start, const QDateTime& end)
+QJsonObject TreeAcked(CString& section, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
     message.insert(kSection, section);
@@ -189,7 +189,7 @@ QJsonObject SearchEntry(CString& section, CString& keyword)
     return message;
 }
 
-QJsonObject OneNode(CString& section, CUuid& node_id)
+QJsonObject NodeAcked(CString& section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, section);

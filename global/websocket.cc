@@ -98,7 +98,7 @@ void WebSocket::InitHandler()
 
     handler_obj_[kWorkspaceAccessPending] = [this](const QJsonObject& obj) { AckWorkspaceAccessPending(obj); };
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
-    handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { ApplyNodeInsert(obj); };
+    handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
     handler_obj_[kLeafRemove] = [this](const QJsonObject& obj) { ApplyLeafRemove(obj); };
     handler_obj_[kBranchRemove] = [this](const QJsonObject& obj) { ApplyBranchRemove(obj); };
     handler_obj_[kLeafReplace] = [this](const QJsonObject& obj) { ApplyLeafReplace(obj); };
@@ -109,8 +109,8 @@ void WebSocket::InitHandler()
     handler_obj_[kEntryRemove] = [this](const QJsonObject& obj) { ApplyEntryRemove(obj); };
     handler_obj_[kDirectionRule] = [this](const QJsonObject& obj) { ApplyDirectionRule(obj); };
     handler_obj_[kLeafRemoveCheck] = [this](const QJsonObject& obj) { AckLeafRemoveCheck(obj); };
-    handler_obj_[kNodeDrag] = [this](const QJsonObject& obj) { ApplyNodeDrag(obj); };
-    handler_obj_[kCheckAction] = [this](const QJsonObject& obj) { ApplyCheckAction(obj); };
+    handler_obj_[kNodeDrag] = [this](const QJsonObject& obj) { DragNode(obj); };
+    handler_obj_[kEntryAction] = [this](const QJsonObject& obj) { ActionEntry(obj); };
     handler_obj_[kDefaultUnit] = [this](const QJsonObject& obj) { ApplyDefaultUnit(obj); };
     handler_obj_[kUpdateDefaultUnitFailed] = [this](const QJsonObject& obj) { AckUpdateDefaultUnitFailed(obj); };
     handler_obj_[kDocumentDir] = [this](const QJsonObject& obj) { ApplyDocumentDir(obj); };
@@ -120,7 +120,7 @@ void WebSocket::InitHandler()
     handler_obj_[kEntryNumeric] = [this](const QJsonObject& obj) { ApplyEntryNumeric(obj); };
     handler_obj_[kLeafRemoveSafely] = [this](const QJsonObject& obj) { ApplyLeafRemoveSafely(obj); };
 
-    handler_arr_[kGlobalConfig] = [this](const QJsonArray& arr) { ApplyGlobalConfig(arr); };
+    handler_arr_[kGlobalConfig] = [this](const QJsonArray& arr) { GlobalConfig(arr); };
 }
 
 void WebSocket::InitConnect()
@@ -230,7 +230,7 @@ void WebSocket::AckRegisterResult(const QJsonObject& obj)
     emit SRegisterResult(result);
 }
 
-void WebSocket::ApplyNodeInsert(const QJsonObject& obj)
+void WebSocket::InsertNode(const QJsonObject& obj)
 {
     CString section = obj.value(kSection).toString();
     CString session_id = obj.value(kSessionId).toString();
@@ -243,9 +243,9 @@ void WebSocket::ApplyNodeInsert(const QJsonObject& obj)
     auto tree_model = tree_model_hash_.value(section);
 
     if (session_id == session_id_)
-        tree_model->ApplyMetaInsert(descendant, node_obj);
+        tree_model->InsertMeta(descendant, node_obj);
     else
-        tree_model->ApplyNodeInsert(ancestor, node_obj);
+        tree_model->InsertNode(ancestor, node_obj);
 }
 
 void WebSocket::ApplyNodeUpdate(const QJsonObject& obj)
@@ -261,10 +261,10 @@ void WebSocket::ApplyNodeUpdate(const QJsonObject& obj)
     if (session_id == session_id_)
         tree_model->ApplyMetaUpdate(id, data);
     else
-        tree_model->ApplyNodeUpdate(id, data);
+        tree_model->UpdateNode(id, data);
 }
 
-void WebSocket::ApplyNodeDrag(const QJsonObject& obj)
+void WebSocket::DragNode(const QJsonObject& obj)
 {
     CString section = obj.value(kSection).toString();
     CString session_id = obj.value(kSessionId).toString();
@@ -283,9 +283,9 @@ void WebSocket::ApplyNodeDrag(const QJsonObject& obj)
     auto tree_model = tree_model_hash_.value(section);
 
     if (session_id == session_id_)
-        tree_model->ApplyNodeUpdate(QUuid(descendant), node);
+        tree_model->UpdateNode(QUuid(descendant), node);
     else
-        tree_model->ApplyNodeDrag(QUuid(ancestor), QUuid(descendant), node);
+        tree_model->DragNode(QUuid(ancestor), QUuid(descendant), node);
 }
 
 void WebSocket::ApplyTree(const QJsonObject& obj)
@@ -316,7 +316,7 @@ void WebSocket::AckLeaf(const QJsonObject& obj)
         emit SScrollToEntry(node_id, entry_id);
 }
 
-void WebSocket::AckOneNode(const QJsonObject& obj)
+void WebSocket::AckNode(const QJsonObject& obj)
 {
     CString section = obj.value(kSection).toString();
 
@@ -656,23 +656,23 @@ void WebSocket::ApplyName(const QJsonObject& obj)
     tree_model->ApplyName(id, data);
 }
 
-void WebSocket::ApplyCheckAction(const QJsonObject& obj)
+void WebSocket::ActionEntry(const QJsonObject& obj)
 {
     CString section = obj.value(kSection).toString();
     CString session_id = obj.value(kSessionId).toString();
 
     const auto node_id = QUuid(obj.value(kNodeId).toString());
-    const Check check = Check(obj.value(kCheck).toInt());
+    const EntryAction action = EntryAction(obj.value(kAction).toInt());
     const QJsonObject meta = obj.value(kMeta).toObject();
 
     auto entry_hub = entry_hub_hash_.value(section);
 
     if (session_id == session_id_) {
-        entry_hub->ApplyCheckActionMeta(node_id, meta);
+        entry_hub->ActionEntryMeta(node_id, meta);
         return;
     }
 
-    entry_hub->ApplyCheckAction(node_id, check, meta);
+    entry_hub->ActionEntry(node_id, action, meta);
 }
 
 void WebSocket::ApplyDocumentDir(const QJsonObject& obj)
@@ -701,7 +701,7 @@ void WebSocket::ApplyDefaultUnit(const QJsonObject& obj)
 
 void WebSocket::AckUpdateDefaultUnitFailed(const QJsonObject& /*obj*/) { emit SUpdateDefaultUnitFailed(kFinance); }
 
-void WebSocket::ApplyGlobalConfig(const QJsonArray& arr) { emit SGlobalConfig(arr); }
+void WebSocket::GlobalConfig(const QJsonArray& arr) { emit SGlobalConfig(arr); }
 
 QHash<QUuid, QSet<QUuid>> WebSocket::ParseNodeReference(const QJsonObject& obj)
 {

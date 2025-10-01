@@ -39,7 +39,7 @@ struct EntryShadow {
     QUuid* lhs_node {};
     QString* description {};
     QStringList* document {};
-    bool* is_checked {};
+    bool* mark_status {};
     QUuid* rhs_node {};
 
     double balance {};
@@ -61,7 +61,7 @@ struct EntryShadow {
     // Subclasses can:
     //   1. Call the base implementation to bind common fields, or
     //   2. Partially bind only relevant fields (e.g., EntryShadowO for order entries),
-    //      skipping unused common fields like issued_time, document, or is_checked.
+    //      skipping unused common fields like issued_time, document, or mark_status.
     virtual void BindEntry(Entry* base, bool parallel);
 
     // ResetState clears all bound pointers and restores the shadow to default values.

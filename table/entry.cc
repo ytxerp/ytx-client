@@ -12,7 +12,7 @@ void Entry::ResetState()
     lhs_node = QUuid();
     description.clear();
     rhs_node = QUuid();
-    is_checked = false;
+    mark_status = false;
     document.clear();
 
     user_id = QUuid();
@@ -36,8 +36,8 @@ void Entry::ReadJson(const QJsonObject& object)
         description = object[kDescription].toString();
     if (object.contains(kDocument))
         document = object[kDocument].toString().split(kSemicolon, Qt::SkipEmptyParts);
-    if (object.contains(kIsChecked))
-        is_checked = object[kIsChecked].toBool();
+    if (object.contains(kMarkStatus))
+        mark_status = object[kMarkStatus].toBool();
     if (object.contains(kRhsNode))
         rhs_node = QUuid(object[kRhsNode].toString());
     if (object.contains(kUserId))
@@ -170,7 +170,7 @@ void EntryO::ResetState()
     discount_price = 0.0;
 }
 
-// Note: Fields like issued_time, document, code and is_checked are ignored for Order entries
+// Note: Fields like issued_time, document, code and mark_status are ignored for Order entries
 void EntryO::ReadJson(const QJsonObject& object)
 {
     if (object.contains(kId))

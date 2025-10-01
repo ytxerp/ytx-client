@@ -30,7 +30,7 @@ void SearchDialogI::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumI::kLhsNode), node_name_);
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumI::kRhsNode), node_name_);
 
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kIsChecked), check_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kMarkStatus), check_);
 }
 
 void SearchDialogI::REntryDoubleClicked(const QModelIndex& index)

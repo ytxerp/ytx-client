@@ -94,7 +94,7 @@ bool TreeModel::InsertNode(int row, const QModelIndex& parent, Node* node)
     return true;
 }
 
-void TreeModel::ApplyNodeInsert(const QUuid& ancestor, const QJsonObject& data)
+void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
 {
     if (!node_hash_.contains(ancestor)) {
         qCritical() << "ApplyNodeInsert: ancestor not found in node_hash_, ancestor =" << ancestor;
@@ -125,7 +125,7 @@ void TreeModel::InsertImpl(Node* parent, int row, Node* node)
     SortModel();
 }
 
-void TreeModel::ApplyMetaInsert(const QUuid& node_id, const QJsonObject& data)
+void TreeModel::InsertMeta(const QUuid& node_id, const QJsonObject& data)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -134,7 +134,7 @@ void TreeModel::ApplyMetaInsert(const QUuid& node_id, const QJsonObject& data)
     InsertMeta(node, data);
 }
 
-void TreeModel::ApplyNodeUpdate(const QUuid& node_id, const QJsonObject& data)
+void TreeModel::UpdateNode(const QUuid& node_id, const QJsonObject& data)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -298,7 +298,7 @@ void TreeModel::ApplyName(const QUuid& node_id, const QJsonObject& data)
     }
 }
 
-void TreeModel::ApplyNodeDrag(const QUuid& ancestor, const QUuid& descendant, const QJsonObject& data)
+void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant, const QJsonObject& data)
 {
     if (!data.contains(kUpdatedBy)) {
         qCritical() << "ApplyNodeDrag: missing key 'updated_by' in data:" << data;
@@ -643,8 +643,8 @@ void TreeModel::ResetModel()
 
 void TreeModel::FetchOneNode(const QUuid& node_id)
 {
-    const auto message { JsonGen::OneNode(section_str_, node_id) };
-    WebSocket::Instance()->SendMessage(kOneNode, message);
+    const auto message { JsonGen::NodeAcked(section_str_, node_id) };
+    WebSocket::Instance()->SendMessage(kNodeAcked, message);
 }
 
 void TreeModel::RemovePath(Node* node, Node* parent_node)

@@ -108,14 +108,14 @@ public:
     virtual void AckTree(const QJsonObject& obj) { Q_UNUSED(obj) }
     void AckOneNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id);
 
-    void ApplyNodeInsert(const QUuid& ancestor, const QJsonObject& data);
-    void ApplyMetaInsert(const QUuid& node_id, const QJsonObject& data);
+    void InsertNode(const QUuid& ancestor, const QJsonObject& data);
+    void InsertMeta(const QUuid& node_id, const QJsonObject& data);
 
-    void ApplyNodeUpdate(const QUuid& node_id, const QJsonObject& data);
+    void UpdateNode(const QUuid& node_id, const QJsonObject& data);
     void ApplyMetaUpdate(const QUuid& node_id, const QJsonObject& data);
 
     void ApplyLeafReplace(const QUuid& old_node_id, const QUuid& new_node_id);
-    void ApplyNodeDrag(const QUuid& ancestor, const QUuid& descendant, const QJsonObject& data);
+    void DragNode(const QUuid& ancestor, const QUuid& descendant, const QJsonObject& data);
 
     void ApplyDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta);
     void ApplyName(const QUuid& node_id, const QJsonObject& data);

@@ -90,7 +90,6 @@ inline const QString kSemicolon = QStringLiteral(";");
 inline const QString kSlash = QStringLiteral("/");
 
 inline const QString kSeparator = QStringLiteral("separator");
-inline constexpr char kCheck[] = "check";
 
 // Operator symbols
 inline const QString kMinux = QStringLiteral("-");
@@ -128,11 +127,10 @@ inline const QString kEnd = QStringLiteral("end");
 inline const QString kStartSection = QStringLiteral("start/section");
 inline const QString kTheme = QStringLiteral("theme");
 
-// EntryData → represents multiple entries or the entire table's data set, suitable for server bulk responses
-// NodeData → represents multiple nodes or the entire node table's data set
+// Client-initiated data requests
 inline const QString kTreeAcked = QStringLiteral("tree_acked");
 inline const QString kLeafAcked = QStringLiteral("leaf_acked");
-inline const QString kOneNode = QStringLiteral("one_node");
+inline const QString kNodeAcked = QStringLiteral("node_acked");
 
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");
@@ -275,11 +273,14 @@ inline const QString kDiscount = QStringLiteral("discount");
 inline const QString kDiscountPrice = QStringLiteral("discount_price");
 inline const QString kDiscountTotal = QStringLiteral("discount_total");
 
-inline const QString kIsChecked = QStringLiteral("is_checked");
+inline constexpr char kAction[] = "action";
+inline const QString kEntryAction = QStringLiteral("entry_action");
+
 inline const QString kIsFinished = QStringLiteral("is_finished");
 inline const QString kIsSaved = QStringLiteral("is_saved");
 
 inline const QString kIssuedTime = QStringLiteral("issued_time");
+inline const QString kMarkStatus = QStringLiteral("mark_status");
 inline const QString kKind = QStringLiteral("kind");
 inline const QString kNote = QStringLiteral("note");
 inline const QString kPaymentTerm = QStringLiteral("payment_term");
@@ -299,7 +300,6 @@ inline const QString kDescendant = QStringLiteral("descendant");
 
 // Others
 inline const QString kYTX = QStringLiteral("ytx");
-inline const QString kCheckAction = QStringLiteral("check_action");
 inline const QString kField = QStringLiteral("field");
 
 // Constants for sections

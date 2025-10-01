@@ -99,9 +99,9 @@ private:
     void AckLoginSuccess(const QJsonObject& obj);
     void AckRegisterResult(const QJsonObject& obj);
 
-    void AckLeaf(const QJsonObject& obj);
     void AckTree(const QJsonObject& obj);
-    void AckOneNode(const QJsonObject& obj);
+    void AckLeaf(const QJsonObject& obj);
+    void AckNode(const QJsonObject& obj);
 
     void AckEntrySearch(const QJsonObject& obj);
     void AckLeafRemoveCheck(const QJsonObject& obj);
@@ -110,12 +110,12 @@ private:
     void AckWorkspaceAccessPending(const QJsonObject& obj);
 
 private:
-    void ApplyGlobalConfig(const QJsonArray& arr);
+    void GlobalConfig(const QJsonArray& arr);
     void ApplyTree(const QJsonObject& obj);
 
-    void ApplyNodeInsert(const QJsonObject& obj);
+    void InsertNode(const QJsonObject& obj);
     void ApplyNodeUpdate(const QJsonObject& obj);
-    void ApplyNodeDrag(const QJsonObject& obj);
+    void DragNode(const QJsonObject& obj);
     void ApplyLeafRemove(const QJsonObject& obj);
     void ApplyLeafRemoveSafely(const QJsonObject& obj);
     void ApplyBranchRemove(const QJsonObject& obj);
@@ -126,7 +126,7 @@ private:
     void ApplyEntryRemove(const QJsonObject& obj);
     void ApplyDirectionRule(const QJsonObject& obj);
     void ApplyName(const QJsonObject& obj);
-    void ApplyCheckAction(const QJsonObject& obj);
+    void ActionEntry(const QJsonObject& obj);
     void ApplyDocumentDir(const QJsonObject& obj);
     void ApplyDefaultUnit(const QJsonObject& obj);
     void ApplyEntryRhsNode(const QJsonObject& obj);

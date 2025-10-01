@@ -30,8 +30,8 @@ void SearchDialogP::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), rhs_node_name);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kExternalSku), rhs_node_name);
 
-    auto* is_checked { new CheckBoxR(view) };
-    view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIsChecked), is_checked);
+    auto* mark_status_r { new MarkStatusR(view) };
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kMarkStatus), mark_status_r);
 }
 
 void SearchDialogP::REntryDoubleClicked(const QModelIndex& index)

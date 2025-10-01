@@ -26,9 +26,9 @@ void LeafModel::RSyncRule(bool value)
     direction_rule_ = value;
 }
 
-void LeafModel::RCheckAction()
+void LeafModel::RMarkAction()
 {
-    const int column { std::to_underlying(EntryEnum::kIsChecked) };
+    const int column { std::to_underlying(EntryEnum::kMarkStatus) };
     emit dataChanged(index(0, column), index(rowCount() - 1, column));
 }
 
@@ -82,21 +82,21 @@ void LeafModel::RUpdateBalance(const QUuid& entry_id)
         AccumulateBalance(index.row());
 }
 
-void LeafModel::CheckAction(Check check)
+void LeafModel::ActionEntry(EntryAction action)
 {
-    QJsonObject message = JsonGen::CheckAction(info_.section_str, lhs_id_, std::to_underlying(check));
-    WebSocket::Instance()->SendMessage(kCheckAction, message);
+    QJsonObject message = JsonGen::EntryAction(info_.section_str, lhs_id_, std::to_underlying(action));
+    WebSocket::Instance()->SendMessage(kEntryAction, message);
 
-    auto Update = [check](EntryShadow* entry_shadow) {
-        switch (check) {
-        case Check::kOn:
-            *entry_shadow->is_checked = true;
+    auto Update = [action](EntryShadow* entry_shadow) {
+        switch (action) {
+        case EntryAction::kMarkAll:
+            *entry_shadow->mark_status = true;
             break;
-        case Check::kOff:
-            *entry_shadow->is_checked = false;
+        case EntryAction::kMarkNone:
+            *entry_shadow->mark_status = false;
             break;
-        case Check::kFlip:
-            *entry_shadow->is_checked = !*entry_shadow->is_checked;
+        case EntryAction::kMarkToggle:
+            *entry_shadow->mark_status = !*entry_shadow->mark_status;
             break;
         default:
             break;
@@ -107,7 +107,7 @@ void LeafModel::CheckAction(Check check)
     auto* watcher { new QFutureWatcher<void>(this) };
 
     connect(watcher, &QFutureWatcher<void>::finished, this, [this, watcher]() {
-        const int column { std::to_underlying(EntryEnum::kIsChecked) };
+        const int column { std::to_underlying(EntryEnum::kMarkStatus) };
         emit dataChanged(index(0, column), index(rowCount() - 1, column));
 
         watcher->deleteLater();

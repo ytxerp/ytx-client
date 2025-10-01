@@ -20,6 +20,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QActionGroup>
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QPointer>
@@ -93,7 +94,7 @@ private slots:
     void RUpdateConfig(const LocalConfig& local, const GlobalConfig& global, const SectionConfig& section);
     void RSyncPartner(const QUuid& node_id, int column, const QVariant& value);
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
-    void RUpdateState();
+    void RActionEntry(EntryAction action);
     void RConnectResult(bool result);
 
     void RFreeWidget(const QUuid& node_id);
@@ -204,6 +205,8 @@ private:
     void EnableAction(bool enable) const;
 
     void IniSectionGroup();
+    void IniMarkGroup();
+
     void LeafExternalReferenceI(const QUuid& node_id, int unit);
     void LeafExternalReferenceS(const QUuid& node_id, int unit);
     void OrderNodeLocation(Section section, const QUuid& node_id);
@@ -243,6 +246,7 @@ private:
     QNetworkAccessManager* network_manager_ {};
 
     QButtonGroup* section_group_ {};
+    QActionGroup* mark_group_ {};
 
     SectionContext* sc_ {};
 

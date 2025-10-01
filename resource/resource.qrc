@@ -29,9 +29,8 @@
         <file>solarized_dark/up.png</file>
         <file>solarized_dark/handle-1.png</file>
         <file>solarized_dark/handle-2.png</file>
-        <file>solarized_dark/check-all.png</file>
-        <file>solarized_dark/check-reverse.png</file>
-        <file>solarized_dark/check-none.png</file>
+        <file>solarized_dark/mark-all.png</file>
+        <file>solarized_dark/mark-none.png</file>
         <file>solarized_dark/edit.png</file>
         <file>solarized_dark/remove.png</file>
         <file>solarized_dark/append_trans.png</file>
@@ -41,5 +40,6 @@
         <file>solarized_dark/checked.png</file>
         <file>solarized_dark/unchecked.png</file>
         <file>solarized_dark/new-group.png</file>
+        <file>solarized_dark/mark-toggle.png</file>
     </qresource>
 </RCC>

@@ -30,7 +30,7 @@ struct Entry {
     QUuid lhs_node {};
     QString description {};
     QStringList document {};
-    bool is_checked { false };
+    bool mark_status { false };
     QUuid rhs_node {};
 
     QUuid user_id {};

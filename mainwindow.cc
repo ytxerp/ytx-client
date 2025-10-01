@@ -18,7 +18,6 @@
 #include "component/enumclass.h"
 #include "component/signalblocker.h"
 #include "component/stringinitializer.h"
-#include "delegate/checkbox.h"
 #include "delegate/dboolstring.h"
 #include "delegate/document.h"
 #include "delegate/double.h"
@@ -26,6 +25,7 @@
 #include "delegate/filterunit.h"
 #include "delegate/int.h"
 #include "delegate/lineguard.h"
+#include "delegate/markstatus.h"
 #include "delegate/plaintextguard.h"
 #include "delegate/readonly/colorr.h"
 #include "delegate/readonly/dintstringr.h"
@@ -118,6 +118,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     SetTabWidget();
     IniSectionGroup();
+    IniMarkGroup();
     StringInitializer::SetHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
     SetAction();
     SetUniqueConnection();
@@ -578,8 +579,8 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* document { new Document(sc_->global_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDocument), document);
 
-    auto* is_checked { new CheckBox(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kIsChecked), is_checked);
+    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kMarkStatus), mark_status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeOneModel(node_id) };
 
@@ -609,8 +610,8 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* document { new Document(sc_->global_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kDocument), document);
 
-    auto* is_checked { new CheckBox(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kIsChecked), is_checked);
+    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kMarkStatus), mark_status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeMultipleModel(node_id, std::to_underlying(UnitI::kExternal)) };
 
@@ -640,8 +641,8 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     auto* document { new Document(sc_->global_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kDocument), document);
 
-    auto* is_checked { new CheckBox(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kIsChecked), is_checked);
+    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kMarkStatus), mark_status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeOneModel(node_id) };
 
@@ -677,8 +678,8 @@ void MainWindow::TableDelegateS(QTableView* table_view, CSectionConfig& config) 
     auto* document { new Document(sc_->global_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kDocument), document);
 
-    auto* is_checked { new CheckBox(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIsChecked), is_checked);
+    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kMarkStatus), mark_status);
 
     auto* int_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kInternal)) };
     auto* int_item { new FilterUnit(tree_model_i, int_filter_model, table_view) };
@@ -821,7 +822,7 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* color { new Color(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kColor), color);
 
-    auto* is_finished { new CheckBox(QEvent::MouseButtonDblClick, tree_view) };
+    auto* is_finished { new MarkStatus(QEvent::MouseButtonDblClick, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kIsFinished), is_finished);
 
     auto* document { new Document(sc_t_.global_config.document_dir, tree_view) };
@@ -921,7 +922,7 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* issued_time { new TreeIssuedTime(section.date_format, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time);
 
-    auto* is_finished { new CheckBox(QEvent::MouseButtonDblClick, tree_view) };
+    auto* is_finished { new MarkStatus(QEvent::MouseButtonDblClick, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIsFinished), is_finished);
 }
 
@@ -938,7 +939,7 @@ void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRemoveEntryHash, LeafSStation::Instance(), &LeafSStation::RRemoveEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveMultiEntry, LeafSStation::Instance(), &LeafSStation::RRemoveMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, LeafSStation::Instance(), &LeafSStation::RAppendMultiEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SCheckAction, LeafSStation::Instance(), &LeafSStation::RCheckAction, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SMarkAction, LeafSStation::Instance(), &LeafSStation::RMarkAction, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAppendOneEntry, LeafSStation::Instance(), &LeafSStation::RAppendOneEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveOneEntry, LeafSStation::Instance(), &LeafSStation::RRemoveOneEntry, Qt::UniqueConnection);
@@ -962,7 +963,7 @@ void MainWindow::TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRemoveEntryHash, LeafSStation::Instance(), &LeafSStation::RRemoveEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveMultiEntry, LeafSStation::Instance(), &LeafSStation::RRemoveMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, LeafSStation::Instance(), &LeafSStation::RAppendMultiEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SCheckAction, LeafSStation::Instance(), &LeafSStation::RCheckAction, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SMarkAction, LeafSStation::Instance(), &LeafSStation::RMarkAction, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAppendOneEntry, LeafSStation::Instance(), &LeafSStation::RAppendOneEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveOneEntry, LeafSStation::Instance(), &LeafSStation::RRemoveOneEntry, Qt::UniqueConnection);
@@ -986,7 +987,7 @@ void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRemoveEntryHash, LeafSStation::Instance(), &LeafSStation::RRemoveEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveMultiEntry, LeafSStation::Instance(), &LeafSStation::RRemoveMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, LeafSStation::Instance(), &LeafSStation::RAppendMultiEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SCheckAction, LeafSStation::Instance(), &LeafSStation::RCheckAction, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SMarkAction, LeafSStation::Instance(), &LeafSStation::RMarkAction, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAppendOneEntry, LeafSStation::Instance(), &LeafSStation::RAppendOneEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveOneEntry, LeafSStation::Instance(), &LeafSStation::RRemoveOneEntry, Qt::UniqueConnection);
@@ -1007,7 +1008,7 @@ void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(tree_model, &TreeModel::SResizeColumnToContents, tree_view, &QTreeView::resizeColumnToContents, Qt::UniqueConnection);
 
-    connect(entry_hub, &EntryHub::SCheckAction, LeafSStation::Instance(), &LeafSStation::RCheckAction, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SMarkAction, LeafSStation::Instance(), &LeafSStation::RMarkAction, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectO(QTreeView* tree_view, TreeModel* tree_model) const
@@ -1240,9 +1241,9 @@ void MainWindow::ClearMainwindow()
 void MainWindow::EnableAction(bool enable) const
 {
     ui->actionAppendNode->setEnabled(enable);
-    ui->actionCheckAll->setEnabled(enable);
-    ui->actionCheckNone->setEnabled(enable);
-    ui->actionCheckReverse->setEnabled(enable);
+    ui->actionMarkAll->setEnabled(enable);
+    ui->actionMarkNone->setEnabled(enable);
+    ui->actionMarkToggle->setEnabled(enable);
     ui->actionEditName->setEnabled(enable);
     ui->actionInsertNode->setEnabled(enable);
     ui->actionJump->setEnabled(enable);
@@ -1266,6 +1267,24 @@ void MainWindow::IniSectionGroup()
     section_group_->addButton(ui->rBtnPartner, 3);
     section_group_->addButton(ui->rBtnSale, 4);
     section_group_->addButton(ui->rBtnPurchase, 5);
+}
+
+void MainWindow::IniMarkGroup()
+{
+    mark_group_ = new QActionGroup(this);
+
+    ui->actionMarkAll->setData(static_cast<int>(EntryAction::kMarkAll));
+    ui->actionMarkNone->setData(static_cast<int>(EntryAction::kMarkNone));
+    ui->actionMarkToggle->setData(static_cast<int>(EntryAction::kMarkToggle));
+
+    mark_group_->addAction(ui->actionMarkAll);
+    mark_group_->addAction(ui->actionMarkNone);
+    mark_group_->addAction(ui->actionMarkToggle);
+
+    connect(mark_group_, &QActionGroup::triggered, this, [this](QAction* action) {
+        const int action_id = action->data().toInt();
+        RActionEntry(static_cast<EntryAction>(action_id));
+    });
 }
 
 void MainWindow::BranchRemove(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id)
@@ -1663,7 +1682,7 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
     auto* amount { new DoubleSpinRNoneZero(config.amount_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kInitialTotal), amount);
 
-    auto* is_finished { new CheckBox(QEvent::MouseButtonDblClick, table_view) };
+    auto* is_finished { new MarkStatus(QEvent::MouseButtonDblClick, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIsFinished), is_finished);
 
     auto* line { new LineGuard(table_view) };
@@ -1688,8 +1707,8 @@ void MainWindow::DelegateSettlementPrimary(QTableView* table_view, CSectionConfi
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kPartner), employee);
 
-    auto* is_checked { new CheckBox(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIsFinished), is_checked);
+    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIsFinished), mark_status);
 
     auto* issued_time { new IssuedTimeR(kDateFST, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIssuedTime), issued_time);
@@ -1708,8 +1727,8 @@ void MainWindow::DelegateStatementPrimary(QTableView* table_view, CSectionConfig
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kEmployee), employee);
 
-    auto* is_checked { new CheckBox(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kIsChecked), is_checked);
+    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kMarkStatus), mark_status);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kIssuedTime), issued_time);
@@ -1726,8 +1745,8 @@ void MainWindow::DelegateStatementSecondary(QTableView* table_view, CSectionConf
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kFinalTotal), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kUnitPrice), amount);
 
-    auto* is_checked { new CheckBox(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kIsChecked), is_checked);
+    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kMarkStatus), mark_status);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kIssuedTime), issued_time);
@@ -1745,9 +1764,6 @@ void MainWindow::DelegateStatementSecondary(QTableView* table_view, CSectionConf
 
 void MainWindow::SetUniqueConnection() const
 {
-    connect(ui->actionCheckAll, &QAction::triggered, this, &MainWindow::RUpdateState);
-    connect(ui->actionCheckNone, &QAction::triggered, this, &MainWindow::RUpdateState);
-    connect(ui->actionCheckReverse, &QAction::triggered, this, &MainWindow::RUpdateState);
     connect(ui->actionQuit, &QAction::triggered, qApp, &QCoreApplication::quit);
 
     connect(section_group_, &QButtonGroup::idClicked, this, &MainWindow::RSectionGroup);
@@ -2053,18 +2069,14 @@ void MainWindow::SetAction() const
     ui->actionJump->setIcon(QIcon(":/solarized_dark/solarized_dark/jump.png"));
     ui->actionPreferences->setIcon(QIcon(":/solarized_dark/solarized_dark/settings.png"));
     ui->actionSearch->setIcon(QIcon(":/solarized_dark/solarized_dark/search.png"));
-    ui->actionCheckAll->setIcon(QIcon(":/solarized_dark/solarized_dark/check-all.png"));
-    ui->actionCheckNone->setIcon(QIcon(":/solarized_dark/solarized_dark/check-none.png"));
-    ui->actionCheckReverse->setIcon(QIcon(":/solarized_dark/solarized_dark/check-reverse.png"));
+    ui->actionMarkAll->setIcon(QIcon(":/solarized_dark/solarized_dark/mark-all.png"));
+    ui->actionMarkNone->setIcon(QIcon(":/solarized_dark/solarized_dark/mark-none.png"));
+    ui->actionMarkToggle->setIcon(QIcon(":/solarized_dark/solarized_dark/mark-toggle.png"));
     ui->actionAppendEntry->setIcon(QIcon(":/solarized_dark/solarized_dark/append_trans.png"));
     ui->actionStatement->setIcon(QIcon(":/solarized_dark/solarized_dark/statement.png"));
     ui->actionSettlement->setIcon(QIcon(":/solarized_dark/solarized_dark/settle.png"));
     ui->actionResetColor->setIcon(QIcon(":/solarized_dark/solarized_dark/reset_color.png"));
     ui->actionNewGroup->setIcon(QIcon(":/solarized_dark/solarized_dark/new-group.png"));
-
-    ui->actionCheckAll->setProperty(kCheck, std::to_underlying(Check::kOn));
-    ui->actionCheckNone->setProperty(kCheck, std::to_underlying(Check::kOff));
-    ui->actionCheckReverse->setProperty(kCheck, std::to_underlying(Check::kFlip));
 }
 
 void MainWindow::SetTreeView(QTreeView* tree_view, CSectionInfo& info) const
@@ -2745,13 +2757,13 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_tabWidget_tabBarDoubleClicked(int index) { RNodeLocation(ui->tabWidget->tabBar()->tabData(index).value<TabInfo>().id); }
 
-void MainWindow::RUpdateState()
+void MainWindow::RActionEntry(EntryAction action)
 {
     auto* leaf_widget { dynamic_cast<LeafWidget*>(ui->tabWidget->currentWidget()) };
     assert(leaf_widget);
 
     auto table_model { leaf_widget->Model() };
-    table_model->CheckAction(Check { QObject::sender()->property(kCheck).toInt() });
+    table_model->ActionEntry(action);
 }
 
 void MainWindow::RConnectResult(bool result)
@@ -2811,9 +2823,9 @@ void MainWindow::on_tabWidget_currentChanged(int index)
     ui->actionEditName->setEnabled(is_tree && !is_order_section);
     ui->actionResetColor->setEnabled(is_tree && is_color_section);
 
-    ui->actionCheckAll->setEnabled(is_leaf_fist);
-    ui->actionCheckNone->setEnabled(is_leaf_fist);
-    ui->actionCheckReverse->setEnabled(is_leaf_fist);
+    ui->actionMarkAll->setEnabled(is_leaf_fist);
+    ui->actionMarkNone->setEnabled(is_leaf_fist);
+    ui->actionMarkToggle->setEnabled(is_leaf_fist);
     ui->actionJump->setEnabled(is_leaf_fist);
 
     ui->actionStatement->setEnabled(is_order_section);

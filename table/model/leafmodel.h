@@ -61,7 +61,7 @@ public slots:
     void RRemoveOneEntry(const QUuid& entry_id);
 
     void RUpdateBalance(const QUuid& entry_id);
-    void RCheckAction();
+    void RMarkAction();
 
     void RRefreshField(const QUuid& entry_id, int start, int end);
     void RSyncRule(bool value);
@@ -80,7 +80,7 @@ public:
     virtual int GetRhsRow(const QUuid& rhs_id) const;
     QModelIndex GetIndex(const QUuid& entry_id) const;
 
-    void CheckAction(Check check);
+    void ActionEntry(EntryAction action);
 
 protected:
     virtual bool UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit)

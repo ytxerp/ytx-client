@@ -49,7 +49,7 @@ signals:
     void SRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
 
     void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
-    void SCheckAction(const QUuid& node_id);
+    void SMarkAction(const QUuid& node_id);
 
     // send to SearchEntryModel
     void SSearchEntry(const EntryList& entry_list);
@@ -69,8 +69,8 @@ public:
     void AckLeafTable(const QUuid& node_id, const QJsonArray& array);
     void AckEntrySearch(const QJsonArray& array);
 
-    void ApplyCheckAction(const QUuid& node_id, Check check, const QJsonObject& meta);
-    void ApplyCheckActionMeta(const QUuid& node_id, const QJsonObject& meta);
+    void ActionEntry(const QUuid& node_id, EntryAction action, const QJsonObject& meta);
+    void ActionEntryMeta(const QUuid& node_id, const QJsonObject& meta);
     void ApplyLeafReplace(const QUuid& old_node_id, const QUuid& new_node_id);
 
     EntryShadow* AllocateEntryShadow();
@@ -106,7 +106,7 @@ protected:
         return {};
     };
 
-    virtual std::pair<int, int> CacheColumnRange() const { return { std::to_underlying(EntryEnum::kCode), std::to_underlying(EntryEnum::kIsChecked) }; }
+    virtual std::pair<int, int> CacheColumnRange() const { return { std::to_underlying(EntryEnum::kCode), std::to_underlying(EntryEnum::kMarkStatus) }; }
     virtual std::pair<int, int> NumericColumnRange() const { return { std::to_underlying(EntryEnum::kDebit), std::to_underlying(EntryEnum::kBalance) }; }
 
     void ReplaceLeafFunction(QSet<QUuid>& entry_id_set, EntryList& entry_list, const QUuid& old_node_id, const QUuid& new_node_id) const;

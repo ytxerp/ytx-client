@@ -32,7 +32,7 @@ public:
 
 protected:
     QString QSReadTransRef(int unit) const override;
-    std::pair<int, int> CacheColumnRange() const override { return { std::to_underlying(EntryEnumI::kCode), std::to_underlying(EntryEnumI::kIsChecked) }; }
+    std::pair<int, int> CacheColumnRange() const override { return { std::to_underlying(EntryEnumI::kCode), std::to_underlying(EntryEnumI::kMarkStatus) }; }
     std::pair<int, int> NumericColumnRange() const override { return { std::to_underlying(EntryEnumI::kDebit), std::to_underlying(EntryEnumI::kBalance) }; }
 
 private:

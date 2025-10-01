@@ -86,7 +86,7 @@ void SearchDialog::InitDelegate()
     value_ = new DoubleSpinRNoneZero(config_.amount_decimal, kCoefficient8, this);
     rate_ = new DoubleSpinRNoneZero(config_.rate_decimal, kCoefficient8, this);
 
-    check_ = new CheckBoxR(this);
+    check_ = new MarkStatusR(this);
     color_ = new ColorR(this);
     node_name_ = new SearchPathTableR(node_, this);
 }

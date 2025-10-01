@@ -1,11 +1,11 @@
-#include "checkboxr.h"
+#include "markstatusr.h"
 
-CheckBoxR::CheckBoxR(QObject* parent)
+MarkStatusR::MarkStatusR(QObject* parent)
     : StyledItemDelegate { parent }
 {
 }
 
-void CheckBoxR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void MarkStatusR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     if (!index.data().toBool())
         return QStyledItemDelegate::paint(painter, option, index);

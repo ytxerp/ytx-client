@@ -102,10 +102,10 @@ void EntryHub::ApplyEntryUpdate(const QUuid& id, const QJsonObject& data)
 
         const int issued_time = std::to_underlying(EntryEnum::kIssuedTime);
 
-        const auto [code, is_checked] = CacheColumnRange();
+        const auto [code, mark_status] = CacheColumnRange();
 
-        emit SRefreshField(entry->lhs_node, id, code, is_checked);
-        emit SRefreshField(entry->rhs_node, id, code, is_checked);
+        emit SRefreshField(entry->lhs_node, id, code, mark_status);
+        emit SRefreshField(entry->rhs_node, id, code, mark_status);
 
         emit SRefreshField(entry->lhs_node, id, issued_time, issued_time);
         emit SRefreshField(entry->rhs_node, id, issued_time, issued_time);
@@ -321,18 +321,18 @@ EntryList EntryHub::ProcessEntryArray(const QJsonArray& array)
     return list;
 }
 
-void EntryHub::ApplyCheckAction(const QUuid& node_id, Check check, const QJsonObject& meta)
+void EntryHub::ActionEntry(const QUuid& node_id, EntryAction action, const QJsonObject& meta)
 {
-    auto Update = [check](Entry* entry) {
-        switch (check) {
-        case Check::kOn:
-            entry->is_checked = true;
+    auto Update = [action](Entry* entry) {
+        switch (action) {
+        case EntryAction::kMarkAll:
+            entry->mark_status = true;
             break;
-        case Check::kOff:
-            entry->is_checked = false;
+        case EntryAction::kMarkNone:
+            entry->mark_status = false;
             break;
-        case Check::kFlip:
-            entry->is_checked = !entry->is_checked;
+        case EntryAction::kMarkToggle:
+            entry->mark_status = !entry->mark_status;
             break;
         default:
             break;
@@ -347,10 +347,10 @@ void EntryHub::ApplyCheckAction(const QUuid& node_id, Check check, const QJsonOb
         }
     }
 
-    emit SCheckAction(node_id);
+    emit SMarkAction(node_id);
 }
 
-void EntryHub::ApplyCheckActionMeta(const QUuid& node_id, const QJsonObject& meta)
+void EntryHub::ActionEntryMeta(const QUuid& node_id, const QJsonObject& meta)
 {
     for (auto* entry : std::as_const(entry_cache_)) {
         if (entry->lhs_node == node_id || entry->rhs_node == node_id) {
