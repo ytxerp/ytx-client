@@ -47,9 +47,9 @@ signals:
     void SRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void SRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
+    void SRefreshMarkStatus(const QUuid& node_id);
 
     void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
-    void SMarkAction(const QUuid& node_id);
 
     // send to SearchEntryModel
     void SSearchEntry(const EntryList& entry_list);

@@ -46,7 +46,7 @@ signals:
 
     void SUpdateBalance(const QUuid& entry_id);
     void SSyncRule(bool rule);
-    void SMarkAction();
+    void SRefreshMarkStatus();
 
     void SAppendMultiEntry(const EntryList& entry_list);
     void SRemoveMultiEntry(const QSet<QUuid>& entry_id_set);
@@ -58,7 +58,7 @@ public slots:
     void RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void RSyncRule(const QUuid& node_id, bool rule);
-    void RMarkAction(const QUuid& node_id);
+    void RRefreshMarkStatus(const QUuid& node_id);
     void RUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
     // receive from EntryHub

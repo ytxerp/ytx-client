@@ -342,7 +342,7 @@ void EntryHub::ActionEntry(const QUuid& node_id, EntryAction action, const QJson
         }
     }
 
-    emit SMarkAction(node_id);
+    emit SRefreshMarkStatus(node_id);
 }
 
 void EntryHub::ActionEntryMeta(const QUuid& node_id, const QJsonObject& meta)

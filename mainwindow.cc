@@ -939,7 +939,7 @@ void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRemoveEntryHash, LeafSStation::Instance(), &LeafSStation::RRemoveEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveMultiEntry, LeafSStation::Instance(), &LeafSStation::RRemoveMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, LeafSStation::Instance(), &LeafSStation::RAppendMultiEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SMarkAction, LeafSStation::Instance(), &LeafSStation::RMarkAction, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRefreshMarkStatus, LeafSStation::Instance(), &LeafSStation::RRefreshMarkStatus, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAppendOneEntry, LeafSStation::Instance(), &LeafSStation::RAppendOneEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveOneEntry, LeafSStation::Instance(), &LeafSStation::RRemoveOneEntry, Qt::UniqueConnection);
@@ -963,7 +963,7 @@ void MainWindow::TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRemoveEntryHash, LeafSStation::Instance(), &LeafSStation::RRemoveEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveMultiEntry, LeafSStation::Instance(), &LeafSStation::RRemoveMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, LeafSStation::Instance(), &LeafSStation::RAppendMultiEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SMarkAction, LeafSStation::Instance(), &LeafSStation::RMarkAction, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRefreshMarkStatus, LeafSStation::Instance(), &LeafSStation::RRefreshMarkStatus, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAppendOneEntry, LeafSStation::Instance(), &LeafSStation::RAppendOneEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveOneEntry, LeafSStation::Instance(), &LeafSStation::RRemoveOneEntry, Qt::UniqueConnection);
@@ -987,7 +987,7 @@ void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRemoveEntryHash, LeafSStation::Instance(), &LeafSStation::RRemoveEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveMultiEntry, LeafSStation::Instance(), &LeafSStation::RRemoveMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, LeafSStation::Instance(), &LeafSStation::RAppendMultiEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SMarkAction, LeafSStation::Instance(), &LeafSStation::RMarkAction, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRefreshMarkStatus, LeafSStation::Instance(), &LeafSStation::RRefreshMarkStatus, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAppendOneEntry, LeafSStation::Instance(), &LeafSStation::RAppendOneEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveOneEntry, LeafSStation::Instance(), &LeafSStation::RRemoveOneEntry, Qt::UniqueConnection);
@@ -1012,7 +1012,7 @@ void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(tree_model, &TreeModel::SResizeColumnToContents, tree_view, &QTreeView::resizeColumnToContents, Qt::UniqueConnection);
 
-    connect(entry_hub, &EntryHub::SMarkAction, LeafSStation::Instance(), &LeafSStation::RMarkAction, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRefreshMarkStatus, LeafSStation::Instance(), &LeafSStation::RRefreshMarkStatus, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectO(QTreeView* tree_view, TreeModel* tree_model) const

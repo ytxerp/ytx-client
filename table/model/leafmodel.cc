@@ -26,7 +26,7 @@ void LeafModel::RSyncRule(bool value)
     direction_rule_ = value;
 }
 
-void LeafModel::RMarkAction()
+void LeafModel::RRefreshMarkStatus()
 {
     const int column { std::to_underlying(EntryEnum::kMarkStatus) };
     emit dataChanged(index(0, column), index(rowCount() - 1, column));
