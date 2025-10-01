@@ -7,7 +7,7 @@ EntryHubT::EntryHubT(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubT::ApplyEntryRate(const QUuid& entry_id, const QJsonObject& data, bool /*is_parallel*/)
+void EntryHubT::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, bool /*is_parallel*/)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
@@ -24,7 +24,7 @@ void EntryHubT::ApplyEntryRate(const QUuid& entry_id, const QJsonObject& data, b
     }
 }
 
-void EntryHubT::ApplyEntryNumeric(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
+void EntryHubT::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {

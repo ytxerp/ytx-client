@@ -56,35 +56,35 @@ signals:
 
 public:
     // tree
-    void ApplyEntryInsert(const QJsonObject& data);
-    void ApplyEntryRemove(const QUuid& entry_id);
-    void ApplyEntryUpdate(const QUuid& entry_id, const QJsonObject& data);
+    void InsertEntry(const QJsonObject& data);
+    void RemoveEntry(const QUuid& entry_id);
+    void UpdateEntry(const QUuid& entry_id, const QJsonObject& data);
 
-    void ApplyMetaInsert(const QUuid& entry_id, const QJsonObject& data);
-    void ApplyMetaUpdate(const QUuid& entry_id, const QJsonObject& data);
+    void InsertMeta(const QUuid& entry_id, const QJsonObject& data);
+    void UpdateMeta(const QUuid& entry_id, const QJsonObject& data);
 
-    void ApplyEntryRhsNode(const QUuid& entry_id, const QUuid& old_rhs_id, const QUuid& new_rhs_id, const QJsonObject& data);
+    void UpdateEntryLinkedNode(const QUuid& entry_id, const QUuid& old_rhs_id, const QUuid& new_rhs_id, const QJsonObject& data);
 
     // table
     void AckLeafTable(const QUuid& node_id, const QJsonArray& array);
-    void AckEntrySearch(const QJsonArray& array);
+    void SearchEntry(const QJsonArray& array);
 
     void ActionEntry(const QUuid& node_id, EntryAction action, const QJsonObject& meta);
     void ActionEntryMeta(const QUuid& node_id, const QJsonObject& meta);
-    void ApplyLeafReplace(const QUuid& old_node_id, const QUuid& new_node_id);
+    void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
 
     EntryShadow* AllocateEntryShadow();
 
     bool ReadTransRef(EntryRefList& list, const QUuid& node_id, int unit, const QDateTime& start, const QDateTime& end) const;
 
-    virtual void ApplyEntryRate(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
+    virtual void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
     {
         Q_UNUSED(entry_id);
         Q_UNUSED(data);
         Q_UNUSED(is_parallel);
     }
 
-    virtual void ApplyEntryNumeric(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
+    virtual void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
     {
         Q_UNUSED(entry_id);
         Q_UNUSED(data);
@@ -96,7 +96,7 @@ public:
         Q_UNUSED(old_item_id);
         Q_UNUSED(new_item_id);
     }
-    virtual void ApplyLeafRemove(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
+    virtual void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
 protected:
     // QS means QueryString

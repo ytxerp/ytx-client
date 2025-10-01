@@ -165,7 +165,7 @@ QJsonObject NodeDelta(CUuid& node_id, double initial_delta, double final_delta)
     QJsonObject delta {};
     delta.insert(kInitialDelta, QString::number(initial_delta, 'f', kMaxNumericScale_4));
     delta.insert(kFinalDelta, QString::number(final_delta, 'f', kMaxNumericScale_4));
-    delta.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    delta.insert(kId, node_id.toString(QUuid::WithoutBraces));
 
     return delta;
 }

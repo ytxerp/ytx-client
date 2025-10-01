@@ -27,8 +27,8 @@ public:
     EntryHubF(CSectionInfo& info, QObject* parent = nullptr);
 
 public:
-    void ApplyEntryRate(const QUuid& entry_id, const QJsonObject& data, bool is_parallel) override;
-    void ApplyEntryNumeric(const QUuid& entry_id, const QJsonObject& data, bool is_parallel) override;
+    void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, bool is_parallel) override;
+    void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& data, bool is_parallel) override;
 };
 
 #endif // ENTRYHUBF_H

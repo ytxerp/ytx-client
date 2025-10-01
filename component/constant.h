@@ -174,6 +174,7 @@ inline const QString kOrderSettlementRef = QStringLiteral("order_settlement_ref"
 inline const QString kNodeInsert = QStringLiteral("node_insert");
 inline const QString kNodeDrag = QStringLiteral("node_drag");
 inline const QString kNodeUpdate = QStringLiteral("node_update");
+inline const QString kNameUpdate = QStringLiteral("name_update");
 
 // App language
 inline const QString kEnUS = QStringLiteral("en_US");
@@ -208,7 +209,7 @@ inline const QString kEntryUpdate = QStringLiteral("entry_update");
 inline const QString kEntryRemove = QStringLiteral("entry_remove");
 inline const QString kEntrySearch = QStringLiteral("entry_search");
 inline const QString kEntryArray = QStringLiteral("entry_array");
-inline const QString kEntryRhsNode = QStringLiteral("entry_rhs_node");
+inline const QString kEntryLinkedNode = QStringLiteral("entry_linked_node");
 inline const QString kEntryRate = QStringLiteral("entry_rate");
 inline const QString kUpdateEntryDebit = QStringLiteral("update_entry_debit");
 inline const QString kUpdateEntryCredit = QStringLiteral("update_entry_credit");
@@ -218,7 +219,7 @@ inline const QString kStatus = QStringLiteral("status");
 inline const QString kNodeDelta = QStringLiteral("node_delta");
 inline const QString kDocumentDir = QStringLiteral("document_dir");
 inline const QString kDefaultUnit = QStringLiteral("default_unit");
-inline const QString kUpdateDefaultUnitFailed = QStringLiteral("update_default_unit_failed");
+inline const QString kUpdateDefaultUnitFailure = QStringLiteral("update_default_unit_failure");
 inline const QString kLeafRemoveSafely = QStringLiteral("leaf_remove_safely");
 
 // Message fields

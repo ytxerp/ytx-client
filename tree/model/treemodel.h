@@ -106,20 +106,20 @@ public:
     void ApplyTree(const QJsonObject& data);
 
     virtual void AckTree(const QJsonObject& obj) { Q_UNUSED(obj) }
-    void AckOneNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id);
+    void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id);
 
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
     void InsertMeta(const QUuid& node_id, const QJsonObject& data);
 
     void UpdateNode(const QUuid& node_id, const QJsonObject& data);
-    void ApplyMetaUpdate(const QUuid& node_id, const QJsonObject& data);
+    void UpdateMeta(const QUuid& node_id, const QJsonObject& data);
 
-    void ApplyLeafReplace(const QUuid& old_node_id, const QUuid& new_node_id);
+    void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
     void DragNode(const QUuid& ancestor, const QUuid& descendant, const QJsonObject& data);
 
-    void ApplyDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta);
-    void ApplyName(const QUuid& node_id, const QJsonObject& data);
-    void ApplyDelta(const QJsonObject& data);
+    void UpdateDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta);
+    void UpdateName(const QUuid& node_id, const QJsonObject& data);
+    void UpdateDelta(const QJsonObject& data);
 
     // Ytx's
     // Default implementations

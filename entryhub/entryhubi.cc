@@ -73,7 +73,7 @@ EntryHubI::EntryHubI(CSectionInfo& info, QObject* parent)
 //     };
 // }
 
-void EntryHubI::ApplyEntryRate(const QUuid& entry_id, const QJsonObject& data, bool /*is_parallel*/)
+void EntryHubI::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, bool /*is_parallel*/)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
@@ -90,7 +90,7 @@ void EntryHubI::ApplyEntryRate(const QUuid& entry_id, const QJsonObject& data, b
     }
 }
 
-void EntryHubI::ApplyEntryNumeric(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
+void EntryHubI::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {

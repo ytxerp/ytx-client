@@ -132,7 +132,7 @@ int EntryHubO::SettlementId(const QUuid& node_id) const
 //     }
 // }
 
-void EntryHubO::ApplyLeafRemove(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
+void EntryHubO::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
 
 void EntryHubO::ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const
 {

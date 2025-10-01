@@ -55,7 +55,7 @@ void TreeModel::RSyncDelta(
     emit SSyncStatusValue();
 }
 
-void TreeModel::ApplyDelta(const QJsonObject& data)
+void TreeModel::UpdateDelta(const QJsonObject& data)
 {
     if (!data.contains(kId)) {
         qCritical() << "ApplyDelta: missing key 'kId' in data:" << data;
@@ -154,7 +154,7 @@ void TreeModel::UpdateNode(const QUuid& node_id, const QJsonObject& data)
     }
 }
 
-void TreeModel::ApplyMetaUpdate(const QUuid& node_id, const QJsonObject& data)
+void TreeModel::UpdateMeta(const QUuid& node_id, const QJsonObject& data)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -212,7 +212,7 @@ void TreeModel::UpdateDirectionRule(Node* node, bool value)
     DirectionRuleImpl(node, value);
 }
 
-void TreeModel::ApplyDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta)
+void TreeModel::UpdateDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -242,7 +242,7 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value)
     emit SSyncStatusValue();
 }
 
-void TreeModel::ApplyLeafReplace(const QUuid& old_node_id, const QUuid& new_node_id)
+void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
 {
     auto* old_node { GetNode(old_node_id) };
     auto* new_node { GetNode(new_node_id) };
@@ -261,7 +261,7 @@ void TreeModel::ApplyLeafReplace(const QUuid& old_node_id, const QUuid& new_node
     RRemoveNode(old_node_id);
 }
 
-void TreeModel::ApplyName(const QUuid& node_id, const QJsonObject& data)
+void TreeModel::UpdateName(const QUuid& node_id, const QJsonObject& data)
 {
     if (!data.contains(kName)) {
         qCritical() << "ApplyName: missing key 'name' in data:" << data;
@@ -592,7 +592,7 @@ void TreeModel::UpdateName(const QUuid& node_id, CString& new_name)
     cache.insert(kName, new_name);
 
     const auto message { JsonGen::Update(section_str_, node_id, cache) };
-    WebSocket::Instance()->SendMessage(kName, message);
+    WebSocket::Instance()->SendMessage(kNameUpdate, message);
 
     NodeUtils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
     NodeUtils::UpdateModel(leaf_path_, leaf_model_, node);
@@ -787,7 +787,7 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     endResetModel();
 }
 
-void TreeModel::AckOneNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
+void TreeModel::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
 {
     if (!node_hash_.contains(ancestor_id)) {
         qCritical() << "AckOneNode: ancestor_id not found in node_hash_:" << ancestor_id;

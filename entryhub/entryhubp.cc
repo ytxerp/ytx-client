@@ -5,7 +5,7 @@ EntryHubP::EntryHubP(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubP::ApplyLeafRemove(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
+void EntryHubP::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
 
 void EntryHubP::RPriceSList(const QList<PriceS>& list)
 {

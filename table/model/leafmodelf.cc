@@ -200,7 +200,7 @@ bool LeafModelF::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, in
         message.insert(kNewNodeId, new_node_id);
         message.insert(kField, field);
 
-        WebSocket::Instance()->SendMessage(kEntryRhsNode, message);
+        WebSocket::Instance()->SendMessage(kEntryLinkedNode, message);
 
         if (has_leaf_delta) {
             AccumulateBalance(row);

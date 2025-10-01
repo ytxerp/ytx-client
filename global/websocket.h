@@ -86,7 +86,7 @@ private:
     void InitTimer();
 
     QHash<QUuid, QSet<QUuid>> ParseNodeReference(const QJsonObject& obj);
-    void ApplyUpdateTotal(const CString& section, const QJsonArray& node_delta) const;
+    void UpdateDelta(const CString& section, const QJsonArray& node_delta) const;
 
     // ----------------------------
     // Naming convention:
@@ -95,43 +95,44 @@ private:
     // ----------------------------
 
 private:
-    void AckLoginFailed(const QJsonObject& obj);
-    void AckLoginSuccess(const QJsonObject& obj);
-    void AckRegisterResult(const QJsonObject& obj);
+    void NotifyLoginFailed(const QJsonObject& obj);
+    void NotifyLoginSuccess(const QJsonObject& obj);
+    void NotifyRegisterResult(const QJsonObject& obj);
 
     void AckTree(const QJsonObject& obj);
     void AckLeaf(const QJsonObject& obj);
     void AckNode(const QJsonObject& obj);
 
-    void AckEntrySearch(const QJsonObject& obj);
-    void AckLeafRemoveCheck(const QJsonObject& obj);
-    void AckUpdateDefaultUnitFailed(const QJsonObject& obj);
+    void SearchEntry(const QJsonObject& obj);
 
-    void AckWorkspaceAccessPending(const QJsonObject& obj);
+    void NotifyLeafRemoveCheck(const QJsonObject& obj);
+    void NotifyUpdateDefaultUnitFailure(const QJsonObject& obj);
+    void NotifyWorkspaceAccessPending(const QJsonObject& obj);
 
 private:
     void GlobalConfig(const QJsonArray& arr);
     void ApplyTree(const QJsonObject& obj);
 
     void InsertNode(const QJsonObject& obj);
-    void ApplyNodeUpdate(const QJsonObject& obj);
+    void UpdateNode(const QJsonObject& obj);
     void DragNode(const QJsonObject& obj);
-    void ApplyLeafRemove(const QJsonObject& obj);
-    void ApplyLeafRemoveSafely(const QJsonObject& obj);
-    void ApplyBranchRemove(const QJsonObject& obj);
+    void ReplaceLeaf(const QJsonObject& obj);
+    void RemoveLeaf(const QJsonObject& obj);
+    void RemoveLeafSafely(const QJsonObject& obj);
+    void RemoveBranch(const QJsonObject& obj);
+    void UpdateDirectionRule(const QJsonObject& obj);
+    void UpdateName(const QJsonObject& obj);
 
-    void ApplyLeafReplace(const QJsonObject& obj);
-    void ApplyEntryUpdate(const QJsonObject& obj);
-    void ApplyEntryInsert(const QJsonObject& obj);
-    void ApplyEntryRemove(const QJsonObject& obj);
-    void ApplyDirectionRule(const QJsonObject& obj);
-    void ApplyName(const QJsonObject& obj);
+    void UpdateDocumentDir(const QJsonObject& obj);
+    void UpdateDefaultUnit(const QJsonObject& obj);
+
+    void UpdateEntry(const QJsonObject& obj);
+    void InsertEntry(const QJsonObject& obj);
+    void RemoveEntry(const QJsonObject& obj);
     void ActionEntry(const QJsonObject& obj);
-    void ApplyDocumentDir(const QJsonObject& obj);
-    void ApplyDefaultUnit(const QJsonObject& obj);
-    void ApplyEntryRhsNode(const QJsonObject& obj);
-    void ApplyEntryRate(const QJsonObject& obj);
-    void ApplyEntryNumeric(const QJsonObject& obj);
+    void UpdateEntryLinkedNode(const QJsonObject& obj);
+    void UpdateEntryRate(const QJsonObject& obj);
+    void UpdateEntryNumeric(const QJsonObject& obj);
 
 private:
     QWebSocket socket_ {};

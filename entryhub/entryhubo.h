@@ -38,7 +38,7 @@ signals:
 
 public:
     bool SearchNode(QList<const Node*>& node_list, const QList<QUuid>& partner_id_list);
-    void ApplyLeafRemove(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
+    void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
 
     bool SettlementReference(const QUuid& settlement_id) const;
     int SettlementId(const QUuid& node_id) const;
