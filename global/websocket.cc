@@ -413,10 +413,8 @@ void WebSocket::UpdateEntry(const QJsonObject& obj)
     const QJsonObject cache = obj.value(kCache).toObject();
 
     auto entry_hub = entry_hub_hash_.value(section);
-    auto tree_model = tree_model_hash_.value(section);
 
     assert(entry_hub);
-    assert(tree_model);
     assert(!id.isNull());
 
     if (session_id == session_id_) {

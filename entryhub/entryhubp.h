@@ -41,6 +41,10 @@ protected:
     // table
     void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;
     QString QSReadTransRef(int unit) const override;
+    std::pair<int, int> CacheColumnRange() const override
+    {
+        return { std::to_underlying(EntryEnumP::kUnitPrice), std::to_underlying(EntryEnumP::kMarkStatus) };
+    }
 
 private:
     // void ReadTransS(QSqlQuery& query);
