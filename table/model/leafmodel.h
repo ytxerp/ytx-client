@@ -105,7 +105,7 @@ protected:
         return {};
     }
 
-    virtual bool UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, int row)
+    virtual bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row)
     {
         Q_UNUSED(entry_shadow)
         Q_UNUSED(value)

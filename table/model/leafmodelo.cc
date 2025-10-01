@@ -147,7 +147,7 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
         EntryUtils::UpdateShadowField(entry, shadow, kDescription, value.toString(), &EntryShadow::description);
         break;
     case EntryEnumO::kRhsNode:
-        UpdateRhsNode(d_shadow, value.toUuid(), 0);
+        UpdateLinkedNode(d_shadow, value.toUuid(), 0);
         break;
     case EntryEnumO::kUnitPrice:
         uni_changed = UpdateRate(d_shadow, value.toDouble());
@@ -330,7 +330,7 @@ bool LeafModelO::UpdateExternalItem(EntryShadowO* entry_shadow, const QUuid& val
     return ins_changed;
 }
 
-bool LeafModelO::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, int /*row*/)
+bool LeafModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int /*row*/)
 {
     if (value.isNull())
         return false;

@@ -38,7 +38,7 @@ public:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
 protected:
-    bool UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
+    bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
 
 private:
     void IniInternalSku();

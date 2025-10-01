@@ -92,7 +92,7 @@ bool LeafModelI::setData(const QModelIndex& index, const QVariant& value, int ro
         UpdateRate(d_shadow, value.toDouble());
         break;
     case EntryEnumI::kRhsNode:
-        UpdateRhsNode(d_shadow, value.toUuid(), row);
+        UpdateLinkedNode(d_shadow, value.toUuid(), row);
         break;
     case EntryEnumI::kDebit:
         UpdateNumeric(d_shadow, value.toDouble(), row, true);
@@ -309,7 +309,7 @@ bool LeafModelI::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
     return true;
 }
 
-bool LeafModelI::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, int row)
+bool LeafModelI::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row)
 {
     if (value.isNull())
         return false;

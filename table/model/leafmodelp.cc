@@ -37,7 +37,7 @@ bool LeafModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
-bool LeafModelP::UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, int /*row*/)
+bool LeafModelP::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int /*row*/)
 {
     if (value.isNull())
         return false;
@@ -145,7 +145,7 @@ bool LeafModelP::setData(const QModelIndex& index, const QVariant& value, int ro
         EntryUtils::UpdateShadowDocument(cache, shadow, kDocument, value.toStringList(), &EntryShadow::document);
         break;
     case EntryEnumP::kRhsNode:
-        UpdateRhsNode(shadow, value.toUuid(), kRow);
+        UpdateLinkedNode(shadow, value.toUuid(), kRow);
         break;
     case EntryEnumP::kUnitPrice:
         EntryUtils::UpdateShadowField(cache, d_shadow, kUnitPrice, value.toDouble(), &EntryShadowP::unit_price);

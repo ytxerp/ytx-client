@@ -41,7 +41,7 @@ protected:
 
     bool UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit) override;
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
-    bool UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
+    bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
 };
 
 #endif // TABLEMODELFINANCE_H

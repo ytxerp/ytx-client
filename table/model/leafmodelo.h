@@ -51,7 +51,7 @@ public:
 
 private:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
-    bool UpdateRhsNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
+    bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
 
     bool UpdateExternalItem(EntryShadowO* entry_shadow, const QUuid& value);
     bool UpdateDiscountPrice(EntryShadow* entry_shadow, double value);
