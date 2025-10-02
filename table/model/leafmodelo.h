@@ -64,7 +64,7 @@ private:
     void UpdatePartner(const QUuid& node_id, const QUuid& partner_id);
 
 private:
-    TreeModelI* tree_model_item_ {};
+    TreeModelI* tree_model_i_ {};
     EntryHubP* entry_hub_partner_ {};
     EntryHubO* entry_hub_order_ {};
     QUuid partner_id_ {};

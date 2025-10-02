@@ -201,7 +201,6 @@ void StringInitializer::SetHeader(
         QObject::tr("ExternalSku"),
         QObject::tr("LhsNode"),
         QObject::tr("DiscountPrice"),
-        QObject::tr("Color"),
         QObject::tr("GrossAmount"),
         QObject::tr("Discount"),
         QObject::tr("NetAmount"),

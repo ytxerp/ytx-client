@@ -39,19 +39,19 @@ QVariant LeafModelI::data(const QModelIndex& index, int role) const
     case EntryEnumI::kCode:
         return *d_shadow->code;
     case EntryEnumI::kUnitCost:
-        return *d_shadow->unit_cost == 0 ? QVariant() : *d_shadow->unit_cost;
+        return *d_shadow->unit_cost;
     case EntryEnumI::kDescription:
         return *d_shadow->description;
     case EntryEnumI::kRhsNode:
-        return d_shadow->rhs_node->isNull() ? QVariant() : *d_shadow->rhs_node;
+        return *d_shadow->rhs_node;
     case EntryEnumI::kStatus:
         return *d_shadow->status;
     case EntryEnumI::kDocument:
-        return d_shadow->document->isEmpty() ? QVariant() : *d_shadow->document;
+        return *d_shadow->document;
     case EntryEnumI::kDebit:
-        return *d_shadow->lhs_debit == 0 ? QVariant() : *d_shadow->lhs_debit;
+        return *d_shadow->lhs_debit;
     case EntryEnumI::kCredit:
-        return *d_shadow->lhs_credit == 0 ? QVariant() : *d_shadow->lhs_credit;
+        return *d_shadow->lhs_credit;
     case EntryEnumI::kBalance:
         return d_shadow->balance;
     default:

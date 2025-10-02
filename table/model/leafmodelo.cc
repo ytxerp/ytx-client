@@ -5,7 +5,7 @@
 
 LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_item, EntryHub* entry_hub_partner, QObject* parent)
     : LeafModel { arg, parent }
-    , tree_model_item_ { static_cast<TreeModelI*>(tree_model_item) }
+    , tree_model_i_ { static_cast<TreeModelI*>(tree_model_item) }
     , entry_hub_partner_ { static_cast<EntryHubP*>(entry_hub_partner) }
     , entry_hub_order_ { static_cast<EntryHubO*>(arg.entry_hub) }
     , partner_id_ { static_cast<const NodeO*>(node)->partner }
@@ -82,27 +82,25 @@ QVariant LeafModelO::data(const QModelIndex& index, int role) const
     case EntryEnumO::kLhsNode:
         return *d_shadow->lhs_node;
     case EntryEnumO::kRhsNode:
-        return d_shadow->rhs_node->isNull() ? QVariant() : *d_shadow->rhs_node;
+        return *d_shadow->rhs_node;
     case EntryEnumO::kUnitPrice:
-        return *d_shadow->unit_price == 0 ? QVariant() : *d_shadow->unit_price;
+        return *d_shadow->unit_price;
     case EntryEnumO::kMeasure:
-        return *d_shadow->measure == 0 ? QVariant() : *d_shadow->measure;
+        return *d_shadow->measure;
     case EntryEnumO::kDescription:
         return *d_shadow->description;
-    case EntryEnumO::kColor:
-        return d_shadow->rhs_node->isNull() ? QVariant() : tree_model_item_->Color(*d_shadow->rhs_node);
     case EntryEnumO::kCount:
-        return *d_shadow->count == 0 ? QVariant() : *d_shadow->count;
+        return *d_shadow->count;
     case EntryEnumO::kFinal:
-        return *d_shadow->final == 0 ? QVariant() : *d_shadow->final;
+        return *d_shadow->final;
     case EntryEnumO::kDiscount:
-        return *d_shadow->discount == 0 ? QVariant() : *d_shadow->discount;
+        return *d_shadow->discount;
     case EntryEnumO::kInitial:
-        return *d_shadow->initial == 0 ? QVariant() : *d_shadow->initial;
+        return *d_shadow->initial;
     case EntryEnumO::kDiscountPrice:
-        return *d_shadow->unit_price == 0 ? QVariant() : *d_shadow->unit_price;
+        return *d_shadow->unit_price;
     case EntryEnumO::kExternalSku:
-        return d_shadow->external_sku->isNull() ? QVariant() : *d_shadow->external_sku;
+        return *d_shadow->external_sku;
     default:
         return QVariant();
     }
@@ -200,22 +198,25 @@ void LeafModelO::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0 && column <= info_.entry_header.size() - 1);
 
-    auto Compare = [column, order](EntryShadow* lhs, EntryShadow* rhs) -> bool {
-        const EntryEnumO kColumn { column };
+    const EntryEnumO kColumn { column };
+
+    switch (kColumn) {
+    case EntryEnumO::kId:
+    case EntryEnumO::kUserId:
+    case EntryEnumO::kCreateTime:
+    case EntryEnumO::kCreateBy:
+    case EntryEnumO::kUpdateTime:
+    case EntryEnumO::kUpdateBy:
+        return;
+    default:
+        break;
+    }
+
+    auto Compare = [order, kColumn](EntryShadow* lhs, EntryShadow* rhs) -> bool {
         auto* d_lhs { DerivedPtr<EntryShadowO>(lhs) };
         auto* d_rhs { DerivedPtr<EntryShadowO>(rhs) };
 
         switch (kColumn) {
-        case EntryEnumO::kUserId:
-            return (order == Qt::AscendingOrder) ? (*lhs->user_id < *rhs->user_id) : (*lhs->user_id > *rhs->user_id);
-        case EntryEnumO::kCreateTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->created_time < *rhs->created_time) : (*lhs->created_time > *rhs->created_time);
-        case EntryEnumO::kCreateBy:
-            return (order == Qt::AscendingOrder) ? (*lhs->created_by < *rhs->created_by) : (*lhs->created_by > *rhs->created_by);
-        case EntryEnumO::kUpdateTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->updated_time < *rhs->updated_time) : (*lhs->updated_time > *rhs->updated_time);
-        case EntryEnumO::kUpdateBy:
-            return (order == Qt::AscendingOrder) ? (*lhs->updated_by < *rhs->updated_by) : (*lhs->updated_by > *rhs->updated_by);
         case EntryEnumO::kRhsNode:
             return (order == Qt::AscendingOrder) ? (*d_lhs->rhs_node < *d_rhs->rhs_node) : (*d_lhs->rhs_node > *d_rhs->rhs_node);
         case EntryEnumO::kUnitPrice:
@@ -257,7 +258,6 @@ Qt::ItemFlags LeafModelO::flags(const QModelIndex& index) const
     case EntryEnumO::kInitial:
     case EntryEnumO::kDiscount:
     case EntryEnumO::kFinal:
-    case EntryEnumO::kColor:
         flags &= ~Qt::ItemIsEditable;
         break;
     default:
@@ -467,6 +467,6 @@ void LeafModelO::CrossSearch(EntryShadow* entry_shadow, const QUuid& item_id, bo
     if (entry_hub_partner_->CrossSearch(d_shadow, partner_id_, item_id, is_internal))
         return;
 
-    *d_shadow->unit_price = is_internal ? tree_model_item_->UnitPrice(item_id) : 0.0;
+    *d_shadow->unit_price = is_internal ? tree_model_i_->UnitPrice(item_id) : 0.0;
     is_internal ? * d_shadow->external_sku = QUuid() : * d_shadow->rhs_node = QUuid();
 }

@@ -107,17 +107,17 @@ QVariant LeafModelP::data(const QModelIndex& index, int role) const
     case EntryEnumP::kCode:
         return *d_shadow->code;
     case EntryEnumP::kUnitPrice:
-        return *d_shadow->unit_price == 0 ? QVariant() : *d_shadow->unit_price;
+        return *d_shadow->unit_price;
     case EntryEnumP::kDescription:
         return *d_shadow->description;
     case EntryEnumP::kDocument:
-        return d_shadow->document->isEmpty() ? QVariant() : *d_shadow->document;
+        return *d_shadow->document;
     case EntryEnumP::kStatus:
-        return *d_shadow->status ? *d_shadow->status : QVariant();
+        return QVariant();
     case EntryEnumP::kRhsNode:
-        return d_shadow->rhs_node->isNull() ? QVariant() : *d_shadow->rhs_node;
+        return *d_shadow->rhs_node;
     case EntryEnumP::kExternalSku:
-        return d_shadow->external_sku->isNull() ? QVariant() : *d_shadow->external_sku;
+        return *d_shadow->external_sku;
     default:
         return QVariant();
     }

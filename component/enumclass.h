@@ -156,7 +156,6 @@ enum class EntryEnumO {
     kExternalSku,
     kLhsNode,
     kDiscountPrice,
-    kColor,
     kInitial,
     kDiscount,
     kFinal,
