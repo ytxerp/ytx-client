@@ -17,7 +17,7 @@ void SearchDialogT::TreeViewDelegate(QTableView* view)
 {
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kInitialTotal), value_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kFinalTotal), value_);
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kIsFinished), check_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kStatus), check_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kColor), color_);
 }
 
@@ -33,7 +33,7 @@ void SearchDialogT::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumT::kLhsNode), node_name_);
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumT::kRhsNode), node_name_);
 
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kMarkStatus), check_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kStatus), check_);
 }
 
 void SearchDialogT::REntryDoubleClicked(const QModelIndex& index)

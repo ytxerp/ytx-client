@@ -43,7 +43,7 @@ protected:
     QString QSReadTransRef(int unit) const override;
     std::pair<int, int> CacheColumnRange() const override
     {
-        return { std::to_underlying(EntryEnumP::kUnitPrice), std::to_underlying(EntryEnumP::kMarkStatus) };
+        return { std::to_underlying(EntryEnumP::kUnitPrice), std::to_underlying(EntryEnumP::kStatus) };
     }
 
 private:

@@ -30,8 +30,8 @@ QVariant SearchEntryModelP::data(const QModelIndex& index, int role) const
         return d_entry->external_sku.isNull() ? QVariant() : d_entry->external_sku;
     case EntryEnumP::kDocument:
         return d_entry->document.isEmpty() ? QVariant() : d_entry->document.size();
-    case EntryEnumP::kMarkStatus:
-        return d_entry->mark_status ? d_entry->mark_status : QVariant();
+    case EntryEnumP::kStatus:
+        return d_entry->status ? d_entry->status : QVariant();
     case EntryEnumP::kUnitPrice:
         return d_entry->unit_price == 0 ? QVariant() : d_entry->unit_price;
     case EntryEnumP::kRhsNode:
@@ -65,8 +65,8 @@ void SearchEntryModelP::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (d_lhs->external_sku < d_rhs->external_sku) : (d_lhs->external_sku > d_rhs->external_sku);
         case EntryEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
-        case EntryEnumP::kMarkStatus:
-            return (order == Qt::AscendingOrder) ? (lhs->mark_status < rhs->mark_status) : (lhs->mark_status > rhs->mark_status);
+        case EntryEnumP::kStatus:
+            return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
         case EntryEnumP::kUnitPrice:
             return (order == Qt::AscendingOrder) ? (d_lhs->unit_price < d_rhs->unit_price) : (d_lhs->unit_price > d_rhs->unit_price);
         case EntryEnumP::kRhsNode:

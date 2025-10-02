@@ -68,7 +68,7 @@ private:
     EntryHubP* entry_hub_partner_ {};
     EntryHubO* entry_hub_order_ {};
     QUuid partner_id_ {};
-    bool is_finished_ {};
+    bool status_ {};
 };
 
 #endif // LEAFMODELO_H

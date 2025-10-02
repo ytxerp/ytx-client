@@ -26,9 +26,9 @@ void LeafModel::RSyncRule(bool value)
     direction_rule_ = value;
 }
 
-void LeafModel::RRefreshMarkStatus()
+void LeafModel::RRefreshStatus()
 {
-    const int column { std::to_underlying(EntryEnum::kMarkStatus) };
+    const int column { std::to_underlying(EntryEnum::kStatus) };
     emit dataChanged(index(0, column), index(rowCount() - 1, column));
 }
 
@@ -90,13 +90,13 @@ void LeafModel::ActionEntry(EntryAction action)
     auto Update = [action](EntryShadow* entry_shadow) {
         switch (action) {
         case EntryAction::kMarkAll:
-            *entry_shadow->mark_status = true;
+            *entry_shadow->status = true;
             break;
         case EntryAction::kMarkNone:
-            *entry_shadow->mark_status = false;
+            *entry_shadow->status = false;
             break;
         case EntryAction::kMarkToggle:
-            *entry_shadow->mark_status = !*entry_shadow->mark_status;
+            *entry_shadow->status = !*entry_shadow->status;
             break;
         default:
             break;
@@ -107,7 +107,7 @@ void LeafModel::ActionEntry(EntryAction action)
     auto* watcher { new QFutureWatcher<void>(this) };
 
     connect(watcher, &QFutureWatcher<void>::finished, this, [this, watcher]() {
-        const int column { std::to_underlying(EntryEnum::kMarkStatus) };
+        const int column { std::to_underlying(EntryEnum::kStatus) };
         emit dataChanged(index(0, column), index(rowCount() - 1, column));
 
         watcher->deleteLater();

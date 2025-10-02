@@ -53,8 +53,8 @@ QVariant SettlementPrimaryModel::data(const QModelIndex& index, int role) const
         return settlement->issued_time;
     case SettlementEnum::kDescription:
         return settlement->description;
-    case SettlementEnum::kIsFinished:
-        return settlement->is_finished ? settlement->is_finished : QVariant();
+    case SettlementEnum::kStatus:
+        return settlement->status ? settlement->status : QVariant();
     case SettlementEnum::kInitialTotal:
         return settlement->initial_total == 0 ? QVariant() : settlement->initial_total;
     case SettlementEnum::kPartner:
@@ -66,7 +66,7 @@ QVariant SettlementPrimaryModel::data(const QModelIndex& index, int role) const
 
 bool SettlementPrimaryModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if (!index.isValid() || index.column() != std::to_underlying(SettlementEnum::kIsFinished) || role != Qt::EditRole || settlement_finished_)
+    if (!index.isValid() || index.column() != std::to_underlying(SettlementEnum::kStatus) || role != Qt::EditRole || settlement_finished_)
         return false;
 
     auto* settlement { settlementList_list_.at(index.row()) };
@@ -74,7 +74,7 @@ bool SettlementPrimaryModel::setData(const QModelIndex& index, const QVariant& v
 
     check ? dbhub_->AddSettlementPrimary(settlement->id, settlement_id_) : dbhub_->RemoveSettlementPrimary(settlement->id);
 
-    settlement->is_finished = check;
+    settlement->status = check;
 
     emit SSyncDouble(settlement_id_, std::to_underlying(SettlementEnum::kInitialTotal), check ? settlement->initial_total : -settlement->initial_total);
     return true;
@@ -103,8 +103,8 @@ void SettlementPrimaryModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case SettlementEnum::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
-        case SettlementEnum::kIsFinished:
-            return (order == Qt::AscendingOrder) ? (lhs->is_finished < rhs->is_finished) : (lhs->is_finished > rhs->is_finished);
+        case SettlementEnum::kStatus:
+            return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
         case SettlementEnum::kInitialTotal:
             return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
         default:
@@ -124,7 +124,7 @@ void SettlementPrimaryModel::RemoveUnfinishedNode()
     }
 
     for (int i = settlementList_list_.size() - 1; i >= 0; --i) {
-        if (!settlementList_list_[i]->is_finished) {
+        if (!settlementList_list_[i]->status) {
             beginRemoveRows(QModelIndex(), i, i);
             ResourcePool<Settlement>::Instance().Recycle(settlementList_list_.takeAt(i));
             endRemoveRows();

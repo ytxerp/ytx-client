@@ -25,7 +25,7 @@
 #include <QTableView>
 
 #include "component/config.h"
-#include "delegate/readonly/markstatusr.h"
+#include "delegate/readonly/statusr.h"
 #include "delegate/readonly/colorr.h"
 #include "delegate/readonly/doublespinrnonezero.h"
 #include "delegate/search/searchpathtabler.h"
@@ -83,7 +83,7 @@ protected:
     DoubleSpinRNoneZero* value_ {};
     DoubleSpinRNoneZero* rate_ {};
 
-    MarkStatusR* check_ {};
+    StatusR* check_ {};
     ColorR* color_ {};
     SearchPathTableR* node_name_ {};
 

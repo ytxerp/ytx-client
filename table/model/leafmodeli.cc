@@ -44,8 +44,8 @@ QVariant LeafModelI::data(const QModelIndex& index, int role) const
         return *d_shadow->description;
     case EntryEnumI::kRhsNode:
         return d_shadow->rhs_node->isNull() ? QVariant() : *d_shadow->rhs_node;
-    case EntryEnumI::kMarkStatus:
-        return *d_shadow->mark_status ? *d_shadow->mark_status : QVariant();
+    case EntryEnumI::kStatus:
+        return *d_shadow->status ? *d_shadow->status : QVariant();
     case EntryEnumI::kDocument:
         return d_shadow->document->isEmpty() ? QVariant() : *d_shadow->document;
     case EntryEnumI::kDebit:
@@ -82,8 +82,8 @@ bool LeafModelI::setData(const QModelIndex& index, const QVariant& value, int ro
     case EntryEnumI::kDocument:
         EntryUtils::UpdateShadowDocument(caches_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
         break;
-    case EntryEnumI::kMarkStatus:
-        EntryUtils::UpdateShadowField(caches_[id], shadow, kMarkStatus, value.toBool(), &EntryShadow::mark_status, [id, this]() { RestartTimer(id); });
+    case EntryEnumI::kStatus:
+        EntryUtils::UpdateShadowField(caches_[id], shadow, kStatus, value.toBool(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumI::kDescription:
         EntryUtils::UpdateShadowField(caches_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
@@ -141,8 +141,8 @@ void LeafModelI::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (*lhs->description < *rhs->description) : (*lhs->description > *rhs->description);
         case EntryEnumI::kRhsNode:
             return (order == Qt::AscendingOrder) ? (*lhs->rhs_node < *rhs->rhs_node) : (*lhs->rhs_node > *rhs->rhs_node);
-        case EntryEnumI::kMarkStatus:
-            return (order == Qt::AscendingOrder) ? (*lhs->mark_status < *rhs->mark_status) : (*lhs->mark_status > *rhs->mark_status);
+        case EntryEnumI::kStatus:
+            return (order == Qt::AscendingOrder) ? (*lhs->status < *rhs->status) : (*lhs->status > *rhs->status);
         case EntryEnumI::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
         case EntryEnumI::kDebit:
@@ -173,7 +173,7 @@ Qt::ItemFlags LeafModelI::flags(const QModelIndex& index) const
     case EntryEnumI::kId:
     case EntryEnumI::kBalance:
     case EntryEnumI::kDocument:
-    case EntryEnumI::kMarkStatus:
+    case EntryEnumI::kStatus:
         flags &= ~Qt::ItemIsEditable;
         break;
     default:

@@ -54,7 +54,7 @@ enum class EntryEnum {
     kCode,
     kDescription,
     kDocument,
-    kMarkStatus,
+    kStatus,
     kRhsNode,
     kDebit,
     kCredit,
@@ -74,7 +74,7 @@ enum class EntryEnumF {
     kCode,
     kDescription,
     kDocument,
-    kMarkStatus,
+    kStatus,
     kRhsNode,
     kDebit,
     kCredit,
@@ -94,7 +94,7 @@ enum class EntryEnumI {
     kCode,
     kDescription,
     kDocument,
-    kMarkStatus,
+    kStatus,
     kRhsNode,
     kDebit,
     kCredit,
@@ -114,7 +114,7 @@ enum class EntryEnumT {
     kCode,
     kDescription,
     kDocument,
-    kMarkStatus,
+    kStatus,
     kRhsNode,
     kDebit,
     kCredit,
@@ -135,7 +135,7 @@ enum class EntryEnumP {
     kCode,
     kDescription,
     kDocument,
-    kMarkStatus,
+    kStatus,
     kRhsNode,
     kExternalSku,
 };
@@ -177,7 +177,7 @@ enum class FullEntryEnumF {
     kLhsCredit,
     kDescription,
     kDocument,
-    kMarkStatus,
+    kStatus,
     kRhsCredit,
     kRhsDebit,
     kRhsRate,
@@ -199,7 +199,7 @@ enum class FullEntryEnumI {
     kDescription,
     kUnitCost,
     kDocument,
-    kMarkStatus,
+    kStatus,
     kRhsCredit,
     kRhsDebit,
     kRhsNode,
@@ -220,7 +220,7 @@ enum class FullEntryEnumT {
     kDescription,
     kUnitCost,
     kDocument,
-    kMarkStatus,
+    kStatus,
     kRhsCredit,
     kRhsDebit,
     kRhsNode,
@@ -299,7 +299,7 @@ enum class NodeEnumT {
     kColor,
     kDocument,
     kIssuedTime,
-    kIsFinished,
+    kStatus,
     kInitialTotal,
     kFinalTotal,
 };
@@ -338,7 +338,7 @@ enum class NodeEnumO {
     kEmployee,
     kCountTotal,
     kMeasureTotal,
-    kIsFinished,
+    kStatus,
     kInitialTotal,
     kDiscountTotal,
     kFinalTotal,
@@ -349,7 +349,7 @@ enum class NodeEnumO {
 // P:Previous, C:Current, Statement
 enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCGrossAmount, kCBalance, kPlaceholder, kCSettlement };
 
-enum class StatementPrimaryEnum { kIssuedTime = 0, kCount, kMeasure, kInitialTotal, kMarkStatus, kDescription, kEmployee, kFinalTotal };
+enum class StatementPrimaryEnum { kIssuedTime = 0, kCount, kMeasure, kInitialTotal, kStatus, kDescription, kEmployee, kFinalTotal };
 
 enum class StatementSecondaryEnum {
     kIssuedTime = 0,
@@ -358,7 +358,7 @@ enum class StatementSecondaryEnum {
     kMeasure,
     kUnitPrice,
     kInitialTotal,
-    kMarkStatus,
+    kStatus,
     kDescription,
     kSupportNode,
     kFinalTotal
@@ -375,7 +375,7 @@ enum class SettlementEnum {
     kIssuedTime,
     kPartner,
     kDescription,
-    kIsFinished,
+    kStatus,
     kInitialTotal,
 };
 

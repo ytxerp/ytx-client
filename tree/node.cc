@@ -114,7 +114,7 @@ void NodeT::ResetState()
     Node::ResetState();
     color.clear();
     document.clear();
-    is_finished = false;
+    status = false;
 }
 
 void NodeT::ReadJson(const QJsonObject& object)
@@ -125,8 +125,8 @@ void NodeT::ReadJson(const QJsonObject& object)
         color = object.value(kColor).toString();
     if (object.contains(kDocument))
         document = object.value(kDocument).toString().split(kSemicolon, Qt::SkipEmptyParts);
-    if (object.contains(kIsFinished))
-        is_finished = object.value(kIsFinished).toBool();
+    if (object.contains(kStatus))
+        status = object.value(kStatus).toBool();
     if (object.contains(kIssuedTime))
         issued_time = QDateTime::fromString(object.value(kIssuedTime).toString(), Qt::ISODate);
 }
@@ -138,7 +138,7 @@ QJsonObject NodeT::WriteJson() const
     obj.insert(kColor, color);
     obj.insert(kDocument, document.join(kSemicolon));
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
-    obj.insert(kIsFinished, is_finished);
+    obj.insert(kStatus, status);
 
     return obj;
 }
@@ -209,7 +209,7 @@ void NodeO::ResetState()
     count_total = 0.0;
     measure_total = 0.0;
     discount_total = 0.0;
-    is_finished = false;
+    status = false;
 }
 
 void NodeO::InvertTotal()
@@ -261,8 +261,8 @@ void NodeO::ReadJson(const QJsonObject& object)
         measure_total = object.value(kMeasureTotal).toString().toDouble();
     if (object.contains(kDiscountTotal))
         discount_total = object.value(kDiscountTotal).toString().toDouble();
-    if (object.contains(kIsFinished))
-        is_finished = object.value(kIsFinished).toBool();
+    if (object.contains(kStatus))
+        status = object.value(kStatus).toBool();
     if (object.contains(kSettlement))
         settlement = QUuid(object.value(kSettlement).toString());
 }
@@ -285,7 +285,7 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kCountTotal, QString::number(count_total, 'f', kMaxNumericScale_4));
     obj.insert(kMeasureTotal, QString::number(measure_total, 'f', kMaxNumericScale_4));
     obj.insert(kDiscountTotal, QString::number(discount_total, 'f', kMaxNumericScale_4));
-    obj.insert(kIsFinished, is_finished);
+    obj.insert(kStatus, status);
 
     return obj;
 }

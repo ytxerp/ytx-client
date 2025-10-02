@@ -52,7 +52,7 @@ set(SOURCES
     widget/datetimeedit.cc
     component/stringinitializer.cc
     delegate/double.cc
-    delegate/markstatus.cc
+    delegate/status.cc
     delegate/plaintextguard.cc
     delegate/int.cc
     delegate/doubleguard.cc
@@ -69,7 +69,7 @@ set(SOURCES
     delegate/readonly/doublespinrnonezero.cc
     delegate/readonly/doublespinr.cc
     delegate/readonly/dboolstringr.cc
-    delegate/readonly/markstatusr.cc
+    delegate/readonly/statusr.cc
     delegate/readonly/nodepathr.cc
     delegate/readonly/sectionr.cc
     delegate/tree/treeissuedtime.cc
@@ -189,7 +189,7 @@ set(HEADERS
     delegate/plaintextguard.h
     delegate/lineguard.h
     delegate/int.h
-    delegate/markstatus.h
+    delegate/status.h
     delegate/doubleguard.h
     delegate/document.h
     delegate/double.h
@@ -198,7 +198,7 @@ set(HEADERS
     delegate/readonly/doublespinr.h
     delegate/readonly/doublespinunitr.h
     delegate/readonly/doublespinrnonezero.h
-    delegate/readonly/markstatusr.h
+    delegate/readonly/statusr.h
     delegate/readonly/issuedtimer.h
     delegate/readonly/colorr.h
     delegate/readonly/dintstringr.h

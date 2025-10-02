@@ -1,14 +1,14 @@
-#include "markstatus.h"
+#include "status.h"
 
 #include <QMouseEvent>
 
-MarkStatus::MarkStatus(QEvent::Type type, QObject* parent)
+Status::Status(QEvent::Type type, QObject* parent)
     : StyledItemDelegate { parent }
     , type_ { type }
 {
 }
 
-void MarkStatus::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void Status::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     if (!index.data().toBool())
         return QStyledItemDelegate::paint(painter, option, index);
@@ -16,7 +16,7 @@ void MarkStatus::paint(QPainter* painter, const QStyleOptionViewItem& option, co
     PaintCheckBox(painter, option, index);
 }
 
-bool MarkStatus::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
+bool Status::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
 {
     if (event->type() != type_)
         return false;

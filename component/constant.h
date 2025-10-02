@@ -215,7 +215,6 @@ inline const QString kUpdateEntryDebit = QStringLiteral("update_entry_debit");
 inline const QString kUpdateEntryCredit = QStringLiteral("update_entry_credit");
 inline const QString kEntryNumeric = QStringLiteral("entry_numeric");
 
-inline const QString kStatus = QStringLiteral("status");
 inline const QString kNodeDelta = QStringLiteral("node_delta");
 inline const QString kDocumentDir = QStringLiteral("document_dir");
 inline const QString kDefaultUnit = QStringLiteral("default_unit");
@@ -277,11 +276,10 @@ inline const QString kDiscountTotal = QStringLiteral("discount_total");
 inline constexpr char kAction[] = "action";
 inline const QString kEntryAction = QStringLiteral("entry_action");
 
-inline const QString kIsFinished = QStringLiteral("is_finished");
 inline const QString kIsSaved = QStringLiteral("is_saved");
 
 inline const QString kIssuedTime = QStringLiteral("issued_time");
-inline const QString kMarkStatus = QStringLiteral("mark_status");
+inline const QString kStatus = QStringLiteral("status");
 inline const QString kKind = QStringLiteral("kind");
 inline const QString kNote = QStringLiteral("note");
 inline const QString kPaymentTerm = QStringLiteral("payment_term");

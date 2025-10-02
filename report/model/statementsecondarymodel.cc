@@ -72,8 +72,8 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
         return entry->description;
     case StatementSecondaryEnum::kInitialTotal:
         return entry->initial == 0 ? QVariant() : entry->initial;
-    case StatementSecondaryEnum::kMarkStatus:
-        return entry->mark_status ? entry->mark_status : QVariant();
+    case StatementSecondaryEnum::kStatus:
+        return entry->status ? entry->status : QVariant();
     default:
         return QVariant();
     }
@@ -90,8 +90,8 @@ bool StatementSecondaryModel::setData(const QModelIndex& index, const QVariant& 
     auto* entry { statement_secondary_list_.at(kRow) };
 
     switch (kColumn) {
-    case StatementSecondaryEnum::kMarkStatus:
-        entry->mark_status = value.toBool();
+    case StatementSecondaryEnum::kStatus:
+        entry->status = value.toBool();
         break;
     default:
         return false;
@@ -133,8 +133,8 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
         case StatementSecondaryEnum::kInitialTotal:
             return (order == Qt::AscendingOrder) ? (lhs->initial < rhs->initial) : (lhs->initial > rhs->initial);
-        case StatementSecondaryEnum::kMarkStatus:
-            return (order == Qt::AscendingOrder) ? (lhs->mark_status < rhs->mark_status) : (lhs->mark_status > rhs->mark_status);
+        case StatementSecondaryEnum::kStatus:
+            return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
         default:
             return false;
         }

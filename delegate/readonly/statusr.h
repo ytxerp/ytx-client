@@ -17,15 +17,15 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MARKSTATUSR_H
-#define MARKSTATUSR_H
+#ifndef STATUSR_H
+#define STATUSR_H
 
 #include "delegate/styleditemdelegate.h"
 
-class MarkStatusR final : public StyledItemDelegate {
+class StatusR final : public StyledItemDelegate {
 public:
-    explicit MarkStatusR(QObject* parent = nullptr);
+    explicit StatusR(QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
 
-#endif // MARKSTATUSR_H
+#endif // STATUSR_H

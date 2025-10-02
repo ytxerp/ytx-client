@@ -10,7 +10,7 @@ void EntryShadow::ResetState()
     lhs_node = nullptr;
     description = nullptr;
     rhs_node = nullptr;
-    mark_status = nullptr;
+    status = nullptr;
     document = nullptr;
 
     user_id = nullptr;
@@ -33,7 +33,7 @@ void EntryShadow::BindEntry(Entry* base, bool parallel)
     code = &base->code;
     description = &base->description;
     document = &base->document;
-    mark_status = &base->mark_status;
+    status = &base->status;
 
     is_parallel = parallel;
 
@@ -58,7 +58,7 @@ QJsonObject EntryShadow::WriteJson() const
     obj.insert(kLhsNode, lhs_node->toString(QUuid::WithoutBraces));
     obj.insert(kDescription, *description);
     obj.insert(kDocument, document->join(kSemicolon));
-    obj.insert(kMarkStatus, *mark_status);
+    obj.insert(kStatus, *status);
     obj.insert(kRhsNode, rhs_node->toString(QUuid::WithoutBraces));
 
     return obj;
@@ -206,7 +206,7 @@ QJsonObject EntryShadowP::WriteJson() const
 
 // Note:
 // Order entries do not use some common fields from EntryShadow
-// (issued_time, document, mark_status, code). Therefore, we do NOT call
+// (issued_time, document, status, code). Therefore, we do NOT call
 // the base class BindEntry() here, and only bind the fields that
 // are relevant for order entries.
 void EntryShadowO::BindEntry(Entry* base, bool /* is_parallel */)

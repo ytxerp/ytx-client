@@ -54,8 +54,8 @@ QVariant TreeModelT::data(const QModelIndex& index, int role) const
         return d_node->color;
     case NodeEnumT::kIssuedTime:
         return d_node->issued_time;
-    case NodeEnumT::kIsFinished:
-        return d_node->is_finished ? d_node->is_finished : QVariant();
+    case NodeEnumT::kStatus:
+        return d_node->status ? d_node->status : QVariant();
     case NodeEnumT::kDocument:
         return d_node->document;
     case NodeEnumT::kInitialTotal:
@@ -104,9 +104,9 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumT::kDocument:
         NodeUtils::UpdateDocument(cache, d_node, kDocument, value.toStringList(), &NodeT::document, [id, this]() { RestartTimer(id); });
         break;
-    case NodeEnumT::kIsFinished:
+    case NodeEnumT::kStatus:
         if (d_node->kind == kLeaf)
-            NodeUtils::UpdateField(cache, d_node, kIsFinished, value.toBool(), &NodeT::is_finished, [id, this]() { RestartTimer(id); });
+            NodeUtils::UpdateField(cache, d_node, kStatus, value.toBool(), &NodeT::status, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;
@@ -148,8 +148,8 @@ void TreeModelT::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->direction_rule < rhs->direction_rule) : (lhs->direction_rule > rhs->direction_rule);
         case NodeEnumT::kKind:
             return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
-        case NodeEnumT::kIsFinished:
-            return (order == Qt::AscendingOrder) ? (d_lhs->is_finished < d_rhs->is_finished) : (d_lhs->is_finished > d_rhs->is_finished);
+        case NodeEnumT::kStatus:
+            return (order == Qt::AscendingOrder) ? (d_lhs->status < d_rhs->status) : (d_lhs->status > d_rhs->status);
         case NodeEnumT::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (d_lhs->issued_time < d_rhs->issued_time) : (d_lhs->issued_time > d_rhs->issued_time);
         case NodeEnumT::kUnit:
@@ -196,8 +196,8 @@ Qt::ItemFlags TreeModelT::flags(const QModelIndex& index) const
         break;
     }
 
-    const bool is_finished { index.siblingAtColumn(std::to_underlying(NodeEnumT::kIsFinished)).data().toBool() };
-    if (is_finished)
+    const bool status { index.siblingAtColumn(std::to_underlying(NodeEnumT::kStatus)).data().toBool() };
+    if (status)
         flags &= ~Qt::ItemIsEditable;
 
     return flags;
@@ -262,9 +262,9 @@ Node* TreeModelT::GetNode(const QUuid& node_id) const
     return node;
 }
 
-void TreeModelT::UpdateIsFinished(NodeT* node, bool value)
+void TreeModelT::UpdateStatus(NodeT* node, bool value)
 {
-    if (node->is_finished == value)
+    if (node->status == value)
         return;
 }
 

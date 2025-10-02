@@ -60,8 +60,8 @@ QVariant StatementPrimaryModel::data(const QModelIndex& index, int role) const
         return node->count == 0 ? QVariant() : node->count;
     case StatementPrimaryEnum::kMeasure:
         return node->measure == 0 ? QVariant() : node->measure;
-    case StatementPrimaryEnum::kMarkStatus:
-        return node->mark_status ? node->mark_status : QVariant();
+    case StatementPrimaryEnum::kStatus:
+        return node->status ? node->status : QVariant();
     case StatementPrimaryEnum::kInitialTotal:
         return node->initial_total == 0 ? QVariant() : node->initial_total;
     case StatementPrimaryEnum::kFinalTotal:
@@ -80,8 +80,8 @@ bool StatementPrimaryModel::setData(const QModelIndex& index, const QVariant& va
     auto* node { statement_primary_list_.at(index.row()) };
 
     switch (kColumn) {
-    case StatementPrimaryEnum::kMarkStatus:
-        node->mark_status = value.toBool();
+    case StatementPrimaryEnum::kStatus:
+        node->status = value.toBool();
         break;
     default:
         return false;
@@ -117,8 +117,8 @@ void StatementPrimaryModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
         case StatementPrimaryEnum::kMeasure:
             return (order == Qt::AscendingOrder) ? (lhs->measure < rhs->measure) : (lhs->measure > rhs->measure);
-        case StatementPrimaryEnum::kMarkStatus:
-            return (order == Qt::AscendingOrder) ? (lhs->mark_status < rhs->mark_status) : (lhs->mark_status > rhs->mark_status);
+        case StatementPrimaryEnum::kStatus:
+            return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
         case StatementPrimaryEnum::kFinalTotal:
             return (order == Qt::AscendingOrder) ? (lhs->final_total < rhs->final_total) : (lhs->final_total > rhs->final_total);
         case StatementPrimaryEnum::kInitialTotal:

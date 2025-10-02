@@ -1,11 +1,11 @@
-#include "markstatusr.h"
+#include "statusr.h"
 
-MarkStatusR::MarkStatusR(QObject* parent)
+StatusR::StatusR(QObject* parent)
     : StyledItemDelegate { parent }
 {
 }
 
-void MarkStatusR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void StatusR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     if (!index.data().toBool())
         return QStyledItemDelegate::paint(painter, option, index);

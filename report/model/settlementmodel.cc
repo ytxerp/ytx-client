@@ -88,8 +88,8 @@ QVariant SettlementModel::data(const QModelIndex& index, int role) const
         return settlement->issued_time;
     case SettlementEnum::kDescription:
         return settlement->description;
-    case SettlementEnum::kIsFinished:
-        return settlement->is_finished ? settlement->is_finished : QVariant();
+    case SettlementEnum::kStatus:
+        return settlement->status ? settlement->status : QVariant();
     case SettlementEnum::kInitialTotal:
         return settlement->initial_total == 0 ? QVariant() : settlement->initial_total;
     case SettlementEnum::kPartner:
@@ -120,7 +120,7 @@ bool SettlementModel::setData(const QModelIndex& index, const QVariant& value, i
     case SettlementEnum::kPartner:
         UpdatePartner(settlement, value.toUuid());
         break;
-    case SettlementEnum::kIsFinished:
+    case SettlementEnum::kStatus:
         UpdateFinished(settlement, value.toBool());
         break;
     default:
@@ -163,7 +163,7 @@ Qt::ItemFlags SettlementModel::flags(const QModelIndex& index) const
         break;
     }
 
-    const bool non_editable { index.siblingAtColumn(std::to_underlying(SettlementEnum::kIsFinished)).data().toBool() };
+    const bool non_editable { index.siblingAtColumn(std::to_underlying(SettlementEnum::kStatus)).data().toBool() };
     if (non_editable)
         flags &= ~Qt::ItemIsEditable;
 
@@ -195,8 +195,8 @@ void SettlementModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case SettlementEnum::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
-        case SettlementEnum::kIsFinished:
-            return (order == Qt::AscendingOrder) ? (lhs->is_finished < rhs->is_finished) : (lhs->is_finished > rhs->is_finished);
+        case SettlementEnum::kStatus:
+            return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
         case SettlementEnum::kInitialTotal:
             return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
         default:
@@ -261,7 +261,7 @@ bool SettlementModel::UpdateFinished(Settlement* settlement, bool finished)
     if (!settlement->partner.isNull())
         return false;
 
-    settlement->is_finished = finished;
+    settlement->status = finished;
     // dbhub_->WriteField(info_->settlement, kIsFinished, finished, settlement->id);
 
     emit SSyncFinished(settlement->partner, settlement->id, finished);

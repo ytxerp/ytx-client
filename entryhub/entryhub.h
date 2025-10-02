@@ -47,7 +47,7 @@ signals:
     void SRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void SRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
-    void SRefreshMarkStatus(const QUuid& node_id);
+    void SRefreshStatus(const QUuid& node_id);
 
     void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
@@ -106,7 +106,7 @@ protected:
         return {};
     };
 
-    virtual std::pair<int, int> CacheColumnRange() const { return { std::to_underlying(EntryEnum::kCode), std::to_underlying(EntryEnum::kMarkStatus) }; }
+    virtual std::pair<int, int> CacheColumnRange() const { return { std::to_underlying(EntryEnum::kCode), std::to_underlying(EntryEnum::kStatus) }; }
     virtual std::pair<int, int> NumericColumnRange() const { return { std::to_underlying(EntryEnum::kDebit), std::to_underlying(EntryEnum::kBalance) }; }
 
     void ReplaceLeafFunction(QSet<QUuid>& entry_id_set, EntryList& entry_list, const QUuid& old_node_id, const QUuid& new_node_id) const;

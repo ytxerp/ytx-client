@@ -51,7 +51,7 @@ struct StatementPrimary {
     double count {};
     double measure {};
     double initial_total {};
-    bool mark_status {};
+    bool status {};
     QString description {};
     QUuid employee {};
     double final_total {};
@@ -65,7 +65,7 @@ inline void StatementPrimary::ResetState()
     count = 0.0;
     measure = 0.0;
     initial_total = 0.0;
-    mark_status = false;
+    status = false;
     description.clear();
     employee = QUuid();
     final_total = 0.0;
@@ -78,7 +78,7 @@ struct StatementSecondary {
     double measure {};
     double unit_price {};
     double initial {};
-    bool mark_status {};
+    bool status {};
     QString description {};
     QUuid support_id {};
 
@@ -92,7 +92,7 @@ inline void StatementSecondary::ResetState()
     measure = 0.0;
     initial = 0.0;
     unit_price = 0.0;
-    mark_status = false;
+    status = false;
     description.clear();
     rhs_node = QUuid();
     support_id = QUuid();

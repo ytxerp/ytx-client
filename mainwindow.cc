@@ -25,7 +25,6 @@
 #include "delegate/filterunit.h"
 #include "delegate/int.h"
 #include "delegate/lineguard.h"
-#include "delegate/markstatus.h"
 #include "delegate/plaintextguard.h"
 #include "delegate/readonly/colorr.h"
 #include "delegate/readonly/dintstringr.h"
@@ -36,6 +35,7 @@
 #include "delegate/readonly/nodenamer.h"
 #include "delegate/readonly/nodepathr.h"
 #include "delegate/readonly/sectionr.h"
+#include "delegate/status.h"
 #include "delegate/table/tablecombofilter.h"
 #include "delegate/table/tableissuedtime.h"
 #include "delegate/tree/color.h"
@@ -579,8 +579,8 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* document { new Document(sc_->global_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDocument), document);
 
-    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kMarkStatus), mark_status);
+    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeOneModel(node_id) };
 
@@ -610,8 +610,8 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* document { new Document(sc_->global_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kDocument), document);
 
-    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kMarkStatus), mark_status);
+    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeMultipleModel(node_id, std::to_underlying(UnitI::kExternal)) };
 
@@ -641,8 +641,8 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     auto* document { new Document(sc_->global_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kDocument), document);
 
-    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kMarkStatus), mark_status);
+    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeOneModel(node_id) };
 
@@ -678,8 +678,8 @@ void MainWindow::TableDelegateS(QTableView* table_view, CSectionConfig& config) 
     auto* document { new Document(sc_->global_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kDocument), document);
 
-    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kMarkStatus), mark_status);
+    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kStatus), status);
 
     auto* int_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kInternal)) };
     auto* int_item { new FilterUnit(tree_model_i, int_filter_model, table_view) };
@@ -822,8 +822,8 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* color { new Color(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kColor), color);
 
-    auto* is_finished { new MarkStatus(QEvent::MouseButtonDblClick, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kIsFinished), is_finished);
+    auto* status { new Status(QEvent::MouseButtonDblClick, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kStatus), status);
 
     auto* document { new Document(sc_t_.global_config.document_dir, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kDocument), document);
@@ -922,8 +922,8 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* issued_time { new TreeIssuedTime(section.date_format, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time);
 
-    auto* is_finished { new MarkStatus(QEvent::MouseButtonDblClick, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIsFinished), is_finished);
+    auto* status { new Status(QEvent::MouseButtonDblClick, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), status);
 }
 
 void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
@@ -939,7 +939,7 @@ void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRemoveEntryHash, LeafSStation::Instance(), &LeafSStation::RRemoveEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveMultiEntry, LeafSStation::Instance(), &LeafSStation::RRemoveMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, LeafSStation::Instance(), &LeafSStation::RAppendMultiEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRefreshMarkStatus, LeafSStation::Instance(), &LeafSStation::RRefreshMarkStatus, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRefreshStatus, LeafSStation::Instance(), &LeafSStation::RRefreshStatus, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAppendOneEntry, LeafSStation::Instance(), &LeafSStation::RAppendOneEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveOneEntry, LeafSStation::Instance(), &LeafSStation::RRemoveOneEntry, Qt::UniqueConnection);
@@ -963,7 +963,7 @@ void MainWindow::TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRemoveEntryHash, LeafSStation::Instance(), &LeafSStation::RRemoveEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveMultiEntry, LeafSStation::Instance(), &LeafSStation::RRemoveMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, LeafSStation::Instance(), &LeafSStation::RAppendMultiEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRefreshMarkStatus, LeafSStation::Instance(), &LeafSStation::RRefreshMarkStatus, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRefreshStatus, LeafSStation::Instance(), &LeafSStation::RRefreshStatus, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAppendOneEntry, LeafSStation::Instance(), &LeafSStation::RAppendOneEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveOneEntry, LeafSStation::Instance(), &LeafSStation::RRemoveOneEntry, Qt::UniqueConnection);
@@ -987,7 +987,7 @@ void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRemoveEntryHash, LeafSStation::Instance(), &LeafSStation::RRemoveEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveMultiEntry, LeafSStation::Instance(), &LeafSStation::RRemoveMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, LeafSStation::Instance(), &LeafSStation::RAppendMultiEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRefreshMarkStatus, LeafSStation::Instance(), &LeafSStation::RRefreshMarkStatus, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRefreshStatus, LeafSStation::Instance(), &LeafSStation::RRefreshStatus, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAppendOneEntry, LeafSStation::Instance(), &LeafSStation::RAppendOneEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRemoveOneEntry, LeafSStation::Instance(), &LeafSStation::RRemoveOneEntry, Qt::UniqueConnection);
@@ -1013,7 +1013,7 @@ void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(tree_model, &TreeModel::SResizeColumnToContents, tree_view, &QTreeView::resizeColumnToContents, Qt::UniqueConnection);
 
-    connect(entry_hub, &EntryHub::SRefreshMarkStatus, LeafSStation::Instance(), &LeafSStation::RRefreshMarkStatus, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SRefreshStatus, LeafSStation::Instance(), &LeafSStation::RRefreshStatus, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectO(QTreeView* tree_view, TreeModel* tree_model) const
@@ -1687,8 +1687,8 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
     auto* amount { new DoubleSpinRNoneZero(config.amount_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kInitialTotal), amount);
 
-    auto* is_finished { new MarkStatus(QEvent::MouseButtonDblClick, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIsFinished), is_finished);
+    auto* status { new Status(QEvent::MouseButtonDblClick, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kStatus), status);
 
     auto* line { new LineGuard(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kDescription), line);
@@ -1712,8 +1712,8 @@ void MainWindow::DelegateSettlementPrimary(QTableView* table_view, CSectionConfi
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kPartner), employee);
 
-    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIsFinished), mark_status);
+    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kStatus), status);
 
     auto* issued_time { new IssuedTimeR(kDateFST, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIssuedTime), issued_time);
@@ -1732,8 +1732,8 @@ void MainWindow::DelegateStatementPrimary(QTableView* table_view, CSectionConfig
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kEmployee), employee);
 
-    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kMarkStatus), mark_status);
+    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kStatus), status);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kIssuedTime), issued_time);
@@ -1750,8 +1750,8 @@ void MainWindow::DelegateStatementSecondary(QTableView* table_view, CSectionConf
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kFinalTotal), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kUnitPrice), amount);
 
-    auto* mark_status { new MarkStatus(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kMarkStatus), mark_status);
+    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kStatus), status);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kIssuedTime), issued_time);

@@ -9,7 +9,7 @@ LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_mod
     , entry_hub_partner_ { static_cast<EntryHubP*>(entry_hub_partner) }
     , entry_hub_order_ { static_cast<EntryHubO*>(arg.entry_hub) }
     , partner_id_ { static_cast<const NodeO*>(node)->partner }
-    , is_finished_ { static_cast<const NodeO*>(node)->is_finished }
+    , status_ { static_cast<const NodeO*>(node)->status }
 {
 }
 
@@ -37,7 +37,7 @@ void LeafModelO::UpdatePartner(const QUuid& node_id, const QUuid& partner_id)
 void LeafModelO::RSyncFinished(const QUuid& node_id, bool value)
 {
     assert(lhs_id_ == node_id);
-    is_finished_ = value;
+    status_ = value;
 
     if (!value)
         return;
@@ -113,7 +113,7 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    if (is_finished_)
+    if (status_)
         return false;
 
     const EntryEnumO kColumn { index.column() };
@@ -271,7 +271,7 @@ Qt::ItemFlags LeafModelO::flags(const QModelIndex& index) const
 bool LeafModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
-    if (is_finished_)
+    if (status_)
         return false;
 
     auto* entry_shadow { entry_hub_->AllocateEntryShadow() };
@@ -288,7 +288,7 @@ bool LeafModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 bool LeafModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
-    if (is_finished_)
+    if (status_)
         return false;
 
     auto* d_shadow = DerivedPtr<EntryShadowO>(shadow_list_.at(row));

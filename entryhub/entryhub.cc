@@ -321,13 +321,13 @@ void EntryHub::ActionEntry(const QUuid& node_id, EntryAction action, const QJson
     auto Update = [action](Entry* entry) {
         switch (action) {
         case EntryAction::kMarkAll:
-            entry->mark_status = true;
+            entry->status = true;
             break;
         case EntryAction::kMarkNone:
-            entry->mark_status = false;
+            entry->status = false;
             break;
         case EntryAction::kMarkToggle:
-            entry->mark_status = !entry->mark_status;
+            entry->status = !entry->status;
             break;
         default:
             break;
@@ -342,7 +342,7 @@ void EntryHub::ActionEntry(const QUuid& node_id, EntryAction action, const QJson
         }
     }
 
-    emit SRefreshMarkStatus(node_id);
+    emit SRefreshStatus(node_id);
 }
 
 void EntryHub::ActionEntryMeta(const QUuid& node_id, const QJsonObject& meta)

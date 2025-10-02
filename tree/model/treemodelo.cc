@@ -24,7 +24,7 @@ void TreeModelO::RSyncDelta(const QUuid& node_id, double initial_delta, double f
     auto index { GetIndex(node->id) };
     emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumO::kCountTotal)), index.siblingAtColumn(std::to_underlying(NodeEnumO::kFinalTotal)));
 
-    if (node->is_finished) {
+    if (node->status) {
         UpdateAncestorValue(node, initial_delta, final_delta, first_delta, second_delta, discount_delta);
     }
 }
@@ -107,7 +107,7 @@ void TreeModelO::RemovePath(Node* node, Node* parent_node)
         }
         break;
     case kLeaf:
-        if (d_node->is_finished) {
+        if (d_node->status) {
             UpdateAncestorValue(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
 
             if (node->unit == std::to_underlying(UnitO::kMonthly))
@@ -164,7 +164,7 @@ void TreeModelO::HandleNode()
     for (auto* node : std::as_const(node_hash_)) {
         auto* d_node { DerivedPtr<NodeO>(node) };
 
-        if (d_node->kind == kLeaf && d_node->is_finished)
+        if (d_node->kind == kLeaf && d_node->status)
             UpdateAncestorValue(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
     }
 }
@@ -224,8 +224,8 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (d_lhs->measure_total < d_rhs->measure_total) : (d_lhs->measure_total > d_rhs->measure_total);
         case NodeEnumO::kDiscountTotal:
             return (order == Qt::AscendingOrder) ? (d_lhs->discount_total < d_rhs->discount_total) : (d_lhs->discount_total > d_rhs->discount_total);
-        case NodeEnumO::kIsFinished:
-            return (order == Qt::AscendingOrder) ? (d_lhs->is_finished < d_rhs->is_finished) : (d_lhs->is_finished > d_rhs->is_finished);
+        case NodeEnumO::kStatus:
+            return (order == Qt::AscendingOrder) ? (d_lhs->status < d_rhs->status) : (d_lhs->status > d_rhs->status);
         case NodeEnumO::kInitialTotal:
             return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
         case NodeEnumO::kFinalTotal:
@@ -287,8 +287,8 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return d_node->measure_total == 0 ? QVariant() : d_node->measure_total;
     case NodeEnumO::kDiscountTotal:
         return d_node->discount_total == 0 ? QVariant() : d_node->discount_total;
-    case NodeEnumO::kIsFinished:
-        return !branch && d_node->is_finished ? d_node->is_finished : QVariant();
+    case NodeEnumO::kStatus:
+        return !branch && d_node->status ? d_node->status : QVariant();
     case NodeEnumO::kInitialTotal:
         return d_node->initial_total;
     case NodeEnumO::kFinalTotal:
@@ -331,7 +331,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*
     auto* node { DerivedPtr<NodeO>(source_parent->children.takeAt(sourceRow)) };
     assert(node);
 
-    bool update_ancestor { node->kind == kBranch || node->is_finished };
+    bool update_ancestor { node->kind == kBranch || node->status };
 
     if (update_ancestor) {
         UpdateAncestorValue(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);

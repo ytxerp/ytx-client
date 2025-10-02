@@ -42,8 +42,8 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
         return d_node->measure_total;
     case NodeEnumO::kDiscountTotal:
         return d_node->discount_total;
-    case NodeEnumO::kIsFinished:
-        return d_node->is_finished;
+    case NodeEnumO::kStatus:
+        return d_node->status;
     case NodeEnumO::kInitialTotal:
         return d_node->initial_total;
     case NodeEnumO::kFinalTotal:
@@ -86,8 +86,8 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (d_lhs->measure_total < d_rhs->measure_total) : (d_lhs->measure_total > d_rhs->measure_total);
         case NodeEnumO::kDiscountTotal:
             return (order == Qt::AscendingOrder) ? (d_lhs->discount_total < d_rhs->discount_total) : (d_lhs->discount_total > d_rhs->discount_total);
-        case NodeEnumO::kIsFinished:
-            return (order == Qt::AscendingOrder) ? (d_lhs->is_finished < d_rhs->is_finished) : (d_lhs->is_finished > d_rhs->is_finished);
+        case NodeEnumO::kStatus:
+            return (order == Qt::AscendingOrder) ? (d_lhs->status < d_rhs->status) : (d_lhs->status > d_rhs->status);
         case NodeEnumO::kInitialTotal:
             return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
         case NodeEnumO::kFinalTotal:

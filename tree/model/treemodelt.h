@@ -41,7 +41,7 @@ public:
 
 protected:
     std::pair<int, int> CacheColumnRange() const override { return { std::to_underlying(NodeEnumT::kColor), std::to_underlying(NodeEnumT::kIssuedTime) }; }
-    void UpdateIsFinished(NodeT* node, bool value);
+    void UpdateStatus(NodeT* node, bool value);
     void RegisterNode(Node* node) override
     {
         node_hash_.insert(node->id, node);

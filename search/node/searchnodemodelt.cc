@@ -34,8 +34,8 @@ QVariant SearchNodeModelT::data(const QModelIndex& index, int role) const
         return d_node->unit;
     case NodeEnumT::kColor:
         return d_node->color;
-    case NodeEnumT::kIsFinished:
-        return d_node->is_finished;
+    case NodeEnumT::kStatus:
+        return d_node->status;
     case NodeEnumT::kDocument:
         return d_node->document.size();
     case NodeEnumT::kInitialTotal:
@@ -70,8 +70,8 @@ void SearchNodeModelT::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->direction_rule < rhs->direction_rule) : (lhs->direction_rule > rhs->direction_rule);
         case NodeEnumT::kKind:
             return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
-        case NodeEnumT::kIsFinished:
-            return (order == Qt::AscendingOrder) ? (d_lhs->is_finished < d_rhs->is_finished) : (d_lhs->is_finished > d_rhs->is_finished);
+        case NodeEnumT::kStatus:
+            return (order == Qt::AscendingOrder) ? (d_lhs->status < d_rhs->status) : (d_lhs->status > d_rhs->status);
         case NodeEnumT::kUnit:
             return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
         case NodeEnumT::kColor:

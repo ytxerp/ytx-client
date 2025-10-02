@@ -34,8 +34,8 @@ QVariant SearchEntryModelT::data(const QModelIndex& index, int role) const
         return d_entry->description;
     case FullEntryEnumT::kDocument:
         return d_entry->document.isEmpty() ? QVariant() : d_entry->document.size();
-    case FullEntryEnumT::kMarkStatus:
-        return d_entry->mark_status ? d_entry->mark_status : QVariant();
+    case FullEntryEnumT::kStatus:
+        return d_entry->status ? d_entry->status : QVariant();
     case FullEntryEnumT::kRhsCredit:
         return d_entry->rhs_credit == 0 ? QVariant() : d_entry->rhs_credit;
     case FullEntryEnumT::kRhsDebit:
@@ -75,8 +75,8 @@ void SearchEntryModelT::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
         case FullEntryEnumT::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
-        case FullEntryEnumT::kMarkStatus:
-            return (order == Qt::AscendingOrder) ? (lhs->mark_status < rhs->mark_status) : (lhs->mark_status > rhs->mark_status);
+        case FullEntryEnumT::kStatus:
+            return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
         case FullEntryEnumT::kRhsCredit:
             return (order == Qt::AscendingOrder) ? (d_lhs->rhs_credit < d_rhs->rhs_credit) : (d_lhs->rhs_credit > d_rhs->rhs_credit);
         case FullEntryEnumT::kRhsDebit:

@@ -17,16 +17,16 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MARKSTATUS_H
-#define MARKSTATUS_H
+#ifndef STATUS_H
+#define STATUS_H
 
 #include <QEvent>
 
 #include "delegate/styleditemdelegate.h"
 
-class MarkStatus final : public StyledItemDelegate {
+class Status final : public StyledItemDelegate {
 public:
-    explicit MarkStatus(QEvent::Type type, QObject* parent = nullptr);
+    explicit Status(QEvent::Type type, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
 
@@ -34,4 +34,4 @@ private:
     QEvent::Type type_ {};
 };
 
-#endif // MARKSTATUS_H
+#endif // STATUS_H

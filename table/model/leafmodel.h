@@ -61,7 +61,7 @@ public slots:
     void RRemoveOneEntry(const QUuid& entry_id);
 
     void RUpdateBalance(const QUuid& entry_id);
-    void RRefreshMarkStatus();
+    void RRefreshStatus();
 
     void RRefreshField(const QUuid& entry_id, int start, int end);
     void RSyncRule(bool value);

@@ -78,9 +78,9 @@ void SettlementWidget::on_settlementView_doubleClicked(const QModelIndex& index)
         return;
 
     const auto settlement_id { index.siblingAtColumn(std::to_underlying(SettlementEnum::kId)).data().toUuid() };
-    const bool is_finished { index.siblingAtColumn(std::to_underlying(SettlementEnum::kIsFinished)).data().toBool() };
+    const bool status { index.siblingAtColumn(std::to_underlying(SettlementEnum::kStatus)).data().toBool() };
 
-    settlement_primary_model_->RResetModel(partner, settlement_id, is_finished);
+    settlement_primary_model_->RResetModel(partner, settlement_id, status);
 }
 
 void SettlementWidget::on_settlementViewPrimary_doubleClicked(const QModelIndex& index)

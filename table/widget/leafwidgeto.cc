@@ -30,7 +30,7 @@ LeafWidgetO::LeafWidgetO(
     IniData(node_->partner, node_->employee);
     IniConnect();
 
-    const bool finished { node_->is_finished };
+    const bool finished { node_->status };
     IniFinished(finished);
     LockWidgets(finished);
 }
@@ -315,7 +315,7 @@ void LeafWidgetO::RUnitGroupClicked(int id)
 
 void LeafWidgetO::on_pBtnFinishOrder_toggled(bool checked)
 {
-    node_->is_finished = checked;
+    node_->status = checked;
     // sql_->WriteField(partner_info_, kIsFinished, checked, node_id_);
 
     emit SSyncFinished(node_id_, checked);

@@ -72,7 +72,7 @@ struct NodeT final : Node {
     QString color {};
     QStringList document {};
     QDateTime issued_time {};
-    bool is_finished {};
+    bool status {};
 
     void ResetState() override;
 
@@ -98,7 +98,7 @@ struct NodeO final : Node {
     double count_total {};
     double measure_total {};
     double discount_total {};
-    bool is_finished {};
+    bool status {};
 
     void ResetState() override;
     void InvertTotal() override;

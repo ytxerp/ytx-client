@@ -7,7 +7,7 @@ void Settlement::ResetState()
     employee = QUuid();
     issued_time = {};
     description.clear();
-    is_finished = false;
+    status = false;
     initial_total = 0.0;
 
     user_id = QUuid();
@@ -25,7 +25,7 @@ const QStringList& Settlement::SqlField() const
         QStringLiteral("partner"),
         QStringLiteral("issued_time"),
         QStringLiteral("description"),
-        QStringLiteral("is_finished"),
+        QStringLiteral("status"),
         QStringLiteral("initial_total"),
         QStringLiteral("user_id"),
         QStringLiteral("created_time"),
@@ -45,7 +45,7 @@ void Settlement::ReadJson(const QJsonObject& object)
     partner = QUuid(object.value(QStringLiteral("partner")).toString());
     issued_time = QDateTime::fromString(object[QStringLiteral("issued_time")].toString(), Qt::ISODate);
     description = object.value(QStringLiteral("description")).toString();
-    is_finished = object.value(QStringLiteral("is_finished")).toBool();
+    status = object.value(QStringLiteral("status")).toBool();
     initial_total = object.value(QStringLiteral("initial_total")).toDouble();
 
     user_id = QUuid(object.value(QStringLiteral("user_id")).toString());
@@ -63,7 +63,7 @@ QJsonObject Settlement::WriteJson() const
     obj.insert(QStringLiteral("partner"), partner.toString());
     obj.insert(QStringLiteral("issued_time"), issued_time.toString(Qt::ISODate));
     obj.insert(QStringLiteral("description"), description);
-    obj.insert(QStringLiteral("is_finished"), is_finished);
+    obj.insert(QStringLiteral("status"), status);
     obj.insert(QStringLiteral("initial_total"), initial_total);
 
     obj.insert(QStringLiteral("user_id"), user_id.toString());
