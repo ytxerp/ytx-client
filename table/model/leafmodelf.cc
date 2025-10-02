@@ -205,7 +205,7 @@ bool LeafModelF::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
         if (has_leaf_delta) {
             AccumulateBalance(row);
 
-            emit SResizeColumnToContents(std::to_underlying(EntryEnumI::kBalance));
+            emit SResizeColumnToContents(std::to_underlying(EntryEnumF::kBalance));
             emit SSyncDelta(value, rhs_initial_delta, rhs_final_delta);
             emit SSyncDelta(old_node, -rhs_initial_delta, -rhs_final_delta);
         }
@@ -373,7 +373,13 @@ void LeafModelF::sort(int column, Qt::SortOrder order)
     const EntryEnumF kColumn { column };
 
     switch (kColumn) {
+    case EntryEnumF::kId:
     case EntryEnumF::kBalance:
+    case EntryEnumF::kUserId:
+    case EntryEnumF::kCreateTime:
+    case EntryEnumF::kCreateBy:
+    case EntryEnumF::kUpdateTime:
+    case EntryEnumF::kUpdateBy:
         return;
     default:
         break;
@@ -386,16 +392,6 @@ void LeafModelF::sort(int column, Qt::SortOrder order)
         switch (kColumn) {
         case EntryEnumF::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (*lhs->issued_time < *rhs->issued_time) : (*lhs->issued_time > *rhs->issued_time);
-        case EntryEnumF::kUserId:
-            return (order == Qt::AscendingOrder) ? (*lhs->user_id < *rhs->user_id) : (*lhs->user_id > *rhs->user_id);
-        case EntryEnumF::kCreateTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->created_time < *rhs->created_time) : (*lhs->created_time > *rhs->created_time);
-        case EntryEnumF::kCreateBy:
-            return (order == Qt::AscendingOrder) ? (*lhs->created_by < *rhs->created_by) : (*lhs->created_by > *rhs->created_by);
-        case EntryEnumF::kUpdateTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->updated_time < *rhs->updated_time) : (*lhs->updated_time > *rhs->updated_time);
-        case EntryEnumF::kUpdateBy:
-            return (order == Qt::AscendingOrder) ? (*lhs->updated_by < *rhs->updated_by) : (*lhs->updated_by > *rhs->updated_by);
         case EntryEnumF::kCode:
             return (order == Qt::AscendingOrder) ? (*lhs->code < *rhs->code) : (*lhs->code > *rhs->code);
         case EntryEnumF::kLhsRate:

@@ -115,7 +115,13 @@ void LeafModelI::sort(int column, Qt::SortOrder order)
     const EntryEnumI kColumn { column };
 
     switch (kColumn) {
+    case EntryEnumI::kId:
     case EntryEnumI::kBalance:
+    case EntryEnumI::kUserId:
+    case EntryEnumI::kCreateTime:
+    case EntryEnumI::kCreateBy:
+    case EntryEnumI::kUpdateTime:
+    case EntryEnumI::kUpdateBy:
         return;
     default:
         break;
@@ -128,16 +134,6 @@ void LeafModelI::sort(int column, Qt::SortOrder order)
         switch (kColumn) {
         case EntryEnumI::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (*lhs->issued_time < *rhs->issued_time) : (*lhs->issued_time > *rhs->issued_time);
-        case EntryEnumI::kUserId:
-            return (order == Qt::AscendingOrder) ? (*lhs->user_id < *rhs->user_id) : (*lhs->user_id > *rhs->user_id);
-        case EntryEnumI::kCreateTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->created_time < *rhs->created_time) : (*lhs->created_time > *rhs->created_time);
-        case EntryEnumI::kCreateBy:
-            return (order == Qt::AscendingOrder) ? (*lhs->created_by < *rhs->created_by) : (*lhs->created_by > *rhs->created_by);
-        case EntryEnumI::kUpdateTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->updated_time < *rhs->updated_time) : (*lhs->updated_time > *rhs->updated_time);
-        case EntryEnumI::kUpdateBy:
-            return (order == Qt::AscendingOrder) ? (*lhs->updated_by < *rhs->updated_by) : (*lhs->updated_by > *rhs->updated_by);
         case EntryEnumI::kCode:
             return (order == Qt::AscendingOrder) ? (*lhs->code < *rhs->code) : (*lhs->code > *rhs->code);
         case EntryEnumI::kUnitCost:
