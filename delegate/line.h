@@ -17,17 +17,17 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LINEGUARD_H
-#define LINEGUARD_H
+#ifndef LINE_H
+#define LINE_H
 
 #include "delegate/styleditemdelegate.h"
 
-class LineGuard final : public StyledItemDelegate {
+class Line final : public StyledItemDelegate {
 public:
-    explicit LineGuard(QObject* parent = nullptr);
+    explicit Line(QObject* parent = nullptr);
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
 };
 
-#endif // LINEGUARD_H
+#endif // LINE_H

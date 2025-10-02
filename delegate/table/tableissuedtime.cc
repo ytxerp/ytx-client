@@ -18,12 +18,15 @@ QWidget* TableIssuedTime::createEditor(QWidget* parent, const QStyleOptionViewIt
 
 void TableIssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
+    auto* cast_editor { static_cast<DateTimeEdit*>(editor) };
+    if (cast_editor->hasFocus())
+        return;
+
     auto issued_time { index.data().toDateTime().toLocalTime() };
     if (!issued_time.isValid())
         issued_time = last_insert_.isValid() ? last_insert_.addSecs(1) : QDateTime::currentDateTime();
 
-    auto* cast_ediotr { static_cast<DateTimeEdit*>(editor) };
-    cast_ediotr->setDateTime(issued_time);
+    cast_editor->setDateTime(issued_time);
 }
 
 void TableIssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
@@ -39,7 +42,7 @@ void TableIssuedTime::paint(QPainter* painter, const QStyleOptionViewItem& optio
 {
     auto issued_time { index.data().toDateTime().toLocalTime() };
     if (!issued_time.isValid())
-        return QStyledItemDelegate::paint(painter, option, index);
+        return PaintEmpty(painter, option, index);
 
     PaintText(issued_time.toString(date_format_), painter, option, index, Qt::AlignCenter);
 }

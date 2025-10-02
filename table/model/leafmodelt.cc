@@ -84,7 +84,7 @@ bool LeafModelT::setData(const QModelIndex& index, const QVariant& value, int ro
         EntryUtils::UpdateShadowDocument(caches_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumT::kStatus:
-        EntryUtils::UpdateShadowField(caches_[id], shadow, kStatus, value.toBool(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowField(caches_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumT::kDescription:
         EntryUtils::UpdateShadowField(caches_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });

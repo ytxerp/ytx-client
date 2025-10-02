@@ -48,7 +48,7 @@ public:
     bool WriteSettlement(const Settlement* settlement) const;
     bool RemoveSettlement(const QUuid& settlement_id);
 
-    bool ReadSettlementPrimary(SettlementList& list, const QUuid& partner_id, const QUuid& settlement_id, bool is_finished);
+    bool ReadSettlementPrimary(SettlementList& list, const QUuid& partner_id, const QUuid& settlement_id, bool status);
     bool AddSettlementPrimary(const QUuid& node_id, const QUuid& settlement_id) const;
     bool RemoveSettlementPrimary(const QUuid& node_id) const;
 
@@ -77,7 +77,7 @@ private:
     QString QSRemoveSettlementFirst() const;
     QString QSRemoveSettlementSecond() const;
 
-    QString QSReadSettlementPrimary(bool is_finished) const;
+    QString QSReadSettlementPrimary(bool status) const;
 
     // void ReadSettlementPrimaryQuery(SettlementList& node_list, QSqlQuery& query);
 

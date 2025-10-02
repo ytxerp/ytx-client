@@ -17,18 +17,20 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLAINTEXTGUARD_H
-#define PLAINTEXTGUARD_H
+#ifndef BOOLSTRINGR_H
+#define BOOLSTRINGR_H
+
+#include <QEvent>
 
 #include "delegate/styleditemdelegate.h"
 
-class PlainTextGuard final : public StyledItemDelegate {
+class BoolStringR final : public StyledItemDelegate {
 public:
-    explicit PlainTextGuard(QObject* parent = nullptr);
-    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    void setEditorData(QWidget* editor, const QModelIndex& index) const override;
-    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
+    explicit BoolStringR(CBoolString& map, QObject* parent = nullptr);
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+
+private:
+    CBoolString& map_;
 };
 
-#endif // PLAINTEXTGUARD_H
+#endif // BOOLSTRINGR_H

@@ -22,6 +22,8 @@ QWidget* OrderUnit::createEditor(QWidget* parent, const QStyleOptionViewItem& op
 void OrderUnit::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
+    if (cast_editor->hasFocus())
+        return;
 
     int item_index { cast_editor->findData(index.data().toInt()) };
     if (item_index != -1)

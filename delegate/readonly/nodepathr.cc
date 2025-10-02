@@ -12,7 +12,7 @@ void NodePathR::paint(QPainter* painter, const QStyleOptionViewItem& option, con
 {
     const QString& text { tree_model_->Path(index.data().toUuid()) };
     if (text.isEmpty())
-        return QStyledItemDelegate::paint(painter, option, index);
+        return PaintEmpty(painter, option, index);
 
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }

@@ -2,6 +2,8 @@
 
 #include <QMouseEvent>
 
+#include "component/enumclass.h"
+
 Status::Status(QEvent::Type type, QObject* parent)
     : StyledItemDelegate { parent }
     , type_ { type }
@@ -10,8 +12,8 @@ Status::Status(QEvent::Type type, QObject* parent)
 
 void Status::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    if (!index.data().toBool())
-        return QStyledItemDelegate::paint(painter, option, index);
+    if (index.data().toInt() == std::to_underlying(EntryStatus::kUnmarked))
+        return PaintEmpty(painter, option, index);
 
     PaintCheckBox(painter, option, index);
 }
@@ -25,6 +27,30 @@ bool Status::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleO
     if (mouse_event->button() != Qt::LeftButton || !option.rect.contains(mouse_event->pos()))
         return false;
 
-    const bool checked { index.data().toBool() };
-    return model->setData(index, !checked, Qt::EditRole);
+    const int status { index.data().toInt() };
+
+    // Note:
+    // Here, status = 0 represents a "base" state:
+    //   - For Entry tables, it corresponds to EntryStatus::kUnmarked.
+    //   - For Node tables, it corresponds to NodeStatus::kEditable.
+    // Since this delegate is shared across different models,
+    // we cannot bind it directly to a specific enum class,
+    // and must toggle the raw int value instead.
+
+    int next_status {};
+    switch (status) {
+    case 0:
+        next_status = 1;
+        break;
+    case 1:
+        next_status = 0;
+        break;
+    default:
+        // Future extension point:
+        // e.g. handle "2 = Voided" or other states
+        next_status = 0;
+        break;
+    }
+
+    return model->setData(index, next_status, Qt::EditRole);
 }

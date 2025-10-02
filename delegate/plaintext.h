@@ -17,25 +17,18 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOUBLEGUARD_H
-#define DOUBLEGUARD_H
+#ifndef PLAINTEXT_H
+#define PLAINTEXT_H
 
 #include "delegate/styleditemdelegate.h"
 
-class DoubleGuard final : public StyledItemDelegate {
+class PlainText final : public StyledItemDelegate {
 public:
-    DoubleGuard(const int& decimal, double min, double max, int coefficient, QObject* parent = nullptr);
+    explicit PlainText(QObject* parent = nullptr);
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
+    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
-    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-
-private:
-    const int& decimal_;
-    double max_ {};
-    double min_ {};
-    const int coefficient_ {};
 };
 
-#endif // DOUBLEGUARD_H
+#endif // PLAINTEXT_H

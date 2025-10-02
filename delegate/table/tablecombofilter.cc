@@ -20,6 +20,8 @@ QWidget* TableComboFilter::createEditor(QWidget* parent, const QStyleOptionViewI
 void TableComboFilter::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
+    if (cast_editor->hasFocus())
+        return;
 
     auto key { index.data().toUuid() };
     if (key.isNull())
@@ -40,10 +42,11 @@ void TableComboFilter::setModelData(QWidget* editor, QAbstractItemModel* model, 
 
 void TableComboFilter::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString path { tree_model_->Path(index.data().toUuid()) };
-    if (path.isEmpty())
-        return QStyledItemDelegate::paint(painter, option, index);
+    const QUuid linked_node { index.data().toUuid() };
+    if (linked_node.isNull())
+        return PaintEmpty(painter, option, index);
 
+    const QString path { tree_model_->Path(linked_node) };
     PaintText(path, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 
     // 高度自定义

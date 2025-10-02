@@ -16,8 +16,7 @@ void Document::paint(QPainter* painter, const QStyleOptionViewItem& option, cons
     const auto size { list.size() };
 
     if (size == 0) {
-        QStyledItemDelegate::paint(painter, option, index);
-        return;
+        return PaintEmpty(painter, option, index);
     }
 
     const QString text = QString::number(size);

@@ -1,40 +1,32 @@
 #include "color.h"
 
+#include <QtWidgets/qapplication.h>
+
 #include <QColorDialog>
 #include <QKeyEvent>
 #include <QPainter>
 
 Color::Color(QObject* parent)
-    : QStyledItemDelegate { parent }
+    : StyledItemDelegate { parent }
 {
 }
 
 void Color::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    QString string { index.data().toString() };
-    if (string.isEmpty())
-        return QStyledItemDelegate::paint(painter, option, index);
+    const QString color_string = index.data().toString();
 
-    QColor color(string);
-    if (!color.isValid())
-        return QStyledItemDelegate::paint(painter, option, index);
+    if (color_string.isEmpty() || !QColor::isValidColorName(color_string))
+        return PaintEmpty(painter, option, index);
 
-    QRect color_rect { option.rect.adjusted(2, 2, -2, -2) };
+    QStyle* style = option.widget ? option.widget->style() : QApplication::style();
+    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
 
-    // 保存当前的 painter 状态
+    const QRect color_rect = option.rect.adjusted(2, 2, -2, -2);
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(Qt::NoPen);
-
-    QColor background_color { (option.state & QStyle::State_Selected) ? option.palette.highlight().color() : option.palette.window().color() };
-
-    painter->setBrush(background_color);
-    painter->drawRect(option.rect);
-
-    // 设置画笔颜色
-    painter->setBrush(color);
+    painter->setBrush(QColor(color_string));
     painter->drawRoundedRect(color_rect, 2, 2);
-
     painter->restore();
 }
 

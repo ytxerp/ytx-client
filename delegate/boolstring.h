@@ -17,19 +17,22 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DINTSTRINGR_H
-#define DINTSTRINGR_H
+#ifndef BOOLSTRING_H
+#define BOOLSTRING_H
 
-#include "component/using.h"
+#include <QEvent>
+
 #include "delegate/styleditemdelegate.h"
 
-class DIntStringR final : public StyledItemDelegate {
+class BoolString final : public StyledItemDelegate {
 public:
-    DIntStringR(CIntString& map, QObject* parent = nullptr);
+    explicit BoolString(CBoolString& map, QEvent::Type type, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+    bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
 
 private:
-    CIntString& map_;
+    CBoolString& map_;
+    QEvent::Type type_ {};
 };
 
-#endif // DINTSTRINGR_H
+#endif // BOOLSTRING_H

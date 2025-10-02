@@ -27,7 +27,7 @@
 #include "component/config.h"
 #include "delegate/readonly/statusr.h"
 #include "delegate/readonly/colorr.h"
-#include "delegate/readonly/doublespinrnonezero.h"
+#include "delegate/readonly/doublespinnonezeror.h"
 #include "delegate/search/searchpathtabler.h"
 #include "search/entry/searchentrymodel.h"
 #include "search/node/searchnodemodel.h"
@@ -80,8 +80,8 @@ protected:
     CTreeModel* node_ {};
     QButtonGroup* content_group_ {};
 
-    DoubleSpinRNoneZero* value_ {};
-    DoubleSpinRNoneZero* rate_ {};
+    DoubleSpinNoneZeroR* value_ {};
+    DoubleSpinNoneZeroR* rate_ {};
 
     StatusR* check_ {};
     ColorR* color_ {};

@@ -1,16 +1,16 @@
-#include "plaintextguard.h"
+#include "plaintext.h"
 
 #include <QApplication>
 #include <QRect>
 
 #include "widget/plaintextedit.h"
 
-PlainTextGuard::PlainTextGuard(QObject* parent)
+PlainText::PlainText(QObject* parent)
     : StyledItemDelegate { parent }
 {
 }
 
-QWidget* PlainTextGuard::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
+QWidget* PlainText::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     Q_UNUSED(option);
     Q_UNUSED(index);
@@ -19,7 +19,7 @@ QWidget* PlainTextGuard::createEditor(QWidget* parent, const QStyleOptionViewIte
     return editor;
 }
 
-void PlainTextGuard::setEditorData(QWidget* editor, const QModelIndex& index) const
+void PlainText::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<PlainTextEdit*>(editor) };
     if (cast_editor->hasFocus())
@@ -28,7 +28,7 @@ void PlainTextGuard::setEditorData(QWidget* editor, const QModelIndex& index) co
     cast_editor->setPlainText(index.data().toString());
 }
 
-void PlainTextGuard::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void PlainText::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     Q_UNUSED(index);
 
@@ -39,7 +39,7 @@ void PlainTextGuard::updateEditorGeometry(QWidget* editor, const QStyleOptionVie
     editor->setGeometry(QRect(option.rect.bottomLeft(), QSize(width, height)));
 }
 
-void PlainTextGuard::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
+void PlainText::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<PlainTextEdit*>(editor) };
     model->setData(index, cast_editor->toPlainText());

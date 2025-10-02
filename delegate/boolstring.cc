@@ -1,15 +1,15 @@
-#include "dboolstring.h"
+#include "boolstring.h"
 
 #include <QMouseEvent>
 
-DBoolString::DBoolString(CBoolString& map, QEvent::Type type, QObject* parent)
+BoolString::BoolString(CBoolString& map, QEvent::Type type, QObject* parent)
     : StyledItemDelegate { parent }
     , map_ { map }
     , type_ { type }
 {
 }
 
-void DBoolString::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void BoolString::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const bool key { index.data().toBool() };
 
@@ -21,7 +21,7 @@ void DBoolString::paint(QPainter* painter, const QStyleOptionViewItem& option, c
     PaintText(it.value(), painter, option, index, Qt::AlignCenter);
 }
 
-bool DBoolString::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
+bool BoolString::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
 {
     if (event->type() != type_)
         return false;

@@ -39,7 +39,7 @@ struct EntryShadow {
     QUuid* lhs_node {};
     QString* description {};
     QStringList* document {};
-    bool* status {};
+    int* status {};
     QUuid* rhs_node {};
 
     double balance {};

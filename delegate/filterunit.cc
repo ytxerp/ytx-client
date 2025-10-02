@@ -24,6 +24,9 @@ QWidget* FilterUnit::createEditor(QWidget* parent, const QStyleOptionViewItem& o
 void FilterUnit::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
+    if (cast_editor->hasFocus())
+        return;
+
     auto key { index.data().toUuid() };
     int item_index { cast_editor->findData(key) };
     cast_editor->setCurrentIndex(item_index);
@@ -40,7 +43,7 @@ void FilterUnit::paint(QPainter* painter, const QStyleOptionViewItem& option, co
 {
     const QString& text { tree_model_->Path(index.data().toUuid()) };
     if (text.isEmpty())
-        return QStyledItemDelegate::paint(painter, option, index);
+        return PaintEmpty(painter, option, index);
 
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }

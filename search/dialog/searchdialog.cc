@@ -4,8 +4,8 @@
 
 #include "component/enumclass.h"
 #include "component/signalblocker.h"
-#include "delegate/readonly/dboolstringr.h"
-#include "delegate/readonly/dintstringr.h"
+#include "delegate/readonly/boolstringr.h"
+#include "delegate/readonly/intstringr.h"
 #include "delegate/search/searchpathtreer.h"
 #include "ui_searchdialog.h"
 
@@ -61,13 +61,13 @@ void SearchDialog::IniConnect()
 
 void SearchDialog::TreeCommonDelegate(QTableView* view)
 {
-    auto* unit { new DIntStringR(info_.unit_map, view) };
+    auto* unit { new IntStringR(info_.unit_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kUnit), unit);
 
-    auto* direction_rule { new DBoolStringR(info_.rule_map, view) };
+    auto* direction_rule { new BoolStringR(info_.rule_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kDirectionRule), direction_rule);
 
-    auto* kind { new DIntStringR(info_.kind_map, view) };
+    auto* kind { new IntStringR(info_.kind_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kKind), kind);
 
     auto* name { new SearchPathTreeR(node_, std::to_underlying(NodeEnum::kId), view) };
@@ -83,8 +83,8 @@ void SearchDialog::IniContentGroup()
 
 void SearchDialog::InitDelegate()
 {
-    value_ = new DoubleSpinRNoneZero(config_.amount_decimal, kCoefficient8, this);
-    rate_ = new DoubleSpinRNoneZero(config_.rate_decimal, kCoefficient8, this);
+    value_ = new DoubleSpinNoneZeroR(config_.amount_decimal, kCoefficient8, this);
+    rate_ = new DoubleSpinNoneZeroR(config_.rate_decimal, kCoefficient8, this);
 
     check_ = new StatusR(this);
     color_ = new ColorR(this);

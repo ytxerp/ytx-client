@@ -12,7 +12,7 @@ void Entry::ResetState()
     lhs_node = QUuid();
     description.clear();
     rhs_node = QUuid();
-    status = false;
+    status = 0;
     document.clear();
 
     user_id = QUuid();
@@ -37,7 +37,7 @@ void Entry::ReadJson(const QJsonObject& object)
     if (object.contains(kDocument))
         document = object[kDocument].toString().split(kSemicolon, Qt::SkipEmptyParts);
     if (object.contains(kStatus))
-        status = object[kStatus].toBool();
+        status = object[kStatus].toInt();
     if (object.contains(kRhsNode))
         rhs_node = QUuid(object[kRhsNode].toString());
     if (object.contains(kUserId))

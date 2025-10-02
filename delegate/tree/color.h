@@ -20,9 +20,9 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-#include <QStyledItemDelegate>
+#include "delegate/styleditemdelegate.h"
 
-class Color final : public QStyledItemDelegate {
+class Color final : public StyledItemDelegate {
 public:
     explicit Color(QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;

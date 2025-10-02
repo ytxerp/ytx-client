@@ -10,7 +10,7 @@ void IssuedTimeR::paint(QPainter* painter, const QStyleOptionViewItem& option, c
 {
     const auto issued_time { index.data().toDateTime() };
     if (!issued_time.isValid())
-        return QStyledItemDelegate::paint(painter, option, index);
+        return PaintEmpty(painter, option, index);
 
     PaintText(issued_time.toString(date_format_), painter, option, index, Qt::AlignCenter);
 }

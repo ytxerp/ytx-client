@@ -45,7 +45,7 @@ QVariant LeafModelI::data(const QModelIndex& index, int role) const
     case EntryEnumI::kRhsNode:
         return d_shadow->rhs_node->isNull() ? QVariant() : *d_shadow->rhs_node;
     case EntryEnumI::kStatus:
-        return *d_shadow->status ? *d_shadow->status : QVariant();
+        return *d_shadow->status;
     case EntryEnumI::kDocument:
         return d_shadow->document->isEmpty() ? QVariant() : *d_shadow->document;
     case EntryEnumI::kDebit:
@@ -83,7 +83,7 @@ bool LeafModelI::setData(const QModelIndex& index, const QVariant& value, int ro
         EntryUtils::UpdateShadowDocument(caches_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumI::kStatus:
-        EntryUtils::UpdateShadowField(caches_[id], shadow, kStatus, value.toBool(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowField(caches_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumI::kDescription:
         EntryUtils::UpdateShadowField(caches_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });

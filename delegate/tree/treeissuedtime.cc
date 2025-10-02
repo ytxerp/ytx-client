@@ -18,12 +18,15 @@ QWidget* TreeIssuedTime::createEditor(QWidget* parent, const QStyleOptionViewIte
 
 void TreeIssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
+    auto* cast_editor { static_cast<DateTimeEdit*>(editor) };
+    if (cast_editor->hasFocus())
+        return;
+
     auto issued_time { index.data().toDateTime().toLocalTime() };
     if (!issued_time.isValid())
         issued_time = QDateTime::currentDateTime();
 
-    auto* cast_ediotr { static_cast<DateTimeEdit*>(editor) };
-    cast_ediotr->setDateTime(issued_time);
+    cast_editor->setDateTime(issued_time);
 }
 
 void TreeIssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
@@ -38,7 +41,7 @@ void TreeIssuedTime::paint(QPainter* painter, const QStyleOptionViewItem& option
 {
     auto issued_time { index.data().toDateTime().toLocalTime() };
     if (!issued_time.isValid())
-        return QStyledItemDelegate::paint(painter, option, index);
+        return PaintEmpty(painter, option, index);
 
     PaintText(issued_time.toString(date_format_), painter, option, index, Qt::AlignCenter);
 }

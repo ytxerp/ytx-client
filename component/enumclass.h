@@ -351,18 +351,7 @@ enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCGrossA
 
 enum class StatementPrimaryEnum { kIssuedTime = 0, kCount, kMeasure, kInitialTotal, kStatus, kDescription, kEmployee, kFinalTotal };
 
-enum class StatementSecondaryEnum {
-    kIssuedTime = 0,
-    kRhsNode,
-    kCount,
-    kMeasure,
-    kUnitPrice,
-    kInitialTotal,
-    kStatus,
-    kDescription,
-    kSupportNode,
-    kFinalTotal
-};
+enum class StatementSecondaryEnum { kIssuedTime = 0, kRhsNode, kCount, kMeasure, kUnitPrice, kInitialTotal, kStatus, kDescription, kSupportNode, kFinalTotal };
 
 // Settlement
 enum class SettlementEnum {
@@ -396,5 +385,8 @@ enum class EntryRefEnum {
 
 // Enum class defining entry actions
 enum class EntryAction { kMarkNone = 0, kMarkAll, kMarkToggle };
+
+enum class EntryStatus { kUnmarked = 0, kMarked };
+enum class NodeStatus { kEditable = 0, kReviewed, kVoided };
 
 #endif // ENUMCLASS_H

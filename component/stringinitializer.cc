@@ -60,7 +60,7 @@ void StringInitializer::SetHeader(
         QObject::tr("Color"),
         QObject::tr("Document"),
         QObject::tr("IssuedTime"),
-        QObject::tr("IsFinished"),
+        QObject::tr("Status"),
         QObject::tr("QuantityTotal"),
         QObject::tr("AmountTotal"),
     };
@@ -99,7 +99,7 @@ void StringInitializer::SetHeader(
         QObject::tr("Employee"),
         QObject::tr("CountTotal"),
         QObject::tr("MeasureTotal"),
-        QObject::tr("IsFinished"),
+        QObject::tr("Status"),
         QObject::tr("InitialTotal"),
         QObject::tr("DiscountTotal"),
         QObject::tr("FinalTotal"),
@@ -351,7 +351,7 @@ void StringInitializer::SetHeader(
         QObject::tr("IssuedTime"),
         QObject::tr("Partner"),
         QObject::tr("Description"),
-        QObject::tr("IsFinished"),
+        QObject::tr("Status"),
         QObject::tr("GrossAmount"),
     };
 

@@ -12,18 +12,17 @@ StyledItemDelegate::StyledItemDelegate(QObject* parent)
 
 void StyledItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& /*index*/) const
 {
-    editor->setFixedHeight(option.rect.height());
-    editor->setFixedWidth(option.rect.width());
     editor->setGeometry(option.rect);
 }
 
 QSize StyledItemDelegate::CalculateTextSize(CString& text, const QStyleOptionViewItem& option, int coefficient)
 {
+    const QFontMetrics fm(option.font);
+
     if (text.isEmpty())
-        return option.rect.size();
+        return QSize(option.rect.width(), fm.height());
 
     const int text_margin { QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr, option.widget) };
-    const QFontMetrics fm(option.font);
     const int width { std::max(fm.horizontalAdvance(text) + coefficient * text_margin, option.rect.width()) };
     const int height { std::max(fm.height(), option.rect.height()) };
 
@@ -34,13 +33,12 @@ void StyledItemDelegate::PaintText(
     CString& text, QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, Qt::Alignment alignment) const
 {
     QStyleOptionViewItem opt(option);
+    initStyleOption(&opt, index);
+    opt.text = text;
     opt.displayAlignment = alignment;
 
-    initStyleOption(&opt, index);
-
-    opt.text = text;
-
-    QApplication::style()->drawControl(QStyle::CE_ItemViewItem, &opt, painter, opt.widget);
+    QStyle* style = opt.widget ? opt.widget->style() : QApplication::style();
+    style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, opt.widget);
 }
 
 void StyledItemDelegate::PaintCheckBox(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
@@ -48,16 +46,42 @@ void StyledItemDelegate::PaintCheckBox(QPainter* painter, const QStyleOptionView
     QStyleOptionViewItem opt { option };
     initStyleOption(&opt, index);
 
-    auto* style { QApplication::style() };
+    QStyle* style = opt.widget ? opt.widget->style() : QApplication::style();
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
 
     QStyleOptionButton check_box {};
-    check_box.state = option.state;
-    check_box.state |= index.data().toBool() ? QStyle::State_On : QStyle::State_Off;
+    check_box.state = opt.state & ~(QStyle::State_On | QStyle::State_Off);
 
-    auto rect { style->subElementRect(QStyle::SE_CheckBoxIndicator, &check_box, opt.widget) };
+    const int status = index.data().toInt();
+
+    // Note:
+    // This function is shared by multiple models:
+    //   - In Entry models, 0 = EntryStatus::kUnmarked, 1 = EntryStatus::kMarked.
+    //   - In Node models, 0 = NodeStatus::kEditable, 1 = NodeStatus::kReviewed, 2 = NodeStatus::kVoided.
+    // We therefore use a raw int instead of binding to a single enum class.
+    switch (status) {
+    case 0:
+        check_box.state |= QStyle::State_Off;
+        break;
+    case 1:
+        check_box.state |= QStyle::State_On;
+        break;
+    // If more states are added later (e.g., Reviewed, Voided),
+    // they can be handled here explicitly.
+    default:
+        check_box.state |= QStyle::State_Off;
+        break;
+    }
+
+    auto rect { style->subElementRect(QStyle::SE_CheckBoxIndicator, &opt, opt.widget) };
     rect.moveCenter(opt.rect.center());
     check_box.rect = rect;
 
-    style->drawPrimitive(QStyle::PE_IndicatorCheckBox, &check_box, painter, option.widget);
+    style->drawPrimitive(QStyle::PE_IndicatorCheckBox, &check_box, painter, opt.widget);
+}
+
+void StyledItemDelegate::PaintEmpty(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& /*index*/) const
+{
+    QStyle* style = option.widget ? option.widget->style() : QApplication::style();
+    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
 }

@@ -15,13 +15,13 @@ void OrderRule::paint(QPainter* painter, const QStyleOptionViewItem& option, con
 {
     const int kind = index.siblingAtColumn(std::to_underlying(NodeEnumO::kKind)).data().toInt();
     if (kind == kBranch)
-        return QStyledItemDelegate::paint(painter, option, index);
+        return PaintEmpty(painter, option, index);
 
     const bool key { index.data().toBool() };
 
     auto it { map_.constFind(key) };
     if (it == map_.constEnd()) {
-        return QStyledItemDelegate::paint(painter, option, index);
+        return PaintEmpty(painter, option, index);
     }
 
     PaintText(it.value(), painter, option, index, Qt::AlignCenter);

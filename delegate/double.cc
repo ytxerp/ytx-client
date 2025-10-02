@@ -24,6 +24,9 @@ QWidget* Double::createEditor(QWidget* parent, const QStyleOptionViewItem& /*opt
 void Double::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<DoubleSpinBox*>(editor) };
+    if (cast_editor->hasFocus())
+        return;
+
     cast_editor->setValue(index.data().toDouble());
 }
 
@@ -37,7 +40,7 @@ void Double::paint(QPainter* painter, const QStyleOptionViewItem& option, const 
 {
     const double value { index.data().toDouble() };
     if (value == 0)
-        return QStyledItemDelegate::paint(painter, option, index);
+        return PaintEmpty(painter, option, index);
 
     PaintText(locale_.toString(value, 'f', decimal_), painter, option, index, Qt::AlignRight | Qt::AlignVCenter);
 }

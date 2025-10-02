@@ -321,13 +321,14 @@ void EntryHub::ActionEntry(const QUuid& node_id, EntryAction action, const QJson
     auto Update = [action](Entry* entry) {
         switch (action) {
         case EntryAction::kMarkAll:
-            entry->status = true;
+            entry->status = std::to_underlying(EntryStatus::kMarked);
             break;
         case EntryAction::kMarkNone:
-            entry->status = false;
+            entry->status = std::to_underlying(EntryStatus::kUnmarked);
             break;
         case EntryAction::kMarkToggle:
-            entry->status = !entry->status;
+            entry->status = (entry->status == std::to_underlying(EntryStatus::kMarked)) ? std::to_underlying(EntryStatus::kUnmarked)
+                                                                                        : std::to_underlying(EntryStatus::kMarked);
             break;
         default:
             break;

@@ -51,24 +51,23 @@ set(SOURCES
     entryhub/entryhubt.cc
     widget/datetimeedit.cc
     component/stringinitializer.cc
-    delegate/double.cc
     delegate/status.cc
-    delegate/plaintextguard.cc
+    delegate/plaintext.cc
     delegate/int.cc
-    delegate/doubleguard.cc
-    delegate/dboolstring.cc
+    delegate/double.cc
+    delegate/boolstring.cc
     delegate/document.cc
-    delegate/lineguard.cc
+    delegate/line.cc
     delegate/styleditemdelegate.cc
     delegate/filterunit.cc
     delegate/readonly/nodenamer.cc
     delegate/readonly/issuedtimer.cc
     delegate/readonly/colorr.cc
     delegate/readonly/doublespinunitr.cc
-    delegate/readonly/dintstringr.cc
-    delegate/readonly/doublespinrnonezero.cc
+    delegate/readonly/intstringr.cc
+    delegate/readonly/doublespinnonezeror.cc
     delegate/readonly/doublespinr.cc
-    delegate/readonly/dboolstringr.cc
+    delegate/readonly/boolstringr.cc
     delegate/readonly/statusr.cc
     delegate/readonly/nodepathr.cc
     delegate/readonly/sectionr.cc
@@ -184,24 +183,23 @@ set(HEADERS
     component/arg/entrymodelarg.h
     component/arg/insertnodeargo.h
     component/arg/insertnodeargfipt.h
-    delegate/dboolstring.h
+    delegate/boolstring.h
     delegate/styleditemdelegate.h
-    delegate/plaintextguard.h
-    delegate/lineguard.h
+    delegate/plaintext.h
+    delegate/line.h
     delegate/int.h
     delegate/status.h
-    delegate/doubleguard.h
-    delegate/document.h
     delegate/double.h
+    delegate/document.h
     delegate/filterunit.h
-    delegate/readonly/dboolstringr.h
+    delegate/readonly/boolstringr.h
     delegate/readonly/doublespinr.h
     delegate/readonly/doublespinunitr.h
-    delegate/readonly/doublespinrnonezero.h
+    delegate/readonly/doublespinnonezeror.h
     delegate/readonly/statusr.h
     delegate/readonly/issuedtimer.h
     delegate/readonly/colorr.h
-    delegate/readonly/dintstringr.h
+    delegate/readonly/intstringr.h
     delegate/readonly/nodenamer.h
     delegate/readonly/nodepathr.h
     delegate/readonly/sectionr.h

@@ -8,7 +8,7 @@ StatusR::StatusR(QObject* parent)
 void StatusR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     if (!index.data().toBool())
-        return QStyledItemDelegate::paint(painter, option, index);
+        return PaintEmpty(painter, option, index);
 
     PaintCheckBox(painter, option, index);
 }

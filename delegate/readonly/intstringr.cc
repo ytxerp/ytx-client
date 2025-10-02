@@ -1,14 +1,14 @@
-#include "dintstringr.h"
+#include "intstringr.h"
 
 #include <widget/combobox.h>
 
-DIntStringR::DIntStringR(CIntString& map, QObject* parent)
+IntStringR::IntStringR(CIntString& map, QObject* parent)
     : StyledItemDelegate { parent }
     , map_ { map }
 {
 }
 
-void DIntStringR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void IntStringR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int key { index.data().toInt() };
 

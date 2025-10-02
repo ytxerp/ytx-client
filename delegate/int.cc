@@ -21,6 +21,9 @@ QWidget* Int::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option
 void Int::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<SpinBox*>(editor) };
+    if (cast_editor->hasFocus())
+        return;
+
     cast_editor->setValue(index.data().toInt());
 }
 
@@ -34,7 +37,7 @@ void Int::paint(QPainter* painter, const QStyleOptionViewItem& option, const QMo
 {
     const int value { index.data().toInt() };
     if (value == 0)
-        return QStyledItemDelegate::paint(painter, option, index);
+        return PaintEmpty(painter, option, index);
 
     PaintText(locale_.toString(value), painter, option, index, Qt::AlignVCenter | Qt::AlignRight);
 }

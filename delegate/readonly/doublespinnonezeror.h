@@ -17,22 +17,20 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DBOOLSTRING_H
-#define DBOOLSTRING_H
-
-#include <QEvent>
+#ifndef DOUBLESPINNONEZEROR_H
+#define DOUBLESPINNONEZEROR_H
 
 #include "delegate/styleditemdelegate.h"
 
-class DBoolString final : public StyledItemDelegate {
+class DoubleSpinNoneZeroR final : public StyledItemDelegate {
 public:
-    explicit DBoolString(CBoolString& map, QEvent::Type type, QObject* parent = nullptr);
+    DoubleSpinNoneZeroR(const int& decimal, int coefficient, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
+    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    CBoolString& map_;
-    QEvent::Type type_ {};
+    const int& decimal_ {};
+    const int coefficient_ {};
 };
 
-#endif // DBOOLSTRING_H
+#endif // DOUBLESPINNONEZEROR_H
