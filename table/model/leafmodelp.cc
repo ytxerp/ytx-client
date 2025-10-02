@@ -25,7 +25,7 @@ bool LeafModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
     if (!rhs_node_id.isNull()) {
         QJsonObject message {};
-        message.insert(kSection, info_.section_str);
+        message.insert(kSection, section_str_);
         message.insert(kSessionId, QString());
         message.insert(kEntryId, entry_shadow->id->toString(QUuid::WithoutBraces));
 
@@ -58,7 +58,7 @@ bool LeafModelP::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
     cache = d_shadow->WriteJson();
 
     QJsonObject message {};
-    message.insert(kSection, info_.section_str);
+    message.insert(kSection, section_str_);
     message.insert(kSessionId, QString());
     message.insert(kEntry, cache);
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
@@ -171,9 +171,7 @@ bool LeafModelP::setData(const QModelIndex& index, const QVariant& value, int ro
 
 void LeafModelP::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0);
-    if (column >= info_.entry_header.size() - 1)
-        return;
+    assert(column >= 0 && column <= info_.entry_header.size() - 1);
 
     auto Compare = [column, order](EntryShadow* lhs, EntryShadow* rhs) -> bool {
         const EntryEnumP kColumn { column };

@@ -129,7 +129,7 @@ bool LeafModelF::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
     cache = d_shadow->WriteJson();
 
     QJsonObject message {};
-    message.insert(kSection, info_.section_str);
+    message.insert(kSection, section_str_);
     message.insert(kSessionId, QString());
     message.insert(kEntry, cache);
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
@@ -260,7 +260,7 @@ bool LeafModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
     cache.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
 
     QJsonObject message {};
-    message.insert(kSection, info_.section_str);
+    message.insert(kSection, section_str_);
     message.insert(kSessionId, QString());
     message.insert(kCache, cache);
     message.insert(kIsParallel, is_parallel);
@@ -333,7 +333,7 @@ bool LeafModelF::UpdateRate(EntryShadow* entry_shadow, double value)
     cache.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
 
     QJsonObject message {};
-    message.insert(kSection, info_.section_str);
+    message.insert(kSection, section_str_);
     message.insert(kSessionId, QString());
     message.insert(kCache, cache);
     message.insert(kIsParallel, is_parallel);
@@ -368,13 +368,18 @@ bool LeafModelF::UpdateRate(EntryShadow* entry_shadow, double value)
 
 void LeafModelF::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0);
-    if (column >= info_.entry_header.size() - 1)
+    assert(column >= 0 && column <= info_.entry_header.size() - 1);
+
+    const EntryEnumF kColumn { column };
+
+    switch (kColumn) {
+    case EntryEnumF::kBalance:
         return;
+    default:
+        break;
+    }
 
-    auto Compare = [column, order](const EntryShadow* lhs, const EntryShadow* rhs) -> bool {
-        const EntryEnumF kColumn { column };
-
+    auto Compare = [order, kColumn](const EntryShadow* lhs, const EntryShadow* rhs) -> bool {
         auto* d_lhs { DerivedPtr<EntryShadowF>(lhs) };
         auto* d_rhs { DerivedPtr<EntryShadowF>(rhs) };
 
@@ -470,7 +475,7 @@ bool LeafModelF::removeRows(int row, int /*count*/, const QModelIndex& parent)
         const bool has_leaf_delta = std::abs(lhs_initial_delta) > kTolerance;
 
         QJsonObject message {};
-        message.insert(kSection, info_.section_str);
+        message.insert(kSection, section_str_);
         message.insert(kSessionId, QString());
         message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
 

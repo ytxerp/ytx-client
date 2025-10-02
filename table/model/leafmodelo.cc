@@ -198,7 +198,7 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
 
 void LeafModelO::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < info_.node_header.size());
+    assert(column >= 0 && column <= info_.entry_header.size() - 1);
 
     auto Compare = [column, order](EntryShadow* lhs, EntryShadow* rhs) -> bool {
         const EntryEnumO kColumn { column };
