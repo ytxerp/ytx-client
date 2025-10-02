@@ -69,16 +69,6 @@ QVariant LeafModelO::data(const QModelIndex& index, int role) const
     switch (kColumn) {
     case EntryEnumO::kId:
         return *d_shadow->id;
-    case EntryEnumO::kUserId:
-        return *d_shadow->user_id;
-    case EntryEnumO::kCreateTime:
-        return *d_shadow->created_time;
-    case EntryEnumO::kCreateBy:
-        return *d_shadow->created_by;
-    case EntryEnumO::kUpdateTime:
-        return *d_shadow->updated_time;
-    case EntryEnumO::kUpdateBy:
-        return *d_shadow->updated_by;
     case EntryEnumO::kLhsNode:
         return *d_shadow->lhs_node;
     case EntryEnumO::kRhsNode:
@@ -202,11 +192,6 @@ void LeafModelO::sort(int column, Qt::SortOrder order)
 
     switch (kColumn) {
     case EntryEnumO::kId:
-    case EntryEnumO::kUserId:
-    case EntryEnumO::kCreateTime:
-    case EntryEnumO::kCreateBy:
-    case EntryEnumO::kUpdateTime:
-    case EntryEnumO::kUpdateBy:
         return;
     default:
         break;

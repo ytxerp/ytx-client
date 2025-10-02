@@ -30,7 +30,7 @@ struct Settlement {
     QUuid employee {};
     QDateTime issued_time {};
     QString description {};
-    bool status {};
+    int status {};
     double initial_total {};
 
     QUuid user_id {};

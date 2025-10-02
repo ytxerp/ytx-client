@@ -188,11 +188,6 @@ void StringInitializer::SetHeader(
 
     sale.entry_header = {
         QObject::tr("Id"),
-        QObject::tr("UserId"),
-        QObject::tr("CreatedTime"),
-        QObject::tr("CreatedBy"),
-        QObject::tr("UpdatedTime"),
-        QObject::tr("UpdatedBy"),
         QObject::tr("InternalSku"),
         QObject::tr("Count"),
         QObject::tr("Measure"),

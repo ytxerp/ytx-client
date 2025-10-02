@@ -143,11 +143,6 @@ enum class EntryEnumP {
 // FullEntryEnumO is same as EntryEnumO
 enum class EntryEnumO {
     kId = 0,
-    kUserId,
-    kCreateTime,
-    kCreateBy,
-    kUpdateTime,
-    kUpdateBy,
     kRhsNode,
     kCount,
     kMeasure,

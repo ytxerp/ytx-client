@@ -21,27 +21,25 @@ QVariant SearchEntryModelO::data(const QModelIndex& index, int role) const
     case EntryEnumO::kLhsNode:
         return d_entry->lhs_node;
     case EntryEnumO::kUnitPrice:
-        return d_entry->unit_price == 0 ? QVariant() : d_entry->unit_price;
+        return d_entry->unit_price;
     case EntryEnumO::kDescription:
         return d_entry->description;
     case EntryEnumO::kExternalSku:
-        return d_entry->external_sku.isNull() ? QVariant() : d_entry->external_sku;
+        return d_entry->external_sku;
     case EntryEnumO::kRhsNode:
         return d_entry->rhs_node;
     case EntryEnumO::kCount:
-        return d_entry->count == 0 ? QVariant() : d_entry->count;
+        return d_entry->count;
     case EntryEnumO::kMeasure:
-        return d_entry->measure == 0 ? QVariant() : d_entry->measure;
-    case EntryEnumO::kColor:
-        return {};
+        return d_entry->measure;
     case EntryEnumO::kDiscountPrice:
-        return d_entry->discount_price == 0 ? QVariant() : d_entry->discount_price;
+        return d_entry->discount_price;
     case EntryEnumO::kInitial:
-        return d_entry->initial == 0 ? QVariant() : d_entry->initial;
+        return d_entry->initial;
     case EntryEnumO::kDiscount:
-        return d_entry->discount == 0 ? QVariant() : d_entry->discount;
+        return d_entry->discount;
     case EntryEnumO::kFinal:
-        return d_entry->final == 0 ? QVariant() : d_entry->final;
+        return d_entry->final;
     default:
         return QVariant();
     }

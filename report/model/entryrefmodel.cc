@@ -53,19 +53,19 @@ QVariant EntryRefModel::data(const QModelIndex& index, int role) const
     case EntryRefEnum::kOrderId:
         return entry->order_id;
     case EntryRefEnum::kExternalSku:
-        return entry->external_sku.isNull() ? QVariant() : entry->external_sku;
+        return entry->external_sku;
     case EntryRefEnum::kkCount:
-        return entry->count == 0 ? QVariant() : entry->count;
+        return entry->count;
     case EntryRefEnum::kkMeasure:
-        return entry->measure == 0 ? QVariant() : entry->measure;
+        return entry->measure;
     case EntryRefEnum::kUnitPrice:
-        return entry->unit_price == 0 ? QVariant() : entry->unit_price;
+        return entry->unit_price;
     case EntryRefEnum::kDiscountPrice:
-        return entry->discount_price == 0 ? QVariant() : entry->discount_price;
+        return entry->discount_price;
     case EntryRefEnum::kDescription:
         return entry->description;
     case EntryRefEnum::kInitial:
-        return entry->initial == 0 ? QVariant() : entry->initial;
+        return entry->initial;
     default:
         return QVariant();
     }

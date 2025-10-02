@@ -39,7 +39,7 @@ void Double::setModelData(QWidget* editor, QAbstractItemModel* model, const QMod
 void Double::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const double value { index.data().toDouble() };
-    if (value == 0)
+    if (std::abs(value) < kTolerance)
         return PaintEmpty(painter, option, index);
 
     PaintText(locale_.toString(value, 'f', decimal_), painter, option, index, Qt::AlignRight | Qt::AlignVCenter);

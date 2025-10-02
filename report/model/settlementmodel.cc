@@ -89,11 +89,11 @@ QVariant SettlementModel::data(const QModelIndex& index, int role) const
     case SettlementEnum::kDescription:
         return settlement->description;
     case SettlementEnum::kStatus:
-        return settlement->status ? settlement->status : QVariant();
+        return settlement->status;
     case SettlementEnum::kInitialTotal:
-        return settlement->initial_total == 0 ? QVariant() : settlement->initial_total;
+        return settlement->initial_total;
     case SettlementEnum::kPartner:
-        return settlement->partner.isNull() ? QVariant() : settlement->partner;
+        return settlement->partner;
     default:
         return QVariant();
     }

@@ -25,23 +25,23 @@ QVariant SearchEntryModelF::data(const QModelIndex& index, int role) const
     case FullEntryEnumF::kLhsNode:
         return d_entry->lhs_node;
     case FullEntryEnumF::kLhsRate:
-        return d_entry->lhs_rate == 0 ? QVariant() : d_entry->lhs_rate;
+        return d_entry->lhs_rate;
     case FullEntryEnumF::kLhsDebit:
-        return d_entry->lhs_debit == 0 ? QVariant() : d_entry->lhs_debit;
+        return d_entry->lhs_debit;
     case FullEntryEnumF::kLhsCredit:
-        return d_entry->lhs_credit == 0 ? QVariant() : d_entry->lhs_credit;
+        return d_entry->lhs_credit;
     case FullEntryEnumF::kDescription:
         return d_entry->description;
     case FullEntryEnumF::kDocument:
-        return d_entry->document.isEmpty() ? QVariant() : d_entry->document.size();
+        return d_entry->document;
     case FullEntryEnumF::kStatus:
-        return d_entry->status ? d_entry->status : QVariant();
+        return d_entry->status;
     case FullEntryEnumF::kRhsCredit:
-        return d_entry->rhs_credit == 0 ? QVariant() : d_entry->rhs_credit;
+        return d_entry->rhs_credit;
     case FullEntryEnumF::kRhsDebit:
-        return d_entry->rhs_debit == 0 ? QVariant() : d_entry->rhs_debit;
+        return d_entry->rhs_debit;
     case FullEntryEnumF::kRhsRate:
-        return d_entry->rhs_rate == 0 ? QVariant() : d_entry->rhs_rate;
+        return d_entry->rhs_rate;
     case FullEntryEnumF::kRhsNode:
         return d_entry->rhs_node;
     default:

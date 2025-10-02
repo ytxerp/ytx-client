@@ -698,9 +698,6 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) 
 
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalSku), external_sku);
 
-    auto* color { new ColorR(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kColor), color);
-
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDescription), line);
 

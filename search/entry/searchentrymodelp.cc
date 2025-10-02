@@ -27,13 +27,13 @@ QVariant SearchEntryModelP::data(const QModelIndex& index, int role) const
     case EntryEnumP::kDescription:
         return d_entry->description;
     case EntryEnumP::kExternalSku:
-        return d_entry->external_sku.isNull() ? QVariant() : d_entry->external_sku;
+        return d_entry->external_sku;
     case EntryEnumP::kDocument:
-        return d_entry->document.isEmpty() ? QVariant() : d_entry->document.size();
+        return d_entry->document;
     case EntryEnumP::kStatus:
-        return d_entry->status ? d_entry->status : QVariant();
+        return d_entry->status;
     case EntryEnumP::kUnitPrice:
-        return d_entry->unit_price == 0 ? QVariant() : d_entry->unit_price;
+        return d_entry->unit_price;
     case EntryEnumP::kRhsNode:
         return d_entry->rhs_node;
     default:

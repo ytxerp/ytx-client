@@ -7,7 +7,7 @@ void Settlement::ResetState()
     employee = QUuid();
     issued_time = {};
     description.clear();
-    status = false;
+    status = 0;
     initial_total = 0.0;
 
     user_id = QUuid();
@@ -45,7 +45,7 @@ void Settlement::ReadJson(const QJsonObject& object)
     partner = QUuid(object.value(QStringLiteral("partner")).toString());
     issued_time = QDateTime::fromString(object[QStringLiteral("issued_time")].toString(), Qt::ISODate);
     description = object.value(QStringLiteral("description")).toString();
-    status = object.value(QStringLiteral("status")).toBool();
+    status = object.value(QStringLiteral("status")).toInt();
     initial_total = object.value(QStringLiteral("initial_total")).toDouble();
 
     user_id = QUuid(object.value(QStringLiteral("user_id")).toString());

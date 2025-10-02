@@ -53,19 +53,19 @@ QVariant StatementPrimaryModel::data(const QModelIndex& index, int role) const
     case StatementPrimaryEnum::kDescription:
         return node->description;
     case StatementPrimaryEnum::kEmployee:
-        return node->employee.isNull() ? QVariant() : node->employee;
+        return node->employee;
     case StatementPrimaryEnum::kIssuedTime:
         return node->issued_time;
     case StatementPrimaryEnum::kCount:
-        return node->count == 0 ? QVariant() : node->count;
+        return node->count;
     case StatementPrimaryEnum::kMeasure:
-        return node->measure == 0 ? QVariant() : node->measure;
+        return node->measure;
     case StatementPrimaryEnum::kStatus:
-        return node->status ? node->status : QVariant();
+        return QVariant();
     case StatementPrimaryEnum::kInitialTotal:
-        return node->initial_total == 0 ? QVariant() : node->initial_total;
+        return node->initial_total;
     case StatementPrimaryEnum::kFinalTotal:
-        return node->final_total == 0 ? QVariant() : node->final_total;
+        return node->final_total;
     default:
         return QVariant();
     }

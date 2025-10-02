@@ -52,17 +52,17 @@ QVariant StatementModel::data(const QModelIndex& index, int role) const
     case StatementEnum::kPartner:
         return statement->partner;
     case StatementEnum::kPBalance:
-        return statement->pbalance == 0 ? QVariant() : statement->pbalance;
+        return statement->pbalance;
     case StatementEnum::kCGrossAmount:
-        return statement->cgross_amount == 0 ? QVariant() : statement->cgross_amount;
+        return statement->cgross_amount;
     case StatementEnum::kCSettlement:
-        return statement->csettlement == 0 ? QVariant() : statement->csettlement;
+        return statement->csettlement;
     case StatementEnum::kCBalance:
-        return statement->cbalance == 0 ? QVariant() : statement->cbalance;
+        return statement->cbalance;
     case StatementEnum::kCCount:
-        return statement->ccount == 0 ? QVariant() : statement->ccount;
+        return statement->ccount;
     case StatementEnum::kCMeasure:
-        return statement->cmeasure == 0 ? QVariant() : statement->cmeasure;
+        return statement->cmeasure;
     default:
         return QVariant();
     }

@@ -61,19 +61,19 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
     case StatementSecondaryEnum::kRhsNode:
         return entry->rhs_node;
     case StatementSecondaryEnum::kSupportNode:
-        return entry->support_id.isNull() ? QVariant() : entry->support_id;
+        return entry->support_id;
     case StatementSecondaryEnum::kCount:
-        return entry->count == 0 ? QVariant() : entry->count;
+        return entry->count;
     case StatementSecondaryEnum::kMeasure:
-        return entry->measure == 0 ? QVariant() : entry->measure;
+        return entry->measure;
     case StatementSecondaryEnum::kUnitPrice:
-        return entry->unit_price == 0 ? QVariant() : entry->unit_price;
+        return entry->unit_price;
     case StatementSecondaryEnum::kDescription:
         return entry->description;
     case StatementSecondaryEnum::kInitialTotal:
-        return entry->initial == 0 ? QVariant() : entry->initial;
+        return entry->initial;
     case StatementSecondaryEnum::kStatus:
-        return entry->status ? entry->status : QVariant();
+        return entry->status;
     default:
         return QVariant();
     }

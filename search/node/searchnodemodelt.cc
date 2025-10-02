@@ -37,7 +37,7 @@ QVariant SearchNodeModelT::data(const QModelIndex& index, int role) const
     case NodeEnumT::kStatus:
         return d_node->status;
     case NodeEnumT::kDocument:
-        return d_node->document.size();
+        return d_node->document;
     case NodeEnumT::kInitialTotal:
         return d_node->initial_total;
     case NodeEnumT::kFinalTotal:

@@ -11,7 +11,7 @@ void DoubleSpinNoneZeroR::paint(QPainter* painter, const QStyleOptionViewItem& o
 {
     const double value { index.data().toDouble() };
 
-    if (value == 0.0)
+    if (std::abs(value) < kTolerance)
         return PaintEmpty(painter, option, index);
 
     PaintText(locale_.toString(value, 'f', decimal_), painter, option, index, Qt::AlignRight | Qt::AlignVCenter);

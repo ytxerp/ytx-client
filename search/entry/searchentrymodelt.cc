@@ -25,21 +25,21 @@ QVariant SearchEntryModelT::data(const QModelIndex& index, int role) const
     case FullEntryEnumT::kLhsNode:
         return d_entry->lhs_node;
     case FullEntryEnumT::kLhsDebit:
-        return d_entry->lhs_debit == 0 ? QVariant() : d_entry->lhs_debit;
+        return d_entry->lhs_debit;
     case FullEntryEnumT::kUnitCost:
-        return d_entry->unit_cost == 0 ? QVariant() : d_entry->unit_cost;
+        return d_entry->unit_cost;
     case FullEntryEnumT::kLhsCredit:
-        return d_entry->lhs_credit == 0 ? QVariant() : d_entry->lhs_credit;
+        return d_entry->lhs_credit;
     case FullEntryEnumT::kDescription:
         return d_entry->description;
     case FullEntryEnumT::kDocument:
-        return d_entry->document.isEmpty() ? QVariant() : d_entry->document.size();
+        return d_entry->document;
     case FullEntryEnumT::kStatus:
-        return d_entry->status ? d_entry->status : QVariant();
+        return d_entry->status;
     case FullEntryEnumT::kRhsCredit:
-        return d_entry->rhs_credit == 0 ? QVariant() : d_entry->rhs_credit;
+        return d_entry->rhs_credit;
     case FullEntryEnumT::kRhsDebit:
-        return d_entry->rhs_debit == 0 ? QVariant() : d_entry->rhs_debit;
+        return d_entry->rhs_debit;
     case FullEntryEnumT::kRhsNode:
         return d_entry->rhs_node;
     default:
