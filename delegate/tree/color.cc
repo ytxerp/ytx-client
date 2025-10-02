@@ -35,8 +35,8 @@ bool Color::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOp
     if (event->type() != QEvent::MouseButtonDblClick)
         return QStyledItemDelegate::editorEvent(event, model, option, index);
 
-    auto* mouse_event { static_cast<QMouseEvent*>(event) };
-    if (!mouse_event || mouse_event->button() != Qt::LeftButton || !option.rect.contains(mouse_event->pos()))
+    const auto* mouse_event = static_cast<const QMouseEvent*>(event);
+    if (mouse_event->button() != Qt::LeftButton || !option.rect.contains(mouse_event->pos()))
         return false;
 
     QColor color(index.data().toString());
@@ -46,7 +46,7 @@ bool Color::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOp
     QColor selected_color { QColorDialog::getColor(color, nullptr, tr("Choose Color"), QColorDialog::ShowAlphaChannel) };
 
     if (selected_color.isValid())
-        model->setData(index, selected_color.name(QColor::HexRgb));
+        model->setData(index, selected_color.name(QColor::HexArgb));
 
     return true;
 }
