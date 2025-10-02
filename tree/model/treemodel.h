@@ -191,8 +191,6 @@ protected:
 
     void BuildHierarchy(const QJsonArray& path_array);
 
-    void ResetModel();
-
     void RestartTimer(const QUuid& id);
     void FlushCaches();
     void EmitRowChanged(const QUuid& node_id, int start_column, int end_column);
@@ -205,11 +203,12 @@ protected:
 
     void InsertImpl(Node* parent, int row, Node* node);
 
-    virtual void InsertPath(Node* node);
+    virtual void RegisterPath(Node* node);
     virtual void RemovePath(Node* node, Node* parent_node);
     virtual void RegisterNode(Node* node) { node_hash_.insert(node->id, node); }
 
     virtual void ResetBranch(Node* node) { Q_UNUSED(node) };
+    virtual void ResetModel() { }
 
     virtual const QSet<QUuid>* UnitSet(int unit) const
     {

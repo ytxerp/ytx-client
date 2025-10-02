@@ -48,6 +48,7 @@ protected:
         node_cache_.insert(node->id, node);
     }
     void ResetBranch(Node* node) override;
+    void ResetModel() override;
 
 private:
     NodeHash node_cache_ {};

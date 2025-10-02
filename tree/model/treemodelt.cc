@@ -7,6 +7,8 @@
 TreeModelT::TreeModelT(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
 {
+    leaf_model_ = new ItemModel(this);
+    node_cache_.insert(QUuid(), root_);
 }
 
 TreeModelT::~TreeModelT() { NodePool::Instance().Recycle(node_cache_, section_); }
@@ -239,11 +241,10 @@ void TreeModelT::AckTree(const QJsonObject& obj)
             node->ReadJson(obj);
         }
 
-        node_hash_.insert(id, node);
-        node_cache_.insert(id, node);
+        RegisterNode(node);
     }
 
-    if (!node_array.isEmpty())
+    if (node_hash_.size() >= 2)
         BuildHierarchy(path_array);
 
     endResetModel();
@@ -275,4 +276,31 @@ void TreeModelT::ResetBranch(Node* node)
     node->children.clear();
     node->initial_total = 0.0;
     node->final_total = 0.0;
+}
+
+void TreeModelT::ResetModel()
+{
+    // Clear tree structure, paths and leaf_model
+    root_->children.clear();
+    leaf_path_.clear();
+    branch_path_.clear();
+    leaf_model_->Clear();
+
+    // Clear non-branch nodes from node_hash_, keep branch nodes and unfinidhws nodes
+    for (auto it = node_hash_.begin(); it != node_hash_.end();) {
+        auto* node = static_cast<NodeT*>(it.value());
+
+        if (node->kind == kBranch) {
+            ResetBranch(node);
+            ++it;
+            continue;
+        }
+
+        if (node->status == std::to_underlying(NodeStatus::kUnfinished)) {
+            ++it;
+            continue;
+        }
+
+        it = node_hash_.erase(it);
+    }
 }

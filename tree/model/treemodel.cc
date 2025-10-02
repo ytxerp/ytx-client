@@ -11,7 +11,6 @@
 
 TreeModel::TreeModel(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : QAbstractItemModel(parent)
-    , leaf_model_ { new ItemModel(this) }
     , separator_ { separator }
     , section_ { info.section }
     , section_str_ { info.section_str }
@@ -121,9 +120,8 @@ void TreeModel::InsertImpl(Node* parent, int row, Node* node)
     node->parent = parent;
     endInsertRows();
 
-    node_hash_.insert(node->id, node);
-
-    InsertPath(node);
+    RegisterNode(node);
+    RegisterPath(node);
     SortModel();
 }
 
@@ -621,28 +619,6 @@ QSortFilterProxyModel* TreeModel::ExcludeOneModel(const QUuid& node_id)
     return model;
 }
 
-void TreeModel::ResetModel()
-{
-    // Clear tree structure and paths
-    root_->children.clear();
-    leaf_path_.clear();
-    branch_path_.clear();
-    if (leaf_model_) {
-        leaf_model_->Clear();
-    }
-
-    // Clear non-branch nodes from node_hash_, keep branch nodes
-    for (auto it = node_hash_.begin(); it != node_hash_.end();) {
-        Node* node = it.value();
-        if (node->kind == kBranch) {
-            ResetBranch(node); // Reset branch node as needed
-            ++it;
-        } else {
-            it = node_hash_.erase(it);
-        }
-    }
-}
-
 void TreeModel::FetchOneNode(const QUuid& node_id)
 {
     const auto message { JsonGen::NodeAcked(section_str_, node_id) };
@@ -681,7 +657,7 @@ void TreeModel::RemovePath(Node* node, Node* parent_node)
 void TreeModel::HandleNode()
 {
     for (auto* node : std::as_const(node_hash_)) {
-        InsertPath(node);
+        RegisterPath(node);
 
         if (node->kind == kLeaf)
             UpdateAncestorValue(node, node->initial_total, node->final_total);
@@ -818,7 +794,6 @@ void TreeModel::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
 
     auto* node = NodePool::Instance().Allocate(section_);
     node->ReadJson(leaf_obj);
-    node_hash_.insert(node->id, node);
 
     Node* ancestor { node_hash_.value(ancestor_id) };
 
@@ -830,7 +805,8 @@ void TreeModel::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
     node->parent = ancestor;
     endInsertRows();
 
-    InsertPath(node);
+    RegisterNode(node);
+    RegisterPath(node);
     SortModel();
 }
 
@@ -880,7 +856,7 @@ void TreeModel::BuildHierarchy(const QJsonArray& path_array)
     }
 }
 
-void TreeModel::InsertPath(Node* node)
+void TreeModel::RegisterPath(Node* node)
 {
     CString path { NodeUtils::ConstructPath(root_, node, separator_) };
 

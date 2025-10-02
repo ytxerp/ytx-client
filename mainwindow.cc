@@ -25,7 +25,6 @@
 #include "delegate/int.h"
 #include "delegate/line.h"
 #include "delegate/plaintext.h"
-#include "delegate/readonly/colorr.h"
 #include "delegate/readonly/doublespinnonezeror.h"
 #include "delegate/readonly/doublespinr.h"
 #include "delegate/readonly/doublespinunitr.h"

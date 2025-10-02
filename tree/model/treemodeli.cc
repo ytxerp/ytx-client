@@ -7,6 +7,7 @@
 TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
 {
+    leaf_model_ = new ItemModel(this);
     leaf_model_->AppendItem(QString(), QUuid());
 }
 

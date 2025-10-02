@@ -381,6 +381,6 @@ enum class EntryRefEnum {
 enum class EntryAction { kMarkNone = 0, kMarkAll, kMarkToggle };
 
 enum class EntryStatus { kUnmarked = 0, kMarked };
-enum class NodeStatus { kEditable = 0, kReviewed, kVoided };
+enum class NodeStatus { kUnfinished = 0, kReviewed, kVoided };
 
 #endif // ENUMCLASS_H
