@@ -20,7 +20,7 @@ TreeWidgetTO::TreeWidgetTO(CString& section, TreeModel* model, const QDateTime& 
     ui->end->setDisplayFormat(kDateFST);
 
     ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_);
+    ui->end->setDateTime(end.addSecs(-1));
 
     ui->treeViewTO->setModel(model);
 }
@@ -37,8 +37,8 @@ void TreeWidgetTO::on_start_dateChanged(const QDate& date)
 
 void TreeWidgetTO::on_end_dateChanged(const QDate& date)
 {
+    end_ = QDateTime(date.addDays(1), kStartTime);
     ui->pBtnFetch->setEnabled(date >= start_.date());
-    end_.setDate(date);
 }
 
 void TreeWidgetTO::on_pBtnFetch_clicked()

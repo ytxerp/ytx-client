@@ -1907,9 +1907,8 @@ void MainWindow::InitContextTask()
     WebSocket::Instance()->RegisterEntryHub(kTask, entry_hub);
 
     const QDate today = QDate::currentDate();
-    const QDate start_date = QDate(today.year() - 1, 1, 1);
-    const QDateTime start_dt(start_date, kStartTime);
-    const QDateTime end_dt(today, kEndTime);
+    const QDateTime start_dt(today, kStartTime);
+    const QDateTime end_dt(today.addDays(1), kStartTime);
 
     tree_widget = new TreeWidgetTO(kTask, tree_model, start_dt, end_dt, this);
     tree_view = tree_widget->View();
@@ -1994,7 +1993,7 @@ void MainWindow::InitContextSale()
 
     const QDate today = QDate::currentDate();
     const QDateTime start_dt(today, kStartTime);
-    const QDateTime end_dt(today, kEndTime);
+    const QDateTime end_dt(today.addDays(1), kStartTime);
 
     WebSocket::Instance()->RegisterTreeModel(kSale, tree_model);
     WebSocket::Instance()->RegisterEntryHub(kSale, entry_hub);
@@ -2048,7 +2047,7 @@ void MainWindow::InitContextPurchase()
 
     const QDate today = QDate::currentDate();
     const QDateTime start_dt(today, kStartTime);
-    const QDateTime end_dt(today, kEndTime);
+    const QDateTime end_dt(today.addDays(1), kStartTime);
 
     WebSocket::Instance()->RegisterTreeModel(kPurchase, tree_model);
     WebSocket::Instance()->RegisterEntryHub(kPurchase, entry_hub);
