@@ -37,7 +37,7 @@ class TreeModel : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    virtual ~TreeModel() = default;
+    virtual ~TreeModel();
 
 protected:
     explicit TreeModel(CSectionInfo& info, CString& separator, int default_unit, QObject* parent = nullptr);
@@ -194,6 +194,7 @@ protected:
     void ResetModel();
 
     void RestartTimer(const QUuid& id);
+    void FlushCaches();
     void EmitRowChanged(const QUuid& node_id, int start_column, int end_column);
 
     void UpdateDirectionRule(Node* node, bool value);

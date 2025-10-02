@@ -20,6 +20,8 @@ TreeModel::TreeModel(CSectionInfo& info, CString& separator, int default_unit, Q
     InitRoot(root_, default_unit);
 }
 
+TreeModel::~TreeModel() { FlushCaches(); }
+
 void TreeModel::RRemoveNode(const QUuid& node_id)
 {
     auto index { GetIndex(node_id) };
@@ -735,27 +737,47 @@ bool TreeModel::UpdateAncestorValue(
 
 void TreeModel::RestartTimer(const QUuid& id)
 {
-    if (timers_.contains(id)) {
-        timers_[id]->stop();
-    } else {
-        auto* timer = new QTimer(this);
+    QTimer* timer = timers_.value(id, nullptr);
+
+    if (!timer) {
+        timer = new QTimer(this);
         timer->setSingleShot(true);
 
-        connect(timer, &QTimer::timeout, this, [this, id, timer]() {
-            timers_.remove(id);
-
+        connect(timer, &QTimer::timeout, this, [this, id]() {
+            auto* expired_timer = timers_.take(id);
             const auto cache = caches_.take(id);
 
             if (!cache.isEmpty()) {
-                const auto message { JsonGen::Update(section_str_, id, cache) };
+                const auto message = JsonGen::Update(section_str_, id, cache);
                 WebSocket::Instance()->SendMessage(kNodeUpdate, message);
             }
 
-            timer->deleteLater();
+            expired_timer->deleteLater();
         });
+
         timers_[id] = timer;
     }
-    timers_[id]->start(kThreeThousand);
+
+    timer->start(kThreeThousand);
+}
+
+void TreeModel::FlushCaches()
+{
+    for (auto* timer : std::as_const(timers_)) {
+        timer->stop();
+        timer->deleteLater();
+    }
+
+    timers_.clear();
+
+    for (auto it = caches_.cbegin(); it != caches_.cend(); ++it) {
+        if (!it.value().isEmpty()) {
+            const auto message = JsonGen::Update(section_str_, it.key(), it.value());
+            WebSocket::Instance()->SendMessage(kNodeUpdate, message);
+        }
+    }
+
+    caches_.clear();
 }
 
 void TreeModel::EmitRowChanged(const QUuid& node_id, int start_column, int end_column)

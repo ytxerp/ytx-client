@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.1.1)
+cmake_minimum_required(VERSION 4.1.2)
 project(YTX VERSION 0.2.6 LANGUAGES CXX)
 
 # ------------------------

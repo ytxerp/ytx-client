@@ -16,7 +16,11 @@ LeafModel::LeafModel(CLeafModelArg& arg, QObject* parent)
 {
 }
 
-LeafModel::~LeafModel() { EntryShadowPool::Instance().Recycle(shadow_list_, section_); }
+LeafModel::~LeafModel()
+{
+    FlushCaches();
+    EntryShadowPool::Instance().Recycle(shadow_list_, section_);
+}
 
 void LeafModel::RSyncRule(bool value)
 {
@@ -157,6 +161,25 @@ void LeafModel::RestartTimer(const QUuid& id)
     }
 
     timers_[id]->start(kThreeThousand);
+}
+
+void LeafModel::FlushCaches()
+{
+    for (auto* timer : std::as_const(timers_)) {
+        timer->stop();
+        timer->deleteLater();
+    }
+
+    timers_.clear();
+
+    for (auto it = caches_.cbegin(); it != caches_.cend(); ++it) {
+        if (!it.value().isEmpty()) {
+            const auto message = JsonGen::Update(info_.section_str, it.key(), it.value());
+            WebSocket::Instance()->SendMessage(kNodeUpdate, message);
+        }
+    }
+
+    caches_.clear();
 }
 
 QModelIndex LeafModel::index(int row, int column, const QModelIndex& parent) const

@@ -115,6 +115,7 @@ protected:
 
     void AccumulateBalance(int start);
     void RestartTimer(const QUuid& id);
+    void FlushCaches();
 
 protected:
     EntryHub* entry_hub_ {};
