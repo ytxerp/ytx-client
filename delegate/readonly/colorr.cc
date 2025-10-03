@@ -11,15 +11,15 @@ ColorR::ColorR(QObject* parent)
 
 void ColorR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString color_string = index.data().toString();
+    const QString color_string { index.data().toString() };
 
     if (color_string.isEmpty() || !QColor::isValidColorName(color_string))
         return PaintEmpty(painter, option, index);
 
-    QStyle* style = option.widget ? option.widget->style() : QApplication::style();
+    QStyle* style { option.widget ? option.widget->style() : QApplication::style() };
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
 
-    const QRect color_rect = option.rect.adjusted(2, 2, -2, -2);
+    const QRect color_rect { option.rect.adjusted(2, 2, -2, -2) };
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(Qt::NoPen);

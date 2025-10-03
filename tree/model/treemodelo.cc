@@ -35,7 +35,7 @@ void TreeModelO::RSyncFinished(const QUuid& node_id, bool value)
     auto* node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
     assert(node);
 
-    int coefficient = value ? 1 : -1;
+    int coefficient { value ? 1 : -1 };
     UpdateAncestorValue(node, coefficient * node->initial_total, coefficient * node->final_total, coefficient * node->count_total,
         coefficient * node->measure_total, coefficient * node->discount_total);
 
@@ -52,7 +52,7 @@ void TreeModelO::AckTree(const QJsonObject& obj)
     ResetModel();
 
     for (const QJsonValue& val : node_array) {
-        const QJsonObject obj = val.toObject();
+        const QJsonObject obj { val.toObject() };
 
         const QUuid id { QUuid(obj.value(kId).toString()) };
         Node* node {};

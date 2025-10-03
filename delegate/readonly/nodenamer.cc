@@ -19,6 +19,6 @@ void NodeNameR::paint(QPainter* painter, const QStyleOptionViewItem& option, con
 
 QSize NodeNameR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString text = tree_model_->Name(index.data().toUuid());
+    const QString text { tree_model_->Name(index.data().toUuid()) };
     return CalculateTextSize(text, option);
 }

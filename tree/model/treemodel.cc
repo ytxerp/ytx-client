@@ -40,8 +40,8 @@ void TreeModel::RSyncDelta(
     // NOTE: Only leaf nodes apply the direction adjustment.
     // The adjusted deltas are treated as the final values
     // and will be propagated to ancestor nodes.
-    const double adjust_initial_delta = multiplier * initial_delta;
-    const double adjust_final_delta = multiplier * final_delta;
+    const double adjust_initial_delta { multiplier * initial_delta };
+    const double adjust_final_delta { multiplier * final_delta };
 
     // Accumulate into the current node totals
     node->initial_total += adjust_initial_delta;
@@ -74,8 +74,8 @@ void TreeModel::UpdateDelta(const QJsonObject& data)
     assert(data.contains(kFinalDelta));
 
     const QUuid node_id { data.value(kId).toString() };
-    const double initial_delta = data.value(kInitialDelta).toString().toDouble();
-    const double final_delta = data.value(kFinalDelta).toString().toDouble();
+    const double initial_delta { data.value(kInitialDelta).toString().toDouble() };
+    const double final_delta { data.value(kFinalDelta).toString().toDouble() };
 
     RSyncDelta(node_id, initial_delta, final_delta);
 }
@@ -144,8 +144,8 @@ void TreeModel::UpdateNode(const QUuid& node_id, const QJsonObject& data)
 
     auto index { GetIndex(node_id) };
     if (index.isValid()) {
-        const int first_start = std::to_underlying(NodeEnum::kCode);
-        const int first_end = std::to_underlying(NodeEnum::kNote);
+        const int first_start { std::to_underlying(NodeEnum::kCode) };
+        const int first_end { std::to_underlying(NodeEnum::kNote) };
         emit dataChanged(index.siblingAtColumn(first_start), index.siblingAtColumn(first_end));
 
         const auto [second_start, second_end] = CacheColumnRange();
@@ -233,7 +233,7 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value)
         emit SDirectionRule(node_id, node->direction_rule);
     }
 
-    const int role_column = std::to_underlying(NodeEnum::kDirectionRule);
+    const int role_column { std::to_underlying(NodeEnum::kDirectionRule) };
     EmitRowChanged(node_id, role_column, role_column);
 
     const auto [start_col, end_col] = TotalColumnRange();
@@ -251,8 +251,8 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
         return;
 
     const int multiplier { old_node->direction_rule == new_node->direction_rule ? 1 : -1 };
-    const double initial_delta = multiplier * old_node->initial_total;
-    const double final_delta = multiplier * old_node->final_total;
+    const double initial_delta { multiplier * old_node->initial_total };
+    const double final_delta { multiplier * old_node->final_total };
 
     new_node->initial_total += initial_delta;
     new_node->final_total += final_delta;
@@ -320,7 +320,7 @@ void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant, const Q
     }
     assert(new_parent);
 
-    const int destination_row = new_parent->children.size();
+    const auto destination_row { new_parent->children.size() };
     const auto destination_parent { GetIndex(ancestor) };
 
     auto source_row { node->parent->children.indexOf(node) };
@@ -528,16 +528,16 @@ void TreeModel::UpdateDefaultUnit(int default_unit)
 {
     root_->unit = default_unit;
 
-    const int row_count = rowCount();
+    const int row_count { rowCount() };
     if (row_count == 0)
         return;
 
-    const int col_count = node_header_.size();
-    const int first_col = col_count - 2;
-    const int last_col = col_count - 1;
+    const auto col_count { node_header_.size() };
+    const auto first_col { col_count - 2 };
+    const auto last_col { col_count - 1 };
 
-    const QModelIndex top_left = index(0, first_col);
-    const QModelIndex bottom_right = index(row_count - 1, last_col);
+    const QModelIndex top_left { index(0, first_col) };
+    const QModelIndex bottom_right { index(row_count - 1, last_col) };
 
     emit dataChanged(top_left, bottom_right);
 }
@@ -721,10 +721,10 @@ void TreeModel::RestartTimer(const QUuid& id)
 
         connect(timer, &QTimer::timeout, this, [this, id]() {
             auto* expired_timer = timers_.take(id);
-            const auto cache = caches_.take(id);
+            const auto cache { caches_.take(id) };
 
             if (!cache.isEmpty()) {
-                const auto message = JsonGen::Update(section_str_, id, cache);
+                const auto message { JsonGen::Update(section_str_, id, cache) };
                 WebSocket::Instance()->SendMessage(kNodeUpdate, message);
             }
 
@@ -748,7 +748,7 @@ void TreeModel::FlushCaches()
 
     for (auto it = caches_.cbegin(); it != caches_.cend(); ++it) {
         if (!it.value().isEmpty()) {
-            const auto message = JsonGen::Update(section_str_, it.key(), it.value());
+            const auto message { JsonGen::Update(section_str_, it.key(), it.value()) };
             WebSocket::Instance()->SendMessage(kNodeUpdate, message);
         }
     }
@@ -758,7 +758,7 @@ void TreeModel::FlushCaches()
 
 void TreeModel::EmitRowChanged(const QUuid& node_id, int start_column, int end_column)
 {
-    auto index = GetIndex(node_id);
+    auto index { GetIndex(node_id) };
     if (!index.isValid())
         return;
 
@@ -773,7 +773,7 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     beginResetModel();
 
     for (const QJsonValue& val : node_array) {
-        const QJsonObject obj = val.toObject();
+        const QJsonObject obj { val.toObject() };
         auto* node = NodePool::Instance().Allocate(section_);
         node->ReadJson(obj);
         RegisterNode(node);
@@ -797,7 +797,7 @@ void TreeModel::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
 
     Node* ancestor { node_hash_.value(ancestor_id) };
 
-    const int row = ancestor->children.size();
+    const long long row { ancestor->children.size() };
     const auto parent { GetIndex(ancestor_id) };
 
     beginInsertRows(parent, row, row);
@@ -841,10 +841,10 @@ void TreeModel::InitRoot(Node*& root, int default_unit)
 void TreeModel::BuildHierarchy(const QJsonArray& path_array)
 {
     for (const QJsonValue& val : path_array) {
-        const QJsonObject obj = val.toObject();
+        const QJsonObject obj { val.toObject() };
 
-        const QUuid ancestor_id = QUuid(obj.value(kAncestor).toString());
-        const QUuid descendant_id = QUuid(obj.value(kDescendant).toString());
+        const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
+        const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
 
         Node* ancestor { node_hash_.value(ancestor_id, nullptr) };
         Node* descendant { node_hash_.value(descendant_id, nullptr) };

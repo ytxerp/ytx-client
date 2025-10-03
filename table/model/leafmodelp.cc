@@ -51,8 +51,8 @@ bool LeafModelP::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
 
     const QUuid entry_id { *d_shadow->id };
 
-    const QString old_node_id = old_node.toString(QUuid::WithoutBraces);
-    const QString new_node_id = value.toString(QUuid::WithoutBraces);
+    const QString old_node_id { old_node.toString(QUuid::WithoutBraces) };
+    const QString new_node_id { value.toString(QUuid::WithoutBraces) };
 
     QJsonObject cache {};
     cache = d_shadow->WriteJson();

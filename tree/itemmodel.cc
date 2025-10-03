@@ -94,8 +94,8 @@ void ItemModel::UpdateSeparator(const QString& old_separator, const QString& new
     }
 
     if (!items_.empty()) {
-        const QModelIndex top = index(0, 0);
-        const QModelIndex bottom = index(rowCount() - 1, 0);
+        const QModelIndex top { index(0, 0) };
+        const QModelIndex bottom { index(rowCount() - 1, 0) };
         emit dataChanged(top, bottom, { Qt::DisplayRole, Qt::EditRole });
     }
 }

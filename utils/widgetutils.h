@@ -58,7 +58,7 @@ template <InheritQWidget T> void FreeWidget(const QUuid& node_id, QHash<QUuid, Q
 {
     auto it = hash.constFind(node_id);
     if (it != hash.constEnd()) {
-        auto widget = it.value();
+        auto widget { it.value() };
 
         if (widget) {
             hash.erase(it);
@@ -108,20 +108,20 @@ template <EntryWidgetLike T> void AppendEntryFIST(T* widget, Section start)
     auto* model { widget->Model() };
     assert(model);
 
-    const int empty_row = model->GetRhsRow({});
+    const int empty_row { model->GetRhsRow({}) };
 
     QModelIndex target_index {};
 
     if (empty_row == -1) {
-        const int new_row = model->rowCount();
+        const int new_row { model->rowCount() };
         if (!model->insertRows(new_row, 1))
             return;
 
         target_index = model->index(new_row, std::to_underlying(EntryEnum::kIssuedTime));
     } else {
-        const int rhs_col = EntryUtils::LinkedNodeColumn(start);
-        if (rhs_col != -1)
-            target_index = model->index(empty_row, rhs_col);
+        const int linked_node_col { EntryUtils::LinkedNodeColumn(start) };
+        if (linked_node_col != -1)
+            target_index = model->index(empty_row, linked_node_col);
     }
 
     if (target_index.isValid()) {
@@ -141,19 +141,19 @@ template <EntryWidgetLike T> void AppendEntryO(T* widget, Section start)
     auto* model { widget->Model() };
     assert(model);
 
-    const int empty_row = model->GetRhsRow({});
+    const int empty_row { model->GetRhsRow({}) };
 
     if (empty_row == -1) {
-        const int new_row = model->rowCount();
+        const int new_row { model->rowCount() };
         if (!model->insertRows(new_row, 1))
             return;
     }
 
-    const int rhs_col = EntryUtils::LinkedNodeColumn(start);
+    const int linked_node_col { EntryUtils::LinkedNodeColumn(start) };
     QModelIndex target_index {};
 
-    if (rhs_col != -1)
-        target_index = model->index(empty_row, rhs_col);
+    if (linked_node_col != -1)
+        target_index = model->index(empty_row, linked_node_col);
 
     if (target_index.isValid()) {
         widget->View()->setCurrentIndex(target_index);

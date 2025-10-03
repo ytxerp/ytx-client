@@ -18,7 +18,6 @@ Preferences::Preferences(CTreeModel* model, CSectionInfo& info, LocalConfig loca
     , section_ { section }
     , global_ { global }
     , model_ { model }
-
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);

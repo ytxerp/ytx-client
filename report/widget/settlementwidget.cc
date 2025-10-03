@@ -4,7 +4,6 @@
 #include "component/enumclass.h"
 #include "component/signalblocker.h"
 #include "ui_settlementwidget.h"
-#include "utils/widgetutils.h"
 
 SettlementWidget::SettlementWidget(
     SettlementModel* settlement_model, SettlementPrimaryModel* settlement_primary_model, CDateTime& start, CDateTime& end, QWidget* parent)

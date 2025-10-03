@@ -357,7 +357,7 @@ void MainWindow::ActivateLeafTab(const QUuid& node_id) const
 
 void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
 {
-    auto tree_model = sc->tree_model;
+    auto tree_model { sc->tree_model };
     auto& entry_hub = sc->entry_hub;
     const auto& info = sc->info;
     const auto& section_config = sc->section_config;
@@ -435,7 +435,7 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
     LeafModelArg model_arg { sc_->entry_hub, sc_->info, node_id, true };
     auto* leaf_model_order { new LeafModelO(model_arg, node, sc_i_.tree_model, sc_p_.entry_hub, this) };
 
-    auto print_manager = QSharedPointer<PrintManager>::create(local_config_, sc_i_.tree_model, sc_p_.tree_model);
+    auto print_manager { QSharedPointer<PrintManager>::create(local_config_, sc_i_.tree_model, sc_p_.tree_model) };
 
     auto widget_arg { InsertNodeArgO { node, sc_->entry_hub, leaf_model_order, sc_p_.tree_model, sc_->section_config, start_ } };
     auto* widget { new LeafWidgetO(widget_arg, true, print_template_, print_manager, this) };
@@ -445,7 +445,7 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
 
     connect(widget, &LeafWidgetO::SSaveOrder, this, [=, this]() {
         if (tree_model_order->InsertNode(row, parent, node)) {
-            auto index = tree_model_order->index(row, 0, parent);
+            auto index { tree_model_order->index(row, 0, parent) };
             sc_->tree_view->setCurrentIndex(index);
         }
     });
@@ -467,7 +467,7 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
 void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 {
     // Extract frequently used shortcuts
-    const auto section = sc->info.section;
+    const auto section { sc->info.section };
     auto& entry_hub = sc->entry_hub;
     auto& section_config = sc->section_config;
     auto* tab_widget = ui->tabWidget;
@@ -482,23 +482,23 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     if (!node)
         return;
 
-    const auto partner_id = node->partner;
+    const auto partner_id { node->partner };
     assert(!partner_id.isNull());
 
     // Prepare dependencies
-    auto tree_model_p = sc_p_.tree_model;
-    auto tree_model_i = sc_i_.tree_model;
+    auto tree_model_p { sc_p_.tree_model };
+    auto tree_model_i { sc_i_.tree_model };
 
     // Create model and widget
     LeafModelArg model_arg { entry_hub, sc->info, node_id, node->direction_rule };
     auto* model = new LeafModelO(model_arg, node, tree_model_i, sc_p_.entry_hub, this);
 
-    auto print_manager = QSharedPointer<PrintManager>::create(local_config_, tree_model_i, tree_model_p);
+    auto print_manager { QSharedPointer<PrintManager>::create(local_config_, tree_model_i, tree_model_p) };
     InsertNodeArgO widget_arg { node, entry_hub, model, tree_model_p, section_config, section };
     auto* widget = new LeafWidgetO(widget_arg, false, print_template_, print_manager, this);
 
     // Setup tab
-    const int tab_index = tab_widget->addTab(widget, tree_model_p->Name(partner_id));
+    const int tab_index { tab_widget->addTab(widget, tree_model_p->Name(partner_id)) };
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, node_id }));
     tab_bar->setTabToolTip(tab_index, tree_model_p->Path(partner_id));
 
@@ -734,7 +734,7 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
     SetTreeView(view, info);
 
     auto* tab_bar = tab_widget->tabBar();
-    const int index = tab_widget->addTab(tree_widget, name);
+    const int index { tab_widget->addTab(tree_widget, name) };
 
     tab_bar->setTabData(index, QVariant::fromValue(TabInfo { section, QUuid() }));
     tab_bar->setTabButton(index, QTabBar::RightSide, nullptr);
@@ -1077,7 +1077,7 @@ void MainWindow::on_actionNewGroup_triggered()
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {
         if (tree_model->InsertNode(row, parent_index, node)) {
-            auto index = tree_model->index(row, 0, parent_index);
+            auto index { tree_model->index(row, 0, parent_index) };
             sc_->tree_view->setCurrentIndex(index);
         }
     });
@@ -1129,13 +1129,13 @@ void MainWindow::RemoveNode()
 
 void MainWindow::RLeafRemoveCheck(const QJsonObject& obj)
 {
-    CString section = obj.value(kSection).toString();
-    const auto id = QUuid(obj.value(kId).toString());
+    CString section { obj.value(kSection).toString() };
+    const auto id { QUuid(obj.value(kId).toString()) };
 
     auto* section_contex = GetSectionContex(section);
 
-    auto model = section_contex->tree_model;
-    const auto index = model->GetIndex(id);
+    auto model { section_contex->tree_model };
+    const auto index { model->GetIndex(id) };
 
     const int unit { index.siblingAtColumn(std::to_underlying(NodeEnum::kUnit)).data().toInt() };
 
@@ -1155,10 +1155,10 @@ void MainWindow::RGlobalConfig(const QJsonArray& arr)
             continue;
         }
 
-        QJsonObject obj = val.toObject();
-        QString section = obj.value("section").toString();
-        int default_unit = obj.value("default_unit").toInt();
-        QString document_dir = obj.value("document_dir").toString();
+        QJsonObject obj { val.toObject() };
+        QString section { obj.value("section").toString() };
+        int default_unit { obj.value("default_unit").toInt() };
+        QString document_dir { obj.value("document_dir").toString() };
 
         auto* section_contex = GetSectionContex(section);
         if (!section_contex) {
@@ -1284,7 +1284,7 @@ void MainWindow::IniMarkGroup()
     mark_group_->addAction(ui->actionMarkToggle);
 
     connect(mark_group_, &QActionGroup::triggered, this, [this](QAction* action) {
-        const int action_id = action->data().toInt();
+        const int action_id { action->data().toInt() };
         RActionEntry(static_cast<EntryAction>(action_id));
     });
 }
@@ -1593,10 +1593,10 @@ void MainWindow::SetAppFontByDpi()
     if (!screen)
         return;
 
-    const qreal screen_dpi = screen->logicalDotsPerInch();
-    const int font_size = (screen_dpi >= 96) ? 12 : 14;
+    const qreal screen_dpi { screen->logicalDotsPerInch() };
+    const int font_size { (screen_dpi >= 96) ? 12 : 14 };
 
-    QFont app_font = qApp->font();
+    QFont app_font { qApp->font() };
     app_font.setPointSize(font_size);
 
     qApp->setFont(app_font);
@@ -1907,7 +1907,7 @@ void MainWindow::InitContextTask()
     WebSocket::Instance()->RegisterTreeModel(kTask, tree_model);
     WebSocket::Instance()->RegisterEntryHub(kTask, entry_hub);
 
-    const QDate today = QDate::currentDate();
+    const QDate today { QDate::currentDate() };
     const QDateTime start_dt(today, kStartTime);
     const QDateTime end_dt(today.addDays(1), kStartTime);
 
@@ -1992,7 +1992,7 @@ void MainWindow::InitContextSale()
     entry_hub = entry_hub_o;
     tree_model = tree_model_o;
 
-    const QDate today = QDate::currentDate();
+    const QDate today { QDate::currentDate() };
     const QDateTime start_dt(today, kStartTime);
     const QDateTime end_dt(today.addDays(1), kStartTime);
 
@@ -2046,7 +2046,7 @@ void MainWindow::InitContextPurchase()
     entry_hub = entry_hub_o;
     tree_model = tree_model_o;
 
-    const QDate today = QDate::currentDate();
+    const QDate today { QDate::currentDate() };
     const QDateTime start_dt(today, kStartTime);
     const QDateTime end_dt(today.addDays(1), kStartTime);
 
@@ -2241,7 +2241,7 @@ void MainWindow::InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUu
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {
         if (tree_model->InsertNode(row, parent, node)) {
-            auto index = tree_model->index(row, 0, parent);
+            auto index { tree_model->index(row, 0, parent) };
             sc_->tree_view->setCurrentIndex(index);
         }
     });
@@ -2310,7 +2310,7 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
         const auto node_id { tab_bar->tabData(index).value<TabInfo>().id };
 
         if (widget->isTabVisible(index) && nodes.contains(node_id)) {
-            const auto path = model->Path(node_id);
+            const auto path { model->Path(node_id) };
 
             if (!branch) {
                 tab_bar->setTabText(index, name);
@@ -2467,19 +2467,19 @@ void MainWindow::UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool b
         // 遍历所有选项卡，计算需要更新的项
         for (int index = 0; index != count; ++index) {
             const auto& data { tab_bar->tabData(index).value<TabInfo>() };
-            bool update = data.section == Section::kSale || data.section == Section::kPurchase;
+            bool update { data.section == Section::kSale || data.section == Section::kPurchase };
 
             if (!widget->isTabVisible(index) && update) {
-                const auto order_node_id = data.id;
+                const auto order_node_id { data.id };
                 if (order_node_id.isNull())
                     continue;
 
-                const auto order_partner = order_model->Partner(order_node_id);
+                const auto order_partner { order_model->Partner(order_node_id) };
                 if (!partner_nodes.contains(order_partner))
                     continue;
 
-                QString name = partner_model->Name(order_partner);
-                QString path = partner_model->Path(order_partner);
+                QString name { partner_model->Name(order_partner) };
+                QString path { partner_model->Path(order_partner) };
 
                 // 收集需要更新的信息
                 updates.append(std::make_tuple(index, name, path));
@@ -2489,7 +2489,7 @@ void MainWindow::UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool b
         return updates;
     });
 
-    auto watcher = std::make_unique<QFutureWatcher<QVector<std::tuple<int, QString, QString>>>>();
+    auto watcher { std::make_unique<QFutureWatcher<QVector<std::tuple<int, QString, QString>>>>() };
 
     // 获取原始指针用于信号连接
     auto* raw_watcher = watcher.get();
@@ -2972,15 +2972,15 @@ void MainWindow::on_actionCheckforUpdates_triggered()
             return;
         }
 
-        const QByteArray data = reply->readAll();
-        QJsonDocument doc = QJsonDocument::fromJson(data);
+        const QByteArray data { reply->readAll() };
+        QJsonDocument doc { QJsonDocument::fromJson(data) };
         if (!doc.isObject()) {
             QMessageBox::warning(this, tr("Update Check"), tr("Invalid update information received."));
             return;
         }
 
-        const QJsonObject obj = doc.object();
-        const QString latest_tag = obj.value("tag_name").toString();
+        const QJsonObject obj { doc.object() };
+        const QString latest_tag { obj.value("tag_name").toString() };
 
         const bool is_chinese { local_config_.language.startsWith("zh", Qt::CaseInsensitive) };
         const QString download_url

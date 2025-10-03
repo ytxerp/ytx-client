@@ -122,8 +122,8 @@ bool LeafModelF::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
 
     const QUuid entry_id { *d_shadow->id };
 
-    const QString old_node_id = old_node.toString(QUuid::WithoutBraces);
-    const QString new_node_id = value.toString(QUuid::WithoutBraces);
+    const QString old_node_id { old_node.toString(QUuid::WithoutBraces) };
+    const QString new_node_id { value.toString(QUuid::WithoutBraces) };
 
     QJsonObject cache {};
     cache = d_shadow->WriteJson();
@@ -141,13 +141,13 @@ bool LeafModelF::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
         const double lhs_debit { *d_shadow->lhs_debit };
         const double lhs_credit { *d_shadow->lhs_credit };
 
-        const double lhs_initial_delta = lhs_debit - lhs_credit;
-        const double lhs_final_delta = lhs_rate * lhs_initial_delta;
+        const double lhs_initial_delta { lhs_debit - lhs_credit };
+        const double lhs_final_delta { lhs_rate * lhs_initial_delta };
 
-        const double rhs_initial_delta = -lhs_initial_delta;
-        const double rhs_final_delta = rhs_rate * rhs_initial_delta;
+        const double rhs_initial_delta { -lhs_initial_delta };
+        const double rhs_final_delta { rhs_rate * rhs_initial_delta };
 
-        const bool has_leaf_delta = std::abs(lhs_initial_delta) > kTolerance;
+        const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
 
         if (has_leaf_delta) {
             QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
@@ -177,16 +177,16 @@ bool LeafModelF::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
         // If true, the EntryShadow corresponds to the left-side node in the Postgres table,
         // so we need to update the right-side node (kRhsNode).
         // If false, it means the entry is collapsed (lhs and rhs flipped), so update the left-side node (kLhsNode).
-        const auto field = is_parallel ? kRhsNode : kLhsNode;
+        const auto field { is_parallel ? kRhsNode : kLhsNode };
 
         const double rhs_rate { *d_shadow->rhs_rate };
         const double rhs_debit { *d_shadow->rhs_debit };
         const double rhs_credit { *d_shadow->rhs_credit };
 
-        const double rhs_initial_delta = rhs_debit - rhs_credit;
-        const double rhs_final_delta = rhs_rate * rhs_initial_delta;
+        const double rhs_initial_delta { rhs_debit - rhs_credit };
+        const double rhs_final_delta { rhs_rate * rhs_initial_delta };
 
-        const bool has_leaf_delta = std::abs(rhs_initial_delta) > kTolerance;
+        const bool has_leaf_delta { std::abs(rhs_initial_delta) > kTolerance };
 
         if (has_leaf_delta) {
             QJsonObject new_node_delta { JsonGen::NodeDelta(value, rhs_initial_delta, rhs_final_delta) };
@@ -221,23 +221,23 @@ bool LeafModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
 {
     auto* d_shadow { DerivedPtr<EntryShadowF>(entry_shadow) };
 
-    const double lhs_old_debit = *d_shadow->lhs_debit;
-    const double lhs_old_credit = *d_shadow->lhs_credit;
-    const double lhs_rate = *d_shadow->lhs_rate;
-    const double rhs_rate = *d_shadow->rhs_rate;
+    const double lhs_old_debit { *d_shadow->lhs_debit };
+    const double lhs_old_credit { *d_shadow->lhs_credit };
+    const double lhs_rate { *d_shadow->lhs_rate };
+    const double rhs_rate { *d_shadow->rhs_rate };
 
     assert(lhs_rate != 0.0);
     assert(rhs_rate != 0.0);
 
-    double lhs_original = is_debit ? lhs_old_debit : lhs_old_credit;
+    double lhs_original { is_debit ? lhs_old_debit : lhs_old_credit };
     if (std::abs(lhs_original - value) < kTolerance)
         return false;
 
-    const double base = is_debit ? lhs_old_credit : lhs_old_debit;
-    const double diff = qAbs(value - base);
+    const double base { is_debit ? lhs_old_credit : lhs_old_debit };
+    const double diff { qAbs(value - base) };
 
-    const bool assign_debit = (is_debit && value > base) || (!is_debit && value <= base);
-    const bool assign_credit = !assign_debit;
+    const bool assign_debit { (is_debit && value > base) || (!is_debit && value <= base) };
+    const bool assign_credit { !assign_debit };
 
     *d_shadow->lhs_debit = assign_debit ? diff : 0.0;
     *d_shadow->lhs_credit = assign_credit ? diff : 0.0;
@@ -248,11 +248,11 @@ bool LeafModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
     if (d_shadow->rhs_node->isNull())
         return false;
 
-    const QUuid entry_id = *d_shadow->id;
+    const QUuid entry_id { *d_shadow->id };
     const QUuid rhs_id { *d_shadow->rhs_node };
 
     QJsonObject cache = {};
-    const bool is_parallel = entry_shadow->is_parallel;
+    const bool is_parallel { entry_shadow->is_parallel };
 
     cache.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*d_shadow->lhs_debit, 'f', kMaxNumericScale_4));
     cache.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*d_shadow->lhs_credit, 'f', kMaxNumericScale_4));
@@ -266,13 +266,13 @@ bool LeafModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
     message.insert(kIsParallel, is_parallel);
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
 
-    const double lhs_initial_delta = *d_shadow->lhs_debit - *d_shadow->lhs_credit - (lhs_old_debit - lhs_old_credit);
-    const double lhs_final_delta = lhs_rate * lhs_initial_delta;
+    const double lhs_initial_delta { *d_shadow->lhs_debit - *d_shadow->lhs_credit - (lhs_old_debit - lhs_old_credit) };
+    const double lhs_final_delta { lhs_rate * lhs_initial_delta };
 
-    const double rhs_initial_delta = -lhs_initial_delta;
-    const double rhs_final_delta = rhs_rate * rhs_initial_delta;
+    const double rhs_initial_delta { -lhs_initial_delta };
+    const double rhs_final_delta { rhs_rate * rhs_initial_delta };
 
-    const bool has_leaf_delta = std::abs(lhs_initial_delta) > kTolerance;
+    const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
 
     if (has_leaf_delta) {
         QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
@@ -327,7 +327,7 @@ bool LeafModelF::UpdateRate(EntryShadow* entry_shadow, double value)
 
     QJsonObject cache {};
 
-    const bool is_parallel = entry_shadow->is_parallel;
+    const bool is_parallel { entry_shadow->is_parallel };
     cache.insert(is_parallel ? kLhsRate : kRhsRate, QString::number(*d_shadow->lhs_rate, 'f', kMaxNumericScale_8));
     cache.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_4));
     cache.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
@@ -345,7 +345,7 @@ bool LeafModelF::UpdateRate(EntryShadow* entry_shadow, double value)
     const double rhs_initial_delta { *d_shadow->rhs_debit - *d_shadow->rhs_credit - (rhs_old_debit - rhs_old_credit) };
     const double rhs_final_delta { -lhs_final_delta };
 
-    const bool has_leaf_delta = std::abs(lhs_final_delta) > kTolerance;
+    const bool has_leaf_delta { std::abs(lhs_final_delta) > kTolerance };
 
     if (has_leaf_delta) {
         QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
@@ -468,7 +468,7 @@ bool LeafModelF::removeRows(int row, int /*count*/, const QModelIndex& parent)
         const double rhs_final_delta { *d_shadow->rhs_rate * rhs_initial_delta };
 
         const auto entry_id { *d_shadow->id };
-        const bool has_leaf_delta = std::abs(lhs_initial_delta) > kTolerance;
+        const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
 
         QJsonObject message {};
         message.insert(kSection, section_str_);

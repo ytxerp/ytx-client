@@ -52,7 +52,7 @@ void StyledItemDelegate::PaintCheckBox(QPainter* painter, const QStyleOptionView
     QStyleOptionButton check_box {};
     check_box.state = opt.state & ~(QStyle::State_On | QStyle::State_Off);
 
-    const int status = index.data().toInt();
+    const int status { index.data().toInt() };
 
     // Note:
     // This function is shared by multiple models:

@@ -28,9 +28,9 @@ void RegisterDialog::RRegisterResult(bool result)
 
 void RegisterDialog::on_pushButtonSubmit_clicked()
 {
-    const QString email = ui->lineEditEmail->text().trimmed();
-    const QString password = ui->lineEditPassword->text();
-    const QString confirm_pwd = ui->lineEditConfirmPwd->text();
+    const QString email { ui->lineEditEmail->text().trimmed() };
+    const QString password { ui->lineEditPassword->text() };
+    const QString confirm_pwd { ui->lineEditConfirmPwd->text() };
 
     if (email.isEmpty()) {
         QMessageBox::warning(this, tr("Invalid Information"), tr("Email cannot be empty"));

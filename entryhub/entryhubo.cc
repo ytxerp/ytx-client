@@ -2,7 +2,6 @@
 
 #include <QDate>
 
-#include "component/constant.h"
 #include "component/using.h"
 
 EntryHubO::EntryHubO(CSectionInfo& info, QObject* parent)
@@ -819,7 +818,7 @@ QString EntryHubO::QSReadSettlementPrimary(bool is_finished) const
 
 // void EntryHubO::WriteTransRangeFunction(const QList<EntryShadow*>& list, QSqlQuery& query) const
 // {
-//     const int size = list.size();
+//     const int size { list.size() };
 
 //     QVariantList code_list {};
 //     QVariantList rhs_node_list {};

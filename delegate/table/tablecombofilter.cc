@@ -27,7 +27,7 @@ void TableComboFilter::setEditorData(QWidget* editor, const QModelIndex& index) 
     if (key.isNull())
         key = last_insert_;
 
-    int item_index { cast_editor->findData(key) };
+    const int item_index { cast_editor->findData(key) };
     cast_editor->setCurrentIndex(item_index);
 }
 
@@ -57,7 +57,7 @@ void TableComboFilter::paint(QPainter* painter, const QStyleOptionViewItem& opti
 
 QSize TableComboFilter::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString text = tree_model_->Path(index.data().toUuid());
+    const QString text { tree_model_->Path(index.data().toUuid()) };
     return CalculateTextSize(text, option);
 }
 

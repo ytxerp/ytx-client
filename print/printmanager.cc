@@ -108,8 +108,8 @@ void PrintManager::RenderAllPages(QPrinter* printer)
         DrawHeader(&painter);
 
         // Draw content on the page
-        const long long start_index = page_num * rows;
-        const long long end_index = qMin((page_num + 1) * rows, entry_shadow_list_.size());
+        const long long start_index { page_num * rows };
+        const long long end_index { qMin((page_num + 1) * rows, entry_shadow_list_.size()) };
         DrawTable(&painter, start_index, end_index);
 
         // Draw footer (e.g., page number, etc.)
@@ -194,7 +194,7 @@ QString PrintManager::GetColumnText(int col, const EntryShadow* entry_shadow)
 
 void PrintManager::ApplyConfig(QPrinter* printer)
 {
-    QPageLayout layout = printer->pageLayout();
+    QPageLayout layout { printer->pageLayout() };
 
     const QString orientation { page_settings_.value("orientation").toString().toLower() };
     const QString paper_size { page_settings_.value("paper_size").toString().toLower() };

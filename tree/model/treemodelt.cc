@@ -228,7 +228,7 @@ void TreeModelT::AckTree(const QJsonObject& obj)
     ResetModel();
 
     for (const QJsonValue& val : node_array) {
-        const QJsonObject obj = val.toObject();
+        const QJsonObject obj { val.toObject() };
 
         const QUuid id { QUuid(obj.value(kId).toString()) };
         Node* node {};

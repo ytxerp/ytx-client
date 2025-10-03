@@ -22,7 +22,7 @@ EntryHubI::EntryHubI(CSectionInfo& info, QObject* parent)
 // {
 //     auto* d_entry { static_cast<const EntryI*>(entry) };
 
-//     if (const auto support_id = d_entry->support_node; !support_id.isNull()) {
+//     if (const auto support_id { d_entry->support_node }; !support_id.isNull()) {
 //         QHash<QUuid, QSet<QUuid>> support_entry {};
 //         support_entry.insert(support_id, { entry->id });
 
@@ -34,7 +34,7 @@ EntryHubI::EntryHubI(CSectionInfo& info, QObject* parent)
 // {
 //     auto* d_entry { static_cast<const EntryI*>(entry) };
 
-//     if (const auto support_id = d_entry->support_node; !support_id.isNull()) {
+//     if (const auto support_id { d_entry->support_node }; !support_id.isNull()) {
 //         emit SAppendOneEntryS( support_id, entry);
 //     }
 // }

@@ -163,7 +163,7 @@ void UpdateModelFunction(ItemModel* model, CUuidSet& update_range, CUuidString& 
         return;
 
     for (int row = 0; row != model->rowCount(); ++row) {
-        auto id = model->ItemData(row, Qt::UserRole).toUuid();
+        auto id { model->ItemData(row, Qt::UserRole).toUuid() };
 
         if (update_range.contains(id)) {
             model->SetDisplay(row, source_path.value(id, QString {}));

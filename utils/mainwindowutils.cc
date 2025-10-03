@@ -119,12 +119,12 @@ void MainWindowUtils::ExportExcel(CString& table, QSharedPointer<YXlsx::Workshee
         return;
     }
 
-    // QSqlDatabase source_db = PublicUtils::GetDatabase(kSourceConnection);
+    // QSqlDatabase source_db { PublicUtils::GetDatabase(kSourceConnection) };
     // if (!source_db.isValid())
     //     return;
 
     // QSqlQuery source_query(source_db);
-    // QString select_query = QString("SELECT * FROM %1 WHERE is_valid = TRUE;").arg(table);
+    // QString select_query { QString("SELECT * FROM %1 WHERE is_valid = TRUE;").arg(table) };
 
     // if (!where)
     //     select_query = QString("SELECT * FROM %1;").arg(table);
@@ -173,14 +173,14 @@ void MainWindowUtils::SwitchDialog(const SectionContext* sc, bool enable)
 
 int MainWindowUtils::CompareVersion(const QString& v1, const QString& v2)
 {
-    const QStringList parts1 = v1.split('.');
-    const QStringList parts2 = v2.split('.');
+    const QStringList parts1 { v1.split('.') };
+    const QStringList parts2 { v2.split('.') };
 
-    const int n = qMax(parts1.size(), parts2.size());
+    const long long n { qMax(parts1.size(), parts2.size()) };
 
-    for (int i = 0; i != n; ++i) {
-        const int num1 = i < parts1.size() ? parts1[i].toInt() : 0;
-        const int num2 = i < parts2.size() ? parts2[i].toInt() : 0;
+    for (long long i = 0; i != n; ++i) {
+        const int num1 { i < parts1.size() ? parts1[i].toInt() : 0 };
+        const int num2 { i < parts2.size() ? parts2[i].toInt() : 0 };
 
         if (num1 < num2)
             return -1;

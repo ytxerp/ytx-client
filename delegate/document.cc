@@ -12,14 +12,14 @@ Document::Document(CString& document_path, QObject* parent)
 
 void Document::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QStringList list = index.data().toStringList();
+    const QStringList list { index.data().toStringList() };
     const auto size { list.size() };
 
     if (size == 0) {
         return PaintEmpty(painter, option, index);
     }
 
-    const QString text = QString::number(size);
+    const QString text { QString::number(size) };
     PaintText(text, painter, option, index, Qt::AlignCenter);
 }
 

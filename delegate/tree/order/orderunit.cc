@@ -25,7 +25,7 @@ void OrderUnit::setEditorData(QWidget* editor, const QModelIndex& index) const
     if (cast_editor->hasFocus())
         return;
 
-    int item_index { cast_editor->findData(index.data().toInt()) };
+    const int item_index { cast_editor->findData(index.data().toInt()) };
     if (item_index != -1)
         cast_editor->setCurrentIndex(item_index);
 }

@@ -39,11 +39,11 @@ void LeafModel::RRefreshStatus()
 
 void LeafModel::RRefreshField(const QUuid& entry_id, int start, int end)
 {
-    auto idx = GetIndex(entry_id);
+    auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
         return;
 
-    int row = idx.row();
+    int row { idx.row() };
 
     if (start > end)
         std::swap(start, end);
@@ -89,7 +89,7 @@ void LeafModel::RUpdateBalance(const QUuid& entry_id)
 
 void LeafModel::ActionEntry(EntryAction action)
 {
-    QJsonObject message = JsonGen::EntryAction(section_str_, lhs_id_, std::to_underlying(action));
+    QJsonObject message { JsonGen::EntryAction(section_str_, lhs_id_, std::to_underlying(action)) };
     WebSocket::Instance()->SendMessage(kEntryAction, message);
 
     auto Update = [action](EntryShadow* entry_shadow) {
@@ -175,7 +175,7 @@ void LeafModel::FlushCaches()
 
     for (auto it = caches_.cbegin(); it != caches_.cend(); ++it) {
         if (!it.value().isEmpty()) {
-            const auto message = JsonGen::Update(section_str_, it.key(), it.value());
+            const auto message { JsonGen::Update(section_str_, it.key(), it.value()) };
             WebSocket::Instance()->SendMessage(kNodeUpdate, message);
         }
     }

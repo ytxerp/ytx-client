@@ -33,8 +33,8 @@ void PlainText::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem
     Q_UNUSED(index);
 
     QSize mainwindow_size { qApp->activeWindow()->size() };
-    int width { mainwindow_size.width() * 150 / 1920 };
-    int height { mainwindow_size.height() * 200 / 1080 };
+    const int width { mainwindow_size.width() * 150 / 1920 };
+    const int height { mainwindow_size.height() * 200 / 1080 };
 
     editor->setGeometry(QRect(option.rect.bottomLeft(), QSize(width, height)));
 }

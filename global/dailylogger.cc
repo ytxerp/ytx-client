@@ -43,7 +43,7 @@ void DailyLogger::HandleMessage(QtMsgType type, const QMessageLogContext&, const
 {
     QMutexLocker locker(&mutex_);
 
-    const QDate today = QDate::currentDate();
+    const QDate today { QDate::currentDate() };
     if (current_date_ != today) {
         OpenLogFile(today);
     }

@@ -95,7 +95,7 @@ void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& data)
 
         entry->ReadJson(data);
 
-        const int issued_time = std::to_underlying(EntryEnum::kIssuedTime);
+        const int issued_time { std::to_underlying(EntryEnum::kIssuedTime) };
 
         const auto [start, end] = CacheColumnRange();
 
@@ -129,8 +129,8 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QUuid& old_rhs_id, c
     if (it != entry_cache_.constEnd()) {
         entry = it.value();
 
-        const bool is_parallel = (entry->rhs_node == old_rhs_id);
-        const QUuid lhs_node = is_parallel ? entry->lhs_node : entry->rhs_node;
+        const bool is_parallel { (entry->rhs_node == old_rhs_id) };
+        const QUuid lhs_node { is_parallel ? entry->lhs_node : entry->rhs_node };
 
         if (is_parallel) {
             entry->rhs_node = new_rhs_id;
@@ -261,7 +261,7 @@ EntryShadow* EntryHub::AllocateEntryShadow()
 //     static const auto kWhere { QStringLiteral(" WHERE ") };
 //     static const auto kAnd { QStringLiteral(" AND ") };
 
-//     const QString sql = QString("SELECT * FROM %1").arg(table);
+//     const QString sql {QString("SELECT * FROM %1").arg(table)};
 
 //     if (condition.isEmpty()) {
 //         return sql;
@@ -279,7 +279,7 @@ EntryShadow* EntryHub::AllocateEntryShadow()
 
 void EntryHub::AckLeafTable(const QUuid& node_id, const QJsonArray& array)
 {
-    const EntryList entry_list = ProcessEntryArray(array);
+    const EntryList entry_list { ProcessEntryArray(array) };
     emit SAppendMultiEntry(node_id, entry_list);
 }
 
@@ -298,7 +298,7 @@ EntryList EntryHub::ProcessEntryArray(const QJsonArray& array)
             continue;
 
         const QJsonObject obj { value.toObject() };
-        const QUuid id = QUuid(obj.value(kId).toString());
+        const QUuid id { QUuid(obj.value(kId).toString()) };
 
         Entry* entry {};
 
