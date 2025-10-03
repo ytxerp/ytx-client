@@ -379,9 +379,10 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     case Section::kInventory:
         leaf_model = new LeafModelI(arg, this);
         break;
-    case Section::kTask:
-        leaf_model = new LeafModelT(arg, this);
-        break;
+    case Section::kTask: {
+        const int status { tree_model->Status(node_id) };
+        leaf_model = new LeafModelT(arg, status, this);
+    } break;
     case Section::kPartner:
         leaf_model = new LeafModelP(arg, this);
         break;
@@ -793,20 +794,20 @@ void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectio
 void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {
     auto* line { new Line(tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kCode), line);
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kDescription), line);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kCode), line);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kDescription), line);
 
     auto* plain_text { new PlainText(tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kNote), plain_text);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kNote), plain_text);
 
     auto* direction_rule { new BoolString(info.rule_map, QEvent::MouseButtonDblClick, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kDirectionRule), direction_rule);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kDirectionRule), direction_rule);
 
     auto* unit { new IntStringR(info.unit_map, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kUnit), unit);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kUnit), unit);
 
     auto* kind { new IntStringR(info.kind_map, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kKind), kind);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kKind), kind);
 
     auto* quantity { new DoubleSpinR(section.amount_decimal, kCoefficient16, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kInitialTotal), quantity);
@@ -830,20 +831,20 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
 void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {
     auto* line { new Line(tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kCode), line);
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kDescription), line);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kCode), line);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kDescription), line);
 
     auto* plain_text { new PlainText(tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kNote), plain_text);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kNote), plain_text);
 
     auto* direction_rule { new BoolString(info.rule_map, QEvent::MouseButtonDblClick, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kDirectionRule), direction_rule);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kDirectionRule), direction_rule);
 
     auto* unit { new IntStringR(info.unit_map, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kUnit), unit);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kUnit), unit);
 
     auto* kind { new IntStringR(info.kind_map, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kKind), kind);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kKind), kind);
 
     auto* quantity { new DoubleSpinR(section.amount_decimal, kCoefficient16, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kInitialTotal), quantity);
@@ -942,7 +943,7 @@ void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRefreshField, LeafSStation::Instance(), &LeafSStation::RRefreshField, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SUpdateBalance, LeafSStation::Instance(), &LeafSStation::RUpdateBalance, Qt::UniqueConnection);
 
-    connect(tree_model, &TreeModel::SSyncRule, LeafSStation::Instance(), &LeafSStation::RSyncRule, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SDirectionRule, LeafSStation::Instance(), &LeafSStation::RDirectionRule, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
@@ -966,7 +967,7 @@ void MainWindow::TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRefreshField, LeafSStation::Instance(), &LeafSStation::RRefreshField, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SUpdateBalance, LeafSStation::Instance(), &LeafSStation::RUpdateBalance, Qt::UniqueConnection);
 
-    connect(tree_model, &TreeModel::SSyncRule, LeafSStation::Instance(), &LeafSStation::RSyncRule, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SDirectionRule, LeafSStation::Instance(), &LeafSStation::RDirectionRule, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
@@ -990,7 +991,8 @@ void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRefreshField, LeafSStation::Instance(), &LeafSStation::RRefreshField, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SUpdateBalance, LeafSStation::Instance(), &LeafSStation::RUpdateBalance, Qt::UniqueConnection);
 
-    connect(tree_model, &TreeModel::SSyncRule, LeafSStation::Instance(), &LeafSStation::RSyncRule, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SDirectionRule, LeafSStation::Instance(), &LeafSStation::RDirectionRule, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SNodeStatus, LeafSStation::Instance(), &LeafSStation::RNodeStatus, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
@@ -2815,7 +2817,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 
     if (is_leaf_order) {
         const auto node_id { ui->tabWidget->tabBar()->tabData(index).value<TabInfo>().id };
-        finished = sc_->tree_model->Finished(node_id);
+        finished = sc_->tree_model->Status(node_id);
     }
 
     ui->actionAppendNode->setEnabled(is_tree);

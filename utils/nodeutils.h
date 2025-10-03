@@ -28,7 +28,7 @@
 
 namespace NodeUtils {
 
-inline int KindColumn(Section section)
+constexpr int KindColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:
@@ -47,7 +47,7 @@ inline int KindColumn(Section section)
     }
 }
 
-inline int UnitColumn(Section section)
+constexpr int UnitColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:

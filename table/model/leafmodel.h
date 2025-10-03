@@ -64,7 +64,9 @@ public slots:
     void RRefreshStatus();
 
     void RRefreshField(const QUuid& entry_id, int start, int end);
-    void RSyncRule(bool value);
+    void RDirectionRule(bool value);
+
+    virtual void RNodeStatus(int value) { Q_UNUSED(value) };
 
 public:
     // implemented functions

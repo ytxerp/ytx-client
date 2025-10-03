@@ -82,14 +82,24 @@ void LeafSStation::RRefreshField(const QUuid& node_id, const QUuid& entry_id, in
     emit SRefreshField(entry_id, start, end);
 }
 
-void LeafSStation::RSyncRule(const QUuid& node_id, bool rule)
+void LeafSStation::RDirectionRule(const QUuid& node_id, bool rule)
 {
     const auto* model { FindModel(node_id) };
     if (!model)
         return;
 
-    connect(this, &LeafSStation::SSyncRule, model, &LeafModel::RSyncRule, Qt::SingleShotConnection);
-    emit SSyncRule(rule);
+    connect(this, &LeafSStation::SDirectionRule, model, &LeafModel::RDirectionRule, Qt::SingleShotConnection);
+    emit SDirectionRule(rule);
+}
+
+void LeafSStation::RNodeStatus(const QUuid& node_id, int value)
+{
+    const auto* model { FindModel(node_id) };
+    if (!model)
+        return;
+
+    connect(this, &LeafSStation::SNodeStatus, model, &LeafModel::RNodeStatus, Qt::SingleShotConnection);
+    emit SNodeStatus(value);
 }
 
 void LeafSStation::RRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& leaf_entry)

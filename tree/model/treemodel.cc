@@ -230,7 +230,7 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value)
     const QUuid node_id { node->id };
 
     if (node->kind == kLeaf) {
-        emit SSyncRule(node_id, node->direction_rule);
+        emit SDirectionRule(node_id, node->direction_rule);
     }
 
     const int role_column = std::to_underlying(NodeEnum::kDirectionRule);

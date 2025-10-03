@@ -44,7 +44,8 @@ protected:
 
 signals:
     // send to LeafSStation
-    void SSyncRule(const QUuid& node_id, bool rule);
+    void SDirectionRule(const QUuid& node_id, bool value);
+    void SNodeStatus(const QUuid& node_id, int value);
 
     // send to its view
     void SResizeColumnToContents(int column);
@@ -106,6 +107,13 @@ public:
     void ApplyTree(const QJsonObject& data);
 
     virtual void AckTree(const QJsonObject& obj) { Q_UNUSED(obj) }
+    virtual void UpdateNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta)
+    {
+        Q_UNUSED(node_id)
+        Q_UNUSED(status)
+        Q_UNUSED(meta)
+    }
+
     void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id);
 
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
@@ -160,16 +168,14 @@ public:
 
     // virtual functions
     virtual void UpdateName(const QUuid& node_id, CString& new_name);
+    virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
 
-    virtual bool Finished(QUuid node_id) const
+    virtual QString Path(const QUuid& node_id) const;
+    virtual int Status(QUuid node_id) const
     {
         Q_UNUSED(node_id);
         return false;
     }
-
-    virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
-
-    virtual QString Path(const QUuid& node_id) const;
 
     virtual QSortFilterProxyModel* IncludeUnitModel(int unit)
     {
@@ -209,6 +215,11 @@ protected:
 
     virtual void ResetBranch(Node* node) { Q_UNUSED(node) };
     virtual void ResetModel() { }
+    virtual void UpdateStatus(Node* node, int value)
+    {
+        Q_UNUSED(node)
+        Q_UNUSED(value)
+    }
 
     virtual const QSet<QUuid>* UnitSet(int unit) const
     {
@@ -251,7 +262,7 @@ protected:
     }
 
     // Returns the range of cache field columns
-    // Note: the positions of these "code", "descriptioon" and "note" are fixed / hard-coded
+    // Note: the columns of these "code", "descriptioon" and "note" are fixed / hard-coded
     virtual std::pair<int, int> CacheColumnRange() const { return { 0, 0 }; }
 
 protected:

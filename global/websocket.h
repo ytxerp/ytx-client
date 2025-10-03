@@ -121,6 +121,7 @@ private:
     void RemoveLeafSafely(const QJsonObject& obj);
     void RemoveBranch(const QJsonObject& obj);
     void UpdateDirectionRule(const QJsonObject& obj);
+    void UpdateNodeStatus(const QJsonObject& obj);
     void UpdateName(const QJsonObject& obj);
 
     void UpdateDocumentDir(const QJsonObject& obj);

@@ -107,6 +107,7 @@ void WebSocket::InitHandler()
     handler_obj_[kEntryUpdate] = [this](const QJsonObject& obj) { UpdateEntry(obj); };
     handler_obj_[kEntryRemove] = [this](const QJsonObject& obj) { RemoveEntry(obj); };
     handler_obj_[kDirectionRule] = [this](const QJsonObject& obj) { UpdateDirectionRule(obj); };
+    handler_obj_[kNodeStatus] = [this](const QJsonObject& obj) { UpdateNodeStatus(obj); };
     handler_obj_[kLeafRemoveCheck] = [this](const QJsonObject& obj) { NotifyLeafRemoveCheck(obj); };
     handler_obj_[kNodeDrag] = [this](const QJsonObject& obj) { DragNode(obj); };
     handler_obj_[kEntryAction] = [this](const QJsonObject& obj) { ActionEntry(obj); };
@@ -633,6 +634,24 @@ void WebSocket::UpdateDirectionRule(const QJsonObject& obj)
     }
 
     tree_model->UpdateDirectionRule(id, direction_rule, meta);
+}
+
+void WebSocket::UpdateNodeStatus(const QJsonObject& obj)
+{
+    CString section = obj.value(kSection).toString();
+    CString session_id = obj.value(kSessionId).toString();
+    const int status = obj.value(kStatus).toInt();
+    const auto id = QUuid(obj.value(kId).toString());
+    const QJsonObject meta = obj.value(kMeta).toObject();
+
+    auto tree_model = tree_model_hash_.value(section);
+
+    if (session_id == session_id_) {
+        tree_model->UpdateMeta(id, meta);
+        return;
+    }
+
+    tree_model->UpdateNodeStatus(id, status, meta);
 }
 
 void WebSocket::UpdateName(const QJsonObject& obj)

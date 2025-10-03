@@ -212,4 +212,16 @@ QJsonObject NodeDirectionRule(CString& section, CUuid& node_id, bool direction_r
     return message;
 }
 
+QJsonObject NodeStatus(CString& section, CUuid& node_id, int status)
+{
+    QJsonObject message {};
+    message.insert(kSection, section);
+    message.insert(kSessionId, QString());
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kStatus, status);
+    message.insert(kMeta, QJsonObject()); // Meta info will be appended in service
+
+    return message;
+}
+
 }

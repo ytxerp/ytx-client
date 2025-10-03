@@ -275,8 +275,8 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* d_node { DerivedPtr<NodeO>(GetNodeByIndex(index)) };
-    if (d_node == root_)
-        return QVariant();
+    if (!d_node)
+        return false;
 
     const NodeEnumO kColumn { index.column() };
     bool branch { d_node->kind == kBranch };
@@ -305,19 +305,19 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
     case NodeEnumO::kUnit:
         return d_node->unit;
     case NodeEnumO::kPartner:
-        return d_node->partner.isNull() ? QVariant() : d_node->partner;
+        return d_node->partner;
     case NodeEnumO::kEmployee:
-        return d_node->employee.isNull() ? QVariant() : d_node->employee;
+        return d_node->employee;
     case NodeEnumO::kIssuedTime:
-        return branch || !d_node->issued_time.isValid() ? QVariant() : d_node->issued_time;
+        return d_node->issued_time;
     case NodeEnumO::kCountTotal:
-        return d_node->count_total == 0 ? QVariant() : d_node->count_total;
+        return d_node->count_total;
     case NodeEnumO::kMeasureTotal:
-        return d_node->measure_total == 0 ? QVariant() : d_node->measure_total;
+        return d_node->measure_total;
     case NodeEnumO::kDiscountTotal:
-        return d_node->discount_total == 0 ? QVariant() : d_node->discount_total;
+        return d_node->discount_total;
     case NodeEnumO::kStatus:
-        return !branch && d_node->status ? d_node->status : QVariant();
+        return d_node->status;
     case NodeEnumO::kInitialTotal:
         return d_node->initial_total;
     case NodeEnumO::kFinalTotal:

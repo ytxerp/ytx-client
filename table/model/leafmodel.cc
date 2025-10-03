@@ -23,7 +23,7 @@ LeafModel::~LeafModel()
     EntryShadowPool::Instance().Recycle(shadow_list_, section_);
 }
 
-void LeafModel::RSyncRule(bool value)
+void LeafModel::RDirectionRule(bool value)
 {
     for (auto* entry_shadow : std::as_const(shadow_list_))
         entry_shadow->balance = -entry_shadow->balance;

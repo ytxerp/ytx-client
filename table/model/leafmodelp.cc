@@ -113,7 +113,7 @@ QVariant LeafModelP::data(const QModelIndex& index, int role) const
     case EntryEnumP::kDocument:
         return *d_shadow->document;
     case EntryEnumP::kStatus:
-        return QVariant();
+        return *d_shadow->status;
     case EntryEnumP::kRhsNode:
         return *d_shadow->rhs_node;
     case EntryEnumP::kExternalSku:

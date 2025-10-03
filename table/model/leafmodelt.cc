@@ -7,8 +7,9 @@
 #include "global/websocket.h"
 #include "utils/jsongen.h"
 
-LeafModelT::LeafModelT(CLeafModelArg& arg, QObject* parent)
+LeafModelT::LeafModelT(CLeafModelArg& arg, int node_status, QObject* parent)
     : LeafModel { arg, parent }
+    , node_status_ { node_status }
 {
 }
 
@@ -46,7 +47,7 @@ QVariant LeafModelT::data(const QModelIndex& index, int role) const
     case EntryEnumT::kRhsNode:
         return *d_shadow->rhs_node;
     case EntryEnumT::kStatus:
-        return QVariant();
+        return *d_shadow->status;
     case EntryEnumT::kDocument:
         return *d_shadow->document;
     case EntryEnumT::kDebit:
@@ -59,6 +60,8 @@ QVariant LeafModelT::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 }
+
+void LeafModelT::RNodeStatus(int value) { node_status_ = value; }
 
 bool LeafModelT::setData(const QModelIndex& index, const QVariant& value, int role)
 {
@@ -183,7 +186,27 @@ Qt::ItemFlags LeafModelT::flags(const QModelIndex& index) const
         break;
     }
 
+    if (node_status_ == std::to_underlying(NodeStatus::kReviewed))
+        flags &= ~Qt::ItemIsEditable;
+
     return flags;
+}
+
+bool LeafModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
+{
+    assert(row >= 0 && row <= rowCount(parent));
+    if (node_status_ == std::to_underlying(NodeStatus::kReviewed))
+        return false;
+
+    auto* entry_shadow { entry_hub_->AllocateEntryShadow() };
+
+    *entry_shadow->lhs_node = lhs_id_;
+
+    beginInsertRows(parent, row, row);
+    shadow_list_.emplaceBack(entry_shadow);
+    endInsertRows();
+
+    return true;
 }
 
 bool LeafModelT::UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit)
@@ -421,6 +444,9 @@ double LeafModelT::CalculateBalance(EntryShadow* entry_shadow)
 bool LeafModelT::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
+
+    if (node_status_ == std::to_underlying(NodeStatus::kReviewed))
+        return false;
 
     auto* d_shadow = DerivedPtr<EntryShadowT>(shadow_list_.at(row));
     const auto rhs_node_id { *d_shadow->rhs_node };

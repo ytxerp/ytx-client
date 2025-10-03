@@ -131,7 +131,6 @@ QVariant TreeModelI::data(const QModelIndex& index, int role) const
         return QVariant();
 
     const NodeEnumI kColumn { index.column() };
-    const bool is_leaf { d_node->kind == kLeaf };
 
     switch (kColumn) {
     case NodeEnumI::kName:
@@ -163,9 +162,9 @@ QVariant TreeModelI::data(const QModelIndex& index, int role) const
     case NodeEnumI::kColor:
         return d_node->color;
     case NodeEnumI::kCommission:
-        return is_leaf && d_node->commission != 0 ? d_node->commission : QVariant();
+        return d_node->commission;
     case NodeEnumI::kUnitPrice:
-        return is_leaf && d_node->unit_price != 0 ? d_node->unit_price : QVariant();
+        return d_node->unit_price;
     case NodeEnumI::kInitialTotal:
         return d_node->initial_total;
     case NodeEnumI::kFinalTotal:
@@ -181,38 +180,35 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
         return false;
 
     auto* node { GetNodeByIndex(index) };
-    auto* d_node { DerivedPtr<NodeI>(node) };
 
-    if (node == root_)
+    auto* d_node { DerivedPtr<NodeI>(node) };
+    if (!d_node)
         return false;
 
     const NodeEnumI kColumn { index.column() };
     const QUuid id { node->id };
-    auto& cache { caches_[id] };
 
     switch (kColumn) {
     case NodeEnumI::kCode:
-        NodeUtils::UpdateField(cache, node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kDescription:
-        NodeUtils::UpdateField(cache, node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kNote:
-        NodeUtils::UpdateField(cache, node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kDirectionRule:
         UpdateDirectionRule(node, value.toBool());
         break;
     case NodeEnumI::kColor:
-        NodeUtils::UpdateField(cache, d_node, kColor, value.toString(), &NodeI::color, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], d_node, kColor, value.toString(), &NodeI::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kCommission:
-        if (d_node->kind == kLeaf)
-            NodeUtils::UpdateDouble(cache, d_node, kCommission, value.toDouble(), &NodeI::commission, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateDouble(caches_[id], d_node, kCommission, value.toDouble(), &NodeI::commission, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kUnitPrice:
-        if (d_node->kind == kLeaf)
-            NodeUtils::UpdateDouble(cache, d_node, kUnitPrice, value.toDouble(), &NodeI::unit_price, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateDouble(caches_[id], d_node, kUnitPrice, value.toDouble(), &NodeI::unit_price, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;

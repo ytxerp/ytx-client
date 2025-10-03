@@ -3,6 +3,8 @@
 #include <QJsonArray>
 
 #include "global/nodepool.h"
+#include "global/websocket.h"
+#include "utils/jsongen.h"
 
 TreeModelT::TreeModelT(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
@@ -57,7 +59,7 @@ QVariant TreeModelT::data(const QModelIndex& index, int role) const
     case NodeEnumT::kIssuedTime:
         return d_node->issued_time;
     case NodeEnumT::kStatus:
-        return d_node->status ? d_node->status : QVariant();
+        return d_node->status;
     case NodeEnumT::kDocument:
         return d_node->document;
     case NodeEnumT::kInitialTotal:
@@ -75,40 +77,38 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
         return false;
 
     auto* node { GetNodeByIndex(index) };
-    auto* d_node { DerivedPtr<NodeT>(node) };
 
-    if (node == root_)
+    auto* d_node { DerivedPtr<NodeT>(node) };
+    if (!d_node)
         return false;
 
     const NodeEnumT kColumn { index.column() };
     const QUuid id { node->id };
-    auto& cache { caches_[id] };
 
     switch (kColumn) {
     case NodeEnumT::kCode:
-        NodeUtils::UpdateField(cache, node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDescription:
-        NodeUtils::UpdateField(cache, node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kNote:
-        NodeUtils::UpdateField(cache, node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDirectionRule:
         UpdateDirectionRule(node, value.toBool());
         break;
     case NodeEnumT::kColor:
-        NodeUtils::UpdateField(cache, d_node, kColor, value.toString(), &NodeT::color, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], d_node, kColor, value.toString(), &NodeT::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kIssuedTime:
-        NodeUtils::UpdateIssuedTime(cache, d_node, kIssuedTime, value.toDateTime(), &NodeT::issued_time, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateIssuedTime(caches_[id], d_node, kIssuedTime, value.toDateTime(), &NodeT::issued_time, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDocument:
-        NodeUtils::UpdateDocument(cache, d_node, kDocument, value.toStringList(), &NodeT::document, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateDocument(caches_[id], d_node, kDocument, value.toStringList(), &NodeT::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kStatus:
-        if (d_node->kind == kLeaf)
-            NodeUtils::UpdateField(cache, d_node, kStatus, value.toBool(), &NodeT::status, [id, this]() { RestartTimer(id); });
+        UpdateStatus(node, value.toInt());
         break;
     default:
         return false;
@@ -198,8 +198,8 @@ Qt::ItemFlags TreeModelT::flags(const QModelIndex& index) const
         break;
     }
 
-    const bool status { index.siblingAtColumn(std::to_underlying(NodeEnumT::kStatus)).data().toBool() };
-    if (status)
+    const int status { index.siblingAtColumn(std::to_underlying(NodeEnumT::kStatus)).data().toInt() };
+    if (status == std::to_underlying(NodeStatus::kReviewed))
         flags &= ~Qt::ItemIsEditable;
 
     return flags;
@@ -263,10 +263,35 @@ Node* TreeModelT::GetNode(const QUuid& node_id) const
     return node;
 }
 
-void TreeModelT::UpdateStatus(NodeT* node, bool value)
+void TreeModelT::UpdateNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta)
 {
-    if (node->status == value)
+    auto* node = GetNode(node_id);
+    if (!node)
         return;
+
+    UpdateMeta(node, meta);
+
+    auto* d_node { DerivedPtr<NodeT>(node) };
+    d_node->status = status;
+
+    emit SNodeStatus(node->id, status);
+}
+
+void TreeModelT::UpdateStatus(Node* node, int value)
+{
+    auto* d_node { DerivedPtr<NodeT>(node) };
+    if (!d_node)
+        return;
+
+    if (d_node->status == value)
+        return;
+
+    d_node->status = value;
+
+    QJsonObject message { JsonGen::NodeStatus(section_str_, node->id, value) };
+    WebSocket::Instance()->SendMessage(kNodeStatus, message);
+
+    emit SNodeStatus(node->id, value);
 }
 
 void TreeModelT::ResetBranch(Node* node)
@@ -286,7 +311,7 @@ void TreeModelT::ResetModel()
     branch_path_.clear();
     leaf_model_->Clear();
 
-    // Clear non-branch nodes from node_hash_, keep branch nodes and unfinidhws nodes
+    // Clear non-branch nodes from node_hash_, keep branch nodes and unfinishded nodes
     for (auto it = node_hash_.begin(); it != node_hash_.end();) {
         auto* node = static_cast<NodeT*>(it.value());
 

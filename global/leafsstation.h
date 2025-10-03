@@ -45,7 +45,8 @@ signals:
     void SRemoveOneEntry(const QUuid& entry_id);
 
     void SUpdateBalance(const QUuid& entry_id);
-    void SSyncRule(bool rule);
+    void SDirectionRule(bool rule);
+    void SNodeStatus(int value);
     void SRefreshStatus();
 
     void SAppendMultiEntry(const EntryList& entry_list);
@@ -57,7 +58,8 @@ public slots:
     void RAppendOneEntry(const QUuid& node_id, Entry* entry);
     void RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
-    void RSyncRule(const QUuid& node_id, bool rule);
+    void RDirectionRule(const QUuid& node_id, bool rule);
+    void RNodeStatus(const QUuid& node_id, int value);
     void RRefreshStatus(const QUuid& node_id);
     void RUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 

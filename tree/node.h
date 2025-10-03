@@ -72,7 +72,7 @@ struct NodeT final : Node {
     QString color {};
     QStringList document {};
     QDateTime issued_time {};
-    bool status {};
+    int status {};
 
     void ResetState() override;
 

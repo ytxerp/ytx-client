@@ -25,8 +25,11 @@
 class LeafModelT final : public LeafModel {
     Q_OBJECT
 
+public slots:
+    void RNodeStatus(int value) override;
+
 public:
-    LeafModelT(CLeafModelArg& arg, QObject* parent = nullptr);
+    LeafModelT(CLeafModelArg& arg, int node_status, QObject* parent = nullptr);
     ~LeafModelT() override = default;
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -34,6 +37,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
+    bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
 protected:
@@ -42,6 +46,9 @@ protected:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
 
     double CalculateBalance(EntryShadow* entry_shadow) override;
+
+private:
+    int node_status_ {};
 };
 
 #endif // LEAFMODELT_H

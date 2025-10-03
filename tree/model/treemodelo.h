@@ -49,7 +49,7 @@ public:
     QString Path(const QUuid& node_id) const override;
 
     Node* GetNode(const QUuid& node_id) const override;
-    bool Finished(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeO::status); }
+    int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeO::status); }
     QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeO::partner); };
 
 protected:

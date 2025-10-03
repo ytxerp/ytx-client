@@ -68,17 +68,16 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
 
     const NodeEnumF kColumn { index.column() };
     const QUuid id { node->id };
-    auto& cache { caches_[id] };
 
     switch (kColumn) {
     case NodeEnumF::kCode:
-        NodeUtils::UpdateField(cache, node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kDescription:
-        NodeUtils::UpdateField(cache, node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kNote:
-        NodeUtils::UpdateField(cache, node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kDirectionRule:
         UpdateDirectionRule(node, value.toBool());

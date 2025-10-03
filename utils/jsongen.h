@@ -44,6 +44,7 @@ QJsonObject LeafAcked(CString& section, CUuid& node_id, CUuid& entry_id = {});
 QJsonObject NodeAcked(CString& section, CUuid& node_id);
 
 QJsonObject NodeDirectionRule(CString& section, CUuid& node_id, bool direction_rule);
+QJsonObject NodeStatus(CString& section, CUuid& node_id, int status);
 QJsonObject Update(CString& section, CUuid& id, CJsonObject& cache);
 QJsonObject UpdateDocumentDir(CString& section, CString& document_dir);
 QJsonObject UpdateDefaultUnit(CString& section, int unit);

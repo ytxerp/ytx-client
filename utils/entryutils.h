@@ -28,7 +28,7 @@
 
 namespace EntryUtils {
 
-inline int LinkedNodeColumn(Section section)
+constexpr int LinkedNodeColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:

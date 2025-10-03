@@ -160,7 +160,6 @@ QVariant TreeModelP::data(const QModelIndex& index, int role) const
         return QVariant();
 
     const NodeEnumP kColumn { index.column() };
-    const bool kIsLeaf { d_node->kind == kLeaf };
 
     switch (kColumn) {
     case NodeEnumP::kName:
@@ -188,7 +187,7 @@ QVariant TreeModelP::data(const QModelIndex& index, int role) const
     case NodeEnumP::kUnit:
         return d_node->unit;
     case NodeEnumP::kPaymentTerm:
-        return kIsLeaf && d_node->payment_term != 0 ? d_node->payment_term : QVariant();
+        return d_node->payment_term;
     case NodeEnumP::kInitialTotal:
         return d_node->initial_total;
     case NodeEnumP::kFinalTotal:
@@ -204,28 +203,26 @@ bool TreeModelP::setData(const QModelIndex& index, const QVariant& value, int ro
         return false;
 
     auto* node { GetNodeByIndex(index) };
-    auto* d_node { DerivedPtr<NodeP>(node) };
 
-    if (node == root_)
+    auto* d_node { DerivedPtr<NodeP>(node) };
+    if (!d_node)
         return false;
 
     const NodeEnumP kColumn { index.column() };
     const QUuid id { node->id };
-    auto& cache { caches_[id] };
 
     switch (kColumn) {
     case NodeEnumP::kCode:
-        NodeUtils::UpdateField(cache, node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kDescription:
-        NodeUtils::UpdateField(cache, node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kNote:
-        NodeUtils::UpdateField(cache, node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kPaymentTerm:
-        if (d_node->kind == kLeaf)
-            NodeUtils::UpdateField(cache, d_node, kPaymentTerm, value.toInt(), &NodeP::payment_term, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(caches_[id], d_node, kPaymentTerm, value.toInt(), &NodeP::payment_term, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;

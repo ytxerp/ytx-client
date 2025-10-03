@@ -114,7 +114,7 @@ void NodeT::ResetState()
     Node::ResetState();
     color.clear();
     document.clear();
-    status = false;
+    status = 0;
 }
 
 void NodeT::ReadJson(const QJsonObject& object)
@@ -126,7 +126,7 @@ void NodeT::ReadJson(const QJsonObject& object)
     if (object.contains(kDocument))
         document = object.value(kDocument).toString().split(kSemicolon, Qt::SkipEmptyParts);
     if (object.contains(kStatus))
-        status = object.value(kStatus).toBool();
+        status = object.value(kStatus).toInt();
     if (object.contains(kIssuedTime))
         issued_time = QDateTime::fromString(object.value(kIssuedTime).toString(), Qt::ISODate);
 }

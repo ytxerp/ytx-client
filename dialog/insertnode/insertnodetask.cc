@@ -123,7 +123,19 @@ void InsertNodeTask::on_pBtnColor_clicked()
     }
 }
 
-void InsertNodeTask::on_chkBoxFinished_checkStateChanged(const Qt::CheckState& arg1) { node_->status = arg1 == Qt::Checked; }
+void InsertNodeTask::on_chkBoxFinished_checkStateChanged(const Qt::CheckState& arg1)
+{
+    switch (arg1) {
+    case Qt::Unchecked:
+        node_->status = std::to_underlying(NodeStatus::kUnfinished);
+        break;
+    case Qt::PartiallyChecked:
+        break;
+    case Qt::Checked:
+        node_->status = std::to_underlying(NodeStatus::kReviewed);
+        break;
+    }
+}
 
 void InsertNodeTask::RRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
 
