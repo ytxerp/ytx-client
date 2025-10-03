@@ -261,8 +261,7 @@ protected:
         return { col_count - 2, col_count - 1 };
     }
 
-    // Returns the range of cache field columns
-    // Note: the columns of these "code", "descriptioon" and "note" are fixed / hard-coded
+    // Returns the range of cached field columns (for debounced updates)
     virtual std::pair<int, int> CacheColumnRange() const { return { 0, 0 }; }
 
 protected:

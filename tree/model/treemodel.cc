@@ -144,13 +144,9 @@ void TreeModel::UpdateNode(const QUuid& node_id, const QJsonObject& data)
 
     auto index { GetIndex(node_id) };
     if (index.isValid()) {
-        const int first_start { std::to_underlying(NodeEnumF::kCode) };
-        const int first_end { std::to_underlying(NodeEnumF::kNote) };
-        emit dataChanged(index.siblingAtColumn(first_start), index.siblingAtColumn(first_end));
-
-        const auto [second_start, second_end] = CacheColumnRange();
-        if (second_end != 0)
-            emit dataChanged(index.siblingAtColumn(second_start), index.siblingAtColumn(second_end));
+        const auto [start, end] = CacheColumnRange();
+        if (end != 0)
+            emit dataChanged(index.siblingAtColumn(start), index.siblingAtColumn(end));
     }
 }
 
@@ -687,7 +683,6 @@ bool TreeModel::UpdateAncestorValue(
     const bool direction_rule { node->direction_rule };
 
     QModelIndexList ancestor {};
-    const auto [start_col, end_col] = TotalColumnRange();
 
     // NOTE: When ancestor nodes receive deltas from a leaf node,
     // the adjustment rule is different from leaf calculation:
@@ -705,9 +700,10 @@ bool TreeModel::UpdateAncestorValue(
         ancestor.emplaceBack(GetIndex(current->id));
     }
 
-    if (!ancestor.isEmpty())
+    if (!ancestor.isEmpty()) {
+        const auto [start_col, end_col] = TotalColumnRange();
         emit dataChanged(index(ancestor.first().row(), start_col), index(ancestor.last().row(), end_col), { Qt::DisplayRole });
-
+    }
     return true;
 }
 

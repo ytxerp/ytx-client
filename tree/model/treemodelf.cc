@@ -176,7 +176,6 @@ bool TreeModelF::UpdateAncestorValue(Node* node, double initial_delta, double fi
     const bool rule { node->direction_rule };
 
     QModelIndexList ancestor {};
-    const auto [start_col, end_col] = TotalColumnRange();
 
     for (Node* current = node->parent; current && current != root_; current = current->parent) {
         const int multiplier { current->direction_rule == rule ? 1 : -1 };
@@ -190,8 +189,10 @@ bool TreeModelF::UpdateAncestorValue(Node* node, double initial_delta, double fi
         ancestor.emplaceBack(GetIndex(current->id));
     }
 
-    if (!ancestor.isEmpty())
+    if (!ancestor.isEmpty()) {
+        const auto [start_col, end_col] = TotalColumnRange();
         emit dataChanged(index(ancestor.first().row(), start_col), index(ancestor.last().row(), end_col), { Qt::DisplayRole });
+    }
 
     return true;
 }
