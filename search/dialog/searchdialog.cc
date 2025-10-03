@@ -4,9 +4,6 @@
 
 #include "component/enumclass.h"
 #include "component/signalblocker.h"
-#include "delegate/readonly/boolstringr.h"
-#include "delegate/readonly/intstringr.h"
-#include "delegate/search/searchpathtreer.h"
 #include "ui_searchdialog.h"
 
 SearchDialog::SearchDialog(
@@ -27,8 +24,6 @@ SearchDialog::SearchDialog(
 
     ui->searchViewNode->setModel(search_node);
     ui->searchViewEntry->setModel(search_entry);
-
-    TreeCommonDelegate(ui->searchViewNode);
 
     ResizeTreeColumn(ui->searchViewNode->horizontalHeader());
     ResizeTableColumn(ui->searchViewEntry->horizontalHeader());
@@ -59,21 +54,6 @@ void SearchDialog::IniConnect()
     connect(content_group_, &QButtonGroup::idClicked, this, &SearchDialog::RContentGroup);
 }
 
-void SearchDialog::TreeCommonDelegate(QTableView* view)
-{
-    auto* unit { new IntStringR(info_.unit_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kUnit), unit);
-
-    auto* direction_rule { new BoolStringR(info_.rule_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kDirectionRule), direction_rule);
-
-    auto* kind { new IntStringR(info_.kind_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kKind), kind);
-
-    auto* name { new SearchPathTreeR(node_, std::to_underlying(NodeEnum::kId), view) };
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnum::kName), name);
-}
-
 void SearchDialog::IniContentGroup()
 {
     content_group_ = new QButtonGroup(this);
@@ -85,10 +65,13 @@ void SearchDialog::InitDelegate()
 {
     value_ = new DoubleSpinNoneZeroR(config_.amount_decimal, kCoefficient8, this);
     rate_ = new DoubleSpinNoneZeroR(config_.rate_decimal, kCoefficient8, this);
-
+    unit_ = new IntStringR(info_.unit_map, this);
+    direction_rule_ = new BoolStringR(info_.rule_map, this);
+    kind_ = new IntStringR(info_.kind_map, this);
+    tree_path_ = new SearchPathTreeR(node_, std::to_underlying(NodeEnum::kId), this);
     check_ = new StatusR(this);
     color_ = new ColorR(this);
-    node_name_ = new SearchPathTableR(node_, this);
+    table_path_ = new SearchPathTableR(node_, this);
 }
 
 void SearchDialog::HideTreeColumn(QTableView* view)
@@ -124,7 +107,7 @@ void SearchDialog::IniView(QTableView* view)
 void SearchDialog::ResizeTreeColumn(QHeaderView* header)
 {
     header->setSectionResizeMode(QHeaderView::ResizeToContents);
-    header->setSectionResizeMode(std::to_underlying(NodeEnum::kDescription), QHeaderView::Stretch);
+    header->setSectionResizeMode(NodeUtils::DescriptionColumn(info_.section), QHeaderView::Stretch);
 }
 
 void SearchDialog::ResizeTableColumn(QHeaderView* header)

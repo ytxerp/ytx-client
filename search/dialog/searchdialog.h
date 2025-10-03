@@ -25,10 +25,13 @@
 #include <QTableView>
 
 #include "component/config.h"
-#include "delegate/readonly/statusr.h"
+#include "delegate/readonly/boolstringr.h"
 #include "delegate/readonly/colorr.h"
 #include "delegate/readonly/doublespinnonezeror.h"
+#include "delegate/readonly/intstringr.h"
+#include "delegate/readonly/statusr.h"
 #include "delegate/search/searchpathtabler.h"
+#include "delegate/search/searchpathtreer.h"
 #include "search/entry/searchentrymodel.h"
 #include "search/node/searchnodemodel.h"
 
@@ -59,8 +62,6 @@ protected:
     void IniDialog();
     void IniConnect();
 
-    void TreeCommonDelegate(QTableView* view);
-
     virtual void TreeViewDelegate(QTableView* view) = 0;
     virtual void TableViewDelegate(QTableView* view) = 0;
 
@@ -83,9 +84,14 @@ protected:
     DoubleSpinNoneZeroR* value_ {};
     DoubleSpinNoneZeroR* rate_ {};
 
+    IntStringR* unit_ {};
+    BoolStringR* direction_rule_ {};
+    IntStringR* kind_ {};
+    SearchPathTreeR* tree_path_ {};
+
     StatusR* check_ {};
     ColorR* color_ {};
-    SearchPathTableR* node_name_ {};
+    SearchPathTableR* table_path_ {};
 
     CSectionConfig& config_;
     CSectionInfo& info_;

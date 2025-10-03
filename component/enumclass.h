@@ -229,12 +229,6 @@ enum class NodeEnum {
     kCreateBy,
     kUpdateTime,
     kUpdateBy,
-    kCode,
-    kDescription,
-    kNote,
-    kDirectionRule,
-    kKind,
-    kUnit,
 };
 
 enum class NodeEnumF {

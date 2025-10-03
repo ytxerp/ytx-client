@@ -16,6 +16,10 @@ void SearchDialogI::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kInitialTotal), value_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kFinalTotal), value_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kColor), color_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kUnit), unit_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kDirectionRule), direction_rule_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kKind), kind_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kName), tree_path_);
 }
 
 void SearchDialogI::TableViewDelegate(QTableView* view)
@@ -27,8 +31,8 @@ void SearchDialogI::TableViewDelegate(QTableView* view)
 
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumI::kUnitCost), rate_);
 
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumI::kLhsNode), node_name_);
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumI::kRhsNode), node_name_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumI::kLhsNode), table_path_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumI::kRhsNode), table_path_);
 
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kStatus), check_);
 }

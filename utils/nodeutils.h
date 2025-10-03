@@ -66,6 +66,44 @@ constexpr int UnitColumn(Section section)
     }
 }
 
+constexpr int DirectionRuleColumn(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+        return std::to_underlying(NodeEnumF::kDirectionRule);
+    case Section::kTask:
+        return std::to_underlying(NodeEnumT::kDirectionRule);
+    case Section::kPartner:
+        return -1;
+    case Section::kInventory:
+        return std::to_underlying(NodeEnumI::kDirectionRule);
+    case Section::kSale:
+    case Section::kPurchase:
+        return std::to_underlying(NodeEnumO::kDirectionRule);
+    default:
+        return -1;
+    }
+}
+
+constexpr int DescriptionColumn(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+        return std::to_underlying(NodeEnumF::kDescription);
+    case Section::kTask:
+        return std::to_underlying(NodeEnumT::kDescription);
+    case Section::kPartner:
+        return std::to_underlying(NodeEnumP::kDescription);
+    case Section::kInventory:
+        return std::to_underlying(NodeEnumI::kDescription);
+    case Section::kSale:
+    case Section::kPurchase:
+        return std::to_underlying(NodeEnumO::kDescription);
+    default:
+        return -1;
+    }
+}
+
 bool IsDescendant(const Node* lhs, const Node* rhs);
 
 void SortIterative(Node* node, std::function<bool(const Node*, const Node*)> Compare);

@@ -1110,7 +1110,7 @@ void MainWindow::RemoveNode()
     assert(model);
 
     const QUuid node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
-    const int kind { index.siblingAtColumn(std::to_underlying(NodeEnum::kKind)).data().toInt() };
+    const int kind { model->Kind(node_id) };
 
     switch (kind) {
     case kBranch: {
@@ -1135,9 +1135,7 @@ void MainWindow::RLeafRemoveCheck(const QJsonObject& obj)
     auto* section_contex = GetSectionContex(section);
 
     auto model { section_contex->tree_model };
-    const auto index { model->GetIndex(id) };
-
-    const int unit { index.siblingAtColumn(std::to_underlying(NodeEnum::kUnit)).data().toInt() };
+    const int unit { model->Unit(id) };
 
     auto* dialog { new LeafRemoveDialog(model, section_contex->info, obj, id, unit, this) };
     dialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -2082,7 +2080,9 @@ void MainWindow::SetAction() const
 
 void MainWindow::SetTreeView(QTreeView* tree_view, CSectionInfo& info) const
 {
-    if (info.section == Section::kSale || info.section == Section::kPurchase) {
+    const auto section { info.section };
+
+    if (section == Section::kSale || section == Section::kPurchase) {
         tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kPartner), kIsHidden);
         tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kSettlementId), kIsHidden);
     }
@@ -2103,7 +2103,7 @@ void MainWindow::SetTreeView(QTreeView* tree_view, CSectionInfo& info) const
     tree_view->setExpandsOnDoubleClick(true);
 
     auto* header { tree_view->header() };
-    ResizeColumn(header, std::to_underlying(NodeEnum::kDescription));
+    ResizeColumn(header, NodeUtils::DescriptionColumn(section));
     header->setStretchLastSection(false);
     header->setDefaultAlignment(Qt::AlignCenter);
 }
@@ -2411,7 +2411,7 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
 
         if (dynamic_cast<TreeWidget*>(current_widget)) {
             auto* header { sc_->tree_view->header() };
-            ResizeColumn(header, std::to_underlying(NodeEnum::kDescription));
+            ResizeColumn(header, NodeUtils::DescriptionColumn(start_));
         }
     }
 }

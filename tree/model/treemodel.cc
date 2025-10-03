@@ -144,8 +144,8 @@ void TreeModel::UpdateNode(const QUuid& node_id, const QJsonObject& data)
 
     auto index { GetIndex(node_id) };
     if (index.isValid()) {
-        const int first_start { std::to_underlying(NodeEnum::kCode) };
-        const int first_end { std::to_underlying(NodeEnum::kNote) };
+        const int first_start { std::to_underlying(NodeEnumF::kCode) };
+        const int first_end { std::to_underlying(NodeEnumF::kNote) };
         emit dataChanged(index.siblingAtColumn(first_start), index.siblingAtColumn(first_end));
 
         const auto [second_start, second_end] = CacheColumnRange();
@@ -233,8 +233,8 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value)
         emit SDirectionRule(node_id, node->direction_rule);
     }
 
-    const int role_column { std::to_underlying(NodeEnum::kDirectionRule) };
-    EmitRowChanged(node_id, role_column, role_column);
+    const int rule_column { NodeUtils::DirectionRuleColumn(section_) };
+    EmitRowChanged(node_id, rule_column, rule_column);
 
     const auto [start_col, end_col] = TotalColumnRange();
     EmitRowChanged(node_id, start_col, end_col);
@@ -331,9 +331,9 @@ void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant, const Q
         node->updated_by = QUuid(data.value(kUpdatedBy).toString());
     }
 
-    auto index { createIndex(destination_row, 0, node) };
-    if (index.isValid())
-        emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnum::kUpdateTime)), index.siblingAtColumn(std::to_underlying(NodeEnum::kUpdateBy)));
+    // auto index { createIndex(destination_row, 0, node) };
+    // if (index.isValid())
+    //     emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumF::kUpdateTime)), index.siblingAtColumn(std::to_underlying(NodeEnumF::kUpdateBy)));
 }
 
 QModelIndex TreeModel::parent(const QModelIndex& index) const

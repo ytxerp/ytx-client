@@ -22,6 +22,10 @@ void SearchDialogO::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDiscountTotal), value_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kCountTotal), value_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kMeasureTotal), value_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kUnit), unit_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDirectionRule), direction_rule_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kKind), kind_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kName), tree_path_);
 
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), check_);
 
@@ -41,7 +45,7 @@ void SearchDialogO::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitPrice), rate_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDiscountPrice), rate_);
 
-    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kLhsNode), node_name_);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kLhsNode), table_path_);
 
     auto* item_name { new SearchPathTableR(item_node_, view) };
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalSku), item_name);

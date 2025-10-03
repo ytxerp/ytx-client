@@ -19,12 +19,15 @@ void SearchDialogP::TreeViewDelegate(QTableView* view)
 {
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kInitialTotal), value_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kFinalTotal), value_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kUnit), unit_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kKind), kind_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kName), tree_path_);
 }
 
 void SearchDialogP::TableViewDelegate(QTableView* view)
 {
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kUnitPrice), rate_);
-    view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kLhsNode), node_name_);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kLhsNode), table_path_);
 
     auto* rhs_node_name { new SearchPathTableR(item_node_, view) };
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), rhs_node_name);
