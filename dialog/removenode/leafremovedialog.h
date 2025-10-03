@@ -59,12 +59,12 @@ private:
     const QUuid node_id_ {};
     const int node_unit_ {};
 
-    const bool internal_node_ref_ {};
-    const bool external_linked_ref_ {};
-    const bool external_sku_ref_ {};
-    const bool external_partner_ref_ {};
-    const bool external_employee_ref_ {};
-    const bool order_settlement_ref_ {};
+    const bool internally_ {};
+    const bool inventory_internal_ {};
+    const bool inventory_external_ {};
+    const bool partner_ {};
+    const bool employee_ {};
+    const bool settlement_ {};
 
     CTreeModel* model_ {};
     CSectionInfo& info_ {};

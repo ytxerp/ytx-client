@@ -17,16 +17,9 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Remove Note</string>
+   <string>Remove Node</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>This node is going to be removed, but it has references. How should it be handled?</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0">
     <spacer name="verticalSpacer">
      <property name="orientation">
@@ -115,63 +108,73 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QCheckBox" name="chkBoxInternalNode">
+       <widget class="QCheckBox" name="chkBoxInternally">
+        <property name="toolTip">
+         <string>This node is referenced by the internal “Linked Node” column.</string>
+        </property>
         <property name="text">
-         <string>Internal Node</string>
+         <string>Internally</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxExternalLinked">
+       <widget class="QCheckBox" name="chkBoxInventoryInternal">
         <property name="toolTip">
-         <string>Inventory</string>
+         <string>This internal inventory node is referenced by other sections, e.g., Partner, Sale, Purchase.</string>
         </property>
         <property name="text">
-         <string>External Linked</string>
+         <string>Inventory Internal</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxExternalSku">
+       <widget class="QCheckBox" name="chkBoxInventoryExternal">
         <property name="toolTip">
-         <string>Inventory</string>
+         <string>This external inventory node is referenced by other sections, e.g., Partner, Sale, Purchase.</string>
         </property>
         <property name="text">
-         <string>External Sku</string>
+         <string>Inventory External</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxExternalPartner">
+       <widget class="QCheckBox" name="chkBoxPartner">
         <property name="toolTip">
+         <string>This partner node (customer or supplier) is referenced in other sections, e.g., Sale, Purchase.</string>
+        </property>
+        <property name="text">
          <string>Partner</string>
         </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chkBoxEmployee">
+        <property name="toolTip">
+         <string>This employee node is referenced in other sections, e.g., Sale, Purchase.</string>
+        </property>
         <property name="text">
-         <string>External Partner</string>
+         <string>Employee</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxExternalEmployee">
+       <widget class="QCheckBox" name="chkBoxSettlement">
         <property name="toolTip">
-         <string>Partner</string>
+         <string>This node (from Sale or Purchase) has already been settled.</string>
         </property>
         <property name="text">
-         <string>External Employee</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="chkBoxOrderSettlement">
-        <property name="toolTip">
-         <string>Order</string>
-        </property>
-        <property name="text">
-         <string>Order Settlement</string>
+         <string>Settlement</string>
         </property>
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>This node is about to be removed but is still referenced. How do you want to handle it?</string>
+     </property>
     </widget>
    </item>
   </layout>

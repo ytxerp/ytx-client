@@ -154,22 +154,25 @@ inline const QString kLeafRemove = QStringLiteral("leaf_remove");
 inline const QString kLeafReplace = QStringLiteral("leaf_replace");
 inline const QString kLeafEntry = QStringLiteral("leaf_entry");
 
-inline const QString kInventoryExternalRef = QStringLiteral("inventory_external_ref");
-inline const QString kInternalReference = QStringLiteral("internal_reference");
 inline const QString kExternalSku = QStringLiteral("external_sku");
 
-// ---- Internal Leaf referenced by Entry within the same module ----
-inline const QString kInternalNodeRef = QStringLiteral("internal_node_ref");
+// Node is referenced by internal linked columns within the same section
+inline const QString kInternallyRef = QStringLiteral("internally_ref");
 
-// ----Inventory Leaf referenced by Order Leaf and Partner Leaf  ----
-inline const QString kExternalLinkedRef = QStringLiteral("external_linked_ref");
-inline const QString kExternalSkuRef = QStringLiteral("external_sku_ref");
+// Internal inventory node is referenced by other sections, e.g., Partner, Sale, Purchase
+inline const QString kInventoryInternalRef = QStringLiteral("inventory_internal_ref");
 
-// ----Partner Leaf referenced by Order Leaf  ----
-inline const QString kExternalPartnerRef = QStringLiteral("external_partner_ref");
-inline const QString kExternalEmployeeRef = QStringLiteral("external_employee_ref");
+// External inventory node is referenced by other sections, e.g., Partner, Sale, Purchase
+inline const QString kInventoryExternalRef = QStringLiteral("inventory_external_ref");
 
-inline const QString kOrderSettlementRef = QStringLiteral("order_settlement_ref");
+// Partner node (customer or supplier) is referenced in other sections, e.g., Sale, Purchase
+inline const QString kPartnerRef = QStringLiteral("partner_ref");
+
+// Employee node (staff) is referenced in other sections, e.g., Sale, Purchase
+inline const QString kEmployeeRef = QStringLiteral("employee_ref");
+
+// Node from Sale or Purchase is referenced by settlement entries
+inline const QString kSettlementRef = QStringLiteral("settlement_ref");
 
 inline const QString kNodeInsert = QStringLiteral("node_insert");
 inline const QString kNodeDrag = QStringLiteral("node_drag");

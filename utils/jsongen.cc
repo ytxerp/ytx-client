@@ -89,12 +89,12 @@ QJsonObject LeafRemoveCheck(CString& section, CUuid& node_id)
     QJsonObject message {};
     message.insert(kSection, section);
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kInternalNodeRef, false);
-    message.insert(kExternalLinkedRef, false);
-    message.insert(kExternalSkuRef, false);
-    message.insert(kExternalPartnerRef, false);
-    message.insert(kExternalEmployeeRef, false);
-    message.insert(kOrderSettlementRef, false);
+    message.insert(kInternallyRef, false);
+    message.insert(kInventoryInternalRef, false);
+    message.insert(kInventoryExternalRef, false);
+    message.insert(kPartnerRef, false);
+    message.insert(kEmployeeRef, false);
+    message.insert(kSettlementRef, false);
 
     return message;
 }
