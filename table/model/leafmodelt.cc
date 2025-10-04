@@ -186,7 +186,7 @@ Qt::ItemFlags LeafModelT::flags(const QModelIndex& index) const
         break;
     }
 
-    if (node_status_ == std::to_underlying(NodeStatus::kReviewed))
+    if (node_status_ == std::to_underlying(NodeStatus::kCompleted))
         flags &= ~Qt::ItemIsEditable;
 
     return flags;
@@ -195,7 +195,7 @@ Qt::ItemFlags LeafModelT::flags(const QModelIndex& index) const
 bool LeafModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
-    if (node_status_ == std::to_underlying(NodeStatus::kReviewed))
+    if (node_status_ == std::to_underlying(NodeStatus::kCompleted))
         return false;
 
     auto* entry_shadow { entry_hub_->AllocateEntryShadow() };
@@ -445,7 +445,7 @@ bool LeafModelT::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
 
-    if (node_status_ == std::to_underlying(NodeStatus::kReviewed))
+    if (node_status_ == std::to_underlying(NodeStatus::kCompleted))
         return false;
 
     auto* d_shadow = DerivedPtr<EntryShadowT>(shadow_list_.at(row));

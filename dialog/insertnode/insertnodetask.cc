@@ -127,12 +127,12 @@ void InsertNodeTask::on_chkBoxFinished_checkStateChanged(const Qt::CheckState& a
 {
     switch (arg1) {
     case Qt::Unchecked:
-        node_->status = std::to_underlying(NodeStatus::kUnfinished);
-        break;
-    case Qt::PartiallyChecked:
+        node_->status = std::to_underlying(NodeStatus::kInProgress);
         break;
     case Qt::Checked:
-        node_->status = std::to_underlying(NodeStatus::kReviewed);
+        node_->status = std::to_underlying(NodeStatus::kCompleted);
+        break;
+    case Qt::PartiallyChecked:
         break;
     }
 }

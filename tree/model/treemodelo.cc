@@ -198,7 +198,7 @@ void TreeModelO::ResetModel()
             continue;
         }
 
-        if (node->status == std::to_underlying(NodeStatus::kUnfinished)) {
+        if (node->status == std::to_underlying(NodeStatus::kInProgress)) {
             ++it;
             continue;
         }
