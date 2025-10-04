@@ -40,11 +40,11 @@ public:
     void SendMessage(const QString& msg_type, const QJsonObject& value);
     void Clear();
 
-    void RegisterTreeModel(const QString& section, QPointer<TreeModel> node) { tree_model_hash_.insert(section, node); }
-    void DeregisterTreeNode(const QString& section) { tree_model_hash_.remove(section); }
+    void RegisterTreeModel(Section section, QPointer<TreeModel> node) { tree_model_hash_.insert(section, node); }
+    void DeregisterTreeNode(Section section) { tree_model_hash_.remove(section); }
 
-    void RegisterEntryHub(const QString& section, QPointer<EntryHub> entry_hub) { entry_hub_hash_.insert(section, entry_hub); }
-    void DeregisterEntryHub(const QString& section) { entry_hub_hash_.remove(section); }
+    void RegisterEntryHub(Section section, QPointer<EntryHub> entry_hub) { entry_hub_hash_.insert(section, entry_hub); }
+    void DeregisterEntryHub(Section section) { entry_hub_hash_.remove(section); }
 
     WebSocket(const WebSocket&) = delete;
     WebSocket& operator=(const WebSocket&) = delete;
@@ -62,8 +62,8 @@ signals:
 
     void SLeafRemoveCheck(const QJsonObject& obj);
     void SGlobalConfig(const QJsonArray& arr);
-    void SDocumentDir(const QString& section, const QString& document_dir);
-    void SDefaultUnit(const QString& section, int unit);
+    void SDocumentDir(Section section, const QString& document_dir);
+    void SDefaultUnit(Section section, int unit);
     void SUpdateDefaultUnitFailed(const QString& section);
 
     void SReplaceResult(bool result);
@@ -83,7 +83,7 @@ private:
     void InitTimer();
 
     QHash<QUuid, QSet<QUuid>> ParseNodeReference(const QJsonObject& obj);
-    void UpdateDelta(const CString& section, const QJsonArray& node_delta) const;
+    void UpdateDelta(Section section, const QJsonArray& node_delta) const;
 
 private:
     void NotifyRegisterResult(const QJsonObject& obj);
@@ -135,8 +135,8 @@ private:
 
     QHash<QString, std::function<void(const QJsonObject&)>> handler_obj_ {};
     QHash<QString, std::function<void(const QJsonArray&)>> handler_arr_ {};
-    QHash<QString, QPointer<TreeModel>> tree_model_hash_ {};
-    QHash<QString, QPointer<EntryHub>> entry_hub_hash_ {};
+    QHash<Section, QPointer<TreeModel>> tree_model_hash_ {};
+    QHash<Section, QPointer<EntryHub>> entry_hub_hash_ {};
 };
 
 #endif // WEBSOCKET_H

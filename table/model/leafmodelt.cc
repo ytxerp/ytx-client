@@ -248,7 +248,7 @@ bool LeafModelT::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
     cache.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
 
     QJsonObject message {};
-    message.insert(kSection, section_str_);
+    message.insert(kSection, std::to_underlying(section_));
     message.insert(kSessionId, QString());
     message.insert(kCache, cache);
     message.insert(kIsParallel, is_parallel);
@@ -310,7 +310,7 @@ bool LeafModelT::UpdateRate(EntryShadow* entry_shadow, double value)
     const bool has_leaf_delta { std::abs(lhs_final_delta) > kTolerance };
 
     QJsonObject message {};
-    message.insert(kSection, section_str_);
+    message.insert(kSection, std::to_underlying(section_));
     message.insert(kSessionId, QString());
     message.insert(kCache, cache);
     message.insert(kIsParallel, true);
@@ -356,7 +356,7 @@ bool LeafModelT::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
     cache = d_shadow->WriteJson();
 
     QJsonObject message {};
-    message.insert(kSection, section_str_);
+    message.insert(kSection, std::to_underlying(section_));
     message.insert(kSessionId, QString());
     message.insert(kEntry, cache);
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
@@ -466,7 +466,7 @@ bool LeafModelT::removeRows(int row, int /*count*/, const QModelIndex& parent)
         const bool has_delta { std::abs(lhs_initial_delta) > kTolerance };
 
         QJsonObject message {};
-        message.insert(kSection, section_str_);
+        message.insert(kSection, std::to_underlying(section_));
         message.insert(kSessionId, QString());
         message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
 

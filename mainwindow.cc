@@ -220,7 +220,7 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
         return;
     }
 
-    const auto message { JsonGen::LeafAcked(sc_->info.section_str, node_id, entry_id) };
+    const auto message { JsonGen::LeafAcked(sc_->info.section, node_id, entry_id) };
     WebSocket::Instance()->SendMessage(kLeafAcked, message);
 
     if (start_ == Section::kSale || start_ == Section::kPurchase) {
@@ -1118,7 +1118,7 @@ void MainWindow::RemoveNode()
         break;
     }
     case NodeKind::kLeaf: {
-        const auto message { JsonGen::LeafRemoveCheck(sc_->info.section_str, node_id) };
+        const auto message { JsonGen::LeafRemoveCheck(sc_->info.section, node_id) };
         WebSocket::Instance()->SendMessage(kLeafRemoveCheck, message);
         break;
     }
@@ -1129,7 +1129,7 @@ void MainWindow::RemoveNode()
 
 void MainWindow::RLeafRemoveCheck(const QJsonObject& obj)
 {
-    CString section { obj.value(kSection).toString() };
+    Section section { obj.value(kSection).toInt() };
     const auto id { QUuid(obj.value(kId).toString()) };
 
     auto* section_contex = GetSectionContex(section);
@@ -1154,7 +1154,7 @@ void MainWindow::RGlobalConfig(const QJsonArray& arr)
         }
 
         QJsonObject obj { val.toObject() };
-        QString section { obj.value("section").toString() };
+        Section section { obj.value("section").toInt() };
         int default_unit { obj.value("default_unit").toInt() };
         QString document_dir { obj.value("document_dir").toString() };
 
@@ -1168,13 +1168,13 @@ void MainWindow::RGlobalConfig(const QJsonArray& arr)
     }
 }
 
-void MainWindow::RDocumentDir(const QString& section, const QString& document_dir)
+void MainWindow::RDocumentDir(Section section, const QString& document_dir)
 {
     auto* sc { GetSectionContex(section) };
     sc->global_config.document_dir = document_dir;
 }
 
-void MainWindow::RDefaultUnit(const QString& section, int unit)
+void MainWindow::RDefaultUnit(Section section, int unit)
 {
     auto* sc { GetSectionContex(section) };
     sc->global_config.default_unit = unit;
@@ -1296,7 +1296,7 @@ void MainWindow::BranchRemove(TreeModel* tree_model, const QModelIndex& index, c
     msg.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
 
     if (msg.exec() == QMessageBox::Ok) {
-        const auto message { JsonGen::BranchRemove(sc_->info.section_str, node_id) };
+        const auto message { JsonGen::BranchRemove(sc_->info.section, node_id) };
         WebSocket::Instance()->SendMessage(kBranchRemove, message);
         tree_model->removeRows(index.row(), 1, index.parent());
     }
@@ -1519,20 +1519,20 @@ void MainWindow::WriteConfig()
     }
 }
 
-SectionContext* MainWindow::GetSectionContex(const QString& section)
+SectionContext* MainWindow::GetSectionContex(Section section)
 {
-    const static QMap<QString, SectionContext*> section_map {
-        { kFinance, &sc_f_ },
-        { kPartner, &sc_p_ },
-        { kInventory, &sc_i_ },
-        { kTask, &sc_t_ },
-        { kSale, &sc_sale_ },
-        { kPurchase, &sc_purchase_ },
+    const static QMap<Section, SectionContext*> section_map {
+        { Section::kFinance, &sc_f_ },
+        { Section::kPartner, &sc_p_ },
+        { Section::kInventory, &sc_i_ },
+        { Section::kTask, &sc_t_ },
+        { Section::kSale, &sc_sale_ },
+        { Section::kPurchase, &sc_purchase_ },
     };
 
     auto it = section_map.constFind(section);
     if (it == section_map.cend()) {
-        qCritical() << "SectionTriple: Unknown section:" << section;
+        qCritical() << "SectionTriple: Unknown section";
         return nullptr;
     }
 
@@ -1790,7 +1790,6 @@ void MainWindow::InitContextFinance()
     auto& tree_widget { sc_f_.tree_widget };
 
     info.section = Section::kFinance;
-    info.section_str = kFinance;
     info.node = kFinanceNode;
     info.path = kFinancePath;
     info.entry = kFinanceEntry;
@@ -1817,8 +1816,8 @@ void MainWindow::InitContextFinance()
     entry_hub = new EntryHubF(info, this);
     tree_model = new TreeModelF(info, local_config_.separator, global_config.default_unit, this);
 
-    WebSocket::Instance()->RegisterTreeModel(kFinance, tree_model);
-    WebSocket::Instance()->RegisterEntryHub(kFinance, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(Section::kFinance, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(Section::kFinance, entry_hub);
 
     tree_widget = new TreeWidgetF(tree_model, info, global_config, section_config, this);
     tree_view = tree_widget->View();
@@ -1837,7 +1836,6 @@ void MainWindow::InitContextInventory()
     auto& tree_widget { sc_i_.tree_widget };
 
     info.section = Section::kInventory;
-    info.section_str = kInventory;
     info.node = kInventoryNode;
     info.path = kInventoryPath;
     info.entry = kInventoryEntry;
@@ -1860,8 +1858,8 @@ void MainWindow::InitContextInventory()
     entry_hub = new EntryHubI(info, this);
     tree_model = new TreeModelI(info, local_config_.separator, global_config.default_unit, this);
 
-    WebSocket::Instance()->RegisterTreeModel(kInventory, tree_model);
-    WebSocket::Instance()->RegisterEntryHub(kInventory, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(Section::kInventory, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(Section::kInventory, entry_hub);
 
     tree_widget = new TreeWidgetI(tree_model, section_config, this);
     tree_view = tree_widget->View();
@@ -1880,7 +1878,6 @@ void MainWindow::InitContextTask()
     auto& tree_widget { sc_t_.tree_widget };
 
     info.section = Section::kTask;
-    info.section_str = kTask;
     info.node = kTaskNode;
     info.path = kTaskPath;
     info.entry = kTaskEntry;
@@ -1902,14 +1899,14 @@ void MainWindow::InitContextTask()
     entry_hub = new EntryHubT(info, this);
     tree_model = new TreeModelT(info, local_config_.separator, global_config.default_unit, this);
 
-    WebSocket::Instance()->RegisterTreeModel(kTask, tree_model);
-    WebSocket::Instance()->RegisterEntryHub(kTask, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(Section::kTask, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(Section::kTask, entry_hub);
 
     const QDate today { QDate::currentDate() };
     const QDateTime start_dt(today, kStartTime);
     const QDateTime end_dt(today.addDays(1), kStartTime);
 
-    tree_widget = new TreeWidgetTO(kTask, tree_model, start_dt, end_dt, this);
+    tree_widget = new TreeWidgetTO(Section::kTask, tree_model, start_dt, end_dt, this);
     tree_view = tree_widget->View();
 }
 
@@ -1924,7 +1921,6 @@ void MainWindow::InitContextPartner()
     auto& tree_widget { sc_p_.tree_widget };
 
     info.section = Section::kPartner;
-    info.section_str = kPartner;
     info.node = kPartnerNode;
     info.path = kPartnerPath;
     info.entry = kPartnerEntry;
@@ -1943,8 +1939,8 @@ void MainWindow::InitContextPartner()
     entry_hub = new EntryHubP(info, this);
     tree_model = new TreeModelP(info, local_config_.separator, global_config.default_unit, this);
 
-    WebSocket::Instance()->RegisterTreeModel(kPartner, tree_model);
-    WebSocket::Instance()->RegisterEntryHub(kPartner, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(Section::kPartner, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(Section::kPartner, entry_hub);
 
     tree_widget = new TreeWidgetP(tree_model, this);
     tree_view = tree_widget->View();
@@ -1961,7 +1957,6 @@ void MainWindow::InitContextSale()
     auto& tree_widget { sc_sale_.tree_widget };
 
     info.section = Section::kSale;
-    info.section_str = kSale;
     info.node = kSaleNode;
     info.path = kSalePath;
     info.entry = kSaleEntry;
@@ -1994,10 +1989,10 @@ void MainWindow::InitContextSale()
     const QDateTime start_dt(today, kStartTime);
     const QDateTime end_dt(today.addDays(1), kStartTime);
 
-    WebSocket::Instance()->RegisterTreeModel(kSale, tree_model);
-    WebSocket::Instance()->RegisterEntryHub(kSale, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(Section::kSale, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(Section::kSale, entry_hub);
 
-    tree_widget = new TreeWidgetTO(kSale, tree_model, start_dt, end_dt, this);
+    tree_widget = new TreeWidgetTO(Section::kSale, tree_model, start_dt, end_dt, this);
     tree_view = tree_widget->View();
 
     connect(tree_model_o, &TreeModelO::SUpdateAmount, static_cast<TreeModelP*>(sc_p_.tree_model.data()), &TreeModelP::RUpdateAmount);
@@ -2015,7 +2010,6 @@ void MainWindow::InitContextPurchase()
     auto& tree_widget { sc_purchase_.tree_widget };
 
     info.section = Section::kPurchase;
-    info.section_str = kPurchase;
     info.node = kPurchaseNode;
     info.path = kPurchasePath;
     info.entry = kPurchaseEntry;
@@ -2048,10 +2042,10 @@ void MainWindow::InitContextPurchase()
     const QDateTime start_dt(today, kStartTime);
     const QDateTime end_dt(today.addDays(1), kStartTime);
 
-    WebSocket::Instance()->RegisterTreeModel(kPurchase, tree_model);
-    WebSocket::Instance()->RegisterEntryHub(kPurchase, entry_hub);
+    WebSocket::Instance()->RegisterTreeModel(Section::kPurchase, tree_model);
+    WebSocket::Instance()->RegisterEntryHub(Section::kPurchase, entry_hub);
 
-    tree_widget = new TreeWidgetTO(kPurchase, tree_model, start_dt, end_dt, this);
+    tree_widget = new TreeWidgetTO(Section::kPurchase, tree_model, start_dt, end_dt, this);
     tree_view = tree_widget->View();
 
     connect(tree_model_o, &TreeModelO::SUpdateAmount, static_cast<TreeModelP*>(sc_p_.tree_model.data()), &TreeModelP::RUpdateAmount);
@@ -2381,7 +2375,17 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
     current_section = section;
     sc_->tree_widget->UpdateStatus();
 
-    section_settings_->beginGroup(sc_->info.section_str);
+    const static QMap<Section, QString> section_string_map {
+        { Section::kFinance, kFinance },
+        { Section::kPartner, kPartner },
+        { Section::kInventory, kInventory },
+        { Section::kTask, kTask },
+        { Section::kSale, kSale },
+        { Section::kPurchase, kPurchase },
+    };
+
+    const QString text { section_string_map.value(start_) };
+    section_settings_->beginGroup(text);
 
     if (start_ == Section::kFinance || start_ == Section::kInventory) {
         section_settings_->setValue(kStaticLabel, section.static_label);
@@ -2423,13 +2427,13 @@ void MainWindow::UpdateGlobalConfig(CGlobalConfig& global)
         return;
 
     if (current_global.document_dir != global.document_dir) {
-        const auto message { JsonGen::UpdateDocumentDir(sc_->info.section_str, global.document_dir) };
+        const auto message { JsonGen::UpdateDocumentDir(sc_->info.section, global.document_dir) };
         WebSocket::Instance()->SendMessage(kDocumentDir, message);
         current_global.document_dir = global.document_dir;
     }
 
     if (current_global.default_unit != global.default_unit) {
-        const auto message { JsonGen::UpdateDefaultUnit(sc_->info.section_str, global.default_unit) };
+        const auto message { JsonGen::UpdateDefaultUnit(sc_->info.section, global.default_unit) };
         WebSocket::Instance()->SendMessage(kDefaultUnit, message);
     }
 }
@@ -2664,7 +2668,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
     };
 
     if (!Contains(lhs_node_id) && !Contains(rhs_node_id)) {
-        const auto message { JsonGen::LeafAcked(sc_->info.section_str, id, entry_id) };
+        const auto message { JsonGen::LeafAcked(sc_->info.section, id, entry_id) };
         WebSocket::Instance()->SendMessage(kLeafAcked, message);
 
         switch (start_) {

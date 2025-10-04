@@ -25,7 +25,7 @@ bool LeafModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
     if (!rhs_node_id.isNull()) {
         QJsonObject message {};
-        message.insert(kSection, section_str_);
+        message.insert(kSection, std::to_underlying(section_));
         message.insert(kSessionId, QString());
         message.insert(kEntryId, entry_shadow->id->toString(QUuid::WithoutBraces));
 
@@ -58,7 +58,7 @@ bool LeafModelP::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
     cache = d_shadow->WriteJson();
 
     QJsonObject message {};
-    message.insert(kSection, section_str_);
+    message.insert(kSection, std::to_underlying(section_));
     message.insert(kSessionId, QString());
     message.insert(kEntry, cache);
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));

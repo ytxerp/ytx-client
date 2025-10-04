@@ -74,8 +74,8 @@ inline EntryPool& EntryPool::Instance()
 // Constructor: pre-fill pools
 inline EntryPool::EntryPool()
 {
-    for (size_t i = 0; i != kSections.size(); ++i) {
-        Expand(pools_[i], kSections[i], Pool::kExpandSize);
+    for (size_t i = 0; i != kSectionArray.size(); ++i) {
+        Expand(pools_[i], kSectionArray[i], Pool::kExpandSize);
     }
 }
 

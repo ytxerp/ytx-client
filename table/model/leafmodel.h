@@ -125,7 +125,6 @@ protected:
     bool direction_rule_ {};
     const QUuid lhs_id_ {};
     const Section section_ {};
-    const QString& section_str_ {};
 
     QList<EntryShadow*> shadow_list_ {};
 

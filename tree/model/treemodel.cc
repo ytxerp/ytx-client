@@ -13,7 +13,6 @@ TreeModel::TreeModel(CSectionInfo& info, CString& separator, int default_unit, Q
     : QAbstractItemModel(parent)
     , separator_ { separator }
     , section_ { info.section }
-    , section_str_ { info.section_str }
     , node_header_ { info.node_header }
 {
     InitRoot(root_, default_unit);
@@ -87,7 +86,7 @@ bool TreeModel::InsertNode(int row, const QModelIndex& parent, Node* node)
     }
     assert(row >= 0 && row <= rowCount(parent));
 
-    const auto message { JsonGen::InsertNode(section_str_, node, node->parent->id) };
+    const auto message { JsonGen::InsertNode(section_, node, node->parent->id) };
     WebSocket::Instance()->SendMessage(kNodeInsert, message);
 
     auto* parent_node { GetNodeByIndex(parent) };
@@ -202,7 +201,7 @@ void TreeModel::UpdateDirectionRule(Node* node, bool value)
     if (node->direction_rule == value)
         return;
 
-    QJsonObject message { JsonGen::NodeDirectionRule(section_str_, node->id, value) };
+    QJsonObject message { JsonGen::NodeDirectionRule(section_, node->id, value) };
     WebSocket::Instance()->SendMessage(kDirectionRule, message);
 
     DirectionRuleImpl(node, value);
@@ -439,7 +438,7 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
     auto source_parent { createIndex(source_row, 0, node).parent() };
 
     if (moveRows(source_parent, source_row, 1, parent, destination_row)) {
-        const auto message { JsonGen::DragNode(section_str_, node_id, destination_parent->id) };
+        const auto message { JsonGen::DragNode(section_, node_id, destination_parent->id) };
         WebSocket::Instance()->SendMessage(kNodeDrag, message);
     }
 
@@ -587,7 +586,7 @@ void TreeModel::UpdateName(const QUuid& node_id, CString& new_name)
     QJsonObject cache {};
     cache.insert(kName, new_name);
 
-    const auto message { JsonGen::Update(section_str_, node_id, cache) };
+    const auto message { JsonGen::Update(section_, node_id, cache) };
     WebSocket::Instance()->SendMessage(kNameUpdate, message);
 
     NodeUtils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
@@ -617,7 +616,7 @@ QSortFilterProxyModel* TreeModel::ExcludeOneModel(const QUuid& node_id)
 
 void TreeModel::FetchOneNode(const QUuid& node_id)
 {
-    const auto message { JsonGen::NodeAcked(section_str_, node_id) };
+    const auto message { JsonGen::NodeAcked(section_, node_id) };
     WebSocket::Instance()->SendMessage(kNodeAcked, message);
 }
 
@@ -721,7 +720,7 @@ void TreeModel::RestartTimer(const QUuid& id)
             const auto cache { caches_.take(id) };
 
             if (!cache.isEmpty()) {
-                const auto message { JsonGen::Update(section_str_, id, cache) };
+                const auto message { JsonGen::Update(section_, id, cache) };
                 WebSocket::Instance()->SendMessage(kNodeUpdate, message);
             }
 
@@ -745,7 +744,7 @@ void TreeModel::FlushCaches()
 
     for (auto it = caches_.cbegin(); it != caches_.cend(); ++it) {
         if (!it.value().isEmpty()) {
-            const auto message { JsonGen::Update(section_str_, it.key(), it.value()) };
+            const auto message { JsonGen::Update(section_, it.key(), it.value()) };
             WebSocket::Instance()->SendMessage(kNodeUpdate, message);
         }
     }

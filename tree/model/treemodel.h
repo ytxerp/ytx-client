@@ -275,7 +275,6 @@ protected:
     CString& separator_;
 
     const Section section_ {};
-    const QString& section_str_ {};
     const QStringList& node_header_ {};
 
     QHash<QUuid, QTimer*> timers_ {};

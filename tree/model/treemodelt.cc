@@ -288,7 +288,7 @@ void TreeModelT::UpdateStatus(Node* node, int value)
 
     d_node->status = value;
 
-    QJsonObject message { JsonGen::NodeStatus(section_str_, node->id, value) };
+    QJsonObject message { JsonGen::NodeStatus(section_, node->id, value) };
     WebSocket::Instance()->SendMessage(kNodeStatus, message);
 
     emit SNodeStatus(node->id, value);

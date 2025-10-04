@@ -7,7 +7,7 @@
 
 namespace JsonGen {
 
-QJsonObject InsertNode(CString& section, const Node* node, CUuid& parent_id)
+QJsonObject InsertNode(Section section, const Node* node, CUuid& parent_id)
 {
     const QJsonObject node_json { node->WriteJson() };
 
@@ -16,7 +16,7 @@ QJsonObject InsertNode(CString& section, const Node* node, CUuid& parent_id)
     path_json.insert(kDescendant, node->id.toString(QUuid::WithoutBraces));
 
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNode, node_json); // Meta info will be appended in service
     message.insert(kPath, path_json); // Meta will be appended in service
@@ -24,10 +24,10 @@ QJsonObject InsertNode(CString& section, const Node* node, CUuid& parent_id)
     return message;
 }
 
-QJsonObject Update(CString& section, CUuid& id, CJsonObject& cache)
+QJsonObject Update(Section section, CUuid& id, CJsonObject& cache)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kId, id.toString(QUuid::WithoutBraces));
     message.insert(kSessionId, QString());
     message.insert(kCache, cache); // Meta info will be appended in service
@@ -35,14 +35,14 @@ QJsonObject Update(CString& section, CUuid& id, CJsonObject& cache)
     return message;
 }
 
-QJsonObject DragNode(CString& section, CUuid& node_id, CUuid& parent_id)
+QJsonObject DragNode(Section section, CUuid& node_id, CUuid& parent_id)
 {
     QJsonObject path_json {};
     path_json.insert(kAncestor, parent_id.toString(QUuid::WithoutBraces));
     path_json.insert(kDescendant, node_id.toString(QUuid::WithoutBraces));
 
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kPath, path_json); // Meta info will be appended in service
     message.insert(kNode, QJsonObject()); // Meta info will be appended in service
@@ -50,10 +50,10 @@ QJsonObject DragNode(CString& section, CUuid& node_id, CUuid& parent_id)
     return message;
 }
 
-QJsonObject LeafRemove(CString& section, CUuid& node_id)
+QJsonObject LeafRemove(Section section, CUuid& node_id)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kLeafEntry, QJsonObject());
@@ -62,10 +62,10 @@ QJsonObject LeafRemove(CString& section, CUuid& node_id)
     return message;
 }
 
-QJsonObject BranchRemove(CString& section, CUuid& node_id)
+QJsonObject BranchRemove(Section section, CUuid& node_id)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
 
@@ -84,10 +84,10 @@ QJsonObject Login()
     return message;
 }
 
-QJsonObject LeafRemoveCheck(CString& section, CUuid& node_id)
+QJsonObject LeafRemoveCheck(Section section, CUuid& node_id)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kInternallyRef, false);
     message.insert(kInventoryInternalRef, false);
@@ -99,10 +99,10 @@ QJsonObject LeafRemoveCheck(CString& section, CUuid& node_id)
     return message;
 }
 
-QJsonObject LeafReplace(CString& section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref)
+QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kStatus, false);
     message.insert(kInventoryExternalRef, inventory_external_ref);
@@ -112,20 +112,20 @@ QJsonObject LeafReplace(CString& section, CUuid& old_id, CUuid& new_id, bool inv
     return message;
 }
 
-QJsonObject LeafAcked(CString& section, CUuid& node_id, CUuid& entry_id)
+QJsonObject LeafAcked(Section section, CUuid& node_id, CUuid& entry_id)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
     message.insert(kEntryArray, QJsonArray());
     return message;
 }
 
-QJsonObject EntryAction(CString& section, CUuid& node_id, int action)
+QJsonObject EntryAction(Section section, CUuid& node_id, int action)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kAction, action);
@@ -134,28 +134,28 @@ QJsonObject EntryAction(CString& section, CUuid& node_id, int action)
     return message;
 }
 
-QJsonObject TreeAcked(CString& section, const QDateTime& start, const QDateTime& end)
+QJsonObject TreeAcked(Section section, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
     return message;
 }
 
-QJsonObject UpdateDocumentDir(CString& section, CString& document_dir)
+QJsonObject UpdateDocumentDir(Section section, CString& document_dir)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kDocumentDir, document_dir);
     return message;
 }
 
-QJsonObject UpdateDefaultUnit(CString& section, int unit)
+QJsonObject UpdateDefaultUnit(Section section, int unit)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kDefaultUnit, unit);
     return message;
 }
@@ -179,20 +179,20 @@ QJsonObject Register(CString& email, CString& password)
     return message;
 }
 
-QJsonObject SearchEntry(CString& section, CString& keyword)
+QJsonObject SearchEntry(Section section, CString& keyword)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kKeyword, keyword);
     message.insert(kEntryArray, QJsonObject());
 
     return message;
 }
 
-QJsonObject NodeAcked(CString& section, CUuid& node_id)
+QJsonObject NodeAcked(Section section, CUuid& node_id)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kNode, QJsonObject());
     message.insert(kAncestor, QUuid().toString(QUuid::WithoutBraces));
@@ -200,10 +200,10 @@ QJsonObject NodeAcked(CString& section, CUuid& node_id)
     return message;
 }
 
-QJsonObject NodeDirectionRule(CString& section, CUuid& node_id, bool direction_rule)
+QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kDirectionRule, direction_rule);
@@ -212,10 +212,10 @@ QJsonObject NodeDirectionRule(CString& section, CUuid& node_id, bool direction_r
     return message;
 }
 
-QJsonObject NodeStatus(CString& section, CUuid& node_id, int status)
+QJsonObject NodeStatus(Section section, CUuid& node_id, int status)
 {
     QJsonObject message {};
-    message.insert(kSection, section);
+    message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kStatus, status);

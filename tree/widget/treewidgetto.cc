@@ -5,7 +5,7 @@
 #include "ui_treewidgetto.h"
 #include "utils/jsongen.h"
 
-TreeWidgetTO::TreeWidgetTO(CString& section, TreeModel* model, const QDateTime& start, const QDateTime& end, QWidget* parent)
+TreeWidgetTO::TreeWidgetTO(Section section, TreeModel* model, const QDateTime& start, const QDateTime& end, QWidget* parent)
     : TreeWidget(parent)
     , ui(new Ui::TreeWidgetTO)
     , section_ { section }

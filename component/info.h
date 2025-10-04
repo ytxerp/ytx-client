@@ -30,7 +30,6 @@
 
 struct SectionInfo {
     Section section {};
-    QString section_str {};
 
     QUuid last_tab_id {};
 

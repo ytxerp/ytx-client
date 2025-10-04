@@ -49,6 +49,6 @@ QVariant SearchEntryModel::headerData(int section, Qt::Orientation orientation, 
 void SearchEntryModel::Search(const QString& text)
 {
     if (!text.isEmpty()) {
-        WebSocket::Instance()->SendMessage(kEntrySearch, JsonGen::SearchEntry(info_.section_str, text));
+        WebSocket::Instance()->SendMessage(kEntrySearch, JsonGen::SearchEntry(info_.section, text));
     }
 }

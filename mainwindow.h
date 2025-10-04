@@ -114,8 +114,8 @@ private slots:
     void RLeafRemoveCheck(const QJsonObject& obj);
     // void RRemoveSupportNode(const QJsonObject& obj);
     void RGlobalConfig(const QJsonArray& arr);
-    void RDocumentDir(const QString& section, const QString& document_dir);
-    void RDefaultUnit(const QString& section, int unit);
+    void RDocumentDir(Section section, const QString& document_dir);
+    void RDefaultUnit(Section section, int unit);
     void RUpdateDefaultUnitFailed(const QString& section);
     void RScrollToEntry(const QUuid& node_id, const QUuid& entry_id);
 
@@ -216,7 +216,7 @@ private:
     void RegisterRptWgt(const QUuid& report_id, ReportWidget* widget);
     void WriteConfig();
 
-    SectionContext* GetSectionContex(const QString& section);
+    SectionContext* GetSectionContex(Section section);
     void InitSystemTray();
 
     void SetAppFontByDpi();

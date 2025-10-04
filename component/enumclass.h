@@ -39,7 +39,7 @@
 enum class Section { kFinance = 0, kTask, kInventory, kPartner, kSale, kPurchase };
 
 /** @brief Constant array of all defined sections. */
-inline constexpr std::array<Section, 6> kSections
+inline constexpr std::array<Section, 6> kSectionArray
     = { Section::kFinance, Section::kTask, Section::kInventory, Section::kPartner, Section::kSale, Section::kPurchase };
 
 /** @brief Kind of node in a tree structure. */

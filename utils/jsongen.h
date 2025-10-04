@@ -17,6 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "component/enumclass.h"
 #include "component/using.h"
 #include "tree/node.h"
 
@@ -28,29 +29,29 @@ namespace JsonGen {
 QJsonObject Login();
 QJsonObject Register(CString& email, CString& password);
 
-QJsonObject InsertNode(CString& section, const Node* node, CUuid& parent_id);
-QJsonObject DragNode(CString& section, CUuid& node_id, CUuid& parent_id);
+QJsonObject InsertNode(Section section, const Node* node, CUuid& parent_id);
+QJsonObject DragNode(Section section, CUuid& node_id, CUuid& parent_id);
 
-QJsonObject LeafRemove(CString& section, CUuid& node_id);
-QJsonObject BranchRemove(CString& section, CUuid& node_id);
+QJsonObject LeafRemove(Section section, CUuid& node_id);
+QJsonObject BranchRemove(Section section, CUuid& node_id);
 
-QJsonObject LeafRemoveCheck(CString& section, CUuid& node_id);
-QJsonObject LeafReplace(CString& section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref);
+QJsonObject LeafRemoveCheck(Section section, CUuid& node_id);
+QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref);
 
-QJsonObject EntryAction(CString& section, CUuid& node_id, int action);
+QJsonObject EntryAction(Section section, CUuid& node_id, int action);
 
-QJsonObject TreeAcked(CString& section, const QDateTime& start, const QDateTime& end);
-QJsonObject LeafAcked(CString& section, CUuid& node_id, CUuid& entry_id = {});
-QJsonObject NodeAcked(CString& section, CUuid& node_id);
+QJsonObject TreeAcked(Section section, const QDateTime& start, const QDateTime& end);
+QJsonObject LeafAcked(Section section, CUuid& node_id, CUuid& entry_id = {});
+QJsonObject NodeAcked(Section section, CUuid& node_id);
 
-QJsonObject NodeDirectionRule(CString& section, CUuid& node_id, bool direction_rule);
-QJsonObject NodeStatus(CString& section, CUuid& node_id, int status);
-QJsonObject Update(CString& section, CUuid& id, CJsonObject& cache);
-QJsonObject UpdateDocumentDir(CString& section, CString& document_dir);
-QJsonObject UpdateDefaultUnit(CString& section, int unit);
+QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule);
+QJsonObject NodeStatus(Section section, CUuid& node_id, int status);
+QJsonObject Update(Section section, CUuid& id, CJsonObject& cache);
+QJsonObject UpdateDocumentDir(Section section, CString& document_dir);
+QJsonObject UpdateDefaultUnit(Section section, int unit);
 
 QJsonObject NodeDelta(CUuid& node_id, double initial_delta, double final_delta);
-QJsonObject SearchEntry(CString& section, CString& keyword);
+QJsonObject SearchEntry(Section section, CString& keyword);
 
 }
 

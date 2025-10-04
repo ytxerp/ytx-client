@@ -35,7 +35,7 @@ public slots:
     void on_end_dateChanged(const QDate& date);
 
 public:
-    TreeWidgetTO(CString& section, TreeModel* model, const QDateTime& start, const QDateTime& end, QWidget* parent = nullptr);
+    TreeWidgetTO(Section section, TreeModel* model, const QDateTime& start, const QDateTime& end, QWidget* parent = nullptr);
     ~TreeWidgetTO() override;
 
     QTreeView* View() const override;
@@ -45,7 +45,7 @@ private slots:
 
 private:
     Ui::TreeWidgetTO* ui;
-    CString section_ {};
+    Section section_ {};
     TreeModel* model_ {};
 
     QDateTime start_ {};

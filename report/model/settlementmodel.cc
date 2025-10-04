@@ -128,7 +128,7 @@ bool SettlementModel::setData(const QModelIndex& index, const QVariant& value, i
     }
 
     if (!cache.isEmpty()) {
-        const auto message { JsonGen::Update(info_.section_str, settlement->id, cache) };
+        const auto message { JsonGen::Update(info_.section, settlement->id, cache) };
         WebSocket::Instance()->SendMessage(kNodeUpdate, message);
     }
 

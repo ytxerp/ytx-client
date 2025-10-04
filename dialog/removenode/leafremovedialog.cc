@@ -94,7 +94,7 @@ void LeafRemoveDialog::on_pBtnOk_clicked()
         if (ui->rBtnRemove->isChecked()) {
             emit SRemoveNode(node_id_);
 
-            const auto message { JsonGen::LeafRemove(info_.section_str, node_id_) };
+            const auto message { JsonGen::LeafRemove(info_.section, node_id_) };
             WebSocket::Instance()->SendMessage(kLeafRemove, message);
 
             accept();
@@ -105,7 +105,7 @@ void LeafRemoveDialog::on_pBtnOk_clicked()
 
             const bool inventory_external_ref { inventory_internal_ || inventory_external_ };
 
-            const auto message { JsonGen::LeafReplace(info_.section_str, node_id_, new_node_id, inventory_external_ref) };
+            const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id, inventory_external_ref) };
             WebSocket::Instance()->SendMessage(kLeafReplace, message);
         }
     }
