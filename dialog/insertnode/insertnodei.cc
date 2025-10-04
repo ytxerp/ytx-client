@@ -123,7 +123,7 @@ void InsertNodeI::on_pBtnColor_clicked()
 
     QColor selected_color { QColorDialog::getColor(color, nullptr, tr("Choose Color"), QColorDialog::ShowAlphaChannel) };
     if (selected_color.isValid()) {
-        node_->color = selected_color.name(QColor::HexRgb);
+        node_->color = selected_color.name(QColor::HexArgb);
         UpdateColor(selected_color);
     }
 }

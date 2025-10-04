@@ -52,7 +52,8 @@ QGroupBox#treeGroup, QTableView#tableViewO, QTableView#settlementView, QTableVie
 
 /*-------------------------------------border add-----------------------------------------------*/
 
-QGroupBox QComboBox, QGroupBox QSpinBox, QDialog QLineEdit, QDialog QComboBox, QDialog QDateTimeEdit, QComboBox#comboEmployee, QComboBox#comboParty {
+QGroupBox QComboBox, QGroupBox QSpinBox, QDialog QLineEdit, QDialog QComboBox, QDialog QDateTimeEdit,
+QComboBox#comboEmployee, QComboBox#comboParty, QDialog QSpinBox, QDialog QDoubleSpinBox {
     border: 1px solid #657B83;
 }
 

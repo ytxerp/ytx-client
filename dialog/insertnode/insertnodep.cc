@@ -31,7 +31,7 @@ void InsertNodeP::IniDialog(ItemModel* unit_model)
     this->setFixedSize(300, 500);
 
     ui->comboUnit->setModel(unit_model);
-    ui->spinPaymentPeriod->setRange(0, std::numeric_limits<int>::max());
+    ui->spinPaymentTerm->setRange(0, std::numeric_limits<int>::max());
 }
 
 void InsertNodeP::IniConnect()
@@ -77,6 +77,6 @@ void InsertNodeP::on_comboUnit_currentIndexChanged(int index)
     node_->unit = ui->comboUnit->currentData().toInt();
 }
 
-void InsertNodeP::on_spinPaymentPeriod_editingFinished() { node_->payment_term = ui->spinPaymentPeriod->value(); }
+void InsertNodeP::on_spinPaymentPeriod_editingFinished() { node_->payment_term = ui->spinPaymentTerm->value(); }
 
 void InsertNodeP::RKindGroupClicked(int id) { node_->kind = id; }

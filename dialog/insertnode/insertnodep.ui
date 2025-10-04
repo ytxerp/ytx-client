@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>500</height>
+    <width>257</width>
+    <height>497</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
@@ -20,10 +20,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Property</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+      <string>PaymentTerm</string>
      </property>
     </widget>
    </item>
@@ -81,18 +78,15 @@
       <property name="spacing">
        <number>-1</number>
       </property>
-      <item row="0" column="3">
-       <spacer name="horizontalSpacer_4">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="rBtnBranch">
+        <property name="toolTip">
+         <string>Branch</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>19</width>
-          <height>5</height>
-         </size>
+        <property name="text">
+         <string notr="true">B</string>
         </property>
-       </spacer>
+       </widget>
       </item>
       <item row="0" column="1">
        <widget class="QRadioButton" name="rBtnLeaf">
@@ -101,16 +95,6 @@
         </property>
         <property name="text">
          <string notr="true">L</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QRadioButton" name="rBtnBranch">
-        <property name="toolTip">
-         <string>Branch</string>
-        </property>
-        <property name="text">
-         <string notr="true">B</string>
         </property>
        </widget>
       </item>
@@ -196,9 +180,6 @@
      <property name="text">
       <string>Unit</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
-     </property>
     </widget>
    </item>
    <item row="2" column="1" colspan="3">
@@ -254,7 +235,7 @@
     </widget>
    </item>
    <item row="8" column="1" colspan="3">
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QWidget" name="widget" native="true">
      <layout class="QGridLayout" name="gridLayout_5">
       <property name="leftMargin">
        <number>8</number>
@@ -268,7 +249,7 @@
       <property name="bottomMargin">
        <number>8</number>
       </property>
-      <item row="0" column="0">
+      <item row="0" column="1">
        <widget class="ComboBox" name="comboUnit">
         <property name="editable">
          <bool>true</bool>
@@ -284,8 +265,8 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <spacer name="horizontalSpacer_3">
+      <item row="0" column="0">
+       <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
         </property>
@@ -301,7 +282,7 @@
     </widget>
    </item>
    <item row="9" column="1" colspan="3">
-    <widget class="QGroupBox" name="groupBoxProperty">
+    <widget class="QWidget" name="widgetPaymentTerm" native="true">
      <layout class="QGridLayout" name="gridLayout_3">
       <property name="leftMargin">
        <number>8</number>
@@ -315,11 +296,11 @@
       <property name="bottomMargin">
        <number>8</number>
       </property>
-      <property name="spacing">
+      <property name="horizontalSpacing">
        <number>-1</number>
       </property>
-      <item row="0" column="2">
-       <widget class="QSpinBox" name="spinPaymentPeriod">
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="spinPaymentTerm">
         <property name="frame">
          <bool>false</bool>
         </property>
@@ -332,11 +313,17 @@
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QLabel" name="labelPaymentTerm">
-        <property name="text">
-         <string>PaymentTerm</string>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
-       </widget>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
