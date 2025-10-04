@@ -104,7 +104,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
+      <item row="0" column="2">
        <widget class="QRadioButton" name="rBtnBranch">
         <property name="toolTip">
          <string>Branch</string>

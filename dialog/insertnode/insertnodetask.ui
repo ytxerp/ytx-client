@@ -230,16 +230,6 @@
       <property name="spacing">
        <number>-1</number>
       </property>
-      <item row="0" column="0">
-       <widget class="QRadioButton" name="rBtnBranch">
-        <property name="toolTip">
-         <string>Branch</string>
-        </property>
-        <property name="text">
-         <string notr="true">B</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="3">
        <spacer name="horizontalSpacer_4">
         <property name="orientation">
@@ -260,6 +250,16 @@
         </property>
         <property name="text">
          <string notr="true">L</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="rBtnBranch">
+        <property name="toolTip">
+         <string>Branch</string>
+        </property>
+        <property name="text">
+         <string notr="true">B</string>
         </property>
        </widget>
       </item>
@@ -294,22 +294,22 @@
        <number>8</number>
       </property>
       <item>
-       <widget class="QRadioButton" name="rBtnDDCI">
-        <property name="toolTip">
-         <string>Debit Decrease, Credit Increase</string>
-        </property>
-        <property name="text">
-         <string notr="true">DDCI</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QRadioButton" name="rBtnDICD">
         <property name="toolTip">
          <string>Debit Increase, Credit Decrease</string>
         </property>
         <property name="text">
          <string notr="true">DICD</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rBtnDDCI">
+        <property name="toolTip">
+         <string>Debit Decrease, Credit Increase</string>
+        </property>
+        <property name="text">
+         <string notr="true">DDCI</string>
         </property>
        </widget>
       </item>
@@ -364,7 +364,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QCheckBox" name="chkBoxFinished">
+       <widget class="QCheckBox" name="chkBoxCompleted">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -372,7 +372,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Finished</string>
+         <string>Completed</string>
         </property>
        </widget>
       </item>

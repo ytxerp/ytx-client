@@ -123,7 +123,7 @@ void InsertNodeTask::on_pBtnColor_clicked()
     }
 }
 
-void InsertNodeTask::on_chkBoxFinished_checkStateChanged(const Qt::CheckState& arg1)
+void InsertNodeTask::on_chkBoxCompleted_checkStateChanged(const Qt::CheckState& arg1)
 {
     switch (arg1) {
     case Qt::Unchecked:

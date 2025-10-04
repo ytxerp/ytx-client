@@ -52,7 +52,7 @@ private slots:
 
     void on_pBtnColor_clicked();
 
-    void on_chkBoxFinished_checkStateChanged(const Qt::CheckState& arg1);
+    void on_chkBoxCompleted_checkStateChanged(const Qt::CheckState& arg1);
     void on_issuedTime_dateTimeChanged(const QDateTime& dateTime);
 
 private:
