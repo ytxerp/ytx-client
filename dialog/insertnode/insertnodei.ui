@@ -199,9 +199,6 @@
      <property name="text">
       <string>Rule</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
-     </property>
      <property name="buddy">
       <cstring>rBtnDICD</cstring>
      </property>
@@ -256,9 +253,6 @@
      </property>
      <property name="text">
       <string>Kind</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
      </property>
      <property name="buddy">
       <cstring>rBtnDICD</cstring>
@@ -385,13 +379,13 @@
       <number>8</number>
      </property>
      <property name="topMargin">
-      <number>8</number>
+      <number>4</number>
      </property>
      <property name="rightMargin">
       <number>8</number>
      </property>
      <property name="bottomMargin">
-      <number>8</number>
+      <number>4</number>
      </property>
      <item>
       <spacer name="horizontalSpacer_4">
