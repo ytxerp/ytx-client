@@ -15,7 +15,7 @@ LeafWidgetO::LeafWidgetO(
     , config_ { arg.section_config }
     , is_insert_ { is_insert }
     , node_id_ { arg.node->id }
-    , partner_unit_ { arg.section == Section::kSale ? std::to_underlying(UnitS::kCustomer) : std::to_underlying(UnitS::kVendor) }
+    , partner_unit_ { arg.section == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor) }
     , print_template_ { print_template }
     , print_manager_ { print_manager }
 {
@@ -69,7 +69,7 @@ void LeafWidgetO::IniWidget()
     ui->comboPartner->setModel(pmodel_);
     ui->comboPartner->setCurrentIndex(-1);
 
-    emodel_ = tree_model_partner_->IncludeUnitModel(std::to_underlying(UnitS::kEmployee));
+    emodel_ = tree_model_partner_->IncludeUnitModel(std::to_underlying(UnitP::kEmployee));
     ui->comboEmployee->setModel(emodel_);
     ui->comboEmployee->setCurrentIndex(-1);
 

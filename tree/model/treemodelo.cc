@@ -15,7 +15,7 @@ TreeModelO::~TreeModelO() { NodePool::Instance().Recycle(node_cache_, section_);
 void TreeModelO::RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
 {
     auto* node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
-    assert(node && node->kind == kLeaf);
+    assert(node && node->kind == std::to_underlying(NodeKind::kLeaf));
 
     if (first_delta == 0.0 && second_delta == 0.0 && initial_delta == 0.0 && discount_delta == 0.0 && final_delta == 0.0)
         return;
@@ -98,15 +98,16 @@ Node* TreeModelO::GetNode(const QUuid& node_id) const
 void TreeModelO::RemovePath(Node* node, Node* parent_node)
 {
     auto* d_node { DerivedPtr<NodeO>(node) };
+    const NodeKind kind { d_node->kind };
 
-    switch (d_node->kind) {
-    case kBranch:
+    switch (kind) {
+    case NodeKind::kBranch:
         for (auto* child : std::as_const(node->children)) {
             child->parent = parent_node;
             parent_node->children.emplace_back(child);
         }
         break;
-    case kLeaf:
+    case NodeKind::kLeaf:
         if (d_node->status) {
             UpdateAncestorValue(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
 
@@ -164,14 +165,14 @@ void TreeModelO::HandleNode()
     for (auto* node : std::as_const(node_hash_)) {
         auto* d_node { DerivedPtr<NodeO>(node) };
 
-        if (d_node->kind == kLeaf && d_node->status)
+        if (d_node->kind == std::to_underlying(NodeKind::kLeaf) && d_node->status)
             UpdateAncestorValue(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
     }
 }
 
 void TreeModelO::ResetBranch(Node* node)
 {
-    assert(node->kind == kBranch && "ResetBranch: node must be of kind kBranch");
+    assert(node->kind == std::to_underlying(NodeKind::kBranch) && "ResetBranch: node must be of kind NodeKind::kBranch");
 
     auto* d_node { DerivedPtr<NodeO>(node) };
     d_node->count_total = 0.0;
@@ -191,7 +192,7 @@ void TreeModelO::ResetModel()
     for (auto it = node_hash_.begin(); it != node_hash_.end();) {
         auto* node = static_cast<NodeO*>(it.value());
 
-        if (node->kind == kBranch) {
+        if (node->kind == std::to_underlying(NodeKind::kBranch)) {
             ResetBranch(node);
             ++it;
             continue;
@@ -279,7 +280,7 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return false;
 
     const NodeEnumO kColumn { index.column() };
-    bool branch { d_node->kind == kBranch };
+    bool branch { d_node->kind == std::to_underlying(NodeKind::kBranch) };
 
     switch (kColumn) {
     case NodeEnumO::kName:
@@ -360,7 +361,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*
     auto* node { DerivedPtr<NodeO>(source_parent->children.takeAt(sourceRow)) };
     assert(node);
 
-    bool update_ancestor { node->kind == kBranch || node->status };
+    bool update_ancestor { node->kind == std::to_underlying(NodeKind::kBranch) || node->status };
 
     if (update_ancestor) {
         UpdateAncestorValue(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);

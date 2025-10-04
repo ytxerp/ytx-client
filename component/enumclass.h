@@ -22,21 +22,41 @@
 
 #include <array>
 
-// TODO: 改为 enum class
-enum NodeKind { kLeaf = 0, kBranch };
-
-// - 4 corresponds to kSale
-// - 5 corresponds to kPurchase
-// Section values must start from 0 to maintain consistency.
-// Abbreviations: Finance -> F, Inventory -> I, Task -> T, Partner -> P, Order -> O
+/**
+ * @brief Available sections in the system.
+ *
+ * Values must remain continuous starting from 0.
+ * - 4 → kSale
+ * - 5 → kPurchase
+ *
+ * Abbreviations:
+ * - Finance (F)
+ * - Inventory (I)
+ * - Task (T)
+ * - Partner (P)
+ * - Order (O)
+ */
 enum class Section { kFinance = 0, kTask, kInventory, kPartner, kSale, kPurchase };
 
+/** @brief Constant array of all defined sections. */
 inline constexpr std::array<Section, 6> kSections
     = { Section::kFinance, Section::kTask, Section::kInventory, Section::kPartner, Section::kSale, Section::kPurchase };
 
-// defining section's unit
+/** @brief Kind of node in a tree structure. */
+enum class NodeKind { kLeaf = 0, kBranch };
+
+/** @brief Workflow status of a node. Just for Task and Order sections. */
+enum class NodeStatus { kUnfinished = 0, kReviewed, kVoided };
+
+/** @brief Action applied to all entries in a leaf table widget. */
+enum class EntryAction { kMarkNone = 0, kMarkAll, kMarkToggle };
+
+/** @brief Status of an entry. */
+enum class EntryStatus { kUnmarked = 0, kMarked };
+
+/** @brief Unit kinds. */
 enum class UnitO { kImmediate = 0, kMonthly, kPending };
-enum class UnitS { kCustomer = 0, kVendor, kEmployee };
+enum class UnitP { kCustomer = 0, kVendor, kEmployee };
 enum class UnitI { kInternal = 0, kPosition, kExternal };
 enum class UnitT { kExternal = 0, kInternal };
 
@@ -370,11 +390,5 @@ enum class EntryRefEnum {
     kDescription,
     kInitial,
 };
-
-// Enum class defining entry actions
-enum class EntryAction { kMarkNone = 0, kMarkAll, kMarkToggle };
-
-enum class EntryStatus { kUnmarked = 0, kMarked };
-enum class NodeStatus { kUnfinished = 0, kReviewed, kVoided };
 
 #endif // ENUMCLASS_H

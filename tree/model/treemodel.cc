@@ -225,7 +225,7 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value)
 
     const QUuid node_id { node->id };
 
-    if (node->kind == kLeaf) {
+    if (node->kind == std::to_underlying(NodeKind::kLeaf)) {
         emit SDirectionRule(node_id, node->direction_rule);
     }
 
@@ -286,7 +286,7 @@ void TreeModel::UpdateName(const QUuid& node_id, const QJsonObject& data)
     NodeUtils::UpdateModel(leaf_path_, leaf_model_, node);
 
     emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
-    emit SUpdateName(node->id, node->name, node->kind == kBranch);
+    emit SUpdateName(node->id, node->name, node->kind == std::to_underlying(NodeKind::kBranch));
 
     auto index { GetIndex(node_id) };
     if (index.isValid()) {
@@ -417,7 +417,7 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
         return false;
 
     auto* destination_parent { GetNodeByIndex(parent) };
-    if (destination_parent->kind != kBranch)
+    if (destination_parent->kind != std::to_underlying(NodeKind::kBranch))
         return false;
 
     QUuid node_id {};
@@ -483,7 +483,7 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*c
     NodeUtils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
     NodeUtils::UpdateModel(leaf_path_, leaf_model_, node);
 
-    emit SUpdateName(node->id, node->name, node->kind == kBranch);
+    emit SUpdateName(node->id, node->name, node->kind == std::to_underlying(NodeKind::kBranch));
     emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
 
     return true;
@@ -594,7 +594,7 @@ void TreeModel::UpdateName(const QUuid& node_id, CString& new_name)
     NodeUtils::UpdateModel(leaf_path_, leaf_model_, node);
 
     emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
-    emit SUpdateName(node->id, node->name, node->kind == kBranch);
+    emit SUpdateName(node->id, node->name, node->kind == std::to_underlying(NodeKind::kBranch));
 }
 
 QString TreeModel::Path(const QUuid& node_id) const
@@ -624,9 +624,10 @@ void TreeModel::FetchOneNode(const QUuid& node_id)
 void TreeModel::RemovePath(Node* node, Node* parent_node)
 {
     const auto node_id { node->id };
+    const NodeKind kind { node->kind };
 
-    switch (node->kind) {
-    case kBranch: {
+    switch (kind) {
+    case NodeKind::kBranch: {
         for (auto* child : std::as_const(node->children)) {
             child->parent = parent_node;
             parent_node->children.emplace_back(child);
@@ -639,7 +640,7 @@ void TreeModel::RemovePath(Node* node, Node* parent_node)
         emit SUpdateName(node_id, node->name, true);
 
     } break;
-    case kLeaf: {
+    case NodeKind::kLeaf: {
         leaf_path_.remove(node_id);
         NodeUtils::RemoveItem(leaf_model_, node_id);
         UpdateAncestorValue(node, -node->initial_total, -node->final_total);
@@ -655,7 +656,7 @@ void TreeModel::HandleNode()
     for (auto* node : std::as_const(node_hash_)) {
         RegisterPath(node);
 
-        if (node->kind == kLeaf)
+        if (node->kind == std::to_underlying(NodeKind::kLeaf))
             UpdateAncestorValue(node, node->initial_total, node->final_total);
     }
 
@@ -820,7 +821,7 @@ void TreeModel::InitRoot(Node*& root, int default_unit)
 {
     if (root == nullptr) {
         root = NodePool::Instance().Allocate(section_);
-        root->kind = kBranch;
+        root->kind = std::to_underlying(NodeKind::kBranch);
         root->unit = default_unit;
         root->direction_rule = false;
         root->name = QString();
@@ -855,12 +856,13 @@ void TreeModel::BuildHierarchy(const QJsonArray& path_array)
 void TreeModel::RegisterPath(Node* node)
 {
     CString path { NodeUtils::ConstructPath(root_, node, separator_) };
+    const NodeKind kind { node->kind };
 
-    switch (node->kind) {
-    case kBranch:
+    switch (kind) {
+    case NodeKind::kBranch:
         branch_path_.insert(node->id, path);
         break;
-    case kLeaf:
+    case NodeKind::kLeaf:
         leaf_path_.insert(node->id, path);
         leaf_model_->AppendItem(path, node->id);
         InsertUnitSet(node->id, node->unit);
@@ -878,7 +880,7 @@ QSet<QUuid> TreeModel::ChildrenId(const QUuid& parent_id) const
     }
     assert(node);
 
-    if (node->kind != kBranch || node->children.isEmpty())
+    if (node->kind != std::to_underlying(NodeKind::kBranch) || node->children.isEmpty())
         return {};
 
     QQueue<const Node*> queue {};
@@ -887,13 +889,14 @@ QSet<QUuid> TreeModel::ChildrenId(const QUuid& parent_id) const
     QSet<QUuid> set {};
     while (!queue.isEmpty()) {
         auto* queue_node = queue.dequeue();
+        const NodeKind kind { queue_node->kind };
 
-        switch (queue_node->kind) {
-        case kBranch:
+        switch (kind) {
+        case NodeKind::kBranch:
             for (const auto* child : queue_node->children)
                 queue.enqueue(child);
             break;
-        case kLeaf:
+        case NodeKind::kLeaf:
             set.insert(queue_node->id);
             break;
         default:

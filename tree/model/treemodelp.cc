@@ -20,7 +20,7 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta, doubl
         return;
 
     auto* node { node_hash_.value(node_id) };
-    if (!node || node == root_ || node->kind != kLeaf)
+    if (!node || node == root_ || node->kind != std::to_underlying(NodeKind::kLeaf))
         return;
 
     node->initial_total += initial_delta;
@@ -41,14 +41,14 @@ QList<QUuid> TreeModelP::PartnerList(CString& text, int unit) const
 
 const QSet<QUuid>* TreeModelP::UnitSet(int unit) const
 {
-    const UnitS kUnit { unit };
+    const UnitP kUnit { unit };
 
     switch (kUnit) {
-    case UnitS::kCustomer:
+    case UnitP::kCustomer:
         return &cset_;
-    case UnitS::kVendor:
+    case UnitP::kVendor:
         return &vset_;
-    case UnitS::kEmployee:
+    case UnitP::kEmployee:
         return &eset_;
     default:
         return nullptr;
@@ -66,16 +66,16 @@ QSortFilterProxyModel* TreeModelP::IncludeUnitModel(int unit)
 
 void TreeModelP::RemoveUnitSet(const QUuid& node_id, int unit)
 {
-    const UnitS kUnit { unit };
+    const UnitP kUnit { unit };
 
     switch (kUnit) {
-    case UnitS::kCustomer:
+    case UnitP::kCustomer:
         cset_.remove(node_id);
         break;
-    case UnitS::kVendor:
+    case UnitP::kVendor:
         vset_.remove(node_id);
         break;
-    case UnitS::kEmployee:
+    case UnitP::kEmployee:
         eset_.remove(node_id);
         break;
     default:
@@ -85,16 +85,16 @@ void TreeModelP::RemoveUnitSet(const QUuid& node_id, int unit)
 
 void TreeModelP::InsertUnitSet(const QUuid& node_id, int unit)
 {
-    const UnitS kUnit { unit };
+    const UnitP kUnit { unit };
 
     switch (kUnit) {
-    case UnitS::kCustomer:
+    case UnitP::kCustomer:
         cset_.insert(node_id);
         break;
-    case UnitS::kVendor:
+    case UnitP::kVendor:
         vset_.insert(node_id);
         break;
-    case UnitS::kEmployee:
+    case UnitP::kEmployee:
         eset_.insert(node_id);
         break;
     default:

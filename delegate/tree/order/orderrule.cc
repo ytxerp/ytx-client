@@ -13,8 +13,8 @@ OrderRule::OrderRule(CBoolString& map, QEvent::Type type, QObject* parent)
 
 void OrderRule::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const int kind { index.siblingAtColumn(std::to_underlying(NodeEnumO::kKind)).data().toInt() };
-    if (kind == kBranch)
+    const NodeKind kind { index.siblingAtColumn(std::to_underlying(NodeEnumO::kKind)).data().toInt() };
+    if (kind == NodeKind::kBranch)
         return PaintEmpty(painter, option, index);
 
     const bool key { index.data().toBool() };
@@ -32,8 +32,8 @@ bool OrderRule::editorEvent(QEvent* event, QAbstractItemModel* model, const QSty
     if (event->type() != type_)
         return false;
 
-    const int kind { index.siblingAtColumn(std::to_underlying(NodeEnumO::kKind)).data().toInt() };
-    if (kind == kBranch)
+    const NodeKind kind { index.siblingAtColumn(std::to_underlying(NodeEnumO::kKind)).data().toInt() };
+    if (kind == NodeKind::kBranch)
         return false;
 
     auto* mouse_event { static_cast<QMouseEvent*>(event) };

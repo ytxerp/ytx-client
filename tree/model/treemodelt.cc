@@ -296,7 +296,7 @@ void TreeModelT::UpdateStatus(Node* node, int value)
 
 void TreeModelT::ResetBranch(Node* node)
 {
-    assert(node->kind == kBranch && "ResetBranch: node must be of kind kBranch");
+    assert(node->kind == std::to_underlying(NodeKind::kBranch) && "ResetBranch: node must be of kind NodeKind::kBranch");
 
     node->children.clear();
     node->initial_total = 0.0;
@@ -315,7 +315,7 @@ void TreeModelT::ResetModel()
     for (auto it = node_hash_.begin(); it != node_hash_.end();) {
         auto* node = static_cast<NodeT*>(it.value());
 
-        if (node->kind == kBranch) {
+        if (node->kind == std::to_underlying(NodeKind::kBranch)) {
             ResetBranch(node);
             ++it;
             continue;

@@ -16,15 +16,16 @@ void UpdatePath(UuidString& leaf, UuidString& branch, const Node* root, const No
     while (!queue.isEmpty()) {
         const auto* current { queue.dequeue() };
         const auto path { ConstructPath(root, current, separator) };
+        const NodeKind kind { current->kind };
 
-        switch (current->kind) {
-        case kBranch:
+        switch (kind) {
+        case NodeKind::kBranch:
             for (const auto* child : current->children)
                 queue.enqueue(child);
 
             branch.insert(current->id, path);
             break;
-        case kLeaf:
+        case NodeKind::kLeaf:
             leaf.insert(current->id, path);
             break;
         default:
@@ -130,14 +131,15 @@ void UpdateModel(CUuidString& leaf, ItemModel* leaf_model, const Node* node)
 
     while (!queue.isEmpty()) {
         const auto* current { queue.dequeue() };
+        const NodeKind kind { current->kind };
 
-        switch (current->kind) {
-        case kBranch:
+        switch (kind) {
+        case NodeKind::kBranch:
             for (const auto* child : current->children)
                 queue.enqueue(child);
 
             break;
-        case kLeaf:
+        case NodeKind::kLeaf:
             leaf_range.insert(current->id);
             break;
         default:

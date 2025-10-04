@@ -107,7 +107,7 @@ void SearchNodeModelO::Search(CString& text)
     node_list_.clear();
 
     auto* partner_tree { static_cast<const TreeModelP*>(partner_tree_model_) };
-    const int unit { info_.section == Section::kSale ? std::to_underlying(UnitS::kCustomer) : std::to_underlying(UnitS::kVendor) };
+    const int unit { info_.section == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor) };
 
     beginResetModel();
     // static_cast<EntryHubO*>(dbhub_)->SearchNode(node_list_, partner_tree->PartyList(text, unit));

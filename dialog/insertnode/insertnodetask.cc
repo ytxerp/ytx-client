@@ -76,8 +76,8 @@ void InsertNodeTask::UpdateColor(QColor color)
 void InsertNodeTask::IniKindGroup()
 {
     kind_group_ = new QButtonGroup(this);
-    kind_group_->addButton(ui->rBtnBranch, kBranch);
-    kind_group_->addButton(ui->rBtnLeaf, kLeaf);
+    kind_group_->addButton(ui->rBtnBranch, std::to_underlying(NodeKind::kBranch));
+    kind_group_->addButton(ui->rBtnLeaf, std::to_underlying(NodeKind::kLeaf));
 }
 
 void InsertNodeTask::IniRuleGroup()

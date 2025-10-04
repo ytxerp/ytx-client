@@ -184,8 +184,8 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
         return;
 
     const int kind_column { NodeUtils::KindColumn(start_) };
-    const int kind { index.siblingAtColumn(kind_column).data().toInt() };
-    if (kind == kBranch)
+    const NodeKind kind { index.siblingAtColumn(kind_column).data().toInt() };
+    if (kind == NodeKind::kBranch)
         return;
 
     const int unit_column { NodeUtils::UnitColumn(start_) };
@@ -908,7 +908,7 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
 
     auto tree_model_p { sc_p_.tree_model };
 
-    auto* filter_model { tree_model_p->IncludeUnitModel(std::to_underlying(UnitS::kEmployee)) };
+    auto* filter_model { tree_model_p->IncludeUnitModel(std::to_underlying(UnitP::kEmployee)) };
     auto* employee { new FilterUnit(tree_model_p, filter_model, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployee), employee);
 
@@ -1059,7 +1059,7 @@ void MainWindow::on_actionNewGroup_triggered()
 
     node->id = QUuid::createUuidV7();
     node->unit = parent_id.isNull() ? sc_->global_config.default_unit : model->Unit(parent_id);
-    node->kind = kBranch;
+    node->kind = std::to_underlying(NodeKind::kBranch);
 
     model->SetParent(node, parent_id);
 
@@ -1110,14 +1110,14 @@ void MainWindow::RemoveNode()
     assert(model);
 
     const QUuid node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
-    const int kind { model->Kind(node_id) };
+    const NodeKind kind { model->Kind(node_id) };
 
     switch (kind) {
-    case kBranch: {
+    case NodeKind::kBranch: {
         BranchRemove(model, index, node_id);
         break;
     }
-    case kLeaf: {
+    case NodeKind::kLeaf: {
         const auto message { JsonGen::LeafRemoveCheck(sc_->info.section_str, node_id) };
         WebSocket::Instance()->SendMessage(kLeafRemoveCheck, message);
         break;
@@ -1692,7 +1692,7 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIssuedTime), issued_time);
 
     auto model { sc_p_.tree_model };
-    const int unit { start_ == Section::kSale ? std::to_underlying(UnitS::kCustomer) : std::to_underlying(UnitS::kVendor) };
+    const int unit { start_ == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor) };
 
     auto* filter_model { model->IncludeUnitModel(unit) };
     auto* node { new TableComboFilter(model, filter_model, table_view) };
@@ -1806,8 +1806,8 @@ void MainWindow::InitContextFinance()
     info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
     info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
 
-    info.kind_map.insert(kBranch, kBranchKind);
-    info.kind_map.insert(kLeaf, kLeafKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
     info.rule_model = MainWindowUtils::CreateModelFromMap(info.rule_map, this);
@@ -1849,8 +1849,8 @@ void MainWindow::InitContextInventory()
     info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
     info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
 
-    info.kind_map.insert(kBranch, kBranchKind);
-    info.kind_map.insert(kLeaf, kLeafKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
     info.rule_model = MainWindowUtils::CreateModelFromMap(info.rule_map, this);
@@ -1891,8 +1891,8 @@ void MainWindow::InitContextTask()
     info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
     info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
 
-    info.kind_map.insert(kBranch, kBranchKind);
-    info.kind_map.insert(kLeaf, kLeafKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
     info.rule_model = MainWindowUtils::CreateModelFromMap(info.rule_map, this);
@@ -1929,12 +1929,12 @@ void MainWindow::InitContextPartner()
     info.path = kPartnerPath;
     info.entry = kPartnerEntry;
 
-    info.unit_map.insert(std::to_underlying(UnitS::kCustomer), kUnitCustomer);
-    info.unit_map.insert(std::to_underlying(UnitS::kEmployee), kUnitEmployee);
-    info.unit_map.insert(std::to_underlying(UnitS::kVendor), kUnitVendor);
+    info.unit_map.insert(std::to_underlying(UnitP::kCustomer), kUnitCustomer);
+    info.unit_map.insert(std::to_underlying(UnitP::kEmployee), kUnitEmployee);
+    info.unit_map.insert(std::to_underlying(UnitP::kVendor), kUnitVendor);
 
-    info.kind_map.insert(kBranch, kBranchKind);
-    info.kind_map.insert(kLeaf, kLeafKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
 
@@ -1974,8 +1974,8 @@ void MainWindow::InitContextSale()
     info.unit_map.insert(std::to_underlying(UnitO::kMonthly), kUnitMonthly);
     info.unit_map.insert(std::to_underlying(UnitO::kPending), kUnitPending);
 
-    info.kind_map.insert(kBranch, kBranchKind);
-    info.kind_map.insert(kLeaf, kLeafKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
     info.unit_model->sort(0, Qt::DescendingOrder);
@@ -2028,8 +2028,8 @@ void MainWindow::InitContextPurchase()
     info.unit_map.insert(std::to_underlying(UnitO::kMonthly), kUnitMonthly);
     info.unit_map.insert(std::to_underlying(UnitO::kPending), kUnitPending);
 
-    info.kind_map.insert(kBranch, kBranchKind);
-    info.kind_map.insert(kLeaf, kLeafKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
+    info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
     info.unit_model->sort(0, Qt::DescendingOrder);
@@ -2131,7 +2131,7 @@ void MainWindow::on_actionAppendNode_triggered()
     parent_index = parent_index.isValid() ? parent_index : QModelIndex();
 
     auto* parent_node { sc_->tree_model->GetNodeByIndex(parent_index) };
-    if (parent_node->kind != kBranch)
+    if (parent_node->kind != std::to_underlying(NodeKind::kBranch))
         return;
 
     InsertNodeFunction(parent_index, parent_node->id, 0);
@@ -2253,7 +2253,7 @@ void MainWindow::InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUu
 void MainWindow::RLeafExternalReference(const QUuid& node_id, int unit)
 {
     assert(sc_->tree_widget);
-    assert(sc_->tree_model->Kind(node_id) == kLeaf
+    assert(sc_->tree_model->Kind(node_id) == std::to_underlying(NodeKind::kLeaf)
         && "Node kind should be 'kLeafNode' at this point. The kind check should be performed in the delegate DoubleSpinUnitRPS.");
 
     switch (start_) {
