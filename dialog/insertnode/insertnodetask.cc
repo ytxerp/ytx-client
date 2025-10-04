@@ -20,6 +20,7 @@ InsertNodeTask::InsertNodeTask(CInsertNodeArgFIPT& arg, QWidget* parent)
     IniData(arg.node);
     IniRuleGroup();
     IniKindGroup();
+    IniStatusGroup();
     IniConnect();
 }
 
@@ -45,8 +46,9 @@ void InsertNodeTask::IniData(Node* node)
     ui->comboUnit->setCurrentIndex(item_index);
 
     IniRule(node->direction_rule);
-    ui->rBtnLeaf->setChecked(true);
 
+    ui->rBtnLeaf->setChecked(true);
+    ui->rBtnInProgress->setChecked(true);
     ui->pBtnOk->setEnabled(false);
 }
 
@@ -55,6 +57,7 @@ void InsertNodeTask::IniConnect()
     connect(ui->lineEditName, &QLineEdit::textEdited, this, &InsertNodeTask::RNameEdited);
     connect(rule_group_, &QButtonGroup::idClicked, this, &InsertNodeTask::RRuleGroupClicked);
     connect(kind_group_, &QButtonGroup::idClicked, this, &InsertNodeTask::RKindGroupClicked);
+    connect(status_group_, &QButtonGroup::idClicked, this, &InsertNodeTask::RStatusGroupClicked);
 }
 
 void InsertNodeTask::UpdateColor(QColor color)
@@ -85,6 +88,13 @@ void InsertNodeTask::IniRuleGroup()
     rule_group_ = new QButtonGroup(this);
     rule_group_->addButton(ui->rBtnDDCI, static_cast<int>(Rule::kDDCI));
     rule_group_->addButton(ui->rBtnDICD, static_cast<int>(Rule::kDICD));
+}
+
+void InsertNodeTask::IniStatusGroup()
+{
+    status_group_ = new QButtonGroup(this);
+    status_group_->addButton(ui->rBtnInProgress, std::to_underlying(NodeStatus::kInProgress));
+    status_group_->addButton(ui->rBtnCompleted, std::to_underlying(NodeStatus::kCompleted));
 }
 
 void InsertNodeTask::IniRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }
@@ -118,27 +128,15 @@ void InsertNodeTask::on_pBtnColor_clicked()
 
     QColor selected_color { QColorDialog::getColor(color, nullptr, tr("Choose Color"), QColorDialog::ShowAlphaChannel) };
     if (selected_color.isValid()) {
-        node_->color = selected_color.name(QColor::HexRgb);
+        node_->color = selected_color.name(QColor::HexArgb);
         UpdateColor(selected_color);
-    }
-}
-
-void InsertNodeTask::on_chkBoxCompleted_checkStateChanged(const Qt::CheckState& arg1)
-{
-    switch (arg1) {
-    case Qt::Unchecked:
-        node_->status = std::to_underlying(NodeStatus::kInProgress);
-        break;
-    case Qt::Checked:
-        node_->status = std::to_underlying(NodeStatus::kCompleted);
-        break;
-    case Qt::PartiallyChecked:
-        break;
     }
 }
 
 void InsertNodeTask::RRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
 
 void InsertNodeTask::RKindGroupClicked(int id) { node_->kind = id; }
+
+void InsertNodeTask::RStatusGroupClicked(int id) { node_->status = id; }
 
 void InsertNodeTask::on_issuedTime_dateTimeChanged(const QDateTime& dateTime) { node_->issued_time = dateTime.toUTC(); }

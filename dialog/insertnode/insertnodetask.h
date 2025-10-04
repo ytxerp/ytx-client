@@ -41,6 +41,7 @@ private slots:
     void RNameEdited(const QString& arg1);
     void RRuleGroupClicked(int id);
     void RKindGroupClicked(int id);
+    void RStatusGroupClicked(int id);
 
     void on_lineEditName_editingFinished();
     void on_lineEditCode_editingFinished();
@@ -52,7 +53,6 @@ private slots:
 
     void on_pBtnColor_clicked();
 
-    void on_chkBoxCompleted_checkStateChanged(const Qt::CheckState& arg1);
     void on_issuedTime_dateTimeChanged(const QDateTime& dateTime);
 
 private:
@@ -62,6 +62,7 @@ private:
     void UpdateColor(QColor color);
     void IniKindGroup();
     void IniRuleGroup();
+    void IniStatusGroup();
     void IniRule(bool rule);
 
 private:
@@ -69,6 +70,7 @@ private:
     NodeT* node_ {};
     QButtonGroup* rule_group_ {};
     QButtonGroup* kind_group_ {};
+    QButtonGroup* status_group_ {};
 
     CString& parent_path_ {};
     CStringList& name_list_ {};

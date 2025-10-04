@@ -30,7 +30,7 @@
 
 QPushButton, QGroupBox, QPlainTextEdit,
 QTreeView, QTableView, QListView, QWidget#tableViewOSave,
-QHeaderView::section, QTabBar::tab, QWidget#widgetProperty,
+QHeaderView::section, QTabBar::tab,
 QToolBar, QToolTip {
     border: 1px solid #657B83;
 }
@@ -52,7 +52,7 @@ QGroupBox#treeGroup, QTableView#tableViewO, QTableView#settlementView, QTableVie
 
 /*-------------------------------------border add-----------------------------------------------*/
 
-QGroupBox QComboBox, QGroupBox QSpinBox, QDialog QLineEdit, QDialog QComboBox, QComboBox#comboEmployee, QComboBox#comboParty {
+QGroupBox QComboBox, QGroupBox QSpinBox, QDialog QLineEdit, QDialog QComboBox, QDialog QDateTimeEdit, QComboBox#comboEmployee, QComboBox#comboParty {
     border: 1px solid #657B83;
 }
 
@@ -179,7 +179,7 @@ QGroupBox#groupBoxSection QRadioButton::indicator {
     height: 0px;
 }
 
-QDialog QRadioButton, QWidget#LeafWidgetO QRadioButton {
+QWidget#LeafWidgetO QRadioButton {
     min-width: 3em;
 }
 
