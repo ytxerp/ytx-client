@@ -41,10 +41,10 @@ public:
     void Clear();
 
     void RegisterTreeModel(const QString& section, QPointer<TreeModel> node) { tree_model_hash_.insert(section, node); }
-    void UnregisterTreeNode(const QString& section) { tree_model_hash_.remove(section); }
+    void DeregisterTreeNode(const QString& section) { tree_model_hash_.remove(section); }
 
     void RegisterEntryHub(const QString& section, QPointer<EntryHub> entry_hub) { entry_hub_hash_.insert(section, entry_hub); }
-    void UnregisterEntryHub(const QString& section) { entry_hub_hash_.remove(section); }
+    void DeregisterEntryHub(const QString& section) { entry_hub_hash_.remove(section); }
 
     WebSocket(const WebSocket&) = delete;
     WebSocket& operator=(const WebSocket&) = delete;
@@ -58,9 +58,6 @@ signals:
     void SRegisterResult(int result);
     void SConnectResult(bool result);
     void SInitializeContext(const QString& expire_date);
-    void SCreateUserResult(bool result);
-    void SCreateDatabaseResult(bool result);
-    void SInitializeDatabaseResult(bool result);
     void SScrollToEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void SLeafRemoveCheck(const QJsonObject& obj);
@@ -88,16 +85,9 @@ private:
     QHash<QUuid, QSet<QUuid>> ParseNodeReference(const QJsonObject& obj);
     void UpdateDelta(const CString& section, const QJsonArray& node_delta) const;
 
-    // ----------------------------
-    // Naming convention:
-    // Private messages (server responds to a client request individually) → Ack
-    // Broadcast messages (server pushes to all clients) → Apply
-    // ----------------------------
-
 private:
-    void NotifyLoginFailed(const QJsonObject& obj);
-    void NotifyLoginSuccess(const QJsonObject& obj);
     void NotifyRegisterResult(const QJsonObject& obj);
+    void NotifyLoginResult(const QJsonObject& obj);
 
     void AckTree(const QJsonObject& obj);
     void AckLeaf(const QJsonObject& obj);

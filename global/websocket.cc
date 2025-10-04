@@ -90,8 +90,7 @@ void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error) { qWarning() 
 
 void WebSocket::InitHandler()
 {
-    handler_obj_[kLoginSuccess] = [this](const QJsonObject& obj) { NotifyLoginSuccess(obj); };
-    handler_obj_[kLoginFailed] = [this](const QJsonObject& obj) { NotifyLoginFailed(obj); };
+    handler_obj_[kLoginResult] = [this](const QJsonObject& obj) { NotifyLoginResult(obj); };
     handler_obj_[kRegisterResult] = [this](const QJsonObject& obj) { NotifyRegisterResult(obj); };
     handler_obj_[kTreeAcked] = [this](const QJsonObject& obj) { AckTree(obj); };
     handler_obj_[kLeafAcked] = [this](const QJsonObject& obj) { AckLeaf(obj); };
@@ -204,16 +203,18 @@ void WebSocket::RReceiveMessage(const QString& message)
     qWarning() << "Unsupported value type for message:" << msg_type;
 }
 
-void WebSocket::NotifyLoginFailed(const QJsonObject& /*obj*/) { emit SLoginResult(false); }
-
-void WebSocket::NotifyLoginSuccess(const QJsonObject& obj)
+void WebSocket::NotifyLoginResult(const QJsonObject& obj)
 {
-    session_id_ = obj[kSessionId].toString();
-    const auto expire_time { QDateTime::fromString(obj[kExpireTime].toString(), Qt::ISODate) };
-    const auto expire_date { expire_time.date().toString(kDateFST) };
+    const bool result { obj[kResult].toBool() };
 
-    emit SLoginResult(true);
-    emit SInitializeContext(expire_date);
+    emit SLoginResult(result);
+
+    if (result) {
+        session_id_ = obj[kSessionId].toString();
+        const auto expire_time { QDateTime::fromString(obj[kExpireTime].toString(), Qt::ISODate) };
+        const auto expire_date { expire_time.date().toString(kDateFST) };
+        emit SInitializeContext(expire_date);
+    }
 }
 
 void WebSocket::NotifyWorkspaceAccessPending(const QJsonObject& obj)
