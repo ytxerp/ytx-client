@@ -162,20 +162,21 @@ Qt::ItemFlags TreeModelF::flags(const QModelIndex& index) const
     return flags;
 }
 
-bool TreeModelF::UpdateAncestorValue(Node* node, double initial_delta, double final_delta, double /*first*/, double /*second*/, double /*discount*/)
+QSet<QUuid> TreeModelF::UpdateAncestorValue(Node* node, double initial_delta, double final_delta, double /*first*/, double /*second*/, double /*discount*/)
 {
     assert(node && node != root_ && node->parent);
+    QSet<QUuid> affected_ids {};
 
     if (node->parent == root_)
-        return false;
+        return affected_ids;
 
     if (initial_delta == 0.0 && final_delta == 0.0)
-        return false;
+        return affected_ids;
 
     const int unit { node->unit };
     const bool rule { node->direction_rule };
 
-    QModelIndexList ancestor {};
+    affected_ids.insert(node->id);
 
     for (Node* current = node->parent; current && current != root_; current = current->parent) {
         const int multiplier { current->direction_rule == rule ? 1 : -1 };
@@ -186,13 +187,8 @@ bool TreeModelF::UpdateAncestorValue(Node* node, double initial_delta, double fi
             current->initial_total += multiplier * initial_delta;
         }
 
-        ancestor.emplaceBack(GetIndex(current->id));
+        affected_ids.insert(current->id);
     }
 
-    if (!ancestor.isEmpty()) {
-        const auto [start_col, end_col] = TotalColumnRange();
-        emit dataChanged(index(ancestor.first().row(), start_col), index(ancestor.last().row(), end_col), { Qt::DisplayRole });
-    }
-
-    return true;
+    return affected_ids;
 }

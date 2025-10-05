@@ -244,13 +244,12 @@ void TreeModelT::AckTree(const QJsonObject& obj)
         RegisterNode(node);
     }
 
-    if (node_hash_.size() >= 2)
+    if (node_hash_.size() >= 2) {
         BuildHierarchy(path_array);
+        HandleNode();
+    }
 
     endResetModel();
-
-    if (!node_array.isEmpty())
-        HandleNode();
 }
 
 Node* TreeModelT::GetNode(const QUuid& node_id) const

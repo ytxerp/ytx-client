@@ -34,7 +34,7 @@ void TreeModel::RSyncDelta(
         return;
 
     // Multiplier is used to adjust the sign (only meaningful for leaf nodes).
-    const int multiplier { node->direction_rule ? 1 : -1 };
+    const int multiplier { node->direction_rule == Rule::kDICD ? 1 : -1 };
 
     // NOTE: Only leaf nodes apply the direction adjustment.
     // The adjusted deltas are treated as the final values
@@ -47,10 +47,8 @@ void TreeModel::RSyncDelta(
     node->final_total += adjust_final_delta;
 
     // Propagate adjusted deltas to ancestor nodes
-    UpdateAncestorValue(node, adjust_initial_delta, adjust_final_delta);
-
-    const auto [start_col, end_col] = TotalColumnRange();
-    EmitRowChanged(node_id, start_col, end_col);
+    const auto affected_ids { UpdateAncestorValue(node, adjust_initial_delta, adjust_final_delta) };
+    RefreshAncestorValue(affected_ids);
 
     emit SSyncStatusValue();
 }
@@ -252,7 +250,9 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     new_node->initial_total += initial_delta;
     new_node->final_total += final_delta;
 
-    UpdateAncestorValue(new_node, initial_delta, final_delta);
+    const auto affected_ids { UpdateAncestorValue(new_node, initial_delta, final_delta) };
+    RefreshAncestorValue(affected_ids);
+
     RRemoveNode(old_node_id);
 }
 
@@ -472,12 +472,15 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*c
     }
     assert(node);
 
-    UpdateAncestorValue(node, -node->initial_total, -node->final_total);
+    const auto affected_ids_source { UpdateAncestorValue(node, -node->initial_total, -node->final_total) };
 
     destination_parent->children.insert(destinationChild, node);
     node->parent = destination_parent;
-    UpdateAncestorValue(node, node->initial_total, node->final_total);
+
+    auto affected_ids_destination { UpdateAncestorValue(node, node->initial_total, node->final_total) };
     endMoveRows();
+
+    RefreshAncestorValue(affected_ids_destination.unite(affected_ids_source));
 
     NodeUtils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
     NodeUtils::UpdateModel(leaf_path_, leaf_model_, node);
@@ -642,7 +645,10 @@ void TreeModel::RemovePath(Node* node, Node* parent_node)
     case NodeKind::kLeaf: {
         leaf_path_.remove(node_id);
         NodeUtils::RemoveItem(leaf_model_, node_id);
-        UpdateAncestorValue(node, -node->initial_total, -node->final_total);
+
+        const auto affected_ids { UpdateAncestorValue(node, -node->initial_total, -node->final_total) };
+        RefreshAncestorValue(affected_ids);
+
         RemoveUnitSet(node_id, node->unit);
     } break;
     default:
@@ -670,19 +676,21 @@ Node* TreeModel::GetNodeByIndex(const QModelIndex& index) const
     return root_;
 }
 
-bool TreeModel::UpdateAncestorValue(
+QSet<QUuid> TreeModel::UpdateAncestorValue(
     Node* node, double initial_delta, double final_delta, double /*first_delta*/, double /*second_delta*/, double /*discount_delta*/)
 {
+    QSet<QUuid> affected_ids {};
+
     if (!node || !node->parent || node->parent == root_)
-        return false;
+        return affected_ids;
 
     if (initial_delta == 0.0 && final_delta == 0.0)
-        return false;
+        return affected_ids;
 
     const int unit { node->unit };
     const bool direction_rule { node->direction_rule };
 
-    QModelIndexList ancestor {};
+    affected_ids.insert(node->id);
 
     // NOTE: When ancestor nodes receive deltas from a leaf node,
     // the adjustment rule is different from leaf calculation:
@@ -697,14 +705,46 @@ bool TreeModel::UpdateAncestorValue(
         current->final_total += multiplier * final_delta;
         current->initial_total += multiplier * initial_delta;
 
-        ancestor.emplaceBack(GetIndex(current->id));
+        affected_ids.insert(current->id);
     }
 
-    if (!ancestor.isEmpty()) {
-        const auto [start_col, end_col] = TotalColumnRange();
-        emit dataChanged(index(ancestor.first().row(), start_col), index(ancestor.last().row(), end_col), { Qt::DisplayRole });
+    return affected_ids;
+}
+
+void TreeModel::RefreshAncestorValue(const QSet<QUuid>& affected_ids)
+{
+    if (affected_ids.isEmpty())
+        return;
+
+    QList<int> affected_rows {};
+    affected_rows.reserve(affected_ids.size());
+
+    for (const QUuid& id : affected_ids) {
+        QModelIndex idx = GetIndex(id);
+        if (idx.isValid())
+            affected_rows.append(idx.row());
     }
-    return true;
+
+    if (affected_rows.isEmpty())
+        return;
+
+    std::sort(affected_rows.begin(), affected_rows.end());
+
+    const auto [start_col, end_col] = TotalColumnRange();
+    int range_start { affected_rows.first() };
+    int range_end { range_start };
+
+    for (int i = 1; i != affected_rows.size(); ++i) {
+        if (affected_rows[i] == range_end + 1) {
+            range_end = affected_rows[i];
+        } else {
+            emit dataChanged(index(range_start, start_col), index(range_end, end_col), { Qt::DisplayRole });
+            range_start = affected_rows[i];
+            range_end = range_start;
+        }
+    }
+
+    emit dataChanged(index(range_start, start_col), index(range_end, end_col), { Qt::DisplayRole });
 }
 
 void TreeModel::RestartTimer(const QUuid& id)

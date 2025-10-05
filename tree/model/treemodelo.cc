@@ -120,25 +120,21 @@ void TreeModelO::RemovePath(Node* node, Node* parent_node)
     }
 }
 
-bool TreeModelO::UpdateAncestorValue(Node* node, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
+QSet<QUuid> TreeModelO::UpdateAncestorValue(
+    Node* node, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
 {
     assert(node && node != root_ && node->parent);
+    QSet<QUuid> affected_ids {};
 
     if (node->parent == root_)
-        return false;
+        return affected_ids;
 
     if (initial_delta == 0.0 && final_delta == 0.0 && first_delta == 0.0 && second_delta == 0.0 && discount_delta == 0.0)
-        return false;
+        return affected_ids;
 
     const int kUnit { node->unit };
-    const int kColumnBegin { std::to_underlying(NodeEnumO::kCountTotal) };
-    int column_end { std::to_underlying(NodeEnumO::kFinalTotal) };
+    affected_ids.insert(node->id);
 
-    // 确定需要更新的列范围
-    if (initial_delta == 0.0 && final_delta == 0.0 && second_delta == 0.0 && discount_delta == 0.0)
-        column_end = kColumnBegin;
-
-    QModelIndexList ancestor {};
     for (Node* current = node->parent; current && current != root_; current = current->parent) {
         if (current->unit != kUnit)
             continue;
@@ -151,13 +147,10 @@ bool TreeModelO::UpdateAncestorValue(Node* node, double initial_delta, double fi
         d_node->initial_total += initial_delta;
         d_node->final_total += final_delta;
 
-        ancestor.emplaceBack(GetIndex(current->id));
+        affected_ids.insert(current->id);
     }
 
-    if (!ancestor.isEmpty())
-        emit dataChanged(index(ancestor.first().row(), kColumnBegin), index(ancestor.last().row(), column_end), { Qt::DisplayRole });
-
-    return true;
+    return affected_ids;
 }
 
 void TreeModelO::HandleNode()

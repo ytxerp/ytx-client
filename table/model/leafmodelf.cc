@@ -446,7 +446,7 @@ Qt::ItemFlags LeafModelF::flags(const QModelIndex& index) const
 double LeafModelF::CalculateBalance(EntryShadow* entry_shadow)
 {
     auto* d_shadow { DerivedPtr<EntryShadowF>(entry_shadow) };
-    return (direction_rule_ ? 1 : -1) * (*d_shadow->lhs_debit - *d_shadow->lhs_credit);
+    return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*d_shadow->lhs_debit - *d_shadow->lhs_credit);
 }
 
 bool LeafModelF::removeRows(int row, int /*count*/, const QModelIndex& parent)

@@ -247,8 +247,10 @@ protected:
     }
 
     virtual void HandleNode();
-    virtual bool UpdateAncestorValue(
+    virtual QSet<QUuid> UpdateAncestorValue(
         Node* node, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
+
+    void RefreshAncestorValue(const QSet<QUuid>& affected_ids);
 
     // Returns the range of numeric columns used for totals
     virtual std::pair<int, int> TotalColumnRange() const

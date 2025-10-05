@@ -1,5 +1,7 @@
 #include "mainwindowutils.h"
 
+#include <QtCore/qlibraryinfo.h>
+
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
@@ -24,7 +26,7 @@ QString MainWindowUtils::ResourceFile()
     QString command { "D:/Qt/6.9.3/llvm-mingw_64/bin/rcc.exe" };
     QStringList arguments {};
     arguments << "-binary"
-              << "E:/YTX/resource/resource.qrc"
+              << "E:/ytx-client/resource/resource.qrc"
               << "-o" << path;
 
     QProcess process {};
@@ -38,8 +40,8 @@ QString MainWindowUtils::ResourceFile()
     path = QCoreApplication::applicationDirPath() + "/../Resources/resource.brc";
 
 #if 0
-    QString command { QDir::homePath() + "/Qt/6.9.3/macos/libexec/rcc" + " -binary " + QDir::homePath() + "/Documents/ytx-client/resource/resource.qrc -o "
-        + path };
+    QString command { QDir::homePath() + "/Qt/6.9.3/macos/libexec/rcc" + " -binary " + QDir::homePath()
+        + "/Documents/GitHub/ytx-client/resource/resource.qrc -o " + path };
 
     QProcess process {};
     process.start("zsh", QStringList() << "-c" << command);

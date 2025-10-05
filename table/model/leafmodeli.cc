@@ -414,7 +414,7 @@ bool LeafModelI::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
 double LeafModelI::CalculateBalance(EntryShadow* entry_shadow)
 {
     auto* d_shadow { DerivedPtr<EntryShadowI>(entry_shadow) };
-    return (direction_rule_ ? 1 : -1) * (*d_shadow->lhs_debit - *d_shadow->lhs_credit);
+    return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*d_shadow->lhs_debit - *d_shadow->lhs_credit);
 }
 
 bool LeafModelI::removeRows(int row, int /*count*/, const QModelIndex& parent)
