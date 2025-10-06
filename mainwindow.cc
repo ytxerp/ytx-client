@@ -1775,7 +1775,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
     connect(WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
     connect(WebSocket::Instance(), &WebSocket::SConnectResult, this, &MainWindow::RConnectResult);
-    connect(WebSocket::Instance(), &WebSocket::SActionLoginTriggered, this, &MainWindow::on_actionLogin_triggered);
+    connect(WebSocket::Instance(), &WebSocket::SDisonnect, this, &MainWindow::RDisonnect);
     connect(WebSocket::Instance(), &WebSocket::SScrollToEntry, this, &MainWindow::RScrollToEntry);
 }
 
@@ -2773,11 +2773,28 @@ void MainWindow::RActionEntry(EntryAction action)
 
 void MainWindow::RConnectResult(bool result)
 {
-    if (!result) {
-        on_actionLogout_triggered();
-    }
+    ui->actionReconnect->setEnabled(!result);
+    ui->actionLogin->setEnabled(result);
+    ui->actionLogout->setEnabled(result);
+    ui->actionRegister->setEnabled(result);
+    ui->actionCheckforUpdates->setEnabled(result);
 
-    ui->actionReconnect->setDisabled(result);
+    if (result) {
+        on_actionLogin_triggered();
+    } else {
+        QMessageBox::warning(this, tr("Connection Failed"), tr("Unable to connect to the server. Please check your network or contact the administrator."));
+    }
+}
+
+void MainWindow::RDisonnect()
+{
+    on_actionLogout_triggered();
+
+    ui->actionReconnect->setEnabled(true);
+    ui->actionLogin->setEnabled(false);
+    ui->actionLogout->setEnabled(false);
+    ui->actionRegister->setEnabled(false);
+    ui->actionCheckforUpdates->setEnabled(false);
 }
 
 void MainWindow::SwitchSection(Section section, const QUuid& last_tab) const

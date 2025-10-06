@@ -51,7 +51,15 @@ void DailyLogger::HandleMessage(QtMsgType type, const QMessageLogContext&, const
     if (is_released_ || !file_.isOpen())
         return;
 
-    static const char* levels[] = { "DEBUG", "INFO", "WARNING", "CRITICAL", "FATAL" };
+    // QtMsgType
+    static const char* levels[] = {
+        "DEBUG", // QtDebugMsg = 0
+        "WARNING", // QtWarningMsg = 1
+        "CRITICAL", // QtCriticalMsg = 2
+        "FATAL", // QtFatalMsg = 3
+        "INFO" // QtInfoMsg = 4
+    };
+
     const char* level = levels[type];
 
     const QString date_time { QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss") };

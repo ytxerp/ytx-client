@@ -52,11 +52,11 @@ public:
     WebSocket& operator=(WebSocket&&) = delete;
 
 signals:
-    void SActionLoginTriggered();
     void SLoginResult(bool result);
     void SWorkspaceAccessPending(const QString& email, const QString& workspace);
     void SRegisterResult(int result);
     void SConnectResult(bool result);
+    void SDisonnect();
     void SInitializeContext(const QString& expire_date);
     void SScrollToEntry(const QUuid& node_id, const QUuid& entry_id);
 
@@ -70,7 +70,6 @@ signals:
 
 private slots:
     void RConnected();
-    void RDisconnected();
     void RReceiveMessage(const QString& message);
     void RErrorOccurred(QAbstractSocket::SocketError error);
 

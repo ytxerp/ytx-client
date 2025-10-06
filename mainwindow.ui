@@ -425,9 +425,6 @@
    <property name="toolTip">
     <string>Email</string>
    </property>
-   <property name="menuRole">
-    <enum>QAction::MenuRole::NoRole</enum>
-   </property>
   </action>
   <action name="actionWorkspace">
    <property name="text">
@@ -435,9 +432,6 @@
    </property>
    <property name="toolTip">
     <string>Workspace</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
   <action name="actionResetColor">

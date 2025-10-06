@@ -17,6 +17,7 @@ Login::Login(QSharedPointer<QSettings> local_settings, QWidget* parent)
     SignalBlocker blocker(this);
 
     IniDialog();
+
     connect(WebSocket::Instance(), &WebSocket::SLoginResult, this, &Login::RLoginResult, Qt::UniqueConnection);
     connect(WebSocket::Instance(), &WebSocket::SWorkspaceAccessPending, this, &Login::RWorkspaceAccessPending, Qt::UniqueConnection);
 }

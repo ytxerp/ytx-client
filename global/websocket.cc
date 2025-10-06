@@ -69,24 +69,38 @@ void WebSocket::Connect()
 void WebSocket::RConnected()
 {
     emit SConnectResult(true);
-    emit SActionLoginTriggered();
 
     if (ping_timer_) {
         ping_timer_->start();
     }
 }
 
-void WebSocket::RDisconnected()
+void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
 {
-    session_id_.clear();
-    emit SConnectResult(false);
+    switch (error) {
+    case QAbstractSocket::ConnectionRefusedError:
+        qWarning() << "WebSocket connection refused!";
+        emit SConnectResult(false);
+        break;
+    case QAbstractSocket::NetworkError:
+        qWarning() << "WebSocket network error, possibly no network connection!";
+        break;
+    case QAbstractSocket::RemoteHostClosedError:
+        emit SDisonnect();
 
-    if (ping_timer_) {
-        ping_timer_->stop();
+        session_id_.clear();
+
+        if (ping_timer_) {
+            ping_timer_->stop();
+        }
+
+        qWarning() << "WebSocket remote host closed connection!";
+        break;
+    default:
+        qWarning() << "WebSocket error:" << error;
+        break;
     }
 }
-
-void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error) { qWarning() << "RErrorOccurred" << error << "-" << socket_.errorString(); }
 
 void WebSocket::InitHandler()
 {
@@ -125,7 +139,6 @@ void WebSocket::InitHandler()
 void WebSocket::InitConnect()
 {
     connect(&socket_, &QWebSocket::connected, this, &WebSocket::RConnected);
-    connect(&socket_, &QWebSocket::disconnected, this, &WebSocket::RDisconnected);
     connect(&socket_, &QWebSocket::errorOccurred, this, &WebSocket::RErrorOccurred);
     connect(&socket_, &QWebSocket::textMessageReceived, this, &WebSocket::RReceiveMessage);
 
@@ -164,7 +177,6 @@ void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
 void WebSocket::Clear()
 {
     if (socket_.state() == QAbstractSocket::ConnectedState || socket_.state() == QAbstractSocket::ConnectingState) {
-        connect(&socket_, &QWebSocket::disconnected, this, [this]() { this->Connect(); }, Qt::SingleShotConnection);
         socket_.close();
     }
 
