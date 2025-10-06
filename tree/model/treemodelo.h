@@ -36,7 +36,8 @@ signals:
     void SUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta);
 
 public slots:
-    void RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta) override;
+    QSet<QUuid> RSyncDelta(
+        const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta) override;
     void RSyncFinished(const QUuid& node_id, bool value);
 
 public:
@@ -56,7 +57,7 @@ protected:
     void UpdateName(const QUuid& /*node_id*/, CString& /*new_name*/) override { };
     void RegisterPath(Node* /*node*/) override { };
     void RemovePath(Node* node, Node* parent_node) override;
-    QSet<QUuid> UpdateAncestorValue(
+    QSet<QUuid> SyncAncestorTotal(
         Node* node, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta) override;
     void HandleNode() override;
     void ResetBranch(Node* node) override;

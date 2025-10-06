@@ -47,11 +47,11 @@ QJsonObject NodeAcked(Section section, CUuid& node_id);
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule);
 QJsonObject NodeStatus(Section section, CUuid& node_id, int status);
 QJsonObject Update(Section section, CUuid& id, CJsonObject& cache);
-QJsonObject UpdateDocumentDir(Section section, CString& document_dir);
-QJsonObject UpdateDefaultUnit(Section section, int unit);
+QJsonObject DocumentDir(Section section, CString& document_dir);
+QJsonObject DefaultUnit(Section section, int unit);
 
 QJsonObject NodeDelta(CUuid& node_id, double initial_delta, double final_delta);
-QJsonObject SearchEntry(Section section, CString& keyword);
+QJsonObject EntrySearch(Section section, CString& keyword);
 
 }
 

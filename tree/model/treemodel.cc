@@ -26,12 +26,12 @@ void TreeModel::RRemoveNode(const QUuid& node_id)
     removeRows(index.row(), 1, index.parent());
 }
 
-void TreeModel::RSyncDelta(
+QSet<QUuid> TreeModel::RSyncDelta(
     const QUuid& node_id, double initial_delta, double final_delta, double /*first_delta*/, double /*second_delta*/, double /*discount_delta*/)
 {
     auto* node = GetNode(node_id);
     if (!node)
-        return;
+        return {};
 
     // Multiplier is used to adjust the sign (only meaningful for leaf nodes).
     const int multiplier { node->direction_rule == Rule::kDICD ? 1 : -1 };
@@ -47,34 +47,37 @@ void TreeModel::RSyncDelta(
     node->final_total += adjust_final_delta;
 
     // Propagate adjusted deltas to ancestor nodes
-    const auto affected_ids { UpdateAncestorValue(node, adjust_initial_delta, adjust_final_delta) };
-    RefreshAncestorValue(affected_ids);
+    auto affected_ids { SyncAncestorTotal(node, adjust_initial_delta, adjust_final_delta) };
+    affected_ids.insert(node_id);
 
-    emit SSyncStatusValue();
+    emit STotalsUpdated();
+
+    return affected_ids;
 }
 
-void TreeModel::UpdateDelta(const QJsonObject& data)
+void TreeModel::SyncDeltaArray(const QJsonArray& delta_array)
 {
-    if (!data.contains(kId)) {
-        qCritical() << "ApplyDelta: missing key 'kId' in data:" << data;
+    if (delta_array.isEmpty())
+        return;
+
+    QSet<QUuid> affected_ids {};
+
+    for (const auto& delta : delta_array) {
+        const QJsonObject obj { delta.toObject() };
+
+        Q_ASSERT_X(obj.contains(kId), "TreeModel::UpdateDelta", "Missing kId in delta object");
+        Q_ASSERT_X(obj.contains(kInitialDelta), "TreeModel::UpdateDelta", "Missing kInitialDelta in delta object");
+        Q_ASSERT_X(obj.contains(kFinalDelta), "TreeModel::UpdateDelta", "Missing kFinalDelta in delta object");
+
+        const QUuid node_id { QUuid(obj.value(kId).toString()) };
+        const double initial_delta { obj.value(kInitialDelta).toString().toDouble() };
+        const double final_delta { obj.value(kFinalDelta).toString().toDouble() };
+
+        const auto ids { RSyncDelta(node_id, initial_delta, final_delta) };
+        affected_ids.unite(ids);
     }
-    assert(data.contains(kId));
 
-    if (!data.contains(kInitialDelta)) {
-        qCritical() << "ApplyDelta: missing key 'kInitialDelta' in data:" << data;
-    }
-    assert(data.contains(kInitialDelta));
-
-    if (!data.contains(kFinalDelta)) {
-        qCritical() << "ApplyDelta: missing key 'kFinalDelta' in data:" << data;
-    }
-    assert(data.contains(kFinalDelta));
-
-    const QUuid node_id { data.value(kId).toString() };
-    const double initial_delta { data.value(kInitialDelta).toString().toDouble() };
-    const double final_delta { data.value(kFinalDelta).toString().toDouble() };
-
-    RSyncDelta(node_id, initial_delta, final_delta);
+    RefreshAffectedTotal(affected_ids);
 }
 
 bool TreeModel::InsertNode(int row, const QModelIndex& parent, Node* node)
@@ -131,7 +134,7 @@ void TreeModel::InsertMeta(const QUuid& node_id, const QJsonObject& data)
     InsertMeta(node, data);
 }
 
-void TreeModel::UpdateNode(const QUuid& node_id, const QJsonObject& data)
+void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& data)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -158,15 +161,8 @@ void TreeModel::UpdateMeta(const QUuid& node_id, const QJsonObject& data)
 
 void TreeModel::UpdateMeta(Node* node, const QJsonObject& meta)
 {
-    if (!meta.contains(kUpdatedBy)) {
-        qCritical() << "UpdateMeta: missing key 'updated_by' in meta:" << meta;
-    }
-    assert(meta.contains(kUpdatedBy));
-
-    if (!meta.contains(kUpdatedTime)) {
-        qCritical() << "UpdateMeta: missing key 'updated_time' in meta:" << meta;
-    }
-    assert(meta.contains(kUpdatedTime));
+    Q_ASSERT_X(meta.contains(kUpdatedBy), "TreeModel::UpdateMeta", "Missing 'updated_by' in meta");
+    Q_ASSERT_X(meta.contains(kUpdatedTime), "TreeModel::UpdateMeta", "Missing 'updated_time' in meta");
 
     node->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
     node->updated_by = QUuid(meta[kUpdatedBy].toString());
@@ -174,20 +170,13 @@ void TreeModel::UpdateMeta(Node* node, const QJsonObject& meta)
 
 void TreeModel::InsertMeta(Node* node, const QJsonObject& meta)
 {
-    if (!meta.contains(kUserId)) {
-        qCritical() << "InsertMeta: missing 'user_id' in meta:" << meta;
-    }
-    assert(meta.contains(kUserId));
+    Q_ASSERT_X(meta.contains(kUserId), "TreeModel::InsertMeta", "Missing 'user_id' in meta");
+    Q_ASSERT_X(meta.contains(kCreatedTime), "TreeModel::InsertMeta", "Missing 'created_time' in meta");
+    Q_ASSERT_X(meta.contains(kCreatedBy), "TreeModel::InsertMeta", "Missing 'created_by' in meta");
 
-    if (!meta.contains(kCreatedTime)) {
-        qCritical() << "InsertMeta: missing 'created_time' in meta:" << meta;
-    }
-    assert(meta.contains(kCreatedTime));
-
-    if (!meta.contains(kCreatedBy)) {
-        qCritical() << "InsertMeta: missing 'created_by' in meta:" << meta;
-    }
-    assert(meta.contains(kCreatedBy));
+    node->user_id = QUuid(meta[kUserId].toString());
+    node->created_time = QDateTime::fromString(meta[kCreatedTime].toString(), Qt::ISODate);
+    node->created_by = QUuid(meta[kCreatedBy].toString());
 
     node->user_id = QUuid(meta.value(kUserId).toString());
     node->created_time = QDateTime::fromString(meta.value(kCreatedTime).toString(), Qt::ISODate);
@@ -205,7 +194,7 @@ void TreeModel::UpdateDirectionRule(Node* node, bool value)
     DirectionRuleImpl(node, value);
 }
 
-void TreeModel::UpdateDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta)
+void TreeModel::SyncDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -232,7 +221,7 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value)
     const auto [start_col, end_col] = TotalColumnRange();
     EmitRowChanged(node_id, start_col, end_col);
 
-    emit SSyncStatusValue();
+    emit STotalsUpdated();
 }
 
 void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
@@ -250,28 +239,17 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     new_node->initial_total += initial_delta;
     new_node->final_total += final_delta;
 
-    const auto affected_ids { UpdateAncestorValue(new_node, initial_delta, final_delta) };
-    RefreshAncestorValue(affected_ids);
+    const auto affected_ids { SyncAncestorTotal(new_node, initial_delta, final_delta) };
+    RefreshAffectedTotal(affected_ids);
 
     RRemoveNode(old_node_id);
 }
 
-void TreeModel::UpdateName(const QUuid& node_id, const QJsonObject& data)
+void TreeModel::SyncName(const QUuid& node_id, const QJsonObject& data)
 {
-    if (!data.contains(kName)) {
-        qCritical() << "ApplyName: missing key 'name' in data:" << data;
-    }
-    assert(data.contains(kName));
-
-    if (!data.contains(kUpdatedBy)) {
-        qCritical() << "ApplyName: missing key 'updated_by' in data:" << data;
-    }
-    assert(data.contains(kUpdatedBy));
-
-    if (!data.contains(kUpdatedTime)) {
-        qCritical() << "ApplyName: missing key 'updated_time' in data:" << data;
-    }
-    assert(data.contains(kUpdatedTime));
+    Q_ASSERT_X(data.contains(kUpdatedBy), "TreeModel::SyncName", "Missing 'updated_by' in data");
+    Q_ASSERT_X(data.contains(kUpdatedTime), "TreeModel::SyncName", "Missing 'updated_time' in data");
+    Q_ASSERT_X(data.contains(kName), "TreeModel::SyncName", "Missing 'name' in data");
 
     auto* node = GetNode(node_id);
     if (!node)
@@ -295,15 +273,8 @@ void TreeModel::UpdateName(const QUuid& node_id, const QJsonObject& data)
 
 void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant, const QJsonObject& data)
 {
-    if (!data.contains(kUpdatedBy)) {
-        qCritical() << "ApplyNodeDrag: missing key 'updated_by' in data:" << data;
-    }
-    assert(data.contains(kUpdatedBy));
-
-    if (!data.contains(kUpdatedTime)) {
-        qCritical() << "ApplyNodeDrag: missing key 'updated_time' in data:" << data;
-    }
-    assert(data.contains(kUpdatedTime));
+    Q_ASSERT_X(data.contains(kUpdatedBy), "TreeModel::DragNode", "Missing 'updated_by' in data");
+    Q_ASSERT_X(data.contains(kUpdatedTime), "TreeModel::DragNode", "Missing 'updated_time' in data");
 
     auto* node = GetNode(descendant);
     if (!node)
@@ -325,10 +296,6 @@ void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant, const Q
         node->updated_time = QDateTime::fromString(data.value(kUpdatedTime).toString(), Qt::ISODate);
         node->updated_by = QUuid(data.value(kUpdatedBy).toString());
     }
-
-    // auto index { createIndex(destination_row, 0, node) };
-    // if (index.isValid())
-    //     emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumF::kUpdateTime)), index.siblingAtColumn(std::to_underlying(NodeEnumF::kUpdateBy)));
 }
 
 QModelIndex TreeModel::parent(const QModelIndex& index) const
@@ -403,7 +370,7 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex& parent)
     ResourcePool<Node>::Instance().Recycle(node);
     node_hash_.remove(node_id);
 
-    emit SSyncStatusValue();
+    emit STotalsUpdated();
     emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
     emit SFreeWidget(node_id);
 
@@ -450,20 +417,9 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*c
     auto* source_parent { GetNodeByIndex(sourceParent) };
     auto* destination_parent { GetNodeByIndex(destinationParent) };
 
-    if (!source_parent) {
-        qCritical() << "moveRows: Source parent is null!";
-    }
-    assert(source_parent);
-
-    if (!destination_parent) {
-        qCritical() << "moveRows: Destination parent is null!";
-    }
-    assert(destination_parent);
-
-    if (sourceRow < 0 || sourceRow >= source_parent->children.size()) {
-        qCritical() << "moveRows: Source row is out of bounds!";
-    }
-    assert(sourceRow >= 0 && sourceRow < source_parent->children.size());
+    Q_ASSERT_X(source_parent, "TreeModel::moveRows", "Source parent is null");
+    Q_ASSERT_X(destination_parent, "TreeModel::moveRows", "Destination parent is null");
+    Q_ASSERT_X(sourceRow >= 0 && sourceRow < source_parent->children.size(), "TreeModel::moveRows", "Source row is out of bounds");
 
     beginMoveRows(sourceParent, sourceRow, sourceRow, destinationParent, destinationChild);
     auto* node { source_parent->children.takeAt(sourceRow) };
@@ -472,15 +428,15 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*c
     }
     assert(node);
 
-    const auto affected_ids_source { UpdateAncestorValue(node, -node->initial_total, -node->final_total) };
+    const auto affected_ids_source { SyncAncestorTotal(node, -node->initial_total, -node->final_total) };
 
     destination_parent->children.insert(destinationChild, node);
     node->parent = destination_parent;
 
-    auto affected_ids_destination { UpdateAncestorValue(node, node->initial_total, node->final_total) };
+    auto affected_ids_destination { SyncAncestorTotal(node, node->initial_total, node->final_total) };
     endMoveRows();
 
-    RefreshAncestorValue(affected_ids_destination.unite(affected_ids_source));
+    RefreshAffectedTotal(affected_ids_destination.unite(affected_ids_source));
 
     NodeUtils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
     NodeUtils::UpdateModel(leaf_path_, leaf_model_, node);
@@ -646,8 +602,8 @@ void TreeModel::RemovePath(Node* node, Node* parent_node)
         leaf_path_.remove(node_id);
         NodeUtils::RemoveItem(leaf_model_, node_id);
 
-        const auto affected_ids { UpdateAncestorValue(node, -node->initial_total, -node->final_total) };
-        RefreshAncestorValue(affected_ids);
+        const auto affected_ids { SyncAncestorTotal(node, -node->initial_total, -node->final_total) };
+        RefreshAffectedTotal(affected_ids);
 
         RemoveUnitSet(node_id, node->unit);
     } break;
@@ -662,7 +618,7 @@ void TreeModel::HandleNode()
         RegisterPath(node);
 
         if (node->kind == std::to_underlying(NodeKind::kLeaf))
-            UpdateAncestorValue(node, node->initial_total, node->final_total);
+            SyncAncestorTotal(node, node->initial_total, node->final_total);
     }
 
     SortModel();
@@ -676,7 +632,7 @@ Node* TreeModel::GetNodeByIndex(const QModelIndex& index) const
     return root_;
 }
 
-QSet<QUuid> TreeModel::UpdateAncestorValue(
+QSet<QUuid> TreeModel::SyncAncestorTotal(
     Node* node, double initial_delta, double final_delta, double /*first_delta*/, double /*second_delta*/, double /*discount_delta*/)
 {
     QSet<QUuid> affected_ids {};
@@ -689,8 +645,6 @@ QSet<QUuid> TreeModel::UpdateAncestorValue(
 
     const int unit { node->unit };
     const bool direction_rule { node->direction_rule };
-
-    affected_ids.insert(node->id);
 
     // NOTE: When ancestor nodes receive deltas from a leaf node,
     // the adjustment rule is different from leaf calculation:
@@ -711,7 +665,7 @@ QSet<QUuid> TreeModel::UpdateAncestorValue(
     return affected_ids;
 }
 
-void TreeModel::RefreshAncestorValue(const QSet<QUuid>& affected_ids)
+void TreeModel::RefreshAffectedTotal(const QSet<QUuid>& affected_ids)
 {
     if (affected_ids.isEmpty())
         return;

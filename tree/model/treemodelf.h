@@ -36,7 +36,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
 protected:
-    QSet<QUuid> UpdateAncestorValue(
+    QSet<QUuid> SyncAncestorTotal(
         Node* node, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0) override;
     std::pair<int, int> CacheColumnRange() const override { return { std::to_underlying(NodeEnumF::kCode), std::to_underlying(NodeEnumF::kNote) }; }
 };

@@ -217,7 +217,7 @@ inline const QString kUpdateEntryDebit = QStringLiteral("update_entry_debit");
 inline const QString kUpdateEntryCredit = QStringLiteral("update_entry_credit");
 inline const QString kEntryNumeric = QStringLiteral("entry_numeric");
 
-inline const QString kNodeDelta = QStringLiteral("node_delta");
+inline const QString kDeltaArray = QStringLiteral("delta_array");
 inline const QString kDocumentDir = QStringLiteral("document_dir");
 inline const QString kDefaultUnit = QStringLiteral("default_unit");
 inline const QString kUpdateDefaultUnitFailure = QStringLiteral("update_default_unit_failure");

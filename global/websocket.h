@@ -83,7 +83,6 @@ private:
     void InitTimer();
 
     QHash<QUuid, QSet<QUuid>> ParseNodeReference(const QJsonObject& obj);
-    void UpdateDelta(Section section, const QJsonArray& node_delta) const;
 
 private:
     void NotifyRegisterResult(const QJsonObject& obj);

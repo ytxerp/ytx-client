@@ -34,7 +34,7 @@ class TreeWidgetI final : public TreeWidget {
     Q_OBJECT
 
 public slots:
-    void RSyncStatusValue() override;
+    void RTotalsUpdated() override;
 
 public:
     TreeWidgetI(TreeModel* model, CSectionConfig& config, QWidget* parent = nullptr);

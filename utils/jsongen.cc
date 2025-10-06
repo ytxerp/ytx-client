@@ -57,7 +57,7 @@ QJsonObject LeafRemove(Section section, CUuid& node_id)
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kLeafEntry, QJsonObject());
-    message.insert(kNodeDelta, QJsonArray());
+    message.insert(kDeltaArray, QJsonArray());
 
     return message;
 }
@@ -143,7 +143,7 @@ QJsonObject TreeAcked(Section section, const QDateTime& start, const QDateTime& 
     return message;
 }
 
-QJsonObject UpdateDocumentDir(Section section, CString& document_dir)
+QJsonObject DocumentDir(Section section, CString& document_dir)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -152,7 +152,7 @@ QJsonObject UpdateDocumentDir(Section section, CString& document_dir)
     return message;
 }
 
-QJsonObject UpdateDefaultUnit(Section section, int unit)
+QJsonObject DefaultUnit(Section section, int unit)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -179,7 +179,7 @@ QJsonObject Register(CString& email, CString& password)
     return message;
 }
 
-QJsonObject SearchEntry(Section section, CString& keyword)
+QJsonObject EntrySearch(Section section, CString& keyword)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));

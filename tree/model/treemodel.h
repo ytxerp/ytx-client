@@ -55,7 +55,7 @@ signals:
     void SFreeWidget(const QUuid& node_id);
 
     // send to NodeWidget
-    void SSyncStatusValue();
+    void STotalsUpdated();
 
     // send to FilterModel
     // Inserting or removing a node will trigger it automatically; manually trigger it only when changing the unit.
@@ -66,7 +66,7 @@ public slots:
     void RRemoveNode(const QUuid& node_id);
 
     // receive from EntryModel
-    virtual void RSyncDelta(
+    virtual QSet<QUuid> RSyncDelta(
         const QUuid& node_id, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
 
 public:
@@ -107,7 +107,7 @@ public:
     void ApplyTree(const QJsonObject& data);
 
     virtual void AckTree(const QJsonObject& obj) { Q_UNUSED(obj) }
-    virtual void UpdateNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta)
+    virtual void SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta)
     {
         Q_UNUSED(node_id)
         Q_UNUSED(status)
@@ -119,15 +119,15 @@ public:
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
     void InsertMeta(const QUuid& node_id, const QJsonObject& data);
 
-    void UpdateNode(const QUuid& node_id, const QJsonObject& data);
+    void SyncNode(const QUuid& node_id, const QJsonObject& data);
     void UpdateMeta(const QUuid& node_id, const QJsonObject& data);
 
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
     void DragNode(const QUuid& ancestor, const QUuid& descendant, const QJsonObject& data);
 
-    void UpdateDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta);
-    void UpdateName(const QUuid& node_id, const QJsonObject& data);
-    void UpdateDelta(const QJsonObject& data);
+    void SyncDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta);
+    void SyncName(const QUuid& node_id, const QJsonObject& data);
+    void SyncDeltaArray(const QJsonArray& delta_array);
 
     // Ytx's
     // Default implementations
@@ -247,10 +247,10 @@ protected:
     }
 
     virtual void HandleNode();
-    virtual QSet<QUuid> UpdateAncestorValue(
+    virtual QSet<QUuid> SyncAncestorTotal(
         Node* node, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
 
-    void RefreshAncestorValue(const QSet<QUuid>& affected_ids);
+    void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
 
     // Returns the range of numeric columns used for totals
     virtual std::pair<int, int> TotalColumnRange() const

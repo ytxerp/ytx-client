@@ -1822,7 +1822,7 @@ void MainWindow::InitContextFinance()
     tree_widget = new TreeWidgetF(tree_model, info, global_config, section_config, this);
     tree_view = tree_widget->View();
 
-    connect(tree_model, &TreeModel::SSyncStatusValue, tree_widget, &TreeWidget::RSyncStatusValue, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::STotalsUpdated, tree_widget, &TreeWidget::RTotalsUpdated, Qt::UniqueConnection);
 }
 
 void MainWindow::InitContextInventory()
@@ -1864,7 +1864,7 @@ void MainWindow::InitContextInventory()
     tree_widget = new TreeWidgetI(tree_model, section_config, this);
     tree_view = tree_widget->View();
 
-    connect(tree_model, &TreeModel::SSyncStatusValue, tree_widget, &TreeWidget::RSyncStatusValue, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::STotalsUpdated, tree_widget, &TreeWidget::RTotalsUpdated, Qt::UniqueConnection);
 }
 
 void MainWindow::InitContextTask()
@@ -2427,13 +2427,13 @@ void MainWindow::UpdateGlobalConfig(CGlobalConfig& global)
         return;
 
     if (current_global.document_dir != global.document_dir) {
-        const auto message { JsonGen::UpdateDocumentDir(sc_->info.section, global.document_dir) };
+        const auto message { JsonGen::DocumentDir(sc_->info.section, global.document_dir) };
         WebSocket::Instance()->SendMessage(kDocumentDir, message);
         current_global.document_dir = global.document_dir;
     }
 
     if (current_global.default_unit != global.default_unit) {
-        const auto message { JsonGen::UpdateDefaultUnit(sc_->info.section, global.default_unit) };
+        const auto message { JsonGen::DefaultUnit(sc_->info.section, global.default_unit) };
         WebSocket::Instance()->SendMessage(kDefaultUnit, message);
     }
 }

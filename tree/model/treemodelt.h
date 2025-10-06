@@ -40,7 +40,7 @@ public:
     Node* GetNode(const QUuid& node_id) const override;
 
     int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeT::status); }
-    void UpdateNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta) override;
+    void SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta) override;
 
 protected:
     std::pair<int, int> CacheColumnRange() const override { return { std::to_underlying(NodeEnumT::kCode), std::to_underlying(NodeEnumT::kDocument) }; }

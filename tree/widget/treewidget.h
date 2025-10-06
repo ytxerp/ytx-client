@@ -27,7 +27,7 @@ class TreeWidget : public QWidget {
     Q_OBJECT
 
 public slots:
-    virtual void RSyncStatusValue() { };
+    virtual void RTotalsUpdated() { };
 
 public:
     virtual ~TreeWidget() = default;

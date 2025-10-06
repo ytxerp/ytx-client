@@ -162,7 +162,7 @@ Qt::ItemFlags TreeModelF::flags(const QModelIndex& index) const
     return flags;
 }
 
-QSet<QUuid> TreeModelF::UpdateAncestorValue(Node* node, double initial_delta, double final_delta, double /*first*/, double /*second*/, double /*discount*/)
+QSet<QUuid> TreeModelF::SyncAncestorTotal(Node* node, double initial_delta, double final_delta, double /*first*/, double /*second*/, double /*discount*/)
 {
     assert(node && node != root_ && node->parent);
     QSet<QUuid> affected_ids {};
@@ -175,8 +175,6 @@ QSet<QUuid> TreeModelF::UpdateAncestorValue(Node* node, double initial_delta, do
 
     const int unit { node->unit };
     const bool rule { node->direction_rule };
-
-    affected_ids.insert(node->id);
 
     for (Node* current = node->parent; current && current != root_; current = current->parent) {
         const int multiplier { current->direction_rule == rule ? 1 : -1 };

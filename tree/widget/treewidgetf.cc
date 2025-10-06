@@ -73,7 +73,7 @@ void TreeWidgetF::UpdateDynamicStatus()
 
 QTreeView* TreeWidgetF::View() const { return ui->treeViewF; }
 
-void TreeWidgetF::RSyncStatusValue()
+void TreeWidgetF::RTotalsUpdated()
 {
     UpdateStaticValue(section_.static_node);
     UpdateDynamicValue(section_.dynamic_node_lhs, section_.dynamic_node_rhs);

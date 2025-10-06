@@ -31,7 +31,7 @@ public:
 
 public slots:
     void RUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta);
-    void RSyncDelta(const QUuid& /*node_id*/, double /*initial_delta*/, double /*final_delta*/, double, double, double) override { }
+    QSet<QUuid> RSyncDelta(const QUuid& /*node_id*/, double /*initial_delta*/, double /*final_delta*/, double, double, double) override { return {}; }
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
