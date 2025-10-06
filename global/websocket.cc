@@ -86,7 +86,7 @@ void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
         qWarning() << "WebSocket network error, possibly no network connection!";
         break;
     case QAbstractSocket::RemoteHostClosedError:
-        emit SDisonnect();
+        emit SRemoteHostClosed();
 
         session_id_.clear();
 

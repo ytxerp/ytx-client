@@ -1775,7 +1775,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
     connect(WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
     connect(WebSocket::Instance(), &WebSocket::SConnectResult, this, &MainWindow::RConnectResult);
-    connect(WebSocket::Instance(), &WebSocket::SDisonnect, this, &MainWindow::RDisonnect);
+    connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::RRemoteHostClosed);
     connect(WebSocket::Instance(), &WebSocket::SScrollToEntry, this, &MainWindow::RScrollToEntry);
 }
 
@@ -2786,7 +2786,7 @@ void MainWindow::RConnectResult(bool result)
     }
 }
 
-void MainWindow::RDisonnect()
+void MainWindow::RRemoteHostClosed()
 {
     on_actionLogout_triggered();
 

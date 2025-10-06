@@ -56,7 +56,7 @@ signals:
     void SWorkspaceAccessPending(const QString& email, const QString& workspace);
     void SRegisterResult(int result);
     void SConnectResult(bool result);
-    void SDisonnect();
+    void SRemoteHostClosed();
     void SInitializeContext(const QString& expire_date);
     void SScrollToEntry(const QUuid& node_id, const QUuid& entry_id);
 
