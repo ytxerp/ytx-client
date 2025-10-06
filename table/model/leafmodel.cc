@@ -153,7 +153,7 @@ void LeafModel::RestartTimer(const QUuid& id)
                 return;
             }
 
-            QJsonObject message { JsonGen::Update(section_, id, cache) };
+            QJsonObject message { JsonGen::EntryUpdate(section_, id, cache) };
             WebSocket::Instance()->SendMessage(kEntryUpdate, message);
             timer->deleteLater();
         });
@@ -174,8 +174,8 @@ void LeafModel::FlushCaches()
 
     for (auto it = caches_.cbegin(); it != caches_.cend(); ++it) {
         if (!it.value().isEmpty()) {
-            const auto message { JsonGen::Update(section_, it.key(), it.value()) };
-            WebSocket::Instance()->SendMessage(kNodeUpdate, message);
+            const auto message { JsonGen::EntryUpdate(section_, it.key(), it.value()) };
+            WebSocket::Instance()->SendMessage(kEntryUpdate, message);
         }
     }
 

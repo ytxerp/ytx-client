@@ -273,6 +273,11 @@ void TreeModelT::SyncNodeStatus(const QUuid& node_id, int status, const QJsonObj
     auto* d_node { DerivedPtr<NodeT>(node) };
     d_node->status = status;
 
+    auto index { GetIndex(node_id) };
+    if (index.isValid()) {
+        emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumT::kStatus)), index.siblingAtColumn(std::to_underlying(NodeEnumT::kStatus)));
+    }
+
     emit SNodeStatus(node->id, status);
 }
 

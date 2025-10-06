@@ -1130,14 +1130,14 @@ void MainWindow::RemoveNode()
 void MainWindow::RLeafRemoveCheck(const QJsonObject& obj)
 {
     Section section { obj.value(kSection).toInt() };
-    const auto id { QUuid(obj.value(kId).toString()) };
+    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     auto* section_contex = GetSectionContex(section);
 
     auto model { section_contex->tree_model };
-    const int unit { model->Unit(id) };
+    const int unit { model->Unit(node_id) };
 
-    auto* dialog { new LeafRemoveDialog(model, section_contex->info, obj, id, unit, this) };
+    auto* dialog { new LeafRemoveDialog(model, section_contex->info, obj, node_id, unit, this) };
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setModal(true);
     dialog->show();

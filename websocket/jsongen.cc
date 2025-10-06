@@ -7,7 +7,7 @@
 
 namespace JsonGen {
 
-QJsonObject InsertNode(Section section, const Node* node, CUuid& parent_id)
+QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id)
 {
     const QJsonObject node_json { node->WriteJson() };
 
@@ -20,17 +20,6 @@ QJsonObject InsertNode(Section section, const Node* node, CUuid& parent_id)
     message.insert(kSessionId, QString());
     message.insert(kNode, node_json); // Meta info will be appended in service
     message.insert(kPath, path_json); // Meta will be appended in service
-
-    return message;
-}
-
-QJsonObject Update(Section section, CUuid& id, CJsonObject& cache)
-{
-    QJsonObject message {};
-    message.insert(kSection, std::to_underlying(section));
-    message.insert(kId, id.toString(QUuid::WithoutBraces));
-    message.insert(kSessionId, QString());
-    message.insert(kCache, cache); // Meta info will be appended in service
 
     return message;
 }
@@ -104,7 +93,7 @@ QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inve
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
-    message.insert(kStatus, false);
+    message.insert(kResult, false);
     message.insert(kInventoryExternalRef, inventory_external_ref);
     message.insert(kOldNodeId, old_id.toString(QUuid::WithoutBraces));
     message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
@@ -207,7 +196,7 @@ QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_ru
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kDirectionRule, direction_rule);
-    message.insert(kMeta, QJsonObject()); // Meta info will be appended in service
+    message.insert(kMeta, QJsonObject());
 
     return message;
 }
@@ -219,7 +208,41 @@ QJsonObject NodeStatus(Section section, CUuid& node_id, int status)
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kStatus, status);
-    message.insert(kMeta, QJsonObject()); // Meta info will be appended in service
+    message.insert(kMeta, QJsonObject());
+
+    return message;
+}
+
+QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& cache)
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
+    message.insert(kSessionId, QString());
+    message.insert(kCache, cache); // Meta info will be appended to cache in service
+
+    return message;
+}
+
+QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& cache)
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kSessionId, QString());
+    message.insert(kCache, cache); // Meta info will be appended to cache in service
+
+    return message;
+}
+
+QJsonObject NodeName(Section section, CUuid& node_id, CString& name)
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kSessionId, QString());
+    message.insert(kName, name);
+    message.insert(kMeta, QJsonObject());
 
     return message;
 }

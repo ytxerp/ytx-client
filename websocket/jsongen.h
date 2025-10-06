@@ -29,7 +29,7 @@ namespace JsonGen {
 QJsonObject Login();
 QJsonObject Register(CString& email, CString& password);
 
-QJsonObject InsertNode(Section section, const Node* node, CUuid& parent_id);
+QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id);
 QJsonObject DragNode(Section section, CUuid& node_id, CUuid& parent_id);
 
 QJsonObject LeafRemove(Section section, CUuid& node_id);
@@ -39,6 +39,7 @@ QJsonObject LeafRemoveCheck(Section section, CUuid& node_id);
 QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref);
 
 QJsonObject EntryAction(Section section, CUuid& node_id, int action);
+QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& cache);
 
 QJsonObject TreeAcked(Section section, const QDateTime& start, const QDateTime& end);
 QJsonObject LeafAcked(Section section, CUuid& node_id, CUuid& entry_id = {});
@@ -46,7 +47,8 @@ QJsonObject NodeAcked(Section section, CUuid& node_id);
 
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule);
 QJsonObject NodeStatus(Section section, CUuid& node_id, int status);
-QJsonObject Update(Section section, CUuid& id, CJsonObject& cache);
+QJsonObject NodeName(Section section, CUuid& node_id, CString& name);
+QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& cache);
 QJsonObject DocumentDir(Section section, CString& document_dir);
 QJsonObject DefaultUnit(Section section, int unit);
 

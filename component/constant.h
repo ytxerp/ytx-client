@@ -177,7 +177,7 @@ inline const QString kSettlementRef = QStringLiteral("settlement_ref");
 inline const QString kNodeInsert = QStringLiteral("node_insert");
 inline const QString kNodeDrag = QStringLiteral("node_drag");
 inline const QString kNodeUpdate = QStringLiteral("node_update");
-inline const QString kNameUpdate = QStringLiteral("name_update");
+inline const QString kNodeName = QStringLiteral("node_name");
 
 // App language
 inline const QString kEnUS = QStringLiteral("en_US");

@@ -87,7 +87,7 @@ bool TreeModel::InsertNode(int row, const QModelIndex& parent, Node* node)
     }
     assert(row >= 0 && row <= rowCount(parent));
 
-    const auto message { JsonGen::InsertNode(section_, node, node->parent->id) };
+    const auto message { JsonGen::NodeInsert(section_, node, node->parent->id) };
     WebSocket::Instance()->SendMessage(kNodeInsert, message);
 
     auto* parent_node { GetNodeByIndex(parent) };
@@ -177,10 +177,6 @@ void TreeModel::InsertMeta(Node* node, const QJsonObject& meta)
     node->user_id = QUuid(meta[kUserId].toString());
     node->created_time = QDateTime::fromString(meta[kCreatedTime].toString(), Qt::ISODate);
     node->created_by = QUuid(meta[kCreatedBy].toString());
-
-    node->user_id = QUuid(meta.value(kUserId).toString());
-    node->created_time = QDateTime::fromString(meta.value(kCreatedTime).toString(), Qt::ISODate);
-    node->created_by = QUuid(meta.value(kCreatedBy).toString());
 }
 
 void TreeModel::UpdateDirectionRule(Node* node, bool value)
@@ -245,19 +241,18 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     RRemoveNode(old_node_id);
 }
 
-void TreeModel::SyncName(const QUuid& node_id, const QJsonObject& data)
+void TreeModel::SyncNodeName(const QUuid& node_id, const QString& name, const QJsonObject& meta)
 {
-    Q_ASSERT_X(data.contains(kUpdatedBy), "TreeModel::SyncName", "Missing 'updated_by' in data");
-    Q_ASSERT_X(data.contains(kUpdatedTime), "TreeModel::SyncName", "Missing 'updated_time' in data");
-    Q_ASSERT_X(data.contains(kName), "TreeModel::SyncName", "Missing 'name' in data");
+    Q_ASSERT_X(meta.contains(kUpdatedBy), "TreeModel::SyncName", "Missing 'updated_by' in data");
+    Q_ASSERT_X(meta.contains(kUpdatedTime), "TreeModel::SyncName", "Missing 'updated_time' in data");
 
     auto* node = GetNode(node_id);
     if (!node)
         return;
 
-    node->name = data.value(kName).toString();
-    node->updated_by = QUuid(data[kUpdatedBy].toString());
-    node->updated_time = QDateTime::fromString(data[kUpdatedTime].toString(), Qt::ISODate);
+    node->name = name;
+    node->updated_by = QUuid(meta[kUpdatedBy].toString());
+    node->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
 
     NodeUtils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
     NodeUtils::UpdateModel(leaf_path_, leaf_model_, node);
@@ -542,11 +537,8 @@ void TreeModel::UpdateName(const QUuid& node_id, CString& new_name)
 
     node->name = new_name;
 
-    QJsonObject cache {};
-    cache.insert(kName, new_name);
-
-    const auto message { JsonGen::Update(section_, node_id, cache) };
-    WebSocket::Instance()->SendMessage(kNameUpdate, message);
+    const auto message { JsonGen::NodeName(section_, node_id, new_name) };
+    WebSocket::Instance()->SendMessage(kNodeName, message);
 
     NodeUtils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
     NodeUtils::UpdateModel(leaf_path_, leaf_model_, node);
@@ -714,7 +706,7 @@ void TreeModel::RestartTimer(const QUuid& id)
             const auto cache { caches_.take(id) };
 
             if (!cache.isEmpty()) {
-                const auto message { JsonGen::Update(section_, id, cache) };
+                const auto message { JsonGen::NodeUpdate(section_, id, cache) };
                 WebSocket::Instance()->SendMessage(kNodeUpdate, message);
             }
 
@@ -738,7 +730,7 @@ void TreeModel::FlushCaches()
 
     for (auto it = caches_.cbegin(); it != caches_.cend(); ++it) {
         if (!it.value().isEmpty()) {
-            const auto message { JsonGen::Update(section_, it.key(), it.value()) };
+            const auto message { JsonGen::NodeUpdate(section_, it.key(), it.value()) };
             WebSocket::Instance()->SendMessage(kNodeUpdate, message);
         }
     }

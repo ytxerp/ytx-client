@@ -110,7 +110,7 @@ private:
     void RemoveBranch(const QJsonObject& obj);
     void UpdateDirectionRule(const QJsonObject& obj);
     void UpdateNodeStatus(const QJsonObject& obj);
-    void UpdateName(const QJsonObject& obj);
+    void UpdateNodeName(const QJsonObject& obj);
 
     void UpdateDocumentDir(const QJsonObject& obj);
     void UpdateDefaultUnit(const QJsonObject& obj);

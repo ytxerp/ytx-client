@@ -126,7 +126,7 @@ public:
     void DragNode(const QUuid& ancestor, const QUuid& descendant, const QJsonObject& data);
 
     void SyncDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta);
-    void SyncName(const QUuid& node_id, const QJsonObject& data);
+    void SyncNodeName(const QUuid& node_id, const QString& name, const QJsonObject& meta);
     void SyncDeltaArray(const QJsonArray& delta_array);
 
     // Ytx's
