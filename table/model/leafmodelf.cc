@@ -223,25 +223,29 @@ bool LeafModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
 
     const double lhs_old_debit { *d_shadow->lhs_debit };
     const double lhs_old_credit { *d_shadow->lhs_credit };
+    const double rhs_old_debit { *d_shadow->rhs_debit };
+    const double rhs_old_credit { *d_shadow->rhs_credit };
     const double lhs_rate { *d_shadow->lhs_rate };
     const double rhs_rate { *d_shadow->rhs_rate };
 
     assert(lhs_rate != 0.0);
     assert(rhs_rate != 0.0);
 
-    double lhs_original { is_debit ? lhs_old_debit : lhs_old_credit };
-    if (std::abs(lhs_original - value) < kTolerance)
+    const double old_value { is_debit ? lhs_old_debit : lhs_old_credit };
+    if (std::abs(old_value - value) < kTolerance)
         return false;
 
+    // Base represents the opposite side (used to compute the new diff)
     const double base { is_debit ? lhs_old_credit : lhs_old_debit };
-    const double diff { qAbs(value - base) };
+    const double diff { std::abs(value - base) };
 
-    const bool assign_debit { (is_debit && value > base) || (!is_debit && value <= base) };
-    const bool assign_credit { !assign_debit };
+    // Determine which side (debit/credit) should hold the new value
+    const bool to_debit { (is_debit && value > base) || (!is_debit && value <= base) };
 
-    *d_shadow->lhs_debit = assign_debit ? diff : 0.0;
-    *d_shadow->lhs_credit = assign_credit ? diff : 0.0;
+    *d_shadow->lhs_debit = to_debit ? diff : 0.0;
+    *d_shadow->lhs_credit = to_debit ? 0.0 : diff;
 
+    // Cauculate RHS
     *d_shadow->rhs_debit = (*d_shadow->lhs_credit) * lhs_rate / rhs_rate;
     *d_shadow->rhs_credit = (*d_shadow->lhs_debit) * lhs_rate / rhs_rate;
 
@@ -266,10 +270,14 @@ bool LeafModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
     message.insert(kIsParallel, is_parallel);
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
 
+    // Delta calculation follows the DICD rule (Debit - Credit).
+    // After the delta is computed, both the node and the server
+    // will adjust the delta value according to the node's direction rule
+    // (DICD → unchanged, DDCI → inverted).
     const double lhs_initial_delta { *d_shadow->lhs_debit - *d_shadow->lhs_credit - (lhs_old_debit - lhs_old_credit) };
     const double lhs_final_delta { lhs_rate * lhs_initial_delta };
 
-    const double rhs_initial_delta { -lhs_initial_delta };
+    const double rhs_initial_delta { *d_shadow->rhs_debit - *d_shadow->rhs_credit - (rhs_old_debit - rhs_old_credit) };
     const double rhs_final_delta { rhs_rate * rhs_initial_delta };
 
     const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };

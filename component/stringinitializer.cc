@@ -180,10 +180,10 @@ void StringInitializer::SetHeader(
         QObject::tr("UnitPrice"),
         QObject::tr("Code"),
         QObject::tr("Description"),
+        QObject::tr("ExternalSku"),
         QObject::tr("D"),
         QObject::tr("S"),
         QObject::tr("InternalSku"),
-        QObject::tr("ExternalSku"),
     };
 
     sale.entry_header = {

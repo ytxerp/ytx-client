@@ -1775,7 +1775,8 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
     connect(WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
     connect(WebSocket::Instance(), &WebSocket::SConnectResult, this, &MainWindow::RConnectResult);
-    connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::RRemoteHostClosed);
+    connect(WebSocket::Instance(), &WebSocket::SLoginResult, this, &MainWindow::RLoginResult);
+    connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::on_actionLogout_triggered);
     connect(WebSocket::Instance(), &WebSocket::SScrollToEntry, this, &MainWindow::RScrollToEntry);
 }
 
@@ -2443,8 +2444,6 @@ void MainWindow::UpdateAccountInfo(const QString& user, const QString& database,
     ui->actionEmail->setText(tr("Email") + ": " + user);
     ui->actionWorkspace->setText(tr("Workspace") + ": " + database);
     ui->actionExpireDate->setText(tr("Expire Date") + ": " + expire_date);
-    ui->actionLogin->setEnabled(false);
-    ui->actionLogout->setEnabled(true);
 }
 
 void MainWindow::ClearAccountInfo()
@@ -2452,8 +2451,6 @@ void MainWindow::ClearAccountInfo()
     ui->actionEmail->setText(tr("Email"));
     ui->actionWorkspace->setText(tr("Workspace"));
     ui->actionExpireDate->setText(tr("Expire Date"));
-    ui->actionLogin->setEnabled(true);
-    ui->actionLogout->setEnabled(false);
 }
 
 void MainWindow::UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool branch) const
@@ -2775,9 +2772,8 @@ void MainWindow::RConnectResult(bool result)
 {
     ui->actionReconnect->setEnabled(!result);
     ui->actionLogin->setEnabled(result);
-    ui->actionLogout->setEnabled(result);
+    ui->actionLogout->setEnabled(false);
     ui->actionRegister->setEnabled(result);
-    ui->actionCheckforUpdates->setEnabled(result);
 
     if (result) {
         on_actionLogin_triggered();
@@ -2786,15 +2782,10 @@ void MainWindow::RConnectResult(bool result)
     }
 }
 
-void MainWindow::RRemoteHostClosed()
+void MainWindow::RLoginResult(bool result)
 {
-    on_actionLogout_triggered();
-
-    ui->actionReconnect->setEnabled(true);
-    ui->actionLogin->setEnabled(false);
-    ui->actionLogout->setEnabled(false);
-    ui->actionRegister->setEnabled(false);
-    ui->actionCheckforUpdates->setEnabled(false);
+    ui->actionLogin->setEnabled(!result);
+    ui->actionLogout->setEnabled(result);
 }
 
 void MainWindow::SwitchSection(Section section, const QUuid& last_tab) const
@@ -2974,6 +2965,11 @@ void MainWindow::on_actionLogout_triggered()
     LeafSStation::Instance()->Clear();
 
     EnableAction(false);
+
+    ui->actionReconnect->setEnabled(true);
+    ui->actionLogin->setEnabled(false);
+    ui->actionLogout->setEnabled(false);
+    ui->actionRegister->setEnabled(false);
 }
 
 void MainWindow::on_actionCheckforUpdates_triggered()

@@ -32,8 +32,6 @@ public:
 
 protected:
     QString QSReadTransRef(int unit) const override;
-    std::pair<int, int> CacheColumnRange() const override { return { std::to_underlying(EntryEnumI::kCode), std::to_underlying(EntryEnumI::kStatus) }; }
-    std::pair<int, int> NumericColumnRange() const override { return { std::to_underlying(EntryEnumI::kDebit), std::to_underlying(EntryEnumI::kBalance) }; }
 
 private:
     QString QSReplaceLeafSI() const; // partner_node item_node

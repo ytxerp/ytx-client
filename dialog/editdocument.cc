@@ -69,8 +69,8 @@ void EditDocument::on_listView_doubleClicked(const QModelIndex& index)
 
     QMessageBox msg {};
     msg.setIcon(QMessageBox::Critical);
-    msg.setText(tr("Document Not Found"));
-    msg.setInformativeText(tr("Sorry about that, it seems like the document isn't there. Can you give it another look?"));
+    msg.setText(tr("Not Found"));
+    msg.setInformativeText(tr("Couldn't find the document. Please check and try again."));
     msg.exec();
 }
 

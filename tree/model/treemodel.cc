@@ -110,7 +110,10 @@ QSet<QUuid> TreeModel::SyncDeltaImpl(
     if (!node)
         return {};
 
-    // Multiplier is used to adjust the sign (only meaningful for leaf nodes).
+    // Multiplier adjusts the sign of deltas based on the node's direction rule.
+    // In LeafModel logic, the default delta computation follows DICD (debit - credit).
+    // If the node rule is DICD, multiplier = +1 (no change);
+    // if the node rule is DDCI, multiplier = -1 (reverse sign).
     const int multiplier { node->direction_rule == Rule::kDICD ? 1 : -1 };
 
     // NOTE: Only leaf nodes apply the direction adjustment.
