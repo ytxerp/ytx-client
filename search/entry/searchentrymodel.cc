@@ -1,7 +1,7 @@
 #include "searchentrymodel.h"
 
-#include "global/websocket.h"
-#include "utils/jsongen.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 SearchEntryModel::SearchEntryModel(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }

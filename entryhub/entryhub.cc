@@ -6,7 +6,7 @@
 #include "global/entrypool.h"
 #include "global/entryshadowpool.h"
 #include "utils/entryutils.h"
-#include "utils/jsongen.h"
+#include "websocket/jsongen.h"
 
 EntryHub::EntryHub(CSectionInfo& info, QObject* parent)
     : QObject(parent)

@@ -1,7 +1,7 @@
 #include "leafmodelo.h"
 
 #include "global/entryshadowpool.h"
-#include "utils/jsongen.h"
+#include "websocket/jsongen.h"
 
 LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_item, EntryHub* entry_hub_partner, QObject* parent)
     : LeafModel { arg, parent }

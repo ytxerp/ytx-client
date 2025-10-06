@@ -83,7 +83,6 @@ set(SOURCES
     delegate/table/tablecombofilter.cc
     utils/nodeutils.cc
     utils/mainwindowutils.cc
-    utils/jsongen.cc
     print/printmanager.cc
     search/entry/searchentrymodelo.cc
     search/entry/searchentrymodel.cc
@@ -136,9 +135,10 @@ set(SOURCES
     report/model/settlementprimarymodel.cc
     report/model/statementmodel.cc
     global/logininfo.cc
-    global/websocket.cc
     global/leafsstation.cc
     global/dailylogger.cc
+    websocket/websocket.cc
+    websocket/jsongen.cc
 )
 
 set(HEADERS
@@ -213,7 +213,8 @@ set(HEADERS
     delegate/search/searchpathtabler.h
     delegate/table/tableissuedtime.h
     delegate/table/tablecombofilter.h
-    utils/jsongen.h
+    websocket/jsongen.h
+    websocket/websocket.h
     utils/nodeutils.h
     utils/widgetutils.h
     utils/entryutils.h
@@ -277,7 +278,6 @@ set(HEADERS
     global/dailylogger.h
     global/entrypool.h
     global/resourcepool.h
-    global/websocket.h
     global/entryshadowpool.h
     global/logininfo.h
     global/nodepool.h

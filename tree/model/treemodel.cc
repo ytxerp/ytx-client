@@ -5,9 +5,9 @@
 
 #include "global/nodepool.h"
 #include "global/resourcepool.h"
-#include "global/websocket.h"
 #include "tree/excludeonefiltermodel.h"
-#include "utils/jsongen.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 TreeModel::TreeModel(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : QAbstractItemModel(parent)

@@ -5,7 +5,7 @@
 
 #include "component/constant.h"
 #include "component/using.h"
-#include "utils/jsongen.h"
+#include "websocket/jsongen.h"
 
 WebSocket::WebSocket(QObject* parent)
     : QObject(parent)

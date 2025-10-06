@@ -2,8 +2,8 @@
 
 #include "component/constant.h"
 #include "global/entryshadowpool.h"
-#include "global/websocket.h"
-#include "utils/jsongen.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 LeafModelF::LeafModelF(CLeafModelArg& arg, QObject* parent)
     : LeafModel { arg, parent }

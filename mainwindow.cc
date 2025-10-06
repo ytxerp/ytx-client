@@ -62,7 +62,6 @@
 #include "global/leafsstation.h"
 #include "global/logininfo.h"
 #include "global/nodepool.h"
-#include "global/websocket.h"
 #include "report/model/entryrefmodel.h"
 #include "report/model/settlementmodel.h"
 #include "report/model/statementmodel.h"
@@ -99,9 +98,10 @@
 #include "tree/widget/treewidgetp.h"
 #include "tree/widget/treewidgetto.h"
 #include "ui_mainwindow.h"
-#include "utils/jsongen.h"
 #include "utils/mainwindowutils.h"
 #include "utils/widgetutils.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)

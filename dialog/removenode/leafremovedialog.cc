@@ -3,10 +3,10 @@
 #include <QMessageBox>
 
 #include "component/signalblocker.h"
-#include "global/websocket.h"
 #include "tree/excludeonefiltermodel.h"
 #include "ui_leafremovedialog.h"
-#include "utils/jsongen.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 LeafRemoveDialog::LeafRemoveDialog(CTreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, int unit, QWidget* parent)
     : QDialog(parent)

@@ -3,8 +3,8 @@
 #include <QJsonArray>
 
 #include "global/nodepool.h"
-#include "global/websocket.h"
-#include "utils/jsongen.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 TreeModelT::TreeModelT(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)

@@ -1,9 +1,9 @@
 #include "treewidgetto.h"
 
 #include "component/signalblocker.h"
-#include "global/websocket.h"
 #include "ui_treewidgetto.h"
-#include "utils/jsongen.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 TreeWidgetTO::TreeWidgetTO(Section section, TreeModel* model, const QDateTime& start, const QDateTime& end, QWidget* parent)
     : TreeWidget(parent)

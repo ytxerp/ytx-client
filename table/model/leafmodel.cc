@@ -3,8 +3,8 @@
 #include <QtConcurrent>
 
 #include "global/entryshadowpool.h"
-#include "global/websocket.h"
-#include "utils/jsongen.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 LeafModel::LeafModel(CLeafModelArg& arg, QObject* parent)
     : QAbstractItemModel(parent)

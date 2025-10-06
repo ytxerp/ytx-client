@@ -3,8 +3,8 @@
 #include "component/constant.h"
 #include "component/enumclass.h"
 #include "global/resourcepool.h"
-#include "global/websocket.h"
-#include "utils/jsongen.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 SettlementModel::SettlementModel(EntryHub* dbhub, CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }

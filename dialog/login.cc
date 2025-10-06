@@ -4,9 +4,9 @@
 
 #include "component/signalblocker.h"
 #include "global/logininfo.h"
-#include "global/websocket.h"
 #include "ui_login.h"
-#include "utils/jsongen.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 Login::Login(QSharedPointer<QSettings> local_settings, QWidget* parent)
     : QDialog(parent)
