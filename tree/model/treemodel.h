@@ -66,7 +66,7 @@ public slots:
     void RRemoveNode(const QUuid& node_id);
 
     // receive from EntryModel
-    virtual QSet<QUuid> RSyncDelta(
+    void RSyncDelta(
         const QUuid& node_id, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
 
 public:
@@ -208,6 +208,9 @@ protected:
     void InsertMeta(Node* node, const QJsonObject& meta);
 
     void InsertImpl(Node* parent, int row, Node* node);
+
+    virtual QSet<QUuid> SyncDeltaImpl(
+        const QUuid& node_id, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
 
     virtual void RegisterPath(Node* node);
     virtual void RemovePath(Node* node, Node* parent_node);

@@ -492,3 +492,147 @@ bool LeafModelT::removeRows(int row, int /*count*/, const QModelIndex& parent)
     EntryShadowPool::Instance().Recycle(d_shadow, section_);
     return true;
 }
+
+#if 0
+bool LeafModelT::UpdateDebit(EntryShadow* entry_shadow, double value, int row)
+{
+    auto* d_shadow { DerivedPtr<EntryShadowT>(entry_shadow) };
+
+    const double lhs_old_debit { *d_shadow->lhs_debit };
+    if (std::abs(lhs_old_debit - value) < kTolerance)
+        return false;
+
+    const double lhs_old_credit { *d_shadow->lhs_credit };
+
+    const double abs { qAbs(value - lhs_old_credit) };
+    *d_shadow->lhs_debit = (value > lhs_old_credit) ? abs : 0;
+    *d_shadow->lhs_credit = (value <= lhs_old_credit) ? abs : 0;
+
+    *d_shadow->rhs_debit = *d_shadow->lhs_credit;
+    *d_shadow->rhs_credit = *d_shadow->lhs_debit;
+
+    if (d_shadow->rhs_node->isNull())
+        return false;
+
+    const QUuid entry_id { *d_shadow->id };
+    const QUuid rhs_id { *d_shadow->rhs_node };
+
+    QJsonObject cache {};
+    const bool is_parallel { entry_shadow->is_parallel };
+
+    cache.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*d_shadow->lhs_debit, 'f', kMaxNumericScale_4));
+    cache.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*d_shadow->lhs_credit, 'f', kMaxNumericScale_4));
+    cache.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_4));
+    cache.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
+
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section_));
+    message.insert(kSessionId, QString());
+    message.insert(kCache, cache);
+    message.insert(kIsParallel, is_parallel);
+    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
+
+    const double unit_cost { *d_shadow->unit_cost };
+
+    const double lhs_initial_delta { *d_shadow->lhs_debit - *d_shadow->lhs_credit - (lhs_old_debit - lhs_old_credit) };
+    const double lhs_final_delta { unit_cost * lhs_initial_delta };
+
+    const double rhs_initial_delta { -lhs_initial_delta };
+    const double rhs_final_delta { unit_cost * rhs_initial_delta };
+
+    const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
+
+    if (has_leaf_delta) {
+        QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
+        QJsonObject rhs_delta { JsonGen::NodeDelta(rhs_id, rhs_initial_delta, rhs_final_delta) };
+
+        message.insert(kLhsDelta, lhs_delta);
+        message.insert(kRhsDelta, rhs_delta);
+    }
+
+    WebSocket::Instance()->SendMessage(kEntryNumeric, message);
+
+    if (has_leaf_delta) {
+        AccumulateBalance(row);
+
+        emit SResizeColumnToContents(std::to_underlying(EntryEnumT::kBalance));
+        emit SUpdateBalance(rhs_id, *d_shadow->id);
+
+        emit SSyncDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
+        emit SSyncDelta(rhs_id, rhs_initial_delta, rhs_final_delta);
+    }
+
+    return true;
+}
+
+bool LeafModelT::UpdateCredit(EntryShadow* entry_shadow, double value, int row)
+{
+    auto* d_shadow { DerivedPtr<EntryShadowT>(entry_shadow) };
+
+    double lhs_old_credit { *d_shadow->lhs_credit };
+    if (std::abs(lhs_old_credit - value) < kTolerance)
+        return false;
+
+    const double lhs_old_debit { *d_shadow->lhs_debit };
+
+    const double abs { qAbs(value - lhs_old_debit) };
+    *d_shadow->lhs_debit = (value > lhs_old_debit) ? 0 : abs;
+    *d_shadow->lhs_credit = (value <= lhs_old_debit) ? 0 : abs;
+
+    *d_shadow->rhs_debit = *d_shadow->lhs_credit;
+    *d_shadow->rhs_credit = *d_shadow->lhs_debit;
+
+    if (d_shadow->rhs_node->isNull())
+        return false;
+
+    const QUuid entry_id { *d_shadow->id };
+    const QUuid rhs_id { *d_shadow->rhs_node };
+
+    QJsonObject cache {};
+    const bool is_parallel { entry_shadow->is_parallel };
+
+    cache.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*d_shadow->lhs_debit, 'f', kMaxNumericScale_4));
+    cache.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*d_shadow->lhs_credit, 'f', kMaxNumericScale_4));
+    cache.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_4));
+    cache.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
+
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section_));
+    message.insert(kSessionId, QString());
+    message.insert(kCache, cache);
+    message.insert(kIsParallel, is_parallel);
+    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
+
+    const double unit_cost { *d_shadow->unit_cost };
+
+    const double lhs_initial_delta { *d_shadow->lhs_debit - *d_shadow->lhs_credit - (lhs_old_debit - lhs_old_credit) };
+    const double lhs_final_delta { unit_cost * lhs_initial_delta };
+
+    const double rhs_initial_delta { -lhs_initial_delta };
+    const double rhs_final_delta { unit_cost * rhs_initial_delta };
+
+    const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
+
+    if (has_leaf_delta) {
+        QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
+        QJsonObject rhs_delta { JsonGen::NodeDelta(rhs_id, rhs_initial_delta, rhs_final_delta) };
+
+        message.insert(kLhsDelta, lhs_delta);
+        message.insert(kRhsDelta, rhs_delta);
+    }
+
+    WebSocket::Instance()->SendMessage(kEntryNumeric, message);
+
+    if (has_leaf_delta) {
+        AccumulateBalance(row);
+
+        emit SResizeColumnToContents(std::to_underlying(EntryEnumT::kBalance));
+        emit SUpdateBalance(rhs_id, *d_shadow->id);
+
+        emit SSyncDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
+        emit SSyncDelta(rhs_id, rhs_initial_delta, rhs_final_delta);
+    }
+
+    return true;
+}
+#endif

@@ -310,6 +310,72 @@ bool LeafModelI::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
     return true;
 }
 
+#if 0
+bool LeafModelI::UpdateDebit(EntryShadow* entry_shadow, double value, int row)
+{
+    auto* d_shadow = DerivedPtr<EntryShadowI>(entry_shadow);
+
+    double lhs_debit { *d_shadow->lhs_debit };
+    if (std::abs(lhs_debit - value) < kTolerance)
+        return false;
+
+    const double lhs_credit { *d_shadow->lhs_credit };
+
+    const double abs { qAbs(value - lhs_credit) };
+    *d_shadow->lhs_debit = (value > lhs_credit) ? abs : 0;
+    *d_shadow->lhs_credit = (value <= lhs_credit) ? abs : 0;
+
+    *d_shadow->rhs_debit = *d_shadow->lhs_credit;
+    *d_shadow->rhs_credit = *d_shadow->lhs_debit;
+
+    if (d_shadow->rhs_node->isNull())
+        return false;
+
+    const double unit_cost { *d_shadow->unit_cost };
+    const double quantity_debit_delta { *d_shadow->lhs_debit - lhs_debit };
+    const double quantity_credit_delta { *d_shadow->lhs_credit - lhs_credit };
+    const double amount_debit_delta { quantity_debit_delta * unit_cost };
+    const double amount_credit_delta { quantity_credit_delta * unit_cost };
+
+    emit SSyncDelta(lhs_id_, quantity_debit_delta, quantity_credit_delta, amount_debit_delta, amount_credit_delta);
+    emit SSyncDelta(*d_shadow->rhs_node, quantity_credit_delta, quantity_debit_delta, amount_credit_delta, amount_debit_delta);
+
+    return true;
+}
+
+bool LeafModelI::UpdateCredit(EntryShadow* entry_shadow, double value, int row)
+{
+    auto* d_shadow = DerivedPtr<EntryShadowI>(entry_shadow);
+
+    double lhs_credit { *d_shadow->lhs_credit };
+    if (std::abs(lhs_credit - value) < kTolerance)
+        return false;
+
+    const double lhs_debit { *d_shadow->lhs_debit };
+
+    const double abs { qAbs(value - lhs_debit) };
+    *d_shadow->lhs_debit = (value > lhs_debit) ? 0 : abs;
+    *d_shadow->lhs_credit = (value <= lhs_debit) ? 0 : abs;
+
+    *d_shadow->rhs_debit = *d_shadow->lhs_credit;
+    *d_shadow->rhs_credit = *d_shadow->lhs_debit;
+
+    if (d_shadow->rhs_node->isNull())
+        return false;
+
+    const double unit_cost { *d_shadow->unit_cost };
+    const double quantity_debit_delta { *d_shadow->lhs_debit - lhs_debit };
+    const double quantity_credit_delta { *d_shadow->lhs_credit - lhs_credit };
+    const double amount_debit_delta { quantity_debit_delta * unit_cost };
+    const double amount_credit_delta { quantity_credit_delta * unit_cost };
+
+    emit SSyncDelta(lhs_id_, quantity_debit_delta, quantity_credit_delta, amount_debit_delta, amount_credit_delta);
+    emit SSyncDelta(*d_shadow->rhs_node, quantity_credit_delta, quantity_debit_delta, amount_credit_delta, amount_debit_delta);
+
+    return true;
+}
+#endif
+
 bool LeafModelI::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row)
 {
     if (value.isNull())

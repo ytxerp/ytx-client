@@ -12,7 +12,7 @@ TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, int default_unit,
 
 TreeModelO::~TreeModelO() { NodePool::Instance().Recycle(node_cache_, section_); }
 
-QSet<QUuid> TreeModelO::RSyncDelta(
+QSet<QUuid> TreeModelO::SyncDeltaImpl(
     const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
 {
     auto* node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };

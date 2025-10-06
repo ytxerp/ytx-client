@@ -40,6 +40,8 @@ protected:
     double CalculateBalance(EntryShadow* entry_shadow) override;
 
     bool UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit) override;
+    // bool UpdateDebit(EntryShadow* entry_shadow, double value, int row) override;
+    // bool UpdateCredit(EntryShadow* entry_shadow, double value, int row) override;
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
 };

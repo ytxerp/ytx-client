@@ -297,6 +297,80 @@ bool LeafModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
     return true;
 }
 
+#if 0
+bool LeafModelF::UpdateDebit(EntryShadow* entry_shadow, double value, int row)
+{
+    auto* d_shadow { DerivedPtr<EntryShadowF>(entry_shadow) };
+
+    const double lhs_debit { *d_shadow->lhs_debit };
+    if (std::abs(lhs_debit - value) < kTolerance)
+        return false;
+
+    const double lhs_credit { *d_shadow->lhs_credit };
+    const double lhs_rate { *d_shadow->lhs_rate };
+
+    const double abs { qAbs(value - lhs_credit) };
+    *d_shadow->lhs_debit = (value > lhs_credit) ? abs : 0;
+    *d_shadow->lhs_credit = (value <= lhs_credit) ? abs : 0;
+
+    const double rhs_debit { *d_shadow->rhs_debit };
+    const double rhs_credit { *d_shadow->rhs_credit };
+    const double rhs_rate { *d_shadow->rhs_rate };
+
+    *d_shadow->rhs_debit = (*d_shadow->lhs_credit) * lhs_rate / rhs_rate;
+    *d_shadow->rhs_credit = (*d_shadow->lhs_debit) * lhs_rate / rhs_rate;
+
+    if (d_shadow->rhs_node->isNull())
+        return false;
+
+    const double lhs_debit_delta { *d_shadow->lhs_debit - lhs_debit };
+    const double lhs_credit_delta { *d_shadow->lhs_credit - lhs_credit };
+    emit SSyncDelta(lhs_id_, lhs_debit_delta, lhs_credit_delta, lhs_debit_delta * lhs_rate, lhs_credit_delta * lhs_rate);
+
+    const double rhs_debit_delta { *d_shadow->rhs_debit - rhs_debit };
+    const double rhs_credit_delta { *d_shadow->rhs_credit - rhs_credit };
+    emit SSyncDelta(*d_shadow->rhs_node, rhs_debit_delta, rhs_credit_delta, rhs_debit_delta * rhs_rate, rhs_credit_delta * rhs_rate);
+
+    return true;
+}
+
+bool LeafModelF::UpdateCredit(EntryShadow* entry_shadow, double value, int row)
+{
+    auto* d_shadow { DerivedPtr<EntryShadowF>(entry_shadow) };
+
+    const double lhs_credit { *d_shadow->lhs_credit };
+    if (std::abs(lhs_credit - value) < kTolerance)
+        return false;
+
+    const double lhs_debit { *d_shadow->lhs_debit };
+    const double lhs_rate { *d_shadow->lhs_rate };
+
+    const double abs { qAbs(value - lhs_debit) };
+    *d_shadow->lhs_debit = (value > lhs_debit) ? 0 : abs;
+    *d_shadow->lhs_credit = (value <= lhs_debit) ? 0 : abs;
+
+    const double rhs_debit { *d_shadow->rhs_debit };
+    const double rhs_credit { *d_shadow->rhs_credit };
+    const double rhs_rate { *d_shadow->rhs_rate };
+
+    *d_shadow->rhs_debit = (*d_shadow->lhs_credit) * lhs_rate / rhs_rate;
+    *d_shadow->rhs_credit = (*d_shadow->lhs_debit) * lhs_rate / rhs_rate;
+
+    if (d_shadow->rhs_node->isNull())
+        return false;
+
+    const double lhs_debit_delta { *d_shadow->lhs_debit - lhs_debit };
+    const double lhs_credit_delta { *d_shadow->lhs_credit - lhs_credit };
+    emit SSyncDelta(lhs_id_, lhs_debit_delta, lhs_credit_delta, lhs_debit_delta * lhs_rate, lhs_credit_delta * lhs_rate);
+
+    const double rhs_debit_delta { *d_shadow->rhs_debit - rhs_debit };
+    const double rhs_credit_delta { *d_shadow->rhs_credit - rhs_credit };
+    emit SSyncDelta(*d_shadow->rhs_node, rhs_debit_delta, rhs_credit_delta, rhs_debit_delta * rhs_rate, rhs_credit_delta * rhs_rate);
+
+    return true;
+}
+#endif
+
 bool LeafModelF::UpdateRate(EntryShadow* entry_shadow, double value)
 {
     auto* d_shadow { DerivedPtr<EntryShadowF>(entry_shadow) };

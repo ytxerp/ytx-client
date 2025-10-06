@@ -94,6 +94,24 @@ protected:
         return false;
     }
 
+#if 0
+    virtual bool UpdateDebit(EntryShadow* entry_shadow, double value, int row)
+    {
+        Q_UNUSED(value)
+        Q_UNUSED(entry_shadow)
+        Q_UNUSED(row)
+        return false;
+    }
+
+    virtual bool UpdateCredit(EntryShadow* entry_shadow, double value, int row)
+    {
+        Q_UNUSED(entry_shadow)
+        Q_UNUSED(value)
+        Q_UNUSED(row)
+        return false;
+    }
+#endif
+
     virtual bool UpdateRate(EntryShadow* entry_shadow, double value)
     {
         Q_UNUSED(entry_shadow)
