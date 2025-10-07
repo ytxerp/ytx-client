@@ -1007,8 +1007,7 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../dialog/login.cc" line="41"/>
         <source>Your access to workspace &quot;%1&quot; for email &quot;%2&quot; is pending approval. Please contact the administrator if needed.</source>
-        <translatorcomment>邮箱 &quot;%2&quot; 对工作区 &quot;%1&quot; 的访问正在等待审批，如果有需要的话，请联系管理员。</translatorcomment>
-        <translation></translation>
+        <translation>&quot;%2&quot; 对 &quot;%1&quot; 的访问请求正在等待审批，如果有需要、请联系管理员。</translation>
     </message>
     <message>
         <location filename="../../dialog/login.cc" line="43"/>
@@ -1902,7 +1901,7 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="124"/>
         <location filename="../../component/stringinitializer.cc" line="144"/>
         <location filename="../../component/stringinitializer.cc" line="164"/>
-        <location filename="../../component/stringinitializer.cc" line="184"/>
+        <location filename="../../component/stringinitializer.cc" line="185"/>
         <location filename="../../component/stringinitializer.cc" line="220"/>
         <location filename="../../component/stringinitializer.cc" line="242"/>
         <location filename="../../component/stringinitializer.cc" line="263"/>
@@ -1920,7 +1919,7 @@ Download now?</source>
         <translation>关联</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="185"/>
+        <location filename="../../component/stringinitializer.cc" line="186"/>
         <location filename="../../component/stringinitializer.cc" line="191"/>
         <location filename="../../component/stringinitializer.cc" line="291"/>
         <location filename="../../component/stringinitializer.cc" line="326"/>
@@ -1928,7 +1927,7 @@ Download now?</source>
         <translation>内部货号</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="186"/>
+        <location filename="../../component/stringinitializer.cc" line="183"/>
         <location filename="../../component/stringinitializer.cc" line="196"/>
         <location filename="../../component/stringinitializer.cc" line="278"/>
         <location filename="../../component/stringinitializer.cc" line="292"/>
@@ -2005,7 +2004,7 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="123"/>
         <location filename="../../component/stringinitializer.cc" line="143"/>
         <location filename="../../component/stringinitializer.cc" line="163"/>
-        <location filename="../../component/stringinitializer.cc" line="183"/>
+        <location filename="../../component/stringinitializer.cc" line="184"/>
         <location filename="../../component/stringinitializer.cc" line="219"/>
         <location filename="../../component/stringinitializer.cc" line="241"/>
         <location filename="../../component/stringinitializer.cc" line="262"/>
