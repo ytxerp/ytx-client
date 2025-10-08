@@ -22,13 +22,10 @@
 
 #include <QDoubleSpinBox>
 #include <QKeyEvent>
-#include <QLineEdit>
 
 #include "component/constant.h"
 
 class DoubleSpinBox final : public QDoubleSpinBox {
-    Q_OBJECT
-
 public:
     explicit DoubleSpinBox(QWidget* parent = nullptr)
         : QDoubleSpinBox { parent }

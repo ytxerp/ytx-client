@@ -2402,17 +2402,17 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
 
 void MainWindow::UpdateSharedConfig(CSharedConfig& shared)
 {
-    auto& current_global { sc_->shared_config };
-    if (current_global == shared)
+    auto& current_shared { sc_->shared_config };
+    if (current_shared == shared)
         return;
 
-    if (current_global.document_dir != shared.document_dir) {
+    if (current_shared.document_dir != shared.document_dir) {
         const auto message { JsonGen::DocumentDir(sc_->info.section, shared.document_dir) };
         WebSocket::Instance()->SendMessage(kDocumentDir, message);
-        current_global.document_dir = shared.document_dir;
+        current_shared.document_dir = shared.document_dir;
     }
 
-    if (current_global.default_unit != shared.default_unit) {
+    if (current_shared.default_unit != shared.default_unit) {
         const auto message { JsonGen::DefaultUnit(sc_->info.section, shared.default_unit) };
         WebSocket::Instance()->SendMessage(kDefaultUnit, message);
     }

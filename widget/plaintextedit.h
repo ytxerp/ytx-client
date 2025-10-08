@@ -27,8 +27,6 @@
 #include "component/constant.h"
 
 class PlainTextEdit final : public QPlainTextEdit {
-    Q_OBJECT
-
 public:
     explicit PlainTextEdit(QWidget* parent = nullptr)
         : QPlainTextEdit { parent }

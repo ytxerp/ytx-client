@@ -25,8 +25,6 @@
 #include <QCompleter>
 
 class ComboBox final : public QComboBox {
-    Q_OBJECT
-
 public:
     explicit ComboBox(QWidget* parent = nullptr)
         : QComboBox { parent }

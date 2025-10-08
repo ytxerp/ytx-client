@@ -1,6 +1,6 @@
 #include "treeissuedtime.h"
 
-#include "widget/datetimeedit.h"
+#include "widget/datetimeeditautoselect.h"
 
 TreeIssuedTime::TreeIssuedTime(const QString& date_format, QObject* parent)
     : StyledItemDelegate { parent }
@@ -10,7 +10,7 @@ TreeIssuedTime::TreeIssuedTime(const QString& date_format, QObject* parent)
 
 QWidget* TreeIssuedTime::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/) const
 {
-    auto* editor { new DateTimeEdit(parent) };
+    auto* editor { new DateTimeEditAutoSelect(parent) };
     editor->setDisplayFormat(date_format_);
 
     return editor;
@@ -18,7 +18,7 @@ QWidget* TreeIssuedTime::createEditor(QWidget* parent, const QStyleOptionViewIte
 
 void TreeIssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
-    auto* cast_editor { static_cast<DateTimeEdit*>(editor) };
+    auto* cast_editor { static_cast<DateTimeEditAutoSelect*>(editor) };
     if (cast_editor->hasFocus())
         return;
 
@@ -31,7 +31,7 @@ void TreeIssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) co
 
 void TreeIssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
-    auto* cast_ediotr { static_cast<DateTimeEdit*>(editor) };
+    auto* cast_ediotr { static_cast<DateTimeEditAutoSelect*>(editor) };
     auto issued_time { cast_ediotr->dateTime().toUTC() };
 
     model->setData(index, issued_time);

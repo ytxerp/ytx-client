@@ -22,15 +22,12 @@
 
 #include <QDateTimeEdit>
 
-class DateTimeEdit final : public QDateTimeEdit {
-    Q_OBJECT
-
+class DateTimeEdit : public QDateTimeEdit {
 public:
     explicit DateTimeEdit(QWidget* parent = nullptr);
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
-    void focusInEvent(QFocusEvent* event) override;
 
 private:
     bool LastMonthEnd(QDateTime& date_time);

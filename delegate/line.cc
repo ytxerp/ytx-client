@@ -11,8 +11,6 @@ QWidget* Line::createEditor(QWidget* parent, const QStyleOptionViewItem& /*optio
 
 void Line::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
-    assert(qobject_cast<LineEdit*>(editor));
-
     auto* cast_editor { static_cast<LineEdit*>(editor) };
     if (cast_editor->hasFocus())
         return;

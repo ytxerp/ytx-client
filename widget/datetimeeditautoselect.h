@@ -17,24 +17,17 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SPINBOX_H
-#define SPINBOX_H
+#ifndef DATETIMEEDITAUTOSELECT_H
+#define DATETIMEEDITAUTOSELECT_H
 
-#include <QSpinBox>
-#include <QWheelEvent>
+#include "widget/datetimeedit.h"
 
-class SpinBox final : public QSpinBox {
+class DateTimeEditAutoSelect final : public DateTimeEdit {
 public:
-    explicit SpinBox(QWidget* parent = nullptr)
-        : QSpinBox { parent }
-    {
-        setStepType(QAbstractSpinBox::AdaptiveDecimalStepType);
-        setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-        setGroupSeparatorShown(true);
-    }
+    explicit DateTimeEditAutoSelect(QWidget* parent = nullptr);
 
 protected:
-    void wheelEvent(QWheelEvent* event) override { event->ignore(); }
+    void focusInEvent(QFocusEvent* event) override;
 };
 
-#endif // SPINBOX_H
+#endif // DATETIMEEDITAUTOSELECT_H

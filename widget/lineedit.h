@@ -28,8 +28,6 @@
 #include "component/constant.h"
 
 class LineEdit final : public QLineEdit {
-    Q_OBJECT
-
 public:
     explicit LineEdit(QWidget* parent = nullptr)
         : QLineEdit(parent)
