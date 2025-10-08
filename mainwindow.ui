@@ -10,9 +10,6 @@
     <height>722</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string/>
-  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Expanding" vsizetype="Preferred">

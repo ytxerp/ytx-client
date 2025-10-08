@@ -148,8 +148,6 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
     LoginInfo& login_info { LoginInfo::Instance() };
     UpdateAccountInfo(login_info.Email(), login_info.Workspace(), expire_date);
 
-    this->setWindowTitle(local_config_.company_name);
-
     if (!section_settings_)
         section_settings_ = QSharedPointer<QSettings>::create(
             QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator() + login_info.Workspace() + kDotSuffixINI,
@@ -2547,7 +2545,6 @@ void MainWindow::ReadLocalConfig()
 
     const QString theme { QStringLiteral("file:///:/theme/theme/%1.qss").arg(local_config_.theme) };
     qApp->setStyleSheet(theme);
-    SetAppFontByDpi();
 }
 
 void MainWindow::LoadAndInstallTranslator(CString& language)
