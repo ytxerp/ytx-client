@@ -2354,13 +2354,18 @@ void MainWindow::UpdateLocalConfig(CLocalConfig& local)
 
     local_config_ = local;
 
-    local_settings_->beginGroup(kYTX);
+    local_settings_->beginGroup(kUi);
     local_settings_->setValue(kLanguage, local.language);
     local_settings_->setValue(kSeparator, local.separator);
-    local_settings_->setValue(kPrinter, local.printer);
     local_settings_->setValue(kTheme, local.theme);
-    local_settings_->setValue(kName, local.company_name);
+    local_settings_->endGroup();
 
+    local_settings_->beginGroup(kPrint);
+    local_settings_->setValue(kPrinter, local.printer);
+    local_settings_->endGroup();
+
+    local_settings_->beginGroup(kExport);
+    local_settings_->setValue(kCompanyName, local.company_name);
     local_settings_->endGroup();
 }
 
@@ -2509,23 +2514,6 @@ void MainWindow::UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool b
     raw_watcher->setFuture(future);
 }
 
-void MainWindow::LoadAndInstallTranslator(CString& language)
-{
-    if (language == kEnUS)
-        return;
-
-    const QString ytx_language { QStringLiteral(":/I18N/I18N/ytx_%1.qm").arg(language) };
-    if (ytx_translator_.load(ytx_language))
-        qApp->installTranslator(&ytx_translator_);
-
-    const QString qt_language { QStringLiteral(":/I18N/I18N/qt_%1.qm").arg(language) };
-    if (qt_translator_.load(qt_language))
-        qApp->installTranslator(&qt_translator_);
-
-    if (language == kZhCN)
-        QLocale::setDefault(QLocale(QLocale::Chinese, QLocale::China));
-}
-
 void MainWindow::ResizeColumn(QHeaderView* header, int stretch_column) const
 {
     header->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -2537,22 +2525,18 @@ void MainWindow::ReadLocalConfig()
     local_settings_ = QSharedPointer<QSettings>::create(
         QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator() + kYTX + kDotSuffixINI, QSettings::IniFormat);
 
-    QString language_code { kEnUS };
-    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedStates));
-
-    switch (QLocale::system().language()) {
-    case QLocale::Chinese:
-        language_code = kZhCN;
-        break;
-    default:
-        break;
-    }
-
-    local_settings_->beginGroup(kYTX);
-    local_config_.language = local_settings_->value(kLanguage, language_code).toString();
+    local_settings_->beginGroup(kUi);
+    local_config_.language = local_settings_->value(kLanguage, QLocale::system().name()).toString();
     local_config_.theme = local_settings_->value(kTheme, kSolarizedDark).toString();
     local_config_.separator = local_settings_->value(kSeparator, kDash).toString();
-    local_config_.printer = local_settings_->value(kPrinter, {}).toString();
+    local_settings_->endGroup();
+
+    local_settings_->beginGroup(kPrint);
+    local_config_.printer = local_settings_->value(kPrinter).toString();
+    local_settings_->endGroup();
+
+    local_settings_->beginGroup(kExport);
+    local_config_.company_name = local_settings_->value(kCompanyName).toString();
     local_settings_->endGroup();
 
     LoginInfo::Instance().ReadConfig(local_settings_);
@@ -2564,6 +2548,27 @@ void MainWindow::ReadLocalConfig()
     const QString theme { QStringLiteral("file:///:/theme/theme/%1.qss").arg(local_config_.theme) };
     qApp->setStyleSheet(theme);
     SetAppFontByDpi();
+}
+
+void MainWindow::LoadAndInstallTranslator(CString& language)
+{
+    static const QSet<QString> supported_languages { kZhCN, kEnUS };
+
+    const QString lang { supported_languages.contains(language) ? language : kEnUS };
+
+    QLocale locale(lang);
+    QLocale::setDefault(locale);
+
+    if (lang.startsWith("en", Qt::CaseInsensitive))
+        return;
+
+    const QString ytx_language { QStringLiteral(":/I18N/I18N/ytx_%1.qm").arg(lang) };
+    if (ytx_translator_.load(ytx_language))
+        qApp->installTranslator(&ytx_translator_);
+
+    const QString qt_language { QStringLiteral(":/I18N/I18N/qt_%1.qm").arg(lang) };
+    if (qt_translator_.load(qt_language))
+        qApp->installTranslator(&qt_translator_);
 }
 
 void MainWindow::ReadSectionConfig(SectionConfig& section, CString& section_name)
