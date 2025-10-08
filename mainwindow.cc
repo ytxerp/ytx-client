@@ -117,17 +117,27 @@ MainWindow::MainWindow(QWidget* parent)
     InitSystemTray();
 
     SetTabWidget();
+    SetIcon();
+    SetUniqueConnection();
+    SetRemoveShortcut();
+    SetAction(false);
 
     StringInitializer::SetHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
-    SetAction();
-    SetUniqueConnection();
 
     WidgetUtils::ReadConfig(ui->splitter, &QSplitter::restoreState, app_settings_, kSplitter, kState);
     WidgetUtils::ReadConfig(this, &QMainWindow::restoreState, app_settings_, kMainwindow, kState, 0);
     WidgetUtils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
+}
 
-    EnableAction(false);
+void MainWindow::SetRemoveShortcut()
+{
+#ifdef Q_OS_WIN
     ui->actionRemove->setShortcut(QKeySequence::Delete);
+#elif defined(Q_OS_MACOS)
+    ui->actionRemove->setShortcut(Qt::Key_Backspace);
+#else
+    ui->actionRemove->setShortcut(QKeySequence::Delete);
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -164,7 +174,7 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
 
     RSectionGroup(static_cast<int>(start_));
 
-    EnableAction(true);
+    SetAction(true);
     on_tabWidget_currentChanged(0);
 
     QTimer::singleShot(0, this, [this]() { MainWindowUtils::ReadPrintTmplate(print_template_); });
@@ -1231,7 +1241,7 @@ void MainWindow::ClearMainwindow()
     ui->tabWidget->clear();
 }
 
-void MainWindow::EnableAction(bool enable) const
+void MainWindow::SetAction(bool enable) const
 {
     ui->actionAppendNode->setEnabled(enable);
     ui->actionMarkAll->setEnabled(enable);
@@ -1557,21 +1567,6 @@ void MainWindow::InitSystemTray()
         }
     });
 #endif
-}
-
-void MainWindow::SetAppFontByDpi()
-{
-    QScreen* screen = QGuiApplication::primaryScreen();
-    if (!screen)
-        return;
-
-    const qreal screen_dpi { screen->logicalDotsPerInch() };
-    const int font_size { (screen_dpi >= 96) ? 12 : 14 };
-
-    QFont app_font { qApp->font() };
-    app_font.setPointSize(font_size);
-
-    qApp->setFont(app_font);
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
@@ -2027,7 +2022,7 @@ void MainWindow::InitContextPurchase()
     connect(entry_hub_o, &EntryHubO::SSyncPrice, static_cast<EntryHubP*>(sc_p_.entry_hub.data()), &EntryHubP::RPriceSList);
 }
 
-void MainWindow::SetAction() const
+void MainWindow::SetIcon() const
 {
     ui->actionInsertNode->setIcon(QIcon(":/solarized_dark/solarized_dark/insert.png"));
     ui->actionEditName->setIcon(QIcon(":/solarized_dark/solarized_dark/edit.png"));
@@ -2942,7 +2937,7 @@ void MainWindow::on_actionLogout_triggered()
     WebSocket::Instance()->Clear();
     LeafSStation::Instance()->Clear();
 
-    EnableAction(false);
+    SetAction(false);
 
     ui->actionReconnect->setEnabled(true);
     ui->actionLogin->setEnabled(false);

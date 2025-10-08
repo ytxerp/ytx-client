@@ -125,7 +125,7 @@ private:
     void ClearMainwindow();
 
     void SetUniqueConnection() const;
-    void SetAction() const;
+    void SetIcon() const;
 
     void InitContextFinance();
     void InitContextInventory();
@@ -203,7 +203,7 @@ private:
     void UpdateAccountInfo(const QString& user, const QString& database, const QString& expire_date);
     void ClearAccountInfo();
 
-    void EnableAction(bool enable) const;
+    void SetAction(bool enable) const;
 
     void IniSectionGroup();
     void IniMarkGroup();
@@ -220,7 +220,7 @@ private:
     SectionContext* GetSectionContex(Section section);
     void InitSystemTray();
 
-    void SetAppFontByDpi();
+    void SetRemoveShortcut();
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
     inline bool IsLeafWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kLeafWidgetFIPT); }
