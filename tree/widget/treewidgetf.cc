@@ -4,13 +4,13 @@
 #include "component/signalblocker.h"
 #include "ui_treewidgetf.h"
 
-TreeWidgetF::TreeWidgetF(TreeModel* model, CSectionInfo& info, CGlobalConfig global, CSectionConfig& section, QWidget* parent)
+TreeWidgetF::TreeWidgetF(TreeModel* model, CSectionInfo& info, CSharedConfig shared, CSectionConfig& section, QWidget* parent)
     : TreeWidget(parent)
     , ui(new Ui::TreeWidgetF)
     , model_ { model }
     , info_ { info }
     , section_ { section }
-    , global_ { global }
+    , shared_ { shared }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -42,7 +42,7 @@ void TreeWidgetF::UpdateStaticStatus()
     }
 
     const int static_unit { model_->Unit(static_node_id) };
-    static_unit_is_default_ = static_unit == global_.default_unit;
+    static_unit_is_default_ = static_unit == shared_.default_unit;
 
     ui->dspin_box_static_->setPrefix(info_.unit_symbol_map.value(static_unit, kEmptyString));
     UpdateStaticValue(static_node_id);
@@ -50,7 +50,7 @@ void TreeWidgetF::UpdateStaticStatus()
 
 void TreeWidgetF::UpdateDynamicStatus()
 {
-    const int default_unit { global_.default_unit };
+    const int default_unit { shared_.default_unit };
 
     ui->dspin_box_dynamic_->setDecimals(section_.amount_decimal);
     ui->label_dynamic_->setText(section_.dynamic_label);

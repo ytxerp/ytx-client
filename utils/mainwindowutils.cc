@@ -1,57 +1,7 @@
 #include "mainwindowutils.h"
 
-#include <QtCore/qlibraryinfo.h>
-
 #include <QCoreApplication>
 #include <QDir>
-#include <QFile>
-#include <QProcess>
-#include <QTimer>
-
-QString MainWindowUtils::ResourceFile()
-{
-    QString path {};
-
-#ifdef Q_OS_WIN
-    path = QCoreApplication::applicationDirPath() + "/resource";
-
-    if (!QDir(path).exists() && !QDir().mkpath(path)) {
-        qDebug() << "Failed to create directory:" << path;
-        return {};
-    }
-
-    path += "/resource.brc";
-
-#if 0
-    QString command { "D:/Qt/6.9.3/llvm-mingw_64/bin/rcc.exe" };
-    QStringList arguments {};
-    arguments << "-binary"
-              << "E:/ytx-client/resource/resource.qrc"
-              << "-o" << path;
-
-    QProcess process {};
-
-    // 启动终端并执行命令
-    process.start(command, arguments);
-    process.waitForFinished();
-#endif
-
-#elif defined(Q_OS_MACOS)
-    path = QCoreApplication::applicationDirPath() + "/../Resources/resource.brc";
-
-#if 0
-    QString command { QDir::homePath() + "/Qt/6.9.3/macos/libexec/rcc" + " -binary " + QDir::homePath()
-        + "/Documents/GitHub/ytx-client/resource/resource.qrc -o " + path };
-
-    QProcess process {};
-    process.start("zsh", QStringList() << "-c" << command);
-    process.waitForFinished();
-#endif
-
-#endif
-
-    return path;
-}
 
 void MainWindowUtils::ReadPrintTmplate(QMap<QString, QString>& print_template)
 {
@@ -192,4 +142,16 @@ int MainWindowUtils::CompareVersion(const QString& v1, const QString& v2)
     }
 
     return 0; // equal
+}
+
+QString MainWindowUtils::SectionFile(const QString& email, const QString& workspace)
+{
+    QString email_prefix { email.section('@', 0, 0) };
+
+    QString file_name { email_prefix + "_" + workspace };
+
+    static QRegularExpression invalid_chars(R"([\\/:*?"<>| \t]+)");
+    file_name.replace(invalid_chars, "_");
+
+    return file_name;
 }

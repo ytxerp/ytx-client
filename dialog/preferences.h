@@ -38,11 +38,11 @@ class Preferences final : public QDialog {
     Q_OBJECT
 
 public:
-    Preferences(CTreeModel* model, CSectionInfo& info, LocalConfig local, GlobalConfig global, SectionConfig section, QWidget* parent = nullptr);
+    Preferences(CTreeModel* model, CSectionInfo& info, AppConfig app, SharedConfig shared, SectionConfig section, QWidget* parent = nullptr);
     ~Preferences();
 
 signals:
-    void SUpdateConfig(const LocalConfig& app, const GlobalConfig& global, const SectionConfig& section);
+    void SUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section);
 
 private slots:
     void on_pBtnApply_clicked();
@@ -94,9 +94,9 @@ private:
 
     ItemModel* leaf_path_branch_path_model_ {};
 
-    LocalConfig local_ {};
+    AppConfig app_ {};
     SectionConfig section_ {};
-    GlobalConfig global_ {};
+    SharedConfig shared_ {};
     CTreeModel* model_ {};
 };
 

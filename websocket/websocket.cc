@@ -133,7 +133,7 @@ void WebSocket::InitHandler()
     handler_obj_[kEntryNumeric] = [this](const QJsonObject& obj) { UpdateEntryNumeric(obj); };
     handler_obj_[kLeafRemoveSafely] = [this](const QJsonObject& obj) { RemoveLeafSafely(obj); };
 
-    handler_arr_[kGlobalConfig] = [this](const QJsonArray& arr) { GlobalConfig(arr); };
+    handler_arr_[kSharedConfig] = [this](const QJsonArray& arr) { SharedConfig(arr); };
 }
 
 void WebSocket::InitConnect()
@@ -720,7 +720,7 @@ void WebSocket::UpdateDefaultUnit(const QJsonObject& obj)
 
 void WebSocket::NotifyUpdateDefaultUnitFailure(const QJsonObject& /*obj*/) { emit SUpdateDefaultUnitFailed(kFinance); }
 
-void WebSocket::GlobalConfig(const QJsonArray& arr) { emit SGlobalConfig(arr); }
+void WebSocket::SharedConfig(const QJsonArray& arr) { emit SSharedConfig(arr); }
 
 QHash<QUuid, QSet<QUuid>> WebSocket::ParseNodeReference(const QJsonObject& obj)
 {

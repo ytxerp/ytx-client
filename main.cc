@@ -19,15 +19,27 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QResource>
 #include <QStandardPaths>
 
 #include "global/dailylogger.h"
 #include "mainwindow.h"
+#include "utils/mainutils.h"
 
 int main(int argc, char* argv[])
 {
     // Create the Qt application instance
     QApplication application(argc, argv);
+
+    // Install global logging system (DailyLogger)
+    DailyLogger::Instance().Install();
+
+    // Register resource file (contains icons, translations, themes, etc.)
+    const QString resource_file { MainUtils::ResourceFile() };
+    if (!QResource::registerResource(resource_file)) {
+        qCritical() << "Failed to load application resources:" << resource_file;
+        return EXIT_FAILURE;
+    }
 
     // Use the Fusion style for a consistent cross-platform appearance
     application.setStyle("Fusion");
@@ -35,8 +47,8 @@ int main(int argc, char* argv[])
     // Disable native file dialogs to ensure consistent behavior across platforms
     application.setAttribute(Qt::AA_DontUseNativeDialogs);
 
-    // Install global logging system (DailyLogger)
-    DailyLogger::Instance().Install();
+    // Set application-level properties (requires resources)
+    MainUtils::SetAppIcon(application);
 
     // Ensure the configuration directory exists
     const QString config_location { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) };
@@ -59,5 +71,10 @@ int main(int argc, char* argv[])
     mainwindow.show();
 
     // Start the Qt event loop
-    return application.exec();
+    const int result { application.exec() };
+
+    // Cleanup: unregister resource file
+    QResource::unregisterResource(resource_file);
+
+    return result;
 }

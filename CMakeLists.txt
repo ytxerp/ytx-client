@@ -220,6 +220,7 @@ set(HEADERS
     utils/entryutils.h
     utils/mainwindowutils.h
     utils/castutils.h
+    utils/mainutils.h
     print/printmanager.h
     search/entry/searchentrymodel.h
     search/entry/searchentrymodeli.h

@@ -91,7 +91,7 @@ private slots:
     void RNodeLocation(const QUuid& node_id);
     void REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
 
-    void RUpdateConfig(const LocalConfig& local, const GlobalConfig& global, const SectionConfig& section);
+    void RUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section);
     void RSyncPartner(const QUuid& node_id, int column, const QVariant& value);
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void RActionEntry(EntryAction action);
@@ -114,7 +114,7 @@ private slots:
 
     void RLeafRemoveCheck(const QJsonObject& obj);
     // void RRemoveSupportNode(const QJsonObject& obj);
-    void RGlobalConfig(const QJsonArray& arr);
+    void RSharedConfig(const QJsonArray& arr);
     void RDocumentDir(Section section, const QString& document_dir);
     void RDefaultUnit(Section section, int unit);
     void RUpdateDefaultUnitFailed(const QString& section);
@@ -196,9 +196,9 @@ private:
     void ReadLocalConfig();
     void ReadSectionConfig(SectionConfig& config, CString& section_name);
 
-    void UpdateLocalConfig(CLocalConfig& local);
+    void UpdateAppConfig(CAppConfig& app);
     void UpdateSectionConfig(CSectionConfig& section);
-    void UpdateGlobalConfig(CGlobalConfig& global);
+    void UpdateSharedConfig(CSharedConfig& shared);
 
     void UpdateAccountInfo(const QString& user, const QString& database, const QString& expire_date);
     void ClearAccountInfo();
@@ -240,9 +240,9 @@ private:
     QTranslator qt_translator_ {};
     QTranslator ytx_translator_ {};
 
-    LocalConfig local_config_ {};
+    AppConfig app_config_ {};
 
-    QSharedPointer<QSettings> local_settings_ {};
+    QSharedPointer<QSettings> app_settings_ {};
     QSharedPointer<QSettings> section_settings_ {};
     QNetworkAccessManager* network_manager_ {};
 

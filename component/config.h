@@ -23,34 +23,34 @@
 #include <QString>
 #include <QUuid>
 
-struct GlobalConfig {
+struct SharedConfig {
     int default_unit {};
     QString document_dir {};
 
-    bool operator==(const GlobalConfig& other) const noexcept
+    bool operator==(const SharedConfig& other) const noexcept
     {
         return std::tie(default_unit, document_dir) == std::tie(other.default_unit, other.document_dir);
     }
 
-    bool operator!=(const GlobalConfig& other) const noexcept { return !(*this == other); }
+    bool operator!=(const SharedConfig& other) const noexcept { return !(*this == other); }
 };
 
-struct LocalConfig {
+struct AppConfig {
     QString theme {};
     QString language {};
     QString separator {};
     QString printer {};
     QString company_name {};
 
-    // Equality operator overload to compare two LocalConfig structs
-    bool operator==(const LocalConfig& other) const noexcept
+    // Equality operator overload to compare two AppConfig structs
+    bool operator==(const AppConfig& other) const noexcept
     {
         return std::tie(theme, language, separator, printer, company_name)
             == std::tie(other.theme, other.language, other.separator, other.printer, other.company_name);
     }
 
-    // Inequality operator overload to compare two LocalConfig structs
-    bool operator!=(const LocalConfig& other) const noexcept { return !(*this == other); }
+    // Inequality operator overload to compare two AppConfig structs
+    bool operator!=(const AppConfig& other) const noexcept { return !(*this == other); }
 };
 
 struct SectionConfig {
@@ -76,8 +76,8 @@ struct SectionConfig {
     bool operator!=(const SectionConfig& other) const noexcept { return !(*this == other); }
 };
 
-using CLocalConfig = const LocalConfig;
-using CGlobalConfig = const GlobalConfig;
+using CAppConfig = const AppConfig;
+using CSharedConfig = const SharedConfig;
 using CSectionConfig = const SectionConfig;
 
 #endif // CONFIG_H

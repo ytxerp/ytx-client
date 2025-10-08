@@ -39,7 +39,7 @@ struct SectionContext {
 
     SectionConfig section_config {};
     SectionInfo info {};
-    GlobalConfig global_config {};
+    SharedConfig shared_config {};
 
     QHash<QUuid, QPointer<LeafWidget>> leaf_wgt_hash {};
     QHash<QUuid, QPointer<ReportWidget>> rpt_wgt_hash {};
@@ -56,7 +56,7 @@ inline void SectionContext::Clear()
     WidgetUtils::SafeDelete(tree_model);
 
     section_config = SectionConfig {};
-    global_config = GlobalConfig {};
+    shared_config = SharedConfig {};
 
     WidgetUtils::ClearWidgets(dialog_list);
     WidgetUtils::ClearWidgets(leaf_wgt_hash);

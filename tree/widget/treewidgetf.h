@@ -38,7 +38,7 @@ public slots:
     void RTotalsUpdated() override;
 
 public:
-    TreeWidgetF(TreeModel* model, CSectionInfo& info, CGlobalConfig global, CSectionConfig& config, QWidget* parent = nullptr);
+    TreeWidgetF(TreeModel* model, CSectionInfo& info, CSharedConfig shared, CSectionConfig& section, QWidget* parent = nullptr);
     ~TreeWidgetF() override;
 
     QTreeView* View() const override;
@@ -59,7 +59,7 @@ private:
 
     CSectionInfo& info_ {};
     CSectionConfig& section_ {};
-    CGlobalConfig global_ {};
+    CSharedConfig shared_ {};
 
     bool dynamic_unit_is_not_default_but_equal_ { false };
     bool static_unit_is_default_ { false };

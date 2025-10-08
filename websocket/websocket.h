@@ -61,7 +61,7 @@ signals:
     void SScrollToEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void SLeafRemoveCheck(const QJsonObject& obj);
-    void SGlobalConfig(const QJsonArray& arr);
+    void SSharedConfig(const QJsonArray& arr);
     void SDocumentDir(Section section, const QString& document_dir);
     void SDefaultUnit(Section section, int unit);
     void SUpdateDefaultUnitFailed(const QString& section);
@@ -98,7 +98,7 @@ private:
     void NotifyWorkspaceAccessPending(const QJsonObject& obj);
 
 private:
-    void GlobalConfig(const QJsonArray& arr);
+    void SharedConfig(const QJsonArray& arr);
     void ApplyTree(const QJsonObject& obj);
 
     void InsertNode(const QJsonObject& obj);

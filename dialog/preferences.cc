@@ -11,12 +11,12 @@
 #include "component/signalblocker.h"
 #include "ui_preferences.h"
 
-Preferences::Preferences(CTreeModel* model, CSectionInfo& info, LocalConfig local, GlobalConfig global, SectionConfig section, QWidget* parent)
+Preferences::Preferences(CTreeModel* model, CSectionInfo& info, AppConfig app, SharedConfig shared, SectionConfig section, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::Preferences)
-    , local_ { local }
+    , app_ { app }
     , section_ { section }
-    , global_ { global }
+    , shared_ { shared }
     , model_ { model }
 {
     ui->setupUi(this);
@@ -70,19 +70,19 @@ void Preferences::IniConnect() { connect(ui->pBtnOk, &QPushButton::clicked, this
 
 void Preferences::IniData(Section section)
 {
-    IniDataCombo(ui->comboTheme, local_.theme);
-    IniDataCombo(ui->comboLanguage, local_.language);
-    IniDataCombo(ui->comboSeparator, local_.separator);
-    IniDataCombo(ui->comboPrinter, local_.printer);
+    IniDataCombo(ui->comboTheme, app_.theme);
+    IniDataCombo(ui->comboLanguage, app_.language);
+    IniDataCombo(ui->comboSeparator, app_.separator);
+    IniDataCombo(ui->comboPrinter, app_.printer);
 
-    ui->lineCompanyName->setText(local_.company_name);
+    ui->lineCompanyName->setText(app_.company_name);
 
     IniDataCombo(ui->comboDateFormat, section_.date_format);
     ui->spinAmountDecimal->setValue(section_.amount_decimal);
     ui->spinRateDecimal->setValue(section_.rate_decimal);
 
-    IniDataCombo(ui->comboDefaultUnit, global_.default_unit);
-    ui->pBtnDocumentDir->setText(global_.document_dir);
+    IniDataCombo(ui->comboDefaultUnit, shared_.default_unit);
+    ui->pBtnDocumentDir->setText(shared_.document_dir);
 
     if (section == Section::kFinance || section == Section::kInventory) {
         leaf_path_branch_path_model_ = new ItemModel(this);
@@ -146,7 +146,7 @@ void Preferences::IniStringList()
     date_format_list_.emplaceBack(kDateFST);
 }
 
-void Preferences::on_pBtnApply_clicked() { emit SUpdateConfig(local_, global_, section_); }
+void Preferences::on_pBtnApply_clicked() { emit SUpdateConfig(app_, shared_, section_); }
 
 void Preferences::on_pBtnDocumentDir_clicked()
 {
@@ -159,14 +159,14 @@ void Preferences::on_pBtnDocumentDir_clicked()
     const QString selected_path { QFileDialog::getExistingDirectory(this, tr("Select Directory"), current_absolute) };
     if (!selected_path.isEmpty()) {
         const QString relative_path { (selected_path == base_path) ? QString() : QDir(base_path).relativeFilePath(selected_path) };
-        global_.document_dir = relative_path;
+        shared_.document_dir = relative_path;
         ui->pBtnDocumentDir->setText(relative_path);
     }
 }
 
 void Preferences::on_pBtnResetDocumentDir_clicked()
 {
-    global_.document_dir = QString();
+    shared_.document_dir = QString();
     ui->pBtnDocumentDir->setText(QString());
 }
 
@@ -196,7 +196,7 @@ void Preferences::IniText(Section section)
 void Preferences::on_comboDefaultUnit_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    global_.default_unit = ui->comboDefaultUnit->currentData().toInt();
+    shared_.default_unit = ui->comboDefaultUnit->currentData().toInt();
 }
 
 void Preferences::on_comboStatic_currentIndexChanged(int index)
@@ -236,13 +236,13 @@ void Preferences::on_spinRateDecimal_editingFinished() { section_.rate_decimal =
 void Preferences::on_comboTheme_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    local_.theme = ui->comboTheme->currentText();
+    app_.theme = ui->comboTheme->currentText();
 }
 
 void Preferences::on_comboLanguage_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    local_.language = ui->comboLanguage->currentText();
+    app_.language = ui->comboLanguage->currentText();
 }
 
 void Preferences::on_comboDateFormat_currentIndexChanged(int index)
@@ -254,7 +254,7 @@ void Preferences::on_comboDateFormat_currentIndexChanged(int index)
 void Preferences::on_comboSeparator_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    local_.separator = ui->comboSeparator->currentText();
+    app_.separator = ui->comboSeparator->currentText();
 }
 
 void Preferences::on_comboOperation_currentIndexChanged(int index)
@@ -265,12 +265,12 @@ void Preferences::on_comboOperation_currentIndexChanged(int index)
 
 void Preferences::on_lineCompanyName_editingFinished()
 {
-    local_.company_name = ui->lineCompanyName->text();
-    ResizeLine(ui->lineCompanyName, local_.company_name);
+    app_.company_name = ui->lineCompanyName->text();
+    ResizeLine(ui->lineCompanyName, app_.company_name);
 }
 
 void Preferences::on_comboPrinter_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    local_.printer = ui->comboPrinter->currentText();
+    app_.printer = ui->comboPrinter->currentText();
 }

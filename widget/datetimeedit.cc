@@ -1,6 +1,7 @@
 #include "datetimeedit.h"
 
 #include <QKeyEvent>
+#include <QLineEdit>
 
 DateTimeEdit::DateTimeEdit(QWidget* parent)
     : QDateTimeEdit { parent }
@@ -21,6 +22,12 @@ void DateTimeEdit::keyPressEvent(QKeyEvent* event)
         return;
     }
     QDateTimeEdit::keyPressEvent(event);
+}
+
+void DateTimeEdit::focusInEvent(QFocusEvent* event)
+{
+    QDateTimeEdit::focusInEvent(event);
+    setSelectedSection(QDateTimeEdit::DaySection);
 }
 
 bool DateTimeEdit::LastMonthEnd(QDateTime& date_time)

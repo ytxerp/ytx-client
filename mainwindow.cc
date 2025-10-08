@@ -8,7 +8,6 @@
 #include <QMessageBox>
 #include <QNetworkReply>
 #include <QQueue>
-#include <QResource>
 #include <QScrollBar>
 #include <QUrl>
 #include <QtConcurrent>
@@ -108,33 +107,27 @@ MainWindow::MainWindow(QWidget* parent)
     , ui(new Ui::MainWindow)
     , network_manager_(new QNetworkAccessManager(this))
 {
-    QResource::registerResource(MainWindowUtils::ResourceFile());
     ReadLocalConfig();
 
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    SetTabWidget();
     IniSectionGroup();
     IniMarkGroup();
+    InitSystemTray();
+
+    SetTabWidget();
+
     StringInitializer::SetHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
     SetAction();
     SetUniqueConnection();
 
-    WidgetUtils::ReadConfig(ui->splitter, &QSplitter::restoreState, local_settings_, kSplitter, kState);
-    WidgetUtils::ReadConfig(this, &QMainWindow::restoreState, local_settings_, kMainwindow, kState, 0);
-    WidgetUtils::ReadConfig(this, &QMainWindow::restoreGeometry, local_settings_, kMainwindow, kGeometry);
+    WidgetUtils::ReadConfig(ui->splitter, &QSplitter::restoreState, app_settings_, kSplitter, kState);
+    WidgetUtils::ReadConfig(this, &QMainWindow::restoreState, app_settings_, kMainwindow, kState, 0);
+    WidgetUtils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
 
     EnableAction(false);
-    InitSystemTray();
-
-#ifdef Q_OS_WIN
-    ui->actionRemove->setShortcut(Qt::Key_Delete);
-    qApp->setWindowIcon(QIcon(":/logo/logo/logo.ico"));
-#elif defined(Q_OS_MACOS)
-    ui->actionRemove->setShortcut(Qt::Key_Backspace);
-    qApp->setWindowIcon(QIcon(":/logo/logo/logo.icns"));
-#endif
+    ui->actionRemove->setShortcut(QKeySequence::Delete);
 }
 
 MainWindow::~MainWindow()
@@ -148,10 +141,12 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
     LoginInfo& login_info { LoginInfo::Instance() };
     UpdateAccountInfo(login_info.Email(), login_info.Workspace(), expire_date);
 
-    if (!section_settings_)
-        section_settings_ = QSharedPointer<QSettings>::create(
-            QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator() + login_info.Workspace() + kDotSuffixINI,
-            QSettings::IniFormat);
+    if (!section_settings_) {
+        const QString section_file_path { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator()
+            + MainWindowUtils::SectionFile(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
+
+        section_settings_ = QSharedPointer<QSettings>::create(section_file_path, QSettings::IniFormat);
+    }
 
     InitContextFinance();
     InitContextTask();
@@ -308,7 +303,7 @@ void MainWindow::RStatementSecondary(const QUuid& partner_id, int unit, const QD
     auto tree_model_p { sc_p_.tree_model };
 
     auto* model { new StatementSecondaryModel(
-        sc_->entry_hub, sc_->info, partner_id, sc_i_.tree_model->LeafPath(), tree_model_p, local_config_.company_name, this) };
+        sc_->entry_hub, sc_->info, partner_id, sc_i_.tree_model->LeafPath(), tree_model_p, app_config_.company_name, this) };
     auto* widget { new StatementWidget(model, unit, true, start, end, this) };
 
     const QString name { tr("StatementSecondary-") + tree_model_p->Name(partner_id) };
@@ -433,7 +428,7 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
     LeafModelArg model_arg { sc_->entry_hub, sc_->info, node_id, true };
     auto* leaf_model_order { new LeafModelO(model_arg, node, sc_i_.tree_model, sc_p_.entry_hub, this) };
 
-    auto print_manager { QSharedPointer<PrintManager>::create(local_config_, sc_i_.tree_model, sc_p_.tree_model) };
+    auto print_manager { QSharedPointer<PrintManager>::create(app_config_, sc_i_.tree_model, sc_p_.tree_model) };
 
     auto widget_arg { InsertNodeArgO { node, sc_->entry_hub, leaf_model_order, sc_p_.tree_model, sc_->section_config, start_ } };
     auto* widget { new LeafWidgetO(widget_arg, true, print_template_, print_manager, this) };
@@ -491,7 +486,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     LeafModelArg model_arg { entry_hub, sc->info, node_id, node->direction_rule };
     auto* model = new LeafModelO(model_arg, node, tree_model_i, sc_p_.entry_hub, this);
 
-    auto print_manager { QSharedPointer<PrintManager>::create(local_config_, tree_model_i, tree_model_p) };
+    auto print_manager { QSharedPointer<PrintManager>::create(app_config_, tree_model_i, tree_model_p) };
     InsertNodeArgO widget_arg { node, entry_hub, model, tree_model_p, section_config, section };
     auto* widget = new LeafWidgetO(widget_arg, false, print_template_, print_manager, this);
 
@@ -573,7 +568,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kCode), line);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDescription), line);
 
-    auto* document { new Document(sc_->global_config.document_dir, table_view) };
+    auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDocument), document);
 
     auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
@@ -604,7 +599,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kCode), line);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kDescription), line);
 
-    auto* document { new Document(sc_->global_config.document_dir, table_view) };
+    auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kDocument), document);
 
     auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
@@ -635,7 +630,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kCode), line);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kDescription), line);
 
-    auto* document { new Document(sc_->global_config.document_dir, table_view) };
+    auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kDocument), document);
 
     auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
@@ -672,7 +667,7 @@ void MainWindow::TableDelegateS(QTableView* table_view, CSectionConfig& config) 
     auto* external_sku { new FilterUnit(tree_model_i, ext_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kExternalSku), external_sku);
 
-    auto* document { new Document(sc_->global_config.document_dir, table_view) };
+    auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kDocument), document);
 
     auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
@@ -782,10 +777,10 @@ void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kKind), kind);
 
-    auto* final_total { new DoubleSpinUnitR(section.amount_decimal, sc_f_.global_config.default_unit, info.unit_symbol_map, tree_view) };
+    auto* final_total { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kFinalTotal), final_total);
 
-    auto* initial_total { new FinanceForeignR(section.amount_decimal, sc_f_.global_config.default_unit, info.unit_symbol_map, tree_view) };
+    auto* initial_total { new FinanceForeignR(section.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kInitialTotal), initial_total);
 }
 
@@ -810,7 +805,7 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* quantity { new DoubleSpinR(section.amount_decimal, kCoefficient16, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kInitialTotal), quantity);
 
-    auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.global_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
+    auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kFinalTotal), amount);
 
     auto* color { new Color(tree_view) };
@@ -819,7 +814,7 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* status { new Status(QEvent::MouseButtonDblClick, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kStatus), status);
 
-    auto* document { new Document(sc_t_.global_config.document_dir, tree_view) };
+    auto* document { new Document(sc_t_.shared_config.document_dir, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kDocument), document);
 
     auto* issued_time { new TreeIssuedTime(section.date_format, tree_view) };
@@ -847,7 +842,7 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* quantity { new DoubleSpinR(section.amount_decimal, kCoefficient16, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kInitialTotal), quantity);
 
-    auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.global_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
+    auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kFinalTotal), amount);
 
     auto* unit_price { new Double(section.rate_decimal, 0, kMaxNumeric_12_4, kCoefficient8, tree_view) };
@@ -873,7 +868,7 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kKind), kind);
 
-    auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.global_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
+    auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kFinalTotal), amount);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kInitialTotal), amount);
 
@@ -895,7 +890,7 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kKind), kind);
 
-    auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.global_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
+    auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kInitialTotal), amount);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kFinalTotal), amount);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDiscountTotal), amount);
@@ -1027,7 +1022,7 @@ void MainWindow::InsertNodeFunction(const QModelIndex& parent, const QUuid& pare
 
     node->id = QUuid::createUuidV7();
     node->direction_rule = model->Rule(parent_id);
-    node->unit = parent_id.isNull() ? sc_->global_config.default_unit : model->Unit(parent_id);
+    node->unit = parent_id.isNull() ? sc_->shared_config.default_unit : model->Unit(parent_id);
 
     model->SetParent(node, parent_id);
 
@@ -1056,7 +1051,7 @@ void MainWindow::on_actionNewGroup_triggered()
     auto* node { NodePool::Instance().Allocate(start_) };
 
     node->id = QUuid::createUuidV7();
-    node->unit = parent_id.isNull() ? sc_->global_config.default_unit : model->Unit(parent_id);
+    node->unit = parent_id.isNull() ? sc_->shared_config.default_unit : model->Unit(parent_id);
     node->kind = std::to_underlying(NodeKind::kBranch);
 
     model->SetParent(node, parent_id);
@@ -1066,7 +1061,7 @@ void MainWindow::on_actionNewGroup_triggered()
 
     auto parent_path { tree_model->Path(parent_id) };
     if (!parent_path.isEmpty())
-        parent_path += local_config_.separator;
+        parent_path += app_config_.separator;
 
     const auto children_name { tree_model->ChildrenName(parent_id) };
     const int row { current_index.row() + 1 };
@@ -1143,7 +1138,7 @@ void MainWindow::RLeafRemoveCheck(const QJsonObject& obj)
     connect(dialog, &LeafRemoveDialog::SRemoveNode, model, &TreeModel::RRemoveNode, Qt::SingleShotConnection);
 }
 
-void MainWindow::RGlobalConfig(const QJsonArray& arr)
+void MainWindow::RSharedConfig(const QJsonArray& arr)
 {
     for (const QJsonValue& val : arr) {
         if (!val.isObject()) {
@@ -1161,21 +1156,21 @@ void MainWindow::RGlobalConfig(const QJsonArray& arr)
             continue;
         }
 
-        section_contex->global_config.default_unit = default_unit;
-        section_contex->global_config.document_dir = document_dir;
+        section_contex->shared_config.default_unit = default_unit;
+        section_contex->shared_config.document_dir = document_dir;
     }
 }
 
 void MainWindow::RDocumentDir(Section section, const QString& document_dir)
 {
     auto* sc { GetSectionContex(section) };
-    sc->global_config.document_dir = document_dir;
+    sc->shared_config.document_dir = document_dir;
 }
 
 void MainWindow::RDefaultUnit(Section section, int unit)
 {
     auto* sc { GetSectionContex(section) };
-    sc->global_config.default_unit = unit;
+    sc->shared_config.default_unit = unit;
 }
 
 void MainWindow::RUpdateDefaultUnitFailed(const QString& /*section*/)
@@ -1223,7 +1218,7 @@ void MainWindow::ClearMainwindow()
     }
 
     print_template_.clear();
-    local_settings_.clear();
+    app_settings_.clear();
     section_settings_.clear();
 
     sc_f_.Clear();
@@ -1259,21 +1254,22 @@ void MainWindow::EnableAction(bool enable) const
 void MainWindow::IniSectionGroup()
 {
     section_group_ = new QButtonGroup(this);
-    section_group_->addButton(ui->rBtnFinance, 0);
-    section_group_->addButton(ui->rBtnTask, 1);
-    section_group_->addButton(ui->rBtnInventory, 2);
-    section_group_->addButton(ui->rBtnPartner, 3);
-    section_group_->addButton(ui->rBtnSale, 4);
-    section_group_->addButton(ui->rBtnPurchase, 5);
+
+    section_group_->addButton(ui->rBtnFinance, std::to_underlying(Section::kFinance));
+    section_group_->addButton(ui->rBtnTask, std::to_underlying(Section::kTask));
+    section_group_->addButton(ui->rBtnInventory, std::to_underlying(Section::kInventory));
+    section_group_->addButton(ui->rBtnPartner, std::to_underlying(Section::kPartner));
+    section_group_->addButton(ui->rBtnSale, std::to_underlying(Section::kSale));
+    section_group_->addButton(ui->rBtnPurchase, std::to_underlying(Section::kPurchase));
 }
 
 void MainWindow::IniMarkGroup()
 {
     mark_group_ = new QActionGroup(this);
 
-    ui->actionMarkAll->setData(static_cast<int>(EntryAction::kMarkAll));
-    ui->actionMarkNone->setData(static_cast<int>(EntryAction::kMarkNone));
-    ui->actionMarkToggle->setData(static_cast<int>(EntryAction::kMarkToggle));
+    ui->actionMarkAll->setData(std::to_underlying(EntryAction::kMarkAll));
+    ui->actionMarkNone->setData(std::to_underlying(EntryAction::kMarkNone));
+    ui->actionMarkToggle->setData(std::to_underlying(EntryAction::kMarkToggle));
 
     mark_group_->addAction(ui->actionMarkAll);
     mark_group_->addAction(ui->actionMarkNone);
@@ -1331,30 +1327,10 @@ void MainWindow::SetTabWidget()
     tab_widget->setTabsClosable(true);
     tab_widget->setElideMode(Qt::ElideNone);
 
-    start_ = Section(local_settings_->value(kStartSection, 0).toInt());
+    const int start_section { app_settings_->value(kStartSection, 0).toInt() };
 
-    switch (start_) {
-    case Section::kFinance:
-        ui->rBtnFinance->setChecked(true);
-        break;
-    case Section::kPartner:
-        ui->rBtnPartner->setChecked(true);
-        break;
-    case Section::kInventory:
-        ui->rBtnInventory->setChecked(true);
-        break;
-    case Section::kTask:
-        ui->rBtnTask->setChecked(true);
-        break;
-    case Section::kSale:
-        ui->rBtnSale->setChecked(true);
-        break;
-    case Section::kPurchase:
-        ui->rBtnPurchase->setChecked(true);
-        break;
-    default:
-        break;
-    }
+    start_ = Section(start_section);
+    section_group_->button(start_section)->setChecked(true);
 }
 
 void MainWindow::SetTableView(QTableView* view, int stretch_column, int lhs_node_column) const
@@ -1500,11 +1476,11 @@ void MainWindow::RegisterRptWgt(const QUuid& report_id, ReportWidget* widget)
 
 void MainWindow::WriteConfig()
 {
-    if (local_settings_) {
-        WidgetUtils::WriteConfig(ui->splitter, &QSplitter::saveState, local_settings_, kSplitter, kState);
-        WidgetUtils::WriteConfig(this, &QMainWindow::saveState, local_settings_, kMainwindow, kState, 0);
-        WidgetUtils::WriteConfig(this, &QMainWindow::saveGeometry, local_settings_, kMainwindow, kGeometry);
-        WidgetUtils::WriteConfig(local_settings_, std::to_underlying(start_), kStart, kSection);
+    if (app_settings_) {
+        WidgetUtils::WriteConfig(ui->splitter, &QSplitter::saveState, app_settings_, kSplitter, kState);
+        WidgetUtils::WriteConfig(this, &QMainWindow::saveState, app_settings_, kMainwindow, kState, 0);
+        WidgetUtils::WriteConfig(this, &QMainWindow::saveGeometry, app_settings_, kMainwindow, kGeometry);
+        WidgetUtils::WriteConfig(app_settings_, std::to_underlying(start_), kStart, kSection);
     }
 
     if (section_settings_) {
@@ -1768,7 +1744,7 @@ void MainWindow::SetUniqueConnection() const
 
     connect(WebSocket::Instance(), &WebSocket::SInitializeContext, this, &MainWindow::RInitializeContext);
     connect(WebSocket::Instance(), &WebSocket::SLeafRemoveCheck, this, &MainWindow::RLeafRemoveCheck);
-    connect(WebSocket::Instance(), &WebSocket::SGlobalConfig, this, &MainWindow::RGlobalConfig);
+    connect(WebSocket::Instance(), &WebSocket::SSharedConfig, this, &MainWindow::RSharedConfig);
     connect(WebSocket::Instance(), &WebSocket::SDefaultUnit, this, &MainWindow::RDefaultUnit);
     connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
     connect(WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
@@ -1782,7 +1758,7 @@ void MainWindow::InitContextFinance()
 {
     auto& info { sc_f_.info };
     auto& section_config { sc_f_.section_config };
-    auto& global_config { sc_f_.global_config };
+    auto& shared_config { sc_f_.shared_config };
     auto& entry_hub { sc_f_.entry_hub };
     auto& tree_model { sc_f_.tree_model };
     auto& tree_view { sc_f_.tree_view };
@@ -1813,12 +1789,12 @@ void MainWindow::InitContextFinance()
     ReadSectionConfig(section_config, kFinance);
 
     entry_hub = new EntryHubF(info, this);
-    tree_model = new TreeModelF(info, local_config_.separator, global_config.default_unit, this);
+    tree_model = new TreeModelF(info, app_config_.separator, shared_config.default_unit, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kFinance, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kFinance, entry_hub);
 
-    tree_widget = new TreeWidgetF(tree_model, info, global_config, section_config, this);
+    tree_widget = new TreeWidgetF(tree_model, info, shared_config, section_config, this);
     tree_view = tree_widget->View();
 
     connect(tree_model, &TreeModel::STotalsUpdated, tree_widget, &TreeWidget::RTotalsUpdated, Qt::UniqueConnection);
@@ -1828,7 +1804,7 @@ void MainWindow::InitContextInventory()
 {
     auto& info { sc_i_.info };
     auto& section_config { sc_i_.section_config };
-    auto& global_config { sc_i_.global_config };
+    auto& shared_config { sc_i_.shared_config };
     auto& entry_hub { sc_i_.entry_hub };
     auto& tree_model { sc_i_.tree_model };
     auto& tree_view { sc_i_.tree_view };
@@ -1855,7 +1831,7 @@ void MainWindow::InitContextInventory()
     ReadSectionConfig(section_config, kInventory);
 
     entry_hub = new EntryHubI(info, this);
-    tree_model = new TreeModelI(info, local_config_.separator, global_config.default_unit, this);
+    tree_model = new TreeModelI(info, app_config_.separator, shared_config.default_unit, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kInventory, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kInventory, entry_hub);
@@ -1870,7 +1846,7 @@ void MainWindow::InitContextTask()
 {
     auto& info { sc_t_.info };
     auto& section_config { sc_t_.section_config };
-    auto& global_config { sc_t_.global_config };
+    auto& shared_config { sc_t_.shared_config };
     auto& entry_hub { sc_t_.entry_hub };
     auto& tree_model { sc_t_.tree_model };
     auto& tree_view { sc_t_.tree_view };
@@ -1896,7 +1872,7 @@ void MainWindow::InitContextTask()
     ReadSectionConfig(section_config, kTask);
 
     entry_hub = new EntryHubT(info, this);
-    tree_model = new TreeModelT(info, local_config_.separator, global_config.default_unit, this);
+    tree_model = new TreeModelT(info, app_config_.separator, shared_config.default_unit, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kTask, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kTask, entry_hub);
@@ -1913,7 +1889,7 @@ void MainWindow::InitContextPartner()
 {
     auto& info { sc_p_.info };
     auto& section_config { sc_p_.section_config };
-    auto& global_config { sc_p_.global_config };
+    auto& shared_config { sc_p_.shared_config };
     auto& entry_hub { sc_p_.entry_hub };
     auto& tree_model { sc_p_.tree_model };
     auto& tree_view { sc_p_.tree_view };
@@ -1936,7 +1912,7 @@ void MainWindow::InitContextPartner()
     ReadSectionConfig(section_config, kPartner);
 
     entry_hub = new EntryHubP(info, this);
-    tree_model = new TreeModelP(info, local_config_.separator, global_config.default_unit, this);
+    tree_model = new TreeModelP(info, app_config_.separator, shared_config.default_unit, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kPartner, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kPartner, entry_hub);
@@ -1949,7 +1925,7 @@ void MainWindow::InitContextSale()
 {
     auto& info { sc_sale_.info };
     auto& section_config { sc_sale_.section_config };
-    auto& global_config { sc_sale_.global_config };
+    auto& shared_config { sc_sale_.shared_config };
     auto& entry_hub { sc_sale_.entry_hub };
     auto& tree_model { sc_sale_.tree_model };
     auto& tree_view { sc_sale_.tree_view };
@@ -1979,7 +1955,7 @@ void MainWindow::InitContextSale()
     ReadSectionConfig(section_config, kSale);
 
     auto* entry_hub_o = new EntryHubO(info, this);
-    auto* tree_model_o = new TreeModelO(info, local_config_.separator, global_config.default_unit, this);
+    auto* tree_model_o = new TreeModelO(info, app_config_.separator, shared_config.default_unit, this);
 
     entry_hub = entry_hub_o;
     tree_model = tree_model_o;
@@ -2002,7 +1978,7 @@ void MainWindow::InitContextPurchase()
 {
     auto& info { sc_purchase_.info };
     auto& section_config { sc_purchase_.section_config };
-    auto& global_config { sc_purchase_.global_config };
+    auto& shared_config { sc_purchase_.shared_config };
     auto& entry_hub { sc_purchase_.entry_hub };
     auto& tree_model { sc_purchase_.tree_model };
     auto& tree_view { sc_purchase_.tree_view };
@@ -2032,7 +2008,7 @@ void MainWindow::InitContextPurchase()
     ReadSectionConfig(section_config, kPurchase);
 
     auto* entry_hub_o = new EntryHubO(info, this);
-    auto* tree_model_o = new TreeModelO(info, local_config_.separator, global_config.default_unit, this);
+    auto* tree_model_o = new TreeModelO(info, app_config_.separator, shared_config.default_unit, this);
 
     entry_hub = entry_hub_o;
     tree_model = tree_model_o;
@@ -2191,7 +2167,7 @@ void MainWindow::on_actionEditName_triggered()
     auto parent_path { model->Path(parent_id) };
 
     if (!parent_path.isEmpty())
-        parent_path += local_config_.separator;
+        parent_path += app_config_.separator;
 
     CString name { model->Name(node_id) };
     const auto children_name { model->ChildrenName(parent_id) };
@@ -2208,7 +2184,7 @@ void MainWindow::InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUu
 
     auto parent_path { tree_model->Path(parent_id) };
     if (!parent_path.isEmpty())
-        parent_path += local_config_.separator;
+        parent_path += app_config_.separator;
 
     QDialog* dialog {};
 
@@ -2317,20 +2293,20 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
         UpdatePartnerReference(nodes, branch);
 }
 
-void MainWindow::RUpdateConfig(const LocalConfig& local, const GlobalConfig& global, const SectionConfig& section)
+void MainWindow::RUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section)
 {
-    UpdateLocalConfig(local);
+    UpdateAppConfig(app);
     UpdateSectionConfig(section);
-    UpdateGlobalConfig(global);
+    UpdateSharedConfig(shared);
 }
 
-void MainWindow::UpdateLocalConfig(CLocalConfig& local)
+void MainWindow::UpdateAppConfig(CAppConfig& app)
 {
-    if (local_config_ == local)
+    if (app_config_ == app)
         return;
 
-    auto new_separator { local.separator };
-    auto old_separator { local_config_.separator };
+    auto new_separator { app.separator };
+    auto old_separator { app_config_.separator };
 
     if (old_separator != new_separator) {
         sc_f_.tree_model->UpdateSeparator(old_separator, new_separator);
@@ -2345,26 +2321,26 @@ void MainWindow::UpdateLocalConfig(CLocalConfig& local)
             widget->setTabToolTip(index, widget->tabToolTip(index).replace(old_separator, new_separator));
     }
 
-    if (local_config_.language != local.language) {
+    if (app_config_.language != app.language) {
         MainWindowUtils::Message(QMessageBox::Information, tr("Language Changed"),
             tr("The language has been changed. Please restart the application for the changes to take effect."), kThreeThousand);
     }
 
-    local_config_ = local;
+    app_config_ = app;
 
-    local_settings_->beginGroup(kUi);
-    local_settings_->setValue(kLanguage, local.language);
-    local_settings_->setValue(kSeparator, local.separator);
-    local_settings_->setValue(kTheme, local.theme);
-    local_settings_->endGroup();
+    app_settings_->beginGroup(kUi);
+    app_settings_->setValue(kLanguage, app.language);
+    app_settings_->setValue(kSeparator, app.separator);
+    app_settings_->setValue(kTheme, app.theme);
+    app_settings_->endGroup();
 
-    local_settings_->beginGroup(kPrint);
-    local_settings_->setValue(kPrinter, local.printer);
-    local_settings_->endGroup();
+    app_settings_->beginGroup(kPrint);
+    app_settings_->setValue(kPrinter, app.printer);
+    app_settings_->endGroup();
 
-    local_settings_->beginGroup(kExport);
-    local_settings_->setValue(kCompanyName, local.company_name);
-    local_settings_->endGroup();
+    app_settings_->beginGroup(kExport);
+    app_settings_->setValue(kCompanyName, app.company_name);
+    app_settings_->endGroup();
 }
 
 void MainWindow::UpdateSectionConfig(CSectionConfig& section)
@@ -2424,20 +2400,20 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
     }
 }
 
-void MainWindow::UpdateGlobalConfig(CGlobalConfig& global)
+void MainWindow::UpdateSharedConfig(CSharedConfig& shared)
 {
-    auto& current_global { sc_->global_config };
-    if (current_global == global)
+    auto& current_global { sc_->shared_config };
+    if (current_global == shared)
         return;
 
-    if (current_global.document_dir != global.document_dir) {
-        const auto message { JsonGen::DocumentDir(sc_->info.section, global.document_dir) };
+    if (current_global.document_dir != shared.document_dir) {
+        const auto message { JsonGen::DocumentDir(sc_->info.section, shared.document_dir) };
         WebSocket::Instance()->SendMessage(kDocumentDir, message);
-        current_global.document_dir = global.document_dir;
+        current_global.document_dir = shared.document_dir;
     }
 
-    if (current_global.default_unit != global.default_unit) {
-        const auto message { JsonGen::DefaultUnit(sc_->info.section, global.default_unit) };
+    if (current_global.default_unit != shared.default_unit) {
+        const auto message { JsonGen::DefaultUnit(sc_->info.section, shared.default_unit) };
         WebSocket::Instance()->SendMessage(kDefaultUnit, message);
     }
 }
@@ -2520,30 +2496,30 @@ void MainWindow::ResizeColumn(QHeaderView* header, int stretch_column) const
 
 void MainWindow::ReadLocalConfig()
 {
-    local_settings_ = QSharedPointer<QSettings>::create(
+    app_settings_ = QSharedPointer<QSettings>::create(
         QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator() + kYTX + kDotSuffixINI, QSettings::IniFormat);
 
-    local_settings_->beginGroup(kUi);
-    local_config_.language = local_settings_->value(kLanguage, QLocale::system().name()).toString();
-    local_config_.theme = local_settings_->value(kTheme, kSolarizedDark).toString();
-    local_config_.separator = local_settings_->value(kSeparator, kDash).toString();
-    local_settings_->endGroup();
+    app_settings_->beginGroup(kUi);
+    app_config_.language = app_settings_->value(kLanguage, QLocale::system().name()).toString();
+    app_config_.theme = app_settings_->value(kTheme, kSolarizedDark).toString();
+    app_config_.separator = app_settings_->value(kSeparator, kDash).toString();
+    app_settings_->endGroup();
 
-    local_settings_->beginGroup(kPrint);
-    local_config_.printer = local_settings_->value(kPrinter).toString();
-    local_settings_->endGroup();
+    app_settings_->beginGroup(kPrint);
+    app_config_.printer = app_settings_->value(kPrinter).toString();
+    app_settings_->endGroup();
 
-    local_settings_->beginGroup(kExport);
-    local_config_.company_name = local_settings_->value(kCompanyName).toString();
-    local_settings_->endGroup();
+    app_settings_->beginGroup(kExport);
+    app_config_.company_name = app_settings_->value(kCompanyName).toString();
+    app_settings_->endGroup();
 
-    LoginInfo::Instance().ReadConfig(local_settings_);
-    WebSocket::Instance()->ReadConfig(local_settings_);
+    LoginInfo::Instance().ReadConfig(app_settings_);
+    WebSocket::Instance()->ReadConfig(app_settings_);
     WebSocket::Instance()->Connect();
 
-    LoadAndInstallTranslator(local_config_.language);
+    LoadAndInstallTranslator(app_config_.language);
 
-    const QString theme { QStringLiteral("file:///:/theme/theme/%1.qss").arg(local_config_.theme) };
+    const QString theme { QStringLiteral("file:///:/theme/theme/%1.qss").arg(app_config_.theme) };
     qApp->setStyleSheet(theme);
 }
 
@@ -2739,7 +2715,7 @@ void MainWindow::on_actionPreferences_triggered()
 {
     auto model { sc_->tree_model };
 
-    auto* preference { new Preferences(model, sc_->info, local_config_, sc_->global_config, sc_->section_config, this) };
+    auto* preference { new Preferences(model, sc_->info, app_config_, sc_->shared_config, sc_->section_config, this) };
     connect(preference, &Preferences::SUpdateConfig, this, &MainWindow::RUpdateConfig);
     preference->exec();
 }
@@ -2924,7 +2900,7 @@ void MainWindow::on_actionLogin_triggered()
     static Login* dialog = nullptr;
 
     if (!dialog) {
-        dialog = new Login(local_settings_, this);
+        dialog = new Login(app_settings_, this);
         dialog->setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         connect(dialog, &QDialog::destroyed, this, [=]() { dialog = nullptr; });
@@ -3001,7 +2977,7 @@ void MainWindow::on_actionCheckforUpdates_triggered()
         const QJsonObject obj { doc.object() };
         const QString latest_tag { obj.value("tag_name").toString() };
 
-        const bool is_chinese { local_config_.language.startsWith("zh", Qt::CaseInsensitive) };
+        const bool is_chinese { app_config_.language.startsWith("zh", Qt::CaseInsensitive) };
         const QString download_url
             = is_chinese ? "https://gitee.com/ytxerp/ytx-client/releases/latest" : "https://github.com/ytxerp/ytx-client/releases/latest";
 

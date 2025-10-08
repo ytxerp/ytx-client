@@ -135,7 +135,7 @@ inline const QString kNodeAcked = QStringLiteral("node_acked");
 
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");
-inline const QString kGlobalConfig = QStringLiteral("global_config");
+inline const QString kSharedConfig = QStringLiteral("shared_config");
 
 // Decimal config
 inline const QString kAmountDecimal = QStringLiteral("amount_decimal");

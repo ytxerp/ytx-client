@@ -8,9 +8,9 @@
 #include <QPrinterInfo>
 #include <QVariant>
 
-PrintManager::PrintManager(CLocalConfig& local_config, TreeModel* item, TreeModel* partner)
-    : local_config_ { local_config }
-    , item_ { item }
+PrintManager::PrintManager(CAppConfig& app_config, TreeModel* inventory, TreeModel* partner)
+    : app_config_ { app_config }
+    , inventory_ { inventory }
     , partner_ { partner }
 {
 }
@@ -26,7 +26,7 @@ void PrintManager::Preview()
     QPrinter printer { QPrinter::ScreenResolution };
     ApplyConfig(&printer);
 
-    printer.setPrinterName(local_config_.printer);
+    printer.setPrinterName(app_config_.printer);
 
     QPrintPreviewDialog preview(&printer);
 
@@ -40,7 +40,7 @@ void PrintManager::Print()
     ApplyConfig(&printer);
 
     const auto available_printers { QPrinterInfo::availablePrinterNames() };
-    const QString& printer_name { local_config_.printer };
+    const QString& printer_name { app_config_.printer };
 
     if (printer_name.isEmpty() || !available_printers.contains(printer_name)) {
         QPrintDialog dialog(&printer);
@@ -174,9 +174,9 @@ QString PrintManager::GetColumnText(int col, const EntryShadow* entry_shadow)
 
     switch (col) {
     case 0:
-        return item_->Path(*entry_shadow->rhs_node);
+        return inventory_->Path(*entry_shadow->rhs_node);
     case 1:
-        return item_->Path(*o_entry_shadow->external_sku);
+        return inventory_->Path(*o_entry_shadow->external_sku);
     case 2:
         return *entry_shadow->description;
     case 3:

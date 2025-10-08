@@ -21,8 +21,6 @@
 #define MAINWINDOWUTILS_H
 
 #include <QMessageBox>
-#include <QSettings>
-#include <QWidget>
 
 #include "component/sectioncontex.h"
 #include "worksheet.h"
@@ -40,7 +38,7 @@ concept MapType = requires(T a) {
 
 namespace MainWindowUtils {
 
-QString ResourceFile();
+QString SectionFile(const QString& email, const QString& workspace);
 
 void ReadPrintTmplate(QMap<QString, QString>& print_template);
 

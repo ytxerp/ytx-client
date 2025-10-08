@@ -43,7 +43,7 @@ struct PrintData {
 
 class PrintManager {
 public:
-    PrintManager(CLocalConfig& local_config, TreeModel* item, TreeModel* partner);
+    PrintManager(CAppConfig& app_config, TreeModel* inventory, TreeModel* partner);
 
     bool LoadIni(const QString& file_path);
     void SetData(const PrintData& print_data, const QList<EntryShadow*>& entry_shadow_list);
@@ -65,12 +65,12 @@ private:
 private:
     QHash<QString, QVariant> page_settings_ {};
     QHash<QString, FieldSettings> field_settings_ {};
-    CLocalConfig& local_config_ {};
+    CAppConfig& app_config_ {};
 
     QList<EntryShadow*> entry_shadow_list_ {};
     PrintData data_ {};
 
-    TreeModel* item_ {};
+    TreeModel* inventory_ {};
     TreeModel* partner_ {};
 };
 

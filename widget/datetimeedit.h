@@ -30,6 +30,7 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
+    void focusInEvent(QFocusEvent* event) override;
 
 private:
     bool LastMonthEnd(QDateTime& date_time);
