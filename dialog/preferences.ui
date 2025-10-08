@@ -36,12 +36,12 @@
      </property>
      <item>
       <property name="text">
-       <string>Global</string>
+       <string>Shared</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Local</string>
+       <string>Application</string>
       </property>
      </item>
      <item>

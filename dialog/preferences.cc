@@ -56,6 +56,11 @@ void Preferences::IniDialog(ItemModel* unit_model, Section section)
     ui->comboDynamicRhs->setEnabled(is_enable);
     ui->comboOperation->setEnabled(is_enable);
 
+    if (section == Section::kPartner) {
+        ui->spinRateDecimal->setEnabled(false);
+        ui->labelRateDecimal->setEnabled(false);
+    }
+
     ui->comboPrinter->addItem(QString());
     const auto& printers { QPrinterInfo::availablePrinters() };
 
