@@ -22,6 +22,10 @@ TreeModel::~TreeModel() { FlushCaches(); }
 
 void TreeModel::RRemoveNode(const QUuid& node_id)
 {
+    if (!node_hash_.contains(node_id)) {
+        return;
+    }
+
     auto index { GetIndex(node_id) };
     removeRows(index.row(), 1, index.parent());
 }

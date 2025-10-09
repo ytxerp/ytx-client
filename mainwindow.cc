@@ -1113,6 +1113,11 @@ void MainWindow::RemoveNode()
     assert(model);
 
     const QUuid node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
+    if (node_pending_removal_.contains(node_id))
+        return;
+
+    node_pending_removal_.insert(node_id);
+
     const NodeKind kind { model->Kind(node_id) };
 
     switch (kind) {
@@ -1130,7 +1135,7 @@ void MainWindow::RemoveNode()
     }
 }
 
-void MainWindow::RLeafRemoveCheck(const QJsonObject& obj)
+void MainWindow::RLeafRemoveDenied(const QJsonObject& obj)
 {
     Section section { obj.value(kSection).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
@@ -1738,7 +1743,7 @@ void MainWindow::SetUniqueConnection() const
     connect(section_group_, &QButtonGroup::idClicked, this, &MainWindow::RSectionGroup);
 
     connect(WebSocket::Instance(), &WebSocket::SInitializeContext, this, &MainWindow::RInitializeContext);
-    connect(WebSocket::Instance(), &WebSocket::SLeafRemoveCheck, this, &MainWindow::RLeafRemoveCheck);
+    connect(WebSocket::Instance(), &WebSocket::SLeafRemoveDenied, this, &MainWindow::RLeafRemoveDenied);
     connect(WebSocket::Instance(), &WebSocket::SSharedConfig, this, &MainWindow::RSharedConfig);
     connect(WebSocket::Instance(), &WebSocket::SDefaultUnit, this, &MainWindow::RDefaultUnit);
     connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);

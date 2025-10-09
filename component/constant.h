@@ -151,6 +151,7 @@ inline const QString kStaticLabel = QStringLiteral("static_label");
 inline const QString kStaticNode = QStringLiteral("static_node");
 
 inline const QString kLeafRemoveCheck = QStringLiteral("leaf_remove_check");
+inline const QString kLeafRemoveDenied = QStringLiteral("leaf_remove_denied");
 inline const QString kLeafRemove = QStringLiteral("leaf_remove");
 inline const QString kLeafReplace = QStringLiteral("leaf_replace");
 inline const QString kLeafEntry = QStringLiteral("leaf_entry");

@@ -112,8 +112,9 @@ private slots:
 
     void REnableAction(bool finished);
 
-    void RLeafRemoveCheck(const QJsonObject& obj);
-    // void RRemoveSupportNode(const QJsonObject& obj);
+    void RLeafRemoveDenied(const QJsonObject& obj);
+    inline void RNodeRemoveConfirmed(const QUuid& node_id) { node_pending_removal_.remove(node_id); }
+
     void RSharedConfig(const QJsonArray& arr);
     void RDocumentDir(Section section, const QString& document_dir);
     void RDefaultUnit(Section section, int unit);
@@ -233,6 +234,8 @@ private:
 
     QSystemTrayIcon* tray_icon_ {};
     QMenu* tray_menu_ {};
+
+    QSet<QUuid> node_pending_removal_ {};
 
     QPointer<SettlementWidget> settlement_widget_ {};
     QMap<QString, QString> print_template_ {};

@@ -60,11 +60,12 @@ signals:
     void SInitializeContext(const QString& expire_date);
     void SScrollToEntry(const QUuid& node_id, const QUuid& entry_id);
 
-    void SLeafRemoveCheck(const QJsonObject& obj);
+    void SLeafRemoveDenied(const QJsonObject& obj);
     void SSharedConfig(const QJsonArray& arr);
     void SDocumentDir(Section section, const QString& document_dir);
     void SDefaultUnit(Section section, int unit);
     void SUpdateDefaultUnitFailed(const QString& section);
+    void SNodeRemoveConfirmed(const QUuid& node_id);
 
     void SReplaceResult(bool result);
 
@@ -93,7 +94,7 @@ private:
 
     void SearchEntry(const QJsonObject& obj);
 
-    void NotifyLeafRemoveCheck(const QJsonObject& obj);
+    void NotifyLeafRemoveDenied(const QJsonObject& obj);
     void NotifyUpdateDefaultUnitFailure(const QJsonObject& obj);
     void NotifyWorkspaceAccessPending(const QJsonObject& obj);
 

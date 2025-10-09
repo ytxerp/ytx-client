@@ -121,7 +121,7 @@ void WebSocket::InitHandler()
     handler_obj_[kEntryRemove] = [this](const QJsonObject& obj) { RemoveEntry(obj); };
     handler_obj_[kDirectionRule] = [this](const QJsonObject& obj) { UpdateDirectionRule(obj); };
     handler_obj_[kNodeStatus] = [this](const QJsonObject& obj) { UpdateNodeStatus(obj); };
-    handler_obj_[kLeafRemoveCheck] = [this](const QJsonObject& obj) { NotifyLeafRemoveCheck(obj); };
+    handler_obj_[kLeafRemoveDenied] = [this](const QJsonObject& obj) { NotifyLeafRemoveDenied(obj); };
     handler_obj_[kNodeDrag] = [this](const QJsonObject& obj) { DragNode(obj); };
     handler_obj_[kEntryAction] = [this](const QJsonObject& obj) { ActionEntry(obj); };
     handler_obj_[kDefaultUnit] = [this](const QJsonObject& obj) { UpdateDefaultUnit(obj); };
@@ -355,8 +355,11 @@ void WebSocket::RemoveLeaf(const QJsonObject& obj)
     entry_hub->RemoveLeaf(leaf_entry);
     tree_model->SyncDeltaArray(delta_array);
 
-    if (session_id != session_id_)
+    if (session_id != session_id_) {
         tree_model->RRemoveNode(QUuid(node_id));
+
+        emit SNodeRemoveConfirmed(node_id);
+    }
 }
 
 void WebSocket::RemoveLeafSafely(const QJsonObject& obj)
@@ -366,6 +369,8 @@ void WebSocket::RemoveLeafSafely(const QJsonObject& obj)
 
     auto tree_model { tree_model_hash_.value(section) };
     tree_model->RRemoveNode(node_id);
+
+    emit SNodeRemoveConfirmed(node_id);
 }
 
 void WebSocket::RemoveBranch(const QJsonObject& obj)
@@ -376,11 +381,14 @@ void WebSocket::RemoveBranch(const QJsonObject& obj)
 
     auto tree_model { tree_model_hash_.value(section) };
 
-    if (session_id != session_id_)
+    if (session_id != session_id_) {
         tree_model->RRemoveNode(QUuid(node_id));
+
+        emit SNodeRemoveConfirmed(node_id);
+    }
 }
 
-void WebSocket::NotifyLeafRemoveCheck(const QJsonObject& obj) { emit SLeafRemoveCheck(obj); }
+void WebSocket::NotifyLeafRemoveDenied(const QJsonObject& obj) { emit SLeafRemoveDenied(obj); }
 
 void WebSocket::ReplaceLeaf(const QJsonObject& obj)
 {
