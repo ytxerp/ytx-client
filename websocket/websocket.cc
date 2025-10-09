@@ -362,22 +362,23 @@ void WebSocket::RemoveLeaf(const QJsonObject& obj)
     entry_hub->RemoveLeaf(leaf_entry);
     tree_model->SyncDeltaArray(delta_array);
 
-    if (session_id != session_id_) {
-        tree_model->RRemoveNode(QUuid(node_id));
-
+    if (session_id == session_id_)
         emit SNodeRemoveConfirmed(node_id);
-    }
+    else
+        tree_model->RRemoveNode(QUuid(node_id));
 }
 
 void WebSocket::RemoveLeafSafely(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
+    CString session_id { obj.value(kSessionId).toString() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     auto tree_model { tree_model_hash_.value(section) };
     tree_model->RRemoveNode(node_id);
 
-    emit SNodeRemoveConfirmed(node_id);
+    if (session_id == session_id_)
+        emit SNodeRemoveConfirmed(node_id);
 }
 
 void WebSocket::RemoveBranch(const QJsonObject& obj)
@@ -388,11 +389,10 @@ void WebSocket::RemoveBranch(const QJsonObject& obj)
 
     auto tree_model { tree_model_hash_.value(section) };
 
-    if (session_id != session_id_) {
-        tree_model->RRemoveNode(QUuid(node_id));
-
+    if (session_id == session_id_)
         emit SNodeRemoveConfirmed(node_id);
-    }
+    else
+        tree_model->RRemoveNode(QUuid(node_id));
 }
 
 void WebSocket::NotifyLeafRemoveDenied(const QJsonObject& obj) { emit SLeafRemoveDenied(obj); }

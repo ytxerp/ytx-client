@@ -77,6 +77,7 @@ QJsonObject LeafRemoveCheck(Section section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
+    message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kInternallyRef, false);
     message.insert(kInventoryInternalRef, false);
