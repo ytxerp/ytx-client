@@ -19,6 +19,14 @@ set(QT_FORCE_CMP0156_TO_VALUE NEW)
 # set(CMAKE_BUILD_TYPE Debug)
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
+option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
+
+if(CMAKE_BUILD_TYPE MATCHES Debug AND ENABLE_ASAN)
+    message(STATUS "Enabling AddressSanitizer for Debug build")
+    add_compile_options(-O1 -g -fsanitize=address -fno-omit-frame-pointer)
+    add_link_options(-fsanitize=address)
+endif()
+
 # Include directories & external libs
 add_subdirectory(external/yxlsx/)
 

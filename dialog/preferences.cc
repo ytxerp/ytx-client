@@ -5,7 +5,6 @@
 #include <QFileDialog>
 #include <QPrinterInfo>
 #include <QStandardPaths>
-#include <QTimer>
 
 #include "component/constant.h"
 #include "component/signalblocker.h"

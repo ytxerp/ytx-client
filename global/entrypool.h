@@ -80,12 +80,7 @@ inline EntryPool::EntryPool()
 }
 
 // Destructor: delete remaining entries
-inline EntryPool::~EntryPool()
-{
-    for (auto& pool : pools_) {
-        qDeleteAll(pool);
-    }
-}
+inline EntryPool::~EntryPool() { }
 
 // Expand pool with 'count' new entries
 inline void EntryPool::Expand(std::deque<Entry*>& pool, Section section, qsizetype count)

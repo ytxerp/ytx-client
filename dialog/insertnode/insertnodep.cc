@@ -77,6 +77,6 @@ void InsertNodeP::on_comboUnit_currentIndexChanged(int index)
     node_->unit = ui->comboUnit->currentData().toInt();
 }
 
-void InsertNodeP::on_spinPaymentPeriod_editingFinished() { node_->payment_term = ui->spinPaymentTerm->value(); }
+void InsertNodeP::on_spinPaymentTerm_editingFinished() { node_->payment_term = ui->spinPaymentTerm->value(); }
 
 void InsertNodeP::RKindGroupClicked(int id) { node_->kind = id; }

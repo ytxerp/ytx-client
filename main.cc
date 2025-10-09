@@ -31,9 +31,6 @@ int main(int argc, char* argv[])
     // Create the Qt application instance
     QApplication application(argc, argv);
 
-    // Install global logging system (DailyLogger)
-    DailyLogger::Instance().Install();
-
     // Register resource file (contains icons, translations, themes, etc.)
     const QString resource_file { MainUtils::ResourceFile() };
     if (!QResource::registerResource(resource_file)) {
@@ -63,6 +60,9 @@ int main(int argc, char* argv[])
         qCritical() << "Failed to create data directory:" << data_location;
         return EXIT_FAILURE;
     }
+
+    // Install global logging system (DailyLogger)
+    DailyLogger::Instance().Install();
 
     // Create the main window of the application
     MainWindow mainwindow {};

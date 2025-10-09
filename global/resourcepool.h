@@ -121,6 +121,6 @@ template <Resettable T> void ResourcePool<T>::Expand(qsizetype size)
     }
 }
 
-template <Resettable T> ResourcePool<T>::~ResourcePool() { qDeleteAll(pool_); }
+template <Resettable T> ResourcePool<T>::~ResourcePool() { }
 
 #endif // RESOURCEPOOL_H

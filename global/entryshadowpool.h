@@ -88,12 +88,7 @@ inline EntryShadowPool::EntryShadowPool()
     }
 }
 
-inline EntryShadowPool::~EntryShadowPool()
-{
-    for (auto& pool : pools_) {
-        qDeleteAll(pool); // Delete all remaining EntryShadow objects
-    }
-}
+inline EntryShadowPool::~EntryShadowPool() { }
 
 inline void EntryShadowPool::Expand(std::deque<EntryShadow*>& pool, Section section, qsizetype count)
 {

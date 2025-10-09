@@ -88,12 +88,7 @@ inline NodePool::NodePool()
     }
 }
 
-inline NodePool::~NodePool()
-{
-    for (auto& pool : pools_) {
-        qDeleteAll(pool); // Delete all remaining Node objects
-    }
-}
+inline NodePool::~NodePool() { }
 
 inline void NodePool::Expand(std::deque<Node*>& pool, Section section, qsizetype count)
 {

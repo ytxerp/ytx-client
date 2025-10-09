@@ -12,7 +12,6 @@ WebSocket::WebSocket(QObject* parent)
 {
     InitHandler();
     InitConnect();
-    InitTimer();
 }
 
 WebSocket::~WebSocket()
@@ -69,10 +68,7 @@ void WebSocket::Connect()
 void WebSocket::RConnected()
 {
     emit SConnectResult(true);
-
-    if (ping_timer_) {
-        ping_timer_->start();
-    }
+    InitTimer();
 }
 
 void WebSocket::RDisconnected()
@@ -165,7 +161,7 @@ void WebSocket::InitTimer()
         });
     }
 
-    Q_ASSERT(ping_timer_ != nullptr);
+    ping_timer_->start();
 }
 
 void WebSocket::SendMessage(const QString& type, const QJsonObject& value)

@@ -1,7 +1,5 @@
 #include "leafmodelt.h"
 
-#include <QTimer>
-
 #include "component/constant.h"
 #include "global/entryshadowpool.h"
 #include "websocket/jsongen.h"
