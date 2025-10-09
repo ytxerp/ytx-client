@@ -75,6 +75,20 @@ void WebSocket::RConnected()
     }
 }
 
+void WebSocket::RDisconnected()
+{
+    if (session_id_.isEmpty())
+        return;
+
+    emit SRemoteHostClosed();
+
+    session_id_.clear();
+
+    if (ping_timer_) {
+        ping_timer_->stop();
+    }
+}
+
 void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
 {
     switch (error) {
@@ -86,14 +100,6 @@ void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
         qWarning() << "WebSocket network error, possibly no network connection!";
         break;
     case QAbstractSocket::RemoteHostClosedError:
-        emit SRemoteHostClosed();
-
-        session_id_.clear();
-
-        if (ping_timer_) {
-            ping_timer_->stop();
-        }
-
         qWarning() << "WebSocket remote host closed connection!";
         break;
     default:
@@ -139,6 +145,7 @@ void WebSocket::InitHandler()
 void WebSocket::InitConnect()
 {
     connect(&socket_, &QWebSocket::connected, this, &WebSocket::RConnected);
+    connect(&socket_, &QWebSocket::disconnected, this, &WebSocket::RDisconnected);
     connect(&socket_, &QWebSocket::errorOccurred, this, &WebSocket::RErrorOccurred);
     connect(&socket_, &QWebSocket::textMessageReceived, this, &WebSocket::RReceiveMessage);
 

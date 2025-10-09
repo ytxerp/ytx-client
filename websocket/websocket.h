@@ -71,6 +71,7 @@ signals:
 
 private slots:
     void RConnected();
+    void RDisconnected();
     void RReceiveMessage(const QString& message);
     void RErrorOccurred(QAbstractSocket::SocketError error);
 
