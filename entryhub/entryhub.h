@@ -47,7 +47,7 @@ signals:
     void SRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void SRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
-    void SRefreshStatus(const QUuid& node_id);
+    void SRefreshStatus(const QSet<QUuid>& affected_node);
 
     void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
@@ -110,6 +110,7 @@ protected:
     void RemoveLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
     EntryList ProcessEntryArray(const QJsonArray& array);
+    void EntryActionImpl(Entry* entry, EntryAction action);
 
 protected:
     QHash<QUuid, Entry*> entry_cache_ {};

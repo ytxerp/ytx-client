@@ -62,14 +62,16 @@ void LeafSStation::RAppendMultiEntry(const QUuid& node_id, const EntryList& entr
     emit SAppendMultiEntry(entry_list);
 }
 
-void LeafSStation::RRefreshStatus(const QUuid& node_id)
+void LeafSStation::RRefreshStatus(const QSet<QUuid>& affected_node)
 {
-    const auto* model { FindModel(node_id) };
-    if (!model)
-        return;
+    for (const auto& node_id : affected_node) {
+        const auto* model { FindModel(node_id) };
+        if (!model)
+            return;
 
-    connect(this, &LeafSStation::SRefreshStatus, model, &LeafModel::RRefreshStatus, Qt::SingleShotConnection);
-    emit SRefreshStatus();
+        connect(this, &LeafSStation::SRefreshStatus, model, &LeafModel::RRefreshStatus, Qt::SingleShotConnection);
+        emit SRefreshStatus();
+    }
 }
 
 void LeafSStation::RRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end)

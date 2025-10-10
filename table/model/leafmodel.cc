@@ -96,19 +96,22 @@ void LeafModel::RUpdateBalance(const QUuid& entry_id)
 
 void LeafModel::ActionEntry(EntryAction action)
 {
+    if (shadow_list_.isEmpty())
+        return;
+
     QJsonObject message { JsonGen::EntryAction(section_, lhs_id_, std::to_underlying(action)) };
     WebSocket::Instance()->SendMessage(kEntryAction, message);
 
     auto Update = [action](EntryShadow* entry_shadow) {
         switch (action) {
         case EntryAction::kMarkAll:
-            *entry_shadow->status = true;
+            *entry_shadow->status = std::to_underlying(EntryStatus::kMarked);
             break;
         case EntryAction::kMarkNone:
-            *entry_shadow->status = false;
+            *entry_shadow->status = std::to_underlying(EntryStatus::kUnmarked);
             break;
         case EntryAction::kMarkToggle:
-            *entry_shadow->status = !*entry_shadow->status;
+            *entry_shadow->status = std::to_underlying(EntryStatus::kMarked) - *entry_shadow->status;
             break;
         default:
             break;

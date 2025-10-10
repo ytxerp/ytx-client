@@ -318,32 +318,38 @@ EntryList EntryHub::ProcessEntryArray(const QJsonArray& array)
 
 void EntryHub::ActionEntry(const QUuid& node_id, EntryAction action, const QJsonObject& meta)
 {
-    auto Update = [action](Entry* entry) {
-        switch (action) {
-        case EntryAction::kMarkAll:
-            entry->status = std::to_underlying(EntryStatus::kMarked);
-            break;
-        case EntryAction::kMarkNone:
-            entry->status = std::to_underlying(EntryStatus::kUnmarked);
-            break;
-        case EntryAction::kMarkToggle:
-            entry->status = (entry->status == std::to_underlying(EntryStatus::kMarked)) ? std::to_underlying(EntryStatus::kUnmarked)
-                                                                                        : std::to_underlying(EntryStatus::kMarked);
-            break;
-        default:
-            break;
-        }
-    };
+    QSet<QUuid> affected_node {};
 
     for (auto* entry : std::as_const(entry_cache_)) {
         if (entry->lhs_node == node_id || entry->rhs_node == node_id) {
-            Update(entry);
+            EntryActionImpl(entry, action);
+
             entry->updated_by = QUuid(meta.value(kUpdatedBy).toString());
             entry->updated_time = QDateTime::fromString(meta.value(kUpdatedTime).toString(), Qt::ISODate);
+
+            affected_node.insert(entry->lhs_node);
+            affected_node.insert(entry->rhs_node);
         }
     }
 
-    emit SRefreshStatus(node_id);
+    emit SRefreshStatus(affected_node);
+}
+
+void EntryHub::EntryActionImpl(Entry* entry, EntryAction action)
+{
+    switch (action) {
+    case EntryAction::kMarkAll:
+        entry->status = std::to_underlying(EntryStatus::kMarked);
+        break;
+    case EntryAction::kMarkNone:
+        entry->status = std::to_underlying(EntryStatus::kUnmarked);
+        break;
+    case EntryAction::kMarkToggle:
+        entry->status = std::to_underlying(EntryStatus::kMarked) - entry->status;
+        break;
+    default:
+        break;
+    }
 }
 
 void EntryHub::ActionEntryMeta(const QUuid& node_id, const QJsonObject& meta)

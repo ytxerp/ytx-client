@@ -60,7 +60,7 @@ public slots:
 
     void RDirectionRule(const QUuid& node_id, bool rule);
     void RNodeStatus(const QUuid& node_id, int value);
-    void RRefreshStatus(const QUuid& node_id);
+    void RRefreshStatus(const QSet<QUuid>& affected_node);
     void RUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
     // receive from EntryHub
