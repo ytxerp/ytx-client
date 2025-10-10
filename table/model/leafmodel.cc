@@ -63,6 +63,9 @@ void LeafModel::RAppendOneEntry(Entry* entry)
 
     const double previous_balance { row >= 1 ? shadow_list_.at(row - 1)->balance : 0.0 };
     entry_shadow->balance = CalculateBalance(entry_shadow) + previous_balance;
+
+    const int balance_column { EntryUtils::BalanceColumn(section_) };
+    emit dataChanged(index(row, balance_column), index(row, balance_column));
 }
 
 void LeafModel::RRemoveOneEntry(const QUuid& entry_id)
@@ -81,9 +84,14 @@ void LeafModel::RRemoveOneEntry(const QUuid& entry_id)
 
 void LeafModel::RUpdateBalance(const QUuid& entry_id)
 {
-    auto index { GetIndex(entry_id) };
-    if (index.isValid())
-        AccumulateBalance(index.row());
+    const auto entry_index { GetIndex(entry_id) };
+    const int row { entry_index.row() };
+
+    const auto [debit, credit] = EntryUtils::NumericColumnRange(section_);
+    emit dataChanged(index(row, debit), index(row, credit));
+
+    if (entry_index.isValid())
+        AccumulateBalance(row);
 }
 
 void LeafModel::ActionEntry(EntryAction action)
@@ -134,6 +142,9 @@ void LeafModel::AccumulateBalance(int start)
         entry_shadow->balance = CalculateBalance(entry_shadow) + current_balance;
         return entry_shadow->balance;
     });
+
+    const int balance_column { EntryUtils::BalanceColumn(section_) };
+    emit dataChanged(index(start, balance_column), index(rowCount() - 1, balance_column));
 }
 
 void LeafModel::RestartTimer(const QUuid& id)

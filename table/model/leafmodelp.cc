@@ -7,6 +7,30 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
+void LeafModelP::RAppendOneEntry(Entry* entry)
+{
+    auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
+    entry_shadow->BindEntry(entry, lhs_id_ == entry->lhs_node);
+
+    auto row { shadow_list_.size() };
+
+    beginInsertRows(QModelIndex(), row, row);
+    shadow_list_.emplaceBack(entry_shadow);
+    endInsertRows();
+}
+
+void LeafModelP::RRemoveOneEntry(const QUuid& entry_id)
+{
+    auto idx { GetIndex(entry_id) };
+    if (!idx.isValid())
+        return;
+
+    int row { idx.row() };
+    beginRemoveRows(QModelIndex(), row, row);
+    EntryShadowPool::Instance().Recycle(shadow_list_.takeAt(row), section_);
+    endRemoveRows();
+}
+
 LeafModelP::LeafModelP(CLeafModelArg& arg, QObject* parent)
     : LeafModel { arg, parent }
 {

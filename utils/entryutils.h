@@ -47,6 +47,58 @@ constexpr int LinkedNodeColumn(Section section)
     }
 }
 
+constexpr int BalanceColumn(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+        return std::to_underlying(EntryEnumF::kBalance);
+    case Section::kTask:
+        return std::to_underlying(EntryEnumT::kBalance);
+    case Section::kInventory:
+        return std::to_underlying(EntryEnumI::kBalance);
+    default:
+        return -1;
+    }
+}
+
+constexpr std::pair<int, int> CacheColumnRange(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+        return { std::to_underlying(EntryEnumF::kCode), std::to_underlying(EntryEnumF::kStatus) };
+    case Section::kTask:
+        return { std::to_underlying(EntryEnumT::kCode), std::to_underlying(EntryEnumT::kStatus) };
+    case Section::kPartner:
+        return { std::to_underlying(EntryEnumP::kUnitPrice), std::to_underlying(EntryEnumP::kStatus) };
+    case Section::kInventory:
+        return { std::to_underlying(EntryEnumI::kCode), std::to_underlying(EntryEnumI::kStatus) };
+    case Section::kSale:
+    case Section::kPurchase:
+        return { std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kExternalSku) };
+    default:
+        return { -1, -1 };
+    }
+}
+
+constexpr std::pair<int, int> NumericColumnRange(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+        return { std::to_underlying(EntryEnumF::kDebit), std::to_underlying(EntryEnumF::kCredit) };
+    case Section::kTask:
+        return { std::to_underlying(EntryEnumT::kDebit), std::to_underlying(EntryEnumT::kCredit) };
+    case Section::kPartner:
+        return { -1, -1 };
+    case Section::kInventory:
+        return { std::to_underlying(EntryEnumI::kDebit), std::to_underlying(EntryEnumI::kCredit) };
+    case Section::kSale:
+    case Section::kPurchase:
+        return { std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kFinal) };
+    default:
+        return { -1, -1 };
+    }
+}
+
 template <typename T>
 bool UpdateShadowIssuedTime(
     QJsonObject& cache, T* object, CString& field, const QDateTime& value, QDateTime* T::* member, std::function<void()> restart_timer = nullptr)

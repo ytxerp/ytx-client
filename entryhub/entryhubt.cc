@@ -53,10 +53,5 @@ void EntryHubT::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& dat
 
         emit SUpdateBalance(rhs_id, entry_id);
         emit SUpdateBalance(lhs_id, entry_id);
-
-        const auto [debit, balance] = NumericColumnRange();
-
-        emit SRefreshField(lhs_id, entry_id, debit, balance);
-        emit SRefreshField(rhs_id, entry_id, debit, balance);
     }
 }

@@ -33,11 +33,9 @@ void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, 
         d_entry->updated_by = QUuid(data[kUpdatedBy].toString());
 
         const int lhs_rate { std::to_underlying(EntryEnumF::kLhsRate) };
-        const auto [debit, balance] = NumericColumnRange();
 
         emit SUpdateBalance(rhs_id, entry_id);
         emit SRefreshField(lhs_id, entry_id, lhs_rate, lhs_rate);
-        emit SRefreshField(lhs_id, entry_id, debit, balance);
     }
 }
 
@@ -70,11 +68,6 @@ void EntryHubF::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& dat
 
         emit SUpdateBalance(rhs_id, entry_id);
         emit SUpdateBalance(lhs_id, entry_id);
-
-        const auto [debit, balance] = NumericColumnRange();
-
-        emit SRefreshField(lhs_id, entry_id, debit, balance);
-        emit SRefreshField(rhs_id, entry_id, debit, balance);
     }
 }
 

@@ -57,15 +57,14 @@ public slots:
     void RRemoveMultiEntry(const QSet<QUuid>& entry_id_set);
     void RAppendMultiEntry(const EntryList& entry_list);
 
-    void RAppendOneEntry(Entry* entry);
-    void RRemoveOneEntry(const QUuid& entry_id);
-
     void RUpdateBalance(const QUuid& entry_id);
     void RRefreshStatus();
 
     void RRefreshField(const QUuid& entry_id, int start, int end);
     void RDirectionRule(bool value);
 
+    virtual void RAppendOneEntry(Entry* entry);
+    virtual void RRemoveOneEntry(const QUuid& entry_id);
     virtual void RNodeStatus(int value) { Q_UNUSED(value) };
 
 public:

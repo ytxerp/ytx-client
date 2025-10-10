@@ -25,6 +25,10 @@
 class LeafModelP final : public LeafModel {
     Q_OBJECT
 
+public slots:
+    void RAppendOneEntry(Entry* entry) override;
+    void RRemoveOneEntry(const QUuid& entry_id) override;
+
 public:
     LeafModelP(CLeafModelArg& arg, QObject* parent = nullptr);
     ~LeafModelP() override = default;

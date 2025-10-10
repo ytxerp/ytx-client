@@ -97,7 +97,7 @@ void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& data)
 
         const int issued_time { std::to_underlying(EntryEnum::kIssuedTime) };
 
-        const auto [start, end] = CacheColumnRange();
+        const auto [start, end] = EntryUtils::CacheColumnRange(section_);
 
         emit SRefreshField(entry->lhs_node, id, start, end);
         emit SRefreshField(entry->rhs_node, id, start, end);
