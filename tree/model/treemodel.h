@@ -255,20 +255,6 @@ protected:
 
     void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
 
-    // Returns the range of numeric columns used for totals
-    virtual std::pair<int, int> TotalColumnRange() const
-    {
-        const int col_count = columnCount();
-
-        if (col_count < 2)
-            return { 0, 0 };
-
-        return { col_count - 2, col_count - 1 };
-    }
-
-    // Returns the range of cached field columns (for debounced updates)
-    virtual std::pair<int, int> CacheColumnRange() const { return { 0, 0 }; }
-
 protected:
     Node* root_ {};
     NodeHash node_hash_ {};

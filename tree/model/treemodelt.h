@@ -43,7 +43,6 @@ public:
     void SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta) override;
 
 protected:
-    std::pair<int, int> CacheColumnRange() const override { return { std::to_underlying(NodeEnumT::kCode), std::to_underlying(NodeEnumT::kDocument) }; }
     void RegisterNode(Node* node) override
     {
         node_hash_.insert(node->id, node);

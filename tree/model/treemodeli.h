@@ -46,7 +46,6 @@ protected:
     const QSet<QUuid>* UnitSet(int unit) const override;
     void RemoveUnitSet(const QUuid& node_id, int unit) override;
     void InsertUnitSet(const QUuid& node_id, int unit) override;
-    std::pair<int, int> CacheColumnRange() const override { return { std::to_underlying(NodeEnumI::kCode), std::to_underlying(NodeEnumI::kCommission) }; }
 
 private:
     QSet<QUuid> pos_set_ {}; // Set of all nodes that are position-unit

@@ -104,6 +104,44 @@ constexpr int DescriptionColumn(Section section)
     }
 }
 
+constexpr std::pair<int, int> NumericColumnRange(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+        return { std::to_underlying(NodeEnumF::kInitialTotal), std::to_underlying(NodeEnumF::kFinalTotal) };
+    case Section::kTask:
+        return { std::to_underlying(NodeEnumT::kInitialTotal), std::to_underlying(NodeEnumT::kFinalTotal) };
+    case Section::kPartner:
+        return { std::to_underlying(NodeEnumP::kInitialTotal), std::to_underlying(NodeEnumP::kFinalTotal) };
+    case Section::kInventory:
+        return { std::to_underlying(NodeEnumI::kInitialTotal), std::to_underlying(NodeEnumI::kFinalTotal) };
+    case Section::kSale:
+    case Section::kPurchase:
+        return { std::to_underlying(NodeEnumO::kCountTotal), std::to_underlying(NodeEnumO::kFinalTotal) };
+    default:
+        return { -1, -1 };
+    }
+}
+
+constexpr std::pair<int, int> CacheColumnRange(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+        return { std::to_underlying(NodeEnumF::kCode), std::to_underlying(NodeEnumF::kNote) };
+    case Section::kTask:
+        return { std::to_underlying(NodeEnumT::kCode), std::to_underlying(NodeEnumT::kDocument) };
+    case Section::kPartner:
+        return { std::to_underlying(NodeEnumP::kCode), std::to_underlying(NodeEnumP::kPaymentTerm) };
+    case Section::kInventory:
+        return { std::to_underlying(NodeEnumI::kCode), std::to_underlying(NodeEnumI::kCommission) };
+    case Section::kSale:
+    case Section::kPurchase:
+        return { std::to_underlying(NodeEnumO::kDescription), std::to_underlying(NodeEnumO::kDescription) };
+    default:
+        return { -1, -1 };
+    }
+}
+
 bool IsDescendant(const Node* lhs, const Node* rhs);
 
 void SortIterative(Node* node, std::function<bool(const Node*, const Node*)> Compare);

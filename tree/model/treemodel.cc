@@ -158,7 +158,7 @@ void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& data)
 
     auto index { GetIndex(node_id) };
     if (index.isValid()) {
-        const auto [start, end] = CacheColumnRange();
+        const auto [start, end] = NodeUtils::CacheColumnRange(section_);
         if (end != 0)
             emit dataChanged(index.siblingAtColumn(start), index.siblingAtColumn(end));
     }
@@ -228,7 +228,7 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value)
     const int rule_column { NodeUtils::DirectionRuleColumn(section_) };
     EmitRowChanged(node_id, rule_column, rule_column);
 
-    const auto [start_col, end_col] = TotalColumnRange();
+    const auto [start_col, end_col] = NodeUtils::NumericColumnRange(section_);
     EmitRowChanged(node_id, start_col, end_col);
 
     emit STotalsUpdated();
@@ -676,35 +676,14 @@ void TreeModel::RefreshAffectedTotal(const QSet<QUuid>& affected_ids)
     if (affected_ids.isEmpty())
         return;
 
-    QList<int> affected_rows {};
-    affected_rows.reserve(affected_ids.size());
-
     for (const QUuid& id : affected_ids) {
         QModelIndex idx = GetIndex(id);
-        if (idx.isValid())
-            affected_rows.append(idx.row());
+        if (!idx.isValid())
+            continue;
+
+        const auto [start_col, end_col] = NodeUtils::NumericColumnRange(section_);
+        emit dataChanged(index(idx.row(), start_col, idx.parent()), index(idx.row(), end_col, idx.parent()), { Qt::DisplayRole });
     }
-
-    if (affected_rows.isEmpty())
-        return;
-
-    std::sort(affected_rows.begin(), affected_rows.end());
-
-    const auto [start_col, end_col] = TotalColumnRange();
-    int range_start { affected_rows.first() };
-    int range_end { range_start };
-
-    for (int i = 1; i != affected_rows.size(); ++i) {
-        if (affected_rows[i] == range_end + 1) {
-            range_end = affected_rows[i];
-        } else {
-            emit dataChanged(index(range_start, start_col), index(range_end, end_col), { Qt::DisplayRole });
-            range_start = affected_rows[i];
-            range_end = range_start;
-        }
-    }
-
-    emit dataChanged(index(range_start, start_col), index(range_end, end_col), { Qt::DisplayRole });
 }
 
 void TreeModel::RestartTimer(const QUuid& id)

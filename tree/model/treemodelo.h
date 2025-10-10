@@ -68,16 +68,6 @@ protected:
         node_cache_.insert(node->id, node);
     }
 
-    std::pair<int, int> TotalColumnRange() const override
-    {
-        const int col_count = columnCount();
-
-        if (col_count < 2)
-            return { 0, 0 };
-
-        return { col_count - 6, col_count - 2 };
-    }
-
 private:
     NodeHash node_cache_ {};
 };

@@ -48,8 +48,6 @@ protected:
     void InsertUnitSet(const QUuid& node_id, int unit) override;
     QSet<QUuid> SyncDeltaImpl(const QUuid& /*node_id*/, double /*initial_delta*/, double /*final_delta*/, double, double, double) override { return {}; }
 
-    std::pair<int, int> CacheColumnRange() const override { return { std::to_underlying(NodeEnumP::kCode), std::to_underlying(NodeEnumP::kPaymentTerm) }; }
-
 private:
     QSet<QUuid> cset_ {}; // Set of all nodes that are customer unit
     QSet<QUuid> vset_ {}; // Set of all nodes that are vendor unit
