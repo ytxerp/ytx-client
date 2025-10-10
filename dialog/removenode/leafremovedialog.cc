@@ -127,6 +127,7 @@ void LeafRemoveDialog::IniData(Section section)
 
     if (section == Section::kSale || section == Section::kPurchase || section == Section::kPartner) {
         ui->rBtnReplace->setEnabled(false);
+        ui->comboBox->setEnabled(false);
         return;
     }
 
@@ -134,7 +135,6 @@ void LeafRemoveDialog::IniData(Section section)
     filter_model->setSourceModel(model_->LeafModel());
     ui->comboBox->setModel(filter_model);
 
-    ui->rBtnReplace->setChecked(true);
     RcomboBoxCurrentIndexChanged(0);
 }
 

@@ -1151,6 +1151,7 @@ void MainWindow::RLeafRemoveDenied(const QJsonObject& obj)
     dialog->show();
 
     connect(dialog, &LeafRemoveDialog::SRemoveNode, model, &TreeModel::RRemoveNode, Qt::SingleShotConnection);
+    connect(dialog, &QObject::destroyed, this, [this, node_id]() { node_pending_removal_.remove(node_id); });
 }
 
 void MainWindow::RSharedConfig(const QJsonArray& arr)
@@ -1308,6 +1309,7 @@ void MainWindow::BranchRemove(TreeModel* tree_model, const QModelIndex& index, c
         const auto message { JsonGen::BranchRemove(sc_->info.section, node_id) };
         WebSocket::Instance()->SendMessage(kBranchRemove, message);
         tree_model->removeRows(index.row(), 1, index.parent());
+        node_pending_removal_.remove(node_id);
     }
 }
 

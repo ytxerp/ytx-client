@@ -358,9 +358,7 @@ void WebSocket::RemoveLeaf(const QJsonObject& obj)
     entry_hub->RemoveLeaf(leaf_entry);
     tree_model->SyncDeltaArray(delta_array);
 
-    if (session_id == session_id_)
-        emit SNodeRemoveConfirmed(node_id);
-    else
+    if (session_id != session_id_)
         tree_model->RRemoveNode(QUuid(node_id));
 }
 
@@ -385,9 +383,7 @@ void WebSocket::RemoveBranch(const QJsonObject& obj)
 
     auto tree_model { tree_model_hash_.value(section) };
 
-    if (session_id == session_id_)
-        emit SNodeRemoveConfirmed(node_id);
-    else
+    if (session_id != session_id_)
         tree_model->RRemoveNode(QUuid(node_id));
 }
 
