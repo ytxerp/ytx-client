@@ -51,11 +51,11 @@ void LeafRemoveDialog::InitCheckBoxGroup()
     ui->chkBoxInternally->setChecked(internally_);
     ui->chkBoxInternally->setEnabled(false);
 
-    ui->chkBoxInventoryInternal->setChecked(inventory_internal_);
-    ui->chkBoxInventoryInternal->setEnabled(false);
+    ui->chkBoxInventoryINT->setChecked(inventory_internal_);
+    ui->chkBoxInventoryINT->setEnabled(false);
 
-    ui->chkBoxInventoryExternal->setChecked(inventory_external_);
-    ui->chkBoxInventoryExternal->setEnabled(false);
+    ui->chkBoxInventoryEXT->setChecked(inventory_external_);
+    ui->chkBoxInventoryEXT->setEnabled(false);
 
     ui->chkBoxPartner->setChecked(partner_);
     ui->chkBoxPartner->setEnabled(false);
