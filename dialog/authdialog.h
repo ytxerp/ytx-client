@@ -17,37 +17,47 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LOGIN_H
-#define LOGIN_H
+#ifndef AUTHDIALOG_H
+#define AUTHDIALOG_H
 
 #include <QDialog>
+#include <QLineEdit>
 #include <QSettings>
 
 namespace Ui {
-class Login;
+class AuthDialog;
 }
 
-class Login final : public QDialog {
+class AuthDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit Login(QSharedPointer<QSettings> local_settings, QWidget* parent = nullptr);
-    ~Login();
+    explicit AuthDialog(QSharedPointer<QSettings> local_settings, QWidget* parent = nullptr);
+    ~AuthDialog();
 
 public slots:
     void RLoginResult(bool result);
+    void RRegisterResult(bool result);
     void RWorkspaceAccessPending(const QString& email, const QString& workspace);
 
 private slots:
     void on_pushButtonLogin_clicked();
+    void RRegisterDialog();
+    void RLoginDialog();
+
+    void on_pushButtonRegister_clicked();
 
 private:
-    void IniDialog();
     void SaveLoginConfig();
+    void InitConnect();
+    void SyncLoginInfo(const QString& workspace = QString());
+    QAction* CreateAction(QLineEdit* lineEdit);
 
 private:
-    Ui::Login* ui;
+    Ui::AuthDialog* ui;
     QSharedPointer<QSettings> local_settings_ {};
+    QAction* action_password_ {};
+    QAction* action_confirm_ {};
 };
 
-#endif // LOGIN_H
+#endif // AUTHDIALOG_H

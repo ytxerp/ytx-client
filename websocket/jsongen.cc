@@ -3,7 +3,6 @@
 #include <QJsonArray>
 
 #include "component/constant.h"
-#include "global/logininfo.h"
 
 namespace JsonGen {
 
@@ -61,14 +60,12 @@ QJsonObject BranchRemove(Section section, CUuid& node_id)
     return message;
 }
 
-QJsonObject Login()
+QJsonObject Login(CString& email, CString& password, CString& workspace)
 {
-    LoginInfo& login_info { LoginInfo::Instance() };
-
     QJsonObject message {};
-    message.insert(kEmail, login_info.Email());
-    message.insert(kPassword, login_info.Password());
-    message.insert(kWorkspace, login_info.Workspace());
+    message.insert(kEmail, email);
+    message.insert(kPassword, password);
+    message.insert(kWorkspace, workspace);
 
     return message;
 }

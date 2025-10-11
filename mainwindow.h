@@ -74,7 +74,6 @@ private slots:
 
     void on_actionLogin_triggered();
     void on_actionLogout_triggered();
-    void on_actionRegister_triggered();
     void on_actionReconnect_triggered();
 
     void on_actionCheckforUpdates_triggered();

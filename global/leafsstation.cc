@@ -67,7 +67,7 @@ void LeafSStation::RRefreshStatus(const QSet<QUuid>& affected_node)
     for (const auto& node_id : affected_node) {
         const auto* model { FindModel(node_id) };
         if (!model)
-            return;
+            continue;
 
         connect(this, &LeafSStation::SRefreshStatus, model, &LeafModel::RRefreshStatus, Qt::SingleShotConnection);
         emit SRefreshStatus();

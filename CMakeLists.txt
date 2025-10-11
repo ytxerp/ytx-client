@@ -111,7 +111,7 @@ set(SOURCES
     search/node/searchnodemodelf.cc
     search/node/searchnodemodelp.cc
     search/node/searchnodemodelo.cc
-    dialog/login.cc
+    dialog/authdialog.cc
     dialog/editdocument.cc
     dialog/editnodename.cc
     dialog/about.cc
@@ -255,7 +255,7 @@ set(HEADERS
     dialog/editdocument.h
     dialog/preferences.h
     dialog/registerdialog.h
-    dialog/login.h
+    dialog/authdialog.h
     dialog/removenode/leafremovedialog.h
     dialog/insertnode/insertnodep.h
     dialog/insertnode/insertnodebranch.h
@@ -308,7 +308,7 @@ set(UIS
     dialog/registerdialog.ui
     dialog/preferences.ui
     dialog/editdocument.ui
-    dialog/login.ui
+    dialog/authdialog.ui
     dialog/removenode/leafremovedialog.ui
     dialog/insertnode/insertnodebranch.ui
     dialog/insertnode/insertnodep.ui

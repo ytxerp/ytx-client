@@ -83,6 +83,8 @@ void WebSocket::RDisconnected()
     if (ping_timer_) {
         ping_timer_->stop();
     }
+
+    Connect();
 }
 
 void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
