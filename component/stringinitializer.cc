@@ -177,12 +177,12 @@ void StringInitializer::SetHeader(
         QObject::tr("UpdatedBy"),
         QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
-        QObject::tr("UnitPrice"),
         QObject::tr("Code"),
         QObject::tr("Description"),
-        QObject::tr("ExternalSku"),
         QObject::tr("D"),
         QObject::tr("S"),
+        QObject::tr("ExternalSku"),
+        QObject::tr("UnitPrice"),
         QObject::tr("InternalSku"),
     };
 

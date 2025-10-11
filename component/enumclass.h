@@ -151,12 +151,12 @@ enum class EntryEnumP {
     kUpdateBy,
     kIssuedTime,
     kLhsNode,
-    kUnitPrice,
     kCode,
     kDescription,
-    kExternalSku,
     kDocument,
     kStatus,
+    kExternalSku,
+    kUnitPrice,
     kRhsNode,
 };
 
