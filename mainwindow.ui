@@ -130,6 +130,9 @@
         </item>
         <item>
          <widget class="QRadioButton" name="rBtnSale">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -143,6 +146,9 @@
         </item>
         <item>
          <widget class="QRadioButton" name="rBtnPurchase">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -208,7 +214,6 @@
     <addaction name="actionLogin"/>
     <addaction name="actionLogout"/>
     <addaction name="separator"/>
-    <addaction name="actionRegister"/>
     <addaction name="actionReconnect"/>
     <addaction name="separator"/>
     <addaction name="actionEmail"/>
@@ -440,11 +445,6 @@
    </property>
    <property name="shortcut">
     <string>Alt+R</string>
-   </property>
-  </action>
-  <action name="actionRegister">
-   <property name="text">
-    <string>Register...</string>
    </property>
   </action>
   <action name="actionReconnect">

@@ -42,15 +42,14 @@
 #include "delegate/tree/order/orderunit.h"
 #include "delegate/tree/treeissuedtime.h"
 #include "dialog/about.h"
+#include "dialog/authdialog.h"
 #include "dialog/editnodename.h"
 #include "dialog/insertnode/insertnodebranch.h"
 #include "dialog/insertnode/insertnodefinance.h"
 #include "dialog/insertnode/insertnodei.h"
 #include "dialog/insertnode/insertnodep.h"
 #include "dialog/insertnode/insertnodetask.h"
-#include "dialog/login.h"
 #include "dialog/preferences.h"
-#include "dialog/registerdialog.h"
 #include "dialog/removenode/leafremovedialog.h"
 #include "document.h"
 #include "entryhub/entryhubf.h"
@@ -2754,7 +2753,6 @@ void MainWindow::RConnectResult(bool result)
     ui->actionReconnect->setEnabled(!result);
     ui->actionLogin->setEnabled(result);
     ui->actionLogout->setEnabled(false);
-    ui->actionRegister->setEnabled(result);
 
     if (result) {
         on_actionLogin_triggered();
@@ -2900,10 +2898,10 @@ void MainWindow::on_actionExportExcel_triggered()
 
 void MainWindow::on_actionLogin_triggered()
 {
-    static Login* dialog = nullptr;
+    static AuthDialog* dialog = nullptr;
 
     if (!dialog) {
-        dialog = new Login(app_settings_, this);
+        dialog = new AuthDialog(app_settings_, this);
         dialog->setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         connect(dialog, &QDialog::destroyed, this, [=]() { dialog = nullptr; });
@@ -2929,12 +2927,6 @@ void MainWindow::on_actionResetColor_triggered()
     model->ResetColor(index);
 }
 
-void MainWindow::on_actionRegister_triggered()
-{
-    auto* regist { new RegisterDialog(this) };
-    regist->exec();
-}
-
 void MainWindow::on_actionReconnect_triggered() { WebSocket::Instance()->Connect(); }
 
 void MainWindow::on_actionLogout_triggered()
@@ -2950,7 +2942,6 @@ void MainWindow::on_actionLogout_triggered()
     ui->actionReconnect->setEnabled(true);
     ui->actionLogin->setEnabled(false);
     ui->actionLogout->setEnabled(false);
-    ui->actionRegister->setEnabled(false);
 }
 
 void MainWindow::on_actionCheckforUpdates_triggered()
