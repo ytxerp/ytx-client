@@ -403,7 +403,8 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
 
     auto* view { widget->View() };
 
-    SetTableView(view, std::to_underlying(EntryEnum::kDescription), std::to_underlying(EntryEnum::kLhsNode));
+    const int description_column { EntryUtils::DescriptionColumn(section) };
+    SetTableView(view, description_column, std::to_underlying(EntryEnum::kLhsNode));
 
     switch (section) {
     case Section::kFinance:

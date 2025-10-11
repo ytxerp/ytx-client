@@ -47,6 +47,25 @@ constexpr int LinkedNodeColumn(Section section)
     }
 }
 
+constexpr int DescriptionColumn(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+        return std::to_underlying(EntryEnumF::kDescription);
+    case Section::kTask:
+        return std::to_underlying(EntryEnumT::kDescription);
+    case Section::kPartner:
+        return std::to_underlying(EntryEnumP::kDescription);
+    case Section::kInventory:
+        return std::to_underlying(EntryEnumI::kDescription);
+    case Section::kSale:
+    case Section::kPurchase:
+        return std::to_underlying(EntryEnumO::kDescription);
+    default:
+        return -1;
+    }
+}
+
 constexpr int BalanceColumn(Section section)
 {
     switch (section) {
