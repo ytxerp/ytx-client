@@ -9,7 +9,7 @@
 
 ## Introduction
 
-**YTX** is a lightweight ERP software designed for small businesses, with full support for **multi-user online operation**. It provides a complete solution for managing daily operations across key modules such as **Finance**, **Item**, **Task**, **Sale**, **Purchase**, and **Stakeholder**.
+**YTX** is a lightweight ERP software designed for small businesses, with full support for **multi-user online operation**. It provides a complete solution for managing daily operations across key modules such as **Finance**, **Inventory**, **Task**, **Sale**, **Purchase**, and **Partner**.
 
 Originally built as a desktop application, YTX has evolved into a **fully-featured online ERP system**. With the support of the companion **ytx-server backend service**, it can be deployed on a **local server** using PostgreSQL to enable **real-time collaboration** within teams, without relying on third-party cloud services.
 
@@ -21,14 +21,16 @@ With its **user-friendly interface** and **modular design**, YTX is an efficient
 
 ### Build
 
-- Qt: 6.9+
-    1. Desktop
-    2. Additional Libraries
-        - Qt Charts
-        - Qt Image Formats
-        - Developer and Designer Tools
-    3. Qt Creator 15.X.X
-- CMake: 3.19+
+- Qt
+  - Qt: 6.9.3
+      1. Desktop
+      2. Additional Libraries
+          - Qt Image Formats
+          - Qt Websockets
+  - Build Tools
+- Qt Creator 17.0.2
+
+- CMake: 3.30.5
 - Compiler: GCC 12+ or LLVM/Clang 14+
 - External Dependencies:
   - Clone the [yxlsx](https://github.com/ytxerp/yxlsx) repository into the `external/` folder of the project:
