@@ -115,7 +115,6 @@ set(SOURCES
     dialog/editdocument.cc
     dialog/editnodename.cc
     dialog/about.cc
-    dialog/registerdialog.cc
     dialog/preferences.cc
     dialog/removenode/leafremovedialog.cc
     dialog/insertnode/insertnodefinance.cc
@@ -254,7 +253,6 @@ set(HEADERS
     dialog/editnodename.h
     dialog/editdocument.h
     dialog/preferences.h
-    dialog/registerdialog.h
     dialog/authdialog.h
     dialog/removenode/leafremovedialog.h
     dialog/insertnode/insertnodep.h
@@ -305,7 +303,6 @@ set(UIS
     search/dialog/searchdialog.ui
     dialog/editnodename.ui
     dialog/about.ui
-    dialog/registerdialog.ui
     dialog/preferences.ui
     dialog/editdocument.ui
     dialog/authdialog.ui
