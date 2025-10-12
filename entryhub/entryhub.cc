@@ -316,16 +316,13 @@ EntryList EntryHub::ProcessEntryArray(const QJsonArray& array)
     return list;
 }
 
-void EntryHub::ActionEntry(const QUuid& node_id, EntryAction action, const QJsonObject& meta)
+void EntryHub::ActionEntry(const QUuid& node_id, EntryAction action)
 {
     QSet<QUuid> affected_node {};
 
     for (auto* entry : std::as_const(entry_cache_)) {
         if (entry->lhs_node == node_id || entry->rhs_node == node_id) {
             EntryActionImpl(entry, action);
-
-            entry->updated_by = QUuid(meta.value(kUpdatedBy).toString());
-            entry->updated_time = QDateTime::fromString(meta.value(kUpdatedTime).toString(), Qt::ISODate);
 
             affected_node.insert(entry->lhs_node);
             affected_node.insert(entry->rhs_node);

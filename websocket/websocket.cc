@@ -691,16 +691,14 @@ void WebSocket::ActionEntry(const QJsonObject& obj)
 
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const EntryAction action { EntryAction(obj.value(kAction).toInt()) };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
 
     if (session_id == session_id_) {
-        entry_hub->ActionEntryMeta(node_id, meta);
         return;
     }
 
-    entry_hub->ActionEntry(node_id, action, meta);
+    entry_hub->ActionEntry(node_id, action);
 }
 
 void WebSocket::UpdateDocumentDir(const QJsonObject& obj)

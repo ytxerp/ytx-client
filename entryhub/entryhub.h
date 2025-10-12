@@ -69,7 +69,7 @@ public:
     void AckLeafTable(const QUuid& node_id, const QJsonArray& array);
     void SearchEntry(const QJsonArray& array);
 
-    void ActionEntry(const QUuid& node_id, EntryAction action, const QJsonObject& meta);
+    void ActionEntry(const QUuid& node_id, EntryAction action);
     void ActionEntryMeta(const QUuid& node_id, const QJsonObject& meta);
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
 
