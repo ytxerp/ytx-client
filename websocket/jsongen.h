@@ -42,7 +42,7 @@ QJsonObject EntryAction(Section section, CUuid& node_id, int action);
 QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& cache);
 
 QJsonObject TreeAcked(Section section, const QDateTime& start, const QDateTime& end);
-QJsonObject LeafAcked(Section section, CUuid& node_id, CUuid& entry_id = {});
+QJsonObject LeafEntry(Section section, CUuid& node_id, CUuid& entry_id = {});
 QJsonObject NodeAcked(Section section, CUuid& node_id);
 
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule);
@@ -54,6 +54,7 @@ QJsonObject DefaultUnit(Section section, int unit);
 
 QJsonObject NodeDelta(CUuid& node_id, double initial_delta, double final_delta);
 QJsonObject EntrySearch(Section section, CString& keyword);
+QJsonObject NodeSearch(Section section, CString& keyword);
 
 }
 

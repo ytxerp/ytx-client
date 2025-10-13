@@ -111,7 +111,7 @@ void WebSocket::InitHandler()
     handler_obj_[kLoginResult] = [this](const QJsonObject& obj) { NotifyLoginResult(obj); };
     handler_obj_[kRegisterResult] = [this](const QJsonObject& obj) { NotifyRegisterResult(obj); };
     handler_obj_[kTreeAcked] = [this](const QJsonObject& obj) { AckTree(obj); };
-    handler_obj_[kLeafAcked] = [this](const QJsonObject& obj) { AckLeaf(obj); };
+    handler_obj_[kLeafEntry] = [this](const QJsonObject& obj) { AckLeafEntry(obj); };
     handler_obj_[kWorkspaceAccessPending] = [this](const QJsonObject& obj) { NotifyWorkspaceAccessPending(obj); };
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
@@ -121,6 +121,7 @@ void WebSocket::InitHandler()
     handler_obj_[kNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
     handler_obj_[kEntryInsert] = [this](const QJsonObject& obj) { InsertEntry(obj); };
     handler_obj_[kEntrySearch] = [this](const QJsonObject& obj) { SearchEntry(obj); };
+    handler_obj_[kNodeSearch] = [this](const QJsonObject& obj) { SearchNode(obj); };
     handler_obj_[kEntryUpdate] = [this](const QJsonObject& obj) { UpdateEntry(obj); };
     handler_obj_[kEntryRemove] = [this](const QJsonObject& obj) { RemoveEntry(obj); };
     handler_obj_[kDirectionRule] = [this](const QJsonObject& obj) { UpdateDirectionRule(obj); };
@@ -318,7 +319,7 @@ void WebSocket::AckTree(const QJsonObject& obj)
     tree_model->AckTree(obj);
 }
 
-void WebSocket::AckLeaf(const QJsonObject& obj)
+void WebSocket::AckLeafEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
@@ -329,7 +330,7 @@ void WebSocket::AckLeaf(const QJsonObject& obj)
     entry_hub->AckLeafTable(node_id, array);
 
     if (!entry_id.isNull())
-        emit SScrollToEntry(node_id, entry_id);
+        emit SSelectLeafEntry(node_id, entry_id);
 }
 
 void WebSocket::AckNode(const QJsonObject& obj)
@@ -349,10 +350,10 @@ void WebSocket::RemoveLeaf(const QJsonObject& obj)
     CString session_id { obj.value(kSessionId).toString() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
-    const QJsonObject leaf_obj { obj.value(kLeafEntry).toObject() };
+    const QJsonObject linked_entry_obj { obj.value(kLinkedEntry).toObject() };
     const QJsonArray delta_array { obj.value(kDeltaArray).toArray() };
 
-    const auto leaf_entry { ParseNodeReference(leaf_obj) };
+    const auto leaf_entry { ParseNodeReference(linked_entry_obj) };
 
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
@@ -559,6 +560,13 @@ void WebSocket::SearchEntry(const QJsonObject& obj)
 
     auto entry_hub { entry_hub_hash_.value(section) };
     entry_hub->SearchEntry(array);
+}
+
+void WebSocket::SearchNode(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    auto tree_model { tree_model_hash_.value(section) };
+    tree_model->SearchNode(obj);
 }
 
 void WebSocket::InsertEntry(const QJsonObject& obj)

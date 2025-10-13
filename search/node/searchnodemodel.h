@@ -34,6 +34,9 @@ class SearchNodeModel : public QAbstractItemModel {
 public:
     virtual ~SearchNodeModel() = default;
 
+public slots:
+    void RSearchNode(const QList<const Node*>& entry_list);
+
 protected:
     SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, QObject* parent = nullptr);
 

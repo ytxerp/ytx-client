@@ -118,7 +118,7 @@ private slots:
     void RDocumentDir(Section section, const QString& document_dir);
     void RDefaultUnit(Section section, int unit);
     void RUpdateDefaultUnitFailed(const QString& section);
-    void RScrollToEntry(const QUuid& node_id, const QUuid& entry_id);
+    void RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id);
 
 private:
     void SetTabWidget();
@@ -212,7 +212,7 @@ private:
     void LeafExternalReferenceS(const QUuid& node_id, int unit);
     void OrderNodeLocation(Section section, const QUuid& node_id);
 
-    void ActivateLeafTab(const QUuid& node_id) const;
+    void FocusLeafWidget(const QUuid& node_id) const;
 
     void RegisterRptWgt(const QUuid& report_id, ReportWidget* widget);
     void WriteConfig();

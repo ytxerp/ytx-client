@@ -7,6 +7,13 @@ SearchNodeModel::SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, QOb
 {
 }
 
+void SearchNodeModel::RSearchNode(const QList<const Node*>& node_list)
+{
+    beginResetModel();
+    node_list_ = node_list;
+    endResetModel();
+}
+
 QModelIndex SearchNodeModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
@@ -48,7 +55,7 @@ void SearchNodeModel::Search(const QString& text)
     node_list_.clear();
 
     if (!text.isEmpty())
-        tree_model_->SearchNode(node_list_, text);
+        tree_model_->SearchModel(node_list_, text);
 
     endResetModel();
 }

@@ -15,7 +15,7 @@ TreeModelO::~TreeModelO() { NodePool::Instance().Recycle(node_cache_, section_);
 QSet<QUuid> TreeModelO::SyncDeltaImpl(
     const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
 {
-    auto* node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
+    auto* node { DerivedPtr<NodeO>(node_model_.value(node_id)) };
     assert(node && node->kind == std::to_underlying(NodeKind::kLeaf));
 
     if (first_delta == 0.0 && second_delta == 0.0 && initial_delta == 0.0 && discount_delta == 0.0 && final_delta == 0.0)
@@ -32,7 +32,7 @@ QSet<QUuid> TreeModelO::SyncDeltaImpl(
 
 void TreeModelO::RSyncFinished(const QUuid& node_id, bool value)
 {
-    auto* node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
+    auto* node { DerivedPtr<NodeO>(node_model_.value(node_id)) };
     assert(node);
 
     int coefficient { value ? 1 : -1 };
@@ -68,31 +68,13 @@ void TreeModelO::AckTree(const QJsonObject& obj)
         RegisterNode(node);
     }
 
-    if (node_hash_.size() >= 2)
+    if (node_model_.size() >= 2)
         BuildHierarchy(path_array);
 
     endResetModel();
 
     if (!node_array.isEmpty())
         HandleNode();
-}
-
-QString TreeModelO::Path(const QUuid& node_id) const
-{
-    if (auto it = node_hash_.constFind(node_id); it != node_hash_.constEnd())
-        return it.value()->name;
-
-    return {};
-}
-
-Node* TreeModelO::GetNode(const QUuid& node_id) const
-{
-    auto* node = node_cache_.value(node_id);
-    if (!node) {
-        qInfo() << "node_id not found in node_cache_";
-    }
-
-    return node;
 }
 
 void TreeModelO::RemovePath(Node* node, Node* parent_node)
@@ -153,7 +135,7 @@ QSet<QUuid> TreeModelO::SyncAncestorTotal(Node* node, double initial_delta, doub
 
 void TreeModelO::HandleNode()
 {
-    for (auto* node : std::as_const(node_hash_)) {
+    for (auto* node : std::as_const(node_model_)) {
         auto* d_node { DerivedPtr<NodeO>(node) };
 
         if (d_node->kind == std::to_underlying(NodeKind::kLeaf) && d_node->status)
@@ -180,7 +162,7 @@ void TreeModelO::ResetModel()
     root_->children.clear();
 
     // Clear non-branch nodes from node_hash_, keep branch nodes and unfinidhws nodes
-    for (auto it = node_hash_.begin(); it != node_hash_.end();) {
+    for (auto it = node_model_.begin(); it != node_model_.end();) {
         auto* node = static_cast<NodeO*>(it.value());
 
         if (node->kind == std::to_underlying(NodeKind::kBranch)) {
@@ -199,7 +181,7 @@ void TreeModelO::ResetModel()
             continue;
         }
 
-        it = node_hash_.erase(it);
+        it = node_model_.erase(it);
     }
 }
 

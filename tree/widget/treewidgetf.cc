@@ -36,7 +36,7 @@ void TreeWidgetF::UpdateStaticStatus()
 
     const auto static_node_id { section_.static_node };
 
-    if (!model_->Contains(static_node_id)) {
+    if (!model_->ModelContains(static_node_id)) {
         ResetStatus(ui->dspin_box_static_, static_unit_is_default_);
         return;
     }
@@ -58,7 +58,7 @@ void TreeWidgetF::UpdateDynamicStatus()
     const auto dynamic_node_id_lhs { section_.dynamic_node_lhs };
     const auto dynamic_node_id_rhs { section_.dynamic_node_rhs };
 
-    if (!model_->Contains(dynamic_node_id_lhs) && !model_->Contains(dynamic_node_id_rhs)) {
+    if (!model_->ModelContains(dynamic_node_id_lhs) && !model_->ModelContains(dynamic_node_id_rhs)) {
         ResetStatus(ui->dspin_box_dynamic_, dynamic_unit_is_not_default_but_equal_);
         return;
     }

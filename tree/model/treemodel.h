@@ -50,9 +50,13 @@ signals:
     // send to its view
     void SResizeColumnToContents(int column);
 
+    // send to SearchNodeModel
+    void SSearchNode(const QList<const Node*>& entry_list);
+
     // send to Mainwindow
     void SUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void SFreeWidget(const QUuid& node_id);
+    void SNodeLocation(const QUuid& node_id);
 
     // send to NodeWidget
     void STotalsUpdated();
@@ -115,6 +119,7 @@ public:
     }
 
     void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id);
+    void SearchNode(const QJsonObject& obj);
 
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
     void InsertMeta(const QUuid& node_id, const QJsonObject& data);
@@ -131,12 +136,13 @@ public:
 
     // Ytx's
     // Default implementations
-    double InitialTotal(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::initial_total); }
-    double FinalTotal(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::final_total); }
-    int Kind(QUuid node_id) { return NodeUtils::Value(node_hash_, node_id, &Node::kind); }
-    int Unit(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::unit); }
-    bool Rule(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::direction_rule); }
-    QString Name(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::name); }
+    double InitialTotal(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &Node::initial_total); }
+    double FinalTotal(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &Node::final_total); }
+    int Kind(QUuid node_id) { return NodeUtils::Value(node_model_, node_id, &Node::kind); }
+    int Unit(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &Node::unit); }
+    bool Rule(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &Node::direction_rule); }
+    QString Name(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &Node::name); }
+    QString Path(const QUuid& node_id) const;
 
     QStringList ChildrenName(const QUuid& parent_id) const;
     QSet<QUuid> ChildrenId(const QUuid& parent_id) const;
@@ -145,21 +151,27 @@ public:
     inline CUuidString& LeafPath() const { return leaf_path_; }
 
     void LeafPathBranchPathModel(ItemModel* model) const;
-    void SearchNode(QList<const Node*>& node_list, CString& name) const;
 
     void UpdateSeparator(CString& old_separator, CString& new_separator);
     void UpdateDefaultUnit(int default_unit);
 
     bool InsertNode(int row, const QModelIndex& parent, Node* node);
-    void FetchOneNode(const QUuid& node_id);
+    void AckNode(const QUuid& node_id);
+    bool ActivateCachedNode(const QUuid& node_id);
+    void SearchModel(QList<const Node*>& node_list, CString& name) const;
 
-    inline bool Contains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
+    inline bool ModelContains(const QUuid& node_id) const { return node_model_.contains(node_id); }
     inline void SetParent(Node* node, const QUuid& parent_id) const
     {
         assert(node);
-        assert(node_hash_.contains(parent_id));
-
-        node->parent = node_hash_.value(parent_id);
+        assert(node_model_.contains(parent_id));
+        node->parent = node_model_.value(parent_id);
+    }
+    inline Node* GetNode(const QUuid& node_id) const
+    {
+        auto* node = node_model_.value(node_id);
+        assert(node);
+        return node;
     }
 
     QModelIndex GetIndex(const QUuid& node_id) const;
@@ -170,7 +182,6 @@ public:
     virtual void UpdateName(const QUuid& node_id, CString& new_name);
     virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
 
-    virtual QString Path(const QUuid& node_id) const;
     virtual int Status(QUuid node_id) const
     {
         Q_UNUSED(node_id);
@@ -208,13 +219,16 @@ protected:
     void InsertMeta(Node* node, const QJsonObject& meta);
 
     void InsertImpl(Node* parent, int row, Node* node);
+    void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
+
+    inline bool CacheContains(const QUuid& node_id) const { return node_cache_.contains(node_id); }
 
     virtual QSet<QUuid> SyncDeltaImpl(
         const QUuid& node_id, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
 
     virtual void RegisterPath(Node* node);
     virtual void RemovePath(Node* node, Node* parent_node);
-    virtual void RegisterNode(Node* node) { node_hash_.insert(node->id, node); }
+    virtual void RegisterNode(Node* node) { node_model_.insert(node->id, node); }
 
     virtual void ResetBranch(Node* node) { Q_UNUSED(node) };
     virtual void ResetModel() { }
@@ -242,22 +256,14 @@ protected:
         Q_UNUSED(unit)
     }
 
-    virtual Node* GetNode(const QUuid& node_id) const
-    {
-        auto* node = node_hash_.value(node_id);
-        assert(node);
-        return node;
-    }
-
     virtual void HandleNode();
     virtual QSet<QUuid> SyncAncestorTotal(
         Node* node, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
 
-    void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
-
 protected:
     Node* root_ {};
-    NodeHash node_hash_ {};
+    NodeHash node_model_ {};
+    NodeHash node_cache_ {};
 
     UuidString leaf_path_ {};
     UuidString branch_path_ {};

@@ -34,7 +34,7 @@ void TreeWidgetI::UpdateStaticStatus()
 
     const auto static_node_id { config_.static_node };
 
-    if (model_->Contains(static_node_id)) {
+    if (model_->ModelContains(static_node_id)) {
         UpdateStaticValue(static_node_id);
     } else {
         ui->dspin_box_static_->setValue(0.0);
@@ -49,7 +49,7 @@ void TreeWidgetI::UpdateDynamicStatus()
     const auto dynamic_node_id_lhs { config_.dynamic_node_lhs };
     const auto dynamic_node_id_rhs { config_.dynamic_node_rhs };
 
-    if (model_->Contains(dynamic_node_id_lhs) || model_->Contains(dynamic_node_id_rhs)) {
+    if (model_->ModelContains(dynamic_node_id_lhs) || model_->ModelContains(dynamic_node_id_rhs)) {
         UpdateDynamicValue(dynamic_node_id_lhs, dynamic_node_id_rhs);
     } else {
         ui->dspin_box_dynamic_->setValue(0.0);

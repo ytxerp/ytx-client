@@ -45,11 +45,9 @@ public:
     bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild) override;
 
     void AckTree(const QJsonObject& obj) override;
-    QString Path(const QUuid& node_id) const override;
 
-    Node* GetNode(const QUuid& node_id) const override;
-    int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeO::status); }
-    QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeO::partner); };
+    int Status(QUuid node_id) const override { return NodeUtils::Value(node_model_, node_id, &NodeO::status); }
+    QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &NodeO::partner); };
 
 protected:
     void UpdateName(const QUuid& /*node_id*/, CString& /*new_name*/) override { };
@@ -64,12 +62,9 @@ protected:
     void ResetModel() override;
     void RegisterNode(Node* node) override
     {
-        node_hash_.insert(node->id, node);
+        node_model_.insert(node->id, node);
         node_cache_.insert(node->id, node);
     }
-
-private:
-    NodeHash node_cache_ {};
 };
 
 #endif // TREEMODELO_H

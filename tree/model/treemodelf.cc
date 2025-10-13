@@ -8,7 +8,7 @@ TreeModelF::TreeModelF(CSectionInfo& info, CString& separator, int default_unit,
     leaf_model_ = new ItemModel(this);
 }
 
-TreeModelF::~TreeModelF() { NodePool::Instance().Recycle(node_hash_, section_); }
+TreeModelF::~TreeModelF() { NodePool::Instance().Recycle(node_model_, section_); }
 
 QVariant TreeModelF::data(const QModelIndex& index, int role) const
 {

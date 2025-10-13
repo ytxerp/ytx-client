@@ -221,8 +221,8 @@ void TreeModelT::ResetColor(const QModelIndex& index)
 
 void TreeModelT::AckTree(const QJsonObject& obj)
 {
-    const QJsonArray node_array { obj.value(kNode).toArray() };
-    const QJsonArray path_array { obj.value(kPath).toArray() };
+    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
+    const QJsonArray path_array { obj.value(kPathArray).toArray() };
 
     beginResetModel();
     ResetModel();
@@ -244,22 +244,12 @@ void TreeModelT::AckTree(const QJsonObject& obj)
         RegisterNode(node);
     }
 
-    if (node_hash_.size() >= 2) {
+    if (node_model_.size() >= 2) {
         BuildHierarchy(path_array);
         HandleNode();
     }
 
     endResetModel();
-}
-
-Node* TreeModelT::GetNode(const QUuid& node_id) const
-{
-    auto* node = node_cache_.value(node_id);
-    if (!node) {
-        qInfo() << "node_id not found in node_cache_";
-    }
-
-    return node;
 }
 
 void TreeModelT::SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta)
@@ -316,7 +306,7 @@ void TreeModelT::ResetModel()
     leaf_model_->Clear();
 
     // Clear non-branch nodes from node_hash_, keep branch nodes and unfinishded nodes
-    for (auto it = node_hash_.begin(); it != node_hash_.end();) {
+    for (auto it = node_model_.begin(); it != node_model_.end();) {
         auto* node = static_cast<NodeT*>(it.value());
 
         if (node->kind == std::to_underlying(NodeKind::kBranch)) {
@@ -330,6 +320,6 @@ void TreeModelT::ResetModel()
             continue;
         }
 
-        it = node_hash_.erase(it);
+        it = node_model_.erase(it);
     }
 }

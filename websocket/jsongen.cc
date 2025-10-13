@@ -44,7 +44,7 @@ QJsonObject LeafRemove(Section section, CUuid& node_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kLeafEntry, QJsonObject());
+    message.insert(kLinkedEntry, QJsonObject());
     message.insert(kDeltaArray, QJsonArray());
 
     return message;
@@ -99,7 +99,7 @@ QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inve
     return message;
 }
 
-QJsonObject LeafAcked(Section section, CUuid& node_id, CUuid& entry_id)
+QJsonObject LeafEntry(Section section, CUuid& node_id, CUuid& entry_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -127,6 +127,8 @@ QJsonObject TreeAcked(Section section, const QDateTime& start, const QDateTime& 
     message.insert(kSection, std::to_underlying(section));
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kNodeArray, QJsonArray());
+    message.insert(kPathArray, QJsonArray());
     return message;
 }
 
@@ -171,7 +173,7 @@ QJsonObject EntrySearch(Section section, CString& keyword)
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kKeyword, keyword);
-    message.insert(kEntryArray, QJsonObject());
+    message.insert(kEntryArray, QJsonArray());
 
     return message;
 }
@@ -241,6 +243,17 @@ QJsonObject NodeName(Section section, CUuid& node_id, CString& name)
     message.insert(kSessionId, QString());
     message.insert(kName, name);
     message.insert(kMeta, QJsonObject());
+
+    return message;
+}
+
+QJsonObject NodeSearch(Section section, CString& keyword)
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kKeyword, keyword);
+    message.insert(kNodeArray, QJsonArray());
+    message.insert(kPathArray, QJsonArray());
 
     return message;
 }

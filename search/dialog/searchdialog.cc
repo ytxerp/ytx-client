@@ -118,15 +118,15 @@ void SearchDialog::ResizeTableColumn(QHeaderView* header)
 
 void SearchDialog::RSearch()
 {
-    CString kText { ui->lineEdit->text() };
+    CString text { ui->lineEdit->text() };
 
     if (ui->rBtnNode->isChecked()) {
-        search_node_->Search(kText);
+        search_node_->Search(text);
         ResizeTreeColumn(ui->searchViewNode->horizontalHeader());
     }
 
     if (ui->rBtnEntry->isChecked()) {
-        search_entry_->Search(kText);
+        search_entry_->Search(text);
         ResizeTableColumn(ui->searchViewEntry->horizontalHeader());
     }
 }

@@ -58,7 +58,7 @@ signals:
     void SConnectResult(bool result);
     void SRemoteHostClosed();
     void SInitializeContext(const QString& expire_date);
-    void SScrollToEntry(const QUuid& node_id, const QUuid& entry_id);
+    void SSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void SLeafRemoveDenied(const QJsonObject& obj);
     void SSharedConfig(const QJsonArray& arr);
@@ -90,10 +90,11 @@ private:
     void NotifyLoginResult(const QJsonObject& obj);
 
     void AckTree(const QJsonObject& obj);
-    void AckLeaf(const QJsonObject& obj);
+    void AckLeafEntry(const QJsonObject& obj);
     void AckNode(const QJsonObject& obj);
 
     void SearchEntry(const QJsonObject& obj);
+    void SearchNode(const QJsonObject& obj);
 
     void NotifyLeafRemoveDenied(const QJsonObject& obj);
     void NotifyUpdateDefaultUnitFailure(const QJsonObject& obj);

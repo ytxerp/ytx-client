@@ -11,7 +11,7 @@ TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, int default_unit,
     leaf_model_->AppendItem(QString(), QUuid());
 }
 
-TreeModelI::~TreeModelI() { NodePool::Instance().Recycle(node_hash_, section_); }
+TreeModelI::~TreeModelI() { NodePool::Instance().Recycle(node_model_, section_); }
 
 void TreeModelI::RemoveUnitSet(const QUuid& node_id, int unit)
 {

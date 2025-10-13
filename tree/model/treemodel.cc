@@ -22,7 +22,7 @@ TreeModel::~TreeModel() { FlushCaches(); }
 
 void TreeModel::RRemoveNode(const QUuid& node_id)
 {
-    if (!node_hash_.contains(node_id)) {
+    if (!node_model_.contains(node_id)) {
         return;
     }
 
@@ -79,15 +79,15 @@ bool TreeModel::InsertNode(int row, const QModelIndex& parent, Node* node)
 
 void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
 {
-    if (!node_hash_.contains(ancestor)) {
+    if (!node_model_.contains(ancestor)) {
         qCritical() << "ApplyNodeInsert: ancestor not found in node_hash_, ancestor =" << ancestor;
     }
-    assert(node_hash_.contains(ancestor));
+    assert(node_model_.contains(ancestor));
 
     auto* node { NodePool::Instance().Allocate(section_) };
     node->ReadJson(data);
 
-    Node* parent { node_hash_.value(ancestor) };
+    Node* parent { node_model_.value(ancestor) };
     const auto row { parent->children.size() };
 
     InsertImpl(parent, row, node);
@@ -377,7 +377,7 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex& parent)
     RemovePath(node, parent_node);
 
     ResourcePool<Node>::Instance().Recycle(node);
-    node_hash_.remove(node_id);
+    node_model_.remove(node_id);
 
     emit STotalsUpdated();
     emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
@@ -400,7 +400,7 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
     if (auto mime { data->data(kYTX) }; !mime.isEmpty())
         node_id = QUuid::fromRfc4122(mime);
 
-    auto* node { node_hash_.value(node_id) };
+    auto* node { node_model_.value(node_id) };
     if (!node) {
         qCritical() << "dropMimeData: Node not found for UUID:" << node_id;
         return false;
@@ -458,7 +458,7 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*c
 
 QStringList TreeModel::ChildrenName(const QUuid& parent_id) const
 {
-    auto* node { node_hash_.value(parent_id) };
+    auto* node { node_model_.value(parent_id) };
     if (!node) {
         qCritical() << "ChildrenName: parent_id not found in node_hash_, parent_id =" << parent_id;
     }
@@ -505,11 +505,11 @@ void TreeModel::UpdateDefaultUnit(int default_unit)
     emit dataChanged(top_left, bottom_right);
 }
 
-void TreeModel::SearchNode(QList<const Node*>& node_list, CString& name) const
+void TreeModel::SearchModel(QList<const Node*>& node_list, CString& name) const
 {
-    node_list.reserve(node_hash_.size() / 2);
+    node_list.reserve(node_model_.size() / 2);
 
-    for (const auto& [id, node_ptr] : node_hash_.asKeyValueRange()) {
+    for (const auto& [id, node_ptr] : node_model_.asKeyValueRange()) {
         if (!node_ptr)
             continue;
 
@@ -521,15 +521,15 @@ void TreeModel::SearchNode(QList<const Node*>& node_list, CString& name) const
 
 QModelIndex TreeModel::GetIndex(const QUuid& node_id) const
 {
-    if (!node_hash_.contains(node_id)) {
+    if (!node_model_.contains(node_id)) {
         qCritical() << "GetIndex: node_id not found in node_hash_, node_id =" << node_id;
     }
-    assert(node_hash_.contains(node_id));
+    assert(node_model_.contains(node_id));
 
     if (node_id.isNull())
         return QModelIndex();
 
-    const Node* node { node_hash_.value(node_id) };
+    const Node* node { node_model_.value(node_id) };
 
     if (!node->parent)
         return QModelIndex();
@@ -543,7 +543,7 @@ QModelIndex TreeModel::GetIndex(const QUuid& node_id) const
 
 void TreeModel::UpdateName(const QUuid& node_id, CString& new_name)
 {
-    auto* node { node_hash_.value(node_id) };
+    auto* node { node_model_.value(node_id) };
     if (!node) {
         qCritical() << "UpdateName: node_id not found in node_hash_, node_id =" << node_id;
     }
@@ -579,10 +579,41 @@ QSortFilterProxyModel* TreeModel::ExcludeOneModel(const QUuid& node_id)
     return model;
 }
 
-void TreeModel::FetchOneNode(const QUuid& node_id)
+void TreeModel::AckNode(const QUuid& node_id)
 {
+    if (node_model_.contains(node_id))
+        return;
+
+    if (ActivateCachedNode(node_id))
+        return;
+
     const auto message { JsonGen::NodeAcked(section_, node_id) };
     WebSocket::Instance()->SendMessage(kNodeAcked, message);
+}
+
+bool TreeModel::ActivateCachedNode(const QUuid& node_id)
+{
+    auto it = node_cache_.find(node_id);
+    if (it == node_cache_.end())
+        return false;
+
+    Node* node { it.value() };
+    if (!node || !node->parent)
+        return false;
+
+    Node* parent { node->parent };
+    const long long row { parent->children.size() };
+    const auto parent_idx { GetIndex(parent->id) };
+
+    beginInsertRows(parent_idx, row, row);
+    parent->children.insert(row, node);
+    endInsertRows();
+
+    RegisterPath(node);
+    SortModel();
+
+    emit SNodeLocation(node->id);
+    return true;
 }
 
 void TreeModel::RemovePath(Node* node, Node* parent_node)
@@ -620,7 +651,7 @@ void TreeModel::RemovePath(Node* node, Node* parent_node)
 
 void TreeModel::HandleNode()
 {
-    for (auto* node : std::as_const(node_hash_)) {
+    for (auto* node : std::as_const(node_model_)) {
         RegisterPath(node);
 
         if (node->kind == std::to_underlying(NodeKind::kLeaf))
@@ -742,8 +773,8 @@ void TreeModel::EmitRowChanged(const QUuid& node_id, int start_column, int end_c
 
 void TreeModel::ApplyTree(const QJsonObject& data)
 {
-    const QJsonArray node_array { data.value(kNode).toArray() };
-    const QJsonArray path_array { data.value(kPath).toArray() };
+    const QJsonArray node_array { data.value(kNodeArray).toArray() };
+    const QJsonArray path_array { data.value(kPathArray).toArray() };
 
     beginResetModel();
 
@@ -762,15 +793,15 @@ void TreeModel::ApplyTree(const QJsonObject& data)
 
 void TreeModel::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
 {
-    if (!node_hash_.contains(ancestor_id)) {
+    if (!node_model_.contains(ancestor_id)) {
         qCritical() << "AckOneNode: ancestor_id not found in node_hash_:" << ancestor_id;
     }
-    assert(node_hash_.contains(ancestor_id));
+    assert(node_model_.contains(ancestor_id));
 
     auto* node = NodePool::Instance().Allocate(section_);
     node->ReadJson(leaf_obj);
 
-    Node* ancestor { node_hash_.value(ancestor_id) };
+    Node* ancestor { node_model_.value(ancestor_id) };
 
     const long long row { ancestor->children.size() };
     const auto parent { GetIndex(ancestor_id) };
@@ -783,6 +814,49 @@ void TreeModel::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
     RegisterNode(node);
     RegisterPath(node);
     SortModel();
+
+    emit SNodeLocation(node->id);
+}
+
+void TreeModel::SearchNode(const QJsonObject& obj)
+{
+    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
+    const QJsonArray path_array { obj.value(kPathArray).toArray() };
+    QList<const Node*> list {};
+
+    for (const QJsonValue& val : node_array) {
+        const QJsonObject obj { val.toObject() };
+
+        const QUuid id { QUuid(obj.value(kId).toString()) };
+        Node* node {};
+
+        auto it = node_cache_.find(id);
+        if (it != node_cache_.end()) {
+            node = it.value();
+        } else {
+            node = NodePool::Instance().Allocate(section_);
+            node->ReadJson(obj);
+            node_cache_[id] = node;
+        }
+
+        list.append(node);
+    }
+
+    for (const QJsonValue& val : path_array) {
+        const QJsonObject obj { val.toObject() };
+
+        const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
+        const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
+
+        Node* ancestor { node_cache_.value(ancestor_id, nullptr) };
+        Node* descendant { node_cache_.value(descendant_id, nullptr) };
+
+        if (ancestor && descendant) {
+            descendant->parent = ancestor;
+        }
+    }
+
+    emit SSearchNode(list);
 }
 
 void TreeModel::SortModel()
@@ -804,7 +878,7 @@ void TreeModel::InitRoot(Node*& root, int default_unit)
         root->direction_rule = false;
         root->name = QString();
         root->id = QUuid();
-        node_hash_.insert(QUuid(), root);
+        node_model_.insert(QUuid(), root);
     }
 
     if (!root) {
@@ -821,8 +895,8 @@ void TreeModel::BuildHierarchy(const QJsonArray& path_array)
         const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
         const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
 
-        Node* ancestor { node_hash_.value(ancestor_id, nullptr) };
-        Node* descendant { node_hash_.value(descendant_id, nullptr) };
+        Node* ancestor { node_model_.value(ancestor_id, nullptr) };
+        Node* descendant { node_model_.value(descendant_id, nullptr) };
 
         if (ancestor && descendant) {
             ancestor->children.emplaceBack(descendant);
@@ -852,7 +926,7 @@ void TreeModel::RegisterPath(Node* node)
 
 QSet<QUuid> TreeModel::ChildrenId(const QUuid& parent_id) const
 {
-    auto* node { node_hash_.value(parent_id) };
+    auto* node { node_model_.value(parent_id) };
     if (!node) {
         qCritical() << "ChildrenId: parent_id not found in node_hash_:" << parent_id;
     }

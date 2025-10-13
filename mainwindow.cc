@@ -217,13 +217,13 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
     auto& leaf_wgt_hash { sc_->leaf_wgt_hash };
 
     if (leaf_wgt_hash.contains(node_id)) {
-        ActivateLeafTab(node_id);
-        RScrollToEntry(node_id, entry_id);
+        FocusLeafWidget(node_id);
+        RSelectLeafEntry(node_id, entry_id);
         return;
     }
 
-    const auto message { JsonGen::LeafAcked(sc_->info.section, node_id, entry_id) };
-    WebSocket::Instance()->SendMessage(kLeafAcked, message);
+    const auto message { JsonGen::LeafEntry(sc_->info.section, node_id, entry_id) };
+    WebSocket::Instance()->SendMessage(kLeafEntry, message);
 
     if (start_ == Section::kSale || start_ == Section::kPurchase) {
         CreateLeafO(sc_, node_id);
@@ -231,7 +231,7 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
         CreateLeafFIPT(sc_, node_id);
     }
 
-    ActivateLeafTab(node_id);
+    FocusLeafWidget(node_id);
 }
 
 void MainWindow::RSectionGroup(int id)
@@ -339,14 +339,14 @@ void MainWindow::REnableAction(bool finished)
     ui->actionRemove->setEnabled(!finished);
 }
 
-// ActivateLeafTab - Activate and focus the leaf widget tab
+// FocusLeafWidget - Activate and focus the leaf widget tab
 // -------------------------------
 // Used for:
 //  • Node double-click → navigate to node's tab
 //  • Entry jump → switch between different node tabs
 //
 // Note: Clears view selection after switching
-void MainWindow::ActivateLeafTab(const QUuid& node_id) const
+void MainWindow::FocusLeafWidget(const QUuid& node_id) const
 {
     auto widget { sc_->leaf_wgt_hash.value(node_id, nullptr) };
     assert(widget);
@@ -365,7 +365,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     const auto& section_config = sc->section_config;
 
     assert(tree_model);
-    assert(tree_model->Contains(node_id));
+    assert(tree_model->ModelContains(node_id));
 
     CString name { tree_model->Name(node_id) };
     const Section section { info.section };
@@ -464,7 +464,7 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, node_id }));
 
     sc_->leaf_wgt_hash.insert(node_id, widget);
-    ActivateLeafTab(node_id);
+    FocusLeafWidget(node_id);
 }
 
 void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
@@ -1194,16 +1194,16 @@ void MainWindow::RUpdateDefaultUnitFailed(const QString& /*section*/)
     QMessageBox::warning(this, tr("Update Failed"), tr("Cannot change the base unit for section Finance because related entries already exist."));
 }
 
-// RScrollToEntry - Scroll to and select the specified entry (slot)
+// RSelectLeafEntry - Scroll to and select the specified entry (slot)
 // -------------------------------
 // Behavior:
 //  1. Skip if entry_id is null (no target to scroll to)
 //  2. Find and select the entry in the view
 //  3. Scroll to center the IssuedTime column
 //  4. Close any persistent editor on that row
-void MainWindow::RScrollToEntry(const QUuid& node_id, const QUuid& entry_id)
+void MainWindow::RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id)
 {
-    if (entry_id.isNull())
+    if (entry_id.isNull() || node_id.isNull())
         return;
 
     auto widget { sc_->leaf_wgt_hash.value(node_id, nullptr) };
@@ -1456,7 +1456,7 @@ void MainWindow::on_actionSettlement_triggered()
 void MainWindow::CreateLeafExternalReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit)
 {
     assert(tree_model);
-    assert(tree_model->Contains(node_id));
+    assert(tree_model->ModelContains(node_id));
 
     CString name { tr("Record-") + tree_model->Name(node_id) };
 
@@ -1753,7 +1753,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SConnectResult, this, &MainWindow::RConnectResult);
     connect(WebSocket::Instance(), &WebSocket::SLoginResult, this, &MainWindow::RLoginResult);
     connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::on_actionLogout_triggered);
-    connect(WebSocket::Instance(), &WebSocket::SScrollToEntry, this, &MainWindow::RScrollToEntry);
+    connect(WebSocket::Instance(), &WebSocket::SSelectLeafEntry, this, &MainWindow::RSelectLeafEntry);
 }
 
 void MainWindow::InitContextFinance()
@@ -2128,8 +2128,15 @@ void MainWindow::on_actionJump_triggered()
     if (rhs_node_id.isNull())
         return;
 
-    const auto entry_id { index.sibling(row, std::to_underlying(EntryEnum::kId)).data().toUuid() };
+    if (start_ == Section::kTask) {
+        auto& tree_model { sc_->tree_model };
 
+        if (!tree_model->ModelContains(rhs_node_id)) {
+            tree_model->AckNode(rhs_node_id);
+        }
+    }
+
+    const auto entry_id { index.sibling(row, std::to_underlying(EntryEnum::kId)).data().toUuid() };
     ShowLeafWidget(rhs_node_id, entry_id);
 }
 
@@ -2587,6 +2594,7 @@ void MainWindow::on_actionSearch_triggered()
         node = new SearchNodeModelT(sc_->info, sc_->tree_model, this);
         entry = new SearchEntryModelT(sc_->info, this);
         dialog = new SearchDialogT(sc_->tree_model, node, entry, sc_->section_config, sc_->info, this);
+        connect(sc_->tree_model, &TreeModel::SSearchNode, node, &SearchNodeModel::RSearchNode);
         break;
     case Section::kPartner:
         node = new SearchNodeModelP(sc_->info, sc_->tree_model, this);
@@ -2598,6 +2606,7 @@ void MainWindow::on_actionSearch_triggered()
         node = new SearchNodeModelO(sc_->info, sc_->tree_model, sc_p_.tree_model, this);
         entry = new SearchEntryModelO(sc_->info, this);
         dialog = new SearchDialogO(sc_->tree_model, node, entry, sc_i_.tree_model, sc_p_.tree_model, sc_->section_config, sc_->info, this);
+        connect(sc_->tree_model, &TreeModel::SSearchNode, node, &SearchNodeModel::RSearchNode);
         break;
     default:
         break;
@@ -2620,53 +2629,74 @@ void MainWindow::RNodeLocation(const QUuid& node_id)
     if (node_id.isNull())
         return;
 
-    auto widget { sc_->tree_widget };
-    ui->tabWidget->setCurrentWidget(widget);
-
     if (start_ == Section::kSale || start_ == Section::kPurchase || start_ == Section::kTask) {
-        sc_->tree_model->FetchOneNode(node_id);
+        auto& tree_model { sc_->tree_model };
+
+        if (!tree_model->ModelContains(node_id)) {
+            tree_model->ActivateCachedNode(node_id);
+        }
     }
 
     auto index { sc_->tree_model->GetIndex(node_id) };
+    if (!index.isValid())
+        return;
+
+    auto widget { sc_->tree_widget };
+    ui->tabWidget->setCurrentWidget(widget);
     widget->activateWindow();
     widget->View()->setCurrentIndex(index);
 }
 
 void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id)
 {
-    QUuid id { lhs_node_id };
+    QUuid id {};
+    auto& leaf_wgt_hash { sc_->leaf_wgt_hash };
 
-    auto Contains = [&](QUuid node_id) {
-        if (sc_->leaf_wgt_hash.contains(node_id)) {
-            id = node_id;
-            return true;
-        }
-        return false;
-    };
+    if (leaf_wgt_hash.contains(lhs_node_id)) {
+        id = lhs_node_id;
+    } else if (leaf_wgt_hash.contains(rhs_node_id)) {
+        id = rhs_node_id;
+    }
 
-    if (!Contains(lhs_node_id) && !Contains(rhs_node_id)) {
-        const auto message { JsonGen::LeafAcked(sc_->info.section, id, entry_id) };
-        WebSocket::Instance()->SendMessage(kLeafAcked, message);
+    if (!id.isNull()) {
+        FocusLeafWidget(id);
+        RSelectLeafEntry(id, entry_id);
+        return;
+    }
 
-        switch (start_) {
-        case Section::kSale:
-        case Section::kPurchase:
-            sc_->tree_model->FetchOneNode(lhs_node_id);
-            CreateLeafO(sc_, lhs_node_id);
-            break;
-        case Section::kTask:
-            sc_->tree_model->FetchOneNode(lhs_node_id);
-        case Section::kFinance:
-        case Section::kInventory:
-        case Section::kPartner:
-            CreateLeafFIPT(sc_, id);
-            break;
-        default:
-            break;
+    id = lhs_node_id;
+
+    if (start_ == Section::kSale || start_ == Section::kPurchase || start_ == Section::kTask) {
+        auto& tree_model { sc_->tree_model };
+
+        if (tree_model->ModelContains(lhs_node_id)) {
+            id = lhs_node_id;
+        } else if (tree_model->ModelContains(rhs_node_id)) {
+            id = rhs_node_id;
+        } else {
+            tree_model->AckNode(id);
         }
     }
 
-    ActivateLeafTab(id);
+    const auto message { JsonGen::LeafEntry(sc_->info.section, id, entry_id) };
+    WebSocket::Instance()->SendMessage(kLeafEntry, message);
+
+    switch (start_) {
+    case Section::kSale:
+    case Section::kPurchase:
+        CreateLeafO(sc_, id);
+        break;
+    case Section::kTask:
+    case Section::kFinance:
+    case Section::kInventory:
+    case Section::kPartner:
+        CreateLeafFIPT(sc_, id);
+        break;
+    default:
+        break;
+    }
+
+    FocusLeafWidget(id);
 }
 
 void MainWindow::OrderNodeLocation(Section section, const QUuid& node_id)
@@ -2686,7 +2716,7 @@ void MainWindow::OrderNodeLocation(Section section, const QUuid& node_id)
 
     ui->tabWidget->setCurrentWidget(sc_->tree_widget);
 
-    sc_->tree_model->FetchOneNode(node_id);
+    sc_->tree_model->AckNode(node_id);
     sc_->tree_widget->activateWindow();
 
     auto index { sc_->tree_model->GetIndex(node_id) };
@@ -2724,7 +2754,7 @@ void MainWindow::on_actionPreferences_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    static About* dialog = nullptr;
+    static About* dialog { nullptr };
 
     if (!dialog) {
         dialog = new About(this);
@@ -2737,7 +2767,12 @@ void MainWindow::on_actionAbout_triggered()
     dialog->activateWindow();
 }
 
-void MainWindow::on_tabWidget_tabBarDoubleClicked(int index) { RNodeLocation(ui->tabWidget->tabBar()->tabData(index).value<TabInfo>().id); }
+void MainWindow::on_tabWidget_tabBarDoubleClicked(int index)
+{
+    auto* tab_bar { ui->tabWidget->tabBar() };
+    const auto tab_info { tab_bar->tabData(index).value<TabInfo>() };
+    RNodeLocation(tab_info.id);
+}
 
 void MainWindow::RActionEntry(EntryAction action)
 {

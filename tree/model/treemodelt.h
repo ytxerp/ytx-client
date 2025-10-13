@@ -37,23 +37,19 @@ public:
 
     void ResetColor(const QModelIndex& index) override;
     void AckTree(const QJsonObject& obj) override;
-    Node* GetNode(const QUuid& node_id) const override;
 
-    int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeT::status); }
+    int Status(QUuid node_id) const override { return NodeUtils::Value(node_model_, node_id, &NodeT::status); }
     void SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta) override;
 
 protected:
     void RegisterNode(Node* node) override
     {
-        node_hash_.insert(node->id, node);
+        node_model_.insert(node->id, node);
         node_cache_.insert(node->id, node);
     }
     void ResetBranch(Node* node) override;
     void ResetModel() override;
     void UpdateStatus(Node* node, int value) override;
-
-private:
-    NodeHash node_cache_ {};
 };
 
 #endif // TREEMODELT_H

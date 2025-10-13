@@ -1,6 +1,8 @@
 #include "searchnodemodelt.h"
 
 #include "component/enumclass.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 SearchNodeModelT::SearchNodeModelT(CSectionInfo& info, CTreeModel* tree_model, QObject* parent)
     : SearchNodeModel { info, tree_model, parent }
@@ -92,4 +94,14 @@ void SearchNodeModelT::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SearchNodeModelT::Search(CString& text) { }
+void SearchNodeModelT::Search(CString& text)
+{
+    if (text.isEmpty()) {
+        beginResetModel();
+        node_list_.clear();
+        endResetModel();
+        return;
+    }
+
+    WebSocket::Instance()->SendMessage(kNodeSearch, JsonGen::NodeSearch(info_.section, text));
+}

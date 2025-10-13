@@ -130,8 +130,8 @@ inline const QString kTheme = QStringLiteral("theme");
 
 // Client-initiated data requests
 inline const QString kTreeAcked = QStringLiteral("tree_acked");
-inline const QString kLeafAcked = QStringLiteral("leaf_acked");
 inline const QString kNodeAcked = QStringLiteral("node_acked");
+inline const QString kLinkedEntry = QStringLiteral("linked_entry");
 
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");
@@ -201,7 +201,10 @@ inline const QString kWorkspace = QStringLiteral("workspace");
 inline const QString kHost = QStringLiteral("host");
 inline const QString kBranchRemove = QStringLiteral("branch_remove");
 inline const QString kNode = QStringLiteral("node");
+inline const QString kNodeSearch = QStringLiteral("node_search");
+inline const QString kNodeArray = QStringLiteral("node_array");
 inline const QString kPath = QStringLiteral("path");
+inline const QString kPathArray = QStringLiteral("path_array");
 inline const QString kMeta = QStringLiteral("meta");
 inline const QString kEntry = QStringLiteral("entry");
 inline const QString kPort = QStringLiteral("port");
