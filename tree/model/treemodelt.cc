@@ -225,7 +225,7 @@ void TreeModelT::AckTree(const QJsonObject& obj)
     const QJsonArray path_array { obj.value(kPathArray).toArray() };
 
     beginResetModel();
-    ResetModel();
+    ClearModel();
 
     for (const QJsonValue& val : node_array) {
         const QJsonObject obj { val.toObject() };
@@ -239,16 +239,38 @@ void TreeModelT::AckTree(const QJsonObject& obj)
         } else {
             node = NodePool::Instance().Allocate(section_);
             node->ReadJson(obj);
+            node_cache_.insert(node->id, node);
         }
 
-        RegisterNode(node);
+        node_model_.insert(node->id, node);
+    }
+
+    for (const QJsonValue& val : path_array) {
+        const QJsonObject obj { val.toObject() };
+
+        const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
+        const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
+
+        Node* ancestor { node_model_.value(ancestor_id) };
+        Node* descendant { node_model_.value(descendant_id) };
+
+        assert((ancestor) && "Ancestor not found in node_model_");
+        assert((descendant) && "Descendant not found in node_model_");
+
+        descendant->parent = ancestor;
+    }
+
+    for (auto* node : std::as_const(node_model_)) {
+        if (node->kind == std::to_underlying(NodeKind::kLeaf)) {
+            node->parent->children.emplaceBack(node);
+        }
     }
 
     if (node_model_.size() >= 2) {
-        BuildHierarchy(path_array);
         HandleNode();
     }
 
+    sort(std::to_underlying(NodeEnumT::kName), Qt::AscendingOrder);
     endResetModel();
 }
 
@@ -297,7 +319,7 @@ void TreeModelT::ResetBranch(Node* node)
     node->final_total = 0.0;
 }
 
-void TreeModelT::ResetModel()
+void TreeModelT::ClearModel()
 {
     // Clear tree structure, paths and leaf_model
     root_->children.clear();

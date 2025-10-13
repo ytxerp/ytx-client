@@ -18,7 +18,7 @@ QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNode, node_json); // Meta info will be appended in service
-    message.insert(kPath, path_json); // Meta will be appended in service
+    message.insert(kPath, path_json);
 
     return message;
 }
@@ -32,8 +32,8 @@ QJsonObject DragNode(Section section, CUuid& node_id, CUuid& parent_id)
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
-    message.insert(kPath, path_json); // Meta info will be appended in service
-    message.insert(kNode, QJsonObject()); // Meta info will be appended in service
+    message.insert(kPath, path_json);
+    message.insert(kMeta, QJsonObject());
 
     return message;
 }
@@ -50,12 +50,13 @@ QJsonObject LeafRemove(Section section, CUuid& node_id)
     return message;
 }
 
-QJsonObject BranchRemove(Section section, CUuid& node_id)
+QJsonObject BranchRemove(Section section, CUuid& node_id, CUuid& parent_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kParentId, parent_id.toString(QUuid::WithoutBraces));
 
     return message;
 }
@@ -151,12 +152,12 @@ QJsonObject DefaultUnit(Section section, int unit)
 
 QJsonObject NodeDelta(CUuid& node_id, double initial_delta, double final_delta)
 {
-    QJsonObject delta {};
-    delta.insert(kInitialDelta, QString::number(initial_delta, 'f', kMaxNumericScale_4));
-    delta.insert(kFinalDelta, QString::number(final_delta, 'f', kMaxNumericScale_4));
-    delta.insert(kId, node_id.toString(QUuid::WithoutBraces));
+    QJsonObject message {};
+    message.insert(kInitialDelta, QString::number(initial_delta, 'f', kMaxNumericScale_4));
+    message.insert(kFinalDelta, QString::number(final_delta, 'f', kMaxNumericScale_4));
+    message.insert(kId, node_id.toString(QUuid::WithoutBraces));
 
-    return delta;
+    return message;
 }
 
 QJsonObject Register(CString& email, CString& password)

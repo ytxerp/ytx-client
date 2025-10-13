@@ -48,7 +48,7 @@ protected:
         node_cache_.insert(node->id, node);
     }
     void ResetBranch(Node* node) override;
-    void ResetModel() override;
+    void ClearModel() override;
     void UpdateStatus(Node* node, int value) override;
 };
 

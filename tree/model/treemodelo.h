@@ -59,7 +59,7 @@ protected:
         const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta) override;
     void HandleNode() override;
     void ResetBranch(Node* node) override;
-    void ResetModel() override;
+    void ClearModel() override;
     void RegisterNode(Node* node) override
     {
         node_model_.insert(node->id, node);

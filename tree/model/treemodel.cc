@@ -609,6 +609,7 @@ bool TreeModel::ActivateCachedNode(const QUuid& node_id)
     parent->children.insert(row, node);
     endInsertRows();
 
+    node_model_.insert(node_id, node);
     RegisterPath(node);
     SortModel();
 

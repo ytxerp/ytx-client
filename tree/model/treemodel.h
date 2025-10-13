@@ -231,7 +231,7 @@ protected:
     virtual void RegisterNode(Node* node) { node_model_.insert(node->id, node); }
 
     virtual void ResetBranch(Node* node) { Q_UNUSED(node) };
-    virtual void ResetModel() { }
+    virtual void ClearModel() { }
     virtual void UpdateStatus(Node* node, int value)
     {
         Q_UNUSED(node)

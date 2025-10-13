@@ -69,6 +69,10 @@ void LeafRemoveDialog::InitCheckBoxGroup()
 
 void LeafRemoveDialog::on_pBtnOk_clicked()
 {
+    if (!ui->rBtnRemove->isChecked() && !ui->rBtnReplace->isChecked()) {
+        return;
+    }
+
     QMessageBox msg(this);
     msg.setIcon(QMessageBox::Question);
     msg.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
@@ -133,9 +137,9 @@ void LeafRemoveDialog::IniData(Section section)
 
     auto* filter_model { new ExcludeOneFilterModel(node_id_, this) };
     filter_model->setSourceModel(model_->LeafModel());
-    ui->comboBox->setModel(filter_model);
 
-    RcomboBoxCurrentIndexChanged(0);
+    ui->comboBox->setModel(filter_model);
+    ui->comboBox->setCurrentIndex(-1);
 }
 
 void LeafRemoveDialog::RcomboBoxCurrentIndexChanged(int /*index*/)
@@ -144,19 +148,7 @@ void LeafRemoveDialog::RcomboBoxCurrentIndexChanged(int /*index*/)
     ui->pBtnOk->setEnabled(!new_node_id.isNull() && model_->Unit(new_node_id) == node_unit_);
 }
 
-void LeafRemoveDialog::RButtonGroup(int id)
-{
-    switch (id) {
-    case 0:
-        ui->pBtnOk->setEnabled(true);
-        break;
-    case 1:
-        RcomboBoxCurrentIndexChanged(0);
-        break;
-    default:
-        break;
-    }
-}
+void LeafRemoveDialog::RButtonGroup(int /*id*/) { ui->pBtnOk->setEnabled(true); }
 
 void LeafRemoveDialog::RReplaceResult(bool result)
 {

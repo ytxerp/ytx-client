@@ -33,7 +33,7 @@ QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id);
 QJsonObject DragNode(Section section, CUuid& node_id, CUuid& parent_id);
 
 QJsonObject LeafRemove(Section section, CUuid& node_id);
-QJsonObject BranchRemove(Section section, CUuid& node_id);
+QJsonObject BranchRemove(Section section, CUuid& node_id, CUuid& parent_id);
 
 QJsonObject LeafRemoveCheck(Section section, CUuid& node_id);
 QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref);

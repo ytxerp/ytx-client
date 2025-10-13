@@ -250,6 +250,7 @@ inline const QString kUserId = QStringLiteral("user_id");
 inline const QString kSessionId = QStringLiteral("session_id");
 inline const QString kEntryId = QStringLiteral("entry_id");
 inline const QString kNodeId = QStringLiteral("node_id");
+inline const QString kParentId = QStringLiteral("parent_id");
 inline const QString kOldNodeId = QStringLiteral("old_node_id");
 inline const QString kNewNodeId = QStringLiteral("new_node_id");
 inline const QString kOldNodeDelta = QStringLiteral("old_node_delta");

@@ -49,7 +49,7 @@ void TreeModelO::AckTree(const QJsonObject& obj)
     const QJsonArray path_array { obj.value(kPath).toArray() };
 
     beginResetModel();
-    ResetModel();
+    ClearModel();
 
     for (const QJsonValue& val : node_array) {
         const QJsonObject obj { val.toObject() };
@@ -156,7 +156,7 @@ void TreeModelO::ResetBranch(Node* node)
     d_node->children.clear();
 }
 
-void TreeModelO::ResetModel()
+void TreeModelO::ClearModel()
 {
     // Clear tree structure and paths
     root_->children.clear();

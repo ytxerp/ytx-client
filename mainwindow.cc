@@ -1306,7 +1306,9 @@ void MainWindow::BranchRemove(TreeModel* tree_model, const QModelIndex& index, c
     msg.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
 
     if (msg.exec() == QMessageBox::Ok) {
-        const auto message { JsonGen::BranchRemove(sc_->info.section, node_id) };
+        const QUuid parent_id { sc_->tree_model->GetNode(node_id)->parent->id };
+
+        const auto message { JsonGen::BranchRemove(sc_->info.section, node_id, parent_id) };
         WebSocket::Instance()->SendMessage(kBranchRemove, message);
         tree_model->removeRows(index.row(), 1, index.parent());
         node_pending_removal_.remove(node_id);
@@ -2666,7 +2668,15 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
 
     id = lhs_node_id;
 
-    if (start_ == Section::kSale || start_ == Section::kPurchase || start_ == Section::kTask) {
+    if (start_ == Section::kSale || start_ == Section::kPurchase) {
+        auto& tree_model { sc_->tree_model };
+
+        if (!tree_model->ModelContains(lhs_node_id)) {
+            tree_model->AckNode(id);
+        }
+    }
+
+    if (start_ == Section::kTask) {
         auto& tree_model { sc_->tree_model };
 
         if (tree_model->ModelContains(lhs_node_id)) {
