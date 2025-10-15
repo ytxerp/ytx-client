@@ -67,12 +67,15 @@ void WebSocket::Connect()
 
 void WebSocket::RConnected()
 {
+    qInfo() << "Websocket connected";
     emit SConnectResult(true);
     InitTimer();
 }
 
 void WebSocket::RDisconnected()
 {
+    emit SConnectResult(false);
+
     if (session_id_.isEmpty())
         return;
 
@@ -91,17 +94,37 @@ void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
 {
     switch (error) {
     case QAbstractSocket::ConnectionRefusedError:
-        qWarning() << "WebSocket connection refused!";
-        emit SConnectResult(false);
-        break;
-    case QAbstractSocket::NetworkError:
-        qWarning() << "WebSocket network error, possibly no network connection!";
+        qWarning() << "WebSocket connection refused! (The peer refused or timed out)";
         break;
     case QAbstractSocket::RemoteHostClosedError:
         qWarning() << "WebSocket remote host closed connection!";
         break;
+    case QAbstractSocket::HostNotFoundError:
+        qWarning() << "WebSocket host not found! (Invalid address or DNS failure)";
+        break;
+    case QAbstractSocket::SocketAccessError:
+        qWarning() << "WebSocket socket access error! (Permission denied)";
+        break;
+    case QAbstractSocket::SocketResourceError:
+        qWarning() << "WebSocket socket resource error! (Too many open sockets)";
+        break;
+    case QAbstractSocket::SocketTimeoutError:
+        qWarning() << "WebSocket socket timeout error!";
+        break;
+    case QAbstractSocket::DatagramTooLargeError:
+        qWarning() << "WebSocket datagram too large error! (Exceeded system limit)";
+        break;
+    case QAbstractSocket::NetworkError:
+        qWarning() << "WebSocket network error! (Network cable unplugged or lost connection)";
+        break;
+    case QAbstractSocket::AddressInUseError:
+        qWarning() << "WebSocket address already in use! (Port conflict)";
+        break;
+    case QAbstractSocket::SocketAddressNotAvailableError:
+        qWarning() << "WebSocket socket address not available! (Address does not belong to host)";
+        break;
     default:
-        qWarning() << "WebSocket error:" << error;
+        qWarning() << "WebSocket unknown error:" << error;
         break;
     }
 }
