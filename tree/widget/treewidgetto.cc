@@ -43,6 +43,12 @@ void TreeWidgetTO::on_end_dateChanged(const QDate& date)
 
 void TreeWidgetTO::on_pBtnFetch_clicked()
 {
+    if (start_ == last_start_ && end_ == last_end_)
+        return;
+
+    last_start_ = start_;
+    last_end_ = end_;
+
     const auto message { JsonGen::TreeAcked(section_, start_.toUTC(), end_.toUTC()) };
     WebSocket::Instance()->SendMessage(kTreeAcked, message);
 }

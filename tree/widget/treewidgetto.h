@@ -50,6 +50,9 @@ private:
 
     QDateTime start_ {};
     QDateTime end_ {};
+
+    QDateTime last_start_ {};
+    QDateTime last_end_ {};
 };
 
 #endif // TREEWIDGETTO_H
