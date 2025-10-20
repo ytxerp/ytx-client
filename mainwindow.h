@@ -94,8 +94,10 @@ private slots:
     void RSyncPartner(const QUuid& node_id, int column, const QVariant& value);
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void RActionEntry(EntryAction action);
-    void RConnectResult(bool result);
     void RLoginResult(bool result);
+    void RConnectionAccepted();
+    void RConnectionRefused();
+    void RRemoteHostClosed();
 
     void RFreeWidget(const QUuid& node_id);
     void RLeafExternalReference(const QUuid& node_id, int unit);

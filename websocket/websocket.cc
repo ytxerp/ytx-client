@@ -16,10 +16,10 @@ WebSocket::WebSocket(QObject* parent)
 
 WebSocket::~WebSocket()
 {
-    if (ping_timer_) {
-        ping_timer_->stop();
-        ping_timer_->deleteLater();
-        ping_timer_ = nullptr;
+    if (heartbeat_) {
+        heartbeat_->stop();
+        heartbeat_->deleteLater();
+        heartbeat_ = nullptr;
     }
 
     if (socket_.state() == QAbstractSocket::ConnectedState) {
@@ -68,32 +68,48 @@ void WebSocket::Connect()
 void WebSocket::RConnected()
 {
     qInfo() << "Websocket connected";
-    emit SConnectResult(true);
+    emit SConnectionAccepted(true);
     InitTimer();
 }
 
 void WebSocket::RDisconnected()
 {
-    emit SConnectResult(false);
+    qInfo() << "Websocket disconnected";
 
-    if (session_id_.isEmpty())
+    if (session_id_.isEmpty()) {
+        qInfo() << "Session ID is empty — disconnected before login.";
         return;
-
-    emit SRemoteHostClosed();
-
-    session_id_.clear();
-
-    if (ping_timer_) {
-        ping_timer_->stop();
     }
 
-    Connect();
+    if (!manual_disconnect_)
+        emit SRemoteHostClosed();
+
+    manual_disconnect_ = false;
+
+    qInfo() << "Session ID:" << session_id_ << "— connection closed unexpectedly.";
+
+    session_id_.clear();
+    tree_model_hash_.clear();
+    entry_hub_hash_.clear();
+
+    if (heartbeat_) {
+        heartbeat_->stop();
+    }
+}
+
+void WebSocket::Close()
+{
+    if (socket_.state() == QAbstractSocket::ConnectedState || socket_.state() == QAbstractSocket::ConnectingState) {
+        manual_disconnect_ = true;
+        socket_.close();
+    }
 }
 
 void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
 {
     switch (error) {
     case QAbstractSocket::ConnectionRefusedError:
+        emit SConnectionRefused();
         qWarning() << "WebSocket connection refused! (The peer refused or timed out)";
         break;
     case QAbstractSocket::RemoteHostClosedError:
@@ -171,23 +187,36 @@ void WebSocket::InitConnect()
     connect(&socket_, &QWebSocket::errorOccurred, this, &WebSocket::RErrorOccurred);
     connect(&socket_, &QWebSocket::textMessageReceived, this, &WebSocket::RReceiveMessage);
 
-    connect(&socket_, &QWebSocket::pong, []() { });
+    connect(&socket_, &QWebSocket::pong, this, [this](quint64, const QByteArray&) {
+        last_heartbeat_time_ = QDateTime::currentDateTime();
+        qDebug() << "Received Pong from server";
+    });
 }
 
 void WebSocket::InitTimer()
 {
-    if (!ping_timer_) {
-        ping_timer_ = new QTimer(this);
-        ping_timer_->setInterval(30000);
+    if (!heartbeat_) {
+        heartbeat_ = new QTimer(this);
+        heartbeat_->setInterval(HEARTBEAT_INTERVAL);
 
-        connect(ping_timer_, &QTimer::timeout, this, [this]() {
-            if (socket_.state() == QAbstractSocket::ConnectedState) {
-                socket_.ping();
+        connect(heartbeat_, &QTimer::timeout, this, [this]() {
+            if (socket_.state() != QAbstractSocket::ConnectedState) {
+                return;
             }
+
+            const auto elapsed_ms { last_heartbeat_time_.msecsTo(QDateTime::currentDateTime()) };
+            if (elapsed_ms > TIMEOUT_THRESHOLD) {
+                qWarning() << "Pong timeout:" << elapsed_ms << "ms, closing connection";
+                socket_.abort();
+                return;
+            }
+
+            socket_.ping();
         });
     }
 
-    ping_timer_->start();
+    heartbeat_->start();
+    last_heartbeat_time_ = QDateTime::currentDateTime();
 }
 
 void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
@@ -203,16 +232,6 @@ void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
     socket_.sendTextMessage(QString::fromUtf8(json));
 }
 
-void WebSocket::Clear()
-{
-    if (socket_.state() == QAbstractSocket::ConnectedState || socket_.state() == QAbstractSocket::ConnectingState) {
-        socket_.close();
-    }
-
-    tree_model_hash_.clear();
-    entry_hub_hash_.clear();
-}
-
 void WebSocket::RReceiveMessage(const QString& message)
 {
     QJsonParseError err {};
@@ -222,6 +241,8 @@ void WebSocket::RReceiveMessage(const QString& message)
         qWarning() << "Invalid JSON message:" << message;
         return;
     }
+
+    last_heartbeat_time_ = QDateTime::currentDateTime();
 
     const QJsonObject obj { root.toObject() };
     const QString msg_type { obj.value(kKind).toString() };

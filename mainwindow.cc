@@ -1752,9 +1752,10 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SDefaultUnit, this, &MainWindow::RDefaultUnit);
     connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
     connect(WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
-    connect(WebSocket::Instance(), &WebSocket::SConnectResult, this, &MainWindow::RConnectResult);
+    connect(WebSocket::Instance(), &WebSocket::SConnectionAccepted, this, &MainWindow::RConnectionAccepted);
+    connect(WebSocket::Instance(), &WebSocket::SConnectionRefused, this, &MainWindow::RConnectionRefused);
     connect(WebSocket::Instance(), &WebSocket::SLoginResult, this, &MainWindow::RLoginResult);
-    connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::on_actionLogout_triggered);
+    connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::RRemoteHostClosed);
     connect(WebSocket::Instance(), &WebSocket::SSelectLeafEntry, this, &MainWindow::RSelectLeafEntry);
 }
 
@@ -2793,23 +2794,32 @@ void MainWindow::RActionEntry(EntryAction action)
     table_model->ActionEntry(action);
 }
 
-void MainWindow::RConnectResult(bool result)
+void MainWindow::RConnectionAccepted()
 {
-    ui->actionReconnect->setEnabled(!result);
-    ui->actionLogin->setEnabled(result);
+    ui->actionLogin->setEnabled(true);
+    ui->actionReconnect->setEnabled(false);
     ui->actionLogout->setEnabled(false);
 
-    if (result) {
-        on_actionLogin_triggered();
-    } else {
-        QMessageBox::warning(this, tr("Connection Failed"), tr("Unable to connect to the server. Please check your network or contact the administrator."));
-    }
+    on_actionLogin_triggered();
 }
 
 void MainWindow::RLoginResult(bool result)
 {
     ui->actionLogin->setEnabled(!result);
     ui->actionLogout->setEnabled(result);
+}
+
+void MainWindow::RConnectionRefused() { QMessageBox::warning(this, tr("Connection Refused"), tr("Unable to connect to the server. Please try again.")); }
+
+void MainWindow::RRemoteHostClosed()
+{
+    auto* msg_box { new QMessageBox(
+        QMessageBox::Warning, tr("Remote Host Closed"), tr("The server has closed the connection. Please try reconnecting."), QMessageBox::Ok, this) };
+
+    msg_box->setAttribute(Qt::WA_DeleteOnClose);
+    msg_box->show();
+
+    on_actionLogout_triggered();
 }
 
 void MainWindow::SwitchSection(Section section, const QUuid& last_tab) const
@@ -2979,7 +2989,7 @@ void MainWindow::on_actionLogout_triggered()
     ClearMainwindow();
     ClearAccountInfo();
 
-    WebSocket::Instance()->Clear();
+    WebSocket::Instance()->Close();
     LeafSStation::Instance()->Clear();
 
     SetAction(false);

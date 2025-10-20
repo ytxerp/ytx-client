@@ -38,7 +38,7 @@ public:
     void ReadConfig(QSharedPointer<QSettings> local_settings);
     void Connect();
     void SendMessage(const QString& msg_type, const QJsonObject& value);
-    void Clear();
+    void Close();
 
     void RegisterTreeModel(Section section, QPointer<TreeModel> node) { tree_model_hash_.insert(section, node); }
     void DeregisterTreeNode(Section section) { tree_model_hash_.remove(section); }
@@ -55,7 +55,7 @@ signals:
     void SLoginResult(bool result);
     void SWorkspaceAccessPending(const QString& email, const QString& workspace);
     void SRegisterResult(int result);
-    void SConnectResult(bool result);
+    void SConnectionAccepted(bool result);
     void SRemoteHostClosed();
     void SInitializeContext(const QString& expire_date);
     void SSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id);
@@ -68,6 +68,8 @@ signals:
     void SNodeRemoveConfirmed(const QUuid& node_id);
 
     void SReplaceResult(bool result);
+
+    void SConnectionRefused();
 
 private slots:
     void RConnected();
@@ -131,8 +133,10 @@ private:
     QString session_id_ {};
 
     QUrl server_url_ {};
+    bool manual_disconnect_ {};
 
-    QTimer* ping_timer_ {};
+    QTimer* heartbeat_ {};
+    QDateTime last_heartbeat_time_ {};
 
     QHash<QString, std::function<void(const QJsonObject&)>> handler_obj_ {};
     QHash<QString, std::function<void(const QJsonArray&)>> handler_arr_ {};

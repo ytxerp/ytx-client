@@ -32,6 +32,9 @@ inline constexpr double kTolerance = 1e-8;
 inline constexpr int kRowHeight = 24;
 inline constexpr int kThreeThousand = 3000;
 
+inline constexpr int HEARTBEAT_INTERVAL = 20000;
+inline constexpr int TIMEOUT_THRESHOLD = 35000;
+
 namespace Pool {
 inline constexpr qsizetype kExpandSize { 100 };
 inline constexpr qsizetype kMaxSize { 1000 };
