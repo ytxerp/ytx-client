@@ -1393,20 +1393,20 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="382"/>
-        <location filename="../../mainwindow.cc" line="2900"/>
+        <location filename="../../mainwindow.cc" line="2901"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="387"/>
-        <location filename="../../mainwindow.cc" line="1393"/>
+        <location filename="../../mainwindow.cc" line="1395"/>
         <source>Statement</source>
         <translation>帐单</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="395"/>
         <location filename="../../mainwindow.ui" line="398"/>
-        <location filename="../../mainwindow.cc" line="1430"/>
+        <location filename="../../mainwindow.cc" line="1432"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1423,16 +1423,16 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../mainwindow.ui" line="428"/>
         <location filename="../../mainwindow.ui" line="431"/>
-        <location filename="../../mainwindow.cc" line="2435"/>
-        <location filename="../../mainwindow.cc" line="2442"/>
+        <location filename="../../mainwindow.cc" line="2436"/>
+        <location filename="../../mainwindow.cc" line="2443"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="436"/>
         <location filename="../../mainwindow.ui" line="439"/>
-        <location filename="../../mainwindow.cc" line="2436"/>
-        <location filename="../../mainwindow.cc" line="2443"/>
+        <location filename="../../mainwindow.cc" line="2437"/>
+        <location filename="../../mainwindow.cc" line="2444"/>
         <source>Workspace</source>
         <translation>工区</translation>
     </message>
@@ -1478,8 +1478,8 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="488"/>
-        <location filename="../../mainwindow.cc" line="2437"/>
-        <location filename="../../mainwindow.cc" line="2444"/>
+        <location filename="../../mainwindow.cc" line="2438"/>
+        <location filename="../../mainwindow.cc" line="2445"/>
         <source>Expire Date</source>
         <translation>期限</translation>
     </message>
@@ -1499,37 +1499,37 @@ Rage, rage against the dying of the light.</source>
         <translation>二级明细-</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1194"/>
+        <location filename="../../mainwindow.cc" line="1196"/>
         <source>Update Failed</source>
         <translation>更新失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1194"/>
+        <location filename="../../mainwindow.cc" line="1196"/>
         <source>Cannot change the base unit for section Finance because related entries already exist.</source>
         <translation>无法更改财务版块的基准单位，因为已存在记录。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1304"/>
+        <location filename="../../mainwindow.cc" line="1306"/>
         <source>Remove %1</source>
         <translation>删除 %1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1305"/>
+        <location filename="../../mainwindow.cc" line="1307"/>
         <source>The branch will be removed, and its direct children will be promoted to the same level.</source>
         <translation>将删除此分支，且所有直系子节点提升至同级。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1463"/>
+        <location filename="../../mainwindow.cc" line="1465"/>
         <source>Record-</source>
         <translation>记录-</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2337"/>
+        <location filename="../../mainwindow.cc" line="2338"/>
         <source>Language Changed</source>
         <translation>语言已更改</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2338"/>
+        <location filename="../../mainwindow.cc" line="2339"/>
         <source>The language has been changed. Please restart the application for the changes to take effect.</source>
         <translation>语言已更改，请重启应用程序以使更改生效。</translation>
     </message>
@@ -1565,84 +1565,84 @@ Please check your network and try reconnecting.</source>
         <translation type="vanished">无法连接到服务器，或连接已中断。\n请检查网络并重新连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2812"/>
+        <location filename="../../mainwindow.cc" line="2813"/>
         <source>Connection Refused</source>
         <translation>连接被拒绝</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2812"/>
+        <location filename="../../mainwindow.cc" line="2813"/>
         <source>Unable to connect to the server. Please try again.</source>
         <translation>无法连接到服务器，请重新尝试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2817"/>
+        <location filename="../../mainwindow.cc" line="2818"/>
         <source>Remote Host Closed</source>
         <translation>连接已关闭</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2817"/>
+        <location filename="../../mainwindow.cc" line="2818"/>
         <source>The server has closed the connection. Please try reconnecting.</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2910"/>
+        <location filename="../../mainwindow.cc" line="2911"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2910"/>
+        <location filename="../../mainwindow.cc" line="2911"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2910"/>
+        <location filename="../../mainwindow.cc" line="2911"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2944"/>
+        <location filename="../../mainwindow.cc" line="2945"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2944"/>
+        <location filename="../../mainwindow.cc" line="2945"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2947"/>
+        <location filename="../../mainwindow.cc" line="2948"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2947"/>
+        <location filename="../../mainwindow.cc" line="2948"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3015"/>
-        <location filename="../../mainwindow.cc" line="3022"/>
+        <location filename="../../mainwindow.cc" line="3016"/>
+        <location filename="../../mainwindow.cc" line="3023"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3015"/>
+        <location filename="../../mainwindow.cc" line="3016"/>
         <source>Failed to check updates:
 %1</source>
         <translation>检查更新失败：\n%1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3022"/>
+        <location filename="../../mainwindow.cc" line="3023"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3035"/>
+        <location filename="../../mainwindow.cc" line="3036"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3035"/>
+        <location filename="../../mainwindow.cc" line="3036"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1651,12 +1651,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3041"/>
+        <location filename="../../mainwindow.cc" line="3042"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3041"/>
+        <location filename="../../mainwindow.cc" line="3042"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -1800,12 +1800,12 @@ Download now?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../mainwindow.cc" line="1558"/>
+        <location filename="../../mainwindow.cc" line="1560"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1565"/>
+        <location filename="../../mainwindow.cc" line="1567"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -1814,7 +1814,6 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="26"/>
         <location filename="../../component/stringinitializer.cc" line="47"/>
         <location filename="../../component/stringinitializer.cc" line="69"/>
-        <location filename="../../component/stringinitializer.cc" line="87"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
@@ -1942,7 +1941,7 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="34"/>
         <location filename="../../component/stringinitializer.cc" line="55"/>
         <location filename="../../component/stringinitializer.cc" line="77"/>
-        <location filename="../../component/stringinitializer.cc" line="96"/>
+        <location filename="../../component/stringinitializer.cc" line="97"/>
         <location filename="../../component/stringinitializer.cc" line="122"/>
         <location filename="../../component/stringinitializer.cc" line="142"/>
         <location filename="../../component/stringinitializer.cc" line="162"/>
@@ -1973,7 +1972,7 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="18"/>
         <location filename="../../component/stringinitializer.cc" line="39"/>
         <location filename="../../component/stringinitializer.cc" line="61"/>
-        <location filename="../../component/stringinitializer.cc" line="95"/>
+        <location filename="../../component/stringinitializer.cc" line="96"/>
         <source>DirectionRule</source>
         <translation>规则</translation>
     </message>
@@ -1982,7 +1981,7 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="40"/>
         <location filename="../../component/stringinitializer.cc" line="62"/>
         <location filename="../../component/stringinitializer.cc" line="80"/>
-        <location filename="../../component/stringinitializer.cc" line="99"/>
+        <location filename="../../component/stringinitializer.cc" line="100"/>
         <source>Kind</source>
         <translation>类型</translation>
     </message>
@@ -1991,7 +1990,7 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="41"/>
         <location filename="../../component/stringinitializer.cc" line="63"/>
         <location filename="../../component/stringinitializer.cc" line="81"/>
-        <location filename="../../component/stringinitializer.cc" line="100"/>
+        <location filename="../../component/stringinitializer.cc" line="101"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
@@ -2013,7 +2012,7 @@ Download now?</source>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="60"/>
-        <location filename="../../component/stringinitializer.cc" line="98"/>
+        <location filename="../../component/stringinitializer.cc" line="99"/>
         <location filename="../../component/stringinitializer.cc" line="348"/>
         <source>Status</source>
         <translation>状态</translation>
@@ -2052,7 +2051,7 @@ Download now?</source>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="57"/>
-        <location filename="../../component/stringinitializer.cc" line="94"/>
+        <location filename="../../component/stringinitializer.cc" line="95"/>
         <location filename="../../component/stringinitializer.cc" line="118"/>
         <location filename="../../component/stringinitializer.cc" line="138"/>
         <location filename="../../component/stringinitializer.cc" line="158"/>
@@ -2093,19 +2092,19 @@ Download now?</source>
         <translation type="vanished">合作</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="97"/>
+        <location filename="../../component/stringinitializer.cc" line="98"/>
         <location filename="../../component/stringinitializer.cc" line="320"/>
         <location filename="../../component/stringinitializer.cc" line="355"/>
         <source>Employee</source>
         <translation>职员</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="101"/>
+        <location filename="../../component/stringinitializer.cc" line="102"/>
         <source>CountTotal</source>
         <translation>计数</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="102"/>
+        <location filename="../../component/stringinitializer.cc" line="103"/>
         <source>MeasureTotal</source>
         <translation>度量</translation>
     </message>
@@ -2166,22 +2165,22 @@ Download now?</source>
         <translation type="vanished">第二</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="103"/>
+        <location filename="../../component/stringinitializer.cc" line="104"/>
         <source>InitialTotal</source>
         <translation>初始</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="104"/>
+        <location filename="../../component/stringinitializer.cc" line="105"/>
         <source>DiscountTotal</source>
         <translation>优惠</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="105"/>
+        <location filename="../../component/stringinitializer.cc" line="106"/>
         <source>FinalTotal</source>
         <translation>结算</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="106"/>
+        <location filename="../../component/stringinitializer.cc" line="94"/>
         <location filename="../../component/stringinitializer.cc" line="277"/>
         <location filename="../../component/stringinitializer.cc" line="303"/>
         <location filename="../../component/stringinitializer.cc" line="346"/>
@@ -2192,6 +2191,11 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="107"/>
         <source>SettlementId</source>
         <translation>结算 ID</translation>
+    </message>
+    <message>
+        <location filename="../../component/stringinitializer.cc" line="87"/>
+        <source>Group</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="119"/>

@@ -30,9 +30,9 @@ LeafWidgetO::LeafWidgetO(
     IniData(node_->partner, node_->employee);
     IniConnect();
 
-    const bool finished { node_->status };
-    IniFinished(finished);
-    LockWidgets(finished);
+    const bool is_completed { node_->status == std::to_underlying(NodeStatus::kCompleted) };
+    IniFinished(is_completed);
+    LockWidgets(is_completed);
 }
 
 LeafWidgetO::~LeafWidgetO()
@@ -108,8 +108,12 @@ void LeafWidgetO::IniConnect()
 
 void LeafWidgetO::IniData(const QUuid& partner, const QUuid& employee)
 {
-    if (is_insert_)
+    if (is_insert_) {
+        const auto date_time { QDateTime::currentDateTimeUtc() };
+        ui->dateTimeEdit->setDateTime(date_time.toLocalTime());
+        node_->issued_time = date_time;
         return;
+    }
 
     IniLeafValue();
     ui->lineDescription->setText(node_->description);

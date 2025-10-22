@@ -338,6 +338,7 @@ enum class NodeEnumO {
     kCreateBy,
     kUpdateTime,
     kUpdateBy,
+    kPartner,
     kIssuedTime,
     kDirectionRule,
     kDescription,
@@ -350,7 +351,6 @@ enum class NodeEnumO {
     kInitialTotal,
     kDiscountTotal,
     kFinalTotal,
-    kPartner,
     kSettlementId,
 };
 

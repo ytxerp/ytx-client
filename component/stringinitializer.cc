@@ -91,6 +91,7 @@ void StringInitializer::SetHeader(
         QObject::tr("CreatedBy"),
         QObject::tr("UpdatedTime"),
         QObject::tr("UpdatedBy"),
+        QObject::tr("Partner"),
         QObject::tr("IssuedTime"),
         QObject::tr("DirectionRule"),
         QObject::tr("Description"),
@@ -103,7 +104,6 @@ void StringInitializer::SetHeader(
         QObject::tr("InitialTotal"),
         QObject::tr("DiscountTotal"),
         QObject::tr("FinalTotal"),
-        QObject::tr("Partner"),
         QObject::tr("SettlementId"),
     };
 

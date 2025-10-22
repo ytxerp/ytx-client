@@ -209,7 +209,7 @@ void NodeO::ResetState()
     count_total = 0.0;
     measure_total = 0.0;
     discount_total = 0.0;
-    status = false;
+    status = 0;
 }
 
 void NodeO::InvertTotal()
@@ -262,7 +262,7 @@ void NodeO::ReadJson(const QJsonObject& object)
     if (object.contains(kDiscountTotal))
         discount_total = object.value(kDiscountTotal).toString().toDouble();
     if (object.contains(kStatus))
-        status = object.value(kStatus).toBool();
+        status = object.value(kStatus).toInt();
     if (object.contains(kSettlement))
         settlement = QUuid(object.value(kSettlement).toString());
 }

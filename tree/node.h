@@ -98,7 +98,7 @@ struct NodeO final : Node {
     double count_total {};
     double measure_total {};
     double discount_total {};
-    bool status {};
+    int status {};
 
     void ResetState() override;
     void InvertTotal() override;

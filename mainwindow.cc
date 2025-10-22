@@ -911,12 +911,14 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
 
     auto tree_model_p { sc_p_.tree_model };
 
-    auto* filter_model { tree_model_p->IncludeUnitModel(std::to_underlying(UnitP::kEmployee)) };
-    auto* employee { new FilterUnit(tree_model_p, filter_model, tree_view) };
+    auto* filter_model_employee { tree_model_p->IncludeUnitModel(std::to_underlying(UnitP::kEmployee)) };
+    auto* employee { new FilterUnit(tree_model_p, filter_model_employee, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployee), employee);
 
-    auto* name { new OrderNameR(tree_model_p, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kName), name);
+    const UnitP unit_p { info.section == Section::kSale ? UnitP::kCustomer : UnitP::kVendor };
+    auto* filter_model_partner { tree_model_p->IncludeUnitModel(std::to_underlying(unit_p)) };
+    auto* partner { new FilterUnit(tree_model_p, filter_model_partner, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kPartner), partner);
 
     auto* issued_time { new TreeIssuedTime(section.date_format, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time);
@@ -2057,7 +2059,6 @@ void MainWindow::SetTreeView(QTreeView* tree_view, CSectionInfo& info) const
     const auto section { info.section };
 
     if (section == Section::kSale || section == Section::kPurchase) {
-        tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kPartner), kIsHidden);
         tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kSettlementId), kIsHidden);
     }
 
