@@ -30,7 +30,7 @@ class LeafModelO final : public LeafModel {
     Q_OBJECT
 
 public:
-    LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_item, EntryHub* entry_hub_partner, QObject* parent = nullptr);
+    LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
     ~LeafModelO() override = default;
 
 public slots:
@@ -68,7 +68,7 @@ private:
     EntryHubP* entry_hub_partner_ {};
     EntryHubO* entry_hub_order_ {};
     QUuid partner_id_ {};
-    int status_ {};
+    int node_status_ {};
 };
 
 #endif // LEAFMODELO_H

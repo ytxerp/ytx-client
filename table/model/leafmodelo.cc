@@ -3,13 +3,13 @@
 #include "global/entryshadowpool.h"
 #include "websocket/jsongen.h"
 
-LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_item, EntryHub* entry_hub_partner, QObject* parent)
+LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
     : LeafModel { arg, parent }
-    , tree_model_i_ { static_cast<TreeModelI*>(tree_model_item) }
+    , tree_model_i_ { static_cast<TreeModelI*>(tree_model_inventory) }
     , entry_hub_partner_ { static_cast<EntryHubP*>(entry_hub_partner) }
     , entry_hub_order_ { static_cast<EntryHubO*>(arg.entry_hub) }
     , partner_id_ { static_cast<const NodeO*>(node)->partner }
-    , status_ { static_cast<const NodeO*>(node)->status }
+    , node_status_ { static_cast<const NodeO*>(node)->status }
 {
 }
 
@@ -37,7 +37,7 @@ void LeafModelO::UpdatePartner(const QUuid& node_id, const QUuid& partner_id)
 void LeafModelO::RSyncFinished(const QUuid& node_id, bool value)
 {
     assert(lhs_id_ == node_id);
-    status_ = value;
+    node_status_ = value;
 
     if (!value)
         return;
@@ -99,9 +99,6 @@ QVariant LeafModelO::data(const QModelIndex& index, int role) const
 bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
-        return false;
-
-    if (status_)
         return false;
 
     const EntryEnumO kColumn { index.column() };
@@ -250,13 +247,16 @@ Qt::ItemFlags LeafModelO::flags(const QModelIndex& index) const
         break;
     }
 
+    if (node_status_ == std::to_underlying(NodeStatus::kCompleted))
+        flags &= ~Qt::ItemIsEditable;
+
     return flags;
 }
 
 bool LeafModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
-    if (status_)
+    if (node_status_ == std::to_underlying(NodeStatus::kCompleted))
         return false;
 
     auto* entry_shadow { entry_hub_->AllocateEntryShadow() };
@@ -273,7 +273,7 @@ bool LeafModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 bool LeafModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
-    if (status_)
+    if (node_status_ == std::to_underlying(NodeStatus::kCompleted))
         return false;
 
     auto* d_shadow = DerivedPtr<EntryShadowO>(shadow_list_.at(row));

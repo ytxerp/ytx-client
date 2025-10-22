@@ -45,8 +45,8 @@ void TreeModelO::RSyncFinished(const QUuid& node_id, bool value)
 
 void TreeModelO::AckTree(const QJsonObject& obj)
 {
-    const QJsonArray node_array { obj.value(kNode).toArray() };
-    const QJsonArray path_array { obj.value(kPath).toArray() };
+    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
+    const QJsonArray path_array { obj.value(kPathArray).toArray() };
 
     beginResetModel();
     ClearModel();
@@ -63,18 +63,58 @@ void TreeModelO::AckTree(const QJsonObject& obj)
         } else {
             node = NodePool::Instance().Allocate(section_);
             node->ReadJson(obj);
+            node_cache_.insert(node->id, node);
         }
 
-        RegisterNode(node);
+        node_model_.insert(node->id, node);
     }
 
-    if (node_model_.size() >= 2)
-        BuildHierarchy(path_array);
+    for (const QJsonValue& val : path_array) {
+        const QJsonObject obj { val.toObject() };
 
-    endResetModel();
+        const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
+        const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
 
-    if (!node_array.isEmpty())
+        Node* ancestor { node_model_.value(ancestor_id) };
+        Node* descendant { node_model_.value(descendant_id) };
+
+        assert((ancestor) && "Ancestor not found in node_model_");
+        assert((descendant) && "Descendant not found in node_model_");
+
+        descendant->parent = ancestor;
+    }
+
+    for (auto* node : std::as_const(node_model_)) {
+        if (node->kind == std::to_underlying(NodeKind::kLeaf)) {
+            node->parent->children.emplaceBack(node);
+        }
+    }
+
+    if (node_model_.size() >= 2) {
         HandleNode();
+    }
+
+    sort(std::to_underlying(NodeEnumT::kName), Qt::AscendingOrder);
+    endResetModel();
+}
+
+void TreeModelO::SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta)
+{
+    auto* node = GetNode(node_id);
+    if (!node)
+        return;
+
+    UpdateMeta(node, meta);
+
+    auto* d_node { DerivedPtr<NodeO>(node) };
+    d_node->status = status;
+
+    auto index { GetIndex(node_id) };
+    if (index.isValid()) {
+        emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumO::kStatus)), index.siblingAtColumn(std::to_underlying(NodeEnumO::kStatus)));
+    }
+
+    emit SNodeStatus(node->id, status);
 }
 
 void TreeModelO::RemovePath(Node* node, Node* parent_node)
