@@ -1073,19 +1073,19 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="352"/>
-        <location filename="../../table/widget/leafwidgeto.cc" line="352"/>
+        <location filename="../../table/widget/leafwidgeto.cc" line="356"/>
         <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="359"/>
-        <location filename="../../table/widget/leafwidgeto.cc" line="349"/>
+        <location filename="../../table/widget/leafwidgeto.cc" line="353"/>
         <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="366"/>
-        <location filename="../../table/widget/leafwidgeto.cc" line="355"/>
+        <location filename="../../table/widget/leafwidgeto.cc" line="359"/>
         <source>PEND</source>
         <translation>挂帐</translation>
     </message>
@@ -1106,7 +1106,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../table/widget/leafwidgeto.ui" line="437"/>
-        <location filename="../../table/widget/leafwidgeto.cc" line="194"/>
+        <location filename="../../table/widget/leafwidgeto.cc" line="198"/>
         <source>Finish</source>
         <translation>完成</translation>
     </message>
@@ -1135,7 +1135,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">供应商</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.cc" line="194"/>
+        <location filename="../../table/widget/leafwidgeto.cc" line="198"/>
         <source>Edit</source>
         <translation>编辑</translation>
     </message>
@@ -1393,20 +1393,20 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="382"/>
-        <location filename="../../mainwindow.cc" line="2901"/>
+        <location filename="../../mainwindow.cc" line="2922"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="387"/>
-        <location filename="../../mainwindow.cc" line="1395"/>
+        <location filename="../../mainwindow.cc" line="1416"/>
         <source>Statement</source>
         <translation>帐单</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="395"/>
         <location filename="../../mainwindow.ui" line="398"/>
-        <location filename="../../mainwindow.cc" line="1432"/>
+        <location filename="../../mainwindow.cc" line="1453"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1423,16 +1423,16 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../mainwindow.ui" line="428"/>
         <location filename="../../mainwindow.ui" line="431"/>
-        <location filename="../../mainwindow.cc" line="2436"/>
-        <location filename="../../mainwindow.cc" line="2443"/>
+        <location filename="../../mainwindow.cc" line="2457"/>
+        <location filename="../../mainwindow.cc" line="2464"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="436"/>
         <location filename="../../mainwindow.ui" line="439"/>
-        <location filename="../../mainwindow.cc" line="2437"/>
-        <location filename="../../mainwindow.cc" line="2444"/>
+        <location filename="../../mainwindow.cc" line="2458"/>
+        <location filename="../../mainwindow.cc" line="2465"/>
         <source>Workspace</source>
         <translation>工区</translation>
     </message>
@@ -1478,8 +1478,8 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="488"/>
-        <location filename="../../mainwindow.cc" line="2438"/>
-        <location filename="../../mainwindow.cc" line="2445"/>
+        <location filename="../../mainwindow.cc" line="2459"/>
+        <location filename="../../mainwindow.cc" line="2466"/>
         <source>Expire Date</source>
         <translation>期限</translation>
     </message>
@@ -1519,17 +1519,17 @@ Rage, rage against the dying of the light.</source>
         <translation>将删除此分支，且所有直系子节点提升至同级。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1465"/>
+        <location filename="../../mainwindow.cc" line="1486"/>
         <source>Record-</source>
         <translation>记录-</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2338"/>
+        <location filename="../../mainwindow.cc" line="2359"/>
         <source>Language Changed</source>
         <translation>语言已更改</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2339"/>
+        <location filename="../../mainwindow.cc" line="2360"/>
         <source>The language has been changed. Please restart the application for the changes to take effect.</source>
         <translation>语言已更改，请重启应用程序以使更改生效。</translation>
     </message>
@@ -1565,84 +1565,84 @@ Please check your network and try reconnecting.</source>
         <translation type="vanished">无法连接到服务器，或连接已中断。\n请检查网络并重新连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2813"/>
+        <location filename="../../mainwindow.cc" line="2834"/>
         <source>Connection Refused</source>
         <translation>连接被拒绝</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2813"/>
+        <location filename="../../mainwindow.cc" line="2834"/>
         <source>Unable to connect to the server. Please try again.</source>
         <translation>无法连接到服务器，请重新尝试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2818"/>
+        <location filename="../../mainwindow.cc" line="2839"/>
         <source>Remote Host Closed</source>
         <translation>连接已关闭</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2818"/>
+        <location filename="../../mainwindow.cc" line="2839"/>
         <source>The server has closed the connection. Please try reconnecting.</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2911"/>
+        <location filename="../../mainwindow.cc" line="2932"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2911"/>
+        <location filename="../../mainwindow.cc" line="2932"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2911"/>
+        <location filename="../../mainwindow.cc" line="2932"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2945"/>
+        <location filename="../../mainwindow.cc" line="2966"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2945"/>
+        <location filename="../../mainwindow.cc" line="2966"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2948"/>
+        <location filename="../../mainwindow.cc" line="2969"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2948"/>
+        <location filename="../../mainwindow.cc" line="2969"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3016"/>
-        <location filename="../../mainwindow.cc" line="3023"/>
+        <location filename="../../mainwindow.cc" line="3037"/>
+        <location filename="../../mainwindow.cc" line="3044"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3016"/>
+        <location filename="../../mainwindow.cc" line="3037"/>
         <source>Failed to check updates:
 %1</source>
         <translation>检查更新失败：\n%1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3023"/>
+        <location filename="../../mainwindow.cc" line="3044"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3036"/>
+        <location filename="../../mainwindow.cc" line="3057"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3036"/>
+        <location filename="../../mainwindow.cc" line="3057"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1651,12 +1651,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3042"/>
+        <location filename="../../mainwindow.cc" line="3063"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3042"/>
+        <location filename="../../mainwindow.cc" line="3063"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -1800,12 +1800,12 @@ Download now?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../mainwindow.cc" line="1560"/>
+        <location filename="../../mainwindow.cc" line="1581"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1567"/>
+        <location filename="../../mainwindow.cc" line="1588"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -1814,6 +1814,7 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="26"/>
         <location filename="../../component/stringinitializer.cc" line="47"/>
         <location filename="../../component/stringinitializer.cc" line="69"/>
+        <location filename="../../component/stringinitializer.cc" line="87"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
@@ -2191,11 +2192,6 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="107"/>
         <source>SettlementId</source>
         <translation>结算 ID</translation>
-    </message>
-    <message>
-        <location filename="../../component/stringinitializer.cc" line="87"/>
-        <source>Group</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="119"/>

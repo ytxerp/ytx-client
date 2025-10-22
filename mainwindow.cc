@@ -507,7 +507,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 
     // Configure view
     auto* view = widget->View();
-    SetTableView(view, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
+    SetTableViewO(view, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
     TableConnectO(view, model, tree_model_o, widget);
     TableDelegateO(view, section_config);
 
@@ -1368,6 +1368,27 @@ void MainWindow::SetTableView(QTableView* view, int stretch_column, int lhs_node
     view->setColumnHidden(std::to_underlying(EntryEnum::kCreateTime), kIsHidden);
     view->setColumnHidden(std::to_underlying(EntryEnum::kUpdateTime), kIsHidden);
     view->setColumnHidden(std::to_underlying(EntryEnum::kUpdateBy), kIsHidden);
+
+    auto* h_header { view->horizontalHeader() };
+    ResizeColumn(h_header, stretch_column);
+
+    auto* v_header { view->verticalHeader() };
+    v_header->setDefaultSectionSize(kRowHeight);
+    v_header->setSectionResizeMode(QHeaderView::Fixed);
+    v_header->setHidden(true);
+
+    view->setSortingEnabled(true);
+}
+
+void MainWindow::SetTableViewO(QTableView* view, int stretch_column, int lhs_node_column) const
+{
+    view->setSelectionMode(QAbstractItemView::SingleSelection);
+    view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    view->setAlternatingRowColors(true);
+    view->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::CurrentChanged);
+
+    view->setColumnHidden(std::to_underlying(EntryEnum::kId), kIsHidden);
+    view->setColumnHidden(lhs_node_column, kIsHidden);
 
     auto* h_header { view->horizontalHeader() };
     ResizeColumn(h_header, stretch_column);

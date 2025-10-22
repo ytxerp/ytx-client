@@ -148,6 +148,7 @@ private:
     void TableDelegateO(QTableView* table_view, CSectionConfig& config) const;
 
     void SetTableView(QTableView* table_view, int stretch_column, int lhs_node_column) const;
+    void SetTableViewO(QTableView* table_view, int stretch_column, int lhs_node_column) const;
     void TableConnectF(QTableView* table_view, LeafModel* table_model, TreeModel* tree_model) const;
     void TableConnectI(QTableView* table_view, LeafModel* table_model, TreeModel* tree_model) const;
     void TableConnectT(QTableView* table_view, LeafModel* table_model, TreeModel* tree_model) const;
