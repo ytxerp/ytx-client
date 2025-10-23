@@ -67,6 +67,7 @@ public:
 
     // table
     void AckLeafTable(const QUuid& node_id, const QJsonArray& array);
+    void EntryTable(const QJsonArray& array);
     void SearchEntry(const QJsonArray& array);
 
     void ActionEntry(const QUuid& node_id, EntryAction action);

@@ -103,8 +103,9 @@ private:
     void NotifyWorkspaceAccessPending(const QJsonObject& obj);
 
 private:
-    void SharedConfig(const QJsonArray& arr);
+    void ApplySharedConfig(const QJsonArray& arr);
     void ApplyTree(const QJsonObject& obj);
+    void ApplyPartnerEntry(const QJsonArray& arr);
 
     void InsertNode(const QJsonObject& obj);
     void UpdateNode(const QJsonObject& obj);

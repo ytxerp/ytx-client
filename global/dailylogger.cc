@@ -41,6 +41,11 @@ void DailyLogger::MessageHandler(QtMsgType type, const QMessageLogContext& conte
 
 void DailyLogger::HandleMessage(QtMsgType type, const QMessageLogContext&, const QString& msg)
 {
+#ifndef QT_DEBUG
+    if (type == QtDebugMsg)
+        return;
+#endif
+
     QMutexLocker locker(&mutex_);
 
     const QDate today { QDate::currentDate() };

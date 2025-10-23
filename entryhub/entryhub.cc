@@ -283,6 +283,21 @@ void EntryHub::AckLeafTable(const QUuid& node_id, const QJsonArray& array)
     emit SAppendMultiEntry(node_id, entry_list);
 }
 
+void EntryHub::EntryTable(const QJsonArray& array)
+{
+    for (const auto& value : array) {
+        if (!value.isObject())
+            continue;
+
+        const QJsonObject obj { value.toObject() };
+        const QUuid id { QUuid(obj.value(kId).toString()) };
+
+        Entry* entry { EntryPool::Instance().Allocate(section_) };
+        entry->ReadJson(obj);
+        entry_cache_.insert(id, entry);
+    }
+}
+
 void EntryHub::SearchEntry(const QJsonArray& array)
 {
     EntryList list = ProcessEntryArray(array);

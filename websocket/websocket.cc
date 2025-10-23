@@ -86,8 +86,6 @@ void WebSocket::RDisconnected()
 
     manual_disconnect_ = false;
 
-    qInfo() << "Session ID:" << session_id_ << "— connection closed unexpectedly.";
-
     session_id_.clear();
     tree_model_hash_.clear();
     entry_hub_hash_.clear();
@@ -177,7 +175,8 @@ void WebSocket::InitHandler()
     handler_obj_[kEntryNumeric] = [this](const QJsonObject& obj) { UpdateEntryNumeric(obj); };
     handler_obj_[kLeafRemoveSafely] = [this](const QJsonObject& obj) { RemoveLeafSafely(obj); };
 
-    handler_arr_[kSharedConfig] = [this](const QJsonArray& arr) { SharedConfig(arr); };
+    handler_arr_[kSharedConfig] = [this](const QJsonArray& arr) { ApplySharedConfig(arr); };
+    handler_arr_[kPartnerEntry] = [this](const QJsonArray& arr) { ApplyPartnerEntry(arr); };
 }
 
 void WebSocket::InitConnect()
@@ -354,6 +353,12 @@ void WebSocket::ApplyTree(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     auto tree_model { tree_model_hash_.value(section) };
     tree_model->ApplyTree(obj);
+}
+
+void WebSocket::ApplyPartnerEntry(const QJsonArray& arr)
+{
+    auto entry_hub { entry_hub_hash_.value(Section::kPartner) };
+    entry_hub->EntryTable(arr);
 }
 
 void WebSocket::AckTree(const QJsonObject& obj)
@@ -779,7 +784,7 @@ void WebSocket::UpdateDefaultUnit(const QJsonObject& obj)
 
 void WebSocket::NotifyUpdateDefaultUnitFailure(const QJsonObject& /*obj*/) { emit SUpdateDefaultUnitFailed(kFinance); }
 
-void WebSocket::SharedConfig(const QJsonArray& arr) { emit SSharedConfig(arr); }
+void WebSocket::ApplySharedConfig(const QJsonArray& arr) { emit SSharedConfig(arr); }
 
 QHash<QUuid, QSet<QUuid>> WebSocket::ParseNodeReference(const QJsonObject& obj)
 {
