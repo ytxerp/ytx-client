@@ -76,7 +76,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Settlement</string>
+           <string>NetAmount</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing</set>
@@ -414,7 +414,7 @@
       <item>
        <widget class="QPushButton" name="pBtnStatus">
         <property name="text">
-         <string>Finish</string>
+         <string>Status</string>
         </property>
         <property name="checkable">
          <bool>true</bool>

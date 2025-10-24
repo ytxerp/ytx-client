@@ -1058,6 +1058,8 @@ void MainWindow::on_actionNewGroup_triggered()
     node->unit = parent_id.isNull() ? sc_->shared_config.default_unit : model->Unit(parent_id);
     node->kind = std::to_underlying(NodeKind::kBranch);
 
+    static_cast<NodeO*>(node)->issued_time = QDateTime::currentDateTimeUtc();
+
     model->SetParent(node, parent_id);
 
     auto tree_model { sc_->tree_model };
