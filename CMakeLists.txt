@@ -84,7 +84,6 @@ set(SOURCES
     delegate/tree/color.cc
     delegate/tree/order/orderunit.cc
     delegate/tree/order/orderrule.cc
-    delegate/tree/order/ordernamer.cc
     delegate/tree/finance/financeforeignr.cc
     delegate/search/searchpathtreer.cc
     delegate/search/searchpathtabler.cc
@@ -214,7 +213,6 @@ set(HEADERS
     delegate/tree/treeissuedtime.h
     delegate/tree/color.h
     delegate/tree/order/orderunit.h
-    delegate/tree/order/ordernamer.h
     delegate/tree/order/orderrule.h
     delegate/tree/finance/financeforeignr.h
     delegate/search/searchpathtreer.h
