@@ -35,7 +35,7 @@ public:
 
 public slots:
     void RSyncStatus(const QUuid& node_id, bool value);
-    void RSyncPartner(const QUuid& node_id, int column, const QUuid& value);
+    void RSyncPartner(const QUuid& node_id, const QUuid& value);
     void RSaveOrder();
 
 public:
@@ -60,8 +60,6 @@ private:
     void PurifyEntryShadow();
 
     void CrossSearch(EntryShadow* entry_shadow, const QUuid& item_id, bool is_internal) const;
-
-    void UpdatePartner(const QUuid& node_id, const QUuid& partner_id);
 
 private:
     TreeModelI* tree_model_i_ {};

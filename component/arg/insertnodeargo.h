@@ -28,7 +28,7 @@
 
 struct InsertNodeArgO {
     Node* node {};
-    EntryHub* dbhub {};
+    EntryHub* entry_hub {};
     LeafModel* leaf_model {};
     TreeModel* tree_model_partner {};
     CSectionConfig& section_config {};

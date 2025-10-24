@@ -1,5 +1,7 @@
 #include "leafwidgeto.h"
 
+#include <QMessageBox>
+
 #include "component/signalblocker.h"
 #include "global/nodepool.h"
 #include "ui_leafwidgeto.h"
@@ -9,7 +11,7 @@ LeafWidgetO::LeafWidgetO(
     : LeafWidget(parent)
     , ui(new Ui::LeafWidgetO)
     , node_ { static_cast<NodeO*>(arg.node) }
-    , sql_ { qobject_cast<EntryHubO*>(arg.dbhub) }
+    , sql_ { qobject_cast<EntryHubO*>(arg.entry_hub) }
     , leaf_model_order_ { qobject_cast<LeafModelO*>(arg.leaf_model) }
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
@@ -187,10 +189,6 @@ void LeafWidgetO::IniStatus(bool released)
         ui->pBtnPrint->setDefault(true);
         ui->tableViewO->clearSelection();
     }
-
-    // 需要修复
-    // if (sql_->ExternalReference(node_id_))
-    //     ui->pBtnFinishOrder->setEnabled(false);
 }
 
 void LeafWidgetO::IniRuleGroup()
@@ -215,26 +213,39 @@ void LeafWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
         return;
 
     node_->partner = partner_id;
-    // sql_->WriteField(partner_info_, kPartner, partner_id.toString(QUuid::WithoutBraces), node_id_);
-    emit SSyncPartner(node_id_, std::to_underlying(NodeEnumO::kPartner), partner_id);
+    emit SSyncPartner(node_id_, partner_id);
+
+    if (!is_insert_) {
+        update_cache_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
+    }
 }
 
 void LeafWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 {
-    node_->employee = ui->comboEmployee->currentData().toUuid();
-    // sql_->WriteField(partner_info_, kEmployee, node_->employee.toString(QUuid::WithoutBraces), node_id_);
+    const QUuid employee_id { ui->comboEmployee->currentData().toUuid() };
+    node_->employee = employee_id;
+
+    if (!is_insert_) {
+        update_cache_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
+    }
 }
 
 void LeafWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
     node_->issued_time = date_time.toUTC();
-    // sql_->WriteField(partner_info_, kIssuedTime, node_->issued_time, node_id_);
+
+    if (!is_insert_) {
+        update_cache_.insert(kIssuedTime, node_->issued_time.toString(Qt::ISODate));
+    }
 }
 
 void LeafWidgetO::on_lineDescription_editingFinished()
 {
     node_->description = ui->lineDescription->text();
-    // sql_->WriteField(partner_info_, kDescription, node_->description, node_id_);
+
+    if (!is_insert_) {
+        update_cache_.insert(kDescription, node_->description);
+    }
 }
 
 void LeafWidgetO::RRuleGroupClicked(int id)
@@ -249,9 +260,14 @@ void LeafWidgetO::RRuleGroupClicked(int id)
 
     IniLeafValue();
 
-    // sql_->WriteField(partner_info_, kDirectionRule, node_->direction_rule, node_id_);
-    // sql_->UpdateLeafValue(node_);
-    // sql_->InvertTransValue(node_id_);
+    if (!is_insert_) {
+        update_cache_.insert(kDirectionRule, node_->direction_rule);
+        update_cache_.insert(kCountTotal, QString::number(node_->count_total, 'f', kMaxNumericScale_4));
+        update_cache_.insert(kMeasureTotal, QString::number(node_->measure_total, 'f', kMaxNumericScale_4));
+        update_cache_.insert(kInitialTotal, QString::number(node_->initial_total, 'f', kMaxNumericScale_4));
+        update_cache_.insert(kDiscountTotal, QString::number(node_->discount_total, 'f', kMaxNumericScale_4));
+        update_cache_.insert(kFinalTotal, QString::number(node_->final_total, 'f', kMaxNumericScale_4));
+    }
 }
 
 void LeafWidgetO::RUnitGroupClicked(int id)
@@ -276,15 +292,20 @@ void LeafWidgetO::RUnitGroupClicked(int id)
     node_->unit = id;
     ui->dSpinFinalTotal->setValue(node_->final_total);
 
-    // sql_->WriteField(partner_info_, kUnit, id, node_id_);
-    // sql_->WriteField(partner_info_, kFinalTotal, node_->final_total, node_id_);
+    if (!is_insert_) {
+        update_cache_.insert(kUnit, id);
+        update_cache_.insert(kFinalTotal, QString::number(node_->final_total, 'f', kMaxNumericScale_4));
+    }
 }
 
 void LeafWidgetO::on_pBtnStatus_toggled(bool checked)
 {
-    node_->status = checked;
-    // sql_->WriteField(partner_info_, kIsFinished, checked, node_id_);
+    if (!node_->settlement.isNull()) {
+        QMessageBox::information(this, tr("Order Locked"), tr("This order has already been settled and cannot be modified."));
+        return;
+    }
 
+    node_->status = checked;
     emit SSyncStatus(node_id_, checked);
 
     IniStatus(checked);
@@ -329,8 +350,10 @@ void LeafWidgetO::PreparePrint()
 
 void LeafWidgetO::on_pBtnSave_clicked()
 {
-    if (is_insert_)
-        emit SSaveOrder();
+    if (is_insert_) {
+        emit SInsertOrder();
+        is_insert_ = false;
+    }
 
-    is_insert_ = false;
+    emit SSaveOrder();
 }

@@ -24,16 +24,6 @@ void LeafModelO::RSaveOrder()
         entry_hub_order_->WriteTransRange(shadow_list_);
 }
 
-void LeafModelO::UpdatePartner(const QUuid& node_id, const QUuid& partner_id)
-{
-    assert(lhs_id_ == node_id);
-    if (partner_id_ == partner_id)
-        return;
-
-    partner_id_ = partner_id;
-    // sql_partner_->ReadTrans(partner_id);
-}
-
 void LeafModelO::RSyncStatus(const QUuid& node_id, bool value)
 {
     assert(lhs_id_ == node_id);
@@ -45,17 +35,10 @@ void LeafModelO::RSyncStatus(const QUuid& node_id, bool value)
     PurifyEntryShadow();
 }
 
-void LeafModelO::RSyncPartner(const QUuid& node_id, int column, const QUuid& value)
+void LeafModelO::RSyncPartner(const QUuid& node_id, const QUuid& value)
 {
-    const NodeEnumO kColumn { column };
-
-    switch (kColumn) {
-    case NodeEnumO::kPartner:
-        UpdatePartner(node_id, value);
-        break;
-    default:
-        break;
-    }
+    assert(lhs_id_ == node_id);
+    partner_id_ = value;
 }
 
 QVariant LeafModelO::data(const QModelIndex& index, int role) const

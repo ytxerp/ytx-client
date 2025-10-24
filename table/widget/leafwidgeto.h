@@ -42,13 +42,14 @@ public:
 
 signals:
     // send to TableModelOrder, MainWindow
-    void SSyncPartner(const QUuid& node_id, int column, const QUuid& value);
+    void SSyncPartner(const QUuid& node_id, const QUuid& value);
 
     // send to TreeModelOrder
     void SSyncStatus(const QUuid& node_id, bool value);
 
     // send to its widget
     void SSaveOrder();
+    void SInsertOrder();
 
 public slots:
     // receive from TableModelOrder
@@ -92,6 +93,8 @@ private:
 private:
     Ui::LeafWidgetO* ui;
     NodeO* node_ {};
+    QJsonObject update_cache_ {};
+
     EntryHubO* sql_ {};
     LeafModelO* leaf_model_order_ {};
     TreeModel* tree_model_partner_ {};

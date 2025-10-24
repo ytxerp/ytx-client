@@ -440,16 +440,19 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
 
     TableConnectO(view, leaf_model_order, tree_model_order, widget);
 
-    connect(widget, &LeafWidgetO::SSaveOrder, this, [=, this]() {
-        if (tree_model_order->InsertNode(row, parent, node)) {
-            auto index { tree_model_order->index(row, 0, parent) };
-            sc_->tree_view->setCurrentIndex(index);
-        }
-    });
+    connect(
+        widget, &LeafWidgetO::SInsertOrder, this,
+        [=, this]() {
+            if (tree_model_order->InsertNode(row, parent, node)) {
+                auto index { tree_model_order->index(row, 0, parent) };
+                sc_->tree_view->setCurrentIndex(index);
+            }
+        },
+        Qt::SingleShotConnection);
 
     connect(widget, &LeafWidgetO::SSaveOrder, leaf_model_order, &LeafModelO::RSaveOrder);
 
-    SetTableViewFIPT(view, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
+    SetTableViewO(view, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
     TableDelegateO(view, sc_->section_config);
 
     const int tab_index { ui->tabWidget->addTab(widget, QString()) };
