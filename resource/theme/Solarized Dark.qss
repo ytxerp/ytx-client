@@ -53,7 +53,7 @@ QGroupBox#treeGroup, QTableView#tableViewO, QTableView#settlementView, QTableVie
 /*-------------------------------------border add-----------------------------------------------*/
 
 QGroupBox QComboBox, QGroupBox QSpinBox, QDialog QLineEdit, QDialog QComboBox, QDialog QDateTimeEdit,
-QComboBox#comboEmployee, QComboBox#comboParty, QDialog QSpinBox, QDialog QDoubleSpinBox {
+QDialog QSpinBox, QDialog QDoubleSpinBox {
     border: 1px solid #657B83;
 }
 
@@ -71,11 +71,7 @@ QCheckBox, QRadioButton {
 
 /*--------------------------------------height-------------------------------------------------*/
 
-QTreeView::item {
-    height: 22px;
-}
-
-QListView::item {
+QListView::item, QTreeView::item, QComboBox {
     height: 24px;
 }
 
@@ -85,6 +81,10 @@ QComboBox#comboDateFormat, QComboBox#comboDynamicLhs, QComboBox#comboDynamicRhs,
 QComboBox#comboDefaultUnit
 {
     min-width: 120px;
+}
+
+QWidget#LeafWidgetO QComboBox {
+    min-width: 80px;
 }
 
 /*--------------------------------------background color----------------------------------------*/
@@ -234,7 +234,7 @@ QToolBar {
 QTabBar::tab {
     min-width: 60px;
     padding: 2px 4px;
-    height: 18px;
+    height: 16px;
     border-bottom: none;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;

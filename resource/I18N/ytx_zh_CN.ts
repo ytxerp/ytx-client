@@ -1040,32 +1040,31 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">合作</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="95"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="79"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="114"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="98"/>
         <source>Discount</source>
         <translation>优惠</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="230"/>
         <source>Employee</source>
-        <translation>职员</translation>
+        <translation type="vanished">职员</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="250"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="224"/>
         <source>TO</source>
         <translation>交易</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="257"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="231"/>
         <source>RO</source>
         <translation>退回</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="264"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="238"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
@@ -1078,60 +1077,59 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">第二</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="49"/>
         <source>Partner</source>
-        <translation>合作</translation>
+        <translation type="vanished">合作</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="277"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="251"/>
         <source>Count</source>
         <translation>计数</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="303"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="280"/>
         <source>Measure</source>
         <translation>度量</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="335"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="315"/>
         <source>yyyy/MM/dd HH:mm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="352"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="332"/>
         <location filename="../../table/widget/leafwidgeto.cc" line="316"/>
         <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="359"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="339"/>
         <location filename="../../table/widget/leafwidgeto.cc" line="313"/>
         <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="366"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="346"/>
         <location filename="../../table/widget/leafwidgeto.cc" line="319"/>
         <source>PEND</source>
         <translation>挂帐</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="389"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="369"/>
         <source>Preview</source>
         <translation>预览</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="396"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="376"/>
         <source>Print</source>
         <translation>打印</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="430"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="410"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../../table/widget/leafwidgeto.ui" line="437"/>
+        <location filename="../../table/widget/leafwidgeto.ui" line="417"/>
         <source>Finish</source>
         <translation>完成</translation>
     </message>
