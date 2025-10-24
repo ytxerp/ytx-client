@@ -32,7 +32,7 @@ public:
     ~TreeModelO() override;
 
 signals:
-    // send to NodeModelS
+    // send to NodeModelP
     void SUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta);
 
 public slots:
@@ -45,6 +45,7 @@ public:
     bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild) override;
 
     void AckTree(const QJsonObject& obj) override;
+    void SyncNodeName(const QUuid& node_id, const QString& name, const QJsonObject& meta) override;
 
     int Status(QUuid node_id) const override { return NodeUtils::Value(node_model_, node_id, &NodeO::status); }
     void SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta) override;
@@ -52,13 +53,16 @@ public:
     QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &NodeO::partner); };
 
 protected:
-    void UpdateName(const QUuid& /*node_id*/, CString& /*new_name*/) override { };
     void RegisterPath(Node* /*node*/) override { };
+
+    void UpdateName(const QUuid& node_id, CString& new_name) override;
     void RemovePath(Node* node, Node* parent_node) override;
+
     QSet<QUuid> SyncAncestorTotal(
         Node* node, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta) override;
     QSet<QUuid> SyncDeltaImpl(
         const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta) override;
+
     void HandleNode() override;
     void ResetBranch(Node* node) override;
     void ClearModel() override;

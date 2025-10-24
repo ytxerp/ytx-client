@@ -117,6 +117,7 @@ public:
         Q_UNUSED(status)
         Q_UNUSED(meta)
     }
+    virtual void SyncNodeName(const QUuid& node_id, const QString& name, const QJsonObject& meta);
 
     void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id);
     void SearchNode(const QJsonObject& obj);
@@ -131,7 +132,6 @@ public:
     void DragNode(const QUuid& ancestor, const QUuid& descendant, const QJsonObject& data);
 
     void SyncDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta);
-    void SyncNodeName(const QUuid& node_id, const QString& name, const QJsonObject& meta);
     void SyncDeltaArray(const QJsonArray& delta_array);
 
     // Ytx's

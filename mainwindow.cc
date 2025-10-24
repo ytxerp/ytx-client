@@ -37,13 +37,13 @@
 #include "delegate/table/tableissuedtime.h"
 #include "delegate/tree/color.h"
 #include "delegate/tree/finance/financeforeignr.h"
-#include "delegate/tree/order/ordernamer.h"
 #include "delegate/tree/order/orderrule.h"
 #include "delegate/tree/order/orderunit.h"
 #include "delegate/tree/treeissuedtime.h"
 #include "dialog/about.h"
 #include "dialog/authdialog.h"
 #include "dialog/editnodename.h"
+#include "dialog/editnodenameo.h"
 #include "dialog/insertnode/insertnodebranch.h"
 #include "dialog/insertnode/insertnodefinance.h"
 #include "dialog/insertnode/insertnodei.h"
@@ -397,7 +397,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     auto* view { widget->View() };
 
     const int description_column { EntryUtils::DescriptionColumn(section) };
-    SetTableView(view, description_column, std::to_underlying(EntryEnum::kLhsNode));
+    SetTableViewFIPT(view, description_column, std::to_underlying(EntryEnum::kLhsNode));
 
     switch (section) {
     case Section::kFinance:
@@ -413,8 +413,8 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         TableConnectT(view, leaf_model, tree_model);
         break;
     case Section::kPartner:
-        TableDelegateS(view, section_config);
-        TableConnectS(view, leaf_model);
+        TableDelegateP(view, section_config);
+        TableConnectP(view, leaf_model);
         break;
     default:
         break;
@@ -449,7 +449,7 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
 
     connect(widget, &LeafWidgetO::SSaveOrder, leaf_model_order, &LeafModelO::RSaveOrder);
 
-    SetTableView(view, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
+    SetTableViewFIPT(view, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
     TableDelegateO(view, sc_->section_config);
 
     const int tab_index { ui->tabWidget->addTab(widget, QString()) };
@@ -553,7 +553,7 @@ void MainWindow::TableConnectO(QTableView* table_view, LeafModelO* leaf_model_or
     connect(widget, &LeafWidgetO::SSyncStatus, tree_model, &TreeModelO::RSyncStatus);
 }
 
-void MainWindow::TableConnectS(QTableView* table_view, LeafModel* leaf_model) const
+void MainWindow::TableConnectP(QTableView* table_view, LeafModel* leaf_model) const
 {
     connect(leaf_model, &LeafModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 }
@@ -651,7 +651,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kBalance), initial);
 }
 
-void MainWindow::TableDelegateS(QTableView* table_view, CSectionConfig& config) const
+void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) const
 {
     auto* issued_time { new TableIssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIssuedTime), issued_time);
@@ -1346,7 +1346,7 @@ void MainWindow::SetTabWidget()
     section_group_->button(start_section)->setChecked(true);
 }
 
-void MainWindow::SetTableView(QTableView* view, int stretch_column, int lhs_node_column) const
+void MainWindow::SetTableViewFIPT(QTableView* view, int stretch_column, int lhs_node_column) const
 {
     view->setSelectionMode(QAbstractItemView::SingleSelection);
     view->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -1492,7 +1492,7 @@ void MainWindow::CreateLeafExternalReference(TreeModel* tree_model, CSectionInfo
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, report_id }));
 
     auto* view { widget->View() };
-    SetTableView(view, std::to_underlying(EntryRefEnum::kDescription), std::to_underlying(EntryRefEnum::kPIId));
+    SetTableViewFIPT(view, std::to_underlying(EntryRefEnum::kDescription), std::to_underlying(EntryRefEnum::kPIId));
     DelegateLeafExternalReference(view, sc_sale_.section_config);
 
     connect(view, &QTableView::doubleClicked, this, &MainWindow::REntryRefDoubleClicked);
@@ -2173,9 +2173,19 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
 
 void MainWindow::on_actionEditName_triggered()
 {
-    if (start_ == Section::kSale || start_ == Section::kPurchase)
-        return;
+    switch (start_) {
+    case Section::kSale:
+    case Section::kPurchase:
+        EditNameO();
+        break;
+    default:
+        EditNameFIPT();
+        break;
+    }
+}
 
+void MainWindow::EditNameFIPT()
+{
     assert(sc_->tree_widget);
 
     const auto index { sc_->tree_view->currentIndex() };
@@ -2183,7 +2193,6 @@ void MainWindow::on_actionEditName_triggered()
         return;
 
     const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
-
     auto model { sc_->tree_model };
 
     const auto& parent { index.parent() };
@@ -2197,6 +2206,24 @@ void MainWindow::on_actionEditName_triggered()
     const auto children_name { model->ChildrenName(parent_id) };
 
     auto* edit_name { new EditNodeName(name, parent_path, children_name, this) };
+    connect(edit_name, &QDialog::accepted, this, [=]() { model->UpdateName(node_id, edit_name->GetName()); });
+    edit_name->exec();
+}
+
+void MainWindow::EditNameO()
+{
+    assert(sc_->tree_widget);
+
+    const auto index { sc_->tree_view->currentIndex() };
+    if (!index.isValid())
+        return;
+
+    const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
+    auto model { sc_->tree_model };
+
+    CString name { model->Name(node_id) };
+
+    auto* edit_name { new EditNodeNameO(name, this) };
     connect(edit_name, &QDialog::accepted, this, [=]() { model->UpdateName(node_id, edit_name->GetName()); });
     edit_name->exec();
 }
@@ -2879,7 +2906,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
     }
 
     ui->actionAppendNode->setEnabled(is_tree);
-    ui->actionEditName->setEnabled(is_tree && !is_order_section);
+    ui->actionEditName->setEnabled(is_tree);
     ui->actionResetColor->setEnabled(is_tree && is_color_section);
 
     ui->actionMarkAll->setEnabled(is_leaf_fist);

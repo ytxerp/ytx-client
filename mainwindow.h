@@ -57,12 +57,10 @@ public:
 protected:
     void closeEvent(QCloseEvent* event) override;
 
-public slots:
+private slots:
     void on_actionInsertNode_triggered();
     void on_actionAppendEntry_triggered();
     void on_actionRemove_triggered();
-
-private slots:
     void on_actionAppendNode_triggered();
     void on_actionEditName_triggered();
     void on_actionResetColor_triggered();
@@ -142,15 +140,16 @@ private:
     void TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
     void TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
     void TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
-    void TableDelegateS(QTableView* table_view, CSectionConfig& config) const;
+    void TableDelegateP(QTableView* table_view, CSectionConfig& config) const;
     void TableDelegateO(QTableView* table_view, CSectionConfig& config) const;
 
-    void SetTableView(QTableView* table_view, int stretch_column, int lhs_node_column) const;
+    void SetTableViewFIPT(QTableView* table_view, int stretch_column, int lhs_node_column) const;
     void SetTableViewO(QTableView* table_view, int stretch_column, int lhs_node_column) const;
+
     void TableConnectF(QTableView* table_view, LeafModel* table_model, TreeModel* tree_model) const;
     void TableConnectI(QTableView* table_view, LeafModel* table_model, TreeModel* tree_model) const;
     void TableConnectT(QTableView* table_view, LeafModel* table_model, TreeModel* tree_model) const;
-    void TableConnectS(QTableView* table_view, LeafModel* table_model) const;
+    void TableConnectP(QTableView* table_view, LeafModel* table_model) const;
     void TableConnectO(QTableView* table_view, LeafModelO* table_model, TreeModelO* tree_model, LeafWidgetO* widget) const;
 
     void CreateLeafExternalReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit);
@@ -167,6 +166,9 @@ private:
     void CreateSection(SectionContext& sc, CString& name);
     void SwitchSection(Section section, const QUuid& last_tab) const;
     void UpdateLastTab() const;
+
+    void EditNameFIPT();
+    void EditNameO();
 
     void SetTreeView(QTreeView* tree_view, CSectionInfo& info) const;
 

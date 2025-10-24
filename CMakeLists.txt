@@ -113,6 +113,7 @@ set(SOURCES
     dialog/authdialog.cc
     dialog/editdocument.cc
     dialog/editnodename.cc
+    dialog/editnodenameo.cc
     dialog/about.cc
     dialog/preferences.cc
     dialog/removenode/leafremovedialog.cc
@@ -248,6 +249,7 @@ set(HEADERS
     search/node/searchnodemodelt.h
     dialog/about.h
     dialog/editnodename.h
+    dialog/editnodenameo.h
     dialog/editdocument.h
     dialog/preferences.h
     dialog/authdialog.h
@@ -299,6 +301,7 @@ set(UIS
     tree/widget/treewidgetp.ui
     search/dialog/searchdialog.ui
     dialog/editnodename.ui
+    dialog/editnodenameo.ui
     dialog/about.ui
     dialog/preferences.ui
     dialog/editdocument.ui

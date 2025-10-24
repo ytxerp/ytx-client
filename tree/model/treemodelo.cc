@@ -3,6 +3,8 @@
 #include <QJsonArray>
 
 #include "global/nodepool.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
@@ -98,6 +100,27 @@ void TreeModelO::AckTree(const QJsonObject& obj)
     endResetModel();
 }
 
+void TreeModelO::SyncNodeName(const QUuid& node_id, const QString& name, const QJsonObject& meta)
+{
+    Q_ASSERT_X(meta.contains(kUpdatedBy), "TreeModel::SyncName", "Missing 'updated_by' in data");
+    Q_ASSERT_X(meta.contains(kUpdatedTime), "TreeModel::SyncName", "Missing 'updated_time' in data");
+
+    auto* node = GetNode(node_id);
+    if (!node)
+        return;
+
+    node->name = name;
+    node->updated_by = QUuid(meta[kUpdatedBy].toString());
+    node->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
+
+    emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
+
+    auto index { GetIndex(node_id) };
+    if (index.isValid()) {
+        emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnum::kName)), index.siblingAtColumn(std::to_underlying(NodeEnum::kName)));
+    }
+}
+
 void TreeModelO::SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta)
 {
     auto* node = GetNode(node_id);
@@ -115,6 +138,22 @@ void TreeModelO::SyncNodeStatus(const QUuid& node_id, int status, const QJsonObj
     }
 
     emit SNodeStatus(node->id, status);
+}
+
+void TreeModelO::UpdateName(const QUuid& node_id, CString& new_name)
+{
+    auto* node { node_model_.value(node_id) };
+    if (!node) {
+        qCritical() << "UpdateName: node_id not found in node_hash_, node_id =" << node_id;
+    }
+    assert(node);
+
+    node->name = new_name;
+
+    const auto message { JsonGen::NodeName(section_, node_id, new_name) };
+    WebSocket::Instance()->SendMessage(kNodeName, message);
+
+    emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
 }
 
 void TreeModelO::RemovePath(Node* node, Node* parent_node)
