@@ -111,8 +111,6 @@ private slots:
     void RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
     void RStatementSecondary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 
-    void REnableAction(bool finished);
-
     void RLeafRemoveDenied(const QJsonObject& obj);
     inline void RNodeRemoveConfirmed(const QUuid& node_id) { node_pending_removal_.remove(node_id); }
 

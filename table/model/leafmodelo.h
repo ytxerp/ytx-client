@@ -34,7 +34,7 @@ public:
     ~LeafModelO() override = default;
 
 public slots:
-    void RSyncFinished(const QUuid& node_id, bool value);
+    void RSyncStatus(const QUuid& node_id, bool value);
     void RSyncPartner(const QUuid& node_id, int column, const QUuid& value);
     void RSaveOrder();
 

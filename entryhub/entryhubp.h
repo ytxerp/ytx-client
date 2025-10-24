@@ -21,16 +21,12 @@
 #define ENTRYHUBP_H
 
 #include "entryhub.h"
-#include "entryhub/prices.h"
 
 class EntryHubP final : public EntryHub {
     Q_OBJECT
 
 public:
     EntryHubP(CSectionInfo& info, QObject* parent = nullptr);
-
-public slots:
-    void RPriceSList(const QList<PriceS>& list);
 
 public:
     bool CrossSearch(EntryShadowO* order_entry_shadow, const QUuid& partner_id, const QUuid& item_id, bool is_internal) const;

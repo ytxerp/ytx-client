@@ -22,7 +22,6 @@
 
 #include "component/using.h"
 #include "entryhub.h"
-#include "entryhub/prices.h"
 #include "report/settlement.h"
 #include "report/statement.h"
 #include "tree/node.h"
@@ -32,9 +31,6 @@ class EntryHubO final : public EntryHub {
 
 public:
     EntryHubO(CSectionInfo& info, QObject* parent = nullptr);
-
-signals:
-    void SSyncPrice(const QList<PriceS>& list);
 
 public:
     bool SearchNode(QList<const Node*>& node_list, const QList<QUuid>& partner_id_list);
@@ -51,8 +47,6 @@ public:
     bool ReadSettlementPrimary(SettlementList& list, const QUuid& partner_id, const QUuid& settlement_id, bool status);
     bool AddSettlementPrimary(const QUuid& node_id, const QUuid& settlement_id) const;
     bool RemoveSettlementPrimary(const QUuid& node_id) const;
-
-    bool SyncPrice(const QUuid& node_id);
 
     bool ReadStatement(StatementList& list, int unit, const QDateTime& start, const QDateTime& end) const;
     bool ReadBalance(double& pbalance, double& cdelta, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const;

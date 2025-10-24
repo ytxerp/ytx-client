@@ -282,47 +282,6 @@ bool EntryHubO::RemoveSettlementPrimary(const QUuid& node_id) const
     return true;
 }
 
-bool EntryHubO::SyncPrice(const QUuid& node_id)
-{
-    // QSqlQuery query(main_db_);
-    // query.setForwardOnly(true);
-
-    // CString sql_first { QSSyncPriceFirst() };
-
-    // query.prepare(sql_first);
-    // query.bindValue(QStringLiteral(":node_id"), node_id.toString(QUuid::WithoutBraces));
-
-    // if (!query.exec()) {
-    //     qWarning() << "SQL execution failed in QSSyncStakeholderPriceFirst:" << query.lastError().text();
-    //     return false;
-    // }
-
-    // CString sql_second { QSSyncPriceSecond() };
-
-    // query.prepare(sql_second);
-    // query.bindValue(QStringLiteral(":node_id"), node_id.toString(QUuid::WithoutBraces));
-
-    // if (!query.exec()) {
-    //     qWarning() << "SQL execution failed in QSSyncStakeholderPriceSecond:" << query.lastError().text();
-    //     return false;
-    // }
-
-    // QList<PriceS> list {};
-
-    // while (query.next()) {
-    //     PriceS item {};
-    //     item.issued_time = query.value(QStringLiteral("issued_time")).toDateTime();
-    //     item.lhs_node = query.value(QStringLiteral("lhs_node")).toUuid();
-    //     item.rhs_node = query.value(QStringLiteral("rhs_node")).toUuid();
-    //     item.unit_price = query.value(QStringLiteral("unit_price")).toDouble();
-
-    //     list.append(std::move(item));
-    // }
-
-    // emit SSyncPrice(list);
-    return true;
-}
-
 bool EntryHubO::ReadStatement(StatementList& list, int unit, const QDateTime& start, const QDateTime& end) const
 {
     // QSqlQuery query(main_db_);

@@ -425,14 +425,14 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pBtnSaveOrder">
+       <widget class="QPushButton" name="pBtnSave">
         <property name="text">
          <string>Save</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pBtnFinishOrder">
+       <widget class="QPushButton" name="pBtnStatus">
         <property name="text">
          <string>Finish</string>
         </property>
@@ -461,14 +461,14 @@
    <header location="global">widget/combobox.h</header>
   </customwidget>
   <customwidget>
-   <class>DoubleSpinBox</class>
-   <extends>QDoubleSpinBox</extends>
-   <header location="global">widget/doublespinbox.h</header>
-  </customwidget>
-  <customwidget>
    <class>DateTimeEdit</class>
    <extends>QDateTimeEdit</extends>
    <header location="global">widget/datetimeedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header location="global">widget/doublespinbox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

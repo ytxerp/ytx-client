@@ -30,9 +30,11 @@ LeafWidgetO::LeafWidgetO(
     IniData(node_->partner, node_->employee);
     IniConnect();
 
-    const bool is_completed { node_->status == std::to_underlying(NodeStatus::kCompleted) };
-    IniFinished(is_completed);
-    LockWidgets(is_completed);
+    const bool released { node_->status == std::to_underlying(NodeStatus::kReleased) };
+    ui->pBtnStatus->setChecked(released);
+
+    IniStatus(released);
+    LockWidgets(released);
 }
 
 LeafWidgetO::~LeafWidgetO()
@@ -126,40 +128,23 @@ void LeafWidgetO::IniData(const QUuid& partner, const QUuid& employee)
     ui->comboEmployee->setCurrentIndex(employee_index);
 }
 
-void LeafWidgetO::LockWidgets(bool finished)
+void LeafWidgetO::LockWidgets(bool released)
 {
-    const bool enable { !finished };
+    const bool enable { !released };
 
-    ui->labPartner->setEnabled(enable);
     ui->comboPartner->setEnabled(enable);
-
-    ui->labelFinalTotal->setEnabled(enable);
-    ui->dSpinFinalTotal->setEnabled(enable);
-
-    ui->dSpinInitialTotal->setEnabled(enable);
-
-    ui->labelDiscountTotal->setEnabled(enable);
-    ui->dSpinDiscountTotal->setEnabled(enable);
-
-    ui->labelEmployee->setEnabled(enable);
     ui->comboEmployee->setEnabled(enable);
-    ui->tableViewO->setEnabled(enable);
-
-    ui->rBtnIS->setEnabled(enable);
-    ui->rBtnMS->setEnabled(enable);
-    ui->rBtnPEND->setEnabled(enable);
-    ui->dateTimeEdit->setEnabled(enable);
-
-    ui->dSpinFirstTotal->setEnabled(enable);
-    ui->labelCountTotal->setEnabled(enable);
-    ui->dSpinSecondTotal->setEnabled(enable);
-    ui->labelMeasureTotal->setEnabled(enable);
 
     ui->rBtnRO->setEnabled(enable);
     ui->rBtnTO->setEnabled(enable);
-    ui->lineDescription->setEnabled(enable);
+    ui->rBtnIS->setEnabled(enable);
+    ui->rBtnMS->setEnabled(enable);
+    ui->rBtnPEND->setEnabled(enable);
 
-    ui->pBtnPrint->setEnabled(finished);
+    ui->lineDescription->setReadOnly(released);
+    ui->dateTimeEdit->setReadOnly(released);
+
+    ui->pBtnPrint->setEnabled(released);
 }
 
 void LeafWidgetO::IniUnit(int unit)
@@ -192,14 +177,12 @@ void LeafWidgetO::IniLeafValue()
 
 void LeafWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true); }
 
-void LeafWidgetO::IniFinished(bool finished)
+void LeafWidgetO::IniStatus(bool released)
 {
-    ui->pBtnFinishOrder->setChecked(finished);
-    ui->pBtnFinishOrder->setText(finished ? tr("Edit") : tr("Finish"));
-    ui->pBtnFinishOrder->setEnabled(node_->unit != std::to_underlying(UnitO::kPending));
-    emit SEnableAction(finished);
+    ui->pBtnStatus->setText(released ? tr("Recall") : tr("Released"));
+    ui->pBtnStatus->setEnabled(node_->unit != std::to_underlying(UnitO::kPending));
 
-    if (finished) {
+    if (released) {
         ui->pBtnPrint->setFocus();
         ui->pBtnPrint->setDefault(true);
         ui->tableViewO->clearSelection();
@@ -242,26 +225,6 @@ void LeafWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
     // sql_->WriteField(partner_info_, kEmployee, node_->employee.toString(QUuid::WithoutBraces), node_id_);
 }
 
-#if 0
-void TransWidgetO::on_pBtnInsert_clicked()
-{
-    const auto& name { ui->comboPartner->currentText() };
-    if (name.isEmpty() || ui->comboPartner->currentIndex() != -1)
-        return;
-
-    auto* node { ResourcePool<Node>::Instance().Allocate() };
-    partner_node_->SetParent(node, {});
-    node->name = name;
-
-    node->unit = partner_unit_;
-
-    partner_node_->InsertNode(0, QModelIndex(), node);
-
-    int partner_index { ui->comboPartner->findData(node->id) };
-    ui->comboPartner->setCurrentIndex(partner_index);
-}
-#endif
-
 void LeafWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
     node_->issued_time = date_time.toUTC();
@@ -301,10 +264,10 @@ void LeafWidgetO::RUnitGroupClicked(int id)
         node_->final_total = node_->initial_total - node_->discount_total;
         [[fallthrough]];
     case UnitO::kMonthly:
-        ui->pBtnFinishOrder->setEnabled(true);
+        ui->pBtnStatus->setEnabled(true);
         break;
     case UnitO::kPending:
-        ui->pBtnFinishOrder->setEnabled(false);
+        ui->pBtnStatus->setEnabled(false);
         break;
     default:
         break;
@@ -317,18 +280,15 @@ void LeafWidgetO::RUnitGroupClicked(int id)
     // sql_->WriteField(partner_info_, kFinalTotal, node_->final_total, node_id_);
 }
 
-void LeafWidgetO::on_pBtnFinishOrder_toggled(bool checked)
+void LeafWidgetO::on_pBtnStatus_toggled(bool checked)
 {
     node_->status = checked;
     // sql_->WriteField(partner_info_, kIsFinished, checked, node_id_);
 
-    emit SSyncFinished(node_id_, checked);
+    emit SSyncStatus(node_id_, checked);
 
-    IniFinished(checked);
+    IniStatus(checked);
     LockWidgets(checked);
-
-    if (checked)
-        sql_->SyncPrice(node_id_);
 }
 
 void LeafWidgetO::on_pBtnPrint_clicked()
@@ -367,7 +327,7 @@ void LeafWidgetO::PreparePrint()
     print_manager_->SetData(data, leaf_model_order_->GetEntryShadowList());
 }
 
-void LeafWidgetO::on_pBtnSaveOrder_clicked()
+void LeafWidgetO::on_pBtnSave_clicked()
 {
     if (is_insert_)
         emit SSaveOrder();

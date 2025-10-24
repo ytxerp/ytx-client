@@ -48,7 +48,7 @@ void InsertNodeTask::IniData(Node* node)
     IniRule(node->direction_rule);
 
     ui->rBtnLeaf->setChecked(true);
-    ui->rBtnInProgress->setChecked(true);
+    ui->rBtnDraft->setChecked(true);
     ui->pBtnOk->setEnabled(false);
 }
 
@@ -93,8 +93,8 @@ void InsertNodeTask::IniRuleGroup()
 void InsertNodeTask::IniStatusGroup()
 {
     status_group_ = new QButtonGroup(this);
-    status_group_->addButton(ui->rBtnInProgress, std::to_underlying(NodeStatus::kInProgress));
-    status_group_->addButton(ui->rBtnCompleted, std::to_underlying(NodeStatus::kCompleted));
+    status_group_->addButton(ui->rBtnDraft, std::to_underlying(NodeStatus::kDraft));
+    status_group_->addButton(ui->rBtnReleased, std::to_underlying(NodeStatus::kReleased));
 }
 
 void InsertNodeTask::IniRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }

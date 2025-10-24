@@ -45,13 +45,10 @@ signals:
     void SSyncPartner(const QUuid& node_id, int column, const QUuid& value);
 
     // send to TreeModelOrder
-    void SSyncFinished(const QUuid& node_id, bool value);
+    void SSyncStatus(const QUuid& node_id, bool value);
 
     // send to its widget
     void SSaveOrder();
-
-    // send to MainWindow
-    void SEnableAction(bool finished);
 
 public slots:
     // receive from TableModelOrder
@@ -66,9 +63,6 @@ private slots:
     void on_comboPartner_currentIndexChanged(int index);
     void on_comboEmployee_currentIndexChanged(int index);
 
-    void on_pBtnFinishOrder_toggled(bool checked);
-    // void on_pBtnInsert_clicked();
-
     void on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time);
     void on_lineDescription_editingFinished();
 
@@ -78,17 +72,18 @@ private slots:
     void RRuleGroupClicked(int id);
     void RUnitGroupClicked(int id);
 
-    void on_pBtnSaveOrder_clicked();
+    void on_pBtnSave_clicked();
+    void on_pBtnStatus_toggled(bool checked);
 
 private:
     void IniWidget();
     void IniConnect();
     void IniData(const QUuid& partner, const QUuid& employee);
-    void LockWidgets(bool finished);
+    void LockWidgets(bool released);
     void IniUnit(int unit);
     void IniLeafValue();
     void IniRule(bool rule);
-    void IniFinished(bool finished);
+    void IniStatus(bool released);
     void IniRuleGroup();
     void IniUnitGroup();
 

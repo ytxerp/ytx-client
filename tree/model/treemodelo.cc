@@ -23,14 +23,14 @@ QSet<QUuid> TreeModelO::SyncDeltaImpl(
 
     QSet<QUuid> affected_ids {};
 
-    if (node->status == std::to_underlying(NodeStatus::kCompleted)) {
+    if (node->status == std::to_underlying(NodeStatus::kReleased)) {
         affected_ids = SyncAncestorTotal(node, initial_delta, final_delta, first_delta, second_delta, discount_delta);
     }
 
     return {};
 }
 
-void TreeModelO::RSyncFinished(const QUuid& node_id, bool value)
+void TreeModelO::RSyncStatus(const QUuid& node_id, bool value)
 {
     auto* node { DerivedPtr<NodeO>(node_model_.value(node_id)) };
     assert(node);
@@ -130,7 +130,7 @@ void TreeModelO::RemovePath(Node* node, Node* parent_node)
         }
         break;
     case NodeKind::kLeaf:
-        if (d_node->status == std::to_underlying(NodeStatus::kCompleted)) {
+        if (d_node->status == std::to_underlying(NodeStatus::kReleased)) {
             SyncAncestorTotal(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
 
             if (node->unit == std::to_underlying(UnitO::kMonthly))
@@ -178,7 +178,7 @@ void TreeModelO::HandleNode()
     for (auto* node : std::as_const(node_model_)) {
         auto* d_node { DerivedPtr<NodeO>(node) };
 
-        if (d_node->kind == std::to_underlying(NodeKind::kLeaf) && d_node->status == std::to_underlying(NodeStatus::kCompleted))
+        if (d_node->kind == std::to_underlying(NodeKind::kLeaf) && d_node->status == std::to_underlying(NodeStatus::kReleased))
             SyncAncestorTotal(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
     }
 }
@@ -211,7 +211,7 @@ void TreeModelO::ClearModel()
             continue;
         }
 
-        if (node->status == std::to_underlying(NodeStatus::kInProgress)) {
+        if (node->status == std::to_underlying(NodeStatus::kDraft)) {
             ++it;
             continue;
         }
@@ -374,7 +374,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*
     auto* node { DerivedPtr<NodeO>(source_parent->children.takeAt(sourceRow)) };
     assert(node);
 
-    bool update_ancestor { node->kind == std::to_underlying(NodeKind::kBranch) || node->status == std::to_underlying(NodeStatus::kCompleted) };
+    bool update_ancestor { node->kind == std::to_underlying(NodeKind::kBranch) || node->status == std::to_underlying(NodeStatus::kReleased) };
 
     if (update_ancestor) {
         SyncAncestorTotal(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);

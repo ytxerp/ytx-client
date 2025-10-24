@@ -173,7 +173,6 @@ set(HEADERS
     entryhub/entryhub.h
     entryhub/entryhubt.h
     entryhub/entryhubi.h
-    entryhub/prices.h
     widget/plaintextedit.h
     widget/spinbox.h
     widget/combobox.h

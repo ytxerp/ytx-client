@@ -7,33 +7,6 @@ EntryHubP::EntryHubP(CSectionInfo& info, QObject* parent)
 
 void EntryHubP::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
 
-void EntryHubP::RPriceSList(const QList<PriceS>& list)
-{
-    for (int i = 0; i != list.size(); ++i) {
-        EntryP* latest_trans { nullptr };
-
-        for (auto* trans : std::as_const(entry_cache_)) {
-            if (trans->lhs_node == list[i].lhs_node && trans->rhs_node == list[i].rhs_node) {
-                latest_trans = static_cast<EntryP*>(trans);
-                break;
-            }
-        }
-
-        if (latest_trans) {
-            latest_trans->unit_price = list[i].unit_price;
-            latest_trans->unit_price = list[i].unit_price;
-            latest_trans->issued_time = list[i].issued_time;
-        }
-    }
-
-    QSet<QUuid> set {};
-    for (const auto& item : std::as_const(list)) {
-        set.insert(item.rhs_node);
-    }
-
-    ReadTransRange(set);
-}
-
 void EntryHubP::ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const
 {
     for (auto* entry : std::as_const(entry_cache_)) {

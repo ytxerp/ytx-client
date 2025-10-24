@@ -226,16 +226,16 @@
        <number>8</number>
       </property>
       <item>
-       <widget class="QRadioButton" name="rBtnInProgress">
+       <widget class="QRadioButton" name="rBtnDraft">
         <property name="text">
-         <string>In Progress</string>
+         <string>Draft</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="rBtnCompleted">
+       <widget class="QRadioButton" name="rBtnReleased">
         <property name="text">
-         <string>Completed</string>
+         <string>Released</string>
         </property>
        </widget>
       </item>

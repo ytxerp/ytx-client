@@ -333,12 +333,6 @@ void MainWindow::RStatementSecondary(const QUuid& partner_id, int unit, const QD
     RegisterRptWgt(report_id, widget);
 }
 
-void MainWindow::REnableAction(bool finished)
-{
-    ui->actionAppendEntry->setEnabled(!finished);
-    ui->actionRemove->setEnabled(!finished);
-}
-
 // FocusLeafWidget - Activate and focus the leaf widget tab
 // -------------------------------
 // Used for:
@@ -550,15 +544,13 @@ void MainWindow::TableConnectT(QTableView* table_view, LeafModel* table_model, T
 void MainWindow::TableConnectO(QTableView* table_view, LeafModelO* leaf_model_order, TreeModelO* tree_model, LeafWidgetO* widget) const
 {
     connect(leaf_model_order, &LeafModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
-
     connect(leaf_model_order, &LeafModel::SSyncDelta, widget, &LeafWidgetO::RSyncDelta);
 
     connect(widget, &LeafWidgetO::SSyncPartner, leaf_model_order, &LeafModelO::RSyncPartner);
-    connect(widget, &LeafWidgetO::SSyncFinished, leaf_model_order, &LeafModelO::RSyncFinished);
-    connect(widget, &LeafWidgetO::SSyncFinished, tree_model, &TreeModelO::RSyncFinished);
-
     connect(widget, &LeafWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
-    connect(widget, &LeafWidgetO::SEnableAction, this, &MainWindow::REnableAction);
+
+    connect(widget, &LeafWidgetO::SSyncStatus, leaf_model_order, &LeafModelO::RSyncStatus);
+    connect(widget, &LeafWidgetO::SSyncStatus, tree_model, &TreeModelO::RSyncStatus);
 }
 
 void MainWindow::TableConnectS(QTableView* table_view, LeafModel* leaf_model) const
@@ -1999,7 +1991,6 @@ void MainWindow::InitContextSale()
     tree_view = tree_widget->View();
 
     connect(tree_model_o, &TreeModelO::SUpdateAmount, static_cast<TreeModelP*>(sc_p_.tree_model.data()), &TreeModelP::RUpdateAmount);
-    connect(entry_hub_o, &EntryHubO::SSyncPrice, static_cast<EntryHubP*>(sc_p_.entry_hub.data()), &EntryHubP::RPriceSList);
 }
 
 void MainWindow::InitContextPurchase()
@@ -2052,7 +2043,6 @@ void MainWindow::InitContextPurchase()
     tree_view = tree_widget->View();
 
     connect(tree_model_o, &TreeModelO::SUpdateAmount, static_cast<TreeModelP*>(sc_p_.tree_model.data()), &TreeModelP::RUpdateAmount);
-    connect(entry_hub_o, &EntryHubO::SSyncPrice, static_cast<EntryHubP*>(sc_p_.entry_hub.data()), &EntryHubP::RPriceSList);
 }
 
 void MainWindow::SetIcon() const

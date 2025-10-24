@@ -199,7 +199,7 @@ Qt::ItemFlags TreeModelT::flags(const QModelIndex& index) const
     }
 
     const int status { index.siblingAtColumn(std::to_underlying(NodeEnumT::kStatus)).data().toInt() };
-    if (status == std::to_underlying(NodeStatus::kCompleted))
+    if (status == std::to_underlying(NodeStatus::kReleased))
         flags &= ~Qt::ItemIsEditable;
 
     return flags;
@@ -337,7 +337,7 @@ void TreeModelT::ClearModel()
             continue;
         }
 
-        if (node->status == std::to_underlying(NodeStatus::kInProgress)) {
+        if (node->status == std::to_underlying(NodeStatus::kDraft)) {
             ++it;
             continue;
         }
