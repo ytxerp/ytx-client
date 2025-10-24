@@ -281,7 +281,7 @@ inline const QString kFinalDelta = QStringLiteral("final_delta");
 inline const QString kFinalTotal = QStringLiteral("final_total");
 
 inline const QString kDiscount = QStringLiteral("discount");
-inline const QString kDiscountPrice = QStringLiteral("discount_price");
+inline const QString kUnitDiscount = QStringLiteral("unit_discount");
 inline const QString kDiscountTotal = QStringLiteral("discount_total");
 
 inline constexpr char kAction[] = "action";

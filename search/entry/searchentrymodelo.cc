@@ -32,8 +32,8 @@ QVariant SearchEntryModelO::data(const QModelIndex& index, int role) const
         return d_entry->count;
     case EntryEnumO::kMeasure:
         return d_entry->measure;
-    case EntryEnumO::kDiscountPrice:
-        return d_entry->discount_price;
+    case EntryEnumO::kUnitDiscount:
+        return d_entry->unit_discount;
     case EntryEnumO::kInitial:
         return d_entry->initial;
     case EntryEnumO::kDiscount:
@@ -69,8 +69,8 @@ void SearchEntryModelO::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
         case EntryEnumO::kExternalSku:
             return (order == Qt::AscendingOrder) ? (d_lhs->external_sku < d_rhs->external_sku) : (d_lhs->external_sku > d_rhs->external_sku);
-        case EntryEnumO::kDiscountPrice:
-            return (order == Qt::AscendingOrder) ? (d_lhs->discount_price < d_rhs->discount_price) : (d_lhs->discount_price > d_rhs->discount_price);
+        case EntryEnumO::kUnitDiscount:
+            return (order == Qt::AscendingOrder) ? (d_lhs->unit_discount < d_rhs->unit_discount) : (d_lhs->unit_discount > d_rhs->unit_discount);
         case EntryEnumO::kInitial:
             return (order == Qt::AscendingOrder) ? (d_lhs->initial < d_rhs->initial) : (d_lhs->initial > d_rhs->initial);
         case EntryEnumO::kFinal:

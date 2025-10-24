@@ -698,7 +698,7 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) 
 
     auto* price { new Double(config.rate_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient8, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitPrice), price);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDiscountPrice), price);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitDiscount), price);
 
     auto* quantity { new Double(config.amount_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient8, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kCount), quantity);
@@ -1608,7 +1608,7 @@ void MainWindow::DelegateLeafExternalReference(QTableView* table_view, CSectionC
 {
     auto* price { new DoubleSpinNoneZeroR(config.rate_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kUnitPrice), price);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kDiscountPrice), price);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kUnitDiscount), price);
 
     auto* quantity { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kkCount), quantity);

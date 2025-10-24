@@ -34,7 +34,7 @@ struct EntryRef {
     double count {};
     double measure {};
     double unit_price {};
-    double discount_price {};
+    double unit_discount {};
     double initial {};
     QString description {};
 
@@ -51,7 +51,7 @@ inline void EntryRef::ResetState()
     count = 0.0;
     measure = 0.0;
     unit_price = 0.0;
-    discount_price = 0.0;
+    unit_discount = 0.0;
     initial = 0.0;
     description.clear();
 }

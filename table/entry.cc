@@ -167,7 +167,7 @@ void EntryO::ResetState()
     initial = 0.0;
     final = 0.0;
     discount = 0.0;
-    discount_price = 0.0;
+    unit_discount = 0.0;
 }
 
 // Note: Fields like issued_time, document, code and status are ignored for Order entries
@@ -205,6 +205,6 @@ void EntryO::ReadJson(const QJsonObject& object)
         final = object[kFinal].toString().toDouble();
     if (object.contains(kDiscount))
         discount = object[kDiscount].toString().toDouble();
-    if (object.contains(kDiscountPrice))
-        discount_price = object[kDiscountPrice].toString().toDouble();
+    if (object.contains(kUnitDiscount))
+        unit_discount = object[kUnitDiscount].toString().toDouble();
 }

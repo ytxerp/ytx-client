@@ -170,7 +170,7 @@ enum class EntryEnumO {
     kDescription,
     kExternalSku,
     kLhsNode,
-    kDiscountPrice,
+    kUnitDiscount,
     kInitial,
     kDiscount,
     kFinal,
@@ -386,7 +386,7 @@ enum class EntryRefEnum {
     kkCount,
     kkMeasure,
     kUnitPrice,
-    kDiscountPrice,
+    kUnitDiscount,
     kDescription,
     kInitial,
 };

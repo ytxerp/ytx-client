@@ -99,7 +99,7 @@ struct EntryO final : Entry {
     double initial {};
     double final {};
     double discount {};
-    double discount_price {};
+    double unit_discount {};
 
     void ResetState() override;
     void ReadJson(const QJsonObject& object) override;

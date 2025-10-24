@@ -60,8 +60,8 @@ QVariant EntryRefModel::data(const QModelIndex& index, int role) const
         return entry->measure;
     case EntryRefEnum::kUnitPrice:
         return entry->unit_price;
-    case EntryRefEnum::kDiscountPrice:
-        return entry->discount_price;
+    case EntryRefEnum::kUnitDiscount:
+        return entry->unit_discount;
     case EntryRefEnum::kDescription:
         return entry->description;
     case EntryRefEnum::kInitial:
@@ -104,8 +104,8 @@ void EntryRefModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
         case EntryRefEnum::kInitial:
             return (order == Qt::AscendingOrder) ? (lhs->initial < rhs->initial) : (lhs->initial > rhs->initial);
-        case EntryRefEnum::kDiscountPrice:
-            return (order == Qt::AscendingOrder) ? (lhs->discount_price < rhs->discount_price) : (lhs->discount_price > rhs->discount_price);
+        case EntryRefEnum::kUnitDiscount:
+            return (order == Qt::AscendingOrder) ? (lhs->unit_discount < rhs->unit_discount) : (lhs->unit_discount > rhs->unit_discount);
         default:
             return false;
         }

@@ -128,7 +128,7 @@ struct EntryShadowO final : EntryShadow {
     double* initial {};
     double* final {};
     double* discount {};
-    double* discount_price {};
+    double* unit_discount {};
 
     void BindEntry(Entry* base, bool is_parallel) override;
     void ResetState() override;

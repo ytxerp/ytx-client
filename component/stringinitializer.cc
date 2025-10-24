@@ -195,7 +195,7 @@ void StringInitializer::SetHeader(
         QObject::tr("Description"),
         QObject::tr("ExternalSku"),
         QObject::tr("LhsNode"),
-        QObject::tr("DiscountPrice"),
+        QObject::tr("UnitDiscount"),
         QObject::tr("GrossAmount"),
         QObject::tr("Discount"),
         QObject::tr("NetAmount"),
@@ -279,7 +279,7 @@ void StringInitializer::SetHeader(
         QObject::tr("Count"),
         QObject::tr("Measure"),
         QObject::tr("UnitPrice"),
-        QObject::tr("DiscountPrice"),
+        QObject::tr("UnitDiscount"),
         QObject::tr("Description"),
         QObject::tr("GrossAmount"),
     };
@@ -293,7 +293,7 @@ void StringInitializer::SetHeader(
         QObject::tr("Count"),
         QObject::tr("Measure"),
         QObject::tr("UnitPrice"),
-        QObject::tr("DiscountPrice"),
+        QObject::tr("UnitDiscount"),
         QObject::tr("Description"),
         QObject::tr("GrossAmount"),
     };

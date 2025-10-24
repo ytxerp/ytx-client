@@ -43,7 +43,7 @@ void SearchDialogO::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kFinal), value_);
 
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitPrice), rate_);
-    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDiscountPrice), rate_);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitDiscount), rate_);
 
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kLhsNode), table_path_);
 

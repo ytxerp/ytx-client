@@ -87,7 +87,7 @@ QVariant LeafModelO::data(const QModelIndex& index, int role) const
         return *d_shadow->discount;
     case EntryEnumO::kInitial:
         return *d_shadow->initial;
-    case EntryEnumO::kDiscountPrice:
+    case EntryEnumO::kUnitDiscount:
         return *d_shadow->unit_price;
     case EntryEnumO::kExternalSku:
         return *d_shadow->external_sku;
@@ -143,7 +143,7 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     case EntryEnumO::kCount:
         fir_changed = UpdateFirst(d_shadow, value.toDouble(), kCoefficient);
         break;
-    case EntryEnumO::kDiscountPrice:
+    case EntryEnumO::kUnitDiscount:
         dis_changed = UpdateDiscountPrice(d_shadow, value.toDouble());
         break;
     case EntryEnumO::kExternalSku:
@@ -211,8 +211,8 @@ void LeafModelO::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (*d_lhs->final < *d_rhs->final) : (*d_lhs->final > *d_rhs->final);
         case EntryEnumO::kInitial:
             return (order == Qt::AscendingOrder) ? (*d_lhs->initial < *d_rhs->initial) : (*d_lhs->initial > *d_rhs->initial);
-        case EntryEnumO::kDiscountPrice:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->unit_price < *d_rhs->unit_price) : (*d_lhs->unit_price > *d_rhs->unit_price);
+        case EntryEnumO::kUnitDiscount:
+            return (order == Qt::AscendingOrder) ? (*d_lhs->unit_discount < *d_rhs->unit_discount) : (*d_lhs->unit_discount > *d_rhs->unit_discount);
         case EntryEnumO::kExternalSku:
             return (order == Qt::AscendingOrder) ? (*d_lhs->external_sku < *d_rhs->external_sku) : (*d_lhs->external_sku > *d_rhs->external_sku);
         case EntryEnumO::kDiscount:
