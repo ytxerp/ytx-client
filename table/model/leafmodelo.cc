@@ -285,7 +285,7 @@ bool LeafModelO::UpdateExternalItem(EntryShadowO* entry_shadow, const QUuid& val
     const auto old_rhs_node { *entry_shadow->rhs_node };
 
     *entry_shadow->external_sku = value;
-    CrossSearch(entry_shadow, value, false);
+    ResolveFromExternal(entry_shadow, value);
 
     if (!old_rhs_node.isNull()) {
         // dbhub_->WriteField(info_->entry, kExternalItem, value, *entry_shadow->id);
@@ -311,7 +311,7 @@ bool LeafModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
     *d_shadow->rhs_node = value;
     State state { caches_.take(*d_shadow->id) };
 
-    CrossSearch(entry_shadow, value, true);
+    ResolveFromInternal(d_shadow, value);
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kUnitPrice));
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kExternalSku));
 
@@ -425,16 +425,29 @@ void LeafModelO::PurifyEntryShadow()
     }
 }
 
-void LeafModelO::CrossSearch(EntryShadow* entry_shadow, const QUuid& item_id, bool is_internal) const
+void LeafModelO::ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_id) const
 {
-    if (!entry_shadow || !entry_hub_partner_ || item_id.isNull())
+    if (!shadow || !entry_hub_partner_ || internal_id.isNull())
         return;
 
-    auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
+    if (auto result = entry_hub_partner_->ResolveFromInternal(partner_id_, internal_id)) {
+        const auto& [external_id, price] = *result;
+        *shadow->unit_price = price;
+        *shadow->external_sku = external_id;
+    } else {
+        *shadow->unit_price = tree_model_i_->UnitPrice(internal_id);
+        *shadow->external_sku = QUuid();
+    }
+}
 
-    if (entry_hub_partner_->CrossSearch(d_shadow, partner_id_, item_id, is_internal))
+void LeafModelO::ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_id) const
+{
+    if (!shadow || !entry_hub_partner_ || external_id.isNull())
         return;
 
-    *d_shadow->unit_price = is_internal ? tree_model_i_->UnitPrice(item_id) : 0.0;
-    is_internal ? * d_shadow->external_sku = QUuid() : * d_shadow->rhs_node = QUuid();
+    if (auto result = entry_hub_partner_->ResolveFromExternal(partner_id_, external_id)) {
+        const auto& [rhs_node, price] = *result;
+        *shadow->unit_price = price;
+        *shadow->rhs_node = rhs_node;
+    }
 }

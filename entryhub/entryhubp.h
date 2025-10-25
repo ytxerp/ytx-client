@@ -29,7 +29,8 @@ public:
     EntryHubP(CSectionInfo& info, QObject* parent = nullptr);
 
 public:
-    bool CrossSearch(EntryShadowO* order_entry_shadow, const QUuid& partner_id, const QUuid& item_id, bool is_internal) const;
+    std::optional<std::pair<QUuid, double>> ResolveFromInternal(const QUuid& partner_id, const QUuid& internal_id) const;
+    std::optional<std::pair<QUuid, double>> ResolveFromExternal(const QUuid& partner_id, const QUuid& external_id) const;
     void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
     // void ApplyEntryRate(const QUuid& entry_id, const QJsonObject& data, bool is_parallel) override;
 

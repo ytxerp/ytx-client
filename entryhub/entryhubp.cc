@@ -20,37 +20,30 @@ void EntryHubP::ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new
     }
 }
 
-bool EntryHubP::CrossSearch(EntryShadowO* order_entry_shadow, const QUuid& partner_id, const QUuid& item_id, bool is_internal) const
+std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromInternal(const QUuid& partner_id, const QUuid& internal_id) const
 {
-    const EntryP* latest_trans { nullptr };
-
     for (const auto* trans : std::as_const(entry_cache_)) {
         auto* d_trans = static_cast<const EntryP*>(trans);
 
-        if (is_internal && d_trans->lhs_node == partner_id && d_trans->rhs_node == item_id) {
-            latest_trans = d_trans;
-            break;
-        }
-
-        if (!is_internal && d_trans->lhs_node == partner_id && d_trans->external_sku == item_id) {
-            latest_trans = d_trans;
-            break;
+        if (d_trans->lhs_node == partner_id && d_trans->rhs_node == internal_id) {
+            return std::make_pair(d_trans->external_sku, d_trans->unit_price);
         }
     }
 
-    if (!latest_trans) {
-        return false;
+    return std::nullopt;
+}
+
+std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromExternal(const QUuid& partner_id, const QUuid& external_id) const
+{
+    for (const auto* trans : std::as_const(entry_cache_)) {
+        auto* d_trans = static_cast<const EntryP*>(trans);
+
+        if (d_trans->lhs_node == partner_id && d_trans->external_sku == external_id) {
+            return std::make_pair(d_trans->rhs_node, d_trans->unit_price);
+        }
     }
 
-    *order_entry_shadow->unit_price = latest_trans->unit_price;
-
-    if (is_internal) {
-        *order_entry_shadow->external_sku = latest_trans->external_sku;
-    } else {
-        *order_entry_shadow->rhs_node = latest_trans->rhs_node;
-    }
-
-    return true;
+    return std::nullopt;
 }
 
 // void EntryHubS::ApplyEntryRate(const QUuid& entry_id, const QJsonObject& data, bool /*is_parallel*/)

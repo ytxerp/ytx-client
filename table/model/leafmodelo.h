@@ -59,7 +59,8 @@ private:
     bool UpdateFirst(EntryShadow* entry_shadow, double value, int kCoefficient);
     void PurifyEntryShadow();
 
-    void CrossSearch(EntryShadow* entry_shadow, const QUuid& item_id, bool is_internal) const;
+    void ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_id) const;
+    void ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_id) const;
 
 private:
     TreeModelI* tree_model_i_ {};
