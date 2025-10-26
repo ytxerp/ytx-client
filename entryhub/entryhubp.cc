@@ -20,12 +20,12 @@ void EntryHubP::ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new
     }
 }
 
-std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromInternal(const QUuid& partner_id, const QUuid& internal_id) const
+std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromInternal(const QUuid& partner_id, const QUuid& internal_sku) const
 {
     for (const auto* trans : std::as_const(entry_cache_)) {
         auto* d_trans = static_cast<const EntryP*>(trans);
 
-        if (d_trans->lhs_node == partner_id && d_trans->rhs_node == internal_id) {
+        if (d_trans->lhs_node == partner_id && d_trans->rhs_node == internal_sku) {
             return std::make_pair(d_trans->external_sku, d_trans->unit_price);
         }
     }
@@ -33,12 +33,12 @@ std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromInternal(const QUu
     return std::nullopt;
 }
 
-std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromExternal(const QUuid& partner_id, const QUuid& external_id) const
+std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const
 {
     for (const auto* trans : std::as_const(entry_cache_)) {
         auto* d_trans = static_cast<const EntryP*>(trans);
 
-        if (d_trans->lhs_node == partner_id && d_trans->external_sku == external_id) {
+        if (d_trans->lhs_node == partner_id && d_trans->external_sku == external_sku) {
             return std::make_pair(d_trans->rhs_node, d_trans->unit_price);
         }
     }

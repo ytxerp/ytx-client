@@ -53,14 +53,14 @@ private:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
 
-    bool UpdateExternalItem(EntryShadowO* entry_shadow, const QUuid& value);
-    bool UpdateDiscountPrice(EntryShadow* entry_shadow, double value);
-    bool UpdateSecond(EntryShadow* entry_shadow, double value, int kCoefficient);
-    bool UpdateFirst(EntryShadow* entry_shadow, double value, int kCoefficient);
+    bool UpdateExternaSku(EntryShadowO* entry_shadow, const QUuid& value);
+    bool UpdateUnitDiscount(EntryShadow* entry_shadow, double value);
+    bool UpdateMeasure(EntryShadow* entry_shadow, double value, int kCoefficient);
+    bool UpdateCount(EntryShadow* entry_shadow, double value, int kCoefficient);
     void PurifyEntryShadow();
 
-    void ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_id) const;
-    void ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_id) const;
+    void ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_sku) const;
+    void ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_sku) const;
 
 private:
     TreeModelI* tree_model_i_ {};

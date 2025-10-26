@@ -90,16 +90,16 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     auto* d_shadow = DerivedPtr<EntryShadowO>(shadow);
 
     const auto old_rhs_node { *d_shadow->rhs_node };
-    const double old_first { *d_shadow->count };
-    const double old_second { *d_shadow->measure };
+    const double old_count { *d_shadow->count };
+    const double old_measure { *d_shadow->measure };
     const double old_discount { *d_shadow->discount };
     const double old_gross_amount { *d_shadow->initial };
     const double old_net_amount { *d_shadow->final };
 
-    bool fir_changed { false };
-    bool sec_changed { false };
-    bool uni_changed { false };
-    bool dis_changed { false };
+    bool count_changed { false };
+    bool measure_changed { false };
+    bool unit_price_changed { false };
+    bool unit_discount_changed { false };
 
     const QUuid id { *d_shadow->id };
     auto& entry { caches_[id] };
@@ -118,19 +118,19 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
         UpdateLinkedNode(d_shadow, value.toUuid(), 0);
         break;
     case EntryEnumO::kUnitPrice:
-        uni_changed = UpdateRate(d_shadow, value.toDouble());
+        unit_price_changed = UpdateRate(d_shadow, value.toDouble());
         break;
     case EntryEnumO::kMeasure:
-        sec_changed = UpdateSecond(d_shadow, value.toDouble(), kCoefficient);
+        measure_changed = UpdateMeasure(d_shadow, value.toDouble(), kCoefficient);
         break;
     case EntryEnumO::kCount:
-        fir_changed = UpdateFirst(d_shadow, value.toDouble(), kCoefficient);
+        count_changed = UpdateCount(d_shadow, value.toDouble(), kCoefficient);
         break;
     case EntryEnumO::kUnitDiscount:
-        dis_changed = UpdateDiscountPrice(d_shadow, value.toDouble());
+        unit_discount_changed = UpdateUnitDiscount(d_shadow, value.toDouble());
         break;
     case EntryEnumO::kExternalSku:
-        UpdateExternalItem(d_shadow, value.toUuid());
+        UpdateExternaSku(d_shadow, value.toUuid());
         break;
     default:
         return false;
@@ -138,24 +138,24 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
 
     emit SResizeColumnToContents(index.column());
 
-    if (fir_changed)
-        emit SSyncDelta(*d_shadow->lhs_node, 0.0, 0.0, *d_shadow->count - old_first);
+    if (count_changed)
+        emit SSyncDelta(*d_shadow->lhs_node, 0.0, 0.0, *d_shadow->count - old_count);
 
-    if (sec_changed) {
-        const double second_delta { *d_shadow->measure - old_second };
+    if (measure_changed) {
+        const double second_delta { *d_shadow->measure - old_measure };
         const double gross_amount_delta { *d_shadow->initial - old_gross_amount };
         const double discount_delta { *d_shadow->discount - old_discount };
         const double net_amount_delta { *d_shadow->final - old_net_amount };
         emit SSyncDelta(*d_shadow->lhs_node, gross_amount_delta, net_amount_delta, 0.0, second_delta, discount_delta);
     }
 
-    if (uni_changed) {
+    if (unit_price_changed) {
         const double gross_amount_delta { *d_shadow->initial - old_gross_amount };
         const double net_amount_delta { *d_shadow->final - old_net_amount };
         emit SSyncDelta(*d_shadow->lhs_node, gross_amount_delta, net_amount_delta);
     }
 
-    if (dis_changed) {
+    if (unit_discount_changed) {
         const double discount_delta { *d_shadow->discount - old_discount };
         const double net_amount_delta { *d_shadow->final - old_net_amount };
         emit SSyncDelta(*d_shadow->lhs_node, 0.0, net_amount_delta, 0.0, 0.0, discount_delta);
@@ -277,7 +277,7 @@ bool LeafModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
-bool LeafModelO::UpdateExternalItem(EntryShadowO* entry_shadow, const QUuid& value)
+bool LeafModelO::UpdateExternaSku(EntryShadowO* entry_shadow, const QUuid& value)
 {
     if (*entry_shadow->external_sku == value)
         return false;
@@ -354,7 +354,7 @@ bool LeafModelO::UpdateRate(EntryShadow* entry_shadow, double value)
     return true;
 }
 
-bool LeafModelO::UpdateDiscountPrice(EntryShadow* entry_shadow, double value)
+bool LeafModelO::UpdateUnitDiscount(EntryShadow* entry_shadow, double value)
 {
     auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
 
@@ -376,7 +376,7 @@ bool LeafModelO::UpdateDiscountPrice(EntryShadow* entry_shadow, double value)
     return true;
 }
 
-bool LeafModelO::UpdateSecond(EntryShadow* entry_shadow, double value, int kCoefficient)
+bool LeafModelO::UpdateMeasure(EntryShadow* entry_shadow, double value, int kCoefficient)
 {
     auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
 
@@ -401,7 +401,7 @@ bool LeafModelO::UpdateSecond(EntryShadow* entry_shadow, double value, int kCoef
     return true;
 }
 
-bool LeafModelO::UpdateFirst(EntryShadow* entry_shadow, double value, int kCoefficient)
+bool LeafModelO::UpdateCount(EntryShadow* entry_shadow, double value, int kCoefficient)
 {
     auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
 
@@ -425,29 +425,32 @@ void LeafModelO::PurifyEntryShadow()
     }
 }
 
-void LeafModelO::ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_id) const
+void LeafModelO::ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_sku) const
 {
-    if (!shadow || !entry_hub_partner_ || internal_id.isNull())
+    if (!shadow || !entry_hub_partner_ || internal_sku.isNull())
         return;
 
-    if (auto result = entry_hub_partner_->ResolveFromInternal(partner_id_, internal_id)) {
+    if (auto result = entry_hub_partner_->ResolveFromInternal(partner_id_, internal_sku)) {
         const auto& [external_id, price] = *result;
         *shadow->unit_price = price;
         *shadow->external_sku = external_id;
     } else {
-        *shadow->unit_price = tree_model_i_->UnitPrice(internal_id);
+        *shadow->unit_price = tree_model_i_->UnitPrice(internal_sku);
         *shadow->external_sku = QUuid();
     }
 }
 
-void LeafModelO::ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_id) const
+void LeafModelO::ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_sku) const
 {
-    if (!shadow || !entry_hub_partner_ || external_id.isNull())
+    if (!shadow || !entry_hub_partner_ || external_sku.isNull())
         return;
 
-    if (auto result = entry_hub_partner_->ResolveFromExternal(partner_id_, external_id)) {
+    if (auto result = entry_hub_partner_->ResolveFromExternal(partner_id_, external_sku)) {
         const auto& [rhs_node, price] = *result;
         *shadow->unit_price = price;
         *shadow->rhs_node = rhs_node;
+    } else {
+        *shadow->unit_price = 0.0;
+        *shadow->rhs_node = QUuid();
     }
 }
