@@ -281,8 +281,12 @@ inline const QString kFinalDelta = QStringLiteral("final_delta");
 inline const QString kFinalTotal = QStringLiteral("final_total");
 
 inline const QString kDiscount = QStringLiteral("discount");
+inline const QString kDiscountDelta = QStringLiteral("discount_delta");
 inline const QString kUnitDiscount = QStringLiteral("unit_discount");
 inline const QString kDiscountTotal = QStringLiteral("discount_total");
+
+inline const QString kCountDelta = QStringLiteral("count_delta");
+inline const QString kMeasureDelta = QStringLiteral("measure_delta");
 
 inline constexpr char kAction[] = "action";
 inline const QString kEntryAction = QStringLiteral("entry_action");

@@ -53,7 +53,7 @@ signals:
 
 public slots:
     // receive from TableModelOrder
-    void RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta);
+    void RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
 
 public:
     LeafModel* Model() const override { return leaf_model_order_; }
@@ -82,7 +82,7 @@ private:
     void IniData(const QUuid& partner, const QUuid& employee);
     void LockWidgets(bool released);
     void IniUnit(int unit);
-    void IniLeafValue();
+    void IniUiValue();
     void IniRule(bool rule);
     void IniStatus(bool released);
     void IniRuleGroup();
@@ -106,6 +106,11 @@ private:
     QSortFilterProxyModel* pmodel_ {};
 
     bool is_insert_ {};
+    double initial_delta_ {};
+    double final_delta_ {};
+    double count_delta_ {};
+    double measure_delta_ {};
+    double discount_delta_ {};
 
     const QUuid node_id_ {};
     const int partner_unit_ {};

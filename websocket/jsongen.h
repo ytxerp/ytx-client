@@ -53,6 +53,7 @@ QJsonObject DocumentDir(Section section, CString& document_dir);
 QJsonObject DefaultUnit(Section section, int unit);
 
 QJsonObject NodeDelta(CUuid& node_id, double initial_delta, double final_delta);
+QJsonObject NodeODelta(CUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
 QJsonObject EntrySearch(Section section, CString& keyword);
 QJsonObject NodeSearch(Section section, CString& keyword);
 

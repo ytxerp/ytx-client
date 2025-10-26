@@ -51,20 +51,28 @@ LeafWidgetO::~LeafWidgetO()
 
 QTableView* LeafWidgetO::View() const { return ui->tableViewO; }
 
-void LeafWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
+void LeafWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
 {
     if (node_id_ != node_id)
         return;
 
     const double adjusted_final_delta { node_->unit == std::to_underlying(UnitO::kImmediate) ? final_delta : 0.0 };
 
-    node_->count_total += first_delta;
-    node_->measure_total += second_delta;
+    node_->count_total += count_delta;
+    node_->measure_total += measure_delta;
     node_->initial_total += initial_delta;
     node_->discount_total += discount_delta;
     node_->final_total += adjusted_final_delta;
 
-    IniLeafValue();
+    if (!is_insert_) {
+        count_delta_ += count_delta;
+        measure_delta_ += measure_delta;
+        initial_delta_ += initial_delta;
+        discount_delta_ += discount_delta;
+        final_delta_ += adjusted_final_delta;
+    }
+
+    IniUiValue();
 }
 
 void LeafWidgetO::IniWidget()
@@ -119,7 +127,7 @@ void LeafWidgetO::IniData(const QUuid& partner, const QUuid& employee)
         return;
     }
 
-    IniLeafValue();
+    IniUiValue();
     ui->lineDescription->setText(node_->description);
     ui->dateTimeEdit->setDateTime(node_->issued_time.toLocalTime());
 
@@ -168,7 +176,7 @@ void LeafWidgetO::IniUnit(int unit)
     }
 }
 
-void LeafWidgetO::IniLeafValue()
+void LeafWidgetO::IniUiValue()
 {
     ui->dSpinFinalTotal->setValue(node_->final_total);
     ui->dSpinDiscountTotal->setValue(node_->discount_total);
@@ -258,31 +266,36 @@ void LeafWidgetO::RRuleGroupClicked(int id)
     node_->discount_total *= -1;
     node_->final_total *= -1;
 
-    IniLeafValue();
+    IniUiValue();
 
     if (!is_insert_) {
         update_cache_.insert(kDirectionRule, node_->direction_rule);
-        update_cache_.insert(kCountTotal, QString::number(node_->count_total, 'f', kMaxNumericScale_4));
-        update_cache_.insert(kMeasureTotal, QString::number(node_->measure_total, 'f', kMaxNumericScale_4));
-        update_cache_.insert(kInitialTotal, QString::number(node_->initial_total, 'f', kMaxNumericScale_4));
-        update_cache_.insert(kDiscountTotal, QString::number(node_->discount_total, 'f', kMaxNumericScale_4));
-        update_cache_.insert(kFinalTotal, QString::number(node_->final_total, 'f', kMaxNumericScale_4));
+        count_delta_ *= -1;
+        measure_delta_ *= -1;
+        initial_delta_ *= -1;
+        discount_delta_ *= -1;
+        final_delta_ *= -1;
     }
 }
 
 void LeafWidgetO::RUnitGroupClicked(int id)
 {
     const UnitO unit { id };
-    node_->final_total = 0.0;
 
     switch (unit) {
     case UnitO::kImmediate:
         node_->final_total = node_->initial_total - node_->discount_total;
-        [[fallthrough]];
+        final_delta_ += node_->final_total;
+        ui->pBtnStatus->setEnabled(true);
+        break;
     case UnitO::kMonthly:
+        final_delta_ += -node_->final_total;
+        node_->final_total = 0.0;
         ui->pBtnStatus->setEnabled(true);
         break;
     case UnitO::kPending:
+        final_delta_ += -node_->final_total;
+        node_->final_total = 0.0;
         ui->pBtnStatus->setEnabled(false);
         break;
     default:
@@ -294,7 +307,6 @@ void LeafWidgetO::RUnitGroupClicked(int id)
 
     if (!is_insert_) {
         update_cache_.insert(kUnit, id);
-        update_cache_.insert(kFinalTotal, QString::number(node_->final_total, 'f', kMaxNumericScale_4));
     }
 }
 
