@@ -3,13 +3,14 @@
 #include "global/entryshadowpool.h"
 #include "websocket/jsongen.h"
 
-LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
+LeafModelO::LeafModelO(CLeafModelArg& arg, bool is_new, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
     : LeafModel { arg, parent }
     , tree_model_i_ { static_cast<TreeModelI*>(tree_model_inventory) }
     , entry_hub_partner_ { static_cast<EntryHubP*>(entry_hub_partner) }
     , entry_hub_order_ { static_cast<EntryHubO*>(arg.entry_hub) }
     , partner_id_ { static_cast<const NodeO*>(node)->partner }
     , node_status_ { static_cast<const NodeO*>(node)->status }
+    , is_new_ { is_new }
 {
 }
 
@@ -268,10 +269,6 @@ bool LeafModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     endRemoveRows();
 
     emit SSyncDelta(lhs_node, -*d_shadow->initial, -*d_shadow->final, -*d_shadow->count, -*d_shadow->measure, -*d_shadow->discount);
-
-    if (!lhs_node.isNull() && !rhs_node.isNull()) {
-        // dbhub_->RemoveTrans(*d_shadow->id);
-    }
 
     EntryShadowPool::Instance().Recycle(d_shadow, section_);
     return true;

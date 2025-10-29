@@ -36,8 +36,8 @@ class LeafWidgetO final : public LeafWidget {
     Q_OBJECT
 
 public:
-    LeafWidgetO(CInsertNodeArgO& arg, bool is_insert, const QMap<QString, QString>& print_template, QSharedPointer<PrintManager> print_manager,
-        QWidget* parent = nullptr);
+    LeafWidgetO(
+        CInsertNodeArgO& arg, bool is_new, const QMap<QString, QString>& print_template, QSharedPointer<PrintManager> print_manager, QWidget* parent = nullptr);
     ~LeafWidgetO();
 
 signals:
@@ -105,7 +105,7 @@ private:
     QSortFilterProxyModel* emodel_ {};
     QSortFilterProxyModel* pmodel_ {};
 
-    bool is_insert_ {};
+    bool is_new_ {};
     double initial_delta_ {};
     double final_delta_ {};
     double count_delta_ {};

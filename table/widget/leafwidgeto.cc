@@ -7,7 +7,7 @@
 #include "ui_leafwidgeto.h"
 
 LeafWidgetO::LeafWidgetO(
-    CInsertNodeArgO& arg, bool is_insert, const QMap<QString, QString>& print_template, QSharedPointer<PrintManager> print_manager, QWidget* parent)
+    CInsertNodeArgO& arg, bool is_new, const QMap<QString, QString>& print_template, QSharedPointer<PrintManager> print_manager, QWidget* parent)
     : LeafWidget(parent)
     , ui(new Ui::LeafWidgetO)
     , node_ { static_cast<NodeO*>(arg.node) }
@@ -15,7 +15,7 @@ LeafWidgetO::LeafWidgetO(
     , leaf_model_order_ { qobject_cast<LeafModelO*>(arg.leaf_model) }
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
-    , is_insert_ { is_insert }
+    , is_new_ { is_new }
     , node_id_ { arg.node->id }
     , partner_unit_ { arg.section == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor) }
     , print_template_ { print_template }
@@ -41,7 +41,7 @@ LeafWidgetO::LeafWidgetO(
 
 LeafWidgetO::~LeafWidgetO()
 {
-    if (is_insert_) {
+    if (is_new_) {
         NodePool::Instance().Recycle(node_, Section::kSale);
     }
 
@@ -64,7 +64,7 @@ void LeafWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double 
     node_->discount_total += discount_delta;
     node_->final_total += adjusted_final_delta;
 
-    if (!is_insert_) {
+    if (!is_new_) {
         count_delta_ += count_delta;
         measure_delta_ += measure_delta;
         initial_delta_ += initial_delta;
@@ -120,7 +120,7 @@ void LeafWidgetO::IniConnect()
 
 void LeafWidgetO::IniData(const QUuid& partner, const QUuid& employee)
 {
-    if (is_insert_) {
+    if (is_new_) {
         const auto date_time { QDateTime::currentDateTimeUtc() };
         ui->dateTimeEdit->setDateTime(date_time.toLocalTime());
         node_->issued_time = date_time;
@@ -223,7 +223,7 @@ void LeafWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     node_->partner = partner_id;
     emit SSyncPartner(node_id_, partner_id);
 
-    if (!is_insert_) {
+    if (!is_new_) {
         update_cache_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
     }
 }
@@ -233,7 +233,7 @@ void LeafWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
     const QUuid employee_id { ui->comboEmployee->currentData().toUuid() };
     node_->employee = employee_id;
 
-    if (!is_insert_) {
+    if (!is_new_) {
         update_cache_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
     }
 }
@@ -242,7 +242,7 @@ void LeafWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
     node_->issued_time = date_time.toUTC();
 
-    if (!is_insert_) {
+    if (!is_new_) {
         update_cache_.insert(kIssuedTime, node_->issued_time.toString(Qt::ISODate));
     }
 }
@@ -251,7 +251,7 @@ void LeafWidgetO::on_lineDescription_editingFinished()
 {
     node_->description = ui->lineDescription->text();
 
-    if (!is_insert_) {
+    if (!is_new_) {
         update_cache_.insert(kDescription, node_->description);
     }
 }
@@ -268,7 +268,7 @@ void LeafWidgetO::RRuleGroupClicked(int id)
 
     IniUiValue();
 
-    if (!is_insert_) {
+    if (!is_new_) {
         update_cache_.insert(kDirectionRule, node_->direction_rule);
         count_delta_ *= -1;
         measure_delta_ *= -1;
@@ -305,7 +305,7 @@ void LeafWidgetO::RUnitGroupClicked(int id)
     node_->unit = id;
     ui->dSpinFinalTotal->setValue(node_->final_total);
 
-    if (!is_insert_) {
+    if (!is_new_) {
         update_cache_.insert(kUnit, id);
     }
 }
@@ -362,9 +362,9 @@ void LeafWidgetO::PreparePrint()
 
 void LeafWidgetO::on_pBtnSave_clicked()
 {
-    if (is_insert_) {
+    if (is_new_) {
         emit SInsertOrder();
-        is_insert_ = false;
+        is_new_ = false;
     }
 
     emit SSaveOrder();

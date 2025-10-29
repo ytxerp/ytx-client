@@ -89,7 +89,7 @@ private slots:
     void REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
 
     void RUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section);
-    void RSyncPartner(const QUuid& node_id, int column, const QVariant& value);
+    void RSyncPartner(const QUuid& node_id, const QVariant& value);
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void RActionEntry(EntryAction action);
     void RLoginResult(bool result);

@@ -30,7 +30,7 @@ class LeafModelO final : public LeafModel {
     Q_OBJECT
 
 public:
-    LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
+    LeafModelO(CLeafModelArg& arg, bool is_new, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
     ~LeafModelO() override = default;
 
 public slots:
@@ -68,6 +68,11 @@ private:
     EntryHubO* entry_hub_order_ {};
     QUuid partner_id_ {};
     int node_status_ {};
+
+    bool is_new_ {};
+    QSet<QUuid> deleted_entries_ {};
+    QHash<QUuid, QJsonObject> updated_entries_ {};
+    QSet<EntryO*> inserted_entries_ {};
 };
 
 #endif // LEAFMODELO_H

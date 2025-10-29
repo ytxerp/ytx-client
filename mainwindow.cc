@@ -430,7 +430,7 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
     const QUuid node_id { node->id };
 
     LeafModelArg model_arg { sc_->entry_hub, sc_->info, node_id, true };
-    auto* leaf_model_order { new LeafModelO(model_arg, node, sc_i_.tree_model, sc_p_.entry_hub, this) };
+    auto* leaf_model_order { new LeafModelO(model_arg, true, node, sc_i_.tree_model, sc_p_.entry_hub, this) };
 
     auto print_manager { QSharedPointer<PrintManager>::create(app_config_, sc_i_.tree_model, sc_p_.tree_model) };
 
@@ -491,7 +491,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 
     // Create model and widget
     LeafModelArg model_arg { entry_hub, sc->info, node_id, node->direction_rule };
-    auto* model = new LeafModelO(model_arg, node, tree_model_i, sc_p_.entry_hub, this);
+    auto* model = new LeafModelO(model_arg, false, node, tree_model_i, sc_p_.entry_hub, this);
 
     auto print_manager { QSharedPointer<PrintManager>::create(app_config_, tree_model_i, tree_model_p) };
     InsertNodeArgO widget_arg { node, entry_hub, model, tree_model_p, section_config, section };
@@ -2778,11 +2778,8 @@ void MainWindow::OrderNodeLocation(Section section, const QUuid& node_id)
     sc_->tree_view->setCurrentIndex(index);
 }
 
-void MainWindow::RSyncPartner(const QUuid& node_id, int column, const QVariant& value)
+void MainWindow::RSyncPartner(const QUuid& node_id, const QVariant& value)
 {
-    if (column != std::to_underlying(NodeEnumO::kPartner))
-        return;
-
     const auto partner_id { value.toUuid() };
 
     auto model { sc_p_.tree_model };
