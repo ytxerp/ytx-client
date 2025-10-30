@@ -15,9 +15,9 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* d_node { DerivedPtr<NodeO>(node_list_.at(index.row())) };
-    const NodeEnumO kColumn { index.column() };
+    const NodeEnumO column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case NodeEnumO::kName:
         return d_node->name;
     case NodeEnumO::kId:
@@ -62,8 +62,8 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
         auto* d_lhs = DerivedPtr<NodeO>(lhs);
         auto* d_rhs = DerivedPtr<NodeO>(rhs);
 
-        const NodeEnumO kColumn { column };
-        switch (kColumn) {
+        const NodeEnumO e_column { column };
+        switch (e_column) {
         case NodeEnumO::kName:
             return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
         case NodeEnumO::kDescription:

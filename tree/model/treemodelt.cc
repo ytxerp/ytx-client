@@ -25,9 +25,9 @@ QVariant TreeModelT::data(const QModelIndex& index, int role) const
     if (d_node == root_)
         return QVariant();
 
-    const NodeEnumT kColumn { index.column() };
+    const NodeEnumT column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case NodeEnumT::kName:
         return d_node->name;
     case NodeEnumT::kId:
@@ -132,8 +132,8 @@ void TreeModelT::sort(int column, Qt::SortOrder order)
         auto* d_lhs = DerivedPtr<NodeT>(lhs);
         auto* d_rhs = DerivedPtr<NodeT>(rhs);
 
-        const NodeEnumT kColumn { column };
-        switch (kColumn) {
+        const NodeEnumT e_column { column };
+        switch (e_column) {
         case NodeEnumT::kName:
             return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
         case NodeEnumT::kUserId:

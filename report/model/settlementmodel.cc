@@ -68,10 +68,10 @@ QVariant SettlementModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    const SettlementEnum kColumn { index.column() };
+    const SettlementEnum column { index.column() };
     auto* settlement { settlement_list_.at(index.row()) };
 
-    switch (kColumn) {
+    switch (column) {
     case SettlementEnum::kId:
         return settlement->id;
     case SettlementEnum::kUserId:
@@ -104,13 +104,13 @@ bool SettlementModel::setData(const QModelIndex& index, const QVariant& value, i
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    const SettlementEnum kColumn { index.column() };
+    const SettlementEnum column { index.column() };
     const int kRow { index.row() };
 
     auto* settlement { settlement_list_.at(kRow) };
     QJsonObject cache {};
 
-    switch (kColumn) {
+    switch (column) {
     case SettlementEnum::kIssuedTime:
         NodeUtils::UpdateIssuedTime(cache, settlement, kIssuedTime, value.toDateTime(), &Settlement::issued_time);
         break;
@@ -150,9 +150,9 @@ Qt::ItemFlags SettlementModel::flags(const QModelIndex& index) const
         return Qt::NoItemFlags;
 
     auto flags { QAbstractItemModel::flags(index) };
-    const SettlementEnum kColumn { index.column() };
+    const SettlementEnum column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case SettlementEnum::kIssuedTime:
     case SettlementEnum::kDescription:
     case SettlementEnum::kPartner:
@@ -176,9 +176,9 @@ void SettlementModel::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](const Settlement* lhs, const Settlement* rhs) -> bool {
-        const SettlementEnum kColumn { column };
+        const SettlementEnum e_column { column };
 
-        switch (kColumn) {
+        switch (e_column) {
         case SettlementEnum::kPartner:
             return (order == Qt::AscendingOrder) ? (lhs->partner < rhs->partner) : (lhs->partner > rhs->partner);
         case SettlementEnum::kUserId:

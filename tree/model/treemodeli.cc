@@ -75,8 +75,8 @@ void TreeModelI::sort(int column, Qt::SortOrder order)
         auto* d_lhs { DerivedPtr<NodeI>(lhs) };
         auto* d_rhs { DerivedPtr<NodeI>(rhs) };
 
-        const NodeEnumI kColumn { column };
-        switch (kColumn) {
+        const NodeEnumI e_column { column };
+        switch (e_column) {
         case NodeEnumI::kName:
             return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
         case NodeEnumI::kUserId:
@@ -130,9 +130,9 @@ QVariant TreeModelI::data(const QModelIndex& index, int role) const
     if (d_node == root_)
         return QVariant();
 
-    const NodeEnumI kColumn { index.column() };
+    const NodeEnumI column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case NodeEnumI::kName:
         return d_node->name;
     case NodeEnumI::kId:
@@ -185,10 +185,10 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
     if (!d_node)
         return false;
 
-    const NodeEnumI kColumn { index.column() };
+    const NodeEnumI column { index.column() };
     const QUuid id { node->id };
 
-    switch (kColumn) {
+    switch (column) {
     case NodeEnumI::kCode:
         NodeUtils::UpdateField(caches_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
@@ -224,9 +224,9 @@ Qt::ItemFlags TreeModelI::flags(const QModelIndex& index) const
         return Qt::NoItemFlags;
 
     auto flags { QAbstractItemModel::flags(index) };
-    const NodeEnumI kColumn { index.column() };
+    const NodeEnumI column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case NodeEnumI::kName:
         flags |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
         flags &= ~Qt::ItemIsEditable;

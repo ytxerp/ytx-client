@@ -41,9 +41,9 @@ QVariant EntryRefModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* entry { entry_ref_list_.at(index.row()) };
-    const EntryRefEnum kColumn { index.column() };
+    const EntryRefEnum column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case EntryRefEnum::kIssuedTime:
         return entry->issued_time;
     case EntryRefEnum::kPIId:
@@ -85,9 +85,9 @@ void EntryRefModel::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](const EntryRef* lhs, const EntryRef* rhs) -> bool {
-        const EntryRefEnum kColumn { column };
+        const EntryRefEnum e_column { column };
 
-        switch (kColumn) {
+        switch (e_column) {
         case EntryRefEnum::kExternalSku:
             return (order == Qt::AscendingOrder) ? (lhs->external_sku < rhs->external_sku) : (lhs->external_sku > rhs->external_sku);
         case EntryRefEnum::kIssuedTime:

@@ -13,9 +13,9 @@ QVariant SearchNodeModelF::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* node { node_list_.at(index.row()) };
-    const NodeEnumF kColumn { index.column() };
+    const NodeEnumF column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case NodeEnumF::kName:
         return node->name;
     case NodeEnumF::kId:
@@ -47,9 +47,9 @@ void SearchNodeModelF::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](const Node* lhs, const Node* rhs) -> bool {
-        const NodeEnumF kColumn { column };
+        const NodeEnumF e_column { column };
 
-        switch (kColumn) {
+        switch (e_column) {
         case NodeEnumF::kName:
             return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
         case NodeEnumF::kCode:

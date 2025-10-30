@@ -43,10 +43,10 @@ QVariant SettlementPrimaryModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    const SettlementEnum kColumn { index.column() };
+    const SettlementEnum column { index.column() };
     auto* settlement { settlementList_list_.at(index.row()) };
 
-    switch (kColumn) {
+    switch (column) {
     case SettlementEnum::kId:
         return settlement->id;
     case SettlementEnum::kIssuedTime:
@@ -94,9 +94,9 @@ void SettlementPrimaryModel::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](const Settlement* lhs, const Settlement* rhs) -> bool {
-        const SettlementEnum kColumn { column };
+        const SettlementEnum e_column { column };
 
-        switch (kColumn) {
+        switch (e_column) {
         case SettlementEnum::kPartner:
             return (order == Qt::AscendingOrder) ? (lhs->employee < rhs->employee) : (lhs->employee > rhs->employee);
         case SettlementEnum::kIssuedTime:

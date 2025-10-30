@@ -13,9 +13,9 @@ QVariant SearchNodeModelP::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* d_node { DerivedPtr<NodeP>(node_list_.at(index.row())) };
-    const NodeEnumP kColumn { index.column() };
+    const NodeEnumP column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case NodeEnumP::kName:
         return d_node->name;
     case NodeEnumP::kId:
@@ -50,8 +50,7 @@ void SearchNodeModelP::sort(int column, Qt::SortOrder order)
         auto* d_lhs = DerivedPtr<NodeP>(lhs);
         auto* d_rhs = DerivedPtr<NodeP>(rhs);
 
-        const NodeEnumP kColumn { column };
-        switch (kColumn) {
+        switch (NodeEnumP(column)) {
         case NodeEnumP::kName:
             return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
         case NodeEnumP::kCode:

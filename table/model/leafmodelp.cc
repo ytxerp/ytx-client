@@ -109,9 +109,9 @@ QVariant LeafModelP::data(const QModelIndex& index, int role) const
 
     auto* d_shadow = DerivedPtr<EntryShadowP>(shadow_list_.at(index.row()));
 
-    const EntryEnumP kColumn { index.column() };
+    const EntryEnumP column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case EntryEnumP::kId:
         return *d_shadow->id;
     case EntryEnumP::kUserId:
@@ -152,7 +152,7 @@ bool LeafModelP::setData(const QModelIndex& index, const QVariant& value, int ro
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    const EntryEnumP kColumn { index.column() };
+    const EntryEnumP column { index.column() };
     const int kRow { index.row() };
 
     auto* shadow { shadow_list_.at(kRow) };
@@ -160,7 +160,7 @@ bool LeafModelP::setData(const QModelIndex& index, const QVariant& value, int ro
 
     const QUuid id { *shadow->id };
 
-    switch (kColumn) {
+    switch (column) {
     case EntryEnumP::kIssuedTime:
         EntryUtils::UpdateShadowIssuedTime(caches_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
         break;
@@ -198,12 +198,12 @@ void LeafModelP::sort(int column, Qt::SortOrder order)
     assert(column >= 0 && column <= info_.entry_header.size() - 1);
 
     auto Compare = [column, order](EntryShadow* lhs, EntryShadow* rhs) -> bool {
-        const EntryEnumP kColumn { column };
+        const EntryEnumP e_column { column };
 
         auto* d_lhs { DerivedPtr<EntryShadowP>(lhs) };
         auto* d_rhs { DerivedPtr<EntryShadowP>(rhs) };
 
-        switch (kColumn) {
+        switch (e_column) {
         case EntryEnumP::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (*lhs->issued_time < *rhs->issued_time) : (*lhs->issued_time > *rhs->issued_time);
         case EntryEnumP::kUserId:
@@ -246,9 +246,9 @@ Qt::ItemFlags LeafModelP::flags(const QModelIndex& index) const
         return Qt::NoItemFlags;
 
     auto flags { QAbstractItemModel::flags(index) };
-    const EntryEnumP kColumn { index.column() };
+    const EntryEnumP column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case EntryEnumP::kId:
     case EntryEnumP::kDocument:
     case EntryEnumP::kStatus:

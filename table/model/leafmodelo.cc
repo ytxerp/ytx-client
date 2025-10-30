@@ -37,9 +37,9 @@ QVariant LeafModelO::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* d_shadow = DerivedPtr<EntryShadowO>(shadow_list_.at(index.row()));
-    const EntryEnumO kColumn { index.column() };
+    const EntryEnumO column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case EntryEnumO::kId:
         return *d_shadow->id;
     case EntryEnumO::kLhsNode:
@@ -77,7 +77,7 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         return false;
 
-    const EntryEnumO kColumn { index.column() };
+    const EntryEnumO column { index.column() };
 
     auto* shadow = shadow_list_.at(index.row());
     auto* d_shadow = DerivedPtr<EntryShadowO>(shadow);
@@ -103,7 +103,7 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
 
     const int kCoefficient { direction_rule_ ? -1 : 1 };
 
-    switch (kColumn) {
+    switch (column) {
     case EntryEnumO::kDescription:
         EntryUtils::UpdateShadowField(entry, shadow, kDescription, value.toString(), &EntryShadow::description);
         break;
@@ -161,20 +161,20 @@ void LeafModelO::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0 && column <= info_.entry_header.size() - 1);
 
-    const EntryEnumO kColumn { column };
+    const EntryEnumO e_column { column };
 
-    switch (kColumn) {
+    switch (e_column) {
     case EntryEnumO::kId:
         return;
     default:
         break;
     }
 
-    auto Compare = [order, kColumn](EntryShadow* lhs, EntryShadow* rhs) -> bool {
+    auto Compare = [order, e_column](EntryShadow* lhs, EntryShadow* rhs) -> bool {
         auto* d_lhs { DerivedPtr<EntryShadowO>(lhs) };
         auto* d_rhs { DerivedPtr<EntryShadowO>(rhs) };
 
-        switch (kColumn) {
+        switch (e_column) {
         case EntryEnumO::kRhsNode:
             return (order == Qt::AscendingOrder) ? (*d_lhs->rhs_node < *d_rhs->rhs_node) : (*d_lhs->rhs_node > *d_rhs->rhs_node);
         case EntryEnumO::kUnitPrice:
@@ -209,9 +209,9 @@ Qt::ItemFlags LeafModelO::flags(const QModelIndex& index) const
         return Qt::NoItemFlags;
 
     auto flags { QAbstractItemModel::flags(index) };
-    const EntryEnumO kColumn { index.column() };
+    const EntryEnumO column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case EntryEnumO::kId:
     case EntryEnumO::kInitial:
     case EntryEnumO::kDiscount:

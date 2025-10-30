@@ -270,8 +270,8 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
         auto* d_lhs = DerivedPtr<NodeO>(lhs);
         auto* d_rhs = DerivedPtr<NodeO>(rhs);
 
-        const NodeEnumO kColumn { column };
-        switch (kColumn) {
+        const NodeEnumO e_column { column };
+        switch (e_column) {
         case NodeEnumO::kName:
             return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
         case NodeEnumO::kUserId:
@@ -329,10 +329,10 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
     if (!d_node)
         return false;
 
-    const NodeEnumO kColumn { index.column() };
+    const NodeEnumO column { index.column() };
     bool branch { d_node->kind == std::to_underlying(NodeKind::kBranch) };
 
-    switch (kColumn) {
+    switch (column) {
     case NodeEnumO::kName:
         return d_node->name;
     case NodeEnumO::kId:
@@ -385,8 +385,8 @@ Qt::ItemFlags TreeModelO::flags(const QModelIndex& index) const
 
     auto flags { QAbstractItemModel::flags(index) };
 
-    const NodeEnumO kColumn { index.column() };
-    switch (kColumn) {
+    const NodeEnumO column { index.column() };
+    switch (column) {
     case NodeEnumO::kName:
         flags |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
         break;

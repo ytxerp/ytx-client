@@ -19,9 +19,9 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
     if (node == root_)
         return QVariant();
 
-    const NodeEnumF kColumn { index.column() };
+    const NodeEnumF column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case NodeEnumF::kName:
         return node->name;
     case NodeEnumF::kId:
@@ -66,10 +66,10 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
     if (node == root_)
         return false;
 
-    const NodeEnumF kColumn { index.column() };
+    const NodeEnumF column { index.column() };
     const QUuid id { node->id };
 
-    switch (kColumn) {
+    switch (column) {
     case NodeEnumF::kCode:
         NodeUtils::UpdateField(caches_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
@@ -95,8 +95,8 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
     assert(column >= 0 && column < node_header_.size());
 
     auto Compare = [column, order](const Node* lhs, const Node* rhs) -> bool {
-        const NodeEnumF kColumn { column };
-        switch (kColumn) {
+        const NodeEnumF e_column { column };
+        switch (e_column) {
         case NodeEnumF::kName:
             return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
         case NodeEnumF::kUserId:
@@ -141,9 +141,9 @@ Qt::ItemFlags TreeModelF::flags(const QModelIndex& index) const
         return Qt::NoItemFlags;
 
     auto flags { QAbstractItemModel::flags(index) };
-    const NodeEnumF kColumn { index.column() };
+    const NodeEnumF column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case NodeEnumF::kName:
         flags |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
         flags &= ~Qt::ItemIsEditable;

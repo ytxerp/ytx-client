@@ -274,11 +274,11 @@ void MainWindow::RSectionGroup(int id)
 void MainWindow::REntryRefDoubleClicked(const QModelIndex& index)
 {
     const auto node_id { index.siblingAtColumn(std::to_underlying(EntryRefEnum::kOrderId)).data().toUuid() };
-    const int kColumn { std::to_underlying(EntryRefEnum::kInitial) };
+    const int column { std::to_underlying(EntryRefEnum::kInitial) };
 
     assert(!node_id.isNull());
 
-    if (index.column() != kColumn)
+    if (index.column() != column)
         return;
 
     const Section section { index.siblingAtColumn(std::to_underlying(EntryRefEnum::kSection)).data().toInt() };

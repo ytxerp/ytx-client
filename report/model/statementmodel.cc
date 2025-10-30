@@ -45,10 +45,10 @@ QVariant StatementModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    const StatementEnum kColumn { index.column() };
+    const StatementEnum column { index.column() };
     auto* statement { statement_list_.at(index.row()) };
 
-    switch (kColumn) {
+    switch (column) {
     case StatementEnum::kPartner:
         return statement->partner;
     case StatementEnum::kPBalance:
@@ -82,9 +82,9 @@ void StatementModel::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](const Statement* lhs, const Statement* rhs) -> bool {
-        const StatementEnum kColumn { column };
+        const StatementEnum e_column { column };
 
-        switch (kColumn) {
+        switch (e_column) {
         case StatementEnum::kPartner:
             return (order == Qt::AscendingOrder) ? (lhs->partner < rhs->partner) : (lhs->partner > rhs->partner);
         case StatementEnum::kPBalance:

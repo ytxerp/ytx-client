@@ -13,9 +13,9 @@ QVariant SearchEntryModelO::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* d_entry { DerivedPtr<EntryO>(entry_list_.at(index.row())) };
-    const EntryEnumO kColumn { index.column() };
+    const EntryEnumO column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case EntryEnumO::kId:
         return d_entry->id;
     case EntryEnumO::kLhsNode:
@@ -51,12 +51,12 @@ void SearchEntryModelO::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](const Entry* lhs, const Entry* rhs) -> bool {
-        const EntryEnumO kColumn { column };
+        const EntryEnumO e_column { column };
 
         auto* d_lhs = DerivedPtr<EntryO>(lhs);
         auto* d_rhs = DerivedPtr<EntryO>(rhs);
 
-        switch (kColumn) {
+        switch (e_column) {
         case EntryEnumO::kLhsNode:
             return (order == Qt::AscendingOrder) ? (lhs->lhs_node < rhs->lhs_node) : (lhs->lhs_node > rhs->lhs_node);
         case EntryEnumO::kCount:

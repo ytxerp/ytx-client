@@ -53,9 +53,9 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* entry { statement_secondary_list_.at(index.row()) };
-    const StatementSecondaryEnum kColumn { index.column() };
+    const StatementSecondaryEnum column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case StatementSecondaryEnum::kIssuedTime:
         return entry->issued_time;
     case StatementSecondaryEnum::kRhsNode:
@@ -84,12 +84,12 @@ bool StatementSecondaryModel::setData(const QModelIndex& index, const QVariant& 
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    const StatementSecondaryEnum kColumn { index.column() };
+    const StatementSecondaryEnum column { index.column() };
     const int kRow { index.row() };
 
     auto* entry { statement_secondary_list_.at(kRow) };
 
-    switch (kColumn) {
+    switch (column) {
     case StatementSecondaryEnum::kStatus:
         entry->status = value.toBool();
         break;
@@ -114,9 +114,9 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](const StatementSecondary* lhs, const StatementSecondary* rhs) -> bool {
-        const StatementSecondaryEnum kColumn { column };
+        const StatementSecondaryEnum e_column { column };
 
-        switch (kColumn) {
+        switch (e_column) {
         case StatementSecondaryEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case StatementSecondaryEnum::kRhsNode:

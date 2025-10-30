@@ -47,9 +47,9 @@ QVariant StatementPrimaryModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* node { statement_primary_list_.at(index.row()) };
-    const StatementPrimaryEnum kColumn { index.column() };
+    const StatementPrimaryEnum column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case StatementPrimaryEnum::kDescription:
         return node->description;
     case StatementPrimaryEnum::kEmployee:
@@ -76,10 +76,10 @@ bool StatementPrimaryModel::setData(const QModelIndex& index, const QVariant& va
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    const StatementPrimaryEnum kColumn { index.column() };
+    const StatementPrimaryEnum column { index.column() };
     auto* node { statement_primary_list_.at(index.row()) };
 
-    switch (kColumn) {
+    switch (column) {
     case StatementPrimaryEnum::kStatus:
         node->status = value.toBool();
         break;
@@ -104,9 +104,9 @@ void StatementPrimaryModel::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](const StatementPrimary* lhs, const StatementPrimary* rhs) -> bool {
-        const StatementPrimaryEnum kColumn { column };
+        const StatementPrimaryEnum e_column { column };
 
-        switch (kColumn) {
+        switch (e_column) {
         case StatementPrimaryEnum::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
         case StatementPrimaryEnum::kEmployee:

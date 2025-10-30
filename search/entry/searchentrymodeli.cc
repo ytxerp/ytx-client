@@ -13,9 +13,9 @@ QVariant SearchEntryModelI::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* d_entry { DerivedPtr<EntryI>(entry_list_.at(index.row())) };
-    const FullEntryEnumI kColumn { index.column() };
+    const FullEntryEnumI column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case FullEntryEnumI::kId:
         return d_entry->id;
     case FullEntryEnumI::kIssuedTime:
@@ -53,12 +53,12 @@ void SearchEntryModelI::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](const Entry* lhs, const Entry* rhs) -> bool {
-        const FullEntryEnumI kColumn { column };
+        const FullEntryEnumI e_column { column };
 
         auto* d_lhs = DerivedPtr<EntryI>(lhs);
         auto* d_rhs = DerivedPtr<EntryI>(rhs);
 
-        switch (kColumn) {
+        switch (e_column) {
         case FullEntryEnumI::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case FullEntryEnumI::kCode:

@@ -17,9 +17,9 @@ QVariant LeafModelI::data(const QModelIndex& index, int role) const
 
     auto* d_shadow = DerivedPtr<EntryShadowI>(shadow_list_.at(index.row()));
 
-    const EntryEnumI kColumn { index.column() };
+    const EntryEnumI column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case EntryEnumI::kId:
         return *d_shadow->id;
     case EntryEnumI::kUserId:
@@ -112,9 +112,9 @@ void LeafModelI::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0 && column <= info_.entry_header.size() - 1);
 
-    const EntryEnumI kColumn { column };
+    const EntryEnumI e_column { column };
 
-    switch (kColumn) {
+    switch (e_column) {
     case EntryEnumI::kId:
     case EntryEnumI::kBalance:
     case EntryEnumI::kUserId:
@@ -127,11 +127,11 @@ void LeafModelI::sort(int column, Qt::SortOrder order)
         break;
     }
 
-    auto Compare = [order, kColumn](EntryShadow* lhs, EntryShadow* rhs) -> bool {
+    auto Compare = [order, e_column](EntryShadow* lhs, EntryShadow* rhs) -> bool {
         auto* d_lhs { DerivedPtr<EntryShadowI>(lhs) };
         auto* d_rhs { DerivedPtr<EntryShadowI>(rhs) };
 
-        switch (kColumn) {
+        switch (e_column) {
         case EntryEnumI::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (*lhs->issued_time < *rhs->issued_time) : (*lhs->issued_time > *rhs->issued_time);
         case EntryEnumI::kCode:
@@ -168,9 +168,9 @@ Qt::ItemFlags LeafModelI::flags(const QModelIndex& index) const
         return Qt::NoItemFlags;
 
     auto flags { QAbstractItemModel::flags(index) };
-    const EntryEnumI kColumn { index.column() };
+    const EntryEnumI column { index.column() };
 
-    switch (kColumn) {
+    switch (column) {
     case EntryEnumI::kId:
     case EntryEnumI::kBalance:
     case EntryEnumI::kDocument:
