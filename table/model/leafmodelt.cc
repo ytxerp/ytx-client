@@ -5,9 +5,9 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-LeafModelT::LeafModelT(CLeafModelArg& arg, int node_status, QObject* parent)
+LeafModelT::LeafModelT(CLeafModelArg& arg, const Node* node, QObject* parent)
     : LeafModel { arg, parent }
-    , node_status_ { node_status }
+    , d_node_ { static_cast<const NodeT*>(node) }
 {
 }
 
@@ -59,12 +59,15 @@ QVariant LeafModelT::data(const QModelIndex& index, int role) const
     }
 }
 
-void LeafModelT::RNodeStatus(int value) { node_status_ = value; }
-
 bool LeafModelT::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
         return false;
+
+    if (d_node_->status == std::to_underlying(NodeStatus::kReleased)) {
+        qInfo() << "Edit ignored: node is released, entry cannot be edited either.";
+        return false;
+    }
 
     const EntryEnumT column { index.column() };
     const int row { index.row() };
@@ -184,7 +187,7 @@ Qt::ItemFlags LeafModelT::flags(const QModelIndex& index) const
         break;
     }
 
-    if (node_status_ == std::to_underlying(NodeStatus::kReleased))
+    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         flags &= ~Qt::ItemIsEditable;
 
     return flags;
@@ -193,7 +196,7 @@ Qt::ItemFlags LeafModelT::flags(const QModelIndex& index) const
 bool LeafModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
-    if (node_status_ == std::to_underlying(NodeStatus::kReleased))
+    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         return false;
 
     auto* entry_shadow { entry_hub_->AllocateEntryShadow() };
@@ -452,7 +455,7 @@ bool LeafModelT::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
 
-    if (node_status_ == std::to_underlying(NodeStatus::kReleased))
+    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         return false;
 
     auto* d_shadow = DerivedPtr<EntryShadowT>(shadow_list_.at(row));

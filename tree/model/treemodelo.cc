@@ -136,8 +136,6 @@ void TreeModelO::SyncNodeStatus(const QUuid& node_id, int status, const QJsonObj
     if (index.isValid()) {
         emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumO::kStatus)), index.siblingAtColumn(std::to_underlying(NodeEnumO::kStatus)));
     }
-
-    emit SNodeStatus(node->id, status);
 }
 
 void TreeModelO::UpdateName(const QUuid& node_id, CString& new_name)

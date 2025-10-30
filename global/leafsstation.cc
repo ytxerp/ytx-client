@@ -94,16 +94,6 @@ void LeafSStation::RDirectionRule(const QUuid& node_id, bool rule)
     emit SDirectionRule(rule);
 }
 
-void LeafSStation::RNodeStatus(const QUuid& node_id, int value)
-{
-    const auto* model { FindModel(node_id) };
-    if (!model)
-        return;
-
-    connect(this, &LeafSStation::SNodeStatus, model, &LeafModel::RNodeStatus, Qt::SingleShotConnection);
-    emit SNodeStatus(value);
-}
-
 void LeafSStation::RRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
 {
     for (auto it = leaf_entry.constBegin(); it != leaf_entry.constEnd(); ++it) {

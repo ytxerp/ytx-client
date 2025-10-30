@@ -45,7 +45,6 @@ protected:
 signals:
     // send to LeafSStation
     void SDirectionRule(const QUuid& node_id, bool value);
-    void SNodeStatus(const QUuid& node_id, int value);
 
     // send to its view
     void SResizeColumnToContents(int column);

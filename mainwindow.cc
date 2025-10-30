@@ -375,10 +375,9 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     case Section::kInventory:
         leaf_model = new LeafModelI(arg, this);
         break;
-    case Section::kTask: {
-        const int status { tree_model->Status(node_id) };
-        leaf_model = new LeafModelT(arg, status, this);
-    } break;
+    case Section::kTask:
+        leaf_model = new LeafModelT(arg, tree_model->GetNode(node_id), this);
+        break;
     case Section::kPartner:
         leaf_model = new LeafModelP(arg, this);
         break;
@@ -552,7 +551,6 @@ void MainWindow::TableConnectO(QTableView* table_view, LeafModelO* leaf_model_or
     connect(widget, &LeafWidgetO::SSyncPartner, leaf_model_order, &LeafModelO::RSyncPartner);
     connect(widget, &LeafWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
 
-    connect(widget, &LeafWidgetO::SSyncStatus, leaf_model_order, &LeafModelO::RSyncStatus);
     connect(widget, &LeafWidgetO::SSyncStatus, tree_model, &TreeModelO::RSyncStatus);
 }
 
@@ -992,7 +990,6 @@ void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SUpdateBalance, LeafSStation::Instance(), &LeafSStation::RUpdateBalance, Qt::UniqueConnection);
 
     connect(tree_model, &TreeModel::SDirectionRule, LeafSStation::Instance(), &LeafSStation::RDirectionRule, Qt::UniqueConnection);
-    connect(tree_model, &TreeModel::SNodeStatus, LeafSStation::Instance(), &LeafSStation::RNodeStatus, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const

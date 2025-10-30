@@ -9,7 +9,7 @@ LeafModelO::LeafModelO(CLeafModelArg& arg, bool is_new, const Node* node, TreeMo
     , entry_hub_partner_ { static_cast<EntryHubP*>(entry_hub_partner) }
     , entry_hub_order_ { static_cast<EntryHubO*>(arg.entry_hub) }
     , partner_id_ { static_cast<const NodeO*>(node)->partner }
-    , node_status_ { static_cast<const NodeO*>(node)->status }
+    , d_node_ { static_cast<const NodeO*>(node) }
     , is_new_ { is_new }
 {
 }
@@ -23,17 +23,6 @@ void LeafModelO::RSaveOrder()
 
     if (!shadow_list_.isEmpty())
         entry_hub_order_->WriteTransRange(shadow_list_);
-}
-
-void LeafModelO::RSyncStatus(const QUuid& node_id, bool value)
-{
-    assert(lhs_id_ == node_id);
-    node_status_ = value;
-
-    if (!value)
-        return;
-
-    PurifyEntryShadow();
 }
 
 void LeafModelO::RSyncPartner(const QUuid& node_id, const QUuid& value)
@@ -83,6 +72,9 @@ QVariant LeafModelO::data(const QModelIndex& index, int role) const
 bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
+        return false;
+
+    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         return false;
 
     const EntryEnumO kColumn { index.column() };
@@ -231,7 +223,7 @@ Qt::ItemFlags LeafModelO::flags(const QModelIndex& index) const
         break;
     }
 
-    if (node_status_ == std::to_underlying(NodeStatus::kReleased))
+    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         flags &= ~Qt::ItemIsEditable;
 
     return flags;
@@ -240,7 +232,7 @@ Qt::ItemFlags LeafModelO::flags(const QModelIndex& index) const
 bool LeafModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
-    if (node_status_ == std::to_underlying(NodeStatus::kReleased))
+    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         return false;
 
     auto* entry_shadow { entry_hub_->AllocateEntryShadow() };
@@ -257,12 +249,12 @@ bool LeafModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 bool LeafModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
-    if (node_status_ == std::to_underlying(NodeStatus::kReleased))
+    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         return false;
 
     auto* d_shadow = DerivedPtr<EntryShadowO>(shadow_list_.at(row));
     const auto lhs_node { *d_shadow->lhs_node };
-    const auto rhs_node { *d_shadow->rhs_node };
+    // const auto rhs_node { *d_shadow->rhs_node };
 
     beginRemoveRows(parent, row, row);
     shadow_list_.removeAt(row);

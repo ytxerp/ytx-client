@@ -34,7 +34,6 @@ public:
     ~LeafModelO() override = default;
 
 public slots:
-    void RSyncStatus(const QUuid& node_id, bool value);
     void RSyncPartner(const QUuid& node_id, const QUuid& value);
     void RSaveOrder();
 
@@ -67,7 +66,7 @@ private:
     EntryHubP* entry_hub_partner_ {};
     EntryHubO* entry_hub_order_ {};
     QUuid partner_id_ {};
-    int node_status_ {};
+    const NodeO* d_node_ {};
 
     bool is_new_ {};
     QSet<QUuid> deleted_entries_ {};

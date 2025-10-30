@@ -270,11 +270,11 @@ void LeafWidgetO::RRuleGroupClicked(int id)
 
     if (!is_new_) {
         update_cache_.insert(kDirectionRule, node_->direction_rule);
-        count_delta_ *= -1;
-        measure_delta_ *= -1;
-        initial_delta_ *= -1;
-        discount_delta_ *= -1;
-        final_delta_ *= -1;
+        count_delta_ *= -2;
+        measure_delta_ *= -2;
+        initial_delta_ *= -2;
+        discount_delta_ *= -2;
+        final_delta_ *= -2;
     }
 }
 

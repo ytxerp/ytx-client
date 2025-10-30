@@ -82,10 +82,16 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
     if (!d_node)
         return false;
 
-    const NodeEnumT kColumn { index.column() };
+    const NodeEnumT column { index.column() };
+
+    if (d_node->status == std::to_underlying(NodeStatus::kReleased) && column != NodeEnumT::kStatus) {
+        qInfo() << "Edit ignored: node is released";
+        return false;
+    }
+
     const QUuid id { node->id };
 
-    switch (kColumn) {
+    switch (column) {
     case NodeEnumT::kCode:
         NodeUtils::UpdateField(caches_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
@@ -181,8 +187,8 @@ Qt::ItemFlags TreeModelT::flags(const QModelIndex& index) const
 
     auto flags { QAbstractItemModel::flags(index) };
 
-    const NodeEnumT kColumn { index.column() };
-    switch (kColumn) {
+    const NodeEnumT column { index.column() };
+    switch (column) {
     case NodeEnumT::kName:
         flags |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
         break;
@@ -289,8 +295,6 @@ void TreeModelT::SyncNodeStatus(const QUuid& node_id, int status, const QJsonObj
     if (index.isValid()) {
         emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumT::kStatus)), index.siblingAtColumn(std::to_underlying(NodeEnumT::kStatus)));
     }
-
-    emit SNodeStatus(node->id, status);
 }
 
 void TreeModelT::UpdateStatus(Node* node, int value)
@@ -306,8 +310,6 @@ void TreeModelT::UpdateStatus(Node* node, int value)
 
     QJsonObject message { JsonGen::NodeStatus(section_, node->id, value) };
     WebSocket::Instance()->SendMessage(kNodeStatus, message);
-
-    emit SNodeStatus(node->id, value);
 }
 
 void TreeModelT::ResetBranch(Node* node)

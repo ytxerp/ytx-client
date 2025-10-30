@@ -21,15 +21,13 @@
 #define LEAFMODELT_H
 
 #include "leafmodel.h"
+#include "tree/node.h"
 
 class LeafModelT final : public LeafModel {
     Q_OBJECT
 
-public slots:
-    void RNodeStatus(int value) override;
-
 public:
-    LeafModelT(CLeafModelArg& arg, int node_status, QObject* parent = nullptr);
+    LeafModelT(CLeafModelArg& arg, const Node* node, QObject* parent = nullptr);
     ~LeafModelT() override = default;
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -50,7 +48,7 @@ protected:
     double CalculateBalance(EntryShadow* entry_shadow) override;
 
 private:
-    int node_status_ {};
+    const NodeT* d_node_ {};
 };
 
 #endif // LEAFMODELT_H

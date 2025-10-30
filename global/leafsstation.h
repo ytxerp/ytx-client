@@ -46,7 +46,6 @@ signals:
 
     void SUpdateBalance(const QUuid& entry_id);
     void SDirectionRule(bool rule);
-    void SNodeStatus(int value);
     void SRefreshStatus();
 
     void SAppendMultiEntry(const EntryList& entry_list);
@@ -59,7 +58,6 @@ public slots:
     void RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void RDirectionRule(const QUuid& node_id, bool rule);
-    void RNodeStatus(const QUuid& node_id, int value);
     void RRefreshStatus(const QSet<QUuid>& affected_node);
     void RUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
