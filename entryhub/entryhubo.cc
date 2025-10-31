@@ -372,47 +372,6 @@ bool EntryHubO::ReadStatementSecondary(StatementSecondaryList& list, const QUuid
     return true;
 }
 
-bool EntryHubO::WriteTransRange(const QList<EntryShadow*>& list)
-{
-    // if (list.isEmpty())
-    //     return false;
-
-    // QSqlQuery query(main_db_);
-
-    // query.exec(QStringLiteral("PRAGMA synchronous = OFF"));
-    // query.exec(QStringLiteral("PRAGMA journal_mode = MEMORY"));
-
-    // if (!main_db_.transaction()) {
-    //     qDebug() << "Failed to start transaction" << main_db_.lastError();
-    //     return false;
-    // }
-
-    // CString sql {};
-
-    // // 插入多条记录的 SQL 语句
-    // query.prepare(sql);
-    // WriteTransRangeFunction(list, query);
-
-    // // 执行批量插入
-    // if (!query.execBatch()) {
-    //     qDebug() << "Failed in WriteTransRange" << query.lastError();
-    //     main_db_.rollback();
-    //     return false;
-    // }
-
-    // // 提交事务
-    // if (!main_db_.commit()) {
-    //     qDebug() << "Failed to commit transaction" << main_db_.lastError();
-    //     main_db_.rollback();
-    //     return false;
-    // }
-
-    // query.exec(QStringLiteral("PRAGMA synchronous = FULL"));
-    // query.exec(QStringLiteral("PRAGMA journal_mode = DELETE"));
-
-    return true;
-}
-
 QString EntryHubO::QSReadStatement(int unit) const
 {
     switch (UnitO(unit)) {

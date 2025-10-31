@@ -186,7 +186,7 @@ private:
 
     void InsertNodeFunction(const QModelIndex& parent, const QUuid& parent_id, int row);
     void InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUuid& parent_id, int row); // Finance Inventory Partner Task
-    void InsertNodeO(Node* node, const QModelIndex& parent, int row); // Purchase Sales
+    void InsertNodeO(Node* base_node, const QModelIndex& parent, int row); // Purchase Sales
 
     void RemoveNode();
     void BranchRemove(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id);

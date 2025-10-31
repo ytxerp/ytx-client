@@ -22,7 +22,7 @@
 
 #include <QButtonGroup>
 
-#include "component/arg/insertnodeargo.h"
+#include "component/arg/nodeopargo.h"
 #include "entryhub/entryhubo.h"
 #include "leafwidget.h"
 #include "print/printmanager.h"
@@ -36,8 +36,7 @@ class LeafWidgetO final : public LeafWidget {
     Q_OBJECT
 
 public:
-    LeafWidgetO(
-        CInsertNodeArgO& arg, bool is_new, const QMap<QString, QString>& print_template, QSharedPointer<PrintManager> print_manager, QWidget* parent = nullptr);
+    LeafWidgetO(CNodeOpArgO& arg, QWidget* parent = nullptr);
     ~LeafWidgetO();
 
 signals:
@@ -93,7 +92,6 @@ private:
 private:
     Ui::LeafWidgetO* ui;
     NodeO* node_ {};
-    QJsonObject update_cache_ {};
 
     EntryHubO* sql_ {};
     LeafModelO* leaf_model_order_ {};
@@ -106,6 +104,8 @@ private:
     QSortFilterProxyModel* pmodel_ {};
 
     bool is_new_ {};
+
+    QJsonObject update_cache_ {};
     double initial_delta_ {};
     double final_delta_ {};
     double count_delta_ {};
@@ -116,7 +116,7 @@ private:
     const int partner_unit_ {};
 
     const QMap<QString, QString>& print_template_ {};
-    QSharedPointer<PrintManager> print_manager_ {};
+    PrintManager print_manager_;
 };
 
 inline const char* kLeafWidgetO = "LeafWidgetO";

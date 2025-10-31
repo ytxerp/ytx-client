@@ -189,7 +189,7 @@ set(HEADERS
     component/sectioncontex.h
     component/info.h
     component/arg/entrymodelarg.h
-    component/arg/insertnodeargo.h
+    component/arg/nodeopargo.h
     component/arg/insertnodeargfipt.h
     delegate/boolstring.h
     delegate/styleditemdelegate.h

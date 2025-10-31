@@ -65,7 +65,6 @@ public slots:
 
     virtual void RAppendOneEntry(Entry* entry);
     virtual void RRemoveOneEntry(const QUuid& entry_id);
-    virtual void RNodeStatus(int value) { Q_UNUSED(value) };
 
 public:
     // implemented functions

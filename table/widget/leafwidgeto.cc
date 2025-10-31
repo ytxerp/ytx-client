@@ -6,8 +6,7 @@
 #include "global/nodepool.h"
 #include "ui_leafwidgeto.h"
 
-LeafWidgetO::LeafWidgetO(
-    CInsertNodeArgO& arg, bool is_new, const QMap<QString, QString>& print_template, QSharedPointer<PrintManager> print_manager, QWidget* parent)
+LeafWidgetO::LeafWidgetO(CNodeOpArgO& arg, QWidget* parent)
     : LeafWidget(parent)
     , ui(new Ui::LeafWidgetO)
     , node_ { static_cast<NodeO*>(arg.node) }
@@ -15,11 +14,11 @@ LeafWidgetO::LeafWidgetO(
     , leaf_model_order_ { qobject_cast<LeafModelO*>(arg.leaf_model) }
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
-    , is_new_ { is_new }
+    , is_new_ { arg.is_new }
     , node_id_ { arg.node->id }
     , partner_unit_ { arg.section == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor) }
-    , print_template_ { print_template }
-    , print_manager_ { print_manager }
+    , print_template_ { arg.print_template }
+    , print_manager_ { arg.app_config, arg.tree_model_inventory, arg.tree_model_partner }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -327,18 +326,18 @@ void LeafWidgetO::on_pBtnStatus_toggled(bool checked)
 void LeafWidgetO::on_pBtnPrint_clicked()
 {
     PreparePrint();
-    print_manager_->Print();
+    print_manager_.Print();
 }
 
 void LeafWidgetO::on_pBtnPreview_clicked()
 {
     PreparePrint();
-    print_manager_->Preview();
+    print_manager_.Preview();
 }
 
 void LeafWidgetO::PreparePrint()
 {
-    print_manager_->LoadIni(ui->comboTemplate->currentData().toString());
+    print_manager_.LoadIni(ui->comboTemplate->currentData().toString());
 
     QString unit {};
     switch (UnitO(node_->unit)) {
@@ -357,7 +356,7 @@ void LeafWidgetO::PreparePrint()
 
     PrintData data { tree_model_partner_->Name(node_->partner), node_->issued_time.toLocalTime().toString(kDateTimeFST),
         tree_model_partner_->Name(node_->employee), unit, node_->initial_total };
-    print_manager_->SetData(data, leaf_model_order_->GetEntryShadowList());
+    print_manager_.SetData(data, leaf_model_order_->GetEntryShadowList());
 }
 
 void LeafWidgetO::on_pBtnSave_clicked()

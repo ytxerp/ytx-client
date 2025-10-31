@@ -423,41 +423,56 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     LeafSStation::Instance()->RegisterModel(node_id, leaf_model);
 }
 
-void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
+void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row)
 {
-    auto* tree_model_order { static_cast<TreeModelO*>(sc_->tree_model.data()) };
+    // Extract frequently used shortcuts
+    auto& entry_hub = sc_->entry_hub;
+    auto& section_config = sc_->section_config;
+    auto* tab_widget = ui->tabWidget;
+    auto* tab_bar = tab_widget->tabBar();
+
+    // Validate tree model and node
+    auto* tree_model_o { static_cast<TreeModelO*>(sc_->tree_model.data()) };
+    if (!tree_model_o)
+        return;
+
+    auto* node = static_cast<NodeO*>(base_node);
+    if (!node)
+        return;
+
     const QUuid node_id { node->id };
 
-    LeafModelArg model_arg { sc_->entry_hub, sc_->info, node_id, true };
-    auto* leaf_model_order { new LeafModelO(model_arg, true, node, sc_i_.tree_model, sc_p_.entry_hub, this) };
+    // Prepare dependencies
+    auto tree_model_p { sc_p_.tree_model };
+    auto tree_model_i { sc_i_.tree_model };
 
-    auto print_manager { QSharedPointer<PrintManager>::create(app_config_, sc_i_.tree_model, sc_p_.tree_model) };
+    // Create model and widget
+    LeafModelArg leaf_model_arg { entry_hub, sc_->info, node_id, true };
+    auto* leaf_model { new LeafModelO(leaf_model_arg, node, tree_model_i, sc_p_.entry_hub, this) };
 
-    auto widget_arg { InsertNodeArgO { node, sc_->entry_hub, leaf_model_order, sc_p_.tree_model, sc_->section_config, start_ } };
-    auto* widget { new LeafWidgetO(widget_arg, true, print_template_, print_manager, this) };
-    auto* view { widget->View() };
+    NodeOpArgO op_arg { node, entry_hub, leaf_model, tree_model_p, tree_model_i, app_config_, section_config, start_, true };
+    auto* widget { new LeafWidgetO(op_arg, this) };
 
-    TableConnectO(view, leaf_model_order, tree_model_order, widget);
-
+    // Setup insert connect
     connect(
         widget, &LeafWidgetO::SInsertOrder, this,
         [=, this]() {
-            if (tree_model_order->InsertNode(row, parent, node)) {
-                auto index { tree_model_order->index(row, 0, parent) };
+            if (tree_model_o->InsertNode(row, parent, node)) {
+                auto index { tree_model_o->index(row, 0, parent) };
                 sc_->tree_view->setCurrentIndex(index);
             }
         },
         Qt::SingleShotConnection);
 
-    connect(widget, &LeafWidgetO::SSaveOrder, leaf_model_order, &LeafModelO::RSaveOrder);
-
-    SetTableViewO(view, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
-    TableDelegateO(view, sc_->section_config);
-
-    const int tab_index { ui->tabWidget->addTab(widget, QString()) };
-    auto* tab_bar { ui->tabWidget->tabBar() };
-
+    // Setup tab
+    const int tab_index { tab_widget->addTab(widget, QString()) };
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, node_id }));
+
+    // Configure view
+    auto* view { widget->View() };
+    TableConnectO(view, leaf_model, tree_model_o, widget);
+    SetTableViewO(view, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
+    TableDelegateO(view, section_config);
 
     sc_->leaf_wgt_hash.insert(node_id, widget);
     FocusLeafWidget(node_id);
@@ -466,7 +481,6 @@ void MainWindow::InsertNodeO(Node* node, const QModelIndex& parent, int row)
 void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 {
     // Extract frequently used shortcuts
-    const auto section { sc->info.section };
     auto& entry_hub = sc->entry_hub;
     auto& section_config = sc->section_config;
     auto* tab_widget = ui->tabWidget;
@@ -489,22 +503,21 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     auto tree_model_i { sc_i_.tree_model };
 
     // Create model and widget
-    LeafModelArg model_arg { entry_hub, sc->info, node_id, node->direction_rule };
-    auto* model = new LeafModelO(model_arg, false, node, tree_model_i, sc_p_.entry_hub, this);
+    LeafModelArg leaf_model_arg { entry_hub, sc->info, node_id, node->direction_rule };
+    auto* leaf_model = new LeafModelO(leaf_model_arg, node, tree_model_i, sc_p_.entry_hub, this);
 
-    auto print_manager { QSharedPointer<PrintManager>::create(app_config_, tree_model_i, tree_model_p) };
-    InsertNodeArgO widget_arg { node, entry_hub, model, tree_model_p, section_config, section };
-    auto* widget = new LeafWidgetO(widget_arg, false, print_template_, print_manager, this);
+    NodeOpArgO op_arg { node, entry_hub, leaf_model, tree_model_p, tree_model_i, app_config_, section_config, start_, false };
+    auto* widget = new LeafWidgetO(op_arg, this);
 
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, tree_model_p->Name(partner_id)) };
-    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, node_id }));
+    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, node_id }));
     tab_bar->setTabToolTip(tab_index, tree_model_p->Path(partner_id));
 
     // Configure view
     auto* view = widget->View();
     SetTableViewO(view, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
-    TableConnectO(view, model, tree_model_o, widget);
+    TableConnectO(view, leaf_model, tree_model_o, widget);
     TableDelegateO(view, section_config);
 
     sc->leaf_wgt_hash.insert(node_id, widget);

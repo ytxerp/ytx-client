@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INSERTNODEARGO_H
-#define INSERTNODEARGO_H
+#ifndef NODEOPARGO_H
+#define NODEOPARGO_H
 
 #include "component/config.h"
 #include "entryhub/entryhub.h"
@@ -26,15 +26,20 @@
 #include "tree/model/treemodel.h"
 #include "tree/node.h"
 
-struct InsertNodeArgO {
+// Order Node Operation Argument
+struct NodeOpArgO {
     Node* node {};
     EntryHub* entry_hub {};
     LeafModel* leaf_model {};
     TreeModel* tree_model_partner {};
+    TreeModel* tree_model_inventory;
+    CAppConfig& app_config {};
     CSectionConfig& section_config {};
     Section section {};
+    bool is_new {};
+    const QMap<QString, QString>& print_template {};
 };
 
-using CInsertNodeArgO = const InsertNodeArgO;
+using CNodeOpArgO = const NodeOpArgO;
 
-#endif // INSERTNODEARGO_H
+#endif // NODEOPARGO_H

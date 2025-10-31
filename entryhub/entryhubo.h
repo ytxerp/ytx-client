@@ -53,8 +53,6 @@ public:
     bool ReadStatementPrimary(StatementPrimaryList& list, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const;
     bool ReadStatementSecondary(StatementSecondaryList& list, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const;
 
-    bool WriteTransRange(const QList<EntryShadow*>& list);
-
 protected:
     // table
     void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;

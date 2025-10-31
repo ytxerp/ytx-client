@@ -3,26 +3,59 @@
 #include "global/entryshadowpool.h"
 #include "websocket/jsongen.h"
 
-LeafModelO::LeafModelO(CLeafModelArg& arg, bool is_new, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
+LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
     : LeafModel { arg, parent }
     , tree_model_i_ { static_cast<TreeModelI*>(tree_model_inventory) }
     , entry_hub_partner_ { static_cast<EntryHubP*>(entry_hub_partner) }
     , entry_hub_order_ { static_cast<EntryHubO*>(arg.entry_hub) }
     , partner_id_ { static_cast<const NodeO*>(node)->partner }
     , d_node_ { static_cast<const NodeO*>(node) }
-    , is_new_ { is_new }
 {
 }
 
 void LeafModelO::RSaveOrder()
 {
+    // Skip if there are no shadow entries to save
     if (shadow_list_.isEmpty())
         return;
 
+    // Remove entries that have no associated rhs_node (i.e. internal sku not selected).
     PurifyEntryShadow();
 
-    if (!shadow_list_.isEmpty())
-        entry_hub_order_->WriteTransRange(shadow_list_);
+    // After cleanup, there might be nothing left to save.
+    if (shadow_list_.isEmpty())
+        return;
+
+    // --- Step 3: Normalize buffer states before saving ---
+    // This ensures that insert/delete/update buffers remain consistent
+    // and no redundant or conflicting entries exist.
+
+    // Case ①: Entries that were inserted and then deleted.
+    // → These should be removed from both inserted_entries_ and deleted_entries_.
+    QSet<QUuid> to_remove_from_deleted;
+    for (const QUuid& id : std::as_const(deleted_entries_)) {
+        if (inserted_entries_.contains(id)) {
+            inserted_entries_.remove(id);
+            to_remove_from_deleted.insert(id);
+        }
+    }
+    // Efficiently remove all matching ids from the deleted set.
+    deleted_entries_.subtract(to_remove_from_deleted);
+
+    // Case ② & ③:
+    // - Deleted entries: remove any pending update caches (they're meaningless now).
+    // - Newly inserted entries: remove redundant caches (fresh insertions don't need updates).
+    for (const QUuid& id : std::as_const(deleted_entries_)) {
+        caches_.remove(id);
+    }
+
+    for (auto it = inserted_entries_.cbegin(); it != inserted_entries_.cend(); ++it) {
+        caches_.remove(it.key());
+    }
+
+    // At this point:
+    // - shadow_list_ contains only valid entries ready for saving.
+    // - buffer containers (inserted/deleted/caches) are consistent and conflict-free.
 }
 
 void LeafModelO::RSyncPartner(const QUuid& node_id, const QUuid& value)
@@ -95,7 +128,7 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     bool unit_discount_changed { false };
 
     const QUuid id { *d_shadow->id };
-    auto& entry { caches_[id] };
+    auto& cache { caches_[id] };
 
     if (!old_rhs_node.isNull()) {
         RestartTimer(id);
@@ -105,7 +138,7 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case EntryEnumO::kDescription:
-        EntryUtils::UpdateShadowField(entry, shadow, kDescription, value.toString(), &EntryShadow::description);
+        EntryUtils::UpdateShadowField(cache, shadow, kDescription, value.toString(), &EntryShadow::description);
         break;
     case EntryEnumO::kRhsNode:
         UpdateLinkedNode(d_shadow, value.toUuid(), 0);
@@ -114,16 +147,16 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
         unit_price_changed = UpdateRate(d_shadow, value.toDouble());
         break;
     case EntryEnumO::kMeasure:
-        measure_changed = UpdateMeasure(d_shadow, value.toDouble(), kCoefficient);
+        measure_changed = UpdateMeasure(cache, d_shadow, value.toDouble(), kCoefficient);
         break;
     case EntryEnumO::kCount:
-        count_changed = UpdateCount(d_shadow, value.toDouble(), kCoefficient);
+        count_changed = UpdateCount(cache, d_shadow, value.toDouble(), kCoefficient);
         break;
     case EntryEnumO::kUnitDiscount:
-        unit_discount_changed = UpdateUnitDiscount(d_shadow, value.toDouble());
+        unit_discount_changed = UpdateUnitDiscount(cache, d_shadow, value.toDouble());
         break;
     case EntryEnumO::kExternalSku:
-        UpdateExternaSku(d_shadow, value.toUuid());
+        UpdateExternaSku(cache, d_shadow, value.toUuid());
         break;
     default:
         return false;
@@ -254,19 +287,22 @@ bool LeafModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
     auto* d_shadow = DerivedPtr<EntryShadowO>(shadow_list_.at(row));
     const auto lhs_node { *d_shadow->lhs_node };
-    // const auto rhs_node { *d_shadow->rhs_node };
+    const auto rhs_node { *d_shadow->rhs_node };
 
     beginRemoveRows(parent, row, row);
     shadow_list_.removeAt(row);
     endRemoveRows();
 
-    emit SSyncDelta(lhs_node, -*d_shadow->initial, -*d_shadow->final, -*d_shadow->count, -*d_shadow->measure, -*d_shadow->discount);
+    if (!rhs_node.isNull()) {
+        emit SSyncDelta(lhs_node, -*d_shadow->initial, -*d_shadow->final, -*d_shadow->count, -*d_shadow->measure, -*d_shadow->discount);
+        deleted_entries_.insert(*d_shadow->id);
+    }
 
     EntryShadowPool::Instance().Recycle(d_shadow, section_);
     return true;
 }
 
-bool LeafModelO::UpdateExternaSku(EntryShadowO* entry_shadow, const QUuid& value)
+bool LeafModelO::UpdateExternaSku(QJsonObject& cache, EntryShadowO* entry_shadow, const QUuid& value)
 {
     if (*entry_shadow->external_sku == value)
         return false;
@@ -276,14 +312,14 @@ bool LeafModelO::UpdateExternaSku(EntryShadowO* entry_shadow, const QUuid& value
     *entry_shadow->external_sku = value;
     ResolveFromExternal(entry_shadow, value);
 
-    if (!old_rhs_node.isNull()) {
-        // dbhub_->WriteField(info_->entry, kExternalItem, value, *entry_shadow->id);
-    }
-
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kUnitPrice));
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kRhsNode));
 
     bool ins_changed { *entry_shadow->rhs_node != old_rhs_node };
+
+    if (entry_shadow->rhs_node->isNull())
+        return true;
+
     return ins_changed;
 }
 
@@ -298,21 +334,17 @@ bool LeafModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
         return false;
 
     *d_shadow->rhs_node = value;
-    State state { caches_.take(*d_shadow->id) };
+    auto& cache { caches_[*d_shadow->id] };
 
     ResolveFromInternal(d_shadow, value);
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kUnitPrice));
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kExternalSku));
 
     if (old_rhs_node.isNull()) {
-        // const auto message { JsonGen::InsertEntry(info_->section_str, d_shadow, node_id_) };
-        // WebSocket::Instance().SendMessage(kInsertEntry, message);
-
         emit SSyncDelta(*d_shadow->lhs_node, *d_shadow->initial, *d_shadow->final, *d_shadow->count, *d_shadow->measure, *d_shadow->discount);
-    }
-
-    if (!old_rhs_node.isNull()) {
-        // cache.insert(kRhsNode, value.toString(QUuid::WithoutBraces));
+        inserted_entries_.insert(*entry_shadow->id, entry_shadow);
+    } else {
+        cache.insert(kRhsNode, value.toString(QUuid::WithoutBraces));
     }
 
     return true;
@@ -325,6 +357,8 @@ bool LeafModelO::UpdateRate(EntryShadow* entry_shadow, double value)
     if (std::abs(*d_shadow->unit_price - value) < kTolerance)
         return false;
 
+    auto& cache { caches_[*d_shadow->id] };
+
     const double delta { *d_shadow->measure * (value - *d_shadow->unit_price) };
     *d_shadow->final += delta;
     *d_shadow->initial += delta;
@@ -333,71 +367,75 @@ bool LeafModelO::UpdateRate(EntryShadow* entry_shadow, double value)
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kFinal));
 
-    if (d_shadow->lhs_node->isNull() || d_shadow->rhs_node->isNull())
+    if (d_shadow->rhs_node->isNull())
         return true;
 
-    // cache.insert(kUnitPrice, *d_shadow->unit_price);
-    // cache.insert(kInitial, *d_shadow->initial);
-    // cache.insert(kFinal, *d_shadow->final);
+    cache.insert(kUnitPrice, *d_shadow->unit_price);
+    cache.insert(kInitial, *d_shadow->initial);
+    cache.insert(kFinal, *d_shadow->final);
 
     return true;
 }
 
-bool LeafModelO::UpdateUnitDiscount(EntryShadow* entry_shadow, double value)
+bool LeafModelO::UpdateUnitDiscount(QJsonObject& cache, EntryShadowO* entry_shadow, double value)
 {
-    auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
-
-    if (std::abs(*d_shadow->unit_price - value) < kTolerance)
+    if (std::abs(*entry_shadow->unit_discount - value) < kTolerance)
         return false;
 
-    const double delta { *d_shadow->measure * (value - *d_shadow->unit_price) };
-    *d_shadow->final -= delta;
-    *d_shadow->discount += delta;
-    *d_shadow->unit_price = value;
+    const double delta { *entry_shadow->measure * (value - *entry_shadow->unit_discount) };
+    *entry_shadow->final -= delta;
+    *entry_shadow->discount += delta;
+    *entry_shadow->unit_discount = value;
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kDiscount));
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kFinal));
 
-    if (d_shadow->lhs_node->isNull() || d_shadow->rhs_node->isNull())
+    if (entry_shadow->rhs_node->isNull())
         return true;
 
-    // dbhub_->WriteField(info_->entry, kDiscountPrice, value, *d_shadow->id);
+    cache.insert(kUnitDiscount, *entry_shadow->unit_discount);
+    cache.insert(kDiscount, *entry_shadow->discount);
+    cache.insert(kFinal, *entry_shadow->final);
+
     return true;
 }
 
-bool LeafModelO::UpdateMeasure(EntryShadow* entry_shadow, double value, int kCoefficient)
+bool LeafModelO::UpdateMeasure(QJsonObject& cache, EntryShadowO* entry_shadow, double value, int kCoefficient)
 {
-    auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
-
-    if (std::abs(*d_shadow->measure - value) < kTolerance)
+    if (std::abs(*entry_shadow->measure - value) < kTolerance)
         return false;
 
-    const double delta { value * kCoefficient - *d_shadow->measure };
-    *d_shadow->initial += *d_shadow->unit_price * delta;
-    *d_shadow->discount += *d_shadow->unit_price * delta;
-    *d_shadow->final += (*d_shadow->unit_price - *d_shadow->unit_price) * delta;
+    const double delta { value * kCoefficient - *entry_shadow->measure };
+    *entry_shadow->initial += *entry_shadow->unit_price * delta;
+    *entry_shadow->discount += *entry_shadow->unit_price * delta;
+    *entry_shadow->final += (*entry_shadow->unit_price - *entry_shadow->unit_price) * delta;
 
-    *d_shadow->measure = value * kCoefficient;
+    *entry_shadow->measure = value * kCoefficient;
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kDiscount));
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kFinal));
 
-    if (d_shadow->lhs_node->isNull() || d_shadow->rhs_node->isNull())
-        // Return without writing data to SQLite
+    if (entry_shadow->rhs_node->isNull())
         return true;
+
+    cache.insert(kInitial, *entry_shadow->initial);
+    cache.insert(kDiscount, *entry_shadow->discount);
+    cache.insert(kFinal, *entry_shadow->final);
 
     return true;
 }
 
-bool LeafModelO::UpdateCount(EntryShadow* entry_shadow, double value, int kCoefficient)
+bool LeafModelO::UpdateCount(QJsonObject& cache, EntryShadowO* entry_shadow, double value, int kCoefficient)
 {
-    auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
-
-    if (std::abs(*d_shadow->count - value) < kTolerance)
+    if (std::abs(*entry_shadow->count - value) < kTolerance)
         return false;
 
-    // EntryUtils::UpdateShadow(dbhub_, d_shadow, info_->trans, kFirst, value * kCoefficient, &OTransShadow::first);
+    if (entry_shadow->rhs_node->isNull())
+        return true;
+
+    cache.insert(kCount, *entry_shadow->count);
+
     return true;
 }
 
@@ -405,12 +443,12 @@ void LeafModelO::PurifyEntryShadow()
 {
     for (auto i = shadow_list_.size() - 1; i >= 0; --i) {
         auto* entry_shadow { shadow_list_[i] };
+        if (!entry_shadow->rhs_node->isNull())
+            continue;
 
-        if (entry_shadow->rhs_node->isNull()) {
-            beginRemoveRows(QModelIndex(), i, i);
-            EntryShadowPool::Instance().Recycle(shadow_list_.takeAt(i), section_);
-            endRemoveRows();
-        }
+        beginRemoveRows(QModelIndex(), i, i);
+        EntryShadowPool::Instance().Recycle(shadow_list_.takeAt(i), section_);
+        endRemoveRows();
     }
 }
 

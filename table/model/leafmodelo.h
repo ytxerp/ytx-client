@@ -30,7 +30,7 @@ class LeafModelO final : public LeafModel {
     Q_OBJECT
 
 public:
-    LeafModelO(CLeafModelArg& arg, bool is_new, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
+    LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
     ~LeafModelO() override = default;
 
 public slots:
@@ -52,10 +52,10 @@ private:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
 
-    bool UpdateExternaSku(EntryShadowO* entry_shadow, const QUuid& value);
-    bool UpdateUnitDiscount(EntryShadow* entry_shadow, double value);
-    bool UpdateMeasure(EntryShadow* entry_shadow, double value, int kCoefficient);
-    bool UpdateCount(EntryShadow* entry_shadow, double value, int kCoefficient);
+    bool UpdateExternaSku(QJsonObject& cache, EntryShadowO* entry_shadow, const QUuid& value);
+    bool UpdateUnitDiscount(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
+    bool UpdateMeasure(QJsonObject& cache, EntryShadowO* entry_shadow, double value, int kCoefficient);
+    bool UpdateCount(QJsonObject& cache, EntryShadowO* entry_shadow, double value, int kCoefficient);
     void PurifyEntryShadow();
 
     void ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_sku) const;
@@ -68,10 +68,8 @@ private:
     QUuid partner_id_ {};
     const NodeO* d_node_ {};
 
-    bool is_new_ {};
     QSet<QUuid> deleted_entries_ {};
-    QHash<QUuid, QJsonObject> updated_entries_ {};
-    QSet<EntryO*> inserted_entries_ {};
+    QHash<QUuid, EntryShadow*> inserted_entries_ {};
 };
 
 #endif // LEAFMODELO_H
