@@ -20,11 +20,9 @@
 #ifndef ENTRYHUBO_H
 #define ENTRYHUBO_H
 
-#include "component/using.h"
 #include "entryhub.h"
 #include "report/settlement.h"
 #include "report/statement.h"
-#include "tree/node.h"
 
 class EntryHubO final : public EntryHub {
     Q_OBJECT
@@ -33,12 +31,7 @@ public:
     EntryHubO(CSectionInfo& info, QObject* parent = nullptr);
 
 public:
-    bool SearchNode(QList<const Node*>& node_list, const QList<QUuid>& partner_id_list);
     void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
-
-    bool SettlementReference(const QUuid& settlement_id) const;
-    int SettlementId(const QUuid& node_id) const;
-    // void ApplyEntryRate(const QUuid& entry_id, const QJsonObject& data, bool is_parallel) override;
 
     bool ReadSettlement(SettlementList& list, const QDateTime& start, const QDateTime& end) const;
     bool WriteSettlement(const Settlement* settlement) const;
@@ -58,10 +51,6 @@ protected:
     void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;
 
 private:
-    QString QSSearchNode(CString& in_list) const;
-
-    // void SearchNodeFunction(QList<const Node*>& node_list, QSqlQuery& query);
-
     QString QSReadSettlement() const;
     // void ReadSettlementQuery(SettlementList& settlement_list, QSqlQuery& query) const;
     QString QSWriteSettlement() const;
@@ -73,8 +62,6 @@ private:
 
     // void ReadSettlementPrimaryQuery(SettlementList& node_list, QSqlQuery& query);
 
-    QString QSSyncPriceFirst() const;
-    QString QSSyncPriceSecond() const;
     QString QSInvertTransValue() const;
 
     QString QSReadStatement(int unit) const;
@@ -85,8 +72,6 @@ private:
     // void ReadStatementQuery(StatementList& list, QSqlQuery& query) const;
     // void ReadStatementPrimaryQuery(StatementPrimaryList& list, QSqlQuery& query) const;
     // void ReadStatementSecondaryQuery(StatementSecondaryList& list, QSqlQuery& query) const;
-
-    // void WriteTransRangeFunction(const QList<EntryShadow*>& list, QSqlQuery& query) const;
 };
 
 #endif // ENTRYHUBO_H
