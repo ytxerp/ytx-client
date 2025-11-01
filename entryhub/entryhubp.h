@@ -32,16 +32,11 @@ public:
     std::optional<std::pair<QUuid, double>> ResolveFromInternal(const QUuid& partner_id, const QUuid& internal_sku) const;
     std::optional<std::pair<QUuid, double>> ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const;
     void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
-    // void ApplyEntryRate(const QUuid& entry_id, const QJsonObject& data, bool is_parallel) override;
 
 protected:
     // table
     void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;
-    QString QSReadTransRef(int unit) const override;
-
-private:
-    // void ReadTransS(QSqlQuery& query);
-    bool ReadTransRange(const QSet<QUuid>& set);
+    // QString QSReadTransRef(int unit) const override;
 };
 
 #endif // ENTRYHUBP_H

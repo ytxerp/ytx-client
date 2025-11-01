@@ -8,7 +8,6 @@ LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_mod
     , tree_model_i_ { static_cast<TreeModelI*>(tree_model_inventory) }
     , entry_hub_partner_ { static_cast<EntryHubP*>(entry_hub_partner) }
     , entry_hub_order_ { static_cast<EntryHubO*>(arg.entry_hub) }
-    , partner_id_ { static_cast<const NodeO*>(node)->partner }
     , d_node_ { static_cast<const NodeO*>(node) }
 {
 }
@@ -56,12 +55,6 @@ void LeafModelO::RSaveOrder()
     // At this point:
     // - shadow_list_ contains only valid entries ready for saving.
     // - buffer containers (inserted/deleted/caches) are consistent and conflict-free.
-}
-
-void LeafModelO::RSyncPartner(const QUuid& node_id, const QUuid& value)
-{
-    assert(lhs_id_ == node_id);
-    partner_id_ = value;
 }
 
 QVariant LeafModelO::data(const QModelIndex& index, int role) const
@@ -115,7 +108,6 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     auto* shadow = shadow_list_.at(index.row());
     auto* d_shadow = DerivedPtr<EntryShadowO>(shadow);
 
-    const auto old_rhs_node { *d_shadow->rhs_node };
     const double old_count { *d_shadow->count };
     const double old_measure { *d_shadow->measure };
     const double old_discount { *d_shadow->discount };
@@ -127,14 +119,7 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     bool unit_price_changed { false };
     bool unit_discount_changed { false };
 
-    const QUuid id { *d_shadow->id };
-    auto& cache { caches_[id] };
-
-    if (!old_rhs_node.isNull()) {
-        RestartTimer(id);
-    }
-
-    const int kCoefficient { direction_rule_ ? -1 : 1 };
+    auto& cache { caches_[*d_shadow->id] };
 
     switch (column) {
     case EntryEnumO::kDescription:
@@ -147,16 +132,16 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
         unit_price_changed = UpdateRate(d_shadow, value.toDouble());
         break;
     case EntryEnumO::kMeasure:
-        measure_changed = UpdateMeasure(cache, d_shadow, value.toDouble(), kCoefficient);
+        measure_changed = UpdateMeasure(cache, d_shadow, value.toDouble());
         break;
     case EntryEnumO::kCount:
-        count_changed = UpdateCount(cache, d_shadow, value.toDouble(), kCoefficient);
+        count_changed = UpdateCount(cache, d_shadow, value.toDouble());
         break;
     case EntryEnumO::kUnitDiscount:
         unit_discount_changed = UpdateUnitDiscount(cache, d_shadow, value.toDouble());
         break;
     case EntryEnumO::kExternalSku:
-        UpdateExternaSku(cache, d_shadow, value.toUuid());
+        UpdateExternalSku(cache, d_shadow, value.toUuid());
         break;
     default:
         return false;
@@ -302,25 +287,60 @@ bool LeafModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
-bool LeafModelO::UpdateExternaSku(QJsonObject& cache, EntryShadowO* entry_shadow, const QUuid& value)
+bool LeafModelO::UpdateExternalSku(QJsonObject& cache, EntryShadowO* entry_shadow, const QUuid& value)
 {
     if (*entry_shadow->external_sku == value)
         return false;
 
-    const auto old_rhs_node { *entry_shadow->rhs_node };
+    const double old_unit_price { *entry_shadow->unit_price };
+    const QUuid old_rhs_node { *entry_shadow->rhs_node };
 
     *entry_shadow->external_sku = value;
     ResolveFromExternal(entry_shadow, value);
 
-    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kUnitPrice));
-    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kRhsNode));
+    const bool price_changed { old_unit_price != *entry_shadow->unit_price };
+    const bool rhs_changed { old_rhs_node != *entry_shadow->rhs_node };
 
-    bool ins_changed { *entry_shadow->rhs_node != old_rhs_node };
+    cache.insert(kExternalSku, value.toString(QUuid::WithoutBraces));
 
-    if (entry_shadow->rhs_node->isNull())
-        return true;
+    if (price_changed) {
+        RecalculateAmount(entry_shadow);
 
-    return ins_changed;
+        cache.insert(kUnitPrice, *entry_shadow->unit_price);
+        cache.insert(kInitial, *entry_shadow->initial);
+        cache.insert(kFinal, *entry_shadow->final);
+    }
+
+    if (rhs_changed) {
+        if (old_rhs_node.isNull()) {
+            emit SSyncDelta(
+                *entry_shadow->lhs_node, *entry_shadow->initial, *entry_shadow->final, *entry_shadow->count, *entry_shadow->measure, *entry_shadow->discount);
+            inserted_entries_.insert(*entry_shadow->id, entry_shadow);
+        }
+
+        if (entry_shadow->rhs_node->isNull()) {
+            emit SSyncDelta(*entry_shadow->lhs_node, -*entry_shadow->initial, -*entry_shadow->final, -*entry_shadow->count, -*entry_shadow->measure,
+                -*entry_shadow->discount);
+            deleted_entries_.insert(*entry_shadow->id);
+        }
+
+        cache.insert(kRhsNode, entry_shadow->rhs_node->toString(QUuid::WithoutBraces));
+    }
+
+    // unified resize
+    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kExternalSku));
+
+    if (rhs_changed) {
+        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kRhsNode));
+    }
+
+    if (price_changed) {
+        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kUnitPrice));
+        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
+        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kFinal));
+    }
+
+    return true;
 }
 
 bool LeafModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int /*row*/)
@@ -333,18 +353,47 @@ bool LeafModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
     if (old_rhs_node == value)
         return false;
 
+    const double old_unit_price { *d_shadow->unit_price };
+    const QUuid old_external_sku { *d_shadow->external_sku };
+
     *d_shadow->rhs_node = value;
     auto& cache { caches_[*d_shadow->id] };
 
     ResolveFromInternal(d_shadow, value);
-    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kUnitPrice));
-    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kExternalSku));
+
+    const bool price_changed { old_unit_price != *d_shadow->unit_price };
+    const bool external_changed { old_external_sku != *d_shadow->external_sku };
+
+    if (price_changed)
+        RecalculateAmount(d_shadow);
 
     if (old_rhs_node.isNull()) {
         emit SSyncDelta(*d_shadow->lhs_node, *d_shadow->initial, *d_shadow->final, *d_shadow->count, *d_shadow->measure, *d_shadow->discount);
         inserted_entries_.insert(*entry_shadow->id, entry_shadow);
     } else {
         cache.insert(kRhsNode, value.toString(QUuid::WithoutBraces));
+
+        if (external_changed) {
+            cache.insert(kExternalSku, d_shadow->external_sku->toString(QUuid::WithoutBraces));
+        }
+
+        if (price_changed) {
+            cache.insert(kUnitPrice, *d_shadow->unit_price);
+            cache.insert(kInitial, *d_shadow->initial);
+            cache.insert(kFinal, *d_shadow->final);
+        }
+    }
+
+    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kRhsNode));
+
+    if (external_changed) {
+        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kExternalSku));
+    }
+
+    if (price_changed) {
+        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kUnitPrice));
+        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
+        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kFinal));
     }
 
     return true;
@@ -400,17 +449,17 @@ bool LeafModelO::UpdateUnitDiscount(QJsonObject& cache, EntryShadowO* entry_shad
     return true;
 }
 
-bool LeafModelO::UpdateMeasure(QJsonObject& cache, EntryShadowO* entry_shadow, double value, int kCoefficient)
+bool LeafModelO::UpdateMeasure(QJsonObject& cache, EntryShadowO* entry_shadow, double value)
 {
     if (std::abs(*entry_shadow->measure - value) < kTolerance)
         return false;
 
-    const double delta { value * kCoefficient - *entry_shadow->measure };
+    const double delta { value - *entry_shadow->measure };
     *entry_shadow->initial += *entry_shadow->unit_price * delta;
     *entry_shadow->discount += *entry_shadow->unit_price * delta;
     *entry_shadow->final += (*entry_shadow->unit_price - *entry_shadow->unit_price) * delta;
 
-    *entry_shadow->measure = value * kCoefficient;
+    *entry_shadow->measure = value;
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kDiscount));
@@ -426,7 +475,7 @@ bool LeafModelO::UpdateMeasure(QJsonObject& cache, EntryShadowO* entry_shadow, d
     return true;
 }
 
-bool LeafModelO::UpdateCount(QJsonObject& cache, EntryShadowO* entry_shadow, double value, int kCoefficient)
+bool LeafModelO::UpdateCount(QJsonObject& cache, EntryShadowO* entry_shadow, double value)
 {
     if (std::abs(*entry_shadow->count - value) < kTolerance)
         return false;
@@ -435,7 +484,6 @@ bool LeafModelO::UpdateCount(QJsonObject& cache, EntryShadowO* entry_shadow, dou
         return true;
 
     cache.insert(kCount, *entry_shadow->count);
-
     return true;
 }
 
@@ -457,7 +505,7 @@ void LeafModelO::ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal
     if (!shadow || !entry_hub_partner_ || internal_sku.isNull())
         return;
 
-    if (auto result = entry_hub_partner_->ResolveFromInternal(partner_id_, internal_sku)) {
+    if (auto result = entry_hub_partner_->ResolveFromInternal(d_node_->partner, internal_sku)) {
         const auto& [external_id, price] = *result;
         *shadow->unit_price = price;
         *shadow->external_sku = external_id;
@@ -472,7 +520,7 @@ void LeafModelO::ResolveFromExternal(EntryShadowO* shadow, const QUuid& external
     if (!shadow || !entry_hub_partner_ || external_sku.isNull())
         return;
 
-    if (auto result = entry_hub_partner_->ResolveFromExternal(partner_id_, external_sku)) {
+    if (auto result = entry_hub_partner_->ResolveFromExternal(d_node_->partner, external_sku)) {
         const auto& [rhs_node, price] = *result;
         *shadow->unit_price = price;
         *shadow->rhs_node = rhs_node;
@@ -480,4 +528,22 @@ void LeafModelO::ResolveFromExternal(EntryShadowO* shadow, const QUuid& external
         *shadow->unit_price = 0.0;
         *shadow->rhs_node = QUuid();
     }
+}
+
+void LeafModelO::RecalculateAmount(EntryShadowO* shadow) const
+{
+    if (!shadow)
+        return;
+
+    const double measure { *shadow->measure };
+    const double unit_price { *shadow->unit_price };
+    const double unit_discount { *shadow->unit_discount };
+
+    const double discount { measure * unit_discount };
+    const double gross_amount { measure * unit_price };
+    const double net_amount { gross_amount - discount };
+
+    *shadow->initial = gross_amount;
+    *shadow->final = net_amount;
+    *shadow->discount = discount;
 }

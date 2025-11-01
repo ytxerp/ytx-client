@@ -34,7 +34,6 @@ public:
     ~LeafModelO() override = default;
 
 public slots:
-    void RSyncPartner(const QUuid& node_id, const QUuid& value);
     void RSaveOrder();
 
 public:
@@ -52,20 +51,20 @@ private:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
 
-    bool UpdateExternaSku(QJsonObject& cache, EntryShadowO* entry_shadow, const QUuid& value);
+    bool UpdateExternalSku(QJsonObject& cache, EntryShadowO* entry_shadow, const QUuid& value);
     bool UpdateUnitDiscount(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
-    bool UpdateMeasure(QJsonObject& cache, EntryShadowO* entry_shadow, double value, int kCoefficient);
-    bool UpdateCount(QJsonObject& cache, EntryShadowO* entry_shadow, double value, int kCoefficient);
+    bool UpdateMeasure(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
+    bool UpdateCount(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
     void PurifyEntryShadow();
 
     void ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_sku) const;
     void ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_sku) const;
+    void RecalculateAmount(EntryShadowO* shadow) const;
 
 private:
     TreeModelI* tree_model_i_ {};
     EntryHubP* entry_hub_partner_ {};
     EntryHubO* entry_hub_order_ {};
-    QUuid partner_id_ {};
     const NodeO* d_node_ {};
 
     QSet<QUuid> deleted_entries_ {};

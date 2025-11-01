@@ -561,7 +561,6 @@ void MainWindow::TableConnectO(QTableView* table_view, LeafModelO* leaf_model_or
     connect(leaf_model_order, &LeafModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
     connect(leaf_model_order, &LeafModel::SSyncDelta, widget, &LeafWidgetO::RSyncDelta);
 
-    connect(widget, &LeafWidgetO::SSyncPartner, leaf_model_order, &LeafModelO::RSyncPartner);
     connect(widget, &LeafWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
 
     connect(widget, &LeafWidgetO::SSyncStatus, tree_model, &TreeModelO::RSyncStatus);
@@ -704,7 +703,6 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) 
 
     auto* ext_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kExternal)) };
     auto* external_sku { new FilterUnit(tree_model_i, ext_filter_model, table_view) };
-
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalSku), external_sku);
 
     auto* line { new Line(table_view) };
