@@ -101,9 +101,9 @@ void StringInitializer::SetHeader(
         QObject::tr("Unit"),
         QObject::tr("CountTotal"),
         QObject::tr("MeasureTotal"),
-        QObject::tr("InitialTotal"),
+        QObject::tr("GrossTotal"),
         QObject::tr("DiscountTotal"),
-        QObject::tr("FinalTotal"),
+        QObject::tr("NetTotal"),
         QObject::tr("SettlementId"),
     };
 
@@ -196,9 +196,9 @@ void StringInitializer::SetHeader(
         QObject::tr("ExternalSku"),
         QObject::tr("LhsNode"),
         QObject::tr("UnitDiscount"),
-        QObject::tr("GrossAmount"),
+        QObject::tr("Gross"),
         QObject::tr("Discount"),
-        QObject::tr("NetAmount"),
+        QObject::tr("Net"),
     };
 
     // Full Entry
