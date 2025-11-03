@@ -155,3 +155,62 @@ QString MainWindowUtils::SectionFile(const QString& email, const QString& worksp
 
     return file_name;
 }
+
+void MainWindowUtils::AppendEntry(LeafWidget* widget, Section section)
+{
+    assert(widget);
+
+    auto* model { widget->Model() };
+    assert(model);
+
+    const int new_row { model->rowCount() };
+    if (!model->insertRows(new_row, 1))
+        return;
+
+    const int linked_node_col { EntryUtils::LinkedNodeColumn(section) };
+    QModelIndex target_index { model->index(new_row, linked_node_col) };
+
+    if (target_index.isValid()) {
+        widget->View()->setCurrentIndex(target_index);
+    }
+}
+
+void MainWindowUtils::RemoveEntry(LeafWidget* widget)
+{
+    assert(widget);
+
+    auto* view { widget->View() };
+    assert(view);
+
+    if (!WidgetUtils::HasSelection(view))
+        return;
+
+    const QModelIndex current_index { view->currentIndex() };
+    if (!current_index.isValid())
+        return;
+
+    auto* model { widget->Model() };
+    assert(model);
+
+    const int current_row { current_index.row() };
+    if (!model->removeRows(current_row, 1)) {
+        qDebug() << "Failed to remove row:" << current_row;
+        return;
+    }
+
+    const int new_row_count { model->rowCount() };
+    if (new_row_count == 0)
+        return;
+
+    QModelIndex new_index {};
+    if (current_row < new_row_count) {
+        new_index = model->index(current_row, 0);
+    } else {
+        new_index = model->index(new_row_count - 1, 0);
+    }
+
+    if (new_index.isValid()) {
+        view->setCurrentIndex(new_index);
+        view->closePersistentEditor(new_index);
+    }
+}

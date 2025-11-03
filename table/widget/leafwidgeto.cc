@@ -21,6 +21,7 @@ LeafWidgetO::LeafWidgetO(CNodeOpArgO& arg, QWidget* parent)
     , print_manager_ { arg.app_config, arg.tree_model_inventory, arg.tree_model_partner }
 {
     ui->setupUi(this);
+    leaf_model_order_->setParent(this);
     SignalBlocker blocker(this);
 
     IniWidget();

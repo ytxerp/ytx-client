@@ -38,6 +38,10 @@ concept MapType = requires(T a) {
 
 namespace MainWindowUtils {
 
+// insert a new row and focus the RhsNode column
+void AppendEntry(LeafWidget* widget, Section section);
+void RemoveEntry(LeafWidget* widget);
+
 QString SectionFile(const QString& email, const QString& workspace);
 
 void ReadPrintTmplate(QMap<QString, QString>& print_template);

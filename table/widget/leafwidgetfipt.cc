@@ -8,6 +8,7 @@ LeafWidgetFIPT::LeafWidgetFIPT(LeafModel* model, QWidget* parent)
     , model_ { model }
 {
     ui->setupUi(this);
+    model_->setParent(this);
     ui->tableViewFIPT->setModel(model);
 }
 

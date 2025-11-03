@@ -244,6 +244,7 @@ bool LeafModel::insertRows(int row, int /*count*/, const QModelIndex& parent)
 
     auto* entry_shadow { entry_hub_->AllocateEntryShadow() };
 
+    *entry_shadow->issued_time = QDateTime::currentDateTimeUtc();
     *entry_shadow->lhs_node = lhs_id_;
 
     beginInsertRows(parent, row, row);

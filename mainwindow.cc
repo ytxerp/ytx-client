@@ -365,21 +365,23 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     const Section section { info.section };
     const bool rule { tree_model->Rule(node_id) };
 
+    // The model is parented to the LeafWidgetFIPT inside its constructor.
+    // When the LeafWidget is destroyed, it will automatically delete the model.
     LeafModel* leaf_model {};
     LeafModelArg arg { entry_hub, info, node_id, rule };
 
     switch (section) {
     case Section::kFinance:
-        leaf_model = new LeafModelF(arg, this);
+        leaf_model = new LeafModelF(arg, nullptr);
         break;
     case Section::kInventory:
-        leaf_model = new LeafModelI(arg, this);
+        leaf_model = new LeafModelI(arg, nullptr);
         break;
     case Section::kTask:
-        leaf_model = new LeafModelT(arg, tree_model->GetNode(node_id), this);
+        leaf_model = new LeafModelT(arg, tree_model->GetNode(node_id), nullptr);
         break;
     case Section::kPartner:
-        leaf_model = new LeafModelP(arg, this);
+        leaf_model = new LeafModelP(arg, nullptr);
         break;
     default:
         break;
@@ -1106,7 +1108,7 @@ void MainWindow::on_actionRemove_triggered()
     }
 
     if (auto* leaf_widget { dynamic_cast<LeafWidget*>(widget) }) {
-        WidgetUtils::RemoveEntry(leaf_widget);
+        MainWindowUtils::RemoveEntry(leaf_widget);
     }
 }
 
@@ -2934,12 +2936,10 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 
 void MainWindow::on_actionAppendEntry_triggered()
 {
-    auto* widget { ui->tabWidget->currentWidget() };
+    auto* widget { dynamic_cast<LeafWidget*>(ui->tabWidget->currentWidget()) };
     assert(widget);
 
-    if (auto* leaf_widget = dynamic_cast<LeafWidget*>(widget)) {
-        WidgetUtils::AppendEntryFIST(leaf_widget, start_);
-    }
+    MainWindowUtils::AppendEntry(widget, start_);
 }
 
 void MainWindow::on_actionExportExcel_triggered()

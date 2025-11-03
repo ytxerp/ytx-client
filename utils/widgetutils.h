@@ -20,14 +20,11 @@
 #ifndef WIDGETUTILS_H
 #define WIDGETUTILS_H
 
-#include <QtWidgets/qtableview.h>
-
 #include <QAbstractItemView>
 #include <QSettings>
+#include <QTableView>
 
-#include "component/enumclass.h"
 #include "component/using.h"
-#include "table/model/leafmodel.h"
 
 template <typename T>
 concept InheritQAbstractItemView = std::is_base_of_v<QAbstractItemView, T>;
@@ -37,12 +34,6 @@ concept InheritQWidget = std::is_base_of_v<QWidget, T>;
 
 template <typename T>
 concept MemberFunction = std::is_member_function_pointer_v<T>;
-
-template <typename T>
-concept EntryWidgetLike = std::is_base_of_v<QWidget, T> && requires(T t) {
-    { t.Model() } -> std::convertible_to<LeafModel*>;
-    { t.View() } -> std::convertible_to<QTableView*>;
-};
 
 namespace WidgetUtils {
 
@@ -94,111 +85,6 @@ template <InheritQWidget T> void ClearWidgets(QHash<QUuid, QPointer<T>>& hash)
 template <InheritQAbstractItemView T> bool HasSelection(QPointer<T> view) { return view && view->selectionModel() && view->selectionModel()->hasSelection(); }
 
 template <InheritQAbstractItemView T> bool HasSelection(T* view) { return view && view->selectionModel() && view->selectionModel()->hasSelection(); }
-
-// For Finance / Inventory / Partner / Task  (FIPT) sections
-// Behavior:
-// - If no empty row exists: insert a new row and focus the IssuedTime column
-//   (so the user can first input the entry time).
-// - If an empty row exists: focus the LinkedNode column
-//   (so the user can quickly continue linking the target node).
-template <EntryWidgetLike T> void AppendEntryFIST(T* widget, Section start)
-{
-    assert(widget);
-
-    auto* model { widget->Model() };
-    assert(model);
-
-    const int empty_row { model->GetRhsRow({}) };
-
-    QModelIndex target_index {};
-
-    if (empty_row == -1) {
-        const int new_row { model->rowCount() };
-        if (!model->insertRows(new_row, 1))
-            return;
-
-        target_index = model->index(new_row, std::to_underlying(EntryEnum::kIssuedTime));
-    } else {
-        const int linked_node_col { EntryUtils::LinkedNodeColumn(start) };
-        if (linked_node_col != -1)
-            target_index = model->index(empty_row, linked_node_col);
-    }
-
-    if (target_index.isValid()) {
-        widget->View()->setCurrentIndex(target_index);
-    }
-}
-
-// For Order section
-// Behavior:
-// - If no empty row exists: insert a new row
-// - Regardless of whether a new row is created or not,
-//   always focus the RhsNode column (orders only care about linked nodes).
-template <EntryWidgetLike T> void AppendEntryO(T* widget, Section start)
-{
-    assert(widget);
-
-    auto* model { widget->Model() };
-    assert(model);
-
-    const int empty_row { model->GetRhsRow({}) };
-
-    if (empty_row == -1) {
-        const int new_row { model->rowCount() };
-        if (!model->insertRows(new_row, 1))
-            return;
-    }
-
-    const int linked_node_col { EntryUtils::LinkedNodeColumn(start) };
-    QModelIndex target_index {};
-
-    if (linked_node_col != -1)
-        target_index = model->index(empty_row, linked_node_col);
-
-    if (target_index.isValid()) {
-        widget->View()->setCurrentIndex(target_index);
-    }
-}
-
-template <EntryWidgetLike T> void RemoveEntry(T* widget)
-{
-    assert(widget);
-
-    auto* view { widget->View() };
-    assert(view);
-
-    if (!WidgetUtils::HasSelection(view))
-        return;
-
-    const QModelIndex current_index { view->currentIndex() };
-    if (!current_index.isValid())
-        return;
-
-    auto* model { widget->Model() };
-    assert(model);
-
-    const int current_row { current_index.row() };
-    if (!model->removeRows(current_row, 1)) {
-        qDebug() << "Failed to remove row:" << current_row;
-        return;
-    }
-
-    const int new_row_count { model->rowCount() };
-    if (new_row_count == 0)
-        return;
-
-    QModelIndex new_index {};
-    if (current_row < new_row_count) {
-        new_index = model->index(current_row, 0);
-    } else {
-        new_index = model->index(new_row_count - 1, 0);
-    }
-
-    if (new_index.isValid()) {
-        view->setCurrentIndex(new_index);
-        view->closePersistentEditor(new_index);
-    }
-}
 
 inline void WriteConfig(QSharedPointer<QSettings> settings, const QVariant& value, CString& section, CString& property)
 {
