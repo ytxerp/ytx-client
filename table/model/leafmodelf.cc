@@ -74,19 +74,19 @@ bool LeafModelF::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case EntryEnumF::kIssuedTime:
-        EntryUtils::UpdateShadowIssuedTime(caches_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowIssuedTime(entry_caches_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumF::kCode:
-        EntryUtils::UpdateShadowField(caches_[id], shadow, kCode, value.toString(), &EntryShadow::code, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowField(entry_caches_[id], shadow, kCode, value.toString(), &EntryShadow::code, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumF::kStatus:
-        EntryUtils::UpdateShadowField(caches_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowField(entry_caches_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumF::kDescription:
-        EntryUtils::UpdateShadowField(caches_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowField(entry_caches_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumF::kDocument:
-        EntryUtils::UpdateShadowDocument(caches_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowDocument(entry_caches_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumF::kLhsRate:
         UpdateRate(d_shadow, value.toDouble());

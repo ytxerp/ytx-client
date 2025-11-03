@@ -145,8 +145,8 @@ protected:
 
     QList<EntryShadow*> shadow_list_ {};
 
-    QHash<QUuid, QJsonObject> caches_ {};
-    QHash<QUuid, QTimer*> timers_ {};
+    QHash<QUuid, QJsonObject> entry_caches_ {};
+    QHash<QUuid, QTimer*> entry_timers_ {};
 };
 
 #endif // LEAFMODEL_H

@@ -1,5 +1,7 @@
 #include "leafmodelo.h"
 
+#include <QJsonArray>
+
 #include "global/entryshadowpool.h"
 #include "websocket/jsongen.h"
 
@@ -12,7 +14,7 @@ LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_mod
 {
 }
 
-void LeafModelO::RSaveOrder()
+void LeafModelO::SaveOrder(QJsonObject& order_cache)
 {
     if (shadow_list_.isEmpty())
         return;
@@ -23,7 +25,7 @@ void LeafModelO::RSaveOrder()
 
     // Case ①: Entries that were inserted and then deleted.
     // → These should be removed from both inserted_entries_ and deleted_entries_.
-    QSet<QUuid> to_remove_from_deleted;
+    QSet<QUuid> to_remove_from_deleted {};
     for (const QUuid& id : std::as_const(deleted_entries_)) {
         if (inserted_entries_.contains(id)) {
             inserted_entries_.remove(id);
@@ -37,16 +39,44 @@ void LeafModelO::RSaveOrder()
     // - Deleted entries: remove any pending update caches (they're meaningless now).
     // - Newly inserted entries: remove redundant caches (fresh insertions don't need updates).
     for (const QUuid& id : std::as_const(deleted_entries_)) {
-        caches_.remove(id);
+        entry_caches_.remove(id);
     }
 
     for (auto it = inserted_entries_.cbegin(); it != inserted_entries_.cend(); ++it) {
-        caches_.remove(it.key());
+        entry_caches_.remove(it.key());
     }
 
     // At this point:
     // - shadow_list_ contains only valid entries ready for saving.
     // - buffer containers (inserted/deleted/caches) are consistent and conflict-free.
+
+    // deleted
+    QJsonArray deleted_entry_array {};
+    for (const auto& id : std::as_const(deleted_entries_)) {
+        deleted_entry_array.append(id.toString(QUuid::WithoutBraces));
+    }
+    order_cache.insert(kDeletedEntryArray, deleted_entry_array);
+
+    // inserted
+    QJsonArray inserted_entry_array {};
+    for (auto it = inserted_entries_.cbegin(); it != inserted_entries_.cend(); ++it) {
+        const QJsonObject obj { it.value()->WriteJson() };
+        inserted_entry_array.append(obj);
+    }
+    order_cache.insert(kInsertedEntryArray, inserted_entry_array);
+
+    // updated
+    QJsonArray entry_cache_array {};
+    for (auto it = entry_caches_.begin(); it != entry_caches_.end(); ++it) {
+        it.value().insert("id", it.key().toString(QUuid::WithoutBraces));
+        entry_cache_array.append(it.value());
+    }
+    order_cache.insert(kEntryCacheArray, entry_cache_array);
+
+    // clear
+    deleted_entries_.clear();
+    inserted_entries_.clear();
+    entry_caches_.clear();
 }
 
 QVariant LeafModelO::data(const QModelIndex& index, int role) const
@@ -111,7 +141,7 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     bool unit_price_changed { false };
     bool unit_discount_changed { false };
 
-    auto& cache { caches_[*d_shadow->id] };
+    auto& cache { entry_caches_[*d_shadow->id] };
 
     switch (column) {
     case EntryEnumO::kDescription:
@@ -351,7 +381,7 @@ bool LeafModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
     const QUuid old_external_sku { *d_shadow->external_sku };
 
     *d_shadow->rhs_node = value;
-    auto& cache { caches_[*d_shadow->id] };
+    auto& cache { entry_caches_[*d_shadow->id] };
 
     ResolveFromInternal(d_shadow, value);
 
@@ -397,7 +427,7 @@ bool LeafModelO::UpdateRate(EntryShadow* entry_shadow, double value)
     if (FloatEqual(*d_shadow->unit_price, value))
         return false;
 
-    auto& cache { caches_[*d_shadow->id] };
+    auto& cache { entry_caches_[*d_shadow->id] };
 
     *d_shadow->initial = *d_shadow->measure * value;
     *d_shadow->final = *d_shadow->initial - *d_shadow->discount;

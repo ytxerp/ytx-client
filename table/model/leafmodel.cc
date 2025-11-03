@@ -152,16 +152,16 @@ void LeafModel::AccumulateBalance(int start)
 
 void LeafModel::RestartTimer(const QUuid& id)
 {
-    if (timers_.contains(id)) {
-        timers_[id]->stop();
+    if (entry_timers_.contains(id)) {
+        entry_timers_[id]->stop();
     } else {
         auto* timer = new QTimer(this);
         timer->setSingleShot(true);
 
         connect(timer, &QTimer::timeout, this, [this, id, timer]() {
-            timers_.remove(id);
+            entry_timers_.remove(id);
 
-            const auto cache { caches_.take(id) };
+            const auto cache { entry_caches_.take(id) };
             if (cache.isEmpty()) {
                 timer->deleteLater();
                 return;
@@ -171,29 +171,29 @@ void LeafModel::RestartTimer(const QUuid& id)
             WebSocket::Instance()->SendMessage(kEntryUpdate, message);
             timer->deleteLater();
         });
-        timers_[id] = timer;
+        entry_timers_[id] = timer;
     }
 
-    timers_[id]->start(kThreeThousand);
+    entry_timers_[id]->start(kThreeThousand);
 }
 
 void LeafModel::FlushCaches()
 {
-    for (auto* timer : std::as_const(timers_)) {
+    for (auto* timer : std::as_const(entry_timers_)) {
         timer->stop();
         timer->deleteLater();
     }
 
-    timers_.clear();
+    entry_timers_.clear();
 
-    for (auto it = caches_.cbegin(); it != caches_.cend(); ++it) {
+    for (auto it = entry_caches_.cbegin(); it != entry_caches_.cend(); ++it) {
         if (!it.value().isEmpty()) {
             const auto message { JsonGen::EntryUpdate(section_, it.key(), it.value()) };
             WebSocket::Instance()->SendMessage(kEntryUpdate, message);
         }
     }
 
-    caches_.clear();
+    entry_caches_.clear();
 }
 
 QModelIndex LeafModel::index(int row, int column, const QModelIndex& parent) const

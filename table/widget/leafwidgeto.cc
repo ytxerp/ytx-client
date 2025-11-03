@@ -5,6 +5,8 @@
 #include "component/signalblocker.h"
 #include "global/nodepool.h"
 #include "ui_leafwidgeto.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 LeafWidgetO::LeafWidgetO(CNodeOpArgO& arg, QWidget* parent)
     : LeafWidget(parent)
@@ -17,6 +19,7 @@ LeafWidgetO::LeafWidgetO(CNodeOpArgO& arg, QWidget* parent)
     , is_new_ { arg.is_new }
     , node_id_ { arg.node->id }
     , partner_unit_ { arg.section == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor) }
+    , section_ { arg.section }
     , print_template_ { arg.print_template }
     , print_manager_ { arg.app_config, arg.tree_model_inventory, arg.tree_model_partner }
 {
@@ -45,7 +48,6 @@ LeafWidgetO::~LeafWidgetO()
         NodePool::Instance().Recycle(node_, Section::kSale);
     }
 
-    delete leaf_model_order_;
     delete ui;
 }
 
@@ -224,7 +226,7 @@ void LeafWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     emit SSyncPartner(node_id_, partner_id);
 
     if (!is_new_) {
-        update_cache_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
+        node_cache_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
     }
 }
 
@@ -234,7 +236,7 @@ void LeafWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
     node_->employee = employee_id;
 
     if (!is_new_) {
-        update_cache_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
+        node_cache_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
     }
 }
 
@@ -243,7 +245,7 @@ void LeafWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
     node_->issued_time = date_time.toUTC();
 
     if (!is_new_) {
-        update_cache_.insert(kIssuedTime, node_->issued_time.toString(Qt::ISODate));
+        node_cache_.insert(kIssuedTime, node_->issued_time.toString(Qt::ISODate));
     }
 }
 
@@ -252,7 +254,7 @@ void LeafWidgetO::on_lineDescription_editingFinished()
     node_->description = ui->lineDescription->text();
 
     if (!is_new_) {
-        update_cache_.insert(kDescription, node_->description);
+        node_cache_.insert(kDescription, node_->description);
     }
 }
 
@@ -269,7 +271,7 @@ void LeafWidgetO::RRuleGroupClicked(int id)
     IniUiValue();
 
     if (!is_new_) {
-        update_cache_.insert(kDirectionRule, node_->direction_rule);
+        node_cache_.insert(kDirectionRule, node_->direction_rule);
         count_delta_ *= -2;
         measure_delta_ *= -2;
         initial_delta_ *= -2;
@@ -306,7 +308,7 @@ void LeafWidgetO::RUnitGroupClicked(int id)
     ui->dSpinFinalTotal->setValue(node_->final_total);
 
     if (!is_new_) {
-        update_cache_.insert(kUnit, id);
+        node_cache_.insert(kUnit, id);
     }
 }
 
@@ -362,10 +364,42 @@ void LeafWidgetO::PreparePrint()
 
 void LeafWidgetO::on_pBtnSave_clicked()
 {
+    QJsonObject order_cache {};
+    order_cache.insert(kSection, std::to_underlying(section_));
+    order_cache.insert(kSessionId, QString());
+
+    leaf_model_order_->SaveOrder(order_cache);
+
     if (is_new_) {
+        const QJsonObject node_json { node_->WriteJson() };
+
+        QJsonObject path_json {};
+        path_json.insert(kAncestor, node_->parent->id.toString(QUuid::WithoutBraces));
+        path_json.insert(kDescendant, node_->id.toString(QUuid::WithoutBraces));
+
+        order_cache.insert(kNode, node_json); // Meta info will be appended in service
+        order_cache.insert(kPath, path_json);
+
+        WebSocket::Instance()->SendMessage(kInsertOrder, order_cache);
+
         emit SInsertOrder();
         is_new_ = false;
-    }
+    } else {
+        node_cache_.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
+        node_cache_.insert(kFinalDelta, QString::number(final_delta_, 'f', kMaxNumericScale_4));
+        node_cache_.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
+        node_cache_.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
+        node_cache_.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
+        node_cache_.insert(kId, node_->id.toString(QUuid::WithoutBraces));
 
-    emit SSaveOrder();
+        order_cache.insert(kNodeCache, node_cache_);
+        WebSocket::Instance()->SendMessage(kUpdateOrder, order_cache);
+
+        node_cache_ = QJsonObject();
+        initial_delta_ = 0.0;
+        final_delta_ = 0.0;
+        count_delta_ = 0.0;
+        measure_delta_ = 0.0;
+        discount_delta_ = 0.0;
+    }
 }

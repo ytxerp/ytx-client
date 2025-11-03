@@ -162,28 +162,28 @@ bool LeafModelP::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case EntryEnumP::kIssuedTime:
-        EntryUtils::UpdateShadowIssuedTime(caches_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowIssuedTime(entry_caches_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kCode:
-        EntryUtils::UpdateShadowField(caches_[id], shadow, kCode, value.toString(), &EntryShadow::code, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowField(entry_caches_[id], shadow, kCode, value.toString(), &EntryShadow::code, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kDocument:
-        EntryUtils::UpdateShadowDocument(caches_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowDocument(entry_caches_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kRhsNode:
         UpdateLinkedNode(shadow, value.toUuid(), kRow);
         break;
     case EntryEnumP::kUnitPrice:
-        EntryUtils::UpdateShadowDouble(caches_[id], d_shadow, kUnitPrice, value.toDouble(), &EntryShadowP::unit_price, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowDouble(entry_caches_[id], d_shadow, kUnitPrice, value.toDouble(), &EntryShadowP::unit_price, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kDescription:
-        EntryUtils::UpdateShadowField(caches_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowField(entry_caches_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kStatus:
-        EntryUtils::UpdateShadowField(caches_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowField(entry_caches_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kExternalSku:
-        EntryUtils::UpdateShadowUuid(caches_[id], d_shadow, kExternalSku, value.toUuid(), &EntryShadowP::external_sku, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowUuid(entry_caches_[id], d_shadow, kExternalSku, value.toUuid(), &EntryShadowP::external_sku, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;

@@ -154,7 +154,6 @@ public:
     void UpdateSeparator(CString& old_separator, CString& new_separator);
     void UpdateDefaultUnit(int default_unit);
 
-    bool InsertNode(int row, const QModelIndex& parent, Node* node);
     void AckNode(const QUuid& node_id);
     bool ActivateCachedNode(const QUuid& node_id);
     void SearchModel(QList<const Node*>& node_list, CString& name) const;
@@ -178,6 +177,7 @@ public:
     QSortFilterProxyModel* ExcludeOneModel(const QUuid& node_id);
 
     // virtual functions
+    virtual bool InsertNode(int row, const QModelIndex& parent, Node* node);
     virtual void UpdateName(const QUuid& node_id, CString& new_name);
     virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
 

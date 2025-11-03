@@ -50,6 +50,7 @@ public:
     int Status(QUuid node_id) const override { return NodeUtils::Value(node_model_, node_id, &NodeO::status); }
     void SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta) override;
 
+    bool InsertNode(int row, const QModelIndex& parent, Node* node) override;
     QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &NodeO::partner); };
 
 protected:

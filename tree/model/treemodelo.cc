@@ -138,6 +138,18 @@ void TreeModelO::SyncNodeStatus(const QUuid& node_id, int status, const QJsonObj
     }
 }
 
+bool TreeModelO::InsertNode(int row, const QModelIndex& parent, Node* node)
+{
+    if (row < 0 || row > rowCount(parent)) {
+        qCritical() << "InsertNode: row out of range";
+    }
+    assert(row >= 0 && row <= rowCount(parent));
+
+    auto* parent_node { GetNodeByIndex(parent) };
+    InsertImpl(parent_node, row, node);
+    return true;
+}
+
 void TreeModelO::UpdateName(const QUuid& node_id, CString& new_name)
 {
     auto* node { node_model_.value(node_id) };

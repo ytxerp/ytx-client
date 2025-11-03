@@ -47,7 +47,6 @@ signals:
     void SSyncStatus(const QUuid& node_id, bool value);
 
     // send to its widget
-    void SSaveOrder();
     void SInsertOrder();
 
 public slots:
@@ -105,7 +104,7 @@ private:
 
     bool is_new_ {};
 
-    QJsonObject update_cache_ {};
+    QJsonObject node_cache_ {};
     double initial_delta_ {};
     double final_delta_ {};
     double count_delta_ {};
@@ -114,6 +113,7 @@ private:
 
     const QUuid node_id_ {};
     const int partner_unit_ {};
+    const Section section_ {};
 
     const QMap<QString, QString>& print_template_ {};
     PrintManager print_manager_;

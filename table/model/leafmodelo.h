@@ -33,9 +33,6 @@ public:
     LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
     ~LeafModelO() override = default;
 
-public slots:
-    void RSaveOrder();
-
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
@@ -46,6 +43,7 @@ public:
     bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
 
     const QList<EntryShadow*>& GetEntryShadowList() { return shadow_list_; }
+    void SaveOrder(QJsonObject& order_cache);
 
 private:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
