@@ -27,7 +27,10 @@
 inline constexpr int kCoefficient5 = 5;
 inline constexpr int kCoefficient8 = 8;
 inline constexpr int kCoefficient16 = 16;
+
 inline constexpr double kTolerance = 1e-8;
+inline bool FloatEqual(double a, double b) noexcept { return std::abs(a - b) < kTolerance; }
+inline bool FloatChanged(double a, double b) noexcept { return !FloatEqual(a, b); }
 
 inline constexpr int kRowHeight = 24;
 inline constexpr int kThreeThousand = 3000;

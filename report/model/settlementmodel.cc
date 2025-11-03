@@ -246,8 +246,9 @@ bool SettlementModel::insertRows(int row, int /*count*/, const QModelIndex& pare
 
 bool SettlementModel::UpdatePartner(Settlement* settlement, const QUuid& partner_id)
 {
-    if (dbhub_->SettlementReference(settlement->id) || settlement->partner == partner_id)
-        return false;
+    // to fix
+    // if (dbhub_->SettlementReference(settlement->id) || settlement->partner == partner_id)
+    //     return false;
 
     settlement->partner = partner_id;
     // dbhub_->WriteField(info_->settlement, kPartner, partner_id, settlement->id);

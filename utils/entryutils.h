@@ -202,7 +202,7 @@ bool UpdateShadowDouble(QJsonObject& cache, T* object, CString& field, const Fie
 
     Field* member_ptr { object->*member };
 
-    if (std::abs(*member_ptr - value) < kTolerance)
+    if (FloatEqual(*member_ptr, value))
         return false;
 
     *member_ptr = value;

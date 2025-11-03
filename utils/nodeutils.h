@@ -205,7 +205,7 @@ bool UpdateDouble(QJsonObject& cache, T* object, CString& field, const Field& va
 
     Field& current_value { object->*member };
 
-    if (std::abs(current_value - value) < kTolerance)
+    if (FloatEqual(current_value, value))
         return false;
 
     current_value = value;

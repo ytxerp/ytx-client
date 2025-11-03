@@ -14,18 +14,10 @@ LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_mod
 
 void LeafModelO::RSaveOrder()
 {
-    // Skip if there are no shadow entries to save
     if (shadow_list_.isEmpty())
         return;
 
-    // Remove entries that have no associated rhs_node (i.e. internal sku not selected).
-    PurifyEntryShadow();
-
-    // After cleanup, there might be nothing left to save.
-    if (shadow_list_.isEmpty())
-        return;
-
-    // --- Step 3: Normalize buffer states before saving ---
+    // Normalize buffer states before saving ---
     // This ensures that insert/delete/update buffers remain consistent
     // and no redundant or conflicting entries exist.
 
@@ -287,6 +279,9 @@ bool LeafModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
+/// @brief Update entry by customer product code (external_sku)
+/// @note Responsibility: Handle insertion and clearing, not deletion
+/// @note If mapping not found, rhs_node is cleared but entry is kept for later correction
 bool LeafModelO::UpdateExternalSku(QJsonObject& cache, EntryShadowO* entry_shadow, const QUuid& value)
 {
     if (*entry_shadow->external_sku == value)
@@ -298,7 +293,7 @@ bool LeafModelO::UpdateExternalSku(QJsonObject& cache, EntryShadowO* entry_shado
     *entry_shadow->external_sku = value;
     ResolveFromExternal(entry_shadow, value);
 
-    const bool price_changed { old_unit_price != *entry_shadow->unit_price };
+    const bool price_changed { FloatChanged(old_unit_price, *entry_shadow->unit_price) };
     const bool rhs_changed { old_rhs_node != *entry_shadow->rhs_node };
 
     cache.insert(kExternalSku, value.toString(QUuid::WithoutBraces));
@@ -321,7 +316,6 @@ bool LeafModelO::UpdateExternalSku(QJsonObject& cache, EntryShadowO* entry_shado
         if (entry_shadow->rhs_node->isNull()) {
             emit SSyncDelta(*entry_shadow->lhs_node, -*entry_shadow->initial, -*entry_shadow->final, -*entry_shadow->count, -*entry_shadow->measure,
                 -*entry_shadow->discount);
-            deleted_entries_.insert(*entry_shadow->id);
         }
 
         cache.insert(kRhsNode, entry_shadow->rhs_node->toString(QUuid::WithoutBraces));
@@ -343,6 +337,9 @@ bool LeafModelO::UpdateExternalSku(QJsonObject& cache, EntryShadowO* entry_shado
     return true;
 }
 
+/// @brief Update entry by internal product ID (rhs_node)
+/// @note Responsibility: Handle insertion and update, not deletion
+/// @note rhs_node must be valid, external_sku is auto-filled
 bool LeafModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int /*row*/)
 {
     if (value.isNull())
@@ -361,7 +358,7 @@ bool LeafModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
 
     ResolveFromInternal(d_shadow, value);
 
-    const bool price_changed { old_unit_price != *d_shadow->unit_price };
+    const bool price_changed { FloatChanged(old_unit_price, *d_shadow->unit_price) };
     const bool external_changed { old_external_sku != *d_shadow->external_sku };
 
     if (price_changed)
@@ -403,7 +400,7 @@ bool LeafModelO::UpdateRate(EntryShadow* entry_shadow, double value)
 {
     auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
 
-    if (std::abs(*d_shadow->unit_price - value) < kTolerance)
+    if (FloatEqual(*d_shadow->unit_price, value))
         return false;
 
     auto& cache { caches_[*d_shadow->id] };
@@ -428,7 +425,7 @@ bool LeafModelO::UpdateRate(EntryShadow* entry_shadow, double value)
 
 bool LeafModelO::UpdateUnitDiscount(QJsonObject& cache, EntryShadowO* entry_shadow, double value)
 {
-    if (std::abs(*entry_shadow->unit_discount - value) < kTolerance)
+    if (FloatEqual(*entry_shadow->unit_discount, value))
         return false;
 
     const double delta { *entry_shadow->measure * (value - *entry_shadow->unit_discount) };
@@ -451,7 +448,7 @@ bool LeafModelO::UpdateUnitDiscount(QJsonObject& cache, EntryShadowO* entry_shad
 
 bool LeafModelO::UpdateMeasure(QJsonObject& cache, EntryShadowO* entry_shadow, double value)
 {
-    if (std::abs(*entry_shadow->measure - value) < kTolerance)
+    if (FloatEqual(*entry_shadow->measure, value))
         return false;
 
     const double delta { value - *entry_shadow->measure };
@@ -477,7 +474,7 @@ bool LeafModelO::UpdateMeasure(QJsonObject& cache, EntryShadowO* entry_shadow, d
 
 bool LeafModelO::UpdateCount(QJsonObject& cache, EntryShadowO* entry_shadow, double value)
 {
-    if (std::abs(*entry_shadow->count - value) < kTolerance)
+    if (FloatEqual(*entry_shadow->count, value))
         return false;
 
     if (entry_shadow->rhs_node->isNull())
@@ -485,19 +482,6 @@ bool LeafModelO::UpdateCount(QJsonObject& cache, EntryShadowO* entry_shadow, dou
 
     cache.insert(kCount, *entry_shadow->count);
     return true;
-}
-
-void LeafModelO::PurifyEntryShadow()
-{
-    for (auto i = shadow_list_.size() - 1; i >= 0; --i) {
-        auto* entry_shadow { shadow_list_[i] };
-        if (!entry_shadow->rhs_node->isNull())
-            continue;
-
-        beginRemoveRows(QModelIndex(), i, i);
-        EntryShadowPool::Instance().Recycle(shadow_list_.takeAt(i), section_);
-        endRemoveRows();
-    }
 }
 
 void LeafModelO::ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_sku) const

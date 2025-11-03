@@ -52,7 +52,7 @@ inline QString ResourceFile()
     return path;
 }
 
-void SetAppIcon(QApplication& app)
+inline void SetAppIcon(QApplication& app)
 {
 #ifdef Q_OS_WIN
     app.setWindowIcon(QIcon(":/logo/logo/logo.ico"));

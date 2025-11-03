@@ -232,7 +232,7 @@ bool LeafModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row,
     assert(rhs_rate != 0.0);
 
     const double old_value { is_debit ? lhs_old_debit : lhs_old_credit };
-    if (std::abs(old_value - value) < kTolerance)
+    if (FloatEqual(old_value, value))
         return false;
 
     // Base represents the opposite side (used to compute the new diff)
@@ -311,7 +311,7 @@ bool LeafModelF::UpdateDebit(EntryShadow* entry_shadow, double value, int row)
     auto* d_shadow { DerivedPtr<EntryShadowF>(entry_shadow) };
 
     const double lhs_debit { *d_shadow->lhs_debit };
-    if (std::abs(lhs_debit - value) < kTolerance)
+    if (FloatEqual(lhs_debit, value))
         return false;
 
     const double lhs_credit { *d_shadow->lhs_credit };
@@ -347,7 +347,7 @@ bool LeafModelF::UpdateCredit(EntryShadow* entry_shadow, double value, int row)
     auto* d_shadow { DerivedPtr<EntryShadowF>(entry_shadow) };
 
     const double lhs_credit { *d_shadow->lhs_credit };
-    if (std::abs(lhs_credit - value) < kTolerance)
+    if (FloatEqual(lhs_credit, value))
         return false;
 
     const double lhs_debit { *d_shadow->lhs_debit };
@@ -384,7 +384,7 @@ bool LeafModelF::UpdateRate(EntryShadow* entry_shadow, double value)
     auto* d_shadow { DerivedPtr<EntryShadowF>(entry_shadow) };
 
     const double old_rate { *d_shadow->lhs_rate };
-    if (std::abs(old_rate - value) < kTolerance || value <= 0)
+    if (FloatEqual(old_rate, value) || value <= 0)
         return false;
 
     const double delta { value - old_rate };

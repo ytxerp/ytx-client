@@ -27,6 +27,7 @@
 #include "entryhub/entryhub.h"
 #include "utils/castutils.h"
 #include "utils/entryutils.h"
+#include "utils/mainutils.h"
 
 using CastUtils::DerivedPtr;
 

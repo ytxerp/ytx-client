@@ -55,7 +55,6 @@ private:
     bool UpdateUnitDiscount(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
     bool UpdateMeasure(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
     bool UpdateCount(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
-    void PurifyEntryShadow();
 
     void ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_sku) const;
     void ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_sku) const;
