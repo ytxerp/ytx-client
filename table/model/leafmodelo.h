@@ -53,10 +53,14 @@ private:
     bool UpdateUnitDiscount(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
     bool UpdateMeasure(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
     bool UpdateCount(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
+    bool UpdateDescription(QJsonObject& cache, EntryShadowO* entry_shadow, const QString& value);
 
     void ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_sku) const;
     void ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_sku) const;
     void RecalculateAmount(EntryShadowO* shadow) const;
+
+    void PurifyEntryShadow();
+    void NormalizeEntryBuffer();
 
 private:
     TreeModelI* tree_model_i_ {};
