@@ -894,43 +894,33 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
 
 void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {
-    auto* line { new Line(tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDescription), line);
+    auto* direction_rule_r { new BoolStringR(info.rule_map, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDirectionRule), direction_rule_r);
 
-    auto* direction_rule { new OrderRule(info.rule_map, QEvent::MouseButtonDblClick, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDirectionRule), direction_rule);
+    auto* unit_r { new IntStringR(info.unit_map, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kUnit), unit_r);
 
-    auto* unit { new OrderUnit(info.unit_map, info.unit_model, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kUnit), unit);
+    auto* kind_r { new IntStringR(info.kind_map, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kKind), kind_r);
 
-    auto* kind { new IntStringR(info.kind_map, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kKind), kind);
+    auto* amount_r { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kInitialTotal), amount_r);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kFinalTotal), amount_r);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDiscountTotal), amount_r);
 
-    auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kInitialTotal), amount);
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kFinalTotal), amount);
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDiscountTotal), amount);
+    auto* quantity_r { new DoubleSpinNoneZeroR(section.amount_decimal, kCoefficient16, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kMeasureTotal), quantity_r);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kCountTotal), quantity_r);
 
-    auto* quantity { new DoubleSpinNoneZeroR(section.amount_decimal, kCoefficient16, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kMeasureTotal), quantity);
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kCountTotal), quantity);
+    auto* name_r { new NodeNameR(sc_p_.tree_model, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployee), name_r);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kPartner), name_r);
 
-    auto tree_model_p { sc_p_.tree_model };
+    auto* issued_time_r { new IssuedTimeR(section.date_format, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time_r);
 
-    auto* filter_model_employee { tree_model_p->IncludeUnitModel(std::to_underlying(UnitP::kEmployee)) };
-    auto* employee { new FilterUnit(tree_model_p, filter_model_employee, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployee), employee);
-
-    const UnitP unit_p { info.section == Section::kSale ? UnitP::kCustomer : UnitP::kVendor };
-    auto* filter_model_partner { tree_model_p->IncludeUnitModel(std::to_underlying(unit_p)) };
-    auto* partner { new FilterUnit(tree_model_p, filter_model_partner, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kPartner), partner);
-
-    auto* issued_time { new TreeIssuedTime(section.date_format, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time);
-
-    auto* status { new Status(QEvent::MouseButtonDblClick, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), status);
+    auto* status_r { new StatusR(tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), status_r);
 }
 
 void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const

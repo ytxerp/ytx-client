@@ -84,7 +84,7 @@ void StringInitializer::SetHeader(
     };
 
     sale.node_header = {
-        QObject::tr("Name"),
+        QObject::tr("GroupName"),
         QObject::tr("Id"),
         QObject::tr("UserId"),
         QObject::tr("CreatedTime"),
