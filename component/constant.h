@@ -187,8 +187,8 @@ inline const QString kNodeDrag = QStringLiteral("node_drag");
 inline const QString kNodeUpdate = QStringLiteral("node_update");
 inline const QString kNodeName = QStringLiteral("node_name");
 
-inline const QString kInsertOrder = QStringLiteral("insert_order");
-inline const QString kUpdateOrder = QStringLiteral("update_order");
+inline const QString kOrderInsert = QStringLiteral("order_insert");
+inline const QString kOrderUpdate = QStringLiteral("order_update");
 inline const QString kNodeCache = QStringLiteral("node_cache");
 inline const QString kDeletedEntryArray = QStringLiteral("deleted_entry_array");
 inline const QString kInsertedEntryArray = QStringLiteral("inserted_entry_array");

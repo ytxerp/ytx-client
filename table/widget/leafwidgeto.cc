@@ -380,7 +380,7 @@ void LeafWidgetO::on_pBtnSave_clicked()
         order_cache.insert(kNode, node_json); // Meta info will be appended in service
         order_cache.insert(kPath, path_json);
 
-        WebSocket::Instance()->SendMessage(kInsertOrder, order_cache);
+        WebSocket::Instance()->SendMessage(kOrderInsert, order_cache);
 
         emit SInsertOrder();
         is_new_ = false;
@@ -393,7 +393,7 @@ void LeafWidgetO::on_pBtnSave_clicked()
         node_cache_.insert(kId, node_->id.toString(QUuid::WithoutBraces));
 
         order_cache.insert(kNodeCache, node_cache_);
-        WebSocket::Instance()->SendMessage(kUpdateOrder, order_cache);
+        WebSocket::Instance()->SendMessage(kOrderUpdate, order_cache);
 
         node_cache_ = QJsonObject();
         initial_delta_ = 0.0;

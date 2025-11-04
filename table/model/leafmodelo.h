@@ -49,11 +49,11 @@ private:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
 
-    bool UpdateExternalSku(QJsonObject& cache, EntryShadowO* entry_shadow, const QUuid& value);
-    bool UpdateUnitDiscount(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
-    bool UpdateMeasure(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
-    bool UpdateCount(QJsonObject& cache, EntryShadowO* entry_shadow, double value);
-    bool UpdateDescription(QJsonObject& cache, EntryShadowO* entry_shadow, const QString& value);
+    bool UpdateExternalSku(EntryShadowO* entry_shadow, const QUuid& value);
+    bool UpdateUnitDiscount(EntryShadowO* entry_shadow, double value);
+    bool UpdateMeasure(EntryShadowO* entry_shadow, double value);
+    bool UpdateCount(EntryShadowO* entry_shadow, double value);
+    bool UpdateDescription(EntryShadowO* entry_shadow, const QString& value);
 
     void ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_sku) const;
     void ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_sku) const;
