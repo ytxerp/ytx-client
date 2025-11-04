@@ -174,6 +174,8 @@ void WebSocket::InitHandler()
     handler_obj_[kEntryRate] = [this](const QJsonObject& obj) { UpdateEntryRate(obj); };
     handler_obj_[kEntryNumeric] = [this](const QJsonObject& obj) { UpdateEntryNumeric(obj); };
     handler_obj_[kLeafRemoveSafely] = [this](const QJsonObject& obj) { RemoveLeafSafely(obj); };
+    handler_obj_[kOrderInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
+    handler_obj_[kOrderUpdate] = [this](const QJsonObject& obj) { UpdateOrder(obj); };
 
     handler_arr_[kSharedConfig] = [this](const QJsonArray& arr) { ApplySharedConfig(arr); };
     handler_arr_[kPartnerEntry] = [this](const QJsonArray& arr) { ApplyPartnerEntry(arr); };
@@ -740,6 +742,8 @@ void WebSocket::UpdateNodeName(const QJsonObject& obj)
 
     tree_model->SyncNodeName(node_id, name, meta);
 }
+
+void WebSocket::UpdateOrder(const QJsonObject& obj) { }
 
 void WebSocket::ActionEntry(const QJsonObject& obj)
 {
