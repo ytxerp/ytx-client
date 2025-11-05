@@ -82,8 +82,6 @@ set(SOURCES
     delegate/readonly/sectionr.cc
     delegate/tree/treeissuedtime.cc
     delegate/tree/color.cc
-    delegate/tree/order/orderunit.cc
-    delegate/tree/order/orderrule.cc
     delegate/tree/finance/financeforeignr.cc
     delegate/search/searchpathtreer.cc
     delegate/search/searchpathtabler.cc
@@ -213,8 +211,6 @@ set(HEADERS
     delegate/readonly/sectionr.h
     delegate/tree/treeissuedtime.h
     delegate/tree/color.h
-    delegate/tree/order/orderunit.h
-    delegate/tree/order/orderrule.h
     delegate/tree/finance/financeforeignr.h
     delegate/search/searchpathtreer.h
     delegate/search/searchpathtabler.h
