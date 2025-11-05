@@ -182,7 +182,10 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
 
 void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 {
-    if (index.column() != 0)
+    const bool is_order { start_ == Section::kSale || start_ == Section::kPurchase };
+    const int expected_column { is_order ? std::to_underlying(NodeEnumO::kPartner) : std::to_underlying(NodeEnum::kName) };
+
+    if (index.column() != expected_column)
         return;
 
     const int kind_column { NodeUtils::KindColumn(start_) };
@@ -506,7 +509,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 
     // Create model and widget
     LeafModelArg leaf_model_arg { entry_hub, sc->info, node_id, node->direction_rule };
-    auto* leaf_model = new LeafModelO(leaf_model_arg, node, tree_model_i, sc_p_.entry_hub, this);
+    auto* leaf_model = new LeafModelO(leaf_model_arg, node, tree_model_i, sc_p_.entry_hub, nullptr);
 
     NodeOpArgO op_arg { node, entry_hub, leaf_model, tree_model_p, tree_model_i, app_config_, section_config, start_, false };
     auto* widget = new LeafWidgetO(op_arg, this);
@@ -769,7 +772,7 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
     case Section::kSale:
     case Section::kPurchase:
         TreeDelegateO(view, info, config);
-        TreeConnectO(view, tree_model);
+        TreeConnectO(view, tree_model, entry_hub);
         break;
     default:
         break;
@@ -1014,12 +1017,13 @@ void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SRefreshStatus, LeafSStation::Instance(), &LeafSStation::RRefreshStatus, Qt::UniqueConnection);
 }
 
-void MainWindow::TreeConnectO(QTreeView* tree_view, TreeModel* tree_model) const
+void MainWindow::TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
 {
     connect(tree_view, &QTreeView::doubleClicked, this, &MainWindow::RTreeViewDoubleClicked, Qt::UniqueConnection);
     connect(tree_view, &QTreeView::customContextMenuRequested, this, &MainWindow::RTreeViewCustomContextMenuRequested, Qt::UniqueConnection);
     connect(tree_model, &TreeModel::SFreeWidget, this, &MainWindow::RFreeWidget, Qt::UniqueConnection);
     connect(tree_model, &TreeModel::SResizeColumnToContents, tree_view, &QTreeView::resizeColumnToContents, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SAppendMultiEntry, LeafSStation::Instance(), &LeafSStation::RAppendMultiEntry, Qt::UniqueConnection);
 }
 
 void MainWindow::InsertNodeFunction(const QModelIndex& parent, const QUuid& parent_id, int row)
@@ -1079,6 +1083,9 @@ void MainWindow::on_actionNewGroup_triggered()
     QDialog* dialog { new InsertNodeBranch(node, unit_model, parent_path, children_name, this) };
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {
+        const auto message { JsonGen::NodeInsert(start_, node, node->parent->id) };
+        WebSocket::Instance()->SendMessage(kNodeInsert, message);
+
         if (tree_model->InsertNode(row, parent_index, node)) {
             auto index { tree_model->index(row, 0, parent_index) };
             sc_->tree_view->setCurrentIndex(index);
@@ -1321,6 +1328,19 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
         return;
 
     const auto node_id { ui->tabWidget->tabBar()->tabData(index).value<TabInfo>().id };
+
+    if (start_ == Section::kSale || start_ == Section::kPurchase) {
+        auto widget { sc_->leaf_wgt_hash.value(node_id) };
+
+        if (widget->HasUnsavedData()) {
+            auto ret = QMessageBox::warning(this, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nDo you want to close it anyway?"),
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+
+            if (ret == QMessageBox::No) {
+                return;
+            }
+        }
+    }
 
     if (start_ != Section::kFinance && start_ != Section::kTask)
         WidgetUtils::FreeWidget(node_id, sc_->rpt_wgt_hash);

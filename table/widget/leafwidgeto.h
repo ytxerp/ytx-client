@@ -56,6 +56,7 @@ public slots:
 public:
     LeafModel* Model() const override { return leaf_model_order_; }
     QTableView* View() const override;
+    bool HasUnsavedData() const override;
 
 private slots:
 

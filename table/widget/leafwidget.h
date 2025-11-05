@@ -34,6 +34,7 @@ public:
 
     virtual LeafModel* Model() const = 0;
     virtual QTableView* View() const = 0;
+    virtual bool HasUnsavedData() const { return false; }
 
 protected:
     explicit LeafWidget(QWidget* parent = nullptr)

@@ -182,7 +182,7 @@ private:
     void TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
-    void TreeConnectO(QTreeView* tree_view, TreeModel* tree_model) const;
+    void TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
 
     void InsertNodeFunction(const QModelIndex& parent, const QUuid& parent_id, int row);
     void InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUuid& parent_id, int row); // Finance Inventory Partner Task

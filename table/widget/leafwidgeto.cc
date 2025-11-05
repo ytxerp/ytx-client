@@ -53,6 +53,13 @@ LeafWidgetO::~LeafWidgetO()
 
 QTableView* LeafWidgetO::View() const { return ui->tableViewO; }
 
+bool LeafWidgetO::HasUnsavedData() const
+{
+    const bool has_delta { initial_delta_ != 0.0 || final_delta_ != 0.0 || count_delta_ != 0.0 || measure_delta_ != 0.0 || discount_delta_ != 0.0 };
+
+    return has_delta || !node_delta_.isEmpty() || leaf_model_order_->HasUnsavedData();
+}
+
 void LeafWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
 {
     if (node_id_ != node_id)

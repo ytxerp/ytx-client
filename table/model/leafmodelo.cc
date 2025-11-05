@@ -64,6 +64,20 @@ void LeafModelO::SaveOrder(QJsonObject& order_cache)
     entry_caches_.clear();
 }
 
+bool LeafModelO::HasUnsavedData() const
+{
+    if (!deleted_entries_.isEmpty())
+        return true;
+
+    if (!inserted_entries_.isEmpty())
+        return true;
+
+    if (!entry_caches_.isEmpty())
+        return true;
+
+    return false;
+}
+
 QVariant LeafModelO::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
@@ -336,9 +350,9 @@ bool LeafModelO::UpdateExternalSku(EntryShadowO* entry_shadow, const QUuid& valu
         cache.insert(kExternalSku, value.toString(QUuid::WithoutBraces));
 
         if (price_changed) {
-            cache.insert(kUnitPrice, *entry_shadow->unit_price);
-            cache.insert(kInitial, *entry_shadow->initial);
-            cache.insert(kFinal, *entry_shadow->final);
+            cache.insert(kUnitPrice, QString::number(*entry_shadow->unit_price, 'f', kMaxNumericScale_4));
+            cache.insert(kInitial, QString::number(*entry_shadow->initial, 'f', kMaxNumericScale_4));
+            cache.insert(kFinal, QString::number(*entry_shadow->final, 'f', kMaxNumericScale_4));
         }
 
         if (rhs_changed) {
@@ -394,9 +408,9 @@ bool LeafModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
         }
 
         if (price_changed) {
-            cache.insert(kUnitPrice, *d_shadow->unit_price);
-            cache.insert(kInitial, *d_shadow->initial);
-            cache.insert(kFinal, *d_shadow->final);
+            cache.insert(kUnitPrice, QString::number(*d_shadow->unit_price, 'f', kMaxNumericScale_4));
+            cache.insert(kInitial, QString::number(*d_shadow->initial, 'f', kMaxNumericScale_4));
+            cache.insert(kFinal, QString::number(*d_shadow->final, 'f', kMaxNumericScale_4));
         }
     }
 
@@ -427,9 +441,9 @@ bool LeafModelO::UpdateRate(EntryShadow* entry_shadow, double value)
     if (!inserted_entries_.contains(*entry_shadow->id)) {
         auto& cache { entry_caches_[*d_shadow->id] };
 
-        cache.insert(kUnitPrice, *d_shadow->unit_price);
-        cache.insert(kInitial, *d_shadow->initial);
-        cache.insert(kFinal, *d_shadow->final);
+        cache.insert(kUnitPrice, QString::number(*d_shadow->unit_price, 'f', kMaxNumericScale_4));
+        cache.insert(kInitial, QString::number(*d_shadow->initial, 'f', kMaxNumericScale_4));
+        cache.insert(kFinal, QString::number(*d_shadow->final, 'f', kMaxNumericScale_4));
     }
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
@@ -450,9 +464,9 @@ bool LeafModelO::UpdateUnitDiscount(EntryShadowO* entry_shadow, double value)
     if (!inserted_entries_.contains(*entry_shadow->id)) {
         auto& cache { entry_caches_[*entry_shadow->id] };
 
-        cache.insert(kUnitDiscount, *entry_shadow->unit_discount);
-        cache.insert(kDiscount, *entry_shadow->discount);
-        cache.insert(kFinal, *entry_shadow->final);
+        cache.insert(kUnitDiscount, QString::number(*entry_shadow->unit_discount, 'f', kMaxNumericScale_4));
+        cache.insert(kDiscount, QString::number(*entry_shadow->discount, 'f', kMaxNumericScale_4));
+        cache.insert(kFinal, QString::number(*entry_shadow->final, 'f', kMaxNumericScale_4));
     }
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kDiscount));
@@ -474,10 +488,10 @@ bool LeafModelO::UpdateMeasure(EntryShadowO* entry_shadow, double value)
     if (!inserted_entries_.contains(*entry_shadow->id)) {
         auto& cache { entry_caches_[*entry_shadow->id] };
 
-        cache.insert(kMeasure, *entry_shadow->measure);
-        cache.insert(kInitial, *entry_shadow->initial);
-        cache.insert(kDiscount, *entry_shadow->discount);
-        cache.insert(kFinal, *entry_shadow->final);
+        cache.insert(kMeasure, QString::number(*entry_shadow->measure, 'f', kMaxNumericScale_4));
+        cache.insert(kInitial, QString::number(*entry_shadow->initial, 'f', kMaxNumericScale_4));
+        cache.insert(kDiscount, QString::number(*entry_shadow->discount, 'f', kMaxNumericScale_4));
+        cache.insert(kFinal, QString::number(*entry_shadow->final, 'f', kMaxNumericScale_4));
     }
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
@@ -496,7 +510,7 @@ bool LeafModelO::UpdateCount(EntryShadowO* entry_shadow, double value)
     if (!inserted_entries_.contains(*entry_shadow->id)) {
         auto& cache { entry_caches_[*entry_shadow->id] };
 
-        cache.insert(kCount, value);
+        cache.insert(kCount, QString::number(value, 'f', kMaxNumericScale_4));
     }
 
     return true;

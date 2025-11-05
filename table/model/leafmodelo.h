@@ -44,6 +44,7 @@ public:
 
     const QList<EntryShadow*>& GetEntryShadowList() { return shadow_list_; }
     void SaveOrder(QJsonObject& order_cache);
+    bool HasUnsavedData() const;
 
 private:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
