@@ -30,7 +30,7 @@ class TableModelO final : public TableModel {
     Q_OBJECT
 
 public:
-    TableModelO(CTableModelArg& arg, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
+    TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
     ~TableModelO() override = default;
 
 public:
@@ -45,6 +45,7 @@ public:
     const QList<EntryShadow*>& GetEntryShadowList() { return shadow_list_; }
     void SaveOrder(QJsonObject& order_cache);
     bool HasUnsavedData() const;
+    void SetNode(const NodeO* node) { node_ = node; }
 
 private:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
@@ -67,7 +68,7 @@ private:
     TreeModelI* tree_model_i_ {};
     EntryHubP* entry_hub_partner_ {};
     EntryHubO* entry_hub_order_ {};
-    const NodeO* d_node_ {};
+    const NodeO* node_ {};
 
     QSet<QUuid> deleted_entries_ {};
     QHash<QUuid, EntryShadow*> inserted_entries_ {};

@@ -37,8 +37,6 @@
 #include "delegate/table/tableissuedtime.h"
 #include "delegate/tree/color.h"
 #include "delegate/tree/finance/financeforeignr.h"
-#include "delegate/tree/order/orderrule.h"
-#include "delegate/tree/order/orderunit.h"
 #include "delegate/tree/treeissuedtime.h"
 #include "dialog/about.h"
 #include "dialog/authdialog.h"
@@ -453,10 +451,21 @@ void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row
 
     // Create model and widget
     TableModelArg table_model_arg { entry_hub, sc_->info, node_id, true };
-    auto* table_model { new TableModelO(table_model_arg, node, tree_model_i, sc_p_.entry_hub, this) };
+    auto* table_model { new TableModelO(table_model_arg, tree_model_i, sc_p_.entry_hub, this) };
 
-    NodeOpArgO op_arg { node, entry_hub, table_model, tree_model_p, tree_model_i, app_config_, section_config, start_, true };
-    auto* widget { new TableWidgetO(op_arg, this) };
+    OrderWidgetArg order_arg {
+        node,
+        entry_hub,
+        table_model,
+        tree_model_p,
+        tree_model_i,
+        app_config_,
+        section_config,
+        print_template_,
+        start_,
+        true,
+    };
+    auto* widget { new TableWidgetO(order_arg, this) };
 
     // Setup insert connect
     connect(
@@ -509,10 +518,21 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 
     // Create model and widget
     TableModelArg table_model_arg { entry_hub, sc->info, node_id, node->direction_rule };
-    auto* table_model = new TableModelO(table_model_arg, node, tree_model_i, sc_p_.entry_hub, nullptr);
+    auto* table_model = new TableModelO(table_model_arg, tree_model_i, sc_p_.entry_hub, nullptr);
 
-    NodeOpArgO op_arg { node, entry_hub, table_model, tree_model_p, tree_model_i, app_config_, section_config, start_, false };
-    auto* widget = new TableWidgetO(op_arg, this);
+    OrderWidgetArg order_arg {
+        node,
+        entry_hub,
+        table_model,
+        tree_model_p,
+        tree_model_i,
+        app_config_,
+        section_config,
+        print_template_,
+        start_,
+        false,
+    };
+    auto* widget = new TableWidgetO(order_arg, this);
 
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, tree_model_p->Name(partner_id)) };
@@ -1333,15 +1353,14 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
         auto* widget { static_cast<TableWidgetO*>(sc_->table_wgt_hash.value(node_id).data()) };
 
         if (widget->HasUnsavedData()) {
-            auto ret
-                = QMessageBox::warning(this, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nClick 'Yes' to save and close, or 'No' to cancel."),
-                    QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+            auto ret = QMessageBox::warning(this, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nDo you want to save before closing?"),
+                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
 
-            if (ret == QMessageBox::Yes)
-                widget->on_pBtnSave_clicked();
-
-            if (ret == QMessageBox::No)
+            if (ret == QMessageBox::Save) {
+                widget->SaveOrder();
+            } else if (ret == QMessageBox::Cancel) {
                 return;
+            }
         }
     }
 

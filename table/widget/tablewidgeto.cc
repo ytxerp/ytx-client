@@ -8,16 +8,17 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TableWidgetO::TableWidgetO(CNodeOpArgO& arg, QWidget* parent)
+TableWidgetO::TableWidgetO(COrderWidgetArg& arg, QWidget* parent)
     : TableWidget(parent)
     , ui(new Ui::TableWidgetO)
-    , node_ { static_cast<NodeO*>(arg.node) }
+    , node_ { arg.node }
+    , tmp_node_ { *node_ }
     , sql_ { qobject_cast<EntryHubO*>(arg.entry_hub) }
     , table_model_order_ { qobject_cast<TableModelO*>(arg.table_model) }
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
     , is_new_ { arg.is_new }
-    , node_id_ { arg.node->id }
+    , node_id_ { tmp_node_.id }
     , partner_unit_ { arg.section == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor) }
     , section_ { arg.section }
     , print_template_ { arg.print_template }
@@ -25,17 +26,18 @@ TableWidgetO::TableWidgetO(CNodeOpArgO& arg, QWidget* parent)
 {
     ui->setupUi(this);
     table_model_order_->setParent(this);
+    table_model_order_->SetNode(&tmp_node_);
     SignalBlocker blocker(this);
 
     IniWidget();
-    IniUnit(arg.node->unit);
+    IniUnit(tmp_node_.unit);
     IniRuleGroup();
     IniUnitGroup();
-    IniRule(arg.node->direction_rule);
-    IniData(node_->partner, node_->employee);
+    IniRule(tmp_node_.direction_rule);
+    IniData(tmp_node_.partner, tmp_node_.employee);
     IniConnect();
 
-    const bool released { node_->status == std::to_underlying(NodeStatus::kReleased) };
+    const bool released { tmp_node_.status == std::to_underlying(NodeStatus::kReleased) };
     ui->pBtnStatus->setChecked(released);
 
     IniStatus(released);
@@ -65,13 +67,13 @@ void TableWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double
     if (node_id_ != node_id)
         return;
 
-    const double adjusted_final_delta { node_->unit == std::to_underlying(UnitO::kImmediate) ? final_delta : 0.0 };
+    const double adjusted_final_delta { tmp_node_.unit == std::to_underlying(UnitO::kImmediate) ? final_delta : 0.0 };
 
-    node_->count_total += count_delta;
-    node_->measure_total += measure_delta;
-    node_->initial_total += initial_delta;
-    node_->discount_total += discount_delta;
-    node_->final_total += adjusted_final_delta;
+    tmp_node_.count_total += count_delta;
+    tmp_node_.measure_total += measure_delta;
+    tmp_node_.initial_total += initial_delta;
+    tmp_node_.discount_total += discount_delta;
+    tmp_node_.final_total += adjusted_final_delta;
 
     if (!is_new_) {
         count_delta_ += count_delta;
@@ -132,13 +134,13 @@ void TableWidgetO::IniData(const QUuid& partner, const QUuid& employee)
     if (is_new_) {
         const auto date_time { QDateTime::currentDateTimeUtc() };
         ui->dateTimeEdit->setDateTime(date_time.toLocalTime());
-        node_->issued_time = date_time;
+        tmp_node_.issued_time = date_time;
         return;
     }
 
     IniUiValue();
-    ui->lineDescription->setText(node_->description);
-    ui->dateTimeEdit->setDateTime(node_->issued_time.toLocalTime());
+    ui->lineDescription->setText(tmp_node_.description);
+    ui->dateTimeEdit->setDateTime(tmp_node_.issued_time.toLocalTime());
 
     int partner_index { ui->comboPartner->findData(partner) };
     ui->comboPartner->setCurrentIndex(partner_index);
@@ -187,11 +189,11 @@ void TableWidgetO::IniUnit(int unit)
 
 void TableWidgetO::IniUiValue()
 {
-    ui->dSpinFinalTotal->setValue(node_->final_total);
-    ui->dSpinDiscountTotal->setValue(node_->discount_total);
-    ui->dSpinFirstTotal->setValue(node_->count_total);
-    ui->dSpinSecondTotal->setValue(node_->measure_total);
-    ui->dSpinInitialTotal->setValue(node_->initial_total);
+    ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
+    ui->dSpinDiscountTotal->setValue(tmp_node_.discount_total);
+    ui->dSpinFirstTotal->setValue(tmp_node_.count_total);
+    ui->dSpinSecondTotal->setValue(tmp_node_.measure_total);
+    ui->dSpinInitialTotal->setValue(tmp_node_.initial_total);
 }
 
 void TableWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true); }
@@ -199,7 +201,7 @@ void TableWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChe
 void TableWidgetO::IniStatus(bool released)
 {
     ui->pBtnStatus->setText(released ? tr("Recall") : tr("Released"));
-    ui->pBtnStatus->setEnabled(node_->unit != std::to_underlying(UnitO::kPending));
+    ui->pBtnStatus->setEnabled(tmp_node_.unit != std::to_underlying(UnitO::kPending));
 
     if (released) {
         ui->pBtnPrint->setFocus();
@@ -229,7 +231,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     if (partner_id.isNull())
         return;
 
-    node_->partner = partner_id;
+    tmp_node_.partner = partner_id;
     emit SSyncPartner(node_id_, partner_id);
 
     if (!is_new_) {
@@ -240,7 +242,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
 void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 {
     const QUuid employee_id { ui->comboEmployee->currentData().toUuid() };
-    node_->employee = employee_id;
+    tmp_node_.employee = employee_id;
 
     if (!is_new_) {
         node_cache_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
@@ -249,19 +251,19 @@ void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 
 void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
-    node_->issued_time = date_time.toUTC();
+    tmp_node_.issued_time = date_time.toUTC();
 
     if (!is_new_) {
-        node_cache_.insert(kIssuedTime, node_->issued_time.toString(Qt::ISODate));
+        node_cache_.insert(kIssuedTime, tmp_node_.issued_time.toString(Qt::ISODate));
     }
 }
 
 void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 {
-    if (node_->description == arg1)
+    if (tmp_node_.description == arg1)
         return;
 
-    node_->description = arg1;
+    tmp_node_.description = arg1;
 
     if (!is_new_) {
         node_cache_.insert(kDescription, arg1);
@@ -270,18 +272,18 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 
 void TableWidgetO::RRuleGroupClicked(int id)
 {
-    node_->direction_rule = static_cast<bool>(id);
+    tmp_node_.direction_rule = static_cast<bool>(id);
 
-    node_->count_total *= -1;
-    node_->measure_total *= -1;
-    node_->initial_total *= -1;
-    node_->discount_total *= -1;
-    node_->final_total *= -1;
+    tmp_node_.count_total *= -1;
+    tmp_node_.measure_total *= -1;
+    tmp_node_.initial_total *= -1;
+    tmp_node_.discount_total *= -1;
+    tmp_node_.final_total *= -1;
 
     IniUiValue();
 
     if (!is_new_) {
-        node_cache_.insert(kDirectionRule, node_->direction_rule);
+        node_cache_.insert(kDirectionRule, tmp_node_.direction_rule);
         count_delta_ *= -2;
         measure_delta_ *= -2;
         initial_delta_ *= -2;
@@ -296,26 +298,26 @@ void TableWidgetO::RUnitGroupClicked(int id)
 
     switch (unit) {
     case UnitO::kImmediate:
-        node_->final_total = node_->initial_total - node_->discount_total;
-        final_delta_ += node_->final_total;
+        tmp_node_.final_total = tmp_node_.initial_total - tmp_node_.discount_total;
+        final_delta_ += tmp_node_.final_total;
         ui->pBtnStatus->setEnabled(true);
         break;
     case UnitO::kMonthly:
-        final_delta_ += -node_->final_total;
-        node_->final_total = 0.0;
+        final_delta_ += -tmp_node_.final_total;
+        tmp_node_.final_total = 0.0;
         ui->pBtnStatus->setEnabled(true);
         break;
     case UnitO::kPending:
-        final_delta_ += -node_->final_total;
-        node_->final_total = 0.0;
+        final_delta_ += -tmp_node_.final_total;
+        tmp_node_.final_total = 0.0;
         ui->pBtnStatus->setEnabled(false);
         break;
     default:
         break;
     }
 
-    node_->unit = id;
-    ui->dSpinFinalTotal->setValue(node_->final_total);
+    tmp_node_.unit = id;
+    ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
 
     if (!is_new_) {
         node_cache_.insert(kUnit, id);
@@ -324,17 +326,19 @@ void TableWidgetO::RUnitGroupClicked(int id)
 
 void TableWidgetO::on_pBtnStatus_toggled(bool checked)
 {
-    if (!node_->settlement.isNull()) {
+    if (!tmp_node_.settlement.isNull()) {
         QMessageBox::information(this, tr("Order Locked"), tr("This order has already been settled and cannot be modified."));
         return;
     }
 
-    node_->status = checked;
+    tmp_node_.status = checked;
     emit SSyncStatus(node_id_, checked);
 
     IniStatus(checked);
     LockWidgets(checked);
 }
+
+void TableWidgetO::on_pBtnSave_clicked() { SaveOrder(); }
 
 void TableWidgetO::on_pBtnPrint_clicked()
 {
@@ -353,7 +357,7 @@ void TableWidgetO::PreparePrint()
     print_manager_.LoadIni(ui->comboTemplate->currentData().toString());
 
     QString unit {};
-    switch (UnitO(node_->unit)) {
+    switch (UnitO(tmp_node_.unit)) {
     case UnitO::kMonthly:
         unit = tr("MS");
         break;
@@ -367,13 +371,15 @@ void TableWidgetO::PreparePrint()
         break;
     }
 
-    PrintData data { tree_model_partner_->Name(node_->partner), node_->issued_time.toLocalTime().toString(kDateTimeFST),
-        tree_model_partner_->Name(node_->employee), unit, node_->initial_total };
+    PrintData data { tree_model_partner_->Name(tmp_node_.partner), tmp_node_.issued_time.toLocalTime().toString(kDateTimeFST),
+        tree_model_partner_->Name(tmp_node_.employee), unit, tmp_node_.initial_total };
     print_manager_.SetData(data, table_model_order_->GetEntryShadowList());
 }
 
-void TableWidgetO::on_pBtnSave_clicked()
+void TableWidgetO::SaveOrder()
 {
+    *node_ = tmp_node_;
+
     QJsonObject order_cache {};
     order_cache.insert(kSection, std::to_underlying(section_));
     order_cache.insert(kSessionId, QString());
@@ -381,11 +387,11 @@ void TableWidgetO::on_pBtnSave_clicked()
     table_model_order_->SaveOrder(order_cache);
 
     if (is_new_) {
-        const QJsonObject node_json { node_->WriteJson() };
+        const QJsonObject node_json { tmp_node_.WriteJson() };
 
         QJsonObject path_json {};
-        path_json.insert(kAncestor, node_->parent->id.toString(QUuid::WithoutBraces));
-        path_json.insert(kDescendant, node_->id.toString(QUuid::WithoutBraces));
+        path_json.insert(kAncestor, tmp_node_.parent->id.toString(QUuid::WithoutBraces));
+        path_json.insert(kDescendant, tmp_node_.id.toString(QUuid::WithoutBraces));
 
         order_cache.insert(kNode, node_json); // Meta info will be appended in service
         order_cache.insert(kPath, path_json);
@@ -401,7 +407,7 @@ void TableWidgetO::on_pBtnSave_clicked()
         node_delta_.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
         node_delta_.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
 
-        order_cache.insert(kNodeId, node_->id.toString(QUuid::WithoutBraces));
+        order_cache.insert(kNodeId, tmp_node_.id.toString(QUuid::WithoutBraces));
         order_cache.insert(kNodeCache, node_cache_);
         order_cache.insert(kNodeDelta, node_delta_);
 

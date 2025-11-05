@@ -22,7 +22,7 @@
 
 #include <QButtonGroup>
 
-#include "component/arg/nodeopargo.h"
+#include "component/arg/orderwidgetarg.h"
 #include "entryhub/entryhubo.h"
 #include "print/printmanager.h"
 #include "table/model/tablemodelo.h"
@@ -36,7 +36,7 @@ class TableWidgetO final : public TableWidget {
     Q_OBJECT
 
 public:
-    TableWidgetO(CNodeOpArgO& arg, QWidget* parent = nullptr);
+    TableWidgetO(COrderWidgetArg& arg, QWidget* parent = nullptr);
     ~TableWidgetO();
 
 signals:
@@ -57,8 +57,8 @@ public:
     TableModel* Model() const override { return table_model_order_; }
     QTableView* View() const override;
 
-    void on_pBtnSave_clicked();
     bool HasUnsavedData() const;
+    void SaveOrder();
 
 private slots:
 
@@ -75,6 +75,7 @@ private slots:
     void RUnitGroupClicked(int id);
 
     void on_pBtnStatus_toggled(bool checked);
+    void on_pBtnSave_clicked();
 
 private:
     void IniWidget();
@@ -93,6 +94,7 @@ private:
 private:
     Ui::TableWidgetO* ui;
     NodeO* node_ {};
+    NodeO tmp_node_ {};
 
     EntryHubO* sql_ {};
     TableModelO* table_model_order_ {};

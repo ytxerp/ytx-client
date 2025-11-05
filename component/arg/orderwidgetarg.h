@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef NODEOPARGO_H
-#define NODEOPARGO_H
+#ifndef ORDERWIDGETARG_H
+#define ORDERWIDGETARG_H
 
 #include "component/config.h"
 #include "entryhub/entryhub.h"
@@ -26,20 +26,19 @@
 #include "tree/model/treemodel.h"
 #include "tree/node.h"
 
-// Order Node Operation Argument
-struct NodeOpArgO {
-    Node* node {};
+struct OrderWidgetArg {
+    NodeO* node {};
     EntryHub* entry_hub {};
     TableModel* table_model {};
     TreeModel* tree_model_partner {};
     TreeModel* tree_model_inventory;
     CAppConfig& app_config {};
     CSectionConfig& section_config {};
+    const QMap<QString, QString>& print_template {};
     Section section {};
     bool is_new {};
-    const QMap<QString, QString>& print_template {};
 };
 
-using CNodeOpArgO = const NodeOpArgO;
+using COrderWidgetArg = const OrderWidgetArg;
 
-#endif // NODEOPARGO_H
+#endif // ORDERWIDGETARG_H
