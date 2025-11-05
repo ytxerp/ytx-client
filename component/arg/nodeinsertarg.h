@@ -17,19 +17,19 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INSERTNODEARGFIPT_H
-#define INSERTNODEARGFIPT_H
+#ifndef NODEINSERTARG_H
+#define NODEINSERTARG_H
 
 #include "tree/itemmodel.h"
 #include "tree/node.h"
 
-struct InsertNodeArgFIPT {
+struct NodeInsertArg {
     Node* node {};
     ItemModel* unit_model {};
     const QString& parent_path {};
     const QStringList& name_list {};
 };
 
-using CInsertNodeArgFIPT = const InsertNodeArgFIPT;
+using CNodeInsertArg = const NodeInsertArg;
 
-#endif // INSERTNODEARGFIPT_H
+#endif // NODEINSERTARG_H

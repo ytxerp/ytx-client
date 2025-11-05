@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYMODELARG_H
-#define ENTRYMODELARG_H
+#ifndef TABLEMODELARG_H
+#define TABLEMODELARG_H
 
 #include "entryhub/entryhub.h"
 
@@ -31,4 +31,4 @@ struct TableModelArg {
 
 using CTableModelArg = const TableModelArg;
 
-#endif // ENTRYMODELARG_H
+#endif // TABLEMODELARG_H

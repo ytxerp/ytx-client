@@ -6,7 +6,7 @@
 #include "component/signalblocker.h"
 #include "ui_insertnodei.h"
 
-InsertNodeI::InsertNodeI(CInsertNodeArgFIPT& arg, int rate_decimal, QWidget* parent)
+InsertNodeI::InsertNodeI(CNodeInsertArg& arg, int rate_decimal, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::InsertNodeI)
     , node_ { static_cast<NodeI*>(arg.node) }

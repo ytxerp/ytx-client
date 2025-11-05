@@ -188,9 +188,9 @@ set(HEADERS
     component/enumclass.h
     component/sectioncontex.h
     component/info.h
-    component/arg/entrymodelarg.h
+    component/arg/tablemodelarg.h
     component/arg/orderwidgetarg.h
-    component/arg/insertnodeargfipt.h
+    component/arg/nodeinsertarg.h
     delegate/boolstring.h
     delegate/styleditemdelegate.h
     delegate/plaintext.h

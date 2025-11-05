@@ -12,7 +12,7 @@
 #include <QUrl>
 #include <QtConcurrent>
 
-#include "component/arg/insertnodeargfipt.h"
+#include "component/arg/nodeinsertarg.h"
 #include "component/constant.h"
 #include "component/enumclass.h"
 #include "component/signalblocker.h"
@@ -2288,7 +2288,7 @@ void MainWindow::InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUu
     QDialog* dialog {};
 
     const auto children_name { tree_model->ChildrenName(parent_id) };
-    const auto arg { InsertNodeArgFIPT { node, unit_model, parent_path, children_name } };
+    const auto arg { NodeInsertArg { node, unit_model, parent_path, children_name } };
 
     switch (start_) {
     case Section::kFinance:

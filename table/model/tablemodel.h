@@ -23,7 +23,7 @@
 #include <QAbstractItemModel>
 #include <QTimer>
 
-#include "component/arg/entrymodelarg.h"
+#include "component/arg/tablemodelarg.h"
 #include "entryhub/entryhub.h"
 #include "utils/castutils.h"
 #include "utils/entryutils.h"
