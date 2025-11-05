@@ -105,6 +105,8 @@ private:
     bool is_new_ {};
 
     QJsonObject node_cache_ {};
+    QJsonObject node_delta_ {};
+
     double initial_delta_ {};
     double final_delta_ {};
     double count_delta_ {};

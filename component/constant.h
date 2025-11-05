@@ -190,6 +190,7 @@ inline const QString kNodeName = QStringLiteral("node_name");
 inline const QString kOrderInsert = QStringLiteral("order_insert");
 inline const QString kOrderUpdate = QStringLiteral("order_update");
 inline const QString kNodeCache = QStringLiteral("node_cache");
+inline const QString kNodeDelta = QStringLiteral("node_delta");
 inline const QString kDeletedEntryArray = QStringLiteral("deleted_entry_array");
 inline const QString kInsertedEntryArray = QStringLiteral("inserted_entry_array");
 inline const QString kEntryCacheArray = QStringLiteral("entry_cache_array");

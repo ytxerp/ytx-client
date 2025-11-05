@@ -385,14 +385,16 @@ void LeafWidgetO::on_pBtnSave_clicked()
         emit SInsertOrder();
         is_new_ = false;
     } else {
-        node_cache_.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kFinalDelta, QString::number(final_delta_, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kId, node_->id.toString(QUuid::WithoutBraces));
+        node_delta_.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
+        node_delta_.insert(kFinalDelta, QString::number(final_delta_, 'f', kMaxNumericScale_4));
+        node_delta_.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
+        node_delta_.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
+        node_delta_.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
 
+        order_cache.insert(kNodeId, node_->id.toString(QUuid::WithoutBraces));
         order_cache.insert(kNodeCache, node_cache_);
+        order_cache.insert(kNodeDelta, node_delta_);
+
         WebSocket::Instance()->SendMessage(kOrderUpdate, order_cache);
 
         node_cache_ = QJsonObject();

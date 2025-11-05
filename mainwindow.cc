@@ -523,6 +523,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     TableDelegateO(view, section_config);
 
     sc->leaf_wgt_hash.insert(node_id, widget);
+    LeafSStation::Instance()->RegisterModel(node_id, leaf_model);
 }
 
 void MainWindow::TableConnectF(QTableView* table_view, LeafModel* table_model, TreeModel* tree_model) const
