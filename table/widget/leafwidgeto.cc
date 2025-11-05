@@ -57,7 +57,7 @@ bool LeafWidgetO::HasUnsavedData() const
 {
     const bool has_delta { initial_delta_ != 0.0 || final_delta_ != 0.0 || count_delta_ != 0.0 || measure_delta_ != 0.0 || discount_delta_ != 0.0 };
 
-    return has_delta || !node_delta_.isEmpty() || leaf_model_order_->HasUnsavedData();
+    return has_delta || !node_cache_.isEmpty() || !node_delta_.isEmpty() || leaf_model_order_->HasUnsavedData();
 }
 
 void LeafWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
@@ -256,12 +256,15 @@ void LeafWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
     }
 }
 
-void LeafWidgetO::on_lineDescription_editingFinished()
+void LeafWidgetO::on_lineDescription_textChanged(const QString& arg1)
 {
-    node_->description = ui->lineDescription->text();
+    if (node_->description == arg1)
+        return;
+
+    node_->description = arg1;
 
     if (!is_new_) {
-        node_cache_.insert(kDescription, node_->description);
+        node_cache_.insert(kDescription, arg1);
     }
 }
 

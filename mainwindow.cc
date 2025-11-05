@@ -1330,15 +1330,18 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
     const auto node_id { ui->tabWidget->tabBar()->tabData(index).value<TabInfo>().id };
 
     if (start_ == Section::kSale || start_ == Section::kPurchase) {
-        auto widget { sc_->leaf_wgt_hash.value(node_id) };
+        auto* widget { static_cast<LeafWidgetO*>(sc_->leaf_wgt_hash.value(node_id).data()) };
 
         if (widget->HasUnsavedData()) {
-            auto ret = QMessageBox::warning(this, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nDo you want to close it anyway?"),
-                QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+            auto ret
+                = QMessageBox::warning(this, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nClick 'Yes' to save and close, or 'No' to cancel."),
+                    QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
 
-            if (ret == QMessageBox::No) {
+            if (ret == QMessageBox::Yes)
+                widget->on_pBtnSave_clicked();
+
+            if (ret == QMessageBox::No)
                 return;
-            }
         }
     }
 

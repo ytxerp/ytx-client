@@ -53,7 +53,8 @@ template <InheritQWidget T> void FreeWidget(const QUuid& node_id, QHash<QUuid, Q
 
         if (widget) {
             hash.erase(it);
-            delete widget;
+            widget->setAttribute(Qt::WA_DeleteOnClose);
+            widget->close();
         }
     }
 }
@@ -63,10 +64,11 @@ template <InheritQWidget T> void ClearWidgets(QList<QPointer<T>>& list)
 {
     for (auto& widget : list) {
         if (widget) {
+            widget->setAttribute(Qt::WA_DeleteOnClose);
             widget->close();
-            delete widget;
         }
     }
+
     list.clear();
 }
 
@@ -75,10 +77,11 @@ template <InheritQWidget T> void ClearWidgets(QHash<QUuid, QPointer<T>>& hash)
 {
     for (auto& widget : hash) {
         if (widget) {
+            widget->setAttribute(Qt::WA_DeleteOnClose);
             widget->close();
-            delete widget;
         }
     }
+
     hash.clear();
 }
 

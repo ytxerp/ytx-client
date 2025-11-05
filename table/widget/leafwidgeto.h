@@ -56,7 +56,9 @@ public slots:
 public:
     LeafModel* Model() const override { return leaf_model_order_; }
     QTableView* View() const override;
-    bool HasUnsavedData() const override;
+
+    void on_pBtnSave_clicked();
+    bool HasUnsavedData() const;
 
 private slots:
 
@@ -64,7 +66,7 @@ private slots:
     void on_comboEmployee_currentIndexChanged(int index);
 
     void on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time);
-    void on_lineDescription_editingFinished();
+    void on_lineDescription_textChanged(const QString& arg1);
 
     void on_pBtnPreview_clicked();
     void on_pBtnPrint_clicked();
@@ -72,7 +74,6 @@ private slots:
     void RRuleGroupClicked(int id);
     void RUnitGroupClicked(int id);
 
-    void on_pBtnSave_clicked();
     void on_pBtnStatus_toggled(bool checked);
 
 private:
