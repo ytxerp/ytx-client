@@ -24,7 +24,7 @@
 
 #include "component/config.h"
 #include "report/widget/reportwidget.h"
-#include "table/widget/leafwidget.h"
+#include "table/widget/tablewidget.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidget.h"
 #include "utils/widgetutils.h"
@@ -41,7 +41,7 @@ struct SectionContext {
     SectionInfo info {};
     SharedConfig shared_config {};
 
-    QHash<QUuid, QPointer<LeafWidget>> leaf_wgt_hash {};
+    QHash<QUuid, QPointer<TableWidget>> table_wgt_hash {};
     QHash<QUuid, QPointer<ReportWidget>> rpt_wgt_hash {};
 
     void Clear();
@@ -59,7 +59,7 @@ inline void SectionContext::Clear()
     shared_config = SharedConfig {};
 
     WidgetUtils::ClearWidgets(dialog_list);
-    WidgetUtils::ClearWidgets(leaf_wgt_hash);
+    WidgetUtils::ClearWidgets(table_wgt_hash);
     WidgetUtils::ClearWidgets(rpt_wgt_hash);
 }
 

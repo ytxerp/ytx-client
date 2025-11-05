@@ -1,16 +1,16 @@
-#include "leafmodelf.h"
+#include "tablemodelf.h"
 
 #include "component/constant.h"
 #include "global/entryshadowpool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-LeafModelF::LeafModelF(CLeafModelArg& arg, QObject* parent)
-    : LeafModel { arg, parent }
+TableModelF::TableModelF(CTableModelArg& arg, QObject* parent)
+    : TableModel { arg, parent }
 {
 }
 
-QVariant LeafModelF::data(const QModelIndex& index, int role) const
+QVariant TableModelF::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -59,7 +59,7 @@ QVariant LeafModelF::data(const QModelIndex& index, int role) const
     }
 }
 
-bool LeafModelF::setData(const QModelIndex& index, const QVariant& value, int role)
+bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
         return false;
@@ -74,7 +74,8 @@ bool LeafModelF::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case EntryEnumF::kIssuedTime:
-        EntryUtils::UpdateShadowIssuedTime(entry_caches_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowIssuedTime(
+            entry_caches_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumF::kCode:
         EntryUtils::UpdateShadowField(entry_caches_[id], shadow, kCode, value.toString(), &EntryShadow::code, [id, this]() { RestartTimer(id); });
@@ -86,7 +87,8 @@ bool LeafModelF::setData(const QModelIndex& index, const QVariant& value, int ro
         EntryUtils::UpdateShadowField(entry_caches_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumF::kDocument:
-        EntryUtils::UpdateShadowDocument(entry_caches_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowDocument(
+            entry_caches_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumF::kLhsRate:
         UpdateRate(d_shadow, value.toDouble());
@@ -108,7 +110,7 @@ bool LeafModelF::setData(const QModelIndex& index, const QVariant& value, int ro
     return true;
 }
 
-bool LeafModelF::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row)
+bool TableModelF::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row)
 {
     if (value.isNull())
         return false;
@@ -217,7 +219,7 @@ bool LeafModelF::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
     return true;
 }
 
-bool LeafModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit)
+bool TableModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit)
 {
     auto* d_shadow { DerivedPtr<EntryShadowF>(entry_shadow) };
 
@@ -379,7 +381,7 @@ bool LeafModelF::UpdateCredit(EntryShadow* entry_shadow, double value, int row)
 }
 #endif
 
-bool LeafModelF::UpdateRate(EntryShadow* entry_shadow, double value)
+bool TableModelF::UpdateRate(EntryShadow* entry_shadow, double value)
 {
     auto* d_shadow { DerivedPtr<EntryShadowF>(entry_shadow) };
 
@@ -448,7 +450,7 @@ bool LeafModelF::UpdateRate(EntryShadow* entry_shadow, double value)
     return true;
 }
 
-void LeafModelF::sort(int column, Qt::SortOrder order)
+void TableModelF::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0 && column <= info_.entry_header.size() - 1);
 
@@ -502,7 +504,7 @@ void LeafModelF::sort(int column, Qt::SortOrder order)
     AccumulateBalance(0);
 }
 
-Qt::ItemFlags LeafModelF::flags(const QModelIndex& index) const
+Qt::ItemFlags TableModelF::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
@@ -525,13 +527,13 @@ Qt::ItemFlags LeafModelF::flags(const QModelIndex& index) const
     return flags;
 }
 
-double LeafModelF::CalculateBalance(EntryShadow* entry_shadow)
+double TableModelF::CalculateBalance(EntryShadow* entry_shadow)
 {
     auto* d_shadow { DerivedPtr<EntryShadowF>(entry_shadow) };
     return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*d_shadow->lhs_debit - *d_shadow->lhs_credit);
 }
 
-bool LeafModelF::removeRows(int row, int /*count*/, const QModelIndex& parent)
+bool TableModelF::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
 

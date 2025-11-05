@@ -135,18 +135,18 @@ public:
 
     // Ytx's
     // Default implementations
-    double InitialTotal(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &Node::initial_total); }
-    double FinalTotal(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &Node::final_total); }
-    int Kind(QUuid node_id) { return NodeUtils::Value(node_model_, node_id, &Node::kind); }
-    int Unit(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &Node::unit); }
-    bool Rule(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &Node::direction_rule); }
-    QString Name(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &Node::name); }
+    double InitialTotal(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::initial_total); }
+    double FinalTotal(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::final_total); }
+    int Kind(QUuid node_id) { return NodeUtils::Value(node_hash_, node_id, &Node::kind); }
+    int Unit(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::unit); }
+    bool Rule(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::direction_rule); }
+    QString Name(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::name); }
     QString Path(const QUuid& node_id) const;
 
     QStringList ChildrenName(const QUuid& parent_id) const;
     QSet<QUuid> ChildrenId(const QUuid& parent_id) const;
 
-    inline ItemModel* LeafModel() const { return leaf_model_; }
+    inline ItemModel* LeafModel() const { return leaf_path_model_; }
     inline CUuidString& LeafPath() const { return leaf_path_; }
 
     void LeafPathBranchPathModel(ItemModel* model) const;
@@ -158,16 +158,16 @@ public:
     bool ActivateCachedNode(const QUuid& node_id);
     void SearchModel(QList<const Node*>& node_list, CString& name) const;
 
-    inline bool ModelContains(const QUuid& node_id) const { return node_model_.contains(node_id); }
+    inline bool ModelContains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
     inline void SetParent(Node* node, const QUuid& parent_id) const
     {
         assert(node);
-        assert(node_model_.contains(parent_id));
-        node->parent = node_model_.value(parent_id);
+        assert(node_hash_.contains(parent_id));
+        node->parent = node_hash_.value(parent_id);
     }
     inline Node* GetNode(const QUuid& node_id) const
     {
-        auto* node = node_model_.value(node_id);
+        auto* node = node_hash_.value(node_id);
         assert(node);
         return node;
     }
@@ -227,7 +227,7 @@ protected:
 
     virtual void RegisterPath(Node* node);
     virtual void RemovePath(Node* node, Node* parent_node);
-    virtual void RegisterNode(Node* node) { node_model_.insert(node->id, node); }
+    virtual void RegisterNode(Node* node) { node_hash_.insert(node->id, node); }
 
     virtual void ResetBranch(Node* node) { Q_UNUSED(node) };
     virtual void ClearModel() { }
@@ -261,13 +261,13 @@ protected:
 
 protected:
     Node* root_ {};
-    NodeHash node_model_ {};
+    NodeHash node_hash_ {};
     NodeHash node_cache_ {};
 
-    UuidString leaf_path_ {};
-    UuidString branch_path_ {};
+    QHash<QUuid, QString> leaf_path_ {};
+    QHash<QUuid, QString> branch_path_ {};
 
-    ItemModel* leaf_model_ {};
+    ItemModel* leaf_path_model_ {};
     CString& separator_;
 
     const Section section_ {};

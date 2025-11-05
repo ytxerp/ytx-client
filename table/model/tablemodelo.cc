@@ -1,12 +1,12 @@
-#include "leafmodelo.h"
+#include "tablemodelo.h"
 
 #include <QJsonArray>
 
 #include "global/entryshadowpool.h"
 #include "websocket/jsongen.h"
 
-LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
-    : LeafModel { arg, parent }
+TableModelO::TableModelO(CTableModelArg& arg, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
+    : TableModel { arg, parent }
     , tree_model_i_ { static_cast<TreeModelI*>(tree_model_inventory) }
     , entry_hub_partner_ { static_cast<EntryHubP*>(entry_hub_partner) }
     , entry_hub_order_ { static_cast<EntryHubO*>(arg.entry_hub) }
@@ -14,7 +14,7 @@ LeafModelO::LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_mod
 {
 }
 
-void LeafModelO::SaveOrder(QJsonObject& order_cache)
+void TableModelO::SaveOrder(QJsonObject& order_cache)
 {
     // Skip if there are no shadow entries to save
     if (shadow_list_.isEmpty())
@@ -64,7 +64,7 @@ void LeafModelO::SaveOrder(QJsonObject& order_cache)
     entry_caches_.clear();
 }
 
-bool LeafModelO::HasUnsavedData() const
+bool TableModelO::HasUnsavedData() const
 {
     if (!deleted_entries_.isEmpty())
         return true;
@@ -78,7 +78,7 @@ bool LeafModelO::HasUnsavedData() const
     return false;
 }
 
-QVariant LeafModelO::data(const QModelIndex& index, int role) const
+QVariant TableModelO::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -116,7 +116,7 @@ QVariant LeafModelO::data(const QModelIndex& index, int role) const
     }
 }
 
-bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int role)
+bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
         return false;
@@ -201,7 +201,7 @@ bool LeafModelO::setData(const QModelIndex& index, const QVariant& value, int ro
     return true;
 }
 
-void LeafModelO::sort(int column, Qt::SortOrder order)
+void TableModelO::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0 && column <= info_.entry_header.size() - 1);
 
@@ -247,7 +247,7 @@ void LeafModelO::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-Qt::ItemFlags LeafModelO::flags(const QModelIndex& index) const
+Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
@@ -273,7 +273,7 @@ Qt::ItemFlags LeafModelO::flags(const QModelIndex& index) const
     return flags;
 }
 
-bool LeafModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
+bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
     if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
@@ -291,7 +291,7 @@ bool LeafModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
-bool LeafModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
+bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
     if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
@@ -327,7 +327,7 @@ bool LeafModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 /// @brief Update entry by customer product code (external_sku)
 /// @note Responsibility: Handle insertion and clearing, not deletion
 /// @note If mapping not found, rhs_node is cleared but entry is kept for later correction
-bool LeafModelO::UpdateExternalSku(EntryShadowO* entry_shadow, const QUuid& value)
+bool TableModelO::UpdateExternalSku(EntryShadowO* entry_shadow, const QUuid& value)
 {
     if (*entry_shadow->external_sku == value)
         return false;
@@ -376,7 +376,7 @@ bool LeafModelO::UpdateExternalSku(EntryShadowO* entry_shadow, const QUuid& valu
 /// @brief Update entry by internal product ID (rhs_node)
 /// @note Responsibility: Handle insertion and update, not deletion
 /// @note rhs_node must be valid, external_sku is auto-filled
-bool LeafModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int /*row*/)
+bool TableModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int /*row*/)
 {
     if (value.isNull())
         return false;
@@ -427,7 +427,7 @@ bool LeafModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
     return price_changed;
 }
 
-bool LeafModelO::UpdateRate(EntryShadow* entry_shadow, double value)
+bool TableModelO::UpdateRate(EntryShadow* entry_shadow, double value)
 {
     auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
 
@@ -452,7 +452,7 @@ bool LeafModelO::UpdateRate(EntryShadow* entry_shadow, double value)
     return true;
 }
 
-bool LeafModelO::UpdateUnitDiscount(EntryShadowO* entry_shadow, double value)
+bool TableModelO::UpdateUnitDiscount(EntryShadowO* entry_shadow, double value)
 {
     if (FloatEqual(*entry_shadow->unit_discount, value))
         return false;
@@ -474,7 +474,7 @@ bool LeafModelO::UpdateUnitDiscount(EntryShadowO* entry_shadow, double value)
     return true;
 }
 
-bool LeafModelO::UpdateMeasure(EntryShadowO* entry_shadow, double value)
+bool TableModelO::UpdateMeasure(EntryShadowO* entry_shadow, double value)
 {
     if (FloatEqual(*entry_shadow->measure, value))
         return false;
@@ -500,7 +500,7 @@ bool LeafModelO::UpdateMeasure(EntryShadowO* entry_shadow, double value)
     return true;
 }
 
-bool LeafModelO::UpdateCount(EntryShadowO* entry_shadow, double value)
+bool TableModelO::UpdateCount(EntryShadowO* entry_shadow, double value)
 {
     if (FloatEqual(*entry_shadow->count, value))
         return false;
@@ -516,7 +516,7 @@ bool LeafModelO::UpdateCount(EntryShadowO* entry_shadow, double value)
     return true;
 }
 
-bool LeafModelO::UpdateDescription(EntryShadowO* entry_shadow, const QString& value)
+bool TableModelO::UpdateDescription(EntryShadowO* entry_shadow, const QString& value)
 {
     if (*entry_shadow->description == value)
         return false;
@@ -532,7 +532,7 @@ bool LeafModelO::UpdateDescription(EntryShadowO* entry_shadow, const QString& va
     return true;
 }
 
-void LeafModelO::ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_sku) const
+void TableModelO::ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_sku) const
 {
     if (!shadow || !entry_hub_partner_ || internal_sku.isNull())
         return;
@@ -547,7 +547,7 @@ void LeafModelO::ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal
     }
 }
 
-void LeafModelO::ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_sku) const
+void TableModelO::ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_sku) const
 {
     if (!shadow || !entry_hub_partner_ || external_sku.isNull())
         return;
@@ -562,7 +562,7 @@ void LeafModelO::ResolveFromExternal(EntryShadowO* shadow, const QUuid& external
     }
 }
 
-void LeafModelO::RecalculateAmount(EntryShadowO* shadow) const
+void TableModelO::RecalculateAmount(EntryShadowO* shadow) const
 {
     if (!shadow)
         return;
@@ -580,7 +580,7 @@ void LeafModelO::RecalculateAmount(EntryShadowO* shadow) const
     *shadow->discount = discount;
 }
 
-void LeafModelO::PurifyEntryShadow()
+void TableModelO::PurifyEntryShadow()
 {
     // Remove entries with null rhs_node (internal SKU not selected).
     // Clears pending update cache for these entries and marks them as deleted.
@@ -597,7 +597,7 @@ void LeafModelO::PurifyEntryShadow()
     }
 }
 
-void LeafModelO::NormalizeEntryBuffer()
+void TableModelO::NormalizeEntryBuffer()
 {
     // Entries that were inserted and then deleted.
     // → These should be removed from both inserted_entries_ and deleted_entries_.

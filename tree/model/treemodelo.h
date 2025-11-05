@@ -47,11 +47,11 @@ public:
     void AckTree(const QJsonObject& obj) override;
     void SyncNodeName(const QUuid& node_id, const QString& name, const QJsonObject& meta) override;
 
-    int Status(QUuid node_id) const override { return NodeUtils::Value(node_model_, node_id, &NodeO::status); }
+    int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeO::status); }
     void SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta) override;
 
     bool InsertNode(int row, const QModelIndex& parent, Node* node) override;
-    QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_model_, node_id, &NodeO::partner); };
+    QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeO::partner); };
 
 protected:
     void RegisterPath(Node* /*node*/) override { };
@@ -69,7 +69,7 @@ protected:
     void ClearModel() override;
     void RegisterNode(Node* node) override
     {
-        node_model_.insert(node->id, node);
+        node_hash_.insert(node->id, node);
         node_cache_.insert(node->id, node);
     }
 };

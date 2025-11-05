@@ -1,19 +1,19 @@
-#include "leafwidgeto.h"
+#include "tablewidgeto.h"
 
 #include <QMessageBox>
 
 #include "component/signalblocker.h"
 #include "global/nodepool.h"
-#include "ui_leafwidgeto.h"
+#include "ui_tablewidgeto.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-LeafWidgetO::LeafWidgetO(CNodeOpArgO& arg, QWidget* parent)
-    : LeafWidget(parent)
-    , ui(new Ui::LeafWidgetO)
+TableWidgetO::TableWidgetO(CNodeOpArgO& arg, QWidget* parent)
+    : TableWidget(parent)
+    , ui(new Ui::TableWidgetO)
     , node_ { static_cast<NodeO*>(arg.node) }
     , sql_ { qobject_cast<EntryHubO*>(arg.entry_hub) }
-    , leaf_model_order_ { qobject_cast<LeafModelO*>(arg.leaf_model) }
+    , table_model_order_ { qobject_cast<TableModelO*>(arg.table_model) }
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
     , is_new_ { arg.is_new }
@@ -24,7 +24,7 @@ LeafWidgetO::LeafWidgetO(CNodeOpArgO& arg, QWidget* parent)
     , print_manager_ { arg.app_config, arg.tree_model_inventory, arg.tree_model_partner }
 {
     ui->setupUi(this);
-    leaf_model_order_->setParent(this);
+    table_model_order_->setParent(this);
     SignalBlocker blocker(this);
 
     IniWidget();
@@ -42,7 +42,7 @@ LeafWidgetO::LeafWidgetO(CNodeOpArgO& arg, QWidget* parent)
     LockWidgets(released);
 }
 
-LeafWidgetO::~LeafWidgetO()
+TableWidgetO::~TableWidgetO()
 {
     if (is_new_) {
         NodePool::Instance().Recycle(node_, Section::kSale);
@@ -51,16 +51,16 @@ LeafWidgetO::~LeafWidgetO()
     delete ui;
 }
 
-QTableView* LeafWidgetO::View() const { return ui->tableViewO; }
+QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
-bool LeafWidgetO::HasUnsavedData() const
+bool TableWidgetO::HasUnsavedData() const
 {
     const bool has_delta { initial_delta_ != 0.0 || final_delta_ != 0.0 || count_delta_ != 0.0 || measure_delta_ != 0.0 || discount_delta_ != 0.0 };
 
-    return has_delta || !node_cache_.isEmpty() || !node_delta_.isEmpty() || leaf_model_order_->HasUnsavedData();
+    return has_delta || !node_cache_.isEmpty() || !node_delta_.isEmpty() || table_model_order_->HasUnsavedData();
 }
 
-void LeafWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
+void TableWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
 {
     if (node_id_ != node_id)
         return;
@@ -84,7 +84,7 @@ void LeafWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double 
     IniUiValue();
 }
 
-void LeafWidgetO::IniWidget()
+void TableWidgetO::IniWidget()
 {
     pmodel_ = tree_model_partner_->IncludeUnitModel(partner_unit_);
     ui->comboPartner->setModel(pmodel_);
@@ -94,7 +94,7 @@ void LeafWidgetO::IniWidget()
     ui->comboEmployee->setModel(emodel_);
     ui->comboEmployee->setCurrentIndex(-1);
 
-    ui->tableViewO->setModel(leaf_model_order_);
+    ui->tableViewO->setModel(table_model_order_);
     ui->dateTimeEdit->setDisplayFormat(kDateTimeFST);
 
     ui->dSpinDiscountTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
@@ -121,13 +121,13 @@ void LeafWidgetO::IniWidget()
     }
 }
 
-void LeafWidgetO::IniConnect()
+void TableWidgetO::IniConnect()
 {
-    connect(rule_group_, &QButtonGroup::idClicked, this, &LeafWidgetO::RRuleGroupClicked);
-    connect(unit_group_, &QButtonGroup::idClicked, this, &LeafWidgetO::RUnitGroupClicked);
+    connect(rule_group_, &QButtonGroup::idClicked, this, &TableWidgetO::RRuleGroupClicked);
+    connect(unit_group_, &QButtonGroup::idClicked, this, &TableWidgetO::RUnitGroupClicked);
 }
 
-void LeafWidgetO::IniData(const QUuid& partner, const QUuid& employee)
+void TableWidgetO::IniData(const QUuid& partner, const QUuid& employee)
 {
     if (is_new_) {
         const auto date_time { QDateTime::currentDateTimeUtc() };
@@ -147,7 +147,7 @@ void LeafWidgetO::IniData(const QUuid& partner, const QUuid& employee)
     ui->comboEmployee->setCurrentIndex(employee_index);
 }
 
-void LeafWidgetO::LockWidgets(bool released)
+void TableWidgetO::LockWidgets(bool released)
 {
     const bool enable { !released };
 
@@ -166,7 +166,7 @@ void LeafWidgetO::LockWidgets(bool released)
     ui->pBtnPrint->setEnabled(released);
 }
 
-void LeafWidgetO::IniUnit(int unit)
+void TableWidgetO::IniUnit(int unit)
 {
     const UnitO kUnit { unit };
 
@@ -185,7 +185,7 @@ void LeafWidgetO::IniUnit(int unit)
     }
 }
 
-void LeafWidgetO::IniUiValue()
+void TableWidgetO::IniUiValue()
 {
     ui->dSpinFinalTotal->setValue(node_->final_total);
     ui->dSpinDiscountTotal->setValue(node_->discount_total);
@@ -194,9 +194,9 @@ void LeafWidgetO::IniUiValue()
     ui->dSpinInitialTotal->setValue(node_->initial_total);
 }
 
-void LeafWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true); }
+void TableWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true); }
 
-void LeafWidgetO::IniStatus(bool released)
+void TableWidgetO::IniStatus(bool released)
 {
     ui->pBtnStatus->setText(released ? tr("Recall") : tr("Released"));
     ui->pBtnStatus->setEnabled(node_->unit != std::to_underlying(UnitO::kPending));
@@ -208,14 +208,14 @@ void LeafWidgetO::IniStatus(bool released)
     }
 }
 
-void LeafWidgetO::IniRuleGroup()
+void TableWidgetO::IniRuleGroup()
 {
     rule_group_ = new QButtonGroup(this);
     rule_group_->addButton(ui->rBtnRO, static_cast<int>(Rule::kRO));
     rule_group_->addButton(ui->rBtnTO, static_cast<int>(Rule::kTO));
 }
 
-void LeafWidgetO::IniUnitGroup()
+void TableWidgetO::IniUnitGroup()
 {
     unit_group_ = new QButtonGroup(this);
     unit_group_->addButton(ui->rBtnIS, std::to_underlying(UnitO::kImmediate));
@@ -223,7 +223,7 @@ void LeafWidgetO::IniUnitGroup()
     unit_group_->addButton(ui->rBtnPEND, std::to_underlying(UnitO::kPending));
 }
 
-void LeafWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
+void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
 {
     const QUuid partner_id { ui->comboPartner->currentData().toUuid() };
     if (partner_id.isNull())
@@ -237,7 +237,7 @@ void LeafWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     }
 }
 
-void LeafWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
+void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 {
     const QUuid employee_id { ui->comboEmployee->currentData().toUuid() };
     node_->employee = employee_id;
@@ -247,7 +247,7 @@ void LeafWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
     }
 }
 
-void LeafWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
+void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
     node_->issued_time = date_time.toUTC();
 
@@ -256,7 +256,7 @@ void LeafWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
     }
 }
 
-void LeafWidgetO::on_lineDescription_textChanged(const QString& arg1)
+void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 {
     if (node_->description == arg1)
         return;
@@ -268,7 +268,7 @@ void LeafWidgetO::on_lineDescription_textChanged(const QString& arg1)
     }
 }
 
-void LeafWidgetO::RRuleGroupClicked(int id)
+void TableWidgetO::RRuleGroupClicked(int id)
 {
     node_->direction_rule = static_cast<bool>(id);
 
@@ -290,7 +290,7 @@ void LeafWidgetO::RRuleGroupClicked(int id)
     }
 }
 
-void LeafWidgetO::RUnitGroupClicked(int id)
+void TableWidgetO::RUnitGroupClicked(int id)
 {
     const UnitO unit { id };
 
@@ -322,7 +322,7 @@ void LeafWidgetO::RUnitGroupClicked(int id)
     }
 }
 
-void LeafWidgetO::on_pBtnStatus_toggled(bool checked)
+void TableWidgetO::on_pBtnStatus_toggled(bool checked)
 {
     if (!node_->settlement.isNull()) {
         QMessageBox::information(this, tr("Order Locked"), tr("This order has already been settled and cannot be modified."));
@@ -336,19 +336,19 @@ void LeafWidgetO::on_pBtnStatus_toggled(bool checked)
     LockWidgets(checked);
 }
 
-void LeafWidgetO::on_pBtnPrint_clicked()
+void TableWidgetO::on_pBtnPrint_clicked()
 {
     PreparePrint();
     print_manager_.Print();
 }
 
-void LeafWidgetO::on_pBtnPreview_clicked()
+void TableWidgetO::on_pBtnPreview_clicked()
 {
     PreparePrint();
     print_manager_.Preview();
 }
 
-void LeafWidgetO::PreparePrint()
+void TableWidgetO::PreparePrint()
 {
     print_manager_.LoadIni(ui->comboTemplate->currentData().toString());
 
@@ -369,16 +369,16 @@ void LeafWidgetO::PreparePrint()
 
     PrintData data { tree_model_partner_->Name(node_->partner), node_->issued_time.toLocalTime().toString(kDateTimeFST),
         tree_model_partner_->Name(node_->employee), unit, node_->initial_total };
-    print_manager_.SetData(data, leaf_model_order_->GetEntryShadowList());
+    print_manager_.SetData(data, table_model_order_->GetEntryShadowList());
 }
 
-void LeafWidgetO::on_pBtnSave_clicked()
+void TableWidgetO::on_pBtnSave_clicked()
 {
     QJsonObject order_cache {};
     order_cache.insert(kSection, std::to_underlying(section_));
     order_cache.insert(kSessionId, QString());
 
-    leaf_model_order_->SaveOrder(order_cache);
+    table_model_order_->SaveOrder(order_cache);
 
     if (is_new_) {
         const QJsonObject node_json { node_->WriteJson() };

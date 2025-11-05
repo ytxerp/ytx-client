@@ -22,13 +22,13 @@
 
 #include "entryhub/entryhub.h"
 
-struct LeafModelArg {
+struct TableModelArg {
     EntryHub* entry_hub {};
     CSectionInfo& info {};
     QUuid node_id {};
     bool direction_rule {};
 };
 
-using CLeafModelArg = const LeafModelArg;
+using CTableModelArg = const TableModelArg;
 
 #endif // ENTRYMODELARG_H

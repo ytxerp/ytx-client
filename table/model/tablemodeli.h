@@ -17,17 +17,17 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLEMODELFINANCE_H
-#define TABLEMODELFINANCE_H
+#ifndef TABLEMODELI_H
+#define TABLEMODELI_H
 
-#include "leafmodel.h"
+#include "tablemodel.h"
 
-class LeafModelF final : public LeafModel {
+class TableModelI final : public TableModel {
     Q_OBJECT
 
 public:
-    LeafModelF(CLeafModelArg& arg, QObject* parent = nullptr);
-    ~LeafModelF() override = default;
+    TableModelI(CTableModelArg& arg, QObject* parent = nullptr);
+    ~TableModelI() override = default;
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
@@ -37,13 +37,13 @@ public:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
 protected:
-    double CalculateBalance(EntryShadow* entry_shadow) override;
-
     bool UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit) override;
     // bool UpdateDebit(EntryShadow* entry_shadow, double value, int row) override;
     // bool UpdateCredit(EntryShadow* entry_shadow, double value, int row) override;
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
+
+    double CalculateBalance(EntryShadow* entry_shadow) override;
 };
 
-#endif // TABLEMODELFINANCE_H
+#endif // TABLEMODELI_H

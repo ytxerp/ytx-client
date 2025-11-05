@@ -17,27 +17,27 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LEAFWIDGETO_H
-#define LEAFWIDGETO_H
+#ifndef TABLEWIDGETO_H
+#define TABLEWIDGETO_H
 
 #include <QButtonGroup>
 
 #include "component/arg/nodeopargo.h"
 #include "entryhub/entryhubo.h"
-#include "leafwidget.h"
 #include "print/printmanager.h"
-#include "table/model/leafmodelo.h"
+#include "table/model/tablemodelo.h"
+#include "tablewidget.h"
 
 namespace Ui {
-class LeafWidgetO;
+class TableWidgetO;
 }
 
-class LeafWidgetO final : public LeafWidget {
+class TableWidgetO final : public TableWidget {
     Q_OBJECT
 
 public:
-    LeafWidgetO(CNodeOpArgO& arg, QWidget* parent = nullptr);
-    ~LeafWidgetO();
+    TableWidgetO(CNodeOpArgO& arg, QWidget* parent = nullptr);
+    ~TableWidgetO();
 
 signals:
     // send to TableModelOrder, MainWindow
@@ -54,7 +54,7 @@ public slots:
     void RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
 
 public:
-    LeafModel* Model() const override { return leaf_model_order_; }
+    TableModel* Model() const override { return table_model_order_; }
     QTableView* View() const override;
 
     void on_pBtnSave_clicked();
@@ -91,11 +91,11 @@ private:
     void PreparePrint();
 
 private:
-    Ui::LeafWidgetO* ui;
+    Ui::TableWidgetO* ui;
     NodeO* node_ {};
 
     EntryHubO* sql_ {};
-    LeafModelO* leaf_model_order_ {};
+    TableModelO* table_model_order_ {};
     TreeModel* tree_model_partner_ {};
     CSectionConfig& config_ {};
     QButtonGroup* rule_group_ {};
@@ -123,6 +123,6 @@ private:
     PrintManager print_manager_;
 };
 
-inline const char* kLeafWidgetO = "LeafWidgetO";
+inline const char* kTableWidgetO = "TableWidgetO";
 
-#endif // LEAFWIDGETO_H
+#endif // TABLEWIDGETO_H

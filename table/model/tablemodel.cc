@@ -1,4 +1,4 @@
-#include "leafmodel.h"
+#include "tablemodel.h"
 
 #include <QtConcurrent>
 
@@ -6,7 +6,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-LeafModel::LeafModel(CLeafModelArg& arg, QObject* parent)
+TableModel::TableModel(CTableModelArg& arg, QObject* parent)
     : QAbstractItemModel(parent)
     , entry_hub_ { arg.entry_hub }
     , info_ { arg.info }
@@ -16,13 +16,13 @@ LeafModel::LeafModel(CLeafModelArg& arg, QObject* parent)
 {
 }
 
-LeafModel::~LeafModel()
+TableModel::~TableModel()
 {
     FlushCaches();
     EntryShadowPool::Instance().Recycle(shadow_list_, section_);
 }
 
-void LeafModel::RDirectionRule(bool value)
+void TableModel::RDirectionRule(bool value)
 {
     for (auto* entry_shadow : std::as_const(shadow_list_))
         entry_shadow->balance = -entry_shadow->balance;
@@ -30,13 +30,13 @@ void LeafModel::RDirectionRule(bool value)
     direction_rule_ = value;
 }
 
-void LeafModel::RRefreshStatus()
+void TableModel::RRefreshStatus()
 {
     const int column { std::to_underlying(EntryEnum::kStatus) };
     emit dataChanged(index(0, column), index(rowCount() - 1, column));
 }
 
-void LeafModel::RRefreshField(const QUuid& entry_id, int start, int end)
+void TableModel::RRefreshField(const QUuid& entry_id, int start, int end)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -50,7 +50,7 @@ void LeafModel::RRefreshField(const QUuid& entry_id, int start, int end)
     emit dataChanged(index(row, start), index(row, end));
 }
 
-void LeafModel::RAppendOneEntry(Entry* entry)
+void TableModel::RAppendOneEntry(Entry* entry)
 {
     auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
     entry_shadow->BindEntry(entry, lhs_id_ == entry->lhs_node);
@@ -68,7 +68,7 @@ void LeafModel::RAppendOneEntry(Entry* entry)
     emit dataChanged(index(row, balance_column), index(row, balance_column));
 }
 
-void LeafModel::RRemoveOneEntry(const QUuid& entry_id)
+void TableModel::RRemoveOneEntry(const QUuid& entry_id)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -82,7 +82,7 @@ void LeafModel::RRemoveOneEntry(const QUuid& entry_id)
     AccumulateBalance(row);
 }
 
-void LeafModel::RUpdateBalance(const QUuid& entry_id)
+void TableModel::RUpdateBalance(const QUuid& entry_id)
 {
     const auto entry_index { GetIndex(entry_id) };
     const int row { entry_index.row() };
@@ -94,7 +94,7 @@ void LeafModel::RUpdateBalance(const QUuid& entry_id)
         AccumulateBalance(row);
 }
 
-void LeafModel::ActionEntry(EntryAction action)
+void TableModel::ActionEntry(EntryAction action)
 {
     if (shadow_list_.isEmpty())
         return;
@@ -131,7 +131,7 @@ void LeafModel::ActionEntry(EntryAction action)
     watcher->setFuture(future);
 }
 
-void LeafModel::AccumulateBalance(int start)
+void TableModel::AccumulateBalance(int start)
 {
     if (start <= -1 || start >= shadow_list_.size() || shadow_list_.isEmpty())
         return;
@@ -150,7 +150,7 @@ void LeafModel::AccumulateBalance(int start)
     emit dataChanged(index(start, balance_column), index(rowCount() - 1, balance_column));
 }
 
-void LeafModel::RestartTimer(const QUuid& id)
+void TableModel::RestartTimer(const QUuid& id)
 {
     if (entry_timers_.contains(id)) {
         entry_timers_[id]->stop();
@@ -177,7 +177,7 @@ void LeafModel::RestartTimer(const QUuid& id)
     entry_timers_[id]->start(kThreeThousand);
 }
 
-void LeafModel::FlushCaches()
+void TableModel::FlushCaches()
 {
     for (auto* timer : std::as_const(entry_timers_)) {
         timer->stop();
@@ -196,7 +196,7 @@ void LeafModel::FlushCaches()
     entry_caches_.clear();
 }
 
-QModelIndex LeafModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex TableModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -204,7 +204,7 @@ QModelIndex LeafModel::index(int row, int column, const QModelIndex& parent) con
     return createIndex(row, column);
 }
 
-QVariant LeafModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant TableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return info_.entry_header.at(section);
@@ -212,7 +212,7 @@ QVariant LeafModel::headerData(int section, Qt::Orientation orientation, int rol
     return QVariant();
 }
 
-int LeafModel::GetRhsRow(const QUuid& rhs_id) const
+int TableModel::GetRhsRow(const QUuid& rhs_id) const
 {
     int row { 0 };
 
@@ -225,7 +225,7 @@ int LeafModel::GetRhsRow(const QUuid& rhs_id) const
     return -1;
 }
 
-QModelIndex LeafModel::GetIndex(const QUuid& entry_id) const
+QModelIndex TableModel::GetIndex(const QUuid& entry_id) const
 {
     int row { 0 };
 
@@ -238,7 +238,7 @@ QModelIndex LeafModel::GetIndex(const QUuid& entry_id) const
     return QModelIndex();
 }
 
-bool LeafModel::insertRows(int row, int /*count*/, const QModelIndex& parent)
+bool TableModel::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
 
@@ -254,7 +254,7 @@ bool LeafModel::insertRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
-void LeafModel::RRemoveMultiEntry(const QSet<QUuid>& entry_id_set)
+void TableModel::RRemoveMultiEntry(const QSet<QUuid>& entry_id_set)
 {
     int min_row { std::numeric_limits<int>::max() };
 
@@ -274,7 +274,7 @@ void LeafModel::RRemoveMultiEntry(const QSet<QUuid>& entry_id_set)
         AccumulateBalance(min_row);
 }
 
-void LeafModel::RAppendMultiEntry(const EntryList& entry_list)
+void TableModel::RAppendMultiEntry(const EntryList& entry_list)
 {
     EntryShadowList shadow_list {};
     for (auto* entry : entry_list) {

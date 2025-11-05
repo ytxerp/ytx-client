@@ -6,11 +6,11 @@
 TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
 {
-    leaf_model_ = new ItemModel(this);
-    leaf_model_->AppendItem(QString(), QUuid());
+    leaf_path_model_ = new ItemModel(this);
+    leaf_path_model_->AppendItem(QString(), QUuid());
 }
 
-TreeModelP::~TreeModelP() { NodePool::Instance().Recycle(node_model_, section_); }
+TreeModelP::~TreeModelP() { NodePool::Instance().Recycle(node_hash_, section_); }
 
 void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta)
 {
@@ -19,7 +19,7 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta, doubl
     if (initial_delta == 0.0 && final_delta == 0.0)
         return;
 
-    auto* node { node_model_.value(node_id) };
+    auto* node { node_hash_.value(node_id) };
     if (!node || node == root_ || node->kind != std::to_underlying(NodeKind::kLeaf))
         return;
 
@@ -32,7 +32,7 @@ QList<QUuid> TreeModelP::PartnerList(CString& text, int unit) const
 {
     QList<QUuid> list {};
 
-    for (auto* node : node_model_)
+    for (auto* node : node_hash_)
         if (node->unit == unit && node->name.contains(text))
             list.emplaceBack(node->id);
 
@@ -59,7 +59,7 @@ QSortFilterProxyModel* TreeModelP::IncludeUnitModel(int unit)
 {
     auto* set { UnitSet(unit) };
     auto* model { new IncludeMultipleFilterModel(set, this) };
-    model->setSourceModel(leaf_model_);
+    model->setSourceModel(leaf_path_model_);
     QObject::connect(this, &TreeModel::SSyncFilterModel, model, &IncludeMultipleFilterModel::RSyncFilterModel);
     return model;
 }

@@ -17,32 +17,38 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LEAFMODELP_H
-#define LEAFMODELP_H
+#ifndef TABLEMODELT_H
+#define TABLEMODELT_H
 
-#include "leafmodel.h"
+#include "tablemodel.h"
+#include "tree/node.h"
 
-class LeafModelP final : public LeafModel {
+class TableModelT final : public TableModel {
     Q_OBJECT
 
-public slots:
-    void RAppendOneEntry(Entry* entry) override;
-    void RRemoveOneEntry(const QUuid& entry_id) override;
-
 public:
-    LeafModelP(CLeafModelArg& arg, QObject* parent = nullptr);
-    ~LeafModelP() override = default;
+    TableModelT(CTableModelArg& arg, const Node* node, QObject* parent = nullptr);
+    ~TableModelT() override = default;
 
-public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
+    bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
 protected:
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
+    bool UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit) override;
+    // bool UpdateDebit(EntryShadow* entry_shadow, double value, int row) override;
+    // bool UpdateCredit(EntryShadow* entry_shadow, double value, int row) override;
+    bool UpdateRate(EntryShadow* entry_shadow, double value) override;
+
+    double CalculateBalance(EntryShadow* entry_shadow) override;
+
+private:
+    const NodeT* d_node_ {};
 };
 
-#endif // LEAFMODELP_H
+#endif // TABLEMODELT_H

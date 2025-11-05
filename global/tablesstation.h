@@ -17,27 +17,27 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LEAFSSTATION_H
-#define LEAFSSTATION_H
+#ifndef TABLESSTATION_H
+#define TABLESSTATION_H
 
-#include "table/model/leafmodel.h"
+#include "table/model/tablemodel.h"
 
-// leaf model signal station
+// table model signal station
 
-class LeafSStation final : public QObject {
+class TableSStation final : public QObject {
     Q_OBJECT
 
 public:
-    static LeafSStation* Instance();
-    void RegisterModel(const QUuid& node_id, const LeafModel* model);
+    static TableSStation* Instance();
+    void RegisterModel(const QUuid& node_id, const TableModel* model);
     void DeregisterModel(const QUuid& node_id);
 
     void Clear() { model_hash_.clear(); }
 
-    LeafSStation(const LeafSStation&) = delete;
-    LeafSStation& operator=(const LeafSStation&) = delete;
-    LeafSStation(LeafSStation&&) = delete;
-    LeafSStation& operator=(LeafSStation&&) = delete;
+    TableSStation(const TableSStation&) = delete;
+    TableSStation& operator=(const TableSStation&) = delete;
+    TableSStation(TableSStation&&) = delete;
+    TableSStation& operator=(TableSStation&&) = delete;
 
 signals:
     // send to TableModel
@@ -62,17 +62,17 @@ public slots:
     void RUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
     // receive from EntryHub
-    void RRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
+    void RRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash);
     void RRemoveMultiEntry(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
     void RAppendMultiEntry(const QUuid& node_id, const EntryList& entry_list);
 
     void RRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
 
 private:
-    explicit LeafSStation(QObject* parent = nullptr);
-    ~LeafSStation() = default;
+    explicit TableSStation(QObject* parent = nullptr);
+    ~TableSStation() = default;
 
-    const LeafModel* FindModel(const QUuid& node_id) const
+    const TableModel* FindModel(const QUuid& node_id) const
     {
         auto it = model_hash_.constFind(node_id);
         if (it == model_hash_.constEnd())
@@ -82,7 +82,7 @@ private:
     }
 
 private:
-    QHash<QUuid, const LeafModel*> model_hash_ {};
+    QHash<QUuid, const TableModel*> model_hash_ {};
 };
 
-#endif // LEAFSSTATION_H
+#endif // TABLESSTATION_H

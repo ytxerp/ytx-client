@@ -124,14 +124,14 @@ set(SOURCES
     dialog/insertnode/insertnodebranch.cc
     table/entry.cc
     table/entryshadow.cc
-    table/widget/leafwidgetfipt.cc
-    table/widget/leafwidgeto.cc
-    table/model/leafmodeli.cc
-    table/model/leafmodelt.cc
-    table/model/leafmodelf.cc
-    table/model/leafmodel.cc
-    table/model/leafmodelo.cc
-    table/model/leafmodelp.cc
+    table/widget/tablewidgetfipt.cc
+    table/widget/tablewidgeto.cc
+    table/model/tablemodeli.cc
+    table/model/tablemodelt.cc
+    table/model/tablemodelf.cc
+    table/model/tablemodel.cc
+    table/model/tablemodelo.cc
+    table/model/tablemodelp.cc
     report/settlement.cc
     report/widget/refwidget.cc
     report/widget/statementwidget.cc
@@ -143,7 +143,7 @@ set(SOURCES
     report/model/settlementprimarymodel.cc
     report/model/statementmodel.cc
     global/logininfo.cc
-    global/leafsstation.cc
+    global/tablesstation.cc
     global/dailylogger.cc
     websocket/websocket.cc
     websocket/jsongen.cc
@@ -261,15 +261,15 @@ set(HEADERS
     dialog/insertnode/insertnodefinance.h
     table/entryshadow.h
     table/entry.h
-    table/widget/leafwidgetfipt.h
-    table/widget/leafwidgeto.h
-    table/widget/leafwidget.h
-    table/model/leafmodelp.h
-    table/model/leafmodelo.h
-    table/model/leafmodelt.h
-    table/model/leafmodelf.h
-    table/model/leafmodeli.h
-    table/model/leafmodel.h
+    table/widget/tablewidgetfipt.h
+    table/widget/tablewidgeto.h
+    table/widget/tablewidget.h
+    table/model/tablemodelp.h
+    table/model/tablemodelo.h
+    table/model/tablemodelt.h
+    table/model/tablemodelf.h
+    table/model/tablemodeli.h
+    table/model/tablemodel.h
     report/entryref.h
     report/statement.h
     report/settlement.h
@@ -290,7 +290,7 @@ set(HEADERS
     global/logininfo.h
     global/nodepool.h
     global/concepts.h
-    global/leafsstation.h
+    global/tablesstation.h
 )
 
 set(UIS
@@ -312,8 +312,8 @@ set(UIS
     dialog/insertnode/insertnodetask.ui
     dialog/insertnode/insertnodei.ui
     dialog/insertnode/insertnodefinance.ui
-    table/widget/leafwidgetfipt.ui
-    table/widget/leafwidgeto.ui
+    table/widget/tablewidgetfipt.ui
+    table/widget/tablewidgeto.ui
     report/widget/statementwidget.ui
     report/widget/settlementwidget.ui
     report/widget/refwidget.ui

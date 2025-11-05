@@ -147,16 +147,16 @@ bool IsDescendant(const Node* lhs, const Node* rhs);
 void SortIterative(Node* node, std::function<bool(const Node*, const Node*)> Compare);
 
 QString ConstructPath(const Node* root, const Node* node, CString& separator);
-void UpdatePath(UuidString& leaf, UuidString& branch, const Node* root, const Node* node, CString& separator);
+void UpdatePath(QHash<QUuid, QString>& leaf, QHash<QUuid, QString>& branch, const Node* root, const Node* node, CString& separator);
 
 void LeafPathBranchPathModel(CUuidString& leaf, CUuidString& branch, ItemModel* model);
 
 void RemoveItem(ItemModel* model, const QUuid& node_id);
 
-void UpdateModel(CUuidString& leaf, ItemModel* leaf_model, const Node* node);
-void UpdatePathSeparator(CString& old_separator, CString& new_separator, UuidString& source_path);
+void UpdateModel(const QHash<QUuid, QString>& leaf_path, ItemModel* leaf_path_model, const Node* node);
+void UpdatePathSeparator(CString& old_separator, CString& new_separator, QHash<QUuid, QString>& source_path);
 
-void UpdateModelFunction(ItemModel* model, CUuidSet& update_range, CUuidString& source_path);
+void UpdateModelFunction(ItemModel* model, const QSet<QUuid>& update_range, CUuidString& source_path);
 
 template <typename Field, typename Node> const Field& Value(CNodeHash& hash, const QUuid& node_id, Field Node::* member)
 {

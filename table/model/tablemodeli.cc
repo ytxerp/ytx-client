@@ -1,16 +1,16 @@
-#include "leafmodeli.h"
+#include "tablemodeli.h"
 
 #include "component/constant.h"
 #include "global/entryshadowpool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-LeafModelI::LeafModelI(CLeafModelArg& arg, QObject* parent)
-    : LeafModel { arg, parent }
+TableModelI::TableModelI(CTableModelArg& arg, QObject* parent)
+    : TableModel { arg, parent }
 {
 }
 
-QVariant LeafModelI::data(const QModelIndex& index, int role) const
+QVariant TableModelI::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -59,7 +59,7 @@ QVariant LeafModelI::data(const QModelIndex& index, int role) const
     }
 }
 
-bool LeafModelI::setData(const QModelIndex& index, const QVariant& value, int role)
+bool TableModelI::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
         return false;
@@ -74,13 +74,15 @@ bool LeafModelI::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case EntryEnumI::kIssuedTime:
-        EntryUtils::UpdateShadowIssuedTime(entry_caches_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowIssuedTime(
+            entry_caches_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumI::kCode:
         EntryUtils::UpdateShadowField(entry_caches_[id], shadow, kCode, value.toString(), &EntryShadow::code, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumI::kDocument:
-        EntryUtils::UpdateShadowDocument(entry_caches_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowDocument(
+            entry_caches_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumI::kStatus:
         EntryUtils::UpdateShadowField(entry_caches_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
@@ -108,7 +110,7 @@ bool LeafModelI::setData(const QModelIndex& index, const QVariant& value, int ro
     return true;
 }
 
-void LeafModelI::sort(int column, Qt::SortOrder order)
+void TableModelI::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0 && column <= info_.entry_header.size() - 1);
 
@@ -162,7 +164,7 @@ void LeafModelI::sort(int column, Qt::SortOrder order)
     AccumulateBalance(0);
 }
 
-Qt::ItemFlags LeafModelI::flags(const QModelIndex& index) const
+Qt::ItemFlags TableModelI::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
@@ -185,7 +187,7 @@ Qt::ItemFlags LeafModelI::flags(const QModelIndex& index) const
     return flags;
 }
 
-bool LeafModelI::UpdateRate(EntryShadow* entry_shadow, double value)
+bool TableModelI::UpdateRate(EntryShadow* entry_shadow, double value)
 {
     auto* d_shadow = DerivedPtr<EntryShadowI>(entry_shadow);
 
@@ -234,7 +236,7 @@ bool LeafModelI::UpdateRate(EntryShadow* entry_shadow, double value)
     return true;
 }
 
-bool LeafModelI::UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit)
+bool TableModelI::UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit)
 {
     auto* d_shadow { DerivedPtr<EntryShadowI>(entry_shadow) };
 
@@ -385,7 +387,7 @@ bool LeafModelI::UpdateCredit(EntryShadow* entry_shadow, double value, int row)
 }
 #endif
 
-bool LeafModelI::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row)
+bool TableModelI::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row)
 {
     if (value.isNull())
         return false;
@@ -486,13 +488,13 @@ bool LeafModelI::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value,
     return true;
 }
 
-double LeafModelI::CalculateBalance(EntryShadow* entry_shadow)
+double TableModelI::CalculateBalance(EntryShadow* entry_shadow)
 {
     auto* d_shadow { DerivedPtr<EntryShadowI>(entry_shadow) };
     return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*d_shadow->lhs_debit - *d_shadow->lhs_credit);
 }
 
-bool LeafModelI::removeRows(int row, int /*count*/, const QModelIndex& parent)
+bool TableModelI::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
 

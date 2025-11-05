@@ -5,10 +5,10 @@
 TreeModelF::TreeModelF(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
 {
-    leaf_model_ = new ItemModel(this);
+    leaf_path_model_ = new ItemModel(this);
 }
 
-TreeModelF::~TreeModelF() { NodePool::Instance().Recycle(node_model_, section_); }
+TreeModelF::~TreeModelF() { NodePool::Instance().Recycle(node_hash_, section_); }
 
 QVariant TreeModelF::data(const QModelIndex& index, int role) const
 {

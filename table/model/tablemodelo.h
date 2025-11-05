@@ -17,21 +17,21 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LEAFMODELO_H
-#define LEAFMODELO_H
+#ifndef TABLEMODELO_H
+#define TABLEMODELO_H
 
 #include "entryhub/entryhubo.h"
 #include "entryhub/entryhubp.h"
-#include "leafmodel.h"
+#include "tablemodel.h"
 #include "tree/model/treemodel.h"
 #include "tree/model/treemodeli.h"
 
-class LeafModelO final : public LeafModel {
+class TableModelO final : public TableModel {
     Q_OBJECT
 
 public:
-    LeafModelO(CLeafModelArg& arg, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
-    ~LeafModelO() override = default;
+    TableModelO(CTableModelArg& arg, const Node* node, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
+    ~TableModelO() override = default;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -73,4 +73,4 @@ private:
     QHash<QUuid, EntryShadow*> inserted_entries_ {};
 };
 
-#endif // LEAFMODELO_H
+#endif // TABLEMODELO_H

@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LEAFMODEL_H
-#define LEAFMODEL_H
+#ifndef TABLEMODEL_H
+#define TABLEMODEL_H
 
 #include <QAbstractItemModel>
 #include <QTimer>
@@ -31,15 +31,15 @@
 
 using CastUtils::DerivedPtr;
 
-class LeafModel : public QAbstractItemModel {
+class TableModel : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    virtual ~LeafModel();
-    LeafModel() = delete;
+    virtual ~TableModel();
+    TableModel() = delete;
 
 protected:
-    LeafModel(CLeafModelArg& arg, QObject* parent = nullptr);
+    TableModel(CTableModelArg& arg, QObject* parent = nullptr);
 
 signals:
     // send to TreeModel
@@ -149,4 +149,4 @@ protected:
     QHash<QUuid, QTimer*> entry_timers_ {};
 };
 
-#endif // LEAFMODEL_H
+#endif // TABLEMODEL_H

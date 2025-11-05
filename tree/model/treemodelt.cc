@@ -9,7 +9,7 @@
 TreeModelT::TreeModelT(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
 {
-    leaf_model_ = new ItemModel(this);
+    leaf_path_model_ = new ItemModel(this);
     node_cache_.insert(QUuid(), root_);
 }
 
@@ -248,7 +248,7 @@ void TreeModelT::AckTree(const QJsonObject& obj)
             node_cache_.insert(node->id, node);
         }
 
-        node_model_.insert(node->id, node);
+        node_hash_.insert(node->id, node);
     }
 
     for (const QJsonValue& val : path_array) {
@@ -257,8 +257,8 @@ void TreeModelT::AckTree(const QJsonObject& obj)
         const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
         const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
 
-        Node* ancestor { node_model_.value(ancestor_id) };
-        Node* descendant { node_model_.value(descendant_id) };
+        Node* ancestor { node_hash_.value(ancestor_id) };
+        Node* descendant { node_hash_.value(descendant_id) };
 
         assert((ancestor) && "Ancestor not found in node_model_");
         assert((descendant) && "Descendant not found in node_model_");
@@ -266,13 +266,13 @@ void TreeModelT::AckTree(const QJsonObject& obj)
         descendant->parent = ancestor;
     }
 
-    for (auto* node : std::as_const(node_model_)) {
+    for (auto* node : std::as_const(node_hash_)) {
         if (node->kind == std::to_underlying(NodeKind::kLeaf)) {
             node->parent->children.emplaceBack(node);
         }
     }
 
-    if (node_model_.size() >= 2) {
+    if (node_hash_.size() >= 2) {
         HandleNode();
     }
 
@@ -323,14 +323,14 @@ void TreeModelT::ResetBranch(Node* node)
 
 void TreeModelT::ClearModel()
 {
-    // Clear tree structure, paths and leaf_model
+    // Clear tree structure, paths and item_model
     root_->children.clear();
     leaf_path_.clear();
     branch_path_.clear();
-    leaf_model_->Clear();
+    leaf_path_model_->Clear();
 
     // Clear non-branch nodes from node_hash_, keep branch nodes and unfinishded nodes
-    for (auto it = node_model_.begin(); it != node_model_.end();) {
+    for (auto it = node_hash_.begin(); it != node_hash_.end();) {
         auto* node = static_cast<NodeT*>(it.value());
 
         if (node->kind == std::to_underlying(NodeKind::kBranch)) {
@@ -344,6 +344,6 @@ void TreeModelT::ClearModel()
             continue;
         }
 
-        it = node_model_.erase(it);
+        it = node_hash_.erase(it);
     }
 }

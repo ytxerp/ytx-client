@@ -17,32 +17,33 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LEAFWIDGET_H
-#define LEAFWIDGET_H
+#ifndef TABLEWIDGETFIPT_H
+#define TABLEWIDGETFIPT_H
 
-#include <QPointer>
 #include <QTableView>
-#include <QWidget>
 
-#include "table/model/leafmodel.h"
+#include "table/model/tablemodel.h"
+#include "table/widget/tablewidget.h"
 
-class LeafWidget : public QWidget {
+namespace Ui {
+class TableWidgetFIPT;
+}
+
+class TableWidgetFIPT final : public TableWidget {
     Q_OBJECT
 
 public:
-    virtual ~LeafWidget() = default;
+    explicit TableWidgetFIPT(TableModel* model, QWidget* parent = nullptr);
+    ~TableWidgetFIPT();
 
-    virtual LeafModel* Model() const = 0;
-    virtual QTableView* View() const = 0;
+    TableModel* Model() const override { return model_; }
+    QTableView* View() const override;
 
-protected:
-    explicit LeafWidget(QWidget* parent = nullptr)
-        : QWidget { parent }
-    {
-    }
+private:
+    Ui::TableWidgetFIPT* ui;
+    TableModel* model_ {};
 };
 
-using LeafWgtHash = QHash<QUuid, QPointer<LeafWidget>>;
-using CLeafWgtHash = const QHash<QUuid, QPointer<LeafWidget>>;
+inline const char* kTableWidgetFIPT = "TableWidgetFIPT";
 
-#endif // LEAFWIDGET_H
+#endif // TABLEWIDGETFIPT_H

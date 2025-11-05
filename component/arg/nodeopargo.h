@@ -22,7 +22,7 @@
 
 #include "component/config.h"
 #include "entryhub/entryhub.h"
-#include "table/model/leafmodel.h"
+#include "table/model/tablemodel.h"
 #include "tree/model/treemodel.h"
 #include "tree/node.h"
 
@@ -30,7 +30,7 @@
 struct NodeOpArgO {
     Node* node {};
     EntryHub* entry_hub {};
-    LeafModel* leaf_model {};
+    TableModel* table_model {};
     TreeModel* tree_model_partner {};
     TreeModel* tree_model_inventory;
     CAppConfig& app_config {};

@@ -17,7 +17,7 @@ TreeModelO::~TreeModelO() { NodePool::Instance().Recycle(node_cache_, section_);
 QSet<QUuid> TreeModelO::SyncDeltaImpl(
     const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
 {
-    auto* node { DerivedPtr<NodeO>(node_model_.value(node_id)) };
+    auto* node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
     assert(node && node->kind == std::to_underlying(NodeKind::kLeaf));
 
     if (first_delta == 0.0 && second_delta == 0.0 && initial_delta == 0.0 && discount_delta == 0.0 && final_delta == 0.0)
@@ -34,7 +34,7 @@ QSet<QUuid> TreeModelO::SyncDeltaImpl(
 
 void TreeModelO::RSyncStatus(const QUuid& node_id, bool value)
 {
-    auto* node { DerivedPtr<NodeO>(node_model_.value(node_id)) };
+    auto* node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
     assert(node);
 
     int coefficient { value ? 1 : -1 };
@@ -68,7 +68,7 @@ void TreeModelO::AckTree(const QJsonObject& obj)
             node_cache_.insert(node->id, node);
         }
 
-        node_model_.insert(node->id, node);
+        node_hash_.insert(node->id, node);
     }
 
     for (const QJsonValue& val : path_array) {
@@ -77,8 +77,8 @@ void TreeModelO::AckTree(const QJsonObject& obj)
         const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
         const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
 
-        Node* ancestor { node_model_.value(ancestor_id) };
-        Node* descendant { node_model_.value(descendant_id) };
+        Node* ancestor { node_hash_.value(ancestor_id) };
+        Node* descendant { node_hash_.value(descendant_id) };
 
         assert((ancestor) && "Ancestor not found in node_model_");
         assert((descendant) && "Descendant not found in node_model_");
@@ -86,13 +86,13 @@ void TreeModelO::AckTree(const QJsonObject& obj)
         descendant->parent = ancestor;
     }
 
-    for (auto* node : std::as_const(node_model_)) {
+    for (auto* node : std::as_const(node_hash_)) {
         if (node->kind == std::to_underlying(NodeKind::kLeaf)) {
             node->parent->children.emplaceBack(node);
         }
     }
 
-    if (node_model_.size() >= 2) {
+    if (node_hash_.size() >= 2) {
         HandleNode();
     }
 
@@ -152,7 +152,7 @@ bool TreeModelO::InsertNode(int row, const QModelIndex& parent, Node* node)
 
 void TreeModelO::UpdateName(const QUuid& node_id, CString& new_name)
 {
-    auto* node { node_model_.value(node_id) };
+    auto* node { node_hash_.value(node_id) };
     if (!node) {
         qCritical() << "UpdateName: node_id not found in node_hash_, node_id =" << node_id;
     }
@@ -224,7 +224,7 @@ QSet<QUuid> TreeModelO::SyncAncestorTotal(Node* node, double initial_delta, doub
 
 void TreeModelO::HandleNode()
 {
-    for (auto* node : std::as_const(node_model_)) {
+    for (auto* node : std::as_const(node_hash_)) {
         auto* d_node { DerivedPtr<NodeO>(node) };
 
         if (d_node->kind == std::to_underlying(NodeKind::kLeaf) && d_node->status == std::to_underlying(NodeStatus::kReleased))
@@ -251,7 +251,7 @@ void TreeModelO::ClearModel()
     root_->children.clear();
 
     // Clear non-branch nodes from node_hash_, keep branch nodes and unfinidhws nodes
-    for (auto it = node_model_.begin(); it != node_model_.end();) {
+    for (auto it = node_hash_.begin(); it != node_hash_.end();) {
         auto* node = static_cast<NodeO*>(it.value());
 
         if (node->kind == std::to_underlying(NodeKind::kBranch)) {
@@ -270,7 +270,7 @@ void TreeModelO::ClearModel()
             continue;
         }
 
-        it = node_model_.erase(it);
+        it = node_hash_.erase(it);
     }
 }
 

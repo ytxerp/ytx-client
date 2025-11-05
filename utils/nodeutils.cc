@@ -8,7 +8,7 @@
 
 namespace NodeUtils {
 
-void UpdatePath(UuidString& leaf, UuidString& branch, const Node* root, const Node* node, CString& separator)
+void UpdatePath(QHash<QUuid, QString>& leaf, QHash<QUuid, QString>& branch, const Node* root, const Node* node, CString& separator)
 {
     QQueue<const Node*> queue {};
     queue.enqueue(node);
@@ -119,7 +119,7 @@ void RemoveItem(ItemModel* model, const QUuid& node_id)
     }
 }
 
-void UpdateModel(CUuidString& leaf, ItemModel* leaf_model, const Node* node)
+void UpdateModel(const QHash<QUuid, QString>& leaf_path, ItemModel* leaf_path_model, const Node* node)
 {
     if (!node)
         return;
@@ -147,10 +147,10 @@ void UpdateModel(CUuidString& leaf, ItemModel* leaf_model, const Node* node)
         }
     }
 
-    UpdateModelFunction(leaf_model, leaf_range, leaf);
+    UpdateModelFunction(leaf_path_model, leaf_range, leaf_path);
 }
 
-void UpdatePathSeparator(CString& old_separator, CString& new_separator, UuidString& source_path)
+void UpdatePathSeparator(CString& old_separator, CString& new_separator, QHash<QUuid, QString>& source_path)
 {
     if (old_separator == new_separator || new_separator.isEmpty() || source_path.isEmpty())
         return;
@@ -159,7 +159,7 @@ void UpdatePathSeparator(CString& old_separator, CString& new_separator, UuidStr
         path.replace(old_separator, new_separator);
 }
 
-void UpdateModelFunction(ItemModel* model, CUuidSet& update_range, CUuidString& source_path)
+void UpdateModelFunction(ItemModel* model, const QSet<QUuid>& update_range, CUuidString& source_path)
 {
     if (!model || update_range.isEmpty() || source_path.isEmpty())
         return;

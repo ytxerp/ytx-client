@@ -34,10 +34,10 @@
 #include "component/sectioncontex.h"
 #include "entryhub/entryhub.h"
 #include "report/widget/settlementwidget.h"
-#include "table/model/leafmodel.h"
-#include "table/model/leafmodelo.h"
-#include "table/widget/leafwidgetfipt.h"
-#include "table/widget/leafwidgeto.h"
+#include "table/model/tablemodel.h"
+#include "table/model/tablemodelo.h"
+#include "table/widget/tablewidgetfipt.h"
+#include "table/widget/tablewidgeto.h"
 #include "tree/model/treemodel.h"
 #include "tree/model/treemodelo.h"
 
@@ -146,11 +146,11 @@ private:
     void SetTableViewFIPT(QTableView* table_view, int stretch_column, int lhs_node_column) const;
     void SetTableViewO(QTableView* table_view, int stretch_column, int lhs_node_column) const;
 
-    void TableConnectF(QTableView* table_view, LeafModel* table_model, TreeModel* tree_model) const;
-    void TableConnectI(QTableView* table_view, LeafModel* table_model, TreeModel* tree_model) const;
-    void TableConnectT(QTableView* table_view, LeafModel* table_model, TreeModel* tree_model) const;
-    void TableConnectP(QTableView* table_view, LeafModel* table_model) const;
-    void TableConnectO(QTableView* table_view, LeafModelO* table_model, TreeModelO* tree_model, LeafWidgetO* widget) const;
+    void TableConnectF(QTableView* table_view, TableModel* table_model, TreeModel* tree_model) const;
+    void TableConnectI(QTableView* table_view, TableModel* table_model, TreeModel* tree_model) const;
+    void TableConnectT(QTableView* table_view, TableModel* table_model, TreeModel* tree_model) const;
+    void TableConnectP(QTableView* table_view, TableModel* table_model) const;
+    void TableConnectO(QTableView* table_view, TableModelO* table_model, TreeModelO* tree_model, TableWidgetO* widget) const;
 
     void CreateLeafExternalReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit);
     void DelegateLeafExternalReference(QTableView* table_view, CSectionConfig& config) const;
@@ -215,7 +215,7 @@ private:
     void LeafExternalReferenceS(const QUuid& node_id, int unit);
     void OrderNodeLocation(Section section, const QUuid& node_id);
 
-    void FocusLeafWidget(const QUuid& node_id) const;
+    void FocusTableWidget(const QUuid& node_id) const;
 
     void RegisterRptWgt(const QUuid& report_id, ReportWidget* widget);
     void WriteConfig();
@@ -226,8 +226,8 @@ private:
     void SetRemoveShortcut();
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
-    inline bool IsLeafWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kLeafWidgetFIPT); }
-    inline bool IsLeafWidgetO(const QWidget* widget) { return widget && widget->inherits(kLeafWidgetO); }
+    inline bool IsTableWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kTableWidgetFIPT); }
+    inline bool IsTableWidgetO(const QWidget* widget) { return widget && widget->inherits(kTableWidgetO); }
 
 private:
     Ui::MainWindow* ui {};

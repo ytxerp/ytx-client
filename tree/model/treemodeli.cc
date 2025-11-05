@@ -7,11 +7,11 @@
 TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
 {
-    leaf_model_ = new ItemModel(this);
-    leaf_model_->AppendItem(QString(), QUuid());
+    leaf_path_model_ = new ItemModel(this);
+    leaf_path_model_->AppendItem(QString(), QUuid());
 }
 
-TreeModelI::~TreeModelI() { NodePool::Instance().Recycle(node_model_, section_); }
+TreeModelI::~TreeModelI() { NodePool::Instance().Recycle(node_hash_, section_); }
 
 void TreeModelI::RemoveUnitSet(const QUuid& node_id, int unit)
 {
@@ -250,7 +250,7 @@ QSortFilterProxyModel* TreeModelI::IncludeUnitModel(int unit)
 {
     auto* set { UnitSet(unit) };
     auto* model { new IncludeMultipleFilterModel(set, this) };
-    model->setSourceModel(leaf_model_);
+    model->setSourceModel(leaf_path_model_);
     QObject::connect(this, &TreeModel::SSyncFilterModel, model, &IncludeMultipleFilterModel::RSyncFilterModel);
     return model;
 }
@@ -259,7 +259,7 @@ QSortFilterProxyModel* TreeModelI::ExcludeMultipleModel(const QUuid& node_id, in
 {
     auto* set { UnitSet(unit) };
     auto* model { new ExcludeMultipleFilterModel(node_id, set, this) };
-    model->setSourceModel(leaf_model_);
+    model->setSourceModel(leaf_path_model_);
     QObject::connect(this, &TreeModel::SSyncFilterModel, model, &ExcludeMultipleFilterModel::RSyncFilterModel);
     return model;
 }

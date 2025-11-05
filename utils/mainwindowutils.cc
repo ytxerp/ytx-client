@@ -156,7 +156,7 @@ QString MainWindowUtils::SectionFile(const QString& email, const QString& worksp
     return file_name;
 }
 
-void MainWindowUtils::AppendEntry(LeafWidget* widget, Section section)
+void MainWindowUtils::AppendEntry(TableWidget* widget, Section section)
 {
     assert(widget);
 
@@ -175,7 +175,7 @@ void MainWindowUtils::AppendEntry(LeafWidget* widget, Section section)
     }
 }
 
-void MainWindowUtils::RemoveEntry(LeafWidget* widget)
+void MainWindowUtils::RemoveEntry(TableWidget* widget)
 {
     assert(widget);
 
