@@ -21,14 +21,12 @@
 #define ORDERWIDGETARG_H
 
 #include "component/config.h"
-#include "entryhub/entryhub.h"
 #include "table/model/tablemodel.h"
 #include "tree/model/treemodel.h"
 #include "tree/node.h"
 
 struct OrderWidgetArg {
     NodeO* node {};
-    EntryHub* entry_hub {};
     TableModel* table_model {};
     TreeModel* tree_model_partner {};
     TreeModel* tree_model_inventory;

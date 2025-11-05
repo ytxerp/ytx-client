@@ -23,7 +23,6 @@
 #include <QButtonGroup>
 
 #include "component/arg/orderwidgetarg.h"
-#include "entryhub/entryhubo.h"
 #include "print/printmanager.h"
 #include "table/model/tablemodelo.h"
 #include "tablewidget.h"
@@ -40,13 +39,13 @@ public:
     ~TableWidgetO();
 
 signals:
-    // send to TableModelOrder, MainWindow
+    // send to MainWindow
     void SSyncPartner(const QUuid& node_id, const QUuid& value);
 
     // send to TreeModelOrder
     void SSyncStatus(const QUuid& node_id, bool value);
 
-    // send to its widget
+    // send to its lambda
     void SInsertOrder();
 
 public slots:
@@ -96,7 +95,6 @@ private:
     NodeO* node_ {};
     NodeO tmp_node_ {};
 
-    EntryHubO* sql_ {};
     TableModelO* table_model_order_ {};
     TreeModel* tree_model_partner_ {};
     CSectionConfig& config_ {};
@@ -118,7 +116,6 @@ private:
     double discount_delta_ {};
 
     const QUuid node_id_ {};
-    const int partner_unit_ {};
     const Section section_ {};
 
     const QMap<QString, QString>& print_template_ {};

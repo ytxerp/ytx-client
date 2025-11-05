@@ -13,13 +13,11 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, QWidget* parent)
     , ui(new Ui::TableWidgetO)
     , node_ { arg.node }
     , tmp_node_ { *node_ }
-    , sql_ { qobject_cast<EntryHubO*>(arg.entry_hub) }
     , table_model_order_ { qobject_cast<TableModelO*>(arg.table_model) }
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
     , is_new_ { arg.is_new }
     , node_id_ { tmp_node_.id }
-    , partner_unit_ { arg.section == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor) }
     , section_ { arg.section }
     , print_template_ { arg.print_template }
     , print_manager_ { arg.app_config, arg.tree_model_inventory, arg.tree_model_partner }
@@ -88,7 +86,7 @@ void TableWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double
 
 void TableWidgetO::IniWidget()
 {
-    pmodel_ = tree_model_partner_->IncludeUnitModel(partner_unit_);
+    pmodel_ = tree_model_partner_->IncludeUnitModel(section_ == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor));
     ui->comboPartner->setModel(pmodel_);
     ui->comboPartner->setCurrentIndex(-1);
 
@@ -391,7 +389,7 @@ void TableWidgetO::SaveOrder()
 
         QJsonObject path_json {};
         path_json.insert(kAncestor, tmp_node_.parent->id.toString(QUuid::WithoutBraces));
-        path_json.insert(kDescendant, tmp_node_.id.toString(QUuid::WithoutBraces));
+        path_json.insert(kDescendant, node_id_.toString(QUuid::WithoutBraces));
 
         order_cache.insert(kNode, node_json); // Meta info will be appended in service
         order_cache.insert(kPath, path_json);
@@ -407,7 +405,7 @@ void TableWidgetO::SaveOrder()
         node_delta_.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
         node_delta_.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
 
-        order_cache.insert(kNodeId, tmp_node_.id.toString(QUuid::WithoutBraces));
+        order_cache.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
         order_cache.insert(kNodeCache, node_cache_);
         order_cache.insert(kNodeDelta, node_delta_);
 

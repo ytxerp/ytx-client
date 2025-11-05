@@ -455,7 +455,6 @@ void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row
 
     OrderWidgetArg order_arg {
         node,
-        entry_hub,
         table_model,
         tree_model_p,
         tree_model_i,
@@ -522,7 +521,6 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 
     OrderWidgetArg order_arg {
         node,
-        entry_hub,
         table_model,
         tree_model_p,
         tree_model_i,
