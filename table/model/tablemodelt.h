@@ -45,7 +45,7 @@ protected:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
 
     double CalculateBalance(EntryShadow* entry_shadow) override;
-    bool CanInsertRows() const override { return d_node_->status == std::to_underlying(NodeStatus::kDraft); }
+    bool CanInsertRows() const override { return d_node_->status == std::to_underlying(NodeStatus::kRecalled); }
 
 private:
     const NodeT* d_node_ {};

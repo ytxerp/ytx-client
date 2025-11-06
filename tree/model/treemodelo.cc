@@ -260,7 +260,7 @@ void TreeModelO::ClearModel()
             continue;
         }
 
-        if (node->status == std::to_underlying(NodeStatus::kDraft)) {
+        if (node->status == std::to_underlying(NodeStatus::kRecalled)) {
             ++it;
             continue;
         }

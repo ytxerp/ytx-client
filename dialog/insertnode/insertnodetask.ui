@@ -226,9 +226,9 @@
        <number>8</number>
       </property>
       <item>
-       <widget class="QRadioButton" name="rBtnDraft">
+       <widget class="QRadioButton" name="rBtnRecalled">
         <property name="text">
-         <string>Draft</string>
+         <string>Recalled</string>
         </property>
        </widget>
       </item>
@@ -432,14 +432,14 @@
    <header location="global">widget/combobox.h</header>
   </customwidget>
   <customwidget>
-   <class>PlainTextEdit</class>
-   <extends>QPlainTextEdit</extends>
-   <header location="global">widget/plaintextedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>DateTimeEdit</class>
    <extends>QDateTimeEdit</extends>
    <header location="global">widget/datetimeedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PlainTextEdit</class>
+   <extends>QPlainTextEdit</extends>
+   <header location="global">widget/plaintextedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -48,7 +48,7 @@ public:
 private:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
-    bool CanInsertRows() const override { return d_node_->status == std::to_underlying(NodeStatus::kDraft); }
+    bool CanInsertRows() const override { return d_node_->status == std::to_underlying(NodeStatus::kRecalled); }
     void InitShadow(EntryShadow* entry_shadow) const override
     {
         assert(entry_shadow->lhs_node != nullptr);
