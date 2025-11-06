@@ -340,8 +340,8 @@ void TableWidgetO::on_pBtnStatus_toggled(bool checked)
         return;
     }
 
-    tmp_node_.status = checked;
-    node_->status = checked;
+    tmp_node_.status = static_cast<int>(checked);
+    node_->status = static_cast<int>(checked);
 
     if (!is_new_ && checked) {
         node_cache_.insert(kStatus, checked);
