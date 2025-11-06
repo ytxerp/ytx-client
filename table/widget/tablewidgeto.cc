@@ -57,7 +57,7 @@ bool TableWidgetO::HasUnsavedData() const
 {
     const bool has_delta { initial_delta_ != 0.0 || final_delta_ != 0.0 || count_delta_ != 0.0 || measure_delta_ != 0.0 || discount_delta_ != 0.0 };
 
-    return has_delta || !node_cache_.isEmpty() || !node_delta_.isEmpty() || table_model_order_->HasUnsavedData();
+    return has_delta || !node_cache_.isEmpty() || table_model_order_->HasUnsavedData();
 }
 
 void TableWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
@@ -325,7 +325,7 @@ void TableWidgetO::RUnitGroupClicked(int id)
 void TableWidgetO::on_pBtnStatus_toggled(bool checked)
 {
     if (!tmp_node_.settlement.isNull()) {
-        QMessageBox::information(this, tr("Order Locked"), tr("This order has already been settled and cannot be modified."));
+        QMessageBox::information(this, tr("Order Settled"), tr("This order has already been settled and cannot be modified."));
         return;
     }
 
@@ -376,6 +376,9 @@ void TableWidgetO::PreparePrint()
 
 void TableWidgetO::SaveOrder()
 {
+    if (!HasUnsavedData())
+        return;
+
     *node_ = tmp_node_;
 
     QJsonObject order_cache {};
@@ -399,15 +402,17 @@ void TableWidgetO::SaveOrder()
         emit SInsertOrder();
         is_new_ = false;
     } else {
-        node_delta_.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
-        node_delta_.insert(kFinalDelta, QString::number(final_delta_, 'f', kMaxNumericScale_4));
-        node_delta_.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
-        node_delta_.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
-        node_delta_.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
+        QJsonObject node_delta {};
+
+        node_delta.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kFinalDelta, QString::number(final_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
 
         order_cache.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
         order_cache.insert(kNodeCache, node_cache_);
-        order_cache.insert(kNodeDelta, node_delta_);
+        order_cache.insert(kNodeDelta, node_delta);
 
         WebSocket::Instance()->SendMessage(kOrderUpdate, order_cache);
 
