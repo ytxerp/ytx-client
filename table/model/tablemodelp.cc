@@ -24,17 +24,19 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
     shadow_list_.removeAt(row);
     endRemoveRows();
 
+    const auto entry_id { *entry_shadow->id };
+
     if (!rhs_node_id.isNull()) {
         QJsonObject message {};
         message.insert(kSection, std::to_underlying(section_));
         message.insert(kSessionId, QString());
-        message.insert(kEntryId, entry_shadow->id->toString(QUuid::WithoutBraces));
+        message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
 
         WebSocket::Instance()->SendMessage(kEntryRemove, message);
     }
 
     EntryShadowPool::Instance().Recycle(entry_shadow, section_);
-    emit SRemoveEntry(*entry_shadow->id);
+    emit SRemoveEntry(entry_id);
     return true;
 }
 
