@@ -2833,19 +2833,19 @@ Download now?</source>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="332"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="379"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="383"/>
         <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="339"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="376"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="380"/>
         <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="346"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="382"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="386"/>
         <source>PEND</source>
         <translation>挂帐</translation>
     </message>
