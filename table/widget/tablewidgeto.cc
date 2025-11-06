@@ -65,6 +65,14 @@ void TableWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double
     if (node_id_ != node_id)
         return;
 
+    if (tmp_node_.direction_rule == Rule::kRO) {
+        initial_delta *= -1;
+        final_delta *= -1;
+        count_delta *= -1;
+        measure_delta *= -1;
+        discount_delta *= -1;
+    }
+
     const double adjusted_final_delta { tmp_node_.unit == std::to_underlying(UnitO::kImmediate) ? final_delta : 0.0 };
 
     tmp_node_.count_total += count_delta;
@@ -164,7 +172,8 @@ void TableWidgetO::LockWidgets(bool released)
     ui->lineDescription->setReadOnly(released);
     ui->dateTimeEdit->setReadOnly(released);
 
-    ui->pBtnPrint->setEnabled(released);
+    const bool can_print { released || tmp_node_.unit == std::to_underlying(UnitO::kPending) };
+    ui->pBtnPrint->setEnabled(can_print);
 }
 
 void TableWidgetO::IniUnit(int unit)
@@ -199,7 +208,7 @@ void TableWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChe
 
 void TableWidgetO::IniStatus(bool released)
 {
-    ui->pBtnStatus->setText(released ? tr("Recall") : tr("Released"));
+    ui->pBtnStatus->setText(released ? tr("Recall") : tr("Release"));
     ui->pBtnStatus->setEnabled(tmp_node_.unit != std::to_underlying(UnitO::kPending));
 
     if (released) {
@@ -283,11 +292,11 @@ void TableWidgetO::RRuleGroupClicked(int id)
 
     if (!is_new_) {
         node_cache_.insert(kDirectionRule, tmp_node_.direction_rule);
-        count_delta_ *= -2;
-        measure_delta_ *= -2;
-        initial_delta_ *= -2;
-        discount_delta_ *= -2;
-        final_delta_ *= -2;
+        initial_delta_ = -initial_delta_;
+        final_delta_ = -final_delta_;
+        count_delta_ = -count_delta_;
+        measure_delta_ = -measure_delta_;
+        discount_delta_ = -discount_delta_;
     }
 }
 
@@ -317,6 +326,7 @@ void TableWidgetO::RUnitGroupClicked(int id)
 
     tmp_node_.unit = id;
     ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
+    ui->pBtnPrint->setEnabled(unit == UnitO::kPending);
 
     if (!is_new_) {
         node_cache_.insert(kUnit, id);
