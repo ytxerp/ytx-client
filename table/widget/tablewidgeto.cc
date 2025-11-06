@@ -45,7 +45,7 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, QWidget* parent)
 TableWidgetO::~TableWidgetO()
 {
     if (is_new_) {
-        NodePool::Instance().Recycle(node_, Section::kSale);
+        NodePool::Instance().Recycle(node_, section_);
     }
 
     delete ui;
