@@ -572,9 +572,9 @@ QString TreeModel::Path(const QUuid& node_id) const
     return {};
 }
 
-QSortFilterProxyModel* TreeModel::ExcludeOneModel(const QUuid& node_id)
+QSortFilterProxyModel* TreeModel::ExcludeOneModel(const QUuid& node_id, QObject* parent)
 {
-    auto* model { new ExcludeOneFilterModel(node_id, this) };
+    auto* model { new ExcludeOneFilterModel(node_id, parent) };
     model->setSourceModel(leaf_path_model_);
     return model;
 }

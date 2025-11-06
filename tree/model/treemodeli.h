@@ -38,8 +38,8 @@ public:
     const QString& Color(const QUuid& node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeI::color); }
     double UnitPrice(const QUuid& node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeI::unit_price); }
 
-    QSortFilterProxyModel* IncludeUnitModel(int unit) override;
-    QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& node_id, int unit) override;
+    QSortFilterProxyModel* IncludeUnitModel(int unit, QObject* parent) override;
+    QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& node_id, int unit, QObject* parent) override;
     void ResetColor(const QModelIndex& index) override;
 
 protected:

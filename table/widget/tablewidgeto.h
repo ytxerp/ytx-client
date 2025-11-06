@@ -101,9 +101,6 @@ private:
     QButtonGroup* rule_group_ {};
     QButtonGroup* unit_group_ {};
 
-    QSortFilterProxyModel* emodel_ {};
-    QSortFilterProxyModel* pmodel_ {};
-
     bool is_new_ {};
 
     QJsonObject node_cache_ {};

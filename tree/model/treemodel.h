@@ -60,10 +60,6 @@ signals:
     // send to NodeWidget
     void STotalsUpdated();
 
-    // send to FilterModel
-    // Inserting or removing a node will trigger it automatically; manually trigger it only when changing the unit.
-    void SSyncFilterModel();
-
 public slots:
     // receive from RemoveDialog
     void RRemoveNode(const QUuid& node_id);
@@ -174,7 +170,7 @@ public:
 
     QModelIndex GetIndex(const QUuid& node_id) const;
     Node* GetNodeByIndex(const QModelIndex& index) const;
-    QSortFilterProxyModel* ExcludeOneModel(const QUuid& node_id);
+    QSortFilterProxyModel* ExcludeOneModel(const QUuid& node_id, QObject* parent);
 
     // virtual functions
     virtual bool InsertNode(int row, const QModelIndex& parent, Node* node);
@@ -187,16 +183,18 @@ public:
         return false;
     }
 
-    virtual QSortFilterProxyModel* IncludeUnitModel(int unit)
+    virtual QSortFilterProxyModel* IncludeUnitModel(int unit, QObject* parent)
     {
         Q_UNUSED(unit)
+        Q_UNUSED(parent)
         return nullptr;
     }
 
-    virtual QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& node_id, int unit)
+    virtual QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& node_id, int unit, QObject* parent)
     {
         Q_UNUSED(unit)
         Q_UNUSED(node_id)
+        Q_UNUSED(parent)
         return nullptr;
     }
 

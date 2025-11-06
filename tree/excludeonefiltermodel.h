@@ -25,7 +25,7 @@
 
 #include "tree/itemmodel.h"
 
-class ExcludeOneFilterModel : public QSortFilterProxyModel {
+class ExcludeOneFilterModel final : public QSortFilterProxyModel {
 public:
     explicit ExcludeOneFilterModel(const QUuid& node_id, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }

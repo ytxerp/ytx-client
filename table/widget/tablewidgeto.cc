@@ -86,12 +86,13 @@ void TableWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double
 
 void TableWidgetO::IniWidget()
 {
-    pmodel_ = tree_model_partner_->IncludeUnitModel(section_ == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor));
-    ui->comboPartner->setModel(pmodel_);
+    auto* pmodel { tree_model_partner_->IncludeUnitModel(
+        section_ == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor), this) };
+    ui->comboPartner->setModel(pmodel);
     ui->comboPartner->setCurrentIndex(-1);
 
-    emodel_ = tree_model_partner_->IncludeUnitModel(std::to_underlying(UnitP::kEmployee));
-    ui->comboEmployee->setModel(emodel_);
+    auto* emodel { tree_model_partner_->IncludeUnitModel(std::to_underlying(UnitP::kEmployee), this) };
+    ui->comboEmployee->setModel(emodel);
     ui->comboEmployee->setCurrentIndex(-1);
 
     ui->tableViewO->setModel(table_model_order_);
@@ -330,10 +331,15 @@ void TableWidgetO::on_pBtnStatus_toggled(bool checked)
     }
 
     tmp_node_.status = checked;
+    node_->status = checked;
+
     emit SSyncStatus(node_id_, checked);
 
     IniStatus(checked);
     LockWidgets(checked);
+
+    QJsonObject message { JsonGen::NodeStatus(section_, node_id_, checked) };
+    WebSocket::Instance()->SendMessage(kNodeStatus, message);
 }
 
 void TableWidgetO::on_pBtnSave_clicked() { SaveOrder(); }

@@ -25,12 +25,7 @@
 
 #include "tree/itemmodel.h"
 
-class IncludeMultipleFilterModel : public QSortFilterProxyModel {
-    Q_OBJECT
-
-public slots:
-    void RSyncFilterModel() { invalidateRowsFilter(); }
-
+class IncludeMultipleFilterModel final : public QSortFilterProxyModel {
 public:
     explicit IncludeMultipleFilterModel(const QSet<QUuid>* set, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }

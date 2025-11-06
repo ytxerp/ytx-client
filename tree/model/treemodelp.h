@@ -40,7 +40,7 @@ public:
 
     QList<QUuid> PartnerList(CString& text, int unit) const;
 
-    QSortFilterProxyModel* IncludeUnitModel(int unit) override;
+    QSortFilterProxyModel* IncludeUnitModel(int unit, QObject* parent) override;
 
 protected:
     const QSet<QUuid>* UnitSet(int unit) const override;

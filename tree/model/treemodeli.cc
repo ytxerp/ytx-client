@@ -246,21 +246,19 @@ Qt::ItemFlags TreeModelI::flags(const QModelIndex& index) const
     return flags;
 }
 
-QSortFilterProxyModel* TreeModelI::IncludeUnitModel(int unit)
+QSortFilterProxyModel* TreeModelI::IncludeUnitModel(int unit, QObject* parent)
 {
     auto* set { UnitSet(unit) };
-    auto* model { new IncludeMultipleFilterModel(set, this) };
+    auto* model { new IncludeMultipleFilterModel(set, parent) };
     model->setSourceModel(leaf_path_model_);
-    QObject::connect(this, &TreeModel::SSyncFilterModel, model, &IncludeMultipleFilterModel::RSyncFilterModel);
     return model;
 }
 
-QSortFilterProxyModel* TreeModelI::ExcludeMultipleModel(const QUuid& node_id, int unit)
+QSortFilterProxyModel* TreeModelI::ExcludeMultipleModel(const QUuid& node_id, int unit, QObject* parent)
 {
     auto* set { UnitSet(unit) };
-    auto* model { new ExcludeMultipleFilterModel(node_id, set, this) };
+    auto* model { new ExcludeMultipleFilterModel(node_id, set, parent) };
     model->setSourceModel(leaf_path_model_);
-    QObject::connect(this, &TreeModel::SSyncFilterModel, model, &ExcludeMultipleFilterModel::RSyncFilterModel);
     return model;
 }
 

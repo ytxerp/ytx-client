@@ -55,12 +55,11 @@ const QSet<QUuid>* TreeModelP::UnitSet(int unit) const
     }
 }
 
-QSortFilterProxyModel* TreeModelP::IncludeUnitModel(int unit)
+QSortFilterProxyModel* TreeModelP::IncludeUnitModel(int unit, QObject* parent)
 {
     auto* set { UnitSet(unit) };
-    auto* model { new IncludeMultipleFilterModel(set, this) };
+    auto* model { new IncludeMultipleFilterModel(set, parent) };
     model->setSourceModel(leaf_path_model_);
-    QObject::connect(this, &TreeModel::SSyncFilterModel, model, &IncludeMultipleFilterModel::RSyncFilterModel);
     return model;
 }
 
