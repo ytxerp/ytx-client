@@ -35,6 +35,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
+    bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
 protected:
@@ -45,7 +46,6 @@ protected:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
 
     double CalculateBalance(EntryShadow* entry_shadow) override;
-    bool CanInsertRows() const override { return d_node_->status == std::to_underlying(NodeStatus::kRecalled); }
 
 private:
     const NodeT* d_node_ {};

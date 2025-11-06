@@ -437,6 +437,19 @@ double TableModelT::CalculateBalance(EntryShadow* entry_shadow)
     return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*d_shadow->lhs_debit - *d_shadow->lhs_credit);
 }
 
+bool TableModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
+{
+    assert(row >= 0 && row <= rowCount(parent));
+    if (d_node_->status != std::to_underlying(NodeStatus::kRecalled))
+        return false;
+
+    auto* entry_shadow { InsertRowsImpl(row, parent) };
+    *entry_shadow->issued_time = QDateTime::currentDateTimeUtc();
+
+    emit SInsertEntry(entry_shadow->entry);
+    return true;
+}
+
 bool TableModelT::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);

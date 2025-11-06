@@ -274,6 +274,19 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
     return flags;
 }
 
+bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
+{
+    assert(row >= 0 && row <= rowCount(parent));
+    if (d_node_->status != std::to_underlying(NodeStatus::kRecalled))
+        return false;
+
+    auto* entry_shadow { InsertRowsImpl(row, parent) };
+
+    inserted_entries_.insert(*entry_shadow->id, entry_shadow);
+    emit SInsertEntry(entry_shadow->entry);
+    return true;
+}
+
 bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);

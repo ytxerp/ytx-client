@@ -38,6 +38,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
+    bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
     bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
 
     const QList<EntryShadow*>& GetEntryShadowList() { return shadow_list_; }
@@ -48,12 +49,6 @@ public:
 private:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
-    bool CanInsertRows() const override { return d_node_->status == std::to_underlying(NodeStatus::kRecalled); }
-    void InitShadow(EntryShadow* entry_shadow) const override
-    {
-        assert(entry_shadow->lhs_node != nullptr);
-        *entry_shadow->lhs_node = lhs_id_;
-    }
 
     bool UpdateExternalSku(EntryShadowO* entry_shadow, const QUuid& value);
     bool UpdateUnitDiscount(EntryShadowO* entry_shadow, double value);

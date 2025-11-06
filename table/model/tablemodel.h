@@ -96,16 +96,6 @@ protected:
         return false;
     }
 
-    virtual bool CanInsertRows() const { return true; }
-    virtual void InitShadow(EntryShadow* entry_shadow) const
-    {
-        assert(entry_shadow->lhs_node != nullptr);
-        assert(entry_shadow->issued_time != nullptr);
-
-        *entry_shadow->issued_time = QDateTime::currentDateTimeUtc();
-        *entry_shadow->lhs_node = lhs_id_;
-    }
-
 #if 0
     virtual bool UpdateDebit(EntryShadow* entry_shadow, double value, int row)
     {
@@ -144,6 +134,8 @@ protected:
         Q_UNUSED(row)
         return false;
     }
+
+    EntryShadow* InsertRowsImpl(int row, const QModelIndex& parent = QModelIndex());
 
     void AccumulateBalance(int start);
     void RestartTimer(const QUuid& id);
