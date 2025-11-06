@@ -58,6 +58,7 @@ public:
 
     bool HasUnsavedData() const;
     void SaveOrder();
+    void ReleaseOrder();
 
 private slots:
 
@@ -89,6 +90,14 @@ private:
     void IniUnitGroup();
 
     void PreparePrint();
+
+    QJsonObject BuildOrderCache();
+    QJsonObject BuildNodeDelta();
+    QJsonObject BuildPartnerDelta();
+
+    void BuildNodeInsert(QJsonObject& order_cache);
+    void BuildNodeUpdate(QJsonObject& order_cache);
+    void ResetCache();
 
 private:
     Ui::TableWidgetO* ui;

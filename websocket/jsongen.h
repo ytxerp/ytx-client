@@ -57,6 +57,8 @@ QJsonObject NodeODelta(CUuid& node_id, double initial_delta, double final_delta,
 QJsonObject EntrySearch(Section section, CString& keyword);
 QJsonObject NodeSearch(Section section, CString& keyword);
 
+QJsonObject OrderRecalled(Section section, const NodeO* node);
+
 }
 
 #endif // JSONGEN_H

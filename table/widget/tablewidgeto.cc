@@ -343,13 +343,20 @@ void TableWidgetO::on_pBtnStatus_toggled(bool checked)
     tmp_node_.status = checked;
     node_->status = checked;
 
+    if (!is_new_ && checked) {
+        node_cache_.insert(kStatus, checked);
+    }
+
     emit SSyncStatus(node_id_, checked);
 
     IniStatus(checked);
     LockWidgets(checked);
 
-    QJsonObject message { JsonGen::NodeStatus(section_, node_id_, checked) };
-    WebSocket::Instance()->SendMessage(kNodeStatus, message);
+    if (checked) {
+        ReleaseOrder();
+    } else {
+        WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_));
+    }
 }
 
 void TableWidgetO::on_pBtnSave_clicked() { SaveOrder(); }
@@ -397,46 +404,104 @@ void TableWidgetO::SaveOrder()
 
     *node_ = tmp_node_;
 
+    QJsonObject order_cache { BuildOrderCache() };
+
+    if (is_new_) {
+        BuildNodeInsert(order_cache);
+        WebSocket::Instance()->SendMessage(kOrderInsert, order_cache);
+
+        emit SInsertOrder();
+        is_new_ = false;
+    } else {
+        BuildNodeUpdate(order_cache);
+        WebSocket::Instance()->SendMessage(kOrderUpdate, order_cache);
+
+        ResetCache();
+    }
+}
+
+void TableWidgetO::ReleaseOrder()
+{
+    if (!HasUnsavedData())
+        return;
+
+    *node_ = tmp_node_;
+
+    QJsonObject order_cache { BuildOrderCache() };
+
+    order_cache.insert(kPartnerDelta, BuildPartnerDelta());
+    order_cache.insert(kPartnerId, node_->partner.toString(QUuid::WithoutBraces));
+
+    if (is_new_) {
+        BuildNodeInsert(order_cache);
+        WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_cache);
+
+        emit SInsertOrder();
+        is_new_ = false;
+    } else {
+        BuildNodeUpdate(order_cache);
+        WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_cache);
+
+        ResetCache();
+    }
+}
+
+QJsonObject TableWidgetO::BuildOrderCache()
+{
     QJsonObject order_cache {};
     order_cache.insert(kSection, std::to_underlying(section_));
     order_cache.insert(kSessionId, QString());
 
     table_model_order_->SaveOrder(order_cache);
 
-    if (is_new_) {
-        const QJsonObject node_json { tmp_node_.WriteJson() };
+    return order_cache;
+}
 
-        QJsonObject path_json {};
-        path_json.insert(kAncestor, tmp_node_.parent->id.toString(QUuid::WithoutBraces));
-        path_json.insert(kDescendant, node_id_.toString(QUuid::WithoutBraces));
+QJsonObject TableWidgetO::BuildNodeDelta()
+{
+    QJsonObject node_delta {};
+    node_delta.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
+    node_delta.insert(kFinalDelta, QString::number(final_delta_, 'f', kMaxNumericScale_4));
+    node_delta.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
+    node_delta.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
+    node_delta.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
 
-        order_cache.insert(kNode, node_json); // Meta info will be appended in service
-        order_cache.insert(kPath, path_json);
+    return node_delta;
+}
 
-        WebSocket::Instance()->SendMessage(kOrderInsert, order_cache);
+void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
+{
+    const QJsonObject node_json { tmp_node_.WriteJson() };
 
-        emit SInsertOrder();
-        is_new_ = false;
-    } else {
-        QJsonObject node_delta {};
+    QJsonObject path_json {};
+    path_json.insert(kAncestor, tmp_node_.parent->id.toString(QUuid::WithoutBraces));
+    path_json.insert(kDescendant, node_id_.toString(QUuid::WithoutBraces));
 
-        node_delta.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
-        node_delta.insert(kFinalDelta, QString::number(final_delta_, 'f', kMaxNumericScale_4));
-        node_delta.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
-        node_delta.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
-        node_delta.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
+    order_cache.insert(kNode, node_json);
+    order_cache.insert(kPath, path_json);
+}
 
-        order_cache.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
-        order_cache.insert(kNodeCache, node_cache_);
-        order_cache.insert(kNodeDelta, node_delta);
+void TableWidgetO::BuildNodeUpdate(QJsonObject& order_cache)
+{
+    order_cache.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
+    order_cache.insert(kNodeCache, node_cache_);
+    order_cache.insert(kNodeDelta, BuildNodeDelta());
+}
 
-        WebSocket::Instance()->SendMessage(kOrderUpdate, order_cache);
+QJsonObject TableWidgetO::BuildPartnerDelta()
+{
+    QJsonObject partner_delta {};
+    partner_delta.insert(kInitialDelta, QString::number(node_->initial_total, 'f', kMaxNumericScale_4));
+    partner_delta.insert(kFinalDelta, QString::number(node_->final_total, 'f', kMaxNumericScale_4));
+    return partner_delta;
+}
 
-        node_cache_ = QJsonObject();
-        initial_delta_ = 0.0;
-        final_delta_ = 0.0;
-        count_delta_ = 0.0;
-        measure_delta_ = 0.0;
-        discount_delta_ = 0.0;
-    }
+void TableWidgetO::ResetCache()
+{
+    node_cache_ = QJsonObject();
+    initial_delta_ = 0.0;
+    final_delta_ = 0.0;
+    count_delta_ = 0.0;
+    measure_delta_ = 0.0;
+    discount_delta_ = 0.0;
 }

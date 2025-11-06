@@ -189,6 +189,11 @@ inline const QString kNodeName = QStringLiteral("node_name");
 
 inline const QString kOrderInsert = QStringLiteral("order_insert");
 inline const QString kOrderUpdate = QStringLiteral("order_update");
+inline const QString kOrderInsertReleased = QStringLiteral("order_insert_released");
+inline const QString kOrderUpdateReleased = QStringLiteral("order_update_released");
+inline const QString kOrderReleased = QStringLiteral("order_released");
+inline const QString kOrderRecalled = QStringLiteral("order_recalled");
+
 inline const QString kNodeCache = QStringLiteral("node_cache");
 inline const QString kNodeDelta = QStringLiteral("node_delta");
 inline const QString kDeletedEntryArray = QStringLiteral("deleted_entry_array");
@@ -290,6 +295,9 @@ inline const QString kInitialTotal = QStringLiteral("initial_total");
 inline const QString kFinal = QStringLiteral("final");
 inline const QString kFinalDelta = QStringLiteral("final_delta");
 inline const QString kFinalTotal = QStringLiteral("final_total");
+
+inline const QString kPartnerDelta = QStringLiteral("partner_delta");
+inline const QString kPartnerId = QStringLiteral("partner_id");
 
 inline const QString kDiscount = QStringLiteral("discount");
 inline const QString kDiscountDelta = QStringLiteral("discount_delta");
