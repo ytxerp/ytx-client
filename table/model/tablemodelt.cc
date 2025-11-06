@@ -2,6 +2,7 @@
 
 #include "component/constant.h"
 #include "global/entryshadowpool.h"
+#include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -193,23 +194,6 @@ Qt::ItemFlags TableModelT::flags(const QModelIndex& index) const
         flags &= ~Qt::ItemIsEditable;
 
     return flags;
-}
-
-bool TableModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
-{
-    assert(row >= 0 && row <= rowCount(parent));
-    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
-        return false;
-
-    auto* entry_shadow { entry_hub_->AllocateEntryShadow() };
-
-    *entry_shadow->lhs_node = lhs_id_;
-
-    beginInsertRows(parent, row, row);
-    shadow_list_.emplaceBack(entry_shadow);
-    endInsertRows();
-
-    return true;
 }
 
 bool TableModelT::UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit)
@@ -467,6 +451,8 @@ bool TableModelT::removeRows(int row, int /*count*/, const QModelIndex& parent)
     shadow_list_.removeAt(row);
     endRemoveRows();
 
+    const auto entry_id { *d_shadow->id };
+
     if (!rhs_node_id.isNull()) {
         const double lhs_initial_delta { *d_shadow->lhs_credit - *d_shadow->lhs_debit };
         const double lhs_final_delta { *d_shadow->unit_cost * lhs_initial_delta };
@@ -474,7 +460,6 @@ bool TableModelT::removeRows(int row, int /*count*/, const QModelIndex& parent)
         const double rhs_initial_delta { *d_shadow->rhs_credit - *d_shadow->rhs_debit };
         const double rhs_final_delta { *d_shadow->unit_cost * rhs_initial_delta };
 
-        const auto entry_id { *d_shadow->id };
         const bool has_delta { std::abs(lhs_initial_delta) > kTolerance };
 
         QJsonObject message {};
@@ -502,6 +487,7 @@ bool TableModelT::removeRows(int row, int /*count*/, const QModelIndex& parent)
     }
 
     EntryShadowPool::Instance().Recycle(d_shadow, section_);
+    emit SRemoveEntry(entry_id);
     return true;
 }
 

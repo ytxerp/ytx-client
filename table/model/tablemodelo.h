@@ -20,7 +20,6 @@
 #ifndef TABLEMODELO_H
 #define TABLEMODELO_H
 
-#include "entryhub/entryhubo.h"
 #include "entryhub/entryhubp.h"
 #include "tablemodel.h"
 #include "tree/model/treemodel.h"
@@ -39,17 +38,22 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
     bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
 
     const QList<EntryShadow*>& GetEntryShadowList() { return shadow_list_; }
     void SaveOrder(QJsonObject& order_cache);
     bool HasUnsavedData() const;
-    void SetNode(const NodeO* node) { node_ = node; }
+    void SetNode(const NodeO* node) { d_node_ = node; }
 
 private:
     bool UpdateRate(EntryShadow* entry_shadow, double value) override;
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
+    bool CanInsertRows() const override { return d_node_->status == std::to_underlying(NodeStatus::kDraft); }
+    void InitShadow(EntryShadow* entry_shadow) const override
+    {
+        assert(entry_shadow->lhs_node != nullptr);
+        *entry_shadow->lhs_node = lhs_id_;
+    }
 
     bool UpdateExternalSku(EntryShadowO* entry_shadow, const QUuid& value);
     bool UpdateUnitDiscount(EntryShadowO* entry_shadow, double value);
@@ -67,8 +71,7 @@ private:
 private:
     TreeModelI* tree_model_i_ {};
     EntryHubP* entry_hub_partner_ {};
-    EntryHubO* entry_hub_order_ {};
-    const NodeO* node_ {};
+    const NodeO* d_node_ {};
 
     QSet<QUuid> deleted_entries_ {};
     QHash<QUuid, EntryShadow*> inserted_entries_ {};

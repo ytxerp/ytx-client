@@ -25,10 +25,6 @@
 class TableModelP final : public TableModel {
     Q_OBJECT
 
-public slots:
-    void RAppendOneEntry(Entry* entry) override;
-    void RRemoveOneEntry(const QUuid& entry_id) override;
-
 public:
     TableModelP(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelP() override = default;

@@ -20,13 +20,13 @@
 #ifndef ENTRYHUB_H
 #define ENTRYHUB_H
 
+#include <QJsonObject>
 #include <QObject>
 
 #include "component/enumclass.h"
 #include "component/info.h"
 #include "report/entryref.h"
 #include "table/entry.h"
-#include "table/entryshadow.h"
 
 class EntryHub : public QObject {
     Q_OBJECT
@@ -54,6 +54,12 @@ signals:
     // send to SearchEntryModel
     void SSearchEntry(const EntryList& entry_list);
 
+public slots:
+    // receive from TableModel
+    void RInsertEntry(Entry* entry) { entry_cache_.insert(entry->id, entry); }
+    void RRemoveEntry(const QUuid& entry_id);
+    void RRemoveEntrySet(const QSet<QUuid>& entry_set);
+
 public:
     // tree
     void InsertEntry(const QJsonObject& data);
@@ -73,8 +79,6 @@ public:
     void ActionEntry(const QUuid& node_id, EntryAction action);
     void ActionEntryMeta(const QUuid& node_id, const QJsonObject& meta);
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
-
-    EntryShadow* AllocateEntryShadow();
 
     bool ReadTransRef(EntryRefList& list, const QUuid& node_id, int unit, const QDateTime& start, const QDateTime& end) const;
 

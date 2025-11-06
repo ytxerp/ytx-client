@@ -3,6 +3,8 @@
 #include <QCoreApplication>
 #include <QDir>
 
+#include "utils/entryutils.h"
+
 void MainWindowUtils::ReadPrintTmplate(QMap<QString, QString>& print_template)
 {
 #ifdef Q_OS_MAC

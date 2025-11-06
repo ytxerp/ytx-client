@@ -20,10 +20,9 @@
 #ifndef TABLEMODELARG_H
 #define TABLEMODELARG_H
 
-#include "entryhub/entryhub.h"
+#include "component/info.h"
 
 struct TableModelArg {
-    EntryHub* entry_hub {};
     CSectionInfo& info {};
     QUuid node_id {};
     bool direction_rule {};

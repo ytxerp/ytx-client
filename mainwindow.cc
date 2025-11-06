@@ -94,6 +94,7 @@
 #include "tree/widget/treewidgetp.h"
 #include "tree/widget/treewidgetto.h"
 #include "ui_mainwindow.h"
+#include "utils/entryutils.h"
 #include "utils/mainwindowutils.h"
 #include "utils/widgetutils.h"
 #include "websocket/jsongen.h"
@@ -355,7 +356,6 @@ void MainWindow::FocusTableWidget(const QUuid& node_id) const
 void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
 {
     auto tree_model { sc->tree_model };
-    auto& entry_hub = sc->entry_hub;
     const auto& info = sc->info;
     const auto& section_config = sc->section_config;
 
@@ -369,7 +369,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     // The model is parented to the LeafWidgetFIPT inside its constructor.
     // When the LeafWidget is destroyed, it will automatically delete the model.
     TableModel* table_model {};
-    TableModelArg arg { entry_hub, info, node_id, rule };
+    TableModelArg arg { info, node_id, rule };
 
     switch (section) {
     case Section::kFinance:
@@ -404,15 +404,15 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     switch (section) {
     case Section::kFinance:
         TableDelegateF(view, tree_model, section_config, node_id);
-        TableConnectF(view, table_model, tree_model);
+        TableConnectF(view, table_model);
         break;
     case Section::kInventory:
         TableDelegateI(view, tree_model, section_config, node_id);
-        TableConnectI(view, table_model, tree_model);
+        TableConnectI(view, table_model);
         break;
     case Section::kTask:
         TableDelegateT(view, tree_model, section_config, node_id);
-        TableConnectT(view, table_model, tree_model);
+        TableConnectT(view, table_model);
         break;
     case Section::kPartner:
         TableDelegateP(view, section_config);
@@ -429,7 +429,6 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
 void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row)
 {
     // Extract frequently used shortcuts
-    auto& entry_hub = sc_->entry_hub;
     auto& section_config = sc_->section_config;
     auto* tab_widget = ui->tabWidget;
     auto* tab_bar = tab_widget->tabBar();
@@ -450,7 +449,7 @@ void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row
     auto tree_model_i { sc_i_.tree_model };
 
     // Create model and widget
-    TableModelArg table_model_arg { entry_hub, sc_->info, node_id, true };
+    TableModelArg table_model_arg { sc_->info, node_id, true };
     auto* table_model { new TableModelO(table_model_arg, tree_model_i, sc_p_.entry_hub, this) };
 
     OrderWidgetArg order_arg {
@@ -483,7 +482,7 @@ void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row
 
     // Configure view
     auto* view { widget->View() };
-    TableConnectO(view, table_model, tree_model_o, widget);
+    TableConnectO(view, table_model, widget);
     SetTableViewO(view, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
     TableDelegateO(view, section_config);
 
@@ -494,7 +493,6 @@ void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row
 void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 {
     // Extract frequently used shortcuts
-    auto& entry_hub = sc->entry_hub;
     auto& section_config = sc->section_config;
     auto* tab_widget = ui->tabWidget;
     auto* tab_bar = tab_widget->tabBar();
@@ -516,7 +514,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     auto tree_model_i { sc_i_.tree_model };
 
     // Create model and widget
-    TableModelArg table_model_arg { entry_hub, sc->info, node_id, node->direction_rule };
+    TableModelArg table_model_arg { sc->info, node_id, node->direction_rule };
     auto* table_model = new TableModelO(table_model_arg, tree_model_i, sc_p_.entry_hub, nullptr);
 
     OrderWidgetArg order_arg {
@@ -540,58 +538,86 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     // Configure view
     auto* view = widget->View();
     SetTableViewO(view, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
-    TableConnectO(view, table_model, tree_model_o, widget);
+    TableConnectO(view, table_model, widget);
     TableDelegateO(view, section_config);
 
     sc->table_wgt_hash.insert(node_id, widget);
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 
-void MainWindow::TableConnectF(QTableView* table_view, TableModel* table_model, TreeModel* tree_model) const
+void MainWindow::TableConnectF(QTableView* table_view, TableModel* table_model) const
 {
+    auto tree_model { sc_f_.tree_model };
+    auto entry_hub { sc_f_.entry_hub };
+
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
     connect(table_model, &TableModel::SSyncDelta, tree_model, &TreeModel::RSyncDelta);
+
+    connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
+    connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
 
     connect(table_model, &TableModel::SRemoveOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry);
     connect(table_model, &TableModel::SAppendOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry);
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
 }
 
-void MainWindow::TableConnectI(QTableView* table_view, TableModel* table_model, TreeModel* tree_model) const
+void MainWindow::TableConnectI(QTableView* table_view, TableModel* table_model) const
 {
+    auto tree_model { sc_i_.tree_model };
+    auto entry_hub { sc_i_.entry_hub };
+
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
     connect(table_model, &TableModel::SSyncDelta, tree_model, &TreeModel::RSyncDelta);
+
+    connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
+    connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
 
     connect(table_model, &TableModel::SRemoveOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry);
     connect(table_model, &TableModel::SAppendOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry);
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
 }
 
-void MainWindow::TableConnectT(QTableView* table_view, TableModel* table_model, TreeModel* tree_model) const
+void MainWindow::TableConnectT(QTableView* table_view, TableModel* table_model) const
 {
+    auto tree_model { sc_t_.tree_model };
+    auto entry_hub { sc_t_.entry_hub };
+
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
     connect(table_model, &TableModel::SSyncDelta, tree_model, &TreeModel::RSyncDelta);
+
+    connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
+    connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
 
     connect(table_model, &TableModel::SRemoveOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry);
     connect(table_model, &TableModel::SAppendOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry);
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
 }
 
-void MainWindow::TableConnectO(QTableView* table_view, TableModelO* table_model_order, TreeModelO* tree_model, TableWidgetO* widget) const
+void MainWindow::TableConnectO(QTableView* table_view, TableModelO* table_model_order, TableWidgetO* widget) const
 {
+    auto* tree_model { static_cast<TreeModelO*>(sc_->tree_model.data()) };
+    auto entry_hub { sc_->entry_hub };
+
     connect(table_model_order, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
     connect(table_model_order, &TableModel::SSyncDelta, widget, &TableWidgetO::RSyncDelta);
 
     connect(widget, &TableWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
 
     connect(widget, &TableWidgetO::SSyncStatus, tree_model, &TreeModelO::RSyncStatus);
+    connect(table_model_order, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
+    connect(table_model_order, &TableModel::SRemoveEntrySet, entry_hub, &EntryHub::RRemoveEntrySet);
 }
 
 void MainWindow::TableConnectP(QTableView* table_view, TableModel* table_model) const
 {
+    auto entry_hub { sc_p_.entry_hub };
+
+    connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
+    connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
+
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 }
 

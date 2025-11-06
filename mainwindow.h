@@ -146,11 +146,11 @@ private:
     void SetTableViewFIPT(QTableView* table_view, int stretch_column, int lhs_node_column) const;
     void SetTableViewO(QTableView* table_view, int stretch_column, int lhs_node_column) const;
 
-    void TableConnectF(QTableView* table_view, TableModel* table_model, TreeModel* tree_model) const;
-    void TableConnectI(QTableView* table_view, TableModel* table_model, TreeModel* tree_model) const;
-    void TableConnectT(QTableView* table_view, TableModel* table_model, TreeModel* tree_model) const;
+    void TableConnectF(QTableView* table_view, TableModel* table_model) const;
+    void TableConnectI(QTableView* table_view, TableModel* table_model) const;
+    void TableConnectT(QTableView* table_view, TableModel* table_model) const;
     void TableConnectP(QTableView* table_view, TableModel* table_model) const;
-    void TableConnectO(QTableView* table_view, TableModelO* table_model, TreeModelO* tree_model, TableWidgetO* widget) const;
+    void TableConnectO(QTableView* table_view, TableModelO* table_model, TableWidgetO* widget) const;
 
     void CreateLeafExternalReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit);
     void DelegateLeafExternalReference(QTableView* table_view, CSectionConfig& config) const;

@@ -23,6 +23,7 @@
 #include <QPointer>
 
 #include "component/config.h"
+#include "entryhub/entryhub.h"
 #include "report/widget/reportwidget.h"
 #include "table/widget/tablewidget.h"
 #include "tree/model/treemodel.h"

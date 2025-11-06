@@ -4,36 +4,13 @@
 
 #include "component/constant.h"
 #include "global/entryshadowpool.h"
+#include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
 TableModelP::TableModelP(CTableModelArg& arg, QObject* parent)
     : TableModel { arg, parent }
 {
-}
-
-void TableModelP::RAppendOneEntry(Entry* entry)
-{
-    auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
-    entry_shadow->BindEntry(entry, lhs_id_ == entry->lhs_node);
-
-    auto row { shadow_list_.size() };
-
-    beginInsertRows(QModelIndex(), row, row);
-    shadow_list_.emplaceBack(entry_shadow);
-    endInsertRows();
-}
-
-void TableModelP::RRemoveOneEntry(const QUuid& entry_id)
-{
-    auto idx { GetIndex(entry_id) };
-    if (!idx.isValid())
-        return;
-
-    int row { idx.row() };
-    beginRemoveRows(QModelIndex(), row, row);
-    EntryShadowPool::Instance().Recycle(shadow_list_.takeAt(row), section_);
-    endRemoveRows();
 }
 
 bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
@@ -57,6 +34,7 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
     }
 
     EntryShadowPool::Instance().Recycle(entry_shadow, section_);
+    emit SRemoveEntry(*entry_shadow->id);
     return true;
 }
 

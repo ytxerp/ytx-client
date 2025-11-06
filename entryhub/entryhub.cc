@@ -4,7 +4,6 @@
 
 #include "component/constant.h"
 #include "global/entrypool.h"
-#include "global/entryshadowpool.h"
 #include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 
@@ -21,6 +20,22 @@ void EntryHub::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
 {
     emit SRemoveEntryHash(leaf_entry);
     RemoveLeafFunction(leaf_entry);
+}
+
+void EntryHub::RRemoveEntry(const QUuid& entry_id)
+{
+    auto it = entry_cache_.find(entry_id);
+    if (it != entry_cache_.end()) {
+        EntryPool::Instance().Recycle(it.value(), section_);
+        entry_cache_.erase(it);
+    }
+}
+
+void EntryHub::RRemoveEntrySet(const QSet<QUuid>& entry_set)
+{
+    for (const auto& id : entry_set) {
+        RRemoveEntry(id);
+    }
 }
 
 void EntryHub::RemoveLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
@@ -242,18 +257,6 @@ bool EntryHub::ReadTransRef(EntryRefList& list, const QUuid& node_id, int unit, 
     // ReadTransRefQuery(list, query);
 
     return true;
-}
-
-EntryShadow* EntryHub::AllocateEntryShadow()
-{
-    auto* entry = EntryPool::Instance().Allocate(section_);
-    entry->id = QUuid::createUuidV7();
-
-    auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
-    entry_shadow->BindEntry(entry, true);
-
-    entry_cache_.insert(entry->id, entry);
-    return entry_shadow;
 }
 
 // QString EntryHub::BuildSelect(const QString& table, QStringList& condition) const

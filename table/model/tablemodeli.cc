@@ -2,6 +2,7 @@
 
 #include "component/constant.h"
 #include "global/entryshadowpool.h"
+#include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -505,6 +506,8 @@ bool TableModelI::removeRows(int row, int /*count*/, const QModelIndex& parent)
     shadow_list_.removeAt(row);
     endRemoveRows();
 
+    const auto entry_id { *d_shadow->id };
+
     if (!rhs_node_id.isNull()) {
         const double lhs_initial_delta { *d_shadow->lhs_credit - *d_shadow->lhs_debit };
         const double lhs_final_delta { *d_shadow->unit_cost * lhs_initial_delta };
@@ -512,7 +515,6 @@ bool TableModelI::removeRows(int row, int /*count*/, const QModelIndex& parent)
         const double rhs_initial_delta { *d_shadow->rhs_credit - *d_shadow->rhs_debit };
         const double rhs_final_delta { *d_shadow->unit_cost * rhs_initial_delta };
 
-        const auto entry_id { *d_shadow->id };
         const bool has_delta { std::abs(lhs_initial_delta) > kTolerance };
 
         QJsonObject message {};
@@ -540,5 +542,6 @@ bool TableModelI::removeRows(int row, int /*count*/, const QModelIndex& parent)
     }
 
     EntryShadowPool::Instance().Recycle(d_shadow, section_);
+    emit SRemoveEntry(entry_id);
     return true;
 }

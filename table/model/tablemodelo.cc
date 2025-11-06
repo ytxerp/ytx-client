@@ -9,7 +9,6 @@ TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, E
     : TableModel { arg, parent }
     , tree_model_i_ { static_cast<TreeModelI*>(tree_model_inventory) }
     , entry_hub_partner_ { static_cast<EntryHubP*>(entry_hub_partner) }
-    , entry_hub_order_ { static_cast<EntryHubO*>(arg.entry_hub) }
 {
 }
 
@@ -56,6 +55,9 @@ void TableModelO::SaveOrder(QJsonObject& order_cache)
         entry_cache_array.append(it.value());
     }
     order_cache.insert(kEntryCacheArray, entry_cache_array);
+
+    // nofity entryhub recycle entry
+    emit SRemoveEntrySet(deleted_entries_);
 
     // clear
     deleted_entries_.clear();
@@ -120,7 +122,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    if (node_->status == std::to_underlying(NodeStatus::kReleased))
+    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         return false;
 
     const EntryEnumO column { index.column() };
@@ -266,34 +268,16 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
         break;
     }
 
-    if (node_->status == std::to_underlying(NodeStatus::kReleased))
+    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         flags &= ~Qt::ItemIsEditable;
 
     return flags;
 }
 
-bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
-{
-    assert(row >= 0 && row <= rowCount(parent));
-    if (node_->status == std::to_underlying(NodeStatus::kReleased))
-        return false;
-
-    auto* entry_shadow { entry_hub_->AllocateEntryShadow() };
-
-    *entry_shadow->lhs_node = lhs_id_;
-
-    beginInsertRows(parent, row, row);
-    shadow_list_.emplaceBack(entry_shadow);
-    endInsertRows();
-
-    inserted_entries_.insert(*entry_shadow->id, entry_shadow);
-    return true;
-}
-
 bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
-    if (node_->status == std::to_underlying(NodeStatus::kReleased))
+    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         return false;
 
     auto* d_shadow = DerivedPtr<EntryShadowO>(shadow_list_.at(row));
@@ -303,6 +287,8 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     beginRemoveRows(parent, row, row);
     shadow_list_.removeAt(row);
     endRemoveRows();
+
+    const auto entry_id { *d_shadow->id };
 
     if (!rhs_node.isNull()) {
         const double count_delta { -*d_shadow->count };
@@ -317,8 +303,9 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
         }
     }
 
-    deleted_entries_.insert(*d_shadow->id);
-    entry_caches_.remove(*d_shadow->id);
+    deleted_entries_.insert(entry_id);
+    entry_caches_.remove(entry_id);
+
     EntryShadowPool::Instance().Recycle(d_shadow, section_);
     return true;
 }
@@ -536,7 +523,7 @@ void TableModelO::ResolveFromInternal(EntryShadowO* shadow, const QUuid& interna
     if (!shadow || !entry_hub_partner_ || internal_sku.isNull())
         return;
 
-    if (auto result = entry_hub_partner_->ResolveFromInternal(node_->partner, internal_sku)) {
+    if (auto result = entry_hub_partner_->ResolveFromInternal(d_node_->partner, internal_sku)) {
         const auto& [external_id, price] = *result;
         *shadow->unit_price = price;
         *shadow->external_sku = external_id;
@@ -551,7 +538,7 @@ void TableModelO::ResolveFromExternal(EntryShadowO* shadow, const QUuid& externa
     if (!shadow || !entry_hub_partner_ || external_sku.isNull())
         return;
 
-    if (auto result = entry_hub_partner_->ResolveFromExternal(node_->partner, external_sku)) {
+    if (auto result = entry_hub_partner_->ResolveFromExternal(d_node_->partner, external_sku)) {
         const auto& [rhs_node, price] = *result;
         *shadow->unit_price = price;
         *shadow->rhs_node = rhs_node;

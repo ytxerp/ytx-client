@@ -2,13 +2,14 @@
 
 #include <QtConcurrent>
 
+#include "global/entrypool.h"
 #include "global/entryshadowpool.h"
+#include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
 TableModel::TableModel(CTableModelArg& arg, QObject* parent)
     : QAbstractItemModel(parent)
-    , entry_hub_ { arg.entry_hub }
     , info_ { arg.info }
     , direction_rule_ { arg.direction_rule }
     , lhs_id_ { arg.node_id }
@@ -241,16 +242,22 @@ QModelIndex TableModel::GetIndex(const QUuid& entry_id) const
 bool TableModel::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
+    if (!CanInsertRows())
+        return false;
 
-    auto* entry_shadow { entry_hub_->AllocateEntryShadow() };
+    auto* entry { EntryPool::Instance().Allocate(section_) };
+    entry->id = QUuid::createUuidV7();
 
-    *entry_shadow->issued_time = QDateTime::currentDateTimeUtc();
-    *entry_shadow->lhs_node = lhs_id_;
+    auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
+    entry_shadow->BindEntry(entry, true);
+
+    InitShadow(entry_shadow);
 
     beginInsertRows(parent, row, row);
     shadow_list_.emplaceBack(entry_shadow);
     endInsertRows();
 
+    emit SInsertEntry(entry);
     return true;
 }
 

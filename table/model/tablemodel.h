@@ -24,10 +24,8 @@
 #include <QTimer>
 
 #include "component/arg/tablemodelarg.h"
-#include "entryhub/entryhub.h"
+#include "table/entryshadow.h"
 #include "utils/castutils.h"
-#include "utils/entryutils.h"
-#include "utils/mainutils.h"
 
 using CastUtils::DerivedPtr;
 
@@ -54,6 +52,11 @@ signals:
     // send to its table view
     void SResizeColumnToContents(int column);
 
+    // send to entryhub
+    void SInsertEntry(Entry* entry);
+    void SRemoveEntry(const QUuid& entry_id);
+    void SRemoveEntrySet(const QSet<QUuid>& entry_set);
+
 public slots:
     void RRemoveMultiEntry(const QSet<QUuid>& entry_id_set);
     void RAppendMultiEntry(const EntryList& entry_list);
@@ -64,8 +67,8 @@ public slots:
     void RRefreshField(const QUuid& entry_id, int start, int end);
     void RDirectionRule(bool value);
 
-    virtual void RAppendOneEntry(Entry* entry);
-    virtual void RRemoveOneEntry(const QUuid& entry_id);
+    void RAppendOneEntry(Entry* entry);
+    void RRemoveOneEntry(const QUuid& entry_id);
 
 public:
     // implemented functions
@@ -91,6 +94,16 @@ protected:
         Q_UNUSED(is_debit)
         Q_UNUSED(row)
         return false;
+    }
+
+    virtual bool CanInsertRows() const { return true; }
+    virtual void InitShadow(EntryShadow* entry_shadow) const
+    {
+        assert(entry_shadow->lhs_node != nullptr);
+        assert(entry_shadow->issued_time != nullptr);
+
+        *entry_shadow->issued_time = QDateTime::currentDateTimeUtc();
+        *entry_shadow->lhs_node = lhs_id_;
     }
 
 #if 0
@@ -137,7 +150,6 @@ protected:
     void FlushCaches();
 
 protected:
-    EntryHub* entry_hub_ {};
     CSectionInfo& info_;
     bool direction_rule_ {};
     const QUuid lhs_id_ {};
