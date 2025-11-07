@@ -280,6 +280,7 @@ QJsonObject OrderRecalled(Section section, const NodeO* node)
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node->id.toString(QUuid::WithoutBraces));
     message.insert(kMeta, QJsonObject());
+    message.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
 
     QJsonObject partner_delta {};
     partner_delta.insert(kInitialDelta, QString::number(-node->initial_total, 'f', kMaxNumericScale_4));
@@ -287,6 +288,7 @@ QJsonObject OrderRecalled(Section section, const NodeO* node)
 
     message.insert(kPartnerDelta, partner_delta);
     message.insert(kPartnerId, node->partner.toString(QUuid::WithoutBraces));
+    message.insert(kUnit, node->unit);
     return message;
 }
 

@@ -36,10 +36,9 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, QWidget* parent)
     IniConnect();
 
     const bool released { tmp_node_.status == std::to_underlying(NodeStatus::kReleased) };
-    ui->pBtnStatus->setChecked(released);
+    ui->pBtnRecall->setChecked(released);
 
-    IniStatus(released);
-    LockWidgets(released);
+    LockWidgets(NodeStatus(tmp_node_.status));
 }
 
 TableWidgetO::~TableWidgetO()
@@ -156,24 +155,28 @@ void TableWidgetO::IniData(const QUuid& partner, const QUuid& employee)
     ui->comboEmployee->setCurrentIndex(employee_index);
 }
 
-void TableWidgetO::LockWidgets(bool released)
+void TableWidgetO::LockWidgets(NodeStatus value)
 {
-    const bool enable { !released };
+    const bool recalled { value == NodeStatus::kRecalled };
 
-    ui->comboPartner->setEnabled(enable);
-    ui->comboEmployee->setEnabled(enable);
+    ui->comboPartner->setEnabled(recalled);
+    ui->comboEmployee->setEnabled(recalled);
 
-    ui->rBtnRO->setEnabled(enable);
-    ui->rBtnTO->setEnabled(enable);
-    ui->rBtnIS->setEnabled(enable);
-    ui->rBtnMS->setEnabled(enable);
-    ui->rBtnPEND->setEnabled(enable);
+    ui->rBtnRO->setEnabled(recalled);
+    ui->rBtnTO->setEnabled(recalled);
+    ui->rBtnIS->setEnabled(recalled);
+    ui->rBtnMS->setEnabled(recalled);
+    ui->rBtnPEND->setEnabled(recalled);
 
-    ui->lineDescription->setReadOnly(released);
-    ui->dateTimeEdit->setReadOnly(released);
+    ui->lineDescription->setReadOnly(!recalled);
+    ui->dateTimeEdit->setReadOnly(!recalled);
 
-    const bool can_print { released || tmp_node_.unit == std::to_underlying(UnitO::kPending) };
+    const bool can_print { !recalled || tmp_node_.unit == std::to_underlying(UnitO::kPending) };
     ui->pBtnPrint->setEnabled(can_print);
+
+    ui->pBtnSave->setHidden(!recalled);
+    ui->pBtnRelease->setHidden(!recalled);
+    ui->pBtnRecall->setHidden(recalled);
 }
 
 void TableWidgetO::IniUnit(int unit)
@@ -205,18 +208,6 @@ void TableWidgetO::IniUiValue()
 }
 
 void TableWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true); }
-
-void TableWidgetO::IniStatus(bool released)
-{
-    ui->pBtnStatus->setText(released ? tr("Recall") : tr("Release"));
-    ui->pBtnStatus->setEnabled(tmp_node_.unit != std::to_underlying(UnitO::kPending));
-
-    if (released) {
-        ui->pBtnPrint->setFocus();
-        ui->pBtnPrint->setDefault(true);
-        ui->tableViewO->clearSelection();
-    }
-}
 
 void TableWidgetO::IniRuleGroup()
 {
@@ -308,17 +299,17 @@ void TableWidgetO::RUnitGroupClicked(int id)
     case UnitO::kImmediate:
         tmp_node_.final_total = tmp_node_.initial_total - tmp_node_.discount_total;
         final_delta_ += tmp_node_.final_total;
-        ui->pBtnStatus->setEnabled(true);
+        ui->pBtnRelease->setEnabled(true);
         break;
     case UnitO::kMonthly:
         final_delta_ += -tmp_node_.final_total;
         tmp_node_.final_total = 0.0;
-        ui->pBtnStatus->setEnabled(true);
+        ui->pBtnRelease->setEnabled(true);
         break;
     case UnitO::kPending:
         final_delta_ += -tmp_node_.final_total;
         tmp_node_.final_total = 0.0;
-        ui->pBtnStatus->setEnabled(false);
+        ui->pBtnRelease->setEnabled(false);
         break;
     default:
         break;
@@ -330,32 +321,6 @@ void TableWidgetO::RUnitGroupClicked(int id)
 
     if (!is_new_) {
         node_cache_.insert(kUnit, id);
-    }
-}
-
-void TableWidgetO::on_pBtnStatus_toggled(bool checked)
-{
-    if (!tmp_node_.settlement.isNull()) {
-        QMessageBox::information(this, tr("Order Settled"), tr("This order has already been settled and cannot be modified."));
-        return;
-    }
-
-    tmp_node_.status = static_cast<int>(checked);
-    node_->status = static_cast<int>(checked);
-
-    if (!is_new_ && checked) {
-        node_cache_.insert(kStatus, checked);
-    }
-
-    emit SSyncStatus(node_id_, checked);
-
-    IniStatus(checked);
-    LockWidgets(checked);
-
-    if (checked) {
-        ReleaseOrder();
-    } else {
-        WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_));
     }
 }
 
@@ -395,55 +360,6 @@ void TableWidgetO::PreparePrint()
     PrintData data { tree_model_partner_->Name(tmp_node_.partner), tmp_node_.issued_time.toLocalTime().toString(kDateTimeFST),
         tree_model_partner_->Name(tmp_node_.employee), unit, tmp_node_.initial_total };
     print_manager_.SetData(data, table_model_order_->GetEntryShadowList());
-}
-
-void TableWidgetO::SaveOrder()
-{
-    if (!HasUnsavedData())
-        return;
-
-    *node_ = tmp_node_;
-
-    QJsonObject order_cache { BuildOrderCache() };
-
-    if (is_new_) {
-        BuildNodeInsert(order_cache);
-        WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_cache);
-
-        emit SInsertOrder();
-        is_new_ = false;
-    } else {
-        BuildNodeUpdate(order_cache);
-        WebSocket::Instance()->SendMessage(kOrderUpdateSaved, order_cache);
-
-        ResetCache();
-    }
-}
-
-void TableWidgetO::ReleaseOrder()
-{
-    if (!HasUnsavedData())
-        return;
-
-    *node_ = tmp_node_;
-
-    QJsonObject order_cache { BuildOrderCache() };
-
-    order_cache.insert(kPartnerDelta, BuildPartnerDelta());
-    order_cache.insert(kPartnerId, node_->partner.toString(QUuid::WithoutBraces));
-
-    if (is_new_) {
-        BuildNodeInsert(order_cache);
-        WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_cache);
-
-        emit SInsertOrder();
-        is_new_ = false;
-    } else {
-        BuildNodeUpdate(order_cache);
-        WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_cache);
-
-        ResetCache();
-    }
 }
 
 QJsonObject TableWidgetO::BuildOrderCache()
@@ -504,4 +420,85 @@ void TableWidgetO::ResetCache()
     count_delta_ = 0.0;
     measure_delta_ = 0.0;
     discount_delta_ = 0.0;
+}
+
+void TableWidgetO::on_pBtnRecall_clicked()
+{
+    if (!tmp_node_.settlement.isNull()) {
+        QMessageBox::information(this, tr("Order Settled"), tr("This order has already been settled and cannot be modified."));
+        return;
+    }
+
+    tmp_node_.status = std::to_underlying(NodeStatus::kRecalled);
+    node_->status = std::to_underlying(NodeStatus::kRecalled);
+
+    WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_));
+
+    LockWidgets(NodeStatus::kRecalled);
+    emit SSyncStatus(node_id_, NodeStatus::kRecalled);
+}
+
+void TableWidgetO::SaveOrder()
+{
+    if (!HasUnsavedData())
+        return;
+
+    *node_ = tmp_node_;
+
+    QJsonObject order_cache { BuildOrderCache() };
+
+    if (is_new_) {
+        BuildNodeInsert(order_cache);
+        WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_cache);
+
+        emit SInsertOrder();
+        is_new_ = false;
+    } else {
+        BuildNodeUpdate(order_cache);
+        WebSocket::Instance()->SendMessage(kOrderUpdateSaved, order_cache);
+
+        ResetCache();
+    }
+}
+
+void TableWidgetO::on_pBtnRelease_clicked()
+{
+    if (tmp_node_.status == std::to_underlying(NodeStatus::kReleased))
+        return;
+
+    node_cache_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
+    tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
+
+    *node_ = tmp_node_;
+
+    QJsonObject order_cache { BuildOrderCache() };
+
+    order_cache.insert(kPartnerDelta, BuildPartnerDelta());
+    order_cache.insert(kPartnerId, tmp_node_.partner.toString(QUuid::WithoutBraces));
+    order_cache.insert(kUnit, tmp_node_.unit);
+
+    if (is_new_) {
+        BuildNodeInsert(order_cache);
+        WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_cache);
+
+        emit SInsertOrder();
+        is_new_ = false;
+    } else {
+        BuildNodeUpdate(order_cache);
+        WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_cache);
+
+        ResetCache();
+    }
+
+    ReadyPrint();
+
+    LockWidgets(NodeStatus::kReleased);
+    emit SSyncStatus(node_id_, NodeStatus::kReleased);
+}
+
+void TableWidgetO::ReadyPrint()
+{
+    ui->pBtnPrint->setFocus();
+    ui->pBtnPrint->setDefault(true);
+    ui->tableViewO->clearSelection();
 }

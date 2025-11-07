@@ -14,10 +14,6 @@ TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, E
 
 void TableModelO::SaveOrder(QJsonObject& order_cache)
 {
-    // Skip if there are no shadow entries to save
-    if (shadow_list_.isEmpty())
-        return;
-
     // - Remove entries from shadow_list_ that have no linked rhs_node (i.e., internal SKU not selected).
     // - Also remove any pending update cache for these entries.
     // - Mark them as deleted in deleted_entries_ and recycle the entry_shadow.
@@ -28,10 +24,6 @@ void TableModelO::SaveOrder(QJsonObject& order_cache)
     // e.g. inserted+deleted ⇒ remove both
     // NOTE: update caches are implicitly consistent: newly inserted never have update cache.
     NormalizeEntryBuffer();
-
-    // After cleanup, there might be nothing left to save.
-    if (shadow_list_.isEmpty())
-        return;
 
     // deleted
     QJsonArray deleted_entry_array {};
@@ -57,26 +49,13 @@ void TableModelO::SaveOrder(QJsonObject& order_cache)
     order_cache.insert(kEntryCacheArray, entry_cache_array);
 
     // nofity entryhub recycle entry
-    emit SRemoveEntrySet(deleted_entries_);
+    if (!deleted_entries_.isEmpty())
+        emit SRemoveEntrySet(deleted_entries_);
 
     // clear
     deleted_entries_.clear();
     inserted_entries_.clear();
     entry_caches_.clear();
-}
-
-bool TableModelO::HasUnsavedData() const
-{
-    if (!deleted_entries_.isEmpty())
-        return true;
-
-    if (!inserted_entries_.isEmpty())
-        return true;
-
-    if (!entry_caches_.isEmpty())
-        return true;
-
-    return false;
 }
 
 QVariant TableModelO::data(const QModelIndex& index, int role) const

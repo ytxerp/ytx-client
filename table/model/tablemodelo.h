@@ -43,7 +43,7 @@ public:
 
     const QList<EntryShadow*>& GetEntryShadowList() { return shadow_list_; }
     void SaveOrder(QJsonObject& order_cache);
-    bool HasUnsavedData() const;
+    bool HasUnsavedData() const { return !deleted_entries_.isEmpty() || !inserted_entries_.isEmpty() || !entry_caches_.isEmpty(); }
     void SetNode(const NodeO* node) { d_node_ = node; }
 
 private:

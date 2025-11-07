@@ -412,15 +412,22 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pBtnStatus">
+       <widget class="QPushButton" name="pBtnRelease">
         <property name="text">
-         <string>Status</string>
+         <string>Release</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
         </property>
         <property name="default">
          <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pBtnRecall">
+        <property name="text">
+         <string>Recall</string>
         </property>
        </widget>
       </item>

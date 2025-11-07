@@ -32,12 +32,13 @@ QSet<QUuid> TreeModelO::SyncDeltaImpl(
     return {};
 }
 
-void TreeModelO::RSyncStatus(const QUuid& node_id, bool value)
+void TreeModelO::RSyncStatus(const QUuid& node_id, NodeStatus value)
 {
     auto* node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
     assert(node);
 
-    int coefficient { value ? 1 : -1 };
+    const int coefficient { value == NodeStatus::kReleased ? 1 : -1 };
+
     SyncAncestorTotal(node, coefficient * node->initial_total, coefficient * node->final_total, coefficient * node->count_total,
         coefficient * node->measure_total, coefficient * node->discount_total);
 

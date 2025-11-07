@@ -46,7 +46,7 @@ inline constexpr std::array<Section, 6> kSectionArray
 enum class NodeKind { kLeaf = 0, kBranch };
 
 /** @brief Workflow status of a node. Just for Task and Order sections. */
-enum class NodeStatus { kRecalled = 0, kReleased, kCanceled };
+enum class NodeStatus { kRecalled = 0, kReleased };
 
 /** @brief Action applied to all entries in a leaf table widget. */
 enum class EntryAction { kMarkNone = 0, kMarkAll, kMarkToggle };

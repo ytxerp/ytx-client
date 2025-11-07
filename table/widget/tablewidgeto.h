@@ -43,7 +43,7 @@ signals:
     void SSyncPartner(const QUuid& node_id, const QUuid& value);
 
     // send to TreeModelOrder
-    void SSyncStatus(const QUuid& node_id, bool value);
+    void SSyncStatus(const QUuid& node_id, NodeStatus value);
 
     // send to its lambda
     void SInsertOrder();
@@ -58,7 +58,6 @@ public:
 
     bool HasUnsavedData() const;
     void SaveOrder();
-    void ReleaseOrder();
 
 private slots:
 
@@ -74,18 +73,18 @@ private slots:
     void RRuleGroupClicked(int id);
     void RUnitGroupClicked(int id);
 
-    void on_pBtnStatus_toggled(bool checked);
     void on_pBtnSave_clicked();
+    void on_pBtnRecall_clicked();
+    void on_pBtnRelease_clicked();
 
 private:
     void IniWidget();
     void IniConnect();
     void IniData(const QUuid& partner, const QUuid& employee);
-    void LockWidgets(bool released);
+    void LockWidgets(NodeStatus value);
     void IniUnit(int unit);
     void IniUiValue();
     void IniRule(bool rule);
-    void IniStatus(bool released);
     void IniRuleGroup();
     void IniUnitGroup();
 
@@ -98,6 +97,7 @@ private:
     void BuildNodeInsert(QJsonObject& order_cache);
     void BuildNodeUpdate(QJsonObject& order_cache);
     void ResetCache();
+    void ReadyPrint();
 
 private:
     Ui::TableWidgetO* ui;

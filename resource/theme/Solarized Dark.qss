@@ -83,7 +83,7 @@ QComboBox#comboDefaultUnit
     min-width: 120px;
 }
 
-QWidget#LeafWidgetO QComboBox {
+QWidget#TableWidgetO QComboBox {
     min-width: 80px;
 }
 
@@ -180,7 +180,7 @@ QGroupBox#groupBoxSection QRadioButton::indicator {
     height: 0px;
 }
 
-QWidget#LeafWidgetO QRadioButton {
+QWidget#TableWidgetO QRadioButton {
     min-width: 3em;
 }
 
