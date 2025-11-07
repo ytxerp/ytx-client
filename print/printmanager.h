@@ -25,7 +25,7 @@
 #include <QString>
 
 #include "component/config.h"
-#include "table/entryshadow.h"
+#include "table/entry.h"
 #include "tree/model/treemodel.h"
 
 struct FieldSettings {
@@ -46,7 +46,7 @@ public:
     PrintManager(CAppConfig& app_config, TreeModel* inventory, TreeModel* partner);
 
     bool LoadIni(const QString& file_path);
-    void SetData(const PrintData& print_data, const QList<EntryShadow*>& entry_shadow_list);
+    void SetData(const PrintData& print_data, const QList<Entry*>& entry_list);
     void Preview();
     void Print();
 
@@ -60,14 +60,14 @@ private:
     void DrawTable(QPainter* painter, long long start_index, long long end_index);
     void DrawFooter(QPainter* painter, int page_num, int total_pages);
 
-    QString GetColumnText(int col, const EntryShadow* entry_shadow);
+    QString GetColumnText(int col, const Entry* entry);
 
 private:
     QHash<QString, QVariant> page_settings_ {};
     QHash<QString, FieldSettings> field_settings_ {};
     CAppConfig& app_config_ {};
 
-    QList<EntryShadow*> entry_shadow_list_ {};
+    QList<Entry*> entry_list_ {};
     PrintData data_ {};
 
     TreeModel* inventory_ {};

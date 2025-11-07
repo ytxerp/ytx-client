@@ -52,10 +52,12 @@ signals:
     // send to its table view
     void SResizeColumnToContents(int column);
 
-    // send to entryhub
+    // send to entryhub, FIPT
     void SInsertEntry(Entry* entry);
     void SRemoveEntry(const QUuid& entry_id);
-    void SRemoveEntrySet(const QSet<QUuid>& entry_set);
+
+    // send to entryhub, Sale and Purchase, Partner
+    void SReleaseNode(const QUuid& node_id);
 
 public slots:
     void RRemoveMultiEntry(const QSet<QUuid>& entry_id_set);
@@ -135,9 +137,10 @@ protected:
         return false;
     }
 
+    virtual void AccumulateBalance(int start);
+
     EntryShadow* InsertRowsImpl(int row, const QModelIndex& parent = QModelIndex());
 
-    void AccumulateBalance(int start);
     void RestartTimer(const QUuid& id);
     void FlushCaches();
 

@@ -27,7 +27,7 @@ class TableModelP final : public TableModel {
 
 public:
     TableModelP(CTableModelArg& arg, QObject* parent = nullptr);
-    ~TableModelP() override = default;
+    ~TableModelP() override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -39,6 +39,7 @@ public:
 
 protected:
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
+    void AccumulateBalance(int start) override { Q_UNUSED(start) }
 };
 
 #endif // TABLEMODELP_H

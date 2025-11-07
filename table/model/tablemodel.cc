@@ -301,6 +301,6 @@ void TableModel::RAppendMultiEntry(const EntryList& entry_list)
     shadow_list_.append(shadow_list);
     endInsertRows();
 
-    sort(std::to_underlying(EntryEnum::kIssuedTime));
+    sort(std::to_underlying(EntryEnum::kIssuedTime), Qt::AscendingOrder);
     AccumulateBalance(row);
 }

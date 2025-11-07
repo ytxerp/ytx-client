@@ -8,11 +8,19 @@
 TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
     : TableModel { arg, parent }
     , tree_model_i_ { static_cast<TreeModelI*>(tree_model_inventory) }
-    , entry_hub_partner_ { static_cast<EntryHubP*>(entry_hub_partner) }
+    , entry_hub_p_ { static_cast<EntryHubP*>(entry_hub_partner) }
 {
 }
 
-TableModelO::~TableModelO() { EntryPool::Instance().Recycle(inserted_entries_, section_); }
+TableModelO::~TableModelO()
+{
+    // Notify EntryHub to release entries associated with this node
+    emit SReleaseNode(lhs_id_);
+
+    // All entries are cloned via EntryO::Clone from the Section::kSale pool,
+    // so they must be recycled back to the same Sale pool to ensure proper handling.
+    EntryPool::Instance().Recycle(entry_list_, Section::kSale);
+}
 
 void TableModelO::RAppendMultiEntry(const EntryList& entry_list)
 {
@@ -23,19 +31,20 @@ void TableModelO::RAppendMultiEntry(const EntryList& entry_list)
 
     beginInsertRows(QModelIndex(), row, row + entry_list.size() - 1);
     for (auto* e : entry_list) {
-        auto* entry { EntryPool::Instance().Allocate(section_) };
-        *entry = *e;
+        auto* entry { e->Clone() };
         entry_list_.append(entry);
     }
     endInsertRows();
+
+    sort(std::to_underlying(EntryEnumO::kRhsNode), Qt::AscendingOrder);
 }
 
 void TableModelO::SaveOrder(QJsonObject& order_cache)
 {
     // - Remove entries from entry_list_ that have no linked rhs_node (i.e., internal SKU not selected).
     // - Also remove any pending update cache for these entries.
-    // - Mark them as deleted in deleted_entries_ and recycle the entry_shadow.
-    PurifyEntryShadow();
+    // - Mark them as deleted in deleted_entries_ and recycle the entry.
+    PurifyEntry();
 
     // Normalize diff buffers (inserted / deleted)
     // to ensure no conflict states remain before packaging.
@@ -59,21 +68,27 @@ void TableModelO::SaveOrder(QJsonObject& order_cache)
     order_cache.insert(kInsertedEntryArray, inserted_entry_array);
 
     // updated
-    QJsonArray entry_cache_array {};
-    for (auto it = entry_caches_.begin(); it != entry_caches_.end(); ++it) {
+    QJsonArray updated_entry_array {};
+    for (auto it = updated_entries_.begin(); it != updated_entries_.end(); ++it) {
         it.value().insert("id", it.key().toString(QUuid::WithoutBraces));
-        entry_cache_array.append(it.value());
+        updated_entry_array.append(it.value());
     }
-    order_cache.insert(kEntryCacheArray, entry_cache_array);
+    order_cache.insert(kUpdatedEntryArray, updated_entry_array);
 
-    // nofity entryhub recycle entry
+    // nofity entryhub
     if (!deleted_entries_.isEmpty())
         emit SRemoveEntrySet(deleted_entries_);
+
+    if (!inserted_entries_.isEmpty())
+        emit SInsertEntryHash(inserted_entries_);
+
+    if (!updated_entries_.isEmpty())
+        emit SUpdateEntryHash(updated_entries_);
 
     // clear
     deleted_entries_.clear();
     inserted_entries_.clear();
-    entry_caches_.clear();
+    updated_entries_.clear();
 }
 
 QVariant TableModelO::data(const QModelIndex& index, int role) const
@@ -319,7 +334,7 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     }
 
     deleted_entries_.insert(entry_id);
-    entry_caches_.remove(entry_id);
+    updated_entries_.remove(entry_id);
 
     EntryPool::Instance().Recycle(d_entry, section_);
     return true;
@@ -347,7 +362,7 @@ bool TableModelO::UpdateExternalSku(EntryO* entry, const QUuid& value)
     }
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { entry_caches_[entry->id] };
+        auto& cache { updated_entries_[entry->id] };
         cache.insert(kExternalSku, value.toString(QUuid::WithoutBraces));
 
         if (price_changed) {
@@ -400,7 +415,7 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value)
         RecalculateAmount(entry);
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { entry_caches_[entry->id] };
+        auto& cache { updated_entries_[entry->id] };
         cache.insert(kRhsNode, value.toString(QUuid::WithoutBraces));
 
         if (external_changed) {
@@ -437,7 +452,7 @@ bool TableModelO::UpdateUnitPrice(EntryO* entry, double value)
     entry->unit_price = value;
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { entry_caches_[entry->id] };
+        auto& cache { updated_entries_[entry->id] };
 
         cache.insert(kUnitPrice, QString::number(entry->unit_price, 'f', kMaxNumericScale_4));
         cache.insert(kInitial, QString::number(entry->initial, 'f', kMaxNumericScale_4));
@@ -460,7 +475,7 @@ bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value)
     entry->unit_discount = value;
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { entry_caches_[entry->id] };
+        auto& cache { updated_entries_[entry->id] };
 
         cache.insert(kUnitDiscount, QString::number(entry->unit_discount, 'f', kMaxNumericScale_4));
         cache.insert(kDiscount, QString::number(entry->discount, 'f', kMaxNumericScale_4));
@@ -484,7 +499,7 @@ bool TableModelO::UpdateMeasure(EntryO* entry, double value)
     entry->measure = value;
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { entry_caches_[entry->id] };
+        auto& cache { updated_entries_[entry->id] };
 
         cache.insert(kMeasure, QString::number(entry->measure, 'f', kMaxNumericScale_4));
         cache.insert(kInitial, QString::number(entry->initial, 'f', kMaxNumericScale_4));
@@ -506,7 +521,7 @@ bool TableModelO::UpdateCount(EntryO* entry, double value)
     entry->count = value;
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { entry_caches_[entry->id] };
+        auto& cache { updated_entries_[entry->id] };
 
         cache.insert(kCount, QString::number(value, 'f', kMaxNumericScale_4));
     }
@@ -522,7 +537,7 @@ bool TableModelO::UpdateDescription(EntryO* entry, const QString& value)
     entry->description = value;
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { entry_caches_[entry->id] };
+        auto& cache { updated_entries_[entry->id] };
 
         cache.insert(kDescription, value);
     }
@@ -532,10 +547,10 @@ bool TableModelO::UpdateDescription(EntryO* entry, const QString& value)
 
 void TableModelO::ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) const
 {
-    if (!entry || !entry_hub_partner_ || internal_sku.isNull())
+    if (!entry || !entry_hub_p_ || internal_sku.isNull())
         return;
 
-    if (auto result = entry_hub_partner_->ResolveFromInternal(d_node_->partner, internal_sku)) {
+    if (auto result = entry_hub_p_->ResolveFromInternal(d_node_->partner, internal_sku)) {
         const auto& [external_id, price] = *result;
         entry->unit_price = price;
         entry->external_sku = external_id;
@@ -547,10 +562,10 @@ void TableModelO::ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) 
 
 void TableModelO::ResolveFromExternal(EntryO* entry, const QUuid& external_sku) const
 {
-    if (!entry || !entry_hub_partner_ || external_sku.isNull())
+    if (!entry || !entry_hub_p_ || external_sku.isNull())
         return;
 
-    if (auto result = entry_hub_partner_->ResolveFromExternal(d_node_->partner, external_sku)) {
+    if (auto result = entry_hub_p_->ResolveFromExternal(d_node_->partner, external_sku)) {
         const auto& [rhs_node, price] = *result;
         entry->unit_price = price;
         entry->rhs_node = rhs_node;
@@ -578,7 +593,7 @@ void TableModelO::RecalculateAmount(EntryO* entry) const
     entry->discount = discount;
 }
 
-void TableModelO::PurifyEntryShadow()
+void TableModelO::PurifyEntry()
 {
     // Remove entries with null rhs_node (internal SKU not selected).
     // Clears pending update cache for these entries and marks them as deleted.
@@ -589,7 +604,7 @@ void TableModelO::PurifyEntryShadow()
 
         beginRemoveRows(QModelIndex(), i, i);
         deleted_entries_.insert(entry->id);
-        entry_caches_.remove(entry->id);
+        updated_entries_.remove(entry->id);
         EntryPool::Instance().Recycle(entry_list_.takeAt(i), section_);
         endRemoveRows();
     }

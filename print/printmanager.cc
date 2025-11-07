@@ -15,10 +15,10 @@ PrintManager::PrintManager(CAppConfig& app_config, TreeModel* inventory, TreeMod
 {
 }
 
-void PrintManager::SetData(const PrintData& data, const QList<EntryShadow*>& entry_shadow_list)
+void PrintManager::SetData(const PrintData& data, const QList<Entry*>& entry_list)
 {
     data_ = data;
-    entry_shadow_list_ = entry_shadow_list;
+    entry_list_ = entry_list;
 }
 
 void PrintManager::Preview()
@@ -93,7 +93,7 @@ void PrintManager::RenderAllPages(QPrinter* printer)
     int rows { field_settings_.value("rows_columns").x };
 
     // Calculate total pages required based on the total rows and rows per page
-    const long long total_pages { (entry_shadow_list_.size() + rows - 1) / rows }; // Ceiling division to determine total pages
+    const long long total_pages { (entry_list_.size() + rows - 1) / rows }; // Ceiling division to determine total pages
 
     QPainter painter(printer);
 
@@ -109,7 +109,7 @@ void PrintManager::RenderAllPages(QPrinter* printer)
 
         // Draw content on the page
         const long long start_index { page_num * rows };
-        const long long end_index { qMin((page_num + 1) * rows, entry_shadow_list_.size()) };
+        const long long end_index { qMin((page_num + 1) * rows, entry_list_.size()) };
         DrawTable(&painter, start_index, end_index);
 
         // Draw footer (e.g., page number, etc.)
@@ -139,7 +139,7 @@ void PrintManager::DrawTable(QPainter* painter, long long start_index, long long
     int width { field_settings_.value("heigh_width").y };
 
     for (int row = 0; row != end_index - start_index; ++row) {
-        const auto* entry_shadow { entry_shadow_list_.at(start_index + row) };
+        const auto* entry_shadow { entry_list_.at(start_index + row) };
 
         for (int col = 0; col != columns; ++col) {
             QRect cellRect(left + col * width, top + row * heigh, width, heigh);
@@ -168,25 +168,25 @@ void PrintManager::DrawFooter(QPainter* painter, int page_num, int total_pages)
     painter->drawText(page_info.x, page_info.y, QString::asprintf("%d/%d", page_num, total_pages));
 }
 
-QString PrintManager::GetColumnText(int col, const EntryShadow* entry_shadow)
+QString PrintManager::GetColumnText(int col, const Entry* entry)
 {
-    auto* o_entry_shadow { static_cast<const EntryShadowO*>(entry_shadow) };
+    auto* d_entry { static_cast<const EntryO*>(entry) };
 
     switch (col) {
     case 0:
-        return inventory_->Path(*entry_shadow->rhs_node);
+        return inventory_->Path(entry->rhs_node);
     case 1:
-        return inventory_->Path(*o_entry_shadow->external_sku);
+        return inventory_->Path(d_entry->external_sku);
     case 2:
-        return *entry_shadow->description;
+        return entry->description;
     case 3:
-        return QString::number(*o_entry_shadow->count);
+        return QString::number(d_entry->count);
     case 4:
-        return QString::number(*o_entry_shadow->measure);
+        return QString::number(d_entry->measure);
     case 5:
-        return QString::number(*o_entry_shadow->unit_price);
+        return QString::number(d_entry->unit_price);
     case 6:
-        return QString::number(*o_entry_shadow->initial);
+        return QString::number(d_entry->initial);
     default:
         return QString();
     }

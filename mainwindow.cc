@@ -607,8 +607,11 @@ void MainWindow::TableConnectO(QTableView* table_view, TableModelO* table_model_
     connect(widget, &TableWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
 
     connect(widget, &TableWidgetO::SSyncStatus, tree_model, &TreeModelO::RSyncStatus);
-    connect(table_model_order, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
-    connect(table_model_order, &TableModel::SRemoveEntrySet, entry_hub, &EntryHub::RRemoveEntrySet);
+
+    connect(table_model_order, &TableModelO::SInsertEntryHash, entry_hub, &EntryHub::RInsertEntryHash);
+    connect(table_model_order, &TableModelO::SRemoveEntrySet, entry_hub, &EntryHub::RRemoveEntrySet);
+    connect(table_model_order, &TableModelO::SUpdateEntryHash, entry_hub, &EntryHub::RUpdateEntryHash);
+    connect(table_model_order, &TableModel::SReleaseNode, entry_hub, &EntryHub::RReleaseNode);
 }
 
 void MainWindow::TableConnectP(QTableView* table_view, TableModel* table_model) const
@@ -619,6 +622,7 @@ void MainWindow::TableConnectP(QTableView* table_view, TableModel* table_model) 
     connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
+    connect(table_model, &TableModel::SReleaseNode, entry_hub, &EntryHub::RReleaseNode);
 }
 
 void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
@@ -2948,39 +2952,32 @@ void MainWindow::UpdateLastTab() const
     sc_->info.last_tab_id = ui->tabWidget->tabBar()->tabData(index).value<TabInfo>().id;
 }
 
-void MainWindow::on_tabWidget_currentChanged(int index)
+void MainWindow::on_tabWidget_currentChanged(int /*index*/)
 {
     auto* widget { ui->tabWidget->currentWidget() };
     assert(widget);
 
     const bool is_tree { IsTreeWidget(widget) };
-    const bool is_leaf_fist { IsTableWidgetFIPT(widget) };
-    const bool is_leaf_order { IsTableWidgetO(widget) };
+    const bool is_table_fipt { IsTableWidgetFIPT(widget) };
+    const bool is_table_o { IsTableWidgetO(widget) };
     const bool is_order_section { start_ == Section::kSale || start_ == Section::kPurchase };
     const bool is_color_section { start_ == Section::kTask || start_ == Section::kInventory };
-
-    bool finished {};
-
-    if (is_leaf_order) {
-        const auto node_id { ui->tabWidget->tabBar()->tabData(index).value<TabInfo>().id };
-        finished = sc_->tree_model->Status(node_id);
-    }
 
     ui->actionAppendNode->setEnabled(is_tree);
     ui->actionEditName->setEnabled(is_tree);
     ui->actionResetColor->setEnabled(is_tree && is_color_section);
 
-    ui->actionMarkAll->setEnabled(is_leaf_fist);
-    ui->actionMarkNone->setEnabled(is_leaf_fist);
-    ui->actionMarkToggle->setEnabled(is_leaf_fist);
-    ui->actionJump->setEnabled(is_leaf_fist);
+    ui->actionMarkAll->setEnabled(is_table_fipt);
+    ui->actionMarkNone->setEnabled(is_table_fipt);
+    ui->actionMarkToggle->setEnabled(is_table_fipt);
+    ui->actionJump->setEnabled(is_table_fipt);
 
     ui->actionStatement->setEnabled(is_order_section);
     ui->actionSettlement->setEnabled(is_order_section);
     ui->actionNewGroup->setEnabled(is_order_section);
 
-    ui->actionAppendEntry->setEnabled(is_leaf_fist || (is_leaf_order && !finished));
-    ui->actionRemove->setEnabled(is_tree || is_leaf_fist || (is_leaf_order && !finished));
+    ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o);
+    ui->actionRemove->setEnabled(is_tree || is_table_fipt || is_table_o);
 }
 
 void MainWindow::on_actionAppendEntry_triggered()

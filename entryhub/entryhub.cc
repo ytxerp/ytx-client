@@ -31,10 +31,48 @@ void EntryHub::RRemoveEntry(const QUuid& entry_id)
     }
 }
 
+void EntryHub::RReleaseNode(const QUuid& node_id)
+{
+    for (auto it = entry_cache_.begin(); it != entry_cache_.end();) {
+        Entry* e = it.value();
+
+        if (e->lhs_node == node_id) {
+            EntryPool::Instance().Recycle(e, section_);
+
+            it = entry_cache_.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
 void EntryHub::RRemoveEntrySet(const QSet<QUuid>& entry_set)
 {
     for (const auto& id : entry_set) {
         RRemoveEntry(id);
+    }
+}
+
+void EntryHub::RInsertEntryHash(const QHash<QUuid, Entry*>& entry_hash)
+{
+    for (auto* e : entry_hash) {
+        auto* entry { e->Clone() };
+        entry_cache_.insert(entry->id, entry);
+    }
+}
+
+void EntryHub::RUpdateEntryHash(const QHash<QUuid, QJsonObject>& entry_caches)
+{
+    for (auto it = entry_caches.cbegin(); it != entry_caches.cend(); ++it) {
+        const QUuid& id { it.key() };
+        const QJsonObject& cache { it.value() };
+
+        auto entry_it = entry_cache_.find(id);
+        if (entry_it == entry_cache_.end())
+            continue;
+
+        Entry* entry = entry_it.value();
+        entry->ReadJson(cache);
     }
 }
 

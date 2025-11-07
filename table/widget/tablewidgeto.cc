@@ -337,7 +337,7 @@ void TableWidgetO::PreparePrint()
 
     PrintData data { tree_model_partner_->Name(tmp_node_.partner), tmp_node_.issued_time.toLocalTime().toString(kDateTimeFST),
         tree_model_partner_->Name(tmp_node_.employee), unit, tmp_node_.initial_total };
-    print_manager_.SetData(data, table_model_order_->GetEntryShadowList());
+    print_manager_.SetData(data, table_model_order_->GetEntryList());
 }
 
 QJsonObject TableWidgetO::BuildOrderCache()

@@ -80,7 +80,7 @@ private slots:
     void on_actionStatement_triggered();
     void on_actionSettlement_triggered();
 
-    void on_tabWidget_currentChanged(int index);
+    void on_tabWidget_currentChanged(int);
     void on_tabWidget_tabBarDoubleClicked(int index);
     void on_tabWidget_tabCloseRequested(int index);
 

@@ -58,7 +58,12 @@ public slots:
     // receive from TableModel
     void RInsertEntry(Entry* entry) { entry_cache_.insert(entry->id, entry); }
     void RRemoveEntry(const QUuid& entry_id);
+    void RReleaseNode(const QUuid& node_id);
+
+    // receive from TableModelO
     void RRemoveEntrySet(const QSet<QUuid>& entry_set);
+    void RInsertEntryHash(const QHash<QUuid, Entry*>& entry_hash);
+    void RUpdateEntryHash(const QHash<QUuid, QJsonObject>& entry_caches);
 
 public:
     // tree

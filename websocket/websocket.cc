@@ -769,7 +769,7 @@ void WebSocket::SaveOrderUpdate(const QJsonObject& obj)
     const auto node_delta { obj.value(kNodeDelta).toObject() };
     const QJsonArray deleted_entry_array { obj.value(kDeletedEntryArray).toArray() };
     const QJsonArray inserted_entry_array { obj.value(kInsertedEntryArray).toArray() };
-    const QJsonArray entry_cache_array { obj.value(kEntryCacheArray).toArray() };
+    const QJsonArray entry_cache_array { obj.value(kUpdatedEntryArray).toArray() };
 }
 
 void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj) { }

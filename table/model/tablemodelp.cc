@@ -13,6 +13,8 @@ TableModelP::TableModelP(CTableModelArg& arg, QObject* parent)
 {
 }
 
+TableModelP::~TableModelP() { emit SReleaseNode(lhs_id_); }
+
 bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);

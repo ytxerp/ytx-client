@@ -12,10 +12,6 @@ TableWidgetFIPT::TableWidgetFIPT(TableModel* model, QWidget* parent)
     ui->tableViewFIPT->setModel(model);
 }
 
-TableWidgetFIPT::~TableWidgetFIPT()
-{
-    delete model_;
-    delete ui;
-}
+TableWidgetFIPT::~TableWidgetFIPT() { delete ui; }
 
 QTableView* TableWidgetFIPT::View() const { return ui->tableViewFIPT; }
