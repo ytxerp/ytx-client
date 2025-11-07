@@ -117,7 +117,11 @@ private:
     void UpdateDirectionRule(const QJsonObject& obj);
     void UpdateNodeStatus(const QJsonObject& obj);
     void UpdateNodeName(const QJsonObject& obj);
-    void UpdateOrder(const QJsonObject& obj);
+
+    void SaveOrderUpdate(const QJsonObject& obj);
+    void ReleaseOrderUpdate(const QJsonObject& obj);
+    void ReleaseOrderInsert(const QJsonObject& obj);
+    void RecallOrder(const QJsonObject& obj);
 
     void UpdateDocumentDir(const QJsonObject& obj);
     void UpdateDefaultUnit(const QJsonObject& obj);

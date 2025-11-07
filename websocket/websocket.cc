@@ -175,7 +175,10 @@ void WebSocket::InitHandler()
     handler_obj_[kEntryNumeric] = [this](const QJsonObject& obj) { UpdateEntryNumeric(obj); };
     handler_obj_[kLeafRemoveSafely] = [this](const QJsonObject& obj) { RemoveLeafSafely(obj); };
     handler_obj_[kOrderInsertSaved] = [this](const QJsonObject& obj) { InsertNode(obj); };
-    handler_obj_[kOrderUpdateSaved] = [this](const QJsonObject& obj) { UpdateOrder(obj); };
+    handler_obj_[kOrderUpdateSaved] = [this](const QJsonObject& obj) { SaveOrderUpdate(obj); };
+    handler_obj_[kOrderInsertReleased] = [this](const QJsonObject& obj) { ReleaseOrderInsert(obj); };
+    handler_obj_[kOrderUpdateReleased] = [this](const QJsonObject& obj) { ReleaseOrderUpdate(obj); };
+    handler_obj_[kOrderRecalled] = [this](const QJsonObject& obj) { RecallOrder(obj); };
 
     handler_arr_[kSharedConfig] = [this](const QJsonArray& arr) { ApplySharedConfig(arr); };
     handler_arr_[kPartnerEntry] = [this](const QJsonArray& arr) { ApplyPartnerEntry(arr); };
@@ -743,7 +746,20 @@ void WebSocket::UpdateNodeName(const QJsonObject& obj)
     tree_model->SyncNodeName(node_id, name, meta);
 }
 
-void WebSocket::UpdateOrder(const QJsonObject& obj) { }
+void WebSocket::SaveOrderUpdate(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    CString session_id { obj.value(kSessionId).toString() };
+
+    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+    auto tree_model { tree_model_hash_.value(section) };
+}
+
+void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj) { }
+
+void WebSocket::ReleaseOrderInsert(const QJsonObject& obj) { }
+
+void WebSocket::RecallOrder(const QJsonObject& obj) { }
 
 void WebSocket::ActionEntry(const QJsonObject& obj)
 {
