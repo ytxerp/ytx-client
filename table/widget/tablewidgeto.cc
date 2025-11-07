@@ -408,13 +408,13 @@ void TableWidgetO::SaveOrder()
 
     if (is_new_) {
         BuildNodeInsert(order_cache);
-        WebSocket::Instance()->SendMessage(kOrderInsert, order_cache);
+        WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_cache);
 
         emit SInsertOrder();
         is_new_ = false;
     } else {
         BuildNodeUpdate(order_cache);
-        WebSocket::Instance()->SendMessage(kOrderUpdate, order_cache);
+        WebSocket::Instance()->SendMessage(kOrderUpdateSaved, order_cache);
 
         ResetCache();
     }

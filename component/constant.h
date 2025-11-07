@@ -187,8 +187,8 @@ inline const QString kNodeDrag = QStringLiteral("node_drag");
 inline const QString kNodeUpdate = QStringLiteral("node_update");
 inline const QString kNodeName = QStringLiteral("node_name");
 
-inline const QString kOrderInsert = QStringLiteral("order_insert");
-inline const QString kOrderUpdate = QStringLiteral("order_update");
+inline const QString kOrderInsertSaved = QStringLiteral("order_insert_saved");
+inline const QString kOrderUpdateSaved = QStringLiteral("order_update_saved");
 inline const QString kOrderInsertReleased = QStringLiteral("order_insert_released");
 inline const QString kOrderUpdateReleased = QStringLiteral("order_update_released");
 inline const QString kOrderRecalled = QStringLiteral("order_recalled");
