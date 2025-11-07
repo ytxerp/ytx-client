@@ -360,7 +360,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     const auto& section_config = sc->section_config;
 
     assert(tree_model);
-    assert(tree_model->ModelContains(node_id));
+    assert(tree_model->Contains(node_id));
 
     CString name { tree_model->Name(node_id) };
     const Section section { info.section };
@@ -1545,7 +1545,7 @@ void MainWindow::on_actionSettlement_triggered()
 void MainWindow::CreateLeafExternalReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit)
 {
     assert(tree_model);
-    assert(tree_model->ModelContains(node_id));
+    assert(tree_model->Contains(node_id));
 
     CString name { tr("Record-") + tree_model->Name(node_id) };
 
@@ -2218,7 +2218,7 @@ void MainWindow::on_actionJump_triggered()
     if (start_ == Section::kTask) {
         auto& tree_model { sc_->tree_model };
 
-        if (!tree_model->ModelContains(rhs_node_id)) {
+        if (!tree_model->Contains(rhs_node_id)) {
             tree_model->AckNode(rhs_node_id);
         }
     }
@@ -2708,7 +2708,7 @@ void MainWindow::on_actionSearch_triggered()
         node = new SearchNodeModelT(sc_->info, sc_->tree_model, this);
         entry = new SearchEntryModelT(sc_->info, this);
         dialog = new SearchDialogT(sc_->tree_model, node, entry, sc_->section_config, sc_->info, this);
-        connect(sc_->tree_model, &TreeModel::SSearchNode, node, &SearchNodeModel::RSearchNode);
+        connect(WebSocket::Instance(), &WebSocket::SNodeSearch, node, &SearchNodeModel::RNodeSearch);
         break;
     case Section::kPartner:
         node = new SearchNodeModelP(sc_->info, sc_->tree_model, this);
@@ -2720,7 +2720,7 @@ void MainWindow::on_actionSearch_triggered()
         node = new SearchNodeModelO(sc_->info, sc_->tree_model, sc_p_.tree_model, this);
         entry = new SearchEntryModelO(sc_->info, this);
         dialog = new SearchDialogO(sc_->tree_model, node, entry, sc_i_.tree_model, sc_p_.tree_model, sc_->section_config, sc_->info, this);
-        connect(sc_->tree_model, &TreeModel::SSearchNode, node, &SearchNodeModel::RSearchNode);
+        connect(WebSocket::Instance(), &WebSocket::SNodeSearch, node, &SearchNodeModel::RNodeSearch);
         break;
     default:
         break;
@@ -2742,14 +2742,6 @@ void MainWindow::RNodeLocation(const QUuid& node_id)
     // Ignore report widget
     if (node_id.isNull())
         return;
-
-    if (start_ == Section::kSale || start_ == Section::kPurchase || start_ == Section::kTask) {
-        auto& tree_model { sc_->tree_model };
-
-        if (!tree_model->ModelContains(node_id)) {
-            tree_model->ActivateCachedNode(node_id);
-        }
-    }
 
     auto index { sc_->tree_model->GetIndex(node_id) };
     if (!index.isValid())
@@ -2783,7 +2775,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
     if (start_ == Section::kSale || start_ == Section::kPurchase) {
         auto& tree_model { sc_->tree_model };
 
-        if (!tree_model->ModelContains(lhs_node_id)) {
+        if (!tree_model->Contains(lhs_node_id)) {
             tree_model->AckNode(id);
         }
     }
@@ -2791,9 +2783,9 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
     if (start_ == Section::kTask) {
         auto& tree_model { sc_->tree_model };
 
-        if (tree_model->ModelContains(lhs_node_id)) {
+        if (tree_model->Contains(lhs_node_id)) {
             id = lhs_node_id;
-        } else if (tree_model->ModelContains(rhs_node_id)) {
+        } else if (tree_model->Contains(rhs_node_id)) {
             id = rhs_node_id;
         } else {
             tree_model->AckNode(id);

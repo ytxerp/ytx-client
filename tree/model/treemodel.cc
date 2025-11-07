@@ -18,7 +18,11 @@ TreeModel::TreeModel(CSectionInfo& info, CString& separator, int default_unit, Q
     InitRoot(root_, default_unit);
 }
 
-TreeModel::~TreeModel() { FlushCaches(); }
+TreeModel::~TreeModel()
+{
+    FlushCaches();
+    NodePool::Instance().Recycle(node_hash_, section_);
+}
 
 void TreeModel::RRemoveNode(const QUuid& node_id)
 {
@@ -102,7 +106,7 @@ void TreeModel::InsertImpl(Node* parent, int row, Node* node)
     node->parent = parent;
     endInsertRows();
 
-    RegisterNode(node);
+    node_hash_.insert(node->id, node);
     RegisterPath(node);
     SortModel();
 }
@@ -505,7 +509,7 @@ void TreeModel::UpdateDefaultUnit(int default_unit)
     emit dataChanged(top_left, bottom_right);
 }
 
-void TreeModel::SearchModel(QList<const Node*>& node_list, CString& name) const
+void TreeModel::SearchModel(QList<Node*>& node_list, CString& name) const
 {
     node_list.reserve(node_hash_.size() / 2);
 
@@ -579,42 +583,13 @@ QSortFilterProxyModel* TreeModel::ExcludeOneModel(const QUuid& node_id, QObject*
     return model;
 }
 
-void TreeModel::AckNode(const QUuid& node_id)
+void TreeModel::AckNode(const QUuid& node_id) const
 {
     if (node_hash_.contains(node_id))
         return;
 
-    if (ActivateCachedNode(node_id))
-        return;
-
     const auto message { JsonGen::NodeAcked(section_, node_id) };
     WebSocket::Instance()->SendMessage(kNodeAcked, message);
-}
-
-bool TreeModel::ActivateCachedNode(const QUuid& node_id)
-{
-    auto it = node_cache_.find(node_id);
-    if (it == node_cache_.end())
-        return false;
-
-    Node* node { it.value() };
-    if (!node || !node->parent)
-        return false;
-
-    Node* parent { node->parent };
-    const long long row { parent->children.size() };
-    const auto parent_idx { GetIndex(parent->id) };
-
-    beginInsertRows(parent_idx, row, row);
-    parent->children.insert(row, node);
-    endInsertRows();
-
-    node_hash_.insert(node_id, node);
-    RegisterPath(node);
-    SortModel();
-
-    emit SNodeLocation(node->id);
-    return true;
 }
 
 void TreeModel::RemovePath(Node* node, Node* parent_node)
@@ -783,7 +758,7 @@ void TreeModel::ApplyTree(const QJsonObject& data)
         const QJsonObject obj { val.toObject() };
         auto* node = NodePool::Instance().Allocate(section_);
         node->ReadJson(obj);
-        RegisterNode(node);
+        node_hash_.insert(node->id, node);
     }
 
     BuildHierarchy(path_array);
@@ -812,52 +787,11 @@ void TreeModel::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
     node->parent = ancestor;
     endInsertRows();
 
-    RegisterNode(node);
+    node_hash_.insert(node->id, node);
     RegisterPath(node);
     SortModel();
 
     emit SNodeLocation(node->id);
-}
-
-void TreeModel::SearchNode(const QJsonObject& obj)
-{
-    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
-    const QJsonArray path_array { obj.value(kPathArray).toArray() };
-    QList<const Node*> list {};
-
-    for (const QJsonValue& val : node_array) {
-        const QJsonObject obj { val.toObject() };
-
-        const QUuid id { QUuid(obj.value(kId).toString()) };
-        Node* node {};
-
-        auto it = node_cache_.find(id);
-        if (it != node_cache_.end()) {
-            node = it.value();
-        } else {
-            node = NodePool::Instance().Allocate(section_);
-            node->ReadJson(obj);
-            node_cache_[id] = node;
-        }
-
-        list.append(node);
-    }
-
-    for (const QJsonValue& val : path_array) {
-        const QJsonObject obj { val.toObject() };
-
-        const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
-        const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
-
-        Node* ancestor { node_cache_.value(ancestor_id, nullptr) };
-        Node* descendant { node_cache_.value(descendant_id, nullptr) };
-
-        if (ancestor && descendant) {
-            descendant->parent = ancestor;
-        }
-    }
-
-    emit SSearchNode(list);
 }
 
 void TreeModel::SortModel()

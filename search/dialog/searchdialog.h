@@ -52,10 +52,10 @@ signals:
     void SEntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
 
 private slots:
-    void RNodeDoubleClicked(const QModelIndex& index);
     void RContentGroup(int id);
     void RSearch();
 
+    virtual void RNodeDoubleClicked(const QModelIndex& index);
     virtual void REntryDoubleClicked(const QModelIndex& index) = 0;
 
 protected:
@@ -78,7 +78,7 @@ protected:
 
     SearchNodeModel* search_node_ {};
     SearchEntryModel* search_entry_ {};
-    CTreeModel* node_ {};
+    CTreeModel* tree_model_ {};
     QButtonGroup* content_group_ {};
 
     DoubleSpinNoneZeroR* value_ {};

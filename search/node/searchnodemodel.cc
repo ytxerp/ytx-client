@@ -1,17 +1,13 @@
 #include "searchnodemodel.h"
 
+#include <QJsonArray>
+
 SearchNodeModel::SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
     , tree_model_ { tree_model }
+    , section_ { info.section }
 {
-}
-
-void SearchNodeModel::RSearchNode(const QList<const Node*>& node_list)
-{
-    beginResetModel();
-    node_list_ = node_list;
-    endResetModel();
 }
 
 QModelIndex SearchNodeModel::index(int row, int column, const QModelIndex& parent) const

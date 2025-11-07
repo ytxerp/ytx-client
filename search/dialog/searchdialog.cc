@@ -12,7 +12,7 @@ SearchDialog::SearchDialog(
     , ui(new Ui::SearchDialog)
     , search_node_ { search_node }
     , search_entry_ { search_entry }
-    , node_ { tree }
+    , tree_model_ { tree }
     , config_ { config }
     , info_ { info }
 {
@@ -68,10 +68,10 @@ void SearchDialog::InitDelegate()
     unit_ = new IntStringR(info_.unit_map, this);
     direction_rule_ = new BoolStringR(info_.rule_map, this);
     kind_ = new IntStringR(info_.kind_map, this);
-    tree_path_ = new SearchPathTreeR(node_, std::to_underlying(NodeEnum::kId), this);
+    tree_path_ = new SearchPathTreeR(tree_model_, std::to_underlying(NodeEnum::kId), this);
     check_ = new StatusR(this);
     color_ = new ColorR(this);
-    table_path_ = new SearchPathTableR(node_, this);
+    table_path_ = new SearchPathTableR(tree_model_, this);
 }
 
 void SearchDialog::HideTreeColumn(QTableView* view)

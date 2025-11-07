@@ -29,7 +29,7 @@ class TreeModelO final : public TreeModel {
 
 public:
     TreeModelO(CSectionInfo& info, CString& separator, int default_unit, QObject* parent = nullptr);
-    ~TreeModelO() override;
+    ~TreeModelO() override = default;
 
 signals:
     // send to NodeModelP
@@ -67,11 +67,6 @@ protected:
     void HandleNode() override;
     void ResetBranch(Node* node) override;
     void ClearModel() override;
-    void RegisterNode(Node* node) override
-    {
-        node_hash_.insert(node->id, node);
-        node_cache_.insert(node->id, node);
-    }
 };
 
 #endif // TREEMODELO_H

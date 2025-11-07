@@ -1,12 +1,38 @@
 #include "searchnodemodelo.h"
 
+#include <QJsonArray>
+
 #include "component/enumclass.h"
-#include "tree/model/treemodelp.h"
+#include "global/nodepool.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 SearchNodeModelO::SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, CTreeModel* partner_tree_model, QObject* parent)
     : SearchNodeModel { info, tree_model, parent }
     , partner_tree_model_ { partner_tree_model }
 {
+}
+
+void SearchNodeModelO::RNodeSearch(const QJsonObject& obj)
+{
+    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
+
+    beginResetModel();
+
+    if (!node_list_.isEmpty()) {
+        NodePool::Instance().Recycle(node_list_, section_);
+        node_list_.clear();
+    }
+
+    for (const QJsonValue& val : node_array) {
+        const QJsonObject obj { val.toObject() };
+
+        Node* node { NodePool::Instance().Allocate(section_) };
+        node->ReadJson(obj);
+
+        node_list_.append(node);
+    }
+    endResetModel();
 }
 
 QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
@@ -104,12 +130,21 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
 
 void SearchNodeModelO::Search(CString& text)
 {
+    if (text.isEmpty()) {
+        if (!node_list_.isEmpty()) {
+            beginResetModel();
+            NodePool::Instance().Recycle(node_list_, section_);
+            node_list_.clear();
+            endResetModel();
+        }
+        return;
+    }
+
+    WebSocket::Instance()->SendMessage(kNodeSearch, JsonGen::NodeSearch(section_, text));
+}
+
+void SearchNodeModelO::ResetData()
+{
+    NodePool::Instance().Recycle(node_list_, section_);
     node_list_.clear();
-
-    auto* partner_tree { static_cast<const TreeModelP*>(partner_tree_model_) };
-    const int unit { info_.section == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor) };
-
-    beginResetModel();
-    // static_cast<EntryHubO*>(dbhub_)->SearchNode(node_list_, partner_tree->PartyList(text, unit));
-    endResetModel();
 }

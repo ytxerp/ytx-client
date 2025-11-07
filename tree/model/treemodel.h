@@ -49,9 +49,6 @@ signals:
     // send to its view
     void SResizeColumnToContents(int column);
 
-    // send to SearchNodeModel
-    void SSearchNode(const QList<const Node*>& entry_list);
-
     // send to Mainwindow
     void SUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void SFreeWidget(const QUuid& node_id);
@@ -115,7 +112,6 @@ public:
     virtual void SyncNodeName(const QUuid& node_id, const QString& name, const QJsonObject& meta);
 
     void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id);
-    void SearchNode(const QJsonObject& obj);
 
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
     void InsertMeta(const QUuid& node_id, const QJsonObject& data);
@@ -150,11 +146,10 @@ public:
     void UpdateSeparator(CString& old_separator, CString& new_separator);
     void UpdateDefaultUnit(int default_unit);
 
-    void AckNode(const QUuid& node_id);
-    bool ActivateCachedNode(const QUuid& node_id);
-    void SearchModel(QList<const Node*>& node_list, CString& name) const;
+    void AckNode(const QUuid& node_id) const;
+    void SearchModel(QList<Node*>& node_list, CString& name) const;
 
-    inline bool ModelContains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
+    inline bool Contains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
     inline void SetParent(Node* node, const QUuid& parent_id) const
     {
         assert(node);
@@ -218,14 +213,11 @@ protected:
     void InsertImpl(Node* parent, int row, Node* node);
     void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
 
-    inline bool CacheContains(const QUuid& node_id) const { return node_cache_.contains(node_id); }
-
     virtual QSet<QUuid> SyncDeltaImpl(
         const QUuid& node_id, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
 
     virtual void RegisterPath(Node* node);
     virtual void RemovePath(Node* node, Node* parent_node);
-    virtual void RegisterNode(Node* node) { node_hash_.insert(node->id, node); }
 
     virtual void ResetBranch(Node* node) { Q_UNUSED(node) };
     virtual void ClearModel() { }
@@ -260,7 +252,6 @@ protected:
 protected:
     Node* root_ {};
     NodeHash node_hash_ {};
-    NodeHash node_cache_ {};
 
     QHash<QUuid, QString> leaf_path_ {};
     QHash<QUuid, QString> branch_path_ {};

@@ -268,7 +268,6 @@ QJsonObject NodeSearch(Section section, CString& keyword)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kKeyword, keyword);
     message.insert(kNodeArray, QJsonArray());
-    message.insert(kPathArray, QJsonArray());
 
     return message;
 }

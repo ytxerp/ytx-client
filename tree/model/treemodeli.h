@@ -27,7 +27,7 @@ class TreeModelI final : public TreeModel {
 
 public:
     TreeModelI(CSectionInfo& info, CString& separator, int default_unit, QObject* parent = nullptr);
-    ~TreeModelI() override;
+    ~TreeModelI() override = default;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

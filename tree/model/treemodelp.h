@@ -27,7 +27,7 @@ class TreeModelP final : public TreeModel {
 
 public:
     TreeModelP(CSectionInfo& info, CString& separator, int default_unit, QObject* parent = nullptr);
-    ~TreeModelP() override;
+    ~TreeModelP() override = default;
 
 public slots:
     void RUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta);

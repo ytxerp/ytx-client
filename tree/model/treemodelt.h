@@ -27,7 +27,7 @@ class TreeModelT final : public TreeModel {
 
 public:
     TreeModelT(CSectionInfo& info, CString& separator, int default_unit, QObject* parent = nullptr);
-    ~TreeModelT() override;
+    ~TreeModelT() override = default;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -42,11 +42,6 @@ public:
     void SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta) override;
 
 protected:
-    void RegisterNode(Node* node) override
-    {
-        node_hash_.insert(node->id, node);
-        node_cache_.insert(node->id, node);
-    }
     void ResetBranch(Node* node) override;
     void ClearModel() override;
     void UpdateStatus(Node* node, int value) override;

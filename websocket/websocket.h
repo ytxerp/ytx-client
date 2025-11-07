@@ -71,6 +71,9 @@ signals:
 
     void SConnectionRefused();
 
+    // send to SearchNodeModel
+    void SNodeSearch(const QJsonObject& obj);
+
 private slots:
     void RConnected();
     void RDisconnected();

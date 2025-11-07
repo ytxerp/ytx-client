@@ -9,10 +9,7 @@
 TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
 {
-    node_cache_.insert(QUuid(), root_);
 }
-
-TreeModelO::~TreeModelO() { NodePool::Instance().Recycle(node_cache_, section_); }
 
 QSet<QUuid> TreeModelO::SyncDeltaImpl(
     const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
@@ -58,18 +55,12 @@ void TreeModelO::AckTree(const QJsonObject& obj)
         const QJsonObject obj { val.toObject() };
 
         const QUuid id { QUuid(obj.value(kId).toString()) };
-        Node* node {};
 
-        auto it = node_cache_.find(id);
-        if (it != node_cache_.end()) {
-            node = it.value();
-        } else {
-            node = NodePool::Instance().Allocate(section_);
-            node->ReadJson(obj);
-            node_cache_.insert(node->id, node);
-        }
+        assert(!node_hash_.contains(id));
 
-        node_hash_.insert(node->id, node);
+        Node* node { NodePool::Instance().Allocate(section_) };
+        node->ReadJson(obj);
+        node_hash_.insert(id, node);
     }
 
     for (const QJsonValue& val : path_array) {
@@ -248,9 +239,6 @@ void TreeModelO::ResetBranch(Node* node)
 
 void TreeModelO::ClearModel()
 {
-    // Clear tree structure and paths
-    root_->children.clear();
-
     // Clear non-branch nodes from node_hash_, keep branch nodes and unfinidhws nodes
     for (auto it = node_hash_.begin(); it != node_hash_.end();) {
         auto* node = static_cast<NodeO*>(it.value());
@@ -271,6 +259,7 @@ void TreeModelO::ClearModel()
             continue;
         }
 
+        NodePool::Instance().Recycle(node, section_);
         it = node_hash_.erase(it);
     }
 }

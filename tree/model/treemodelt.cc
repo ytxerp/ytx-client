@@ -10,10 +10,7 @@ TreeModelT::TreeModelT(CSectionInfo& info, CString& separator, int default_unit,
     : TreeModel(info, separator, default_unit, parent)
 {
     leaf_path_model_ = new ItemModel(this);
-    node_cache_.insert(QUuid(), root_);
 }
-
-TreeModelT::~TreeModelT() { NodePool::Instance().Recycle(node_cache_, section_); }
 
 QVariant TreeModelT::data(const QModelIndex& index, int role) const
 {
@@ -237,18 +234,12 @@ void TreeModelT::AckTree(const QJsonObject& obj)
         const QJsonObject obj { val.toObject() };
 
         const QUuid id { QUuid(obj.value(kId).toString()) };
-        Node* node {};
 
-        auto it = node_cache_.find(id);
-        if (it != node_cache_.end()) {
-            node = it.value();
-        } else {
-            node = NodePool::Instance().Allocate(section_);
-            node->ReadJson(obj);
-            node_cache_.insert(node->id, node);
-        }
+        assert(!node_hash_.contains(id));
 
-        node_hash_.insert(node->id, node);
+        Node* node { NodePool::Instance().Allocate(section_) };
+        node->ReadJson(obj);
+        node_hash_.insert(id, node);
     }
 
     for (const QJsonValue& val : path_array) {
@@ -324,7 +315,6 @@ void TreeModelT::ResetBranch(Node* node)
 void TreeModelT::ClearModel()
 {
     // Clear tree structure, paths and item_model
-    root_->children.clear();
     leaf_path_.clear();
     branch_path_.clear();
     leaf_path_model_->Clear();
@@ -344,6 +334,7 @@ void TreeModelT::ClearModel()
             continue;
         }
 
+        NodePool::Instance().Recycle(node, section_);
         it = node_hash_.erase(it);
     }
 }

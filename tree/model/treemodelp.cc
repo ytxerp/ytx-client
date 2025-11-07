@@ -1,6 +1,5 @@
 #include "treemodelp.h"
 
-#include "global/nodepool.h"
 #include "tree/includemultiplefiltermodel.h"
 
 TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
@@ -9,8 +8,6 @@ TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, int default_unit,
     leaf_path_model_ = new ItemModel(this);
     leaf_path_model_->AppendItem(QString(), QUuid());
 }
-
-TreeModelP::~TreeModelP() { NodePool::Instance().Recycle(node_hash_, section_); }
 
 void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta)
 {

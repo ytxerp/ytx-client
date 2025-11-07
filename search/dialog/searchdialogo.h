@@ -31,6 +31,7 @@ public:
 
 private slots:
     void REntryDoubleClicked(const QModelIndex& index) override;
+    void RNodeDoubleClicked(const QModelIndex& index) override;
 
 private:
     void TreeViewDelegate(QTableView* view) override;

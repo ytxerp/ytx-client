@@ -35,7 +35,7 @@ public:
     virtual ~SearchNodeModel() = default;
 
 public slots:
-    void RSearchNode(const QList<const Node*>& entry_list);
+    virtual void RNodeSearch(const QJsonObject& obj) { Q_UNUSED(obj) }
 
 protected:
     SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, QObject* parent = nullptr);
@@ -52,9 +52,13 @@ public:
     virtual void Search(CString& text);
 
 protected:
+    virtual void ResetData() { node_list_.clear(); }
+
+protected:
     CSectionInfo& info_;
     CTreeModel* tree_model_ {};
-    QList<const Node*> node_list_ {};
+    QList<Node*> node_list_ {};
+    const Section section_ {};
 };
 
 #endif // SEARCHNODEMODEL_H

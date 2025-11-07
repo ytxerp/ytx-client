@@ -1,12 +1,37 @@
 #include "searchnodemodelt.h"
 
+#include <QJsonArray>
+
 #include "component/enumclass.h"
+#include "global/nodepool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
 SearchNodeModelT::SearchNodeModelT(CSectionInfo& info, CTreeModel* tree_model, QObject* parent)
     : SearchNodeModel { info, tree_model, parent }
 {
+}
+
+void SearchNodeModelT::RNodeSearch(const QJsonObject& obj)
+{
+    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
+
+    beginResetModel();
+
+    if (!node_list_.isEmpty()) {
+        NodePool::Instance().Recycle(node_list_, section_);
+        node_list_.clear();
+    }
+
+    for (const QJsonValue& val : node_array) {
+        const QJsonObject obj { val.toObject() };
+
+        Node* node { NodePool::Instance().Allocate(section_) };
+        node->ReadJson(obj);
+
+        node_list_.append(node);
+    }
+    endResetModel();
 }
 
 QVariant SearchNodeModelT::data(const QModelIndex& index, int role) const
@@ -96,11 +121,20 @@ void SearchNodeModelT::sort(int column, Qt::SortOrder order)
 void SearchNodeModelT::Search(CString& text)
 {
     if (text.isEmpty()) {
-        beginResetModel();
-        node_list_.clear();
-        endResetModel();
+        if (!node_list_.isEmpty()) {
+            beginResetModel();
+            NodePool::Instance().Recycle(node_list_, section_);
+            node_list_.clear();
+            endResetModel();
+        }
         return;
     }
 
-    WebSocket::Instance()->SendMessage(kNodeSearch, JsonGen::NodeSearch(info_.section, text));
+    WebSocket::Instance()->SendMessage(kNodeSearch, JsonGen::NodeSearch(section_, text));
+}
+
+void SearchNodeModelT::ResetData()
+{
+    NodePool::Instance().Recycle(node_list_, section_);
+    node_list_.clear();
 }

@@ -1,14 +1,10 @@
 #include "treemodelf.h"
 
-#include "global/nodepool.h"
-
 TreeModelF::TreeModelF(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
 {
     leaf_path_model_ = new ItemModel(this);
 }
-
-TreeModelF::~TreeModelF() { NodePool::Instance().Recycle(node_hash_, section_); }
 
 QVariant TreeModelF::data(const QModelIndex& index, int role) const
 {

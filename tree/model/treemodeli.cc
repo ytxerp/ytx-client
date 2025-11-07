@@ -1,6 +1,5 @@
 #include "treemodeli.h"
 
-#include "global/nodepool.h"
 #include "tree/excludemultiplefiltermodel.h"
 #include "tree/includemultiplefiltermodel.h"
 
@@ -10,8 +9,6 @@ TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, int default_unit,
     leaf_path_model_ = new ItemModel(this);
     leaf_path_model_->AppendItem(QString(), QUuid());
 }
-
-TreeModelI::~TreeModelI() { NodePool::Instance().Recycle(node_hash_, section_); }
 
 void TreeModelI::RemoveUnitSet(const QUuid& node_id, int unit)
 {
