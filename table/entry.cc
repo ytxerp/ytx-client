@@ -208,3 +208,24 @@ void EntryO::ReadJson(const QJsonObject& object)
     if (object.contains(kUnitDiscount))
         unit_discount = object[kUnitDiscount].toString().toDouble();
 }
+
+QJsonObject EntryO::WriteJson() const
+{
+    QJsonObject obj {};
+
+    obj.insert(kId, id.toString(QUuid::WithoutBraces));
+    obj.insert(kDescription, description);
+    obj.insert(kLhsNode, lhs_node.toString(QUuid::WithoutBraces));
+    obj.insert(kRhsNode, rhs_node.toString(QUuid::WithoutBraces));
+
+    obj.insert(kUnitPrice, QString::number(unit_price, 'f', kMaxNumericScale_4));
+    obj.insert(kCount, QString::number(count, 'f', kMaxNumericScale_4));
+    obj.insert(kMeasure, QString::number(measure, 'f', kMaxNumericScale_4));
+    obj.insert(kInitial, QString::number(initial, 'f', kMaxNumericScale_4));
+    obj.insert(kFinal, QString::number(final, 'f', kMaxNumericScale_4));
+    obj.insert(kDiscount, QString::number(discount, 'f', kMaxNumericScale_4));
+    obj.insert(kUnitDiscount, QString::number(unit_discount, 'f', kMaxNumericScale_4));
+    obj.insert(kExternalSku, external_sku.toString(QUuid::WithoutBraces));
+
+    return obj;
+}

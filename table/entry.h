@@ -21,6 +21,7 @@
 #define ENTRY_H
 
 #include <QDateTime>
+#include <QJsonObject>
 #include <QUuid>
 
 struct Entry {
@@ -41,6 +42,7 @@ struct Entry {
 
     virtual void ResetState();
     virtual void ReadJson(const QJsonObject& object);
+    virtual QJsonObject WriteJson() const { return {}; }
     virtual ~Entry() = default;
 };
 
@@ -103,6 +105,7 @@ struct EntryO final : Entry {
 
     void ResetState() override;
     void ReadJson(const QJsonObject& object) override;
+    QJsonObject WriteJson() const override;
 };
 
 using EntryList = QList<Entry*>;

@@ -59,7 +59,7 @@ signals:
 
 public slots:
     void RRemoveMultiEntry(const QSet<QUuid>& entry_id_set);
-    void RAppendMultiEntry(const EntryList& entry_list);
+    virtual void RAppendMultiEntry(const EntryList& entry_list);
 
     void RUpdateBalance(const QUuid& entry_id);
     void RRefreshStatus();

@@ -30,7 +30,10 @@ class TableModelO final : public TableModel {
 
 public:
     TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
-    ~TableModelO() override = default;
+    ~TableModelO() override;
+
+public slots:
+    void RAppendMultiEntry(const EntryList& entry_list) override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -47,18 +50,17 @@ public:
     void SetNode(const NodeO* node) { d_node_ = node; }
 
 private:
-    bool UpdateRate(EntryShadow* entry_shadow, double value) override;
-    bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
+    bool UpdateInternalSku(EntryO* entry, const QUuid& value);
+    bool UpdateUnitPrice(EntryO* entry, double value);
+    bool UpdateExternalSku(EntryO* entry, const QUuid& value);
+    bool UpdateUnitDiscount(EntryO* entry, double value);
+    bool UpdateMeasure(EntryO* entry, double value);
+    bool UpdateCount(EntryO* entry, double value);
+    bool UpdateDescription(EntryO* entry, const QString& value);
 
-    bool UpdateExternalSku(EntryShadowO* entry_shadow, const QUuid& value);
-    bool UpdateUnitDiscount(EntryShadowO* entry_shadow, double value);
-    bool UpdateMeasure(EntryShadowO* entry_shadow, double value);
-    bool UpdateCount(EntryShadowO* entry_shadow, double value);
-    bool UpdateDescription(EntryShadowO* entry_shadow, const QString& value);
-
-    void ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_sku) const;
-    void ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_sku) const;
-    void RecalculateAmount(EntryShadowO* shadow) const;
+    void ResolveFromInternal(EntryO* shadow, const QUuid& internal_sku) const;
+    void ResolveFromExternal(EntryO* shadow, const QUuid& external_sku) const;
+    void RecalculateAmount(EntryO* shadow) const;
 
     void PurifyEntryShadow();
     void NormalizeEntryBuffer();
@@ -68,8 +70,10 @@ private:
     EntryHubP* entry_hub_partner_ {};
     const NodeO* d_node_ {};
 
+    QList<Entry*> entry_list_ {};
+
     QSet<QUuid> deleted_entries_ {};
-    QHash<QUuid, EntryShadow*> inserted_entries_ {};
+    QHash<QUuid, Entry*> inserted_entries_ {};
 };
 
 #endif // TABLEMODELO_H

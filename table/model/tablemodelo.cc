@@ -2,7 +2,7 @@
 
 #include <QJsonArray>
 
-#include "global/entryshadowpool.h"
+#include "global/entrypool.h"
 #include "websocket/jsongen.h"
 
 TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
@@ -12,9 +12,27 @@ TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, E
 {
 }
 
+TableModelO::~TableModelO() { EntryPool::Instance().Recycle(inserted_entries_, section_); }
+
+void TableModelO::RAppendMultiEntry(const EntryList& entry_list)
+{
+    if (entry_list.isEmpty())
+        return;
+
+    const auto row { entry_list_.size() };
+
+    beginInsertRows(QModelIndex(), row, row + entry_list.size() - 1);
+    for (auto* e : entry_list) {
+        auto* entry { EntryPool::Instance().Allocate(section_) };
+        *entry = *e;
+        entry_list_.append(entry);
+    }
+    endInsertRows();
+}
+
 void TableModelO::SaveOrder(QJsonObject& order_cache)
 {
-    // - Remove entries from shadow_list_ that have no linked rhs_node (i.e., internal SKU not selected).
+    // - Remove entries from entry_list_ that have no linked rhs_node (i.e., internal SKU not selected).
     // - Also remove any pending update cache for these entries.
     // - Mark them as deleted in deleted_entries_ and recycle the entry_shadow.
     PurifyEntryShadow();
@@ -63,34 +81,34 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* d_shadow = DerivedPtr<EntryShadowO>(shadow_list_.at(index.row()));
+    auto* d_entry = DerivedPtr<EntryO>(entry_list_.at(index.row()));
     const EntryEnumO column { index.column() };
 
     switch (column) {
     case EntryEnumO::kId:
-        return *d_shadow->id;
+        return d_entry->id;
     case EntryEnumO::kLhsNode:
-        return *d_shadow->lhs_node;
+        return d_entry->lhs_node;
     case EntryEnumO::kRhsNode:
-        return *d_shadow->rhs_node;
+        return d_entry->rhs_node;
     case EntryEnumO::kUnitPrice:
-        return *d_shadow->unit_price;
+        return d_entry->unit_price;
     case EntryEnumO::kMeasure:
-        return *d_shadow->measure;
+        return d_entry->measure;
     case EntryEnumO::kDescription:
-        return *d_shadow->description;
+        return d_entry->description;
     case EntryEnumO::kCount:
-        return *d_shadow->count;
+        return d_entry->count;
     case EntryEnumO::kFinal:
-        return *d_shadow->final;
+        return d_entry->final;
     case EntryEnumO::kDiscount:
-        return *d_shadow->discount;
+        return d_entry->discount;
     case EntryEnumO::kInitial:
-        return *d_shadow->initial;
+        return d_entry->initial;
     case EntryEnumO::kUnitDiscount:
-        return *d_shadow->unit_discount;
+        return d_entry->unit_discount;
     case EntryEnumO::kExternalSku:
-        return *d_shadow->external_sku;
+        return d_entry->external_sku;
     default:
         return QVariant();
     }
@@ -106,14 +124,14 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
 
     const EntryEnumO column { index.column() };
 
-    auto* shadow = shadow_list_.at(index.row());
-    auto* d_shadow = DerivedPtr<EntryShadowO>(shadow);
+    auto* entry = entry_list_.at(index.row());
+    auto* d_entry = DerivedPtr<EntryO>(entry);
 
-    const double old_count { *d_shadow->count };
-    const double old_measure { *d_shadow->measure };
-    const double old_discount { *d_shadow->discount };
-    const double old_initial { *d_shadow->initial };
-    const double old_final { *d_shadow->final };
+    const double old_count { d_entry->count };
+    const double old_measure { d_entry->measure };
+    const double old_discount { d_entry->discount };
+    const double old_initial { d_entry->initial };
+    const double old_final { d_entry->final };
 
     bool count_changed { false };
     bool measure_changed { false };
@@ -122,25 +140,25 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
 
     switch (column) {
     case EntryEnumO::kDescription:
-        UpdateDescription(d_shadow, value.toString());
+        UpdateDescription(d_entry, value.toString());
         break;
     case EntryEnumO::kRhsNode:
-        unit_price_changed = UpdateLinkedNode(d_shadow, value.toUuid(), 0);
+        unit_price_changed = UpdateInternalSku(d_entry, value.toUuid());
         break;
     case EntryEnumO::kUnitPrice:
-        unit_price_changed = UpdateRate(d_shadow, value.toDouble());
+        unit_price_changed = UpdateUnitPrice(d_entry, value.toDouble());
         break;
     case EntryEnumO::kMeasure:
-        measure_changed = UpdateMeasure(d_shadow, value.toDouble());
+        measure_changed = UpdateMeasure(d_entry, value.toDouble());
         break;
     case EntryEnumO::kCount:
-        count_changed = UpdateCount(d_shadow, value.toDouble());
+        count_changed = UpdateCount(d_entry, value.toDouble());
         break;
     case EntryEnumO::kUnitDiscount:
-        unit_discount_changed = UpdateUnitDiscount(d_shadow, value.toDouble());
+        unit_discount_changed = UpdateUnitDiscount(d_entry, value.toDouble());
         break;
     case EntryEnumO::kExternalSku:
-        unit_price_changed = UpdateExternalSku(d_shadow, value.toUuid());
+        unit_price_changed = UpdateExternalSku(d_entry, value.toUuid());
         break;
     default:
         return false;
@@ -149,33 +167,33 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     emit SResizeColumnToContents(index.column());
 
     if (count_changed)
-        emit SSyncDelta(*d_shadow->lhs_node, 0.0, 0.0, *d_shadow->count - old_count);
+        emit SSyncDelta(d_entry->lhs_node, 0.0, 0.0, d_entry->count - old_count);
 
     if (measure_changed) {
-        const double measure_delta { *d_shadow->measure - old_measure };
-        const double initial_delta { *d_shadow->initial - old_initial };
-        const double discount_delta { *d_shadow->discount - old_discount };
-        const double final_delta { *d_shadow->final - old_final };
+        const double measure_delta { d_entry->measure - old_measure };
+        const double initial_delta { d_entry->initial - old_initial };
+        const double discount_delta { d_entry->discount - old_discount };
+        const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(measure_delta, 0.0) || FloatChanged(initial_delta, 0.0) || FloatChanged(discount_delta, 0.0) || FloatChanged(final_delta, 0.0)) {
-            emit SSyncDelta(*d_shadow->lhs_node, initial_delta, final_delta, 0.0, measure_delta, discount_delta);
+            emit SSyncDelta(d_entry->lhs_node, initial_delta, final_delta, 0.0, measure_delta, discount_delta);
         }
     }
 
     if (unit_price_changed) {
-        const double initial_delta { *d_shadow->initial - old_initial };
-        const double final_delta { *d_shadow->final - old_final };
+        const double initial_delta { d_entry->initial - old_initial };
+        const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(initial_delta, 0.0) || FloatChanged(final_delta, 0.0))
-            emit SSyncDelta(*d_shadow->lhs_node, initial_delta, final_delta);
+            emit SSyncDelta(d_entry->lhs_node, initial_delta, final_delta);
     }
 
     if (unit_discount_changed) {
-        const double discount_delta { *d_shadow->discount - old_discount };
-        const double final_delta { *d_shadow->final - old_final };
+        const double discount_delta { d_entry->discount - old_discount };
+        const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(discount_delta, 0.0) || FloatChanged(final_delta, 0.0))
-            emit SSyncDelta(*d_shadow->lhs_node, 0.0, final_delta, 0.0, 0.0, discount_delta);
+            emit SSyncDelta(d_entry->lhs_node, 0.0, final_delta, 0.0, 0.0, discount_delta);
     }
 
     return true;
@@ -194,36 +212,36 @@ void TableModelO::sort(int column, Qt::SortOrder order)
         break;
     }
 
-    auto Compare = [order, e_column](EntryShadow* lhs, EntryShadow* rhs) -> bool {
-        auto* d_lhs { DerivedPtr<EntryShadowO>(lhs) };
-        auto* d_rhs { DerivedPtr<EntryShadowO>(rhs) };
+    auto Compare = [order, e_column](Entry* lhs, Entry* rhs) -> bool {
+        auto* d_lhs { DerivedPtr<EntryO>(lhs) };
+        auto* d_rhs { DerivedPtr<EntryO>(rhs) };
 
         switch (e_column) {
         case EntryEnumO::kRhsNode:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->rhs_node < *d_rhs->rhs_node) : (*d_lhs->rhs_node > *d_rhs->rhs_node);
+            return (order == Qt::AscendingOrder) ? (d_lhs->rhs_node < d_rhs->rhs_node) : (d_lhs->rhs_node > d_rhs->rhs_node);
         case EntryEnumO::kUnitPrice:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->unit_price < *d_rhs->unit_price) : (*d_lhs->unit_price > *d_rhs->unit_price);
+            return (order == Qt::AscendingOrder) ? (d_lhs->unit_price < d_rhs->unit_price) : (d_lhs->unit_price > d_rhs->unit_price);
         case EntryEnumO::kCount:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->count < *d_rhs->count) : (*d_lhs->count > *d_rhs->count);
+            return (order == Qt::AscendingOrder) ? (d_lhs->count < d_rhs->count) : (d_lhs->count > d_rhs->count);
         case EntryEnumO::kMeasure:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->measure < *d_rhs->measure) : (*d_lhs->measure > *d_rhs->measure);
+            return (order == Qt::AscendingOrder) ? (d_lhs->measure < d_rhs->measure) : (d_lhs->measure > d_rhs->measure);
         case EntryEnumO::kFinal:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->final < *d_rhs->final) : (*d_lhs->final > *d_rhs->final);
+            return (order == Qt::AscendingOrder) ? (d_lhs->final < d_rhs->final) : (d_lhs->final > d_rhs->final);
         case EntryEnumO::kInitial:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->initial < *d_rhs->initial) : (*d_lhs->initial > *d_rhs->initial);
+            return (order == Qt::AscendingOrder) ? (d_lhs->initial < d_rhs->initial) : (d_lhs->initial > d_rhs->initial);
         case EntryEnumO::kUnitDiscount:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->unit_discount < *d_rhs->unit_discount) : (*d_lhs->unit_discount > *d_rhs->unit_discount);
+            return (order == Qt::AscendingOrder) ? (d_lhs->unit_discount < d_rhs->unit_discount) : (d_lhs->unit_discount > d_rhs->unit_discount);
         case EntryEnumO::kExternalSku:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->external_sku < *d_rhs->external_sku) : (*d_lhs->external_sku > *d_rhs->external_sku);
+            return (order == Qt::AscendingOrder) ? (d_lhs->external_sku < d_rhs->external_sku) : (d_lhs->external_sku > d_rhs->external_sku);
         case EntryEnumO::kDiscount:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->discount < *d_rhs->discount) : (*d_lhs->discount > *d_rhs->discount);
+            return (order == Qt::AscendingOrder) ? (d_lhs->discount < d_rhs->discount) : (d_lhs->discount > d_rhs->discount);
         default:
             return false;
         }
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(shadow_list_.begin(), shadow_list_.end(), Compare);
+    std::sort(entry_list_.begin(), entry_list_.end(), Compare);
     emit layoutChanged();
 }
 
@@ -259,10 +277,15 @@ bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
     if (d_node_->status != std::to_underlying(NodeStatus::kRecalled))
         return false;
 
-    auto* entry_shadow { InsertRowsImpl(row, parent) };
+    auto* entry { EntryPool::Instance().Allocate(section_) };
+    entry->id = QUuid::createUuidV7();
+    entry->lhs_node = lhs_id_;
 
-    inserted_entries_.insert(*entry_shadow->id, entry_shadow);
-    emit SInsertEntry(entry_shadow->entry);
+    beginInsertRows(parent, row, row);
+    entry_list_.emplaceBack(entry);
+    endInsertRows();
+
+    inserted_entries_.insert(entry->id, entry);
     return true;
 }
 
@@ -272,22 +295,22 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         return false;
 
-    auto* d_shadow = DerivedPtr<EntryShadowO>(shadow_list_.at(row));
-    const auto lhs_node { *d_shadow->lhs_node };
-    const auto rhs_node { *d_shadow->rhs_node };
+    auto* d_entry = DerivedPtr<EntryO>(entry_list_.at(row));
+    const auto lhs_node { d_entry->lhs_node };
+    const auto rhs_node { d_entry->rhs_node };
 
     beginRemoveRows(parent, row, row);
-    shadow_list_.removeAt(row);
+    entry_list_.removeAt(row);
     endRemoveRows();
 
-    const auto entry_id { *d_shadow->id };
+    const auto entry_id { d_entry->id };
 
     if (!rhs_node.isNull()) {
-        const double count_delta { -*d_shadow->count };
-        const double measure_delta { -*d_shadow->measure };
-        const double discount_delta { -*d_shadow->discount };
-        const double initial_delta { -*d_shadow->initial };
-        const double final_delta { -*d_shadow->final };
+        const double count_delta { -d_entry->count };
+        const double measure_delta { -d_entry->measure };
+        const double discount_delta { -d_entry->discount };
+        const double initial_delta { -d_entry->initial };
+        const double final_delta { -d_entry->final };
 
         if (FloatChanged(count_delta, 0.0) || FloatChanged(measure_delta, 0.0) || FloatChanged(discount_delta, 0.0) || FloatChanged(initial_delta, 0.0)
             || FloatChanged(final_delta, 0.0)) {
@@ -298,43 +321,43 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     deleted_entries_.insert(entry_id);
     entry_caches_.remove(entry_id);
 
-    EntryShadowPool::Instance().Recycle(d_shadow, section_);
+    EntryPool::Instance().Recycle(d_entry, section_);
     return true;
 }
 
 /// @brief Update entry by customer product code (external_sku)
 /// @note Responsibility: Handle insertion and clearing, not deletion
 /// @note If mapping not found, rhs_node is cleared but entry is kept for later correction
-bool TableModelO::UpdateExternalSku(EntryShadowO* entry_shadow, const QUuid& value)
+bool TableModelO::UpdateExternalSku(EntryO* entry, const QUuid& value)
 {
-    if (*entry_shadow->external_sku == value)
+    if (entry->external_sku == value)
         return false;
 
-    const double old_unit_price { *entry_shadow->unit_price };
-    const QUuid old_rhs_node { *entry_shadow->rhs_node };
+    const double old_unit_price { entry->unit_price };
+    const QUuid old_rhs_node { entry->rhs_node };
 
-    *entry_shadow->external_sku = value;
-    ResolveFromExternal(entry_shadow, value);
+    entry->external_sku = value;
+    ResolveFromExternal(entry, value);
 
-    const bool price_changed { FloatChanged(old_unit_price, *entry_shadow->unit_price) };
-    const bool rhs_changed { old_rhs_node != *entry_shadow->rhs_node };
+    const bool price_changed { FloatChanged(old_unit_price, entry->unit_price) };
+    const bool rhs_changed { old_rhs_node != entry->rhs_node };
 
     if (price_changed) {
-        RecalculateAmount(entry_shadow);
+        RecalculateAmount(entry);
     }
 
-    if (!inserted_entries_.contains(*entry_shadow->id)) {
-        auto& cache { entry_caches_[*entry_shadow->id] };
+    if (!inserted_entries_.contains(entry->id)) {
+        auto& cache { entry_caches_[entry->id] };
         cache.insert(kExternalSku, value.toString(QUuid::WithoutBraces));
 
         if (price_changed) {
-            cache.insert(kUnitPrice, QString::number(*entry_shadow->unit_price, 'f', kMaxNumericScale_4));
-            cache.insert(kInitial, QString::number(*entry_shadow->initial, 'f', kMaxNumericScale_4));
-            cache.insert(kFinal, QString::number(*entry_shadow->final, 'f', kMaxNumericScale_4));
+            cache.insert(kUnitPrice, QString::number(entry->unit_price, 'f', kMaxNumericScale_4));
+            cache.insert(kInitial, QString::number(entry->initial, 'f', kMaxNumericScale_4));
+            cache.insert(kFinal, QString::number(entry->final, 'f', kMaxNumericScale_4));
         }
 
         if (rhs_changed) {
-            cache.insert(kRhsNode, entry_shadow->rhs_node->toString(QUuid::WithoutBraces));
+            cache.insert(kRhsNode, entry->rhs_node.toString(QUuid::WithoutBraces));
         }
     }
 
@@ -354,41 +377,40 @@ bool TableModelO::UpdateExternalSku(EntryShadowO* entry_shadow, const QUuid& val
 /// @brief Update entry by internal product ID (rhs_node)
 /// @note Responsibility: Handle insertion and update, not deletion
 /// @note rhs_node must be valid, external_sku is auto-filled
-bool TableModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int /*row*/)
+bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value)
 {
     if (value.isNull())
         return false;
 
-    auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
-    auto old_rhs_node { *d_shadow->rhs_node };
+    auto old_rhs_node { entry->rhs_node };
     if (old_rhs_node == value)
         return false;
 
-    const double old_unit_price { *d_shadow->unit_price };
-    const QUuid old_external_sku { *d_shadow->external_sku };
+    const double old_unit_price { entry->unit_price };
+    const QUuid old_external_sku { entry->external_sku };
 
-    *d_shadow->rhs_node = value;
+    entry->rhs_node = value;
 
-    ResolveFromInternal(d_shadow, value);
+    ResolveFromInternal(entry, value);
 
-    const bool price_changed { FloatChanged(old_unit_price, *d_shadow->unit_price) };
-    const bool external_changed { old_external_sku != *d_shadow->external_sku };
+    const bool price_changed { FloatChanged(old_unit_price, entry->unit_price) };
+    const bool external_changed { old_external_sku != entry->external_sku };
 
     if (price_changed)
-        RecalculateAmount(d_shadow);
+        RecalculateAmount(entry);
 
-    if (!inserted_entries_.contains(*entry_shadow->id)) {
-        auto& cache { entry_caches_[*d_shadow->id] };
+    if (!inserted_entries_.contains(entry->id)) {
+        auto& cache { entry_caches_[entry->id] };
         cache.insert(kRhsNode, value.toString(QUuid::WithoutBraces));
 
         if (external_changed) {
-            cache.insert(kExternalSku, d_shadow->external_sku->toString(QUuid::WithoutBraces));
+            cache.insert(kExternalSku, entry->external_sku.toString(QUuid::WithoutBraces));
         }
 
         if (price_changed) {
-            cache.insert(kUnitPrice, QString::number(*d_shadow->unit_price, 'f', kMaxNumericScale_4));
-            cache.insert(kInitial, QString::number(*d_shadow->initial, 'f', kMaxNumericScale_4));
-            cache.insert(kFinal, QString::number(*d_shadow->final, 'f', kMaxNumericScale_4));
+            cache.insert(kUnitPrice, QString::number(entry->unit_price, 'f', kMaxNumericScale_4));
+            cache.insert(kInitial, QString::number(entry->initial, 'f', kMaxNumericScale_4));
+            cache.insert(kFinal, QString::number(entry->final, 'f', kMaxNumericScale_4));
         }
     }
 
@@ -405,23 +427,21 @@ bool TableModelO::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
     return price_changed;
 }
 
-bool TableModelO::UpdateRate(EntryShadow* entry_shadow, double value)
+bool TableModelO::UpdateUnitPrice(EntryO* entry, double value)
 {
-    auto* d_shadow = DerivedPtr<EntryShadowO>(entry_shadow);
-
-    if (FloatEqual(*d_shadow->unit_price, value))
+    if (FloatEqual(entry->unit_price, value))
         return false;
 
-    *d_shadow->initial = *d_shadow->measure * value;
-    *d_shadow->final = *d_shadow->initial - *d_shadow->discount;
-    *d_shadow->unit_price = value;
+    entry->initial = entry->measure * value;
+    entry->final = entry->initial - entry->discount;
+    entry->unit_price = value;
 
-    if (!inserted_entries_.contains(*entry_shadow->id)) {
-        auto& cache { entry_caches_[*d_shadow->id] };
+    if (!inserted_entries_.contains(entry->id)) {
+        auto& cache { entry_caches_[entry->id] };
 
-        cache.insert(kUnitPrice, QString::number(*d_shadow->unit_price, 'f', kMaxNumericScale_4));
-        cache.insert(kInitial, QString::number(*d_shadow->initial, 'f', kMaxNumericScale_4));
-        cache.insert(kFinal, QString::number(*d_shadow->final, 'f', kMaxNumericScale_4));
+        cache.insert(kUnitPrice, QString::number(entry->unit_price, 'f', kMaxNumericScale_4));
+        cache.insert(kInitial, QString::number(entry->initial, 'f', kMaxNumericScale_4));
+        cache.insert(kFinal, QString::number(entry->final, 'f', kMaxNumericScale_4));
     }
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
@@ -430,21 +450,21 @@ bool TableModelO::UpdateRate(EntryShadow* entry_shadow, double value)
     return true;
 }
 
-bool TableModelO::UpdateUnitDiscount(EntryShadowO* entry_shadow, double value)
+bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value)
 {
-    if (FloatEqual(*entry_shadow->unit_discount, value))
+    if (FloatEqual(entry->unit_discount, value))
         return false;
 
-    *entry_shadow->discount = *entry_shadow->measure * value;
-    *entry_shadow->final = *entry_shadow->initial - *entry_shadow->discount;
-    *entry_shadow->unit_discount = value;
+    entry->discount = entry->measure * value;
+    entry->final = entry->initial - entry->discount;
+    entry->unit_discount = value;
 
-    if (!inserted_entries_.contains(*entry_shadow->id)) {
-        auto& cache { entry_caches_[*entry_shadow->id] };
+    if (!inserted_entries_.contains(entry->id)) {
+        auto& cache { entry_caches_[entry->id] };
 
-        cache.insert(kUnitDiscount, QString::number(*entry_shadow->unit_discount, 'f', kMaxNumericScale_4));
-        cache.insert(kDiscount, QString::number(*entry_shadow->discount, 'f', kMaxNumericScale_4));
-        cache.insert(kFinal, QString::number(*entry_shadow->final, 'f', kMaxNumericScale_4));
+        cache.insert(kUnitDiscount, QString::number(entry->unit_discount, 'f', kMaxNumericScale_4));
+        cache.insert(kDiscount, QString::number(entry->discount, 'f', kMaxNumericScale_4));
+        cache.insert(kFinal, QString::number(entry->final, 'f', kMaxNumericScale_4));
     }
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kDiscount));
@@ -452,24 +472,24 @@ bool TableModelO::UpdateUnitDiscount(EntryShadowO* entry_shadow, double value)
     return true;
 }
 
-bool TableModelO::UpdateMeasure(EntryShadowO* entry_shadow, double value)
+bool TableModelO::UpdateMeasure(EntryO* entry, double value)
 {
-    if (FloatEqual(*entry_shadow->measure, value))
+    if (FloatEqual(entry->measure, value))
         return false;
 
-    *entry_shadow->initial = *entry_shadow->unit_price * value;
-    *entry_shadow->discount = *entry_shadow->unit_discount * value;
-    *entry_shadow->final = (*entry_shadow->unit_price - *entry_shadow->unit_discount) * value;
+    entry->initial = entry->unit_price * value;
+    entry->discount = entry->unit_discount * value;
+    entry->final = (entry->unit_price - entry->unit_discount) * value;
 
-    *entry_shadow->measure = value;
+    entry->measure = value;
 
-    if (!inserted_entries_.contains(*entry_shadow->id)) {
-        auto& cache { entry_caches_[*entry_shadow->id] };
+    if (!inserted_entries_.contains(entry->id)) {
+        auto& cache { entry_caches_[entry->id] };
 
-        cache.insert(kMeasure, QString::number(*entry_shadow->measure, 'f', kMaxNumericScale_4));
-        cache.insert(kInitial, QString::number(*entry_shadow->initial, 'f', kMaxNumericScale_4));
-        cache.insert(kDiscount, QString::number(*entry_shadow->discount, 'f', kMaxNumericScale_4));
-        cache.insert(kFinal, QString::number(*entry_shadow->final, 'f', kMaxNumericScale_4));
+        cache.insert(kMeasure, QString::number(entry->measure, 'f', kMaxNumericScale_4));
+        cache.insert(kInitial, QString::number(entry->initial, 'f', kMaxNumericScale_4));
+        cache.insert(kDiscount, QString::number(entry->discount, 'f', kMaxNumericScale_4));
+        cache.insert(kFinal, QString::number(entry->final, 'f', kMaxNumericScale_4));
     }
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
@@ -478,15 +498,15 @@ bool TableModelO::UpdateMeasure(EntryShadowO* entry_shadow, double value)
     return true;
 }
 
-bool TableModelO::UpdateCount(EntryShadowO* entry_shadow, double value)
+bool TableModelO::UpdateCount(EntryO* entry, double value)
 {
-    if (FloatEqual(*entry_shadow->count, value))
+    if (FloatEqual(entry->count, value))
         return false;
 
-    *entry_shadow->count = value;
+    entry->count = value;
 
-    if (!inserted_entries_.contains(*entry_shadow->id)) {
-        auto& cache { entry_caches_[*entry_shadow->id] };
+    if (!inserted_entries_.contains(entry->id)) {
+        auto& cache { entry_caches_[entry->id] };
 
         cache.insert(kCount, QString::number(value, 'f', kMaxNumericScale_4));
     }
@@ -494,15 +514,15 @@ bool TableModelO::UpdateCount(EntryShadowO* entry_shadow, double value)
     return true;
 }
 
-bool TableModelO::UpdateDescription(EntryShadowO* entry_shadow, const QString& value)
+bool TableModelO::UpdateDescription(EntryO* entry, const QString& value)
 {
-    if (*entry_shadow->description == value)
+    if (entry->description == value)
         return false;
 
-    *entry_shadow->description = value;
+    entry->description = value;
 
-    if (!inserted_entries_.contains(*entry_shadow->id)) {
-        auto& cache { entry_caches_[*entry_shadow->id] };
+    if (!inserted_entries_.contains(entry->id)) {
+        auto& cache { entry_caches_[entry->id] };
 
         cache.insert(kDescription, value);
     }
@@ -510,67 +530,67 @@ bool TableModelO::UpdateDescription(EntryShadowO* entry_shadow, const QString& v
     return true;
 }
 
-void TableModelO::ResolveFromInternal(EntryShadowO* shadow, const QUuid& internal_sku) const
+void TableModelO::ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) const
 {
-    if (!shadow || !entry_hub_partner_ || internal_sku.isNull())
+    if (!entry || !entry_hub_partner_ || internal_sku.isNull())
         return;
 
     if (auto result = entry_hub_partner_->ResolveFromInternal(d_node_->partner, internal_sku)) {
         const auto& [external_id, price] = *result;
-        *shadow->unit_price = price;
-        *shadow->external_sku = external_id;
+        entry->unit_price = price;
+        entry->external_sku = external_id;
     } else {
-        *shadow->unit_price = tree_model_i_->UnitPrice(internal_sku);
-        *shadow->external_sku = QUuid();
+        entry->unit_price = tree_model_i_->UnitPrice(internal_sku);
+        entry->external_sku = QUuid();
     }
 }
 
-void TableModelO::ResolveFromExternal(EntryShadowO* shadow, const QUuid& external_sku) const
+void TableModelO::ResolveFromExternal(EntryO* entry, const QUuid& external_sku) const
 {
-    if (!shadow || !entry_hub_partner_ || external_sku.isNull())
+    if (!entry || !entry_hub_partner_ || external_sku.isNull())
         return;
 
     if (auto result = entry_hub_partner_->ResolveFromExternal(d_node_->partner, external_sku)) {
         const auto& [rhs_node, price] = *result;
-        *shadow->unit_price = price;
-        *shadow->rhs_node = rhs_node;
+        entry->unit_price = price;
+        entry->rhs_node = rhs_node;
     } else {
-        *shadow->unit_price = 0.0;
-        *shadow->rhs_node = QUuid();
+        entry->unit_price = 0.0;
+        entry->rhs_node = QUuid();
     }
 }
 
-void TableModelO::RecalculateAmount(EntryShadowO* shadow) const
+void TableModelO::RecalculateAmount(EntryO* entry) const
 {
-    if (!shadow)
+    if (!entry)
         return;
 
-    const double measure { *shadow->measure };
-    const double unit_price { *shadow->unit_price };
-    const double unit_discount { *shadow->unit_discount };
+    const double measure { entry->measure };
+    const double unit_price { entry->unit_price };
+    const double unit_discount { entry->unit_discount };
 
     const double discount { measure * unit_discount };
     const double gross_amount { measure * unit_price };
     const double net_amount { gross_amount - discount };
 
-    *shadow->initial = gross_amount;
-    *shadow->final = net_amount;
-    *shadow->discount = discount;
+    entry->initial = gross_amount;
+    entry->final = net_amount;
+    entry->discount = discount;
 }
 
 void TableModelO::PurifyEntryShadow()
 {
     // Remove entries with null rhs_node (internal SKU not selected).
     // Clears pending update cache for these entries and marks them as deleted.
-    for (auto i = shadow_list_.size() - 1; i >= 0; --i) {
-        auto* entry_shadow { shadow_list_[i] };
-        if (!entry_shadow->rhs_node->isNull())
+    for (auto i = entry_list_.size() - 1; i >= 0; --i) {
+        auto* entry { entry_list_[i] };
+        if (!entry->rhs_node.isNull())
             continue;
 
         beginRemoveRows(QModelIndex(), i, i);
-        deleted_entries_.insert(*entry_shadow->id);
-        entry_caches_.remove(*entry_shadow->id);
-        EntryShadowPool::Instance().Recycle(shadow_list_.takeAt(i), section_);
+        deleted_entries_.insert(entry->id);
+        entry_caches_.remove(entry->id);
+        EntryPool::Instance().Recycle(entry_list_.takeAt(i), section_);
         endRemoveRows();
     }
 }

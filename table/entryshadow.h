@@ -132,7 +132,7 @@ struct EntryShadowO final : EntryShadow {
 
     void BindEntry(Entry* base, bool is_parallel) override;
     void ResetState() override;
-    QJsonObject WriteJson() const override;
+    QJsonObject WriteJson() const override { return {}; }
 };
 
 using EntryShadowList = QList<EntryShadow*>;
