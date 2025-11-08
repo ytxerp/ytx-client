@@ -65,6 +65,12 @@ public slots:
     void RSyncDelta(
         const QUuid& node_id, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
 
+    virtual void RSyncStatus(const QUuid& node_id, NodeStatus value)
+    {
+        Q_UNUSED(node_id);
+        Q_UNUSED(value);
+    }
+
 public:
     // Qt's
     // Default implementations
@@ -226,7 +232,6 @@ protected:
         Q_UNUSED(node)
         Q_UNUSED(value)
     }
-
     virtual const QSet<QUuid>* UnitSet(int unit) const
     {
         Q_UNUSED(unit)

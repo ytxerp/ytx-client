@@ -767,11 +767,70 @@ void WebSocket::SaveOrderUpdate(const QJsonObject& obj)
     tree_model->SyncNode(node_id, node_cache);
 }
 
-void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj) { }
+void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    CString session_id { obj.value(kSessionId).toString() };
 
-void WebSocket::ReleaseOrderInsert(const QJsonObject& obj) { }
+    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+    auto tree_model { tree_model_hash_.value(section) };
 
-void WebSocket::RecallOrder(const QJsonObject& obj) { }
+    if (!tree_model->Contains(node_id))
+        return;
+
+    const auto node_cache { obj.value(kNodeCache).toObject() };
+
+    if (session_id == session_id_) {
+        tree_model->UpdateMeta(node_id, node_cache);
+        return;
+    }
+
+    tree_model->SyncNode(node_id, node_cache);
+    tree_model->RSyncStatus(node_id, NodeStatus::kReleased);
+}
+
+void WebSocket::ReleaseOrderInsert(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    CString session_id { obj.value(kSessionId).toString() };
+    const QJsonObject node_obj { obj.value(kNode).toObject() };
+    const QJsonObject path_obj { obj.value(kPath).toObject() };
+
+    const auto descendant { QUuid(path_obj.value(kDescendant).toString()) };
+    const auto ancestor { QUuid(path_obj.value(kAncestor).toString()) };
+    const auto node_id { QUuid(node_obj.value(kId).toString()) };
+
+    auto tree_model { tree_model_hash_.value(section) };
+
+    if (session_id == session_id_)
+        tree_model->InsertMeta(descendant, node_obj);
+    else {
+        tree_model->InsertNode(ancestor, node_obj);
+        tree_model->RSyncStatus(node_id, NodeStatus::kReleased);
+    }
+}
+
+void WebSocket::RecallOrder(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    CString session_id { obj.value(kSessionId).toString() };
+
+    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+    auto tree_model { tree_model_hash_.value(section) };
+
+    if (!tree_model->Contains(node_id))
+        return;
+
+    const auto node_cache { obj.value(kNodeCache).toObject() };
+
+    if (session_id == session_id_) {
+        tree_model->UpdateMeta(node_id, node_cache);
+        return;
+    }
+
+    tree_model->SyncNode(node_id, node_cache);
+    tree_model->RSyncStatus(node_id, NodeStatus::kRecalled);
+}
 
 void WebSocket::ActionEntry(const QJsonObject& obj)
 {

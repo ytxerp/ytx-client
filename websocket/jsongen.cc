@@ -274,20 +274,21 @@ QJsonObject NodeSearch(Section section, CString& keyword)
 
 QJsonObject OrderRecalled(Section section, const NodeO* node)
 {
+    QJsonObject node_cache {};
+    node_cache.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
+
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node->id.toString(QUuid::WithoutBraces));
-    message.insert(kMeta, QJsonObject());
-    message.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
+    message.insert(kNodeCache, node_cache);
 
     QJsonObject partner_delta {};
     partner_delta.insert(kInitialDelta, QString::number(-node->initial_total, 'f', kMaxNumericScale_4));
     partner_delta.insert(kFinalDelta, QString::number(-node->final_total, 'f', kMaxNumericScale_4));
+    partner_delta.insert(kId, node->partner.toString(QUuid::WithoutBraces));
 
     message.insert(kPartnerDelta, partner_delta);
-    message.insert(kPartnerId, node->partner.toString(QUuid::WithoutBraces));
-    message.insert(kUnit, node->unit);
     return message;
 }
 

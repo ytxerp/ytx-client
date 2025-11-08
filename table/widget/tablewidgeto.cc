@@ -382,6 +382,7 @@ QJsonObject TableWidgetO::BuildPartnerDelta()
     QJsonObject partner_delta {};
     partner_delta.insert(kInitialDelta, QString::number(node_->initial_total, 'f', kMaxNumericScale_4));
     partner_delta.insert(kFinalDelta, QString::number(node_->final_total, 'f', kMaxNumericScale_4));
+    partner_delta.insert(kId, tmp_node_.partner.toString(QUuid::WithoutBraces));
     return partner_delta;
 }
 
@@ -408,6 +409,11 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
 void TableWidgetO::SaveOrder()
 {
+    if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
+        QMessageBox::information(this, tr("Cannot Save"), tr("This order has already been released by another client and cannot be modified."));
+        return;
+    }
+
     if (!HasUnsavedData())
         return;
 
@@ -434,6 +440,11 @@ void TableWidgetO::on_pBtnRelease_clicked()
     if (tmp_node_.status == std::to_underlying(NodeStatus::kReleased))
         return;
 
+    if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
+        QMessageBox::information(this, tr("Cannot Release"), tr("This order has already been released by another client and cannot be modified."));
+        return;
+    }
+
     node_cache_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
     tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
 
@@ -442,7 +453,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
     QJsonObject order_cache { BuildOrderCache() };
 
     order_cache.insert(kPartnerDelta, BuildPartnerDelta());
-    order_cache.insert(kPartnerId, tmp_node_.partner.toString(QUuid::WithoutBraces));
 
     if (is_new_) {
         BuildNodeInsert(order_cache);
