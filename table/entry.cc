@@ -3,7 +3,6 @@
 #include <QJsonObject>
 
 #include "component/constant.h"
-#include "global/entrypool.h"
 
 void Entry::ResetState()
 {
@@ -229,26 +228,4 @@ QJsonObject EntryO::WriteJson() const
     obj.insert(kExternalSku, external_sku.toString(QUuid::WithoutBraces));
 
     return obj;
-}
-
-Entry* EntryO::Clone() const
-{
-    auto* p { EntryPool::Instance().Allocate(Section::kSale) };
-    auto* po { static_cast<EntryO*>(p) };
-
-    po->id = id;
-    po->description = description;
-    po->lhs_node = lhs_node;
-    po->rhs_node = rhs_node;
-
-    po->unit_price = unit_price;
-    po->count = count;
-    po->measure = measure;
-    po->initial = initial;
-    po->final = final;
-    po->discount = discount;
-    po->unit_discount = unit_discount;
-    po->external_sku = external_sku;
-
-    return p;
 }

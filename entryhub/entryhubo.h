@@ -47,8 +47,7 @@ public:
     bool ReadStatementSecondary(StatementSecondaryList& list, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const;
 
 protected:
-    // table
-    void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;
+    EntryList ProcessEntryArray(const QJsonArray& array) override;
 
 private:
     QString QSReadSettlement() const;

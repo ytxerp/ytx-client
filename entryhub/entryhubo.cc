@@ -1,8 +1,11 @@
 #include "entryhubo.h"
 
 #include <QDate>
+#include <QJsonArray>
 
+#include "component/constant.h"
 #include "component/using.h"
+#include "global/entrypool.h"
 
 EntryHubO::EntryHubO(CSectionInfo& info, QObject* parent)
     : EntryHub(info, parent)
@@ -10,19 +13,6 @@ EntryHubO::EntryHubO(CSectionInfo& info, QObject* parent)
 }
 
 void EntryHubO::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
-
-void EntryHubO::ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const
-{
-    for (auto* entry : std::as_const(entry_cache_)) {
-        auto* d_entry = static_cast<EntryO*>(entry);
-
-        if (d_entry->rhs_node == old_item_id)
-            d_entry->rhs_node = new_item_id;
-
-        if (d_entry->external_sku == old_item_id)
-            d_entry->external_sku = new_item_id;
-    }
-}
 
 bool EntryHubO::ReadSettlement(SettlementList& list, const QDateTime& start, const QDateTime& end) const
 {
@@ -248,6 +238,25 @@ bool EntryHubO::ReadStatementSecondary(StatementSecondaryList& list, const QUuid
 
     // ReadStatementSecondaryQuery(list, query);
     return true;
+}
+
+EntryList EntryHubO::ProcessEntryArray(const QJsonArray& array)
+{
+    EntryList list {};
+
+    for (const auto& value : array) {
+        if (!value.isObject())
+            continue;
+
+        const QJsonObject obj { value.toObject() };
+
+        Entry* entry { EntryPool::Instance().Allocate(section_) };
+        entry->ReadJson(obj);
+
+        list.emplaceBack(entry);
+    }
+
+    return list;
 }
 
 QString EntryHubO::QSReadStatement(int unit) const

@@ -34,7 +34,6 @@ public:
     void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
 
 protected:
-    // table
     void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;
     // QString QSReadTransRef(int unit) const override;
 };

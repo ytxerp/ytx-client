@@ -14,9 +14,6 @@ TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, E
 
 TableModelO::~TableModelO()
 {
-    // Notify EntryHub to release entries associated with this node
-    emit SReleaseNode(lhs_id_);
-
     // All entries are cloned via EntryO::Clone from the Section::kSale pool,
     // so they must be recycled back to the same Sale pool to ensure proper handling.
     EntryPool::Instance().Recycle(entry_list_, Section::kSale);
@@ -30,10 +27,7 @@ void TableModelO::RAppendMultiEntry(const EntryList& entry_list)
     const auto row { entry_list_.size() };
 
     beginInsertRows(QModelIndex(), row, row + entry_list.size() - 1);
-    for (auto* e : entry_list) {
-        auto* entry { e->Clone() };
-        entry_list_.append(entry);
-    }
+    entry_list_.append(entry_list);
     endInsertRows();
 
     sort(std::to_underlying(EntryEnumO::kRhsNode), Qt::AscendingOrder);
@@ -74,16 +68,6 @@ void TableModelO::SaveOrder(QJsonObject& order_cache)
         updated_entry_array.append(it.value());
     }
     order_cache.insert(kUpdatedEntryArray, updated_entry_array);
-
-    // nofity entryhub
-    if (!deleted_entries_.isEmpty())
-        emit SRemoveEntrySet(deleted_entries_);
-
-    if (!inserted_entries_.isEmpty())
-        emit SInsertEntryHash(inserted_entries_);
-
-    if (!updated_entries_.isEmpty())
-        emit SUpdateEntryHash(updated_entries_);
 
     // clear
     deleted_entries_.clear();

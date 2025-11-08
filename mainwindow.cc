@@ -607,11 +607,6 @@ void MainWindow::TableConnectO(QTableView* table_view, TableModelO* table_model_
     connect(widget, &TableWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
 
     connect(widget, &TableWidgetO::SSyncStatus, tree_model, &TreeModelO::RSyncStatus);
-
-    connect(table_model_order, &TableModelO::SInsertEntryHash, entry_hub, &EntryHub::RInsertEntryHash);
-    connect(table_model_order, &TableModelO::SRemoveEntrySet, entry_hub, &EntryHub::RRemoveEntrySet);
-    connect(table_model_order, &TableModelO::SUpdateEntryHash, entry_hub, &EntryHub::RUpdateEntryHash);
-    connect(table_model_order, &TableModel::SReleaseNode, entry_hub, &EntryHub::RReleaseNode);
 }
 
 void MainWindow::TableConnectP(QTableView* table_view, TableModel* table_model) const
@@ -622,7 +617,6 @@ void MainWindow::TableConnectP(QTableView* table_view, TableModel* table_model) 
     connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
-    connect(table_model, &TableModel::SReleaseNode, entry_hub, &EntryHub::RReleaseNode);
 }
 
 void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const

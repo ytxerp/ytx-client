@@ -32,12 +32,6 @@ public:
     TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
     ~TableModelO() override;
 
-signals:
-    // send to entryhub
-    void SInsertEntryHash(const QHash<QUuid, Entry*>& entry_hash);
-    void SRemoveEntrySet(const QSet<QUuid>& entry_set);
-    void SUpdateEntryHash(const QHash<QUuid, QJsonObject>& entry_caches);
-
 public slots:
     void RAppendMultiEntry(const EntryList& entry_list) override;
 

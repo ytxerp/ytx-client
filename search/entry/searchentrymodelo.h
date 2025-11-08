@@ -26,6 +26,7 @@ class SearchEntryModelO final : public SearchEntryModel {
     Q_OBJECT
 public:
     SearchEntryModelO(CSectionInfo& info, QObject* parent = nullptr);
+    ~SearchEntryModelO() override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

@@ -154,16 +154,23 @@ void TreeModel::InsertMeta(const QUuid& node_id, const QJsonObject& data)
 
 void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& data)
 {
-    auto* node = GetNode(node_id);
-    if (!node)
+    if (data.isEmpty()) {
+        qInfo().noquote() << "SyncNode ignored: empty data for node" << node_id.toString(QUuid::WithoutBraces);
         return;
+    }
+
+    auto* node = GetNode(node_id);
+    if (!node) {
+        qInfo().noquote() << "SyncNode ignored: node not found in local node_hash_, id =" << node_id.toString(QUuid::WithoutBraces);
+        return;
+    }
 
     node->ReadJson(data);
 
     auto index { GetIndex(node_id) };
     if (index.isValid()) {
         const auto [start, end] = NodeUtils::CacheColumnRange(section_);
-        if (end != 0)
+        if (end != -1)
             emit dataChanged(index.siblingAtColumn(start), index.siblingAtColumn(end));
     }
 }

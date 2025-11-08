@@ -394,6 +394,9 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
     }
 
+    if (tmp_node_.status == std::to_underlying(NodeStatus::kRecalled))
+        return;
+
     tmp_node_.status = std::to_underlying(NodeStatus::kRecalled);
     node_->status = std::to_underlying(NodeStatus::kRecalled);
 
@@ -440,7 +443,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
     order_cache.insert(kPartnerDelta, BuildPartnerDelta());
     order_cache.insert(kPartnerId, tmp_node_.partner.toString(QUuid::WithoutBraces));
-    order_cache.insert(kUnit, tmp_node_.unit);
 
     if (is_new_) {
         BuildNodeInsert(order_cache);

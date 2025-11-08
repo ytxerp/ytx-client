@@ -58,12 +58,6 @@ public slots:
     // receive from TableModel
     void RInsertEntry(Entry* entry) { entry_cache_.insert(entry->id, entry); }
     void RRemoveEntry(const QUuid& entry_id);
-    void RReleaseNode(const QUuid& node_id);
-
-    // receive from TableModelO
-    void RRemoveEntrySet(const QSet<QUuid>& entry_set);
-    void RInsertEntryHash(const QHash<QUuid, Entry*>& entry_hash);
-    void RUpdateEntryHash(const QHash<QUuid, QJsonObject>& entry_caches);
 
 public:
     // tree
@@ -109,7 +103,7 @@ public:
     virtual void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
 protected:
-    // QS means QueryString
+    virtual EntryList ProcessEntryArray(const QJsonArray& array);
     virtual QString QSReadTransRef(int unit) const
     {
         Q_UNUSED(unit);
@@ -119,7 +113,6 @@ protected:
     void ReplaceLeafFunction(QSet<QUuid>& entry_id_set, EntryList& entry_list, const QUuid& old_node_id, const QUuid& new_node_id) const;
     void RemoveLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
-    EntryList ProcessEntryArray(const QJsonArray& array);
     void EntryActionImpl(Entry* entry, EntryAction action);
 
 protected:

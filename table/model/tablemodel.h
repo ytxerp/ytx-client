@@ -56,9 +56,6 @@ signals:
     void SInsertEntry(Entry* entry);
     void SRemoveEntry(const QUuid& entry_id);
 
-    // send to entryhub, Sale and Purchase, Partner
-    void SReleaseNode(const QUuid& node_id);
-
 public slots:
     void RRemoveMultiEntry(const QSet<QUuid>& entry_id_set);
     virtual void RAppendMultiEntry(const EntryList& entry_list);

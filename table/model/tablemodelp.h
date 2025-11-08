@@ -27,7 +27,7 @@ class TableModelP final : public TableModel {
 
 public:
     TableModelP(CTableModelArg& arg, QObject* parent = nullptr);
-    ~TableModelP() override;
+    ~TableModelP() override = default;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
