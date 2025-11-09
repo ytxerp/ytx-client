@@ -396,9 +396,13 @@ void TableWidgetO::BuildNodeUpdate(QJsonObject& order_cache)
 QJsonObject TableWidgetO::BuildPartnerDelta()
 {
     QJsonObject partner_delta {};
-    partner_delta.insert(kInitialDelta, QString::number(node_->initial_total, 'f', kMaxNumericScale_4));
-    partner_delta.insert(kFinalDelta, QString::number(node_->final_total, 'f', kMaxNumericScale_4));
-    partner_delta.insert(kId, tmp_node_.partner.toString(QUuid::WithoutBraces));
+
+    if (tmp_node_.unit == std::to_underlying(UnitO::kMonthly)) {
+        partner_delta.insert(kInitialDelta, QString::number(tmp_node_.initial_total, 'f', kMaxNumericScale_4));
+        partner_delta.insert(kFinalDelta, QString::number(tmp_node_.final_total, 'f', kMaxNumericScale_4));
+        partner_delta.insert(kId, tmp_node_.partner.toString(QUuid::WithoutBraces));
+    }
+
     return partner_delta;
 }
 
