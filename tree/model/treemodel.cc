@@ -34,8 +34,7 @@ void TreeModel::RRemoveNode(const QUuid& node_id)
     removeRows(index.row(), 1, index.parent());
 }
 
-void TreeModel::RSyncDelta(
-    const QUuid& node_id, double initial_delta, double final_delta, double /*first_delta*/, double /*second_delta*/, double /*discount_delta*/)
+void TreeModel::RNodeDelta(const QUuid& node_id, double initial_delta, double final_delta)
 {
     const auto affected_ids { SyncDeltaImpl(node_id, initial_delta, final_delta) };
     RefreshAffectedTotal(affected_ids);
@@ -111,8 +110,7 @@ void TreeModel::InsertImpl(Node* parent, int row, Node* node)
     SortModel();
 }
 
-QSet<QUuid> TreeModel::SyncDeltaImpl(
-    const QUuid& node_id, double initial_delta, double final_delta, double /*first_delta*/, double /*second_delta*/, double /*discount_delta*/)
+QSet<QUuid> TreeModel::SyncDeltaImpl(const QUuid& node_id, double initial_delta, double final_delta)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -135,7 +133,7 @@ QSet<QUuid> TreeModel::SyncDeltaImpl(
     node->final_total += adjust_final_delta;
 
     // Propagate adjusted deltas to ancestor nodes
-    auto affected_ids { SyncAncestorTotal(node, adjust_initial_delta, adjust_final_delta) };
+    auto affected_ids { UpdateAncestorTotal(node, adjust_initial_delta, adjust_final_delta) };
     affected_ids.insert(node_id);
 
     emit STotalsUpdated();
@@ -260,7 +258,7 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     new_node->initial_total += initial_delta;
     new_node->final_total += final_delta;
 
-    const auto affected_ids { SyncAncestorTotal(new_node, initial_delta, final_delta) };
+    const auto affected_ids { UpdateAncestorTotal(new_node, initial_delta, final_delta) };
     RefreshAffectedTotal(affected_ids);
 
     RRemoveNode(old_node_id);
@@ -448,12 +446,12 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*c
     }
     assert(node);
 
-    const auto affected_ids_source { SyncAncestorTotal(node, -node->initial_total, -node->final_total) };
+    const auto affected_ids_source { UpdateAncestorTotal(node, -node->initial_total, -node->final_total) };
 
     destination_parent->children.insert(destinationChild, node);
     node->parent = destination_parent;
 
-    auto affected_ids_destination { SyncAncestorTotal(node, node->initial_total, node->final_total) };
+    auto affected_ids_destination { UpdateAncestorTotal(node, node->initial_total, node->final_total) };
     endMoveRows();
 
     RefreshAffectedTotal(affected_ids_destination.unite(affected_ids_source));
@@ -622,7 +620,7 @@ void TreeModel::RemovePath(Node* node, Node* parent_node)
         leaf_path_.remove(node_id);
         NodeUtils::RemoveItem(leaf_path_model_, node_id);
 
-        const auto affected_ids { SyncAncestorTotal(node, -node->initial_total, -node->final_total) };
+        const auto affected_ids { UpdateAncestorTotal(node, -node->initial_total, -node->final_total) };
         RefreshAffectedTotal(affected_ids);
 
         RemoveUnitSet(node_id, node->unit);
@@ -638,7 +636,7 @@ void TreeModel::HandleNode()
         RegisterPath(node);
 
         if (node->kind == std::to_underlying(NodeKind::kLeaf))
-            SyncAncestorTotal(node, node->initial_total, node->final_total);
+            UpdateAncestorTotal(node, node->initial_total, node->final_total);
     }
 
     SortModel();
@@ -652,8 +650,7 @@ Node* TreeModel::GetNodeByIndex(const QModelIndex& index) const
     return root_;
 }
 
-QSet<QUuid> TreeModel::SyncAncestorTotal(
-    Node* node, double initial_delta, double final_delta, double /*first_delta*/, double /*second_delta*/, double /*discount_delta*/)
+QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, double final_delta)
 {
     QSet<QUuid> affected_ids {};
 

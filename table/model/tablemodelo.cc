@@ -166,7 +166,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     emit SResizeColumnToContents(index.column());
 
     if (count_changed)
-        emit SSyncDelta(d_entry->lhs_node, 0.0, 0.0, d_entry->count - old_count);
+        emit SSyncDeltaOrder(d_entry->lhs_node, 0.0, 0.0, d_entry->count - old_count, 0.0, 0.0);
 
     if (measure_changed) {
         const double measure_delta { d_entry->measure - old_measure };
@@ -175,7 +175,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(measure_delta, 0.0) || FloatChanged(initial_delta, 0.0) || FloatChanged(discount_delta, 0.0) || FloatChanged(final_delta, 0.0)) {
-            emit SSyncDelta(d_entry->lhs_node, initial_delta, final_delta, 0.0, measure_delta, discount_delta);
+            emit SSyncDeltaOrder(d_entry->lhs_node, initial_delta, final_delta, 0.0, measure_delta, discount_delta);
         }
     }
 
@@ -184,7 +184,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(initial_delta, 0.0) || FloatChanged(final_delta, 0.0))
-            emit SSyncDelta(d_entry->lhs_node, initial_delta, final_delta);
+            emit SSyncDeltaOrder(d_entry->lhs_node, initial_delta, final_delta, 0.0, 0.0, 0.0);
     }
 
     if (unit_discount_changed) {
@@ -192,7 +192,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(discount_delta, 0.0) || FloatChanged(final_delta, 0.0))
-            emit SSyncDelta(d_entry->lhs_node, 0.0, final_delta, 0.0, 0.0, discount_delta);
+            emit SSyncDeltaOrder(d_entry->lhs_node, 0.0, final_delta, 0.0, 0.0, discount_delta);
     }
 
     return true;
@@ -313,7 +313,7 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
         if (FloatChanged(count_delta, 0.0) || FloatChanged(measure_delta, 0.0) || FloatChanged(discount_delta, 0.0) || FloatChanged(initial_delta, 0.0)
             || FloatChanged(final_delta, 0.0)) {
-            emit SSyncDelta(lhs_node, initial_delta, final_delta, count_delta, measure_delta, discount_delta);
+            emit SSyncDeltaOrder(lhs_node, initial_delta, final_delta, count_delta, measure_delta, discount_delta);
         }
     }
 

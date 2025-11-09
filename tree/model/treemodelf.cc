@@ -158,7 +158,7 @@ Qt::ItemFlags TreeModelF::flags(const QModelIndex& index) const
     return flags;
 }
 
-QSet<QUuid> TreeModelF::SyncAncestorTotal(Node* node, double initial_delta, double final_delta, double /*first*/, double /*second*/, double /*discount*/)
+QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, double initial_delta, double final_delta)
 {
     assert(node && node != root_ && node->parent);
     QSet<QUuid> affected_ids {};

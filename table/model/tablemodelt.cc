@@ -274,8 +274,8 @@ bool TableModelT::UpdateNumeric(EntryShadow* entry_shadow, double value, int row
         emit SResizeColumnToContents(std::to_underlying(EntryEnumT::kBalance));
         emit SUpdateBalance(rhs_id, *d_shadow->id);
 
-        emit SSyncDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
-        emit SSyncDelta(rhs_id, rhs_initial_delta, rhs_final_delta);
+        emit SNodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
+        emit SNodeDelta(rhs_id, rhs_initial_delta, rhs_final_delta);
     }
 
     return true;
@@ -323,8 +323,8 @@ bool TableModelT::UpdateRate(EntryShadow* entry_shadow, double value)
     WebSocket::Instance()->SendMessage(kEntryRate, message);
 
     if (has_leaf_delta) {
-        emit SSyncDelta(lhs_id_, 0.0, lhs_final_delta);
-        emit SSyncDelta(*d_shadow->rhs_node, 0.0, rhs_final_delta);
+        emit SNodeDelta(lhs_id_, 0.0, lhs_final_delta);
+        emit SNodeDelta(*d_shadow->rhs_node, 0.0, rhs_final_delta);
     }
 
     return true;
@@ -381,8 +381,8 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
             AccumulateBalance(row);
 
             emit SResizeColumnToContents(std::to_underlying(EntryEnumT::kBalance));
-            emit SSyncDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
-            emit SSyncDelta(value, rhs_initial_delta, rhs_final_delta);
+            emit SNodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
+            emit SNodeDelta(value, rhs_initial_delta, rhs_final_delta);
         }
 
         emit SAppendOneEntry(value, d_shadow->entry);
@@ -414,8 +414,8 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
             AccumulateBalance(row);
 
             emit SResizeColumnToContents(std::to_underlying(EntryEnumT::kBalance));
-            emit SSyncDelta(value, rhs_initial_delta, rhs_final_delta);
-            emit SSyncDelta(old_node, -rhs_initial_delta, -rhs_final_delta);
+            emit SNodeDelta(value, rhs_initial_delta, rhs_final_delta);
+            emit SNodeDelta(old_node, -rhs_initial_delta, -rhs_final_delta);
         }
 
         emit SRemoveOneEntry(old_node, entry_id);
@@ -491,8 +491,8 @@ bool TableModelT::removeRows(int row, int /*count*/, const QModelIndex& parent)
         WebSocket::Instance()->SendMessage(kEntryRemove, message);
 
         if (has_delta) {
-            emit SSyncDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
-            emit SSyncDelta(*d_shadow->rhs_node, rhs_initial_delta, rhs_final_delta);
+            emit SNodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
+            emit SNodeDelta(*d_shadow->rhs_node, rhs_initial_delta, rhs_final_delta);
             AccumulateBalance(row);
         }
 

@@ -552,7 +552,7 @@ void MainWindow::TableConnectF(QTableView* table_view, TableModel* table_model) 
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
-    connect(table_model, &TableModel::SSyncDelta, tree_model, &TreeModel::RSyncDelta);
+    connect(table_model, &TableModel::SNodeDelta, tree_model, &TreeModel::RNodeDelta);
 
     connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
     connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
@@ -569,7 +569,7 @@ void MainWindow::TableConnectI(QTableView* table_view, TableModel* table_model) 
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
-    connect(table_model, &TableModel::SSyncDelta, tree_model, &TreeModel::RSyncDelta);
+    connect(table_model, &TableModel::SNodeDelta, tree_model, &TreeModel::RNodeDelta);
 
     connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
     connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
@@ -586,7 +586,7 @@ void MainWindow::TableConnectT(QTableView* table_view, TableModel* table_model) 
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
-    connect(table_model, &TableModel::SSyncDelta, tree_model, &TreeModel::RSyncDelta);
+    connect(table_model, &TableModel::SNodeDelta, tree_model, &TreeModel::RNodeDelta);
 
     connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
     connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
@@ -602,11 +602,11 @@ void MainWindow::TableConnectO(QTableView* table_view, TableModelO* table_model_
     auto entry_hub { sc_->entry_hub };
 
     connect(table_model_order, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
-    connect(table_model_order, &TableModel::SSyncDelta, widget, &TableWidgetO::RSyncDelta);
+    connect(table_model_order, &TableModelO::SSyncDeltaOrder, widget, &TableWidgetO::RSyncDeltaOrder);
 
     connect(widget, &TableWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
 
-    connect(widget, &TableWidgetO::SSyncStatus, tree_model, &TreeModelO::RSyncStatus);
+    connect(widget, &TableWidgetO::SNodeStatus, tree_model, &TreeModelO::RNodeStatus);
 }
 
 void MainWindow::TableConnectP(QTableView* table_view, TableModel* table_model) const

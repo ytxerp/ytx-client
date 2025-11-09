@@ -32,6 +32,10 @@ public:
     TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
     ~TableModelO() override;
 
+signals:
+    // send to TableWidgetO
+    void SSyncDeltaOrder(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
+
 public slots:
     void RAppendMultiEntry(const EntryList& entry_list) override;
 

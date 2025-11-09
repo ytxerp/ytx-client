@@ -36,7 +36,7 @@ signals:
     void SUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta);
 
 public slots:
-    void RSyncStatus(const QUuid& node_id, NodeStatus value) override;
+    void RNodeStatus(const QUuid& node_id, NodeStatus value) override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -59,14 +59,12 @@ protected:
     void UpdateName(const QUuid& node_id, CString& new_name) override;
     void RemovePath(Node* node, Node* parent_node) override;
 
-    QSet<QUuid> SyncAncestorTotal(
-        Node* node, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta) override;
-    QSet<QUuid> SyncDeltaImpl(
-        const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta) override;
-
     void HandleNode() override;
     void ResetBranch(Node* node) override;
     void ClearModel() override;
+
+private:
+    QSet<QUuid> UpdateAncestorTotalOrder(Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
 };
 
 #endif // TREEMODELO_H

@@ -11,36 +11,20 @@ TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, int default_unit,
 {
 }
 
-QSet<QUuid> TreeModelO::SyncDeltaImpl(
-    const QUuid& node_id, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
-{
-    auto* node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
-    assert(node && node->kind == std::to_underlying(NodeKind::kLeaf));
-
-    if (first_delta == 0.0 && second_delta == 0.0 && initial_delta == 0.0 && discount_delta == 0.0 && final_delta == 0.0)
-        return {};
-
-    QSet<QUuid> affected_ids {};
-
-    if (node->status == std::to_underlying(NodeStatus::kReleased)) {
-        affected_ids = SyncAncestorTotal(node, initial_delta, final_delta, first_delta, second_delta, discount_delta);
-    }
-
-    return {};
-}
-
-void TreeModelO::RSyncStatus(const QUuid& node_id, NodeStatus value)
+void TreeModelO::RNodeStatus(const QUuid& node_id, NodeStatus value)
 {
     auto* node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
     assert(node);
 
     const int coefficient { value == NodeStatus::kReleased ? 1 : -1 };
 
-    SyncAncestorTotal(node, coefficient * node->initial_total, coefficient * node->final_total, coefficient * node->count_total,
-        coefficient * node->measure_total, coefficient * node->discount_total);
+    const auto& affected_ids { UpdateAncestorTotalOrder(node, coefficient * node->initial_total, coefficient * node->final_total,
+        coefficient * node->count_total, coefficient * node->measure_total, coefficient * node->discount_total) };
 
     if (node->unit == std::to_underlying(UnitO::kMonthly))
         emit SUpdateAmount(node->partner, coefficient * node->initial_total, coefficient * node->final_total);
+
+    RefreshAffectedTotal(affected_ids);
 }
 
 void TreeModelO::AckTree(const QJsonObject& obj)
@@ -172,7 +156,7 @@ void TreeModelO::RemovePath(Node* node, Node* parent_node)
         break;
     case NodeKind::kLeaf:
         if (d_node->status == std::to_underlying(NodeStatus::kReleased)) {
-            SyncAncestorTotal(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
+            UpdateAncestorTotalOrder(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
 
             if (node->unit == std::to_underlying(UnitO::kMonthly))
                 emit SUpdateAmount(d_node->partner, -node->initial_total, -node->final_total);
@@ -183,7 +167,8 @@ void TreeModelO::RemovePath(Node* node, Node* parent_node)
     }
 }
 
-QSet<QUuid> TreeModelO::SyncAncestorTotal(Node* node, double initial_delta, double final_delta, double first_delta, double second_delta, double discount_delta)
+QSet<QUuid> TreeModelO::UpdateAncestorTotalOrder(
+    Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
 {
     assert(node && node != root_ && node->parent);
     QSet<QUuid> affected_ids {};
@@ -191,7 +176,7 @@ QSet<QUuid> TreeModelO::SyncAncestorTotal(Node* node, double initial_delta, doub
     if (node->parent == root_)
         return affected_ids;
 
-    if (initial_delta == 0.0 && final_delta == 0.0 && first_delta == 0.0 && second_delta == 0.0 && discount_delta == 0.0)
+    if (initial_delta == 0.0 && final_delta == 0.0 && count_delta == 0.0 && measure_delta == 0.0 && discount_delta == 0.0)
         return affected_ids;
 
     const int kUnit { node->unit };
@@ -202,8 +187,8 @@ QSet<QUuid> TreeModelO::SyncAncestorTotal(Node* node, double initial_delta, doub
 
         auto* d_node { DerivedPtr<NodeO>(current) };
 
-        d_node->count_total += first_delta;
-        d_node->measure_total += second_delta;
+        d_node->count_total += count_delta;
+        d_node->measure_total += measure_delta;
         d_node->discount_total += discount_delta;
         d_node->initial_total += initial_delta;
         d_node->final_total += final_delta;
@@ -220,7 +205,7 @@ void TreeModelO::HandleNode()
         auto* d_node { DerivedPtr<NodeO>(node) };
 
         if (d_node->kind == std::to_underlying(NodeKind::kLeaf) && d_node->status == std::to_underlying(NodeStatus::kReleased))
-            SyncAncestorTotal(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
+            UpdateAncestorTotalOrder(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
     }
 }
 
@@ -416,14 +401,14 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*
     bool update_ancestor { node->kind == std::to_underlying(NodeKind::kBranch) || node->status == std::to_underlying(NodeStatus::kReleased) };
 
     if (update_ancestor) {
-        SyncAncestorTotal(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);
+        UpdateAncestorTotalOrder(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);
     }
 
     destination_parent->children.insert(destinationChild, node);
     node->parent = destination_parent;
 
     if (update_ancestor) {
-        SyncAncestorTotal(node, node->initial_total, node->final_total, node->count_total, node->measure_total, node->discount_total);
+        UpdateAncestorTotalOrder(node, node->initial_total, node->final_total, node->count_total, node->measure_total, node->discount_total);
     }
 
     endMoveRows();

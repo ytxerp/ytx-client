@@ -22,7 +22,9 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta, doubl
 
     node->initial_total += initial_delta;
     node->final_total += final_delta;
-    SyncAncestorTotal(node, initial_delta, final_delta);
+
+    const auto& affected_ids { UpdateAncestorTotal(node, initial_delta, final_delta) };
+    RefreshAffectedTotal(affected_ids);
 }
 
 QList<QUuid> TreeModelP::PartnerList(CString& text, int unit) const
@@ -96,6 +98,31 @@ void TreeModelP::InsertUnitSet(const QUuid& node_id, int unit)
     default:
         break;
     }
+}
+
+QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, double final_delta)
+{
+    QSet<QUuid> affected_ids {};
+
+    if (!node || !node->parent || node->parent == root_)
+        return affected_ids;
+
+    if (initial_delta == 0.0 && final_delta == 0.0)
+        return affected_ids;
+
+    const int unit { node->unit };
+
+    for (Node* current = node->parent; current && current != root_; current = current->parent) {
+        if (current->unit != unit)
+            continue;
+
+        current->final_total += final_delta;
+        current->initial_total += initial_delta;
+
+        affected_ids.insert(current->id);
+    }
+
+    return affected_ids;
 }
 
 void TreeModelP::sort(int column, Qt::SortOrder order)

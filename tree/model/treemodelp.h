@@ -46,7 +46,7 @@ protected:
     const QSet<QUuid>* UnitSet(int unit) const override;
     void RemoveUnitSet(const QUuid& node_id, int unit) override;
     void InsertUnitSet(const QUuid& node_id, int unit) override;
-    QSet<QUuid> SyncDeltaImpl(const QUuid& /*node_id*/, double /*initial_delta*/, double /*final_delta*/, double, double, double) override { return {}; }
+    QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta) override;
 
 private:
     QSet<QUuid> cset_ {}; // Set of all nodes that are customer unit

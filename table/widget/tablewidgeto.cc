@@ -54,7 +54,7 @@ QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
 bool TableWidgetO::HasUnsavedData() const { return HasNodeDelta() || !node_cache_.isEmpty() || table_model_order_->HasUnsavedData(); }
 
-void TableWidgetO::RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
+void TableWidgetO::RSyncDeltaOrder(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
 {
     assert(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
 
@@ -404,7 +404,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
     WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_));
 
     LockWidgets(NodeStatus::kRecalled);
-    emit SSyncStatus(node_id_, NodeStatus::kRecalled);
+    emit SNodeStatus(node_id_, NodeStatus::kRecalled);
 }
 
 void TableWidgetO::SaveOrder()
@@ -470,7 +470,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
     ReadyPrint();
 
     LockWidgets(NodeStatus::kReleased);
-    emit SSyncStatus(node_id_, NodeStatus::kReleased);
+    emit SNodeStatus(node_id_, NodeStatus::kReleased);
 }
 
 void TableWidgetO::ReadyPrint()

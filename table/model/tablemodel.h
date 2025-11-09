@@ -41,8 +41,7 @@ protected:
 
 signals:
     // send to TreeModel
-    void SSyncDelta(
-        const QUuid& node_id, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
+    void SNodeDelta(const QUuid& node_id, double initial_delta, double final_delta);
 
     // send to LeafSStation
     void SAppendOneEntry(const QUuid& node_id, Entry* entry);

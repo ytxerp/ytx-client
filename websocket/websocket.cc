@@ -786,7 +786,7 @@ void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj)
     }
 
     tree_model->SyncNode(node_id, node_cache);
-    tree_model->RSyncStatus(node_id, NodeStatus::kReleased);
+    tree_model->RNodeStatus(node_id, NodeStatus::kReleased);
 }
 
 void WebSocket::ReleaseOrderInsert(const QJsonObject& obj)
@@ -806,7 +806,7 @@ void WebSocket::ReleaseOrderInsert(const QJsonObject& obj)
         tree_model->InsertMeta(descendant, node_obj);
     else {
         tree_model->InsertNode(ancestor, node_obj);
-        tree_model->RSyncStatus(node_id, NodeStatus::kReleased);
+        tree_model->RNodeStatus(node_id, NodeStatus::kReleased);
     }
 }
 
@@ -829,7 +829,7 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
     }
 
     tree_model->SyncNode(node_id, node_cache);
-    tree_model->RSyncStatus(node_id, NodeStatus::kRecalled);
+    tree_model->RNodeStatus(node_id, NodeStatus::kRecalled);
 }
 
 void WebSocket::ActionEntry(const QJsonObject& obj)

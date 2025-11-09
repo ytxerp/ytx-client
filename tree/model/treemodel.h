@@ -61,11 +61,10 @@ public slots:
     // receive from RemoveDialog
     void RRemoveNode(const QUuid& node_id);
 
-    // receive from EntryModel
-    void RSyncDelta(
-        const QUuid& node_id, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
+    // receive from TableModel
+    void RNodeDelta(const QUuid& node_id, double initial_delta, double final_delta);
 
-    virtual void RSyncStatus(const QUuid& node_id, NodeStatus value)
+    virtual void RNodeStatus(const QUuid& node_id, NodeStatus value)
     {
         Q_UNUSED(node_id);
         Q_UNUSED(value);
@@ -219,8 +218,8 @@ protected:
     void InsertImpl(Node* parent, int row, Node* node);
     void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
 
-    virtual QSet<QUuid> SyncDeltaImpl(
-        const QUuid& node_id, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
+    QSet<QUuid> SyncDeltaImpl(const QUuid& node_id, double initial_delta, double final_delta);
+    virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta);
 
     virtual void RegisterPath(Node* node);
     virtual void RemovePath(Node* node, Node* parent_node);
@@ -251,8 +250,6 @@ protected:
     }
 
     virtual void HandleNode();
-    virtual QSet<QUuid> SyncAncestorTotal(
-        Node* node, double initial_delta, double final_delta, double first_delta = 0.0, double second_delta = 0.0, double discount_delta = 0.0);
 
 protected:
     Node* root_ {};

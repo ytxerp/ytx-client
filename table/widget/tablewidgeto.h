@@ -43,14 +43,14 @@ signals:
     void SSyncPartner(const QUuid& node_id, const QUuid& value);
 
     // send to TreeModelOrder
-    void SSyncStatus(const QUuid& node_id, NodeStatus value);
+    void SNodeStatus(const QUuid& node_id, NodeStatus value);
 
     // send to its lambda
     void SInsertOrder();
 
 public slots:
     // receive from TableModelOrder
-    void RSyncDelta(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
+    void RSyncDeltaOrder(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
 
 public:
     TableModel* Model() const override { return table_model_order_; }
