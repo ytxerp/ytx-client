@@ -64,12 +64,6 @@ public slots:
     // receive from TableModel
     void RNodeDelta(const QUuid& node_id, double initial_delta, double final_delta);
 
-    virtual void RNodeStatus(const QUuid& node_id, NodeStatus value)
-    {
-        Q_UNUSED(node_id);
-        Q_UNUSED(value);
-    }
-
 public:
     // Qt's
     // Default implementations

@@ -36,7 +36,7 @@ signals:
     void SUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta);
 
 public slots:
-    void RNodeStatus(const QUuid& node_id, NodeStatus value) override;
+    void RNodeStatus(const QUuid& node_id, NodeStatus value);
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
