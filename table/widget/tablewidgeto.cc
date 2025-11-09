@@ -54,7 +54,8 @@ QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
 bool TableWidgetO::HasUnsavedData() const { return HasNodeDelta() || !node_cache_.isEmpty() || table_model_order_->HasUnsavedData(); }
 
-void TableWidgetO::RSyncDeltaOrder(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
+void TableWidgetO::RSyncDeltaOrder(
+    const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
 {
     assert(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
 
@@ -363,6 +364,21 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
     order_cache.insert(kPath, path_json);
 }
 
+/**
+ * @brief Build the JSON object representing the node's updated data for synchronization.
+ *
+ * This function compares the current temporary node (tmp_node_) with the original node
+ * to determine if there are any deltas. If there are changes, it populates node_cache_
+ * with the updated totals: initial, final, count, measure, and discount.
+ *
+ * The resulting JSON is inserted into order_cache under the keys:
+ *  - kNodeId: the UUID of the node
+ *  - kNodeCache: the node's updated data
+ *
+ * Important: Since this function relies on temporary delta values, it must be called
+ * before committing the changes to the actual node (*node_ = tmp_node_). Calling it
+ * after the node update may result in incorrect or missing deltas.
+ */
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_cache)
 {
     if (HasNodeDelta()) {
@@ -417,8 +433,6 @@ void TableWidgetO::SaveOrder()
     if (!HasUnsavedData())
         return;
 
-    *node_ = tmp_node_;
-
     QJsonObject order_cache { BuildOrderCache() };
 
     if (is_new_) {
@@ -433,6 +447,8 @@ void TableWidgetO::SaveOrder()
 
         ResetCache();
     }
+
+    *node_ = tmp_node_;
 }
 
 void TableWidgetO::on_pBtnRelease_clicked()
@@ -447,8 +463,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
     node_cache_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
     tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
-
-    *node_ = tmp_node_;
 
     QJsonObject order_cache { BuildOrderCache() };
 
@@ -467,17 +481,15 @@ void TableWidgetO::on_pBtnRelease_clicked()
         ResetCache();
     }
 
-    ReadyPrint();
-
     LockWidgets(NodeStatus::kReleased);
-    emit SNodeStatus(node_id_, NodeStatus::kReleased);
-}
+    *node_ = tmp_node_;
 
-void TableWidgetO::ReadyPrint()
-{
+    // ready for print
     ui->pBtnPrint->setFocus();
     ui->pBtnPrint->setDefault(true);
     ui->tableViewO->clearSelection();
+
+    emit SNodeStatus(node_id_, NodeStatus::kReleased);
 }
 
 bool TableWidgetO::HasNodeDelta() const

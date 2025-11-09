@@ -96,7 +96,6 @@ private:
     void BuildNodeInsert(QJsonObject& order_cache);
     void BuildNodeUpdate(QJsonObject& order_cache);
     void ResetCache();
-    void ReadyPrint();
 
     bool HasNodeDelta() const;
 
