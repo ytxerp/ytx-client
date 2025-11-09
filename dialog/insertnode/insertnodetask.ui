@@ -258,13 +258,13 @@
       <number>8</number>
      </property>
      <property name="topMargin">
-      <number>4</number>
+      <number>8</number>
      </property>
      <property name="rightMargin">
       <number>8</number>
      </property>
      <property name="bottomMargin">
-      <number>4</number>
+      <number>8</number>
      </property>
      <item>
       <spacer name="horizontalSpacer">
@@ -297,13 +297,13 @@
       <number>8</number>
      </property>
      <property name="topMargin">
-      <number>4</number>
+      <number>8</number>
      </property>
      <property name="rightMargin">
       <number>8</number>
      </property>
      <property name="bottomMargin">
-      <number>4</number>
+      <number>8</number>
      </property>
      <item>
       <spacer name="horizontalSpacer_2">
@@ -432,14 +432,14 @@
    <header location="global">widget/combobox.h</header>
   </customwidget>
   <customwidget>
-   <class>DateTimeEdit</class>
-   <extends>QDateTimeEdit</extends>
-   <header location="global">widget/datetimeedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>PlainTextEdit</class>
    <extends>QPlainTextEdit</extends>
    <header location="global">widget/plaintextedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DateTimeEdit</class>
+   <extends>QDateTimeEdit</extends>
+   <header location="global">widget/datetimeedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
