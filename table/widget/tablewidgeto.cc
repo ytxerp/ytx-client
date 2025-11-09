@@ -430,7 +430,9 @@ void TableWidgetO::on_pBtnRecall_clicked()
 void TableWidgetO::SaveOrder()
 {
     if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
-        QMessageBox::information(this, tr("Cannot Save"), tr("This order has already been released by another client and cannot be modified."));
+        QMessageBox::information(this, tr("Save Not Allowed"),
+            tr("This order has already been released on another client.\n"
+               "Your local changes cannot be saved."));
         return;
     }
 
@@ -461,7 +463,9 @@ void TableWidgetO::on_pBtnRelease_clicked()
         return;
 
     if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
-        QMessageBox::information(this, tr("Cannot Release"), tr("This order has already been released by another client and cannot be modified."));
+        QMessageBox::information(this, tr("Release Not Allowed"),
+            tr("This order has already been released by another client.\n"
+               "You cannot release it again."));
         return;
     }
 
