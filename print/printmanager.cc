@@ -66,8 +66,8 @@ bool PrintManager::LoadIni(const QString& file_path)
     }
 
     const QList<QString> header_settings { "partner", "issued_time" };
-    const QList<QString> content_settings { "left_top", "heigh_width", "rows_columns" };
-    const QList<QString> footer_settings { "employee", "unit", "initial_total", "page_info" };
+    const QList<QString> content_settings { "left_top", "rows_columns" };
+    const QList<QString> footer_settings { "employee", "unit", "initial_total", "initial_total_upper", "page_info" };
 
     // Read fields for header section
     for (const QString& setting : header_settings) {
@@ -78,6 +78,17 @@ bool PrintManager::LoadIni(const QString& file_path)
     for (const QString& setting : content_settings) {
         ReadFieldPosition(settings, "table", setting);
     }
+
+    settings.beginGroup("table");
+    row_height_ = settings.value("row_height").toInt();
+
+    const auto col_string { settings.value("column_widths").toStringList() };
+    column_widths_.reserve(col_string.size());
+
+    for (const auto& s : col_string) {
+        column_widths_.push_back(s.toInt());
+    }
+    settings.endGroup();
 
     // Read fields for footer section
     for (const QString& setting : footer_settings) {
@@ -90,7 +101,7 @@ bool PrintManager::LoadIni(const QString& file_path)
 void PrintManager::RenderAllPages(QPrinter* printer)
 {
     // Fetch configuration values for rows and columns
-    int rows { field_settings_.value("rows_columns").x };
+    const int rows { field_settings_.value("rows_columns").x };
 
     // Calculate total pages required based on the total rows and rows per page
     const long long total_pages { (entry_list_.size() + rows - 1) / rows }; // Ceiling division to determine total pages
@@ -135,16 +146,18 @@ void PrintManager::DrawTable(QPainter* painter, long long start_index, long long
     int columns { field_settings_.value("rows_columns").y };
     int left { field_settings_.value("left_top").x };
     int top { field_settings_.value("left_top").y };
-    int heigh { field_settings_.value("heigh_width").x };
-    int width { field_settings_.value("heigh_width").y };
 
     for (int row = 0; row != end_index - start_index; ++row) {
-        const auto* entry_shadow { entry_list_.at(start_index + row) };
+        const auto* entry { entry_list_.at(start_index + row) };
 
+        int x = left;
         for (int col = 0; col != columns; ++col) {
-            QRect cellRect(left + col * width, top + row * heigh, width, heigh);
-            // painter->drawRect(cellRect);
-            painter->drawText(cellRect, Qt::AlignCenter, GetColumnText(col, entry_shadow));
+            const int col_width { column_widths_.at(col) };
+
+            QRect cellRect(x, top + row * row_height_, col_width, row_height_);
+
+            painter->drawText(cellRect, Qt::AlignCenter, GetColumnText(col, entry));
+            x += col_width;
         }
     }
 }
@@ -164,6 +177,9 @@ void PrintManager::DrawFooter(QPainter* painter, int page_num, int total_pages)
     const auto& initial_total { field_settings_.value("initial_total") };
     painter->drawText(initial_total.x, initial_total.y, QString::number(data_.initial_total));
 
+    const auto& initial_total_upper { field_settings_.value("initial_total_upper") };
+    painter->drawText(initial_total_upper.x, initial_total_upper.y, NumberToChineseUpper(data_.initial_total));
+
     const auto& page_info { field_settings_.value("page_info") };
     painter->drawText(page_info.x, page_info.y, QString::asprintf("%d/%d", page_num, total_pages));
 }
@@ -176,7 +192,7 @@ QString PrintManager::GetColumnText(int col, const Entry* entry)
     case 0:
         return inventory_->Path(entry->rhs_node);
     case 1:
-        return inventory_->Path(d_entry->external_sku);
+        return inventory_->Name(d_entry->external_sku);
     case 2:
         return entry->description;
     case 3:
@@ -190,6 +206,114 @@ QString PrintManager::GetColumnText(int col, const Entry* entry)
     default:
         return QString();
     }
+}
+
+QString PrintManager::NumberToChineseUpper(double value)
+{
+    if (value < 0) {
+        return QObject::tr("-") + NumberToChineseUpper(-value);
+    }
+
+    if (value >= 1e15) {
+        return QObject::tr("Amount Too Large");
+    }
+
+    static const QStringList digits = { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖" };
+    static const QStringList units = { "", "拾", "佰", "仟" };
+    static const QStringList big_units = { "", "万", "亿", "兆" };
+
+    qint64 integer { static_cast<qint64>(value) };
+    const int fraction { qRound((value - integer) * 100) };
+
+    QString result {};
+    result.reserve(64);
+
+    if (integer == 0) {
+        result = "零元";
+    } else {
+        QString temp {};
+        temp.reserve(48);
+
+        int section_idx { 0 };
+        bool has_prev_section { false };
+
+        while (integer > 0) {
+            const int section { static_cast<int>(integer % 10000) };
+            integer /= 10000;
+
+            if (section > 0) {
+                QString section_str { ConvertSection(section, digits, units) };
+                section_str += big_units[section_idx];
+
+                if (has_prev_section && !temp.isEmpty()) {
+                    temp = section_str + temp;
+                } else {
+                    temp = section_str + temp;
+                }
+                has_prev_section = true;
+            } else if (has_prev_section) {
+                temp = "零" + temp;
+            }
+
+            section_idx++;
+        }
+
+        static const QRegularExpression multi_zero("零{2,}");
+        static const QRegularExpression zero_before_unit("零([万亿兆])");
+        static const QRegularExpression trailing_zero("零+$");
+
+        temp.replace(multi_zero, "零");
+        temp.replace(zero_before_unit, "\\1");
+        temp.remove(trailing_zero);
+
+        result = temp + "元";
+    }
+
+    if (fraction == 0) {
+        result += "整";
+    } else {
+        const int jiao { fraction / 10 };
+        const int fen { fraction % 10 };
+
+        if (jiao > 0) {
+            result += digits[jiao] + "角";
+            if (fen > 0) {
+                result += digits[fen] + "分";
+            }
+        } else {
+            result += "零" + digits[fen] + "分";
+        }
+    }
+
+    return result;
+}
+QString PrintManager::ConvertSection(int section, const QStringList& digits, const QStringList& units)
+{
+    if (section == 0)
+        return QString();
+
+    static constexpr int divisors[] = { 1000, 100, 10, 1 };
+
+    QString result {};
+    result.reserve(8);
+    bool need_zero { false };
+
+    for (int i = 0; i != 4; ++i) {
+        const int digit { section / divisors[i] };
+        section %= divisors[i];
+
+        if (digit > 0) {
+            if (need_zero) {
+                result += "零";
+            }
+            result += digits[digit] + units[3 - i];
+            need_zero = false;
+        } else if (!result.isEmpty()) {
+            need_zero = true;
+        }
+    }
+
+    return result;
 }
 
 void PrintManager::ApplyConfig(QPrinter* printer)

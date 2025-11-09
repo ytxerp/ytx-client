@@ -62,6 +62,9 @@ private:
 
     QString GetColumnText(int col, const Entry* entry);
 
+    QString NumberToChineseUpper(double value);
+    QString ConvertSection(int section, const QStringList& digits, const QStringList& units);
+
 private:
     QHash<QString, QVariant> page_settings_ {};
     QHash<QString, FieldSettings> field_settings_ {};
@@ -72,6 +75,9 @@ private:
 
     TreeModel* inventory_ {};
     TreeModel* partner_ {};
+
+    int row_height_ {};
+    QList<int> column_widths_ {};
 };
 
 #endif // PRINTMANAGER_H

@@ -194,7 +194,6 @@ void WebSocket::InitConnect()
 
     connect(&socket_, &QWebSocket::pong, this, [this](quint64, const QByteArray&) {
         last_heartbeat_time_ = QDateTime::currentDateTime();
-        qDebug() << "Received Pong from server";
     });
 }
 

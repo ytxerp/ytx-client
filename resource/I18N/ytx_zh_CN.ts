@@ -2502,6 +2502,16 @@ Download now?</source>
         <source>Purchase</source>
         <translation>购</translation>
     </message>
+    <message>
+        <location filename="../../print/printmanager.cc" line="214"/>
+        <source>-</source>
+        <translation>负</translation>
+    </message>
+    <message>
+        <location filename="../../print/printmanager.cc" line="218"/>
+        <source>Amount Too Large</source>
+        <translation>金额过大</translation>
+    </message>
 </context>
 <context>
     <name>RefWidget</name>
