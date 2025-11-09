@@ -165,8 +165,6 @@ void NodeP::ReadJson(const QJsonObject& object)
         kind = object.value(kKind).toInt();
     if (object.contains(kUnit))
         unit = object.value(kUnit).toInt();
-    if (object.contains(kFinalTotal))
-        final_total = object.value(kFinalTotal).toString().toDouble();
     if (object.contains(kInitialTotal))
         initial_total = object.value(kInitialTotal).toString().toDouble();
     if (object.contains(kUserId))
@@ -193,7 +191,6 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kNote, note);
     obj.insert(kKind, kind);
     obj.insert(kUnit, unit);
-    obj.insert(kFinalTotal, QString::number(final_total, 'f', kMaxNumericScale_4));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
     obj.insert(kPaymentTerm, payment_term);
 

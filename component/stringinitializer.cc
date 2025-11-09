@@ -79,8 +79,7 @@ void StringInitializer::SetHeader(
         QObject::tr("PaymentTerm"),
         QObject::tr("Kind"),
         QObject::tr("Unit"),
-        QObject::tr("TradeTotal"),
-        QObject::tr("UnpaidTradeTotal"),
+        QObject::tr("UnpaidTotal"),
     };
 
     sale.node_header = {

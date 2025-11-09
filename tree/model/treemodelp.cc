@@ -161,8 +161,6 @@ void TreeModelP::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (d_lhs->payment_term < d_rhs->payment_term) : (d_lhs->payment_term > d_rhs->payment_term);
         case NodeEnumP::kInitialTotal:
             return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
-        case NodeEnumP::kFinalTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->final_total < rhs->final_total) : (lhs->final_total > rhs->final_total);
         default:
             return false;
         }
@@ -213,8 +211,6 @@ QVariant TreeModelP::data(const QModelIndex& index, int role) const
         return d_node->payment_term;
     case NodeEnumP::kInitialTotal:
         return d_node->initial_total;
-    case NodeEnumP::kFinalTotal:
-        return d_node->final_total;
     default:
         return QVariant();
     }
@@ -268,7 +264,6 @@ Qt::ItemFlags TreeModelP::flags(const QModelIndex& index) const
         flags |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
         flags &= ~Qt::ItemIsEditable;
         break;
-    case NodeEnumP::kFinalTotal:
     case NodeEnumP::kInitialTotal:
     case NodeEnumP::kUnit:
     case NodeEnumP::kKind:
