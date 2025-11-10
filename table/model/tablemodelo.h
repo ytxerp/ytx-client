@@ -55,6 +55,7 @@ public:
     void SaveOrder(QJsonObject& order_cache);
     bool HasUnsavedData() const { return !deleted_entries_.isEmpty() || !inserted_entries_.isEmpty() || !updated_entries_.isEmpty(); }
     void SetNode(const NodeO* node) { d_node_ = node; }
+    void SetPersisted(bool is_persisted) { is_persisted_ = is_persisted; }
 
 private:
     bool UpdateInternalSku(EntryO* entry, const QUuid& value);
@@ -78,6 +79,7 @@ private:
     const NodeO* d_node_ {};
 
     QList<Entry*> entry_list_ {};
+    bool is_persisted_ {};
 
     QSet<QUuid> deleted_entries_ {};
     QHash<QUuid, Entry*> inserted_entries_ {};

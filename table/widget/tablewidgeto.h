@@ -110,7 +110,7 @@ private:
     QButtonGroup* rule_group_ {};
     QButtonGroup* unit_group_ {};
 
-    bool is_new_ {};
+    bool is_persisted_ {};
 
     QJsonObject node_cache_ {};
     double initial_delta_ {};

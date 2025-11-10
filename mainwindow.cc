@@ -468,7 +468,7 @@ void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row
         app_config_,
         section_config,
         start_,
-        true,
+        false,
     };
     auto* widget { new TableWidgetO(order_arg, this) };
 
@@ -532,7 +532,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
         app_config_,
         section_config,
         start_,
-        false,
+        true,
     };
     auto* widget = new TableWidgetO(order_arg, this);
 

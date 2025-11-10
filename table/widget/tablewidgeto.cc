@@ -16,7 +16,7 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, QWidget* parent)
     , table_model_order_ { qobject_cast<TableModelO*>(arg.table_model) }
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
-    , is_new_ { arg.is_new }
+    , is_persisted_ { arg.is_persisted }
     , node_id_ { node_->id }
     , section_ { arg.section }
 {
@@ -41,7 +41,7 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, QWidget* parent)
 
 TableWidgetO::~TableWidgetO()
 {
-    if (is_new_) {
+    if (!is_persisted_) {
         NodePool::Instance().Recycle(node_, section_);
     }
 
@@ -129,7 +129,7 @@ void TableWidgetO::IniConnect()
 
 void TableWidgetO::IniData(const QUuid& partner, const QUuid& employee)
 {
-    if (is_new_) {
+    if (!is_persisted_) {
         const auto date_time { QDateTime::currentDateTimeUtc() };
         ui->dateTimeEdit->setDateTime(date_time.toLocalTime());
         node_->issued_time = date_time;
@@ -154,8 +154,8 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->comboPartner->setEnabled(recalled);
     ui->comboEmployee->setEnabled(recalled);
 
-    ui->rBtnRO->setEnabled(is_new_);
-    ui->rBtnTO->setEnabled(is_new_);
+    ui->rBtnRO->setEnabled(!is_persisted_);
+    ui->rBtnTO->setEnabled(!is_persisted_);
 
     ui->rBtnIS->setEnabled(recalled);
     ui->rBtnMS->setEnabled(recalled);
@@ -226,7 +226,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     node_->partner = partner_id;
     emit SSyncPartner(node_id_, partner_id);
 
-    if (!is_new_) {
+    if (is_persisted_) {
         node_cache_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
     }
 }
@@ -236,7 +236,7 @@ void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
     const QUuid employee_id { ui->comboEmployee->currentData().toUuid() };
     node_->employee = employee_id;
 
-    if (!is_new_) {
+    if (is_persisted_) {
         node_cache_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
     }
 }
@@ -245,7 +245,7 @@ void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
     node_->issued_time = date_time.toUTC();
 
-    if (!is_new_) {
+    if (is_persisted_) {
         node_cache_.insert(kIssuedTime, node_->issued_time.toString(Qt::ISODate));
     }
 }
@@ -257,14 +257,14 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 
     node_->description = arg1;
 
-    if (!is_new_) {
+    if (is_persisted_) {
         node_cache_.insert(kDescription, arg1);
     }
 }
 
 void TableWidgetO::RRuleGroupClicked(int id)
 {
-    if (!is_new_)
+    if (is_persisted_)
         return;
 
     node_->direction_rule = static_cast<bool>(id);
@@ -306,7 +306,7 @@ void TableWidgetO::RUnitGroupClicked(int id)
     ui->dSpinFinalTotal->setValue(node_->final_total);
     ui->pBtnPrint->setEnabled(unit == UnitO::kPending);
 
-    if (!is_new_) {
+    if (is_persisted_) {
         node_cache_.insert(kUnit, id);
     }
 }
@@ -436,20 +436,22 @@ void TableWidgetO::SaveOrder()
 
     QJsonObject order_cache { BuildOrderCache() };
 
-    if (is_new_) {
-        BuildNodeInsert(order_cache);
-        WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_cache);
-
-        is_new_ = false;
-        ui->rBtnRO->setEnabled(false);
-        ui->rBtnTO->setEnabled(false);
-
-        emit SInsertOrder();
-    } else {
+    if (is_persisted_) {
         BuildNodeUpdate(order_cache);
         WebSocket::Instance()->SendMessage(kOrderUpdateSaved, order_cache);
 
         ResetCache();
+    } else {
+        BuildNodeInsert(order_cache);
+        WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_cache);
+
+        is_persisted_ = true;
+        table_model_order_->SetPersisted(true);
+
+        ui->rBtnRO->setEnabled(false);
+        ui->rBtnTO->setEnabled(false);
+
+        emit SInsertOrder();
     }
 }
 
@@ -476,17 +478,19 @@ void TableWidgetO::on_pBtnRelease_clicked()
     QJsonObject order_cache { BuildOrderCache() };
     BuildPartnerDelta(order_cache);
 
-    if (is_new_) {
-        BuildNodeInsert(order_cache);
-        WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_cache);
-
-        emit SInsertOrder();
-        is_new_ = false;
-    } else {
+    if (is_persisted_) {
         BuildNodeUpdate(order_cache);
         WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_cache);
 
         ResetCache();
+    } else {
+        BuildNodeInsert(order_cache);
+        WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_cache);
+
+        is_persisted_ = true;
+        table_model_order_->SetPersisted(true);
+
+        emit SInsertOrder();
     }
 
     LockWidgets(NodeStatus::kReleased);
