@@ -35,6 +35,8 @@ public:
 signals:
     // send to TableWidgetO
     void SSyncDeltaOrder(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
+    // send to entryhub, Sale and Purchase
+    void SReleaseEntry(const QUuid& node_id);
 
 public slots:
     void RAppendMultiEntry(const EntryList& entry_list) override;
@@ -51,7 +53,7 @@ public:
 
     const QList<Entry*>& GetEntryList() { return entry_list_; }
     void SaveOrder(QJsonObject& order_cache);
-    bool HasUnsavedData() const;
+    bool HasUnsavedData() const { return !deleted_entries_.isEmpty() || !inserted_entries_.isEmpty() || !updated_entries_.isEmpty(); }
     void SetNode(const NodeO* node) { d_node_ = node; }
 
 private:

@@ -602,17 +602,18 @@ void MainWindow::TableConnectT(QTableView* table_view, TableModel* table_model) 
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
 }
 
-void MainWindow::TableConnectO(QTableView* table_view, TableModelO* table_model_order, TableWidgetO* widget) const
+void MainWindow::TableConnectO(QTableView* table_view, TableModelO* table_model_o, TableWidgetO* widget) const
 {
-    auto* tree_model { static_cast<TreeModelO*>(sc_->tree_model.data()) };
-    auto entry_hub { sc_->entry_hub };
+    auto* tree_model_o { static_cast<TreeModelO*>(sc_->tree_model.data()) };
+    auto* entry_hub_o { static_cast<EntryHubO*>(sc_->entry_hub.data()) };
 
-    connect(table_model_order, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
-    connect(table_model_order, &TableModelO::SSyncDeltaOrder, widget, &TableWidgetO::RSyncDeltaOrder);
+    connect(table_model_o, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
+    connect(table_model_o, &TableModelO::SSyncDeltaOrder, widget, &TableWidgetO::RSyncDeltaOrder);
 
     connect(widget, &TableWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
+    connect(table_model_o, &TableModelO::SReleaseEntry, entry_hub_o, &EntryHubO::RReleaseEntry);
 
-    connect(widget, &TableWidgetO::SNodeStatus, tree_model, &TreeModelO::RNodeStatus);
+    connect(widget, &TableWidgetO::SNodeStatus, tree_model_o, &TreeModelO::RNodeStatus);
 }
 
 void MainWindow::TableConnectP(QTableView* table_view, TableModel* table_model) const

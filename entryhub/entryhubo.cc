@@ -3,13 +3,27 @@
 #include <QDate>
 #include <QJsonArray>
 
-#include "component/constant.h"
 #include "component/using.h"
 #include "global/entrypool.h"
 
 EntryHubO::EntryHubO(CSectionInfo& info, QObject* parent)
     : EntryHub(info, parent)
 {
+}
+
+void EntryHubO::RReleaseEntry(const QUuid& node_id)
+{
+    for (auto it = entry_cache_.begin(); it != entry_cache_.end();) {
+        Entry* e = it.value();
+
+        if (e->lhs_node == node_id) {
+            EntryPool::Instance().Recycle(e, section_);
+
+            it = entry_cache_.erase(it);
+        } else {
+            ++it;
+        }
+    }
 }
 
 void EntryHubO::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
@@ -253,6 +267,7 @@ EntryList EntryHubO::ProcessEntryArray(const QJsonArray& array)
         Entry* entry { EntryPool::Instance().Allocate(section_) };
         entry->ReadJson(obj);
 
+        entry_cache_.insert(entry->id, entry);
         list.emplaceBack(entry);
     }
 

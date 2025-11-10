@@ -51,19 +51,7 @@ TableWidgetO::~TableWidgetO()
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
-bool TableWidgetO::HasUnsavedData() const
-{
-    const bool order_delta { HasOrderDelta() };
-    const bool cache_not_empty { !node_cache_.isEmpty() };
-    const bool table_dirty { table_model_order_->HasUnsavedData() };
-
-    const bool has_unsaved { order_delta || cache_not_empty || table_dirty };
-
-    qDebug() << "TableWidgetO::HasUnsavedData?"
-             << "order_delta:" << order_delta << "cache_not_empty:" << cache_not_empty << "table_dirty:" << table_dirty << "=> result =" << has_unsaved;
-
-    return has_unsaved;
-}
+bool TableWidgetO::HasUnsavedData() const { return HasOrderDelta() || !node_cache_.isEmpty() || table_model_order_->HasUnsavedData(); }
 
 void TableWidgetO::RSyncDeltaOrder(
     const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)

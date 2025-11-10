@@ -1,14 +1,11 @@
 #include "searchentrymodelo.h"
 
 #include "component/enumclass.h"
-#include "global/entrypool.h"
 
 SearchEntryModelO::SearchEntryModelO(CSectionInfo& info, QObject* parent)
     : SearchEntryModel { info, parent }
 {
 }
-
-SearchEntryModelO::~SearchEntryModelO() { EntryPool::Instance().Recycle(entry_list_, info_.section); }
 
 QVariant SearchEntryModelO::data(const QModelIndex& index, int role) const
 {

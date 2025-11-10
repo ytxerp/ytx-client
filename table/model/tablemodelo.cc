@@ -12,12 +12,7 @@ TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, E
 {
 }
 
-TableModelO::~TableModelO()
-{
-    // All entries are cloned via EntryO::Clone from the Section::kSale pool,
-    // so they must be recycled back to the same Sale pool to ensure proper handling.
-    EntryPool::Instance().Recycle(entry_list_, Section::kSale);
-}
+TableModelO::~TableModelO() { emit SReleaseEntry(lhs_id_); }
 
 void TableModelO::RAppendMultiEntry(const EntryList& entry_list)
 {
@@ -73,20 +68,6 @@ void TableModelO::SaveOrder(QJsonObject& order_cache)
     deleted_entries_.clear();
     inserted_entries_.clear();
     updated_entries_.clear();
-}
-
-bool TableModelO::HasUnsavedData() const
-{
-    const bool has_deleted { !deleted_entries_.isEmpty() };
-    const bool has_inserted { !inserted_entries_.isEmpty() };
-    const bool has_updated { !updated_entries_.isEmpty() };
-
-    const bool dirty { has_deleted || has_inserted || has_updated };
-
-    qDebug() << "TableModelO::HasUnsavedData?"
-             << "deleted:" << has_deleted << "inserted:" << has_inserted << "updated:" << has_updated << "=> result =" << dirty;
-
-    return dirty;
 }
 
 QVariant TableModelO::data(const QModelIndex& index, int role) const
