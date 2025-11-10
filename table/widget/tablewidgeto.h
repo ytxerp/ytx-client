@@ -23,7 +23,6 @@
 #include <QButtonGroup>
 
 #include "component/arg/orderwidgetarg.h"
-#include "print/printmanager.h"
 #include "table/model/tablemodelo.h"
 #include "tablewidget.h"
 
@@ -116,9 +115,6 @@ private:
 
     const QUuid node_id_ {};
     const Section section_ {};
-
-    const QMap<QString, QString>& print_template_ {};
-    PrintManager print_manager_;
 };
 
 inline const char* kTableWidgetO = "TableWidgetO";

@@ -22,39 +22,45 @@
 
 #include <QPrinter>
 #include <QSettings>
-#include <QString>
 
 #include "component/config.h"
 #include "table/entry.h"
 #include "tree/model/treemodel.h"
 
-struct FieldSettings {
+struct FieldPosition {
     int x {};
     int y {};
 };
 
-struct PrintData {
-    QString partner {};
-    QString issued_time {};
-    QString employee {};
-    QString unit {};
-    double initial_total {};
-};
-
 class PrintManager {
 public:
-    PrintManager(CAppConfig& app_config, TreeModel* inventory, TreeModel* partner);
+    static PrintManager& Instance()
+    {
+        static PrintManager instance {};
+        return instance;
+    }
 
-    bool LoadIni(const QString& file_path);
-    void SetData(const PrintData& print_data, const QList<Entry*>& entry_list);
+    void ScanTemplate();
+    const QMap<QString, QString>& TemplateMap() { return template_map_; }
+
+    void SetAppConfig(CAppConfig* config) { app_config_ = config; }
+    void SetInventoryModel(TreeModel* inventory) { inventory_ = inventory; }
+    void SetPartnerModel(TreeModel* partner) { partner_ = partner; }
+
+    bool LoadTemplate(const QString& template_name);
+    void SetValue(const NodeO* node_o, const QList<Entry*>& entry_list);
     void Preview();
     void Print();
 
 private:
-    void RenderAllPages(QPrinter* printer);
+    PrintManager() = default;
+    ~PrintManager() = default;
+    PrintManager(const PrintManager&) = delete;
+    PrintManager& operator=(const PrintManager&) = delete;
 
+    void RenderAllPages(QPrinter* printer);
     void ApplyConfig(QPrinter* printer);
-    void ReadFieldPosition(QSettings& settings, const QString& section, const QString& prefix);
+    void ReadFieldPosition(QSettings& settings, const QString& group, const QString& field);
 
     void DrawHeader(QPainter* painter);
     void DrawTable(QPainter* painter, long long start_index, long long end_index);
@@ -66,12 +72,15 @@ private:
     QString ConvertSection(int section, const QStringList& digits, const QStringList& units);
 
 private:
-    QHash<QString, QVariant> page_settings_ {};
-    QHash<QString, FieldSettings> field_settings_ {};
-    CAppConfig& app_config_ {};
+    QHash<QString, QVariant> page_values_ {};
+    QHash<QString, FieldPosition> field_position_ {};
 
+    QMap<QString, QString> template_map_ {};
+
+    CAppConfig* app_config_ {};
     QList<Entry*> entry_list_ {};
-    PrintData data_ {};
+    const NodeO* node_o_ {};
+    QString current_template_ {};
 
     TreeModel* inventory_ {};
     TreeModel* partner_ {};

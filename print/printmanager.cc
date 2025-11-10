@@ -1,5 +1,7 @@
 #include "printmanager.h"
 
+#include <QCoreApplication>
+#include <QDir>
 #include <QFile>
 #include <QFont>
 #include <QPainter>
@@ -8,16 +10,9 @@
 #include <QPrinterInfo>
 #include <QVariant>
 
-PrintManager::PrintManager(CAppConfig& app_config, TreeModel* inventory, TreeModel* partner)
-    : app_config_ { app_config }
-    , inventory_ { inventory }
-    , partner_ { partner }
+void PrintManager::SetValue(const NodeO* node_o, const QList<Entry*>& entry_list)
 {
-}
-
-void PrintManager::SetData(const PrintData& data, const QList<Entry*>& entry_list)
-{
-    data_ = data;
+    node_o_ = node_o;
     entry_list_ = entry_list;
 }
 
@@ -26,11 +21,11 @@ void PrintManager::Preview()
     QPrinter printer { QPrinter::ScreenResolution };
     ApplyConfig(&printer);
 
-    printer.setPrinterName(app_config_.printer);
+    printer.setPrinterName(app_config_->printer);
 
     QPrintPreviewDialog preview(&printer);
 
-    QObject::connect(&preview, &QPrintPreviewDialog::paintRequested, &preview, [this](QPrinter* printer) { this->RenderAllPages(printer); });
+    QObject::connect(&preview, &QPrintPreviewDialog::paintRequested, &preview, [this](QPrinter* printer) { RenderAllPages(printer); });
     preview.exec();
 }
 
@@ -40,7 +35,7 @@ void PrintManager::Print()
     ApplyConfig(&printer);
 
     const auto available_printers { QPrinterInfo::availablePrinterNames() };
-    const QString& printer_name { app_config_.printer };
+    const QString& printer_name { app_config_->printer };
 
     if (printer_name.isEmpty() || !available_printers.contains(printer_name)) {
         QPrintDialog dialog(&printer);
@@ -54,54 +49,90 @@ void PrintManager::Print()
     RenderAllPages(&printer);
 }
 
-bool PrintManager::LoadIni(const QString& file_path)
+void PrintManager::ScanTemplate()
 {
-    // Page settings
-    QSettings settings(file_path, QSettings::IniFormat);
+#ifdef Q_OS_MAC
+    constexpr auto folder_name { "../Resources/print_template" };
+#elif defined(Q_OS_WIN32)
+    constexpr auto folder_name { "print_template" };
+#else
+    return;
+#endif
 
-    const QList<QString> page_settings { "paper_size", "orientation", "font_size" };
+    const QString folder_path { QCoreApplication::applicationDirPath() + QDir::separator() + QString::fromUtf8(folder_name) };
+    QDir dir(folder_path);
 
-    for (const QString& setting : page_settings) {
-        page_settings_[setting] = settings.value("page_settings/" + setting);
+    if (!dir.exists()) {
+        return;
     }
 
-    const QList<QString> header_settings { "partner", "issued_time" };
-    const QList<QString> content_settings { "left_top", "rows_columns" };
-    const QList<QString> footer_settings { "employee", "unit", "initial_total", "initial_total_upper", "page_info" };
+    const QStringList name_filters { "*.ini" };
+    const QDir::Filters entry_filters { QDir::Files | QDir::NoSymLinks };
+    const QFileInfoList file_list { dir.entryInfoList(name_filters, entry_filters) };
+
+    for (const auto& fileInfo : file_list) {
+        template_map_.insert(fileInfo.baseName(), fileInfo.absoluteFilePath());
+    }
+}
+
+bool PrintManager::LoadTemplate(const QString& template_name)
+{
+    if (template_name == current_template_) {
+        return true;
+    }
+
+    page_values_.clear();
+    field_position_.clear();
+
+    // Page settings
+    QSettings settings(template_name, QSettings::IniFormat);
+
+    static const QList<QString> page_fields { "page_size", "orientation", "font_size" };
+
+    for (const QString& field : page_fields) {
+        page_values_[field] = settings.value("page/" + field);
+    }
+
+    static const QList<QString> header_fields { "partner", "issued_time" };
+    static const QList<QString> content_fields { "left_top", "rows_columns" };
+    static const QList<QString> footer_fields { "employee", "unit", "initial_total", "initial_total_upper", "page_info" };
 
     // Read fields for header section
-    for (const QString& setting : header_settings) {
-        ReadFieldPosition(settings, "header", setting);
+    for (const QString& field : header_fields) {
+        ReadFieldPosition(settings, "header", field);
     }
 
     // Read fields for content section
-    for (const QString& setting : content_settings) {
-        ReadFieldPosition(settings, "table", setting);
+    for (const QString& field : content_fields) {
+        ReadFieldPosition(settings, "table", field);
     }
 
-    settings.beginGroup("table");
-    row_height_ = settings.value("row_height").toInt();
+    {
+        settings.beginGroup("table");
+        row_height_ = settings.value("row_height").toInt();
 
-    const auto col_string { settings.value("column_widths").toStringList() };
-    column_widths_.reserve(col_string.size());
+        const auto col_string { settings.value("column_widths").toStringList() };
+        column_widths_.reserve(col_string.size());
 
-    for (const auto& s : col_string) {
-        column_widths_.push_back(s.toInt());
+        for (const auto& s : col_string) {
+            column_widths_.push_back(s.toInt());
+        }
+        settings.endGroup();
     }
-    settings.endGroup();
 
     // Read fields for footer section
-    for (const QString& setting : footer_settings) {
-        ReadFieldPosition(settings, "footer", setting);
+    for (const QString& field : footer_fields) {
+        ReadFieldPosition(settings, "footer", field);
     }
 
+    current_template_ = template_name;
     return true;
 }
 
 void PrintManager::RenderAllPages(QPrinter* printer)
 {
     // Fetch configuration values for rows and columns
-    const int rows { field_settings_.value("rows_columns").x };
+    const int rows { field_position_.value("rows_columns").x };
 
     // Calculate total pages required based on the total rows and rows per page
     const long long total_pages { (entry_list_.size() + rows - 1) / rows }; // Ceiling division to determine total pages
@@ -132,29 +163,39 @@ void PrintManager::DrawHeader(QPainter* painter)
 {
     // Example: Draw a header at the specified position
 
-    if (field_settings_.contains("partner")) {
-        const auto& partner { field_settings_.value("partner") };
-        painter->drawText(partner.x, partner.y, data_.partner);
+    {
+        const auto partner { field_position_.value("partner") };
+
+        const int x { partner.x };
+        const int y { partner.y };
+
+        if (x != 0 || y != 0) {
+            painter->drawText(x, y, partner_->Name(node_o_->partner));
+        }
     }
 
-    const auto& issued_time { field_settings_.value("issued_time") };
-    painter->drawText(issued_time.x, issued_time.y, data_.issued_time);
+    const auto issued_time { field_position_.value("issued_time") };
+    painter->drawText(issued_time.x, issued_time.y, node_o_->issued_time.toLocalTime().toString(kDateTimeFST));
 }
 
 void PrintManager::DrawTable(QPainter* painter, long long start_index, long long end_index)
 {
-    int columns { field_settings_.value("rows_columns").y };
-    int left { field_settings_.value("left_top").x };
-    int top { field_settings_.value("left_top").y };
+    int columns { field_position_.value("rows_columns").y };
+    int left { field_position_.value("left_top").x };
+    int top { field_position_.value("left_top").y };
 
     for (int row = 0; row != end_index - start_index; ++row) {
         const auto* entry { entry_list_.at(start_index + row) };
 
-        int x = left;
+        int x { left };
         for (int col = 0; col != columns; ++col) {
             const int col_width { column_widths_.at(col) };
 
-            QRect cellRect(x, top + row * row_height_, col_width, row_height_);
+            if (col_width == 0) {
+                continue;
+            }
+
+            const QRect cellRect(x, top + row * row_height_, col_width, row_height_);
 
             painter->drawText(cellRect, Qt::AlignCenter, GetColumnText(col, entry));
             x += col_width;
@@ -164,24 +205,57 @@ void PrintManager::DrawTable(QPainter* painter, long long start_index, long long
 
 void PrintManager::DrawFooter(QPainter* painter, int page_num, int total_pages)
 {
-    // Example: Draw footer with page number at the bottom of the page
-
-    if (field_settings_.contains("employee")) {
-        const auto& employee { field_settings_.value("employee") };
-        painter->drawText(employee.x, employee.y, data_.employee);
+    // employee
+    {
+        const auto employee { field_position_.value("employee") };
+        painter->drawText(employee.x, employee.y, partner_->Name(node_o_->employee));
     }
 
-    const auto& unit { field_settings_.value("unit") };
-    painter->drawText(unit.x, unit.y, data_.unit);
+    // unit
+    {
+        QString unit {};
+        switch (UnitO(node_o_->unit)) {
+        case UnitO::kMonthly:
+            unit = QObject::tr("MS");
+            break;
+        case UnitO::kImmediate:
+            unit = QObject::tr("IS");
+            break;
+        case UnitO::kPending:
+            unit = QObject::tr("PEND");
+            break;
+        default:
+            break;
+        }
 
-    const auto& initial_total { field_settings_.value("initial_total") };
-    painter->drawText(initial_total.x, initial_total.y, QString::number(data_.initial_total));
+        const auto unit_poition { field_position_.value("unit") };
+        painter->drawText(unit_poition.x, unit_poition.y, unit);
+    }
 
-    const auto& initial_total_upper { field_settings_.value("initial_total_upper") };
-    painter->drawText(initial_total_upper.x, initial_total_upper.y, NumberToChineseUpper(data_.initial_total));
+    // initial_total
+    {
+        const auto p { field_position_.value("initial_total") };
+        const int x { p.x };
+        const int y { p.y };
+        if (x != 0 || y != 0) {
+            painter->drawText(x, y, QString::number(node_o_->initial_total));
+        }
+    }
 
-    const auto& page_info { field_settings_.value("page_info") };
-    painter->drawText(page_info.x, page_info.y, QString::asprintf("%d/%d", page_num, total_pages));
+    // initial_total_upper
+    {
+        const auto p { field_position_.value("initial_total_upper") };
+        const int x { p.x };
+        const int y { p.y };
+        if (x != 0 || y != 0) {
+            painter->drawText(x, y, NumberToChineseUpper(node_o_->initial_total));
+        }
+    }
+
+    {
+        const auto page_info { field_position_.value("page_info") };
+        painter->drawText(page_info.x, page_info.y, QString::asprintf("%d/%d", page_num, total_pages));
+    }
 }
 
 QString PrintManager::GetColumnText(int col, const Entry* entry)
@@ -211,11 +285,11 @@ QString PrintManager::GetColumnText(int col, const Entry* entry)
 QString PrintManager::NumberToChineseUpper(double value)
 {
     if (value < 0) {
-        return QObject::tr("-") + NumberToChineseUpper(-value);
+        return "负" + NumberToChineseUpper(-value);
     }
 
     if (value >= 1e15) {
-        return QObject::tr("Amount Too Large");
+        return "金额过大";
     }
 
     static const QStringList digits = { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖" };
@@ -320,29 +394,29 @@ void PrintManager::ApplyConfig(QPrinter* printer)
 {
     QPageLayout layout { printer->pageLayout() };
 
-    const QString orientation { page_settings_.value("orientation").toString().toLower() };
-    const QString paper_size { page_settings_.value("paper_size").toString().toLower() };
+    const QString orientation { page_values_.value("orientation").toString().toLower() };
+    const QString page_size { page_values_.value("page_size").toString().toLower() };
 
     layout.setOrientation(orientation == "landscape" ? QPageLayout::Landscape : QPageLayout::Portrait);
-    layout.setPageSize(QPageSize(paper_size == "a4" ? QPageSize::A4 : QPageSize::A5));
+    layout.setPageSize(QPageSize(page_size == "a4" ? QPageSize::A4 : QPageSize::A5));
 
     printer->setPageLayout(layout);
 }
 
-void PrintManager::ReadFieldPosition(QSettings& settings, const QString& section, const QString& prefix)
+void PrintManager::ReadFieldPosition(QSettings& settings, const QString& group, const QString& field)
 {
-    settings.beginGroup(section);
+    settings.beginGroup(group);
 
     // Check if the key exists in settings
-    if (!settings.contains(prefix)) {
-        qWarning() << "Position setting not found for section:" << section << "field:" << prefix;
+    if (!settings.contains(field)) {
+        qWarning() << "Position setting not found, group:" << group << "field:" << field;
         return;
     }
 
     // Read the position value from the settings
-    const auto position { settings.value(prefix).value<QVariantList>() };
+    const auto position { settings.value(field).value<QVariantList>() };
     if (position.size() != 2) {
-        qWarning() << "Non valid position value for section:" << section << "field:" << prefix;
+        qWarning() << "Non valid position value for field_group:" << group << "field:" << field;
         return;
     }
 
@@ -354,9 +428,9 @@ void PrintManager::ReadFieldPosition(QSettings& settings, const QString& section
 
     // Only store if both x and y are valid integers
     if (x_ok && y_ok) {
-        field_settings_[prefix] = FieldSettings(x, y);
+        field_position_[field] = FieldPosition(x, y);
     } else {
-        qWarning() << "Invalid position coordinates for section:" << section << "field:" << prefix << "value:" << position;
+        qWarning() << "Invalid position coordinates, group:" << group << "field:" << field << "value:" << position;
     }
 
     settings.endGroup();

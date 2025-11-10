@@ -5,32 +5,6 @@
 
 #include "utils/entryutils.h"
 
-void MainWindowUtils::ReadPrintTmplate(QMap<QString, QString>& print_template)
-{
-#ifdef Q_OS_MAC
-    constexpr auto folder_name { "../Resources/print_template" };
-#elif defined(Q_OS_WIN32)
-    constexpr auto folder_name { "print_template" };
-#else
-    return;
-#endif
-
-    const QString folder_path { QCoreApplication::applicationDirPath() + QDir::separator() + QString::fromUtf8(folder_name) };
-    QDir dir(folder_path);
-
-    if (!dir.exists()) {
-        return;
-    }
-
-    const QStringList name_filters { "*.ini" };
-    const QDir::Filters entry_filters { QDir::Files | QDir::NoSymLinks };
-    const QFileInfoList file_list { dir.entryInfoList(name_filters, entry_filters) };
-
-    for (const auto& fileInfo : file_list) {
-        print_template.insert(fileInfo.baseName(), fileInfo.absoluteFilePath());
-    }
-}
-
 bool MainWindowUtils::PrepareNewFile(QString& file_path, CString& suffix)
 {
     if (file_path.isEmpty())

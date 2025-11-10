@@ -4,6 +4,7 @@
 
 #include "component/signalblocker.h"
 #include "global/nodepool.h"
+#include "print/printmanager.h"
 #include "ui_tablewidgeto.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -19,8 +20,6 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, QWidget* parent)
     , is_new_ { arg.is_new }
     , node_id_ { tmp_node_.id }
     , section_ { arg.section }
-    , print_template_ { arg.print_template }
-    , print_manager_ { arg.app_config, arg.tree_model_inventory, arg.tree_model_partner }
 {
     ui->setupUi(this);
     table_model_order_->setParent(this);
@@ -111,7 +110,8 @@ void TableWidgetO::IniWidget()
 
     ui->tableViewO->setFocus();
 
-    for (auto it = print_template_.constBegin(); it != print_template_.constEnd(); ++it) {
+    auto& templates { PrintManager::Instance().TemplateMap() };
+    for (auto it = templates.constBegin(); it != templates.constEnd(); ++it) {
         ui->comboTemplate->addItem(it.key(), it.value());
     }
 }
@@ -308,37 +308,19 @@ void TableWidgetO::on_pBtnSave_clicked() { SaveOrder(); }
 void TableWidgetO::on_pBtnPrint_clicked()
 {
     PreparePrint();
-    print_manager_.Print();
+    PrintManager::Instance().Print();
 }
 
 void TableWidgetO::on_pBtnPreview_clicked()
 {
     PreparePrint();
-    print_manager_.Preview();
+    PrintManager::Instance().Preview();
 }
 
 void TableWidgetO::PreparePrint()
 {
-    print_manager_.LoadIni(ui->comboTemplate->currentData().toString());
-
-    QString unit {};
-    switch (UnitO(tmp_node_.unit)) {
-    case UnitO::kMonthly:
-        unit = tr("MS");
-        break;
-    case UnitO::kImmediate:
-        unit = tr("IS");
-        break;
-    case UnitO::kPending:
-        unit = tr("PEND");
-        break;
-    default:
-        break;
-    }
-
-    PrintData data { tree_model_partner_->Name(tmp_node_.partner), tmp_node_.issued_time.toLocalTime().toString(kDateTimeFST),
-        tree_model_partner_->Name(tmp_node_.employee), unit, tmp_node_.initial_total };
-    print_manager_.SetData(data, table_model_order_->GetEntryList());
+    PrintManager::Instance().LoadTemplate(ui->comboTemplate->currentData().toString());
+    PrintManager::Instance().SetValue(&tmp_node_, table_model_order_->GetEntryList());
 }
 
 QJsonObject TableWidgetO::BuildOrderCache()

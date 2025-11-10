@@ -32,7 +32,6 @@ struct OrderWidgetArg {
     TreeModel* tree_model_inventory;
     CAppConfig& app_config {};
     CSectionConfig& section_config {};
-    const QMap<QString, QString>& print_template {};
     Section section {};
     bool is_new {};
 };

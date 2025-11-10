@@ -58,6 +58,7 @@
 #include "global/logininfo.h"
 #include "global/nodepool.h"
 #include "global/tablesstation.h"
+#include "print/printmanager.h"
 #include "report/model/entryrefmodel.h"
 #include "report/model/settlementmodel.h"
 #include "report/model/statementmodel.h"
@@ -87,6 +88,7 @@
 #include "table/model/tablemodelt.h"
 #include "tree/model/treemodelf.h"
 #include "tree/model/treemodeli.h"
+#include "tree/model/treemodelo.h"
 #include "tree/model/treemodelp.h"
 #include "tree/model/treemodelt.h"
 #include "tree/widget/treewidgetf.h"
@@ -175,7 +177,13 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
     SetAction(true);
     on_tabWidget_currentChanged(0);
 
-    QTimer::singleShot(0, this, [this]() { MainWindowUtils::ReadPrintTmplate(print_template_); });
+    QTimer::singleShot(0, this, [this]() {
+        PrintManager::Instance().ScanTemplate();
+        PrintManager::Instance().SetAppConfig(&app_config_);
+        PrintManager::Instance().SetPartnerModel(sc_p_.tree_model);
+        PrintManager::Instance().SetInventoryModel(sc_i_.tree_model);
+    });
+
     return true;
 }
 
@@ -459,7 +467,6 @@ void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row
         tree_model_i,
         app_config_,
         section_config,
-        print_template_,
         start_,
         true,
     };
@@ -524,7 +531,6 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
         tree_model_i,
         app_config_,
         section_config,
-        print_template_,
         start_,
         false,
     };
@@ -1282,7 +1288,6 @@ void MainWindow::ClearMainwindow()
         settlement_widget_.clear();
     }
 
-    print_template_.clear();
     app_settings_.clear();
     section_settings_.clear();
 
@@ -2949,7 +2954,8 @@ void MainWindow::UpdateLastTab() const
 void MainWindow::on_tabWidget_currentChanged(int /*index*/)
 {
     auto* widget { ui->tabWidget->currentWidget() };
-    assert(widget);
+    if (!widget)
+        return;
 
     const bool is_tree { IsTreeWidget(widget) };
     const bool is_table_fipt { IsTableWidgetFIPT(widget) };

@@ -39,7 +39,6 @@
 #include "table/widget/tablewidgetfipt.h"
 #include "table/widget/tablewidgeto.h"
 #include "tree/model/treemodel.h"
-#include "tree/model/treemodelo.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -240,7 +239,6 @@ private:
     QSet<QUuid> node_pending_removal_ {};
 
     QPointer<SettlementWidget> settlement_widget_ {};
-    QMap<QString, QString> print_template_ {};
 
     QTranslator qt_translator_ {};
     QTranslator ytx_translator_ {};
