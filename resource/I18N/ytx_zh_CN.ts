@@ -2503,17 +2503,17 @@ Download now?</source>
         <translation>购</translation>
     </message>
     <message>
-        <location filename="../../print/printmanager.cc" line="219"/>
+        <location filename="../../global/printhub.cc" line="219"/>
         <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../print/printmanager.cc" line="222"/>
+        <location filename="../../global/printhub.cc" line="222"/>
         <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../print/printmanager.cc" line="225"/>
+        <location filename="../../global/printhub.cc" line="225"/>
         <source>PEND</source>
         <translation>挂帐</translation>
     </message>

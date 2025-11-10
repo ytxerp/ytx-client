@@ -1,4 +1,4 @@
-#include "printmanager.h"
+#include "printhub.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -10,13 +10,13 @@
 #include <QPrinterInfo>
 #include <QVariant>
 
-void PrintManager::SetValue(const NodeO* node_o, const QList<Entry*>& entry_list)
+void PrintHub::SetValue(const NodeO* node_o, const QList<Entry*>& entry_list)
 {
     node_o_ = node_o;
     entry_list_ = entry_list;
 }
 
-void PrintManager::Preview()
+void PrintHub::Preview()
 {
     QPrinter printer { QPrinter::ScreenResolution };
     ApplyConfig(&printer);
@@ -29,7 +29,7 @@ void PrintManager::Preview()
     preview.exec();
 }
 
-void PrintManager::Print()
+void PrintHub::Print()
 {
     QPrinter printer(QPrinter::ScreenResolution);
     ApplyConfig(&printer);
@@ -49,7 +49,7 @@ void PrintManager::Print()
     RenderAllPages(&printer);
 }
 
-void PrintManager::ScanTemplate()
+void PrintHub::ScanTemplate()
 {
 #ifdef Q_OS_MAC
     constexpr auto folder_name { "../Resources/print_template" };
@@ -75,7 +75,7 @@ void PrintManager::ScanTemplate()
     }
 }
 
-bool PrintManager::LoadTemplate(const QString& template_name)
+bool PrintHub::LoadTemplate(const QString& template_name)
 {
     if (template_name == current_template_) {
         return true;
@@ -129,7 +129,7 @@ bool PrintManager::LoadTemplate(const QString& template_name)
     return true;
 }
 
-void PrintManager::RenderAllPages(QPrinter* printer)
+void PrintHub::RenderAllPages(QPrinter* printer)
 {
     // Fetch configuration values for rows and columns
     const int rows { field_position_.value("rows_columns").x };
@@ -159,7 +159,7 @@ void PrintManager::RenderAllPages(QPrinter* printer)
     }
 }
 
-void PrintManager::DrawHeader(QPainter* painter)
+void PrintHub::DrawHeader(QPainter* painter)
 {
     // Example: Draw a header at the specified position
 
@@ -178,7 +178,7 @@ void PrintManager::DrawHeader(QPainter* painter)
     painter->drawText(issued_time.x, issued_time.y, node_o_->issued_time.toLocalTime().toString(kDateTimeFST));
 }
 
-void PrintManager::DrawTable(QPainter* painter, long long start_index, long long end_index)
+void PrintHub::DrawTable(QPainter* painter, long long start_index, long long end_index)
 {
     int columns { field_position_.value("rows_columns").y };
     int left { field_position_.value("left_top").x };
@@ -203,7 +203,7 @@ void PrintManager::DrawTable(QPainter* painter, long long start_index, long long
     }
 }
 
-void PrintManager::DrawFooter(QPainter* painter, int page_num, int total_pages)
+void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
 {
     // employee
     {
@@ -258,7 +258,7 @@ void PrintManager::DrawFooter(QPainter* painter, int page_num, int total_pages)
     }
 }
 
-QString PrintManager::GetColumnText(int col, const Entry* entry)
+QString PrintHub::GetColumnText(int col, const Entry* entry)
 {
     auto* d_entry { static_cast<const EntryO*>(entry) };
 
@@ -282,7 +282,7 @@ QString PrintManager::GetColumnText(int col, const Entry* entry)
     }
 }
 
-QString PrintManager::NumberToChineseUpper(double value)
+QString PrintHub::NumberToChineseUpper(double value)
 {
     if (value < 0) {
         return "负" + NumberToChineseUpper(-value);
@@ -361,7 +361,7 @@ QString PrintManager::NumberToChineseUpper(double value)
 
     return result;
 }
-QString PrintManager::ConvertSection(int section, const QStringList& digits, const QStringList& units)
+QString PrintHub::ConvertSection(int section, const QStringList& digits, const QStringList& units)
 {
     if (section == 0)
         return QString();
@@ -390,7 +390,7 @@ QString PrintManager::ConvertSection(int section, const QStringList& digits, con
     return result;
 }
 
-void PrintManager::ApplyConfig(QPrinter* printer)
+void PrintHub::ApplyConfig(QPrinter* printer)
 {
     QPageLayout layout { printer->pageLayout() };
 
@@ -403,7 +403,7 @@ void PrintManager::ApplyConfig(QPrinter* printer)
     printer->setPageLayout(layout);
 }
 
-void PrintManager::ReadFieldPosition(QSettings& settings, const QString& group, const QString& field)
+void PrintHub::ReadFieldPosition(QSettings& settings, const QString& group, const QString& field)
 {
     settings.beginGroup(group);
 

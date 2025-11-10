@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PRINTMANAGER_H
-#define PRINTMANAGER_H
+#ifndef PRINTHUB_H
+#define PRINTHUB_H
 
 #include <QPrinter>
 #include <QSettings>
@@ -32,11 +32,11 @@ struct FieldPosition {
     int y {};
 };
 
-class PrintManager {
+class PrintHub {
 public:
-    static PrintManager& Instance()
+    static PrintHub& Instance()
     {
-        static PrintManager instance {};
+        static PrintHub instance {};
         return instance;
     }
 
@@ -53,10 +53,10 @@ public:
     void Print();
 
 private:
-    PrintManager() = default;
-    ~PrintManager() = default;
-    PrintManager(const PrintManager&) = delete;
-    PrintManager& operator=(const PrintManager&) = delete;
+    PrintHub() = default;
+    ~PrintHub() = default;
+    PrintHub(const PrintHub&) = delete;
+    PrintHub& operator=(const PrintHub&) = delete;
 
     void RenderAllPages(QPrinter* printer);
     void ApplyConfig(QPrinter* printer);
@@ -89,4 +89,4 @@ private:
     QList<int> column_widths_ {};
 };
 
-#endif // PRINTMANAGER_H
+#endif // PRINTHUB_H

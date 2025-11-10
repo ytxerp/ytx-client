@@ -4,7 +4,7 @@
 
 #include "component/signalblocker.h"
 #include "global/nodepool.h"
-#include "print/printmanager.h"
+#include "global/printhub.h"
 #include "ui_tablewidgeto.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -110,7 +110,7 @@ void TableWidgetO::IniWidget()
 
     ui->tableViewO->setFocus();
 
-    auto& templates { PrintManager::Instance().TemplateMap() };
+    auto& templates { PrintHub::Instance().TemplateMap() };
     for (auto it = templates.constBegin(); it != templates.constEnd(); ++it) {
         ui->comboTemplate->addItem(it.key(), it.value());
     }
@@ -308,19 +308,19 @@ void TableWidgetO::on_pBtnSave_clicked() { SaveOrder(); }
 void TableWidgetO::on_pBtnPrint_clicked()
 {
     PreparePrint();
-    PrintManager::Instance().Print();
+    PrintHub::Instance().Print();
 }
 
 void TableWidgetO::on_pBtnPreview_clicked()
 {
     PreparePrint();
-    PrintManager::Instance().Preview();
+    PrintHub::Instance().Preview();
 }
 
 void TableWidgetO::PreparePrint()
 {
-    PrintManager::Instance().LoadTemplate(ui->comboTemplate->currentData().toString());
-    PrintManager::Instance().SetValue(&tmp_node_, table_model_order_->GetEntryList());
+    PrintHub::Instance().LoadTemplate(ui->comboTemplate->currentData().toString());
+    PrintHub::Instance().SetValue(&tmp_node_, table_model_order_->GetEntryList());
 }
 
 QJsonObject TableWidgetO::BuildOrderCache()

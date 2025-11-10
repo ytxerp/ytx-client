@@ -89,7 +89,7 @@ set(SOURCES
     delegate/table/tablecombofilter.cc
     utils/nodeutils.cc
     utils/mainwindowutils.cc
-    print/printmanager.cc
+    global/printhub.cc
     search/entry/searchentrymodelo.cc
     search/entry/searchentrymodel.cc
     search/entry/searchentrymodelp.cc
@@ -224,7 +224,7 @@ set(HEADERS
     utils/mainwindowutils.h
     utils/castutils.h
     utils/mainutils.h
-    print/printmanager.h
+    global/printhub.h
     search/entry/searchentrymodel.h
     search/entry/searchentrymodeli.h
     search/entry/searchentrymodelt.h
@@ -340,7 +340,7 @@ if(APPLE)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E rm -rf "$<TARGET_BUNDLE_DIR:${PROJECT_NAME}>/Contents/Resources/print_template"
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "${CMAKE_CURRENT_SOURCE_DIR}/print/template"
+            "${CMAKE_CURRENT_SOURCE_DIR}/print_template"
             "$<TARGET_BUNDLE_DIR:${PROJECT_NAME}>/Contents/Resources/print_template"
     )
 

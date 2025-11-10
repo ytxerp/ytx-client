@@ -57,8 +57,8 @@
 #include "entryhub/entryhubt.h"
 #include "global/logininfo.h"
 #include "global/nodepool.h"
+#include "global/printhub.h"
 #include "global/tablesstation.h"
-#include "print/printmanager.h"
 #include "report/model/entryrefmodel.h"
 #include "report/model/settlementmodel.h"
 #include "report/model/statementmodel.h"
@@ -178,10 +178,10 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
     on_tabWidget_currentChanged(0);
 
     QTimer::singleShot(0, this, [this]() {
-        PrintManager::Instance().ScanTemplate();
-        PrintManager::Instance().SetAppConfig(&app_config_);
-        PrintManager::Instance().SetPartnerModel(sc_p_.tree_model);
-        PrintManager::Instance().SetInventoryModel(sc_i_.tree_model);
+        PrintHub::Instance().ScanTemplate();
+        PrintHub::Instance().SetAppConfig(&app_config_);
+        PrintHub::Instance().SetPartnerModel(sc_p_.tree_model);
+        PrintHub::Instance().SetInventoryModel(sc_i_.tree_model);
     });
 
     return true;
