@@ -75,6 +75,20 @@ void TableModelO::SaveOrder(QJsonObject& order_cache)
     updated_entries_.clear();
 }
 
+bool TableModelO::HasUnsavedData() const
+{
+    const bool has_deleted { !deleted_entries_.isEmpty() };
+    const bool has_inserted { !inserted_entries_.isEmpty() };
+    const bool has_updated { !updated_entries_.isEmpty() };
+
+    const bool dirty { has_deleted || has_inserted || has_updated };
+
+    qDebug() << "TableModelO::HasUnsavedData?"
+             << "deleted:" << has_deleted << "inserted:" << has_inserted << "updated:" << has_updated << "=> result =" << dirty;
+
+    return dirty;
+}
+
 QVariant TableModelO::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)

@@ -39,7 +39,7 @@ public:
     void AckTree(const QJsonObject& obj) override;
 
     int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeT::status); }
-    void SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta) override;
+    void UpdateNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta);
 
 protected:
     void ResetBranch(Node* node) override;

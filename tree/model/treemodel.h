@@ -102,12 +102,6 @@ public:
     void ApplyTree(const QJsonObject& data);
 
     virtual void AckTree(const QJsonObject& obj) { Q_UNUSED(obj) }
-    virtual void SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta)
-    {
-        Q_UNUSED(node_id)
-        Q_UNUSED(status)
-        Q_UNUSED(meta)
-    }
     virtual void SyncNodeName(const QUuid& node_id, const QString& name, const QJsonObject& meta);
 
     void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id);

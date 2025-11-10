@@ -97,23 +97,6 @@ void TreeModelO::SyncNodeName(const QUuid& node_id, const QString& name, const Q
     }
 }
 
-void TreeModelO::SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta)
-{
-    auto* node = GetNode(node_id);
-    if (!node)
-        return;
-
-    UpdateMeta(node, meta);
-
-    auto* d_node { DerivedPtr<NodeO>(node) };
-    d_node->status = status;
-
-    auto index { GetIndex(node_id) };
-    if (index.isValid()) {
-        emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumO::kStatus)), index.siblingAtColumn(std::to_underlying(NodeEnumO::kStatus)));
-    }
-}
-
 bool TreeModelO::InsertNode(int row, const QModelIndex& parent, Node* node)
 {
     if (row < 0 || row > rowCount(parent)) {
@@ -124,6 +107,46 @@ bool TreeModelO::InsertNode(int row, const QModelIndex& parent, Node* node)
     auto* parent_node { GetNodeByIndex(parent) };
     InsertImpl(parent_node, row, node);
     return true;
+}
+
+void TreeModelO::SyncNodeDelta(const QUuid& node_id, const QJsonObject& data)
+{
+    if (data.isEmpty()) {
+        qInfo().noquote() << "SyncNodeDelta ignored: empty data for node" << node_id.toString(QUuid::WithoutBraces);
+        return;
+    }
+
+    auto* node { GetNode(node_id) };
+    if (!node) {
+        qInfo().noquote() << "SyncNodeDelta ignored: node not found in local node_hash_, id =" << node_id.toString(QUuid::WithoutBraces);
+        return;
+    }
+
+    auto* node_o { static_cast<NodeO*>(node) };
+    if (!node_o) {
+        return;
+    }
+
+    const double initial_delta { data.value(kInitialDelta).toString().toDouble() };
+    const double final_delta { data.value(kFinalDelta).toString().toDouble() };
+    const double count_delta { data.value(kCountDelta).toString().toDouble() };
+    const double measure_delta { data.value(kMeasureDelta).toString().toDouble() };
+    const double discount_delta { data.value(kDiscountDelta).toString().toDouble() };
+
+    node_o->initial_total += initial_delta;
+    node_o->final_total += final_delta;
+    node_o->count_total += count_delta;
+    node_o->measure_total += measure_delta;
+    node_o->discount_total += discount_delta;
+
+    UpdateMeta(node_o, data);
+
+    auto index { GetIndex(node_id) };
+    if (index.isValid()) {
+        const auto [start, end] = NodeUtils::NumericColumnRange(section_);
+        if (end != -1)
+            emit dataChanged(index.siblingAtColumn(start), index.siblingAtColumn(end));
+    }
 }
 
 void TreeModelO::UpdateName(const QUuid& node_id, CString& new_name)

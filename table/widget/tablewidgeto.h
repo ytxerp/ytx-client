@@ -90,13 +90,15 @@ private:
     void PreparePrint();
 
     QJsonObject BuildOrderCache();
-    QJsonObject BuildPartnerDelta();
 
+    void BuildPartnerDelta(QJsonObject& order_cache);
     void BuildNodeInsert(QJsonObject& order_cache);
     void BuildNodeUpdate(QJsonObject& order_cache);
-    void ResetCache();
 
-    bool HasNodeDelta() const;
+    bool HasOrderDelta() const;
+    bool HasPartnerDelta() const;
+
+    void ResetCache();
 
 private:
     Ui::TableWidgetO* ui;
@@ -112,6 +114,11 @@ private:
     bool is_new_ {};
 
     QJsonObject node_cache_ {};
+    double initial_delta_ {};
+    double final_delta_ {};
+    double count_delta_ {};
+    double measure_delta_ {};
+    double discount_delta_ {};
 
     const QUuid node_id_ {};
     const Section section_ {};

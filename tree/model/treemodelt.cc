@@ -271,7 +271,7 @@ void TreeModelT::AckTree(const QJsonObject& obj)
     endResetModel();
 }
 
-void TreeModelT::SyncNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta)
+void TreeModelT::UpdateNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta)
 {
     auto* node = GetNode(node_id);
     if (!node)

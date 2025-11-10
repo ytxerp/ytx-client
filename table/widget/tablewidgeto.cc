@@ -51,7 +51,19 @@ TableWidgetO::~TableWidgetO()
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
-bool TableWidgetO::HasUnsavedData() const { return HasNodeDelta() || !node_cache_.isEmpty() || table_model_order_->HasUnsavedData(); }
+bool TableWidgetO::HasUnsavedData() const
+{
+    const bool order_delta { HasOrderDelta() };
+    const bool cache_not_empty { !node_cache_.isEmpty() };
+    const bool table_dirty { table_model_order_->HasUnsavedData() };
+
+    const bool has_unsaved { order_delta || cache_not_empty || table_dirty };
+
+    qDebug() << "TableWidgetO::HasUnsavedData?"
+             << "order_delta:" << order_delta << "cache_not_empty:" << cache_not_empty << "table_dirty:" << table_dirty << "=> result =" << has_unsaved;
+
+    return has_unsaved;
+}
 
 void TableWidgetO::RSyncDeltaOrder(
     const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
@@ -73,6 +85,14 @@ void TableWidgetO::RSyncDeltaOrder(
     tmp_node_.initial_total += initial_delta;
     tmp_node_.discount_total += discount_delta;
     tmp_node_.final_total += adjusted_final_delta;
+
+    if (!is_new_) {
+        count_delta_ += count_delta;
+        measure_delta_ += measure_delta;
+        initial_delta_ += initial_delta;
+        discount_delta_ += discount_delta;
+        final_delta_ += adjusted_final_delta;
+    }
 
     IniUiValue();
 }
@@ -149,8 +169,9 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->comboPartner->setEnabled(recalled);
     ui->comboEmployee->setEnabled(recalled);
 
-    ui->rBtnRO->setEnabled(recalled);
-    ui->rBtnTO->setEnabled(recalled);
+    ui->rBtnRO->setEnabled(is_new_);
+    ui->rBtnTO->setEnabled(is_new_);
+
     ui->rBtnIS->setEnabled(recalled);
     ui->rBtnMS->setEnabled(recalled);
     ui->rBtnPEND->setEnabled(recalled);
@@ -258,6 +279,9 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 
 void TableWidgetO::RRuleGroupClicked(int id)
 {
+    if (!is_new_)
+        return;
+
     tmp_node_.direction_rule = static_cast<bool>(id);
 
     tmp_node_.count_total *= -1;
@@ -267,10 +291,6 @@ void TableWidgetO::RRuleGroupClicked(int id)
     tmp_node_.final_total *= -1;
 
     IniUiValue();
-
-    if (!is_new_) {
-        node_cache_.insert(kDirectionRule, tmp_node_.direction_rule);
-    }
 }
 
 void TableWidgetO::RUnitGroupClicked(int id)
@@ -280,13 +300,16 @@ void TableWidgetO::RUnitGroupClicked(int id)
     switch (unit) {
     case UnitO::kImmediate:
         tmp_node_.final_total = tmp_node_.initial_total - tmp_node_.discount_total;
+        final_delta_ += tmp_node_.final_total;
         ui->pBtnRelease->setEnabled(true);
         break;
     case UnitO::kMonthly:
+        final_delta_ += -tmp_node_.final_total;
         tmp_node_.final_total = 0.0;
         ui->pBtnRelease->setEnabled(true);
         break;
     case UnitO::kPending:
+        final_delta_ += -tmp_node_.final_total;
         tmp_node_.final_total = 0.0;
         ui->pBtnRelease->setEnabled(false);
         break;
@@ -356,6 +379,7 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
  * The resulting JSON is inserted into order_cache under the keys:
  *  - kNodeId: the UUID of the node
  *  - kNodeCache: the node's updated data
+ *  - kNodeDelta: the node's total delta
  *
  * Important: Since this function relies on temporary delta values, it must be called
  * before committing the changes to the actual node (*node_ = tmp_node_). Calling it
@@ -363,35 +387,54 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
  */
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_cache)
 {
-    if (HasNodeDelta()) {
-        node_cache_.insert(kInitialTotal, QString::number(tmp_node_.initial_total, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kFinalTotal, QString::number(tmp_node_.final_total, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kCountTotal, QString::number(tmp_node_.count_total, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kMeasureTotal, QString::number(tmp_node_.measure_total, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kDiscountTotal, QString::number(tmp_node_.discount_total, 'f', kMaxNumericScale_4));
+    QJsonObject node_delta {};
+
+    if (HasOrderDelta()) {
+        node_delta.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kFinalDelta, QString::number(final_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kId, node_id_.toString(QUuid::WithoutBraces));
     }
 
     order_cache.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
     order_cache.insert(kNodeCache, node_cache_);
+    order_cache.insert(kNodeDelta, node_delta);
 }
 
-QJsonObject TableWidgetO::BuildPartnerDelta()
+void TableWidgetO::BuildPartnerDelta(QJsonObject& order_cache)
 {
     QJsonObject partner_delta {};
 
-    if (tmp_node_.unit == std::to_underlying(UnitO::kMonthly)) {
+    if (tmp_node_.unit == std::to_underlying(UnitO::kMonthly) && HasPartnerDelta()) {
         partner_delta.insert(kInitialDelta, QString::number(tmp_node_.initial_total, 'f', kMaxNumericScale_4));
         partner_delta.insert(kFinalDelta, QString::number(tmp_node_.final_total, 'f', kMaxNumericScale_4));
         partner_delta.insert(kId, tmp_node_.partner.toString(QUuid::WithoutBraces));
     }
 
-    return partner_delta;
+    order_cache.insert(kPartnerDelta, partner_delta);
 }
 
-void TableWidgetO::ResetCache() { node_cache_ = QJsonObject(); }
+void TableWidgetO::ResetCache()
+{
+    node_cache_ = QJsonObject();
+    initial_delta_ = 0.0;
+    final_delta_ = 0.0;
+    count_delta_ = 0.0;
+    measure_delta_ = 0.0;
+    discount_delta_ = 0.0;
+}
 
 void TableWidgetO::on_pBtnRecall_clicked()
 {
+    if (node_->id.isNull()) {
+        QMessageBox::information(this, tr("Order Deleted"),
+            tr("This order has already been deleted by another client.\n"
+               "You cannot perform recall operation."));
+        return;
+    }
+
     if (!tmp_node_.settlement.isNull()) {
         QMessageBox::information(this, tr("Order Settled"), tr("This order has already been settled and cannot be modified."));
         return;
@@ -411,6 +454,13 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
 void TableWidgetO::SaveOrder()
 {
+    if (node_->id.isNull()) {
+        QMessageBox::information(this, tr("Order Deleted"),
+            tr("This order has already been deleted by another client.\n"
+               "You cannot perform save operation."));
+        return;
+    }
+
     if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
         QMessageBox::information(this, tr("Save Not Allowed"),
             tr("This order has already been released on another client.\n"
@@ -441,6 +491,13 @@ void TableWidgetO::SaveOrder()
 
 void TableWidgetO::on_pBtnRelease_clicked()
 {
+    if (node_->id.isNull()) {
+        QMessageBox::information(this, tr("Order Deleted"),
+            tr("This order has already been deleted by another client.\n"
+               "You cannot perform release operation."));
+        return;
+    }
+
     if (tmp_node_.status == std::to_underlying(NodeStatus::kReleased))
         return;
 
@@ -455,8 +512,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
     tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
 
     QJsonObject order_cache { BuildOrderCache() };
-
-    order_cache.insert(kPartnerDelta, BuildPartnerDelta());
+    BuildPartnerDelta(order_cache);
 
     if (is_new_) {
         BuildNodeInsert(order_cache);
@@ -482,9 +538,10 @@ void TableWidgetO::on_pBtnRelease_clicked()
     emit SNodeStatus(node_id_, NodeStatus::kReleased);
 }
 
-bool TableWidgetO::HasNodeDelta() const
+bool TableWidgetO::HasOrderDelta() const
 {
-    return FloatChanged(node_->initial_total, tmp_node_.initial_total) || FloatChanged(node_->final_total, tmp_node_.final_total)
-        || FloatChanged(node_->count_total, tmp_node_.count_total) || FloatChanged(node_->measure_total, tmp_node_.measure_total)
-        || FloatChanged(node_->discount_total, tmp_node_.discount_total);
+    return FloatChanged(initial_delta_, 0.0) || FloatChanged(final_delta_, 0.0) || FloatChanged(count_delta_, 0.0) || FloatChanged(measure_delta_, 0.0)
+        || FloatChanged(discount_delta_, 0.0);
 }
+
+bool TableWidgetO::HasPartnerDelta() const { return FloatChanged(initial_delta_, 0.0) || FloatChanged(final_delta_, 0.0); }

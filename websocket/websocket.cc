@@ -6,6 +6,7 @@
 #include "component/constant.h"
 #include "component/using.h"
 #include "tree/model/treemodelo.h"
+#include "tree/model/treemodelt.h"
 #include "websocket/jsongen.h"
 
 WebSocket::WebSocket(QObject* parent)
@@ -192,9 +193,7 @@ void WebSocket::InitConnect()
     connect(&socket_, &QWebSocket::errorOccurred, this, &WebSocket::RErrorOccurred);
     connect(&socket_, &QWebSocket::textMessageReceived, this, &WebSocket::RReceiveMessage);
 
-    connect(&socket_, &QWebSocket::pong, this, [this](quint64, const QByteArray&) {
-        last_heartbeat_time_ = QDateTime::currentDateTime();
-    });
+    connect(&socket_, &QWebSocket::pong, this, [this](quint64, const QByteArray&) { last_heartbeat_time_ = QDateTime::currentDateTime(); });
 }
 
 void WebSocket::InitTimer()
@@ -717,14 +716,17 @@ void WebSocket::UpdateNodeStatus(const QJsonObject& obj)
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const QJsonObject meta { obj.value(kMeta).toObject() };
 
-    auto tree_model { tree_model_hash_.value(section) };
+    auto* base_model { tree_model_hash_.value(section).data() };
 
     if (session_id == session_id_) {
-        tree_model->UpdateMeta(node_id, meta);
+        base_model->UpdateMeta(node_id, meta);
         return;
     }
 
-    tree_model->SyncNodeStatus(node_id, status, meta);
+    auto* task_model = static_cast<TreeModelT*>(base_model);
+    assert(task_model != nullptr);
+
+    task_model->UpdateNodeStatus(node_id, status, meta);
 }
 
 void WebSocket::UpdateNodeName(const QJsonObject& obj)
@@ -752,19 +754,24 @@ void WebSocket::SaveOrderUpdate(const QJsonObject& obj)
     CString session_id { obj.value(kSessionId).toString() };
 
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
-    auto tree_model { tree_model_hash_.value(section) };
 
-    if (!tree_model->Contains(node_id))
+    auto* base_model { tree_model_hash_.value(section).data() };
+    auto* order_model = static_cast<TreeModelO*>(base_model);
+    assert(order_model != nullptr);
+
+    if (!order_model->Contains(node_id))
         return;
 
     const auto node_cache { obj.value(kNodeCache).toObject() };
+    const auto node_delta { obj.value(kNodeDelta).toObject() };
 
     if (session_id == session_id_) {
-        tree_model->UpdateMeta(node_id, node_cache);
+        order_model->UpdateMeta(node_id, node_cache);
         return;
     }
 
-    tree_model->SyncNode(node_id, node_cache);
+    order_model->SyncNode(node_id, node_cache);
+    order_model->SyncNodeDelta(node_id, node_delta);
 }
 
 void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj)
@@ -775,7 +782,6 @@ void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj)
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     auto* base_model { tree_model_hash_.value(section).data() };
-
     auto* order_model = static_cast<TreeModelO*>(base_model);
     assert(order_model != nullptr);
 
@@ -783,6 +789,7 @@ void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj)
         return;
 
     const auto node_cache { obj.value(kNodeCache).toObject() };
+    const auto node_delta { obj.value(kNodeDelta).toObject() };
 
     if (session_id == session_id_) {
         order_model->UpdateMeta(node_id, node_cache);
@@ -790,6 +797,7 @@ void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj)
     }
 
     order_model->SyncNode(node_id, node_cache);
+    order_model->SyncNodeDelta(node_id, node_delta);
     order_model->RNodeStatus(node_id, NodeStatus::kReleased);
 }
 
