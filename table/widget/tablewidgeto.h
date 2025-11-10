@@ -57,6 +57,7 @@ public:
 
     bool HasUnsavedData() const;
     void SaveOrder();
+    void IniUiValue();
 
 private slots:
 
@@ -82,7 +83,6 @@ private:
     void IniData(const QUuid& partner, const QUuid& employee);
     void LockWidgets(NodeStatus value);
     void IniUnit(int unit);
-    void IniUiValue();
     void IniRule(bool rule);
     void IniRuleGroup();
     void IniUnitGroup();
@@ -98,13 +98,11 @@ private:
     bool HasOrderDelta() const;
     bool HasPartnerDelta() const;
 
-    void SyncNode();
     void ResetCache();
 
 private:
     Ui::TableWidgetO* ui;
     NodeO* node_ {};
-    NodeO tmp_node_ {};
 
     TableModelO* table_model_order_ {};
     TreeModel* tree_model_partner_ {};
