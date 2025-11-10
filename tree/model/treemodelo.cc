@@ -13,16 +13,16 @@ TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, int default_unit,
 
 void TreeModelO::RNodeStatus(const QUuid& node_id, NodeStatus value)
 {
-    auto* node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
-    assert(node);
+    auto* d_node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
+    assert(d_node);
 
     const int coefficient { value == NodeStatus::kReleased ? 1 : -1 };
 
-    const auto& affected_ids { UpdateAncestorTotalOrder(node, coefficient * node->initial_total, coefficient * node->final_total,
-        coefficient * node->count_total, coefficient * node->measure_total, coefficient * node->discount_total) };
+    const auto& affected_ids { UpdateAncestorTotalOrder(d_node, coefficient * d_node->initial_total, coefficient * d_node->final_total,
+        coefficient * d_node->count_total, coefficient * d_node->measure_total, coefficient * d_node->discount_total) };
 
-    if (node->unit == std::to_underlying(UnitO::kMonthly))
-        emit SUpdateAmount(node->partner, coefficient * node->initial_total, coefficient * node->final_total);
+    if (d_node->unit == std::to_underlying(UnitO::kMonthly))
+        emit SUpdateAmount(d_node->partner, coefficient * d_node->initial_total, coefficient * d_node->final_total);
 
     RefreshAffectedTotal(affected_ids);
 }

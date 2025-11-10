@@ -369,22 +369,6 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
     order_cache.insert(kPath, path_json);
 }
 
-/**
- * @brief Build the JSON object representing the node's updated data for synchronization.
- *
- * This function compares the current temporary node (tmp_node_) with the original node
- * to determine if there are any deltas. If there are changes, it populates node_cache_
- * with the updated totals: initial, final, count, measure, and discount.
- *
- * The resulting JSON is inserted into order_cache under the keys:
- *  - kNodeId: the UUID of the node
- *  - kNodeCache: the node's updated data
- *  - kNodeDelta: the node's total delta
- *
- * Important: Since this function relies on temporary delta values, it must be called
- * before committing the changes to the actual node (*node_ = tmp_node_). Calling it
- * after the node update may result in incorrect or missing deltas.
- */
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_cache)
 {
     QJsonObject node_delta {};
@@ -468,8 +452,15 @@ void TableWidgetO::SaveOrder()
         return;
     }
 
+    if (tmp_node_.partner.isNull()) {
+        QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before saving or releasing the order."));
+        return;
+    }
+
     if (!HasUnsavedData())
         return;
+
+    SyncNode();
 
     QJsonObject order_cache { BuildOrderCache() };
 
@@ -477,16 +468,17 @@ void TableWidgetO::SaveOrder()
         BuildNodeInsert(order_cache);
         WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_cache);
 
-        emit SInsertOrder();
         is_new_ = false;
+        ui->rBtnRO->setEnabled(false);
+        ui->rBtnTO->setEnabled(false);
+
+        emit SInsertOrder();
     } else {
         BuildNodeUpdate(order_cache);
         WebSocket::Instance()->SendMessage(kOrderUpdateSaved, order_cache);
 
         ResetCache();
     }
-
-    *node_ = tmp_node_;
 }
 
 void TableWidgetO::on_pBtnRelease_clicked()
@@ -498,9 +490,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
         return;
     }
 
-    if (tmp_node_.status == std::to_underlying(NodeStatus::kReleased))
-        return;
-
     if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
         QMessageBox::information(this, tr("Release Not Allowed"),
             tr("This order has already been released by another client.\n"
@@ -508,8 +497,18 @@ void TableWidgetO::on_pBtnRelease_clicked()
         return;
     }
 
+    if (tmp_node_.status == std::to_underlying(NodeStatus::kReleased))
+        return;
+
+    if (tmp_node_.partner.isNull()) {
+        QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before saving or releasing the order."));
+        return;
+    }
+
     node_cache_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
     tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
+
+    SyncNode();
 
     QJsonObject order_cache { BuildOrderCache() };
     BuildPartnerDelta(order_cache);
@@ -528,7 +527,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
     }
 
     LockWidgets(NodeStatus::kReleased);
-    *node_ = tmp_node_;
 
     // ready for print
     ui->pBtnPrint->setFocus();
@@ -545,3 +543,14 @@ bool TableWidgetO::HasOrderDelta() const
 }
 
 bool TableWidgetO::HasPartnerDelta() const { return FloatChanged(initial_delta_, 0.0) || FloatChanged(final_delta_, 0.0); }
+
+void TableWidgetO::SyncNode()
+{
+    node_->ReadJson(node_cache_);
+
+    node_->initial_total += initial_delta_;
+    node_->final_total += final_delta_;
+    node_->count_total += count_delta_;
+    node_->measure_total += measure_delta_;
+    node_->discount_total += discount_delta_;
+}

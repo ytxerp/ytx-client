@@ -98,6 +98,7 @@ private:
     bool HasOrderDelta() const;
     bool HasPartnerDelta() const;
 
+    void SyncNode();
     void ResetCache();
 
 private:
