@@ -546,7 +546,10 @@ bool TableWidgetO::HasPartnerDelta() const { return FloatChanged(initial_delta_,
 
 void TableWidgetO::SyncNode()
 {
-    node_->ReadJson(node_cache_);
+    if (is_new_)
+        *node_ = tmp_node_;
+    else
+        node_->ReadJson(node_cache_);
 
     node_->initial_total += initial_delta_;
     node_->final_total += final_delta_;
