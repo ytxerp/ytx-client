@@ -356,29 +356,8 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
 
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_cache)
 {
-    if (HasOrderDelta()) {
-        pending_updates_.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
-        pending_updates_.insert(kFinalDelta, QString::number(final_delta_, 'f', kMaxNumericScale_4));
-        pending_updates_.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
-        pending_updates_.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
-        pending_updates_.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
-    }
-
     order_cache.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
     order_cache.insert(kNodeCache, pending_updates_);
-}
-
-void TableWidgetO::BuildPartnerDelta(QJsonObject& order_cache)
-{
-    QJsonObject partner_delta {};
-
-    if (node_->unit == std::to_underlying(UnitO::kMonthly) && HasPartnerDelta()) {
-        partner_delta.insert(kInitialDelta, QString::number(node_->initial_total, 'f', kMaxNumericScale_4));
-        partner_delta.insert(kFinalDelta, QString::number(node_->final_total, 'f', kMaxNumericScale_4));
-        partner_delta.insert(kId, node_->partner.toString(QUuid::WithoutBraces));
-    }
-
-    order_cache.insert(kPartnerDelta, partner_delta);
 }
 
 void TableWidgetO::ResetCache()
@@ -472,7 +451,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
     node_->status = std::to_underlying(NodeStatus::kReleased);
 
     QJsonObject order_cache { BuildOrderCache() };
-    BuildPartnerDelta(order_cache);
 
     if (is_persisted_) {
         BuildNodeUpdate(order_cache);
@@ -503,5 +481,3 @@ bool TableWidgetO::HasOrderDelta() const
     return FloatChanged(initial_delta_, 0.0) || FloatChanged(final_delta_, 0.0) || FloatChanged(count_delta_, 0.0) || FloatChanged(measure_delta_, 0.0)
         || FloatChanged(discount_delta_, 0.0);
 }
-
-bool TableWidgetO::HasPartnerDelta() const { return FloatChanged(initial_delta_, 0.0) || FloatChanged(final_delta_, 0.0); }

@@ -91,13 +91,10 @@ private:
 
     QJsonObject BuildOrderCache();
 
-    void BuildPartnerDelta(QJsonObject& order_cache);
     void BuildNodeInsert(QJsonObject& order_cache);
     void BuildNodeUpdate(QJsonObject& order_cache);
 
     bool HasOrderDelta() const;
-    bool HasPartnerDelta() const;
-
     void ResetCache();
 
 private:
