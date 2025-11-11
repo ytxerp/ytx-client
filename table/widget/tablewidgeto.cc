@@ -454,6 +454,8 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
     if (is_persisted_) {
         BuildNodeUpdate(order_cache);
+        order_cache.insert(kPartnerId, node_->partner.toString(QUuid::WithoutBraces));
+
         WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_cache);
 
         ResetCache();
