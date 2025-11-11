@@ -30,7 +30,7 @@ public:
 
 public:
     std::optional<std::pair<QUuid, double>> ResolveFromInternal(const QUuid& partner_id, const QUuid& internal_sku) const;
-    std::optional<std::pair<QUuid, double>> ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const;
+    // std::optional<std::pair<QUuid, double>> ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const;
     void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
 
 protected:

@@ -89,20 +89,21 @@ public:
 private:
     bool UpdateInternalSku(EntryO* entry, const QUuid& value);
     bool UpdateUnitPrice(EntryO* entry, double value);
-    bool UpdateExternalSku(EntryO* entry, const QUuid& value);
     bool UpdateUnitDiscount(EntryO* entry, double value);
     bool UpdateMeasure(EntryO* entry, double value);
     bool UpdateCount(EntryO* entry, double value);
     bool UpdateDescription(EntryO* entry, const QString& value);
 
     void ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) const;
-    void ResolveFromExternal(EntryO* entry, const QUuid& external_sku) const;
     void RecalculateAmount(EntryO* entry) const;
 
     void PurifyEntry();
 
     void ScheduleUpdate(const QUuid& id);
     void FlushUpdates();
+
+    // bool UpdateExternalSku(EntryO* entry, const QUuid& value);
+    // void ResolveFromExternal(EntryO* entry, const QUuid& external_sku) const;
 
 private:
     TreeModelI* tree_model_i_ {};

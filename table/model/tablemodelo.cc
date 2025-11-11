@@ -131,9 +131,6 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     case EntryEnumO::kUnitDiscount:
         unit_discount_changed = UpdateUnitDiscount(d_entry, value.toDouble());
         break;
-    case EntryEnumO::kExternalSku:
-        unit_price_changed = UpdateExternalSku(d_entry, value.toUuid());
-        break;
     default:
         return false;
     }
@@ -232,6 +229,7 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
     case EntryEnumO::kInitial:
     case EntryEnumO::kDiscount:
     case EntryEnumO::kFinal:
+    case EntryEnumO::kExternalSku:
         flags &= ~Qt::ItemIsEditable;
         break;
     default:
@@ -315,6 +313,7 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
+#if 0
 /// @brief Update entry by customer product code (external_sku)
 /// @note Responsibility: Handle insertion and clearing, not deletion
 /// @note If mapping not found, rhs_node is cleared but entry is kept for later correction
@@ -368,6 +367,7 @@ bool TableModelO::UpdateExternalSku(EntryO* entry, const QUuid& value)
 
     return price_changed;
 }
+#endif
 
 /// @brief Update entry by internal product ID (rhs_node)
 /// @note Responsibility: Handle insertion and update, not deletion
@@ -552,6 +552,7 @@ void TableModelO::ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) 
     }
 }
 
+#if 0
 void TableModelO::ResolveFromExternal(EntryO* entry, const QUuid& external_sku) const
 {
     if (!entry || !entry_hub_p_ || external_sku.isNull())
@@ -566,6 +567,7 @@ void TableModelO::ResolveFromExternal(EntryO* entry, const QUuid& external_sku) 
         entry->rhs_node = QUuid();
     }
 }
+#endif
 
 void TableModelO::RecalculateAmount(EntryO* entry) const
 {

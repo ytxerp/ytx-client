@@ -756,9 +756,8 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) 
     auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kRhsNode), internal_sku);
 
-    auto* ext_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kExternal), table_view) };
-    auto* external_sku { new FilterUnit(tree_model_i, ext_filter_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalSku), external_sku);
+    auto* name_r { new NodeNameR(sc_i_.tree_model, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalSku), name_r);
 
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDescription), line);

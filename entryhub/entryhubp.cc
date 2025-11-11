@@ -33,6 +33,7 @@ std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromInternal(const QUu
     return std::nullopt;
 }
 
+#if 0
 std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const
 {
     for (const auto* trans : std::as_const(entry_cache_)) {
@@ -45,6 +46,7 @@ std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromExternal(const QUu
 
     return std::nullopt;
 }
+#endif
 
 // QString EntryHubP::QSReadTransRef(int unit) const
 // {
