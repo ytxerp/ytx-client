@@ -90,25 +90,25 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case NodeEnumT::kCode:
-        NodeUtils::UpdateField(caches_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDescription:
-        NodeUtils::UpdateField(caches_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kNote:
-        NodeUtils::UpdateField(caches_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDirectionRule:
         UpdateDirectionRule(node, value.toBool());
         break;
     case NodeEnumT::kColor:
-        NodeUtils::UpdateField(caches_[id], d_node, kColor, value.toString(), &NodeT::color, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(pending_updates_[id], d_node, kColor, value.toString(), &NodeT::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kIssuedTime:
-        NodeUtils::UpdateIssuedTime(caches_[id], d_node, kIssuedTime, value.toDateTime(), &NodeT::issued_time, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateIssuedTime(pending_updates_[id], d_node, kIssuedTime, value.toDateTime(), &NodeT::issued_time, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDocument:
-        NodeUtils::UpdateDocument(caches_[id], d_node, kDocument, value.toStringList(), &NodeT::document, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateDocument(pending_updates_[id], d_node, kDocument, value.toStringList(), &NodeT::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kStatus:
         UpdateStatus(node, value.toInt());
@@ -217,9 +217,9 @@ void TreeModelT::ResetColor(const QModelIndex& index)
     d_node->color.clear();
     emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumT::kColor)), index.siblingAtColumn(std::to_underlying(NodeEnumT::kColor)));
 
-    auto& cache { caches_[d_node->id] };
+    auto& update { pending_updates_[d_node->id] };
     RestartTimer(id);
-    cache.insert(kColor, QString());
+    update.insert(kColor, QString());
 }
 
 void TreeModelT::AckTree(const QJsonObject& obj)

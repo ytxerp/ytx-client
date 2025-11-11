@@ -180,7 +180,7 @@ template <typename Field, typename Node> const Field& Value(CNodeHash& hash, con
 // Update a QString or int field of an object and cache the change in a QJsonObject.
 // Returns true if the value was changed.
 template <typename Field, typename T>
-bool UpdateField(QJsonObject& cache, T* object, CString& field, const Field& value, Field T::* member, std::function<void()> restart_timer = nullptr)
+bool UpdateField(QJsonObject& update, T* object, CString& field, const Field& value, Field T::* member, std::function<void()> restart_timer = nullptr)
 {
     assert(object);
 
@@ -190,7 +190,7 @@ bool UpdateField(QJsonObject& cache, T* object, CString& field, const Field& val
         return false;
 
     current_value = value;
-    cache.insert(field, value);
+    update.insert(field, value);
 
     if (restart_timer)
         restart_timer();
@@ -199,7 +199,7 @@ bool UpdateField(QJsonObject& cache, T* object, CString& field, const Field& val
 }
 
 template <typename Field, typename T>
-bool UpdateDouble(QJsonObject& cache, T* object, CString& field, const Field& value, Field T::* member, std::function<void()> restart_timer = nullptr)
+bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& value, Field T::* member, std::function<void()> restart_timer = nullptr)
 {
     assert(object);
 
@@ -209,7 +209,7 @@ bool UpdateDouble(QJsonObject& cache, T* object, CString& field, const Field& va
         return false;
 
     current_value = value;
-    cache.insert(field, QString::number(value, 'f', kMaxNumericScale_4));
+    update.insert(field, QString::number(value, 'f', kMaxNumericScale_4));
 
     if (restart_timer)
         restart_timer();
@@ -219,7 +219,7 @@ bool UpdateDouble(QJsonObject& cache, T* object, CString& field, const Field& va
 
 template <typename T>
 bool UpdateDocument(
-    QJsonObject& cache, T* object, CString& field, const QStringList& value, QStringList T::* member, std::function<void()> restart_timer = nullptr)
+    QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList T::* member, std::function<void()> restart_timer = nullptr)
 {
     assert(object);
 
@@ -229,7 +229,7 @@ bool UpdateDocument(
         return false;
 
     current_value = value;
-    cache.insert(field, value.join(kSemicolon));
+    update.insert(field, value.join(kSemicolon));
 
     if (restart_timer)
         restart_timer();
@@ -238,7 +238,7 @@ bool UpdateDocument(
 }
 
 template <typename T>
-bool UpdateUuid(QJsonObject& cache, T* object, CString& field, const QUuid& value, QUuid T::* member, std::function<void()> restart_timer = nullptr)
+bool UpdateUuid(QJsonObject& update, T* object, CString& field, const QUuid& value, QUuid T::* member, std::function<void()> restart_timer = nullptr)
 {
     assert(object);
 
@@ -252,7 +252,7 @@ bool UpdateUuid(QJsonObject& cache, T* object, CString& field, const QUuid& valu
         return false;
 
     current_value = value;
-    cache.insert(field, value.toString(QUuid::WithoutBraces));
+    update.insert(field, value.toString(QUuid::WithoutBraces));
 
     if (restart_timer)
         restart_timer();
@@ -262,7 +262,7 @@ bool UpdateUuid(QJsonObject& cache, T* object, CString& field, const QUuid& valu
 
 template <typename T>
 bool UpdateIssuedTime(
-    QJsonObject& cache, T* object, CString& field, const QDateTime& value, QDateTime T::* member, std::function<void()> restart_timer = nullptr)
+    QJsonObject& update, T* object, CString& field, const QDateTime& value, QDateTime T::* member, std::function<void()> restart_timer = nullptr)
 {
     assert(object);
 
@@ -272,7 +272,7 @@ bool UpdateIssuedTime(
         return false;
 
     current_value = value;
-    cache.insert(field, value.toString(Qt::ISODate));
+    update.insert(field, value.toString(Qt::ISODate));
 
     if (restart_timer)
         restart_timer();

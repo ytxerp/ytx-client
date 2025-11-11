@@ -187,25 +187,25 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case NodeEnumI::kCode:
-        NodeUtils::UpdateField(caches_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kDescription:
-        NodeUtils::UpdateField(caches_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kNote:
-        NodeUtils::UpdateField(caches_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kDirectionRule:
         UpdateDirectionRule(node, value.toBool());
         break;
     case NodeEnumI::kColor:
-        NodeUtils::UpdateField(caches_[id], d_node, kColor, value.toString(), &NodeI::color, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(pending_updates_[id], d_node, kColor, value.toString(), &NodeI::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kCommission:
-        NodeUtils::UpdateDouble(caches_[id], d_node, kCommission, value.toDouble(), &NodeI::commission, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateDouble(pending_updates_[id], d_node, kCommission, value.toDouble(), &NodeI::commission, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kUnitPrice:
-        NodeUtils::UpdateDouble(caches_[id], d_node, kUnitPrice, value.toDouble(), &NodeI::unit_price, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateDouble(pending_updates_[id], d_node, kUnitPrice, value.toDouble(), &NodeI::unit_price, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;
@@ -268,7 +268,7 @@ void TreeModelI::ResetColor(const QModelIndex& index)
     d_node->color.clear();
     emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumI::kColor)), index.siblingAtColumn(std::to_underlying(NodeEnumI::kColor)));
 
-    auto& cache { caches_[d_node->id] };
+    auto& update { pending_updates_[d_node->id] };
     RestartTimer(id);
-    cache.insert(kColor, QString());
+    update.insert(kColor, QString());
 }

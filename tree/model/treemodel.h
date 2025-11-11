@@ -252,8 +252,8 @@ protected:
     const Section section_ {};
     const QStringList& node_header_ {};
 
-    QHash<QUuid, QTimer*> timers_ {};
-    QHash<QUuid, QJsonObject> caches_ {};
+    QHash<QUuid, QTimer*> pending_timers_ {};
+    QHash<QUuid, QJsonObject> pending_updates_ {};
 };
 
 using CTreeModel = const TreeModel;
