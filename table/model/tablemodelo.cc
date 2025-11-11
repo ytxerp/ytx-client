@@ -16,7 +16,7 @@ TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, E
 TableModelO::~TableModelO()
 {
     emit SReleaseEntry(lhs_id_);
-    FlushCaches();
+    FlushUpdates();
 }
 
 void TableModelO::RAppendMultiEntry(const EntryList& entry_list)
@@ -352,7 +352,7 @@ bool TableModelO::UpdateExternalSku(EntryO* entry, const QUuid& value)
             cache.insert(kRhsNode, new_rhs_node.toString(QUuid::WithoutBraces));
         }
 
-        RestartTimer(entry_id);
+        ScheduleUpdate(entry_id);
     }
 
     if (rhs_changed) {
@@ -407,7 +407,7 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value)
             cache.insert(kFinal, QString::number(entry->final, 'f', kMaxNumericScale_4));
         }
 
-        RestartTimer(entry->id);
+        ScheduleUpdate(entry->id);
     }
 
     if (external_changed) {
@@ -439,7 +439,7 @@ bool TableModelO::UpdateUnitPrice(EntryO* entry, double value)
         cache.insert(kInitial, QString::number(entry->initial, 'f', kMaxNumericScale_4));
         cache.insert(kFinal, QString::number(entry->final, 'f', kMaxNumericScale_4));
 
-        RestartTimer(entry->id);
+        ScheduleUpdate(entry->id);
     }
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
@@ -464,7 +464,7 @@ bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value)
         cache.insert(kDiscount, QString::number(entry->discount, 'f', kMaxNumericScale_4));
         cache.insert(kFinal, QString::number(entry->final, 'f', kMaxNumericScale_4));
 
-        RestartTimer(entry->id);
+        ScheduleUpdate(entry->id);
     }
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kDiscount));
@@ -491,7 +491,7 @@ bool TableModelO::UpdateMeasure(EntryO* entry, double value)
         cache.insert(kDiscount, QString::number(entry->discount, 'f', kMaxNumericScale_4));
         cache.insert(kFinal, QString::number(entry->final, 'f', kMaxNumericScale_4));
 
-        RestartTimer(entry->id);
+        ScheduleUpdate(entry->id);
     }
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
@@ -512,7 +512,7 @@ bool TableModelO::UpdateCount(EntryO* entry, double value)
 
         cache.insert(kCount, QString::number(value, 'f', kMaxNumericScale_4));
 
-        RestartTimer(entry->id);
+        ScheduleUpdate(entry->id);
     }
 
     return true;
@@ -530,7 +530,7 @@ bool TableModelO::UpdateDescription(EntryO* entry, const QString& value)
 
         cache.insert(kDescription, value);
 
-        RestartTimer(entry->id);
+        ScheduleUpdate(entry->id);
     }
 
     return true;
@@ -607,7 +607,7 @@ void TableModelO::PurifyEntry()
     }
 }
 
-void TableModelO::RestartTimer(const QUuid& id)
+void TableModelO::ScheduleUpdate(const QUuid& id)
 {
     if (pending_timers_.contains(id)) {
         pending_timers_[id]->stop();
@@ -637,7 +637,7 @@ void TableModelO::RestartTimer(const QUuid& id)
     pending_timers_[id]->start(kThreeThousand);
 }
 
-void TableModelO::FlushCaches()
+void TableModelO::FlushUpdates()
 {
     for (auto* timer : std::as_const(pending_timers_)) {
         timer->stop();

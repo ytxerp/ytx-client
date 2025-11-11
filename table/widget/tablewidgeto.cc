@@ -50,7 +50,7 @@ TableWidgetO::~TableWidgetO()
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
-bool TableWidgetO::HasUnsavedData() const { return HasOrderDelta() || !node_cache_.isEmpty() || table_model_order_->HasInserts(); }
+bool TableWidgetO::HasUnsavedData() const { return HasOrderDelta() || !pending_updates_.isEmpty() || table_model_order_->HasInserts(); }
 
 void TableWidgetO::RSyncDeltaOrder(
     const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
@@ -227,7 +227,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     emit SSyncPartner(node_id_, partner_id);
 
     if (is_persisted_) {
-        node_cache_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
+        pending_updates_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
     }
 }
 
@@ -237,7 +237,7 @@ void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
     node_->employee = employee_id;
 
     if (is_persisted_) {
-        node_cache_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
+        pending_updates_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
     }
 }
 
@@ -246,7 +246,7 @@ void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
     node_->issued_time = date_time.toUTC();
 
     if (is_persisted_) {
-        node_cache_.insert(kIssuedTime, node_->issued_time.toString(Qt::ISODate));
+        pending_updates_.insert(kIssuedTime, node_->issued_time.toString(Qt::ISODate));
     }
 }
 
@@ -258,7 +258,7 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
     node_->description = arg1;
 
     if (is_persisted_) {
-        node_cache_.insert(kDescription, arg1);
+        pending_updates_.insert(kDescription, arg1);
     }
 }
 
@@ -307,7 +307,7 @@ void TableWidgetO::RUnitGroupClicked(int id)
     ui->pBtnPrint->setEnabled(unit == UnitO::kPending);
 
     if (is_persisted_) {
-        node_cache_.insert(kUnit, id);
+        pending_updates_.insert(kUnit, id);
     }
 }
 
@@ -357,15 +357,15 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_cache)
 {
     if (HasOrderDelta()) {
-        node_cache_.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kFinalDelta, QString::number(final_delta_, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
-        node_cache_.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
+        pending_updates_.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
+        pending_updates_.insert(kFinalDelta, QString::number(final_delta_, 'f', kMaxNumericScale_4));
+        pending_updates_.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
+        pending_updates_.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
+        pending_updates_.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
     }
 
     order_cache.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
-    order_cache.insert(kNodeCache, node_cache_);
+    order_cache.insert(kNodeCache, pending_updates_);
 }
 
 void TableWidgetO::BuildPartnerDelta(QJsonObject& order_cache)
@@ -383,7 +383,7 @@ void TableWidgetO::BuildPartnerDelta(QJsonObject& order_cache)
 
 void TableWidgetO::ResetCache()
 {
-    node_cache_ = QJsonObject();
+    pending_updates_ = QJsonObject();
     initial_delta_ = 0.0;
     final_delta_ = 0.0;
     count_delta_ = 0.0;
@@ -468,7 +468,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
         return;
     }
 
-    node_cache_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
+    pending_updates_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
     node_->status = std::to_underlying(NodeStatus::kReleased);
 
     QJsonObject order_cache { BuildOrderCache() };

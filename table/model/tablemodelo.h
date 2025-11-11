@@ -100,8 +100,8 @@ private:
 
     void PurifyEntry();
 
-    void RestartTimer(const QUuid& id) override;
-    void FlushCaches() override;
+    void ScheduleUpdate(const QUuid& id);
+    void FlushUpdates();
 
 private:
     TreeModelI* tree_model_i_ {};

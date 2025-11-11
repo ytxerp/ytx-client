@@ -134,8 +134,9 @@ protected:
     }
 
     virtual void AccumulateBalance(int start);
-    virtual void RestartTimer(const QUuid& id);
-    virtual void FlushCaches();
+
+    void RestartTimer(const QUuid& id);
+    void FlushCaches();
 
     EntryShadow* InsertRowsImpl(int row, const QModelIndex& parent = QModelIndex());
 

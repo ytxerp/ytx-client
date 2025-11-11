@@ -112,7 +112,9 @@ private:
 
     bool is_persisted_ {};
 
-    QJsonObject node_cache_ {};
+    QJsonObject pending_updates_ {};
+    QTimer* pending_timer_ {};
+
     double initial_delta_ {};
     double final_delta_ {};
     double count_delta_ {};
