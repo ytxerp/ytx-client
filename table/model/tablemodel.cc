@@ -153,48 +153,48 @@ void TableModel::AccumulateBalance(int start)
 
 void TableModel::RestartTimer(const QUuid& id)
 {
-    if (entry_timers_.contains(id)) {
-        entry_timers_[id]->stop();
+    if (pending_timers_.contains(id)) {
+        pending_timers_[id]->stop();
     } else {
         auto* timer = new QTimer(this);
         timer->setSingleShot(true);
 
         connect(timer, &QTimer::timeout, this, [this, id, timer]() {
-            entry_timers_.remove(id);
+            pending_timers_.remove(id);
 
-            const auto cache { entry_caches_.take(id) };
-            if (cache.isEmpty()) {
+            const auto update { pending_updates_.take(id) };
+            if (update.isEmpty()) {
                 timer->deleteLater();
                 return;
             }
 
-            QJsonObject message { JsonGen::EntryUpdate(section_, id, cache) };
+            QJsonObject message { JsonGen::EntryUpdate(section_, id, update) };
             WebSocket::Instance()->SendMessage(kEntryUpdate, message);
             timer->deleteLater();
         });
-        entry_timers_[id] = timer;
+        pending_timers_[id] = timer;
     }
 
-    entry_timers_[id]->start(kThreeThousand);
+    pending_timers_[id]->start(kThreeThousand);
 }
 
 void TableModel::FlushCaches()
 {
-    for (auto* timer : std::as_const(entry_timers_)) {
+    for (auto* timer : std::as_const(pending_timers_)) {
         timer->stop();
         timer->deleteLater();
     }
 
-    entry_timers_.clear();
+    pending_timers_.clear();
 
-    for (auto it = entry_caches_.cbegin(); it != entry_caches_.cend(); ++it) {
+    for (auto it = pending_updates_.cbegin(); it != pending_updates_.cend(); ++it) {
         if (!it.value().isEmpty()) {
             const auto message { JsonGen::EntryUpdate(section_, it.key(), it.value()) };
             WebSocket::Instance()->SendMessage(kEntryUpdate, message);
         }
     }
 
-    entry_caches_.clear();
+    pending_updates_.clear();
 }
 
 QModelIndex TableModel::index(int row, int column, const QModelIndex& parent) const

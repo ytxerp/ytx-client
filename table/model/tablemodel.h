@@ -134,11 +134,10 @@ protected:
     }
 
     virtual void AccumulateBalance(int start);
+    virtual void RestartTimer(const QUuid& id);
+    virtual void FlushCaches();
 
     EntryShadow* InsertRowsImpl(int row, const QModelIndex& parent = QModelIndex());
-
-    void RestartTimer(const QUuid& id);
-    void FlushCaches();
 
 protected:
     CSectionInfo& info_;
@@ -148,8 +147,8 @@ protected:
 
     QList<EntryShadow*> shadow_list_ {};
 
-    QHash<QUuid, QJsonObject> entry_caches_ {};
-    QHash<QUuid, QTimer*> entry_timers_ {};
+    QHash<QUuid, QJsonObject> pending_updates_ {};
+    QHash<QUuid, QTimer*> pending_timers_ {};
 };
 
 #endif // TABLEMODEL_H

@@ -4,6 +4,7 @@
 
 #include "global/entrypool.h"
 #include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
     : TableModel { arg, parent }
@@ -58,7 +59,7 @@ void TableModelO::SaveOrder(QJsonObject& order_cache)
 
     // updated
     QJsonArray updated_entry_array {};
-    for (auto it = updated_entries_.begin(); it != updated_entries_.end(); ++it) {
+    for (auto it = pending_updates_.begin(); it != pending_updates_.end(); ++it) {
         it.value().insert("id", it.key().toString(QUuid::WithoutBraces));
         updated_entry_array.append(it.value());
     }
@@ -67,7 +68,7 @@ void TableModelO::SaveOrder(QJsonObject& order_cache)
     // clear
     deleted_entries_.clear();
     inserted_entries_.clear();
-    updated_entries_.clear();
+    pending_updates_.clear();
 }
 
 QVariant TableModelO::data(const QModelIndex& index, int role) const
@@ -313,7 +314,7 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     }
 
     deleted_entries_.insert(entry_id);
-    updated_entries_.remove(entry_id);
+    pending_updates_.remove(entry_id);
 
     EntryPool::Instance().Recycle(d_entry, section_);
     return true;
@@ -341,7 +342,7 @@ bool TableModelO::UpdateExternalSku(EntryO* entry, const QUuid& value)
     }
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { updated_entries_[entry->id] };
+        auto& cache { pending_updates_[entry->id] };
         cache.insert(kExternalSku, value.toString(QUuid::WithoutBraces));
 
         if (price_changed) {
@@ -394,7 +395,7 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value)
         RecalculateAmount(entry);
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { updated_entries_[entry->id] };
+        auto& cache { pending_updates_[entry->id] };
         cache.insert(kRhsNode, value.toString(QUuid::WithoutBraces));
 
         if (external_changed) {
@@ -431,7 +432,7 @@ bool TableModelO::UpdateUnitPrice(EntryO* entry, double value)
     entry->unit_price = value;
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { updated_entries_[entry->id] };
+        auto& cache { pending_updates_[entry->id] };
 
         cache.insert(kUnitPrice, QString::number(entry->unit_price, 'f', kMaxNumericScale_4));
         cache.insert(kInitial, QString::number(entry->initial, 'f', kMaxNumericScale_4));
@@ -454,7 +455,7 @@ bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value)
     entry->unit_discount = value;
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { updated_entries_[entry->id] };
+        auto& cache { pending_updates_[entry->id] };
 
         cache.insert(kUnitDiscount, QString::number(entry->unit_discount, 'f', kMaxNumericScale_4));
         cache.insert(kDiscount, QString::number(entry->discount, 'f', kMaxNumericScale_4));
@@ -478,7 +479,7 @@ bool TableModelO::UpdateMeasure(EntryO* entry, double value)
     entry->measure = value;
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { updated_entries_[entry->id] };
+        auto& cache { pending_updates_[entry->id] };
 
         cache.insert(kMeasure, QString::number(entry->measure, 'f', kMaxNumericScale_4));
         cache.insert(kInitial, QString::number(entry->initial, 'f', kMaxNumericScale_4));
@@ -500,7 +501,7 @@ bool TableModelO::UpdateCount(EntryO* entry, double value)
     entry->count = value;
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { updated_entries_[entry->id] };
+        auto& cache { pending_updates_[entry->id] };
 
         cache.insert(kCount, QString::number(value, 'f', kMaxNumericScale_4));
     }
@@ -516,7 +517,7 @@ bool TableModelO::UpdateDescription(EntryO* entry, const QString& value)
     entry->description = value;
 
     if (!inserted_entries_.contains(entry->id)) {
-        auto& cache { updated_entries_[entry->id] };
+        auto& cache { pending_updates_[entry->id] };
 
         cache.insert(kDescription, value);
     }
@@ -583,7 +584,7 @@ void TableModelO::PurifyEntry()
 
         beginRemoveRows(QModelIndex(), i, i);
         deleted_entries_.insert(entry->id);
-        updated_entries_.remove(entry->id);
+        pending_updates_.remove(entry->id);
         EntryPool::Instance().Recycle(entry_list_.takeAt(i), section_);
         endRemoveRows();
     }
@@ -606,3 +607,32 @@ void TableModelO::NormalizeEntryBuffer()
     // Efficiently remove all matching ids from the deleted set.
     deleted_entries_.subtract(to_remove_from_deleted);
 }
+
+void TableModelO::RestartTimer(const QUuid& id)
+{
+    if (pending_timers_.contains(id)) {
+        pending_timers_[id]->stop();
+    } else {
+        auto* timer = new QTimer(this);
+        timer->setSingleShot(true);
+
+        connect(timer, &QTimer::timeout, this, [this, id, timer]() {
+            pending_timers_.remove(id);
+
+            const auto cache { pending_updates_.take(id) };
+            if (cache.isEmpty()) {
+                timer->deleteLater();
+                return;
+            }
+
+            QJsonObject message { JsonGen::EntryUpdate(section_, id, cache) };
+            WebSocket::Instance()->SendMessage(kEntryUpdate, message);
+            timer->deleteLater();
+        });
+        pending_timers_[id] = timer;
+    }
+
+    pending_timers_[id]->start(kThreeThousand);
+}
+
+void TableModelO::FlushCaches() { }

@@ -53,7 +53,7 @@ public:
 
     const QList<Entry*>& GetEntryList() { return entry_list_; }
     void SaveOrder(QJsonObject& order_cache);
-    bool HasUnsavedData() const { return !deleted_entries_.isEmpty() || !inserted_entries_.isEmpty() || !updated_entries_.isEmpty(); }
+    bool HasUnsavedData() const { return !deleted_entries_.isEmpty() || !inserted_entries_.isEmpty() || !pending_updates_.isEmpty(); }
     void SetNode(const NodeO* node) { d_node_ = node; }
     void SetPersisted(bool is_persisted) { is_persisted_ = is_persisted; }
 
@@ -73,6 +73,9 @@ private:
     void PurifyEntry();
     void NormalizeEntryBuffer();
 
+    void RestartTimer(const QUuid& id) override;
+    void FlushCaches() override;
+
 private:
     TreeModelI* tree_model_i_ {};
     EntryHubP* entry_hub_p_ {};
@@ -83,7 +86,6 @@ private:
 
     QSet<QUuid> deleted_entries_ {};
     QHash<QUuid, Entry*> inserted_entries_ {};
-    QHash<QUuid, QJsonObject> updated_entries_ {};
 };
 
 #endif // TABLEMODELO_H
