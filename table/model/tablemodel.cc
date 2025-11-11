@@ -159,18 +159,21 @@ void TableModel::RestartTimer(const QUuid& id)
         auto* timer = new QTimer(this);
         timer->setSingleShot(true);
 
-        connect(timer, &QTimer::timeout, this, [this, id, timer]() {
-            pending_timers_.remove(id);
+        connect(timer, &QTimer::timeout, this, [this, id]() {
+            auto* expired_timer { pending_timers_.take(id) };
 
-            const auto update { pending_updates_.take(id) };
-            if (update.isEmpty()) {
-                timer->deleteLater();
-                return;
+            if (auto it = pending_updates_.find(id); it != pending_updates_.end()) {
+                const auto& update { it.value() };
+
+                if (!update.isEmpty()) {
+                    const QJsonObject message { JsonGen::EntryUpdate(section_, id, update) };
+                    WebSocket::Instance()->SendMessage(kEntryUpdate, message);
+                }
+
+                pending_updates_.erase(it);
             }
 
-            QJsonObject message { JsonGen::EntryUpdate(section_, id, update) };
-            WebSocket::Instance()->SendMessage(kEntryUpdate, message);
-            timer->deleteLater();
+            expired_timer->deleteLater();
         });
         pending_timers_[id] = timer;
     }

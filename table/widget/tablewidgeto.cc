@@ -50,7 +50,7 @@ TableWidgetO::~TableWidgetO()
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
-bool TableWidgetO::HasUnsavedData() const { return HasOrderDelta() || !node_cache_.isEmpty() || table_model_order_->HasUnsavedData(); }
+bool TableWidgetO::HasUnsavedData() const { return HasOrderDelta() || !node_cache_.isEmpty() || table_model_order_->HasInserts(); }
 
 void TableWidgetO::RSyncDeltaOrder(
     const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
@@ -337,7 +337,7 @@ QJsonObject TableWidgetO::BuildOrderCache()
     order_cache.insert(kSection, std::to_underlying(section_));
     order_cache.insert(kSessionId, QString());
 
-    table_model_order_->SaveOrder(order_cache);
+    table_model_order_->FinalizeInserts(order_cache);
 
     return order_cache;
 }
@@ -446,7 +446,6 @@ void TableWidgetO::SaveOrder()
         WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_cache);
 
         is_persisted_ = true;
-        table_model_order_->SetPersisted(true);
 
         ui->rBtnRO->setEnabled(false);
         ui->rBtnTO->setEnabled(false);
@@ -463,9 +462,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
                "You cannot release it again."));
         return;
     }
-
-    if (node_->status == std::to_underlying(NodeStatus::kReleased))
-        return;
 
     if (node_->partner.isNull()) {
         QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before saving or releasing the order."));
@@ -488,7 +484,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
         WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_cache);
 
         is_persisted_ = true;
-        table_model_order_->SetPersisted(true);
 
         emit SInsertOrder();
     }

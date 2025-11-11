@@ -25,6 +25,35 @@
 #include "tree/model/treemodel.h"
 #include "tree/model/treemodeli.h"
 
+/*
+ * TableModelO design notes:
+ *
+ * 1. New entries (inserted into a draft order) are cached locally in `pending_inserts_`.
+ *    - These entries are NOT immediately sent to the server.
+ *    - When the user clicks "Save" or "Release", all pending inserts are processed:
+ *        a) Entries with null rhs_node (internal SKU not selected) are removed.
+ *        b) Remaining entries are serialized into JSON and sent as a batch.
+ *    - This ensures that incomplete or invalid entries are never sent to the server.
+ *
+ * 2. Updates to existing entries (already persisted) are cached in `pending_updates_`.
+ *    - These updates use a debounced timer to delay sending changes, preventing excessive network traffic.
+ *    - The timer restarts on subsequent edits to the same entry, ensuring that only the latest state is sent.
+ *
+ * 3. Deletions:
+ *    - If the entry is in `pending_inserts_`, deletion is local only (no server message needed).
+ *    - If the entry has already been persisted, the debounced timer is stopped, and a delete message is sent to the server.
+ *
+ * 4. Save button behavior:
+ *    - Only affects new, unpersisted entries (drafts).
+ *    - Existing entries are synchronized automatically via the debounced timer; no manual save required.
+ *
+ * 5. PurifyEntry ensures that only valid new entries are saved, while persisted entries remain untouched,
+ *    even if their rhs_node becomes null temporarily.
+ *
+ * This design cleanly separates new inserts from updates, ensures safe multi-client synchronization,
+ * and prevents sending incomplete or redundant data to the server.
+ */
+
 class TableModelO final : public TableModel {
     Q_OBJECT
 
@@ -35,7 +64,7 @@ public:
 signals:
     // send to TableWidgetO
     void SSyncDeltaOrder(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
-    // send to entryhub, Sale and Purchase
+    // send to entryhub
     void SReleaseEntry(const QUuid& node_id);
 
 public slots:
@@ -52,10 +81,9 @@ public:
     bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
 
     const QList<Entry*>& GetEntryList() { return entry_list_; }
-    void SaveOrder(QJsonObject& order_cache);
-    bool HasUnsavedData() const { return !deleted_entries_.isEmpty() || !inserted_entries_.isEmpty() || !pending_updates_.isEmpty(); }
+    void FinalizeInserts(QJsonObject& order_cache);
+    bool HasInserts() const { return !pending_inserts_.isEmpty(); }
     void SetNode(const NodeO* node) { d_node_ = node; }
-    void SetPersisted(bool is_persisted) { is_persisted_ = is_persisted; }
 
 private:
     bool UpdateInternalSku(EntryO* entry, const QUuid& value);
@@ -71,7 +99,6 @@ private:
     void RecalculateAmount(EntryO* entry) const;
 
     void PurifyEntry();
-    void NormalizeEntryBuffer();
 
     void RestartTimer(const QUuid& id) override;
     void FlushCaches() override;
@@ -82,10 +109,9 @@ private:
     const NodeO* d_node_ {};
 
     QList<Entry*> entry_list_ {};
-    bool is_persisted_ {};
 
-    QSet<QUuid> deleted_entries_ {};
-    QHash<QUuid, Entry*> inserted_entries_ {};
+    QHash<QUuid, Entry*> pending_inserts_ {};
+    QHash<QUuid, QJsonObject> pending_updates_ {};
 };
 
 #endif // TABLEMODELO_H
