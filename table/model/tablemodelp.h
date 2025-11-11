@@ -29,6 +29,9 @@ public:
     TableModelP(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelP() override = default;
 
+public slots:
+    void RAppendMultiEntry(const EntryList& entry_list) override;
+
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
@@ -39,7 +42,9 @@ public:
 
 protected:
     bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
-    void AccumulateBalance(int start) override { Q_UNUSED(start) }
+
+private:
+    QSet<QUuid> internal_sku_ {};
 };
 
 #endif // TABLEMODELP_H

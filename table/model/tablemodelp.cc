@@ -13,6 +13,25 @@ TableModelP::TableModelP(CTableModelArg& arg, QObject* parent)
 {
 }
 
+void TableModelP::RAppendMultiEntry(const EntryList& entry_list)
+{
+    EntryShadowList shadow_list {};
+    for (auto* entry : entry_list) {
+        auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
+        entry_shadow->BindEntry(entry, true);
+
+        shadow_list.emplaceBack(entry_shadow);
+        internal_sku_.insert(entry->rhs_node);
+    }
+
+    auto row { shadow_list_.size() };
+    beginInsertRows(QModelIndex(), row, row + entry_list.size() - 1);
+    shadow_list_.append(shadow_list);
+    endInsertRows();
+
+    sort(std::to_underlying(EntryEnum::kIssuedTime), Qt::AscendingOrder);
+}
+
 bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
@@ -36,6 +55,8 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
     }
 
     EntryShadowPool::Instance().Recycle(entry_shadow, section_);
+    internal_sku_.remove(rhs_node_id);
+
     emit SRemoveEntry(entry_id);
     return true;
 }
@@ -45,6 +66,9 @@ bool TableModelP::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
     if (value.isNull())
         return false;
 
+    if (internal_sku_.contains(value))
+        return false;
+
     auto* d_shadow = DerivedPtr<EntryShadowP>(entry_shadow);
 
     auto old_node { *d_shadow->rhs_node };
@@ -52,6 +76,7 @@ bool TableModelP::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
         return false;
 
     *d_shadow->rhs_node = value;
+    internal_sku_.insert(value);
 
     const QUuid entry_id { *d_shadow->id };
 
@@ -160,7 +185,8 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
             pending_updates_[id], d_shadow, kUnitPrice, value.toDouble(), &EntryShadowP::unit_price, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kDescription:
-        EntryUtils::UpdateShadowField(pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowField(
+            pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kStatus:
         EntryUtils::UpdateShadowField(pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
