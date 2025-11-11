@@ -13,30 +13,31 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, QWidget* parent)
     : TableWidget(parent)
     , ui(new Ui::TableWidgetO)
     , node_ { arg.node }
+    , tmp_node_ { *node_ }
     , table_model_order_ { qobject_cast<TableModelO*>(arg.table_model) }
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
     , is_persisted_ { arg.is_persisted }
-    , node_id_ { node_->id }
+    , node_id_ { tmp_node_.id }
     , section_ { arg.section }
 {
     ui->setupUi(this);
     table_model_order_->setParent(this);
-    table_model_order_->SetNode(node_);
+    table_model_order_->SetNode(&tmp_node_);
     SignalBlocker blocker(this);
 
     IniWidget();
-    IniUnit(node_->unit);
+    IniUnit(tmp_node_.unit);
     IniRuleGroup();
     IniUnitGroup();
-    IniRule(node_->direction_rule);
-    IniData(node_->partner, node_->employee);
+    IniRule(tmp_node_.direction_rule);
+    IniData(tmp_node_.partner, tmp_node_.employee);
     IniConnect();
 
-    const bool released { node_->status == std::to_underlying(NodeStatus::kReleased) };
+    const bool released { tmp_node_.status == std::to_underlying(NodeStatus::kReleased) };
     ui->pBtnRecall->setChecked(released);
 
-    LockWidgets(NodeStatus(node_->status));
+    LockWidgets(NodeStatus(tmp_node_.status));
 }
 
 TableWidgetO::~TableWidgetO()
@@ -50,14 +51,14 @@ TableWidgetO::~TableWidgetO()
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
-bool TableWidgetO::HasUnsavedData() const { return HasOrderDelta() || !pending_updates_.isEmpty() || table_model_order_->HasInserts(); }
+bool TableWidgetO::HasUnsavedData() const { return !pending_updates_.isEmpty() || table_model_order_->HasInserts(); }
 
-void TableWidgetO::RSyncDeltaOrder(
-    const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
+void TableWidgetO::RSyncDeltaO(
+    const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta, bool is_persisted)
 {
     assert(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
 
-    if (node_->direction_rule == Rule::kRO) {
+    if (tmp_node_.direction_rule == Rule::kRO) {
         initial_delta *= -1;
         final_delta *= -1;
         count_delta *= -1;
@@ -65,19 +66,21 @@ void TableWidgetO::RSyncDeltaOrder(
         discount_delta *= -1;
     }
 
-    const double adjusted_final_delta { node_->unit == std::to_underlying(UnitO::kImmediate) ? final_delta : 0.0 };
+    const double adjusted_final_delta { tmp_node_.unit == std::to_underlying(UnitO::kImmediate) ? final_delta : 0.0 };
 
-    node_->count_total += count_delta;
-    node_->measure_total += measure_delta;
-    node_->initial_total += initial_delta;
-    node_->discount_total += discount_delta;
-    node_->final_total += adjusted_final_delta;
+    if (is_persisted) {
+        node_->count_total += count_delta;
+        node_->measure_total += measure_delta;
+        node_->initial_total += initial_delta;
+        node_->discount_total += discount_delta;
+        node_->final_total += adjusted_final_delta;
+    }
 
-    count_delta_ += count_delta;
-    measure_delta_ += measure_delta;
-    initial_delta_ += initial_delta;
-    discount_delta_ += discount_delta;
-    final_delta_ += adjusted_final_delta;
+    tmp_node_.count_total += count_delta;
+    tmp_node_.measure_total += measure_delta;
+    tmp_node_.initial_total += initial_delta;
+    tmp_node_.discount_total += discount_delta;
+    tmp_node_.final_total += adjusted_final_delta;
 
     IniUiValue();
 }
@@ -132,13 +135,14 @@ void TableWidgetO::IniData(const QUuid& partner, const QUuid& employee)
     if (!is_persisted_) {
         const auto date_time { QDateTime::currentDateTimeUtc() };
         ui->dateTimeEdit->setDateTime(date_time.toLocalTime());
-        node_->issued_time = date_time;
+        tmp_node_.issued_time = date_time;
         return;
     }
 
     IniUiValue();
-    ui->lineDescription->setText(node_->description);
-    ui->dateTimeEdit->setDateTime(node_->issued_time.toLocalTime());
+
+    ui->lineDescription->setText(tmp_node_.description);
+    ui->dateTimeEdit->setDateTime(tmp_node_.issued_time.toLocalTime());
 
     int partner_index { ui->comboPartner->findData(partner) };
     ui->comboPartner->setCurrentIndex(partner_index);
@@ -164,7 +168,7 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->lineDescription->setReadOnly(!recalled);
     ui->dateTimeEdit->setReadOnly(!recalled);
 
-    const bool can_print { !recalled || node_->unit == std::to_underlying(UnitO::kPending) };
+    const bool can_print { !recalled || tmp_node_.unit == std::to_underlying(UnitO::kPending) };
     ui->pBtnPrint->setEnabled(can_print);
 
     ui->pBtnSave->setHidden(!recalled);
@@ -193,11 +197,11 @@ void TableWidgetO::IniUnit(int unit)
 
 void TableWidgetO::IniUiValue()
 {
-    ui->dSpinFinalTotal->setValue(node_->final_total);
-    ui->dSpinDiscountTotal->setValue(node_->discount_total);
-    ui->dSpinFirstTotal->setValue(node_->count_total);
-    ui->dSpinSecondTotal->setValue(node_->measure_total);
-    ui->dSpinInitialTotal->setValue(node_->initial_total);
+    ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
+    ui->dSpinDiscountTotal->setValue(tmp_node_.discount_total);
+    ui->dSpinFirstTotal->setValue(tmp_node_.count_total);
+    ui->dSpinSecondTotal->setValue(tmp_node_.measure_total);
+    ui->dSpinInitialTotal->setValue(tmp_node_.initial_total);
 }
 
 void TableWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true); }
@@ -223,7 +227,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     if (partner_id.isNull())
         return;
 
-    node_->partner = partner_id;
+    tmp_node_.partner = partner_id;
     emit SSyncPartner(node_id_, partner_id);
 
     if (is_persisted_) {
@@ -234,7 +238,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
 void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 {
     const QUuid employee_id { ui->comboEmployee->currentData().toUuid() };
-    node_->employee = employee_id;
+    tmp_node_.employee = employee_id;
 
     if (is_persisted_) {
         pending_updates_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
@@ -243,19 +247,19 @@ void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 
 void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
-    node_->issued_time = date_time.toUTC();
+    tmp_node_.issued_time = date_time.toUTC();
 
     if (is_persisted_) {
-        pending_updates_.insert(kIssuedTime, node_->issued_time.toString(Qt::ISODate));
+        pending_updates_.insert(kIssuedTime, tmp_node_.issued_time.toString(Qt::ISODate));
     }
 }
 
 void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 {
-    if (node_->description == arg1)
+    if (tmp_node_.description == arg1)
         return;
 
-    node_->description = arg1;
+    tmp_node_.description = arg1;
 
     if (is_persisted_) {
         pending_updates_.insert(kDescription, arg1);
@@ -267,13 +271,13 @@ void TableWidgetO::RRuleGroupClicked(int id)
     if (is_persisted_)
         return;
 
-    node_->direction_rule = static_cast<bool>(id);
+    tmp_node_.direction_rule = static_cast<bool>(id);
 
-    node_->count_total *= -1;
-    node_->measure_total *= -1;
-    node_->initial_total *= -1;
-    node_->discount_total *= -1;
-    node_->final_total *= -1;
+    tmp_node_.count_total *= -1;
+    tmp_node_.measure_total *= -1;
+    tmp_node_.initial_total *= -1;
+    tmp_node_.discount_total *= -1;
+    tmp_node_.final_total *= -1;
 
     IniUiValue();
 }
@@ -284,26 +288,23 @@ void TableWidgetO::RUnitGroupClicked(int id)
 
     switch (unit) {
     case UnitO::kImmediate:
-        node_->final_total = node_->initial_total - node_->discount_total;
-        final_delta_ += node_->final_total;
+        tmp_node_.final_total = tmp_node_.initial_total - tmp_node_.discount_total;
         ui->pBtnRelease->setEnabled(true);
         break;
     case UnitO::kMonthly:
-        final_delta_ += -node_->final_total;
-        node_->final_total = 0.0;
+        tmp_node_.final_total = 0.0;
         ui->pBtnRelease->setEnabled(true);
         break;
     case UnitO::kPending:
-        final_delta_ += -node_->final_total;
-        node_->final_total = 0.0;
+        tmp_node_.final_total = 0.0;
         ui->pBtnRelease->setEnabled(false);
         break;
     default:
         break;
     }
 
-    node_->unit = id;
-    ui->dSpinFinalTotal->setValue(node_->final_total);
+    tmp_node_.unit = id;
+    ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
     ui->pBtnPrint->setEnabled(unit == UnitO::kPending);
 
     if (is_persisted_) {
@@ -328,7 +329,7 @@ void TableWidgetO::on_pBtnPreview_clicked()
 void TableWidgetO::PreparePrint()
 {
     PrintHub::Instance().LoadTemplate(ui->comboTemplate->currentData().toString());
-    PrintHub::Instance().SetValue(node_, table_model_order_->GetEntryList());
+    PrintHub::Instance().SetValue(&tmp_node_, table_model_order_->GetEntryList());
 }
 
 QJsonObject TableWidgetO::BuildOrderCache()
@@ -344,10 +345,10 @@ QJsonObject TableWidgetO::BuildOrderCache()
 
 void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
 {
-    const QJsonObject node_json { node_->WriteJson() };
+    const QJsonObject node_json { tmp_node_.WriteJson() };
 
     QJsonObject path_json {};
-    path_json.insert(kAncestor, node_->parent->id.toString(QUuid::WithoutBraces));
+    path_json.insert(kAncestor, tmp_node_.parent->id.toString(QUuid::WithoutBraces));
     path_json.insert(kDescendant, node_id_.toString(QUuid::WithoutBraces));
 
     order_cache.insert(kNode, node_json);
@@ -360,15 +361,7 @@ void TableWidgetO::BuildNodeUpdate(QJsonObject& order_cache)
     order_cache.insert(kNodeCache, pending_updates_);
 }
 
-void TableWidgetO::ResetCache()
-{
-    pending_updates_ = QJsonObject();
-    initial_delta_ = 0.0;
-    final_delta_ = 0.0;
-    count_delta_ = 0.0;
-    measure_delta_ = 0.0;
-    discount_delta_ = 0.0;
-}
+void TableWidgetO::ResetCache() { pending_updates_ = QJsonObject(); }
 
 void TableWidgetO::on_pBtnRecall_clicked()
 {
@@ -387,7 +380,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
     if (node_->status == std::to_underlying(NodeStatus::kRecalled))
         return;
 
-    node_->status = std::to_underlying(NodeStatus::kRecalled);
+    tmp_node_.status = std::to_underlying(NodeStatus::kRecalled);
     node_->status = std::to_underlying(NodeStatus::kRecalled);
 
     WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_));
@@ -398,6 +391,13 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
 void TableWidgetO::SaveOrder()
 {
+    if (node_->id.isNull()) {
+        QMessageBox::information(this, tr("Order Deleted"),
+            tr("This order has already been deleted by another client.\n"
+               "You cannot perform recall operation."));
+        return;
+    }
+
     if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
         QMessageBox::information(this, tr("Save Not Allowed"),
             tr("This order has already been released on another client.\n"
@@ -405,13 +405,15 @@ void TableWidgetO::SaveOrder()
         return;
     }
 
-    if (node_->partner.isNull()) {
+    if (tmp_node_.partner.isNull()) {
         QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before saving or releasing the order."));
         return;
     }
 
     if (!HasUnsavedData())
         return;
+
+    *node_ = tmp_node_;
 
     QJsonObject order_cache { BuildOrderCache() };
 
@@ -435,6 +437,13 @@ void TableWidgetO::SaveOrder()
 
 void TableWidgetO::on_pBtnRelease_clicked()
 {
+    if (node_->id.isNull()) {
+        QMessageBox::information(this, tr("Order Deleted"),
+            tr("This order has already been deleted by another client.\n"
+               "You cannot perform recall operation."));
+        return;
+    }
+
     if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
         QMessageBox::information(this, tr("Release Not Allowed"),
             tr("This order has already been released by another client.\n"
@@ -442,19 +451,21 @@ void TableWidgetO::on_pBtnRelease_clicked()
         return;
     }
 
-    if (node_->partner.isNull()) {
+    if (tmp_node_.partner.isNull()) {
         QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before saving or releasing the order."));
         return;
     }
 
     pending_updates_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
-    node_->status = std::to_underlying(NodeStatus::kReleased);
+    tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
+
+    *node_ = tmp_node_;
 
     QJsonObject order_cache { BuildOrderCache() };
 
     if (is_persisted_) {
         BuildNodeUpdate(order_cache);
-        order_cache.insert(kPartnerId, node_->partner.toString(QUuid::WithoutBraces));
+        order_cache.insert(kPartnerId, tmp_node_.partner.toString(QUuid::WithoutBraces));
 
         WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_cache);
 
@@ -476,10 +487,4 @@ void TableWidgetO::on_pBtnRelease_clicked()
     ui->tableViewO->clearSelection();
 
     emit SNodeStatus(node_id_, NodeStatus::kReleased);
-}
-
-bool TableWidgetO::HasOrderDelta() const
-{
-    return FloatChanged(initial_delta_, 0.0) || FloatChanged(final_delta_, 0.0) || FloatChanged(count_delta_, 0.0) || FloatChanged(measure_delta_, 0.0)
-        || FloatChanged(discount_delta_, 0.0);
 }

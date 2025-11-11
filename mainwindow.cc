@@ -608,7 +608,7 @@ void MainWindow::TableConnectO(QTableView* table_view, TableModelO* table_model_
     auto* entry_hub_o { static_cast<EntryHubO*>(sc_->entry_hub.data()) };
 
     connect(table_model_o, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
-    connect(table_model_o, &TableModelO::SSyncDeltaOrder, widget, &TableWidgetO::RSyncDeltaOrder);
+    connect(table_model_o, &TableModelO::SSyncDeltaO, widget, &TableWidgetO::RSyncDeltaO);
 
     connect(widget, &TableWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
     connect(table_model_o, &TableModelO::SReleaseEntry, entry_hub_o, &EntryHubO::RReleaseEntry);

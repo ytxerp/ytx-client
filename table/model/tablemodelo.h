@@ -63,7 +63,8 @@ public:
 
 signals:
     // send to TableWidgetO
-    void SSyncDeltaOrder(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
+    void SSyncDeltaO(
+        const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta, bool is_persisted);
     // send to entryhub
     void SReleaseEntry(const QUuid& node_id);
 

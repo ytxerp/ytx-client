@@ -105,6 +105,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     const double old_discount { d_entry->discount };
     const double old_initial { d_entry->initial };
     const double old_final { d_entry->final };
+    const auto entry_id { d_entry->id };
 
     bool count_changed { false };
     bool measure_changed { false };
@@ -140,7 +141,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     emit SResizeColumnToContents(index.column());
 
     if (count_changed)
-        emit SSyncDeltaOrder(d_entry->lhs_node, 0.0, 0.0, d_entry->count - old_count, 0.0, 0.0);
+        emit SSyncDeltaO(d_entry->lhs_node, 0.0, 0.0, d_entry->count - old_count, 0.0, 0.0, !pending_inserts_.contains(entry_id));
 
     if (measure_changed) {
         const double measure_delta { d_entry->measure - old_measure };
@@ -149,7 +150,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(measure_delta, 0.0) || FloatChanged(initial_delta, 0.0) || FloatChanged(discount_delta, 0.0) || FloatChanged(final_delta, 0.0)) {
-            emit SSyncDeltaOrder(d_entry->lhs_node, initial_delta, final_delta, 0.0, measure_delta, discount_delta);
+            emit SSyncDeltaO(d_entry->lhs_node, initial_delta, final_delta, 0.0, measure_delta, discount_delta, !pending_inserts_.contains(entry_id));
         }
     }
 
@@ -158,7 +159,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(initial_delta, 0.0) || FloatChanged(final_delta, 0.0))
-            emit SSyncDeltaOrder(d_entry->lhs_node, initial_delta, final_delta, 0.0, 0.0, 0.0);
+            emit SSyncDeltaO(d_entry->lhs_node, initial_delta, final_delta, 0.0, 0.0, 0.0, !pending_inserts_.contains(entry_id));
     }
 
     if (unit_discount_changed) {
@@ -166,7 +167,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(discount_delta, 0.0) || FloatChanged(final_delta, 0.0))
-            emit SSyncDeltaOrder(d_entry->lhs_node, 0.0, final_delta, 0.0, 0.0, discount_delta);
+            emit SSyncDeltaO(d_entry->lhs_node, 0.0, final_delta, 0.0, 0.0, discount_delta, !pending_inserts_.contains(entry_id));
     }
 
     return true;
@@ -247,7 +248,7 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
 bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
-    if (d_node_->status != std::to_underlying(NodeStatus::kRecalled))
+    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
         return false;
 
     auto* entry { EntryPool::Instance().Allocate(section_) };
@@ -296,7 +297,7 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
         if (FloatChanged(count_delta, 0.0) || FloatChanged(measure_delta, 0.0) || FloatChanged(discount_delta, 0.0) || FloatChanged(initial_delta, 0.0)
             || FloatChanged(final_delta, 0.0)) {
-            emit SSyncDeltaOrder(lhs_node, initial_delta, final_delta, count_delta, measure_delta, discount_delta);
+            emit SSyncDeltaO(lhs_node, initial_delta, final_delta, count_delta, measure_delta, discount_delta, !pending_inserts_.contains(entry_id));
         }
     }
 
