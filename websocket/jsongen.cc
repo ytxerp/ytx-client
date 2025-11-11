@@ -287,8 +287,7 @@ QJsonObject OrderRecalled(Section section, const NodeO* node)
 
     if (node->unit == std::to_underlying(UnitO::kMonthly)) {
         partner_delta.insert(kInitialDelta, QString::number(-node->initial_total, 'f', kMaxNumericScale_4));
-        partner_delta.insert(kFinalDelta, QString::number(-node->final_total, 'f', kMaxNumericScale_4));
-        partner_delta.insert(kId, node->partner.toString(QUuid::WithoutBraces));
+        partner_delta.insert(kNodeId, node->partner.toString(QUuid::WithoutBraces));
     }
 
     message.insert(kPartnerDelta, partner_delta);
