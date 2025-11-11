@@ -242,10 +242,6 @@ bool UpdateUuid(QJsonObject& update, T* object, CString& field, const QUuid& val
 {
     assert(object);
 
-    if (object->kind != std::to_underlying(NodeKind::kLeaf)) {
-        return false;
-    }
-
     QUuid& current_value { object->*member };
 
     if (current_value == value)

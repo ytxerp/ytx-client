@@ -37,14 +37,17 @@ public:
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
+    inline int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return entry_list_.size(); }
 
+    bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
 protected:
-    bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
+    bool UpdateInternalSku(EntryP* entry, const QUuid& value);
 
 private:
     QSet<QUuid> internal_sku_ {};
+    QList<Entry*> entry_list_ {};
 };
 
 #endif // TABLEMODELP_H

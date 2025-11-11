@@ -52,6 +52,22 @@ void Entry::ReadJson(const QJsonObject& object)
         updated_by = QUuid(object.value(kUpdatedBy).toString());
 }
 
+QJsonObject Entry::WriteJson() const
+{
+    QJsonObject obj;
+
+    obj.insert(kId, id.toString(QUuid::WithoutBraces));
+    obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
+    obj.insert(kCode, code);
+    obj.insert(kLhsNode, lhs_node.toString(QUuid::WithoutBraces));
+    obj.insert(kDescription, description);
+    obj.insert(kDocument, document.join(kSemicolon));
+    obj.insert(kStatus, status);
+    obj.insert(kRhsNode, rhs_node.toString(QUuid::WithoutBraces));
+
+    return obj;
+}
+
 void EntryF::ResetState()
 {
     Entry::ResetState();
@@ -152,6 +168,14 @@ void EntryP::ReadJson(const QJsonObject& object)
         unit_price = object[kUnitPrice].toString().toDouble();
     if (object.contains(kExternalSku))
         external_sku = QUuid(object[kExternalSku].toString());
+}
+
+QJsonObject EntryP::WriteJson() const
+{
+    QJsonObject obj = Entry::WriteJson();
+    obj.insert(kUnitPrice, QString::number(unit_price, 'f', kMaxNumericScale_4));
+    obj.insert(kExternalSku, external_sku.toString(QUuid::WithoutBraces));
+    return obj;
 }
 
 void EntryO::ResetState()

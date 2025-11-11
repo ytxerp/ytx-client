@@ -259,6 +259,7 @@ bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 
     pending_inserts_.insert(entry->id, entry);
 
+    emit SInsertEntry(entry);
     return true;
 }
 
@@ -309,7 +310,7 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
         pending_inserts_.erase(it);
     }
 
-    EntryPool::Instance().Recycle(d_entry, section_);
+    emit SRemoveEntry(entry_id);
     return true;
 }
 

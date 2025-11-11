@@ -3,8 +3,7 @@
 #include <QDateTime>
 
 #include "component/constant.h"
-#include "global/entryshadowpool.h"
-#include "utils/entryutils.h"
+#include "global/entrypool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -15,18 +14,13 @@ TableModelP::TableModelP(CTableModelArg& arg, QObject* parent)
 
 void TableModelP::RAppendMultiEntry(const EntryList& entry_list)
 {
-    EntryShadowList shadow_list {};
-    for (auto* entry : entry_list) {
-        auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
-        entry_shadow->BindEntry(entry, true);
+    if (entry_list.isEmpty())
+        return;
 
-        shadow_list.emplaceBack(entry_shadow);
-        internal_sku_.insert(entry->rhs_node);
-    }
+    const auto row { entry_list_.size() };
 
-    auto row { shadow_list_.size() };
     beginInsertRows(QModelIndex(), row, row + entry_list.size() - 1);
-    shadow_list_.append(shadow_list);
+    entry_list_.append(entry_list);
     endInsertRows();
 
     sort(std::to_underlying(EntryEnum::kIssuedTime), Qt::AscendingOrder);
@@ -36,14 +30,14 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
 
-    auto* entry_shadow { shadow_list_.at(row) };
-    auto rhs_node_id { *entry_shadow->rhs_node };
+    auto* entry { entry_list_.at(row) };
+    auto rhs_node_id { entry->rhs_node };
 
     beginRemoveRows(parent, row, row);
-    shadow_list_.removeAt(row);
+    entry_list_.removeAt(row);
     endRemoveRows();
 
-    const auto entry_id { *entry_shadow->id };
+    const auto entry_id { entry->id };
 
     if (!rhs_node_id.isNull()) {
         QJsonObject message {};
@@ -54,14 +48,13 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
         WebSocket::Instance()->SendMessage(kEntryRemove, message);
     }
 
-    EntryShadowPool::Instance().Recycle(entry_shadow, section_);
     internal_sku_.remove(rhs_node_id);
 
     emit SRemoveEntry(entry_id);
     return true;
 }
 
-bool TableModelP::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int /*row*/)
+bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
 {
     if (value.isNull())
         return false;
@@ -69,22 +62,20 @@ bool TableModelP::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
     if (internal_sku_.contains(value))
         return false;
 
-    auto* d_shadow = DerivedPtr<EntryShadowP>(entry_shadow);
-
-    auto old_node { *d_shadow->rhs_node };
+    auto old_node { entry->rhs_node };
     if (old_node == value)
         return false;
 
-    *d_shadow->rhs_node = value;
+    entry->rhs_node = value;
     internal_sku_.insert(value);
 
-    const QUuid entry_id { *d_shadow->id };
+    const QUuid entry_id { entry->id };
 
     const QString old_node_id { old_node.toString(QUuid::WithoutBraces) };
     const QString new_node_id { value.toString(QUuid::WithoutBraces) };
 
     QJsonObject cache {};
-    cache = d_shadow->WriteJson();
+    cache = entry->WriteJson();
 
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section_));
@@ -112,41 +103,41 @@ QVariant TableModelP::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* d_shadow = DerivedPtr<EntryShadowP>(shadow_list_.at(index.row()));
+    auto* entry = DerivedPtr<EntryP>(entry_list_.at(index.row()));
 
     const EntryEnumP column { index.column() };
 
     switch (column) {
     case EntryEnumP::kId:
-        return *d_shadow->id;
+        return entry->id;
     case EntryEnumP::kUserId:
-        return *d_shadow->user_id;
+        return entry->user_id;
     case EntryEnumP::kCreateTime:
-        return *d_shadow->created_time;
+        return entry->created_time;
     case EntryEnumP::kCreateBy:
-        return *d_shadow->created_by;
+        return entry->created_by;
     case EntryEnumP::kUpdateTime:
-        return *d_shadow->updated_time;
+        return entry->updated_time;
     case EntryEnumP::kUpdateBy:
-        return *d_shadow->updated_by;
+        return entry->updated_by;
     case EntryEnumP::kLhsNode:
-        return *d_shadow->lhs_node;
+        return entry->lhs_node;
     case EntryEnumP::kIssuedTime:
-        return *d_shadow->issued_time;
+        return entry->issued_time;
     case EntryEnumP::kCode:
-        return *d_shadow->code;
+        return entry->code;
     case EntryEnumP::kUnitPrice:
-        return *d_shadow->unit_price;
+        return entry->unit_price;
     case EntryEnumP::kDescription:
-        return *d_shadow->description;
+        return entry->description;
     case EntryEnumP::kDocument:
-        return *d_shadow->document;
+        return entry->document;
     case EntryEnumP::kStatus:
-        return *d_shadow->status;
+        return entry->status;
     case EntryEnumP::kRhsNode:
-        return *d_shadow->rhs_node;
+        return entry->rhs_node;
     case EntryEnumP::kExternalSku:
-        return *d_shadow->external_sku;
+        return entry->external_sku;
     default:
         return QVariant();
     }
@@ -158,42 +149,36 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         return false;
 
     const EntryEnumP column { index.column() };
-    const int kRow { index.row() };
 
-    auto* shadow { shadow_list_.at(kRow) };
-    auto* d_shadow = DerivedPtr<EntryShadowP>(shadow);
+    auto* entry { entry_list_.at(index.row()) };
+    auto* d_entry = DerivedPtr<EntryP>(entry);
 
-    const QUuid id { *shadow->id };
+    const QUuid id { entry->id };
 
     switch (column) {
     case EntryEnumP::kIssuedTime:
-        EntryUtils::UpdateShadowIssuedTime(
-            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateIssuedTime(pending_updates_[id], entry, kIssuedTime, value.toDateTime(), &Entry::issued_time, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kCode:
-        EntryUtils::UpdateShadowField(pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(pending_updates_[id], entry, kCode, value.toString(), &Entry::code, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kDocument:
-        EntryUtils::UpdateShadowDocument(
-            pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateDocument(pending_updates_[id], entry, kDocument, value.toStringList(), &Entry::document, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kRhsNode:
-        UpdateLinkedNode(shadow, value.toUuid(), kRow);
+        UpdateInternalSku(d_entry, value.toUuid());
         break;
     case EntryEnumP::kUnitPrice:
-        EntryUtils::UpdateShadowDouble(
-            pending_updates_[id], d_shadow, kUnitPrice, value.toDouble(), &EntryShadowP::unit_price, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateDouble(pending_updates_[id], d_entry, kUnitPrice, value.toDouble(), &EntryP::unit_price, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kDescription:
-        EntryUtils::UpdateShadowField(
-            pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(pending_updates_[id], entry, kDescription, value.toString(), &Entry::description, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kStatus:
-        EntryUtils::UpdateShadowField(pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateField(pending_updates_[id], entry, kStatus, value.toInt(), &Entry::status, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kExternalSku:
-        EntryUtils::UpdateShadowUuid(
-            pending_updates_[id], d_shadow, kExternalSku, value.toUuid(), &EntryShadowP::external_sku, [id, this]() { RestartTimer(id); });
+        NodeUtils::UpdateUuid(pending_updates_[id], d_entry, kExternalSku, value.toUuid(), &EntryP::external_sku, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;
@@ -207,46 +192,46 @@ void TableModelP::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0 && column <= info_.entry_header.size() - 1);
 
-    auto Compare = [column, order](EntryShadow* lhs, EntryShadow* rhs) -> bool {
+    auto Compare = [column, order](Entry* lhs, Entry* rhs) -> bool {
         const EntryEnumP e_column { column };
 
-        auto* d_lhs { DerivedPtr<EntryShadowP>(lhs) };
-        auto* d_rhs { DerivedPtr<EntryShadowP>(rhs) };
+        auto* d_lhs { DerivedPtr<EntryP>(lhs) };
+        auto* d_rhs { DerivedPtr<EntryP>(rhs) };
 
         switch (e_column) {
         case EntryEnumP::kIssuedTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->issued_time < *rhs->issued_time) : (*lhs->issued_time > *rhs->issued_time);
+            return (order == Qt::AscendingOrder) ? (d_lhs->issued_time < d_rhs->issued_time) : (d_lhs->issued_time > d_rhs->issued_time);
         case EntryEnumP::kUserId:
-            return (order == Qt::AscendingOrder) ? (*lhs->user_id < *rhs->user_id) : (*lhs->user_id > *rhs->user_id);
+            return (order == Qt::AscendingOrder) ? (d_lhs->user_id < d_rhs->user_id) : (d_lhs->user_id > d_rhs->user_id);
         case EntryEnumP::kCreateTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->created_time < *rhs->created_time) : (*lhs->created_time > *rhs->created_time);
+            return (order == Qt::AscendingOrder) ? (d_lhs->created_time < d_rhs->created_time) : (d_lhs->created_time > d_rhs->created_time);
         case EntryEnumP::kCreateBy:
-            return (order == Qt::AscendingOrder) ? (*lhs->created_by < *rhs->created_by) : (*lhs->created_by > *rhs->created_by);
+            return (order == Qt::AscendingOrder) ? (d_lhs->created_by < d_rhs->created_by) : (d_lhs->created_by > d_rhs->created_by);
         case EntryEnumP::kUpdateTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->updated_time < *rhs->updated_time) : (*lhs->updated_time > *rhs->updated_time);
+            return (order == Qt::AscendingOrder) ? (d_lhs->updated_time < d_rhs->updated_time) : (d_lhs->updated_time > d_rhs->updated_time);
         case EntryEnumP::kUpdateBy:
-            return (order == Qt::AscendingOrder) ? (*lhs->updated_by < *rhs->updated_by) : (*lhs->updated_by > *rhs->updated_by);
+            return (order == Qt::AscendingOrder) ? (d_lhs->updated_by < d_rhs->updated_by) : (d_lhs->updated_by > d_rhs->updated_by);
         case EntryEnumP::kCode:
-            return (order == Qt::AscendingOrder) ? (*lhs->code < *rhs->code) : (*lhs->code > *rhs->code);
+            return (order == Qt::AscendingOrder) ? (d_lhs->code < d_rhs->code) : (d_lhs->code > d_rhs->code);
         case EntryEnumP::kUnitPrice:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->unit_price < *d_rhs->unit_price) : (*d_lhs->unit_price > *d_rhs->unit_price);
+            return (order == Qt::AscendingOrder) ? (d_lhs->unit_price < d_rhs->unit_price) : (d_lhs->unit_price > d_rhs->unit_price);
         case EntryEnumP::kDescription:
-            return (order == Qt::AscendingOrder) ? (*lhs->description < *rhs->description) : (*lhs->description > *rhs->description);
+            return (order == Qt::AscendingOrder) ? (d_lhs->description < d_rhs->description) : (d_lhs->description > d_rhs->description);
         case EntryEnumP::kDocument:
-            return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
+            return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case EntryEnumP::kStatus:
-            return (order == Qt::AscendingOrder) ? (*lhs->status < *rhs->status) : (*lhs->status > *rhs->status);
+            return (order == Qt::AscendingOrder) ? (d_lhs->status < d_rhs->status) : (d_lhs->status > d_rhs->status);
         case EntryEnumP::kExternalSku:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->external_sku < *d_rhs->external_sku) : (*d_lhs->external_sku > *d_rhs->external_sku);
+            return (order == Qt::AscendingOrder) ? (d_lhs->external_sku < d_rhs->external_sku) : (d_lhs->external_sku > d_rhs->external_sku);
         case EntryEnumP::kRhsNode:
-            return (order == Qt::AscendingOrder) ? (*lhs->rhs_node < *rhs->rhs_node) : (*lhs->rhs_node > *rhs->rhs_node);
+            return (order == Qt::AscendingOrder) ? (d_lhs->rhs_node < d_rhs->rhs_node) : (d_lhs->rhs_node > d_rhs->rhs_node);
         default:
             return false;
         }
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(shadow_list_.begin(), shadow_list_.end(), Compare);
+    std::sort(entry_list_.begin(), entry_list_.end(), Compare);
     emit layoutChanged();
 }
 
@@ -269,4 +254,21 @@ Qt::ItemFlags TableModelP::flags(const QModelIndex& index) const
     }
 
     return flags;
+}
+
+bool TableModelP::insertRows(int row, int, const QModelIndex& parent)
+{
+    assert(row >= 0 && row <= rowCount(parent));
+
+    auto* entry { EntryPool::Instance().Allocate(section_) };
+    entry->id = QUuid::createUuidV7();
+    entry->lhs_node = lhs_id_;
+    entry->issued_time = QDateTime::currentDateTimeUtc();
+
+    beginInsertRows(parent, row, row);
+    entry_list_.emplaceBack(entry);
+    endInsertRows();
+
+    emit SInsertEntry(entry);
+    return true;
 }

@@ -611,7 +611,10 @@ void MainWindow::TableConnectO(QTableView* table_view, TableModelO* table_model_
     connect(table_model_o, &TableModelO::SSyncDeltaO, widget, &TableWidgetO::RSyncDeltaO);
 
     connect(widget, &TableWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
+
     connect(table_model_o, &TableModelO::SReleaseEntry, entry_hub_o, &EntryHubO::RReleaseEntry);
+    connect(table_model_o, &TableModel::SInsertEntry, entry_hub_o, &EntryHub::RInsertEntry);
+    connect(table_model_o, &TableModel::SRemoveEntry, entry_hub_o, &EntryHub::RRemoveEntry);
 
     connect(widget, &TableWidgetO::SNodeStatus, tree_model_o, &TreeModelO::RNodeStatus);
 }

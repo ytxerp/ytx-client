@@ -42,7 +42,7 @@ struct Entry {
 
     virtual void ResetState();
     virtual void ReadJson(const QJsonObject& object);
-    virtual QJsonObject WriteJson() const { return {}; }
+    virtual QJsonObject WriteJson() const;
     virtual ~Entry() = default;
 };
 
@@ -89,6 +89,7 @@ struct EntryP final : Entry {
 
     void ResetState() override;
     void ReadJson(const QJsonObject& object) override;
+    QJsonObject WriteJson() const override;
 };
 
 struct EntryO final : Entry {
