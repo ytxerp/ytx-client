@@ -232,8 +232,10 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
         return;
     }
 
-    const auto message { JsonGen::LeafEntry(sc_->info.section, node_id, entry_id) };
-    WebSocket::Instance()->SendMessage(kLeafEntry, message);
+    if (start_ != Section::kPartner) {
+        const auto message { JsonGen::LeafEntry(sc_->info.section, node_id, entry_id) };
+        WebSocket::Instance()->SendMessage(kLeafEntry, message);
+    }
 
     if (start_ == Section::kSale || start_ == Section::kPurchase) {
         CreateLeafO(sc_, node_id);
@@ -370,68 +372,75 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     assert(tree_model);
     assert(tree_model->Contains(node_id));
 
-    CString name { tree_model->Name(node_id) };
     const Section section { info.section };
-    const bool rule { tree_model->Rule(node_id) };
 
     // The model is parented to the LeafWidgetFIPT inside its constructor.
     // When the LeafWidget is destroyed, it will automatically delete the model.
     TableModel* table_model {};
-    TableModelArg arg { info, node_id, rule };
 
-    switch (section) {
-    case Section::kFinance:
-        table_model = new TableModelF(arg, nullptr);
-        break;
-    case Section::kInventory:
-        table_model = new TableModelI(arg, nullptr);
-        break;
-    case Section::kTask:
-        table_model = new TableModelT(arg, tree_model->GetNode(node_id), nullptr);
-        break;
-    case Section::kPartner:
-        table_model = new TableModelP(arg, nullptr);
-        break;
-    default:
-        break;
+    {
+        const bool rule { tree_model->Rule(node_id) };
+        TableModelArg arg { info, node_id, rule };
+
+        switch (section) {
+        case Section::kFinance:
+            table_model = new TableModelF(arg, nullptr);
+            break;
+        case Section::kInventory:
+            table_model = new TableModelI(arg, nullptr);
+            break;
+        case Section::kTask:
+            table_model = new TableModelT(arg, tree_model->GetNode(node_id), nullptr);
+            break;
+        case Section::kPartner:
+            table_model = new TableModelP(arg, nullptr);
+            break;
+        default:
+            break;
+        }
     }
+
+    TableSStation::Instance()->RegisterModel(node_id, table_model);
 
     TableWidgetFIPT* widget { new TableWidgetFIPT(table_model, this) };
 
-    const int tab_index { ui->tabWidget->addTab(widget, name) };
-    auto* tab_bar { ui->tabWidget->tabBar() };
+    {
+        CString name { tree_model->Name(node_id) };
+        const int tab_index { ui->tabWidget->addTab(widget, name) };
+        auto* tab_bar { ui->tabWidget->tabBar() };
 
-    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, node_id }));
-    tab_bar->setTabToolTip(tab_index, tree_model->Path(node_id));
+        tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, node_id }));
+        tab_bar->setTabToolTip(tab_index, tree_model->Path(node_id));
 
-    auto* view { widget->View() };
+        auto* view { widget->View() };
 
-    const int description_column { EntryUtils::DescriptionColumn(section) };
-    SetTableViewFIPT(view, description_column, std::to_underlying(EntryEnum::kLhsNode));
+        const int description_column { EntryUtils::DescriptionColumn(section) };
+        SetTableViewFIPT(view, description_column, std::to_underlying(EntryEnum::kLhsNode));
 
-    switch (section) {
-    case Section::kFinance:
-        TableDelegateF(view, tree_model, section_config, node_id);
-        TableConnectF(view, table_model);
-        break;
-    case Section::kInventory:
-        TableDelegateI(view, tree_model, section_config, node_id);
-        TableConnectI(view, table_model);
-        break;
-    case Section::kTask:
-        TableDelegateT(view, tree_model, section_config, node_id);
-        TableConnectT(view, table_model);
-        break;
-    case Section::kPartner:
-        TableDelegateP(view, section_config);
-        TableConnectP(view, table_model);
-        break;
-    default:
-        break;
+        switch (section) {
+        case Section::kFinance:
+            TableDelegateF(view, tree_model, section_config, node_id);
+            TableConnectF(view, table_model);
+            break;
+        case Section::kInventory:
+            TableDelegateI(view, tree_model, section_config, node_id);
+            TableConnectI(view, table_model);
+            break;
+        case Section::kTask:
+            TableDelegateT(view, tree_model, section_config, node_id);
+            TableConnectT(view, table_model);
+            break;
+        case Section::kPartner:
+            TableDelegateP(view, section_config);
+            TableConnectP(view, table_model);
+            static_cast<EntryHubP*>(sc_->entry_hub.data())->PushEntry(node_id);
+            break;
+        default:
+            break;
+        }
     }
 
     sc->table_wgt_hash.insert(node_id, widget);
-    TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 
 void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row)

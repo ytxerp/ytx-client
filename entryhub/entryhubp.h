@@ -31,7 +31,9 @@ public:
 
 public:
     std::optional<std::pair<QUuid, double>> ResolveFromInternal(const QUuid& partner_id, const QUuid& internal_sku) const;
+
     void SearchEntry(QList<Entry*>& entry_list, CString& name) const;
+    void PushEntry(const QUuid& node_id);
 
     void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
     // std::optional<std::pair<QUuid, double>> ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const;
