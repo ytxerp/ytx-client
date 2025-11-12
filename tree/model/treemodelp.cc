@@ -9,11 +9,11 @@ TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, int default_unit,
     leaf_path_model_->AppendItem(QString(), QUuid());
 }
 
-void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta)
+void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)
 {
     assert(!node_id.isNull());
 
-    if (initial_delta == 0.0 && final_delta == 0.0)
+    if (FloatEqual(initial_delta, 0.0))
         return;
 
     auto* node { node_hash_.value(node_id) };
@@ -21,9 +21,8 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta, doubl
         return;
 
     node->initial_total += initial_delta;
-    node->final_total += final_delta;
 
-    const auto& affected_ids { UpdateAncestorTotal(node, initial_delta, final_delta) };
+    const auto& affected_ids { UpdateAncestorTotal(node, initial_delta, 0.0) };
     RefreshAffectedTotal(affected_ids);
 }
 
@@ -100,14 +99,14 @@ void TreeModelP::InsertUnitSet(const QUuid& node_id, int unit)
     }
 }
 
-QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, double final_delta)
+QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, double /*final_delta*/)
 {
     QSet<QUuid> affected_ids {};
 
     if (!node || !node->parent || node->parent == root_)
         return affected_ids;
 
-    if (initial_delta == 0.0 && final_delta == 0.0)
+    if (FloatEqual(initial_delta, 0.0))
         return affected_ids;
 
     const int unit { node->unit };
@@ -116,7 +115,6 @@ QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, do
         if (current->unit != unit)
             continue;
 
-        current->final_total += final_delta;
         current->initial_total += initial_delta;
 
         affected_ids.insert(current->id);

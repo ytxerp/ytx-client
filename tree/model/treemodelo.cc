@@ -21,8 +21,8 @@ void TreeModelO::RNodeStatus(const QUuid& node_id, NodeStatus value)
     const auto& affected_ids { UpdateAncestorTotalOrder(d_node, coefficient * d_node->initial_total, coefficient * d_node->final_total,
         coefficient * d_node->count_total, coefficient * d_node->measure_total, coefficient * d_node->discount_total) };
 
-    if (d_node->unit == std::to_underlying(UnitO::kMonthly))
-        emit SUpdateAmount(d_node->partner, coefficient * d_node->initial_total, coefficient * d_node->final_total);
+    if (d_node->unit == std::to_underlying(UnitO::kMonthly) && FloatChanged(d_node->initial_total, 0.0))
+        emit SUpdateAmount(d_node->partner, coefficient * d_node->initial_total);
 
     RefreshAffectedTotal(affected_ids);
 }
@@ -181,8 +181,8 @@ void TreeModelO::RemovePath(Node* node, Node* parent_node)
         if (d_node->status == std::to_underlying(NodeStatus::kReleased)) {
             UpdateAncestorTotalOrder(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
 
-            if (node->unit == std::to_underlying(UnitO::kMonthly))
-                emit SUpdateAmount(d_node->partner, -node->initial_total, -node->final_total);
+            if (node->unit == std::to_underlying(UnitO::kMonthly) && FloatChanged(-node->initial_total, 0.0))
+                emit SUpdateAmount(d_node->partner, -node->initial_total);
         }
         break;
     default:

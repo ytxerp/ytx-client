@@ -30,7 +30,7 @@ public:
     ~TreeModelP() override = default;
 
 public slots:
-    void RUpdateAmount(const QUuid& node_id, double initial_delta, double final_delta);
+    void RUpdateAmount(const QUuid& node_id, double initial_delta);
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

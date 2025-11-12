@@ -763,7 +763,6 @@ void WebSocket::SaveOrderUpdate(const QJsonObject& obj)
         return;
 
     const auto node_cache { obj.value(kNodeCache).toObject() };
-    const auto node_delta { obj.value(kNodeDelta).toObject() };
 
     if (session_id == session_id_) {
         order_model->UpdateMeta(node_id, node_cache);
@@ -771,7 +770,11 @@ void WebSocket::SaveOrderUpdate(const QJsonObject& obj)
     }
 
     order_model->SyncNode(node_id, node_cache);
-    order_model->SyncNodeDelta(node_id, node_delta);
+
+    if (obj.contains(kNodeDelta) && obj.value(kNodeDelta).isObject()) {
+        const auto node_delta { obj.value(kNodeDelta).toObject() };
+        order_model->SyncNodeDelta(node_id, node_delta);
+    }
 }
 
 void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj)
@@ -797,7 +800,12 @@ void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj)
     }
 
     order_model->SyncNode(node_id, node_cache);
-    order_model->SyncNodeDelta(node_id, node_delta);
+
+    if (obj.contains(kNodeDelta) && obj.value(kNodeDelta).isObject()) {
+        const auto node_delta { obj.value(kNodeDelta).toObject() };
+        order_model->SyncNodeDelta(node_id, node_delta);
+    }
+
     order_model->RNodeStatus(node_id, NodeStatus::kReleased);
 }
 
@@ -817,12 +825,13 @@ void WebSocket::ReleaseOrderInsert(const QJsonObject& obj)
     auto* order_model = static_cast<TreeModelO*>(base_model);
     assert(order_model != nullptr);
 
-    if (session_id == session_id_)
+    if (session_id == session_id_) {
         order_model->InsertMeta(descendant, node_obj);
-    else {
-        base_model->InsertNode(ancestor, node_obj);
-        order_model->RNodeStatus(node_id, NodeStatus::kReleased);
+        return;
     }
+
+    base_model->InsertNode(ancestor, node_obj);
+    order_model->RNodeStatus(node_id, NodeStatus::kReleased);
 }
 
 void WebSocket::RecallOrder(const QJsonObject& obj)
