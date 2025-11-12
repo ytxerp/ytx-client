@@ -47,8 +47,7 @@
  *    - Only affects new, unpersisted entries (drafts).
  *    - Existing entries are synchronized automatically via the debounced timer; no manual save required.
  *
- * 5. PurifyEntry ensures that only valid new entries are saved, while persisted entries remain untouched,
- *    even if their rhs_node becomes null temporarily.
+ * 5. PurifyEntry ensures that only valid new entries are saved.
  *
  * This design cleanly separates new inserts from updates, ensures safe multi-client synchronization,
  * and prevents sending incomplete or redundant data to the server.
@@ -87,12 +86,12 @@ public:
     void SetNode(const NodeO* node) { d_node_ = node; }
 
 private:
-    bool UpdateInternalSku(EntryO* entry, const QUuid& value);
-    bool UpdateUnitPrice(EntryO* entry, double value);
-    bool UpdateUnitDiscount(EntryO* entry, double value);
-    bool UpdateMeasure(EntryO* entry, double value);
-    bool UpdateCount(EntryO* entry, double value);
-    bool UpdateDescription(EntryO* entry, const QString& value);
+    bool UpdateInternalSku(EntryO* entry, const QUuid& value, bool is_persisted);
+    bool UpdateUnitPrice(EntryO* entry, double value, bool is_persisted);
+    bool UpdateUnitDiscount(EntryO* entry, double value, bool is_persisted);
+    bool UpdateMeasure(EntryO* entry, double value, bool is_persisted);
+    bool UpdateCount(EntryO* entry, double value, bool is_persisted);
+    bool UpdateDescription(EntryO* entry, const QString& value, bool is_persisted);
 
     void ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) const;
     void RecalculateAmount(EntryO* entry) const;

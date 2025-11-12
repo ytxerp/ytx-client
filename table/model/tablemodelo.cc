@@ -105,7 +105,9 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     const double old_discount { d_entry->discount };
     const double old_initial { d_entry->initial };
     const double old_final { d_entry->final };
+
     const auto entry_id { d_entry->id };
+    const bool is_persisted { !pending_inserts_.contains(entry_id) };
 
     bool count_changed { false };
     bool measure_changed { false };
@@ -114,22 +116,22 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
 
     switch (column) {
     case EntryEnumO::kDescription:
-        UpdateDescription(d_entry, value.toString());
+        UpdateDescription(d_entry, value.toString(), is_persisted);
         break;
     case EntryEnumO::kRhsNode:
-        unit_price_changed = UpdateInternalSku(d_entry, value.toUuid());
+        unit_price_changed = UpdateInternalSku(d_entry, value.toUuid(), is_persisted);
         break;
     case EntryEnumO::kUnitPrice:
-        unit_price_changed = UpdateUnitPrice(d_entry, value.toDouble());
+        unit_price_changed = UpdateUnitPrice(d_entry, value.toDouble(), is_persisted);
         break;
     case EntryEnumO::kMeasure:
-        measure_changed = UpdateMeasure(d_entry, value.toDouble());
+        measure_changed = UpdateMeasure(d_entry, value.toDouble(), is_persisted);
         break;
     case EntryEnumO::kCount:
-        count_changed = UpdateCount(d_entry, value.toDouble());
+        count_changed = UpdateCount(d_entry, value.toDouble(), is_persisted);
         break;
     case EntryEnumO::kUnitDiscount:
-        unit_discount_changed = UpdateUnitDiscount(d_entry, value.toDouble());
+        unit_discount_changed = UpdateUnitDiscount(d_entry, value.toDouble(), is_persisted);
         break;
     default:
         return false;
@@ -138,7 +140,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     emit SResizeColumnToContents(index.column());
 
     if (count_changed)
-        emit SSyncDeltaO(d_entry->lhs_node, 0.0, 0.0, d_entry->count - old_count, 0.0, 0.0, !pending_inserts_.contains(entry_id));
+        emit SSyncDeltaO(d_entry->lhs_node, 0.0, 0.0, d_entry->count - old_count, 0.0, 0.0, is_persisted);
 
     if (measure_changed) {
         const double measure_delta { d_entry->measure - old_measure };
@@ -147,7 +149,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(measure_delta, 0.0) || FloatChanged(initial_delta, 0.0) || FloatChanged(discount_delta, 0.0) || FloatChanged(final_delta, 0.0)) {
-            emit SSyncDeltaO(d_entry->lhs_node, initial_delta, final_delta, 0.0, measure_delta, discount_delta, !pending_inserts_.contains(entry_id));
+            emit SSyncDeltaO(d_entry->lhs_node, initial_delta, final_delta, 0.0, measure_delta, discount_delta, is_persisted);
         }
     }
 
@@ -156,7 +158,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(initial_delta, 0.0) || FloatChanged(final_delta, 0.0))
-            emit SSyncDeltaO(d_entry->lhs_node, initial_delta, final_delta, 0.0, 0.0, 0.0, !pending_inserts_.contains(entry_id));
+            emit SSyncDeltaO(d_entry->lhs_node, initial_delta, final_delta, 0.0, 0.0, 0.0, is_persisted);
     }
 
     if (unit_discount_changed) {
@@ -164,7 +166,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(discount_delta, 0.0) || FloatChanged(final_delta, 0.0))
-            emit SSyncDeltaO(d_entry->lhs_node, 0.0, final_delta, 0.0, 0.0, discount_delta, !pending_inserts_.contains(entry_id));
+            emit SSyncDeltaO(d_entry->lhs_node, 0.0, final_delta, 0.0, 0.0, discount_delta, is_persisted);
     }
 
     return true;
@@ -274,13 +276,21 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     const auto lhs_node { d_entry->lhs_node };
     const auto rhs_node { d_entry->rhs_node };
     const auto entry_id { d_entry->id };
+    const bool is_persisted { !pending_inserts_.contains(entry_id) };
 
-    if (!pending_inserts_.contains(entry_id)) {
+    if (is_persisted) {
         if (auto it = pending_timers_.find(entry_id); it != pending_timers_.end()) {
             it.value()->stop();
             it.value()->deleteLater();
             pending_timers_.erase(it);
         }
+
+        pending_updates_.remove(entry_id);
+
+        QJsonObject message {};
+        WebSocket::Instance()->SendMessage(kEntryRemoveOrder, message);
+    } else {
+        pending_inserts_.remove(entry_id);
     }
 
     beginRemoveRows(parent, row, row);
@@ -296,18 +306,8 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
         if (FloatChanged(count_delta, 0.0) || FloatChanged(measure_delta, 0.0) || FloatChanged(discount_delta, 0.0) || FloatChanged(initial_delta, 0.0)
             || FloatChanged(final_delta, 0.0)) {
-            emit SSyncDeltaO(lhs_node, initial_delta, final_delta, count_delta, measure_delta, discount_delta, !pending_inserts_.contains(entry_id));
+            emit SSyncDeltaO(lhs_node, initial_delta, final_delta, count_delta, measure_delta, discount_delta, is_persisted);
         }
-    }
-
-    pending_updates_.remove(entry_id);
-
-    auto it = pending_inserts_.find(entry_id);
-    if (it == pending_inserts_.end()) {
-        QJsonObject message {};
-        WebSocket::Instance()->SendMessage(kEntryRemove, message);
-    } else {
-        pending_inserts_.erase(it);
     }
 
     emit SRemoveEntry(entry_id);
@@ -373,7 +373,7 @@ bool TableModelO::UpdateExternalSku(EntryO* entry, const QUuid& value)
 /// @brief Update entry by internal product ID (rhs_node)
 /// @note Responsibility: Handle insertion and update, not deletion
 /// @note rhs_node must be valid, external_sku is auto-filled
-bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value)
+bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value, bool is_persisted)
 {
     if (value.isNull())
         return false;
@@ -395,7 +395,7 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value)
     if (price_changed)
         RecalculateAmount(entry);
 
-    if (!pending_inserts_.contains(entry->id)) {
+    if (is_persisted) {
         auto& cache { pending_updates_[entry->id] };
         cache.insert(kRhsNode, value.toString(QUuid::WithoutBraces));
 
@@ -425,7 +425,7 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value)
     return price_changed;
 }
 
-bool TableModelO::UpdateUnitPrice(EntryO* entry, double value)
+bool TableModelO::UpdateUnitPrice(EntryO* entry, double value, bool is_persisted)
 {
     if (FloatEqual(entry->unit_price, value))
         return false;
@@ -434,7 +434,7 @@ bool TableModelO::UpdateUnitPrice(EntryO* entry, double value)
     entry->final = entry->initial - entry->discount;
     entry->unit_price = value;
 
-    if (!pending_inserts_.contains(entry->id)) {
+    if (is_persisted) {
         auto& cache { pending_updates_[entry->id] };
 
         cache.insert(kUnitPrice, QString::number(entry->unit_price, 'f', kMaxNumericScale_4));
@@ -450,7 +450,7 @@ bool TableModelO::UpdateUnitPrice(EntryO* entry, double value)
     return true;
 }
 
-bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value)
+bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value, bool is_persisted)
 {
     if (FloatEqual(entry->unit_discount, value))
         return false;
@@ -459,7 +459,7 @@ bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value)
     entry->final = entry->initial - entry->discount;
     entry->unit_discount = value;
 
-    if (!pending_inserts_.contains(entry->id)) {
+    if (is_persisted) {
         auto& cache { pending_updates_[entry->id] };
 
         cache.insert(kUnitDiscount, QString::number(entry->unit_discount, 'f', kMaxNumericScale_4));
@@ -474,7 +474,7 @@ bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value)
     return true;
 }
 
-bool TableModelO::UpdateMeasure(EntryO* entry, double value)
+bool TableModelO::UpdateMeasure(EntryO* entry, double value, bool is_persisted)
 {
     if (FloatEqual(entry->measure, value))
         return false;
@@ -485,7 +485,7 @@ bool TableModelO::UpdateMeasure(EntryO* entry, double value)
 
     entry->measure = value;
 
-    if (!pending_inserts_.contains(entry->id)) {
+    if (is_persisted) {
         auto& cache { pending_updates_[entry->id] };
 
         cache.insert(kMeasure, QString::number(entry->measure, 'f', kMaxNumericScale_4));
@@ -502,14 +502,14 @@ bool TableModelO::UpdateMeasure(EntryO* entry, double value)
     return true;
 }
 
-bool TableModelO::UpdateCount(EntryO* entry, double value)
+bool TableModelO::UpdateCount(EntryO* entry, double value, bool is_persisted)
 {
     if (FloatEqual(entry->count, value))
         return false;
 
     entry->count = value;
 
-    if (!pending_inserts_.contains(entry->id)) {
+    if (is_persisted) {
         auto& cache { pending_updates_[entry->id] };
 
         cache.insert(kCount, QString::number(value, 'f', kMaxNumericScale_4));
@@ -520,14 +520,14 @@ bool TableModelO::UpdateCount(EntryO* entry, double value)
     return true;
 }
 
-bool TableModelO::UpdateDescription(EntryO* entry, const QString& value)
+bool TableModelO::UpdateDescription(EntryO* entry, const QString& value, bool is_persisted)
 {
     if (entry->description == value)
         return false;
 
     entry->description = value;
 
-    if (!pending_inserts_.contains(entry->id)) {
+    if (is_persisted) {
         auto& cache { pending_updates_[entry->id] };
 
         cache.insert(kDescription, value);
@@ -589,23 +589,17 @@ void TableModelO::RecalculateAmount(EntryO* entry) const
 }
 
 // Purify newly inserted entries:
-// - Only entries in `pending_inserts_` are considered (newly created, not yet persisted).
 // - Entries with null `rhs_node` (internal SKU not selected) are removed.
-// - Corresponding pending updates are cleared.
 // - The entry objects are recycled via EntryPool.
 void TableModelO::PurifyEntry()
 {
     for (auto i = entry_list_.size() - 1; i >= 0; --i) {
         auto* entry { entry_list_[i] };
 
-        if (!pending_inserts_.contains(entry->id))
-            continue;
-
         if (!entry->rhs_node.isNull())
             continue;
 
         beginRemoveRows(QModelIndex(), i, i);
-        pending_updates_.remove(entry->id);
         EntryPool::Instance().Recycle(entry_list_.takeAt(i), section_);
         endRemoveRows();
     }

@@ -194,6 +194,7 @@ inline const QString kOrderUpdateReleased = QStringLiteral("order_update_release
 inline const QString kOrderRecalled = QStringLiteral("order_recalled");
 inline const QString kEntryInsertOrder = QStringLiteral("entry_insert_order");
 inline const QString kEntryUpdateOrder = QStringLiteral("entry_update_order");
+inline const QString kEntryRemoveOrder = QStringLiteral("entry_remove_order");
 
 inline const QString kNodeCache = QStringLiteral("node_cache");
 inline const QString kNodeDelta = QStringLiteral("node_delta");

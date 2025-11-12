@@ -58,31 +58,43 @@ void TableWidgetO::RSyncDeltaO(
 {
     assert(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
 
-    if (tmp_node_.direction_rule == Rule::kRO) {
-        initial_delta *= -1;
-        final_delta *= -1;
-        count_delta *= -1;
-        measure_delta *= -1;
-        discount_delta *= -1;
+    {
+        if (tmp_node_.direction_rule == Rule::kRO) {
+            initial_delta *= -1;
+            final_delta *= -1;
+            count_delta *= -1;
+            measure_delta *= -1;
+            discount_delta *= -1;
+        }
     }
 
     const double adjusted_final_delta { tmp_node_.unit == std::to_underlying(UnitO::kImmediate) ? final_delta : 0.0 };
 
-    if (is_persisted) {
-        node_->count_total += count_delta;
-        node_->measure_total += measure_delta;
-        node_->initial_total += initial_delta;
-        node_->discount_total += discount_delta;
-        node_->final_total += adjusted_final_delta;
+    {
+        if (is_persisted) {
+            node_->count_total += count_delta;
+            node_->measure_total += measure_delta;
+            node_->initial_total += initial_delta;
+            node_->discount_total += discount_delta;
+
+            node_->final_total = CalculateFinalTotal();
+        } else {
+            count_delta_ += count_delta;
+            measure_delta_ += measure_delta;
+            initial_delta_ += initial_delta;
+            discount_delta_ += discount_delta;
+        }
     }
 
-    tmp_node_.count_total += count_delta;
-    tmp_node_.measure_total += measure_delta;
-    tmp_node_.initial_total += initial_delta;
-    tmp_node_.discount_total += discount_delta;
-    tmp_node_.final_total += adjusted_final_delta;
+    {
+        tmp_node_.count_total += count_delta;
+        tmp_node_.measure_total += measure_delta;
+        tmp_node_.initial_total += initial_delta;
+        tmp_node_.discount_total += discount_delta;
+        tmp_node_.final_total += adjusted_final_delta;
 
-    IniUiValue();
+        IniUiValue();
+    }
 }
 
 void TableWidgetO::IniWidget()
@@ -117,6 +129,10 @@ void TableWidgetO::IniWidget()
     ui->dSpinSecondTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     ui->tableViewO->setFocus();
+
+    ui->pBtnSave->setShortcut(QKeySequence::Save);
+    ui->pBtnRelease->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return));
+    ui->pBtnRecall->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Return));
 
     auto& templates { PrintHub::Instance().TemplateMap() };
     for (auto it = templates.constBegin(); it != templates.constEnd(); ++it) {
@@ -343,6 +359,18 @@ QJsonObject TableWidgetO::BuildOrderCache()
     return order_cache;
 }
 
+void TableWidgetO::BuildPartnerDelta(QJsonObject& order_cache)
+{
+    QJsonObject partner_delta {};
+
+    if (node_->unit == std::to_underlying(UnitO::kMonthly) && HasPartnerDelta()) {
+        partner_delta.insert(kInitialDelta, QString::number(node_->initial_total, 'f', kMaxNumericScale_4));
+        partner_delta.insert(kId, node_->partner.toString(QUuid::WithoutBraces));
+    }
+
+    order_cache.insert(kPartnerDelta, partner_delta);
+}
+
 void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
 {
     const QJsonObject node_json { tmp_node_.WriteJson() };
@@ -357,11 +385,47 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
 
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_cache)
 {
+    QJsonObject node_delta {};
+
+    if (HasOrderDelta()) {
+        node_delta.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
+    }
+
     order_cache.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
     order_cache.insert(kNodeCache, pending_updates_);
+    order_cache.insert(kNodeDelta, node_delta);
 }
 
-void TableWidgetO::ResetCache() { pending_updates_ = QJsonObject(); }
+bool TableWidgetO::HasOrderDelta() const
+{
+    return FloatChanged(initial_delta_, 0.0) || FloatChanged(count_delta_, 0.0) || FloatChanged(measure_delta_, 0.0) || FloatChanged(discount_delta_, 0.0);
+}
+
+bool TableWidgetO::HasPartnerDelta() const { return FloatChanged(initial_delta_, 0.0); }
+
+void TableWidgetO::SyncNode()
+{
+    node_->ReadJson(pending_updates_);
+
+    node_->count_total += count_delta_;
+    node_->measure_total += measure_delta_;
+    node_->initial_total += initial_delta_;
+    node_->discount_total += discount_delta_;
+
+    node_->final_total = CalculateFinalTotal();
+}
+
+void TableWidgetO::ResetCache()
+{
+    pending_updates_ = QJsonObject();
+    initial_delta_ = 0.0;
+    count_delta_ = 0.0;
+    measure_delta_ = 0.0;
+    discount_delta_ = 0.0;
+}
 
 void TableWidgetO::on_pBtnRecall_clicked()
 {
@@ -413,7 +477,7 @@ void TableWidgetO::SaveOrder()
     if (!HasUnsavedData())
         return;
 
-    *node_ = tmp_node_;
+    SyncNode();
 
     QJsonObject order_cache { BuildOrderCache() };
 
@@ -459,7 +523,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
     pending_updates_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
     tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
 
-    *node_ = tmp_node_;
+    SyncNode();
 
     QJsonObject order_cache { BuildOrderCache() };
 
