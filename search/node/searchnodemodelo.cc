@@ -142,9 +142,3 @@ void SearchNodeModelO::Search(CString& text)
 
     WebSocket::Instance()->SendMessage(kNodeSearch, JsonGen::NodeSearch(section_, text));
 }
-
-void SearchNodeModelO::ResetData()
-{
-    NodePool::Instance().Recycle(node_list_, section_);
-    node_list_.clear();
-}

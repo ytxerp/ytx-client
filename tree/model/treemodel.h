@@ -140,7 +140,7 @@ public:
     void UpdateDefaultUnit(int default_unit);
 
     void AckNode(const QUuid& node_id) const;
-    void SearchModel(QList<Node*>& node_list, CString& name) const;
+    void SearchNode(QList<Node*>& node_list, CString& name) const;
 
     inline bool Contains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
     inline void SetParent(Node* node, const QUuid& parent_id) const

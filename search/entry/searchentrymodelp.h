@@ -20,16 +20,22 @@
 #ifndef SEARCHENTRYMODELP_H
 #define SEARCHENTRYMODELP_H
 
+#include "entryhub/entryhubp.h"
 #include "searchentrymodel.h"
 
 class SearchEntryModelP final : public SearchEntryModel {
     Q_OBJECT
 public:
-    SearchEntryModelP(CSectionInfo& info, QObject* parent = nullptr);
+    SearchEntryModelP(EntryHub* entry_hub, CSectionInfo& info, QObject* parent = nullptr);
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
+
+    void Search(const QString& text) override;
+
+private:
+    EntryHubP* entry_hub_p_ {};
 };
 
 #endif // SEARCHENTRYMODELP_H

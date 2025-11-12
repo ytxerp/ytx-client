@@ -2,8 +2,9 @@
 
 #include "component/enumclass.h"
 
-SearchEntryModelP::SearchEntryModelP(CSectionInfo& info, QObject* parent)
+SearchEntryModelP::SearchEntryModelP(EntryHub* entry_hub, CSectionInfo& info, QObject* parent)
     : SearchEntryModel { info, parent }
+    , entry_hub_p_ { static_cast<EntryHubP*>(entry_hub) }
 {
 }
 
@@ -79,4 +80,16 @@ void SearchEntryModelP::sort(int column, Qt::SortOrder order)
     emit layoutAboutToBeChanged();
     std::sort(entry_list_.begin(), entry_list_.end(), Compare);
     emit layoutChanged();
+}
+
+void SearchEntryModelP::Search(const QString& text)
+{
+    beginResetModel();
+
+    entry_list_.clear();
+
+    if (!text.isEmpty())
+        entry_hub_p_->SearchEntry(entry_list_, text);
+
+    endResetModel();
 }

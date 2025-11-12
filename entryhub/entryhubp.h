@@ -20,6 +20,7 @@
 #ifndef ENTRYHUBP_H
 #define ENTRYHUBP_H
 
+#include "component/using.h"
 #include "entryhub.h"
 
 class EntryHubP final : public EntryHub {
@@ -30,8 +31,10 @@ public:
 
 public:
     std::optional<std::pair<QUuid, double>> ResolveFromInternal(const QUuid& partner_id, const QUuid& internal_sku) const;
-    // std::optional<std::pair<QUuid, double>> ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const;
+    void SearchEntry(QList<Entry*>& entry_list, CString& name) const;
+
     void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
+    // std::optional<std::pair<QUuid, double>> ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const;
 
 protected:
     void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;

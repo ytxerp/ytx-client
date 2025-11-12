@@ -33,6 +33,20 @@ std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromInternal(const QUu
     return std::nullopt;
 }
 
+void EntryHubP::SearchEntry(QList<Entry*>& entry_list, CString& name) const
+{
+    entry_list.reserve(entry_cache_.size() / 2);
+
+    for (const auto& [id, entry] : entry_cache_.asKeyValueRange()) {
+        if (!entry)
+            continue;
+
+        if (entry->description.contains(name, Qt::CaseInsensitive)) {
+            entry_list.emplaceBack(entry);
+        }
+    }
+}
+
 #if 0
 std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const
 {

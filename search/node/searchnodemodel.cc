@@ -51,7 +51,7 @@ void SearchNodeModel::Search(const QString& text)
     node_list_.clear();
 
     if (!text.isEmpty())
-        tree_model_->SearchModel(node_list_, text);
+        tree_model_->SearchNode(node_list_, text);
 
     endResetModel();
 }

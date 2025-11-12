@@ -52,9 +52,6 @@ public:
     virtual void Search(CString& text);
 
 protected:
-    virtual void ResetData() { node_list_.clear(); }
-
-protected:
     CSectionInfo& info_;
     CTreeModel* tree_model_ {};
     QList<Node*> node_list_ {};

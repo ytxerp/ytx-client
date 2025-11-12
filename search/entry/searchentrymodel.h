@@ -49,7 +49,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
 public:
-    void Search(const QString& text);
+    virtual void Search(const QString& text);
 
 protected:
     EntryList entry_list_ {};

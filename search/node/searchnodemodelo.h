@@ -34,10 +34,8 @@ public slots:
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
-    void Search(CString& text) override;
 
-protected:
-    void ResetData() override;
+    void Search(CString& text) override;
 
 private:
     CTreeModel* partner_tree_model_ {};

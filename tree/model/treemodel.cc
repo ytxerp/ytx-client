@@ -514,7 +514,7 @@ void TreeModel::UpdateDefaultUnit(int default_unit)
     emit dataChanged(top_left, bottom_right);
 }
 
-void TreeModel::SearchModel(QList<Node*>& node_list, CString& name) const
+void TreeModel::SearchNode(QList<Node*>& node_list, CString& name) const
 {
     node_list.reserve(node_hash_.size() / 2);
 

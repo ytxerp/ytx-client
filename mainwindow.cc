@@ -2718,7 +2718,7 @@ void MainWindow::on_actionSearch_triggered()
         break;
     case Section::kPartner:
         node = new SearchNodeModelP(sc_->info, sc_->tree_model, this);
-        entry = new SearchEntryModelP(sc_->info, this);
+        entry = new SearchEntryModelP(sc_->entry_hub, sc_->info, this);
         dialog = new SearchDialogP(sc_->tree_model, node, entry, sc_i_.tree_model, sc_->section_config, sc_->info, this);
         break;
     case Section::kSale:
