@@ -148,67 +148,85 @@ MainWindow::~MainWindow()
 
 bool MainWindow::RInitializeContext(const QString& expire_date)
 {
-    LoginInfo& login_info { LoginInfo::Instance() };
-    UpdateAccountInfo(login_info.Email(), login_info.Workspace(), expire_date);
+    {
+        LoginInfo& login_info { LoginInfo::Instance() };
+        UpdateAccountInfo(login_info.Email(), login_info.Workspace(), expire_date);
 
-    if (!section_settings_) {
-        const QString section_file_path { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator()
-            + MainWindowUtils::SectionFile(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
+        if (!section_settings_) {
+            const QString section_file_path { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator()
+                + MainWindowUtils::SectionFile(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
 
-        section_settings_ = QSharedPointer<QSettings>::create(section_file_path, QSettings::IniFormat);
+            section_settings_ = QSharedPointer<QSettings>::create(section_file_path, QSettings::IniFormat);
+        }
     }
 
-    InitContextFinance();
-    InitContextTask();
-    InitContextInventory();
-    InitContextPartner();
-    InitContextSale();
-    InitContextPurchase();
+    {
+        InitContextFinance();
+        InitContextTask();
+        InitContextInventory();
+        InitContextPartner();
+        InitContextSale();
+        InitContextPurchase();
+    }
 
-    CreateSection(sc_f_, tr("Finance"));
-    CreateSection(sc_p_, tr("Partner"));
-    CreateSection(sc_i_, tr("Inventory"));
-    CreateSection(sc_t_, tr("Task"));
-    CreateSection(sc_sale_, tr("Sale"));
-    CreateSection(sc_purchase_, tr("Purchase"));
+    {
+        CreateSection(sc_f_, tr("Finance"));
+        CreateSection(sc_p_, tr("Partner"));
+        CreateSection(sc_i_, tr("Inventory"));
+        CreateSection(sc_t_, tr("Task"));
+        CreateSection(sc_sale_, tr("Sale"));
+        CreateSection(sc_purchase_, tr("Purchase"));
+    }
 
-    RSectionGroup(static_cast<int>(start_));
+    {
+        RSectionGroup(std::to_underlying(start_));
+        SetAction(true);
+        on_tabWidget_currentChanged(0);
+    }
 
-    SetAction(true);
-    on_tabWidget_currentChanged(0);
-
-    QTimer::singleShot(0, this, [this]() {
-        PrintHub::Instance().ScanTemplate();
-        PrintHub::Instance().SetAppConfig(&app_config_);
-        PrintHub::Instance().SetPartnerModel(sc_p_.tree_model);
-        PrintHub::Instance().SetInventoryModel(sc_i_.tree_model);
-    });
+    {
+        // Delay template and model setup until event loop starts (non-blocking post-init)
+        QTimer::singleShot(0, this, [this]() {
+            PrintHub::Instance().ScanTemplate();
+            PrintHub::Instance().SetAppConfig(&app_config_);
+            PrintHub::Instance().SetPartnerModel(sc_p_.tree_model);
+            PrintHub::Instance().SetInventoryModel(sc_i_.tree_model);
+        });
+    }
 
     return true;
 }
 
 void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 {
-    const bool is_order { start_ == Section::kSale || start_ == Section::kPurchase };
-    const int expected_column { is_order ? std::to_underlying(NodeEnumO::kPartner) : std::to_underlying(NodeEnum::kName) };
+    {
+        const bool is_order { start_ == Section::kSale || start_ == Section::kPurchase };
+        const int expected_column { is_order ? std::to_underlying(NodeEnumO::kPartner) : std::to_underlying(NodeEnum::kName) };
 
-    if (index.column() != expected_column)
-        return;
+        if (index.column() != expected_column)
+            return;
+    }
 
-    const int kind_column { NodeUtils::KindColumn(start_) };
-    const NodeKind kind { index.siblingAtColumn(kind_column).data().toInt() };
-    if (kind == NodeKind::kBranch)
-        return;
+    {
+        const int kind_column { NodeUtils::KindColumn(start_) };
+        const NodeKind kind { index.siblingAtColumn(kind_column).data().toInt() };
+        if (kind == NodeKind::kBranch)
+            return;
+    }
 
-    const int unit_column { NodeUtils::UnitColumn(start_) };
-    const int unit { index.siblingAtColumn(unit_column).data().toInt() };
-    if (start_ == Section::kInventory && unit == std::to_underlying(UnitI::kExternal))
-        return;
+    {
+        const int unit_column { NodeUtils::UnitColumn(start_) };
+        const int unit { index.siblingAtColumn(unit_column).data().toInt() };
+        if (start_ == Section::kInventory && unit == std::to_underlying(UnitI::kExternal))
+            return;
+    }
 
-    const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
-    assert(!node_id.isNull());
+    {
+        const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
+        assert(!node_id.isNull());
 
-    ShowLeafWidget(node_id);
+        ShowLeafWidget(node_id);
+    }
 }
 
 // ShowLeafWidget - Show leaf widget (create and scroll as needed)
@@ -224,32 +242,36 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 // Note: Scrolling only occurs when entry_id is non-empty
 void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
 {
-    auto& table_wgt_hash { sc_->table_wgt_hash };
+    {
+        auto& table_wgt_hash { sc_->table_wgt_hash };
 
-    if (table_wgt_hash.contains(node_id)) {
+        if (table_wgt_hash.contains(node_id)) {
+            FocusTableWidget(node_id);
+            RSelectLeafEntry(node_id, entry_id);
+            return;
+        }
+    }
+
+    {
+        if (start_ != Section::kPartner) {
+            const auto message { JsonGen::LeafEntry(sc_->info.section, node_id, entry_id) };
+            WebSocket::Instance()->SendMessage(kLeafEntry, message);
+        }
+
+        if (start_ == Section::kSale || start_ == Section::kPurchase) {
+            CreateLeafO(sc_, node_id);
+        } else {
+            CreateLeafFIPT(sc_, node_id);
+        }
+
         FocusTableWidget(node_id);
-        RSelectLeafEntry(node_id, entry_id);
-        return;
     }
-
-    if (start_ != Section::kPartner) {
-        const auto message { JsonGen::LeafEntry(sc_->info.section, node_id, entry_id) };
-        WebSocket::Instance()->SendMessage(kLeafEntry, message);
-    }
-
-    if (start_ == Section::kSale || start_ == Section::kPurchase) {
-        CreateLeafO(sc_, node_id);
-    } else {
-        CreateLeafFIPT(sc_, node_id);
-    }
-
-    FocusTableWidget(node_id);
 }
 
 void MainWindow::RSectionGroup(int id)
 {
-    const Section kSection { id };
-    start_ = kSection;
+    const Section section { id };
+    start_ = section;
 
     if (!section_settings_)
         return;
@@ -257,7 +279,7 @@ void MainWindow::RSectionGroup(int id)
     MainWindowUtils::SwitchDialog(sc_, false);
     UpdateLastTab();
 
-    switch (kSection) {
+    switch (section) {
     case Section::kFinance:
         sc_ = &sc_f_;
         break;
