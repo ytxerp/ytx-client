@@ -160,20 +160,6 @@ QJsonObject NodeDelta(CUuid& node_id, double initial_delta, double final_delta)
     return message;
 }
 
-QJsonObject NodeODelta(CUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
-{
-    QJsonObject message {};
-    message.insert(kInitialDelta, QString::number(initial_delta, 'f', kMaxNumericScale_4));
-    message.insert(kFinalDelta, QString::number(final_delta, 'f', kMaxNumericScale_4));
-    message.insert(kCountDelta, QString::number(count_delta, 'f', kMaxNumericScale_4));
-    message.insert(kMeasureDelta, QString::number(measure_delta, 'f', kMaxNumericScale_4));
-    message.insert(kDiscountDelta, QString::number(discount_delta, 'f', kMaxNumericScale_4));
-
-    message.insert(kId, node_id.toString(QUuid::WithoutBraces));
-
-    return message;
-}
-
 QJsonObject Register(CString& email, CString& password)
 {
     QJsonObject message {};
@@ -283,14 +269,15 @@ QJsonObject OrderRecalled(Section section, const NodeO* node)
     message.insert(kNodeId, node->id.toString(QUuid::WithoutBraces));
     message.insert(kNodeCache, node_cache);
 
-    QJsonObject partner_delta {};
+    if (node->unit == std::to_underlying(UnitO::kMonthly) && FloatChanged(-node->initial_total, 0.0)) {
+        QJsonObject partner_delta {};
 
-    if (node->unit == std::to_underlying(UnitO::kMonthly)) {
         partner_delta.insert(kInitialDelta, QString::number(-node->initial_total, 'f', kMaxNumericScale_4));
-        partner_delta.insert(kNodeId, node->partner.toString(QUuid::WithoutBraces));
+        partner_delta.insert(kId, node->partner.toString(QUuid::WithoutBraces));
+
+        message.insert(kPartnerDelta, partner_delta);
     }
 
-    message.insert(kPartnerDelta, partner_delta);
     return message;
 }
 

@@ -51,7 +51,7 @@ TableWidgetO::~TableWidgetO()
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
-bool TableWidgetO::HasUnsavedData() const { return !pending_updates_.isEmpty() || table_model_order_->HasInserts(); }
+bool TableWidgetO::HasUnsavedData() const { return node_modified_ || HasOrderDelta() || table_model_order_->HasInserts(); }
 
 void TableWidgetO::RSyncDeltaO(
     const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta, bool is_persisted)
@@ -240,7 +240,7 @@ void TableWidgetO::IniUnitGroup()
 void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
 {
     const QUuid partner_id { ui->comboPartner->currentData().toUuid() };
-    if (partner_id.isNull())
+    if (tmp_node_.partner == partner_id)
         return;
 
     tmp_node_.partner = partner_id;
@@ -249,25 +249,38 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     if (is_persisted_) {
         pending_updates_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
     }
+
+    node_modified_ = true;
 }
 
 void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 {
     const QUuid employee_id { ui->comboEmployee->currentData().toUuid() };
+    if (tmp_node_.employee == employee_id)
+        return;
+
     tmp_node_.employee = employee_id;
 
     if (is_persisted_) {
         pending_updates_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
     }
+
+    node_modified_ = true;
 }
 
 void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
-    tmp_node_.issued_time = date_time.toUTC();
+    const QDateTime utc_time { date_time.toUTC() };
+    if (tmp_node_.issued_time == utc_time)
+        return;
+
+    tmp_node_.issued_time = utc_time;
 
     if (is_persisted_) {
-        pending_updates_.insert(kIssuedTime, tmp_node_.issued_time.toString(Qt::ISODate));
+        pending_updates_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
     }
+
+    node_modified_ = true;
 }
 
 void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
@@ -280,6 +293,8 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
     if (is_persisted_) {
         pending_updates_.insert(kDescription, arg1);
     }
+
+    node_modified_ = true;
 }
 
 void TableWidgetO::RRuleGroupClicked(int id)
@@ -288,6 +303,7 @@ void TableWidgetO::RRuleGroupClicked(int id)
         return;
 
     tmp_node_.direction_rule = static_cast<bool>(id);
+    node_modified_ = true;
 
     tmp_node_.count_total *= -1;
     tmp_node_.measure_total *= -1;
@@ -326,6 +342,8 @@ void TableWidgetO::RUnitGroupClicked(int id)
     if (is_persisted_) {
         pending_updates_.insert(kUnit, id);
     }
+
+    node_modified_ = true;
 }
 
 void TableWidgetO::on_pBtnSave_clicked() { SaveOrder(); }
@@ -361,14 +379,14 @@ QJsonObject TableWidgetO::BuildOrderCache()
 
 void TableWidgetO::BuildPartnerDelta(QJsonObject& order_cache)
 {
-    QJsonObject partner_delta {};
-
     if (node_->unit == std::to_underlying(UnitO::kMonthly) && HasPartnerDelta()) {
+        QJsonObject partner_delta {};
+
         partner_delta.insert(kInitialDelta, QString::number(node_->initial_total, 'f', kMaxNumericScale_4));
         partner_delta.insert(kId, node_->partner.toString(QUuid::WithoutBraces));
-    }
 
-    order_cache.insert(kPartnerDelta, partner_delta);
+        order_cache.insert(kPartnerDelta, partner_delta);
+    }
 }
 
 void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
@@ -385,18 +403,20 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
 
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_cache)
 {
-    QJsonObject node_delta {};
-
     if (HasOrderDelta()) {
+        QJsonObject node_delta {};
+
         node_delta.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
         node_delta.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
         node_delta.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
         node_delta.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
+        node_delta.insert(kId, node_id_.toString(QUuid::WithoutBraces));
+
+        order_cache.insert(kNodeDelta, node_delta);
     }
 
     order_cache.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
     order_cache.insert(kNodeCache, pending_updates_);
-    order_cache.insert(kNodeDelta, node_delta);
 }
 
 bool TableWidgetO::HasOrderDelta() const
@@ -477,16 +497,18 @@ void TableWidgetO::SaveOrder()
     if (!HasUnsavedData())
         return;
 
-    SyncNode();
-
     QJsonObject order_cache { BuildOrderCache() };
 
     if (is_persisted_) {
+        SyncNode();
+
         BuildNodeUpdate(order_cache);
         WebSocket::Instance()->SendMessage(kOrderUpdateSaved, order_cache);
 
         ResetCache();
     } else {
+        *node_ = tmp_node_;
+
         BuildNodeInsert(order_cache);
         WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_cache);
 
@@ -497,6 +519,8 @@ void TableWidgetO::SaveOrder()
 
         emit SInsertOrder();
     }
+
+    node_modified_ = false;
 }
 
 void TableWidgetO::on_pBtnRelease_clicked()
@@ -523,11 +547,11 @@ void TableWidgetO::on_pBtnRelease_clicked()
     pending_updates_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
     tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
 
-    SyncNode();
-
     QJsonObject order_cache { BuildOrderCache() };
 
     if (is_persisted_) {
+        SyncNode();
+
         BuildNodeUpdate(order_cache);
         order_cache.insert(kPartnerId, tmp_node_.partner.toString(QUuid::WithoutBraces));
 
@@ -535,6 +559,8 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
         ResetCache();
     } else {
+        *node_ = tmp_node_;
+
         BuildNodeInsert(order_cache);
         WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_cache);
 
@@ -543,6 +569,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
         emit SInsertOrder();
     }
 
+    node_modified_ = false;
     LockWidgets(NodeStatus::kReleased);
 
     // ready for print

@@ -139,6 +139,8 @@ private:
     QButtonGroup* unit_group_ {};
 
     bool is_persisted_ {};
+    bool node_modified_ {};
+
     double initial_delta_ {};
     double count_delta_ {};
     double measure_delta_ {};
