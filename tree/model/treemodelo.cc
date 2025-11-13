@@ -128,16 +128,15 @@ void TreeModelO::SyncNodeDelta(const QUuid& node_id, const QJsonObject& data)
     }
 
     const double initial_delta { data.value(kInitialDelta).toString().toDouble() };
-    const double final_delta { data.value(kFinalDelta).toString().toDouble() };
     const double count_delta { data.value(kCountDelta).toString().toDouble() };
     const double measure_delta { data.value(kMeasureDelta).toString().toDouble() };
     const double discount_delta { data.value(kDiscountDelta).toString().toDouble() };
 
     node_o->initial_total += initial_delta;
-    node_o->final_total += final_delta;
     node_o->count_total += count_delta;
     node_o->measure_total += measure_delta;
     node_o->discount_total += discount_delta;
+    NodeUtils::UpdateOrderFinalTotal(node_o);
 
     UpdateMeta(node_o, data);
 

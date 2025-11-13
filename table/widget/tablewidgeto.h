@@ -82,6 +82,7 @@ public:
     bool HasUnsavedData() const;
     void SaveOrder();
     void IniUiValue();
+    void SyncNodeDelta(const QJsonObject& delta);
 
 private slots:
 
@@ -124,8 +125,6 @@ private:
 
     void SyncNode();
     void ResetCache();
-
-    double CalculateFinalTotal() const { return node_->unit == std::to_underlying(UnitO::kImmediate) ? node_->initial_total - node_->discount_total : 0.0; }
 
 private:
     Ui::TableWidgetO* ui;

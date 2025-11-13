@@ -771,9 +771,16 @@ void WebSocket::SaveOrderUpdate(const QJsonObject& obj)
 
     order_model->SyncNode(node_id, node_cache);
 
+    QJsonObject node_delta {};
+
     if (obj.contains(kNodeDelta) && obj.value(kNodeDelta).isObject()) {
-        const auto node_delta { obj.value(kNodeDelta).toObject() };
+        node_delta = obj.value(kNodeDelta).toObject();
         order_model->SyncNodeDelta(node_id, node_delta);
+    }
+
+    if (obj.contains(kInsertedEntryArray) && obj.value(kInsertedEntryArray).isArray()) {
+        const auto inserted_entries { obj.value(kInsertedEntryArray).toArray() };
+        SEntryArray(section, node_id, node_delta, inserted_entries);
     }
 }
 
@@ -792,7 +799,6 @@ void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj)
         return;
 
     const auto node_cache { obj.value(kNodeCache).toObject() };
-    const auto node_delta { obj.value(kNodeDelta).toObject() };
 
     if (session_id == session_id_) {
         order_model->UpdateMeta(node_id, node_cache);
@@ -801,9 +807,16 @@ void WebSocket::ReleaseOrderUpdate(const QJsonObject& obj)
 
     order_model->SyncNode(node_id, node_cache);
 
+    QJsonObject node_delta {};
+
     if (obj.contains(kNodeDelta) && obj.value(kNodeDelta).isObject()) {
-        const auto node_delta { obj.value(kNodeDelta).toObject() };
+        node_delta = obj.value(kNodeDelta).toObject();
         order_model->SyncNodeDelta(node_id, node_delta);
+    }
+
+    if (obj.contains(kInsertedEntryArray) && obj.value(kInsertedEntryArray).isArray()) {
+        const auto inserted_entries { obj.value(kInsertedEntryArray).toArray() };
+        SEntryArray(section, node_id, node_delta, inserted_entries);
     }
 
     order_model->RNodeStatus(node_id, NodeStatus::kReleased);

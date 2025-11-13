@@ -1309,6 +1309,23 @@ void MainWindow::RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id)
     view->closePersistentEditor(index);
 }
 
+void MainWindow::REntryArray(Section section, const QUuid& node_id, const QJsonObject& node_delta, const QJsonArray& arr)
+{
+    auto* sc { GetSectionContex(section) };
+    assert(sc != nullptr);
+
+    auto widget { sc->table_wgt_hash.value(node_id) };
+    if (widget.isNull()) {
+        return;
+    }
+
+    auto* widget_o { static_cast<TableWidgetO*>(widget.data()) };
+    assert(widget_o != nullptr);
+
+    widget_o->SyncNodeDelta(node_delta);
+    sc->entry_hub->AckLeafTable(node_id, arr);
+}
+
 void MainWindow::ClearMainwindow()
 {
     WriteConfig();
@@ -1881,6 +1898,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SLoginResult, this, &MainWindow::RLoginResult);
     connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::RRemoteHostClosed);
     connect(WebSocket::Instance(), &WebSocket::SSelectLeafEntry, this, &MainWindow::RSelectLeafEntry);
+    connect(WebSocket::Instance(), &WebSocket::SOrderUpdate, this, &MainWindow::REntryArray);
 }
 
 void MainWindow::InitContextFinance()

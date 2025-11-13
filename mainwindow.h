@@ -116,6 +116,7 @@ private slots:
     void RDefaultUnit(Section section, int unit);
     void RUpdateDefaultUnitFailed(const QString& section);
     void RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id);
+    void REntryArray(Section section, const QUuid& node_id, const QJsonObject& node_delta, const QJsonArray& arr);
 
 private:
     void SetTabWidget();

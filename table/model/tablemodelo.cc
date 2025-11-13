@@ -37,6 +37,9 @@ void TableModelO::FinalizeInserts(QJsonObject& order_cache)
 {
     PurifyEntry();
 
+    if (pending_inserts_.isEmpty())
+        return;
+
     // inserted
     QJsonArray inserted_entry_array {};
     for (auto it = pending_inserts_.cbegin(); it != pending_inserts_.cend(); ++it) {

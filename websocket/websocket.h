@@ -70,6 +70,7 @@ signals:
     void SReplaceResult(bool result);
 
     void SConnectionRefused();
+    void SEntryArray(Section section, const QUuid& node_id, const QJsonObject& node_delta, const QJsonArray& arr);
 
     // send to SearchNodeModel
     void SNodeSearch(const QJsonObject& obj);

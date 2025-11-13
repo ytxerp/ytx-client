@@ -275,6 +275,9 @@ bool EntryHub::ReadTransRef(EntryRefList& list, const QUuid& node_id, int unit, 
 
 void EntryHub::AckLeafTable(const QUuid& node_id, const QJsonArray& array)
 {
+    if (array.isEmpty())
+        return;
+
     const EntryList entry_list { ProcessEntryArray(array) };
     emit SAppendMultiEntry(node_id, entry_list);
 }

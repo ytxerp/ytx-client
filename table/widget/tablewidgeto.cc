@@ -51,7 +51,7 @@ TableWidgetO::~TableWidgetO()
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
-bool TableWidgetO::HasUnsavedData() const { return node_modified_ || HasOrderDelta() || table_model_order_->HasInserts(); }
+bool TableWidgetO::HasUnsavedData() const { return node_modified_ || table_model_order_->HasInserts(); }
 
 void TableWidgetO::RSyncDeltaO(
     const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta, bool is_persisted)
@@ -77,7 +77,7 @@ void TableWidgetO::RSyncDeltaO(
             node_->initial_total += initial_delta;
             node_->discount_total += discount_delta;
 
-            node_->final_total = CalculateFinalTotal();
+            NodeUtils::UpdateOrderFinalTotal(node_);
         } else {
             count_delta_ += count_delta;
             measure_delta_ += measure_delta;
@@ -218,6 +218,25 @@ void TableWidgetO::IniUiValue()
     ui->dSpinFirstTotal->setValue(tmp_node_.count_total);
     ui->dSpinSecondTotal->setValue(tmp_node_.measure_total);
     ui->dSpinInitialTotal->setValue(tmp_node_.initial_total);
+}
+
+void TableWidgetO::SyncNodeDelta(const QJsonObject& delta)
+{
+    if (delta.isEmpty())
+        return;
+
+    const double initial_delta { delta.value(kInitialDelta).toString().toDouble() };
+    const double count_delta { delta.value(kCountDelta).toString().toDouble() };
+    const double measure_delta { delta.value(kMeasureDelta).toString().toDouble() };
+    const double discount_delta { delta.value(kDiscountDelta).toString().toDouble() };
+
+    tmp_node_.count_total += count_delta;
+    tmp_node_.measure_total += measure_delta;
+    tmp_node_.initial_total += initial_delta;
+    tmp_node_.discount_total += discount_delta;
+
+    NodeUtils::UpdateOrderFinalTotal(&tmp_node_);
+    IniUiValue();
 }
 
 void TableWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true); }
@@ -435,7 +454,7 @@ void TableWidgetO::SyncNode()
     node_->initial_total += initial_delta_;
     node_->discount_total += discount_delta_;
 
-    node_->final_total = CalculateFinalTotal();
+    NodeUtils::UpdateOrderFinalTotal(node_);
 }
 
 void TableWidgetO::ResetCache()

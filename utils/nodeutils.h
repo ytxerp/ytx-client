@@ -142,6 +142,11 @@ constexpr std::pair<int, int> CacheColumnRange(Section section)
     }
 }
 
+inline void UpdateOrderFinalTotal(NodeO* node)
+{
+    node->final_total = node->unit == std::to_underlying(UnitO::kImmediate) ? node->initial_total - node->discount_total : 0.0;
+}
+
 bool IsDescendant(const Node* lhs, const Node* rhs);
 
 void SortIterative(Node* node, std::function<bool(const Node*, const Node*)> Compare);
