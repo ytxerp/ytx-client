@@ -30,9 +30,6 @@ class EntryHubO final : public EntryHub {
 public:
     EntryHubO(CSectionInfo& info, QObject* parent = nullptr);
 
-public slots:
-    void RReleaseEntry(const QUuid& node_id);
-
 public:
     void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
 

@@ -220,25 +220,6 @@ void TableWidgetO::IniUiValue()
     ui->dSpinInitialTotal->setValue(tmp_node_.initial_total);
 }
 
-void TableWidgetO::SyncNodeDelta(const QJsonObject& delta)
-{
-    if (delta.isEmpty())
-        return;
-
-    const double initial_delta { delta.value(kInitialDelta).toString().toDouble() };
-    const double count_delta { delta.value(kCountDelta).toString().toDouble() };
-    const double measure_delta { delta.value(kMeasureDelta).toString().toDouble() };
-    const double discount_delta { delta.value(kDiscountDelta).toString().toDouble() };
-
-    tmp_node_.count_total += count_delta;
-    tmp_node_.measure_total += measure_delta;
-    tmp_node_.initial_total += initial_delta;
-    tmp_node_.discount_total += discount_delta;
-
-    NodeUtils::UpdateOrderFinalTotal(&tmp_node_);
-    IniUiValue();
-}
-
 void TableWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true); }
 
 void TableWidgetO::IniRuleGroup()

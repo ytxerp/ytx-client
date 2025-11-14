@@ -82,7 +82,6 @@ public:
     bool HasUnsavedData() const;
     void SaveOrder();
     void IniUiValue();
-    void SyncNodeDelta(const QJsonObject& delta);
 
 private slots:
 

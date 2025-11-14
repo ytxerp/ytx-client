@@ -58,14 +58,12 @@ class TableModelO final : public TableModel {
 
 public:
     TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
-    ~TableModelO() override;
+    ~TableModelO() override = default;
 
 signals:
     // send to TableWidgetO
     void SSyncDeltaO(
         const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta, bool is_persisted);
-    // send to entryhub
-    void SReleaseEntry(const QUuid& node_id);
 
 public slots:
     void RAppendMultiEntry(const EntryList& entry_list) override;
@@ -98,9 +96,6 @@ private:
 
     void PurifyEntry();
 
-    void ScheduleUpdate(const QUuid& id);
-    void FlushUpdates();
-
     // bool UpdateExternalSku(EntryO* entry, const QUuid& value);
     // void ResolveFromExternal(EntryO* entry, const QUuid& external_sku) const;
 
@@ -112,7 +107,7 @@ private:
     QList<Entry*> entry_list_ {};
 
     QHash<QUuid, Entry*> pending_inserts_ {};
-    QHash<QUuid, QJsonObject> pending_updates_ {};
+    QHash<QUuid, Entry*> pending_updates_ {};
 };
 
 #endif // TABLEMODELO_H

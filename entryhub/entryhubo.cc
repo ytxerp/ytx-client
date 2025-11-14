@@ -11,21 +11,6 @@ EntryHubO::EntryHubO(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubO::RReleaseEntry(const QUuid& node_id)
-{
-    for (auto it = entry_cache_.begin(); it != entry_cache_.end();) {
-        Entry* e = it.value();
-
-        if (e->lhs_node == node_id) {
-            EntryPool::Instance().Recycle(e, section_);
-
-            it = entry_cache_.erase(it);
-        } else {
-            ++it;
-        }
-    }
-}
-
 void EntryHubO::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
 
 bool EntryHubO::ReadSettlement(SettlementList& list, const QDateTime& start, const QDateTime& end) const
@@ -267,7 +252,6 @@ EntryList EntryHubO::ProcessEntryArray(const QJsonArray& array)
         Entry* entry { EntryPool::Instance().Allocate(section_) };
         entry->ReadJson(obj);
 
-        entry_cache_.insert(entry->id, entry);
         list.emplaceBack(entry);
     }
 
