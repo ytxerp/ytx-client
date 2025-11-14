@@ -40,11 +40,7 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
     const auto entry_id { entry->id };
 
     if (!rhs_node_id.isNull()) {
-        QJsonObject message {};
-        message.insert(kSection, std::to_underlying(section_));
-        message.insert(kSessionId, QString());
-        message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
-
+        QJsonObject message { JsonGen::EntryRemove(section_, entry_id) };
         WebSocket::Instance()->SendMessage(kEntryRemove, message);
     }
 
@@ -74,16 +70,11 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
     const QString old_node_id { old_node.toString(QUuid::WithoutBraces) };
     const QString new_node_id { value.toString(QUuid::WithoutBraces) };
 
-    QJsonObject cache {};
-    cache = entry->WriteJson();
-
-    QJsonObject message {};
-    message.insert(kSection, std::to_underlying(section_));
-    message.insert(kSessionId, QString());
-    message.insert(kEntry, cache);
-    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
+    QJsonObject message { JsonGen::EntryLinkedNode(section_, entry_id) };
 
     if (old_node.isNull()) {
+        message.insert(kEntry, entry->WriteJson());
+
         WebSocket::Instance()->SendMessage(kEntryInsert, message);
     }
 

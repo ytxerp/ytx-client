@@ -26,7 +26,7 @@ void TableModelO::RAppendMultiEntry(const EntryList& entry_list)
     sort(std::to_underlying(EntryEnumO::kRhsNode), Qt::AscendingOrder);
 }
 
-void TableModelO::FinalizeOrder(QJsonObject& order_cache)
+void TableModelO::FinalizeOrder(QJsonObject& order_message)
 {
     {
         // - Remove entries from entry_list_ that have no linked rhs_node (i.e., internal SKU not selected).
@@ -36,7 +36,7 @@ void TableModelO::FinalizeOrder(QJsonObject& order_cache)
         // Normalize diff buffers (inserted / deleted)
         // to ensure no conflict states remain before packaging.
         // e.g. inserted+deleted ⇒ remove both
-        // NOTE: update caches are implicitly consistent: newly inserted never have update cache.
+        // NOTE: update caches are implicitly consistent: newly inserted never have update update.
         NormalizeEntryBuffer();
     }
 
@@ -47,7 +47,7 @@ void TableModelO::FinalizeOrder(QJsonObject& order_cache)
             for (const auto& id : std::as_const(pending_deleted_)) {
                 deleted_entry_array.append(id.toString(QUuid::WithoutBraces));
             }
-            order_cache.insert(kDeletedEntryArray, deleted_entry_array);
+            order_message.insert(kDeletedEntryArray, deleted_entry_array);
         }
     }
 
@@ -59,7 +59,7 @@ void TableModelO::FinalizeOrder(QJsonObject& order_cache)
                 const QJsonObject obj { it.value()->WriteJson() };
                 inserted_entry_array.append(obj);
             }
-            order_cache.insert(kInsertedEntryArray, inserted_entry_array);
+            order_message.insert(kInsertedEntryArray, inserted_entry_array);
         }
     }
 
@@ -70,7 +70,7 @@ void TableModelO::FinalizeOrder(QJsonObject& order_cache)
             for (auto it = pending_updates_.begin(); it != pending_updates_.end(); ++it) {
                 updated_entry_array.append(it.value()->WriteJson());
             }
-            order_cache.insert(kUpdatedEntryArray, updated_entry_array);
+            order_message.insert(kUpdatedEntryArray, updated_entry_array);
         }
     }
 
@@ -359,17 +359,17 @@ bool TableModelO::UpdateExternalSku(EntryO* entry, const QUuid& value)
     }
 
     if (!pending_inserts_.contains(entry_id)) {
-        auto& cache { pending_updates_[entry_id] };
-        cache.insert(kExternalSku, value.toString(QUuid::WithoutBraces));
+        auto& update { pending_updates_[entry_id] };
+        update.insert(kExternalSku, value.toString(QUuid::WithoutBraces));
 
         if (price_changed) {
-            cache.insert(kUnitPrice, QString::number(entry->unit_price, 'f', kMaxNumericScale_4));
-            cache.insert(kInitial, QString::number(entry->initial, 'f', kMaxNumericScale_4));
-            cache.insert(kFinal, QString::number(entry->final, 'f', kMaxNumericScale_4));
+            update.insert(kUnitPrice, QString::number(entry->unit_price, 'f', kMaxNumericScale_4));
+            update.insert(kInitial, QString::number(entry->initial, 'f', kMaxNumericScale_4));
+            update.insert(kFinal, QString::number(entry->final, 'f', kMaxNumericScale_4));
         }
 
         if (rhs_changed) {
-            cache.insert(kRhsNode, new_rhs_node.toString(QUuid::WithoutBraces));
+            update.insert(kRhsNode, new_rhs_node.toString(QUuid::WithoutBraces));
         }
 
         ScheduleUpdate(entry_id);

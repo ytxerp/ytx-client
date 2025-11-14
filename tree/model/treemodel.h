@@ -102,20 +102,20 @@ public:
     void ApplyTree(const QJsonObject& data);
 
     virtual void AckTree(const QJsonObject& obj) { Q_UNUSED(obj) }
-    virtual void SyncNodeName(const QUuid& node_id, const QString& name, const QJsonObject& meta);
+    virtual void SyncNodeName(const QUuid& node_id, const QString& name);
 
     void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id);
 
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
-    void InsertMeta(const QUuid& node_id, const QJsonObject& data);
+    void InsertMeta(const QUuid& node_id, const QJsonObject& meta);
 
     void SyncNode(const QUuid& node_id, const QJsonObject& data);
-    void UpdateMeta(const QUuid& node_id, const QJsonObject& data);
+    void UpdateMeta(const QUuid& node_id, const QJsonObject& meta);
 
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
     void DragNode(const QUuid& ancestor, const QUuid& descendant);
 
-    void SyncDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta);
+    void SyncDirectionRule(const QUuid& node_id, bool direction_rule);
     void SyncDeltaArray(const QJsonArray& delta_array);
 
     // Ytx's

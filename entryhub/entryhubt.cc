@@ -14,8 +14,6 @@ void EntryHubT::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, 
         auto* d_entry = static_cast<EntryI*>(it.value());
 
         d_entry->unit_cost = data[kUnitCost].toString().toDouble();
-        d_entry->updated_time = QDateTime::fromString(data[kUpdatedTime].toString(), Qt::ISODate);
-        d_entry->updated_by = QUuid(data[kUpdatedBy].toString());
 
         const int unit_cost { std::to_underlying(EntryEnumT::kUnitCost) };
 
@@ -47,9 +45,6 @@ void EntryHubT::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& dat
             rhs_id = d_entry->lhs_node;
             lhs_id = d_entry->rhs_node;
         }
-
-        d_entry->updated_time = QDateTime::fromString(data[kUpdatedTime].toString(), Qt::ISODate);
-        d_entry->updated_by = QUuid(data[kUpdatedBy].toString());
 
         emit SUpdateBalance(rhs_id, entry_id);
         emit SUpdateBalance(lhs_id, entry_id);

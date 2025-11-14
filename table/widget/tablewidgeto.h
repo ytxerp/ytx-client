@@ -80,7 +80,6 @@ public:
 
     bool HasUnsavedData() const;
     void SaveOrder();
-    void IniUiValue();
 
 private slots:
 
@@ -109,13 +108,12 @@ private:
     void IniRule(bool rule);
     void IniRuleGroup();
     void IniUnitGroup();
+    void IniUiValue();
 
     void PreparePrint();
 
-    QJsonObject BuildOrderCache();
-
-    void BuildNodeInsert(QJsonObject& order_cache);
-    void BuildNodeUpdate(QJsonObject& order_cache);
+    void BuildNodeInsert(QJsonObject& order_message);
+    void BuildNodeUpdate(QJsonObject& order_message);
 
     void ResetCache();
 
@@ -133,8 +131,7 @@ private:
     bool is_persisted_ {};
     bool node_modified_ {};
 
-    QJsonObject pending_updates_ {};
-    QTimer* pending_timer_ {};
+    QJsonObject pending_update_ {};
 
     const QUuid node_id_ {};
     const Section section_ {};

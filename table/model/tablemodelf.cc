@@ -129,16 +129,11 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
     const QString old_node_id { old_node.toString(QUuid::WithoutBraces) };
     const QString new_node_id { value.toString(QUuid::WithoutBraces) };
 
-    QJsonObject cache {};
-    cache = d_shadow->WriteJson();
-
-    QJsonObject message {};
-    message.insert(kSection, std::to_underlying(section_));
-    message.insert(kSessionId, QString());
-    message.insert(kEntry, cache);
-    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
+    QJsonObject message { JsonGen::EntryLinkedNode(section_, entry_id) };
 
     if (old_node.isNull()) {
+        message.insert(kEntry, d_shadow->WriteJson());
+
         const double lhs_rate { *d_shadow->lhs_rate };
         const double rhs_rate { *d_shadow->rhs_rate };
 
@@ -259,21 +254,15 @@ bool TableModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row
     const QUuid entry_id { *d_shadow->id };
     const QUuid rhs_id { *d_shadow->rhs_node };
 
-    QJsonObject cache = {};
+    QJsonObject update {};
     const bool is_parallel { entry_shadow->is_parallel };
 
-    cache.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*d_shadow->lhs_debit, 'f', kMaxNumericScale_4));
-    cache.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*d_shadow->lhs_credit, 'f', kMaxNumericScale_4));
-    cache.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_4));
-    cache.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
+    update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*d_shadow->lhs_debit, 'f', kMaxNumericScale_4));
+    update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*d_shadow->lhs_credit, 'f', kMaxNumericScale_4));
+    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_4));
+    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
 
-    QJsonObject message {};
-    message.insert(kSection, std::to_underlying(section_));
-    message.insert(kSessionId, QString());
-    message.insert(kCache, cache);
-    message.insert(kIsParallel, is_parallel);
-    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
-    message.insert(kMeta, QJsonObject());
+    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
 
     // Delta calculation follows the DICD rule (Debit - Credit).
     // After the delta is computed, both the node and the server
@@ -412,20 +401,14 @@ bool TableModelF::UpdateRate(EntryShadow* entry_shadow, double value)
     const QUuid entry_id { *d_shadow->id };
     const QUuid rhs_id { *d_shadow->rhs_node };
 
-    QJsonObject cache {};
+    QJsonObject update {};
 
     const bool is_parallel { entry_shadow->is_parallel };
-    cache.insert(is_parallel ? kLhsRate : kRhsRate, QString::number(*d_shadow->lhs_rate, 'f', kMaxNumericScale_8));
-    cache.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_4));
-    cache.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
+    update.insert(is_parallel ? kLhsRate : kRhsRate, QString::number(*d_shadow->lhs_rate, 'f', kMaxNumericScale_8));
+    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_4));
+    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
 
-    QJsonObject message {};
-    message.insert(kSection, std::to_underlying(section_));
-    message.insert(kSessionId, QString());
-    message.insert(kCache, cache);
-    message.insert(kIsParallel, is_parallel);
-    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
-    message.insert(kMeta, QJsonObject());
+    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
 
     const double lhs_initial_delta { 0.0 };
     const double lhs_final_delta { delta * (lhs_debit - lhs_credit) };
@@ -559,10 +542,7 @@ bool TableModelF::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
         const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
 
-        QJsonObject message {};
-        message.insert(kSection, std::to_underlying(section_));
-        message.insert(kSessionId, QString());
-        message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
+        QJsonObject message { JsonGen::EntryRemove(section_, entry_id) };
 
         if (has_leaf_delta) {
             QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };

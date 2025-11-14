@@ -230,7 +230,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     emit SSyncPartner(node_id_, partner_id);
 
     if (is_persisted_) {
-        pending_updates_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
+        pending_update_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
     }
 
     node_modified_ = true;
@@ -245,7 +245,7 @@ void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
     tmp_node_.employee = employee_id;
 
     if (is_persisted_) {
-        pending_updates_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
+        pending_update_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
     }
 
     node_modified_ = true;
@@ -260,7 +260,7 @@ void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
     tmp_node_.issued_time = utc_time;
 
     if (is_persisted_) {
-        pending_updates_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
+        pending_update_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
     }
 
     node_modified_ = true;
@@ -274,7 +274,7 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
     tmp_node_.description = arg1;
 
     if (is_persisted_) {
-        pending_updates_.insert(kDescription, arg1);
+        pending_update_.insert(kDescription, arg1);
     }
 
     node_modified_ = true;
@@ -323,7 +323,7 @@ void TableWidgetO::RUnitGroupClicked(int id)
     ui->pBtnPrint->setEnabled(unit == UnitO::kPending);
 
     if (is_persisted_) {
-        pending_updates_.insert(kUnit, id);
+        pending_update_.insert(kUnit, id);
     }
 
     node_modified_ = true;
@@ -349,19 +349,7 @@ void TableWidgetO::PreparePrint()
     PrintHub::Instance().SetValue(&tmp_node_, table_model_order_->GetEntryList());
 }
 
-QJsonObject TableWidgetO::BuildOrderCache()
-{
-    QJsonObject order_cache {};
-    order_cache.insert(kSection, std::to_underlying(section_));
-    order_cache.insert(kSessionId, QString());
-    order_cache.insert(kMeta, QJsonObject());
-
-    table_model_order_->FinalizeOrder(order_cache);
-
-    return order_cache;
-}
-
-void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
+void TableWidgetO::BuildNodeInsert(QJsonObject& order_message)
 {
     const QJsonObject node_json { tmp_node_.WriteJson() };
 
@@ -369,18 +357,18 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
     path_json.insert(kAncestor, tmp_node_.parent->id.toString(QUuid::WithoutBraces));
     path_json.insert(kDescendant, node_id_.toString(QUuid::WithoutBraces));
 
-    order_cache.insert(kNode, node_json);
-    order_cache.insert(kPath, path_json);
+    order_message.insert(kNode, node_json);
+    order_message.insert(kPath, path_json);
 }
 
-void TableWidgetO::BuildNodeUpdate(QJsonObject& order_cache)
+void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
 {
-    order_cache.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
-    order_cache.insert(kNodeCache, pending_updates_);
-    order_cache.insert(kNodeTotal, QJsonObject());
+    order_message.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
+    order_message.insert(kNodeCache, pending_update_);
+    order_message.insert(kNodeTotal, QJsonObject());
 }
 
-void TableWidgetO::ResetCache() { pending_updates_ = QJsonObject(); }
+void TableWidgetO::ResetCache() { pending_update_ = QJsonObject(); }
 
 void TableWidgetO::on_pBtnRecall_clicked()
 {
@@ -432,18 +420,19 @@ void TableWidgetO::SaveOrder()
     if (!HasUnsavedData())
         return;
 
-    QJsonObject order_cache { BuildOrderCache() };
+    QJsonObject order_message { JsonGen::OrderMessage(section_) };
+    table_model_order_->FinalizeOrder(order_message);
 
     if (is_persisted_) {
-        BuildNodeUpdate(order_cache);
-        WebSocket::Instance()->SendMessage(kOrderUpdateSaved, order_cache);
+        BuildNodeUpdate(order_message);
+        WebSocket::Instance()->SendMessage(kOrderUpdateSaved, order_message);
 
         ResetCache();
     } else {
         *node_ = tmp_node_;
 
-        BuildNodeInsert(order_cache);
-        WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_cache);
+        BuildNodeInsert(order_message);
+        WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_message);
 
         is_persisted_ = true;
 
@@ -477,23 +466,24 @@ void TableWidgetO::on_pBtnRelease_clicked()
         return;
     }
 
-    pending_updates_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
+    pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
     tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
 
-    QJsonObject order_cache { BuildOrderCache() };
+    QJsonObject order_message { JsonGen::OrderMessage(section_) };
+    table_model_order_->FinalizeOrder(order_message);
 
     if (is_persisted_) {
-        BuildNodeUpdate(order_cache);
-        order_cache.insert(kPartnerId, tmp_node_.partner.toString(QUuid::WithoutBraces));
+        BuildNodeUpdate(order_message);
+        order_message.insert(kPartnerId, tmp_node_.partner.toString(QUuid::WithoutBraces));
 
-        WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_cache);
+        WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_message);
 
         ResetCache();
     } else {
         *node_ = tmp_node_;
 
-        BuildNodeInsert(order_cache);
-        WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_cache);
+        BuildNodeInsert(order_message);
+        WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_message);
 
         is_persisted_ = true;
 

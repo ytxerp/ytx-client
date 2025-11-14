@@ -29,9 +29,6 @@ void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, 
             lhs_id = d_entry->rhs_node;
         }
 
-        d_entry->updated_time = QDateTime::fromString(data[kUpdatedTime].toString(), Qt::ISODate);
-        d_entry->updated_by = QUuid(data[kUpdatedBy].toString());
-
         const int lhs_rate { std::to_underlying(EntryEnumF::kLhsRate) };
 
         emit SUpdateBalance(rhs_id, entry_id);
@@ -62,9 +59,6 @@ void EntryHubF::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& dat
             rhs_id = d_entry->lhs_node;
             lhs_id = d_entry->rhs_node;
         }
-
-        d_entry->updated_time = QDateTime::fromString(data[kUpdatedTime].toString(), Qt::ISODate);
-        d_entry->updated_by = QUuid(data[kUpdatedBy].toString());
 
         emit SUpdateBalance(rhs_id, entry_id);
         emit SUpdateBalance(lhs_id, entry_id);

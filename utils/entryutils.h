@@ -120,7 +120,7 @@ constexpr std::pair<int, int> NumericColumnRange(Section section)
 
 template <typename T>
 bool UpdateShadowIssuedTime(
-    QJsonObject& cache, T* object, CString& field, const QDateTime& value, QDateTime* T::* member, std::function<void()> restart_timer = nullptr)
+    QJsonObject& update, T* object, CString& field, const QDateTime& value, QDateTime* T::* member, std::function<void()> restart_timer = nullptr)
 {
     assert(object);
 
@@ -135,7 +135,7 @@ bool UpdateShadowIssuedTime(
         return true;
     }
 
-    cache.insert(field, value.toString(Qt::ISODate));
+    update.insert(field, value.toString(Qt::ISODate));
     if (restart_timer)
         restart_timer();
 
@@ -143,7 +143,7 @@ bool UpdateShadowIssuedTime(
 }
 
 template <typename T>
-bool UpdateShadowUuid(QJsonObject& cache, T* object, CString& field, const QUuid& value, QUuid* T::* member, std::function<void()> restart_timer = nullptr)
+bool UpdateShadowUuid(QJsonObject& update, T* object, CString& field, const QUuid& value, QUuid* T::* member, std::function<void()> restart_timer = nullptr)
 {
     assert(object);
 
@@ -158,7 +158,7 @@ bool UpdateShadowUuid(QJsonObject& cache, T* object, CString& field, const QUuid
         return true;
     }
 
-    cache.insert(field, value.toString(QUuid::WithoutBraces));
+    update.insert(field, value.toString(QUuid::WithoutBraces));
     if (restart_timer)
         restart_timer();
 
@@ -167,7 +167,7 @@ bool UpdateShadowUuid(QJsonObject& cache, T* object, CString& field, const QUuid
 
 template <typename T>
 bool UpdateShadowDocument(
-    QJsonObject& cache, T* object, CString& field, const QStringList& value, QStringList* T::* member, std::function<void()> restart_timer = nullptr)
+    QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList* T::* member, std::function<void()> restart_timer = nullptr)
 {
     assert(object);
 
@@ -188,7 +188,7 @@ bool UpdateShadowDocument(
         return true;
     }
 
-    cache.insert(field, value.join(kSemicolon));
+    update.insert(field, value.join(kSemicolon));
     if (restart_timer)
         restart_timer();
 
@@ -196,7 +196,7 @@ bool UpdateShadowDocument(
 }
 
 template <typename Field, typename T>
-bool UpdateShadowDouble(QJsonObject& cache, T* object, CString& field, const Field& value, Field* T::* member, std::function<void()> restart_timer = nullptr)
+bool UpdateShadowDouble(QJsonObject& update, T* object, CString& field, const Field& value, Field* T::* member, std::function<void()> restart_timer = nullptr)
 {
     assert(object);
 
@@ -212,7 +212,7 @@ bool UpdateShadowDouble(QJsonObject& cache, T* object, CString& field, const Fie
         return true;
     }
 
-    cache.insert(field, QString::number(value, 'f', kMaxNumericScale_4));
+    update.insert(field, QString::number(value, 'f', kMaxNumericScale_4));
     if (restart_timer)
         restart_timer();
 
@@ -220,7 +220,7 @@ bool UpdateShadowDouble(QJsonObject& cache, T* object, CString& field, const Fie
 }
 
 template <typename Field, typename T>
-bool UpdateShadowField(QJsonObject& cache, T* object, CString& field, const Field& value, Field* T::* member, std::function<void()> restart_timer = nullptr)
+bool UpdateShadowField(QJsonObject& update, T* object, CString& field, const Field& value, Field* T::* member, std::function<void()> restart_timer = nullptr)
 {
     assert(object);
 
@@ -241,7 +241,7 @@ bool UpdateShadowField(QJsonObject& cache, T* object, CString& field, const Fiel
         return true;
     }
 
-    cache.insert(field, value);
+    update.insert(field, value);
     if (restart_timer)
         restart_timer();
 

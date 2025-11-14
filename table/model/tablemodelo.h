@@ -78,7 +78,7 @@ public:
     bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
 
     const QList<Entry*>& GetEntryList() { return entry_list_; }
-    void FinalizeOrder(QJsonObject& order_cache);
+    void FinalizeOrder(QJsonObject& order_message);
     bool HasUnsavedData() const { return !pending_inserts_.isEmpty() || !pending_deleted_.isEmpty() || !pending_updates_.isEmpty(); }
     void SetNode(const NodeO* node) { d_node_ = node; }
 

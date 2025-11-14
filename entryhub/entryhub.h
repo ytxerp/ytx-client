@@ -65,10 +65,10 @@ public:
     void RemoveEntry(const QUuid& entry_id);
     void UpdateEntry(const QUuid& entry_id, const QJsonObject& data);
 
-    void InsertMeta(const QUuid& entry_id, const QJsonObject& data);
-    void UpdateMeta(const QUuid& entry_id, const QJsonObject& data);
+    void InsertMeta(const QUuid& entry_id, const QJsonObject& meta);
+    void UpdateMeta(const QUuid& entry_id, const QJsonObject& meta);
 
-    void UpdateEntryLinkedNode(const QUuid& entry_id, const QUuid& old_rhs_id, const QUuid& new_rhs_id, const QJsonObject& data);
+    void UpdateEntryLinkedNode(const QUuid& entry_id, const QUuid& old_rhs_id, const QUuid& new_rhs_id);
 
     // table
     void AckLeafTable(const QUuid& node_id, const QJsonArray& array);
@@ -76,7 +76,6 @@ public:
     void SearchEntry(const QJsonArray& array);
 
     void ActionEntry(const QUuid& node_id, EntryAction action);
-    void ActionEntryMeta(const QUuid& node_id, const QJsonObject& meta);
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
 
     bool ReadTransRef(EntryRefList& list, const QUuid& node_id, int unit, const QDateTime& start, const QDateTime& end) const;

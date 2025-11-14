@@ -76,18 +76,13 @@ void TreeModelO::AckTree(const QJsonObject& obj)
     endResetModel();
 }
 
-void TreeModelO::SyncNodeName(const QUuid& node_id, const QString& name, const QJsonObject& meta)
+void TreeModelO::SyncNodeName(const QUuid& node_id, const QString& name)
 {
-    Q_ASSERT_X(meta.contains(kUpdatedBy), "TreeModel::SyncName", "Missing 'updated_by' in data");
-    Q_ASSERT_X(meta.contains(kUpdatedTime), "TreeModel::SyncName", "Missing 'updated_time' in data");
-
     auto* node = GetNode(node_id);
     if (!node)
         return;
 
     node->name = name;
-    node->updated_by = QUuid(meta[kUpdatedBy].toString());
-    node->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
 
     emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
 

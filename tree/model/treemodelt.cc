@@ -271,13 +271,11 @@ void TreeModelT::AckTree(const QJsonObject& obj)
     endResetModel();
 }
 
-void TreeModelT::UpdateNodeStatus(const QUuid& node_id, int status, const QJsonObject& meta)
+void TreeModelT::UpdateNodeStatus(const QUuid& node_id, int status)
 {
     auto* node = GetNode(node_id);
     if (!node)
         return;
-
-    UpdateMeta(node, meta);
 
     auto* d_node { DerivedPtr<NodeT>(node) };
     d_node->status = status;

@@ -17,8 +17,9 @@ QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id)
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
-    message.insert(kNode, node_json); // Meta info will be appended in service
+    message.insert(kNode, node_json);
     message.insert(kPath, path_json);
+    message.insert(kMeta, QJsonObject());
 
     return message;
 }
@@ -116,7 +117,6 @@ QJsonObject EntryAction(Section section, CUuid& node_id, int action)
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kAction, action);
-    message.insert(kMeta, QJsonObject());
 
     return message;
 }
@@ -213,25 +213,25 @@ QJsonObject NodeStatus(Section section, CUuid& node_id, int status)
     return message;
 }
 
-QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& cache)
+QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
     message.insert(kSessionId, QString());
-    message.insert(kCache, cache);
+    message.insert(kCache, update);
     message.insert(kMeta, QJsonObject());
 
     return message;
 }
 
-QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& cache)
+QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& update)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kSessionId, QString());
-    message.insert(kCache, cache);
+    message.insert(kCache, update);
     message.insert(kMeta, QJsonObject());
 
     return message;
@@ -261,14 +261,16 @@ QJsonObject NodeSearch(Section section, CString& keyword)
 
 QJsonObject OrderRecalled(Section section, const NodeO* node)
 {
-    QJsonObject node_cache {};
-    node_cache.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
+    QJsonObject node_update {};
+    node_update.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
 
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
+    message.insert(kMeta, QJsonObject());
+
     message.insert(kNodeId, node->id.toString(QUuid::WithoutBraces));
-    message.insert(kNodeCache, node_cache);
+    message.insert(kNodeCache, node_update);
 
     if (node->unit == std::to_underlying(UnitO::kMonthly) && FloatChanged(-node->initial_total, 0.0)) {
         QJsonObject partner_delta {};
@@ -278,6 +280,55 @@ QJsonObject OrderRecalled(Section section, const NodeO* node)
 
         message.insert(kPartnerDelta, partner_delta);
     }
+
+    return message;
+}
+
+QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bool is_parallel)
+{
+    QJsonObject message {};
+
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kSessionId, QString());
+    message.insert(kCache, update);
+    message.insert(kIsParallel, is_parallel);
+    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
+    message.insert(kMeta, QJsonObject());
+
+    return message;
+}
+
+QJsonObject EntryRemove(Section section, CUuid& entry_id)
+{
+    QJsonObject message {};
+
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kSessionId, QString());
+    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
+    message.insert(kMeta, QJsonObject());
+
+    return message;
+}
+
+QJsonObject OrderMessage(Section section)
+{
+    QJsonObject message {};
+
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kSessionId, QString());
+    message.insert(kMeta, QJsonObject());
+
+    return message;
+}
+
+QJsonObject EntryLinkedNode(Section section, CUuid& entry_id)
+{
+    QJsonObject message {};
+
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kSessionId, QString());
+    message.insert(kMeta, QJsonObject());
+    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
 
     return message;
 }

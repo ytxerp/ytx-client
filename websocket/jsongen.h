@@ -39,7 +39,10 @@ QJsonObject LeafRemoveCheck(Section section, CUuid& node_id);
 QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref);
 
 QJsonObject EntryAction(Section section, CUuid& node_id, int action);
-QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& cache);
+QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update);
+QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bool is_parallel);
+QJsonObject EntryRemove(Section section, CUuid& entry_id);
+QJsonObject EntryLinkedNode(Section section, CUuid& entry_id);
 
 QJsonObject TreeAcked(Section section, const QDateTime& start, const QDateTime& end);
 QJsonObject LeafEntry(Section section, CUuid& node_id, CUuid& entry_id = {});
@@ -48,7 +51,7 @@ QJsonObject NodeAcked(Section section, CUuid& node_id);
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule);
 QJsonObject NodeStatus(Section section, CUuid& node_id, int status);
 QJsonObject NodeName(Section section, CUuid& node_id, CString& name);
-QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& cache);
+QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& update);
 QJsonObject DocumentDir(Section section, CString& document_dir);
 QJsonObject DefaultUnit(Section section, int unit);
 
@@ -57,6 +60,7 @@ QJsonObject EntrySearch(Section section, CString& keyword);
 QJsonObject NodeSearch(Section section, CString& keyword);
 
 QJsonObject OrderRecalled(Section section, const NodeO* node);
+QJsonObject OrderMessage(Section section);
 
 }
 

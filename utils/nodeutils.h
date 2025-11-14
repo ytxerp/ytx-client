@@ -182,7 +182,7 @@ template <typename Field, typename Node> const Field& Value(CNodeHash& hash, con
     return empty;
 }
 
-// Update a QString or int field of an object and cache the change in a QJsonObject.
+// Update a QString or int field of an object and update the change in a QJsonObject.
 // Returns true if the value was changed.
 template <typename Field, typename T>
 bool UpdateField(QJsonObject& update, T* object, CString& field, const Field& value, Field T::* member, std::function<void()> restart_timer = nullptr)

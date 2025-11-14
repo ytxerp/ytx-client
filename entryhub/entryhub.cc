@@ -67,18 +67,19 @@ void EntryHub::InsertEntry(const QJsonObject& data)
     emit SAppendOneEntry(entry->rhs_node, entry);
 }
 
-void EntryHub::InsertMeta(const QUuid& entry_id, const QJsonObject& data)
+void EntryHub::InsertMeta(const QUuid& entry_id, const QJsonObject& meta)
 {
+    Q_ASSERT_X(meta.contains(kUserId), "EntryHub::InsertMeta", "Missing 'user_id' in meta");
+    Q_ASSERT_X(meta.contains(kCreatedTime), "EntryHub::InsertMeta", "Missing 'created_time' in meta");
+    Q_ASSERT_X(meta.contains(kCreatedBy), "EntryHub::InsertMeta", "Missing 'created_by' in meta");
+
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
         auto* entry = it.value();
 
-        if (data.contains(kUserId))
-            entry->user_id = QUuid(data.value(kUserId).toString());
-        if (data.contains(kCreatedTime))
-            entry->created_time = QDateTime::fromString(data.value(kCreatedTime).toString(), Qt::ISODate);
-        if (data.contains(kCreatedBy))
-            entry->created_by = QUuid(data.value(kCreatedBy).toString());
+        entry->user_id = QUuid(meta.value(kUserId).toString());
+        entry->created_time = QDateTime::fromString(meta.value(kCreatedTime).toString(), Qt::ISODate);
+        entry->created_by = QUuid(meta.value(kCreatedBy).toString());
     };
 }
 
@@ -129,7 +130,7 @@ void EntryHub::UpdateMeta(const QUuid& entry_id, const QJsonObject& data)
     };
 }
 
-void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QUuid& old_rhs_id, const QUuid& new_rhs_id, const QJsonObject& data)
+void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QUuid& old_rhs_id, const QUuid& new_rhs_id)
 {
     Entry* entry {};
 
@@ -146,16 +147,12 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QUuid& old_rhs_id, c
             entry->lhs_node = new_rhs_id;
         }
 
-        entry->updated_time = QDateTime::fromString(data[kUpdatedTime].toString(), Qt::ISODate);
-        entry->updated_by = QUuid(data[kUpdatedBy].toString());
-
         const int rhs_node_column { EntryUtils::LinkedNodeColumn(section_) };
 
         emit SRemoveOneEntry(old_rhs_id, id);
         emit SRefreshField(lhs_node, id, rhs_node_column, rhs_node_column);
     } else {
         entry = EntryPool::Instance().Allocate(section_);
-        entry->ReadJson(data);
         entry_cache_.insert(entry->id, entry);
     }
 
@@ -360,16 +357,6 @@ void EntryHub::EntryActionImpl(Entry* entry, EntryAction action)
         break;
     default:
         break;
-    }
-}
-
-void EntryHub::ActionEntryMeta(const QUuid& node_id, const QJsonObject& meta)
-{
-    for (auto* entry : std::as_const(entry_cache_)) {
-        if (entry->lhs_node == node_id || entry->rhs_node == node_id) {
-            entry->updated_by = QUuid(meta.value(kUpdatedBy).toString());
-            entry->updated_time = QDateTime::fromString(meta.value(kUpdatedTime).toString(), Qt::ISODate);
-        }
     }
 }
 

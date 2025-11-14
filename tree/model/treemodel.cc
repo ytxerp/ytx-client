@@ -141,13 +141,13 @@ QSet<QUuid> TreeModel::SyncDeltaImpl(const QUuid& node_id, double initial_delta,
     return affected_ids;
 }
 
-void TreeModel::InsertMeta(const QUuid& node_id, const QJsonObject& data)
+void TreeModel::InsertMeta(const QUuid& node_id, const QJsonObject& meta)
 {
     auto* node = GetNode(node_id);
     if (!node)
         return;
 
-    InsertMeta(node, data);
+    InsertMeta(node, meta);
 }
 
 void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& data)
@@ -173,13 +173,13 @@ void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& data)
     }
 }
 
-void TreeModel::UpdateMeta(const QUuid& node_id, const QJsonObject& data)
+void TreeModel::UpdateMeta(const QUuid& node_id, const QJsonObject& meta)
 {
     auto* node = GetNode(node_id);
     if (!node)
         return;
 
-    UpdateMeta(node, data);
+    UpdateMeta(node, meta);
 }
 
 void TreeModel::UpdateMeta(Node* node, const QJsonObject& meta)
@@ -213,13 +213,12 @@ void TreeModel::UpdateDirectionRule(Node* node, bool value)
     DirectionRuleImpl(node, value);
 }
 
-void TreeModel::SyncDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta)
+void TreeModel::SyncDirectionRule(const QUuid& node_id, bool direction_rule)
 {
     auto* node = GetNode(node_id);
     if (!node)
         return;
 
-    UpdateMeta(node, meta);
     DirectionRuleImpl(node, direction_rule);
 }
 
@@ -264,18 +263,13 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     RRemoveNode(old_node_id);
 }
 
-void TreeModel::SyncNodeName(const QUuid& node_id, const QString& name, const QJsonObject& meta)
+void TreeModel::SyncNodeName(const QUuid& node_id, const QString& name)
 {
-    Q_ASSERT_X(meta.contains(kUpdatedBy), "TreeModel::SyncName", "Missing 'updated_by' in data");
-    Q_ASSERT_X(meta.contains(kUpdatedTime), "TreeModel::SyncName", "Missing 'updated_time' in data");
-
     auto* node = GetNode(node_id);
     if (!node)
         return;
 
     node->name = name;
-    node->updated_by = QUuid(meta[kUpdatedBy].toString());
-    node->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
 
     NodeUtils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
     NodeUtils::UpdateModel(leaf_path_, leaf_path_model_, node);
