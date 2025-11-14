@@ -289,11 +289,8 @@ void TreeModel::SyncNodeName(const QUuid& node_id, const QString& name, const QJ
     }
 }
 
-void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant, const QJsonObject& data)
+void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant)
 {
-    Q_ASSERT_X(data.contains(kUpdatedBy), "TreeModel::DragNode", "Missing 'updated_by' in data");
-    Q_ASSERT_X(data.contains(kUpdatedTime), "TreeModel::DragNode", "Missing 'updated_time' in data");
-
     auto* node = GetNode(descendant);
     if (!node)
         return;
@@ -310,10 +307,7 @@ void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant, const Q
     auto source_row { node->parent->children.indexOf(node) };
     auto source_parent { createIndex(source_row, 0, node).parent() };
 
-    if (moveRows(source_parent, source_row, 1, destination_parent, destination_row)) {
-        node->updated_time = QDateTime::fromString(data.value(kUpdatedTime).toString(), Qt::ISODate);
-        node->updated_by = QUuid(data.value(kUpdatedBy).toString());
-    }
+    moveRows(source_parent, source_row, 1, destination_parent, destination_row);
 }
 
 QModelIndex TreeModel::parent(const QModelIndex& index) const
@@ -423,7 +417,7 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
     auto source_parent { createIndex(source_row, 0, node).parent() };
 
     if (moveRows(source_parent, source_row, 1, parent, destination_row)) {
-        const auto message { JsonGen::DragNode(section_, node_id, destination_parent->id) };
+        const auto message { JsonGen::NodeDrag(section_, node_id, destination_parent->id) };
         WebSocket::Instance()->SendMessage(kNodeDrag, message);
     }
 

@@ -113,7 +113,7 @@ public:
     void UpdateMeta(const QUuid& node_id, const QJsonObject& data);
 
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
-    void DragNode(const QUuid& ancestor, const QUuid& descendant, const QJsonObject& data);
+    void DragNode(const QUuid& ancestor, const QUuid& descendant);
 
     void SyncDirectionRule(const QUuid& node_id, bool direction_rule, const QJsonObject& meta);
     void SyncDeltaArray(const QJsonArray& delta_array);

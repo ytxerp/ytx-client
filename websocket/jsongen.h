@@ -30,7 +30,7 @@ QJsonObject Login(CString& email, CString& password, CString& workspace);
 QJsonObject Register(CString& email, CString& password);
 
 QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id);
-QJsonObject DragNode(Section section, CUuid& node_id, CUuid& parent_id);
+QJsonObject NodeDrag(Section section, CUuid& node_id, CUuid& parent_id);
 
 QJsonObject LeafRemove(Section section, CUuid& node_id);
 QJsonObject BranchRemove(Section section, CUuid& node_id, CUuid& parent_id);

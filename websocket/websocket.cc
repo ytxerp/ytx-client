@@ -334,12 +334,11 @@ void WebSocket::DragNode(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     CString session_id { obj.value(kSessionId).toString() };
     const QJsonObject path { obj.value(kPath).toObject() };
-    const QJsonObject node { obj.value(kNode).toObject() };
 
     CString ancestor { path.value(kAncestor).toString() };
     CString descendant { path.value(kDescendant).toString() };
 
-    if (ancestor.isEmpty() || descendant.isEmpty() || node.isEmpty()) {
+    if (ancestor.isEmpty() || descendant.isEmpty()) {
         qWarning() << "Invalid drag node obj";
         return;
     }

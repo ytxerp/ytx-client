@@ -23,7 +23,7 @@ QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id)
     return message;
 }
 
-QJsonObject DragNode(Section section, CUuid& node_id, CUuid& parent_id)
+QJsonObject NodeDrag(Section section, CUuid& node_id, CUuid& parent_id)
 {
     QJsonObject path_json {};
     path_json.insert(kAncestor, parent_id.toString(QUuid::WithoutBraces));
@@ -33,7 +33,6 @@ QJsonObject DragNode(Section section, CUuid& node_id, CUuid& parent_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kPath, path_json);
-    message.insert(kMeta, QJsonObject());
 
     return message;
 }
@@ -220,7 +219,8 @@ QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& cache)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
     message.insert(kSessionId, QString());
-    message.insert(kCache, cache); // Meta info will be appended to cache in service
+    message.insert(kCache, cache);
+    message.insert(kMeta, QJsonObject());
 
     return message;
 }
@@ -231,7 +231,8 @@ QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& cache)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kSessionId, QString());
-    message.insert(kCache, cache); // Meta info will be appended to cache in service
+    message.insert(kCache, cache);
+    message.insert(kMeta, QJsonObject());
 
     return message;
 }

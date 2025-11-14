@@ -85,7 +85,8 @@ bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int r
         EntryUtils::UpdateShadowField(pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumF::kDescription:
-        EntryUtils::UpdateShadowField(pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
+        EntryUtils::UpdateShadowField(
+            pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumF::kDocument:
         EntryUtils::UpdateShadowDocument(
@@ -272,6 +273,7 @@ bool TableModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row
     message.insert(kCache, cache);
     message.insert(kIsParallel, is_parallel);
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
+    message.insert(kMeta, QJsonObject());
 
     // Delta calculation follows the DICD rule (Debit - Credit).
     // After the delta is computed, both the node and the server
@@ -423,6 +425,7 @@ bool TableModelF::UpdateRate(EntryShadow* entry_shadow, double value)
     message.insert(kCache, cache);
     message.insert(kIsParallel, is_parallel);
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
+    message.insert(kMeta, QJsonObject());
 
     const double lhs_initial_delta { 0.0 };
     const double lhs_final_delta { delta * (lhs_debit - lhs_credit) };
