@@ -51,10 +51,9 @@ TableWidgetO::~TableWidgetO()
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
-bool TableWidgetO::HasUnsavedData() const { return node_modified_ || table_model_order_->HasInserts(); }
+bool TableWidgetO::HasUnsavedData() const { return node_modified_ || table_model_order_->HasUnsavedData(); }
 
-void TableWidgetO::RSyncDeltaO(
-    const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta, bool is_persisted)
+void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
 {
     assert(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
 
@@ -69,22 +68,6 @@ void TableWidgetO::RSyncDeltaO(
     }
 
     const double adjusted_final_delta { tmp_node_.unit == std::to_underlying(UnitO::kImmediate) ? final_delta : 0.0 };
-
-    {
-        if (is_persisted) {
-            node_->count_total += count_delta;
-            node_->measure_total += measure_delta;
-            node_->initial_total += initial_delta;
-            node_->discount_total += discount_delta;
-
-            NodeUtils::UpdateOrderFinalTotal(node_);
-        } else {
-            count_delta_ += count_delta;
-            measure_delta_ += measure_delta;
-            initial_delta_ += initial_delta;
-            discount_delta_ += discount_delta;
-        }
-    }
 
     {
         tmp_node_.count_total += count_delta;
@@ -371,22 +354,11 @@ QJsonObject TableWidgetO::BuildOrderCache()
     QJsonObject order_cache {};
     order_cache.insert(kSection, std::to_underlying(section_));
     order_cache.insert(kSessionId, QString());
+    order_cache.insert(kMeta, QJsonObject());
 
-    table_model_order_->FinalizeInserts(order_cache);
+    table_model_order_->FinalizeOrder(order_cache);
 
     return order_cache;
-}
-
-void TableWidgetO::BuildPartnerDelta(QJsonObject& order_cache)
-{
-    if (node_->unit == std::to_underlying(UnitO::kMonthly) && HasPartnerDelta()) {
-        QJsonObject partner_delta {};
-
-        partner_delta.insert(kInitialDelta, QString::number(node_->initial_total, 'f', kMaxNumericScale_4));
-        partner_delta.insert(kId, node_->partner.toString(QUuid::WithoutBraces));
-
-        order_cache.insert(kPartnerDelta, partner_delta);
-    }
 }
 
 void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
@@ -403,49 +375,12 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_cache)
 
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_cache)
 {
-    if (HasOrderDelta()) {
-        QJsonObject node_delta {};
-
-        node_delta.insert(kInitialDelta, QString::number(initial_delta_, 'f', kMaxNumericScale_4));
-        node_delta.insert(kCountDelta, QString::number(count_delta_, 'f', kMaxNumericScale_4));
-        node_delta.insert(kMeasureDelta, QString::number(measure_delta_, 'f', kMaxNumericScale_4));
-        node_delta.insert(kDiscountDelta, QString::number(discount_delta_, 'f', kMaxNumericScale_4));
-        node_delta.insert(kId, node_id_.toString(QUuid::WithoutBraces));
-
-        order_cache.insert(kNodeDelta, node_delta);
-    }
-
     order_cache.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
     order_cache.insert(kNodeCache, pending_updates_);
+    order_cache.insert(kNodeTotal, QJsonObject());
 }
 
-bool TableWidgetO::HasOrderDelta() const
-{
-    return FloatChanged(initial_delta_, 0.0) || FloatChanged(count_delta_, 0.0) || FloatChanged(measure_delta_, 0.0) || FloatChanged(discount_delta_, 0.0);
-}
-
-bool TableWidgetO::HasPartnerDelta() const { return FloatChanged(initial_delta_, 0.0); }
-
-void TableWidgetO::SyncNode()
-{
-    node_->ReadJson(pending_updates_);
-
-    node_->count_total += count_delta_;
-    node_->measure_total += measure_delta_;
-    node_->initial_total += initial_delta_;
-    node_->discount_total += discount_delta_;
-
-    NodeUtils::UpdateOrderFinalTotal(node_);
-}
-
-void TableWidgetO::ResetCache()
-{
-    pending_updates_ = QJsonObject();
-    initial_delta_ = 0.0;
-    count_delta_ = 0.0;
-    measure_delta_ = 0.0;
-    discount_delta_ = 0.0;
-}
+void TableWidgetO::ResetCache() { pending_updates_ = QJsonObject(); }
 
 void TableWidgetO::on_pBtnRecall_clicked()
 {
@@ -500,8 +435,6 @@ void TableWidgetO::SaveOrder()
     QJsonObject order_cache { BuildOrderCache() };
 
     if (is_persisted_) {
-        SyncNode();
-
         BuildNodeUpdate(order_cache);
         WebSocket::Instance()->SendMessage(kOrderUpdateSaved, order_cache);
 
@@ -550,8 +483,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
     QJsonObject order_cache { BuildOrderCache() };
 
     if (is_persisted_) {
-        SyncNode();
-
         BuildNodeUpdate(order_cache);
         order_cache.insert(kPartnerId, tmp_node_.partner.toString(QUuid::WithoutBraces));
 

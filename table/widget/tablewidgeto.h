@@ -72,8 +72,7 @@ signals:
 
 public slots:
     // receive from TableModelOrder
-    void RSyncDeltaO(
-        const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta, bool is_persisted);
+    void RSyncDeltaO(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
 
 public:
     TableModel* Model() const override { return table_model_order_; }
@@ -115,14 +114,9 @@ private:
 
     QJsonObject BuildOrderCache();
 
-    void BuildPartnerDelta(QJsonObject& order_cache);
     void BuildNodeInsert(QJsonObject& order_cache);
     void BuildNodeUpdate(QJsonObject& order_cache);
 
-    bool HasOrderDelta() const;
-    bool HasPartnerDelta() const;
-
-    void SyncNode();
     void ResetCache();
 
 private:
@@ -138,11 +132,6 @@ private:
 
     bool is_persisted_ {};
     bool node_modified_ {};
-
-    double initial_delta_ {};
-    double count_delta_ {};
-    double measure_delta_ {};
-    double discount_delta_ {};
 
     QJsonObject pending_updates_ {};
     QTimer* pending_timer_ {};

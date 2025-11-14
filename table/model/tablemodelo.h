@@ -62,8 +62,7 @@ public:
 
 signals:
     // send to TableWidgetO
-    void SSyncDeltaO(
-        const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta, bool is_persisted);
+    void SSyncDeltaO(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
 
 public slots:
     void RAppendMultiEntry(const EntryList& entry_list) override;
@@ -79,8 +78,8 @@ public:
     bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
 
     const QList<Entry*>& GetEntryList() { return entry_list_; }
-    void FinalizeInserts(QJsonObject& order_cache);
-    bool HasInserts() const { return !pending_inserts_.isEmpty(); }
+    void FinalizeOrder(QJsonObject& order_cache);
+    bool HasUnsavedData() const { return !pending_inserts_.isEmpty() || !pending_deleted_.isEmpty() || !pending_updates_.isEmpty(); }
     void SetNode(const NodeO* node) { d_node_ = node; }
 
 private:
@@ -95,6 +94,7 @@ private:
     void RecalculateAmount(EntryO* entry) const;
 
     void PurifyEntry();
+    void NormalizeEntryBuffer();
 
     // bool UpdateExternalSku(EntryO* entry, const QUuid& value);
     // void ResolveFromExternal(EntryO* entry, const QUuid& external_sku) const;
@@ -106,6 +106,7 @@ private:
 
     QList<Entry*> entry_list_ {};
 
+    QSet<QUuid> pending_deleted_ {};
     QHash<QUuid, Entry*> pending_inserts_ {};
     QHash<QUuid, Entry*> pending_updates_ {};
 };

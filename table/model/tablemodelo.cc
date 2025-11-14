@@ -4,7 +4,6 @@
 
 #include "global/entrypool.h"
 #include "websocket/jsongen.h"
-#include "websocket/websocket.h"
 
 TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
     : TableModel { arg, parent }
@@ -27,23 +26,60 @@ void TableModelO::RAppendMultiEntry(const EntryList& entry_list)
     sort(std::to_underlying(EntryEnumO::kRhsNode), Qt::AscendingOrder);
 }
 
-void TableModelO::FinalizeInserts(QJsonObject& order_cache)
+void TableModelO::FinalizeOrder(QJsonObject& order_cache)
 {
-    PurifyEntry();
+    {
+        // - Remove entries from entry_list_ that have no linked rhs_node (i.e., internal SKU not selected).
+        // - Mark them as deleted in deleted_entries_ and recycle the entry.
+        PurifyEntry();
 
-    if (pending_inserts_.isEmpty())
-        return;
-
-    // inserted
-    QJsonArray inserted_entry_array {};
-    for (auto it = pending_inserts_.cbegin(); it != pending_inserts_.cend(); ++it) {
-        const QJsonObject obj { it.value()->WriteJson() };
-        inserted_entry_array.append(obj);
+        // Normalize diff buffers (inserted / deleted)
+        // to ensure no conflict states remain before packaging.
+        // e.g. inserted+deleted ⇒ remove both
+        // NOTE: update caches are implicitly consistent: newly inserted never have update cache.
+        NormalizeEntryBuffer();
     }
-    order_cache.insert(kInsertedEntryArray, inserted_entry_array);
+
+    // deleted
+    {
+        if (!pending_deleted_.isEmpty()) {
+            QJsonArray deleted_entry_array {};
+            for (const auto& id : std::as_const(pending_deleted_)) {
+                deleted_entry_array.append(id.toString(QUuid::WithoutBraces));
+            }
+            order_cache.insert(kDeletedEntryArray, deleted_entry_array);
+        }
+    }
+
+    // insert
+    {
+        if (!pending_inserts_.isEmpty()) {
+            QJsonArray inserted_entry_array {};
+            for (auto it = pending_inserts_.cbegin(); it != pending_inserts_.cend(); ++it) {
+                const QJsonObject obj { it.value()->WriteJson() };
+                inserted_entry_array.append(obj);
+            }
+            order_cache.insert(kInsertedEntryArray, inserted_entry_array);
+        }
+    }
+
+    // update
+    {
+        if (!pending_updates_.isEmpty()) {
+            QJsonArray updated_entry_array {};
+            for (auto it = pending_updates_.begin(); it != pending_updates_.end(); ++it) {
+                updated_entry_array.append(it.value()->WriteJson());
+            }
+            order_cache.insert(kUpdatedEntryArray, updated_entry_array);
+        }
+    }
 
     // clear
-    pending_inserts_.clear();
+    {
+        pending_inserts_.clear();
+        pending_deleted_.clear();
+        pending_updates_.clear();
+    }
 }
 
 QVariant TableModelO::data(const QModelIndex& index, int role) const
@@ -137,7 +173,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     emit SResizeColumnToContents(index.column());
 
     if (count_changed)
-        emit SSyncDeltaO(d_entry->lhs_node, 0.0, 0.0, d_entry->count - old_count, 0.0, 0.0, is_persisted);
+        emit SSyncDeltaO(d_entry->lhs_node, 0.0, 0.0, d_entry->count - old_count, 0.0, 0.0);
 
     if (measure_changed) {
         const double measure_delta { d_entry->measure - old_measure };
@@ -146,7 +182,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(measure_delta, 0.0) || FloatChanged(initial_delta, 0.0) || FloatChanged(discount_delta, 0.0) || FloatChanged(final_delta, 0.0)) {
-            emit SSyncDeltaO(d_entry->lhs_node, initial_delta, final_delta, 0.0, measure_delta, discount_delta, is_persisted);
+            emit SSyncDeltaO(d_entry->lhs_node, initial_delta, final_delta, 0.0, measure_delta, discount_delta);
         }
     }
 
@@ -155,7 +191,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(initial_delta, 0.0) || FloatChanged(final_delta, 0.0))
-            emit SSyncDeltaO(d_entry->lhs_node, initial_delta, final_delta, 0.0, 0.0, 0.0, is_persisted);
+            emit SSyncDeltaO(d_entry->lhs_node, initial_delta, final_delta, 0.0, 0.0, 0.0);
     }
 
     if (unit_discount_changed) {
@@ -163,7 +199,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double final_delta { d_entry->final - old_final };
 
         if (FloatChanged(discount_delta, 0.0) || FloatChanged(final_delta, 0.0))
-            emit SSyncDeltaO(d_entry->lhs_node, 0.0, final_delta, 0.0, 0.0, discount_delta, is_persisted);
+            emit SSyncDeltaO(d_entry->lhs_node, 0.0, final_delta, 0.0, 0.0, discount_delta);
     }
 
     return true;
@@ -273,22 +309,6 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     const auto lhs_node { d_entry->lhs_node };
     const auto rhs_node { d_entry->rhs_node };
     const auto entry_id { d_entry->id };
-    const bool is_persisted { !pending_inserts_.contains(entry_id) };
-
-    if (is_persisted) {
-        if (auto it = pending_timers_.find(entry_id); it != pending_timers_.end()) {
-            it.value()->stop();
-            it.value()->deleteLater();
-            pending_timers_.erase(it);
-        }
-
-        pending_updates_.remove(entry_id);
-
-        QJsonObject message {};
-        WebSocket::Instance()->SendMessage(kOrderEntryRemove, message);
-    } else {
-        pending_inserts_.remove(entry_id);
-    }
 
     beginRemoveRows(parent, row, row);
     entry_list_.removeAt(row);
@@ -303,9 +323,11 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
         if (FloatChanged(count_delta, 0.0) || FloatChanged(measure_delta, 0.0) || FloatChanged(discount_delta, 0.0) || FloatChanged(initial_delta, 0.0)
             || FloatChanged(final_delta, 0.0)) {
-            emit SSyncDeltaO(lhs_node, initial_delta, final_delta, count_delta, measure_delta, discount_delta, is_persisted);
+            emit SSyncDeltaO(lhs_node, initial_delta, final_delta, count_delta, measure_delta, discount_delta);
         }
     }
+
+    pending_inserts_.remove(entry_id);
 
     emit SRemoveEntry(entry_id);
     return true;
@@ -560,4 +582,22 @@ void TableModelO::PurifyEntry()
         EntryPool::Instance().Recycle(entry_list_.takeAt(i), section_);
         endRemoveRows();
     }
+}
+
+void TableModelO::NormalizeEntryBuffer()
+{
+    // Entries that were inserted and then deleted.
+    // → These should be removed from both inserted_entries_ and deleted_entries_.
+    QSet<QUuid> to_remove_from_deleted {};
+
+    for (const QUuid& id : std::as_const(pending_deleted_)) {
+        auto it = pending_inserts_.find(id);
+        if (it != pending_inserts_.end()) {
+            pending_inserts_.erase(it);
+            to_remove_from_deleted.insert(id);
+        }
+    }
+
+    // Efficiently remove all matching ids from the deleted set.
+    pending_deleted_.subtract(to_remove_from_deleted);
 }
