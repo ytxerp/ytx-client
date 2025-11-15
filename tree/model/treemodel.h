@@ -109,7 +109,7 @@ public:
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
     void InsertMeta(const QUuid& node_id, const QJsonObject& meta);
 
-    void SyncNode(const QUuid& node_id, const QJsonObject& data);
+    void SyncNode(const QUuid& node_id, const QJsonObject& update);
     void UpdateMeta(const QUuid& node_id, const QJsonObject& meta);
 
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);

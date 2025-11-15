@@ -7,13 +7,13 @@ EntryHubT::EntryHubT(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubT::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, bool /*is_parallel*/)
+void EntryHubT::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool /*is_parallel*/)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
         auto* d_entry = static_cast<EntryI*>(it.value());
 
-        d_entry->unit_cost = data[kUnitCost].toString().toDouble();
+        d_entry->unit_cost = update[kUnitCost].toString().toDouble();
 
         const int unit_cost { std::to_underlying(EntryEnumT::kUnitCost) };
 
@@ -22,7 +22,7 @@ void EntryHubT::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, 
     }
 }
 
-void EntryHubT::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
+void EntryHubT::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update, bool is_parallel)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
@@ -31,17 +31,17 @@ void EntryHubT::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& dat
         QUuid lhs_id {};
 
         if (is_parallel) {
-            d_entry->lhs_debit = data[kLhsDebit].toString().toDouble();
-            d_entry->lhs_credit = data[kLhsCredit].toString().toDouble();
-            d_entry->rhs_debit = data[kRhsDebit].toString().toDouble();
-            d_entry->rhs_credit = data[kRhsCredit].toString().toDouble();
+            d_entry->lhs_debit = update[kLhsDebit].toString().toDouble();
+            d_entry->lhs_credit = update[kLhsCredit].toString().toDouble();
+            d_entry->rhs_debit = update[kRhsDebit].toString().toDouble();
+            d_entry->rhs_credit = update[kRhsCredit].toString().toDouble();
             rhs_id = d_entry->rhs_node;
             lhs_id = d_entry->lhs_node;
         } else {
-            d_entry->lhs_debit = data[kRhsDebit].toString().toDouble();
-            d_entry->lhs_credit = data[kRhsCredit].toString().toDouble();
-            d_entry->rhs_debit = data[kLhsDebit].toString().toDouble();
-            d_entry->rhs_credit = data[kLhsCredit].toString().toDouble();
+            d_entry->lhs_debit = update[kRhsDebit].toString().toDouble();
+            d_entry->lhs_credit = update[kRhsCredit].toString().toDouble();
+            d_entry->rhs_debit = update[kLhsDebit].toString().toDouble();
+            d_entry->rhs_credit = update[kLhsCredit].toString().toDouble();
             rhs_id = d_entry->lhs_node;
             lhs_id = d_entry->rhs_node;
         }

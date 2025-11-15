@@ -7,7 +7,7 @@ EntryHubF::EntryHubF(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
+void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool is_parallel)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
@@ -16,15 +16,15 @@ void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, 
         QUuid lhs_id {};
 
         if (is_parallel) {
-            d_entry->lhs_rate = data[kLhsRate].toString().toDouble();
-            d_entry->rhs_debit = data[kRhsDebit].toString().toDouble();
-            d_entry->rhs_credit = data[kRhsCredit].toString().toDouble();
+            d_entry->lhs_rate = update[kLhsRate].toString().toDouble();
+            d_entry->rhs_debit = update[kRhsDebit].toString().toDouble();
+            d_entry->rhs_credit = update[kRhsCredit].toString().toDouble();
             rhs_id = d_entry->rhs_node;
             lhs_id = d_entry->lhs_node;
         } else {
-            d_entry->rhs_rate = data[kRhsRate].toString().toDouble();
-            d_entry->lhs_debit = data[kLhsDebit].toString().toDouble();
-            d_entry->lhs_credit = data[kLhsCredit].toString().toDouble();
+            d_entry->rhs_rate = update[kRhsRate].toString().toDouble();
+            d_entry->lhs_debit = update[kLhsDebit].toString().toDouble();
+            d_entry->lhs_credit = update[kLhsCredit].toString().toDouble();
             rhs_id = d_entry->lhs_node;
             lhs_id = d_entry->rhs_node;
         }
@@ -36,7 +36,7 @@ void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, 
     }
 }
 
-void EntryHubF::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
+void EntryHubF::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update, bool is_parallel)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
@@ -45,17 +45,17 @@ void EntryHubF::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& dat
         QUuid lhs_id {};
 
         if (is_parallel) {
-            d_entry->lhs_debit = data[kLhsDebit].toString().toDouble();
-            d_entry->lhs_credit = data[kLhsCredit].toString().toDouble();
-            d_entry->rhs_debit = data[kRhsDebit].toString().toDouble();
-            d_entry->rhs_credit = data[kRhsCredit].toString().toDouble();
+            d_entry->lhs_debit = update[kLhsDebit].toString().toDouble();
+            d_entry->lhs_credit = update[kLhsCredit].toString().toDouble();
+            d_entry->rhs_debit = update[kRhsDebit].toString().toDouble();
+            d_entry->rhs_credit = update[kRhsCredit].toString().toDouble();
             rhs_id = d_entry->rhs_node;
             lhs_id = d_entry->lhs_node;
         } else {
-            d_entry->lhs_debit = data[kRhsDebit].toString().toDouble();
-            d_entry->lhs_credit = data[kRhsCredit].toString().toDouble();
-            d_entry->rhs_debit = data[kLhsDebit].toString().toDouble();
-            d_entry->rhs_credit = data[kLhsCredit].toString().toDouble();
+            d_entry->lhs_debit = update[kRhsDebit].toString().toDouble();
+            d_entry->lhs_credit = update[kRhsCredit].toString().toDouble();
+            d_entry->rhs_debit = update[kLhsDebit].toString().toDouble();
+            d_entry->rhs_credit = update[kLhsCredit].toString().toDouble();
             rhs_id = d_entry->lhs_node;
             lhs_id = d_entry->rhs_node;
         }

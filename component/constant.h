@@ -193,7 +193,6 @@ inline const QString kOrderInsertReleased = QStringLiteral("order_insert_release
 inline const QString kOrderUpdateReleased = QStringLiteral("order_update_released");
 inline const QString kOrderRecalled = QStringLiteral("order_recalled");
 
-inline const QString kNodeCache = QStringLiteral("node_cache");
 inline const QString kNodeTotal = QStringLiteral("node_total");
 inline const QString kNodeDelta = QStringLiteral("node_delta");
 inline const QString kDeletedEntryArray = QStringLiteral("deleted_entry_array");
@@ -278,7 +277,7 @@ inline const QString kLhsDelta = QStringLiteral("lhs_delta");
 inline const QString kRhsDelta = QStringLiteral("rhs_delta");
 inline const QString kExpireTime = QStringLiteral("expire_time");
 inline const QString kSettlement = QStringLiteral("settlement");
-inline const QString kCache = QStringLiteral("cache");
+inline const QString kUpdate = QStringLiteral("update");
 inline const QString kResult = QStringLiteral("result");
 
 inline const QString kLhsRate = QStringLiteral("lhs_rate");

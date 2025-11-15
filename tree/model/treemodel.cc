@@ -150,9 +150,9 @@ void TreeModel::InsertMeta(const QUuid& node_id, const QJsonObject& meta)
     InsertMeta(node, meta);
 }
 
-void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& data)
+void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
 {
-    if (data.isEmpty()) {
+    if (update.isEmpty()) {
         qInfo().noquote() << "SyncNode ignored: empty data for node" << node_id.toString(QUuid::WithoutBraces);
         return;
     }
@@ -163,7 +163,7 @@ void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& data)
         return;
     }
 
-    node->ReadJson(data);
+    node->ReadJson(update);
 
     auto index { GetIndex(node_id) };
     if (index.isValid()) {

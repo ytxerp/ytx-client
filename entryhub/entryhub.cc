@@ -96,13 +96,13 @@ void EntryHub::RemoveEntry(const QUuid& entry_id)
     }
 }
 
-void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& data)
+void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update)
 {
     auto it = entry_cache_.constFind(id);
     if (it != entry_cache_.constEnd()) {
         auto* entry = it.value();
 
-        entry->ReadJson(data);
+        entry->ReadJson(update);
 
         const int issued_time { std::to_underlying(EntryEnum::kIssuedTime) };
 

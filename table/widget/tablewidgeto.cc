@@ -364,7 +364,7 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_message)
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
 {
     order_message.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
-    order_message.insert(kNodeCache, pending_update_);
+    order_message.insert(kNodeUpdate, pending_update_);
     order_message.insert(kNodeTotal, QJsonObject());
 }
 

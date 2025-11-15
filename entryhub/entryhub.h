@@ -63,7 +63,7 @@ public:
     // tree
     void InsertEntry(const QJsonObject& data);
     void RemoveEntry(const QUuid& entry_id);
-    void UpdateEntry(const QUuid& entry_id, const QJsonObject& data);
+    void UpdateEntry(const QUuid& entry_id, const QJsonObject& update);
 
     void InsertMeta(const QUuid& entry_id, const QJsonObject& meta);
     void UpdateMeta(const QUuid& entry_id, const QJsonObject& meta);
@@ -80,17 +80,17 @@ public:
 
     bool ReadTransRef(EntryRefList& list, const QUuid& node_id, int unit, const QDateTime& start, const QDateTime& end) const;
 
-    virtual void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
+    virtual void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool is_parallel)
     {
         Q_UNUSED(entry_id);
-        Q_UNUSED(data);
+        Q_UNUSED(update);
         Q_UNUSED(is_parallel);
     }
 
-    virtual void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& data, bool is_parallel)
+    virtual void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update, bool is_parallel)
     {
         Q_UNUSED(entry_id);
-        Q_UNUSED(data);
+        Q_UNUSED(update);
         Q_UNUSED(is_parallel);
     }
 
