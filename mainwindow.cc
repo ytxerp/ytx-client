@@ -636,15 +636,11 @@ void MainWindow::TableConnectT(QTableView* table_view, TableModel* table_model) 
 void MainWindow::TableConnectO(QTableView* table_view, TableModelO* table_model_o, TableWidgetO* widget) const
 {
     auto* tree_model_o { static_cast<TreeModelO*>(sc_->tree_model.data()) };
-    auto* entry_hub_o { static_cast<EntryHubO*>(sc_->entry_hub.data()) };
 
     connect(table_model_o, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
     connect(table_model_o, &TableModelO::SSyncDeltaO, widget, &TableWidgetO::RSyncDeltaO);
 
     connect(widget, &TableWidgetO::SSyncPartner, this, &MainWindow::RSyncPartner);
-
-    connect(table_model_o, &TableModel::SInsertEntry, entry_hub_o, &EntryHub::RInsertEntry);
-    connect(table_model_o, &TableModel::SRemoveEntry, entry_hub_o, &EntryHub::RRemoveEntry);
 
     connect(widget, &TableWidgetO::SNodeStatus, tree_model_o, &TreeModelO::RNodeStatus);
 }

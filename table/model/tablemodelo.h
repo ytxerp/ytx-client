@@ -58,7 +58,7 @@ class TableModelO final : public TableModel {
 
 public:
     TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
-    ~TableModelO() override = default;
+    ~TableModelO() override;
 
 signals:
     // send to TableWidgetO

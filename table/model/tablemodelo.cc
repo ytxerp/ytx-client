@@ -12,6 +12,8 @@ TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, E
 {
 }
 
+TableModelO::~TableModelO() { EntryPool::Instance().Recycle(entry_list_, section_); }
+
 void TableModelO::RAppendMultiEntry(const EntryList& entry_list)
 {
     if (entry_list.isEmpty())
@@ -294,7 +296,6 @@ bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 
     pending_inserts_.insert(entry->id, entry);
 
-    emit SInsertEntry(entry);
     return true;
 }
 
@@ -327,9 +328,10 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
         }
     }
 
-    pending_inserts_.remove(entry_id);
+    pending_deleted_.insert(entry_id);
+    pending_updates_.remove(entry_id);
 
-    emit SRemoveEntry(entry_id);
+    EntryPool::Instance().Recycle(d_entry, section_);
     return true;
 }
 
@@ -584,10 +586,10 @@ void TableModelO::PurifyEntry()
     }
 }
 
+// Entries that were inserted and then deleted.
+// → These should be removed from both inserted_entries_ and deleted_entries_.
 void TableModelO::NormalizeEntryBuffer()
 {
-    // Entries that were inserted and then deleted.
-    // → These should be removed from both inserted_entries_ and deleted_entries_.
     QSet<QUuid> to_remove_from_deleted {};
 
     for (const QUuid& id : std::as_const(pending_deleted_)) {

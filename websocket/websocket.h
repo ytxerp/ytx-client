@@ -70,7 +70,6 @@ signals:
     void SReplaceResult(bool result);
 
     void SConnectionRefused();
-    void SEntryArray(Section section, const QUuid& node_id, const QJsonObject& node_delta, const QJsonArray& arr);
 
     // send to SearchNodeModel
     void SNodeSearch(const QJsonObject& obj);
@@ -122,9 +121,8 @@ private:
     void UpdateNodeStatus(const QJsonObject& obj);
     void UpdateNodeName(const QJsonObject& obj);
 
-    void SaveOrderUpdate(const QJsonObject& obj);
-    void ReleaseOrderUpdate(const QJsonObject& obj);
-    void ReleaseOrderInsert(const QJsonObject& obj);
+    void UpdateOrder(const QJsonObject& obj, bool is_release);
+    void InsertOrder(const QJsonObject& obj, bool is_release);
     void RecallOrder(const QJsonObject& obj);
 
     void UpdateDocumentDir(const QJsonObject& obj);
