@@ -38,6 +38,11 @@ void InsertNodeI::IniDialog(ItemModel* unit_model, int amount_decimal)
     ui->dSpinBoxCommission->setRange(0.0, kMaxNumeric_12_4);
     ui->dSpinBoxUnitPrice->setDecimals(amount_decimal);
     ui->dSpinBoxCommission->setDecimals(amount_decimal);
+
+    ui->rBtnBranch->setShortcut(QKeySequence(Qt::ALT | Qt::Key_B));
+    ui->rBtnLeaf->setShortcut(QKeySequence(Qt::ALT | Qt::Key_L));
+    ui->rBtnDICD->setShortcut(QKeySequence(Qt::ALT | Qt::Key_D));
+    ui->rBtnDDCI->setShortcut(QKeySequence(Qt::ALT | Qt::Key_C));
 }
 
 void InsertNodeI::IniConnect()

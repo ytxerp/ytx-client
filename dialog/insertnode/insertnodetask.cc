@@ -38,6 +38,13 @@ void InsertNodeTask::IniDialog(ItemModel* unit_model)
     ui->comboUnit->setModel(unit_model);
     ui->issuedTime->setDisplayFormat(kDateFST);
     ui->issuedTime->setDateTime(node_->issued_time.toLocalTime());
+
+    ui->rBtnBranch->setShortcut(QKeySequence(Qt::ALT | Qt::Key_B));
+    ui->rBtnLeaf->setShortcut(QKeySequence(Qt::ALT | Qt::Key_L));
+    ui->rBtnDICD->setShortcut(QKeySequence(Qt::ALT | Qt::Key_D));
+    ui->rBtnDDCI->setShortcut(QKeySequence(Qt::ALT | Qt::Key_C));
+    ui->rBtnRecalled->setShortcut(QKeySequence(Qt::ALT | Qt::Key_E));
+    ui->rBtnReleased->setShortcut(QKeySequence(Qt::ALT | Qt::Key_R));
 }
 
 void InsertNodeTask::IniData(Node* node)

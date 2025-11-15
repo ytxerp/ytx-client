@@ -91,7 +91,7 @@
          <string>Branch</string>
         </property>
         <property name="text">
-         <string notr="true">B</string>
+         <string notr="true">&amp;B</string>
         </property>
        </widget>
       </item>
@@ -101,7 +101,7 @@
          <string>Leaf</string>
         </property>
         <property name="text">
-         <string notr="true">L</string>
+         <string notr="true">&amp;L</string>
         </property>
        </widget>
       </item>
@@ -161,7 +161,7 @@
          <string>Debit Increase, Credit Decrease</string>
         </property>
         <property name="text">
-         <string notr="true">DICD</string>
+         <string notr="true">&amp;DICD</string>
         </property>
        </widget>
       </item>
@@ -171,7 +171,7 @@
          <string>Debit Decrease, Credit Increase</string>
         </property>
         <property name="text">
-         <string notr="true">DDCI</string>
+         <string notr="true">DD&amp;CI</string>
         </property>
        </widget>
       </item>

@@ -32,6 +32,9 @@ void InsertNodeP::IniDialog(ItemModel* unit_model)
 
     ui->comboUnit->setModel(unit_model);
     ui->spinPaymentTerm->setRange(0, std::numeric_limits<int>::max());
+
+    ui->rBtnBranch->setShortcut(QKeySequence(Qt::ALT | Qt::Key_B));
+    ui->rBtnLeaf->setShortcut(QKeySequence(Qt::ALT | Qt::Key_L));
 }
 
 void InsertNodeP::IniConnect()

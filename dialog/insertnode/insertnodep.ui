@@ -123,7 +123,7 @@
          <string>Branch</string>
         </property>
         <property name="text">
-         <string notr="true">B</string>
+         <string notr="true">&amp;B</string>
         </property>
        </widget>
       </item>
@@ -133,7 +133,7 @@
          <string>Leaf</string>
         </property>
         <property name="text">
-         <string notr="true">L</string>
+         <string notr="true">&amp;L</string>
         </property>
        </widget>
       </item>

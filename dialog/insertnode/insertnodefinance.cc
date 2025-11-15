@@ -32,6 +32,11 @@ void InsertNodeFinance::IniDialog(ItemModel* unit_model)
     this->setFixedSize(300, 500);
 
     ui->comboUnit->setModel(unit_model);
+
+    ui->rBtnBranch->setShortcut(QKeySequence(Qt::ALT | Qt::Key_B));
+    ui->rBtnLeaf->setShortcut(QKeySequence(Qt::ALT | Qt::Key_L));
+    ui->rBtnDICD->setShortcut(QKeySequence(Qt::ALT | Qt::Key_D));
+    ui->rBtnDDCI->setShortcut(QKeySequence(Qt::ALT | Qt::Key_C));
 }
 
 void InsertNodeFinance::IniData(Node* node)
