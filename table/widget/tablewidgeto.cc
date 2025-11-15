@@ -51,7 +51,18 @@ TableWidgetO::~TableWidgetO()
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
-bool TableWidgetO::HasUnsavedData() const { return node_modified_ || table_model_order_->HasUnsavedData(); }
+bool TableWidgetO::HasUnsavedData() const
+{
+    if (node_modified_) {
+        qDebug() << "Node data has been modified";
+    }
+
+    if (table_model_order_->HasUnsavedData()) {
+        qDebug() << "Table model has unsaved data";
+    }
+
+    return node_modified_ || table_model_order_->HasUnsavedData();
+}
 
 void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
 {
