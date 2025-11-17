@@ -137,6 +137,7 @@ inline const QString kTheme = QStringLiteral("theme");
 // Client-initiated data requests
 inline const QString kTreeAcked = QStringLiteral("tree_acked");
 inline const QString kNodeAcked = QStringLiteral("node_acked");
+inline const QString kTableAcked = QStringLiteral("table_acked");
 inline const QString kLinkedEntry = QStringLiteral("linked_entry");
 
 // Server-initiated data push
@@ -160,7 +161,6 @@ inline const QString kLeafRemoveCheck = QStringLiteral("leaf_remove_check");
 inline const QString kLeafRemoveDenied = QStringLiteral("leaf_remove_denied");
 inline const QString kLeafRemove = QStringLiteral("leaf_remove");
 inline const QString kLeafReplace = QStringLiteral("leaf_replace");
-inline const QString kLeafEntry = QStringLiteral("leaf_entry");
 
 inline const QString kExternalSku = QStringLiteral("external_sku");
 
@@ -271,8 +271,6 @@ inline const QString kNodeId = QStringLiteral("node_id");
 inline const QString kParentId = QStringLiteral("parent_id");
 inline const QString kOldNodeId = QStringLiteral("old_node_id");
 inline const QString kNewNodeId = QStringLiteral("new_node_id");
-inline const QString kOldNodeDelta = QStringLiteral("old_node_delta");
-inline const QString kNewNodeDelta = QStringLiteral("new_node_delta");
 inline const QString kLhsDelta = QStringLiteral("lhs_delta");
 inline const QString kRhsDelta = QStringLiteral("rhs_delta");
 inline const QString kExpireTime = QStringLiteral("expire_time");
@@ -282,6 +280,8 @@ inline const QString kResult = QStringLiteral("result");
 
 inline const QString kLhsRate = QStringLiteral("lhs_rate");
 inline const QString kRhsRate = QStringLiteral("rhs_rate");
+inline const QString kLhsNumeric = QStringLiteral("lhs_numeric");
+inline const QString kRhsNumeric = QStringLiteral("rhs_numeric");
 inline const QString kLhsDebit = QStringLiteral("lhs_debit");
 inline const QString kLhsCredit = QStringLiteral("lhs_credit");
 inline const QString kRhsDebit = QStringLiteral("rhs_debit");

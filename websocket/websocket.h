@@ -95,7 +95,7 @@ private:
     void NotifyLoginResult(const QJsonObject& obj);
 
     void AckTree(const QJsonObject& obj);
-    void AckLeafEntry(const QJsonObject& obj);
+    void AckTable(const QJsonObject& obj);
     void AckNode(const QJsonObject& obj);
 
     void SearchEntry(const QJsonObject& obj);

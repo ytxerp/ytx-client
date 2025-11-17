@@ -255,7 +255,7 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
     {
         if (start_ != Section::kPartner) {
             const auto message { JsonGen::LeafEntry(sc_->info.section, node_id, entry_id) };
-            WebSocket::Instance()->SendMessage(kLeafEntry, message);
+            WebSocket::Instance()->SendMessage(kTableAcked, message);
         }
 
         if (start_ == Section::kSale || start_ == Section::kPurchase) {
@@ -2825,7 +2825,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
     }
 
     const auto message { JsonGen::LeafEntry(sc_->info.section, id, entry_id) };
-    WebSocket::Instance()->SendMessage(kLeafEntry, message);
+    WebSocket::Instance()->SendMessage(kTableAcked, message);
 
     switch (start_) {
     case Section::kSale:

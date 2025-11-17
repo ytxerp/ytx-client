@@ -178,36 +178,13 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
         // If false, it means the entry is collapsed (lhs and rhs flipped), so update the left-side node (kLhsNode).
         const auto field { is_parallel ? kRhsNode : kLhsNode };
 
-        const double rhs_rate { *d_shadow->rhs_rate };
-        const double rhs_debit { *d_shadow->rhs_debit };
-        const double rhs_credit { *d_shadow->rhs_credit };
+        QJsonObject update {};
+        update.insert(field, value.toString(QUuid::WithoutBraces));
 
-        const double rhs_initial_delta { rhs_debit - rhs_credit };
-        const double rhs_final_delta { rhs_rate * rhs_initial_delta };
-
-        const bool has_leaf_delta { std::abs(rhs_initial_delta) > kTolerance };
-
-        if (has_leaf_delta) {
-            QJsonObject new_node_delta { JsonGen::NodeDelta(value, rhs_initial_delta, rhs_final_delta) };
-            QJsonObject old_node_delta { JsonGen::NodeDelta(old_node, -rhs_initial_delta, -rhs_final_delta) };
-
-            message.insert(kOldNodeDelta, old_node_delta);
-            message.insert(kNewNodeDelta, new_node_delta);
-        }
-
-        message.insert(kOldNodeId, old_node_id);
-        message.insert(kNewNodeId, new_node_id);
-        message.insert(kField, field);
+        message.insert(kUpdate, update);
+        message.insert(kIsParallel, is_parallel);
 
         WebSocket::Instance()->SendMessage(kEntryLinkedNode, message);
-
-        if (has_leaf_delta) {
-            AccumulateBalance(row);
-
-            emit SResizeColumnToContents(std::to_underlying(EntryEnumF::kBalance));
-            emit SNodeDelta(value, rhs_initial_delta, rhs_final_delta);
-            emit SNodeDelta(old_node, -rhs_initial_delta, -rhs_final_delta);
-        }
 
         emit SRemoveOneEntry(old_node, entry_id);
         emit SAppendOneEntry(value, d_shadow->entry);
@@ -222,8 +199,6 @@ bool TableModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row
 
     const double lhs_old_debit { *d_shadow->lhs_debit };
     const double lhs_old_credit { *d_shadow->lhs_credit };
-    const double rhs_old_debit { *d_shadow->rhs_debit };
-    const double rhs_old_credit { *d_shadow->rhs_credit };
     const double lhs_rate { *d_shadow->lhs_rate };
     const double rhs_rate { *d_shadow->rhs_rate };
 
@@ -259,8 +234,6 @@ bool TableModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row
 
     update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*d_shadow->lhs_debit, 'f', kMaxNumericScale_4));
     update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*d_shadow->lhs_credit, 'f', kMaxNumericScale_4));
-    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_4));
-    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
 
@@ -269,20 +242,7 @@ bool TableModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row
     // will adjust the delta value according to the node's direction rule
     // (DICD → unchanged, DDCI → inverted).
     const double lhs_initial_delta { *d_shadow->lhs_debit - *d_shadow->lhs_credit - (lhs_old_debit - lhs_old_credit) };
-    const double lhs_final_delta { lhs_rate * lhs_initial_delta };
-
-    const double rhs_initial_delta { *d_shadow->rhs_debit - *d_shadow->rhs_credit - (rhs_old_debit - rhs_old_credit) };
-    const double rhs_final_delta { rhs_rate * rhs_initial_delta };
-
     const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
-
-    if (has_leaf_delta) {
-        QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
-        QJsonObject rhs_delta { JsonGen::NodeDelta(*d_shadow->rhs_node, rhs_initial_delta, rhs_final_delta) };
-
-        message.insert(kLhsDelta, lhs_delta);
-        message.insert(kRhsDelta, rhs_delta);
-    }
 
     WebSocket::Instance()->SendMessage(kEntryNumeric, message);
 
@@ -291,9 +251,6 @@ bool TableModelF::UpdateNumeric(EntryShadow* entry_shadow, double value, int row
 
         emit SResizeColumnToContents(std::to_underlying(EntryEnumF::kBalance));
         emit SUpdateBalance(rhs_id, *d_shadow->id);
-
-        emit SNodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
-        emit SNodeDelta(rhs_id, rhs_initial_delta, rhs_final_delta);
     }
 
     return true;
@@ -381,13 +338,9 @@ bool TableModelF::UpdateRate(EntryShadow* entry_shadow, double value)
     if (FloatEqual(old_rate, value) || value <= 0)
         return false;
 
-    const double delta { value - old_rate };
     const double proportion { value / old_rate };
 
     *d_shadow->lhs_rate = value;
-
-    const double lhs_debit { *d_shadow->lhs_debit };
-    const double lhs_credit { *d_shadow->lhs_credit };
 
     const double rhs_old_debit { *d_shadow->rhs_debit };
     const double rhs_old_credit { *d_shadow->rhs_credit };
@@ -399,39 +352,21 @@ bool TableModelF::UpdateRate(EntryShadow* entry_shadow, double value)
         return false;
 
     const QUuid entry_id { *d_shadow->id };
-    const QUuid rhs_id { *d_shadow->rhs_node };
 
     QJsonObject update {};
 
     const bool is_parallel { entry_shadow->is_parallel };
     update.insert(is_parallel ? kLhsRate : kRhsRate, QString::number(*d_shadow->lhs_rate, 'f', kMaxNumericScale_8));
-    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_4));
-    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
-
-    const double lhs_initial_delta { 0.0 };
-    const double lhs_final_delta { delta * (lhs_debit - lhs_credit) };
-
-    const double rhs_initial_delta { *d_shadow->rhs_debit - *d_shadow->rhs_credit - (rhs_old_debit - rhs_old_credit) };
-    const double rhs_final_delta { -lhs_final_delta };
-
-    const bool has_leaf_delta { std::abs(lhs_final_delta) > kTolerance };
-
-    if (has_leaf_delta) {
-        QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
-        QJsonObject rhs_delta { JsonGen::NodeDelta(rhs_id, rhs_initial_delta, rhs_final_delta) };
-
-        message.insert(kLhsDelta, lhs_delta);
-        message.insert(kRhsDelta, rhs_delta);
-    }
-
     WebSocket::Instance()->SendMessage(kEntryRate, message);
 
+    const double rhs_initial_delta { *d_shadow->rhs_debit - *d_shadow->rhs_credit - (rhs_old_debit - rhs_old_credit) };
+    const bool has_leaf_delta { std::abs(rhs_initial_delta) > kTolerance };
+
     if (has_leaf_delta) {
+        const QUuid rhs_id { *d_shadow->rhs_node };
         emit SUpdateBalance(rhs_id, *d_shadow->id);
-        emit SNodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
-        emit SNodeDelta(rhs_id, rhs_initial_delta, rhs_final_delta);
     }
 
     return true;

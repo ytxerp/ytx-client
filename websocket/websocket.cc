@@ -150,7 +150,7 @@ void WebSocket::InitHandler()
     handler_obj_[kLoginResult] = [this](const QJsonObject& obj) { NotifyLoginResult(obj); };
     handler_obj_[kRegisterResult] = [this](const QJsonObject& obj) { NotifyRegisterResult(obj); };
     handler_obj_[kTreeAcked] = [this](const QJsonObject& obj) { AckTree(obj); };
-    handler_obj_[kLeafEntry] = [this](const QJsonObject& obj) { AckLeafEntry(obj); };
+    handler_obj_[kTableAcked] = [this](const QJsonObject& obj) { AckTable(obj); };
     handler_obj_[kWorkspaceAccessPending] = [this](const QJsonObject& obj) { NotifyWorkspaceAccessPending(obj); };
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
@@ -371,7 +371,7 @@ void WebSocket::AckTree(const QJsonObject& obj)
     tree_model->AckTree(obj);
 }
 
-void WebSocket::AckLeafEntry(const QJsonObject& obj)
+void WebSocket::AckTable(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
@@ -512,24 +512,21 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
     QJsonObject old_rhs_delta {};
     QJsonObject new_rhs_delta {};
 
-    const bool has_delta { obj.contains(kNewNodeDelta) && obj.value(kNewNodeDelta).isObject() && obj.contains(kOldNodeDelta)
-        && obj.value(kOldNodeDelta).isObject() };
+    const bool has_delta { obj.contains(kRhsDelta) && obj.value(kRhsDelta).isObject() && obj.contains(kLhsDelta) && obj.value(kLhsDelta).isObject() };
 
     if (has_delta) {
-        new_rhs_delta = obj.value(kNewNodeDelta).toObject();
-        old_rhs_delta = obj.value(kOldNodeDelta).toObject();
+        new_rhs_delta = obj.value(kRhsDelta).toObject();
+        old_rhs_delta = obj.value(kLhsDelta).toObject();
 
         tree_model->UpdateMeta(QUuid(old_rhs_delta.value(kId).toString()), meta);
         tree_model->UpdateMeta(QUuid(old_rhs_delta.value(kId).toString()), meta);
+
+        const QJsonArray delta_array { old_rhs_delta, new_rhs_delta };
+        tree_model->SyncDeltaArray(delta_array);
     }
 
     if (session_id != session_id_) {
         entry_hub->UpdateEntryLinkedNode(entry_id, old_node_id, new_node_id);
-
-        if (has_delta) {
-            const QJsonArray delta_array { old_rhs_delta, new_rhs_delta };
-            tree_model->SyncDeltaArray(delta_array);
-        }
     }
 
     entry_hub->UpdateMeta(entry_id, meta);
@@ -561,15 +558,13 @@ void WebSocket::UpdateEntryRate(const QJsonObject& obj)
 
         tree_model->UpdateMeta(QUuid(lhs_delta.value(kId).toString()), meta);
         tree_model->UpdateMeta(QUuid(rhs_delta.value(kId).toString()), meta);
+
+        const QJsonArray delta_array { lhs_delta, rhs_delta };
+        tree_model->SyncDeltaArray(delta_array);
     }
 
     if (session_id != session_id_) {
         entry_hub->UpdateEntryRate(entry_id, update, is_parallel);
-
-        if (has_delta) {
-            const QJsonArray delta_array { lhs_delta, rhs_delta };
-            tree_model->SyncDeltaArray(delta_array);
-        }
     }
 
     entry_hub->UpdateMeta(entry_id, update);
@@ -601,15 +596,13 @@ void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
 
         tree_model->UpdateMeta(QUuid(lhs_delta.value(kId).toString()), meta);
         tree_model->UpdateMeta(QUuid(rhs_delta.value(kId).toString()), meta);
+
+        const QJsonArray delta_array { lhs_delta, rhs_delta };
+        tree_model->SyncDeltaArray(delta_array);
     }
 
     if (session_id != session_id_) {
         entry_hub->UpdateEntryNumeric(entry_id, update, is_parallel);
-
-        if (has_delta) {
-            const QJsonArray delta_array { lhs_delta, rhs_delta };
-            tree_model->SyncDeltaArray(delta_array);
-        }
     }
 
     entry_hub->UpdateMeta(entry_id, meta);
