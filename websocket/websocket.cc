@@ -693,15 +693,13 @@ void WebSocket::RemoveEntry(const QJsonObject& obj)
 
         tree_model->UpdateMeta(QUuid(lhs_delta.value(kId).toString()), meta);
         tree_model->UpdateMeta(QUuid(rhs_delta.value(kId).toString()), meta);
+
+        const QJsonArray delta_array { lhs_delta, rhs_delta };
+        tree_model->SyncDeltaArray(delta_array);
     }
 
     if (session_id != session_id_) {
         entry_hub->RemoveEntry(entry_id);
-
-        if (has_delta) {
-            const QJsonArray delta_array { lhs_delta, rhs_delta };
-            tree_model->SyncDeltaArray(delta_array);
-        }
     }
 }
 

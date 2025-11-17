@@ -495,29 +495,13 @@ bool TableModelI::removeRows(int row, int /*count*/, const QModelIndex& parent)
     const auto entry_id { *d_shadow->id };
 
     if (!rhs_node_id.isNull()) {
-        const double lhs_initial_delta { *d_shadow->lhs_credit - *d_shadow->lhs_debit };
-        const double lhs_final_delta { *d_shadow->unit_cost * lhs_initial_delta };
-
-        const double rhs_initial_delta { *d_shadow->rhs_credit - *d_shadow->rhs_debit };
-        const double rhs_final_delta { *d_shadow->unit_cost * rhs_initial_delta };
-
-        const bool has_delta { std::abs(lhs_initial_delta) > kTolerance };
-
         QJsonObject message { JsonGen::EntryRemove(section_, entry_id) };
-
-        if (has_delta) {
-            QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
-            QJsonObject rhs_delta { JsonGen::NodeDelta(rhs_node_id, rhs_initial_delta, rhs_final_delta) };
-
-            message.insert(kLhsDelta, lhs_delta);
-            message.insert(kRhsDelta, rhs_delta);
-        }
-
         WebSocket::Instance()->SendMessage(kEntryRemove, message);
 
+        const double lhs_initial_delta { *d_shadow->lhs_credit - *d_shadow->lhs_debit };
+        const bool has_delta { std::abs(lhs_initial_delta) > kTolerance };
+
         if (has_delta) {
-            emit SNodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
-            emit SNodeDelta(rhs_node_id, rhs_initial_delta, rhs_final_delta);
             AccumulateBalance(row);
         }
 
