@@ -71,8 +71,8 @@ public:
     void UpdateEntryLinkedNode(const QUuid& entry_id, const QUuid& old_rhs_id, const QUuid& new_rhs_id);
 
     // table
-    void AckLeafTable(const QUuid& node_id, const QJsonArray& array);
-    void EntryTable(const QJsonArray& array);
+    void AckTable(const QUuid& node_id, const QJsonArray& array);
+    void ApplyPartnerEntry(const QJsonArray& array);
     void SearchEntry(const QJsonArray& array);
 
     void ActionEntry(const QUuid& node_id, EntryAction action);

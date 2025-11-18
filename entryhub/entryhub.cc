@@ -270,7 +270,7 @@ bool EntryHub::ReadTransRef(EntryRefList& list, const QUuid& node_id, int unit, 
 //     return sql + kWhere + condition.join(kAnd);
 // }
 
-void EntryHub::AckLeafTable(const QUuid& node_id, const QJsonArray& array)
+void EntryHub::AckTable(const QUuid& node_id, const QJsonArray& array)
 {
     if (array.isEmpty())
         return;
@@ -279,7 +279,7 @@ void EntryHub::AckLeafTable(const QUuid& node_id, const QJsonArray& array)
     emit SAppendMultiEntry(node_id, entry_list);
 }
 
-void EntryHub::EntryTable(const QJsonArray& array)
+void EntryHub::ApplyPartnerEntry(const QJsonArray& array)
 {
     for (const auto& value : array) {
         if (!value.isObject())

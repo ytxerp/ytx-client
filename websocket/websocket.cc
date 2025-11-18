@@ -361,7 +361,7 @@ void WebSocket::ApplyTree(const QJsonObject& obj)
 void WebSocket::ApplyPartnerEntry(const QJsonArray& arr)
 {
     auto entry_hub { entry_hub_hash_.value(Section::kPartner) };
-    entry_hub->EntryTable(arr);
+    entry_hub->ApplyPartnerEntry(arr);
 }
 
 void WebSocket::AckTree(const QJsonObject& obj)
@@ -379,7 +379,7 @@ void WebSocket::AckTable(const QJsonObject& obj)
     const QJsonArray array { obj.value(kEntryArray).toArray() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
-    entry_hub->AckLeafTable(node_id, array);
+    entry_hub->AckTable(node_id, array);
 
     if (!entry_id.isNull())
         emit SSelectLeafEntry(node_id, entry_id);
