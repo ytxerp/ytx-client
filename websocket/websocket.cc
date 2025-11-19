@@ -548,19 +548,19 @@ void WebSocket::UpdateEntryRate(const QJsonObject& obj)
     assert(entry_hub);
     assert(tree_model);
 
-    QJsonObject lhs_delta {};
-    QJsonObject rhs_delta {};
+    QJsonObject lhs_total {};
+    QJsonObject rhs_total {};
 
-    const bool has_delta { obj.contains(kLhsDelta) && obj.value(kLhsDelta).isObject() && obj.contains(kRhsDelta) && obj.value(kRhsDelta).isObject() };
-    if (has_delta) {
-        lhs_delta = obj.value(kLhsDelta).toObject();
-        rhs_delta = obj.value(kRhsDelta).toObject();
+    const bool has_total { obj.contains(kLhsTotal) && obj.value(kLhsTotal).isObject() && obj.contains(kRhsTotal) && obj.value(kRhsTotal).isObject() };
+    if (has_total) {
+        lhs_total = obj.value(kLhsTotal).toObject();
+        rhs_total = obj.value(kRhsTotal).toObject();
 
-        tree_model->UpdateMeta(QUuid(lhs_delta.value(kId).toString()), meta);
-        tree_model->UpdateMeta(QUuid(rhs_delta.value(kId).toString()), meta);
+        tree_model->UpdateMeta(QUuid(lhs_total.value(kId).toString()), meta);
+        tree_model->UpdateMeta(QUuid(rhs_total.value(kId).toString()), meta);
 
-        const QJsonArray delta_array { lhs_delta, rhs_delta };
-        tree_model->SyncDeltaArray(delta_array);
+        const QJsonArray total_array { lhs_total, rhs_total };
+        tree_model->SyncTotalArray(total_array);
     }
 
     if (session_id != session_id_) {
@@ -586,19 +586,19 @@ void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
     assert(entry_hub);
     assert(tree_model);
 
-    QJsonObject lhs_delta {};
-    QJsonObject rhs_delta {};
+    QJsonObject lhs_total {};
+    QJsonObject rhs_total {};
 
-    const bool has_delta { obj.contains(kLhsDelta) && obj.value(kLhsDelta).isObject() && obj.contains(kRhsDelta) && obj.value(kRhsDelta).isObject() };
-    if (has_delta) {
-        lhs_delta = obj.value(kLhsDelta).toObject();
-        rhs_delta = obj.value(kRhsDelta).toObject();
+    const bool has_total { obj.contains(kLhsTotal) && obj.value(kLhsTotal).isObject() && obj.contains(kRhsTotal) && obj.value(kRhsTotal).isObject() };
+    if (has_total) {
+        lhs_total = obj.value(kLhsTotal).toObject();
+        rhs_total = obj.value(kRhsTotal).toObject();
 
-        tree_model->UpdateMeta(QUuid(lhs_delta.value(kId).toString()), meta);
-        tree_model->UpdateMeta(QUuid(rhs_delta.value(kId).toString()), meta);
+        tree_model->UpdateMeta(QUuid(lhs_total.value(kId).toString()), meta);
+        tree_model->UpdateMeta(QUuid(rhs_total.value(kId).toString()), meta);
 
-        const QJsonArray delta_array { lhs_delta, rhs_delta };
-        tree_model->SyncDeltaArray(delta_array);
+        const QJsonArray total_array { lhs_total, rhs_total };
+        tree_model->SyncTotalArray(total_array);
     }
 
     if (session_id != session_id_) {
@@ -639,25 +639,23 @@ void WebSocket::InsertEntry(const QJsonObject& obj)
     assert(entry_hub);
     assert(tree_model);
 
-    QJsonObject lhs_delta {};
-    QJsonObject rhs_delta {};
+    QJsonObject lhs_total {};
+    QJsonObject rhs_total {};
 
-    const bool has_delta { obj.contains(kLhsDelta) && obj.value(kLhsDelta).isObject() && obj.contains(kRhsDelta) && obj.value(kRhsDelta).isObject() };
-    if (has_delta) {
-        lhs_delta = obj.value(kLhsDelta).toObject();
-        rhs_delta = obj.value(kRhsDelta).toObject();
+    const bool has_total { obj.contains(kLhsTotal) && obj.value(kLhsTotal).isObject() && obj.contains(kRhsTotal) && obj.value(kRhsTotal).isObject() };
+    if (has_total) {
+        lhs_total = obj.value(kLhsTotal).toObject();
+        rhs_total = obj.value(kRhsTotal).toObject();
 
-        tree_model->UpdateMeta(QUuid(lhs_delta.value(kId).toString()), meta);
-        tree_model->UpdateMeta(QUuid(rhs_delta.value(kId).toString()), meta);
+        tree_model->UpdateMeta(QUuid(lhs_total.value(kId).toString()), meta);
+        tree_model->UpdateMeta(QUuid(rhs_total.value(kId).toString()), meta);
+
+        const QJsonArray total_array { lhs_total, rhs_total };
+        tree_model->SyncTotalArray(total_array);
     }
 
     if (session_id != session_id_) {
         entry_hub->InsertEntry(entry);
-
-        if (has_delta) {
-            const QJsonArray delta_array { lhs_delta, rhs_delta };
-            tree_model->SyncDeltaArray(delta_array);
-        }
     }
 
     entry_hub->InsertMeta(entry_id, meta);
@@ -676,19 +674,19 @@ void WebSocket::RemoveEntry(const QJsonObject& obj)
     assert(entry_hub);
     assert(tree_model);
 
-    QJsonObject lhs_delta {};
-    QJsonObject rhs_delta {};
+    QJsonObject lhs_total {};
+    QJsonObject rhs_total {};
 
-    const bool has_delta { obj.contains(kLhsDelta) && obj.value(kLhsDelta).isObject() && obj.contains(kRhsDelta) && obj.value(kRhsDelta).isObject() };
-    if (has_delta) {
-        lhs_delta = obj.value(kLhsDelta).toObject();
-        rhs_delta = obj.value(kRhsDelta).toObject();
+    const bool has_total { obj.contains(kLhsTotal) && obj.value(kLhsTotal).isObject() && obj.contains(kRhsTotal) && obj.value(kRhsTotal).isObject() };
+    if (has_total) {
+        lhs_total = obj.value(kLhsTotal).toObject();
+        rhs_total = obj.value(kRhsTotal).toObject();
 
-        tree_model->UpdateMeta(QUuid(lhs_delta.value(kId).toString()), meta);
-        tree_model->UpdateMeta(QUuid(rhs_delta.value(kId).toString()), meta);
+        tree_model->UpdateMeta(QUuid(lhs_total.value(kId).toString()), meta);
+        tree_model->UpdateMeta(QUuid(rhs_total.value(kId).toString()), meta);
 
-        const QJsonArray delta_array { lhs_delta, rhs_delta };
-        tree_model->SyncDeltaArray(delta_array);
+        const QJsonArray total_array { lhs_total, rhs_total };
+        tree_model->SyncTotalArray(total_array);
     }
 
     if (session_id != session_id_) {

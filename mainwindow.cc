@@ -589,8 +589,6 @@ void MainWindow::TableConnectF(QTableView* table_view, TableModel* table_model) 
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
-    connect(table_model, &TableModel::SNodeDelta, tree_model, &TreeModel::RNodeDelta);
-
     connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
     connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
 
@@ -606,8 +604,6 @@ void MainWindow::TableConnectI(QTableView* table_view, TableModel* table_model) 
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
-    connect(table_model, &TableModel::SNodeDelta, tree_model, &TreeModel::RNodeDelta);
-
     connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
     connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
 
@@ -622,8 +618,6 @@ void MainWindow::TableConnectT(QTableView* table_view, TableModel* table_model) 
     auto entry_hub { sc_t_.entry_hub };
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
-
-    connect(table_model, &TableModel::SNodeDelta, tree_model, &TreeModel::RNodeDelta);
 
     connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
     connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);

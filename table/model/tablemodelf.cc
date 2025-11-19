@@ -160,10 +160,7 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
 
         if (has_leaf_delta) {
             AccumulateBalance(row);
-
             emit SResizeColumnToContents(std::to_underlying(EntryEnumF::kBalance));
-            emit SNodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
-            emit SNodeDelta(value, rhs_initial_delta, rhs_final_delta);
         }
 
         emit SAppendOneEntry(value, d_shadow->entry);

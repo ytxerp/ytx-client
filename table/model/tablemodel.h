@@ -40,9 +40,6 @@ protected:
     TableModel(CTableModelArg& arg, QObject* parent = nullptr);
 
 signals:
-    // send to TreeModel
-    void SNodeDelta(const QUuid& node_id, double initial_delta, double final_delta);
-
     // send to LeafSStation
     void SAppendOneEntry(const QUuid& node_id, Entry* entry);
     void SRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);

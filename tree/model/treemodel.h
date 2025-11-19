@@ -61,9 +61,6 @@ public slots:
     // receive from RemoveDialog
     void RRemoveNode(const QUuid& node_id);
 
-    // receive from TableModel
-    void RNodeDelta(const QUuid& node_id, double initial_delta, double final_delta);
-
 public:
     // Qt's
     // Default implementations
@@ -117,6 +114,7 @@ public:
 
     void SyncDirectionRule(const QUuid& node_id, bool direction_rule);
     void SyncDeltaArray(const QJsonArray& delta_array);
+    void SyncTotalArray(const QJsonArray& total_array);
 
     // Ytx's
     // Default implementations
@@ -207,6 +205,7 @@ protected:
     void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
 
     QSet<QUuid> SyncDeltaImpl(const QUuid& node_id, double initial_delta, double final_delta);
+    QSet<QUuid> UpdateTotal(const QUuid& node_id, double initial_total, double final_total);
     virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta);
 
     virtual void RegisterPath(Node* node);

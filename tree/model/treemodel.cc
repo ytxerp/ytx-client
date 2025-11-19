@@ -34,12 +34,6 @@ void TreeModel::RRemoveNode(const QUuid& node_id)
     removeRows(index.row(), 1, index.parent());
 }
 
-void TreeModel::RNodeDelta(const QUuid& node_id, double initial_delta, double final_delta)
-{
-    const auto affected_ids { SyncDeltaImpl(node_id, initial_delta, final_delta) };
-    RefreshAffectedTotal(affected_ids);
-}
-
 void TreeModel::SyncDeltaArray(const QJsonArray& delta_array)
 {
     if (delta_array.isEmpty())
@@ -59,6 +53,31 @@ void TreeModel::SyncDeltaArray(const QJsonArray& delta_array)
         const double final_delta { obj.value(kFinalDelta).toString().toDouble() };
 
         const auto ids { SyncDeltaImpl(node_id, initial_delta, final_delta) };
+        affected_ids.unite(ids);
+    }
+
+    RefreshAffectedTotal(affected_ids);
+}
+
+void TreeModel::SyncTotalArray(const QJsonArray& total_array)
+{
+    if (total_array.isEmpty())
+        return;
+
+    QSet<QUuid> affected_ids {};
+
+    for (const auto& delta : total_array) {
+        const QJsonObject obj { delta.toObject() };
+
+        Q_ASSERT_X(obj.contains(kId), "TreeModel::UpdateDelta", "Missing kId in delta object");
+        Q_ASSERT_X(obj.contains(kInitialTotal), "TreeModel::UpdateDelta", "Missing kInitialDelta in delta object");
+        Q_ASSERT_X(obj.contains(kFinalTotal), "TreeModel::UpdateDelta", "Missing kFinalDelta in delta object");
+
+        const QUuid node_id { QUuid(obj.value(kId).toString()) };
+        const double initial_total { obj.value(kInitialTotal).toString().toDouble() };
+        const double final_total { obj.value(kFinalTotal).toString().toDouble() };
+
+        const auto ids { UpdateTotal(node_id, initial_total, final_total) };
         affected_ids.unite(ids);
     }
 
@@ -134,6 +153,28 @@ QSet<QUuid> TreeModel::SyncDeltaImpl(const QUuid& node_id, double initial_delta,
 
     // Propagate adjusted deltas to ancestor nodes
     auto affected_ids { UpdateAncestorTotal(node, adjust_initial_delta, adjust_final_delta) };
+    affected_ids.insert(node_id);
+
+    emit STotalsUpdated();
+
+    return affected_ids;
+}
+
+QSet<QUuid> TreeModel::UpdateTotal(const QUuid& node_id, double initial_total, double final_total)
+{
+    auto* node = GetNode(node_id);
+    if (!node)
+        return {};
+
+    const double initial_delta { initial_total - node->initial_total };
+    const double final_delta { final_total - node->final_total };
+
+    // Accumulate into the current node totals
+    node->initial_total = initial_total;
+    node->final_total = final_total;
+
+    // Propagate adjusted deltas to ancestor nodes
+    auto affected_ids { UpdateAncestorTotal(node, initial_delta, final_delta) };
     affected_ids.insert(node_id);
 
     emit STotalsUpdated();
