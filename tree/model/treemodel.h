@@ -113,7 +113,6 @@ public:
     void DragNode(const QUuid& ancestor, const QUuid& descendant);
 
     void SyncDirectionRule(const QUuid& node_id, bool direction_rule);
-    void SyncDeltaArray(const QJsonArray& delta_array);
     void SyncTotalArray(const QJsonArray& total_array);
 
     // Ytx's

@@ -403,7 +403,7 @@ void WebSocket::RemoveLeaf(const QJsonObject& obj)
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     const QJsonObject linked_entry_obj { obj.value(kLinkedEntry).toObject() };
-    const QJsonArray delta_array { obj.value(kDeltaArray).toArray() };
+    const QJsonArray total_array { obj.value(kTotalArray).toArray() };
 
     const auto leaf_entry { ParseNodeReference(linked_entry_obj) };
 
@@ -411,7 +411,7 @@ void WebSocket::RemoveLeaf(const QJsonObject& obj)
     auto tree_model { tree_model_hash_.value(section) };
 
     entry_hub->RemoveLeaf(leaf_entry);
-    tree_model->SyncDeltaArray(delta_array);
+    tree_model->SyncTotalArray(total_array);
 
     if (session_id != session_id_)
         tree_model->RRemoveNode(QUuid(node_id));
@@ -499,34 +499,34 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     CString session_id { obj.value(kSessionId).toString() };
-
-    const QJsonObject meta { obj.value(kMeta).toObject() };
-
     const QUuid entry_id { obj.value(kEntryId).toString() };
-    const QUuid old_node_id { obj.value(kOldNodeId).toString() };
-    const QUuid new_node_id { obj.value(kNewNodeId).toString() };
+    const bool is_parallel { obj.value(kIsParallel).toBool() };
+    const QJsonObject meta { obj.value(kMeta).toObject() };
+    const QJsonObject update { obj.value(kUpdate).toObject() };
+
+    const auto field { is_parallel ? kRhsNode : kLhsNode };
+    const QUuid new_node_id { update.value(field).toString() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
 
-    QJsonObject old_rhs_delta {};
-    QJsonObject new_rhs_delta {};
+    QJsonObject lhs_total {};
+    QJsonObject rhs_total {};
 
-    const bool has_delta { obj.contains(kRhsDelta) && obj.value(kRhsDelta).isObject() && obj.contains(kLhsDelta) && obj.value(kLhsDelta).isObject() };
+    const bool has_total { obj.contains(kLhsTotal) && obj.value(kLhsTotal).isObject() && obj.contains(kRhsTotal) && obj.value(kRhsTotal).isObject() };
+    if (has_total) {
+        lhs_total = obj.value(kLhsTotal).toObject();
+        rhs_total = obj.value(kRhsTotal).toObject();
 
-    if (has_delta) {
-        new_rhs_delta = obj.value(kRhsDelta).toObject();
-        old_rhs_delta = obj.value(kLhsDelta).toObject();
+        tree_model->UpdateMeta(QUuid(lhs_total.value(kId).toString()), meta);
+        tree_model->UpdateMeta(QUuid(rhs_total.value(kId).toString()), meta);
 
-        tree_model->UpdateMeta(QUuid(old_rhs_delta.value(kId).toString()), meta);
-        tree_model->UpdateMeta(QUuid(old_rhs_delta.value(kId).toString()), meta);
-
-        const QJsonArray delta_array { old_rhs_delta, new_rhs_delta };
-        tree_model->SyncDeltaArray(delta_array);
+        const QJsonArray total_array { lhs_total, rhs_total };
+        tree_model->SyncTotalArray(total_array);
     }
 
     if (session_id != session_id_) {
-        entry_hub->UpdateEntryLinkedNode(entry_id, old_node_id, new_node_id);
+        entry_hub->UpdateEntryLinkedNode(entry_id, new_node_id, is_parallel);
     }
 
     entry_hub->UpdateMeta(entry_id, meta);

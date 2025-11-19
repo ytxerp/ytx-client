@@ -130,7 +130,7 @@ void EntryHub::UpdateMeta(const QUuid& entry_id, const QJsonObject& data)
     };
 }
 
-void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QUuid& old_rhs_id, const QUuid& new_rhs_id)
+void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QUuid& new_node_id, bool is_parallel)
 {
     Entry* entry {};
 
@@ -138,25 +138,25 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QUuid& old_rhs_id, c
     if (it != entry_cache_.constEnd()) {
         entry = it.value();
 
-        const bool is_parallel { (entry->rhs_node == old_rhs_id) };
+        const QUuid old_node_id { is_parallel ? entry->rhs_node : entry->lhs_node };
         const QUuid lhs_node { is_parallel ? entry->lhs_node : entry->rhs_node };
 
         if (is_parallel) {
-            entry->rhs_node = new_rhs_id;
+            entry->rhs_node = new_node_id;
         } else {
-            entry->lhs_node = new_rhs_id;
+            entry->lhs_node = new_node_id;
         }
 
         const int rhs_node_column { EntryUtils::LinkedNodeColumn(section_) };
 
-        emit SRemoveOneEntry(old_rhs_id, id);
+        emit SRemoveOneEntry(old_node_id, id);
         emit SRefreshField(lhs_node, id, rhs_node_column, rhs_node_column);
     } else {
         entry = EntryPool::Instance().Allocate(section_);
         entry_cache_.insert(entry->id, entry);
     }
 
-    emit SAppendOneEntry(new_rhs_id, entry);
+    emit SAppendOneEntry(new_node_id, entry);
 }
 
 /**

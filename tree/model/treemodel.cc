@@ -34,31 +34,6 @@ void TreeModel::RRemoveNode(const QUuid& node_id)
     removeRows(index.row(), 1, index.parent());
 }
 
-void TreeModel::SyncDeltaArray(const QJsonArray& delta_array)
-{
-    if (delta_array.isEmpty())
-        return;
-
-    QSet<QUuid> affected_ids {};
-
-    for (const auto& delta : delta_array) {
-        const QJsonObject obj { delta.toObject() };
-
-        Q_ASSERT_X(obj.contains(kId), "TreeModel::UpdateDelta", "Missing kId in delta object");
-        Q_ASSERT_X(obj.contains(kInitialDelta), "TreeModel::UpdateDelta", "Missing kInitialDelta in delta object");
-        Q_ASSERT_X(obj.contains(kFinalDelta), "TreeModel::UpdateDelta", "Missing kFinalDelta in delta object");
-
-        const QUuid node_id { QUuid(obj.value(kId).toString()) };
-        const double initial_delta { obj.value(kInitialDelta).toString().toDouble() };
-        const double final_delta { obj.value(kFinalDelta).toString().toDouble() };
-
-        const auto ids { SyncDeltaImpl(node_id, initial_delta, final_delta) };
-        affected_ids.unite(ids);
-    }
-
-    RefreshAffectedTotal(affected_ids);
-}
-
 void TreeModel::SyncTotalArray(const QJsonArray& total_array)
 {
     if (total_array.isEmpty())

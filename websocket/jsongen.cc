@@ -45,7 +45,7 @@ QJsonObject LeafRemove(Section section, CUuid& node_id)
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kLinkedEntry, QJsonObject());
-    message.insert(kDeltaArray, QJsonArray());
+    message.insert(kTotalArray, QJsonArray());
 
     return message;
 }
