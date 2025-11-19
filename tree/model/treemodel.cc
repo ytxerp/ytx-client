@@ -688,9 +688,6 @@ QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, dou
 
 void TreeModel::RefreshAffectedTotal(const QSet<QUuid>& affected_ids)
 {
-    if (affected_ids.isEmpty())
-        return;
-
     for (const QUuid& id : affected_ids) {
         QModelIndex idx = GetIndex(id);
         if (!idx.isValid())

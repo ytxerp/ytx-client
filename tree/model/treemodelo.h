@@ -51,7 +51,6 @@ public:
 
     bool InsertNode(int row, const QModelIndex& parent, Node* node) override;
     QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeO::partner); };
-    void SyncNodeDelta(const QUuid& node_id, const QJsonObject& data);
 
 protected:
     void RegisterPath(Node* /*node*/) override { };

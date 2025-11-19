@@ -149,16 +149,6 @@ QJsonObject DefaultUnit(Section section, int unit)
     return message;
 }
 
-QJsonObject NodeDelta(CUuid& node_id, double initial_delta, double final_delta)
-{
-    QJsonObject message {};
-    message.insert(kInitialDelta, QString::number(initial_delta, 'f', kMaxNumericScale_4));
-    message.insert(kFinalDelta, QString::number(final_delta, 'f', kMaxNumericScale_4));
-    message.insert(kId, node_id.toString(QUuid::WithoutBraces));
-
-    return message;
-}
-
 QJsonObject Register(CString& email, CString& password)
 {
     QJsonObject message {};

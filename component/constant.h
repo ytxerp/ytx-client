@@ -194,7 +194,6 @@ inline const QString kOrderUpdateReleased = QStringLiteral("order_update_release
 inline const QString kOrderRecalled = QStringLiteral("order_recalled");
 
 inline const QString kNodeTotal = QStringLiteral("node_total");
-inline const QString kNodeDelta = QStringLiteral("node_delta");
 inline const QString kDeletedEntryArray = QStringLiteral("deleted_entry_array");
 inline const QString kInsertedEntryArray = QStringLiteral("inserted_entry_array");
 inline const QString kUpdatedEntryArray = QStringLiteral("updated_entry_array");
@@ -271,8 +270,6 @@ inline const QString kNodeId = QStringLiteral("node_id");
 inline const QString kParentId = QStringLiteral("parent_id");
 inline const QString kOldNodeId = QStringLiteral("old_node_id");
 inline const QString kNewNodeId = QStringLiteral("new_node_id");
-inline const QString kLhsDelta = QStringLiteral("lhs_delta");
-inline const QString kRhsDelta = QStringLiteral("rhs_delta");
 inline const QString kExpireTime = QStringLiteral("expire_time");
 inline const QString kSettlement = QStringLiteral("settlement");
 inline const QString kUpdate = QStringLiteral("update");
@@ -294,19 +291,14 @@ inline const QString kInitialDelta = QStringLiteral("initial_delta");
 inline const QString kInitialTotal = QStringLiteral("initial_total");
 
 inline const QString kFinal = QStringLiteral("final");
-inline const QString kFinalDelta = QStringLiteral("final_delta");
 inline const QString kFinalTotal = QStringLiteral("final_total");
 
 inline const QString kPartnerDelta = QStringLiteral("partner_delta");
 inline const QString kPartnerId = QStringLiteral("partner_id");
 
 inline const QString kDiscount = QStringLiteral("discount");
-inline const QString kDiscountDelta = QStringLiteral("discount_delta");
 inline const QString kUnitDiscount = QStringLiteral("unit_discount");
 inline const QString kDiscountTotal = QStringLiteral("discount_total");
-
-inline const QString kCountDelta = QStringLiteral("count_delta");
-inline const QString kMeasureDelta = QStringLiteral("measure_delta");
 
 inline constexpr char kAction[] = "action";
 inline const QString kEntryAction = QStringLiteral("entry_action");

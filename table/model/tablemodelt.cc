@@ -296,7 +296,6 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
     *d_shadow->rhs_node = value;
 
     const QUuid entry_id { *d_shadow->id };
-    const double unit_cost { *d_shadow->unit_cost };
 
     const QString old_node_id { old_node.toString(QUuid::WithoutBraces) };
     const QString new_node_id { value.toString(QUuid::WithoutBraces) };
@@ -305,35 +304,16 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
 
     if (old_node.isNull()) {
         message.insert(kEntry, d_shadow->WriteJson());
+        WebSocket::Instance()->SendMessage(kEntryInsert, message);
 
-        double lhs_debit { *d_shadow->lhs_debit };
-        double lhs_credit { *d_shadow->lhs_credit };
+        const double lhs_debit { *d_shadow->lhs_debit };
+        const double lhs_credit { *d_shadow->lhs_credit };
 
-        const double lhs_initial_delta { lhs_debit - lhs_credit };
-        const double lhs_final_delta { unit_cost * lhs_initial_delta };
-
-        const double rhs_initial_delta { -lhs_initial_delta };
-        const double rhs_final_delta { -lhs_final_delta };
-
-        const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
-
-        if (has_leaf_delta) {
-            QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
-            QJsonObject rhs_delta { JsonGen::NodeDelta(value, rhs_initial_delta, rhs_final_delta) };
-
-            message.insert(kLhsDelta, lhs_delta);
-            message.insert(kRhsDelta, rhs_delta);
-        }
-
+        const bool has_leaf_delta { std::abs(lhs_debit - lhs_credit) > kTolerance };
         if (has_leaf_delta) {
             AccumulateBalance(row);
-
             emit SResizeColumnToContents(std::to_underlying(EntryEnumT::kBalance));
         }
-
-        emit SAppendOneEntry(value, d_shadow->entry);
-
-        WebSocket::Instance()->SendMessage(kEntryInsert, message);
     }
 
     if (!old_node.isNull()) {
@@ -349,9 +329,9 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
         WebSocket::Instance()->SendMessage(kEntryLinkedNode, message);
 
         emit SRemoveOneEntry(old_node, entry_id);
-        emit SAppendOneEntry(value, d_shadow->entry);
     }
 
+    emit SAppendOneEntry(value, d_shadow->entry);
     return true;
 }
 
