@@ -345,6 +345,12 @@ void TableWidgetO::on_pBtnPreview_clicked()
 
 void TableWidgetO::PreparePrint()
 {
+    if (ui->comboTemplate->currentIndex() == -1) {
+        QMessageBox::warning(this, tr("No Template"), tr("No printable template was found."));
+        return;
+    }
+
+    PrintHub::Instance().SetSectionConfig(&config_);
     PrintHub::Instance().LoadTemplate(ui->comboTemplate->currentData().toString());
     PrintHub::Instance().SetValue(&tmp_node_, table_model_order_->GetEntryList());
 }

@@ -44,6 +44,7 @@ public:
     const QMap<QString, QString>& TemplateMap() { return template_map_; }
 
     void SetAppConfig(CAppConfig* config) { app_config_ = config; }
+    void SetSectionConfig(CSectionConfig* config) { section_config_ = config; }
     void SetInventoryModel(TreeModel* inventory) { inventory_ = inventory; }
     void SetPartnerModel(TreeModel* partner) { partner_ = partner; }
 
@@ -78,6 +79,7 @@ private:
     QMap<QString, QString> template_map_ {};
 
     CAppConfig* app_config_ {};
+    CSectionConfig* section_config_ {};
     QList<Entry*> entry_list_ {};
     const NodeO* node_o_ {};
     QString current_template_ {};

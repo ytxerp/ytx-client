@@ -232,13 +232,15 @@ void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
         painter->drawText(unit_poition.x, unit_poition.y, unit);
     }
 
+    const double rounded_value { QString::number(node_o_->initial_total, 'f', section_config_->amount_decimal).toDouble() };
+
     // initial_total
     {
         const auto p { field_position_.value("initial_total") };
         const int x { p.x };
         const int y { p.y };
         if (x != 0 || y != 0) {
-            painter->drawText(x, y, QString::number(node_o_->initial_total));
+            painter->drawText(x, y, QString::number(rounded_value));
         }
     }
 
@@ -248,7 +250,7 @@ void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
         const int x { p.x };
         const int y { p.y };
         if (x != 0 || y != 0) {
-            painter->drawText(x, y, NumberToChineseUpper(node_o_->initial_total));
+            painter->drawText(x, y, NumberToChineseUpper(rounded_value));
         }
     }
 
@@ -261,6 +263,7 @@ void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
 QString PrintHub::GetColumnText(int col, const Entry* entry)
 {
     auto* d_entry { static_cast<const EntryO*>(entry) };
+    assert(section_config_);
 
     switch (col) {
     case 0:
@@ -270,13 +273,13 @@ QString PrintHub::GetColumnText(int col, const Entry* entry)
     case 2:
         return entry->description;
     case 3:
-        return QString::number(d_entry->count);
+        return QString::number(d_entry->count, 'f', section_config_->quantity_decimal);
     case 4:
-        return QString::number(d_entry->measure);
+        return QString::number(d_entry->measure, 'f', section_config_->quantity_decimal);
     case 5:
-        return QString::number(d_entry->unit_price);
+        return QString::number(d_entry->unit_price, 'f', section_config_->rate_decimal);
     case 6:
-        return QString::number(d_entry->initial);
+        return QString::number(d_entry->initial, 'f', section_config_->amount_decimal);
     default:
         return QString();
     }
