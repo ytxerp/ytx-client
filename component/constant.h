@@ -64,16 +64,8 @@ inline const QString kStrTO = QStringLiteral("TO");
 inline const QString kStrRO = QStringLiteral("RO");
 }
 
-// Maximum and minimum values for PostgreSQL NUMERIC(12,4)
-// Up to 8 digits before the decimal point and 4 digits after
-inline constexpr double kMaxNumeric_12_4 = 99999999.9999;
-inline constexpr double kMinNumeric_12_4 = -99999999.9999;
-
-// Maximum and minimum values for PostgreSQL NUMERIC(16,8)
-// Up to 8 digits before the decimal point and 8 digits after
-// Used only in the finance module for exchange rates
-inline constexpr double kMaxNumeric_16_8 = 99999999.99999999;
-inline constexpr double kMinNumeric_16_8 = -99999999.99999999;
+inline constexpr double kDoubleMax = std::numeric_limits<double>::max();
+inline constexpr double kDoubleLowest = std::numeric_limits<double>::lowest();
 
 inline constexpr int kMaxNumericScale_4 = 4;
 inline constexpr int kMaxNumericScale_8 = 8;

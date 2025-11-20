@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30.5)
-project(YTX VERSION 0.2.8 LANGUAGES CXX)
+project(YTX VERSION 0.2.9 LANGUAGES CXX)
 
 # ------------------------
 # Qt setup
@@ -355,6 +355,14 @@ elseif(WIN32)
 
     set(INFO_RC "${CMAKE_CURRENT_BINARY_DIR}/Info.rc")
     qt6_add_executable(${PROJECT_NAME} WIN32 ${INFO_RC})
+
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E rm -rf
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/print_template"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${CMAKE_CURRENT_SOURCE_DIR}/print_template"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/print_template"
+    )
 
 # Linux or other platforms
 else()

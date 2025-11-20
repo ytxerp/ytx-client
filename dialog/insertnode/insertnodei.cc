@@ -34,8 +34,8 @@ void InsertNodeI::IniDialog(ItemModel* unit_model, int amount_decimal)
     this->setFixedSize(360, 600);
 
     ui->comboUnit->setModel(unit_model);
-    ui->dSpinBoxUnitPrice->setRange(0.0, kMaxNumeric_12_4);
-    ui->dSpinBoxCommission->setRange(0.0, kMaxNumeric_12_4);
+    ui->dSpinBoxUnitPrice->setRange(0.0, kDoubleMax);
+    ui->dSpinBoxCommission->setRange(0.0, kDoubleMax);
     ui->dSpinBoxUnitPrice->setDecimals(amount_decimal);
     ui->dSpinBoxCommission->setDecimals(amount_decimal);
 

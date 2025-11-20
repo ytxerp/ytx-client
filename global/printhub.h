@@ -72,9 +72,25 @@ private:
     QString NumberToChineseUpper(double value);
     QString ConvertSection(int section, const QStringList& digits, const QStringList& units);
 
+    void DrawText(QPainter* painter, const QString& field, const QString& text);
+
+    int GetFieldX(const QString& field, int default_x = 0) const
+    {
+        if (auto it = field_position_.constFind(field); it != field_position_.constEnd() && it.value().has_value())
+            return it.value()->x;
+        return default_x;
+    }
+
+    int GetFieldY(const QString& field, int default_y = 0) const
+    {
+        if (auto it = field_position_.constFind(field); it != field_position_.constEnd() && it.value().has_value())
+            return it.value()->y;
+        return default_y;
+    }
+
 private:
     QHash<QString, QVariant> page_values_ {};
-    QHash<QString, FieldPosition> field_position_ {};
+    QHash<QString, std::optional<FieldPosition>> field_position_ {};
 
     QMap<QString, QString> template_map_ {};
 

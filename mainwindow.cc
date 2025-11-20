@@ -153,10 +153,10 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
         UpdateAccountInfo(login_info.Email(), login_info.Workspace(), expire_date);
 
         if (!section_settings_) {
-            const QString section_file_path { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator()
+            const QString ini_file { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator()
                 + MainWindowUtils::SectionFile(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
 
-            section_settings_ = QSharedPointer<QSettings>::create(section_file_path, QSettings::IniFormat);
+            section_settings_ = QSharedPointer<QSettings>::create(ini_file, QSettings::IniFormat);
         }
     }
 
@@ -654,7 +654,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* issued_time { new TableIssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kIssuedTime), issued_time);
 
-    auto* lhs_rate { new Double(config.rate_decimal, 0, kMaxNumeric_16_8, kCoefficient8, table_view) };
+    auto* lhs_rate { new Double(config.rate_decimal, 0.0, kDoubleMax, kCoefficient8, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kLhsRate), lhs_rate);
 
     auto* line { new Line(table_view) };
@@ -672,7 +672,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* node { new TableComboFilter(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kRhsNode), node);
 
-    auto* value { new Double(config.quantity_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient16, table_view) };
+    auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDebit), value);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kCredit), value);
 
@@ -685,7 +685,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* issued_time { new TableIssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kIssuedTime), issued_time);
 
-    auto* unit_cost { new Double(config.rate_decimal, 0, kMaxNumeric_16_8, kCoefficient8, table_view) };
+    auto* unit_cost { new Double(config.rate_decimal, 0.0, kDoubleMax, kCoefficient8, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kUnitCost), unit_cost);
 
     auto* line { new Line(table_view) };
@@ -703,7 +703,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* node { new TableComboFilter(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kRhsNode), node);
 
-    auto* value { new Double(config.quantity_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient16, table_view) };
+    auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kDebit), value);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kCredit), value);
 
@@ -716,7 +716,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     auto* issued_time { new TableIssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kIssuedTime), issued_time);
 
-    auto* unit_cost { new Double(config.rate_decimal, 0, kMaxNumeric_16_8, kCoefficient8, table_view) };
+    auto* unit_cost { new Double(config.rate_decimal, 0.0, kDoubleMax, kCoefficient8, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kUnitCost), unit_cost);
 
     auto* line { new Line(table_view) };
@@ -734,7 +734,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     auto* node { new TableComboFilter(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kRhsNode), node);
 
-    auto* value { new Double(config.quantity_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient16, table_view) };
+    auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kDebit), value);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kCredit), value);
 
@@ -747,7 +747,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     auto* issued_time { new TableIssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIssuedTime), issued_time);
 
-    auto* unit_price { new Double(config.rate_decimal, 0, kMaxNumeric_12_4, kCoefficient8, table_view) };
+    auto* unit_price { new Double(config.rate_decimal, 0.0, kDoubleMax, kCoefficient8, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kUnitPrice), unit_price);
 
     auto* line { new Line(table_view) };
@@ -785,11 +785,11 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) 
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDescription), line);
 
-    auto* price { new Double(config.rate_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient8, table_view) };
+    auto* price { new Double(config.rate_decimal, 0.0, kDoubleMax, kCoefficient8, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitPrice), price);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitDiscount), price);
 
-    auto* quantity { new Double(config.quantity_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient8, table_view) };
+    auto* quantity { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, kCoefficient8, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kCount), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kMeasure), quantity);
 
@@ -813,7 +813,7 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
     const auto& section { info.section };
 
     // ReadSettings must before SetTreeView
-    WidgetUtils::ReadConfig(view->header(), &QHeaderView::restoreState, section_settings_, info.node, kHeaderState);
+    WidgetUtils::ReadConfig(view->header(), &QHeaderView::restoreState, section_settings_, MainWindowUtils::SectionToString(section), kHeaderState);
 
     SetTreeView(view, info);
 
@@ -936,7 +936,7 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kFinalTotal), amount);
 
-    auto* unit_price { new Double(section.rate_decimal, 0, kMaxNumeric_12_4, kCoefficient8, tree_view) };
+    auto* unit_price { new Double(section.rate_decimal, 0.0, kDoubleMax, kCoefficient8, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kUnitPrice), unit_price);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kCommission), unit_price);
 
@@ -1616,12 +1616,18 @@ void MainWindow::WriteConfig()
     }
 
     if (section_settings_) {
-        WidgetUtils::WriteConfig(sc_f_.tree_view->header(), &QHeaderView::saveState, section_settings_, kFinance, kHeaderState);
-        WidgetUtils::WriteConfig(sc_i_.tree_view->header(), &QHeaderView::saveState, section_settings_, kInventory, kHeaderState);
-        WidgetUtils::WriteConfig(sc_p_.tree_view->header(), &QHeaderView::saveState, section_settings_, kPartner, kHeaderState);
-        WidgetUtils::WriteConfig(sc_t_.tree_view->header(), &QHeaderView::saveState, section_settings_, kTask, kHeaderState);
-        WidgetUtils::WriteConfig(sc_sale_.tree_view->header(), &QHeaderView::saveState, section_settings_, kSale, kHeaderState);
-        WidgetUtils::WriteConfig(sc_purchase_.tree_view->header(), &QHeaderView::saveState, section_settings_, kPurchase, kHeaderState);
+        std::array<std::pair<Section, QHeaderView*>, 6> headers = {
+            std::make_pair(Section::kFinance, sc_f_.tree_view->header()),
+            std::make_pair(Section::kTask, sc_t_.tree_view->header()),
+            std::make_pair(Section::kInventory, sc_i_.tree_view->header()),
+            std::make_pair(Section::kPartner, sc_p_.tree_view->header()),
+            std::make_pair(Section::kSale, sc_sale_.tree_view->header()),
+            std::make_pair(Section::kPurchase, sc_purchase_.tree_view->header()),
+        };
+
+        for (auto& [section, header] : headers) {
+            WidgetUtils::WriteConfig(header, &QHeaderView::saveState, section_settings_, MainWindowUtils::SectionToString(section), kHeaderState);
+        }
     }
 }
 

@@ -87,31 +87,36 @@ bool PrintHub::LoadTemplate(const QString& template_name)
     // Page settings
     QSettings settings(template_name, QSettings::IniFormat);
 
-    static const QList<QString> page_fields { "page_size", "orientation", "font_size" };
+    {
+        settings.beginGroup(QStringLiteral("page"));
 
-    for (const QString& field : page_fields) {
-        page_values_[field] = settings.value("page/" + field);
+        page_values_[QStringLiteral("page_size")] = settings.value(QStringLiteral("page_size"), QStringLiteral("A5"));
+        page_values_[QStringLiteral("orientation")] = settings.value(QStringLiteral("orientation"), QStringLiteral("Portrait"));
+        page_values_[QStringLiteral("font_size")] = settings.value(QStringLiteral("font_size"), 12);
+
+        settings.endGroup();
     }
 
-    static const QList<QString> header_fields { "partner", "issued_time" };
-    static const QList<QString> content_fields { "left_top", "rows_columns" };
-    static const QList<QString> footer_fields { "employee", "unit", "initial_total", "initial_total_upper", "page_info" };
+    static const QList<QString> header_fields { QStringLiteral("partner"), QStringLiteral("issued_time") };
+    static const QList<QString> table_fields { QStringLiteral("left_top"), QStringLiteral("rows_columns") };
+    static const QList<QString> footer_fields { QStringLiteral("employee"), QStringLiteral("unit"), QStringLiteral("initial_total"),
+        QStringLiteral("initial_total_upper"), QStringLiteral("page_info") };
 
     // Read fields for header section
     for (const QString& field : header_fields) {
-        ReadFieldPosition(settings, "header", field);
+        ReadFieldPosition(settings, QStringLiteral("header"), field);
     }
 
-    // Read fields for content section
-    for (const QString& field : content_fields) {
-        ReadFieldPosition(settings, "table", field);
+    // Read fields for table section
+    for (const QString& field : table_fields) {
+        ReadFieldPosition(settings, QStringLiteral("table"), field);
     }
 
     {
-        settings.beginGroup("table");
-        row_height_ = settings.value("row_height").toInt();
+        settings.beginGroup(QStringLiteral("table"));
+        row_height_ = settings.value(QStringLiteral("row_height")).toInt();
 
-        const auto col_string { settings.value("column_widths").toStringList() };
+        const auto col_string { settings.value(QStringLiteral("column_widths")).toStringList() };
         column_widths_.reserve(col_string.size());
 
         for (const auto& s : col_string) {
@@ -122,7 +127,7 @@ bool PrintHub::LoadTemplate(const QString& template_name)
 
     // Read fields for footer section
     for (const QString& field : footer_fields) {
-        ReadFieldPosition(settings, "footer", field);
+        ReadFieldPosition(settings, QStringLiteral("footer"), field);
     }
 
     current_template_ = template_name;
@@ -132,7 +137,7 @@ bool PrintHub::LoadTemplate(const QString& template_name)
 void PrintHub::RenderAllPages(QPrinter* printer)
 {
     // Fetch configuration values for rows and columns
-    const int rows { field_position_.value("rows_columns").x };
+    const int rows { GetFieldX(QStringLiteral("rows_columns"), 7) };
 
     // Calculate total pages required based on the total rows and rows per page
     const long long total_pages { (entry_list_.size() + rows - 1) / rows }; // Ceiling division to determine total pages
@@ -163,26 +168,15 @@ void PrintHub::DrawHeader(QPainter* painter)
 {
     // Example: Draw a header at the specified position
 
-    {
-        const auto partner { field_position_.value("partner") };
-
-        const int x { partner.x };
-        const int y { partner.y };
-
-        if (x != 0 || y != 0) {
-            painter->drawText(x, y, partner_->Name(node_o_->partner));
-        }
-    }
-
-    const auto issued_time { field_position_.value("issued_time") };
-    painter->drawText(issued_time.x, issued_time.y, node_o_->issued_time.toLocalTime().toString(kDateTimeFST));
+    DrawText(painter, QStringLiteral("partner"), partner_->Name(node_o_->partner));
+    DrawText(painter, QStringLiteral("issued_time"), node_o_->issued_time.toLocalTime().toString(kDateTimeFST));
 }
 
 void PrintHub::DrawTable(QPainter* painter, long long start_index, long long end_index)
 {
-    int columns { field_position_.value("rows_columns").y };
-    int left { field_position_.value("left_top").x };
-    int top { field_position_.value("left_top").y };
+    const int columns { GetFieldY(QStringLiteral("rows_columns"), 0) };
+    const int left { GetFieldX(QStringLiteral("left_top"), 0) };
+    const int top { GetFieldY(QStringLiteral("left_top"), 0) };
 
     for (int row = 0; row != end_index - start_index; ++row) {
         const auto* entry { entry_list_.at(start_index + row) };
@@ -205,11 +199,7 @@ void PrintHub::DrawTable(QPainter* painter, long long start_index, long long end
 
 void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
 {
-    // employee
-    {
-        const auto employee { field_position_.value("employee") };
-        painter->drawText(employee.x, employee.y, partner_->Name(node_o_->employee));
-    }
+    DrawText(painter, QStringLiteral("employee"), partner_->Name(node_o_->employee));
 
     // unit
     {
@@ -228,36 +218,14 @@ void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
             break;
         }
 
-        const auto unit_poition { field_position_.value("unit") };
-        painter->drawText(unit_poition.x, unit_poition.y, unit);
+        DrawText(painter, QStringLiteral("unit"), unit);
     }
 
     const double rounded_value { QString::number(node_o_->initial_total, 'f', section_config_->amount_decimal).toDouble() };
 
-    // initial_total
-    {
-        const auto p { field_position_.value("initial_total") };
-        const int x { p.x };
-        const int y { p.y };
-        if (x != 0 || y != 0) {
-            painter->drawText(x, y, QString::number(rounded_value));
-        }
-    }
-
-    // initial_total_upper
-    {
-        const auto p { field_position_.value("initial_total_upper") };
-        const int x { p.x };
-        const int y { p.y };
-        if (x != 0 || y != 0) {
-            painter->drawText(x, y, NumberToChineseUpper(rounded_value));
-        }
-    }
-
-    {
-        const auto page_info { field_position_.value("page_info") };
-        painter->drawText(page_info.x, page_info.y, QString::asprintf("%d/%d", page_num, total_pages));
-    }
+    DrawText(painter, QStringLiteral("initial_total"), QString::number(rounded_value));
+    DrawText(painter, QStringLiteral("initial_total_upper"), NumberToChineseUpper(rounded_value));
+    DrawText(painter, QStringLiteral("page_info"), QString::asprintf("%d/%d", page_num, total_pages));
 }
 
 QString PrintHub::GetColumnText(int col, const Entry* entry)
@@ -393,15 +361,25 @@ QString PrintHub::ConvertSection(int section, const QStringList& digits, const Q
     return result;
 }
 
+void PrintHub::DrawText(QPainter* painter, const QString& field, const QString& text)
+{
+    const auto& opt_pos { field_position_.value(field) };
+    if (!opt_pos.has_value())
+        return;
+
+    const FieldPosition& pos { *opt_pos };
+    painter->drawText(pos.x, pos.y, text);
+}
+
 void PrintHub::ApplyConfig(QPrinter* printer)
 {
     QPageLayout layout { printer->pageLayout() };
 
-    const QString orientation { page_values_.value("orientation").toString().toLower() };
-    const QString page_size { page_values_.value("page_size").toString().toLower() };
+    const QString orientation { page_values_.value(QStringLiteral("orientation")).toString().toLower() };
+    const QString page_size { page_values_.value(QStringLiteral("page_size")).toString().toLower() };
 
-    layout.setOrientation(orientation == "landscape" ? QPageLayout::Landscape : QPageLayout::Portrait);
-    layout.setPageSize(QPageSize(page_size == "a4" ? QPageSize::A4 : QPageSize::A5));
+    layout.setOrientation(orientation == QStringLiteral("landscape") ? QPageLayout::Landscape : QPageLayout::Portrait);
+    layout.setPageSize(QPageSize(page_size == QStringLiteral("a4") ? QPageSize::A4 : QPageSize::A5));
 
     printer->setPageLayout(layout);
 }
@@ -413,6 +391,8 @@ void PrintHub::ReadFieldPosition(QSettings& settings, const QString& group, cons
     // Check if the key exists in settings
     if (!settings.contains(field)) {
         qWarning() << "Position setting not found, group:" << group << "field:" << field;
+        field_position_[field] = std::nullopt;
+        settings.endGroup();
         return;
     }
 
@@ -420,6 +400,8 @@ void PrintHub::ReadFieldPosition(QSettings& settings, const QString& group, cons
     const auto position { settings.value(field).value<QVariantList>() };
     if (position.size() != 2) {
         qWarning() << "Non valid position value for field_group:" << group << "field:" << field;
+        field_position_[field] = std::nullopt;
+        settings.endGroup();
         return;
     }
 
@@ -434,6 +416,7 @@ void PrintHub::ReadFieldPosition(QSettings& settings, const QString& group, cons
         field_position_[field] = FieldPosition(x, y);
     } else {
         qWarning() << "Invalid position coordinates, group:" << group << "field:" << field << "value:" << position;
+        field_position_[field] = std::nullopt;
     }
 
     settings.endGroup();
