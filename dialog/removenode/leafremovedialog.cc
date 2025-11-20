@@ -13,12 +13,12 @@ LeafRemoveDialog::LeafRemoveDialog(CTreeModel* model, CSectionInfo& info, CJsonO
     , ui(new Ui::LeafRemoveDialog)
     , node_id_ { node_id }
     , node_unit_ { unit }
-    , internally_ { obj.value(kInternallyRef).toBool() }
-    , inventory_internal_ { obj.value(kInventoryInternalRef).toBool() }
-    , inventory_external_ { obj.value(kInventoryExternalRef).toBool() }
-    , partner_ { obj.value(kPartnerRef).toBool() }
-    , employee_ { obj.value(kEmployeeRef).toBool() }
-    , settlement_ { obj.value(kSettlementRef).toBool() }
+    , inside_ref_ { obj.value(kInsideRef).toBool() }
+    , inventory_int_ref_ { obj.value(kInventoryIntRef).toBool() }
+    , inventory_ext_ref_ { obj.value(kInventoryExtRef).toBool() }
+    , partner_ref_ { obj.value(kPartnerRef).toBool() }
+    , employee_ref_ { obj.value(kEmployeeRef).toBool() }
+    , settlement_ref_ { obj.value(kSettlementRef).toBool() }
     , model_ { model }
     , info_ { info }
 {
@@ -48,22 +48,22 @@ void LeafRemoveDialog::IniOptionGroup()
 
 void LeafRemoveDialog::InitCheckBoxGroup()
 {
-    ui->chkBoxInternally->setChecked(internally_);
-    ui->chkBoxInternally->setEnabled(false);
+    ui->chkBoxInside->setChecked(inside_ref_);
+    ui->chkBoxInside->setEnabled(false);
 
-    ui->chkBoxInventoryINT->setChecked(inventory_internal_);
-    ui->chkBoxInventoryINT->setEnabled(false);
+    ui->chkBoxInventoryInt->setChecked(inventory_int_ref_);
+    ui->chkBoxInventoryInt->setEnabled(false);
 
-    ui->chkBoxInventoryEXT->setChecked(inventory_external_);
-    ui->chkBoxInventoryEXT->setEnabled(false);
+    ui->chkBoxInventoryExt->setChecked(inventory_ext_ref_);
+    ui->chkBoxInventoryExt->setEnabled(false);
 
-    ui->chkBoxPartner->setChecked(partner_);
+    ui->chkBoxPartner->setChecked(partner_ref_);
     ui->chkBoxPartner->setEnabled(false);
 
-    ui->chkBoxEmployee->setChecked(employee_);
+    ui->chkBoxEmployee->setChecked(employee_ref_);
     ui->chkBoxEmployee->setEnabled(false);
 
-    ui->chkBoxSettlement->setChecked(settlement_);
+    ui->chkBoxSettlement->setChecked(settlement_ref_);
     ui->chkBoxSettlement->setEnabled(false);
 }
 
@@ -107,9 +107,9 @@ void LeafRemoveDialog::on_pBtnOk_clicked()
         if (ui->rBtnReplace->isChecked()) {
             const auto new_node_id { ui->comboBox->currentData().toUuid() };
 
-            const bool inventory_external_ref { inventory_internal_ || inventory_external_ };
+            const bool inventory_ref { inventory_int_ref_ || inventory_ext_ref_ };
 
-            const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id, inventory_external_ref) };
+            const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id, inventory_ref, node_unit_) };
             WebSocket::Instance()->SendMessage(kLeafReplace, message);
         }
     }
@@ -124,7 +124,7 @@ void LeafRemoveDialog::IniData(Section section)
 
     this->setWindowTitle(tr("Remove %1").arg(model_->Path(node_id_)));
 
-    if (inventory_internal_ || inventory_external_ || partner_ || employee_ || settlement_) {
+    if (inventory_int_ref_ || inventory_ext_ref_ || partner_ref_ || employee_ref_ || settlement_ref_) {
         ui->rBtnRemove->setEnabled(false);
         ui->label->setText(tr("The node has external references, so it can’t be removed."));
     }
@@ -148,7 +148,11 @@ void LeafRemoveDialog::RcomboBoxCurrentIndexChanged(int /*index*/)
     ui->pBtnOk->setEnabled(!new_node_id.isNull() && model_->Unit(new_node_id) == node_unit_);
 }
 
-void LeafRemoveDialog::RButtonGroup(int /*id*/) { ui->pBtnOk->setEnabled(true); }
+void LeafRemoveDialog::RButtonGroup(int id)
+{
+    ui->pBtnOk->setEnabled(true);
+    ui->comboBox->setEnabled(id == 1);
+}
 
 void LeafRemoveDialog::RReplaceResult(bool result)
 {

@@ -449,7 +449,7 @@ void WebSocket::ReplaceLeaf(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     CString session_id { obj.value(kSessionId).toString() };
     const bool result { obj.value(kResult).toBool() };
-    const bool inventory_external_ref { obj.value(kInventoryExternalRef).toBool() };
+    const bool inventory_outside_ref { obj.value(kInventoryOutsideRef).toBool() };
     const QUuid old_node_id(obj.value(kOldNodeId).toString());
     const QUuid new_node_id(obj.value(kNewNodeId).toString());
 
@@ -465,7 +465,7 @@ void WebSocket::ReplaceLeaf(const QJsonObject& obj)
     auto entry_hub { entry_hub_hash_.value(section) };
     entry_hub->ReplaceLeaf(old_node_id, new_node_id);
 
-    if (section == Section::kInventory && inventory_external_ref) {
+    if (section == Section::kInventory && inventory_outside_ref) {
         entry_hub_hash_.value(Section::kSale)->ApplyInventoryReplace(old_node_id, new_node_id);
         entry_hub_hash_.value(Section::kPurchase)->ApplyInventoryReplace(old_node_id, new_node_id);
         entry_hub_hash_.value(Section::kPartner)->ApplyInventoryReplace(old_node_id, new_node_id);

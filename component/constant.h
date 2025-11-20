@@ -165,13 +165,16 @@ inline const QString kLeafReplace = QStringLiteral("leaf_replace");
 inline const QString kExternalSku = QStringLiteral("external_sku");
 
 // Node is referenced by internal linked columns within the same section
-inline const QString kInternallyRef = QStringLiteral("internally_ref");
+inline const QString kInsideRef = QStringLiteral("inside_ref");
 
 // Internal inventory node is referenced by other sections, e.g., Partner, Sale, Purchase
-inline const QString kInventoryInternalRef = QStringLiteral("inventory_internal_ref");
+inline const QString kInventoryIntRef = QStringLiteral("inventory_int_ref");
 
 // External inventory node is referenced by other sections, e.g., Partner, Sale, Purchase
-inline const QString kInventoryExternalRef = QStringLiteral("inventory_external_ref");
+inline const QString kInventoryExtRef = QStringLiteral("inventory_ext_ref");
+
+// Internal or External inventory node is referenced by other sections, e.g., Partner, Sale, Purchase
+inline const QString kInventoryOutsideRef = QStringLiteral("inventory_outside_ref");
 
 // Partner node (customer or supplier) is referenced in other sections, e.g., Sale, Purchase
 inline const QString kPartnerRef = QStringLiteral("partner_ref");

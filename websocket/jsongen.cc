@@ -77,9 +77,9 @@ QJsonObject LeafRemoveCheck(Section section, CUuid& node_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kInternallyRef, false);
-    message.insert(kInventoryInternalRef, false);
-    message.insert(kInventoryExternalRef, false);
+    message.insert(kInsideRef, false);
+    message.insert(kInventoryIntRef, false);
+    message.insert(kInventoryExtRef, false);
     message.insert(kPartnerRef, false);
     message.insert(kEmployeeRef, false);
     message.insert(kSettlementRef, false);
@@ -87,15 +87,16 @@ QJsonObject LeafRemoveCheck(Section section, CUuid& node_id)
     return message;
 }
 
-QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref)
+QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref, int unit)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kResult, false);
-    message.insert(kInventoryExternalRef, inventory_external_ref);
+    message.insert(kInventoryOutsideRef, inventory_external_ref);
     message.insert(kOldNodeId, old_id.toString(QUuid::WithoutBraces));
     message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
+    message.insert(kUnit, unit);
 
     return message;
 }

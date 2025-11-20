@@ -99,7 +99,11 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="ComboBox" name="comboBox"/>
+       <widget class="ComboBox" name="comboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -108,17 +112,17 @@
     <widget class="QGroupBox" name="groupBox_2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QCheckBox" name="chkBoxInternally">
+       <widget class="QCheckBox" name="chkBoxInside">
         <property name="toolTip">
          <string>Referenced by “Linked Node” in its own section.</string>
         </property>
         <property name="text">
-         <string>Internally</string>
+         <string>Inside</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxInventoryINT">
+       <widget class="QCheckBox" name="chkBoxInventoryInt">
         <property name="toolTip">
          <string>This inventory node (internal ID) is referenced by Partner, Sale, or Purchase entries.</string>
         </property>
@@ -128,7 +132,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxInventoryEXT">
+       <widget class="QCheckBox" name="chkBoxInventoryExt">
         <property name="toolTip">
          <string>This inventory node (external ID) is referenced by Partner, Sale, or Purchase entries.</string>
         </property>
