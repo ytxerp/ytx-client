@@ -107,9 +107,9 @@ void LeafRemoveDialog::on_pBtnOk_clicked()
         if (ui->rBtnReplace->isChecked()) {
             const auto new_node_id { ui->comboBox->currentData().toUuid() };
 
-            const bool inventory_ref { inventory_int_ref_ || inventory_ext_ref_ };
+            const bool inventory_outside_ref { inventory_int_ref_ || inventory_ext_ref_ };
 
-            const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id, inventory_ref, node_unit_) };
+            const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id, inventory_outside_ref, node_unit_) };
             WebSocket::Instance()->SendMessage(kLeafReplace, message);
         }
     }
