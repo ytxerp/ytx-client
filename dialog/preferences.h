@@ -69,6 +69,8 @@ private slots:
 
     void on_comboPrinter_currentIndexChanged(int index);
 
+    void on_spinQuantityDecimal_editingFinished();
+
 private:
     void IniDialog(ItemModel* unit_model, Section section);
     void IniCombo(QComboBox* combo, CStringList& list);

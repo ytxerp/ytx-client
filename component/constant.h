@@ -147,6 +147,7 @@ inline const QString kSharedConfig = QStringLiteral("shared_config");
 // Decimal config
 inline const QString kAmountDecimal = QStringLiteral("amount_decimal");
 inline const QString kRateDecimal = QStringLiteral("rate_decimal");
+inline const QString kQuantityDecimal = QStringLiteral("quantity_decimal");
 
 // Other ini keys
 inline const QString kDateFormat = QStringLiteral("date_format");

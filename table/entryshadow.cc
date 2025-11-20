@@ -133,11 +133,12 @@ QJsonObject EntryShadowI::WriteJson() const
 {
     QJsonObject obj = EntryShadow::WriteJson();
 
-    obj.insert(kUnitCost, QString::number(*unit_cost, 'f', kMaxNumericScale_4));
-    obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', kMaxNumericScale_4));
-    obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', kMaxNumericScale_4));
-    obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', kMaxNumericScale_4));
-    obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', kMaxNumericScale_4));
+    obj.insert(kUnitCost, QString::number(*unit_cost, 'f', kMaxNumericScale_8));
+
+    obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', kMaxNumericScale_8));
+    obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', kMaxNumericScale_8));
+    obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', kMaxNumericScale_8));
+    obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', kMaxNumericScale_8));
 
     return obj;
 }
@@ -170,11 +171,11 @@ QJsonObject EntryShadowT::WriteJson() const
 {
     QJsonObject obj = EntryShadow::WriteJson();
 
-    obj.insert(kUnitCost, QString::number(*unit_cost, 'f', kMaxNumericScale_4));
-    obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', kMaxNumericScale_4));
-    obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', kMaxNumericScale_4));
-    obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', kMaxNumericScale_4));
-    obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', kMaxNumericScale_4));
+    obj.insert(kUnitCost, QString::number(*unit_cost, 'f', kMaxNumericScale_8));
+    obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', kMaxNumericScale_8));
+    obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', kMaxNumericScale_8));
+    obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', kMaxNumericScale_8));
+    obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', kMaxNumericScale_8));
 
     return obj;
 }
@@ -194,14 +195,6 @@ void EntryShadowP::ResetState()
 
     unit_price = nullptr;
     external_sku = nullptr;
-}
-
-QJsonObject EntryShadowP::WriteJson() const
-{
-    QJsonObject obj = EntryShadow::WriteJson();
-    obj.insert(kUnitPrice, QString::number(*unit_price, 'f', kMaxNumericScale_4));
-    obj.insert(kExternalSku, external_sku->toString(QUuid::WithoutBraces));
-    return obj;
 }
 
 // Note:

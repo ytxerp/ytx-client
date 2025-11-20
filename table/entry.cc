@@ -173,7 +173,7 @@ void EntryP::ReadJson(const QJsonObject& object)
 QJsonObject EntryP::WriteJson() const
 {
     QJsonObject obj = Entry::WriteJson();
-    obj.insert(kUnitPrice, QString::number(unit_price, 'f', kMaxNumericScale_4));
+    obj.insert(kUnitPrice, QString::number(unit_price, 'f', kMaxNumericScale_8));
     obj.insert(kExternalSku, external_sku.toString(QUuid::WithoutBraces));
     return obj;
 }
@@ -242,13 +242,13 @@ QJsonObject EntryO::WriteJson() const
     obj.insert(kLhsNode, lhs_node.toString(QUuid::WithoutBraces));
     obj.insert(kRhsNode, rhs_node.toString(QUuid::WithoutBraces));
 
-    obj.insert(kUnitPrice, QString::number(unit_price, 'f', kMaxNumericScale_4));
-    obj.insert(kCount, QString::number(count, 'f', kMaxNumericScale_4));
-    obj.insert(kMeasure, QString::number(measure, 'f', kMaxNumericScale_4));
+    obj.insert(kUnitPrice, QString::number(unit_price, 'f', kMaxNumericScale_8));
+    obj.insert(kUnitDiscount, QString::number(unit_discount, 'f', kMaxNumericScale_8));
+    obj.insert(kCount, QString::number(count, 'f', kMaxNumericScale_8));
+    obj.insert(kMeasure, QString::number(measure, 'f', kMaxNumericScale_8));
     obj.insert(kInitial, QString::number(initial, 'f', kMaxNumericScale_4));
     obj.insert(kFinal, QString::number(final, 'f', kMaxNumericScale_4));
     obj.insert(kDiscount, QString::number(discount, 'f', kMaxNumericScale_4));
-    obj.insert(kUnitDiscount, QString::number(unit_discount, 'f', kMaxNumericScale_4));
     obj.insert(kExternalSku, external_sku.toString(QUuid::WithoutBraces));
 
     return obj;

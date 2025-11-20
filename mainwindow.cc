@@ -672,11 +672,11 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* node { new TableComboFilter(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kRhsNode), node);
 
-    auto* value { new Double(config.amount_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient16, table_view) };
+    auto* value { new Double(config.quantity_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDebit), value);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kCredit), value);
 
-    auto* initial { new DoubleSpinR(config.amount_decimal, kCoefficient16, table_view) };
+    auto* initial { new DoubleSpinR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kBalance), initial);
 }
 
@@ -703,11 +703,11 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* node { new TableComboFilter(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kRhsNode), node);
 
-    auto* value { new Double(config.amount_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient16, table_view) };
+    auto* value { new Double(config.quantity_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kDebit), value);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kCredit), value);
 
-    auto* initial { new DoubleSpinR(config.amount_decimal, kCoefficient16, table_view) };
+    auto* initial { new DoubleSpinR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kBalance), initial);
 }
 
@@ -734,11 +734,11 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     auto* node { new TableComboFilter(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kRhsNode), node);
 
-    auto* value { new Double(config.amount_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient16, table_view) };
+    auto* value { new Double(config.quantity_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kDebit), value);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kCredit), value);
 
-    auto* initial { new DoubleSpinR(config.amount_decimal, kCoefficient16, table_view) };
+    auto* initial { new DoubleSpinR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kBalance), initial);
 }
 
@@ -789,7 +789,7 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) 
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitPrice), price);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitDiscount), price);
 
-    auto* quantity { new Double(config.amount_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient8, table_view) };
+    auto* quantity { new Double(config.quantity_decimal, kMinNumeric_12_4, kMaxNumeric_12_4, kCoefficient8, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kCount), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kMeasure), quantity);
 
@@ -893,7 +893,7 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kKind), kind);
 
-    auto* quantity { new DoubleSpinR(section.amount_decimal, kCoefficient16, tree_view) };
+    auto* quantity { new DoubleSpinR(section.quantity_decimal, kCoefficient16, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kInitialTotal), quantity);
 
     auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
@@ -930,7 +930,7 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kKind), kind);
 
-    auto* quantity { new DoubleSpinR(section.amount_decimal, kCoefficient16, tree_view) };
+    auto* quantity { new DoubleSpinR(section.quantity_decimal, kCoefficient16, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kInitialTotal), quantity);
 
     auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
@@ -983,7 +983,7 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kFinalTotal), amount_r);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDiscountTotal), amount_r);
 
-    auto* quantity_r { new DoubleSpinNoneZeroR(section.amount_decimal, kCoefficient16, tree_view) };
+    auto* quantity_r { new DoubleSpinNoneZeroR(section.quantity_decimal, kCoefficient16, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kMeasureTotal), quantity_r);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kCountTotal), quantity_r);
 
@@ -2528,6 +2528,7 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
     section_settings_->setValue(kDateFormat, section.date_format);
     section_settings_->setValue(kAmountDecimal, section.amount_decimal);
     section_settings_->setValue(kRateDecimal, section.rate_decimal);
+    section_settings_->setValue(kQuantityDecimal, section.quantity_decimal);
 
     section_settings_->endGroup();
 
@@ -2709,6 +2710,7 @@ void MainWindow::ReadSectionConfig(SectionConfig& section, CString& section_name
     section.date_format = section_settings_->value(kDateFormat, kDateTimeFST).toString();
     section.amount_decimal = section_settings_->value(kAmountDecimal, 2).toInt();
     section.rate_decimal = section_settings_->value(kRateDecimal, 2).toInt();
+    section.quantity_decimal = section_settings_->value(kQuantityDecimal, 2).toInt();
 
     section_settings_->endGroup();
 }

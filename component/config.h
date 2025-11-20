@@ -63,13 +63,15 @@ struct SectionConfig {
     QString date_format {};
     int amount_decimal {};
     int rate_decimal {};
+    int quantity_decimal {};
 
     // Equality operator overload to compare two SectionConfig structs
     bool operator==(const SectionConfig& other) const noexcept
     {
-        return std::tie(static_label, static_node, dynamic_label, dynamic_node_lhs, operation, dynamic_node_rhs, date_format, amount_decimal, rate_decimal)
+        return std::tie(static_label, static_node, dynamic_label, dynamic_node_lhs, operation, dynamic_node_rhs, date_format, amount_decimal, rate_decimal,
+                   quantity_decimal)
             == std::tie(other.static_label, other.static_node, other.dynamic_label, other.dynamic_node_lhs, other.operation, other.dynamic_node_rhs,
-                other.date_format, other.amount_decimal, other.rate_decimal);
+                other.date_format, other.amount_decimal, other.rate_decimal, other.quantity_decimal);
     }
 
     // Inequality operator overload to compare two SectionConfig structs

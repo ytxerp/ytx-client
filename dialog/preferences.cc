@@ -56,8 +56,8 @@ void Preferences::IniDialog(ItemModel* unit_model, Section section)
     ui->comboOperation->setEnabled(is_enable);
 
     if (section == Section::kPartner) {
-        ui->spinRateDecimal->setEnabled(false);
-        ui->labelRateDecimal->setEnabled(false);
+        ui->spinQuantityDecimal->setHidden(true);
+        ui->labelQuantityDecimal->setHidden(true);
     }
 
     ui->comboPrinter->addItem(QString());
@@ -84,6 +84,7 @@ void Preferences::IniData(Section section)
     IniDataCombo(ui->comboDateFormat, section_.date_format);
     ui->spinAmountDecimal->setValue(section_.amount_decimal);
     ui->spinRateDecimal->setValue(section_.rate_decimal);
+    ui->spinQuantityDecimal->setValue(section_.quantity_decimal);
 
     IniDataCombo(ui->comboDefaultUnit, shared_.default_unit);
     ui->pBtnDocumentDir->setText(shared_.document_dir);
@@ -108,7 +109,8 @@ void Preferences::IniData(Section section)
     }
 
     ui->spinAmountDecimal->setMaximum(kMaxNumericScale_4);
-    ui->spinRateDecimal->setMaximum(section == Section::kFinance ? kMaxNumericScale_8 : kMaxNumericScale_4);
+    ui->spinRateDecimal->setMaximum(kMaxNumericScale_8);
+    ui->spinQuantityDecimal->setMaximum(section == Section::kFinance ? kMaxNumericScale_4 : kMaxNumericScale_8);
 
     ResizeLine(ui->lineStatic, section_.static_label);
     ResizeLine(ui->lineDynamic, section_.dynamic_label);
@@ -182,15 +184,6 @@ void Preferences::IniText(Section section)
     case Section::kFinance:
         ui->labelRateDecimal->setText(tr("FXRate Decimal"));
         ui->labelDefaultUnit->setText(tr("Base Currency"));
-        break;
-    case Section::kPartner:
-        ui->labelRateDecimal->setText(tr("Placeholder"));
-        break;
-    case Section::kTask:
-    case Section::kInventory:
-    case Section::kSale:
-    case Section::kPurchase:
-        ui->labelRateDecimal->setText(tr("Quantity Decimal"));
         break;
     default:
         break;
@@ -278,3 +271,5 @@ void Preferences::on_comboPrinter_currentIndexChanged(int index)
     Q_UNUSED(index)
     app_.printer = ui->comboPrinter->currentText();
 }
+
+void Preferences::on_spinQuantityDecimal_editingFinished() { section_.quantity_decimal = ui->spinQuantityDecimal->value(); }

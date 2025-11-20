@@ -312,8 +312,21 @@
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
          </property>
          <layout class="QGridLayout" name="gridLayout_6">
-          <item row="2" column="3">
-           <widget class="ComboBox" name="comboDynamicRhs">
+          <item row="2" column="4" colspan="2">
+           <spacer name="horizontalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLineEdit" name="lineStatic">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -322,17 +335,17 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>160</width>
+              <width>80</width>
               <height>0</height>
              </size>
             </property>
-            <property name="sizeAdjustPolicy">
-             <enum>QComboBox::SizeAdjustPolicy::AdjustToContents</enum>
+            <property name="placeholderText">
+             <string>Static Label</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="2">
-           <widget class="ComboBox" name="comboOperation">
+          <item row="2" column="0">
+           <widget class="QLineEdit" name="lineDynamic">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -341,15 +354,12 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>40</width>
+              <width>80</width>
               <height>0</height>
              </size>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>40</width>
-              <height>16777215</height>
-             </size>
+            <property name="placeholderText">
+             <string>Dynamic Label</string>
             </property>
            </widget>
           </item>
@@ -391,22 +401,13 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLineEdit" name="lineDynamic">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+          <item row="0" column="1">
+           <widget class="ComboBox" name="comboDateFormat">
             <property name="minimumSize">
              <size>
-              <width>80</width>
+              <width>160</width>
               <height>0</height>
              </size>
-            </property>
-            <property name="placeholderText">
-             <string>Dynamic Label</string>
             </property>
            </widget>
           </item>
@@ -423,18 +424,8 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="ComboBox" name="comboDateFormat">
-            <property name="minimumSize">
-             <size>
-              <width>160</width>
-              <height>0</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLineEdit" name="lineStatic">
+          <item row="2" column="3">
+           <widget class="ComboBox" name="comboDynamicRhs">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -443,27 +434,14 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>80</width>
+              <width>160</width>
               <height>0</height>
              </size>
             </property>
-            <property name="placeholderText">
-             <string>Static Label</string>
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::SizeAdjustPolicy::AdjustToContents</enum>
             </property>
            </widget>
-          </item>
-          <item row="2" column="4" colspan="2">
-           <spacer name="horizontalSpacer_6">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
           <item row="1" column="2" colspan="4">
            <spacer name="horizontalSpacer_2">
@@ -477,6 +455,28 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="2" column="2">
+           <widget class="ComboBox" name="comboOperation">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>40</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -500,7 +500,14 @@
           <string/>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
-          <item row="2" column="1">
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelRateDecimal">
+            <property name="text">
+             <string>Rate Decimal</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
            <widget class="SpinBox" name="spinRateDecimal">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -522,21 +529,36 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="labelRateDecimal">
-            <property name="text">
-             <string>Rate Decimal</string>
+          <item row="2" column="1">
+           <widget class="SpinBox" name="spinAmountDecimal">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>60</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="frame">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item row="2" column="0">
            <widget class="QLabel" name="labelAmountDecimal">
             <property name="text">
              <string>Amount Decimal</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
+          <item row="2" column="2">
            <spacer name="horizontalSpacer_5">
             <property name="orientation">
              <enum>Qt::Orientation::Horizontal</enum>
@@ -549,8 +571,15 @@
             </property>
            </spacer>
           </item>
-          <item row="1" column="1">
-           <widget class="SpinBox" name="spinAmountDecimal">
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelQuantityDecimal">
+            <property name="text">
+             <string>Quantity Decimal</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="SpinBox" name="spinQuantityDecimal">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>

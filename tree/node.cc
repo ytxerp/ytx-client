@@ -104,8 +104,8 @@ QJsonObject NodeI::WriteJson() const
 {
     QJsonObject obj { Node::WriteJson() };
     obj.insert(kColor, color);
-    obj.insert(kUnitPrice, QString::number(unit_price, 'f', kMaxNumericScale_4));
-    obj.insert(kCommission, QString::number(commission, 'f', kMaxNumericScale_4));
+    obj.insert(kUnitPrice, QString::number(unit_price, 'f', kMaxNumericScale_8));
+    obj.insert(kCommission, QString::number(commission, 'f', kMaxNumericScale_8));
     return obj;
 }
 
@@ -275,13 +275,13 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kUnit, unit);
     obj.insert(kFinalTotal, QString::number(final_total, 'f', kMaxNumericScale_4));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
+    obj.insert(kDiscountTotal, QString::number(discount_total, 'f', kMaxNumericScale_4));
     obj.insert(kEmployee, employee.toString(QUuid::WithoutBraces));
     obj.insert(kPartner, partner.toString(QUuid::WithoutBraces));
     obj.insert(kSettlement, settlement.toString(QUuid::WithoutBraces));
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
-    obj.insert(kCountTotal, QString::number(count_total, 'f', kMaxNumericScale_4));
-    obj.insert(kMeasureTotal, QString::number(measure_total, 'f', kMaxNumericScale_4));
-    obj.insert(kDiscountTotal, QString::number(discount_total, 'f', kMaxNumericScale_4));
+    obj.insert(kCountTotal, QString::number(count_total, 'f', kMaxNumericScale_8));
+    obj.insert(kMeasureTotal, QString::number(measure_total, 'f', kMaxNumericScale_8));
     obj.insert(kStatus, status);
 
     return obj;

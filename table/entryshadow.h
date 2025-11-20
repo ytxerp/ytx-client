@@ -115,7 +115,7 @@ struct EntryShadowP final : EntryShadow {
 
     void BindEntry(Entry* base, bool is_parallel) override;
     void ResetState() override;
-    QJsonObject WriteJson() const override;
+    QJsonObject WriteJson() const override { std::unreachable(); }
 };
 
 struct EntryShadowO final : EntryShadow {
@@ -132,7 +132,7 @@ struct EntryShadowO final : EntryShadow {
 
     void BindEntry(Entry* base, bool is_parallel) override;
     void ResetState() override;
-    QJsonObject WriteJson() const override { return {}; }
+    QJsonObject WriteJson() const override { std::unreachable(); }
 };
 
 using EntryShadowList = QList<EntryShadow*>;

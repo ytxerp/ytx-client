@@ -1789,42 +1789,42 @@ Download now?</source>
         <translation>公司名称</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.ui" line="409"/>
+        <location filename="../../dialog/preferences.ui" line="362"/>
         <source>Dynamic Label</source>
         <translation>动态标签</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.ui" line="422"/>
+        <location filename="../../dialog/preferences.ui" line="423"/>
         <source>Date Format</source>
         <translation>日期格式</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.ui" line="451"/>
+        <location filename="../../dialog/preferences.ui" line="343"/>
         <source>Static Label</source>
         <translation>静态标签</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.ui" line="528"/>
+        <location filename="../../dialog/preferences.ui" line="506"/>
         <source>Rate Decimal</source>
         <translation>比率小数位</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.ui" line="535"/>
+        <location filename="../../dialog/preferences.ui" line="557"/>
         <source>Amount Decimal</source>
         <translation>金额小数位</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.ui" line="586"/>
+        <location filename="../../dialog/preferences.ui" line="615"/>
         <source>Apply</source>
         <translation>应用</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.ui" line="606"/>
+        <location filename="../../dialog/preferences.ui" line="635"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.ui" line="613"/>
+        <location filename="../../dialog/preferences.ui" line="642"/>
         <source>Ok</source>
         <translation>确认</translation>
     </message>
@@ -1834,27 +1834,28 @@ Download now?</source>
         <translation>首选项</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.cc" line="163"/>
+        <location filename="../../dialog/preferences.cc" line="164"/>
         <source>Select Directory</source>
         <translation>默认文件夹</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.cc" line="183"/>
+        <location filename="../../dialog/preferences.cc" line="184"/>
         <source>FXRate Decimal</source>
         <translation>汇率小数位</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.cc" line="184"/>
+        <location filename="../../dialog/preferences.cc" line="185"/>
         <source>Base Currency</source>
         <translation>基准单位</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.cc" line="187"/>
+        <location filename="../../dialog/preferences.cc" line="188"/>
         <source>Placeholder</source>
         <translation>占位符</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.cc" line="193"/>
+        <location filename="../../dialog/preferences.ui" line="577"/>
+        <location filename="../../dialog/preferences.cc" line="194"/>
         <source>Quantity Decimal</source>
         <translation>数量小数位</translation>
     </message>
