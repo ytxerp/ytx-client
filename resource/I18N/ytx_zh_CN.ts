@@ -488,7 +488,7 @@ Rage, rage against the dying of the light.</source>
         <translation>单价</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.cc" line="124"/>
+        <location filename="../../dialog/insertnode/insertnodei.cc" line="129"/>
         <source>Choose Color</source>
         <translation>选择颜色</translation>
     </message>
@@ -735,8 +735,17 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../dialog/insertnode/insertnodetask.ui" line="231"/>
+        <source>Recall&amp;ed</source>
+        <translation>撤回(&amp;E)</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="238"/>
+        <source>&amp;Released</source>
+        <translation>发布(&amp;R)</translation>
+    </message>
+    <message>
         <source>Recalled</source>
-        <translation>行进</translation>
+        <translation type="vanished">行进</translation>
     </message>
     <message>
         <source>In Progress</source>
@@ -800,9 +809,8 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">草稿</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="238"/>
         <source>Released</source>
-        <translation>发布</translation>
+        <translation type="vanished">发布</translation>
     </message>
     <message>
         <location filename="../../dialog/insertnode/insertnodetask.ui" line="330"/>
@@ -819,7 +827,7 @@ Rage, rage against the dying of the light.</source>
         <translation>颜色</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.cc" line="129"/>
+        <location filename="../../dialog/insertnode/insertnodetask.cc" line="136"/>
         <source>Choose Color</source>
         <translation>选择颜色</translation>
     </message>
@@ -855,42 +863,47 @@ Rage, rage against the dying of the light.</source>
         <translation>替换</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="113"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="117"/>
         <source>Referenced by “Linked Node” in its own section.</source>
         <translation>节点被同一版块内的“关联”列引用。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="123"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="120"/>
+        <source>Inside</source>
+        <translation>内部</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="127"/>
         <source>This inventory node (internal ID) is referenced by Partner, Sale, or Purchase entries.</source>
         <translation>存货节点（内部编号）被合作、销售或采购引用。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="126"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="130"/>
         <source>Inventory INT</source>
         <translation>存货（内）</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="133"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="137"/>
         <source>This inventory node (external ID) is referenced by Partner, Sale, or Purchase entries.</source>
         <translation>存货节点（外部编号）被合作、销售或采购引用。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="136"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="140"/>
         <source>Inventory EXT</source>
         <translation>存货（外）</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="143"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="147"/>
         <source>This partner node (customer or vendor) is referenced by Sale or Purchase entries.</source>
         <translation>合作节点（客户或供应商）被销售或采购引用。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="153"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="157"/>
         <source>This partner node (employee) is referenced by Sale or Purchase entries.</source>
         <translation>合作节点（职工）被销售或采购引用。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="163"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="167"/>
         <source>This order node (sale or purchase) has already been settled.</source>
         <translation>订单节点（销售或采购）已经结算。</translation>
     </message>
@@ -907,9 +920,8 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">这个节点正被版块内的“关联”列引用。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="116"/>
         <source>Internally</source>
-        <translation>内部</translation>
+        <translation type="vanished">内部</translation>
     </message>
     <message>
         <source>This internal inventory node is referenced by other sections, e.g., Partner, Sale, Purchase.</source>
@@ -936,7 +948,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">这个职员节点正被其他版块引用，例如：销售、采购。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="156"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="160"/>
         <source>Employee</source>
         <translation>职员</translation>
     </message>
@@ -949,12 +961,12 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">这个节点（销售或采购）已经结算。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="166"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="170"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="176"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="180"/>
         <source>This node is about to be removed but is still referenced. How do you want to handle it?</source>
         <translation>这个节点即将被删除，但仍然存在引用。你希望如何处理它？</translation>
     </message>
@@ -975,7 +987,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">外部存货</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="146"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="150"/>
         <source>Partner</source>
         <translation>合作</translation>
     </message>
@@ -1027,12 +1039,12 @@ Rage, rage against the dying of the light.</source>
         <translation>该节点存在外部引用，无法删除。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="158"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="162"/>
         <source>Replacement Conflict</source>
         <translation>替换冲突</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="159"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="163"/>
         <source>A reference conflict exists between the linked nodes of the old node and the new node. The replacement operation has been canceled.</source>
         <translation>旧节点与新节点之间已存在记录，替换操作已被取消。</translation>
     </message>
@@ -1421,20 +1433,20 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="382"/>
-        <location filename="../../mainwindow.cc" line="3029"/>
+        <location filename="../../mainwindow.cc" line="3018"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="387"/>
-        <location filename="../../mainwindow.cc" line="1517"/>
+        <location filename="../../mainwindow.cc" line="1506"/>
         <source>Statement</source>
         <translation>帐单</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="395"/>
         <location filename="../../mainwindow.ui" line="398"/>
-        <location filename="../../mainwindow.cc" line="1554"/>
+        <location filename="../../mainwindow.cc" line="1543"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1451,16 +1463,16 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../mainwindow.ui" line="428"/>
         <location filename="../../mainwindow.ui" line="431"/>
-        <location filename="../../mainwindow.cc" line="2583"/>
-        <location filename="../../mainwindow.cc" line="2590"/>
+        <location filename="../../mainwindow.cc" line="2572"/>
+        <location filename="../../mainwindow.cc" line="2579"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="436"/>
         <location filename="../../mainwindow.ui" line="439"/>
-        <location filename="../../mainwindow.cc" line="2584"/>
-        <location filename="../../mainwindow.cc" line="2591"/>
+        <location filename="../../mainwindow.cc" line="2573"/>
+        <location filename="../../mainwindow.cc" line="2580"/>
         <source>Workspace</source>
         <translation>工区</translation>
     </message>
@@ -1506,8 +1518,8 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="488"/>
-        <location filename="../../mainwindow.cc" line="2585"/>
-        <location filename="../../mainwindow.cc" line="2592"/>
+        <location filename="../../mainwindow.cc" line="2574"/>
+        <location filename="../../mainwindow.cc" line="2581"/>
         <source>Expire Date</source>
         <translation>期限</translation>
     </message>
@@ -1527,27 +1539,27 @@ Rage, rage against the dying of the light.</source>
         <translation>二级明细-</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1283"/>
+        <location filename="../../mainwindow.cc" line="1272"/>
         <source>Update Failed</source>
         <translation>更新失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1283"/>
+        <location filename="../../mainwindow.cc" line="1272"/>
         <source>Cannot change the base unit for section Finance because related entries already exist.</source>
         <translation>无法更改财务版块的基准单位，因为已存在记录。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1392"/>
+        <location filename="../../mainwindow.cc" line="1381"/>
         <source>Remove %1</source>
         <translation>删除 %1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1393"/>
+        <location filename="../../mainwindow.cc" line="1382"/>
         <source>The branch will be removed, and its direct children will be promoted to the same level.</source>
         <translation>将删除此分支，且所有直系子节点提升至同级。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1417"/>
+        <location filename="../../mainwindow.cc" line="1406"/>
         <source>Unsaved Data</source>
         <translation>未保存的数据</translation>
     </message>
@@ -1560,17 +1572,17 @@ Click &apos;Yes&apos; to save and close, or &apos;No&apos; to cancel.</source>
 点击“是”以保存并关闭，或点击“否”以取消。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1587"/>
+        <location filename="../../mainwindow.cc" line="1576"/>
         <source>Record-</source>
         <translation>记录-</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2485"/>
+        <location filename="../../mainwindow.cc" line="2474"/>
         <source>Language Changed</source>
         <translation>语言已更改</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2486"/>
+        <location filename="../../mainwindow.cc" line="2475"/>
         <source>The language has been changed. Please restart the application for the changes to take effect.</source>
         <translation>语言已更改，请重启应用程序以使更改生效。</translation>
     </message>
@@ -1606,7 +1618,7 @@ Please check your network and try reconnecting.</source>
         <translation type="vanished">无法连接到服务器，或连接已中断。\n请检查网络并重新连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1417"/>
+        <location filename="../../mainwindow.cc" line="1406"/>
         <source>This page contains unsaved data.
 
 Do you want to save before closing?</source>
@@ -1615,84 +1627,84 @@ Do you want to save before closing?</source>
 是否在关闭前保存？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2949"/>
+        <location filename="../../mainwindow.cc" line="2938"/>
         <source>Connection Refused</source>
         <translation>连接被拒绝</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2949"/>
+        <location filename="../../mainwindow.cc" line="2938"/>
         <source>Unable to connect to the server. Please try again.</source>
         <translation>无法连接到服务器，请重新尝试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2954"/>
+        <location filename="../../mainwindow.cc" line="2943"/>
         <source>Remote Host Closed</source>
         <translation>连接已关闭</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2954"/>
+        <location filename="../../mainwindow.cc" line="2943"/>
         <source>The server has closed the connection. Please try reconnecting.</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3039"/>
+        <location filename="../../mainwindow.cc" line="3028"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3039"/>
+        <location filename="../../mainwindow.cc" line="3028"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3039"/>
+        <location filename="../../mainwindow.cc" line="3028"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3073"/>
+        <location filename="../../mainwindow.cc" line="3062"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3073"/>
+        <location filename="../../mainwindow.cc" line="3062"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3076"/>
+        <location filename="../../mainwindow.cc" line="3065"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3076"/>
+        <location filename="../../mainwindow.cc" line="3065"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3144"/>
-        <location filename="../../mainwindow.cc" line="3151"/>
+        <location filename="../../mainwindow.cc" line="3133"/>
+        <location filename="../../mainwindow.cc" line="3140"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3144"/>
+        <location filename="../../mainwindow.cc" line="3133"/>
         <source>Failed to check updates:
 %1</source>
         <translation>检查更新失败：\n%1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3151"/>
+        <location filename="../../mainwindow.cc" line="3140"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3164"/>
+        <location filename="../../mainwindow.cc" line="3153"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3164"/>
+        <location filename="../../mainwindow.cc" line="3153"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1701,12 +1713,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3170"/>
+        <location filename="../../mainwindow.cc" line="3159"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3170"/>
+        <location filename="../../mainwindow.cc" line="3159"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -1850,12 +1862,12 @@ Download now?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../mainwindow.cc" line="1682"/>
+        <location filename="../../mainwindow.cc" line="1671"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1689"/>
+        <location filename="../../mainwindow.cc" line="1678"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -2906,57 +2918,57 @@ Download now?</source>
         <translation>发布</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="433"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="459"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="505"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="376"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="402"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="451"/>
         <source>Order Deleted</source>
         <translation>已删除</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="434"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="460"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="506"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="377"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="403"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="452"/>
         <source>This order has already been deleted by another client.
 You cannot perform recall operation.</source>
         <translation>该订单已被其他客户端删除。
 你无法执行撤回操作。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="440"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="383"/>
         <source>Order Settled</source>
         <translation>已结算</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="466"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="409"/>
         <source>Save Not Allowed</source>
         <translation>无法保存</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="467"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="410"/>
         <source>This order has already been released on another client.
 Your local changes cannot be saved.</source>
         <translation>该订单已在其他客户端发布。
 您本地的更改无法保存。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="473"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="519"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="416"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="465"/>
         <source>Partner Required</source>
         <translation>必需选择交易对象</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="473"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="519"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="416"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="465"/>
         <source>Please select a partner before saving or releasing the order.</source>
         <translation>在保存或发布订单之前，请先选择一个交易对象。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="512"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="458"/>
         <source>Release Not Allowed</source>
         <translation>无法发布</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="513"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="459"/>
         <source>This order has already been released by another client.
 You cannot release it again.</source>
         <translation>该订单已被其他客户端发布。
@@ -2975,7 +2987,7 @@ You cannot release it again.</source>
         <translation type="vanished">锁定</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="440"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="383"/>
         <source>This order has already been settled and cannot be modified.</source>
         <translation>订单已结算，无法再编辑了。</translation>
     </message>
