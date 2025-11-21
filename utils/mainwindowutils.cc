@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QHeaderView>
 
 #include "utils/entryutils.h"
 
@@ -189,4 +190,16 @@ void MainWindowUtils::RemoveEntry(TableWidget* widget)
         view->setCurrentIndex(new_index);
         view->closePersistentEditor(new_index);
     }
+}
+
+void MainWindowUtils::SetupHeaderStatus(QHeaderView* header, QSharedPointer<QSettings> settings, Section section, const QString& key)
+{
+    assert(header && settings);
+
+    const auto section_name { SectionToString(section) };
+
+    WidgetUtils::ReadConfig(header, &QHeaderView::restoreState, settings, section_name, key);
+
+    QObject::connect(header, &QHeaderView::sectionMoved,
+        [header, settings, section_name, key]() { WidgetUtils::WriteConfig(header, &QHeaderView::saveState, settings, section_name, key); });
 }

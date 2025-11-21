@@ -114,7 +114,8 @@ inline const QString kUnitPending = QStringLiteral("PEND");
 
 // App ini keys
 inline const QString kGeometry = QStringLiteral("geometry");
-inline const QString kHeaderState = QStringLiteral("header_state");
+inline const QString kTreeHeaderState = QStringLiteral("tree_header_state");
+inline const QString kTableHeaderState = QStringLiteral("table_header_state");
 inline const QString kMainwindow = QStringLiteral("mainwindow");
 inline const QString kPrinter = QStringLiteral("printer");
 inline const QString kCompanyName = QStringLiteral("company_name");

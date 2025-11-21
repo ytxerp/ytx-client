@@ -72,6 +72,8 @@ bool CheckFileValid(CString& file_path, CString& suffix);
 void SwitchDialog(const SectionContext* sc, bool enable);
 int CompareVersion(const QString& v1, const QString& v2);
 
+void SetupHeaderStatus(QHeaderView* header, QSharedPointer<QSettings> settings, Section section, const QString& key);
+
 template <MapType T> ItemModel* CreateModelFromMap(const T& map, QObject* parent)
 {
     auto* model { new ItemModel(parent) };
