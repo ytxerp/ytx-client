@@ -77,6 +77,9 @@ void PrintHub::ScanTemplate()
 
 bool PrintHub::LoadTemplate(const QString& template_name)
 {
+    if (template_name.isEmpty())
+        return false;
+
     if (template_name == current_template_) {
         return true;
     }
@@ -137,7 +140,9 @@ bool PrintHub::LoadTemplate(const QString& template_name)
 void PrintHub::RenderAllPages(QPrinter* printer)
 {
     // Fetch configuration values for rows and columns
-    const int rows { GetFieldX(QStringLiteral("rows_columns"), 7) };
+    const int rows { GetFieldX(QStringLiteral("rows_columns")) };
+    if (rows == 0)
+        return;
 
     // Calculate total pages required based on the total rows and rows per page
     const long long total_pages { (entry_list_.size() + rows - 1) / rows }; // Ceiling division to determine total pages

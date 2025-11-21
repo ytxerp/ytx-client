@@ -354,8 +354,11 @@ bool TableWidgetO::PreparePrint()
         return false;
     }
 
+    if (!PrintHub::Instance().LoadTemplate(ui->comboTemplate->currentData().toString())) {
+        return false;
+    }
+
     PrintHub::Instance().SetSectionConfig(&config_);
-    PrintHub::Instance().LoadTemplate(ui->comboTemplate->currentData().toString());
     PrintHub::Instance().SetValue(&tmp_node_, table_model_order_->GetEntryList());
 
     return true;
