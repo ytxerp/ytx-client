@@ -28,7 +28,7 @@
 #include "table/widget/tablewidget.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidget.h"
-#include "utils/widgetutils.h"
+#include "utils/templateutils.h"
 
 struct SectionContext {
     QPointer<TreeWidget> tree_widget {};
@@ -50,18 +50,18 @@ struct SectionContext {
 
 inline void SectionContext::Clear()
 {
-    WidgetUtils::SafeDelete(tree_widget);
-    WidgetUtils::SafeDelete(entry_hub);
-    WidgetUtils::SafeDelete(info.rule_model);
-    WidgetUtils::SafeDelete(info.unit_model);
-    WidgetUtils::SafeDelete(tree_model);
+    TemplateUtils::SafeDelete(tree_widget);
+    TemplateUtils::SafeDelete(entry_hub);
+    TemplateUtils::SafeDelete(info.rule_model);
+    TemplateUtils::SafeDelete(info.unit_model);
+    TemplateUtils::SafeDelete(tree_model);
 
     section_config = SectionConfig {};
     shared_config = SharedConfig {};
 
-    WidgetUtils::ClearWidgets(dialog_list);
-    WidgetUtils::ClearWidgets(table_wgt_hash);
-    WidgetUtils::ClearWidgets(rpt_wgt_hash);
+    TemplateUtils::ClearWidgets(dialog_list);
+    TemplateUtils::ClearWidgets(table_wgt_hash);
+    TemplateUtils::ClearWidgets(rpt_wgt_hash);
 }
 
 #endif // SECTIONCONTEX_H

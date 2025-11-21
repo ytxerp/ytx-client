@@ -219,7 +219,7 @@ set(HEADERS
     websocket/jsongen.h
     websocket/websocket.h
     utils/nodeutils.h
-    utils/widgetutils.h
+    utils/templateutils.h
     utils/entryutils.h
     utils/mainwindowutils.h
     utils/castutils.h

@@ -17,14 +17,15 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef WIDGETUTILS_H
-#define WIDGETUTILS_H
+#ifndef TEMPLATEUTILS_H
+#define TEMPLATEUTILS_H
 
 #include <QAbstractItemView>
 #include <QSettings>
 #include <QTableView>
 
 #include "component/using.h"
+#include "tree/itemmodel.h"
 
 template <typename T>
 concept InheritQAbstractItemView = std::is_base_of_v<QAbstractItemView, T>;
@@ -35,7 +36,18 @@ concept InheritQWidget = std::is_base_of_v<QWidget, T>;
 template <typename T>
 concept MemberFunction = std::is_member_function_pointer_v<T>;
 
-namespace WidgetUtils {
+template <typename T>
+concept MapType = requires(T a) {
+    typename T::const_iterator;
+    typename T::key_type;
+    typename T::mapped_type;
+    { a.constBegin() } -> std::same_as<typename T::const_iterator>;
+    { a.constEnd() } -> std::same_as<typename T::const_iterator>;
+    requires std::is_same_v<typename T::mapped_type, QString>;
+    requires std::is_same_v<typename T::key_type, int> || std::is_same_v<typename T::key_type, bool>;
+};
+
+namespace TemplateUtils {
 
 template <typename T> void SafeDelete(QPointer<T>& ptr)
 {
@@ -43,6 +55,18 @@ template <typename T> void SafeDelete(QPointer<T>& ptr)
         delete ptr;
         ptr = nullptr;
     }
+}
+
+template <MapType T> ItemModel* CreateModelFromMap(const T& map, QObject* parent)
+{
+    auto* model { new ItemModel(parent) };
+
+    for (auto it = map.constBegin(); it != map.constEnd(); ++it) {
+        model->AppendItem(it.value(), it.key());
+    }
+
+    model->sort(0);
+    return model;
 }
 
 template <InheritQWidget T> void FreeWidget(const QUuid& node_id, QHash<QUuid, QPointer<T>>& hash)
@@ -124,4 +148,4 @@ void ReadConfig(Widget* widget, Function function, QSharedPointer<QSettings> set
 
 } // namespace WidgetUtils
 
-#endif // WIDGETUTILS_H
+#endif // TEMPLATEUTILS_H

@@ -98,7 +98,7 @@
 #include "ui_mainwindow.h"
 #include "utils/entryutils.h"
 #include "utils/mainwindowutils.h"
-#include "utils/widgetutils.h"
+#include "utils/templateutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -124,9 +124,9 @@ MainWindow::MainWindow(QWidget* parent)
 
     StringInitializer::SetHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
 
-    WidgetUtils::ReadConfig(ui->splitter, &QSplitter::restoreState, app_settings_, kSplitter, kState);
-    WidgetUtils::ReadConfig(this, &QMainWindow::restoreState, app_settings_, kMainwindow, kState, 0);
-    WidgetUtils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
+    TemplateUtils::ReadConfig(ui->splitter, &QSplitter::restoreState, app_settings_, kSplitter, kState);
+    TemplateUtils::ReadConfig(this, &QMainWindow::restoreState, app_settings_, kMainwindow, kState, 0);
+    TemplateUtils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
 }
 
 void MainWindow::SetRemoveShortcut()
@@ -1412,14 +1412,14 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
     }
 
     if (start_ != Section::kFinance && start_ != Section::kTask)
-        WidgetUtils::FreeWidget(node_id, sc_->rpt_wgt_hash);
+        TemplateUtils::FreeWidget(node_id, sc_->rpt_wgt_hash);
 
     RFreeWidget(node_id);
 }
 
 void MainWindow::RFreeWidget(const QUuid& node_id)
 {
-    WidgetUtils::FreeWidget(node_id, sc_->table_wgt_hash);
+    TemplateUtils::FreeWidget(node_id, sc_->table_wgt_hash);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
@@ -1622,10 +1622,10 @@ void MainWindow::RegisterRptWgt(const QUuid& report_id, ReportWidget* widget)
 void MainWindow::WriteConfig()
 {
     if (app_settings_) {
-        WidgetUtils::WriteConfig(ui->splitter, &QSplitter::saveState, app_settings_, kSplitter, kState);
-        WidgetUtils::WriteConfig(this, &QMainWindow::saveState, app_settings_, kMainwindow, kState, 0);
-        WidgetUtils::WriteConfig(this, &QMainWindow::saveGeometry, app_settings_, kMainwindow, kGeometry);
-        WidgetUtils::WriteConfig(app_settings_, std::to_underlying(start_), kStart, kSection);
+        TemplateUtils::WriteConfig(ui->splitter, &QSplitter::saveState, app_settings_, kSplitter, kState);
+        TemplateUtils::WriteConfig(this, &QMainWindow::saveState, app_settings_, kMainwindow, kState, 0);
+        TemplateUtils::WriteConfig(this, &QMainWindow::saveGeometry, app_settings_, kMainwindow, kGeometry);
+        TemplateUtils::WriteConfig(app_settings_, std::to_underlying(start_), kStart, kSection);
     }
 }
 
@@ -1905,8 +1905,8 @@ void MainWindow::InitContextFinance()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
-    info.rule_model = MainWindowUtils::CreateModelFromMap(info.rule_map, this);
+    info.unit_model = TemplateUtils::CreateModelFromMap(info.unit_map, this);
+    info.rule_model = TemplateUtils::CreateModelFromMap(info.rule_map, this);
 
     ReadSectionConfig(section_config, kFinance);
 
@@ -1947,8 +1947,8 @@ void MainWindow::InitContextInventory()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
-    info.rule_model = MainWindowUtils::CreateModelFromMap(info.rule_map, this);
+    info.unit_model = TemplateUtils::CreateModelFromMap(info.unit_map, this);
+    info.rule_model = TemplateUtils::CreateModelFromMap(info.rule_map, this);
 
     ReadSectionConfig(section_config, kInventory);
 
@@ -1988,8 +1988,8 @@ void MainWindow::InitContextTask()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
-    info.rule_model = MainWindowUtils::CreateModelFromMap(info.rule_map, this);
+    info.unit_model = TemplateUtils::CreateModelFromMap(info.unit_map, this);
+    info.rule_model = TemplateUtils::CreateModelFromMap(info.rule_map, this);
 
     ReadSectionConfig(section_config, kTask);
 
@@ -2029,7 +2029,7 @@ void MainWindow::InitContextPartner()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
+    info.unit_model = TemplateUtils::CreateModelFromMap(info.unit_map, this);
 
     ReadSectionConfig(section_config, kPartner);
 
@@ -2069,10 +2069,10 @@ void MainWindow::InitContextSale()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
+    info.unit_model = TemplateUtils::CreateModelFromMap(info.unit_map, this);
     info.unit_model->sort(0, Qt::DescendingOrder);
 
-    info.rule_model = MainWindowUtils::CreateModelFromMap(info.rule_map, this);
+    info.rule_model = TemplateUtils::CreateModelFromMap(info.rule_map, this);
 
     ReadSectionConfig(section_config, kSale);
 
@@ -2121,10 +2121,10 @@ void MainWindow::InitContextPurchase()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = MainWindowUtils::CreateModelFromMap(info.unit_map, this);
+    info.unit_model = TemplateUtils::CreateModelFromMap(info.unit_map, this);
     info.unit_model->sort(0, Qt::DescendingOrder);
 
-    info.rule_model = MainWindowUtils::CreateModelFromMap(info.rule_map, this);
+    info.rule_model = TemplateUtils::CreateModelFromMap(info.rule_map, this);
 
     ReadSectionConfig(section_config, kPurchase);
 

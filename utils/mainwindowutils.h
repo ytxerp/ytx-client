@@ -25,17 +25,6 @@
 #include "component/sectioncontex.h"
 #include "worksheet.h"
 
-template <typename T>
-concept MapType = requires(T a) {
-    typename T::const_iterator;
-    typename T::key_type;
-    typename T::mapped_type;
-    { a.constBegin() } -> std::same_as<typename T::const_iterator>;
-    { a.constEnd() } -> std::same_as<typename T::const_iterator>;
-    requires std::is_same_v<typename T::mapped_type, QString>;
-    requires std::is_same_v<typename T::key_type, int> || std::is_same_v<typename T::key_type, bool>;
-};
-
 namespace MainWindowUtils {
 
 inline QString SectionToString(Section section)
@@ -73,18 +62,6 @@ void SwitchDialog(const SectionContext* sc, bool enable);
 int CompareVersion(const QString& v1, const QString& v2);
 
 void SetupHeaderStatus(QHeaderView* header, QSharedPointer<QSettings> settings, Section section, const QString& key);
-
-template <MapType T> ItemModel* CreateModelFromMap(const T& map, QObject* parent)
-{
-    auto* model { new ItemModel(parent) };
-
-    for (auto it = map.constBegin(); it != map.constEnd(); ++it) {
-        model->AppendItem(it.value(), it.key());
-    }
-
-    model->sort(0);
-    return model;
-}
 
 // ============================================================================
 // Reserved Feature: RestoreTab

@@ -159,7 +159,7 @@ void MainWindowUtils::RemoveEntry(TableWidget* widget)
     auto* view { widget->View() };
     assert(view);
 
-    if (!WidgetUtils::HasSelection(view))
+    if (!TemplateUtils::HasSelection(view))
         return;
 
     const QModelIndex current_index { view->currentIndex() };
@@ -198,8 +198,8 @@ void MainWindowUtils::SetupHeaderStatus(QHeaderView* header, QSharedPointer<QSet
 
     const auto section_name { SectionToString(section) };
 
-    WidgetUtils::ReadConfig(header, &QHeaderView::restoreState, settings, section_name, key);
+    TemplateUtils::ReadConfig(header, &QHeaderView::restoreState, settings, section_name, key);
 
     QObject::connect(header, &QHeaderView::sectionMoved,
-        [header, settings, section_name, key]() { WidgetUtils::WriteConfig(header, &QHeaderView::saveState, settings, section_name, key); });
+        [header, settings, section_name, key]() { TemplateUtils::WriteConfig(header, &QHeaderView::saveState, settings, section_name, key); });
 }
