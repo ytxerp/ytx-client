@@ -105,12 +105,12 @@ inline const QString kLeafKind = QStringLiteral("L");
 inline const QString kUnitInternal = QStringLiteral("INT");
 inline const QString kUnitPosition = QStringLiteral("POS");
 inline const QString kUnitExternal = QStringLiteral("EXT");
-inline const QString kUnitCustomer = QStringLiteral("CUST");
+inline const QString kUnitCustomer = QStringLiteral("CUS");
 inline const QString kUnitEmployee = QStringLiteral("EMP");
-inline const QString kUnitVendor = QStringLiteral("VEND");
-inline const QString kUnitImmediate = QStringLiteral("IS");
-inline const QString kUnitMonthly = QStringLiteral("MS");
-inline const QString kUnitPending = QStringLiteral("PEND");
+inline const QString kUnitVendor = QStringLiteral("VEN");
+inline const QString kUnitImmediate = QStringLiteral("IMM");
+inline const QString kUnitMonthly = QStringLiteral("MON");
+inline const QString kUnitPending = QStringLiteral("PEN");
 
 // App ini keys
 inline const QString kGeometry = QStringLiteral("geometry");
