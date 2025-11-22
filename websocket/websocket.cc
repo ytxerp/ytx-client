@@ -504,9 +504,6 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
     const QJsonObject meta { obj.value(kMeta).toObject() };
     const QJsonObject update { obj.value(kUpdate).toObject() };
 
-    const auto field { is_parallel ? kRhsNode : kLhsNode };
-    const QUuid new_node_id { update.value(field).toString() };
-
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
 
@@ -526,7 +523,7 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
     }
 
     if (session_id != session_id_) {
-        entry_hub->UpdateEntryLinkedNode(entry_id, new_node_id, is_parallel);
+        entry_hub->UpdateEntryLinkedNode(entry_id, update, is_parallel);
     }
 
     entry_hub->UpdateMeta(entry_id, meta);

@@ -130,9 +130,12 @@ void EntryHub::UpdateMeta(const QUuid& entry_id, const QJsonObject& data)
     };
 }
 
-void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QUuid& new_node_id, bool is_parallel)
+void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, bool is_parallel)
 {
     Entry* entry {};
+
+    const auto field { is_parallel ? kRhsNode : kLhsNode };
+    const QUuid new_node_id { update.value(field).toString() };
 
     auto it = entry_cache_.constFind(id);
     if (it != entry_cache_.constEnd()) {
@@ -153,6 +156,7 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QUuid& new_node_id, 
         emit SRefreshField(lhs_node, id, rhs_node_column, rhs_node_column);
     } else {
         entry = EntryPool::Instance().Allocate(section_);
+        entry->ReadJson(update);
         entry_cache_.insert(entry->id, entry);
     }
 
