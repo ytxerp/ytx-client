@@ -574,7 +574,6 @@ void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
 
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
-    const bool is_parallel { obj.value(kIsParallel).toBool() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
@@ -599,7 +598,7 @@ void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
     }
 
     if (session_id != session_id_) {
-        entry_hub->UpdateEntryNumeric(entry_id, update, is_parallel);
+        entry_hub->UpdateEntryNumeric(entry_id, update);
     }
 
     entry_hub->UpdateMeta(entry_id, meta);

@@ -87,11 +87,10 @@ public:
         Q_UNUSED(is_parallel);
     }
 
-    virtual void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update, bool is_parallel)
+    virtual void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update)
     {
         Q_UNUSED(entry_id);
         Q_UNUSED(update);
-        Q_UNUSED(is_parallel);
     }
 
     virtual void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const

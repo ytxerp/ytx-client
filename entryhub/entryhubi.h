@@ -28,7 +28,7 @@ public:
 
 public:
     void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool is_parallel) override;
-    void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update, bool is_parallel) override;
+    void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update) override;
 
 protected:
     QString QSReadTransRef(int unit) const override;
