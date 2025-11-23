@@ -58,7 +58,10 @@ enum class EntryStatus { kUnmarked = 0, kMarked };
 enum class UnitO { kImmediate = 0, kMonthly, kPending };
 enum class UnitP { kCustomer = 0, kVendor, kEmployee };
 enum class UnitI { kInternal = 0, kPosition, kExternal };
-enum class UnitT { kExternal = 0, kInternal };
+enum class UnitT {
+    kSource = 0, // 0–9 reserved for source types
+    kAction = 10, // 10–19 reserved for action types
+};
 
 // defining entry column
 enum class EntryEnum {

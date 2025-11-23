@@ -1979,8 +1979,8 @@ void MainWindow::InitContextTask()
     info.path = kTaskPath;
     info.entry = kTaskEntry;
 
-    info.unit_map.insert(std::to_underlying(UnitT::kInternal), kUnitInternal);
-    info.unit_map.insert(std::to_underlying(UnitT::kExternal), kUnitExternal);
+    info.unit_map.insert(std::to_underlying(UnitT::kAction), kUnitAction);
+    info.unit_map.insert(std::to_underlying(UnitT::kSource), kUnitSource);
 
     info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
     info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
