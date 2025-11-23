@@ -228,7 +228,7 @@
       <item>
        <widget class="QRadioButton" name="rBtnRecalled">
         <property name="text">
-         <string>Recall&amp;ed</string>
+         <string>Draf&amp;t</string>
         </property>
        </widget>
       </item>
