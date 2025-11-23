@@ -110,7 +110,8 @@ void EntryShadowI::BindEntry(Entry* base, bool is_parallel)
     EntryShadow::BindEntry(base, is_parallel);
 
     auto* entry = static_cast<EntryI*>(base);
-    unit_cost = &entry->unit_cost;
+    lhs_rate = is_parallel ? &entry->lhs_rate : &entry->rhs_rate;
+    rhs_rate = is_parallel ? &entry->rhs_rate : &entry->lhs_rate;
 
     lhs_debit = is_parallel ? &entry->lhs_debit : &entry->rhs_debit;
     lhs_credit = is_parallel ? &entry->lhs_credit : &entry->rhs_credit;
@@ -122,7 +123,8 @@ void EntryShadowI::ResetState()
 {
     EntryShadow::ResetState();
 
-    unit_cost = nullptr;
+    lhs_rate = nullptr;
+    rhs_rate = nullptr;
     lhs_debit = nullptr;
     lhs_credit = nullptr;
     rhs_debit = nullptr;
@@ -133,7 +135,8 @@ QJsonObject EntryShadowI::WriteJson() const
 {
     QJsonObject obj = EntryShadow::WriteJson();
 
-    obj.insert(kUnitCost, QString::number(*unit_cost, 'f', kMaxNumericScale_8));
+    obj.insert(kLhsRate, QString::number(*lhs_rate, 'f', kMaxNumericScale_8));
+    obj.insert(kRhsRate, QString::number(*rhs_rate, 'f', kMaxNumericScale_8));
 
     obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', kMaxNumericScale_8));
     obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', kMaxNumericScale_8));
@@ -148,7 +151,8 @@ void EntryShadowT::BindEntry(Entry* base, bool is_parallel)
     EntryShadow::BindEntry(base, is_parallel);
 
     auto* entry = static_cast<EntryT*>(base);
-    unit_cost = &entry->unit_cost;
+    lhs_rate = is_parallel ? &entry->lhs_rate : &entry->rhs_rate;
+    rhs_rate = is_parallel ? &entry->rhs_rate : &entry->lhs_rate;
 
     lhs_debit = is_parallel ? &entry->lhs_debit : &entry->rhs_debit;
     lhs_credit = is_parallel ? &entry->lhs_credit : &entry->rhs_credit;
@@ -160,7 +164,8 @@ void EntryShadowT::ResetState()
 {
     EntryShadow::ResetState();
 
-    unit_cost = nullptr;
+    lhs_rate = nullptr;
+    rhs_rate = nullptr;
     lhs_debit = nullptr;
     lhs_credit = nullptr;
     rhs_debit = nullptr;
@@ -171,7 +176,8 @@ QJsonObject EntryShadowT::WriteJson() const
 {
     QJsonObject obj = EntryShadow::WriteJson();
 
-    obj.insert(kUnitCost, QString::number(*unit_cost, 'f', kMaxNumericScale_8));
+    obj.insert(kLhsRate, QString::number(*lhs_rate, 'f', kMaxNumericScale_8));
+    obj.insert(kRhsRate, QString::number(*rhs_rate, 'f', kMaxNumericScale_8));
     obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', kMaxNumericScale_8));
     obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', kMaxNumericScale_8));
     obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', kMaxNumericScale_8));

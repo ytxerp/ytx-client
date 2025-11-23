@@ -40,7 +40,7 @@ QVariant TableModelI::data(const QModelIndex& index, int role) const
     case EntryEnumI::kCode:
         return *d_shadow->code;
     case EntryEnumI::kUnitCost:
-        return *d_shadow->unit_cost;
+        return *d_shadow->lhs_rate;
     case EntryEnumI::kDescription:
         return *d_shadow->description;
     case EntryEnumI::kRhsNode:
@@ -141,7 +141,7 @@ void TableModelI::sort(int column, Qt::SortOrder order)
         case EntryEnumI::kCode:
             return (order == Qt::AscendingOrder) ? (*lhs->code < *rhs->code) : (*lhs->code > *rhs->code);
         case EntryEnumI::kUnitCost:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->unit_cost < *d_rhs->unit_cost) : (*d_lhs->unit_cost > *d_rhs->unit_cost);
+            return (order == Qt::AscendingOrder) ? (*d_lhs->lhs_rate < *d_rhs->lhs_rate) : (*d_lhs->lhs_rate > *d_rhs->lhs_rate);
         case EntryEnumI::kDescription:
             return (order == Qt::AscendingOrder) ? (*lhs->description < *rhs->description) : (*lhs->description > *rhs->description);
         case EntryEnumI::kRhsNode:
@@ -193,11 +193,12 @@ bool TableModelI::UpdateRate(EntryShadow* entry_shadow, double value)
 {
     auto* d_shadow = DerivedPtr<EntryShadowI>(entry_shadow);
 
-    const double unit_cost { *d_shadow->unit_cost };
+    const double unit_cost { *d_shadow->lhs_rate };
     if (FloatEqual(unit_cost, value) || value < 0)
         return false;
 
-    *d_shadow->unit_cost = value;
+    *d_shadow->lhs_rate = value;
+    *d_shadow->rhs_rate = value;
 
     if (d_shadow->rhs_node->isNull())
         return false;
@@ -205,9 +206,10 @@ bool TableModelI::UpdateRate(EntryShadow* entry_shadow, double value)
     const QUuid entry_id { *d_shadow->id };
 
     QJsonObject update {};
-    update.insert(kUnitCost, QString::number(value, 'f', kMaxNumericScale_4));
+    update.insert(kLhsRate, QString::number(value, 'f', kMaxNumericScale_8));
+    update.insert(kRhsRate, QString::number(value, 'f', kMaxNumericScale_8));
 
-    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, true) };
+    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, d_shadow->is_parallel) };
     WebSocket::Instance()->SendMessage(kEntryRate, message);
 
     return true;
@@ -247,10 +249,10 @@ bool TableModelI::UpdateNumeric(EntryShadow* entry_shadow, double value, int row
     QJsonObject update {};
     const bool is_parallel { entry_shadow->is_parallel };
 
-    update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*d_shadow->lhs_debit, 'f', kMaxNumericScale_4));
-    update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*d_shadow->lhs_credit, 'f', kMaxNumericScale_4));
-    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_4));
-    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
+    update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*d_shadow->lhs_debit, 'f', kMaxNumericScale_8));
+    update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*d_shadow->lhs_credit, 'f', kMaxNumericScale_8));
+    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_8));
+    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_8));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
     WebSocket::Instance()->SendMessage(kEntryNumeric, message);

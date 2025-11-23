@@ -31,7 +31,8 @@ void SearchDialogT::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumT::kLhsCredit), value_);
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumT::kRhsCredit), value_);
 
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumT::kUnitCost), rate_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumT::kLhsRate), rate_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumT::kRhsRate), rate_);
 
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumT::kLhsNode), table_path_);
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumT::kRhsNode), table_path_);

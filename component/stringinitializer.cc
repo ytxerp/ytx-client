@@ -233,14 +233,15 @@ void StringInitializer::SetHeader(
         QObject::tr("IssuedTime"),
         QObject::tr("Code"),
         QObject::tr("LhsNode"),
+        QObject::tr("LhsUnitCost"),
         QObject::tr("LhsDebit"),
         QObject::tr("LhsCredit"),
         QObject::tr("Description"),
-        QObject::tr("UnitCost"),
         QObject::tr("D"),
         QObject::tr("S"),
         QObject::tr("RhsCredit"),
         QObject::tr("RhsDebit"),
+        QObject::tr("RhsUnitCost"),
         QObject::tr("RhsNode"),
     };
 
@@ -254,14 +255,15 @@ void StringInitializer::SetHeader(
         QObject::tr("IssuedTime"),
         QObject::tr("Code"),
         QObject::tr("LhsNode"),
+        QObject::tr("LhsUnitCost"),
         QObject::tr("LhsDebit"),
         QObject::tr("LhsCredit"),
         QObject::tr("Description"),
-        QObject::tr("UnitCost"),
         QObject::tr("D"),
         QObject::tr("S"),
         QObject::tr("RhsCredit"),
         QObject::tr("RhsDebit"),
+        QObject::tr("RhsUnitCost"),
         QObject::tr("RhsNode"),
     };
 

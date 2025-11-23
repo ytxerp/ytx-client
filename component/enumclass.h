@@ -208,14 +208,15 @@ enum class FullEntryEnumI {
     kIssuedTime,
     kCode,
     kLhsNode,
+    kLhsRate,
     kLhsDebit,
     kLhsCredit,
     kDescription,
-    kUnitCost,
     kDocument,
     kStatus,
     kRhsCredit,
     kRhsDebit,
+    kRhsRate,
     kRhsNode,
 };
 
@@ -229,14 +230,15 @@ enum class FullEntryEnumT {
     kIssuedTime,
     kCode,
     kLhsNode,
+    kLhsRate,
     kLhsDebit,
     kLhsCredit,
     kDescription,
-    kUnitCost,
     kDocument,
     kStatus,
     kRhsCredit,
     kRhsDebit,
+    kRhsRate,
     kRhsNode,
 };
 

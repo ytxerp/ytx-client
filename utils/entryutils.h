@@ -195,6 +195,7 @@ bool UpdateShadowDocument(
     return true;
 }
 
+#if 0
 template <typename Field, typename T>
 bool UpdateShadowDouble(QJsonObject& update, T* object, CString& field, const Field& value, Field* T::* member, std::function<void()> restart_timer = nullptr)
 {
@@ -212,12 +213,13 @@ bool UpdateShadowDouble(QJsonObject& update, T* object, CString& field, const Fi
         return true;
     }
 
-    update.insert(field, QString::number(value, 'f', kMaxNumericScale_4));
+    update.insert(field, QString::number(value, 'f', kMaxNumericScale_8));
     if (restart_timer)
         restart_timer();
 
     return true;
 }
+#endif
 
 template <typename Field, typename T>
 bool UpdateShadowField(QJsonObject& update, T* object, CString& field, const Field& value, Field* T::* member, std::function<void()> restart_timer = nullptr)

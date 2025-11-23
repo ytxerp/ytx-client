@@ -60,7 +60,8 @@ struct EntryF final : Entry {
 };
 
 struct EntryI final : Entry {
-    double unit_cost {};
+    double lhs_rate {};
+    double rhs_rate {};
 
     double lhs_debit {};
     double lhs_credit {};
@@ -72,7 +73,8 @@ struct EntryI final : Entry {
 };
 
 struct EntryT final : Entry {
-    double unit_cost {};
+    double lhs_rate {};
+    double rhs_rate {};
 
     double lhs_debit {};
     double lhs_credit {};

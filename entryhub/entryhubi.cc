@@ -79,7 +79,8 @@ void EntryHubI::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update
     if (it != entry_cache_.constEnd()) {
         auto* d_entry = static_cast<EntryI*>(it.value());
 
-        d_entry->unit_cost = update[kUnitCost].toString().toDouble();
+        d_entry->lhs_rate = update[kLhsRate].toString().toDouble();
+        d_entry->rhs_rate = update[kRhsRate].toString().toDouble();
 
         const int unit_cost { std::to_underlying(EntryEnumI::kUnitCost) };
 

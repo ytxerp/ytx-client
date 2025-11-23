@@ -86,7 +86,8 @@ struct EntryShadowF final : EntryShadow {
 };
 
 struct EntryShadowI final : EntryShadow {
-    double* unit_cost {};
+    double* lhs_rate {};
+    double* rhs_rate {};
     double* lhs_debit {};
     double* lhs_credit {};
     double* rhs_debit {};
@@ -98,7 +99,9 @@ struct EntryShadowI final : EntryShadow {
 };
 
 struct EntryShadowT final : EntryShadow {
-    double* unit_cost {};
+    double* lhs_rate {};
+    double* rhs_rate {};
+
     double* lhs_debit {};
     double* lhs_credit {};
     double* rhs_debit {};

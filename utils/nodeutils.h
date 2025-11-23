@@ -214,7 +214,7 @@ bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& v
         return false;
 
     current_value = value;
-    update.insert(field, QString::number(value, 'f', kMaxNumericScale_4));
+    update.insert(field, QString::number(value, 'f', kMaxNumericScale_8));
 
     if (restart_timer)
         restart_timer();

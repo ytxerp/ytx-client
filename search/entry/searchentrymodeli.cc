@@ -26,8 +26,8 @@ QVariant SearchEntryModelI::data(const QModelIndex& index, int role) const
         return d_entry->lhs_node;
     case FullEntryEnumI::kLhsDebit:
         return d_entry->lhs_debit;
-    case FullEntryEnumI::kUnitCost:
-        return d_entry->unit_cost;
+    case FullEntryEnumI::kLhsRate:
+        return d_entry->lhs_rate;
     case FullEntryEnumI::kLhsCredit:
         return d_entry->lhs_credit;
     case FullEntryEnumI::kDescription:
@@ -40,6 +40,8 @@ QVariant SearchEntryModelI::data(const QModelIndex& index, int role) const
         return d_entry->rhs_credit;
     case FullEntryEnumI::kRhsDebit:
         return d_entry->rhs_debit;
+    case FullEntryEnumI::kRhsRate:
+        return d_entry->rhs_rate;
     case FullEntryEnumI::kRhsNode:
         return d_entry->rhs_node;
     default:
@@ -65,8 +67,10 @@ void SearchEntryModelI::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->code < rhs->code) : (lhs->code > rhs->code);
         case FullEntryEnumI::kLhsNode:
             return (order == Qt::AscendingOrder) ? (lhs->lhs_node < rhs->lhs_node) : (lhs->lhs_node > rhs->lhs_node);
-        case FullEntryEnumI::kUnitCost:
-            return (order == Qt::AscendingOrder) ? (d_lhs->unit_cost < d_rhs->unit_cost) : (d_lhs->unit_cost > d_rhs->unit_cost);
+        case FullEntryEnumI::kLhsRate:
+            return (order == Qt::AscendingOrder) ? (d_lhs->lhs_rate < d_rhs->lhs_rate) : (d_lhs->lhs_rate > d_rhs->lhs_rate);
+        case FullEntryEnumI::kRhsRate:
+            return (order == Qt::AscendingOrder) ? (d_lhs->rhs_rate < d_rhs->rhs_rate) : (d_lhs->rhs_rate > d_rhs->rhs_rate);
         case FullEntryEnumI::kLhsDebit:
             return (order == Qt::AscendingOrder) ? (d_lhs->lhs_debit < d_rhs->lhs_debit) : (d_lhs->lhs_debit > d_rhs->lhs_debit);
         case FullEntryEnumI::kLhsCredit:

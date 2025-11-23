@@ -102,7 +102,8 @@ void EntryI::ResetState()
 {
     Entry::ResetState();
 
-    unit_cost = 0.0;
+    lhs_rate = 0.0;
+    rhs_rate = 0.0;
     lhs_debit = 0.0;
     lhs_credit = 0.0;
     rhs_debit = 0.0;
@@ -113,8 +114,10 @@ void EntryI::ReadJson(const QJsonObject& object)
 {
     Entry::ReadJson(object);
 
-    if (object.contains(kUnitCost))
-        unit_cost = object[kUnitCost].toString().toDouble();
+    if (object.contains(kLhsRate))
+        lhs_rate = object[kLhsRate].toString().toDouble();
+    if (object.contains(kRhsRate))
+        rhs_rate = object[kRhsRate].toString().toDouble();
     if (object.contains(kLhsDebit))
         lhs_debit = object[kLhsDebit].toString().toDouble();
     if (object.contains(kLhsCredit))
@@ -129,7 +132,8 @@ void EntryT::ResetState()
 {
     Entry::ResetState();
 
-    unit_cost = 0.0;
+    lhs_rate = 0.0;
+    rhs_rate = 0.0;
     lhs_debit = 0.0;
     lhs_credit = 0.0;
     rhs_debit = 0.0;
@@ -140,8 +144,10 @@ void EntryT::ReadJson(const QJsonObject& object)
 {
     Entry::ReadJson(object);
 
-    if (object.contains(kUnitCost))
-        unit_cost = object[kUnitCost].toString().toDouble();
+    if (object.contains(kLhsRate))
+        lhs_rate = object[kLhsRate].toString().toDouble();
+    if (object.contains(kRhsRate))
+        rhs_rate = object[kRhsRate].toString().toDouble();
     if (object.contains(kLhsDebit))
         lhs_debit = object[kLhsDebit].toString().toDouble();
     if (object.contains(kLhsCredit))
