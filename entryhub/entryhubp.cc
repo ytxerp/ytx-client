@@ -1,5 +1,8 @@
 #include "entryhubp.h"
 
+#include "global/entrypool.h"
+#include "utils/entryutils.h"
+
 EntryHubP::EntryHubP(CSectionInfo& info, QObject* parent)
     : EntryHub(info, parent)
 {
@@ -69,6 +72,41 @@ void EntryHubP::PushEntry(const QUuid& node_id)
     }
 
     emit SAppendMultiEntry(node_id, entry_list);
+}
+
+void EntryHubP::InsertEntry(const QJsonObject& data)
+{
+    auto* entry = EntryPool::Instance().Allocate(section_);
+    entry->ReadJson(data);
+
+    entry_cache_.insert(entry->id, entry);
+
+    emit SAppendOneEntry(entry->lhs_node, entry);
+}
+
+void EntryHubP::RemoveEntry(const QUuid& entry_id)
+{
+    auto it = entry_cache_.constFind(entry_id);
+    if (it != entry_cache_.constEnd()) {
+        auto* entry = it.value();
+
+        emit SRemoveOneEntry(entry->lhs_node, entry_id);
+
+        EntryPool::Instance().Recycle(entry, section_);
+    }
+}
+
+void EntryHubP::UpdateEntry(const QUuid& id, const QJsonObject& update)
+{
+    auto it = entry_cache_.constFind(id);
+    if (it != entry_cache_.constEnd()) {
+        auto* entry = it.value();
+
+        entry->ReadJson(update);
+
+        const auto [start, end] = EntryUtils::CacheColumnRange(section_);
+        emit SRefreshField(entry->lhs_node, id, start, end);
+    };
 }
 
 #if 0

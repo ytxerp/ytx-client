@@ -53,17 +53,17 @@ signals:
     void SRemoveEntry(const QUuid& entry_id);
 
 public slots:
-    void RRemoveMultiEntry(const QSet<QUuid>& entry_id_set);
     virtual void RAppendMultiEntry(const EntryList& entry_list);
+    virtual void RRemoveOneEntry(const QUuid& entry_id);
+    virtual void RAppendOneEntry(Entry* entry);
+
+    void RRemoveMultiEntry(const QSet<QUuid>& entry_id_set);
 
     void RUpdateBalance(const QUuid& entry_id);
     void RRefreshStatus();
 
     void RRefreshField(const QUuid& entry_id, int start, int end);
     void RDirectionRule(bool value);
-
-    void RAppendOneEntry(Entry* entry);
-    void RRemoveOneEntry(const QUuid& entry_id);
 
 public:
     // implemented functions
@@ -73,11 +73,9 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
-
     bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-    virtual int GetRhsRow(const QUuid& rhs_id) const;
-    QModelIndex GetIndex(const QUuid& entry_id) const;
+    virtual QModelIndex GetIndex(const QUuid& entry_id) const;
 
     void ActionEntry(EntryAction action);
 

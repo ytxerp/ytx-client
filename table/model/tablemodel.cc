@@ -216,19 +216,6 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-int TableModel::GetRhsRow(const QUuid& rhs_id) const
-{
-    int row { 0 };
-
-    for (const auto* entry_shadow : shadow_list_) {
-        if (*entry_shadow->rhs_node == rhs_id) {
-            return row;
-        }
-        ++row;
-    }
-    return -1;
-}
-
 QModelIndex TableModel::GetIndex(const QUuid& entry_id) const
 {
     int row { 0 };
@@ -248,6 +235,9 @@ bool TableModel::insertRows(int row, int /*count*/, const QModelIndex& parent)
 
     auto* entry_shadow { InsertRowsImpl(row, parent) };
     *entry_shadow->issued_time = QDateTime::currentDateTimeUtc();
+
+    if (shadow_list_.size() == 1)
+        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
 
     emit SInsertEntry(entry_shadow->entry);
     return true;

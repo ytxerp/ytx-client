@@ -31,6 +31,8 @@ public:
 
 public slots:
     void RAppendMultiEntry(const EntryList& entry_list) override;
+    void RRemoveOneEntry(const QUuid& entry_id) override;
+    void RAppendOneEntry(Entry* entry) override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -41,6 +43,7 @@ public:
 
     bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+    QModelIndex GetIndex(const QUuid& entry_id) const override;
 
 protected:
     bool UpdateInternalSku(EntryP* entry, const QUuid& value);

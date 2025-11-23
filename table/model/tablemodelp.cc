@@ -26,6 +26,30 @@ void TableModelP::RAppendMultiEntry(const EntryList& entry_list)
     sort(std::to_underlying(EntryEnum::kIssuedTime), Qt::AscendingOrder);
 }
 
+void TableModelP::RRemoveOneEntry(const QUuid& entry_id)
+{
+    auto idx { GetIndex(entry_id) };
+    if (!idx.isValid())
+        return;
+
+    int row { idx.row() };
+    beginRemoveRows(QModelIndex(), row, row);
+    entry_list_.remove(row);
+    endRemoveRows();
+}
+
+void TableModelP::RAppendOneEntry(Entry* entry)
+{
+    auto row { entry_list_.size() };
+
+    beginInsertRows(QModelIndex(), row, row);
+    entry_list_.emplaceBack(entry);
+    endInsertRows();
+
+    if (entry_list_.size() == 1)
+        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
+}
+
 bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
@@ -48,6 +72,20 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
     emit SRemoveEntry(entry_id);
     return true;
+}
+
+QModelIndex TableModelP::GetIndex(const QUuid& entry_id) const
+{
+    int row { 0 };
+
+    for (const auto* entry : entry_list_) {
+        if (entry->id == entry_id) {
+            return index(row, 0);
+        }
+        ++row;
+    }
+
+    return QModelIndex();
 }
 
 bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
@@ -74,16 +112,12 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
 
     if (old_node.isNull()) {
         message.insert(kEntry, entry->WriteJson());
-
         WebSocket::Instance()->SendMessage(kEntryInsert, message);
     }
 
     if (!old_node.isNull()) {
-        message.insert(kOldNodeId, old_node_id);
-        message.insert(kNewNodeId, new_node_id);
-        message.insert(kField, kRhsNode);
-
-        WebSocket::Instance()->SendMessage(kEntryLinkedNode, message);
+        pending_updates_[entry_id].insert(kRhsNode, new_node_id);
+        RestartTimer(entry_id);
     }
 
     return true;
@@ -259,6 +293,9 @@ bool TableModelP::insertRows(int row, int, const QModelIndex& parent)
     beginInsertRows(parent, row, row);
     entry_list_.emplaceBack(entry);
     endInsertRows();
+
+    if (entry_list_.size() == 1)
+        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
 
     emit SInsertEntry(entry);
     return true;

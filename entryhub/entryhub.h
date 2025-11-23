@@ -61,9 +61,9 @@ public slots:
 
 public:
     // tree
-    void InsertEntry(const QJsonObject& data);
-    void RemoveEntry(const QUuid& entry_id);
-    void UpdateEntry(const QUuid& entry_id, const QJsonObject& update);
+    virtual void InsertEntry(const QJsonObject& data);
+    virtual void RemoveEntry(const QUuid& entry_id);
+    virtual void UpdateEntry(const QUuid& entry_id, const QJsonObject& update);
 
     void InsertMeta(const QUuid& entry_id, const QJsonObject& meta);
     void UpdateMeta(const QUuid& entry_id, const QJsonObject& meta);

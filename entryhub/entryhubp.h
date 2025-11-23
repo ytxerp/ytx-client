@@ -35,6 +35,10 @@ public:
     void SearchEntry(QList<Entry*>& entry_list, CString& name) const;
     void PushEntry(const QUuid& node_id);
 
+    void InsertEntry(const QJsonObject& data) override;
+    void RemoveEntry(const QUuid& entry_id) override;
+    void UpdateEntry(const QUuid& entry_id, const QJsonObject& update) override;
+
     void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
     // std::optional<std::pair<QUuid, double>> ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const;
 
