@@ -1891,12 +1891,27 @@ void MainWindow::InitContextFinance()
     info.path = kFinancePath;
     info.entry = kFinanceEntry;
 
-    QStringList unit_list { "CNY", "HKD", "USD", "GBP", "JPY", "CAD", "AUD", "EUR" };
-    QStringList unit_symbol_list { "¥", "$", "$", "£", "¥", "$", "$", "€" };
-
-    for (int i = 0; i != unit_list.size(); ++i) {
-        info.unit_map.insert(i, unit_list.at(i));
-        info.unit_symbol_map.insert(i, unit_symbol_list.at(i));
+    for (Currency c : {
+             Currency::USD,
+             Currency::EUR,
+             Currency::JPY,
+             Currency::GBP,
+             Currency::AUD,
+             Currency::CAD,
+             Currency::CHF,
+             Currency::CNY,
+             Currency::HKD,
+             Currency::NZD,
+             Currency::SEK,
+             Currency::NOK,
+             Currency::SGD,
+             Currency::KRW,
+             Currency::MXN,
+             Currency::INR,
+         }) {
+        const int key { std::to_underlying(c) };
+        info.unit_map.insert(key, currency_code(c));
+        info.unit_symbol_map.insert(key, currency_symbol(c));
     }
 
     info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
