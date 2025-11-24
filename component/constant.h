@@ -202,6 +202,7 @@ inline const QString kEnUS = QStringLiteral("en_US");
 inline const QString kLanguage = QStringLiteral("language");
 inline const QString kZhCN = QStringLiteral("zh_CN");
 inline const QString kSolarizedDark = QStringLiteral("Solarized Dark");
+inline const QSet<QString> kSupportedLanguages { kZhCN, kEnUS };
 
 // Database & connection
 inline const QString kLogin = QStringLiteral("login");

@@ -2701,13 +2701,10 @@ void MainWindow::ReadLocalConfig()
 
 void MainWindow::LoadAndInstallTranslator(CString& language)
 {
-    static const QSet<QString> supported_languages { kZhCN, kEnUS };
-
-    const QString lang { supported_languages.contains(language) ? language : kEnUS };
+    const QString lang { kSupportedLanguages.contains(language) ? language : kEnUS };
 
     QLocale locale(lang);
     QLocale::setDefault(locale);
-
     Collator::SetLanguage(locale);
 
     if (lang.startsWith("en", Qt::CaseInsensitive))
