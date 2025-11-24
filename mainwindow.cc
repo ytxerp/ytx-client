@@ -1107,11 +1107,15 @@ void MainWindow::InsertNodeFunction(const QModelIndex& parent, const QUuid& pare
 
     model->SetParent(node, parent_id);
 
-    if (start_ == Section::kSale || start_ == Section::kPurchase)
+    switch (start_) {
+    case Section::kSale:
+    case Section::kPurchase:
         InsertNodeO(node, parent, row);
-
-    if (start_ != Section::kSale && start_ != Section::kPurchase)
+        break;
+    default:
         InsertNodeFIPT(node, parent, parent_id, row);
+        break;
+    }
 }
 
 void MainWindow::on_actionNewGroup_triggered()
@@ -2265,14 +2269,6 @@ void MainWindow::on_actionJump_triggered()
     if (rhs_node_id.isNull())
         return;
 
-    if (start_ == Section::kTask) {
-        auto& tree_model { sc_->tree_model };
-
-        if (!tree_model->Contains(rhs_node_id)) {
-            tree_model->AckNode(rhs_node_id);
-        }
-    }
-
     const auto entry_id { index.sibling(row, std::to_underlying(EntryEnum::kId)).data().toUuid() };
     ShowLeafWidget(rhs_node_id, entry_id);
 }
@@ -2827,18 +2823,6 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
         auto& tree_model { sc_->tree_model };
 
         if (!tree_model->Contains(lhs_node_id)) {
-            tree_model->AckNode(id);
-        }
-    }
-
-    if (start_ == Section::kTask) {
-        auto& tree_model { sc_->tree_model };
-
-        if (tree_model->Contains(lhs_node_id)) {
-            id = lhs_node_id;
-        } else if (tree_model->Contains(rhs_node_id)) {
-            id = rhs_node_id;
-        } else {
             tree_model->AckNode(id);
         }
     }

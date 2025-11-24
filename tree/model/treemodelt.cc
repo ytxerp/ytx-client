@@ -228,55 +228,6 @@ void TreeModelT::ResetColor(const QModelIndex& index)
     update.insert(kColor, QString());
 }
 
-void TreeModelT::AckTree(const QJsonObject& obj)
-{
-    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
-    const QJsonArray path_array { obj.value(kPathArray).toArray() };
-
-    beginResetModel();
-    ClearModel();
-
-    for (const QJsonValue& val : node_array) {
-        const QJsonObject obj { val.toObject() };
-
-        const QUuid id { QUuid(obj.value(kId).toString()) };
-
-        assert(!node_hash_.contains(id));
-
-        Node* node { NodePool::Instance().Allocate(section_) };
-        node->ReadJson(obj);
-        node_hash_.insert(id, node);
-    }
-
-    for (const QJsonValue& val : path_array) {
-        const QJsonObject obj { val.toObject() };
-
-        const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
-        const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
-
-        Node* ancestor { node_hash_.value(ancestor_id) };
-        Node* descendant { node_hash_.value(descendant_id) };
-
-        assert((ancestor) && "Ancestor not found in node_model_");
-        assert((descendant) && "Descendant not found in node_model_");
-
-        descendant->parent = ancestor;
-    }
-
-    for (auto* node : std::as_const(node_hash_)) {
-        if (node != root_) {
-            node->parent->children.emplaceBack(node);
-        }
-    }
-
-    if (node_hash_.size() >= 2) {
-        HandleNode();
-    }
-
-    sort(std::to_underlying(NodeEnumT::kName), Qt::AscendingOrder);
-    endResetModel();
-}
-
 void TreeModelT::UpdateNodeStatus(const QUuid& node_id, int status)
 {
     auto* node = GetNode(node_id);

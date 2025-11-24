@@ -117,18 +117,3 @@ void SearchNodeModelT::sort(int column, Qt::SortOrder order)
     std::sort(node_list_.begin(), node_list_.end(), Compare);
     emit layoutChanged();
 }
-
-void SearchNodeModelT::Search(CString& text)
-{
-    if (text.isEmpty()) {
-        if (!node_list_.isEmpty()) {
-            beginResetModel();
-            NodePool::Instance().Recycle(node_list_, section_);
-            node_list_.clear();
-            endResetModel();
-        }
-        return;
-    }
-
-    WebSocket::Instance()->SendMessage(kNodeSearch, JsonGen::NodeSearch(section_, text));
-}

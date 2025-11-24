@@ -520,7 +520,9 @@ void TreeModel::UpdateDefaultUnit(int default_unit)
 
 void TreeModel::SearchNode(QList<Node*>& node_list, CString& name) const
 {
-    node_list.reserve(node_hash_.size() / 2);
+    if (node_hash_.size() >= 50) {
+        node_list.reserve(node_hash_.size() / 2);
+    }
 
     for (const auto& [id, node_ptr] : node_hash_.asKeyValueRange()) {
         if (!node_ptr)

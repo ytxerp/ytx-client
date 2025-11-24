@@ -36,7 +36,6 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     void ResetColor(const QModelIndex& index) override;
-    void AckTree(const QJsonObject& obj) override;
 
     int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeT::status); }
     void UpdateNodeStatus(const QUuid& node_id, int status);
