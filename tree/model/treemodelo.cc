@@ -63,7 +63,7 @@ void TreeModelO::AckTree(const QJsonObject& obj)
     }
 
     for (auto* node : std::as_const(node_hash_)) {
-        if (node->kind == std::to_underlying(NodeKind::kLeaf)) {
+        if (node != root_) {
             node->parent->children.emplaceBack(node);
         }
     }
