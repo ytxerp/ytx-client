@@ -1,5 +1,6 @@
 #include "treemodelp.h"
 
+#include "global/collator.h"
 #include "tree/includemultiplefiltermodel.h"
 
 TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
@@ -127,30 +128,36 @@ void TreeModelP::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0 && column < node_header_.size());
 
-    auto Compare = [column, order](const Node* lhs, const Node* rhs) -> bool {
+    const NodeEnumP e_column { column };
+
+    switch (e_column) {
+    case NodeEnumP::kId:
+    case NodeEnumP::kUserId:
+    case NodeEnumP::kCreateTime:
+    case NodeEnumP::kCreateBy:
+    case NodeEnumP::kUpdateTime:
+    case NodeEnumP::kUpdateBy:
+        return;
+    default:
+        break;
+    }
+
+    auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
         auto* d_lhs = DerivedPtr<NodeP>(lhs);
         auto* d_rhs = DerivedPtr<NodeP>(rhs);
 
-        const NodeEnumP e_column { column };
+        const auto& collator { Collator::Instance() };
+
         switch (e_column) {
         case NodeEnumP::kName:
-            return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
-        case NodeEnumP::kUserId:
-            return (order == Qt::AscendingOrder) ? (lhs->user_id < rhs->user_id) : (lhs->user_id > rhs->user_id);
-        case NodeEnumP::kCreateTime:
-            return (order == Qt::AscendingOrder) ? (lhs->created_time < rhs->created_time) : (lhs->created_time > rhs->created_time);
-        case NodeEnumP::kCreateBy:
-            return (order == Qt::AscendingOrder) ? (lhs->created_by < rhs->created_by) : (lhs->created_by > rhs->created_by);
-        case NodeEnumP::kUpdateTime:
-            return (order == Qt::AscendingOrder) ? (lhs->updated_time < rhs->updated_time) : (lhs->updated_time > rhs->updated_time);
-        case NodeEnumP::kUpdateBy:
-            return (order == Qt::AscendingOrder) ? (lhs->updated_by < rhs->updated_by) : (lhs->updated_by > rhs->updated_by);
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->name, rhs->name) < 0) : (collator.compare(lhs->name, rhs->name) > 0);
         case NodeEnumP::kCode:
-            return (order == Qt::AscendingOrder) ? (lhs->code < rhs->code) : (lhs->code > rhs->code);
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->code, rhs->code) < 0) : (collator.compare(lhs->code, rhs->code) > 0);
         case NodeEnumP::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
+                                                 : (collator.compare(lhs->description, rhs->description) > 0);
         case NodeEnumP::kNote:
-            return (order == Qt::AscendingOrder) ? (lhs->note < rhs->note) : (lhs->note > rhs->note);
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->note, rhs->note) < 0) : (collator.compare(lhs->note, rhs->note) > 0);
         case NodeEnumP::kKind:
             return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
         case NodeEnumP::kUnit:

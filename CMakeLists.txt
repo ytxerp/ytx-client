@@ -287,6 +287,7 @@ set(HEADERS
     global/nodepool.h
     global/concepts.h
     global/tablesstation.h
+    global/collator.h
 )
 
 set(UIS

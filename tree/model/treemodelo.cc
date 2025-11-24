@@ -2,6 +2,7 @@
 
 #include <QJsonArray>
 
+#include "global/collator.h"
 #include "global/nodepool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -72,7 +73,7 @@ void TreeModelO::AckTree(const QJsonObject& obj)
         HandleNode();
     }
 
-    sort(std::to_underlying(NodeEnumT::kName), Qt::AscendingOrder);
+    sort(std::to_underlying(NodeEnumO::kName), Qt::AscendingOrder);
     endResetModel();
 }
 
@@ -231,26 +232,32 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0 && column < node_header_.size());
 
-    auto Compare = [column, order](const Node* lhs, const Node* rhs) -> bool {
+    const NodeEnumO e_column { column };
+
+    switch (e_column) {
+    case NodeEnumO::kId:
+    case NodeEnumO::kUserId:
+    case NodeEnumO::kCreateTime:
+    case NodeEnumO::kCreateBy:
+    case NodeEnumO::kUpdateTime:
+    case NodeEnumO::kUpdateBy:
+        return;
+    default:
+        break;
+    }
+
+    auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
         auto* d_lhs = DerivedPtr<NodeO>(lhs);
         auto* d_rhs = DerivedPtr<NodeO>(rhs);
 
-        const NodeEnumO e_column { column };
+        const auto& collator { Collator::Instance() };
+
         switch (e_column) {
         case NodeEnumO::kName:
-            return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
-        case NodeEnumO::kUserId:
-            return (order == Qt::AscendingOrder) ? (lhs->user_id < rhs->user_id) : (lhs->user_id > rhs->user_id);
-        case NodeEnumO::kCreateTime:
-            return (order == Qt::AscendingOrder) ? (lhs->created_time < rhs->created_time) : (lhs->created_time > rhs->created_time);
-        case NodeEnumO::kCreateBy:
-            return (order == Qt::AscendingOrder) ? (lhs->created_by < rhs->created_by) : (lhs->created_by > rhs->created_by);
-        case NodeEnumO::kUpdateTime:
-            return (order == Qt::AscendingOrder) ? (lhs->updated_time < rhs->updated_time) : (lhs->updated_time > rhs->updated_time);
-        case NodeEnumO::kUpdateBy:
-            return (order == Qt::AscendingOrder) ? (lhs->updated_by < rhs->updated_by) : (lhs->updated_by > rhs->updated_by);
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->name, rhs->name) < 0) : (collator.compare(lhs->name, rhs->name) > 0);
         case NodeEnumO::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
+                                                 : (collator.compare(lhs->description, rhs->description) > 0);
         case NodeEnumO::kDirectionRule:
             return (order == Qt::AscendingOrder) ? (lhs->direction_rule < rhs->direction_rule) : (lhs->direction_rule > rhs->direction_rule);
         case NodeEnumO::kKind:

@@ -55,6 +55,7 @@
 #include "entryhub/entryhubo.h"
 #include "entryhub/entryhubp.h"
 #include "entryhub/entryhubt.h"
+#include "global/collator.h"
 #include "global/logininfo.h"
 #include "global/nodepool.h"
 #include "global/printhub.h"
@@ -2706,6 +2707,8 @@ void MainWindow::LoadAndInstallTranslator(CString& language)
 
     QLocale locale(lang);
     QLocale::setDefault(locale);
+
+    Collator::SetLanguage(locale);
 
     if (lang.startsWith("en", Qt::CaseInsensitive))
         return;

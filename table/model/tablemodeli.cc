@@ -1,6 +1,7 @@
 #include "tablemodeli.h"
 
 #include "component/constant.h"
+#include "global/collator.h"
 #include "global/entryshadowpool.h"
 #include "utils/entryutils.h"
 #include "websocket/jsongen.h"
@@ -135,15 +136,18 @@ void TableModelI::sort(int column, Qt::SortOrder order)
         auto* d_lhs { DerivedPtr<EntryShadowI>(lhs) };
         auto* d_rhs { DerivedPtr<EntryShadowI>(rhs) };
 
+        const auto& collator { Collator::Instance() };
+
         switch (e_column) {
+        case EntryEnumI::kCode:
+            return (order == Qt::AscendingOrder) ? (collator.compare(*lhs->code, *rhs->code) < 0) : (collator.compare(*lhs->code, *rhs->code) > 0);
+        case EntryEnumI::kDescription:
+            return (order == Qt::AscendingOrder) ? (collator.compare(*lhs->description, *rhs->description) < 0)
+                                                 : (collator.compare(*lhs->description, *rhs->description) > 0);
         case EntryEnumI::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (*lhs->issued_time < *rhs->issued_time) : (*lhs->issued_time > *rhs->issued_time);
-        case EntryEnumI::kCode:
-            return (order == Qt::AscendingOrder) ? (*lhs->code < *rhs->code) : (*lhs->code > *rhs->code);
         case EntryEnumI::kUnitCost:
             return (order == Qt::AscendingOrder) ? (*d_lhs->lhs_rate < *d_rhs->lhs_rate) : (*d_lhs->lhs_rate > *d_rhs->lhs_rate);
-        case EntryEnumI::kDescription:
-            return (order == Qt::AscendingOrder) ? (*lhs->description < *rhs->description) : (*lhs->description > *rhs->description);
         case EntryEnumI::kRhsNode:
             return (order == Qt::AscendingOrder) ? (*lhs->rhs_node < *rhs->rhs_node) : (*lhs->rhs_node > *rhs->rhs_node);
         case EntryEnumI::kStatus:

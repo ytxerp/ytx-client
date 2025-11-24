@@ -3,6 +3,7 @@
 #include <QDateTime>
 
 #include "component/constant.h"
+#include "global/collator.h"
 #include "global/entrypool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -217,31 +218,36 @@ void TableModelP::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0 && column <= info_.entry_header.size() - 1);
 
-    auto Compare = [column, order](Entry* lhs, Entry* rhs) -> bool {
-        const EntryEnumP e_column { column };
+    const EntryEnumP e_column { column };
 
+    switch (e_column) {
+    case EntryEnumP::kId:
+    case EntryEnumP::kUserId:
+    case EntryEnumP::kCreateTime:
+    case EntryEnumP::kCreateBy:
+    case EntryEnumP::kUpdateTime:
+    case EntryEnumP::kUpdateBy:
+        return;
+    default:
+        break;
+    }
+
+    auto Compare = [e_column, order](Entry* lhs, Entry* rhs) -> bool {
         auto* d_lhs { DerivedPtr<EntryP>(lhs) };
         auto* d_rhs { DerivedPtr<EntryP>(rhs) };
 
+        const auto& collator { Collator::Instance() };
+
         switch (e_column) {
+        case EntryEnumP::kCode:
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->code, rhs->code) < 0) : (collator.compare(lhs->code, rhs->code) > 0);
+        case EntryEnumP::kDescription:
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
+                                                 : (collator.compare(lhs->description, rhs->description) > 0);
         case EntryEnumP::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (d_lhs->issued_time < d_rhs->issued_time) : (d_lhs->issued_time > d_rhs->issued_time);
-        case EntryEnumP::kUserId:
-            return (order == Qt::AscendingOrder) ? (d_lhs->user_id < d_rhs->user_id) : (d_lhs->user_id > d_rhs->user_id);
-        case EntryEnumP::kCreateTime:
-            return (order == Qt::AscendingOrder) ? (d_lhs->created_time < d_rhs->created_time) : (d_lhs->created_time > d_rhs->created_time);
-        case EntryEnumP::kCreateBy:
-            return (order == Qt::AscendingOrder) ? (d_lhs->created_by < d_rhs->created_by) : (d_lhs->created_by > d_rhs->created_by);
-        case EntryEnumP::kUpdateTime:
-            return (order == Qt::AscendingOrder) ? (d_lhs->updated_time < d_rhs->updated_time) : (d_lhs->updated_time > d_rhs->updated_time);
-        case EntryEnumP::kUpdateBy:
-            return (order == Qt::AscendingOrder) ? (d_lhs->updated_by < d_rhs->updated_by) : (d_lhs->updated_by > d_rhs->updated_by);
-        case EntryEnumP::kCode:
-            return (order == Qt::AscendingOrder) ? (d_lhs->code < d_rhs->code) : (d_lhs->code > d_rhs->code);
         case EntryEnumP::kUnitPrice:
             return (order == Qt::AscendingOrder) ? (d_lhs->unit_price < d_rhs->unit_price) : (d_lhs->unit_price > d_rhs->unit_price);
-        case EntryEnumP::kDescription:
-            return (order == Qt::AscendingOrder) ? (d_lhs->description < d_rhs->description) : (d_lhs->description > d_rhs->description);
         case EntryEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case EntryEnumP::kStatus:

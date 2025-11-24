@@ -2,6 +2,7 @@
 
 #include <QJsonArray>
 
+#include "global/collator.h"
 #include "global/entrypool.h"
 #include "websocket/jsongen.h"
 
@@ -224,7 +225,12 @@ void TableModelO::sort(int column, Qt::SortOrder order)
         auto* d_lhs { DerivedPtr<EntryO>(lhs) };
         auto* d_rhs { DerivedPtr<EntryO>(rhs) };
 
+        const auto& collator { Collator::Instance() };
+
         switch (e_column) {
+        case EntryEnumO::kDescription:
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
+                                                 : (collator.compare(lhs->description, rhs->description) > 0);
         case EntryEnumO::kRhsNode:
             return (order == Qt::AscendingOrder) ? (d_lhs->rhs_node < d_rhs->rhs_node) : (d_lhs->rhs_node > d_rhs->rhs_node);
         case EntryEnumO::kUnitPrice:

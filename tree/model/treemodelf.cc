@@ -1,5 +1,7 @@
 #include "treemodelf.h"
 
+#include "global/collator.h"
+
 TreeModelF::TreeModelF(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
 {
@@ -90,27 +92,33 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
 {
     assert(column >= 0 && column < node_header_.size());
 
-    auto Compare = [column, order](const Node* lhs, const Node* rhs) -> bool {
-        const NodeEnumF e_column { column };
+    const NodeEnumF e_column { column };
+
+    switch (e_column) {
+    case NodeEnumF::kId:
+    case NodeEnumF::kUserId:
+    case NodeEnumF::kCreateTime:
+    case NodeEnumF::kCreateBy:
+    case NodeEnumF::kUpdateTime:
+    case NodeEnumF::kUpdateBy:
+        return;
+    default:
+        break;
+    }
+
+    auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
+        const auto& collator { Collator::Instance() };
+
         switch (e_column) {
         case NodeEnumF::kName:
-            return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
-        case NodeEnumF::kUserId:
-            return (order == Qt::AscendingOrder) ? (lhs->user_id < rhs->user_id) : (lhs->user_id > rhs->user_id);
-        case NodeEnumF::kCreateTime:
-            return (order == Qt::AscendingOrder) ? (lhs->created_time < rhs->created_time) : (lhs->created_time > rhs->created_time);
-        case NodeEnumF::kCreateBy:
-            return (order == Qt::AscendingOrder) ? (lhs->created_by < rhs->created_by) : (lhs->created_by > rhs->created_by);
-        case NodeEnumF::kUpdateTime:
-            return (order == Qt::AscendingOrder) ? (lhs->updated_time < rhs->updated_time) : (lhs->updated_time > rhs->updated_time);
-        case NodeEnumF::kUpdateBy:
-            return (order == Qt::AscendingOrder) ? (lhs->updated_by < rhs->updated_by) : (lhs->updated_by > rhs->updated_by);
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->name, rhs->name) < 0) : (collator.compare(lhs->name, rhs->name) > 0);
         case NodeEnumF::kCode:
-            return (order == Qt::AscendingOrder) ? (lhs->code < rhs->code) : (lhs->code > rhs->code);
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->code, rhs->code) < 0) : (collator.compare(lhs->code, rhs->code) > 0);
         case NodeEnumF::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
+                                                 : (collator.compare(lhs->description, rhs->description) > 0);
         case NodeEnumF::kNote:
-            return (order == Qt::AscendingOrder) ? (lhs->note < rhs->note) : (lhs->note > rhs->note);
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->note, rhs->note) < 0) : (collator.compare(lhs->note, rhs->note) > 0);
         case NodeEnumF::kDirectionRule:
             return (order == Qt::AscendingOrder) ? (lhs->direction_rule < rhs->direction_rule) : (lhs->direction_rule > rhs->direction_rule);
         case NodeEnumF::kKind:

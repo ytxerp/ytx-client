@@ -769,6 +769,7 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     BuildHierarchy(path_array);
     HandleNode();
 
+    sort(std::to_underlying(NodeEnum::kName), Qt::AscendingOrder);
     endResetModel();
 }
 
