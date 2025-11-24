@@ -1,13 +1,13 @@
-#include "treewidgetto.h"
+#include "treewidgeto.h"
 
 #include "component/signalblocker.h"
-#include "ui_treewidgetto.h"
+#include "ui_treewidgeto.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TreeWidgetTO::TreeWidgetTO(Section section, TreeModel* model, const QDateTime& start, const QDateTime& end, QWidget* parent)
+TreeWidgetO::TreeWidgetO(Section section, TreeModel* model, const QDateTime& start, const QDateTime& end, QWidget* parent)
     : TreeWidget(parent)
-    , ui(new Ui::TreeWidgetTO)
+    , ui(new Ui::TreeWidgetO)
     , section_ { section }
     , model_ { model }
     , start_ { start }
@@ -25,23 +25,23 @@ TreeWidgetTO::TreeWidgetTO(Section section, TreeModel* model, const QDateTime& s
     ui->treeViewTO->setModel(model);
 }
 
-TreeWidgetTO::~TreeWidgetTO() { delete ui; }
+TreeWidgetO::~TreeWidgetO() { delete ui; }
 
-QTreeView* TreeWidgetTO::View() const { return ui->treeViewTO; }
+QTreeView* TreeWidgetO::View() const { return ui->treeViewTO; }
 
-void TreeWidgetTO::on_start_dateChanged(const QDate& date)
+void TreeWidgetO::on_start_dateChanged(const QDate& date)
 {
     ui->pBtnFetch->setEnabled(date <= end_.date());
     start_.setDate(date);
 }
 
-void TreeWidgetTO::on_end_dateChanged(const QDate& date)
+void TreeWidgetO::on_end_dateChanged(const QDate& date)
 {
     end_ = QDateTime(date.addDays(1), kStartTime);
     ui->pBtnFetch->setEnabled(date >= start_.date());
 }
 
-void TreeWidgetTO::on_pBtnFetch_clicked()
+void TreeWidgetO::on_pBtnFetch_clicked()
 {
     if (start_ == last_start_ && end_ == last_end_)
         return;

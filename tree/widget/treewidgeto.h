@@ -17,17 +17,17 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEWIDGETTO_H
-#define TREEWIDGETTO_H
+#ifndef TREEWIDGETO_H
+#define TREEWIDGETO_H
 
 #include "tree/model/treemodel.h"
 #include "treewidget.h"
 
 namespace Ui {
-class TreeWidgetTO;
+class TreeWidgetO;
 }
 
-class TreeWidgetTO final : public TreeWidget {
+class TreeWidgetO final : public TreeWidget {
     Q_OBJECT
 
 public slots:
@@ -35,8 +35,8 @@ public slots:
     void on_end_dateChanged(const QDate& date);
 
 public:
-    TreeWidgetTO(Section section, TreeModel* model, const QDateTime& start, const QDateTime& end, QWidget* parent = nullptr);
-    ~TreeWidgetTO() override;
+    TreeWidgetO(Section section, TreeModel* model, const QDateTime& start, const QDateTime& end, QWidget* parent = nullptr);
+    ~TreeWidgetO() override;
 
     QTreeView* View() const override;
 
@@ -44,7 +44,7 @@ private slots:
     void on_pBtnFetch_clicked();
 
 private:
-    Ui::TreeWidgetTO* ui;
+    Ui::TreeWidgetO* ui;
     Section section_ {};
     TreeModel* model_ {};
 
@@ -55,4 +55,4 @@ private:
     QDateTime last_end_ {};
 };
 
-#endif // TREEWIDGETTO_H
+#endif // TREEWIDGETO_H

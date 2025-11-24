@@ -94,8 +94,8 @@
 #include "tree/model/treemodelt.h"
 #include "tree/widget/treewidgetf.h"
 #include "tree/widget/treewidgeti.h"
+#include "tree/widget/treewidgeto.h"
 #include "tree/widget/treewidgetp.h"
-#include "tree/widget/treewidgetto.h"
 #include "ui_mainwindow.h"
 #include "utils/entryutils.h"
 #include "utils/mainwindowutils.h"
@@ -2019,7 +2019,7 @@ void MainWindow::InitContextTask()
     const QDateTime start_dt(today, kStartTime);
     const QDateTime end_dt(today.addDays(1), kStartTime);
 
-    tree_widget = new TreeWidgetTO(Section::kTask, tree_model, start_dt, end_dt, this);
+    tree_widget = new TreeWidgetO(Section::kTask, tree_model, start_dt, end_dt, this);
     tree_view = tree_widget->View();
 }
 
@@ -2105,7 +2105,7 @@ void MainWindow::InitContextSale()
     WebSocket::Instance()->RegisterTreeModel(Section::kSale, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kSale, entry_hub);
 
-    tree_widget = new TreeWidgetTO(Section::kSale, tree_model, start_dt, end_dt, this);
+    tree_widget = new TreeWidgetO(Section::kSale, tree_model, start_dt, end_dt, this);
     tree_view = tree_widget->View();
 
     connect(tree_model_o, &TreeModelO::SUpdateAmount, static_cast<TreeModelP*>(sc_p_.tree_model.data()), &TreeModelP::RUpdateAmount);
@@ -2157,7 +2157,7 @@ void MainWindow::InitContextPurchase()
     WebSocket::Instance()->RegisterTreeModel(Section::kPurchase, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kPurchase, entry_hub);
 
-    tree_widget = new TreeWidgetTO(Section::kPurchase, tree_model, start_dt, end_dt, this);
+    tree_widget = new TreeWidgetO(Section::kPurchase, tree_model, start_dt, end_dt, this);
     tree_view = tree_widget->View();
 
     connect(tree_model_o, &TreeModelO::SUpdateAmount, static_cast<TreeModelP*>(sc_p_.tree_model.data()), &TreeModelP::RUpdateAmount);

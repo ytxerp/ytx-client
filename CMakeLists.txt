@@ -42,7 +42,7 @@ set(SOURCES
     tree/node.cc
     tree/itemmodel.cc
     tree/widget/treewidgetp.cc
-    tree/widget/treewidgetto.cc
+    tree/widget/treewidgeto.cc
     tree/widget/treewidgetf.cc
     tree/widget/treewidgeti.cc
     tree/model/treemodelf.cc
@@ -157,7 +157,7 @@ set(HEADERS
     tree/widget/treewidgetp.h
     tree/widget/treewidget.h
     tree/widget/treewidgetf.h
-    tree/widget/treewidgetto.h
+    tree/widget/treewidgeto.h
     tree/widget/treewidgeti.h
     tree/model/treemodel.h
     tree/model/treemodeli.h
@@ -294,7 +294,7 @@ set(UIS
     mainwindow.ui
     tree/widget/treewidgeti.ui
     tree/widget/treewidgetf.ui
-    tree/widget/treewidgetto.ui
+    tree/widget/treewidgeto.ui
     tree/widget/treewidgetp.ui
     search/dialog/searchdialog.ui
     dialog/editnodename.ui
