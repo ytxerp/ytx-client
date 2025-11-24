@@ -47,7 +47,7 @@ void Preferences::IniDialog(ItemModel* unit_model, Section section)
 
     ui->comboDefaultUnit->setModel(unit_model);
 
-    const bool is_enable { section == Section::kFinance || section == Section::kInventory };
+    const bool is_enable { section == Section::kFinance || section == Section::kInventory || section == Section::kTask };
     ui->lineStatic->setEnabled(is_enable);
     ui->comboStatic->setEnabled(is_enable);
     ui->lineDynamic->setEnabled(is_enable);

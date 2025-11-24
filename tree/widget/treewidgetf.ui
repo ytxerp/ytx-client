@@ -30,7 +30,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTreeView" name="treeViewF"/>
+    <widget class="QTreeView" name="treeView"/>
    </item>
    <item>
     <widget class="QGroupBox" name="treeGroup">

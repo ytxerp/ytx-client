@@ -17,28 +17,28 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEWIDGETI_H
-#define TREEWIDGETI_H
+#ifndef TREEWIDGETIT_H
+#define TREEWIDGETIT_H
 
 #include <QDoubleSpinBox>
 
 #include "component/config.h"
-#include "treewidget.h"
 #include "tree/model/treemodel.h"
+#include "treewidget.h"
 
 namespace Ui {
-class TreeWidgetI;
+class TreeWidgetIT;
 }
 
-class TreeWidgetI final : public TreeWidget {
+class TreeWidgetIT final : public TreeWidget {
     Q_OBJECT
 
 public slots:
     void RTotalsUpdated() override;
 
 public:
-    TreeWidgetI(TreeModel* model, CSectionConfig& config, QWidget* parent = nullptr);
-    ~TreeWidgetI() override;
+    TreeWidgetIT(TreeModel* model, CSectionConfig& config, QWidget* parent = nullptr);
+    ~TreeWidgetIT() override;
 
     QTreeView* View() const override;
     void UpdateStatus() override;
@@ -52,10 +52,10 @@ private:
     double Operate(double lhs, double rhs, const QString& operation);
 
 private:
-    Ui::TreeWidgetI* ui;
+    Ui::TreeWidgetIT* ui;
     TreeModel* model_ {};
 
     CSectionConfig& config_ {};
 };
 
-#endif // TREEWIDGETI_H
+#endif // TREEWIDGETIT_H

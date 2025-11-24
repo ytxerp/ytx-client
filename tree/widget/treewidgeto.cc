@@ -22,12 +22,12 @@ TreeWidgetO::TreeWidgetO(Section section, TreeModel* model, const QDateTime& sta
     ui->start->setDateTime(start_);
     ui->end->setDateTime(end.addSecs(-1));
 
-    ui->treeViewTO->setModel(model);
+    ui->treeViewO->setModel(model);
 }
 
 TreeWidgetO::~TreeWidgetO() { delete ui; }
 
-QTreeView* TreeWidgetO::View() const { return ui->treeViewTO; }
+QTreeView* TreeWidgetO::View() const { return ui->treeViewO; }
 
 void TreeWidgetO::on_start_dateChanged(const QDate& date)
 {

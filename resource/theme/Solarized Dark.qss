@@ -41,7 +41,7 @@ QComboBox, QSpinBox, QDoubleSpinBox, QDateEdit, QDateTimeEdit, QLineEdit {
     border: none;
 }
 
-QTreeView#treeViewF, QTreeView#treeViewI, QGroupBox#treeGroupTO, QTableView#tableViewO {
+QTreeView#treeView, QGroupBox#treeGroupO, QTableView#tableViewO {
     border-bottom: none;
 }
 
@@ -307,7 +307,7 @@ QRadioButton#rBtnNode, QRadioButton#rBtnEntry {
 
 /*-----------------------------------------QScrollBar Horizontal-----------------------------------------------*/
 
-QScrollBar:horizontal {
+QScrollBar::horizontal {
     height: 16px;
     background: #002B36;
     margin: 0px 24px 0 24px;
@@ -337,7 +337,7 @@ QScrollBar::sub-line:horizontal {
     subcontrol-origin: margin;
 }
 
-QScrollBar:left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
     width: 8px;
     height: 8px;
 }
@@ -386,25 +386,17 @@ QTableView::corner, QTreeView::corner {
     border-top: 1px solid #657B83;
 }
 
-/*-------------------------------------QTreeView#treeViewI, QTreeView#treeViewF----------------------------------------------*/
+/*-------------------------------------QTreeView#treeView----------------------------------------------*/
 
-QTreeView#treeViewI QScrollBar::add-line:vertical, QTreeView#treeViewF QScrollBar::add-line:vertical
+QTreeView#treeView QScrollBar::handle:horizontal,
+QTreeView#treeView QScrollBar::add-line:horizontal,
+QTreeView#treeView QScrollBar::sub-line:horizontal
 {
     border-bottom: 1px solid #657B83;
 }
 
-QTreeView#treeViewI QScrollBar::handle:horizontal,
-QTreeView#treeViewI QScrollBar::add-line:horizontal,
-QTreeView#treeViewI QScrollBar::sub-line:horizontal,
-QTreeView#treeViewF QScrollBar::handle:horizontal,
-QTreeView#treeViewF QScrollBar::add-line:horizontal,
-QTreeView#treeViewF QScrollBar::sub-line:horizontal
-{
+QTreeView#treeView::corner {
     border-bottom: 1px solid #657B83;
-}
-
-QTreeView#treeViewI::corner, QTreeView#treeViewF::corner {
-    border-top: none;
 }
 
 /*-------------------------------------QSplitter------------------------------------------------------------*/

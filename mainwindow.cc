@@ -93,7 +93,7 @@
 #include "tree/model/treemodelp.h"
 #include "tree/model/treemodelt.h"
 #include "tree/widget/treewidgetf.h"
-#include "tree/widget/treewidgeti.h"
+#include "tree/widget/treewidgetit.h"
 #include "tree/widget/treewidgeto.h"
 #include "tree/widget/treewidgetp.h"
 #include "ui_mainwindow.h"
@@ -1974,7 +1974,7 @@ void MainWindow::InitContextInventory()
     WebSocket::Instance()->RegisterTreeModel(Section::kInventory, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kInventory, entry_hub);
 
-    tree_widget = new TreeWidgetI(tree_model, section_config, this);
+    tree_widget = new TreeWidgetIT(tree_model, section_config, this);
     tree_view = tree_widget->View();
 
     connect(tree_model, &TreeModel::STotalsUpdated, tree_widget, &TreeWidget::RTotalsUpdated, Qt::UniqueConnection);
@@ -2015,12 +2015,10 @@ void MainWindow::InitContextTask()
     WebSocket::Instance()->RegisterTreeModel(Section::kTask, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kTask, entry_hub);
 
-    const QDate today { QDate::currentDate() };
-    const QDateTime start_dt(today, kStartTime);
-    const QDateTime end_dt(today.addDays(1), kStartTime);
-
-    tree_widget = new TreeWidgetO(Section::kTask, tree_model, start_dt, end_dt, this);
+    tree_widget = new TreeWidgetIT(tree_model, section_config, this);
     tree_view = tree_widget->View();
+
+    connect(tree_model, &TreeModel::STotalsUpdated, tree_widget, &TreeWidget::RTotalsUpdated, Qt::UniqueConnection);
 }
 
 void MainWindow::InitContextPartner()

@@ -1,33 +1,33 @@
-#include "treewidgeti.h"
+#include "treewidgetit.h"
 
 #include "component/constant.h"
 #include "component/signalblocker.h"
-#include "ui_treewidgeti.h"
+#include "ui_treewidgetit.h"
 
-TreeWidgetI::TreeWidgetI(TreeModel* model, CSectionConfig& config, QWidget* parent)
+TreeWidgetIT::TreeWidgetIT(TreeModel* model, CSectionConfig& config, QWidget* parent)
     : TreeWidget(parent)
-    , ui(new Ui::TreeWidgetI)
+    , ui(new Ui::TreeWidgetIT)
     , model_ { model }
     , config_ { config }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    ui->treeViewI->setModel(model);
+    ui->treeView->setModel(model);
     ui->dspin_box_dynamic_->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
     ui->dspin_box_static_->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
     UpdateStatus();
 }
 
-TreeWidgetI::~TreeWidgetI() { delete ui; }
+TreeWidgetIT::~TreeWidgetIT() { delete ui; }
 
-void TreeWidgetI::UpdateStatus()
+void TreeWidgetIT::UpdateStatus()
 {
     UpdateStaticStatus();
     UpdateDynamicStatus();
 }
 
-void TreeWidgetI::UpdateStaticStatus()
+void TreeWidgetIT::UpdateStaticStatus()
 {
     ui->dspin_box_static_->setDecimals(config_.amount_decimal);
     ui->lable_static_->setText(config_.static_label);
@@ -41,7 +41,7 @@ void TreeWidgetI::UpdateStaticStatus()
     }
 }
 
-void TreeWidgetI::UpdateDynamicStatus()
+void TreeWidgetIT::UpdateDynamicStatus()
 {
     ui->dspin_box_dynamic_->setDecimals(config_.amount_decimal);
     ui->label_dynamic_->setText(config_.dynamic_label);
@@ -56,15 +56,15 @@ void TreeWidgetI::UpdateDynamicStatus()
     }
 }
 
-QTreeView* TreeWidgetI::View() const { return ui->treeViewI; }
+QTreeView* TreeWidgetIT::View() const { return ui->treeView; }
 
-void TreeWidgetI::RTotalsUpdated()
+void TreeWidgetIT::RTotalsUpdated()
 {
     UpdateStaticValue(config_.static_node);
     UpdateDynamicValue(config_.dynamic_node_lhs, config_.dynamic_node_rhs);
 }
 
-void TreeWidgetI::UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id)
+void TreeWidgetIT::UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id)
 {
     if (lhs_node_id.isNull() && rhs_node_id.isNull())
         return;
@@ -78,7 +78,7 @@ void TreeWidgetI::UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_
     ui->dspin_box_dynamic_->setValue(total);
 }
 
-void TreeWidgetI::UpdateStaticValue(const QUuid& node_id)
+void TreeWidgetIT::UpdateStaticValue(const QUuid& node_id)
 {
     if (node_id.isNull())
         return;
@@ -86,7 +86,7 @@ void TreeWidgetI::UpdateStaticValue(const QUuid& node_id)
     ui->dspin_box_static_->setValue(model_->InitialTotal(node_id));
 }
 
-double TreeWidgetI::Operate(double lhs, double rhs, const QString& operation)
+double TreeWidgetIT::Operate(double lhs, double rhs, const QString& operation)
 {
     switch (operation.at(0).toLatin1()) {
     case '+':

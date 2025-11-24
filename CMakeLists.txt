@@ -44,7 +44,7 @@ set(SOURCES
     tree/widget/treewidgetp.cc
     tree/widget/treewidgeto.cc
     tree/widget/treewidgetf.cc
-    tree/widget/treewidgeti.cc
+    tree/widget/treewidgetit.cc
     tree/model/treemodelf.cc
     tree/model/treemodelt.cc
     tree/model/treemodel.cc
@@ -158,7 +158,7 @@ set(HEADERS
     tree/widget/treewidget.h
     tree/widget/treewidgetf.h
     tree/widget/treewidgeto.h
-    tree/widget/treewidgeti.h
+    tree/widget/treewidgetit.h
     tree/model/treemodel.h
     tree/model/treemodeli.h
     tree/model/treemodelt.h
@@ -292,7 +292,7 @@ set(HEADERS
 
 set(UIS
     mainwindow.ui
-    tree/widget/treewidgeti.ui
+    tree/widget/treewidgetit.ui
     tree/widget/treewidgetf.ui
     tree/widget/treewidgeto.ui
     tree/widget/treewidgetp.ui

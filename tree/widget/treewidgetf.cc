@@ -15,7 +15,7 @@ TreeWidgetF::TreeWidgetF(TreeModel* model, CSectionInfo& info, CSharedConfig sha
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    ui->treeViewF->setModel(model);
+    ui->treeView->setModel(model);
     ui->dspin_box_dynamic_->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
     ui->dspin_box_static_->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
     UpdateStatus();
@@ -71,7 +71,7 @@ void TreeWidgetF::UpdateDynamicStatus()
     UpdateDynamicValue(dynamic_node_id_lhs, dynamic_node_id_rhs);
 }
 
-QTreeView* TreeWidgetF::View() const { return ui->treeViewF; }
+QTreeView* TreeWidgetF::View() const { return ui->treeView; }
 
 void TreeWidgetF::RTotalsUpdated()
 {
