@@ -46,15 +46,16 @@ void DailyLogger::HandleMessage(QtMsgType type, const QMessageLogContext&, const
         return;
 #endif
 
-    QMutexLocker locker(&mutex_);
-
-    const QDate today { QDate::currentDate() };
-    if (current_date_ != today) {
-        OpenLogFile(today);
-    }
-
-    if (is_released_ || !file_.isOpen())
+    if (is_released_)
         return;
+
+    static const QStringList ignore_patterns { "QObject::startTimer", "QObject::disconnect", "WebSocket remote host closed connection" };
+
+    for (const auto& pattern : ignore_patterns) {
+        if (msg.contains(pattern)) {
+            return;
+        }
+    }
 
     // QtMsgType
     static const char* levels[] = {
@@ -69,21 +70,27 @@ void DailyLogger::HandleMessage(QtMsgType type, const QMessageLogContext&, const
 
     const QString date_time { QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss") };
 
-    formatted_msg_.clear();
-    formatted_msg_.append(date_time).append(" [").append(level).append("] ").append(msg);
+    QString formatted_msg {};
+    formatted_msg.reserve(512);
+    formatted_msg.append(date_time).append(" [").append(level).append("] ").append(msg);
 
-    log_stream_ << formatted_msg_ << '\n';
+    {
+        QMutexLocker locker(&mutex_);
 
-    if (type >= QtCriticalMsg) {
-        log_stream_.flush();
+        const QDate today { QDate::currentDate() };
+        if (current_date_ != today)
+            OpenLogFile(today);
+
+        if (file_.isOpen())
+            log_stream_ << formatted_msg << '\n';
+
+        if (type >= QtCriticalMsg)
+            log_stream_.flush();
     }
 
-    locker.unlock();
-
-    fprintf(stderr, "%s\n", formatted_msg_.toLocal8Bit().constData());
-    if (type >= QtCriticalMsg) {
+    fprintf(stderr, "%s\n", formatted_msg.toLocal8Bit().constData());
+    if (type >= QtCriticalMsg)
         fflush(stderr);
-    }
 
     if (type == QtFatalMsg)
         abort();
@@ -96,16 +103,15 @@ void DailyLogger::OpenLogFile(const QDate& date)
         file_.close();
     }
 
-    const QString log_path { QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath("logs") };
-    const QString log_name { date.toString("yyyy-MM-dd") + ".log" };
-    const QString file_name { QDir(log_path).filePath(log_name) };
+    static const QString log_dir { QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).filePath("logs") };
+    QDir().mkpath(log_dir);
 
-    QDir().mkpath(log_path);
+    const QString log_name { date.toString("yyyy-MM-dd") + ".log" };
+    const QString file_name { QDir(log_dir).filePath(log_name) };
 
     file_.setFileName(file_name);
     if (file_.open(QIODevice::Append | QIODevice::Text)) {
         log_stream_.setDevice(&file_);
-        formatted_msg_.reserve(512);
     }
 
     current_date_ = date;

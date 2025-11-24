@@ -47,7 +47,6 @@ private:
 
 private:
     QFile file_ {};
-    QString formatted_msg_ {};
     QTextStream log_stream_ {};
     QMutex mutex_ {};
     bool is_released_ { false };

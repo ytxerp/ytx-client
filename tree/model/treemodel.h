@@ -148,8 +148,10 @@ public:
     }
     inline Node* GetNode(const QUuid& node_id) const
     {
-        auto* node = node_hash_.value(node_id);
-        assert(node);
+        auto* node { node_hash_.value(node_id, nullptr) };
+        if (!node) {
+            qInfo() << "Node not found for section:" << std::to_underlying(section_) << "id:" << node_id;
+        }
         return node;
     }
 
