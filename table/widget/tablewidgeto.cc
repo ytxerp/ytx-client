@@ -97,19 +97,19 @@ void TableWidgetO::IniWidget()
     ui->dSpinDiscountTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
     ui->dSpinInitialTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
     ui->dSpinFinalTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-    ui->dSpinSecondTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-    ui->dSpinFirstTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
+    ui->dSpinMeasureTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
+    ui->dSpinCountTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
 
     ui->dSpinDiscountTotal->setDecimals(config_.amount_decimal);
     ui->dSpinInitialTotal->setDecimals(config_.amount_decimal);
     ui->dSpinFinalTotal->setDecimals(config_.amount_decimal);
-    ui->dSpinSecondTotal->setDecimals(config_.amount_decimal);
-    ui->dSpinFirstTotal->setDecimals(config_.amount_decimal);
+    ui->dSpinMeasureTotal->setDecimals(config_.quantity_decimal);
+    ui->dSpinCountTotal->setDecimals(config_.quantity_decimal);
 
     ui->dSpinDiscountTotal->setAlignment(Qt::AlignRight | Qt::AlignBottom);
     ui->dSpinFinalTotal->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
-    ui->dSpinFirstTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    ui->dSpinSecondTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    ui->dSpinCountTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    ui->dSpinMeasureTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     ui->tableViewO->setFocus();
 
@@ -198,8 +198,8 @@ void TableWidgetO::IniUiValue()
 {
     ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
     ui->dSpinDiscountTotal->setValue(tmp_node_.discount_total);
-    ui->dSpinFirstTotal->setValue(tmp_node_.count_total);
-    ui->dSpinSecondTotal->setValue(tmp_node_.measure_total);
+    ui->dSpinCountTotal->setValue(tmp_node_.count_total);
+    ui->dSpinMeasureTotal->setValue(tmp_node_.measure_total);
     ui->dSpinInitialTotal->setValue(tmp_node_.initial_total);
 }
 

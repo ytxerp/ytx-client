@@ -256,7 +256,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="dSpinFirstTotal">
+         <widget class="QDoubleSpinBox" name="dSpinCountTotal">
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
           </property>
@@ -285,7 +285,7 @@
          </widget>
         </item>
         <item>
-         <widget class="DoubleSpinBox" name="dSpinSecondTotal">
+         <widget class="DoubleSpinBox" name="dSpinMeasureTotal">
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
           </property>
