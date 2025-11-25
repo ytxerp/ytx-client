@@ -42,16 +42,14 @@ public:
     ~TreeWidgetF() override;
 
     QTreeView* View() const override;
-    void UpdateStatus() override;
+    void InitStatus() override;
 
 private:
-    void UpdateStaticStatus();
-    void UpdateDynamicStatus();
+    void InitStaticStatus() override;
+    void InitDynamicStatus() override;
 
-    void UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id);
-    void UpdateStaticValue(const QUuid& node_id);
-    double Operate(double lhs, double rhs, const QString& operation);
-    void ResetStatus(QDoubleSpinBox* spin_box, bool& flags);
+    void UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id) override;
+    void UpdateStaticValue(const QUuid& node_id) override;
 
 private:
     Ui::TreeWidgetF* ui;
@@ -60,9 +58,6 @@ private:
     CSectionInfo& info_ {};
     CSectionConfig& section_ {};
     CSharedConfig shared_ {};
-
-    bool dynamic_unit_is_not_default_but_equal_ { false };
-    bool static_unit_is_default_ { false };
 };
 
 #endif // TREEWIDGETF_H

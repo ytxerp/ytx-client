@@ -47,13 +47,13 @@ void Preferences::IniDialog(ItemModel* unit_model, Section section)
 
     ui->comboDefaultUnit->setModel(unit_model);
 
-    const bool is_enable { section == Section::kFinance || section == Section::kInventory || section == Section::kTask };
-    ui->lineStatic->setEnabled(is_enable);
-    ui->comboStatic->setEnabled(is_enable);
-    ui->lineDynamic->setEnabled(is_enable);
-    ui->comboDynamicLhs->setEnabled(is_enable);
-    ui->comboDynamicRhs->setEnabled(is_enable);
-    ui->comboOperation->setEnabled(is_enable);
+    is_enable_status_ = { section == Section::kFinance || section == Section::kInventory || section == Section::kTask };
+    ui->lineStatic->setEnabled(is_enable_status_);
+    ui->comboStatic->setEnabled(is_enable_status_);
+    ui->lineDynamic->setEnabled(is_enable_status_);
+    ui->comboDynamicLhs->setEnabled(is_enable_status_);
+    ui->comboDynamicRhs->setEnabled(is_enable_status_);
+    ui->comboOperation->setEnabled(is_enable_status_);
 
     if (section == Section::kPartner) {
         ui->spinQuantityDecimal->setHidden(true);
@@ -89,7 +89,7 @@ void Preferences::IniData(Section section)
     IniDataCombo(ui->comboDefaultUnit, shared_.default_unit);
     ui->pBtnDocumentDir->setText(shared_.document_dir);
 
-    if (section == Section::kFinance || section == Section::kInventory) {
+    if (is_enable_status_) {
         leaf_path_branch_path_model_ = new ItemModel(this);
         model_->LeafPathBranchPathModel(leaf_path_branch_path_model_);
         leaf_path_branch_path_model_->sort(0);

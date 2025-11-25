@@ -7,9 +7,9 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TableModelT::TableModelT(CTableModelArg& arg, const Node* node, QObject* parent)
+TableModelT::TableModelT(CTableModelArg& arg, TreeModelT* tree_model_t, QObject* parent)
     : TableModel { arg, parent }
-    , d_node_ { static_cast<const NodeT*>(node) }
+    , tree_model_t_ { tree_model_t }
 {
 }
 
@@ -66,16 +66,17 @@ bool TableModelT::setData(const QModelIndex& index, const QVariant& value, int r
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    if (d_node_->status == std::to_underlying(NodeStatus::kReleased)) {
-        qInfo() << "Edit ignored: node is released, entry cannot be edited either.";
-        return false;
-    }
-
     const EntryEnumT column { index.column() };
     const int row { index.row() };
 
     auto* shadow { shadow_list_.at(index.row()) };
     auto* d_shadow = DerivedPtr<EntryShadowT>(shadow);
+
+    if (tree_model_t_->Status(lhs_id_) == std::to_underlying(NodeStatus::kReleased)
+        || tree_model_t_->Status(*shadow->rhs_node) == std::to_underlying(NodeStatus::kReleased)) {
+        qInfo() << "setData ignored: node is released.";
+        return false;
+    }
 
     const QUuid id { *shadow->id };
 
@@ -195,8 +196,12 @@ Qt::ItemFlags TableModelT::flags(const QModelIndex& index) const
         break;
     }
 
-    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
+    const auto rhs_id { index.siblingAtColumn(std::to_underlying(EntryEnumT::kRhsNode)).data().toUuid() };
+
+    if (tree_model_t_->Status(lhs_id_) == std::to_underlying(NodeStatus::kReleased)
+        || tree_model_t_->Status(rhs_id) == std::to_underlying(NodeStatus::kReleased)) {
         flags &= ~Qt::ItemIsEditable;
+    }
 
     return flags;
 }
@@ -294,6 +299,11 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
     if (value.isNull())
         return false;
 
+    if (tree_model_t_->Status(value) == std::to_underlying(NodeStatus::kReleased)) {
+        qInfo() << "UpdateLinkedNode ignored: node is released.";
+        return false;
+    }
+
     auto* d_shadow = DerivedPtr<EntryShadowT>(entry_shadow);
     auto old_node { *d_shadow->rhs_node };
     if (old_node == value)
@@ -350,7 +360,7 @@ double TableModelT::CalculateBalance(EntryShadow* entry_shadow)
 bool TableModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
-    if (d_node_->status != std::to_underlying(NodeStatus::kRecalled))
+    if (tree_model_t_->Status(lhs_id_) == std::to_underlying(NodeStatus::kReleased))
         return false;
 
     auto* entry_shadow { InsertRowsImpl(row, parent) };
@@ -367,11 +377,14 @@ bool TableModelT::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent) - 1);
 
-    if (d_node_->status == std::to_underlying(NodeStatus::kReleased))
-        return false;
-
-    auto* d_shadow = DerivedPtr<EntryShadowT>(shadow_list_.at(row));
+    auto* d_shadow { DerivedPtr<EntryShadowT>(shadow_list_.at(row)) };
     const auto rhs_node_id { *d_shadow->rhs_node };
+
+    if (tree_model_t_->Status(lhs_id_) == std::to_underlying(NodeStatus::kReleased)
+        || tree_model_t_->Status(rhs_node_id) == std::to_underlying(NodeStatus::kReleased)) {
+        qInfo() << "removeRows ignored: node is released.";
+        return false;
+    }
 
     beginRemoveRows(parent, row, row);
     shadow_list_.removeAt(row);

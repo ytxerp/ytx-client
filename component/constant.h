@@ -102,8 +102,9 @@ inline const QString kDotSuffixXLSX = QStringLiteral(".xlsx");
 inline const QString kBranchKind = QStringLiteral("B");
 inline const QString kLeafKind = QStringLiteral("L");
 
-inline const QString kUnitSource = QStringLiteral("SRC");
+inline const QString kUnitTarget = QStringLiteral("TGT");
 inline const QString kUnitAction = QStringLiteral("ACT");
+inline const QString kUnitSource = QStringLiteral("SRC");
 inline const QString kUnitInternal = QStringLiteral("INT");
 inline const QString kUnitPosition = QStringLiteral("POS");
 inline const QString kUnitExternal = QStringLiteral("EXT");

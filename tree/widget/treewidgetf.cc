@@ -16,58 +16,43 @@ TreeWidgetF::TreeWidgetF(TreeModel* model, CSectionInfo& info, CSharedConfig sha
     SignalBlocker blocker(this);
 
     ui->treeView->setModel(model);
-    ui->dspin_box_dynamic_->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-    ui->dspin_box_static_->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-    UpdateStatus();
+
+    ui->dspin_box_dynamic_->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+    ui->dspin_box_static_->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+
+    InitStatus();
 }
 
 TreeWidgetF::~TreeWidgetF() { delete ui; }
 
-void TreeWidgetF::UpdateStatus()
+void TreeWidgetF::InitStatus()
 {
-    UpdateStaticStatus();
-    UpdateDynamicStatus();
+    InitStaticStatus();
+    InitDynamicStatus();
 }
 
-void TreeWidgetF::UpdateStaticStatus()
+void TreeWidgetF::InitStaticStatus()
 {
     ui->dspin_box_static_->setDecimals(section_.amount_decimal);
     ui->lable_static_->setText(section_.static_label);
 
-    const auto static_node_id { section_.static_node };
-
-    if (!model_->Contains(static_node_id)) {
-        ResetStatus(ui->dspin_box_static_, static_unit_is_default_);
-        return;
-    }
-
-    const int static_unit { model_->Unit(static_node_id) };
-    static_unit_is_default_ = static_unit == shared_.default_unit;
-
-    ui->dspin_box_static_->setPrefix(info_.unit_symbol_map.value(static_unit, kEmptyString));
-    UpdateStaticValue(static_node_id);
+    UpdateStaticValue(section_.static_node);
 }
 
-void TreeWidgetF::UpdateDynamicStatus()
+void TreeWidgetF::InitDynamicStatus()
 {
-    const int default_unit { shared_.default_unit };
-
     ui->dspin_box_dynamic_->setDecimals(section_.amount_decimal);
+    ui->dspin_box_dynamic_->setPrefix(info_.unit_symbol_map.value(shared_.default_unit));
     ui->label_dynamic_->setText(section_.dynamic_label);
 
     const auto dynamic_node_id_lhs { section_.dynamic_node_lhs };
     const auto dynamic_node_id_rhs { section_.dynamic_node_rhs };
 
     if (!model_->Contains(dynamic_node_id_lhs) && !model_->Contains(dynamic_node_id_rhs)) {
-        ResetStatus(ui->dspin_box_dynamic_, dynamic_unit_is_not_default_but_equal_);
+        ui->dspin_box_dynamic_->setValue(0.0);
         return;
     }
 
-    const int lhs_unit { model_->Unit(dynamic_node_id_lhs) };
-    const int rhs_unit { model_->Unit(dynamic_node_id_rhs) };
-    dynamic_unit_is_not_default_but_equal_ = (lhs_unit == rhs_unit && lhs_unit != default_unit);
-
-    ui->dspin_box_dynamic_->setPrefix(info_.unit_symbol_map.value((dynamic_unit_is_not_default_but_equal_ ? lhs_unit : default_unit), kEmptyString));
     UpdateDynamicValue(dynamic_node_id_lhs, dynamic_node_id_rhs);
 }
 
@@ -84,8 +69,8 @@ void TreeWidgetF::UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_
     if (lhs_node_id.isNull() && rhs_node_id.isNull())
         return;
 
-    const double lhs_total { dynamic_unit_is_not_default_but_equal_ ? model_->InitialTotal(lhs_node_id) : model_->FinalTotal(lhs_node_id) };
-    const double rhs_total { dynamic_unit_is_not_default_but_equal_ ? model_->InitialTotal(rhs_node_id) : model_->FinalTotal(rhs_node_id) };
+    const double lhs_total { model_->FinalTotal(lhs_node_id) };
+    const double rhs_total { model_->FinalTotal(rhs_node_id) };
 
     const auto& operation { section_.operation.isEmpty() ? kPlus : section_.operation };
     const double total { Operate(lhs_total, rhs_total, operation) };
@@ -98,24 +83,14 @@ void TreeWidgetF::UpdateStaticValue(const QUuid& node_id)
     if (node_id.isNull())
         return;
 
-    ui->dspin_box_static_->setValue(static_unit_is_default_ ? model_->FinalTotal(node_id) : model_->InitialTotal(node_id));
-}
-
-double TreeWidgetF::Operate(double lhs, double rhs, const QString& operation)
-{
-    switch (operation.at(0).toLatin1()) {
-    case '+':
-        return lhs + rhs;
-    case '-':
-        return lhs - rhs;
-    default:
-        return 0.0;
+    if (!model_->Contains(node_id)) {
+        ui->dspin_box_static_->setValue(0.0);
+        ui->dspin_box_static_->setPrefix(kEmptyString);
+        return;
     }
-}
 
-void TreeWidgetF::ResetStatus(QDoubleSpinBox* spin_box, bool& flags)
-{
-    spin_box->setPrefix(kEmptyString);
-    spin_box->setValue(0.0);
-    flags = false;
+    const int static_unit { model_->Unit(node_id) };
+
+    ui->dspin_box_static_->setPrefix(info_.unit_symbol_map.value(static_unit));
+    ui->dspin_box_static_->setValue(model_->InitialTotal(node_id));
 }

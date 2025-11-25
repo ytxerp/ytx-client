@@ -21,13 +21,13 @@
 #define TABLEMODELT_H
 
 #include "tablemodel.h"
-#include "tree/node.h"
+#include "tree/model/treemodelt.h"
 
 class TableModelT final : public TableModel {
     Q_OBJECT
 
 public:
-    TableModelT(CTableModelArg& arg, const Node* node, QObject* parent = nullptr);
+    TableModelT(CTableModelArg& arg, TreeModelT* tree_model_t, QObject* parent = nullptr);
     ~TableModelT() override = default;
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -48,7 +48,7 @@ protected:
     double CalculateBalance(EntryShadow* entry_shadow) override;
 
 private:
-    const NodeT* d_node_ {};
+    TreeModelT* tree_model_t_ {};
 };
 
 #endif // TABLEMODELT_H

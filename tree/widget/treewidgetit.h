@@ -41,15 +41,14 @@ public:
     ~TreeWidgetIT() override;
 
     QTreeView* View() const override;
-    void UpdateStatus() override;
+    void InitStatus() override;
 
 private:
-    void UpdateStaticStatus();
-    void UpdateDynamicStatus();
+    void InitStaticStatus() override;
+    void InitDynamicStatus() override;
 
-    void UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id);
-    void UpdateStaticValue(const QUuid& node_id);
-    double Operate(double lhs, double rhs, const QString& operation);
+    void UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id) override;
+    void UpdateStaticValue(const QUuid& node_id) override;
 
 private:
     Ui::TreeWidgetIT* ui;

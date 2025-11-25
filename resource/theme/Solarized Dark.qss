@@ -71,8 +71,18 @@ QCheckBox, QRadioButton {
 
 /*--------------------------------------height-------------------------------------------------*/
 
-QListView::item, QTreeView::item, QComboBox {
+QListView::item, QTreeView::item {
     height: 24px;
+}
+
+QComboBox,
+QLineEdit,
+QSpinBox,
+QDoubleSpinBox {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 /*--------------------------------------min-width-------------------------------------------------*/
@@ -442,4 +452,17 @@ QDoubleSpinBox::up-button, QDoubleSpinBox::down-button {
 
 DoubleSpinBox#dSpinGrossAmount {
     font-size: 24pt;
+}
+
+/*-------------------------------------QComboBox------------------------------------------------------------*/
+
+QComboBox::drop-down {
+    border: none;
+    width: 24px;
+}
+
+QComboBox::down-arrow {
+    width: 12px;
+    height: 12px;
+    image: url(:/solarized_dark/solarized_dark/down.png);
 }

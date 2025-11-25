@@ -413,7 +413,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
             table_model = new TableModelI(arg, nullptr);
             break;
         case Section::kTask:
-            table_model = new TableModelT(arg, tree_model->GetNode(node_id), nullptr);
+            table_model = new TableModelT(arg, static_cast<TreeModelT*>(tree_model.data()), nullptr);
             break;
         case Section::kPartner:
             table_model = new TableModelP(arg, nullptr);
@@ -1390,8 +1390,9 @@ void MainWindow::BranchRemove(TreeModel* tree_model, const QModelIndex& index, c
         const auto message { JsonGen::BranchRemove(sc_->info.section, node_id, parent_id) };
         WebSocket::Instance()->SendMessage(kBranchRemove, message);
         tree_model->removeRows(index.row(), 1, index.parent());
-        node_pending_removal_.remove(node_id);
     }
+
+    node_pending_removal_.remove(node_id);
 }
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
@@ -2000,6 +2001,7 @@ void MainWindow::InitContextTask()
     info.entry = kTaskEntry;
 
     info.unit_map.insert(std::to_underlying(UnitT::kAction), kUnitAction);
+    info.unit_map.insert(std::to_underlying(UnitT::kTarget), kUnitTarget);
     info.unit_map.insert(std::to_underlying(UnitT::kSource), kUnitSource);
 
     info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
@@ -2522,18 +2524,9 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
         || current_section.date_format != section.date_format };
 
     current_section = section;
-    sc_->tree_widget->UpdateStatus();
+    sc_->tree_widget->InitStatus();
 
-    const static QMap<Section, QString> section_string_map {
-        { Section::kFinance, kFinance },
-        { Section::kPartner, kPartner },
-        { Section::kInventory, kInventory },
-        { Section::kTask, kTask },
-        { Section::kSale, kSale },
-        { Section::kPurchase, kPurchase },
-    };
-
-    const QString text { section_string_map.value(start_) };
+    const QString text { MainWindowUtils::kSectionString.value(start_) };
     section_settings_->beginGroup(text);
 
     if (start_ == Section::kFinance || start_ == Section::kInventory) {
@@ -3004,8 +2997,8 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     ui->actionMarkToggle->setEnabled(is_table_fipt);
     ui->actionJump->setEnabled(is_table_fipt);
 
-    ui->actionStatement->setEnabled(is_order_section);
-    ui->actionSettlement->setEnabled(is_order_section);
+    ui->actionStatement->setEnabled(false);
+    ui->actionSettlement->setEnabled(false);
     ui->actionNewGroup->setEnabled(is_order_section);
 
     ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o);

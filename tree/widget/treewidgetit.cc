@@ -14,46 +14,48 @@ TreeWidgetIT::TreeWidgetIT(TreeModel* model, CSectionConfig& config, QWidget* pa
     SignalBlocker blocker(this);
 
     ui->treeView->setModel(model);
-    ui->dspin_box_dynamic_->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-    ui->dspin_box_static_->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-    UpdateStatus();
+    ui->dspin_box_dynamic_->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+    ui->dspin_box_static_->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+    InitStatus();
 }
 
 TreeWidgetIT::~TreeWidgetIT() { delete ui; }
 
-void TreeWidgetIT::UpdateStatus()
+void TreeWidgetIT::InitStatus()
 {
-    UpdateStaticStatus();
-    UpdateDynamicStatus();
+    InitStaticStatus();
+    InitDynamicStatus();
 }
 
-void TreeWidgetIT::UpdateStaticStatus()
+void TreeWidgetIT::InitStaticStatus()
 {
-    ui->dspin_box_static_->setDecimals(config_.amount_decimal);
+    ui->dspin_box_static_->setDecimals(config_.quantity_decimal);
     ui->lable_static_->setText(config_.static_label);
 
     const auto static_node_id { config_.static_node };
 
-    if (model_->Contains(static_node_id)) {
-        UpdateStaticValue(static_node_id);
-    } else {
+    if (!model_->Contains(static_node_id)) {
         ui->dspin_box_static_->setValue(0.0);
+        return;
     }
+
+    UpdateStaticValue(static_node_id);
 }
 
-void TreeWidgetIT::UpdateDynamicStatus()
+void TreeWidgetIT::InitDynamicStatus()
 {
-    ui->dspin_box_dynamic_->setDecimals(config_.amount_decimal);
+    ui->dspin_box_dynamic_->setDecimals(config_.quantity_decimal);
     ui->label_dynamic_->setText(config_.dynamic_label);
 
     const auto dynamic_node_id_lhs { config_.dynamic_node_lhs };
     const auto dynamic_node_id_rhs { config_.dynamic_node_rhs };
 
-    if (model_->Contains(dynamic_node_id_lhs) || model_->Contains(dynamic_node_id_rhs)) {
-        UpdateDynamicValue(dynamic_node_id_lhs, dynamic_node_id_rhs);
-    } else {
+    if (!model_->Contains(dynamic_node_id_lhs) && !model_->Contains(dynamic_node_id_rhs)) {
         ui->dspin_box_dynamic_->setValue(0.0);
+        return;
     }
+
+    UpdateDynamicValue(dynamic_node_id_lhs, dynamic_node_id_rhs);
 }
 
 QTreeView* TreeWidgetIT::View() const { return ui->treeView; }
@@ -84,16 +86,4 @@ void TreeWidgetIT::UpdateStaticValue(const QUuid& node_id)
         return;
 
     ui->dspin_box_static_->setValue(model_->InitialTotal(node_id));
-}
-
-double TreeWidgetIT::Operate(double lhs, double rhs, const QString& operation)
-{
-    switch (operation.at(0).toLatin1()) {
-    case '+':
-        return lhs + rhs;
-    case '-':
-        return lhs - rhs;
-    default:
-        return 0.0;
-    }
 }

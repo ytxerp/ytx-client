@@ -156,8 +156,9 @@ enum class UnitP { kCustomer = 0, kVendor, kEmployee };
 enum class UnitI { kInternal = 0, kPosition, kExternal };
 
 enum class UnitT {
-    kSource = 0, // 0–9 reserved for source types
-    kAction = 10, // 10–19 reserved for action types
+    kTarget = 0, // 0–9 reserved for target types
+    kSource = 10, // 10–19 reserved for source types
+    kAction = 20, // 20–29 reserved for action types
 };
 
 // defining entry column

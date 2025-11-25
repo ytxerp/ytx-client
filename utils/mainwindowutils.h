@@ -27,25 +27,14 @@
 
 namespace MainWindowUtils {
 
-inline QString SectionToString(Section section)
-{
-    switch (section) {
-    case Section::kFinance:
-        return kFinance;
-    case Section::kTask:
-        return kTask;
-    case Section::kInventory:
-        return kInventory;
-    case Section::kPartner:
-        return kPartner;
-    case Section::kSale:
-        return kSale;
-    case Section::kPurchase:
-        return kPurchase;
-    default:
-        return kEmptyString;
-    }
-}
+inline const QMap<Section, QString> kSectionString {
+    { Section::kFinance, kFinance },
+    { Section::kPartner, kPartner },
+    { Section::kInventory, kInventory },
+    { Section::kTask, kTask },
+    { Section::kSale, kSale },
+    { Section::kPurchase, kPurchase },
+};
 
 // insert a new row and focus the RhsNode column
 void AppendEntry(TableWidget* widget, Section section);

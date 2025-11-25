@@ -32,13 +32,34 @@ public slots:
 public:
     virtual ~TreeWidget() = default;
 
-    virtual void UpdateStatus() { };
+    virtual void InitStatus() { };
     virtual QTreeView* View() const = 0;
 
 protected:
     TreeWidget(QWidget* parent = nullptr)
         : QWidget { parent }
     {
+    }
+
+    virtual void InitStaticStatus() { }
+    virtual void InitDynamicStatus() { }
+    virtual void UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id)
+    {
+        Q_UNUSED(lhs_node_id)
+        Q_UNUSED(rhs_node_id)
+    }
+    virtual void UpdateStaticValue(const QUuid& node_id) { Q_UNUSED(node_id) }
+
+    inline double Operate(double lhs, double rhs, const QString& operation)
+    {
+        switch (operation.at(0).toLatin1()) {
+        case '+':
+            return lhs + rhs;
+        case '-':
+            return lhs - rhs;
+        default:
+            return 0.0;
+        }
     }
 };
 

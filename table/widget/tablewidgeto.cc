@@ -94,11 +94,11 @@ void TableWidgetO::IniWidget()
     ui->tableViewO->setModel(table_model_order_);
     ui->dateTimeEdit->setDisplayFormat(kDateTimeFST);
 
-    ui->dSpinDiscountTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-    ui->dSpinInitialTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-    ui->dSpinFinalTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-    ui->dSpinMeasureTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-    ui->dSpinCountTotal->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
+    ui->dSpinDiscountTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+    ui->dSpinInitialTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+    ui->dSpinFinalTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+    ui->dSpinMeasureTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+    ui->dSpinCountTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
 
     ui->dSpinDiscountTotal->setDecimals(config_.amount_decimal);
     ui->dSpinInitialTotal->setDecimals(config_.amount_decimal);

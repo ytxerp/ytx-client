@@ -196,7 +196,7 @@ void MainWindowUtils::SetupHeaderStatus(QHeaderView* header, QSharedPointer<QSet
 {
     assert(header && settings);
 
-    const auto section_name { SectionToString(section) };
+    const auto section_name { kSectionString.value(section) };
 
     TemplateUtils::ReadConfig(header, &QHeaderView::restoreState, settings, section_name, key);
 

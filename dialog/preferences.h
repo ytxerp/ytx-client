@@ -100,6 +100,8 @@ private:
     SectionConfig section_ {};
     SharedConfig shared_ {};
     CTreeModel* model_ {};
+
+    bool is_enable_status_ { false };
 };
 
 #endif // PREFERENCES_H
