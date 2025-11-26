@@ -53,6 +53,8 @@ private:
     void SyncLoginInfo(const QString& workspace = QString());
     QAction* CreateAction(QLineEdit* lineEdit);
 
+    bool ValidateEmail(QWidget* parent, const QString& email);
+
 private:
     Ui::AuthDialog* ui;
     QSharedPointer<QSettings> local_settings_ {};

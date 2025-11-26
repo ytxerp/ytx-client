@@ -67,6 +67,20 @@ void AuthDialog::on_pushButtonLogin_clicked()
     const QString email { ui->lineEditEmail->text().trimmed() };
     const QString password { ui->lineEditPassword->text() };
     const QString workspace { ui->lineEditWorkspace->text() };
+
+    if (!ValidateEmail(this, email))
+        return;
+
+    if (password.isEmpty()) {
+        QMessageBox::warning(this, tr("Invalid Information"), tr("Password cannot be empty"));
+        return;
+    }
+
+    if (workspace.isEmpty()) {
+        QMessageBox::warning(this, tr("Invalid Information"), tr("Workspace cannot be empty"));
+        return;
+    }
+
     WebSocket::Instance()->SendMessage(kLogin, JsonGen::Login(email, password, workspace));
 }
 
@@ -166,22 +180,34 @@ QAction* AuthDialog::CreateAction(QLineEdit* lineEdit)
     return toggle_action;
 }
 
+bool AuthDialog::ValidateEmail(QWidget* parent, const QString& email)
+{
+    if (email.isEmpty()) {
+        QMessageBox::warning(parent, tr("Invalid Information"), tr("Email cannot be empty"));
+        return false;
+    }
+
+    // static QRegularExpression email_regex(
+    //     R"(^[A-Za-z0-9][A-Za-z0-9._%+-]*[A-Za-z0-9]@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)*\.[A-Za-z]{2,}$)");
+
+    static QRegularExpression email_regex(R"(^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$)");
+
+    if (!email_regex.match(email).hasMatch()) {
+        QMessageBox::warning(parent, tr("Invalid Information"), tr("Invalid email format"));
+        return false;
+    }
+
+    return true;
+}
+
 void AuthDialog::on_pushButtonRegister_clicked()
 {
     const QString email { ui->lineEditEmail->text().trimmed() };
     const QString password { ui->lineEditPassword->text() };
     const QString confirm_pwd { ui->lineEditPasswordConfirm->text() };
 
-    if (email.isEmpty()) {
-        QMessageBox::warning(this, tr("Invalid Information"), tr("Email cannot be empty"));
+    if (!ValidateEmail(this, email))
         return;
-    }
-
-    static QRegularExpression email_regex(R"(^[^\s@]+@[^\s@]+\.[^\s@]+$)");
-    if (!email_regex.match(email).hasMatch()) {
-        QMessageBox::warning(this, tr("Invalid Information"), tr("Invalid email format"));
-        return;
-    }
 
     if (password.isEmpty()) {
         QMessageBox::warning(this, tr("Invalid Information"), tr("Password cannot be empty"));
