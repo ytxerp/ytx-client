@@ -201,8 +201,7 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
 void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 {
     {
-        const bool is_order { start_ == Section::kSale || start_ == Section::kPurchase };
-        const int expected_column { is_order ? std::to_underlying(NodeEnumO::kPartner) : std::to_underlying(NodeEnum::kName) };
+        const int expected_column { IsOrderSection(start_) ? std::to_underlying(NodeEnumO::kPartner) : std::to_underlying(NodeEnum::kName) };
 
         if (index.column() != expected_column)
             return;
@@ -259,7 +258,7 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
             WebSocket::Instance()->SendMessage(kTableAcked, message);
         }
 
-        if (start_ == Section::kSale || start_ == Section::kPurchase) {
+        if (IsOrderSection(start_)) {
             CreateLeafO(sc_, node_id);
         } else {
             CreateLeafFIPT(sc_, node_id);
@@ -1267,6 +1266,9 @@ void MainWindow::RDefaultUnit(Section section, int unit)
 {
     auto* sc { GetSectionContex(section) };
     sc->shared_config.default_unit = unit;
+
+    if (section == Section::kFinance)
+        sc_->tree_widget->InitStatus();
 }
 
 void MainWindow::RUpdateDefaultUnitFailed(const QString& /*section*/)
@@ -1402,7 +1404,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 
     const auto node_id { ui->tabWidget->tabBar()->tabData(index).value<TabInfo>().id };
 
-    if (start_ == Section::kSale || start_ == Section::kPurchase) {
+    if (IsOrderSection(start_)) {
         auto* widget { static_cast<TableWidgetO*>(sc_->table_wgt_hash.value(node_id).data()) };
 
         if (widget->HasUnsavedData()) {
@@ -1512,7 +1514,7 @@ void MainWindow::SetTableViewO(QTableView* view, Section section, int stretch_co
 
 void MainWindow::on_actionStatement_triggered()
 {
-    assert(start_ == Section::kSale || start_ == Section::kPurchase);
+    assert(IsOrderSection(start_));
 
     auto* model { new StatementModel(sc_->entry_hub, sc_->info, this) };
 
@@ -1541,7 +1543,7 @@ void MainWindow::on_actionStatement_triggered()
 
 void MainWindow::on_actionSettlement_triggered()
 {
-    assert(start_ == Section::kSale || start_ == Section::kPurchase);
+    assert(IsOrderSection(start_));
 
     if (settlement_widget_) {
         ui->tabWidget->setCurrentWidget(settlement_widget_);
@@ -2253,7 +2255,7 @@ void MainWindow::on_actionAppendNode_triggered()
 
 void MainWindow::on_actionJump_triggered()
 {
-    if (start_ == Section::kSale || start_ == Section::kPurchase || start_ == Section::kPartner)
+    if (IsSingleEntry(start_))
         return;
 
     auto* leaf_widget { dynamic_cast<TableWidget*>(ui->tabWidget->currentWidget()) };
@@ -2524,12 +2526,11 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
         || current_section.date_format != section.date_format };
 
     current_section = section;
-    sc_->tree_widget->InitStatus();
 
-    const QString text { MainWindowUtils::kSectionString.value(start_) };
+    const QString text { kSectionString.value(start_) };
     section_settings_->beginGroup(text);
 
-    if (start_ == Section::kFinance || start_ == Section::kInventory) {
+    if (IsDoubleEntry(start_)) {
         section_settings_->setValue(kStaticLabel, section.static_label);
         section_settings_->setValue(kStaticNode, section.static_node);
         section_settings_->setValue(kDynamicLabel, section.dynamic_label);
@@ -2706,23 +2707,24 @@ void MainWindow::LoadAndInstallTranslator(CString& language)
         qApp->installTranslator(&qt_translator_);
 }
 
-void MainWindow::ReadSectionConfig(SectionConfig& section, CString& section_name)
+void MainWindow::ReadSectionConfig(SectionConfig& section_config, CString& section_name)
 {
     section_settings_->beginGroup(section_name);
+    const Section section { kStringSection.value(section_name) };
 
-    if (section_name == kFinance || section_name == kInventory) {
-        section.static_label = section_settings_->value(kStaticLabel, {}).toString();
-        section.static_node = section_settings_->value(kStaticNode, QUuid()).toUuid();
-        section.dynamic_label = section_settings_->value(kDynamicLabel, {}).toString();
-        section.dynamic_node_lhs = section_settings_->value(kDynamicNodeLhs, QUuid()).toUuid();
-        section.operation = section_settings_->value(kOperation, kPlus).toString();
-        section.dynamic_node_rhs = section_settings_->value(kDynamicNodeRhs, QUuid()).toUuid();
+    if (IsDoubleEntry(section)) {
+        section_config.static_label = section_settings_->value(kStaticLabel, {}).toString();
+        section_config.static_node = section_settings_->value(kStaticNode, QUuid()).toUuid();
+        section_config.dynamic_label = section_settings_->value(kDynamicLabel, {}).toString();
+        section_config.dynamic_node_lhs = section_settings_->value(kDynamicNodeLhs, QUuid()).toUuid();
+        section_config.operation = section_settings_->value(kOperation, kPlus).toString();
+        section_config.dynamic_node_rhs = section_settings_->value(kDynamicNodeRhs, QUuid()).toUuid();
     }
 
-    section.date_format = section_settings_->value(kDateFormat, kDateTimeFST).toString();
-    section.amount_decimal = section_settings_->value(kAmountDecimal, 2).toInt();
-    section.rate_decimal = section_settings_->value(kRateDecimal, 2).toInt();
-    section.quantity_decimal = section_settings_->value(kQuantityDecimal, 2).toInt();
+    section_config.date_format = section_settings_->value(kDateFormat, kDateTimeFST).toString();
+    section_config.amount_decimal = section_settings_->value(kAmountDecimal, 2).toInt();
+    section_config.rate_decimal = section_settings_->value(kRateDecimal, 2).toInt();
+    section_config.quantity_decimal = section_settings_->value(kQuantityDecimal, 2).toInt();
 
     section_settings_->endGroup();
 }
@@ -2812,7 +2814,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
 
     id = lhs_node_id;
 
-    if (start_ == Section::kSale || start_ == Section::kPurchase) {
+    if (IsOrderSection(start_)) {
         auto& tree_model { sc_->tree_model };
 
         if (!tree_model->Contains(lhs_node_id)) {
@@ -2985,7 +2987,6 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     const bool is_tree { IsTreeWidget(widget) };
     const bool is_table_fipt { IsTableWidgetFIPT(widget) };
     const bool is_table_o { IsTableWidgetO(widget) };
-    const bool is_order_section { start_ == Section::kSale || start_ == Section::kPurchase };
     const bool is_color_section { start_ == Section::kTask || start_ == Section::kInventory };
 
     ui->actionAppendNode->setEnabled(is_tree);
@@ -2999,7 +3000,7 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
 
     ui->actionStatement->setEnabled(false);
     ui->actionSettlement->setEnabled(false);
-    ui->actionNewGroup->setEnabled(is_order_section);
+    ui->actionNewGroup->setEnabled(IsOrderSection(start_));
 
     ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o);
     ui->actionRemove->setEnabled(is_tree || is_table_fipt || is_table_o);

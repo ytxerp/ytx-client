@@ -25,7 +25,7 @@
 #include <QStringList>
 #include <QUuid>
 
-#include "enumclass.h"
+#include "section.h"
 #include "tree/itemmodel.h"
 
 struct SectionInfo {

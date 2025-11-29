@@ -149,6 +149,7 @@ set(SOURCES
 
 set(HEADERS
     mainwindow.h
+    component/section.h
     tree/includemultiplefiltermodel.h
     tree/excludeonefiltermodel.h
     tree/excludemultiplefiltermodel.h

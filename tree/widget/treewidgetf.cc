@@ -4,7 +4,7 @@
 #include "component/signalblocker.h"
 #include "ui_treewidgetf.h"
 
-TreeWidgetF::TreeWidgetF(TreeModel* model, CSectionInfo& info, CSharedConfig shared, CSectionConfig& section, QWidget* parent)
+TreeWidgetF::TreeWidgetF(TreeModel* model, CSectionInfo& info, CSharedConfig& shared, CSectionConfig& section, QWidget* parent)
     : TreeWidget(parent)
     , ui(new Ui::TreeWidgetF)
     , model_ { model }
@@ -16,10 +16,8 @@ TreeWidgetF::TreeWidgetF(TreeModel* model, CSectionInfo& info, CSharedConfig sha
     SignalBlocker blocker(this);
 
     ui->treeView->setModel(model);
-
     ui->dspin_box_dynamic_->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
     ui->dspin_box_static_->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
-
     InitStatus();
 }
 

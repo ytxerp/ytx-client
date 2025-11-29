@@ -27,15 +27,6 @@
 
 namespace MainWindowUtils {
 
-inline const QMap<Section, QString> kSectionString {
-    { Section::kFinance, kFinance },
-    { Section::kPartner, kPartner },
-    { Section::kInventory, kInventory },
-    { Section::kTask, kTask },
-    { Section::kSale, kSale },
-    { Section::kPurchase, kPurchase },
-};
-
 // insert a new row and focus the RhsNode column
 void AppendEntry(TableWidget* widget, Section section);
 void RemoveEntry(TableWidget* widget);

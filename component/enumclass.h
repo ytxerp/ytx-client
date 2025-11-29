@@ -20,28 +20,6 @@
 #ifndef ENUMCLASS_H
 #define ENUMCLASS_H
 
-#include <array>
-
-/**
- * @brief Available sections in the system.
- *
- * Values must remain continuous starting from 0.
- * - 4 → kSale
- * - 5 → kPurchase
- *
- * Abbreviations:
- * - Finance (F)
- * - Inventory (I)
- * - Task (T)
- * - Partner (P)
- * - Order (O)
- */
-enum class Section { kFinance = 0, kTask, kInventory, kPartner, kSale, kPurchase };
-
-/** @brief Constant array of all defined sections. */
-inline constexpr std::array<Section, 6> kSectionArray
-    = { Section::kFinance, Section::kTask, Section::kInventory, Section::kPartner, Section::kSale, Section::kPurchase };
-
 /** @brief Kind of node in a tree structure. */
 enum class NodeKind { kLeaf = 0, kBranch };
 

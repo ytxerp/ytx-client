@@ -3,6 +3,7 @@
 #include <QJsonArray>
 
 #include "component/constant.h"
+#include "component/enumclass.h"
 
 namespace JsonGen {
 

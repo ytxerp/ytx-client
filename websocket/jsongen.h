@@ -17,7 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "component/enumclass.h"
+#include "component/section.h"
 #include "component/using.h"
 #include "tree/node.h"
 
