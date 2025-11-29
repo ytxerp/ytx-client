@@ -1,7 +1,5 @@
 #include "searchnodemodelp.h"
 
-#include "component/enumclass.h"
-
 SearchNodeModelP::SearchNodeModelP(CSectionInfo& info, CTreeModel* tree_model, QObject* parent)
     : SearchNodeModel { info, tree_model, parent }
 {

@@ -5,8 +5,9 @@
 #include <QtConcurrent>
 
 #include "component/constant.h"
-#include "component/enumclass.h"
 #include "document.h"
+#include "enum/enumclass.h"
+#include "enum/statementenum.h"
 #include "global/resourcepool.h"
 #include "utils/mainwindowutils.h"
 

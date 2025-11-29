@@ -24,7 +24,7 @@
 #include <QTimer>
 
 #include "component/arg/tablemodelarg.h"
-#include "component/enumclass.h"
+#include "enum/enumclass.h"
 #include "table/entryshadow.h"
 #include "utils/castutils.h"
 

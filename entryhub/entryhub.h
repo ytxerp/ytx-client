@@ -23,8 +23,8 @@
 #include <QJsonObject>
 #include <QObject>
 
-#include "component/enumclass.h"
 #include "component/info.h"
+#include "enum/enumclass.h"
 #include "report/entryref.h"
 #include "table/entry.h"
 

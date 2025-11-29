@@ -1,6 +1,6 @@
 #include "entryrefmodel.h"
 
-#include "component/enumclass.h"
+#include "enum/entryenum.h"
 #include "global/resourcepool.h"
 
 EntryRefModel::EntryRefModel(EntryHub* dbhub, CSectionInfo& info, int unit, QObject* parent)

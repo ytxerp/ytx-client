@@ -3,7 +3,7 @@
 #include <QDateTime>
 
 #include "component/constant.h"
-#include "component/entryenum.h"
+#include "enum/entryenum.h"
 #include "global/collator.h"
 #include "global/entrypool.h"
 #include "websocket/jsongen.h"

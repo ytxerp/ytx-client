@@ -2,8 +2,8 @@
 
 #include <QHeaderView>
 
-#include "component/entryenum.h"
 #include "delegate/search/searchpathtabler.h"
+#include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 
 SearchDialogP::SearchDialogP(CTreeModel* tree, SearchNodeModel* search_tree, SearchEntryModel* search_table, CTreeModel* tree_model_i, CSectionConfig& config,

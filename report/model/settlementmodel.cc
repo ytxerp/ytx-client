@@ -1,7 +1,7 @@
 #include "settlementmodel.h"
 
 #include "component/constant.h"
-#include "component/enumclass.h"
+#include "enum/statementenum.h"
 #include "global/resourcepool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"

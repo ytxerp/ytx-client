@@ -14,7 +14,6 @@
 
 #include "component/arg/nodeinsertarg.h"
 #include "component/constant.h"
-#include "component/enumclass.h"
 #include "component/signalblocker.h"
 #include "component/stringinitializer.h"
 #include "delegate/boolstring.h"
@@ -55,6 +54,8 @@
 #include "entryhub/entryhubo.h"
 #include "entryhub/entryhubp.h"
 #include "entryhub/entryhubt.h"
+#include "enum/enumclass.h"
+#include "enum/statementenum.h"
 #include "global/collator.h"
 #include "global/logininfo.h"
 #include "global/nodepool.h"

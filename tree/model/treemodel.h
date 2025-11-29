@@ -25,7 +25,6 @@
 #include <QSortFilterProxyModel>
 
 #include "component/constant.h"
-#include "component/enumclass.h"
 #include "component/info.h"
 #include "utils/castutils.h"
 #include "utils/nodeutils.h"

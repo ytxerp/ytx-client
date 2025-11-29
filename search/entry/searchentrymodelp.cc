@@ -1,6 +1,6 @@
 #include "searchentrymodelp.h"
 
-#include "component/entryenum.h"
+#include "enum/entryenum.h"
 
 SearchEntryModelP::SearchEntryModelP(EntryHub* entry_hub, CSectionInfo& info, QObject* parent)
     : SearchEntryModel { info, parent }

@@ -1,6 +1,6 @@
 #include "settlementprimarymodel.h"
 
-#include "component/enumclass.h"
+#include "enum/statementenum.h"
 #include "global/resourcepool.h"
 
 SettlementPrimaryModel::SettlementPrimaryModel(EntryHub* dbhub, CSectionInfo& info, QObject* parent)

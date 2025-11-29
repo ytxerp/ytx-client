@@ -24,7 +24,6 @@
 #include <QDialog>
 
 #include "component/config.h"
-#include "component/enumclass.h"
 #include "component/info.h"
 #include "component/using.h"
 #include "tree/itemmodel.h"

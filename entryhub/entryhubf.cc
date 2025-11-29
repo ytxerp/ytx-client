@@ -1,7 +1,7 @@
 #include "entryhubf.h"
 
 #include "component/constant.h"
-#include "component/entryenum.h"
+#include "enum/entryenum.h"
 
 EntryHubF::EntryHubF(CSectionInfo& info, QObject* parent)
     : EntryHub(info, parent)

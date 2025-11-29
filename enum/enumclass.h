@@ -139,41 +139,4 @@ enum class UnitT {
     kAction = 20, // 20–29 reserved for action types
 };
 
-// P:Previous, C:Current, Statement
-enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCGrossAmount, kCBalance, kPlaceholder, kCSettlement };
-
-enum class StatementPrimaryEnum { kIssuedTime = 0, kCount, kMeasure, kInitialTotal, kStatus, kDescription, kEmployee, kFinalTotal };
-
-enum class StatementSecondaryEnum { kIssuedTime = 0, kRhsNode, kCount, kMeasure, kUnitPrice, kInitialTotal, kStatus, kDescription, kSupportNode, kFinalTotal };
-
-// Settlement
-enum class SettlementEnum {
-    kId = 0,
-    kUserId,
-    kCreateTime,
-    kCreateBy,
-    kUpdateTime,
-    kUpdateBy,
-    kIssuedTime,
-    kPartner,
-    kDescription,
-    kStatus,
-    kInitialTotal,
-};
-
-// kPIId: kPartner or kInventory
-enum class EntryRefEnum {
-    kIssuedTime = 0,
-    kOrderId,
-    kSection,
-    kPIId,
-    kExternalSku,
-    kkCount,
-    kkMeasure,
-    kUnitPrice,
-    kUnitDiscount,
-    kDescription,
-    kInitial,
-};
-
 #endif // ENUMCLASS_H

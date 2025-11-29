@@ -2,7 +2,7 @@
 
 #include <QTime>
 
-#include "component/enumclass.h"
+#include "enum/statementenum.h"
 #include "global/resourcepool.h"
 
 StatementModel::StatementModel(EntryHub* dbhub, CSectionInfo& info, QObject* parent)

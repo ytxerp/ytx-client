@@ -25,8 +25,8 @@
 #include <deque>
 
 #include "component/constant.h"
-#include "component/enumclass.h"
 #include "concepts.h"
+#include "enum/enumclass.h"
 #include "tree/node.h"
 
 /*

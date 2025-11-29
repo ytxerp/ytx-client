@@ -1,6 +1,6 @@
 #include "searchentrymodelo.h"
 
-#include "component/entryenum.h"
+#include "enum/entryenum.h"
 #include "global/entrypool.h"
 
 SearchEntryModelO::SearchEntryModelO(CSectionInfo& info, QObject* parent)

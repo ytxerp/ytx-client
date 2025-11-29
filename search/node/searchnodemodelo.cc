@@ -2,7 +2,6 @@
 
 #include <QJsonArray>
 
-#include "component/enumclass.h"
 #include "global/nodepool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"

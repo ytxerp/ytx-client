@@ -3,8 +3,9 @@
 #include <QTimer>
 
 #include "component/constant.h"
-#include "component/enumclass.h"
 #include "component/signalblocker.h"
+#include "enum/enumclass.h"
+#include "enum/statementenum.h"
 #include "ui_statementwidget.h"
 
 StatementWidget::StatementWidget(QAbstractItemModel* model, int unit, bool enable_excel, CDateTime& start, CDateTime& end, QWidget* parent)

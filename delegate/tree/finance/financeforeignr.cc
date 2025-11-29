@@ -1,6 +1,6 @@
 #include "financeforeignr.h"
 
-#include "component/nodeenum.h"
+#include "enum/nodeenum.h"
 
 FinanceForeignR::FinanceForeignR(const int& decimal, const int& default_unit, CIntString& unit_symbol_map, QObject* parent)
     : StyledItemDelegate { parent }

@@ -1,8 +1,8 @@
 #include "settlementwidget.h"
 
 #include "component/constant.h"
-#include "component/enumclass.h"
 #include "component/signalblocker.h"
+#include "enum/statementenum.h"
 #include "ui_settlementwidget.h"
 
 SettlementWidget::SettlementWidget(

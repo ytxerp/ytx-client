@@ -21,10 +21,10 @@
 #define NODEUTILS_H
 
 #include "component/constant.h"
-#include "component/enumclass.h"
-#include "component/nodeenum.h"
-#include "component/section.h"
 #include "component/using.h"
+#include "enum/enumclass.h"
+#include "enum/nodeenum.h"
+#include "enum/section.h"
 #include "tree/itemmodel.h"
 #include "tree/node.h"
 

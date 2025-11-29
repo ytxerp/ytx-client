@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "component/section.h"
 #include "component/using.h"
+#include "enum/section.h"
 #include "tree/node.h"
 
 #ifndef JSONGEN_H

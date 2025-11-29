@@ -2,7 +2,7 @@
 
 #include <QMouseEvent>
 
-#include "component/enumclass.h"
+#include "enum/enumclass.h"
 
 Status::Status(QEvent::Type type, QObject* parent)
     : StyledItemDelegate { parent }

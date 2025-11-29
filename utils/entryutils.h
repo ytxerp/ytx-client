@@ -23,9 +23,9 @@
 #include <QJsonObject>
 
 #include "component/constant.h"
-#include "component/entryenum.h"
-#include "component/section.h"
 #include "component/using.h"
+#include "enum/entryenum.h"
+#include "enum/section.h"
 
 namespace EntryUtils {
 

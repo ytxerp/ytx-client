@@ -2,8 +2,8 @@
 
 #include <QHeaderView>
 
-#include "component/entryenum.h"
 #include "component/signalblocker.h"
+#include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 
 SearchDialog::SearchDialog(

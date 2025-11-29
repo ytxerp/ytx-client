@@ -149,9 +149,11 @@ set(SOURCES
 
 set(HEADERS
     mainwindow.h
-    component/section.h
-    component/nodeenum.h
-    component/entryenum.h
+    enum/section.h
+    enum/nodeenum.h
+    enum/entryenum.h
+    enum/enumclass.h
+    enum/statementenum.h
     tree/includemultiplefiltermodel.h
     tree/excludeonefiltermodel.h
     tree/excludemultiplefiltermodel.h
@@ -186,7 +188,6 @@ set(HEADERS
     component/config.h
     component/stringinitializer.h
     component/constant.h
-    component/enumclass.h
     component/sectioncontex.h
     component/info.h
     component/arg/tablemodelarg.h
