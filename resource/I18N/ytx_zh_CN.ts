@@ -1247,7 +1247,7 @@ Rage, rage against the dying of the light.</source>
     <name>MainWindow</name>
     <message>
         <location filename="../../mainwindow.ui" line="82"/>
-        <location filename="../../mainwindow.cc" line="174"/>
+        <location filename="../../mainwindow.cc" line="175"/>
         <source>Finance</source>
         <translation>财务</translation>
     </message>
@@ -1261,31 +1261,31 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="101"/>
-        <location filename="../../mainwindow.cc" line="177"/>
+        <location filename="../../mainwindow.cc" line="178"/>
         <source>Task</source>
         <translation>任务</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="114"/>
-        <location filename="../../mainwindow.cc" line="176"/>
+        <location filename="../../mainwindow.cc" line="177"/>
         <source>Inventory</source>
         <translation>存货</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="127"/>
-        <location filename="../../mainwindow.cc" line="175"/>
+        <location filename="../../mainwindow.cc" line="176"/>
         <source>Partner</source>
         <translation>合作</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="143"/>
-        <location filename="../../mainwindow.cc" line="178"/>
+        <location filename="../../mainwindow.cc" line="179"/>
         <source>Sale</source>
         <translation>销售</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="159"/>
-        <location filename="../../mainwindow.cc" line="179"/>
+        <location filename="../../mainwindow.cc" line="180"/>
         <source>Purchase</source>
         <translation>采购</translation>
     </message>
@@ -1445,20 +1445,20 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="382"/>
-        <location filename="../../mainwindow.cc" line="3020"/>
+        <location filename="../../mainwindow.cc" line="3022"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="387"/>
-        <location filename="../../mainwindow.cc" line="1525"/>
+        <location filename="../../mainwindow.cc" line="1528"/>
         <source>Statement</source>
         <translation>帐单</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="395"/>
         <location filename="../../mainwindow.ui" line="398"/>
-        <location filename="../../mainwindow.cc" line="1562"/>
+        <location filename="../../mainwindow.cc" line="1565"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1475,16 +1475,16 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../mainwindow.ui" line="428"/>
         <location filename="../../mainwindow.ui" line="431"/>
-        <location filename="../../mainwindow.cc" line="2586"/>
-        <location filename="../../mainwindow.cc" line="2593"/>
+        <location filename="../../mainwindow.cc" line="2588"/>
+        <location filename="../../mainwindow.cc" line="2595"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="436"/>
         <location filename="../../mainwindow.ui" line="439"/>
-        <location filename="../../mainwindow.cc" line="2587"/>
-        <location filename="../../mainwindow.cc" line="2594"/>
+        <location filename="../../mainwindow.cc" line="2589"/>
+        <location filename="../../mainwindow.cc" line="2596"/>
         <source>Workspace</source>
         <translation>工区</translation>
     </message>
@@ -1530,8 +1530,8 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow.ui" line="488"/>
-        <location filename="../../mainwindow.cc" line="2588"/>
-        <location filename="../../mainwindow.cc" line="2595"/>
+        <location filename="../../mainwindow.cc" line="2590"/>
+        <location filename="../../mainwindow.cc" line="2597"/>
         <source>Expire Date</source>
         <translation>期限</translation>
     </message>
@@ -1551,27 +1551,27 @@ Rage, rage against the dying of the light.</source>
         <translation>二级明细-</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1274"/>
+        <location filename="../../mainwindow.cc" line="1277"/>
         <source>Update Failed</source>
         <translation>更新失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1274"/>
+        <location filename="../../mainwindow.cc" line="1277"/>
         <source>Cannot change the base unit for section Finance because related entries already exist.</source>
         <translation>无法更改财务版块的基准单位，因为已存在记录。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1383"/>
+        <location filename="../../mainwindow.cc" line="1386"/>
         <source>Remove %1</source>
         <translation>删除 %1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1384"/>
+        <location filename="../../mainwindow.cc" line="1387"/>
         <source>The branch will be removed, and its direct children will be promoted to the same level.</source>
         <translation>将删除此分支，且所有直系子节点提升至同级。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1409"/>
+        <location filename="../../mainwindow.cc" line="1412"/>
         <source>Unsaved Data</source>
         <translation>未保存的数据</translation>
     </message>
@@ -1584,17 +1584,17 @@ Click &apos;Yes&apos; to save and close, or &apos;No&apos; to cancel.</source>
 点击“是”以保存并关闭，或点击“否”以取消。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1595"/>
+        <location filename="../../mainwindow.cc" line="1598"/>
         <source>Record-</source>
         <translation>记录-</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2496"/>
+        <location filename="../../mainwindow.cc" line="2499"/>
         <source>Language Changed</source>
         <translation>语言已更改</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2497"/>
+        <location filename="../../mainwindow.cc" line="2500"/>
         <source>The language has been changed. Please restart the application for the changes to take effect.</source>
         <translation>语言已更改，请重启应用程序以使更改生效。</translation>
     </message>
@@ -1630,7 +1630,7 @@ Please check your network and try reconnecting.</source>
         <translation type="vanished">无法连接到服务器，或连接已中断。\n请检查网络并重新连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1409"/>
+        <location filename="../../mainwindow.cc" line="1412"/>
         <source>This page contains unsaved data.
 
 Do you want to save before closing?</source>
@@ -1639,84 +1639,84 @@ Do you want to save before closing?</source>
 是否在关闭前保存？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2940"/>
+        <location filename="../../mainwindow.cc" line="2943"/>
         <source>Connection Refused</source>
         <translation>连接被拒绝</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2940"/>
+        <location filename="../../mainwindow.cc" line="2943"/>
         <source>Unable to connect to the server. Please try again.</source>
         <translation>无法连接到服务器，请重新尝试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2945"/>
+        <location filename="../../mainwindow.cc" line="2948"/>
         <source>Remote Host Closed</source>
         <translation>连接已关闭</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="2945"/>
+        <location filename="../../mainwindow.cc" line="2948"/>
         <source>The server has closed the connection. Please try reconnecting.</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3030"/>
+        <location filename="../../mainwindow.cc" line="3032"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3030"/>
+        <location filename="../../mainwindow.cc" line="3032"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3030"/>
+        <location filename="../../mainwindow.cc" line="3032"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3064"/>
+        <location filename="../../mainwindow.cc" line="3066"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3064"/>
+        <location filename="../../mainwindow.cc" line="3066"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3067"/>
+        <location filename="../../mainwindow.cc" line="3069"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3067"/>
+        <location filename="../../mainwindow.cc" line="3069"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3135"/>
-        <location filename="../../mainwindow.cc" line="3142"/>
+        <location filename="../../mainwindow.cc" line="3137"/>
+        <location filename="../../mainwindow.cc" line="3144"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3135"/>
+        <location filename="../../mainwindow.cc" line="3137"/>
         <source>Failed to check updates:
 %1</source>
         <translation>检查更新失败：\n%1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3142"/>
+        <location filename="../../mainwindow.cc" line="3144"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3155"/>
+        <location filename="../../mainwindow.cc" line="3157"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3155"/>
+        <location filename="../../mainwindow.cc" line="3157"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1725,12 +1725,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3161"/>
+        <location filename="../../mainwindow.cc" line="3163"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="3161"/>
+        <location filename="../../mainwindow.cc" line="3163"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -1873,12 +1873,12 @@ Download now?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../mainwindow.cc" line="1681"/>
+        <location filename="../../mainwindow.cc" line="1684"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="1688"/>
+        <location filename="../../mainwindow.cc" line="1691"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -2734,43 +2734,43 @@ Download now?</source>
 <context>
     <name>StatementSecondaryModel</name>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="173"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="174"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="183"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="184"/>
         <source>Statement</source>
         <translation>帐单</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="187"/>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="188"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="198"/>
         <source>Date</source>
         <translation>日期</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="190"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="191"/>
         <source>Previous Balance</source>
         <translation>期初余额</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="192"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="193"/>
         <source>Current Delta</source>
         <translation>本期新增</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="194"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="195"/>
         <source>Current Balance</source>
         <translation>期末余额</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="198"/>
         <source>Internal</source>
         <translation>内部</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="198"/>
         <source>External</source>
         <translation>外部</translation>
     </message>
@@ -2783,47 +2783,47 @@ Download now?</source>
         <translation type="vanished">第二</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="198"/>
         <source>UnitPrice</source>
         <translation>单价</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="198"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="198"/>
         <source>Count</source>
         <translation>计数</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="197"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="198"/>
         <source>Measure</source>
         <translation>度量</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="198"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="199"/>
         <source>GrossAmount</source>
         <translation>总额</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="230"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="231"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="230"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="231"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="233"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="234"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../report/model/statementsecondarymodel.cc" line="233"/>
+        <location filename="../../report/model/statementsecondarymodel.cc" line="234"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
