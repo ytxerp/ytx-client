@@ -2,7 +2,7 @@
 
 #include <QHeaderView>
 
-#include "component/enumclass.h"
+#include "component/entryenum.h"
 #include "ui_searchdialog.h"
 
 SearchDialogT::SearchDialogT(

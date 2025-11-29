@@ -1,6 +1,6 @@
 #include "searchdialogf.h"
 
-#include "component/enumclass.h"
+#include "component/entryenum.h"
 #include "ui_searchdialog.h"
 
 SearchDialogF::SearchDialogF(

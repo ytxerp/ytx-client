@@ -2,6 +2,7 @@
 
 #include <QJsonArray>
 
+#include "component/entryenum.h"
 #include "global/collator.h"
 #include "global/entrypool.h"
 #include "websocket/jsongen.h"

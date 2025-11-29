@@ -2,7 +2,7 @@
 
 #include <QHeaderView>
 
-#include "component/enumclass.h"
+#include "component/entryenum.h"
 #include "ui_searchdialog.h"
 
 SearchDialogO::SearchDialogO(CTreeModel* tree, SearchNodeModel* search_tree, SearchEntryModel* search_table, CTreeModel* item_node, CTreeModel* partner_node,

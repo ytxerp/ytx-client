@@ -23,7 +23,8 @@
 #include <QJsonObject>
 
 #include "component/constant.h"
-#include "component/enumclass.h"
+#include "component/entryenum.h"
+#include "component/section.h"
 #include "component/using.h"
 
 namespace EntryUtils {
