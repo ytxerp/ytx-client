@@ -3,7 +3,7 @@
 #include <QColorDialog>
 
 #include "component/signalblocker.h"
-#include "enum/enumclass.h"
+#include "enum/nodeenum.h"
 #include "ui_insertnodei.h"
 
 InsertNodeI::InsertNodeI(CNodeInsertArg& arg, int rate_decimal, QWidget* parent)

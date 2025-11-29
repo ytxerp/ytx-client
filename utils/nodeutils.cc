@@ -4,7 +4,6 @@
 #include <QQueue>
 
 #include "component/constant.h"
-#include "enum/enumclass.h"
 
 namespace NodeUtils {
 

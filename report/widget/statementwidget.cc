@@ -4,7 +4,7 @@
 
 #include "component/constant.h"
 #include "component/signalblocker.h"
-#include "enum/enumclass.h"
+#include "enum/nodeenum.h"
 #include "enum/statementenum.h"
 #include "ui_statementwidget.h"
 

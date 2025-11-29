@@ -1,7 +1,7 @@
 #include "insertnodefinance.h"
 
 #include "component/signalblocker.h"
-#include "enum/enumclass.h"
+#include "enum/nodeenum.h"
 #include "ui_insertnodefinance.h"
 
 InsertNodeFinance::InsertNodeFinance(CNodeInsertArg& arg, QWidget* parent)

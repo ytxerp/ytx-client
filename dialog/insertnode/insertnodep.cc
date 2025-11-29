@@ -1,7 +1,7 @@
 #include "insertnodep.h"
 
 #include "component/signalblocker.h"
-#include "enum/enumclass.h"
+#include "enum/nodeenum.h"
 #include "ui_insertnodep.h"
 
 InsertNodeP::InsertNodeP(CNodeInsertArg& arg, QWidget* parent)

@@ -152,7 +152,6 @@ set(HEADERS
     enum/section.h
     enum/nodeenum.h
     enum/entryenum.h
-    enum/enumclass.h
     enum/statementenum.h
     tree/includemultiplefiltermodel.h
     tree/excludeonefiltermodel.h

@@ -24,7 +24,7 @@
 #include <QObject>
 
 #include "component/info.h"
-#include "enum/enumclass.h"
+#include "enum/entryenum.h"
 #include "report/entryref.h"
 #include "table/entry.h"
 

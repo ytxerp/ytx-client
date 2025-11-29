@@ -4,6 +4,7 @@
 #include <QJsonArray>
 
 #include "component/using.h"
+#include "enum/nodeenum.h"
 #include "global/entrypool.h"
 
 EntryHubO::EntryHubO(CSectionInfo& info, QObject* parent)

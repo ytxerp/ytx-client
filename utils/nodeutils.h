@@ -22,7 +22,6 @@
 
 #include "component/constant.h"
 #include "component/using.h"
-#include "enum/enumclass.h"
 #include "enum/nodeenum.h"
 #include "enum/section.h"
 #include "tree/itemmodel.h"

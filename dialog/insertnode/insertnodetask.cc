@@ -3,7 +3,7 @@
 #include <QColorDialog>
 
 #include "component/signalblocker.h"
-#include "enum/enumclass.h"
+#include "enum/nodeenum.h"
 #include "ui_insertnodetask.h"
 
 InsertNodeTask::InsertNodeTask(CNodeInsertArg& arg, QWidget* parent)

@@ -54,7 +54,6 @@
 #include "entryhub/entryhubo.h"
 #include "entryhub/entryhubp.h"
 #include "entryhub/entryhubt.h"
-#include "enum/enumclass.h"
 #include "enum/statementenum.h"
 #include "global/collator.h"
 #include "global/logininfo.h"

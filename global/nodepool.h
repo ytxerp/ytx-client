@@ -26,7 +26,7 @@
 
 #include "component/constant.h"
 #include "concepts.h"
-#include "enum/enumclass.h"
+#include "enum/section.h"
 #include "tree/node.h"
 
 /*
