@@ -44,7 +44,20 @@ void WebSocket::ReadConfig(QSharedPointer<QSettings> local_settings)
     const QString port { local_settings->value(kPort).toString() };
     local_settings->endGroup();
 
-    const QString url_str { (!host.isEmpty() && !port.isEmpty()) ? QString("ws://%1:%2").arg(host, port) : QString("wss://ytxerp.cc") };
+    if (host.isEmpty() || port.isEmpty()) {
+        qWarning() << "WebSocket host or port not configured!";
+        return;
+    }
+
+    QString scheme {};
+
+    if (host == "127.0.0.1" || host == "localhost" || host == "::1") {
+        scheme = "ws";
+    } else {
+        scheme = "wss";
+    }
+
+    const QString url_str { QString("%1://%2:%3").arg(scheme, host, port) };
 
     server_url_ = QUrl(url_str);
     if (!server_url_.isValid()) {
