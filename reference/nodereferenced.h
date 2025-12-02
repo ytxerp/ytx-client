@@ -17,19 +17,19 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYREF_H
-#define ENTRYREF_H
+#ifndef NODEREFERENCED_H
+#define NODEREFERENCED_H
 
 #include <QDateTime>
 #include <QList>
 #include <QString>
 #include <QUuid>
 
-struct EntryRef {
+struct NodeReferenced {
     QDateTime issued_time {};
     QUuid order_id {};
     int section {};
-    QUuid pi_id {}; // partner or inventory uuid
+    QUuid node_id {}; // partner or inventory uuid
     QUuid external_sku {};
     double count {};
     double measure {};
@@ -41,12 +41,12 @@ struct EntryRef {
     void ResetState();
 };
 
-inline void EntryRef::ResetState()
+inline void NodeReferenced::ResetState()
 {
     issued_time = {};
     order_id = QUuid();
     section = 0;
-    pi_id = QUuid();
+    node_id = QUuid();
     external_sku = QUuid();
     count = 0.0;
     measure = 0.0;
@@ -56,6 +56,6 @@ inline void EntryRef::ResetState()
     description.clear();
 }
 
-using EntryRefList = QList<EntryRef*>;
+using NodeReferencedList = QList<NodeReferenced*>;
 
-#endif // ENTRYREF_H
+#endif // NODEREFERENCED_H

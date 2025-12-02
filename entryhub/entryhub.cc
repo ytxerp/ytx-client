@@ -229,7 +229,7 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
 //                         .arg(info_.path);
 // }
 
-bool EntryHub::ReadTransRef(EntryRefList& list, const QUuid& node_id, int unit, const QDateTime& start, const QDateTime& end) const
+bool EntryHub::ReadTransRef(NodeReferencedList& list, const QUuid& node_id, int unit, const QDateTime& start, const QDateTime& end) const
 {
     // QSqlQuery query(main_db_);
     // query.setForwardOnly(true);

@@ -24,7 +24,6 @@
 
 #include "component/config.h"
 #include "entryhub/entryhub.h"
-#include "report/widget/reportwidget.h"
 #include "table/widget/tablewidget.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidget.h"
@@ -43,7 +42,7 @@ struct SectionContext {
     SharedConfig shared_config {};
 
     QHash<QUuid, QPointer<TableWidget>> table_wgt_hash {};
-    QHash<QUuid, QPointer<ReportWidget>> rpt_wgt_hash {};
+    QHash<QUuid, QPointer<QWidget>> rpt_wgt_hash {};
 
     void Clear();
 };

@@ -60,12 +60,12 @@
 #include "global/nodepool.h"
 #include "global/printhub.h"
 #include "global/tablesstation.h"
-#include "report/model/entryrefmodel.h"
+#include "reference/nodereferencedmodel.h"
+#include "reference/nodereferencedwidget.h"
 #include "report/model/settlementmodel.h"
 #include "report/model/statementmodel.h"
 #include "report/model/statementprimarymodel.h"
 #include "report/model/statementsecondarymodel.h"
-#include "report/widget/refwidget.h"
 #include "report/widget/statementwidget.h"
 #include "search/dialog/searchdialog.h"
 #include "search/dialog/searchdialogf.h"
@@ -1598,11 +1598,11 @@ void MainWindow::CreateLeafExternalReference(TreeModel* tree_model, CSectionInfo
 
     const Section section { info.section };
 
-    auto* model { new EntryRefModel(sc_->entry_hub, info, unit, this) };
+    auto* model { new NodeReferencedModel(sc_->entry_hub, info, unit, this) };
 
     const auto start { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) };
     const auto end { QDateTime(QDate(QDate::currentDate().year(), 12, 31), kEndTime) };
-    auto* widget { new RefWidget(model, node_id, start, end, this) };
+    auto* widget { new NodeReferencedWidget(model, node_id, start, end, this) };
 
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };
@@ -1615,12 +1615,12 @@ void MainWindow::CreateLeafExternalReference(TreeModel* tree_model, CSectionInfo
     DelegateLeafExternalReference(view, sc_sale_.section_config);
 
     connect(view, &QTableView::doubleClicked, this, &MainWindow::REntryRefDoubleClicked);
-    connect(widget, &RefWidget::SResetModel, model, &EntryRefModel::RResetModel);
+    connect(widget, &NodeReferencedWidget::SResetModel, model, &NodeReferencedModel::RResetModel);
 
     RegisterRptWgt(report_id, widget);
 }
 
-void MainWindow::RegisterRptWgt(const QUuid& report_id, ReportWidget* widget)
+void MainWindow::RegisterRptWgt(const QUuid& report_id, QWidget* widget)
 {
     sc_->rpt_wgt_hash.insert(report_id, widget);
     ui->tabWidget->setCurrentWidget(widget);

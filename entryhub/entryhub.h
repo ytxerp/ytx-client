@@ -25,7 +25,7 @@
 
 #include "component/info.h"
 #include "enum/entryenum.h"
-#include "report/entryref.h"
+#include "reference/nodereferenced.h"
 #include "table/entry.h"
 
 class EntryHub : public QObject {
@@ -78,7 +78,7 @@ public:
     void ActionEntry(const QUuid& node_id, EntryAction action);
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
 
-    bool ReadTransRef(EntryRefList& list, const QUuid& node_id, int unit, const QDateTime& start, const QDateTime& end) const;
+    bool ReadTransRef(NodeReferencedList& list, const QUuid& node_id, int unit, const QDateTime& start, const QDateTime& end) const;
 
     virtual void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool is_parallel)
     {

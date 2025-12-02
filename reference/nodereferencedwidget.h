@@ -17,31 +17,32 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef REFWIDGET_H
-#define REFWIDGET_H
+#ifndef NODEREFERENCEDWIDGET_H
+#define NODEREFERENCEDWIDGET_H
 
+#include <QAbstractItemModel>
 #include <QDateTime>
+#include <QTableView>
 #include <QUuid>
 
 #include "component/using.h"
-#include "reportwidget.h"
 
 namespace Ui {
-class RefWidget;
+class NodeReferencedWidget;
 }
 
-class RefWidget final : public ReportWidget {
+class NodeReferencedWidget final : public QWidget {
     Q_OBJECT
 
 signals:
     void SResetModel(const QUuid& node_id, const QDateTime& start, const QDateTime& end);
 
 public:
-    RefWidget(QAbstractItemModel* model, const QUuid& node_id, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
-    ~RefWidget() override;
+    NodeReferencedWidget(QAbstractItemModel* model, const QUuid& node_id, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
+    ~NodeReferencedWidget() override;
 
-    QTableView* View() const override;
-    QAbstractItemModel* Model() const override;
+    QTableView* View() const;
+    QAbstractItemModel* Model() const;
 
 private slots:
     void on_pBtnRefresh_clicked();
@@ -52,11 +53,11 @@ private:
     void IniWidget(QAbstractItemModel* model);
 
 private:
-    Ui::RefWidget* ui;
+    Ui::NodeReferencedWidget* ui;
     QDateTime start_ {};
     QDateTime end_ {};
 
     const QUuid node_id_ {};
 };
 
-#endif // REFWIDGET_H
+#endif // NODEREFERENCEDWIDGET_H

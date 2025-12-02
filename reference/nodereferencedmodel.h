@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYREFMODEL_H
-#define ENTRYREFMODEL_H
+#ifndef NODEREFERENCEDMODEL_H
+#define NODEREFERENCEDMODEL_H
 
 // Leaf node referenced by entries
 // such as a item node linked to order entries or a partner node associated with an order entry.
@@ -27,13 +27,13 @@
 
 #include "component/info.h"
 #include "entryhub/entryhub.h"
-#include "report/entryref.h"
+#include "nodereferenced.h"
 
-class EntryRefModel final : public QAbstractItemModel {
+class NodeReferencedModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    EntryRefModel(EntryHub* dbhub, CSectionInfo& info, int unit, QObject* parent = nullptr);
-    ~EntryRefModel();
+    NodeReferencedModel(EntryHub* dbhub, CSectionInfo& info, int unit, QObject* parent = nullptr);
+    ~NodeReferencedModel();
 
 public slots:
     void RResetModel(const QUuid& node_id, const QDateTime& start, const QDateTime& end);
@@ -55,7 +55,7 @@ private:
     CSectionInfo& info_;
     const int unit_ {};
 
-    EntryRefList entry_ref_list_ {};
+    NodeReferencedList list_ {};
 };
 
-#endif // ENTRYREFMODEL_H
+#endif // NODEREFERENCEDMODEL_H
