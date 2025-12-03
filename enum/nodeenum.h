@@ -219,7 +219,6 @@ enum class NodeEnumP {
     kKind,
     kUnit,
     kInitialTotal,
-    kFinalTotal,
 };
 
 enum class NodeEnumO {

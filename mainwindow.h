@@ -97,7 +97,7 @@ private slots:
     void RRemoteHostClosed();
 
     void RFreeWidget(const QUuid& node_id);
-    void RLeafExternalReference(const QUuid& node_id, int unit);
+    void RNodeReferenced(const QUuid& node_id, int unit);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
     void RTreeViewDoubleClicked(const QModelIndex& index);

@@ -77,6 +77,7 @@ set(SOURCES
     delegate/readonly/doublespinnonezeror.cc
     delegate/readonly/doublespinr.cc
     delegate/readonly/boolstringr.cc
+    delegate/readonly/doublespinunitreferencedr.cc
     delegate/readonly/statusr.cc
     delegate/readonly/nodepathr.cc
     delegate/readonly/sectionr.cc
@@ -211,6 +212,7 @@ set(HEADERS
     delegate/readonly/intstringr.h
     delegate/readonly/nodenamer.h
     delegate/readonly/nodepathr.h
+    delegate/readonly/doublespinunitreferencedr.h
     delegate/readonly/sectionr.h
     delegate/tree/treeissuedtime.h
     delegate/tree/color.h

@@ -113,7 +113,7 @@ constexpr std::pair<int, int> NumericColumnRange(Section section)
     case Section::kTask:
         return { std::to_underlying(NodeEnumT::kInitialTotal), std::to_underlying(NodeEnumT::kFinalTotal) };
     case Section::kPartner:
-        return { std::to_underlying(NodeEnumP::kInitialTotal), std::to_underlying(NodeEnumP::kFinalTotal) };
+        return { std::to_underlying(NodeEnumP::kInitialTotal), std::to_underlying(NodeEnumP::kInitialTotal) };
     case Section::kInventory:
         return { std::to_underlying(NodeEnumI::kInitialTotal), std::to_underlying(NodeEnumI::kFinalTotal) };
     case Section::kSale:

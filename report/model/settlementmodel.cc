@@ -216,7 +216,7 @@ bool SettlementModel::removeRows(int row, int /*count*/, const QModelIndex& pare
     endRemoveRows();
 
     if (settlement->initial_total != 0.0)
-        emit SUpdateAmount(settlement->partner, std::to_underlying(NodeEnumP::kFinalTotal), settlement->initial_total);
+        emit SUpdateAmount(settlement->partner, std::to_underlying(NodeEnumP::kInitialTotal), settlement->initial_total);
 
     dbhub_->RemoveSettlement(settlement->id);
     ResourcePool<Settlement>::Instance().Recycle(settlement);

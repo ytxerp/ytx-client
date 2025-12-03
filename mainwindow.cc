@@ -26,6 +26,7 @@
 #include "delegate/readonly/doublespinnonezeror.h"
 #include "delegate/readonly/doublespinr.h"
 #include "delegate/readonly/doublespinunitr.h"
+#include "delegate/readonly/doublespinunitreferencedr.h"
 #include "delegate/readonly/intstringr.h"
 #include "delegate/readonly/issuedtimer.h"
 #include "delegate/readonly/nodenamer.h"
@@ -952,8 +953,10 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* quantity { new DoubleSpinR(section.quantity_decimal, kCoefficient16, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kInitialTotal), quantity);
 
-    auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
+    auto* amount { new DoubleSpinUnitReferencedR(
+        info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kFinalTotal), amount);
+    connect(amount, &DoubleSpinUnitReferencedR::SNodeReferenced, this, &MainWindow::RNodeReferenced);
 
     auto* unit_price { new Double(section.rate_decimal, 0.0, kDoubleMax, kCoefficient8, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kUnitPrice), unit_price);
@@ -978,9 +981,10 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kKind), kind);
 
-    auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kFinalTotal), amount);
+    auto* amount { new DoubleSpinUnitReferencedR(
+        info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kInitialTotal), amount);
+    connect(amount, &DoubleSpinUnitReferencedR::SNodeReferenced, this, &MainWindow::RNodeReferenced);
 
     auto* payment_term { new Int(0, 36500, tree_view) }; // one hundred years
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kPaymentTerm), payment_term);
@@ -2413,7 +2417,7 @@ void MainWindow::InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUu
     dialog->exec();
 }
 
-void MainWindow::RLeafExternalReference(const QUuid& node_id, int unit)
+void MainWindow::RNodeReferenced(const QUuid& node_id, int unit)
 {
     assert(sc_->tree_widget);
     assert(sc_->tree_model->Kind(node_id) == std::to_underlying(NodeKind::kLeaf)

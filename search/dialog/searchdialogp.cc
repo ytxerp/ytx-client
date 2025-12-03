@@ -18,7 +18,6 @@ SearchDialogP::SearchDialogP(CTreeModel* tree, SearchNodeModel* search_tree, Sea
 void SearchDialogP::TreeViewDelegate(QTableView* view)
 {
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kInitialTotal), value_);
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kFinalTotal), value_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kUnit), unit_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kKind), kind_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kName), tree_path_);
