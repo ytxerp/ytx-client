@@ -26,17 +26,13 @@
 #include <QAbstractItemModel>
 
 #include "component/info.h"
-#include "entryhub/entryhub.h"
 #include "nodereferenced.h"
 
 class NodeReferencedModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    NodeReferencedModel(EntryHub* dbhub, CSectionInfo& info, int unit, QObject* parent = nullptr);
+    NodeReferencedModel(CSectionInfo& info, QObject* parent = nullptr);
     ~NodeReferencedModel();
-
-public slots:
-    void RResetModel(const QUuid& node_id, const QDateTime& start, const QDateTime& end);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -51,10 +47,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
 
 private:
-    EntryHub* dbhub_ {};
     CSectionInfo& info_;
-    const int unit_ {};
-
     NodeReferencedList list_ {};
 };
 

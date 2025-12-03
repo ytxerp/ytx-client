@@ -103,7 +103,7 @@ private slots:
     void RTreeViewDoubleClicked(const QModelIndex& index);
 
     void RSectionGroup(int id);
-    void REntryRefDoubleClicked(const QModelIndex& index);
+    void RNodeReferencedDoubleClicked(const QModelIndex& index);
 
     void RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
     void RStatementSecondary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
@@ -151,8 +151,10 @@ private:
     void TableConnectP(QTableView* table_view, TableModel* table_model) const;
     void TableConnectO(QTableView* table_view, TableModelO* table_model, TableWidgetO* widget) const;
 
-    void CreateLeafExternalReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit);
-    void DelegateLeafExternalReference(QTableView* table_view, CSectionConfig& config) const;
+    void NodeReferencedI(const QUuid& node_id, int unit);
+    void NodeReferencedP(const QUuid& node_id, int unit);
+    void CreateNodeReferenced(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit);
+    void DelegateNodeReferenced(QTableView* table_view, CSectionConfig& config) const;
 
     void SetStatementView(QTableView* table_view, int stretch_column) const;
     void DelegateStatement(QTableView* table_view, CSectionConfig& config) const;
@@ -209,10 +211,6 @@ private:
 
     void IniSectionGroup();
     void IniMarkGroup();
-
-    void LeafExternalReferenceI(const QUuid& node_id, int unit);
-    void LeafExternalReferenceS(const QUuid& node_id, int unit);
-    void OrderNodeLocation(Section section, const QUuid& node_id);
 
     void FocusTableWidget(const QUuid& node_id) const;
 

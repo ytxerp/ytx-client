@@ -1,23 +1,20 @@
 #include "nodereferencedwidget.h"
 
-#include <QTimer>
-
 #include "component/constant.h"
 #include "component/signalblocker.h"
 #include "ui_nodereferencedwidget.h"
 
-NodeReferencedWidget::NodeReferencedWidget(QAbstractItemModel* model, const QUuid& node_id, CDateTime& start, CDateTime& end, QWidget* parent)
+NodeReferencedWidget::NodeReferencedWidget(QAbstractItemModel* model, const QUuid& node_id, int node_unit, CDateTime& start, CDateTime& end, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::NodeReferencedWidget)
     , start_ { start }
     , end_ { end }
     , node_id_ { node_id }
+    , node_unit_ { node_unit }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
     IniWidget(model);
-
-    QTimer::singleShot(0, this, [this]() { emit SResetModel(node_id_, start_.toUTC(), end_.toUTC()); });
 }
 
 NodeReferencedWidget::~NodeReferencedWidget() { delete ui; }
@@ -38,7 +35,7 @@ void NodeReferencedWidget::on_end_dateChanged(const QDate& date)
     end_.setDate(date);
 }
 
-void NodeReferencedWidget::on_pBtnRefresh_clicked() { emit SResetModel(node_id_, start_.toUTC(), end_.toUTC()); }
+void NodeReferencedWidget::on_pBtnRefresh_clicked() { }
 
 void NodeReferencedWidget::IniWidget(QAbstractItemModel* model)
 {

@@ -208,12 +208,12 @@ enum class FullEntryEnumT {
     kRhsNode,
 };
 
-// kPIId: kPartner or kInventory
+// kNodeId: kPartner or kInventory
 enum class EntryRefEnum {
     kIssuedTime = 0,
     kOrderId,
     kSection,
-    kPIId,
+    kNodeId,
     kExternalSku,
     kkCount,
     kkMeasure,

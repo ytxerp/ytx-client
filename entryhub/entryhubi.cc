@@ -146,9 +146,9 @@ void EntryHubI::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& upd
 //         trans_ref->section = QStringLiteral("section").toInt();
 //         trans_ref->pi_id = query.value(QStringLiteral("partner")).toUuid();
 //         trans_ref->unit_price = query.value(QStringLiteral("unit_price")).toDouble();
-//         trans_ref->second = query.value(QStringLiteral("second")).toDouble();
+//         trans_ref->measure = query.value(QStringLiteral("measure")).toDouble();
 //         trans_ref->description = query.value(QStringLiteral("description")).toString();
-//         trans_ref->first = query.value(QStringLiteral("first")).toDouble();
+//         trans_ref->count = query.value(QStringLiteral("count")).toDouble();
 //         trans_ref->initial = query.value(QStringLiteral("initial")).toDouble();
 //         trans_ref->external_item = query.value(QStringLiteral("support_id")).toUuid();
 //         trans_ref->issued_time = query.value(QStringLiteral("issued_time")).toDateTime();
@@ -163,41 +163,39 @@ QString EntryHubI::QSReadTransRef(int /*unit*/) const
     return QStringLiteral(R"(
     SELECT
         4 AS section,
-        st.unit_price,
-        st.second,
-        st.lhs_node,
-        st.description,
-        st.first,
-        st.initial,
-        st.discount,
-        st.final,
-        st.support_id,
-        st.discount_price,
+        se.unit_price,
+        se.measure,
+        se.lhs_node,
+        se.description,
+        se.count,
+        se.initial,
+        se.discount,
+        se.final,
+        se.discount_price,
         sn.partner,
         sn.issued_time
-    FROM sale_transaction st
-    INNER JOIN sale_node sn ON st.lhs_node = sn.id
-    WHERE st.rhs_node = :node_id AND sn.is_finished = TRUE AND (sn.issued_time BETWEEN :start AND :end) AND st.is_valid = TRUE
+    FROM sale_entry se
+    INNER JOIN sale_node sn ON se.lhs_node = sn.id
+    WHERE se.rhs_node = :node_id AND sn.status = TRUE AND (sn.issued_time BETWEEN :start AND :end) AND se.is_valid = TRUE
 
     UNION ALL
 
     SELECT
         5 AS section,
-        pt.unit_price,
-        pt.second,
-        pt.lhs_node,
-        pt.description,
-        pt.first,
-        pt.initial,
-        pt.discount,
-        pt.final,
-        pt.support_id,
-        pt.discount_price,
+        pe.unit_price,
+        pe.measure,
+        pe.lhs_node,
+        pe.description,
+        pe.count,
+        pe.initial,
+        pe.discount,
+        pe.final,
+        pe.discount_price,
         pn.partner,
         pn.issued_time
-    FROM purchase_transaction pt
-    INNER JOIN purchase_node pn ON pt.lhs_node = pn.id
-    WHERE pt.rhs_node = :node_id AND pn.is_finished = TRUE AND (pn.issued_time BETWEEN :start AND :end) AND pt.is_valid = TRUE;
+    FROM purchase_entry pe
+    INNER JOIN purchase_node pn ON pe.lhs_node = pn.id
+    WHERE pe.rhs_node = :node_id AND pn.status = TRUE AND (pn.issued_time BETWEEN :start AND :end) AND pe.is_valid = TRUE;
     )");
 }
 
@@ -213,7 +211,7 @@ QString EntryHubI::QSReplaceLeafSI() const
 QString EntryHubI::QSReplaceLeafOSI() const
 {
     return QStringLiteral(R"(
-    UPDATE sale_transaction
+    UPDATE sale_entry
     SET rhs_node = :new_node_id
     WHERE rhs_node = :old_node_id;
     )");
@@ -222,7 +220,7 @@ QString EntryHubI::QSReplaceLeafOSI() const
 QString EntryHubI::QSReplaceLeafOPI() const
 {
     return QStringLiteral(R"(
-    UPDATE purchase_transaction
+    UPDATE purchase_entry
     SET rhs_node = :new_node_id
     WHERE rhs_node = :old_node_id;
     )");

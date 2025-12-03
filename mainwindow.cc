@@ -305,7 +305,7 @@ void MainWindow::RSectionGroup(int id)
     SwitchSection(start_, sc_->info.last_tab_id);
 }
 
-void MainWindow::REntryRefDoubleClicked(const QModelIndex& index)
+void MainWindow::RNodeReferencedDoubleClicked(const QModelIndex& index)
 {
     const auto node_id { index.siblingAtColumn(std::to_underlying(EntryRefEnum::kOrderId)).data().toUuid() };
     const int column { std::to_underlying(EntryRefEnum::kInitial) };
@@ -316,7 +316,29 @@ void MainWindow::REntryRefDoubleClicked(const QModelIndex& index)
         return;
 
     const Section section { index.siblingAtColumn(std::to_underlying(EntryRefEnum::kSection)).data().toInt() };
-    OrderNodeLocation(section, node_id);
+
+    switch (section) {
+    case Section::kSale:
+        RSectionGroup(std::to_underlying(Section::kSale));
+        ui->rBtnSale->setChecked(true);
+        break;
+    case Section::kPurchase:
+        RSectionGroup(std::to_underlying(Section::kPurchase));
+        ui->rBtnPurchase->setChecked(true);
+        break;
+    default:
+        return;
+    }
+
+    auto* sc { GetSectionContex(section) };
+    auto tree_model { sc->tree_model };
+
+    if (!tree_model->Contains(node_id)) {
+        tree_model->AckNode(node_id);
+        return;
+    }
+
+    RNodeLocation(node_id);
 }
 
 void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
@@ -1589,20 +1611,20 @@ void MainWindow::on_actionSettlement_triggered()
     RegisterRptWgt(report_id, settlement_widget_);
 }
 
-void MainWindow::CreateLeafExternalReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit)
+void MainWindow::CreateNodeReferenced(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit)
 {
     assert(tree_model);
     assert(tree_model->Contains(node_id));
 
-    CString name { tr("Record-") + tree_model->Name(node_id) };
+    CString name { tr("Referenced-") + tree_model->Name(node_id) };
 
     const Section section { info.section };
 
-    auto* model { new NodeReferencedModel(sc_->entry_hub, info, unit, this) };
+    auto* model { new NodeReferencedModel(info, this) };
 
     const auto start { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) };
     const auto end { QDateTime(QDate(QDate::currentDate().year(), 12, 31), kEndTime) };
-    auto* widget { new NodeReferencedWidget(model, node_id, start, end, this) };
+    auto* widget { new NodeReferencedWidget(model, node_id, unit, start, end, this) };
 
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };
@@ -1611,11 +1633,10 @@ void MainWindow::CreateLeafExternalReference(TreeModel* tree_model, CSectionInfo
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, report_id }));
 
     auto* view { widget->View() };
-    SetTableViewFIPT(view, std::to_underlying(EntryRefEnum::kDescription), std::to_underlying(EntryRefEnum::kPIId));
-    DelegateLeafExternalReference(view, sc_sale_.section_config);
+    SetTableViewFIPT(view, std::to_underlying(EntryRefEnum::kDescription), std::to_underlying(EntryRefEnum::kNodeId));
+    DelegateNodeReferenced(view, sc_sale_.section_config);
 
-    connect(view, &QTableView::doubleClicked, this, &MainWindow::REntryRefDoubleClicked);
-    connect(widget, &NodeReferencedWidget::SResetModel, model, &NodeReferencedModel::RResetModel);
+    connect(view, &QTableView::doubleClicked, this, &MainWindow::RNodeReferencedDoubleClicked);
 
     RegisterRptWgt(report_id, widget);
 }
@@ -1714,7 +1735,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
     QMainWindow::closeEvent(event);
 }
 
-void MainWindow::DelegateLeafExternalReference(QTableView* table_view, CSectionConfig& config) const
+void MainWindow::DelegateNodeReferenced(QTableView* table_view, CSectionConfig& config) const
 {
     auto* price { new DoubleSpinNoneZeroR(config.rate_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kUnitPrice), price);
@@ -1739,12 +1760,12 @@ void MainWindow::DelegateLeafExternalReference(QTableView* table_view, CSectionC
 
     if (start_ == Section::kInventory) {
         auto* name { new NodeNameR(partner_tree_model, table_view) };
-        table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kPIId), name);
+        table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kNodeId), name);
     }
 
     if (start_ == Section::kPartner) {
         auto* internal_sku { new NodeNameR(sc_i_.tree_model, table_view) };
-        table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kPIId), internal_sku);
+        table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kNodeId), internal_sku);
     }
 }
 
@@ -2400,30 +2421,30 @@ void MainWindow::RLeafExternalReference(const QUuid& node_id, int unit)
 
     switch (start_) {
     case Section::kInventory:
-        LeafExternalReferenceI(node_id, unit);
+        NodeReferencedI(node_id, unit);
         break;
     case Section::kPartner:
-        LeafExternalReferenceS(node_id, unit);
+        NodeReferencedP(node_id, unit);
         break;
     default:
         break;
     }
 }
 
-void MainWindow::LeafExternalReferenceI(const QUuid& node_id, int unit)
+void MainWindow::NodeReferencedI(const QUuid& node_id, int unit)
 {
-    if (unit != std::to_underlying(UnitI::kInternal) || start_ != Section::kInventory)
+    if (start_ != Section::kInventory || unit != std::to_underlying(UnitI::kInternal))
         return;
 
-    CreateLeafExternalReference(sc_->tree_model, sc_->info, node_id, unit);
+    CreateNodeReferenced(sc_->tree_model, sc_->info, node_id, unit);
 }
 
-void MainWindow::LeafExternalReferenceS(const QUuid& node_id, int unit)
+void MainWindow::NodeReferencedP(const QUuid& node_id, int unit)
 {
-    if (start_ != Section::kPartner)
+    if (start_ != Section::kPartner || unit != std::to_underlying(UnitP::kCustomer))
         return;
 
-    CreateLeafExternalReference(sc_->tree_model, sc_->info, node_id, unit);
+    CreateNodeReferenced(sc_->tree_model, sc_->info, node_id, unit);
 }
 
 void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool branch)
@@ -2841,30 +2862,6 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
     }
 
     FocusTableWidget(id);
-}
-
-void MainWindow::OrderNodeLocation(Section section, const QUuid& node_id)
-{
-    switch (section) {
-    case Section::kSale:
-        RSectionGroup(std::to_underlying(Section::kSale));
-        ui->rBtnSale->setChecked(true);
-        break;
-    case Section::kPurchase:
-        RSectionGroup(std::to_underlying(Section::kPurchase));
-        ui->rBtnPurchase->setChecked(true);
-        break;
-    default:
-        return;
-    }
-
-    ui->tabWidget->setCurrentWidget(sc_->tree_widget);
-
-    sc_->tree_model->AckNode(node_id);
-    sc_->tree_widget->activateWindow();
-
-    auto index { sc_->tree_model->GetIndex(node_id) };
-    sc_->tree_view->setCurrentIndex(index);
 }
 
 void MainWindow::RSyncPartner(const QUuid& node_id, const QVariant& value)

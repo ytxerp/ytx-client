@@ -3,11 +3,9 @@
 #include "enum/entryenum.h"
 #include "global/resourcepool.h"
 
-NodeReferencedModel::NodeReferencedModel(EntryHub* dbhub, CSectionInfo& info, int unit, QObject* parent)
+NodeReferencedModel::NodeReferencedModel(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }
-    , dbhub_ { dbhub }
     , info_ { info }
-    , unit_ { unit }
 {
 }
 
@@ -33,7 +31,7 @@ int NodeReferencedModel::rowCount(const QModelIndex& parent) const
     return list_.size();
 }
 
-int NodeReferencedModel::columnCount(const QModelIndex& /*parent*/) const { return info_.entry_ref_header.size(); }
+int NodeReferencedModel::columnCount(const QModelIndex& /*parent*/) const { return info_.node_referenced_header.size(); }
 
 QVariant NodeReferencedModel::data(const QModelIndex& index, int role) const
 {
@@ -46,7 +44,7 @@ QVariant NodeReferencedModel::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryRefEnum::kIssuedTime:
         return entry->issued_time;
-    case EntryRefEnum::kPIId:
+    case EntryRefEnum::kNodeId:
         return entry->node_id;
     case EntryRefEnum::kSection:
         return entry->section;
@@ -74,14 +72,14 @@ QVariant NodeReferencedModel::data(const QModelIndex& index, int role) const
 QVariant NodeReferencedModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.entry_ref_header.at(section);
+        return info_.node_referenced_header.at(section);
 
     return QVariant();
 }
 
 void NodeReferencedModel::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.entry_ref_header.size() - 1)
+    if (column <= -1 || column >= info_.node_referenced_header.size() - 1)
         return;
 
     auto Compare = [column, order](const NodeReferenced* lhs, const NodeReferenced* rhs) -> bool {
@@ -92,7 +90,7 @@ void NodeReferencedModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->external_sku < rhs->external_sku) : (lhs->external_sku > rhs->external_sku);
         case EntryRefEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
-        case EntryRefEnum::kPIId:
+        case EntryRefEnum::kNodeId:
             return (order == Qt::AscendingOrder) ? (lhs->node_id < rhs->node_id) : (lhs->node_id > rhs->node_id);
         case EntryRefEnum::kUnitPrice:
             return (order == Qt::AscendingOrder) ? (lhs->unit_price < rhs->unit_price) : (lhs->unit_price > rhs->unit_price);
@@ -114,19 +112,4 @@ void NodeReferencedModel::sort(int column, Qt::SortOrder order)
     emit layoutAboutToBeChanged();
     std::sort(list_.begin(), list_.end(), Compare);
     emit layoutChanged();
-}
-
-void NodeReferencedModel::RResetModel(const QUuid& node_id, const QDateTime& start, const QDateTime& end)
-{
-    if (node_id.isNull())
-        return;
-
-    beginResetModel();
-    if (!list_.isEmpty())
-        ResourcePool<NodeReferenced>::Instance().Recycle(list_);
-
-    if (!node_id.isNull())
-        dbhub_->ReadTransRef(list_, node_id, unit_, start.toUTC(), end.toUTC());
-
-    endResetModel();
 }

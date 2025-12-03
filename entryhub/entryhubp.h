@@ -44,7 +44,7 @@ public:
 
 protected:
     void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;
-    // QString QSReadTransRef(int unit) const override;
+    QString QSReadTransRef(int unit) const override;
 };
 
 #endif // ENTRYHUBP_H

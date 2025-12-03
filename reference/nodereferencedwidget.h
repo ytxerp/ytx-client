@@ -34,11 +34,8 @@ class NodeReferencedWidget;
 class NodeReferencedWidget final : public QWidget {
     Q_OBJECT
 
-signals:
-    void SResetModel(const QUuid& node_id, const QDateTime& start, const QDateTime& end);
-
 public:
-    NodeReferencedWidget(QAbstractItemModel* model, const QUuid& node_id, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
+    NodeReferencedWidget(QAbstractItemModel* model, const QUuid& node_id, int node_unit, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
     ~NodeReferencedWidget() override;
 
     QTableView* View() const;
@@ -58,6 +55,7 @@ private:
     QDateTime end_ {};
 
     const QUuid node_id_ {};
+    int node_unit_ {};
 };
 
 #endif // NODEREFERENCEDWIDGET_H

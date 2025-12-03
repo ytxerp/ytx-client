@@ -41,7 +41,8 @@ struct SectionInfo {
     QStringList node_header {};
     QStringList entry_header {};
 
-    QStringList entry_ref_header {};
+    QStringList node_referenced_header {};
+
     QStringList settlement_header {};
     QStringList settlement_primary_header {};
 

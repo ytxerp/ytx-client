@@ -229,30 +229,6 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
 //                         .arg(info_.path);
 // }
 
-bool EntryHub::ReadTransRef(NodeReferencedList& list, const QUuid& node_id, int unit, const QDateTime& start, const QDateTime& end) const
-{
-    // QSqlQuery query(main_db_);
-    // query.setForwardOnly(true);
-
-    // auto sql { QSReadTransRef(unit) };
-    // if (sql.isEmpty())
-    //     return false;
-
-    // query.prepare(sql);
-    // query.bindValue(QStringLiteral(":node_id"), node_id.toString(QUuid::WithoutBraces));
-    // query.bindValue(QStringLiteral(":start"), start.toString(Qt::ISODate));
-    // query.bindValue(QStringLiteral(":end"), end.toString(Qt::ISODate));
-
-    // if (!query.exec()) {
-    //     qWarning() << "Failed in TransRefRecord" << query.lastError().text();
-    //     return false;
-    // }
-
-    // ReadTransRefQuery(list, query);
-
-    return true;
-}
-
 // QString EntryHub::BuildSelect(const QString& table, QStringList& condition) const
 // {
 //     static const auto kWhere { QStringLiteral(" WHERE ") };
