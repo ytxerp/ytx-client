@@ -51,7 +51,7 @@ void SettlementWidget::IniWidget(SettlementModel* settlement_model, SettlementPr
     ui->pBtnRefresh->setFocus();
 
     ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_);
+    ui->end->setDateTime(end_.addSecs(-1));
 }
 
 void SettlementWidget::on_pBtnAppend_clicked() { settlement_model_->insertRows(settlement_model_->rowCount(), 1); }

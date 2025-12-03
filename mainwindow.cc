@@ -1547,7 +1547,7 @@ void MainWindow::on_actionStatement_triggered()
 
     const int unit { std::to_underlying(UnitO::kMonthly) };
     const auto start { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime) };
-    const auto end { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), QDate::currentDate().daysInMonth()), kEndTime) };
+    const auto end { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month() + 1, 1), kStartTime) };
 
     auto* widget { new StatementWidget(model, unit, false, start, end, this) };
 
@@ -1579,7 +1579,7 @@ void MainWindow::on_actionSettlement_triggered()
     }
 
     const auto start { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) };
-    const auto end { QDateTime(QDate(QDate::currentDate().year(), 12, 31), kEndTime) };
+    const auto end { QDateTime(QDate(QDate::currentDate().year() + 1, 1, 1), kStartTime) };
 
     auto* model { new SettlementModel(sc_->entry_hub, sc_->info, this) };
     model->ResetModel(start, end);
@@ -2449,8 +2449,8 @@ void MainWindow::CreateNodeReferenced(TreeModel* tree_model, CSectionInfo& info,
     auto* model { new NodeReferencedModel(info, this) };
 
     const auto start { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) };
-    const auto end { QDateTime(QDate(QDate::currentDate().year(), 12, 31), kEndTime) };
-    auto* widget { new NodeReferencedWidget(model, node_id, unit, start, end, this) };
+    const auto end { QDateTime(QDate(QDate::currentDate().year() + 1, 1, 1), kStartTime) };
+    auto* widget { new NodeReferencedWidget(model, section, node_id, unit, start, end, this) };
 
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };

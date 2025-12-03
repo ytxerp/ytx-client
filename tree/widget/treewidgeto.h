@@ -42,6 +42,7 @@ public:
 
 private slots:
     void on_pBtnFetch_clicked();
+    void InitTimer();
 
 private:
     Ui::TreeWidgetO* ui;
@@ -51,8 +52,7 @@ private:
     QDateTime start_ {};
     QDateTime end_ {};
 
-    QDateTime last_start_ {};
-    QDateTime last_end_ {};
+    QTimer* cooldown_timer_ { nullptr };
 };
 
 #endif // TREEWIDGETO_H

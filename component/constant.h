@@ -34,6 +34,7 @@ inline bool FloatChanged(double a, double b) noexcept { return !FloatEqual(a, b)
 
 inline constexpr int kRowHeight = 24;
 inline constexpr int kThreeThousand = 3000;
+inline constexpr int kTwoThousand = 2000;
 
 inline constexpr int HEARTBEAT_INTERVAL = 20000;
 inline constexpr int TIMEOUT_THRESHOLD = 35000;
@@ -75,7 +76,6 @@ inline const QString kDateTimeFST = QStringLiteral("yyyy-MM-dd HH:mm");
 inline const QString kDateFST = QStringLiteral("yyyy-MM-dd");
 inline const QString kMonthFST = QStringLiteral("yyyyMM");
 
-inline const QTime kEndTime = { 23, 59 }; // 23:59
 inline const QTime kStartTime = { 0, 0 }; // 00:00
 
 // Empty & punctuation
@@ -135,6 +135,7 @@ inline const QString kTreeAcked = QStringLiteral("tree_acked");
 inline const QString kNodeAcked = QStringLiteral("node_acked");
 inline const QString kTableAcked = QStringLiteral("table_acked");
 inline const QString kLinkedEntry = QStringLiteral("linked_entry");
+inline const QString kNodeReferenced = QStringLiteral("node_referenced");
 
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");

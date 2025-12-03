@@ -26,6 +26,7 @@
 #include <QUuid>
 
 #include "component/using.h"
+#include "enum/section.h"
 
 namespace Ui {
 class NodeReferencedWidget;
@@ -35,7 +36,8 @@ class NodeReferencedWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    NodeReferencedWidget(QAbstractItemModel* model, const QUuid& node_id, int node_unit, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
+    NodeReferencedWidget(
+        QAbstractItemModel* model, const Section section, const QUuid& node_id, int node_unit, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
     ~NodeReferencedWidget() override;
 
     QTableView* View() const;
@@ -48,14 +50,18 @@ private slots:
 
 private:
     void IniWidget(QAbstractItemModel* model);
+    void InitTimer();
 
 private:
     Ui::NodeReferencedWidget* ui;
     QDateTime start_ {};
     QDateTime end_ {};
 
+    QTimer* cooldown_timer_ { nullptr };
+
     const QUuid node_id_ {};
-    int node_unit_ {};
+    const int node_unit_ {};
+    const Section section_ {};
 };
 
 #endif // NODEREFERENCEDWIDGET_H

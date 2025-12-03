@@ -325,4 +325,17 @@ QJsonObject EntryLinkedNode(Section section, CUuid& entry_id)
     return message;
 }
 
+QJsonObject NodeReferenced(Section section, CUuid& node_id, int unit, const QDateTime& start, const QDateTime& end)
+{
+    QJsonObject message {};
+
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kUnit, unit);
+    message.insert(kStart, start.toString(Qt::ISODate));
+    message.insert(kEnd, end.toString(Qt::ISODate));
+
+    return message;
+}
+
 }
