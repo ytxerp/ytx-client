@@ -30,7 +30,7 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="treeWidgetOrder">
+    <widget class="QGroupBox" name="treeGroupO">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -77,9 +77,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pBtnRefresh">
+       <widget class="QPushButton" name="pBtnFetch">
         <property name="text">
-         <string>Refresh</string>
+         <string>Fetch</string>
         </property>
        </widget>
       </item>

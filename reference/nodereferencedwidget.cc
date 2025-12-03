@@ -25,17 +25,17 @@ QAbstractItemModel* NodeReferencedWidget::Model() const { return ui->tableView->
 
 void NodeReferencedWidget::on_start_dateChanged(const QDate& date)
 {
-    ui->pBtnRefresh->setEnabled(date <= end_.date());
+    ui->pBtnFetch->setEnabled(date <= end_.date());
     start_.setDate(date);
 }
 
 void NodeReferencedWidget::on_end_dateChanged(const QDate& date)
 {
-    ui->pBtnRefresh->setEnabled(date >= start_.date());
+    ui->pBtnFetch->setEnabled(date >= start_.date());
     end_.setDate(date);
 }
 
-void NodeReferencedWidget::on_pBtnRefresh_clicked() { }
+void NodeReferencedWidget::on_pBtnFetch_clicked() { }
 
 void NodeReferencedWidget::IniWidget(QAbstractItemModel* model)
 {
@@ -45,5 +45,5 @@ void NodeReferencedWidget::IniWidget(QAbstractItemModel* model)
     ui->start->setDateTime(start_);
     ui->end->setDateTime(end_);
 
-    ui->pBtnRefresh->setFocus();
+    ui->pBtnFetch->setFocus();
 }

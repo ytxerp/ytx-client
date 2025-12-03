@@ -1615,36 +1615,6 @@ void MainWindow::on_actionSettlement_triggered()
     RegisterRptWgt(report_id, settlement_widget_);
 }
 
-void MainWindow::CreateNodeReferenced(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit)
-{
-    assert(tree_model);
-    assert(tree_model->Contains(node_id));
-
-    CString name { tr("Referenced-") + tree_model->Name(node_id) };
-
-    const Section section { info.section };
-
-    auto* model { new NodeReferencedModel(info, this) };
-
-    const auto start { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) };
-    const auto end { QDateTime(QDate(QDate::currentDate().year(), 12, 31), kEndTime) };
-    auto* widget { new NodeReferencedWidget(model, node_id, unit, start, end, this) };
-
-    const int tab_index { ui->tabWidget->addTab(widget, name) };
-    auto* tab_bar { ui->tabWidget->tabBar() };
-
-    const QUuid report_id { QUuid::createUuidV7() };
-    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, report_id }));
-
-    auto* view { widget->View() };
-    SetTableViewFIPT(view, std::to_underlying(EntryRefEnum::kDescription), std::to_underlying(EntryRefEnum::kNodeId));
-    DelegateNodeReferenced(view, sc_sale_.section_config);
-
-    connect(view, &QTableView::doubleClicked, this, &MainWindow::RNodeReferencedDoubleClicked);
-
-    RegisterRptWgt(report_id, widget);
-}
-
 void MainWindow::RegisterRptWgt(const QUuid& report_id, QWidget* widget)
 {
     sc_->rpt_wgt_hash.insert(report_id, widget);
@@ -2425,30 +2395,48 @@ void MainWindow::RNodeReferenced(const QUuid& node_id, int unit)
 
     switch (start_) {
     case Section::kInventory:
-        NodeReferencedI(node_id, unit);
+        if (unit != std::to_underlying(UnitI::kInternal))
+            return;
         break;
     case Section::kPartner:
-        NodeReferencedP(node_id, unit);
+        if (unit != std::to_underlying(UnitP::kCustomer))
+            return;
         break;
     default:
-        break;
+        return;
     }
-}
-
-void MainWindow::NodeReferencedI(const QUuid& node_id, int unit)
-{
-    if (start_ != Section::kInventory || unit != std::to_underlying(UnitI::kInternal))
-        return;
 
     CreateNodeReferenced(sc_->tree_model, sc_->info, node_id, unit);
 }
 
-void MainWindow::NodeReferencedP(const QUuid& node_id, int unit)
+void MainWindow::CreateNodeReferenced(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit)
 {
-    if (start_ != Section::kPartner || unit != std::to_underlying(UnitP::kCustomer))
-        return;
+    assert(tree_model);
+    assert(tree_model->Contains(node_id));
 
-    CreateNodeReferenced(sc_->tree_model, sc_->info, node_id, unit);
+    CString name { tr("Referenced-") + tree_model->Name(node_id) };
+
+    const Section section { info.section };
+
+    auto* model { new NodeReferencedModel(info, this) };
+
+    const auto start { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) };
+    const auto end { QDateTime(QDate(QDate::currentDate().year(), 12, 31), kEndTime) };
+    auto* widget { new NodeReferencedWidget(model, node_id, unit, start, end, this) };
+
+    const int tab_index { ui->tabWidget->addTab(widget, name) };
+    auto* tab_bar { ui->tabWidget->tabBar() };
+
+    const QUuid report_id { QUuid::createUuidV7() };
+    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, report_id }));
+
+    auto* view { widget->View() };
+    SetTableViewFIPT(view, std::to_underlying(EntryRefEnum::kDescription), std::to_underlying(EntryRefEnum::kNodeId));
+    DelegateNodeReferenced(view, sc_sale_.section_config);
+
+    connect(view, &QTableView::doubleClicked, this, &MainWindow::RNodeReferencedDoubleClicked);
+
+    RegisterRptWgt(report_id, widget);
 }
 
 void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool branch)

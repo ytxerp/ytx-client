@@ -42,7 +42,7 @@ public:
     QAbstractItemModel* Model() const;
 
 private slots:
-    void on_pBtnRefresh_clicked();
+    void on_pBtnFetch_clicked();
     void on_start_dateChanged(const QDate& date);
     void on_end_dateChanged(const QDate& date);
 
