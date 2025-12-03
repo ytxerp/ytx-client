@@ -154,6 +154,7 @@ set(HEADERS
     enum/nodeenum.h
     enum/entryenum.h
     enum/statementenum.h
+    enum/reference.h
     tree/includemultiplefiltermodel.h
     tree/excludeonefiltermodel.h
     tree/excludemultiplefiltermodel.h

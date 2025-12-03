@@ -1,6 +1,6 @@
 #include "nodereferencedmodel.h"
 
-#include "enum/nodeenum.h"
+#include "enum/reference.h"
 #include "global/resourcepool.h"
 
 NodeReferencedModel::NodeReferencedModel(CSectionInfo& info, QObject* parent)
