@@ -245,4 +245,19 @@ enum class NodeEnumO {
     kSettlementId,
 };
 
+// kNodeId: kPartner or kInventory
+enum class NodeReferencedEnum {
+    kIssuedTime = 0,
+    kOrderId,
+    kSection,
+    kNodeId,
+    kExternalSku,
+    kkCount,
+    kkMeasure,
+    kUnitPrice,
+    kUnitDiscount,
+    kDescription,
+    kInitial,
+};
+
 #endif // NODEENUM_H

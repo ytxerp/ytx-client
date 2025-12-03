@@ -154,6 +154,7 @@ private:
 
     void CreateNodeReferenced(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit);
     void DelegateNodeReferenced(QTableView* table_view, CSectionConfig& config) const;
+    void SetTableViewNodeReferenced(QTableView* table_view) const;
 
     void SetStatementView(QTableView* table_view, int stretch_column) const;
     void DelegateStatement(QTableView* table_view, CSectionConfig& config) const;

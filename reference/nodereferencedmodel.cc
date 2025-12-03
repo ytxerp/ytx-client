@@ -1,6 +1,6 @@
 #include "nodereferencedmodel.h"
 
-#include "enum/entryenum.h"
+#include "enum/nodeenum.h"
 #include "global/resourcepool.h"
 
 NodeReferencedModel::NodeReferencedModel(CSectionInfo& info, QObject* parent)
@@ -39,30 +39,30 @@ QVariant NodeReferencedModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* entry { list_.at(index.row()) };
-    const EntryRefEnum column { index.column() };
+    const NodeReferencedEnum column { index.column() };
 
     switch (column) {
-    case EntryRefEnum::kIssuedTime:
+    case NodeReferencedEnum::kIssuedTime:
         return entry->issued_time;
-    case EntryRefEnum::kNodeId:
+    case NodeReferencedEnum::kNodeId:
         return entry->node_id;
-    case EntryRefEnum::kSection:
+    case NodeReferencedEnum::kSection:
         return entry->section;
-    case EntryRefEnum::kOrderId:
+    case NodeReferencedEnum::kOrderId:
         return entry->order_id;
-    case EntryRefEnum::kExternalSku:
+    case NodeReferencedEnum::kExternalSku:
         return entry->external_sku;
-    case EntryRefEnum::kkCount:
+    case NodeReferencedEnum::kkCount:
         return entry->count;
-    case EntryRefEnum::kkMeasure:
+    case NodeReferencedEnum::kkMeasure:
         return entry->measure;
-    case EntryRefEnum::kUnitPrice:
+    case NodeReferencedEnum::kUnitPrice:
         return entry->unit_price;
-    case EntryRefEnum::kUnitDiscount:
+    case NodeReferencedEnum::kUnitDiscount:
         return entry->unit_discount;
-    case EntryRefEnum::kDescription:
+    case NodeReferencedEnum::kDescription:
         return entry->description;
-    case EntryRefEnum::kInitial:
+    case NodeReferencedEnum::kInitial:
         return entry->initial;
     default:
         return QVariant();
@@ -83,26 +83,26 @@ void NodeReferencedModel::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](const NodeReferenced* lhs, const NodeReferenced* rhs) -> bool {
-        const EntryRefEnum e_column { column };
+        const NodeReferencedEnum e_column { column };
 
         switch (e_column) {
-        case EntryRefEnum::kExternalSku:
+        case NodeReferencedEnum::kExternalSku:
             return (order == Qt::AscendingOrder) ? (lhs->external_sku < rhs->external_sku) : (lhs->external_sku > rhs->external_sku);
-        case EntryRefEnum::kIssuedTime:
+        case NodeReferencedEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
-        case EntryRefEnum::kNodeId:
+        case NodeReferencedEnum::kNodeId:
             return (order == Qt::AscendingOrder) ? (lhs->node_id < rhs->node_id) : (lhs->node_id > rhs->node_id);
-        case EntryRefEnum::kUnitPrice:
+        case NodeReferencedEnum::kUnitPrice:
             return (order == Qt::AscendingOrder) ? (lhs->unit_price < rhs->unit_price) : (lhs->unit_price > rhs->unit_price);
-        case EntryRefEnum::kkCount:
+        case NodeReferencedEnum::kkCount:
             return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
-        case EntryRefEnum::kkMeasure:
+        case NodeReferencedEnum::kkMeasure:
             return (order == Qt::AscendingOrder) ? (lhs->measure < rhs->measure) : (lhs->measure > rhs->measure);
-        case EntryRefEnum::kDescription:
+        case NodeReferencedEnum::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
-        case EntryRefEnum::kInitial:
+        case NodeReferencedEnum::kInitial:
             return (order == Qt::AscendingOrder) ? (lhs->initial < rhs->initial) : (lhs->initial > rhs->initial);
-        case EntryRefEnum::kUnitDiscount:
+        case NodeReferencedEnum::kUnitDiscount:
             return (order == Qt::AscendingOrder) ? (lhs->unit_discount < rhs->unit_discount) : (lhs->unit_discount > rhs->unit_discount);
         default:
             return false;

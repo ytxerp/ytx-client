@@ -308,15 +308,15 @@ void MainWindow::RSectionGroup(int id)
 
 void MainWindow::RNodeReferencedDoubleClicked(const QModelIndex& index)
 {
-    const auto node_id { index.siblingAtColumn(std::to_underlying(EntryRefEnum::kOrderId)).data().toUuid() };
-    const int column { std::to_underlying(EntryRefEnum::kInitial) };
+    const auto node_id { index.siblingAtColumn(std::to_underlying(NodeReferencedEnum::kOrderId)).data().toUuid() };
+    const int column { std::to_underlying(NodeReferencedEnum::kInitial) };
 
     assert(!node_id.isNull());
 
     if (index.column() != column)
         return;
 
-    const Section section { index.siblingAtColumn(std::to_underlying(EntryRefEnum::kSection)).data().toInt() };
+    const Section section { index.siblingAtColumn(std::to_underlying(NodeReferencedEnum::kSection)).data().toInt() };
 
     switch (section) {
     case Section::kSale:
@@ -1712,34 +1712,61 @@ void MainWindow::closeEvent(QCloseEvent* event)
 void MainWindow::DelegateNodeReferenced(QTableView* table_view, CSectionConfig& config) const
 {
     auto* price { new DoubleSpinNoneZeroR(config.rate_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kUnitPrice), price);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kUnitDiscount), price);
+    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kUnitPrice), price);
+    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kUnitDiscount), price);
 
-    auto* quantity { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kkCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kkMeasure), quantity);
+    auto* quantity { new DoubleSpinNoneZeroR(config.quantity_decimal, kCoefficient16, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kkCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kkMeasure), quantity);
 
     auto* amount { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kInitial), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kInitial), amount);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kIssuedTime), issued_time);
 
     auto partner_tree_model { sc_p_.tree_model };
     auto* external_sku { new NodePathR(partner_tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kExternalSku), external_sku);
+    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kExternalSku), external_sku);
 
     auto* section { new SectionR(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kSection), section);
+    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kSection), section);
 
     if (start_ == Section::kInventory) {
         auto* name { new NodeNameR(partner_tree_model, table_view) };
-        table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kNodeId), name);
+        table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kNodeId), name);
     }
 
     if (start_ == Section::kPartner) {
         auto* internal_sku { new NodeNameR(sc_i_.tree_model, table_view) };
-        table_view->setItemDelegateForColumn(std::to_underlying(EntryRefEnum::kNodeId), internal_sku);
+        table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kNodeId), internal_sku);
+    }
+}
+
+void MainWindow::SetTableViewNodeReferenced(QTableView* view) const
+{
+    {
+        view->setSelectionMode(QAbstractItemView::SingleSelection);
+        view->setSelectionBehavior(QAbstractItemView::SelectRows);
+        view->setAlternatingRowColors(true);
+        view->setSortingEnabled(true);
+    }
+
+    {
+        view->setColumnHidden(std::to_underlying(NodeReferencedEnum::kNodeId), kIsHidden);
+        view->setColumnHidden(std::to_underlying(NodeReferencedEnum::kOrderId), kIsHidden);
+    }
+
+    {
+        auto* h_header { view->horizontalHeader() };
+        ResizeColumn(h_header, std::to_underlying(NodeReferencedEnum::kDescription));
+    }
+
+    {
+        auto* v_header { view->verticalHeader() };
+        v_header->setDefaultSectionSize(kRowHeight);
+        v_header->setSectionResizeMode(QHeaderView::Fixed);
+        v_header->setHidden(true);
     }
 }
 
@@ -2431,7 +2458,7 @@ void MainWindow::CreateNodeReferenced(TreeModel* tree_model, CSectionInfo& info,
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, report_id }));
 
     auto* view { widget->View() };
-    SetTableViewFIPT(view, std::to_underlying(EntryRefEnum::kDescription), std::to_underlying(EntryRefEnum::kNodeId));
+    SetTableViewNodeReferenced(view);
     DelegateNodeReferenced(view, sc_sale_.section_config);
 
     connect(view, &QTableView::doubleClicked, this, &MainWindow::RNodeReferencedDoubleClicked);
