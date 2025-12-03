@@ -51,20 +51,42 @@ void LeafRemoveDialog::InitCheckBoxGroup()
     ui->chkBoxInside->setChecked(inside_ref_);
     ui->chkBoxInside->setEnabled(false);
 
-    ui->chkBoxInventoryInt->setChecked(inventory_int_ref_);
-    ui->chkBoxInventoryInt->setEnabled(false);
+    ui->chkBoxInventoryInt->hide();
+    ui->chkBoxInventoryExt->hide();
+    ui->chkBoxPartner->hide();
+    ui->chkBoxEmployee->hide();
+    ui->chkBoxSettlement->hide();
 
-    ui->chkBoxInventoryExt->setChecked(inventory_ext_ref_);
-    ui->chkBoxInventoryExt->setEnabled(false);
+    switch (info_.section) {
+    case Section::kInventory:
+        ui->chkBoxInventoryInt->show();
+        ui->chkBoxInventoryInt->setChecked(inventory_int_ref_);
+        ui->chkBoxInventoryInt->setEnabled(false);
 
-    ui->chkBoxPartner->setChecked(partner_ref_);
-    ui->chkBoxPartner->setEnabled(false);
-
-    ui->chkBoxEmployee->setChecked(employee_ref_);
-    ui->chkBoxEmployee->setEnabled(false);
-
-    ui->chkBoxSettlement->setChecked(settlement_ref_);
-    ui->chkBoxSettlement->setEnabled(false);
+        ui->chkBoxInventoryExt->show();
+        ui->chkBoxInventoryExt->setChecked(inventory_ext_ref_);
+        ui->chkBoxInventoryExt->setEnabled(false);
+        break;
+    case Section::kPartner:
+        if (node_unit_ == std::to_underlying(UnitP::kEmployee)) {
+            ui->chkBoxEmployee->show();
+            ui->chkBoxEmployee->setChecked(employee_ref_);
+            ui->chkBoxEmployee->setEnabled(false);
+        } else {
+            ui->chkBoxPartner->show();
+            ui->chkBoxPartner->setChecked(partner_ref_);
+            ui->chkBoxPartner->setEnabled(false);
+        }
+        break;
+    case Section::kSale:
+    case Section::kPurchase:
+        ui->chkBoxSettlement->show();
+        ui->chkBoxSettlement->setChecked(settlement_ref_);
+        ui->chkBoxSettlement->setEnabled(false);
+        break;
+    default:
+        break;
+    }
 }
 
 void LeafRemoveDialog::on_pBtnOk_clicked()
