@@ -1,17 +1,17 @@
-#include "nodereferencedmodel.h"
+#include "salereferencemodel.h"
 
 #include "enum/reference.h"
 #include "global/resourcepool.h"
 
-NodeReferencedModel::NodeReferencedModel(CSectionInfo& info, QObject* parent)
+SaleReferenceModel::SaleReferenceModel(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
 {
 }
 
-NodeReferencedModel::~NodeReferencedModel() { ResourcePool<NodeReferenced>::Instance().Recycle(list_); }
+SaleReferenceModel::~SaleReferenceModel() { ResourcePool<SaleReference>::Instance().Recycle(list_); }
 
-QModelIndex NodeReferencedModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex SaleReferenceModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -19,21 +19,21 @@ QModelIndex NodeReferencedModel::index(int row, int column, const QModelIndex& p
     return createIndex(row, column);
 }
 
-QModelIndex NodeReferencedModel::parent(const QModelIndex& index) const
+QModelIndex SaleReferenceModel::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int NodeReferencedModel::rowCount(const QModelIndex& parent) const
+int SaleReferenceModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return list_.size();
 }
 
-int NodeReferencedModel::columnCount(const QModelIndex& /*parent*/) const { return info_.node_referenced_header.size(); }
+int SaleReferenceModel::columnCount(const QModelIndex& /*parent*/) const { return info_.node_referenced_header.size(); }
 
-QVariant NodeReferencedModel::data(const QModelIndex& index, int role) const
+QVariant SaleReferenceModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -69,7 +69,7 @@ QVariant NodeReferencedModel::data(const QModelIndex& index, int role) const
     }
 }
 
-QVariant NodeReferencedModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant SaleReferenceModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return info_.node_referenced_header.at(section);
@@ -77,12 +77,12 @@ QVariant NodeReferencedModel::headerData(int section, Qt::Orientation orientatio
     return QVariant();
 }
 
-void NodeReferencedModel::sort(int column, Qt::SortOrder order)
+void SaleReferenceModel::sort(int column, Qt::SortOrder order)
 {
     if (column <= -1 || column >= info_.node_referenced_header.size() - 1)
         return;
 
-    auto Compare = [column, order](const NodeReferenced* lhs, const NodeReferenced* rhs) -> bool {
+    auto Compare = [column, order](const SaleReference* lhs, const SaleReference* rhs) -> bool {
         const NodeReferencedEnum e_column { column };
 
         switch (e_column) {

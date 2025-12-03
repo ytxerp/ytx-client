@@ -132,12 +132,12 @@ set(SOURCES
     table/model/tablemodelo.cc
     table/model/tablemodelp.cc
     report/settlement.cc
-    reference/nodereferencedwidget.cc
+    reference/salereferencewidget.cc
     report/widget/statementwidget.cc
     report/widget/settlementwidget.cc
     report/model/statementprimarymodel.cc
     report/model/statementsecondarymodel.cc
-    reference/nodereferencedmodel.cc
+    reference/salereferencemodel.cc
     report/model/settlementmodel.cc
     report/model/settlementprimarymodel.cc
     report/model/statementmodel.cc
@@ -272,19 +272,19 @@ set(HEADERS
     table/model/tablemodelf.h
     table/model/tablemodeli.h
     table/model/tablemodel.h
-    reference/nodereferenced.h
+    reference/salereference.h
     report/statement.h
     report/settlement.h
     report/widget/settlementwidget.h
     report/widget/reportwidget.h
     report/widget/statementwidget.h
-    reference/nodereferencedwidget.h
+    reference/salereferencewidget.h
     report/model/statementprimarymodel.h
     report/model/settlementprimarymodel.h
     report/model/statementsecondarymodel.h
     report/model/settlementmodel.h
     report/model/statementmodel.h
-    reference/nodereferencedmodel.h
+    reference/salereferencemodel.h
     global/dailylogger.h
     global/entrypool.h
     global/resourcepool.h
@@ -319,7 +319,7 @@ set(UIS
     table/widget/tablewidgeto.ui
     report/widget/statementwidget.ui
     report/widget/settlementwidget.ui
-    reference/nodereferencedwidget.ui
+    reference/salereferencewidget.ui
 )
 
 # ------------------------

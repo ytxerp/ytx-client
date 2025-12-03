@@ -135,7 +135,7 @@ inline const QString kTreeAcked = QStringLiteral("tree_acked");
 inline const QString kNodeAcked = QStringLiteral("node_acked");
 inline const QString kTableAcked = QStringLiteral("table_acked");
 inline const QString kLinkedEntry = QStringLiteral("linked_entry");
-inline const QString kNodeReferenced = QStringLiteral("node_referenced");
+inline const QString kSaleReference = QStringLiteral("sale_reference");
 
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");

@@ -98,8 +98,8 @@ private slots:
 
     void RFreeWidget(const QUuid& node_id);
 
-    void RNodeReferenced(const QUuid& node_id, int unit);
-    void RNodeReferencedDoubleClicked(const QModelIndex& index);
+    void RSaleReference(const QUuid& node_id, int unit);
+    void RSaleReferenceDoubleClicked(const QModelIndex& index);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
     void RTreeViewDoubleClicked(const QModelIndex& index);
@@ -152,9 +152,9 @@ private:
     void TableConnectP(QTableView* table_view, TableModel* table_model) const;
     void TableConnectO(QTableView* table_view, TableModelO* table_model, TableWidgetO* widget) const;
 
-    void CreateNodeReferenced(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit);
-    void DelegateNodeReferenced(QTableView* table_view, CSectionConfig& config) const;
-    void SetTableViewNodeReferenced(QTableView* table_view) const;
+    void CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit);
+    void DelegateSaleReference(QTableView* table_view, CSectionConfig& config) const;
+    void SetTableViewSaleReference(QTableView* table_view) const;
 
     void SetStatementView(QTableView* table_view, int stretch_column) const;
     void DelegateStatement(QTableView* table_view, CSectionConfig& config) const;

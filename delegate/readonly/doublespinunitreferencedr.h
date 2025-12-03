@@ -28,7 +28,7 @@ class DoubleSpinUnitReferencedR final : public StyledItemDelegate {
     Q_OBJECT
 
 signals:
-    void SNodeReferenced(const QUuid& node_id, int unit);
+    void SSaleReference(const QUuid& node_id, int unit);
 
 public:
     DoubleSpinUnitReferencedR(Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, QObject* parent = nullptr);

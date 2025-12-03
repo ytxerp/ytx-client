@@ -25,7 +25,6 @@
 
 #include "component/info.h"
 #include "enum/entryenum.h"
-#include "reference/nodereferenced.h"
 #include "table/entry.h"
 
 class EntryHub : public QObject {

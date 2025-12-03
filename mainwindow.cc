@@ -62,8 +62,8 @@
 #include "global/nodepool.h"
 #include "global/printhub.h"
 #include "global/tablesstation.h"
-#include "reference/nodereferencedmodel.h"
-#include "reference/nodereferencedwidget.h"
+#include "reference/salereferencemodel.h"
+#include "reference/salereferencewidget.h"
 #include "report/model/settlementmodel.h"
 #include "report/model/statementmodel.h"
 #include "report/model/statementprimarymodel.h"
@@ -307,7 +307,7 @@ void MainWindow::RSectionGroup(int id)
     SwitchSection(start_, sc_->info.last_tab_id);
 }
 
-void MainWindow::RNodeReferencedDoubleClicked(const QModelIndex& index)
+void MainWindow::RSaleReferenceDoubleClicked(const QModelIndex& index)
 {
     const auto node_id { index.siblingAtColumn(std::to_underlying(NodeReferencedEnum::kOrderId)).data().toUuid() };
     const int column { std::to_underlying(NodeReferencedEnum::kInitial) };
@@ -957,7 +957,7 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* amount { new DoubleSpinUnitReferencedR(
         info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kFinalTotal), amount);
-    connect(amount, &DoubleSpinUnitReferencedR::SNodeReferenced, this, &MainWindow::RNodeReferenced);
+    connect(amount, &DoubleSpinUnitReferencedR::SSaleReference, this, &MainWindow::RSaleReference);
 
     auto* unit_price { new Double(section.rate_decimal, 0.0, kDoubleMax, kCoefficient8, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kUnitPrice), unit_price);
@@ -985,7 +985,7 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* amount { new DoubleSpinUnitReferencedR(
         info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kInitialTotal), amount);
-    connect(amount, &DoubleSpinUnitReferencedR::SNodeReferenced, this, &MainWindow::RNodeReferenced);
+    connect(amount, &DoubleSpinUnitReferencedR::SSaleReference, this, &MainWindow::RSaleReference);
 
     auto* payment_term { new Int(0, 36500, tree_view) }; // one hundred years
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kPaymentTerm), payment_term);
@@ -1710,7 +1710,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
     QMainWindow::closeEvent(event);
 }
 
-void MainWindow::DelegateNodeReferenced(QTableView* table_view, CSectionConfig& config) const
+void MainWindow::DelegateSaleReference(QTableView* table_view, CSectionConfig& config) const
 {
     auto* price { new DoubleSpinNoneZeroR(config.rate_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kUnitPrice), price);
@@ -1744,7 +1744,7 @@ void MainWindow::DelegateNodeReferenced(QTableView* table_view, CSectionConfig& 
     }
 }
 
-void MainWindow::SetTableViewNodeReferenced(QTableView* view) const
+void MainWindow::SetTableViewSaleReference(QTableView* view) const
 {
     {
         view->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -2415,7 +2415,7 @@ void MainWindow::InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUu
     dialog->exec();
 }
 
-void MainWindow::RNodeReferenced(const QUuid& node_id, int unit)
+void MainWindow::RSaleReference(const QUuid& node_id, int unit)
 {
     assert(sc_->tree_widget);
     assert(sc_->tree_model->Kind(node_id) == std::to_underlying(NodeKind::kLeaf)
@@ -2434,23 +2434,23 @@ void MainWindow::RNodeReferenced(const QUuid& node_id, int unit)
         return;
     }
 
-    CreateNodeReferenced(sc_->tree_model, sc_->info, node_id, unit);
+    CreateSaleReference(sc_->tree_model, sc_->info, node_id, unit);
 }
 
-void MainWindow::CreateNodeReferenced(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit)
+void MainWindow::CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit)
 {
     assert(tree_model);
     assert(tree_model->Contains(node_id));
 
-    CString name { tr("Referenced-") + tree_model->Name(node_id) };
+    CString name { tr("Record-") + tree_model->Name(node_id) };
 
     const Section section { info.section };
 
-    auto* model { new NodeReferencedModel(info, this) };
+    auto* model { new SaleReferenceModel(info, this) };
 
     const auto start { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) };
     const auto end { QDateTime(QDate(QDate::currentDate().year() + 1, 1, 1), kStartTime) };
-    auto* widget { new NodeReferencedWidget(model, section, node_id, unit, start, end, this) };
+    auto* widget { new SaleReferenceWidget(model, section, node_id, unit, start, end, this) };
 
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };
@@ -2459,10 +2459,10 @@ void MainWindow::CreateNodeReferenced(TreeModel* tree_model, CSectionInfo& info,
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, report_id }));
 
     auto* view { widget->View() };
-    SetTableViewNodeReferenced(view);
-    DelegateNodeReferenced(view, sc_sale_.section_config);
+    SetTableViewSaleReference(view);
+    DelegateSaleReference(view, sc_sale_.section_config);
 
-    connect(view, &QTableView::doubleClicked, this, &MainWindow::RNodeReferencedDoubleClicked);
+    connect(view, &QTableView::doubleClicked, this, &MainWindow::RSaleReferenceDoubleClicked);
 
     RegisterRptWgt(report_id, widget);
 }

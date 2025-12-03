@@ -17,15 +17,15 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef NODEREFERENCED_H
-#define NODEREFERENCED_H
+#ifndef SALEREFERENCE_H
+#define SALEREFERENCE_H
 
 #include <QDateTime>
 #include <QList>
 #include <QString>
 #include <QUuid>
 
-struct NodeReferenced {
+struct SaleReference {
     QDateTime issued_time {};
     QUuid order_id {};
     int section {};
@@ -41,7 +41,7 @@ struct NodeReferenced {
     void ResetState();
 };
 
-inline void NodeReferenced::ResetState()
+inline void SaleReference::ResetState()
 {
     issued_time = {};
     order_id = QUuid();
@@ -56,6 +56,6 @@ inline void NodeReferenced::ResetState()
     description.clear();
 }
 
-using NodeReferencedList = QList<NodeReferenced*>;
+using SaleReferenceList = QList<SaleReference*>;
 
-#endif // NODEREFERENCED_H
+#endif // SALEREFERENCE_H

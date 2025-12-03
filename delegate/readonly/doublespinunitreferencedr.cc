@@ -43,7 +43,7 @@ bool DoubleSpinUnitReferencedR::editorEvent(QEvent* event, QAbstractItemModel* m
     const int unit { index.siblingAtColumn(unit_column).data().toInt() };
 
     if (is_leaf && event->type() == QEvent::MouseButtonDblClick && option.rect.contains(static_cast<QMouseEvent*>(event)->pos()))
-        emit SNodeReferenced(node_id, unit);
+        emit SSaleReference(node_id, unit);
 
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }

@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef NODEREFERENCEDWIDGET_H
-#define NODEREFERENCEDWIDGET_H
+#ifndef SALEREFERENCEWIDGET_H
+#define SALEREFERENCEWIDGET_H
 
 #include <QAbstractItemModel>
 #include <QDateTime>
@@ -29,16 +29,16 @@
 #include "enum/section.h"
 
 namespace Ui {
-class NodeReferencedWidget;
+class SaleReferenceWidget;
 }
 
-class NodeReferencedWidget final : public QWidget {
+class SaleReferenceWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    NodeReferencedWidget(
+    SaleReferenceWidget(
         QAbstractItemModel* model, const Section section, const QUuid& node_id, int node_unit, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
-    ~NodeReferencedWidget() override;
+    ~SaleReferenceWidget() override;
 
     QTableView* View() const;
     QAbstractItemModel* Model() const;
@@ -53,7 +53,7 @@ private:
     void InitTimer();
 
 private:
-    Ui::NodeReferencedWidget* ui;
+    Ui::SaleReferenceWidget* ui;
     QDateTime start_ {};
     QDateTime end_ {};
 
@@ -64,4 +64,4 @@ private:
     const Section section_ {};
 };
 
-#endif // NODEREFERENCEDWIDGET_H
+#endif // SALEREFERENCEWIDGET_H

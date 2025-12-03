@@ -325,7 +325,7 @@ QJsonObject EntryLinkedNode(Section section, CUuid& entry_id)
     return message;
 }
 
-QJsonObject NodeReferenced(Section section, CUuid& node_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject SaleReference(Section section, CUuid& node_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 

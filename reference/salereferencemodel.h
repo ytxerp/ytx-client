@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef NODEREFERENCEDMODEL_H
-#define NODEREFERENCEDMODEL_H
+#ifndef SALEREFERENCEMODEL_H
+#define SALEREFERENCEMODEL_H
 
 // Leaf node referenced by entries
 // such as a item node linked to order entries or a partner node associated with an order entry.
@@ -26,13 +26,13 @@
 #include <QAbstractItemModel>
 
 #include "component/info.h"
-#include "nodereferenced.h"
+#include "salereference.h"
 
-class NodeReferencedModel final : public QAbstractItemModel {
+class SaleReferenceModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    NodeReferencedModel(CSectionInfo& info, QObject* parent = nullptr);
-    ~NodeReferencedModel();
+    SaleReferenceModel(CSectionInfo& info, QObject* parent = nullptr);
+    ~SaleReferenceModel();
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -48,7 +48,7 @@ public:
 
 private:
     CSectionInfo& info_;
-    NodeReferencedList list_ {};
+    SaleReferenceList list_ {};
 };
 
-#endif // NODEREFERENCEDMODEL_H
+#endif // SALEREFERENCEMODEL_H

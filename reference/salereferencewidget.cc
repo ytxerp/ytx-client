@@ -1,15 +1,15 @@
-#include "nodereferencedwidget.h"
+#include "salereferencewidget.h"
 
 #include "component/constant.h"
 #include "component/signalblocker.h"
-#include "ui_nodereferencedwidget.h"
+#include "ui_salereferencewidget.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-NodeReferencedWidget::NodeReferencedWidget(
+SaleReferenceWidget::SaleReferenceWidget(
     QAbstractItemModel* model, const Section section, const QUuid& node_id, int node_unit, CDateTime& start, CDateTime& end, QWidget* parent)
     : QWidget(parent)
-    , ui(new Ui::NodeReferencedWidget)
+    , ui(new Ui::SaleReferenceWidget)
     , start_ { start }
     , end_ { end }
     , node_id_ { node_id }
@@ -22,16 +22,16 @@ NodeReferencedWidget::NodeReferencedWidget(
     IniWidget(model);
     InitTimer();
 
-    QTimer::singleShot(0, this, &NodeReferencedWidget::on_pBtnFetch_clicked);
+    QTimer::singleShot(0, this, &SaleReferenceWidget::on_pBtnFetch_clicked);
 }
 
-NodeReferencedWidget::~NodeReferencedWidget() { delete ui; }
+SaleReferenceWidget::~SaleReferenceWidget() { delete ui; }
 
-QTableView* NodeReferencedWidget::View() const { return ui->tableView; }
+QTableView* SaleReferenceWidget::View() const { return ui->tableView; }
 
-QAbstractItemModel* NodeReferencedWidget::Model() const { return ui->tableView->model(); }
+QAbstractItemModel* SaleReferenceWidget::Model() const { return ui->tableView->model(); }
 
-void NodeReferencedWidget::on_start_dateChanged(const QDate& date)
+void SaleReferenceWidget::on_start_dateChanged(const QDate& date)
 {
     const bool valid { date <= end_.date() };
     start_.setDate(date);
@@ -40,7 +40,7 @@ void NodeReferencedWidget::on_start_dateChanged(const QDate& date)
     ui->pBtnFetch->setEnabled(valid);
 }
 
-void NodeReferencedWidget::on_end_dateChanged(const QDate& date)
+void SaleReferenceWidget::on_end_dateChanged(const QDate& date)
 {
     const bool valid { date >= start_.date() };
 
@@ -49,7 +49,7 @@ void NodeReferencedWidget::on_end_dateChanged(const QDate& date)
     end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
-void NodeReferencedWidget::on_pBtnFetch_clicked()
+void SaleReferenceWidget::on_pBtnFetch_clicked()
 {
     if (!ui->pBtnFetch->isEnabled()) {
         return;
@@ -57,13 +57,13 @@ void NodeReferencedWidget::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::NodeReferenced(section_, node_id_, node_unit_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance()->SendMessage(kNodeReferenced, message);
+    const auto message { JsonGen::SaleReference(section_, node_id_, node_unit_, start_.toUTC(), end_.toUTC()) };
+    WebSocket::Instance()->SendMessage(kSaleReference, message);
 
     cooldown_timer_->start(kTwoThousand);
 }
 
-void NodeReferencedWidget::IniWidget(QAbstractItemModel* model)
+void SaleReferenceWidget::IniWidget(QAbstractItemModel* model)
 {
     ui->start->setDisplayFormat(kDateFST);
     ui->end->setDisplayFormat(kDateFST);
@@ -74,7 +74,7 @@ void NodeReferencedWidget::IniWidget(QAbstractItemModel* model)
     ui->pBtnFetch->setFocus();
 }
 
-void NodeReferencedWidget::InitTimer()
+void SaleReferenceWidget::InitTimer()
 {
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
