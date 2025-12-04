@@ -40,18 +40,13 @@ WebSocket* WebSocket::Instance()
 void WebSocket::ReadConfig(QSharedPointer<QSettings> local_settings)
 {
     local_settings->beginGroup(kServer);
-    const QString host { local_settings->value(kHost).toString() };
-    const QString port { local_settings->value(kPort).toString() };
+    const QString host { local_settings->value(kHost, "ytxerp.cc").toString() };
+    const QString port { local_settings->value(kPort, "443").toString() };
     local_settings->endGroup();
-
-    if (host.isEmpty() || port.isEmpty()) {
-        qWarning() << "WebSocket host or port not configured!";
-        return;
-    }
 
     QString scheme {};
 
-    if (host == "127.0.0.1" || host == "localhost" || host == "::1") {
+    if (host == "127.0.0.1" || host == "localhost") {
         scheme = "ws";
     } else {
         scheme = "wss";
