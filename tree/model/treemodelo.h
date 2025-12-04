@@ -45,6 +45,7 @@ public:
     bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild) override;
 
     void AckTree(const QJsonObject& obj) override;
+    void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id) override;
     void SyncNodeName(const QUuid& node_id, const QString& name) override;
 
     int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeO::status); }

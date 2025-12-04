@@ -77,6 +77,31 @@ void TreeModelO::AckTree(const QJsonObject& obj)
     endResetModel();
 }
 
+void TreeModelO::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
+{
+    if (!node_hash_.contains(ancestor_id)) {
+        qCritical() << "AckNode: ancestor_id not found in node_hash_:" << ancestor_id;
+    }
+    assert(node_hash_.contains(ancestor_id));
+
+    auto* node = NodePool::Instance().Allocate(section_);
+    node->ReadJson(leaf_obj);
+
+    Node* ancestor { node_hash_.value(ancestor_id) };
+
+    const long long row { ancestor->children.size() };
+    const auto parent { GetIndex(ancestor_id) };
+
+    beginInsertRows(parent, row, row);
+    ancestor->children.insert(row, node);
+    node->parent = ancestor;
+    endInsertRows();
+
+    node_hash_.insert(node->id, node);
+
+    emit SNodeLocation(node->id);
+}
+
 void TreeModelO::SyncNodeName(const QUuid& node_id, const QString& name)
 {
     auto* node = GetNode(node_id);

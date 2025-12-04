@@ -99,8 +99,11 @@ public:
 
     virtual void AckTree(const QJsonObject& obj) { Q_UNUSED(obj) }
     virtual void SyncNodeName(const QUuid& node_id, const QString& name);
-
-    void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id);
+    virtual void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
+    {
+        Q_UNUSED(leaf_obj)
+        Q_UNUSED(ancestor_id)
+    }
 
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
     void InsertMeta(const QUuid& node_id, const QJsonObject& meta);
