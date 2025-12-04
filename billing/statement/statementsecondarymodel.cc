@@ -11,9 +11,8 @@
 #include "utils/mainwindowutils.h"
 
 StatementSecondaryModel::StatementSecondaryModel(
-    EntryHub* dbhub, CSectionInfo& info, const QUuid& partner_id, CUuidString& item_leaf, TreeModel* partner, CString& company_name, QObject* parent)
+    CSectionInfo& info, const QUuid& partner_id, CUuidString& item_leaf, TreeModel* partner, CString& company_name, QObject* parent)
     : QAbstractItemModel { parent }
-    , dbhub_ { static_cast<EntryHubO*>(dbhub) }
     , info_ { info }
     , partner_id_ { partner_id }
     , item_leaf_ { item_leaf }
@@ -154,7 +153,7 @@ void StatementSecondaryModel::RResetModel(int unit, const QDateTime& start, cons
     if (!statement_secondary_list_.isEmpty())
         ResourcePool<StatementSecondary>::Instance().Recycle(statement_secondary_list_);
 
-    dbhub_->ReadStatementSecondary(statement_secondary_list_, partner_id_, unit, start.toUTC(), end.toUTC());
+    // dbhub_->ReadStatementSecondary(statement_secondary_list_, partner_id_, unit, start.toUTC(), end.toUTC());
     endResetModel();
 }
 
@@ -164,7 +163,7 @@ void StatementSecondaryModel::RExport(int unit, const QDateTime& start, const QD
     double cdelta { 0.0 };
 
     if (unit != std::to_underlying(UnitO::kImmediate)) {
-        dbhub_->ReadBalance(pbalance, cdelta, partner_id_, unit, start, end);
+        // dbhub_->ReadBalance(pbalance, cdelta, partner_id_, unit, start, end);
     }
 
     CString name { QDir::homePath() + QDir::separator() + partner_->Name(partner_id_) + QStringLiteral("-") + company_name_ + QStringLiteral("-")

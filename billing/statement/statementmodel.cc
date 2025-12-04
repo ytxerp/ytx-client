@@ -5,9 +5,8 @@
 #include "enum/statementenum.h"
 #include "global/resourcepool.h"
 
-StatementModel::StatementModel(EntryHub* dbhub, CSectionInfo& info, QObject* parent)
+StatementModel::StatementModel(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }
-    , dbhub_ { static_cast<EntryHubO*>(dbhub) }
     , info_ { info }
 {
 }
@@ -109,7 +108,7 @@ void StatementModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void StatementModel::RResetModel(int unit, const QDateTime& start, const QDateTime& end)
+void StatementModel::ResetModel(int unit, const QDateTime& start, const QDateTime& end)
 {
     if (!start.isValid() || !end.isValid())
         return;
@@ -118,6 +117,5 @@ void StatementModel::RResetModel(int unit, const QDateTime& start, const QDateTi
     if (!statement_list_.isEmpty())
         ResourcePool<Statement>::Instance().Recycle(statement_list_);
 
-    dbhub_->ReadStatement(statement_list_, unit, start.toUTC(), end.toUTC());
     endResetModel();
 }

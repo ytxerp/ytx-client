@@ -20,9 +20,9 @@
 #ifndef ENTRYHUBO_H
 #define ENTRYHUBO_H
 
+#include "billing/statement/statement.h"
 #include "entryhub.h"
 #include "report/settlement.h"
-#include "report/statement.h"
 
 class EntryHubO final : public EntryHub {
     Q_OBJECT

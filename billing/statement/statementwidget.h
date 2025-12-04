@@ -23,15 +23,17 @@
 #include <QButtonGroup>
 #include <QDateTime>
 #include <QUuid>
+#include <QAbstractItemModel>
+#include <QTableView>
 
 #include "component/using.h"
-#include "reportwidget.h"
+
 
 namespace Ui {
 class StatementWidget;
 }
 
-class StatementWidget final : public ReportWidget {
+class StatementWidget final : public QWidget {
     Q_OBJECT
 
 signals:
@@ -44,8 +46,8 @@ public:
     StatementWidget(QAbstractItemModel* model, int unit, bool enable_excel, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
     ~StatementWidget() override;
 
-    QTableView* View() const override;
-    QAbstractItemModel* Model() const override;
+    QTableView* View() const ;
+    QAbstractItemModel* Model() const ;
 
 private slots:
     void on_pBtnRefresh_clicked();

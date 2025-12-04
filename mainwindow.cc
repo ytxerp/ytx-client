@@ -12,6 +12,10 @@
 #include <QUrl>
 #include <QtConcurrent>
 
+#include "billing/statement/statementmodel.h"
+#include "billing/statement/statementprimarymodel.h"
+#include "billing/statement/statementsecondarymodel.h"
+#include "billing/statement/statementwidget.h"
 #include "component/arg/nodeinsertarg.h"
 #include "component/constant.h"
 #include "component/signalblocker.h"
@@ -64,10 +68,6 @@
 #include "reference/salereferencemodel.h"
 #include "reference/salereferencewidget.h"
 #include "report/model/settlementmodel.h"
-#include "report/model/statementmodel.h"
-#include "report/model/statementprimarymodel.h"
-#include "report/model/statementsecondarymodel.h"
-#include "report/widget/statementwidget.h"
 #include "search/dialog/searchdialog.h"
 #include "search/dialog/searchdialogf.h"
 #include "search/dialog/searchdialogi.h"
@@ -332,7 +332,7 @@ void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
 
 void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
-    auto* model { new StatementPrimaryModel(sc_->entry_hub, sc_->info, partner_id, this) };
+    auto* model { new StatementPrimaryModel(sc_->info, partner_id, this) };
     auto* widget { new StatementWidget(model, unit, false, start, end, this) };
 
     const QString name { tr("StatementPrimary-") + sc_p_.tree_model->Name(partner_id) };
@@ -356,8 +356,7 @@ void MainWindow::RStatementSecondary(const QUuid& partner_id, int unit, const QD
 {
     auto tree_model_p { sc_p_.tree_model };
 
-    auto* model { new StatementSecondaryModel(
-        sc_->entry_hub, sc_->info, partner_id, sc_i_.tree_model->LeafPath(), tree_model_p, app_config_.company_name, this) };
+    auto* model { new StatementSecondaryModel(sc_->info, partner_id, sc_i_.tree_model->LeafPath(), tree_model_p, app_config_.company_name, this) };
     auto* widget { new StatementWidget(model, unit, true, start, end, this) };
 
     const QString name { tr("StatementSecondary-") + tree_model_p->Name(partner_id) };
@@ -1541,7 +1540,7 @@ void MainWindow::on_actionStatement_triggered()
 {
     assert(IsOrderSection(start_));
 
-    auto* model { new StatementModel(sc_->entry_hub, sc_->info, this) };
+    auto* model { new StatementModel(sc_->info, this) };
 
     const int unit { std::to_underlying(UnitO::kMonthly) };
     const auto start { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime) };
@@ -1561,7 +1560,6 @@ void MainWindow::on_actionStatement_triggered()
 
     connect(widget, &StatementWidget::SStatementPrimary, this, &MainWindow::RStatementPrimary);
     connect(widget, &StatementWidget::SStatementSecondary, this, &MainWindow::RStatementSecondary);
-    connect(widget, &StatementWidget::SResetModel, model, &StatementModel::RResetModel);
 
     RegisterWidget(report_id, widget);
 }

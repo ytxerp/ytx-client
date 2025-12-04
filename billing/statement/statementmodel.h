@@ -23,17 +23,13 @@
 #include <QAbstractItemModel>
 
 #include "component/info.h"
-#include "entryhub/entryhubo.h"
-#include "report/statement.h"
+#include "statement.h"
 
 class StatementModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    StatementModel(EntryHub* dbhub, CSectionInfo& info, QObject* parent = nullptr);
+    StatementModel(CSectionInfo& info, QObject* parent = nullptr);
     ~StatementModel();
-
-public slots:
-    void RResetModel(int unit, const QDateTime& start, const QDateTime& end);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -47,8 +43,9 @@ public:
 
     void sort(int column, Qt::SortOrder order) override;
 
+    void ResetModel(int unit, const QDateTime& start, const QDateTime& end);
+
 private:
-    EntryHubO* dbhub_ {};
     CSectionInfo& info_;
 
     StatementList statement_list_ {};

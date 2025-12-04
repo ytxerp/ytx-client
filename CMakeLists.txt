@@ -132,14 +132,14 @@ set(SOURCES
     table/model/tablemodelp.cc
     report/settlement.cc
     reference/salereferencewidget.cc
-    report/widget/statementwidget.cc
+    billing/statement/statementwidget.cc
     report/widget/settlementwidget.cc
-    report/model/statementprimarymodel.cc
-    report/model/statementsecondarymodel.cc
+    billing/statement/statementprimarymodel.cc
+    billing/statement/statementsecondarymodel.cc
     reference/salereferencemodel.cc
     report/model/settlementmodel.cc
     report/model/settlementprimarymodel.cc
-    report/model/statementmodel.cc
+    billing/statement/statementmodel.cc
     global/logininfo.cc
     global/tablesstation.cc
     global/dailylogger.cc
@@ -271,17 +271,17 @@ set(HEADERS
     table/model/tablemodeli.h
     table/model/tablemodel.h
     reference/salereference.h
-    report/statement.h
+    billing/statement/statement.h
     report/settlement.h
     report/widget/settlementwidget.h
     report/widget/reportwidget.h
-    report/widget/statementwidget.h
+    billing/statement/statementwidget.h
     reference/salereferencewidget.h
-    report/model/statementprimarymodel.h
+    billing/statement/statementprimarymodel.h
     report/model/settlementprimarymodel.h
-    report/model/statementsecondarymodel.h
+    billing/statement/statementsecondarymodel.h
     report/model/settlementmodel.h
-    report/model/statementmodel.h
+    billing/statement/statementmodel.h
     reference/salereferencemodel.h
     global/dailylogger.h
     global/entrypool.h
@@ -315,7 +315,7 @@ set(UIS
     dialog/insertnode/insertnodefinance.ui
     table/widget/tablewidgetfipt.ui
     table/widget/tablewidgeto.ui
-    report/widget/statementwidget.ui
+    billing/statement/statementwidget.ui
     report/widget/settlementwidget.ui
     reference/salereferencewidget.ui
 )

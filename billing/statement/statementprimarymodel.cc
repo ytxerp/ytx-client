@@ -5,9 +5,8 @@
 #include "enum/statementenum.h"
 #include "global/resourcepool.h"
 
-StatementPrimaryModel::StatementPrimaryModel(EntryHub* dbhub, CSectionInfo& info, const QUuid& partner_id, QObject* parent)
+StatementPrimaryModel::StatementPrimaryModel(CSectionInfo& info, const QUuid& partner_id, QObject* parent)
     : QAbstractItemModel { parent }
-    , dbhub_ { qobject_cast<EntryHubO*>(dbhub) }
     , info_ { info }
     , partner_id_ { partner_id }
 {
@@ -143,6 +142,5 @@ void StatementPrimaryModel::RResetModel(int unit, const QDateTime& start, const 
     if (!statement_primary_list_.isEmpty())
         ResourcePool<StatementPrimary>::Instance().Recycle(statement_primary_list_);
 
-    dbhub_->ReadStatementPrimary(statement_primary_list_, partner_id_, unit, start.toUTC(), end.toUTC());
     endResetModel();
 }

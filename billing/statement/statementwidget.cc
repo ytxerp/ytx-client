@@ -9,7 +9,7 @@
 #include "ui_statementwidget.h"
 
 StatementWidget::StatementWidget(QAbstractItemModel* model, int unit, bool enable_excel, CDateTime& start, CDateTime& end, QWidget* parent)
-    : ReportWidget(parent)
+    : QWidget(parent)
     , ui(new Ui::StatementWidget)
     , unit_ { unit }
     , start_ { start }
@@ -40,7 +40,7 @@ void StatementWidget::on_start_dateChanged(const QDate& date)
 void StatementWidget::on_end_dateChanged(const QDate& date)
 {
     ui->pBtnRefresh->setEnabled(date >= start_.date());
-    end_ = QDateTime(date.addDays(1), kStartTime);
+    end_.setDate(date);
 }
 
 void StatementWidget::on_pBtnRefresh_clicked() { emit SResetModel(unit_, start_, end_); }
@@ -85,7 +85,7 @@ void StatementWidget::IniWidget(QAbstractItemModel* model, bool enable_excel)
     ui->pBtnRefresh->setFocus();
 
     ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_.addSecs(-1));
+    ui->end->setDateTime(end_);
 
     ui->pBtnExport->setEnabled(enable_excel);
 }

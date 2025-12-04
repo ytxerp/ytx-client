@@ -17,23 +17,25 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTPRIMARYMODEL_H
-#define STATEMENTPRIMARYMODEL_H
+#ifndef STATEMENTSECONDARYMODEL_H
+#define STATEMENTSECONDARYMODEL_H
 
 #include <QAbstractItemModel>
 
 #include "component/info.h"
-#include "entryhub/entryhubo.h"
-#include "report/statement.h"
+#include "statement.h"
+#include "tree/model/treemodel.h"
 
-class StatementPrimaryModel final : public QAbstractItemModel {
+class StatementSecondaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    StatementPrimaryModel(EntryHub* dbhub, CSectionInfo& info, const QUuid& partner_id, QObject* parent = nullptr);
-    ~StatementPrimaryModel();
+    StatementSecondaryModel(
+        CSectionInfo& info, const QUuid& partner_id, CUuidString& item_leaf, TreeModel* partner, CString& company_name, QObject* parent = nullptr);
+    ~StatementSecondaryModel();
 
 public slots:
     void RResetModel(int unit, const QDateTime& start, const QDateTime& end);
+    void RExport(int unit, const QDateTime& start, const QDateTime& end);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -50,11 +52,13 @@ public:
     void sort(int column, Qt::SortOrder order) override;
 
 private:
-    EntryHubO* dbhub_ {};
     CSectionInfo& info_;
-    const QUuid partner_id_ {};
-
-    StatementPrimaryList statement_primary_list_ {};
+    const QUuid& partner_id_ {};
+    CUuidString& item_leaf_ {};
+    CUuidString& partner_leaf_ {};
+    TreeModel* partner_ {};
+    CString& company_name_ {};
+    StatementSecondaryList statement_secondary_list_ {};
 };
 
-#endif // STATEMENTPRIMARYMODEL_H
+#endif // STATEMENTSECONDARYMODEL_H
