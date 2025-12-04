@@ -214,7 +214,7 @@ private:
 
     void FocusTableWidget(const QUuid& node_id) const;
 
-    void RegisterRptWgt(const QUuid& report_id, QWidget* widget);
+    void RegisterWidget(const QUuid& report_id, QWidget* widget);
     void WriteConfig();
 
     SectionContext* GetSectionContex(Section section);

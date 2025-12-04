@@ -349,7 +349,7 @@ void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDat
 
     connect(widget, &StatementWidget::SResetModel, model, &StatementPrimaryModel::RResetModel);
 
-    RegisterRptWgt(report_id, widget);
+    RegisterWidget(report_id, widget);
 }
 
 void MainWindow::RStatementSecondary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
@@ -375,7 +375,7 @@ void MainWindow::RStatementSecondary(const QUuid& partner_id, int unit, const QD
     connect(widget, &StatementWidget::SResetModel, model, &StatementSecondaryModel::RResetModel);
     connect(widget, &StatementWidget::SExport, model, &StatementSecondaryModel::RExport);
 
-    RegisterRptWgt(report_id, widget);
+    RegisterWidget(report_id, widget);
 }
 
 // FocusTableWidget - Activate and focus the leaf widget tab
@@ -1432,7 +1432,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
     }
 
     if (start_ != Section::kFinance && start_ != Section::kTask)
-        TemplateUtils::FreeWidget(node_id, sc_->rpt_wgt_hash);
+        TemplateUtils::FreeWidget(node_id, sc_->widget_hash);
 
     RFreeWidget(node_id);
 }
@@ -1550,7 +1550,7 @@ void MainWindow::on_actionStatement_triggered()
     connect(widget, &StatementWidget::SStatementSecondary, this, &MainWindow::RStatementSecondary);
     connect(widget, &StatementWidget::SResetModel, model, &StatementModel::RResetModel);
 
-    RegisterRptWgt(report_id, widget);
+    RegisterWidget(report_id, widget);
 }
 
 void MainWindow::on_actionSettlement_triggered()
@@ -1598,12 +1598,12 @@ void MainWindow::on_actionSettlement_triggered()
     connect(model, &SettlementModel::SUpdateAmount, static_cast<TreeModelP*>(sc_p_.tree_model.data()), &TreeModelP::RUpdateAmount);
     connect(settlement_widget_, &SettlementWidget::SNodeLocation, this, &MainWindow::RNodeLocation);
 
-    RegisterRptWgt(report_id, settlement_widget_);
+    RegisterWidget(report_id, settlement_widget_);
 }
 
-void MainWindow::RegisterRptWgt(const QUuid& report_id, QWidget* widget)
+void MainWindow::RegisterWidget(const QUuid& report_id, QWidget* widget)
 {
-    sc_->rpt_wgt_hash.insert(report_id, widget);
+    sc_->widget_hash.insert(report_id, widget);
     ui->tabWidget->setCurrentWidget(widget);
     widget->activateWindow();
 }
@@ -2446,7 +2446,7 @@ void MainWindow::CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, 
 
     connect(view, &QTableView::doubleClicked, this, &MainWindow::RSaleReferenceSecondary);
 
-    RegisterRptWgt(widget_id, widget);
+    RegisterWidget(widget_id, widget);
 }
 
 void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool branch)

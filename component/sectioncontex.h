@@ -42,7 +42,7 @@ struct SectionContext {
     SharedConfig shared_config {};
 
     QHash<QUuid, QPointer<TableWidget>> table_wgt_hash {};
-    QHash<QUuid, QPointer<QWidget>> rpt_wgt_hash {};
+    QHash<QUuid, QPointer<QWidget>> widget_hash {};
 
     void Clear();
 };
@@ -60,7 +60,7 @@ inline void SectionContext::Clear()
 
     TemplateUtils::ClearWidgets(dialog_list);
     TemplateUtils::ClearWidgets(table_wgt_hash);
-    TemplateUtils::ClearWidgets(rpt_wgt_hash);
+    TemplateUtils::ClearWidgets(widget_hash);
 }
 
 #endif // SECTIONCONTEX_H
