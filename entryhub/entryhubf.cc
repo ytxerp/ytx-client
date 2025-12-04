@@ -55,32 +55,3 @@ void EntryHubF::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& upd
         emit SUpdateBalance(lhs_id, entry_id);
     }
 }
-
-// QString EntryHubF::QSLeafTotal(int /*unit*/) const
-// {
-//     return QStringLiteral(R"(
-//     WITH node_balance AS (
-//         SELECT
-//             lhs_debit AS initial_debit,
-//             lhs_credit AS initial_credit,
-//             lhs_rate * lhs_debit AS final_debit,
-//             lhs_rate * lhs_credit AS final_credit
-//         FROM finance_transaction
-//         WHERE lhs_node = :node_id AND is_valid = TRUE
-
-//         UNION ALL
-
-//         SELECT
-//             rhs_debit,
-//             rhs_credit,
-//             rhs_rate * rhs_debit,
-//             rhs_rate * rhs_credit
-//         FROM finance_transaction
-//         WHERE rhs_node = :node_id AND is_valid = TRUE
-//     )
-//     SELECT
-//         SUM(initial_credit) - SUM(initial_debit) AS initial_balance,
-//         SUM(final_credit) - SUM(final_debit) AS final_balance
-//     FROM node_balance;
-//     )");
-// }

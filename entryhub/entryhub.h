@@ -99,11 +99,6 @@ public:
 
 protected:
     virtual EntryList ProcessEntryArray(const QJsonArray& array);
-    virtual QString QSReadTransRef(int unit) const
-    {
-        Q_UNUSED(unit);
-        return {};
-    };
 
     void ReplaceLeafFunction(QSet<QUuid>& entry_id_set, EntryList& entry_list, const QUuid& old_node_id, const QUuid& new_node_id) const;
     void RemoveLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
