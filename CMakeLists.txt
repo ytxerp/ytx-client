@@ -72,12 +72,12 @@ set(SOURCES
     delegate/readonly/nodenamer.cc
     delegate/readonly/issuedtimer.cc
     delegate/readonly/colorr.cc
-    delegate/readonly/doublespinunitr.cc
+    delegate/readonly/amountr.cc
     delegate/readonly/intstringr.cc
     delegate/readonly/doublespinnonezeror.cc
-    delegate/readonly/doublespinr.cc
+    delegate/readonly/quantityr.cc
     delegate/readonly/boolstringr.cc
-    delegate/readonly/doublespinunitreferencedr.cc
+    delegate/readonly/amountsalereferencer.cc
     delegate/readonly/statusr.cc
     delegate/readonly/nodepathr.cc
     delegate/readonly/sectionr.cc
@@ -204,8 +204,8 @@ set(HEADERS
     delegate/document.h
     delegate/filterunit.h
     delegate/readonly/boolstringr.h
-    delegate/readonly/doublespinr.h
-    delegate/readonly/doublespinunitr.h
+    delegate/readonly/quantityr.h
+    delegate/readonly/amountr.h
     delegate/readonly/doublespinnonezeror.h
     delegate/readonly/statusr.h
     delegate/readonly/issuedtimer.h
@@ -213,7 +213,7 @@ set(HEADERS
     delegate/readonly/intstringr.h
     delegate/readonly/nodenamer.h
     delegate/readonly/nodepathr.h
-    delegate/readonly/doublespinunitreferencedr.h
+    delegate/readonly/amountsalereferencer.h
     delegate/readonly/sectionr.h
     delegate/tree/treeissuedtime.h
     delegate/tree/color.h

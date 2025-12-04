@@ -334,6 +334,7 @@ QJsonObject SaleReference(Section section, CUuid& node_id, int unit, const QDate
     message.insert(kUnit, unit);
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kEntryArray, QJsonArray());
 
     return message;
 }

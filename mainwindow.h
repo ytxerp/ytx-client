@@ -98,8 +98,8 @@ private slots:
 
     void RFreeWidget(const QUuid& node_id);
 
-    void RSaleReference(const QUuid& node_id, int unit);
-    void RSaleReferenceDoubleClicked(const QModelIndex& index);
+    void RSaleReferencePrimary(const QUuid& node_id, int unit);
+    void RSaleReferenceSecondary(const QModelIndex& index);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
     void RTreeViewDoubleClicked(const QModelIndex& index);

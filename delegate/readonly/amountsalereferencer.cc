@@ -1,11 +1,11 @@
-#include "doublespinunitreferencedr.h"
+#include "amountsalereferencer.h"
 
 #include <QMouseEvent>
 
 #include "enum/nodeenum.h"
 #include "utils/nodeutils.h"
 
-DoubleSpinUnitReferencedR::DoubleSpinUnitReferencedR(Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, QObject* parent)
+AmountSaleReferenceR::AmountSaleReferenceR(Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, QObject* parent)
     : StyledItemDelegate { parent }
     , decimal_ { decimal }
     , unit_ { unit }
@@ -14,17 +14,17 @@ DoubleSpinUnitReferencedR::DoubleSpinUnitReferencedR(Section section, const int&
 {
 }
 
-void DoubleSpinUnitReferencedR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void AmountSaleReferenceR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     PaintText(Format(index), painter, option, index, Qt::AlignRight | Qt::AlignVCenter);
 }
 
-QSize DoubleSpinUnitReferencedR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+QSize AmountSaleReferenceR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     return { CalculateTextSize(Format(index), option, kCoefficient16) };
 }
 
-QString DoubleSpinUnitReferencedR::Format(const QModelIndex& index) const
+QString AmountSaleReferenceR::Format(const QModelIndex& index) const
 {
     auto it { unit_symbol_map_.constFind(unit_) };
     auto symbol { (it != unit_symbol_map_.constEnd()) ? it.value() : kEmptyString };
@@ -32,7 +32,7 @@ QString DoubleSpinUnitReferencedR::Format(const QModelIndex& index) const
     return symbol + locale_.toString(index.data().toDouble(), 'f', decimal_);
 }
 
-bool DoubleSpinUnitReferencedR::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
+bool AmountSaleReferenceR::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
 {
     const int kind_column { NodeUtils::KindColumn(section_) };
     const int unit_column { NodeUtils::UnitColumn(section_) };
@@ -43,7 +43,7 @@ bool DoubleSpinUnitReferencedR::editorEvent(QEvent* event, QAbstractItemModel* m
     const int unit { index.siblingAtColumn(unit_column).data().toInt() };
 
     if (is_leaf && event->type() == QEvent::MouseButtonDblClick && option.rect.contains(static_cast<QMouseEvent*>(event)->pos()))
-        emit SSaleReference(node_id, unit);
+        emit SSaleReferencePrimary(node_id, unit);
 
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }

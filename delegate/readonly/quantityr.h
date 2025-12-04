@@ -17,25 +17,20 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOUBLESPINUNITR_H
-#define DOUBLESPINUNITR_H
+#ifndef QUANTITYR_H
+#define QUANTITYR_H
 
-#include "component/using.h"
 #include "delegate/styleditemdelegate.h"
 
-class DoubleSpinUnitR final : public StyledItemDelegate {
+class QuantityR final : public StyledItemDelegate {
 public:
-    DoubleSpinUnitR(const int& decimal, const int& unit, CIntString& unit_symbol_map, QObject* parent = nullptr);
+    QuantityR(const int& decimal, int coefficient, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    QString Format(const QModelIndex& index) const;
-
-private:
     const int& decimal_ {};
-    const int& unit_ {};
-    CIntString& unit_symbol_map_;
+    const int coefficient_ {};
 };
 
-#endif // DOUBLESPINUNITR_H
+#endif // QUANTITYR_H

@@ -17,21 +17,21 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOUBLESPINUNITREFERENCEDR_H
-#define DOUBLESPINUNITREFERENCEDR_H
+#ifndef AMOUNTSALEREFERENCER_H
+#define AMOUNTSALEREFERENCER_H
 
 #include "component/using.h"
 #include "delegate/styleditemdelegate.h"
 #include "enum/section.h"
 
-class DoubleSpinUnitReferencedR final : public StyledItemDelegate {
+class AmountSaleReferenceR final : public StyledItemDelegate {
     Q_OBJECT
 
 signals:
-    void SSaleReference(const QUuid& node_id, int unit);
+    void SSaleReferencePrimary(const QUuid& node_id, int unit);
 
 public:
-    DoubleSpinUnitReferencedR(Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, QObject* parent = nullptr);
+    AmountSaleReferenceR(Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
@@ -46,4 +46,4 @@ private:
     CIntString& unit_symbol_map_;
 };
 
-#endif // DOUBLESPINUNITREFERENCEDR_H
+#endif // AMOUNTSALEREFERENCER_H

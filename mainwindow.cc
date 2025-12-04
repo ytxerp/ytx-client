@@ -23,14 +23,14 @@
 #include "delegate/int.h"
 #include "delegate/line.h"
 #include "delegate/plaintext.h"
+#include "delegate/readonly/amountr.h"
+#include "delegate/readonly/amountsalereferencer.h"
 #include "delegate/readonly/doublespinnonezeror.h"
-#include "delegate/readonly/doublespinr.h"
-#include "delegate/readonly/doublespinunitr.h"
-#include "delegate/readonly/doublespinunitreferencedr.h"
 #include "delegate/readonly/intstringr.h"
 #include "delegate/readonly/issuedtimer.h"
 #include "delegate/readonly/nodenamer.h"
 #include "delegate/readonly/nodepathr.h"
+#include "delegate/readonly/quantityr.h"
 #include "delegate/readonly/sectionr.h"
 #include "delegate/status.h"
 #include "delegate/table/tablecombofilter.h"
@@ -307,7 +307,7 @@ void MainWindow::RSectionGroup(int id)
     SwitchSection(start_, sc_->info.last_tab_id);
 }
 
-void MainWindow::RSaleReferenceDoubleClicked(const QModelIndex& index)
+void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
 {
     const auto node_id { index.siblingAtColumn(std::to_underlying(NodeReferencedEnum::kOrderId)).data().toUuid() };
     const int column { std::to_underlying(NodeReferencedEnum::kInitial) };
@@ -700,8 +700,8 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDebit), value);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kCredit), value);
 
-    auto* initial { new DoubleSpinR(config.quantity_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kBalance), initial);
+    auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kBalance), quantity);
 }
 
 void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
@@ -731,8 +731,8 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kDebit), value);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kCredit), value);
 
-    auto* initial { new DoubleSpinR(config.quantity_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kBalance), initial);
+    auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kBalance), quantity);
 }
 
 void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
@@ -762,8 +762,8 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kDebit), value);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kCredit), value);
 
-    auto* initial { new DoubleSpinR(config.quantity_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kBalance), initial);
+    auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kBalance), quantity);
 }
 
 void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) const
@@ -889,7 +889,7 @@ void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kKind), kind);
 
-    auto* final_total { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, tree_view) };
+    auto* final_total { new AmountR(section.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kFinalTotal), final_total);
 
     auto* initial_total { new FinanceForeignR(section.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, tree_view) };
@@ -914,10 +914,10 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kKind), kind);
 
-    auto* quantity { new DoubleSpinR(section.quantity_decimal, kCoefficient16, tree_view) };
+    auto* quantity { new QuantityR(section.quantity_decimal, kCoefficient16, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kInitialTotal), quantity);
 
-    auto* amount { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
+    auto* amount { new AmountR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kFinalTotal), amount);
 
     auto* color { new Color(tree_view) };
@@ -951,13 +951,12 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kKind), kind);
 
-    auto* quantity { new DoubleSpinR(section.quantity_decimal, kCoefficient16, tree_view) };
+    auto* quantity { new QuantityR(section.quantity_decimal, kCoefficient16, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kInitialTotal), quantity);
 
-    auto* amount { new DoubleSpinUnitReferencedR(
-        info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
+    auto* amount { new AmountSaleReferenceR(info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kFinalTotal), amount);
-    connect(amount, &DoubleSpinUnitReferencedR::SSaleReference, this, &MainWindow::RSaleReference);
+    connect(amount, &AmountSaleReferenceR::SSaleReferencePrimary, this, &MainWindow::RSaleReferencePrimary);
 
     auto* unit_price { new Double(section.rate_decimal, 0.0, kDoubleMax, kCoefficient8, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kUnitPrice), unit_price);
@@ -982,10 +981,9 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kKind), kind);
 
-    auto* amount { new DoubleSpinUnitReferencedR(
-        info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
+    auto* amount { new AmountSaleReferenceR(info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kInitialTotal), amount);
-    connect(amount, &DoubleSpinUnitReferencedR::SSaleReference, this, &MainWindow::RSaleReference);
+    connect(amount, &AmountSaleReferenceR::SSaleReferencePrimary, this, &MainWindow::RSaleReferencePrimary);
 
     auto* payment_term { new Int(0, 36500, tree_view) }; // one hundred years
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kPaymentTerm), payment_term);
@@ -1002,10 +1000,10 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind_r { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kKind), kind_r);
 
-    auto* amount_r { new DoubleSpinUnitR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kInitialTotal), amount_r);
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kFinalTotal), amount_r);
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDiscountTotal), amount_r);
+    auto* amount { new AmountR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kInitialTotal), amount);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kFinalTotal), amount);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDiscountTotal), amount);
 
     auto* quantity_r { new DoubleSpinNoneZeroR(section.quantity_decimal, kCoefficient16, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kMeasureTotal), quantity_r);
@@ -2415,7 +2413,7 @@ void MainWindow::InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUu
     dialog->exec();
 }
 
-void MainWindow::RSaleReference(const QUuid& node_id, int unit)
+void MainWindow::RSaleReferencePrimary(const QUuid& node_id, int unit)
 {
     assert(sc_->tree_widget);
     assert(sc_->tree_model->Kind(node_id) == std::to_underlying(NodeKind::kLeaf)
@@ -2462,7 +2460,7 @@ void MainWindow::CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, 
     SetTableViewSaleReference(view);
     DelegateSaleReference(view, sc_sale_.section_config);
 
-    connect(view, &QTableView::doubleClicked, this, &MainWindow::RSaleReferenceDoubleClicked);
+    connect(view, &QTableView::doubleClicked, this, &MainWindow::RSaleReferenceSecondary);
 
     RegisterRptWgt(report_id, widget);
 }

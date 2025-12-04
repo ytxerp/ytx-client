@@ -30,6 +30,7 @@
 
 class SaleReferenceModel final : public QAbstractItemModel {
     Q_OBJECT
+
 public:
     SaleReferenceModel(CSectionInfo& info, QObject* parent = nullptr);
     ~SaleReferenceModel();
