@@ -31,9 +31,6 @@ public:
     StatementPrimaryModel(CSectionInfo& info, const QUuid& partner_id, QObject* parent = nullptr);
     ~StatementPrimaryModel();
 
-public slots:
-    void RResetModel(int unit, const QDateTime& start, const QDateTime& end);
-
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex& index) const override;
@@ -47,6 +44,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     void sort(int column, Qt::SortOrder order) override;
+    void ResetModel(int unit, const QDateTime& start, const QDateTime& end);
 
 private:
     CSectionInfo& info_;

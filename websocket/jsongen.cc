@@ -354,4 +354,19 @@ QJsonObject StatementAcked(Section section, CUuid& widget_id, int unit, const QD
     return message;
 }
 
+QJsonObject StatementPrimaryAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+{
+    QJsonObject message {};
+
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
+    message.insert(kParentId, partner_id.toString(QUuid::WithoutBraces));
+    message.insert(kUnit, unit);
+    message.insert(kStart, start.toString(Qt::ISODate));
+    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kEntryArray, QJsonArray());
+
+    return message;
+}
+
 }

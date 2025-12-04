@@ -137,6 +137,7 @@ inline const QString kTableAcked = QStringLiteral("table_acked");
 inline const QString kLinkedEntry = QStringLiteral("linked_entry");
 inline const QString kSaleReferenceAcked = QStringLiteral("sale_reference_acked");
 inline const QString kStatementAcked = QStringLiteral("statement_acked");
+inline const QString kStatementPrimaryAcked = QStringLiteral("statement_primary_acked");
 
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");

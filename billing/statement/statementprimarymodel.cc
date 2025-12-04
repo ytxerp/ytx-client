@@ -132,7 +132,7 @@ void StatementPrimaryModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void StatementPrimaryModel::RResetModel(int unit, const QDateTime& start, const QDateTime& end)
+void StatementPrimaryModel::ResetModel(int unit, const QDateTime& start, const QDateTime& end)
 {
     if (partner_id_.isNull() || !start.isValid() || !end.isValid())
         return;
