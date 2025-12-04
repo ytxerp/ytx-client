@@ -135,6 +135,8 @@ set(SOURCES
     billing/statement/statementwidget.cc
     report/widget/settlementwidget.cc
     billing/statement/statementprimarymodel.cc
+    billing/statement/statementsecondarywidget.cc
+    billing/statement/statementprimarywidget.cc
     billing/statement/statementsecondarymodel.cc
     reference/salereferencemodel.cc
     report/model/settlementmodel.cc
@@ -276,6 +278,8 @@ set(HEADERS
     report/widget/settlementwidget.h
     report/widget/reportwidget.h
     billing/statement/statementwidget.h
+    billing/statement/statementprimarywidget.h
+    billing/statement/statementsecondarywidget.h
     reference/salereferencewidget.h
     billing/statement/statementprimarymodel.h
     report/model/settlementprimarymodel.h
@@ -316,6 +320,8 @@ set(UIS
     table/widget/tablewidgetfipt.ui
     table/widget/tablewidgeto.ui
     billing/statement/statementwidget.ui
+    billing/statement/statementprimarywidget.ui
+    billing/statement/statementsecondarywidget.ui
     report/widget/settlementwidget.ui
     reference/salereferencewidget.ui
 )

@@ -47,7 +47,8 @@ QJsonObject EntryLinkedNode(Section section, CUuid& entry_id);
 QJsonObject TreeAcked(Section section, const QDateTime& start, const QDateTime& end);
 QJsonObject LeafEntry(Section section, CUuid& node_id, CUuid& entry_id = {});
 QJsonObject NodeAcked(Section section, CUuid& node_id);
-QJsonObject SaleReference(Section section, CUuid& widget_id, CUuid& node_id, int unit, const QDateTime& start, const QDateTime& end);
+QJsonObject SaleReferenceAcked(Section section, CUuid& widget_id, CUuid& node_id, int unit, const QDateTime& start, const QDateTime& end);
+QJsonObject StatementAcked(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end);
 
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule);
 QJsonObject NodeStatus(Section section, CUuid& node_id, int status);

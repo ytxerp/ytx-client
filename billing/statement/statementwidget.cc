@@ -1,58 +1,83 @@
 #include "statementwidget.h"
 
-#include <QTimer>
-
 #include "component/constant.h"
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
 #include "enum/statementenum.h"
 #include "ui_statementwidget.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
-StatementWidget::StatementWidget(QAbstractItemModel* model, int unit, bool enable_excel, CDateTime& start, CDateTime& end, QWidget* parent)
+StatementWidget::StatementWidget(StatementModel* model, Section section, CUuid& widget_id, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementWidget)
-    , unit_ { unit }
-    , start_ { start }
-    , end_ { end }
+    , unit_ { std::to_underlying(UnitO::kMonthly) }
+    , start_ { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime) }
+    , end_ { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month() + 1, 1), kStartTime) }
+    , model_ { model }
+    , section_ { section }
+    , widget_id_ { widget_id }
+
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
+
+    ui->tableView->setModel(model);
+    model->setParent(this);
+
     IniUnitGroup();
-    IniWidget(model, enable_excel);
-    IniUnit(unit);
+    IniWidget();
+    InitTimer();
+    IniUnit(unit_);
     IniConnect();
 
-    QTimer::singleShot(0, this, [this]() { emit SResetModel(unit_, start_, end_); });
+    QTimer::singleShot(0, this, &StatementWidget::on_pBtnFetch_clicked);
 }
 
 StatementWidget::~StatementWidget() { delete ui; }
 
 QTableView* StatementWidget::View() const { return ui->tableView; }
 
-QAbstractItemModel* StatementWidget::Model() const { return ui->tableView->model(); }
-
 void StatementWidget::on_start_dateChanged(const QDate& date)
 {
-    ui->pBtnRefresh->setEnabled(date <= end_.date());
+    const bool valid { date <= end_.date() };
     start_.setDate(date);
+
+    cooldown_timer_->stop();
+    ui->pBtnFetch->setEnabled(valid);
 }
 
 void StatementWidget::on_end_dateChanged(const QDate& date)
 {
-    ui->pBtnRefresh->setEnabled(date >= start_.date());
-    end_.setDate(date);
+    const bool valid { date >= start_.date() };
+
+    cooldown_timer_->stop();
+    ui->pBtnFetch->setEnabled(valid);
+    end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
-void StatementWidget::on_pBtnRefresh_clicked() { emit SResetModel(unit_, start_, end_); }
+void StatementWidget::on_pBtnFetch_clicked()
+{
+    if (!ui->pBtnFetch->isEnabled()) {
+        return;
+    }
+
+    ui->pBtnFetch->setEnabled(false);
+
+    const auto message { JsonGen::StatementAcked(section_, widget_id_, unit_, start_.toUTC(), end_.toUTC()) };
+    WebSocket::Instance()->SendMessage(kStatementAcked, message);
+
+    cooldown_timer_->start(kTwoThousand);
+}
 
 void StatementWidget::RUnitGroupClicked(int id) { unit_ = id; }
 
 void StatementWidget::IniUnitGroup()
 {
     unit_group_ = new QButtonGroup(this);
-    unit_group_->addButton(ui->rBtnIS, 0);
-    unit_group_->addButton(ui->rBtnMS, 1);
-    unit_group_->addButton(ui->rBtnPEND, 2);
+    unit_group_->addButton(ui->rBtnIMM, 0);
+    unit_group_->addButton(ui->rBtnMON, 1);
+    unit_group_->addButton(ui->rBtnPEN, 2);
 }
 
 void StatementWidget::IniConnect() { connect(unit_group_, &QButtonGroup::idClicked, this, &StatementWidget::RUnitGroupClicked); }
@@ -63,44 +88,41 @@ void StatementWidget::IniUnit(int unit)
 
     switch (kUnit) {
     case UnitO::kImmediate:
-        ui->rBtnIS->setChecked(true);
+        ui->rBtnIMM->setChecked(true);
         break;
     case UnitO::kMonthly:
-        ui->rBtnMS->setChecked(true);
+        ui->rBtnMON->setChecked(true);
         break;
     case UnitO::kPending:
-        ui->rBtnPEND->setChecked(true);
+        ui->rBtnPEN->setChecked(true);
         break;
     default:
         break;
     }
 }
 
-void StatementWidget::IniWidget(QAbstractItemModel* model, bool enable_excel)
+void StatementWidget::IniWidget()
 {
     ui->start->setDisplayFormat(kDateFST);
     ui->end->setDisplayFormat(kDateFST);
 
-    ui->tableView->setModel(model);
-    ui->pBtnRefresh->setFocus();
+    ui->pBtnFetch->setFocus();
 
     ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_);
+    ui->end->setDateTime(end_.addSecs(-1));
+}
 
-    ui->pBtnExport->setEnabled(enable_excel);
+void StatementWidget::InitTimer()
+{
+    cooldown_timer_ = new QTimer(this);
+    cooldown_timer_->setSingleShot(true);
+    connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
 }
 
 void StatementWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
-    const auto partner { index.siblingAtColumn(std::to_underlying(StatementEnum::kPartner)).data().toUuid() };
-
     if (index.column() == std::to_underlying(StatementEnum::kPartner)) {
+        const auto partner { index.siblingAtColumn(std::to_underlying(StatementEnum::kPartner)).data().toUuid() };
         emit SStatementPrimary(partner, unit_, start_, end_);
     }
-
-    if (index.column() == std::to_underlying(StatementEnum::kCSettlement)) {
-        emit SStatementSecondary(partner, unit_, start_, end_);
-    }
 }
-
-void StatementWidget::on_pBtnExport_clicked() { emit SExport(unit_, start_, end_); }

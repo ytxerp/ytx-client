@@ -159,7 +159,7 @@ void WebSocket::InitHandler()
     handler_obj_[kRegisterResult] = [this](const QJsonObject& obj) { NotifyRegisterResult(obj); };
     handler_obj_[kTreeAcked] = [this](const QJsonObject& obj) { AckTree(obj); };
     handler_obj_[kTableAcked] = [this](const QJsonObject& obj) { AckTable(obj); };
-    handler_obj_[kSaleReference] = [this](const QJsonObject& obj) { AckSaleReference(obj); };
+    handler_obj_[kSaleReferenceAcked] = [this](const QJsonObject& obj) { AckSaleReference(obj); };
     handler_obj_[kWorkspaceAccessPending] = [this](const QJsonObject& obj) { NotifyWorkspaceAccessPending(obj); };
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };

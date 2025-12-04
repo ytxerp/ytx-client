@@ -41,7 +41,7 @@ QComboBox, QSpinBox, QDoubleSpinBox, QDateEdit, QDateTimeEdit, QLineEdit {
     border: none;
 }
 
-QTreeView#treeView, QGroupBox#treeGroupO, QGroupBox#tableGroupReferenced, QTableView#tableViewO {
+QTreeView#treeView, QGroupBox#treeGroupO, QGroupBox#tableGroup, QTableView#tableViewO {
     border-bottom: none;
 }
 

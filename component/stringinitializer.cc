@@ -274,7 +274,7 @@ void StringInitializer::SetHeader(
     inventory.node_referenced_header = {
         QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
-        QObject::tr("Partner"),
+        QObject::tr("Customer"),
         QObject::tr("ExternalSku"),
         QObject::tr("Count"),
         QObject::tr("Measure"),

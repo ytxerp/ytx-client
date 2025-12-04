@@ -59,8 +59,8 @@ void SaleReferenceWidget::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::SaleReference(section_, widget_id_, node_id_, node_unit_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance()->SendMessage(kSaleReference, message);
+    const auto message { JsonGen::SaleReferenceAcked(section_, widget_id_, node_id_, node_unit_, start_.toUTC(), end_.toUTC()) };
+    WebSocket::Instance()->SendMessage(kSaleReferenceAcked, message);
 
     cooldown_timer_->start(kTwoThousand);
 }

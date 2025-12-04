@@ -30,7 +30,7 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="treeWidgetOrder">
+    <widget class="QGroupBox" name="tableGroup">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -77,30 +77,30 @@
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="rBtnIS">
+       <widget class="QRadioButton" name="rBtnIMM">
         <property name="text">
-         <string>IS</string>
+         <string>IMM</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="rBtnMS">
+       <widget class="QRadioButton" name="rBtnMON">
         <property name="text">
-         <string>MS</string>
+         <string>MON</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="rBtnPEND">
+       <widget class="QRadioButton" name="rBtnPEN">
         <property name="text">
-         <string>PEND</string>
+         <string>PEN</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pBtnRefresh">
+       <widget class="QPushButton" name="pBtnFetch">
         <property name="text">
-         <string>Refresh</string>
+         <string>Fetch</string>
         </property>
        </widget>
       </item>
@@ -116,13 +116,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pBtnExport">
-        <property name="text">
-         <string>Export</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>

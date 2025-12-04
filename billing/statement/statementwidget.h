@@ -22,12 +22,10 @@
 
 #include <QButtonGroup>
 #include <QDateTime>
-#include <QUuid>
-#include <QAbstractItemModel>
 #include <QTableView>
 
 #include "component/using.h"
-
+#include "statementmodel.h"
 
 namespace Ui {
 class StatementWidget;
@@ -38,23 +36,19 @@ class StatementWidget final : public QWidget {
 
 signals:
     void SStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
-    void SStatementSecondary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
-    void SResetModel(int unit, const QDateTime& start, const QDateTime& end);
-    void SExport(int unit, const QDateTime& start, const QDateTime& end);
 
 public:
-    StatementWidget(QAbstractItemModel* model, int unit, bool enable_excel, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
+    StatementWidget(StatementModel* model, Section section, CUuid& widget_id, QWidget* parent = nullptr);
     ~StatementWidget() override;
 
-    QTableView* View() const ;
-    QAbstractItemModel* Model() const ;
+    QTableView* View() const;
+    StatementModel* Model() const { return model_; }
 
 private slots:
-    void on_pBtnRefresh_clicked();
+    void on_pBtnFetch_clicked();
     void on_tableView_doubleClicked(const QModelIndex& index);
     void on_start_dateChanged(const QDate& date);
     void on_end_dateChanged(const QDate& date);
-    void on_pBtnExport_clicked();
 
     void RUnitGroupClicked(int id);
 
@@ -62,13 +56,19 @@ private:
     void IniUnitGroup();
     void IniConnect();
     void IniUnit(int unit);
-    void IniWidget(QAbstractItemModel* model, bool enable_excel);
+    void IniWidget();
+    void InitTimer();
 
 private:
     Ui::StatementWidget* ui;
     int unit_ {};
     QDateTime start_ {};
     QDateTime end_ {};
+    StatementModel* model_ {};
+    QTimer* cooldown_timer_ { nullptr };
+
+    const Section section_ {};
+    const QUuid widget_id_ {};
 
     QButtonGroup* unit_group_ {};
 };

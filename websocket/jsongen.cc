@@ -325,13 +325,27 @@ QJsonObject EntryLinkedNode(Section section, CUuid& entry_id)
     return message;
 }
 
-QJsonObject SaleReference(Section section, CUuid& widget_id, CUuid& node_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject SaleReferenceAcked(Section section, CUuid& widget_id, CUuid& node_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 
     message.insert(kSection, std::to_underlying(section));
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kUnit, unit);
+    message.insert(kStart, start.toString(Qt::ISODate));
+    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kEntryArray, QJsonArray());
+
+    return message;
+}
+
+QJsonObject StatementAcked(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end)
+{
+    QJsonObject message {};
+
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kUnit, unit);
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
