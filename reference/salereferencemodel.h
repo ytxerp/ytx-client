@@ -20,9 +20,6 @@
 #ifndef SALEREFERENCEMODEL_H
 #define SALEREFERENCEMODEL_H
 
-// Leaf node referenced by entries
-// such as a item node linked to order entries or a partner node associated with an order entry.
-
 #include <QAbstractItemModel>
 
 #include "component/info.h"

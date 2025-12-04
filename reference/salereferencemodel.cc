@@ -118,7 +118,7 @@ void SaleReferenceModel::ResetModel(const QJsonArray& entry_array)
 {
     beginResetModel();
 
-    list_.clear();
+    ResourcePool<SaleReference>::Instance().Recycle(list_);
 
     for (const auto& value : entry_array) {
         if (!value.isObject())
