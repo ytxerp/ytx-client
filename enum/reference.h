@@ -24,7 +24,6 @@
 enum class NodeReferencedEnum {
     kIssuedTime = 0,
     kOrderId,
-    kSection,
     kNodeId,
     kExternalSku,
     kkCount,

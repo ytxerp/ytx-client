@@ -21,14 +21,16 @@
 #define SALEREFERENCE_H
 
 #include <QDateTime>
+#include <QJsonObject>
 #include <QList>
 #include <QString>
 #include <QUuid>
 
+#include "component/constant.h"
+
 struct SaleReference {
     QDateTime issued_time {};
     QUuid order_id {};
-    int section {};
     QUuid node_id {}; // partner or inventory uuid
     QUuid external_sku {};
     double count {};
@@ -39,13 +41,13 @@ struct SaleReference {
     QString description {};
 
     void ResetState();
+    void ReadJson(const QJsonObject& object);
 };
 
 inline void SaleReference::ResetState()
 {
     issued_time = {};
     order_id = QUuid();
-    section = 0;
     node_id = QUuid();
     external_sku = QUuid();
     count = 0.0;
@@ -54,6 +56,30 @@ inline void SaleReference::ResetState()
     unit_discount = 0.0;
     initial = 0.0;
     description.clear();
+}
+
+inline void SaleReference::ReadJson(const QJsonObject& object)
+{
+    if (object.contains(kIssuedTime))
+        issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
+    if (object.contains(kNodeId))
+        node_id = QUuid(object[kNodeId].toString());
+    if (object.contains(kOrderId))
+        node_id = QUuid(object[kOrderId].toString());
+    if (object.contains(kExternalSku))
+        node_id = QUuid(object[kExternalSku].toString());
+    if (object.contains(kDescription))
+        description = object[kDescription].toString();
+    if (object.contains(kCount))
+        count = object[kCount].toString().toDouble();
+    if (object.contains(kMeasure))
+        measure = object[kMeasure].toString().toDouble();
+    if (object.contains(kInitial))
+        initial = object[kInitial].toString().toDouble();
+    if (object.contains(kUnitDiscount))
+        unit_discount = object[kUnitDiscount].toString().toDouble();
+    if (object.contains(kUnitPrice))
+        unit_price = object[kUnitPrice].toString().toDouble();
 }
 
 using SaleReferenceList = QList<SaleReference*>;

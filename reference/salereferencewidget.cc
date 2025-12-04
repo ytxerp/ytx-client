@@ -7,12 +7,13 @@
 #include "websocket/websocket.h"
 
 SaleReferenceWidget::SaleReferenceWidget(
-    QAbstractItemModel* model, const Section section, const QUuid& node_id, int node_unit, CDateTime& start, CDateTime& end, QWidget* parent)
+    QAbstractItemModel* model, Section section, CUuid& widget_id, CUuid& node_id, int node_unit, CDateTime& start, CDateTime& end, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SaleReferenceWidget)
     , start_ { start }
     , end_ { end }
     , node_id_ { node_id }
+    , widget_id_ { widget_id }
     , node_unit_ { node_unit }
     , section_ { section }
 {
@@ -57,7 +58,7 @@ void SaleReferenceWidget::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::SaleReference(section_, node_id_, node_unit_, start_.toUTC(), end_.toUTC()) };
+    const auto message { JsonGen::SaleReference(section_, widget_id_, node_id_, node_unit_, start_.toUTC(), end_.toUTC()) };
     WebSocket::Instance()->SendMessage(kSaleReference, message);
 
     cooldown_timer_->start(kTwoThousand);

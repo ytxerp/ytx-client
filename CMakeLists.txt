@@ -80,7 +80,6 @@ set(SOURCES
     delegate/readonly/amountsalereferencer.cc
     delegate/readonly/statusr.cc
     delegate/readonly/nodepathr.cc
-    delegate/readonly/sectionr.cc
     delegate/tree/treeissuedtime.cc
     delegate/tree/color.cc
     delegate/tree/finance/financeforeignr.cc
@@ -214,7 +213,6 @@ set(HEADERS
     delegate/readonly/nodenamer.h
     delegate/readonly/nodepathr.h
     delegate/readonly/amountsalereferencer.h
-    delegate/readonly/sectionr.h
     delegate/tree/treeissuedtime.h
     delegate/tree/color.h
     delegate/tree/finance/financeforeignr.h

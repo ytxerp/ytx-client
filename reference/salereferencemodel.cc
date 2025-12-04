@@ -46,8 +46,6 @@ QVariant SaleReferenceModel::data(const QModelIndex& index, int role) const
         return entry->issued_time;
     case NodeReferencedEnum::kNodeId:
         return entry->node_id;
-    case NodeReferencedEnum::kSection:
-        return entry->section;
     case NodeReferencedEnum::kOrderId:
         return entry->order_id;
     case NodeReferencedEnum::kExternalSku:

@@ -36,8 +36,8 @@ class SaleReferenceWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    SaleReferenceWidget(
-        QAbstractItemModel* model, const Section section, const QUuid& node_id, int node_unit, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
+    SaleReferenceWidget(QAbstractItemModel* model, Section section, CUuid& widget_id, CUuid& node_id, int node_unit, CDateTime& start, CDateTime& end,
+        QWidget* parent = nullptr);
     ~SaleReferenceWidget() override;
 
     QTableView* View() const;
@@ -60,6 +60,7 @@ private:
     QTimer* cooldown_timer_ { nullptr };
 
     const QUuid node_id_ {};
+    const QUuid widget_id_ {};
     const int node_unit_ {};
     const Section section_ {};
 };

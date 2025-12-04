@@ -31,7 +31,6 @@
 #include "delegate/readonly/nodenamer.h"
 #include "delegate/readonly/nodepathr.h"
 #include "delegate/readonly/quantityr.h"
-#include "delegate/readonly/sectionr.h"
 #include "delegate/status.h"
 #include "delegate/table/tablecombofilter.h"
 #include "delegate/table/tableissuedtime.h"
@@ -317,22 +316,10 @@ void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
     if (index.column() != column)
         return;
 
-    const Section section { index.siblingAtColumn(std::to_underlying(NodeReferencedEnum::kSection)).data().toInt() };
+    RSectionGroup(std::to_underlying(Section::kSale));
+    ui->rBtnSale->setChecked(true);
 
-    switch (section) {
-    case Section::kSale:
-        RSectionGroup(std::to_underlying(Section::kSale));
-        ui->rBtnSale->setChecked(true);
-        break;
-    case Section::kPurchase:
-        RSectionGroup(std::to_underlying(Section::kPurchase));
-        ui->rBtnPurchase->setChecked(true);
-        break;
-    default:
-        return;
-    }
-
-    auto* sc { GetSectionContex(section) };
+    auto* sc { GetSectionContex(Section::kSale) };
     auto tree_model { sc->tree_model };
 
     if (!tree_model->Contains(node_id)) {
@@ -1728,9 +1715,6 @@ void MainWindow::DelegateSaleReference(QTableView* table_view, CSectionConfig& c
     auto* external_sku { new NodePathR(partner_tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kExternalSku), external_sku);
 
-    auto* section { new SectionR(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kSection), section);
-
     if (start_ == Section::kInventory) {
         auto* name { new NodeNameR(partner_tree_model, table_view) };
         table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kNodeId), name);
@@ -2443,18 +2427,18 @@ void MainWindow::CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, 
     CString name { tr("Record-") + tree_model->Name(node_id) };
 
     const Section section { info.section };
+    const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* model { new SaleReferenceModel(info, this) };
 
     const auto start { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) };
     const auto end { QDateTime(QDate(QDate::currentDate().year() + 1, 1, 1), kStartTime) };
-    auto* widget { new SaleReferenceWidget(model, section, node_id, unit, start, end, this) };
+    auto* widget { new SaleReferenceWidget(model, section, widget_id, node_id, unit, start, end, this) };
 
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
-    const QUuid report_id { QUuid::createUuidV7() };
-    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, report_id }));
+    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, widget_id }));
 
     auto* view { widget->View() };
     SetTableViewSaleReference(view);
@@ -2462,7 +2446,7 @@ void MainWindow::CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, 
 
     connect(view, &QTableView::doubleClicked, this, &MainWindow::RSaleReferenceSecondary);
 
-    RegisterRptWgt(report_id, widget);
+    RegisterRptWgt(widget_id, widget);
 }
 
 void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool branch)
