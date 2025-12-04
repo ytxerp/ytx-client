@@ -12,7 +12,7 @@ StatementPrimaryModel::StatementPrimaryModel(CSectionInfo& info, const QUuid& pa
 {
 }
 
-StatementPrimaryModel::~StatementPrimaryModel() { ResourcePool<StatementPrimary>::Instance().Recycle(statement_primary_list_); }
+StatementPrimaryModel::~StatementPrimaryModel() { ResourcePool<StatementPrimary>::Instance().Recycle(list_); }
 
 QModelIndex StatementPrimaryModel::index(int row, int column, const QModelIndex& parent) const
 {
@@ -31,7 +31,7 @@ QModelIndex StatementPrimaryModel::parent(const QModelIndex& index) const
 int StatementPrimaryModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return statement_primary_list_.size();
+    return list_.size();
 }
 
 int StatementPrimaryModel::columnCount(const QModelIndex& parent) const
@@ -45,7 +45,7 @@ QVariant StatementPrimaryModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* node { statement_primary_list_.at(index.row()) };
+    auto* node { list_.at(index.row()) };
     const StatementPrimaryEnum column { index.column() };
 
     switch (column) {
@@ -76,7 +76,7 @@ bool StatementPrimaryModel::setData(const QModelIndex& index, const QVariant& va
         return false;
 
     const StatementPrimaryEnum column { index.column() };
-    auto* node { statement_primary_list_.at(index.row()) };
+    auto* node { list_.at(index.row()) };
 
     switch (column) {
     case StatementPrimaryEnum::kStatus:
@@ -128,7 +128,7 @@ void StatementPrimaryModel::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(statement_primary_list_.begin(), statement_primary_list_.end(), Compare);
+    std::sort(list_.begin(), list_.end(), Compare);
     emit layoutChanged();
 }
 
@@ -139,8 +139,8 @@ void StatementPrimaryModel::ResetModel(int unit, const QDateTime& start, const Q
 
     beginResetModel();
 
-    if (!statement_primary_list_.isEmpty())
-        ResourcePool<StatementPrimary>::Instance().Recycle(statement_primary_list_);
+    if (!list_.isEmpty())
+        ResourcePool<StatementPrimary>::Instance().Recycle(list_);
 
     endResetModel();
 }

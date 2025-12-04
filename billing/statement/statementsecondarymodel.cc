@@ -22,7 +22,7 @@ StatementSecondaryModel::StatementSecondaryModel(
 {
 }
 
-StatementSecondaryModel::~StatementSecondaryModel() { ResourcePool<StatementSecondary>::Instance().Recycle(statement_secondary_list_); }
+StatementSecondaryModel::~StatementSecondaryModel() { ResourcePool<StatementSecondary>::Instance().Recycle(list_); }
 
 QModelIndex StatementSecondaryModel::index(int row, int column, const QModelIndex& parent) const
 {
@@ -41,7 +41,7 @@ QModelIndex StatementSecondaryModel::parent(const QModelIndex& index) const
 int StatementSecondaryModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return statement_secondary_list_.size();
+    return list_.size();
 }
 
 int StatementSecondaryModel::columnCount(const QModelIndex& /*parent*/) const { return info_.statement_secondary_header.size(); }
@@ -51,7 +51,7 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* entry { statement_secondary_list_.at(index.row()) };
+    auto* entry { list_.at(index.row()) };
     const StatementSecondaryEnum column { index.column() };
 
     switch (column) {
@@ -86,7 +86,7 @@ bool StatementSecondaryModel::setData(const QModelIndex& index, const QVariant& 
     const StatementSecondaryEnum column { index.column() };
     const int kRow { index.row() };
 
-    auto* entry { statement_secondary_list_.at(kRow) };
+    auto* entry { list_.at(kRow) };
 
     switch (column) {
     case StatementSecondaryEnum::kStatus:
@@ -140,24 +140,24 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(statement_secondary_list_.begin(), statement_secondary_list_.end(), Compare);
+    std::sort(list_.begin(), list_.end(), Compare);
     emit layoutChanged();
 }
 
-void StatementSecondaryModel::RResetModel(int unit, const QDateTime& start, const QDateTime& end)
+void StatementSecondaryModel::ResetModel(int unit, const QDateTime& start, const QDateTime& end)
 {
     if (partner_id_.isNull() || !start.isValid() || !end.isValid())
         return;
 
     beginResetModel();
-    if (!statement_secondary_list_.isEmpty())
-        ResourcePool<StatementSecondary>::Instance().Recycle(statement_secondary_list_);
+    if (!list_.isEmpty())
+        ResourcePool<StatementSecondary>::Instance().Recycle(list_);
 
     // dbhub_->ReadStatementSecondary(statement_secondary_list_, partner_id_, unit, start.toUTC(), end.toUTC());
     endResetModel();
 }
 
-void StatementSecondaryModel::RExport(int unit, const QDateTime& start, const QDateTime& end)
+void StatementSecondaryModel::Export(int unit, const QDateTime& start, const QDateTime& end)
 {
     double pbalance { 0.0 };
     double cdelta { 0.0 };
@@ -197,12 +197,12 @@ void StatementSecondaryModel::RExport(int unit, const QDateTime& start, const QD
                 tr("GrossAmount") };
             sheet->WriteRow(7, 4, header);
 
-            const qsizetype rows { statement_secondary_list_.size() };
+            const qsizetype rows { list_.size() };
 
             QList<QVariantList> list(rows);
 
             qsizetype row_index { 0 };
-            for (const auto* entry : std::as_const(statement_secondary_list_)) {
+            for (const auto* entry : std::as_const(list_)) {
                 list[row_index] << entry->issued_time << item_leaf_.value(entry->rhs_node) << partner_leaf_.value(entry->support_id) << entry->count
                                 << entry->measure << entry->unit_price << entry->description << entry->initial;
                 ++row_index;

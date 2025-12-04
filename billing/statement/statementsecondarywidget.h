@@ -17,39 +17,36 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTPRIMARYWIDGET_H
-#define STATEMENTPRIMARYWIDGET_H
+#ifndef STATEMENTSECONDARYWIDGET_H
+#define STATEMENTSECONDARYWIDGET_H
 
 #include <QButtonGroup>
 #include <QDateTime>
 #include <QTableView>
 
 #include "component/using.h"
-#include "statementprimarymodel.h"
+#include "statementsecondarymodel.h"
 
 namespace Ui {
-class StatementPrimaryWidget;
+class StatementSecondaryWidget;
 }
 
-class StatementPrimaryWidget final : public QWidget {
+class StatementSecondaryWidget final : public QWidget {
     Q_OBJECT
 
-signals:
-    void SStatementSecondary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
-
 public:
-    StatementPrimaryWidget(StatementPrimaryModel* model, Section section, CUuid& widget_id, CUuid& partner_id, int unit, CDateTime& start, CDateTime& end,
+    StatementSecondaryWidget(StatementSecondaryModel* model, Section section, CUuid& widget_id, CUuid& partner_id, int unit, CDateTime& start, CDateTime& end,
         QWidget* parent = nullptr);
-    ~StatementPrimaryWidget() override;
+    ~StatementSecondaryWidget() override;
 
     QTableView* View() const;
-    StatementPrimaryModel* Model() const { return model_; }
+    StatementSecondaryModel* Model() const { return model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
-    void on_tableView_doubleClicked(const QModelIndex& index);
     void on_start_dateChanged(const QDate& date);
     void on_end_dateChanged(const QDate& date);
+    void on_pBtnExport_clicked();
 
     void RUnitGroupClicked(int id);
 
@@ -61,18 +58,17 @@ private:
     void InitTimer();
 
 private:
-    Ui::StatementPrimaryWidget* ui;
+    Ui::StatementSecondaryWidget* ui;
     int unit_ {};
     QDateTime start_ {};
     QDateTime end_ {};
-
-    StatementPrimaryModel* model_ {};
-    QTimer* cooldown_timer_ { nullptr };
+    StatementSecondaryModel* model_ {};
 
     QButtonGroup* unit_group_ {};
+    QTimer* cooldown_timer_ { nullptr };
     const Section section_ {};
     const QUuid widget_id_ {};
     CUuid partner_id_ {};
 };
 
-#endif // STATEMENTPRIMARYWIDGET_H
+#endif // STATEMENTSECONDARYWIDGET_H

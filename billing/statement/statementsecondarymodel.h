@@ -33,10 +33,6 @@ public:
         CSectionInfo& info, const QUuid& partner_id, CUuidString& item_leaf, TreeModel* partner, CString& company_name, QObject* parent = nullptr);
     ~StatementSecondaryModel();
 
-public slots:
-    void RResetModel(int unit, const QDateTime& start, const QDateTime& end);
-    void RExport(int unit, const QDateTime& start, const QDateTime& end);
-
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex& index) const override;
@@ -50,15 +46,17 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     void sort(int column, Qt::SortOrder order) override;
+    void ResetModel(int unit, const QDateTime& start, const QDateTime& end);
+    void Export(int unit, const QDateTime& start, const QDateTime& end);
 
 private:
     CSectionInfo& info_;
-    const QUuid& partner_id_ {};
+    const QUuid partner_id_ {};
     CUuidString& item_leaf_ {};
     CUuidString& partner_leaf_ {};
     TreeModel* partner_ {};
     CString& company_name_ {};
-    StatementSecondaryList statement_secondary_list_ {};
+    StatementSecondaryList list_ {};
 };
 
 #endif // STATEMENTSECONDARYMODEL_H

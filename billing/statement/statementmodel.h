@@ -47,8 +47,7 @@ public:
 
 private:
     CSectionInfo& info_;
-
-    StatementList statement_list_ {};
+    StatementList list_ {};
 };
 
 #endif // STATEMENTMODEL_H

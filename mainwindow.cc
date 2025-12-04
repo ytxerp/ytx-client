@@ -14,7 +14,9 @@
 
 #include "billing/statement/statementmodel.h"
 #include "billing/statement/statementprimarymodel.h"
+#include "billing/statement/statementprimarywidget.h"
 #include "billing/statement/statementsecondarymodel.h"
+#include "billing/statement/statementsecondarywidget.h"
 #include "billing/statement/statementwidget.h"
 #include "component/arg/nodeinsertarg.h"
 #include "component/constant.h"
@@ -333,23 +335,24 @@ void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
 void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     auto* model { new StatementPrimaryModel(sc_->info, partner_id, this) };
-    auto* widget { new StatementWidget(model, unit, false, start, end, this) };
+    const QUuid widget_id { QUuid::createUuidV7() };
 
-    const QString name { tr("StatementPrimary-") + sc_p_.tree_model->Name(partner_id) };
-    const int tab_index { ui->tabWidget->addTab(widget, name) };
+    auto* widget { new StatementPrimaryWidget(model, start_, widget_id, partner_id, unit, start, end, this) };
+
+    const QString title { QString("%1-%2 %3").arg(tr("StatementPrimary"), sc_p_.tree_model->Name(partner_id), QDateTime::currentDateTime().toString("HH:mm")) };
+
+    const int tab_index { ui->tabWidget->addTab(widget, title) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
-    const QUuid report_id { QUuid::createUuidV7() };
-    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, report_id }));
-    tab_bar->setTabToolTip(tab_index, name);
+    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
 
     auto* view { widget->View() };
     SetStatementView(view, std::to_underlying(StatementPrimaryEnum::kDescription));
     DelegateStatementPrimary(view, sc_->section_config);
 
-    connect(widget, &StatementWidget::SResetModel, model, &StatementPrimaryModel::RResetModel);
+    connect(widget, &StatementPrimaryWidget::SStatementSecondary, this, &MainWindow::RStatementSecondary);
 
-    RegisterWidget(report_id, widget);
+    RegisterWidget(widget_id, widget);
 }
 
 void MainWindow::RStatementSecondary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
@@ -357,24 +360,24 @@ void MainWindow::RStatementSecondary(const QUuid& partner_id, int unit, const QD
     auto tree_model_p { sc_p_.tree_model };
 
     auto* model { new StatementSecondaryModel(sc_->info, partner_id, sc_i_.tree_model->LeafPath(), tree_model_p, app_config_.company_name, this) };
-    auto* widget { new StatementWidget(model, unit, true, start, end, this) };
+    const QUuid widget_id { QUuid::createUuidV7() };
 
-    const QString name { tr("StatementSecondary-") + tree_model_p->Name(partner_id) };
-    const int tab_index { ui->tabWidget->addTab(widget, name) };
+    auto* widget { new StatementSecondaryWidget(model, start_, widget_id, partner_id, unit, start, end, this) };
+
+    const QString title {
+        QString("%1-%2 %3").arg(tr("StatementSecondary"), sc_p_.tree_model->Name(partner_id), QDateTime::currentDateTime().toString("HH:mm"))
+    };
+
+    const int tab_index { ui->tabWidget->addTab(widget, title) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
-    const QUuid report_id { QUuid::createUuidV7() };
-    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, report_id }));
-    tab_bar->setTabToolTip(tab_index, name);
+    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
 
     auto* view { widget->View() };
     SetStatementView(view, std::to_underlying(StatementSecondaryEnum::kDescription));
     DelegateStatementSecondary(view, sc_->section_config);
 
-    connect(widget, &StatementWidget::SResetModel, model, &StatementSecondaryModel::RResetModel);
-    connect(widget, &StatementWidget::SExport, model, &StatementSecondaryModel::RExport);
-
-    RegisterWidget(report_id, widget);
+    RegisterWidget(widget_id, widget);
 }
 
 // FocusTableWidget - Activate and focus the leaf widget tab
@@ -1541,27 +1544,23 @@ void MainWindow::on_actionStatement_triggered()
     assert(IsOrderSection(start_));
 
     auto* model { new StatementModel(sc_->info, this) };
+    const QUuid widget_id { QUuid::createUuidV7() };
 
-    const int unit { std::to_underlying(UnitO::kMonthly) };
-    const auto start { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime) };
-    const auto end { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month() + 1, 1), kStartTime) };
+    auto* widget { new StatementWidget(model, start_, widget_id, this) };
 
-    auto* widget { new StatementWidget(model, unit, false, start, end, this) };
-
-    const int tab_index { ui->tabWidget->addTab(widget, tr("Statement")) };
+    const QString title { tr("Statement %1").arg(QDateTime::currentDateTime().toString("HH:mm")) };
+    const int tab_index { ui->tabWidget->addTab(widget, title) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
-    const QUuid report_id { QUuid::createUuidV7() };
-    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, report_id }));
+    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
 
     auto* view { widget->View() };
     SetStatementView(view, std::to_underlying(StatementEnum::kPlaceholder));
     DelegateStatement(view, sc_->section_config);
 
     connect(widget, &StatementWidget::SStatementPrimary, this, &MainWindow::RStatementPrimary);
-    connect(widget, &StatementWidget::SStatementSecondary, this, &MainWindow::RStatementSecondary);
 
-    RegisterWidget(report_id, widget);
+    RegisterWidget(widget_id, widget);
 }
 
 void MainWindow::on_actionSettlement_triggered()
@@ -2435,16 +2434,16 @@ void MainWindow::CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, 
     assert(tree_model);
     assert(tree_model->Contains(node_id));
 
-    CString name { tr("Record-") + tree_model->Name(node_id) };
+    const QString title { QString("%1-%2 %3").arg(tr("Record"), tree_model->Name(node_id), QDateTime::currentDateTime().toString("HH:mm")) };
 
     const Section section { info.section };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     // The widget will take ownership of the model
-    auto* model { new SaleReferenceModel(info, nullptr) };
+    auto* model { new SaleReferenceModel(info, this) };
     auto* widget { new SaleReferenceWidget(model, section, widget_id, node_id, unit, this) };
 
-    const int tab_index { ui->tabWidget->addTab(widget, name) };
+    const int tab_index { ui->tabWidget->addTab(widget, title) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, widget_id }));
@@ -2996,6 +2995,7 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     const bool is_table_fipt { IsTableWidgetFIPT(widget) };
     const bool is_table_o { IsTableWidgetO(widget) };
     const bool is_color_section { start_ == Section::kTask || start_ == Section::kInventory };
+    const bool is_order_section { IsOrderSection(start_) };
 
     ui->actionAppendNode->setEnabled(is_tree);
     ui->actionEditName->setEnabled(is_tree);
@@ -3006,9 +3006,9 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     ui->actionMarkToggle->setEnabled(is_table_fipt);
     ui->actionJump->setEnabled(is_table_fipt);
 
-    ui->actionStatement->setEnabled(false);
-    ui->actionSettlement->setEnabled(false);
-    ui->actionNewGroup->setEnabled(IsOrderSection(start_));
+    ui->actionStatement->setEnabled(is_order_section);
+    ui->actionSettlement->setEnabled(is_order_section);
+    ui->actionNewGroup->setEnabled(is_order_section);
 
     ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o);
     ui->actionRemove->setEnabled(is_tree || is_table_fipt || is_table_o);

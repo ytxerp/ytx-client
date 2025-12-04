@@ -50,7 +50,7 @@ private:
     CSectionInfo& info_;
     const QUuid partner_id_ {};
 
-    StatementPrimaryList statement_primary_list_ {};
+    StatementPrimaryList list_ {};
 };
 
 #endif // STATEMENTPRIMARYMODEL_H

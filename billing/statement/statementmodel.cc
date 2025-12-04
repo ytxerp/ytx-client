@@ -11,7 +11,7 @@ StatementModel::StatementModel(CSectionInfo& info, QObject* parent)
 {
 }
 
-StatementModel::~StatementModel() { ResourcePool<Statement>::Instance().Recycle(statement_list_); }
+StatementModel::~StatementModel() { ResourcePool<Statement>::Instance().Recycle(list_); }
 
 QModelIndex StatementModel::index(int row, int column, const QModelIndex& parent) const
 {
@@ -30,7 +30,7 @@ QModelIndex StatementModel::parent(const QModelIndex& index) const
 int StatementModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return statement_list_.size();
+    return list_.size();
 }
 
 int StatementModel::columnCount(const QModelIndex& parent) const
@@ -45,7 +45,7 @@ QVariant StatementModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     const StatementEnum column { index.column() };
-    auto* statement { statement_list_.at(index.row()) };
+    auto* statement { list_.at(index.row()) };
 
     switch (column) {
     case StatementEnum::kPartner:
@@ -104,7 +104,7 @@ void StatementModel::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(statement_list_.begin(), statement_list_.end(), Compare);
+    std::sort(list_.begin(), list_.end(), Compare);
     emit layoutChanged();
 }
 
@@ -114,8 +114,8 @@ void StatementModel::ResetModel(int unit, const QDateTime& start, const QDateTim
         return;
 
     beginResetModel();
-    if (!statement_list_.isEmpty())
-        ResourcePool<Statement>::Instance().Recycle(statement_list_);
+    if (!list_.isEmpty())
+        ResourcePool<Statement>::Instance().Recycle(list_);
 
     endResetModel();
 }
