@@ -6,12 +6,12 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SaleReferenceWidget::SaleReferenceWidget(
-    QAbstractItemModel* model, Section section, CUuid& widget_id, CUuid& node_id, int node_unit, CDateTime& start, CDateTime& end, QWidget* parent)
+SaleReferenceWidget::SaleReferenceWidget(SaleReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, int node_unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SaleReferenceWidget)
-    , start_ { start }
-    , end_ { end }
+    , start_ { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) }
+    , end_ { QDateTime(QDate(QDate::currentDate().year() + 1, 1, 1), kStartTime) }
+    , model_ { model }
     , node_id_ { node_id }
     , widget_id_ { widget_id }
     , node_unit_ { node_unit }
@@ -20,7 +20,10 @@ SaleReferenceWidget::SaleReferenceWidget(
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    IniWidget(model);
+    ui->tableView->setModel(model);
+    model->setParent(this);
+
+    IniWidget();
     InitTimer();
 
     QTimer::singleShot(0, this, &SaleReferenceWidget::on_pBtnFetch_clicked);
@@ -29,8 +32,6 @@ SaleReferenceWidget::SaleReferenceWidget(
 SaleReferenceWidget::~SaleReferenceWidget() { delete ui; }
 
 QTableView* SaleReferenceWidget::View() const { return ui->tableView; }
-
-QAbstractItemModel* SaleReferenceWidget::Model() const { return ui->tableView->model(); }
 
 void SaleReferenceWidget::on_start_dateChanged(const QDate& date)
 {
@@ -64,11 +65,10 @@ void SaleReferenceWidget::on_pBtnFetch_clicked()
     cooldown_timer_->start(kTwoThousand);
 }
 
-void SaleReferenceWidget::IniWidget(QAbstractItemModel* model)
+void SaleReferenceWidget::IniWidget()
 {
     ui->start->setDisplayFormat(kDateFST);
     ui->end->setDisplayFormat(kDateFST);
-    ui->tableView->setModel(model);
     ui->start->setDateTime(start_);
     ui->end->setDateTime(end_.addSecs(-1));
 

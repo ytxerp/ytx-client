@@ -2429,11 +2429,9 @@ void MainWindow::CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, 
     const Section section { info.section };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* model { new SaleReferenceModel(info, this) };
-
-    const auto start { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) };
-    const auto end { QDateTime(QDate(QDate::currentDate().year() + 1, 1, 1), kStartTime) };
-    auto* widget { new SaleReferenceWidget(model, section, widget_id, node_id, unit, start, end, this) };
+    // The widget will take ownership of the model
+    auto* model { new SaleReferenceModel(info, nullptr) };
+    auto* widget { new SaleReferenceWidget(model, section, widget_id, node_id, unit, this) };
 
     const int tab_index { ui->tabWidget->addTab(widget, name) };
     auto* tab_bar { ui->tabWidget->tabBar() };

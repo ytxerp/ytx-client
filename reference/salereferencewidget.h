@@ -20,13 +20,13 @@
 #ifndef SALEREFERENCEWIDGET_H
 #define SALEREFERENCEWIDGET_H
 
-#include <QAbstractItemModel>
 #include <QDateTime>
 #include <QTableView>
 #include <QUuid>
 
 #include "component/using.h"
 #include "enum/section.h"
+#include "reference/salereferencemodel.h"
 
 namespace Ui {
 class SaleReferenceWidget;
@@ -36,12 +36,11 @@ class SaleReferenceWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    SaleReferenceWidget(QAbstractItemModel* model, Section section, CUuid& widget_id, CUuid& node_id, int node_unit, CDateTime& start, CDateTime& end,
-        QWidget* parent = nullptr);
+    SaleReferenceWidget(SaleReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, int node_unit, QWidget* parent = nullptr);
     ~SaleReferenceWidget() override;
 
     QTableView* View() const;
-    QAbstractItemModel* Model() const;
+    SaleReferenceModel* Model() const { return model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -49,13 +48,14 @@ private slots:
     void on_end_dateChanged(const QDate& date);
 
 private:
-    void IniWidget(QAbstractItemModel* model);
+    void IniWidget();
     void InitTimer();
 
 private:
     Ui::SaleReferenceWidget* ui;
     QDateTime start_ {};
     QDateTime end_ {};
+    SaleReferenceModel* model_ {};
 
     QTimer* cooldown_timer_ { nullptr };
 
