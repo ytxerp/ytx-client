@@ -164,9 +164,11 @@ void WebSocket::InitHandler()
     handler_obj_[kRegisterResult] = [this](const QJsonObject& obj) { NotifyRegisterResult(obj); };
     handler_obj_[kTreeAcked] = [this](const QJsonObject& obj) { AckTree(obj); };
     handler_obj_[kTableAcked] = [this](const QJsonObject& obj) { AckTable(obj); };
+    handler_obj_[kSaleReference] = [this](const QJsonObject& obj) { AckSaleReference(obj); };
     handler_obj_[kWorkspaceAccessPending] = [this](const QJsonObject& obj) { NotifyWorkspaceAccessPending(obj); };
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
+    handler_obj_[kNodeAcked] = [this](const QJsonObject& obj) { AckNode(obj); };
     handler_obj_[kLeafRemove] = [this](const QJsonObject& obj) { RemoveLeaf(obj); };
     handler_obj_[kBranchRemove] = [this](const QJsonObject& obj) { RemoveBranch(obj); };
     handler_obj_[kLeafReplace] = [this](const QJsonObject& obj) { ReplaceLeaf(obj); };
@@ -407,6 +409,15 @@ void WebSocket::AckNode(const QJsonObject& obj)
 
     auto tree_model { tree_model_hash_.value(section) };
     tree_model->AckNode(leaf_obj, ancestor);
+}
+
+void WebSocket::AckSaleReference(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
+    const QJsonArray array { obj.value(kEntryArray).toArray() };
+
+    emit SSaleReference(section, widget_id, array);
 }
 
 void WebSocket::RemoveLeaf(const QJsonObject& obj)

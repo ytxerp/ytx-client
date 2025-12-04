@@ -68,6 +68,7 @@ signals:
     void SNodeRemoveConfirmed(const QUuid& node_id);
 
     void SReplaceResult(bool result);
+    void SSaleReference(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
 
     void SConnectionRefused();
 
@@ -97,6 +98,7 @@ private:
     void AckTree(const QJsonObject& obj);
     void AckTable(const QJsonObject& obj);
     void AckNode(const QJsonObject& obj);
+    void AckSaleReference(const QJsonObject& obj);
 
     void SearchEntry(const QJsonObject& obj);
     void SearchNode(const QJsonObject& obj);

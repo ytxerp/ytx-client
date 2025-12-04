@@ -47,6 +47,8 @@ public:
 
     void sort(int column, Qt::SortOrder order) override;
 
+    void ResetModel(const QJsonArray& entry_array);
+
 private:
     CSectionInfo& info_;
     SaleReferenceList list_ {};

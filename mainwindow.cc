@@ -308,10 +308,10 @@ void MainWindow::RSectionGroup(int id)
 
 void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
 {
-    const auto node_id { index.siblingAtColumn(std::to_underlying(NodeReferencedEnum::kOrderId)).data().toUuid() };
+    const auto order_id { index.siblingAtColumn(std::to_underlying(NodeReferencedEnum::kOrderId)).data().toUuid() };
     const int column { std::to_underlying(NodeReferencedEnum::kInitial) };
 
-    assert(!node_id.isNull());
+    assert(!order_id.isNull());
 
     if (index.column() != column)
         return;
@@ -322,12 +322,12 @@ void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
     auto* sc { GetSectionContex(Section::kSale) };
     auto tree_model { sc->tree_model };
 
-    if (!tree_model->Contains(node_id)) {
-        tree_model->AckNode(node_id);
+    if (!tree_model->Contains(order_id)) {
+        tree_model->AckNode(order_id);
         return;
     }
 
-    RNodeLocation(node_id);
+    RNodeLocation(order_id);
 }
 
 void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
@@ -1443,6 +1443,19 @@ void MainWindow::RFreeWidget(const QUuid& node_id)
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
+void MainWindow::RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
+{
+    auto* sc { GetSectionContex(section) };
+
+    auto widget { sc->widget_hash.value(widget_id, nullptr) };
+    if (!widget)
+        return;
+
+    auto* d_widget { static_cast<SaleReferenceWidget*>(widget.data()) };
+    auto* model { d_widget->Model() };
+    model->ResetModel(entry_array);
+}
+
 void MainWindow::SetTabWidget()
 {
     auto* tab_widget { ui->tabWidget };
@@ -1736,7 +1749,6 @@ void MainWindow::SetTableViewSaleReference(QTableView* view) const
     }
 
     {
-        view->setColumnHidden(std::to_underlying(NodeReferencedEnum::kNodeId), kIsHidden);
         view->setColumnHidden(std::to_underlying(NodeReferencedEnum::kOrderId), kIsHidden);
     }
 
@@ -1887,6 +1899,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SLoginResult, this, &MainWindow::RLoginResult);
     connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::RRemoteHostClosed);
     connect(WebSocket::Instance(), &WebSocket::SSelectLeafEntry, this, &MainWindow::RSelectLeafEntry);
+    connect(WebSocket::Instance(), &WebSocket::SSaleReference, this, &MainWindow::RSaleReference);
 }
 
 void MainWindow::InitContextFinance()

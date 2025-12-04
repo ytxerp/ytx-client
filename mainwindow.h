@@ -98,6 +98,7 @@ private slots:
 
     void RFreeWidget(const QUuid& node_id);
 
+    void RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
     void RSaleReferencePrimary(const QUuid& node_id, int unit);
     void RSaleReferenceSecondary(const QModelIndex& index);
 

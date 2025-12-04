@@ -1,5 +1,7 @@
 #include "salereferencemodel.h"
 
+#include <QJsonArray>
+
 #include "enum/reference.h"
 #include "global/resourcepool.h"
 
@@ -110,4 +112,25 @@ void SaleReferenceModel::sort(int column, Qt::SortOrder order)
     emit layoutAboutToBeChanged();
     std::sort(list_.begin(), list_.end(), Compare);
     emit layoutChanged();
+}
+
+void SaleReferenceModel::ResetModel(const QJsonArray& entry_array)
+{
+    beginResetModel();
+
+    list_.clear();
+
+    for (const auto& value : entry_array) {
+        if (!value.isObject())
+            continue;
+
+        const QJsonObject obj { value.toObject() };
+
+        auto* reference { ResourcePool<SaleReference>::Instance().Allocate() };
+        reference->ReadJson(obj);
+
+        list_.emplaceBack(reference);
+    }
+
+    endResetModel();
 }

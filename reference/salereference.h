@@ -65,9 +65,9 @@ inline void SaleReference::ReadJson(const QJsonObject& object)
     if (object.contains(kNodeId))
         node_id = QUuid(object[kNodeId].toString());
     if (object.contains(kOrderId))
-        node_id = QUuid(object[kOrderId].toString());
+        order_id = QUuid(object[kOrderId].toString());
     if (object.contains(kExternalSku))
-        node_id = QUuid(object[kExternalSku].toString());
+        external_sku = QUuid(object[kExternalSku].toString());
     if (object.contains(kDescription))
         description = object[kDescription].toString();
     if (object.contains(kCount))

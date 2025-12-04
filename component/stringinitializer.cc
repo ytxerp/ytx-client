@@ -270,11 +270,10 @@ void StringInitializer::SetHeader(
     partner.full_entry_header = partner.entry_header;
     sale.full_entry_header = sale.entry_header;
 
-    // NodeReferenced
+    // SaleReference
     inventory.node_referenced_header = {
         QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
-        QObject::tr("Section"),
         QObject::tr("Partner"),
         QObject::tr("ExternalSku"),
         QObject::tr("Count"),
@@ -288,7 +287,6 @@ void StringInitializer::SetHeader(
     partner.node_referenced_header = {
         QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
-        QObject::tr("Section"),
         QObject::tr("InternalSku"),
         QObject::tr("ExternalSku"),
         QObject::tr("Count"),
