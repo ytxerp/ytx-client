@@ -195,114 +195,55 @@ QString EntryHubO::QSReadStatement(int unit) const
     switch (UnitO(unit)) {
     case UnitO::kImmediate:
         return QString(R"(
-        WITH Statement AS (
-            SELECT
-                p.id AS partner,
-                SUM(o.initial_total)  AS camount,
-                SUM(o.count_total)    AS ccount,
-                SUM(o.measure_total)  AS cmeasure
-            FROM partner_node p
-            INNER JOIN %1 o
-                ON p.id = o.partner
-            WHERE o.unit = 0
-                AND o.status = 1
-                AND o.is_valid = TRUE
-                AND o.issued_time >= :start
-                AND o.issued_time  < :end
-            GROUP BY p.id
-        )
         SELECT
-            partner,
+            p.id AS partner,
             0.0 AS pbalance,
-            0.0 AS cbalance,
-            camount,
-            camount AS csettlement,
-            ccount,
-            cmeasure
-        FROM Statement
+            SUM(o.initial_total) AS camount,
+            SUM(o.count_total) AS ccount,
+            SUM(o.measure_total) AS cmeasure,
+            SUM(o.initial_total) AS csettlement,
+            0.0 AS cbalance
+        FROM partner_node p
+        INNER JOIN %1 o ON p.id = o.partner
+        WHERE o.unit = 0
+            AND o.status = 1
+            AND o.is_valid = TRUE
+            AND o.issued_time >= :start
+            AND o.issued_time < :end
+        GROUP BY p.id
         )")
             .arg(info_.node);
     case UnitO::kMonthly:
         return QString(R"(
-        WITH pbalance_statement AS (
-            SELECT
-                p.id AS partner,
-                SUM(o.initial_total) AS pbalance
-            FROM partner_node p
-            INNER JOIN %1 o ON p.id = o.partner
-            WHERE o.unit = 1
-                AND o.status = 1
-                AND o.is_valid = TRUE
-                AND o.issued_time < :start
-                AND o.settlement = '00000000-0000-0000-0000-000000000000'::uuid
-            GROUP BY p.id
-        ),
-        current_statement AS (
-            SELECT
-                p.id AS partner,
-                SUM(o.initial_total) AS camount,
-                SUM(CASE WHEN o.settlement != '00000000-0000-0000-0000-000000000000'::uuid THEN o.initial_total ELSE 0 END) AS csettlement,
-                SUM(o.count_total) AS ccount,
-                SUM(o.measure_total) AS cmeasure
-            FROM partner_node p
-            INNER JOIN %1 o ON p.id = o.partner
-            WHERE o.unit = 1
-                AND o.status = 1
-                AND o.is_valid = TRUE
-                AND o.issued_time >= :start
-                AND o.issued_time  < :end
-            GROUP BY p.id
-        )
         SELECT
-            COALESCE(p.partner, c.partner) AS partner,
-            COALESCE(p.pbalance, 0.0) AS pbalance,
-            COALESCE(c.camount, 0.0) AS camount,
-            COALESCE(c.csettlement, 0.0) AS csettlement,
-            COALESCE(p.pbalance, 0.0) + COALESCE(c.camount, 0.0) - COALESCE(c.csettlement, 0.0) AS cbalance,
-            COALESCE(c.ccount, 0.0) AS ccount,
-            COALESCE(c.cmeasure, 0.0) AS cmeasure
-        FROM pbalance_statement p
-        FULL OUTER JOIN current_statement c ON p.partner = c.partner;
-            )")
+            p.id AS partner,
+            COALESCE(SUM(o.initial_total) FILTER (WHERE o.issued_time < :start AND o.settlement = '00000000-0000-0000-0000-000000000000'::uuid), 0.0) AS pbalance,
+            COALESCE(SUM(o.initial_total) FILTER (WHERE o.issued_time >= :start AND o.issued_time < :end), 0.0) AS camount,
+            COALESCE(SUM(o.count_total)   FILTER (WHERE o.issued_time >= :start AND o.issued_time < :end), 0.0) AS ccount,
+            COALESCE(SUM(o.measure_total) FILTER (WHERE o.issued_time >= :start AND o.issued_time < :end), 0.0) AS cmeasure,
+            COALESCE(SUM(o.initial_total) FILTER (WHERE o.issued_time >= :start AND o.issued_time < :end AND o.settlement != '00000000-0000-0000-0000-000000000000'::uuid), 0.0) AS csettlement,
+            COALESCE(SUM(o.initial_total) FILTER (WHERE o.issued_time < :end AND o.settlement = '00000000-0000-0000-0000-000000000000'::uuid), 0.0) AS cbalance
+        FROM partner_node p
+        INNER JOIN %1 o ON p.id = o.partner
+        WHERE o.unit = 1 AND o.status = 1 AND o.is_valid = TRUE
+        GROUP BY p.id
+        )")
             .arg(info_.node);
     case UnitO::kPending:
         return QString(R"(
-        WITH pbalance_statement AS (
-            SELECT
-                p.id AS partner,
-                SUM(o.initial_total) AS pbalance
-            FROM partner_node p
-            INNER JOIN %1 o ON p.id = o.partner
-            WHERE o.unit = 2
-                AND o.is_valid = TRUE
-                AND o.issued_time < :start
-            GROUP BY p.id
-        ),
-        current_statement AS (
-            SELECT
-                p.id AS partner,
-                SUM(o.initial_total)       AS camount,
-                SUM(o.count_total)         AS ccount,
-                SUM(o.measure_total)       AS cmeasure
-            FROM partner_node p
-            INNER JOIN %1 o ON p.id = o.partner
-            WHERE o.unit = 2
-                AND o.is_valid = TRUE
-                AND o.issued_time >= :start
-                AND o.issued_time < :end
-            GROUP BY p.id
-        )
         SELECT
-            COALESCE(p.partner, c.partner) AS partner,
-            COALESCE(p.pbalance, 0.0) AS pbalance,
-            COALESCE(c.camount, 0.0) AS camount,
+            p.id AS partner,
+            COALESCE(SUM(o.initial_total) FILTER (WHERE o.issued_time < :start), 0.0) AS pbalance,
+            COALESCE(SUM(o.initial_total) FILTER (WHERE o.issued_time >= :start AND o.issued_time < :end), 0.0) AS camount,
+            COALESCE(SUM(o.count_total)   FILTER (WHERE o.issued_time >= :start AND o.issued_time < :end), 0.0) AS ccount,
+            COALESCE(SUM(o.measure_total) FILTER (WHERE o.issued_time >= :start AND o.issued_time < :end), 0.0) AS cmeasure,
             0.0 AS csettlement,
-            COALESCE(p.pbalance, 0.0) + COALESCE(c.camount, 0.0) AS cbalance,
-            COALESCE(c.ccount, 0.0) AS ccount,
-            COALESCE(c.cmeasure, 0.0) AS cmeasure
-        FROM pbalance_statement p
-        FULL OUTER JOIN current_statement c ON p.partner = c.partner;
-            )")
+            COALESCE(SUM(o.initial_total) FILTER (WHERE o.issued_time < :end), 0.0) AS cbalance
+        FROM partner_node p
+        INNER JOIN %1 o ON p.id = o.partner
+        WHERE o.unit = 2 AND o.status = 0 AND o.is_valid = TRUE
+        GROUP BY p.id
+        )")
             .arg(info_.node);
     default:
         return {};
