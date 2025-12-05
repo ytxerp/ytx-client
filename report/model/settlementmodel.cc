@@ -218,7 +218,7 @@ bool SettlementModel::removeRows(int row, int /*count*/, const QModelIndex& pare
     if (settlement->initial_total != 0.0)
         emit SUpdateAmount(settlement->partner, std::to_underlying(NodeEnumP::kInitialTotal), settlement->initial_total);
 
-    dbhub_->RemoveSettlement(settlement->id);
+    // dbhub_->RemoveSettlement(settlement->id);
     ResourcePool<Settlement>::Instance().Recycle(settlement);
 
     emit SResetModel({}, {}, false);
@@ -240,7 +240,7 @@ bool SettlementModel::insertRows(int row, int /*count*/, const QModelIndex& pare
     if (is_empty)
         emit SResizeColumnToContents(std::to_underlying(SettlementEnum::kIssuedTime));
 
-    dbhub_->WriteSettlement(settlement);
+    // dbhub_->WriteSettlement(settlement);
     return true;
 }
 
@@ -278,6 +278,6 @@ void SettlementModel::ResetModel(const QDateTime& start, const QDateTime& end)
     if (!settlement_list_.isEmpty())
         ResourcePool<Settlement>::Instance().Recycle(settlement_list_);
 
-    dbhub_->ReadSettlement(settlement_list_, start.toUTC(), end.toUTC());
+    // dbhub_->ReadSettlement(settlement_list_, start.toUTC(), end.toUTC());
     endResetModel();
 }

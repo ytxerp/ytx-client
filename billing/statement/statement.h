@@ -24,6 +24,8 @@
 #include <QJsonObject>
 #include <QUuid>
 
+#include "component/constant.h"
+
 struct Statement {
     QUuid partner {};
     double pbalance {};
@@ -50,8 +52,8 @@ inline void Statement::ResetState()
 
 inline void Statement::ReadJson(const QJsonObject& object)
 {
-    if (object.contains("partner"))
-        partner = QUuid(object["partner"].toString());
+    if (object.contains(kPartner))
+        partner = QUuid(object[kPartner].toString());
 
     if (object.contains("pbalance"))
         pbalance = object["pbalance"].toString().toDouble();
@@ -74,8 +76,8 @@ inline void Statement::ReadJson(const QJsonObject& object)
 
 struct StatementPrimary {
     QDateTime issued_time {};
-    double count {};
-    double measure {};
+    double count_total {};
+    double measure_total {};
     double initial_total {};
     bool status {};
     QString description {};
@@ -83,18 +85,43 @@ struct StatementPrimary {
     double final_total {};
 
     void ResetState();
+    void ReadJson(const QJsonObject& object);
 };
 
 inline void StatementPrimary::ResetState()
 {
     issued_time = {};
-    count = 0.0;
-    measure = 0.0;
+    count_total = 0.0;
+    measure_total = 0.0;
     initial_total = 0.0;
     status = false;
     description.clear();
     employee = QUuid();
     final_total = 0.0;
+}
+
+inline void StatementPrimary::ReadJson(const QJsonObject& object)
+{
+    if (object.contains(kIssuedTime))
+        issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
+
+    if (object.contains(kCountTotal))
+        count_total = object[kCountTotal].toString().toDouble();
+
+    if (object.contains(kMeasureTotal))
+        measure_total = object[kMeasureTotal].toString().toDouble();
+
+    if (object.contains(kInitialTotal))
+        initial_total = object[kInitialTotal].toString().toDouble();
+
+    if (object.contains(kDescription))
+        description = object[kDescription].toString();
+
+    if (object.contains(kEmployee))
+        employee = QUuid(object[kEmployee].toString());
+
+    if (object.contains(kFinalTotal))
+        final_total = object[kFinalTotal].toString().toDouble();
 }
 
 struct StatementSecondary {
@@ -106,9 +133,10 @@ struct StatementSecondary {
     double initial {};
     bool status {};
     QString description {};
-    QUuid support_id {};
+    QUuid external_sku {};
 
     void ResetState();
+    void ReadJson(const QJsonObject& object);
 };
 
 inline void StatementSecondary::ResetState()
@@ -121,7 +149,34 @@ inline void StatementSecondary::ResetState()
     status = false;
     description.clear();
     rhs_node = QUuid();
-    support_id = QUuid();
+    external_sku = QUuid();
+}
+
+inline void StatementSecondary::ReadJson(const QJsonObject& object)
+{
+    if (object.contains(kIssuedTime))
+        issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
+
+    if (object.contains(kRhsNode))
+        rhs_node = QUuid(object[kRhsNode].toString());
+
+    if (object.contains(kCount))
+        count = object[kCount].toString().toDouble();
+
+    if (object.contains(kMeasure))
+        measure = object[kMeasure].toString().toDouble();
+
+    if (object.contains(kUnitPrice))
+        unit_price = object[kUnitPrice].toString().toDouble();
+
+    if (object.contains(kInitial))
+        initial = object[kInitial].toString().toDouble();
+
+    if (object.contains(kDescription))
+        description = object[kDescription].toString();
+
+    if (object.contains(kExternalSku))
+        external_sku = QUuid(object[kExternalSku].toString());
 }
 
 using StatementList = QList<Statement*>;

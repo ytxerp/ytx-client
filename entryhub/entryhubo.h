@@ -21,7 +21,6 @@
 #define ENTRYHUBO_H
 
 #include "entryhub.h"
-#include "report/settlement.h"
 
 class EntryHubO final : public EntryHub {
     Q_OBJECT
@@ -32,20 +31,11 @@ public:
 public:
     void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
 
-    bool ReadSettlement(SettlementList& list, const QDateTime& start, const QDateTime& end) const;
-    bool WriteSettlement(const Settlement* settlement) const;
-    bool RemoveSettlement(const QUuid& settlement_id);
-
-    bool ReadSettlementPrimary(SettlementList& list, const QUuid& partner_id, const QUuid& settlement_id, bool status);
-    bool AddSettlementPrimary(const QUuid& node_id, const QUuid& settlement_id) const;
-    bool RemoveSettlementPrimary(const QUuid& node_id) const;
-
 protected:
     EntryList ProcessEntryArray(const QJsonArray& array) override;
 
 private:
     QString QSReadSettlement() const;
-    // void ReadSettlementQuery(SettlementList& settlement_list, QSqlQuery& query) const;
     QString QSWriteSettlement() const;
 
     QString QSRemoveSettlementFirst() const;
@@ -53,18 +43,9 @@ private:
 
     QString QSReadSettlementPrimary(bool status) const;
 
-    // void ReadSettlementPrimaryQuery(SettlementList& node_list, QSqlQuery& query);
-
-    QString QSInvertTransValue() const;
-
-    QString QSReadStatement(int unit) const;
     QString QSReadBalance(int unit) const;
     QString QSReadStatementPrimary(int unit) const;
     QString QSReadStatementSecondary(int unit) const;
-
-    // void ReadStatementQuery(StatementList& list, QSqlQuery& query) const;
-    // void ReadStatementPrimaryQuery(StatementPrimaryList& list, QSqlQuery& query) const;
-    // void ReadStatementSecondaryQuery(StatementSecondaryList& list, QSqlQuery& query) const;
 };
 
 #endif // ENTRYHUBO_H

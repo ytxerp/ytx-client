@@ -1,6 +1,7 @@
 #include "statementprimarymodel.h"
 
-#include <QTime>
+#include <QJsonArray>
+#include <QJsonObject>
 
 #include "enum/statementenum.h"
 #include "global/resourcepool.h"
@@ -56,9 +57,9 @@ QVariant StatementPrimaryModel::data(const QModelIndex& index, int role) const
     case StatementPrimaryEnum::kIssuedTime:
         return node->issued_time;
     case StatementPrimaryEnum::kCount:
-        return node->count;
+        return node->count_total;
     case StatementPrimaryEnum::kMeasure:
-        return node->measure;
+        return node->measure_total;
     case StatementPrimaryEnum::kStatus:
         return QVariant();
     case StatementPrimaryEnum::kInitialTotal:
@@ -113,9 +114,9 @@ void StatementPrimaryModel::sort(int column, Qt::SortOrder order)
         case StatementPrimaryEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case StatementPrimaryEnum::kCount:
-            return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
+            return (order == Qt::AscendingOrder) ? (lhs->count_total < rhs->count_total) : (lhs->count_total > rhs->count_total);
         case StatementPrimaryEnum::kMeasure:
-            return (order == Qt::AscendingOrder) ? (lhs->measure < rhs->measure) : (lhs->measure > rhs->measure);
+            return (order == Qt::AscendingOrder) ? (lhs->measure_total < rhs->measure_total) : (lhs->measure_total > rhs->measure_total);
         case StatementPrimaryEnum::kStatus:
             return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
         case StatementPrimaryEnum::kFinalTotal:
@@ -132,15 +133,23 @@ void StatementPrimaryModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void StatementPrimaryModel::ResetModel(int unit, const QDateTime& start, const QDateTime& end)
+void StatementPrimaryModel::ResetModel(const QJsonArray& entry_array)
 {
-    if (partner_id_.isNull() || !start.isValid() || !end.isValid())
-        return;
-
     beginResetModel();
 
-    if (!list_.isEmpty())
-        ResourcePool<StatementPrimary>::Instance().Recycle(list_);
+    ResourcePool<StatementPrimary>::Instance().Recycle(list_);
+
+    for (const auto& value : entry_array) {
+        if (!value.isObject())
+            continue;
+
+        const QJsonObject obj { value.toObject() };
+
+        auto* statement_primary { ResourcePool<StatementPrimary>::Instance().Allocate() };
+        statement_primary->ReadJson(obj);
+
+        list_.emplaceBack(statement_primary);
+    }
 
     endResetModel();
 }

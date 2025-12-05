@@ -2,6 +2,8 @@
 
 #include <QDir>
 #include <QFileDialog>
+#include <QJsonArray>
+#include <QJsonObject>
 #include <QtConcurrent>
 
 #include "component/constant.h"
@@ -60,7 +62,7 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
     case StatementSecondaryEnum::kRhsNode:
         return entry->rhs_node;
     case StatementSecondaryEnum::kSupportNode:
-        return entry->support_id;
+        return entry->external_sku;
     case StatementSecondaryEnum::kCount:
         return entry->count;
     case StatementSecondaryEnum::kMeasure:
@@ -121,7 +123,7 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
         case StatementSecondaryEnum::kRhsNode:
             return (order == Qt::AscendingOrder) ? (lhs->rhs_node < rhs->rhs_node) : (lhs->rhs_node > rhs->rhs_node);
         case StatementSecondaryEnum::kSupportNode:
-            return (order == Qt::AscendingOrder) ? (lhs->support_id < rhs->support_id) : (lhs->support_id > rhs->support_id);
+            return (order == Qt::AscendingOrder) ? (lhs->external_sku < rhs->external_sku) : (lhs->external_sku > rhs->external_sku);
         case StatementSecondaryEnum::kCount:
             return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
         case StatementSecondaryEnum::kMeasure:
@@ -144,16 +146,24 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void StatementSecondaryModel::ResetModel(int unit, const QDateTime& start, const QDateTime& end)
+void StatementSecondaryModel::ResetModel(const QJsonArray& entry_array)
 {
-    if (partner_id_.isNull() || !start.isValid() || !end.isValid())
-        return;
-
     beginResetModel();
-    if (!list_.isEmpty())
-        ResourcePool<StatementSecondary>::Instance().Recycle(list_);
 
-    // dbhub_->ReadStatementSecondary(statement_secondary_list_, partner_id_, unit, start.toUTC(), end.toUTC());
+    ResourcePool<StatementSecondary>::Instance().Recycle(list_);
+
+    for (const auto& value : entry_array) {
+        if (!value.isObject())
+            continue;
+
+        const QJsonObject obj { value.toObject() };
+
+        auto* statement_secondary { ResourcePool<StatementSecondary>::Instance().Allocate() };
+        statement_secondary->ReadJson(obj);
+
+        list_.emplaceBack(statement_secondary);
+    }
+
     endResetModel();
 }
 
@@ -203,7 +213,7 @@ void StatementSecondaryModel::Export(int unit, const QDateTime& start, const QDa
 
             qsizetype row_index { 0 };
             for (const auto* entry : std::as_const(list_)) {
-                list[row_index] << entry->issued_time << item_leaf_.value(entry->rhs_node) << partner_leaf_.value(entry->support_id) << entry->count
+                list[row_index] << entry->issued_time << item_leaf_.value(entry->rhs_node) << partner_leaf_.value(entry->external_sku) << entry->count
                                 << entry->measure << entry->unit_price << entry->description << entry->initial;
                 ++row_index;
             }

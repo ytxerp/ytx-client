@@ -46,7 +46,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     void sort(int column, Qt::SortOrder order) override;
-    void ResetModel(int unit, const QDateTime& start, const QDateTime& end);
+    void ResetModel(const QJsonArray& entry_array);
     void Export(int unit, const QDateTime& start, const QDateTime& end);
 
 private:
