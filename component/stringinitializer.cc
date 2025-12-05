@@ -304,9 +304,10 @@ void StringInitializer::SetHeader(
         QObject::tr("CCount"),
         QObject::tr("CMeasure"),
         QObject::tr("CGrossAmount"),
-        QObject::tr("CBalance"),
         QObject::tr("Description"),
         QObject::tr("CSettlement"),
+        QObject::tr("CBalance"),
+
     };
 
     sale.statement_primary_header = {

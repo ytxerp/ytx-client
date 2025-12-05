@@ -332,6 +332,19 @@ void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
     RNodeLocation(order_id);
 }
 
+void MainWindow::RStatement(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
+{
+    auto* sc { GetSectionContex(section) };
+
+    auto widget { sc->widget_hash.value(widget_id, nullptr) };
+    if (!widget)
+        return;
+
+    auto* d_widget { static_cast<StatementWidget*>(widget.data()) };
+    auto* model { d_widget->Model() };
+    model->ResetModel(entry_array);
+}
+
 void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     auto* model { new StatementPrimaryModel(sc_->info, partner_id, this) };
@@ -339,7 +352,7 @@ void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDat
 
     auto* widget { new StatementPrimaryWidget(model, start_, widget_id, partner_id, unit, start, end, this) };
 
-    const QString title { QString("%1-%2 %3").arg(tr("StatementPrimary"), sc_p_.tree_model->Name(partner_id), QDateTime::currentDateTime().toString("HH:mm")) };
+    const QString title { QString("%1-%2").arg(tr("StatementPrimary"), sc_p_.tree_model->Name(partner_id)) };
 
     const int tab_index { ui->tabWidget->addTab(widget, title) };
     auto* tab_bar { ui->tabWidget->tabBar() };
@@ -364,9 +377,7 @@ void MainWindow::RStatementSecondary(const QUuid& partner_id, int unit, const QD
 
     auto* widget { new StatementSecondaryWidget(model, start_, widget_id, partner_id, unit, start, end, this) };
 
-    const QString title {
-        QString("%1-%2 %3").arg(tr("StatementSecondary"), sc_p_.tree_model->Name(partner_id), QDateTime::currentDateTime().toString("HH:mm"))
-    };
+    const QString title { QString("%1-%2").arg(tr("StatementSecondary"), sc_p_.tree_model->Name(partner_id)) };
 
     const int tab_index { ui->tabWidget->addTab(widget, title) };
     auto* tab_bar { ui->tabWidget->tabBar() };
@@ -1418,25 +1429,36 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 
     const auto node_id { ui->tabWidget->tabBar()->tabData(index).value<TabInfo>().id };
 
-    if (IsOrderSection(start_)) {
-        auto* widget { static_cast<TableWidgetO*>(sc_->table_wgt_hash.value(node_id).data()) };
+    {
+        if (sc_->widget_hash.contains(node_id)) {
+            TemplateUtils::FreeWidget(node_id, sc_->widget_hash);
+            return;
+        }
+    }
 
-        if (widget->HasUnsavedData()) {
-            auto ret = QMessageBox::warning(this, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nDo you want to save before closing?"),
-                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
+    {
+        if (IsOrderSection(start_)) {
+            auto* widget { static_cast<TableWidgetO*>(sc_->table_wgt_hash.value(node_id).data()) };
 
-            if (ret == QMessageBox::Save) {
-                widget->SaveOrder();
-            } else if (ret == QMessageBox::Cancel) {
+            if (!widget)
                 return;
+
+            if (widget->HasUnsavedData()) {
+                auto ret = QMessageBox::warning(this, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nDo you want to save before closing?"),
+                    QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
+
+                if (ret == QMessageBox::Save) {
+                    widget->SaveOrder();
+                } else if (ret == QMessageBox::Cancel) {
+                    return;
+                }
             }
         }
     }
 
-    if (start_ != Section::kFinance && start_ != Section::kTask)
-        TemplateUtils::FreeWidget(node_id, sc_->widget_hash);
-
-    RFreeWidget(node_id);
+    {
+        RFreeWidget(node_id);
+    }
 }
 
 void MainWindow::RFreeWidget(const QUuid& node_id)
@@ -1548,8 +1570,7 @@ void MainWindow::on_actionStatement_triggered()
 
     auto* widget { new StatementWidget(model, start_, widget_id, this) };
 
-    const QString title { tr("Statement %1").arg(QDateTime::currentDateTime().toString("HH:mm")) };
-    const int tab_index { ui->tabWidget->addTab(widget, title) };
+    const int tab_index { ui->tabWidget->addTab(widget, tr("Statement")) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
@@ -1897,6 +1918,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::RRemoteHostClosed);
     connect(WebSocket::Instance(), &WebSocket::SSelectLeafEntry, this, &MainWindow::RSelectLeafEntry);
     connect(WebSocket::Instance(), &WebSocket::SSaleReference, this, &MainWindow::RSaleReference);
+    connect(WebSocket::Instance(), &WebSocket::SStatement, this, &MainWindow::RStatement);
 }
 
 void MainWindow::InitContextFinance()
@@ -2434,7 +2456,7 @@ void MainWindow::CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, 
     assert(tree_model);
     assert(tree_model->Contains(node_id));
 
-    const QString title { QString("%1-%2 %3").arg(tr("Record"), tree_model->Name(node_id), QDateTime::currentDateTime().toString("HH:mm")) };
+    const QString title { QString("%1-%2").arg(tr("Record"), tree_model->Name(node_id)) };
 
     const Section section { info.section };
     const QUuid widget_id { QUuid::createUuidV7() };
@@ -2919,7 +2941,16 @@ void MainWindow::on_tabWidget_tabBarDoubleClicked(int index)
 {
     auto* tab_bar { ui->tabWidget->tabBar() };
     const auto tab_info { tab_bar->tabData(index).value<TabInfo>() };
-    RNodeLocation(tab_info.id);
+    const QUuid id { tab_info.id };
+
+    {
+        if (sc_->widget_hash.contains(id))
+            return;
+    }
+
+    {
+        RNodeLocation(id);
+    }
 }
 
 void MainWindow::RActionEntry(EntryAction action)

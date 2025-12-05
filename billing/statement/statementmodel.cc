@@ -1,6 +1,7 @@
 #include "statementmodel.h"
 
-#include <QTime>
+#include <QJsonArray>
+#include <QJsonObject>
 
 #include "enum/statementenum.h"
 #include "global/resourcepool.h"
@@ -108,14 +109,23 @@ void StatementModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void StatementModel::ResetModel(int unit, const QDateTime& start, const QDateTime& end)
+void StatementModel::ResetModel(const QJsonArray& entry_array)
 {
-    if (!start.isValid() || !end.isValid())
-        return;
-
     beginResetModel();
-    if (!list_.isEmpty())
-        ResourcePool<Statement>::Instance().Recycle(list_);
+
+    ResourcePool<Statement>::Instance().Recycle(list_);
+
+    for (const auto& value : entry_array) {
+        if (!value.isObject())
+            continue;
+
+        const QJsonObject obj { value.toObject() };
+
+        auto* statement { ResourcePool<Statement>::Instance().Allocate() };
+        statement->ReadJson(obj);
+
+        list_.emplaceBack(statement);
+    }
 
     endResetModel();
 }

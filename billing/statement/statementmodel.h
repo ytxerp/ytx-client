@@ -43,7 +43,7 @@ public:
 
     void sort(int column, Qt::SortOrder order) override;
 
-    void ResetModel(int unit, const QDateTime& start, const QDateTime& end);
+    void ResetModel(const QJsonArray& entry_array);
 
 private:
     CSectionInfo& info_;

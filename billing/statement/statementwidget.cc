@@ -12,8 +12,6 @@ StatementWidget::StatementWidget(StatementModel* model, Section section, CUuid& 
     : QWidget(parent)
     , ui(new Ui::StatementWidget)
     , unit_ { std::to_underlying(UnitO::kMonthly) }
-    , start_ { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime) }
-    , end_ { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month() + 1, 1), kStartTime) }
     , model_ { model }
     , section_ { section }
     , widget_id_ { widget_id }
@@ -103,6 +101,11 @@ void StatementWidget::IniUnit(int unit)
 
 void StatementWidget::IniWidget()
 {
+    start_ = QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime);
+
+    const QDate first_of_next_month { QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1).addMonths(1) };
+    end_ = QDateTime(first_of_next_month, kStartTime);
+
     ui->start->setDisplayFormat(kDateFST);
     ui->end->setDisplayFormat(kDateFST);
 
@@ -121,7 +124,7 @@ void StatementWidget::InitTimer()
 
 void StatementWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
-    if (index.column() == std::to_underlying(StatementEnum::kCSettlement)) {
+    if (index.column() == std::to_underlying(StatementEnum::kCBalance)) {
         const auto partner { index.siblingAtColumn(std::to_underlying(StatementEnum::kPartner)).data().toUuid() };
         emit SStatementPrimary(partner, unit_, start_, end_);
     }

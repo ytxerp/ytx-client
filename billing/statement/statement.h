@@ -21,6 +21,7 @@
 #define STATEMENT_H
 
 #include <QDateTime>
+#include <QJsonObject>
 #include <QUuid>
 
 struct Statement {
@@ -33,6 +34,7 @@ struct Statement {
     double csettlement {};
 
     void ResetState();
+    void ReadJson(const QJsonObject& object);
 };
 
 inline void Statement::ResetState()
@@ -44,6 +46,30 @@ inline void Statement::ResetState()
     camount = 0.0;
     cbalance = 0.0;
     csettlement = 0.0;
+}
+
+inline void Statement::ReadJson(const QJsonObject& object)
+{
+    if (object.contains("partner"))
+        partner = QUuid(object["partner"].toString());
+
+    if (object.contains("pbalance"))
+        pbalance = object["pbalance"].toString().toDouble();
+
+    if (object.contains("ccount"))
+        ccount = object["ccount"].toString().toDouble();
+
+    if (object.contains("cmeasure"))
+        cmeasure = object["cmeasure"].toString().toDouble();
+
+    if (object.contains("camount"))
+        camount = object["camount"].toString().toDouble();
+
+    if (object.contains("cbalance"))
+        cbalance = object["cbalance"].toString().toDouble();
+
+    if (object.contains("csettlement"))
+        csettlement = object["csettlement"].toString().toDouble();
 }
 
 struct StatementPrimary {
