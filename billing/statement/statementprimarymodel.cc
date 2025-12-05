@@ -46,26 +46,26 @@ QVariant StatementPrimaryModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* node { list_.at(index.row()) };
+    auto* statement_primary { list_.at(index.row()) };
     const StatementPrimaryEnum column { index.column() };
 
     switch (column) {
     case StatementPrimaryEnum::kDescription:
-        return node->description;
+        return statement_primary->description;
     case StatementPrimaryEnum::kEmployee:
-        return node->employee;
+        return statement_primary->employee;
     case StatementPrimaryEnum::kIssuedTime:
-        return node->issued_time;
+        return statement_primary->issued_time;
     case StatementPrimaryEnum::kCount:
-        return node->count_total;
+        return statement_primary->count;
     case StatementPrimaryEnum::kMeasure:
-        return node->measure_total;
+        return statement_primary->measure;
     case StatementPrimaryEnum::kStatus:
-        return QVariant();
-    case StatementPrimaryEnum::kInitialTotal:
-        return node->initial_total;
-    case StatementPrimaryEnum::kFinalTotal:
-        return node->final_total;
+        return statement_primary->status;
+    case StatementPrimaryEnum::kAmount:
+        return statement_primary->amount;
+    case StatementPrimaryEnum::kSettlement:
+        return statement_primary->settlement;
     default:
         return QVariant();
     }
@@ -81,7 +81,7 @@ bool StatementPrimaryModel::setData(const QModelIndex& index, const QVariant& va
 
     switch (column) {
     case StatementPrimaryEnum::kStatus:
-        node->status = value.toBool();
+        node->status = value.toInt();
         break;
     default:
         return false;
@@ -114,15 +114,15 @@ void StatementPrimaryModel::sort(int column, Qt::SortOrder order)
         case StatementPrimaryEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case StatementPrimaryEnum::kCount:
-            return (order == Qt::AscendingOrder) ? (lhs->count_total < rhs->count_total) : (lhs->count_total > rhs->count_total);
+            return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
         case StatementPrimaryEnum::kMeasure:
-            return (order == Qt::AscendingOrder) ? (lhs->measure_total < rhs->measure_total) : (lhs->measure_total > rhs->measure_total);
+            return (order == Qt::AscendingOrder) ? (lhs->measure < rhs->measure) : (lhs->measure > rhs->measure);
         case StatementPrimaryEnum::kStatus:
             return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
-        case StatementPrimaryEnum::kFinalTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->final_total < rhs->final_total) : (lhs->final_total > rhs->final_total);
-        case StatementPrimaryEnum::kInitialTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
+        case StatementPrimaryEnum::kSettlement:
+            return (order == Qt::AscendingOrder) ? (lhs->settlement < rhs->settlement) : (lhs->settlement > rhs->settlement);
+        case StatementPrimaryEnum::kAmount:
+            return (order == Qt::AscendingOrder) ? (lhs->amount < rhs->amount) : (lhs->amount > rhs->amount);
         default:
             return false;
         }

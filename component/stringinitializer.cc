@@ -315,8 +315,8 @@ void StringInitializer::SetHeader(
         QObject::tr("Count"),
         QObject::tr("Measure"),
         QObject::tr("GrossAmount"),
-        QObject::tr("S"),
         QObject::tr("Description"),
+        QObject::tr("S"),
         QObject::tr("Employee"),
         QObject::tr("Settlement"),
     };

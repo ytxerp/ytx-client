@@ -88,37 +88,6 @@ QString EntryHubO::QSReadBalance(int unit) const
     }
 }
 
-QString EntryHubO::QSReadStatementPrimary(int unit) const
-{
-    static const QString kBaseQuery = R"(
-        SELECT description, employee, issued_time, count, measure, initial_total, %1 AS final_total
-        FROM %2
-        WHERE unit = :unit AND partner = :partner AND (issued_time BETWEEN :start AND :end) %3 AND is_valid = TRUE
-    )";
-
-    QString settlement_expr {};
-    QString status_condition {};
-
-    switch (UnitO(unit)) {
-    case UnitO::kImmediate:
-        settlement_expr = QStringLiteral("initial_total");
-        status_condition = QStringLiteral("AND status = TRUE");
-        break;
-    case UnitO::kMonthly:
-        settlement_expr = QStringLiteral("0");
-        status_condition = QStringLiteral("AND status = TRUE");
-        break;
-    case UnitO::kPending:
-        settlement_expr = QStringLiteral("0");
-        status_condition = QLatin1String("");
-        break;
-    default:
-        return {};
-    }
-
-    return kBaseQuery.arg(settlement_expr, info_.node, status_condition);
-}
-
 QString EntryHubO::QSReadStatementSecondary(int unit) const
 {
     static const QString kBaseQuery = R"(

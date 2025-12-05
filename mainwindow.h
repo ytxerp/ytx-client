@@ -103,6 +103,7 @@ private slots:
     void RSaleReferenceSecondary(const QModelIndex& index);
 
     void RStatement(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
+    void RStatementPrimaryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
     void RTreeViewDoubleClicked(const QModelIndex& index);

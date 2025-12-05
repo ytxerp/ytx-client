@@ -265,6 +265,7 @@ inline const QString kEmployee = QStringLiteral("employee");
 inline const QString kCount = QStringLiteral("count");
 inline const QString kCountTotal = QStringLiteral("count_total");
 inline const QString kMeasure = QStringLiteral("measure");
+inline const QString kAmount = QStringLiteral("amount");
 inline const QString kMeasureTotal = QStringLiteral("measure_total");
 
 inline const QString kId = QStringLiteral("id");

@@ -169,6 +169,7 @@ void WebSocket::InitHandler()
     handler_obj_[kTableAcked] = [this](const QJsonObject& obj) { AckTable(obj); };
     handler_obj_[kSaleReferenceAcked] = [this](const QJsonObject& obj) { AckSaleReference(obj); };
     handler_obj_[kStatementAcked] = [this](const QJsonObject& obj) { AckStatement(obj); };
+    handler_obj_[kStatementPrimaryAcked] = [this](const QJsonObject& obj) { AckStatementPrimary(obj); };
 
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
@@ -426,6 +427,15 @@ void WebSocket::AckStatement(const QJsonObject& obj)
     const QJsonArray array { obj.value(kEntryArray).toArray() };
 
     emit SStatement(section, widget_id, array);
+}
+
+void WebSocket::AckStatementPrimary(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
+    const QJsonArray array { obj.value(kEntryArray).toArray() };
+
+    emit SStatementPrimaryAcked(section, widget_id, array);
 }
 
 void WebSocket::RemoveLeaf(const QJsonObject& obj)

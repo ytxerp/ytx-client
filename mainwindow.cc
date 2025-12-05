@@ -345,6 +345,19 @@ void MainWindow::RStatement(Section section, const QUuid& widget_id, const QJson
     model->ResetModel(entry_array);
 }
 
+void MainWindow::RStatementPrimaryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
+{
+    auto* sc { GetSectionContex(section) };
+
+    auto widget { sc->widget_hash.value(widget_id, nullptr) };
+    if (!widget)
+        return;
+
+    auto* d_widget { static_cast<StatementPrimaryWidget*>(widget.data()) };
+    auto* model { d_widget->Model() };
+    model->ResetModel(entry_array);
+}
+
 void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     auto* model { new StatementPrimaryModel(sc_->info, partner_id, this) };
@@ -1859,8 +1872,8 @@ void MainWindow::DelegateStatementPrimary(QTableView* table_view, CSectionConfig
     table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kMeasure), quantity);
 
     auto* amount { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kInitialTotal), amount);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kFinalTotal), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kAmount), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kSettlement), amount);
 
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kEmployee), employee);
@@ -1919,6 +1932,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SSelectLeafEntry, this, &MainWindow::RSelectLeafEntry);
     connect(WebSocket::Instance(), &WebSocket::SSaleReference, this, &MainWindow::RSaleReference);
     connect(WebSocket::Instance(), &WebSocket::SStatement, this, &MainWindow::RStatement);
+    connect(WebSocket::Instance(), &WebSocket::SStatementPrimaryAcked, this, &MainWindow::RStatementPrimaryAcked);
 }
 
 void MainWindow::InitContextFinance()

@@ -23,7 +23,7 @@
 // P:Previous, C:Current, Statement
 enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCAmount, kPlaceholder, kCSettlement, kCBalance };
 
-enum class StatementPrimaryEnum { kIssuedTime = 0, kCount, kMeasure, kInitialTotal, kStatus, kDescription, kEmployee, kFinalTotal };
+enum class StatementPrimaryEnum { kIssuedTime = 0, kCount, kMeasure, kAmount, kDescription, kStatus, kEmployee, kSettlement };
 
 enum class StatementSecondaryEnum { kIssuedTime = 0, kRhsNode, kCount, kMeasure, kUnitPrice, kInitialTotal, kStatus, kDescription, kSupportNode, kFinalTotal };
 

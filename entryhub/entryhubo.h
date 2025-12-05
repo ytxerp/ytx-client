@@ -44,7 +44,6 @@ private:
     QString QSReadSettlementPrimary(bool status) const;
 
     QString QSReadBalance(int unit) const;
-    QString QSReadStatementPrimary(int unit) const;
     QString QSReadStatementSecondary(int unit) const;
 };
 

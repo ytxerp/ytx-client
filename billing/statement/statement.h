@@ -76,13 +76,13 @@ inline void Statement::ReadJson(const QJsonObject& object)
 
 struct StatementPrimary {
     QDateTime issued_time {};
-    double count_total {};
-    double measure_total {};
-    double initial_total {};
-    bool status {};
+    double count {};
+    double measure {};
+    double amount {};
+    int status {};
     QString description {};
     QUuid employee {};
-    double final_total {};
+    double settlement {};
 
     void ResetState();
     void ReadJson(const QJsonObject& object);
@@ -91,13 +91,13 @@ struct StatementPrimary {
 inline void StatementPrimary::ResetState()
 {
     issued_time = {};
-    count_total = 0.0;
-    measure_total = 0.0;
-    initial_total = 0.0;
-    status = false;
+    count = 0.0;
+    measure = 0.0;
+    amount = 0.0;
+    status = 0;
     description.clear();
     employee = QUuid();
-    final_total = 0.0;
+    settlement = 0.0;
 }
 
 inline void StatementPrimary::ReadJson(const QJsonObject& object)
@@ -105,14 +105,14 @@ inline void StatementPrimary::ReadJson(const QJsonObject& object)
     if (object.contains(kIssuedTime))
         issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
 
-    if (object.contains(kCountTotal))
-        count_total = object[kCountTotal].toString().toDouble();
+    if (object.contains(kCount))
+        count = object[kCount].toString().toDouble();
 
-    if (object.contains(kMeasureTotal))
-        measure_total = object[kMeasureTotal].toString().toDouble();
+    if (object.contains(kMeasure))
+        measure = object[kMeasure].toString().toDouble();
 
-    if (object.contains(kInitialTotal))
-        initial_total = object[kInitialTotal].toString().toDouble();
+    if (object.contains(kAmount))
+        amount = object[kAmount].toString().toDouble();
 
     if (object.contains(kDescription))
         description = object[kDescription].toString();
@@ -120,8 +120,8 @@ inline void StatementPrimary::ReadJson(const QJsonObject& object)
     if (object.contains(kEmployee))
         employee = QUuid(object[kEmployee].toString());
 
-    if (object.contains(kFinalTotal))
-        final_total = object[kFinalTotal].toString().toDouble();
+    if (object.contains(kSettlement))
+        settlement = object[kSettlement].toString().toDouble();
 }
 
 struct StatementSecondary {
@@ -131,7 +131,7 @@ struct StatementSecondary {
     double measure {};
     double unit_price {};
     double initial {};
-    bool status {};
+    int status {};
     QString description {};
     QUuid external_sku {};
 
@@ -146,7 +146,7 @@ inline void StatementSecondary::ResetState()
     measure = 0.0;
     initial = 0.0;
     unit_price = 0.0;
-    status = false;
+    status = 0;
     description.clear();
     rhs_node = QUuid();
     external_sku = QUuid();

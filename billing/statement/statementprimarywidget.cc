@@ -124,7 +124,7 @@ void StatementPrimaryWidget::InitTimer()
 
 void StatementPrimaryWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
-    if (index.column() == std::to_underlying(StatementPrimaryEnum::kFinalTotal)) {
+    if (index.column() == std::to_underlying(StatementPrimaryEnum::kSettlement)) {
         emit SStatementSecondary(partner_id_, unit_, start_, end_);
     }
 }
