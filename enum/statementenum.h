@@ -21,7 +21,7 @@
 #define STATEMENTENUM_H
 
 // P:Previous, C:Current, Statement
-enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCGrossAmount, kCBalance, kPlaceholder, kCSettlement };
+enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCAmount, kCBalance, kPlaceholder, kCSettlement };
 
 enum class StatementPrimaryEnum { kIssuedTime = 0, kCount, kMeasure, kInitialTotal, kStatus, kDescription, kEmployee, kFinalTotal };
 

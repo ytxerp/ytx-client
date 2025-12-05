@@ -28,7 +28,7 @@ struct Statement {
     double pbalance {};
     double ccount {};
     double cmeasure {};
-    double cgross_amount {};
+    double camount {};
     double cbalance {};
     double csettlement {};
 
@@ -41,7 +41,7 @@ inline void Statement::ResetState()
     pbalance = 0.0;
     ccount = 0.0;
     cmeasure = 0.0;
-    cgross_amount = 0.0;
+    camount = 0.0;
     cbalance = 0.0;
     csettlement = 0.0;
 }

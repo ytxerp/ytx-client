@@ -56,23 +56,23 @@ bool EntryHubO::WriteSettlement(const Settlement* settlement) const
     return true;
 }
 
-bool EntryHubO::RemoveSettlement(const QUuid& settlement_id)
+bool EntryHubO::RemoveSettlement(const QUuid& settlement)
 {
     // QSqlQuery query(main_db_);
 
-    CString sql_first { QSRemoveSettlementFirst() };
-    CString sql_second { QSRemoveSettlementSecond() };
+    CString sql_count { QSRemoveSettlementFirst() };
+    CString sql_measure { QSRemoveSettlementSecond() };
 
     // return DBTransaction([&]() {
-    //     query.prepare(sql_first);
-    //     query.bindValue(QStringLiteral(":node_id"), settlement_id.toString(QUuid::WithoutBraces));
+    //     query.prepare(sql_count);
+    //     query.bindValue(QStringLiteral(":node_id"), settlement.toString(QUuid::WithoutBraces));
     //     if (!query.exec()) {
     //         qWarning() << "Failed in RemoveSettlement 1st" << query.lastError().text();
     //         return false;
     //     }
 
-    //     query.prepare(sql_second);
-    //     query.bindValue(QStringLiteral(":node_id"), settlement_id.toString(QUuid::WithoutBraces));
+    //     query.prepare(sql_measure);
+    //     query.bindValue(QStringLiteral(":node_id"), settlement.toString(QUuid::WithoutBraces));
     //     if (!query.exec()) {
     //         qWarning() << "Failed in RemoveSettlement 2nd" << query.lastError().text();
     //         return false;
@@ -82,16 +82,16 @@ bool EntryHubO::RemoveSettlement(const QUuid& settlement_id)
     // });
 }
 
-bool EntryHubO::ReadSettlementPrimary(SettlementList& list, const QUuid& partner_id, const QUuid& settlement_id, bool is_finished)
+bool EntryHubO::ReadSettlementPrimary(SettlementList& list, const QUuid& partner_id, const QUuid& settlement, bool status)
 {
     // QSqlQuery query(main_db_);
     // query.setForwardOnly(true);
 
-    // CString sql { QSReadSettlementPrimary(is_finished) };
+    // CString sql { QSReadSettlementPrimary(status) };
 
     // query.prepare(sql);
     // query.bindValue(QStringLiteral(":partner_id"), partner_id.toString(QUuid::WithoutBraces));
-    // query.bindValue(QStringLiteral(":settlement_id"), settlement_id.toString(QUuid::WithoutBraces));
+    // query.bindValue(QStringLiteral(":settlement"), settlement.toString(QUuid::WithoutBraces));
 
     // if (!query.exec()) {
     //     qWarning() << "Failed in ReadSettlementPrimary" << query.lastError().text();
@@ -102,17 +102,17 @@ bool EntryHubO::ReadSettlementPrimary(SettlementList& list, const QUuid& partner
     return true;
 }
 
-bool EntryHubO::AddSettlementPrimary(const QUuid& node_id, const QUuid& settlement_id) const
+bool EntryHubO::AddSettlementPrimary(const QUuid& node_id, const QUuid& settlement) const
 {
     // QSqlQuery query(main_db_);
     // query.setForwardOnly(true);
 
-    // CString sql { QString("UPDATE %1 SET settlement_id = :settlement_id, final_total = initial_total - discount_total WHERE id = :node_id").arg(info_.node)
+    // CString sql { QString("UPDATE %1 SET settlement = :settlement, final_total = initial_total - discount_total WHERE id = :node_id").arg(info_.node)
     // };
 
     // query.prepare(sql);
     // query.bindValue(QStringLiteral(":node_id"), node_id.toString(QUuid::WithoutBraces));
-    // query.bindValue(QStringLiteral(":settlement_id"), settlement_id.toString(QUuid::WithoutBraces));
+    // query.bindValue(QStringLiteral(":settlement"), settlement.toString(QUuid::WithoutBraces));
 
     // if (!query.exec()) {
     //     qWarning() << "Failed in SyncNewSettlement" << query.lastError().text();
@@ -132,7 +132,7 @@ bool EntryHubO::RemoveSettlementPrimary(const QUuid& node_id) const
     // QSqlQuery query(main_db_);
     // query.setForwardOnly(true);
 
-    // CString sql { QString("UPDATE %1 SET settlement_id = 0, final_total = 0 WHERE id = :node_id").arg(info_.node) };
+    // CString sql { QString("UPDATE %1 SET settlement = 0, final_total = 0 WHERE id = :node_id").arg(info_.node) };
 
     // query.prepare(sql);
     // query.bindValue(QStringLiteral(":node_id"), node_id.toString(QUuid::WithoutBraces));
@@ -147,96 +147,6 @@ bool EntryHubO::RemoveSettlementPrimary(const QUuid& node_id) const
     //     node->final_total = 0.0;
     // }
 
-    return true;
-}
-
-bool EntryHubO::ReadStatement(StatementList& list, int unit, const QDateTime& start, const QDateTime& end) const
-{
-    // QSqlQuery query(main_db_);
-    // query.setForwardOnly(true);
-
-    // CString sql { QSReadStatement(unit) };
-
-    // query.prepare(sql);
-    // query.bindValue(QStringLiteral(":start"), start.toString(Qt::ISODate));
-    // query.bindValue(QStringLiteral(":end"), end.toString(Qt::ISODate));
-
-    // if (!query.exec()) {
-    //     qWarning() << "Failed in ReadStatement" << query.lastError().text();
-    //     return false;
-    // }
-
-    // ReadStatementQuery(list, query);
-
-    return true;
-}
-
-bool EntryHubO::ReadBalance(double& pbalance, double& cdelta, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const
-{
-    // QSqlQuery query(main_db_);
-    // query.setForwardOnly(true);
-
-    // CString sql { QSReadBalance(unit) };
-
-    // query.prepare(sql);
-    // query.bindValue(QStringLiteral(":start"), start.toString(kDateTimeFST));
-    // query.bindValue(QStringLiteral(":end"), end.toString(kDateTimeFST));
-    // query.bindValue(QStringLiteral(":partner_id"), partner_id.toString(QUuid::WithoutBraces));
-
-    // if (!query.exec()) {
-    //     qWarning() << "Failed in ReadStatement" << query.lastError().text();
-    //     return false;
-    // }
-
-    // if (query.next()) {
-    //     pbalance = query.value(QStringLiteral("pbalance")).toDouble();
-    //     cdelta = query.value(QStringLiteral("cgross_amount")).toDouble() - query.value(QStringLiteral("csettlement")).toDouble();
-    // }
-
-    return true;
-}
-
-bool EntryHubO::ReadStatementPrimary(StatementPrimaryList& list, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const
-{
-    // QSqlQuery query(main_db_);
-    // query.setForwardOnly(true);
-
-    // CString sql { QSReadStatementPrimary(unit) };
-
-    // query.prepare(sql);
-    // query.bindValue(QStringLiteral(":start"), start.toString(Qt::ISODate));
-    // query.bindValue(QStringLiteral(":end"), end.toString(Qt::ISODate));
-    // query.bindValue(QStringLiteral(":partner"), partner_id.toString(QUuid::WithoutBraces));
-    // query.bindValue(QStringLiteral(":unit"), unit);
-
-    // if (!query.exec()) {
-    //     qWarning() << "Failed in ReadStatementPrimary" << query.lastError().text();
-    //     return false;
-    // }
-
-    // ReadStatementPrimaryQuery(list, query);
-    return true;
-}
-
-bool EntryHubO::ReadStatementSecondary(StatementSecondaryList& list, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const
-{
-    // QSqlQuery query(main_db_);
-    // query.setForwardOnly(true);
-
-    // CString sql { QSReadStatementSecondary(unit) };
-
-    // query.prepare(sql);
-    // query.bindValue(QStringLiteral(":start"), start.toString(Qt::ISODate));
-    // query.bindValue(QStringLiteral(":end"), end.toString(Qt::ISODate));
-    // query.bindValue(QStringLiteral(":partner"), partner_id.toString(QUuid::WithoutBraces));
-    // query.bindValue(QStringLiteral(":unit"), unit);
-
-    // if (!query.exec()) {
-    //     qWarning() << "Failed in ReadStatementPrimary" << query.lastError().text();
-    //     return false;
-    // }
-
-    // ReadStatementSecondaryQuery(list, query);
     return true;
 }
 
@@ -285,79 +195,113 @@ QString EntryHubO::QSReadStatement(int unit) const
     switch (UnitO(unit)) {
     case UnitO::kImmediate:
         return QString(R"(
-            WITH Statement AS (
-                SELECT
-                    s.id AS partner,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.initial_total ELSE 0 END) AS cgross_amount,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.first        ELSE 0 END) AS cfirst,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.second       ELSE 0 END) AS csecond
-                FROM stakeholder_node s
-                INNER JOIN %1 o ON s.id = o.partner
-                WHERE o.unit = 0 AND o.is_finished = TRUE AND o.is_valid = TRUE
-                GROUP BY s.id
-            )
+        WITH Statement AS (
             SELECT
-                partner,
-                0 AS pbalance,
-                0 AS cbalance,
-                cgross_amount,
-                cgross_amount AS csettlement,
-                cfirst,
-                csecond
-            FROM Statement
-            )")
+                p.id AS partner,
+                SUM(o.initial_total)  AS camount,
+                SUM(o.count_total)    AS ccount,
+                SUM(o.measure_total)  AS cmeasure
+            FROM partner_node p
+            INNER JOIN %1 o
+                ON p.id = o.partner
+            WHERE o.unit = 0
+                AND o.status = 1
+                AND o.is_valid = TRUE
+                AND o.issued_time >= :start
+                AND o.issued_time  < :end
+            GROUP BY p.id
+        )
+        SELECT
+            partner,
+            0.0 AS pbalance,
+            0.0 AS cbalance,
+            camount,
+            camount AS csettlement,
+            ccount,
+            cmeasure
+        FROM Statement
+        )")
             .arg(info_.node);
     case UnitO::kMonthly:
         return QString(R"(
-            WITH Statement AS (
-                SELECT
-                    s.id AS partner,
-
-                    SUM(CASE WHEN o.issued_time < :start AND o.settlement_id = 0 THEN o.initial_total                 ELSE 0 END) AS pbalance,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.initial_total                          ELSE 0 END) AS cgross_amount,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end AND o.settlement_id != 0 THEN o.initial_total ELSE 0 END) AS csettlement,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.first                                  ELSE 0 END) AS cfirst,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.second                                 ELSE 0 END) AS csecond
-
-                FROM stakeholder_node s
-                INNER JOIN %1 o ON s.id = o.partner
-                WHERE o.unit = 1 AND o.is_finished = TRUE AND o.is_valid = TRUE
-                GROUP BY s.id
-            )
+        WITH pbalance_statement AS (
             SELECT
-                partner,
-                pbalance,
-                cgross_amount,
-                csettlement,
-                pbalance + cgross_amount - csettlement AS cbalance,
-                cfirst,
-                csecond
-            FROM Statement;
+                p.id AS partner,
+                SUM(o.initial_total) AS pbalance
+            FROM partner_node p
+            INNER JOIN %1 o ON p.id = o.partner
+            WHERE o.unit = 1
+                AND o.status = 1
+                AND o.is_valid = TRUE
+                AND o.issued_time < :start
+                AND o.settlement = '00000000-0000-0000-0000-000000000000'::uuid
+            GROUP BY p.id
+        ),
+        current_statement AS (
+            SELECT
+                p.id AS partner,
+                SUM(o.initial_total) AS camount,
+                SUM(CASE WHEN o.settlement != '00000000-0000-0000-0000-000000000000'::uuid THEN o.initial_total ELSE 0 END) AS csettlement,
+                SUM(o.count_total) AS ccount,
+                SUM(o.measure_total) AS cmeasure
+            FROM partner_node p
+            INNER JOIN %1 o ON p.id = o.partner
+            WHERE o.unit = 1
+                AND o.status = 1
+                AND o.is_valid = TRUE
+                AND o.issued_time >= :start
+                AND o.issued_time  < :end
+            GROUP BY p.id
+        )
+        SELECT
+            COALESCE(p.partner, c.partner) AS partner,
+            COALESCE(p.pbalance, 0.0) AS pbalance,
+            COALESCE(c.camount, 0.0) AS camount,
+            COALESCE(c.csettlement, 0.0) AS csettlement,
+            COALESCE(p.pbalance, 0.0) + COALESCE(c.camount, 0.0) - COALESCE(c.csettlement, 0.0) AS cbalance,
+            COALESCE(c.ccount, 0.0) AS ccount,
+            COALESCE(c.cmeasure, 0.0) AS cmeasure
+        FROM pbalance_statement p
+        FULL OUTER JOIN current_statement c ON p.partner = c.partner;
             )")
             .arg(info_.node);
     case UnitO::kPending:
         return QString(R"(
-            WITH Statement AS (
-                SELECT
-                    s.id AS partner,
-                    SUM(CASE WHEN o.issued_time < :start THEN o.initial_total                ELSE 0 END) AS pbalance,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.initial_total ELSE 0 END) AS cgross_amount,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.first         ELSE 0 END) AS cfirst,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.second        ELSE 0 END) AS csecond
-                FROM stakeholder_node s
-                INNER JOIN %1 o ON s.id = o.partner
-                WHERE o.unit = 2 AND o.is_valid = TRUE
-                GROUP BY s.id
-            )
+        WITH pbalance_statement AS (
             SELECT
-                partner,
-                pbalance,
-                cgross_amount,
-                0 AS csettlement,
-                pbalance + cgross_amount AS cbalance,
-                cfirst,
-                csecond
-            FROM Statement;
+                p.id AS partner,
+                SUM(o.initial_total) AS pbalance
+            FROM partner_node p
+            INNER JOIN %1 o ON p.id = o.partner
+            WHERE o.unit = 2
+                AND o.is_valid = TRUE
+                AND o.issued_time < :start
+            GROUP BY p.id
+        ),
+        current_statement AS (
+            SELECT
+                p.id AS partner,
+                SUM(o.initial_total)       AS camount,
+                SUM(o.count_total)         AS ccount,
+                SUM(o.measure_total)       AS cmeasure
+            FROM partner_node p
+            INNER JOIN %1 o ON p.id = o.partner
+            WHERE o.unit = 2
+                AND o.is_valid = TRUE
+                AND o.issued_time >= :start
+                AND o.issued_time < :end
+            GROUP BY p.id
+        )
+        SELECT
+            COALESCE(p.partner, c.partner) AS partner,
+            COALESCE(p.pbalance, 0.0) AS pbalance,
+            COALESCE(c.camount, 0.0) AS camount,
+            0.0 AS csettlement,
+            COALESCE(p.pbalance, 0.0) + COALESCE(c.camount, 0.0) AS cbalance,
+            COALESCE(c.ccount, 0.0) AS ccount,
+            COALESCE(c.cmeasure, 0.0) AS cmeasure
+        FROM pbalance_statement p
+        FULL OUTER JOIN current_statement c ON p.partner = c.partner;
             )")
             .arg(info_.node);
     default:
@@ -372,13 +316,13 @@ QString EntryHubO::QSReadBalance(int unit) const
         return QString(R"(
                 SELECT
 
-                    SUM(CASE WHEN o.issued_time < :start AND o.settlement_id = 0 THEN o.initial_total                 ELSE 0 END) AS pbalance,
+                    SUM(CASE WHEN o.issued_time < :start AND o.settlement = 0 THEN o.initial_total                 ELSE 0 END) AS pbalance,
                     SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.initial_total                          ELSE 0 END) AS cgross_amount,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end AND o.settlement_id != 0 THEN o.initial_total ELSE 0 END) AS csettlement
+                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end AND o.settlement != 0 THEN o.initial_total ELSE 0 END) AS csettlement
 
-                FROM stakeholder_node s
-                INNER JOIN %1 o ON s.id = o.partner
-                WHERE o.partner = :partner_id AND o.unit = 1 AND o.is_finished = TRUE AND o.is_valid = TRUE
+                FROM partner_node p
+                INNER JOIN %1 o ON p.id = o.partner
+                WHERE o.partner = :partner_id AND o.unit = 1 AND o.status = TRUE AND o.is_valid = TRUE
             )")
             .arg(info_.node);
     case UnitO::kPending:
@@ -389,8 +333,8 @@ QString EntryHubO::QSReadBalance(int unit) const
                     SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.initial_total  ELSE 0 END) AS cgross_amount,
                     0 AS csettlement
 
-                FROM stakeholder_node s
-                INNER JOIN %1 o ON s.id = o.partner
+                FROM partner_node p
+                INNER JOIN %1 o ON p.id = o.partner
                 WHERE o.partner = :partner_id AND o.unit = 2 AND o.is_valid = TRUE
             )")
             .arg(info_.node);
@@ -402,32 +346,32 @@ QString EntryHubO::QSReadBalance(int unit) const
 QString EntryHubO::QSReadStatementPrimary(int unit) const
 {
     static const QString kBaseQuery = R"(
-        SELECT description, employee, issued_time, first, second, initial_total, %1 AS final_total
+        SELECT description, employee, issued_time, count, measure, initial_total, %1 AS final_total
         FROM %2
         WHERE unit = :unit AND partner = :partner AND (issued_time BETWEEN :start AND :end) %3 AND is_valid = TRUE
     )";
 
     QString settlement_expr {};
-    QString is_finished_condition {};
+    QString status_condition {};
 
     switch (UnitO(unit)) {
     case UnitO::kImmediate:
         settlement_expr = QStringLiteral("initial_total");
-        is_finished_condition = QStringLiteral("AND is_finished = TRUE");
+        status_condition = QStringLiteral("AND status = TRUE");
         break;
     case UnitO::kMonthly:
         settlement_expr = QStringLiteral("0");
-        is_finished_condition = QStringLiteral("AND is_finished = TRUE");
+        status_condition = QStringLiteral("AND status = TRUE");
         break;
     case UnitO::kPending:
         settlement_expr = QStringLiteral("0");
-        is_finished_condition = QLatin1String("");
+        status_condition = QLatin1String("");
         break;
     default:
         return {};
     }
 
-    return kBaseQuery.arg(settlement_expr, info_.node, is_finished_condition);
+    return kBaseQuery.arg(settlement_expr, info_.node, status_condition);
 }
 
 QString EntryHubO::QSReadStatementSecondary(int unit) const
@@ -436,9 +380,9 @@ QString EntryHubO::QSReadStatementSecondary(int unit) const
         SELECT
             trans.rhs_node,
             trans.unit_price,
-            trans.second,
+            trans.measure,
             trans.description,
-            trans.first,
+            trans.count,
             trans.initial,
             trans.support_id,
             node.issued_time
@@ -447,21 +391,21 @@ QString EntryHubO::QSReadStatementSecondary(int unit) const
         WHERE node.unit = :unit AND node.partner = :partner AND (node.issued_time BETWEEN :start AND :end) %3 AND trans.is_valid = TRUE
     )";
 
-    QString is_finished_condition {};
+    QString status_condition {};
 
     switch (UnitO(unit)) {
     case UnitO::kImmediate:
     case UnitO::kMonthly:
-        is_finished_condition = QStringLiteral("AND node.is_finished = TRUE");
+        status_condition = QStringLiteral("AND node.status = TRUE");
         break;
     case UnitO::kPending:
-        is_finished_condition = QLatin1String("");
+        status_condition = QLatin1String("");
         break;
     default:
         return {};
     }
 
-    return kBaseQuery.arg(info_.node, info_.entry, is_finished_condition);
+    return kBaseQuery.arg(info_.node, info_.entry, status_condition);
 }
 
 QString EntryHubO::QSInvertTransValue() const
@@ -472,8 +416,8 @@ QString EntryHubO::QSInvertTransValue() const
             initial = -initial,
             final = -final,
             discount = -discount,
-            first = -first,
-            second = -second
+            count = -count,
+            measure = -measure
         WHERE lhs_node = :lhs_node;
         )")
         .arg(info_.entry);
@@ -502,23 +446,23 @@ QString EntryHubO::QSRemoveSettlementSecond() const
 {
     return QString(R"(
     UPDATE %1 SET
-        settlement_id = 0,
+        settlement = 0,
         final_total = 0
-    WHERE settlement_id = :node_id
+    WHERE settlement = :node_id
     )")
         .arg(info_.node);
 }
 
-QString EntryHubO::QSReadSettlementPrimary(bool is_finished) const
+QString EntryHubO::QSReadSettlementPrimary(bool status) const
 {
-    CString is_finished_string { is_finished ? QString() : "OR settlement_id = 0" };
+    CString status_string { status ? QString() : "OR settlement = 0" };
 
     return QString(R"(
-    SELECT id, issued_time, description, initial_total, employee, settlement_id
+    SELECT id, issued_time, description, initial_total, employee, settlement
     FROM %1
-    WHERE partner = :partner_id AND unit = 1 AND is_finished = TRUE AND (settlement_id = :settlement_id %2) AND is_valid = TRUE
+    WHERE partner = :partner_id AND unit = 1 AND status = TRUE AND (settlement = :settlement %2) AND is_valid = TRUE
     )")
-        .arg(info_.node, is_finished_string);
+        .arg(info_.node, status_string);
 }
 
 // void EntryHubO::ReadSettlementPrimaryQuery(SettlementList& node_list, QSqlQuery& query)
@@ -531,7 +475,7 @@ QString EntryHubO::QSReadSettlementPrimary(bool is_finished) const
 //         settlement->description = query.value(QStringLiteral("description")).toString();
 //         settlement->issued_time = query.value(QStringLiteral("issued_time")).toDateTime();
 //         settlement->initial_total = query.value(QStringLiteral("initial_total")).toDouble();
-//         settlement->is_finished = !query.value(QStringLiteral("settlement_id")).toUuid().isNull();
+//         settlement->status = !query.value(QStringLiteral("settlement")).toUuid().isNull();
 
 //         node_list.emplaceBack(settlement);
 //     }
@@ -547,8 +491,8 @@ QString EntryHubO::QSReadSettlementPrimary(bool is_finished) const
 //         statement->cgross_amount = query.value(QStringLiteral("cgross_amount")).toDouble();
 //         statement->csettlement = query.value(QStringLiteral("csettlement")).toDouble();
 //         statement->cbalance = query.value(QStringLiteral("cbalance")).toDouble();
-//         statement->cfirst = query.value(QStringLiteral("cfirst")).toDouble();
-//         statement->csecond = query.value(QStringLiteral("csecond")).toDouble();
+//         statement->ccount = query.value(QStringLiteral("ccount")).toDouble();
+//         statement->cmeasure = query.value(QStringLiteral("cmeasure")).toDouble();
 
 //         list.emplaceBack(statement);
 //     }
@@ -562,8 +506,8 @@ QString EntryHubO::QSReadSettlementPrimary(bool is_finished) const
 //         statement_primary->description = query.value(QStringLiteral("description")).toString();
 //         statement_primary->employee = query.value(QStringLiteral("employee")).toUuid();
 //         statement_primary->issued_time = query.value(QStringLiteral("issued_time")).toDateTime();
-//         statement_primary->first = query.value(QStringLiteral("first")).toDouble();
-//         statement_primary->second = query.value(QStringLiteral("second")).toDouble();
+//         statement_primary->count = query.value(QStringLiteral("count")).toDouble();
+//         statement_primary->measure = query.value(QStringLiteral("measure")).toDouble();
 //         statement_primary->initial_total = query.value(QStringLiteral("initial_total")).toDouble();
 //         statement_primary->final_total = query.value(QStringLiteral("final_total")).toDouble();
 
@@ -577,9 +521,9 @@ QString EntryHubO::QSReadSettlementPrimary(bool is_finished) const
 //         auto* trans { ResourcePool<StatementSecondary>::Instance().Allocate() };
 
 //         trans->unit_price = query.value(QStringLiteral("unit_price")).toDouble();
-//         trans->second = query.value(QStringLiteral("second")).toDouble();
+//         trans->measure = query.value(QStringLiteral("measure")).toDouble();
 //         trans->description = query.value(QStringLiteral("description")).toString();
-//         trans->first = query.value(QStringLiteral("first")).toDouble();
+//         trans->count = query.value(QStringLiteral("count")).toDouble();
 //         trans->initial = query.value(QStringLiteral("initial")).toDouble();
 //         trans->support_id = query.value(QStringLiteral("support_id")).toUuid();
 //         trans->rhs_node = query.value(QStringLiteral("rhs_node")).toUuid();
@@ -598,7 +542,7 @@ QString EntryHubO::QSReadSettlementPrimary(bool is_finished) const
 //         settlement->partner = query.value(QStringLiteral("partner")).toUuid();
 //         settlement->description = query.value(QStringLiteral("description")).toString();
 //         settlement->issued_time = query.value(QStringLiteral("issued_time")).toDateTime();
-//         settlement->is_finished = query.value(QStringLiteral("is_finished")).toBool();
+//         settlement->status = query.value(QStringLiteral("status")).toBool();
 //         settlement->initial_total = query.value(QStringLiteral("initial_total")).toDouble();
 
 //         settlement_list.emplaceBack(settlement);

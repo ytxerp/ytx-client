@@ -1785,7 +1785,7 @@ void MainWindow::DelegateStatement(QTableView* table_view, CSectionConfig& confi
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCMeasure), quantity);
 
     auto* amount { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCGrossAmount), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCAmount), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCSettlement), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kPBalance), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCBalance), amount);

@@ -20,7 +20,6 @@
 #ifndef ENTRYHUBO_H
 #define ENTRYHUBO_H
 
-#include "billing/statement/statement.h"
 #include "entryhub.h"
 #include "report/settlement.h"
 
@@ -40,11 +39,6 @@ public:
     bool ReadSettlementPrimary(SettlementList& list, const QUuid& partner_id, const QUuid& settlement_id, bool status);
     bool AddSettlementPrimary(const QUuid& node_id, const QUuid& settlement_id) const;
     bool RemoveSettlementPrimary(const QUuid& node_id) const;
-
-    bool ReadStatement(StatementList& list, int unit, const QDateTime& start, const QDateTime& end) const;
-    bool ReadBalance(double& pbalance, double& cdelta, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const;
-    bool ReadStatementPrimary(StatementPrimaryList& list, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const;
-    bool ReadStatementSecondary(StatementSecondaryList& list, const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end) const;
 
 protected:
     EntryList ProcessEntryArray(const QJsonArray& array) override;
