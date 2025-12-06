@@ -370,7 +370,7 @@ void MainWindow::RStatementSecondaryAcked(Section section, const QUuid& widget_i
     auto* model { d_widget->Model() };
 
     model->ResetModel(entry_array);
-    model->ResetTotal(total);
+    d_widget->ResetTotal(total);
 }
 
 void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
@@ -399,13 +399,15 @@ void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDat
 void MainWindow::RStatementSecondary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     auto tree_model_p { sc_p_.tree_model };
+    const QString partner_name { tree_model_p->Name(partner_id) };
 
-    auto* model { new StatementSecondaryModel(sc_->info, partner_id, sc_i_.tree_model->LeafPath(), tree_model_p, app_config_.company_name, this) };
+    auto* model { new StatementSecondaryModel(sc_->info, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementSecondaryWidget(model, start_, widget_id, partner_id, unit, start, end, this) };
+    auto* widget { new StatementSecondaryWidget(
+        model, start_, widget_id, partner_id, unit, start, end, partner_name, app_config_.company_name, sc_i_.tree_model->LeafPath(), this) };
 
-    const QString title { QString("%1-%2").arg(tr("StatementSecondary"), sc_p_.tree_model->Name(partner_id)) };
+    const QString title { QString("%1-%2").arg(tr("StatementSecondary"), partner_name) };
 
     const int tab_index { ui->tabWidget->addTab(widget, title) };
     auto* tab_bar { ui->tabWidget->tabBar() };

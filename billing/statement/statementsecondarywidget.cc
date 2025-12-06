@@ -1,20 +1,27 @@
 #include "statementsecondarywidget.h"
 
+#include <QDir>
+#include <QFileDialog>
+
 #include "component/constant.h"
 #include "component/signalblocker.h"
-#include "enum/nodeenum.h"
+#include "global/exportexcel.h"
 #include "ui_statementsecondarywidget.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementSecondaryWidget::StatementSecondaryWidget(
-    StatementSecondaryModel* model, Section section, CUuid& widget_id, CUuid& partner_id, int unit, CDateTime& start, CDateTime& end, QWidget* parent)
+StatementSecondaryWidget::StatementSecondaryWidget(StatementSecondaryModel* model, Section section, CUuid& widget_id, CUuid& partner_id, int unit,
+    CDateTime& start, CDateTime& end, CString& partner_name, CString& company_name, CUuidString& inventory_leaf, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementSecondaryWidget)
     , unit_ { unit }
     , start_ { start }
     , end_ { end }
     , model_ { model }
+    , partner_name_ { partner_name }
+    , company_name_ { company_name }
+    , inventory_leaf_ { inventory_leaf }
     , section_ { section }
     , widget_id_ { widget_id }
     , partner_id_ { partner_id }
@@ -125,4 +132,24 @@ void StatementSecondaryWidget::InitTimer()
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
 }
 
-void StatementSecondaryWidget::on_pBtnExport_clicked() { model_->Export(start_.toLocalTime(), end_.toLocalTime()); }
+void StatementSecondaryWidget::on_pBtnExport_clicked()
+{
+    // Adjust end time (make the range inclusive) ---
+    const QDateTime adjust_end { end_.addSecs(-1).toLocalTime() };
+
+    // Build default export file name ---
+    QDir dir(QDir::homePath());
+    const QString file_name { QString("%1-%2-%3.xlsx").arg(partner_name_, company_name_, adjust_end.toString(kMonthFST)) };
+    const QString full_path { dir.filePath(file_name) };
+
+    QString destination { QFileDialog::getSaveFileName(nullptr, tr("Export Excel"), full_path, "*.xlsx") };
+
+    // Prepare the file (remove if exists)
+    if (!MainWindowUtils::PrepareNewFile(destination, kDotSuffixXLSX))
+        return;
+
+    auto& list { model_->EntryList() };
+    const QString unit_string { NodeUtils::UnitString(UnitO(unit_)) };
+
+    ExportExcel::Instance().StatementAsync(destination, partner_name_, inventory_leaf_, unit_string, start_, adjust_end, total_, list);
+}

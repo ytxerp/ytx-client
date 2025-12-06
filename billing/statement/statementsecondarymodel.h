@@ -24,13 +24,11 @@
 
 #include "component/info.h"
 #include "statement.h"
-#include "tree/model/treemodel.h"
 
 class StatementSecondaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    StatementSecondaryModel(
-        CSectionInfo& info, const QUuid& partner_id, CUuidString& item_leaf, TreeModel* partner, CString& company_name, QObject* parent = nullptr);
+    StatementSecondaryModel(CSectionInfo& info, QObject* parent = nullptr);
     ~StatementSecondaryModel();
 
 public:
@@ -47,22 +45,12 @@ public:
 
     void sort(int column, Qt::SortOrder order) override;
     void ResetModel(const QJsonArray& entry_array);
-    void ResetTotal(const QJsonObject& total);
-    void Export(const QDateTime& start, const QDateTime& end);
+
+    const QList<StatementSecondary*>& EntryList() const { return list_; }
 
 private:
     CSectionInfo& info_;
-    const QUuid partner_id_ {};
-    CUuidString& item_leaf_ {};
-    CUuidString& partner_leaf_ {};
-    TreeModel* partner_ {};
-    CString& company_name_ {};
     QList<StatementSecondary*> list_ {};
-
-    double pbalance_ {};
-    double camount_ {};
-    double csettlement_ {};
-    double cbalance_ {};
 };
 
 #endif // STATEMENTSECONDARYMODEL_H

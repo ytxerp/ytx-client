@@ -143,6 +143,20 @@ constexpr std::pair<int, int> CacheColumnRange(Section section)
     }
 }
 
+constexpr QString UnitString(UnitO unit)
+{
+    switch (unit) {
+    case UnitO::kMonthly:
+        return QObject::tr("MS");
+    case UnitO::kImmediate:
+        return QObject::tr("IS");
+    case UnitO::kPending:
+        return QObject::tr("PEND");
+    default:
+        return {};
+    }
+}
+
 inline void UpdateOrderFinalTotal(NodeO* node)
 {
     node->final_total = node->unit == std::to_underlying(UnitO::kImmediate) ? node->initial_total - node->discount_total : 0.0;

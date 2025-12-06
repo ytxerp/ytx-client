@@ -145,6 +145,7 @@ set(SOURCES
     global/logininfo.cc
     global/tablesstation.cc
     global/dailylogger.cc
+    global/exportexcel.cc
     websocket/websocket.cc
     websocket/jsongen.cc
 )
@@ -296,6 +297,7 @@ set(HEADERS
     global/concepts.h
     global/tablesstation.h
     global/collator.h
+    global/exportexcel.h
 )
 
 set(UIS

@@ -36,11 +36,13 @@ class StatementSecondaryWidget final : public QWidget {
 
 public:
     StatementSecondaryWidget(StatementSecondaryModel* model, Section section, CUuid& widget_id, CUuid& partner_id, int unit, CDateTime& start, CDateTime& end,
-        QWidget* parent = nullptr);
+        CString& partner_name, CString& company_name, CUuidString& inventory_leaf, QWidget* parent = nullptr);
     ~StatementSecondaryWidget() override;
 
     QTableView* View() const;
     StatementSecondaryModel* Model() const { return model_; }
+
+    void ResetTotal(const QJsonObject& total) { total_ = total; }
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -63,6 +65,11 @@ private:
     QDateTime start_ {};
     QDateTime end_ {};
     StatementSecondaryModel* model_ {};
+
+    QJsonObject total_ {};
+    const QString partner_name_ {};
+    const QString company_name_ {};
+    const QHash<QUuid, QString>& inventory_leaf_;
 
     QButtonGroup* unit_group_ {};
     QTimer* cooldown_timer_ { nullptr };

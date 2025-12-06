@@ -179,4 +179,7 @@ inline void StatementSecondary::ReadJson(const QJsonObject& object)
         external_sku = QUuid(object[kExternalSku].toString());
 }
 
+using StatementSecondaryList = QList<StatementSecondary*>;
+using CStatementSecondaryList = const QList<StatementSecondary*>;
+
 #endif // STATEMENT_H

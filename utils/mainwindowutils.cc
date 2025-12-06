@@ -15,7 +15,6 @@ bool MainWindowUtils::PrepareNewFile(QString& file_path, CString& suffix)
         file_path += suffix;
 
     if (QFile::exists(file_path)) {
-        qDebug() << "Destination file already exists. Overwriting:" << file_path;
         QFile::remove(file_path);
     }
 

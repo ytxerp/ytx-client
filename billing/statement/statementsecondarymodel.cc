@@ -1,26 +1,14 @@
 #include "statementsecondarymodel.h"
 
-#include <QDir>
-#include <QFileDialog>
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QtConcurrent>
 
-#include "component/constant.h"
-#include "document.h"
 #include "enum/statementenum.h"
 #include "global/resourcepool.h"
-#include "utils/mainwindowutils.h"
 
-StatementSecondaryModel::StatementSecondaryModel(
-    CSectionInfo& info, const QUuid& partner_id, CUuidString& item_leaf, TreeModel* partner, CString& company_name, QObject* parent)
+StatementSecondaryModel::StatementSecondaryModel(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
-    , partner_id_ { partner_id }
-    , item_leaf_ { item_leaf }
-    , partner_leaf_ { partner->LeafPath() }
-    , partner_ { partner }
-    , company_name_ { company_name }
 {
 }
 
@@ -92,7 +80,7 @@ bool StatementSecondaryModel::setData(const QModelIndex& index, const QVariant& 
 
     switch (column) {
     case StatementSecondaryEnum::kStatus:
-        entry->status = value.toBool();
+        entry->status = value.toInt();
         break;
     default:
         return false;
@@ -165,95 +153,4 @@ void StatementSecondaryModel::ResetModel(const QJsonArray& entry_array)
     }
 
     endResetModel();
-}
-
-void StatementSecondaryModel::Export(const QDateTime& start, const QDateTime& end)
-{
-    const QDateTime adjust_end { end.addSecs(-1) };
-
-    CString name { QDir::homePath() + QDir::separator() + partner_->Name(partner_id_) + QStringLiteral("-") + company_name_ + QStringLiteral("-")
-        + adjust_end.toString(kMonthFST) };
-
-    QString destination { QFileDialog::getSaveFileName(nullptr, tr("Export Excel"), name, QStringLiteral("*.xlsx")) };
-    if (!MainWindowUtils::PrepareNewFile(destination, kDotSuffixXLSX))
-        return;
-
-    auto future = QtConcurrent::run([=, this]() {
-        try {
-            YXlsx::Document d(destination);
-
-            auto book { d.GetWorkbook() };
-
-            book->AppendSheet(tr("Statement"));
-            auto sheet { book->GetCurrentWorksheet() };
-
-            sheet->Write(1, 1, partner_->Name(partner_id_));
-            sheet->Write(2, 1, tr("Date"));
-            sheet->Write(2, 2, start.toString(kDateFST));
-            sheet->Write(2, 3, adjust_end.toString(kDateFST));
-            sheet->Write(3, 1, tr("Previous Balance"));
-            sheet->Write(3, 3, pbalance_);
-            sheet->Write(4, 1, tr("Current Amount"));
-            sheet->Write(4, 3, camount_);
-            sheet->Write(5, 1, tr("Current Settlement"));
-            sheet->Write(5, 3, csettlement_);
-            sheet->Write(6, 1, tr("Current Balance"));
-            sheet->Write(6, 3, cbalance_);
-
-            const QStringList header { tr("Date"), tr("Internal"), tr("External"), tr("Count"), tr("Measure"), tr("UnitPrice"), tr("Description"),
-                tr("Amount") };
-            sheet->WriteRow(8, 1, header);
-
-            const qsizetype rows { list_.size() };
-
-            QList<QVariantList> list(rows);
-
-            qsizetype row_index { 0 };
-            for (const auto* entry : std::as_const(list_)) {
-                list[row_index] << entry->issued_time.toString(kDateFST) << item_leaf_.value(entry->internal_sku) << partner_leaf_.value(entry->external_sku)
-                                << entry->count << entry->measure << entry->unit_price << entry->description << entry->amount;
-                ++row_index;
-            }
-
-            for (qsizetype start_row = 0; start_row != rows; ++start_row) {
-                sheet->WriteRow(start_row + 9, 1, list.at(start_row));
-            }
-
-            d.Save();
-            return true;
-        } catch (...) {
-            qWarning() << "Export failed due to an unknown exception.";
-            return false;
-        }
-    });
-
-    auto* watcher = new QFutureWatcher<bool>(this);
-    connect(watcher, &QFutureWatcher<bool>::finished, this, [watcher, destination]() {
-        watcher->deleteLater();
-
-        bool success { watcher->future().result() };
-        if (success) {
-            MainWindowUtils::Message(QMessageBox::Information, tr("Export Completed"), tr("Export completed successfully."), kThreeThousand);
-        } else {
-            QFile::remove(destination);
-            MainWindowUtils::Message(QMessageBox::Critical, tr("Export Failed"), tr("Export failed. The file has been deleted."), kThreeThousand);
-        }
-    });
-
-    watcher->setFuture(future);
-}
-
-void StatementSecondaryModel::ResetTotal(const QJsonObject& obj)
-{
-    if (obj.contains(kPBalance))
-        pbalance_ = obj[kPBalance].toString().toDouble();
-
-    if (obj.contains(kCAmount))
-        camount_ = obj[kCAmount].toString().toDouble();
-
-    if (obj.contains(kCSettlement))
-        csettlement_ = obj[kCSettlement].toString().toDouble();
-
-    if (obj.contains(kCBalance))
-        cbalance_ = obj[kCBalance].toString().toDouble();
 }
