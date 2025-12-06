@@ -21,17 +21,17 @@
 #define SETTLEMENTWIDGET_H
 
 #include <QDateTime>
+#include <QTableView>
 
+#include "billing/settlement/settlementmodel.h"
+#include "billing/settlement/settlementprimarymodel.h"
 #include "component/using.h"
-#include "report/model/settlementmodel.h"
-#include "report/model/settlementprimarymodel.h"
-#include "reportwidget.h"
 
 namespace Ui {
 class SettlementWidget;
 }
 
-class SettlementWidget final : public ReportWidget {
+class SettlementWidget final : public QWidget {
     Q_OBJECT
 
 signals:
@@ -42,8 +42,8 @@ public:
         SettlementModel* settlement_model, SettlementPrimaryModel* settlement_primary_model, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
     ~SettlementWidget() override;
 
-    QTableView* View() const override;
-    QAbstractItemModel* Model() const override;
+    QTableView* View() const;
+    QAbstractItemModel* Model() const;
 
     QTableView* PrimaryView() const;
 

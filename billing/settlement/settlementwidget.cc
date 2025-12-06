@@ -7,7 +7,7 @@
 
 SettlementWidget::SettlementWidget(
     SettlementModel* settlement_model, SettlementPrimaryModel* settlement_primary_model, CDateTime& start, CDateTime& end, QWidget* parent)
-    : ReportWidget(parent)
+    : QWidget(parent)
     , ui(new Ui::SettlementWidget)
     , settlement_model_ { settlement_model }
     , settlement_primary_model_ { settlement_primary_model }
@@ -51,7 +51,7 @@ void SettlementWidget::IniWidget(SettlementModel* settlement_model, SettlementPr
     ui->pBtnRefresh->setFocus();
 
     ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_.addSecs(-1));
+    ui->end->setDateTime(end_);
 }
 
 void SettlementWidget::on_pBtnAppend_clicked() { settlement_model_->insertRows(settlement_model_->rowCount(), 1); }

@@ -22,9 +22,9 @@
 
 #include <QAbstractItemModel>
 
+#include "billing/settlement/settlement.h"
 #include "component/info.h"
 #include "entryhub/entryhubo.h"
-#include "report/settlement.h"
 
 class SettlementPrimaryModel final : public QAbstractItemModel {
     Q_OBJECT

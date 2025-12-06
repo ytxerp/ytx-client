@@ -18,27 +18,6 @@ void Settlement::ResetState()
     is_valid = true;
 }
 
-const QStringList& Settlement::SqlField() const
-{
-    static const QStringList field {
-        QStringLiteral("id"),
-        QStringLiteral("partner"),
-        QStringLiteral("issued_time"),
-        QStringLiteral("description"),
-        QStringLiteral("status"),
-        QStringLiteral("initial_total"),
-        QStringLiteral("user_id"),
-        QStringLiteral("created_time"),
-        QStringLiteral("created_by"),
-        QStringLiteral("updated_time"),
-        QStringLiteral("updated_by"),
-        QStringLiteral("version"),
-        QStringLiteral("is_valid"),
-    };
-
-    return field;
-}
-
 void Settlement::ReadJson(const QJsonObject& object)
 {
     id = QUuid(object.value(QStringLiteral("id")).toString());

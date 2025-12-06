@@ -12,6 +12,7 @@
 #include <QUrl>
 #include <QtConcurrent>
 
+#include "billing/settlement/settlementmodel.h"
 #include "billing/statement/statementmodel.h"
 #include "billing/statement/statementprimarymodel.h"
 #include "billing/statement/statementprimarywidget.h"
@@ -69,7 +70,6 @@
 #include "global/tablesstation.h"
 #include "reference/salereferencemodel.h"
 #include "reference/salereferencewidget.h"
-#include "report/model/settlementmodel.h"
 #include "search/dialog/searchdialog.h"
 #include "search/dialog/searchdialogf.h"
 #include "search/dialog/searchdialogi.h"

@@ -130,17 +130,17 @@ set(SOURCES
     table/model/tablemodel.cc
     table/model/tablemodelo.cc
     table/model/tablemodelp.cc
-    report/settlement.cc
+    billing/settlement/settlement.cc
     reference/salereferencewidget.cc
     billing/statement/statementwidget.cc
-    report/widget/settlementwidget.cc
+    billing/settlement/settlementwidget.cc
     billing/statement/statementprimarymodel.cc
     billing/statement/statementsecondarywidget.cc
     billing/statement/statementprimarywidget.cc
     billing/statement/statementsecondarymodel.cc
     reference/salereferencemodel.cc
-    report/model/settlementmodel.cc
-    report/model/settlementprimarymodel.cc
+    billing/settlement/settlementmodel.cc
+    billing/settlement/settlementprimarymodel.cc
     billing/statement/statementmodel.cc
     global/logininfo.cc
     global/tablesstation.cc
@@ -275,17 +275,16 @@ set(HEADERS
     table/model/tablemodel.h
     reference/salereference.h
     billing/statement/statement.h
-    report/settlement.h
-    report/widget/settlementwidget.h
-    report/widget/reportwidget.h
+    billing/settlement/settlement.h
+    billing/settlement/settlementwidget.h
     billing/statement/statementwidget.h
     billing/statement/statementprimarywidget.h
     billing/statement/statementsecondarywidget.h
     reference/salereferencewidget.h
     billing/statement/statementprimarymodel.h
-    report/model/settlementprimarymodel.h
+    billing/settlement/settlementprimarymodel.h
     billing/statement/statementsecondarymodel.h
-    report/model/settlementmodel.h
+    billing/settlement/settlementmodel.h
     billing/statement/statementmodel.h
     reference/salereferencemodel.h
     global/dailylogger.h
@@ -324,7 +323,7 @@ set(UIS
     billing/statement/statementwidget.ui
     billing/statement/statementprimarywidget.ui
     billing/statement/statementsecondarywidget.ui
-    report/widget/settlementwidget.ui
+    billing/settlement/settlementwidget.ui
     reference/salereferencewidget.ui
 )
 

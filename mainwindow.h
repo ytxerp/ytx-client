@@ -29,11 +29,11 @@
 #include <QTableView>
 #include <QTranslator>
 
+#include "billing/settlement/settlementwidget.h"
 #include "component/config.h"
 #include "component/info.h"
 #include "component/sectioncontex.h"
 #include "entryhub/entryhub.h"
-#include "report/widget/settlementwidget.h"
 #include "table/model/tablemodel.h"
 #include "table/model/tablemodelo.h"
 #include "table/widget/tablewidgetfipt.h"

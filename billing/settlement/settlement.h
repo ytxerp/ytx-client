@@ -17,28 +17,35 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef REPORTWIDGET_H
-#define REPORTWIDGET_H
+#ifndef SETTLEMENT_H
+#define SETTLEMENT_H
 
-#include <QTableView>
-#include <QWidget>
+#include <QJsonObject>
+#include <QStringList>
+#include <QUuid>
 
-class ReportWidget : public QWidget {
-    Q_OBJECT
+struct Settlement {
+    QUuid id {};
+    QUuid partner {};
+    QUuid employee {};
+    QDateTime issued_time {};
+    QString description {};
+    int status {};
+    double initial_total {};
 
-public:
-    virtual ~ReportWidget() = default;
+    QUuid user_id {};
+    QDateTime created_time {};
+    QUuid created_by {};
+    QDateTime updated_time {};
+    QUuid updated_by {};
+    bool is_valid { true };
 
-    virtual QAbstractItemModel* Model() const = 0;
-    virtual QTableView* View() const = 0;
+    void ResetState();
 
-protected:
-    explicit ReportWidget(QWidget* parent = nullptr)
-        : QWidget { parent }
-    {
-    }
+    void ReadJson(const QJsonObject& object);
+    QJsonObject WriteJson() const;
 };
 
-using RptWgtHash = QHash<QUuid, ReportWidget*>;
+using SettlementList = QList<Settlement*>;
 
-#endif // REPORTWIDGET_H
+#endif // SETTLEMENT_H
