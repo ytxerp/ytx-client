@@ -40,30 +40,30 @@ QVariant SaleReferenceModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* entry { list_.at(index.row()) };
-    const NodeReferencedEnum column { index.column() };
+    auto* sale_reference { list_.at(index.row()) };
+    const SaleReferenceEnum column { index.column() };
 
     switch (column) {
-    case NodeReferencedEnum::kIssuedTime:
-        return entry->issued_time;
-    case NodeReferencedEnum::kNodeId:
-        return entry->node_id;
-    case NodeReferencedEnum::kOrderId:
-        return entry->order_id;
-    case NodeReferencedEnum::kExternalSku:
-        return entry->external_sku;
-    case NodeReferencedEnum::kkCount:
-        return entry->count;
-    case NodeReferencedEnum::kkMeasure:
-        return entry->measure;
-    case NodeReferencedEnum::kUnitPrice:
-        return entry->unit_price;
-    case NodeReferencedEnum::kUnitDiscount:
-        return entry->unit_discount;
-    case NodeReferencedEnum::kDescription:
-        return entry->description;
-    case NodeReferencedEnum::kInitial:
-        return entry->initial;
+    case SaleReferenceEnum::kIssuedTime:
+        return sale_reference->issued_time;
+    case SaleReferenceEnum::kNodeId:
+        return sale_reference->node_id;
+    case SaleReferenceEnum::kOrderId:
+        return sale_reference->order_id;
+    case SaleReferenceEnum::kExternalSku:
+        return sale_reference->external_sku;
+    case SaleReferenceEnum::kCount:
+        return sale_reference->count;
+    case SaleReferenceEnum::kMeasure:
+        return sale_reference->measure;
+    case SaleReferenceEnum::kUnitPrice:
+        return sale_reference->unit_price;
+    case SaleReferenceEnum::kUnitDiscount:
+        return sale_reference->unit_discount;
+    case SaleReferenceEnum::kDescription:
+        return sale_reference->description;
+    case SaleReferenceEnum::kInitial:
+        return sale_reference->initial;
     default:
         return QVariant();
     }
@@ -83,26 +83,26 @@ void SaleReferenceModel::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](const SaleReference* lhs, const SaleReference* rhs) -> bool {
-        const NodeReferencedEnum e_column { column };
+        const SaleReferenceEnum e_column { column };
 
         switch (e_column) {
-        case NodeReferencedEnum::kExternalSku:
+        case SaleReferenceEnum::kExternalSku:
             return (order == Qt::AscendingOrder) ? (lhs->external_sku < rhs->external_sku) : (lhs->external_sku > rhs->external_sku);
-        case NodeReferencedEnum::kIssuedTime:
+        case SaleReferenceEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
-        case NodeReferencedEnum::kNodeId:
+        case SaleReferenceEnum::kNodeId:
             return (order == Qt::AscendingOrder) ? (lhs->node_id < rhs->node_id) : (lhs->node_id > rhs->node_id);
-        case NodeReferencedEnum::kUnitPrice:
+        case SaleReferenceEnum::kUnitPrice:
             return (order == Qt::AscendingOrder) ? (lhs->unit_price < rhs->unit_price) : (lhs->unit_price > rhs->unit_price);
-        case NodeReferencedEnum::kkCount:
+        case SaleReferenceEnum::kCount:
             return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
-        case NodeReferencedEnum::kkMeasure:
+        case SaleReferenceEnum::kMeasure:
             return (order == Qt::AscendingOrder) ? (lhs->measure < rhs->measure) : (lhs->measure > rhs->measure);
-        case NodeReferencedEnum::kDescription:
+        case SaleReferenceEnum::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
-        case NodeReferencedEnum::kInitial:
+        case SaleReferenceEnum::kInitial:
             return (order == Qt::AscendingOrder) ? (lhs->initial < rhs->initial) : (lhs->initial > rhs->initial);
-        case NodeReferencedEnum::kUnitDiscount:
+        case SaleReferenceEnum::kUnitDiscount:
             return (order == Qt::AscendingOrder) ? (lhs->unit_discount < rhs->unit_discount) : (lhs->unit_discount > rhs->unit_discount);
         default:
             return false;

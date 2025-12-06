@@ -20,14 +20,14 @@
 #ifndef REFERENCE_H
 #define REFERENCE_H
 
-// kNodeId: kPartner or kInventory
-enum class NodeReferencedEnum {
+// kNodeId: kPartner or kInventory id
+enum class SaleReferenceEnum {
     kIssuedTime = 0,
     kOrderId,
     kNodeId,
     kExternalSku,
-    kkCount,
-    kkMeasure,
+    kCount,
+    kMeasure,
     kUnitPrice,
     kUnitDiscount,
     kDescription,
