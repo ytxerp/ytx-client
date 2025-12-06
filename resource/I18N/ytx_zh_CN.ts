@@ -2831,17 +2831,17 @@ Download now?</source>
 <context>
     <name>SettlementWidget</name>
     <message>
-        <location filename="../../report/widget/settlementwidget.ui" line="82"/>
+        <location filename="../../billing/settlement/settlementwidget.ui" line="82"/>
         <source>Refresh</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../../report/widget/settlementwidget.ui" line="89"/>
+        <location filename="../../billing/settlement/settlementwidget.ui" line="89"/>
         <source>Append</source>
         <translation>新增</translation>
     </message>
     <message>
-        <location filename="../../report/widget/settlementwidget.ui" line="109"/>
+        <location filename="../../billing/settlement/settlementwidget.ui" line="109"/>
         <source>Remove</source>
         <translation>删除</translation>
     </message>
