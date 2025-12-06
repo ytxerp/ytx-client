@@ -57,7 +57,7 @@ private:
     CUuidString& partner_leaf_ {};
     TreeModel* partner_ {};
     CString& company_name_ {};
-    StatementSecondaryList list_ {};
+    QList<StatementSecondary*> list_ {};
 
     double pbalance_ {};
     double camount_ {};

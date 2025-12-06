@@ -169,7 +169,7 @@ void StatementSecondaryModel::ResetModel(const QJsonArray& entry_array)
 
 void StatementSecondaryModel::Export(const QDateTime& start, const QDateTime& end)
 {
-    const QDateTime adjust_end { end.addDays(-1) };
+    const QDateTime adjust_end { end.addSecs(-1) };
 
     CString name { QDir::homePath() + QDir::separator() + partner_->Name(partner_id_) + QStringLiteral("-") + company_name_ + QStringLiteral("-")
         + adjust_end.toString(kMonthFST) };
