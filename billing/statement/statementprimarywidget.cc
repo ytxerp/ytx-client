@@ -73,7 +73,13 @@ void StatementPrimaryWidget::on_pBtnFetch_clicked()
     cooldown_timer_->start(kTwoThousand);
 }
 
-void StatementPrimaryWidget::RUnitGroupClicked(int id) { unit_ = id; }
+void StatementPrimaryWidget::RUnitGroupClicked(int id)
+{
+    cooldown_timer_->stop();
+    ui->pBtnFetch->setEnabled(start_ <= end_);
+
+    unit_ = id;
+}
 
 void StatementPrimaryWidget::IniUnitGroup()
 {

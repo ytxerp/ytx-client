@@ -4,7 +4,6 @@
 #include <QJsonArray>
 
 #include "component/using.h"
-#include "enum/nodeenum.h"
 #include "global/entrypool.h"
 
 EntryHubO::EntryHubO(CSectionInfo& info, QObject* parent)
@@ -52,74 +51,6 @@ EntryList EntryHubO::ProcessEntryArray(const QJsonArray& array)
     }
 
     return list;
-}
-
-QString EntryHubO::QSReadBalance(int unit) const
-{
-    switch (UnitO(unit)) {
-    case UnitO::kMonthly:
-        return QString(R"(
-                SELECT
-
-                    SUM(CASE WHEN o.issued_time < :start AND o.settlement = 0 THEN o.initial_total                 ELSE 0 END) AS pbalance,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.initial_total                          ELSE 0 END) AS cgross_amount,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end AND o.settlement != 0 THEN o.initial_total ELSE 0 END) AS csettlement
-
-                FROM partner_node p
-                INNER JOIN %1 o ON p.id = o.partner
-                WHERE o.partner = :partner_id AND o.unit = 1 AND o.status = TRUE AND o.is_valid = TRUE
-            )")
-            .arg(info_.node);
-    case UnitO::kPending:
-        return QString(R"(
-                SELECT
-
-                    SUM(CASE WHEN o.issued_time < :start THEN o.initial_total                 ELSE 0 END) AS pbalance,
-                    SUM(CASE WHEN o.issued_time BETWEEN :start AND :end THEN o.initial_total  ELSE 0 END) AS cgross_amount,
-                    0 AS csettlement
-
-                FROM partner_node p
-                INNER JOIN %1 o ON p.id = o.partner
-                WHERE o.partner = :partner_id AND o.unit = 2 AND o.is_valid = TRUE
-            )")
-            .arg(info_.node);
-    default:
-        return {};
-    }
-}
-
-QString EntryHubO::QSReadStatementSecondary(int unit) const
-{
-    static const QString kBaseQuery = R"(
-        SELECT
-            trans.rhs_node,
-            trans.unit_price,
-            trans.measure,
-            trans.description,
-            trans.count,
-            trans.initial,
-            trans.support_id,
-            node.issued_time
-        FROM %2 trans
-        INNER JOIN %1 node ON trans.lhs_node = node.id
-        WHERE node.unit = :unit AND node.partner = :partner AND (node.issued_time BETWEEN :start AND :end) %3 AND trans.is_valid = TRUE
-    )";
-
-    QString status_condition {};
-
-    switch (UnitO(unit)) {
-    case UnitO::kImmediate:
-    case UnitO::kMonthly:
-        status_condition = QStringLiteral("AND node.status = TRUE");
-        break;
-    case UnitO::kPending:
-        status_condition = QLatin1String("");
-        break;
-    default:
-        return {};
-    }
-
-    return kBaseQuery.arg(info_.node, info_.entry, status_condition);
 }
 
 QString EntryHubO::QSWriteSettlement() const

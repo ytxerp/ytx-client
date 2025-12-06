@@ -310,8 +310,8 @@ void MainWindow::RSectionGroup(int id)
 
 void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
 {
-    const auto order_id { index.siblingAtColumn(std::to_underlying(NodeReferencedEnum::kOrderId)).data().toUuid() };
-    const int column { std::to_underlying(NodeReferencedEnum::kInitial) };
+    const auto order_id { index.siblingAtColumn(std::to_underlying(SaleReferenceEnum::kOrderId)).data().toUuid() };
+    const int column { std::to_underlying(SaleReferenceEnum::kInitial) };
 
     assert(!order_id.isNull());
 
@@ -356,6 +356,21 @@ void MainWindow::RStatementPrimaryAcked(Section section, const QUuid& widget_id,
     auto* d_widget { static_cast<StatementPrimaryWidget*>(widget.data()) };
     auto* model { d_widget->Model() };
     model->ResetModel(entry_array);
+}
+
+void MainWindow::RStatementSecondaryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonObject& total)
+{
+    auto* sc { GetSectionContex(section) };
+
+    auto widget { sc->widget_hash.value(widget_id, nullptr) };
+    if (!widget)
+        return;
+
+    auto* d_widget { static_cast<StatementSecondaryWidget*>(widget.data()) };
+    auto* model { d_widget->Model() };
+
+    model->ResetModel(entry_array);
+    model->ResetTotal(total);
 }
 
 void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
@@ -1742,31 +1757,31 @@ void MainWindow::closeEvent(QCloseEvent* event)
 void MainWindow::DelegateSaleReference(QTableView* table_view, CSectionConfig& config) const
 {
     auto* price { new DoubleSpinNoneZeroR(config.rate_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kUnitPrice), price);
-    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kUnitDiscount), price);
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kUnitPrice), price);
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kUnitDiscount), price);
 
     auto* quantity { new DoubleSpinNoneZeroR(config.quantity_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kkCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kkMeasure), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kMeasure), quantity);
 
     auto* amount { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kInitial), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kInitial), amount);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kIssuedTime), issued_time);
 
     auto partner_tree_model { sc_p_.tree_model };
     auto* external_sku { new NodePathR(partner_tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kExternalSku), external_sku);
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kExternalSku), external_sku);
 
     if (start_ == Section::kInventory) {
         auto* name { new NodeNameR(partner_tree_model, table_view) };
-        table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kNodeId), name);
+        table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kNodeId), name);
     }
 
     if (start_ == Section::kPartner) {
         auto* internal_sku { new NodeNameR(sc_i_.tree_model, table_view) };
-        table_view->setItemDelegateForColumn(std::to_underlying(NodeReferencedEnum::kNodeId), internal_sku);
+        table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kNodeId), internal_sku);
     }
 }
 
@@ -1780,12 +1795,12 @@ void MainWindow::SetTableViewSaleReference(QTableView* view) const
     }
 
     {
-        view->setColumnHidden(std::to_underlying(NodeReferencedEnum::kOrderId), kIsHidden);
+        view->setColumnHidden(std::to_underlying(SaleReferenceEnum::kOrderId), kIsHidden);
     }
 
     {
         auto* h_header { view->horizontalHeader() };
-        ResizeColumn(h_header, std::to_underlying(NodeReferencedEnum::kDescription));
+        ResizeColumn(h_header, std::to_underlying(SaleReferenceEnum::kDescription));
     }
 
     {
@@ -1867,7 +1882,7 @@ void MainWindow::DelegateSettlementPrimary(QTableView* table_view, CSectionConfi
 
 void MainWindow::DelegateStatementPrimary(QTableView* table_view, CSectionConfig& config) const
 {
-    auto* quantity { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
+    auto* quantity { new DoubleSpinNoneZeroR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kCount), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kMeasure), quantity);
 
@@ -1887,14 +1902,15 @@ void MainWindow::DelegateStatementPrimary(QTableView* table_view, CSectionConfig
 
 void MainWindow::DelegateStatementSecondary(QTableView* table_view, CSectionConfig& config) const
 {
-    auto* quantity { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
+    auto* quantity { new DoubleSpinNoneZeroR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kCount), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kMeasure), quantity);
 
     auto* amount { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kInitialTotal), amount);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kFinalTotal), amount);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kUnitPrice), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kAmount), amount);
+
+    auto* unit_price { new DoubleSpinNoneZeroR(config.rate_decimal, kCoefficient16, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kUnitPrice), unit_price);
 
     auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kStatus), status);
@@ -1903,14 +1919,14 @@ void MainWindow::DelegateStatementSecondary(QTableView* table_view, CSectionConf
     table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kIssuedTime), issued_time);
 
     auto* external_sku { new NodePathR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kSupportNode), external_sku);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kExternalSku), external_sku);
 
     auto tree_model_i { sc_i_.tree_model };
 
     auto* int_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kInternal), table_view) };
     auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
 
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kRhsNode), internal_sku);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kInternalSku), internal_sku);
 }
 
 void MainWindow::SetUniqueConnection() const
@@ -1933,6 +1949,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SSaleReference, this, &MainWindow::RSaleReference);
     connect(WebSocket::Instance(), &WebSocket::SStatement, this, &MainWindow::RStatement);
     connect(WebSocket::Instance(), &WebSocket::SStatementPrimaryAcked, this, &MainWindow::RStatementPrimaryAcked);
+    connect(WebSocket::Instance(), &WebSocket::SStatementSecondaryAcked, this, &MainWindow::RStatementSecondaryAcked);
 }
 
 void MainWindow::InitContextFinance()

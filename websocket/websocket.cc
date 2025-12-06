@@ -170,6 +170,7 @@ void WebSocket::InitHandler()
     handler_obj_[kSaleReferenceAcked] = [this](const QJsonObject& obj) { AckSaleReference(obj); };
     handler_obj_[kStatementAcked] = [this](const QJsonObject& obj) { AckStatement(obj); };
     handler_obj_[kStatementPrimaryAcked] = [this](const QJsonObject& obj) { AckStatementPrimary(obj); };
+    handler_obj_[kStatementSecondaryAcked] = [this](const QJsonObject& obj) { AckStatementSecondary(obj); };
 
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
@@ -436,6 +437,16 @@ void WebSocket::AckStatementPrimary(const QJsonObject& obj)
     const QJsonArray array { obj.value(kEntryArray).toArray() };
 
     emit SStatementPrimaryAcked(section, widget_id, array);
+}
+
+void WebSocket::AckStatementSecondary(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
+    const QJsonArray array { obj.value(kEntryArray).toArray() };
+    const QJsonObject total { obj.value(kTotal).toObject() };
+
+    emit SStatementSecondaryAcked(section, widget_id, array, total);
 }
 
 void WebSocket::RemoveLeaf(const QJsonObject& obj)

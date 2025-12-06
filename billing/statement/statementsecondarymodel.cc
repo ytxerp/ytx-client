@@ -59,9 +59,9 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
     switch (column) {
     case StatementSecondaryEnum::kIssuedTime:
         return entry->issued_time;
-    case StatementSecondaryEnum::kRhsNode:
-        return entry->rhs_node;
-    case StatementSecondaryEnum::kSupportNode:
+    case StatementSecondaryEnum::kInternalSku:
+        return entry->internal_sku;
+    case StatementSecondaryEnum::kExternalSku:
         return entry->external_sku;
     case StatementSecondaryEnum::kCount:
         return entry->count;
@@ -71,8 +71,8 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
         return entry->unit_price;
     case StatementSecondaryEnum::kDescription:
         return entry->description;
-    case StatementSecondaryEnum::kInitialTotal:
-        return entry->initial;
+    case StatementSecondaryEnum::kAmount:
+        return entry->amount;
     case StatementSecondaryEnum::kStatus:
         return entry->status;
     default:
@@ -120,9 +120,9 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
         switch (e_column) {
         case StatementSecondaryEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
-        case StatementSecondaryEnum::kRhsNode:
-            return (order == Qt::AscendingOrder) ? (lhs->rhs_node < rhs->rhs_node) : (lhs->rhs_node > rhs->rhs_node);
-        case StatementSecondaryEnum::kSupportNode:
+        case StatementSecondaryEnum::kInternalSku:
+            return (order == Qt::AscendingOrder) ? (lhs->internal_sku < rhs->internal_sku) : (lhs->internal_sku > rhs->internal_sku);
+        case StatementSecondaryEnum::kExternalSku:
             return (order == Qt::AscendingOrder) ? (lhs->external_sku < rhs->external_sku) : (lhs->external_sku > rhs->external_sku);
         case StatementSecondaryEnum::kCount:
             return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
@@ -132,8 +132,8 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->unit_price < rhs->unit_price) : (lhs->unit_price > rhs->unit_price);
         case StatementSecondaryEnum::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
-        case StatementSecondaryEnum::kInitialTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->initial < rhs->initial) : (lhs->initial > rhs->initial);
+        case StatementSecondaryEnum::kAmount:
+            return (order == Qt::AscendingOrder) ? (lhs->amount < rhs->amount) : (lhs->amount > rhs->amount);
         case StatementSecondaryEnum::kStatus:
             return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
         default:
@@ -167,17 +167,12 @@ void StatementSecondaryModel::ResetModel(const QJsonArray& entry_array)
     endResetModel();
 }
 
-void StatementSecondaryModel::Export(int unit, const QDateTime& start, const QDateTime& end)
+void StatementSecondaryModel::Export(const QDateTime& start, const QDateTime& end)
 {
-    double pbalance { 0.0 };
-    double cdelta { 0.0 };
-
-    if (unit != std::to_underlying(UnitO::kImmediate)) {
-        // dbhub_->ReadBalance(pbalance, cdelta, partner_id_, unit, start, end);
-    }
+    const QDateTime adjust_end { end.addDays(-1) };
 
     CString name { QDir::homePath() + QDir::separator() + partner_->Name(partner_id_) + QStringLiteral("-") + company_name_ + QStringLiteral("-")
-        + end.toString(kMonthFST) };
+        + adjust_end.toString(kMonthFST) };
 
     QString destination { QFileDialog::getSaveFileName(nullptr, tr("Export Excel"), name, QStringLiteral("*.xlsx")) };
     if (!MainWindowUtils::PrepareNewFile(destination, kDotSuffixXLSX))
@@ -195,17 +190,19 @@ void StatementSecondaryModel::Export(int unit, const QDateTime& start, const QDa
             sheet->Write(1, 1, partner_->Name(partner_id_));
             sheet->Write(2, 1, tr("Date"));
             sheet->Write(2, 2, start.toString(kDateFST));
-            sheet->Write(2, 3, end.toString(kDateFST));
+            sheet->Write(2, 3, adjust_end.toString(kDateFST));
             sheet->Write(3, 1, tr("Previous Balance"));
-            sheet->Write(3, 2, pbalance);
-            sheet->Write(4, 1, tr("Current Delta"));
-            sheet->Write(4, 3, cdelta);
-            sheet->Write(5, 1, tr("Current Balance"));
-            sheet->Write(5, 3, pbalance + cdelta);
+            sheet->Write(3, 3, pbalance_);
+            sheet->Write(4, 1, tr("Current Amount"));
+            sheet->Write(4, 3, camount_);
+            sheet->Write(5, 1, tr("Current Settlement"));
+            sheet->Write(5, 3, csettlement_);
+            sheet->Write(6, 1, tr("Current Balance"));
+            sheet->Write(6, 3, cbalance_);
 
             const QStringList header { tr("Date"), tr("Internal"), tr("External"), tr("Count"), tr("Measure"), tr("UnitPrice"), tr("Description"),
-                tr("GrossAmount") };
-            sheet->WriteRow(7, 4, header);
+                tr("Amount") };
+            sheet->WriteRow(8, 1, header);
 
             const qsizetype rows { list_.size() };
 
@@ -213,13 +210,13 @@ void StatementSecondaryModel::Export(int unit, const QDateTime& start, const QDa
 
             qsizetype row_index { 0 };
             for (const auto* entry : std::as_const(list_)) {
-                list[row_index] << entry->issued_time << item_leaf_.value(entry->rhs_node) << partner_leaf_.value(entry->external_sku) << entry->count
-                                << entry->measure << entry->unit_price << entry->description << entry->initial;
+                list[row_index] << entry->issued_time.toString(kDateFST) << item_leaf_.value(entry->internal_sku) << partner_leaf_.value(entry->external_sku)
+                                << entry->count << entry->measure << entry->unit_price << entry->description << entry->amount;
                 ++row_index;
             }
 
             for (qsizetype start_row = 0; start_row != rows; ++start_row) {
-                sheet->WriteRow(start_row + 8, 4, list.at(start_row));
+                sheet->WriteRow(start_row + 9, 1, list.at(start_row));
             }
 
             d.Save();
@@ -244,4 +241,19 @@ void StatementSecondaryModel::Export(int unit, const QDateTime& start, const QDa
     });
 
     watcher->setFuture(future);
+}
+
+void StatementSecondaryModel::ResetTotal(const QJsonObject& obj)
+{
+    if (obj.contains(kPBalance))
+        pbalance_ = obj[kPBalance].toString().toDouble();
+
+    if (obj.contains(kCAmount))
+        camount_ = obj[kCAmount].toString().toDouble();
+
+    if (obj.contains(kCSettlement))
+        csettlement_ = obj[kCSettlement].toString().toDouble();
+
+    if (obj.contains(kCBalance))
+        cbalance_ = obj[kCBalance].toString().toDouble();
 }

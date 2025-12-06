@@ -164,6 +164,7 @@ inline const QString kLeafRemove = QStringLiteral("leaf_remove");
 inline const QString kLeafReplace = QStringLiteral("leaf_replace");
 
 inline const QString kExternalSku = QStringLiteral("external_sku");
+inline const QString kInternalSku = QStringLiteral("internal_sku");
 
 // Node is referenced by internal linked columns within the same section
 inline const QString kInsideRef = QStringLiteral("inside_ref");
@@ -244,11 +245,19 @@ inline const QString kUpdateEntryDebit = QStringLiteral("update_entry_debit");
 inline const QString kUpdateEntryCredit = QStringLiteral("update_entry_credit");
 inline const QString kEntryNumeric = QStringLiteral("entry_numeric");
 
+inline const QString kTotal = QStringLiteral("total");
 inline const QString kTotalArray = QStringLiteral("total_array");
 inline const QString kDocumentDir = QStringLiteral("document_dir");
 inline const QString kDefaultUnit = QStringLiteral("default_unit");
 inline const QString kUpdateDefaultUnitFailure = QStringLiteral("update_default_unit_failure");
 inline const QString kLeafRemoveSafely = QStringLiteral("leaf_remove_safely");
+
+inline const QString kPBalance = QStringLiteral("pbalance");
+inline const QString kCCount = QStringLiteral("ccount");
+inline const QString kCMeasure = QStringLiteral("cmeasure");
+inline const QString kCAmount = QStringLiteral("camount");
+inline const QString kCBalance = QStringLiteral("cbalance");
+inline const QString kCSettlement = QStringLiteral("csettlement");
 
 // Message fields
 inline const QString kValue = QStringLiteral("value");

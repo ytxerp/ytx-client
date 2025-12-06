@@ -42,9 +42,6 @@ private:
     QString QSRemoveSettlementSecond() const;
 
     QString QSReadSettlementPrimary(bool status) const;
-
-    QString QSReadBalance(int unit) const;
-    QString QSReadStatementSecondary(int unit) const;
 };
 
 #endif // ENTRYHUBO_H

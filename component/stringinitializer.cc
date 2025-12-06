@@ -281,7 +281,7 @@ void StringInitializer::SetHeader(
         QObject::tr("UnitPrice"),
         QObject::tr("UnitDiscount"),
         QObject::tr("Description"),
-        QObject::tr("GrossAmount"),
+        QObject::tr("Gross"),
     };
 
     partner.node_referenced_header = {
@@ -294,7 +294,7 @@ void StringInitializer::SetHeader(
         QObject::tr("UnitPrice"),
         QObject::tr("UnitDiscount"),
         QObject::tr("Description"),
-        QObject::tr("GrossAmount"),
+        QObject::tr("Gross"),
     };
 
     // Statement
@@ -303,7 +303,7 @@ void StringInitializer::SetHeader(
         QObject::tr("PBalance"),
         QObject::tr("CCount"),
         QObject::tr("CMeasure"),
-        QObject::tr("CGrossAmount"),
+        QObject::tr("CAmount"),
         QObject::tr("Description"),
         QObject::tr("CSettlement"),
         QObject::tr("CBalance"),
@@ -314,7 +314,7 @@ void StringInitializer::SetHeader(
         QObject::tr("IssuedTime"),
         QObject::tr("Count"),
         QObject::tr("Measure"),
-        QObject::tr("GrossAmount"),
+        QObject::tr("Amount"),
         QObject::tr("Description"),
         QObject::tr("S"),
         QObject::tr("Employee"),
@@ -327,11 +327,10 @@ void StringInitializer::SetHeader(
         QObject::tr("Count"),
         QObject::tr("Measure"),
         QObject::tr("UnitPrice"),
-        QObject::tr("GrossAmount"),
-        QObject::tr("S"),
+        QObject::tr("Amount"),
         QObject::tr("Description"),
+        QObject::tr("S"),
         QObject::tr("ExternalSku"),
-        QObject::tr("Settlement"),
     };
 
     // Settlement
@@ -346,7 +345,7 @@ void StringInitializer::SetHeader(
         QObject::tr("Partner"),
         QObject::tr("Description"),
         QObject::tr("Status"),
-        QObject::tr("GrossAmount"),
+        QObject::tr("Amount"),
     };
 
     sale.settlement_primary_header = {
@@ -355,7 +354,7 @@ void StringInitializer::SetHeader(
         QObject::tr("Employee"),
         QObject::tr("Description"),
         QObject::tr("S"),
-        QObject::tr("GrossAmount"),
+        QObject::tr("Amount"),
     };
 
     purchase.node_header = sale.node_header;

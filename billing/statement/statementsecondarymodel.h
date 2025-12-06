@@ -47,7 +47,8 @@ public:
 
     void sort(int column, Qt::SortOrder order) override;
     void ResetModel(const QJsonArray& entry_array);
-    void Export(int unit, const QDateTime& start, const QDateTime& end);
+    void ResetTotal(const QJsonObject& total);
+    void Export(const QDateTime& start, const QDateTime& end);
 
 private:
     CSectionInfo& info_;
@@ -57,6 +58,11 @@ private:
     TreeModel* partner_ {};
     CString& company_name_ {};
     StatementSecondaryList list_ {};
+
+    double pbalance_ {};
+    double camount_ {};
+    double csettlement_ {};
+    double cbalance_ {};
 };
 
 #endif // STATEMENTSECONDARYMODEL_H

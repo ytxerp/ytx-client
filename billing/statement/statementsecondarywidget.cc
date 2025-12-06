@@ -64,13 +64,19 @@ void StatementSecondaryWidget::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::StatementPrimaryAcked(section_, widget_id_, partner_id_, unit_, start_.toUTC(), end_.toUTC()) };
+    const auto message { JsonGen::StatementSecondaryAcked(section_, widget_id_, partner_id_, unit_, start_.toUTC(), end_.toUTC()) };
     WebSocket::Instance()->SendMessage(kStatementSecondaryAcked, message);
 
     cooldown_timer_->start(kTwoThousand);
 }
 
-void StatementSecondaryWidget::RUnitGroupClicked(int id) { unit_ = id; }
+void StatementSecondaryWidget::RUnitGroupClicked(int id)
+{
+    cooldown_timer_->stop();
+    ui->pBtnFetch->setEnabled(start_ <= end_);
+
+    unit_ = id;
+}
 
 void StatementSecondaryWidget::IniUnitGroup()
 {
@@ -119,4 +125,4 @@ void StatementSecondaryWidget::InitTimer()
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
 }
 
-void StatementSecondaryWidget::on_pBtnExport_clicked() { }
+void StatementSecondaryWidget::on_pBtnExport_clicked() { model_->Export(start_.toLocalTime(), end_.toLocalTime()); }

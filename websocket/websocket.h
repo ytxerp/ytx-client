@@ -71,6 +71,7 @@ signals:
     void SSaleReference(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
     void SStatement(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
     void SStatementPrimaryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
+    void SStatementSecondaryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonObject& total);
 
     void SConnectionRefused();
 
@@ -103,6 +104,7 @@ private:
     void AckSaleReference(const QJsonObject& obj);
     void AckStatement(const QJsonObject& obj);
     void AckStatementPrimary(const QJsonObject& obj);
+    void AckStatementSecondary(const QJsonObject& obj);
 
     void SearchEntry(const QJsonObject& obj);
     void SearchNode(const QJsonObject& obj);

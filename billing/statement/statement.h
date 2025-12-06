@@ -55,23 +55,23 @@ inline void Statement::ReadJson(const QJsonObject& object)
     if (object.contains(kPartner))
         partner = QUuid(object[kPartner].toString());
 
-    if (object.contains("pbalance"))
-        pbalance = object["pbalance"].toString().toDouble();
+    if (object.contains(kPBalance))
+        pbalance = object[kPBalance].toString().toDouble();
 
-    if (object.contains("ccount"))
-        ccount = object["ccount"].toString().toDouble();
+    if (object.contains(kCCount))
+        ccount = object[kCCount].toString().toDouble();
 
-    if (object.contains("cmeasure"))
-        cmeasure = object["cmeasure"].toString().toDouble();
+    if (object.contains(kCMeasure))
+        cmeasure = object[kCMeasure].toString().toDouble();
 
-    if (object.contains("camount"))
-        camount = object["camount"].toString().toDouble();
+    if (object.contains(kCAmount))
+        camount = object[kCAmount].toString().toDouble();
 
-    if (object.contains("cbalance"))
-        cbalance = object["cbalance"].toString().toDouble();
+    if (object.contains(kCBalance))
+        cbalance = object[kCBalance].toString().toDouble();
 
-    if (object.contains("csettlement"))
-        csettlement = object["csettlement"].toString().toDouble();
+    if (object.contains(kCSettlement))
+        csettlement = object[kCSettlement].toString().toDouble();
 }
 
 struct StatementPrimary {
@@ -126,11 +126,11 @@ inline void StatementPrimary::ReadJson(const QJsonObject& object)
 
 struct StatementSecondary {
     QDateTime issued_time {};
-    QUuid rhs_node {};
+    QUuid internal_sku {};
     double count {};
     double measure {};
     double unit_price {};
-    double initial {};
+    double amount {};
     int status {};
     QString description {};
     QUuid external_sku {};
@@ -144,11 +144,11 @@ inline void StatementSecondary::ResetState()
     issued_time = {};
     count = 0.0;
     measure = 0.0;
-    initial = 0.0;
+    amount = 0.0;
     unit_price = 0.0;
     status = 0;
     description.clear();
-    rhs_node = QUuid();
+    internal_sku = QUuid();
     external_sku = QUuid();
 }
 
@@ -157,8 +157,8 @@ inline void StatementSecondary::ReadJson(const QJsonObject& object)
     if (object.contains(kIssuedTime))
         issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
 
-    if (object.contains(kRhsNode))
-        rhs_node = QUuid(object[kRhsNode].toString());
+    if (object.contains(kInternalSku))
+        internal_sku = QUuid(object[kInternalSku].toString());
 
     if (object.contains(kCount))
         count = object[kCount].toString().toDouble();
@@ -169,8 +169,8 @@ inline void StatementSecondary::ReadJson(const QJsonObject& object)
     if (object.contains(kUnitPrice))
         unit_price = object[kUnitPrice].toString().toDouble();
 
-    if (object.contains(kInitial))
-        initial = object[kInitial].toString().toDouble();
+    if (object.contains(kAmount))
+        amount = object[kAmount].toString().toDouble();
 
     if (object.contains(kDescription))
         description = object[kDescription].toString();
