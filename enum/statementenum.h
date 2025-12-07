@@ -23,7 +23,7 @@
 // P:Previous, C:Current, Statement
 enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCAmount, kPlaceholder, kCSettlement, kCBalance };
 
-enum class StatementPrimaryEnum {
+enum class StatementNodeEnum {
     kIssuedTime = 0,
     kCount,
     kMeasure,
@@ -34,7 +34,7 @@ enum class StatementPrimaryEnum {
     kSettlement,
 };
 
-enum class StatementSecondaryEnum {
+enum class StatementEntryEnum {
     kIssuedTime = 0,
     kInternalSku,
     kCount,

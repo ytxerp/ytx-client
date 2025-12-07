@@ -103,16 +103,16 @@ private slots:
     void RSaleReferenceSecondary(const QModelIndex& index);
 
     void RStatement(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
-    void RStatementPrimaryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
-    void RStatementSecondaryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonObject& total);
+    void RStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
+    void RStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonObject& total);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
     void RTreeViewDoubleClicked(const QModelIndex& index);
 
     void RSectionGroup(int id);
 
-    void RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
-    void RStatementSecondary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
+    void RStatementNode(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
+    void RStatementEntry(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 
     void RLeafRemoveDenied(const QJsonObject& obj);
     inline void RNodeRemoveConfirmed(const QUuid& node_id) { node_pending_removal_.remove(node_id); }
@@ -166,8 +166,8 @@ private:
     void DelegateSettlement(QTableView* table_view, CSectionConfig& config) const;
     void DelegateSettlementPrimary(QTableView* table_view, CSectionConfig& config) const;
 
-    void DelegateStatementPrimary(QTableView* table_view, CSectionConfig& config) const;
-    void DelegateStatementSecondary(QTableView* table_view, CSectionConfig& config) const;
+    void DelegateStatementNode(QTableView* table_view, CSectionConfig& config) const;
+    void DelegateStatementEntry(QTableView* table_view, CSectionConfig& config) const;
 
     void CreateSection(SectionContext& sc, CString& name);
     void SwitchSection(Section section, const QUuid& last_tab) const;

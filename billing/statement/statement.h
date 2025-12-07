@@ -74,7 +74,7 @@ inline void Statement::ReadJson(const QJsonObject& object)
         csettlement = object[kCSettlement].toString().toDouble();
 }
 
-struct StatementPrimary {
+struct StatementNode {
     QDateTime issued_time {};
     double count {};
     double measure {};
@@ -88,7 +88,7 @@ struct StatementPrimary {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void StatementPrimary::ResetState()
+inline void StatementNode::ResetState()
 {
     issued_time = {};
     count = 0.0;
@@ -100,7 +100,7 @@ inline void StatementPrimary::ResetState()
     settlement = 0.0;
 }
 
-inline void StatementPrimary::ReadJson(const QJsonObject& object)
+inline void StatementNode::ReadJson(const QJsonObject& object)
 {
     if (object.contains(kIssuedTime))
         issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
@@ -124,7 +124,7 @@ inline void StatementPrimary::ReadJson(const QJsonObject& object)
         settlement = object[kSettlement].toString().toDouble();
 }
 
-struct StatementSecondary {
+struct StatementEntry {
     QDateTime issued_time {};
     QUuid internal_sku {};
     double count {};
@@ -139,7 +139,7 @@ struct StatementSecondary {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void StatementSecondary::ResetState()
+inline void StatementEntry::ResetState()
 {
     issued_time = {};
     count = 0.0;
@@ -152,7 +152,7 @@ inline void StatementSecondary::ResetState()
     external_sku = QUuid();
 }
 
-inline void StatementSecondary::ReadJson(const QJsonObject& object)
+inline void StatementEntry::ReadJson(const QJsonObject& object)
 {
     if (object.contains(kIssuedTime))
         issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
@@ -179,7 +179,7 @@ inline void StatementSecondary::ReadJson(const QJsonObject& object)
         external_sku = QUuid(object[kExternalSku].toString());
 }
 
-using StatementSecondaryList = QList<StatementSecondary*>;
-using CStatementSecondaryList = const QList<StatementSecondary*>;
+using StatementEntryList = QList<StatementEntry*>;
+using CStatementEntryList = const QList<StatementEntry*>;
 
 #endif // STATEMENT_H

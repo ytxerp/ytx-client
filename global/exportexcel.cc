@@ -10,7 +10,7 @@
 #include "utils/mainwindowutils.h"
 
 void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuidString& inventory_leaf, CString& unit_string, CDateTime& start, CDateTime& end,
-    CJsonObject& total, CStatementSecondaryList& list)
+    CJsonObject& total, CStatementEntryList& list)
 {
     auto future = QtConcurrent::run(
         [=]() -> bool { return ExportExcel::Instance().Statement(path, partner_name, inventory_leaf, unit_string, start, end, total, list); });
@@ -32,7 +32,7 @@ void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuidStri
 }
 
 bool ExportExcel::Statement(CString& path, CString& partner_name, CUuidString& inventory_leaf, CString& unit_string, CDateTime& start, CDateTime& end,
-    CJsonObject& total, CStatementSecondaryList& list)
+    CJsonObject& total, CStatementEntryList& list)
 {
     // Extract totals
     const double pbalance { total.value("pbalance").toString().toDouble() };

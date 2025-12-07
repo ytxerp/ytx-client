@@ -134,10 +134,10 @@ set(SOURCES
     reference/salereferencewidget.cc
     billing/statement/statementwidget.cc
     billing/settlement/settlementwidget.cc
-    billing/statement/statementprimarymodel.cc
-    billing/statement/statementsecondarywidget.cc
-    billing/statement/statementprimarywidget.cc
-    billing/statement/statementsecondarymodel.cc
+    billing/statement/statementnodemodel.cc
+    billing/statement/statemententrywidget.cc
+    billing/statement/statementnodewidget.cc
+    billing/statement/statemententrymodel.cc
     reference/salereferencemodel.cc
     billing/settlement/settlementmodel.cc
     billing/settlement/settlementprimarymodel.cc
@@ -278,12 +278,12 @@ set(HEADERS
     billing/settlement/settlement.h
     billing/settlement/settlementwidget.h
     billing/statement/statementwidget.h
-    billing/statement/statementprimarywidget.h
-    billing/statement/statementsecondarywidget.h
+    billing/statement/statementnodewidget.h
+    billing/statement/statemententrywidget.h
     reference/salereferencewidget.h
-    billing/statement/statementprimarymodel.h
+    billing/statement/statementnodemodel.h
     billing/settlement/settlementprimarymodel.h
-    billing/statement/statementsecondarymodel.h
+    billing/statement/statemententrymodel.h
     billing/settlement/settlementmodel.h
     billing/statement/statementmodel.h
     reference/salereferencemodel.h
@@ -321,8 +321,8 @@ set(UIS
     table/widget/tablewidgetfipt.ui
     table/widget/tablewidgeto.ui
     billing/statement/statementwidget.ui
-    billing/statement/statementprimarywidget.ui
-    billing/statement/statementsecondarywidget.ui
+    billing/statement/statementnodewidget.ui
+    billing/statement/statemententrywidget.ui
     billing/settlement/settlementwidget.ui
     reference/salereferencewidget.ui
 )

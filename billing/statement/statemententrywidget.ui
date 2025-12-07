@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>StatementSecondaryWidget</class>
- <widget class="QWidget" name="StatementSecondaryWidget">
+ <class>StatementEntryWidget</class>
+ <widget class="QWidget" name="StatementEntryWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -35,7 +35,7 @@ class StatementWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
+    void SStatementNode(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 
 public:
     StatementWidget(StatementModel* model, Section section, CUuid& widget_id, QWidget* parent = nullptr);

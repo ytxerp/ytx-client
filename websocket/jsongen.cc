@@ -354,7 +354,7 @@ QJsonObject StatementAcked(Section section, CUuid& widget_id, int unit, const QD
     return message;
 }
 
-QJsonObject StatementPrimaryAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject StatementNodeAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 
@@ -369,7 +369,7 @@ QJsonObject StatementPrimaryAcked(Section section, CUuid& widget_id, CUuid& part
     return message;
 }
 
-QJsonObject StatementSecondaryAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject StatementEntryAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 

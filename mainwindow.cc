@@ -13,11 +13,11 @@
 #include <QtConcurrent>
 
 #include "billing/settlement/settlementmodel.h"
+#include "billing/statement/statemententrymodel.h"
+#include "billing/statement/statemententrywidget.h"
 #include "billing/statement/statementmodel.h"
-#include "billing/statement/statementprimarymodel.h"
-#include "billing/statement/statementprimarywidget.h"
-#include "billing/statement/statementsecondarymodel.h"
-#include "billing/statement/statementsecondarywidget.h"
+#include "billing/statement/statementnodemodel.h"
+#include "billing/statement/statementnodewidget.h"
 #include "billing/statement/statementwidget.h"
 #include "component/arg/nodeinsertarg.h"
 #include "component/constant.h"
@@ -345,7 +345,7 @@ void MainWindow::RStatement(Section section, const QUuid& widget_id, const QJson
     model->ResetModel(entry_array);
 }
 
-void MainWindow::RStatementPrimaryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
+void MainWindow::RStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -353,12 +353,12 @@ void MainWindow::RStatementPrimaryAcked(Section section, const QUuid& widget_id,
     if (!widget)
         return;
 
-    auto* d_widget { static_cast<StatementPrimaryWidget*>(widget.data()) };
+    auto* d_widget { static_cast<StatementNodeWidget*>(widget.data()) };
     auto* model { d_widget->Model() };
     model->ResetModel(entry_array);
 }
 
-void MainWindow::RStatementSecondaryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonObject& total)
+void MainWindow::RStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonObject& total)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -366,21 +366,21 @@ void MainWindow::RStatementSecondaryAcked(Section section, const QUuid& widget_i
     if (!widget)
         return;
 
-    auto* d_widget { static_cast<StatementSecondaryWidget*>(widget.data()) };
+    auto* d_widget { static_cast<StatementEntryWidget*>(widget.data()) };
     auto* model { d_widget->Model() };
 
     model->ResetModel(entry_array);
     d_widget->ResetTotal(total);
 }
 
-void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+void MainWindow::RStatementNode(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
-    auto* model { new StatementPrimaryModel(sc_->info, partner_id, this) };
+    auto* model { new StatementNodeModel(sc_->info, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementPrimaryWidget(model, start_, widget_id, partner_id, unit, start, end, this) };
+    auto* widget { new StatementNodeWidget(model, start_, widget_id, partner_id, unit, start, end, this) };
 
-    const QString title { QString("%1-%2").arg(tr("StatementPrimary"), sc_p_.tree_model->Name(partner_id)) };
+    const QString title { QString("%1-%2").arg(tr("StatementNode"), sc_p_.tree_model->Name(partner_id)) };
 
     const int tab_index { ui->tabWidget->addTab(widget, title) };
     auto* tab_bar { ui->tabWidget->tabBar() };
@@ -388,26 +388,26 @@ void MainWindow::RStatementPrimary(const QUuid& partner_id, int unit, const QDat
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
 
     auto* view { widget->View() };
-    SetStatementView(view, std::to_underlying(StatementPrimaryEnum::kDescription));
-    DelegateStatementPrimary(view, sc_->section_config);
+    SetStatementView(view, std::to_underlying(StatementNodeEnum::kDescription));
+    DelegateStatementNode(view, sc_->section_config);
 
-    connect(widget, &StatementPrimaryWidget::SStatementSecondary, this, &MainWindow::RStatementSecondary);
+    connect(widget, &StatementNodeWidget::SStatementEntry, this, &MainWindow::RStatementEntry);
 
     RegisterWidget(widget_id, widget);
 }
 
-void MainWindow::RStatementSecondary(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+void MainWindow::RStatementEntry(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     auto tree_model_p { sc_p_.tree_model };
     const QString partner_name { tree_model_p->Name(partner_id) };
 
-    auto* model { new StatementSecondaryModel(sc_->info, this) };
+    auto* model { new StatementEntryModel(sc_->info, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementSecondaryWidget(
+    auto* widget { new StatementEntryWidget(
         model, start_, widget_id, partner_id, unit, start, end, partner_name, app_config_.company_name, sc_i_.tree_model->LeafPath(), this) };
 
-    const QString title { QString("%1-%2").arg(tr("StatementSecondary"), partner_name) };
+    const QString title { QString("%1-%2").arg(tr("StatementEntry"), partner_name) };
 
     const int tab_index { ui->tabWidget->addTab(widget, title) };
     auto* tab_bar { ui->tabWidget->tabBar() };
@@ -415,8 +415,8 @@ void MainWindow::RStatementSecondary(const QUuid& partner_id, int unit, const QD
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
 
     auto* view { widget->View() };
-    SetStatementView(view, std::to_underlying(StatementSecondaryEnum::kDescription));
-    DelegateStatementSecondary(view, sc_->section_config);
+    SetStatementView(view, std::to_underlying(StatementEntryEnum::kDescription));
+    DelegateStatementEntry(view, sc_->section_config);
 
     RegisterWidget(widget_id, widget);
 }
@@ -1609,7 +1609,7 @@ void MainWindow::on_actionStatement_triggered()
     SetStatementView(view, std::to_underlying(StatementEnum::kPlaceholder));
     DelegateStatement(view, sc_->section_config);
 
-    connect(widget, &StatementWidget::SStatementPrimary, this, &MainWindow::RStatementPrimary);
+    connect(widget, &StatementWidget::SStatementNode, this, &MainWindow::RStatementNode);
 
     RegisterWidget(widget_id, widget);
 }
@@ -1882,53 +1882,53 @@ void MainWindow::DelegateSettlementPrimary(QTableView* table_view, CSectionConfi
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIssuedTime), issued_time);
 }
 
-void MainWindow::DelegateStatementPrimary(QTableView* table_view, CSectionConfig& config) const
+void MainWindow::DelegateStatementNode(QTableView* table_view, CSectionConfig& config) const
 {
     auto* quantity { new DoubleSpinNoneZeroR(config.quantity_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kMeasure), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kMeasure), quantity);
 
     auto* amount { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kAmount), amount);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kSettlement), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kAmount), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kSettlement), amount);
 
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kEmployee), employee);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kEmployee), employee);
 
     auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kStatus), status);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kIssuedTime), issued_time);
 }
 
-void MainWindow::DelegateStatementSecondary(QTableView* table_view, CSectionConfig& config) const
+void MainWindow::DelegateStatementEntry(QTableView* table_view, CSectionConfig& config) const
 {
     auto* quantity { new DoubleSpinNoneZeroR(config.quantity_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kMeasure), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kMeasure), quantity);
 
     auto* amount { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kAmount), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kAmount), amount);
 
     auto* unit_price { new DoubleSpinNoneZeroR(config.rate_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kUnitPrice), unit_price);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kUnitPrice), unit_price);
 
     auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kStatus), status);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kIssuedTime), issued_time);
 
     auto* external_sku { new NodePathR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kExternalSku), external_sku);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kExternalSku), external_sku);
 
     auto tree_model_i { sc_i_.tree_model };
 
     auto* int_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kInternal), table_view) };
     auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
 
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kInternalSku), internal_sku);
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kInternalSku), internal_sku);
 }
 
 void MainWindow::SetUniqueConnection() const
@@ -1950,8 +1950,8 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SSelectLeafEntry, this, &MainWindow::RSelectLeafEntry);
     connect(WebSocket::Instance(), &WebSocket::SSaleReference, this, &MainWindow::RSaleReference);
     connect(WebSocket::Instance(), &WebSocket::SStatement, this, &MainWindow::RStatement);
-    connect(WebSocket::Instance(), &WebSocket::SStatementPrimaryAcked, this, &MainWindow::RStatementPrimaryAcked);
-    connect(WebSocket::Instance(), &WebSocket::SStatementSecondaryAcked, this, &MainWindow::RStatementSecondaryAcked);
+    connect(WebSocket::Instance(), &WebSocket::SStatementNodeAcked, this, &MainWindow::RStatementNodeAcked);
+    connect(WebSocket::Instance(), &WebSocket::SStatementEntryAcked, this, &MainWindow::RStatementEntryAcked);
 }
 
 void MainWindow::InitContextFinance()
