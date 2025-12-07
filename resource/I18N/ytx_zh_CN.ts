@@ -1656,14 +1656,22 @@ Do you want to save before closing?</source>
         <translation type="vanished">记录 - </translation>
     </message>
     <message>
-        <location filename="../../mainwindow.cc" line="383"/>
         <source>StatementPrimary</source>
-        <translation>一级明细</translation>
+        <translation type="vanished">一级明细</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow.cc" line="383"/>
+        <source>StatementNode</source>
+        <translation>账单节点</translation>
+    </message>
+    <message>
+        <source>StatementSecondary</source>
+        <translation type="vanished">二级明细</translation>
     </message>
     <message>
         <location filename="../../mainwindow.cc" line="410"/>
-        <source>StatementSecondary</source>
-        <translation>二级明细</translation>
+        <source>StatementEntry</source>
+        <translation>帐单明细</translation>
     </message>
     <message>
         <location filename="../../mainwindow.cc" line="2492"/>
@@ -2847,26 +2855,78 @@ Download now?</source>
     </message>
 </context>
 <context>
-    <name>StatementPrimaryWidget</name>
+    <name>StatementEntryWidget</name>
     <message>
-        <location filename="../../billing/statement/statementprimarywidget.ui" line="82"/>
+        <location filename="../../billing/statement/statemententrywidget.ui" line="82"/>
         <source>IMM</source>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementprimarywidget.ui" line="89"/>
+        <location filename="../../billing/statement/statemententrywidget.ui" line="89"/>
         <source>MON</source>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementprimarywidget.ui" line="96"/>
+        <location filename="../../billing/statement/statemententrywidget.ui" line="96"/>
         <source>PEN</source>
         <translation>挂帐</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementprimarywidget.ui" line="103"/>
+        <location filename="../../billing/statement/statemententrywidget.ui" line="103"/>
         <source>Fetch</source>
         <translation>刷新</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statemententrywidget.ui" line="123"/>
+        <source>Export</source>
+        <translation>导出</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statemententrywidget.cc" line="145"/>
+        <source>Export Excel</source>
+        <translation>导出 Excel</translation>
+    </message>
+</context>
+<context>
+    <name>StatementNodeWidget</name>
+    <message>
+        <location filename="../../billing/statement/statementnodewidget.ui" line="82"/>
+        <source>IMM</source>
+        <translation>现结</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statementnodewidget.ui" line="89"/>
+        <source>MON</source>
+        <translation>月结</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statementnodewidget.ui" line="96"/>
+        <source>PEN</source>
+        <translation>挂帐</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statementnodewidget.ui" line="103"/>
+        <source>Fetch</source>
+        <translation>刷新</translation>
+    </message>
+</context>
+<context>
+    <name>StatementPrimaryWidget</name>
+    <message>
+        <source>IMM</source>
+        <translation type="vanished">现结</translation>
+    </message>
+    <message>
+        <source>MON</source>
+        <translation type="vanished">月结</translation>
+    </message>
+    <message>
+        <source>PEN</source>
+        <translation type="vanished">挂帐</translation>
+    </message>
+    <message>
+        <source>Fetch</source>
+        <translation type="vanished">刷新</translation>
     </message>
 </context>
 <context>
@@ -2963,34 +3023,28 @@ Download now?</source>
 <context>
     <name>StatementSecondaryWidget</name>
     <message>
-        <location filename="../../billing/statement/statementsecondarywidget.ui" line="82"/>
         <source>IMM</source>
-        <translation>现结</translation>
+        <translation type="vanished">现结</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementsecondarywidget.ui" line="89"/>
         <source>MON</source>
-        <translation>月结</translation>
+        <translation type="vanished">月结</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementsecondarywidget.ui" line="96"/>
         <source>PEN</source>
-        <translation>挂帐</translation>
+        <translation type="vanished">挂帐</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementsecondarywidget.ui" line="103"/>
         <source>Fetch</source>
-        <translation>刷新</translation>
+        <translation type="vanished">刷新</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementsecondarywidget.ui" line="123"/>
         <source>Export</source>
-        <translation>导出</translation>
+        <translation type="vanished">导出</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementsecondarywidget.cc" line="145"/>
         <source>Export Excel</source>
-        <translation>导出 Excel</translation>
+        <translation type="vanished">导出 Excel</translation>
     </message>
 </context>
 <context>
