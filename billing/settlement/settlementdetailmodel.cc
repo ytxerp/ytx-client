@@ -1,18 +1,18 @@
-#include "settlementprimarymodel.h"
+#include "settlementdetailmodel.h"
 
 #include "enum/statementenum.h"
 #include "global/resourcepool.h"
 
-SettlementPrimaryModel::SettlementPrimaryModel(EntryHub* dbhub, CSectionInfo& info, QObject* parent)
+SettlementDetailModel::SettlementDetailModel(EntryHub* dbhub, CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }
     , dbhub_ { qobject_cast<EntryHubO*>(dbhub) }
     , info_ { info }
 {
 }
 
-SettlementPrimaryModel::~SettlementPrimaryModel() { ResourcePool<Settlement>::Instance().Recycle(settlementList_list_); }
+SettlementDetailModel::~SettlementDetailModel() { ResourcePool<Settlement>::Instance().Recycle(settlementList_list_); }
 
-QModelIndex SettlementPrimaryModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex SettlementDetailModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -20,25 +20,25 @@ QModelIndex SettlementPrimaryModel::index(int row, int column, const QModelIndex
     return createIndex(row, column);
 }
 
-QModelIndex SettlementPrimaryModel::parent(const QModelIndex& index) const
+QModelIndex SettlementDetailModel::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int SettlementPrimaryModel::rowCount(const QModelIndex& parent) const
+int SettlementDetailModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return settlementList_list_.size();
 }
 
-int SettlementPrimaryModel::columnCount(const QModelIndex& parent) const
+int SettlementDetailModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return info_.settlement_primary_header.size();
 }
 
-QVariant SettlementPrimaryModel::data(const QModelIndex& index, int role) const
+QVariant SettlementDetailModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -64,7 +64,7 @@ QVariant SettlementPrimaryModel::data(const QModelIndex& index, int role) const
     }
 }
 
-bool SettlementPrimaryModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool SettlementDetailModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || index.column() != std::to_underlying(SettlementEnum::kStatus) || role != Qt::EditRole || settlement_finished_)
         return false;
@@ -80,7 +80,7 @@ bool SettlementPrimaryModel::setData(const QModelIndex& index, const QVariant& v
     return true;
 }
 
-QVariant SettlementPrimaryModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant SettlementDetailModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return info_.settlement_primary_header.at(section);
@@ -88,7 +88,7 @@ QVariant SettlementPrimaryModel::headerData(int section, Qt::Orientation orienta
     return QVariant();
 }
 
-void SettlementPrimaryModel::sort(int column, Qt::SortOrder order)
+void SettlementDetailModel::sort(int column, Qt::SortOrder order)
 {
     if (column <= -1 || column >= info_.settlement_primary_header.size())
         return;
@@ -117,7 +117,7 @@ void SettlementPrimaryModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SettlementPrimaryModel::RemoveUnfinishedNode()
+void SettlementDetailModel::RemoveUnfinishedNode()
 {
     if (settlementList_list_.isEmpty()) {
         return;
@@ -132,14 +132,14 @@ void SettlementPrimaryModel::RemoveUnfinishedNode()
     }
 }
 
-void SettlementPrimaryModel::UpdateSettlementInfo(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished)
+void SettlementDetailModel::UpdateSettlementInfo(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished)
 {
     partner_id_ = partner_id;
     settlement_id_ = settlement_id;
     settlement_finished_ = settlement_finished;
 }
 
-void SettlementPrimaryModel::RSyncFinished(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished)
+void SettlementDetailModel::RSyncFinished(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished)
 {
     UpdateSettlementInfo(partner_id, settlement_id, settlement_finished);
 
@@ -162,7 +162,7 @@ void SettlementPrimaryModel::RSyncFinished(const QUuid& partner_id, const QUuid&
     }
 }
 
-void SettlementPrimaryModel::RResetModel(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished)
+void SettlementDetailModel::RResetModel(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished)
 {
     UpdateSettlementInfo(partner_id, settlement_id, settlement_finished);
 

@@ -17,20 +17,20 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTPRIMARYMODEL_H
-#define SETTLEMENTPRIMARYMODEL_H
+#ifndef SETTLEMENTDETAILMODEL_H
+#define SETTLEMENTDETAILMODEL_H
 
 #include <QAbstractItemModel>
 
-#include "billing/settlement/settlement.h"
 #include "component/info.h"
 #include "entryhub/entryhubo.h"
+#include "settlement.h"
 
-class SettlementPrimaryModel final : public QAbstractItemModel {
+class SettlementDetailModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SettlementPrimaryModel(EntryHub* dbhub, CSectionInfo& info, QObject* parent = nullptr);
-    ~SettlementPrimaryModel();
+    SettlementDetailModel(EntryHub* dbhub, CSectionInfo& info, QObject* parent = nullptr);
+    ~SettlementDetailModel();
 
 signals:
     void SSyncDouble(const QUuid& settlement_id, int column, double delta1);
@@ -68,4 +68,4 @@ private:
     SettlementList settlementList_list_ {};
 };
 
-#endif // SETTLEMENTPRIMARYMODEL_H
+#endif // SETTLEMENTDETAILMODEL_H

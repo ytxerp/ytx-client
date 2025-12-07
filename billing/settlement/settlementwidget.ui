@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>893</width>
-    <height>645</height>
+    <width>817</width>
+    <height>583</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,11 +26,11 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <property name="verticalSpacing">
+   <property name="spacing">
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="settlementWidget">
+    <widget class="QGroupBox" name="tableGroup">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -77,16 +77,23 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pBtnRefresh">
+       <widget class="QPushButton" name="pBtnAppend">
         <property name="text">
-         <string>Refresh</string>
+         <string>Append</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pBtnAppend">
+       <widget class="QPushButton" name="pBtnRemove">
         <property name="text">
-         <string>Append</string>
+         <string>Remove</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pBtnFetch">
+        <property name="text">
+         <string>Fetch</string>
         </property>
        </widget>
       </item>
@@ -103,30 +110,11 @@
         </property>
        </spacer>
       </item>
-      <item>
-       <widget class="QPushButton" name="pBtnRemoveSettlement">
-        <property name="text">
-         <string>Remove</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QSplitter" name="splitter">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
-     </property>
-     <widget class="QTableView" name="settlementView"/>
-     <widget class="QTableView" name="settlementViewPrimary"/>
-    </widget>
+    <widget class="QTableView" name="tableView"/>
    </item>
   </layout>
  </widget>

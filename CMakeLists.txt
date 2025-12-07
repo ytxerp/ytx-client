@@ -140,7 +140,7 @@ set(SOURCES
     billing/statement/statemententrymodel.cc
     reference/salereferencemodel.cc
     billing/settlement/settlementmodel.cc
-    billing/settlement/settlementprimarymodel.cc
+    billing/settlement/settlementdetailmodel.cc
     billing/statement/statementmodel.cc
     global/logininfo.cc
     global/tablesstation.cc
@@ -282,7 +282,7 @@ set(HEADERS
     billing/statement/statemententrywidget.h
     reference/salereferencewidget.h
     billing/statement/statementnodemodel.h
-    billing/settlement/settlementprimarymodel.h
+    billing/settlement/settlementdetailmodel.h
     billing/statement/statemententrymodel.h
     billing/settlement/settlementmodel.h
     billing/statement/statementmodel.h

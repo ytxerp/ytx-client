@@ -1630,9 +1630,9 @@ void MainWindow::on_actionSettlement_triggered()
     auto* model { new SettlementModel(sc_->entry_hub, sc_->info, this) };
     model->ResetModel(start, end);
 
-    auto* primary_model { new SettlementPrimaryModel(sc_->entry_hub, sc_->info, this) };
+    auto* primary_model { new SettlementDetailModel(sc_->entry_hub, sc_->info, this) };
 
-    settlement_widget_ = new SettlementWidget(model, primary_model, start, end, this);
+    settlement_widget_ = new SettlementWidget(model, start, end, this);
 
     const int tab_index { ui->tabWidget->addTab(settlement_widget_, tr("Settlement")) };
     auto* tab_bar { ui->tabWidget->tabBar() };
@@ -1641,21 +1641,17 @@ void MainWindow::on_actionSettlement_triggered()
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, report_id }));
 
     auto* view { settlement_widget_->View() };
-    auto primary_view { settlement_widget_->PrimaryView() };
     SetStatementView(view, std::to_underlying(SettlementEnum::kDescription));
-    SetStatementView(primary_view, std::to_underlying(SettlementEnum::kDescription));
 
     view->setColumnHidden(std::to_underlying(SettlementEnum::kId), false);
-    primary_view->setColumnHidden(std::to_underlying(SettlementEnum::kId), false);
 
     DelegateSettlement(view, sc_->section_config);
-    DelegateSettlementPrimary(primary_view, sc_->section_config);
 
-    connect(model, &SettlementModel::SResetModel, primary_model, &SettlementPrimaryModel::RResetModel);
-    connect(model, &SettlementModel::SSyncFinished, primary_model, &SettlementPrimaryModel::RSyncFinished);
+    connect(model, &SettlementModel::SResetModel, primary_model, &SettlementDetailModel::RResetModel);
+    connect(model, &SettlementModel::SSyncFinished, primary_model, &SettlementDetailModel::RSyncFinished);
     connect(model, &SettlementModel::SResizeColumnToContents, view, &QTableView::resizeColumnToContents);
 
-    connect(primary_model, &SettlementPrimaryModel::SSyncDouble, model, &SettlementModel::RSyncDouble);
+    connect(primary_model, &SettlementDetailModel::SSyncDouble, model, &SettlementModel::RSyncDouble);
     connect(model, &SettlementModel::SUpdateAmount, static_cast<TreeModelP*>(sc_p_.tree_model.data()), &TreeModelP::RUpdateAmount);
     connect(settlement_widget_, &SettlementWidget::SNodeLocation, this, &MainWindow::RNodeLocation);
 

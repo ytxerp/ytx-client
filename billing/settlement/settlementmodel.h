@@ -23,9 +23,9 @@
 #include <QAbstractItemModel>
 #include <QJsonObject>
 
-#include "billing/settlement/settlement.h"
 #include "component/info.h"
 #include "entryhub/entryhubo.h"
+#include "settlement.h"
 
 class SettlementModel final : public QAbstractItemModel {
     Q_OBJECT

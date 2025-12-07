@@ -23,9 +23,9 @@
 #include <QDateTime>
 #include <QTableView>
 
-#include "billing/settlement/settlementmodel.h"
-#include "billing/settlement/settlementprimarymodel.h"
 #include "component/using.h"
+#include "settlementdetailmodel.h"
+#include "settlementmodel.h"
 
 namespace Ui {
 class SettlementWidget;
@@ -38,31 +38,27 @@ signals:
     void SNodeLocation(const QUuid& node_id);
 
 public:
-    SettlementWidget(
-        SettlementModel* settlement_model, SettlementPrimaryModel* settlement_primary_model, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
+    SettlementWidget(SettlementModel* settlement_model, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
     ~SettlementWidget() override;
 
     QTableView* View() const;
     QAbstractItemModel* Model() const;
 
-    QTableView* PrimaryView() const;
-
 private slots:
-    void on_pBtnRefresh_clicked();
+    void on_pBtnFetch_clicked();
     void on_start_dateChanged(const QDate& date);
     void on_end_dateChanged(const QDate& date);
     void on_pBtnAppend_clicked();
-    void on_pBtnRemoveSettlement_clicked();
-    void on_settlementView_doubleClicked(const QModelIndex& index);
-    void on_settlementViewPrimary_doubleClicked(const QModelIndex& index);
+    void on_pBtnRemove_clicked();
+    void on_tableView_doubleClicked(const QModelIndex& index);
 
 private:
-    void IniWidget(SettlementModel* settlement_model, SettlementPrimaryModel* settlement_primary_model);
+    void IniWidget();
 
 private:
     Ui::SettlementWidget* ui;
     SettlementModel* settlement_model_ {};
-    SettlementPrimaryModel* settlement_primary_model_ {};
+    SettlementDetailModel* settlement_primary_model_ {};
     QDateTime start_ {};
     QDateTime end_ {};
 };
