@@ -38,7 +38,7 @@ set(BRC "${CMAKE_CURRENT_SOURCE_DIR}/resource/resource.brc")
 # Auto-generated file lists for CMake with python
 set(SOURCES
     main.cc
-    mainwindow.cc
+    mainwindow/mainwindow.cc
     tree/node.cc
     tree/itemmodel.cc
     tree/widget/treewidgetp.cc
@@ -148,10 +148,26 @@ set(SOURCES
     global/exportexcel.cc
     websocket/websocket.cc
     websocket/jsongen.cc
+    mainwindow/mainwindow_settlement.cc
+    mainwindow/mainwindow_statement.cc
+    mainwindow/mainwindow_sale_reference.cc
+    mainwindow/mainwindow_global.cc
+    mainwindow/mainwindow_node_remove.cc
+    mainwindow/mainwindow_auth.cc
+    mainwindow/mainwindow_context.cc
+    mainwindow/mainwindow_node.cc
+    mainwindow/mainwindow_order.cc
+    mainwindow/mainwindow_entry.cc
+    mainwindow/mainwindow_tab_widget.cc
+    mainwindow/mainwindow_local.cc
+    mainwindow/mainwindow_search.cc
+    mainwindow/mainwindow_delegate.cc
+    mainwindow/mainwindow_connect.cc
+    mainwindow/mainwindow_view.cc
 )
 
 set(HEADERS
-    mainwindow.h
+    mainwindow/mainwindow.h
     enum/section.h
     enum/nodeenum.h
     enum/entryenum.h
@@ -300,7 +316,7 @@ set(HEADERS
 )
 
 set(UIS
-    mainwindow.ui
+    mainwindow/mainwindow.ui
     tree/widget/treewidgetit.ui
     tree/widget/treewidgetf.ui
     tree/widget/treewidgeto.ui

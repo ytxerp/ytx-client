@@ -1,0 +1,212 @@
+#include "dialog/editnodenameo.h"
+#include "dialog/insertnode/insertnodebranch.h"
+#include "global/nodepool.h"
+#include "global/tablesstation.h"
+#include "mainwindow.h"
+#include "tree/model/treemodelo.h"
+#include "ui_mainwindow.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
+
+void MainWindow::EditNameO()
+{
+    assert(sc_->tree_widget);
+
+    const auto index { sc_->tree_view->currentIndex() };
+    if (!index.isValid())
+        return;
+
+    const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
+    auto model { sc_->tree_model };
+
+    CString name { model->Name(node_id) };
+
+    auto* edit_name { new EditNodeNameO(name, this) };
+    connect(edit_name, &QDialog::accepted, this, [=]() { model->UpdateName(node_id, edit_name->GetName()); });
+    edit_name->exec();
+}
+
+void MainWindow::on_actionNewGroup_triggered()
+{
+    if (start_ != Section::kSale && start_ != Section::kPurchase)
+        return;
+
+    auto current_index { sc_->tree_view->currentIndex() };
+    current_index = current_index.isValid() ? current_index : QModelIndex();
+
+    auto parent_index { current_index.parent() };
+    parent_index = parent_index.isValid() ? parent_index : QModelIndex();
+
+    const QUuid parent_id { parent_index.isValid() ? parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() : QUuid() };
+
+    auto model { sc_->tree_model };
+
+    auto* node { NodePool::Instance().Allocate(start_) };
+
+    node->id = QUuid::createUuidV7();
+    node->unit = parent_id.isNull() ? sc_->shared_config.default_unit : model->Unit(parent_id);
+    node->kind = std::to_underlying(NodeKind::kBranch);
+
+    static_cast<NodeO*>(node)->issued_time = QDateTime::currentDateTimeUtc();
+
+    model->SetParent(node, parent_id);
+
+    auto tree_model { sc_->tree_model };
+    auto unit_model { sc_->info.unit_model };
+
+    auto parent_path { tree_model->Path(parent_id) };
+    if (!parent_path.isEmpty())
+        parent_path += app_config_.separator;
+
+    const auto children_name { tree_model->ChildrenName(parent_id) };
+    const int row { current_index.row() + 1 };
+
+    QDialog* dialog { new InsertNodeBranch(node, unit_model, parent_path, children_name, this) };
+
+    connect(dialog, &QDialog::accepted, this, [=, this]() {
+        const auto message { JsonGen::NodeInsert(start_, node, node->parent->id) };
+        WebSocket::Instance()->SendMessage(kNodeInsert, message);
+
+        if (tree_model->InsertNode(row, parent_index, node)) {
+            auto index { tree_model->index(row, 0, parent_index) };
+            sc_->tree_view->setCurrentIndex(index);
+        }
+    });
+
+    connect(dialog, &QDialog::rejected, this, [=, this]() { NodePool::Instance().Recycle(node, start_); });
+    dialog->exec();
+}
+
+void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row)
+{
+    // Extract frequently used shortcuts
+    auto& section_config = sc_->section_config;
+    auto* tab_widget = ui->tabWidget;
+    auto* tab_bar = tab_widget->tabBar();
+
+    // Validate tree model and node
+    auto* tree_model_o { static_cast<TreeModelO*>(sc_->tree_model.data()) };
+    if (!tree_model_o)
+        return;
+
+    auto* node = static_cast<NodeO*>(base_node);
+    if (!node)
+        return;
+
+    const QUuid node_id { node->id };
+
+    // Prepare dependencies
+    auto tree_model_p { sc_p_.tree_model };
+    auto tree_model_i { sc_i_.tree_model };
+
+    // Create model and widget
+    TableModelArg table_model_arg { sc_->info, node_id, true };
+    auto* table_model { new TableModelO(table_model_arg, tree_model_i, sc_p_.entry_hub, this) };
+
+    OrderWidgetArg order_arg {
+        node,
+        table_model,
+        tree_model_p,
+        tree_model_i,
+        app_config_,
+        section_config,
+        start_,
+        false,
+    };
+    auto* widget { new TableWidgetO(order_arg, this) };
+
+    // Setup insert connect
+    connect(
+        widget, &TableWidgetO::SInsertOrder, this,
+        [=, this]() {
+            if (tree_model_o->InsertNode(row, parent, node)) {
+                auto index { tree_model_o->index(row, 0, parent) };
+                sc_->tree_view->setCurrentIndex(index);
+            }
+        },
+        Qt::SingleShotConnection);
+
+    // Setup tab
+    const int tab_index { tab_widget->addTab(widget, QString()) };
+    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, node_id }));
+
+    // Configure view
+    auto* view { widget->View() };
+    TableConnectO(view, table_model, widget);
+    SetTableViewO(view, sc_->info.section, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
+    TableDelegateO(view, section_config);
+
+    sc_->table_wgt_hash.insert(node_id, widget);
+    FocusTableWidget(node_id);
+}
+
+void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
+{
+    // Extract frequently used shortcuts
+    auto& section_config = sc->section_config;
+    auto* tab_widget = ui->tabWidget;
+    auto* tab_bar = tab_widget->tabBar();
+
+    // Validate tree model and node
+    auto* tree_model_o = static_cast<TreeModelO*>(sc->tree_model.data());
+    if (!tree_model_o)
+        return;
+
+    auto* node = static_cast<NodeO*>(tree_model_o->GetNode(node_id));
+    if (!node)
+        return;
+
+    const auto partner_id { node->partner };
+    assert(!partner_id.isNull());
+
+    // Prepare dependencies
+    auto tree_model_p { sc_p_.tree_model };
+    auto tree_model_i { sc_i_.tree_model };
+
+    // Create model and widget
+    TableModelArg table_model_arg { sc->info, node_id, node->direction_rule };
+    auto* table_model = new TableModelO(table_model_arg, tree_model_i, sc_p_.entry_hub, nullptr);
+
+    OrderWidgetArg order_arg {
+        node,
+        table_model,
+        tree_model_p,
+        tree_model_i,
+        app_config_,
+        section_config,
+        start_,
+        true,
+    };
+    auto* widget = new TableWidgetO(order_arg, this);
+
+    // Setup tab
+    const int tab_index { tab_widget->addTab(widget, tree_model_p->Name(partner_id)) };
+    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, node_id }));
+    tab_bar->setTabToolTip(tab_index, tree_model_p->Path(partner_id));
+
+    // Configure view
+    auto* view = widget->View();
+    SetTableViewO(view, sc->info.section, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
+    TableConnectO(view, table_model, widget);
+    TableDelegateO(view, section_config);
+
+    sc->table_wgt_hash.insert(node_id, widget);
+    TableSStation::Instance()->RegisterModel(node_id, table_model);
+}
+
+void MainWindow::RSyncPartner(const QUuid& node_id, const QVariant& value)
+{
+    const auto partner_id { value.toUuid() };
+
+    auto model { sc_p_.tree_model };
+    auto* widget { ui->tabWidget };
+    auto* tab_bar { widget->tabBar() };
+    int count { widget->count() };
+
+    for (int index = 0; index != count; ++index) {
+        if (widget->isTabVisible(index) && tab_bar->tabData(index).value<TabInfo>().id == node_id) {
+            tab_bar->setTabText(index, model->Name(partner_id));
+            tab_bar->setTabToolTip(index, model->Path(partner_id));
+        }
+    }
+}

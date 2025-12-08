@@ -23,7 +23,7 @@
 #include <QStandardPaths>
 
 #include "global/dailylogger.h"
-#include "mainwindow.h"
+#include "mainwindow/mainwindow.h"
 #include "utils/mainutils.h"
 
 int main(int argc, char* argv[])

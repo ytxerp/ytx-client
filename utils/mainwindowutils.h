@@ -27,10 +27,6 @@
 
 namespace MainWindowUtils {
 
-// insert a new row and focus the RhsNode column
-void AppendEntry(TableWidget* widget, Section section);
-void RemoveEntry(TableWidget* widget);
-
 QString SectionFile(const QString& email, const QString& workspace);
 
 void ExportExcel(CString& table, QSharedPointer<YXlsx::Worksheet> worksheet, bool where = true);

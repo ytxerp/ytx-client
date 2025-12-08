@@ -195,6 +195,7 @@ private:
     void InsertNodeO(Node* base_node, const QModelIndex& parent, int row); // Purchase Sales
 
     void RemoveNode();
+    void RemoveEntry(TableWidget* widget);
     void BranchRemove(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id);
 
     void UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool branch) const;
