@@ -4,6 +4,7 @@
 
 #include "entryhub/entryhubf.h"
 #include "entryhub/entryhubi.h"
+#include "entryhub/entryhubo.h"
 #include "entryhub/entryhubt.h"
 #include "global/logininfo.h"
 #include "global/printhub.h"

@@ -24,7 +24,6 @@
 #include <QTableView>
 
 #include "component/using.h"
-#include "settlementdetailmodel.h"
 #include "settlementmodel.h"
 
 namespace Ui {
@@ -35,14 +34,15 @@ class SettlementWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SNodeLocation(const QUuid& node_id);
+    void SSettlementNode(const QUuid& partner_id, const QUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list, int status);
 
 public:
-    SettlementWidget(SettlementModel* settlement_model, CDateTime& start, CDateTime& end, QWidget* parent = nullptr);
+    explicit SettlementWidget(SettlementModel* settlement_model, Section section, CUuid& widget_id, QWidget* parent = nullptr);
     ~SettlementWidget() override;
 
     QTableView* View() const;
-    QAbstractItemModel* Model() const;
+    SettlementModel* Model() const { return model_; }
+    void ResetList(const QJsonArray& array);
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -54,13 +54,20 @@ private slots:
 
 private:
     void IniWidget();
+    void InitTimer();
+    void InitSharedPtr();
 
 private:
     Ui::SettlementWidget* ui;
-    SettlementModel* settlement_model_ {};
-    SettlementDetailModel* settlement_primary_model_ {};
+    SettlementModel* model_ {};
     QDateTime start_ {};
     QDateTime end_ {};
+    QTimer* cooldown_timer_ { nullptr };
+
+    std::shared_ptr<SettlementNodeList> settlement_node_list_ {};
+
+    const Section section_ {};
+    const QUuid widget_id_ {};
 };
 
 #endif // SETTLEMENTWIDGET_H

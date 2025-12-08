@@ -1,41 +1,88 @@
 #include "settlementwidget.h"
 
+#include <QJsonArray>
+#include <QTimer>
+
 #include "component/constant.h"
 #include "component/signalblocker.h"
-#include "enum/statementenum.h"
+#include "enum/settlementenum.h"
+#include "global/resourcepool.h"
 #include "ui_settlementwidget.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
-SettlementWidget::SettlementWidget(SettlementModel* settlement_model, CDateTime& start, CDateTime& end, QWidget* parent)
+SettlementWidget::SettlementWidget(SettlementModel* model, Section section, CUuid& widget_id, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SettlementWidget)
-    , settlement_model_ { settlement_model }
-    , start_ { start }
-    , end_ { end }
+    , model_ { model }
+    , start_ { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) }
+    , end_ { QDateTime(QDate(QDate::currentDate().year() + 1, 1, 1), kStartTime) }
+    , section_ { section }
+    , widget_id_ { widget_id }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
+
+    ui->tableView->setModel(model);
+    model->setParent(this);
+
     IniWidget();
+    InitTimer();
+    InitSharedPtr();
+
+    QTimer::singleShot(0, this, &SettlementWidget::on_pBtnFetch_clicked);
 }
 
 SettlementWidget::~SettlementWidget() { delete ui; }
 
 QTableView* SettlementWidget::View() const { return ui->tableView; }
 
-QAbstractItemModel* SettlementWidget::Model() const { return ui->tableView->model(); }
+void SettlementWidget::ResetList(const QJsonArray& array)
+{
+    ResourcePool<SettlementNode>::Instance().Recycle(*settlement_node_list_);
+
+    for (const auto& value : array) {
+        if (!value.isObject())
+            continue;
+
+        auto* settlement_node { ResourcePool<SettlementNode>::Instance().Allocate() };
+        settlement_node->ReadJson(value.toObject());
+
+        settlement_node_list_->emplaceBack(settlement_node);
+    }
+}
 
 void SettlementWidget::on_start_dateChanged(const QDate& date)
 {
-    ui->pBtnFetch->setEnabled(date <= end_.date());
+    const bool valid { date <= end_.date() };
     start_.setDate(date);
+
+    cooldown_timer_->stop();
+    ui->pBtnFetch->setEnabled(valid);
 }
 
 void SettlementWidget::on_end_dateChanged(const QDate& date)
 {
-    ui->pBtnFetch->setEnabled(date >= start_.date());
-    end_.setDate(date);
+    const bool valid { date >= start_.date() };
+
+    cooldown_timer_->stop();
+    ui->pBtnFetch->setEnabled(valid);
+    end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
-void SettlementWidget::on_pBtnFetch_clicked() { settlement_model_->ResetModel(start_, end_); }
+void SettlementWidget::on_pBtnFetch_clicked()
+{
+    if (!ui->pBtnFetch->isEnabled()) {
+        return;
+    }
+
+    ui->pBtnFetch->setEnabled(false);
+
+    const auto message { JsonGen::SettlementAcked(section_, widget_id_, start_.toUTC(), end_.toUTC()) };
+    WebSocket::Instance()->SendMessage(kSettlementAcked, message);
+
+    cooldown_timer_->start(kTwoThousand);
+}
 
 void SettlementWidget::IniWidget()
 {
@@ -45,10 +92,10 @@ void SettlementWidget::IniWidget()
     ui->pBtnFetch->setFocus();
 
     ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_);
+    ui->end->setDateTime(end_.addSecs(-1));
 }
 
-void SettlementWidget::on_pBtnAppend_clicked() { settlement_model_->insertRows(settlement_model_->rowCount(), 1); }
+void SettlementWidget::on_pBtnAppend_clicked() { model_->insertRows(model_->rowCount(), 1); }
 
 void SettlementWidget::on_pBtnRemove_clicked()
 {
@@ -58,20 +105,37 @@ void SettlementWidget::on_pBtnRemove_clicked()
     if (!index.isValid())
         return;
 
-    settlement_model_->removeRows(index.row(), 1);
+    model_->removeRows(index.row(), 1);
 }
 
 void SettlementWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
-    if (index.column() != std::to_underlying(SettlementEnum::kInitialTotal))
+    if (index.column() != std::to_underlying(SettlementEnum::kAmount))
         return;
 
     const auto partner { index.siblingAtColumn(std::to_underlying(SettlementEnum::kPartner)).data().toUuid() };
     if (partner.isNull())
         return;
 
-    const auto settlement_id { index.siblingAtColumn(std::to_underlying(SettlementEnum::kId)).data().toUuid() };
-    const bool status { index.siblingAtColumn(std::to_underlying(SettlementEnum::kStatus)).data().toBool() };
+    const QUuid settlement_id { index.siblingAtColumn(std::to_underlying(SettlementEnum::kId)).data().toUuid() };
+    const int status { index.siblingAtColumn(std::to_underlying(SettlementEnum::kStatus)).data().toInt() };
 
-    settlement_primary_model_->RResetModel(partner, settlement_id, status);
+    emit SSettlementNode(partner, settlement_id, settlement_node_list_, status);
+}
+
+void SettlementWidget::InitTimer()
+{
+    cooldown_timer_ = new QTimer(this);
+    cooldown_timer_->setSingleShot(true);
+    connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
+}
+
+void SettlementWidget::InitSharedPtr()
+{
+    auto deleter = [](SettlementNodeList* list) {
+        ResourcePool<SettlementNode>::Instance().Recycle(*list);
+        delete list;
+    };
+
+    settlement_node_list_ = std::shared_ptr<SettlementNodeList>(new SettlementNodeList(), deleter);
 }

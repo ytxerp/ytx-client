@@ -17,33 +17,31 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTENUM_H
-#define STATEMENTENUM_H
+#ifndef SETTLEMENTENUM_H
+#define SETTLEMENTENUM_H
 
-// P:Previous, C:Current, Statement
-enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCAmount, kPlaceholder, kCSettlement, kCBalance };
-
-enum class StatementNodeEnum {
-    kIssuedTime = 0,
-    kCount,
-    kMeasure,
-    kAmount,
+enum class SettlementEnum {
+    kId = 0,
+    kUserId,
+    kCreateTime,
+    kCreateBy,
+    kUpdateTime,
+    kUpdateBy,
+    kIssuedTime,
+    kPartner,
     kDescription,
     kStatus,
+    kAmount,
+};
+
+enum class SettlementNodeEnum {
+    kId = 0,
+    kSettlementId,
+    kIssuedTime,
+    kPartner,
+    kDescription,
     kEmployee,
-    kSettlement,
-};
-
-enum class StatementEntryEnum {
-    kIssuedTime = 0,
-    kInternalSku,
-    kCount,
-    kMeasure,
-    kUnitPrice,
     kAmount,
-    kDescription,
-    kStatus,
-    kExternalSku,
 };
 
-#endif // STATEMENTENUM_H
+#endif // SETTLEMENTENUM_H

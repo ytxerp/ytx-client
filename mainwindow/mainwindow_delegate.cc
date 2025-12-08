@@ -22,6 +22,7 @@
 #include "delegate/tree/finance/financeforeignr.h"
 #include "delegate/tree/treeissuedtime.h"
 #include "enum/reference.h"
+#include "enum/settlementenum.h"
 #include "enum/statementenum.h"
 #include "mainwindow.h"
 
@@ -423,7 +424,7 @@ void MainWindow::DelegateStatementEntry(QTableView* table_view, CSectionConfig& 
 void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& config) const
 {
     auto* amount { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kInitialTotal), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kAmount), amount);
 
     auto* status { new Status(QEvent::MouseButtonDblClick, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kStatus), status);
@@ -445,7 +446,7 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
 void MainWindow::DelegateSettlementPrimary(QTableView* table_view, CSectionConfig& config) const
 {
     auto* amount { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kInitialTotal), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kAmount), amount);
 
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kPartner), employee);

@@ -310,7 +310,7 @@ void StringInitializer::SetHeader(
 
     };
 
-    sale.statement_primary_header = {
+    sale.statement_node_header = {
         QObject::tr("IssuedTime"),
         QObject::tr("Count"),
         QObject::tr("Measure"),
@@ -321,7 +321,7 @@ void StringInitializer::SetHeader(
         QObject::tr("Settlement"),
     };
 
-    sale.statement_secondary_header = {
+    sale.statement_entry_header = {
         QObject::tr("IssuedTime"),
         QObject::tr("InternalSku"),
         QObject::tr("Count"),
@@ -348,12 +348,13 @@ void StringInitializer::SetHeader(
         QObject::tr("Amount"),
     };
 
-    sale.settlement_primary_header = {
-        QObject::tr("IssuedTime"),
+    sale.settlement_node_header = {
         QObject::tr("Id"),
-        QObject::tr("Employee"),
+        QObject::tr("SettlementId"),
+        QObject::tr("IssuedTime"),
+        QObject::tr("Partner"),
         QObject::tr("Description"),
-        QObject::tr("S"),
+        QObject::tr("Employee"),
         QObject::tr("Amount"),
     };
 
@@ -361,8 +362,8 @@ void StringInitializer::SetHeader(
     purchase.entry_header = sale.entry_header;
     purchase.full_entry_header = sale.full_entry_header;
     purchase.statement_header = sale.statement_header;
-    purchase.statement_primary_header = sale.statement_primary_header;
-    purchase.statement_secondary_header = sale.statement_secondary_header;
+    purchase.statement_node_header = sale.statement_node_header;
+    purchase.statement_entry_header = sale.statement_entry_header;
     purchase.settlement_header = sale.settlement_header;
-    purchase.settlement_primary_header = sale.settlement_primary_header;
+    purchase.settlement_node_header = sale.settlement_node_header;
 }

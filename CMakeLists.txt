@@ -140,7 +140,7 @@ set(SOURCES
     billing/statement/statemententrymodel.cc
     reference/salereferencemodel.cc
     billing/settlement/settlementmodel.cc
-    billing/settlement/settlementdetailmodel.cc
+    billing/settlement/settlementnodemodel.cc
     billing/statement/statementmodel.cc
     global/logininfo.cc
     global/tablesstation.cc
@@ -164,6 +164,7 @@ set(SOURCES
     mainwindow/mainwindow_delegate.cc
     mainwindow/mainwindow_connect.cc
     mainwindow/mainwindow_view.cc
+    billing/settlement/settlementnodewidget.cc
 )
 
 set(HEADERS
@@ -298,7 +299,7 @@ set(HEADERS
     billing/statement/statemententrywidget.h
     reference/salereferencewidget.h
     billing/statement/statementnodemodel.h
-    billing/settlement/settlementdetailmodel.h
+    billing/settlement/settlementnodemodel.h
     billing/statement/statemententrymodel.h
     billing/settlement/settlementmodel.h
     billing/statement/statementmodel.h
@@ -313,6 +314,8 @@ set(HEADERS
     global/tablesstation.h
     global/collator.h
     global/exportexcel.h
+    enum/settlementenum.h
+    billing/settlement/settlementnodewidget.h
 )
 
 set(UIS
@@ -341,6 +344,7 @@ set(UIS
     billing/statement/statemententrywidget.ui
     billing/settlement/settlementwidget.ui
     reference/salereferencewidget.ui
+    billing/settlement/settlementnodewidget.ui
 )
 
 # ------------------------

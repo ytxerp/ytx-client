@@ -139,6 +139,7 @@ inline const QString kSaleReferenceAcked = QStringLiteral("sale_reference_acked"
 inline const QString kStatementAcked = QStringLiteral("statement_acked");
 inline const QString kStatementNodeAcked = QStringLiteral("statement_node_acked");
 inline const QString kStatementEntryAcked = QStringLiteral("statement_entry_acked");
+inline const QString kSettlementAcked = QStringLiteral("settlement_acked");
 
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");
@@ -289,6 +290,7 @@ inline const QString kOldNodeId = QStringLiteral("old_node_id");
 inline const QString kNewNodeId = QStringLiteral("new_node_id");
 inline const QString kExpireTime = QStringLiteral("expire_time");
 inline const QString kSettlement = QStringLiteral("settlement");
+inline const QString kSettlementId = QStringLiteral("settlement_id");
 inline const QString kUpdate = QStringLiteral("update");
 inline const QString kResult = QStringLiteral("result");
 inline const QString kLhsTotal = QStringLiteral("lhs_total");

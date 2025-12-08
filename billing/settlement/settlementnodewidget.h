@@ -17,33 +17,35 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTENUM_H
-#define STATEMENTENUM_H
+#ifndef SETTLEMENTNODEWIDGET_H
+#define SETTLEMENTNODEWIDGET_H
 
-// P:Previous, C:Current, Statement
-enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCAmount, kPlaceholder, kCSettlement, kCBalance };
+#include <QWidget>
 
-enum class StatementNodeEnum {
-    kIssuedTime = 0,
-    kCount,
-    kMeasure,
-    kAmount,
-    kDescription,
-    kStatus,
-    kEmployee,
-    kSettlement,
+#include "billing/settlement/settlement.h"
+#include "component/using.h"
+
+namespace Ui {
+class SettlementNodeWidget;
+}
+
+class SettlementNodeWidget final : public QWidget {
+    Q_OBJECT
+
+public:
+    explicit SettlementNodeWidget(CUuid& partner_id, CUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list, int status, QWidget* parent = nullptr);
+    ~SettlementNodeWidget();
+
+private:
+    void IniWidget();
+
+private:
+    Ui::SettlementNodeWidget* ui;
+
+    QUuid partner_id_ {};
+    const QUuid settlement_id_ {};
+
+    std::shared_ptr<SettlementNodeList> list_ {};
 };
 
-enum class StatementEntryEnum {
-    kIssuedTime = 0,
-    kInternalSku,
-    kCount,
-    kMeasure,
-    kUnitPrice,
-    kAmount,
-    kDescription,
-    kStatus,
-    kExternalSku,
-};
-
-#endif // STATEMENTENUM_H
+#endif // SETTLEMENTNODEWIDGET_H

@@ -1,5 +1,5 @@
 #include "billing/settlement/settlementmodel.h"
-#include "enum/statementenum.h"
+#include "enum/settlementenum.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -7,34 +7,24 @@ void MainWindow::on_actionSettlement_triggered()
 {
     assert(IsOrderSection(start_));
 
-    if (settlement_widget_) {
-        ui->tabWidget->setCurrentWidget(settlement_widget_);
-        settlement_widget_->activateWindow();
-        return;
-    }
+    auto* model { new SettlementModel(sc_->info, this) };
+    const QUuid widget_id { QUuid::createUuidV7() };
 
-    const auto start { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) };
-    const auto end { QDateTime(QDate(QDate::currentDate().year() + 1, 1, 1), kStartTime) };
+    auto* widget { new SettlementWidget(model, start_, widget_id, this) };
 
-    auto* model { new SettlementModel(sc_->entry_hub, sc_->info, this) };
-    model->ResetModel(start, end);
-
-    settlement_widget_ = new SettlementWidget(model, start, end, this);
-
-    const int tab_index { ui->tabWidget->addTab(settlement_widget_, tr("Settlement")) };
+    const int tab_index { ui->tabWidget->addTab(widget, tr("Settlement")) };
     auto* tab_bar { ui->tabWidget->tabBar() };
 
-    const QUuid report_id { QUuid::createUuidV7() };
-    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, report_id }));
+    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
 
-    auto* view { settlement_widget_->View() };
-    SetStatementView(view, std::to_underlying(SettlementEnum::kDescription));
-
-    view->setColumnHidden(std::to_underlying(SettlementEnum::kId), false);
-
+    auto* view { widget->View() };
+    SetSettlementView(view, std::to_underlying(SettlementEnum::kDescription));
     DelegateSettlement(view, sc_->section_config);
 
-    connect(model, &SettlementModel::SResizeColumnToContents, view, &QTableView::resizeColumnToContents);
+    RegisterWidget(widget_id, widget);
+}
 
-    RegisterWidget(report_id, settlement_widget_);
+void MainWindow::RSettlementNode(const QUuid& partner_id, const QUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list, int status)
+{
+    assert(IsOrderSection(start_));
 }

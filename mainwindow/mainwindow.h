@@ -114,6 +114,8 @@ private slots:
     void RStatementNode(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
     void RStatementEntry(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 
+    void RSettlementNode(const QUuid& partner_id, const QUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list, int status);
+
     void RLeafRemoveDenied(const QJsonObject& obj);
     inline void RNodeRemoveConfirmed(const QUuid& node_id) { node_pending_removal_.remove(node_id); }
 
@@ -163,6 +165,8 @@ private:
 
     void SetStatementView(QTableView* table_view, int stretch_column) const;
     void DelegateStatement(QTableView* table_view, CSectionConfig& config) const;
+
+    void SetSettlementView(QTableView* table_view, int stretch_column) const;
     void DelegateSettlement(QTableView* table_view, CSectionConfig& config) const;
     void DelegateSettlementPrimary(QTableView* table_view, CSectionConfig& config) const;
 
@@ -220,7 +224,7 @@ private:
 
     void FocusTableWidget(const QUuid& node_id) const;
 
-    void RegisterWidget(const QUuid& report_id, QWidget* widget);
+    void RegisterWidget(const QUuid& widget_id, QWidget* widget);
     void WriteConfig();
 
     SectionContext* GetSectionContex(Section section);
@@ -241,8 +245,6 @@ private:
     QMenu* tray_menu_ {};
 
     QSet<QUuid> node_pending_removal_ {};
-
-    QPointer<SettlementWidget> settlement_widget_ {};
 
     QTranslator qt_translator_ {};
     QTranslator ytx_translator_ {};

@@ -27,18 +27,31 @@
 struct Settlement {
     QUuid id {};
     QUuid partner {};
-    QUuid employee {};
     QDateTime issued_time {};
     QString description {};
     int status {};
-    double initial_total {};
+    double amount {};
 
     QUuid user_id {};
     QDateTime created_time {};
     QUuid created_by {};
     QDateTime updated_time {};
     QUuid updated_by {};
-    bool is_valid { true };
+
+    void ResetState();
+
+    void ReadJson(const QJsonObject& object);
+    QJsonObject WriteJson() const;
+};
+
+struct SettlementNode {
+    QUuid id {};
+    QUuid partner {};
+    QUuid settlement_id {};
+    QUuid employee {};
+    QDateTime issued_time {};
+    QString description {};
+    double amount {};
 
     void ResetState();
 
@@ -47,5 +60,6 @@ struct Settlement {
 };
 
 using SettlementList = QList<Settlement*>;
+using SettlementNodeList = QList<SettlementNode*>;
 
 #endif // SETTLEMENT_H

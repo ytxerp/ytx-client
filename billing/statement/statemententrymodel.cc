@@ -34,7 +34,7 @@ int StatementEntryModel::rowCount(const QModelIndex& parent) const
     return list_.size();
 }
 
-int StatementEntryModel::columnCount(const QModelIndex& /*parent*/) const { return info_.statement_secondary_header.size(); }
+int StatementEntryModel::columnCount(const QModelIndex& /*parent*/) const { return info_.statement_entry_header.size(); }
 
 QVariant StatementEntryModel::data(const QModelIndex& index, int role) const
 {
@@ -92,14 +92,14 @@ bool StatementEntryModel::setData(const QModelIndex& index, const QVariant& valu
 QVariant StatementEntryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.statement_secondary_header.at(section);
+        return info_.statement_entry_header.at(section);
 
     return QVariant();
 }
 
 void StatementEntryModel::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.statement_secondary_header.size() - 1)
+    if (column <= -1 || column >= info_.statement_entry_header.size() - 1)
         return;
 
     auto Compare = [column, order](const StatementEntry* lhs, const StatementEntry* rhs) -> bool {

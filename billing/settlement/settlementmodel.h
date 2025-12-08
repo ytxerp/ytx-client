@@ -24,27 +24,13 @@
 #include <QJsonObject>
 
 #include "component/info.h"
-#include "entryhub/entryhubo.h"
 #include "settlement.h"
 
 class SettlementModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SettlementModel(EntryHub* dbhub, CSectionInfo& info, QObject* parent = nullptr);
+    SettlementModel(CSectionInfo& info, QObject* parent = nullptr);
     ~SettlementModel();
-
-signals:
-    void SResetModel(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished);
-    void SSyncFinished(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished);
-
-    // send to its table view
-    void SResizeColumnToContents(int column);
-
-    // send to NodeModelS
-    void SUpdateAmount(const QUuid& settlement_id, double initial_delta, double final_delta);
-
-public slots:
-    void RSyncDouble(const QUuid& settlement_id, int column, double delta1);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -54,27 +40,17 @@ public:
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-    Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     void sort(int column, Qt::SortOrder order) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
-    bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-    void ResetModel(const QDateTime& start, const QDateTime& end);
-
-private:
-    bool UpdatePartner(Settlement* settlement, const QUuid& partner_id);
-    bool UpdateFinished(Settlement* settlement, bool finished);
+    bool InsertNode(int row, const QModelIndex& parent, Settlement* node);
+    void ResetModel(const QJsonArray& entry_array);
 
 private:
-    EntryHubO* dbhub_ {};
-    QJsonObject update_cache_ {};
-
     CSectionInfo& info_;
-
-    SettlementList settlement_list_ {};
+    SettlementList list_ {};
 };
 
 #endif // SETTLEMENTMODEL_H

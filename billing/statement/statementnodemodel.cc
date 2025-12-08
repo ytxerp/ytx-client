@@ -38,7 +38,7 @@ int StatementNodeModel::rowCount(const QModelIndex& parent) const
 int StatementNodeModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return info_.statement_primary_header.size();
+    return info_.statement_node_header.size();
 }
 
 QVariant StatementNodeModel::data(const QModelIndex& index, int role) const
@@ -93,14 +93,14 @@ bool StatementNodeModel::setData(const QModelIndex& index, const QVariant& value
 QVariant StatementNodeModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.statement_primary_header.at(section);
+        return info_.statement_node_header.at(section);
 
     return QVariant();
 }
 
 void StatementNodeModel::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.statement_primary_header.size())
+    if (column <= -1 || column >= info_.statement_node_header.size())
         return;
 
     auto Compare = [column, order](const StatementNode* lhs, const StatementNode* rhs) -> bool {

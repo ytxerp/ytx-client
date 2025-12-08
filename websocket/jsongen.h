@@ -51,6 +51,7 @@ QJsonObject SaleReferenceAcked(Section section, CUuid& widget_id, CUuid& node_id
 QJsonObject StatementAcked(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end);
 QJsonObject StatementNodeAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 QJsonObject StatementEntryAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
+QJsonObject SettlementAcked(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end);
 
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule);
 QJsonObject NodeStatus(Section section, CUuid& node_id, int status);

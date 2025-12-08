@@ -130,12 +130,6 @@ void MainWindow::ClearMainwindow()
     if (!section_settings_)
         return;
 
-    if (settlement_widget_) {
-        settlement_widget_->close();
-        delete settlement_widget_;
-        settlement_widget_.clear();
-    }
-
     app_settings_.clear();
     section_settings_.clear();
 
@@ -185,9 +179,9 @@ void MainWindow::RFreeWidget(const QUuid& node_id)
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
-void MainWindow::RegisterWidget(const QUuid& report_id, QWidget* widget)
+void MainWindow::RegisterWidget(const QUuid& widget_id, QWidget* widget)
 {
-    sc_->widget_hash.insert(report_id, widget);
+    sc_->widget_hash.insert(widget_id, widget);
     ui->tabWidget->setCurrentWidget(widget);
     widget->activateWindow();
 }

@@ -385,4 +385,17 @@ QJsonObject StatementEntryAcked(Section section, CUuid& widget_id, CUuid& partne
     return message;
 }
 
+QJsonObject SettlementAcked(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end)
+{
+    QJsonObject message {};
+
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
+    message.insert(kStart, start.toString(Qt::ISODate));
+    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kEntryArray, QJsonArray());
+
+    return message;
+}
+
 }

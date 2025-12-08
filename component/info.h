@@ -44,11 +44,11 @@ struct SectionInfo {
     QStringList node_referenced_header {};
 
     QStringList settlement_header {};
-    QStringList settlement_primary_header {};
+    QStringList settlement_node_header {};
 
     QStringList statement_header {};
-    QStringList statement_primary_header {};
-    QStringList statement_secondary_header {};
+    QStringList statement_node_header {};
+    QStringList statement_entry_header {};
 
     QStringList full_entry_header {};
 

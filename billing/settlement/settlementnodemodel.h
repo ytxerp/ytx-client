@@ -17,27 +17,19 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTDETAILMODEL_H
-#define SETTLEMENTDETAILMODEL_H
+#ifndef SETTLEMENTNODEMODEL_H
+#define SETTLEMENTNODEMODEL_H
 
 #include <QAbstractItemModel>
 
 #include "component/info.h"
-#include "entryhub/entryhubo.h"
 #include "settlement.h"
 
-class SettlementDetailModel final : public QAbstractItemModel {
+class SettlementNodeModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SettlementDetailModel(EntryHub* dbhub, CSectionInfo& info, QObject* parent = nullptr);
-    ~SettlementDetailModel();
-
-signals:
-    void SSyncDouble(const QUuid& settlement_id, int column, double delta1);
-
-public slots:
-    void RSyncFinished(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished);
-    void RResetModel(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished);
+    SettlementNodeModel(CSectionInfo& info, QObject* parent = nullptr);
+    ~SettlementNodeModel();
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -53,19 +45,15 @@ public:
 
     void sort(int column, Qt::SortOrder order) override;
 
-private:
-    void RemoveUnfinishedNode();
-    void UpdateSettlementInfo(const QUuid& partner_id, const QUuid& settlement_id, bool settlement_finished);
+    void UpdatePartner(const QUuid& partner_id);
 
 private:
-    EntryHubO* dbhub_ {};
     CSectionInfo& info_;
 
     QUuid partner_id_ {};
     QUuid settlement_id_ {};
-    bool settlement_finished_ {};
 
-    SettlementList settlementList_list_ {};
+    SettlementNodeList list_ {};
 };
 
-#endif // SETTLEMENTDETAILMODEL_H
+#endif // SETTLEMENTNODEMODEL_H
