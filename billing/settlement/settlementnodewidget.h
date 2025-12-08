@@ -33,7 +33,7 @@ class SettlementNodeWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SettlementNodeWidget(CUuid& partner_id, CUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list, int status, QWidget* parent = nullptr);
+    explicit SettlementNodeWidget(CUuid& widget_id, Settlement* settlement, std::shared_ptr<SettlementNodeList>& list, QWidget* parent = nullptr);
     ~SettlementNodeWidget();
 
 private:
@@ -42,9 +42,8 @@ private:
 private:
     Ui::SettlementNodeWidget* ui;
 
-    QUuid partner_id_ {};
-    const QUuid settlement_id_ {};
-
+    Settlement* settlement_ {};
+    const QUuid widget_id_ {};
     std::shared_ptr<SettlementNodeList> list_ {};
 };
 

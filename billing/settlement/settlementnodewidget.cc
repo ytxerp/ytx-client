@@ -2,9 +2,11 @@
 
 #include "ui_settlementnodewidget.h"
 
-SettlementNodeWidget::SettlementNodeWidget(CUuid& partner_id, CUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list, int status, QWidget* parent)
+SettlementNodeWidget::SettlementNodeWidget(CUuid& widget_id, Settlement* settlement, std::shared_ptr<SettlementNodeList>& list, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SettlementNodeWidget)
+    , settlement_ { settlement }
+    , widget_id_ { widget_id }
     , list_ { list }
 {
     ui->setupUi(this);

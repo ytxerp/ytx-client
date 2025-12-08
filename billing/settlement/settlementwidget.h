@@ -34,7 +34,7 @@ class SettlementWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SSettlementNode(const QUuid& partner_id, const QUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list, int status);
+    void SSettlementNode(Settlement* settlement, std::shared_ptr<SettlementNodeList>& list);
 
 public:
     explicit SettlementWidget(SettlementModel* settlement_model, Section section, CUuid& widget_id, QWidget* parent = nullptr);

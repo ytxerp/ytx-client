@@ -113,14 +113,9 @@ void SettlementWidget::on_tableView_doubleClicked(const QModelIndex& index)
     if (index.column() != std::to_underlying(SettlementEnum::kAmount))
         return;
 
-    const auto partner { index.siblingAtColumn(std::to_underlying(SettlementEnum::kPartner)).data().toUuid() };
-    if (partner.isNull())
-        return;
+    auto* settlement { static_cast<Settlement*>(index.internalPointer()) };
 
-    const QUuid settlement_id { index.siblingAtColumn(std::to_underlying(SettlementEnum::kId)).data().toUuid() };
-    const int status { index.siblingAtColumn(std::to_underlying(SettlementEnum::kStatus)).data().toInt() };
-
-    emit SSettlementNode(partner, settlement_id, settlement_node_list_, status);
+    emit SSettlementNode(settlement, settlement_node_list_);
 }
 
 void SettlementWidget::InitTimer()

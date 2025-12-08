@@ -114,7 +114,7 @@ private slots:
     void RStatementNode(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
     void RStatementEntry(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 
-    void RSettlementNode(const QUuid& partner_id, const QUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list, int status);
+    void RSettlementNode(Settlement* settlement, std::shared_ptr<SettlementNodeList>& list);
 
     void RLeafRemoveDenied(const QJsonObject& obj);
     inline void RNodeRemoveConfirmed(const QUuid& node_id) { node_pending_removal_.remove(node_id); }

@@ -24,7 +24,4 @@ void MainWindow::on_actionSettlement_triggered()
     RegisterWidget(widget_id, widget);
 }
 
-void MainWindow::RSettlementNode(const QUuid& partner_id, const QUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list, int status)
-{
-    assert(IsOrderSection(start_));
-}
+void MainWindow::RSettlementNode(Settlement* settlement, std::shared_ptr<SettlementNodeList>& list) { assert(IsOrderSection(start_)); }
