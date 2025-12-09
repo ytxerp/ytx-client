@@ -171,6 +171,7 @@ void WebSocket::InitHandler()
     handler_obj_[kStatementAcked] = [this](const QJsonObject& obj) { AckStatement(obj); };
     handler_obj_[kStatementNodeAcked] = [this](const QJsonObject& obj) { AckStatementNode(obj); };
     handler_obj_[kStatementEntryAcked] = [this](const QJsonObject& obj) { AckStatementEntry(obj); };
+    handler_obj_[kSettlementAcked] = [this](const QJsonObject& obj) { AckSettlement(obj); };
 
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
@@ -447,6 +448,16 @@ void WebSocket::AckStatementEntry(const QJsonObject& obj)
     const QJsonObject total { obj.value(kTotal).toObject() };
 
     emit SStatementEntryAcked(section, widget_id, array, total);
+}
+
+void WebSocket::AckSettlement(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
+    const QJsonArray array { obj.value(kEntryArray).toArray() };
+    const QJsonArray unsettled_order { obj.value(kUnsettledOrder).toArray() };
+
+    emit SSettlement(section, widget_id, array, unsettled_order);
 }
 
 void WebSocket::RemoveLeaf(const QJsonObject& obj)

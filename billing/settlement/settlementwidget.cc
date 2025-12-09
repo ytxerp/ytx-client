@@ -37,9 +37,9 @@ SettlementWidget::~SettlementWidget() { delete ui; }
 
 QTableView* SettlementWidget::View() const { return ui->tableView; }
 
-void SettlementWidget::ResetList(const QJsonArray& array)
+void SettlementWidget::ResetUnsettledOrder(const QJsonArray& array)
 {
-    ResourcePool<SettlementNode>::Instance().Recycle(*list_cache_);
+    ResourcePool<SettlementNode>::Instance().Recycle(*unsettled_order_);
 
     for (const auto& value : array) {
         if (!value.isObject())
@@ -48,7 +48,7 @@ void SettlementWidget::ResetList(const QJsonArray& array)
         auto* settlement_node { ResourcePool<SettlementNode>::Instance().Allocate() };
         settlement_node->ReadJson(value.toObject());
 
-        list_cache_->emplaceBack(settlement_node);
+        unsettled_order_->emplaceBack(settlement_node);
     }
 }
 
@@ -104,7 +104,7 @@ void SettlementWidget::on_pBtnAppend_clicked()
     settlement->id = QUuid::createUuidV7();
 
     // Emit the signal with shared_ptr
-    emit SSettlementNode(settlement, false, list_cache_);
+    emit SSettlementNode(settlement, false, unsettled_order_);
 }
 
 void SettlementWidget::on_pBtnRemove_clicked()
@@ -125,7 +125,7 @@ void SettlementWidget::on_tableView_doubleClicked(const QModelIndex& index)
 
     auto& settlement { model_->SettlementAt(index.row()) };
 
-    emit SSettlementNode(settlement, true, list_cache_);
+    emit SSettlementNode(settlement, true, unsettled_order_);
 }
 
 void SettlementWidget::InitTimer()
@@ -142,5 +142,5 @@ void SettlementWidget::InitSharedPtr()
         delete list;
     };
 
-    list_cache_ = std::shared_ptr<SettlementNodeList>(new SettlementNodeList(), deleter);
+    unsettled_order_ = std::shared_ptr<SettlementNodeList>(new SettlementNodeList(), deleter);
 }

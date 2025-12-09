@@ -72,6 +72,7 @@ signals:
     void SStatement(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
     void SStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
     void SStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonObject& total);
+    void SSettlement(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonArray& unsettled_order);
 
     void SConnectionRefused();
 
@@ -105,6 +106,7 @@ private:
     void AckStatement(const QJsonObject& obj);
     void AckStatementNode(const QJsonObject& obj);
     void AckStatementEntry(const QJsonObject& obj);
+    void AckSettlement(const QJsonObject& obj);
 
     void SearchEntry(const QJsonObject& obj);
     void SearchNode(const QJsonObject& obj);

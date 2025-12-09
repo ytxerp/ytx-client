@@ -42,7 +42,7 @@ public:
 
     QTableView* View() const;
     SettlementModel* Model() const { return model_; }
-    void ResetList(const QJsonArray& array);
+    void ResetUnsettledOrder(const QJsonArray& array);
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -64,7 +64,7 @@ private:
     QDateTime end_ {};
     QTimer* cooldown_timer_ { nullptr };
 
-    std::shared_ptr<SettlementNodeList> list_cache_ {};
+    std::shared_ptr<SettlementNodeList> unsettled_order_ {};
 
     const Section section_ {};
     const QUuid widget_id_ {};

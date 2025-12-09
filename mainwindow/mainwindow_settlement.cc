@@ -49,3 +49,17 @@ void MainWindow::RSettlementNode(const std::shared_ptr<Settlement>& settlement, 
 
     RegisterWidget(widget_id, widget);
 }
+
+void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonArray& unsettled_order)
+{
+    auto* sc { GetSectionContex(section) };
+
+    auto widget { sc->widget_hash.value(widget_id, nullptr) };
+    if (!widget)
+        return;
+
+    auto* d_widget { static_cast<SettlementWidget*>(widget.data()) };
+    auto* model { d_widget->Model() };
+    model->ResetModel(entry_array);
+    d_widget->ResetUnsettledOrder(unsettled_order);
+}
