@@ -38,7 +38,7 @@ void MainWindow::RSettlementNode(const std::shared_ptr<Settlement>& settlement, 
     auto* model { new SettlementNodeModel(sc_->info, settlement->partner, settlement->id, list_cache, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new SettlementNodeWidget(model, settlement, is_persisted, start_, widget_id, this) };
+    auto* widget { new SettlementNodeWidget(sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, this) };
 
     {
         const int tab_index { ui->tabWidget->addTab(widget, tr("SettlementNode")) };
