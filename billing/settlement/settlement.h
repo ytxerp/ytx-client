@@ -24,6 +24,8 @@
 #include <QStringList>
 #include <QUuid>
 
+#include "global/resourcepool.h"
+
 struct Settlement {
     QUuid id {};
     QUuid partner {};
@@ -58,6 +60,9 @@ struct SettlementNode {
     void ReadJson(const QJsonObject& object);
     QJsonObject WriteJson() const;
 };
+
+// Custom deleter that returns the Settlement to the ResourcePool
+auto kSettlementDeleter = [](Settlement* s) { ResourcePool<Settlement>::Instance().Recycle(s); };
 
 using SettlementList = QList<Settlement*>;
 using SettlementNodeList = QList<SettlementNode*>;

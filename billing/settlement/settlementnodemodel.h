@@ -23,12 +23,14 @@
 #include <QAbstractItemModel>
 
 #include "component/info.h"
+#include "component/using.h"
 #include "settlement.h"
 
 class SettlementNodeModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SettlementNodeModel(CSectionInfo& info, QObject* parent = nullptr);
+    SettlementNodeModel(
+        CSectionInfo& info, CUuid& partner_id, CUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list_cache, QObject* parent = nullptr);
     ~SettlementNodeModel();
 
 public:
@@ -46,14 +48,19 @@ public:
     void sort(int column, Qt::SortOrder order) override;
 
     void UpdatePartner(const QUuid& partner_id);
+    void UpdateStatus(int status);
 
 private:
     CSectionInfo& info_;
 
     QUuid partner_id_ {};
-    QUuid settlement_id_ {};
+    const QUuid settlement_id_ {};
 
     SettlementNodeList list_ {};
+    std::shared_ptr<SettlementNodeList> list_cache_;
+
+    QSet<QUuid> pending_delete_ {};
+    QSet<QUuid> pending_insert_ {};
 };
 
 #endif // SETTLEMENTNODEMODEL_H

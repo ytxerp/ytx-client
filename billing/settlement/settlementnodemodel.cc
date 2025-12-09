@@ -1,15 +1,22 @@
 #include "settlementnodemodel.h"
 
-#include "enum/settlementenum.h"
-#include "global/resourcepool.h"
+#include <QTimer>
 
-SettlementNodeModel::SettlementNodeModel(CSectionInfo& info, QObject* parent)
+#include "enum/nodeenum.h"
+#include "enum/settlementenum.h"
+
+SettlementNodeModel::SettlementNodeModel(
+    CSectionInfo& info, CUuid& partner_id, CUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list_cache, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
+    , partner_id_ { partner_id }
+    , settlement_id_ { settlement_id }
+    , list_cache_ { list_cache }
 {
+    QTimer::singleShot(0, [this]() { UpdatePartner(partner_id_); });
 }
 
-SettlementNodeModel::~SettlementNodeModel() { ResourcePool<SettlementNode>::Instance().Recycle(list_); }
+SettlementNodeModel::~SettlementNodeModel() { }
 
 QModelIndex SettlementNodeModel::index(int row, int column, const QModelIndex& parent) const
 {
@@ -43,7 +50,10 @@ QVariant SettlementNodeModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     const SettlementNodeEnum column { index.column() };
-    auto* settlement_node { list_.at(index.row()) };
+
+    auto* settlement_node { static_cast<SettlementNode*>(index.internalPointer()) };
+    if (!settlement_node)
+        return QVariant();
 
     switch (column) {
     case SettlementNodeEnum::kId:
@@ -70,7 +80,10 @@ bool SettlementNodeModel::setData(const QModelIndex& index, const QVariant& valu
     if (!index.isValid() || index.column() != std::to_underlying(SettlementNodeEnum::kSettlementId) || role != Qt::EditRole)
         return false;
 
-    auto* settlement_node { list_.at(index.row()) };
+    auto* settlement_node { static_cast<SettlementNode*>(index.internalPointer()) };
+    if (!settlement_node)
+        return false;
+
     const bool check { value.toBool() };
 
     settlement_node->settlement_id = check ? settlement_id_ : QUuid();
@@ -114,4 +127,59 @@ void SettlementNodeModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SettlementNodeModel::UpdatePartner(const QUuid& partner_id) { partner_id_ = partner_id; }
+void SettlementNodeModel::UpdatePartner(const QUuid& partner_id)
+{
+    if (partner_id_ == partner_id || partner_id.isNull())
+        return;
+
+    beginResetModel();
+
+    partner_id_ = partner_id;
+
+    list_.clear();
+
+    for (auto* node : *list_cache_) {
+        if (node->partner == partner_id) {
+            list_.emplaceBack(node);
+        }
+    }
+
+    sort(std::to_underlying(SettlementNodeEnum::kSettlementId), Qt::AscendingOrder);
+    endResetModel();
+}
+
+void SettlementNodeModel::UpdateStatus(int status)
+{
+    {
+        if (status == std::to_underlying(NodeStatus::kReleased))
+            for (int row = list_.size() - 1; row >= 0; --row) {
+                auto* node = list_.at(row);
+                if (node->settlement_id.isNull()) {
+                    beginRemoveRows(QModelIndex(), row, row);
+                    list_.removeAt(row);
+                    endRemoveRows();
+                }
+            }
+    }
+
+    {
+        if (status == std::to_underlying(NodeStatus::kRecalled)) {
+            QList<SettlementNode*> to_add {};
+
+            for (auto* node : *list_cache_) {
+                if (node->partner == partner_id_ && node->settlement_id.isNull()) {
+                    to_add.append(node);
+                }
+            }
+
+            if (!to_add.isEmpty()) {
+                const qsizetype start_row { list_.size() };
+                const qsizetype end_row { start_row + to_add.size() - 1 };
+
+                beginInsertRows(QModelIndex(), start_row, end_row);
+                list_.append(to_add);
+                endInsertRows();
+            }
+        }
+    }
+}

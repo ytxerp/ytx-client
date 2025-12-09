@@ -1,4 +1,6 @@
 #include "billing/settlement/settlementmodel.h"
+#include "billing/settlement/settlementnodemodel.h"
+#include "billing/settlement/settlementnodewidget.h"
 #include "enum/settlementenum.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -11,17 +13,39 @@ void MainWindow::on_actionSettlement_triggered()
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new SettlementWidget(model, start_, widget_id, this) };
+    connect(widget, &SettlementWidget::SSettlementNode, this, &MainWindow::RSettlementNode);
 
-    const int tab_index { ui->tabWidget->addTab(widget, tr("Settlement")) };
-    auto* tab_bar { ui->tabWidget->tabBar() };
+    {
+        const int tab_index { ui->tabWidget->addTab(widget, tr("Settlement")) };
+        auto* tab_bar { ui->tabWidget->tabBar() };
 
-    tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
+        tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
+    }
 
-    auto* view { widget->View() };
-    SetSettlementView(view, std::to_underlying(SettlementEnum::kDescription));
-    DelegateSettlement(view, sc_->section_config);
+    {
+        auto* view { widget->View() };
+        SetSettlementView(view, std::to_underlying(SettlementEnum::kDescription));
+        DelegateSettlement(view, sc_->section_config);
+    }
 
     RegisterWidget(widget_id, widget);
 }
 
-void MainWindow::RSettlementNode(Settlement* settlement, std::shared_ptr<SettlementNodeList>& list) { assert(IsOrderSection(start_)); }
+void MainWindow::RSettlementNode(const std::shared_ptr<Settlement>& settlement, bool is_persisted, std::shared_ptr<SettlementNodeList>& list_cache)
+{
+    assert(IsOrderSection(start_));
+
+    auto* model { new SettlementNodeModel(sc_->info, settlement->partner, settlement->id, list_cache, this) };
+    const QUuid widget_id { QUuid::createUuidV7() };
+
+    auto* widget { new SettlementNodeWidget(model, settlement, is_persisted, start_, widget_id, this) };
+
+    {
+        const int tab_index { ui->tabWidget->addTab(widget, tr("SettlementNode")) };
+        auto* tab_bar { ui->tabWidget->tabBar() };
+
+        tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
+    }
+
+    RegisterWidget(widget_id, widget);
+}

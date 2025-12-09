@@ -39,7 +39,7 @@ QTableView* SettlementWidget::View() const { return ui->tableView; }
 
 void SettlementWidget::ResetList(const QJsonArray& array)
 {
-    ResourcePool<SettlementNode>::Instance().Recycle(*settlement_node_list_);
+    ResourcePool<SettlementNode>::Instance().Recycle(*list_cache_);
 
     for (const auto& value : array) {
         if (!value.isObject())
@@ -48,7 +48,7 @@ void SettlementWidget::ResetList(const QJsonArray& array)
         auto* settlement_node { ResourcePool<SettlementNode>::Instance().Allocate() };
         settlement_node->ReadJson(value.toObject());
 
-        settlement_node_list_->emplaceBack(settlement_node);
+        list_cache_->emplaceBack(settlement_node);
     }
 }
 
@@ -95,7 +95,17 @@ void SettlementWidget::IniWidget()
     ui->end->setDateTime(end_.addSecs(-1));
 }
 
-void SettlementWidget::on_pBtnAppend_clicked() { model_->insertRows(model_->rowCount(), 1); }
+void SettlementWidget::on_pBtnAppend_clicked()
+{
+    // Allocate a Settlement and wrap it in a shared_ptr with the deleter
+    const std::shared_ptr<Settlement> settlement(ResourcePool<Settlement>::Instance().Allocate(), kSettlementDeleter);
+
+    settlement->issued_time = QDateTime::currentDateTimeUtc();
+    settlement->id = QUuid::createUuidV7();
+
+    // Emit the signal with shared_ptr
+    emit SSettlementNode(settlement, false, list_cache_);
+}
 
 void SettlementWidget::on_pBtnRemove_clicked()
 {
@@ -113,9 +123,9 @@ void SettlementWidget::on_tableView_doubleClicked(const QModelIndex& index)
     if (index.column() != std::to_underlying(SettlementEnum::kAmount))
         return;
 
-    auto* settlement { static_cast<Settlement*>(index.internalPointer()) };
+    auto& settlement { model_->SettlementAt(index.row()) };
 
-    emit SSettlementNode(settlement, settlement_node_list_);
+    emit SSettlementNode(settlement, true, list_cache_);
 }
 
 void SettlementWidget::InitTimer()
@@ -132,5 +142,5 @@ void SettlementWidget::InitSharedPtr()
         delete list;
     };
 
-    settlement_node_list_ = std::shared_ptr<SettlementNodeList>(new SettlementNodeList(), deleter);
+    list_cache_ = std::shared_ptr<SettlementNodeList>(new SettlementNodeList(), deleter);
 }

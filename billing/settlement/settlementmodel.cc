@@ -11,14 +11,14 @@ SettlementModel::SettlementModel(CSectionInfo& info, QObject* parent)
 {
 }
 
-SettlementModel::~SettlementModel() { ResourcePool<Settlement>::Instance().Recycle(list_); }
+SettlementModel::~SettlementModel() { }
 
 QModelIndex SettlementModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column, list_.at(row));
+    return createIndex(row, column, list_.at(row).get());
 }
 
 QModelIndex SettlementModel::parent(const QModelIndex& index) const
@@ -45,7 +45,7 @@ QVariant SettlementModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     const SettlementEnum column { index.column() };
-    auto* settlement { list_.at(index.row()) };
+    auto& settlement { list_.at(index.row()) };
 
     switch (column) {
     case SettlementEnum::kId:
@@ -88,7 +88,7 @@ void SettlementModel::sort(int column, Qt::SortOrder order)
     if (column <= -1 || column >= info_.settlement_header.size())
         return;
 
-    auto Compare = [column, order](const Settlement* lhs, const Settlement* rhs) -> bool {
+    auto Compare = [column, order](const auto& lhs, const auto& rhs) -> bool {
         const SettlementEnum e_column { column };
 
         switch (e_column) {
@@ -125,10 +125,9 @@ void SettlementModel::sort(int column, Qt::SortOrder order)
 bool SettlementModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     beginRemoveRows(parent, row, row);
-    auto* settlement { list_.takeAt(row) };
+    auto settlement { list_.takeAt(row) };
     endRemoveRows();
 
-    ResourcePool<Settlement>::Instance().Recycle(settlement);
     return true;
 }
 
@@ -145,7 +144,7 @@ void SettlementModel::ResetModel(const QJsonArray& entry_array)
 {
     beginResetModel();
 
-    ResourcePool<Settlement>::Instance().Recycle(list_);
+    list_.clear();
 
     for (const auto& value : entry_array) {
         if (!value.isObject())
@@ -153,7 +152,9 @@ void SettlementModel::ResetModel(const QJsonArray& entry_array)
 
         const QJsonObject obj { value.toObject() };
 
-        auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
+        // Allocate a Settlement and wrap it in a shared_ptr with the deleter
+        std::shared_ptr<Settlement> settlement(ResourcePool<Settlement>::Instance().Allocate(), kSettlementDeleter);
+
         settlement->ReadJson(obj);
 
         list_.emplaceBack(settlement);

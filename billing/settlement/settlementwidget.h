@@ -34,10 +34,10 @@ class SettlementWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SSettlementNode(Settlement* settlement, std::shared_ptr<SettlementNodeList>& list);
+    void SSettlementNode(const std::shared_ptr<Settlement>& settlement, bool is_persisted, std::shared_ptr<SettlementNodeList>& list_cache);
 
 public:
-    explicit SettlementWidget(SettlementModel* settlement_model, Section section, CUuid& widget_id, QWidget* parent = nullptr);
+    explicit SettlementWidget(SettlementModel* model, Section section, CUuid& widget_id, QWidget* parent = nullptr);
     ~SettlementWidget() override;
 
     QTableView* View() const;
@@ -64,7 +64,7 @@ private:
     QDateTime end_ {};
     QTimer* cooldown_timer_ { nullptr };
 
-    std::shared_ptr<SettlementNodeList> settlement_node_list_ {};
+    std::shared_ptr<SettlementNodeList> list_cache_ {};
 
     const Section section_ {};
     const QUuid widget_id_ {};

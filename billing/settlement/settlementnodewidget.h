@@ -20,10 +20,13 @@
 #ifndef SETTLEMENTNODEWIDGET_H
 #define SETTLEMENTNODEWIDGET_H
 
+#include <QTableView>
 #include <QWidget>
 
-#include "billing/settlement/settlement.h"
 #include "component/using.h"
+#include "enum/section.h"
+#include "settlement.h"
+#include "settlementnodemodel.h"
 
 namespace Ui {
 class SettlementNodeWidget;
@@ -33,18 +36,24 @@ class SettlementNodeWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SettlementNodeWidget(CUuid& widget_id, Settlement* settlement, std::shared_ptr<SettlementNodeList>& list, QWidget* parent = nullptr);
+    explicit SettlementNodeWidget(SettlementNodeModel* model, const std::shared_ptr<Settlement>& settlement, bool is_persisted, Section section,
+        CUuid& widget_id, QWidget* parent = nullptr);
     ~SettlementNodeWidget();
 
+    QTableView* View() const;
+
 private:
-    void IniWidget();
+    void InitWidget();
 
 private:
     Ui::SettlementNodeWidget* ui;
 
-    Settlement* settlement_ {};
+    const std::shared_ptr<Settlement> settlement_ {};
+    SettlementNodeModel* model_ {};
+
     const QUuid widget_id_ {};
-    std::shared_ptr<SettlementNodeList> list_ {};
+    const Section section_ {};
+    bool is_persisted_ {};
 };
 
 #endif // SETTLEMENTNODEWIDGET_H
