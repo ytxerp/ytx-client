@@ -92,7 +92,8 @@ struct NodeP final : Node {
 struct NodeO final : Node {
     QUuid employee {};
     QUuid partner {};
-    QUuid settlement {};
+    QUuid settlement_id {};
+    bool is_settled {};
 
     QDateTime issued_time {};
     double count_total {};

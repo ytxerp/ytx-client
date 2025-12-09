@@ -394,7 +394,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
     }
 
-    if (!node_->settlement.isNull()) {
+    if (node_->is_settled) {
         QMessageBox::information(this, tr("Order Settled"), tr("This order has already been settled and cannot be modified."));
         return;
     }

@@ -266,6 +266,8 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
     case NodeEnumO::kCreateBy:
     case NodeEnumO::kUpdateTime:
     case NodeEnumO::kUpdateBy:
+    case NodeEnumO::kIsSettled:
+    case NodeEnumO::kSettlementId:
         return;
     default:
         break;
@@ -370,6 +372,10 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return d_node->initial_total;
     case NodeEnumO::kFinalTotal:
         return d_node->final_total;
+    case NodeEnumO::kIsSettled:
+        return d_node->is_settled;
+    case NodeEnumO::kSettlementId:
+        return d_node->settlement_id;
     default:
         return QVariant();
     }

@@ -261,7 +261,9 @@ void NodeO::ReadJson(const QJsonObject& object)
     if (object.contains(kStatus))
         status = object.value(kStatus).toInt();
     if (object.contains(kSettlementId))
-        settlement = QUuid(object.value(kSettlementId).toString());
+        settlement_id = QUuid(object.value(kSettlementId).toString());
+    if (object.contains(kIsSettled))
+        direction_rule = object.value(kIsSettled).toBool();
 }
 
 QJsonObject NodeO::WriteJson() const
@@ -278,11 +280,12 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kDiscountTotal, QString::number(discount_total, 'f', kMaxNumericScale_4));
     obj.insert(kEmployee, employee.toString(QUuid::WithoutBraces));
     obj.insert(kPartner, partner.toString(QUuid::WithoutBraces));
-    obj.insert(kSettlementId, settlement.toString(QUuid::WithoutBraces));
+    obj.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kCountTotal, QString::number(count_total, 'f', kMaxNumericScale_8));
     obj.insert(kMeasureTotal, QString::number(measure_total, 'f', kMaxNumericScale_8));
     obj.insert(kStatus, status);
+    obj.insert(kIsSettled, is_settled);
 
     return obj;
 }

@@ -242,6 +242,7 @@ enum class NodeEnumO {
     kInitialTotal,
     kDiscountTotal,
     kFinalTotal,
+    kIsSettled,
     kSettlementId,
 };
 

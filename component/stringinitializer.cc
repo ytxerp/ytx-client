@@ -103,6 +103,7 @@ void StringInitializer::SetHeader(
         QObject::tr("GrossTotal"),
         QObject::tr("DiscountTotal"),
         QObject::tr("NetTotal"),
+        QObject::tr("IsSettled"),
         QObject::tr("SettlementId"),
     };
 

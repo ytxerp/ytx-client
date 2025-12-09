@@ -2,7 +2,6 @@
 
 #include "enum/reference.h"
 #include "enum/settlementenum.h"
-#include "enum/statementenum.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 
@@ -12,6 +11,7 @@ void MainWindow::SetTreeView(QTreeView* tree_view, CSectionInfo& info) const
 
     if (section == Section::kSale || section == Section::kPurchase) {
         tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kSettlementId), kIsHidden);
+        tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kIsSettled), kIsHidden);
     }
 
     {
