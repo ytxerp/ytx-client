@@ -5,39 +5,39 @@
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 
-void MainWindow::SetTreeView(QTreeView* tree_view, CSectionInfo& info) const
+void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
 {
     const auto section { info.section };
 
-    if (section == Section::kSale || section == Section::kPurchase) {
-        tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kSettlementId), kIsHidden);
-        tree_view->setColumnHidden(std::to_underlying(NodeEnumO::kIsSettled), kIsHidden);
-    }
-
     {
-        tree_view->setColumnHidden(std::to_underlying(NodeEnum::kId), kIsHidden);
-        tree_view->setColumnHidden(std::to_underlying(NodeEnum::kUserId), kIsHidden);
-        tree_view->setColumnHidden(std::to_underlying(NodeEnum::kCreateBy), kIsHidden);
-        tree_view->setColumnHidden(std::to_underlying(NodeEnum::kCreateTime), kIsHidden);
-        tree_view->setColumnHidden(std::to_underlying(NodeEnum::kUpdateTime), kIsHidden);
-        tree_view->setColumnHidden(std::to_underlying(NodeEnum::kUpdateBy), kIsHidden);
-
-        tree_view->setSelectionMode(QAbstractItemView::SingleSelection);
-        tree_view->setDragDropMode(QAbstractItemView::DragDrop);
-        tree_view->setEditTriggers(QAbstractItemView::DoubleClicked);
-        tree_view->setDropIndicatorShown(true);
-        tree_view->setSortingEnabled(true);
-        tree_view->setContextMenuPolicy(Qt::CustomContextMenu);
-        tree_view->setExpandsOnDoubleClick(true);
-    }
-
-    {
-        auto* header { tree_view->header() };
+        auto* header { view->header() };
         MainWindowUtils::SetupHeaderStatus(header, section_settings_, section, kTreeHeaderState);
 
         ResizeColumn(header, NodeUtils::DescriptionColumn(section));
         header->setStretchLastSection(false);
         header->setDefaultAlignment(Qt::AlignCenter);
+    }
+
+    if (section == Section::kSale || section == Section::kPurchase) {
+        view->setColumnHidden(std::to_underlying(NodeEnumO::kSettlementId), kIsHidden);
+        view->setColumnHidden(std::to_underlying(NodeEnumO::kIsSettled), kIsHidden);
+    }
+
+    {
+        view->setColumnHidden(std::to_underlying(NodeEnum::kId), kIsHidden);
+        view->setColumnHidden(std::to_underlying(NodeEnum::kUserId), kIsHidden);
+        view->setColumnHidden(std::to_underlying(NodeEnum::kCreateBy), kIsHidden);
+        view->setColumnHidden(std::to_underlying(NodeEnum::kCreateTime), kIsHidden);
+        view->setColumnHidden(std::to_underlying(NodeEnum::kUpdateTime), kIsHidden);
+        view->setColumnHidden(std::to_underlying(NodeEnum::kUpdateBy), kIsHidden);
+
+        view->setSelectionMode(QAbstractItemView::SingleSelection);
+        view->setDragDropMode(QAbstractItemView::DragDrop);
+        view->setEditTriggers(QAbstractItemView::DoubleClicked);
+        view->setDropIndicatorShown(true);
+        view->setSortingEnabled(true);
+        view->setContextMenuPolicy(Qt::CustomContextMenu);
+        view->setExpandsOnDoubleClick(true);
     }
 }
 
@@ -139,16 +139,6 @@ void MainWindow::SetSettlementView(QTableView* view, int stretch_column) const
 void MainWindow::SetTableViewO(QTableView* view, Section section, int stretch_column, int lhs_node_column) const
 {
     {
-        view->setSelectionMode(QAbstractItemView::SingleSelection);
-        view->setSelectionBehavior(QAbstractItemView::SelectRows);
-        view->setAlternatingRowColors(true);
-        view->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::CurrentChanged);
-
-        view->setColumnHidden(std::to_underlying(EntryEnum::kId), kIsHidden);
-        view->setColumnHidden(lhs_node_column, kIsHidden);
-    }
-
-    {
         auto* h_header { view->horizontalHeader() };
         MainWindowUtils::SetupHeaderStatus(h_header, section_settings_, section, kTableHeaderState);
 
@@ -156,6 +146,16 @@ void MainWindow::SetTableViewO(QTableView* view, Section section, int stretch_co
 
         h_header->setSectionsMovable(true);
         h_header->setHighlightSections(true);
+    }
+
+    {
+        view->setSelectionMode(QAbstractItemView::SingleSelection);
+        view->setSelectionBehavior(QAbstractItemView::SelectRows);
+        view->setAlternatingRowColors(true);
+        view->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::CurrentChanged);
+
+        view->setColumnHidden(std::to_underlying(EntryEnum::kId), kIsHidden);
+        view->setColumnHidden(lhs_node_column, kIsHidden);
     }
 
     {
