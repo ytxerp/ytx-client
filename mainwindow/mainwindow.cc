@@ -294,6 +294,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SStatement, this, &MainWindow::RStatement);
     connect(WebSocket::Instance(), &WebSocket::SStatementNodeAcked, this, &MainWindow::RStatementNodeAcked);
     connect(WebSocket::Instance(), &WebSocket::SStatementEntryAcked, this, &MainWindow::RStatementEntryAcked);
+    connect(WebSocket::Instance(), &WebSocket::SSettlement, this, &MainWindow::RSettlement);
 }
 
 void MainWindow::SetIcon() const
