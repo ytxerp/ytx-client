@@ -51,6 +51,12 @@ void MainWindow::RSettlementNodeAppend(
         tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
     }
 
+    {
+        auto* view { widget->View() };
+        SetSettlementNodeView(view, std::to_underlying(SettlementNodeEnum::kDescription));
+        DelegateSettlementNode(view, sc_->section_config);
+    }
+
     RegisterWidget(widget_id, widget);
 }
 
@@ -68,6 +74,12 @@ void MainWindow::RSettlementNodeEdit(const QUuid& parent_widget_id, const std::s
         auto* tab_bar { ui->tabWidget->tabBar() };
 
         tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
+    }
+
+    {
+        auto* view { widget->View() };
+        SetSettlementNodeView(view, std::to_underlying(SettlementNodeEnum::kDescription));
+        DelegateSettlementNode(view, sc_->section_config);
     }
 
     RegisterWidget(widget_id, widget);

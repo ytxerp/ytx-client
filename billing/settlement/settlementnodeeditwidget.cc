@@ -16,6 +16,10 @@ SettlementNodeEditWidget::SettlementNodeEditWidget(TreeModel* tree_model_partner
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
+
+    ui->tableView->setModel(model);
+    model->setParent(this);
+
     InitWidget();
     InitData();
 }

@@ -443,17 +443,17 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kPartner), node);
 }
 
-void MainWindow::DelegateSettlementPrimary(QTableView* table_view, CSectionConfig& config) const
+void MainWindow::DelegateSettlementNode(QTableView* table_view, CSectionConfig& config) const
 {
     auto* amount { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kAmount), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kAmount), amount);
 
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kPartner), employee);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kPartner), employee);
 
-    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kStatus), status);
+    // auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    // table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kSettlementId), status);
 
     auto* issued_time { new IssuedTimeR(kDateFST, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kIssuedTime), issued_time);
 }
