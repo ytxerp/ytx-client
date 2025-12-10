@@ -67,6 +67,7 @@ set(SOURCES
     delegate/boolstring.cc
     delegate/document.cc
     delegate/line.cc
+    delegate/bool.cc
     delegate/styleditemdelegate.cc
     delegate/filterunit.cc
     delegate/readonly/nodenamer.cc
@@ -221,6 +222,7 @@ set(HEADERS
     delegate/line.h
     delegate/int.h
     delegate/status.h
+    delegate/bool.h
     delegate/double.h
     delegate/document.h
     delegate/filterunit.h

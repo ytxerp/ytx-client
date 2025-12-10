@@ -17,31 +17,21 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTENUM_H
-#define SETTLEMENTENUM_H
+#ifndef BOOL_H
+#define BOOL_H
 
-enum class SettlementEnum {
-    kId = 0,
-    kUserId,
-    kCreateTime,
-    kCreateBy,
-    kUpdateTime,
-    kUpdateBy,
-    kIssuedTime,
-    kPartner,
-    kDescription,
-    kStatus,
-    kAmount,
+#include <QEvent>
+
+#include "delegate/styleditemdelegate.h"
+
+class Bool final : public StyledItemDelegate {
+public:
+    explicit Bool(QEvent::Type type, QObject* parent = nullptr);
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+    bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
+
+private:
+    QEvent::Type type_ {};
 };
 
-enum class SettlementNodeEnum {
-    kId = 0,
-    kIssuedTime,
-    kAmount,
-    kStatus,
-    kPartner,
-    kDescription,
-    kEmployee,
-};
-
-#endif // SETTLEMENTENUM_H
+#endif // BOOL_H

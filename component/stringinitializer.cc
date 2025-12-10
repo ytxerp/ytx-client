@@ -351,12 +351,12 @@ void StringInitializer::SetHeader(
 
     sale.settlement_node_header = {
         QObject::tr("Id"),
-        QObject::tr("SettlementId"),
         QObject::tr("IssuedTime"),
+        QObject::tr("Amount"),
+        QObject::tr("Status"),
         QObject::tr("Partner"),
         QObject::tr("Description"),
         QObject::tr("Employee"),
-        QObject::tr("Amount"),
     };
 
     purchase.node_header = sale.node_header;

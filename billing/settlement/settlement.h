@@ -49,11 +49,11 @@ struct Settlement {
 struct SettlementNode {
     QUuid id {};
     QUuid partner {};
-    QUuid settlement_id {};
     QUuid employee {};
     QDateTime issued_time {};
     QString description {};
     double amount {};
+    bool is_settled {};
 
     void ResetState();
 

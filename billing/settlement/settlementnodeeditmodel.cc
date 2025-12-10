@@ -56,8 +56,6 @@ QVariant SettlementNodeEditModel::data(const QModelIndex& index, int role) const
     switch (column) {
     case SettlementNodeEnum::kId:
         return settlement_node->id;
-    case SettlementNodeEnum::kSettlementId:
-        return settlement_node->settlement_id;
     case SettlementNodeEnum::kIssuedTime:
         return settlement_node->issued_time;
     case SettlementNodeEnum::kDescription:
@@ -68,6 +66,8 @@ QVariant SettlementNodeEditModel::data(const QModelIndex& index, int role) const
         return settlement_node->partner;
     case SettlementNodeEnum::kEmployee:
         return settlement_node->employee;
+    case SettlementNodeEnum::kStatus:
+        return settlement_node->is_settled;
     default:
         return QVariant();
     }
@@ -75,16 +75,14 @@ QVariant SettlementNodeEditModel::data(const QModelIndex& index, int role) const
 
 bool SettlementNodeEditModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if (!index.isValid() || index.column() != std::to_underlying(SettlementNodeEnum::kSettlementId) || role != Qt::EditRole)
+    if (!index.isValid() || index.column() != std::to_underlying(SettlementNodeEnum::kStatus) || role != Qt::EditRole)
         return false;
 
     auto* settlement_node { static_cast<SettlementNode*>(index.internalPointer()) };
     if (!settlement_node)
         return false;
 
-    const bool check { value.toBool() };
-
-    settlement_node->settlement_id = check ? settlement_id_ : QUuid();
+    settlement_node->is_settled = value.toBool();
     return true;
 }
 
@@ -115,6 +113,8 @@ void SettlementNodeEditModel::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->partner < rhs->partner) : (lhs->partner > rhs->partner);
         case SettlementNodeEnum::kAmount:
             return (order == Qt::AscendingOrder) ? (lhs->amount < rhs->amount) : (lhs->amount > rhs->amount);
+        case SettlementNodeEnum::kStatus:
+            return (order == Qt::AscendingOrder) ? (lhs->is_settled < rhs->is_settled) : (lhs->is_settled > rhs->is_settled);
         default:
             return false;
         }
@@ -148,7 +148,7 @@ void SettlementNodeEditModel::ResetModel(const QJsonArray& entry_array)
         list_.clear();
 
         for (auto* entry : std::as_const(list_cache_)) {
-            if (status_ == std::to_underlying(SettlementStatus::kReleased) && !entry->settlement_id.isNull())
+            if (status_ == std::to_underlying(SettlementStatus::kReleased) && entry->is_settled)
                 list_.emplaceBack(entry);
 
             if (status_ == std::to_underlying(SettlementStatus::kRecalled))
@@ -171,7 +171,7 @@ void SettlementNodeEditModel::UpdateStatus(int status)
         if (status == std::to_underlying(SettlementStatus::kReleased))
             for (int row = list_.size() - 1; row >= 0; --row) {
                 auto* node = list_.at(row);
-                if (node->settlement_id.isNull()) {
+                if (!node->is_settled) {
                     beginRemoveRows(QModelIndex(), row, row);
                     list_.removeAt(row);
                     endRemoveRows();
@@ -184,7 +184,7 @@ void SettlementNodeEditModel::UpdateStatus(int status)
             QList<SettlementNode*> to_add {};
 
             for (auto* node : std::as_const(list_cache_)) {
-                if (node->settlement_id.isNull()) {
+                if (!node->is_settled) {
                     to_add.append(node);
                 }
             }

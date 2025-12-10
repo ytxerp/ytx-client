@@ -36,7 +36,7 @@ void Settlement::ReadJson(const QJsonObject& object)
         status = object.value(kStatus).toInt();
 
     if (object.contains(kAmount))
-        amount = object.value(kAmount).toDouble();
+        amount = object.value(kAmount).toString().toDouble();
 
     if (object.contains(kUserId))
         user_id = QUuid(object.value(kUserId).toString());
@@ -72,11 +72,11 @@ void SettlementNode::ResetState()
 {
     id = QUuid();
     partner = QUuid();
-    settlement_id = QUuid();
     employee = QUuid();
     issued_time = {};
     description.clear();
     amount = 0.0;
+    is_settled = false;
 }
 
 void SettlementNode::ReadJson(const QJsonObject& object)
@@ -86,9 +86,6 @@ void SettlementNode::ReadJson(const QJsonObject& object)
 
     if (object.contains(kPartner))
         partner = QUuid(object.value(kPartner).toString());
-
-    if (object.contains(kSettlementId))
-        settlement_id = QUuid(object.value(kSettlementId).toString());
 
     if (object.contains(kEmployee))
         employee = QUuid(object.value(kEmployee).toString());
@@ -100,7 +97,10 @@ void SettlementNode::ReadJson(const QJsonObject& object)
         description = object.value(kDescription).toString();
 
     if (object.contains(kAmount))
-        amount = object.value(kAmount).toDouble();
+        amount = object.value(kAmount).toString().toDouble();
+
+    if (object.contains(kIsSettled))
+        is_settled = object.value(kIsSettled).toBool();
 }
 
 QJsonObject SettlementNode::WriteJson() const
@@ -108,10 +108,10 @@ QJsonObject SettlementNode::WriteJson() const
     QJsonObject obj {};
     obj.insert(kId, id.toString(QUuid::WithoutBraces));
     obj.insert(kPartner, partner.toString(QUuid::WithoutBraces));
-    obj.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
     obj.insert(kEmployee, employee.toString(QUuid::WithoutBraces));
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kDescription, description);
     obj.insert(kAmount, amount);
+    obj.insert(kIsSettled, is_settled);
     return obj;
 }

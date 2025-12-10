@@ -1,3 +1,4 @@
+#include "delegate/bool.h"
 #include "delegate/boolstring.h"
 #include "delegate/document.h"
 #include "delegate/double.h"
@@ -449,10 +450,10 @@ void MainWindow::DelegateSettlementNode(QTableView* table_view, CSectionConfig& 
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kAmount), amount);
 
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kPartner), employee);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kEmployee), employee);
 
-    // auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
-    // table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kSettlementId), status);
+    auto* status { new Bool(QEvent::MouseButtonRelease, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kStatus), status);
 
     auto* issued_time { new IssuedTimeR(kDateFST, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kIssuedTime), issued_time);
