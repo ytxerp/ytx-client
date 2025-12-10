@@ -50,6 +50,9 @@ public:
     void UpdateStatus(int status);
 
 private:
+    void NormalizeBuffer();
+
+private:
     CSectionInfo& info_;
 
     QUuid partner_id_ {};

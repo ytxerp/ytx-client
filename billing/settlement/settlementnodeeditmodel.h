@@ -50,6 +50,9 @@ public:
     void UpdateStatus(int status);
 
 private:
+    void NormalizeBuffer();
+
+private:
     CSectionInfo& info_;
 
     const QUuid settlement_id_ {};

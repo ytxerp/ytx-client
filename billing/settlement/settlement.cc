@@ -76,7 +76,7 @@ void SettlementNode::ResetState()
     issued_time = {};
     description.clear();
     amount = 0.0;
-    is_settled = false;
+    status = false;
 }
 
 void SettlementNode::ReadJson(const QJsonObject& object)
@@ -100,7 +100,7 @@ void SettlementNode::ReadJson(const QJsonObject& object)
         amount = object.value(kAmount).toString().toDouble();
 
     if (object.contains(kIsSettled))
-        is_settled = object.value(kIsSettled).toBool();
+        status = object.value(kIsSettled).toBool();
 }
 
 QJsonObject SettlementNode::WriteJson() const
@@ -112,6 +112,6 @@ QJsonObject SettlementNode::WriteJson() const
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kDescription, description);
     obj.insert(kAmount, amount);
-    obj.insert(kIsSettled, is_settled);
+    obj.insert(kIsSettled, status);
     return obj;
 }

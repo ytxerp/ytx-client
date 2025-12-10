@@ -53,7 +53,7 @@ struct SettlementNode {
     QDateTime issued_time {};
     QString description {};
     double amount {};
-    bool is_settled {};
+    bool status {};
 
     void ResetState();
 
