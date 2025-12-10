@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTNODEMODEL_H
-#define SETTLEMENTNODEMODEL_H
+#ifndef SETTLEMENTNODEAPPENDMODEL_H
+#define SETTLEMENTNODEAPPENDMODEL_H
 
 #include <QAbstractItemModel>
 
@@ -26,12 +26,11 @@
 #include "component/using.h"
 #include "settlement.h"
 
-class SettlementNodeModel final : public QAbstractItemModel {
+class SettlementNodeAppendModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SettlementNodeModel(
-        CSectionInfo& info, CUuid& partner_id, CUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list_cache, QObject* parent = nullptr);
-    ~SettlementNodeModel();
+    SettlementNodeAppendModel(CSectionInfo& info, CUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list_cache, QObject* parent = nullptr);
+    ~SettlementNodeAppendModel();
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -54,6 +53,8 @@ private:
     CSectionInfo& info_;
 
     QUuid partner_id_ {};
+    int status_ {};
+
     const QUuid settlement_id_ {};
 
     SettlementNodeList list_ {};
@@ -63,4 +64,4 @@ private:
     QSet<QUuid> pending_insert_ {};
 };
 
-#endif // SETTLEMENTNODEMODEL_H
+#endif // SETTLEMENTNODEAPPENDMODEL_H

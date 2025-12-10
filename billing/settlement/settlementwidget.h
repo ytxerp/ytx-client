@@ -34,7 +34,8 @@ class SettlementWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SSettlementNode(const std::shared_ptr<Settlement>& settlement, bool is_persisted, std::shared_ptr<SettlementNodeList>& list_cache);
+    void SSettlementNodeAppend(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement, std::shared_ptr<SettlementNodeList>& list_cache);
+    void SSettlementNodeEdit(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement);
 
 public:
     explicit SettlementWidget(SettlementModel* model, Section section, CUuid& widget_id, QWidget* parent = nullptr);

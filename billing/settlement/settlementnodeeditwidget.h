@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTNODEWIDGET_H
-#define SETTLEMENTNODEWIDGET_H
+#ifndef SETTLEMENTNODEEDITWIDGET_H
+#define SETTLEMENTNODEEDITWIDGET_H
 
 #include <QTableView>
 #include <QWidget>
@@ -26,27 +26,26 @@
 #include "component/using.h"
 #include "enum/section.h"
 #include "settlement.h"
-#include "settlementnodemodel.h"
+#include "settlementnodeeditmodel.h"
 #include "tree/model/treemodel.h"
 
 namespace Ui {
-class SettlementNodeWidget;
+class SettlementNodeEditWidget;
 }
 
-class SettlementNodeWidget final : public QWidget {
+class SettlementNodeEditWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SettlementNodeWidget(TreeModel* tree_model_partner, SettlementNodeModel* model, const std::shared_ptr<Settlement>& settlement, bool is_persisted,
-        Section section, CUuid& widget_id, QWidget* parent = nullptr);
-    ~SettlementNodeWidget();
+    explicit SettlementNodeEditWidget(TreeModel* tree_model_partner, SettlementNodeEditModel* model, const std::shared_ptr<Settlement>& settlement,
+        Section section, CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent = nullptr);
+    ~SettlementNodeEditWidget();
 
     QTableView* View() const;
 
 private slots:
     void on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime);
     void on_lineDescription_textChanged(const QString& arg1);
-    void on_comboPartner_currentIndexChanged(int index);
 
     void on_pBtnRelease_clicked();
     void on_pBtnRecall_clicked();
@@ -56,16 +55,16 @@ private:
     void InitData();
 
 private:
-    Ui::SettlementNodeWidget* ui;
+    Ui::SettlementNodeEditWidget* ui;
 
     const std::shared_ptr<Settlement> settlement_ {};
-    SettlementNodeModel* model_ {};
+    SettlementNodeEditModel* model_ {};
 
     TreeModel* tree_model_partner_ {};
 
     const QUuid widget_id_ {};
+    const QUuid parent_widget_id_ {};
     const Section section_ {};
-    bool is_persisted_ {};
 };
 
-#endif // SETTLEMENTNODEWIDGET_H
+#endif // SETTLEMENTNODEEDITWIDGET_H

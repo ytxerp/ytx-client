@@ -160,5 +160,6 @@ void SettlementModel::ResetModel(const QJsonArray& entry_array)
         list_.emplaceBack(settlement);
     }
 
+    sort(static_cast<int>(SettlementEnum::kIssuedTime), Qt::AscendingOrder);
     endResetModel();
 }

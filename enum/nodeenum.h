@@ -26,6 +26,8 @@ enum class NodeKind { kLeaf = 0, kBranch };
 /** @brief Workflow status of a node. Just for Task and Order sections. */
 enum class NodeStatus { kRecalled = 0, kReleased };
 
+enum class SettlementStatus { kRecalled = 0, kReleased };
+
 /** @brief Unit kinds. */
 /** @brief Currency kinds, ordered by common usage and trading volume. */
 enum class Currency {

@@ -1,24 +1,22 @@
-#include "settlementnodemodel.h"
+#include "settlementnodeeditmodel.h"
 
+#include <QJsonArray>
 #include <QTimer>
 
 #include "enum/nodeenum.h"
 #include "enum/settlementenum.h"
 
-SettlementNodeModel::SettlementNodeModel(
-    CSectionInfo& info, CUuid& partner_id, CUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list_cache, QObject* parent)
+SettlementNodeEditModel::SettlementNodeEditModel(CSectionInfo& info, int status, CUuid& settlement_id, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
-    , partner_id_ { partner_id }
     , settlement_id_ { settlement_id }
-    , list_cache_ { list_cache }
+    , status_ { status }
 {
-    QTimer::singleShot(0, [this]() { UpdatePartner(partner_id_); });
 }
 
-SettlementNodeModel::~SettlementNodeModel() { }
+SettlementNodeEditModel::~SettlementNodeEditModel() { ResourcePool<SettlementNode>::Instance().Recycle(list_cache_); }
 
-QModelIndex SettlementNodeModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex SettlementNodeEditModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -26,25 +24,25 @@ QModelIndex SettlementNodeModel::index(int row, int column, const QModelIndex& p
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex SettlementNodeModel::parent(const QModelIndex& index) const
+QModelIndex SettlementNodeEditModel::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int SettlementNodeModel::rowCount(const QModelIndex& parent) const
+int SettlementNodeEditModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return list_.size();
 }
 
-int SettlementNodeModel::columnCount(const QModelIndex& parent) const
+int SettlementNodeEditModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return info_.settlement_node_header.size();
 }
 
-QVariant SettlementNodeModel::data(const QModelIndex& index, int role) const
+QVariant SettlementNodeEditModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -75,7 +73,7 @@ QVariant SettlementNodeModel::data(const QModelIndex& index, int role) const
     }
 }
 
-bool SettlementNodeModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool SettlementNodeEditModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || index.column() != std::to_underlying(SettlementNodeEnum::kSettlementId) || role != Qt::EditRole)
         return false;
@@ -90,7 +88,7 @@ bool SettlementNodeModel::setData(const QModelIndex& index, const QVariant& valu
     return true;
 }
 
-QVariant SettlementNodeModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant SettlementNodeEditModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return info_.settlement_node_header.at(section);
@@ -98,7 +96,7 @@ QVariant SettlementNodeModel::headerData(int section, Qt::Orientation orientatio
     return QVariant();
 }
 
-void SettlementNodeModel::sort(int column, Qt::SortOrder order)
+void SettlementNodeEditModel::sort(int column, Qt::SortOrder order)
 {
     if (column <= -1 || column >= info_.settlement_node_header.size())
         return;
@@ -127,31 +125,50 @@ void SettlementNodeModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SettlementNodeModel::UpdatePartner(const QUuid& partner_id)
+void SettlementNodeEditModel::ResetModel(const QJsonArray& entry_array)
 {
-    if (partner_id_ == partner_id || partner_id.isNull())
-        return;
+    ResourcePool<SettlementNode>::Instance().Recycle(list_cache_);
 
-    beginResetModel();
+    for (const auto& value : entry_array) {
+        if (!value.isObject())
+            continue;
 
-    partner_id_ = partner_id;
+        const QJsonObject obj { value.toObject() };
 
-    list_.clear();
+        auto* settlement { ResourcePool<SettlementNode>::Instance().Allocate() };
 
-    for (auto* node : *list_cache_) {
-        if (node->partner == partner_id) {
-            list_.emplaceBack(node);
-        }
+        settlement->ReadJson(obj);
+
+        list_cache_.emplaceBack(settlement);
     }
 
-    sort(std::to_underlying(SettlementNodeEnum::kSettlementId), Qt::AscendingOrder);
-    endResetModel();
+    {
+        beginResetModel();
+
+        list_.clear();
+
+        for (auto* entry : std::as_const(list_cache_)) {
+            if (status_ == std::to_underlying(SettlementStatus::kReleased) && !entry->settlement_id.isNull())
+                list_.emplaceBack(entry);
+
+            if (status_ == std::to_underlying(SettlementStatus::kRecalled))
+                list_.emplaceBack(entry);
+        }
+
+        sort(static_cast<int>(SettlementNodeEnum::kIssuedTime), Qt::AscendingOrder);
+        endResetModel();
+    }
 }
 
-void SettlementNodeModel::UpdateStatus(int status)
+void SettlementNodeEditModel::UpdateStatus(int status)
 {
+    if (status_ == status)
+        return;
+
+    status_ = status;
+
     {
-        if (status == std::to_underlying(NodeStatus::kReleased))
+        if (status == std::to_underlying(SettlementStatus::kReleased))
             for (int row = list_.size() - 1; row >= 0; --row) {
                 auto* node = list_.at(row);
                 if (node->settlement_id.isNull()) {
@@ -163,11 +180,11 @@ void SettlementNodeModel::UpdateStatus(int status)
     }
 
     {
-        if (status == std::to_underlying(NodeStatus::kRecalled)) {
+        if (status == std::to_underlying(SettlementStatus::kRecalled)) {
             QList<SettlementNode*> to_add {};
 
-            for (auto* node : *list_cache_) {
-                if (node->partner == partner_id_ && node->settlement_id.isNull()) {
+            for (auto* node : std::as_const(list_cache_)) {
+                if (node->settlement_id.isNull()) {
                     to_add.append(node);
                 }
             }
