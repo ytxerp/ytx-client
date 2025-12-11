@@ -172,6 +172,7 @@ void WebSocket::InitHandler()
     handler_obj_[kStatementNodeAcked] = [this](const QJsonObject& obj) { AckStatementNode(obj); };
     handler_obj_[kStatementEntryAcked] = [this](const QJsonObject& obj) { AckStatementEntry(obj); };
     handler_obj_[kSettlementAcked] = [this](const QJsonObject& obj) { AckSettlement(obj); };
+    handler_obj_[kSettlementNodeAcked] = [this](const QJsonObject& obj) { AckSettlementNode(obj); };
 
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
@@ -258,7 +259,7 @@ void WebSocket::RReceiveMessage(const QString& message)
     const QJsonValue root { QJsonValue::fromJson(message.toUtf8(), &err) };
 
     if (err.error != QJsonParseError::NoError || !root.isObject()) {
-        qWarning() << "Invalid JSON message:" << message;
+        qWarning() << "Invalid Message:" << message;
         return;
     }
 
@@ -282,7 +283,7 @@ void WebSocket::RReceiveMessage(const QString& message)
         }
     }
 
-    qWarning() << "Unsupported value type for message:" << msg_type;
+    qWarning() << "Unsupported Message:" << msg_type;
 }
 
 void WebSocket::NotifyLoginResult(const QJsonObject& obj)
@@ -457,6 +458,15 @@ void WebSocket::AckSettlement(const QJsonObject& obj)
     const QJsonArray array { obj.value(kEntryArray).toArray() };
 
     emit SSettlement(section, widget_id, array);
+}
+
+void WebSocket::AckSettlementNode(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
+    const QJsonArray array { obj.value(kEntryArray).toArray() };
+
+    emit SSettlementNodeAcked(section, widget_id, array);
 }
 
 void WebSocket::RemoveLeaf(const QJsonObject& obj)

@@ -57,6 +57,19 @@ void MainWindow::RSettlementNode(const QUuid& parent_widget_id, const std::share
     RegisterWidget(widget_id, widget);
 }
 
+void MainWindow::RSettlementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
+{
+    auto* sc { GetSectionContex(section) };
+
+    auto widget { sc->widget_hash.value(widget_id, nullptr) };
+    if (!widget)
+        return;
+
+    auto* d_widget { static_cast<SettlementNodeWidget*>(widget.data()) };
+    auto* model { d_widget->Model() };
+    model->ResetModel(entry_array);
+}
+
 void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
 {
     auto* sc { GetSectionContex(section) };
