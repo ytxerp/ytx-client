@@ -394,7 +394,6 @@ QJsonObject SettlementAcked(Section section, CUuid& widget_id, const QDateTime& 
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
     message.insert(kEntryArray, QJsonArray());
-    message.insert(kUnsettledOrder, QJsonArray());
 
     return message;
 }

@@ -1,8 +1,7 @@
 #include "billing/settlement/settlementmodel.h"
-#include "billing/settlement/settlementnodeappendmodel.h"
-#include "billing/settlement/settlementnodeappendwidget.h"
-#include "billing/settlement/settlementnodeeditmodel.h"
-#include "billing/settlement/settlementnodeeditwidget.h"
+#include "billing/settlement/settlementnodemodel.h"
+#include "billing/settlement/settlementnodewidget.h"
+#include "billing/settlement/settlementwidget.h"
 #include "enum/settlementenum.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -16,7 +15,6 @@ void MainWindow::on_actionSettlement_triggered()
 
     auto* widget { new SettlementWidget(model, start_, widget_id, this) };
     connect(widget, &SettlementWidget::SSettlementNodeAppend, this, &MainWindow::RSettlementNodeAppend);
-    connect(widget, &SettlementWidget::SSettlementNodeEdit, this, &MainWindow::RSettlementNodeEdit);
 
     {
         const int tab_index { ui->tabWidget->addTab(widget, tr("Settlement")) };
@@ -34,15 +32,14 @@ void MainWindow::on_actionSettlement_triggered()
     RegisterWidget(widget_id, widget);
 }
 
-void MainWindow::RSettlementNodeAppend(
-    const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement, std::shared_ptr<SettlementNodeList>& list_cache)
+void MainWindow::RSettlementNodeAppend(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement, bool is_persisted)
 {
     assert(IsOrderSection(start_));
 
-    auto* model { new SettlementNodeAppendModel(sc_->info, settlement->id, list_cache, this) };
+    auto* model { new SettlementNodeModel(sc_->info, settlement->status, settlement->id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new SettlementNodeAppendWidget(sc_p_.tree_model, model, settlement, start_, widget_id, parent_widget_id, this) };
+    auto* widget { new SettlementNodeWidget(sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, parent_widget_id, this) };
 
     {
         const int tab_index { ui->tabWidget->addTab(widget, tr("SettlementNode")) };
@@ -60,32 +57,7 @@ void MainWindow::RSettlementNodeAppend(
     RegisterWidget(widget_id, widget);
 }
 
-void MainWindow::RSettlementNodeEdit(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement)
-{
-    assert(IsOrderSection(start_));
-
-    auto* model { new SettlementNodeEditModel(sc_->info, settlement->status, settlement->id, this) };
-    const QUuid widget_id { QUuid::createUuidV7() };
-
-    auto* widget { new SettlementNodeEditWidget(sc_p_.tree_model, model, settlement, start_, widget_id, parent_widget_id, this) };
-
-    {
-        const int tab_index { ui->tabWidget->addTab(widget, tr("SettlementNode")) };
-        auto* tab_bar { ui->tabWidget->tabBar() };
-
-        tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
-    }
-
-    {
-        auto* view { widget->View() };
-        SetSettlementNodeView(view, std::to_underlying(SettlementNodeEnum::kDescription));
-        DelegateSettlementNode(view, sc_->section_config);
-    }
-
-    RegisterWidget(widget_id, widget);
-}
-
-void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonArray& unsettled_order)
+void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -96,5 +68,4 @@ void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJso
     auto* d_widget { static_cast<SettlementWidget*>(widget.data()) };
     auto* model { d_widget->Model() };
     model->ResetModel(entry_array);
-    d_widget->ResetUnsettledOrder(unsettled_order);
 }

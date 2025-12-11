@@ -34,8 +34,7 @@ class SettlementWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SSettlementNodeAppend(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement, std::shared_ptr<SettlementNodeList>& list_cache);
-    void SSettlementNodeEdit(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement);
+    void SSettlementNodeAppend(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement, bool is_persisted);
 
 public:
     explicit SettlementWidget(SettlementModel* model, Section section, CUuid& widget_id, QWidget* parent = nullptr);
@@ -43,7 +42,6 @@ public:
 
     QTableView* View() const;
     SettlementModel* Model() const { return model_; }
-    void ResetUnsettledOrder(const QJsonArray& array);
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -56,7 +54,6 @@ private slots:
 private:
     void IniWidget();
     void InitTimer();
-    void InitSharedPtr();
 
 private:
     Ui::SettlementWidget* ui;
@@ -64,8 +61,6 @@ private:
     QDateTime start_ {};
     QDateTime end_ {};
     QTimer* cooldown_timer_ { nullptr };
-
-    std::shared_ptr<SettlementNodeList> unsettled_order_ {};
 
     const Section section_ {};
     const QUuid widget_id_ {};

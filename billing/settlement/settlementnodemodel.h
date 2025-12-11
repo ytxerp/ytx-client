@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTNODEAPPENDMODEL_H
-#define SETTLEMENTNODEAPPENDMODEL_H
+#ifndef SETTLEMENTNODEMODEL_H
+#define SETTLEMENTNODEMODEL_H
 
 #include <QAbstractItemModel>
 
@@ -26,11 +26,11 @@
 #include "component/using.h"
 #include "settlement.h"
 
-class SettlementNodeAppendModel final : public QAbstractItemModel {
+class SettlementNodeModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SettlementNodeAppendModel(CSectionInfo& info, CUuid& settlement_id, std::shared_ptr<SettlementNodeList>& list_cache, QObject* parent = nullptr);
-    ~SettlementNodeAppendModel();
+    SettlementNodeModel(CSectionInfo& info, int status, CUuid& settlement_id, QObject* parent = nullptr);
+    ~SettlementNodeModel();
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -46,25 +46,20 @@ public:
 
     void sort(int column, Qt::SortOrder order) override;
 
-    void UpdatePartner(const QUuid& partner_id);
+    void ResetModel(const QJsonArray& entry_array);
     void UpdateStatus(int status);
-
-private:
-    void NormalizeBuffer();
 
 private:
     CSectionInfo& info_;
 
-    QUuid partner_id_ {};
+    const QUuid settlement_id_ {};
     int status_ {};
 
-    const QUuid settlement_id_ {};
-
     SettlementNodeList list_ {};
-    std::shared_ptr<SettlementNodeList> list_cache_;
+    SettlementNodeList list_cache_ {};
 
     QSet<QUuid> pending_delete_ {};
     QSet<QUuid> pending_insert_ {};
 };
 
-#endif // SETTLEMENTNODEAPPENDMODEL_H
+#endif // SETTLEMENTNODEMODEL_H

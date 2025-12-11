@@ -31,7 +31,7 @@ struct Settlement {
     QUuid partner {};
     QDateTime issued_time {};
     QString description {};
-    int status {};
+    int status {}; // Server-side settlement status code, (0=kRecalled, 1=kReleased)
     double amount {};
 
     QUuid user_id {};
@@ -53,12 +53,12 @@ struct SettlementNode {
     QDateTime issued_time {};
     QString description {};
     double amount {};
-    bool status {};
+    bool is_settled {}; // Local settlement flag: true = settled locally, false = not settled yet
 
     void ResetState();
 
     void ReadJson(const QJsonObject& object);
-    QJsonObject WriteJson() const;
+    // QJsonObject WriteJson() const;
 };
 
 // Custom deleter that returns the Settlement to the ResourcePool

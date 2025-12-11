@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTNODEEDITWIDGET_H
-#define SETTLEMENTNODEEDITWIDGET_H
+#ifndef SETTLEMENTNODEWIDGET_H
+#define SETTLEMENTNODEWIDGET_H
 
 #include <QTableView>
 #include <QWidget>
@@ -26,26 +26,28 @@
 #include "component/using.h"
 #include "enum/section.h"
 #include "settlement.h"
-#include "settlementnodeeditmodel.h"
+#include "settlementnodemodel.h"
 #include "tree/model/treemodel.h"
 
 namespace Ui {
-class SettlementNodeEditWidget;
+class SettlementNodeWidget;
 }
 
-class SettlementNodeEditWidget final : public QWidget {
+class SettlementNodeWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SettlementNodeEditWidget(TreeModel* tree_model_partner, SettlementNodeEditModel* model, const std::shared_ptr<Settlement>& settlement,
+    explicit SettlementNodeWidget(TreeModel* tree_model_partner, SettlementNodeModel* model, const std::shared_ptr<Settlement>& settlement, bool is_persisted,
         Section section, CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent = nullptr);
-    ~SettlementNodeEditWidget();
+    ~SettlementNodeWidget();
 
     QTableView* View() const;
+    SettlementNodeModel* Model() const { return model_; }
 
 private slots:
     void on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime);
     void on_lineDescription_textChanged(const QString& arg1);
+    void on_comboPartner_currentIndexChanged(int index);
 
     void on_pBtnRelease_clicked();
     void on_pBtnRecall_clicked();
@@ -55,16 +57,17 @@ private:
     void InitData();
 
 private:
-    Ui::SettlementNodeEditWidget* ui;
+    Ui::SettlementNodeWidget* ui;
 
     const std::shared_ptr<Settlement> settlement_ {};
-    SettlementNodeEditModel* model_ {};
+    SettlementNodeModel* model_ {};
 
     TreeModel* tree_model_partner_ {};
 
     const QUuid widget_id_ {};
     const QUuid parent_widget_id_ {};
     const Section section_ {};
+    bool is_persisted_ {};
 };
 
-#endif // SETTLEMENTNODEEDITWIDGET_H
+#endif // SETTLEMENTNODEWIDGET_H

@@ -453,7 +453,7 @@ void MainWindow::DelegateSettlementNode(QTableView* table_view, CSectionConfig& 
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kEmployee), employee);
 
     auto* status { new Bool(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kIsSettled), status);
 
     auto* issued_time { new IssuedTimeR(kDateFST, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementNodeEnum::kIssuedTime), issued_time);

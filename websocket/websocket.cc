@@ -455,9 +455,8 @@ void WebSocket::AckSettlement(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonArray array { obj.value(kEntryArray).toArray() };
-    const QJsonArray unsettled_order { obj.value(kUnsettledOrder).toArray() };
 
-    emit SSettlement(section, widget_id, array, unsettled_order);
+    emit SSettlement(section, widget_id, array);
 }
 
 void WebSocket::RemoveLeaf(const QJsonObject& obj)

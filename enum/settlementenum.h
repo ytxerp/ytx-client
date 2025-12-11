@@ -20,6 +20,8 @@
 #ifndef SETTLEMENTENUM_H
 #define SETTLEMENTENUM_H
 
+enum class SettlementStatus { kRecalled = 0, kReleased };
+
 enum class SettlementEnum {
     kId = 0,
     kUserId,
@@ -38,7 +40,7 @@ enum class SettlementNodeEnum {
     kId = 0,
     kIssuedTime,
     kAmount,
-    kStatus,
+    kIsSettled,
     kPartner,
     kDescription,
     kEmployee,

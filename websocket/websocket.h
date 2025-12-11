@@ -72,7 +72,7 @@ signals:
     void SStatement(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
     void SStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
     void SStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonObject& total);
-    void SSettlement(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonArray& unsettled_order);
+    void SSettlement(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
 
     void SConnectionRefused();
 

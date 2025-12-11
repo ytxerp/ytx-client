@@ -28,7 +28,6 @@ SettlementWidget::SettlementWidget(SettlementModel* model, Section section, CUui
 
     IniWidget();
     InitTimer();
-    InitSharedPtr();
 
     QTimer::singleShot(0, this, &SettlementWidget::on_pBtnFetch_clicked);
 }
@@ -36,21 +35,6 @@ SettlementWidget::SettlementWidget(SettlementModel* model, Section section, CUui
 SettlementWidget::~SettlementWidget() { delete ui; }
 
 QTableView* SettlementWidget::View() const { return ui->tableView; }
-
-void SettlementWidget::ResetUnsettledOrder(const QJsonArray& array)
-{
-    ResourcePool<SettlementNode>::Instance().Recycle(*unsettled_order_);
-
-    for (const auto& value : array) {
-        if (!value.isObject())
-            continue;
-
-        auto* settlement_node { ResourcePool<SettlementNode>::Instance().Allocate() };
-        settlement_node->ReadJson(value.toObject());
-
-        unsettled_order_->emplaceBack(settlement_node);
-    }
-}
 
 void SettlementWidget::on_start_dateChanged(const QDate& date)
 {
@@ -104,7 +88,7 @@ void SettlementWidget::on_pBtnAppend_clicked()
     settlement->id = QUuid::createUuidV7();
 
     // Emit the signal with shared_ptr
-    emit SSettlementNodeAppend(widget_id_, settlement, unsettled_order_);
+    emit SSettlementNodeAppend(widget_id_, settlement, false);
 }
 
 void SettlementWidget::on_pBtnRemove_clicked()
@@ -125,7 +109,7 @@ void SettlementWidget::on_tableView_doubleClicked(const QModelIndex& index)
 
     auto& settlement { model_->SettlementAt(index.row()) };
 
-    emit SSettlementNodeEdit(widget_id_, settlement);
+    emit SSettlementNodeAppend(widget_id_, settlement, true);
 }
 
 void SettlementWidget::InitTimer()
@@ -133,14 +117,4 @@ void SettlementWidget::InitTimer()
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
-}
-
-void SettlementWidget::InitSharedPtr()
-{
-    auto deleter = [](SettlementNodeList* list) {
-        ResourcePool<SettlementNode>::Instance().Recycle(*list);
-        delete list;
-    };
-
-    unsettled_order_ = std::shared_ptr<SettlementNodeList>(new SettlementNodeList(), deleter);
 }

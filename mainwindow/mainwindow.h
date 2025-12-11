@@ -29,7 +29,7 @@
 #include <QTableView>
 #include <QTranslator>
 
-#include "billing/settlement/settlementwidget.h"
+#include "billing/settlement/settlement.h"
 #include "component/config.h"
 #include "component/info.h"
 #include "component/sectioncontex.h"
@@ -114,9 +114,8 @@ private slots:
     void RStatementNode(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
     void RStatementEntry(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 
-    void RSettlement(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonArray& unsettled_order);
-    void RSettlementNodeAppend(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement, std::shared_ptr<SettlementNodeList>& list_cache);
-    void RSettlementNodeEdit(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement);
+    void RSettlement(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
+    void RSettlementNodeAppend(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement, bool is_persisted);
 
     void RLeafRemoveDenied(const QJsonObject& obj);
     inline void RNodeRemoveConfirmed(const QUuid& node_id) { node_pending_removal_.remove(node_id); }
