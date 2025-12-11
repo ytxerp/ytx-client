@@ -47,11 +47,11 @@ public:
 
     bool InsertNode(int row, const QModelIndex& parent, Settlement* node);
     void ResetModel(const QJsonArray& entry_array);
-    const std::shared_ptr<Settlement>& SettlementAt(int row) { return list_.at(row); }
+    Settlement* SettlementAt(int row) { return list_.at(row); }
 
 private:
     CSectionInfo& info_;
-    QList<std::shared_ptr<Settlement>> list_ {};
+    SettlementList list_ {};
 };
 
 #endif // SETTLEMENTMODEL_H

@@ -4,6 +4,7 @@
 #include <QTimer>
 
 #include "enum/settlementenum.h"
+#include "global/resourcepool.h"
 
 SettlementNodeModel::SettlementNodeModel(CSectionInfo& info, int status, CUuid& settlement_id, QObject* parent)
     : QAbstractItemModel { parent }

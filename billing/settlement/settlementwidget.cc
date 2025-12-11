@@ -82,7 +82,7 @@ void SettlementWidget::IniWidget()
 void SettlementWidget::on_pBtnAppend_clicked()
 {
     // Allocate a Settlement and wrap it in a shared_ptr with the deleter
-    const std::shared_ptr<Settlement> settlement(ResourcePool<Settlement>::Instance().Allocate(), kSettlementDeleter);
+    auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
 
     settlement->issued_time = QDateTime::currentDateTimeUtc();
     settlement->id = QUuid::createUuidV7();
@@ -107,8 +107,7 @@ void SettlementWidget::on_tableView_doubleClicked(const QModelIndex& index)
     if (index.column() != std::to_underlying(SettlementEnum::kAmount))
         return;
 
-    auto& settlement { model_->SettlementAt(index.row()) };
-
+    auto* settlement { static_cast<Settlement*>(index.internalPointer()) };
     emit SSettlementNode(widget_id_, settlement, true);
 }
 

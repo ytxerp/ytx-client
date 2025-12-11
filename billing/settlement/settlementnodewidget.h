@@ -37,8 +37,8 @@ class SettlementNodeWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SettlementNodeWidget(TreeModel* tree_model_partner, SettlementNodeModel* model, const std::shared_ptr<Settlement>& settlement, bool is_persisted,
-        Section section, CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent = nullptr);
+    explicit SettlementNodeWidget(TreeModel* tree_model_partner, SettlementNodeModel* model, Settlement* settlement, bool is_persisted, Section section,
+        CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent = nullptr);
     ~SettlementNodeWidget();
 
     QTableView* View() const;
@@ -61,7 +61,8 @@ private:
 private:
     Ui::SettlementNodeWidget* ui;
 
-    const std::shared_ptr<Settlement> settlement_ {};
+    Settlement* settlement_ {};
+    Settlement tmp_settlement_ {};
     SettlementNodeModel* model_ {};
 
     TreeModel* tree_model_partner_ {};

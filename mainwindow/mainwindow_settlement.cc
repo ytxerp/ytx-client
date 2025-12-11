@@ -32,7 +32,7 @@ void MainWindow::on_actionSettlement_triggered()
     RegisterWidget(widget_id, widget);
 }
 
-void MainWindow::RSettlementNode(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement, bool is_persisted)
+void MainWindow::RSettlementNode(const QUuid& parent_widget_id, Settlement* settlement, bool is_persisted)
 {
     assert(IsOrderSection(start_));
 

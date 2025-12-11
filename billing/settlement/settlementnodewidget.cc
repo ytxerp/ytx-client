@@ -2,15 +2,17 @@
 
 #include "component/signalblocker.h"
 #include "enum/settlementenum.h"
+#include "global/resourcepool.h"
 #include "ui_settlementnodewidget.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SettlementNodeWidget::SettlementNodeWidget(TreeModel* tree_model_partner, SettlementNodeModel* model, const std::shared_ptr<Settlement>& settlement,
-    bool is_persisted, Section section, CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent)
+SettlementNodeWidget::SettlementNodeWidget(TreeModel* tree_model_partner, SettlementNodeModel* model, Settlement* settlement, bool is_persisted,
+    Section section, CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SettlementNodeWidget)
     , settlement_ { settlement }
+    , tmp_settlement_ { *settlement }
     , model_ { model }
     , tree_model_partner_ { tree_model_partner }
     , widget_id_ { widget_id }
@@ -30,7 +32,13 @@ SettlementNodeWidget::SettlementNodeWidget(TreeModel* tree_model_partner, Settle
     QTimer::singleShot(0, this, &SettlementNodeWidget::FetchNode);
 }
 
-SettlementNodeWidget::~SettlementNodeWidget() { delete ui; }
+SettlementNodeWidget::~SettlementNodeWidget()
+{
+    if (!is_persisted_)
+        ResourcePool<Settlement>::Instance().Recycle(settlement_);
+
+    delete ui;
+}
 
 QTableView* SettlementNodeWidget::View() const { return ui->tableView; }
 
@@ -46,37 +54,37 @@ void SettlementNodeWidget::InitWidget()
 
 void SettlementNodeWidget::InitData()
 {
-    int partner_index { ui->comboPartner->findData(settlement_->partner) };
+    int partner_index { ui->comboPartner->findData(tmp_settlement_.partner) };
     ui->comboPartner->setCurrentIndex(partner_index);
 
     ui->comboPartner->setEnabled(!is_persisted_);
     HideWidget();
 
-    ui->lineDescription->setText(settlement_->description);
-    ui->dateTimeEdit->setDateTime(settlement_->issued_time.toLocalTime());
-    ui->dSpinAmount->setValue(settlement_->amount);
+    ui->lineDescription->setText(tmp_settlement_.description);
+    ui->dateTimeEdit->setDateTime(tmp_settlement_.issued_time.toLocalTime());
+    ui->dSpinAmount->setValue(tmp_settlement_.amount);
 }
 
 void SettlementNodeWidget::FetchNode()
 {
-    if (settlement_->partner.isNull())
+    if (tmp_settlement_.partner.isNull())
         return;
 
-    const auto message { JsonGen::SettlementNodeAcked(section_, widget_id_, settlement_->partner, settlement_->id) };
+    const auto message { JsonGen::SettlementNodeAcked(section_, widget_id_, tmp_settlement_.partner, tmp_settlement_.id) };
     WebSocket::Instance()->SendMessage(kSettlementNodeAcked, message);
 }
 
 void SettlementNodeWidget::HideWidget()
 {
-    const bool recalled { settlement_->status == std::to_underlying(SettlementStatus::kRecalled) };
+    const bool recalled { tmp_settlement_.status == std::to_underlying(SettlementStatus::kRecalled) };
 
     ui->pBtnRelease->setVisible(recalled);
     ui->pBtnRecall->setVisible(!recalled);
 }
 
-void SettlementNodeWidget::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime) { settlement_->issued_time = dateTime.toUTC(); }
+void SettlementNodeWidget::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime) { tmp_settlement_.issued_time = dateTime.toUTC(); }
 
-void SettlementNodeWidget::on_lineDescription_textChanged(const QString& arg1) { settlement_->description = arg1; }
+void SettlementNodeWidget::on_lineDescription_textChanged(const QString& arg1) { tmp_settlement_.description = arg1; }
 
 void SettlementNodeWidget::on_comboPartner_currentIndexChanged(int /*index*/)
 {
@@ -84,12 +92,12 @@ void SettlementNodeWidget::on_comboPartner_currentIndexChanged(int /*index*/)
         return;
 
     const QUuid partner_id { ui->comboPartner->currentData().toUuid() };
-    if (settlement_->partner == partner_id)
+    if (tmp_settlement_.partner == partner_id)
         return;
 
     ui->dSpinAmount->setValue(0.0);
 
-    settlement_->partner = partner_id;
+    tmp_settlement_.partner = partner_id;
 
     FetchNode();
 }

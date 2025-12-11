@@ -11,14 +11,14 @@ SettlementModel::SettlementModel(CSectionInfo& info, QObject* parent)
 {
 }
 
-SettlementModel::~SettlementModel() { }
+SettlementModel::~SettlementModel() { ResourcePool<Settlement>::Instance().Recycle(list_); }
 
 QModelIndex SettlementModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column, list_.at(row).get());
+    return createIndex(row, column, list_.at(row));
 }
 
 QModelIndex SettlementModel::parent(const QModelIndex& index) const
@@ -45,7 +45,7 @@ QVariant SettlementModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     const SettlementEnum column { index.column() };
-    auto& settlement { list_.at(index.row()) };
+    auto* settlement { static_cast<Settlement*>(index.internalPointer()) };
 
     switch (column) {
     case SettlementEnum::kId:
@@ -125,7 +125,8 @@ void SettlementModel::sort(int column, Qt::SortOrder order)
 bool SettlementModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     beginRemoveRows(parent, row, row);
-    auto settlement { list_.takeAt(row) };
+    auto* settlement { list_.takeAt(row) };
+    ResourcePool<Settlement>::Instance().Recycle(settlement);
     endRemoveRows();
 
     return true;
@@ -144,7 +145,7 @@ void SettlementModel::ResetModel(const QJsonArray& entry_array)
 {
     beginResetModel();
 
-    list_.clear();
+    ResourcePool<Settlement>::Instance().Recycle(list_);
 
     for (const auto& value : entry_array) {
         if (!value.isObject())
@@ -152,9 +153,7 @@ void SettlementModel::ResetModel(const QJsonArray& entry_array)
 
         const QJsonObject obj { value.toObject() };
 
-        // Allocate a Settlement and wrap it in a shared_ptr with the deleter
-        std::shared_ptr<Settlement> settlement(ResourcePool<Settlement>::Instance().Allocate(), kSettlementDeleter);
-
+        auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
         settlement->ReadJson(obj);
 
         list_.emplaceBack(settlement);
