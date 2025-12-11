@@ -42,6 +42,12 @@ SettlementNodeWidget::~SettlementNodeWidget()
 
 QTableView* SettlementNodeWidget::View() const { return ui->tableView; }
 
+void SettlementNodeWidget::RSyncAmount(double amount)
+{
+    tmp_settlement_.amount += amount;
+    ui->dSpinAmount->setValue(tmp_settlement_.amount);
+}
+
 void SettlementNodeWidget::InitWidget()
 {
     auto* pmodel { tree_model_partner_->IncludeUnitModel(
@@ -50,6 +56,7 @@ void SettlementNodeWidget::InitWidget()
     ui->comboPartner->setCurrentIndex(-1);
 
     ui->dateTimeEdit->setDisplayFormat(kDateTimeFST);
+    ui->dSpinAmount->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
 }
 
 void SettlementNodeWidget::InitData()
@@ -95,6 +102,7 @@ void SettlementNodeWidget::on_comboPartner_currentIndexChanged(int /*index*/)
     if (tmp_settlement_.partner == partner_id)
         return;
 
+    tmp_settlement_.amount = 0.0;
     ui->dSpinAmount->setValue(0.0);
 
     tmp_settlement_.partner = partner_id;

@@ -44,6 +44,9 @@ public:
     QTableView* View() const;
     SettlementNodeModel* Model() const { return model_; }
 
+public slots:
+    void RSyncAmount(double amount);
+
 private slots:
     void on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime);
     void on_lineDescription_textChanged(const QString& arg1);

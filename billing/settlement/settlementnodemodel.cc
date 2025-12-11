@@ -82,12 +82,16 @@ bool SettlementNodeModel::setData(const QModelIndex& index, const QVariant& valu
     if (!settlement_node)
         return false;
 
-    settlement_node->is_settled = value.toBool();
+    const bool is_settled { value.toBool() };
 
-    if (settlement_node->is_settled)
+    settlement_node->is_settled = is_settled;
+
+    if (is_settled)
         pending_insert_.insert(settlement_node->id);
     else
         pending_delete_.insert(settlement_node->id);
+
+    emit SSyncAmount(settlement_node->amount * (is_settled ? 1 : -1));
 
     return true;
 }

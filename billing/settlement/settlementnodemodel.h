@@ -32,6 +32,9 @@ public:
     SettlementNodeModel(CSectionInfo& info, int status, CUuid& settlement_id, QObject* parent = nullptr);
     ~SettlementNodeModel();
 
+signals:
+    void SSyncAmount(double amount);
+
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex& index) const override;

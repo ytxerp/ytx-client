@@ -40,6 +40,7 @@ void MainWindow::RSettlementNode(const QUuid& parent_widget_id, Settlement* sett
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new SettlementNodeWidget(sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, parent_widget_id, this) };
+    connect(model, &SettlementNodeModel::SSyncAmount, widget, &SettlementNodeWidget::RSyncAmount);
 
     {
         const int tab_index { ui->tabWidget->addTab(widget, tr("SettlementNode")) };
