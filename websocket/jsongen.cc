@@ -398,13 +398,14 @@ QJsonObject SettlementAcked(Section section, CUuid& widget_id, const QDateTime& 
     return message;
 }
 
-QJsonObject SettlementNodeAcked(Section section, CUuid& widget_id, CUuid& partner_id)
+QJsonObject SettlementNodeAcked(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id)
 {
     QJsonObject message {};
 
     message.insert(kSection, std::to_underlying(section));
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
+    message.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
     message.insert(kEntryArray, QJsonArray());
 
     return message;

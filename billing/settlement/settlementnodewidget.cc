@@ -62,7 +62,7 @@ void SettlementNodeWidget::FetchNode()
     if (settlement_->partner.isNull())
         return;
 
-    const auto message { JsonGen::SettlementNodeAcked(section_, widget_id_, settlement_->partner) };
+    const auto message { JsonGen::SettlementNodeAcked(section_, widget_id_, settlement_->partner, settlement_->id) };
     WebSocket::Instance()->SendMessage(kSettlementNodeAcked, message);
 }
 

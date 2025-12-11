@@ -98,6 +98,9 @@ void SettlementNode::ReadJson(const QJsonObject& object)
 
     if (object.contains(kAmount))
         amount = object.value(kAmount).toString().toDouble();
+
+    if (object.contains(kIsSettled))
+        is_settled = object.value(kSettlementId).toBool();
 }
 
 // QJsonObject SettlementNode::WriteJson() const

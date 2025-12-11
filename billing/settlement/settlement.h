@@ -31,7 +31,7 @@ struct Settlement {
     QUuid partner {};
     QDateTime issued_time {};
     QString description {};
-    int status {}; // Server-side settlement status code, (0=kRecalled, 1=kReleased)
+    int status {};
     double amount {};
 
     QUuid user_id {};
@@ -53,7 +53,7 @@ struct SettlementNode {
     QDateTime issued_time {};
     QString description {};
     double amount {};
-    bool is_settled {}; // Local settlement flag: true = settled locally, false = not settled yet
+    bool is_settled {};
 
     void ResetState();
 

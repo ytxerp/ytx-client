@@ -83,13 +83,10 @@ bool SettlementNodeModel::setData(const QModelIndex& index, const QVariant& valu
 
     settlement_node->is_settled = value.toBool();
 
-    if (settlement_node->is_settled) {
-        pending_delete_.remove(settlement_node->id);
+    if (settlement_node->is_settled)
         pending_insert_.insert(settlement_node->id);
-    } else {
-        pending_insert_.remove(settlement_node->id);
+    else
         pending_delete_.insert(settlement_node->id);
-    }
 
     return true;
 }
@@ -205,6 +202,17 @@ void SettlementNodeModel::UpdateStatus(int status)
                 list_.append(to_add);
                 endInsertRows();
             }
+        }
+    }
+}
+
+void SettlementNodeModel::NormalizeBuffer()
+{
+    for (auto it = pending_insert_.begin(); it != pending_insert_.end();) {
+        if (pending_delete_.remove(*it)) {
+            it = pending_insert_.erase(it);
+        } else {
+            ++it;
         }
     }
 }
