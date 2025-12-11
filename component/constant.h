@@ -140,6 +140,7 @@ inline const QString kStatementAcked = QStringLiteral("statement_acked");
 inline const QString kStatementNodeAcked = QStringLiteral("statement_node_acked");
 inline const QString kStatementEntryAcked = QStringLiteral("statement_entry_acked");
 inline const QString kSettlementAcked = QStringLiteral("settlement_acked");
+inline const QString kSettlementNodeAcked = QStringLiteral("settlement_node_acked");
 
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");

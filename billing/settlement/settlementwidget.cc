@@ -88,7 +88,7 @@ void SettlementWidget::on_pBtnAppend_clicked()
     settlement->id = QUuid::createUuidV7();
 
     // Emit the signal with shared_ptr
-    emit SSettlementNodeAppend(widget_id_, settlement, false);
+    emit SSettlementNode(widget_id_, settlement, false);
 }
 
 void SettlementWidget::on_pBtnRemove_clicked()
@@ -109,7 +109,7 @@ void SettlementWidget::on_tableView_doubleClicked(const QModelIndex& index)
 
     auto& settlement { model_->SettlementAt(index.row()) };
 
-    emit SSettlementNodeAppend(widget_id_, settlement, true);
+    emit SSettlementNode(widget_id_, settlement, true);
 }
 
 void SettlementWidget::InitTimer()

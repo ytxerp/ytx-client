@@ -170,9 +170,9 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     const bool can_print { !recalled || tmp_node_.unit == std::to_underlying(UnitO::kPending) };
     ui->pBtnPrint->setEnabled(can_print);
 
-    ui->pBtnSave->setHidden(!recalled);
-    ui->pBtnRelease->setHidden(!recalled);
-    ui->pBtnRecall->setHidden(recalled);
+    ui->pBtnSave->setVisible(recalled);
+    ui->pBtnRelease->setVisible(recalled);
+    ui->pBtnRecall->setVisible(!recalled);
 }
 
 void TableWidgetO::IniUnit(int unit)

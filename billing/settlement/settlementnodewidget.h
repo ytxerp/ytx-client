@@ -55,6 +55,8 @@ private slots:
 private:
     void InitWidget();
     void InitData();
+    void FetchNode();
+    void HideWidget();
 
 private:
     Ui::SettlementNodeWidget* ui;

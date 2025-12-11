@@ -14,7 +14,7 @@ void MainWindow::on_actionSettlement_triggered()
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new SettlementWidget(model, start_, widget_id, this) };
-    connect(widget, &SettlementWidget::SSettlementNodeAppend, this, &MainWindow::RSettlementNodeAppend);
+    connect(widget, &SettlementWidget::SSettlementNode, this, &MainWindow::RSettlementNode);
 
     {
         const int tab_index { ui->tabWidget->addTab(widget, tr("Settlement")) };
@@ -32,7 +32,7 @@ void MainWindow::on_actionSettlement_triggered()
     RegisterWidget(widget_id, widget);
 }
 
-void MainWindow::RSettlementNodeAppend(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement, bool is_persisted)
+void MainWindow::RSettlementNode(const QUuid& parent_widget_id, const std::shared_ptr<Settlement>& settlement, bool is_persisted)
 {
     assert(IsOrderSection(start_));
 
