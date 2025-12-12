@@ -134,13 +134,13 @@ void StatementEntryModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void StatementEntryModel::ResetModel(const QJsonArray& entry_array)
+void StatementEntryModel::ResetModel(const QJsonArray& array)
 {
     beginResetModel();
 
     ResourcePool<StatementEntry>::Instance().Recycle(list_);
 
-    for (const auto& value : entry_array) {
+    for (const auto& value : array) {
         if (!value.isObject())
             continue;
 

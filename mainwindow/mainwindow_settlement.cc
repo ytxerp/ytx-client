@@ -71,7 +71,7 @@ void MainWindow::RSettlementNodeAcked(Section section, const QUuid& widget_id, c
     model->ResetModel(entry_array);
 }
 
-void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
+void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -81,5 +81,5 @@ void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJso
 
     auto* d_widget { static_cast<SettlementWidget*>(widget.data()) };
     auto* model { d_widget->Model() };
-    model->ResetModel(entry_array);
+    model->ResetModel(array);
 }

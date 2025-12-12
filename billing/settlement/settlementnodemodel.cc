@@ -135,11 +135,11 @@ void SettlementNodeModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SettlementNodeModel::ResetModel(const QJsonArray& entry_array)
+void SettlementNodeModel::ResetModel(const QJsonArray& array)
 {
     ResourcePool<SettlementNode>::Instance().Recycle(list_cache_);
 
-    for (const auto& value : entry_array) {
+    for (const auto& value : array) {
         if (!value.isObject())
             continue;
 

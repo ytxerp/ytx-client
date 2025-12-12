@@ -98,13 +98,13 @@ private slots:
 
     void RFreeWidget(const QUuid& node_id);
 
-    void RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
+    void RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RSaleReferencePrimary(const QUuid& node_id, int unit);
     void RSaleReferenceSecondary(const QModelIndex& index);
 
-    void RStatement(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
-    void RStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
-    void RStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonObject& total);
+    void RStatement(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
     void RTreeViewDoubleClicked(const QModelIndex& index);
@@ -114,9 +114,9 @@ private slots:
     void RStatementNode(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
     void RStatementEntry(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 
-    void RSettlement(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
+    void RSettlement(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RSettlementNode(const QUuid& parent_widget_id, Settlement* settlement, bool is_persisted);
-    void RSettlementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
+    void RSettlementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
 
     void RLeafRemoveDenied(const QJsonObject& obj);
     inline void RNodeRemoveConfirmed(const QUuid& node_id) { node_pending_removal_.remove(node_id); }

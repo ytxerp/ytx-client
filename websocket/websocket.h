@@ -68,12 +68,12 @@ signals:
     void SNodeRemoveConfirmed(const QUuid& node_id);
 
     void SReplaceResult(bool result);
-    void SSaleReference(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
-    void SStatement(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
-    void SStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
-    void SStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonObject& total);
-    void SSettlement(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
-    void SSettlementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array);
+    void SSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SStatement(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
+    void SSettlement(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SSettlementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
 
     void SConnectionRefused();
 

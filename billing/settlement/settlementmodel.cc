@@ -141,13 +141,13 @@ bool SettlementModel::InsertNode(int row, const QModelIndex& parent, Settlement*
     return true;
 }
 
-void SettlementModel::ResetModel(const QJsonArray& entry_array)
+void SettlementModel::ResetModel(const QJsonArray& array)
 {
     beginResetModel();
 
     ResourcePool<Settlement>::Instance().Recycle(list_);
 
-    for (const auto& value : entry_array) {
+    for (const auto& value : array) {
         if (!value.isObject())
             continue;
 

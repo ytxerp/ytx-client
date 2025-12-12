@@ -28,7 +28,7 @@ void MainWindow::on_actionStatement_triggered()
     RegisterWidget(widget_id, widget);
 }
 
-void MainWindow::RStatement(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
+void MainWindow::RStatement(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -38,10 +38,10 @@ void MainWindow::RStatement(Section section, const QUuid& widget_id, const QJson
 
     auto* d_widget { static_cast<StatementWidget*>(widget.data()) };
     auto* model { d_widget->Model() };
-    model->ResetModel(entry_array);
+    model->ResetModel(array);
 }
 
-void MainWindow::RStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
+void MainWindow::RStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -51,10 +51,10 @@ void MainWindow::RStatementNodeAcked(Section section, const QUuid& widget_id, co
 
     auto* d_widget { static_cast<StatementNodeWidget*>(widget.data()) };
     auto* model { d_widget->Model() };
-    model->ResetModel(entry_array);
+    model->ResetModel(array);
 }
 
-void MainWindow::RStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array, const QJsonObject& total)
+void MainWindow::RStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -65,7 +65,7 @@ void MainWindow::RStatementEntryAcked(Section section, const QUuid& widget_id, c
     auto* d_widget { static_cast<StatementEntryWidget*>(widget.data()) };
     auto* model { d_widget->Model() };
 
-    model->ResetModel(entry_array);
+    model->ResetModel(array);
     d_widget->ResetTotal(total);
 }
 

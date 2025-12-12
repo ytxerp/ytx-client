@@ -3,7 +3,7 @@
 #include "reference/salereferencewidget.h"
 #include "ui_mainwindow.h"
 
-void MainWindow::RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
+void MainWindow::RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -13,7 +13,7 @@ void MainWindow::RSaleReference(Section section, const QUuid& widget_id, const Q
 
     auto* d_widget { static_cast<SaleReferenceWidget*>(widget.data()) };
     auto* model { d_widget->Model() };
-    model->ResetModel(entry_array);
+    model->ResetModel(array);
 }
 
 void MainWindow::RSaleReferencePrimary(const QUuid& node_id, int unit)

@@ -46,8 +46,7 @@ public:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
     bool InsertNode(int row, const QModelIndex& parent, Settlement* node);
-    void ResetModel(const QJsonArray& entry_array);
-    Settlement* SettlementAt(int row) { return list_.at(row); }
+    void ResetModel(const QJsonArray& array);
 
 private:
     CSectionInfo& info_;

@@ -335,7 +335,7 @@ QJsonObject SaleReferenceAcked(Section section, CUuid& widget_id, CUuid& node_id
     message.insert(kUnit, unit);
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kEntryArray, QJsonArray());
+    message.insert(kArray, QJsonArray());
 
     return message;
 }
@@ -349,7 +349,7 @@ QJsonObject StatementAcked(Section section, CUuid& widget_id, int unit, const QD
     message.insert(kUnit, unit);
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kEntryArray, QJsonArray());
+    message.insert(kArray, QJsonArray());
 
     return message;
 }
@@ -364,7 +364,7 @@ QJsonObject StatementNodeAcked(Section section, CUuid& widget_id, CUuid& partner
     message.insert(kUnit, unit);
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kEntryArray, QJsonArray());
+    message.insert(kArray, QJsonArray());
 
     return message;
 }
@@ -379,7 +379,7 @@ QJsonObject StatementEntryAcked(Section section, CUuid& widget_id, CUuid& partne
     message.insert(kUnit, unit);
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kEntryArray, QJsonArray());
+    message.insert(kArray, QJsonArray());
     message.insert(kTotal, QJsonObject());
 
     return message;
@@ -393,7 +393,7 @@ QJsonObject SettlementAcked(Section section, CUuid& widget_id, const QDateTime& 
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kEntryArray, QJsonArray());
+    message.insert(kArray, QJsonArray());
 
     return message;
 }
@@ -406,7 +406,7 @@ QJsonObject SettlementNodeAcked(Section section, CUuid& widget_id, CUuid& partne
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
     message.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
-    message.insert(kEntryArray, QJsonArray());
+    message.insert(kArray, QJsonArray());
 
     return message;
 }

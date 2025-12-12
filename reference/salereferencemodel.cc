@@ -114,13 +114,13 @@ void SaleReferenceModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SaleReferenceModel::ResetModel(const QJsonArray& entry_array)
+void SaleReferenceModel::ResetModel(const QJsonArray& array)
 {
     beginResetModel();
 
     ResourcePool<SaleReference>::Instance().Recycle(list_);
 
-    for (const auto& value : entry_array) {
+    for (const auto& value : array) {
         if (!value.isObject())
             continue;
 

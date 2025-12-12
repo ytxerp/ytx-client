@@ -250,6 +250,7 @@ inline const QString kEntryNumeric = QStringLiteral("entry_numeric");
 
 inline const QString kTotal = QStringLiteral("total");
 inline const QString kTotalArray = QStringLiteral("total_array");
+inline const QString kArray = QStringLiteral("array");
 inline const QString kDocumentDir = QStringLiteral("document_dir");
 inline const QString kDefaultUnit = QStringLiteral("default_unit");
 inline const QString kUpdateDefaultUnitFailure = QStringLiteral("update_default_unit_failure");

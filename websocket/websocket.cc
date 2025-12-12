@@ -418,7 +418,7 @@ void WebSocket::AckSaleReference(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kEntryArray).toArray() };
+    const QJsonArray array { obj.value(kArray).toArray() };
 
     emit SSaleReference(section, widget_id, array);
 }
@@ -427,7 +427,7 @@ void WebSocket::AckStatement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kEntryArray).toArray() };
+    const QJsonArray array { obj.value(kArray).toArray() };
 
     emit SStatement(section, widget_id, array);
 }
@@ -436,7 +436,7 @@ void WebSocket::AckStatementNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kEntryArray).toArray() };
+    const QJsonArray array { obj.value(kArray).toArray() };
 
     emit SStatementNodeAcked(section, widget_id, array);
 }
@@ -445,7 +445,7 @@ void WebSocket::AckStatementEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kEntryArray).toArray() };
+    const QJsonArray array { obj.value(kArray).toArray() };
     const QJsonObject total { obj.value(kTotal).toObject() };
 
     emit SStatementEntryAcked(section, widget_id, array, total);
@@ -455,7 +455,7 @@ void WebSocket::AckSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kEntryArray).toArray() };
+    const QJsonArray array { obj.value(kArray).toArray() };
 
     emit SSettlement(section, widget_id, array);
 }
@@ -464,7 +464,7 @@ void WebSocket::AckSettlementNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kEntryArray).toArray() };
+    const QJsonArray array { obj.value(kArray).toArray() };
 
     emit SSettlementNodeAcked(section, widget_id, array);
 }
