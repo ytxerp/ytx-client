@@ -204,6 +204,8 @@ inline const QString kNodeTotal = QStringLiteral("node_total");
 inline const QString kDeletedEntryArray = QStringLiteral("deleted_entry_array");
 inline const QString kInsertedEntryArray = QStringLiteral("inserted_entry_array");
 inline const QString kUpdatedEntryArray = QStringLiteral("updated_entry_array");
+inline const QString kDeletedArray = QStringLiteral("deleted_array");
+inline const QString kInsertedArray = QStringLiteral("inserted_array");
 
 // App language
 inline const QString kEnUS = QStringLiteral("en_US");

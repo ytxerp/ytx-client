@@ -435,8 +435,8 @@ void TableWidgetO::SaveOrder()
     if (!HasUnsavedData())
         return;
 
-    QJsonObject order_message { JsonGen::OrderMessage(section_) };
-    table_model_order_->FinalizeOrder(order_message);
+    QJsonObject order_message { JsonGen::MetaMessage(section_) };
+    table_model_order_->Finalize(order_message);
 
     if (is_persisted_) {
         BuildNodeUpdate(order_message);
@@ -484,8 +484,8 @@ void TableWidgetO::on_pBtnRelease_clicked()
     pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
     tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
 
-    QJsonObject order_message { JsonGen::OrderMessage(section_) };
-    table_model_order_->FinalizeOrder(order_message);
+    QJsonObject order_message { JsonGen::MetaMessage(section_) };
+    table_model_order_->Finalize(order_message);
 
     if (is_persisted_) {
         BuildNodeUpdate(order_message);

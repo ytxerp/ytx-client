@@ -78,8 +78,8 @@ public:
     bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
 
     const QList<Entry*>& GetEntryList() { return entry_list_; }
-    void FinalizeOrder(QJsonObject& order_message);
-    bool HasUnsavedData() const { return !pending_inserts_.isEmpty() || !pending_deleted_.isEmpty() || !pending_updates_.isEmpty(); }
+    void Finalize(QJsonObject& message);
+    bool HasUnsavedData() const { return !pending_insert_.isEmpty() || !pending_delete_.isEmpty() || !pending_update_.isEmpty(); }
     void SetNode(const NodeO* node) { d_node_ = node; }
 
 private:
@@ -106,9 +106,9 @@ private:
 
     QList<Entry*> entry_list_ {};
 
-    QSet<QUuid> pending_deleted_ {};
-    QHash<QUuid, Entry*> pending_inserts_ {};
-    QHash<QUuid, Entry*> pending_updates_ {};
+    QSet<QUuid> pending_delete_ {};
+    QHash<QUuid, Entry*> pending_insert_ {};
+    QHash<QUuid, Entry*> pending_update_ {};
 };
 
 #endif // TABLEMODELO_H

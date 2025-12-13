@@ -30,7 +30,7 @@ void TableModelO::RAppendMultiEntry(const EntryList& entry_list)
     sort(std::to_underlying(EntryEnumO::kRhsNode), Qt::AscendingOrder);
 }
 
-void TableModelO::FinalizeOrder(QJsonObject& order_message)
+void TableModelO::Finalize(QJsonObject& message)
 {
     {
         // - Remove entries from entry_list_ that have no linked rhs_node (i.e., internal SKU not selected).
@@ -46,43 +46,43 @@ void TableModelO::FinalizeOrder(QJsonObject& order_message)
 
     // deleted
     {
-        if (!pending_deleted_.isEmpty()) {
+        if (!pending_delete_.isEmpty()) {
             QJsonArray deleted_entry_array {};
-            for (const auto& id : std::as_const(pending_deleted_)) {
+            for (const auto& id : std::as_const(pending_delete_)) {
                 deleted_entry_array.append(id.toString(QUuid::WithoutBraces));
             }
-            order_message.insert(kDeletedEntryArray, deleted_entry_array);
+            message.insert(kDeletedEntryArray, deleted_entry_array);
         }
     }
 
     // insert
     {
-        if (!pending_inserts_.isEmpty()) {
+        if (!pending_insert_.isEmpty()) {
             QJsonArray inserted_entry_array {};
-            for (auto it = pending_inserts_.cbegin(); it != pending_inserts_.cend(); ++it) {
+            for (auto it = pending_insert_.cbegin(); it != pending_insert_.cend(); ++it) {
                 const QJsonObject obj { it.value()->WriteJson() };
                 inserted_entry_array.append(obj);
             }
-            order_message.insert(kInsertedEntryArray, inserted_entry_array);
+            message.insert(kInsertedEntryArray, inserted_entry_array);
         }
     }
 
     // update
     {
-        if (!pending_updates_.isEmpty()) {
+        if (!pending_update_.isEmpty()) {
             QJsonArray updated_entry_array {};
-            for (auto it = pending_updates_.begin(); it != pending_updates_.end(); ++it) {
+            for (auto it = pending_update_.begin(); it != pending_update_.end(); ++it) {
                 updated_entry_array.append(it.value()->WriteJson());
             }
-            order_message.insert(kUpdatedEntryArray, updated_entry_array);
+            message.insert(kUpdatedEntryArray, updated_entry_array);
         }
     }
 
     // clear
     {
-        pending_inserts_.clear();
-        pending_deleted_.clear();
-        pending_updates_.clear();
+        pending_insert_.clear();
+        pending_delete_.clear();
+        pending_update_.clear();
     }
 }
 
@@ -144,7 +144,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     const double old_final { d_entry->final };
 
     const auto entry_id { d_entry->id };
-    const bool is_persisted { !pending_inserts_.contains(entry_id) };
+    const bool is_persisted { !pending_insert_.contains(entry_id) };
 
     bool count_changed { false };
     bool measure_changed { false };
@@ -301,7 +301,7 @@ bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
     entry_list_.emplaceBack(entry);
     endInsertRows();
 
-    pending_inserts_.insert(entry->id, entry);
+    pending_insert_.insert(entry->id, entry);
 
     return true;
 }
@@ -335,8 +335,8 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
         }
     }
 
-    pending_deleted_.insert(entry_id);
-    pending_updates_.remove(entry_id);
+    pending_delete_.insert(entry_id);
+    pending_update_.remove(entry_id);
 
     EntryPool::Instance().Recycle(d_entry, section_);
     return true;
@@ -424,7 +424,7 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value, bool is_p
         RecalculateAmount(entry);
 
     if (is_persisted) {
-        pending_updates_.insert(entry->id, entry);
+        pending_update_.insert(entry->id, entry);
     }
 
     if (external_changed) {
@@ -450,7 +450,7 @@ bool TableModelO::UpdateUnitPrice(EntryO* entry, double value, bool is_persisted
     entry->unit_price = value;
 
     if (is_persisted) {
-        pending_updates_.insert(entry->id, entry);
+        pending_update_.insert(entry->id, entry);
     }
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
@@ -469,7 +469,7 @@ bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value, bool is_persis
     entry->unit_discount = value;
 
     if (is_persisted) {
-        pending_updates_.insert(entry->id, entry);
+        pending_update_.insert(entry->id, entry);
     }
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kDiscount));
@@ -489,7 +489,7 @@ bool TableModelO::UpdateMeasure(EntryO* entry, double value, bool is_persisted)
     entry->measure = value;
 
     if (is_persisted) {
-        pending_updates_.insert(entry->id, entry);
+        pending_update_.insert(entry->id, entry);
     }
 
     emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
@@ -506,7 +506,7 @@ bool TableModelO::UpdateCount(EntryO* entry, double value, bool is_persisted)
     entry->count = value;
 
     if (is_persisted) {
-        pending_updates_.insert(entry->id, entry);
+        pending_update_.insert(entry->id, entry);
     }
 
     return true;
@@ -520,7 +520,7 @@ bool TableModelO::UpdateDescription(EntryO* entry, const QString& value, bool is
     entry->description = value;
 
     if (is_persisted) {
-        pending_updates_.insert(entry->id, entry);
+        pending_update_.insert(entry->id, entry);
     }
 
     return true;
@@ -599,14 +599,14 @@ void TableModelO::NormalizeEntryBuffer()
 {
     QSet<QUuid> to_remove_from_deleted {};
 
-    for (const QUuid& id : std::as_const(pending_deleted_)) {
-        auto it = pending_inserts_.find(id);
-        if (it != pending_inserts_.end()) {
-            pending_inserts_.erase(it);
+    for (const QUuid& id : std::as_const(pending_delete_)) {
+        auto it = pending_insert_.find(id);
+        if (it != pending_insert_.end()) {
+            pending_insert_.erase(it);
             to_remove_from_deleted.insert(id);
         }
     }
 
     // Efficiently remove all matching ids from the deleted set.
-    pending_deleted_.subtract(to_remove_from_deleted);
+    pending_delete_.subtract(to_remove_from_deleted);
 }

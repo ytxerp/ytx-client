@@ -302,7 +302,7 @@ QJsonObject EntryRemove(Section section, CUuid& entry_id)
     return message;
 }
 
-QJsonObject OrderMessage(Section section)
+QJsonObject MetaMessage(Section section)
 {
     QJsonObject message {};
 

@@ -211,6 +211,44 @@ void SettlementNodeModel::UpdateStatus(int status)
     }
 }
 
+void SettlementNodeModel::Finalize(QJsonObject& message)
+{
+    {
+        // Normalize diff buffers (inserted / deleted)
+        // to ensure no conflict states remain before packaging.
+        // e.g. inserted+deleted ⇒ remove both
+        // NOTE: update caches are implicitly consistent: newly inserted never have update update.
+        NormalizeBuffer();
+    }
+
+    // deleted
+    {
+        if (!pending_delete_.isEmpty()) {
+            QJsonArray deleted_array {};
+            for (const auto& id : std::as_const(pending_delete_)) {
+                deleted_array.append(id.toString(QUuid::WithoutBraces));
+            }
+
+            message.insert(kDeletedArray, deleted_array);
+        }
+    }
+
+    // insert
+    {
+        if (!pending_insert_.isEmpty()) {
+            QJsonArray inserted_array {};
+            for (const auto& id : std::as_const(pending_insert_)) {
+                inserted_array.append(id.toString(QUuid::WithoutBraces));
+            }
+
+            message.insert(kInsertedArray, inserted_array);
+        }
+    }
+
+    pending_delete_.clear();
+    pending_insert_.clear();
+}
+
 void SettlementNodeModel::NormalizeBuffer()
 {
     for (auto it = pending_insert_.begin(); it != pending_insert_.end();) {

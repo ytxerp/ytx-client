@@ -51,6 +51,7 @@ public:
 
     void ResetModel(const QJsonArray& array);
     void UpdateStatus(int status);
+    void Finalize(QJsonObject& message);
 
 private:
     void NormalizeBuffer();

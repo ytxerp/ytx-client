@@ -65,7 +65,7 @@ QJsonObject EntrySearch(Section section, CString& keyword);
 QJsonObject NodeSearch(Section section, CString& keyword);
 
 QJsonObject OrderRecalled(Section section, const NodeO* node);
-QJsonObject OrderMessage(Section section);
+QJsonObject MetaMessage(Section section);
 
 }
 

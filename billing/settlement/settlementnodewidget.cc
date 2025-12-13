@@ -112,8 +112,16 @@ void SettlementNodeWidget::on_comboPartner_currentIndexChanged(int /*index*/)
 
 void SettlementNodeWidget::on_pBtnRelease_clicked()
 {
+    assert(!tmp_settlement_.partner.isNull() && "tmp_settlement_.partner should never be null here");
+
+    QJsonObject message { JsonGen::MetaMessage(section_) };
+    model_->Finalize(message);
+
     // is_persisted_ = true;
     // ui->comboPartner->setEnabled(false);
+    if (is_persisted_) {
+    } else {
+    }
 }
 
 void SettlementNodeWidget::on_pBtnRecall_clicked() { }
