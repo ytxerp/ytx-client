@@ -114,11 +114,14 @@
       </item>
       <item row="1" column="0" colspan="3">
        <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="spacing">
+         <number>24</number>
+        </property>
         <property name="topMargin">
-         <number>4</number>
+         <number>0</number>
         </property>
         <property name="bottomMargin">
-         <number>4</number>
+         <number>0</number>
         </property>
         <item>
          <widget class="ComboBox" name="comboPartner">
