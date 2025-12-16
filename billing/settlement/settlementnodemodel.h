@@ -52,6 +52,7 @@ public:
     void ResetModel(const QJsonArray& array);
     void UpdateStatus(int status);
     void Finalize(QJsonObject& message);
+    bool HasPendingChange() const { return !pending_insert_.isEmpty() || !pending_delete_.isEmpty(); }
 
 private:
     void NormalizeBuffer();

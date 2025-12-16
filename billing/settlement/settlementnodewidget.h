@@ -69,6 +69,7 @@ private:
     SettlementNodeModel* model_ {};
 
     TreeModel* tree_model_partner_ {};
+    QJsonObject pending_update_ {};
 
     const QUuid widget_id_ {};
     const QUuid parent_widget_id_ {};

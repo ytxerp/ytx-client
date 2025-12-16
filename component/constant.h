@@ -193,12 +193,17 @@ inline const QString kNodeInsert = QStringLiteral("node_insert");
 inline const QString kNodeDrag = QStringLiteral("node_drag");
 inline const QString kNodeUpdate = QStringLiteral("node_update");
 inline const QString kNodeName = QStringLiteral("node_name");
+inline const QString kSettlementInsert = QStringLiteral("settlement_insert");
+inline const QString kSettlementUpdate = QStringLiteral("settlement_update");
 
 inline const QString kOrderInsertSaved = QStringLiteral("order_insert_saved");
 inline const QString kOrderUpdateSaved = QStringLiteral("order_update_saved");
 inline const QString kOrderInsertReleased = QStringLiteral("order_insert_released");
 inline const QString kOrderUpdateReleased = QStringLiteral("order_update_released");
 inline const QString kOrderRecalled = QStringLiteral("order_recalled");
+inline const QString kSettlementInsertReleased = QStringLiteral("settlement_insert_released");
+inline const QString kSettlementUpdateReleased = QStringLiteral("settlement_update_released");
+inline const QString kSettlementRecalled = QStringLiteral("settlement_recalled");
 
 inline const QString kNodeTotal = QStringLiteral("node_total");
 inline const QString kDeletedEntryArray = QStringLiteral("deleted_entry_array");
@@ -291,6 +296,7 @@ inline const QString kNodeId = QStringLiteral("node_id");
 inline const QString kParentId = QStringLiteral("parent_id");
 inline const QString kOrderId = QStringLiteral("order_id");
 inline const QString kWidgetId = QStringLiteral("widget_id");
+inline const QString kParentWidgetId = QStringLiteral("parent_widget_id");
 inline const QString kOldNodeId = QStringLiteral("old_node_id");
 inline const QString kNewNodeId = QStringLiteral("new_node_id");
 inline const QString kExpireTime = QStringLiteral("expire_time");

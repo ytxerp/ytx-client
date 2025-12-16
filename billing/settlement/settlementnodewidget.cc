@@ -89,9 +89,25 @@ void SettlementNodeWidget::HideWidget()
     ui->pBtnRecall->setVisible(!recalled);
 }
 
-void SettlementNodeWidget::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime) { tmp_settlement_.issued_time = dateTime.toUTC(); }
+void SettlementNodeWidget::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime)
+{
+    const QDateTime utc_time { dateTime.toUTC() };
+    if (tmp_settlement_.issued_time == utc_time)
+        return;
 
-void SettlementNodeWidget::on_lineDescription_textChanged(const QString& arg1) { tmp_settlement_.description = arg1; }
+    tmp_settlement_.issued_time = dateTime.toUTC();
+
+    if (is_persisted_)
+        pending_update_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
+}
+
+void SettlementNodeWidget::on_lineDescription_textChanged(const QString& arg1)
+{
+    tmp_settlement_.description = arg1;
+
+    if (is_persisted_)
+        pending_update_.insert(kDescription, arg1);
+}
 
 void SettlementNodeWidget::on_comboPartner_currentIndexChanged(int /*index*/)
 {
@@ -114,13 +130,36 @@ void SettlementNodeWidget::on_pBtnRelease_clicked()
 {
     assert(!tmp_settlement_.partner.isNull() && "tmp_settlement_.partner should never be null here");
 
+    if (!is_persisted_ && !model_->HasPendingChange()) {
+        return;
+    }
+
+    if (tmp_settlement_.status == std::to_underlying(NodeStatus::kReleased))
+        return;
+
+    if (is_persisted_)
+        pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
+
     QJsonObject message { JsonGen::MetaMessage(section_) };
     model_->Finalize(message);
 
-    // is_persisted_ = true;
-    // ui->comboPartner->setEnabled(false);
+    message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
+    message.insert(kParentWidgetId, parent_widget_id_.toString(QUuid::WithoutBraces));
+    message.insert(kAmount, QString::number(tmp_settlement_.amount, 'f', kMaxNumericScale_4));
+
     if (is_persisted_) {
+        message.insert(kSettlementUpdate, pending_update_);
+        message.insert(kSettlementId, tmp_settlement_.id.toString(QUuid::WithoutBraces));
+
+        WebSocket::Instance()->SendMessage(kSettlementUpdateReleased, message);
+
+        pending_update_ = QJsonObject();
     } else {
+        // is_persisted_ = true;
+        // ui->comboPartner->setEnabled(false);
+
+        message.insert(kSettlementInsert, tmp_settlement_.WriteJson());
+        WebSocket::Instance()->SendMessage(kSettlementInsertReleased, message);
     }
 }
 
