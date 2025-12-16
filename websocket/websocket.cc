@@ -172,7 +172,7 @@ void WebSocket::InitHandler()
     handler_obj_[kStatementNodeAcked] = [this](const QJsonObject& obj) { AckStatementNode(obj); };
     handler_obj_[kStatementEntryAcked] = [this](const QJsonObject& obj) { AckStatementEntry(obj); };
     handler_obj_[kSettlementAcked] = [this](const QJsonObject& obj) { AckSettlement(obj); };
-    handler_obj_[kSettlementNodeAcked] = [this](const QJsonObject& obj) { AckSettlementNode(obj); };
+    handler_obj_[kSettlementItemAcked] = [this](const QJsonObject& obj) { AckSettlementItem(obj); };
 
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
@@ -460,13 +460,13 @@ void WebSocket::AckSettlement(const QJsonObject& obj)
     emit SSettlement(section, widget_id, array);
 }
 
-void WebSocket::AckSettlementNode(const QJsonObject& obj)
+void WebSocket::AckSettlementItem(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonArray array { obj.value(kArray).toArray() };
 
-    emit SSettlementNodeAcked(section, widget_id, array);
+    emit SSettlementItemAcked(section, widget_id, array);
 }
 
 void WebSocket::RemoveLeaf(const QJsonObject& obj)

@@ -68,7 +68,7 @@ QJsonObject Settlement::WriteJson() const
     return obj;
 }
 
-void SettlementNode::ResetState()
+void SettlementItem::ResetState()
 {
     id = QUuid();
     partner = QUuid();
@@ -79,7 +79,7 @@ void SettlementNode::ResetState()
     is_settled = false;
 }
 
-void SettlementNode::ReadJson(const QJsonObject& object)
+void SettlementItem::ReadJson(const QJsonObject& object)
 {
     if (object.contains(kId))
         id = QUuid(object.value(kId).toString());

@@ -93,7 +93,7 @@ QComboBox#comboDefaultUnit
     min-width: 120px;
 }
 
-QWidget#TableWidgetO QComboBox, QWidget#SettlementNodeWidget QComboBox {
+QWidget#TableWidgetO QComboBox, QWidget#SettlementItemWidget QComboBox {
     min-width: 80px;
 }
 

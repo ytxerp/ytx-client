@@ -164,8 +164,8 @@ set(SOURCES
     mainwindow/mainwindow_delegate.cc
     mainwindow/mainwindow_connect.cc
     mainwindow/mainwindow_view.cc
-    billing/settlement/settlementnodewidget.cc
-    billing/settlement/settlementnodemodel.cc
+    billing/settlement/settlementitemwidget.cc
+    billing/settlement/settlementitemmodel.cc
 )
 
 set(HEADERS
@@ -316,8 +316,8 @@ set(HEADERS
     global/collator.h
     global/exportexcel.h
     enum/settlementenum.h
-    billing/settlement/settlementnodewidget.h
-    billing/settlement/settlementnodemodel.h
+    billing/settlement/settlementitemwidget.h
+    billing/settlement/settlementitemmodel.h
 )
 
 set(UIS
@@ -346,7 +346,7 @@ set(UIS
     billing/statement/statemententrywidget.ui
     billing/settlement/settlementwidget.ui
     reference/salereferencewidget.ui
-    billing/settlement/settlementnodewidget.ui
+    billing/settlement/settlementitemwidget.ui
 )
 
 # ------------------------

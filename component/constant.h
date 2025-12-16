@@ -140,7 +140,7 @@ inline const QString kStatementAcked = QStringLiteral("statement_acked");
 inline const QString kStatementNodeAcked = QStringLiteral("statement_node_acked");
 inline const QString kStatementEntryAcked = QStringLiteral("statement_entry_acked");
 inline const QString kSettlementAcked = QStringLiteral("settlement_acked");
-inline const QString kSettlementNodeAcked = QStringLiteral("settlement_node_acked");
+inline const QString kSettlementItemAcked = QStringLiteral("settlement_item_acked");
 
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");
@@ -193,24 +193,23 @@ inline const QString kNodeInsert = QStringLiteral("node_insert");
 inline const QString kNodeDrag = QStringLiteral("node_drag");
 inline const QString kNodeUpdate = QStringLiteral("node_update");
 inline const QString kNodeName = QStringLiteral("node_name");
-inline const QString kSettlementInsert = QStringLiteral("settlement_insert");
-inline const QString kSettlementUpdate = QStringLiteral("settlement_update");
 
 inline const QString kOrderInsertSaved = QStringLiteral("order_insert_saved");
 inline const QString kOrderUpdateSaved = QStringLiteral("order_update_saved");
 inline const QString kOrderInsertReleased = QStringLiteral("order_insert_released");
 inline const QString kOrderUpdateReleased = QStringLiteral("order_update_released");
 inline const QString kOrderRecalled = QStringLiteral("order_recalled");
+
 inline const QString kSettlementInsertReleased = QStringLiteral("settlement_insert_released");
 inline const QString kSettlementUpdateReleased = QStringLiteral("settlement_update_released");
 inline const QString kSettlementRecalled = QStringLiteral("settlement_recalled");
+inline const QString kSettlementItemDeleted = QStringLiteral("settlement_item_deleted");
+inline const QString kSettlementItemInserted = QStringLiteral("settlement_item_inserted");
 
 inline const QString kNodeTotal = QStringLiteral("node_total");
 inline const QString kDeletedEntryArray = QStringLiteral("deleted_entry_array");
 inline const QString kInsertedEntryArray = QStringLiteral("inserted_entry_array");
 inline const QString kUpdatedEntryArray = QStringLiteral("updated_entry_array");
-inline const QString kDeletedArray = QStringLiteral("deleted_array");
-inline const QString kInsertedArray = QStringLiteral("inserted_array");
 
 // App language
 inline const QString kEnUS = QStringLiteral("en_US");

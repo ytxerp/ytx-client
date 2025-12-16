@@ -50,7 +50,7 @@ public:
 
 private:
     CSectionInfo& info_;
-    SettlementList list_ {};
+    QList<Settlement*> list_ {};
 };
 
 #endif // SETTLEMENTMODEL_H

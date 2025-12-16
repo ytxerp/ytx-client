@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTNODEWIDGET_H
-#define SETTLEMENTNODEWIDGET_H
+#ifndef SETTLEMENTITEMWIDGET_H
+#define SETTLEMENTITEMWIDGET_H
 
 #include <QTableView>
 #include <QWidget>
@@ -26,23 +26,23 @@
 #include "component/using.h"
 #include "enum/section.h"
 #include "settlement.h"
-#include "settlementnodemodel.h"
+#include "settlementitemmodel.h"
 #include "tree/model/treemodel.h"
 
 namespace Ui {
-class SettlementNodeWidget;
+class SettlementItemWidget;
 }
 
-class SettlementNodeWidget final : public QWidget {
+class SettlementItemWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SettlementNodeWidget(TreeModel* tree_model_partner, SettlementNodeModel* model, Settlement* settlement, bool is_persisted, Section section,
+    explicit SettlementItemWidget(TreeModel* tree_model_partner, SettlementItemModel* model, Settlement* settlement, bool is_persisted, Section section,
         CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent = nullptr);
-    ~SettlementNodeWidget();
+    ~SettlementItemWidget();
 
     QTableView* View() const;
-    SettlementNodeModel* Model() const { return model_; }
+    SettlementItemModel* Model() const { return model_; }
 
 public slots:
     void RSyncAmount(double amount);
@@ -62,11 +62,11 @@ private:
     void HideWidget();
 
 private:
-    Ui::SettlementNodeWidget* ui;
+    Ui::SettlementItemWidget* ui;
 
     Settlement* settlement_ {};
     Settlement tmp_settlement_ {};
-    SettlementNodeModel* model_ {};
+    SettlementItemModel* model_ {};
 
     TreeModel* tree_model_partner_ {};
     QJsonObject pending_update_ {};
@@ -77,4 +77,4 @@ private:
     bool is_persisted_ {};
 };
 
-#endif // SETTLEMENTNODEWIDGET_H
+#endif // SETTLEMENTITEMWIDGET_H

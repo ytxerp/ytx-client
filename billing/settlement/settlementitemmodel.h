@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTNODEMODEL_H
-#define SETTLEMENTNODEMODEL_H
+#ifndef SETTLEMENTITEMMODEL_H
+#define SETTLEMENTITEMMODEL_H
 
 #include <QAbstractItemModel>
 
@@ -26,11 +26,11 @@
 #include "component/using.h"
 #include "settlement.h"
 
-class SettlementNodeModel final : public QAbstractItemModel {
+class SettlementItemModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SettlementNodeModel(CSectionInfo& info, int status, CUuid& settlement_id, QObject* parent = nullptr);
-    ~SettlementNodeModel();
+    SettlementItemModel(CSectionInfo& info, int status, CUuid& settlement_id, QObject* parent = nullptr);
+    ~SettlementItemModel();
 
 signals:
     void SSyncAmount(double amount);
@@ -63,11 +63,11 @@ private:
     const QUuid settlement_id_ {};
     int status_ {};
 
-    SettlementNodeList list_ {};
-    SettlementNodeList list_cache_ {};
+    QList<SettlementItem*> list_ {};
+    QList<SettlementItem*> list_cache_ {};
 
     QSet<QUuid> pending_delete_ {};
     QSet<QUuid> pending_insert_ {};
 };
 
-#endif // SETTLEMENTNODEMODEL_H
+#endif // SETTLEMENTITEMMODEL_H

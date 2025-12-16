@@ -1,6 +1,6 @@
+#include "billing/settlement/settlementitemmodel.h"
+#include "billing/settlement/settlementitemwidget.h"
 #include "billing/settlement/settlementmodel.h"
-#include "billing/settlement/settlementnodemodel.h"
-#include "billing/settlement/settlementnodewidget.h"
 #include "billing/settlement/settlementwidget.h"
 #include "enum/settlementenum.h"
 #include "mainwindow.h"
@@ -36,11 +36,11 @@ void MainWindow::RSettlementNode(const QUuid& parent_widget_id, Settlement* sett
 {
     assert(IsOrderSection(start_));
 
-    auto* model { new SettlementNodeModel(sc_->info, settlement->status, settlement->id, this) };
+    auto* model { new SettlementItemModel(sc_->info, settlement->status, settlement->id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new SettlementNodeWidget(sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, parent_widget_id, this) };
-    connect(model, &SettlementNodeModel::SSyncAmount, widget, &SettlementNodeWidget::RSyncAmount);
+    auto* widget { new SettlementItemWidget(sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, parent_widget_id, this) };
+    connect(model, &SettlementItemModel::SSyncAmount, widget, &SettlementItemWidget::RSyncAmount);
 
     {
         const int tab_index { ui->tabWidget->addTab(widget, tr("SettlementNode")) };
@@ -58,7 +58,7 @@ void MainWindow::RSettlementNode(const QUuid& parent_widget_id, Settlement* sett
     RegisterWidget(widget_id, widget);
 }
 
-void MainWindow::RSettlementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
+void MainWindow::RSettlementItemAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -66,7 +66,7 @@ void MainWindow::RSettlementNodeAcked(Section section, const QUuid& widget_id, c
     if (!widget)
         return;
 
-    auto* d_widget { static_cast<SettlementNodeWidget*>(widget.data()) };
+    auto* d_widget { static_cast<SettlementItemWidget*>(widget.data()) };
     auto* model { d_widget->Model() };
     model->ResetModel(entry_array);
 }

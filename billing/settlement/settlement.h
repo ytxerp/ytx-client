@@ -44,7 +44,7 @@ struct Settlement {
     QJsonObject WriteJson() const;
 };
 
-struct SettlementNode {
+struct SettlementItem {
     QUuid id {};
     QUuid partner {};
     QUuid employee {};
@@ -58,8 +58,5 @@ struct SettlementNode {
     void ReadJson(const QJsonObject& object);
     // QJsonObject WriteJson() const;
 };
-
-using SettlementList = QList<Settlement*>;
-using SettlementNodeList = QList<SettlementNode*>;
 
 #endif // SETTLEMENT_H
