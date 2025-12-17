@@ -1453,7 +1453,7 @@ Rage, rage against the dying of the light.</source>
         <location filename="../../mainwindow/mainwindow.ui" line="387"/>
         <location filename="../../mainwindow/mainwindow_statement.cc" line="17"/>
         <source>Statement</source>
-        <translation>帐单</translation>
+        <translation>对帐</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="395"/>
@@ -1662,7 +1662,7 @@ Do you want to save before closing?</source>
     <message>
         <location filename="../../mainwindow/mainwindow_statement.cc" line="79"/>
         <source>StatementNode</source>
-        <translation>账单节点</translation>
+        <translation>对账单</translation>
     </message>
     <message>
         <source>StatementSecondary</source>
@@ -1671,7 +1671,7 @@ Do you want to save before closing?</source>
     <message>
         <location filename="../../mainwindow/mainwindow_statement.cc" line="106"/>
         <source>StatementEntry</source>
-        <translation>帐单明细</translation>
+        <translation>对帐明细</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_sale_reference.cc" line="70"/>
@@ -1775,9 +1775,13 @@ Download now?</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="45"/>
         <source>SettlementNode</source>
-        <translation>结算节点</translation>
+        <translation type="vanished">结算节点</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="46"/>
+        <source>SettlementItem</source>
+        <translation>结算单</translation>
     </message>
 </context>
 <context>
@@ -2867,30 +2871,45 @@ Download now?</source>
     </message>
 </context>
 <context>
-    <name>SettlementNodeWidget</name>
+    <name>SettlementItemWidget</name>
     <message>
-        <location filename="../../billing/settlement/settlementnodewidget.ui" line="139"/>
+        <location filename="../../billing/settlement/settlementitemwidget.ui" line="142"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../billing/settlement/settlementnodewidget.ui" line="158"/>
+        <location filename="../../billing/settlement/settlementitemwidget.ui" line="161"/>
         <source>yyyy/MM/dd HH:mm</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../../billing/settlement/settlementitemwidget.ui" line="201"/>
+        <source>Release</source>
+        <translation>发布</translation>
+    </message>
+    <message>
+        <location filename="../../billing/settlement/settlementitemwidget.ui" line="214"/>
+        <source>Recall</source>
+        <translation>撤回</translation>
+    </message>
+</context>
+<context>
+    <name>SettlementNodeWidget</name>
+    <message>
+        <source>Description</source>
+        <translation type="vanished">描述</translation>
     </message>
     <message>
         <source>&amp;Save</source>
         <translation type="vanished">保存(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../billing/settlement/settlementnodewidget.ui" line="198"/>
         <source>Release</source>
-        <translation>发布</translation>
+        <translation type="vanished">发布</translation>
     </message>
     <message>
-        <location filename="../../billing/settlement/settlementnodewidget.ui" line="211"/>
         <source>Recall</source>
-        <translation>撤回</translation>
+        <translation type="vanished">撤回</translation>
     </message>
 </context>
 <context>
