@@ -45,6 +45,7 @@ public:
     SettlementItemModel* Model() const { return model_; }
 
     void ReleaseSucceeded();
+    void RecallSucceeded();
 
 public slots:
     void RSyncAmount(double amount);
@@ -61,7 +62,7 @@ private:
     void InitWidget();
     void InitData();
     void FetchNode();
-    void HideWidget();
+    void HideWidget(bool is_released);
 
 private:
     Ui::SettlementItemWidget* ui;

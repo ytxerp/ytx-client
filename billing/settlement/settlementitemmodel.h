@@ -23,14 +23,13 @@
 #include <QAbstractItemModel>
 
 #include "component/info.h"
-#include "component/using.h"
 #include "enum/settlementenum.h"
 #include "settlement.h"
 
 class SettlementItemModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SettlementItemModel(CSectionInfo& info, SettlementStatus status, CUuid& settlement_id, QObject* parent = nullptr);
+    SettlementItemModel(CSectionInfo& info, SettlementStatus status, QObject* parent = nullptr);
     ~SettlementItemModel();
 
 signals:
@@ -61,7 +60,6 @@ private:
 private:
     CSectionInfo& info_;
 
-    const QUuid settlement_id_ {};
     SettlementStatus status_ {};
 
     QList<SettlementItem*> list_ {};

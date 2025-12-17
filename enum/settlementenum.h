@@ -36,12 +36,11 @@ enum class SettlementEnum {
     kAmount,
 };
 
-enum class SettlementNodeEnum {
+enum class SettlementItemEnum {
     kId = 0,
     kIssuedTime,
     kAmount,
     kIsSettled,
-    kPartner,
     kDescription,
     kEmployee,
 };

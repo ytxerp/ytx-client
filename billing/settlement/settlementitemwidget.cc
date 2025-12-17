@@ -64,12 +64,17 @@ void SettlementItemWidget::InitData()
     int partner_index { ui->comboPartner->findData(tmp_settlement_.partner) };
     ui->comboPartner->setCurrentIndex(partner_index);
 
-    ui->comboPartner->setEnabled(!is_persisted_);
-    HideWidget();
-
     ui->lineDescription->setText(tmp_settlement_.description);
     ui->dateTimeEdit->setDateTime(tmp_settlement_.issued_time.toLocalTime());
     ui->dSpinAmount->setValue(tmp_settlement_.amount);
+
+    ui->comboPartner->setEnabled(!is_persisted_);
+
+    const bool is_released { tmp_settlement_.status == std::to_underlying(SettlementStatus::kReleased) };
+    ui->lineDescription->setReadOnly(is_released);
+    ui->dateTimeEdit->setReadOnly(is_released);
+
+    HideWidget(is_released);
 }
 
 void SettlementItemWidget::FetchNode()
@@ -81,12 +86,10 @@ void SettlementItemWidget::FetchNode()
     WebSocket::Instance()->SendMessage(kSettlementItemAcked, message);
 }
 
-void SettlementItemWidget::HideWidget()
+void SettlementItemWidget::HideWidget(bool is_released)
 {
-    const bool recalled { tmp_settlement_.status == std::to_underlying(SettlementStatus::kRecalled) };
-
-    ui->pBtnRelease->setVisible(recalled);
-    ui->pBtnRecall->setVisible(!recalled);
+    ui->pBtnRelease->setVisible(!is_released);
+    ui->pBtnRecall->setVisible(is_released);
 }
 
 void SettlementItemWidget::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime)
@@ -134,38 +137,44 @@ void SettlementItemWidget::on_pBtnRelease_clicked()
 {
     assert(!tmp_settlement_.partner.isNull() && "tmp_settlement_.partner should never be null here");
 
-    if (!is_persisted_ && !model_->HasPendingChange()) {
-        return;
+    {
+        if (!is_persisted_ && !model_->HasPendingChange()) {
+            return;
+        }
+
+        if (tmp_settlement_.status == std::to_underlying(SettlementStatus::kReleased))
+            return;
     }
 
-    if (tmp_settlement_.status == std::to_underlying(NodeStatus::kReleased))
-        return;
+    {
+        tmp_settlement_.status = std::to_underlying(SettlementStatus::kReleased);
 
-    tmp_settlement_.status = std::to_underlying(NodeStatus::kReleased);
+        if (is_persisted_)
+            pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kReleased));
+    }
 
-    if (is_persisted_)
-        pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
+    {
+        QJsonObject message { JsonGen::MetaMessage(section_) };
+        model_->Finalize(message);
 
-    QJsonObject message { JsonGen::MetaMessage(section_) };
-    model_->Finalize(message);
+        message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
+        message.insert(kParentWidgetId, parent_widget_id_.toString(QUuid::WithoutBraces));
 
-    message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
-    message.insert(kParentWidgetId, parent_widget_id_.toString(QUuid::WithoutBraces));
+        if (is_persisted_) {
+            message.insert(kSettlement, pending_update_);
+            message.insert(kSettlementId, tmp_settlement_.id.toString(QUuid::WithoutBraces));
 
-    if (is_persisted_) {
-        message.insert(kSettlement, pending_update_);
-        message.insert(kSettlementId, tmp_settlement_.id.toString(QUuid::WithoutBraces));
+            WebSocket::Instance()->SendMessage(kSettlementUpdated, message);
 
-        WebSocket::Instance()->SendMessage(kSettlementUpdated, message);
-
-        pending_update_ = QJsonObject();
-    } else {
-        message.insert(kSettlement, tmp_settlement_.WriteJson());
-        WebSocket::Instance()->SendMessage(kSettlementInserted, message);
+            pending_update_ = QJsonObject();
+        } else {
+            message.insert(kSettlement, tmp_settlement_.WriteJson());
+            WebSocket::Instance()->SendMessage(kSettlementInserted, message);
+        }
     }
 }
 
-void SettlementItemWidget::on_pBtnRecall_clicked() { }
+void SettlementItemWidget::on_pBtnRecall_clicked() { tmp_settlement_.status = std::to_underlying(SettlementStatus::kRecalled); }
 
 void SettlementItemWidget::ReleaseSucceeded()
 {
@@ -178,5 +187,15 @@ void SettlementItemWidget::ReleaseSucceeded()
     model_->UpdateStatus(SettlementStatus::kReleased);
     ui->tableView->clearSelection();
 
-    HideWidget();
+    HideWidget(true);
+}
+
+void SettlementItemWidget::RecallSucceeded()
+{
+    ui->lineDescription->setReadOnly(false);
+    ui->dateTimeEdit->setReadOnly(false);
+
+    model_->UpdateStatus(SettlementStatus::kRecalled);
+
+    HideWidget(false);
 }

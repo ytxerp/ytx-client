@@ -37,7 +37,7 @@ void MainWindow::RSettlementNode(const QUuid& parent_widget_id, Settlement* sett
 {
     assert(IsOrderSection(start_));
 
-    auto* model { new SettlementItemModel(sc_->info, SettlementStatus(settlement->status), settlement->id, this) };
+    auto* model { new SettlementItemModel(sc_->info, SettlementStatus(settlement->status), this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new SettlementItemWidget(sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, parent_widget_id, this) };
@@ -52,7 +52,7 @@ void MainWindow::RSettlementNode(const QUuid& parent_widget_id, Settlement* sett
 
     {
         auto* view { widget->View() };
-        SetSettlementNodeView(view, std::to_underlying(SettlementNodeEnum::kDescription));
+        SetSettlementItemView(view, std::to_underlying(SettlementItemEnum::kDescription));
         DelegateSettlementNode(view, sc_->section_config);
     }
 

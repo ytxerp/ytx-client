@@ -6,10 +6,9 @@
 #include "enum/settlementenum.h"
 #include "global/resourcepool.h"
 
-SettlementItemModel::SettlementItemModel(CSectionInfo& info, SettlementStatus status, CUuid& settlement_id, QObject* parent)
+SettlementItemModel::SettlementItemModel(CSectionInfo& info, SettlementStatus status, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
-    , settlement_id_ { settlement_id }
     , status_ { status }
 {
 }
@@ -47,26 +46,24 @@ QVariant SettlementItemModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    const SettlementNodeEnum column { index.column() };
+    const SettlementItemEnum column { index.column() };
 
     auto* settlement_node { static_cast<SettlementItem*>(index.internalPointer()) };
     if (!settlement_node)
         return QVariant();
 
     switch (column) {
-    case SettlementNodeEnum::kId:
+    case SettlementItemEnum::kId:
         return settlement_node->id;
-    case SettlementNodeEnum::kIssuedTime:
+    case SettlementItemEnum::kIssuedTime:
         return settlement_node->issued_time;
-    case SettlementNodeEnum::kDescription:
+    case SettlementItemEnum::kDescription:
         return settlement_node->description;
-    case SettlementNodeEnum::kAmount:
+    case SettlementItemEnum::kAmount:
         return settlement_node->amount;
-    case SettlementNodeEnum::kPartner:
-        return settlement_node->partner;
-    case SettlementNodeEnum::kEmployee:
+    case SettlementItemEnum::kEmployee:
         return settlement_node->employee;
-    case SettlementNodeEnum::kIsSettled:
+    case SettlementItemEnum::kIsSettled:
         return settlement_node->is_settled;
     default:
         return QVariant();
@@ -75,7 +72,7 @@ QVariant SettlementItemModel::data(const QModelIndex& index, int role) const
 
 bool SettlementItemModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if (!index.isValid() || index.column() != std::to_underlying(SettlementNodeEnum::kIsSettled) || role != Qt::EditRole)
+    if (!index.isValid() || index.column() != std::to_underlying(SettlementItemEnum::kIsSettled) || role != Qt::EditRole)
         return false;
 
     if (status_ == SettlementStatus::kReleased)
@@ -113,20 +110,18 @@ void SettlementItemModel::sort(int column, Qt::SortOrder order)
         return;
 
     auto Compare = [column, order](const SettlementItem* lhs, const SettlementItem* rhs) -> bool {
-        const SettlementNodeEnum e_column { column };
+        const SettlementItemEnum e_column { column };
 
         switch (e_column) {
-        case SettlementNodeEnum::kEmployee:
+        case SettlementItemEnum::kEmployee:
             return (order == Qt::AscendingOrder) ? (lhs->employee < rhs->employee) : (lhs->employee > rhs->employee);
-        case SettlementNodeEnum::kIssuedTime:
+        case SettlementItemEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
-        case SettlementNodeEnum::kDescription:
+        case SettlementItemEnum::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
-        case SettlementNodeEnum::kPartner:
-            return (order == Qt::AscendingOrder) ? (lhs->partner < rhs->partner) : (lhs->partner > rhs->partner);
-        case SettlementNodeEnum::kAmount:
+        case SettlementItemEnum::kAmount:
             return (order == Qt::AscendingOrder) ? (lhs->amount < rhs->amount) : (lhs->amount > rhs->amount);
-        case SettlementNodeEnum::kIsSettled:
+        case SettlementItemEnum::kIsSettled:
             return (order == Qt::AscendingOrder) ? (lhs->is_settled < rhs->is_settled) : (lhs->is_settled > rhs->is_settled);
         default:
             return false;
@@ -168,7 +163,7 @@ void SettlementItemModel::ResetModel(const QJsonArray& array)
                 list_.emplaceBack(entry);
         }
 
-        sort(static_cast<int>(SettlementNodeEnum::kIssuedTime), Qt::AscendingOrder);
+        sort(static_cast<int>(SettlementItemEnum::kIssuedTime), Qt::AscendingOrder);
         endResetModel();
     }
 }

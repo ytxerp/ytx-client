@@ -137,15 +137,14 @@ void MainWindow::SetSettlementView(QTableView* view, int stretch_column) const
     v_header->setHidden(true);
 }
 
-void MainWindow::SetSettlementNodeView(QTableView* view, int stretch_column) const
+void MainWindow::SetSettlementItemView(QTableView* view, int stretch_column) const
 {
     view->setSortingEnabled(true);
     view->setSelectionMode(QAbstractItemView::SingleSelection);
     view->setSelectionBehavior(QAbstractItemView::SelectRows);
     view->setAlternatingRowColors(true);
 
-    view->setColumnHidden(std::to_underlying(SettlementNodeEnum::kId), kIsHidden);
-    view->setColumnHidden(std::to_underlying(SettlementNodeEnum::kPartner), kIsHidden);
+    view->setColumnHidden(std::to_underlying(SettlementItemEnum::kId), kIsHidden);
 
     auto* h_header { view->horizontalHeader() };
     ResizeColumn(h_header, stretch_column);

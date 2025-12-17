@@ -354,7 +354,6 @@ void StringInitializer::SetHeader(
         QObject::tr("IssuedTime"),
         QObject::tr("Amount"),
         QObject::tr("Status"),
-        QObject::tr("Partner"),
         QObject::tr("Description"),
         QObject::tr("Employee"),
     };

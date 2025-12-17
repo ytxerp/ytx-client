@@ -46,7 +46,6 @@ struct Settlement {
 
 struct SettlementItem {
     QUuid id {};
-    QUuid partner {};
     QUuid employee {};
     QDateTime issued_time {};
     QString description {};
@@ -56,7 +55,6 @@ struct SettlementItem {
     void ResetState();
 
     void ReadJson(const QJsonObject& object);
-    // QJsonObject WriteJson() const;
 };
 
 #endif // SETTLEMENT_H

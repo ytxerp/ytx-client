@@ -171,7 +171,7 @@ private:
 
     void SetSettlementView(QTableView* table_view, int stretch_column) const;
     void DelegateSettlement(QTableView* table_view, CSectionConfig& config) const;
-    void SetSettlementNodeView(QTableView* table_view, int stretch_column) const;
+    void SetSettlementItemView(QTableView* table_view, int stretch_column) const;
     void DelegateSettlementNode(QTableView* table_view, CSectionConfig& config) const;
 
     void DelegateStatementNode(QTableView* table_view, CSectionConfig& config) const;

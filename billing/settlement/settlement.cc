@@ -71,7 +71,6 @@ QJsonObject Settlement::WriteJson() const
 void SettlementItem::ResetState()
 {
     id = QUuid();
-    partner = QUuid();
     employee = QUuid();
     issued_time = {};
     description.clear();
@@ -83,9 +82,6 @@ void SettlementItem::ReadJson(const QJsonObject& object)
 {
     if (object.contains(kId))
         id = QUuid(object.value(kId).toString());
-
-    if (object.contains(kPartner))
-        partner = QUuid(object.value(kPartner).toString());
 
     if (object.contains(kEmployee))
         employee = QUuid(object.value(kEmployee).toString());
@@ -102,16 +98,3 @@ void SettlementItem::ReadJson(const QJsonObject& object)
     if (object.contains(kIsSettled))
         is_settled = object.value(kIsSettled).toBool();
 }
-
-// QJsonObject SettlementNode::WriteJson() const
-// {
-//     QJsonObject obj {};
-//     obj.insert(kId, id.toString(QUuid::WithoutBraces));
-//     obj.insert(kPartner, partner.toString(QUuid::WithoutBraces));
-//     obj.insert(kEmployee, employee.toString(QUuid::WithoutBraces));
-//     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
-//     obj.insert(kDescription, description);
-//     obj.insert(kAmount, amount);
-//     obj.insert(kIsSettled, is_settled);
-//     return obj;
-// }
