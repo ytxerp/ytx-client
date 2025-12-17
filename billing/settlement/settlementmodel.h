@@ -45,7 +45,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-    bool InsertNode(int row, const QModelIndex& parent, Settlement* node);
+    bool InsertRow(Settlement* settlement);
     void ResetModel(const QJsonArray& array);
 
 private:

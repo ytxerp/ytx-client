@@ -24,12 +24,13 @@
 
 #include "component/info.h"
 #include "component/using.h"
+#include "enum/settlementenum.h"
 #include "settlement.h"
 
 class SettlementItemModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SettlementItemModel(CSectionInfo& info, int status, CUuid& settlement_id, QObject* parent = nullptr);
+    SettlementItemModel(CSectionInfo& info, SettlementStatus status, CUuid& settlement_id, QObject* parent = nullptr);
     ~SettlementItemModel();
 
 signals:
@@ -50,7 +51,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
 
     void ResetModel(const QJsonArray& array);
-    void UpdateStatus(int status);
+    void UpdateStatus(SettlementStatus status);
     void Finalize(QJsonObject& message);
     bool HasPendingChange() const { return !pending_insert_.isEmpty() || !pending_delete_.isEmpty(); }
 
@@ -61,7 +62,7 @@ private:
     CSectionInfo& info_;
 
     const QUuid settlement_id_ {};
-    int status_ {};
+    SettlementStatus status_ {};
 
     QList<SettlementItem*> list_ {};
     QList<SettlementItem*> list_cache_ {};

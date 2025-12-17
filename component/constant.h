@@ -205,6 +205,7 @@ inline const QString kSettlementUpdated = QStringLiteral("settlement_updated");
 inline const QString kSettlementRecalled = QStringLiteral("settlement_recalled");
 inline const QString kSettlementItemDeleted = QStringLiteral("settlement_item_deleted");
 inline const QString kSettlementItemInserted = QStringLiteral("settlement_item_inserted");
+inline const QString kPartnerUpdated = QStringLiteral("partner_updated");
 
 inline const QString kNodeTotal = QStringLiteral("node_total");
 inline const QString kDeletedEntryArray = QStringLiteral("deleted_entry_array");

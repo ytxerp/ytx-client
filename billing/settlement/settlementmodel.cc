@@ -132,10 +132,12 @@ bool SettlementModel::removeRows(int row, int /*count*/, const QModelIndex& pare
     return true;
 }
 
-bool SettlementModel::InsertNode(int row, const QModelIndex& parent, Settlement* node)
+bool SettlementModel::InsertRow(Settlement* settlement)
 {
-    beginInsertRows(parent, row, row);
-    list_.emplaceBack(node);
+    const int row { rowCount() };
+
+    beginInsertRows(QModelIndex(), row, row);
+    list_.emplaceBack(settlement);
     endInsertRows();
 
     return true;

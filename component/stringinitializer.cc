@@ -349,7 +349,7 @@ void StringInitializer::SetHeader(
         QObject::tr("Amount"),
     };
 
-    sale.settlement_node_header = {
+    sale.settlement_item_header = {
         QObject::tr("Id"),
         QObject::tr("IssuedTime"),
         QObject::tr("Amount"),
@@ -366,5 +366,5 @@ void StringInitializer::SetHeader(
     purchase.statement_node_header = sale.statement_node_header;
     purchase.statement_entry_header = sale.statement_entry_header;
     purchase.settlement_header = sale.settlement_header;
-    purchase.settlement_node_header = sale.settlement_node_header;
+    purchase.settlement_item_header = sale.settlement_item_header;
 }

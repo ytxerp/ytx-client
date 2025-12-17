@@ -6,7 +6,7 @@
 #include "enum/settlementenum.h"
 #include "global/resourcepool.h"
 
-SettlementItemModel::SettlementItemModel(CSectionInfo& info, int status, CUuid& settlement_id, QObject* parent)
+SettlementItemModel::SettlementItemModel(CSectionInfo& info, SettlementStatus status, CUuid& settlement_id, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
     , settlement_id_ { settlement_id }
@@ -39,7 +39,7 @@ int SettlementItemModel::rowCount(const QModelIndex& parent) const
 int SettlementItemModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return info_.settlement_node_header.size();
+    return info_.settlement_item_header.size();
 }
 
 QVariant SettlementItemModel::data(const QModelIndex& index, int role) const
@@ -78,6 +78,9 @@ bool SettlementItemModel::setData(const QModelIndex& index, const QVariant& valu
     if (!index.isValid() || index.column() != std::to_underlying(SettlementNodeEnum::kIsSettled) || role != Qt::EditRole)
         return false;
 
+    if (status_ == SettlementStatus::kReleased)
+        return false;
+
     auto* settlement_node { static_cast<SettlementItem*>(index.internalPointer()) };
     if (!settlement_node)
         return false;
@@ -99,14 +102,14 @@ bool SettlementItemModel::setData(const QModelIndex& index, const QVariant& valu
 QVariant SettlementItemModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.settlement_node_header.at(section);
+        return info_.settlement_item_header.at(section);
 
     return QVariant();
 }
 
 void SettlementItemModel::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.settlement_node_header.size())
+    if (column <= -1 || column >= info_.settlement_item_header.size())
         return;
 
     auto Compare = [column, order](const SettlementItem* lhs, const SettlementItem* rhs) -> bool {
@@ -158,10 +161,10 @@ void SettlementItemModel::ResetModel(const QJsonArray& array)
         list_.clear();
 
         for (auto* entry : std::as_const(list_cache_)) {
-            if (status_ == std::to_underlying(SettlementStatus::kReleased) && entry->is_settled)
+            if (status_ == SettlementStatus::kReleased && entry->is_settled)
                 list_.emplaceBack(entry);
 
-            if (status_ == std::to_underlying(SettlementStatus::kRecalled))
+            if (status_ == SettlementStatus::kRecalled)
                 list_.emplaceBack(entry);
         }
 
@@ -170,7 +173,7 @@ void SettlementItemModel::ResetModel(const QJsonArray& array)
     }
 }
 
-void SettlementItemModel::UpdateStatus(int status)
+void SettlementItemModel::UpdateStatus(SettlementStatus status)
 {
     if (status_ == status)
         return;
@@ -178,7 +181,7 @@ void SettlementItemModel::UpdateStatus(int status)
     status_ = status;
 
     {
-        if (status == std::to_underlying(SettlementStatus::kReleased))
+        if (status == SettlementStatus::kReleased)
             for (int row = list_.size() - 1; row >= 0; --row) {
                 auto* node = list_.at(row);
                 if (!node->is_settled) {
@@ -190,7 +193,7 @@ void SettlementItemModel::UpdateStatus(int status)
     }
 
     {
-        if (status == std::to_underlying(SettlementStatus::kRecalled)) {
+        if (status == SettlementStatus::kRecalled) {
             QList<SettlementItem*> to_add {};
 
             for (auto* node : std::as_const(list_cache_)) {

@@ -74,6 +74,7 @@ signals:
     void SStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
     void SSettlement(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SSettlementItemAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SSettlementInserted(const QJsonObject& obj);
 
     void SConnectionRefused();
 
@@ -136,6 +137,11 @@ private:
     void UpdateOrder(const QJsonObject& obj, bool is_release);
     void InsertOrder(const QJsonObject& obj, bool is_release);
     void RecallOrder(const QJsonObject& obj);
+
+    void InsertSettlement(const QJsonObject& obj);
+    void UpdateSettlement(const QJsonObject& obj);
+    void RecallSettlement(const QJsonObject& obj);
+    void UpdatePartner(const QJsonObject& obj);
 
     void UpdateDocumentDir(const QJsonObject& obj);
     void UpdateDefaultUnit(const QJsonObject& obj);

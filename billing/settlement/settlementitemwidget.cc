@@ -119,7 +119,11 @@ void SettlementItemWidget::on_comboPartner_currentIndexChanged(int /*index*/)
         return;
 
     tmp_settlement_.amount = 0.0;
+    tmp_settlement_.status = 0;
+    tmp_settlement_.description.clear();
+
     ui->dSpinAmount->setValue(0.0);
+    ui->lineDescription->clear();
 
     tmp_settlement_.partner = partner_id;
 
@@ -156,12 +160,23 @@ void SettlementItemWidget::on_pBtnRelease_clicked()
 
         pending_update_ = QJsonObject();
     } else {
-        // is_persisted_ = true;
-        // ui->comboPartner->setEnabled(false);
-
         message.insert(kSettlement, tmp_settlement_.WriteJson());
         WebSocket::Instance()->SendMessage(kSettlementInserted, message);
     }
 }
 
 void SettlementItemWidget::on_pBtnRecall_clicked() { }
+
+void SettlementItemWidget::ReleaseSucceeded()
+{
+    is_persisted_ = true;
+    ui->comboPartner->setEnabled(false);
+
+    ui->lineDescription->setReadOnly(true);
+    ui->dateTimeEdit->setReadOnly(true);
+
+    model_->UpdateStatus(SettlementStatus::kReleased);
+    ui->tableView->clearSelection();
+
+    HideWidget();
+}

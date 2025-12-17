@@ -6,6 +6,7 @@
 #include "component/constant.h"
 #include "component/using.h"
 #include "tree/model/treemodelo.h"
+#include "tree/model/treemodelp.h"
 #include "tree/model/treemodelt.h"
 #include "websocket/jsongen.h"
 
@@ -173,6 +174,10 @@ void WebSocket::InitHandler()
     handler_obj_[kStatementEntryAcked] = [this](const QJsonObject& obj) { AckStatementEntry(obj); };
     handler_obj_[kSettlementAcked] = [this](const QJsonObject& obj) { AckSettlement(obj); };
     handler_obj_[kSettlementItemAcked] = [this](const QJsonObject& obj) { AckSettlementItem(obj); };
+    handler_obj_[kSettlementInserted] = [this](const QJsonObject& obj) { InsertSettlement(obj); };
+    handler_obj_[kSettlementUpdated] = [this](const QJsonObject& obj) { UpdateSettlement(obj); };
+    handler_obj_[kSettlementRecalled] = [this](const QJsonObject& obj) { RecallSettlement(obj); };
+    handler_obj_[kPartnerUpdated] = [this](const QJsonObject& obj) { UpdatePartner(obj); };
 
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
@@ -891,6 +896,32 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
     }
 
     order_model->UpdateMeta(node_id, meta);
+}
+
+void WebSocket::InsertSettlement(const QJsonObject& obj)
+{
+    CString session_id { obj.value(kSessionId).toString() };
+
+    if (session_id != session_id_) {
+        return;
+    }
+
+    emit SSettlementInserted(obj);
+}
+
+void WebSocket::UpdateSettlement(const QJsonObject& obj) { }
+
+void WebSocket::RecallSettlement(const QJsonObject& obj) { }
+
+void WebSocket::UpdatePartner(const QJsonObject& obj)
+{
+    auto* base_model { tree_model_hash_.value(Section::kPartner).data() };
+    auto* partner_model = static_cast<TreeModelP*>(base_model);
+
+    const auto partner_id { QUuid(obj.value(kPartnerId).toString()) };
+    const double initial_delta { obj.value(kInitialDelta).toString().toDouble() };
+
+    partner_model->RUpdateAmount(partner_id, initial_delta);
 }
 
 void WebSocket::ActionEntry(const QJsonObject& obj)

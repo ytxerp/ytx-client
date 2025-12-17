@@ -3,6 +3,7 @@
 #include "billing/settlement/settlementmodel.h"
 #include "billing/settlement/settlementwidget.h"
 #include "enum/settlementenum.h"
+#include "global/resourcepool.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -36,7 +37,7 @@ void MainWindow::RSettlementNode(const QUuid& parent_widget_id, Settlement* sett
 {
     assert(IsOrderSection(start_));
 
-    auto* model { new SettlementItemModel(sc_->info, settlement->status, settlement->id, this) };
+    auto* model { new SettlementItemModel(sc_->info, SettlementStatus(settlement->status), settlement->id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new SettlementItemWidget(sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, parent_widget_id, this) };
@@ -69,6 +70,38 @@ void MainWindow::RSettlementItemAcked(Section section, const QUuid& widget_id, c
     auto* d_widget { static_cast<SettlementItemWidget*>(widget.data()) };
     auto* model { d_widget->Model() };
     model->ResetModel(entry_array);
+}
+
+void MainWindow::RSettlementInserted(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const QJsonObject meta { obj.value(kMeta).toObject() };
+    const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
+    const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
+
+    auto* sc { GetSectionContex(section) };
+
+    {
+        auto widget { sc->widget_hash.value(widget_id, nullptr) };
+        if (widget) {
+            auto* d_widget { static_cast<SettlementItemWidget*>(widget.data()) };
+            d_widget->ReleaseSucceeded();
+        }
+    }
+
+    {
+        auto parent_widget { sc->widget_hash.value(parent_widget_id, nullptr) };
+        if (parent_widget) {
+            auto* d_parent_widget { static_cast<SettlementWidget*>(parent_widget.data()) };
+            auto* model { d_parent_widget->Model() };
+
+            const QJsonObject settlement_obj { obj.value(kSettlement).toObject() };
+            auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
+            settlement->ReadJson(settlement_obj);
+
+            model->InsertRow(settlement);
+        }
+    }
 }
 
 void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJsonArray& array)

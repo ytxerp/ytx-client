@@ -44,6 +44,8 @@ public:
     QTableView* View() const;
     SettlementItemModel* Model() const { return model_; }
 
+    void ReleaseSucceeded();
+
 public slots:
     void RSyncAmount(double amount);
 
