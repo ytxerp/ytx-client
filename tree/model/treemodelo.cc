@@ -118,6 +118,16 @@ void TreeModelO::SyncNodeName(const QUuid& node_id, const QString& name)
     }
 }
 
+void TreeModelO::SyncSettlement(const QUuid& node_id, const QUuid& settltment_id)
+{
+    auto* node = GetNode(node_id);
+    if (node) {
+        auto* d_node { static_cast<NodeO*>(node) };
+        d_node->is_settled = true;
+        d_node->settlement_id = settltment_id;
+    }
+}
+
 bool TreeModelO::InsertNode(int row, const QModelIndex& parent, Node* node)
 {
     if (row < 0 || row > rowCount(parent)) {

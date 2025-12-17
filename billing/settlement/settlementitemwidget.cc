@@ -159,11 +159,10 @@ void SettlementItemWidget::on_pBtnRelease_clicked()
 
         message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
         message.insert(kParentWidgetId, parent_widget_id_.toString(QUuid::WithoutBraces));
+        message.insert(kSettlementId, tmp_settlement_.id.toString(QUuid::WithoutBraces));
 
         if (is_persisted_) {
             message.insert(kSettlement, pending_update_);
-            message.insert(kSettlementId, tmp_settlement_.id.toString(QUuid::WithoutBraces));
-
             WebSocket::Instance()->SendMessage(kSettlementUpdated, message);
 
             pending_update_ = QJsonObject();
