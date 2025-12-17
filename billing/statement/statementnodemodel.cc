@@ -53,7 +53,7 @@ QVariant StatementNodeModel::data(const QModelIndex& index, int role) const
     case StatementNodeEnum::kDescription:
         return statement_primary->description;
     case StatementNodeEnum::kEmployee:
-        return statement_primary->employee;
+        return statement_primary->employee_id;
     case StatementNodeEnum::kIssuedTime:
         return statement_primary->issued_time;
     case StatementNodeEnum::kCount:
@@ -110,7 +110,7 @@ void StatementNodeModel::sort(int column, Qt::SortOrder order)
         case StatementNodeEnum::kDescription:
             return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
         case StatementNodeEnum::kEmployee:
-            return (order == Qt::AscendingOrder) ? (lhs->employee < rhs->employee) : (lhs->employee > rhs->employee);
+            return (order == Qt::AscendingOrder) ? (lhs->employee_id < rhs->employee_id) : (lhs->employee_id > rhs->employee_id);
         case StatementNodeEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case StatementNodeEnum::kCount:

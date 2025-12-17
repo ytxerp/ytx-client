@@ -26,7 +26,7 @@
 
 struct Settlement {
     QUuid id {};
-    QUuid partner {};
+    QUuid partner_id {};
     QDateTime issued_time {};
     QString description {};
     int status {};
@@ -46,7 +46,7 @@ struct Settlement {
 
 struct SettlementItem {
     QUuid id {};
-    QUuid employee {};
+    QUuid employee_id {};
     QDateTime issued_time {};
     QString description {};
     double amount {};

@@ -27,7 +27,7 @@
 #include "component/constant.h"
 
 struct Statement {
-    QUuid partner {};
+    QUuid partner_id {};
     double pbalance {};
     double ccount {};
     double cmeasure {};
@@ -41,7 +41,7 @@ struct Statement {
 
 inline void Statement::ResetState()
 {
-    partner = QUuid();
+    partner_id = QUuid();
     pbalance = 0.0;
     ccount = 0.0;
     cmeasure = 0.0;
@@ -52,8 +52,8 @@ inline void Statement::ResetState()
 
 inline void Statement::ReadJson(const QJsonObject& object)
 {
-    if (object.contains(kPartner))
-        partner = QUuid(object[kPartner].toString());
+    if (object.contains(kPartnerId))
+        partner_id = QUuid(object[kPartnerId].toString());
 
     if (object.contains(kPBalance))
         pbalance = object[kPBalance].toString().toDouble();
@@ -81,7 +81,7 @@ struct StatementNode {
     double amount {};
     int status {};
     QString description {};
-    QUuid employee {};
+    QUuid employee_id {};
     double settlement {};
 
     void ResetState();
@@ -96,7 +96,7 @@ inline void StatementNode::ResetState()
     amount = 0.0;
     status = 0;
     description.clear();
-    employee = QUuid();
+    employee_id = QUuid();
     settlement = 0.0;
 }
 
@@ -117,8 +117,8 @@ inline void StatementNode::ReadJson(const QJsonObject& object)
     if (object.contains(kDescription))
         description = object[kDescription].toString();
 
-    if (object.contains(kEmployee))
-        employee = QUuid(object[kEmployee].toString());
+    if (object.contains(kEmployeeId))
+        employee_id = QUuid(object[kEmployeeId].toString());
 
     if (object.contains(kSettlement))
         settlement = object[kSettlement].toString().toDouble();

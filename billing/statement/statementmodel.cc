@@ -50,7 +50,7 @@ QVariant StatementModel::data(const QModelIndex& index, int role) const
 
     switch (column) {
     case StatementEnum::kPartner:
-        return statement->partner;
+        return statement->partner_id;
     case StatementEnum::kPBalance:
         return statement->pbalance;
     case StatementEnum::kCAmount:
@@ -86,7 +86,7 @@ void StatementModel::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case StatementEnum::kPartner:
-            return (order == Qt::AscendingOrder) ? (lhs->partner < rhs->partner) : (lhs->partner > rhs->partner);
+            return (order == Qt::AscendingOrder) ? (lhs->partner_id < rhs->partner_id) : (lhs->partner_id > rhs->partner_id);
         case StatementEnum::kPBalance:
             return (order == Qt::AscendingOrder) ? (lhs->pbalance < rhs->pbalance) : (lhs->pbalance > rhs->pbalance);
         case StatementEnum::kCAmount:

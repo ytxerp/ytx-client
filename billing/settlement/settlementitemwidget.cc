@@ -61,7 +61,7 @@ void SettlementItemWidget::InitWidget()
 
 void SettlementItemWidget::InitData()
 {
-    int partner_index { ui->comboPartner->findData(tmp_settlement_.partner) };
+    int partner_index { ui->comboPartner->findData(tmp_settlement_.partner_id) };
     ui->comboPartner->setCurrentIndex(partner_index);
 
     ui->lineDescription->setText(tmp_settlement_.description);
@@ -79,10 +79,10 @@ void SettlementItemWidget::InitData()
 
 void SettlementItemWidget::FetchNode()
 {
-    if (tmp_settlement_.partner.isNull())
+    if (tmp_settlement_.partner_id.isNull())
         return;
 
-    const auto message { JsonGen::SettlementNodeAcked(section_, widget_id_, tmp_settlement_.partner, tmp_settlement_.id) };
+    const auto message { JsonGen::SettlementNodeAcked(section_, widget_id_, tmp_settlement_.partner_id, tmp_settlement_.id) };
     WebSocket::Instance()->SendMessage(kSettlementItemAcked, message);
 }
 
@@ -118,7 +118,7 @@ void SettlementItemWidget::on_comboPartner_currentIndexChanged(int /*index*/)
         return;
 
     const QUuid partner_id { ui->comboPartner->currentData().toUuid() };
-    if (tmp_settlement_.partner == partner_id)
+    if (tmp_settlement_.partner_id == partner_id)
         return;
 
     tmp_settlement_.amount = 0.0;
@@ -128,14 +128,14 @@ void SettlementItemWidget::on_comboPartner_currentIndexChanged(int /*index*/)
     ui->dSpinAmount->setValue(0.0);
     ui->lineDescription->clear();
 
-    tmp_settlement_.partner = partner_id;
+    tmp_settlement_.partner_id = partner_id;
 
     FetchNode();
 }
 
 void SettlementItemWidget::on_pBtnRelease_clicked()
 {
-    assert(!tmp_settlement_.partner.isNull() && "tmp_settlement_.partner should never be null here");
+    assert(!tmp_settlement_.partner_id.isNull() && "tmp_settlement_.partner should never be null here");
 
     {
         if (!is_persisted_ && !model_->HasPendingChange()) {

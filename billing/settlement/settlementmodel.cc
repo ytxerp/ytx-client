@@ -69,7 +69,7 @@ QVariant SettlementModel::data(const QModelIndex& index, int role) const
     case SettlementEnum::kAmount:
         return settlement->amount;
     case SettlementEnum::kPartner:
-        return settlement->partner;
+        return settlement->partner_id;
     default:
         return QVariant();
     }
@@ -93,7 +93,7 @@ void SettlementModel::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case SettlementEnum::kPartner:
-            return (order == Qt::AscendingOrder) ? (lhs->partner < rhs->partner) : (lhs->partner > rhs->partner);
+            return (order == Qt::AscendingOrder) ? (lhs->partner_id < rhs->partner_id) : (lhs->partner_id > rhs->partner_id);
         case SettlementEnum::kUserId:
             return (order == Qt::AscendingOrder) ? (lhs->user_id < rhs->user_id) : (lhs->user_id > rhs->user_id);
         case SettlementEnum::kCreateTime:

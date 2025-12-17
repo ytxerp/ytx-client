@@ -62,7 +62,7 @@ QVariant SettlementItemModel::data(const QModelIndex& index, int role) const
     case SettlementItemEnum::kAmount:
         return settlement_node->amount;
     case SettlementItemEnum::kEmployee:
-        return settlement_node->employee;
+        return settlement_node->employee_id;
     case SettlementItemEnum::kIsSettled:
         return settlement_node->is_settled;
     default:
@@ -114,7 +114,7 @@ void SettlementItemModel::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case SettlementItemEnum::kEmployee:
-            return (order == Qt::AscendingOrder) ? (lhs->employee < rhs->employee) : (lhs->employee > rhs->employee);
+            return (order == Qt::AscendingOrder) ? (lhs->employee_id < rhs->employee_id) : (lhs->employee_id > rhs->employee_id);
         case SettlementItemEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case SettlementItemEnum::kDescription:
