@@ -63,7 +63,7 @@ QJsonObject Settlement::WriteJson() const
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kDescription, description);
     obj.insert(kStatus, status);
-    obj.insert(kAmount, amount);
+    obj.insert(kAmount, QString::number(amount, 'f', kMaxNumericScale_4));
 
     return obj;
 }
@@ -100,7 +100,7 @@ void SettlementItem::ReadJson(const QJsonObject& object)
         amount = object.value(kAmount).toString().toDouble();
 
     if (object.contains(kIsSettled))
-        is_settled = object.value(kSettlementId).toBool();
+        is_settled = object.value(kIsSettled).toBool();
 }
 
 // QJsonObject SettlementNode::WriteJson() const

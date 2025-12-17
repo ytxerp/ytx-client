@@ -200,8 +200,8 @@ inline const QString kOrderInsertReleased = QStringLiteral("order_insert_release
 inline const QString kOrderUpdateReleased = QStringLiteral("order_update_released");
 inline const QString kOrderRecalled = QStringLiteral("order_recalled");
 
-inline const QString kSettlementInsertReleased = QStringLiteral("settlement_insert_released");
-inline const QString kSettlementUpdateReleased = QStringLiteral("settlement_update_released");
+inline const QString kSettlementInserted = QStringLiteral("settlement_inserted");
+inline const QString kSettlementUpdated = QStringLiteral("settlement_updated");
 inline const QString kSettlementRecalled = QStringLiteral("settlement_recalled");
 inline const QString kSettlementItemDeleted = QStringLiteral("settlement_item_deleted");
 inline const QString kSettlementItemInserted = QStringLiteral("settlement_item_inserted");

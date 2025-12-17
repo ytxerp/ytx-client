@@ -137,6 +137,8 @@ void SettlementItemWidget::on_pBtnRelease_clicked()
     if (tmp_settlement_.status == std::to_underlying(NodeStatus::kReleased))
         return;
 
+    tmp_settlement_.status = std::to_underlying(NodeStatus::kReleased);
+
     if (is_persisted_)
         pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
 
@@ -145,14 +147,12 @@ void SettlementItemWidget::on_pBtnRelease_clicked()
 
     message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
     message.insert(kParentWidgetId, parent_widget_id_.toString(QUuid::WithoutBraces));
-    message.insert(kAmount, QString::number(tmp_settlement_.amount, 'f', kMaxNumericScale_4));
-    message.insert(kPartnerId, tmp_settlement_.partner.toString(QUuid::WithoutBraces));
 
     if (is_persisted_) {
         message.insert(kSettlement, pending_update_);
         message.insert(kSettlementId, tmp_settlement_.id.toString(QUuid::WithoutBraces));
 
-        WebSocket::Instance()->SendMessage(kSettlementUpdateReleased, message);
+        WebSocket::Instance()->SendMessage(kSettlementUpdated, message);
 
         pending_update_ = QJsonObject();
     } else {
@@ -160,7 +160,7 @@ void SettlementItemWidget::on_pBtnRelease_clicked()
         // ui->comboPartner->setEnabled(false);
 
         message.insert(kSettlement, tmp_settlement_.WriteJson());
-        WebSocket::Instance()->SendMessage(kSettlementInsertReleased, message);
+        WebSocket::Instance()->SendMessage(kSettlementInserted, message);
     }
 }
 
