@@ -378,6 +378,9 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_message)
 
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
 {
+    if (pending_update_.contains(kUnit))
+        pending_update_.insert(kFinalTotal, QString::number(tmp_node_.final_total, 'f', kMaxNumericScale_4));
+
     order_message.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
     order_message.insert(kPartnerId, tmp_node_.partner_id.toString(QUuid::WithoutBraces));
     order_message.insert(kNodeUpdate, pending_update_);
@@ -503,6 +506,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
         is_persisted_ = true;
 
         emit SInsertOrder();
+        emit SNodeStatus(node_id_, NodeStatus::kReleased);
     }
 
     node_modified_ = false;
@@ -512,6 +516,4 @@ void TableWidgetO::on_pBtnRelease_clicked()
     ui->pBtnPrint->setFocus();
     ui->pBtnPrint->setDefault(true);
     ui->tableViewO->clearSelection();
-
-    emit SNodeStatus(node_id_, NodeStatus::kReleased);
 }
