@@ -56,9 +56,9 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
     case NodeEnumO::kUnit:
         return d_node->unit;
     case NodeEnumO::kPartner:
-        return d_node->partner;
+        return d_node->partner_id;
     case NodeEnumO::kEmployee:
-        return d_node->employee;
+        return d_node->employee_id;
     case NodeEnumO::kIssuedTime:
         return d_node->issued_time;
     case NodeEnumO::kCountTotal:
@@ -100,9 +100,9 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
         case NodeEnumO::kUnit:
             return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
         case NodeEnumO::kPartner:
-            return (order == Qt::AscendingOrder) ? (d_lhs->partner < d_rhs->partner) : (d_lhs->partner > d_rhs->partner);
+            return (order == Qt::AscendingOrder) ? (d_lhs->partner_id < d_rhs->partner_id) : (d_lhs->partner_id > d_rhs->partner_id);
         case NodeEnumO::kEmployee:
-            return (order == Qt::AscendingOrder) ? (d_lhs->employee < d_rhs->employee) : (d_lhs->employee > d_rhs->employee);
+            return (order == Qt::AscendingOrder) ? (d_lhs->employee_id < d_rhs->employee_id) : (d_lhs->employee_id > d_rhs->employee_id);
         case NodeEnumO::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (d_lhs->issued_time < d_rhs->issued_time) : (d_lhs->issued_time > d_rhs->issued_time);
         case NodeEnumO::kCountTotal:

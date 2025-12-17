@@ -918,7 +918,7 @@ void WebSocket::UpdatePartner(const QJsonObject& obj)
     auto* base_model { tree_model_hash_.value(Section::kPartner).data() };
     auto* partner_model = static_cast<TreeModelP*>(base_model);
 
-    const auto partner_id { QUuid(obj.value(kPartnerId).toString()) };
+    const auto partner_id { QUuid(obj.value(kId).toString()) };
     const double initial_delta { obj.value(kInitialDelta).toString().toDouble() };
 
     partner_model->RUpdateAmount(partner_id, initial_delta);

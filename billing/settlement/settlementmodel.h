@@ -46,6 +46,7 @@ public:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
     bool InsertRow(Settlement* settlement);
+    void InsertMeta(Settlement* settlement, const QJsonObject& meta);
     void ResetModel(const QJsonArray& array);
 
 private:

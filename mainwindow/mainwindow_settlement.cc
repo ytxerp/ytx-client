@@ -99,6 +99,7 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
             auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
             settlement->ReadJson(settlement_obj);
 
+            model->InsertMeta(settlement, meta);
             model->InsertRow(settlement);
         }
     }

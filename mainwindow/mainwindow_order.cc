@@ -156,7 +156,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     if (!node)
         return;
 
-    const auto partner_id { node->partner };
+    const auto partner_id { node->partner_id };
     assert(!partner_id.isNull());
 
     // Prepare dependencies

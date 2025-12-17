@@ -531,7 +531,7 @@ void TableModelO::ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) 
     if (!entry || !entry_hub_p_ || internal_sku.isNull())
         return;
 
-    if (auto result = entry_hub_p_->ResolveFromInternal(d_node_->partner, internal_sku)) {
+    if (auto result = entry_hub_p_->ResolveFromInternal(d_node_->partner_id, internal_sku)) {
         const auto& [external_id, price] = *result;
         entry->unit_price = price;
         entry->external_sku = external_id;

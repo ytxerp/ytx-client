@@ -143,6 +143,17 @@ bool SettlementModel::InsertRow(Settlement* settlement)
     return true;
 }
 
+void SettlementModel::InsertMeta(Settlement* settlement, const QJsonObject& meta)
+{
+    Q_ASSERT_X(meta.contains(kUserId), "SettlementModel::InsertMeta", "Missing 'user_id' in meta");
+    Q_ASSERT_X(meta.contains(kCreatedTime), "SettlementModel::InsertMeta", "Missing 'created_time' in meta");
+    Q_ASSERT_X(meta.contains(kCreatedBy), "SettlementModel::InsertMeta", "Missing 'created_by' in meta");
+
+    settlement->user_id = QUuid(meta[kUserId].toString());
+    settlement->created_time = QDateTime::fromString(meta[kCreatedTime].toString(), Qt::ISODate);
+    settlement->created_by = QUuid(meta[kCreatedBy].toString());
+}
+
 void SettlementModel::ResetModel(const QJsonArray& array)
 {
     beginResetModel();

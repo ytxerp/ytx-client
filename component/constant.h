@@ -324,7 +324,6 @@ inline const QString kInitialTotal = QStringLiteral("initial_total");
 inline const QString kFinal = QStringLiteral("final");
 inline const QString kFinalTotal = QStringLiteral("final_total");
 
-inline const QString kPartnerDelta = QStringLiteral("partner_delta");
 inline const QString kPartnerId = QStringLiteral("partner_id");
 inline const QString kEmployeeId = QStringLiteral("employee_id");
 

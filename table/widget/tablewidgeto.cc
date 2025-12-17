@@ -31,7 +31,7 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, QWidget* parent)
     IniRuleGroup();
     IniUnitGroup();
     IniRule(tmp_node_.direction_rule);
-    IniData(tmp_node_.partner, tmp_node_.employee);
+    IniData(tmp_node_.partner_id, tmp_node_.employee_id);
     IniConnect();
 
     const bool released { tmp_node_.status == std::to_underlying(NodeStatus::kReleased) };
@@ -223,10 +223,10 @@ void TableWidgetO::IniUnitGroup()
 void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
 {
     const QUuid partner_id { ui->comboPartner->currentData().toUuid() };
-    if (tmp_node_.partner == partner_id)
+    if (tmp_node_.partner_id == partner_id)
         return;
 
-    tmp_node_.partner = partner_id;
+    tmp_node_.partner_id = partner_id;
     emit SSyncPartner(node_id_, partner_id);
 
     if (is_persisted_) {
@@ -239,10 +239,10 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
 void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 {
     const QUuid employee_id { ui->comboEmployee->currentData().toUuid() };
-    if (tmp_node_.employee == employee_id)
+    if (tmp_node_.employee_id == employee_id)
         return;
 
-    tmp_node_.employee = employee_id;
+    tmp_node_.employee_id = employee_id;
 
     if (is_persisted_) {
         pending_update_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
@@ -379,7 +379,7 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_message)
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
 {
     order_message.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
-    order_message.insert(kPartnerId, tmp_node_.partner.toString(QUuid::WithoutBraces));
+    order_message.insert(kPartnerId, tmp_node_.partner_id.toString(QUuid::WithoutBraces));
     order_message.insert(kNodeUpdate, pending_update_);
 }
 
@@ -427,7 +427,7 @@ void TableWidgetO::SaveOrder()
         return;
     }
 
-    if (tmp_node_.partner.isNull()) {
+    if (tmp_node_.partner_id.isNull()) {
         QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before saving or releasing the order."));
         return;
     }
@@ -476,7 +476,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
         return;
     }
 
-    if (tmp_node_.partner.isNull()) {
+    if (tmp_node_.partner_id.isNull()) {
         QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before saving or releasing the order."));
         return;
     }
@@ -489,7 +489,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
     if (is_persisted_) {
         BuildNodeUpdate(order_message);
-        order_message.insert(kPartnerId, tmp_node_.partner.toString(QUuid::WithoutBraces));
+        order_message.insert(kPartnerId, tmp_node_.partner_id.toString(QUuid::WithoutBraces));
 
         WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_message);
 

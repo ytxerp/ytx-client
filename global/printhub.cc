@@ -173,7 +173,7 @@ void PrintHub::DrawHeader(QPainter* painter)
 {
     // Example: Draw a header at the specified position
 
-    DrawText(painter, QStringLiteral("partner"), partner_->Name(node_o_->partner));
+    DrawText(painter, QStringLiteral("partner"), partner_->Name(node_o_->partner_id));
     DrawText(painter, QStringLiteral("issued_time"), node_o_->issued_time.toLocalTime().toString(kDateTimeFST));
 }
 
@@ -204,7 +204,7 @@ void PrintHub::DrawTable(QPainter* painter, long long start_index, long long end
 
 void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
 {
-    DrawText(painter, QStringLiteral("employee"), partner_->Name(node_o_->employee));
+    DrawText(painter, QStringLiteral("employee"), partner_->Name(node_o_->employee_id));
 
     // unit
     {

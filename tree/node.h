@@ -90,8 +90,8 @@ struct NodeP final : Node {
 };
 
 struct NodeO final : Node {
-    QUuid employee {};
-    QUuid partner {};
+    QUuid employee_id {};
+    QUuid partner_id {};
     QUuid settlement_id {};
     bool is_settled {};
 

@@ -200,8 +200,8 @@ QJsonObject NodeP::WriteJson() const
 void NodeO::ResetState()
 {
     Node::ResetState();
-    employee = QUuid();
-    partner = QUuid();
+    employee_id = QUuid();
+    partner_id = QUuid();
     issued_time = {};
     count_total = 0.0;
     measure_total = 0.0;
@@ -246,10 +246,10 @@ void NodeO::ReadJson(const QJsonObject& object)
         updated_time = QDateTime::fromString(object.value(kUpdatedTime).toString(), Qt::ISODate);
     if (object.contains(kUpdatedBy))
         updated_by = QUuid(object.value(kUpdatedBy).toString());
-    if (object.contains(kEmployee))
-        employee = QUuid(object.value(kEmployee).toString());
-    if (object.contains(kPartner))
-        partner = QUuid(object.value(kPartner).toString());
+    if (object.contains(kEmployeeId))
+        employee_id = QUuid(object.value(kEmployeeId).toString());
+    if (object.contains(kPartnerId))
+        partner_id = QUuid(object.value(kPartnerId).toString());
     if (object.contains(kIssuedTime))
         issued_time = QDateTime::fromString(object.value(kIssuedTime).toString(), Qt::ISODate);
     if (object.contains(kCountTotal))
@@ -278,8 +278,8 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kFinalTotal, QString::number(final_total, 'f', kMaxNumericScale_4));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
     obj.insert(kDiscountTotal, QString::number(discount_total, 'f', kMaxNumericScale_4));
-    obj.insert(kEmployee, employee.toString(QUuid::WithoutBraces));
-    obj.insert(kPartner, partner.toString(QUuid::WithoutBraces));
+    obj.insert(kEmployeeId, employee_id.toString(QUuid::WithoutBraces));
+    obj.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
     obj.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kCountTotal, QString::number(count_total, 'f', kMaxNumericScale_8));
