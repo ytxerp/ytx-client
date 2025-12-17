@@ -173,7 +173,22 @@ void SettlementItemWidget::on_pBtnRelease_clicked()
     }
 }
 
-void SettlementItemWidget::on_pBtnRecall_clicked() { tmp_settlement_.status = std::to_underlying(SettlementStatus::kRecalled); }
+void SettlementItemWidget::on_pBtnRecall_clicked()
+{
+    if (tmp_settlement_.status == std::to_underlying(SettlementStatus::kRecalled))
+        return;
+
+    tmp_settlement_.status = std::to_underlying(SettlementStatus::kRecalled);
+
+    QJsonObject message { JsonGen::MetaMessage(section_) };
+    model_->Finalize(message);
+
+    message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
+    message.insert(kParentWidgetId, parent_widget_id_.toString(QUuid::WithoutBraces));
+    message.insert(kSettlementId, tmp_settlement_.id.toString(QUuid::WithoutBraces));
+
+    WebSocket::Instance()->SendMessage(kSettlementRecalled, message);
+}
 
 void SettlementItemWidget::ReleaseSucceeded()
 {
