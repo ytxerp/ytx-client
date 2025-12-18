@@ -24,12 +24,14 @@
 #include <QStringList>
 #include <QUuid>
 
+#include "enum/settlementenum.h"
+
 struct Settlement {
     QUuid id {};
     QUuid partner_id {};
     QDateTime issued_time {};
     QString description {};
-    int status {};
+    SettlementStatus status {};
     double amount {};
 
     QUuid user_id {};

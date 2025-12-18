@@ -70,7 +70,7 @@ void SettlementItemWidget::InitData()
 
     ui->comboPartner->setEnabled(!is_persisted_);
 
-    const bool is_released { tmp_settlement_.status == std::to_underlying(SettlementStatus::kReleased) };
+    const bool is_released { tmp_settlement_.status == SettlementStatus::kReleased };
     ui->lineDescription->setReadOnly(is_released);
     ui->dateTimeEdit->setReadOnly(is_released);
 
@@ -122,7 +122,7 @@ void SettlementItemWidget::on_comboPartner_currentIndexChanged(int /*index*/)
         return;
 
     tmp_settlement_.amount = 0.0;
-    tmp_settlement_.status = 0;
+    tmp_settlement_.status = SettlementStatus::kRecalled;
     tmp_settlement_.description.clear();
 
     ui->dSpinAmount->setValue(0.0);
@@ -142,12 +142,12 @@ void SettlementItemWidget::on_pBtnRelease_clicked()
             return;
         }
 
-        if (tmp_settlement_.status == std::to_underlying(SettlementStatus::kReleased))
+        if (tmp_settlement_.status == SettlementStatus::kReleased)
             return;
     }
 
     {
-        tmp_settlement_.status = std::to_underlying(SettlementStatus::kReleased);
+        tmp_settlement_.status = SettlementStatus::kReleased;
 
         if (is_persisted_)
             pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kReleased));
@@ -175,10 +175,10 @@ void SettlementItemWidget::on_pBtnRelease_clicked()
 
 void SettlementItemWidget::on_pBtnRecall_clicked()
 {
-    if (tmp_settlement_.status == std::to_underlying(SettlementStatus::kRecalled))
+    if (tmp_settlement_.status == SettlementStatus::kRecalled)
         return;
 
-    tmp_settlement_.status = std::to_underlying(SettlementStatus::kRecalled);
+    tmp_settlement_.status = SettlementStatus::kRecalled;
 
     QJsonObject message { JsonGen::MetaMessage(section_) };
     model_->Finalize(message);

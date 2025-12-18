@@ -402,6 +402,11 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
     }
 
+    if (!node_->settlement_id.isNull()) {
+        QMessageBox::information(this, tr("Settlement Selected"), tr("This order has already been selected and cannot be modified."));
+        return;
+    }
+
     if (node_->status == std::to_underlying(NodeStatus::kRecalled))
         return;
 

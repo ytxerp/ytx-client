@@ -8,7 +8,7 @@ void Settlement::ResetState()
     partner_id = QUuid();
     issued_time = {};
     description.clear();
-    status = 0;
+    status = SettlementStatus::kRecalled;
     amount = 0.0;
 
     user_id = QUuid();
@@ -33,7 +33,7 @@ void Settlement::ReadJson(const QJsonObject& object)
         description = object.value(kDescription).toString();
 
     if (object.contains(kStatus))
-        status = object.value(kStatus).toInt();
+        status = SettlementStatus(object.value(kStatus).toInt());
 
     if (object.contains(kAmount))
         amount = object.value(kAmount).toString().toDouble();
@@ -62,7 +62,7 @@ QJsonObject Settlement::WriteJson() const
     obj.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kDescription, description);
-    obj.insert(kStatus, status);
+    obj.insert(kStatus, std::to_underlying(status));
     obj.insert(kAmount, QString::number(amount, 'f', kMaxNumericScale_4));
 
     return obj;

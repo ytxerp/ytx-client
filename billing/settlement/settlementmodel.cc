@@ -65,7 +65,7 @@ QVariant SettlementModel::data(const QModelIndex& index, int role) const
     case SettlementEnum::kDescription:
         return settlement->description;
     case SettlementEnum::kStatus:
-        return settlement->status;
+        return std::to_underlying(settlement->status);
     case SettlementEnum::kAmount:
         return settlement->amount;
     case SettlementEnum::kPartner:
@@ -161,7 +161,7 @@ void SettlementModel::RecallSucceeded(const QUuid& settlement_id, const QJsonObj
 
     settlement->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
     settlement->updated_by = QUuid(meta[kUpdatedBy].toString());
-    settlement->status = std::to_underlying(SettlementStatus::kRecalled);
+    settlement->status = SettlementStatus::kRecalled;
 }
 
 void SettlementModel::ResetModel(const QJsonArray& array)
