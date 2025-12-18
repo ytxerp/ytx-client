@@ -46,6 +46,7 @@ public:
 
     void InsertSucceeded();
     void RecallSucceeded();
+    void UpdateSucceeded();
 
 public slots:
     void RSyncAmount(double amount);

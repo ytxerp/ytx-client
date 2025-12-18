@@ -76,6 +76,7 @@ signals:
     void SSettlementItemAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SSettlementInserted(const QJsonObject& obj);
     void SSettlementRecalled(const QJsonObject& obj);
+    void SSettlementUpdated(const QJsonObject& obj);
 
     void SConnectionRefused();
 

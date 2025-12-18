@@ -920,7 +920,33 @@ void WebSocket::InsertSettlement(const QJsonObject& obj)
     }
 }
 
-void WebSocket::UpdateSettlement(const QJsonObject& obj) { }
+void WebSocket::UpdateSettlement(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    CString session_id { obj.value(kSessionId).toString() };
+    const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
+    const QJsonArray insert_array { obj.value(kSettlementItemInserted).toArray() };
+    const QJsonArray delete_array { obj.value(kSettlementItemDeleted).toArray() };
+
+    auto* base_model { tree_model_hash_.value(section).data() };
+
+    auto* order_model = static_cast<TreeModelO*>(base_model);
+    assert(order_model != nullptr);
+
+    for (const auto& v : insert_array) {
+        const QUuid node_id { v.toString() };
+        order_model->InsertSettlement(node_id, settlement_id);
+    }
+
+    for (const auto& v : delete_array) {
+        const QUuid node_id { v.toString() };
+        order_model->DeleteSettlement(settlement_id);
+    }
+
+    if (session_id == session_id_) {
+        emit SSettlementUpdated(obj);
+    }
+}
 
 void WebSocket::RecallSettlement(const QJsonObject& obj)
 {

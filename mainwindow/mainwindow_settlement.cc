@@ -132,6 +132,37 @@ void MainWindow::RSettlementRecalled(const QJsonObject& obj)
     }
 }
 
+void MainWindow::RSettlementUpdated(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const QJsonObject meta { obj.value(kMeta).toObject() };
+    const QJsonObject settlement { obj.value(kSettlement).toObject() };
+    const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
+    const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
+    const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
+
+    auto* sc { GetSectionContex(section) };
+
+    {
+        auto widget { sc->widget_hash.value(widget_id, nullptr) };
+        if (widget) {
+            auto* d_widget { static_cast<SettlementItemWidget*>(widget.data()) };
+            d_widget->UpdateSucceeded();
+        }
+    }
+
+    {
+        auto parent_widget { sc->widget_hash.value(parent_widget_id, nullptr) };
+        if (parent_widget) {
+            const double amount { settlement.value(kAmount).toString().toDouble() };
+
+            auto* d_parent_widget { static_cast<SettlementWidget*>(parent_widget.data()) };
+            auto* model { d_parent_widget->Model() };
+            model->UpdateSucceeded(settlement_id, amount, meta);
+        }
+    }
+}
+
 void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };

@@ -217,3 +217,14 @@ void SettlementItemWidget::RecallSucceeded()
 
     HideWidget(false);
 }
+
+void SettlementItemWidget::UpdateSucceeded()
+{
+    ui->lineDescription->setReadOnly(true);
+    ui->dateTimeEdit->setReadOnly(true);
+
+    model_->UpdateStatus(SettlementStatus::kReleased);
+    ui->tableView->clearSelection();
+
+    HideWidget(true);
+}

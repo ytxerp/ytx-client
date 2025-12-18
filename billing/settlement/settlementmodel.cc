@@ -164,6 +164,20 @@ void SettlementModel::RecallSucceeded(const QUuid& settlement_id, const QJsonObj
     settlement->status = SettlementStatus::kRecalled;
 }
 
+void SettlementModel::UpdateSucceeded(const QUuid& settlement_id, double amount, const QJsonObject& meta)
+{
+    Q_ASSERT_X(meta.contains(kUpdatedBy), "SettlementModel::UpdateMeta", "Missing 'updated_by' in meta");
+    Q_ASSERT_X(meta.contains(kUpdatedTime), "SettlementModel::UpdateMeta", "Missing 'updated_time' in meta");
+
+    auto* settlement { FindSettlement(settlement_id) };
+    Q_ASSERT_X(settlement != nullptr, "SettlementModel::RecallSettlement", "Settlement must exist for recalled operation");
+
+    settlement->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
+    settlement->updated_by = QUuid(meta[kUpdatedBy].toString());
+    settlement->status = SettlementStatus::kReleased;
+    settlement->amount = amount;
+}
+
 void SettlementModel::ResetModel(const QJsonArray& array)
 {
     beginResetModel();

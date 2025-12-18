@@ -142,6 +142,21 @@ void TreeModelO::RecallSettlement(const QUuid& settlement_id)
     }
 }
 
+void TreeModelO::DeleteSettlement(const QUuid& settlement_id)
+{
+    for (auto it = node_hash_.begin(); it != node_hash_.end(); ++it) {
+        auto* node = it.value();
+        if (!node)
+            continue;
+
+        auto* d_node = static_cast<NodeO*>(node);
+        if (d_node->settlement_id == settlement_id) {
+            d_node->is_settled = false;
+            d_node->settlement_id = QUuid();
+        }
+    }
+}
+
 bool TreeModelO::InsertNode(int row, const QModelIndex& parent, Node* node)
 {
     if (row < 0 || row > rowCount(parent)) {

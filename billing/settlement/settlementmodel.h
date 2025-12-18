@@ -47,6 +47,7 @@ public:
 
     bool InsertSucceeded(Settlement* settlement, const QJsonObject& meta);
     void RecallSucceeded(const QUuid& settlement_id, const QJsonObject& meta);
+    void UpdateSucceeded(const QUuid& settlement_id, double amount, const QJsonObject& meta);
     void ResetModel(const QJsonArray& array);
 
     Settlement* FindSettlement(const QUuid& settlement_id) const
