@@ -307,6 +307,7 @@ inline const QString kUpdate = QStringLiteral("update");
 inline const QString kResult = QStringLiteral("result");
 inline const QString kLhsTotal = QStringLiteral("lhs_total");
 inline const QString kRhsTotal = QStringLiteral("rhs_total");
+inline const QString kIsSelected = QStringLiteral("is_selected");
 
 inline const QString kLhsRate = QStringLiteral("lhs_rate");
 inline const QString kRhsRate = QStringLiteral("rhs_rate");

@@ -50,7 +50,7 @@ struct SettlementItem {
     QDateTime issued_time {};
     QString description {};
     double amount {};
-    bool is_settled {};
+    bool is_selected {};
 
     void ResetState();
 

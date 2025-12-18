@@ -75,7 +75,7 @@ void SettlementItem::ResetState()
     issued_time = {};
     description.clear();
     amount = 0.0;
-    is_settled = false;
+    is_selected = false;
 }
 
 void SettlementItem::ReadJson(const QJsonObject& object)
@@ -95,6 +95,6 @@ void SettlementItem::ReadJson(const QJsonObject& object)
     if (object.contains(kAmount))
         amount = object.value(kAmount).toString().toDouble();
 
-    if (object.contains(kIsSettled))
-        is_settled = object.value(kIsSettled).toBool();
+    if (object.contains(kIsSelected))
+        is_selected = object.value(kIsSelected).toBool();
 }
