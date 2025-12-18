@@ -85,7 +85,7 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
         auto widget { sc->widget_hash.value(widget_id, nullptr) };
         if (widget) {
             auto* d_widget { static_cast<SettlementItemWidget*>(widget.data()) };
-            d_widget->ReleaseSucceeded();
+            d_widget->InsertSucceeded();
         }
     }
 
@@ -99,8 +99,35 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
             auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
             settlement->ReadJson(settlement_obj);
 
-            model->InsertMeta(settlement, meta);
-            model->InsertRow(settlement);
+            model->InsertSucceeded(settlement, meta);
+        }
+    }
+}
+
+void MainWindow::RSettlementRecalled(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const QJsonObject meta { obj.value(kMeta).toObject() };
+    const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
+    const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
+    const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
+
+    auto* sc { GetSectionContex(section) };
+
+    {
+        auto widget { sc->widget_hash.value(widget_id, nullptr) };
+        if (widget) {
+            auto* d_widget { static_cast<SettlementItemWidget*>(widget.data()) };
+            d_widget->RecallSucceeded();
+        }
+    }
+
+    {
+        auto parent_widget { sc->widget_hash.value(parent_widget_id, nullptr) };
+        if (parent_widget) {
+            auto* d_parent_widget { static_cast<SettlementWidget*>(parent_widget.data()) };
+            auto* model { d_parent_widget->Model() };
+            model->RecallSucceeded(settlement_id, meta);
         }
     }
 }

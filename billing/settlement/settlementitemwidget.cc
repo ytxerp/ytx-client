@@ -190,7 +190,7 @@ void SettlementItemWidget::on_pBtnRecall_clicked()
     WebSocket::Instance()->SendMessage(kSettlementRecalled, message);
 }
 
-void SettlementItemWidget::ReleaseSucceeded()
+void SettlementItemWidget::InsertSucceeded()
 {
     is_persisted_ = true;
     ui->comboPartner->setEnabled(false);

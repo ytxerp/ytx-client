@@ -47,7 +47,9 @@ public:
     void AckTree(const QJsonObject& obj) override;
     void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id) override;
     void SyncNodeName(const QUuid& node_id, const QString& name) override;
-    void SyncSettlement(const QUuid& node_id, const QUuid& settltment_id);
+
+    void InsertSettlement(const QUuid& node_id, const QUuid& settltment_id);
+    void RecallSettlement(const QUuid& settltment_id);
 
     int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeO::status); }
 

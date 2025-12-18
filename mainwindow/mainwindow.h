@@ -118,6 +118,7 @@ private slots:
     void RSettlementNode(const QUuid& parent_widget_id, Settlement* settlement, bool is_persisted);
     void RSettlementItemAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RSettlementInserted(const QJsonObject& obj);
+    void RSettlementRecalled(const QJsonObject& obj);
 
     void RLeafRemoveDenied(const QJsonObject& obj);
     inline void RNodeRemoveConfirmed(const QUuid& node_id) { node_pending_removal_.remove(node_id); }

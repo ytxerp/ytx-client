@@ -44,7 +44,7 @@ public:
     QTableView* View() const;
     SettlementItemModel* Model() const { return model_; }
 
-    void ReleaseSucceeded();
+    void InsertSucceeded();
     void RecallSucceeded();
 
 public slots:

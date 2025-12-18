@@ -132,8 +132,16 @@ bool SettlementModel::removeRows(int row, int /*count*/, const QModelIndex& pare
     return true;
 }
 
-bool SettlementModel::InsertRow(Settlement* settlement)
+bool SettlementModel::InsertSucceeded(Settlement* settlement, const QJsonObject& meta)
 {
+    Q_ASSERT_X(meta.contains(kUserId), "SettlementModel::InsertMeta", "Missing 'user_id' in meta");
+    Q_ASSERT_X(meta.contains(kCreatedTime), "SettlementModel::InsertMeta", "Missing 'created_time' in meta");
+    Q_ASSERT_X(meta.contains(kCreatedBy), "SettlementModel::InsertMeta", "Missing 'created_by' in meta");
+
+    settlement->user_id = QUuid(meta[kUserId].toString());
+    settlement->created_time = QDateTime::fromString(meta[kCreatedTime].toString(), Qt::ISODate);
+    settlement->created_by = QUuid(meta[kCreatedBy].toString());
+
     const int row { rowCount() };
 
     beginInsertRows(QModelIndex(), row, row);
@@ -143,15 +151,17 @@ bool SettlementModel::InsertRow(Settlement* settlement)
     return true;
 }
 
-void SettlementModel::InsertMeta(Settlement* settlement, const QJsonObject& meta)
+void SettlementModel::RecallSucceeded(const QUuid& settlement_id, const QJsonObject& meta)
 {
-    Q_ASSERT_X(meta.contains(kUserId), "SettlementModel::InsertMeta", "Missing 'user_id' in meta");
-    Q_ASSERT_X(meta.contains(kCreatedTime), "SettlementModel::InsertMeta", "Missing 'created_time' in meta");
-    Q_ASSERT_X(meta.contains(kCreatedBy), "SettlementModel::InsertMeta", "Missing 'created_by' in meta");
+    Q_ASSERT_X(meta.contains(kUpdatedBy), "SettlementModel::UpdateMeta", "Missing 'updated_by' in meta");
+    Q_ASSERT_X(meta.contains(kUpdatedTime), "SettlementModel::UpdateMeta", "Missing 'updated_time' in meta");
 
-    settlement->user_id = QUuid(meta[kUserId].toString());
-    settlement->created_time = QDateTime::fromString(meta[kCreatedTime].toString(), Qt::ISODate);
-    settlement->created_by = QUuid(meta[kCreatedBy].toString());
+    auto* settlement { FindSettlement(settlement_id) };
+    Q_ASSERT_X(settlement != nullptr, "SettlementModel::RecallSettlement", "Settlement must exist for recalled operation");
+
+    settlement->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
+    settlement->updated_by = QUuid(meta[kUpdatedBy].toString());
+    settlement->status = std::to_underlying(SettlementStatus::kRecalled);
 }
 
 void SettlementModel::ResetModel(const QJsonArray& array)

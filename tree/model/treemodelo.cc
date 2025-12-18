@@ -118,13 +118,27 @@ void TreeModelO::SyncNodeName(const QUuid& node_id, const QString& name)
     }
 }
 
-void TreeModelO::SyncSettlement(const QUuid& node_id, const QUuid& settltment_id)
+void TreeModelO::InsertSettlement(const QUuid& node_id, const QUuid& settltment_id)
 {
     auto* node = GetNode(node_id);
     if (node) {
         auto* d_node { static_cast<NodeO*>(node) };
         d_node->is_settled = true;
         d_node->settlement_id = settltment_id;
+    }
+}
+
+void TreeModelO::RecallSettlement(const QUuid& settlement_id)
+{
+    for (auto it = node_hash_.begin(); it != node_hash_.end(); ++it) {
+        auto* node = it.value();
+        if (!node)
+            continue;
+
+        auto* d_node = static_cast<NodeO*>(node);
+        if (d_node->settlement_id == settlement_id) {
+            d_node->is_settled = false;
+        }
     }
 }
 

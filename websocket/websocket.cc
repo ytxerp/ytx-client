@@ -912,7 +912,7 @@ void WebSocket::InsertSettlement(const QJsonObject& obj)
 
     for (const auto& v : array) {
         const QUuid node_id { v.toString() };
-        order_model->SyncSettlement(node_id, settlement_id);
+        order_model->InsertSettlement(node_id, settlement_id);
     }
 
     if (session_id == session_id_) {
@@ -922,7 +922,23 @@ void WebSocket::InsertSettlement(const QJsonObject& obj)
 
 void WebSocket::UpdateSettlement(const QJsonObject& obj) { }
 
-void WebSocket::RecallSettlement(const QJsonObject& obj) { }
+void WebSocket::RecallSettlement(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    CString session_id { obj.value(kSessionId).toString() };
+    const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
+
+    auto* base_model { tree_model_hash_.value(section).data() };
+
+    auto* order_model = static_cast<TreeModelO*>(base_model);
+    assert(order_model != nullptr);
+
+    order_model->RecallSettlement(settlement_id);
+
+    if (session_id == session_id_) {
+        emit SSettlementRecalled(obj);
+    }
+}
 
 void WebSocket::UpdatePartner(const QJsonObject& obj)
 {

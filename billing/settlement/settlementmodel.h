@@ -45,9 +45,20 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-    bool InsertRow(Settlement* settlement);
-    void InsertMeta(Settlement* settlement, const QJsonObject& meta);
+    bool InsertSucceeded(Settlement* settlement, const QJsonObject& meta);
+    void RecallSucceeded(const QUuid& settlement_id, const QJsonObject& meta);
     void ResetModel(const QJsonArray& array);
+
+    Settlement* FindSettlement(const QUuid& settlement_id) const
+    {
+        for (auto* s : std::as_const(list_)) {
+            if (s && s->id == settlement_id) {
+                return s;
+            }
+        }
+
+        return nullptr;
+    }
 
 private:
     CSectionInfo& info_;
