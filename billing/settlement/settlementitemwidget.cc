@@ -137,6 +137,8 @@ void SettlementItemWidget::on_pBtnRelease_clicked()
 {
     assert(!tmp_settlement_.partner_id.isNull() && "tmp_settlement_.partner should never be null here");
 
+    model_->NormalizeBuffer();
+
     {
         if (!is_persisted_ && !model_->HasPendingChange()) {
             return;
@@ -149,8 +151,10 @@ void SettlementItemWidget::on_pBtnRelease_clicked()
     {
         tmp_settlement_.status = SettlementStatus::kReleased;
 
-        if (is_persisted_)
+        if (is_persisted_) {
             pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kReleased));
+            pending_update_.insert(kAmount, QString::number(tmp_settlement_.amount, 'f', kMaxNumericScale_4));
+        }
     }
 
     {
@@ -163,8 +167,8 @@ void SettlementItemWidget::on_pBtnRelease_clicked()
 
         if (is_persisted_) {
             message.insert(kSettlement, pending_update_);
-            WebSocket::Instance()->SendMessage(kSettlementUpdated, message);
 
+            WebSocket::Instance()->SendMessage(kSettlementUpdated, message);
             pending_update_ = QJsonObject();
         } else {
             message.insert(kSettlement, tmp_settlement_.WriteJson());

@@ -211,14 +211,6 @@ void SettlementItemModel::UpdateStatus(SettlementStatus status)
 
 void SettlementItemModel::Finalize(QJsonObject& message)
 {
-    {
-        // Normalize diff buffers (inserted / deleted)
-        // to ensure no conflict states remain before packaging.
-        // e.g. inserted+deleted ⇒ remove both
-        // NOTE: update caches are implicitly consistent: newly inserted never have update update.
-        NormalizeBuffer();
-    }
-
     // deleted
     {
         if (!pending_delete_.isEmpty()) {
