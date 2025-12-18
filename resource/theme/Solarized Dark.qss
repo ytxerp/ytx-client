@@ -26,6 +26,15 @@
     color: #2BB3EB;
 }
 
+/*--------------------------------------VLine-------------------------------------------------*/
+
+QFrame[frameShape="5"] {
+    border: none;
+    border-left: 1px solid #657B83;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
 /*--------------------------------------border-------------------------------------------------*/
 
 QPushButton, QGroupBox, QPlainTextEdit,

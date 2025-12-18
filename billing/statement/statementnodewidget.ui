@@ -77,6 +77,19 @@
        </widget>
       </item>
       <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>516</width>
+          <height>17</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
        <widget class="QRadioButton" name="rBtnIMM">
         <property name="text">
          <string>IMM</string>
@@ -103,19 +116,6 @@
          <string>Fetch</string>
         </property>
        </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>516</width>
-          <height>17</height>
-         </size>
-        </property>
-       </spacer>
       </item>
      </layout>
     </widget>
