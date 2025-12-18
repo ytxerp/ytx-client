@@ -5,8 +5,6 @@
 
 #include "component/constant.h"
 #include "component/signalblocker.h"
-#include "enum/settlementenum.h"
-#include "global/resourcepool.h"
 #include "ui_settlementwidget.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -79,37 +77,16 @@ void SettlementWidget::IniWidget()
     ui->end->setDateTime(end_.addSecs(-1));
 }
 
-void SettlementWidget::on_pBtnAppend_clicked()
-{
-    // Allocate a Settlement and wrap it in a shared_ptr with the deleter
-    auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
+// void SettlementWidget::on_pBtnRemove_clicked()
+// {
+//     auto* view { ui->tableView };
 
-    settlement->issued_time = QDateTime::currentDateTimeUtc();
-    settlement->id = QUuid::createUuidV7();
+//     const auto index { view->selectionModel()->selectedIndexes().first() };
+//     if (!index.isValid())
+//         return;
 
-    // Emit the signal with shared_ptr
-    emit SSettlementNode(widget_id_, settlement, false);
-}
-
-void SettlementWidget::on_pBtnRemove_clicked()
-{
-    auto* view { ui->tableView };
-
-    const auto index { view->selectionModel()->selectedIndexes().first() };
-    if (!index.isValid())
-        return;
-
-    model_->removeRows(index.row(), 1);
-}
-
-void SettlementWidget::on_tableView_doubleClicked(const QModelIndex& index)
-{
-    if (index.column() != std::to_underlying(SettlementEnum::kAmount))
-        return;
-
-    auto* settlement { static_cast<Settlement*>(index.internalPointer()) };
-    emit SSettlementNode(widget_id_, settlement, true);
-}
+//     model_->removeRows(index.row(), 1);
+// }
 
 void SettlementWidget::InitTimer()
 {

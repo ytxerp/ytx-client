@@ -107,6 +107,7 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     const bool is_tree { IsTreeWidget(widget) };
     const bool is_table_fipt { IsTableWidgetFIPT(widget) };
     const bool is_table_o { IsTableWidgetO(widget) };
+    const bool is_settlement { IsSettlementWidget(widget) };
     const bool is_color_section { start_ == Section::kTask || start_ == Section::kInventory };
     const bool is_order_section { IsOrderSection(start_) };
 
@@ -123,8 +124,8 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     ui->actionSettlement->setEnabled(is_order_section);
     ui->actionNewGroup->setEnabled(is_order_section);
 
-    ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o);
-    ui->actionRemove->setEnabled(is_tree || is_table_fipt || is_table_o);
+    ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o || is_settlement);
+    ui->actionRemove->setEnabled(is_tree || is_table_fipt || is_table_o || is_settlement);
 }
 
 void MainWindow::on_tabWidget_tabBarDoubleClicked(int index)

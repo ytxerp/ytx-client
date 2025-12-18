@@ -30,6 +30,7 @@
 #include <QTranslator>
 
 #include "billing/settlement/settlement.h"
+#include "billing/settlement/settlementwidget.h"
 #include "component/config.h"
 #include "component/info.h"
 #include "component/sectioncontex.h"
@@ -88,7 +89,8 @@ private slots:
     void REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
 
     void RUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section);
-    void RSyncPartner(const QUuid& node_id, const QVariant& value);
+    void RSyncPartner(const QUuid& node_id, const QUuid& value);
+    void RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void RActionEntry(EntryAction action);
     void RLoginResult(bool result);
@@ -108,6 +110,7 @@ private slots:
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
     void RTreeViewDoubleClicked(const QModelIndex& index);
+    void RSettlementTableViewDoubleClicked(const QModelIndex& index);
 
     void RSectionGroup(int id);
 
@@ -115,7 +118,6 @@ private slots:
     void RStatementEntry(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 
     void RSettlement(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RSettlementNode(const QUuid& parent_widget_id, Settlement* settlement, bool is_persisted);
     void RSettlementItemAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RSettlementInserted(const QJsonObject& obj);
     void RSettlementRecalled(const QJsonObject& obj);
@@ -148,6 +150,7 @@ private:
 
     void CreateLeafFIPT(SectionContext* sc, const QUuid& node_id);
     void CreateLeafO(SectionContext* sc, const QUuid& node_id);
+    void SettlementItemTab(const QUuid& parent_widget_id, Settlement* settlement, bool is_persisted);
 
     void TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
     void TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
@@ -241,6 +244,7 @@ private:
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
     inline bool IsTableWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kTableWidgetFIPT); }
     inline bool IsTableWidgetO(const QWidget* widget) { return widget && widget->inherits(kTableWidgetO); }
+    inline bool IsSettlementWidget(const QWidget* widget) { return widget && widget->inherits(kSettlementWidget); }
 
 private:
     Ui::MainWindow* ui {};

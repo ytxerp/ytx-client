@@ -33,23 +33,18 @@ class SettlementWidget;
 class SettlementWidget final : public QWidget {
     Q_OBJECT
 
-signals:
-    void SSettlementNode(const QUuid& parent_widget_id, Settlement* settlement, bool is_persisted);
-
 public:
     explicit SettlementWidget(SettlementModel* model, Section section, CUuid& widget_id, QWidget* parent = nullptr);
     ~SettlementWidget() override;
 
     QTableView* View() const;
     SettlementModel* Model() const { return model_; }
+    QUuid WidgetId() const { return widget_id_; }
 
 private slots:
     void on_pBtnFetch_clicked();
     void on_start_dateChanged(const QDate& date);
     void on_end_dateChanged(const QDate& date);
-    void on_pBtnAppend_clicked();
-    void on_pBtnRemove_clicked();
-    void on_tableView_doubleClicked(const QModelIndex& index);
 
 private:
     void IniWidget();
@@ -65,5 +60,7 @@ private:
     const Section section_ {};
     const QUuid widget_id_ {};
 };
+
+inline const char* kSettlementWidget = "SettlementWidget";
 
 #endif // SETTLEMENTWIDGET_H

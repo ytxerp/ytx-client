@@ -15,7 +15,6 @@ void MainWindow::on_actionSettlement_triggered()
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new SettlementWidget(model, start_, widget_id, this) };
-    connect(widget, &SettlementWidget::SSettlementNode, this, &MainWindow::RSettlementNode);
 
     {
         const int tab_index { ui->tabWidget->addTab(widget, tr("Settlement")) };
@@ -26,6 +25,8 @@ void MainWindow::on_actionSettlement_triggered()
 
     {
         auto* view { widget->View() };
+
+        connect(view, &QTableView::doubleClicked, this, &MainWindow::RSettlementTableViewDoubleClicked);
         SetSettlementView(view, std::to_underlying(SettlementEnum::kDescription));
         DelegateSettlement(view, sc_->section_config);
     }
@@ -33,7 +34,7 @@ void MainWindow::on_actionSettlement_triggered()
     RegisterWidget(widget_id, widget);
 }
 
-void MainWindow::RSettlementNode(const QUuid& parent_widget_id, Settlement* settlement, bool is_persisted)
+void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, Settlement* settlement, bool is_persisted)
 {
     assert(IsOrderSection(start_));
 
@@ -42,10 +43,11 @@ void MainWindow::RSettlementNode(const QUuid& parent_widget_id, Settlement* sett
 
     auto* widget { new SettlementItemWidget(sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, parent_widget_id, this) };
     connect(model, &SettlementItemModel::SSyncAmount, widget, &SettlementItemWidget::RSyncAmount);
+    connect(widget, &SettlementItemWidget::SUpdatePartner, this, &MainWindow::RUpdatePartner);
 
     {
         const QString name { sc_p_.tree_model->Name(settlement->partner_id) };
-        const QString label { name.isEmpty() ? tr("SettlementItem") : QString("%1-%2").arg(tr("Settlement"), name) };
+        const QString label { is_persisted ? QString("%1-%2").arg(tr("Settlement"), name) : tr("Settlement") };
 
         const int tab_index { ui->tabWidget->addTab(widget, label) };
         auto* tab_bar { ui->tabWidget->tabBar() };
@@ -60,6 +62,37 @@ void MainWindow::RSettlementNode(const QUuid& parent_widget_id, Settlement* sett
     }
 
     RegisterWidget(widget_id, widget);
+}
+
+void MainWindow::RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id)
+{
+    auto model { sc_p_.tree_model };
+    auto* widget { ui->tabWidget };
+    auto* tab_bar { widget->tabBar() };
+    int count { widget->count() };
+
+    for (int index = 0; index != count; ++index) {
+        if (widget->isTabVisible(index) && tab_bar->tabData(index).value<TabInfo>().id == widget_id) {
+            const QString name { model->Name(partner_id) };
+            const QString label { QString("%1-%2").arg(tr("Settlement"), name) };
+
+            tab_bar->setTabText(index, label);
+        }
+    }
+}
+
+void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
+{
+    auto* settlement_widget { dynamic_cast<SettlementWidget*>(ui->tabWidget->currentWidget()) };
+    if (settlement_widget) {
+        if (index.column() != std::to_underlying(SettlementEnum::kAmount))
+            return;
+
+        auto* settlement { static_cast<Settlement*>(index.internalPointer()) };
+        const QUuid settlement_widget_id { settlement_widget->WidgetId() };
+
+        SettlementItemTab(settlement_widget_id, settlement, true);
+    }
 }
 
 void MainWindow::RSettlementItemAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array)

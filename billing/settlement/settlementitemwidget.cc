@@ -131,6 +131,7 @@ void SettlementItemWidget::on_comboPartner_currentIndexChanged(int /*index*/)
     tmp_settlement_.partner_id = partner_id;
 
     FetchNode();
+    emit SUpdatePartner(widget_id_, partner_id);
 }
 
 void SettlementItemWidget::on_pBtnRelease_clicked()

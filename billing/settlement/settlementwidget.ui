@@ -90,20 +90,6 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pBtnAppend">
-        <property name="text">
-         <string>Append</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pBtnRemove">
-        <property name="text">
-         <string>Remove</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="pBtnFetch">
         <property name="text">
          <string>Fetch</string>

@@ -36,6 +36,9 @@ class SettlementItemWidget;
 class SettlementItemWidget final : public QWidget {
     Q_OBJECT
 
+signals:
+    void SUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
+
 public:
     explicit SettlementItemWidget(TreeModel* tree_model_partner, SettlementItemModel* model, Settlement* settlement, bool is_persisted, Section section,
         CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent = nullptr);

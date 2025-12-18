@@ -1,3 +1,5 @@
+#include "billing/settlement/settlementwidget.h"
+#include "global/resourcepool.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
 #include "table/model/tablemodelf.h"
@@ -11,21 +13,38 @@
 
 void MainWindow::on_actionAppendEntry_triggered()
 {
-    auto* widget { dynamic_cast<TableWidget*>(ui->tabWidget->currentWidget()) };
-    assert(widget);
+    {
+        auto* widget { dynamic_cast<SettlementWidget*>(ui->tabWidget->currentWidget()) };
+        if (widget) {
+            const QUuid settlement_widget_id { widget->WidgetId() };
 
-    auto* model { widget->Model() };
-    assert(model);
+            auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
 
-    const int new_row { model->rowCount() };
-    if (!model->insertRows(new_row, 1))
-        return;
+            settlement->issued_time = QDateTime::currentDateTimeUtc();
+            settlement->id = QUuid::createUuidV7();
 
-    const int linked_node_col { EntryUtils::LinkedNodeColumn(start_) };
-    QModelIndex target_index { model->index(new_row, linked_node_col) };
+            SettlementItemTab(settlement_widget_id, settlement, false);
+            return;
+        }
+    }
 
-    if (target_index.isValid()) {
-        widget->View()->setCurrentIndex(target_index);
+    {
+        auto* widget { dynamic_cast<TableWidget*>(ui->tabWidget->currentWidget()) };
+        if (widget) {
+            auto* model { widget->Model() };
+            assert(model);
+
+            const int new_row { model->rowCount() };
+            if (!model->insertRows(new_row, 1))
+                return;
+
+            const int linked_node_col { EntryUtils::LinkedNodeColumn(start_) };
+            QModelIndex target_index { model->index(new_row, linked_node_col) };
+
+            if (target_index.isValid()) {
+                widget->View()->setCurrentIndex(target_index);
+            }
+        }
     }
 }
 

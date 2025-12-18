@@ -182,7 +182,6 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, tree_model_p->Name(partner_id)) };
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, node_id }));
-    tab_bar->setTabToolTip(tab_index, tree_model_p->Path(partner_id));
 
     // Configure view
     auto* view = widget->View();
@@ -194,10 +193,8 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 
-void MainWindow::RSyncPartner(const QUuid& node_id, const QVariant& value)
+void MainWindow::RSyncPartner(const QUuid& node_id, const QUuid& value)
 {
-    const auto partner_id { value.toUuid() };
-
     auto model { sc_p_.tree_model };
     auto* widget { ui->tabWidget };
     auto* tab_bar { widget->tabBar() };
@@ -205,8 +202,7 @@ void MainWindow::RSyncPartner(const QUuid& node_id, const QVariant& value)
 
     for (int index = 0; index != count; ++index) {
         if (widget->isTabVisible(index) && tab_bar->tabData(index).value<TabInfo>().id == node_id) {
-            tab_bar->setTabText(index, model->Name(partner_id));
-            tab_bar->setTabToolTip(index, model->Path(partner_id));
+            tab_bar->setTabText(index, model->Name(value));
         }
     }
 }

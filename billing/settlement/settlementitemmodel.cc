@@ -208,7 +208,7 @@ void SettlementItemModel::UpdateStatus(SettlementStatus status)
         }
     }
 
-    sort(static_cast<int>(SettlementItemEnum::kIssuedTime), Qt::AscendingOrder);
+    sort(static_cast<int>(SettlementItemEnum::kIsSelected), Qt::DescendingOrder);
 }
 
 void SettlementItemModel::Finalize(QJsonObject& message)
