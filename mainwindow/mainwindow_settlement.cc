@@ -44,7 +44,10 @@ void MainWindow::RSettlementNode(const QUuid& parent_widget_id, Settlement* sett
     connect(model, &SettlementItemModel::SSyncAmount, widget, &SettlementItemWidget::RSyncAmount);
 
     {
-        const int tab_index { ui->tabWidget->addTab(widget, tr("SettlementItem")) };
+        const QString name { sc_p_.tree_model->Name(settlement->partner_id) };
+        const QString label { name.isEmpty() ? tr("SettlementItem") : QString("%1-%2").arg(tr("Settlement"), name) };
+
+        const int tab_index { ui->tabWidget->addTab(widget, label) };
         auto* tab_bar { ui->tabWidget->tabBar() };
 
         tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
