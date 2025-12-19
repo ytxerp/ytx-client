@@ -113,9 +113,17 @@ void TableWidgetO::IniWidget()
 
     ui->tableViewO->setFocus();
 
-    ui->pBtnSave->setShortcut(QKeySequence::Save);
-    ui->pBtnRelease->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return));
-    ui->pBtnRecall->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Return));
+    auto SetButton = [](QPushButton* btn, const QString& text, const QKeySequence& ks) {
+        btn->setShortcut(ks);
+        btn->setText(text);
+        btn->setToolTip(QString("%1 (%2)").arg(text, ks.toString()));
+    };
+
+    SetButton(ui->pBtnSave, tr("Save"), QKeySequence::Save);
+    SetButton(ui->pBtnRelease, tr("Release"), QKeySequence(Qt::CTRL | Qt::Key_Return));
+    SetButton(ui->pBtnRecall, tr("Recall"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
+    SetButton(ui->pBtnPreview, tr("Preview"), QKeySequence(Qt::CTRL | Qt::Key_P));
+    SetButton(ui->pBtnPrint, tr("Print"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
 
     auto& templates { PrintHub::Instance().TemplateMap() };
     for (auto it = templates.constBegin(); it != templates.constEnd(); ++it) {

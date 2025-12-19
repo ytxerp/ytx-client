@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30.5)
-project(YTX VERSION 0.2.9 LANGUAGES CXX)
+project(YTX VERSION 0.3.0 LANGUAGES CXX)
 
 # ------------------------
 # Qt setup
