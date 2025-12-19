@@ -336,8 +336,7 @@ void MainWindow::on_actionInsertNode_triggered()
     assert(sc_->tree_widget);
 
     auto current_index { sc_->tree_view->currentIndex() };
-    if (!current_index.isValid())
-        return;
+    current_index = current_index.isValid() ? current_index : QModelIndex();
 
     auto parent_index { current_index.parent() };
     parent_index = parent_index.isValid() ? parent_index : QModelIndex();
