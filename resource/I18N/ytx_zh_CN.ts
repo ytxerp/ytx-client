@@ -1445,7 +1445,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="382"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="492"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="504"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
@@ -1458,7 +1458,9 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="395"/>
         <location filename="../../mainwindow/mainwindow.ui" line="398"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="20"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="22"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="52"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="79"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1569,7 +1571,7 @@ Rage, rage against the dying of the light.</source>
         <translation>将删除此分支，且所有直系子节点提升至同级。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="168"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="169"/>
         <source>Unsaved Data</source>
         <translation>未保存的数据</translation>
     </message>
@@ -1627,7 +1629,7 @@ Please check your network and try reconnecting.</source>
         <translation type="vanished">无法连接到服务器，或连接已中断。\n请检查网络并重新连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="168"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="169"/>
         <source>This page contains unsaved data.
 
 Do you want to save before closing?</source>
@@ -1699,64 +1701,64 @@ Do you want to save before closing?</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="502"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="514"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="502"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="514"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="502"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="514"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="536"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="548"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="536"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="548"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="539"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="551"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="539"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="551"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="559"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="566"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="571"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="578"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="559"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="571"/>
         <source>Failed to check updates:
 %1</source>
         <translation>检查更新失败：\n%1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="566"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="578"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="579"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="591"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="579"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="591"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1765,12 +1767,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="585"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="597"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="585"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="597"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -1779,9 +1781,20 @@ Download now?</source>
         <translation type="vanished">结算节点</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="46"/>
         <source>SettlementItem</source>
-        <translation>结算单</translation>
+        <translation type="vanished">结算单</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="231"/>
+        <source>Settlement Released</source>
+        <translation>结算单已发布</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="232"/>
+        <source>This settlement has already been released and cannot be deleted.
+You need to recall it first before making changes.</source>
+        <translation>该结算单已发布，无法直接删除。
+请先撤回结算单，再进行修改或删除操作。</translation>
     </message>
 </context>
 <context>
@@ -1929,12 +1942,12 @@ Download now?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="242"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="251"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="249"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="258"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -2085,7 +2098,7 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="319"/>
         <location filename="../../component/stringinitializer.cc" line="332"/>
         <location filename="../../component/stringinitializer.cc" line="347"/>
-        <location filename="../../component/stringinitializer.cc" line="358"/>
+        <location filename="../../component/stringinitializer.cc" line="357"/>
         <location filename="../../global/exportexcel.cc" line="84"/>
         <source>Description</source>
         <translation>描述</translation>
@@ -2224,7 +2237,7 @@ Download now?</source>
     <message>
         <location filename="../../component/stringinitializer.cc" line="97"/>
         <location filename="../../component/stringinitializer.cc" line="321"/>
-        <location filename="../../component/stringinitializer.cc" line="359"/>
+        <location filename="../../component/stringinitializer.cc" line="358"/>
         <source>Employee</source>
         <translation>职员</translation>
     </message>
@@ -2354,7 +2367,6 @@ Download now?</source>
         <location filename="../../component/stringinitializer.cc" line="93"/>
         <location filename="../../component/stringinitializer.cc" line="303"/>
         <location filename="../../component/stringinitializer.cc" line="346"/>
-        <location filename="../../component/stringinitializer.cc" line="357"/>
         <source>Partner</source>
         <translation>合作</translation>
     </message>
@@ -2873,24 +2885,16 @@ Download now?</source>
 <context>
     <name>SettlementItemWidget</name>
     <message>
-        <location filename="../../billing/settlement/settlementitemwidget.ui" line="142"/>
         <source>Description</source>
-        <translation>描述</translation>
+        <translation type="vanished">描述</translation>
     </message>
     <message>
-        <location filename="../../billing/settlement/settlementitemwidget.ui" line="161"/>
-        <source>yyyy/MM/dd HH:mm</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../billing/settlement/settlementitemwidget.ui" line="201"/>
         <source>Release</source>
-        <translation>发布</translation>
+        <translation type="vanished">发布</translation>
     </message>
     <message>
-        <location filename="../../billing/settlement/settlementitemwidget.ui" line="214"/>
         <source>Recall</source>
-        <translation>撤回</translation>
+        <translation type="vanished">撤回</translation>
     </message>
 </context>
 <context>
@@ -2919,45 +2923,42 @@ Download now?</source>
         <translation type="vanished">刷新</translation>
     </message>
     <message>
-        <location filename="../../billing/settlement/settlementwidget.ui" line="82"/>
         <source>Append</source>
-        <translation>新增</translation>
+        <translation type="vanished">新增</translation>
     </message>
     <message>
-        <location filename="../../billing/settlement/settlementwidget.ui" line="89"/>
         <source>Remove</source>
-        <translation>删除</translation>
+        <translation type="vanished">删除</translation>
     </message>
     <message>
-        <location filename="../../billing/settlement/settlementwidget.ui" line="96"/>
         <source>Fetch</source>
-        <translation>刷新</translation>
+        <translation type="vanished">刷新</translation>
     </message>
 </context>
 <context>
     <name>StatementEntryWidget</name>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.ui" line="82"/>
+        <location filename="../../billing/statement/statemententrywidget.ui" line="95"/>
         <source>IMM</source>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.ui" line="89"/>
+        <location filename="../../billing/statement/statemententrywidget.ui" line="102"/>
         <source>MON</source>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.ui" line="96"/>
+        <location filename="../../billing/statement/statemententrywidget.ui" line="109"/>
         <source>PEN</source>
         <translation>挂帐</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.ui" line="103"/>
+        <location filename="../../billing/statement/statemententrywidget.ui" line="123"/>
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.ui" line="123"/>
+        <location filename="../../billing/statement/statemententrywidget.ui" line="116"/>
         <source>Export</source>
         <translation>导出</translation>
     </message>
@@ -2970,22 +2971,22 @@ Download now?</source>
 <context>
     <name>StatementNodeWidget</name>
     <message>
-        <location filename="../../billing/statement/statementnodewidget.ui" line="82"/>
+        <location filename="../../billing/statement/statementnodewidget.ui" line="95"/>
         <source>IMM</source>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementnodewidget.ui" line="89"/>
+        <location filename="../../billing/statement/statementnodewidget.ui" line="102"/>
         <source>MON</source>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementnodewidget.ui" line="96"/>
+        <location filename="../../billing/statement/statementnodewidget.ui" line="109"/>
         <source>PEN</source>
         <translation>挂帐</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementnodewidget.ui" line="103"/>
+        <location filename="../../billing/statement/statementnodewidget.ui" line="116"/>
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
@@ -3150,22 +3151,22 @@ Download now?</source>
         <translation type="vanished">导出</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementwidget.ui" line="82"/>
+        <location filename="../../billing/statement/statementwidget.ui" line="95"/>
         <source>IMM</source>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementwidget.ui" line="89"/>
+        <location filename="../../billing/statement/statementwidget.ui" line="102"/>
         <source>MON</source>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementwidget.ui" line="96"/>
+        <location filename="../../billing/statement/statementwidget.ui" line="109"/>
         <source>PEN</source>
         <translation>挂帐</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementwidget.ui" line="103"/>
+        <location filename="../../billing/statement/statementwidget.ui" line="116"/>
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
@@ -3271,57 +3272,67 @@ Download now?</source>
         <translation>找不到可用的打印模板。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="391"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="417"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="466"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="394"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="425"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="474"/>
         <source>Order Deleted</source>
         <translation>已删除</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="392"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="418"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="467"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="395"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="426"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="475"/>
         <source>This order has already been deleted by another client.
 You cannot perform recall operation.</source>
         <translation>该订单已被其他客户端删除。
 你无法执行撤回操作。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="398"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="401"/>
         <source>Order Settled</source>
         <translation>已结算</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="424"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="406"/>
+        <source>Settlement Selected</source>
+        <translation>结算选中</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="406"/>
+        <source>This order has already been selected and cannot be modified.</source>
+        <translation>订单已在结算中，无法再编辑了。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="432"/>
         <source>Save Not Allowed</source>
         <translation>无法保存</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="425"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="433"/>
         <source>This order has already been released on another client.
 Your local changes cannot be saved.</source>
         <translation>该订单已在其他客户端发布。
 您本地的更改无法保存。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="431"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="480"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="439"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="488"/>
         <source>Partner Required</source>
         <translation>必需选择交易对象</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="431"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="480"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="439"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="488"/>
         <source>Please select a partner before saving or releasing the order.</source>
         <translation>在保存或发布订单之前，请先选择一个交易对象。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="473"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="481"/>
         <source>Release Not Allowed</source>
         <translation>无法发布</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="474"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="482"/>
         <source>This order has already been released by another client.
 You cannot release it again.</source>
         <translation>该订单已被其他客户端发布。
@@ -3340,15 +3351,46 @@ You cannot release it again.</source>
         <translation type="vanished">锁定</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="398"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="401"/>
         <source>This order has already been settled and cannot be modified.</source>
         <translation>订单已结算，无法再编辑了。</translation>
+    </message>
+</context>
+<context>
+    <name>TableWidgetSettlement</name>
+    <message>
+        <location filename="../../billing/settlement/tablewidgetsettlement.ui" line="142"/>
+        <source>Description</source>
+        <translation>描述</translation>
+    </message>
+    <message>
+        <location filename="../../billing/settlement/tablewidgetsettlement.ui" line="161"/>
+        <source>yyyy/MM/dd HH:mm</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../billing/settlement/tablewidgetsettlement.ui" line="201"/>
+        <source>Release</source>
+        <translation>发布</translation>
+    </message>
+    <message>
+        <location filename="../../billing/settlement/tablewidgetsettlement.ui" line="214"/>
+        <source>Recall</source>
+        <translation>撤回</translation>
     </message>
 </context>
 <context>
     <name>TreeWidgetO</name>
     <message>
         <location filename="../../tree/widget/treewidgeto.ui" line="85"/>
+        <source>Fetch</source>
+        <translation>刷新</translation>
+    </message>
+</context>
+<context>
+    <name>TreeWidgetSettlement</name>
+    <message>
+        <location filename="../../billing/settlement/treewidgetsettlement.ui" line="95"/>
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
