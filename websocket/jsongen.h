@@ -65,7 +65,7 @@ QJsonObject DefaultUnit(Section section, int unit);
 QJsonObject EntrySearch(Section section, CString& keyword);
 QJsonObject NodeSearch(Section section, CString& keyword);
 
-QJsonObject OrderRecalled(Section section, const NodeO* node);
+QJsonObject OrderRecalled(Section section, CUuid& node_id, CJsonObject& update);
 QJsonObject MetaMessage(Section section);
 
 }

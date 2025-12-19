@@ -251,14 +251,14 @@ QJsonObject NodeSearch(Section section, CString& keyword)
     return message;
 }
 
-QJsonObject OrderRecalled(Section section, const NodeO* node)
+QJsonObject OrderRecalled(Section section, CUuid& node_id, CJsonObject& update)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kMeta, QJsonObject());
-
-    message.insert(kNodeId, node->id.toString(QUuid::WithoutBraces));
+    message.insert(kNodeUpdate, update);
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     return message;
 }
 

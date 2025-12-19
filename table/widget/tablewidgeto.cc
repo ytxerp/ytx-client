@@ -421,7 +421,8 @@ void TableWidgetO::on_pBtnRecall_clicked()
     tmp_node_.status = std::to_underlying(NodeStatus::kRecalled);
     node_->status = std::to_underlying(NodeStatus::kRecalled);
 
-    WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_));
+    pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
+    WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_->id, pending_update_));
 
     LockWidgets(NodeStatus::kRecalled);
     emit SNodeStatus(node_id_, NodeStatus::kRecalled);
