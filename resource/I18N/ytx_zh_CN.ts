@@ -1445,7 +1445,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="382"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="504"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="505"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
@@ -1700,64 +1700,64 @@ Do you want to save before closing?</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="514"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="515"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="514"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="515"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="514"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="515"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="548"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="549"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="548"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="549"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="551"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="552"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="551"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="552"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="571"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="578"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="572"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="579"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="571"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="572"/>
         <source>Failed to check updates:
 %1</source>
         <translation>检查更新失败：\n%1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="578"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="579"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="591"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="592"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="591"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="592"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1766,12 +1766,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="597"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="598"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="597"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="598"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -1784,12 +1784,24 @@ Download now?</source>
         <translation type="vanished">结算单</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="231"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="206"/>
+        <source>Settlement Validation Failed</source>
+        <translation>校验失败</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="207"/>
+        <source>The settlement operation failed due to validation errors.
+Please refresh the data and try again.</source>
+        <translation>结算操作校验失败，
+请刷新当前数据后重新尝试。</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="238"/>
         <source>Settlement Released</source>
         <translation>结算单已发布</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="232"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="239"/>
         <source>This settlement has already been released and cannot be deleted.
 You need to recall it first before making changes.</source>
         <translation>该结算单已发布，无法直接删除。
