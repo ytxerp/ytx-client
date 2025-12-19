@@ -201,6 +201,13 @@ void MainWindow::RSettlementUpdated(const QJsonObject& obj)
     }
 }
 
+void MainWindow::RSettlementValidationFailed()
+{
+    QMessageBox::warning(this, tr("Settlement Validation Failed"),
+        tr("The settlement operation failed due to validation errors.\n"
+           "Please refresh the data and try again."));
+}
+
 void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };

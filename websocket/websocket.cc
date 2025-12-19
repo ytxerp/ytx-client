@@ -178,6 +178,8 @@ void WebSocket::InitHandler()
     handler_obj_[kSettlementUpdated] = [this](const QJsonObject& obj) { UpdateSettlement(obj); };
     handler_obj_[kSettlementRecalled] = [this](const QJsonObject& obj) { RecallSettlement(obj); };
     handler_obj_[kPartnerUpdated] = [this](const QJsonObject& obj) { UpdatePartner(obj); };
+    handler_obj_[kSettlementInsertValidationFailed] = [this](const QJsonObject& obj) { SettlementValidationFailed(obj); };
+    handler_obj_[kSettlementUpdateValidationFailed] = [this](const QJsonObject& obj) { SettlementValidationFailed(obj); };
 
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
@@ -976,6 +978,8 @@ void WebSocket::UpdatePartner(const QJsonObject& obj)
 
     partner_model->RUpdateAmount(partner_id, initial_delta);
 }
+
+void WebSocket::SettlementValidationFailed(const QJsonObject& /*obj*/) { emit SSettlementValidationFailed(); }
 
 void WebSocket::ActionEntry(const QJsonObject& obj)
 {

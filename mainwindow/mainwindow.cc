@@ -308,6 +308,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SSettlementInserted, this, &MainWindow::RSettlementInserted);
     connect(WebSocket::Instance(), &WebSocket::SSettlementRecalled, this, &MainWindow::RSettlementRecalled);
     connect(WebSocket::Instance(), &WebSocket::SSettlementUpdated, this, &MainWindow::RSettlementUpdated);
+    connect(WebSocket::Instance(), &WebSocket::SSettlementValidationFailed, this, &MainWindow::RSettlementValidationFailed);
 }
 
 void MainWindow::SetIcon() const

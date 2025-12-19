@@ -77,6 +77,7 @@ signals:
     void SSettlementInserted(const QJsonObject& obj);
     void SSettlementRecalled(const QJsonObject& obj);
     void SSettlementUpdated(const QJsonObject& obj);
+    void SSettlementValidationFailed();
 
     void SConnectionRefused();
 
@@ -144,6 +145,7 @@ private:
     void UpdateSettlement(const QJsonObject& obj);
     void RecallSettlement(const QJsonObject& obj);
     void UpdatePartner(const QJsonObject& obj);
+    void SettlementValidationFailed(const QJsonObject& obj);
 
     void UpdateDocumentDir(const QJsonObject& obj);
     void UpdateDefaultUnit(const QJsonObject& obj);

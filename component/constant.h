@@ -142,6 +142,8 @@ inline const QString kStatementEntryAcked = QStringLiteral("statement_entry_acke
 inline const QString kSettlementAcked = QStringLiteral("settlement_acked");
 inline const QString kSettlementItemAcked = QStringLiteral("settlement_item_acked");
 inline const QString kSettlementRemoved = QStringLiteral("settlement_removed");
+inline const QString kSettlementInsertValidationFailed = QStringLiteral("settlement_insert_validation_failed");
+inline const QString kSettlementUpdateValidationFailed = QStringLiteral("settlement_update_validation_failed");
 
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");
