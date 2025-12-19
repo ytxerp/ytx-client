@@ -54,7 +54,7 @@ QTreeView#treeView, QGroupBox#treeGroupO, QGroupBox#tableGroup, QTableView#table
     border-bottom: none;
 }
 
-QGroupBox#treeGroup, QTableView#tableViewO, QTableView#settlementView, QTableView#settlementViewPrimary, QWidget#tableViewOSave
+QGroupBox#treeGroup, QTableView#tableViewO, QWidget#tableViewOSave
 {
     border-top: none;
 }
@@ -102,7 +102,7 @@ QComboBox#comboDefaultUnit
     min-width: 120px;
 }
 
-QWidget#TableWidgetO QComboBox, QWidget#SettlementItemWidget QComboBox {
+QWidget#TableWidgetO QComboBox, QWidget#TableWidgetSettlement QComboBox {
     min-width: 80px;
 }
 
