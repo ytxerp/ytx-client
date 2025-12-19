@@ -1,3 +1,5 @@
+#include <QMessageBox>
+
 #include "billing/settlement/settlementitemmodel.h"
 #include "billing/settlement/settlementitemwidget.h"
 #include "billing/settlement/settlementmodel.h"
@@ -212,4 +214,48 @@ void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJso
     model->ResetModel(array);
 }
 
-void MainWindow::RemoveSettlement(SettlementWidget* widget) { }
+void MainWindow::RemoveSettlementItem(SettlementWidget* widget)
+{
+    auto* view { widget->View() };
+    assert(view);
+
+    if (!TemplateUtils::HasSelection(view))
+        return;
+
+    const QModelIndex current_index { view->currentIndex() };
+    if (!current_index.isValid())
+        return;
+
+    auto* settlement { static_cast<Settlement*>(current_index.internalPointer()) };
+    if (settlement->status == SettlementStatus::kReleased) {
+        QMessageBox::information(this, tr("Settlement Released"),
+            tr("This settlement has already been released and cannot be deleted.\n"
+               "You need to recall it first before making changes."));
+        return;
+    }
+
+    auto* model { widget->Model() };
+    assert(model);
+
+    const int current_row { current_index.row() };
+    if (!model->removeRows(current_row, 1)) {
+        qDebug() << "Failed to remove row:" << current_row;
+        return;
+    }
+
+    const int new_row_count { model->rowCount() };
+    if (new_row_count == 0)
+        return;
+
+    QModelIndex new_index {};
+    if (current_row < new_row_count) {
+        new_index = model->index(current_row, 0);
+    } else {
+        new_index = model->index(new_row_count - 1, 0);
+    }
+
+    if (new_index.isValid()) {
+        view->setCurrentIndex(new_index);
+        view->closePersistentEditor(new_index);
+    }
+}

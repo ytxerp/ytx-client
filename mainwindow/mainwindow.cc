@@ -117,7 +117,7 @@ void MainWindow::on_actionRemove_triggered()
     {
         auto* d_widget { dynamic_cast<SettlementWidget*>(widget) };
         if (d_widget) {
-            RemoveSettlement(d_widget);
+            RemoveSettlementItem(d_widget);
             return;
         }
     }
