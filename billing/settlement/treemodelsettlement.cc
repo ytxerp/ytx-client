@@ -4,6 +4,8 @@
 
 #include "enum/settlementenum.h"
 #include "global/resourcepool.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 TreeModelSettlement::TreeModelSettlement(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }
@@ -126,9 +128,12 @@ bool TreeModelSettlement::removeRows(int row, int /*count*/, const QModelIndex& 
 {
     beginRemoveRows(parent, row, row);
     auto* settlement { list_.takeAt(row) };
-    ResourcePool<Settlement>::Instance().Recycle(settlement);
     endRemoveRows();
 
+    QJsonObject message { JsonGen::SettlementRemoved(info_.section, settlement->id) };
+    WebSocket::Instance()->SendMessage(kSettlementRemoved, message);
+
+    ResourcePool<Settlement>::Instance().Recycle(settlement);
     return true;
 }
 

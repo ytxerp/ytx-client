@@ -397,4 +397,14 @@ QJsonObject SettlementNodeAcked(Section section, CUuid& widget_id, CUuid& partne
     return message;
 }
 
+QJsonObject SettlementRemoved(Section section, CUuid& settlement_id)
+{
+    QJsonObject message {};
+
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
+
+    return message;
+}
+
 }
