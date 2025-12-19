@@ -143,7 +143,7 @@ constexpr std::pair<int, int> CacheColumnRange(Section section)
     }
 }
 
-constexpr QString UnitString(UnitO unit)
+inline QString UnitString(UnitO unit)
 {
     switch (unit) {
     case UnitO::kMonthly:
