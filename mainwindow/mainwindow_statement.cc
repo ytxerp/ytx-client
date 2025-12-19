@@ -76,7 +76,7 @@ void MainWindow::RStatementNode(const QUuid& partner_id, int unit, const QDateTi
 
     auto* widget { new StatementNodeWidget(model, start_, widget_id, partner_id, unit, start, end, this) };
 
-    const QString title { QString("%1-%2").arg(tr("StatementNode"), sc_p_.tree_model->Name(partner_id)) };
+    const QString title { QString("%1-%2").arg(tr("Statement"), sc_p_.tree_model->Name(partner_id)) };
 
     const int tab_index { ui->tabWidget->addTab(widget, title) };
     auto* tab_bar { ui->tabWidget->tabBar() };
@@ -103,7 +103,7 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, int unit, const QDateT
     auto* widget { new StatementEntryWidget(
         model, start_, widget_id, partner_id, unit, start, end, partner_name, app_config_.company_name, sc_i_.tree_model->LeafPath(), this) };
 
-    const QString title { QString("%1-%2").arg(tr("StatementEntry"), partner_name) };
+    const QString title { QString("%1-%2").arg(tr("StatementDetail"), partner_name) };
 
     const int tab_index { ui->tabWidget->addTab(widget, title) };
     auto* tab_bar { ui->tabWidget->tabBar() };
