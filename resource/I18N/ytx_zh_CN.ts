@@ -3274,68 +3274,123 @@ You need to recall it first before making changes.</source>
     <message>
         <location filename="../../table/widget/tablewidgeto.cc" line="394"/>
         <location filename="../../table/widget/tablewidgeto.cc" line="425"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="474"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="470"/>
         <source>Order Deleted</source>
         <translation>已删除</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="395"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="426"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="394"/>
+        <source>This order was deleted by another client and cannot be recalled.</source>
+        <translation>订单已经被删除，无法再编辑了。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="399"/>
+        <source>This order has already been settled and cannot be recalled.</source>
+        <translation>订单已经结算，无法再编辑了。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="404"/>
+        <source>Order Selected</source>
+        <translation>已选中</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="404"/>
+        <source>This order has already been selected in a settlement and cannot be recalled.</source>
+        <translation>订单已经被结算单选中，无法再编辑了。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="409"/>
+        <source>Order Recalled</source>
+        <translation>已撤回</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="409"/>
+        <source>This order node has already been recalled and cannot be recalled again.</source>
+        <translation>订单已经撤回，无法再次撤回了。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="425"/>
+        <source>This order was deleted by another client and cannot be saved.</source>
+        <translation>订单已经被删除，无法再保存了。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="430"/>
+        <source>Please select a partner before saving the order.</source>
+        <translation>保存订单之前，请先选择一个交易对象。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="435"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="480"/>
+        <source>Order Released</source>
+        <translation>已发布</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="435"/>
+        <source>This order has already been released and cannot be saved.</source>
+        <translation>订单已经发布，无法再保存了。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="470"/>
+        <source>This order was deleted by another client and cannot be released.</source>
+        <translation>订单已经被删除，无法再发布了。</translation>
+    </message>
+    <message>
         <location filename="../../table/widget/tablewidgeto.cc" line="475"/>
+        <source>Please select a partner before releasing the order.</source>
+        <translation>发布订单之前，请先选择一个交易对象。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="480"/>
+        <source>This order has already been released and cannot be released again.</source>
+        <translation>订单已经发布，无法再次发布了。</translation>
+    </message>
+    <message>
         <source>This order has already been deleted by another client.
 You cannot perform recall operation.</source>
-        <translation>该订单已被其他客户端删除。
+        <translation type="vanished">该订单已被其他客户端删除。
 你无法执行撤回操作。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="401"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="399"/>
         <source>Order Settled</source>
         <translation>已结算</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="406"/>
         <source>Settlement Selected</source>
-        <translation>结算选中</translation>
+        <translation type="vanished">结算选中</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="406"/>
         <source>This order has already been selected and cannot be modified.</source>
-        <translation>订单已在结算中，无法再编辑了。</translation>
+        <translation type="vanished">订单已在结算中，无法再编辑了。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="432"/>
         <source>Save Not Allowed</source>
-        <translation>无法保存</translation>
+        <translation type="vanished">无法保存</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="433"/>
         <source>This order has already been released on another client.
 Your local changes cannot be saved.</source>
-        <translation>该订单已在其他客户端发布。
+        <translation type="vanished">该订单已在其他客户端发布。
 您本地的更改无法保存。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="439"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="488"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="430"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="475"/>
         <source>Partner Required</source>
         <translation>必需选择交易对象</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="439"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="488"/>
         <source>Please select a partner before saving or releasing the order.</source>
-        <translation>在保存或发布订单之前，请先选择一个交易对象。</translation>
+        <translation type="vanished">在保存或发布订单之前，请先选择一个交易对象。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="481"/>
         <source>Release Not Allowed</source>
-        <translation>无法发布</translation>
+        <translation type="vanished">无法发布</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="482"/>
         <source>This order has already been released by another client.
 You cannot release it again.</source>
-        <translation>该订单已被其他客户端发布。
+        <translation type="vanished">该订单已被其他客户端发布。
 您无法再次发布该订单。</translation>
     </message>
     <message>
@@ -3351,9 +3406,8 @@ You cannot release it again.</source>
         <translation type="vanished">锁定</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="401"/>
         <source>This order has already been settled and cannot be modified.</source>
-        <translation>订单已结算，无法再编辑了。</translation>
+        <translation type="vanished">订单已结算，无法再编辑了。</translation>
     </message>
 </context>
 <context>
