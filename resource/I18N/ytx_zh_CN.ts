@@ -1452,8 +1452,9 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="387"/>
         <location filename="../../mainwindow/mainwindow_statement.cc" line="17"/>
+        <location filename="../../mainwindow/mainwindow_statement.cc" line="79"/>
         <source>Statement</source>
-        <translation>对帐</translation>
+        <translation>帐单</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="395"/>
@@ -1662,18 +1663,16 @@ Do you want to save before closing?</source>
         <translation type="vanished">一级明细</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_statement.cc" line="79"/>
         <source>StatementNode</source>
-        <translation>对账单</translation>
+        <translation type="vanished">账单</translation>
     </message>
     <message>
         <source>StatementSecondary</source>
         <translation type="vanished">二级明细</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_statement.cc" line="106"/>
         <source>StatementEntry</source>
-        <translation>对帐明细</translation>
+        <translation type="vanished">帐单明细</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_sale_reference.cc" line="70"/>
@@ -1795,6 +1794,11 @@ Download now?</source>
 You need to recall it first before making changes.</source>
         <translation>该结算单已发布，无法直接删除。
 请先撤回结算单，再进行修改或删除操作。</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_statement.cc" line="106"/>
+        <source>StatementDetail</source>
+        <translation>帐单明细</translation>
     </message>
 </context>
 <context>
