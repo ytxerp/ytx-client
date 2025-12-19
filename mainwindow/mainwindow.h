@@ -210,7 +210,7 @@ private:
     void RemoveNode();
     void RemoveEntry(TableWidget* widget);
     void BranchRemove(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id);
-    void RemoveSettlementItem(TreeWidgetSettlement* widget);
+    void RemoveSettlement(TreeWidgetSettlement* widget);
 
     void UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool branch) const;
 

@@ -391,24 +391,24 @@ void TableWidgetO::ResetCache() { pending_update_ = QJsonObject(); }
 void TableWidgetO::on_pBtnRecall_clicked()
 {
     if (node_->id.isNull()) {
-        QMessageBox::information(this, tr("Order Deleted"),
-            tr("This order has already been deleted by another client.\n"
-               "You cannot perform recall operation."));
+        QMessageBox::information(this, tr("Order Deleted"), tr("This order was deleted by another client and cannot be recalled."));
         return;
     }
 
     if (node_->is_settled) {
-        QMessageBox::information(this, tr("Order Settled"), tr("This order has already been settled and cannot be modified."));
+        QMessageBox::information(this, tr("Order Settled"), tr("This order has already been settled and cannot be recalled."));
         return;
     }
 
     if (!node_->settlement_id.isNull()) {
-        QMessageBox::information(this, tr("Settlement Selected"), tr("This order has already been selected and cannot be modified."));
+        QMessageBox::information(this, tr("Order Selected"), tr("This order has already been selected in a settlement and cannot be recalled."));
         return;
     }
 
-    if (node_->status == std::to_underlying(NodeStatus::kRecalled))
+    if (node_->status == std::to_underlying(NodeStatus::kRecalled)) {
+        QMessageBox::information(this, tr("Order Recalled"), tr("This order node has already been recalled and cannot be recalled again."));
         return;
+    }
 
     tmp_node_.status = std::to_underlying(NodeStatus::kRecalled);
     node_->status = std::to_underlying(NodeStatus::kRecalled);
@@ -422,21 +422,17 @@ void TableWidgetO::on_pBtnRecall_clicked()
 void TableWidgetO::SaveOrder()
 {
     if (node_->id.isNull()) {
-        QMessageBox::information(this, tr("Order Deleted"),
-            tr("This order has already been deleted by another client.\n"
-               "You cannot perform recall operation."));
-        return;
-    }
-
-    if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
-        QMessageBox::information(this, tr("Save Not Allowed"),
-            tr("This order has already been released on another client.\n"
-               "Your local changes cannot be saved."));
+        QMessageBox::information(this, tr("Order Deleted"), tr("This order was deleted by another client and cannot be saved."));
         return;
     }
 
     if (tmp_node_.partner_id.isNull()) {
-        QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before saving or releasing the order."));
+        QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before saving the order."));
+        return;
+    }
+
+    if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
+        QMessageBox::information(this, tr("Order Released"), tr("This order has already been released and cannot be saved."));
         return;
     }
 
@@ -471,21 +467,17 @@ void TableWidgetO::SaveOrder()
 void TableWidgetO::on_pBtnRelease_clicked()
 {
     if (node_->id.isNull()) {
-        QMessageBox::information(this, tr("Order Deleted"),
-            tr("This order has already been deleted by another client.\n"
-               "You cannot perform recall operation."));
-        return;
-    }
-
-    if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
-        QMessageBox::information(this, tr("Release Not Allowed"),
-            tr("This order has already been released by another client.\n"
-               "You cannot release it again."));
+        QMessageBox::information(this, tr("Order Deleted"), tr("This order was deleted by another client and cannot be released."));
         return;
     }
 
     if (tmp_node_.partner_id.isNull()) {
-        QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before saving or releasing the order."));
+        QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before releasing the order."));
+        return;
+    }
+
+    if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
+        QMessageBox::information(this, tr("Order Released"), tr("This order has already been released and cannot be released again."));
         return;
     }
 

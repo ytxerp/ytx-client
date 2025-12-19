@@ -77,17 +77,6 @@ void TreeWidgetSettlement::IniWidget()
     ui->end->setDateTime(end_.addSecs(-1));
 }
 
-// void SettlementWidget::on_pBtnRemove_clicked()
-// {
-//     auto* view { ui->tableView };
-
-//     const auto index { view->selectionModel()->selectedIndexes().first() };
-//     if (!index.isValid())
-//         return;
-
-//     model_->removeRows(index.row(), 1);
-// }
-
 void TreeWidgetSettlement::InitTimer()
 {
     cooldown_timer_ = new QTimer(this);
