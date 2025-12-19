@@ -115,7 +115,7 @@ void MainWindow::on_actionRemove_triggered()
     assert(widget);
 
     {
-        auto* d_widget { dynamic_cast<SettlementWidget*>(widget) };
+        auto* d_widget { dynamic_cast<TreeWidgetSettlement*>(widget) };
         if (d_widget) {
             RemoveSettlementItem(d_widget);
             return;

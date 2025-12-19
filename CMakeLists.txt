@@ -134,13 +134,13 @@ set(SOURCES
     billing/settlement/settlement.cc
     reference/salereferencewidget.cc
     billing/statement/statementwidget.cc
-    billing/settlement/settlementwidget.cc
+    billing/settlement/treewidgetsettlement.cc
     billing/statement/statementnodemodel.cc
     billing/statement/statemententrywidget.cc
     billing/statement/statementnodewidget.cc
     billing/statement/statemententrymodel.cc
     reference/salereferencemodel.cc
-    billing/settlement/settlementmodel.cc
+    billing/settlement/treemodelsettlement.cc
     billing/statement/statementmodel.cc
     global/logininfo.cc
     global/tablesstation.cc
@@ -164,8 +164,8 @@ set(SOURCES
     mainwindow/mainwindow_delegate.cc
     mainwindow/mainwindow_connect.cc
     mainwindow/mainwindow_view.cc
-    billing/settlement/settlementitemwidget.cc
-    billing/settlement/settlementitemmodel.cc
+    billing/settlement/tablewidgetsettlement.cc
+    billing/settlement/tablemodelsettlement.cc
 )
 
 set(HEADERS
@@ -295,14 +295,14 @@ set(HEADERS
     reference/salereference.h
     billing/statement/statement.h
     billing/settlement/settlement.h
-    billing/settlement/settlementwidget.h
+    billing/settlement/treewidgetsettlement.h
     billing/statement/statementwidget.h
     billing/statement/statementnodewidget.h
     billing/statement/statemententrywidget.h
     reference/salereferencewidget.h
     billing/statement/statementnodemodel.h
     billing/statement/statemententrymodel.h
-    billing/settlement/settlementmodel.h
+    billing/settlement/treemodelsettlement.h
     billing/statement/statementmodel.h
     reference/salereferencemodel.h
     global/dailylogger.h
@@ -316,8 +316,8 @@ set(HEADERS
     global/collator.h
     global/exportexcel.h
     enum/settlementenum.h
-    billing/settlement/settlementitemwidget.h
-    billing/settlement/settlementitemmodel.h
+    billing/settlement/tablewidgetsettlement.h
+    billing/settlement/tablemodelsettlement.h
 )
 
 set(UIS
@@ -344,9 +344,9 @@ set(UIS
     billing/statement/statementwidget.ui
     billing/statement/statementnodewidget.ui
     billing/statement/statemententrywidget.ui
-    billing/settlement/settlementwidget.ui
+    billing/settlement/treewidgetsettlement.ui
     reference/salereferencewidget.ui
-    billing/settlement/settlementitemwidget.ui
+    billing/settlement/tablewidgetsettlement.ui
 )
 
 # ------------------------

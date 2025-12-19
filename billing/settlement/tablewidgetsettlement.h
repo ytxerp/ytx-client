@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTITEMWIDGET_H
-#define SETTLEMENTITEMWIDGET_H
+#ifndef TABLEWIDGETSETTLEMENT_H
+#define TABLEWIDGETSETTLEMENT_H
 
 #include <QTableView>
 #include <QWidget>
@@ -26,26 +26,26 @@
 #include "component/using.h"
 #include "enum/section.h"
 #include "settlement.h"
-#include "settlementitemmodel.h"
+#include "tablemodelsettlement.h"
 #include "tree/model/treemodel.h"
 
 namespace Ui {
-class SettlementItemWidget;
+class TableWidgetSettlement;
 }
 
-class SettlementItemWidget final : public QWidget {
+class TableWidgetSettlement final : public QWidget {
     Q_OBJECT
 
 signals:
     void SUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
 
 public:
-    explicit SettlementItemWidget(TreeModel* tree_model_partner, SettlementItemModel* model, Settlement* settlement, bool is_persisted, Section section,
+    explicit TableWidgetSettlement(TreeModel* tree_model_partner, TableModelSettlement* model, Settlement* settlement, bool is_persisted, Section section,
         CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent = nullptr);
-    ~SettlementItemWidget();
+    ~TableWidgetSettlement();
 
     QTableView* View() const;
-    SettlementItemModel* Model() const { return model_; }
+    TableModelSettlement* Model() const { return model_; }
 
     void InsertSucceeded();
     void RecallSucceeded();
@@ -69,11 +69,11 @@ private:
     void HideWidget(bool is_released);
 
 private:
-    Ui::SettlementItemWidget* ui;
+    Ui::TableWidgetSettlement* ui;
 
     Settlement* settlement_ {};
     Settlement tmp_settlement_ {};
-    SettlementItemModel* model_ {};
+    TableModelSettlement* model_ {};
 
     TreeModel* tree_model_partner_ {};
     QJsonObject pending_update_ {};
@@ -84,4 +84,4 @@ private:
     bool is_persisted_ {};
 };
 
-#endif // SETTLEMENTITEMWIDGET_H
+#endif // TABLEWIDGETSETTLEMENT_H

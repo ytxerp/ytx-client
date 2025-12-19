@@ -1,19 +1,19 @@
-#include "settlementmodel.h"
+#include "treemodelsettlement.h"
 
 #include <QJsonArray>
 
 #include "enum/settlementenum.h"
 #include "global/resourcepool.h"
 
-SettlementModel::SettlementModel(CSectionInfo& info, QObject* parent)
+TreeModelSettlement::TreeModelSettlement(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
 {
 }
 
-SettlementModel::~SettlementModel() { ResourcePool<Settlement>::Instance().Recycle(list_); }
+TreeModelSettlement::~TreeModelSettlement() { ResourcePool<Settlement>::Instance().Recycle(list_); }
 
-QModelIndex SettlementModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex TreeModelSettlement::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -21,25 +21,25 @@ QModelIndex SettlementModel::index(int row, int column, const QModelIndex& paren
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex SettlementModel::parent(const QModelIndex& index) const
+QModelIndex TreeModelSettlement::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int SettlementModel::rowCount(const QModelIndex& parent) const
+int TreeModelSettlement::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return list_.size();
 }
 
-int SettlementModel::columnCount(const QModelIndex& parent) const
+int TreeModelSettlement::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return info_.settlement_header.size();
 }
 
-QVariant SettlementModel::data(const QModelIndex& index, int role) const
+QVariant TreeModelSettlement::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -75,7 +75,7 @@ QVariant SettlementModel::data(const QModelIndex& index, int role) const
     }
 }
 
-QVariant SettlementModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant TreeModelSettlement::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return info_.settlement_header.at(section);
@@ -83,7 +83,7 @@ QVariant SettlementModel::headerData(int section, Qt::Orientation orientation, i
     return QVariant();
 }
 
-void SettlementModel::sort(int column, Qt::SortOrder order)
+void TreeModelSettlement::sort(int column, Qt::SortOrder order)
 {
     if (column <= -1 || column >= info_.settlement_header.size())
         return;
@@ -122,7 +122,7 @@ void SettlementModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-bool SettlementModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
+bool TreeModelSettlement::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     beginRemoveRows(parent, row, row);
     auto* settlement { list_.takeAt(row) };
@@ -132,7 +132,7 @@ bool SettlementModel::removeRows(int row, int /*count*/, const QModelIndex& pare
     return true;
 }
 
-bool SettlementModel::InsertSucceeded(Settlement* settlement, const QJsonObject& meta)
+bool TreeModelSettlement::InsertSucceeded(Settlement* settlement, const QJsonObject& meta)
 {
     Q_ASSERT_X(meta.contains(kUserId), "SettlementModel::InsertMeta", "Missing 'user_id' in meta");
     Q_ASSERT_X(meta.contains(kCreatedTime), "SettlementModel::InsertMeta", "Missing 'created_time' in meta");
@@ -151,7 +151,7 @@ bool SettlementModel::InsertSucceeded(Settlement* settlement, const QJsonObject&
     return true;
 }
 
-void SettlementModel::RecallSucceeded(const QUuid& settlement_id, const QJsonObject& meta)
+void TreeModelSettlement::RecallSucceeded(const QUuid& settlement_id, const QJsonObject& meta)
 {
     Q_ASSERT_X(meta.contains(kUpdatedBy), "SettlementModel::UpdateMeta", "Missing 'updated_by' in meta");
     Q_ASSERT_X(meta.contains(kUpdatedTime), "SettlementModel::UpdateMeta", "Missing 'updated_time' in meta");
@@ -164,7 +164,7 @@ void SettlementModel::RecallSucceeded(const QUuid& settlement_id, const QJsonObj
     settlement->status = SettlementStatus::kRecalled;
 }
 
-void SettlementModel::UpdateSucceeded(const QUuid& settlement_id, double amount, const QJsonObject& meta)
+void TreeModelSettlement::UpdateSucceeded(const QUuid& settlement_id, double amount, const QJsonObject& meta)
 {
     Q_ASSERT_X(meta.contains(kUpdatedBy), "SettlementModel::UpdateMeta", "Missing 'updated_by' in meta");
     Q_ASSERT_X(meta.contains(kUpdatedTime), "SettlementModel::UpdateMeta", "Missing 'updated_time' in meta");
@@ -178,7 +178,7 @@ void SettlementModel::UpdateSucceeded(const QUuid& settlement_id, double amount,
     settlement->amount = amount;
 }
 
-void SettlementModel::ResetModel(const QJsonArray& array)
+void TreeModelSettlement::ResetModel(const QJsonArray& array)
 {
     beginResetModel();
 

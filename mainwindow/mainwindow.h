@@ -30,7 +30,7 @@
 #include <QTranslator>
 
 #include "billing/settlement/settlement.h"
-#include "billing/settlement/settlementwidget.h"
+#include "billing/settlement/treewidgetsettlement.h"
 #include "component/config.h"
 #include "component/info.h"
 #include "component/sectioncontex.h"
@@ -210,7 +210,7 @@ private:
     void RemoveNode();
     void RemoveEntry(TableWidget* widget);
     void BranchRemove(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id);
-    void RemoveSettlementItem(SettlementWidget* widget);
+    void RemoveSettlementItem(TreeWidgetSettlement* widget);
 
     void UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool branch) const;
 
@@ -245,7 +245,7 @@ private:
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
     inline bool IsTableWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kTableWidgetFIPT); }
     inline bool IsTableWidgetO(const QWidget* widget) { return widget && widget->inherits(kTableWidgetO); }
-    inline bool IsSettlementWidget(const QWidget* widget) { return widget && widget->inherits(kSettlementWidget); }
+    inline bool IsTreeWidgetSettlement(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetSettlement); }
 
 private:
     Ui::MainWindow* ui {};

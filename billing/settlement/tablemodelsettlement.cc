@@ -1,4 +1,4 @@
-#include "settlementitemmodel.h"
+#include "tablemodelsettlement.h"
 
 #include <QJsonArray>
 #include <QTimer>
@@ -6,16 +6,16 @@
 #include "enum/settlementenum.h"
 #include "global/resourcepool.h"
 
-SettlementItemModel::SettlementItemModel(CSectionInfo& info, SettlementStatus status, QObject* parent)
+TableModelSettlement::TableModelSettlement(CSectionInfo& info, SettlementStatus status, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
     , status_ { status }
 {
 }
 
-SettlementItemModel::~SettlementItemModel() { ResourcePool<SettlementItem>::Instance().Recycle(list_cache_); }
+TableModelSettlement::~TableModelSettlement() { ResourcePool<SettlementItem>::Instance().Recycle(list_cache_); }
 
-QModelIndex SettlementItemModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex TableModelSettlement::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -23,25 +23,25 @@ QModelIndex SettlementItemModel::index(int row, int column, const QModelIndex& p
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex SettlementItemModel::parent(const QModelIndex& index) const
+QModelIndex TableModelSettlement::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int SettlementItemModel::rowCount(const QModelIndex& parent) const
+int TableModelSettlement::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return list_.size();
 }
 
-int SettlementItemModel::columnCount(const QModelIndex& parent) const
+int TableModelSettlement::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return info_.settlement_item_header.size();
 }
 
-QVariant SettlementItemModel::data(const QModelIndex& index, int role) const
+QVariant TableModelSettlement::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -70,7 +70,7 @@ QVariant SettlementItemModel::data(const QModelIndex& index, int role) const
     }
 }
 
-bool SettlementItemModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool TableModelSettlement::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || index.column() != std::to_underlying(SettlementItemEnum::kIsSelected) || role != Qt::EditRole)
         return false;
@@ -96,7 +96,7 @@ bool SettlementItemModel::setData(const QModelIndex& index, const QVariant& valu
     return true;
 }
 
-QVariant SettlementItemModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant TableModelSettlement::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return info_.settlement_item_header.at(section);
@@ -104,7 +104,7 @@ QVariant SettlementItemModel::headerData(int section, Qt::Orientation orientatio
     return QVariant();
 }
 
-void SettlementItemModel::sort(int column, Qt::SortOrder order)
+void TableModelSettlement::sort(int column, Qt::SortOrder order)
 {
     if (column <= -1 || column >= info_.settlement_item_header.size())
         return;
@@ -133,7 +133,7 @@ void SettlementItemModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SettlementItemModel::ResetModel(const QJsonArray& array)
+void TableModelSettlement::ResetModel(const QJsonArray& array)
 {
     ResourcePool<SettlementItem>::Instance().Recycle(list_cache_);
 
@@ -168,7 +168,7 @@ void SettlementItemModel::ResetModel(const QJsonArray& array)
     }
 }
 
-void SettlementItemModel::UpdateStatus(SettlementStatus status)
+void TableModelSettlement::UpdateStatus(SettlementStatus status)
 {
     if (status_ == status)
         return;
@@ -211,7 +211,7 @@ void SettlementItemModel::UpdateStatus(SettlementStatus status)
     sort(static_cast<int>(SettlementItemEnum::kIsSelected), Qt::DescendingOrder);
 }
 
-void SettlementItemModel::Finalize(QJsonObject& message)
+void TableModelSettlement::Finalize(QJsonObject& message)
 {
     // deleted
     {
@@ -241,7 +241,7 @@ void SettlementItemModel::Finalize(QJsonObject& message)
     pending_insert_.clear();
 }
 
-void SettlementItemModel::NormalizeBuffer()
+void TableModelSettlement::NormalizeBuffer()
 {
     for (auto it = pending_insert_.begin(); it != pending_insert_.end();) {
         if (pending_delete_.remove(*it)) {

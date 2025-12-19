@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SettlementWidget</class>
- <widget class="QWidget" name="SettlementWidget">
+ <class>TreeWidgetSettlement</class>
+ <widget class="QWidget" name="TreeWidgetSettlement">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -1,9 +1,9 @@
 #include <QMessageBox>
 
-#include "billing/settlement/settlementitemmodel.h"
-#include "billing/settlement/settlementitemwidget.h"
-#include "billing/settlement/settlementmodel.h"
-#include "billing/settlement/settlementwidget.h"
+#include "billing/settlement/tablemodelsettlement.h"
+#include "billing/settlement/tablewidgetsettlement.h"
+#include "billing/settlement/treemodelsettlement.h"
+#include "billing/settlement/treewidgetsettlement.h"
 #include "enum/settlementenum.h"
 #include "global/resourcepool.h"
 #include "mainwindow.h"
@@ -13,10 +13,10 @@ void MainWindow::on_actionSettlement_triggered()
 {
     assert(IsOrderSection(start_));
 
-    auto* model { new SettlementModel(sc_->info, this) };
+    auto* model { new TreeModelSettlement(sc_->info, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new SettlementWidget(model, start_, widget_id, this) };
+    auto* widget { new TreeWidgetSettlement(model, start_, widget_id, this) };
 
     {
         const int tab_index { ui->tabWidget->addTab(widget, tr("Settlement")) };
@@ -40,12 +40,12 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, Settlement* se
 {
     assert(IsOrderSection(start_));
 
-    auto* model { new SettlementItemModel(sc_->info, SettlementStatus(settlement->status), this) };
+    auto* model { new TableModelSettlement(sc_->info, SettlementStatus(settlement->status), this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new SettlementItemWidget(sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, parent_widget_id, this) };
-    connect(model, &SettlementItemModel::SSyncAmount, widget, &SettlementItemWidget::RSyncAmount);
-    connect(widget, &SettlementItemWidget::SUpdatePartner, this, &MainWindow::RUpdatePartner);
+    auto* widget { new TableWidgetSettlement(sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, parent_widget_id, this) };
+    connect(model, &TableModelSettlement::SSyncAmount, widget, &TableWidgetSettlement::RSyncAmount);
+    connect(widget, &TableWidgetSettlement::SUpdatePartner, this, &MainWindow::RUpdatePartner);
 
     {
         const QString name { sc_p_.tree_model->Name(settlement->partner_id) };
@@ -85,7 +85,7 @@ void MainWindow::RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id)
 
 void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
 {
-    auto* settlement_widget { dynamic_cast<SettlementWidget*>(ui->tabWidget->currentWidget()) };
+    auto* settlement_widget { dynamic_cast<TreeWidgetSettlement*>(ui->tabWidget->currentWidget()) };
     if (settlement_widget) {
         if (index.column() != std::to_underlying(SettlementEnum::kAmount))
             return;
@@ -105,7 +105,7 @@ void MainWindow::RSettlementItemAcked(Section section, const QUuid& widget_id, c
     if (!widget)
         return;
 
-    auto* d_widget { static_cast<SettlementItemWidget*>(widget.data()) };
+    auto* d_widget { static_cast<TableWidgetSettlement*>(widget.data()) };
     auto* model { d_widget->Model() };
     model->ResetModel(entry_array);
 }
@@ -122,7 +122,7 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
     {
         auto widget { sc->widget_hash.value(widget_id, nullptr) };
         if (widget) {
-            auto* d_widget { static_cast<SettlementItemWidget*>(widget.data()) };
+            auto* d_widget { static_cast<TableWidgetSettlement*>(widget.data()) };
             d_widget->InsertSucceeded();
         }
     }
@@ -130,7 +130,7 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
     {
         auto parent_widget { sc->widget_hash.value(parent_widget_id, nullptr) };
         if (parent_widget) {
-            auto* d_parent_widget { static_cast<SettlementWidget*>(parent_widget.data()) };
+            auto* d_parent_widget { static_cast<TreeWidgetSettlement*>(parent_widget.data()) };
             auto* model { d_parent_widget->Model() };
 
             const QJsonObject settlement_obj { obj.value(kSettlement).toObject() };
@@ -155,7 +155,7 @@ void MainWindow::RSettlementRecalled(const QJsonObject& obj)
     {
         auto widget { sc->widget_hash.value(widget_id, nullptr) };
         if (widget) {
-            auto* d_widget { static_cast<SettlementItemWidget*>(widget.data()) };
+            auto* d_widget { static_cast<TableWidgetSettlement*>(widget.data()) };
             d_widget->RecallSucceeded();
         }
     }
@@ -163,7 +163,7 @@ void MainWindow::RSettlementRecalled(const QJsonObject& obj)
     {
         auto parent_widget { sc->widget_hash.value(parent_widget_id, nullptr) };
         if (parent_widget) {
-            auto* d_parent_widget { static_cast<SettlementWidget*>(parent_widget.data()) };
+            auto* d_parent_widget { static_cast<TreeWidgetSettlement*>(parent_widget.data()) };
             auto* model { d_parent_widget->Model() };
             model->RecallSucceeded(settlement_id, meta);
         }
@@ -184,7 +184,7 @@ void MainWindow::RSettlementUpdated(const QJsonObject& obj)
     {
         auto widget { sc->widget_hash.value(widget_id, nullptr) };
         if (widget) {
-            auto* d_widget { static_cast<SettlementItemWidget*>(widget.data()) };
+            auto* d_widget { static_cast<TableWidgetSettlement*>(widget.data()) };
             d_widget->UpdateSucceeded();
         }
     }
@@ -194,7 +194,7 @@ void MainWindow::RSettlementUpdated(const QJsonObject& obj)
         if (parent_widget) {
             const double amount { settlement.value(kAmount).toString().toDouble() };
 
-            auto* d_parent_widget { static_cast<SettlementWidget*>(parent_widget.data()) };
+            auto* d_parent_widget { static_cast<TreeWidgetSettlement*>(parent_widget.data()) };
             auto* model { d_parent_widget->Model() };
             model->UpdateSucceeded(settlement_id, amount, meta);
         }
@@ -209,12 +209,12 @@ void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJso
     if (!widget)
         return;
 
-    auto* d_widget { static_cast<SettlementWidget*>(widget.data()) };
+    auto* d_widget { static_cast<TreeWidgetSettlement*>(widget.data()) };
     auto* model { d_widget->Model() };
     model->ResetModel(array);
 }
 
-void MainWindow::RemoveSettlementItem(SettlementWidget* widget)
+void MainWindow::RemoveSettlementItem(TreeWidgetSettlement* widget)
 {
     auto* view { widget->View() };
     assert(view);

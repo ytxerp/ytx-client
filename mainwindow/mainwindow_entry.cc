@@ -1,4 +1,4 @@
-#include "billing/settlement/settlementwidget.h"
+#include "billing/settlement/treewidgetsettlement.h"
 #include "global/resourcepool.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
@@ -14,7 +14,7 @@
 void MainWindow::on_actionAppendEntry_triggered()
 {
     {
-        auto* widget { dynamic_cast<SettlementWidget*>(ui->tabWidget->currentWidget()) };
+        auto* widget { dynamic_cast<TreeWidgetSettlement*>(ui->tabWidget->currentWidget()) };
         if (widget) {
             const QUuid settlement_widget_id { widget->WidgetId() };
 

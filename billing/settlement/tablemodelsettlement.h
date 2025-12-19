@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTITEMMODEL_H
-#define SETTLEMENTITEMMODEL_H
+#ifndef TABLEMODELSETTLEMENT_H
+#define TABLEMODELSETTLEMENT_H
 
 #include <QAbstractItemModel>
 
@@ -26,11 +26,11 @@
 #include "enum/settlementenum.h"
 #include "settlement.h"
 
-class SettlementItemModel final : public QAbstractItemModel {
+class TableModelSettlement final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SettlementItemModel(CSectionInfo& info, SettlementStatus status, QObject* parent = nullptr);
-    ~SettlementItemModel();
+    TableModelSettlement(CSectionInfo& info, SettlementStatus status, QObject* parent = nullptr);
+    ~TableModelSettlement();
 
 signals:
     void SSyncAmount(double amount);
@@ -67,4 +67,4 @@ private:
     QSet<QUuid> pending_insert_ {};
 };
 
-#endif // SETTLEMENTITEMMODEL_H
+#endif // TABLEMODELSETTLEMENT_H

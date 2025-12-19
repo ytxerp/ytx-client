@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTMODEL_H
-#define SETTLEMENTMODEL_H
+#ifndef TREEMODELSETTLEMENT_H
+#define TREEMODELSETTLEMENT_H
 
 #include <QAbstractItemModel>
 #include <QJsonObject>
@@ -26,11 +26,11 @@
 #include "component/info.h"
 #include "settlement.h"
 
-class SettlementModel final : public QAbstractItemModel {
+class TreeModelSettlement final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SettlementModel(CSectionInfo& info, QObject* parent = nullptr);
-    ~SettlementModel();
+    TreeModelSettlement(CSectionInfo& info, QObject* parent = nullptr);
+    ~TreeModelSettlement();
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -66,4 +66,4 @@ private:
     QList<Settlement*> list_ {};
 };
 
-#endif // SETTLEMENTMODEL_H
+#endif // TREEMODELSETTLEMENT_H
