@@ -357,6 +357,7 @@ inline const QString kCreatedTime = QStringLiteral("created_time");
 inline const QString kCreatedBy = QStringLiteral("created_by");
 inline const QString kUpdatedTime = QStringLiteral("updated_time");
 inline const QString kUpdatedBy = QStringLiteral("updated_by");
+inline const QString kVersion = QStringLiteral("version");
 inline const QString kAncestor = QStringLiteral("ancestor");
 inline const QString kDescendant = QStringLiteral("descendant");
 

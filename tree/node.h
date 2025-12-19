@@ -42,6 +42,7 @@ struct Node {
     QUuid created_by {};
     QDateTime updated_time {};
     QUuid updated_by {};
+    int version {};
 
     Node* parent {};
     QList<Node*> children {};
@@ -92,8 +93,12 @@ struct NodeP final : Node {
 struct NodeO final : Node {
     QUuid employee_id {};
     QUuid partner_id {};
-    QUuid settlement_id {};
+
+    // NOTE: is_settled and settlement_id are managed by the server
+    // - ReadJson: Updates from server
+    // - WriteJson: Should NOT be serialized (server sets default: false)
     bool is_settled {};
+    QUuid settlement_id {};
 
     QDateTime issued_time {};
     double count_total {};

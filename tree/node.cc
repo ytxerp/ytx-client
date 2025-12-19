@@ -22,6 +22,7 @@ void Node::ResetState()
     created_by = QUuid();
     updated_time = {};
     updated_by = QUuid();
+    version = 0;
 }
 
 void Node::InvertTotal()
@@ -62,6 +63,8 @@ void Node::ReadJson(const QJsonObject& object)
         updated_time = QDateTime::fromString(object.value(kUpdatedTime).toString(), Qt::ISODate);
     if (object.contains(kUpdatedBy))
         updated_by = QUuid(object.value(kUpdatedBy).toString());
+    if (object.contains(kVersion))
+        version = object.value(kVersion).toInt();
 }
 
 QJsonObject Node::WriteJson() const
@@ -179,6 +182,8 @@ void NodeP::ReadJson(const QJsonObject& object)
         updated_by = QUuid(object.value(kUpdatedBy).toString());
     if (object.contains(kPaymentTerm))
         payment_term = object.value(kPaymentTerm).toInt();
+    if (object.contains(kVersion))
+        version = object.value(kVersion).toInt();
 }
 
 QJsonObject NodeP::WriteJson() const
@@ -264,6 +269,8 @@ void NodeO::ReadJson(const QJsonObject& object)
         settlement_id = QUuid(object.value(kSettlementId).toString());
     if (object.contains(kIsSettled))
         direction_rule = object.value(kIsSettled).toBool();
+    if (object.contains(kVersion))
+        version = object.value(kVersion).toInt();
 }
 
 QJsonObject NodeO::WriteJson() const
@@ -280,12 +287,10 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kDiscountTotal, QString::number(discount_total, 'f', kMaxNumericScale_4));
     obj.insert(kEmployeeId, employee_id.toString(QUuid::WithoutBraces));
     obj.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
-    obj.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kCountTotal, QString::number(count_total, 'f', kMaxNumericScale_8));
     obj.insert(kMeasureTotal, QString::number(measure_total, 'f', kMaxNumericScale_8));
     obj.insert(kStatus, status);
-    obj.insert(kIsSettled, is_settled);
 
     return obj;
 }
