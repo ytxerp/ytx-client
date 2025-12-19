@@ -114,8 +114,17 @@ void MainWindow::on_actionRemove_triggered()
     auto* widget { ui->tabWidget->currentWidget() };
     assert(widget);
 
+    {
+        auto* d_widget { dynamic_cast<SettlementWidget*>(widget) };
+        if (d_widget) {
+            RemoveSettlement(d_widget);
+            return;
+        }
+    }
+
     if (dynamic_cast<TreeWidget*>(widget)) {
         RemoveNode();
+        return;
     }
 
     if (auto* leaf_widget { dynamic_cast<TableWidget*>(widget) }) {

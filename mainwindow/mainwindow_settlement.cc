@@ -211,3 +211,5 @@ void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJso
     auto* model { d_widget->Model() };
     model->ResetModel(array);
 }
+
+void MainWindow::RemoveSettlement(SettlementWidget* widget) { }
