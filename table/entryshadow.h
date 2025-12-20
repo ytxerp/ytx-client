@@ -24,14 +24,6 @@
 
 #include "table/entry.h"
 
-struct State {
-    QJsonObject entry {};
-    QJsonObject lhs_node {};
-    QJsonObject rhs_node {};
-
-    QJsonObject WriteJson() const;
-};
-
 struct EntryShadow {
     QUuid* id {};
     QDateTime* issued_time {};
@@ -110,32 +102,6 @@ struct EntryShadowT final : EntryShadow {
     void BindEntry(Entry* base, bool is_parallel) override;
     void ResetState() override;
     QJsonObject WriteJson() const override;
-};
-
-struct EntryShadowP final : EntryShadow {
-    double* unit_price {};
-    QUuid* external_sku {};
-
-    void BindEntry(Entry* base, bool is_parallel) override;
-    void ResetState() override;
-    QJsonObject WriteJson() const override { std::unreachable(); }
-};
-
-struct EntryShadowO final : EntryShadow {
-    double* unit_price {};
-    QUuid* external_sku {};
-
-    double* count {};
-    double* measure {};
-
-    double* initial {};
-    double* final {};
-    double* discount {};
-    double* unit_discount {};
-
-    void BindEntry(Entry* base, bool is_parallel) override;
-    void ResetState() override;
-    QJsonObject WriteJson() const override { std::unreachable(); }
 };
 
 using EntryShadowList = QList<EntryShadow*>;
