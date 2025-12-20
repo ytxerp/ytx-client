@@ -39,6 +39,7 @@ struct Entry {
     QUuid created_by {};
     QDateTime updated_time {};
     QUuid updated_by {};
+    int version {};
 
     virtual void ResetState();
     virtual void ReadJson(const QJsonObject& object);

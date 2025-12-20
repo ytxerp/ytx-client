@@ -20,6 +20,7 @@ void Entry::ResetState()
     created_by = QUuid();
     updated_time = {};
     updated_by = QUuid();
+    version = 0;
 }
 
 void Entry::ReadJson(const QJsonObject& object)
@@ -50,6 +51,8 @@ void Entry::ReadJson(const QJsonObject& object)
         updated_time = QDateTime::fromString(object.value(kUpdatedTime).toString(), Qt::ISODate);
     if (object.contains(kUpdatedBy))
         updated_by = QUuid(object.value(kUpdatedBy).toString());
+    if (object.contains(kVersion))
+        version = object.value(kVersion).toInt();
 }
 
 QJsonObject Entry::WriteJson() const
@@ -237,6 +240,8 @@ void EntryO::ReadJson(const QJsonObject& object)
         discount = object[kDiscount].toString().toDouble();
     if (object.contains(kUnitDiscount))
         unit_discount = object[kUnitDiscount].toString().toDouble();
+    if (object.contains(kVersion))
+        version = object.value(kVersion).toInt();
 }
 
 QJsonObject EntryO::WriteJson() const
