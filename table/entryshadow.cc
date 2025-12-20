@@ -19,6 +19,7 @@ void EntryShadow::ResetState()
     updated_time = nullptr;
     updated_by = nullptr;
     entry = nullptr;
+    version = nullptr;
 
     balance = 0.0;
     is_parallel = {};
@@ -45,6 +46,7 @@ void EntryShadow::BindEntry(Entry* base, bool parallel)
     created_by = &base->created_by;
     updated_time = &base->updated_time;
     updated_by = &base->updated_by;
+    version = &base->version;
 }
 
 QJsonObject EntryShadow::WriteJson() const

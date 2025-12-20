@@ -41,6 +41,7 @@ struct EntryShadow {
     QUuid* created_by {};
     QDateTime* updated_time {};
     QUuid* updated_by {};
+    int* version {};
 
     Entry* entry {};
 
