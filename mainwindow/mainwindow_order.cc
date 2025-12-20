@@ -16,13 +16,14 @@ void MainWindow::EditNameO()
     if (!index.isValid())
         return;
 
-    const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    if (node->kind == std::to_underlying(NodeKind::kLeaf))
+        return;
+
     auto model { sc_->tree_model };
 
-    CString name { model->Name(node_id) };
-
-    auto* edit_name { new EditNodeNameO(name, this) };
-    connect(edit_name, &QDialog::accepted, this, [=]() { model->UpdateName(node_id, edit_name->GetName()); });
+    auto* edit_name { new EditNodeNameO(node->name, this) };
+    connect(edit_name, &QDialog::accepted, this, [=]() { model->UpdateName(node->id, edit_name->GetName()); });
     edit_name->exec();
 }
 
