@@ -11,18 +11,19 @@ void MainWindow::RemoveNode()
     if (!index.isValid())
         return;
 
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    assert(node);
+
     auto model { sc_->tree_model };
     assert(model);
 
-    const QUuid node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
+    const QUuid node_id { node->id };
     if (node_pending_removal_.contains(node_id))
         return;
 
     node_pending_removal_.insert(node_id);
 
-    const NodeKind kind { model->Kind(node_id) };
-
-    switch (kind) {
+    switch (NodeKind(node->kind)) {
     case NodeKind::kBranch: {
         BranchRemove(model, index, node_id);
         break;

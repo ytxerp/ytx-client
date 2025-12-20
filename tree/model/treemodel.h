@@ -121,7 +121,6 @@ public:
     // Default implementations
     double InitialTotal(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::initial_total); }
     double FinalTotal(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::final_total); }
-    int Kind(QUuid node_id) { return NodeUtils::Value(node_hash_, node_id, &Node::kind); }
     int Unit(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::unit); }
     bool Rule(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::direction_rule); }
     QString Name(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::name); }
