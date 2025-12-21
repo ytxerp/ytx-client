@@ -112,6 +112,8 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     const bool is_order_section { IsOrderSection(start_) };
 
     ui->actionAppendNode->setEnabled(is_tree);
+    ui->actionInsertNode->setEnabled(is_tree || is_table_o);
+
     ui->actionEditName->setEnabled(is_tree);
     ui->actionResetColor->setEnabled(is_tree && is_color_section);
 

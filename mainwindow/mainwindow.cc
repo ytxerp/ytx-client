@@ -334,11 +334,9 @@ void MainWindow::SetIcon() const
 void MainWindow::on_actionInsertNode_triggered()
 {
     auto* widget { ui->tabWidget->currentWidget() };
-    if (!IsTreeWidget(widget) && !IsTableWidgetFIPT(widget) && !IsTableWidgetO(widget)) {
+    if (!IsTreeWidget(widget) && !IsTableWidgetO(widget)) {
         return;
     }
-
-    assert(sc_->tree_widget);
 
     auto current_index { sc_->tree_view->currentIndex() };
     current_index = current_index.isValid() ? current_index : QModelIndex();
@@ -353,16 +351,15 @@ void MainWindow::on_actionInsertNode_triggered()
 void MainWindow::on_actionAppendNode_triggered()
 {
     auto* widget { ui->tabWidget->currentWidget() };
-    if (!IsTreeWidget(widget) && !IsTableWidgetFIPT(widget) && !IsTableWidgetO(widget)) {
+    if (!IsTreeWidget(widget)) {
         return;
     }
 
-    assert(sc_->tree_widget);
-
     auto parent_index { sc_->tree_view->currentIndex() };
-    parent_index = parent_index.isValid() ? parent_index : QModelIndex();
+    if (!parent_index.isValid())
+        return;
 
-    auto* parent_node { sc_->tree_model->GetNodeByIndex(parent_index) };
+    auto* parent_node { static_cast<Node*>(parent_index.internalPointer()) };
     if (parent_node->kind != std::to_underlying(NodeKind::kBranch))
         return;
 
