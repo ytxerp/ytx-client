@@ -333,8 +333,8 @@ void MainWindow::SetIcon() const
 
 void MainWindow::on_actionInsertNode_triggered()
 {
-    auto* widget { dynamic_cast<TreeWidgetSettlement*>(ui->tabWidget->currentWidget()) };
-    if (widget) {
+    auto* widget { ui->tabWidget->currentWidget() };
+    if (!IsTreeWidget(widget) && !IsTableWidgetFIPT(widget) && !IsTableWidgetO(widget)) {
         return;
     }
 
@@ -352,8 +352,8 @@ void MainWindow::on_actionInsertNode_triggered()
 
 void MainWindow::on_actionAppendNode_triggered()
 {
-    auto* widget { dynamic_cast<TreeWidgetSettlement*>(ui->tabWidget->currentWidget()) };
-    if (widget) {
+    auto* widget { ui->tabWidget->currentWidget() };
+    if (!IsTreeWidget(widget) && !IsTableWidgetFIPT(widget) && !IsTableWidgetO(widget)) {
         return;
     }
 
