@@ -116,6 +116,7 @@ private:
     void BuildNodeUpdate(QJsonObject& order_message);
 
     void ResetCache();
+    bool ValidateOrder();
 
 private:
     Ui::TableWidgetO* ui;

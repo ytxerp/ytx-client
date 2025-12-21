@@ -398,25 +398,8 @@ void TableWidgetO::ResetCache() { pending_update_ = QJsonObject(); }
 
 void TableWidgetO::on_pBtnRecall_clicked()
 {
-    if (node_->id.isNull()) {
-        QMessageBox::information(this, tr("Order Deleted"), tr("This order was deleted by another client and cannot be recalled."));
+    if (!ValidateOrder())
         return;
-    }
-
-    if (node_->is_settled) {
-        QMessageBox::information(this, tr("Order Settled"), tr("This order has already been settled and cannot be recalled."));
-        return;
-    }
-
-    if (!node_->settlement_id.isNull()) {
-        QMessageBox::information(this, tr("Order Selected"), tr("This order has already been selected in a settlement and cannot be recalled."));
-        return;
-    }
-
-    if (node_->status == std::to_underlying(NodeStatus::kRecalled)) {
-        QMessageBox::information(this, tr("Order Recalled"), tr("This order node has already been recalled and cannot be recalled again."));
-        return;
-    }
 
     tmp_node_.status = std::to_underlying(NodeStatus::kRecalled);
     node_->status = std::to_underlying(NodeStatus::kRecalled);
@@ -428,22 +411,30 @@ void TableWidgetO::on_pBtnRecall_clicked()
     emit SNodeStatus(node_id_, NodeStatus::kRecalled);
 }
 
-void TableWidgetO::SaveOrder()
+bool TableWidgetO::ValidateOrder()
 {
     if (node_->id.isNull()) {
-        QMessageBox::information(this, tr("Order Deleted"), tr("This order was deleted by another client and cannot be saved."));
-        return;
+        QMessageBox::information(this, tr("Order Deleted"), tr("This order was deleted by another client and cannot be performed."));
+        return false;
     }
 
     if (tmp_node_.partner_id.isNull()) {
-        QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before saving the order."));
-        return;
+        QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before performing this action."));
+        return false;
     }
 
-    if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
-        QMessageBox::information(this, tr("Order Released"), tr("This order has already been released and cannot be saved."));
-        return;
+    if (tmp_node_.version != node_->version) {
+        QMessageBox::information(this, tr("Order Outdated"), tr("This order was modified by another client. Please refresh before continuing."));
+        return false;
     }
+
+    return true;
+}
+
+void TableWidgetO::SaveOrder()
+{
+    if (!ValidateOrder())
+        return;
 
     if (!HasUnsavedData())
         return;
@@ -475,20 +466,8 @@ void TableWidgetO::SaveOrder()
 
 void TableWidgetO::on_pBtnRelease_clicked()
 {
-    if (node_->id.isNull()) {
-        QMessageBox::information(this, tr("Order Deleted"), tr("This order was deleted by another client and cannot be released."));
+    if (!ValidateOrder())
         return;
-    }
-
-    if (tmp_node_.partner_id.isNull()) {
-        QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before releasing the order."));
-        return;
-    }
-
-    if (node_->status == std::to_underlying(NodeStatus::kReleased)) {
-        QMessageBox::information(this, tr("Order Released"), tr("This order has already been released and cannot be released again."));
-        return;
-    }
 
     pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
     tmp_node_.status = std::to_underlying(NodeStatus::kReleased);

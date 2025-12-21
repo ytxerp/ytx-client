@@ -873,12 +873,14 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
     }
 
     order_model->InsertMeta(descendant, meta);
+    order_model->UpdateVersion(descendant, 1);
 }
 
 void WebSocket::RecallOrder(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     CString session_id { obj.value(kSessionId).toString() };
+    const int version { obj.value(kVersion).toInt() };
 
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     auto* base_model { tree_model_hash_.value(section).data() };
@@ -898,6 +900,7 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
     }
 
     order_model->UpdateMeta(node_id, meta);
+    order_model->UpdateVersion(node_id, version);
 }
 
 void WebSocket::InsertSettlement(const QJsonObject& obj)
