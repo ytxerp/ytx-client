@@ -51,6 +51,16 @@ TableWidgetO::~TableWidgetO()
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
+void TableWidgetO::ReleaseSucceeded()
+{
+    ui->pBtnPrint->setFocus();
+    ui->pBtnPrint->setDefault(true);
+
+    LockWidgets(NodeStatus::kReleased);
+}
+
+void TableWidgetO::RecallSucceeded() { LockWidgets(NodeStatus::kRecalled); }
+
 bool TableWidgetO::HasUnsavedData() const { return node_modified_ || table_model_order_->HasUnsavedData(); }
 
 void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
@@ -401,14 +411,13 @@ void TableWidgetO::on_pBtnRecall_clicked()
     if (!ValidateOrder())
         return;
 
+    if (tmp_node_.status == std::to_underlying(NodeStatus::kRecalled))
+        return;
+
     tmp_node_.status = std::to_underlying(NodeStatus::kRecalled);
-    node_->status = std::to_underlying(NodeStatus::kRecalled);
 
     pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
-    WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_->id, pending_update_));
-
-    LockWidgets(NodeStatus::kRecalled);
-    emit SNodeStatus(node_id_, NodeStatus::kRecalled);
+    WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_id_, tmp_node_.version, pending_update_));
 }
 
 bool TableWidgetO::ValidateOrder()
@@ -457,11 +466,10 @@ void TableWidgetO::SaveOrder()
 
         ui->rBtnRO->setEnabled(false);
         ui->rBtnTO->setEnabled(false);
-
-        emit SInsertOrder();
     }
 
     node_modified_ = false;
+    ui->tableViewO->clearSelection();
 }
 
 void TableWidgetO::on_pBtnRelease_clicked()
@@ -469,15 +477,18 @@ void TableWidgetO::on_pBtnRelease_clicked()
     if (!ValidateOrder())
         return;
 
-    pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
+    if (tmp_node_.status == std::to_underlying(NodeStatus::kReleased))
+        return;
+
     tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
 
     QJsonObject order_message { JsonGen::MetaMessage(section_) };
     table_model_order_->Finalize(order_message);
 
     if (is_persisted_) {
+        pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
+
         BuildNodeUpdate(order_message);
-        order_message.insert(kPartnerId, tmp_node_.partner_id.toString(QUuid::WithoutBraces));
 
         WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_message);
 
@@ -489,16 +500,10 @@ void TableWidgetO::on_pBtnRelease_clicked()
         WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_message);
 
         is_persisted_ = true;
-
-        emit SInsertOrder();
-        emit SNodeStatus(node_id_, NodeStatus::kReleased);
+        ui->rBtnRO->setEnabled(false);
+        ui->rBtnTO->setEnabled(false);
     }
 
     node_modified_ = false;
-    LockWidgets(NodeStatus::kReleased);
-
-    // ready for print
-    ui->pBtnPrint->setFocus();
-    ui->pBtnPrint->setDefault(true);
     ui->tableViewO->clearSelection();
 }

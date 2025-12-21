@@ -53,7 +53,6 @@ public:
     void DeleteSettlement(const QUuid& settlement_id);
 
     int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeO::status); }
-    void UpdateVersion(const QUuid& node_id, int version);
 
     bool InsertNode(int row, const QModelIndex& parent, Node* node) override;
     QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeO::partner_id); };

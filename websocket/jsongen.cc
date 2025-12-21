@@ -3,7 +3,6 @@
 #include <QJsonArray>
 
 #include "component/constant.h"
-#include "enum/nodeenum.h"
 
 namespace JsonGen {
 
@@ -251,7 +250,7 @@ QJsonObject NodeSearch(Section section, CString& keyword)
     return message;
 }
 
-QJsonObject OrderRecalled(Section section, CUuid& node_id, CJsonObject& update)
+QJsonObject OrderRecalled(Section section, CUuid& node_id, int version, CJsonObject& update)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -259,6 +258,7 @@ QJsonObject OrderRecalled(Section section, CUuid& node_id, CJsonObject& update)
     message.insert(kMeta, QJsonObject());
     message.insert(kNodeUpdate, update);
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kVersion, version);
     return message;
 }
 

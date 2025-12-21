@@ -101,7 +101,7 @@ void MainWindow::InsertNodeFunction(const QModelIndex& parent, const QUuid& pare
     switch (start_) {
     case Section::kSale:
     case Section::kPurchase:
-        InsertNodeO(node, parent, row);
+        InsertNodeO(node);
         break;
     default:
         InsertNodeFIPT(node, parent, parent_id, row);
@@ -309,6 +309,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SSettlementRecalled, this, &MainWindow::RSettlementRecalled);
     connect(WebSocket::Instance(), &WebSocket::SSettlementUpdated, this, &MainWindow::RSettlementUpdated);
     connect(WebSocket::Instance(), &WebSocket::SSettlementValidationFailed, this, &MainWindow::RSettlementValidationFailed);
+    connect(WebSocket::Instance(), &WebSocket::SOrderReleased, this, &MainWindow::ROrderReleased);
 }
 
 void MainWindow::SetIcon() const

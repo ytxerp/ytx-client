@@ -157,15 +157,6 @@ void TreeModelO::DeleteSettlement(const QUuid& settlement_id)
     }
 }
 
-void TreeModelO::UpdateVersion(const QUuid& node_id, int version)
-{
-    auto* node = GetNode(node_id);
-    if (!node)
-        return;
-
-    node->version = version;
-}
-
 bool TreeModelO::InsertNode(int row, const QModelIndex& parent, Node* node)
 {
     if (row < 0 || row > rowCount(parent)) {

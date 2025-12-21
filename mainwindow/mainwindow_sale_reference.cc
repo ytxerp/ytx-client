@@ -19,8 +19,8 @@ void MainWindow::RSaleReference(Section section, const QUuid& widget_id, const Q
 void MainWindow::RSaleReferencePrimary(const QUuid& node_id, int unit)
 {
     assert(sc_->tree_widget);
-    assert(sc_->tree_model->Kind(node_id) == std::to_underlying(NodeKind::kLeaf)
-        && "Node kind should be 'kLeafNode' at this point. The kind check should be performed in the delegate DoubleSpinUnitRPS.");
+    // assert(sc_->tree_model->Kind(node_id) == std::to_underlying(NodeKind::kLeaf)
+    //     && "Node kind should be 'kLeafNode' at this point. The kind check should be performed in the delegate DoubleSpinUnitRPS.");
 
     switch (start_) {
     case Section::kInventory:

@@ -124,6 +124,8 @@ private slots:
     void RSettlementUpdated(const QJsonObject& obj);
     void RSettlementValidationFailed();
 
+    void ROrderReleased(Section section, const QUuid& node_id);
+
     void RLeafRemoveDenied(const QJsonObject& obj);
     inline void RNodeRemoveConfirmed(const QUuid& node_id) { node_pending_removal_.remove(node_id); }
 
@@ -206,7 +208,7 @@ private:
 
     void InsertNodeFunction(const QModelIndex& parent, const QUuid& parent_id, int row);
     void InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUuid& parent_id, int row); // Finance Inventory Partner Task
-    void InsertNodeO(Node* base_node, const QModelIndex& parent, int row); // Purchase Sales
+    void InsertNodeO(Node* base_node); // Purchase Sales
 
     void RemoveNode();
     void RemoveEntry(TableWidget* widget);

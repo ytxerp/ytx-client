@@ -865,15 +865,16 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
     auto* order_model = static_cast<TreeModelO*>(base_model);
     assert(order_model != nullptr);
 
-    if (session_id != session_id_) {
-        base_model->InsertNode(ancestor, node_obj);
+    base_model->InsertNode(ancestor, node_obj);
 
-        if (is_release)
-            order_model->RNodeStatus(node_id, NodeStatus::kReleased);
+    if (is_release)
+        order_model->RNodeStatus(node_id, NodeStatus::kReleased);
+
+    if (session_id == session_id_ && is_release) {
+        emit SOrderReleased(section, node_id);
     }
 
     order_model->InsertMeta(descendant, meta);
-    order_model->UpdateVersion(descendant, 1);
 }
 
 void WebSocket::RecallOrder(const QJsonObject& obj)
@@ -900,7 +901,6 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
     }
 
     order_model->UpdateMeta(node_id, meta);
-    order_model->UpdateVersion(node_id, version);
 }
 
 void WebSocket::InsertSettlement(const QJsonObject& obj)
