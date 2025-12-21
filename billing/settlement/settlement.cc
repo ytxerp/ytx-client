@@ -16,6 +16,7 @@ void Settlement::ResetState()
     created_by = QUuid();
     updated_time = {};
     updated_by = QUuid();
+    version = 0;
 }
 
 void Settlement::ReadJson(const QJsonObject& object)
@@ -52,6 +53,9 @@ void Settlement::ReadJson(const QJsonObject& object)
 
     if (object.contains(kUpdatedBy))
         updated_by = QUuid(object.value(kUpdatedBy).toString());
+
+    if (object.contains(kVersion))
+        version = object.value(kVersion).toInt();
 }
 
 QJsonObject Settlement::WriteJson() const

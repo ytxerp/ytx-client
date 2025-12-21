@@ -30,6 +30,7 @@ void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
         view->setColumnHidden(std::to_underlying(NodeEnum::kCreateTime), kIsHidden);
         view->setColumnHidden(std::to_underlying(NodeEnum::kUpdateTime), kIsHidden);
         view->setColumnHidden(std::to_underlying(NodeEnum::kUpdateBy), kIsHidden);
+        view->setColumnHidden(std::to_underlying(NodeEnum::kVersion), kIsHidden);
 
         view->setSelectionMode(QAbstractItemView::SingleSelection);
         view->setDragDropMode(QAbstractItemView::DragDrop);
@@ -57,6 +58,7 @@ void MainWindow::SetTableViewFIPT(QTableView* view, int stretch_column, int lhs_
         view->setColumnHidden(std::to_underlying(EntryEnum::kCreateTime), kIsHidden);
         view->setColumnHidden(std::to_underlying(EntryEnum::kUpdateTime), kIsHidden);
         view->setColumnHidden(std::to_underlying(EntryEnum::kUpdateBy), kIsHidden);
+        view->setColumnHidden(std::to_underlying(EntryEnum::kVersion), kIsHidden);
     }
 
     {
@@ -127,6 +129,7 @@ void MainWindow::SetSettlementView(QTableView* view, int stretch_column) const
     view->setColumnHidden(std::to_underlying(SettlementEnum::kCreateTime), kIsHidden);
     view->setColumnHidden(std::to_underlying(SettlementEnum::kUpdateTime), kIsHidden);
     view->setColumnHidden(std::to_underlying(SettlementEnum::kUpdateBy), kIsHidden);
+    view->setColumnHidden(std::to_underlying(SettlementEnum::kVersion), kIsHidden);
 
     auto* h_header { view->horizontalHeader() };
     ResizeColumn(h_header, stretch_column);
@@ -173,8 +176,14 @@ void MainWindow::SetTableViewO(QTableView* view, Section section, int stretch_co
         view->setAlternatingRowColors(true);
         view->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::CurrentChanged);
 
-        view->setColumnHidden(std::to_underlying(EntryEnum::kId), kIsHidden);
+        view->setColumnHidden(std::to_underlying(EntryEnumO::kId), kIsHidden);
         view->setColumnHidden(lhs_node_column, kIsHidden);
+        view->setColumnHidden(std::to_underlying(EntryEnumO::kUserId), kIsHidden);
+        view->setColumnHidden(std::to_underlying(EntryEnumO::kCreateBy), kIsHidden);
+        view->setColumnHidden(std::to_underlying(EntryEnumO::kCreateTime), kIsHidden);
+        view->setColumnHidden(std::to_underlying(EntryEnumO::kUpdateTime), kIsHidden);
+        view->setColumnHidden(std::to_underlying(EntryEnumO::kUpdateBy), kIsHidden);
+        view->setColumnHidden(std::to_underlying(EntryEnumO::kVersion), kIsHidden);
     }
 
     {

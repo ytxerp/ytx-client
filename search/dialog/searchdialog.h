@@ -63,7 +63,7 @@ protected:
     void IniConnect();
 
     virtual void TreeViewDelegate(QTableView* view) = 0;
-    virtual void TableViewDelegate(QTableView* view) = 0;
+    virtual void TableViewDelegate(QTableView* view);
 
     void IniView(QTableView* view);
     void ResizeTreeColumn(QHeaderView* header);

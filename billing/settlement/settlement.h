@@ -39,6 +39,7 @@ struct Settlement {
     QUuid created_by {};
     QDateTime updated_time {};
     QUuid updated_by {};
+    int version {};
 
     void ResetState();
 

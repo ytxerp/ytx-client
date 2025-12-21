@@ -34,7 +34,6 @@ private slots:
 
 private:
     void TreeViewDelegate(QTableView* view) override;
-    void TableViewDelegate(QTableView* view) override;
 };
 
 #endif // SEARCHDIALOGF_H

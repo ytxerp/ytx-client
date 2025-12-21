@@ -33,13 +33,11 @@ constexpr int LinkedNodeColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:
-        return std::to_underlying(EntryEnumF::kRhsNode);
     case Section::kTask:
-        return std::to_underlying(EntryEnumT::kRhsNode);
+    case Section::kInventory:
+        return std::to_underlying(EntryEnum::kRhsNode);
     case Section::kPartner:
         return std::to_underlying(EntryEnumP::kRhsNode);
-    case Section::kInventory:
-        return std::to_underlying(EntryEnumI::kRhsNode);
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(EntryEnumO::kRhsNode);
@@ -52,13 +50,11 @@ constexpr int DescriptionColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:
-        return std::to_underlying(EntryEnumF::kDescription);
+    case Section::kInventory:
     case Section::kTask:
-        return std::to_underlying(EntryEnumT::kDescription);
+        return std::to_underlying(EntryEnum::kDescription);
     case Section::kPartner:
         return std::to_underlying(EntryEnumP::kDescription);
-    case Section::kInventory:
-        return std::to_underlying(EntryEnumI::kDescription);
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(EntryEnumO::kDescription);
@@ -71,11 +67,9 @@ constexpr int BalanceColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:
-        return std::to_underlying(EntryEnumF::kBalance);
     case Section::kTask:
-        return std::to_underlying(EntryEnumT::kBalance);
     case Section::kInventory:
-        return std::to_underlying(EntryEnumI::kBalance);
+        return std::to_underlying(EntryEnum::kBalance);
     default:
         return -1;
     }
@@ -85,13 +79,11 @@ constexpr std::pair<int, int> CacheColumnRange(Section section)
 {
     switch (section) {
     case Section::kFinance:
-        return { std::to_underlying(EntryEnumF::kCode), std::to_underlying(EntryEnumF::kStatus) };
+    case Section::kInventory:
     case Section::kTask:
-        return { std::to_underlying(EntryEnumT::kCode), std::to_underlying(EntryEnumT::kStatus) };
+        return { std::to_underlying(EntryEnum::kCode), std::to_underlying(EntryEnum::kStatus) };
     case Section::kPartner:
         return { std::to_underlying(EntryEnumP::kIssuedTime), std::to_underlying(EntryEnumP::kRhsNode) };
-    case Section::kInventory:
-        return { std::to_underlying(EntryEnumI::kCode), std::to_underlying(EntryEnumI::kStatus) };
     case Section::kSale:
     case Section::kPurchase:
         return { std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kExternalSku) };
@@ -104,13 +96,11 @@ constexpr std::pair<int, int> NumericColumnRange(Section section)
 {
     switch (section) {
     case Section::kFinance:
-        return { std::to_underlying(EntryEnumF::kDebit), std::to_underlying(EntryEnumF::kCredit) };
     case Section::kTask:
-        return { std::to_underlying(EntryEnumT::kDebit), std::to_underlying(EntryEnumT::kCredit) };
+    case Section::kInventory:
+        return { std::to_underlying(EntryEnum::kDebit), std::to_underlying(EntryEnum::kCredit) };
     case Section::kPartner:
         return { -1, -1 };
-    case Section::kInventory:
-        return { std::to_underlying(EntryEnumI::kDebit), std::to_underlying(EntryEnumI::kCredit) };
     case Section::kSale:
     case Section::kPurchase:
         return { std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kFinal) };

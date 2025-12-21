@@ -2,8 +2,9 @@
 
 #include <QtConcurrent>
 
+#include "global/collator.h"
 #include "global/entrypool.h"
-#include "global/entryshadowpool.h"
+#include "global/resourcepool.h"
 #include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -20,7 +21,7 @@ TableModel::TableModel(CTableModelArg& arg, QObject* parent)
 TableModel::~TableModel()
 {
     FlushCaches();
-    EntryShadowPool::Instance().Recycle(shadow_list_, section_);
+    ResourcePool<EntryShadow>::Instance().Recycle(shadow_list_);
 }
 
 void TableModel::RDirectionRule(bool value)
@@ -53,7 +54,7 @@ void TableModel::RRefreshField(const QUuid& entry_id, int start, int end)
 
 void TableModel::RAppendOneEntry(Entry* entry)
 {
-    auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
+    auto* entry_shadow { ResourcePool<EntryShadow>::Instance().Allocate() };
     entry_shadow->BindEntry(entry, lhs_id_ == entry->lhs_node);
 
     auto row { shadow_list_.size() };
@@ -77,7 +78,7 @@ void TableModel::RRemoveOneEntry(const QUuid& entry_id)
 
     int row { idx.row() };
     beginRemoveRows(QModelIndex(), row, row);
-    EntryShadowPool::Instance().Recycle(shadow_list_.takeAt(row), section_);
+    ResourcePool<EntryShadow>::Instance().Recycle(shadow_list_.takeAt(row));
     endRemoveRows();
 
     AccumulateBalance(row);
@@ -232,9 +233,12 @@ QModelIndex TableModel::GetIndex(const QUuid& entry_id) const
 bool TableModel::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
+    if (IsReleased(lhs_id_, QUuid()))
+        return false;
 
     auto* entry_shadow { InsertRowsImpl(row, parent) };
     *entry_shadow->issued_time = QDateTime::currentDateTimeUtc();
+    InitRate(entry_shadow);
 
     if (shadow_list_.size() == 1)
         emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
@@ -243,12 +247,234 @@ bool TableModel::insertRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
+QVariant TableModel::data(const QModelIndex& index, int role) const
+{
+    if (!index.isValid() || role != Qt::DisplayRole)
+        return QVariant();
+
+    auto* shadow = shadow_list_.at(index.row());
+
+    const EntryEnum column { index.column() };
+
+    switch (column) {
+    case EntryEnum::kId:
+        return *shadow->id;
+    case EntryEnum::kUserId:
+        return *shadow->user_id;
+    case EntryEnum::kCreateTime:
+        return *shadow->created_time;
+    case EntryEnum::kCreateBy:
+        return *shadow->created_by;
+    case EntryEnum::kUpdateTime:
+        return *shadow->updated_time;
+    case EntryEnum::kUpdateBy:
+        return *shadow->updated_by;
+    case EntryEnum::kVersion:
+        return *shadow->version;
+    case EntryEnum::kIssuedTime:
+        return *shadow->issued_time;
+    case EntryEnum::kLhsNode:
+        return *shadow->lhs_node;
+    case EntryEnum::kCode:
+        return *shadow->code;
+    case EntryEnum::kLhsRate:
+        return *shadow->lhs_rate;
+    case EntryEnum::kDescription:
+        return *shadow->description;
+    case EntryEnum::kRhsNode:
+        return *shadow->rhs_node;
+    case EntryEnum::kStatus:
+        return *shadow->status;
+    case EntryEnum::kDocument:
+        return *shadow->document;
+    case EntryEnum::kDebit:
+        return *shadow->lhs_debit;
+    case EntryEnum::kCredit:
+        return *shadow->lhs_credit;
+    case EntryEnum::kBalance:
+        return shadow->balance;
+    default:
+        return QVariant();
+    }
+}
+
+bool TableModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    if (!index.isValid() || role != Qt::EditRole)
+        return false;
+
+    const EntryEnum column { index.column() };
+    const int row { index.row() };
+
+    auto* shadow { shadow_list_.at(index.row()) };
+
+    if (IsReleased(lhs_id_, *shadow->rhs_node))
+        return false;
+
+    const QUuid id { *shadow->id };
+
+    switch (column) {
+    case EntryEnum::kIssuedTime:
+        EntryUtils::UpdateShadowIssuedTime(
+            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
+        break;
+    case EntryEnum::kCode:
+        EntryUtils::UpdateShadowField(pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [id, this]() { RestartTimer(id); });
+        break;
+    case EntryEnum::kStatus:
+        EntryUtils::UpdateShadowField(pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
+        break;
+    case EntryEnum::kDescription:
+        EntryUtils::UpdateShadowField(
+            pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
+        break;
+    case EntryEnum::kDocument:
+        EntryUtils::UpdateShadowDocument(
+            pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
+        break;
+    case EntryEnum::kLhsRate:
+        UpdateRate(shadow, value.toDouble());
+        break;
+    case EntryEnum::kRhsNode:
+        UpdateLinkedNode(shadow, value.toUuid(), row);
+        break;
+    case EntryEnum::kDebit:
+        UpdateNumeric(shadow, value.toDouble(), row, true);
+        break;
+    case EntryEnum::kCredit:
+        UpdateNumeric(shadow, value.toDouble(), row, false);
+        break;
+    default:
+        return false;
+    }
+
+    emit SResizeColumnToContents(index.column());
+    return true;
+}
+
+void TableModel::sort(int column, Qt::SortOrder order)
+{
+    assert(column >= 0 && column <= info_.entry_header.size() - 1);
+
+    const EntryEnum e_column { column };
+
+    switch (e_column) {
+    case EntryEnum::kId:
+    case EntryEnum::kBalance:
+    case EntryEnum::kUserId:
+    case EntryEnum::kCreateTime:
+    case EntryEnum::kCreateBy:
+    case EntryEnum::kUpdateTime:
+    case EntryEnum::kUpdateBy:
+    case EntryEnum::kVersion:
+        return;
+    default:
+        break;
+    }
+
+    auto Compare = [order, e_column](const EntryShadow* lhs, const EntryShadow* rhs) -> bool {
+        const auto& collator { Collator::Instance() };
+
+        switch (e_column) {
+        case EntryEnum::kCode:
+            return (order == Qt::AscendingOrder) ? (collator.compare(*lhs->code, *rhs->code) < 0) : (collator.compare(*lhs->code, *rhs->code) > 0);
+        case EntryEnum::kDescription:
+            return (order == Qt::AscendingOrder) ? (collator.compare(*lhs->description, *rhs->description) < 0)
+                                                 : (collator.compare(*lhs->description, *rhs->description) > 0);
+        case EntryEnum::kIssuedTime:
+            return (order == Qt::AscendingOrder) ? (*lhs->issued_time < *rhs->issued_time) : (*lhs->issued_time > *rhs->issued_time);
+        case EntryEnum::kLhsRate:
+            return (order == Qt::AscendingOrder) ? (*lhs->lhs_rate < *rhs->lhs_rate) : (*lhs->lhs_rate > *rhs->lhs_rate);
+        case EntryEnum::kRhsNode:
+            return (order == Qt::AscendingOrder) ? (*lhs->rhs_node < *rhs->rhs_node) : (*lhs->rhs_node > *rhs->rhs_node);
+        case EntryEnum::kStatus:
+            return (order == Qt::AscendingOrder) ? (*lhs->status < *rhs->status) : (*lhs->status > *rhs->status);
+        case EntryEnum::kDocument:
+            return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
+        case EntryEnum::kDebit:
+            return (order == Qt::AscendingOrder) ? (*lhs->lhs_debit < *rhs->lhs_debit) : (*lhs->lhs_debit > *rhs->lhs_debit);
+        case EntryEnum::kCredit:
+            return (order == Qt::AscendingOrder) ? (*lhs->lhs_credit < *rhs->lhs_credit) : (*lhs->lhs_credit > *rhs->lhs_credit);
+        default:
+            return false;
+        }
+    };
+
+    emit layoutAboutToBeChanged();
+    std::sort(shadow_list_.begin(), shadow_list_.end(), Compare);
+    emit layoutChanged();
+
+    AccumulateBalance(0);
+}
+
+Qt::ItemFlags TableModel::flags(const QModelIndex& index) const
+{
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    auto flags { QAbstractItemModel::flags(index) };
+    const EntryEnum column { index.column() };
+
+    switch (column) {
+    case EntryEnum::kId:
+    case EntryEnum::kBalance:
+    case EntryEnum::kDocument:
+    case EntryEnum::kStatus:
+        flags &= ~Qt::ItemIsEditable;
+        break;
+    default:
+        flags |= Qt::ItemIsEditable;
+        break;
+    }
+
+    const auto rhs_id { index.siblingAtColumn(std::to_underlying(EntryEnum::kRhsNode)).data().toUuid() };
+    if (IsReleased(lhs_id_, rhs_id))
+        flags &= ~Qt::ItemIsEditable;
+
+    return flags;
+}
+
+bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
+{
+    assert(row >= 0 && row <= rowCount(parent) - 1);
+
+    auto* shadow = shadow_list_.at(row);
+    const auto rhs_node_id { *shadow->rhs_node };
+
+    if (IsReleased(lhs_id_, rhs_node_id))
+        return false;
+
+    beginRemoveRows(parent, row, row);
+    shadow_list_.removeAt(row);
+    endRemoveRows();
+
+    const auto entry_id { *shadow->id };
+
+    if (!rhs_node_id.isNull()) {
+        QJsonObject message { JsonGen::EntryRemove(section_, entry_id) };
+        WebSocket::Instance()->SendMessage(kEntryRemove, message);
+
+        const double lhs_initial_delta { *shadow->lhs_credit - *shadow->lhs_debit };
+        const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
+
+        if (has_leaf_delta) {
+            AccumulateBalance(row);
+        }
+
+        emit SRemoveOneEntry(rhs_node_id, entry_id);
+    }
+
+    ResourcePool<EntryShadow>::Instance().Recycle(shadow);
+    emit SRemoveEntry(entry_id);
+    return true;
+}
+
 EntryShadow* TableModel::InsertRowsImpl(int row, const QModelIndex& parent)
 {
     auto* entry { EntryPool::Instance().Allocate(section_) };
     entry->id = QUuid::createUuidV7();
 
-    auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
+    auto* entry_shadow { ResourcePool<EntryShadow>::Instance().Allocate() };
     entry_shadow->BindEntry(entry, true);
 
     *entry_shadow->lhs_node = lhs_id_;
@@ -271,7 +497,7 @@ void TableModel::RRemoveMultiEntry(const QSet<QUuid>& entry_id_set)
             min_row = i;
 
             beginRemoveRows(QModelIndex(), i, i);
-            EntryShadowPool::Instance().Recycle(shadow_list_.takeAt(i), section_);
+            ResourcePool<EntryShadow>::Instance().Recycle(shadow_list_.takeAt(i));
             endRemoveRows();
         }
     }
@@ -284,7 +510,7 @@ void TableModel::RAppendMultiEntry(const EntryList& entry_list)
 {
     EntryShadowList shadow_list {};
     for (auto* entry : entry_list) {
-        auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
+        auto* entry_shadow { ResourcePool<EntryShadow>::Instance().Allocate() };
         entry_shadow->BindEntry(entry, lhs_id_ == entry->lhs_node);
         shadow_list.emplaceBack(entry_shadow);
     }

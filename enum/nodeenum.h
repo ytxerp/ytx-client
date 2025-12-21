@@ -141,6 +141,7 @@ enum class NodeEnum {
     kCreateBy,
     kUpdateTime,
     kUpdateBy,
+    kVersion,
 };
 
 enum class NodeEnumF {
@@ -151,6 +152,7 @@ enum class NodeEnumF {
     kCreateBy,
     kUpdateTime,
     kUpdateBy,
+    kVersion,
     kCode,
     kDescription,
     kNote,
@@ -169,6 +171,7 @@ enum class NodeEnumI {
     kCreateBy,
     kUpdateTime,
     kUpdateBy,
+    kVersion,
     kCode,
     kDescription,
     kNote,
@@ -190,6 +193,7 @@ enum class NodeEnumT {
     kCreateBy,
     kUpdateTime,
     kUpdateBy,
+    kVersion,
     kCode,
     kDescription,
     kNote,
@@ -212,6 +216,7 @@ enum class NodeEnumP {
     kCreateBy,
     kUpdateTime,
     kUpdateBy,
+    kVersion,
     kCode,
     kDescription,
     kNote,
@@ -229,6 +234,7 @@ enum class NodeEnumO {
     kCreateBy,
     kUpdateTime,
     kUpdateBy,
+    kVersion,
     kPartner,
     kIssuedTime,
     kDirectionRule,

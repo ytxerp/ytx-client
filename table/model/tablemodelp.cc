@@ -130,41 +130,43 @@ QVariant TableModelP::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* entry = DerivedPtr<EntryP>(entry_list_.at(index.row()));
+    auto* d_entry = DerivedPtr<EntryP>(entry_list_.at(index.row()));
 
     const EntryEnumP column { index.column() };
 
     switch (column) {
     case EntryEnumP::kId:
-        return entry->id;
+        return d_entry->id;
     case EntryEnumP::kUserId:
-        return entry->user_id;
+        return d_entry->user_id;
     case EntryEnumP::kCreateTime:
-        return entry->created_time;
+        return d_entry->created_time;
     case EntryEnumP::kCreateBy:
-        return entry->created_by;
+        return d_entry->created_by;
     case EntryEnumP::kUpdateTime:
-        return entry->updated_time;
+        return d_entry->updated_time;
+    case EntryEnumP::kVersion:
+        return d_entry->version;
     case EntryEnumP::kUpdateBy:
-        return entry->updated_by;
+        return d_entry->updated_by;
     case EntryEnumP::kLhsNode:
-        return entry->lhs_node;
+        return d_entry->lhs_node;
     case EntryEnumP::kIssuedTime:
-        return entry->issued_time;
+        return d_entry->issued_time;
     case EntryEnumP::kCode:
-        return entry->code;
+        return d_entry->code;
     case EntryEnumP::kUnitPrice:
-        return entry->unit_price;
+        return d_entry->unit_price;
     case EntryEnumP::kDescription:
-        return entry->description;
+        return d_entry->description;
     case EntryEnumP::kDocument:
-        return entry->document;
+        return d_entry->document;
     case EntryEnumP::kStatus:
-        return entry->status;
+        return d_entry->status;
     case EntryEnumP::kRhsNode:
-        return entry->rhs_node;
+        return d_entry->rhs_node;
     case EntryEnumP::kExternalSku:
-        return entry->external_sku;
+        return d_entry->external_sku;
     default:
         return QVariant();
     }
@@ -228,6 +230,7 @@ void TableModelP::sort(int column, Qt::SortOrder order)
     case EntryEnumP::kCreateBy:
     case EntryEnumP::kUpdateTime:
     case EntryEnumP::kUpdateBy:
+    case EntryEnumP::kVersion:
         return;
     default:
         break;

@@ -308,7 +308,6 @@ set(HEADERS
     global/dailylogger.h
     global/entrypool.h
     global/resourcepool.h
-    global/entryshadowpool.h
     global/logininfo.h
     global/nodepool.h
     global/concepts.h

@@ -29,21 +29,10 @@ public:
     TableModelI(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelI() override = default;
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
-    void sort(int column, Qt::SortOrder order) override;
-    Qt::ItemFlags flags(const QModelIndex& index) const override;
-
-    bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
-
 protected:
-    bool UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit) override;
-    // bool UpdateDebit(EntryShadow* entry_shadow, double value, int row) override;
-    // bool UpdateCredit(EntryShadow* entry_shadow, double value, int row) override;
-    bool UpdateRate(EntryShadow* entry_shadow, double value) override;
-    bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
-
-    double CalculateBalance(EntryShadow* entry_shadow) override;
+    bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit) override;
+    bool UpdateRate(EntryShadow* shadow, double value) override;
+    bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row) override;
 };
 
 #endif // TABLEMODELI_H

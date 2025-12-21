@@ -21,27 +21,11 @@ void SearchDialogF::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kName), tree_path_);
 }
 
-void SearchDialogF::TableViewDelegate(QTableView* view)
-{
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kLhsDebit), value_);
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kRhsDebit), value_);
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kLhsCredit), value_);
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kRhsCredit), value_);
-
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kLhsRate), rate_);
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kRhsRate), rate_);
-
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kLhsNode), table_path_);
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kRhsNode), table_path_);
-
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kStatus), check_);
-}
-
 void SearchDialogF::REntryDoubleClicked(const QModelIndex& index)
 {
-    auto lhs_id { index.siblingAtColumn(std::to_underlying(FullEntryEnumF::kLhsNode)).data().toUuid() };
-    auto rhs_id { index.siblingAtColumn(std::to_underlying(FullEntryEnumF::kRhsNode)).data().toUuid() };
-    auto entry_id { index.siblingAtColumn(std::to_underlying(FullEntryEnumF::kId)).data().toUuid() };
+    auto lhs_id { index.siblingAtColumn(std::to_underlying(FullEntryEnum::kLhsNode)).data().toUuid() };
+    auto rhs_id { index.siblingAtColumn(std::to_underlying(FullEntryEnum::kRhsNode)).data().toUuid() };
+    auto entry_id { index.siblingAtColumn(std::to_underlying(FullEntryEnum::kId)).data().toUuid() };
 
     if (lhs_id.isNull() || rhs_id.isNull() || entry_id.isNull())
         return;

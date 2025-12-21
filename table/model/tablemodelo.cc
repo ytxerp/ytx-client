@@ -97,6 +97,16 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryEnumO::kId:
         return d_entry->id;
+    case EntryEnumO::kUserId:
+        return d_entry->user_id;
+    case EntryEnumO::kCreateTime:
+        return d_entry->created_time;
+    case EntryEnumO::kCreateBy:
+        return d_entry->created_by;
+    case EntryEnumO::kUpdateTime:
+        return d_entry->updated_time;
+    case EntryEnumO::kVersion:
+        return d_entry->version;
     case EntryEnumO::kLhsNode:
         return d_entry->lhs_node;
     case EntryEnumO::kRhsNode:
@@ -217,6 +227,12 @@ void TableModelO::sort(int column, Qt::SortOrder order)
 
     switch (e_column) {
     case EntryEnumO::kId:
+    case EntryEnumO::kUserId:
+    case EntryEnumO::kCreateTime:
+    case EntryEnumO::kCreateBy:
+    case EntryEnumO::kUpdateTime:
+    case EntryEnumO::kUpdateBy:
+    case EntryEnumO::kVersion:
         return;
     default:
         break;

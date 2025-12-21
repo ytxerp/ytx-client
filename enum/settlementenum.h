@@ -29,6 +29,7 @@ enum class SettlementEnum {
     kCreateBy,
     kUpdateTime,
     kUpdateBy,
+    kVersion,
     kIssuedTime,
     kPartner,
     kDescription,

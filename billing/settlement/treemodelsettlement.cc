@@ -3,6 +3,7 @@
 #include <QJsonArray>
 
 #include "enum/settlementenum.h"
+#include "global/collator.h"
 #include "global/resourcepool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -62,6 +63,8 @@ QVariant TreeModelSettlement::data(const QModelIndex& index, int role) const
         return settlement->updated_time;
     case SettlementEnum::kUpdateBy:
         return settlement->updated_by;
+    case SettlementEnum::kVersion:
+        return settlement->version;
     case SettlementEnum::kIssuedTime:
         return settlement->issued_time;
     case SettlementEnum::kDescription:
@@ -90,26 +93,32 @@ void TreeModelSettlement::sort(int column, Qt::SortOrder order)
     if (column <= -1 || column >= info_.settlement_header.size())
         return;
 
-    auto Compare = [column, order](const auto& lhs, const auto& rhs) -> bool {
-        const SettlementEnum e_column { column };
+    const SettlementEnum e_column { column };
+
+    switch (e_column) {
+    case SettlementEnum::kId:
+    case SettlementEnum::kUserId:
+    case SettlementEnum::kCreateTime:
+    case SettlementEnum::kCreateBy:
+    case SettlementEnum::kUpdateTime:
+    case SettlementEnum::kUpdateBy:
+    case SettlementEnum::kVersion:
+        return;
+    default:
+        break;
+    }
+
+    auto Compare = [e_column, order](const auto& lhs, const auto& rhs) -> bool {
+        const auto& collator { Collator::Instance() };
 
         switch (e_column) {
         case SettlementEnum::kPartner:
             return (order == Qt::AscendingOrder) ? (lhs->partner_id < rhs->partner_id) : (lhs->partner_id > rhs->partner_id);
-        case SettlementEnum::kUserId:
-            return (order == Qt::AscendingOrder) ? (lhs->user_id < rhs->user_id) : (lhs->user_id > rhs->user_id);
-        case SettlementEnum::kCreateTime:
-            return (order == Qt::AscendingOrder) ? (lhs->created_time < rhs->created_time) : (lhs->created_time > rhs->created_time);
-        case SettlementEnum::kCreateBy:
-            return (order == Qt::AscendingOrder) ? (lhs->created_by < rhs->created_by) : (lhs->created_by > rhs->created_by);
-        case SettlementEnum::kUpdateTime:
-            return (order == Qt::AscendingOrder) ? (lhs->updated_time < rhs->updated_time) : (lhs->updated_time > rhs->updated_time);
-        case SettlementEnum::kUpdateBy:
-            return (order == Qt::AscendingOrder) ? (lhs->updated_by < rhs->updated_by) : (lhs->updated_by > rhs->updated_by);
         case SettlementEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case SettlementEnum::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
+                                                 : (collator.compare(lhs->description, rhs->description) > 0);
         case SettlementEnum::kStatus:
             return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
         case SettlementEnum::kAmount:

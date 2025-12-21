@@ -12,7 +12,7 @@ void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
-        auto* d_entry = static_cast<EntryF*>(it.value());
+        auto* d_entry = static_cast<Entry*>(it.value());
         QUuid rhs_id {};
         QUuid lhs_id {};
 
@@ -30,7 +30,7 @@ void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update
             lhs_id = d_entry->rhs_node;
         }
 
-        const int lhs_rate { std::to_underlying(EntryEnumF::kLhsRate) };
+        const int lhs_rate { std::to_underlying(EntryEnum::kLhsRate) };
 
         emit SUpdateBalance(rhs_id, entry_id);
         emit SRefreshField(lhs_id, entry_id, lhs_rate, lhs_rate);
@@ -41,7 +41,7 @@ void EntryHubF::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& upd
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
-        auto* d_entry = static_cast<EntryF*>(it.value());
+        auto* d_entry = static_cast<Entry*>(it.value());
 
         d_entry->lhs_debit = update[kLhsDebit].toString().toDouble();
         d_entry->lhs_credit = update[kLhsCredit].toString().toDouble();

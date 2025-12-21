@@ -4,6 +4,7 @@
 #include <QTimer>
 
 #include "enum/settlementenum.h"
+#include "global/collator.h"
 #include "global/resourcepool.h"
 
 TableModelSettlement::TableModelSettlement(CSectionInfo& info, SettlementStatus status, QObject* parent)
@@ -109,8 +110,10 @@ void TableModelSettlement::sort(int column, Qt::SortOrder order)
     if (column <= -1 || column >= info_.settlement_item_header.size())
         return;
 
-    auto Compare = [column, order](const SettlementItem* lhs, const SettlementItem* rhs) -> bool {
-        const SettlementItemEnum e_column { column };
+    const SettlementItemEnum e_column { column };
+
+    auto Compare = [e_column, order](const SettlementItem* lhs, const SettlementItem* rhs) -> bool {
+        const auto& collator { Collator::Instance() };
 
         switch (e_column) {
         case SettlementItemEnum::kEmployee:
@@ -118,7 +121,8 @@ void TableModelSettlement::sort(int column, Qt::SortOrder order)
         case SettlementItemEnum::kIssuedTime:
             return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
         case SettlementItemEnum::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
+            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
+                                                 : (collator.compare(lhs->description, rhs->description) > 0);
         case SettlementItemEnum::kAmount:
             return (order == Qt::AscendingOrder) ? (lhs->amount < rhs->amount) : (lhs->amount > rhs->amount);
         case SettlementItemEnum::kIsSelected:

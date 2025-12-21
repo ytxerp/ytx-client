@@ -95,15 +95,12 @@ inline Entry* EntryPool::NewResource(Section section)
 {
     switch (section) {
     case Section::kFinance:
-        return new EntryF();
-    case Section::kInventory:
-        return new EntryI();
     case Section::kTask:
-        return new EntryT();
+    case Section::kInventory:
+        return new Entry();
     case Section::kPartner:
         return new EntryP();
     case Section::kSale:
-        return new EntryO();
     case Section::kPurchase:
         return new EntryO();
     default:

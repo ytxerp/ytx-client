@@ -74,7 +74,14 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
+
     bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+    bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
+    void sort(int column, Qt::SortOrder order) override;
+    Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     virtual QModelIndex GetIndex(const QUuid& entry_id) const;
 
@@ -90,24 +97,6 @@ protected:
         return false;
     }
 
-#if 0
-    virtual bool UpdateDebit(EntryShadow* entry_shadow, double value, int row)
-    {
-        Q_UNUSED(value)
-        Q_UNUSED(entry_shadow)
-        Q_UNUSED(row)
-        return false;
-    }
-
-    virtual bool UpdateCredit(EntryShadow* entry_shadow, double value, int row)
-    {
-        Q_UNUSED(entry_shadow)
-        Q_UNUSED(value)
-        Q_UNUSED(row)
-        return false;
-    }
-#endif
-
     virtual bool UpdateRate(EntryShadow* entry_shadow, double value)
     {
         Q_UNUSED(entry_shadow)
@@ -115,11 +104,7 @@ protected:
         return false;
     }
 
-    virtual double CalculateBalance(EntryShadow* entry_shadow)
-    {
-        Q_UNUSED(entry_shadow)
-        return {};
-    }
+    virtual void InitRate(EntryShadow* entry_shadow) const { Q_UNUSED(entry_shadow) }
 
     virtual bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row)
     {
@@ -130,9 +115,16 @@ protected:
     }
 
     virtual void AccumulateBalance(int start);
+    virtual bool IsReleased(const QUuid& lhs_node, const QUuid& rhs_node) const
+    {
+        Q_UNUSED(lhs_node)
+        Q_UNUSED(rhs_node)
+        return false;
+    };
 
     void RestartTimer(const QUuid& id);
     void FlushCaches();
+    double CalculateBalance(EntryShadow* shadow) { return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit); }
 
     EntryShadow* InsertRowsImpl(int row, const QModelIndex& parent = QModelIndex());
 

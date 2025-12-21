@@ -30,22 +30,15 @@ public:
     TableModelT(CTableModelArg& arg, TreeModelT* tree_model_t, QObject* parent = nullptr);
     ~TableModelT() override = default;
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
-    void sort(int column, Qt::SortOrder order) override;
-    Qt::ItemFlags flags(const QModelIndex& index) const override;
-
-    bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
-    bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
-
 protected:
-    bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row) override;
-    bool UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit) override;
-    // bool UpdateDebit(EntryShadow* entry_shadow, double value, int row) override;
-    // bool UpdateCredit(EntryShadow* entry_shadow, double value, int row) override;
-    bool UpdateRate(EntryShadow* entry_shadow, double value) override;
-
-    double CalculateBalance(EntryShadow* entry_shadow) override;
+    bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row) override;
+    bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit) override;
+    bool UpdateRate(EntryShadow* shadow, double value) override;
+    bool IsReleased(const QUuid& lhs_node, const QUuid& rhs_node) const override
+    {
+        return tree_model_t_->Status(lhs_node) == std::to_underlying(NodeStatus::kReleased)
+            || tree_model_t_->Status(rhs_node) == std::to_underlying(NodeStatus::kReleased);
+    };
 
 private:
     TreeModelT* tree_model_t_ {};

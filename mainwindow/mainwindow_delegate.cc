@@ -179,94 +179,94 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
 void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
 {
     auto* issued_time { new TableIssuedTime(config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
 
     auto* lhs_rate { new Double(config.rate_decimal, 0.0, kDoubleMax, kCoefficient8, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kLhsRate), lhs_rate);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kLhsRate), lhs_rate);
 
     auto* line { new Line(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kCode), line);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDescription), line);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kCode), line);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDescription), line);
 
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDocument), document);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDocument), document);
 
     auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeOneModel(node_id, table_view) };
 
     auto* node { new TableComboFilter(tree_model, filter_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kRhsNode), node);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
 
     auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDebit), value);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kCredit), value);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDebit), value);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kCredit), value);
 
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kBalance), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
 }
 
 void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
 {
     auto* issued_time { new TableIssuedTime(config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
 
     auto* unit_cost { new Double(config.rate_decimal, 0.0, kDoubleMax, kCoefficient8, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kUnitCost), unit_cost);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kLhsRate), unit_cost);
 
     auto* line { new Line(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kCode), line);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kDescription), line);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kCode), line);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDescription), line);
 
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kDocument), document);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDocument), document);
 
     auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeMultipleModel(node_id, std::to_underlying(UnitI::kExternal), table_view) };
 
     auto* node { new TableComboFilter(tree_model, filter_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kRhsNode), node);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
 
     auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kDebit), value);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kCredit), value);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDebit), value);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kCredit), value);
 
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumI::kBalance), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
 }
 
 void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
 {
     auto* issued_time { new TableIssuedTime(config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
 
     auto* unit_cost { new Double(config.rate_decimal, 0.0, kDoubleMax, kCoefficient8, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kUnitCost), unit_cost);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kLhsRate), unit_cost);
 
     auto* line { new Line(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kCode), line);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kDescription), line);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kCode), line);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDescription), line);
 
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kDocument), document);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDocument), document);
 
     auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeOneModel(node_id, table_view) };
 
     auto* node { new TableComboFilter(tree_model, filter_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kRhsNode), node);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
 
     auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kDebit), value);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kCredit), value);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDebit), value);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kCredit), value);
 
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumT::kBalance), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
 }
 
 void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) const

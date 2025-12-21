@@ -307,6 +307,7 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
     case NodeEnumO::kUpdateBy:
     case NodeEnumO::kIsSettled:
     case NodeEnumO::kSettlementId:
+    case NodeEnumO::kVersion:
         return;
     default:
         break;
@@ -385,6 +386,8 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return d_node->updated_time;
     case NodeEnumO::kUpdateBy:
         return d_node->updated_by;
+    case NodeEnumO::kVersion:
+        return d_node->version;
     case NodeEnumO::kDescription:
         return d_node->description;
     case NodeEnumO::kDirectionRule:

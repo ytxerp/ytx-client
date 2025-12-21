@@ -26,10 +26,6 @@ class SearchEntryModelI final : public SearchEntryModel {
     Q_OBJECT
 public:
     SearchEntryModelI(CSectionInfo& info, QObject* parent = nullptr);
-
-public:
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    void sort(int column, Qt::SortOrder order) override;
 };
 
 #endif // SEARCHENTRYMODELI_H

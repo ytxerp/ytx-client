@@ -33,6 +33,13 @@ struct EntryShadow {
     QStringList* document {};
     int* status {};
     QUuid* rhs_node {};
+    double* lhs_rate {};
+    double* rhs_rate {};
+
+    double* lhs_debit {};
+    double* lhs_credit {};
+    double* rhs_debit {};
+    double* rhs_credit {};
 
     double balance {};
 
@@ -63,46 +70,6 @@ struct EntryShadow {
     // Serialize shadow to JSON.
     virtual QJsonObject WriteJson() const;
     virtual ~EntryShadow() = default;
-};
-
-struct EntryShadowF final : EntryShadow {
-    double* lhs_rate {};
-    double* rhs_rate {};
-    double* lhs_debit {};
-    double* lhs_credit {};
-    double* rhs_debit {};
-    double* rhs_credit {};
-
-    void BindEntry(Entry* base, bool is_parallel) override;
-    void ResetState() override;
-    QJsonObject WriteJson() const override;
-};
-
-struct EntryShadowI final : EntryShadow {
-    double* lhs_rate {};
-    double* rhs_rate {};
-    double* lhs_debit {};
-    double* lhs_credit {};
-    double* rhs_debit {};
-    double* rhs_credit {};
-
-    void BindEntry(Entry* base, bool is_parallel) override;
-    void ResetState() override;
-    QJsonObject WriteJson() const override;
-};
-
-struct EntryShadowT final : EntryShadow {
-    double* lhs_rate {};
-    double* rhs_rate {};
-
-    double* lhs_debit {};
-    double* lhs_credit {};
-    double* rhs_debit {};
-    double* rhs_credit {};
-
-    void BindEntry(Entry* base, bool is_parallel) override;
-    void ResetState() override;
-    QJsonObject WriteJson() const override;
 };
 
 using EntryShadowList = QList<EntryShadow*>;

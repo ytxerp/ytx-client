@@ -54,6 +54,22 @@ void SearchDialog::IniConnect()
     connect(content_group_, &QButtonGroup::idClicked, this, &SearchDialog::RContentGroup);
 }
 
+void SearchDialog::TableViewDelegate(QTableView* view)
+{
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsDebit), value_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsDebit), value_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsCredit), value_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsCredit), value_);
+
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsRate), rate_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsRate), rate_);
+
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsNode), table_path_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsNode), table_path_);
+
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kStatus), check_);
+}
+
 void SearchDialog::IniContentGroup()
 {
     content_group_ = new QButtonGroup(this);

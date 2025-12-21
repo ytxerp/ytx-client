@@ -12,6 +12,12 @@ void EntryShadow::ResetState()
     rhs_node = nullptr;
     status = nullptr;
     document = nullptr;
+    lhs_rate = nullptr;
+    rhs_rate = nullptr;
+    lhs_debit = nullptr;
+    lhs_credit = nullptr;
+    rhs_debit = nullptr;
+    rhs_credit = nullptr;
 
     user_id = nullptr;
     created_time = nullptr;
@@ -40,6 +46,13 @@ void EntryShadow::BindEntry(Entry* base, bool parallel)
 
     lhs_node = parallel ? &base->lhs_node : &base->rhs_node;
     rhs_node = parallel ? &base->rhs_node : &base->lhs_node;
+    lhs_rate = is_parallel ? &entry->lhs_rate : &entry->rhs_rate;
+    lhs_debit = is_parallel ? &entry->lhs_debit : &entry->rhs_debit;
+    lhs_credit = is_parallel ? &entry->lhs_credit : &entry->rhs_credit;
+
+    rhs_rate = is_parallel ? &entry->rhs_rate : &entry->lhs_rate;
+    rhs_debit = is_parallel ? &entry->rhs_debit : &entry->lhs_debit;
+    rhs_credit = is_parallel ? &entry->rhs_credit : &entry->lhs_credit;
 
     user_id = &base->user_id;
     created_time = &base->created_time;
@@ -62,128 +75,12 @@ QJsonObject EntryShadow::WriteJson() const
     obj.insert(kDocument, document->join(kSemicolon));
     obj.insert(kStatus, *status);
     obj.insert(kRhsNode, rhs_node->toString(QUuid::WithoutBraces));
-
-    return obj;
-}
-
-void EntryShadowF::BindEntry(Entry* base, bool is_parallel)
-{
-    EntryShadow::BindEntry(base, is_parallel);
-
-    auto* entry = static_cast<EntryF*>(base);
-
-    lhs_rate = is_parallel ? &entry->lhs_rate : &entry->rhs_rate;
-    lhs_debit = is_parallel ? &entry->lhs_debit : &entry->rhs_debit;
-    lhs_credit = is_parallel ? &entry->lhs_credit : &entry->rhs_credit;
-
-    rhs_rate = is_parallel ? &entry->rhs_rate : &entry->lhs_rate;
-    rhs_debit = is_parallel ? &entry->rhs_debit : &entry->lhs_debit;
-    rhs_credit = is_parallel ? &entry->rhs_credit : &entry->lhs_credit;
-}
-
-void EntryShadowF::ResetState()
-{
-    EntryShadow::ResetState();
-
-    lhs_rate = nullptr;
-    rhs_rate = nullptr;
-    lhs_debit = nullptr;
-    lhs_credit = nullptr;
-    rhs_debit = nullptr;
-    rhs_credit = nullptr;
-}
-
-QJsonObject EntryShadowF::WriteJson() const
-{
-    QJsonObject obj = EntryShadow::WriteJson();
-
     obj.insert(kLhsRate, QString::number(*lhs_rate, 'f', kMaxNumericScale_8));
     obj.insert(kRhsRate, QString::number(*rhs_rate, 'f', kMaxNumericScale_8));
     obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', kMaxNumericScale_4));
     obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', kMaxNumericScale_4));
     obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', kMaxNumericScale_4));
     obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', kMaxNumericScale_4));
-
-    return obj;
-}
-
-void EntryShadowI::BindEntry(Entry* base, bool is_parallel)
-{
-    EntryShadow::BindEntry(base, is_parallel);
-
-    auto* entry = static_cast<EntryI*>(base);
-    lhs_rate = is_parallel ? &entry->lhs_rate : &entry->rhs_rate;
-    rhs_rate = is_parallel ? &entry->rhs_rate : &entry->lhs_rate;
-
-    lhs_debit = is_parallel ? &entry->lhs_debit : &entry->rhs_debit;
-    lhs_credit = is_parallel ? &entry->lhs_credit : &entry->rhs_credit;
-    rhs_debit = is_parallel ? &entry->rhs_debit : &entry->lhs_debit;
-    rhs_credit = is_parallel ? &entry->rhs_credit : &entry->lhs_credit;
-}
-
-void EntryShadowI::ResetState()
-{
-    EntryShadow::ResetState();
-
-    lhs_rate = nullptr;
-    rhs_rate = nullptr;
-    lhs_debit = nullptr;
-    lhs_credit = nullptr;
-    rhs_debit = nullptr;
-    rhs_credit = nullptr;
-}
-
-QJsonObject EntryShadowI::WriteJson() const
-{
-    QJsonObject obj = EntryShadow::WriteJson();
-
-    obj.insert(kLhsRate, QString::number(*lhs_rate, 'f', kMaxNumericScale_8));
-    obj.insert(kRhsRate, QString::number(*rhs_rate, 'f', kMaxNumericScale_8));
-
-    obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', kMaxNumericScale_8));
-    obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', kMaxNumericScale_8));
-    obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', kMaxNumericScale_8));
-    obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', kMaxNumericScale_8));
-
-    return obj;
-}
-
-void EntryShadowT::BindEntry(Entry* base, bool is_parallel)
-{
-    EntryShadow::BindEntry(base, is_parallel);
-
-    auto* entry = static_cast<EntryT*>(base);
-    lhs_rate = is_parallel ? &entry->lhs_rate : &entry->rhs_rate;
-    rhs_rate = is_parallel ? &entry->rhs_rate : &entry->lhs_rate;
-
-    lhs_debit = is_parallel ? &entry->lhs_debit : &entry->rhs_debit;
-    lhs_credit = is_parallel ? &entry->lhs_credit : &entry->rhs_credit;
-    rhs_debit = is_parallel ? &entry->rhs_debit : &entry->lhs_debit;
-    rhs_credit = is_parallel ? &entry->rhs_credit : &entry->lhs_credit;
-}
-
-void EntryShadowT::ResetState()
-{
-    EntryShadow::ResetState();
-
-    lhs_rate = nullptr;
-    rhs_rate = nullptr;
-    lhs_debit = nullptr;
-    lhs_credit = nullptr;
-    rhs_debit = nullptr;
-    rhs_credit = nullptr;
-}
-
-QJsonObject EntryShadowT::WriteJson() const
-{
-    QJsonObject obj = EntryShadow::WriteJson();
-
-    obj.insert(kLhsRate, QString::number(*lhs_rate, 'f', kMaxNumericScale_8));
-    obj.insert(kRhsRate, QString::number(*rhs_rate, 'f', kMaxNumericScale_8));
-    obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', kMaxNumericScale_8));
-    obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', kMaxNumericScale_8));
-    obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', kMaxNumericScale_8));
-    obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', kMaxNumericScale_8));
 
     return obj;
 }

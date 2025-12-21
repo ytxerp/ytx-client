@@ -1,9 +1,6 @@
 #include "tablemodelt.h"
 
 #include "component/constant.h"
-#include "global/collator.h"
-#include "global/entryshadowpool.h"
-#include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -13,205 +10,10 @@ TableModelT::TableModelT(CTableModelArg& arg, TreeModelT* tree_model_t, QObject*
 {
 }
 
-QVariant TableModelT::data(const QModelIndex& index, int role) const
+bool TableModelT::UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit)
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
-        return QVariant();
-
-    auto* d_shadow = DerivedPtr<EntryShadowT>(shadow_list_.at(index.row()));
-    const EntryEnumT column { index.column() };
-
-    switch (column) {
-    case EntryEnumT::kId:
-        return *d_shadow->id;
-    case EntryEnumT::kUserId:
-        return *d_shadow->user_id;
-    case EntryEnumT::kCreateTime:
-        return *d_shadow->created_time;
-    case EntryEnumT::kCreateBy:
-        return *d_shadow->created_by;
-    case EntryEnumT::kUpdateTime:
-        return *d_shadow->updated_time;
-    case EntryEnumT::kUpdateBy:
-        return *d_shadow->updated_by;
-    case EntryEnumT::kLhsNode:
-        return *d_shadow->lhs_node;
-    case EntryEnumT::kIssuedTime:
-        return *d_shadow->issued_time;
-    case EntryEnumT::kCode:
-        return *d_shadow->code;
-    case EntryEnumT::kUnitCost:
-        return *d_shadow->lhs_rate;
-    case EntryEnumT::kDescription:
-        return *d_shadow->description;
-    case EntryEnumT::kRhsNode:
-        return *d_shadow->rhs_node;
-    case EntryEnumT::kStatus:
-        return *d_shadow->status;
-    case EntryEnumT::kDocument:
-        return *d_shadow->document;
-    case EntryEnumT::kDebit:
-        return *d_shadow->lhs_debit;
-    case EntryEnumT::kCredit:
-        return *d_shadow->lhs_credit;
-    case EntryEnumT::kBalance:
-        return d_shadow->balance;
-    default:
-        return QVariant();
-    }
-}
-
-bool TableModelT::setData(const QModelIndex& index, const QVariant& value, int role)
-{
-    if (!index.isValid() || role != Qt::EditRole)
-        return false;
-
-    const EntryEnumT column { index.column() };
-    const int row { index.row() };
-
-    auto* shadow { shadow_list_.at(index.row()) };
-    auto* d_shadow = DerivedPtr<EntryShadowT>(shadow);
-
-    if (tree_model_t_->Status(lhs_id_) == std::to_underlying(NodeStatus::kReleased)
-        || tree_model_t_->Status(*shadow->rhs_node) == std::to_underlying(NodeStatus::kReleased)) {
-        qInfo() << "setData ignored: node is released.";
-        return false;
-    }
-
-    const QUuid id { *shadow->id };
-
-    switch (column) {
-    case EntryEnumT::kIssuedTime:
-        EntryUtils::UpdateShadowIssuedTime(
-            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
-        break;
-    case EntryEnumT::kCode:
-        EntryUtils::UpdateShadowField(pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [id, this]() { RestartTimer(id); });
-        break;
-    case EntryEnumT::kDocument:
-        EntryUtils::UpdateShadowDocument(
-            pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
-        break;
-    case EntryEnumT::kStatus:
-        EntryUtils::UpdateShadowField(pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
-        break;
-    case EntryEnumT::kDescription:
-        EntryUtils::UpdateShadowField(
-            pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
-        break;
-    case EntryEnumT::kUnitCost:
-        UpdateRate(d_shadow, value.toDouble());
-        break;
-    case EntryEnumT::kRhsNode:
-        UpdateLinkedNode(d_shadow, value.toUuid(), row);
-        break;
-    case EntryEnumT::kDebit:
-        UpdateNumeric(d_shadow, value.toDouble(), row, true);
-        break;
-    case EntryEnumT::kCredit:
-        UpdateNumeric(d_shadow, value.toDouble(), row, false);
-        break;
-    default:
-        return false;
-    }
-
-    emit SResizeColumnToContents(index.column());
-    return true;
-}
-
-void TableModelT::sort(int column, Qt::SortOrder order)
-{
-    assert(column >= 0 && column <= info_.entry_header.size() - 1);
-
-    const EntryEnumT e_column { column };
-
-    switch (e_column) {
-    case EntryEnumT::kId:
-    case EntryEnumT::kBalance:
-    case EntryEnumT::kUserId:
-    case EntryEnumT::kCreateTime:
-    case EntryEnumT::kCreateBy:
-    case EntryEnumT::kUpdateTime:
-    case EntryEnumT::kUpdateBy:
-        return;
-    default:
-        break;
-    }
-
-    auto Compare = [order, e_column](EntryShadow* lhs, EntryShadow* rhs) -> bool {
-        auto* d_lhs { DerivedPtr<EntryShadowT>(lhs) };
-        auto* d_rhs { DerivedPtr<EntryShadowT>(rhs) };
-
-        const auto& collator { Collator::Instance() };
-
-        switch (e_column) {
-        case EntryEnumT::kCode:
-            return (order == Qt::AscendingOrder) ? (collator.compare(*lhs->code, *rhs->code) < 0) : (collator.compare(*lhs->code, *rhs->code) > 0);
-        case EntryEnumT::kDescription:
-            return (order == Qt::AscendingOrder) ? (collator.compare(*lhs->description, *rhs->description) < 0)
-                                                 : (collator.compare(*lhs->description, *rhs->description) > 0);
-        case EntryEnumT::kIssuedTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->issued_time < *rhs->issued_time) : (*lhs->issued_time > *rhs->issued_time);
-        case EntryEnumT::kUnitCost:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->lhs_rate < *d_rhs->lhs_rate) : (*d_lhs->lhs_rate > *d_rhs->lhs_rate);
-        case EntryEnumT::kRhsNode:
-            return (order == Qt::AscendingOrder) ? (*lhs->rhs_node < *rhs->rhs_node) : (*lhs->rhs_node > *rhs->rhs_node);
-        case EntryEnumT::kStatus:
-            return (order == Qt::AscendingOrder) ? (*lhs->status < *rhs->status) : (*lhs->status > *rhs->status);
-        case EntryEnumT::kDocument:
-            return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
-        case EntryEnumT::kDebit:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->lhs_debit < *d_rhs->lhs_debit) : (*d_lhs->lhs_debit > *d_rhs->lhs_debit);
-        case EntryEnumT::kCredit:
-            return (order == Qt::AscendingOrder) ? (*d_lhs->lhs_credit < *d_rhs->lhs_credit) : (*d_lhs->lhs_credit > *d_rhs->lhs_credit);
-        default:
-            return false;
-        }
-    };
-
-    emit layoutAboutToBeChanged();
-    std::sort(shadow_list_.begin(), shadow_list_.end(), Compare);
-    emit layoutChanged();
-
-    AccumulateBalance(0);
-}
-
-Qt::ItemFlags TableModelT::flags(const QModelIndex& index) const
-{
-    if (!index.isValid())
-        return Qt::NoItemFlags;
-
-    auto flags { QAbstractItemModel::flags(index) };
-    const EntryEnumT column { index.column() };
-
-    switch (column) {
-    case EntryEnumT::kId:
-    case EntryEnumT::kBalance:
-    case EntryEnumT::kDocument:
-    case EntryEnumT::kStatus:
-        flags &= ~Qt::ItemIsEditable;
-        break;
-    default:
-        flags |= Qt::ItemIsEditable;
-        break;
-    }
-
-    const auto rhs_id { index.siblingAtColumn(std::to_underlying(EntryEnumT::kRhsNode)).data().toUuid() };
-
-    if (tree_model_t_->Status(lhs_id_) == std::to_underlying(NodeStatus::kReleased)
-        || tree_model_t_->Status(rhs_id) == std::to_underlying(NodeStatus::kReleased)) {
-        flags &= ~Qt::ItemIsEditable;
-    }
-
-    return flags;
-}
-
-bool TableModelT::UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit)
-{
-    auto* d_shadow { DerivedPtr<EntryShadowT>(entry_shadow) };
-
-    const double lhs_old_debit { *d_shadow->lhs_debit };
-    const double lhs_old_credit { *d_shadow->lhs_credit };
+    const double lhs_old_debit { *shadow->lhs_debit };
+    const double lhs_old_credit { *shadow->lhs_credit };
 
     const double old_value { is_debit ? lhs_old_debit : lhs_old_credit };
     if (FloatEqual(old_value, value))
@@ -224,26 +26,26 @@ bool TableModelT::UpdateNumeric(EntryShadow* entry_shadow, double value, int row
     // Determine which side (debit/credit) should hold the new value
     const bool to_debit { (is_debit && value > base) || (!is_debit && value <= base) };
 
-    *d_shadow->lhs_debit = to_debit ? diff : 0.0;
-    *d_shadow->lhs_credit = to_debit ? 0.0 : diff;
+    *shadow->lhs_debit = to_debit ? diff : 0.0;
+    *shadow->lhs_credit = to_debit ? 0.0 : diff;
 
     // Mirror to RHS (Debit ↔ Credit)
-    *d_shadow->rhs_debit = *d_shadow->lhs_credit;
-    *d_shadow->rhs_credit = *d_shadow->lhs_debit;
+    *shadow->rhs_debit = *shadow->lhs_credit;
+    *shadow->rhs_credit = *shadow->lhs_debit;
 
-    if (d_shadow->rhs_node->isNull())
+    if (shadow->rhs_node->isNull())
         return false;
 
-    const QUuid entry_id { *d_shadow->id };
-    const QUuid rhs_id { *d_shadow->rhs_node };
+    const QUuid entry_id { *shadow->id };
+    const QUuid rhs_id { *shadow->rhs_node };
 
     QJsonObject update {};
-    const bool is_parallel { entry_shadow->is_parallel };
+    const bool is_parallel { shadow->is_parallel };
 
-    update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*d_shadow->lhs_debit, 'f', kMaxNumericScale_8));
-    update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*d_shadow->lhs_credit, 'f', kMaxNumericScale_8));
-    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_8));
-    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_8));
+    update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*shadow->lhs_debit, 'f', kMaxNumericScale_8));
+    update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*shadow->lhs_credit, 'f', kMaxNumericScale_8));
+    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*shadow->rhs_debit, 'f', kMaxNumericScale_8));
+    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*shadow->rhs_credit, 'f', kMaxNumericScale_8));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
     WebSocket::Instance()->SendMessage(kEntryNumeric, message);
@@ -255,46 +57,44 @@ bool TableModelT::UpdateNumeric(EntryShadow* entry_shadow, double value, int row
     // The right-hand side (RHS) node must always mirror the left-hand side (LHS),
     // therefore its delta is the opposite of LHS delta.
     // This ensures overall balance (LHS + RHS = 0).
-    const double lhs_initial_delta { *d_shadow->lhs_debit - *d_shadow->lhs_credit - (lhs_old_debit - lhs_old_credit) };
+    const double lhs_initial_delta { *shadow->lhs_debit - *shadow->lhs_credit - (lhs_old_debit - lhs_old_credit) };
     const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
 
     if (has_leaf_delta) {
         AccumulateBalance(row);
 
-        emit SResizeColumnToContents(std::to_underlying(EntryEnumT::kBalance));
-        emit SUpdateBalance(rhs_id, *d_shadow->id);
+        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kBalance));
+        emit SUpdateBalance(rhs_id, *shadow->id);
     }
 
     return true;
 }
 
-bool TableModelT::UpdateRate(EntryShadow* entry_shadow, double value)
+bool TableModelT::UpdateRate(EntryShadow* shadow, double value)
 {
-    auto* d_shadow { DerivedPtr<EntryShadowT>(entry_shadow) };
-
-    const double old_unit_cost { *d_shadow->lhs_rate };
+    const double old_unit_cost { *shadow->lhs_rate };
     if (FloatEqual(old_unit_cost, value) || value < 0)
         return false;
 
-    *d_shadow->lhs_rate = value;
-    *d_shadow->rhs_rate = value;
+    *shadow->lhs_rate = value;
+    *shadow->rhs_rate = value;
 
-    if (d_shadow->rhs_node->isNull())
+    if (shadow->rhs_node->isNull())
         return false;
 
-    const QUuid entry_id { *d_shadow->id };
+    const QUuid entry_id { *shadow->id };
     QJsonObject update {};
 
     update.insert(kLhsRate, QString::number(value, 'f', kMaxNumericScale_8));
     update.insert(kRhsRate, QString::number(value, 'f', kMaxNumericScale_8));
 
-    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, d_shadow->is_parallel) };
+    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, shadow->is_parallel) };
     WebSocket::Instance()->SendMessage(kEntryRate, message);
 
     return true;
 }
 
-bool TableModelT::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row)
+bool TableModelT::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row)
 {
     if (value.isNull())
         return false;
@@ -304,14 +104,13 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
         return false;
     }
 
-    auto* d_shadow = DerivedPtr<EntryShadowT>(entry_shadow);
-    auto old_node { *d_shadow->rhs_node };
+    auto old_node { *shadow->rhs_node };
     if (old_node == value)
         return false;
 
-    *d_shadow->rhs_node = value;
+    *shadow->rhs_node = value;
 
-    const QUuid entry_id { *d_shadow->id };
+    const QUuid entry_id { *shadow->id };
 
     const QString old_node_id { old_node.toString(QUuid::WithoutBraces) };
     const QString new_node_id { value.toString(QUuid::WithoutBraces) };
@@ -319,21 +118,21 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
     QJsonObject message { JsonGen::EntryLinkedNode(section_, entry_id) };
 
     if (old_node.isNull()) {
-        message.insert(kEntry, d_shadow->WriteJson());
+        message.insert(kEntry, shadow->WriteJson());
         WebSocket::Instance()->SendMessage(kEntryInsert, message);
 
-        const double lhs_debit { *d_shadow->lhs_debit };
-        const double lhs_credit { *d_shadow->lhs_credit };
+        const double lhs_debit { *shadow->lhs_debit };
+        const double lhs_credit { *shadow->lhs_credit };
 
         const bool has_leaf_delta { std::abs(lhs_debit - lhs_credit) > kTolerance };
         if (has_leaf_delta) {
             AccumulateBalance(row);
-            emit SResizeColumnToContents(std::to_underlying(EntryEnumT::kBalance));
+            emit SResizeColumnToContents(std::to_underlying(EntryEnum::kBalance));
         }
     }
 
     if (!old_node.isNull()) {
-        const bool is_parallel { d_shadow->is_parallel };
+        const bool is_parallel { shadow->is_parallel };
         const auto field { is_parallel ? kRhsNode : kLhsNode };
 
         QJsonObject update {};
@@ -347,210 +146,6 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value
         emit SRemoveOneEntry(old_node, entry_id);
     }
 
-    emit SAppendOneEntry(value, d_shadow->entry);
+    emit SAppendOneEntry(value, shadow->entry);
     return true;
 }
-
-double TableModelT::CalculateBalance(EntryShadow* entry_shadow)
-{
-    auto* d_shadow { DerivedPtr<EntryShadowT>(entry_shadow) };
-    return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*d_shadow->lhs_debit - *d_shadow->lhs_credit);
-}
-
-bool TableModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
-{
-    assert(row >= 0 && row <= rowCount(parent));
-    if (tree_model_t_->Status(lhs_id_) == std::to_underlying(NodeStatus::kReleased))
-        return false;
-
-    auto* entry_shadow { InsertRowsImpl(row, parent) };
-    *entry_shadow->issued_time = QDateTime::currentDateTimeUtc();
-
-    if (shadow_list_.size() == 1)
-        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
-
-    emit SInsertEntry(entry_shadow->entry);
-    return true;
-}
-
-bool TableModelT::removeRows(int row, int /*count*/, const QModelIndex& parent)
-{
-    assert(row >= 0 && row <= rowCount(parent) - 1);
-
-    auto* d_shadow { DerivedPtr<EntryShadowT>(shadow_list_.at(row)) };
-    const auto rhs_node_id { *d_shadow->rhs_node };
-
-    if (tree_model_t_->Status(lhs_id_) == std::to_underlying(NodeStatus::kReleased)
-        || tree_model_t_->Status(rhs_node_id) == std::to_underlying(NodeStatus::kReleased)) {
-        qInfo() << "removeRows ignored: node is released.";
-        return false;
-    }
-
-    beginRemoveRows(parent, row, row);
-    shadow_list_.removeAt(row);
-    endRemoveRows();
-
-    const auto entry_id { *d_shadow->id };
-
-    if (!rhs_node_id.isNull()) {
-        QJsonObject message { JsonGen::EntryRemove(section_, entry_id) };
-        WebSocket::Instance()->SendMessage(kEntryRemove, message);
-
-        const double lhs_initial_delta { *d_shadow->lhs_credit - *d_shadow->lhs_debit };
-        const bool has_delta { std::abs(lhs_initial_delta) > kTolerance };
-
-        if (has_delta) {
-            AccumulateBalance(row);
-        }
-
-        emit SRemoveOneEntry(rhs_node_id, entry_id);
-    }
-
-    EntryShadowPool::Instance().Recycle(d_shadow, section_);
-    emit SRemoveEntry(entry_id);
-    return true;
-}
-
-#if 0
-bool LeafModelT::UpdateDebit(EntryShadow* entry_shadow, double value, int row)
-{
-    auto* d_shadow { DerivedPtr<EntryShadowT>(entry_shadow) };
-
-    const double lhs_old_debit { *d_shadow->lhs_debit };
-    if (FloatEqual(lhs_old_debit, value))
-        return false;
-
-    const double lhs_old_credit { *d_shadow->lhs_credit };
-
-    const double abs { qAbs(value - lhs_old_credit) };
-    *d_shadow->lhs_debit = (value > lhs_old_credit) ? abs : 0;
-    *d_shadow->lhs_credit = (value <= lhs_old_credit) ? abs : 0;
-
-    *d_shadow->rhs_debit = *d_shadow->lhs_credit;
-    *d_shadow->rhs_credit = *d_shadow->lhs_debit;
-
-    if (d_shadow->rhs_node->isNull())
-        return false;
-
-    const QUuid entry_id { *d_shadow->id };
-    const QUuid rhs_id { *d_shadow->rhs_node };
-
-    QJsonObject update {};
-    const bool is_parallel { entry_shadow->is_parallel };
-
-    update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*d_shadow->lhs_debit, 'f', kMaxNumericScale_4));
-    update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*d_shadow->lhs_credit, 'f', kMaxNumericScale_4));
-    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_4));
-    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
-
-    QJsonObject message {};
-    message.insert(kSection, std::to_underlying(section_));
-    message.insert(kSessionId, QString());
-    message.insert(kCache, update);
-    message.insert(kIsParallel, is_parallel);
-    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
-
-    const double unit_cost { *d_shadow->unit_cost };
-
-    const double lhs_initial_delta { *d_shadow->lhs_debit - *d_shadow->lhs_credit - (lhs_old_debit - lhs_old_credit) };
-    const double lhs_final_delta { unit_cost * lhs_initial_delta };
-
-    const double rhs_initial_delta { -lhs_initial_delta };
-    const double rhs_final_delta { unit_cost * rhs_initial_delta };
-
-    const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
-
-    if (has_leaf_delta) {
-        QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
-        QJsonObject rhs_delta { JsonGen::NodeDelta(rhs_id, rhs_initial_delta, rhs_final_delta) };
-
-        message.insert(kLhsDelta, lhs_delta);
-        message.insert(kRhsDelta, rhs_delta);
-    }
-
-    WebSocket::Instance()->SendMessage(kEntryNumeric, message);
-
-    if (has_leaf_delta) {
-        AccumulateBalance(row);
-
-        emit SResizeColumnToContents(std::to_underlying(EntryEnumT::kBalance));
-        emit SUpdateBalance(rhs_id, *d_shadow->id);
-
-        emit SSyncDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
-        emit SSyncDelta(rhs_id, rhs_initial_delta, rhs_final_delta);
-    }
-
-    return true;
-}
-
-bool LeafModelT::UpdateCredit(EntryShadow* entry_shadow, double value, int row)
-{
-    auto* d_shadow { DerivedPtr<EntryShadowT>(entry_shadow) };
-
-    double lhs_old_credit { *d_shadow->lhs_credit };
-    if (FloatEqual(lhs_old_credit, value))
-        return false;
-
-    const double lhs_old_debit { *d_shadow->lhs_debit };
-
-    const double abs { qAbs(value - lhs_old_debit) };
-    *d_shadow->lhs_debit = (value > lhs_old_debit) ? 0 : abs;
-    *d_shadow->lhs_credit = (value <= lhs_old_debit) ? 0 : abs;
-
-    *d_shadow->rhs_debit = *d_shadow->lhs_credit;
-    *d_shadow->rhs_credit = *d_shadow->lhs_debit;
-
-    if (d_shadow->rhs_node->isNull())
-        return false;
-
-    const QUuid entry_id { *d_shadow->id };
-    const QUuid rhs_id { *d_shadow->rhs_node };
-
-    QJsonObject update {};
-    const bool is_parallel { entry_shadow->is_parallel };
-
-    update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*d_shadow->lhs_debit, 'f', kMaxNumericScale_4));
-    update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*d_shadow->lhs_credit, 'f', kMaxNumericScale_4));
-    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*d_shadow->rhs_debit, 'f', kMaxNumericScale_4));
-    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*d_shadow->rhs_credit, 'f', kMaxNumericScale_4));
-
-    QJsonObject message {};
-    message.insert(kSection, std::to_underlying(section_));
-    message.insert(kSessionId, QString());
-    message.insert(kCache, update);
-    message.insert(kIsParallel, is_parallel);
-    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
-
-    const double unit_cost { *d_shadow->unit_cost };
-
-    const double lhs_initial_delta { *d_shadow->lhs_debit - *d_shadow->lhs_credit - (lhs_old_debit - lhs_old_credit) };
-    const double lhs_final_delta { unit_cost * lhs_initial_delta };
-
-    const double rhs_initial_delta { -lhs_initial_delta };
-    const double rhs_final_delta { unit_cost * rhs_initial_delta };
-
-    const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
-
-    if (has_leaf_delta) {
-        QJsonObject lhs_delta { JsonGen::NodeDelta(lhs_id_, lhs_initial_delta, lhs_final_delta) };
-        QJsonObject rhs_delta { JsonGen::NodeDelta(rhs_id, rhs_initial_delta, rhs_final_delta) };
-
-        message.insert(kLhsDelta, lhs_delta);
-        message.insert(kRhsDelta, rhs_delta);
-    }
-
-    WebSocket::Instance()->SendMessage(kEntryNumeric, message);
-
-    if (has_leaf_delta) {
-        AccumulateBalance(row);
-
-        emit SResizeColumnToContents(std::to_underlying(EntryEnumT::kBalance));
-        emit SUpdateBalance(rhs_id, *d_shadow->id);
-
-        emit SSyncDelta(lhs_id_, lhs_initial_delta, lhs_final_delta);
-        emit SSyncDelta(rhs_id, rhs_initial_delta, rhs_final_delta);
-    }
-
-    return true;
-}
-#endif

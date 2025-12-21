@@ -33,6 +33,13 @@ struct Entry {
     QStringList document {};
     int status {};
     QUuid rhs_node {};
+    double lhs_rate {};
+    double rhs_rate {};
+
+    double lhs_debit {};
+    double lhs_credit {};
+    double rhs_debit {};
+    double rhs_credit {};
 
     QUuid user_id {};
     QDateTime created_time {};
@@ -43,47 +50,8 @@ struct Entry {
 
     virtual void ResetState();
     virtual void ReadJson(const QJsonObject& object);
-    virtual QJsonObject WriteJson() const;
+    virtual QJsonObject WriteJson() const { return QJsonObject(); }
     virtual ~Entry() = default;
-};
-
-struct EntryF final : Entry {
-    double lhs_rate { 1.0 };
-    double rhs_rate { 1.0 };
-
-    double lhs_debit {};
-    double lhs_credit {};
-    double rhs_debit {};
-    double rhs_credit {};
-
-    void ResetState() override;
-    void ReadJson(const QJsonObject& object) override;
-};
-
-struct EntryI final : Entry {
-    double lhs_rate {};
-    double rhs_rate {};
-
-    double lhs_debit {};
-    double lhs_credit {};
-    double rhs_debit {};
-    double rhs_credit {};
-
-    void ResetState() override;
-    void ReadJson(const QJsonObject& object) override;
-};
-
-struct EntryT final : Entry {
-    double lhs_rate {};
-    double rhs_rate {};
-
-    double lhs_debit {};
-    double lhs_credit {};
-    double rhs_debit {};
-    double rhs_credit {};
-
-    void ResetState() override;
-    void ReadJson(const QJsonObject& object) override;
 };
 
 struct EntryP final : Entry {

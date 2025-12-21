@@ -333,6 +333,11 @@ void MainWindow::SetIcon() const
 
 void MainWindow::on_actionInsertNode_triggered()
 {
+    auto* widget { dynamic_cast<TreeWidgetSettlement*>(ui->tabWidget->currentWidget()) };
+    if (widget) {
+        return;
+    }
+
     assert(sc_->tree_widget);
 
     auto current_index { sc_->tree_view->currentIndex() };
@@ -347,6 +352,11 @@ void MainWindow::on_actionInsertNode_triggered()
 
 void MainWindow::on_actionAppendNode_triggered()
 {
+    auto* widget { dynamic_cast<TreeWidgetSettlement*>(ui->tabWidget->currentWidget()) };
+    if (widget) {
+        return;
+    }
+
     assert(sc_->tree_widget);
 
     auto parent_index { sc_->tree_view->currentIndex() };

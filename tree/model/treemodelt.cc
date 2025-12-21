@@ -40,6 +40,8 @@ QVariant TreeModelT::data(const QModelIndex& index, int role) const
         return d_node->updated_time;
     case NodeEnumT::kUpdateBy:
         return d_node->updated_by;
+    case NodeEnumT::kVersion:
+        return d_node->version;
     case NodeEnumT::kCode:
         return d_node->code;
     case NodeEnumT::kDescription:
@@ -135,6 +137,7 @@ void TreeModelT::sort(int column, Qt::SortOrder order)
     case NodeEnumT::kCreateBy:
     case NodeEnumT::kUpdateTime:
     case NodeEnumT::kUpdateBy:
+    case NodeEnumT::kVersion:
         return;
     default:
         break;
