@@ -862,20 +862,26 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
     const auto ancestor { QUuid(path_obj.value(kAncestor).toString()) };
     const auto node_id { QUuid(node_obj.value(kId).toString()) };
     const QJsonObject meta { obj.value(kMeta).toObject() };
+    const int version { node_obj.value(kVersion).toInt() };
 
     auto* base_model { tree_model_hash_.value(section).data() };
 
     auto* order_model = static_cast<TreeModelO*>(base_model);
     assert(order_model != nullptr);
 
-    base_model->InsertNode(ancestor, node_obj);
+    if (session_id != session_id_) {
+        base_model->InsertNode(ancestor, node_obj);
+    }
+
+    if (session_id == session_id_) {
+        order_model->InsertVersion(node_id, version);
+
+        if (is_release)
+            emit SOrderReleased(section, node_id, version);
+    }
 
     if (is_release)
         order_model->RNodeStatus(node_id, NodeStatus::kReleased);
-
-    if (session_id == session_id_ && is_release) {
-        emit SOrderReleased(section, node_id);
-    }
 
     order_model->InsertMeta(descendant, meta);
 }
@@ -896,14 +902,15 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
 
     const auto node_update { obj.value(kNodeUpdate).toObject() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
+    const int version { node_update.value(kVersion).toInt() };
 
     order_model->SyncNode(node_id, node_update);
-    order_model->RNodeStatus(node_id, NodeStatus::kRecalled);
 
     if (session_id == session_id_) {
-        emit SOrderRecalled(section, node_id);
+        emit SOrderRecalled(section, node_id, version);
     }
 
+    order_model->RNodeStatus(node_id, NodeStatus::kRecalled);
     order_model->UpdateMeta(node_id, meta);
 }
 

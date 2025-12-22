@@ -107,6 +107,7 @@ public:
 
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
     void InsertMeta(const QUuid& node_id, const QJsonObject& meta);
+    void InsertVersion(const QUuid& node_id, int version);
 
     void SyncNode(const QUuid& node_id, const QJsonObject& update);
     void UpdateMeta(const QUuid& node_id, const QJsonObject& meta);

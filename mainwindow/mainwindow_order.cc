@@ -80,25 +80,25 @@ void MainWindow::on_actionNewGroup_triggered()
     dialog->exec();
 }
 
-void MainWindow::ROrderReleased(Section section, const QUuid& node_id)
+void MainWindow::ROrderReleased(Section section, const QUuid& node_id, int version)
 {
     auto* sc { GetSectionContex(section) };
 
     auto widget { sc->table_wgt_hash.value(node_id, nullptr) };
     if (widget) {
         auto* d_widget { static_cast<TableWidgetO*>(widget.data()) };
-        d_widget->ReleaseSucceeded();
+        d_widget->ReleaseSucceeded(version);
     }
 }
 
-void MainWindow::ROrderRecalled(Section section, const QUuid& node_id)
+void MainWindow::ROrderRecalled(Section section, const QUuid& node_id, int version)
 {
     auto* sc { GetSectionContex(section) };
 
     auto widget { sc->table_wgt_hash.value(node_id, nullptr) };
     if (widget) {
         auto* d_widget { static_cast<TableWidgetO*>(widget.data()) };
-        d_widget->RecallSucceeded();
+        d_widget->RecallSucceeded(version);
     }
 }
 
@@ -108,7 +108,7 @@ void MainWindow::RInvalidOperation()
         this, tr("Invalid Operation"), tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."));
 }
 
-void MainWindow::InsertNodeO(Node* base_node)
+void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row)
 {
     // Extract frequently used shortcuts
     auto& section_config = sc_->section_config;
@@ -145,6 +145,16 @@ void MainWindow::InsertNodeO(Node* base_node)
         false,
     };
     auto* widget { new TableWidgetO(order_arg, this) };
+
+    connect(
+        widget, &TableWidgetO::SInsertOrder, this,
+        [=, this]() {
+            if (tree_model_o->InsertNode(row, parent, node)) {
+                auto index { tree_model_o->index(row, 0, parent) };
+                sc_->tree_view->setCurrentIndex(index);
+            }
+        },
+        Qt::SingleShotConnection);
 
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, QString()) };

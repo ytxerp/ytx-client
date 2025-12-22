@@ -166,6 +166,15 @@ void TreeModel::InsertMeta(const QUuid& node_id, const QJsonObject& meta)
     InsertMeta(node, meta);
 }
 
+void TreeModel::InsertVersion(const QUuid& node_id, int version)
+{
+    auto* node = GetNode(node_id);
+    if (!node)
+        return;
+
+    node->version = version;
+}
+
 void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
 {
     if (update.isEmpty()) {

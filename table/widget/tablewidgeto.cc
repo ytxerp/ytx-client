@@ -51,18 +51,22 @@ TableWidgetO::~TableWidgetO()
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
-void TableWidgetO::ReleaseSucceeded()
+void TableWidgetO::ReleaseSucceeded(int version)
 {
     ui->pBtnPrint->setFocus();
     ui->pBtnPrint->setDefault(true);
 
+    tmp_node_.version = version;
+
     LockWidgets(NodeStatus::kReleased);
 }
 
-void TableWidgetO::RecallSucceeded()
+void TableWidgetO::RecallSucceeded(int version)
 {
     ui->pBtnRelease->setFocus();
     ui->pBtnRelease->setDefault(true);
+
+    tmp_node_.version = version;
 
     LockWidgets(NodeStatus::kRecalled);
 }
@@ -472,10 +476,11 @@ void TableWidgetO::SaveOrder()
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_message);
 
-        is_persisted_ = true;
-
         ui->rBtnRO->setEnabled(false);
         ui->rBtnTO->setEnabled(false);
+
+        is_persisted_ = true;
+        emit SInsertOrder();
     }
 
     node_modified_ = false;
@@ -509,9 +514,11 @@ void TableWidgetO::on_pBtnRelease_clicked()
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_message);
 
-        is_persisted_ = true;
         ui->rBtnRO->setEnabled(false);
         ui->rBtnTO->setEnabled(false);
+
+        is_persisted_ = true;
+        emit SInsertOrder();
     }
 
     node_modified_ = false;

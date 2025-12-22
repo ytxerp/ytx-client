@@ -64,6 +64,9 @@ signals:
     // send to MainWindow
     void SSyncPartner(const QUuid& node_id, const QUuid& value);
 
+    // send to its lambda
+    void SInsertOrder();
+
 public slots:
     // receive from TableModelOrder
     void RSyncDeltaO(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
@@ -72,8 +75,8 @@ public:
     TableModel* Model() const override { return table_model_order_; }
     QTableView* View() const override;
 
-    void ReleaseSucceeded();
-    void RecallSucceeded();
+    void ReleaseSucceeded(int version);
+    void RecallSucceeded(int version);
 
     bool HasUnsavedData() const;
     void SaveOrder();

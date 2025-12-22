@@ -101,7 +101,7 @@ void MainWindow::InsertNodeFunction(const QModelIndex& parent, const QUuid& pare
     switch (start_) {
     case Section::kSale:
     case Section::kPurchase:
-        InsertNodeO(node);
+        InsertNodeO(node, parent, row);
         break;
     default:
         InsertNodeFIPT(node, parent, parent_id, row);
