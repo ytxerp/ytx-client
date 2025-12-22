@@ -356,6 +356,18 @@ QScrollBar::sub-line:horizontal {
     subcontrol-origin: margin;
 }
 
+QWidget#TreeWidgetF QScrollBar::handle:horizontal, QWidget#TreeWidgetIT QScrollBar::handle:horizontal, QWidget#TableWidgetO QScrollBar::handle:horizontal {
+    border-bottom: 1px solid #657B83;
+}
+
+QWidget#TreeWidgetF QScrollBar::add-line:horizontal, QWidget#TreeWidgetIT QScrollBar::add-line:horizontal, QWidget#TableWidgetO QScrollBar::add-line:horizontal {
+    border-bottom: 1px solid #657B83;
+}
+
+QWidget#TreeWidgetF QScrollBar::sub-line:horizontal, QWidget#TreeWidgetIT QScrollBar::sub-line:horizontal, QWidget#TableWidgetO QScrollBar::sub-line:horizontal {
+    border-bottom: 1px solid #657B83;
+}
+
 QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
     width: 8px;
     height: 8px;
@@ -403,18 +415,6 @@ QScrollBar::add-line:vertical {
 QTableView::corner, QTreeView::corner {
     border-left: 1px solid #657B83;
     border-top: 1px solid #657B83;
-}
-
-/*-------------------------------------QTreeView#treeView----------------------------------------------*/
-
-QTreeView#treeView QScrollBar::handle:horizontal,
-QTreeView#treeView QScrollBar::add-line:horizontal,
-QTreeView#treeView QScrollBar::sub-line:horizontal
-{
-    border-bottom: 1px solid #657B83;
-}
-
-QTreeView#treeView::corner {
     border-bottom: 1px solid #657B83;
 }
 
