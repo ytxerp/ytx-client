@@ -125,6 +125,8 @@ private slots:
     void RSettlementValidationFailed();
 
     void ROrderReleased(Section section, const QUuid& node_id);
+    void ROrderRecalled(Section section, const QUuid& node_id);
+    void RInvalidOperation();
 
     void RLeafRemoveDenied(const QJsonObject& obj);
     inline void RNodeRemoveConfirmed(const QUuid& node_id) { node_pending_removal_.remove(node_id); }

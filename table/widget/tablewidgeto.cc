@@ -59,7 +59,13 @@ void TableWidgetO::ReleaseSucceeded()
     LockWidgets(NodeStatus::kReleased);
 }
 
-void TableWidgetO::RecallSucceeded() { LockWidgets(NodeStatus::kRecalled); }
+void TableWidgetO::RecallSucceeded()
+{
+    ui->pBtnRelease->setFocus();
+    ui->pBtnRelease->setDefault(true);
+
+    LockWidgets(NodeStatus::kRecalled);
+}
 
 bool TableWidgetO::HasUnsavedData() const { return node_modified_ || table_model_order_->HasUnsavedData(); }
 
@@ -399,6 +405,8 @@ void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
     if (pending_update_.contains(kUnit))
         pending_update_.insert(kFinalTotal, QString::number(tmp_node_.final_total, 'f', kMaxNumericScale_4));
 
+    pending_update_.insert(kVersion, tmp_node_.version);
+
     order_message.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
     order_message.insert(kPartnerId, tmp_node_.partner_id.toString(QUuid::WithoutBraces));
     order_message.insert(kNodeUpdate, pending_update_);
@@ -417,7 +425,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
     tmp_node_.status = std::to_underlying(NodeStatus::kRecalled);
 
     pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
-    WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_id_, tmp_node_.version, pending_update_));
+    WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_id_, pending_update_));
 }
 
 bool TableWidgetO::ValidateOrder()

@@ -180,6 +180,7 @@ void WebSocket::InitHandler()
     handler_obj_[kPartnerUpdated] = [this](const QJsonObject& obj) { UpdatePartner(obj); };
     handler_obj_[kSettlementInsertValidationFailed] = [this](const QJsonObject& obj) { SettlementValidationFailed(obj); };
     handler_obj_[kSettlementUpdateValidationFailed] = [this](const QJsonObject& obj) { SettlementValidationFailed(obj); };
+    handler_obj_[kInvalidOperation] = [this](const QJsonObject& /*obj*/) { NotifyInvalidOperation(); };
 
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
@@ -314,6 +315,8 @@ void WebSocket::NotifyWorkspaceAccessPending(const QJsonObject& obj)
 
     emit SWorkspaceAccessPending(email, workspace);
 }
+
+void WebSocket::NotifyInvalidOperation() { emit SInvalidOperation(); }
 
 void WebSocket::NotifyRegisterResult(const QJsonObject& obj)
 {
@@ -881,7 +884,6 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     CString session_id { obj.value(kSessionId).toString() };
-    const int version { obj.value(kVersion).toInt() };
 
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     auto* base_model { tree_model_hash_.value(section).data() };
@@ -895,9 +897,11 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
     const auto node_update { obj.value(kNodeUpdate).toObject() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
 
-    if (session_id != session_id_) {
-        order_model->SyncNode(node_id, node_update);
-        order_model->RNodeStatus(node_id, NodeStatus::kRecalled);
+    order_model->SyncNode(node_id, node_update);
+    order_model->RNodeStatus(node_id, NodeStatus::kRecalled);
+
+    if (session_id == session_id_) {
+        emit SOrderRecalled(section, node_id);
     }
 
     order_model->UpdateMeta(node_id, meta);

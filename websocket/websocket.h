@@ -79,6 +79,8 @@ signals:
     void SSettlementUpdated(const QJsonObject& obj);
     void SSettlementValidationFailed();
     void SOrderReleased(Section section, const QUuid& node_id);
+    void SOrderRecalled(Section section, const QUuid& node_id);
+    void SInvalidOperation();
 
     void SConnectionRefused();
 
@@ -121,6 +123,7 @@ private:
     void NotifyLeafRemoveDenied(const QJsonObject& obj);
     void NotifyUpdateDefaultUnitFailure(const QJsonObject& obj);
     void NotifyWorkspaceAccessPending(const QJsonObject& obj);
+    void NotifyInvalidOperation();
 
 private:
     void ApplySharedConfig(const QJsonArray& arr);

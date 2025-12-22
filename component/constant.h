@@ -360,6 +360,7 @@ inline const QString kUpdatedBy = QStringLiteral("updated_by");
 inline const QString kVersion = QStringLiteral("version");
 inline const QString kAncestor = QStringLiteral("ancestor");
 inline const QString kDescendant = QStringLiteral("descendant");
+inline const QString kInvalidOperation = QStringLiteral("invalid_operation");
 
 // Others
 inline const QString kYTX = QStringLiteral("ytx");

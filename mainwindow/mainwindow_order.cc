@@ -1,3 +1,5 @@
+#include <QMessageBox>
+
 #include "dialog/editnodenameo.h"
 #include "dialog/insertnode/insertnodebranch.h"
 #include "global/nodepool.h"
@@ -87,6 +89,23 @@ void MainWindow::ROrderReleased(Section section, const QUuid& node_id)
         auto* d_widget { static_cast<TableWidgetO*>(widget.data()) };
         d_widget->ReleaseSucceeded();
     }
+}
+
+void MainWindow::ROrderRecalled(Section section, const QUuid& node_id)
+{
+    auto* sc { GetSectionContex(section) };
+
+    auto widget { sc->table_wgt_hash.value(node_id, nullptr) };
+    if (widget) {
+        auto* d_widget { static_cast<TableWidgetO*>(widget.data()) };
+        d_widget->RecallSucceeded();
+    }
+}
+
+void MainWindow::RInvalidOperation()
+{
+    QMessageBox::information(
+        this, tr("Invalid Operation"), tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."));
 }
 
 void MainWindow::InsertNodeO(Node* base_node)
