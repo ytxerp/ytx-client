@@ -115,7 +115,6 @@ private:
     void BuildNodeInsert(QJsonObject& order_message);
     void BuildNodeUpdate(QJsonObject& order_message);
 
-    void ResetCache();
     bool ValidateOrder();
 
 private:

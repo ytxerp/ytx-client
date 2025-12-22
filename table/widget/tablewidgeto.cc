@@ -416,8 +416,6 @@ void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
     order_message.insert(kNodeUpdate, pending_update_);
 }
 
-void TableWidgetO::ResetCache() { pending_update_ = QJsonObject(); }
-
 void TableWidgetO::on_pBtnRecall_clicked()
 {
     if (!ValidateOrder())
@@ -432,6 +430,8 @@ void TableWidgetO::on_pBtnRecall_clicked()
     pending_update_.insert(kVersion, tmp_node_.version);
 
     WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_id_, pending_update_));
+
+    pending_update_ = QJsonObject();
 }
 
 bool TableWidgetO::ValidateOrder()
@@ -469,7 +469,7 @@ void TableWidgetO::SaveOrder()
         BuildNodeUpdate(order_message);
         WebSocket::Instance()->SendMessage(kOrderUpdateSaved, order_message);
 
-        ResetCache();
+        pending_update_ = QJsonObject();
     } else {
         *node_ = tmp_node_;
 
@@ -507,7 +507,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
         WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_message);
 
-        ResetCache();
+        pending_update_ = QJsonObject();
     } else {
         *node_ = tmp_node_;
 
