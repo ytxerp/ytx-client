@@ -40,7 +40,7 @@ signals:
     void SUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
 
 public:
-    explicit TableWidgetSettlement(TreeModel* tree_model_partner, TableModelSettlement* model, Settlement* settlement, bool is_persisted, Section section,
+    explicit TableWidgetSettlement(TreeModel* tree_model_partner, TableModelSettlement* model, const Settlement& settlement, bool is_persisted, Section section,
         CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent = nullptr);
     ~TableWidgetSettlement();
 
@@ -71,8 +71,7 @@ private:
 private:
     Ui::TableWidgetSettlement* ui;
 
-    Settlement* settlement_ {};
-    Settlement tmp_settlement_ {};
+    Settlement settlement_ {};
     TableModelSettlement* model_ {};
 
     TreeModel* tree_model_partner_ {};

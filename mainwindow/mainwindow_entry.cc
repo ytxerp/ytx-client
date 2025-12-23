@@ -1,5 +1,4 @@
 #include "billing/settlement/treewidgetsettlement.h"
-#include "global/resourcepool.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
 #include "table/model/tablemodelf.h"
@@ -18,10 +17,10 @@ void MainWindow::on_actionAppendEntry_triggered()
         if (widget) {
             const QUuid settlement_widget_id { widget->WidgetId() };
 
-            auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
+            Settlement settlement {};
 
-            settlement->issued_time = QDateTime::currentDateTimeUtc();
-            settlement->id = QUuid::createUuidV7();
+            settlement.issued_time = QDateTime::currentDateTimeUtc();
+            settlement.id = QUuid::createUuidV7();
 
             SettlementItemTab(settlement_widget_id, settlement, false);
             return;

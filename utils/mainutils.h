@@ -38,7 +38,7 @@ inline QString ResourceFile()
 #elif defined(Q_OS_MACOS)
     path = QCoreApplication::applicationDirPath() + "/../Resources/resource.brc";
 
-#if 0
+#if 1
     QString command { QDir::homePath() + "/Qt/6.9.3/macos/libexec/rcc" + " -binary " + QDir::homePath()
         + "/Documents/GitHub/ytx-client/resource/resource.qrc -o " + path };
 
