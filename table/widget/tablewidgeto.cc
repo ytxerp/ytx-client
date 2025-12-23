@@ -3,17 +3,15 @@
 #include <QMessageBox>
 
 #include "component/signalblocker.h"
-#include "global/nodepool.h"
 #include "global/printhub.h"
 #include "ui_tablewidgeto.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TableWidgetO::TableWidgetO(COrderWidgetArg& arg, QWidget* parent)
+TableWidgetO::TableWidgetO(COrderWidgetArg& arg, const NodeO& node, QWidget* parent)
     : TableWidget(parent)
     , ui(new Ui::TableWidgetO)
-    , node_ { arg.node }
-    , tmp_node_ { *node_ }
+    , tmp_node_ { node }
     , table_model_order_ { qobject_cast<TableModelO*>(arg.table_model) }
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
@@ -40,14 +38,7 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, QWidget* parent)
     LockWidgets(NodeStatus(tmp_node_.status));
 }
 
-TableWidgetO::~TableWidgetO()
-{
-    if (!is_persisted_) {
-        NodePool::Instance().Recycle(node_, section_);
-    }
-
-    delete ui;
-}
+TableWidgetO::~TableWidgetO() { delete ui; }
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
@@ -56,6 +47,7 @@ void TableWidgetO::ReleaseSucceeded(int version)
     ui->pBtnPrint->setFocus();
     ui->pBtnPrint->setDefault(true);
 
+    is_persisted_ = true;
     tmp_node_.version = version;
 
     LockWidgets(NodeStatus::kReleased);
@@ -71,7 +63,11 @@ void TableWidgetO::RecallSucceeded(int version)
     LockWidgets(NodeStatus::kRecalled);
 }
 
-void TableWidgetO::SaveSucceeded(int version) { tmp_node_.version = version; }
+void TableWidgetO::SaveSucceeded(int version)
+{
+    is_persisted_ = true;
+    tmp_node_.version = version;
+}
 
 bool TableWidgetO::HasUnsavedData() const { return node_modified_ || table_model_order_->HasUnsavedData(); }
 
@@ -438,19 +434,8 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
 bool TableWidgetO::ValidateOrder()
 {
-    if (node_->id.isNull()) {
-        QMessageBox::information(this, tr("Order Deleted"), tr("This order was deleted by another client and cannot be performed."));
-        return false;
-    }
-
     if (tmp_node_.partner_id.isNull()) {
         QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before performing this action."));
-        return false;
-    }
-
-    if (tmp_node_.version != node_->version) {
-        QMessageBox::information(
-            this, tr("Invalid Operation"), tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."));
         return false;
     }
 
@@ -474,16 +459,11 @@ void TableWidgetO::SaveOrder()
 
         pending_update_ = QJsonObject();
     } else {
-        *node_ = tmp_node_;
-
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_message);
 
         ui->rBtnRO->setEnabled(false);
         ui->rBtnTO->setEnabled(false);
-
-        is_persisted_ = true;
-        emit SInsertOrder();
     }
 
     node_modified_ = false;
@@ -512,16 +492,11 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
         pending_update_ = QJsonObject();
     } else {
-        *node_ = tmp_node_;
-
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_message);
 
         ui->rBtnRO->setEnabled(false);
         ui->rBtnTO->setEnabled(false);
-
-        is_persisted_ = true;
-        emit SInsertOrder();
     }
 
     node_modified_ = false;

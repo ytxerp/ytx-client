@@ -208,9 +208,9 @@ private:
     void TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
 
-    void InsertNodeFunction(const QModelIndex& parent, const QUuid& parent_id, int row);
-    void InsertNodeFIPT(Node* node, const QModelIndex& parent, const QUuid& parent_id, int row); // Finance Inventory Partner Task
-    void InsertNodeO(Node* base_node, const QModelIndex& parent, int row); // Purchase Sales
+    void InsertNodeFunction(Node* parent_node, int row);
+    void InsertNodeFIPT(Node* parent_node, int row); // Finance Inventory Partner Task
+    void InsertNodeO(Node* parent_node); // Purchase Sales
 
     void RemoveNode();
     void RemoveEntry(TableWidget* widget);
@@ -246,6 +246,8 @@ private:
     void InitSystemTray();
 
     void SetRemoveShortcut();
+    QStringList ChildrenName(const Node* node) const;
+    QSet<QUuid> LeafChildrenId(const Node* node) const;
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
     inline bool IsTableWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kTableWidgetFIPT); }

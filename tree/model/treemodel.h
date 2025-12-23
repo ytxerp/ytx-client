@@ -107,7 +107,6 @@ public:
 
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
     void InsertMeta(const QUuid& node_id, const QJsonObject& meta);
-    void InsertVersion(const QUuid& node_id, int version);
 
     void SyncNode(const QUuid& node_id, const QJsonObject& update);
     void UpdateMeta(const QUuid& node_id, const QJsonObject& meta);
@@ -126,9 +125,6 @@ public:
     bool Rule(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::direction_rule); }
     QString Name(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &Node::name); }
     QString Path(const QUuid& node_id) const;
-
-    QStringList ChildrenName(const QUuid& parent_id) const;
-    QSet<QUuid> ChildrenId(const QUuid& parent_id) const;
 
     inline ItemModel* LeafModel() const { return leaf_path_model_; }
     inline CUuidString& LeafPath() const { return leaf_path_; }
@@ -162,7 +158,7 @@ public:
     QSortFilterProxyModel* ExcludeOneModel(const QUuid& node_id, QObject* parent);
 
     // virtual functions
-    virtual bool InsertNode(int row, const QModelIndex& parent, Node* node);
+    virtual bool InsertNode(Node* parent_node, Node* node, int row);
     virtual void UpdateName(const QUuid& node_id, CString& new_name);
     virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
 
@@ -204,7 +200,7 @@ protected:
     void UpdateMeta(Node* node, const QJsonObject& meta);
     void InsertMeta(Node* node, const QJsonObject& meta);
 
-    void InsertImpl(Node* parent, int row, Node* node);
+    void InsertImpl(Node* parent_node, Node* node, int row);
     void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
 
     QSet<QUuid> SyncDeltaImpl(const QUuid& node_id, double initial_delta, double final_delta);

@@ -59,18 +59,15 @@ void TreeModel::SyncTotalArray(const QJsonArray& total_array)
     RefreshAffectedTotal(affected_ids);
 }
 
-bool TreeModel::InsertNode(int row, const QModelIndex& parent, Node* node)
+bool TreeModel::InsertNode(Node* parent_node, Node* node, int row)
 {
-    if (row < 0 || row > rowCount(parent)) {
-        qCritical() << "InsertNode: row out of range";
-    }
-    assert(row >= 0 && row <= rowCount(parent));
+    Q_ASSERT(parent_node);
+    Q_ASSERT(node);
 
     const auto message { JsonGen::NodeInsert(section_, node, node->parent->id) };
     WebSocket::Instance()->SendMessage(kNodeInsert, message);
 
-    auto* parent_node { GetNodeByIndex(parent) };
-    InsertImpl(parent_node, row, node);
+    InsertImpl(parent_node, node, row);
     return true;
 }
 
@@ -87,16 +84,16 @@ void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
     Node* parent { node_hash_.value(ancestor) };
     const auto row { parent->children.size() };
 
-    InsertImpl(parent, row, node);
+    InsertImpl(parent, node, row);
 }
 
-void TreeModel::InsertImpl(Node* parent, int row, Node* node)
+void TreeModel::InsertImpl(Node* parent_node, Node* node, int row)
 {
-    auto parent_index { GetIndex(parent->id) };
+    auto parent_index { GetIndex(parent_node->id) };
 
     beginInsertRows(parent_index, row, row);
-    parent->children.insert(row, node);
-    node->parent = parent;
+    parent_node->children.insert(row, node);
+    node->parent = parent_node;
     endInsertRows();
 
     node_hash_.insert(node->id, node);
@@ -164,15 +161,6 @@ void TreeModel::InsertMeta(const QUuid& node_id, const QJsonObject& meta)
         return;
 
     InsertMeta(node, meta);
-}
-
-void TreeModel::InsertVersion(const QUuid& node_id, int version)
-{
-    auto* node = GetNode(node_id);
-    if (!node)
-        return;
-
-    node->version = version;
 }
 
 void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
@@ -476,24 +464,6 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*c
     emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
 
     return true;
-}
-
-QStringList TreeModel::ChildrenName(const QUuid& parent_id) const
-{
-    auto* node { node_hash_.value(parent_id) };
-    if (!node) {
-        qCritical() << "ChildrenName: parent_id not found in node_hash_, parent_id =" << parent_id;
-    }
-    assert(node);
-
-    QStringList list {};
-    list.reserve(node->children.size());
-
-    for (const auto* child : std::as_const(node->children)) {
-        list.emplaceBack(child->name);
-    }
-
-    return list;
 }
 
 void TreeModel::LeafPathBranchPathModel(ItemModel* model) const { NodeUtils::LeafPathBranchPathModel(leaf_path_, branch_path_, model); }
@@ -847,39 +817,4 @@ void TreeModel::RegisterPath(Node* node)
     default:
         break;
     }
-}
-
-QSet<QUuid> TreeModel::ChildrenId(const QUuid& parent_id) const
-{
-    auto* node { node_hash_.value(parent_id) };
-    if (!node) {
-        qCritical() << "ChildrenId: parent_id not found in node_hash_:" << parent_id;
-    }
-    assert(node);
-
-    if (node->kind != std::to_underlying(NodeKind::kBranch) || node->children.isEmpty())
-        return {};
-
-    QQueue<const Node*> queue {};
-    queue.enqueue(node);
-
-    QSet<QUuid> set {};
-    while (!queue.isEmpty()) {
-        auto* queue_node = queue.dequeue();
-        const NodeKind kind { queue_node->kind };
-
-        switch (kind) {
-        case NodeKind::kBranch:
-            for (const auto* child : queue_node->children)
-                queue.enqueue(child);
-            break;
-        case NodeKind::kLeaf:
-            set.insert(queue_node->id);
-            break;
-        default:
-            break;
-        }
-    }
-
-    return set;
 }

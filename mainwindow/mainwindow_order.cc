@@ -40,28 +40,27 @@ void MainWindow::on_actionNewGroup_triggered()
     auto parent_index { current_index.parent() };
     parent_index = parent_index.isValid() ? parent_index : QModelIndex();
 
-    const QUuid parent_id { parent_index.isValid() ? parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() : QUuid() };
+    auto tree_model { sc_->tree_model };
+    auto unit_model { sc_->info.unit_model };
 
-    auto model { sc_->tree_model };
+    auto* parent_node { tree_model->GetNodeByIndex(parent_index) };
+
+    const QUuid parent_id { parent_node->id };
 
     auto* node { NodePool::Instance().Allocate(start_) };
 
     node->id = QUuid::createUuidV7();
-    node->unit = parent_id.isNull() ? sc_->shared_config.default_unit : model->Unit(parent_id);
+    node->unit = parent_node->unit;
     node->kind = std::to_underlying(NodeKind::kBranch);
+    node->parent = parent_node;
 
     static_cast<NodeO*>(node)->issued_time = QDateTime::currentDateTimeUtc();
-
-    model->SetParent(node, parent_id);
-
-    auto tree_model { sc_->tree_model };
-    auto unit_model { sc_->info.unit_model };
 
     auto parent_path { tree_model->Path(parent_id) };
     if (!parent_path.isEmpty())
         parent_path += app_config_.separator;
 
-    const auto children_name { tree_model->ChildrenName(parent_id) };
+    const auto children_name { ChildrenName(parent_node) };
     const int row { current_index.row() + 1 };
 
     QDialog* dialog { new InsertNodeBranch(node, unit_model, parent_path, children_name, this) };
@@ -70,7 +69,7 @@ void MainWindow::on_actionNewGroup_triggered()
         const auto message { JsonGen::NodeInsert(start_, node, node->parent->id) };
         WebSocket::Instance()->SendMessage(kNodeInsert, message);
 
-        if (tree_model->InsertNode(row, parent_index, node)) {
+        if (tree_model->InsertNode(parent_node, node, row)) {
             auto index { tree_model->index(row, 0, parent_index) };
             sc_->tree_view->setCurrentIndex(index);
         }
@@ -119,7 +118,7 @@ void MainWindow::RInvalidOperation()
         this, tr("Invalid Operation"), tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."));
 }
 
-void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row)
+void MainWindow::InsertNodeO(Node* parent_node)
 {
     // Extract frequently used shortcuts
     auto& section_config = sc_->section_config;
@@ -131,11 +130,13 @@ void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row
     if (!tree_model_o)
         return;
 
-    auto* node = static_cast<NodeO*>(base_node);
-    if (!node)
-        return;
+    NodeO node {};
+    node.id = QUuid::createUuidV7();
+    node.direction_rule = parent_node->direction_rule;
+    node.unit = parent_node->unit;
+    node.parent = parent_node;
 
-    const QUuid node_id { node->id };
+    const QUuid node_id { node.id };
 
     // Prepare dependencies
     auto tree_model_p { sc_p_.tree_model };
@@ -146,7 +147,6 @@ void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row
     auto* table_model { new TableModelO(table_model_arg, tree_model_i, sc_p_.entry_hub, this) };
 
     OrderWidgetArg order_arg {
-        node,
         table_model,
         tree_model_p,
         tree_model_i,
@@ -155,17 +155,7 @@ void MainWindow::InsertNodeO(Node* base_node, const QModelIndex& parent, int row
         start_,
         false,
     };
-    auto* widget { new TableWidgetO(order_arg, this) };
-
-    connect(
-        widget, &TableWidgetO::SInsertOrder, this,
-        [=, this]() {
-            if (tree_model_o->InsertNode(row, parent, node)) {
-                auto index { tree_model_o->index(row, 0, parent) };
-                sc_->tree_view->setCurrentIndex(index);
-            }
-        },
-        Qt::SingleShotConnection);
+    auto* widget { new TableWidgetO(order_arg, node, this) };
 
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, QString()) };
@@ -193,7 +183,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     if (!tree_model_o)
         return;
 
-    auto* node = static_cast<NodeO*>(tree_model_o->GetNode(node_id));
+    auto* node { static_cast<NodeO*>(tree_model_o->GetNode(node_id)) };
     if (!node)
         return;
 
@@ -209,7 +199,6 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     auto* table_model = new TableModelO(table_model_arg, tree_model_i, sc_p_.entry_hub, nullptr);
 
     OrderWidgetArg order_arg {
-        node,
         table_model,
         tree_model_p,
         tree_model_i,
@@ -218,7 +207,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
         start_,
         true,
     };
-    auto* widget = new TableWidgetO(order_arg, this);
+    auto* widget = new TableWidgetO(order_arg, *node, this);
 
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, tree_model_p->Name(partner_id)) };

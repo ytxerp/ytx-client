@@ -17,7 +17,6 @@
 #include "dialog/about.h"
 #include "dialog/preferences.h"
 #include "document.h"
-#include "global/nodepool.h"
 #include "global/tablesstation.h"
 #include "ui_mainwindow.h"
 #include "utils/mainwindowutils.h"
@@ -62,6 +61,58 @@ void MainWindow::SetRemoveShortcut()
 #endif
 }
 
+QStringList MainWindow::ChildrenName(const Node* node) const
+{
+    Q_ASSERT(node);
+
+    QStringList list {};
+
+    if (!node || node->kind != std::to_underlying(NodeKind::kBranch) || node->children.isEmpty())
+        return list;
+
+    list.reserve(node->children.size());
+
+    for (const auto* child : std::as_const(node->children)) {
+        Q_ASSERT(child);
+
+        list.emplaceBack(child->name);
+    }
+
+    return list;
+}
+
+QSet<QUuid> MainWindow::LeafChildrenId(const Node* node) const
+{
+    Q_ASSERT(node);
+
+    QSet<QUuid> set {};
+
+    if (!node || node->kind != std::to_underlying(NodeKind::kBranch) || node->children.isEmpty())
+        return set;
+
+    QQueue<const Node*> queue {};
+    queue.enqueue(node);
+
+    while (!queue.isEmpty()) {
+        auto* queue_node = queue.dequeue();
+        const NodeKind kind { queue_node->kind };
+
+        switch (kind) {
+        case NodeKind::kBranch:
+            for (const auto* child : queue_node->children)
+                queue.enqueue(child);
+            break;
+        case NodeKind::kLeaf:
+            set.insert(queue_node->id);
+            break;
+        default:
+            break;
+        }
+    }
+
+    return set;
+}
+
 MainWindow::~MainWindow()
 {
     WriteConfig();
@@ -86,25 +137,17 @@ void MainWindow::FocusTableWidget(const QUuid& node_id) const
     widget->View()->setCurrentIndex(QModelIndex());
 }
 
-void MainWindow::InsertNodeFunction(const QModelIndex& parent, const QUuid& parent_id, int row)
+void MainWindow::InsertNodeFunction(Node* parent_node, int row)
 {
-    auto model { sc_->tree_model };
-
-    auto* node { NodePool::Instance().Allocate(start_) };
-
-    node->id = QUuid::createUuidV7();
-    node->direction_rule = model->Rule(parent_id);
-    node->unit = parent_id.isNull() ? sc_->shared_config.default_unit : model->Unit(parent_id);
-
-    model->SetParent(node, parent_id);
+    Q_ASSERT(parent_node);
 
     switch (start_) {
     case Section::kSale:
     case Section::kPurchase:
-        InsertNodeO(node, parent, row);
+        InsertNodeO(parent_node);
         break;
     default:
-        InsertNodeFIPT(node, parent, parent_id, row);
+        InsertNodeFIPT(parent_node, row);
         break;
     }
 }
@@ -347,8 +390,9 @@ void MainWindow::on_actionInsertNode_triggered()
     auto parent_index { current_index.parent() };
     parent_index = parent_index.isValid() ? parent_index : QModelIndex();
 
-    const QUuid parent_id { parent_index.isValid() ? parent_index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() : QUuid() };
-    InsertNodeFunction(parent_index, parent_id, current_index.row() + 1);
+    auto* parent_node { sc_->tree_model->GetNodeByIndex(parent_index) };
+
+    InsertNodeFunction(parent_node, current_index.row() + 1);
 }
 
 void MainWindow::on_actionAppendNode_triggered()
@@ -366,7 +410,7 @@ void MainWindow::on_actionAppendNode_triggered()
     if (parent_node->kind != std::to_underlying(NodeKind::kBranch))
         return;
 
-    InsertNodeFunction(parent_index, parent_node->id, 0);
+    InsertNodeFunction(parent_node, 0);
 }
 
 void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)

@@ -220,7 +220,8 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
     QSet<QUuid> nodes;
 
     if (branch) {
-        nodes = model->ChildrenId(node_id);
+        auto* node { model->GetNode(node_id) };
+        nodes = LeafChildrenId(node);
     } else {
         nodes.insert(node_id);
 

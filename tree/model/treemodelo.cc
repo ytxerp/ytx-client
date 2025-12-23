@@ -157,15 +157,12 @@ void TreeModelO::DeleteSettlement(const QUuid& settlement_id)
     }
 }
 
-bool TreeModelO::InsertNode(int row, const QModelIndex& parent, Node* node)
+bool TreeModelO::InsertNode(Node* parent_node, Node* node, int row)
 {
-    if (row < 0 || row > rowCount(parent)) {
-        qCritical() << "InsertNode: row out of range";
-    }
-    assert(row >= 0 && row <= rowCount(parent));
+    Q_ASSERT(parent_node);
+    Q_ASSERT(node);
 
-    auto* parent_node { GetNodeByIndex(parent) };
-    InsertImpl(parent_node, row, node);
+    InsertImpl(parent_node, node, row);
     return true;
 }
 

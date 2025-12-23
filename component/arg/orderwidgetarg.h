@@ -23,10 +23,8 @@
 #include "component/config.h"
 #include "table/model/tablemodel.h"
 #include "tree/model/treemodel.h"
-#include "tree/node.h"
 
 struct OrderWidgetArg {
-    NodeO* node {};
     TableModel* table_model {};
     TreeModel* tree_model_partner {};
     TreeModel* tree_model_inventory;

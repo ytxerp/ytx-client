@@ -57,15 +57,12 @@ class TableWidgetO final : public TableWidget {
     Q_OBJECT
 
 public:
-    TableWidgetO(COrderWidgetArg& arg, QWidget* parent = nullptr);
+    explicit TableWidgetO(COrderWidgetArg& arg, const NodeO& node, QWidget* parent = nullptr);
     ~TableWidgetO();
 
 signals:
     // send to MainWindow
     void SSyncPartner(const QUuid& node_id, const QUuid& value);
-
-    // send to its lambda
-    void SInsertOrder();
 
 public slots:
     // receive from TableModelOrder
@@ -120,7 +117,6 @@ private:
 
 private:
     Ui::TableWidgetO* ui;
-    NodeO* node_ {};
     NodeO tmp_node_ {};
 
     TableModelO* table_model_order_ {};
