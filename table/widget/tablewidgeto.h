@@ -77,6 +77,7 @@ public:
 
     void ReleaseSucceeded(int version);
     void RecallSucceeded(int version);
+    void SaveSucceeded(int version);
 
     bool HasUnsavedData() const;
     void SaveOrder();

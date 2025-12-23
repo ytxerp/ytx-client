@@ -79,6 +79,7 @@ signals:
     void SSettlementUpdated(const QJsonObject& obj);
     void SOrderReleased(Section section, const QUuid& node_id, int version);
     void SOrderRecalled(Section section, const QUuid& node_id, int version);
+    void SOrderSaved(Section section, const QUuid& node_id, int version);
     void SInvalidOperation();
 
     void SConnectionRefused();

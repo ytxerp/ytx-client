@@ -310,6 +310,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SSettlementUpdated, this, &MainWindow::RSettlementUpdated);
     connect(WebSocket::Instance(), &WebSocket::SOrderReleased, this, &MainWindow::ROrderReleased);
     connect(WebSocket::Instance(), &WebSocket::SOrderRecalled, this, &MainWindow::ROrderRecalled);
+    connect(WebSocket::Instance(), &WebSocket::SOrderSaved, this, &MainWindow::ROrderSaved);
     connect(WebSocket::Instance(), &WebSocket::SInvalidOperation, this, &MainWindow::RInvalidOperation);
 }
 

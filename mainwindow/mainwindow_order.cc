@@ -102,6 +102,17 @@ void MainWindow::ROrderRecalled(Section section, const QUuid& node_id, int versi
     }
 }
 
+void MainWindow::ROrderSaved(Section section, const QUuid& node_id, int version)
+{
+    auto* sc { GetSectionContex(section) };
+
+    auto widget { sc->table_wgt_hash.value(node_id, nullptr) };
+    if (widget) {
+        auto* d_widget { static_cast<TableWidgetO*>(widget.data()) };
+        d_widget->SaveSucceeded(version);
+    }
+}
+
 void MainWindow::RInvalidOperation()
 {
     QMessageBox::information(

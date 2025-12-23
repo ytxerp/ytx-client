@@ -125,6 +125,7 @@ private slots:
 
     void ROrderReleased(Section section, const QUuid& node_id, int version);
     void ROrderRecalled(Section section, const QUuid& node_id, int version);
+    void ROrderSaved(Section section, const QUuid& node_id, int version);
     void RInvalidOperation();
 
     void RLeafRemoveDenied(const QJsonObject& obj);

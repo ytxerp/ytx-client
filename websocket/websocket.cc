@@ -846,8 +846,11 @@ void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_release)
     order_model->UpdateMeta(node_id, meta);
     const int version { node_update.value(kVersion).toInt() };
 
-    if (session_id == session_id_ && is_release) {
-        emit SOrderReleased(section, node_id, version);
+    if (session_id == session_id_) {
+        if (is_release)
+            emit SOrderReleased(section, node_id, version);
+        else
+            emit SOrderSaved(section, node_id, version);
     }
 
     if (is_release)

@@ -71,6 +71,8 @@ void TableWidgetO::RecallSucceeded(int version)
     LockWidgets(NodeStatus::kRecalled);
 }
 
+void TableWidgetO::SaveSucceeded(int version) { tmp_node_.version = version; }
+
 bool TableWidgetO::HasUnsavedData() const { return node_modified_ || table_model_order_->HasUnsavedData(); }
 
 void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
@@ -447,7 +449,8 @@ bool TableWidgetO::ValidateOrder()
     }
 
     if (tmp_node_.version != node_->version) {
-        QMessageBox::information(this, tr("Order Outdated"), tr("This order was modified by another client. Please refresh before continuing."));
+        QMessageBox::information(
+            this, tr("Invalid Operation"), tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."));
         return false;
     }
 
