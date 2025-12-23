@@ -353,10 +353,6 @@ QScrollBar::handle:horizontal {
     background-color: #073642;
 }
 
-QScrollBar::handle:horizontal:hover {
-    background-color: #586E75;
-}
-
 QScrollBar::add-line:horizontal {
     border: 1px solid #657B83;
     border-right: none;
@@ -417,10 +413,6 @@ QScrollBar::handle:vertical {
     border-right: none;
     min-height: 24px;
     background-color: #073642;
-}
-
-QScrollBar::handle:vertical:hover {
-    background-color: #586E75;
 }
 
 QScrollBar::sub-line:vertical {
