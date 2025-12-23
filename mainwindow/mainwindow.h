@@ -122,7 +122,6 @@ private slots:
     void RSettlementInserted(const QJsonObject& obj);
     void RSettlementRecalled(const QJsonObject& obj);
     void RSettlementUpdated(const QJsonObject& obj);
-    void RSettlementValidationFailed();
 
     void ROrderReleased(Section section, const QUuid& node_id, int version);
     void ROrderRecalled(Section section, const QUuid& node_id, int version);
