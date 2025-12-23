@@ -47,9 +47,9 @@ public:
     QTableView* View() const;
     TableModelSettlement* Model() const { return model_; }
 
-    void InsertSucceeded();
-    void RecallSucceeded();
-    void UpdateSucceeded();
+    void InsertSucceeded(int version);
+    void RecallSucceeded(int version);
+    void UpdateSucceeded(int version);
 
 public slots:
     void RSyncAmount(double amount);

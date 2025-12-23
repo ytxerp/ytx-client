@@ -165,7 +165,7 @@ bool TreeModelSettlement::InsertSucceeded(Settlement* settlement, const QJsonObj
     return true;
 }
 
-void TreeModelSettlement::RecallSucceeded(const QUuid& settlement_id, const QJsonObject& meta)
+void TreeModelSettlement::RecallSucceeded(const QUuid& settlement_id, const QJsonObject& update, const QJsonObject& meta)
 {
     Q_ASSERT_X(meta.contains(kUpdatedBy), "SettlementModel::UpdateMeta", "Missing 'updated_by' in meta");
     Q_ASSERT_X(meta.contains(kUpdatedTime), "SettlementModel::UpdateMeta", "Missing 'updated_time' in meta");
@@ -175,10 +175,10 @@ void TreeModelSettlement::RecallSucceeded(const QUuid& settlement_id, const QJso
 
     settlement->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
     settlement->updated_by = QUuid(meta[kUpdatedBy].toString());
-    settlement->status = SettlementStatus::kRecalled;
+    settlement->ReadJson(update);
 }
 
-void TreeModelSettlement::UpdateSucceeded(const QUuid& settlement_id, double amount, const QJsonObject& meta)
+void TreeModelSettlement::UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update, const QJsonObject& meta)
 {
     Q_ASSERT_X(meta.contains(kUpdatedBy), "SettlementModel::UpdateMeta", "Missing 'updated_by' in meta");
     Q_ASSERT_X(meta.contains(kUpdatedTime), "SettlementModel::UpdateMeta", "Missing 'updated_time' in meta");
@@ -188,8 +188,7 @@ void TreeModelSettlement::UpdateSucceeded(const QUuid& settlement_id, double amo
 
     settlement->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
     settlement->updated_by = QUuid(meta[kUpdatedBy].toString());
-    settlement->status = SettlementStatus::kReleased;
-    settlement->amount = amount;
+    settlement->ReadJson(update);
 }
 
 void TreeModelSettlement::ResetModel(const QJsonArray& array)

@@ -155,6 +155,7 @@ void TableWidgetSettlement::on_pBtnRelease_clicked()
         if (is_persisted_) {
             pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kReleased));
             pending_update_.insert(kAmount, QString::number(tmp_settlement_.amount, 'f', kMaxNumericScale_4));
+            pending_update_.insert(kVersion, tmp_settlement_.version);
         }
     }
 
@@ -188,16 +189,23 @@ void TableWidgetSettlement::on_pBtnRecall_clicked()
     QJsonObject message { JsonGen::MetaMessage(section_) };
     model_->Finalize(message);
 
+    pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kRecalled));
+    pending_update_.insert(kVersion, tmp_settlement_.version);
+
     message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
     message.insert(kParentWidgetId, parent_widget_id_.toString(QUuid::WithoutBraces));
     message.insert(kSettlementId, tmp_settlement_.id.toString(QUuid::WithoutBraces));
+    message.insert(kSettlement, pending_update_);
 
     WebSocket::Instance()->SendMessage(kSettlementRecalled, message);
+    pending_update_ = QJsonObject();
 }
 
-void TableWidgetSettlement::InsertSucceeded()
+void TableWidgetSettlement::InsertSucceeded(int version)
 {
     is_persisted_ = true;
+    tmp_settlement_.version = version;
+
     ui->comboPartner->setEnabled(false);
 
     ui->lineDescription->setReadOnly(true);
@@ -209,23 +217,25 @@ void TableWidgetSettlement::InsertSucceeded()
     HideWidget(true);
 }
 
-void TableWidgetSettlement::RecallSucceeded()
+void TableWidgetSettlement::RecallSucceeded(int version)
 {
     ui->lineDescription->setReadOnly(false);
     ui->dateTimeEdit->setReadOnly(false);
 
+    tmp_settlement_.version = version;
     model_->UpdateStatus(SettlementStatus::kRecalled);
 
     HideWidget(false);
 }
 
-void TableWidgetSettlement::UpdateSucceeded()
+void TableWidgetSettlement::UpdateSucceeded(int version)
 {
     ui->lineDescription->setReadOnly(true);
     ui->dateTimeEdit->setReadOnly(true);
 
+    tmp_settlement_.version = version;
     model_->UpdateStatus(SettlementStatus::kReleased);
-    ui->tableView->clearSelection();
 
+    ui->tableView->clearSelection();
     HideWidget(true);
 }

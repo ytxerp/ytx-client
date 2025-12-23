@@ -116,6 +116,8 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
     const QJsonObject meta { obj.value(kMeta).toObject() };
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
+    const QJsonObject settlement_obj { obj.value(kSettlement).toObject() };
+    const int version { settlement_obj.value(kSection).toInt() };
 
     auto* sc { GetSectionContex(section) };
 
@@ -123,7 +125,7 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
         auto widget { sc->widget_hash.value(widget_id, nullptr) };
         if (widget) {
             auto* d_widget { static_cast<TableWidgetSettlement*>(widget.data()) };
-            d_widget->InsertSucceeded();
+            d_widget->InsertSucceeded(version);
         }
     }
 
@@ -133,7 +135,6 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
             auto* d_parent_widget { static_cast<TreeWidgetSettlement*>(parent_widget.data()) };
             auto* model { d_parent_widget->Model() };
 
-            const QJsonObject settlement_obj { obj.value(kSettlement).toObject() };
             auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
             settlement->ReadJson(settlement_obj);
 
@@ -149,6 +150,8 @@ void MainWindow::RSettlementRecalled(const QJsonObject& obj)
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
+    const QJsonObject settlement { obj.value(kSettlement).toObject() };
+    const int version { settlement.value(kVersion).toInt() };
 
     auto* sc { GetSectionContex(section) };
 
@@ -156,7 +159,7 @@ void MainWindow::RSettlementRecalled(const QJsonObject& obj)
         auto widget { sc->widget_hash.value(widget_id, nullptr) };
         if (widget) {
             auto* d_widget { static_cast<TableWidgetSettlement*>(widget.data()) };
-            d_widget->RecallSucceeded();
+            d_widget->RecallSucceeded(version);
         }
     }
 
@@ -165,7 +168,7 @@ void MainWindow::RSettlementRecalled(const QJsonObject& obj)
         if (parent_widget) {
             auto* d_parent_widget { static_cast<TreeWidgetSettlement*>(parent_widget.data()) };
             auto* model { d_parent_widget->Model() };
-            model->RecallSucceeded(settlement_id, meta);
+            model->RecallSucceeded(settlement_id, settlement, meta);
         }
     }
 }
@@ -178,6 +181,7 @@ void MainWindow::RSettlementUpdated(const QJsonObject& obj)
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
+    const int version { settlement.value(kVersion).toInt() };
 
     auto* sc { GetSectionContex(section) };
 
@@ -185,18 +189,16 @@ void MainWindow::RSettlementUpdated(const QJsonObject& obj)
         auto widget { sc->widget_hash.value(widget_id, nullptr) };
         if (widget) {
             auto* d_widget { static_cast<TableWidgetSettlement*>(widget.data()) };
-            d_widget->UpdateSucceeded();
+            d_widget->UpdateSucceeded(version);
         }
     }
 
     {
         auto parent_widget { sc->widget_hash.value(parent_widget_id, nullptr) };
         if (parent_widget) {
-            const double amount { settlement.value(kAmount).toString().toDouble() };
-
             auto* d_parent_widget { static_cast<TreeWidgetSettlement*>(parent_widget.data()) };
             auto* model { d_parent_widget->Model() };
-            model->UpdateSucceeded(settlement_id, amount, meta);
+            model->UpdateSucceeded(settlement_id, settlement, meta);
         }
     }
 }
