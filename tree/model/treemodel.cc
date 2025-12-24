@@ -374,7 +374,7 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex& parent)
 
     emit STotalsUpdated();
     emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
-    emit SFreeWidget(node_id);
+    emit SFreeWidget(section_, node_id);
 
     return true;
 }

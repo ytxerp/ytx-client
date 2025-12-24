@@ -100,7 +100,7 @@ private slots:
     void RConnectionRefused();
     void RRemoteHostClosed();
 
-    void RFreeWidget(const QUuid& node_id);
+    void RFreeWidget(Section section, const QUuid& node_id);
 
     void RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RSaleReferencePrimary(const QUuid& node_id, int unit);

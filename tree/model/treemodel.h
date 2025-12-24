@@ -50,7 +50,7 @@ signals:
 
     // send to Mainwindow
     void SUpdateName(const QUuid& node_id, const QString& name, bool branch);
-    void SFreeWidget(const QUuid& node_id);
+    void SFreeWidget(Section section, const QUuid& node_id);
 
     // send to NodeWidget
     void STotalsUpdated();

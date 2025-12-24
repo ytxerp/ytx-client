@@ -226,9 +226,11 @@ void MainWindow::IniMarkGroup()
     });
 }
 
-void MainWindow::RFreeWidget(const QUuid& node_id)
+void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 {
-    TemplateUtils::FreeWidget(node_id, sc_->table_wgt_hash);
+    auto* sc { GetSectionContex(section) };
+
+    TemplateUtils::FreeWidget(node_id, sc->table_wgt_hash);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 

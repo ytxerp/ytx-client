@@ -181,7 +181,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
     }
 
     {
-        RFreeWidget(node_id);
+        RFreeWidget(start_, node_id);
     }
 }
 
