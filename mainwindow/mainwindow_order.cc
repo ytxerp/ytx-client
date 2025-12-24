@@ -25,7 +25,10 @@ void MainWindow::EditNameO()
     auto model { sc_->tree_model };
 
     auto* edit_name { new EditNodeNameO(node->name, this) };
-    connect(edit_name, &QDialog::accepted, this, [=]() { model->UpdateName(node->id, edit_name->GetName()); });
+    connect(edit_name, &QDialog::accepted, this, [=, this]() {
+        const auto message { JsonGen::NodeName(start_, node->id, edit_name->GetName()) };
+        WebSocket::Instance()->SendMessage(kNodeName, message);
+    });
     edit_name->exec();
 }
 

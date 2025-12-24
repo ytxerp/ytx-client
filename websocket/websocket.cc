@@ -821,10 +821,7 @@ void WebSocket::UpdateNodeName(const QJsonObject& obj)
 
     auto tree_model { tree_model_hash_.value(section) };
 
-    if (session_id != session_id_) {
-        tree_model->SyncNodeName(node_id, name);
-    }
-
+    tree_model->UpdateName(node_id, name);
     tree_model->UpdateMeta(node_id, meta);
 }
 

@@ -46,7 +46,7 @@ public:
 
     void AckTree(const QJsonObject& obj) override;
     void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id) override;
-    void SyncNodeName(const QUuid& node_id, const QString& name) override;
+    void UpdateName(const QUuid& node_id, const QString& name) override;
 
     void InsertSettlement(const QUuid& node_id, const QUuid& settlement_id);
     void RecallSettlement(const QUuid& settlement_id);
@@ -59,7 +59,6 @@ public:
 protected:
     void RegisterPath(Node* /*node*/) override { };
 
-    void UpdateName(const QUuid& node_id, CString& new_name) override;
     void RemovePath(Node* node, Node* parent_node) override;
 
     void HandleNode() override;

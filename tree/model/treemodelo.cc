@@ -100,7 +100,7 @@ void TreeModelO::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
     node_hash_.insert(node->id, node);
 }
 
-void TreeModelO::SyncNodeName(const QUuid& node_id, const QString& name)
+void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -153,22 +153,6 @@ void TreeModelO::DeleteSettlement(const QUuid& settlement_id)
             d_node->settlement_id = QUuid();
         }
     }
-}
-
-void TreeModelO::UpdateName(const QUuid& node_id, CString& new_name)
-{
-    auto* node { node_hash_.value(node_id) };
-    if (!node) {
-        qCritical() << "UpdateName: node_id not found in node_hash_, node_id =" << node_id;
-    }
-    assert(node);
-
-    node->name = new_name;
-
-    const auto message { JsonGen::NodeName(section_, node_id, new_name) };
-    WebSocket::Instance()->SendMessage(kNodeName, message);
-
-    emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
 }
 
 void TreeModelO::RemovePath(Node* node, Node* parent_node)

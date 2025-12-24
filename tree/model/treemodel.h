@@ -97,7 +97,7 @@ public:
     void ApplyTree(const QJsonObject& data);
 
     virtual void AckTree(const QJsonObject& obj) { Q_UNUSED(obj) }
-    virtual void SyncNodeName(const QUuid& node_id, const QString& name);
+    virtual void UpdateName(const QUuid& node_id, const QString& name);
     virtual void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
     {
         Q_UNUSED(leaf_obj)
@@ -151,7 +151,6 @@ public:
     QSortFilterProxyModel* ExcludeOneModel(const QUuid& node_id, QObject* parent);
 
     // virtual functions
-    virtual void UpdateName(const QUuid& node_id, CString& new_name);
     virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
 
     virtual int Status(QUuid node_id) const

@@ -85,12 +85,13 @@ void MainWindow::EditNameFIPT()
     if (!index.isValid())
         return;
 
-    const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    const auto node_id { node->id };
+
     auto model { sc_->tree_model };
 
-    const auto parent { index.parent() };
-    const auto* parent_node { model->GetNodeByIndex(parent) };
-    auto parent_path { model->Path(parent_node->id) };
+    auto* parent_node { node->parent };
+    QString parent_path { model->Path(parent_node->id) };
 
     if (!parent_path.isEmpty())
         parent_path += app_config_.separator;
@@ -99,7 +100,10 @@ void MainWindow::EditNameFIPT()
     const auto children_name { ChildrenName(parent_node) };
 
     auto* edit_name { new EditNodeName(name, parent_path, children_name, this) };
-    connect(edit_name, &QDialog::accepted, this, [=]() { model->UpdateName(node_id, edit_name->GetName()); });
+    connect(edit_name, &QDialog::accepted, this, [=, this]() {
+        const auto message { JsonGen::NodeName(start_, node_id, edit_name->GetName()) };
+        WebSocket::Instance()->SendMessage(kNodeName, message);
+    });
     edit_name->exec();
 }
 

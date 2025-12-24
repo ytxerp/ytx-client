@@ -259,10 +259,10 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     RRemoveNode(old_node_id);
 }
 
-void TreeModel::SyncNodeName(const QUuid& node_id, const QString& name)
+void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
 {
     auto* node = GetNode(node_id);
-    if (!node)
+    if (!node || node->name == name)
         return;
 
     node->name = name;
@@ -516,26 +516,6 @@ QModelIndex TreeModel::GetIndex(const QUuid& node_id) const
         return QModelIndex();
 
     return createIndex(row, 0, node);
-}
-
-void TreeModel::UpdateName(const QUuid& node_id, CString& new_name)
-{
-    auto* node { node_hash_.value(node_id) };
-    if (!node) {
-        qCritical() << "UpdateName: node_id not found in node_hash_, node_id =" << node_id;
-    }
-    assert(node);
-
-    node->name = new_name;
-
-    const auto message { JsonGen::NodeName(section_, node_id, new_name) };
-    WebSocket::Instance()->SendMessage(kNodeName, message);
-
-    NodeUtils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
-    NodeUtils::UpdateModel(leaf_path_, leaf_path_model_, node);
-
-    emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
-    emit SUpdateName(node->id, node->name, node->kind == std::to_underlying(NodeKind::kBranch));
 }
 
 QString TreeModel::Path(const QUuid& node_id) const
