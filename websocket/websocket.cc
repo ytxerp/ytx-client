@@ -335,10 +335,10 @@ void WebSocket::InsertNode(const QJsonObject& obj)
 
     auto tree_model { tree_model_hash_.value(section) };
 
-    if (session_id != session_id_)
-        tree_model->InsertNode(ancestor, node_obj);
-
+    tree_model->InsertNode(ancestor, node_obj);
     tree_model->InsertMeta(descendant, meta);
+
+    emit SNodeSelected(section, descendant);
 }
 
 void WebSocket::UpdateNode(const QJsonObject& obj)
@@ -417,9 +417,12 @@ void WebSocket::AckNode(const QJsonObject& obj)
 
     const QJsonObject leaf_obj { obj.value(kNode).toObject() };
     const QUuid ancestor { QUuid(obj.value(kAncestor).toString()) };
+    const auto node_id { QUuid(leaf_obj.value(kId).toString()) };
 
     auto tree_model { tree_model_hash_.value(section) };
     tree_model->AckNode(leaf_obj, ancestor);
+
+    emit SNodeLocation(section, node_id);
 }
 
 void WebSocket::AckSaleReference(const QJsonObject& obj)
@@ -885,6 +888,8 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
 
     if (is_release)
         order_model->RNodeStatus(node_id, NodeStatus::kReleased);
+
+    emit SNodeSelected(section, descendant);
 }
 
 void WebSocket::RecallOrder(const QJsonObject& obj)

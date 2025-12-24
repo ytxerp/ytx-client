@@ -54,7 +54,6 @@ public:
 
     int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeO::status); }
 
-    bool InsertNode(Node* parent_node, Node* node, int row) override;
     QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeO::partner_id); };
 
 protected:

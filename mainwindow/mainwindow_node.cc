@@ -7,8 +7,10 @@
 #include "global/nodepool.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
-void MainWindow::InsertNodeFIPT(Node* parent_node, int row)
+void MainWindow::InsertNodeFIPT(Node* parent_node)
 {
     auto tree_model { sc_->tree_model };
     auto unit_model { sc_->info.unit_model };
@@ -47,27 +49,27 @@ void MainWindow::InsertNodeFIPT(Node* parent_node, int row)
     }
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {
-        if (tree_model->InsertNode(parent_node, node, row)) {
-            auto index { tree_model->GetIndex(parent_node->id) };
-            sc_->tree_view->setCurrentIndex(index);
-        }
+        const auto message { JsonGen::NodeInsert(start_, node, parent_node->id) };
+        WebSocket::Instance()->SendMessage(kNodeInsert, message);
     });
 
-    connect(dialog, &QDialog::rejected, this, [=, this]() { NodePool::Instance().Recycle(node, start_); });
+    connect(dialog, &QDialog::finished, this, [=, this]() { NodePool::Instance().Recycle(node, start_); });
     dialog->exec();
 }
 
-void MainWindow::RNodeLocation(const QUuid& node_id)
+void MainWindow::RNodeLocation(Section section, const QUuid& node_id)
 {
     // Ignore report widget
     if (node_id.isNull())
         return;
 
-    auto index { sc_->tree_model->GetIndex(node_id) };
+    auto* sc { GetSectionContex(section) };
+
+    auto index { sc->tree_model->GetIndex(node_id) };
     if (!index.isValid())
         return;
 
-    auto widget { sc_->tree_widget };
+    auto widget { sc->tree_widget };
     ui->tabWidget->setCurrentWidget(widget);
     widget->activateWindow();
     widget->View()->setCurrentIndex(index);

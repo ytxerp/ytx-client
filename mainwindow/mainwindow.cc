@@ -137,7 +137,7 @@ void MainWindow::FocusTableWidget(const QUuid& node_id) const
     widget->View()->setCurrentIndex(QModelIndex());
 }
 
-void MainWindow::InsertNodeFunction(Node* parent_node, int row)
+void MainWindow::InsertNodeFunction(Node* parent_node)
 {
     Q_ASSERT(parent_node);
 
@@ -147,7 +147,7 @@ void MainWindow::InsertNodeFunction(Node* parent_node, int row)
         InsertNodeO(parent_node);
         break;
     default:
-        InsertNodeFIPT(parent_node, row);
+        InsertNodeFIPT(parent_node);
         break;
     }
 }
@@ -355,6 +355,8 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SOrderRecalled, this, &MainWindow::ROrderRecalled);
     connect(WebSocket::Instance(), &WebSocket::SOrderSaved, this, &MainWindow::ROrderSaved);
     connect(WebSocket::Instance(), &WebSocket::SInvalidOperation, this, &MainWindow::RInvalidOperation);
+    connect(WebSocket::Instance(), &WebSocket::SNodeSelected, this, &MainWindow::RNodeSelected);
+    connect(WebSocket::Instance(), &WebSocket::SNodeLocation, this, &MainWindow::RNodeLocation);
 }
 
 void MainWindow::SetIcon() const
@@ -392,7 +394,7 @@ void MainWindow::on_actionInsertNode_triggered()
 
     auto* parent_node { sc_->tree_model->GetNodeByIndex(parent_index) };
 
-    InsertNodeFunction(parent_node, current_index.row() + 1);
+    InsertNodeFunction(parent_node);
 }
 
 void MainWindow::on_actionAppendNode_triggered()
@@ -402,15 +404,17 @@ void MainWindow::on_actionAppendNode_triggered()
         return;
     }
 
-    auto parent_index { sc_->tree_view->currentIndex() };
-    if (!parent_index.isValid())
+    auto index { sc_->tree_view->currentIndex() };
+    if (!index.isValid())
         return;
 
-    auto* parent_node { static_cast<Node*>(parent_index.internalPointer()) };
-    if (parent_node->kind != std::to_underlying(NodeKind::kBranch))
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    Q_ASSERT(node);
+
+    if (node->kind != std::to_underlying(NodeKind::kBranch))
         return;
 
-    InsertNodeFunction(parent_node, 0);
+    InsertNodeFunction(node);
 }
 
 void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)

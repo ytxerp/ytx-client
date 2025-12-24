@@ -61,21 +61,15 @@ void MainWindow::on_actionNewGroup_triggered()
         parent_path += app_config_.separator;
 
     const auto children_name { ChildrenName(parent_node) };
-    const int row { current_index.row() + 1 };
 
     QDialog* dialog { new InsertNodeBranch(node, unit_model, parent_path, children_name, this) };
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {
         const auto message { JsonGen::NodeInsert(start_, node, node->parent->id) };
         WebSocket::Instance()->SendMessage(kNodeInsert, message);
-
-        if (tree_model->InsertNode(parent_node, node, row)) {
-            auto index { tree_model->index(row, 0, parent_index) };
-            sc_->tree_view->setCurrentIndex(index);
-        }
     });
 
-    connect(dialog, &QDialog::rejected, this, [=, this]() { NodePool::Instance().Recycle(node, start_); });
+    connect(dialog, &QDialog::finished, this, [=, this]() { NodePool::Instance().Recycle(node, start_); });
     dialog->exec();
 }
 
@@ -116,6 +110,18 @@ void MainWindow::RInvalidOperation()
 {
     QMessageBox::information(
         this, tr("Invalid Operation"), tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."));
+}
+
+void MainWindow::RNodeSelected(Section section, const QUuid& node_id)
+{
+    auto* sc { GetSectionContex(section) };
+    auto tree_model { sc->tree_model };
+
+    const auto index { tree_model->GetIndex(node_id) };
+    if (!index.isValid())
+        return;
+
+    sc->tree_view->setCurrentIndex(index);
 }
 
 void MainWindow::InsertNodeO(Node* parent_node)

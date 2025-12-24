@@ -48,7 +48,7 @@ protected:
     virtual ~SearchDialog();
 
 signals:
-    void SNodeLocation(const QUuid& node_id);
+    void SNodeLocation(Section section, const QUuid& node_id);
     void SEntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
 
 private slots:

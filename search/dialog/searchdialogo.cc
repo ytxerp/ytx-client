@@ -68,7 +68,7 @@ void SearchDialogO::RNodeDoubleClicked(const QModelIndex& index)
     auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
 
     if (tree_model_->Contains(node_id))
-        emit SNodeLocation(node_id);
+        emit SNodeLocation(info_.section, node_id);
     else
         tree_model_->AckNode(node_id);
 }

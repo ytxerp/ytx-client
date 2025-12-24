@@ -98,8 +98,6 @@ void TreeModelO::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
     endInsertRows();
 
     node_hash_.insert(node->id, node);
-
-    emit SNodeLocation(node->id);
 }
 
 void TreeModelO::SyncNodeName(const QUuid& node_id, const QString& name)
@@ -110,12 +108,12 @@ void TreeModelO::SyncNodeName(const QUuid& node_id, const QString& name)
 
     node->name = name;
 
-    emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
-
     auto index { GetIndex(node_id) };
     if (index.isValid()) {
         emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnum::kName)), index.siblingAtColumn(std::to_underlying(NodeEnum::kName)));
     }
+
+    emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
 }
 
 void TreeModelO::InsertSettlement(const QUuid& node_id, const QUuid& settltment_id)
@@ -155,15 +153,6 @@ void TreeModelO::DeleteSettlement(const QUuid& settlement_id)
             d_node->settlement_id = QUuid();
         }
     }
-}
-
-bool TreeModelO::InsertNode(Node* parent_node, Node* node, int row)
-{
-    Q_ASSERT(parent_node);
-    Q_ASSERT(node);
-
-    InsertImpl(parent_node, node, row);
-    return true;
 }
 
 void TreeModelO::UpdateName(const QUuid& node_id, CString& new_name)

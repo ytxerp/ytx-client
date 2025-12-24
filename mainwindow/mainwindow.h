@@ -85,8 +85,10 @@ private slots:
     void on_tabWidget_tabCloseRequested(int index);
 
     bool RInitializeContext(const QString& expire_date);
-    void RNodeLocation(const QUuid& node_id);
+
+    void RNodeLocation(Section section, const QUuid& node_id);
     void REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
+    void RNodeSelected(Section section, const QUuid& node_id);
 
     void RUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section);
     void RSyncPartner(const QUuid& node_id, const QUuid& value);
@@ -208,8 +210,8 @@ private:
     void TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
 
-    void InsertNodeFunction(Node* parent_node, int row);
-    void InsertNodeFIPT(Node* parent_node, int row); // Finance Inventory Partner Task
+    void InsertNodeFunction(Node* parent_node);
+    void InsertNodeFIPT(Node* parent_node); // Finance Inventory Partner Task
     void InsertNodeO(Node* parent_node); // Purchase Sales
 
     void RemoveNode();

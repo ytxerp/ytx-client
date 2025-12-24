@@ -81,6 +81,8 @@ signals:
     void SOrderRecalled(Section section, const QUuid& node_id, int version);
     void SOrderSaved(Section section, const QUuid& node_id, int version);
     void SInvalidOperation();
+    void SNodeSelected(Section section, const QUuid& node_id);
+    void SNodeLocation(Section section, const QUuid& node_id);
 
     void SConnectionRefused();
 

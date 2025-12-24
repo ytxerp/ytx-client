@@ -142,7 +142,7 @@ void MainWindow::on_tabWidget_tabBarDoubleClicked(int index)
     }
 
     {
-        RNodeLocation(id);
+        RNodeLocation(start_, id);
     }
 }
 

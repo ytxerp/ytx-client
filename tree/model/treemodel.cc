@@ -59,18 +59,6 @@ void TreeModel::SyncTotalArray(const QJsonArray& total_array)
     RefreshAffectedTotal(affected_ids);
 }
 
-bool TreeModel::InsertNode(Node* parent_node, Node* node, int row)
-{
-    Q_ASSERT(parent_node);
-    Q_ASSERT(node);
-
-    const auto message { JsonGen::NodeInsert(section_, node, node->parent->id) };
-    WebSocket::Instance()->SendMessage(kNodeInsert, message);
-
-    InsertImpl(parent_node, node, row);
-    return true;
-}
-
 void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
 {
     if (!node_hash_.contains(ancestor)) {
@@ -84,16 +72,11 @@ void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
     Node* parent { node_hash_.value(ancestor) };
     const auto row { parent->children.size() };
 
-    InsertImpl(parent, node, row);
-}
-
-void TreeModel::InsertImpl(Node* parent_node, Node* node, int row)
-{
-    auto parent_index { GetIndex(parent_node->id) };
+    auto parent_index { GetIndex(parent->id) };
 
     beginInsertRows(parent_index, row, row);
-    parent_node->children.insert(row, node);
-    node->parent = parent_node;
+    parent->children.insert(row, node);
+    node->parent = parent;
     endInsertRows();
 
     node_hash_.insert(node->id, node);

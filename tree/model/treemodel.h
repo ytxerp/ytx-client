@@ -51,7 +51,6 @@ signals:
     // send to Mainwindow
     void SUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void SFreeWidget(const QUuid& node_id);
-    void SNodeLocation(const QUuid& node_id);
 
     // send to NodeWidget
     void STotalsUpdated();
@@ -158,7 +157,6 @@ public:
     QSortFilterProxyModel* ExcludeOneModel(const QUuid& node_id, QObject* parent);
 
     // virtual functions
-    virtual bool InsertNode(Node* parent_node, Node* node, int row);
     virtual void UpdateName(const QUuid& node_id, CString& new_name);
     virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
 
@@ -200,7 +198,6 @@ protected:
     void UpdateMeta(Node* node, const QJsonObject& meta);
     void InsertMeta(Node* node, const QJsonObject& meta);
 
-    void InsertImpl(Node* parent_node, Node* node, int row);
     void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
 
     QSet<QUuid> SyncDeltaImpl(const QUuid& node_id, double initial_delta, double final_delta);

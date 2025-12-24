@@ -128,7 +128,7 @@ void TableWidgetSettlement::on_comboPartner_currentIndexChanged(int /*index*/)
 
 void TableWidgetSettlement::on_pBtnRelease_clicked()
 {
-    assert(!tmp_settlement_.partner_id.isNull() && "tmp_settlement_.partner should never be null here");
+    assert(!settlement_.partner_id.isNull() && "settlement_.partner should never be null here");
 
     model_->NormalizeBuffer();
 

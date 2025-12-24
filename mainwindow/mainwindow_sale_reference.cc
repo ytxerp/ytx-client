@@ -59,7 +59,7 @@ void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
         return;
     }
 
-    RNodeLocation(order_id);
+    RNodeLocation(Section::kSale, order_id);
 }
 
 void MainWindow::CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit)

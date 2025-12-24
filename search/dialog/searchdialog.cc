@@ -150,7 +150,7 @@ void SearchDialog::RSearch()
 void SearchDialog::RNodeDoubleClicked(const QModelIndex& index)
 {
     auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
-    emit SNodeLocation(node_id);
+    emit SNodeLocation(info_.section, node_id);
 }
 
 void SearchDialog::RContentGroup(int id) { ui->stackedWidget->setCurrentIndex(id); }
