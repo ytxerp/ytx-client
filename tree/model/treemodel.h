@@ -137,12 +137,6 @@ public:
     void SearchNode(QList<Node*>& node_list, CString& name) const;
 
     inline bool Contains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
-    inline void SetParent(Node* node, const QUuid& parent_id) const
-    {
-        assert(node);
-        assert(node_hash_.contains(parent_id));
-        node->parent = node_hash_.value(parent_id);
-    }
     inline Node* GetNode(const QUuid& node_id) const
     {
         auto* node { node_hash_.value(node_id, nullptr) };
