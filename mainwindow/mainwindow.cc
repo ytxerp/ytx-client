@@ -135,6 +135,7 @@ void MainWindow::FocusTableWidget(const QUuid& node_id) const
     widget->activateWindow();
 
     widget->View()->setCurrentIndex(QModelIndex());
+    widget->View()->clearSelection();
 }
 
 void MainWindow::InsertNodeFunction(Node* parent_node)

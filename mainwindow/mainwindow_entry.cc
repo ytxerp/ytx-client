@@ -81,6 +81,7 @@ void MainWindow::RemoveEntry(TableWidget* widget)
 
     if (new_index.isValid()) {
         view->setCurrentIndex(new_index);
+        view->selectionModel()->select(new_index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
         view->closePersistentEditor(new_index);
     }
 }
@@ -155,6 +156,7 @@ void MainWindow::RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id)
         return;
 
     view->setCurrentIndex(index);
+    view->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
     view->scrollTo(index.siblingAtColumn(std::to_underlying(EntryEnum::kIssuedTime)), QAbstractItemView::PositionAtCenter);
     view->closePersistentEditor(index);
 }

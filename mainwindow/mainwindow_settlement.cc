@@ -135,10 +135,22 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
             auto* d_parent_widget { static_cast<TreeWidgetSettlement*>(parent_widget.data()) };
             auto* model { d_parent_widget->Model() };
 
-            auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
-            settlement->ReadJson(settlement_obj);
+            {
+                auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
+                settlement->ReadJson(settlement_obj);
 
-            model->InsertSucceeded(settlement, meta);
+                model->InsertSucceeded(settlement, meta);
+            }
+
+            {
+                auto* view { d_parent_widget->View() };
+
+                const int last_row { model->rowCount() - 1 };
+                const QModelIndex last_index { model->index(last_row, std::to_underlying(SettlementEnum::kPartner)) };
+
+                view->setCurrentIndex(last_index);
+                view->selectionModel()->select(last_index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+            }
         }
     }
 }
@@ -258,6 +270,7 @@ void MainWindow::RemoveSettlement(TreeWidgetSettlement* widget)
 
     if (new_index.isValid()) {
         view->setCurrentIndex(new_index);
+        view->selectionModel()->select(new_index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
         view->closePersistentEditor(new_index);
     }
 }

@@ -122,6 +122,7 @@ void MainWindow::RNodeSelected(Section section, const QUuid& node_id)
         return;
 
     sc->tree_view->setCurrentIndex(index);
+    sc->tree_view->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
 
 void MainWindow::InsertNodeO(Node* parent_node)

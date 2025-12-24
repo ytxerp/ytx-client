@@ -72,7 +72,9 @@ void MainWindow::RNodeLocation(Section section, const QUuid& node_id)
     auto widget { sc->tree_widget };
     ui->tabWidget->setCurrentWidget(widget);
     widget->activateWindow();
+
     widget->View()->setCurrentIndex(index);
+    widget->View()->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
 
 void MainWindow::EditNameFIPT()
