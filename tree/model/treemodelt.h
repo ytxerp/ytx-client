@@ -37,12 +37,11 @@ public:
 
     void ResetColor(const QModelIndex& index) override;
 
-    int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeT::status); }
-    void UpdateNodeStatus(const QUuid& node_id, int status);
+    int Status(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeT::status); }
+    void UpdateStatus(const QUuid& node_id, int status);
 
-protected:
-    void ResetBranch(Node* node) override;
-    void UpdateStatus(Node* node, int value) override;
+private:
+    void UpdateStatus(Node* node, int value);
 };
 
 #endif // TREEMODELT_H

@@ -45,7 +45,7 @@ inline constexpr qsizetype kMaxSize { 1000 };
 }
 
 // Boolean constants
-inline constexpr bool kIsHidden = false;
+inline constexpr bool kIsHidden = true;
 
 namespace Rule {
 // Finance/Inventory/Task: Credit increase, Debit decrease; calculation: credit - debit

@@ -230,7 +230,7 @@ void TreeModelT::ResetColor(const QModelIndex& index)
     update.insert(kColor, QString());
 }
 
-void TreeModelT::UpdateNodeStatus(const QUuid& node_id, int status)
+void TreeModelT::UpdateStatus(const QUuid& node_id, int status)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -256,13 +256,4 @@ void TreeModelT::UpdateStatus(Node* node, int value)
 
     QJsonObject message { JsonGen::NodeStatus(section_, node->id, value) };
     WebSocket::Instance()->SendMessage(kNodeStatus, message);
-}
-
-void TreeModelT::ResetBranch(Node* node)
-{
-    assert(node->kind == std::to_underlying(NodeKind::kBranch) && "ResetBranch: node must be of kind NodeKind::kBranch");
-
-    node->children.clear();
-    node->initial_total = 0.0;
-    node->final_total = 0.0;
 }

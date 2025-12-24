@@ -52,8 +52,6 @@ public:
     void RecallSettlement(const QUuid& settlement_id);
     void DeleteSettlement(const QUuid& settlement_id);
 
-    int Status(QUuid node_id) const override { return NodeUtils::Value(node_hash_, node_id, &NodeO::status); }
-
     QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeO::partner_id); };
 
 protected:
@@ -62,8 +60,9 @@ protected:
     void RemovePath(Node* node, Node* parent_node) override;
 
     void HandleNode() override;
-    void ResetBranch(Node* node) override;
-    void ClearModel() override;
+
+    void ResetBranch(Node* node);
+    void ClearModel();
 
 private:
     QSet<QUuid> UpdateAncestorTotalOrder(Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);

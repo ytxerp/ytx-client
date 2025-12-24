@@ -804,7 +804,7 @@ void WebSocket::UpdateNodeStatus(const QJsonObject& obj)
     if (session_id != session_id_) {
         auto* task_model { static_cast<TreeModelT*>(base_model) };
 
-        task_model->UpdateNodeStatus(node_id, status);
+        task_model->UpdateStatus(node_id, status);
     }
 
     base_model->UpdateMeta(node_id, meta);

@@ -153,12 +153,6 @@ public:
     // virtual functions
     virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
 
-    virtual int Status(QUuid node_id) const
-    {
-        Q_UNUSED(node_id);
-        return false;
-    }
-
     virtual QSortFilterProxyModel* IncludeUnitModel(int unit, QObject* parent)
     {
         Q_UNUSED(unit)
@@ -200,13 +194,6 @@ protected:
     virtual void RegisterPath(Node* node);
     virtual void RemovePath(Node* node, Node* parent_node);
 
-    virtual void ResetBranch(Node* node) { Q_UNUSED(node) };
-    virtual void ClearModel() { }
-    virtual void UpdateStatus(Node* node, int value)
-    {
-        Q_UNUSED(node)
-        Q_UNUSED(value)
-    }
     virtual const QSet<QUuid>* UnitSet(int unit) const
     {
         Q_UNUSED(unit)
