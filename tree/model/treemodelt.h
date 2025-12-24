@@ -42,7 +42,6 @@ public:
 
 protected:
     void ResetBranch(Node* node) override;
-    void ClearModel() override;
     void UpdateStatus(Node* node, int value) override;
 };
 

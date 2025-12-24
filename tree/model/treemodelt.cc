@@ -3,7 +3,6 @@
 #include <QJsonArray>
 
 #include "global/collator.h"
-#include "global/nodepool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -221,13 +220,13 @@ void TreeModelT::ResetColor(const QModelIndex& index)
 {
     auto* node { GetNodeByIndex(index) };
     auto* d_node { DerivedPtr<NodeT>(node) };
-    const QUuid id { d_node->id };
+    const QUuid node_id { d_node->id };
 
     d_node->color.clear();
     emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumT::kColor)), index.siblingAtColumn(std::to_underlying(NodeEnumT::kColor)));
 
     auto& update { pending_updates_[d_node->id] };
-    RestartTimer(id);
+    RestartTimer(node_id);
     update.insert(kColor, QString());
 }
 
@@ -240,10 +239,8 @@ void TreeModelT::UpdateNodeStatus(const QUuid& node_id, int status)
     auto* d_node { DerivedPtr<NodeT>(node) };
     d_node->status = status;
 
-    auto index { GetIndex(node_id) };
-    if (index.isValid()) {
-        emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumT::kStatus)), index.siblingAtColumn(std::to_underlying(NodeEnumT::kStatus)));
-    }
+    const int status_column { std::to_underlying(NodeEnumT::kStatus) };
+    EmitRowChanged(node_id, status_column, status_column);
 }
 
 void TreeModelT::UpdateStatus(Node* node, int value)
@@ -268,31 +265,4 @@ void TreeModelT::ResetBranch(Node* node)
     node->children.clear();
     node->initial_total = 0.0;
     node->final_total = 0.0;
-}
-
-void TreeModelT::ClearModel()
-{
-    // Clear tree structure, paths and item_model
-    leaf_path_.clear();
-    branch_path_.clear();
-    leaf_path_model_->Clear();
-
-    // Clear non-branch nodes from node_hash_, keep branch nodes and unfinishded nodes
-    for (auto it = node_hash_.begin(); it != node_hash_.end();) {
-        auto* node = static_cast<NodeT*>(it.value());
-
-        if (node->kind == std::to_underlying(NodeKind::kBranch)) {
-            ResetBranch(node);
-            ++it;
-            continue;
-        }
-
-        if (node->status == std::to_underlying(NodeStatus::kRecalled)) {
-            ++it;
-            continue;
-        }
-
-        NodePool::Instance().Recycle(node, section_);
-        it = node_hash_.erase(it);
-    }
 }

@@ -5,7 +5,6 @@
 #include "global/collator.h"
 #include "global/nodepool.h"
 #include "websocket/jsongen.h"
-#include "websocket/websocket.h"
 
 TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
@@ -108,12 +107,10 @@ void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
 
     node->name = name;
 
-    auto index { GetIndex(node_id) };
-    if (index.isValid()) {
-        emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnum::kName)), index.siblingAtColumn(std::to_underlying(NodeEnum::kName)));
-    }
+    const int name_column { std::to_underlying(NodeEnumO::kName) };
 
-    emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
+    EmitRowChanged(node_id, name_column, name_column);
+    emit SResizeColumnToContents(name_column);
 }
 
 void TreeModelO::InsertSettlement(const QUuid& node_id, const QUuid& settltment_id)

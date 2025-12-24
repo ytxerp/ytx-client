@@ -270,13 +270,12 @@ void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
     NodeUtils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
     NodeUtils::UpdateModel(leaf_path_, leaf_path_model_, node);
 
-    emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
-    emit SUpdateName(node->id, node->name, node->kind == std::to_underlying(NodeKind::kBranch));
+    const int name_column { std::to_underlying(NodeEnum::kName) };
 
-    auto index { GetIndex(node_id) };
-    if (index.isValid()) {
-        emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnum::kName)), index.siblingAtColumn(std::to_underlying(NodeEnum::kName)));
-    }
+    EmitRowChanged(node_id, name_column, name_column);
+    emit SResizeColumnToContents(name_column);
+
+    emit SUpdateName(node->id, node->name, node->kind == std::to_underlying(NodeKind::kBranch));
 }
 
 void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant)
