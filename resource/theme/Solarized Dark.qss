@@ -323,7 +323,6 @@ QPushButton#pBtnDocumentDir {
 }
 
 QPushButton:hover {
-    color: #2BB3EB;
     border-color: #2BB3EB;
 }
 
@@ -350,6 +349,10 @@ QScrollBar::handle:horizontal {
     border: 1px solid #657B83;
     border-bottom: none;
     min-width: 24px;
+    background-color: #002B36;
+}
+
+QScrollBar::handle:horizontal:hover {
     background-color: #073642;
 }
 
@@ -369,6 +372,10 @@ QScrollBar::sub-line:horizontal {
     width: 24px;
     subcontrol-position: left;
     subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:horizontal:hover, QScrollBar::add-line:horizontal:hover {
+    background-color: #073642;
 }
 
 QScrollBar::add-page:horizontal,
@@ -412,6 +419,10 @@ QScrollBar::handle:vertical {
     border: 1px solid #657B83;
     border-right: none;
     min-height: 24px;
+    background-color: #002B36;
+}
+
+QScrollBar::handle:vertical:hover {
     background-color: #073642;
 }
 
@@ -431,6 +442,10 @@ QScrollBar::add-line:vertical {
     height: 24px;
     subcontrol-position: bottom;
     subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:vertical:hover, QScrollBar::add-line:vertical:hover {
+    background-color: #073642;
 }
 
 QScrollBar::add-page:vertical,
