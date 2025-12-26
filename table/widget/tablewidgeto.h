@@ -100,10 +100,8 @@ private slots:
 private:
     void IniWidget();
     void IniConnect();
-    void IniData(const QUuid& partner, const QUuid& employee);
+    void IniData(const NodeO& node);
     void LockWidgets(NodeStatus value);
-    void IniUnit(int unit);
-    void IniRule(bool rule);
     void IniRuleGroup();
     void IniUnitGroup();
     void IniUiValue();

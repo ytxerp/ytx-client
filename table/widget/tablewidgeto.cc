@@ -16,26 +16,20 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, const NodeO& node, QWidget* par
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
     , is_persisted_ { arg.is_persisted }
-    , node_id_ { tmp_node_.id }
+    , node_id_ { node.id }
     , section_ { arg.section }
 {
     ui->setupUi(this);
-    table_model_order_->setParent(this);
-    table_model_order_->SetNode(&tmp_node_);
     SignalBlocker blocker(this);
 
     IniWidget();
-    IniUnit(tmp_node_.unit);
     IniRuleGroup();
     IniUnitGroup();
-    IniRule(tmp_node_.direction_rule);
-    IniData(tmp_node_.partner_id, tmp_node_.employee_id);
+    IniData(node);
     IniConnect();
 
-    const bool released { tmp_node_.status == std::to_underlying(NodeStatus::kReleased) };
-    ui->pBtnRecall->setChecked(released);
-
-    LockWidgets(NodeStatus(tmp_node_.status));
+    if (!is_persisted_)
+        QTimer::singleShot(0, this, [this]() { ui->comboPartner->setFocus(); });
 }
 
 TableWidgetO::~TableWidgetO() { delete ui; }
@@ -110,6 +104,8 @@ void TableWidgetO::IniWidget()
     ui->comboEmployee->setCurrentIndex(-1);
 
     ui->tableViewO->setModel(table_model_order_);
+    table_model_order_->setParent(ui->tableViewO);
+
     ui->dateTimeEdit->setDisplayFormat(kDateTimeFST);
 
     ui->dSpinDiscountTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
@@ -128,8 +124,6 @@ void TableWidgetO::IniWidget()
     ui->dSpinFinalTotal->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
     ui->dSpinCountTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     ui->dSpinMeasureTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-
-    ui->tableViewO->setFocus();
 
     auto SetButton = [](QPushButton* btn, const QString& text, const QKeySequence& ks) {
         btn->setShortcut(ks);
@@ -155,8 +149,38 @@ void TableWidgetO::IniConnect()
     connect(unit_group_, &QButtonGroup::idClicked, this, &TableWidgetO::RUnitGroupClicked);
 }
 
-void TableWidgetO::IniData(const QUuid& partner, const QUuid& employee)
+void TableWidgetO::IniData(const NodeO& node)
 {
+    {
+        (node.direction_rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true);
+    }
+
+    {
+        const UnitO kUnit { node.unit };
+
+        switch (kUnit) {
+        case UnitO::kImmediate:
+            ui->rBtnIS->setChecked(true);
+            break;
+        case UnitO::kMonthly:
+            ui->rBtnMS->setChecked(true);
+            break;
+        case UnitO::kPending:
+            ui->rBtnPEND->setChecked(true);
+            break;
+        default:
+            break;
+        }
+    }
+
+    {
+        LockWidgets(NodeStatus(node.status));
+    }
+
+    {
+        table_model_order_->SetNode(&tmp_node_);
+    }
+
     if (!is_persisted_) {
         const auto date_time { QDateTime::currentDateTimeUtc() };
         ui->dateTimeEdit->setDateTime(date_time.toLocalTime());
@@ -164,16 +188,18 @@ void TableWidgetO::IniData(const QUuid& partner, const QUuid& employee)
         return;
     }
 
-    IniUiValue();
+    {
+        IniUiValue();
 
-    ui->lineDescription->setText(tmp_node_.description);
-    ui->dateTimeEdit->setDateTime(tmp_node_.issued_time.toLocalTime());
+        ui->lineDescription->setText(node.description);
+        ui->dateTimeEdit->setDateTime(node.issued_time.toLocalTime());
 
-    int partner_index { ui->comboPartner->findData(partner) };
-    ui->comboPartner->setCurrentIndex(partner_index);
+        int partner_index { ui->comboPartner->findData(node.partner_id) };
+        ui->comboPartner->setCurrentIndex(partner_index);
 
-    int employee_index { ui->comboEmployee->findData(employee) };
-    ui->comboEmployee->setCurrentIndex(employee_index);
+        int employee_index { ui->comboEmployee->findData(node.employee_id) };
+        ui->comboEmployee->setCurrentIndex(employee_index);
+    }
 }
 
 void TableWidgetO::LockWidgets(NodeStatus value)
@@ -201,25 +227,6 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->pBtnRecall->setVisible(!recalled);
 }
 
-void TableWidgetO::IniUnit(int unit)
-{
-    const UnitO kUnit { unit };
-
-    switch (kUnit) {
-    case UnitO::kImmediate:
-        ui->rBtnIS->setChecked(true);
-        break;
-    case UnitO::kMonthly:
-        ui->rBtnMS->setChecked(true);
-        break;
-    case UnitO::kPending:
-        ui->rBtnPEND->setChecked(true);
-        break;
-    default:
-        break;
-    }
-}
-
 void TableWidgetO::IniUiValue()
 {
     ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
@@ -228,8 +235,6 @@ void TableWidgetO::IniUiValue()
     ui->dSpinMeasureTotal->setValue(tmp_node_.measure_total);
     ui->dSpinInitialTotal->setValue(tmp_node_.initial_total);
 }
-
-void TableWidgetO::IniRule(bool rule) { (rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true); }
 
 void TableWidgetO::IniRuleGroup()
 {
