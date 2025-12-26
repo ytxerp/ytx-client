@@ -204,8 +204,8 @@ inline const QString kOrderRecalled = QStringLiteral("order_recalled");
 inline const QString kSettlementInserted = QStringLiteral("settlement_inserted");
 inline const QString kSettlementUpdated = QStringLiteral("settlement_updated");
 inline const QString kSettlementRecalled = QStringLiteral("settlement_recalled");
-inline const QString kSettlementItemDeleted = QStringLiteral("settlement_item_deleted");
-inline const QString kSettlementItemInserted = QStringLiteral("settlement_item_inserted");
+inline const QString kSettlementItemDeselected = QStringLiteral("settlement_item_deselected");
+inline const QString kSettlementItemSelected = QStringLiteral("settlement_item_selected");
 inline const QString kPartnerUpdated = QStringLiteral("partner_updated");
 
 inline const QString kNodeTotal = QStringLiteral("node_total");

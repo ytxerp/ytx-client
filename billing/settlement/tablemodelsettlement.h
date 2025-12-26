@@ -52,7 +52,7 @@ public:
     void ResetModel(const QJsonArray& array);
     void UpdateStatus(SettlementStatus status);
     void Finalize(QJsonObject& message);
-    bool HasPendingChange() const { return !pending_insert_.isEmpty() || !pending_delete_.isEmpty(); }
+    bool HasPendingChange() const { return !pending_selected_.isEmpty() || !pending_deselected_.isEmpty(); }
     void NormalizeBuffer();
 
 private:
@@ -63,8 +63,8 @@ private:
     QList<SettlementItem*> list_ {};
     QList<SettlementItem*> list_cache_ {};
 
-    QSet<QUuid> pending_delete_ {};
-    QSet<QUuid> pending_insert_ {};
+    QSet<QUuid> pending_deselected_ {};
+    QSet<QUuid> pending_selected_ {};
 };
 
 #endif // TABLEMODELSETTLEMENT_H

@@ -88,9 +88,9 @@ bool TableModelSettlement::setData(const QModelIndex& index, const QVariant& val
     settlement_node->is_selected = is_settled;
 
     if (is_settled)
-        pending_insert_.insert(settlement_node->id);
+        pending_selected_.insert(settlement_node->id);
     else
-        pending_delete_.insert(settlement_node->id);
+        pending_deselected_.insert(settlement_node->id);
 
     emit SSyncAmount(settlement_node->amount * (is_settled ? 1 : -1));
 
@@ -217,39 +217,37 @@ void TableModelSettlement::UpdateStatus(SettlementStatus status)
 
 void TableModelSettlement::Finalize(QJsonObject& message)
 {
-    // deleted
     {
-        if (!pending_delete_.isEmpty()) {
-            QJsonArray deleted_array {};
-            for (const auto& id : std::as_const(pending_delete_)) {
-                deleted_array.append(id.toString(QUuid::WithoutBraces));
+        if (!pending_deselected_.isEmpty()) {
+            QJsonArray deselected_array {};
+            for (const auto& id : std::as_const(pending_deselected_)) {
+                deselected_array.append(id.toString(QUuid::WithoutBraces));
             }
 
-            message.insert(kSettlementItemDeleted, deleted_array);
+            message.insert(kSettlementItemDeselected, deselected_array);
         }
     }
 
-    // insert
     {
-        if (!pending_insert_.isEmpty()) {
-            QJsonArray inserted_array {};
-            for (const auto& id : std::as_const(pending_insert_)) {
-                inserted_array.append(id.toString(QUuid::WithoutBraces));
+        if (!pending_selected_.isEmpty()) {
+            QJsonArray selected_array {};
+            for (const auto& id : std::as_const(pending_selected_)) {
+                selected_array.append(id.toString(QUuid::WithoutBraces));
             }
 
-            message.insert(kSettlementItemInserted, inserted_array);
+            message.insert(kSettlementItemSelected, selected_array);
         }
     }
 
-    pending_delete_.clear();
-    pending_insert_.clear();
+    pending_deselected_.clear();
+    pending_selected_.clear();
 }
 
 void TableModelSettlement::NormalizeBuffer()
 {
-    for (auto it = pending_insert_.begin(); it != pending_insert_.end();) {
-        if (pending_delete_.remove(*it)) {
-            it = pending_insert_.erase(it);
+    for (auto it = pending_selected_.begin(); it != pending_selected_.end();) {
+        if (pending_deselected_.remove(*it)) {
+            it = pending_selected_.erase(it);
         } else {
             ++it;
         }
