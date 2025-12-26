@@ -1445,7 +1445,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="382"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="562"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="565"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
@@ -1700,64 +1700,64 @@ Do you want to save before closing?</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="572"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="575"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="572"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="575"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="572"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="575"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="606"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="609"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="606"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="609"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="609"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="612"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="609"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="612"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="629"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="636"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="632"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="639"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="629"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="632"/>
         <source>Failed to check updates:
 %1</source>
         <translation>检查更新失败：\n%1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="636"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="639"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="649"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="652"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="649"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="652"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1766,12 +1766,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="655"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="658"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="655"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="658"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -1794,12 +1794,12 @@ Please refresh the data and try again.</source>
 请刷新当前数据后重新尝试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="233"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="245"/>
         <source>Settlement Released</source>
         <translation>结算单已发布</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="234"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="246"/>
         <source>This settlement has already been released and cannot be deleted.
 You need to recall it first before making changes.</source>
         <translation>该结算单已发布，无法直接删除。
@@ -1811,12 +1811,12 @@ You need to recall it first before making changes.</source>
         <translation>帐单明细</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_order.cc" line="112"/>
+        <location filename="../../mainwindow/mainwindow_order.cc" line="115"/>
         <source>Invalid Operation</source>
         <translation>无效操作</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_order.cc" line="112"/>
+        <location filename="../../mainwindow/mainwindow_order.cc" line="115"/>
         <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
@@ -1966,12 +1966,12 @@ You need to recall it first before making changes.</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="294"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="297"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="301"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="304"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -3324,6 +3324,16 @@ You need to recall it first before making changes.</source>
         <translation>找不到可用的打印模板。</translation>
     </message>
     <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="423"/>
+        <source>This cache order has already been settled and cannot be recalled.</source>
+        <translation>缓存订单已结算，无法再撤回了。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="428"/>
+        <source>This cache order has already been selected in a settlement and cannot be recalled.</source>
+        <translation>缓存订单已经被结算单选中，无法再撤回了。</translation>
+    </message>
+    <message>
         <source>Order Deleted</source>
         <translation type="vanished">已删除</translation>
     </message>
@@ -3332,7 +3342,7 @@ You need to recall it first before making changes.</source>
         <translation type="vanished">订单已经被删除，无法再执行操作。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="438"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="448"/>
         <source>Please select a partner before performing this action.</source>
         <translation>请先选择一个交易对象。</translation>
     </message>
@@ -3361,8 +3371,9 @@ You need to recall it first before making changes.</source>
         <translation type="vanished">订单已经结算，无法再编辑了。</translation>
     </message>
     <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="428"/>
         <source>Order Selected</source>
-        <translation type="vanished">已选中</translation>
+        <translation>已选中</translation>
     </message>
     <message>
         <source>This order has already been selected in a settlement and cannot be recalled.</source>
@@ -3411,8 +3422,9 @@ You cannot perform recall operation.</source>
 你无法执行撤回操作。</translation>
     </message>
     <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="423"/>
         <source>Order Settled</source>
-        <translation type="vanished">已结算</translation>
+        <translation>已结算</translation>
     </message>
     <message>
         <source>Settlement Selected</source>
@@ -3433,7 +3445,7 @@ Your local changes cannot be saved.</source>
 您本地的更改无法保存。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="438"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="448"/>
         <source>Partner Required</source>
         <translation>必需选择交易对象</translation>
     </message>
