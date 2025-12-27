@@ -24,6 +24,7 @@ TreeWidgetO::TreeWidgetO(Section section, TreeModel* model, const QDateTime& sta
     ui->end->setDateTime(end.addSecs(-1));
 
     ui->treeViewO->setModel(model);
+    model->setParent(ui->treeViewO);
 }
 
 TreeWidgetO::~TreeWidgetO() { delete ui; }

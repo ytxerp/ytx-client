@@ -9,6 +9,7 @@ TreeWidgetP::TreeWidgetP(TreeModel* model, QWidget* parent)
 {
     ui->setupUi(this);
     ui->treeViewP->setModel(model);
+    model->setParent(ui->treeViewP);
 }
 
 TreeWidgetP::~TreeWidgetP() { delete ui; }

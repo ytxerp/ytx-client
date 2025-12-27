@@ -22,7 +22,7 @@ TableWidgetSettlement::TableWidgetSettlement(TreeModel* tree_model_partner, Tabl
     SignalBlocker blocker(this);
 
     ui->tableView->setModel(model);
-    model->setParent(this);
+    model->setParent(ui->tableView);
 
     InitWidget();
     InitData();

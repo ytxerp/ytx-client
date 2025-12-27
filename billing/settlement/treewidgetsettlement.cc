@@ -22,7 +22,7 @@ TreeWidgetSettlement::TreeWidgetSettlement(TreeModelSettlement* model, Section s
     SignalBlocker blocker(this);
 
     ui->tableView->setModel(model);
-    model->setParent(this);
+    model->setParent(ui->tableView);
 
     IniWidget();
     InitTimer();

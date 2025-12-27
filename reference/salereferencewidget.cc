@@ -21,7 +21,7 @@ SaleReferenceWidget::SaleReferenceWidget(SaleReferenceModel* model, Section sect
     SignalBlocker blocker(this);
 
     ui->tableView->setModel(model);
-    model->setParent(this);
+    model->setParent(ui->tableView);
 
     IniWidget();
     InitTimer();

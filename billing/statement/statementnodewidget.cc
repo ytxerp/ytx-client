@@ -26,7 +26,7 @@ StatementNodeWidget::StatementNodeWidget(
     SignalBlocker blocker(this);
 
     ui->tableView->setModel(model);
-    model->setParent(this);
+    model->setParent(ui->tableView);
 
     IniUnitGroup();
     IniWidget();

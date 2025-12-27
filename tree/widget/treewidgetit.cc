@@ -14,6 +14,8 @@ TreeWidgetIT::TreeWidgetIT(TreeModel* model, CSectionConfig& config, QWidget* pa
     SignalBlocker blocker(this);
 
     ui->treeView->setModel(model);
+    model->setParent(ui->treeView);
+
     ui->dspin_box_dynamic_->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
     ui->dspin_box_static_->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
     InitStatus();

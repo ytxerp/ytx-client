@@ -11,8 +11,8 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementEntryWidget::StatementEntryWidget(StatementEntryModel* model, Section section, CUuid& widget_id, CUuid& partner_id, int unit,
-    CDateTime& start, CDateTime& end, CString& partner_name, CString& company_name, CUuidString& inventory_leaf, QWidget* parent)
+StatementEntryWidget::StatementEntryWidget(StatementEntryModel* model, Section section, CUuid& widget_id, CUuid& partner_id, int unit, CDateTime& start,
+    CDateTime& end, CString& partner_name, CString& company_name, CUuidString& inventory_leaf, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementEntryWidget)
     , unit_ { unit }
@@ -30,7 +30,7 @@ StatementEntryWidget::StatementEntryWidget(StatementEntryModel* model, Section s
     SignalBlocker blocker(this);
 
     ui->tableView->setModel(model);
-    model->setParent(this);
+    model->setParent(ui->tableView);
 
     IniUnitGroup();
     IniWidget();
