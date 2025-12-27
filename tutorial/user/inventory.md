@@ -2,7 +2,7 @@
 
 Hello everyone, today we'll introduce how **YTX** manages inventory.
 
-The current software version is **0.2.7**, and it can be downloaded from the [Github](https://github.com/ytxerp/ytx-client/releases/tag/0.2.7).
+The current software version is **0.3.0**, and it can be downloaded from the [Github](https://github.com/ytxerp/ytx-client/releases/tag/0.3.0).
 
 ---
 
@@ -73,8 +73,8 @@ At this point, the basic structure is complete. You can expand or collapse nodes
 
 ### **Important Notes**
 
-- When appending a node, it will append a child node under the selected branch node; if no node is selected, it will be appended to the root level — that is, a top-level node will be created.
-- When inserting a node, it will insert a new node at the same level as the selected node; if no node is selected, the operation will be invalid.
+- When appending a node, it will append a child node under the selected branch node; if no node is selected, the operation will be invalid.
+- When inserting a node, it will insert a new node at the same level as the selected node; if no node is selected, it will be appended to the root level — that is, a top-level node will be created.
 - Once a node's **Type** and **Unit** are set, they cannot be modified. If entered incorrectly, you must delete and recreate it.
 - Branch nodes will only aggregate data from leaf nodes with the same **Unit**.
 - The unit of **Position** nodes must be accurate so that incorrect data won't be collected when creating orders in the Order section.
@@ -115,7 +115,7 @@ Next is data entry.
    - In `Phone`, view which locations it's stored in.
 
 5. **Search**
-   - `Ctrl + F` allows quick searching by **node name** or **record description**.
+   - `Ctrl + F` allows quick searching by **Node Name** or **Entry Description**.
 
 ---
 

@@ -23,27 +23,28 @@ With its **user-friendly interface** and **modular design**, YTX is an efficient
 
 - Qt
   - Qt: 6.9.3
-      1. Desktop
-      2. Additional Libraries
-          - Qt Image Formats
-          - Qt Websockets
+        1. Desktop
+        2. Additional Libraries
+            - Qt Image Formats
+            - Qt Websockets
   - Build Tools
 - Qt Creator 17.0.2
 
 - CMake: 3.30.5
 - Compiler: GCC 12+ or LLVM/Clang 14+
 - External Dependencies:
+
   - Clone the [yxlsx](https://github.com/ytxerp/yxlsx) repository into the `external/` folder of the project:
 
-      ```bash
-      git clone https://github.com/ytxerp/yxlsx.git external/yxlsx
-      ```
+        ```bash
+        git clone https://github.com/ytxerp/yxlsx.git external/yxlsx
+        ```
 
   - Add it in CMakeLists:
 
-      ```cmake
-      add_subdirectory(external/yxlsx/)
-      ```
+        ```cmake
+        add_subdirectory(external/yxlsx/)
+        ```
 
 ## User Tutorial
 
@@ -52,6 +53,7 @@ With its **user-friendly interface** and **modular design**, YTX is an efficient
   - Mac: `~/Library/Preferences/YTX`
   - Win: `C:/Users/<USER>/AppData/Local/YTX`
 - Data Location
+
   - QStandardPaths::AppDataLocation
   - Mac: `~/Library/Application Support/YTX`
   - Win: `C:/Users/<USER>/AppData/Roaming/YTX`
