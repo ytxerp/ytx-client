@@ -53,7 +53,8 @@ signals:
 
 private slots:
     void RContentGroup(int id);
-    void RSearch();
+    void RSearchNode();
+    void RSearchEntry();
 
     virtual void RNodeDoubleClicked(const QModelIndex& index);
     virtual void REntryDoubleClicked(const QModelIndex& index) = 0;

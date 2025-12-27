@@ -27,9 +27,16 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="QLineEdit" name="lineEditNode">
        <property name="placeholderText">
-        <string>Node Name Or Entry Description</string>
+        <string>Node Name</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEditEntry">
+       <property name="placeholderText">
+        <string>Entry Description</string>
        </property>
       </widget>
      </item>
@@ -167,7 +174,7 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>lineEdit</tabstop>
+  <tabstop>lineEditNode</tabstop>
   <tabstop>rBtnNode</tabstop>
   <tabstop>rBtnEntry</tabstop>
   <tabstop>pBtnClose</tabstop>

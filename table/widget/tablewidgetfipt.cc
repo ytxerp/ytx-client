@@ -8,8 +8,8 @@ TableWidgetFIPT::TableWidgetFIPT(TableModel* model, QWidget* parent)
     , model_ { model }
 {
     ui->setupUi(this);
-    model_->setParent(this);
     ui->tableViewFIPT->setModel(model);
+    model_->setParent(ui->tableViewFIPT);
 }
 
 TableWidgetFIPT::~TableWidgetFIPT() { delete ui; }

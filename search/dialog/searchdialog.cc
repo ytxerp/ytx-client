@@ -23,7 +23,10 @@ SearchDialog::SearchDialog(
     IniView(ui->searchViewEntry);
 
     ui->searchViewNode->setModel(search_node);
+    search_node->setParent(ui->searchViewNode);
+
     ui->searchViewEntry->setModel(search_entry);
+    search_entry->setParent(ui->searchViewEntry);
 
     ResizeTreeColumn(ui->searchViewNode->horizontalHeader());
     ResizeTableColumn(ui->searchViewEntry->horizontalHeader());
@@ -41,6 +44,8 @@ SearchDialog::~SearchDialog() { delete ui; }
 void SearchDialog::IniDialog()
 {
     ui->rBtnNode->setChecked(true);
+    ui->lineEditEntry->setVisible(false);
+
     ui->stackedWidget->setCurrentIndex(0);
     ui->pBtnClose->setAutoDefault(false);
     this->setWindowTitle(tr("Search"));
@@ -48,7 +53,8 @@ void SearchDialog::IniDialog()
 
 void SearchDialog::IniConnect()
 {
-    connect(ui->lineEdit, &QLineEdit::returnPressed, this, &SearchDialog::RSearch);
+    connect(ui->lineEditNode, &QLineEdit::returnPressed, this, &SearchDialog::RSearchNode);
+    connect(ui->lineEditEntry, &QLineEdit::returnPressed, this, &SearchDialog::RSearchEntry);
     connect(ui->searchViewNode, &QTableView::doubleClicked, this, &SearchDialog::RNodeDoubleClicked);
     connect(ui->searchViewEntry, &QTableView::doubleClicked, this, &SearchDialog::REntryDoubleClicked);
     connect(content_group_, &QButtonGroup::idClicked, this, &SearchDialog::RContentGroup);
@@ -98,6 +104,7 @@ void SearchDialog::HideTreeColumn(QTableView* view)
     view->setColumnHidden(std::to_underlying(NodeEnum::kCreateTime), kIsHidden);
     view->setColumnHidden(std::to_underlying(NodeEnum::kUpdateTime), kIsHidden);
     view->setColumnHidden(std::to_underlying(NodeEnum::kUpdateBy), kIsHidden);
+    view->setColumnHidden(std::to_underlying(NodeEnum::kVersion), kIsHidden);
 }
 
 void SearchDialog::HideTableColumn(QTableView* view)
@@ -108,6 +115,7 @@ void SearchDialog::HideTableColumn(QTableView* view)
     view->setColumnHidden(std::to_underlying(EntryEnum::kCreateTime), kIsHidden);
     view->setColumnHidden(std::to_underlying(EntryEnum::kUpdateTime), kIsHidden);
     view->setColumnHidden(std::to_underlying(EntryEnum::kUpdateBy), kIsHidden);
+    view->setColumnHidden(std::to_underlying(EntryEnum::kVersion), kIsHidden);
 }
 
 void SearchDialog::IniView(QTableView* view)
@@ -132,19 +140,16 @@ void SearchDialog::ResizeTableColumn(QHeaderView* header)
     header->setSectionResizeMode(std::to_underlying(EntryEnum::kDescription), QHeaderView::Stretch);
 }
 
-void SearchDialog::RSearch()
+void SearchDialog::RSearchNode()
 {
-    CString text { ui->lineEdit->text() };
+    search_node_->Search(ui->lineEditNode->text());
+    ResizeTreeColumn(ui->searchViewNode->horizontalHeader());
+}
 
-    if (ui->rBtnNode->isChecked()) {
-        search_node_->Search(text);
-        ResizeTreeColumn(ui->searchViewNode->horizontalHeader());
-    }
-
-    if (ui->rBtnEntry->isChecked()) {
-        search_entry_->Search(text);
-        ResizeTableColumn(ui->searchViewEntry->horizontalHeader());
-    }
+void SearchDialog::RSearchEntry()
+{
+    search_entry_->Search(ui->lineEditEntry->text());
+    ResizeTableColumn(ui->searchViewEntry->horizontalHeader());
 }
 
 void SearchDialog::RNodeDoubleClicked(const QModelIndex& index)
@@ -153,4 +158,13 @@ void SearchDialog::RNodeDoubleClicked(const QModelIndex& index)
     emit SNodeLocation(info_.section, node_id);
 }
 
-void SearchDialog::RContentGroup(int id) { ui->stackedWidget->setCurrentIndex(id); }
+void SearchDialog::RContentGroup(int id)
+{
+    {
+        const bool is_node { id == 0 };
+        ui->lineEditNode->setVisible(is_node);
+        ui->lineEditEntry->setVisible(!is_node);
+    }
+
+    ui->stackedWidget->setCurrentIndex(id);
+}
