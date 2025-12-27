@@ -94,52 +94,64 @@ void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, doubl
 
 void TableWidgetO::IniWidget()
 {
-    auto* pmodel { tree_model_partner_->IncludeUnitModel(
-        section_ == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor), this) };
-    ui->comboPartner->setModel(pmodel);
-    ui->comboPartner->setCurrentIndex(-1);
+    {
+        auto* pmodel { tree_model_partner_->IncludeUnitModel(
+            section_ == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor), this) };
+        ui->comboPartner->setModel(pmodel);
+        ui->comboPartner->setCurrentIndex(-1);
 
-    auto* emodel { tree_model_partner_->IncludeUnitModel(std::to_underlying(UnitP::kEmployee), this) };
-    ui->comboEmployee->setModel(emodel);
-    ui->comboEmployee->setCurrentIndex(-1);
+        auto* emodel { tree_model_partner_->IncludeUnitModel(std::to_underlying(UnitP::kEmployee), this) };
+        ui->comboEmployee->setModel(emodel);
+        ui->comboEmployee->setCurrentIndex(-1);
+    }
 
-    ui->tableViewO->setModel(table_model_order_);
-    table_model_order_->setParent(ui->tableViewO);
+    {
+        ui->tableViewO->setModel(table_model_order_);
+        table_model_order_->setParent(ui->tableViewO);
+    }
 
-    ui->dateTimeEdit->setDisplayFormat(kDateTimeFST);
+    {
+        ui->dateTimeEdit->setDisplayFormat(kDateTimeFST);
+    }
 
-    ui->dSpinDiscountTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
-    ui->dSpinInitialTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
-    ui->dSpinFinalTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
-    ui->dSpinMeasureTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
-    ui->dSpinCountTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+    {
+        ui->dSpinDiscountTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+        ui->dSpinInitialTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+        ui->dSpinFinalTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+        ui->dSpinMeasureTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+        ui->dSpinCountTotal->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
 
-    ui->dSpinDiscountTotal->setDecimals(config_.amount_decimal);
-    ui->dSpinInitialTotal->setDecimals(config_.amount_decimal);
-    ui->dSpinFinalTotal->setDecimals(config_.amount_decimal);
-    ui->dSpinMeasureTotal->setDecimals(config_.quantity_decimal);
-    ui->dSpinCountTotal->setDecimals(config_.quantity_decimal);
+        ui->dSpinDiscountTotal->setDecimals(config_.amount_decimal);
+        ui->dSpinInitialTotal->setDecimals(config_.amount_decimal);
+        ui->dSpinFinalTotal->setDecimals(config_.amount_decimal);
+        ui->dSpinMeasureTotal->setDecimals(config_.quantity_decimal);
+        ui->dSpinCountTotal->setDecimals(config_.quantity_decimal);
 
-    ui->dSpinDiscountTotal->setAlignment(Qt::AlignRight | Qt::AlignBottom);
-    ui->dSpinFinalTotal->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
-    ui->dSpinCountTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    ui->dSpinMeasureTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        ui->dSpinDiscountTotal->setAlignment(Qt::AlignRight | Qt::AlignBottom);
+        ui->dSpinFinalTotal->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
+        ui->dSpinCountTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        ui->dSpinMeasureTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    }
 
-    auto SetButton = [](QPushButton* btn, const QString& text, const QKeySequence& ks) {
-        btn->setShortcut(ks);
-        btn->setText(text);
-        btn->setToolTip(QString("%1 (%2)").arg(text, ks.toString()));
-    };
+    {
+        auto SetButton = [](QPushButton* btn, const QString& text, const QKeySequence& ks) {
+            btn->setShortcut(ks);
+            btn->setText(text);
+            btn->setToolTip(QString("%1 (%2)").arg(text, ks.toString()));
+        };
 
-    SetButton(ui->pBtnSave, tr("Save"), QKeySequence::Save);
-    SetButton(ui->pBtnRelease, tr("Release"), QKeySequence(Qt::CTRL | Qt::Key_Return));
-    SetButton(ui->pBtnRecall, tr("Recall"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
-    SetButton(ui->pBtnPreview, tr("Preview"), QKeySequence(Qt::CTRL | Qt::Key_P));
-    SetButton(ui->pBtnPrint, tr("Print"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
+        SetButton(ui->pBtnSave, tr("Save"), QKeySequence::Save);
+        SetButton(ui->pBtnRelease, tr("Release"), QKeySequence(Qt::CTRL | Qt::Key_Return));
+        SetButton(ui->pBtnRecall, tr("Recall"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
+        SetButton(ui->pBtnPreview, tr("Preview"), QKeySequence(Qt::CTRL | Qt::Key_P));
+        SetButton(ui->pBtnPrint, tr("Print"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
+    }
 
-    auto& templates { PrintHub::Instance().TemplateMap() };
-    for (auto it = templates.constBegin(); it != templates.constEnd(); ++it) {
-        ui->comboTemplate->addItem(it.key(), it.value());
+    {
+        auto& templates { PrintHub::Instance().TemplateMap() };
+        for (auto it = templates.constBegin(); it != templates.constEnd(); ++it) {
+            ui->comboTemplate->addItem(it.key(), it.value());
+        }
     }
 }
 
