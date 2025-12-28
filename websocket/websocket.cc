@@ -338,7 +338,8 @@ void WebSocket::InsertNode(const QJsonObject& obj)
     tree_model->InsertNode(ancestor, node_obj);
     tree_model->InsertMeta(descendant, meta);
 
-    emit SNodeSelected(section, descendant);
+    if (session_id_ == session_id)
+        emit SNodeSelected(section, descendant);
 }
 
 void WebSocket::UpdateNode(const QJsonObject& obj)
