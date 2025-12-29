@@ -58,7 +58,6 @@ set(SOURCES
     entryhub/entryhubi.cc
     entryhub/entryhubt.cc
     widget/datetimeedit.cc
-    widget/datetimeeditautoselect.cc
     component/stringinitializer.cc
     delegate/status.cc
     delegate/plaintext.cc
@@ -202,7 +201,6 @@ set(HEADERS
     widget/combobox.h
     widget/doublespinbox.h
     widget/datetimeedit.h
-    widget/datetimeeditautoselect.h
     widget/lineedit.h
     component/using.h
     component/signalblocker.h

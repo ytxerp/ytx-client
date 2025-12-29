@@ -1,6 +1,6 @@
 #include "tableissuedtime.h"
 
-#include "widget/datetimeeditautoselect.h"
+#include "widget/datetimeedit.h"
 
 TableIssuedTime::TableIssuedTime(const QString& date_format, QObject* parent)
     : StyledItemDelegate { parent }
@@ -10,7 +10,7 @@ TableIssuedTime::TableIssuedTime(const QString& date_format, QObject* parent)
 
 QWidget* TableIssuedTime::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/) const
 {
-    auto* editor { new DateTimeEditAutoSelect(parent) };
+    auto* editor { new DateTimeEdit(parent) };
     editor->setDisplayFormat(date_format_);
 
     return editor;
@@ -18,7 +18,7 @@ QWidget* TableIssuedTime::createEditor(QWidget* parent, const QStyleOptionViewIt
 
 void TableIssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
-    auto* cast_editor { static_cast<DateTimeEditAutoSelect*>(editor) };
+    auto* cast_editor { static_cast<DateTimeEdit*>(editor) };
     if (cast_editor->hasFocus())
         return;
 
@@ -31,7 +31,7 @@ void TableIssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) c
 
 void TableIssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
-    auto* cast_ediotr { static_cast<DateTimeEditAutoSelect*>(editor) };
+    auto* cast_ediotr { static_cast<DateTimeEdit*>(editor) };
     auto issued_time { cast_ediotr->dateTime() };
 
     last_insert_ = issued_time.date() == QDate::currentDate() ? QDateTime() : issued_time;

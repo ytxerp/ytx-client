@@ -23,6 +23,12 @@ void DateTimeEdit::keyPressEvent(QKeyEvent* event)
     QDateTimeEdit::keyPressEvent(event);
 }
 
+void DateTimeEdit::focusInEvent(QFocusEvent* event)
+{
+    QDateTimeEdit::focusInEvent(event);
+    setSelectedSection(QDateTimeEdit::DaySection);
+}
+
 bool DateTimeEdit::LastMonthEnd(QDateTime& date_time)
 {
     QDate date { date_time.date().addMonths(-1) };
