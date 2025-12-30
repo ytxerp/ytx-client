@@ -64,7 +64,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../dialog/authdialog.ui" line="40"/>
-        <location filename="../../dialog/authdialog.cc" line="178"/>
+        <location filename="../../dialog/authdialog.cc" line="177"/>
         <source>Log in to YTX account</source>
         <translation>登录 YTX 账号</translation>
     </message>
@@ -95,7 +95,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../dialog/authdialog.ui" line="108"/>
-        <location filename="../../dialog/authdialog.cc" line="179"/>
+        <location filename="../../dialog/authdialog.cc" line="178"/>
         <source>Don&apos;t have YTX account?</source>
         <translation>没有 YTX 账号？</translation>
     </message>
@@ -211,17 +211,17 @@ Rage, rage against the dying of the light.</source>
         <translation>邮箱已经注册过了。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="138"/>
+        <location filename="../../dialog/authdialog.cc" line="137"/>
         <source>Invalid Workspace</source>
         <translation>工区无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="310"/>
+        <location filename="../../dialog/authdialog.cc" line="309"/>
         <source>Password Mismatch</source>
         <translation>密码不一致</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="310"/>
+        <location filename="../../dialog/authdialog.cc" line="309"/>
         <source>The passwords do not match.</source>
         <translation>两次输入的密码不一致。</translation>
     </message>
@@ -240,17 +240,17 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">权限申请</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="138"/>
+        <location filename="../../dialog/authdialog.cc" line="137"/>
         <source>Workspace cannot be empty</source>
         <translation>工区不能为空</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="154"/>
+        <location filename="../../dialog/authdialog.cc" line="153"/>
         <source>Need a YTX account?</source>
         <translation>需要 YTX 账号吗？</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="155"/>
+        <location filename="../../dialog/authdialog.cc" line="154"/>
         <source>Have YTX account?</source>
         <translation>已有 YTX 账号？</translation>
     </message>
@@ -264,7 +264,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">信息无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="245"/>
+        <location filename="../../dialog/authdialog.cc" line="244"/>
         <source>Email cannot be empty</source>
         <translation>邮箱不能为空</translation>
     </message>
@@ -273,47 +273,45 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">邮箱格式不正确</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="133"/>
         <source>Password cannot be empty</source>
-        <translation>密码不能为空</translation>
+        <translation type="vanished">密码不能为空</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="245"/>
-        <location filename="../../dialog/authdialog.cc" line="252"/>
+        <location filename="../../dialog/authdialog.cc" line="244"/>
+        <location filename="../../dialog/authdialog.cc" line="251"/>
         <source>Invalid Email</source>
         <translation>邮箱无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="252"/>
+        <location filename="../../dialog/authdialog.cc" line="251"/>
         <source>Please enter a valid email address.</source>
         <translation>请输入有效的邮箱地址。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="133"/>
-        <location filename="../../dialog/authdialog.cc" line="262"/>
-        <location filename="../../dialog/authdialog.cc" line="270"/>
-        <location filename="../../dialog/authdialog.cc" line="279"/>
-        <location filename="../../dialog/authdialog.cc" line="288"/>
+        <location filename="../../dialog/authdialog.cc" line="261"/>
+        <location filename="../../dialog/authdialog.cc" line="269"/>
+        <location filename="../../dialog/authdialog.cc" line="278"/>
+        <location filename="../../dialog/authdialog.cc" line="287"/>
         <source>Invalid Password</source>
         <translation>密码无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="262"/>
+        <location filename="../../dialog/authdialog.cc" line="261"/>
         <source>Password must be at least 8 characters long.</source>
         <translation>密码长度不能少于 8 位。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="270"/>
+        <location filename="../../dialog/authdialog.cc" line="269"/>
         <source>Password must include at least one letter.</source>
         <translation>密码必须至少包含一个字母。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="279"/>
+        <location filename="../../dialog/authdialog.cc" line="278"/>
         <source>Password must include at least one digit.</source>
         <translation>密码必须至少包含一个数字。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="288"/>
+        <location filename="../../dialog/authdialog.cc" line="287"/>
         <source>Password must include at least one special character.</source>
         <translation>密码必须至少包含一个特殊字符。</translation>
     </message>
