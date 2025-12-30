@@ -52,8 +52,7 @@ public:
     WebSocket& operator=(WebSocket&&) = delete;
 
 signals:
-    void SLoginResult(bool result);
-    void SWorkspaceAccessPending(const QString& email, const QString& workspace);
+    void SLoginResult(bool result, int code);
     void SRegisterResult(bool result, int code);
     void SConnectionAccepted(bool result);
     void SRemoteHostClosed();
@@ -124,7 +123,6 @@ private:
 
     void NotifyLeafRemoveDenied(const QJsonObject& obj);
     void NotifyUpdateDefaultUnitFailure(const QJsonObject& obj);
-    void NotifyWorkspaceAccessPending(const QJsonObject& obj);
     void NotifyInvalidOperation();
 
 private:

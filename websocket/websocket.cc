@@ -158,7 +158,6 @@ void WebSocket::InitHandler()
 {
     handler_obj_[kLoginResult] = [this](const QJsonObject& obj) { NotifyLoginResult(obj); };
     handler_obj_[kRegisterResult] = [this](const QJsonObject& obj) { NotifyRegisterResult(obj); };
-    handler_obj_[kWorkspaceAccessPending] = [this](const QJsonObject& obj) { NotifyWorkspaceAccessPending(obj); };
     handler_arr_[kSharedConfig] = [this](const QJsonArray& arr) { ApplySharedConfig(arr); };
     handler_arr_[kPartnerEntry] = [this](const QJsonArray& arr) { ApplyPartnerEntry(arr); };
 
@@ -295,8 +294,9 @@ void WebSocket::RReceiveMessage(const QString& message)
 void WebSocket::NotifyLoginResult(const QJsonObject& obj)
 {
     const bool result { obj[kResult].toBool() };
+    const int code { obj[kCode].toInt() };
 
-    emit SLoginResult(result);
+    emit SLoginResult(result, code);
 
     if (result) {
         session_id_ = obj[kSessionId].toString();
@@ -304,14 +304,6 @@ void WebSocket::NotifyLoginResult(const QJsonObject& obj)
         const auto expire_date { expire_time.date().toString(kDateFST) };
         emit SInitializeContext(expire_date);
     }
-}
-
-void WebSocket::NotifyWorkspaceAccessPending(const QJsonObject& obj)
-{
-    CString email { obj.value(kEmail).toString() };
-    CString workspace { obj.value(kWorkspace).toString() };
-
-    emit SWorkspaceAccessPending(email, workspace);
 }
 
 void WebSocket::NotifyInvalidOperation() { emit SInvalidOperation(); }

@@ -33,17 +33,55 @@ AuthDialog::AuthDialog(QSharedPointer<QSettings> local_settings, QWidget* parent
 
 AuthDialog::~AuthDialog() { delete ui; }
 
-void AuthDialog::RLoginResult(bool result)
+void AuthDialog::RLoginResult(bool result, int code)
 {
     SaveLoginConfig();
 
     if (result) {
         SyncLoginInfo(ui->lineEditWorkspace->text());
-        this->close();
-    } else {
-        QMessageBox::critical(
-            this, tr("Login Failed"), tr("Unable to log in. Please verify your email, password, workspace access, or check if your account has expired."));
+        close();
+        return;
     }
+
+    QString message {};
+    QString title { tr("Login Failed") };
+
+    switch (static_cast<LoginOutcome>(code)) {
+    case LoginOutcome::EmptyEmail:
+        message = tr("Please enter your email.");
+        break;
+    case LoginOutcome::EmptyPassword:
+        message = tr("Please enter your password.");
+        break;
+    case LoginOutcome::EmailNotFound:
+        message = tr("The email you entered was not found.");
+        break;
+    case LoginOutcome::PasswordIncorrect:
+        message = tr("The password you entered is incorrect.");
+        break;
+    case LoginOutcome::WorkspaceNotFound:
+        message = tr("The specified workspace does not exist.");
+        break;
+    case LoginOutcome::WorkspaceExpired:
+        message = tr("The workspace subscription has expired.");
+        break;
+    case LoginOutcome::WorkspaceAccessPending:
+        title = tr("Access Pending");
+        message
+            = tr("Your access to workspace \"%1\" for email \"%2\" is pending approval.").arg(LoginInfo::Instance().Workspace(), LoginInfo::Instance().Email());
+        break;
+    case LoginOutcome::AlreadyLoggedIn:
+        message = tr("You are already logged in.");
+        break;
+    case LoginOutcome::ServerError:
+        message = tr("Server error occurred. Please try again later.");
+        break;
+    default:
+        message = tr("Unable to log in. Please contact the administrator for details.");
+        break;
+    }
+
+    QMessageBox::critical(this, title, message);
 }
 
 void AuthDialog::RRegisterResult(bool result, int code)
@@ -82,14 +120,6 @@ void AuthDialog::RRegisterResult(bool result, int code)
 
         QMessageBox::critical(this, tr("Registration Failed"), message);
     }
-}
-
-void AuthDialog::RWorkspaceAccessPending(const QString& email, const QString& workspace)
-{
-    const QString message
-        = tr("Your access to workspace \"%1\" for email \"%2\" is pending approval. Please contact the administrator if needed.").arg(workspace, email);
-
-    QMessageBox::information(this, tr("Workspace Access Pending"), message);
 }
 
 void AuthDialog::on_pushButtonLogin_clicked()
@@ -176,8 +206,6 @@ void AuthDialog::InitConnect()
 {
     connect(WebSocket::Instance(), &WebSocket::SLoginResult, this, &AuthDialog::RLoginResult);
     connect(WebSocket::Instance(), &WebSocket::SRegisterResult, this, &AuthDialog::RRegisterResult);
-
-    connect(WebSocket::Instance(), &WebSocket::SWorkspaceAccessPending, this, &AuthDialog::RWorkspaceAccessPending);
 
     connect(ui->labelSignUp, &QLabel::linkActivated, this, &AuthDialog::RRegisterDialog);
     connect(ui->labelLogin, &QLabel::linkActivated, this, &AuthDialog::RLoginDialog);

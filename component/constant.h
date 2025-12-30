@@ -227,7 +227,6 @@ inline const QString kPassword = QStringLiteral("password");
 inline const QString kKeyword = QStringLiteral("keyword");
 inline const QString kRegister = QStringLiteral("register");
 inline const QString kRegisterResult = QStringLiteral("register_result");
-inline const QString kWorkspaceAccessPending = QStringLiteral("workspace_access_pending");
 inline const QString kServer = QStringLiteral("server");
 inline const QString kLoginResult = QStringLiteral("login_result");
 inline const QString kWorkspace = QStringLiteral("workspace");

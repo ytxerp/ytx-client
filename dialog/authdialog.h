@@ -36,9 +36,8 @@ public:
     ~AuthDialog();
 
 public slots:
-    void RLoginResult(bool result);
+    void RLoginResult(bool result, int code);
     void RRegisterResult(bool result, int code);
-    void RWorkspaceAccessPending(const QString& email, const QString& workspace);
 
 private slots:
     void on_pushButtonLogin_clicked();

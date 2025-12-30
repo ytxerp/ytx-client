@@ -29,4 +29,17 @@ enum class RegisterOutcome {
     ServerError = 5,
 };
 
+enum class LoginOutcome {
+    Success = 0,
+    EmptyEmail = 1,
+    EmptyPassword = 2,
+    EmailNotFound = 3,
+    PasswordIncorrect = 4,
+    WorkspaceNotFound = 5,
+    WorkspaceExpired = 6,
+    WorkspaceAccessPending = 7,
+    AlreadyLoggedIn = 8,
+    ServerError = 9,
+};
+
 #endif // AUTHENUM_H
