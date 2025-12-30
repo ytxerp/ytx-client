@@ -3,6 +3,7 @@
 #include <QMessageBox>
 
 #include "component/signalblocker.h"
+#include "enum/authenum.h"
 #include "global/logininfo.h"
 #include "ui_authdialog.h"
 #include "websocket/jsongen.h"
@@ -34,9 +35,10 @@ AuthDialog::~AuthDialog() { delete ui; }
 
 void AuthDialog::RLoginResult(bool result)
 {
+    SaveLoginConfig();
+
     if (result) {
         SyncLoginInfo(ui->lineEditWorkspace->text());
-        SaveLoginConfig();
         this->close();
     } else {
         QMessageBox::critical(
@@ -44,13 +46,41 @@ void AuthDialog::RLoginResult(bool result)
     }
 }
 
-void AuthDialog::RRegisterResult(bool result)
+void AuthDialog::RRegisterResult(bool result, int code)
 {
+    SaveLoginConfig();
+
     if (result) {
         SyncLoginInfo();
         RLoginDialog();
-    } else {
-        QMessageBox::critical(this, tr("Registration Failed"), tr("Unable to register. Please contact the administrator for details."));
+        QMessageBox::information(this, tr("Registration Successful"), tr("Your account has been registered successfully."));
+        return;
+    }
+
+    {
+        QString message {};
+        switch (RegisterOutcome(code)) {
+        case RegisterOutcome::EmptyEmail:
+            message = tr("Please enter your email.");
+            break;
+        case RegisterOutcome::EmptyPassword:
+            message = tr("Please enter your password.");
+            break;
+        case RegisterOutcome::InvalidEmail:
+            message = tr("The email format is invalid.");
+            break;
+        case RegisterOutcome::EmailAlreadyExists:
+            message = tr("This email is already registered.");
+            break;
+        case RegisterOutcome::ServerError:
+            message = tr("Server error occurred. Please try again later.");
+            break;
+        default:
+            message = tr("Unable to register. Please contact the administrator for details.");
+            break;
+        }
+
+        QMessageBox::critical(this, tr("Registration Failed"), message);
     }
 }
 

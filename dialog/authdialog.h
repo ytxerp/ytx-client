@@ -37,7 +37,7 @@ public:
 
 public slots:
     void RLoginResult(bool result);
-    void RRegisterResult(bool result);
+    void RRegisterResult(bool result, int code);
     void RWorkspaceAccessPending(const QString& email, const QString& workspace);
 
 private slots:

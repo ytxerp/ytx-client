@@ -319,7 +319,8 @@ void WebSocket::NotifyInvalidOperation() { emit SInvalidOperation(); }
 void WebSocket::NotifyRegisterResult(const QJsonObject& obj)
 {
     const bool result { obj[kResult].toBool() };
-    emit SRegisterResult(result);
+    const int code { obj[kCode].toInt() };
+    emit SRegisterResult(result, code);
 }
 
 void WebSocket::InsertNode(const QJsonObject& obj)

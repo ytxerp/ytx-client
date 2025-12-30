@@ -54,7 +54,7 @@ public:
 signals:
     void SLoginResult(bool result);
     void SWorkspaceAccessPending(const QString& email, const QString& workspace);
-    void SRegisterResult(int result);
+    void SRegisterResult(bool result, int code);
     void SConnectionAccepted(bool result);
     void SRemoteHostClosed();
     void SInitializeContext(const QString& expire_date);

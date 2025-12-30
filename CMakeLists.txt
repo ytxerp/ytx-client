@@ -313,6 +313,7 @@ set(HEADERS
     global/collator.h
     global/exportexcel.h
     enum/settlementenum.h
+    enum/authenum.h
     billing/settlement/tablewidgetsettlement.h
     billing/settlement/tablemodelsettlement.h
 )
