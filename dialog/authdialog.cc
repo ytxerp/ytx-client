@@ -129,8 +129,7 @@ void AuthDialog::on_pushButtonLogin_clicked()
     if (!ValidateEmail(email))
         return;
 
-    if (password.isEmpty()) {
-        QMessageBox::warning(this, tr("Invalid Password"), tr("Password cannot be empty"));
+    if (!ValidatePassword(password)) {
         return;
     }
 
