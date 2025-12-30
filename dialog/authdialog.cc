@@ -130,12 +130,12 @@ void AuthDialog::on_pushButtonLogin_clicked()
         return;
 
     if (password.isEmpty()) {
-        QMessageBox::warning(this, tr("Invalid Information"), tr("Password cannot be empty"));
+        QMessageBox::warning(this, tr("Invalid Password"), tr("Password cannot be empty"));
         return;
     }
 
     if (workspace.isEmpty()) {
-        QMessageBox::warning(this, tr("Invalid Information"), tr("Workspace cannot be empty"));
+        QMessageBox::warning(this, tr("Invalid Workspace"), tr("Workspace cannot be empty"));
         return;
     }
 
@@ -242,14 +242,14 @@ QAction* AuthDialog::CreateAction(QLineEdit* lineEdit)
 bool AuthDialog::ValidateEmail(const QString& email)
 {
     if (email.isEmpty()) {
-        QMessageBox::warning(this, tr("Invalid Information"), tr("Email cannot be empty"));
+        QMessageBox::warning(this, tr("Invalid Email"), tr("Email cannot be empty"));
         return false;
     }
 
     static QRegularExpression re(R"(^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$)");
 
     if (!re.match(email).hasMatch()) {
-        QMessageBox::warning(this, tr("Invalid Information"), tr("Please enter a valid email address."));
+        QMessageBox::warning(this, tr("Invalid Email"), tr("Please enter a valid email address."));
         return false;
     }
 
@@ -307,7 +307,7 @@ void AuthDialog::on_pushButtonRegister_clicked()
     }
 
     if (password != confirm_pwd) {
-        QMessageBox::warning(this, tr("Invalid Information"), tr("Passwords do not match"));
+        QMessageBox::warning(this, tr("Password Mismatch"), tr("The passwords do not match."));
         return;
     }
 
