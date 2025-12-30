@@ -37,9 +37,12 @@
         <file>solarized_dark/settle.png</file>
         <file>solarized_dark/statement.png</file>
         <file>solarized_dark/reset_color.png</file>
-        <file>solarized_dark/checked.png</file>
-        <file>solarized_dark/unchecked.png</file>
         <file>solarized_dark/new-group.png</file>
         <file>solarized_dark/mark-toggle.png</file>
+        <file>solarized_dark/view_checked.png</file>
+        <file>solarized_dark/checkbox_checked.png</file>
+        <file>solarized_dark/checkbox_unchecked.png</file>
+        <file>solarized_dark/radio_checked.png</file>
+        <file>solarized_dark/radio_unchecked.png</file>
     </qresource>
 </RCC>

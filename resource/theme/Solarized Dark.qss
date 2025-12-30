@@ -202,18 +202,40 @@ QMenuBar::item:selected {
     color: #2BB3EB;
 }
 
-/* ==================== Checkboxes & Radio Buttons ==================== */
-*::indicator {
+/* ==================== Checkboxes ==================== */
+QCheckBox::indicator {
     width: 16px;
     height: 16px;
 }
 
-*::indicator:unchecked {
-    image: url(:/solarized_dark/solarized_dark/unchecked.png);
+QDialog QCheckBox::indicator:unchecked {
+    image: url(:/solarized_dark/solarized_dark/checkbox_unchecked.png);
 }
 
-*::indicator:checked {
-    image: url(:/solarized_dark/solarized_dark/checked.png);
+QDialog QCheckBox::indicator:checked {
+    image: url(:/solarized_dark/solarized_dark/checkbox_checked.png);
+}
+
+QAbstractItemView::indicator:unchecked {
+    image: none;
+}
+
+QAbstractItemView::indicator:checked {
+    image: url(:/solarized_dark/solarized_dark/view_checked.png);
+}
+
+/* ==================== Radio Buttons ==================== */
+QRadioButton::indicator {
+    width: 13px;
+    height: 13px;
+}
+
+QDialog QRadioButton::indicator:unchecked {
+    image: url(:/solarized_dark/solarized_dark/radio_unchecked.png);
+}
+
+QDialog QRadioButton::indicator:checked {
+    image: url(:/solarized_dark/solarized_dark/radio_checked.png);
 }
 
 QGroupBox#groupBoxSection QRadioButton::indicator {
