@@ -49,10 +49,11 @@ private slots:
 private:
     void SaveLoginConfig();
     void InitConnect();
-    void SyncLoginInfo(const QString& workspace = QString());
+    void SyncLoginInfo();
     QAction* CreateAction(QLineEdit* lineEdit);
 
-    bool ValidateEmail(QWidget* parent, const QString& email);
+    bool ValidateEmail(const QString& email);
+    bool ValidatePassword(const QString& password);
 
 private:
     Ui::AuthDialog* ui;

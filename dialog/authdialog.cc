@@ -35,10 +35,7 @@ AuthDialog::~AuthDialog() { delete ui; }
 
 void AuthDialog::RLoginResult(bool result, int code)
 {
-    SaveLoginConfig();
-
     if (result) {
-        SyncLoginInfo(ui->lineEditWorkspace->text());
         close();
         return;
     }
@@ -86,8 +83,6 @@ void AuthDialog::RLoginResult(bool result, int code)
 
 void AuthDialog::RRegisterResult(bool result, int code)
 {
-    SaveLoginConfig();
-
     if (result) {
         SyncLoginInfo();
         RLoginDialog();
@@ -119,6 +114,9 @@ void AuthDialog::RRegisterResult(bool result, int code)
         }
 
         QMessageBox::critical(this, tr("Registration Failed"), message);
+
+        SyncLoginInfo();
+        SaveLoginConfig();
     }
 }
 
@@ -128,7 +126,7 @@ void AuthDialog::on_pushButtonLogin_clicked()
     const QString password { ui->lineEditPassword->text() };
     const QString workspace { ui->lineEditWorkspace->text() };
 
-    if (!ValidateEmail(this, email))
+    if (!ValidateEmail(email))
         return;
 
     if (password.isEmpty()) {
@@ -142,6 +140,9 @@ void AuthDialog::on_pushButtonLogin_clicked()
     }
 
     WebSocket::Instance()->SendMessage(kLogin, JsonGen::Login(email, password, workspace));
+
+    SyncLoginInfo();
+    SaveLoginConfig();
 }
 
 void AuthDialog::RRegisterDialog()
@@ -211,13 +212,13 @@ void AuthDialog::InitConnect()
     connect(ui->labelLogin, &QLabel::linkActivated, this, &AuthDialog::RLoginDialog);
 }
 
-void AuthDialog::SyncLoginInfo(const QString& workspace)
+void AuthDialog::SyncLoginInfo()
 {
     LoginInfo& login_info { LoginInfo::Instance() };
 
     login_info.SetEmail(ui->lineEditEmail->text());
     login_info.SetPassword(ui->lineEditPassword->text());
-    login_info.SetWorkspace(workspace);
+    login_info.SetWorkspace(ui->lineEditWorkspace->text());
     login_info.SetIsSaved(ui->chkBoxSave->isChecked());
 }
 
@@ -238,21 +239,55 @@ QAction* AuthDialog::CreateAction(QLineEdit* lineEdit)
     return toggle_action;
 }
 
-bool AuthDialog::ValidateEmail(QWidget* parent, const QString& email)
+bool AuthDialog::ValidateEmail(const QString& email)
 {
     if (email.isEmpty()) {
-        QMessageBox::warning(parent, tr("Invalid Information"), tr("Email cannot be empty"));
+        QMessageBox::warning(this, tr("Invalid Information"), tr("Email cannot be empty"));
         return false;
     }
 
-    // static QRegularExpression email_regex(
-    //     R"(^[A-Za-z0-9][A-Za-z0-9._%+-]*[A-Za-z0-9]@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)*\.[A-Za-z]{2,}$)");
+    static QRegularExpression re(R"(^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$)");
 
-    static QRegularExpression email_regex(R"(^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$)");
-
-    if (!email_regex.match(email).hasMatch()) {
-        QMessageBox::warning(parent, tr("Invalid Information"), tr("Invalid email format"));
+    if (!re.match(email).hasMatch()) {
+        QMessageBox::warning(this, tr("Invalid Information"), tr("Please enter a valid email address."));
         return false;
+    }
+
+    return true;
+}
+
+bool AuthDialog::ValidatePassword(const QString& password)
+{
+    if (password.length() < 8) {
+        QMessageBox::warning(this, tr("Invalid Password"), tr("Password must be at least 8 characters long."));
+        return false;
+    }
+
+    {
+        static QRegularExpression re(R"([A-Za-z])");
+
+        if (!password.contains(re)) {
+            QMessageBox::warning(this, tr("Invalid Password"), tr("Password must include at least one letter."));
+            return false;
+        }
+    }
+
+    {
+        static QRegularExpression re(R"(\d)");
+
+        if (!password.contains(re)) {
+            QMessageBox::warning(this, tr("Invalid Password"), tr("Password must include at least one digit."));
+            return false;
+        }
+    }
+
+    {
+        static QRegularExpression re(R"([^\w\s])");
+
+        if (!password.contains(re)) {
+            QMessageBox::warning(this, tr("Invalid Password"), tr("Password must include at least one special character."));
+            return false;
+        }
     }
 
     return true;
@@ -264,11 +299,10 @@ void AuthDialog::on_pushButtonRegister_clicked()
     const QString password { ui->lineEditPassword->text() };
     const QString confirm_pwd { ui->lineEditPasswordConfirm->text() };
 
-    if (!ValidateEmail(this, email))
+    if (!ValidateEmail(email))
         return;
 
-    if (password.isEmpty()) {
-        QMessageBox::warning(this, tr("Invalid Information"), tr("Password cannot be empty"));
+    if (!ValidatePassword(password)) {
         return;
     }
 
