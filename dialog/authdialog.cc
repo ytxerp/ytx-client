@@ -155,7 +155,7 @@ void AuthDialog::RRegisterDialog()
 
     ui->labelSignUp->setHidden(true);
     ui->lineEditWorkspace->setHidden(true);
-    ui->chkBoxSave->setHidden(true);
+    ui->chkBoxPasswordRemembered->setHidden(true);
     ui->pushButtonLogin->setHidden(true);
 
     ui->labelLogin->show();
@@ -172,7 +172,7 @@ void AuthDialog::RLoginDialog()
     ui->lineEditEmail->setText(login_info.Email());
     ui->lineEditWorkspace->setText(login_info.Workspace());
     ui->lineEditPassword->setText(login_info.Password());
-    ui->chkBoxSave->setChecked(login_info.IsSaved());
+    ui->chkBoxPasswordRemembered->setChecked(login_info.PasswordRemembered());
 
     ui->labelHeader->setText(tr("Log in to YTX account"));
     ui->labelTail->setText(tr("Don't have YTX account?"));
@@ -182,7 +182,7 @@ void AuthDialog::RLoginDialog()
     ui->lineEditPasswordConfirm->setHidden(true);
 
     ui->labelSignUp->show();
-    ui->chkBoxSave->show();
+    ui->chkBoxPasswordRemembered->show();
     ui->pushButtonLogin->show();
     ui->lineEditWorkspace->show();
 
@@ -191,10 +191,10 @@ void AuthDialog::RLoginDialog()
 
 void AuthDialog::SaveLoginConfig()
 {
-    const bool is_saved { ui->chkBoxSave->isChecked() };
+    const bool is_saved { ui->chkBoxPasswordRemembered->isChecked() };
 
     LoginInfo& login_info { LoginInfo::Instance() };
-    login_info.SetIsSaved(is_saved);
+    login_info.SetPasswordRemembered(is_saved);
 
     if (!is_saved)
         login_info.SetPassword({});
@@ -218,7 +218,7 @@ void AuthDialog::SyncLoginInfo()
     login_info.SetEmail(ui->lineEditEmail->text());
     login_info.SetPassword(ui->lineEditPassword->text());
     login_info.SetWorkspace(ui->lineEditWorkspace->text());
-    login_info.SetIsSaved(ui->chkBoxSave->isChecked());
+    login_info.SetPasswordRemembered(ui->chkBoxPasswordRemembered->isChecked());
 }
 
 QAction* AuthDialog::CreateAction(QLineEdit* lineEdit)
@@ -227,11 +227,15 @@ QAction* AuthDialog::CreateAction(QLineEdit* lineEdit)
     toggle_action->setCheckable(true);
     lineEdit->addAction(toggle_action, QLineEdit::TrailingPosition);
 
+    toggle_action->setIcon(QIcon(":/solarized_dark/solarized_dark/eye_closed.png"));
+
     connect(toggle_action, &QAction::toggled, this, [=](bool checked) {
         if (checked) {
             lineEdit->setEchoMode(QLineEdit::Normal);
+            toggle_action->setIcon(QIcon(":/solarized_dark/solarized_dark/eye_open.png"));
         } else {
             lineEdit->setEchoMode(QLineEdit::Password);
+            toggle_action->setIcon(QIcon(":/solarized_dark/solarized_dark/eye_closed.png"));
         }
     });
 

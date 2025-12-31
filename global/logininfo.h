@@ -40,13 +40,13 @@ public:
     const QString& Email() const { return email_; }
     const QString& Password() const { return password_; }
     const QString& Workspace() const { return workspace_; }
-    bool IsSaved() const { return is_saved_; }
+    bool PasswordRemembered() const { return password_remembered_; }
 
     // Setter
     void SetEmail(const QString& value) { email_ = value; }
     void SetPassword(const QString& value) { password_ = value; }
     void SetWorkspace(const QString& value) { workspace_ = value; }
-    void SetIsSaved(bool value) { is_saved_ = value; }
+    void SetPasswordRemembered(bool value) { password_remembered_ = value; }
 
     void Clear();
 
@@ -63,7 +63,7 @@ private:
     QString email_ {};
     QString password_ {};
     QString workspace_ {};
-    bool is_saved_ { false };
+    bool password_remembered_ { false };
 };
 
 #endif // LOGININFO_H
