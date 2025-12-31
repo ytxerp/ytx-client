@@ -90,8 +90,12 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../dialog/authdialog.ui" line="184"/>
+        <source>Password Remembered</source>
+        <translation>记住密码</translation>
+    </message>
+    <message>
         <source>Save</source>
-        <translation>保存</translation>
+        <translation type="vanished">保存</translation>
     </message>
     <message>
         <location filename="../../dialog/authdialog.ui" line="108"/>
@@ -216,12 +220,12 @@ Rage, rage against the dying of the light.</source>
         <translation>工区无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="309"/>
+        <location filename="../../dialog/authdialog.cc" line="313"/>
         <source>Password Mismatch</source>
         <translation>密码不一致</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="309"/>
+        <location filename="../../dialog/authdialog.cc" line="313"/>
         <source>The passwords do not match.</source>
         <translation>两次输入的密码不一致。</translation>
     </message>
@@ -264,7 +268,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">信息无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="244"/>
+        <location filename="../../dialog/authdialog.cc" line="248"/>
         <source>Email cannot be empty</source>
         <translation>邮箱不能为空</translation>
     </message>
@@ -277,41 +281,41 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">密码不能为空</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="244"/>
-        <location filename="../../dialog/authdialog.cc" line="251"/>
+        <location filename="../../dialog/authdialog.cc" line="248"/>
+        <location filename="../../dialog/authdialog.cc" line="255"/>
         <source>Invalid Email</source>
         <translation>邮箱无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="251"/>
+        <location filename="../../dialog/authdialog.cc" line="255"/>
         <source>Please enter a valid email address.</source>
         <translation>请输入有效的邮箱地址。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="261"/>
-        <location filename="../../dialog/authdialog.cc" line="269"/>
-        <location filename="../../dialog/authdialog.cc" line="278"/>
-        <location filename="../../dialog/authdialog.cc" line="287"/>
+        <location filename="../../dialog/authdialog.cc" line="265"/>
+        <location filename="../../dialog/authdialog.cc" line="273"/>
+        <location filename="../../dialog/authdialog.cc" line="282"/>
+        <location filename="../../dialog/authdialog.cc" line="291"/>
         <source>Invalid Password</source>
         <translation>密码无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="261"/>
+        <location filename="../../dialog/authdialog.cc" line="265"/>
         <source>Password must be at least 8 characters long.</source>
         <translation>密码长度不能少于 8 位。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="269"/>
+        <location filename="../../dialog/authdialog.cc" line="273"/>
         <source>Password must include at least one letter.</source>
         <translation>密码必须至少包含一个字母。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="278"/>
+        <location filename="../../dialog/authdialog.cc" line="282"/>
         <source>Password must include at least one digit.</source>
         <translation>密码必须至少包含一个数字。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="287"/>
+        <location filename="../../dialog/authdialog.cc" line="291"/>
         <source>Password must include at least one special character.</source>
         <translation>密码必须至少包含一个特殊字符。</translation>
     </message>
