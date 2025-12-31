@@ -33,8 +33,9 @@ public:
     static QByteArray GetMachineKey();
 
 private:
-    static constexpr int AES_BLOCK_SIZE = 16;
-    static constexpr int AES_KEY_SIZE = 32;
+    static constexpr int KEY_SIZE = 32; // ChaCha20-Poly1305 key size
+    static constexpr int NONCE_SIZE = 12; // ChaCha20-Poly1305 nonce size
+    static constexpr int TAG_SIZE = 16; // ChaCha20-Poly1305 tag size
 };
 
 #endif // PASSWORD_ENCRYPTION_H

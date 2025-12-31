@@ -11,11 +11,11 @@
 
 QString PasswordEncryption::Encrypt(const QString& plaintext, const QByteArray& machine_key)
 {
-    if (plaintext.isEmpty() || machine_key.size() != 32) {
+    if (plaintext.isEmpty() || machine_key.size() != KEY_SIZE) {
         return {};
     }
 
-    QByteArray nonce(12, 0);
+    QByteArray nonce(NONCE_SIZE, 0);
     if (RAND_bytes(reinterpret_cast<unsigned char*>(nonce.data()), nonce.size()) != 1) {
         qWarning() << "Failed to generate nonce";
         return {};
@@ -37,7 +37,7 @@ QString PasswordEncryption::Encrypt(const QString& plaintext, const QByteArray& 
 
     const QByteArray plain_data { plaintext.toUtf8() };
 
-    QByteArray ciphertext(plain_data.size() + 16, 0);
+    QByteArray ciphertext(plain_data.size() + TAG_SIZE, 0);
     int out_len = 0;
 
     if (EVP_EncryptUpdate(ctx, reinterpret_cast<unsigned char*>(ciphertext.data()), &out_len, reinterpret_cast<const unsigned char*>(plain_data.constData()),
@@ -58,8 +58,8 @@ QString PasswordEncryption::Encrypt(const QString& plaintext, const QByteArray& 
     out_len += final_len;
     ciphertext.resize(out_len);
 
-    QByteArray tag(16, 0);
-    if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, 16, tag.data()) != 1) {
+    QByteArray tag(TAG_SIZE, 0);
+    if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, TAG_SIZE, tag.data()) != 1) {
         qWarning() << "Failed to get tag";
         EVP_CIPHER_CTX_free(ctx);
         return {};
@@ -77,19 +77,19 @@ QString PasswordEncryption::Encrypt(const QString& plaintext, const QByteArray& 
 
 QString PasswordEncryption::Decrypt(const QString& ciphertext, const QByteArray& machine_key)
 {
-    if (ciphertext.isEmpty() || machine_key.size() != 32) {
+    if (ciphertext.isEmpty() || machine_key.size() != KEY_SIZE) {
         return {};
     }
 
     const QByteArray all_data { QByteArray::fromBase64(ciphertext.toLatin1()) };
-    if (all_data.size() < 12 + 16) { // nonce + tag
+    if (all_data.size() < NONCE_SIZE + TAG_SIZE) { // nonce + tag
         qWarning() << "Invalid ciphertext (too short)";
         return {};
     }
 
-    const QByteArray nonce { all_data.left(12) };
-    const QByteArray tag { all_data.right(16) };
-    const QByteArray encrypted { all_data.mid(12, all_data.size() - 12 - 16) };
+    const QByteArray nonce { all_data.left(NONCE_SIZE) };
+    const QByteArray tag { all_data.right(TAG_SIZE) };
+    const QByteArray encrypted { all_data.mid(NONCE_SIZE, all_data.size() - NONCE_SIZE - TAG_SIZE) };
 
     EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
     if (!ctx) {
@@ -105,7 +105,7 @@ QString PasswordEncryption::Decrypt(const QString& ciphertext, const QByteArray&
         return {};
     }
 
-    if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, 16, const_cast<unsigned char*>(reinterpret_cast<const unsigned char*>(tag.constData()))) != 1) {
+    if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, TAG_SIZE, const_cast<unsigned char*>(reinterpret_cast<const unsigned char*>(tag.constData()))) != 1) {
         qWarning() << "Failed to set tag";
         EVP_CIPHER_CTX_free(ctx);
         return {};
