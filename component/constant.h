@@ -335,7 +335,7 @@ inline const QString kDiscountTotal = QStringLiteral("discount_total");
 inline constexpr char kAction[] = "action";
 inline const QString kEntryAction = QStringLiteral("entry_action");
 
-inline const QString kIsSaved = QStringLiteral("is_saved");
+inline const QString kPasswordRemembered = QStringLiteral("password_remembered");
 
 inline const QString kIssuedTime = QStringLiteral("issued_time");
 inline const QString kStatus = QStringLiteral("status");

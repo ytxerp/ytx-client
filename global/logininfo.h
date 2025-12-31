@@ -27,11 +27,7 @@
 
 class LoginInfo {
 public:
-    static LoginInfo& Instance()
-    {
-        static LoginInfo instance {};
-        return instance;
-    }
+    static LoginInfo& Instance();
 
     void WriteConfig(QSharedPointer<QSettings> local_settings);
     void ReadConfig(QSharedPointer<QSettings> local_settings);
@@ -56,7 +52,7 @@ public:
     LoginInfo& operator=(LoginInfo&&) = delete;
 
 private:
-    LoginInfo() = default;
+    LoginInfo();
     ~LoginInfo() = default;
 
 private:
@@ -64,6 +60,7 @@ private:
     QString password_ {};
     QString workspace_ {};
     bool password_remembered_ { false };
+    QByteArray machine_key_ {};
 };
 
 #endif // LOGININFO_H

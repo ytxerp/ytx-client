@@ -9,120 +9,135 @@
 #include <QProcess>
 #include <QSettings>
 
-QByteArray PasswordEncryption::DeriveKey(const QString& key) { return QCryptographicHash::hash(key.toUtf8(), QCryptographicHash::Sha256); }
-
-QString PasswordEncryption::Encrypt(const QString& plaintext, const QString& key)
+QString PasswordEncryption::Encrypt(const QString& plaintext, const QByteArray& machine_key)
 {
-    if (plaintext.isEmpty()) {
+    if (plaintext.isEmpty() || machine_key.size() != 32) {
         return {};
     }
 
-    const QByteArray key_data { DeriveKey(key) };
-
-    unsigned char iv[AES_BLOCK_SIZE];
-    if (RAND_bytes(iv, AES_BLOCK_SIZE) != 1) {
-        qWarning() << "Failed to generate IV";
+    QByteArray nonce(12, 0);
+    if (RAND_bytes(reinterpret_cast<unsigned char*>(nonce.data()), nonce.size()) != 1) {
+        qWarning() << "Failed to generate nonce";
         return {};
     }
 
-    auto* ctx { EVP_CIPHER_CTX_new() };
+    EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
     if (!ctx) {
         qWarning() << "Failed to create cipher context";
         return {};
     }
 
-    if (EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), nullptr, reinterpret_cast<const unsigned char*>(key_data.constData()), iv) != 1) {
-        qWarning() << "Failed to initialize encryption";
+    if (EVP_EncryptInit_ex(ctx, EVP_chacha20_poly1305(), nullptr, reinterpret_cast<const unsigned char*>(machine_key.constData()),
+            reinterpret_cast<const unsigned char*>(nonce.constData()))
+        != 1) {
+        qWarning() << "EncryptInit failed";
         EVP_CIPHER_CTX_free(ctx);
         return {};
     }
 
     const QByteArray plain_data { plaintext.toUtf8() };
-    const long long plain_len { plain_data.size() };
 
-    QByteArray encrypted(plain_len + AES_BLOCK_SIZE, 0);
-    int encrypted_len = 0;
+    QByteArray ciphertext(plain_data.size() + 16, 0);
+    int out_len = 0;
 
-    if (EVP_EncryptUpdate(
-            ctx, reinterpret_cast<unsigned char*>(encrypted.data()), &encrypted_len, reinterpret_cast<const unsigned char*>(plain_data.constData()), plain_len)
+    if (EVP_EncryptUpdate(ctx, reinterpret_cast<unsigned char*>(ciphertext.data()), &out_len, reinterpret_cast<const unsigned char*>(plain_data.constData()),
+            plain_data.size())
         != 1) {
-        qWarning() << "Failed to encrypt data";
+        qWarning() << "EncryptUpdate failed";
         EVP_CIPHER_CTX_free(ctx);
         return {};
     }
 
-    int finalLen = 0;
-    if (EVP_EncryptFinal_ex(ctx, reinterpret_cast<unsigned char*>(encrypted.data()) + encrypted_len, &finalLen) != 1) {
-        qWarning() << "Failed to finalize encryption";
+    int final_len = 0;
+    if (EVP_EncryptFinal_ex(ctx, reinterpret_cast<unsigned char*>(ciphertext.data()) + out_len, &final_len) != 1) {
+        qWarning() << "EncryptFinal failed";
+        EVP_CIPHER_CTX_free(ctx);
+        return {};
+    }
+
+    out_len += final_len;
+    ciphertext.resize(out_len);
+
+    QByteArray tag(16, 0);
+    if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, 16, tag.data()) != 1) {
+        qWarning() << "Failed to get tag";
         EVP_CIPHER_CTX_free(ctx);
         return {};
     }
 
     EVP_CIPHER_CTX_free(ctx);
 
-    encrypted.resize(encrypted_len + finalLen);
+    QByteArray result {};
+    result.append(nonce);
+    result.append(ciphertext);
+    result.append(tag);
 
-    const QByteArray result { QByteArray(reinterpret_cast<const char*>(iv), AES_BLOCK_SIZE) + encrypted };
     return QString::fromLatin1(result.toBase64());
 }
 
-QString PasswordEncryption::Decrypt(const QString& ciphertext, const QString& key)
+QString PasswordEncryption::Decrypt(const QString& ciphertext, const QByteArray& machine_key)
 {
-    if (ciphertext.isEmpty()) {
+    if (ciphertext.isEmpty() || machine_key.size() != 32) {
         return {};
     }
 
-    const QByteArray encrypted_data { QByteArray::fromBase64(ciphertext.toLatin1()) };
-
-    if (encrypted_data.size() < AES_BLOCK_SIZE) {
-        qWarning() << "Invalid ciphertext length";
+    const QByteArray all_data { QByteArray::fromBase64(ciphertext.toLatin1()) };
+    if (all_data.size() < 12 + 16) { // nonce + tag
+        qWarning() << "Invalid ciphertext (too short)";
         return {};
     }
 
-    unsigned char iv[AES_BLOCK_SIZE];
-    memcpy(iv, encrypted_data.constData(), AES_BLOCK_SIZE);
+    const QByteArray nonce { all_data.left(12) };
+    const QByteArray tag { all_data.right(16) };
+    const QByteArray encrypted { all_data.mid(12, all_data.size() - 12 - 16) };
 
-    const QByteArray encrypted { encrypted_data.mid(AES_BLOCK_SIZE) };
-
-    const QByteArray key_data { DeriveKey(key) };
-
-    auto* ctx { EVP_CIPHER_CTX_new() };
+    EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
     if (!ctx) {
         qWarning() << "Failed to create cipher context";
         return {};
     }
 
-    if (EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), nullptr, reinterpret_cast<const unsigned char*>(key_data.constData()), iv) != 1) {
-        qWarning() << "Failed to initialize decryption";
+    if (EVP_DecryptInit_ex(ctx, EVP_chacha20_poly1305(), nullptr, reinterpret_cast<const unsigned char*>(machine_key.constData()),
+            reinterpret_cast<const unsigned char*>(nonce.constData()))
+        != 1) {
+        qWarning() << "DecryptInit failed";
+        EVP_CIPHER_CTX_free(ctx);
+        return {};
+    }
+
+    if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, 16, const_cast<unsigned char*>(reinterpret_cast<const unsigned char*>(tag.constData()))) != 1) {
+        qWarning() << "Failed to set tag";
         EVP_CIPHER_CTX_free(ctx);
         return {};
     }
 
     QByteArray decrypted(encrypted.size(), 0);
-    int decryptedLen = 0;
+    int out_len = 0;
 
-    if (EVP_DecryptUpdate(ctx, reinterpret_cast<unsigned char*>(decrypted.data()), &decryptedLen, reinterpret_cast<const unsigned char*>(encrypted.constData()),
-            encrypted.size())
+    if (EVP_DecryptUpdate(
+            ctx, reinterpret_cast<unsigned char*>(decrypted.data()), &out_len, reinterpret_cast<const unsigned char*>(encrypted.constData()), encrypted.size())
         != 1) {
-        qWarning() << "Failed to decrypt data";
+        qWarning() << "DecryptUpdate failed";
         EVP_CIPHER_CTX_free(ctx);
         return {};
     }
 
-    int finalLen = 0;
-    if (EVP_DecryptFinal_ex(ctx, reinterpret_cast<unsigned char*>(decrypted.data()) + decryptedLen, &finalLen) != 1) {
-        qWarning() << "Failed to finalize decryption";
+    int final_len = 0;
+    if (EVP_DecryptFinal_ex(ctx, reinterpret_cast<unsigned char*>(decrypted.data()) + out_len, &final_len) != 1) {
+        qWarning() << "DecryptFinal failed (tag verification failed or padding error)";
         EVP_CIPHER_CTX_free(ctx);
         return {};
     }
+
+    out_len += final_len;
+    decrypted.resize(out_len);
 
     EVP_CIPHER_CTX_free(ctx);
 
-    decrypted.resize(decryptedLen + finalLen);
     return QString::fromUtf8(decrypted);
 }
 
-QString PasswordEncryption::GetMachineKey()
+QByteArray PasswordEncryption::GetMachineKey()
 {
     QString machine_id {};
 
@@ -164,6 +179,5 @@ QString PasswordEncryption::GetMachineKey()
         machine_id = "default-application-key-" + qAppName();
     }
 
-    const QByteArray hash { QCryptographicHash::hash(machine_id.toUtf8(), QCryptographicHash::Sha256) };
-    return QString::fromLatin1(hash.toHex());
+    return QCryptographicHash::hash(machine_id.toUtf8(), QCryptographicHash::Sha256);
 }

@@ -23,15 +23,16 @@
 #ifndef PASSWORD_ENCRYPTION_H
 #define PASSWORD_ENCRYPTION_H
 
+// Encrypted format:
+// Base64( nonce[12] | ciphertext[N] | tag[16] )
+
 class PasswordEncryption {
 public:
-    static QString Encrypt(const QString& plaintext, const QString& key);
-    static QString Decrypt(const QString& ciphertext, const QString& key);
-    static QString GetMachineKey();
+    static QString Encrypt(const QString& plaintext, const QByteArray& machine_key);
+    static QString Decrypt(const QString& ciphertext, const QByteArray& machine_key);
+    static QByteArray GetMachineKey();
 
 private:
-    static QByteArray DeriveKey(const QString& key);
-
     static constexpr int AES_BLOCK_SIZE = 16;
     static constexpr int AES_KEY_SIZE = 32;
 };
