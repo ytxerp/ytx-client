@@ -36,6 +36,9 @@ AuthDialog::~AuthDialog() { delete ui; }
 void AuthDialog::RLoginResult(bool result, int code)
 {
     if (result) {
+        SyncLoginInfo();
+        LoginInfo::Instance().WriteConfig(local_settings_);
+
         close();
         return;
     }
@@ -85,6 +88,8 @@ void AuthDialog::RRegisterResult(bool result, int code)
 {
     if (result) {
         SyncLoginInfo();
+        LoginInfo::Instance().WriteConfig(local_settings_);
+
         RLoginDialog();
         QMessageBox::information(this, tr("Registration Successful"), tr("Your account has been registered successfully."));
         return;
@@ -114,9 +119,6 @@ void AuthDialog::RRegisterResult(bool result, int code)
         }
 
         QMessageBox::critical(this, tr("Registration Failed"), message);
-
-        SyncLoginInfo();
-        SaveLoginConfig();
     }
 }
 
@@ -124,7 +126,7 @@ void AuthDialog::on_pushButtonLogin_clicked()
 {
     const QString email { ui->lineEditEmail->text().trimmed() };
     const QString password { ui->lineEditPassword->text() };
-    const QString workspace { ui->lineEditWorkspace->text() };
+    const QString workspace { ui->lineEditWorkspace->text().trimmed() };
 
     if (!ValidateEmail(email))
         return;
@@ -139,9 +141,6 @@ void AuthDialog::on_pushButtonLogin_clicked()
     }
 
     WebSocket::Instance()->SendMessage(kLogin, JsonGen::Login(email, password, workspace));
-
-    SyncLoginInfo();
-    SaveLoginConfig();
 }
 
 void AuthDialog::RRegisterDialog()
@@ -189,19 +188,6 @@ void AuthDialog::RLoginDialog()
     adjustSize();
 }
 
-void AuthDialog::SaveLoginConfig()
-{
-    const bool is_saved { ui->chkBoxPasswordRemembered->isChecked() };
-
-    LoginInfo& login_info { LoginInfo::Instance() };
-    login_info.SetPasswordRemembered(is_saved);
-
-    if (!is_saved)
-        login_info.SetPassword({});
-
-    login_info.WriteConfig(local_settings_);
-}
-
 void AuthDialog::InitConnect()
 {
     connect(WebSocket::Instance(), &WebSocket::SLoginResult, this, &AuthDialog::RLoginResult);
@@ -215,10 +201,13 @@ void AuthDialog::SyncLoginInfo()
 {
     LoginInfo& login_info { LoginInfo::Instance() };
 
-    login_info.SetEmail(ui->lineEditEmail->text());
-    login_info.SetPassword(ui->lineEditPassword->text());
-    login_info.SetWorkspace(ui->lineEditWorkspace->text());
-    login_info.SetPasswordRemembered(ui->chkBoxPasswordRemembered->isChecked());
+    login_info.SetEmail(ui->lineEditEmail->text().trimmed());
+    login_info.SetWorkspace(ui->lineEditWorkspace->text().trimmed());
+
+    const bool remember { ui->chkBoxPasswordRemembered->isChecked() };
+
+    login_info.SetPasswordRemembered(remember);
+    login_info.SetPassword(remember ? ui->lineEditPassword->text() : QString());
 }
 
 QAction* AuthDialog::CreateAction(QLineEdit* lineEdit)

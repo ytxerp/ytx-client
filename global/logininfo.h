@@ -44,6 +44,7 @@ public:
     void SetWorkspace(const QString& value) { workspace_ = value; }
     void SetPasswordRemembered(bool value) { password_remembered_ = value; }
 
+    // Remove
     void Clear();
 
     LoginInfo(const LoginInfo&) = delete;
@@ -60,6 +61,7 @@ private:
     QString password_ {};
     QString workspace_ {};
     bool password_remembered_ { false };
+
     QByteArray machine_key_ {};
 };
 

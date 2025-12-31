@@ -15,6 +15,7 @@ void LoginInfo::WriteConfig(QSharedPointer<QSettings> local_settings)
         return;
 
     local_settings->beginGroup(kLogin);
+
     local_settings->setValue(kUser, email_);
 
     if (password_remembered_ && !password_.isEmpty()) {
@@ -26,6 +27,7 @@ void LoginInfo::WriteConfig(QSharedPointer<QSettings> local_settings)
 
     local_settings->setValue(kWorkspace, workspace_);
     local_settings->setValue(kPasswordRemembered, password_remembered_);
+
     local_settings->endGroup();
 }
 
@@ -35,21 +37,23 @@ void LoginInfo::ReadConfig(QSharedPointer<QSettings> local_settings)
         return;
 
     local_settings->beginGroup(kLogin);
+
     email_ = local_settings->value(kUser, {}).toString();
     password_remembered_ = local_settings->value(kPasswordRemembered, false).toBool();
+    workspace_ = local_settings->value(kWorkspace, {}).toString();
 
     const QString encrypted_pwd { local_settings->value(kPassword, {}).toString() };
 
     if (password_remembered_ && !encrypted_pwd.isEmpty()) {
-        const auto decrypted { PasswordEncryption::Decrypt(encrypted_pwd, machine_key_) };
-        password_ = decrypted.isEmpty() ? QString {} : decrypted;
+        password_ = PasswordEncryption::Decrypt(encrypted_pwd, machine_key_);
     } else {
         password_.clear();
     }
 
-    workspace_ = local_settings->value(kWorkspace, {}).toString();
     local_settings->endGroup();
 }
+
+
 
 void LoginInfo::Clear()
 {

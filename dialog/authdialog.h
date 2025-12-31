@@ -47,7 +47,6 @@ private slots:
     void on_pushButtonRegister_clicked();
 
 private:
-    void SaveLoginConfig();
     void InitConnect();
     void SyncLoginInfo();
     QAction* CreateAction(QLineEdit* lineEdit);
