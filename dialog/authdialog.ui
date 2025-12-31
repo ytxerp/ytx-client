@@ -177,9 +177,6 @@
      </item>
      <item>
       <widget class="QCheckBox" name="chkBoxPasswordRemembered">
-       <property name="toolTip">
-        <string>The password will be saved locally on this computer. Please choose carefully.</string>
-       </property>
        <property name="text">
         <string>Password Remembered</string>
        </property>

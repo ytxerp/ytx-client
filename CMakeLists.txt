@@ -19,6 +19,25 @@ set(QT_FORCE_CMP0156_TO_VALUE NEW)
 # set(CMAKE_BUILD_TYPE Debug)
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
+if(APPLE)
+    set(OPENSSL_ROOT_DIR "/opt/homebrew/opt/openssl@3")
+elseif(WIN32)
+    set(OPENSSL_ROOT_DIR "C:/Program Files/OpenSSL-Win64")
+elseif(UNIX)
+    set(OPENSSL_ROOT_DIR "/usr/local/ssl")
+endif()
+
+find_package(OpenSSL REQUIRED)
+
+if(OpenSSL_FOUND)
+    message(STATUS "✅ OpenSSL ${OPENSSL_VERSION} found")
+    message(STATUS "   Include: ${OPENSSL_INCLUDE_DIR}")
+    message(STATUS "   SSL Library: ${OPENSSL_SSL_LIBRARY}")
+    message(STATUS "   Crypto Library: ${OPENSSL_CRYPTO_LIBRARY}")
+else()
+    message(FATAL_ERROR "❌ OpenSSL not found!")
+endif()
+
 option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
 
 if(CMAKE_BUILD_TYPE MATCHES Debug AND ENABLE_ASAN)
@@ -90,6 +109,7 @@ set(SOURCES
     utils/nodeutils.cc
     utils/mainwindowutils.cc
     global/printhub.cc
+    global/password_encryption.cc
     search/entry/searchentrymodelo.cc
     search/entry/searchentrymodel.cc
     search/entry/searchentrymodelp.cc
@@ -249,6 +269,7 @@ set(HEADERS
     utils/castutils.h
     utils/mainutils.h
     global/printhub.h
+    global/password_encryption.h
     search/entry/searchentrymodel.h
     search/entry/searchentrymodeli.h
     search/entry/searchentrymodelt.h
@@ -471,4 +492,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::PrintSupport
     Qt6::WebSockets
     YXlsx::YXlsx
+    OpenSSL::SSL
+    OpenSSL::Crypto
 )

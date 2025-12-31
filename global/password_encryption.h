@@ -1,0 +1,39 @@
+/*
+ * Copyright (C) 2023 YTX
+ *
+ * This file is part of YTX.
+ *
+ * YTX is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * YTX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with YTX. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#include <QByteArray>
+#include <QString>
+
+#ifndef PASSWORD_ENCRYPTION_H
+#define PASSWORD_ENCRYPTION_H
+
+class PasswordEncryption {
+public:
+    static QString Encrypt(const QString& plaintext, const QString& key);
+    static QString Decrypt(const QString& ciphertext, const QString& key);
+    static QString GetMachineKey();
+
+private:
+    static QByteArray DeriveKey(const QString& key);
+
+    static constexpr int AES_BLOCK_SIZE = 16;
+    static constexpr int AES_KEY_SIZE = 32;
+};
+
+#endif // PASSWORD_ENCRYPTION_H
