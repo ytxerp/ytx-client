@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QIcon>
 #include <QProcess>
+#include <QSslSocket>
 
 namespace MainUtils {
 
@@ -52,6 +53,21 @@ inline QString ResourceFile()
     return path;
 }
 
+inline void CheckOpenSSLRuntime()
+{
+    qDebug() << "SSL supported:" << QSslSocket::supportsSsl();
+
+    if (!QSslSocket::supportsSsl()) {
+        qCritical() << "❌ SSL NOT supported. OpenSSL not loaded!";
+        return;
+    }
+
+    qDebug() << "SSL library build version:" << QSslSocket::sslLibraryBuildVersionString();
+    qDebug() << "SSL library runtime version:" << QSslSocket::sslLibraryVersionString();
+    qDebug() << "Available SSL backends:" << QSslSocket::availableBackends();
+    qDebug() << "Active SSL backend:" << QSslSocket::activeBackend();
+}
+
 inline void SetAppIcon(QApplication& app)
 {
 #ifdef Q_OS_WIN
@@ -60,6 +76,6 @@ inline void SetAppIcon(QApplication& app)
     app.setWindowIcon(QIcon(":/logo/logo/logo.icns"));
 #endif
 }
-}
+} // namespace MainUtils
 
 #endif // MAINUTILS_H

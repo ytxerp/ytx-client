@@ -19,12 +19,30 @@ set(QT_FORCE_CMP0156_TO_VALUE NEW)
 # set(CMAKE_BUILD_TYPE Debug)
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
+# How to install OpenSSL for Qt / LLVM-MinGW on Windows
+#
+# 1. Download and install MSYS2 from:
+#    https://www.msys2.org/
+#
+# 2. Open the MSYS2 shell and update the system:
+#    pacman -Syu
+#    (Close the shell when prompted, then reopen and run again)
+#    pacman -Syu
+#
+# 3. Launch "MSYS2 MinGW64" (important: NOT MSYS, NOT UCRT)
+#
+# 4. Install OpenSSL for MinGW-w64:
+#    pacman -S mingw-w64-x86_64-openssl
+#
+# 5. After installation, OpenSSL will be located at:
+#    D:/msys64/mingw64
+#
+# 6. Use this path as OPENSSL_ROOT_DIR when building with Qt + LLVM-MinGW
+
 if(APPLE)
     set(OPENSSL_ROOT_DIR "/opt/homebrew/opt/openssl@3")
 elseif(WIN32)
-    set(OPENSSL_ROOT_DIR "C:/Program Files/OpenSSL-Win64")
-elseif(UNIX)
-    set(OPENSSL_ROOT_DIR "/usr/local/ssl")
+    set(OPENSSL_ROOT_DIR "D:/msys64/mingw64")
 endif()
 
 find_package(OpenSSL REQUIRED)
