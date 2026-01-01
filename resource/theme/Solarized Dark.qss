@@ -230,11 +230,11 @@ QRadioButton::indicator {
     height: 13px;
 }
 
-QDialog QRadioButton::indicator:unchecked {
+QRadioButton::indicator:unchecked {
     image: url(:/solarized_dark/solarized_dark/radio_unchecked.png);
 }
 
-QDialog QRadioButton::indicator:checked {
+QRadioButton::indicator:checked {
     image: url(:/solarized_dark/solarized_dark/radio_checked.png);
 }
 
@@ -245,14 +245,6 @@ QGroupBox#groupBoxSection QRadioButton::indicator {
 
 QWidget#TableWidgetO QRadioButton {
     min-width: 3em;
-}
-
-QRadioButton#rBtnNode,
-QRadioButton#rBtnEntry {
-    border: 1px solid #657B83;
-    background-color: transparent;
-    border-radius: 4px;
-    padding: 2px 4px;
 }
 
 /* ==================== Tree View Branches ==================== */
