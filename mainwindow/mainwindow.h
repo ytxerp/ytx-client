@@ -70,8 +70,8 @@ private slots:
     void on_actionPreferences_triggered();
     void on_actionSearch_triggered();
 
-    void on_actionLogin_triggered();
-    void on_actionLogout_triggered();
+    void on_actionSignIn_triggered();
+    void on_actionSignOut_triggered();
     void on_actionReconnect_triggered();
 
     void on_actionCheckforUpdates_triggered();

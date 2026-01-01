@@ -17,12 +17,10 @@ AuthDialog::AuthDialog(QSharedPointer<QSettings> local_settings, QWidget* parent
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    setWindowTitle(tr("Authentication"));
-
     ui->labelSignUp->setFocusPolicy(Qt::NoFocus);
-    ui->labelLogin->setFocusPolicy(Qt::NoFocus);
+    ui->labelSignIn->setFocusPolicy(Qt::NoFocus);
     ui->labelSignUp->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-    ui->labelLogin->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+    ui->labelSignIn->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
 
     action_password_ = CreateAction(ui->lineEditPassword);
     action_confirm_ = CreateAction(ui->lineEditPasswordConfirm);
@@ -157,9 +155,11 @@ void AuthDialog::RRegisterDialog()
     ui->chkBoxPasswordRemembered->setHidden(true);
     ui->pushButtonLogin->setHidden(true);
 
-    ui->labelLogin->show();
+    ui->labelSignIn->show();
     ui->pushButtonRegister->show();
     ui->lineEditPasswordConfirm->show();
+
+    setWindowTitle(tr("Sign Up"));
 
     adjustSize();
 }
@@ -177,13 +177,15 @@ void AuthDialog::RLoginDialog()
     ui->labelTail->setText(tr("Don't have YTX account?"));
 
     ui->pushButtonRegister->setHidden(true);
-    ui->labelLogin->setHidden(true);
+    ui->labelSignIn->setHidden(true);
     ui->lineEditPasswordConfirm->setHidden(true);
 
     ui->labelSignUp->show();
     ui->chkBoxPasswordRemembered->show();
     ui->pushButtonLogin->show();
     ui->lineEditWorkspace->show();
+
+    setWindowTitle(tr("Sign In"));
 
     adjustSize();
 }
@@ -194,7 +196,7 @@ void AuthDialog::InitConnect()
     connect(WebSocket::Instance(), &WebSocket::SRegisterResult, this, &AuthDialog::RRegisterResult);
 
     connect(ui->labelSignUp, &QLabel::linkActivated, this, &AuthDialog::RRegisterDialog);
-    connect(ui->labelLogin, &QLabel::linkActivated, this, &AuthDialog::RLoginDialog);
+    connect(ui->labelSignIn, &QLabel::linkActivated, this, &AuthDialog::RLoginDialog);
 }
 
 void AuthDialog::SyncLoginInfo()

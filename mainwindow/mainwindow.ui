@@ -211,8 +211,8 @@
     <property name="title">
      <string>Account</string>
     </property>
-    <addaction name="actionLogin"/>
-    <addaction name="actionLogout"/>
+    <addaction name="actionSignIn"/>
+    <addaction name="actionSignOut"/>
     <addaction name="separator"/>
     <addaction name="actionReconnect"/>
     <addaction name="separator"/>
@@ -401,23 +401,29 @@
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionLogin">
+  <action name="actionSignIn">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Login...</string>
+    <string>Sign In...</string>
+   </property>
+   <property name="toolTip">
+    <string>Sign In</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionLogout">
+  <action name="actionSignOut">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Logout</string>
+    <string>Sign Out</string>
+   </property>
+   <property name="toolTip">
+    <string>Sign Out</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
