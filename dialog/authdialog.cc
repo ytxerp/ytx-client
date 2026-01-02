@@ -22,6 +22,9 @@ AuthDialog::AuthDialog(QSharedPointer<QSettings> local_settings, QWidget* parent
     ui->labelSignUp->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
     ui->labelSignIn->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
 
+    CreateAction(ui->lineEditPassword);
+    CreateAction(ui->lineEditPasswordConfirm);
+
     RLoginDialog();
     InitConnect();
 }
