@@ -46,5 +46,7 @@
         <file>solarized_dark/radio_unchecked.png</file>
         <file>solarized_dark/eye_closed.png</file>
         <file>solarized_dark/eye_open.png</file>
+        <file>solarized_dark/update.png</file>
+        <file>solarized_dark/quit.png</file>
     </qresource>
 </RCC>

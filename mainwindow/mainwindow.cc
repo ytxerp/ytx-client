@@ -368,6 +368,7 @@ void MainWindow::SetIcon() const
     ui->actionEditName->setIcon(QIcon(":/solarized_dark/solarized_dark/edit.png"));
     ui->actionRemove->setIcon(QIcon(":/solarized_dark/solarized_dark/remove.png"));
     ui->actionAbout->setIcon(QIcon(":/solarized_dark/solarized_dark/about.png"));
+    ui->actionCheckforUpdates->setIcon(QIcon(":/solarized_dark/solarized_dark/update.png"));
     ui->actionAppendNode->setIcon(QIcon(":/solarized_dark/solarized_dark/append.png"));
     ui->actionJump->setIcon(QIcon(":/solarized_dark/solarized_dark/jump.png"));
     ui->actionPreferences->setIcon(QIcon(":/solarized_dark/solarized_dark/settings.png"));
@@ -380,6 +381,7 @@ void MainWindow::SetIcon() const
     ui->actionSettlement->setIcon(QIcon(":/solarized_dark/solarized_dark/settle.png"));
     ui->actionResetColor->setIcon(QIcon(":/solarized_dark/solarized_dark/reset_color.png"));
     ui->actionNewGroup->setIcon(QIcon(":/solarized_dark/solarized_dark/new-group.png"));
+    ui->actionQuit->setIcon(QIcon(":/solarized_dark/solarized_dark/quit.png"));
 }
 
 void MainWindow::on_actionInsertNode_triggered()
