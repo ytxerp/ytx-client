@@ -22,9 +22,6 @@ AuthDialog::AuthDialog(QSharedPointer<QSettings> local_settings, QWidget* parent
     ui->labelSignUp->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
     ui->labelSignIn->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
 
-    action_password_ = CreateAction(ui->lineEditPassword);
-    action_confirm_ = CreateAction(ui->lineEditPasswordConfirm);
-
     RLoginDialog();
     InitConnect();
 }
@@ -212,25 +209,23 @@ void AuthDialog::SyncLoginInfo()
     login_info.SetPassword(remember ? ui->lineEditPassword->text() : QString());
 }
 
-QAction* AuthDialog::CreateAction(QLineEdit* lineEdit)
+void AuthDialog::CreateAction(QLineEdit* lineEdit)
 {
-    QAction* toggle_action { new QAction(lineEdit) };
-    toggle_action->setCheckable(true);
-    lineEdit->addAction(toggle_action, QLineEdit::TrailingPosition);
+    QAction* action { new QAction(lineEdit) };
+    action->setCheckable(true);
+    lineEdit->addAction(action, QLineEdit::TrailingPosition);
 
-    toggle_action->setIcon(QIcon(":/solarized_dark/solarized_dark/eye_closed.png"));
+    action->setIcon(QIcon(":/solarized_dark/solarized_dark/eye_closed.png"));
 
-    connect(toggle_action, &QAction::toggled, this, [=](bool checked) {
+    connect(action, &QAction::toggled, this, [=](bool checked) {
         if (checked) {
             lineEdit->setEchoMode(QLineEdit::Normal);
-            toggle_action->setIcon(QIcon(":/solarized_dark/solarized_dark/eye_open.png"));
+            action->setIcon(QIcon(":/solarized_dark/solarized_dark/eye_open.png"));
         } else {
             lineEdit->setEchoMode(QLineEdit::Password);
-            toggle_action->setIcon(QIcon(":/solarized_dark/solarized_dark/eye_closed.png"));
+            action->setIcon(QIcon(":/solarized_dark/solarized_dark/eye_closed.png"));
         }
     });
-
-    return toggle_action;
 }
 
 bool AuthDialog::ValidateEmail(const QString& email)

@@ -49,7 +49,7 @@ private slots:
 private:
     void InitConnect();
     void SyncLoginInfo();
-    QAction* CreateAction(QLineEdit* lineEdit);
+    void CreateAction(QLineEdit* lineEdit);
 
     bool ValidateEmail(const QString& email);
     bool ValidatePassword(const QString& password);
@@ -57,8 +57,6 @@ private:
 private:
     Ui::AuthDialog* ui;
     QSharedPointer<QSettings> local_settings_ {};
-    QAction* action_password_ {};
-    QAction* action_confirm_ {};
 };
 
 #endif // AUTHDIALOG_H
