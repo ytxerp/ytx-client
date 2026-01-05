@@ -120,13 +120,11 @@ int MainWindowUtils::CompareVersion(const QString& v1, const QString& v2)
     return 0; // equal
 }
 
-QString MainWindowUtils::SectionFile(const QString& email, const QString& workspace)
+QString MainWindowUtils::AccountIniFileName(const QString& email)
 {
-    QString email_prefix { email.section('@', 0, 0) };
+    QString file_name { email.section('@', 0, 0) };
 
-    QString file_name { email_prefix + "_" + workspace };
-
-    static QRegularExpression invalid_chars(R"([\\/:*?"<>| \t]+)");
+    static QRegularExpression invalid_chars(R"([^A-Za-z0-9_-]+)");
     file_name.replace(invalid_chars, "_");
 
     return file_name;

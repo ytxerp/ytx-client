@@ -29,7 +29,7 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
 
         if (!section_settings_) {
             const QString ini_file { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator()
-                + MainWindowUtils::SectionFile(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
+                + MainWindowUtils::AccountIniFileName(login_info.Email()) + kDotSuffixINI };
 
             section_settings_ = QSharedPointer<QSettings>::create(ini_file, QSettings::IniFormat);
         }
