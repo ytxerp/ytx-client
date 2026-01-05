@@ -29,15 +29,12 @@ public:
     TableModelF(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelF() override = default;
 
+    bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+
 protected:
     bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit) override;
     bool UpdateRate(EntryShadow* shadow, double value) override;
     bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row) override;
-    void InitRate(EntryShadow* shadow) const override
-    {
-        *shadow->lhs_rate = 1.0;
-        *shadow->rhs_rate = 1.0;
-    }
 };
 
 #endif // TABLEMODELF_H

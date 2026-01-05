@@ -75,7 +75,6 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
 
-    bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -103,8 +102,6 @@ protected:
         Q_UNUSED(value)
         return false;
     }
-
-    virtual void InitRate(EntryShadow* entry_shadow) const { Q_UNUSED(entry_shadow) }
 
     virtual bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row)
     {
@@ -135,6 +132,7 @@ protected:
     const Section section_ {};
 
     QList<EntryShadow*> shadow_list_ {};
+    QDateTime last_issued_ {};
 
     QHash<QUuid, QJsonObject> pending_updates_ {};
     QHash<QUuid, QTimer*> pending_timers_ {};

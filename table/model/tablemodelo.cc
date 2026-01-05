@@ -313,6 +313,9 @@ bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
     entry->id = QUuid::createUuidV7();
     entry->lhs_node = lhs_id_;
 
+    last_issued_ = last_issued_.isValid() ? last_issued_.addSecs(1) : QDateTime::currentDateTimeUtc();
+    entry->issued_time = last_issued_;
+
     beginInsertRows(parent, row, row);
     entry_list_.emplaceBack(entry);
     endInsertRows();

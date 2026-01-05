@@ -10,6 +10,21 @@ TableModelT::TableModelT(CTableModelArg& arg, TreeModelT* tree_model_t, QObject*
 {
 }
 
+bool TableModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
+{
+    assert(row >= 0 && row <= rowCount(parent));
+    if (IsReleased(lhs_id_, QUuid()))
+        return false;
+
+    auto* entry_shadow { InsertRowsImpl(row, parent) };
+
+    if (shadow_list_.size() == 1)
+        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
+
+    emit SInsertEntry(entry_shadow->entry);
+    return true;
+}
+
 bool TableModelT::UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit)
 {
     const double lhs_old_debit { *shadow->lhs_debit };

@@ -298,7 +298,9 @@ bool TableModelP::insertRows(int row, int, const QModelIndex& parent)
     auto* entry { EntryPool::Instance().Allocate(section_) };
     entry->id = QUuid::createUuidV7();
     entry->lhs_node = lhs_id_;
-    entry->issued_time = QDateTime::currentDateTimeUtc();
+
+    last_issued_ = last_issued_.isValid() ? last_issued_.addSecs(1) : QDateTime::currentDateTimeUtc();
+    entry->issued_time = last_issued_;
 
     beginInsertRows(parent, row, row);
     entry_list_.emplaceBack(entry);

@@ -59,7 +59,6 @@ public slots:
     void RRemoveEntry(const QUuid& entry_id);
 
 public:
-    // tree
     virtual void InsertEntry(const QJsonObject& data);
     virtual void RemoveEntry(const QUuid& entry_id);
     virtual void UpdateEntry(const QUuid& entry_id, const QJsonObject& update);
@@ -69,7 +68,6 @@ public:
 
     void UpdateEntryLinkedNode(const QUuid& entry_id, const QJsonObject& update, bool is_parallel);
 
-    // table
     void AckTable(const QUuid& node_id, const QJsonArray& array);
     void ApplyPartnerEntry(const QJsonArray& array);
     void SearchEntry(const QJsonArray& array);

@@ -34,9 +34,6 @@ AuthDialog::~AuthDialog() { delete ui; }
 void AuthDialog::RLoginResult(bool result, int code)
 {
     if (result) {
-        SyncLoginInfo();
-        LoginInfo::Instance().WriteConfig(local_settings_);
-
         close();
         return;
     }
@@ -139,6 +136,9 @@ void AuthDialog::on_pushButtonLogin_clicked()
     }
 
     WebSocket::Instance()->SendMessage(kLogin, JsonGen::Login(email, password, workspace));
+
+    SyncLoginInfo();
+    LoginInfo::Instance().WriteConfig(local_settings_);
 }
 
 void AuthDialog::RRegisterDialog()

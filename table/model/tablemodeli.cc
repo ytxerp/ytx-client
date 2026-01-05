@@ -9,6 +9,19 @@ TableModelI::TableModelI(CTableModelArg& arg, QObject* parent)
 {
 }
 
+bool TableModelI::insertRows(int row, int /*count*/, const QModelIndex& parent)
+{
+    assert(row >= 0 && row <= rowCount(parent));
+
+    auto* entry_shadow { InsertRowsImpl(row, parent) };
+
+    if (shadow_list_.size() == 1)
+        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
+
+    emit SInsertEntry(entry_shadow->entry);
+    return true;
+}
+
 bool TableModelI::UpdateRate(EntryShadow* shadow, double value)
 {
     const double unit_cost { *shadow->lhs_rate };

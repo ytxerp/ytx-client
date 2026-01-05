@@ -29,6 +29,8 @@ public:
     TableModelI(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelI() override = default;
 
+    bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+
 protected:
     bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit) override;
     bool UpdateRate(EntryShadow* shadow, double value) override;

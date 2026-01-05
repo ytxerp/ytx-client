@@ -23,9 +23,6 @@ void TableIssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) c
         return;
 
     auto issued_time { index.data().toDateTime().toLocalTime() };
-    if (!issued_time.isValid())
-        issued_time = last_insert_.isValid() ? last_insert_.addSecs(1) : QDateTime::currentDateTime();
-
     cast_editor->setDateTime(issued_time);
 }
 
@@ -34,7 +31,6 @@ void TableIssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, c
     auto* cast_ediotr { static_cast<DateTimeEdit*>(editor) };
     auto issued_time { cast_ediotr->dateTime() };
 
-    last_insert_ = issued_time.date() == QDate::currentDate() ? QDateTime() : issued_time;
     model->setData(index, issued_time.toUTC());
 }
 

@@ -9,6 +9,22 @@ TableModelF::TableModelF(CTableModelArg& arg, QObject* parent)
 {
 }
 
+bool TableModelF::insertRows(int row, int /*count*/, const QModelIndex& parent)
+{
+    assert(row >= 0 && row <= rowCount(parent));
+
+    auto* entry_shadow { InsertRowsImpl(row, parent) };
+
+    *entry_shadow->lhs_rate = 1.0;
+    *entry_shadow->rhs_rate = 1.0;
+
+    if (shadow_list_.size() == 1)
+        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
+
+    emit SInsertEntry(entry_shadow->entry);
+    return true;
+}
+
 bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row)
 {
     if (value.isNull())

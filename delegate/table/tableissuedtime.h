@@ -35,7 +35,6 @@ public:
 
 private:
     const QString& date_format_ {};
-    mutable QDateTime last_insert_ {};
 };
 
 #endif // TABLEISSUEDTIME_H

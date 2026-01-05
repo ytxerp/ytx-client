@@ -230,23 +230,6 @@ QModelIndex TableModel::GetIndex(const QUuid& entry_id) const
     return QModelIndex();
 }
 
-bool TableModel::insertRows(int row, int /*count*/, const QModelIndex& parent)
-{
-    assert(row >= 0 && row <= rowCount(parent));
-    if (IsReleased(lhs_id_, QUuid()))
-        return false;
-
-    auto* entry_shadow { InsertRowsImpl(row, parent) };
-    *entry_shadow->issued_time = QDateTime::currentDateTimeUtc();
-    InitRate(entry_shadow);
-
-    if (shadow_list_.size() == 1)
-        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
-
-    emit SInsertEntry(entry_shadow->entry);
-    return true;
-}
-
 QVariant TableModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
@@ -314,10 +297,12 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
     const QUuid id { *shadow->id };
 
     switch (column) {
-    case EntryEnum::kIssuedTime:
-        EntryUtils::UpdateShadowIssuedTime(
-            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
+    case EntryEnum::kIssuedTime: {
+        const QDateTime new_time { value.toDateTime() };
+        EntryUtils::UpdateShadowIssuedTime(pending_updates_[id], shadow, kIssuedTime, new_time, &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
+        last_issued_ = new_time;
         break;
+    }
     case EntryEnum::kCode:
         EntryUtils::UpdateShadowField(pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [id, this]() { RestartTimer(id); });
         break;
@@ -478,6 +463,8 @@ EntryShadow* TableModel::InsertRowsImpl(int row, const QModelIndex& parent)
     entry_shadow->BindEntry(entry, true);
 
     *entry_shadow->lhs_node = lhs_id_;
+    last_issued_ = last_issued_.isValid() ? last_issued_.addSecs(1) : QDateTime::currentDateTimeUtc();
+    *entry_shadow->issued_time = last_issued_;
 
     beginInsertRows(parent, row, row);
     shadow_list_.emplaceBack(entry_shadow);

@@ -30,6 +30,8 @@ public:
     TableModelT(CTableModelArg& arg, TreeModelT* tree_model_t, QObject* parent = nullptr);
     ~TableModelT() override = default;
 
+    bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+
 protected:
     bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row) override;
     bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit) override;
