@@ -25,6 +25,8 @@ void MainWindow::RSharedConfig(const QJsonArray& arr)
 
         section_contex->shared_config.default_unit = default_unit;
         section_contex->shared_config.document_dir = document_dir;
+
+        section_contex->tree_model->UpdateDefaultUnit(default_unit);
     }
 }
 
