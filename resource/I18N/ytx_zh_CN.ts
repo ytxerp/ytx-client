@@ -231,12 +231,12 @@ Rage, rage against the dying of the light.</source>
         <translation>登录</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="304"/>
+        <location filename="../../dialog/authdialog.cc" line="302"/>
         <source>Password Mismatch</source>
         <translation>密码不一致</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="304"/>
+        <location filename="../../dialog/authdialog.cc" line="302"/>
         <source>The passwords do not match.</source>
         <translation>两次输入的密码不一致。</translation>
     </message>
@@ -279,7 +279,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">信息无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="239"/>
+        <location filename="../../dialog/authdialog.cc" line="237"/>
         <source>Email cannot be empty</source>
         <translation>邮箱不能为空</translation>
     </message>
@@ -292,41 +292,41 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">密码不能为空</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="239"/>
-        <location filename="../../dialog/authdialog.cc" line="246"/>
+        <location filename="../../dialog/authdialog.cc" line="237"/>
+        <location filename="../../dialog/authdialog.cc" line="244"/>
         <source>Invalid Email</source>
         <translation>邮箱无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="246"/>
+        <location filename="../../dialog/authdialog.cc" line="244"/>
         <source>Please enter a valid email address.</source>
         <translation>请输入有效的邮箱地址。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="256"/>
-        <location filename="../../dialog/authdialog.cc" line="264"/>
-        <location filename="../../dialog/authdialog.cc" line="273"/>
-        <location filename="../../dialog/authdialog.cc" line="282"/>
+        <location filename="../../dialog/authdialog.cc" line="254"/>
+        <location filename="../../dialog/authdialog.cc" line="262"/>
+        <location filename="../../dialog/authdialog.cc" line="271"/>
+        <location filename="../../dialog/authdialog.cc" line="280"/>
         <source>Invalid Password</source>
         <translation>密码无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="256"/>
+        <location filename="../../dialog/authdialog.cc" line="254"/>
         <source>Password must be at least 8 characters long.</source>
         <translation>密码长度不能少于 8 位。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="264"/>
+        <location filename="../../dialog/authdialog.cc" line="262"/>
         <source>Password must include at least one letter.</source>
         <translation>密码必须至少包含一个字母。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="273"/>
+        <location filename="../../dialog/authdialog.cc" line="271"/>
         <source>Password must include at least one digit.</source>
         <translation>密码必须至少包含一个数字。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="282"/>
+        <location filename="../../dialog/authdialog.cc" line="280"/>
         <source>Password must include at least one special character.</source>
         <translation>密码必须至少包含一个特殊字符。</translation>
     </message>
@@ -1595,7 +1595,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="382"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="565"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="567"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
@@ -1848,64 +1848,64 @@ Do you want to save before closing?</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="575"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="577"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="575"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="577"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="575"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="577"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="609"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="611"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="609"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="611"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="612"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="614"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="612"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="614"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="632"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="639"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="634"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="641"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="632"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="634"/>
         <source>Failed to check updates:
 %1</source>
         <translation>检查更新失败：\n%1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="639"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="641"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="652"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="654"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="652"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="654"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1914,12 +1914,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="658"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="660"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="658"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="660"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
