@@ -117,13 +117,12 @@ set(SOURCES
     delegate/readonly/amountsalereferencer.cc
     delegate/readonly/statusr.cc
     delegate/readonly/nodepathr.cc
-    delegate/tree/treeissuedtime.cc
-    delegate/tree/color.cc
-    delegate/tree/finance/financeforeignr.cc
+    delegate/issuedtime.cc
+    delegate/color.cc
+    delegate/readonly/financeforeignr.cc
     delegate/search/searchpathtreer.cc
     delegate/search/searchpathtabler.cc
-    delegate/table/tableissuedtime.cc
-    delegate/table/tablecombofilter.cc
+    delegate/rhsnode.cc
     utils/nodeutils.cc
     utils/mainwindowutils.cc
     global/printhub.cc
@@ -271,13 +270,12 @@ set(HEADERS
     delegate/readonly/nodenamer.h
     delegate/readonly/nodepathr.h
     delegate/readonly/amountsalereferencer.h
-    delegate/tree/treeissuedtime.h
-    delegate/tree/color.h
-    delegate/tree/finance/financeforeignr.h
+    delegate/issuedtime.h
+    delegate/color.h
+    delegate/readonly/financeforeignr.h
     delegate/search/searchpathtreer.h
     delegate/search/searchpathtabler.h
-    delegate/table/tableissuedtime.h
-    delegate/table/tablecombofilter.h
+    delegate/rhsnode.h
     websocket/jsongen.h
     websocket/websocket.h
     utils/nodeutils.h

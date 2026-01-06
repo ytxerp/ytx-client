@@ -1,15 +1,15 @@
-#include "tablecombofilter.h"
+#include "rhsnode.h"
 
 #include "widget/combobox.h"
 
-TableComboFilter::TableComboFilter(CTreeModel* tree_model, QSortFilterProxyModel* filter_model, QObject* parent)
+RhsNode::RhsNode(CTreeModel* tree_model, QSortFilterProxyModel* filter_model, QObject* parent)
     : StyledItemDelegate { parent }
     , tree_model_ { tree_model }
     , filter_model_ { filter_model }
 {
 }
 
-QWidget* TableComboFilter::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/) const
+QWidget* RhsNode::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/) const
 {
     auto* editor { new ComboBox(parent) };
     editor->setModel(filter_model_);
@@ -17,7 +17,7 @@ QWidget* TableComboFilter::createEditor(QWidget* parent, const QStyleOptionViewI
     return editor;
 }
 
-void TableComboFilter::setEditorData(QWidget* editor, const QModelIndex& index) const
+void RhsNode::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
     if (cast_editor->hasFocus())
@@ -31,7 +31,7 @@ void TableComboFilter::setEditorData(QWidget* editor, const QModelIndex& index) 
     cast_editor->setCurrentIndex(item_index);
 }
 
-void TableComboFilter::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
+void RhsNode::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
 
@@ -40,7 +40,7 @@ void TableComboFilter::setModelData(QWidget* editor, QAbstractItemModel* model, 
     model->setData(index, key);
 }
 
-void TableComboFilter::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void RhsNode::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const QUuid linked_node { index.data().toUuid() };
     if (linked_node.isNull())
@@ -55,13 +55,13 @@ void TableComboFilter::paint(QPainter* painter, const QStyleOptionViewItem& opti
     // painter->drawText(text_rect, Qt::AlignLeft | Qt::AlignVCenter, path);
 }
 
-QSize TableComboFilter::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+QSize RhsNode::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const QString text { tree_model_->Path(index.data().toUuid()) };
     return CalculateTextSize(text, option);
 }
 
-void TableComboFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void RhsNode::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int bar_width { QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent) };
     const QSize text_size { CalculateTextSize(tree_model_->Path(index.data().toUuid()), option) };

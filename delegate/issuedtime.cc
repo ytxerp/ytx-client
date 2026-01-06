@@ -1,14 +1,14 @@
-#include "treeissuedtime.h"
+#include "issuedtime.h"
 
 #include "widget/datetimeedit.h"
 
-TreeIssuedTime::TreeIssuedTime(const QString& date_format, QObject* parent)
+IssuedTime::IssuedTime(const QString& date_format, QObject* parent)
     : StyledItemDelegate { parent }
     , date_format_ { date_format }
 {
 }
 
-QWidget* TreeIssuedTime::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/) const
+QWidget* IssuedTime::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/) const
 {
     auto* editor { new DateTimeEdit(parent) };
     editor->setDisplayFormat(date_format_);
@@ -16,7 +16,7 @@ QWidget* TreeIssuedTime::createEditor(QWidget* parent, const QStyleOptionViewIte
     return editor;
 }
 
-void TreeIssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) const
+void IssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<DateTimeEdit*>(editor) };
     if (cast_editor->hasFocus())
@@ -29,7 +29,7 @@ void TreeIssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) co
     cast_editor->setDateTime(issued_time);
 }
 
-void TreeIssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
+void IssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
     auto* cast_ediotr { static_cast<DateTimeEdit*>(editor) };
     auto issued_time { cast_ediotr->dateTime().toUTC() };
@@ -37,7 +37,7 @@ void TreeIssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, co
     model->setData(index, issued_time);
 }
 
-void TreeIssuedTime::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void IssuedTime::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     auto issued_time { index.data().toDateTime().toLocalTime() };
     if (!issued_time.isValid())
@@ -46,7 +46,7 @@ void TreeIssuedTime::paint(QPainter* painter, const QStyleOptionViewItem& option
     PaintText(issued_time.toString(date_format_), painter, option, index, Qt::AlignCenter);
 }
 
-QSize TreeIssuedTime::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+QSize IssuedTime::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     auto text { index.data().toDateTime().toString(date_format_) };
     return CalculateTextSize(text, option, kCoefficient5);

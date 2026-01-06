@@ -17,24 +17,26 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEISSUEDTIME_H
-#define TREEISSUEDTIME_H
-
-#include <QDateTimeEdit>
+#ifndef RHSNODE_H
+#define RHSNODE_H
 
 #include "delegate/styleditemdelegate.h"
+#include "tree/model/treemodel.h"
 
-class TreeIssuedTime final : public StyledItemDelegate {
+class RhsNode final : public StyledItemDelegate {
 public:
-    TreeIssuedTime(const QString& date_format, QObject* parent);
+    RhsNode(CTreeModel* tree_model, QSortFilterProxyModel* filter_model, QObject* parent = nullptr);
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    const QString& date_format_;
+    mutable QUuid last_insert_ {};
+    CTreeModel* tree_model_ {};
+    QSortFilterProxyModel* filter_model_ {};
 };
 
-#endif // TREEISSUEDTIME_H
+#endif // RHSNODE_H

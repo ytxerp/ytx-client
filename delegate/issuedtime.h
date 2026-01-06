@@ -17,26 +17,24 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLECOMBOFILTER_H
-#define TABLECOMBOFILTER_H
+#ifndef ISSUEDTIME_H
+#define ISSUEDTIME_H
+
+#include <QDateTimeEdit>
 
 #include "delegate/styleditemdelegate.h"
-#include "tree/model/treemodel.h"
 
-class TableComboFilter final : public StyledItemDelegate {
+class IssuedTime final : public StyledItemDelegate {
 public:
-    TableComboFilter(CTreeModel* tree_model, QSortFilterProxyModel* filter_model, QObject* parent = nullptr);
+    IssuedTime(const QString& date_format, QObject* parent);
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    mutable QUuid last_insert_ {};
-    CTreeModel* tree_model_ {};
-    QSortFilterProxyModel* filter_model_ {};
+    const QString& date_format_;
 };
 
-#endif // TABLECOMBOFILTER_H
+#endif // ISSUEDTIME_H

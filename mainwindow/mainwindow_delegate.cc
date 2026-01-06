@@ -1,27 +1,26 @@
 #include "delegate/bool.h"
 #include "delegate/boolstring.h"
+#include "delegate/color.h"
 #include "delegate/document.h"
 #include "delegate/double.h"
 #include "delegate/filterunit.h"
 #include "delegate/int.h"
+#include "delegate/issuedtime.h"
 #include "delegate/line.h"
 #include "delegate/plaintext.h"
 #include "delegate/readonly/amountr.h"
 #include "delegate/readonly/amountsalereferencer.h"
 #include "delegate/readonly/boolstringr.h"
 #include "delegate/readonly/doublespinnonezeror.h"
+#include "delegate/readonly/financeforeignr.h"
 #include "delegate/readonly/intstringr.h"
 #include "delegate/readonly/issuedtimer.h"
 #include "delegate/readonly/nodenamer.h"
 #include "delegate/readonly/nodepathr.h"
 #include "delegate/readonly/quantityr.h"
 #include "delegate/readonly/statusr.h"
+#include "delegate/rhsnode.h"
 #include "delegate/status.h"
-#include "delegate/table/tablecombofilter.h"
-#include "delegate/table/tableissuedtime.h"
-#include "delegate/tree/color.h"
-#include "delegate/tree/finance/financeforeignr.h"
-#include "delegate/tree/treeissuedtime.h"
 #include "enum/reference.h"
 #include "enum/settlementenum.h"
 #include "enum/statementenum.h"
@@ -85,7 +84,7 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* document { new Document(sc_t_.shared_config.document_dir, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kDocument), document);
 
-    auto* issued_time { new TreeIssuedTime(section.date_format, tree_view) };
+    auto* issued_time { new IssuedTime(section.date_format, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kIssuedTime), issued_time);
 }
 
@@ -178,7 +177,7 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
 
 void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
 {
-    auto* issued_time { new TableIssuedTime(config.date_format, table_view) };
+    auto* issued_time { new IssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
 
     auto* lhs_rate { new Double(config.rate_decimal, 0.0, kDoubleMax, kCoefficient8, table_view) };
@@ -196,7 +195,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeOneModel(node_id, table_view) };
 
-    auto* node { new TableComboFilter(tree_model, filter_model, table_view) };
+    auto* node { new RhsNode(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
 
     auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, kCoefficient16, table_view) };
@@ -209,7 +208,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
 
 void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
 {
-    auto* issued_time { new TableIssuedTime(config.date_format, table_view) };
+    auto* issued_time { new IssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
 
     auto* unit_cost { new Double(config.rate_decimal, 0.0, kDoubleMax, kCoefficient8, table_view) };
@@ -227,7 +226,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeMultipleModel(node_id, std::to_underlying(UnitI::kExternal), table_view) };
 
-    auto* node { new TableComboFilter(tree_model, filter_model, table_view) };
+    auto* node { new RhsNode(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
 
     auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, kCoefficient16, table_view) };
@@ -240,7 +239,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
 
 void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
 {
-    auto* issued_time { new TableIssuedTime(config.date_format, table_view) };
+    auto* issued_time { new IssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
 
     auto* unit_cost { new Double(config.rate_decimal, 0.0, kDoubleMax, kCoefficient8, table_view) };
@@ -258,7 +257,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeOneModel(node_id, table_view) };
 
-    auto* node { new TableComboFilter(tree_model, filter_model, table_view) };
+    auto* node { new RhsNode(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
 
     auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, kCoefficient16, table_view) };
@@ -271,7 +270,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
 
 void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) const
 {
-    auto* issued_time { new TableIssuedTime(config.date_format, table_view) };
+    auto* issued_time { new IssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIssuedTime), issued_time);
 
     auto* unit_price { new Double(config.rate_decimal, 0.0, kDoubleMax, kCoefficient8, table_view) };
@@ -433,14 +432,14 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kDescription), line);
 
-    auto* issued_time { new TreeIssuedTime(kDateFST, table_view) };
+    auto* issued_time { new IssuedTime(kDateFST, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIssuedTime), issued_time);
 
     auto model { sc_p_.tree_model };
     const int unit { start_ == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor) };
 
     auto* filter_model { model->IncludeUnitModel(unit, table_view) };
-    auto* node { new TableComboFilter(model, filter_model, table_view) };
+    auto* node { new RhsNode(model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kPartner), node);
 }
 
