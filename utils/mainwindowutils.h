@@ -27,7 +27,7 @@
 
 namespace MainWindowUtils {
 
-QString SectionFile(const QString& email, const QString& workspace);
+QString AccountIniFileName(const QString& email);
 
 void ExportExcel(CString& table, QSharedPointer<YXlsx::Worksheet> worksheet, bool where = true);
 void Message(QMessageBox::Icon icon, CString& title, CString& text, int timeout);

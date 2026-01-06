@@ -447,10 +447,11 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
         }
 
         emit SRemoveOneEntry(rhs_node_id, entry_id);
+    } else {
+        EntryPool::Instance().Recycle(shadow->entry, section_);
     }
 
     ResourcePool<EntryShadow>::Instance().Recycle(shadow);
-    emit SRemoveEntry(entry_id);
     return true;
 }
 

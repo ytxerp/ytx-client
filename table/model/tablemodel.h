@@ -42,16 +42,16 @@ protected:
 
 signals:
     // send to LeafSStation
-    void SAppendOneEntry(const QUuid& node_id, Entry* entry);
-    void SRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
+    void SAttachOneEntry(const QUuid& node_id, Entry* entry);
+    void SDetachOneEntry(const QUuid& node_id, const QUuid& entry_id);
     void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
     // send to its table view
     void SResizeColumnToContents(int column);
 
     // send to entryhub, FIPT
-    void SInsertEntry(Entry* entry);
-    void SRemoveEntry(const QUuid& entry_id);
+    void SAppendOneEntry(Entry* entry);
+    void SRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
 public slots:
     virtual void RAppendMultiEntry(const EntryList& entry_list);

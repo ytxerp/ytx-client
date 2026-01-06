@@ -107,11 +107,11 @@ void MainWindow::TableConnectF(QTableView* table_view, TableModel* table_model) 
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
-    connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
-    connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
+    connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
+    connect(table_model, &TableModel::SRemoveOneEntry, entry_hub, &EntryHub::RRemoveOneEntry);
 
-    connect(table_model, &TableModel::SRemoveOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry);
-    connect(table_model, &TableModel::SAppendOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry);
+    connect(table_model, &TableModel::SAttachOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry);
+    connect(table_model, &TableModel::SDetachOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry);
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
 }
 
@@ -122,11 +122,11 @@ void MainWindow::TableConnectI(QTableView* table_view, TableModel* table_model) 
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
-    connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
-    connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
+    connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
+    connect(table_model, &TableModel::SRemoveOneEntry, entry_hub, &EntryHub::RRemoveOneEntry);
 
-    connect(table_model, &TableModel::SRemoveOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry);
-    connect(table_model, &TableModel::SAppendOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry);
+    connect(table_model, &TableModel::SAttachOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry);
+    connect(table_model, &TableModel::SDetachOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry);
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
 }
 
@@ -137,11 +137,11 @@ void MainWindow::TableConnectT(QTableView* table_view, TableModel* table_model) 
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
-    connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
-    connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
+    connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
+    connect(table_model, &TableModel::SRemoveOneEntry, entry_hub, &EntryHub::RRemoveOneEntry);
 
-    connect(table_model, &TableModel::SRemoveOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry);
-    connect(table_model, &TableModel::SAppendOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry);
+    connect(table_model, &TableModel::SAttachOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry);
+    connect(table_model, &TableModel::SDetachOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry);
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
 }
 
@@ -149,8 +149,8 @@ void MainWindow::TableConnectP(QTableView* table_view, TableModel* table_model) 
 {
     auto entry_hub { sc_p_.entry_hub };
 
-    connect(table_model, &TableModel::SInsertEntry, entry_hub, &EntryHub::RInsertEntry);
-    connect(table_model, &TableModel::SRemoveEntry, entry_hub, &EntryHub::RRemoveEntry);
+    connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
+    connect(table_model, &TableModel::SRemoveOneEntry, entry_hub, &EntryHub::RRemoveOneEntry);
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 }

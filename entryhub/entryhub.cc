@@ -22,10 +22,19 @@ void EntryHub::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
     RemoveLeafFunction(leaf_entry);
 }
 
-void EntryHub::RRemoveEntry(const QUuid& entry_id)
+void EntryHub::RAppendOneEntry(Entry* entry)
+{
+    entry_cache_.insert(entry->id, entry);
+    emit SAppendOneEntry(entry->rhs_node, entry);
+}
+
+void EntryHub::RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id)
 {
     auto it = entry_cache_.find(entry_id);
     if (it != entry_cache_.end()) {
+        if (!node_id.isNull())
+            emit SRemoveOneEntry(node_id, entry_id);
+
         EntryPool::Instance().Recycle(it.value(), section_);
         entry_cache_.erase(it);
     }

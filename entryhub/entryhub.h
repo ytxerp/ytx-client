@@ -55,8 +55,8 @@ signals:
 
 public slots:
     // receive from TableModel
-    void RInsertEntry(Entry* entry) { entry_cache_.insert(entry->id, entry); }
-    void RRemoveEntry(const QUuid& entry_id);
+    void RAppendOneEntry(Entry* entry);
+    void RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
 public:
     virtual void InsertEntry(const QJsonObject& data);

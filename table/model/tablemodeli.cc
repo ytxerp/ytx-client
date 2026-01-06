@@ -13,12 +13,11 @@ bool TableModelI::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
 
-    auto* entry_shadow { InsertRowsImpl(row, parent) };
+    InsertRowsImpl(row, parent);
 
     if (shadow_list_.size() == 1)
         emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
 
-    emit SInsertEntry(entry_shadow->entry);
     return true;
 }
 
@@ -136,6 +135,8 @@ bool TableModelI::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
             AccumulateBalance(row);
             emit SResizeColumnToContents(std::to_underlying(EntryEnum::kBalance));
         }
+
+        emit SAppendOneEntry(shadow->entry);
     }
 
     if (!old_node.isNull()) {
@@ -150,9 +151,9 @@ bool TableModelI::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
 
         WebSocket::Instance()->SendMessage(kEntryLinkedNode, message);
 
-        emit SRemoveOneEntry(old_node, entry_id);
+        emit SAttachOneEntry(value, shadow->entry);
+        emit SDetachOneEntry(old_node, entry_id);
     }
 
-    emit SAppendOneEntry(value, shadow->entry);
     return true;
 }

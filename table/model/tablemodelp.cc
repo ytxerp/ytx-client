@@ -68,11 +68,13 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
     if (!rhs_node_id.isNull()) {
         QJsonObject message { JsonGen::EntryRemove(section_, entry_id) };
         WebSocket::Instance()->SendMessage(kEntryRemove, message);
+
+        emit SRemoveOneEntry(QUuid(), entry_id);
+    } else {
+        EntryPool::Instance().Recycle(entry, section_);
     }
 
     internal_sku_.remove(rhs_node_id);
-
-    emit SRemoveEntry(entry_id);
     return true;
 }
 
@@ -115,6 +117,8 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
     if (old_node.isNull()) {
         message.insert(kEntry, entry->WriteJson());
         WebSocket::Instance()->SendMessage(kEntryInsert, message);
+
+        emit SAppendOneEntry(entry);
     }
 
     if (!old_node.isNull()) {
@@ -309,6 +313,5 @@ bool TableModelP::insertRows(int row, int, const QModelIndex& parent)
     if (entry_list_.size() == 1)
         emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
 
-    emit SInsertEntry(entry);
     return true;
 }
