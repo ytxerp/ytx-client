@@ -20,6 +20,7 @@
 #ifndef COMBOBOX_H
 #define COMBOBOX_H
 
+#include <QAbstractItemView>
 #include <QApplication>
 #include <QComboBox>
 #include <QCompleter>
@@ -37,10 +38,32 @@ public:
         completer->setCaseSensitivity(Qt::CaseInsensitive);
 
         setCompleter(completer);
-        setSizeAdjustPolicy(QComboBox::AdjustToContents);
+        setSizeAdjustPolicy(QComboBox::AdjustToContentsOnFirstShow);
     }
 
 protected:
+    void showPopup() override
+    {
+        QComboBox::showPopup();
+
+        QAbstractItemView* popup_view = view();
+        if (!popup_view)
+            return;
+
+        int content_width { popup_view->sizeHintForColumn(0) };
+        if (content_width <= 0) {
+            content_width = popup_view->sizeHint().width();
+        }
+
+        const int frame_width { popup_view->frameWidth() * 2 };
+        const int suggested_width { content_width + frame_width };
+
+        const int combobox_width { width() };
+        const int final_width { qBound(combobox_width, suggested_width, combobox_width * 3) };
+
+        popup_view->setFixedWidth(final_width);
+    }
+
     QSize sizeHint() const override
     {
         QSize sz { QComboBox::sizeHint() };
