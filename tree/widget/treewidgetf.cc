@@ -20,7 +20,6 @@ TreeWidgetF::TreeWidgetF(TreeModel* model, CSectionInfo& info, CSharedConfig& sh
 
     ui->dspin_box_dynamic_->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
     ui->dspin_box_static_->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
-    InitStatus();
 }
 
 TreeWidgetF::~TreeWidgetF() { delete ui; }
