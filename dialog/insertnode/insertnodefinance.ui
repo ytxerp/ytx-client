@@ -85,9 +85,6 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="toolTip">
-      <string>Cannot be changed once set. Delete and recreate to modify.</string>
-     </property>
      <property name="text">
       <string>Kind</string>
      </property>
@@ -120,7 +117,7 @@
       <item row="1" column="0">
        <widget class="QRadioButton" name="rBtnLeaf">
         <property name="toolTip">
-         <string>Leaf</string>
+         <string>Leaf Node</string>
         </property>
         <property name="text">
          <string notr="true">&amp;L</string>
@@ -130,7 +127,7 @@
       <item row="1" column="1">
        <widget class="QRadioButton" name="rBtnBranch">
         <property name="toolTip">
-         <string>Branch</string>
+         <string>Branch Node</string>
         </property>
         <property name="text">
          <string notr="true">&amp;B</string>
@@ -199,9 +196,6 @@
    </item>
    <item row="5" column="0">
     <widget class="QLabel" name="labUnit">
-     <property name="toolTip">
-      <string>Cannot be changed once set. Delete and recreate to modify.</string>
-     </property>
      <property name="text">
       <string>Unit</string>
      </property>
