@@ -322,6 +322,7 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         break;
     case EntryEnum::kRhsNode:
         UpdateLinkedNode(shadow, value.toUuid(), row);
+        AccumulateBalance(row);
         break;
     case EntryEnum::kDebit:
         UpdateNumeric(shadow, value.toDouble(), row, true);
