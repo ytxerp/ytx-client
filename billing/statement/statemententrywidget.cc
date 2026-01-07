@@ -145,11 +145,11 @@ void StatementEntryWidget::on_pBtnExport_clicked()
     QString destination { QFileDialog::getSaveFileName(nullptr, tr("Export Excel"), full_path, "*.xlsx") };
 
     // Prepare the file (remove if exists)
-    if (!MainWindowUtils::PrepareNewFile(destination, kDotSuffixXLSX))
+    if (!Utils::PrepareNewFile(destination, kDotSuffixXLSX))
         return;
 
     auto& list { model_->EntryList() };
-    const QString unit_string { NodeUtils::UnitString(UnitO(unit_)) };
+    const QString unit_string { Utils::UnitString(UnitO(unit_)) };
 
     ExportExcel::Instance().StatementAsync(destination, partner_name_, inventory_leaf_, unit_string, start_, adjust_end, total_, list);
 }

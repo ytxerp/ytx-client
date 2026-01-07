@@ -28,7 +28,7 @@
 #include "table/entryshadow.h"
 #include "utils/castutils.h"
 
-using CastUtils::DerivedPtr;
+using Utils::DerivedPtr;
 
 class TableModel : public QAbstractItemModel {
     Q_OBJECT

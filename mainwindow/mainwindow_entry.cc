@@ -37,7 +37,7 @@ void MainWindow::on_actionAppendEntry_triggered()
             if (!model->insertRows(new_row, 1))
                 return;
 
-            const int linked_node_col { EntryUtils::LinkedNodeColumn(start_) };
+            const int linked_node_col { Utils::LinkedNodeColumn(start_) };
             QModelIndex target_index { model->index(new_row, linked_node_col) };
 
             if (target_index.isValid()) {
@@ -52,7 +52,7 @@ void MainWindow::RemoveEntry(TableWidget* widget)
     auto* view { widget->View() };
     assert(view);
 
-    if (!TemplateUtils::HasSelection(view))
+    if (!Utils::HasSelection(view))
         return;
 
     const QModelIndex current_index { view->currentIndex() };
@@ -212,7 +212,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
 
         auto* view { widget->View() };
 
-        const int description_column { EntryUtils::DescriptionColumn(section) };
+        const int description_column { Utils::EntryDescriptionColumn(section) };
         SetTableViewFIPT(view, description_column, std::to_underlying(EntryEnum::kLhsNode));
 
         switch (section) {

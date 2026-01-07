@@ -29,7 +29,7 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
 
         if (!section_settings_) {
             const QString ini_file { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator()
-                + MainWindowUtils::AccountIniFileName(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
+                + Utils::AccountIniFileName(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
 
             section_settings_ = QSharedPointer<QSettings>::create(ini_file, QSettings::IniFormat);
         }
@@ -191,8 +191,8 @@ void MainWindow::InitContextFinance()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = TemplateUtils::CreateModelFromMap(info.unit_map, this);
-    info.rule_model = TemplateUtils::CreateModelFromMap(info.rule_map, this);
+    info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
+    info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
 
     ReadSectionConfig(section_config, kFinance);
 
@@ -234,8 +234,8 @@ void MainWindow::InitContextInventory()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = TemplateUtils::CreateModelFromMap(info.unit_map, this);
-    info.rule_model = TemplateUtils::CreateModelFromMap(info.rule_map, this);
+    info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
+    info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
 
     ReadSectionConfig(section_config, kInventory);
 
@@ -277,8 +277,8 @@ void MainWindow::InitContextTask()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = TemplateUtils::CreateModelFromMap(info.unit_map, this);
-    info.rule_model = TemplateUtils::CreateModelFromMap(info.rule_map, this);
+    info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
+    info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
 
     ReadSectionConfig(section_config, kTask);
 
@@ -317,7 +317,7 @@ void MainWindow::InitContextPartner()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = TemplateUtils::CreateModelFromMap(info.unit_map, this);
+    info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
 
     ReadSectionConfig(section_config, kPartner);
 
@@ -357,10 +357,10 @@ void MainWindow::InitContextSale()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = TemplateUtils::CreateModelFromMap(info.unit_map, this);
+    info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
     info.unit_model->sort(0, Qt::DescendingOrder);
 
-    info.rule_model = TemplateUtils::CreateModelFromMap(info.rule_map, this);
+    info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
 
     ReadSectionConfig(section_config, kSale);
 
@@ -409,10 +409,10 @@ void MainWindow::InitContextPurchase()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = TemplateUtils::CreateModelFromMap(info.unit_map, this);
+    info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
     info.unit_model->sort(0, Qt::DescendingOrder);
 
-    info.rule_model = TemplateUtils::CreateModelFromMap(info.rule_map, this);
+    info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
 
     ReadSectionConfig(section_config, kPurchase);
 

@@ -71,13 +71,13 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case NodeEnumF::kCode:
-        NodeUtils::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        Utils::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kDescription:
-        NodeUtils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        Utils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kNote:
-        NodeUtils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
+        Utils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kDirectionRule:
         UpdateDirectionRule(node, value.toBool());
@@ -122,7 +122,7 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    NodeUtils::SortIterative(root_, Compare);
+    Utils::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 

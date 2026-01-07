@@ -27,7 +27,7 @@
 #include "tree/itemmodel.h"
 #include "tree/node.h"
 
-namespace NodeUtils {
+namespace Utils {
 
 constexpr int KindColumn(Section section)
 {
@@ -86,7 +86,7 @@ constexpr int DirectionRuleColumn(Section section)
     }
 }
 
-constexpr int DescriptionColumn(Section section)
+constexpr int NodeDescriptionColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:
@@ -105,7 +105,7 @@ constexpr int DescriptionColumn(Section section)
     }
 }
 
-constexpr std::pair<int, int> NumericColumnRange(Section section)
+constexpr std::pair<int, int> NodeNumericColumnRange(Section section)
 {
     switch (section) {
     case Section::kFinance:
@@ -124,7 +124,7 @@ constexpr std::pair<int, int> NumericColumnRange(Section section)
     }
 }
 
-constexpr std::pair<int, int> CacheColumnRange(Section section)
+constexpr std::pair<int, int> NodeCacheColumnRange(Section section)
 {
     switch (section) {
     case Section::kFinance:

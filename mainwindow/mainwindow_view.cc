@@ -11,9 +11,9 @@ void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
 
     {
         auto* header { view->header() };
-        MainWindowUtils::SetupHeaderStatus(header, section_settings_, section, kTreeHeaderState);
+        Utils::SetupHeaderStatus(header, section_settings_, section, kTreeHeaderState);
 
-        ResizeColumn(header, NodeUtils::DescriptionColumn(section));
+        ResizeColumn(header, Utils::NodeDescriptionColumn(section));
         header->setStretchLastSection(false);
         header->setDefaultAlignment(Qt::AlignCenter);
     }
@@ -162,7 +162,7 @@ void MainWindow::SetTableViewO(QTableView* view, Section section, int stretch_co
 {
     {
         auto* h_header { view->horizontalHeader() };
-        MainWindowUtils::SetupHeaderStatus(h_header, section_settings_, section, kTableHeaderState);
+        Utils::SetupHeaderStatus(h_header, section_settings_, section, kTableHeaderState);
 
         ResizeColumn(h_header, stretch_column);
 

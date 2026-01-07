@@ -233,7 +233,7 @@ void MainWindow::RemoveSettlement(TreeWidgetSettlement* widget)
     auto* view { widget->View() };
     assert(view);
 
-    if (!TemplateUtils::HasSelection(view))
+    if (!Utils::HasSelection(view))
         return;
 
     const QModelIndex current_index { view->currentIndex() };

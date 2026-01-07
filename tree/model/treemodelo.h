@@ -52,7 +52,7 @@ public:
     void RecallSettlement(const QUuid& settlement_id);
     void DeleteSettlement(const QUuid& settlement_id);
 
-    QUuid Partner(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeO::partner_id); };
+    QUuid Partner(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &NodeO::partner_id); };
 
 protected:
     void RegisterPath(Node* /*node*/) override { };

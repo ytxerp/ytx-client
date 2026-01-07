@@ -106,7 +106,7 @@ void TreeModelI::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    NodeUtils::SortIterative(root_, Compare);
+    Utils::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 
@@ -181,25 +181,25 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case NodeEnumI::kCode:
-        NodeUtils::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        Utils::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kDescription:
-        NodeUtils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        Utils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kNote:
-        NodeUtils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
+        Utils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kDirectionRule:
         UpdateDirectionRule(node, value.toBool());
         break;
     case NodeEnumI::kColor:
-        NodeUtils::UpdateField(pending_updates_[id], d_node, kColor, value.toString(), &NodeI::color, [id, this]() { RestartTimer(id); });
+        Utils::UpdateField(pending_updates_[id], d_node, kColor, value.toString(), &NodeI::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kCommission:
-        NodeUtils::UpdateDouble(pending_updates_[id], d_node, kCommission, value.toDouble(), &NodeI::commission, [id, this]() { RestartTimer(id); });
+        Utils::UpdateDouble(pending_updates_[id], d_node, kCommission, value.toDouble(), &NodeI::commission, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kUnitPrice:
-        NodeUtils::UpdateDouble(pending_updates_[id], d_node, kUnitPrice, value.toDouble(), &NodeI::unit_price, [id, this]() { RestartTimer(id); });
+        Utils::UpdateDouble(pending_updates_[id], d_node, kUnitPrice, value.toDouble(), &NodeI::unit_price, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;

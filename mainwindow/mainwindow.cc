@@ -45,9 +45,9 @@ MainWindow::MainWindow(QWidget* parent)
 
     StringInitializer::SetHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
 
-    TemplateUtils::ReadConfig(ui->splitter, &QSplitter::restoreState, app_settings_, kSplitter, kState);
-    TemplateUtils::ReadConfig(this, &QMainWindow::restoreState, app_settings_, kMainwindow, kState, 0);
-    TemplateUtils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
+    Utils::ReadConfig(ui->splitter, &QSplitter::restoreState, app_settings_, kSplitter, kState);
+    Utils::ReadConfig(this, &QMainWindow::restoreState, app_settings_, kMainwindow, kState, 0);
+    Utils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
 }
 
 void MainWindow::SetRemoveShortcut()
@@ -230,7 +230,7 @@ void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 {
     auto* sc { GetSectionContex(section) };
 
-    TemplateUtils::FreeWidget(node_id, sc->table_wgt_hash);
+    Utils::FreeWidget(node_id, sc->table_wgt_hash);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
@@ -244,10 +244,10 @@ void MainWindow::RegisterWidget(const QUuid& widget_id, QWidget* widget)
 void MainWindow::WriteConfig()
 {
     if (app_settings_) {
-        TemplateUtils::WriteConfig(ui->splitter, &QSplitter::saveState, app_settings_, kSplitter, kState);
-        TemplateUtils::WriteConfig(this, &QMainWindow::saveState, app_settings_, kMainwindow, kState, 0);
-        TemplateUtils::WriteConfig(this, &QMainWindow::saveGeometry, app_settings_, kMainwindow, kGeometry);
-        TemplateUtils::WriteConfig(app_settings_, std::to_underlying(start_), kStart, kSection);
+        Utils::WriteConfig(ui->splitter, &QSplitter::saveState, app_settings_, kSplitter, kState);
+        Utils::WriteConfig(this, &QMainWindow::saveState, app_settings_, kMainwindow, kState, 0);
+        Utils::WriteConfig(this, &QMainWindow::saveGeometry, app_settings_, kMainwindow, kGeometry);
+        Utils::WriteConfig(app_settings_, std::to_underlying(start_), kStart, kSection);
     }
 }
 
@@ -511,7 +511,7 @@ void MainWindow::SwitchSection(Section section, const QUuid& last_tab) const
             tab_widget->setCurrentIndex(index);
     }
 
-    MainWindowUtils::SwitchDialog(sc_, true);
+    Utils::SwitchDialog(sc_, true);
 }
 
 void MainWindow::RSectionGroup(int id)
@@ -522,7 +522,7 @@ void MainWindow::RSectionGroup(int id)
     if (!section_settings_)
         return;
 
-    MainWindowUtils::SwitchDialog(sc_, false);
+    Utils::SwitchDialog(sc_, false);
     UpdateLastTab();
 
     switch (section) {
@@ -565,7 +565,7 @@ void MainWindow::on_actionExportExcel_triggered()
     CString& source {};
 
     QString destination { QFileDialog::getSaveFileName(this, tr("Export Excel"), QDir::homePath(), QStringLiteral("*.xlsx")) };
-    if (!MainWindowUtils::PrepareNewFile(destination, kDotSuffixXLSX))
+    if (!Utils::PrepareNewFile(destination, kDotSuffixXLSX))
         return;
 
     auto future = QtConcurrent::run([source, destination, this]() {
@@ -581,16 +581,16 @@ void MainWindow::on_actionExportExcel_triggered()
             auto book1 { d.GetWorkbook() };
             book1->AppendSheet(sc_->info.node);
             book1->GetCurrentWorksheet()->WriteRow(1, 1, sc_->info.node_header);
-            MainWindowUtils::ExportExcel(sc_->info.node, book1->GetCurrentWorksheet());
+            Utils::ExportExcel(sc_->info.node, book1->GetCurrentWorksheet());
 
             book1->AppendSheet(sc_->info.path);
             book1->GetCurrentWorksheet()->WriteRow(1, 1, list);
-            MainWindowUtils::ExportExcel(sc_->info.path, book1->GetCurrentWorksheet(), false);
+            Utils::ExportExcel(sc_->info.path, book1->GetCurrentWorksheet(), false);
 
             book1->AppendSheet(sc_->info.entry);
             book1->GetCurrentWorksheet()->WriteRow(1, 1, sc_->info.full_entry_header);
             const bool where { start_ == Section::kPartner ? false : true };
-            MainWindowUtils::ExportExcel(sc_->info.entry, book1->GetCurrentWorksheet(), where);
+            Utils::ExportExcel(sc_->info.entry, book1->GetCurrentWorksheet(), where);
 
             d.Save();
             // PublicUtils::RemoveDatabase(kSourceConnection);
@@ -608,10 +608,10 @@ void MainWindow::on_actionExportExcel_triggered()
 
         bool success { watcher->future().result() };
         if (success) {
-            MainWindowUtils::Message(QMessageBox::Information, tr("Export Completed"), tr("Export completed successfully."), kThreeThousand);
+            Utils::Message(QMessageBox::Information, tr("Export Completed"), tr("Export completed successfully."), kThreeThousand);
         } else {
             QFile::remove(destination);
-            MainWindowUtils::Message(QMessageBox::Critical, tr("Export Failed"), tr("Export failed. The file has been deleted."), kThreeThousand);
+            Utils::Message(QMessageBox::Critical, tr("Export Failed"), tr("Export failed. The file has been deleted."), kThreeThousand);
         }
     });
 
@@ -649,7 +649,7 @@ void MainWindow::on_actionCheckforUpdates_triggered()
         const QString download_url
             = is_chinese ? "https://gitee.com/ytxerp/ytx-client/releases/latest" : "https://github.com/ytxerp/ytx-client/releases/latest";
 
-        if (MainWindowUtils::CompareVersion(latest_tag, QCoreApplication::applicationVersion()) > 0) {
+        if (Utils::CompareVersion(latest_tag, QCoreApplication::applicationVersion()) > 0) {
             QMessageBox::StandardButton btn = QMessageBox::information(
                 this, tr("Update Available"), tr("A new version %1 is available!\n\nDownload now?").arg(latest_tag), QMessageBox::Yes | QMessageBox::No);
 

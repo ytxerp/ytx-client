@@ -131,7 +131,7 @@ void SearchDialog::IniView(QTableView* view)
 void SearchDialog::ResizeTreeColumn(QHeaderView* header)
 {
     header->setSectionResizeMode(QHeaderView::ResizeToContents);
-    header->setSectionResizeMode(NodeUtils::DescriptionColumn(info_.section), QHeaderView::Stretch);
+    header->setSectionResizeMode(Utils::NodeDescriptionColumn(info_.section), QHeaderView::Stretch);
 }
 
 void SearchDialog::ResizeTableColumn(QHeaderView* header)

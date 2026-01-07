@@ -21,10 +21,10 @@ void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuidStri
         watcher->deleteLater();
 
         if (ok) {
-            MainWindowUtils::Message(QMessageBox::Information, QObject::tr("Export Completed"), QObject::tr("Export completed successfully."), 3000);
+            Utils::Message(QMessageBox::Information, QObject::tr("Export Completed"), QObject::tr("Export completed successfully."), 3000);
         } else {
             QFile::remove(path);
-            MainWindowUtils::Message(QMessageBox::Critical, QObject::tr("Export Failed"), QObject::tr("Export failed. The file has been deleted."), 3000);
+            Utils::Message(QMessageBox::Critical, QObject::tr("Export Failed"), QObject::tr("Export failed. The file has been deleted."), 3000);
         }
     });
 

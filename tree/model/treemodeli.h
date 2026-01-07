@@ -35,8 +35,8 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    const QString& Color(const QUuid& node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeI::color); }
-    double UnitPrice(const QUuid& node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeI::unit_price); }
+    const QString& Color(const QUuid& node_id) const { return Utils::Value(node_hash_, node_id, &NodeI::color); }
+    double UnitPrice(const QUuid& node_id) const { return Utils::Value(node_hash_, node_id, &NodeI::unit_price); }
 
     QSortFilterProxyModel* IncludeUnitModel(int unit, QObject* parent) override;
     QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& node_id, int unit, QObject* parent) override;

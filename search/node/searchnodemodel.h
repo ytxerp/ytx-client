@@ -27,7 +27,7 @@
 #include "tree/model/treemodel.h"
 #include "utils/castutils.h"
 
-using CastUtils::DerivedPtr;
+using Utils::DerivedPtr;
 
 class SearchNodeModel : public QAbstractItemModel {
     Q_OBJECT

@@ -4,7 +4,7 @@
 #include <QDir>
 #include <QHeaderView>
 
-bool MainWindowUtils::PrepareNewFile(QString& file_path, CString& suffix)
+bool Utils::PrepareNewFile(QString& file_path, CString& suffix)
 {
     if (file_path.isEmpty())
         return false;
@@ -19,7 +19,7 @@ bool MainWindowUtils::PrepareNewFile(QString& file_path, CString& suffix)
     return true;
 }
 
-bool MainWindowUtils::CheckFileValid(CString& file_path, CString& suffix)
+bool Utils::CheckFileValid(CString& file_path, CString& suffix)
 {
     if (file_path.isEmpty())
         return false;
@@ -39,7 +39,7 @@ bool MainWindowUtils::CheckFileValid(CString& file_path, CString& suffix)
     return true;
 }
 
-void MainWindowUtils::ExportExcel(CString& table, QSharedPointer<YXlsx::Worksheet> worksheet, bool where)
+void Utils::ExportExcel(CString& table, QSharedPointer<YXlsx::Worksheet> worksheet, bool where)
 {
     if (!worksheet) {
         return;
@@ -74,7 +74,7 @@ void MainWindowUtils::ExportExcel(CString& table, QSharedPointer<YXlsx::Workshee
     // }
 }
 
-void MainWindowUtils::Message(QMessageBox::Icon icon, CString& title, CString& text, int timeout)
+void Utils::Message(QMessageBox::Icon icon, CString& title, CString& text, int timeout)
 {
     auto* box { new QMessageBox(icon, title, text, QMessageBox::NoButton) };
     QTimer::singleShot(timeout, box, &QMessageBox::accept);
@@ -84,7 +84,7 @@ void MainWindowUtils::Message(QMessageBox::Icon icon, CString& title, CString& t
     box->show();
 }
 
-void MainWindowUtils::SwitchDialog(const SectionContext* sc, bool enable)
+void Utils::SwitchDialog(const SectionContext* sc, bool enable)
 {
     if (!sc)
         return;
@@ -97,7 +97,7 @@ void MainWindowUtils::SwitchDialog(const SectionContext* sc, bool enable)
     }
 }
 
-int MainWindowUtils::CompareVersion(const QString& v1, const QString& v2)
+int Utils::CompareVersion(const QString& v1, const QString& v2)
 {
     const QStringList parts1 { v1.split('.') };
     const QStringList parts2 { v2.split('.') };
@@ -118,7 +118,7 @@ int MainWindowUtils::CompareVersion(const QString& v1, const QString& v2)
     return 0; // equal
 }
 
-QString MainWindowUtils::AccountIniFileName(const QString& email, const QString& workspace)
+QString Utils::AccountIniFileName(const QString& email, const QString& workspace)
 {
     // Extract email parts
     QString email_user { email.section('@', 0, 0) };
@@ -147,14 +147,14 @@ QString MainWindowUtils::AccountIniFileName(const QString& email, const QString&
     return file_name;
 }
 
-void MainWindowUtils::SetupHeaderStatus(QHeaderView* header, QSharedPointer<QSettings> settings, Section section, const QString& key)
+void Utils::SetupHeaderStatus(QHeaderView* header, QSharedPointer<QSettings> settings, Section section, const QString& key)
 {
     assert(header && settings);
 
     const auto section_name { kSectionString.value(section) };
 
-    TemplateUtils::ReadConfig(header, &QHeaderView::restoreState, settings, section_name, key);
+    Utils::ReadConfig(header, &QHeaderView::restoreState, settings, section_name, key);
 
     QObject::connect(header, &QHeaderView::sectionMoved,
-        [header, settings, section_name, key]() { TemplateUtils::WriteConfig(header, &QHeaderView::saveState, settings, section_name, key); });
+        [header, settings, section_name, key]() { Utils::WriteConfig(header, &QHeaderView::saveState, settings, section_name, key); });
 }

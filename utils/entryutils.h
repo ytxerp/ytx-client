@@ -27,7 +27,7 @@
 #include "enum/entryenum.h"
 #include "enum/section.h"
 
-namespace EntryUtils {
+namespace Utils {
 
 constexpr int LinkedNodeColumn(Section section)
 {
@@ -46,7 +46,7 @@ constexpr int LinkedNodeColumn(Section section)
     }
 }
 
-constexpr int DescriptionColumn(Section section)
+constexpr int EntryDescriptionColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:
@@ -75,7 +75,7 @@ constexpr int BalanceColumn(Section section)
     }
 }
 
-constexpr std::pair<int, int> CacheColumnRange(Section section)
+constexpr std::pair<int, int> EntryCacheColumnRange(Section section)
 {
     switch (section) {
     case Section::kFinance:
@@ -92,7 +92,7 @@ constexpr std::pair<int, int> CacheColumnRange(Section section)
     }
 }
 
-constexpr std::pair<int, int> NumericColumnRange(Section section)
+constexpr std::pair<int, int> EntryNumericColumnRange(Section section)
 {
     switch (section) {
     case Section::kFinance:

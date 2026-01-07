@@ -104,7 +104,7 @@ void EntryHubP::UpdateEntry(const QUuid& id, const QJsonObject& update)
 
         entry->ReadJson(update);
 
-        const auto [start, end] = EntryUtils::CacheColumnRange(section_);
+        const auto [start, end] = Utils::EntryCacheColumnRange(section_);
         emit SRefreshField(entry->lhs_node, id, start, end);
     };
 }

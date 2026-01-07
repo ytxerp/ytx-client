@@ -305,7 +305,7 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    NodeUtils::SortIterative(root_, Compare);
+    Utils::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 

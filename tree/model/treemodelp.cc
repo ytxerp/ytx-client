@@ -158,7 +158,7 @@ void TreeModelP::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    NodeUtils::SortIterative(root_, Compare);
+    Utils::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 
@@ -225,16 +225,16 @@ bool TreeModelP::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case NodeEnumP::kCode:
-        NodeUtils::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        Utils::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kDescription:
-        NodeUtils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        Utils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kNote:
-        NodeUtils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
+        Utils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kPaymentTerm:
-        NodeUtils::UpdateField(pending_updates_[id], d_node, kPaymentTerm, value.toInt(), &NodeP::payment_term, [id, this]() { RestartTimer(id); });
+        Utils::UpdateField(pending_updates_[id], d_node, kPaymentTerm, value.toInt(), &NodeP::payment_term, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;

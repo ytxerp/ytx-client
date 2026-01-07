@@ -5,7 +5,7 @@
 
 #include "component/constant.h"
 
-namespace NodeUtils {
+namespace Utils {
 
 void UpdatePath(QHash<QUuid, QString>& leaf, QHash<QUuid, QString>& branch, const Node* root, const Node* node, CString& separator)
 {

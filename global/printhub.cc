@@ -208,7 +208,7 @@ void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
 
     // unit
     {
-        QString unit { NodeUtils::UnitString(UnitO(node_o_->unit)) };
+        QString unit { Utils::UnitString(UnitO(node_o_->unit)) };
         DrawText(painter, QStringLiteral("unit"), unit);
     }
 

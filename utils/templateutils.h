@@ -47,7 +47,7 @@ concept MapType = requires(T a) {
     requires std::is_same_v<typename T::key_type, int> || std::is_same_v<typename T::key_type, bool>;
 };
 
-namespace TemplateUtils {
+namespace Utils {
 
 template <typename T> void SafeDelete(QPointer<T>& ptr)
 {

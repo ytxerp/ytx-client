@@ -115,7 +115,7 @@ void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update)
 
         const int issued_time { std::to_underlying(EntryEnum::kIssuedTime) };
 
-        const auto [start, end] = EntryUtils::CacheColumnRange(section_);
+        const auto [start, end] = Utils::EntryCacheColumnRange(section_);
 
         emit SRefreshField(entry->lhs_node, id, start, end);
         emit SRefreshField(entry->rhs_node, id, start, end);
@@ -159,7 +159,7 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
             entry->lhs_node = new_node_id;
         }
 
-        const int rhs_node_column { EntryUtils::LinkedNodeColumn(section_) };
+        const int rhs_node_column { Utils::LinkedNodeColumn(section_) };
 
         emit SRemoveOneEntry(old_node_id, id);
         emit SRefreshField(lhs_node, id, rhs_node_column, rhs_node_column);

@@ -25,7 +25,7 @@
 #include "component/sectioncontex.h"
 #include "worksheet.h"
 
-namespace MainWindowUtils {
+namespace Utils {
 
 QString AccountIniFileName(const QString& email, const QString& workspace);
 

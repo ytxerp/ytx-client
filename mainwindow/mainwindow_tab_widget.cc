@@ -38,14 +38,14 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     }
 
     {
-        const int kind_column { NodeUtils::KindColumn(start_) };
+        const int kind_column { Utils::KindColumn(start_) };
         const NodeKind kind { index.siblingAtColumn(kind_column).data().toInt() };
         if (kind == NodeKind::kBranch)
             return;
     }
 
     {
-        const int unit_column { NodeUtils::UnitColumn(start_) };
+        const int unit_column { Utils::UnitColumn(start_) };
         const int unit { index.siblingAtColumn(unit_column).data().toInt() };
         if (start_ == Section::kInventory && unit == std::to_underlying(UnitI::kExternal))
             return;
@@ -155,7 +155,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 
     {
         if (sc_->widget_hash.contains(node_id)) {
-            TemplateUtils::FreeWidget(node_id, sc_->widget_hash);
+            Utils::FreeWidget(node_id, sc_->widget_hash);
             return;
         }
     }
@@ -199,7 +199,7 @@ void MainWindow::on_actionJump_triggered()
         return;
 
     const int row { index.row() };
-    const int rhs_node_column { EntryUtils::LinkedNodeColumn(start_) };
+    const int rhs_node_column { Utils::LinkedNodeColumn(start_) };
 
     const auto rhs_node_id { index.sibling(row, rhs_node_column).data().toUuid() };
     if (rhs_node_id.isNull())

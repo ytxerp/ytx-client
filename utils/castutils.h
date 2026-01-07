@@ -20,7 +20,7 @@
 #ifndef CASTUTILS_H
 #define CASTUTILS_H
 
-namespace CastUtils {
+namespace Utils {
 
 template <typename Derived, typename Base> Derived* DerivedPtr(Base* base)
 {

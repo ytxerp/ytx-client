@@ -59,7 +59,7 @@ void MainWindow::UpdateAppConfig(CAppConfig& app)
     }
 
     if (app_config_.language != app.language) {
-        MainWindowUtils::Message(QMessageBox::Information, tr("Language Changed"),
+        Utils::Message(QMessageBox::Information, tr("Language Changed"),
             tr("The language has been changed. Please restart the application for the changes to take effect."), kThreeThousand);
     }
 
@@ -148,7 +148,7 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
 
         if (dynamic_cast<TreeWidget*>(current_widget)) {
             auto* header { sc_->tree_view->header() };
-            ResizeColumn(header, NodeUtils::DescriptionColumn(start_));
+            ResizeColumn(header, Utils::NodeDescriptionColumn(start_));
         }
     }
 }

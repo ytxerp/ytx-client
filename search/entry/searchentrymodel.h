@@ -26,7 +26,7 @@
 #include "table/entry.h"
 #include "utils/castutils.h"
 
-using CastUtils::DerivedPtr;
+using Utils::DerivedPtr;
 
 class SearchEntryModel : public QAbstractItemModel {
     Q_OBJECT

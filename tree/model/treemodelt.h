@@ -37,7 +37,7 @@ public:
 
     void ResetColor(const QModelIndex& index) override;
 
-    int Status(QUuid node_id) const { return NodeUtils::Value(node_hash_, node_id, &NodeT::status); }
+    int Status(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &NodeT::status); }
     void UpdateStatus(const QUuid& node_id, int status);
 
 private:

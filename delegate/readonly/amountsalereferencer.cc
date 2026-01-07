@@ -34,8 +34,8 @@ QString AmountSaleReferenceR::Format(const QModelIndex& index) const
 
 bool AmountSaleReferenceR::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
 {
-    const int kind_column { NodeUtils::KindColumn(section_) };
-    const int unit_column { NodeUtils::UnitColumn(section_) };
+    const int kind_column { Utils::KindColumn(section_) };
+    const int unit_column { Utils::UnitColumn(section_) };
 
     const bool is_leaf { index.siblingAtColumn(kind_column).data().toInt() == std::to_underlying(NodeKind::kLeaf) };
 
