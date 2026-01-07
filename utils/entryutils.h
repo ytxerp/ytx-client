@@ -109,9 +109,8 @@ constexpr std::pair<int, int> EntryNumericColumnRange(Section section)
     }
 }
 
-template <typename T>
-bool UpdateShadowIssuedTime(
-    QJsonObject& update, T* object, CString& field, const QDateTime& value, QDateTime* T::* member, std::function<void()> restart_timer = nullptr)
+template <typename T, typename F = std::nullptr_t>
+bool UpdateShadowIssuedTime(QJsonObject& update, T* object, CString& field, const QDateTime& value, QDateTime* T::* member, F&& restart_timer = nullptr)
 {
     assert(object);
 
@@ -127,14 +126,16 @@ bool UpdateShadowIssuedTime(
     }
 
     update.insert(field, value.toString(Qt::ISODate));
-    if (restart_timer)
+
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
+    }
 
     return true;
 }
 
-template <typename T>
-bool UpdateShadowUuid(QJsonObject& update, T* object, CString& field, const QUuid& value, QUuid* T::* member, std::function<void()> restart_timer = nullptr)
+template <typename T, typename F = std::nullptr_t>
+bool UpdateShadowUuid(QJsonObject& update, T* object, CString& field, const QUuid& value, QUuid* T::* member, F&& restart_timer = nullptr)
 {
     assert(object);
 
@@ -150,15 +151,16 @@ bool UpdateShadowUuid(QJsonObject& update, T* object, CString& field, const QUui
     }
 
     update.insert(field, value.toString(QUuid::WithoutBraces));
-    if (restart_timer)
+
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
+    }
 
     return true;
 }
 
-template <typename T>
-bool UpdateShadowDocument(
-    QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList* T::* member, std::function<void()> restart_timer = nullptr)
+template <typename T, typename F = std::nullptr_t>
+bool UpdateShadowDocument(QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList* T::* member, F&& restart_timer = nullptr)
 {
     assert(object);
 
@@ -180,15 +182,17 @@ bool UpdateShadowDocument(
     }
 
     update.insert(field, value.join(kSemicolon));
-    if (restart_timer)
+
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
+    }
 
     return true;
 }
 
 #if 0
-template <typename Field, typename T>
-bool UpdateShadowDouble(QJsonObject& update, T* object, CString& field, const Field& value, Field* T::* member, std::function<void()> restart_timer = nullptr)
+template <typename Field, typename T, typename F = std::nullptr_t>
+bool UpdateShadowDouble(QJsonObject& update, T* object, CString& field, const Field& value, Field* T::* member, F&& restart_timer = nullptr)
 {
     assert(object);
 
@@ -205,15 +209,17 @@ bool UpdateShadowDouble(QJsonObject& update, T* object, CString& field, const Fi
     }
 
     update.insert(field, QString::number(value, 'f', kMaxNumericScale_8));
-    if (restart_timer)
+
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
+    }
 
     return true;
 }
 #endif
 
-template <typename Field, typename T>
-bool UpdateShadowField(QJsonObject& update, T* object, CString& field, const Field& value, Field* T::* member, std::function<void()> restart_timer = nullptr)
+template <typename Field, typename T, typename F = std::nullptr_t>
+bool UpdateShadowField(QJsonObject& update, T* object, CString& field, const Field& value, Field* T::* member, F&& restart_timer = nullptr)
 {
     assert(object);
 
@@ -235,8 +241,10 @@ bool UpdateShadowField(QJsonObject& update, T* object, CString& field, const Fie
     }
 
     update.insert(field, value);
-    if (restart_timer)
+
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
+    }
 
     return true;
 }

@@ -1,9 +1,6 @@
 #include "nodeutils.h"
 
 #include <QApplication>
-#include <QQueue>
-
-#include "component/constant.h"
 
 namespace Utils {
 
@@ -42,27 +39,6 @@ bool IsDescendant(const Node* lhs, const Node* rhs)
         lhs = lhs->parent;
 
     return lhs == rhs;
-}
-
-void SortIterative(Node* node, std::function<bool(const Node*, const Node*)> Compare)
-{
-    if (!node)
-        return;
-
-    QQueue<Node*> queue {};
-    queue.enqueue(node);
-
-    while (!queue.isEmpty()) {
-        auto* current { queue.dequeue() };
-
-        if (current->children.isEmpty())
-            continue;
-
-        std::sort(current->children.begin(), current->children.end(), Compare);
-        for (auto* child : std::as_const(current->children)) {
-            queue.enqueue(child);
-        }
-    }
 }
 
 QString ConstructPath(const Node* root, const Node* node, CString& separator)

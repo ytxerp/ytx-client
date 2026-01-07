@@ -3,7 +3,6 @@
 #include <QJsonArray>
 
 #include "enum/settlementenum.h"
-#include "global/collator.h"
 #include "global/resourcepool.h"
 #include "utils/compareutils.h"
 #include "websocket/jsongen.h"

@@ -20,6 +20,8 @@
 #ifndef NODEUTILS_H
 #define NODEUTILS_H
 
+#include <QQueue>
+
 #include "component/constant.h"
 #include "component/using.h"
 #include "enum/nodeenum.h"
@@ -164,7 +166,27 @@ inline void UpdateOrderFinalTotal(NodeO* node)
 
 bool IsDescendant(const Node* lhs, const Node* rhs);
 
-void SortIterative(Node* node, std::function<bool(const Node*, const Node*)> Compare);
+template <typename F> void SortIterative(Node* node, F&& Compare)
+{
+    if (!node)
+        return;
+
+    QQueue<Node*> queue {};
+    queue.enqueue(node);
+
+    while (!queue.isEmpty()) {
+        Node* current = queue.dequeue();
+
+        if (current->children.isEmpty())
+            continue;
+
+        std::sort(current->children.begin(), current->children.end(), std::forward<F>(Compare));
+
+        for (Node* child : std::as_const(current->children)) {
+            queue.enqueue(child);
+        }
+    }
+}
 
 QString ConstructPath(const Node* root, const Node* node, CString& separator);
 void UpdatePath(QHash<QUuid, QString>& leaf, QHash<QUuid, QString>& branch, const Node* root, const Node* node, CString& separator);
@@ -199,8 +221,8 @@ template <typename Field, typename Node> const Field& Value(CNodeHash& hash, con
 
 // Update a QString or int field of an object and update the change in a QJsonObject.
 // Returns true if the value was changed.
-template <typename Field, typename T>
-bool UpdateField(QJsonObject& update, T* object, CString& field, const Field& value, Field T::* member, std::function<void()> restart_timer = nullptr)
+template <typename Field, typename T, typename F = std::nullptr_t>
+bool UpdateField(QJsonObject& update, T* object, CString& field, const Field& value, Field T::* member, F&& restart_timer = nullptr)
 {
     assert(object);
 
@@ -212,14 +234,15 @@ bool UpdateField(QJsonObject& update, T* object, CString& field, const Field& va
     current_value = value;
     update.insert(field, value);
 
-    if (restart_timer)
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
+    }
 
     return true;
 }
 
-template <typename Field, typename T>
-bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& value, Field T::* member, std::function<void()> restart_timer = nullptr)
+template <typename Field, typename T, typename F = std::nullptr_t>
+bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& value, Field T::* member, F&& restart_timer = nullptr)
 {
     assert(object);
 
@@ -231,15 +254,15 @@ bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& v
     current_value = value;
     update.insert(field, QString::number(value, 'f', kMaxNumericScale_8));
 
-    if (restart_timer)
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
+    }
 
     return true;
 }
 
-template <typename T>
-bool UpdateDocument(
-    QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList T::* member, std::function<void()> restart_timer = nullptr)
+template <typename T, typename F = std::nullptr_t>
+bool UpdateDocument(QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList T::* member, F&& restart_timer = nullptr)
 {
     assert(object);
 
@@ -251,14 +274,15 @@ bool UpdateDocument(
     current_value = value;
     update.insert(field, value.join(kSemicolon));
 
-    if (restart_timer)
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
+    }
 
     return true;
 }
 
-template <typename T>
-bool UpdateUuid(QJsonObject& update, T* object, CString& field, const QUuid& value, QUuid T::* member, std::function<void()> restart_timer = nullptr)
+template <typename T, typename F = std::nullptr_t>
+bool UpdateUuid(QJsonObject& update, T* object, CString& field, const QUuid& value, QUuid T::* member, F&& restart_timer = nullptr)
 {
     assert(object);
 
@@ -270,15 +294,15 @@ bool UpdateUuid(QJsonObject& update, T* object, CString& field, const QUuid& val
     current_value = value;
     update.insert(field, value.toString(QUuid::WithoutBraces));
 
-    if (restart_timer)
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
+    }
 
     return true;
 }
 
-template <typename T>
-bool UpdateIssuedTime(
-    QJsonObject& update, T* object, CString& field, const QDateTime& value, QDateTime T::* member, std::function<void()> restart_timer = nullptr)
+template <typename T, typename F = std::nullptr_t>
+bool UpdateIssuedTime(QJsonObject& update, T* object, CString& field, const QDateTime& value, QDateTime T::* member, F&& restart_timer = nullptr)
 {
     assert(object);
 
@@ -290,8 +314,9 @@ bool UpdateIssuedTime(
     current_value = value;
     update.insert(field, value.toString(Qt::ISODate));
 
-    if (restart_timer)
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
+    }
 
     return true;
 }
