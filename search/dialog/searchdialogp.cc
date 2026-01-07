@@ -6,9 +6,9 @@
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 
-SearchDialogP::SearchDialogP(CTreeModel* tree, SearchNodeModel* search_tree, SearchEntryModel* search_table, CTreeModel* tree_model_i, CSectionConfig& config,
+SearchDialogP::SearchDialogP(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* tree_model_i, CSectionConfig& config,
     CSectionInfo& info, QWidget* parent)
-    : SearchDialog(tree, search_tree, search_table, config, info, parent)
+    : SearchDialog(tree, search_node, search_entry, config, info, parent)
     , tree_model_i_ { tree_model_i }
 {
     TreeViewDelegate(ui->searchViewNode);

@@ -114,13 +114,13 @@ void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
     emit SResizeColumnToContents(name_column);
 }
 
-void TreeModelO::InsertSettlement(const QUuid& node_id, const QUuid& settltment_id)
+void TreeModelO::InsertSettlement(const QUuid& node_id, const QUuid& settlement_id)
 {
     auto* node = GetNode(node_id);
     if (node) {
         auto* d_node { static_cast<NodeO*>(node) };
         d_node->is_settled = true;
-        d_node->settlement_id = settltment_id;
+        d_node->settlement_id = settlement_id;
     }
 }
 

@@ -3,7 +3,6 @@
 #include <QDate>
 #include <QJsonArray>
 
-#include "component/using.h"
 #include "global/entrypool.h"
 
 EntryHubO::EntryHubO(CSectionInfo& info, QObject* parent)
@@ -51,52 +50,4 @@ EntryList EntryHubO::ProcessEntryArray(const QJsonArray& array)
     }
 
     return list;
-}
-
-QString EntryHubO::QSWriteSettlement() const
-{
-    return QString(R"(
-    INSERT INTO %1 (id, issued_time)
-    VALUES (:id, :issued_time)
-    )")
-        .arg(info_.settlement);
-}
-
-QString EntryHubO::QSRemoveSettlementFirst() const
-{
-    return QString(R"(
-    UPDATE %1 SET
-        is_valid = FALSE
-    WHERE id = :node_id
-    )")
-        .arg(info_.settlement);
-}
-
-QString EntryHubO::QSRemoveSettlementSecond() const
-{
-    return QString(R"(
-    UPDATE %1 SET
-        settlement = 0,
-        final_total = 0
-    WHERE settlement = :node_id
-    )")
-        .arg(info_.node);
-}
-
-QString EntryHubO::QSReadSettlementPrimary(bool status) const
-{
-    CString status_string { status ? QString() : "OR settlement = 0" };
-
-    return QString(R"(
-    SELECT id, issued_time, description, initial_total, employee, settlement
-    FROM %1
-    WHERE partner = :partner_id AND unit = 1 AND status = TRUE AND (settlement = :settlement %2) AND is_valid = TRUE
-    )")
-        .arg(info_.node, status_string);
-}
-
-QString EntryHubO::QSReadSettlement() const
-{
-    // return BuildSelect(info_.settlement, QStringLiteral("(issued_time BETWEEN :start AND :end) AND is_valid = TRUE"));
-    return {};
 }

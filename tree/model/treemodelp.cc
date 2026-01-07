@@ -1,6 +1,5 @@
 #include "treemodelp.h"
 
-#include "global/collator.h"
 #include "tree/includemultiplefiltermodel.h"
 #include "utils/compareutils.h"
 
@@ -26,17 +25,6 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)
 
     const auto& affected_ids { UpdateAncestorTotal(node, initial_delta, 0.0) };
     RefreshAffectedTotal(affected_ids);
-}
-
-QList<QUuid> TreeModelP::PartnerList(CString& text, int unit) const
-{
-    QList<QUuid> list {};
-
-    for (auto* node : node_hash_)
-        if (node->unit == unit && node->name.contains(text))
-            list.emplaceBack(node->id);
-
-    return list;
 }
 
 const QSet<QUuid>* TreeModelP::UnitSet(int unit) const

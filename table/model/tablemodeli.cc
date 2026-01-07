@@ -118,9 +118,6 @@ bool TableModelI::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
 
     const QUuid entry_id { *shadow->id };
 
-    const QString old_node_id { old_node.toString(QUuid::WithoutBraces) };
-    const QString new_node_id { value.toString(QUuid::WithoutBraces) };
-
     QJsonObject message { JsonGen::EntryLinkedNode(section_, entry_id) };
 
     if (old_node.isNull()) {

@@ -61,12 +61,12 @@ public slots:
 public:
     virtual void InsertEntry(const QJsonObject& data);
     virtual void RemoveEntry(const QUuid& entry_id);
-    virtual void UpdateEntry(const QUuid& entry_id, const QJsonObject& update);
+    virtual void UpdateEntry(const QUuid& id, const QJsonObject& update);
 
     void InsertMeta(const QUuid& entry_id, const QJsonObject& meta);
     void UpdateMeta(const QUuid& entry_id, const QJsonObject& meta);
 
-    void UpdateEntryLinkedNode(const QUuid& entry_id, const QJsonObject& update, bool is_parallel);
+    void UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, bool is_parallel);
 
     void AckTable(const QUuid& node_id, const QJsonArray& array);
     void ApplyPartnerEntry(const QJsonArray& array);

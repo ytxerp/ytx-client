@@ -84,37 +84,6 @@ void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
     SortModel();
 }
 
-QSet<QUuid> TreeModel::SyncDeltaImpl(const QUuid& node_id, double initial_delta, double final_delta)
-{
-    auto* node = GetNode(node_id);
-    if (!node)
-        return {};
-
-    // Multiplier adjusts the sign of deltas based on the node's direction rule.
-    // In LeafModel logic, the default delta computation follows DICD (debit - credit).
-    // If the node rule is DICD, multiplier = +1 (no change);
-    // if the node rule is DDCI, multiplier = -1 (reverse sign).
-    const int multiplier { node->direction_rule == Rule::kDICD ? 1 : -1 };
-
-    // NOTE: Only leaf nodes apply the direction adjustment.
-    // The adjusted deltas are treated as the final values
-    // and will be propagated to ancestor nodes.
-    const double adjust_initial_delta { multiplier * initial_delta };
-    const double adjust_final_delta { multiplier * final_delta };
-
-    // Accumulate into the current node totals
-    node->initial_total += adjust_initial_delta;
-    node->final_total += adjust_final_delta;
-
-    // Propagate adjusted deltas to ancestor nodes
-    auto affected_ids { UpdateAncestorTotal(node, adjust_initial_delta, adjust_final_delta) };
-    affected_ids.insert(node_id);
-
-    emit SSyncValue();
-
-    return affected_ids;
-}
-
 QSet<QUuid> TreeModel::UpdateTotal(const QUuid& node_id, double initial_total, double final_total)
 {
     auto* node = GetNode(node_id);

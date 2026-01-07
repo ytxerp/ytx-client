@@ -37,7 +37,7 @@ public:
 
     void ReadConfig(QSharedPointer<QSettings> local_settings);
     void Connect();
-    void SendMessage(const QString& msg_type, const QJsonObject& value);
+    void SendMessage(const QString& type, const QJsonObject& value);
     void Close();
 
     void RegisterTreeModel(Section section, QPointer<TreeModel> node) { tree_model_hash_.insert(section, node); }

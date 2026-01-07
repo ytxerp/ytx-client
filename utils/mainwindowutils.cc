@@ -19,26 +19,6 @@ bool Utils::PrepareNewFile(QString& file_path, CString& suffix)
     return true;
 }
 
-bool Utils::CheckFileValid(CString& file_path, CString& suffix)
-{
-    if (file_path.isEmpty())
-        return false;
-
-    const QFileInfo file_info(file_path);
-
-    if (!file_info.exists() || !file_info.isFile()) {
-        qDebug() << "The specified file does not exist or is not a valid file: " << file_path;
-        return false;
-    }
-
-    if (file_info.suffix().compare(suffix, Qt::CaseInsensitive) != 0) {
-        qDebug() << "The file extension does not match the expected type: " << file_path;
-        return false;
-    }
-
-    return true;
-}
-
 void Utils::ExportExcel(CString& table, QSharedPointer<YXlsx::Worksheet> worksheet, bool where)
 {
     if (!worksheet) {

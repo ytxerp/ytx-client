@@ -45,7 +45,7 @@ private:
     ExportExcel() = default;
     ~ExportExcel() = default;
 
-    bool Statement(CString& path, CString& partner_name, CUuidString& inventory_leaf, CString& unit_string, CDateTime& start, CDateTime& end,
+    static bool Statement(CString& path, CString& partner_name, CUuidString& inventory_leaf, CString& unit_string, CDateTime& start, CDateTime& end,
         CJsonObject& total, CStatementEntryList& list);
 };
 

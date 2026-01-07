@@ -97,7 +97,7 @@ void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
     }
 }
 
-void MainWindow::RSettlementItemAcked(Section section, const QUuid& widget_id, const QJsonArray& entry_array)
+void MainWindow::RSettlementItemAcked(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -107,7 +107,7 @@ void MainWindow::RSettlementItemAcked(Section section, const QUuid& widget_id, c
 
     auto* d_widget { static_cast<TableWidgetSettlement*>(widget.data()) };
     auto* model { d_widget->Model() };
-    model->ResetModel(entry_array);
+    model->ResetModel(array);
 }
 
 void MainWindow::RSettlementInserted(const QJsonObject& obj)

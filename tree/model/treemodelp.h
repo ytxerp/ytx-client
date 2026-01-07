@@ -38,8 +38,6 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    QList<QUuid> PartnerList(CString& text, int unit) const;
-
     QSortFilterProxyModel* IncludeUnitModel(int unit, QObject* parent) override;
 
 protected:

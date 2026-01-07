@@ -165,25 +165,25 @@ private:
     void TableDelegateP(QTableView* table_view, CSectionConfig& config) const;
     void TableDelegateO(QTableView* table_view, CSectionConfig& config) const;
 
-    void SetTableViewFIPT(QTableView* table_view, int stretch_column, int lhs_node_column) const;
-    void SetTableViewO(QTableView* table_view, Section section, int stretch_column, int lhs_node_column) const;
+    void SetTableViewFIPT(QTableView* view, int stretch_column, int lhs_node_column) const;
+    void SetTableViewO(QTableView* view, Section section, int stretch_column, int lhs_node_column) const;
 
     void TableConnectF(QTableView* table_view, TableModel* table_model) const;
     void TableConnectI(QTableView* table_view, TableModel* table_model) const;
     void TableConnectT(QTableView* table_view, TableModel* table_model) const;
     void TableConnectP(QTableView* table_view, TableModel* table_model) const;
-    void TableConnectO(QTableView* table_view, TableModelO* table_model, TableWidgetO* widget) const;
+    void TableConnectO(QTableView* table_view, TableModelO* table_model_o, TableWidgetO* widget) const;
 
     void CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit);
     void DelegateSaleReference(QTableView* table_view, CSectionConfig& config) const;
-    void SetTableViewSaleReference(QTableView* table_view) const;
+    void SetTableViewSaleReference(QTableView* view) const;
 
-    void SetStatementView(QTableView* table_view, int stretch_column) const;
+    void SetStatementView(QTableView* view, int stretch_column) const;
     void DelegateStatement(QTableView* table_view, CSectionConfig& config) const;
 
-    void SetSettlementView(QTableView* table_view, int stretch_column) const;
+    void SetSettlementView(QTableView* view, int stretch_column) const;
     void DelegateSettlement(QTableView* table_view, CSectionConfig& config) const;
-    void SetSettlementItemView(QTableView* table_view, int stretch_column) const;
+    void SetSettlementItemView(QTableView* view, int stretch_column) const;
     void DelegateSettlementNode(QTableView* table_view, CSectionConfig& config) const;
 
     void DelegateStatementNode(QTableView* table_view, CSectionConfig& config) const;
@@ -196,7 +196,7 @@ private:
     void EditNameFIPT();
     void EditNameO();
 
-    void SetTreeView(QTreeView* tree_view, CSectionInfo& info) const;
+    void SetTreeView(QTreeView* view, CSectionInfo& info) const;
 
     void TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;
     void TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;

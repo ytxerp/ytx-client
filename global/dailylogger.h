@@ -28,7 +28,7 @@
 class DailyLogger {
 public:
     static DailyLogger& Instance();
-    void Install();
+    static void Install();
     void Release();
 
     DailyLogger(const DailyLogger&) = delete;

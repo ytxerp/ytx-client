@@ -53,8 +53,6 @@ void LoginInfo::ReadConfig(QSharedPointer<QSettings> local_settings)
     local_settings->endGroup();
 }
 
-
-
 void LoginInfo::Clear()
 {
     email_.clear();
@@ -63,4 +61,7 @@ void LoginInfo::Clear()
     password_remembered_ = false;
 }
 
-LoginInfo::LoginInfo() { machine_key_ = PasswordEncryption::GetMachineKey(); }
+LoginInfo::LoginInfo()
+    : machine_key_ { PasswordEncryption::GetMachineKey() }
+{
+}

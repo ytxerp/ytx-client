@@ -4,7 +4,6 @@
 
 #include "component/constant.h"
 #include "enum/entryenum.h"
-#include "global/collator.h"
 #include "global/entrypool.h"
 #include "utils/compareutils.h"
 #include "websocket/jsongen.h"
@@ -110,9 +109,6 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
 
     const QUuid entry_id { entry->id };
 
-    const QString old_node_id { old_node.toString(QUuid::WithoutBraces) };
-    const QString new_node_id { value.toString(QUuid::WithoutBraces) };
-
     QJsonObject message { JsonGen::EntryLinkedNode(section_, entry_id) };
 
     if (old_node.isNull()) {
@@ -123,7 +119,7 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
     }
 
     if (!old_node.isNull()) {
-        pending_updates_[entry_id].insert(kRhsNode, new_node_id);
+        pending_updates_[entry_id].insert(kRhsNode, value.toString(QUuid::WithoutBraces));
         RestartTimer(entry_id);
     }
 

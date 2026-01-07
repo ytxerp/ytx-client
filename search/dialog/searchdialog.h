@@ -44,7 +44,7 @@ class SearchDialog : public QDialog {
 
 protected:
     SearchDialog(
-        CTreeModel* node, SearchNodeModel* search_node, SearchEntryModel* search_entry, CSectionConfig& config, CSectionInfo& info, QWidget* parent = nullptr);
+        CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CSectionConfig& config, CSectionInfo& info, QWidget* parent = nullptr);
     virtual ~SearchDialog();
 
 signals:

@@ -125,17 +125,17 @@ void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update)
     };
 }
 
-void EntryHub::UpdateMeta(const QUuid& entry_id, const QJsonObject& data)
+void EntryHub::UpdateMeta(const QUuid& entry_id, const QJsonObject& meta)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
         auto* entry = it.value();
 
-        if (data.contains(kUpdatedTime))
-            entry->updated_time = QDateTime::fromString(data[kUpdatedTime].toString(), Qt::ISODate);
+        if (meta.contains(kUpdatedTime))
+            entry->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
 
-        if (data.contains(kUpdatedBy))
-            entry->updated_by = QUuid(data[kUpdatedBy].toString());
+        if (meta.contains(kUpdatedBy))
+            entry->updated_by = QUuid(meta[kUpdatedBy].toString());
     };
 }
 

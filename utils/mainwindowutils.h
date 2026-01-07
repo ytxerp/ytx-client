@@ -33,7 +33,6 @@ void ExportExcel(CString& table, QSharedPointer<YXlsx::Worksheet> worksheet, boo
 void Message(QMessageBox::Icon icon, CString& title, CString& text, int timeout);
 
 bool PrepareNewFile(QString& file_path, CString& suffix);
-bool CheckFileValid(CString& file_path, CString& suffix);
 void SwitchDialog(const SectionContext* sc, bool enable);
 int CompareVersion(const QString& v1, const QString& v2);
 

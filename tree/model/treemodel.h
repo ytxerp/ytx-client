@@ -187,7 +187,6 @@ protected:
 
     void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
 
-    QSet<QUuid> SyncDeltaImpl(const QUuid& node_id, double initial_delta, double final_delta);
     QSet<QUuid> UpdateTotal(const QUuid& node_id, double initial_total, double final_total);
 
     virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta);

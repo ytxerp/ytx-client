@@ -69,8 +69,8 @@ private:
 
     QString GetColumnText(int col, const Entry* entry);
 
-    QString NumberToChineseUpper(double value);
-    QString ConvertSection(int section, const QStringList& digits, const QStringList& units);
+    static QString NumberToChineseUpper(double value);
+    static QString ConvertSection(int section, const QStringList& digits);
 
     void DrawText(QPainter* painter, const QString& field, const QString& text);
 

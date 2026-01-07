@@ -80,24 +80,24 @@ void MainWindow::UpdateAppConfig(CAppConfig& app)
     app_settings_->endGroup();
 }
 
-void MainWindow::ReadSectionConfig(SectionConfig& section_config, CString& section_name)
+void MainWindow::ReadSectionConfig(SectionConfig& config, CString& section_name)
 {
     section_settings_->beginGroup(section_name);
     const Section section { kStringSection.value(section_name) };
 
     if (IsDoubleEntry(section)) {
-        section_config.static_label = section_settings_->value(kStaticLabel, {}).toString();
-        section_config.static_node = section_settings_->value(kStaticNode, QUuid()).toUuid();
-        section_config.dynamic_label = section_settings_->value(kDynamicLabel, {}).toString();
-        section_config.dynamic_node_lhs = section_settings_->value(kDynamicNodeLhs, QUuid()).toUuid();
-        section_config.operation = section_settings_->value(kOperation, kPlus).toString();
-        section_config.dynamic_node_rhs = section_settings_->value(kDynamicNodeRhs, QUuid()).toUuid();
+        config.static_label = section_settings_->value(kStaticLabel, {}).toString();
+        config.static_node = section_settings_->value(kStaticNode, QUuid()).toUuid();
+        config.dynamic_label = section_settings_->value(kDynamicLabel, {}).toString();
+        config.dynamic_node_lhs = section_settings_->value(kDynamicNodeLhs, QUuid()).toUuid();
+        config.operation = section_settings_->value(kOperation, kPlus).toString();
+        config.dynamic_node_rhs = section_settings_->value(kDynamicNodeRhs, QUuid()).toUuid();
     }
 
-    section_config.date_format = section_settings_->value(kDateFormat, kDateTimeFST).toString();
-    section_config.amount_decimal = section_settings_->value(kAmountDecimal, 2).toInt();
-    section_config.rate_decimal = section_settings_->value(kRateDecimal, 2).toInt();
-    section_config.quantity_decimal = section_settings_->value(kQuantityDecimal, 2).toInt();
+    config.date_format = section_settings_->value(kDateFormat, kDateTimeFST).toString();
+    config.amount_decimal = section_settings_->value(kAmountDecimal, 2).toInt();
+    config.rate_decimal = section_settings_->value(kRateDecimal, 2).toInt();
+    config.quantity_decimal = section_settings_->value(kQuantityDecimal, 2).toInt();
 
     section_settings_->endGroup();
 }

@@ -33,15 +33,6 @@ public:
 
 protected:
     EntryList ProcessEntryArray(const QJsonArray& array) override;
-
-private:
-    QString QSReadSettlement() const;
-    QString QSWriteSettlement() const;
-
-    QString QSRemoveSettlementFirst() const;
-    QString QSRemoveSettlementSecond() const;
-
-    QString QSReadSettlementPrimary(bool status) const;
 };
 
 #endif // ENTRYHUBO_H

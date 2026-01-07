@@ -62,7 +62,7 @@ private:
     QString workspace_ {};
     bool password_remembered_ { false };
 
-    QByteArray machine_key_ {};
+    const QByteArray machine_key_ {};
 };
 
 #endif // LOGININFO_H

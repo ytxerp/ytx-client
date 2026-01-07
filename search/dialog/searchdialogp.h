@@ -26,7 +26,7 @@ class SearchDialogP final : public SearchDialog {
     Q_OBJECT
 
 public:
-    SearchDialogP(CTreeModel* tree_model, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* tree_model_i, CSectionConfig& config,
+    SearchDialogP(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* tree_model_i, CSectionConfig& config,
         CSectionInfo& info, QWidget* parent = nullptr);
 
 private slots:
