@@ -5,6 +5,7 @@
 #include "enum/entryenum.h"
 #include "global/collator.h"
 #include "global/entrypool.h"
+#include "utils/compareutils.h"
 #include "websocket/jsongen.h"
 
 TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
@@ -221,51 +222,35 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
 
 void TableModelO::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column <= info_.entry_header.size() - 1);
+    assert(column >= 0 && column < info_.entry_header.size());
 
     const EntryEnumO e_column { column };
-
-    switch (e_column) {
-    case EntryEnumO::kId:
-    case EntryEnumO::kUserId:
-    case EntryEnumO::kCreateTime:
-    case EntryEnumO::kCreateBy:
-    case EntryEnumO::kUpdateTime:
-    case EntryEnumO::kUpdateBy:
-    case EntryEnumO::kVersion:
-        return;
-    default:
-        break;
-    }
 
     auto Compare = [order, e_column](Entry* lhs, Entry* rhs) -> bool {
         auto* d_lhs { DerivedPtr<EntryO>(lhs) };
         auto* d_rhs { DerivedPtr<EntryO>(rhs) };
 
-        const auto& collator { Collator::Instance() };
-
         switch (e_column) {
         case EntryEnumO::kDescription:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
-                                                 : (collator.compare(lhs->description, rhs->description) > 0);
+            return Utils::CompareMember(lhs, rhs, &Entry::description, order);
         case EntryEnumO::kRhsNode:
-            return (order == Qt::AscendingOrder) ? (d_lhs->rhs_node < d_rhs->rhs_node) : (d_lhs->rhs_node > d_rhs->rhs_node);
+            return Utils::CompareMember(lhs, rhs, &EntryO::rhs_node, order);
         case EntryEnumO::kUnitPrice:
-            return (order == Qt::AscendingOrder) ? (d_lhs->unit_price < d_rhs->unit_price) : (d_lhs->unit_price > d_rhs->unit_price);
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::unit_price, order);
         case EntryEnumO::kCount:
-            return (order == Qt::AscendingOrder) ? (d_lhs->count < d_rhs->count) : (d_lhs->count > d_rhs->count);
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::count, order);
         case EntryEnumO::kMeasure:
-            return (order == Qt::AscendingOrder) ? (d_lhs->measure < d_rhs->measure) : (d_lhs->measure > d_rhs->measure);
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::measure, order);
         case EntryEnumO::kFinal:
-            return (order == Qt::AscendingOrder) ? (d_lhs->final < d_rhs->final) : (d_lhs->final > d_rhs->final);
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::final, order);
         case EntryEnumO::kInitial:
-            return (order == Qt::AscendingOrder) ? (d_lhs->initial < d_rhs->initial) : (d_lhs->initial > d_rhs->initial);
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::initial, order);
         case EntryEnumO::kUnitDiscount:
-            return (order == Qt::AscendingOrder) ? (d_lhs->unit_discount < d_rhs->unit_discount) : (d_lhs->unit_discount > d_rhs->unit_discount);
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::unit_discount, order);
         case EntryEnumO::kExternalSku:
-            return (order == Qt::AscendingOrder) ? (d_lhs->external_sku < d_rhs->external_sku) : (d_lhs->external_sku > d_rhs->external_sku);
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::external_sku, order);
         case EntryEnumO::kDiscount:
-            return (order == Qt::AscendingOrder) ? (d_lhs->discount < d_rhs->discount) : (d_lhs->discount > d_rhs->discount);
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::discount, order);
         default:
             return false;
         }

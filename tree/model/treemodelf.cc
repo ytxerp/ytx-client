@@ -1,6 +1,6 @@
 #include "treemodelf.h"
 
-#include "global/collator.h"
+#include "utils/compareutils.h"
 
 TreeModelF::TreeModelF(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
@@ -96,49 +96,33 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
 
     const NodeEnumF e_column { column };
 
-    switch (e_column) {
-    case NodeEnumF::kId:
-    case NodeEnumF::kUserId:
-    case NodeEnumF::kCreateTime:
-    case NodeEnumF::kCreateBy:
-    case NodeEnumF::kUpdateTime:
-    case NodeEnumF::kUpdateBy:
-    case NodeEnumF::kVersion:
-        return;
-    default:
-        break;
-    }
-
     auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
-        const auto& collator { Collator::Instance() };
-
         switch (e_column) {
         case NodeEnumF::kName:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->name, rhs->name) < 0) : (collator.compare(lhs->name, rhs->name) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumF::kCode:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->code, rhs->code) < 0) : (collator.compare(lhs->code, rhs->code) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumF::kDescription:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
-                                                 : (collator.compare(lhs->description, rhs->description) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumF::kNote:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->note, rhs->note) < 0) : (collator.compare(lhs->note, rhs->note) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::note, order);
         case NodeEnumF::kDirectionRule:
-            return (order == Qt::AscendingOrder) ? (lhs->direction_rule < rhs->direction_rule) : (lhs->direction_rule > rhs->direction_rule);
+            return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumF::kKind:
-            return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
+            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumF::kUnit:
-            return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
+            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumF::kInitialTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
+            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumF::kFinalTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->final_total < rhs->final_total) : (lhs->final_total > rhs->final_total);
+            return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
         default:
             return false;
         }
     };
 
     emit layoutAboutToBeChanged();
-    SortIterative(root_, Compare);
+    NodeUtils::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 

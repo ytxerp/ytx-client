@@ -1,5 +1,7 @@
 #include "searchnodemodelp.h"
 
+#include "utils/compareutils.h"
+
 SearchNodeModelP::SearchNodeModelP(CSectionInfo& info, CTreeModel* tree_model, QObject* parent)
     : SearchNodeModel { info, tree_model, parent }
 {
@@ -39,30 +41,31 @@ QVariant SearchNodeModelP::data(const QModelIndex& index, int role) const
 
 void SearchNodeModelP::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.node_header.size())
-        return;
+    assert(column >= 0 && column < info_.node_header.size());
 
-    auto Compare = [column, order](const Node* lhs, const Node* rhs) -> bool {
-        auto* d_lhs = DerivedPtr<NodeP>(lhs);
-        auto* d_rhs = DerivedPtr<NodeP>(rhs);
+    const NodeEnumP e_column { column };
 
-        switch (NodeEnumP(column)) {
+    auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
+        auto* d_lhs { DerivedPtr<NodeP>(lhs) };
+        auto* d_rhs { DerivedPtr<NodeP>(rhs) };
+
+        switch (e_column) {
         case NodeEnumP::kName:
-            return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
+            return Utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumP::kCode:
-            return (order == Qt::AscendingOrder) ? (lhs->code < rhs->code) : (lhs->code > rhs->code);
+            return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumP::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
+            return Utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumP::kNote:
-            return (order == Qt::AscendingOrder) ? (lhs->note < rhs->note) : (lhs->note > rhs->note);
+            return Utils::CompareMember(lhs, rhs, &Node::note, order);
         case NodeEnumP::kKind:
-            return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
+            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumP::kUnit:
-            return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
+            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumP::kPaymentTerm:
-            return (order == Qt::AscendingOrder) ? (d_lhs->payment_term < d_rhs->payment_term) : (d_lhs->payment_term > d_rhs->payment_term);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeP::payment_term, order);
         case NodeEnumP::kInitialTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
+            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         default:
             return false;
         }

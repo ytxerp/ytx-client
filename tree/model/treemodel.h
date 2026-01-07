@@ -30,7 +30,6 @@
 #include "utils/nodeutils.h"
 
 using CastUtils::DerivedPtr;
-using NodeUtils::SortIterative;
 
 class TreeModel : public QAbstractItemModel {
     Q_OBJECT
@@ -190,8 +189,8 @@ protected:
 
     QSet<QUuid> SyncDeltaImpl(const QUuid& node_id, double initial_delta, double final_delta);
     QSet<QUuid> UpdateTotal(const QUuid& node_id, double initial_total, double final_total);
-    virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta);
 
+    virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta);
     virtual void RegisterPath(Node* node);
     virtual void RemovePath(Node* node, Node* parent_node);
 

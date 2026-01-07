@@ -1,5 +1,6 @@
 #include "searchentrymodel.h"
 
+#include "utils/compareutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -102,39 +103,38 @@ QVariant SearchEntryModel::data(const QModelIndex& index, int role) const
 
 void SearchEntryModel::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.entry_header.size() - 1)
-        return;
+    assert(column >= 0 && column < info_.full_entry_header.size());
 
-    auto Compare = [column, order](const Entry* lhs, const Entry* rhs) -> bool {
-        const FullEntryEnum e_column { column };
+    const FullEntryEnum e_column { column };
 
+    auto Compare = [e_column, order](const Entry* lhs, const Entry* rhs) -> bool {
         switch (e_column) {
         case FullEntryEnum::kIssuedTime:
-            return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
+            return Utils::CompareMember(lhs, rhs, &Entry::issued_time, order);
         case FullEntryEnum::kCode:
-            return (order == Qt::AscendingOrder) ? (lhs->code < rhs->code) : (lhs->code > rhs->code);
+            return Utils::CompareMember(lhs, rhs, &Entry::code, order);
         case FullEntryEnum::kLhsNode:
-            return (order == Qt::AscendingOrder) ? (lhs->lhs_node < rhs->lhs_node) : (lhs->lhs_node > rhs->lhs_node);
+            return Utils::CompareMember(lhs, rhs, &Entry::lhs_node, order);
         case FullEntryEnum::kLhsRate:
-            return (order == Qt::AscendingOrder) ? (lhs->lhs_rate < rhs->lhs_rate) : (lhs->lhs_rate > rhs->lhs_rate);
+            return Utils::CompareMember(lhs, rhs, &Entry::lhs_rate, order);
         case FullEntryEnum::kLhsDebit:
-            return (order == Qt::AscendingOrder) ? (lhs->lhs_debit < rhs->lhs_debit) : (lhs->lhs_debit > rhs->lhs_debit);
+            return Utils::CompareMember(lhs, rhs, &Entry::lhs_debit, order);
         case FullEntryEnum::kLhsCredit:
-            return (order == Qt::AscendingOrder) ? (lhs->lhs_credit < rhs->lhs_credit) : (lhs->lhs_credit > rhs->lhs_credit);
+            return Utils::CompareMember(lhs, rhs, &Entry::lhs_credit, order);
         case FullEntryEnum::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
+            return Utils::CompareMember(lhs, rhs, &Entry::description, order);
         case FullEntryEnum::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case FullEntryEnum::kStatus:
-            return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
+            return Utils::CompareMember(lhs, rhs, &Entry::status, order);
         case FullEntryEnum::kRhsCredit:
-            return (order == Qt::AscendingOrder) ? (lhs->rhs_credit < rhs->rhs_credit) : (lhs->rhs_credit > rhs->rhs_credit);
+            return Utils::CompareMember(lhs, rhs, &Entry::rhs_credit, order);
         case FullEntryEnum::kRhsDebit:
-            return (order == Qt::AscendingOrder) ? (lhs->rhs_debit < rhs->rhs_debit) : (lhs->rhs_debit > rhs->rhs_debit);
+            return Utils::CompareMember(lhs, rhs, &Entry::rhs_debit, order);
         case FullEntryEnum::kRhsRate:
-            return (order == Qt::AscendingOrder) ? (lhs->rhs_rate < rhs->rhs_rate) : (lhs->rhs_rate > rhs->rhs_rate);
+            return Utils::CompareMember(lhs, rhs, &Entry::rhs_rate, order);
         case FullEntryEnum::kRhsNode:
-            return (order == Qt::AscendingOrder) ? (lhs->rhs_node < rhs->rhs_node) : (lhs->rhs_node > rhs->rhs_node);
+            return Utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         default:
             return false;
         }

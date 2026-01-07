@@ -2,6 +2,7 @@
 
 #include "enum/entryenum.h"
 #include "global/entrypool.h"
+#include "utils/compareutils.h"
 
 SearchEntryModelO::SearchEntryModelO(CSectionInfo& info, QObject* parent)
     : SearchEntryModel { info, parent }
@@ -50,38 +51,37 @@ QVariant SearchEntryModelO::data(const QModelIndex& index, int role) const
 
 void SearchEntryModelO::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.entry_header.size() - 1)
-        return;
+    assert(column >= 0 && column < info_.full_entry_header.size());
 
-    auto Compare = [column, order](const Entry* lhs, const Entry* rhs) -> bool {
-        const EntryEnumO e_column { column };
+    const EntryEnumO e_column { column };
 
-        auto* d_lhs = DerivedPtr<EntryO>(lhs);
-        auto* d_rhs = DerivedPtr<EntryO>(rhs);
+    auto Compare = [e_column, order](const Entry* lhs, const Entry* rhs) -> bool {
+        auto* d_lhs { DerivedPtr<EntryO>(lhs) };
+        auto* d_rhs { DerivedPtr<EntryO>(rhs) };
 
         switch (e_column) {
         case EntryEnumO::kLhsNode:
-            return (order == Qt::AscendingOrder) ? (lhs->lhs_node < rhs->lhs_node) : (lhs->lhs_node > rhs->lhs_node);
-        case EntryEnumO::kCount:
-            return (order == Qt::AscendingOrder) ? (d_lhs->count < d_rhs->count) : (d_lhs->count > d_rhs->count);
-        case EntryEnumO::kUnitPrice:
-            return (order == Qt::AscendingOrder) ? (d_lhs->unit_price < d_rhs->unit_price) : (d_lhs->unit_price > d_rhs->unit_price);
-        case EntryEnumO::kMeasure:
-            return (order == Qt::AscendingOrder) ? (d_lhs->measure < d_rhs->measure) : (d_lhs->measure > d_rhs->measure);
-        case EntryEnumO::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
-        case EntryEnumO::kExternalSku:
-            return (order == Qt::AscendingOrder) ? (d_lhs->external_sku < d_rhs->external_sku) : (d_lhs->external_sku > d_rhs->external_sku);
-        case EntryEnumO::kUnitDiscount:
-            return (order == Qt::AscendingOrder) ? (d_lhs->unit_discount < d_rhs->unit_discount) : (d_lhs->unit_discount > d_rhs->unit_discount);
-        case EntryEnumO::kInitial:
-            return (order == Qt::AscendingOrder) ? (d_lhs->initial < d_rhs->initial) : (d_lhs->initial > d_rhs->initial);
-        case EntryEnumO::kFinal:
-            return (order == Qt::AscendingOrder) ? (d_lhs->final < d_rhs->final) : (d_lhs->final > d_rhs->final);
-        case EntryEnumO::kDiscount:
-            return (order == Qt::AscendingOrder) ? (d_lhs->discount < d_rhs->discount) : (d_lhs->discount > d_rhs->discount);
+            return Utils::CompareMember(lhs, rhs, &Entry::lhs_node, order);
         case EntryEnumO::kRhsNode:
-            return (order == Qt::AscendingOrder) ? (lhs->rhs_node < rhs->rhs_node) : (lhs->rhs_node > rhs->rhs_node);
+            return Utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
+        case EntryEnumO::kDescription:
+            return Utils::CompareMember(lhs, rhs, &Entry::description, order);
+        case EntryEnumO::kCount:
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::count, order);
+        case EntryEnumO::kUnitPrice:
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::unit_price, order);
+        case EntryEnumO::kMeasure:
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::measure, order);
+        case EntryEnumO::kExternalSku:
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::external_sku, order);
+        case EntryEnumO::kUnitDiscount:
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::unit_discount, order);
+        case EntryEnumO::kInitial:
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::initial, order);
+        case EntryEnumO::kFinal:
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::final, order);
+        case EntryEnumO::kDiscount:
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::discount, order);
         default:
             return false;
         }

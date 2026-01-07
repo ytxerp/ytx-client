@@ -1,6 +1,7 @@
 #include "searchentrymodelp.h"
 
 #include "enum/entryenum.h"
+#include "utils/compareutils.h"
 
 SearchEntryModelP::SearchEntryModelP(EntryHub* entry_hub, CSectionInfo& info, QObject* parent)
     : SearchEntryModel { info, parent }
@@ -44,34 +45,33 @@ QVariant SearchEntryModelP::data(const QModelIndex& index, int role) const
 
 void SearchEntryModelP::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.entry_header.size() - 1)
-        return;
+    assert(column >= 0 && column < info_.full_entry_header.size());
 
-    auto Compare = [column, order](const Entry* lhs, const Entry* rhs) -> bool {
-        const EntryEnumP e_column { column };
+    const EntryEnumP e_column { column };
 
-        auto* d_lhs = DerivedPtr<EntryP>(lhs);
-        auto* d_rhs = DerivedPtr<EntryP>(rhs);
+    auto Compare = [e_column, order](const Entry* lhs, const Entry* rhs) -> bool {
+        auto* d_lhs { DerivedPtr<EntryP>(lhs) };
+        auto* d_rhs { DerivedPtr<EntryP>(rhs) };
 
         switch (e_column) {
         case EntryEnumP::kIssuedTime:
-            return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
+            return Utils::CompareMember(lhs, rhs, &Entry::issued_time, order);
         case EntryEnumP::kCode:
-            return (order == Qt::AscendingOrder) ? (lhs->code < rhs->code) : (lhs->code > rhs->code);
+            return Utils::CompareMember(lhs, rhs, &Entry::code, order);
         case EntryEnumP::kLhsNode:
-            return (order == Qt::AscendingOrder) ? (lhs->lhs_node < rhs->lhs_node) : (lhs->lhs_node > rhs->lhs_node);
+            return Utils::CompareMember(lhs, rhs, &Entry::lhs_node, order);
         case EntryEnumP::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
+            return Utils::CompareMember(lhs, rhs, &Entry::description, order);
         case EntryEnumP::kExternalSku:
-            return (order == Qt::AscendingOrder) ? (d_lhs->external_sku < d_rhs->external_sku) : (d_lhs->external_sku > d_rhs->external_sku);
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryP::external_sku, order);
         case EntryEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case EntryEnumP::kStatus:
-            return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
+            return Utils::CompareMember(lhs, rhs, &Entry::status, order);
         case EntryEnumP::kUnitPrice:
-            return (order == Qt::AscendingOrder) ? (d_lhs->unit_price < d_rhs->unit_price) : (d_lhs->unit_price > d_rhs->unit_price);
+            return Utils::CompareMember(d_lhs, d_rhs, &EntryP::unit_price, order);
         case EntryEnumP::kRhsNode:
-            return (order == Qt::AscendingOrder) ? (lhs->rhs_node < rhs->rhs_node) : (lhs->rhs_node > rhs->rhs_node);
+            return Utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         default:
             return false;
         }

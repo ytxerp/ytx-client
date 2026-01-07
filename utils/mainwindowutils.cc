@@ -4,8 +4,6 @@
 #include <QDir>
 #include <QHeaderView>
 
-#include "utils/entryutils.h"
-
 bool MainWindowUtils::PrepareNewFile(QString& file_path, CString& suffix)
 {
     if (file_path.isEmpty())

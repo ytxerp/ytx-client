@@ -5,6 +5,7 @@
 #include "global/collator.h"
 #include "global/entrypool.h"
 #include "global/resourcepool.h"
+#include "utils/compareutils.h"
 #include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -340,47 +341,33 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
 
 void TableModel::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column <= info_.entry_header.size() - 1);
+    assert(column >= 0 && column < info_.entry_header.size());
 
     const EntryEnum e_column { column };
-
-    switch (e_column) {
-    case EntryEnum::kId:
-    case EntryEnum::kBalance:
-    case EntryEnum::kUserId:
-    case EntryEnum::kCreateTime:
-    case EntryEnum::kCreateBy:
-    case EntryEnum::kUpdateTime:
-    case EntryEnum::kUpdateBy:
-    case EntryEnum::kVersion:
+    if (e_column == EntryEnum::kBalance)
         return;
-    default:
-        break;
-    }
 
     auto Compare = [order, e_column](const EntryShadow* lhs, const EntryShadow* rhs) -> bool {
-        const auto& collator { Collator::Instance() };
-
         switch (e_column) {
         case EntryEnum::kCode:
-            return (order == Qt::AscendingOrder) ? (collator.compare(*lhs->code, *rhs->code) < 0) : (collator.compare(*lhs->code, *rhs->code) > 0);
+            return Utils::CompareMember(lhs, rhs, &EntryShadow::code, order);
         case EntryEnum::kDescription:
-            return (order == Qt::AscendingOrder) ? (collator.compare(*lhs->description, *rhs->description) < 0)
-                                                 : (collator.compare(*lhs->description, *rhs->description) > 0);
+            return Utils::CompareMember(lhs, rhs, &EntryShadow::description, order);
         case EntryEnum::kIssuedTime:
-            return (order == Qt::AscendingOrder) ? (*lhs->issued_time < *rhs->issued_time) : (*lhs->issued_time > *rhs->issued_time);
+            return Utils::CompareMember(lhs, rhs, &EntryShadow::issued_time, order);
         case EntryEnum::kLhsRate:
-            return (order == Qt::AscendingOrder) ? (*lhs->lhs_rate < *rhs->lhs_rate) : (*lhs->lhs_rate > *rhs->lhs_rate);
+            return Utils::CompareMember(lhs, rhs, &EntryShadow::lhs_rate, order);
         case EntryEnum::kRhsNode:
-            return (order == Qt::AscendingOrder) ? (*lhs->rhs_node < *rhs->rhs_node) : (*lhs->rhs_node > *rhs->rhs_node);
+            return Utils::CompareMember(lhs, rhs, &EntryShadow::rhs_node, order);
         case EntryEnum::kStatus:
-            return (order == Qt::AscendingOrder) ? (*lhs->status < *rhs->status) : (*lhs->status > *rhs->status);
+            return Utils::CompareMember(lhs, rhs, &EntryShadow::status, order);
         case EntryEnum::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
         case EntryEnum::kDebit:
-            return (order == Qt::AscendingOrder) ? (*lhs->lhs_debit < *rhs->lhs_debit) : (*lhs->lhs_debit > *rhs->lhs_debit);
+            return Utils::CompareMember(lhs, rhs, &EntryShadow::lhs_debit, order);
         case EntryEnum::kCredit:
-            return (order == Qt::AscendingOrder) ? (*lhs->lhs_credit < *rhs->lhs_credit) : (*lhs->lhs_credit > *rhs->lhs_credit);
+            return Utils::CompareMember(lhs, rhs, &EntryShadow::lhs_credit, order);
+
         default:
             return false;
         }

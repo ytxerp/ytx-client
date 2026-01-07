@@ -2,6 +2,7 @@
 
 #include "global/collator.h"
 #include "tree/includemultiplefiltermodel.h"
+#include "utils/compareutils.h"
 
 TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
@@ -130,50 +131,34 @@ void TreeModelP::sort(int column, Qt::SortOrder order)
 
     const NodeEnumP e_column { column };
 
-    switch (e_column) {
-    case NodeEnumP::kId:
-    case NodeEnumP::kUserId:
-    case NodeEnumP::kCreateTime:
-    case NodeEnumP::kCreateBy:
-    case NodeEnumP::kUpdateTime:
-    case NodeEnumP::kUpdateBy:
-    case NodeEnumP::kVersion:
-        return;
-    default:
-        break;
-    }
-
     auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
         auto* d_lhs = DerivedPtr<NodeP>(lhs);
         auto* d_rhs = DerivedPtr<NodeP>(rhs);
 
-        const auto& collator { Collator::Instance() };
-
         switch (e_column) {
         case NodeEnumP::kName:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->name, rhs->name) < 0) : (collator.compare(lhs->name, rhs->name) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumP::kCode:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->code, rhs->code) < 0) : (collator.compare(lhs->code, rhs->code) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumP::kDescription:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
-                                                 : (collator.compare(lhs->description, rhs->description) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumP::kNote:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->note, rhs->note) < 0) : (collator.compare(lhs->note, rhs->note) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::note, order);
         case NodeEnumP::kKind:
-            return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
+            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumP::kUnit:
-            return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
+            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumP::kPaymentTerm:
-            return (order == Qt::AscendingOrder) ? (d_lhs->payment_term < d_rhs->payment_term) : (d_lhs->payment_term > d_rhs->payment_term);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeP::payment_term, order);
         case NodeEnumP::kInitialTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
+            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         default:
             return false;
         }
     };
 
     emit layoutAboutToBeChanged();
-    SortIterative(root_, Compare);
+    NodeUtils::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 

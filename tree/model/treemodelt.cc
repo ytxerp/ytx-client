@@ -3,6 +3,7 @@
 #include <QJsonArray>
 
 #include "global/collator.h"
+#include "utils/compareutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -129,59 +130,45 @@ void TreeModelT::sort(int column, Qt::SortOrder order)
 
     const NodeEnumT e_column { column };
 
-    switch (e_column) {
-    case NodeEnumT::kId:
-    case NodeEnumT::kUserId:
-    case NodeEnumT::kCreateTime:
-    case NodeEnumT::kCreateBy:
-    case NodeEnumT::kUpdateTime:
-    case NodeEnumT::kUpdateBy:
-    case NodeEnumT::kVersion:
-        return;
-    default:
-        break;
-    }
-
     auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
         auto* d_lhs = DerivedPtr<NodeT>(lhs);
         auto* d_rhs = DerivedPtr<NodeT>(rhs);
-        const auto& collator { Collator::Instance() };
 
         switch (e_column) {
         case NodeEnumT::kName:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->name, rhs->name) < 0) : (collator.compare(lhs->name, rhs->name) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumT::kCode:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->code, rhs->code) < 0) : (collator.compare(lhs->code, rhs->code) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumT::kDescription:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
-                                                 : (collator.compare(lhs->description, rhs->description) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumT::kNote:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->note, rhs->note) < 0) : (collator.compare(lhs->note, rhs->note) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::note, order);
         case NodeEnumT::kDirectionRule:
-            return (order == Qt::AscendingOrder) ? (lhs->direction_rule < rhs->direction_rule) : (lhs->direction_rule > rhs->direction_rule);
+            return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumT::kKind:
-            return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
-        case NodeEnumT::kStatus:
-            return (order == Qt::AscendingOrder) ? (d_lhs->status < d_rhs->status) : (d_lhs->status > d_rhs->status);
-        case NodeEnumT::kIssuedTime:
-            return (order == Qt::AscendingOrder) ? (d_lhs->issued_time < d_rhs->issued_time) : (d_lhs->issued_time > d_rhs->issued_time);
+            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumT::kUnit:
-            return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
+            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
+        case NodeEnumT::kStatus:
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeT::status, order);
+        case NodeEnumT::kIssuedTime:
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeT::issued_time, order);
         case NodeEnumT::kColor:
-            return (order == Qt::AscendingOrder) ? (d_lhs->color < d_rhs->color) : (d_lhs->color > d_rhs->color);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeT::color, order);
         case NodeEnumT::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumT::kInitialTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
+            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumT::kFinalTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->final_total < rhs->final_total) : (lhs->final_total > rhs->final_total);
+            return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
+
         default:
             return false;
         }
     };
 
     emit layoutAboutToBeChanged();
-    SortIterative(root_, Compare);
+    NodeUtils::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 

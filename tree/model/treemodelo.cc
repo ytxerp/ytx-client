@@ -4,6 +4,7 @@
 
 #include "global/collator.h"
 #include "global/nodepool.h"
+#include "utils/compareutils.h"
 #include "websocket/jsongen.h"
 
 TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
@@ -265,64 +266,46 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
 
     const NodeEnumO e_column { column };
 
-    switch (e_column) {
-    case NodeEnumO::kId:
-    case NodeEnumO::kUserId:
-    case NodeEnumO::kCreateTime:
-    case NodeEnumO::kCreateBy:
-    case NodeEnumO::kUpdateTime:
-    case NodeEnumO::kUpdateBy:
-    case NodeEnumO::kIsSettled:
-    case NodeEnumO::kSettlementId:
-    case NodeEnumO::kVersion:
-        return;
-    default:
-        break;
-    }
-
     auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
         auto* d_lhs = DerivedPtr<NodeO>(lhs);
         auto* d_rhs = DerivedPtr<NodeO>(rhs);
 
-        const auto& collator { Collator::Instance() };
-
         switch (e_column) {
         case NodeEnumO::kName:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->name, rhs->name) < 0) : (collator.compare(lhs->name, rhs->name) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumO::kDescription:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
-                                                 : (collator.compare(lhs->description, rhs->description) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumO::kDirectionRule:
-            return (order == Qt::AscendingOrder) ? (lhs->direction_rule < rhs->direction_rule) : (lhs->direction_rule > rhs->direction_rule);
+            return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumO::kKind:
-            return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
+            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumO::kUnit:
-            return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
+            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumO::kPartner:
-            return (order == Qt::AscendingOrder) ? (d_lhs->partner_id < d_rhs->partner_id) : (d_lhs->partner_id > d_rhs->partner_id);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::partner_id, order);
         case NodeEnumO::kEmployee:
-            return (order == Qt::AscendingOrder) ? (d_lhs->employee_id < d_rhs->employee_id) : (d_lhs->employee_id > d_rhs->employee_id);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::employee_id, order);
         case NodeEnumO::kIssuedTime:
-            return (order == Qt::AscendingOrder) ? (d_lhs->issued_time < d_rhs->issued_time) : (d_lhs->issued_time > d_rhs->issued_time);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::issued_time, order);
         case NodeEnumO::kCountTotal:
-            return (order == Qt::AscendingOrder) ? (d_lhs->count_total < d_rhs->count_total) : (d_lhs->count_total > d_rhs->count_total);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::count_total, order);
         case NodeEnumO::kMeasureTotal:
-            return (order == Qt::AscendingOrder) ? (d_lhs->measure_total < d_rhs->measure_total) : (d_lhs->measure_total > d_rhs->measure_total);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::measure_total, order);
         case NodeEnumO::kDiscountTotal:
-            return (order == Qt::AscendingOrder) ? (d_lhs->discount_total < d_rhs->discount_total) : (d_lhs->discount_total > d_rhs->discount_total);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::discount_total, order);
         case NodeEnumO::kStatus:
-            return (order == Qt::AscendingOrder) ? (d_lhs->status < d_rhs->status) : (d_lhs->status > d_rhs->status);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::status, order);
         case NodeEnumO::kInitialTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
+            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumO::kFinalTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->final_total < rhs->final_total) : (lhs->final_total > rhs->final_total);
+            return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
         default:
             return false;
         }
     };
 
     emit layoutAboutToBeChanged();
-    SortIterative(root_, Compare);
+    NodeUtils::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 

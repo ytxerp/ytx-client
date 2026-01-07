@@ -1,8 +1,8 @@
 #include "treemodeli.h"
 
-#include "global/collator.h"
 #include "tree/excludemultiplefiltermodel.h"
 #include "tree/includemultiplefiltermodel.h"
+#include "utils/compareutils.h"
 
 TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
     : TreeModel(info, separator, default_unit, parent)
@@ -71,58 +71,42 @@ void TreeModelI::sort(int column, Qt::SortOrder order)
 
     const NodeEnumI e_column { column };
 
-    switch (e_column) {
-    case NodeEnumI::kId:
-    case NodeEnumI::kUserId:
-    case NodeEnumI::kCreateTime:
-    case NodeEnumI::kCreateBy:
-    case NodeEnumI::kUpdateTime:
-    case NodeEnumI::kUpdateBy:
-    case NodeEnumI::kVersion:
-        return;
-    default:
-        break;
-    }
-
     auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
         auto* d_lhs { DerivedPtr<NodeI>(lhs) };
         auto* d_rhs { DerivedPtr<NodeI>(rhs) };
 
-        const auto& collator { Collator::Instance() };
-
         switch (e_column) {
         case NodeEnumI::kName:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->name, rhs->name) < 0) : (collator.compare(lhs->name, rhs->name) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumI::kCode:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->code, rhs->code) < 0) : (collator.compare(lhs->code, rhs->code) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumI::kDescription:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
-                                                 : (collator.compare(lhs->description, rhs->description) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumI::kNote:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->note, rhs->note) < 0) : (collator.compare(lhs->note, rhs->note) > 0);
+            return Utils::CompareMember(lhs, rhs, &Node::note, order);
         case NodeEnumI::kDirectionRule:
-            return (order == Qt::AscendingOrder) ? (lhs->direction_rule < rhs->direction_rule) : (lhs->direction_rule > rhs->direction_rule);
+            return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumI::kKind:
-            return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
+            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumI::kUnit:
-            return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
+            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumI::kColor:
-            return (order == Qt::AscendingOrder) ? (d_lhs->color < d_rhs->color) : (d_lhs->color > d_rhs->color);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeI::color, order);
         case NodeEnumI::kCommission:
-            return (order == Qt::AscendingOrder) ? (d_lhs->commission < d_rhs->commission) : (d_lhs->commission > d_rhs->commission);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeI::commission, order);
         case NodeEnumI::kUnitPrice:
-            return (order == Qt::AscendingOrder) ? (d_lhs->unit_price < d_rhs->unit_price) : (d_lhs->unit_price > d_rhs->unit_price);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeI::unit_price, order);
         case NodeEnumI::kInitialTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
+            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumI::kFinalTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->final_total < rhs->final_total) : (lhs->final_total > rhs->final_total);
+            return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
         default:
             return false;
         }
     };
 
     emit layoutAboutToBeChanged();
-    SortIterative(root_, Compare);
+    NodeUtils::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 

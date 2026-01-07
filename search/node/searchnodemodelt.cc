@@ -3,6 +3,7 @@
 #include <QJsonArray>
 
 #include "global/nodepool.h"
+#include "utils/compareutils.h"
 
 SearchNodeModelT::SearchNodeModelT(CSectionInfo& info, CTreeModel* tree_model, QObject* parent)
     : SearchNodeModel { info, tree_model, parent }
@@ -73,38 +74,42 @@ QVariant SearchNodeModelT::data(const QModelIndex& index, int role) const
 
 void SearchNodeModelT::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.node_header.size())
-        return;
+    assert(column >= 0 && column < info_.node_header.size());
 
-    auto Compare = [column, order](const Node* lhs, const Node* rhs) -> bool {
+    const NodeEnumT e_column { column };
+
+    auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
         auto* d_lhs = DerivedPtr<NodeT>(lhs);
         auto* d_rhs = DerivedPtr<NodeT>(rhs);
 
-        switch (NodeEnumT(column)) {
+        switch (e_column) {
         case NodeEnumT::kName:
-            return (order == Qt::AscendingOrder) ? (lhs->name < rhs->name) : (lhs->name > rhs->name);
+            return Utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumT::kCode:
-            return (order == Qt::AscendingOrder) ? (lhs->code < rhs->code) : (lhs->code > rhs->code);
+            return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumT::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
+            return Utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumT::kNote:
-            return (order == Qt::AscendingOrder) ? (lhs->note < rhs->note) : (lhs->note > rhs->note);
+            return Utils::CompareMember(lhs, rhs, &Node::note, order);
         case NodeEnumT::kDirectionRule:
-            return (order == Qt::AscendingOrder) ? (lhs->direction_rule < rhs->direction_rule) : (lhs->direction_rule > rhs->direction_rule);
+            return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumT::kKind:
-            return (order == Qt::AscendingOrder) ? (lhs->kind < rhs->kind) : (lhs->kind > rhs->kind);
-        case NodeEnumT::kStatus:
-            return (order == Qt::AscendingOrder) ? (d_lhs->status < d_rhs->status) : (d_lhs->status > d_rhs->status);
+            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumT::kUnit:
-            return (order == Qt::AscendingOrder) ? (lhs->unit < rhs->unit) : (lhs->unit > rhs->unit);
+            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
+        case NodeEnumT::kStatus:
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeT::status, order);
+        case NodeEnumT::kIssuedTime:
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeT::issued_time, order);
         case NodeEnumT::kColor:
-            return (order == Qt::AscendingOrder) ? (d_lhs->color < d_rhs->color) : (d_lhs->color > d_rhs->color);
+            return Utils::CompareMember(d_lhs, d_rhs, &NodeT::color, order);
         case NodeEnumT::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumT::kInitialTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->initial_total < rhs->initial_total) : (lhs->initial_total > rhs->initial_total);
+            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumT::kFinalTotal:
-            return (order == Qt::AscendingOrder) ? (lhs->final_total < rhs->final_total) : (lhs->final_total > rhs->final_total);
+            return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
+
         default:
             return false;
         }
