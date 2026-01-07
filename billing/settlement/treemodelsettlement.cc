@@ -169,6 +169,9 @@ void TreeModelSettlement::UpdateSucceeded(const QUuid& settlement_id, const QJso
     auto* settlement { FindSettlement(settlement_id) };
     Q_ASSERT_X(settlement != nullptr, "SettlementModel::RecallSettlement", "Settlement must exist for recalled operation");
 
+    if (!settlement)
+        return;
+
     settlement->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
     settlement->updated_by = QUuid(meta[kUpdatedBy].toString());
     settlement->ReadJson(update);
