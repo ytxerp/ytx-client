@@ -4,7 +4,6 @@
 #include <QTimer>
 
 #include "enum/settlementenum.h"
-#include "global/collator.h"
 #include "global/resourcepool.h"
 #include "utils/compareutils.h"
 
@@ -179,7 +178,7 @@ void TableModelSettlement::UpdateStatus(SettlementStatus status)
     {
         if (status == SettlementStatus::kReleased)
             for (int row = list_.size() - 1; row >= 0; --row) {
-                auto* node = list_.at(row);
+                const auto* node = list_.at(row);
                 if (!node->is_selected) {
                     beginRemoveRows(QModelIndex(), row, row);
                     list_.removeAt(row);

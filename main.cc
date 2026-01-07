@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     QApplication application(argc, argv);
 
 #ifdef QT_DEBUG
-    MainUtils::CheckOpenSSLRuntime();
+    Utils::CheckOpenSSLRuntime();
 #endif
 
     // Register resource file (contains icons, translations, themes, etc.)
