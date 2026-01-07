@@ -125,7 +125,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">认证</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="45"/>
+        <location filename="../../dialog/authdialog.cc" line="42"/>
         <source>Login Failed</source>
         <translation>登录失败</translation>
     </message>
@@ -134,89 +134,89 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">无法登录，请核对您的邮箱、密码、工区权限是否正确，亦或账号是否已过期。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="119"/>
+        <location filename="../../dialog/authdialog.cc" line="116"/>
         <source>Registration Failed</source>
         <translation>注册失败</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="115"/>
+        <location filename="../../dialog/authdialog.cc" line="112"/>
         <source>Unable to register. Please contact the administrator for details.</source>
         <translation>无法注册，请联系管理员了解详情。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="92"/>
+        <location filename="../../dialog/authdialog.cc" line="89"/>
         <source>Registration Successful</source>
         <translation>注册成功</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="92"/>
+        <location filename="../../dialog/authdialog.cc" line="89"/>
         <source>Your account has been registered successfully.</source>
         <translation>帐户已注册成功。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="49"/>
-        <location filename="../../dialog/authdialog.cc" line="100"/>
+        <location filename="../../dialog/authdialog.cc" line="46"/>
+        <location filename="../../dialog/authdialog.cc" line="97"/>
         <source>Please enter your email.</source>
         <translation>请输入您的邮箱。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="52"/>
-        <location filename="../../dialog/authdialog.cc" line="103"/>
+        <location filename="../../dialog/authdialog.cc" line="49"/>
+        <location filename="../../dialog/authdialog.cc" line="100"/>
         <source>Please enter your password.</source>
         <translation>请输入您的密码。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="55"/>
+        <location filename="../../dialog/authdialog.cc" line="52"/>
         <source>The email you entered was not found.</source>
         <translation>邮箱未找到。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="58"/>
+        <location filename="../../dialog/authdialog.cc" line="55"/>
         <source>The password you entered is incorrect.</source>
         <translation>密码不正确。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="61"/>
+        <location filename="../../dialog/authdialog.cc" line="58"/>
         <source>The specified workspace does not exist.</source>
         <translation>工区不存在。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="64"/>
+        <location filename="../../dialog/authdialog.cc" line="61"/>
         <source>The workspace subscription has expired.</source>
         <translation>工区的订阅已过期。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="67"/>
+        <location filename="../../dialog/authdialog.cc" line="64"/>
         <source>Access Pending</source>
         <translation>权限申请</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="69"/>
+        <location filename="../../dialog/authdialog.cc" line="66"/>
         <source>Your access to workspace &quot;%1&quot; for email &quot;%2&quot; is pending approval.</source>
         <translation>&quot;%2&quot; 对 &quot;%1&quot; 的访问请求正在等待审批。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="72"/>
+        <location filename="../../dialog/authdialog.cc" line="69"/>
         <source>You are already logged in.</source>
         <translation>您已经登录过了。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="78"/>
+        <location filename="../../dialog/authdialog.cc" line="75"/>
         <source>Unable to log in. Please contact the administrator for details.</source>
         <translation>无法登录，请联系管理员了解详情。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="106"/>
+        <location filename="../../dialog/authdialog.cc" line="103"/>
         <source>The email format is invalid.</source>
         <translation>邮箱的格式不正确。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="109"/>
+        <location filename="../../dialog/authdialog.cc" line="106"/>
         <source>This email is already registered.</source>
         <translation>邮箱已经注册过了。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="137"/>
+        <location filename="../../dialog/authdialog.cc" line="134"/>
         <source>Invalid Workspace</source>
         <translation>工区无效</translation>
     </message>
@@ -241,8 +241,8 @@ Rage, rage against the dying of the light.</source>
         <translation>两次输入的密码不一致。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="75"/>
-        <location filename="../../dialog/authdialog.cc" line="112"/>
+        <location filename="../../dialog/authdialog.cc" line="72"/>
+        <location filename="../../dialog/authdialog.cc" line="109"/>
         <source>Server error occurred. Please try again later.</source>
         <translation>服务器出现了错误，请稍后重试。</translation>
     </message>
@@ -255,7 +255,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">权限申请</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="137"/>
+        <location filename="../../dialog/authdialog.cc" line="134"/>
         <source>Workspace cannot be empty</source>
         <translation>工区不能为空</translation>
     </message>
@@ -338,7 +338,7 @@ Rage, rage against the dying of the light.</source>
 <context>
     <name>Color</name>
     <message>
-        <location filename="../../delegate/tree/color.cc" line="46"/>
+        <location filename="../../delegate/color.cc" line="46"/>
         <source>Choose Color</source>
         <translation>选择颜色</translation>
     </message>
@@ -471,53 +471,59 @@ Rage, rage against the dying of the light.</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="313"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="307"/>
         <source>Ok</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="300"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="294"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="152"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="149"/>
         <source>Rule</source>
         <translation>规则</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="123"/>
         <source>Leaf</source>
-        <translation>叶节点</translation>
+        <translation type="vanished">叶节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="133"/>
         <source>Branch</source>
-        <translation>枝节点</translation>
+        <translation type="vanished">枝节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="89"/>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="203"/>
         <source>Cannot be changed once set. Delete and recreate to modify.</source>
-        <translation>设置后不可更改，如需修改、请删除后重新创建。</translation>
+        <translation type="vanished">设置后不可更改，如需修改、请删除后重新创建。</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="206"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="200"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="180"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="177"/>
         <source>Debit Increase, Credit Decrease</source>
         <translation>借方增加，贷方减少</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="190"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="120"/>
+        <source>Leaf Node</source>
+        <translation>叶节点</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="130"/>
+        <source>Branch Node</source>
+        <translation>枝节点</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="187"/>
         <source>Debit Decrease, Credit Increase</source>
         <translation>借方减少，贷方增加</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="261"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="255"/>
         <source>Note</source>
         <translation>备注</translation>
     </message>
@@ -532,7 +538,7 @@ Rage, rage against the dying of the light.</source>
         <translation>编号</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="92"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="89"/>
         <source>Kind</source>
         <translation>类型</translation>
     </message>
@@ -540,33 +546,41 @@ Rage, rage against the dying of the light.</source>
 <context>
     <name>InsertNodeI</name>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="171"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="168"/>
         <source>Debit Decrease, Credit Increase</source>
         <translation>借方减少，贷方增加</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="161"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="158"/>
         <source>Debit Increase, Credit Decrease</source>
         <translation>借方增加，贷方减少</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="184"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="181"/>
         <source>Code</source>
         <translation>编号</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="127"/>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="252"/>
         <source>Cannot be changed once set. Delete and recreate to modify.</source>
-        <translation>设置后不可更改，如需修改、请删除后重新创建。</translation>
+        <translation type="vanished">设置后不可更改，如需修改、请删除后重新创建。</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="130"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="91"/>
+        <source>Branch Node</source>
+        <translation>枝节点</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="101"/>
+        <source>Leaf Node</source>
+        <translation>叶节点</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="127"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="226"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="223"/>
         <source>Note</source>
         <translation>备注</translation>
     </message>
@@ -580,14 +594,12 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">属性</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="91"/>
         <source>Branch</source>
-        <translation>枝节点</translation>
+        <translation type="vanished">枝节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="101"/>
         <source>Leaf</source>
-        <translation>叶节点</translation>
+        <translation type="vanished">叶节点</translation>
     </message>
     <message>
         <location filename="../../dialog/insertnode/insertnodei.ui" line="53"/>
@@ -595,22 +607,22 @@ Rage, rage against the dying of the light.</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="210"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="207"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="200"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="197"/>
         <source>Rule</source>
         <translation>规则</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="255"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="249"/>
         <source>Kind</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="271"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="265"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
@@ -620,7 +632,7 @@ Rage, rage against the dying of the light.</source>
         <translation>颜色</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="239"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="236"/>
         <source>Commission</source>
         <translation>提成</translation>
     </message>
@@ -726,17 +738,15 @@ Rage, rage against the dying of the light.</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="133"/>
         <source>Leaf</source>
-        <translation>叶节点</translation>
+        <translation type="vanished">叶节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="123"/>
         <source>Branch</source>
-        <translation>枝节点</translation>
+        <translation type="vanished">枝节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="262"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="256"/>
         <source>Note</source>
         <translation>备注</translation>
     </message>
@@ -746,23 +756,31 @@ Rage, rage against the dying of the light.</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="294"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="120"/>
+        <source>Branch Node</source>
+        <translation>枝节点</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="130"/>
+        <source>Leaf Node</source>
+        <translation>叶节点</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="288"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="307"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="301"/>
         <source>Ok</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="89"/>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="146"/>
         <source>Cannot be changed once set. Delete and recreate to modify.</source>
-        <translation>设置后不可更改，如需修改、请删除后重新创建。</translation>
+        <translation type="vanished">设置后不可更改，如需修改、请删除后重新创建。</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="149"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="143"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
@@ -772,12 +790,12 @@ Rage, rage against the dying of the light.</source>
         <translation>编号</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="92"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="89"/>
         <source>Kind</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="207"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="201"/>
         <source>PaymentTerm</source>
         <translation>帐期</translation>
     </message>
@@ -855,28 +873,36 @@ Rage, rage against the dying of the light.</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="89"/>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="248"/>
         <source>Cannot be changed once set. Delete and recreate to modify.</source>
-        <translation>设置后不可更改，如需修改、请删除后重新创建。</translation>
+        <translation type="vanished">设置后不可更改，如需修改、请删除后重新创建。</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="92"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="89"/>
         <source>Kind</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="149"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="117"/>
+        <source>Branch Node</source>
+        <translation>枝节点</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="127"/>
+        <source>Leaf Node</source>
+        <translation>叶节点</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="146"/>
         <source>Rule</source>
         <translation>规则</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="206"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="203"/>
         <source>Status</source>
         <translation>状态</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="231"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="228"/>
         <source>Draf&amp;t</source>
         <translation>草稿(&amp;T)</translation>
     </message>
@@ -885,7 +911,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">撤回(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="238"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="235"/>
         <source>&amp;Released</source>
         <translation>发布(&amp;R)</translation>
     </message>
@@ -902,12 +928,12 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">完成</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="251"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="245"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="417"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="411"/>
         <source>Date</source>
         <translation>日期</translation>
     </message>
@@ -916,37 +942,35 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">属性</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="348"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="342"/>
         <source>Note</source>
         <translation>备注</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="394"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="388"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="407"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="401"/>
         <source>Ok</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="120"/>
         <source>Branch</source>
-        <translation>枝节点</translation>
+        <translation type="vanished">枝节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="130"/>
         <source>Leaf</source>
-        <translation>叶节点</translation>
+        <translation type="vanished">叶节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="193"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="190"/>
         <source>Debit Decrease, Credit Increase</source>
         <translation>借方减少，贷方增加</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="183"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="180"/>
         <source>Debit Increase, Credit Decrease</source>
         <translation>借方增加，贷方减少</translation>
     </message>
@@ -959,7 +983,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">发布</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="330"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="324"/>
         <source>yyyy-MM-dd</source>
         <translation>yyyy-MM-dd</translation>
     </message>
@@ -968,7 +992,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">完成</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="368"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="362"/>
         <source>Color</source>
         <translation>颜色</translation>
     </message>
@@ -1700,12 +1724,12 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">二级明细-</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_global.cc" line="48"/>
+        <location filename="../../mainwindow/mainwindow_global.cc" line="51"/>
         <source>Update Failed</source>
         <translation>更新失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_global.cc" line="48"/>
+        <location filename="../../mainwindow/mainwindow_global.cc" line="51"/>
         <source>Cannot change the base unit for section Finance because related entries already exist.</source>
         <translation>无法更改财务版块的基准单位，因为已存在记录。</translation>
     </message>
