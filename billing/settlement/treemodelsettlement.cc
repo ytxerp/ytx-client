@@ -5,6 +5,7 @@
 #include "enum/settlementenum.h"
 #include "global/collator.h"
 #include "global/resourcepool.h"
+#include "utils/compareutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -90,39 +91,22 @@ QVariant TreeModelSettlement::headerData(int section, Qt::Orientation orientatio
 
 void TreeModelSettlement::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.settlement_header.size())
-        return;
+    assert(column >= 0 && column < info_.settlement_header.size());
 
     const SettlementEnum e_column { column };
 
-    switch (e_column) {
-    case SettlementEnum::kId:
-    case SettlementEnum::kUserId:
-    case SettlementEnum::kCreateTime:
-    case SettlementEnum::kCreateBy:
-    case SettlementEnum::kUpdateTime:
-    case SettlementEnum::kUpdateBy:
-    case SettlementEnum::kVersion:
-        return;
-    default:
-        break;
-    }
-
-    auto Compare = [e_column, order](const auto& lhs, const auto& rhs) -> bool {
-        const auto& collator { Collator::Instance() };
-
+    auto Compare = [e_column, order](const Settlement* lhs, const Settlement* rhs) -> bool {
         switch (e_column) {
         case SettlementEnum::kPartner:
-            return (order == Qt::AscendingOrder) ? (lhs->partner_id < rhs->partner_id) : (lhs->partner_id > rhs->partner_id);
+            return Utils::CompareMember(lhs, rhs, &Settlement::partner_id, order);
         case SettlementEnum::kIssuedTime:
-            return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
+            return Utils::CompareMember(lhs, rhs, &Settlement::issued_time, order);
         case SettlementEnum::kDescription:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
-                                                 : (collator.compare(lhs->description, rhs->description) > 0);
+            return Utils::CompareMember(lhs, rhs, &Settlement::description, order);
         case SettlementEnum::kStatus:
-            return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
+            return Utils::CompareMember(lhs, rhs, &Settlement::status, order);
         case SettlementEnum::kAmount:
-            return (order == Qt::AscendingOrder) ? (lhs->amount < rhs->amount) : (lhs->amount > rhs->amount);
+            return Utils::CompareMember(lhs, rhs, &Settlement::amount, order);
         default:
             return false;
         }

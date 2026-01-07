@@ -6,6 +6,7 @@
 #include "enum/settlementenum.h"
 #include "global/collator.h"
 #include "global/resourcepool.h"
+#include "utils/compareutils.h"
 
 TableModelSettlement::TableModelSettlement(CSectionInfo& info, SettlementStatus status, QObject* parent)
     : QAbstractItemModel { parent }
@@ -107,26 +108,22 @@ QVariant TableModelSettlement::headerData(int section, Qt::Orientation orientati
 
 void TableModelSettlement::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.settlement_item_header.size())
-        return;
+    assert(column >= 0 && column < info_.settlement_item_header.size());
 
     const SettlementItemEnum e_column { column };
 
     auto Compare = [e_column, order](const SettlementItem* lhs, const SettlementItem* rhs) -> bool {
-        const auto& collator { Collator::Instance() };
-
         switch (e_column) {
         case SettlementItemEnum::kEmployee:
-            return (order == Qt::AscendingOrder) ? (lhs->employee_id < rhs->employee_id) : (lhs->employee_id > rhs->employee_id);
+            return Utils::CompareMember(lhs, rhs, &SettlementItem::employee_id, order);
         case SettlementItemEnum::kIssuedTime:
-            return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
+            return Utils::CompareMember(lhs, rhs, &SettlementItem::issued_time, order);
         case SettlementItemEnum::kDescription:
-            return (order == Qt::AscendingOrder) ? (collator.compare(lhs->description, rhs->description) < 0)
-                                                 : (collator.compare(lhs->description, rhs->description) > 0);
+            return Utils::CompareMember(lhs, rhs, &SettlementItem::description, order);
         case SettlementItemEnum::kAmount:
-            return (order == Qt::AscendingOrder) ? (lhs->amount < rhs->amount) : (lhs->amount > rhs->amount);
+            return Utils::CompareMember(lhs, rhs, &SettlementItem::amount, order);
         case SettlementItemEnum::kIsSelected:
-            return (order == Qt::AscendingOrder) ? (lhs->is_selected < rhs->is_selected) : (lhs->is_selected > rhs->is_selected);
+            return Utils::CompareMember(lhs, rhs, &SettlementItem::is_selected, order);
         default:
             return false;
         }

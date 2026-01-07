@@ -5,6 +5,7 @@
 
 #include "enum/statementenum.h"
 #include "global/resourcepool.h"
+#include "utils/compareutils.h"
 
 StatementModel::StatementModel(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }
@@ -78,27 +79,26 @@ QVariant StatementModel::headerData(int section, Qt::Orientation orientation, in
 
 void StatementModel::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.statement_header.size())
-        return;
+    assert(column >= 0 && column < info_.statement_header.size());
 
-    auto Compare = [column, order](const Statement* lhs, const Statement* rhs) -> bool {
-        const StatementEnum e_column { column };
+    const StatementEnum e_column { column };
 
+    auto Compare = [e_column, order](const Statement* lhs, const Statement* rhs) -> bool {
         switch (e_column) {
         case StatementEnum::kPartner:
-            return (order == Qt::AscendingOrder) ? (lhs->partner_id < rhs->partner_id) : (lhs->partner_id > rhs->partner_id);
+            return Utils::CompareMember(lhs, rhs, &Statement::partner_id, order);
         case StatementEnum::kPBalance:
-            return (order == Qt::AscendingOrder) ? (lhs->pbalance < rhs->pbalance) : (lhs->pbalance > rhs->pbalance);
+            return Utils::CompareMember(lhs, rhs, &Statement::pbalance, order);
         case StatementEnum::kCAmount:
-            return (order == Qt::AscendingOrder) ? (lhs->camount < rhs->camount) : (lhs->camount > rhs->camount);
+            return Utils::CompareMember(lhs, rhs, &Statement::camount, order);
         case StatementEnum::kCSettlement:
-            return (order == Qt::AscendingOrder) ? (lhs->csettlement < rhs->csettlement) : (lhs->csettlement > rhs->csettlement);
+            return Utils::CompareMember(lhs, rhs, &Statement::csettlement, order);
         case StatementEnum::kCBalance:
-            return (order == Qt::AscendingOrder) ? (lhs->cbalance < rhs->cbalance) : (lhs->cbalance > rhs->cbalance);
+            return Utils::CompareMember(lhs, rhs, &Statement::cbalance, order);
         case StatementEnum::kCCount:
-            return (order == Qt::AscendingOrder) ? (lhs->ccount < rhs->ccount) : (lhs->ccount > rhs->ccount);
+            return Utils::CompareMember(lhs, rhs, &Statement::ccount, order);
         case StatementEnum::kCMeasure:
-            return (order == Qt::AscendingOrder) ? (lhs->cmeasure < rhs->cmeasure) : (lhs->cmeasure > rhs->cmeasure);
+            return Utils::CompareMember(lhs, rhs, &Statement::cmeasure, order);
         default:
             return false;
         }

@@ -5,6 +5,7 @@
 
 #include "enum/statementenum.h"
 #include "global/resourcepool.h"
+#include "utils/compareutils.h"
 
 StatementNodeModel::StatementNodeModel(CSectionInfo& info, const QUuid& partner_id, QObject* parent)
     : QAbstractItemModel { parent }
@@ -100,29 +101,28 @@ QVariant StatementNodeModel::headerData(int section, Qt::Orientation orientation
 
 void StatementNodeModel::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.statement_node_header.size())
-        return;
+    assert(column >= 0 && column < info_.statement_node_header.size());
 
-    auto Compare = [column, order](const StatementNode* lhs, const StatementNode* rhs) -> bool {
-        const StatementNodeEnum e_column { column };
+    const StatementNodeEnum e_column { column };
 
+    auto Compare = [e_column, order](const StatementNode* lhs, const StatementNode* rhs) -> bool {
         switch (e_column) {
         case StatementNodeEnum::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
+            return Utils::CompareMember(lhs, rhs, &StatementNode::description, order);
         case StatementNodeEnum::kEmployee:
-            return (order == Qt::AscendingOrder) ? (lhs->employee_id < rhs->employee_id) : (lhs->employee_id > rhs->employee_id);
+            return Utils::CompareMember(lhs, rhs, &StatementNode::employee_id, order);
         case StatementNodeEnum::kIssuedTime:
-            return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
+            return Utils::CompareMember(lhs, rhs, &StatementNode::issued_time, order);
         case StatementNodeEnum::kCount:
-            return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
+            return Utils::CompareMember(lhs, rhs, &StatementNode::count, order);
         case StatementNodeEnum::kMeasure:
-            return (order == Qt::AscendingOrder) ? (lhs->measure < rhs->measure) : (lhs->measure > rhs->measure);
+            return Utils::CompareMember(lhs, rhs, &StatementNode::measure, order);
         case StatementNodeEnum::kStatus:
-            return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
+            return Utils::CompareMember(lhs, rhs, &StatementNode::status, order);
         case StatementNodeEnum::kSettlement:
-            return (order == Qt::AscendingOrder) ? (lhs->settlement < rhs->settlement) : (lhs->settlement > rhs->settlement);
+            return Utils::CompareMember(lhs, rhs, &StatementNode::settlement, order);
         case StatementNodeEnum::kAmount:
-            return (order == Qt::AscendingOrder) ? (lhs->amount < rhs->amount) : (lhs->amount > rhs->amount);
+            return Utils::CompareMember(lhs, rhs, &StatementNode::amount, order);
         default:
             return false;
         }

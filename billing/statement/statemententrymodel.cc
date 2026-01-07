@@ -5,6 +5,7 @@
 
 #include "enum/statementenum.h"
 #include "global/resourcepool.h"
+#include "utils/compareutils.h"
 
 StatementEntryModel::StatementEntryModel(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }
@@ -99,31 +100,30 @@ QVariant StatementEntryModel::headerData(int section, Qt::Orientation orientatio
 
 void StatementEntryModel::sort(int column, Qt::SortOrder order)
 {
-    if (column <= -1 || column >= info_.statement_entry_header.size() - 1)
-        return;
+    assert(column >= 0 && column < info_.statement_entry_header.size());
 
-    auto Compare = [column, order](const StatementEntry* lhs, const StatementEntry* rhs) -> bool {
-        const StatementEntryEnum e_column { column };
+    const StatementEntryEnum e_column { column };
 
+    auto Compare = [e_column, order](const StatementEntry* lhs, const StatementEntry* rhs) -> bool {
         switch (e_column) {
         case StatementEntryEnum::kIssuedTime:
-            return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
+            return Utils::CompareMember(lhs, rhs, &StatementEntry::issued_time, order);
         case StatementEntryEnum::kInternalSku:
-            return (order == Qt::AscendingOrder) ? (lhs->internal_sku < rhs->internal_sku) : (lhs->internal_sku > rhs->internal_sku);
+            return Utils::CompareMember(lhs, rhs, &StatementEntry::internal_sku, order);
         case StatementEntryEnum::kExternalSku:
-            return (order == Qt::AscendingOrder) ? (lhs->external_sku < rhs->external_sku) : (lhs->external_sku > rhs->external_sku);
+            return Utils::CompareMember(lhs, rhs, &StatementEntry::external_sku, order);
         case StatementEntryEnum::kCount:
-            return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
+            return Utils::CompareMember(lhs, rhs, &StatementEntry::count, order);
         case StatementEntryEnum::kMeasure:
-            return (order == Qt::AscendingOrder) ? (lhs->measure < rhs->measure) : (lhs->measure > rhs->measure);
+            return Utils::CompareMember(lhs, rhs, &StatementEntry::measure, order);
         case StatementEntryEnum::kUnitPrice:
-            return (order == Qt::AscendingOrder) ? (lhs->unit_price < rhs->unit_price) : (lhs->unit_price > rhs->unit_price);
+            return Utils::CompareMember(lhs, rhs, &StatementEntry::unit_price, order);
         case StatementEntryEnum::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
+            return Utils::CompareMember(lhs, rhs, &StatementEntry::description, order);
         case StatementEntryEnum::kAmount:
-            return (order == Qt::AscendingOrder) ? (lhs->amount < rhs->amount) : (lhs->amount > rhs->amount);
+            return Utils::CompareMember(lhs, rhs, &StatementEntry::amount, order);
         case StatementEntryEnum::kStatus:
-            return (order == Qt::AscendingOrder) ? (lhs->status < rhs->status) : (lhs->status > rhs->status);
+            return Utils::CompareMember(lhs, rhs, &StatementEntry::status, order);
         default:
             return false;
         }
