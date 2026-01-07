@@ -110,7 +110,7 @@ QSet<QUuid> TreeModel::SyncDeltaImpl(const QUuid& node_id, double initial_delta,
     auto affected_ids { UpdateAncestorTotal(node, adjust_initial_delta, adjust_final_delta) };
     affected_ids.insert(node_id);
 
-    emit STotalsUpdated();
+    emit SSyncValue();
 
     return affected_ids;
 }
@@ -132,7 +132,7 @@ QSet<QUuid> TreeModel::UpdateTotal(const QUuid& node_id, double initial_total, d
     auto affected_ids { UpdateAncestorTotal(node, initial_delta, final_delta) };
     affected_ids.insert(node_id);
 
-    emit STotalsUpdated();
+    emit SSyncValue();
 
     return affected_ids;
 }
@@ -235,7 +235,7 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value)
     const auto [start_col, end_col] = NodeUtils::NumericColumnRange(section_);
     EmitRowChanged(node_id, start_col, end_col);
 
-    emit STotalsUpdated();
+    emit SSyncValue();
 }
 
 void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
@@ -371,7 +371,7 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex& parent)
     ResourcePool<Node>::Instance().Recycle(node);
     node_hash_.remove(node_id);
 
-    emit STotalsUpdated();
+    emit SSyncValue();
     emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
     emit SFreeWidget(section_, node_id);
 
@@ -714,6 +714,8 @@ void TreeModel::ApplyTree(const QJsonObject& data)
 
     sort(std::to_underlying(NodeEnum::kName), Qt::AscendingOrder);
     endResetModel();
+
+    emit SInitStatus();
 }
 
 void TreeModel::SortModel()

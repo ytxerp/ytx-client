@@ -53,7 +53,8 @@ signals:
     void SFreeWidget(Section section, const QUuid& node_id);
 
     // send to NodeWidget
-    void STotalsUpdated();
+    void SSyncValue();
+    void SInitStatus();
 
 public slots:
     // receive from RemoveDialog

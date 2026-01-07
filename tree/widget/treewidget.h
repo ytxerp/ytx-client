@@ -20,6 +20,7 @@
 #ifndef TREEWIDGET_H
 #define TREEWIDGET_H
 
+#include <QDoubleSpinBox>
 #include <QTreeView>
 #include <QWidget>
 
@@ -27,12 +28,12 @@ class TreeWidget : public QWidget {
     Q_OBJECT
 
 public slots:
-    virtual void RTotalsUpdated() { };
+    virtual void RSyncValue() { };
+    virtual void RInitStatus() { };
 
 public:
     virtual ~TreeWidget() = default;
 
-    virtual void InitStatus() { };
     virtual QTreeView* View() const = 0;
 
 protected:
@@ -43,12 +44,12 @@ protected:
 
     virtual void InitStaticStatus() { }
     virtual void InitDynamicStatus() { }
-    virtual void UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id)
+    virtual void SyncDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id)
     {
         Q_UNUSED(lhs_node_id)
         Q_UNUSED(rhs_node_id)
     }
-    virtual void UpdateStaticValue(const QUuid& node_id) { Q_UNUSED(node_id) }
+    virtual void SyncStaticValue(const QUuid& node_id) { Q_UNUSED(node_id) }
 
     inline double Operate(double lhs, double rhs, const QString& operation)
     {
@@ -60,6 +61,15 @@ protected:
         default:
             return 0.0;
         }
+    }
+
+    inline void InitDoubleSpinBox(QDoubleSpinBox* box)
+    {
+        Q_ASSERT(box);
+
+        box->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+        box->setSpecialValueText("--");
+        box->setValue(std::numeric_limits<double>::lowest());
     }
 };
 

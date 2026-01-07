@@ -34,21 +34,21 @@ class TreeWidgetIT final : public TreeWidget {
     Q_OBJECT
 
 public slots:
-    void RTotalsUpdated() override;
+    void RSyncValue() override;
+    void RInitStatus() override;
 
 public:
     TreeWidgetIT(TreeModel* model, CSectionConfig& config, QWidget* parent = nullptr);
     ~TreeWidgetIT() override;
 
     QTreeView* View() const override;
-    void InitStatus() override;
 
 private:
     void InitStaticStatus() override;
     void InitDynamicStatus() override;
 
-    void UpdateDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id) override;
-    void UpdateStaticValue(const QUuid& node_id) override;
+    void SyncDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id) override;
+    void SyncStaticValue(const QUuid& node_id) override;
 
 private:
     Ui::TreeWidgetIT* ui;

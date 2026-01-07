@@ -29,7 +29,7 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
 
         if (!section_settings_) {
             const QString ini_file { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator()
-                + MainWindowUtils::AccountIniFileName(login_info.Email()) + kDotSuffixINI };
+                + MainWindowUtils::AccountIniFileName(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
 
             section_settings_ = QSharedPointer<QSettings>::create(ini_file, QSettings::IniFormat);
         }
@@ -205,7 +205,8 @@ void MainWindow::InitContextFinance()
     tree_widget = new TreeWidgetF(tree_model, info, shared_config, section_config, this);
     tree_view = tree_widget->View();
 
-    connect(tree_model, &TreeModel::STotalsUpdated, tree_widget, &TreeWidget::RTotalsUpdated, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SSyncValue, tree_widget, &TreeWidget::RSyncValue, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SInitStatus, tree_widget, &TreeWidget::RInitStatus, Qt::UniqueConnection);
 }
 
 void MainWindow::InitContextInventory()
@@ -247,7 +248,8 @@ void MainWindow::InitContextInventory()
     tree_widget = new TreeWidgetIT(tree_model, section_config, this);
     tree_view = tree_widget->View();
 
-    connect(tree_model, &TreeModel::STotalsUpdated, tree_widget, &TreeWidget::RTotalsUpdated, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SSyncValue, tree_widget, &TreeWidget::RSyncValue, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SInitStatus, tree_widget, &TreeWidget::RInitStatus, Qt::UniqueConnection);
 }
 
 void MainWindow::InitContextTask()
@@ -289,7 +291,8 @@ void MainWindow::InitContextTask()
     tree_widget = new TreeWidgetIT(tree_model, section_config, this);
     tree_view = tree_widget->View();
 
-    connect(tree_model, &TreeModel::STotalsUpdated, tree_widget, &TreeWidget::RTotalsUpdated, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SSyncValue, tree_widget, &TreeWidget::RSyncValue, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SInitStatus, tree_widget, &TreeWidget::RInitStatus, Qt::UniqueConnection);
 }
 
 void MainWindow::InitContextPartner()

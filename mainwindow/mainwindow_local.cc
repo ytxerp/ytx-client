@@ -116,6 +116,9 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
     const QString text { kSectionString.value(start_) };
     section_settings_->beginGroup(text);
 
+    if (start_ == Section::kFinance)
+        sc_->tree_widget->RInitStatus();
+
     if (IsDoubleEntry(start_)) {
         section_settings_->setValue(kStaticLabel, section.static_label);
         section_settings_->setValue(kStaticNode, section.static_node);
