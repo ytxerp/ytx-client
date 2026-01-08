@@ -1,10 +1,21 @@
 cmake_minimum_required(VERSION 3.30.5)
-project(YTX VERSION 0.3.2 LANGUAGES CXX)
+project(
+    YTX
+    VERSION 0.3.2
+    LANGUAGES CXX
+)
 
 # ------------------------
 # Qt setup
 # ------------------------
-set(QT_MODULES Widgets Gui Concurrent PrintSupport WebSockets LinguistTools)
+set(QT_MODULES
+    Widgets
+    Gui
+    Concurrent
+    PrintSupport
+    WebSockets
+    LinguistTools
+)
 find_package(Qt6 REQUIRED COMPONENTS ${QT_MODULES})
 
 qt_standard_project_setup(REQUIRES 6.9)
@@ -15,29 +26,28 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_FORCE_CMP0156_TO_VALUE NEW)
 
-# Optionally enable debug build and flags
-# set(CMAKE_BUILD_TYPE Debug)
-# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
+if(CLANG_TIDY_EXE)
+    # Will automatically use .clang-tidy config
+    set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY_EXE})
+endif()
+
+# Optionally enable debug build and flags set(CMAKE_BUILD_TYPE Debug) set(CMAKE_CXX_FLAGS_DEBUG
+# "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
 # How to install OpenSSL for Qt / LLVM-MinGW on Windows
 #
-# 1. Download and install MSYS2 from:
-#    https://www.msys2.org/
+# Download and install MSYS2 from: https://www.msys2.org/
 #
-# 2. Open the MSYS2 shell and update the system:
-#    pacman -Syu
-#    (Close the shell when prompted, then reopen and run again)
-#    pacman -Syu
+# Open the MSYS2 shell and update the system: pacman -Syu (Close the shell when prompted, then
+# reopen and run again) pacman -Syu
 #
-# 3. Launch "MSYS2 MinGW64" (important: NOT MSYS, NOT UCRT)
+# Launch "MSYS2 MinGW64" (important: NOT MSYS, NOT UCRT)
 #
-# 4. Install OpenSSL for MinGW-w64:
-#    pacman -S mingw-w64-x86_64-openssl
+# Install OpenSSL for MinGW-w64: pacman -S mingw-w64-x86_64-openssl
 #
-# 5. After installation, OpenSSL will be located at:
-#    D:/msys64/mingw64
+# After installation, OpenSSL will be located at: D:/msys64/mingw64
 #
-# 6. Use this path as OPENSSL_ROOT_DIR when building with Qt + LLVM-MinGW
+# Use this path as OPENSSL_ROOT_DIR when building with Qt + LLVM-MinGW
 
 if(APPLE)
     set(OPENSSL_ROOT_DIR "/opt/homebrew/opt/openssl@3")
@@ -60,7 +70,12 @@ option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
 
 if(CMAKE_BUILD_TYPE MATCHES Debug AND ENABLE_ASAN)
     message(STATUS "Enabling AddressSanitizer for Debug build")
-    add_compile_options(-O1 -g -fsanitize=address -fno-omit-frame-pointer)
+    add_compile_options(
+        -O1
+        -g
+        -fsanitize=address
+        -fno-omit-frame-pointer
+    )
     add_link_options(-fsanitize=address)
 endif()
 
@@ -395,46 +410,44 @@ if(APPLE)
     qt6_add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${ICON_MAC})
 
     configure_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist"
-        "${CMAKE_CURRENT_BINARY_DIR}/Info.plist"
-        @ONLY
+        "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist" "${CMAKE_CURRENT_BINARY_DIR}/Info.plist" @ONLY
     )
 
     # Bundle properties
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        MACOSX_BUNDLE TRUE
-        MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist
+    set_target_properties(
+        ${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE MACOSX_BUNDLE_INFO_PLIST
+                                                      ${CMAKE_CURRENT_BINARY_DIR}/Info.plist
     )
 
     # Post-build: copy "print" folder into .app bundle's Resources
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E rm -rf "$<TARGET_BUNDLE_DIR:${PROJECT_NAME}>/Contents/Resources/print_template"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "${CMAKE_CURRENT_SOURCE_DIR}/print_template"
-            "$<TARGET_BUNDLE_DIR:${PROJECT_NAME}>/Contents/Resources/print_template"
+    add_custom_command(
+        TARGET ${PROJECT_NAME}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rm -rf
+                "$<TARGET_BUNDLE_DIR:${PROJECT_NAME}>/Contents/Resources/print_template"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/print_template"
+                "$<TARGET_BUNDLE_DIR:${PROJECT_NAME}>/Contents/Resources/print_template"
     )
 
 elseif(WIN32)
     set(WINRC "C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x86/rc.exe")
 
     configure_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/Info.rc"
-        "${CMAKE_CURRENT_BINARY_DIR}/Info.rc"
-        @ONLY
+        "${CMAKE_CURRENT_SOURCE_DIR}/Info.rc" "${CMAKE_CURRENT_BINARY_DIR}/Info.rc" @ONLY
     )
 
     set(INFO_RC "${CMAKE_CURRENT_BINARY_DIR}/Info.rc")
     qt6_add_executable(${PROJECT_NAME} WIN32 ${INFO_RC})
 
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E rm -rf
-                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/print_template"
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-                "${CMAKE_CURRENT_SOURCE_DIR}/print_template"
+    add_custom_command(
+        TARGET ${PROJECT_NAME}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rm -rf "$<TARGET_FILE_DIR:${PROJECT_NAME}>/print_template"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/print_template"
                 "$<TARGET_FILE_DIR:${PROJECT_NAME}>/print_template"
     )
 
-# Linux or other platforms
+    # Linux or other platforms
 else()
     qt6_add_executable(${PROJECT_NAME})
 endif()
@@ -442,40 +455,31 @@ endif()
 # ------------------------
 # Qt Translations
 # ------------------------
-# Note:
-#   - Only one TS file can be listed here, otherwise CMake will not work correctly.
-#   - Replace YTX_zh_CN.ts with the language you need, for example:
-#       YTX_ja.ts   # Japanese
-#       YTX_de.ts   # German
+# Note: - Only one TS file can be listed here, otherwise CMake will not work correctly. - Replace
+# YTX_zh_CN.ts with the language you need, for example: YTX_ja.ts   # Japanese YTX_de.ts   # German
 #
-# Workflow:
-#   1. In Qt Creator:
-#        Projects -> Build & Run -> Build -> Build Steps -> Details -> Targets
-#        Enable "update_translations".
-#   2. Build the project.
-#        -> This will extract all translatable text into the TS file.
-#   3. Open the TS file in Qt Linguist and add translations.
-#   4. In Qt Linguist, choose:
-#        File -> Release
-#        -> This will generate the corresponding .qm file.
-#   5. Use the .qm file in your application (via QTranslator).
+# Workflow: 1. In Qt Creator: Projects -> Build & Run -> Build -> Build Steps -> Details -> Targets
+# Enable "update_translations". 2. Build the project. -> This will extract all translatable text
+# into the TS file. 3. Open the TS file in Qt Linguist and add translations. 4. In Qt Linguist,
+# choose: File -> Release -> This will generate the corresponding .qm file. 5. Use the .qm file in
+# your application (via QTranslator).
 qt6_add_translations(${PROJECT_NAME} TS_FILES resource/I18N/ytx_zh_CN.ts)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_sources(${PROJECT_NAME} PRIVATE
-    ${SOURCES}
-    ${HEADERS}
-    ${UIS}
-    ${BRC}
+target_sources(
+    ${PROJECT_NAME}
+    PRIVATE ${SOURCES}
+            ${HEADERS}
+            ${UIS}
+            ${BRC}
 )
 
 # ------------------------
 # Define compile-time macros
 # ------------------------
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-    QT_USE_QSTRINGBUILDER
-    QT_USE_FAST_OPERATOR_PLUS
-    QT_DISABLE_DEPRECATED_BEFORE=0x060900
+target_compile_definitions(
+    ${PROJECT_NAME} PRIVATE QT_USE_QSTRINGBUILDER QT_USE_FAST_OPERATOR_PLUS
+                            QT_DISABLE_DEPRECATED_BEFORE=0x060900
 )
 
 # ------------------------
@@ -484,31 +488,36 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 
 # GCC/Clang specific warning options
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-    target_compile_options(${PROJECT_NAME} PRIVATE
-        -Wall
-        -Wextra
-        -Wconversion
-        -Wno-shorten-64-to-32
+    target_compile_options(
+        ${PROJECT_NAME}
+        PRIVATE -Wall
+                -Wextra
+                -Wconversion
+                -Wno-shorten-64-to-32
     )
 endif()
 
 # MSVC specific warning options (optional, to elevate warning level on Windows)
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(${PROJECT_NAME} PRIVATE
-        /W4  # Warning level 4 (equivalent to high warnings like -Wall)
-        /wd4244  # Disable double to int conversion warning (corresponding to part of -Wconversion)
-        /wd4267  # Disable size_t to int conversion warning (corresponding to -Wno-shorten-64-to-32)
+    target_compile_options(
+        ${PROJECT_NAME}
+        PRIVATE /W4 # Warning level 4 (equivalent to high warnings like -Wall)
+                /wd4244 # Disable double to int conversion warning (corresponding to part of
+                        # -Wconversion)
+                /wd4267 # Disable size_t to int conversion warning (corresponding to
+                        # -Wno-shorten-64-to-32)
     )
 endif()
 
 # Link required libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    Qt6::Widgets
-    Qt6::Gui
-    Qt6::Concurrent
-    Qt6::PrintSupport
-    Qt6::WebSockets
-    YXlsx::YXlsx
-    OpenSSL::SSL
-    OpenSSL::Crypto
+target_link_libraries(
+    ${PROJECT_NAME}
+    PRIVATE Qt6::Widgets
+            Qt6::Gui
+            Qt6::Concurrent
+            Qt6::PrintSupport
+            Qt6::WebSockets
+            YXlsx::YXlsx
+            OpenSSL::SSL
+            OpenSSL::Crypto
 )
