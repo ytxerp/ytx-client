@@ -14,13 +14,13 @@ void MainWindow::on_actionSignIn_triggered()
 
     if (!dialog) {
         dialog = new AuthDialog(app_settings_, this);
-        dialog->setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
+        dialog->setWindowFlags(Qt::Dialog);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         connect(dialog, &QDialog::destroyed, this, [=]() { dialog = nullptr; });
     }
 
-    dialog->setModal(true);
     dialog->show();
+    dialog->raise();
     dialog->activateWindow();
 }
 
