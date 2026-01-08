@@ -4,6 +4,8 @@
 #include <QDir>
 #include <QHeaderView>
 
+#include "utils/templateutils.h"
+
 bool Utils::PrepareNewFile(QString& file_path, CString& suffix)
 {
     if (file_path.isEmpty())
@@ -137,4 +139,23 @@ void Utils::SetupHeaderStatus(QHeaderView* header, const QSharedPointer<QSetting
 
     QObject::connect(header, &QHeaderView::sectionMoved,
         [header, settings, section_name, key]() { Utils::WriteConfig(header, &QHeaderView::saveState, settings, section_name, key); });
+}
+
+void Utils::ResetSectionContext(SectionContext& ctx)
+{
+    if (ctx.tree_widget)
+        ctx.tree_widget->Reset();
+
+    if (ctx.entry_hub)
+        ctx.entry_hub->Reset();
+
+    if (ctx.tree_model)
+        ctx.tree_model->Reset();
+
+    ctx.section_config = SectionConfig {};
+    ctx.shared_config = SharedConfig {};
+
+    Utils::CloseWidgets(ctx.dialog_list);
+    Utils::CloseWidgets(ctx.table_wgt_hash);
+    Utils::CloseWidgets(ctx.widget_hash);
 }

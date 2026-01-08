@@ -12,9 +12,9 @@ void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
     {
         auto* header { view->header() };
 
+        ResizeColumn(header, Utils::NodeDescriptionColumn(section));
         header->setStretchLastSection(false);
         header->setDefaultAlignment(Qt::AlignCenter);
-        header->setSectionResizeMode(QHeaderView::Stretch);
     }
 
     if (section == Section::kSale || section == Section::kPurchase) {
@@ -44,12 +44,7 @@ void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
 void MainWindow::SetTreeHeader(QTreeView* view, Section section)
 {
     auto* header { view->header() };
-
     Utils::SetupHeaderStatus(header, section_settings_, section, kTreeHeaderState);
-
-    ResizeColumn(header, Utils::NodeDescriptionColumn(section));
-    header->setStretchLastSection(false);
-    header->setDefaultAlignment(Qt::AlignCenter);
 }
 
 void MainWindow::SetTableViewFIPT(QTableView* view, int stretch_column, int lhs_node_column) const

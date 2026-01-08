@@ -98,8 +98,6 @@ void WebSocket::RDisconnected()
     manual_disconnect_ = false;
 
     session_id_.clear();
-    tree_model_hash_.clear();
-    entry_hub_hash_.clear();
 
     if (heartbeat_) {
         heartbeat_->stop();

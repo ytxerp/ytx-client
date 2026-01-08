@@ -136,6 +136,8 @@ public:
     void AckNode(const QUuid& node_id) const;
     void SearchNode(QList<Node*>& node_list, CString& name) const;
 
+    void Reset();
+
     inline bool Contains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
     inline Node* GetNode(const QUuid& node_id) const
     {

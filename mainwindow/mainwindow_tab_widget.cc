@@ -7,6 +7,7 @@
 #include "tree/model/treemodelo.h"
 #include "ui_mainwindow.h"
 #include "utils/entryutils.h"
+#include "utils/templateutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -155,7 +156,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 
     {
         if (sc_->widget_hash.contains(node_id)) {
-            Utils::FreeWidget(node_id, sc_->widget_hash);
+            Utils::CloseWidget(node_id, sc_->widget_hash);
             return;
         }
     }

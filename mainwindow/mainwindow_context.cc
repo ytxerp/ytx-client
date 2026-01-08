@@ -19,6 +19,7 @@
 #include "tree/widget/treewidgetp.h"
 #include "ui_mainwindow.h"
 #include "utils/mainwindowutils.h"
+#include "utils/templateutils.h"
 #include "websocket/websocket.h"
 
 bool MainWindow::RInitializeContext(const QString& expire_date)

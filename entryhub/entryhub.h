@@ -59,6 +59,8 @@ public slots:
     void RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
 public:
+    void Reset();
+
     virtual void InsertEntry(const QJsonObject& data);
     virtual void RemoveEntry(const QUuid& entry_id);
     virtual void UpdateEntry(const QUuid& id, const QJsonObject& update);

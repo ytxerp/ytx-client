@@ -27,7 +27,6 @@
 #include "table/widget/tablewidget.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidget.h"
-#include "utils/templateutils.h"
 
 struct SectionContext {
     QPointer<TreeWidget> tree_widget {};
@@ -43,24 +42,6 @@ struct SectionContext {
 
     QHash<QUuid, QPointer<TableWidget>> table_wgt_hash {};
     QHash<QUuid, QPointer<QWidget>> widget_hash {};
-
-    void Clear();
 };
-
-inline void SectionContext::Clear()
-{
-    Utils::SafeDelete(tree_widget);
-    Utils::SafeDelete(entry_hub);
-    Utils::SafeDelete(info.rule_model);
-    Utils::SafeDelete(info.unit_model);
-    Utils::SafeDelete(tree_model);
-
-    section_config = SectionConfig {};
-    shared_config = SharedConfig {};
-
-    Utils::ClearWidgets(dialog_list);
-    Utils::ClearWidgets(table_wgt_hash);
-    Utils::ClearWidgets(widget_hash);
-}
 
 #endif // SECTIONCONTEX_H

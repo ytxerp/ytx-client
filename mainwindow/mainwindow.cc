@@ -178,21 +178,42 @@ void MainWindow::on_actionRemove_triggered()
     }
 }
 
-void MainWindow::ClearMainwindow()
+void MainWindow::ResetMainwindow()
 {
-    WriteConfig();
-
-    app_settings_.clear();
     section_settings_.clear();
 
-    sc_f_.Clear();
-    sc_i_.Clear();
-    sc_t_.Clear();
-    sc_p_.Clear();
-    sc_sale_.Clear();
-    sc_purchase_.Clear();
+    {
+        auto* tab_widget { ui->tabWidget };
+        auto* tab_bar { tab_widget->tabBar() };
+        const int count { tab_widget->count() };
 
-    ui->tabWidget->clear();
+        for (int index = count - 1; index >= 0; --index) {
+            const auto tab { tab_bar->tabData(index).value<TabInfo>() };
+            if (!tab.id.isNull())
+                tab_widget->removeTab(index);
+        }
+    }
+
+    {
+        Utils::ResetSectionContext(sc_f_);
+        Utils::ResetSectionContext(sc_i_);
+        Utils::ResetSectionContext(sc_t_);
+        Utils::ResetSectionContext(sc_p_);
+        Utils::ResetSectionContext(sc_sale_);
+        Utils::ResetSectionContext(sc_purchase_);
+    }
+
+    {
+        ui->actionEmail->setText(tr("Email"));
+        ui->actionWorkspace->setText(tr("Workspace"));
+        ui->actionExpireDate->setText(tr("Expire Date"));
+    }
+
+    {
+        ui->actionReconnect->setEnabled(true);
+        ui->actionSignIn->setEnabled(false);
+        ui->actionSignOut->setEnabled(false);
+    }
 }
 
 void MainWindow::IniSectionGroup()
@@ -229,7 +250,7 @@ void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 {
     auto* sc { GetSectionContex(section) };
 
-    Utils::FreeWidget(node_id, sc->table_wgt_hash);
+    Utils::CloseWidget(node_id, sc->table_wgt_hash);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 

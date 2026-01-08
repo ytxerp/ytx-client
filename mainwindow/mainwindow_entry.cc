@@ -7,6 +7,7 @@
 #include "table/model/tablemodelt.h"
 #include "ui_mainwindow.h"
 #include "utils/entryutils.h"
+#include "utils/templateutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 

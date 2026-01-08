@@ -140,7 +140,7 @@ private slots:
 
 private:
     void SetTabWidget();
-    void ClearMainwindow();
+    void ResetMainwindow();
 
     void SetUniqueConnection() const;
     void SetIcon() const;
@@ -233,7 +233,6 @@ private:
     void UpdateSharedConfig(CSharedConfig& shared);
 
     void UpdateAccountInfo(const QString& user, const QString& database, const QString& expire_date);
-    void ClearAccountInfo();
 
     void SetAction(bool enable) const;
 

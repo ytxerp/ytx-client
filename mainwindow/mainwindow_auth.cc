@@ -26,24 +26,12 @@ void MainWindow::on_actionSignIn_triggered()
 
 void MainWindow::on_actionSignOut_triggered()
 {
-    ClearMainwindow();
-    ClearAccountInfo();
+    ResetMainwindow();
 
     WebSocket::Instance()->Close();
     TableSStation::Instance()->Clear();
 
     SetAction(false);
-
-    ui->actionReconnect->setEnabled(true);
-    ui->actionSignIn->setEnabled(false);
-    ui->actionSignOut->setEnabled(false);
-}
-
-void MainWindow::ClearAccountInfo()
-{
-    ui->actionEmail->setText(tr("Email"));
-    ui->actionWorkspace->setText(tr("Workspace"));
-    ui->actionExpireDate->setText(tr("Expire Date"));
 }
 
 void MainWindow::RLoginResult(bool result)

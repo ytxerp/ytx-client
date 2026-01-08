@@ -49,7 +49,7 @@ public:
     void UpdateSeparator(const QString& old_separator, const QString& new_separator);
 
     void SetDisplay(int row, const QString& display);
-    void Clear();
+    void Reset();
 
 protected:
     struct Item {

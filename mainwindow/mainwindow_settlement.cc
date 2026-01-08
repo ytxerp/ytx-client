@@ -8,6 +8,7 @@
 #include "global/resourcepool.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "utils/templateutils.h"
 
 void MainWindow::on_actionSettlement_triggered()
 {

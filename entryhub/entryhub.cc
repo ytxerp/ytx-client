@@ -14,7 +14,7 @@ EntryHub::EntryHub(CSectionInfo& info, QObject* parent)
 {
 }
 
-EntryHub::~EntryHub() { EntryPool::Instance().Recycle(entry_cache_, section_); }
+EntryHub::~EntryHub() { Reset(); }
 
 void EntryHub::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
 {
@@ -39,6 +39,8 @@ void EntryHub::RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id)
         entry_cache_.erase(it);
     }
 }
+
+void EntryHub::Reset() { EntryPool::Instance().Recycle(entry_cache_, section_); }
 
 void EntryHub::RemoveLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
 {

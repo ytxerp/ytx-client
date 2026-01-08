@@ -21,11 +21,14 @@
 #define MAINWINDOWUTILS_H
 
 #include <QMessageBox>
+#include <QSettings>
 
 #include "component/sectioncontex.h"
 #include "worksheet.h"
 
 namespace Utils {
+
+void ResetSectionContext(SectionContext& ctx);
 
 QString AccountIniFileName(const QString& email, const QString& workspace);
 

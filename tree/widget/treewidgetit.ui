@@ -61,7 +61,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="lable_static_">
+       <widget class="QLabel" name="label_static_">
         <property name="text">
          <string/>
         </property>

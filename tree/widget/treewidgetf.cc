@@ -33,7 +33,7 @@ void TreeWidgetF::RInitStatus()
 void TreeWidgetF::InitStaticStatus()
 {
     ui->dspin_box_static_->setDecimals(section_.amount_decimal);
-    ui->lable_static_->setText(section_.static_label);
+    ui->label_static_->setText(section_.static_label);
 
     const auto static_node { section_.static_node };
     const int static_node_unit { model_->Unit(static_node) };
@@ -52,6 +52,15 @@ void TreeWidgetF::InitDynamicStatus()
 }
 
 QTreeView* TreeWidgetF::View() const { return ui->treeView; }
+
+void TreeWidgetF::Reset() const
+{
+    InitDoubleSpinBox(ui->dspin_box_dynamic_);
+    InitDoubleSpinBox(ui->dspin_box_static_);
+
+    ui->label_static_->setText(QString());
+    ui->label_dynamic_->setText(QString());
+}
 
 void TreeWidgetF::RSyncValue()
 {

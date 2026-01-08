@@ -61,7 +61,7 @@ void LeafPathBranchPathModel(CUuidString& leaf, CUuidString& branch, ItemModel* 
     if (!model || (leaf.isEmpty() && branch.isEmpty()))
         return;
 
-    model->Clear();
+    model->Reset();
 
     QVector<std::pair<QUuid, QString>> items {};
     items.reserve(leaf.size() + branch.size());

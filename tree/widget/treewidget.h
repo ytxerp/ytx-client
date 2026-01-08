@@ -35,6 +35,7 @@ public:
     ~TreeWidget() override { };
 
     virtual QTreeView* View() const = 0;
+    virtual void Reset() const { }
 
 protected:
     TreeWidget(QWidget* parent = nullptr)
@@ -63,7 +64,7 @@ protected:
         }
     }
 
-    inline void InitDoubleSpinBox(QDoubleSpinBox* box)
+    inline void InitDoubleSpinBox(QDoubleSpinBox* box) const
     {
         Q_ASSERT(box);
 

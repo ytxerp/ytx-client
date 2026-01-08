@@ -69,7 +69,7 @@ template <MapType T> ItemModel* CreateModelFromMap(const T& map, QObject* parent
     return model;
 }
 
-template <InheritQWidget T> void FreeWidget(const QUuid& node_id, QHash<QUuid, QPointer<T>>& hash)
+template <InheritQWidget T> void CloseWidget(const QUuid& node_id, QHash<QUuid, QPointer<T>>& hash)
 {
     auto it = hash.constFind(node_id);
     if (it != hash.constEnd()) {
@@ -84,7 +84,7 @@ template <InheritQWidget T> void FreeWidget(const QUuid& node_id, QHash<QUuid, Q
 }
 
 // QList<QPointer<T>>
-template <InheritQWidget T> void ClearWidgets(QList<QPointer<T>>& list)
+template <InheritQWidget T> void CloseWidgets(QList<QPointer<T>>& list)
 {
     for (auto& widget : list) {
         if (widget) {
@@ -97,7 +97,7 @@ template <InheritQWidget T> void ClearWidgets(QList<QPointer<T>>& list)
 }
 
 // QHash<QUuid, QPointer<T>>
-template <InheritQWidget T> void ClearWidgets(QHash<QUuid, QPointer<T>>& hash)
+template <InheritQWidget T> void CloseWidgets(QHash<QUuid, QPointer<T>>& hash)
 {
     for (auto& widget : hash) {
         if (widget) {

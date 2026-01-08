@@ -77,7 +77,7 @@ void ItemModel::SetDisplay(int row, const QString& display)
     emit dataChanged(index(row, 0), index(row, 0), { Qt::DisplayRole });
 }
 
-void ItemModel::Clear()
+void ItemModel::Reset()
 {
     beginResetModel();
     items_.clear();

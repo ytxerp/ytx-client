@@ -464,6 +464,30 @@ void TreeModel::SearchNode(QList<Node*>& node_list, CString& name) const
     }
 }
 
+void TreeModel::Reset()
+{
+    FlushCaches();
+
+    {
+        leaf_path_.clear();
+        branch_path_.clear();
+
+        if (leaf_path_model_)
+            leaf_path_model_->Reset();
+    }
+
+    {
+        beginResetModel();
+
+        NodePool::Instance().Recycle(node_hash_, section_);
+
+        root_ = nullptr;
+        InitRoot(root_);
+
+        endResetModel();
+    }
+}
+
 QModelIndex TreeModel::GetIndex(const QUuid& node_id) const
 {
     if (!node_hash_.contains(node_id)) {
