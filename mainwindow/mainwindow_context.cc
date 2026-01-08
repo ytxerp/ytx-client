@@ -45,28 +45,21 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
     }
 
     {
-        CreateSection(sc_f_, tr("Finance"));
-        CreateSection(sc_p_, tr("Partner"));
-        CreateSection(sc_i_, tr("Inventory"));
-        CreateSection(sc_t_, tr("Task"));
-        CreateSection(sc_sale_, tr("Sale"));
-        CreateSection(sc_purchase_, tr("Purchase"));
+        TreeDelegateF(sc_f_.tree_view, sc_f_.info, sc_f_.section_config);
+        TreeDelegateI(sc_i_.tree_view, sc_i_.info, sc_i_.section_config);
+        TreeDelegateP(sc_p_.tree_view, sc_p_.info, sc_p_.section_config);
+        TreeDelegateT(sc_t_.tree_view, sc_t_.info, sc_t_.section_config);
+        TreeDelegateO(sc_sale_.tree_view, sc_sale_.info, sc_sale_.section_config);
+        TreeDelegateO(sc_purchase_.tree_view, sc_purchase_.info, sc_purchase_.section_config);
     }
 
     {
-        RSectionGroup(std::to_underlying(start_));
-        SetAction(true);
-        on_tabWidget_currentChanged(0);
-    }
-
-    {
-        // Delay template and model setup until event loop starts (non-blocking post-init)
-        QTimer::singleShot(0, this, [this]() {
-            PrintHub::Instance().ScanTemplate();
-            PrintHub::Instance().SetAppConfig(&app_config_);
-            PrintHub::Instance().SetPartnerModel(sc_p_.tree_model);
-            PrintHub::Instance().SetInventoryModel(sc_i_.tree_model);
-        });
+        SetTreeHeader(sc_f_.tree_view, Section::kFinance);
+        SetTreeHeader(sc_i_.tree_view, Section::kInventory);
+        SetTreeHeader(sc_p_.tree_view, Section::kPartner);
+        SetTreeHeader(sc_t_.tree_view, Section::kTask);
+        SetTreeHeader(sc_sale_.tree_view, Section::kSale);
+        SetTreeHeader(sc_purchase_.tree_view, Section::kPurchase);
     }
 
     return true;
@@ -109,7 +102,6 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
     auto entry_hub { sc.entry_hub };
 
     const auto& info { sc.info };
-    const auto& config { sc.section_config };
     const auto& section { info.section };
 
     SetTreeView(view, info);
@@ -122,24 +114,19 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
 
     switch (info.section) {
     case Section::kFinance:
-        TreeDelegateF(view, info, config);
         TreeConnectF(view, tree_model, entry_hub);
         break;
     case Section::kTask:
-        TreeDelegateT(view, info, config);
         TreeConnectT(view, tree_model, entry_hub);
         break;
     case Section::kPartner:
-        TreeDelegateP(view, info, config);
         TreeConnectP(view, tree_model, entry_hub);
         break;
     case Section::kInventory:
-        TreeDelegateI(view, info, config);
         TreeConnectI(view, tree_model, entry_hub);
         break;
     case Section::kSale:
     case Section::kPurchase:
-        TreeDelegateO(view, info, config);
         TreeConnectO(view, tree_model, entry_hub);
         break;
     default:
@@ -156,6 +143,31 @@ void MainWindow::InitilizeContext()
         InitContextPartner();
         InitContextSale();
         InitContextPurchase();
+    }
+
+    {
+        CreateSection(sc_f_, tr("Finance"));
+        CreateSection(sc_p_, tr("Partner"));
+        CreateSection(sc_i_, tr("Inventory"));
+        CreateSection(sc_t_, tr("Task"));
+        CreateSection(sc_sale_, tr("Sale"));
+        CreateSection(sc_purchase_, tr("Purchase"));
+    }
+
+    {
+        RSectionGroup(std::to_underlying(start_));
+        SetAction(true);
+        on_tabWidget_currentChanged(0);
+    }
+
+    {
+        // Delay template and model setup until event loop starts (non-blocking post-init)
+        QTimer::singleShot(0, this, [this]() {
+            PrintHub::Instance().ScanTemplate();
+            PrintHub::Instance().SetAppConfig(&app_config_);
+            PrintHub::Instance().SetPartnerModel(sc_p_.tree_model);
+            PrintHub::Instance().SetInventoryModel(sc_i_.tree_model);
+        });
     }
 }
 

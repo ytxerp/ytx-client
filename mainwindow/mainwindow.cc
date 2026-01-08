@@ -182,9 +182,6 @@ void MainWindow::ClearMainwindow()
 {
     WriteConfig();
 
-    if (!section_settings_)
-        return;
-
     app_settings_.clear();
     section_settings_.clear();
 
@@ -520,9 +517,6 @@ void MainWindow::RSectionGroup(int id)
 {
     const Section section { id };
     start_ = section;
-
-    if (!section_settings_)
-        return;
 
     Utils::SwitchDialog(sc_, false);
     UpdateLastTab();
