@@ -102,6 +102,8 @@ void WebSocket::RDisconnected()
     if (heartbeat_) {
         heartbeat_->stop();
     }
+
+    Connect();
 }
 
 void WebSocket::Close()
