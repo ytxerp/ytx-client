@@ -34,7 +34,7 @@ public:
     virtual ~EntryHub();
 
 protected:
-    EntryHub(CSectionInfo& info, QObject* parent = nullptr);
+    explicit EntryHub(CSectionInfo& info, QObject* parent = nullptr);
 
 signals:
     // send to LeafSStation; partner and order entries are removed directly

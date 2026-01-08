@@ -31,7 +31,7 @@ public:
     static ResourcePool& Instance();
     T* Allocate();
     void Recycle(T* resource);
-    template <Iterable Container> void Recycle(Container& resource_list);
+    template <Iterable Container> void Recycle(Container& container);
 
     ResourcePool(const ResourcePool&) = delete;
     ResourcePool& operator=(const ResourcePool&) = delete;

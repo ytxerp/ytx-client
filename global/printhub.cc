@@ -122,9 +122,7 @@ bool PrintHub::LoadTemplate(const QString& template_name)
         const auto col_string { settings.value(QStringLiteral("column_widths")).toStringList() };
         column_widths_.reserve(col_string.size());
 
-        for (const auto& s : col_string) {
-            column_widths_.push_back(s.toInt());
-        }
+        std::ranges::transform(col_string, std::back_inserter(column_widths_), [](const auto& s) { return s.toInt(); });
         settings.endGroup();
     }
 

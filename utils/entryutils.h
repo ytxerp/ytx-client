@@ -135,31 +135,6 @@ bool UpdateShadowIssuedTime(QJsonObject& update, T* object, CString& field, cons
 }
 
 template <typename T, typename F = std::nullptr_t>
-bool UpdateShadowUuid(QJsonObject& update, T* object, CString& field, const QUuid& value, QUuid* T::* member, F&& restart_timer = nullptr)
-{
-    assert(object);
-
-    QUuid* current_value { object->*member };
-
-    if (*current_value == value)
-        return false;
-
-    *current_value = value;
-
-    if (!object->rhs_node || object->rhs_node->isNull()) {
-        return true;
-    }
-
-    update.insert(field, value.toString(QUuid::WithoutBraces));
-
-    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
-        restart_timer();
-    }
-
-    return true;
-}
-
-template <typename T, typename F = std::nullptr_t>
 bool UpdateShadowDocument(QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList* T::* member, F&& restart_timer = nullptr)
 {
     assert(object);
@@ -189,34 +164,6 @@ bool UpdateShadowDocument(QJsonObject& update, T* object, CString& field, const 
 
     return true;
 }
-
-#if 0
-template <typename Field, typename T, typename F = std::nullptr_t>
-bool UpdateShadowDouble(QJsonObject& update, T* object, CString& field, const Field& value, Field* T::* member, F&& restart_timer = nullptr)
-{
-    assert(object);
-
-    Field* member_ptr { object->*member };
-
-    if (FloatEqual(*member_ptr, value))
-        return false;
-
-    *member_ptr = value;
-
-    // If rhs_node is invalid, skip updating
-    if (!object->rhs_node || object->rhs_node->isNull()) {
-        return true;
-    }
-
-    update.insert(field, QString::number(value, 'f', kMaxNumericScale_8));
-
-    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
-        restart_timer();
-    }
-
-    return true;
-}
-#endif
 
 template <typename Field, typename T, typename F = std::nullptr_t>
 bool UpdateShadowField(QJsonObject& update, T* object, CString& field, const Field& value, Field* T::* member, F&& restart_timer = nullptr)

@@ -1,0 +1,11 @@
+{
+  "format": {
+    "line_width": 100,
+    "tab_size": 4,
+    "use_tabchars": false,
+    "command_case": "unchanged",
+    "keyword_case": "upper",
+    "dangle_parens": true,
+    "max_pargs_hwrap": 3
+  }
+}

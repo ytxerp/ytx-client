@@ -38,7 +38,7 @@ public:
     TableModel() = delete;
 
 protected:
-    TableModel(CTableModelArg& arg, QObject* parent = nullptr);
+    explicit TableModel(CTableModelArg& arg, QObject* parent = nullptr);
 
 signals:
     // send to LeafSStation
@@ -121,7 +121,7 @@ protected:
 
     void RestartTimer(const QUuid& id);
     void FlushCaches();
-    double CalculateBalance(EntryShadow* shadow) { return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit); }
+    double CalculateBalance(EntryShadow* shadow) const { return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit); }
 
     EntryShadow* InsertRowsImpl(int row, const QModelIndex& parent = QModelIndex());
 

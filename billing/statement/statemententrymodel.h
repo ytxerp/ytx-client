@@ -28,7 +28,7 @@
 class StatementEntryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    StatementEntryModel(CSectionInfo& info, QObject* parent = nullptr);
+    explicit StatementEntryModel(CSectionInfo& info, QObject* parent = nullptr);
     ~StatementEntryModel();
 
 public:

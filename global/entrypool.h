@@ -57,7 +57,7 @@ private:
     ~EntryPool();
 
     static Entry* NewResource(Section section);
-    void Expand(std::deque<Entry*>& pool, Section section, qsizetype count);
+    static void Expand(std::deque<Entry*>& pool, Section section, qsizetype count);
 
 private:
     std::array<std::deque<Entry*>, 6> pools_ {}; // Pools for each Section

@@ -26,7 +26,7 @@ class TableModelI final : public TableModel {
     Q_OBJECT
 
 public:
-    TableModelI(CTableModelArg& arg, QObject* parent = nullptr);
+    explicit TableModelI(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelI() override = default;
 
     bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;

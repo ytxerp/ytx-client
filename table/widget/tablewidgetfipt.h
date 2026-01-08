@@ -34,7 +34,7 @@ class TableWidgetFIPT final : public TableWidget {
 
 public:
     explicit TableWidgetFIPT(TableModel* model, QWidget* parent = nullptr);
-    ~TableWidgetFIPT();
+    ~TableWidgetFIPT() override;
 
     TableModel* Model() const override { return model_; }
     QTableView* View() const override;

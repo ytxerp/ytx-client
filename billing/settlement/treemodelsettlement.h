@@ -29,7 +29,7 @@
 class TreeModelSettlement final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    TreeModelSettlement(CSectionInfo& info, QObject* parent = nullptr);
+    explicit TreeModelSettlement(CSectionInfo& info, QObject* parent = nullptr);
     ~TreeModelSettlement();
 
 public:
@@ -52,13 +52,8 @@ public:
 
     Settlement* FindSettlement(const QUuid& settlement_id) const
     {
-        for (auto* s : std::as_const(list_)) {
-            if (s && s->id == settlement_id) {
-                return s;
-            }
-        }
-
-        return nullptr;
+        auto it = std::ranges::find_if(list_, [&settlement_id](const Settlement* s) { return s && s->id == settlement_id; });
+        return it != list_.end() ? *it : nullptr;
     }
 
 private:

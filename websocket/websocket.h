@@ -41,10 +41,7 @@ public:
     void Close();
 
     void RegisterTreeModel(Section section, QPointer<TreeModel> node) { tree_model_hash_.insert(section, node); }
-    void DeregisterTreeNode(Section section) { tree_model_hash_.remove(section); }
-
     void RegisterEntryHub(Section section, QPointer<EntryHub> entry_hub) { entry_hub_hash_.insert(section, entry_hub); }
-    void DeregisterEntryHub(Section section) { entry_hub_hash_.remove(section); }
 
     WebSocket(const WebSocket&) = delete;
     WebSocket& operator=(const WebSocket&) = delete;

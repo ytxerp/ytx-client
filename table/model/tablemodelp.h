@@ -26,7 +26,7 @@ class TableModelP final : public TableModel {
     Q_OBJECT
 
 public:
-    TableModelP(CTableModelArg& arg, QObject* parent = nullptr);
+    explicit TableModelP(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelP() override = default;
 
 public slots:

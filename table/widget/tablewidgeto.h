@@ -58,7 +58,7 @@ class TableWidgetO final : public TableWidget {
 
 public:
     explicit TableWidgetO(COrderWidgetArg& arg, const NodeO& node, QWidget* parent = nullptr);
-    ~TableWidgetO();
+    ~TableWidgetO() override;
 
 signals:
     // send to MainWindow

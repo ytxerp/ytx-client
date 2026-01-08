@@ -31,7 +31,7 @@ class TreeWidgetP final : public TreeWidget {
     Q_OBJECT
 
 public:
-    TreeWidgetP(TreeModel* model, QWidget* parent = nullptr);
+    explicit TreeWidgetP(TreeModel* model, QWidget* parent = nullptr);
     ~TreeWidgetP() override;
 
     QTreeView* View() const override;

@@ -24,7 +24,7 @@
 
 class EntryHubF final : public EntryHub {
 public:
-    EntryHubF(CSectionInfo& info, QObject* parent = nullptr);
+    explicit EntryHubF(CSectionInfo& info, QObject* parent = nullptr);
 
 public:
     void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool is_parallel) override;

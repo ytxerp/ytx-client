@@ -28,7 +28,7 @@
 class StatementModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    StatementModel(CSectionInfo& info, QObject* parent = nullptr);
+    explicit StatementModel(CSectionInfo& info, QObject* parent = nullptr);
     ~StatementModel();
 
 public:

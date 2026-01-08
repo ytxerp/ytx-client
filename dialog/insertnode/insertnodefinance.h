@@ -34,7 +34,7 @@ class InsertNodeFinance final : public QDialog {
     Q_OBJECT
 
 public:
-    InsertNodeFinance(CNodeInsertArg& arg, QWidget* parent = nullptr);
+    explicit InsertNodeFinance(CNodeInsertArg& arg, QWidget* parent = nullptr);
     ~InsertNodeFinance();
 
 private slots:

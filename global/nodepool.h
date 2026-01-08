@@ -68,7 +68,7 @@ private:
     static Node* NewResource(Section section);
 
     // Expand the given pool by creating 'count' new Node objects
-    void Expand(std::deque<Node*>& pool, Section section, qsizetype count);
+    static void Expand(std::deque<Node*>& pool, Section section, qsizetype count);
 
 private:
     std::array<std::deque<Node*>, 6> pools_ {}; // Pools for each Section

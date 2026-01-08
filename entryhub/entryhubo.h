@@ -26,7 +26,7 @@ class EntryHubO final : public EntryHub {
     Q_OBJECT
 
 public:
-    EntryHubO(CSectionInfo& info, QObject* parent = nullptr);
+    explicit EntryHubO(CSectionInfo& info, QObject* parent = nullptr);
 
 public:
     void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;

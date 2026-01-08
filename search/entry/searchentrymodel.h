@@ -34,7 +34,7 @@ public:
     virtual ~SearchEntryModel() = default;
 
 protected:
-    SearchEntryModel(CSectionInfo& info, QObject* parent = nullptr);
+    explicit SearchEntryModel(CSectionInfo& info, QObject* parent = nullptr);
 
 public slots:
     void RSearchEntry(const EntryList& entry_list);

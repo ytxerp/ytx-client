@@ -41,7 +41,7 @@ public:
     }
 
     void ScanTemplate();
-    const QMap<QString, QString>& TemplateMap() { return template_map_; }
+    const QMap<QString, QString>& TemplateMap() const { return template_map_; }
 
     void SetAppConfig(CAppConfig* config) { app_config_ = config; }
     void SetSectionConfig(CSectionConfig* config) { section_config_ = config; }

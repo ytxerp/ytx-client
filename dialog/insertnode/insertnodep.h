@@ -34,7 +34,7 @@ class InsertNodeP final : public QDialog {
     Q_OBJECT
 
 public:
-    InsertNodeP(CNodeInsertArg& arg, QWidget* parent = nullptr);
+    explicit InsertNodeP(CNodeInsertArg& arg, QWidget* parent = nullptr);
     ~InsertNodeP();
 
 private slots:

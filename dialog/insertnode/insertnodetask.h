@@ -34,7 +34,7 @@ class InsertNodeTask final : public QDialog {
     Q_OBJECT
 
 public:
-    InsertNodeTask(CNodeInsertArg& arg, QWidget* parent = nullptr);
+    explicit InsertNodeTask(CNodeInsertArg& arg, QWidget* parent = nullptr);
     ~InsertNodeTask();
 
 private slots:

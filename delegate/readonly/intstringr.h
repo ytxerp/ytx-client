@@ -25,7 +25,7 @@
 
 class IntStringR final : public StyledItemDelegate {
 public:
-    IntStringR(CIntString& map, QObject* parent = nullptr);
+    explicit IntStringR(CIntString& map, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:

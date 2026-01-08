@@ -159,11 +159,6 @@ inline QString UnitString(UnitO unit)
     }
 }
 
-inline void UpdateOrderFinalTotal(NodeO* node)
-{
-    node->final_total = node->unit == std::to_underlying(UnitO::kImmediate) ? node->initial_total - node->discount_total : 0.0;
-}
-
 bool IsDescendant(const Node* lhs, const Node* rhs);
 
 template <typename F> void SortIterative(Node* node, F&& Compare)

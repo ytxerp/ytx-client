@@ -51,7 +51,7 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* parent = nullptr);
+    explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
 protected:
@@ -131,7 +131,6 @@ private slots:
     void RInvalidOperation();
 
     void RLeafRemoveDenied(const QJsonObject& obj);
-    inline void RNodeRemoveConfirmed(const QUuid& node_id) { node_pending_removal_.remove(node_id); }
 
     void RSharedConfig(const QJsonArray& arr);
     void RDocumentDir(Section section, const QString& document_dir);

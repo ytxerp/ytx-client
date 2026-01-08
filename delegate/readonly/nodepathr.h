@@ -25,7 +25,7 @@
 
 class NodePathR : public StyledItemDelegate {
 public:
-    NodePathR(CTreeModel* tree_model, QObject* parent = nullptr);
+    explicit NodePathR(CTreeModel* tree_model, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 

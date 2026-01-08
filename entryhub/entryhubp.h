@@ -27,7 +27,7 @@ class EntryHubP final : public EntryHub {
     Q_OBJECT
 
 public:
-    EntryHubP(CSectionInfo& info, QObject* parent = nullptr);
+    explicit EntryHubP(CSectionInfo& info, QObject* parent = nullptr);
 
 public:
     std::optional<std::pair<QUuid, double>> ResolveFromInternal(const QUuid& partner_id, const QUuid& internal_sku) const;
