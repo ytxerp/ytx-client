@@ -32,7 +32,7 @@ public:
     void RegisterModel(const QUuid& node_id, const TableModel* model);
     void DeregisterModel(const QUuid& node_id);
 
-    void Clear() { model_hash_.clear(); }
+    void Reset() { model_hash_.clear(); }
 
     TableSStation(const TableSStation&) = delete;
     TableSStation& operator=(const TableSStation&) = delete;

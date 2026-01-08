@@ -38,7 +38,7 @@ public:
     void ReadConfig(const QSharedPointer<QSettings>& local_settings);
     void Connect();
     void SendMessage(const QString& type, const QJsonObject& value);
-    void Close();
+    void Reset();
 
     void RegisterTreeModel(Section section, QPointer<TreeModel> node) { tree_model_hash_.insert(section, node); }
     void RegisterEntryHub(Section section, QPointer<EntryHub> entry_hub) { entry_hub_hash_.insert(section, entry_hub); }
@@ -49,11 +49,14 @@ public:
     WebSocket& operator=(WebSocket&&) = delete;
 
 signals:
-    void SLoginResult(bool result, int code);
+    void SConnectionSucceeded();
+    void SConnectionFailed();
+
+    void SLoginSucceeded(const QString& expire_date);
+    void SLoginFailed(int code);
+
     void SRegisterResult(bool result, int code);
-    void SConnectionAccepted(bool result);
     void SRemoteHostClosed();
-    void SInitializeContext(const QString& expire_date);
     void SSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void SLeafRemoveDenied(const QJsonObject& obj);
@@ -79,8 +82,6 @@ signals:
     void SInvalidOperation();
     void SNodeSelected(Section section, const QUuid& node_id);
     void SNodeLocation(Section section, const QUuid& node_id);
-
-    void SConnectionRefused();
 
     // send to SearchNodeModel
     void SNodeSearch(const QJsonObject& obj);

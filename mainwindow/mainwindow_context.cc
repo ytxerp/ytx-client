@@ -1,12 +1,10 @@
 #include <QtCore/qdir.h>
-#include <QtCore/qstandardpaths.h>
 #include <QtWidgets/qheaderview.h>
 
 #include "entryhub/entryhubf.h"
 #include "entryhub/entryhubi.h"
 #include "entryhub/entryhubo.h"
 #include "entryhub/entryhubt.h"
-#include "global/logininfo.h"
 #include "global/printhub.h"
 #include "mainwindow.h"
 #include "tree/model/treemodelf.h"
@@ -18,53 +16,8 @@
 #include "tree/widget/treewidgeto.h"
 #include "tree/widget/treewidgetp.h"
 #include "ui_mainwindow.h"
-#include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
 #include "websocket/websocket.h"
-
-bool MainWindow::RInitializeContext(const QString& expire_date)
-{
-    {
-        LoginInfo& login_info { LoginInfo::Instance() };
-        UpdateAccountInfo(login_info.Email(), login_info.Workspace(), expire_date);
-
-        if (!section_settings_) {
-            const QString ini_file { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator()
-                + Utils::AccountIniFileName(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
-
-            section_settings_ = QSharedPointer<QSettings>::create(ini_file, QSettings::IniFormat);
-        }
-    }
-
-    {
-        ReadSectionConfig(sc_f_.section_config, kFinance);
-        ReadSectionConfig(sc_i_.section_config, kInventory);
-        ReadSectionConfig(sc_t_.section_config, kTask);
-        ReadSectionConfig(sc_p_.section_config, kPartner);
-        ReadSectionConfig(sc_sale_.section_config, kSale);
-        ReadSectionConfig(sc_purchase_.section_config, kPurchase);
-    }
-
-    {
-        TreeDelegateF(sc_f_.tree_view, sc_f_.info, sc_f_.section_config);
-        TreeDelegateI(sc_i_.tree_view, sc_i_.info, sc_i_.section_config);
-        TreeDelegateP(sc_p_.tree_view, sc_p_.info, sc_p_.section_config);
-        TreeDelegateT(sc_t_.tree_view, sc_t_.info, sc_t_.section_config);
-        TreeDelegateO(sc_sale_.tree_view, sc_sale_.info, sc_sale_.section_config);
-        TreeDelegateO(sc_purchase_.tree_view, sc_purchase_.info, sc_purchase_.section_config);
-    }
-
-    {
-        SetTreeHeader(sc_f_.tree_view, Section::kFinance);
-        SetTreeHeader(sc_i_.tree_view, Section::kInventory);
-        SetTreeHeader(sc_p_.tree_view, Section::kPartner);
-        SetTreeHeader(sc_t_.tree_view, Section::kTask);
-        SetTreeHeader(sc_sale_.tree_view, Section::kSale);
-        SetTreeHeader(sc_purchase_.tree_view, Section::kPurchase);
-    }
-
-    return true;
-}
 
 void MainWindow::SetAction(bool enable) const
 {
@@ -156,19 +109,37 @@ void MainWindow::InitilizeContext()
     }
 
     {
+        switch (start_) {
+        case Section::kFinance:
+            ui->rBtnFinance->setChecked(true);
+            break;
+        case Section::kTask:
+            ui->rBtnTask->setChecked(true);
+            break;
+        case Section::kInventory:
+            ui->rBtnInventory->setChecked(true);
+            break;
+        case Section::kPartner:
+            ui->rBtnPartner->setChecked(true);
+            break;
+        case Section::kSale:
+            ui->rBtnSale->setChecked(true);
+            break;
+        case Section::kPurchase:
+            ui->rBtnPurchase->setChecked(true);
+            break;
+        default:
+            break;
+        }
+
         RSectionGroup(std::to_underlying(start_));
-        SetAction(true);
-        on_tabWidget_currentChanged(0);
     }
 
     {
-        // Delay template and model setup until event loop starts (non-blocking post-init)
-        QTimer::singleShot(0, this, [this]() {
-            PrintHub::Instance().ScanTemplate();
-            PrintHub::Instance().SetAppConfig(&app_config_);
-            PrintHub::Instance().SetPartnerModel(sc_p_.tree_model);
-            PrintHub::Instance().SetInventoryModel(sc_i_.tree_model);
-        });
+        PrintHub::Instance().ScanTemplate();
+        PrintHub::Instance().SetAppConfig(&app_config_);
+        PrintHub::Instance().SetPartnerModel(sc_p_.tree_model);
+        PrintHub::Instance().SetInventoryModel(sc_i_.tree_model);
     }
 }
 

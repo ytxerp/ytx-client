@@ -79,7 +79,7 @@ void WebSocket::Connect()
 void WebSocket::RConnected()
 {
     qInfo() << "Websocket connected";
-    emit SConnectionAccepted(true);
+    emit SConnectionSucceeded();
     InitTimer();
 }
 
@@ -92,21 +92,21 @@ void WebSocket::RDisconnected()
         return;
     }
 
-    if (!manual_disconnect_)
-        emit SRemoteHostClosed();
-
-    manual_disconnect_ = false;
-
     session_id_.clear();
 
     if (heartbeat_) {
         heartbeat_->stop();
     }
 
-    Connect();
+    if (manual_disconnect_)
+        Connect();
+    else
+        emit SRemoteHostClosed();
+
+    manual_disconnect_ = false;
 }
 
-void WebSocket::Close()
+void WebSocket::Reset()
 {
     if (socket_.state() == QAbstractSocket::ConnectedState || socket_.state() == QAbstractSocket::ConnectingState) {
         manual_disconnect_ = true;
@@ -118,7 +118,6 @@ void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
 {
     switch (error) {
     case QAbstractSocket::ConnectionRefusedError:
-        emit SConnectionRefused();
         qWarning() << "WebSocket connection refused! (The peer refused or timed out)";
         break;
     case QAbstractSocket::RemoteHostClosedError:
@@ -152,6 +151,8 @@ void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
         qWarning() << "WebSocket unknown error:" << error;
         break;
     }
+
+    emit SConnectionFailed();
 }
 
 void WebSocket::InitHandler()
@@ -296,13 +297,13 @@ void WebSocket::NotifyLoginResult(const QJsonObject& obj)
     const bool result { obj[kResult].toBool() };
     const int code { obj[kCode].toInt() };
 
-    emit SLoginResult(result, code);
-
     if (result) {
         session_id_ = obj[kSessionId].toString();
         const auto expire_time { QDateTime::fromString(obj[kExpireTime].toString(), Qt::ISODate) };
         const auto expire_date { expire_time.date().toString(kDateFST) };
-        emit SInitializeContext(expire_date);
+        emit SLoginSucceeded(expire_date);
+    } else {
+        emit SLoginFailed(code);
     }
 }
 

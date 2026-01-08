@@ -354,15 +354,15 @@ void MainWindow::SetUniqueConnection() const
 
     connect(section_group_, &QButtonGroup::idClicked, this, &MainWindow::RSectionGroup);
 
-    connect(WebSocket::Instance(), &WebSocket::SInitializeContext, this, &MainWindow::RInitializeContext);
     connect(WebSocket::Instance(), &WebSocket::SLeafRemoveDenied, this, &MainWindow::RLeafRemoveDenied);
     connect(WebSocket::Instance(), &WebSocket::SSharedConfig, this, &MainWindow::RSharedConfig);
     connect(WebSocket::Instance(), &WebSocket::SDefaultUnit, this, &MainWindow::RDefaultUnit);
     connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
     connect(WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
-    connect(WebSocket::Instance(), &WebSocket::SConnectionAccepted, this, &MainWindow::RConnectionAccepted);
-    connect(WebSocket::Instance(), &WebSocket::SConnectionRefused, this, &MainWindow::RConnectionRefused);
-    connect(WebSocket::Instance(), &WebSocket::SLoginResult, this, &MainWindow::RLoginResult);
+    connect(WebSocket::Instance(), &WebSocket::SConnectionSucceeded, this, &MainWindow::RConnectionSucceeded);
+    connect(WebSocket::Instance(), &WebSocket::SConnectionFailed, this, &MainWindow::RConnectionFailed);
+    connect(WebSocket::Instance(), &WebSocket::SLoginSucceeded, this, &MainWindow::RLoginSucceeded);
+    connect(WebSocket::Instance(), &WebSocket::SLoginFailed, this, &MainWindow::RLoginFailed);
     connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::RRemoteHostClosed);
     connect(WebSocket::Instance(), &WebSocket::SSelectLeafEntry, this, &MainWindow::RSelectLeafEntry);
     connect(WebSocket::Instance(), &WebSocket::SSaleReference, this, &MainWindow::RSaleReference);

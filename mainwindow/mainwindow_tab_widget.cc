@@ -22,11 +22,6 @@ void MainWindow::SetTabWidget()
     tab_widget->setMovable(true);
     tab_widget->setTabsClosable(true);
     tab_widget->setElideMode(Qt::ElideNone);
-
-    const int start_section { app_settings_->value(kStartSection, 0).toInt() };
-
-    start_ = Section(start_section);
-    section_group_->button(start_section)->setChecked(true);
 }
 
 void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
@@ -101,6 +96,9 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
 
 void MainWindow::on_tabWidget_currentChanged(int /*index*/)
 {
+    if (!section_settings_)
+        return;
+
     auto* widget { ui->tabWidget->currentWidget() };
     if (!widget)
         return;

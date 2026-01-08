@@ -31,13 +31,10 @@ AuthDialog::AuthDialog(const QSharedPointer<QSettings>& local_settings, QWidget*
 
 AuthDialog::~AuthDialog() { delete ui; }
 
-void AuthDialog::RLoginResult(bool result, int code)
-{
-    if (result) {
-        close();
-        return;
-    }
+void AuthDialog::RLoginSucceeded() { close(); }
 
+void AuthDialog::RLoginFailed(int code)
+{
     QString message {};
     QString title { tr("Login Failed") };
 
@@ -192,7 +189,8 @@ void AuthDialog::RLoginDialog()
 
 void AuthDialog::InitConnect()
 {
-    connect(WebSocket::Instance(), &WebSocket::SLoginResult, this, &AuthDialog::RLoginResult);
+    connect(WebSocket::Instance(), &WebSocket::SLoginSucceeded, this, &AuthDialog::RLoginSucceeded);
+    connect(WebSocket::Instance(), &WebSocket::SLoginFailed, this, &AuthDialog::RLoginFailed);
     connect(WebSocket::Instance(), &WebSocket::SRegisterResult, this, &AuthDialog::RRegisterResult);
 
     connect(ui->labelSignUp, &QLabel::linkActivated, this, &AuthDialog::RRegisterDialog);

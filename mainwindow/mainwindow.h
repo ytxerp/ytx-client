@@ -84,8 +84,6 @@ private slots:
     void on_tabWidget_tabBarDoubleClicked(int index);
     void on_tabWidget_tabCloseRequested(int index);
 
-    bool RInitializeContext(const QString& expire_date);
-
     void RNodeLocation(Section section, const QUuid& node_id);
     void REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
     void RNodeSelected(Section section, const QUuid& node_id);
@@ -95,10 +93,13 @@ private slots:
     void RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void RActionEntry(EntryAction action);
-    void RLoginResult(bool result);
-    void RConnectionAccepted();
-    void RConnectionRefused();
+
+    void RConnectionFailed();
+    void RConnectionSucceeded();
     void RRemoteHostClosed();
+
+    void RLoginSucceeded(const QString& expire_date);
+    void RLoginFailed();
 
     void RFreeWidget(Section section, const QUuid& node_id);
 

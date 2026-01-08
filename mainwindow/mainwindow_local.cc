@@ -27,6 +27,10 @@ void MainWindow::ReadLocalConfig()
     app_config_.company_name = app_settings_->value(kCompanyName).toString();
     app_settings_->endGroup();
 
+    app_settings_->beginGroup(kStart);
+    start_ = Section(app_settings_->value(kSection).toInt());
+    app_settings_->endGroup();
+
     LoginInfo::Instance().ReadConfig(app_settings_);
     WebSocket::Instance()->ReadConfig(app_settings_);
     WebSocket::Instance()->Connect();

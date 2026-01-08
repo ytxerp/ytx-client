@@ -36,8 +36,10 @@ public:
     ~AuthDialog() override;
 
 public slots:
-    void RLoginResult(bool result, int code);
     void RRegisterResult(bool result, int code);
+
+    void RLoginSucceeded();
+    void RLoginFailed(int code);
 
 private slots:
     void on_pushButtonLogin_clicked();
