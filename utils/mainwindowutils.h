@@ -29,14 +29,14 @@ namespace Utils {
 
 QString AccountIniFileName(const QString& email, const QString& workspace);
 
-void ExportExcel(CString& table, QSharedPointer<YXlsx::Worksheet> worksheet, bool where = true);
+void ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where = true);
 void Message(QMessageBox::Icon icon, CString& title, CString& text, int timeout);
 
 bool PrepareNewFile(QString& file_path, CString& suffix);
 void SwitchDialog(const SectionContext* sc, bool enable);
 int CompareVersion(const QString& v1, const QString& v2);
 
-void SetupHeaderStatus(QHeaderView* header, QSharedPointer<QSettings> settings, Section section, const QString& key);
+void SetupHeaderStatus(QHeaderView* header, const QSharedPointer<QSettings>& settings, Section section, const QString& key);
 
 // ============================================================================
 // Reserved Feature: RestoreTab

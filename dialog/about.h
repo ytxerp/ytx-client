@@ -31,7 +31,7 @@ class About final : public QDialog {
 
 public:
     explicit About(QWidget* parent = nullptr);
-    ~About();
+    ~About() override;
 
 private:
     void IniDialog();

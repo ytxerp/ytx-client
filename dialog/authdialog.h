@@ -32,8 +32,8 @@ class AuthDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit AuthDialog(QSharedPointer<QSettings> local_settings, QWidget* parent = nullptr);
-    ~AuthDialog();
+    explicit AuthDialog(const QSharedPointer<QSettings>& local_settings, QWidget* parent = nullptr);
+    ~AuthDialog() override;
 
 public slots:
     void RLoginResult(bool result, int code);

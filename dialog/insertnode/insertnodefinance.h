@@ -35,7 +35,7 @@ class InsertNodeFinance final : public QDialog {
 
 public:
     explicit InsertNodeFinance(CNodeInsertArg& arg, QWidget* parent = nullptr);
-    ~InsertNodeFinance();
+    ~InsertNodeFinance() override;
 
 private slots:
     void RNameEdited(const QString& arg1);

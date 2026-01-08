@@ -34,7 +34,7 @@ class TableModel : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    virtual ~TableModel();
+    ~TableModel() override;
     TableModel() = delete;
 
 protected:

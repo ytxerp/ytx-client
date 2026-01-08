@@ -33,7 +33,7 @@ class EditNodeName final : public QDialog {
 
 public:
     EditNodeName(CString& name, CString& parent_path, CStringList& children_name, QWidget* parent = nullptr);
-    ~EditNodeName();
+    ~EditNodeName() override;
 
 private slots:
     void RNameEdited(const QString& arg1);

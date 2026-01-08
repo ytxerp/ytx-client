@@ -30,7 +30,7 @@ class TableModelSettlement final : public QAbstractItemModel {
     Q_OBJECT
 public:
     TableModelSettlement(CSectionInfo& info, SettlementStatus status, QObject* parent = nullptr);
-    ~TableModelSettlement();
+    ~TableModelSettlement() override;
 
 signals:
     void SSyncAmount(double amount);

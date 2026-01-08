@@ -589,7 +589,7 @@ void MainWindow::on_actionExportExcel_triggered()
 
             book1->AppendSheet(sc_->info.entry);
             book1->GetCurrentWorksheet()->WriteRow(1, 1, sc_->info.full_entry_header);
-            const bool where { start_ == Section::kPartner ? false : true };
+            const bool where { start_ != Section::kPartner };
             Utils::ExportExcel(sc_->info.entry, book1->GetCurrentWorksheet(), where);
 
             d.Save();

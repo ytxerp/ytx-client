@@ -34,7 +34,7 @@ class EditDocument final : public QDialog {
 
 public:
     explicit EditDocument(QStringList& document, CString& document_path, QWidget* parent = nullptr);
-    ~EditDocument();
+    ~EditDocument() override;
 
 private slots:
     void on_pBtnAdd_clicked();

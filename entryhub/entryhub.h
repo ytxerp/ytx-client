@@ -31,7 +31,7 @@ class EntryHub : public QObject {
     Q_OBJECT
 
 public:
-    virtual ~EntryHub();
+    ~EntryHub() override;
 
 protected:
     explicit EntryHub(CSectionInfo& info, QObject* parent = nullptr);

@@ -30,7 +30,7 @@ class TableWidget : public QWidget {
     Q_OBJECT
 
 public:
-    virtual ~TableWidget() = default;
+    ~TableWidget() override { };
 
     virtual TableModel* Model() const = 0;
     virtual QTableView* View() const = 0;

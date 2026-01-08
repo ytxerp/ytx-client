@@ -9,7 +9,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-AuthDialog::AuthDialog(QSharedPointer<QSettings> local_settings, QWidget* parent)
+AuthDialog::AuthDialog(const QSharedPointer<QSettings>& local_settings, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::AuthDialog)
     , local_settings_ { local_settings }

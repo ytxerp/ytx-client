@@ -29,8 +29,8 @@ class LoginInfo {
 public:
     static LoginInfo& Instance();
 
-    void WriteConfig(QSharedPointer<QSettings> local_settings);
-    void ReadConfig(QSharedPointer<QSettings> local_settings);
+    void WriteConfig(const QSharedPointer<QSettings>& local_settings);
+    void ReadConfig(const QSharedPointer<QSettings>& local_settings);
 
     // Getter
     const QString& Email() const { return email_; }

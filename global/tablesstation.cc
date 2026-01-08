@@ -4,7 +4,7 @@
 
 TableSStation* TableSStation::Instance()
 {
-    static TableSStation* instance = new TableSStation(qApp);
+    static auto* instance = new TableSStation(qApp);
     Q_ASSERT(instance != nullptr);
     return instance;
 }

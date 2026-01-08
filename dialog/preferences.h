@@ -37,8 +37,8 @@ class Preferences final : public QDialog {
     Q_OBJECT
 
 public:
-    Preferences(CTreeModel* model, CSectionInfo& info, AppConfig app, SharedConfig shared, SectionConfig section, QWidget* parent = nullptr);
-    ~Preferences();
+    Preferences(CTreeModel* model, CSectionInfo& info, CAppConfig& app, CSharedConfig& shared, CSectionConfig& section, QWidget* parent = nullptr);
+    ~Preferences() override;
 
 signals:
     void SUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section);

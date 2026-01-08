@@ -36,7 +36,7 @@ class InsertNodeBranch final : public QDialog {
 
 public:
     InsertNodeBranch(Node* node, ItemModel* unit_model, CString& parent_path, CStringList& name_list, QWidget* parent = nullptr);
-    ~InsertNodeBranch();
+    ~InsertNodeBranch() override;
 
 private slots:
     void RNameEdited(const QString& arg1);

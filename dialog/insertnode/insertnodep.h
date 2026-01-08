@@ -35,7 +35,7 @@ class InsertNodeP final : public QDialog {
 
 public:
     explicit InsertNodeP(CNodeInsertArg& arg, QWidget* parent = nullptr);
-    ~InsertNodeP();
+    ~InsertNodeP() override;
 
 private slots:
     void RNameEdited(const QString& arg1);

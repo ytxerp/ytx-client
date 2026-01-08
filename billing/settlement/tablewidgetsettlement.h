@@ -42,7 +42,7 @@ signals:
 public:
     explicit TableWidgetSettlement(TreeModel* tree_model_partner, TableModelSettlement* model, const Settlement& settlement, bool is_persisted, Section section,
         CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent = nullptr);
-    ~TableWidgetSettlement();
+    ~TableWidgetSettlement() override;
 
     QTableView* View() const;
     TableModelSettlement* Model() const { return model_; }

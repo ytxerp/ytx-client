@@ -32,13 +32,13 @@ WebSocket::~WebSocket()
 
 WebSocket* WebSocket::Instance()
 {
-    static WebSocket* instance = new WebSocket(qApp);
+    static auto* instance = new WebSocket(qApp);
 
     Q_ASSERT(instance != nullptr);
     return instance;
 }
 
-void WebSocket::ReadConfig(QSharedPointer<QSettings> local_settings)
+void WebSocket::ReadConfig(const QSharedPointer<QSettings>& local_settings)
 {
     local_settings->beginGroup(kServer);
     const QString host { local_settings->value(kHost, "ytxerp.cc").toString() };

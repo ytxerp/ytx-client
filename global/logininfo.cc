@@ -9,7 +9,7 @@ LoginInfo& LoginInfo::Instance()
     return instance;
 }
 
-void LoginInfo::WriteConfig(QSharedPointer<QSettings> local_settings)
+void LoginInfo::WriteConfig(const QSharedPointer<QSettings>& local_settings)
 {
     if (!local_settings)
         return;
@@ -31,7 +31,7 @@ void LoginInfo::WriteConfig(QSharedPointer<QSettings> local_settings)
     local_settings->endGroup();
 }
 
-void LoginInfo::ReadConfig(QSharedPointer<QSettings> local_settings)
+void LoginInfo::ReadConfig(const QSharedPointer<QSettings>& local_settings)
 {
     if (!local_settings)
         return;

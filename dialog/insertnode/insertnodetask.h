@@ -35,7 +35,7 @@ class InsertNodeTask final : public QDialog {
 
 public:
     explicit InsertNodeTask(CNodeInsertArg& arg, QWidget* parent = nullptr);
-    ~InsertNodeTask();
+    ~InsertNodeTask() override;
 
 private slots:
     void RNameEdited(const QString& arg1);

@@ -31,7 +31,7 @@ using Utils::DerivedPtr;
 class SearchEntryModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    virtual ~SearchEntryModel() = default;
+    ~SearchEntryModel() override { };
 
 protected:
     explicit SearchEntryModel(CSectionInfo& info, QObject* parent = nullptr);

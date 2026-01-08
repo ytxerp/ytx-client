@@ -35,7 +35,7 @@ class InsertNodeI final : public QDialog {
 
 public:
     InsertNodeI(CNodeInsertArg& arg, int rate_decimal, QWidget* parent = nullptr);
-    ~InsertNodeI();
+    ~InsertNodeI() override;
 
 private slots:
     void RNameEdited(const QString& arg1);

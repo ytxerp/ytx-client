@@ -10,7 +10,7 @@
 #include "component/signalblocker.h"
 #include "ui_preferences.h"
 
-Preferences::Preferences(CTreeModel* model, CSectionInfo& info, AppConfig app, SharedConfig shared, SectionConfig section, QWidget* parent)
+Preferences::Preferences(CTreeModel* model, CSectionInfo& info, CAppConfig& app, CSharedConfig& shared, CSectionConfig& section, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::Preferences)
     , app_ { app }

@@ -35,7 +35,7 @@ class WebSocket final : public QObject {
 public:
     static WebSocket* Instance();
 
-    void ReadConfig(QSharedPointer<QSettings> local_settings);
+    void ReadConfig(const QSharedPointer<QSettings>& local_settings);
     void Connect();
     void SendMessage(const QString& type, const QJsonObject& value);
     void Close();
@@ -93,7 +93,7 @@ private slots:
 
 private:
     explicit WebSocket(QObject* parent = nullptr);
-    ~WebSocket();
+    ~WebSocket() override;
 
     void InitHandler();
     void InitConnect();

@@ -32,7 +32,7 @@ public slots:
     virtual void RInitStatus() { };
 
 public:
-    virtual ~TreeWidget() = default;
+    ~TreeWidget() override { };
 
     virtual QTreeView* View() const = 0;
 

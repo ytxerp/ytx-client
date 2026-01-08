@@ -32,7 +32,7 @@ using Utils::DerivedPtr;
 class SearchNodeModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    virtual ~SearchNodeModel() = default;
+    ~SearchNodeModel() override { };
 
 public slots:
     virtual void RNodeSearch(const QJsonObject& obj) { Q_UNUSED(obj) }

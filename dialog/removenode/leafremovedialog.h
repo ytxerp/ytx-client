@@ -37,7 +37,7 @@ signals:
 
 public:
     LeafRemoveDialog(CTreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, int unit, QWidget* parent = nullptr);
-    ~LeafRemoveDialog();
+    ~LeafRemoveDialog() override;
 
 private slots:
     void on_pBtnOk_clicked();

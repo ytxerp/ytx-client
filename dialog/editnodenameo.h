@@ -33,7 +33,7 @@ class EditNodeNameO final : public QDialog {
 
 public:
     explicit EditNodeNameO(CString& name, QWidget* parent = nullptr);
-    ~EditNodeNameO();
+    ~EditNodeNameO() override;
 
 public:
     QString GetName() const;

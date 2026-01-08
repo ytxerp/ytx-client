@@ -3,7 +3,6 @@
 #include <QJsonArray>
 
 #include "enum/entryenum.h"
-#include "global/collator.h"
 #include "global/entrypool.h"
 #include "utils/compareutils.h"
 #include "websocket/jsongen.h"
@@ -90,7 +89,7 @@ void TableModelO::Finalize(QJsonObject& message)
 QVariant TableModelO::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
-        return QVariant();
+        return {};
 
     auto* d_entry = DerivedPtr<EntryO>(entry_list_.at(index.row()));
     const EntryEnumO column { index.column() };
@@ -131,7 +130,7 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
     case EntryEnumO::kExternalSku:
         return d_entry->external_sku;
     default:
-        return QVariant();
+        return {};
     }
 }
 

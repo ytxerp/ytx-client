@@ -30,7 +30,7 @@ class TreeModelSettlement final : public QAbstractItemModel {
     Q_OBJECT
 public:
     explicit TreeModelSettlement(CSectionInfo& info, QObject* parent = nullptr);
-    ~TreeModelSettlement();
+    ~TreeModelSettlement() override;
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;

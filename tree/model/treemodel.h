@@ -35,7 +35,7 @@ class TreeModel : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    virtual ~TreeModel();
+    ~TreeModel() override;
 
 protected:
     explicit TreeModel(CSectionInfo& info, CString& separator, int default_unit, QObject* parent = nullptr);

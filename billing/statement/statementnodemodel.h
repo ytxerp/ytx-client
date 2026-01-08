@@ -29,7 +29,7 @@ class StatementNodeModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
     StatementNodeModel(CSectionInfo& info, const QUuid& partner_id, QObject* parent = nullptr);
-    ~StatementNodeModel();
+    ~StatementNodeModel() override;
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;

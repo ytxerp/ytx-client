@@ -19,7 +19,7 @@ bool Utils::PrepareNewFile(QString& file_path, CString& suffix)
     return true;
 }
 
-void Utils::ExportExcel(CString& table, QSharedPointer<YXlsx::Worksheet> worksheet, bool where)
+void Utils::ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where)
 {
     if (!worksheet) {
         return;
@@ -70,7 +70,7 @@ void Utils::SwitchDialog(const SectionContext* sc, bool enable)
         return;
 
     const auto& list { sc->dialog_list };
-    for (auto dialog : list) {
+    for (const auto& dialog : list) {
         if (dialog) {
             dialog->setVisible(enable);
         }
@@ -127,7 +127,7 @@ QString Utils::AccountIniFileName(const QString& email, const QString& workspace
     return file_name;
 }
 
-void Utils::SetupHeaderStatus(QHeaderView* header, QSharedPointer<QSettings> settings, Section section, const QString& key)
+void Utils::SetupHeaderStatus(QHeaderView* header, const QSharedPointer<QSettings>& settings, Section section, const QString& key)
 {
     assert(header && settings);
 

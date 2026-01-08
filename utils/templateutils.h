@@ -113,14 +113,14 @@ template <InheritQAbstractItemView T> bool HasSelection(QPointer<T> view) { retu
 
 template <InheritQAbstractItemView T> bool HasSelection(T* view) { return view && view->selectionModel() && view->selectionModel()->hasSelection(); }
 
-inline void WriteConfig(QSharedPointer<QSettings> settings, const QVariant& value, CString& section, CString& property)
+inline void WriteConfig(const QSharedPointer<QSettings>& settings, const QVariant& value, CString& section, CString& property)
 {
     assert(settings);
     settings->setValue(QString("%1/%2").arg(section, property), value);
 }
 
 template <InheritQWidget Widget, MemberFunction Function, typename... Args>
-void WriteConfig(Widget* widget, Function function, QSharedPointer<QSettings> settings, CString& section, CString& property, Args&&... args)
+void WriteConfig(Widget* widget, Function function, const QSharedPointer<QSettings>& settings, CString& section, CString& property, Args&&... args)
 {
     static_assert(std::is_same_v<decltype((std::declval<Widget>().*function)(std::forward<Args>(args)...)), QByteArray>, "Function must return QByteArray");
 
@@ -132,7 +132,7 @@ void WriteConfig(Widget* widget, Function function, QSharedPointer<QSettings> se
 }
 
 template <InheritQWidget Widget, MemberFunction Function, typename... Args>
-void ReadConfig(Widget* widget, Function function, QSharedPointer<QSettings> settings, CString& section, CString& property, Args&&... args)
+void ReadConfig(Widget* widget, Function function, const QSharedPointer<QSettings>& settings, CString& section, CString& property, Args&&... args)
 {
     static_assert(std::is_same_v<decltype((std::declval<Widget>().*function)(std::declval<QByteArray>(), std::declval<Args>()...)), bool>,
         "Function must accept QByteArray and additional arguments, and return bool");

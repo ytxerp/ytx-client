@@ -70,7 +70,7 @@ public slots:
 
 private:
     explicit TableSStation(QObject* parent = nullptr);
-    ~TableSStation() = default;
+    ~TableSStation() override { };
 
     const TableModel* FindModel(const QUuid& node_id) const
     {

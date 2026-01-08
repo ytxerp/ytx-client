@@ -1,0 +1,46 @@
+---
+# Minimal noise configuration for Qt projects
+Checks: >
+  -*,
+  bugprone-assert-side-effect,
+  bugprone-dangling-handle,
+  bugprone-inaccurate-erase,
+  bugprone-infinite-loop,
+  bugprone-integer-division,
+  bugprone-move-forwarding-reference,
+  bugprone-string-constructor,
+  bugprone-use-after-move,
+  clang-analyzer-core.DivideZero,
+  clang-analyzer-core.NullDereference,
+  clang-analyzer-cplusplus.NewDelete,
+  clang-analyzer-cplusplus.NewDeleteLeaks,
+  clang-analyzer-deadcode.DeadStores,
+  modernize-make-shared,
+  modernize-make-unique,
+  modernize-use-auto,
+  modernize-use-nullptr,
+  modernize-use-override,
+  modernize-loop-convert,
+  performance-faster-string-find,
+  performance-for-range-copy,
+  performance-inefficient-string-concatenation,
+  performance-inefficient-vector-operation,
+  performance-move-const-arg,
+  performance-unnecessary-copy-initialization,
+  performance-unnecessary-value-param,
+  readability-container-size-empty,
+  readability-redundant-string-cstr,
+  readability-simplify-boolean-expr,
+  readability-string-compare
+
+WarningsAsErrors: ''
+
+# Only check your source files, not Qt headers
+HeaderFilterRegex: '^(src|include|tree|table|billing|global)/.*'
+
+CheckOptions:
+  - key: modernize-use-nullptr.NullMacros
+    value: 'NULL,Q_NULLPTR'
+  # Qt types are intentionally passed by value
+  - key: performance-unnecessary-value-param.AllowedTypes
+    value: 'QString;QStringView;QByteArray;QVariant;QModelIndex;QPersistentModelIndex;QPoint;QPointF;QSize;QSizeF;QRect;QRectF'
