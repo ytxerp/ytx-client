@@ -48,6 +48,8 @@ MainWindow::MainWindow(QWidget* parent)
     Utils::ReadConfig(ui->splitter, &QSplitter::restoreState, app_settings_, kSplitter, kState);
     Utils::ReadConfig(this, &QMainWindow::restoreState, app_settings_, kMainwindow, kState, 0);
     Utils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
+
+    QTimer::singleShot(0, this, &::MainWindow::InitilizeContext);
 }
 
 void MainWindow::SetRemoveShortcut()

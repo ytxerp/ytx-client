@@ -33,17 +33,15 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
 
             section_settings_ = QSharedPointer<QSettings>::create(ini_file, QSettings::IniFormat);
         }
-
-        InitContext();
     }
 
     {
-        InitContextFinance();
-        InitContextTask();
-        InitContextInventory();
-        InitContextPartner();
-        InitContextSale();
-        InitContextPurchase();
+        ReadSectionConfig(sc_f_.section_config, kFinance);
+        ReadSectionConfig(sc_i_.section_config, kInventory);
+        ReadSectionConfig(sc_t_.section_config, kTask);
+        ReadSectionConfig(sc_p_.section_config, kPartner);
+        ReadSectionConfig(sc_sale_.section_config, kSale);
+        ReadSectionConfig(sc_purchase_.section_config, kPurchase);
     }
 
     {
@@ -149,15 +147,15 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
     }
 }
 
-void MainWindow::InitContext()
+void MainWindow::InitilizeContext()
 {
     {
-        ReadSectionConfig(sc_f_.section_config, kFinance);
-        ReadSectionConfig(sc_i_.section_config, kInventory);
-        ReadSectionConfig(sc_t_.section_config, kTask);
-        ReadSectionConfig(sc_p_.section_config, kPartner);
-        ReadSectionConfig(sc_sale_.section_config, kSale);
-        ReadSectionConfig(sc_purchase_.section_config, kPurchase);
+        InitContextFinance();
+        InitContextTask();
+        InitContextInventory();
+        InitContextPartner();
+        InitContextSale();
+        InitContextPurchase();
     }
 }
 
