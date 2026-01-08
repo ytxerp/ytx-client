@@ -4,8 +4,8 @@
 #include "tree/includemultiplefiltermodel.h"
 #include "utils/compareutils.h"
 
-TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
-    : TreeModel(info, separator, default_unit, parent)
+TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, QObject* parent)
+    : TreeModel(info, separator, parent)
 {
     leaf_path_model_ = new ItemModel(this);
     leaf_path_model_->AppendItem(QString(), QUuid());

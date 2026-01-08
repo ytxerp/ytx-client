@@ -197,7 +197,7 @@ void MainWindow::InitContextFinance()
     ReadSectionConfig(section_config, kFinance);
 
     entry_hub = new EntryHubF(info, this);
-    tree_model = new TreeModelF(info, app_config_.separator, shared_config.default_unit, this);
+    tree_model = new TreeModelF(info, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kFinance, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kFinance, entry_hub);
@@ -213,7 +213,6 @@ void MainWindow::InitContextInventory()
 {
     auto& info { sc_i_.info };
     auto& section_config { sc_i_.section_config };
-    auto& shared_config { sc_i_.shared_config };
     auto& entry_hub { sc_i_.entry_hub };
     auto& tree_model { sc_i_.tree_model };
     auto& tree_view { sc_i_.tree_view };
@@ -240,7 +239,7 @@ void MainWindow::InitContextInventory()
     ReadSectionConfig(section_config, kInventory);
 
     entry_hub = new EntryHubI(info, this);
-    tree_model = new TreeModelI(info, app_config_.separator, shared_config.default_unit, this);
+    tree_model = new TreeModelI(info, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kInventory, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kInventory, entry_hub);
@@ -256,7 +255,6 @@ void MainWindow::InitContextTask()
 {
     auto& info { sc_t_.info };
     auto& section_config { sc_t_.section_config };
-    auto& shared_config { sc_t_.shared_config };
     auto& entry_hub { sc_t_.entry_hub };
     auto& tree_model { sc_t_.tree_model };
     auto& tree_view { sc_t_.tree_view };
@@ -283,7 +281,7 @@ void MainWindow::InitContextTask()
     ReadSectionConfig(section_config, kTask);
 
     entry_hub = new EntryHubT(info, this);
-    tree_model = new TreeModelT(info, app_config_.separator, shared_config.default_unit, this);
+    tree_model = new TreeModelT(info, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kTask, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kTask, entry_hub);
@@ -299,7 +297,6 @@ void MainWindow::InitContextPartner()
 {
     auto& info { sc_p_.info };
     auto& section_config { sc_p_.section_config };
-    auto& shared_config { sc_p_.shared_config };
     auto& entry_hub { sc_p_.entry_hub };
     auto& tree_model { sc_p_.tree_model };
     auto& tree_view { sc_p_.tree_view };
@@ -322,7 +319,7 @@ void MainWindow::InitContextPartner()
     ReadSectionConfig(section_config, kPartner);
 
     entry_hub = new EntryHubP(info, this);
-    tree_model = new TreeModelP(info, app_config_.separator, shared_config.default_unit, this);
+    tree_model = new TreeModelP(info, app_config_.separator, this);
 
     WebSocket::Instance()->RegisterTreeModel(Section::kPartner, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kPartner, entry_hub);
@@ -335,7 +332,6 @@ void MainWindow::InitContextSale()
 {
     auto& info { sc_sale_.info };
     auto& section_config { sc_sale_.section_config };
-    auto& shared_config { sc_sale_.shared_config };
     auto& entry_hub { sc_sale_.entry_hub };
     auto& tree_model { sc_sale_.tree_model };
     auto& tree_view { sc_sale_.tree_view };
@@ -365,7 +361,7 @@ void MainWindow::InitContextSale()
     ReadSectionConfig(section_config, kSale);
 
     auto* entry_hub_o = new EntryHubO(info, this);
-    auto* tree_model_o = new TreeModelO(info, app_config_.separator, shared_config.default_unit, this);
+    auto* tree_model_o = new TreeModelO(info, app_config_.separator, this);
 
     entry_hub = entry_hub_o;
     tree_model = tree_model_o;
@@ -387,7 +383,6 @@ void MainWindow::InitContextPurchase()
 {
     auto& info { sc_purchase_.info };
     auto& section_config { sc_purchase_.section_config };
-    auto& shared_config { sc_purchase_.shared_config };
     auto& entry_hub { sc_purchase_.entry_hub };
     auto& tree_model { sc_purchase_.tree_model };
     auto& tree_view { sc_purchase_.tree_view };
@@ -417,7 +412,7 @@ void MainWindow::InitContextPurchase()
     ReadSectionConfig(section_config, kPurchase);
 
     auto* entry_hub_o = new EntryHubO(info, this);
-    auto* tree_model_o = new TreeModelO(info, app_config_.separator, shared_config.default_unit, this);
+    auto* tree_model_o = new TreeModelO(info, app_config_.separator, this);
 
     entry_hub = entry_hub_o;
     tree_model = tree_model_o;

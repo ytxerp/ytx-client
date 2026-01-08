@@ -2,8 +2,8 @@
 
 #include "utils/compareutils.h"
 
-TreeModelF::TreeModelF(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
-    : TreeModel(info, separator, default_unit, parent)
+TreeModelF::TreeModelF(CSectionInfo& info, CString& separator, QObject* parent)
+    : TreeModel(info, separator, parent)
 {
     leaf_path_model_ = new ItemModel(this);
 }

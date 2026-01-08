@@ -26,7 +26,7 @@ class TreeModelT final : public TreeModel {
     Q_OBJECT
 
 public:
-    TreeModelT(CSectionInfo& info, CString& separator, int default_unit, QObject* parent = nullptr);
+    TreeModelT(CSectionInfo& info, CString& separator, QObject* parent = nullptr);
     ~TreeModelT() override = default;
 
 public:

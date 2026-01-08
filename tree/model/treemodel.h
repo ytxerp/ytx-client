@@ -38,7 +38,7 @@ public:
     ~TreeModel() override;
 
 protected:
-    explicit TreeModel(CSectionInfo& info, CString& separator, int default_unit, QObject* parent = nullptr);
+    explicit TreeModel(CSectionInfo& info, CString& separator, QObject* parent = nullptr);
 
 signals:
     // send to LeafSStation
@@ -171,7 +171,7 @@ public:
 protected:
     void SortModel();
 
-    void InitRoot(Node*& root, int default_unit);
+    void InitRoot(Node*& root);
 
     void BuildHierarchy(const QJsonArray& path_array);
 

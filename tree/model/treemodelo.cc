@@ -2,13 +2,12 @@
 
 #include <QJsonArray>
 
-#include "global/collator.h"
 #include "global/nodepool.h"
 #include "utils/compareutils.h"
 #include "websocket/jsongen.h"
 
-TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
-    : TreeModel(info, separator, default_unit, parent)
+TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, QObject* parent)
+    : TreeModel(info, separator, parent)
 {
 }
 

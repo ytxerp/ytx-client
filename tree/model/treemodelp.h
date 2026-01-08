@@ -26,7 +26,7 @@ class TreeModelP final : public TreeModel {
     Q_OBJECT
 
 public:
-    TreeModelP(CSectionInfo& info, CString& separator, int default_unit, QObject* parent = nullptr);
+    TreeModelP(CSectionInfo& info, CString& separator, QObject* parent = nullptr);
     ~TreeModelP() override = default;
 
 public slots:

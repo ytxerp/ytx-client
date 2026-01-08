@@ -9,13 +9,13 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TreeModel::TreeModel(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
+TreeModel::TreeModel(CSectionInfo& info, CString& separator, QObject* parent)
     : QAbstractItemModel(parent)
     , separator_ { separator }
     , section_ { info.section }
     , node_header_ { info.node_header }
 {
-    InitRoot(root_, default_unit);
+    InitRoot(root_);
 }
 
 TreeModel::~TreeModel()
@@ -697,12 +697,11 @@ void TreeModel::SortModel()
 // Initialize the root node.
 // Root is always represented by an empty QUuid as its ID.
 // Root always has direction_rule = true by definition.
-void TreeModel::InitRoot(Node*& root, int default_unit)
+void TreeModel::InitRoot(Node*& root)
 {
     if (root == nullptr) {
         root = NodePool::Instance().Allocate(section_);
         root->kind = std::to_underlying(NodeKind::kBranch);
-        root->unit = default_unit;
         root->direction_rule = false;
         root->name = QString();
         root->id = QUuid();

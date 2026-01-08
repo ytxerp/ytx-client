@@ -2,13 +2,12 @@
 
 #include <QJsonArray>
 
-#include "global/collator.h"
 #include "utils/compareutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TreeModelT::TreeModelT(CSectionInfo& info, CString& separator, int default_unit, QObject* parent)
-    : TreeModel(info, separator, default_unit, parent)
+TreeModelT::TreeModelT(CSectionInfo& info, CString& separator, QObject* parent)
+    : TreeModel(info, separator, parent)
 {
     leaf_path_model_ = new ItemModel(this);
 }
