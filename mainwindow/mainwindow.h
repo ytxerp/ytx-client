@@ -145,6 +145,7 @@ private:
     void SetUniqueConnection() const;
     void SetIcon() const;
 
+    void InitContext();
     void InitContextFinance();
     void InitContextInventory();
     void InitContextPartner();

@@ -33,6 +33,8 @@ bool MainWindow::RInitializeContext(const QString& expire_date)
 
             section_settings_ = QSharedPointer<QSettings>::create(ini_file, QSettings::IniFormat);
         }
+
+        InitContext();
     }
 
     {
@@ -147,6 +149,18 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
     }
 }
 
+void MainWindow::InitContext()
+{
+    {
+        ReadSectionConfig(sc_f_.section_config, kFinance);
+        ReadSectionConfig(sc_i_.section_config, kInventory);
+        ReadSectionConfig(sc_t_.section_config, kTask);
+        ReadSectionConfig(sc_p_.section_config, kPartner);
+        ReadSectionConfig(sc_sale_.section_config, kSale);
+        ReadSectionConfig(sc_purchase_.section_config, kPurchase);
+    }
+}
+
 void MainWindow::InitContextFinance()
 {
     auto& info { sc_f_.info };
@@ -194,8 +208,6 @@ void MainWindow::InitContextFinance()
     info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
     info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
 
-    ReadSectionConfig(section_config, kFinance);
-
     entry_hub = new EntryHubF(info, this);
     tree_model = new TreeModelF(info, app_config_.separator, this);
 
@@ -235,8 +247,6 @@ void MainWindow::InitContextInventory()
 
     info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
     info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
-
-    ReadSectionConfig(section_config, kInventory);
 
     entry_hub = new EntryHubI(info, this);
     tree_model = new TreeModelI(info, app_config_.separator, this);
@@ -278,8 +288,6 @@ void MainWindow::InitContextTask()
     info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
     info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
 
-    ReadSectionConfig(section_config, kTask);
-
     entry_hub = new EntryHubT(info, this);
     tree_model = new TreeModelT(info, app_config_.separator, this);
 
@@ -296,7 +304,6 @@ void MainWindow::InitContextTask()
 void MainWindow::InitContextPartner()
 {
     auto& info { sc_p_.info };
-    auto& section_config { sc_p_.section_config };
     auto& entry_hub { sc_p_.entry_hub };
     auto& tree_model { sc_p_.tree_model };
     auto& tree_view { sc_p_.tree_view };
@@ -316,8 +323,6 @@ void MainWindow::InitContextPartner()
 
     info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
 
-    ReadSectionConfig(section_config, kPartner);
-
     entry_hub = new EntryHubP(info, this);
     tree_model = new TreeModelP(info, app_config_.separator, this);
 
@@ -331,7 +336,6 @@ void MainWindow::InitContextPartner()
 void MainWindow::InitContextSale()
 {
     auto& info { sc_sale_.info };
-    auto& section_config { sc_sale_.section_config };
     auto& entry_hub { sc_sale_.entry_hub };
     auto& tree_model { sc_sale_.tree_model };
     auto& tree_view { sc_sale_.tree_view };
@@ -358,8 +362,6 @@ void MainWindow::InitContextSale()
 
     info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
 
-    ReadSectionConfig(section_config, kSale);
-
     auto* entry_hub_o = new EntryHubO(info, this);
     auto* tree_model_o = new TreeModelO(info, app_config_.separator, this);
 
@@ -382,7 +384,6 @@ void MainWindow::InitContextSale()
 void MainWindow::InitContextPurchase()
 {
     auto& info { sc_purchase_.info };
-    auto& section_config { sc_purchase_.section_config };
     auto& entry_hub { sc_purchase_.entry_hub };
     auto& tree_model { sc_purchase_.tree_model };
     auto& tree_view { sc_purchase_.tree_view };
@@ -408,8 +409,6 @@ void MainWindow::InitContextPurchase()
     info.unit_model->sort(0, Qt::DescendingOrder);
 
     info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
-
-    ReadSectionConfig(section_config, kPurchase);
 
     auto* entry_hub_o = new EntryHubO(info, this);
     auto* tree_model_o = new TreeModelO(info, app_config_.separator, this);
