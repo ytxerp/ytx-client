@@ -20,6 +20,9 @@
 
 void MainWindow::on_actionSearch_triggered()
 {
+    if (!section_settings_)
+        return;
+
     SearchNodeModel* node {};
     SearchEntryModel* entry {};
     SearchDialog* dialog {};

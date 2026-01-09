@@ -70,6 +70,18 @@ QVariant SearchEntryModel::data(const QModelIndex& index, int role) const
     switch (column) {
     case FullEntryEnum::kId:
         return entry->id;
+    case FullEntryEnum::kUpdateBy:
+        return entry->updated_by;
+    case FullEntryEnum::kUpdateTime:
+        return entry->updated_time;
+    case FullEntryEnum::kCreateTime:
+        return entry->created_time;
+    case FullEntryEnum::kCreateBy:
+        return entry->created_by;
+    case FullEntryEnum::kVersion:
+        return entry->version;
+    case FullEntryEnum::kUserId:
+        return entry->user_id;
     case FullEntryEnum::kIssuedTime:
         return entry->issued_time;
     case FullEntryEnum::kCode:
@@ -135,7 +147,13 @@ void SearchEntryModel::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Entry::rhs_rate, order);
         case FullEntryEnum::kRhsNode:
             return Utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
-        default:
+        case FullEntryEnum::kId:
+        case FullEntryEnum::kUpdateBy:
+        case FullEntryEnum::kUpdateTime:
+        case FullEntryEnum::kCreateTime:
+        case FullEntryEnum::kCreateBy:
+        case FullEntryEnum::kVersion:
+        case FullEntryEnum::kUserId:
             return false;
         }
     };

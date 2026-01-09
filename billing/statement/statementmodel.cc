@@ -64,7 +64,7 @@ QVariant StatementModel::data(const QModelIndex& index, int role) const
         return statement->ccount;
     case StatementEnum::kCMeasure:
         return statement->cmeasure;
-    default:
+    case StatementEnum::kPlaceholder:
         return QVariant();
     }
 }
@@ -99,7 +99,7 @@ void StatementModel::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Statement::ccount, order);
         case StatementEnum::kCMeasure:
             return Utils::CompareMember(lhs, rhs, &Statement::cmeasure, order);
-        default:
+        case StatementEnum::kPlaceholder:
             return false;
         }
     };

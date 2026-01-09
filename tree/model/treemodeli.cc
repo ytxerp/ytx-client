@@ -100,7 +100,13 @@ void TreeModelI::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumI::kFinalTotal:
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
-        default:
+        case NodeEnumI::kId:
+        case NodeEnumI::kUpdateBy:
+        case NodeEnumI::kUpdateTime:
+        case NodeEnumI::kCreateTime:
+        case NodeEnumI::kCreateBy:
+        case NodeEnumI::kVersion:
+        case NodeEnumI::kUserId:
             return false;
         }
     };
@@ -201,7 +207,18 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumI::kUnitPrice:
         Utils::UpdateDouble(pending_updates_[id], d_node, kUnitPrice, value.toDouble(), &NodeI::unit_price, [id, this]() { RestartTimer(id); });
         break;
-    default:
+    case NodeEnumI::kId:
+    case NodeEnumI::kUpdateBy:
+    case NodeEnumI::kUpdateTime:
+    case NodeEnumI::kCreateTime:
+    case NodeEnumI::kCreateBy:
+    case NodeEnumI::kVersion:
+    case NodeEnumI::kUserId:
+    case NodeEnumI::kName:
+    case NodeEnumI::kKind:
+    case NodeEnumI::kUnit:
+    case NodeEnumI::kInitialTotal:
+    case NodeEnumI::kFinalTotal:
         return false;
     }
 

@@ -194,8 +194,9 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         case Section::kPartner:
             table_model = new TableModelP(arg, nullptr);
             break;
-        default:
-            break;
+        case Section::kSale:
+        case Section::kPurchase:
+            return;
         }
     }
 
@@ -234,8 +235,9 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
             TableConnectP(view, table_model);
             static_cast<EntryHubP*>(sc_->entry_hub.data())->PushEntry(node_id);
             break;
-        default:
-            break;
+        case Section::kSale:
+        case Section::kPurchase:
+            return;
         }
     }
 

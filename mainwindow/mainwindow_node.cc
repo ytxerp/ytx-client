@@ -49,7 +49,7 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
         break;
     case Section::kSale:
     case Section::kPurchase:
-        break;
+        return;
     }
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {

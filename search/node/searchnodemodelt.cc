@@ -45,6 +45,18 @@ QVariant SearchNodeModelT::data(const QModelIndex& index, int role) const
         return d_node->name;
     case NodeEnumT::kId:
         return d_node->id;
+    case NodeEnumT::kUpdateBy:
+        return d_node->updated_by;
+    case NodeEnumT::kUpdateTime:
+        return d_node->updated_time;
+    case NodeEnumT::kCreateTime:
+        return d_node->created_time;
+    case NodeEnumT::kCreateBy:
+        return d_node->created_by;
+    case NodeEnumT::kVersion:
+        return d_node->version;
+    case NodeEnumT::kUserId:
+        return d_node->user_id;
     case NodeEnumT::kCode:
         return d_node->code;
     case NodeEnumT::kDescription:
@@ -67,6 +79,8 @@ QVariant SearchNodeModelT::data(const QModelIndex& index, int role) const
         return d_node->initial_total;
     case NodeEnumT::kFinalTotal:
         return d_node->final_total;
+    case NodeEnumT::kIssuedTime:
+        return d_node->issued_time;
     default:
         return QVariant();
     }
@@ -109,8 +123,13 @@ void SearchNodeModelT::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumT::kFinalTotal:
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
-
-        default:
+        case NodeEnumT::kId:
+        case NodeEnumT::kUpdateBy:
+        case NodeEnumT::kUpdateTime:
+        case NodeEnumT::kCreateTime:
+        case NodeEnumT::kCreateBy:
+        case NodeEnumT::kVersion:
+        case NodeEnumT::kUserId:
             return false;
         }
     };

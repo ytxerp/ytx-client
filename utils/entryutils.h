@@ -41,9 +41,9 @@ constexpr int LinkedNodeColumn(Section section)
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(EntryEnumO::kRhsNode);
-    default:
-        return -1;
     }
+
+    Q_UNREACHABLE();
 }
 
 constexpr int EntryDescriptionColumn(Section section)
@@ -58,8 +58,6 @@ constexpr int EntryDescriptionColumn(Section section)
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(EntryEnumO::kDescription);
-    default:
-        return -1;
     }
 }
 
@@ -70,9 +68,13 @@ constexpr int BalanceColumn(Section section)
     case Section::kTask:
     case Section::kInventory:
         return std::to_underlying(EntryEnum::kBalance);
-    default:
+    case Section::kPartner:
+    case Section::kSale:
+    case Section::kPurchase:
         return -1;
     }
+
+    Q_UNREACHABLE();
 }
 
 constexpr std::pair<int, int> EntryCacheColumnRange(Section section)
@@ -87,9 +89,9 @@ constexpr std::pair<int, int> EntryCacheColumnRange(Section section)
     case Section::kSale:
     case Section::kPurchase:
         return { std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kExternalSku) };
-    default:
-        return { -1, -1 };
     }
+
+    Q_UNREACHABLE();
 }
 
 constexpr std::pair<int, int> EntryNumericColumnRange(Section section)
@@ -104,9 +106,9 @@ constexpr std::pair<int, int> EntryNumericColumnRange(Section section)
     case Section::kSale:
     case Section::kPurchase:
         return { std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kFinal) };
-    default:
-        return { -1, -1 };
     }
+
+    Q_UNREACHABLE();
 }
 
 template <typename T, typename F = std::nullptr_t>

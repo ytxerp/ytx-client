@@ -210,7 +210,14 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
     case EntryEnumP::kExternalSku:
         Utils::UpdateUuid(pending_updates_[id], d_entry, kExternalSku, value.toUuid(), &EntryP::external_sku, [id, this]() { RestartTimer(id); });
         break;
-    default:
+    case EntryEnumP::kId:
+    case EntryEnumP::kUpdateBy:
+    case EntryEnumP::kUpdateTime:
+    case EntryEnumP::kCreateTime:
+    case EntryEnumP::kCreateBy:
+    case EntryEnumP::kVersion:
+    case EntryEnumP::kUserId:
+    case EntryEnumP::kLhsNode:
         return false;
     }
 
@@ -245,7 +252,14 @@ void TableModelP::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(d_lhs, d_rhs, &EntryP::external_sku, order);
         case EntryEnumP::kRhsNode:
             return Utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
-        default:
+        case EntryEnumP::kId:
+        case EntryEnumP::kUpdateBy:
+        case EntryEnumP::kUpdateTime:
+        case EntryEnumP::kCreateTime:
+        case EntryEnumP::kCreateBy:
+        case EntryEnumP::kVersion:
+        case EntryEnumP::kUserId:
+        case EntryEnumP::kLhsNode:
             return false;
         }
     };

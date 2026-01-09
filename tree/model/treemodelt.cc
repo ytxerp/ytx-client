@@ -115,7 +115,18 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumT::kStatus:
         UpdateStatus(node, value.toInt());
         break;
-    default:
+    case NodeEnumT::kId:
+    case NodeEnumT::kUpdateBy:
+    case NodeEnumT::kUpdateTime:
+    case NodeEnumT::kCreateTime:
+    case NodeEnumT::kCreateBy:
+    case NodeEnumT::kVersion:
+    case NodeEnumT::kUserId:
+    case NodeEnumT::kName:
+    case NodeEnumT::kKind:
+    case NodeEnumT::kUnit:
+    case NodeEnumT::kInitialTotal:
+    case NodeEnumT::kFinalTotal:
         return false;
     }
 
@@ -160,8 +171,13 @@ void TreeModelT::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumT::kFinalTotal:
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
-
-        default:
+        case NodeEnumT::kId:
+        case NodeEnumT::kUpdateBy:
+        case NodeEnumT::kUpdateTime:
+        case NodeEnumT::kCreateTime:
+        case NodeEnumT::kCreateBy:
+        case NodeEnumT::kVersion:
+        case NodeEnumT::kUserId:
             return false;
         }
     };

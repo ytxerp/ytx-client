@@ -123,7 +123,7 @@ void TableModelSettlement::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &SettlementItem::amount, order);
         case SettlementItemEnum::kIsSelected:
             return Utils::CompareMember(lhs, rhs, &SettlementItem::is_selected, order);
-        default:
+        case SettlementItemEnum::kId:
             return false;
         }
     };

@@ -82,8 +82,19 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumF::kDirectionRule:
         UpdateDirectionRule(node, value.toBool());
         break;
-    default:
-        return false;
+    case NodeEnumF::kId:
+    case NodeEnumF::kUpdateBy:
+    case NodeEnumF::kUpdateTime:
+    case NodeEnumF::kCreateTime:
+    case NodeEnumF::kCreateBy:
+    case NodeEnumF::kVersion:
+    case NodeEnumF::kUserId:
+    case NodeEnumF::kName:
+    case NodeEnumF::kKind:
+    case NodeEnumF::kUnit:
+    case NodeEnumF::kInitialTotal:
+    case NodeEnumF::kFinalTotal:
+        break;
     }
 
     emit SResizeColumnToContents(index.column());
@@ -116,7 +127,13 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumF::kFinalTotal:
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
-        default:
+        case NodeEnumF::kId:
+        case NodeEnumF::kUpdateBy:
+        case NodeEnumF::kUpdateTime:
+        case NodeEnumF::kCreateTime:
+        case NodeEnumF::kCreateBy:
+        case NodeEnumF::kVersion:
+        case NodeEnumF::kUserId:
             return false;
         }
     };

@@ -20,6 +20,18 @@ QVariant SearchEntryModelP::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryEnumP::kId:
         return d_entry->id;
+    case EntryEnumP::kUpdateBy:
+        return d_entry->updated_by;
+    case EntryEnumP::kUpdateTime:
+        return d_entry->updated_time;
+    case EntryEnumP::kCreateTime:
+        return d_entry->created_time;
+    case EntryEnumP::kCreateBy:
+        return d_entry->created_by;
+    case EntryEnumP::kVersion:
+        return d_entry->version;
+    case EntryEnumP::kUserId:
+        return d_entry->user_id;
     case EntryEnumP::kIssuedTime:
         return d_entry->issued_time;
     case EntryEnumP::kCode:
@@ -72,7 +84,13 @@ void SearchEntryModelP::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(d_lhs, d_rhs, &EntryP::unit_price, order);
         case EntryEnumP::kRhsNode:
             return Utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
-        default:
+        case EntryEnumP::kId:
+        case EntryEnumP::kUpdateBy:
+        case EntryEnumP::kUpdateTime:
+        case EntryEnumP::kCreateTime:
+        case EntryEnumP::kCreateBy:
+        case EntryEnumP::kVersion:
+        case EntryEnumP::kUserId:
             return false;
         }
     };

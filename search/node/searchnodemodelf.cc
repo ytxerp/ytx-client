@@ -18,6 +18,18 @@ QVariant SearchNodeModelF::data(const QModelIndex& index, int role) const
     switch (column) {
     case NodeEnumF::kName:
         return node->name;
+    case NodeEnumF::kUpdateBy:
+        return node->updated_by;
+    case NodeEnumF::kUpdateTime:
+        return node->updated_time;
+    case NodeEnumF::kCreateTime:
+        return node->created_time;
+    case NodeEnumF::kCreateBy:
+        return node->created_by;
+    case NodeEnumF::kVersion:
+        return node->version;
+    case NodeEnumF::kUserId:
+        return node->user_id;
     case NodeEnumF::kId:
         return node->id;
     case NodeEnumF::kCode:
@@ -67,7 +79,13 @@ void SearchNodeModelF::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumF::kFinalTotal:
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
-        default:
+        case NodeEnumF::kId:
+        case NodeEnumF::kUpdateBy:
+        case NodeEnumF::kUpdateTime:
+        case NodeEnumF::kCreateTime:
+        case NodeEnumF::kCreateBy:
+        case NodeEnumF::kVersion:
+        case NodeEnumF::kUserId:
             return false;
         }
     };

@@ -45,9 +45,9 @@ constexpr int KindColumn(Section section)
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(NodeEnumO::kKind);
-    default:
-        return -1;
     }
+
+    Q_UNREACHABLE();
 }
 
 constexpr int UnitColumn(Section section)
@@ -64,9 +64,9 @@ constexpr int UnitColumn(Section section)
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(NodeEnumO::kUnit);
-    default:
-        return -1;
     }
+
+    Q_UNREACHABLE();
 }
 
 constexpr int DirectionRuleColumn(Section section)
@@ -83,9 +83,9 @@ constexpr int DirectionRuleColumn(Section section)
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(NodeEnumO::kDirectionRule);
-    default:
-        return -1;
     }
+
+    Q_UNREACHABLE();
 }
 
 constexpr int NodeDescriptionColumn(Section section)
@@ -102,9 +102,9 @@ constexpr int NodeDescriptionColumn(Section section)
     case Section::kSale:
     case Section::kPurchase:
         return std::to_underlying(NodeEnumO::kDescription);
-    default:
-        return -1;
     }
+
+    Q_UNREACHABLE();
 }
 
 constexpr std::pair<int, int> NodeNumericColumnRange(Section section)
@@ -121,9 +121,9 @@ constexpr std::pair<int, int> NodeNumericColumnRange(Section section)
     case Section::kSale:
     case Section::kPurchase:
         return { std::to_underlying(NodeEnumO::kCountTotal), std::to_underlying(NodeEnumO::kFinalTotal) };
-    default:
-        return { -1, -1 };
     }
+
+    Q_UNREACHABLE();
 }
 
 constexpr std::pair<int, int> NodeCacheColumnRange(Section section)
@@ -140,9 +140,9 @@ constexpr std::pair<int, int> NodeCacheColumnRange(Section section)
     case Section::kSale:
     case Section::kPurchase:
         return { std::to_underlying(NodeEnumO::kPartner), std::to_underlying(NodeEnumO::kFinalTotal) };
-    default:
-        return { -1, -1 };
     }
+
+    Q_UNREACHABLE();
 }
 
 inline QString UnitString(UnitO unit)
@@ -154,9 +154,9 @@ inline QString UnitString(UnitO unit)
         return QObject::tr("IS");
     case UnitO::kPending:
         return QObject::tr("PEND");
-    default:
-        return {};
     }
+
+    Q_UNREACHABLE();
 }
 
 bool IsDescendant(const Node* lhs, const Node* rhs);

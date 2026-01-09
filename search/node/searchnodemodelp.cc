@@ -20,6 +20,18 @@ QVariant SearchNodeModelP::data(const QModelIndex& index, int role) const
         return d_node->name;
     case NodeEnumP::kId:
         return d_node->id;
+    case NodeEnumP::kUpdateBy:
+        return d_node->updated_by;
+    case NodeEnumP::kUpdateTime:
+        return d_node->updated_time;
+    case NodeEnumP::kCreateTime:
+        return d_node->created_time;
+    case NodeEnumP::kCreateBy:
+        return d_node->created_by;
+    case NodeEnumP::kVersion:
+        return d_node->version;
+    case NodeEnumP::kUserId:
+        return d_node->user_id;
     case NodeEnumP::kCode:
         return d_node->code;
     case NodeEnumP::kDescription:
@@ -66,7 +78,13 @@ void SearchNodeModelP::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(d_lhs, d_rhs, &NodeP::payment_term, order);
         case NodeEnumP::kInitialTotal:
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
-        default:
+        case NodeEnumP::kId:
+        case NodeEnumP::kUpdateBy:
+        case NodeEnumP::kUpdateTime:
+        case NodeEnumP::kCreateTime:
+        case NodeEnumP::kCreateBy:
+        case NodeEnumP::kVersion:
+        case NodeEnumP::kUserId:
             return false;
         }
     };

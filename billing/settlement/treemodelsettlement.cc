@@ -106,7 +106,13 @@ void TreeModelSettlement::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Settlement::status, order);
         case SettlementEnum::kAmount:
             return Utils::CompareMember(lhs, rhs, &Settlement::amount, order);
-        default:
+        case SettlementEnum::kId:
+        case SettlementEnum::kUpdateBy:
+        case SettlementEnum::kUpdateTime:
+        case SettlementEnum::kCreateTime:
+        case SettlementEnum::kCreateBy:
+        case SettlementEnum::kVersion:
+        case SettlementEnum::kUserId:
             return false;
         }
     };

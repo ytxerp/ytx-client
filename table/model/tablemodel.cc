@@ -2,7 +2,6 @@
 
 #include <QtConcurrent>
 
-#include "global/collator.h"
 #include "global/entrypool.h"
 #include "global/resourcepool.h"
 #include "utils/compareutils.h"
@@ -311,12 +310,10 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         Utils::UpdateShadowField(pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnum::kDescription:
-        Utils::UpdateShadowField(
-            pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
+        Utils::UpdateShadowField(pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnum::kDocument:
-        Utils::UpdateShadowDocument(
-            pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
+        Utils::UpdateShadowDocument(pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnum::kLhsRate:
         UpdateRate(shadow, value.toDouble());
@@ -331,7 +328,15 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
     case EntryEnum::kCredit:
         UpdateNumeric(shadow, value.toDouble(), row, false);
         break;
-    default:
+    case EntryEnum::kId:
+    case EntryEnum::kUpdateBy:
+    case EntryEnum::kUpdateTime:
+    case EntryEnum::kCreateTime:
+    case EntryEnum::kCreateBy:
+    case EntryEnum::kVersion:
+    case EntryEnum::kUserId:
+    case EntryEnum::kLhsNode:
+    case EntryEnum::kBalance:
         return false;
     }
 
@@ -367,8 +372,15 @@ void TableModel::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &EntryShadow::lhs_debit, order);
         case EntryEnum::kCredit:
             return Utils::CompareMember(lhs, rhs, &EntryShadow::lhs_credit, order);
-
-        default:
+        case EntryEnum::kId:
+        case EntryEnum::kUpdateBy:
+        case EntryEnum::kUpdateTime:
+        case EntryEnum::kCreateTime:
+        case EntryEnum::kCreateBy:
+        case EntryEnum::kVersion:
+        case EntryEnum::kUserId:
+        case EntryEnum::kLhsNode:
+        case EntryEnum::kBalance:
             return false;
         }
     };

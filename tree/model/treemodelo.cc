@@ -298,7 +298,15 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumO::kFinalTotal:
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
-        default:
+        case NodeEnumO::kId:
+        case NodeEnumO::kUpdateBy:
+        case NodeEnumO::kUpdateTime:
+        case NodeEnumO::kCreateTime:
+        case NodeEnumO::kCreateBy:
+        case NodeEnumO::kVersion:
+        case NodeEnumO::kUserId:
+        case NodeEnumO::kIsSettled:
+        case NodeEnumO::kSettlementId:
             return false;
         }
     };
