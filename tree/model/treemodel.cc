@@ -438,12 +438,10 @@ void TreeModel::UpdateDefaultUnit(int default_unit)
     if (row_count == 0)
         return;
 
-    const auto col_count { node_header_.size() };
-    const auto first_col { col_count - 2 };
-    const auto last_col { col_count - 1 };
+    const auto [start, end] { Utils::NodeNumericColumnRange(section_) };
 
-    const QModelIndex top_left { index(0, first_col) };
-    const QModelIndex bottom_right { index(row_count - 1, last_col) };
+    const QModelIndex top_left { index(0, start) };
+    const QModelIndex bottom_right { index(row_count - 1, end) };
 
     emit dataChanged(top_left, bottom_right);
 }

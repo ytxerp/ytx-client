@@ -53,6 +53,9 @@ void MainWindow::RUpdateDefaultUnitFailed(const QString& /*section*/)
 
 void MainWindow::UpdateSharedConfig(CSharedConfig& shared)
 {
+    if (!section_settings_)
+        return;
+
     auto& current_shared { sc_->shared_config };
     if (current_shared == shared)
         return;

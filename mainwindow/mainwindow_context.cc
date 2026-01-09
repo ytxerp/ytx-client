@@ -28,7 +28,6 @@ void MainWindow::SetAction(bool enable) const
     ui->actionEditName->setEnabled(enable);
     ui->actionInsertNode->setEnabled(enable);
     ui->actionJump->setEnabled(enable);
-    ui->actionPreferences->setEnabled(enable);
     ui->actionSearch->setEnabled(enable);
     ui->actionRemove->setEnabled(enable);
     ui->actionAppendEntry->setEnabled(enable);

@@ -108,6 +108,9 @@ void MainWindow::ReadSectionConfig(SectionConfig& config, CString& section_name)
 
 void MainWindow::UpdateSectionConfig(CSectionConfig& section)
 {
+    if (!section_settings_)
+        return;
+
     auto& current_section { sc_->section_config };
     if (current_section == section)
         return;
