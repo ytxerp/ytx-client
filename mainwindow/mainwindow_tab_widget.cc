@@ -135,14 +135,8 @@ void MainWindow::on_tabWidget_tabBarDoubleClicked(int index)
     const auto tab_info { tab_bar->tabData(index).value<TabInfo>() };
     const QUuid id { tab_info.id };
 
-    {
-        if (sc_->widget_hash.contains(id))
-            return;
-    }
-
-    {
+    if (sc_->table_wgt_hash.contains(id))
         RNodeLocation(start_, id);
-    }
 }
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
@@ -232,10 +226,10 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
     }
 
     for (int index = 0; index != count; ++index) {
-        const auto node_id { tab_bar->tabData(index).value<TabInfo>().id };
+        const auto id { tab_bar->tabData(index).value<TabInfo>().id };
 
-        if (widget->isTabVisible(index) && nodes.contains(node_id)) {
-            const auto path { model->Path(node_id) };
+        if (widget->isTabVisible(index) && nodes.contains(id)) {
+            const auto path { model->Path(id) };
 
             if (!branch) {
                 tab_bar->setTabText(index, name);

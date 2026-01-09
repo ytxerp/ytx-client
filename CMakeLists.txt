@@ -494,6 +494,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
                 -Wextra
                 -Wconversion
                 -Wno-shorten-64-to-32
+                -Wswitch
+                -Wswitch-enum
     )
 endif()
 

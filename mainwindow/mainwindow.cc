@@ -147,10 +147,15 @@ void MainWindow::InsertNodeFunction(const QModelIndex& parent_index)
     case Section::kPurchase:
         InsertNodeO(parent_index);
         break;
-    default:
+    case Section::kFinance:
+    case Section::kTask:
+    case Section::kPartner:
+    case Section::kInventory:
         InsertNodeFIPT(parent_index);
         break;
     }
+
+    Q_UNREACHABLE();
 }
 
 void MainWindow::on_actionRemove_triggered()
@@ -271,22 +276,22 @@ void MainWindow::WriteConfig()
 
 SectionContext* MainWindow::GetSectionContex(Section section)
 {
-    const static QMap<Section, SectionContext*> section_map {
-        { Section::kFinance, &sc_f_ },
-        { Section::kPartner, &sc_p_ },
-        { Section::kInventory, &sc_i_ },
-        { Section::kTask, &sc_t_ },
-        { Section::kSale, &sc_sale_ },
-        { Section::kPurchase, &sc_purchase_ },
-    };
-
-    auto it = section_map.constFind(section);
-    if (it == section_map.cend()) {
-        qCritical() << "SectionTriple: Unknown section";
-        return nullptr;
+    switch (section) {
+    case Section::kFinance:
+        return &sc_f_;
+    case Section::kPartner:
+        return &sc_p_;
+    case Section::kInventory:
+        return &sc_i_;
+    case Section::kTask:
+        return &sc_t_;
+    case Section::kSale:
+        return &sc_sale_;
+    case Section::kPurchase:
+        return &sc_purchase_;
     }
 
-    return it.value();
+    Q_UNREACHABLE();
 }
 
 void MainWindow::InitSystemTray()
@@ -466,10 +471,15 @@ void MainWindow::on_actionEditName_triggered()
     case Section::kPurchase:
         EditNameO();
         break;
-    default:
+    case Section::kFinance:
+    case Section::kTask:
+    case Section::kPartner:
+    case Section::kInventory:
         EditNameFIPT();
         break;
     }
+
+    Q_UNREACHABLE();
 }
 
 void MainWindow::RUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section)

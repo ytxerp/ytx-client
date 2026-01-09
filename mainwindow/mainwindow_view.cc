@@ -47,8 +47,18 @@ void MainWindow::SetTreeHeader(QTreeView* view, Section section)
     Utils::SetupHeaderStatus(header, section_settings_, section, kTreeHeaderState);
 }
 
-void MainWindow::SetTableViewFIPT(QTableView* view, int stretch_column, int lhs_node_column) const
+void MainWindow::SetTableView(QTableView* view, Section section, int stretch_column, int lhs_node_column) const
 {
+    {
+        auto* h_header { view->horizontalHeader() };
+        Utils::SetupHeaderStatus(h_header, section_settings_, section, kTableHeaderState);
+
+        ResizeColumn(h_header, stretch_column);
+
+        h_header->setSectionsMovable(true);
+        h_header->setHighlightSections(true);
+    }
+
     {
         view->setSelectionMode(QAbstractItemView::SingleSelection);
         view->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -64,11 +74,6 @@ void MainWindow::SetTableViewFIPT(QTableView* view, int stretch_column, int lhs_
         view->setColumnHidden(std::to_underlying(EntryEnum::kUpdateTime), kIsHidden);
         view->setColumnHidden(std::to_underlying(EntryEnum::kUpdateBy), kIsHidden);
         view->setColumnHidden(std::to_underlying(EntryEnum::kVersion), kIsHidden);
-    }
-
-    {
-        auto* h_header { view->horizontalHeader() };
-        ResizeColumn(h_header, stretch_column);
     }
 
     {
@@ -107,88 +112,16 @@ void MainWindow::SetTableViewSaleReference(QTableView* view) const
 
 void MainWindow::SetStatementView(QTableView* view, int stretch_column) const
 {
-    view->setSortingEnabled(true);
-    view->setSelectionMode(QAbstractItemView::SingleSelection);
-    view->setSelectionBehavior(QAbstractItemView::SelectRows);
-    view->setAlternatingRowColors(true);
-
-    auto* h_header { view->horizontalHeader() };
-    ResizeColumn(h_header, stretch_column);
-
-    auto* v_header { view->verticalHeader() };
-    v_header->setDefaultSectionSize(kRowHeight);
-    v_header->setSectionResizeMode(QHeaderView::Fixed);
-    v_header->setHidden(true);
-}
-
-void MainWindow::SetSettlementView(QTableView* view, int stretch_column) const
-{
-    view->setSortingEnabled(true);
-    view->setSelectionMode(QAbstractItemView::SingleSelection);
-    view->setSelectionBehavior(QAbstractItemView::SelectRows);
-    view->setAlternatingRowColors(true);
-
-    view->setColumnHidden(std::to_underlying(SettlementEnum::kId), kIsHidden);
-    view->setColumnHidden(std::to_underlying(SettlementEnum::kUserId), kIsHidden);
-    view->setColumnHidden(std::to_underlying(SettlementEnum::kCreateBy), kIsHidden);
-    view->setColumnHidden(std::to_underlying(SettlementEnum::kCreateTime), kIsHidden);
-    view->setColumnHidden(std::to_underlying(SettlementEnum::kUpdateTime), kIsHidden);
-    view->setColumnHidden(std::to_underlying(SettlementEnum::kUpdateBy), kIsHidden);
-    view->setColumnHidden(std::to_underlying(SettlementEnum::kVersion), kIsHidden);
-
-    auto* h_header { view->horizontalHeader() };
-    ResizeColumn(h_header, stretch_column);
-
-    auto* v_header { view->verticalHeader() };
-    v_header->setDefaultSectionSize(kRowHeight);
-    v_header->setSectionResizeMode(QHeaderView::Fixed);
-    v_header->setHidden(true);
-}
-
-void MainWindow::SetSettlementItemView(QTableView* view, int stretch_column) const
-{
-    view->setSortingEnabled(true);
-    view->setSelectionMode(QAbstractItemView::SingleSelection);
-    view->setSelectionBehavior(QAbstractItemView::SelectRows);
-    view->setAlternatingRowColors(true);
-
-    view->setColumnHidden(std::to_underlying(SettlementItemEnum::kId), kIsHidden);
-
-    auto* h_header { view->horizontalHeader() };
-    ResizeColumn(h_header, stretch_column);
-
-    auto* v_header { view->verticalHeader() };
-    v_header->setDefaultSectionSize(kRowHeight);
-    v_header->setSectionResizeMode(QHeaderView::Fixed);
-    v_header->setHidden(true);
-}
-
-void MainWindow::SetTableViewO(QTableView* view, Section section, int stretch_column, int lhs_node_column) const
-{
     {
-        auto* h_header { view->horizontalHeader() };
-        Utils::SetupHeaderStatus(h_header, section_settings_, section, kTableHeaderState);
-
-        ResizeColumn(h_header, stretch_column);
-
-        h_header->setSectionsMovable(true);
-        h_header->setHighlightSections(true);
-    }
-
-    {
+        view->setSortingEnabled(true);
         view->setSelectionMode(QAbstractItemView::SingleSelection);
         view->setSelectionBehavior(QAbstractItemView::SelectRows);
         view->setAlternatingRowColors(true);
-        view->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::CurrentChanged);
+    }
 
-        view->setColumnHidden(std::to_underlying(EntryEnumO::kId), kIsHidden);
-        view->setColumnHidden(lhs_node_column, kIsHidden);
-        view->setColumnHidden(std::to_underlying(EntryEnumO::kUserId), kIsHidden);
-        view->setColumnHidden(std::to_underlying(EntryEnumO::kCreateBy), kIsHidden);
-        view->setColumnHidden(std::to_underlying(EntryEnumO::kCreateTime), kIsHidden);
-        view->setColumnHidden(std::to_underlying(EntryEnumO::kUpdateTime), kIsHidden);
-        view->setColumnHidden(std::to_underlying(EntryEnumO::kUpdateBy), kIsHidden);
-        view->setColumnHidden(std::to_underlying(EntryEnumO::kVersion), kIsHidden);
+    {
+        auto* h_header { view->horizontalHeader() };
+        ResizeColumn(h_header, stretch_column);
     }
 
     {
@@ -196,7 +129,63 @@ void MainWindow::SetTableViewO(QTableView* view, Section section, int stretch_co
         v_header->setDefaultSectionSize(kRowHeight);
         v_header->setSectionResizeMode(QHeaderView::Fixed);
         v_header->setHidden(true);
+    }
+}
 
+void MainWindow::SetSettlementView(QTableView* view, int stretch_column) const
+{
+    {
         view->setSortingEnabled(true);
+        view->setSelectionMode(QAbstractItemView::SingleSelection);
+        view->setSelectionBehavior(QAbstractItemView::SelectRows);
+        view->setAlternatingRowColors(true);
+    }
+
+    {
+        view->setColumnHidden(std::to_underlying(SettlementEnum::kId), kIsHidden);
+        view->setColumnHidden(std::to_underlying(SettlementEnum::kUserId), kIsHidden);
+        view->setColumnHidden(std::to_underlying(SettlementEnum::kCreateBy), kIsHidden);
+        view->setColumnHidden(std::to_underlying(SettlementEnum::kCreateTime), kIsHidden);
+        view->setColumnHidden(std::to_underlying(SettlementEnum::kUpdateTime), kIsHidden);
+        view->setColumnHidden(std::to_underlying(SettlementEnum::kUpdateBy), kIsHidden);
+        view->setColumnHidden(std::to_underlying(SettlementEnum::kVersion), kIsHidden);
+    }
+
+    {
+        auto* h_header { view->horizontalHeader() };
+        ResizeColumn(h_header, stretch_column);
+    }
+
+    {
+        auto* v_header { view->verticalHeader() };
+        v_header->setDefaultSectionSize(kRowHeight);
+        v_header->setSectionResizeMode(QHeaderView::Fixed);
+        v_header->setHidden(true);
+    }
+}
+
+void MainWindow::SetSettlementItemView(QTableView* view, int stretch_column) const
+{
+    {
+        view->setSortingEnabled(true);
+        view->setSelectionMode(QAbstractItemView::SingleSelection);
+        view->setSelectionBehavior(QAbstractItemView::SelectRows);
+        view->setAlternatingRowColors(true);
+    }
+
+    {
+        view->setColumnHidden(std::to_underlying(SettlementItemEnum::kId), kIsHidden);
+    }
+
+    {
+        auto* h_header { view->horizontalHeader() };
+        ResizeColumn(h_header, stretch_column);
+    }
+
+    {
+        auto* v_header { view->verticalHeader() };
+        v_header->setDefaultSectionSize(kRowHeight);
+        v_header->setSectionResizeMode(QHeaderView::Fixed);
+        v_header->setHidden(true);
     }
 }

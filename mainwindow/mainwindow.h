@@ -166,8 +166,7 @@ private:
     void TableDelegateP(QTableView* table_view, CSectionConfig& config) const;
     void TableDelegateO(QTableView* table_view, CSectionConfig& config) const;
 
-    void SetTableViewFIPT(QTableView* view, int stretch_column, int lhs_node_column) const;
-    void SetTableViewO(QTableView* view, Section section, int stretch_column, int lhs_node_column) const;
+    void SetTableView(QTableView* view, Section section, int stretch_column, int lhs_node_column) const;
 
     void TableConnectF(QTableView* table_view, TableModel* table_model) const;
     void TableConnectI(QTableView* table_view, TableModel* table_model) const;
