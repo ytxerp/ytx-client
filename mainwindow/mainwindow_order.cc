@@ -127,12 +127,13 @@ void MainWindow::RNodeSelected(Section section, const QUuid& node_id)
     sc->tree_view->setCurrentIndex(index);
 }
 
-void MainWindow::InsertNodeO(Node* parent_node)
+void MainWindow::InsertNodeO(const QModelIndex& parent_index)
 {
     // Extract frequently used shortcuts
     auto& section_config = sc_->section_config;
     auto* tab_widget = ui->tabWidget;
     auto* tab_bar = tab_widget->tabBar();
+    auto* parent_node { sc_->tree_model->GetNodeByIndex(parent_index) };
 
     // Validate tree model and node
     auto* tree_model_o { static_cast<TreeModelO*>(sc_->tree_model.data()) };
@@ -142,7 +143,7 @@ void MainWindow::InsertNodeO(Node* parent_node)
     NodeO node {};
     node.id = QUuid::createUuidV7();
     node.direction_rule = parent_node->direction_rule;
-    node.unit = parent_node->unit;
+    node.unit = parent_index.isValid() ? parent_node->unit : sc_->shared_config.default_unit;
     node.parent = parent_node;
 
     const QUuid node_id { node.id };

@@ -1022,11 +1022,6 @@ void WebSocket::UpdateDefaultUnit(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const int default_unit { obj.value(kDefaultUnit).toInt() };
 
-    auto tree_model { tree_model_hash_.value(section) };
-    if (!tree_model)
-        return;
-
-    tree_model->UpdateDefaultUnit(default_unit);
     emit SDefaultUnit(section, default_unit);
 }
 

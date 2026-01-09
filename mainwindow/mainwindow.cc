@@ -140,17 +140,15 @@ void MainWindow::FocusTableWidget(const QUuid& node_id) const
     widget->View()->clearSelection();
 }
 
-void MainWindow::InsertNodeFunction(Node* parent_node)
+void MainWindow::InsertNodeFunction(const QModelIndex& parent_index)
 {
-    Q_ASSERT(parent_node);
-
     switch (start_) {
     case Section::kSale:
     case Section::kPurchase:
-        InsertNodeO(parent_node);
+        InsertNodeO(parent_index);
         break;
     default:
-        InsertNodeFIPT(parent_node);
+        InsertNodeFIPT(parent_index);
         break;
     }
 }
@@ -412,14 +410,9 @@ void MainWindow::on_actionInsertNode_triggered()
     }
 
     auto current_index { sc_->tree_view->currentIndex() };
-    current_index = current_index.isValid() ? current_index : QModelIndex();
-
     auto parent_index { current_index.parent() };
-    parent_index = parent_index.isValid() ? parent_index : QModelIndex();
 
-    auto* parent_node { sc_->tree_model->GetNodeByIndex(parent_index) };
-
-    InsertNodeFunction(parent_node);
+    InsertNodeFunction(parent_index);
 }
 
 void MainWindow::on_actionAppendNode_triggered()
@@ -433,13 +426,21 @@ void MainWindow::on_actionAppendNode_triggered()
     if (!index.isValid())
         return;
 
-    auto* node { static_cast<Node*>(index.internalPointer()) };
-    Q_ASSERT(node);
+    const int kind_column { Utils::KindColumn(start_) };
+    const QModelIndex kind_index { index.siblingAtColumn(kind_column) };
 
-    if (node->kind != std::to_underlying(NodeKind::kBranch))
+    // Check if the sibling index is valid
+    if (!kind_index.isValid()) {
+        qWarning() << "Invalid kind column:" << kind_column;
         return;
+    }
 
-    InsertNodeFunction(node);
+    const int kind { kind_index.data().toInt() };
+    if (kind != std::to_underlying(NodeKind::kBranch)) {
+        return;
+    }
+
+    InsertNodeFunction(index);
 }
 
 void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)

@@ -212,9 +212,9 @@ private:
     void TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
 
-    void InsertNodeFunction(Node* parent_node);
-    void InsertNodeFIPT(Node* parent_node); // Finance Inventory Partner Task
-    void InsertNodeO(Node* parent_node); // Purchase Sales
+    void InsertNodeFunction(const QModelIndex& parent_index);
+    void InsertNodeFIPT(const QModelIndex& parent_index); // Finance Inventory Partner Task
+    void InsertNodeO(const QModelIndex& parent_index); // Purchase Sales
 
     void RemoveNode();
     void RemoveEntry(TableWidget* widget);

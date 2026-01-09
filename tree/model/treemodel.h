@@ -131,7 +131,6 @@ public:
     void LeafPathBranchPathModel(ItemModel* model) const;
 
     void UpdateSeparator(CString& old_separator, CString& new_separator);
-    void UpdateDefaultUnit(int default_unit);
 
     void AckNode(const QUuid& node_id) const;
     void SearchNode(QList<Node*>& node_list, CString& name) const;

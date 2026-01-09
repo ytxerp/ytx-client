@@ -13,20 +13,18 @@ void MainWindow::RSharedConfig(const QJsonArray& arr)
             continue;
         }
 
-        QJsonObject obj { val.toObject() };
-        Section section { obj.value("section").toInt() };
-        int default_unit { obj.value("default_unit").toInt() };
-        QString document_dir { obj.value("document_dir").toString() };
+        const QJsonObject obj { val.toObject() };
+        const Section section { obj.value("section").toInt() };
+        const int default_unit { obj.value("default_unit").toInt() };
+        const QString document_dir { obj.value("document_dir").toString() };
 
-        auto* section_contex = GetSectionContex(section);
-        if (!section_contex) {
+        auto* sc = GetSectionContex(section);
+        if (!sc) {
             continue;
         }
 
-        section_contex->shared_config.default_unit = default_unit;
-        section_contex->shared_config.document_dir = document_dir;
-
-        section_contex->tree_model->UpdateDefaultUnit(default_unit);
+        sc->shared_config.default_unit = default_unit;
+        sc->shared_config.document_dir = document_dir;
     }
 }
 
@@ -40,7 +38,6 @@ void MainWindow::RDefaultUnit(Section section, int unit)
 {
     auto* sc { GetSectionContex(section) };
     sc->shared_config.default_unit = unit;
-    sc->tree_model->UpdateDefaultUnit(unit);
 
     if (section == Section::kFinance)
         sc_->tree_widget->RInitStatus();

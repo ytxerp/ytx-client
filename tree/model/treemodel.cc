@@ -430,22 +430,6 @@ void TreeModel::UpdateSeparator(CString& old_separator, CString& new_separator)
     leaf_path_model_->UpdateSeparator(old_separator, new_separator);
 }
 
-void TreeModel::UpdateDefaultUnit(int default_unit)
-{
-    root_->unit = default_unit;
-
-    const int row_count { rowCount() };
-    if (row_count == 0)
-        return;
-
-    const auto [start, end] { Utils::NodeNumericColumnRange(section_) };
-
-    const QModelIndex top_left { index(0, start) };
-    const QModelIndex bottom_right { index(row_count - 1, end) };
-
-    emit dataChanged(top_left, bottom_right);
-}
-
 void TreeModel::SearchNode(QList<Node*>& node_list, CString& name) const
 {
     if (node_hash_.size() >= 50) {
