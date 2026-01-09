@@ -180,13 +180,9 @@ void Preferences::ResizeLine(QLineEdit* line, CString& text) { line->setMinimumW
 
 void Preferences::IniText(Section section)
 {
-    switch (section) {
-    case Section::kFinance:
+    if (section == Section::kFinance) {
         ui->labelRateDecimal->setText(tr("FXRate Decimal"));
         ui->labelDefaultUnit->setText(tr("Base Currency"));
-        break;
-    default:
-        break;
     }
 }
 

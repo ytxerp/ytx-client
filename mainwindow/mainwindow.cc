@@ -146,13 +146,13 @@ void MainWindow::InsertNodeFunction(const QModelIndex& parent_index)
     case Section::kSale:
     case Section::kPurchase:
         InsertNodeO(parent_index);
-        break;
+        return;
     case Section::kFinance:
     case Section::kTask:
     case Section::kPartner:
     case Section::kInventory:
         InsertNodeFIPT(parent_index);
-        break;
+        return;
     }
 
     Q_UNREACHABLE();
@@ -470,13 +470,13 @@ void MainWindow::on_actionEditName_triggered()
     case Section::kSale:
     case Section::kPurchase:
         EditNameO();
-        break;
+        return;
     case Section::kFinance:
     case Section::kTask:
     case Section::kPartner:
     case Section::kInventory:
         EditNameFIPT();
-        break;
+        return;
     }
 
     Q_UNREACHABLE();

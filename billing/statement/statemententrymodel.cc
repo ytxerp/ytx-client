@@ -83,7 +83,14 @@ bool StatementEntryModel::setData(const QModelIndex& index, const QVariant& valu
     case StatementEntryEnum::kStatus:
         entry->status = value.toInt();
         break;
-    default:
+    case StatementEntryEnum::kIssuedTime:
+    case StatementEntryEnum::kAmount:
+    case StatementEntryEnum::kCount:
+    case StatementEntryEnum::kDescription:
+    case StatementEntryEnum::kMeasure:
+    case StatementEntryEnum::kUnitPrice:
+    case StatementEntryEnum::kInternalSku:
+    case StatementEntryEnum::kExternalSku:
         return false;
     }
 

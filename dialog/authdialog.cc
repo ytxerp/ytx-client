@@ -68,6 +68,8 @@ void AuthDialog::RLoginFailed(int code)
     case LoginOutcome::ServerError:
         message = tr("Server error occurred. Please try again later.");
         break;
+    case LoginOutcome::Success:
+        break;
     default:
         message = tr("Unable to log in. Please contact the administrator for details.");
         break;
@@ -104,6 +106,8 @@ void AuthDialog::RRegisterResult(bool result, int code)
             break;
         case RegisterOutcome::ServerError:
             message = tr("Server error occurred. Please try again later.");
+            break;
+        case RegisterOutcome::Success:
             break;
         default:
             message = tr("Unable to register. Please contact the administrator for details.");

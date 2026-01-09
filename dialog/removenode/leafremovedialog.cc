@@ -84,6 +84,9 @@ void LeafRemoveDialog::InitCheckBoxGroup()
         ui->chkBoxSettlement->setChecked(settlement_ref_);
         ui->chkBoxSettlement->setEnabled(false);
         break;
+    case Section::kFinance:
+    case Section::kTask:
+        break;
     default:
         break;
     }

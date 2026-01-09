@@ -4,6 +4,7 @@
 
 #include "enum/reference.h"
 #include "global/resourcepool.h"
+#include "utils/compareutils.h"
 
 SaleReferenceModel::SaleReferenceModel(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }
@@ -82,29 +83,29 @@ void SaleReferenceModel::sort(int column, Qt::SortOrder order)
     if (column <= -1 || column >= info_.node_referenced_header.size() - 1)
         return;
 
-    auto Compare = [column, order](const SaleReference* lhs, const SaleReference* rhs) -> bool {
-        const SaleReferenceEnum e_column { column };
+    const SaleReferenceEnum e_column { column };
 
+    auto Compare = [e_column, order](const SaleReference* lhs, const SaleReference* rhs) -> bool {
         switch (e_column) {
         case SaleReferenceEnum::kExternalSku:
-            return (order == Qt::AscendingOrder) ? (lhs->external_sku < rhs->external_sku) : (lhs->external_sku > rhs->external_sku);
+            return Utils::CompareMember(lhs, rhs, &SaleReference::external_sku, order);
         case SaleReferenceEnum::kIssuedTime:
-            return (order == Qt::AscendingOrder) ? (lhs->issued_time < rhs->issued_time) : (lhs->issued_time > rhs->issued_time);
+            return Utils::CompareMember(lhs, rhs, &SaleReference::issued_time, order);
         case SaleReferenceEnum::kNodeId:
-            return (order == Qt::AscendingOrder) ? (lhs->node_id < rhs->node_id) : (lhs->node_id > rhs->node_id);
+            return Utils::CompareMember(lhs, rhs, &SaleReference::node_id, order);
         case SaleReferenceEnum::kUnitPrice:
-            return (order == Qt::AscendingOrder) ? (lhs->unit_price < rhs->unit_price) : (lhs->unit_price > rhs->unit_price);
+            return Utils::CompareMember(lhs, rhs, &SaleReference::unit_price, order);
         case SaleReferenceEnum::kCount:
-            return (order == Qt::AscendingOrder) ? (lhs->count < rhs->count) : (lhs->count > rhs->count);
+            return Utils::CompareMember(lhs, rhs, &SaleReference::count, order);
         case SaleReferenceEnum::kMeasure:
-            return (order == Qt::AscendingOrder) ? (lhs->measure < rhs->measure) : (lhs->measure > rhs->measure);
+            return Utils::CompareMember(lhs, rhs, &SaleReference::measure, order);
         case SaleReferenceEnum::kDescription:
-            return (order == Qt::AscendingOrder) ? (lhs->description < rhs->description) : (lhs->description > rhs->description);
+            return Utils::CompareMember(lhs, rhs, &SaleReference::description, order);
         case SaleReferenceEnum::kInitial:
-            return (order == Qt::AscendingOrder) ? (lhs->initial < rhs->initial) : (lhs->initial > rhs->initial);
+            return Utils::CompareMember(lhs, rhs, &SaleReference::initial, order);
         case SaleReferenceEnum::kUnitDiscount:
-            return (order == Qt::AscendingOrder) ? (lhs->unit_discount < rhs->unit_discount) : (lhs->unit_discount > rhs->unit_discount);
-        default:
+            return Utils::CompareMember(lhs, rhs, &SaleReference::unit_discount, order);
+        case SaleReferenceEnum::kOrderId:
             return false;
         }
     };

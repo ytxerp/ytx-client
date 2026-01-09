@@ -84,7 +84,13 @@ bool StatementNodeModel::setData(const QModelIndex& index, const QVariant& value
     case StatementNodeEnum::kStatus:
         node->status = value.toInt();
         break;
-    default:
+    case StatementNodeEnum::kIssuedTime:
+    case StatementNodeEnum::kAmount:
+    case StatementNodeEnum::kCount:
+    case StatementNodeEnum::kDescription:
+    case StatementNodeEnum::kMeasure:
+    case StatementNodeEnum::kEmployee:
+    case StatementNodeEnum::kSettlement:
         return false;
     }
 
