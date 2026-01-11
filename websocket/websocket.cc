@@ -19,12 +19,6 @@ WebSocket::WebSocket(QObject* parent)
 
 WebSocket::~WebSocket()
 {
-    if (heartbeat_) {
-        heartbeat_->stop();
-        heartbeat_->deleteLater();
-        heartbeat_ = nullptr;
-    }
-
     if (socket_.state() == QAbstractSocket::ConnectedState) {
         socket_.close();
     }
@@ -80,7 +74,6 @@ void WebSocket::RConnected()
 {
     qInfo() << "Websocket connected";
     emit SConnectionSucceeded();
-    InitTimer();
 }
 
 void WebSocket::RDisconnected()
@@ -93,10 +86,6 @@ void WebSocket::RDisconnected()
     }
 
     session_id_.clear();
-
-    if (heartbeat_) {
-        heartbeat_->stop();
-    }
 
     if (manual_disconnect_)
         Connect();
@@ -216,34 +205,6 @@ void WebSocket::InitConnect()
     connect(&socket_, &QWebSocket::disconnected, this, &WebSocket::RDisconnected);
     connect(&socket_, &QWebSocket::errorOccurred, this, &WebSocket::RErrorOccurred);
     connect(&socket_, &QWebSocket::textMessageReceived, this, &WebSocket::RReceiveMessage);
-
-    connect(&socket_, &QWebSocket::pong, this, [this](quint64, const QByteArray&) { last_heartbeat_time_ = QDateTime::currentDateTime(); });
-}
-
-void WebSocket::InitTimer()
-{
-    if (!heartbeat_) {
-        heartbeat_ = new QTimer(this);
-        heartbeat_->setInterval(HEARTBEAT_INTERVAL);
-
-        connect(heartbeat_, &QTimer::timeout, this, [this]() {
-            if (socket_.state() != QAbstractSocket::ConnectedState) {
-                return;
-            }
-
-            const auto elapsed_ms { last_heartbeat_time_.msecsTo(QDateTime::currentDateTime()) };
-            if (elapsed_ms > TIMEOUT_THRESHOLD) {
-                qWarning() << "Pong timeout:" << elapsed_ms << "ms, closing connection";
-                socket_.abort();
-                return;
-            }
-
-            socket_.ping();
-        });
-    }
-
-    heartbeat_->start();
-    last_heartbeat_time_ = QDateTime::currentDateTime();
 }
 
 void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
@@ -268,8 +229,6 @@ void WebSocket::RReceiveMessage(const QString& message)
         qWarning() << "Invalid Message:" << message;
         return;
     }
-
-    last_heartbeat_time_ = QDateTime::currentDateTime();
 
     const QJsonObject obj { root.toObject() };
     const QString msg_type { obj.value(kKind).toString() };

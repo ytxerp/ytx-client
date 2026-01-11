@@ -23,6 +23,7 @@
 #include <QAbstractItemModel>
 #include <QMimeData>
 #include <QSortFilterProxyModel>
+#include <QTimer>
 
 #include "component/constant.h"
 #include "component/info.h"

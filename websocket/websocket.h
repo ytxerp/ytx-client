@@ -23,7 +23,6 @@
 #include <QObject>
 #include <QPointer>
 #include <QSettings>
-#include <QTimer>
 #include <QWebSocket>
 
 #include "entryhub/entryhub.h"
@@ -98,7 +97,6 @@ private:
 
     void InitHandler();
     void InitConnect();
-    void InitTimer();
 
     QHash<QUuid, QSet<QUuid>> ParseNodeReference(const QJsonObject& obj);
 
@@ -165,9 +163,6 @@ private:
 
     QUrl server_url_ {};
     bool manual_disconnect_ {};
-
-    QTimer* heartbeat_ {};
-    QDateTime last_heartbeat_time_ {};
 
     QHash<QString, std::function<void(const QJsonObject&)>> handler_obj_ {};
     QHash<QString, std::function<void(const QJsonArray&)>> handler_arr_ {};
