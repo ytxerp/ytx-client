@@ -63,7 +63,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../dialog/authdialog.ui" line="37"/>
-        <location filename="../../dialog/authdialog.cc" line="176"/>
+        <location filename="../../dialog/authdialog.cc" line="177"/>
         <source>Log in to YTX account</source>
         <translation>登录 YTX 账号</translation>
     </message>
@@ -102,7 +102,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../dialog/authdialog.ui" line="105"/>
-        <location filename="../../dialog/authdialog.cc" line="177"/>
+        <location filename="../../dialog/authdialog.cc" line="178"/>
         <source>Don&apos;t have YTX account?</source>
         <translation>没有 YTX 账号？</translation>
     </message>
@@ -125,7 +125,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">认证</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="42"/>
+        <location filename="../../dialog/authdialog.cc" line="39"/>
         <source>Login Failed</source>
         <translation>登录失败</translation>
     </message>
@@ -134,115 +134,115 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">无法登录，请核对您的邮箱、密码、工区权限是否正确，亦或账号是否已过期。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="116"/>
+        <location filename="../../dialog/authdialog.cc" line="117"/>
         <source>Registration Failed</source>
         <translation>注册失败</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="112"/>
+        <location filename="../../dialog/authdialog.cc" line="113"/>
         <source>Unable to register. Please contact the administrator for details.</source>
         <translation>无法注册，请联系管理员了解详情。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="89"/>
+        <location filename="../../dialog/authdialog.cc" line="88"/>
         <source>Registration Successful</source>
         <translation>注册成功</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="89"/>
+        <location filename="../../dialog/authdialog.cc" line="88"/>
         <source>Your account has been registered successfully.</source>
         <translation>帐户已注册成功。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="46"/>
-        <location filename="../../dialog/authdialog.cc" line="97"/>
+        <location filename="../../dialog/authdialog.cc" line="43"/>
+        <location filename="../../dialog/authdialog.cc" line="96"/>
         <source>Please enter your email.</source>
         <translation>请输入您的邮箱。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="49"/>
-        <location filename="../../dialog/authdialog.cc" line="100"/>
+        <location filename="../../dialog/authdialog.cc" line="46"/>
+        <location filename="../../dialog/authdialog.cc" line="99"/>
         <source>Please enter your password.</source>
         <translation>请输入您的密码。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="52"/>
+        <location filename="../../dialog/authdialog.cc" line="49"/>
         <source>The email you entered was not found.</source>
         <translation>邮箱未找到。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="55"/>
+        <location filename="../../dialog/authdialog.cc" line="52"/>
         <source>The password you entered is incorrect.</source>
         <translation>密码不正确。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="58"/>
+        <location filename="../../dialog/authdialog.cc" line="55"/>
         <source>The specified workspace does not exist.</source>
         <translation>工区不存在。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="61"/>
+        <location filename="../../dialog/authdialog.cc" line="58"/>
         <source>The workspace subscription has expired.</source>
         <translation>工区的订阅已过期。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="64"/>
+        <location filename="../../dialog/authdialog.cc" line="61"/>
         <source>Access Pending</source>
         <translation>权限申请</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="66"/>
+        <location filename="../../dialog/authdialog.cc" line="63"/>
         <source>Your access to workspace &quot;%1&quot; for email &quot;%2&quot; is pending approval.</source>
         <translation>&quot;%2&quot; 对 &quot;%1&quot; 的访问请求正在等待审批。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="69"/>
+        <location filename="../../dialog/authdialog.cc" line="66"/>
         <source>You are already logged in.</source>
         <translation>您已经登录过了。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="75"/>
+        <location filename="../../dialog/authdialog.cc" line="74"/>
         <source>Unable to log in. Please contact the administrator for details.</source>
         <translation>无法登录，请联系管理员了解详情。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="103"/>
+        <location filename="../../dialog/authdialog.cc" line="102"/>
         <source>The email format is invalid.</source>
         <translation>邮箱的格式不正确。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="106"/>
+        <location filename="../../dialog/authdialog.cc" line="105"/>
         <source>This email is already registered.</source>
         <translation>邮箱已经注册过了。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="134"/>
+        <location filename="../../dialog/authdialog.cc" line="135"/>
         <source>Invalid Workspace</source>
         <translation>工区无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="162"/>
+        <location filename="../../dialog/authdialog.cc" line="163"/>
         <source>Sign Up</source>
         <translation>注册</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="188"/>
+        <location filename="../../dialog/authdialog.cc" line="189"/>
         <source>Sign In</source>
         <translation>登录</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="302"/>
+        <location filename="../../dialog/authdialog.cc" line="304"/>
         <source>Password Mismatch</source>
         <translation>密码不一致</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="302"/>
+        <location filename="../../dialog/authdialog.cc" line="304"/>
         <source>The passwords do not match.</source>
         <translation>两次输入的密码不一致。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="72"/>
-        <location filename="../../dialog/authdialog.cc" line="109"/>
+        <location filename="../../dialog/authdialog.cc" line="69"/>
+        <location filename="../../dialog/authdialog.cc" line="108"/>
         <source>Server error occurred. Please try again later.</source>
         <translation>服务器出现了错误，请稍后重试。</translation>
     </message>
@@ -255,17 +255,17 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">权限申请</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="134"/>
+        <location filename="../../dialog/authdialog.cc" line="135"/>
         <source>Workspace cannot be empty</source>
         <translation>工区不能为空</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="150"/>
+        <location filename="../../dialog/authdialog.cc" line="151"/>
         <source>Need a YTX account?</source>
         <translation>需要 YTX 账号吗？</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="151"/>
+        <location filename="../../dialog/authdialog.cc" line="152"/>
         <source>Have YTX account?</source>
         <translation>已有 YTX 账号？</translation>
     </message>
@@ -279,7 +279,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">信息无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="237"/>
+        <location filename="../../dialog/authdialog.cc" line="239"/>
         <source>Email cannot be empty</source>
         <translation>邮箱不能为空</translation>
     </message>
@@ -292,41 +292,41 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">密码不能为空</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="237"/>
-        <location filename="../../dialog/authdialog.cc" line="244"/>
+        <location filename="../../dialog/authdialog.cc" line="239"/>
+        <location filename="../../dialog/authdialog.cc" line="246"/>
         <source>Invalid Email</source>
         <translation>邮箱无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="244"/>
+        <location filename="../../dialog/authdialog.cc" line="246"/>
         <source>Please enter a valid email address.</source>
         <translation>请输入有效的邮箱地址。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="254"/>
-        <location filename="../../dialog/authdialog.cc" line="262"/>
-        <location filename="../../dialog/authdialog.cc" line="271"/>
-        <location filename="../../dialog/authdialog.cc" line="280"/>
+        <location filename="../../dialog/authdialog.cc" line="256"/>
+        <location filename="../../dialog/authdialog.cc" line="264"/>
+        <location filename="../../dialog/authdialog.cc" line="273"/>
+        <location filename="../../dialog/authdialog.cc" line="282"/>
         <source>Invalid Password</source>
         <translation>密码无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="254"/>
+        <location filename="../../dialog/authdialog.cc" line="256"/>
         <source>Password must be at least 8 characters long.</source>
         <translation>密码长度不能少于 8 位。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="262"/>
+        <location filename="../../dialog/authdialog.cc" line="264"/>
         <source>Password must include at least one letter.</source>
         <translation>密码必须至少包含一个字母。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="271"/>
+        <location filename="../../dialog/authdialog.cc" line="273"/>
         <source>Password must include at least one digit.</source>
         <translation>密码必须至少包含一个数字。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="280"/>
+        <location filename="../../dialog/authdialog.cc" line="282"/>
         <source>Password must include at least one special character.</source>
         <translation>密码必须至少包含一个特殊字符。</translation>
     </message>
@@ -1179,42 +1179,42 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../dialog/removenode/leafremovedialog.ui" line="20"/>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="107"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="110"/>
         <source>Remove Node</source>
         <translation>删除节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="108"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="111"/>
         <source>Remove %1 and all its references. Are you sure</source>
         <translation>删除节点 %1 和所有的引用，确定吗</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="112"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="115"/>
         <source>Replace Node</source>
         <translation>替换节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="113"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="116"/>
         <source>Replace %1 with %2. This action is risky and cannot be undone. Are you sure?</source>
         <translation>确定要将相关记录中的 %1 替换为 %2 吗？</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="147"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="150"/>
         <source>Remove %1</source>
         <translation>删除 %1</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="151"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="154"/>
         <source>The node has external references, so it can’t be removed.</source>
         <translation>该节点存在外部引用，无法删除。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="184"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="187"/>
         <source>Replacement Conflict</source>
         <translation>替换冲突</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="185"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="188"/>
         <source>A reference conflict exists between the linked nodes of the old node and the new node. The replacement operation has been canceled.</source>
         <translation>旧节点与新节点之间已存在记录，替换操作已被取消。</translation>
     </message>
@@ -1405,7 +1405,7 @@ Rage, rage against the dying of the light.</source>
     <name>MainWindow</name>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="82"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="48"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="101"/>
         <source>Finance</source>
         <translation>财务</translation>
     </message>
@@ -1419,31 +1419,31 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="101"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="51"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="104"/>
         <source>Task</source>
         <translation>任务</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="114"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="50"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="103"/>
         <source>Inventory</source>
         <translation>存货</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="127"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="49"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="102"/>
         <source>Partner</source>
         <translation>合作</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="143"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="52"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="105"/>
         <source>Sale</source>
         <translation>销售</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="159"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="53"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="106"/>
         <source>Purchase</source>
         <translation>采购</translation>
     </message>
@@ -1619,7 +1619,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="382"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="567"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="606"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
@@ -1633,9 +1633,9 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="395"/>
         <location filename="../../mainwindow/mainwindow.ui" line="398"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="22"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="52"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="79"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="23"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="53"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="80"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1650,16 +1650,16 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="434"/>
         <location filename="../../mainwindow/mainwindow.ui" line="437"/>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="44"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="97"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="212"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="42"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="442"/>
         <location filename="../../mainwindow/mainwindow.ui" line="445"/>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="45"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="98"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="213"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="43"/>
         <source>Workspace</source>
         <translation>工区</translation>
     </message>
@@ -1705,8 +1705,8 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="494"/>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="46"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="99"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="214"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="44"/>
         <source>Expire Date</source>
         <translation>期限</translation>
     </message>
@@ -1724,12 +1724,12 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">二级明细-</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_global.cc" line="51"/>
+        <location filename="../../mainwindow/mainwindow_global.cc" line="48"/>
         <source>Update Failed</source>
         <translation>更新失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_global.cc" line="51"/>
+        <location filename="../../mainwindow/mainwindow_global.cc" line="48"/>
         <source>Cannot change the base unit for section Finance because related entries already exist.</source>
         <translation>无法更改财务版块的基准单位，因为已存在记录。</translation>
     </message>
@@ -1744,7 +1744,7 @@ Rage, rage against the dying of the light.</source>
         <translation>将删除此分支，且所有直系子节点提升至同级。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="171"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="164"/>
         <source>Unsaved Data</source>
         <translation>未保存的数据</translation>
     </message>
@@ -1761,12 +1761,12 @@ Click &apos;Yes&apos; to save and close, or &apos;No&apos; to cancel.</source>
         <translation type="vanished">记录-</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_local.cc" line="62"/>
+        <location filename="../../mainwindow/mainwindow_local.cc" line="66"/>
         <source>Language Changed</source>
         <translation>语言已更改</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_local.cc" line="63"/>
+        <location filename="../../mainwindow/mainwindow_local.cc" line="67"/>
         <source>The language has been changed. Please restart the application for the changes to take effect.</source>
         <translation>语言已更改，请重启应用程序以使更改生效。</translation>
     </message>
@@ -1802,7 +1802,7 @@ Please check your network and try reconnecting.</source>
         <translation type="vanished">无法连接到服务器，或连接已中断。\n请检查网络并重新连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="171"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="164"/>
         <source>This page contains unsaved data.
 
 Do you want to save before closing?</source>
@@ -1847,89 +1847,89 @@ Do you want to save before closing?</source>
         <translation type="vanished">帐单明细</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_sale_reference.cc" line="70"/>
+        <location filename="../../mainwindow/mainwindow_sale_reference.cc" line="61"/>
         <source>Record</source>
         <translation>记录</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="55"/>
+        <location filename="../../mainwindow/mainwindow_auth.cc" line="50"/>
         <source>Connection Refused</source>
         <translation>连接被拒绝</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="55"/>
+        <location filename="../../mainwindow/mainwindow_auth.cc" line="50"/>
         <source>Unable to connect to the server. Please try again.</source>
         <translation>无法连接到服务器，请重新尝试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="60"/>
+        <location filename="../../mainwindow/mainwindow_auth.cc" line="66"/>
         <source>Remote Host Closed</source>
         <translation>连接已关闭</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="60"/>
+        <location filename="../../mainwindow/mainwindow_auth.cc" line="66"/>
         <source>The server has closed the connection. Please try reconnecting.</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="577"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="616"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="577"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="616"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="577"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="616"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="611"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="650"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="611"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="650"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="614"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="653"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="614"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="653"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="634"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="641"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="673"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="680"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="634"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="673"/>
         <source>Failed to check updates:
 %1</source>
         <translation>检查更新失败：\n%1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="641"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="680"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="654"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="693"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="654"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="693"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1938,12 +1938,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="660"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="699"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="660"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="699"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -1966,12 +1966,12 @@ Please refresh the data and try again.</source>
 请刷新当前数据后重新尝试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="245"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="246"/>
         <source>Settlement Released</source>
         <translation>结算单已发布</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="246"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="247"/>
         <source>This settlement has already been released and cannot be deleted.
 You need to recall it first before making changes.</source>
         <translation>该结算单已发布，无法直接删除。
@@ -2116,12 +2116,12 @@ You need to recall it first before making changes.</source>
         <translation>默认文件夹</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.cc" line="185"/>
+        <location filename="../../dialog/preferences.cc" line="184"/>
         <source>FXRate Decimal</source>
         <translation>汇率小数位</translation>
     </message>
     <message>
-        <location filename="../../dialog/preferences.cc" line="186"/>
+        <location filename="../../dialog/preferences.cc" line="185"/>
         <source>Base Currency</source>
         <translation>基准单位</translation>
     </message>
@@ -2138,12 +2138,12 @@ You need to recall it first before making changes.</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="297"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="322"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="304"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="329"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -2843,17 +2843,17 @@ You need to recall it first before making changes.</source>
         <translation type="vanished">购</translation>
     </message>
     <message>
-        <location filename="../../utils/nodeutils.h" line="150"/>
+        <location filename="../../utils/nodeutils.h" line="152"/>
         <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../utils/nodeutils.h" line="152"/>
+        <location filename="../../utils/nodeutils.h" line="154"/>
         <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../utils/nodeutils.h" line="154"/>
+        <location filename="../../utils/nodeutils.h" line="156"/>
         <source>PEND</source>
         <translation>挂帐</translation>
     </message>
@@ -2927,6 +2927,31 @@ You need to recall it first before making changes.</source>
         <location filename="../../global/exportexcel.cc" line="77"/>
         <source>Current Balance</source>
         <translation>期末余额</translation>
+    </message>
+    <message>
+        <location filename="../../utils/mainwindowutils.cc" line="171"/>
+        <source>Connecting to server...)</source>
+        <translation>正在连接服务器…</translation>
+    </message>
+    <message>
+        <location filename="../../utils/mainwindowutils.cc" line="176"/>
+        <source>Connected to server</source>
+        <translation>已连接</translation>
+    </message>
+    <message>
+        <location filename="../../utils/mainwindowutils.cc" line="181"/>
+        <source>Disconnected from server</source>
+        <translation>已断开</translation>
+    </message>
+    <message>
+        <location filename="../../utils/mainwindowutils.cc" line="197"/>
+        <source>Logged in</source>
+        <translation>已登录</translation>
+    </message>
+    <message>
+        <location filename="../../utils/mainwindowutils.cc" line="202"/>
+        <source>Logged out</source>
+        <translation>已登出</translation>
     </message>
 </context>
 <context>
