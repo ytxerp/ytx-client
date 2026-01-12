@@ -106,6 +106,7 @@ void WebSocket::Reset()
 void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
 {
     switch (error) {
+        emit SConnectionFailed();
     case QAbstractSocket::ConnectionRefusedError:
         qWarning() << "WebSocket connection refused! (The peer refused or timed out)";
         break;
@@ -140,8 +141,6 @@ void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
         qWarning() << "WebSocket unknown error:" << error;
         break;
     }
-
-    emit SConnectionFailed();
 }
 
 void WebSocket::InitHandler()
