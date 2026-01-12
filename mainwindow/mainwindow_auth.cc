@@ -11,7 +11,11 @@
 #include "utils/mainwindowutils.h"
 #include "websocket/websocket.h"
 
-void MainWindow::on_actionReconnect_triggered() { WebSocket::Instance()->Connect(); }
+void MainWindow::on_actionReconnect_triggered()
+{
+    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
+    WebSocket::Instance()->Connect();
+}
 
 void MainWindow::on_actionSignIn_triggered()
 {
@@ -38,6 +42,7 @@ void MainWindow::on_actionSignOut_triggered()
 
     SetAction(false);
     Utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
+    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
 }
 
 void MainWindow::RConnectionRefused()
@@ -56,8 +61,8 @@ void MainWindow::RConnectionSucceeded()
     ui->actionSignOut->setEnabled(false);
     ui->actionReconnect->setEnabled(true);
 
-    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connected);
     on_actionSignIn_triggered();
+    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connected);
 }
 
 void MainWindow::RRemoteHostClosed()
@@ -68,8 +73,8 @@ void MainWindow::RRemoteHostClosed()
     msg_box->setAttribute(Qt::WA_DeleteOnClose);
     msg_box->show();
 
-    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
     on_actionSignOut_triggered();
+    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
 }
 
 void MainWindow::RLoginSucceeded(const QString& expire_date)
@@ -120,8 +125,8 @@ void MainWindow::RLoginSucceeded(const QString& expire_date)
     }
 
     {
-        Utils::SetLoginStatus(login_label_, LoginStatus::LoggedIn);
         on_tabWidget_currentChanged(0);
+        Utils::SetLoginStatus(login_label_, LoginStatus::LoggedIn);
     }
 }
 
