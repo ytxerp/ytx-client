@@ -159,3 +159,50 @@ void Utils::ResetSectionContext(SectionContext& ctx)
     Utils::CloseWidgets(ctx.table_wgt_hash);
     Utils::CloseWidgets(ctx.widget_hash);
 }
+
+void Utils::SetConnectionStatus(QLabel* label, ConnectionStatus status)
+{
+    if (!label)
+        return;
+
+    switch (status) {
+    case ConnectionStatus::Connecting:
+        label->setText("…");
+        label->setToolTip(QObject::tr("Connecting to server...)"));
+        label->setStyleSheet("QLabel {color: orange;}");
+        return;
+    case ConnectionStatus::Connected:
+        label->setText("●");
+        label->setToolTip(QObject::tr("Connected to server"));
+        label->setStyleSheet("QLabel {color: green;}");
+        return;
+    case ConnectionStatus::Disconnected:
+        label->setText("○");
+        label->setToolTip(QObject::tr("Disconnected from server"));
+        label->setStyleSheet("QLabel {color: red;}");
+        return;
+    }
+
+    Q_UNREACHABLE();
+}
+
+void Utils::SetLoginStatus(QLabel* label, LoginStatus status)
+{
+    if (!label)
+        return;
+
+    switch (status) {
+    case LoginStatus::LoggedIn:
+        label->setText("●");
+        label->setToolTip(QObject::tr("Logged in"));
+        label->setStyleSheet("QLabel { color: green; }");
+        return;
+    case LoginStatus::LoggedOut:
+        label->setText("○");
+        label->setToolTip(QObject::tr("Logged out"));
+        label->setStyleSheet("QLabel { color: red; }");
+        return;
+    }
+
+    Q_UNREACHABLE();
+}

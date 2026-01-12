@@ -49,7 +49,7 @@ public:
 
 signals:
     void SConnectionSucceeded();
-    void SConnectionFailed();
+    void SConnectionRefused();
 
     void SLoginSucceeded(const QString& expire_date);
     void SLoginFailed(int code);

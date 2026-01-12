@@ -37,14 +37,16 @@ void MainWindow::on_actionSignOut_triggered()
     TableSStation::Instance()->Reset();
 
     SetAction(false);
+    Utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
 }
 
-void MainWindow::RConnectionFailed()
+void MainWindow::RConnectionRefused()
 {
     ui->actionSignIn->setEnabled(false);
     ui->actionSignOut->setEnabled(false);
     ui->actionReconnect->setEnabled(true);
 
+    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
     QMessageBox::warning(this, tr("Connection Refused"), tr("Unable to connect to the server. Please try again."));
 }
 
@@ -54,6 +56,7 @@ void MainWindow::RConnectionSucceeded()
     ui->actionSignOut->setEnabled(false);
     ui->actionReconnect->setEnabled(true);
 
+    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connected);
     on_actionSignIn_triggered();
 }
 
@@ -65,6 +68,7 @@ void MainWindow::RRemoteHostClosed()
     msg_box->setAttribute(Qt::WA_DeleteOnClose);
     msg_box->show();
 
+    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
     on_actionSignOut_triggered();
 }
 
@@ -113,6 +117,10 @@ void MainWindow::RLoginSucceeded(const QString& expire_date)
         ui->actionSignIn->setEnabled(false);
         ui->actionSignOut->setEnabled(true);
         ui->actionReconnect->setEnabled(false);
+    }
+
+    {
+        Utils::SetLoginStatus(login_label_, LoginStatus::LoggedIn);
         on_tabWidget_currentChanged(0);
     }
 }
@@ -122,4 +130,5 @@ void MainWindow::RLoginFailed()
     ui->actionSignIn->setEnabled(true);
     ui->actionSignOut->setEnabled(false);
     ui->actionReconnect->setEnabled(true);
+    Utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
 }

@@ -367,6 +367,7 @@ set(HEADERS
     global/exportexcel.h
     enum/settlementenum.h
     enum/authenum.h
+    enum/statusenum.h
     billing/settlement/tablewidgetsettlement.h
     billing/settlement/tablemodelsettlement.h
 )

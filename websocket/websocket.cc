@@ -106,8 +106,8 @@ void WebSocket::Reset()
 void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
 {
     switch (error) {
-        emit SConnectionFailed();
     case QAbstractSocket::ConnectionRefusedError:
+        emit SConnectionRefused();
         qWarning() << "WebSocket connection refused! (The peer refused or timed out)";
         break;
     case QAbstractSocket::RemoteHostClosedError:

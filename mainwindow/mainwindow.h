@@ -21,6 +21,7 @@
 #define MAINWINDOW_H
 
 #include <QActionGroup>
+#include <QLabel>
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QPointer>
@@ -94,7 +95,7 @@ private slots:
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void RActionEntry(EntryAction action);
 
-    void RConnectionFailed();
+    void RConnectionRefused();
     void RConnectionSucceeded();
     void RRemoteHostClosed();
 
@@ -246,6 +247,7 @@ private:
 
     SectionContext* GetSectionContex(Section section);
     void InitSystemTray();
+    void InitStatusLabel();
 
     void SetRemoveShortcut();
     QStringList ChildrenName(const Node* node) const;
@@ -260,6 +262,8 @@ private:
     Ui::MainWindow* ui {};
 
     Section start_ {};
+    QLabel* connection_label_ {};
+    QLabel* login_label_ {};
 
     QSystemTrayIcon* tray_icon_ {};
     QMenu* tray_menu_ {};

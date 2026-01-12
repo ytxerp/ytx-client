@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget* parent)
     IniSectionGroup();
     IniMarkGroup();
     InitSystemTray();
+    InitStatusLabel();
 
     SetTabWidget();
     SetIcon();
@@ -45,6 +46,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     StringInitializer::SetHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
 
+    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
     Utils::ReadConfig(ui->splitter, &QSplitter::restoreState, app_settings_, kSplitter, kState);
     Utils::ReadConfig(this, &QMainWindow::restoreState, app_settings_, kMainwindow, kState, 0);
     Utils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
@@ -340,6 +342,15 @@ void MainWindow::InitSystemTray()
 #endif
 }
 
+void MainWindow::InitStatusLabel()
+{
+    login_label_ = new QLabel(this);
+    ui->statusbar->addPermanentWidget(login_label_);
+
+    connection_label_ = new QLabel(this);
+    ui->statusbar->addPermanentWidget(connection_label_);
+}
+
 void MainWindow::closeEvent(QCloseEvent* event)
 {
     if (tray_icon_ && tray_icon_->isVisible()) {
@@ -363,7 +374,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
     connect(WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
     connect(WebSocket::Instance(), &WebSocket::SConnectionSucceeded, this, &MainWindow::RConnectionSucceeded);
-    connect(WebSocket::Instance(), &WebSocket::SConnectionFailed, this, &MainWindow::RConnectionFailed);
+    connect(WebSocket::Instance(), &WebSocket::SConnectionRefused, this, &MainWindow::RConnectionRefused);
     connect(WebSocket::Instance(), &WebSocket::SLoginSucceeded, this, &MainWindow::RLoginSucceeded);
     connect(WebSocket::Instance(), &WebSocket::SLoginFailed, this, &MainWindow::RLoginFailed);
     connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::RRemoteHostClosed);

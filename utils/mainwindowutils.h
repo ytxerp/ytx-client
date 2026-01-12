@@ -20,15 +20,19 @@
 #ifndef MAINWINDOWUTILS_H
 #define MAINWINDOWUTILS_H
 
+#include <QLabel>
 #include <QMessageBox>
 #include <QSettings>
 
 #include "component/sectioncontex.h"
+#include "enum/statusenum.h"
 #include "worksheet.h"
 
 namespace Utils {
 
 void ResetSectionContext(SectionContext& ctx);
+void SetConnectionStatus(QLabel* label, ConnectionStatus status);
+void SetLoginStatus(QLabel* label, LoginStatus status);
 
 QString AccountIniFileName(const QString& email, const QString& workspace);
 
