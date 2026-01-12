@@ -15,8 +15,8 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName",      "YTX"
-            VALUE "FileDescription",  "YTX Double-Entry ERP Program"
+            VALUE "CompanyName",      "YTX Tech"
+            VALUE "FileDescription",  "YTX"
             VALUE "FileVersion",      "@PROJECT_VERSION@"
             VALUE "ProductVersion",   "@PROJECT_VERSION@"
             VALUE "InternalName",     "YTX"

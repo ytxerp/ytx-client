@@ -396,6 +396,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SInvalidOperation, this, &MainWindow::RInvalidOperation);
     connect(WebSocket::Instance(), &WebSocket::SNodeSelected, this, &MainWindow::RNodeSelected);
     connect(WebSocket::Instance(), &WebSocket::SNodeLocation, this, &MainWindow::RNodeLocation);
+    connect(WebSocket::Instance(), &WebSocket::STreeSyncFinished, this, &MainWindow::RTreeSyncFinished);
 }
 
 void MainWindow::SetIcon() const
@@ -570,7 +571,7 @@ void MainWindow::SwitchSection(Section section, const QUuid& last_tab) const
 
 void MainWindow::RSectionGroup(int id)
 {
-    qInfo() << "[UI]" << "Section Changed" << kSectionString.value(Section(id));
+    qInfo() << "[UI]" << "Switched to section:" << kSectionString.value(Section(id));
 
     const Section section { id };
     start_ = section;

@@ -355,23 +355,23 @@ void TableModel::sort(int column, Qt::SortOrder order)
     auto Compare = [order, e_column](const EntryShadow* lhs, const EntryShadow* rhs) -> bool {
         switch (e_column) {
         case EntryEnum::kCode:
-            return Utils::CompareMember(lhs, rhs, &EntryShadow::code, order);
+            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::code, order);
         case EntryEnum::kDescription:
-            return Utils::CompareMember(lhs, rhs, &EntryShadow::description, order);
+            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::description, order);
         case EntryEnum::kIssuedTime:
-            return Utils::CompareMember(lhs, rhs, &EntryShadow::issued_time, order);
+            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::issued_time, order);
         case EntryEnum::kLhsRate:
-            return Utils::CompareMember(lhs, rhs, &EntryShadow::lhs_rate, order);
+            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_rate, order);
         case EntryEnum::kRhsNode:
-            return Utils::CompareMember(lhs, rhs, &EntryShadow::rhs_node, order);
+            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::rhs_node, order);
         case EntryEnum::kStatus:
-            return Utils::CompareMember(lhs, rhs, &EntryShadow::status, order);
+            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::status, order);
         case EntryEnum::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
         case EntryEnum::kDebit:
-            return Utils::CompareMember(lhs, rhs, &EntryShadow::lhs_debit, order);
+            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_debit, order);
         case EntryEnum::kCredit:
-            return Utils::CompareMember(lhs, rhs, &EntryShadow::lhs_credit, order);
+            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_credit, order);
         case EntryEnum::kId:
         case EntryEnum::kUpdateBy:
         case EntryEnum::kUpdateTime:

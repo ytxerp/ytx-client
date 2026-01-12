@@ -143,6 +143,7 @@ inline const QString kSettlementRemoved = QStringLiteral("settlement_removed");
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");
 inline const QString kSharedConfig = QStringLiteral("shared_config");
+inline const QString kTreeSyncFinished = QStringLiteral("tree_sync_finished");
 
 // Decimal config
 inline const QString kAmountDecimal = QStringLiteral("amount_decimal");

@@ -170,6 +170,7 @@ void WebSocket::InitHandler()
     handler_obj_[kInvalidOperation] = [this](const QJsonObject& /*obj*/) { NotifyInvalidOperation(); };
 
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
+    handler_obj_[kTreeSyncFinished] = [this](const QJsonObject& /*obj*/) { NotifyTreeSyncFinished(); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
     handler_obj_[kNodeAcked] = [this](const QJsonObject& obj) { AckNode(obj); };
     handler_obj_[kLeafRemove] = [this](const QJsonObject& obj) { RemoveLeaf(obj); };
@@ -267,6 +268,8 @@ void WebSocket::NotifyLoginResult(const QJsonObject& obj)
 }
 
 void WebSocket::NotifyInvalidOperation() { emit SInvalidOperation(); }
+
+void WebSocket::NotifyTreeSyncFinished() { emit STreeSyncFinished(); }
 
 void WebSocket::NotifyRegisterResult(const QJsonObject& obj)
 {

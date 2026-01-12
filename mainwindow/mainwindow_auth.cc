@@ -131,7 +131,6 @@ void MainWindow::RLoginSucceeded(const QString& expire_date)
     }
 
     {
-        on_tabWidget_currentChanged(0);
         Utils::SetLoginStatus(login_label_, LoginStatus::LoggedIn);
     }
 }
@@ -142,4 +141,10 @@ void MainWindow::RLoginFailed()
     ui->actionSignOut->setEnabled(false);
     ui->actionReconnect->setEnabled(true);
     Utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
+}
+
+void MainWindow::RTreeSyncFinished()
+{
+    qDebug() << "RTreeSyncFinished";
+    on_tabWidget_currentChanged(0);
 }

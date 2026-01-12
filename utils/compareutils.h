@@ -28,6 +28,9 @@ namespace Utils {
 
 template <typename Obj, typename T> inline bool CompareMember(const Obj* lhs, const Obj* rhs, const T Obj::* member, Qt::SortOrder order)
 {
+    Q_ASSERT(lhs != nullptr);
+    Q_ASSERT(rhs != nullptr);
+
     if constexpr (std::is_same_v<T, QString>) {
         // QString comparison using collator
         const auto& collator = Collator::Instance();
@@ -36,6 +39,26 @@ template <typename Obj, typename T> inline bool CompareMember(const Obj* lhs, co
     } else {
         // Regular comparison for other types
         return (order == Qt::AscendingOrder) ? (lhs->*member < rhs->*member) : (lhs->*member > rhs->*member);
+    }
+}
+
+template <typename Obj, typename T> inline bool CompareShadowMember(const Obj* lhs, const Obj* rhs, T* Obj::* member, Qt::SortOrder order)
+{
+    Q_ASSERT(lhs != nullptr);
+    Q_ASSERT(rhs != nullptr);
+
+    const T* lp = lhs->*member;
+    const T* rp = rhs->*member;
+
+    Q_ASSERT(lp != nullptr);
+    Q_ASSERT(rp != nullptr);
+
+    if constexpr (std::is_same_v<T, QString>) {
+        const auto& collator = Collator::Instance();
+        const int r = collator.compare(*lp, *rp);
+        return (order == Qt::AscendingOrder) ? (r < 0) : (r > 0);
+    } else {
+        return (order == Qt::AscendingOrder) ? (*lp < *rp) : (*lp > *rp);
     }
 }
 

@@ -81,6 +81,7 @@ signals:
     void SInvalidOperation();
     void SNodeSelected(Section section, const QUuid& node_id);
     void SNodeLocation(Section section, const QUuid& node_id);
+    void STreeSyncFinished();
 
     // send to SearchNodeModel
     void SNodeSearch(const QJsonObject& obj);
@@ -120,6 +121,7 @@ private:
     void NotifyLeafRemoveDenied(const QJsonObject& obj);
     void NotifyUpdateDefaultUnitFailure(const QJsonObject& obj);
     void NotifyInvalidOperation();
+    void NotifyTreeSyncFinished();
 
 private:
     void ApplySharedConfig(const QJsonArray& arr);

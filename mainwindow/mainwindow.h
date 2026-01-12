@@ -101,6 +101,7 @@ private slots:
 
     void RLoginSucceeded(const QString& expire_date);
     void RLoginFailed();
+    void RTreeSyncFinished();
 
     void RFreeWidget(Section section, const QUuid& node_id);
 
