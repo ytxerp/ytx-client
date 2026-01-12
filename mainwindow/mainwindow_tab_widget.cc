@@ -26,6 +26,8 @@ void MainWindow::SetTabWidget()
 
 void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 {
+    qInfo() << "[UI]" << "RTreeViewDoubleClicked";
+
     {
         const int expected_column { IsOrderSection(start_) ? std::to_underlying(NodeEnumO::kPartner) : std::to_underlying(NodeEnum::kName) };
 
@@ -96,6 +98,8 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
 
 void MainWindow::on_tabWidget_currentChanged(int /*index*/)
 {
+    qDebug() << "[UI]" << "on_tabWidget_currentChanged";
+
     if (!section_settings_)
         return;
 
@@ -131,6 +135,8 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
 
 void MainWindow::on_tabWidget_tabBarDoubleClicked(int index)
 {
+    qInfo() << "[UI]" << "on_tabWidget_tabBarDoubleClicked";
+
     auto* tab_bar { ui->tabWidget->tabBar() };
     const auto tab_info { tab_bar->tabData(index).value<TabInfo>() };
     const QUuid id { tab_info.id };
@@ -141,6 +147,8 @@ void MainWindow::on_tabWidget_tabBarDoubleClicked(int index)
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
 {
+    qInfo() << "[UI]" << "on_tabWidget_tabCloseRequested";
+
     if (index == 0)
         return;
 
@@ -180,6 +188,8 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 
 void MainWindow::on_actionJump_triggered()
 {
+    qInfo() << "[UI]" << "on_actionJump_triggered";
+
     if (IsSingleEntry(start_))
         return;
 

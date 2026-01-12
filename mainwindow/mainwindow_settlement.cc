@@ -12,6 +12,8 @@
 
 void MainWindow::on_actionSettlement_triggered()
 {
+    qInfo() << "[UI]" << "on_actionSettlement_triggered";
+
     assert(IsOrderSection(start_));
 
     auto* model { new TreeModelSettlement(sc_->info, this) };
@@ -86,6 +88,8 @@ void MainWindow::RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id)
 
 void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
 {
+    qInfo() << "[UI]" << "RSettlementTableViewDoubleClicked";
+
     auto* settlement_widget { dynamic_cast<TreeWidgetSettlement*>(ui->tabWidget->currentWidget()) };
     if (settlement_widget) {
         if (index.column() != std::to_underlying(SettlementEnum::kAmount))

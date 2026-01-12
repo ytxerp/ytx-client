@@ -13,6 +13,8 @@
 
 void MainWindow::on_actionAppendEntry_triggered()
 {
+    qInfo() << "[UI]" << "on_actionAppendEntry_triggered";
+
     {
         auto* widget { dynamic_cast<TreeWidgetSettlement*>(ui->tabWidget->currentWidget()) };
         if (widget) {

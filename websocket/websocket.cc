@@ -51,46 +51,47 @@ void WebSocket::ReadConfig(const QSharedPointer<QSettings>& local_settings)
 
     server_url_ = QUrl(url_str);
     if (!server_url_.isValid()) {
-        qWarning() << "Invalid WebSocket URL constructed:" << url_str;
+        qCritical() << "[WS]" << "Invalid URL" << url_str;
     }
 }
 
 void WebSocket::Connect()
 {
     if (!server_url_.isValid()) {
-        qWarning() << "WebSocket: invalid URL, cannot connect.";
+        qCritical() << "[WS]" << "Invalid URL, stopping connection.";
         return;
     }
 
     if (socket_.state() == QAbstractSocket::ConnectedState || socket_.state() == QAbstractSocket::ConnectingState) {
-        qInfo() << "WebSocket: already connected or connecting.";
+        qInfo() << "[WS]" << "Already connected or in the process of connecting.";
         return;
     }
 
+    qInfo() << "[WS]" << "Connecting to server...";
     socket_.open(server_url_);
 }
 
 void WebSocket::RConnected()
 {
-    qInfo() << "Websocket connected";
+    qInfo() << "[WS]" << "Connected";
     emit SConnectionSucceeded();
 }
 
 void WebSocket::RDisconnected()
 {
-    qInfo() << "Websocket disconnected";
-
     if (session_id_.isEmpty()) {
-        qInfo() << "Session ID is empty — disconnected before login.";
+        qInfo() << "[WS]" << "Session ID is empty — disconnected before login.";
         return;
     }
 
     session_id_.clear();
 
-    if (manual_disconnect_)
+    if (manual_disconnect_) {
+        qInfo() << "[WS]" << "Auto-reconnecting to server after logout.";
         Connect();
-    else
+    } else {
         emit SRemoteHostClosed();
+    }
 
     manual_disconnect_ = false;
 }
@@ -108,37 +109,37 @@ void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
     switch (error) {
     case QAbstractSocket::ConnectionRefusedError:
         emit SConnectionRefused();
-        qWarning() << "WebSocket connection refused! (The peer refused or timed out)";
+        qWarning() << "[WS]" << "Connection refused! (The peer refused or timed out)";
         break;
     case QAbstractSocket::RemoteHostClosedError:
-        qWarning() << "WebSocket remote host closed connection!";
+        qWarning() << "[WS]" << "Remote host closed connection!";
         break;
     case QAbstractSocket::HostNotFoundError:
-        qWarning() << "WebSocket host not found! (Invalid address or DNS failure)";
+        qWarning() << "[WS]" << "Host not found! (Invalid address or DNS failure)";
         break;
     case QAbstractSocket::SocketAccessError:
-        qWarning() << "WebSocket socket access error! (Permission denied)";
+        qWarning() << "[WS]" << "Socket access error! (Permission denied)";
         break;
     case QAbstractSocket::SocketResourceError:
-        qWarning() << "WebSocket socket resource error! (Too many open sockets)";
+        qWarning() << "[WS]" << "Socket resource error! (Too many open sockets)";
         break;
     case QAbstractSocket::SocketTimeoutError:
-        qWarning() << "WebSocket socket timeout error!";
+        qWarning() << "[WS]" << "Socket timeout error!";
         break;
     case QAbstractSocket::DatagramTooLargeError:
-        qWarning() << "WebSocket datagram too large error! (Exceeded system limit)";
+        qWarning() << "[WS]" << "Datagram too large! (Exceeded system limit)";
         break;
     case QAbstractSocket::NetworkError:
-        qWarning() << "WebSocket network error! (Network cable unplugged or lost connection)";
+        qWarning() << "[WS]" << "Network error! (Cable unplugged or lost connection)";
         break;
     case QAbstractSocket::AddressInUseError:
-        qWarning() << "WebSocket address already in use! (Port conflict)";
+        qWarning() << "[WS]" << "Address already in use! (Port conflict)";
         break;
     case QAbstractSocket::SocketAddressNotAvailableError:
-        qWarning() << "WebSocket socket address not available! (Address does not belong to host)";
+        qWarning() << "[WS]" << "Socket address not available! (Address does not belong to host)";
         break;
     default:
-        qWarning() << "WebSocket unknown error:" << error;
+        qWarning() << "[WS]" << "Unknown socket error:" << error;
         break;
     }
 }
@@ -209,7 +210,7 @@ void WebSocket::InitConnect()
 void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
 {
     if (socket_.state() != QAbstractSocket::ConnectedState) {
-        qWarning() << "Cannot send message: WebSocket is not connected";
+        qWarning() << "[WS]" << "Cannot send message: WebSocket is not connected.";
         return;
     }
 
@@ -225,7 +226,7 @@ void WebSocket::RReceiveMessage(const QString& message)
     const QJsonValue root { QJsonValue::fromJson(message.toUtf8(), &err) };
 
     if (err.error != QJsonParseError::NoError || !root.isObject()) {
-        qWarning() << "Invalid Message:" << message;
+        qWarning() << "[WS]" << "Invalid message received from server:" << message;
         return;
     }
 
@@ -247,7 +248,7 @@ void WebSocket::RReceiveMessage(const QString& message)
         }
     }
 
-    qWarning() << "Unsupported Message:" << msg_type;
+    qWarning() << "[WS]" << "Unsupported server message type:" << msg_type;
 }
 
 void WebSocket::NotifyLoginResult(const QJsonObject& obj)
@@ -320,7 +321,6 @@ void WebSocket::DragNode(const QJsonObject& obj)
     CString descendant { path.value(kDescendant).toString() };
 
     if (ancestor.isEmpty() || descendant.isEmpty()) {
-        qWarning() << "Invalid drag node obj";
         return;
     }
 
@@ -494,10 +494,8 @@ void WebSocket::ReplaceLeaf(const QJsonObject& obj)
         emit SReplaceResult(result);
     }
 
-    if (!result) {
-        qWarning() << "Replace Leaf Node failed";
+    if (!result)
         return;
-    }
 
     auto entry_hub { entry_hub_hash_.value(section) };
     entry_hub->ReplaceLeaf(old_node_id, new_node_id);

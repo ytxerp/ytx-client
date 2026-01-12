@@ -34,6 +34,8 @@ void MainWindow::EditNameO()
 
 void MainWindow::on_actionNewGroup_triggered()
 {
+    qInfo() << "[UI]" << "on_actionNewGroup_triggered";
+
     if (start_ != Section::kSale && start_ != Section::kPurchase)
         return;
 

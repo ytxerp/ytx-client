@@ -31,7 +31,11 @@ AuthDialog::AuthDialog(const QSharedPointer<QSettings>& local_settings, QWidget*
 
 AuthDialog::~AuthDialog() { delete ui; }
 
-void AuthDialog::RLoginSucceeded() { close(); }
+void AuthDialog::RLoginSucceeded()
+{
+    qInfo() << "[Auth]" << "Login succeeded" << ui->lineEditEmail->text().trimmed() << ui->lineEditWorkspace->text().trimmed();
+    close();
+}
 
 void AuthDialog::RLoginFailed(int code)
 {
@@ -75,6 +79,7 @@ void AuthDialog::RLoginFailed(int code)
         break;
     }
 
+    qWarning() << "[Auth]" << "Login failed" << ui->lineEditEmail->text().trimmed() << ui->lineEditWorkspace->text().trimmed() << message;
     QMessageBox::critical(this, title, message);
 }
 
@@ -85,6 +90,7 @@ void AuthDialog::RRegisterResult(bool result, int code)
         LoginInfo::Instance().WriteConfig(local_settings_);
 
         RLoginDialog();
+        qInfo() << "[Auth]" << "Registration successful";
         QMessageBox::information(this, tr("Registration Successful"), tr("Your account has been registered successfully."));
         return;
     }
@@ -114,6 +120,7 @@ void AuthDialog::RRegisterResult(bool result, int code)
             break;
         }
 
+        qWarning() << "[Auth]" << "Registration failed" << message;
         QMessageBox::critical(this, tr("Registration Failed"), message);
     }
 }

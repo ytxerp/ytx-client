@@ -49,7 +49,7 @@ void DailyLogger::HandleMessage(QtMsgType type, const QMessageLogContext&, const
     if (is_released_)
         return;
 
-    static const QStringList ignore_patterns { "QObject::startTimer", "QObject::disconnect", "WebSocket remote host closed connection" };
+    static const QStringList ignore_patterns { "QObject::startTimer", "QObject::disconnect" };
 
     // Check if message matches any ignore pattern
     if (std::ranges::any_of(ignore_patterns, [&msg](const QString& pattern) { return msg.contains(pattern); })) {

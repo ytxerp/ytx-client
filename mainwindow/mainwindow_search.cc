@@ -20,6 +20,8 @@
 
 void MainWindow::on_actionSearch_triggered()
 {
+    qInfo() << "[UI]" << "on_actionSearch_triggered";
+
     if (!section_settings_)
         return;
 

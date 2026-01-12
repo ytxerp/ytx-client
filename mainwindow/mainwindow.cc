@@ -162,6 +162,8 @@ void MainWindow::InsertNodeFunction(const QModelIndex& parent_index)
 
 void MainWindow::on_actionRemove_triggered()
 {
+    qInfo() << "[UI]" << "on_actionRemove_triggered";
+
     auto* widget { ui->tabWidget->currentWidget() };
     assert(widget);
 
@@ -420,6 +422,8 @@ void MainWindow::SetIcon() const
 
 void MainWindow::on_actionInsertNode_triggered()
 {
+    qInfo() << "[UI]" << "on_actionInsertNode_triggered";
+
     auto* widget { ui->tabWidget->currentWidget() };
     if (!IsTreeWidget(widget) && !IsTableWidgetO(widget)) {
         return;
@@ -433,6 +437,8 @@ void MainWindow::on_actionInsertNode_triggered()
 
 void MainWindow::on_actionAppendNode_triggered()
 {
+    qInfo() << "[UI]" << "on_actionAppendNode_triggered";
+
     auto* widget { ui->tabWidget->currentWidget() };
     if (!IsTreeWidget(widget)) {
         return;
@@ -477,6 +483,8 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
 
 void MainWindow::on_actionEditName_triggered()
 {
+    qInfo() << "[UI]" << "on_actionEditName_triggered";
+
     switch (start_) {
     case Section::kSale:
     case Section::kPurchase:
@@ -508,6 +516,8 @@ void MainWindow::ResizeColumn(QHeaderView* header, int stretch_column) const
 
 void MainWindow::on_actionPreferences_triggered()
 {
+    qInfo() << "[UI]" << "on_actionPreferences_triggered";
+
     auto model { sc_->tree_model };
 
     auto* preference { new Preferences(model, sc_->info, app_config_, sc_->shared_config, sc_->section_config, this) };
@@ -517,6 +527,8 @@ void MainWindow::on_actionPreferences_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
+    qInfo() << "[UI]" << "on_actionAbout_triggered";
+
     static About* dialog { nullptr };
 
     if (!dialog) {
@@ -558,6 +570,8 @@ void MainWindow::SwitchSection(Section section, const QUuid& last_tab) const
 
 void MainWindow::RSectionGroup(int id)
 {
+    qInfo() << "[UI]" << "Section Changed" << kSectionString.value(Section(id));
+
     const Section section { id };
     start_ = section;
 

@@ -1,6 +1,7 @@
 #include <QtCore/qdir.h>
 #include <QtWidgets/qheaderview.h>
 
+#include "component/signalblocker.h"
 #include "entryhub/entryhubf.h"
 #include "entryhub/entryhubi.h"
 #include "entryhub/entryhubo.h"

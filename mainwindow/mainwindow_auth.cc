@@ -13,12 +13,16 @@
 
 void MainWindow::on_actionReconnect_triggered()
 {
+    qInfo() << "[UI]" << "on_actionReconnect_triggered";
+
     Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
     WebSocket::Instance()->Connect();
 }
 
 void MainWindow::on_actionSignIn_triggered()
 {
+    qInfo() << "[UI]" << "on_actionSignIn_triggered";
+
     static AuthDialog* dialog = nullptr;
 
     if (!dialog) {
@@ -35,6 +39,8 @@ void MainWindow::on_actionSignIn_triggered()
 
 void MainWindow::on_actionSignOut_triggered()
 {
+    qInfo() << "[UI]" << "on_actionSignOut_triggered";
+
     ResetMainwindow();
 
     WebSocket::Instance()->Reset();
