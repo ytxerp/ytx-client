@@ -59,6 +59,25 @@ constexpr int EntryDescriptionColumn(Section section)
     case Section::kPurchase:
         return std::to_underlying(EntryEnumO::kDescription);
     }
+
+    Q_UNREACHABLE();
+}
+
+constexpr int SearchEntryDescriptionColumn(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+    case Section::kInventory:
+    case Section::kTask:
+        return std::to_underlying(FullEntryEnum::kDescription);
+    case Section::kPartner:
+        return std::to_underlying(EntryEnumP::kDescription);
+    case Section::kSale:
+    case Section::kPurchase:
+        return std::to_underlying(EntryEnumO::kDescription);
+    }
+
+    Q_UNREACHABLE();
 }
 
 constexpr int BalanceColumn(Section section)

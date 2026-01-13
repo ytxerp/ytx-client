@@ -29,6 +29,7 @@
 #include "delegate/readonly/colorr.h"
 #include "delegate/readonly/doublespinnonezeror.h"
 #include "delegate/readonly/intstringr.h"
+#include "delegate/readonly/issuedtimer.h"
 #include "delegate/readonly/statusr.h"
 #include "delegate/search/searchpathtabler.h"
 #include "delegate/search/searchpathtreer.h"
@@ -84,6 +85,7 @@ protected:
 
     DoubleSpinNoneZeroR* value_ {};
     DoubleSpinNoneZeroR* rate_ {};
+    IssuedTimeR* issued_time_ {};
 
     IntStringR* unit_ {};
     BoolStringR* direction_rule_ {};

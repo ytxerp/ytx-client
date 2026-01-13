@@ -23,8 +23,7 @@ void IssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) const
         return;
 
     auto issued_time { index.data().toDateTime().toLocalTime() };
-    if (!issued_time.isValid())
-        issued_time = QDateTime::currentDateTime();
+    Q_ASSERT(issued_time.isValid());
 
     cast_editor->setDateTime(issued_time);
 }
@@ -40,8 +39,7 @@ void IssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, const 
 void IssuedTime::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     auto issued_time { index.data().toDateTime().toLocalTime() };
-    if (!issued_time.isValid())
-        return PaintEmpty(painter, option, index);
+    Q_ASSERT(issued_time.isValid());
 
     PaintText(issued_time.toString(date_format_), painter, option, index, Qt::AlignCenter);
 }

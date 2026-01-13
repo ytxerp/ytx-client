@@ -147,6 +147,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     node.direction_rule = parent_node->direction_rule;
     node.unit = parent_index.isValid() ? parent_node->unit : sc_->shared_config.default_unit;
     node.parent = parent_node;
+    node.issued_time = QDateTime::currentDateTimeUtc();
 
     const QUuid node_id { node.id };
 

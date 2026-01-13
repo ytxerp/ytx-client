@@ -168,8 +168,8 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployee), name_r);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kPartner), name_r);
 
-    auto* issued_time_r { new IssuedTimeR(section.date_format, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time_r);
+    auto* issued_time { new IssuedTimeR(section.date_format, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time);
 
     auto* status_r { new StatusR(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), status_r);

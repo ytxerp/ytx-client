@@ -5,6 +5,7 @@
 #include "component/signalblocker.h"
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
+#include "utils/entryutils.h"
 
 SearchDialog::SearchDialog(
     CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CSectionConfig& config, CSectionInfo& info, QWidget* parent)
@@ -74,6 +75,7 @@ void SearchDialog::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsNode), table_path_);
 
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kStatus), check_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kIssuedTime), issued_time_);
 }
 
 void SearchDialog::IniContentGroup()
@@ -94,6 +96,7 @@ void SearchDialog::InitDelegate()
     check_ = new StatusR(this);
     color_ = new ColorR(this);
     table_path_ = new SearchPathTableR(tree_model_, this);
+    issued_time_ = new IssuedTimeR(config_.date_format, this);
 }
 
 void SearchDialog::HideTreeColumn(QTableView* view)
@@ -141,8 +144,9 @@ void SearchDialog::ResizeTreeColumn(QHeaderView* header)
 
 void SearchDialog::ResizeTableColumn(QHeaderView* header)
 {
+    const int description_column { Utils::SearchEntryDescriptionColumn(info_.section) };
     header->setSectionResizeMode(QHeaderView::ResizeToContents);
-    header->setSectionResizeMode(std::to_underlying(EntryEnum::kDescription), QHeaderView::Stretch);
+    header->setSectionResizeMode(description_column, QHeaderView::Stretch);
 }
 
 void SearchDialog::RSearchNode()

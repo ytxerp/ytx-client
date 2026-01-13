@@ -165,6 +165,8 @@ void TableWidgetO::IniData(const NodeO& node)
 {
     {
         (node.direction_rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true);
+        ui->dateTimeEdit->setDateTime(node.issued_time.toLocalTime());
+        table_model_order_->SetNode(&tmp_node_);
     }
 
     {
@@ -189,22 +191,13 @@ void TableWidgetO::IniData(const NodeO& node)
         LockWidgets(NodeStatus(node.status));
     }
 
-    {
-        table_model_order_->SetNode(&tmp_node_);
-    }
-
-    if (!is_persisted_) {
-        const auto date_time { QDateTime::currentDateTimeUtc() };
-        ui->dateTimeEdit->setDateTime(date_time.toLocalTime());
-        tmp_node_.issued_time = date_time;
+    if (!is_persisted_)
         return;
-    }
 
     {
         IniUiValue();
 
         ui->lineDescription->setText(node.description);
-        ui->dateTimeEdit->setDateTime(node.issued_time.toLocalTime());
 
         int partner_index { ui->comboPartner->findData(node.partner_id) };
         ui->comboPartner->setCurrentIndex(partner_index);

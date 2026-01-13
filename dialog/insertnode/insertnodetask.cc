@@ -33,7 +33,6 @@ void InsertNodeTask::IniDialog(ItemModel* unit_model)
 
     this->setWindowTitle(parent_path_);
     this->setFixedSize(360, 600);
-    node_->issued_time = QDateTime::currentDateTimeUtc();
 
     ui->comboUnit->setModel(unit_model);
     ui->issuedTime->setDisplayFormat(kDateFST);

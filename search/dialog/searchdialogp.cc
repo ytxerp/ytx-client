@@ -32,8 +32,8 @@ void SearchDialogP::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), rhs_node_name);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kExternalSku), rhs_node_name);
 
-    auto* status_r { new StatusR(view) };
-    view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kStatus), status_r);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kStatus), check_);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIssuedTime), issued_time_);
 }
 
 void SearchDialogP::REntryDoubleClicked(const QModelIndex& index)
