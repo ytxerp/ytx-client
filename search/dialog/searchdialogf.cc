@@ -13,8 +13,8 @@ SearchDialogF::SearchDialogF(
 
 void SearchDialogF::TreeViewDelegate(QTableView* view)
 {
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kInitialTotal), value_);
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kFinalTotal), value_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kInitialTotal), amount_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kFinalTotal), amount_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kUnit), unit_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kDirectionRule), direction_rule_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kKind), kind_);

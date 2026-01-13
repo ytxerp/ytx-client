@@ -25,6 +25,7 @@
 #include <QTableView>
 
 #include "component/config.h"
+#include "delegate/int.h"
 #include "delegate/readonly/boolstringr.h"
 #include "delegate/readonly/colorr.h"
 #include "delegate/readonly/documentr.h"
@@ -84,8 +85,10 @@ protected:
     CTreeModel* tree_model_ {};
     QButtonGroup* content_group_ {};
 
-    DoubleSpinNoneZeroR* value_ {};
+    DoubleSpinNoneZeroR* amount_ {};
     DoubleSpinNoneZeroR* rate_ {};
+    DoubleSpinNoneZeroR* quantity_ {};
+
     IssuedTimeR* issued_time_ {};
     DocumentR* document_ {};
 
@@ -97,6 +100,7 @@ protected:
     StatusR* check_ {};
     ColorR* color_ {};
     SearchPathTableR* table_path_ {};
+    Int* int_ {};
 
     CSectionConfig& config_;
     CSectionInfo& info_;

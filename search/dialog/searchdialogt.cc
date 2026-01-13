@@ -15,8 +15,8 @@ SearchDialogT::SearchDialogT(
 
 void SearchDialogT::TreeViewDelegate(QTableView* view)
 {
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kInitialTotal), value_);
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kFinalTotal), value_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kInitialTotal), amount_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kFinalTotal), amount_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kStatus), check_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kColor), color_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kUnit), unit_);

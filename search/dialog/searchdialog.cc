@@ -63,10 +63,10 @@ void SearchDialog::IniConnect()
 
 void SearchDialog::TableViewDelegate(QTableView* view)
 {
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsDebit), value_);
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsDebit), value_);
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsCredit), value_);
-    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsCredit), value_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsDebit), quantity_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsDebit), quantity_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsCredit), quantity_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsCredit), quantity_);
 
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsRate), rate_);
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsRate), rate_);
@@ -89,8 +89,9 @@ void SearchDialog::IniContentGroup()
 
 void SearchDialog::InitDelegate()
 {
-    value_ = new DoubleSpinNoneZeroR(config_.amount_decimal, kCoefficient8, this);
+    amount_ = new DoubleSpinNoneZeroR(config_.amount_decimal, kCoefficient8, this);
     rate_ = new DoubleSpinNoneZeroR(config_.rate_decimal, kCoefficient8, this);
+    quantity_ = new DoubleSpinNoneZeroR(config_.quantity_decimal, kCoefficient8, this);
     unit_ = new IntStringR(info_.unit_map, this);
     direction_rule_ = new BoolStringR(info_.rule_map, this);
     kind_ = new IntStringR(info_.kind_map, this);
@@ -100,6 +101,7 @@ void SearchDialog::InitDelegate()
     table_path_ = new SearchPathTableR(tree_model_, this);
     issued_time_ = new IssuedTimeR(config_.date_format, this);
     document_ = new DocumentR(this);
+    int_ = new Int(0, 36500, this);
 }
 
 void SearchDialog::HideTreeColumn(QTableView* view)
