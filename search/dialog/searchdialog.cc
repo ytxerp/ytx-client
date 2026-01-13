@@ -151,19 +151,22 @@ void SearchDialog::ResizeTableColumn(QHeaderView* header)
 
 void SearchDialog::RSearchNode()
 {
-    search_node_->Search(ui->lineEditNode->text());
+    search_node_->Search(ui->lineEditNode->text().trimmed());
     ResizeTreeColumn(ui->searchViewNode->horizontalHeader());
 }
 
 void SearchDialog::RSearchEntry()
 {
-    search_entry_->Search(ui->lineEditEntry->text());
+    search_entry_->Search(ui->lineEditEntry->text().trimmed());
     ResizeTableColumn(ui->searchViewEntry->horizontalHeader());
 }
 
 void SearchDialog::RNodeDoubleClicked(const QModelIndex& index)
 {
     auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
+    if (node_id.isNull())
+        return;
+
     emit SNodeLocation(info_.section, node_id);
 }
 

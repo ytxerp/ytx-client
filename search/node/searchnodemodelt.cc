@@ -2,34 +2,11 @@
 
 #include <QJsonArray>
 
-#include "global/nodepool.h"
 #include "utils/compareutils.h"
 
 SearchNodeModelT::SearchNodeModelT(CSectionInfo& info, CTreeModel* tree_model, QObject* parent)
     : SearchNodeModel { info, tree_model, parent }
 {
-}
-
-void SearchNodeModelT::RNodeSearch(const QJsonObject& obj)
-{
-    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
-
-    beginResetModel();
-
-    if (!node_list_.isEmpty()) {
-        NodePool::Instance().Recycle(node_list_, section_);
-        node_list_.clear();
-    }
-
-    for (const QJsonValue& val : node_array) {
-        const QJsonObject obj { val.toObject() };
-
-        Node* node { NodePool::Instance().Allocate(section_) };
-        node->ReadJson(obj);
-
-        node_list_.append(node);
-    }
-    endResetModel();
 }
 
 QVariant SearchNodeModelT::data(const QModelIndex& index, int role) const

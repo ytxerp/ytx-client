@@ -64,7 +64,6 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
 
 void MainWindow::RNodeLocation(Section section, const QUuid& node_id)
 {
-    // Ignore report widget
     if (node_id.isNull())
         return;
 

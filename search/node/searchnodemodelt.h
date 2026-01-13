@@ -28,9 +28,6 @@ class SearchNodeModelT final : public SearchNodeModel {
 public:
     SearchNodeModelT(CSectionInfo& info, CTreeModel* tree_model, QObject* parent = nullptr);
 
-public slots:
-    void RNodeSearch(const QJsonObject& obj) override;
-
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;

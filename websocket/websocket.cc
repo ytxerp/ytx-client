@@ -651,12 +651,7 @@ void WebSocket::SearchEntry(const QJsonObject& obj)
     entry_hub->SearchEntry(array);
 }
 
-void WebSocket::SearchNode(const QJsonObject& obj)
-{
-    const Section section { obj.value(kSection).toInt() };
-    auto tree_model { tree_model_hash_.value(section) };
-    emit SNodeSearch(obj);
-}
+void WebSocket::SearchNode(const QJsonObject& obj) { emit SNodeSearch(obj); }
 
 void WebSocket::InsertEntry(const QJsonObject& obj)
 {

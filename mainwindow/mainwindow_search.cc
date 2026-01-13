@@ -44,7 +44,6 @@ void MainWindow::on_actionSearch_triggered()
         node = new SearchNodeModelT(sc_->info, sc_->tree_model, this);
         entry = new SearchEntryModelT(sc_->info, this);
         dialog = new SearchDialogT(sc_->tree_model, node, entry, sc_->section_config, sc_->info, this);
-        connect(WebSocket::Instance(), &WebSocket::SNodeSearch, node, &SearchNodeModel::RNodeSearch);
         break;
     case Section::kPartner:
         node = new SearchNodeModelP(sc_->info, sc_->tree_model, this);
@@ -67,7 +66,7 @@ void MainWindow::on_actionSearch_triggered()
     connect(dialog, &SearchDialog::SNodeLocation, this, &MainWindow::RNodeLocation);
     connect(dialog, &SearchDialog::SEntryLocation, this, &MainWindow::REntryLocation);
     connect(sc_->entry_hub, &EntryHub::SSearchEntry, entry, &SearchEntryModel::RSearchEntry);
-    connect(dialog, &QDialog::rejected, this, [=, this]() { sc_->dialog_list.removeOne(dialog); });
+    connect(dialog, &QDialog::finished, this, [=, this]() { sc_->dialog_list.removeOne(dialog); });
 
     sc_->dialog_list.append(dialog);
     dialog->show();

@@ -91,50 +91,54 @@ void MainWindow::RemoveEntry(TableWidget* widget)
 
 void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id)
 {
-    QUuid id {};
+    // Note: For Partner, Sale, and Purchase sections, rhs_node_id check is not required
+    if (entry_id.isNull() || lhs_node_id.isNull())
+        return;
+
+    QUuid node_id {};
     auto& leaf_wgt_hash { sc_->table_wgt_hash };
 
     if (leaf_wgt_hash.contains(lhs_node_id)) {
-        id = lhs_node_id;
+        node_id = lhs_node_id;
     } else if (leaf_wgt_hash.contains(rhs_node_id)) {
-        id = rhs_node_id;
+        node_id = rhs_node_id;
     }
 
-    if (!id.isNull()) {
-        FocusTableWidget(id);
-        RSelectLeafEntry(id, entry_id);
+    if (!node_id.isNull()) {
+        FocusTableWidget(node_id);
+        RSelectLeafEntry(node_id, entry_id);
         return;
     }
 
-    id = lhs_node_id;
+    node_id = lhs_node_id;
 
     if (IsOrderSection(start_)) {
         auto& tree_model { sc_->tree_model };
 
         if (!tree_model->Contains(lhs_node_id)) {
-            tree_model->AckNode(id);
+            tree_model->AckNode(node_id);
         }
     }
 
-    const auto message { JsonGen::LeafEntry(sc_->info.section, id, entry_id) };
+    const auto message { JsonGen::LeafEntry(sc_->info.section, node_id, entry_id) };
     WebSocket::Instance()->SendMessage(kTableAcked, message);
 
     switch (start_) {
     case Section::kSale:
     case Section::kPurchase:
-        CreateLeafO(sc_, id);
+        CreateLeafO(sc_, node_id);
         break;
     case Section::kTask:
     case Section::kFinance:
     case Section::kInventory:
     case Section::kPartner:
-        CreateLeafFIPT(sc_, id);
+        CreateLeafFIPT(sc_, node_id);
         break;
     default:
         break;
     }
 
-    FocusTableWidget(id);
+    FocusTableWidget(node_id);
 }
 
 // RSelectLeafEntry - Scroll to and select the specified entry (slot)
