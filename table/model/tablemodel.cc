@@ -320,7 +320,6 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         break;
     case EntryEnum::kRhsNode:
         UpdateLinkedNode(shadow, value.toUuid(), row);
-        AccumulateBalance(row);
         break;
     case EntryEnum::kDebit:
         UpdateNumeric(shadow, value.toDouble(), row, true);
@@ -463,9 +462,14 @@ EntryShadow* TableModel::InsertRowsImpl(int row, const QModelIndex& parent)
     auto* entry_shadow { ResourcePool<EntryShadow>::Instance().Allocate() };
     entry_shadow->BindEntry(entry, true);
 
-    *entry_shadow->lhs_node = lhs_id_;
-    last_issued_ = last_issued_.isValid() ? last_issued_.addSecs(1) : QDateTime::currentDateTimeUtc();
-    *entry_shadow->issued_time = last_issued_;
+    {
+        *entry_shadow->lhs_node = lhs_id_;
+        last_issued_ = last_issued_.isValid() ? last_issued_.addSecs(1) : QDateTime::currentDateTimeUtc();
+        *entry_shadow->issued_time = last_issued_;
+
+        const auto size { shadow_list_.size() };
+        entry_shadow->balance = size >= 1 ? shadow_list_.at(size - 1)->balance : 0.0;
+    }
 
     beginInsertRows(parent, row, row);
     shadow_list_.emplaceBack(entry_shadow);
