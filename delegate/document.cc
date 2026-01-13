@@ -40,3 +40,12 @@ bool Document::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyl
 
     return true;
 }
+
+QSize Document::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    const QStringList list { index.data().toStringList() };
+    const auto size { list.size() };
+
+    const QString text { size == 0 ? QString() : QString::number(size) };
+    return CalculateTextSize(text, option);
+}

@@ -76,6 +76,8 @@ void SearchDialog::TableViewDelegate(QTableView* view)
 
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kStatus), check_);
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kIssuedTime), issued_time_);
+
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kDocument), document_);
 }
 
 void SearchDialog::IniContentGroup()
@@ -97,6 +99,7 @@ void SearchDialog::InitDelegate()
     color_ = new ColorR(this);
     table_path_ = new SearchPathTableR(tree_model_, this);
     issued_time_ = new IssuedTimeR(config_.date_format, this);
+    document_ = new DocumentR(this);
 }
 
 void SearchDialog::HideTreeColumn(QTableView* view)

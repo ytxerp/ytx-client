@@ -47,9 +47,9 @@ QVariant SearchNodeModelI::data(const QModelIndex& index, int role) const
     case NodeEnumI::kColor:
         return d_node->color;
     case NodeEnumI::kCommission:
-        return QVariant();
+        return d_node->commission;
     case NodeEnumI::kUnitPrice:
-        return QVariant();
+        return d_node->unit_price;
     case NodeEnumI::kInitialTotal:
         return d_node->initial_total;
     case NodeEnumI::kFinalTotal:

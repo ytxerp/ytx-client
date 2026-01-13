@@ -17,23 +17,19 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOCUMENT_H
-#define DOCUMENT_H
+#ifndef DOCUMENTR_H
+#define DOCUMENTR_H
 
-#include "component/using.h"
 #include "delegate/styleditemdelegate.h"
 
-class Document final : public StyledItemDelegate {
+class DocumentR final : public StyledItemDelegate {
     Q_OBJECT
 
 public:
-    explicit Document(CString& document_path, QObject* parent = nullptr);
+    explicit DocumentR(QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
-private:
-    CString& document_path_ {};
 };
 
-#endif // DOCUMENT_H
+#endif // DOCUMENTR_H

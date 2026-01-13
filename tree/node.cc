@@ -117,6 +117,7 @@ void NodeT::ResetState()
     Node::ResetState();
     color.clear();
     document.clear();
+    issued_time = {};
     status = 0;
 }
 
@@ -212,6 +213,8 @@ void NodeO::ResetState()
     measure_total = 0.0;
     discount_total = 0.0;
     status = 0;
+    is_settled = false;
+    settlement_id = QUuid();
 }
 
 void NodeO::InvertTotal()

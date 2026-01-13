@@ -405,13 +405,6 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pBtnSave">
-        <property name="text">
-         <string>Save</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="pBtnRelease">
         <property name="text">
          <string>Release</string>
@@ -421,6 +414,13 @@
         </property>
         <property name="default">
          <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pBtnSave">
+        <property name="text">
+         <string>Save</string>
         </property>
        </widget>
       </item>

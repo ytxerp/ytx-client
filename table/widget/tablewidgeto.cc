@@ -228,7 +228,7 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->pBtnPrint->setEnabled(can_print);
 
     ui->pBtnSave->setVisible(recalled);
-    ui->pBtnRelease->setVisible(recalled);
+    ui->pBtnRelease->setVisible(recalled && tmp_node_.unit != std::to_underlying(UnitO::kPending));
     ui->pBtnRecall->setVisible(!recalled);
 }
 
@@ -340,15 +340,12 @@ void TableWidgetO::RUnitGroupClicked(int id)
     switch (unit) {
     case UnitO::kImmediate:
         tmp_node_.final_total = tmp_node_.initial_total - tmp_node_.discount_total;
-        ui->pBtnRelease->setEnabled(true);
         break;
     case UnitO::kMonthly:
         tmp_node_.final_total = 0.0;
-        ui->pBtnRelease->setEnabled(true);
         break;
     case UnitO::kPending:
         tmp_node_.final_total = 0.0;
-        ui->pBtnRelease->setEnabled(false);
         break;
     default:
         break;
@@ -356,7 +353,10 @@ void TableWidgetO::RUnitGroupClicked(int id)
 
     tmp_node_.unit = id;
     ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
-    ui->pBtnPrint->setEnabled(unit == UnitO::kPending);
+
+    const bool is_pending { unit == UnitO::kPending };
+    ui->pBtnPrint->setEnabled(is_pending);
+    ui->pBtnRelease->setHidden(is_pending);
 
     if (is_persisted_) {
         pending_update_.insert(kUnit, id);

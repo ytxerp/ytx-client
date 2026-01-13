@@ -117,6 +117,7 @@ set(SOURCES
     delegate/double.cc
     delegate/boolstring.cc
     delegate/document.cc
+    delegate/readonly/documentr.cc
     delegate/line.cc
     delegate/bool.cc
     delegate/styleditemdelegate.cc
@@ -273,6 +274,7 @@ set(HEADERS
     delegate/bool.h
     delegate/double.h
     delegate/document.h
+    delegate/readonly/documentr.h
     delegate/filterunit.h
     delegate/readonly/boolstringr.h
     delegate/readonly/quantityr.h

@@ -27,6 +27,7 @@
 #include "component/config.h"
 #include "delegate/readonly/boolstringr.h"
 #include "delegate/readonly/colorr.h"
+#include "delegate/readonly/documentr.h"
 #include "delegate/readonly/doublespinnonezeror.h"
 #include "delegate/readonly/intstringr.h"
 #include "delegate/readonly/issuedtimer.h"
@@ -86,6 +87,7 @@ protected:
     DoubleSpinNoneZeroR* value_ {};
     DoubleSpinNoneZeroR* rate_ {};
     IssuedTimeR* issued_time_ {};
+    DocumentR* document_ {};
 
     IntStringR* unit_ {};
     BoolStringR* direction_rule_ {};

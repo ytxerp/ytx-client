@@ -157,7 +157,7 @@ void EntryO::ReadJson(const QJsonObject& object)
     if (object.contains(kId))
         id = QUuid(object[kId].toString());
     if (object.contains(kDescription))
-        code = object[kDescription].toString();
+        description = object[kDescription].toString();
     if (object.contains(kLhsNode))
         lhs_node = QUuid(object[kLhsNode].toString());
     if (object.contains(kRhsNode))
