@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QFontMetrics>
+#include <QPainter>
 
 const QLocale StyledItemDelegate::locale_ { QLocale::English, QLocale::UnitedStates };
 
@@ -37,7 +38,7 @@ void StyledItemDelegate::PaintText(
     opt.text = text;
     opt.displayAlignment = alignment;
 
-    QStyle* style = opt.widget ? opt.widget->style() : QApplication::style();
+    static QStyle* style { QApplication::style() };
     style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, opt.widget);
 }
 
@@ -46,7 +47,7 @@ void StyledItemDelegate::PaintCheckBox(QPainter* painter, const QStyleOptionView
     QStyleOptionViewItem opt { option };
     initStyleOption(&opt, index);
 
-    QStyle* style = opt.widget ? opt.widget->style() : QApplication::style();
+    static QStyle* style { QApplication::style() };
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
 
     QStyleOptionButton check_box {};
@@ -82,6 +83,23 @@ void StyledItemDelegate::PaintCheckBox(QPainter* painter, const QStyleOptionView
 
 void StyledItemDelegate::PaintEmpty(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& /*index*/) const
 {
-    QStyle* style = option.widget ? option.widget->style() : QApplication::style();
+    static QStyle* style { QApplication::style() };
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
+}
+
+void StyledItemDelegate::PaintColorRect(QPainter* painter, const QStyleOptionViewItem& option, const QString& color_string) const
+{
+    if (color_string.isEmpty() || !QColor::isValidColorName(color_string))
+        return;
+
+    static QStyle* style { QApplication::style() };
+    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
+
+    const QRect color_rect { option.rect.adjusted(2, 2, -2, -2) };
+    painter->save();
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(QColor(color_string));
+    painter->drawRoundedRect(color_rect, 2, 2);
+    painter->restore();
 }
