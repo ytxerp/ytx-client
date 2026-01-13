@@ -47,6 +47,7 @@ MainWindow::MainWindow(QWidget* parent)
     StringInitializer::SetHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
 
     Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
+    Utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
     Utils::ReadConfig(ui->splitter, &QSplitter::restoreState, app_settings_, kSplitter, kState);
     Utils::ReadConfig(this, &QMainWindow::restoreState, app_settings_, kMainwindow, kState, 0);
     Utils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
