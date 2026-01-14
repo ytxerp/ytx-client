@@ -76,7 +76,7 @@ public:
     void RecallSucceeded(int version);
     void SaveSucceeded(int version);
 
-    bool IsDirty() const;
+    bool HasPendingUpdate() const;
     void SaveOrder();
 
 private slots:
@@ -125,10 +125,10 @@ private:
     QButtonGroup* rule_group_ {};
     QButtonGroup* unit_group_ {};
 
-    bool is_dirty_ {};
-    SyncState sync_state_ {};
-
+    bool has_pending_update_ {};
     QJsonObject pending_update_ {};
+
+    SyncState sync_state_ {};
 
     const QUuid node_id_ {};
     const Section section_ {};

@@ -66,7 +66,16 @@ void TableWidgetO::MarkSynced(int version)
     sync_state_ = SyncState::kSynced;
 }
 
-bool TableWidgetO::IsDirty() const { return is_dirty_ || table_model_order_->IsDirty(); }
+bool TableWidgetO::HasPendingUpdate() const
+{
+    const bool node_pending { has_pending_update_ };
+    const bool entry_pending { table_model_order_->HasPendingUpdate() };
+
+    qDebug() << "[HasPendingUpdate]"
+             << "node_pending =" << node_pending << ", entry_pending =" << entry_pending << ", result =" << (node_pending || entry_pending);
+
+    return node_pending || entry_pending;
+}
 
 void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
 {
@@ -272,7 +281,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
         pending_update_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
     }
 
-    is_dirty_ = true;
+    has_pending_update_ = true;
 }
 
 void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
@@ -287,7 +296,7 @@ void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
         pending_update_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
     }
 
-    is_dirty_ = true;
+    has_pending_update_ = true;
 }
 
 void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
@@ -302,7 +311,7 @@ void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
         pending_update_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
     }
 
-    is_dirty_ = true;
+    has_pending_update_ = true;
 }
 
 void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
@@ -316,7 +325,7 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
         pending_update_.insert(kDescription, arg1);
     }
 
-    is_dirty_ = true;
+    has_pending_update_ = true;
 }
 
 void TableWidgetO::RRuleGroupClicked(int id)
@@ -325,7 +334,7 @@ void TableWidgetO::RRuleGroupClicked(int id)
         return;
 
     tmp_node_.direction_rule = static_cast<bool>(id);
-    is_dirty_ = true;
+    has_pending_update_ = true;
 
     tmp_node_.count_total *= -1;
     tmp_node_.measure_total *= -1;
@@ -365,7 +374,7 @@ void TableWidgetO::RUnitGroupClicked(int id)
         pending_update_.insert(kUnit, id);
     }
 
-    is_dirty_ = true;
+    has_pending_update_ = true;
 }
 
 void TableWidgetO::on_pBtnSave_clicked() { SaveOrder(); }
@@ -455,7 +464,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
     sync_state_ = SyncState::kOutOfSync;
     pending_update_ = QJsonObject();
-    is_dirty_ = false;
+    has_pending_update_ = false;
 }
 
 bool TableWidgetO::ValidatePartner()
@@ -465,6 +474,7 @@ bool TableWidgetO::ValidatePartner()
         return false;
     }
 
+    qDebug() << "[ValidatePartner] Partner is set" << tree_model_partner_->Name(tmp_node_.partner_id);
     return true;
 }
 
@@ -475,6 +485,8 @@ bool TableWidgetO::ValidateSyncState()
             this, tr("Invalid Operation"), tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."));
         return false;
     }
+
+    qDebug() << "[ValidateSyncState] Passed: sync_state =" << static_cast<int>(sync_state_);
 
     return true;
 }
@@ -487,10 +499,8 @@ void TableWidgetO::SaveOrder()
     if (!ValidateSyncState())
         return;
 
-    if (!IsDirty()) {
-        QMessageBox::information(this, tr("No Changes"), tr("There are no unsaved changes to save."));
+    if (!HasPendingUpdate())
         return;
-    }
 
     QJsonObject order_message { JsonGen::MetaMessage(section_) };
     table_model_order_->Finalize(order_message);
@@ -511,7 +521,7 @@ void TableWidgetO::SaveOrder()
     }
 
     sync_state_ = SyncState::kOutOfSync;
-    is_dirty_ = false;
+    has_pending_update_ = false;
     ui->tableViewO->clearSelection();
 }
 
@@ -548,6 +558,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
     }
 
     sync_state_ = SyncState::kOutOfSync;
-    is_dirty_ = false;
+    has_pending_update_ = false;
     ui->tableViewO->clearSelection();
 }

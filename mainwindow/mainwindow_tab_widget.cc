@@ -168,7 +168,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
             if (!widget)
                 return;
 
-            if (widget->IsDirty()) {
+            if (widget->HasPendingUpdate()) {
                 auto ret = QMessageBox::warning(this, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nDo you want to save before closing?"),
                     QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
 
