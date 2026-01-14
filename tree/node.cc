@@ -212,7 +212,7 @@ void NodeO::ResetState()
     count_total = 0.0;
     measure_total = 0.0;
     discount_total = 0.0;
-    status = 0;
+    status = {};
     is_settled = false;
     settlement_id = QUuid();
 }
@@ -267,7 +267,7 @@ void NodeO::ReadJson(const QJsonObject& object)
     if (object.contains(kDiscountTotal))
         discount_total = object.value(kDiscountTotal).toString().toDouble();
     if (object.contains(kStatus))
-        status = object.value(kStatus).toInt();
+        status = NodeStatus(object.value(kStatus).toInt());
     if (object.contains(kSettlementId))
         settlement_id = QUuid(object.value(kSettlementId).toString());
     if (object.contains(kIsSettled))
@@ -293,7 +293,7 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kCountTotal, QString::number(count_total, 'f', kMaxNumericScale_8));
     obj.insert(kMeasureTotal, QString::number(measure_total, 'f', kMaxNumericScale_8));
-    obj.insert(kStatus, status);
+    obj.insert(kStatus, std::to_underlying(status));
 
     return obj;
 }

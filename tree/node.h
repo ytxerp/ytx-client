@@ -24,6 +24,8 @@
 #include <QStringList>
 #include <QUuid>
 
+#include "enum/nodeenum.h"
+
 struct Node {
     QString name {};
     QUuid id {};
@@ -104,7 +106,7 @@ struct NodeO final : Node {
     double count_total {};
     double measure_total {};
     double discount_total {};
-    int status {};
+    NodeStatus status {};
 
     void ResetState() override;
     void InvertTotal() override;

@@ -43,7 +43,7 @@ void TableWidgetO::ReleaseSucceeded(int version)
 
     MarkSynced(version);
 
-    tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
+    tmp_node_.status = NodeStatus::kReleased;
     LockWidgets(NodeStatus::kReleased);
 }
 
@@ -54,7 +54,7 @@ void TableWidgetO::RecallSucceeded(int version)
 
     MarkSynced(version);
 
-    tmp_node_.status = std::to_underlying(NodeStatus::kRecalled);
+    tmp_node_.status = NodeStatus::kRecalled;
     LockWidgets(NodeStatus::kRecalled);
 }
 
@@ -454,7 +454,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
     }
 
-    if (tmp_node_.status == std::to_underlying(NodeStatus::kRecalled))
+    if (tmp_node_.status == NodeStatus::kRecalled)
         return;
 
     pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
@@ -533,7 +533,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
     if (!ValidateSyncState())
         return;
 
-    if (tmp_node_.status == std::to_underlying(NodeStatus::kReleased))
+    if (tmp_node_.status == NodeStatus::kReleased)
         return;
 
     QJsonObject order_message { JsonGen::MetaMessage(section_) };

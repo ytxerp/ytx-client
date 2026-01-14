@@ -81,7 +81,7 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
     case NodeEnumO::kDiscountTotal:
         return d_node->discount_total;
     case NodeEnumO::kStatus:
-        return d_node->status;
+        return std::to_underlying(d_node->status);
     case NodeEnumO::kInitialTotal:
         return d_node->initial_total;
     case NodeEnumO::kFinalTotal:
