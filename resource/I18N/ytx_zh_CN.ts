@@ -2929,8 +2929,12 @@ You need to recall it first before making changes.</source>
         <translation>期末余额</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="171"/>
         <source>Connecting to server...)</source>
+        <translation type="vanished">正在连接服务器…</translation>
+    </message>
+    <message>
+        <location filename="../../utils/mainwindowutils.cc" line="171"/>
+        <source>Connecting to server...</source>
         <translation>正在连接服务器…</translation>
     </message>
     <message>
