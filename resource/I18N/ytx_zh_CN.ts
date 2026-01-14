@@ -3487,13 +3487,13 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="369"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="149"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="158"/>
         <source>Preview</source>
         <translation>预览</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="376"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="150"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="159"/>
         <source>Print</source>
         <translation>打印</translation>
     </message>
@@ -3503,7 +3503,7 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="423"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="146"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="155"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
@@ -3513,45 +3513,43 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="433"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="148"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="157"/>
         <source>Recall</source>
         <translation>撤回</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="410"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="147"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="156"/>
         <source>Release</source>
         <translation>发布</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="392"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="401"/>
         <source>No Template</source>
         <translation>没有模板</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="392"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="401"/>
         <source>No printable template was found.</source>
         <translation>找不到可用的打印模板。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="439"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="448"/>
         <source>This cache order has already been settled and cannot be recalled.</source>
         <translation>缓存订单已结算，无法再撤回了。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="444"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="453"/>
         <source>This cache order has already been selected in a settlement and cannot be recalled.</source>
         <translation>缓存订单已经被结算单选中，无法再撤回了。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="491"/>
         <source>No Changes</source>
-        <translation>没有更改</translation>
+        <translation type="vanished">没有更改</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="491"/>
         <source>There are no unsaved changes to save.</source>
-        <translation>没有需要保存的更改。</translation>
+        <translation type="vanished">没有需要保存的更改。</translation>
     </message>
     <message>
         <source>Order Deleted</source>
@@ -3562,17 +3560,17 @@ You need to recall it first before making changes.</source>
         <translation type="vanished">订单已经被删除，无法再执行操作。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="464"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="473"/>
         <source>Please select a partner before performing this action.</source>
         <translation>请先选择一个交易对象。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="475"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="485"/>
         <source>Invalid Operation</source>
         <translation>无效操作</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="475"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="485"/>
         <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
@@ -3593,7 +3591,7 @@ You need to recall it first before making changes.</source>
         <translation type="vanished">订单已经结算，无法再编辑了。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="444"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="453"/>
         <source>Order Selected</source>
         <translation>已选中</translation>
     </message>
@@ -3644,7 +3642,7 @@ You cannot perform recall operation.</source>
 你无法执行撤回操作。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="439"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="448"/>
         <source>Order Settled</source>
         <translation>已结算</translation>
     </message>
@@ -3667,7 +3665,7 @@ Your local changes cannot be saved.</source>
 您本地的更改无法保存。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="464"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="473"/>
         <source>Partner Required</source>
         <translation>必需选择交易对象</translation>
     </message>
