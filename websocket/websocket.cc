@@ -21,9 +21,17 @@ WebSocket::~WebSocket()
 {
     StopTimer();
 
-    if (socket_.state() == QAbstractSocket::ConnectedState) {
-        socket_.close();
+    socket_.disconnect();
+    if (ping_timer_)
+        ping_timer_->disconnect();
+    if (timeout_timer_)
+        timeout_timer_->disconnect();
+
+    if (socket_.state() != QAbstractSocket::UnconnectedState) {
+        socket_.abort();
     }
+
+    qDebug() << "WebSocket destructed";
 }
 
 WebSocket* WebSocket::Instance()
@@ -84,12 +92,12 @@ void WebSocket::RDisconnected()
 {
     StopTimer();
 
-    if (session_id_.isEmpty()) {
+    if (session_id_.isNull()) {
         qInfo() << "[WS]" << "Session ID is empty — disconnected before login.";
         return;
     }
 
-    session_id_.clear();
+    session_id_ = QUuid();
 
     if (manual_disconnect_) {
         qInfo() << "[WS]" << "Auto-reconnecting to server after logout.";
@@ -251,6 +259,9 @@ void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
 
 void WebSocket::RTextMessageReceived(const QString& message)
 {
+    // Any incoming server message indicates the connection is alive, reset timeout
+    timeout_timer_->start(TIMEOUT_THRESHOLD);
+
     QJsonParseError err {};
     const QJsonValue root { QJsonValue::fromJson(message.toUtf8(), &err) };
 
@@ -258,8 +269,6 @@ void WebSocket::RTextMessageReceived(const QString& message)
         qWarning() << "[WS]" << "Invalid message received from server:" << message;
         return;
     }
-
-    timeout_timer_->start(TIMEOUT_THRESHOLD);
 
     const QJsonObject obj { root.toObject() };
     const QString msg_type { obj.value(kKind).toString() };
@@ -288,7 +297,7 @@ void WebSocket::NotifyLoginResult(const QJsonObject& obj)
     const int code { obj[kCode].toInt() };
 
     if (result) {
-        session_id_ = obj[kSessionId].toString();
+        session_id_ = QUuid(obj[kSessionId].toString());
         const auto expire_time { QDateTime::fromString(obj[kExpireTime].toString(), Qt::ISODate) };
         const auto expire_date { expire_time.date().toString(kDateFST) };
         emit SLoginSucceeded(expire_date);
@@ -311,7 +320,7 @@ void WebSocket::NotifyRegisterResult(const QJsonObject& obj)
 void WebSocket::InsertNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QJsonObject node_obj { obj.value(kNode).toObject() };
     const QJsonObject path_obj { obj.value(kPath).toObject() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
@@ -331,7 +340,7 @@ void WebSocket::InsertNode(const QJsonObject& obj)
 void WebSocket::UpdateNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
@@ -347,7 +356,7 @@ void WebSocket::UpdateNode(const QJsonObject& obj)
 void WebSocket::DragNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QJsonObject path { obj.value(kPath).toObject() };
 
     CString ancestor { path.value(kAncestor).toString() };
@@ -469,7 +478,7 @@ void WebSocket::AckSettlementItem(const QJsonObject& obj)
 void WebSocket::RemoveLeaf(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     const QJsonObject linked_entry_obj { obj.value(kLinkedEntry).toObject() };
@@ -490,7 +499,7 @@ void WebSocket::RemoveLeaf(const QJsonObject& obj)
 void WebSocket::RemoveLeafSafely(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     auto tree_model { tree_model_hash_.value(section) };
@@ -503,7 +512,7 @@ void WebSocket::RemoveLeafSafely(const QJsonObject& obj)
 void WebSocket::RemoveBranch(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     auto tree_model { tree_model_hash_.value(section) };
@@ -517,7 +526,7 @@ void WebSocket::NotifyLeafRemoveDenied(const QJsonObject& obj) { emit SLeafRemov
 void WebSocket::ReplaceLeaf(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const bool result { obj.value(kResult).toBool() };
     const bool inventory_outside_ref { obj.value(kInventoryOutsideRef).toBool() };
     const QUuid old_node_id(obj.value(kOldNodeId).toString());
@@ -546,7 +555,7 @@ void WebSocket::ReplaceLeaf(const QJsonObject& obj)
 void WebSocket::UpdateEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
@@ -566,7 +575,7 @@ void WebSocket::UpdateEntry(const QJsonObject& obj)
 void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid entry_id { obj.value(kEntryId).toString() };
     const bool is_parallel { obj.value(kIsParallel).toBool() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
@@ -600,7 +609,7 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
 void WebSocket::UpdateEntryRate(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
 
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
@@ -638,7 +647,7 @@ void WebSocket::UpdateEntryRate(const QJsonObject& obj)
 void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
 
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
@@ -686,7 +695,7 @@ void WebSocket::SearchNode(const QJsonObject& obj) { emit SNodeSearch(obj); }
 void WebSocket::InsertEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
 
     const QJsonObject entry { obj.value(kEntry).toObject() };
@@ -723,7 +732,7 @@ void WebSocket::InsertEntry(const QJsonObject& obj)
 void WebSocket::RemoveEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
     const QJsonObject meta { obj.value(kMeta).toObject() };
 
@@ -756,7 +765,7 @@ void WebSocket::RemoveEntry(const QJsonObject& obj)
 void WebSocket::UpdateDirectionRule(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const bool direction_rule { obj.value(kDirectionRule).toBool() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const QJsonObject meta { obj.value(kMeta).toObject() };
@@ -773,7 +782,7 @@ void WebSocket::UpdateDirectionRule(const QJsonObject& obj)
 void WebSocket::UpdateNodeStatus(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const int status { obj.value(kStatus).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const QJsonObject meta { obj.value(kMeta).toObject() };
@@ -807,7 +816,7 @@ void WebSocket::UpdateNodeName(const QJsonObject& obj)
 void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_release)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     auto* base_model { tree_model_hash_.value(section).data() };
@@ -838,7 +847,7 @@ void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_release)
 void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QJsonObject node_obj { obj.value(kNode).toObject() };
     const QJsonObject path_obj { obj.value(kPath).toObject() };
 
@@ -871,7 +880,7 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
 void WebSocket::RecallOrder(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
 
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     auto* base_model { tree_model_hash_.value(section).data() };
@@ -899,7 +908,7 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
 void WebSocket::InsertSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
     const QJsonArray selected_array { obj.value(kSettlementItemSelected).toArray() };
 
@@ -921,7 +930,7 @@ void WebSocket::InsertSettlement(const QJsonObject& obj)
 void WebSocket::UpdateSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
     const QJsonArray selected_array { obj.value(kSettlementItemSelected).toArray() };
     const QJsonArray deselected_array { obj.value(kSettlementItemDeselected).toArray() };
@@ -949,7 +958,7 @@ void WebSocket::UpdateSettlement(const QJsonObject& obj)
 void WebSocket::RecallSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
 
     auto* base_model { tree_model_hash_.value(section).data() };
@@ -978,7 +987,7 @@ void WebSocket::UpdatePartner(const QJsonObject& obj)
 void WebSocket::ActionEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
 
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const EntryAction action { EntryAction(obj.value(kAction).toInt()) };
@@ -993,7 +1002,7 @@ void WebSocket::ActionEntry(const QJsonObject& obj)
 void WebSocket::UpdateDocumentDir(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
     CString document_dir { obj.value(kDocumentDir).toString() };
 
     if (session_id != session_id_) {

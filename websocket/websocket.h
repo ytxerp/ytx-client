@@ -108,7 +108,7 @@ private slots:
     void RTimeout()
     {
         qWarning() << "Heartbeat timeout, closing connection";
-        socket_.abort();
+        socket_.close(QWebSocketProtocol::CloseCodeGoingAway, "Heartbeat timeout");
         ping_timer_->stop();
     }
 
@@ -191,7 +191,7 @@ private:
 
 private:
     QWebSocket socket_ {};
-    QString session_id_ {};
+    QUuid session_id_ {};
 
     QUrl server_url_ {};
     bool manual_disconnect_ {};
