@@ -94,6 +94,6 @@ void InsertNodeFinance::on_comboUnit_currentIndexChanged(int index)
 
 void InsertNodeFinance::RDirectionRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
 
-void InsertNodeFinance::RKindGroupClicked(int id) { node_->kind = id; }
+void InsertNodeFinance::RKindGroupClicked(int id) { node_->kind = NodeKind(id); }
 
 void InsertNodeFinance::on_plainNote_textChanged() { node_->note = ui->plainNote->toPlainText(); }

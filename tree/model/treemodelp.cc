@@ -18,7 +18,7 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)
         return;
 
     auto* node { node_hash_.value(node_id) };
-    if (!node || node == root_ || node->kind != std::to_underlying(NodeKind::kLeaf))
+    if (!node || node == root_ || node->kind != NodeKind::kLeaf)
         return;
 
     node->initial_total += initial_delta;
@@ -191,7 +191,7 @@ QVariant TreeModelP::data(const QModelIndex& index, int role) const
     case NodeEnumP::kNote:
         return d_node->note;
     case NodeEnumP::kKind:
-        return d_node->kind;
+        return std::to_underlying(d_node->kind);
     case NodeEnumP::kUnit:
         return d_node->unit;
     case NodeEnumP::kPaymentTerm:

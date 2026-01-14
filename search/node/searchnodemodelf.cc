@@ -41,7 +41,7 @@ QVariant SearchNodeModelF::data(const QModelIndex& index, int role) const
     case NodeEnumF::kDirectionRule:
         return node->direction_rule;
     case NodeEnumF::kKind:
-        return node->kind;
+        return std::to_underlying(node->kind);
     case NodeEnumF::kUnit:
         return node->unit;
     case NodeEnumF::kInitialTotal:

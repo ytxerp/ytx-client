@@ -19,7 +19,7 @@ void MainWindow::EditNameO()
         return;
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
-    if (node->kind == std::to_underlying(NodeKind::kLeaf))
+    if (node->kind == NodeKind::kLeaf)
         return;
 
     auto model { sc_->tree_model };
@@ -56,7 +56,7 @@ void MainWindow::on_actionNewGroup_triggered()
 
     node->id = QUuid::createUuidV7();
     node->unit = parent_node->unit;
-    node->kind = std::to_underlying(NodeKind::kBranch);
+    node->kind = NodeKind::kBranch;
     node->parent = parent_node;
 
     static_cast<NodeO*>(node)->issued_time = QDateTime::currentDateTimeUtc();

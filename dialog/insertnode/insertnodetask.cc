@@ -141,7 +141,7 @@ void InsertNodeTask::on_pBtnColor_clicked()
 
 void InsertNodeTask::RRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
 
-void InsertNodeTask::RKindGroupClicked(int id) { node_->kind = id; }
+void InsertNodeTask::RKindGroupClicked(int id) { node_->kind = NodeKind(id); }
 
 void InsertNodeTask::RStatusGroupClicked(int id) { node_->status = NodeStatus(id); }
 

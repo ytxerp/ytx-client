@@ -82,4 +82,4 @@ void InsertNodeP::on_comboUnit_currentIndexChanged(int index)
 
 void InsertNodeP::on_spinPaymentTerm_editingFinished() { node_->payment_term = ui->spinPaymentTerm->value(); }
 
-void InsertNodeP::RKindGroupClicked(int id) { node_->kind = id; }
+void InsertNodeP::RKindGroupClicked(int id) { node_->kind = NodeKind(id); }

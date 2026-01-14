@@ -10,7 +10,7 @@ void Node::ResetState()
     description.clear();
     note.clear();
     direction_rule = false;
-    kind = 0;
+    kind = {};
     unit = 0;
     final_total = 0.0;
     initial_total = 0.0;
@@ -44,7 +44,7 @@ void Node::ReadJson(const QJsonObject& object)
     if (object.contains(kNote))
         note = object.value(kNote).toString();
     if (object.contains(kKind))
-        kind = object.value(kKind).toInt();
+        kind = NodeKind(object.value(kKind).toInt());
     if (object.contains(kDirectionRule))
         direction_rule = object.value(kDirectionRule).toBool();
     if (object.contains(kUnit))
@@ -75,7 +75,7 @@ QJsonObject Node::WriteJson() const
     obj.insert(kCode, code);
     obj.insert(kDescription, description);
     obj.insert(kNote, note);
-    obj.insert(kKind, kind);
+    obj.insert(kKind, std::to_underlying(kind));
     obj.insert(kDirectionRule, direction_rule);
     obj.insert(kUnit, unit);
     obj.insert(kFinalTotal, QString::number(final_total, 'f', kMaxNumericScale_4));
@@ -166,7 +166,7 @@ void NodeP::ReadJson(const QJsonObject& object)
     if (object.contains(kNote))
         note = object.value(kNote).toString();
     if (object.contains(kKind))
-        kind = object.value(kKind).toInt();
+        kind = NodeKind(object.value(kKind).toInt());
     if (object.contains(kUnit))
         unit = object.value(kUnit).toInt();
     if (object.contains(kInitialTotal))
@@ -195,7 +195,7 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kCode, code);
     obj.insert(kDescription, description);
     obj.insert(kNote, note);
-    obj.insert(kKind, kind);
+    obj.insert(kKind, std::to_underlying(kind));
     obj.insert(kUnit, unit);
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
     obj.insert(kPaymentTerm, payment_term);
@@ -235,7 +235,7 @@ void NodeO::ReadJson(const QJsonObject& object)
     if (object.contains(kDescription))
         description = object.value(kDescription).toString();
     if (object.contains(kKind))
-        kind = object.value(kKind).toInt();
+        kind = NodeKind(object.value(kKind).toInt());
     if (object.contains(kDirectionRule))
         direction_rule = object.value(kDirectionRule).toBool();
     if (object.contains(kUnit))
@@ -282,7 +282,7 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kName, name);
     obj.insert(kId, id.toString(QUuid::WithoutBraces));
     obj.insert(kDescription, description);
-    obj.insert(kKind, kind);
+    obj.insert(kKind, std::to_underlying(kind));
     obj.insert(kDirectionRule, direction_rule);
     obj.insert(kUnit, unit);
     obj.insert(kFinalTotal, QString::number(final_total, 'f', kMaxNumericScale_4));

@@ -214,14 +214,14 @@ void TreeModelO::HandleNode()
     for (auto* node : std::as_const(node_hash_)) {
         auto* d_node { DerivedPtr<NodeO>(node) };
 
-        if (d_node->kind == std::to_underlying(NodeKind::kLeaf) && d_node->status == NodeStatus::kReleased)
+        if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kReleased)
             UpdateAncestorTotalOrder(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
     }
 }
 
 void TreeModelO::ResetBranch(Node* node)
 {
-    assert(node->kind == std::to_underlying(NodeKind::kBranch) && "ResetBranch: node must be of kind NodeKind::kBranch");
+    assert(node->kind == NodeKind::kBranch && "ResetBranch: node must be of kind NodeKind::kBranch");
 
     auto* d_node { DerivedPtr<NodeO>(node) };
     d_node->count_total = 0.0;
@@ -238,7 +238,7 @@ void TreeModelO::ClearModel()
     for (auto it = node_hash_.begin(); it != node_hash_.end();) {
         auto* node = static_cast<NodeO*>(it.value());
 
-        if (node->kind == std::to_underlying(NodeKind::kBranch)) {
+        if (node->kind == NodeKind::kBranch) {
             ResetBranch(node);
             ++it;
             continue;
@@ -249,7 +249,7 @@ void TreeModelO::ClearModel()
             continue;
         }
 
-        if (node->kind == std::to_underlying(UnitO::kPending)) {
+        if (node->unit == std::to_underlying(UnitO::kPending)) {
             ++it;
             continue;
         }
@@ -326,7 +326,7 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return false;
 
     const NodeEnumO column { index.column() };
-    bool branch { d_node->kind == std::to_underlying(NodeKind::kBranch) };
+    bool branch { d_node->kind == NodeKind::kBranch };
 
     switch (column) {
     case NodeEnumO::kName:
@@ -350,7 +350,7 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
     case NodeEnumO::kDirectionRule:
         return branch ? QVariant() : d_node->direction_rule;
     case NodeEnumO::kKind:
-        return d_node->kind;
+        return std::to_underlying(d_node->kind);
     case NodeEnumO::kUnit:
         return d_node->unit;
     case NodeEnumO::kPartner:
@@ -413,7 +413,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*
     auto* node { DerivedPtr<NodeO>(source_parent->children.takeAt(sourceRow)) };
     assert(node);
 
-    bool update_ancestor { node->kind == std::to_underlying(NodeKind::kBranch) || node->status == NodeStatus::kReleased };
+    bool update_ancestor { node->kind == NodeKind::kBranch || node->status == NodeStatus::kReleased };
 
     if (update_ancestor) {
         UpdateAncestorTotalOrder(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);

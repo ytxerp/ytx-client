@@ -39,7 +39,7 @@ QVariant SearchNodeModelP::data(const QModelIndex& index, int role) const
     case NodeEnumP::kNote:
         return d_node->note;
     case NodeEnumP::kKind:
-        return d_node->kind;
+        return std::to_underlying(d_node->kind);
     case NodeEnumP::kUnit:
         return d_node->unit;
     case NodeEnumP::kPaymentTerm:

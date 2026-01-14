@@ -153,7 +153,7 @@ QVariant TreeModelI::data(const QModelIndex& index, int role) const
     case NodeEnumI::kDirectionRule:
         return d_node->direction_rule;
     case NodeEnumI::kKind:
-        return d_node->kind;
+        return std::to_underlying(d_node->kind);
     case NodeEnumI::kUnit:
         return d_node->unit;
     case NodeEnumI::kColor:

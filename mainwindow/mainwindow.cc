@@ -72,7 +72,7 @@ QStringList MainWindow::ChildrenName(const Node* node) const
 
     QStringList list {};
 
-    if (!node || node->kind != std::to_underlying(NodeKind::kBranch) || node->children.isEmpty())
+    if (!node || node->kind != NodeKind::kBranch || node->children.isEmpty())
         return list;
 
     list.reserve(node->children.size());
@@ -92,7 +92,7 @@ QSet<QUuid> MainWindow::LeafChildrenId(const Node* node) const
 
     QSet<QUuid> set {};
 
-    if (!node || node->kind != std::to_underlying(NodeKind::kBranch) || node->children.isEmpty())
+    if (!node || node->kind != NodeKind::kBranch || node->children.isEmpty())
         return set;
 
     QQueue<const Node*> queue {};

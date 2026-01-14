@@ -194,7 +194,7 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value)
 
     const QUuid node_id { node->id };
 
-    if (node->kind == std::to_underlying(NodeKind::kLeaf)) {
+    if (node->kind == NodeKind::kLeaf) {
         emit SDirectionRule(node_id, node->direction_rule);
     }
 
@@ -244,7 +244,7 @@ void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
     EmitRowChanged(node_id, name_column, name_column);
     emit SResizeColumnToContents(name_column);
 
-    emit SUpdateName(node->id, node->name, node->kind == std::to_underlying(NodeKind::kBranch));
+    emit SUpdateName(node->id, node->name, node->kind == NodeKind::kBranch);
 }
 
 void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant)
@@ -353,7 +353,7 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
         return false;
 
     auto* destination_parent { GetNodeByIndex(parent) };
-    if (destination_parent->kind != std::to_underlying(NodeKind::kBranch))
+    if (destination_parent->kind != NodeKind::kBranch)
         return false;
 
     QUuid node_id {};
@@ -411,7 +411,7 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*c
     Utils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
     Utils::UpdateModel(leaf_path_, leaf_path_model_, node);
 
-    emit SUpdateName(node->id, node->name, node->kind == std::to_underlying(NodeKind::kBranch));
+    emit SUpdateName(node->id, node->name, node->kind == NodeKind::kBranch);
     emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
 
     return true;
@@ -557,7 +557,7 @@ void TreeModel::HandleNode()
     for (auto* node : std::as_const(node_hash_)) {
         RegisterPath(node);
 
-        if (node->kind == std::to_underlying(NodeKind::kLeaf))
+        if (node->kind == NodeKind::kLeaf)
             UpdateAncestorTotal(node, node->initial_total, node->final_total);
     }
 
@@ -707,7 +707,7 @@ void TreeModel::InitRoot(Node*& root)
 {
     if (root == nullptr) {
         root = NodePool::Instance().Allocate(section_);
-        root->kind = std::to_underlying(NodeKind::kBranch);
+        root->kind = NodeKind::kBranch;
         root->direction_rule = false;
         root->name = QString();
         root->id = QUuid();

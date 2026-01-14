@@ -135,4 +135,4 @@ void InsertNodeI::on_pBtnColor_clicked()
 
 void InsertNodeI::RRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
 
-void InsertNodeI::RKindGroupClicked(int id) { node_->kind = id; }
+void InsertNodeI::RKindGroupClicked(int id) { node_->kind = NodeKind(id); }

@@ -32,7 +32,7 @@ struct Node {
     QString code {};
     QString description {};
     QString note {};
-    int kind {};
+    NodeKind kind {};
     bool direction_rule {};
     int unit {};
 
