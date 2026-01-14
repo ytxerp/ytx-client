@@ -8,14 +8,14 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TableWidgetO::TableWidgetO(COrderWidgetArg& arg, const NodeO& node, QWidget* parent)
+TableWidgetO::TableWidgetO(COrderWidgetArg& arg, const NodeO& node, SyncState sync_state, QWidget* parent)
     : TableWidget(parent)
     , ui(new Ui::TableWidgetO)
     , tmp_node_ { node }
     , table_model_order_ { qobject_cast<TableModelO*>(arg.table_model) }
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
-    , is_persisted_ { arg.is_persisted }
+    , sync_state_ { sync_state }
     , node_id_ { node.id }
     , section_ { arg.section }
 {
@@ -28,7 +28,7 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, const NodeO& node, QWidget* par
     IniData(node);
     IniConnect();
 
-    if (!is_persisted_)
+    if (sync_state == SyncState::kLocalOnly)
         QTimer::singleShot(0, this, [this]() { ui->comboPartner->setFocus(); });
 }
 
@@ -41,9 +41,9 @@ void TableWidgetO::ReleaseSucceeded(int version)
     ui->pBtnPrint->setFocus();
     ui->pBtnPrint->setDefault(true);
 
-    is_persisted_ = true;
-    tmp_node_.version = version;
+    MarkSynced(version);
 
+    tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
     LockWidgets(NodeStatus::kReleased);
 }
 
@@ -52,18 +52,21 @@ void TableWidgetO::RecallSucceeded(int version)
     ui->pBtnRelease->setFocus();
     ui->pBtnRelease->setDefault(true);
 
-    tmp_node_.version = version;
+    MarkSynced(version);
 
+    tmp_node_.status = std::to_underlying(NodeStatus::kRecalled);
     LockWidgets(NodeStatus::kRecalled);
 }
 
-void TableWidgetO::SaveSucceeded(int version)
+void TableWidgetO::SaveSucceeded(int version) { MarkSynced(version); }
+
+void TableWidgetO::MarkSynced(int version)
 {
-    is_persisted_ = true;
     tmp_node_.version = version;
+    sync_state_ = SyncState::kSynced;
 }
 
-bool TableWidgetO::HasUnsavedData() const { return node_modified_ || table_model_order_->HasUnsavedData(); }
+bool TableWidgetO::IsDirty() const { return is_dirty_ || table_model_order_->IsDirty(); }
 
 void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
 {
@@ -191,7 +194,7 @@ void TableWidgetO::IniData(const NodeO& node)
         LockWidgets(NodeStatus(node.status));
     }
 
-    if (!is_persisted_)
+    if (sync_state_ == SyncState::kLocalOnly)
         return;
 
     {
@@ -214,8 +217,8 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->comboPartner->setEnabled(recalled);
     ui->comboEmployee->setEnabled(recalled);
 
-    ui->rBtnRO->setEnabled(!is_persisted_);
-    ui->rBtnTO->setEnabled(!is_persisted_);
+    ui->rBtnRO->setEnabled(sync_state_ == SyncState::kLocalOnly);
+    ui->rBtnTO->setEnabled(sync_state_ == SyncState::kLocalOnly);
 
     ui->rBtnIS->setEnabled(recalled);
     ui->rBtnMS->setEnabled(recalled);
@@ -265,11 +268,11 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     tmp_node_.partner_id = partner_id;
     emit SSyncPartner(node_id_, partner_id);
 
-    if (is_persisted_) {
+    if (sync_state_ == SyncState::kSynced) {
         pending_update_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
     }
 
-    node_modified_ = true;
+    is_dirty_ = true;
 }
 
 void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
@@ -280,11 +283,11 @@ void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 
     tmp_node_.employee_id = employee_id;
 
-    if (is_persisted_) {
+    if (sync_state_ == SyncState::kSynced) {
         pending_update_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
     }
 
-    node_modified_ = true;
+    is_dirty_ = true;
 }
 
 void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
@@ -295,11 +298,11 @@ void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 
     tmp_node_.issued_time = utc_time;
 
-    if (is_persisted_) {
+    if (sync_state_ == SyncState::kSynced) {
         pending_update_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
     }
 
-    node_modified_ = true;
+    is_dirty_ = true;
 }
 
 void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
@@ -309,20 +312,20 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 
     tmp_node_.description = arg1;
 
-    if (is_persisted_) {
+    if (sync_state_ == SyncState::kSynced) {
         pending_update_.insert(kDescription, arg1);
     }
 
-    node_modified_ = true;
+    is_dirty_ = true;
 }
 
 void TableWidgetO::RRuleGroupClicked(int id)
 {
-    if (is_persisted_)
+    if (sync_state_ == SyncState::kSynced)
         return;
 
     tmp_node_.direction_rule = static_cast<bool>(id);
-    node_modified_ = true;
+    is_dirty_ = true;
 
     tmp_node_.count_total *= -1;
     tmp_node_.measure_total *= -1;
@@ -358,11 +361,11 @@ void TableWidgetO::RUnitGroupClicked(int id)
     ui->pBtnPrint->setEnabled(is_pending);
     ui->pBtnRelease->setHidden(is_pending);
 
-    if (is_persisted_) {
+    if (sync_state_ == SyncState::kSynced) {
         pending_update_.insert(kUnit, id);
     }
 
-    node_modified_ = true;
+    is_dirty_ = true;
 }
 
 void TableWidgetO::on_pBtnSave_clicked() { SaveOrder(); }
@@ -426,7 +429,10 @@ void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
 
 void TableWidgetO::on_pBtnRecall_clicked()
 {
-    if (!ValidateOrder())
+    if (!ValidatePartner())
+        return;
+
+    if (!ValidateSyncState())
         return;
 
     if (tmp_node_.is_settled) {
@@ -442,17 +448,17 @@ void TableWidgetO::on_pBtnRecall_clicked()
     if (tmp_node_.status == std::to_underlying(NodeStatus::kRecalled))
         return;
 
-    tmp_node_.status = std::to_underlying(NodeStatus::kRecalled);
-
     pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
     pending_update_.insert(kVersion, tmp_node_.version);
 
     WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_id_, pending_update_));
 
+    sync_state_ = SyncState::kOutOfSync;
     pending_update_ = QJsonObject();
+    is_dirty_ = false;
 }
 
-bool TableWidgetO::ValidateOrder()
+bool TableWidgetO::ValidatePartner()
 {
     if (tmp_node_.partner_id.isNull()) {
         QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before performing this action."));
@@ -462,23 +468,41 @@ bool TableWidgetO::ValidateOrder()
     return true;
 }
 
+bool TableWidgetO::ValidateSyncState()
+{
+    if (sync_state_ == SyncState::kOutOfSync) {
+        QMessageBox::information(
+            this, tr("Invalid Operation"), tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."));
+        return false;
+    }
+
+    return true;
+}
+
 void TableWidgetO::SaveOrder()
 {
-    if (!ValidateOrder())
+    if (!ValidatePartner())
         return;
 
-    if (!HasUnsavedData())
+    if (!ValidateSyncState())
         return;
+
+    if (!IsDirty()) {
+        QMessageBox::information(this, tr("No Changes"), tr("There are no unsaved changes to save."));
+        return;
+    }
 
     QJsonObject order_message { JsonGen::MetaMessage(section_) };
     table_model_order_->Finalize(order_message);
 
-    if (is_persisted_) {
+    if (sync_state_ == SyncState::kSynced) {
         BuildNodeUpdate(order_message);
         WebSocket::Instance()->SendMessage(kOrderUpdateSaved, order_message);
 
         pending_update_ = QJsonObject();
-    } else {
+    }
+
+    if (sync_state_ == SyncState::kLocalOnly) {
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_message);
 
@@ -486,24 +510,26 @@ void TableWidgetO::SaveOrder()
         ui->rBtnTO->setEnabled(false);
     }
 
-    node_modified_ = false;
+    sync_state_ = SyncState::kOutOfSync;
+    is_dirty_ = false;
     ui->tableViewO->clearSelection();
 }
 
 void TableWidgetO::on_pBtnRelease_clicked()
 {
-    if (!ValidateOrder())
+    if (!ValidatePartner())
+        return;
+
+    if (!ValidateSyncState())
         return;
 
     if (tmp_node_.status == std::to_underlying(NodeStatus::kReleased))
         return;
 
-    tmp_node_.status = std::to_underlying(NodeStatus::kReleased);
-
     QJsonObject order_message { JsonGen::MetaMessage(section_) };
     table_model_order_->Finalize(order_message);
 
-    if (is_persisted_) {
+    if (sync_state_ == SyncState::kSynced) {
         pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
 
         BuildNodeUpdate(order_message);
@@ -511,7 +537,9 @@ void TableWidgetO::on_pBtnRelease_clicked()
         WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_message);
 
         pending_update_ = QJsonObject();
-    } else {
+    }
+
+    if (sync_state_ == SyncState::kLocalOnly) {
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_message);
 
@@ -519,6 +547,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
         ui->rBtnTO->setEnabled(false);
     }
 
-    node_modified_ = false;
+    sync_state_ = SyncState::kOutOfSync;
+    is_dirty_ = false;
     ui->tableViewO->clearSelection();
 }

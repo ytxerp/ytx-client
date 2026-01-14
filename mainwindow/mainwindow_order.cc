@@ -166,9 +166,8 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
         app_config_,
         section_config,
         start_,
-        false,
     };
-    auto* widget { new TableWidgetO(order_arg, node, this) };
+    auto* widget { new TableWidgetO(order_arg, node, SyncState::kLocalOnly, this) };
 
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, QString()) };
@@ -218,9 +217,8 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
         app_config_,
         section_config,
         start_,
-        true,
     };
-    auto* widget = new TableWidgetO(order_arg, *node, this);
+    auto* widget = new TableWidgetO(order_arg, *node, SyncState::kSynced, this);
 
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, tree_model_p->Name(partner_id)) };

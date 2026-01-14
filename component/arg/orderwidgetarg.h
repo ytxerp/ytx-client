@@ -31,7 +31,6 @@ struct OrderWidgetArg {
     CAppConfig& app_config {};
     CSectionConfig& section_config {};
     Section section {};
-    bool is_persisted {};
 };
 
 using COrderWidgetArg = const OrderWidgetArg;

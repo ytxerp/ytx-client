@@ -79,7 +79,7 @@ public:
 
     const QList<Entry*>& GetEntryList() const { return entry_list_; }
     void Finalize(QJsonObject& message);
-    bool HasUnsavedData() const { return !pending_insert_.isEmpty() || !pending_delete_.isEmpty() || !pending_update_.isEmpty(); }
+    bool IsDirty() const { return !pending_insert_.isEmpty() || !pending_delete_.isEmpty() || !pending_update_.isEmpty(); }
     void SetNode(const NodeO* node) { d_node_ = node; }
 
 private:

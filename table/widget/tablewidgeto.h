@@ -57,7 +57,7 @@ class TableWidgetO final : public TableWidget {
     Q_OBJECT
 
 public:
-    explicit TableWidgetO(COrderWidgetArg& arg, const NodeO& node, QWidget* parent = nullptr);
+    explicit TableWidgetO(COrderWidgetArg& arg, const NodeO& node, SyncState sync_state, QWidget* parent = nullptr);
     ~TableWidgetO() override;
 
 signals:
@@ -76,7 +76,7 @@ public:
     void RecallSucceeded(int version);
     void SaveSucceeded(int version);
 
-    bool HasUnsavedData() const;
+    bool IsDirty() const;
     void SaveOrder();
 
 private slots:
@@ -111,7 +111,9 @@ private:
     void BuildNodeInsert(QJsonObject& order_message);
     void BuildNodeUpdate(QJsonObject& order_message);
 
-    bool ValidateOrder();
+    bool ValidatePartner();
+    bool ValidateSyncState();
+    void MarkSynced(int version);
 
 private:
     Ui::TableWidgetO* ui;
@@ -123,8 +125,8 @@ private:
     QButtonGroup* rule_group_ {};
     QButtonGroup* unit_group_ {};
 
-    bool is_persisted_ {};
-    bool node_modified_ {};
+    bool is_dirty_ {};
+    SyncState sync_state_ {};
 
     QJsonObject pending_update_ {};
 
