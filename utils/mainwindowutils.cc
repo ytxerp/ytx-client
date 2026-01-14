@@ -168,7 +168,7 @@ void Utils::SetConnectionStatus(QLabel* label, ConnectionStatus status)
     switch (status) {
     case ConnectionStatus::Connecting:
         label->setText("…");
-        label->setToolTip(QObject::tr("Connecting to server...)"));
+        label->setToolTip(QObject::tr("Connecting to server..."));
         label->setStyleSheet("QLabel {color: orange;}");
         return;
     case ConnectionStatus::Connected:
