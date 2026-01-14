@@ -89,8 +89,28 @@ signals:
 private slots:
     void RConnected();
     void RDisconnected();
-    void RReceiveMessage(const QString& message);
+    void RTextMessageReceived(const QString& message);
     void RErrorOccurred(QAbstractSocket::SocketError error);
+    void RPong()
+    {
+        qDebug() << "← Pong received, reset timeout_timer_";
+        timeout_timer_->start(TIMEOUT_THRESHOLD);
+    }
+
+    void RSendPing()
+    {
+        if (socket_.state() == QAbstractSocket::ConnectedState) {
+            qDebug() << "→ Ping sent";
+            socket_.ping();
+        }
+    }
+
+    void RTimeout()
+    {
+        qWarning() << "Heartbeat timeout, closing connection";
+        socket_.abort();
+        ping_timer_->stop();
+    }
 
 private:
     explicit WebSocket(QObject* parent = nullptr);
@@ -98,6 +118,16 @@ private:
 
     void InitHandler();
     void InitConnect();
+    void InitTimer();
+
+    void StopTimer()
+    {
+        if (ping_timer_)
+            ping_timer_->stop();
+
+        if (timeout_timer_)
+            timeout_timer_->stop();
+    }
 
     QHash<QUuid, QSet<QUuid>> ParseNodeReference(const QJsonObject& obj);
 
@@ -165,6 +195,9 @@ private:
 
     QUrl server_url_ {};
     bool manual_disconnect_ {};
+
+    QTimer* ping_timer_ {};
+    QTimer* timeout_timer_ {};
 
     QHash<QString, std::function<void(const QJsonObject&)>> handler_obj_ {};
     QHash<QString, std::function<void(const QJsonArray&)>> handler_arr_ {};

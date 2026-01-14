@@ -19,6 +19,8 @@ WebSocket::WebSocket(QObject* parent)
 
 WebSocket::~WebSocket()
 {
+    StopTimer();
+
     if (socket_.state() == QAbstractSocket::ConnectedState) {
         socket_.close();
     }
@@ -75,10 +77,13 @@ void WebSocket::RConnected()
 {
     qInfo() << "[WS]" << "Connected";
     emit SConnectionSucceeded();
+    InitTimer();
 }
 
 void WebSocket::RDisconnected()
 {
+    StopTimer();
+
     if (session_id_.isEmpty()) {
         qInfo() << "[WS]" << "Session ID is empty — disconnected before login.";
         return;
@@ -205,7 +210,30 @@ void WebSocket::InitConnect()
     connect(&socket_, &QWebSocket::connected, this, &WebSocket::RConnected);
     connect(&socket_, &QWebSocket::disconnected, this, &WebSocket::RDisconnected);
     connect(&socket_, &QWebSocket::errorOccurred, this, &WebSocket::RErrorOccurred);
-    connect(&socket_, &QWebSocket::textMessageReceived, this, &WebSocket::RReceiveMessage);
+    connect(&socket_, &QWebSocket::textMessageReceived, this, &WebSocket::RTextMessageReceived);
+    connect(&socket_, &QWebSocket::pong, this, &WebSocket::RPong);
+}
+
+void WebSocket::InitTimer()
+{
+    if (ping_timer_ && ping_timer_->isActive()) {
+        return;
+    }
+
+    if (!ping_timer_) {
+        ping_timer_ = new QTimer(this);
+        ping_timer_->setInterval(HEARTBEAT_INTERVAL);
+        connect(ping_timer_, &QTimer::timeout, this, &WebSocket::RSendPing);
+    }
+
+    if (!timeout_timer_) {
+        timeout_timer_ = new QTimer(this);
+        timeout_timer_->setSingleShot(true);
+        connect(timeout_timer_, &QTimer::timeout, this, &WebSocket::RTimeout);
+    }
+
+    ping_timer_->start();
+    timeout_timer_->start(TIMEOUT_THRESHOLD);
 }
 
 void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
@@ -221,7 +249,7 @@ void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
     socket_.sendTextMessage(QString::fromUtf8(json));
 }
 
-void WebSocket::RReceiveMessage(const QString& message)
+void WebSocket::RTextMessageReceived(const QString& message)
 {
     QJsonParseError err {};
     const QJsonValue root { QJsonValue::fromJson(message.toUtf8(), &err) };
@@ -230,6 +258,8 @@ void WebSocket::RReceiveMessage(const QString& message)
         qWarning() << "[WS]" << "Invalid message received from server:" << message;
         return;
     }
+
+    timeout_timer_->start(TIMEOUT_THRESHOLD);
 
     const QJsonObject obj { root.toObject() };
     const QString msg_type { obj.value(kKind).toString() };
