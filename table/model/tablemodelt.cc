@@ -113,7 +113,7 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
     if (value.isNull())
         return false;
 
-    if (tree_model_t_->Status(value) == std::to_underlying(NodeStatus::kReleased)) {
+    if (tree_model_t_->Status(value) == NodeStatus::kReleased) {
         qInfo() << "UpdateLinkedNode ignored: node is released.";
         return false;
     }

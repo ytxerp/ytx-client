@@ -49,7 +49,7 @@ QVariant SearchNodeModelT::data(const QModelIndex& index, int role) const
     case NodeEnumT::kColor:
         return d_node->color;
     case NodeEnumT::kStatus:
-        return d_node->status;
+        return std::to_underlying(d_node->status);
     case NodeEnumT::kDocument:
         return d_node->document;
     case NodeEnumT::kInitialTotal:

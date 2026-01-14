@@ -38,8 +38,7 @@ protected:
     bool UpdateRate(EntryShadow* shadow, double value) override;
     bool IsReleased(const QUuid& lhs_node, const QUuid& rhs_node) const override
     {
-        return tree_model_t_->Status(lhs_node) == std::to_underlying(NodeStatus::kReleased)
-            || tree_model_t_->Status(rhs_node) == std::to_underlying(NodeStatus::kReleased);
+        return tree_model_t_->Status(lhs_node) == NodeStatus::kReleased || tree_model_t_->Status(rhs_node) == NodeStatus::kReleased;
     };
 
 private:

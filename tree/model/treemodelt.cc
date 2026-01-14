@@ -58,7 +58,7 @@ QVariant TreeModelT::data(const QModelIndex& index, int role) const
     case NodeEnumT::kIssuedTime:
         return d_node->issued_time;
     case NodeEnumT::kStatus:
-        return d_node->status;
+        return std::to_underlying(d_node->status);
     case NodeEnumT::kDocument:
         return d_node->document;
     case NodeEnumT::kInitialTotal:
@@ -83,7 +83,7 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
 
     const NodeEnumT column { index.column() };
 
-    if (d_node->status == std::to_underlying(NodeStatus::kReleased) && column != NodeEnumT::kStatus) {
+    if (d_node->status == NodeStatus::kReleased && column != NodeEnumT::kStatus) {
         qInfo() << "Edit ignored: node is released";
         return false;
     }
@@ -113,7 +113,7 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
         Utils::UpdateDocument(pending_updates_[id], d_node, kDocument, value.toStringList(), &NodeT::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kStatus:
-        UpdateStatus(node, value.toInt());
+        UpdateStatus(node, NodeStatus(value.toInt()));
         break;
     case NodeEnumT::kId:
     case NodeEnumT::kUpdateBy:
@@ -232,7 +232,7 @@ void TreeModelT::ResetColor(const QModelIndex& index)
     update.insert(kColor, QString());
 }
 
-void TreeModelT::UpdateStatus(const QUuid& node_id, int status)
+void TreeModelT::UpdateStatus(const QUuid& node_id, NodeStatus status)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -245,7 +245,7 @@ void TreeModelT::UpdateStatus(const QUuid& node_id, int status)
     EmitRowChanged(node_id, status_column, status_column);
 }
 
-void TreeModelT::UpdateStatus(Node* node, int value)
+void TreeModelT::UpdateStatus(Node* node, NodeStatus value)
 {
     auto* d_node { DerivedPtr<NodeT>(node) };
     if (!d_node)

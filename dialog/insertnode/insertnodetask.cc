@@ -143,6 +143,6 @@ void InsertNodeTask::RRuleGroupClicked(int id) { node_->direction_rule = static_
 
 void InsertNodeTask::RKindGroupClicked(int id) { node_->kind = id; }
 
-void InsertNodeTask::RStatusGroupClicked(int id) { node_->status = id; }
+void InsertNodeTask::RStatusGroupClicked(int id) { node_->status = NodeStatus(id); }
 
 void InsertNodeTask::on_issuedTime_dateTimeChanged(const QDateTime& dateTime) { node_->issued_time = dateTime.toUTC(); }

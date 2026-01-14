@@ -118,7 +118,7 @@ void NodeT::ResetState()
     color.clear();
     document.clear();
     issued_time = {};
-    status = 0;
+    status = {};
 }
 
 void NodeT::ReadJson(const QJsonObject& object)
@@ -130,7 +130,7 @@ void NodeT::ReadJson(const QJsonObject& object)
     if (object.contains(kDocument))
         document = object.value(kDocument).toString().split(kSemicolon, Qt::SkipEmptyParts);
     if (object.contains(kStatus))
-        status = object.value(kStatus).toInt();
+        status = NodeStatus(object.value(kStatus).toInt());
     if (object.contains(kIssuedTime))
         issued_time = QDateTime::fromString(object.value(kIssuedTime).toString(), Qt::ISODate);
 }
@@ -142,7 +142,7 @@ QJsonObject NodeT::WriteJson() const
     obj.insert(kColor, color);
     obj.insert(kDocument, document.join(kSemicolon));
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
-    obj.insert(kStatus, status);
+    obj.insert(kStatus, std::to_underlying(status));
 
     return obj;
 }

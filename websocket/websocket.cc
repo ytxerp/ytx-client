@@ -783,7 +783,7 @@ void WebSocket::UpdateNodeStatus(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
-    const int status { obj.value(kStatus).toInt() };
+    const auto status { NodeStatus(obj.value(kStatus).toInt()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const QJsonObject meta { obj.value(kMeta).toObject() };
 
