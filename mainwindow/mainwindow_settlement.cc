@@ -39,21 +39,20 @@ void MainWindow::on_actionSettlement_triggered()
     RegisterWidget(widget_id, widget);
 }
 
-void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settlement& settlement, bool is_persisted)
+void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settlement& settlement, SyncState sync_state)
 {
     assert(IsOrderSection(start_));
 
     auto* model { new TableModelSettlement(sc_->info, SettlementStatus(settlement.status), this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new TableWidgetSettlement(
-        sc_->section_config, sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, parent_widget_id, this) };
+    auto* widget { new TableWidgetSettlement(sc_->section_config, sc_p_.tree_model, model, settlement, start_, widget_id, parent_widget_id, sync_state, this) };
     connect(model, &TableModelSettlement::SSyncAmount, widget, &TableWidgetSettlement::RSyncAmount);
     connect(widget, &TableWidgetSettlement::SUpdatePartner, this, &MainWindow::RUpdatePartner);
 
     {
         const QString name { sc_p_.tree_model->Name(settlement.partner_id) };
-        const QString label { is_persisted ? QString("%1-%2").arg(tr("Settlement"), name) : tr("Settlement") };
+        const QString label { sync_state == SyncState::kSynced ? QString("%1-%2").arg(tr("Settlement"), name) : tr("Settlement") };
 
         const int tab_index { ui->tabWidget->addTab(widget, label) };
         auto* tab_bar { ui->tabWidget->tabBar() };
@@ -99,7 +98,7 @@ void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
         auto* settlement { static_cast<Settlement*>(index.internalPointer()) };
         const QUuid settlement_widget_id { settlement_widget->WidgetId() };
 
-        SettlementItemTab(settlement_widget_id, *settlement, true);
+        SettlementItemTab(settlement_widget_id, *settlement, SyncState::kSynced);
     }
 }
 

@@ -1,5 +1,7 @@
 #include "tablewidgetsettlement.h"
 
+#include <QMessageBox>
+
 #include "component/signalblocker.h"
 #include "enum/settlementenum.h"
 #include "ui_tablewidgetsettlement.h"
@@ -7,7 +9,7 @@
 #include "websocket/websocket.h"
 
 TableWidgetSettlement::TableWidgetSettlement(CSectionConfig& config, TreeModel* tree_model_p, TableModelSettlement* model, const Settlement& settlement,
-    bool is_persisted, Section section, CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent)
+    Section section, CUuid& widget_id, CUuid& parent_widget_id, SyncState sync_state, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::TableWidgetSettlement)
     , settlement_ { settlement }
@@ -17,7 +19,7 @@ TableWidgetSettlement::TableWidgetSettlement(CSectionConfig& config, TreeModel* 
     , widget_id_ { widget_id }
     , parent_widget_id_ { parent_widget_id }
     , section_ { section }
-    , is_persisted_ { is_persisted }
+    , sync_state_ { sync_state }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -61,7 +63,7 @@ void TableWidgetSettlement::InitData()
     ui->dateTimeEdit->setDateTime(settlement_.issued_time.toLocalTime());
     ui->dSpinAmount->setValue(settlement_.amount);
 
-    ui->comboPartner->setEnabled(!is_persisted_);
+    ui->comboPartner->setEnabled(sync_state_ == SyncState::kLocalOnly);
 
     const bool is_released { settlement_.status == SettlementStatus::kReleased };
     ui->lineDescription->setReadOnly(is_released);
@@ -85,6 +87,19 @@ void TableWidgetSettlement::HideWidget(bool is_released)
     ui->pBtnRecall->setVisible(is_released);
 }
 
+bool TableWidgetSettlement::ValidateSyncState()
+{
+    if (sync_state_ == SyncState::kOutOfSync) {
+        QMessageBox::information(
+            this, tr("Invalid Operation"), tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."));
+        return false;
+    }
+
+    qDebug() << "[ValidateSyncState] Passed: sync_state =" << static_cast<int>(sync_state_);
+
+    return true;
+}
+
 void TableWidgetSettlement::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime)
 {
     const QDateTime utc_time { dateTime.toUTC() };
@@ -93,7 +108,7 @@ void TableWidgetSettlement::on_dateTimeEdit_dateTimeChanged(const QDateTime& dat
 
     settlement_.issued_time = dateTime.toUTC();
 
-    if (is_persisted_)
+    if (sync_state_ == SyncState::kSynced)
         pending_update_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
 }
 
@@ -101,13 +116,13 @@ void TableWidgetSettlement::on_lineDescription_textChanged(const QString& arg1)
 {
     settlement_.description = arg1;
 
-    if (is_persisted_)
+    if (sync_state_ == SyncState::kSynced)
         pending_update_.insert(kDescription, arg1);
 }
 
 void TableWidgetSettlement::on_comboPartner_currentIndexChanged(int /*index*/)
 {
-    if (is_persisted_)
+    if (sync_state_ == SyncState::kSynced)
         return;
 
     const QUuid partner_id { ui->comboPartner->currentData().toUuid() };
@@ -129,27 +144,18 @@ void TableWidgetSettlement::on_comboPartner_currentIndexChanged(int /*index*/)
 
 void TableWidgetSettlement::on_pBtnRelease_clicked()
 {
-    assert(!settlement_.partner_id.isNull() && "settlement_.partner should never be null here");
+    Q_ASSERT(!settlement_.partner_id.isNull());
+    Q_ASSERT(settlement_.status != SettlementStatus::kReleased);
 
     model_->NormalizeBuffer();
 
     {
-        if (!is_persisted_ && !model_->HasPendingChange()) {
+        if (sync_state_ == SyncState::kLocalOnly && !model_->HasPendingUpdate()) {
             return;
         }
 
-        if (settlement_.status == SettlementStatus::kReleased)
+        if (!ValidateSyncState())
             return;
-    }
-
-    {
-        settlement_.status = SettlementStatus::kReleased;
-
-        if (is_persisted_) {
-            pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kReleased));
-            pending_update_.insert(kAmount, QString::number(settlement_.amount, 'f', kMaxNumericScale_4));
-            pending_update_.insert(kVersion, settlement_.version);
-        }
     }
 
     {
@@ -160,24 +166,32 @@ void TableWidgetSettlement::on_pBtnRelease_clicked()
         message.insert(kParentWidgetId, parent_widget_id_.toString(QUuid::WithoutBraces));
         message.insert(kSettlementId, settlement_.id.toString(QUuid::WithoutBraces));
 
-        if (is_persisted_) {
+        if (sync_state_ == SyncState::kSynced) {
+            pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kReleased));
+            pending_update_.insert(kAmount, QString::number(settlement_.amount, 'f', kMaxNumericScale_4));
+            pending_update_.insert(kVersion, settlement_.version);
+
             message.insert(kSettlement, pending_update_);
 
             WebSocket::Instance()->SendMessage(kSettlementUpdated, message);
             pending_update_ = QJsonObject();
-        } else {
+        }
+
+        if (sync_state_ == SyncState::kLocalOnly) {
             message.insert(kSettlement, settlement_.WriteJson());
             WebSocket::Instance()->SendMessage(kSettlementInserted, message);
         }
+
+        sync_state_ = SyncState::kOutOfSync;
     }
 }
 
 void TableWidgetSettlement::on_pBtnRecall_clicked()
 {
-    if (settlement_.status == SettlementStatus::kRecalled)
-        return;
+    Q_ASSERT(settlement_.status != SettlementStatus::kRecalled);
 
-    settlement_.status = SettlementStatus::kRecalled;
+    if (!ValidateSyncState())
+        return;
 
     QJsonObject message { JsonGen::MetaMessage(section_) };
     model_->Finalize(message);
@@ -192,22 +206,14 @@ void TableWidgetSettlement::on_pBtnRecall_clicked()
 
     WebSocket::Instance()->SendMessage(kSettlementRecalled, message);
     pending_update_ = QJsonObject();
+
+    sync_state_ = SyncState::kOutOfSync;
 }
 
 void TableWidgetSettlement::InsertSucceeded(int version)
 {
-    is_persisted_ = true;
-    settlement_.version = version;
-
     ui->comboPartner->setEnabled(false);
-
-    ui->lineDescription->setReadOnly(true);
-    ui->dateTimeEdit->setReadOnly(true);
-
-    model_->UpdateStatus(SettlementStatus::kReleased);
-    ui->tableView->clearSelection();
-
-    HideWidget(true);
+    UpdateSucceeded(version);
 }
 
 void TableWidgetSettlement::RecallSucceeded(int version)
@@ -216,6 +222,8 @@ void TableWidgetSettlement::RecallSucceeded(int version)
     ui->dateTimeEdit->setReadOnly(false);
 
     settlement_.version = version;
+    sync_state_ = SyncState::kSynced;
+    settlement_.status = SettlementStatus::kRecalled;
     model_->UpdateStatus(SettlementStatus::kRecalled);
 
     HideWidget(false);
@@ -227,6 +235,8 @@ void TableWidgetSettlement::UpdateSucceeded(int version)
     ui->dateTimeEdit->setReadOnly(true);
 
     settlement_.version = version;
+    sync_state_ = SyncState::kSynced;
+    settlement_.status = SettlementStatus::kReleased;
     model_->UpdateStatus(SettlementStatus::kReleased);
 
     ui->tableView->clearSelection();

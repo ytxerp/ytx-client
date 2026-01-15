@@ -160,7 +160,7 @@ private:
 
     void CreateLeafFIPT(SectionContext* sc, const QUuid& node_id);
     void CreateLeafO(SectionContext* sc, const QUuid& node_id);
-    void SettlementItemTab(const QUuid& parent_widget_id, const Settlement& settlement, bool is_persisted);
+    void SettlementItemTab(const QUuid& parent_widget_id, const Settlement& settlement, SyncState sync_state);
 
     void TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
     void TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;

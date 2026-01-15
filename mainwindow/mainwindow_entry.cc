@@ -25,7 +25,7 @@ void MainWindow::on_actionAppendEntry_triggered()
             settlement.issued_time = QDateTime::currentDateTimeUtc();
             settlement.id = QUuid::createUuidV7();
 
-            SettlementItemTab(settlement_widget_id, settlement, false);
+            SettlementItemTab(settlement_widget_id, settlement, SyncState::kLocalOnly);
             return;
         }
     }

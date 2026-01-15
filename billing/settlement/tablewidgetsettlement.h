@@ -41,8 +41,8 @@ signals:
     void SUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
 
 public:
-    explicit TableWidgetSettlement(CSectionConfig& config, TreeModel* tree_model_p, TableModelSettlement* model, const Settlement& settlement,
-        bool is_persisted, Section section, CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent = nullptr);
+    explicit TableWidgetSettlement(CSectionConfig& config, TreeModel* tree_model_p, TableModelSettlement* model, const Settlement& settlement, Section section,
+        CUuid& widget_id, CUuid& parent_widget_id, SyncState sync_state, QWidget* parent = nullptr);
     ~TableWidgetSettlement() override;
 
     QTableView* View() const;
@@ -68,6 +68,7 @@ private:
     void InitData();
     void FetchNode();
     void HideWidget(bool is_released);
+    bool ValidateSyncState();
 
 private:
     Ui::TableWidgetSettlement* ui;
@@ -82,7 +83,7 @@ private:
     const QUuid widget_id_ {};
     const QUuid parent_widget_id_ {};
     const Section section_ {};
-    bool is_persisted_ {};
+    SyncState sync_state_ {};
 };
 
 #endif // TABLEWIDGETSETTLEMENT_H

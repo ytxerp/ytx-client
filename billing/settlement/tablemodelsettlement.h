@@ -52,7 +52,7 @@ public:
     void ResetModel(const QJsonArray& array);
     void UpdateStatus(SettlementStatus status);
     void Finalize(QJsonObject& message);
-    bool HasPendingChange() const { return !pending_selected_.isEmpty() || !pending_deselected_.isEmpty(); }
+    bool HasPendingUpdate() const { return !pending_selected_.isEmpty() || !pending_deselected_.isEmpty(); }
     void NormalizeBuffer();
 
 private:
