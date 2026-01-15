@@ -1634,8 +1634,8 @@ Rage, rage against the dying of the light.</source>
         <location filename="../../mainwindow/mainwindow.ui" line="395"/>
         <location filename="../../mainwindow/mainwindow.ui" line="398"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="25"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="55"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="82"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="56"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="83"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1966,12 +1966,12 @@ Please refresh the data and try again.</source>
 请刷新当前数据后重新尝试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="250"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="251"/>
         <source>Settlement Released</source>
         <translation>结算单已发布</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="251"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="252"/>
         <source>This settlement has already been released and cannot be deleted.
 You need to recall it first before making changes.</source>
         <translation>该结算单已发布，无法直接删除。
@@ -3546,14 +3546,12 @@ You need to recall it first before making changes.</source>
         <translation>找不到可用的打印模板。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="447"/>
         <source>This cache order has already been settled and cannot be recalled.</source>
-        <translation>缓存订单已结算，无法再撤回了。</translation>
+        <translation type="vanished">缓存订单已结算，无法再撤回了。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="452"/>
         <source>This cache order has already been selected in a settlement and cannot be recalled.</source>
-        <translation>缓存订单已经被结算单选中，无法再撤回了。</translation>
+        <translation type="vanished">缓存订单已经被结算单选中，无法再撤回了。</translation>
     </message>
     <message>
         <source>No Changes</source>
@@ -3570,6 +3568,16 @@ You need to recall it first before making changes.</source>
     <message>
         <source>This order was deleted by another client and cannot be performed.</source>
         <translation type="vanished">订单已经被删除，无法再执行操作。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="447"/>
+        <source>This order has already been settled and cannot be operated.</source>
+        <translation>订单已经结算，无法再编辑了。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="452"/>
+        <source>This order has already been selected in a settlement and cannot be operated.</source>
+        <translation>订单已在结算单中，无法再编辑了。</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.cc" line="472"/>
