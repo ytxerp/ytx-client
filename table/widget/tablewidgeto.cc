@@ -444,12 +444,12 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
 
     if (tmp_node_.is_settled) {
-        QMessageBox::information(this, tr("Order Settled"), tr("This cache order has already been settled and cannot be recalled."));
+        QMessageBox::information(this, tr("Order Settled"), tr("This order has already been settled and cannot be operated."));
         return;
     }
 
     if (!tmp_node_.settlement_id.isNull()) {
-        QMessageBox::information(this, tr("Order Selected"), tr("This cache order has already been selected in a settlement and cannot be recalled."));
+        QMessageBox::information(this, tr("Order Selected"), tr("This order has already been selected in a settlement and cannot be operated."));
         return;
     }
 

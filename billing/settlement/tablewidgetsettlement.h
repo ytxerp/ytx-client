@@ -23,6 +23,7 @@
 #include <QTableView>
 #include <QWidget>
 
+#include "component/config.h"
 #include "component/using.h"
 #include "enum/section.h"
 #include "settlement.h"
@@ -40,8 +41,8 @@ signals:
     void SUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
 
 public:
-    explicit TableWidgetSettlement(TreeModel* tree_model_partner, TableModelSettlement* model, const Settlement& settlement, bool is_persisted, Section section,
-        CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent = nullptr);
+    explicit TableWidgetSettlement(CSectionConfig& config, TreeModel* tree_model_p, TableModelSettlement* model, const Settlement& settlement,
+        bool is_persisted, Section section, CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent = nullptr);
     ~TableWidgetSettlement() override;
 
     QTableView* View() const;
@@ -73,8 +74,9 @@ private:
 
     Settlement settlement_ {};
     TableModelSettlement* model_ {};
+    CSectionConfig& config_ {};
 
-    TreeModel* tree_model_partner_ {};
+    TreeModel* tree_model_p_ {};
     QJsonObject pending_update_ {};
 
     const QUuid widget_id_ {};

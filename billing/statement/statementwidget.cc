@@ -79,9 +79,9 @@ void StatementWidget::RUnitGroupClicked(int id)
 void StatementWidget::IniUnitGroup()
 {
     unit_group_ = new QButtonGroup(this);
-    unit_group_->addButton(ui->rBtnIMM, 0);
-    unit_group_->addButton(ui->rBtnMON, 1);
-    unit_group_->addButton(ui->rBtnPEN, 2);
+    unit_group_->addButton(ui->rBtnIMM, std::to_underlying(NodeUnit::OImmediate));
+    unit_group_->addButton(ui->rBtnMON, std::to_underlying(NodeUnit::OMonthly));
+    unit_group_->addButton(ui->rBtnPEN, std::to_underlying(NodeUnit::OPending));
 }
 
 void StatementWidget::IniConnect() { connect(unit_group_, &QButtonGroup::idClicked, this, &StatementWidget::RUnitGroupClicked); }

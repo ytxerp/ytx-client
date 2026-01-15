@@ -46,7 +46,8 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
     auto* model { new TableModelSettlement(sc_->info, SettlementStatus(settlement.status), this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new TableWidgetSettlement(sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, parent_widget_id, this) };
+    auto* widget { new TableWidgetSettlement(
+        sc_->section_config, sc_p_.tree_model, model, settlement, is_persisted, start_, widget_id, parent_widget_id, this) };
     connect(model, &TableModelSettlement::SSyncAmount, widget, &TableWidgetSettlement::RSyncAmount);
     connect(widget, &TableWidgetSettlement::SUpdatePartner, this, &MainWindow::RUpdatePartner);
 
@@ -122,7 +123,7 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
     const QJsonObject settlement_obj { obj.value(kSettlement).toObject() };
-    const int version { settlement_obj.value(kSection).toInt() };
+    const int version { settlement_obj.value(kVersion).toInt() };
 
     auto* sc { GetSectionContex(section) };
 

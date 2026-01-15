@@ -6,13 +6,14 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TableWidgetSettlement::TableWidgetSettlement(TreeModel* tree_model_partner, TableModelSettlement* model, const Settlement& settlement, bool is_persisted,
-    Section section, CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent)
+TableWidgetSettlement::TableWidgetSettlement(CSectionConfig& config, TreeModel* tree_model_p, TableModelSettlement* model, const Settlement& settlement,
+    bool is_persisted, Section section, CUuid& widget_id, CUuid& parent_widget_id, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::TableWidgetSettlement)
     , settlement_ { settlement }
     , model_ { model }
-    , tree_model_partner_ { tree_model_partner }
+    , config_ { config }
+    , tree_model_p_ { tree_model_p }
     , widget_id_ { widget_id }
     , parent_widget_id_ { parent_widget_id }
     , section_ { section }
@@ -42,12 +43,13 @@ void TableWidgetSettlement::RSyncAmount(double amount)
 
 void TableWidgetSettlement::InitWidget()
 {
-    auto* pmodel { tree_model_partner_->IncludeUnitModel(section_ == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor, this) };
+    auto* pmodel { tree_model_p_->IncludeUnitModel(section_ == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor, this) };
     ui->comboPartner->setModel(pmodel);
     ui->comboPartner->setCurrentIndex(-1);
 
     ui->dateTimeEdit->setDisplayFormat(kDateTimeFST);
     ui->dSpinAmount->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+    ui->dSpinAmount->setDecimals(config_.amount_decimal);
 }
 
 void TableWidgetSettlement::InitData()
