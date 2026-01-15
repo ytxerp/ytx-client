@@ -45,7 +45,7 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     {
         const int unit_column { Utils::UnitColumn(start_) };
         const int unit { index.siblingAtColumn(unit_column).data().toInt() };
-        if (start_ == Section::kInventory && unit == std::to_underlying(UnitI::kExternal))
+        if (start_ == Section::kInventory && unit == std::to_underlying(NodeUnit::IExternal))
             return;
     }
 

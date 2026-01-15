@@ -13,16 +13,16 @@ TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, QObject* parent)
 
 void TreeModelI::RemoveUnitSet(const QUuid& node_id, int unit)
 {
-    const UnitI kUnit { unit };
+    const NodeUnit kUnit { unit };
 
     switch (kUnit) {
-    case UnitI::kPosition:
+    case NodeUnit::IPosition:
         pos_set_.remove(node_id);
         break;
-    case UnitI::kInternal:
+    case NodeUnit::IInternal:
         int_set_.remove(node_id);
         break;
-    case UnitI::kExternal:
+    case NodeUnit::IExternal:
         ext_set_.remove(node_id);
         break;
     default:
@@ -32,16 +32,16 @@ void TreeModelI::RemoveUnitSet(const QUuid& node_id, int unit)
 
 void TreeModelI::InsertUnitSet(const QUuid& node_id, int unit)
 {
-    const UnitI kUnit { unit };
+    const NodeUnit kUnit { unit };
 
     switch (kUnit) {
-    case UnitI::kPosition:
+    case NodeUnit::IPosition:
         pos_set_.insert(node_id);
         break;
-    case UnitI::kInternal:
+    case NodeUnit::IInternal:
         int_set_.insert(node_id);
         break;
-    case UnitI::kExternal:
+    case NodeUnit::IExternal:
         ext_set_.insert(node_id);
         break;
     default:
@@ -51,14 +51,14 @@ void TreeModelI::InsertUnitSet(const QUuid& node_id, int unit)
 
 const QSet<QUuid>* TreeModelI::UnitSet(int unit) const
 {
-    const UnitI kUnit { unit };
+    const NodeUnit kUnit { unit };
 
     switch (kUnit) {
-    case UnitI::kPosition:
+    case NodeUnit::IPosition:
         return &pos_set_;
-    case UnitI::kInternal:
+    case NodeUnit::IInternal:
         return &int_set_;
-    case UnitI::kExternal:
+    case NodeUnit::IExternal:
         return &ext_set_;
     default:
         return nullptr;

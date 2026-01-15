@@ -93,16 +93,16 @@ void StatementNodeWidget::IniConnect() { connect(unit_group_, &QButtonGroup::idC
 
 void StatementNodeWidget::IniUnit(int unit)
 {
-    const UnitO kUnit { unit };
+    const NodeUnit kUnit { unit };
 
     switch (kUnit) {
-    case UnitO::kImmediate:
+    case NodeUnit::OImmediate:
         ui->rBtnIMM->setChecked(true);
         break;
-    case UnitO::kMonthly:
+    case NodeUnit::OMonthly:
         ui->rBtnMON->setChecked(true);
         break;
-    case UnitO::kPending:
+    case NodeUnit::OPending:
         ui->rBtnPEN->setChecked(true);
         break;
     default:

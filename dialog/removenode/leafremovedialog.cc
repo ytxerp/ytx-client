@@ -68,7 +68,7 @@ void LeafRemoveDialog::InitCheckBoxGroup()
         ui->chkBoxInventoryExt->setEnabled(false);
         break;
     case Section::kPartner:
-        if (node_unit_ == std::to_underlying(UnitP::kEmployee)) {
+        if (node_unit_ == std::to_underlying(NodeUnit::PEmployee)) {
             ui->chkBoxEmployee->show();
             ui->chkBoxEmployee->setChecked(employee_ref_);
             ui->chkBoxEmployee->setEnabled(false);

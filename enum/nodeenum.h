@@ -27,9 +27,16 @@ enum class NodeKind { kLeaf = 0, kBranch };
 enum class NodeStatus { kRecalled = 0, kReleased };
 enum class SyncState { kLocalOnly, kSynced, kOutOfSync };
 
-/** @brief Unit kinds. */
-/** @brief Currency kinds, ordered by common usage and trading volume. */
-enum class Currency {
+/** @brief NodeUnit, global unit identifier across ERP. */
+/**
+ * 1–499   : Financial units (Currency)
+ * 500–599 : Task units
+ * 600–699 : Inventory units
+ * 700–799 : Partner units
+ * 800–899 : Order units
+ */
+enum class NodeUnit : int {
+    // Financial units (Currency), 0–499
     USD = 0, // US Dollar
     EUR = 1, // Euro
     JPY = 2, // Japanese Yen
@@ -45,93 +52,142 @@ enum class Currency {
     SGD = 12, // Singapore Dollar
     KRW = 13, // South Korean Won
     MXN = 14, // Mexican Peso
-    INR = 15 // Indian Rupee
+    INR = 15, // Indian Rupee
+
+    // Task units, 500–599
+    TTarget = 500, // Task Target
+    TSource = 510, // Task Source
+    TAction = 520, // Task Action
+
+    // Inventory units, 600–699
+    IInternal = 600, // Inventory Internal
+    IPosition = 610, // Inventory Position
+    IExternal = 620, // Inventory External
+
+    // Partner units, 700–799
+    PCustomer = 700, // Partner Customer
+    PVendor = 710, // Partner Vendor
+    PEmployee = 720, // Partner Employee
+
+    // Order units, 800–899
+    OImmediate = 800, // Order Immediate
+    OMonthly = 810, // Order Monthly
+    OPending = 820, // Order Pending
 };
 
-inline const char* currency_code(Currency c)
+inline const char* kUnitCode(NodeUnit c)
 {
     switch (c) {
-    case Currency::USD:
+    // Finance units
+    case NodeUnit::USD:
         return "USD";
-    case Currency::EUR:
+    case NodeUnit::EUR:
         return "EUR";
-    case Currency::JPY:
+    case NodeUnit::JPY:
         return "JPY";
-    case Currency::GBP:
+    case NodeUnit::GBP:
         return "GBP";
-    case Currency::AUD:
+    case NodeUnit::AUD:
         return "AUD";
-    case Currency::CAD:
+    case NodeUnit::CAD:
         return "CAD";
-    case Currency::CHF:
+    case NodeUnit::CHF:
         return "CHF";
-    case Currency::CNY:
+    case NodeUnit::CNY:
         return "CNY";
-    case Currency::HKD:
+    case NodeUnit::HKD:
         return "HKD";
-    case Currency::NZD:
+    case NodeUnit::NZD:
         return "NZD";
-    case Currency::SEK:
+    case NodeUnit::SEK:
         return "SEK";
-    case Currency::NOK:
+    case NodeUnit::NOK:
         return "NOK";
-    case Currency::SGD:
+    case NodeUnit::SGD:
         return "SGD";
-    case Currency::KRW:
+    case NodeUnit::KRW:
         return "KRW";
-    case Currency::MXN:
+    case NodeUnit::MXN:
         return "MXN";
-    case Currency::INR:
+    case NodeUnit::INR:
         return "INR";
+
+    // Task units
+    case NodeUnit::TTarget:
+        return "TGT";
+    case NodeUnit::TAction:
+        return "ACT";
+    case NodeUnit::TSource:
+        return "SRC";
+
+    // Inventory units
+    case NodeUnit::IInternal:
+        return "INT";
+    case NodeUnit::IPosition:
+        return "POS";
+    case NodeUnit::IExternal:
+        return "EXT";
+
+    // Partner units
+    case NodeUnit::PCustomer:
+        return "CUS";
+    case NodeUnit::PEmployee:
+        return "EMP";
+    case NodeUnit::PVendor:
+        return "VEN";
+
+    // Order units
+    case NodeUnit::OImmediate:
+        return "IMM";
+    case NodeUnit::OMonthly:
+        return "MON";
+    case NodeUnit::OPending:
+        return "PEN";
     }
 }
 
-inline const char* currency_symbol(Currency c)
+inline const char* kUnitSymbol(NodeUnit c)
 {
     switch (c) {
-    case Currency::USD:
+    // Financial units (Currency)
+    case NodeUnit::USD:
         return "$";
-    case Currency::EUR:
+    case NodeUnit::EUR:
         return "€";
-    case Currency::JPY:
+    case NodeUnit::JPY:
         return "¥";
-    case Currency::GBP:
+    case NodeUnit::GBP:
         return "£";
-    case Currency::AUD:
+    case NodeUnit::AUD:
         return "$";
-    case Currency::CAD:
+    case NodeUnit::CAD:
         return "$";
-    case Currency::CHF:
+    case NodeUnit::CHF:
         return "CHF";
-    case Currency::CNY:
+    case NodeUnit::CNY:
         return "¥";
-    case Currency::HKD:
+    case NodeUnit::HKD:
         return "$";
-    case Currency::NZD:
+    case NodeUnit::NZD:
         return "$";
-    case Currency::SEK:
+    case NodeUnit::SEK:
         return "kr";
-    case Currency::NOK:
+    case NodeUnit::NOK:
         return "kr";
-    case Currency::SGD:
+    case NodeUnit::SGD:
         return "$";
-    case Currency::KRW:
+    case NodeUnit::KRW:
         return "₩";
-    case Currency::MXN:
+    case NodeUnit::MXN:
         return "$";
-    case Currency::INR:
+    case NodeUnit::INR:
         return "₹";
+
+    // Default for other units or unknown
+    default:
+        return "";
     }
 }
-
-enum class UnitO { kImmediate = 0, kMonthly, kPending };
-enum class UnitP { kCustomer = 0, kVendor, kEmployee };
-enum class UnitI { kInternal = 0, kPosition, kExternal };
-enum class UnitT {
-    kTarget = 0, // 0–9 reserved for target types
-    kSource = 10, // 10–19 reserved for source types
-    kAction = 20, // 20–29 reserved for action types
-};
 
 // defining node column
 enum class NodeEnum {

@@ -20,8 +20,8 @@ void MainWindow::RSaleReferencePrimary(const QUuid& node_id, int unit)
 {
     Q_ASSERT(sc_ && sc_->tree_widget);
 
-    const bool allowed { (start_ == Section::kInventory && unit == std::to_underlying(UnitI::kInternal))
-        || (start_ == Section::kPartner && unit == std::to_underlying(UnitP::kCustomer)) };
+    const bool allowed { (start_ == Section::kInventory && unit == std::to_underlying(NodeUnit::IInternal))
+        || (start_ == Section::kPartner && unit == std::to_underlying(NodeUnit::PCustomer)) };
 
     if (!allowed)
         return;

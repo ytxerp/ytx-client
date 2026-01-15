@@ -157,27 +157,27 @@ void MainWindow::InitContextFinance()
     info.path = kFinancePath;
     info.entry = kFinanceEntry;
 
-    for (Currency c : {
-             Currency::USD,
-             Currency::EUR,
-             Currency::JPY,
-             Currency::GBP,
-             Currency::AUD,
-             Currency::CAD,
-             Currency::CHF,
-             Currency::CNY,
-             Currency::HKD,
-             Currency::NZD,
-             Currency::SEK,
-             Currency::NOK,
-             Currency::SGD,
-             Currency::KRW,
-             Currency::MXN,
-             Currency::INR,
+    for (NodeUnit c : {
+             NodeUnit::USD,
+             NodeUnit::EUR,
+             NodeUnit::JPY,
+             NodeUnit::GBP,
+             NodeUnit::AUD,
+             NodeUnit::CAD,
+             NodeUnit::CHF,
+             NodeUnit::CNY,
+             NodeUnit::HKD,
+             NodeUnit::NZD,
+             NodeUnit::SEK,
+             NodeUnit::NOK,
+             NodeUnit::SGD,
+             NodeUnit::KRW,
+             NodeUnit::MXN,
+             NodeUnit::INR,
          }) {
         const int key { std::to_underlying(c) };
-        info.unit_map.insert(key, currency_code(c));
-        info.unit_symbol_map.insert(key, currency_symbol(c));
+        info.unit_map.insert(key, kUnitCode(c));
+        info.unit_symbol_map.insert(key, kUnitSymbol(c));
     }
 
     info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
@@ -216,9 +216,10 @@ void MainWindow::InitContextInventory()
     info.path = kInventoryPath;
     info.entry = kInventoryEntry;
 
-    info.unit_map.insert(std::to_underlying(UnitI::kInternal), kUnitInternal);
-    info.unit_map.insert(std::to_underlying(UnitI::kPosition), kUnitPosition);
-    info.unit_map.insert(std::to_underlying(UnitI::kExternal), kUnitExternal);
+    for (NodeUnit c : { NodeUnit::IInternal, NodeUnit::IPosition, NodeUnit::IExternal }) {
+        const int key { std::to_underlying(c) };
+        info.unit_map.insert(key, kUnitCode(c));
+    }
 
     info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
     info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
@@ -256,9 +257,10 @@ void MainWindow::InitContextTask()
     info.path = kTaskPath;
     info.entry = kTaskEntry;
 
-    info.unit_map.insert(std::to_underlying(UnitT::kAction), kUnitAction);
-    info.unit_map.insert(std::to_underlying(UnitT::kTarget), kUnitTarget);
-    info.unit_map.insert(std::to_underlying(UnitT::kSource), kUnitSource);
+    for (NodeUnit c : { NodeUnit::TTarget, NodeUnit::TAction, NodeUnit::TSource }) {
+        const int key { std::to_underlying(c) };
+        info.unit_map.insert(key, kUnitCode(c));
+    }
 
     info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
     info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
@@ -295,9 +297,10 @@ void MainWindow::InitContextPartner()
     info.path = kPartnerPath;
     info.entry = kPartnerEntry;
 
-    info.unit_map.insert(std::to_underlying(UnitP::kCustomer), kUnitCustomer);
-    info.unit_map.insert(std::to_underlying(UnitP::kEmployee), kUnitEmployee);
-    info.unit_map.insert(std::to_underlying(UnitP::kVendor), kUnitVendor);
+    for (NodeUnit c : { NodeUnit::PCustomer, NodeUnit::PEmployee, NodeUnit::PVendor }) {
+        const int key { std::to_underlying(c) };
+        info.unit_map.insert(key, kUnitCode(c));
+    }
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
@@ -331,9 +334,10 @@ void MainWindow::InitContextSale()
     info.rule_map.insert(Rule::kRO, Rule::kStrRO);
     info.rule_map.insert(Rule::kTO, Rule::kStrTO);
 
-    info.unit_map.insert(std::to_underlying(UnitO::kImmediate), kUnitImmediate);
-    info.unit_map.insert(std::to_underlying(UnitO::kMonthly), kUnitMonthly);
-    info.unit_map.insert(std::to_underlying(UnitO::kPending), kUnitPending);
+    for (NodeUnit c : { NodeUnit::OImmediate, NodeUnit::OMonthly, NodeUnit::OPending }) {
+        const int key { std::to_underlying(c) };
+        info.unit_map.insert(key, kUnitCode(c));
+    }
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
@@ -379,9 +383,10 @@ void MainWindow::InitContextPurchase()
     info.rule_map.insert(Rule::kRO, Rule::kStrRO);
     info.rule_map.insert(Rule::kTO, Rule::kStrTO);
 
-    info.unit_map.insert(std::to_underlying(UnitO::kImmediate), kUnitImmediate);
-    info.unit_map.insert(std::to_underlying(UnitO::kMonthly), kUnitMonthly);
-    info.unit_map.insert(std::to_underlying(UnitO::kPending), kUnitPending);
+    for (NodeUnit c : { NodeUnit::OImmediate, NodeUnit::OMonthly, NodeUnit::OPending }) {
+        const int key { std::to_underlying(c) };
+        info.unit_map.insert(key, kUnitCode(c));
+    }
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);

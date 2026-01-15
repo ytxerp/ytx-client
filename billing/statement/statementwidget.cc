@@ -11,7 +11,7 @@
 StatementWidget::StatementWidget(StatementModel* model, Section section, CUuid& widget_id, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementWidget)
-    , unit_ { std::to_underlying(UnitO::kMonthly) }
+    , unit_ { std::to_underlying(NodeUnit::OMonthly) }
     , model_ { model }
     , section_ { section }
     , widget_id_ { widget_id }
@@ -88,16 +88,16 @@ void StatementWidget::IniConnect() { connect(unit_group_, &QButtonGroup::idClick
 
 void StatementWidget::IniUnit(int unit)
 {
-    const UnitO kUnit { unit };
+    const NodeUnit kUnit { unit };
 
     switch (kUnit) {
-    case UnitO::kImmediate:
+    case NodeUnit::OImmediate:
         ui->rBtnIMM->setChecked(true);
         break;
-    case UnitO::kMonthly:
+    case NodeUnit::OMonthly:
         ui->rBtnMON->setChecked(true);
         break;
-    case UnitO::kPending:
+    case NodeUnit::OPending:
         ui->rBtnPEN->setChecked(true);
         break;
     default:

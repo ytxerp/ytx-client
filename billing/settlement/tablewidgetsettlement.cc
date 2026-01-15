@@ -43,7 +43,7 @@ void TableWidgetSettlement::RSyncAmount(double amount)
 void TableWidgetSettlement::InitWidget()
 {
     auto* pmodel { tree_model_partner_->IncludeUnitModel(
-        section_ == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor), this) };
+        section_ == Section::kSale ? std::to_underlying(NodeUnit::PCustomer) : std::to_underlying(NodeUnit::PVendor), this) };
     ui->comboPartner->setModel(pmodel);
     ui->comboPartner->setCurrentIndex(-1);
 

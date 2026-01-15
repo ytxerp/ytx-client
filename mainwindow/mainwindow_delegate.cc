@@ -224,7 +224,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kStatus), status);
 
-    QSortFilterProxyModel* filter_model { tree_model->ExcludeMultipleModel(node_id, std::to_underlying(UnitI::kExternal), table_view) };
+    QSortFilterProxyModel* filter_model { tree_model->ExcludeMultipleModel(node_id, std::to_underlying(NodeUnit::IExternal), table_view) };
 
     auto* node { new RhsNode(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
@@ -282,7 +282,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
 
     auto tree_model_i { sc_i_.tree_model };
 
-    auto* ext_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kExternal), table_view) };
+    auto* ext_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(NodeUnit::IExternal), table_view) };
     auto* external_sku { new FilterUnit(tree_model_i, ext_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kExternalSku), external_sku);
 
@@ -292,7 +292,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kStatus), status);
 
-    auto* int_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kInternal), table_view) };
+    auto* int_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(NodeUnit::IInternal), table_view) };
     auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), internal_sku);
 }
@@ -300,7 +300,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
 void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) const
 {
     auto tree_model_i { sc_i_.tree_model };
-    auto* int_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kInternal), table_view) };
+    auto* int_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(NodeUnit::IInternal), table_view) };
 
     auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kRhsNode), internal_sku);
@@ -415,7 +415,7 @@ void MainWindow::DelegateStatementEntry(QTableView* table_view, CSectionConfig& 
 
     auto tree_model_i { sc_i_.tree_model };
 
-    auto* int_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(UnitI::kInternal), table_view) };
+    auto* int_filter_model { tree_model_i->IncludeUnitModel(std::to_underlying(NodeUnit::IInternal), table_view) };
     auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
 
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kInternalSku), internal_sku);
@@ -436,7 +436,7 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIssuedTime), issued_time);
 
     auto model { sc_p_.tree_model };
-    const int unit { start_ == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor) };
+    const int unit { start_ == Section::kSale ? std::to_underlying(NodeUnit::PCustomer) : std::to_underlying(NodeUnit::PVendor) };
 
     auto* filter_model { model->IncludeUnitModel(unit, table_view) };
     auto* node { new RhsNode(model, filter_model, table_view) };

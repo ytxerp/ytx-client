@@ -97,16 +97,16 @@ void StatementEntryWidget::IniConnect() { connect(unit_group_, &QButtonGroup::id
 
 void StatementEntryWidget::IniUnit(int unit)
 {
-    const UnitO kUnit { unit };
+    const NodeUnit kUnit { unit };
 
     switch (kUnit) {
-    case UnitO::kImmediate:
+    case NodeUnit::OImmediate:
         ui->rBtnIMM->setChecked(true);
         break;
-    case UnitO::kMonthly:
+    case NodeUnit::OMonthly:
         ui->rBtnMON->setChecked(true);
         break;
-    case UnitO::kPending:
+    case NodeUnit::OPending:
         ui->rBtnPEN->setChecked(true);
         break;
     default:
@@ -149,7 +149,7 @@ void StatementEntryWidget::on_pBtnExport_clicked()
         return;
 
     auto& list { model_->EntryList() };
-    const QString unit_string { Utils::UnitString(UnitO(unit_)) };
+    const QString unit_string { Utils::UnitString(NodeUnit(unit_)) };
 
     ExportExcel::Instance().StatementAsync(destination, partner_name_, inventory_leaf_, unit_string, start_, adjust_end, total_, list);
 }

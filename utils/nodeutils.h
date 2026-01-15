@@ -145,18 +145,18 @@ constexpr std::pair<int, int> NodeCacheColumnRange(Section section)
     Q_UNREACHABLE();
 }
 
-inline QString UnitString(UnitO unit)
+inline QString UnitString(NodeUnit unit)
 {
     switch (unit) {
-    case UnitO::kMonthly:
-        return QObject::tr("MS");
-    case UnitO::kImmediate:
-        return QObject::tr("IS");
-    case UnitO::kPending:
-        return QObject::tr("PEND");
+    case NodeUnit::OMonthly:
+        return QObject::tr("MON");
+    case NodeUnit::OImmediate:
+        return QObject::tr("IMM");
+    case NodeUnit::OPending:
+        return QObject::tr("PEN");
+    default:
+        return kEmptyString;
     }
-
-    Q_UNREACHABLE();
 }
 
 bool IsDescendant(const Node* lhs, const Node* rhs);

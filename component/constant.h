@@ -102,19 +102,6 @@ inline const QString kDotSuffixXLSX = QStringLiteral(".xlsx");
 inline const QString kBranchKind = QStringLiteral("B");
 inline const QString kLeafKind = QStringLiteral("L");
 
-inline const QString kUnitTarget = QStringLiteral("TGT");
-inline const QString kUnitAction = QStringLiteral("ACT");
-inline const QString kUnitSource = QStringLiteral("SRC");
-inline const QString kUnitInternal = QStringLiteral("INT");
-inline const QString kUnitPosition = QStringLiteral("POS");
-inline const QString kUnitExternal = QStringLiteral("EXT");
-inline const QString kUnitCustomer = QStringLiteral("CUS");
-inline const QString kUnitEmployee = QStringLiteral("EMP");
-inline const QString kUnitVendor = QStringLiteral("VEN");
-inline const QString kUnitImmediate = QStringLiteral("IMM");
-inline const QString kUnitMonthly = QStringLiteral("MON");
-inline const QString kUnitPending = QStringLiteral("PEN");
-
 // App ini keys
 inline const QString kGeometry = QStringLiteral("geometry");
 inline const QString kTreeHeaderState = QStringLiteral("tree_header_state");

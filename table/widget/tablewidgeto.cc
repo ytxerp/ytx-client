@@ -91,7 +91,7 @@ void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, doubl
         }
     }
 
-    const double adjusted_final_delta { tmp_node_.unit == std::to_underlying(UnitO::kImmediate) ? final_delta : 0.0 };
+    const double adjusted_final_delta { tmp_node_.unit == std::to_underlying(NodeUnit::OImmediate) ? final_delta : 0.0 };
 
     {
         tmp_node_.count_total += count_delta;
@@ -108,11 +108,11 @@ void TableWidgetO::IniWidget()
 {
     {
         auto* pmodel { tree_model_partner_->IncludeUnitModel(
-            section_ == Section::kSale ? std::to_underlying(UnitP::kCustomer) : std::to_underlying(UnitP::kVendor), this) };
+            section_ == Section::kSale ? std::to_underlying(NodeUnit::PCustomer) : std::to_underlying(NodeUnit::PVendor), this) };
         ui->comboPartner->setModel(pmodel);
         ui->comboPartner->setCurrentIndex(-1);
 
-        auto* emodel { tree_model_partner_->IncludeUnitModel(std::to_underlying(UnitP::kEmployee), this) };
+        auto* emodel { tree_model_partner_->IncludeUnitModel(std::to_underlying(NodeUnit::PEmployee), this) };
         ui->comboEmployee->setModel(emodel);
         ui->comboEmployee->setCurrentIndex(-1);
     }
@@ -182,16 +182,16 @@ void TableWidgetO::IniData(const NodeO& node)
     }
 
     {
-        const UnitO kUnit { node.unit };
+        const NodeUnit kUnit { node.unit };
 
         switch (kUnit) {
-        case UnitO::kImmediate:
+        case NodeUnit::OImmediate:
             ui->rBtnIS->setChecked(true);
             break;
-        case UnitO::kMonthly:
+        case NodeUnit::OMonthly:
             ui->rBtnMS->setChecked(true);
             break;
-        case UnitO::kPending:
+        case NodeUnit::OPending:
             ui->rBtnPEND->setChecked(true);
             break;
         default:
@@ -236,11 +236,11 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->lineDescription->setReadOnly(!recalled);
     ui->dateTimeEdit->setReadOnly(!recalled);
 
-    const bool can_print { !recalled || tmp_node_.unit == std::to_underlying(UnitO::kPending) };
+    const bool can_print { !recalled || tmp_node_.unit == std::to_underlying(NodeUnit::OPending) };
     ui->pBtnPrint->setEnabled(can_print);
 
     ui->pBtnSave->setVisible(recalled);
-    ui->pBtnRelease->setVisible(recalled && tmp_node_.unit != std::to_underlying(UnitO::kPending));
+    ui->pBtnRelease->setVisible(recalled && tmp_node_.unit != std::to_underlying(NodeUnit::OPending));
     ui->pBtnRecall->setVisible(!recalled);
 }
 
@@ -263,9 +263,9 @@ void TableWidgetO::IniRuleGroup()
 void TableWidgetO::IniUnitGroup()
 {
     unit_group_ = new QButtonGroup(this);
-    unit_group_->addButton(ui->rBtnIS, std::to_underlying(UnitO::kImmediate));
-    unit_group_->addButton(ui->rBtnMS, std::to_underlying(UnitO::kMonthly));
-    unit_group_->addButton(ui->rBtnPEND, std::to_underlying(UnitO::kPending));
+    unit_group_->addButton(ui->rBtnIS, std::to_underlying(NodeUnit::OImmediate));
+    unit_group_->addButton(ui->rBtnMS, std::to_underlying(NodeUnit::OMonthly));
+    unit_group_->addButton(ui->rBtnPEND, std::to_underlying(NodeUnit::OPending));
 }
 
 void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
@@ -347,16 +347,16 @@ void TableWidgetO::RRuleGroupClicked(int id)
 
 void TableWidgetO::RUnitGroupClicked(int id)
 {
-    const UnitO unit { id };
+    const NodeUnit unit { id };
 
     switch (unit) {
-    case UnitO::kImmediate:
+    case NodeUnit::OImmediate:
         tmp_node_.final_total = tmp_node_.initial_total - tmp_node_.discount_total;
         break;
-    case UnitO::kMonthly:
+    case NodeUnit::OMonthly:
         tmp_node_.final_total = 0.0;
         break;
-    case UnitO::kPending:
+    case NodeUnit::OPending:
         tmp_node_.final_total = 0.0;
         break;
     default:
@@ -366,7 +366,7 @@ void TableWidgetO::RUnitGroupClicked(int id)
     tmp_node_.unit = id;
     ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
 
-    const bool is_pending { unit == UnitO::kPending };
+    const bool is_pending { unit == NodeUnit::OPending };
     ui->pBtnPrint->setEnabled(is_pending);
     ui->pBtnRelease->setHidden(is_pending);
 
