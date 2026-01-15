@@ -293,6 +293,9 @@ void WebSocket::RTextMessageReceived(const QString& message)
 
 void WebSocket::NotifyLoginResult(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kResult));
+    Q_ASSERT(obj.contains(kCode));
+
     const bool result { obj[kResult].toBool() };
     const int code { obj[kCode].toInt() };
 
@@ -312,6 +315,9 @@ void WebSocket::NotifyTreeSyncFinished() { emit STreeSyncFinished(); }
 
 void WebSocket::NotifyRegisterResult(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kResult));
+    Q_ASSERT(obj.contains(kCode));
+
     const bool result { obj[kResult].toBool() };
     const int code { obj[kCode].toInt() };
     emit SRegisterResult(result, code);
@@ -319,11 +325,20 @@ void WebSocket::NotifyRegisterResult(const QJsonObject& obj)
 
 void WebSocket::InsertNode(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kSection));
+    Q_ASSERT(obj.contains(kSessionId));
+    Q_ASSERT(obj.contains(kNode));
+    Q_ASSERT(obj.contains(kPath));
+    Q_ASSERT(obj.contains(kMeta));
+
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QJsonObject node_obj { obj.value(kNode).toObject() };
     const QJsonObject path_obj { obj.value(kPath).toObject() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
+
+    Q_ASSERT(path_obj.contains(kDescendant));
+    Q_ASSERT(path_obj.contains(kAncestor));
 
     const auto descendant { QUuid(path_obj.value(kDescendant).toString()) };
     const auto ancestor { QUuid(path_obj.value(kAncestor).toString()) };
@@ -339,6 +354,12 @@ void WebSocket::InsertNode(const QJsonObject& obj)
 
 void WebSocket::UpdateNode(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kSection));
+    Q_ASSERT(obj.contains(kSessionId));
+    Q_ASSERT(obj.contains(kNodeId));
+    Q_ASSERT(obj.contains(kUpdate));
+    Q_ASSERT(obj.contains(kMeta));
+
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
@@ -346,6 +367,7 @@ void WebSocket::UpdateNode(const QJsonObject& obj)
     const QJsonObject meta { obj.value(kMeta).toObject() };
 
     auto tree_model { tree_model_hash_.value(section) };
+    Q_ASSERT(tree_model != nullptr);
 
     if (session_id != session_id_)
         tree_model->SyncNode(node_id, update);
@@ -355,6 +377,10 @@ void WebSocket::UpdateNode(const QJsonObject& obj)
 
 void WebSocket::DragNode(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kSection));
+    Q_ASSERT(obj.contains(kSessionId));
+    Q_ASSERT(obj.contains(kPath));
+
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QJsonObject path { obj.value(kPath).toObject() };
@@ -374,6 +400,8 @@ void WebSocket::DragNode(const QJsonObject& obj)
 
 void WebSocket::ApplyTree(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kSection));
+
     const Section section { obj.value(kSection).toInt() };
     auto tree_model { tree_model_hash_.value(section) };
     tree_model->ApplyTree(obj);
@@ -387,6 +415,8 @@ void WebSocket::ApplyPartnerEntry(const QJsonArray& arr)
 
 void WebSocket::AckTree(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kSection));
+
     const Section section { obj.value(kSection).toInt() };
     auto tree_model { tree_model_hash_.value(section) };
     tree_model->AckTree(obj);
@@ -394,6 +424,11 @@ void WebSocket::AckTree(const QJsonObject& obj)
 
 void WebSocket::AckTable(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kSection));
+    Q_ASSERT(obj.contains(kNodeId));
+    Q_ASSERT(obj.contains(kEntryArray));
+    Q_ASSERT(obj.contains(kEntryId));
+
     const Section section { obj.value(kSection).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
@@ -865,6 +900,8 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
     const int version { node_obj.value(kVersion).toInt() };
 
     if (session_id == session_id_) {
+        emit SNodeSelected(section, descendant);
+
         if (is_release)
             emit SOrderReleased(section, node_id, version);
         else
@@ -873,8 +910,6 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
 
     if (is_release)
         order_model->RNodeStatus(node_id, NodeStatus::kReleased);
-
-    emit SNodeSelected(section, descendant);
 }
 
 void WebSocket::RecallOrder(const QJsonObject& obj)

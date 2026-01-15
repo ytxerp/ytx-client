@@ -271,7 +271,7 @@ void NodeO::ReadJson(const QJsonObject& object)
     if (object.contains(kSettlementId))
         settlement_id = QUuid(object.value(kSettlementId).toString());
     if (object.contains(kIsSettled))
-        direction_rule = object.value(kIsSettled).toBool();
+        is_settled = object.value(kIsSettled).toBool();
     if (object.contains(kVersion))
         version = object.value(kVersion).toInt();
 }
