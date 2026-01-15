@@ -210,10 +210,10 @@ void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
         DrawText(painter, QStringLiteral("unit"), unit);
     }
 
-    const double rounded_value { QString::number(node_o_->initial_total, 'f', section_config_->amount_decimal).toDouble() };
+    const QString amount_str { QString::number(node_o_->initial_total, 'f', section_config_->amount_decimal) };
 
-    DrawText(painter, QStringLiteral("initial_total"), QString::number(rounded_value));
-    DrawText(painter, QStringLiteral("initial_total_upper"), NumberToChineseUpper(rounded_value));
+    DrawText(painter, QStringLiteral("initial_total"), amount_str);
+    DrawText(painter, QStringLiteral("initial_total_upper"), QStringLiteral("大写：") + NumberToChineseUpper(amount_str.toDouble()));
     DrawText(painter, QStringLiteral("page_info"), QString::asprintf("%d/%d", page_num, total_pages));
 }
 
