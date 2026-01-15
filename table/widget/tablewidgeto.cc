@@ -437,6 +437,8 @@ void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
 
 void TableWidgetO::on_pBtnRecall_clicked()
 {
+    Q_ASSERT(tmp_node_.status != NodeStatus::kRecalled);
+
     if (!ValidatePartner())
         return;
 
@@ -452,9 +454,6 @@ void TableWidgetO::on_pBtnRecall_clicked()
         QMessageBox::information(this, tr("Order Selected"), tr("This order has already been selected in a settlement and cannot be operated."));
         return;
     }
-
-    if (tmp_node_.status == NodeStatus::kRecalled)
-        return;
 
     pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
     pending_update_.insert(kVersion, tmp_node_.version);
@@ -526,13 +525,12 @@ void TableWidgetO::SaveOrder()
 
 void TableWidgetO::on_pBtnRelease_clicked()
 {
+    Q_ASSERT(tmp_node_.status != NodeStatus::kReleased);
+
     if (!ValidatePartner())
         return;
 
     if (!ValidateSyncState())
-        return;
-
-    if (tmp_node_.status == NodeStatus::kReleased)
         return;
 
     QJsonObject order_message { JsonGen::MetaMessage(section_) };
