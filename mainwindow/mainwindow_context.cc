@@ -291,6 +291,7 @@ void MainWindow::InitContextPartner()
     auto& tree_model { sc_p_.tree_model };
     auto& tree_view { sc_p_.tree_view };
     auto& tree_widget { sc_p_.tree_widget };
+    auto& section_config { sc_p_.section_config };
 
     info.section = Section::kPartner;
     info.node = kPartnerNode;
@@ -313,8 +314,11 @@ void MainWindow::InitContextPartner()
     WebSocket::Instance()->RegisterTreeModel(Section::kPartner, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kPartner, entry_hub);
 
-    tree_widget = new TreeWidgetP(tree_model, this);
+    tree_widget = new TreeWidgetP(tree_model, section_config, this);
     tree_view = tree_widget->View();
+
+    connect(tree_model, &TreeModel::SSyncValue, tree_widget, &TreeWidget::RSyncValue, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SInitStatus, tree_widget, &TreeWidget::RInitStatus, Qt::UniqueConnection);
 }
 
 void MainWindow::InitContextSale()

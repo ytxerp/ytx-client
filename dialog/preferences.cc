@@ -47,7 +47,7 @@ void Preferences::IniDialog(ItemModel* unit_model, Section section)
 
     ui->comboDefaultUnit->setModel(unit_model);
 
-    is_enable_status_ = { section == Section::kFinance || section == Section::kInventory || section == Section::kTask };
+    is_enable_status_ = { !IsOrderSection(section) };
     ui->lineStatic->setEnabled(is_enable_status_);
     ui->comboStatic->setEnabled(is_enable_status_);
     ui->lineDynamic->setEnabled(is_enable_status_);

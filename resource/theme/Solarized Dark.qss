@@ -406,18 +406,21 @@ QScrollBar::right-arrow:horizontal {
 /* Special scroll bars with bottom border */
 QWidget#TreeWidgetF QScrollBar::handle:horizontal,
 QWidget#TreeWidgetIT QScrollBar::handle:horizontal,
+QWidget#TreeWidgetP QScrollBar::handle:horizontal,
 QWidget#TableWidgetO QScrollBar::handle:horizontal {
     border-bottom: 1px solid #657B83;
 }
 
 QWidget#TreeWidgetF QScrollBar::add-line:horizontal,
 QWidget#TreeWidgetIT QScrollBar::add-line:horizontal,
+QWidget#TreeWidgetP QScrollBar::add-line:horizontal,
 QWidget#TableWidgetO QScrollBar::add-line:horizontal {
     border-bottom: 1px solid #657B83;
 }
 
 QWidget#TreeWidgetF QScrollBar::sub-line:horizontal,
 QWidget#TreeWidgetIT QScrollBar::sub-line:horizontal,
+QWidget#TreeWidgetP QScrollBar::sub-line:horizontal,
 QWidget#TableWidgetO QScrollBar::sub-line:horizontal {
     border-bottom: 1px solid #657B83;
 }

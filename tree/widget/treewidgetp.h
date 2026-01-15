@@ -20,6 +20,7 @@
 #ifndef TREEWIDGETP_H
 #define TREEWIDGETP_H
 
+#include "component/config.h"
 #include "tree/model/treemodel.h"
 #include "treewidget.h"
 
@@ -30,15 +31,29 @@ class TreeWidgetP;
 class TreeWidgetP final : public TreeWidget {
     Q_OBJECT
 
+public slots:
+    void RSyncValue() override;
+    void RInitStatus() override;
+
 public:
-    explicit TreeWidgetP(TreeModel* model, QWidget* parent = nullptr);
+    explicit TreeWidgetP(TreeModel* model, CSectionConfig& config, QWidget* parent = nullptr);
     ~TreeWidgetP() override;
 
     QTreeView* View() const override;
+    void Reset() const override;
+
+private:
+    void InitStaticStatus() override;
+    void InitDynamicStatus() override;
+
+    void SyncDynamicValue(const QUuid& lhs_node_id, const QUuid& rhs_node_id) override;
+    void SyncStaticValue(const QUuid& node_id) override;
 
 private:
     Ui::TreeWidgetP* ui;
     TreeModel* model_ {};
+
+    CSectionConfig& config_ {};
 };
 
 #endif // TREEWIDGETP_H

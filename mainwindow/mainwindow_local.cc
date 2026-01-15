@@ -5,6 +5,7 @@
 #include "global/logininfo.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "utils/entryutils.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/websocket.h"
 
@@ -89,7 +90,7 @@ void MainWindow::ReadSectionConfig(SectionConfig& config, CString& section_name)
     section_settings_->beginGroup(section_name);
     const Section section { kStringSection.value(section_name) };
 
-    if (IsDoubleEntry(section)) {
+    if (!IsOrderSection(section)) {
         config.static_label = section_settings_->value(kStaticLabel, {}).toString();
         config.static_node = section_settings_->value(kStaticNode, QUuid()).toUuid();
         config.dynamic_label = section_settings_->value(kDynamicLabel, {}).toString();
@@ -120,13 +121,15 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
 
     current_section = section;
 
+    if (start_ == Section::kFinance)
+        sc_->tree_widget->RInitStatus();
+    else
+        sc_->tree_widget->RSyncValue();
+
     const QString text { kSectionString.value(start_) };
     section_settings_->beginGroup(text);
 
-    if (start_ == Section::kFinance)
-        sc_->tree_widget->RInitStatus();
-
-    if (IsDoubleEntry(start_)) {
+    if (!IsOrderSection(start_)) {
         section_settings_->setValue(kStaticLabel, section.static_label);
         section_settings_->setValue(kStaticNode, section.static_node);
         section_settings_->setValue(kDynamicLabel, section.dynamic_label);
@@ -147,9 +150,7 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
 
         if (const auto* leaf_widget = dynamic_cast<TableWidget*>(current_widget)) {
             auto* header { leaf_widget->View()->horizontalHeader() };
-
-            int column { std::to_underlying(EntryEnum::kDescription) };
-            ResizeColumn(header, column);
+            ResizeColumn(header, Utils::EntryDescriptionColumn(start_));
             return;
         }
 
