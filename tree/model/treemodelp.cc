@@ -27,7 +27,7 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)
     RefreshAffectedTotal(affected_ids);
 }
 
-const QSet<QUuid>* TreeModelP::UnitSet(int unit) const
+const QSet<QUuid>* TreeModelP::UnitSet(NodeUnit unit) const
 {
     const NodeUnit kUnit { unit };
 
@@ -43,7 +43,7 @@ const QSet<QUuid>* TreeModelP::UnitSet(int unit) const
     }
 }
 
-QSortFilterProxyModel* TreeModelP::IncludeUnitModel(int unit, QObject* parent)
+QSortFilterProxyModel* TreeModelP::IncludeUnitModel(NodeUnit unit, QObject* parent)
 {
     auto* set { UnitSet(unit) };
     auto* model { new IncludeMultipleFilterModel(set, parent) };
@@ -51,11 +51,9 @@ QSortFilterProxyModel* TreeModelP::IncludeUnitModel(int unit, QObject* parent)
     return model;
 }
 
-void TreeModelP::RemoveUnitSet(const QUuid& node_id, int unit)
+void TreeModelP::RemoveUnitSet(const QUuid& node_id, NodeUnit unit)
 {
-    const NodeUnit kUnit { unit };
-
-    switch (kUnit) {
+    switch (unit) {
     case NodeUnit::PCustomer:
         cset_.remove(node_id);
         break;
@@ -70,11 +68,9 @@ void TreeModelP::RemoveUnitSet(const QUuid& node_id, int unit)
     }
 }
 
-void TreeModelP::InsertUnitSet(const QUuid& node_id, int unit)
+void TreeModelP::InsertUnitSet(const QUuid& node_id, NodeUnit unit)
 {
-    const NodeUnit kUnit { unit };
-
-    switch (kUnit) {
+    switch (unit) {
     case NodeUnit::PCustomer:
         cset_.insert(node_id);
         break;
@@ -99,7 +95,7 @@ QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, do
     if (FloatEqual(initial_delta, 0.0))
         return affected_ids;
 
-    const int unit { node->unit };
+    const auto unit { node->unit };
 
     for (Node* current = node->parent; current && current != root_; current = current->parent) {
         if (current->unit != unit)
@@ -193,7 +189,7 @@ QVariant TreeModelP::data(const QModelIndex& index, int role) const
     case NodeEnumP::kKind:
         return std::to_underlying(d_node->kind);
     case NodeEnumP::kUnit:
-        return d_node->unit;
+        return std::to_underlying(d_node->unit);
     case NodeEnumP::kPaymentTerm:
         return d_node->payment_term;
     case NodeEnumP::kInitialTotal:

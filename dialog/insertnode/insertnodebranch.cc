@@ -31,7 +31,7 @@ void InsertNodeBranch::IniDialog(ItemModel* unit_model)
 
 void InsertNodeBranch::IniData(Node* node)
 {
-    int unit_index { ui->comboUnit->findData(node->unit) };
+    int unit_index { ui->comboUnit->findData(std::to_underlying(node->unit)) };
     ui->comboUnit->setCurrentIndex(unit_index);
 
     ui->pBtnOk->setEnabled(false);
@@ -53,5 +53,5 @@ void InsertNodeBranch::on_lineDescription_editingFinished() { node_->description
 void InsertNodeBranch::on_comboUnit_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    node_->unit = ui->comboUnit->currentData().toInt();
+    node_->unit = NodeUnit(ui->comboUnit->currentData().toInt());
 }

@@ -67,7 +67,7 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
     case NodeEnumO::kKind:
         return std::to_underlying(d_node->kind);
     case NodeEnumO::kUnit:
-        return d_node->unit;
+        return std::to_underlying(d_node->unit);
     case NodeEnumO::kPartner:
         return d_node->partner_id;
     case NodeEnumO::kEmployee:

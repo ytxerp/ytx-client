@@ -87,7 +87,7 @@ QJsonObject LeafRemoveCheck(Section section, CUuid& node_id)
     return message;
 }
 
-QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref, int unit)
+QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref, NodeUnit unit)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -96,7 +96,7 @@ QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inve
     message.insert(kInventoryOutsideRef, inventory_external_ref);
     message.insert(kOldNodeId, old_id.toString(QUuid::WithoutBraces));
     message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
-    message.insert(kUnit, unit);
+    message.insert(kUnit, std::to_underlying(unit));
 
     return message;
 }

@@ -11,7 +11,7 @@ void Node::ResetState()
     note.clear();
     direction_rule = false;
     kind = {};
-    unit = 0;
+    unit = {};
     final_total = 0.0;
     initial_total = 0.0;
     parent = nullptr;
@@ -48,7 +48,7 @@ void Node::ReadJson(const QJsonObject& object)
     if (object.contains(kDirectionRule))
         direction_rule = object.value(kDirectionRule).toBool();
     if (object.contains(kUnit))
-        unit = object.value(kUnit).toInt();
+        unit = NodeUnit(object.value(kUnit).toInt());
     if (object.contains(kFinalTotal))
         final_total = object.value(kFinalTotal).toString().toDouble();
     if (object.contains(kInitialTotal))
@@ -77,7 +77,7 @@ QJsonObject Node::WriteJson() const
     obj.insert(kNote, note);
     obj.insert(kKind, std::to_underlying(kind));
     obj.insert(kDirectionRule, direction_rule);
-    obj.insert(kUnit, unit);
+    obj.insert(kUnit, std::to_underlying(unit));
     obj.insert(kFinalTotal, QString::number(final_total, 'f', kMaxNumericScale_4));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
     return obj;
@@ -168,7 +168,7 @@ void NodeP::ReadJson(const QJsonObject& object)
     if (object.contains(kKind))
         kind = NodeKind(object.value(kKind).toInt());
     if (object.contains(kUnit))
-        unit = object.value(kUnit).toInt();
+        unit = NodeUnit(object.value(kUnit).toInt());
     if (object.contains(kInitialTotal))
         initial_total = object.value(kInitialTotal).toString().toDouble();
     if (object.contains(kUserId))
@@ -196,7 +196,7 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kDescription, description);
     obj.insert(kNote, note);
     obj.insert(kKind, std::to_underlying(kind));
-    obj.insert(kUnit, unit);
+    obj.insert(kUnit, std::to_underlying(unit));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
     obj.insert(kPaymentTerm, payment_term);
 
@@ -239,7 +239,7 @@ void NodeO::ReadJson(const QJsonObject& object)
     if (object.contains(kDirectionRule))
         direction_rule = object.value(kDirectionRule).toBool();
     if (object.contains(kUnit))
-        unit = object.value(kUnit).toInt();
+        unit = NodeUnit(object.value(kUnit).toInt());
     if (object.contains(kFinalTotal))
         final_total = object.value(kFinalTotal).toString().toDouble();
     if (object.contains(kInitialTotal))
@@ -284,7 +284,7 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kDescription, description);
     obj.insert(kKind, std::to_underlying(kind));
     obj.insert(kDirectionRule, direction_rule);
-    obj.insert(kUnit, unit);
+    obj.insert(kUnit, std::to_underlying(unit));
     obj.insert(kFinalTotal, QString::number(final_total, 'f', kMaxNumericScale_4));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
     obj.insert(kDiscountTotal, QString::number(discount_total, 'f', kMaxNumericScale_4));

@@ -21,7 +21,7 @@ void TreeModelO::RNodeStatus(const QUuid& node_id, NodeStatus value)
     const auto& affected_ids { UpdateAncestorTotalOrder(d_node, coefficient * d_node->initial_total, coefficient * d_node->final_total,
         coefficient * d_node->count_total, coefficient * d_node->measure_total, coefficient * d_node->discount_total) };
 
-    if (d_node->unit == std::to_underlying(NodeUnit::OMonthly) && FloatChanged(d_node->initial_total, 0.0))
+    if (d_node->unit == NodeUnit::OMonthly && FloatChanged(d_node->initial_total, 0.0))
         emit SUpdateAmount(d_node->partner_id, coefficient * d_node->initial_total);
 
     RefreshAffectedTotal(affected_ids);
@@ -168,7 +168,7 @@ void TreeModelO::RemovePath(Node* node, Node* parent_node)
         if (d_node->status == NodeStatus::kReleased) {
             UpdateAncestorTotalOrder(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
 
-            if (node->unit == std::to_underlying(NodeUnit::OMonthly) && FloatChanged(-node->initial_total, 0.0))
+            if (node->unit == NodeUnit::OMonthly && FloatChanged(-node->initial_total, 0.0))
                 emit SUpdateAmount(d_node->partner_id, -node->initial_total);
         }
         break;
@@ -189,7 +189,7 @@ QSet<QUuid> TreeModelO::UpdateAncestorTotalOrder(
     if (initial_delta == 0.0 && final_delta == 0.0 && count_delta == 0.0 && measure_delta == 0.0 && discount_delta == 0.0)
         return affected_ids;
 
-    const int kUnit { node->unit };
+    const auto kUnit { node->unit };
 
     for (Node* current = node->parent; current && current != root_; current = current->parent) {
         if (current->unit != kUnit)
@@ -249,7 +249,7 @@ void TreeModelO::ClearModel()
             continue;
         }
 
-        if (node->unit == std::to_underlying(NodeUnit::OPending)) {
+        if (node->unit == NodeUnit::OPending) {
             ++it;
             continue;
         }
@@ -352,7 +352,7 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
     case NodeEnumO::kKind:
         return std::to_underlying(d_node->kind);
     case NodeEnumO::kUnit:
-        return d_node->unit;
+        return std::to_underlying(d_node->unit);
     case NodeEnumO::kPartner:
         return d_node->partner_id;
     case NodeEnumO::kEmployee:

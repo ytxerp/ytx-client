@@ -48,7 +48,7 @@ void InsertNodeTask::IniDialog(ItemModel* unit_model)
 
 void InsertNodeTask::IniData(Node* node)
 {
-    int item_index { ui->comboUnit->findData(node->unit) };
+    int item_index { ui->comboUnit->findData(std::to_underlying(node->unit)) };
     ui->comboUnit->setCurrentIndex(item_index);
 
     IniRule(node->direction_rule);
@@ -121,7 +121,7 @@ void InsertNodeTask::on_lineEditDescription_editingFinished() { node_->descripti
 void InsertNodeTask::on_comboUnit_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    node_->unit = ui->comboUnit->currentData().toInt();
+    node_->unit = NodeUnit(ui->comboUnit->currentData().toInt());
 }
 
 void InsertNodeTask::on_plainTextEdit_textChanged() { node_->note = ui->plainTextEdit->toPlainText(); }

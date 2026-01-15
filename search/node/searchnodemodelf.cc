@@ -43,7 +43,7 @@ QVariant SearchNodeModelF::data(const QModelIndex& index, int role) const
     case NodeEnumF::kKind:
         return std::to_underlying(node->kind);
     case NodeEnumF::kUnit:
-        return node->unit;
+        return std::to_underlying(node->unit);
     case NodeEnumF::kInitialTotal:
         return node->initial_total;
     case NodeEnumF::kFinalTotal:

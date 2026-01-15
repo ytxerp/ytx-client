@@ -54,7 +54,7 @@ void InsertNodeI::IniConnect()
 
 void InsertNodeI::IniData(Node* node)
 {
-    int unit_index { ui->comboUnit->findData(node->unit) };
+    int unit_index { ui->comboUnit->findData(std::to_underlying(node->unit)) };
     ui->comboUnit->setCurrentIndex(unit_index);
 
     IniDirectionRule(node->direction_rule);
@@ -111,7 +111,7 @@ void InsertNodeI::on_lineEditDescription_editingFinished() { node_->description 
 void InsertNodeI::on_comboUnit_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    node_->unit = ui->comboUnit->currentData().toInt();
+    node_->unit = NodeUnit(ui->comboUnit->currentData().toInt());
 }
 
 void InsertNodeI::on_plainTextEdit_textChanged() { node_->note = ui->plainTextEdit->toPlainText(); }

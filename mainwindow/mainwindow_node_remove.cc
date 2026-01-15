@@ -46,7 +46,7 @@ void MainWindow::RLeafRemoveDenied(const QJsonObject& obj)
     auto* section_contex = GetSectionContex(section);
 
     auto model { section_contex->tree_model };
-    const int unit { model->Unit(node_id) };
+    const auto unit { model->Unit(node_id) };
 
     auto* dialog { new LeafRemoveDialog(model, section_contex->info, obj, node_id, unit, this) };
     dialog->setAttribute(Qt::WA_DeleteOnClose);

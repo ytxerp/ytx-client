@@ -43,7 +43,7 @@ QVariant SearchNodeModelI::data(const QModelIndex& index, int role) const
     case NodeEnumI::kKind:
         return std::to_underlying(d_node->kind);
     case NodeEnumI::kUnit:
-        return d_node->unit;
+        return std::to_underlying(d_node->unit);
     case NodeEnumI::kColor:
         return d_node->color;
     case NodeEnumI::kCommission:

@@ -8,7 +8,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-LeafRemoveDialog::LeafRemoveDialog(CTreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, int unit, QWidget* parent)
+LeafRemoveDialog::LeafRemoveDialog(CTreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, NodeUnit unit, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::LeafRemoveDialog)
     , node_id_ { node_id }
@@ -68,7 +68,7 @@ void LeafRemoveDialog::InitCheckBoxGroup()
         ui->chkBoxInventoryExt->setEnabled(false);
         break;
     case Section::kPartner:
-        if (node_unit_ == std::to_underlying(NodeUnit::PEmployee)) {
+        if (node_unit_ == NodeUnit::PEmployee) {
             ui->chkBoxEmployee->show();
             ui->chkBoxEmployee->setChecked(employee_ref_);
             ui->chkBoxEmployee->setEnabled(false);

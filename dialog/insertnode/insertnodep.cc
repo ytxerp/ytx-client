@@ -45,7 +45,7 @@ void InsertNodeP::IniConnect()
 
 void InsertNodeP::IniData()
 {
-    int unit_index { ui->comboUnit->findData(node_->unit) };
+    int unit_index { ui->comboUnit->findData(std::to_underlying(node_->unit)) };
     ui->comboUnit->setCurrentIndex(unit_index);
 
     ui->rBtnLeaf->setChecked(true);
@@ -77,7 +77,7 @@ void InsertNodeP::on_plainTextEdit_textChanged() { node_->note = ui->plainTextEd
 void InsertNodeP::on_comboUnit_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    node_->unit = ui->comboUnit->currentData().toInt();
+    node_->unit = NodeUnit(ui->comboUnit->currentData().toInt());
 }
 
 void InsertNodeP::on_spinPaymentTerm_editingFinished() { node_->payment_term = ui->spinPaymentTerm->value(); }

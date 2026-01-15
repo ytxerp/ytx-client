@@ -121,7 +121,7 @@ public:
     // Default implementations
     double InitialTotal(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::initial_total); }
     double FinalTotal(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::final_total); }
-    int Unit(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::unit); }
+    NodeUnit Unit(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::unit); }
     bool Rule(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::direction_rule); }
     QString Name(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::name); }
     QString Path(const QUuid& node_id) const;
@@ -155,14 +155,14 @@ public:
     // virtual functions
     virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
 
-    virtual QSortFilterProxyModel* IncludeUnitModel(int unit, QObject* parent)
+    virtual QSortFilterProxyModel* IncludeUnitModel(NodeUnit unit, QObject* parent)
     {
         Q_UNUSED(unit)
         Q_UNUSED(parent)
         return nullptr;
     }
 
-    virtual QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& node_id, int unit, QObject* parent)
+    virtual QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& node_id, NodeUnit unit, QObject* parent)
     {
         Q_UNUSED(unit)
         Q_UNUSED(node_id)
@@ -195,19 +195,19 @@ protected:
     virtual void RegisterPath(Node* node);
     virtual void RemovePath(Node* node, Node* parent_node);
 
-    virtual const QSet<QUuid>* UnitSet(int unit) const
+    virtual const QSet<QUuid>* UnitSet(NodeUnit unit) const
     {
         Q_UNUSED(unit)
         return nullptr;
     }
 
-    virtual void RemoveUnitSet(const QUuid& node_id, int unit)
+    virtual void RemoveUnitSet(const QUuid& node_id, NodeUnit unit)
     {
         Q_UNUSED(node_id)
         Q_UNUSED(unit)
     }
 
-    virtual void InsertUnitSet(const QUuid& node_id, int unit)
+    virtual void InsertUnitSet(const QUuid& node_id, NodeUnit unit)
     {
         Q_UNUSED(node_id)
         Q_UNUSED(unit)

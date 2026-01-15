@@ -34,7 +34,7 @@ struct Node {
     QString note {};
     NodeKind kind {};
     bool direction_rule {};
-    int unit {};
+    NodeUnit unit {};
 
     double final_total {};
     double initial_total {};

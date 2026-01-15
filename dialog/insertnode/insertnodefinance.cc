@@ -41,7 +41,7 @@ void InsertNodeFinance::IniDialog(ItemModel* unit_model)
 
 void InsertNodeFinance::IniData(Node* node)
 {
-    int unit_index { ui->comboUnit->findData(node->unit) };
+    int unit_index { ui->comboUnit->findData(std::to_underlying(node->unit)) };
     ui->comboUnit->setCurrentIndex(unit_index);
 
     IniDirectionRule(node->direction_rule);
@@ -89,7 +89,7 @@ void InsertNodeFinance::on_lineDescription_editingFinished() { node_->descriptio
 void InsertNodeFinance::on_comboUnit_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
-    node_->unit = ui->comboUnit->currentData().toInt();
+    node_->unit = NodeUnit(ui->comboUnit->currentData().toInt());
 }
 
 void InsertNodeFinance::RDirectionRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }

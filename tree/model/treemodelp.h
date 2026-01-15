@@ -38,12 +38,12 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    QSortFilterProxyModel* IncludeUnitModel(int unit, QObject* parent) override;
+    QSortFilterProxyModel* IncludeUnitModel(NodeUnit unit, QObject* parent) override;
 
 protected:
-    const QSet<QUuid>* UnitSet(int unit) const override;
-    void RemoveUnitSet(const QUuid& node_id, int unit) override;
-    void InsertUnitSet(const QUuid& node_id, int unit) override;
+    const QSet<QUuid>* UnitSet(NodeUnit unit) const override;
+    void RemoveUnitSet(const QUuid& node_id, NodeUnit unit) override;
+    void InsertUnitSet(const QUuid& node_id, NodeUnit unit) override;
     QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta) override;
 
 private:

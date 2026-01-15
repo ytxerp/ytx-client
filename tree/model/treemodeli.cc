@@ -11,11 +11,9 @@ TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, QObject* parent)
     leaf_path_model_->AppendItem(QString(), QUuid());
 }
 
-void TreeModelI::RemoveUnitSet(const QUuid& node_id, int unit)
+void TreeModelI::RemoveUnitSet(const QUuid& node_id, NodeUnit unit)
 {
-    const NodeUnit kUnit { unit };
-
-    switch (kUnit) {
+    switch (unit) {
     case NodeUnit::IPosition:
         pos_set_.remove(node_id);
         break;
@@ -30,11 +28,9 @@ void TreeModelI::RemoveUnitSet(const QUuid& node_id, int unit)
     }
 }
 
-void TreeModelI::InsertUnitSet(const QUuid& node_id, int unit)
+void TreeModelI::InsertUnitSet(const QUuid& node_id, NodeUnit unit)
 {
-    const NodeUnit kUnit { unit };
-
-    switch (kUnit) {
+    switch (unit) {
     case NodeUnit::IPosition:
         pos_set_.insert(node_id);
         break;
@@ -49,11 +45,9 @@ void TreeModelI::InsertUnitSet(const QUuid& node_id, int unit)
     }
 }
 
-const QSet<QUuid>* TreeModelI::UnitSet(int unit) const
+const QSet<QUuid>* TreeModelI::UnitSet(NodeUnit unit) const
 {
-    const NodeUnit kUnit { unit };
-
-    switch (kUnit) {
+    switch (unit) {
     case NodeUnit::IPosition:
         return &pos_set_;
     case NodeUnit::IInternal:
@@ -155,7 +149,7 @@ QVariant TreeModelI::data(const QModelIndex& index, int role) const
     case NodeEnumI::kKind:
         return std::to_underlying(d_node->kind);
     case NodeEnumI::kUnit:
-        return d_node->unit;
+        return std::to_underlying(d_node->unit);
     case NodeEnumI::kColor:
         return d_node->color;
     case NodeEnumI::kCommission:
@@ -254,7 +248,7 @@ Qt::ItemFlags TreeModelI::flags(const QModelIndex& index) const
     return flags;
 }
 
-QSortFilterProxyModel* TreeModelI::IncludeUnitModel(int unit, QObject* parent)
+QSortFilterProxyModel* TreeModelI::IncludeUnitModel(NodeUnit unit, QObject* parent)
 {
     auto* set { UnitSet(unit) };
     auto* model { new IncludeMultipleFilterModel(set, parent) };
@@ -262,7 +256,7 @@ QSortFilterProxyModel* TreeModelI::IncludeUnitModel(int unit, QObject* parent)
     return model;
 }
 
-QSortFilterProxyModel* TreeModelI::ExcludeMultipleModel(const QUuid& node_id, int unit, QObject* parent)
+QSortFilterProxyModel* TreeModelI::ExcludeMultipleModel(const QUuid& node_id, NodeUnit unit, QObject* parent)
 {
     auto* set { UnitSet(unit) };
     auto* model { new ExcludeMultipleFilterModel(node_id, set, parent) };

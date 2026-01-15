@@ -91,7 +91,7 @@ void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, doubl
         }
     }
 
-    const double adjusted_final_delta { tmp_node_.unit == std::to_underlying(NodeUnit::OImmediate) ? final_delta : 0.0 };
+    const double adjusted_final_delta { tmp_node_.unit == NodeUnit::OImmediate ? final_delta : 0.0 };
 
     {
         tmp_node_.count_total += count_delta;
@@ -107,12 +107,11 @@ void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, doubl
 void TableWidgetO::IniWidget()
 {
     {
-        auto* pmodel { tree_model_partner_->IncludeUnitModel(
-            section_ == Section::kSale ? std::to_underlying(NodeUnit::PCustomer) : std::to_underlying(NodeUnit::PVendor), this) };
+        auto* pmodel { tree_model_partner_->IncludeUnitModel(section_ == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor, this) };
         ui->comboPartner->setModel(pmodel);
         ui->comboPartner->setCurrentIndex(-1);
 
-        auto* emodel { tree_model_partner_->IncludeUnitModel(std::to_underlying(NodeUnit::PEmployee), this) };
+        auto* emodel { tree_model_partner_->IncludeUnitModel(NodeUnit::PEmployee, this) };
         ui->comboEmployee->setModel(emodel);
         ui->comboEmployee->setCurrentIndex(-1);
     }
@@ -236,11 +235,11 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->lineDescription->setReadOnly(!recalled);
     ui->dateTimeEdit->setReadOnly(!recalled);
 
-    const bool can_print { !recalled || tmp_node_.unit == std::to_underlying(NodeUnit::OPending) };
+    const bool can_print { !recalled || tmp_node_.unit == NodeUnit::OPending };
     ui->pBtnPrint->setEnabled(can_print);
 
     ui->pBtnSave->setVisible(recalled);
-    ui->pBtnRelease->setVisible(recalled && tmp_node_.unit != std::to_underlying(NodeUnit::OPending));
+    ui->pBtnRelease->setVisible(recalled && tmp_node_.unit != NodeUnit::OPending);
     ui->pBtnRecall->setVisible(!recalled);
 }
 
@@ -363,7 +362,7 @@ void TableWidgetO::RUnitGroupClicked(int id)
         break;
     }
 
-    tmp_node_.unit = id;
+    tmp_node_.unit = NodeUnit(id);
     ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
 
     const bool is_pending { unit == NodeUnit::OPending };

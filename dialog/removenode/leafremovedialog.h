@@ -36,7 +36,7 @@ signals:
     void SRemoveNode(const QUuid& node_id);
 
 public:
-    LeafRemoveDialog(CTreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, int unit, QWidget* parent = nullptr);
+    LeafRemoveDialog(CTreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, NodeUnit unit, QWidget* parent = nullptr);
     ~LeafRemoveDialog() override;
 
 private slots:
@@ -57,7 +57,7 @@ private:
     QButtonGroup* option_group_ {};
 
     const QUuid node_id_ {};
-    const int node_unit_ {};
+    const NodeUnit node_unit_ {};
 
     const bool inside_ref_ {};
     const bool inventory_int_ref_ {};

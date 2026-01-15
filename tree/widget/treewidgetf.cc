@@ -36,7 +36,7 @@ void TreeWidgetF::InitStaticStatus()
     ui->label_static_->setText(section_.static_label);
 
     const auto static_node { section_.static_node };
-    const int static_node_unit { model_->Unit(static_node) };
+    const int static_node_unit { std::to_underlying(model_->Unit(static_node)) };
     ui->dspin_box_static_->setPrefix(info_.unit_symbol_map.value(static_node_unit));
 
     SyncStaticValue(static_node);

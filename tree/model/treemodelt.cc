@@ -52,7 +52,7 @@ QVariant TreeModelT::data(const QModelIndex& index, int role) const
     case NodeEnumT::kKind:
         return std::to_underlying(d_node->kind);
     case NodeEnumT::kUnit:
-        return d_node->unit;
+        return std::to_underlying(d_node->unit);
     case NodeEnumT::kColor:
         return d_node->color;
     case NodeEnumT::kIssuedTime:

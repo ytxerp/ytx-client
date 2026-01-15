@@ -47,7 +47,7 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
     case NodeEnumF::kKind:
         return std::to_underlying(node->kind);
     case NodeEnumF::kUnit:
-        return node->unit;
+        return std::to_underlying(node->unit);
     case NodeEnumF::kInitialTotal:
         return node->unit == root_->unit ? QVariant() : node->initial_total;
     case NodeEnumF::kFinalTotal:
@@ -181,7 +181,7 @@ QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, double initial_delta, do
     if (initial_delta == 0.0 && final_delta == 0.0)
         return affected_ids;
 
-    const int unit { node->unit };
+    const auto unit { node->unit };
     const bool rule { node->direction_rule };
 
     for (Node* current = node->parent; current && current != root_; current = current->parent) {

@@ -582,7 +582,7 @@ QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, dou
     if (initial_delta == 0.0 && final_delta == 0.0)
         return affected_ids;
 
-    const int unit { node->unit };
+    const auto unit { node->unit };
     const bool direction_rule { node->direction_rule };
 
     // NOTE: When ancestor nodes receive deltas from a leaf node,
