@@ -33,6 +33,7 @@ namespace Utils {
 void ResetSectionContext(SectionContext& ctx);
 void SetConnectionStatus(QLabel* label, ConnectionStatus status);
 void SetLoginStatus(QLabel* label, LoginStatus status);
+void SetButton(QPushButton* btn, const QString& text, const QKeySequence& ks);
 
 QString AccountIniFileName(const QString& email, const QString& workspace);
 

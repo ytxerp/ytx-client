@@ -1,4 +1,5 @@
 #include "mainwindowutils.h"
+#include <QtWidgets/qpushbutton.h>
 
 #include <QCoreApplication>
 #include <QDir>
@@ -205,4 +206,11 @@ void Utils::SetLoginStatus(QLabel* label, LoginStatus status)
     }
 
     Q_UNREACHABLE();
+}
+
+void Utils::SetButton(QPushButton* btn, const QString& text, const QKeySequence& ks)
+{
+    btn->setShortcut(ks);
+    btn->setText(text);
+    btn->setToolTip(QString("%1 (%2)").arg(text, ks.toString()));
 }

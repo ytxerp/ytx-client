@@ -107,7 +107,7 @@ void MainWindow::ReadSectionConfig(SectionConfig& config, CString& section_name)
     section_settings_->endGroup();
 }
 
-void MainWindow::UpdateSectionConfig(CSectionConfig& section)
+void MainWindow::UpdateSectionConfig(CSectionConfig& section) const
 {
     if (!section_settings_)
         return;

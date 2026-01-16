@@ -231,7 +231,7 @@ private:
     void ReadSectionConfig(SectionConfig& config, CString& section_name);
 
     void UpdateAppConfig(CAppConfig& app);
-    void UpdateSectionConfig(CSectionConfig& section);
+    void UpdateSectionConfig(CSectionConfig& section) const;
     void UpdateSharedConfig(CSharedConfig& shared);
 
     void UpdateAccountInfo(const QString& user, const QString& database, const QString& expire_date);

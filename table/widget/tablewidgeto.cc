@@ -5,6 +5,7 @@
 #include "component/signalblocker.h"
 #include "global/printhub.h"
 #include "ui_tablewidgeto.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -145,17 +146,11 @@ void TableWidgetO::IniWidget()
     }
 
     {
-        auto SetButton = [](QPushButton* btn, const QString& text, const QKeySequence& ks) {
-            btn->setShortcut(ks);
-            btn->setText(text);
-            btn->setToolTip(QString("%1 (%2)").arg(text, ks.toString()));
-        };
-
-        SetButton(ui->pBtnSave, tr("Save"), QKeySequence::Save);
-        SetButton(ui->pBtnRelease, tr("Release"), QKeySequence(Qt::CTRL | Qt::Key_Return));
-        SetButton(ui->pBtnRecall, tr("Recall"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
-        SetButton(ui->pBtnPreview, tr("Preview"), QKeySequence(Qt::CTRL | Qt::Key_P));
-        SetButton(ui->pBtnPrint, tr("Print"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
+        Utils::SetButton(ui->pBtnSave, tr("Save"), QKeySequence::Save);
+        Utils::SetButton(ui->pBtnRelease, tr("Release"), QKeySequence(Qt::CTRL | Qt::Key_Return));
+        Utils::SetButton(ui->pBtnRecall, tr("Recall"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
+        Utils::SetButton(ui->pBtnPreview, tr("Preview"), QKeySequence(Qt::CTRL | Qt::Key_P));
+        Utils::SetButton(ui->pBtnPrint, tr("Print"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
     }
 
     {
