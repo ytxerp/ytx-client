@@ -117,19 +117,16 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section)
         return;
 
     const bool resize_column { current_section.amount_decimal != section.amount_decimal || current_section.rate_decimal != section.rate_decimal
-        || current_section.date_format != section.date_format };
+        || current_section.date_format != section.date_format || current_section.quantity_decimal != section.quantity_decimal };
 
     current_section = section;
-
-    if (start_ == Section::kFinance)
-        sc_->tree_widget->RInitStatus();
-    else
-        sc_->tree_widget->RSyncValue();
 
     const QString text { kSectionString.value(start_) };
     section_settings_->beginGroup(text);
 
     if (!IsOrderSection(start_)) {
+        sc_->tree_widget->RInitStatus();
+
         section_settings_->setValue(kStaticLabel, section.static_label);
         section_settings_->setValue(kStaticNode, section.static_node);
         section_settings_->setValue(kDynamicLabel, section.dynamic_label);
