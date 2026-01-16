@@ -42,8 +42,8 @@ void InsertNodeTask::IniDialog(ItemModel* unit_model)
     ui->rBtnLeaf->setShortcut(QKeySequence(Qt::ALT | Qt::Key_L));
     ui->rBtnDICD->setShortcut(QKeySequence(Qt::ALT | Qt::Key_D));
     ui->rBtnDDCI->setShortcut(QKeySequence(Qt::ALT | Qt::Key_C));
-    ui->rBtnRecalled->setShortcut(QKeySequence(Qt::ALT | Qt::Key_E));
-    ui->rBtnReleased->setShortcut(QKeySequence(Qt::ALT | Qt::Key_R));
+    ui->rBtnUnfinished->setShortcut(QKeySequence(Qt::ALT | Qt::Key_U));
+    ui->rBtnFinished->setShortcut(QKeySequence(Qt::ALT | Qt::Key_F));
 }
 
 void InsertNodeTask::IniData(Node* node)
@@ -54,7 +54,7 @@ void InsertNodeTask::IniData(Node* node)
     IniRule(node->direction_rule);
 
     ui->rBtnLeaf->setChecked(true);
-    ui->rBtnRecalled->setChecked(true);
+    ui->rBtnUnfinished->setChecked(true);
     ui->pBtnOk->setEnabled(false);
 }
 
@@ -99,8 +99,8 @@ void InsertNodeTask::IniRuleGroup()
 void InsertNodeTask::IniStatusGroup()
 {
     status_group_ = new QButtonGroup(this);
-    status_group_->addButton(ui->rBtnRecalled, std::to_underlying(NodeStatus::kUnfinished));
-    status_group_->addButton(ui->rBtnReleased, std::to_underlying(NodeStatus::kFinished));
+    status_group_->addButton(ui->rBtnUnfinished, std::to_underlying(NodeStatus::kUnfinished));
+    status_group_->addButton(ui->rBtnFinished, std::to_underlying(NodeStatus::kFinished));
 }
 
 void InsertNodeTask::IniRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }

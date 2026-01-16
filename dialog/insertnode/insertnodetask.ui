@@ -223,16 +223,16 @@
        <number>8</number>
       </property>
       <item>
-       <widget class="QRadioButton" name="rBtnRecalled">
+       <widget class="QRadioButton" name="rBtnUnfinished">
         <property name="text">
-         <string>Draf&amp;t</string>
+         <string>&amp;Unfinished</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="rBtnReleased">
+       <widget class="QRadioButton" name="rBtnFinished">
         <property name="text">
-         <string>&amp;Released</string>
+         <string>&amp;Finished</string>
         </property>
        </widget>
       </item>
@@ -416,6 +416,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>DateTimeEdit</class>
+   <extends>QDateTimeEdit</extends>
+   <header location="global">widget/datetimeedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>LineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">widget/lineedit.h</header>
@@ -429,11 +434,6 @@
    <class>PlainTextEdit</class>
    <extends>QPlainTextEdit</extends>
    <header location="global">widget/plaintextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>DateTimeEdit</class>
-   <extends>QDateTimeEdit</extends>
-   <header location="global">widget/datetimeedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
