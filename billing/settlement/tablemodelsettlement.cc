@@ -76,23 +76,23 @@ bool TableModelSettlement::setData(const QModelIndex& index, const QVariant& val
     if (!index.isValid() || index.column() != std::to_underlying(SettlementItemEnum::kIsSelected) || role != Qt::EditRole)
         return false;
 
-    if (status_ == SettlementStatus::kReleased)
+    if (status_ == SettlementStatus::kSettled)
         return false;
 
     auto* settlement_node { static_cast<SettlementItem*>(index.internalPointer()) };
     if (!settlement_node)
         return false;
 
-    const bool is_settled { value.toBool() };
+    const bool is_selected { value.toBool() };
 
-    settlement_node->is_selected = is_settled;
+    settlement_node->is_selected = is_selected;
 
-    if (is_settled)
+    if (is_selected)
         pending_selected_.insert(settlement_node->id);
     else
         pending_deselected_.insert(settlement_node->id);
 
-    emit SSyncAmount(settlement_node->amount * (is_settled ? 1 : -1));
+    emit SSyncAmount(settlement_node->amount * (is_selected ? 1 : -1));
 
     return true;
 }
@@ -156,10 +156,10 @@ void TableModelSettlement::ResetModel(const QJsonArray& array)
         list_.clear();
 
         for (auto* entry : std::as_const(list_cache_)) {
-            if (status_ == SettlementStatus::kReleased && entry->is_selected)
+            if (status_ == SettlementStatus::kSettled && entry->is_selected)
                 list_.emplaceBack(entry);
 
-            if (status_ == SettlementStatus::kRecalled)
+            if (status_ == SettlementStatus::kUnsettled)
                 list_.emplaceBack(entry);
         }
 
@@ -176,7 +176,7 @@ void TableModelSettlement::UpdateStatus(SettlementStatus status)
     status_ = status;
 
     {
-        if (status == SettlementStatus::kReleased)
+        if (status == SettlementStatus::kSettled)
             for (int row = list_.size() - 1; row >= 0; --row) {
                 const auto* node = list_.at(row);
                 if (!node->is_selected) {
@@ -188,7 +188,7 @@ void TableModelSettlement::UpdateStatus(SettlementStatus status)
     }
 
     {
-        if (status == SettlementStatus::kRecalled) {
+        if (status == SettlementStatus::kUnsettled) {
             QList<SettlementItem*> to_add {};
 
             for (auto* node : std::as_const(list_cache_)) {

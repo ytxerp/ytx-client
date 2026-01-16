@@ -20,7 +20,7 @@
 #ifndef SETTLEMENTENUM_H
 #define SETTLEMENTENUM_H
 
-enum class SettlementStatus { kRecalled = 0, kReleased };
+enum class SettlementStatus { kUnsettled = 0, kSettled };
 
 enum class SettlementEnum {
     kId = 0,

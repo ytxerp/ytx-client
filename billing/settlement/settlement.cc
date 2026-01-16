@@ -8,7 +8,7 @@ void Settlement::ResetState()
     partner_id = QUuid();
     issued_time = {};
     description.clear();
-    status = SettlementStatus::kRecalled;
+    status = SettlementStatus::kUnsettled;
     amount = 0.0;
 
     user_id = QUuid();

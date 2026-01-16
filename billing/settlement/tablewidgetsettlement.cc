@@ -5,6 +5,7 @@
 #include "component/signalblocker.h"
 #include "enum/settlementenum.h"
 #include "ui_tablewidgetsettlement.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -52,6 +53,9 @@ void TableWidgetSettlement::InitWidget()
     ui->dateTimeEdit->setDisplayFormat(kDateTimeFST);
     ui->dSpinAmount->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
     ui->dSpinAmount->setDecimals(config_.amount_decimal);
+
+    Utils::SetButton(ui->pBtnRelease, tr("Release"), QKeySequence(Qt::CTRL | Qt::Key_Return));
+    Utils::SetButton(ui->pBtnRecall, tr("Recall"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
 }
 
 void TableWidgetSettlement::InitData()
@@ -65,11 +69,11 @@ void TableWidgetSettlement::InitData()
 
     ui->comboPartner->setEnabled(sync_state_ == SyncState::kLocalOnly);
 
-    const bool is_released { settlement_.status == SettlementStatus::kReleased };
-    ui->lineDescription->setReadOnly(is_released);
-    ui->dateTimeEdit->setReadOnly(is_released);
+    const bool is_settled { settlement_.status == SettlementStatus::kSettled };
+    ui->lineDescription->setReadOnly(is_settled);
+    ui->dateTimeEdit->setReadOnly(is_settled);
 
-    HideWidget(is_released);
+    HideWidget(is_settled);
 }
 
 void TableWidgetSettlement::FetchNode()
@@ -81,10 +85,10 @@ void TableWidgetSettlement::FetchNode()
     WebSocket::Instance()->SendMessage(kSettlementItemAcked, message);
 }
 
-void TableWidgetSettlement::HideWidget(bool is_released)
+void TableWidgetSettlement::HideWidget(bool is_settled)
 {
-    ui->pBtnRelease->setVisible(!is_released);
-    ui->pBtnRecall->setVisible(is_released);
+    ui->pBtnRelease->setVisible(!is_settled);
+    ui->pBtnRecall->setVisible(is_settled);
 }
 
 bool TableWidgetSettlement::ValidateSyncState()
@@ -130,7 +134,7 @@ void TableWidgetSettlement::on_comboPartner_currentIndexChanged(int /*index*/)
         return;
 
     settlement_.amount = 0.0;
-    settlement_.status = SettlementStatus::kRecalled;
+    settlement_.status = SettlementStatus::kUnsettled;
     settlement_.description.clear();
 
     ui->dSpinAmount->setValue(0.0);
@@ -145,12 +149,12 @@ void TableWidgetSettlement::on_comboPartner_currentIndexChanged(int /*index*/)
 void TableWidgetSettlement::on_pBtnRelease_clicked()
 {
     Q_ASSERT(!settlement_.partner_id.isNull());
-    Q_ASSERT(settlement_.status != SettlementStatus::kReleased);
+    Q_ASSERT(settlement_.status != SettlementStatus::kSettled);
 
     model_->NormalizeBuffer();
 
     {
-        if (sync_state_ == SyncState::kLocalOnly && !model_->HasPendingUpdate()) {
+        if (!model_->HasSelected() && !model_->HasPendingUpdate()) {
             return;
         }
 
@@ -167,7 +171,7 @@ void TableWidgetSettlement::on_pBtnRelease_clicked()
         message.insert(kSettlementId, settlement_.id.toString(QUuid::WithoutBraces));
 
         if (sync_state_ == SyncState::kSynced) {
-            pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kReleased));
+            pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kSettled));
             pending_update_.insert(kAmount, QString::number(settlement_.amount, 'f', kMaxNumericScale_4));
             pending_update_.insert(kVersion, settlement_.version);
 
@@ -188,7 +192,7 @@ void TableWidgetSettlement::on_pBtnRelease_clicked()
 
 void TableWidgetSettlement::on_pBtnRecall_clicked()
 {
-    Q_ASSERT(settlement_.status != SettlementStatus::kRecalled);
+    Q_ASSERT(settlement_.status != SettlementStatus::kUnsettled);
 
     if (!ValidateSyncState())
         return;
@@ -196,7 +200,7 @@ void TableWidgetSettlement::on_pBtnRecall_clicked()
     QJsonObject message { JsonGen::MetaMessage(section_) };
     model_->Finalize(message);
 
-    pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kRecalled));
+    pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kUnsettled));
     pending_update_.insert(kVersion, settlement_.version);
 
     message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
@@ -223,8 +227,8 @@ void TableWidgetSettlement::RecallSucceeded(int version)
 
     settlement_.version = version;
     sync_state_ = SyncState::kSynced;
-    settlement_.status = SettlementStatus::kRecalled;
-    model_->UpdateStatus(SettlementStatus::kRecalled);
+    settlement_.status = SettlementStatus::kUnsettled;
+    model_->UpdateStatus(SettlementStatus::kUnsettled);
 
     HideWidget(false);
 }
@@ -236,8 +240,8 @@ void TableWidgetSettlement::UpdateSucceeded(int version)
 
     settlement_.version = version;
     sync_state_ = SyncState::kSynced;
-    settlement_.status = SettlementStatus::kReleased;
-    model_->UpdateStatus(SettlementStatus::kReleased);
+    settlement_.status = SettlementStatus::kSettled;
+    model_->UpdateStatus(SettlementStatus::kSettled);
 
     ui->tableView->clearSelection();
     HideWidget(true);

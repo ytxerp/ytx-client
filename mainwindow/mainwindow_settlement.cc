@@ -246,7 +246,7 @@ void MainWindow::RemoveSettlement(TreeWidgetSettlement* widget)
         return;
 
     auto* settlement { static_cast<Settlement*>(current_index.internalPointer()) };
-    if (settlement->status == SettlementStatus::kReleased) {
+    if (settlement->status == SettlementStatus::kSettled) {
         QMessageBox::information(this, tr("Settlement Released"),
             tr("This settlement has already been released and cannot be deleted.\n"
                "You need to recall it first before making changes."));

@@ -53,6 +53,10 @@ public:
     void UpdateStatus(SettlementStatus status);
     void Finalize(QJsonObject& message);
     bool HasPendingUpdate() const { return !pending_selected_.isEmpty() || !pending_deselected_.isEmpty(); }
+    bool HasSelected() const
+    {
+        return std::ranges::any_of(list_, [](const auto* item) { return item->is_selected; });
+    }
     void NormalizeBuffer();
 
 private:
