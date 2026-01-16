@@ -903,17 +903,25 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../dialog/insertnode/insertnodetask.ui" line="228"/>
+        <source>&amp;Unfinished</source>
+        <translation>待办(&amp;U)</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="235"/>
+        <source>&amp;Finished</source>
+        <translation>已办(&amp;F)</translation>
+    </message>
+    <message>
         <source>Draf&amp;t</source>
-        <translation>草稿(&amp;T)</translation>
+        <translation type="vanished">草稿(&amp;T)</translation>
     </message>
     <message>
         <source>Recall&amp;ed</source>
         <translation type="vanished">撤回(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="235"/>
         <source>&amp;Released</source>
-        <translation>发布(&amp;R)</translation>
+        <translation type="vanished">发布(&amp;R)</translation>
     </message>
     <message>
         <source>Recalled</source>
@@ -1634,8 +1642,8 @@ Rage, rage against the dying of the light.</source>
         <location filename="../../mainwindow/mainwindow.ui" line="395"/>
         <location filename="../../mainwindow/mainwindow.ui" line="398"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="25"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="56"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="83"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="55"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="82"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1761,12 +1769,12 @@ Click &apos;Yes&apos; to save and close, or &apos;No&apos; to cancel.</source>
         <translation type="vanished">记录-</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_local.cc" line="66"/>
+        <location filename="../../mainwindow/mainwindow_local.cc" line="67"/>
         <source>Language Changed</source>
         <translation>语言已更改</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_local.cc" line="67"/>
+        <location filename="../../mainwindow/mainwindow_local.cc" line="68"/>
         <source>The language has been changed. Please restart the application for the changes to take effect.</source>
         <translation>语言已更改，请重启应用程序以使更改生效。</translation>
     </message>
@@ -1966,12 +1974,12 @@ Please refresh the data and try again.</source>
 请刷新当前数据后重新尝试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="251"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="250"/>
         <source>Settlement Released</source>
         <translation>结算单已发布</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="252"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="251"/>
         <source>This settlement has already been released and cannot be deleted.
 You need to recall it first before making changes.</source>
         <translation>该结算单已发布，无法直接删除。
@@ -2930,27 +2938,27 @@ You need to recall it first before making changes.</source>
         <translation type="vanished">正在连接服务器…</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="171"/>
+        <location filename="../../utils/mainwindowutils.cc" line="172"/>
         <source>Connecting to server...</source>
         <translation>正在连接服务器…</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="176"/>
+        <location filename="../../utils/mainwindowutils.cc" line="177"/>
         <source>Connected to server</source>
         <translation>已连接</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="181"/>
+        <location filename="../../utils/mainwindowutils.cc" line="182"/>
         <source>Disconnected from server</source>
         <translation>已断开</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="197"/>
+        <location filename="../../utils/mainwindowutils.cc" line="198"/>
         <source>Logged in</source>
         <translation>已登录</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="202"/>
+        <location filename="../../utils/mainwindowutils.cc" line="203"/>
         <source>Logged out</source>
         <translation>已登出</translation>
     </message>
@@ -3499,13 +3507,13 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="369"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="157"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="152"/>
         <source>Preview</source>
         <translation>预览</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="376"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="158"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="153"/>
         <source>Print</source>
         <translation>打印</translation>
     </message>
@@ -3515,7 +3523,7 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="423"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="154"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="149"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
@@ -3525,23 +3533,23 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="433"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="156"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="151"/>
         <source>Recall</source>
         <translation>撤回</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="410"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="155"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="150"/>
         <source>Release</source>
         <translation>发布</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="400"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="395"/>
         <source>No Template</source>
         <translation>没有模板</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="400"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="395"/>
         <source>No printable template was found.</source>
         <translation>找不到可用的打印模板。</translation>
     </message>
@@ -3570,27 +3578,27 @@ You need to recall it first before making changes.</source>
         <translation type="vanished">订单已经被删除，无法再执行操作。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="447"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="444"/>
         <source>This order has already been settled and cannot be operated.</source>
         <translation>订单已经结算，无法再编辑了。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="452"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="449"/>
         <source>This order has already been selected in a settlement and cannot be operated.</source>
         <translation>订单已在结算单中，无法再编辑了。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="472"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="466"/>
         <source>Please select a partner before performing this action.</source>
         <translation>请先选择一个交易对象。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="484"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="478"/>
         <source>Invalid Operation</source>
         <translation>无效操作</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="484"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="478"/>
         <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
@@ -3611,7 +3619,7 @@ You need to recall it first before making changes.</source>
         <translation type="vanished">订单已经结算，无法再编辑了。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="452"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="449"/>
         <source>Order Selected</source>
         <translation>已选中</translation>
     </message>
@@ -3662,7 +3670,7 @@ You cannot perform recall operation.</source>
 你无法执行撤回操作。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="447"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="444"/>
         <source>Order Settled</source>
         <translation>已结算</translation>
     </message>
@@ -3685,7 +3693,7 @@ Your local changes cannot be saved.</source>
 您本地的更改无法保存。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="472"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="466"/>
         <source>Partner Required</source>
         <translation>必需选择交易对象</translation>
     </message>
@@ -3734,13 +3742,25 @@ You cannot release it again.</source>
     </message>
     <message>
         <location filename="../../billing/settlement/tablewidgetsettlement.ui" line="201"/>
+        <location filename="../../billing/settlement/tablewidgetsettlement.cc" line="57"/>
         <source>Release</source>
         <translation>发布</translation>
     </message>
     <message>
         <location filename="../../billing/settlement/tablewidgetsettlement.ui" line="214"/>
+        <location filename="../../billing/settlement/tablewidgetsettlement.cc" line="58"/>
         <source>Recall</source>
         <translation>撤回</translation>
+    </message>
+    <message>
+        <location filename="../../billing/settlement/tablewidgetsettlement.cc" line="98"/>
+        <source>Invalid Operation</source>
+        <translation>无效操作</translation>
+    </message>
+    <message>
+        <location filename="../../billing/settlement/tablewidgetsettlement.cc" line="98"/>
+        <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
+        <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
 </context>
 <context>
