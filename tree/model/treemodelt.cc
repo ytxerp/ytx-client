@@ -83,7 +83,7 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
 
     const NodeEnumT column { index.column() };
 
-    if (d_node->status == NodeStatus::kReleased && column != NodeEnumT::kStatus) {
+    if (d_node->status == NodeStatus::kFinished && column != NodeEnumT::kStatus) {
         qInfo() << "Edit ignored: node is released";
         return false;
     }
@@ -212,7 +212,7 @@ Qt::ItemFlags TreeModelT::flags(const QModelIndex& index) const
     }
 
     const int status { index.siblingAtColumn(std::to_underlying(NodeEnumT::kStatus)).data().toInt() };
-    if (status == std::to_underlying(NodeStatus::kReleased))
+    if (status == std::to_underlying(NodeStatus::kFinished))
         flags &= ~Qt::ItemIsEditable;
 
     return flags;

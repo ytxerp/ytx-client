@@ -44,8 +44,8 @@ void TableWidgetO::ReleaseSucceeded(int version)
 
     MarkSynced(version);
 
-    tmp_node_.status = NodeStatus::kReleased;
-    LockWidgets(NodeStatus::kReleased);
+    tmp_node_.status = NodeStatus::kFinished;
+    LockWidgets(NodeStatus::kFinished);
 }
 
 void TableWidgetO::RecallSucceeded(int version)
@@ -55,8 +55,8 @@ void TableWidgetO::RecallSucceeded(int version)
 
     MarkSynced(version);
 
-    tmp_node_.status = NodeStatus::kRecalled;
-    LockWidgets(NodeStatus::kRecalled);
+    tmp_node_.status = NodeStatus::kUnfinished;
+    LockWidgets(NodeStatus::kUnfinished);
 }
 
 void TableWidgetO::SaveSucceeded(int version) { MarkSynced(version); }
@@ -215,27 +215,27 @@ void TableWidgetO::IniData(const NodeO& node)
 
 void TableWidgetO::LockWidgets(NodeStatus value)
 {
-    const bool recalled { value == NodeStatus::kRecalled };
+    const bool unfinished { value == NodeStatus::kUnfinished };
 
-    ui->comboPartner->setEnabled(recalled);
-    ui->comboEmployee->setEnabled(recalled);
+    ui->comboPartner->setEnabled(unfinished);
+    ui->comboEmployee->setEnabled(unfinished);
 
     ui->rBtnRO->setEnabled(sync_state_ == SyncState::kLocalOnly);
     ui->rBtnTO->setEnabled(sync_state_ == SyncState::kLocalOnly);
 
-    ui->rBtnIS->setEnabled(recalled);
-    ui->rBtnMS->setEnabled(recalled);
-    ui->rBtnPEND->setEnabled(recalled);
+    ui->rBtnIS->setEnabled(unfinished);
+    ui->rBtnMS->setEnabled(unfinished);
+    ui->rBtnPEND->setEnabled(unfinished);
 
-    ui->lineDescription->setReadOnly(!recalled);
-    ui->dateTimeEdit->setReadOnly(!recalled);
+    ui->lineDescription->setEnabled(unfinished);
+    ui->dateTimeEdit->setEnabled(unfinished);
 
-    const bool can_print { !recalled || tmp_node_.unit == NodeUnit::OPending };
+    const bool can_print { !unfinished || tmp_node_.unit == NodeUnit::OPending };
     ui->pBtnPrint->setEnabled(can_print);
 
-    ui->pBtnSave->setVisible(recalled);
-    ui->pBtnRelease->setVisible(recalled && tmp_node_.unit != NodeUnit::OPending);
-    ui->pBtnRecall->setVisible(!recalled);
+    ui->pBtnSave->setVisible(unfinished);
+    ui->pBtnRelease->setVisible(unfinished && tmp_node_.unit != NodeUnit::OPending);
+    ui->pBtnRecall->setVisible(!unfinished);
 }
 
 void TableWidgetO::IniUiValue()
@@ -432,7 +432,7 @@ void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
 
 void TableWidgetO::on_pBtnRecall_clicked()
 {
-    Q_ASSERT(tmp_node_.status != NodeStatus::kRecalled);
+    Q_ASSERT(tmp_node_.status == NodeStatus::kFinished);
 
     if (!ValidatePartner())
         return;
@@ -450,7 +450,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
     }
 
-    pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
+    pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kUnfinished));
     pending_update_.insert(kVersion, tmp_node_.version);
 
     WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_id_, pending_update_));
@@ -520,7 +520,7 @@ void TableWidgetO::SaveOrder()
 
 void TableWidgetO::on_pBtnRelease_clicked()
 {
-    Q_ASSERT(tmp_node_.status != NodeStatus::kReleased);
+    Q_ASSERT(tmp_node_.status == NodeStatus::kUnfinished);
 
     if (!ValidatePartner())
         return;
@@ -532,7 +532,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
     table_model_order_->Finalize(order_message);
 
     if (sync_state_ == SyncState::kSynced) {
-        pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
+        pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kFinished));
 
         BuildNodeUpdate(order_message);
 

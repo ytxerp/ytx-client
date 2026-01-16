@@ -112,7 +112,7 @@ protected:
     }
 
     virtual void AccumulateBalance(int start);
-    virtual bool IsReleased(const QUuid& lhs_node, const QUuid& rhs_node) const
+    virtual bool IsFinished(const QUuid& lhs_node, const QUuid& rhs_node) const
     {
         Q_UNUSED(lhs_node)
         Q_UNUSED(rhs_node)

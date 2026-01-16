@@ -876,7 +876,7 @@ void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_release)
     }
 
     if (is_release)
-        order_model->RNodeStatus(node_id, NodeStatus::kReleased);
+        order_model->RNodeStatus(node_id, NodeStatus::kFinished);
 }
 
 void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
@@ -909,7 +909,7 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
     }
 
     if (is_release)
-        order_model->RNodeStatus(node_id, NodeStatus::kReleased);
+        order_model->RNodeStatus(node_id, NodeStatus::kFinished);
 }
 
 void WebSocket::RecallOrder(const QJsonObject& obj)
@@ -936,7 +936,7 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
         emit SOrderRecalled(section, node_id, version);
     }
 
-    order_model->RNodeStatus(node_id, NodeStatus::kRecalled);
+    order_model->RNodeStatus(node_id, NodeStatus::kUnfinished);
     order_model->UpdateMeta(node_id, meta);
 }
 

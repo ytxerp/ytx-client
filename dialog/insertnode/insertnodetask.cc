@@ -99,8 +99,8 @@ void InsertNodeTask::IniRuleGroup()
 void InsertNodeTask::IniStatusGroup()
 {
     status_group_ = new QButtonGroup(this);
-    status_group_->addButton(ui->rBtnRecalled, std::to_underlying(NodeStatus::kRecalled));
-    status_group_->addButton(ui->rBtnReleased, std::to_underlying(NodeStatus::kReleased));
+    status_group_->addButton(ui->rBtnRecalled, std::to_underlying(NodeStatus::kUnfinished));
+    status_group_->addButton(ui->rBtnReleased, std::to_underlying(NodeStatus::kFinished));
 }
 
 void InsertNodeTask::IniRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }

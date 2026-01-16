@@ -16,7 +16,7 @@ void TreeModelO::RNodeStatus(const QUuid& node_id, NodeStatus value)
     auto* d_node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
     assert(d_node);
 
-    const int coefficient { value == NodeStatus::kReleased ? 1 : -1 };
+    const int coefficient { value == NodeStatus::kFinished ? 1 : -1 };
 
     const auto& affected_ids { UpdateAncestorTotalOrder(d_node, coefficient * d_node->initial_total, coefficient * d_node->final_total,
         coefficient * d_node->count_total, coefficient * d_node->measure_total, coefficient * d_node->discount_total) };
@@ -165,7 +165,7 @@ void TreeModelO::RemovePath(Node* node, Node* parent_node)
         }
         break;
     case NodeKind::kLeaf:
-        if (d_node->status == NodeStatus::kReleased) {
+        if (d_node->status == NodeStatus::kFinished) {
             UpdateAncestorTotalOrder(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
 
             if (node->unit == NodeUnit::OMonthly && FloatChanged(-node->initial_total, 0.0))
@@ -214,7 +214,7 @@ void TreeModelO::HandleNode()
     for (auto* node : std::as_const(node_hash_)) {
         auto* d_node { DerivedPtr<NodeO>(node) };
 
-        if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kReleased)
+        if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kFinished)
             UpdateAncestorTotalOrder(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
     }
 }
@@ -244,7 +244,7 @@ void TreeModelO::ClearModel()
             continue;
         }
 
-        if (node->status == NodeStatus::kRecalled) {
+        if (node->status == NodeStatus::kUnfinished) {
             ++it;
             continue;
         }
@@ -413,7 +413,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*
     auto* node { DerivedPtr<NodeO>(source_parent->children.takeAt(sourceRow)) };
     assert(node);
 
-    bool update_ancestor { node->kind == NodeKind::kBranch || node->status == NodeStatus::kReleased };
+    bool update_ancestor { node->kind == NodeKind::kBranch || node->status == NodeStatus::kFinished };
 
     if (update_ancestor) {
         UpdateAncestorTotalOrder(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);

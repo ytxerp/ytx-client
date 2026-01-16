@@ -36,9 +36,9 @@ protected:
     bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row) override;
     bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit) override;
     bool UpdateRate(EntryShadow* shadow, double value) override;
-    bool IsReleased(const QUuid& lhs_node, const QUuid& rhs_node) const override
+    bool IsFinished(const QUuid& lhs_node, const QUuid& rhs_node) const override
     {
-        return tree_model_t_->Status(lhs_node) == NodeStatus::kReleased || tree_model_t_->Status(rhs_node) == NodeStatus::kReleased;
+        return tree_model_t_->Status(lhs_node) == NodeStatus::kFinished || tree_model_t_->Status(rhs_node) == NodeStatus::kFinished;
     };
 
 private:

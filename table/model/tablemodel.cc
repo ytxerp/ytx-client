@@ -291,7 +291,7 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
 
     auto* shadow { shadow_list_.at(index.row()) };
 
-    if (IsReleased(lhs_id_, *shadow->rhs_node))
+    if (IsFinished(lhs_id_, *shadow->rhs_node))
         return false;
 
     const QUuid id { *shadow->id };
@@ -412,7 +412,7 @@ Qt::ItemFlags TableModel::flags(const QModelIndex& index) const
     }
 
     const auto rhs_id { index.siblingAtColumn(std::to_underlying(EntryEnum::kRhsNode)).data().toUuid() };
-    if (IsReleased(lhs_id_, rhs_id))
+    if (IsFinished(lhs_id_, rhs_id))
         flags &= ~Qt::ItemIsEditable;
 
     return flags;
@@ -425,7 +425,7 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
     auto* shadow = shadow_list_.at(row);
     const auto rhs_node_id { *shadow->rhs_node };
 
-    if (IsReleased(lhs_id_, rhs_node_id))
+    if (IsFinished(lhs_id_, rhs_node_id))
         return false;
 
     beginRemoveRows(parent, row, row);

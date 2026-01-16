@@ -13,7 +13,7 @@ TableModelT::TableModelT(CTableModelArg& arg, TreeModelT* tree_model_t, QObject*
 bool TableModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     assert(row >= 0 && row <= rowCount(parent));
-    if (IsReleased(lhs_id_, QUuid()))
+    if (IsFinished(lhs_id_, QUuid()))
         return false;
 
     InsertRowsImpl(row, parent);
@@ -113,8 +113,8 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
     if (value.isNull())
         return false;
 
-    if (tree_model_t_->Status(value) == NodeStatus::kReleased) {
-        qInfo() << "UpdateLinkedNode ignored: node is released.";
+    if (tree_model_t_->Status(value) == NodeStatus::kFinished) {
+        qInfo() << "UpdateLinkedNode ignored: node is finished.";
         return false;
     }
 
