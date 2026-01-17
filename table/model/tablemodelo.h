@@ -96,9 +96,6 @@ private:
     void PurifyEntry();
     void NormalizeEntryBuffer();
 
-    // bool UpdateExternalSku(EntryO* entry, const QUuid& value);
-    // void ResolveFromExternal(EntryO* entry, const QUuid& external_sku) const;
-
 private:
     TreeModelI* tree_model_i_ {};
     EntryHubP* entry_hub_p_ {};

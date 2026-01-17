@@ -25,11 +25,11 @@ void EntryHubP::ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new
     }
 }
 
-std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromInternal(const QUuid& partner_id, const QUuid& internal_sku) const
+std::optional<double> EntryHubP::UnitPrice(const QUuid& partner_id, const QUuid& internal_sku) const
 {
     auto it = entry_map_.constFind({ partner_id, internal_sku });
     if (it != entry_map_.constEnd()) {
-        return std::make_pair(it->external_sku, it->unit_price);
+        return it->unit_price;
     }
 
     return std::nullopt;

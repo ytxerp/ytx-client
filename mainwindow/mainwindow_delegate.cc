@@ -341,10 +341,6 @@ void MainWindow::DelegateSaleReference(QTableView* table_view, CSectionConfig& c
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kIssuedTime), issued_time);
 
-    auto tree_model_i { sc_i_.tree_model };
-    auto* external_sku { new NodeNameR(tree_model_i, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kExternalSku), external_sku);
-
     if (start_ == Section::kInventory) {
         auto* name { new NodeNameR(sc_p_.tree_model, table_view) };
         table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kNodeId), name);

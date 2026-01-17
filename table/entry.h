@@ -68,8 +68,6 @@ struct EntryO final : Entry {
     double count {};
     double measure {};
 
-    QUuid external_sku {};
-
     double initial {};
     double final {};
     double discount {};

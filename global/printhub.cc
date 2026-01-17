@@ -226,7 +226,7 @@ QString PrintHub::GetColumnText(int col, const Entry* entry)
     case 0:
         return inventory_->Path(entry->rhs_node);
     case 1:
-        return inventory_->Name(d_entry->external_sku);
+        return inventory_->Name(entry_hub_p_->ExternalSku(node_o_->partner_id, entry->rhs_node));
     case 2:
         return entry->description;
     case 3:

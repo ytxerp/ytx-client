@@ -41,7 +41,7 @@ QVariant SearchEntryModelO::data(const QModelIndex& index, int role) const
     case EntryEnumO::kDescription:
         return d_entry->description;
     case EntryEnumO::kExternalSku:
-        return d_entry->external_sku;
+        return QVariant();
     case EntryEnumO::kRhsNode:
         return d_entry->rhs_node;
     case EntryEnumO::kCount:
@@ -84,8 +84,6 @@ void SearchEntryModelO::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(d_lhs, d_rhs, &EntryO::unit_price, order);
         case EntryEnumO::kMeasure:
             return Utils::CompareMember(d_lhs, d_rhs, &EntryO::measure, order);
-        case EntryEnumO::kExternalSku:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::external_sku, order);
         case EntryEnumO::kUnitDiscount:
             return Utils::CompareMember(d_lhs, d_rhs, &EntryO::unit_discount, order);
         case EntryEnumO::kInitial:
@@ -101,6 +99,7 @@ void SearchEntryModelO::sort(int column, Qt::SortOrder order)
         case EntryEnumO::kCreateBy:
         case EntryEnumO::kVersion:
         case EntryEnumO::kUserId:
+        case EntryEnumO::kExternalSku:
             return false;
         }
     };

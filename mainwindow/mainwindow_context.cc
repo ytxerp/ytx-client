@@ -137,8 +137,9 @@ void MainWindow::InitilizeContext()
     {
         PrintHub::Instance().ScanTemplate();
         PrintHub::Instance().SetAppConfig(&app_config_);
-        PrintHub::Instance().SetPartnerModel(sc_p_.tree_model);
-        PrintHub::Instance().SetInventoryModel(sc_i_.tree_model);
+        PrintHub::Instance().SetTreeModelP(sc_p_.tree_model);
+        PrintHub::Instance().SeTreeModelI(sc_i_.tree_model);
+        PrintHub::Instance().SetEntryHubP(sc_p_.entry_hub.data());
     }
 }
 

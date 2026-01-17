@@ -140,7 +140,6 @@ void EntryO::ResetState()
     Entry::ResetState();
 
     unit_price = 0.0;
-    external_sku = QUuid();
 
     count = 0.0;
     measure = 0.0;

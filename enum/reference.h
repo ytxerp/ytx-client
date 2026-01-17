@@ -25,7 +25,6 @@ enum class SaleReferenceEnum {
     kIssuedTime = 0,
     kOrderId,
     kNodeId,
-    kExternalSku,
     kCount,
     kMeasure,
     kUnitPrice,

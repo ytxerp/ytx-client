@@ -24,6 +24,7 @@
 #include <QSettings>
 
 #include "component/config.h"
+#include "entryhub/entryhubp.h"
 #include "table/entry.h"
 #include "tree/model/treemodel.h"
 
@@ -43,10 +44,11 @@ public:
     void ScanTemplate();
     const QMap<QString, QString>& TemplateMap() const { return template_map_; }
 
-    void SetAppConfig(CAppConfig* config) { app_config_ = config; }
-    void SetSectionConfig(CSectionConfig* config) { section_config_ = config; }
-    void SetInventoryModel(TreeModel* inventory) { inventory_ = inventory; }
-    void SetPartnerModel(TreeModel* partner) { partner_ = partner; }
+    void SetAppConfig(CAppConfig* app) { app_config_ = app; }
+    void SetSectionConfig(CSectionConfig* section) { section_config_ = section; }
+    void SeTreeModelI(TreeModel* inventory) { inventory_ = inventory; }
+    void SetTreeModelP(TreeModel* partner) { partner_ = partner; }
+    void SetEntryHubP(EntryHub* partner) { entry_hub_p_ = static_cast<EntryHubP*>(partner); }
 
     bool LoadTemplate(const QString& template_name);
     void SetValue(const NodeO* node_o, const QList<Entry*>& entry_list);
@@ -102,6 +104,7 @@ private:
 
     TreeModel* inventory_ {};
     TreeModel* partner_ {};
+    EntryHubP* entry_hub_p_ {};
 
     int row_height_ {};
     QList<int> column_widths_ {};

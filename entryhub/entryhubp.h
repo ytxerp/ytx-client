@@ -30,7 +30,7 @@ public:
     explicit EntryHubP(CSectionInfo& info, QObject* parent = nullptr);
 
 public:
-    std::optional<std::pair<QUuid, double>> ResolveFromInternal(const QUuid& partner_id, const QUuid& internal_sku) const;
+    std::optional<double> UnitPrice(const QUuid& partner_id, const QUuid& internal_sku) const;
     QUuid ExternalSku(const QUuid& partner_id, const QUuid& internal_sku) const;
 
     void SearchEntry(QList<Entry*>& entry_list, CString& name) const;

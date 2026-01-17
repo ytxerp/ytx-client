@@ -129,6 +129,10 @@ void SearchDialog::HideTableColumn(QTableView* view)
     view->setColumnHidden(std::to_underlying(EntryEnum::kUpdateTime), kIsHidden);
     view->setColumnHidden(std::to_underlying(EntryEnum::kUpdateBy), kIsHidden);
     view->setColumnHidden(std::to_underlying(EntryEnum::kVersion), kIsHidden);
+
+    if (info_.section == Section::kSale || info_.section == Section::kPurchase) {
+        view->setColumnHidden(std::to_underlying(EntryEnumO::kExternalSku), kIsHidden);
+    }
 }
 
 void SearchDialog::IniView(QTableView* view)

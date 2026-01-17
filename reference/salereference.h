@@ -32,7 +32,6 @@ struct SaleReference {
     QDateTime issued_time {};
     QUuid order_id {};
     QUuid node_id {}; // partner or inventory uuid
-    QUuid external_sku {};
     double count {};
     double measure {};
     double unit_price {};
@@ -49,7 +48,6 @@ inline void SaleReference::ResetState()
     issued_time = {};
     order_id = QUuid();
     node_id = QUuid();
-    external_sku = QUuid();
     count = 0.0;
     measure = 0.0;
     unit_price = 0.0;
@@ -66,8 +64,6 @@ inline void SaleReference::ReadJson(const QJsonObject& object)
         node_id = QUuid(object[kNodeId].toString());
     if (object.contains(kOrderId))
         order_id = QUuid(object[kOrderId].toString());
-    if (object.contains(kExternalSku))
-        external_sku = QUuid(object[kExternalSku].toString());
     if (object.contains(kDescription))
         description = object[kDescription].toString();
     if (object.contains(kCount))

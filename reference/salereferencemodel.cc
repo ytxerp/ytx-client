@@ -51,8 +51,6 @@ QVariant SaleReferenceModel::data(const QModelIndex& index, int role) const
         return sale_reference->node_id;
     case SaleReferenceEnum::kOrderId:
         return sale_reference->order_id;
-    case SaleReferenceEnum::kExternalSku:
-        return sale_reference->external_sku;
     case SaleReferenceEnum::kCount:
         return sale_reference->count;
     case SaleReferenceEnum::kMeasure:
@@ -87,8 +85,6 @@ void SaleReferenceModel::sort(int column, Qt::SortOrder order)
 
     auto Compare = [e_column, order](const SaleReference* lhs, const SaleReference* rhs) -> bool {
         switch (e_column) {
-        case SaleReferenceEnum::kExternalSku:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::external_sku, order);
         case SaleReferenceEnum::kIssuedTime:
             return Utils::CompareMember(lhs, rhs, &SaleReference::issued_time, order);
         case SaleReferenceEnum::kNodeId:

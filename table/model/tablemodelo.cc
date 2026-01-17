@@ -259,8 +259,6 @@ void TableModelO::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(d_lhs, d_rhs, &EntryO::initial, order);
         case EntryEnumO::kUnitDiscount:
             return Utils::CompareMember(d_lhs, d_rhs, &EntryO::unit_discount, order);
-        case EntryEnumO::kExternalSku:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::external_sku, order);
         case EntryEnumO::kDiscount:
             return Utils::CompareMember(d_lhs, d_rhs, &EntryO::discount, order);
         case EntryEnumO::kId:
@@ -271,6 +269,7 @@ void TableModelO::sort(int column, Qt::SortOrder order)
         case EntryEnumO::kVersion:
         case EntryEnumO::kUserId:
         case EntryEnumO::kLhsNode:
+        case EntryEnumO::kExternalSku:
             return false;
         }
     };
@@ -434,14 +433,12 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value, bool is_p
         return false;
 
     const double old_unit_price { entry->unit_price };
-    const QUuid old_external_sku { entry->external_sku };
 
     entry->rhs_node = value;
 
     ResolveFromInternal(entry, value);
 
     const bool price_changed { FloatChanged(old_unit_price, entry->unit_price) };
-    const bool external_changed { old_external_sku != entry->external_sku };
 
     if (price_changed)
         RecalculateAmount(entry);
@@ -450,7 +447,7 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value, bool is_p
         pending_update_.insert(entry->id, entry);
     }
 
-    if (external_changed) {
+    if (entry_hub_p_->ExternalSku(d_node_->partner_id, old_rhs_node) != entry_hub_p_->ExternalSku(d_node_->partner_id, value)) {
         emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kExternalSku));
     }
 
@@ -554,32 +551,8 @@ void TableModelO::ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) 
     if (!entry || !entry_hub_p_ || internal_sku.isNull())
         return;
 
-    if (auto result = entry_hub_p_->ResolveFromInternal(d_node_->partner_id, internal_sku)) {
-        const auto& [external_id, price] = *result;
-        entry->unit_price = price;
-        entry->external_sku = external_id;
-    } else {
-        entry->unit_price = tree_model_i_->UnitPrice(internal_sku);
-        entry->external_sku = QUuid();
-    }
+    entry->unit_price = entry_hub_p_->UnitPrice(d_node_->partner_id, internal_sku).value_or(tree_model_i_->UnitPrice(internal_sku));
 }
-
-#if 0
-void TableModelO::ResolveFromExternal(EntryO* entry, const QUuid& external_sku) const
-{
-    if (!entry || !entry_hub_p_ || external_sku.isNull())
-        return;
-
-    if (auto result = entry_hub_p_->ResolveFromExternal(d_node_->partner, external_sku)) {
-        const auto& [rhs_node, price] = *result;
-        entry->unit_price = price;
-        entry->rhs_node = rhs_node;
-    } else {
-        entry->unit_price = 0.0;
-        entry->rhs_node = QUuid();
-    }
-}
-#endif
 
 void TableModelO::RecalculateAmount(EntryO* entry) const
 {
