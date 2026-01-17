@@ -14,7 +14,8 @@ TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, QObject* parent)
 void TreeModelO::RNodeStatus(const QUuid& node_id, NodeStatus value)
 {
     auto* d_node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
-    assert(d_node);
+    if (!d_node)
+        return;
 
     const int coefficient { value == NodeStatus::kFinished ? 1 : -1 };
 
@@ -40,7 +41,7 @@ void TreeModelO::AckTree(const QJsonObject& obj)
 
         const QUuid id { QUuid(obj.value(kId).toString()) };
 
-        assert(!node_hash_.contains(id));
+        Q_ASSERT(!node_hash_.contains(id));
 
         Node* node { NodePool::Instance().Allocate(section_) };
         node->ReadJson(obj);
@@ -56,8 +57,8 @@ void TreeModelO::AckTree(const QJsonObject& obj)
         Node* ancestor { node_hash_.value(ancestor_id) };
         Node* descendant { node_hash_.value(descendant_id) };
 
-        assert((ancestor) && "Ancestor not found in node_model_");
-        assert((descendant) && "Descendant not found in node_model_");
+        Q_ASSERT((ancestor) && "Ancestor not found in node_model_");
+        Q_ASSERT((descendant) && "Descendant not found in node_model_");
 
         descendant->parent = ancestor;
     }
@@ -81,7 +82,7 @@ void TreeModelO::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
     if (!node_hash_.contains(ancestor_id)) {
         qCritical() << "AckNode: ancestor_id not found in node_hash_:" << ancestor_id;
     }
-    assert(node_hash_.contains(ancestor_id));
+    Q_ASSERT(node_hash_.contains(ancestor_id));
 
     auto* node = NodePool::Instance().Allocate(section_);
     node->ReadJson(leaf_obj);
@@ -180,7 +181,7 @@ void TreeModelO::RemovePath(Node* node, Node* parent_node)
 QSet<QUuid> TreeModelO::UpdateAncestorTotalOrder(
     Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
 {
-    assert(node && node != root_ && node->parent);
+    Q_ASSERT(node && node != root_ && node->parent);
     QSet<QUuid> affected_ids {};
 
     if (node->parent == root_)
@@ -221,7 +222,7 @@ void TreeModelO::HandleNode()
 
 void TreeModelO::ResetBranch(Node* node)
 {
-    assert(node->kind == NodeKind::kBranch && "ResetBranch: node must be of kind NodeKind::kBranch");
+    Q_ASSERT(node->kind == NodeKind::kBranch && "ResetBranch: node must be of kind NodeKind::kBranch");
 
     auto* d_node { DerivedPtr<NodeO>(node) };
     d_node->count_total = 0.0;
@@ -261,7 +262,7 @@ void TreeModelO::ClearModel()
 
 void TreeModelO::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < node_header_.size());
+    Q_ASSERT(column >= 0 && column < node_header_.size());
 
     const NodeEnumO e_column { column };
 
@@ -400,34 +401,56 @@ Qt::ItemFlags TreeModelO::flags(const QModelIndex& index) const
     return flags;
 }
 
-bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int /*count*/, const QModelIndex& destinationParent, int destinationChild)
+bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild)
 {
+    if (!sourceParent.isValid() || !destinationParent.isValid()) {
+        qCritical() << "moveRows: Invalid source or destination parent index";
+        return false;
+    }
+
+    if (sourceParent == destinationParent) {
+        qWarning() << "moveRows: same parent move is not supported";
+        return false;
+    }
+
     auto* source_parent { GetNodeByIndex(sourceParent) };
     auto* destination_parent { GetNodeByIndex(destinationParent) };
 
-    assert(source_parent);
-    assert(destination_parent);
-    assert(sourceRow >= 0 && sourceRow < source_parent->children.size());
+    Q_ASSERT_X(source_parent, "TreeModel::moveRows", "Source parent is null");
+    Q_ASSERT_X(destination_parent, "TreeModel::moveRows", "Destination parent is null");
+    Q_ASSERT_X(count == 1, "TreeModel::moveRows", "Only single-row move is supported");
+    Q_ASSERT_X(sourceRow >= 0 && sourceRow < source_parent->children.size(), "TreeModel::moveRows", "Source row is out of bounds");
+    Q_ASSERT_X(destinationChild >= 0 && destinationChild <= destination_parent->children.size(), "TreeModel::moveRows", "Destination child is out of bounds");
 
-    beginMoveRows(sourceParent, sourceRow, sourceRow, destinationParent, destinationChild);
+    QSet<QUuid> affected_ids_source {};
+    QSet<QUuid> affected_ids_destination {};
+
+    if (!beginMoveRows(sourceParent, sourceRow, sourceRow, destinationParent, destinationChild)) {
+        qWarning() << "moveRows: beginMoveRows failed - invalid move operation";
+        return false;
+    }
+
     auto* node { DerivedPtr<NodeO>(source_parent->children.takeAt(sourceRow)) };
-    assert(node);
+    Q_ASSERT(node);
 
     bool update_ancestor { node->kind == NodeKind::kBranch || node->status == NodeStatus::kFinished };
 
     if (update_ancestor) {
-        UpdateAncestorTotalOrder(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);
+        affected_ids_source
+            = UpdateAncestorTotalOrder(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);
     }
 
     destination_parent->children.insert(destinationChild, node);
     node->parent = destination_parent;
 
     if (update_ancestor) {
-        UpdateAncestorTotalOrder(node, node->initial_total, node->final_total, node->count_total, node->measure_total, node->discount_total);
+        affected_ids_destination
+            = UpdateAncestorTotalOrder(node, node->initial_total, node->final_total, node->count_total, node->measure_total, node->discount_total);
     }
 
     endMoveRows();
 
+    RefreshAffectedTotal(affected_ids_destination.unite(affected_ids_source));
     emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
 
     return true;
