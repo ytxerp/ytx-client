@@ -34,18 +34,7 @@ template <typename T>
 concept InheritQWidget = std::is_base_of_v<QWidget, T>;
 
 template <typename T>
-concept MemberFunction = std::is_member_function_pointer_v<T>;
-
-template <typename T>
-concept MapType = requires(T a) {
-    typename T::const_iterator;
-    typename T::key_type;
-    typename T::mapped_type;
-    { a.constBegin() } -> std::same_as<typename T::const_iterator>;
-    { a.constEnd() } -> std::same_as<typename T::const_iterator>;
-    requires std::is_same_v<typename T::mapped_type, QString>;
-    requires std::is_same_v<typename T::key_type, int> || std::is_same_v<typename T::key_type, bool>;
-};
+concept MapType = std::is_same_v<typename T::mapped_type, QString> && (std::is_same_v<typename T::key_type, int> || std::is_same_v<typename T::key_type, bool>);
 
 namespace Utils {
 
@@ -116,33 +105,26 @@ template <InheritQAbstractItemView T> bool HasSelection(T* view) { return view &
 inline void WriteConfig(const QSharedPointer<QSettings>& settings, const QVariant& value, CString& section, CString& property)
 {
     Q_ASSERT(settings);
-    settings->setValue(QString("%1/%2").arg(section, property), value);
+    settings->setValue(section % "/" % property, value);
 }
 
-template <InheritQWidget Widget, MemberFunction Function, typename... Args>
-void WriteConfig(Widget* widget, Function function, const QSharedPointer<QSettings>& settings, CString& section, CString& property, Args&&... args)
+template <InheritQWidget Widget, typename Function, typename... Args>
+void WriteConfig(Widget* widget, Function getter, const QSharedPointer<QSettings>& settings, CString& section, CString& property, Args&&... args)
 {
-    static_assert(std::is_same_v<decltype((std::declval<Widget>().*function)(std::forward<Args>(args)...)), QByteArray>, "Function must return QByteArray");
+    static_assert(std::is_invocable_r_v<QByteArray, Function, Widget*, Args...>, "Getter must return QByteArray");
+    Q_ASSERT(widget && settings);
 
-    Q_ASSERT(widget);
-    Q_ASSERT(settings);
-
-    auto value { std::invoke(function, widget, std::forward<Args>(args)...) };
-    settings->setValue(QString("%1/%2").arg(section, property), value);
+    settings->setValue(section % "/" % property, std::invoke(getter, widget, std::forward<Args>(args)...));
 }
 
-template <InheritQWidget Widget, MemberFunction Function, typename... Args>
-void ReadConfig(Widget* widget, Function function, const QSharedPointer<QSettings>& settings, CString& section, CString& property, Args&&... args)
+template <InheritQWidget Widget, typename Function, typename... Args>
+void ReadConfig(Widget* widget, Function setter, const QSharedPointer<QSettings>& settings, CString& section, CString& property, Args&&... args)
 {
-    static_assert(std::is_same_v<decltype((std::declval<Widget>().*function)(std::declval<QByteArray>(), std::declval<Args>()...)), bool>,
-        "Function must accept QByteArray and additional arguments, and return bool");
+    static_assert(std::is_invocable_r_v<bool, Function, Widget*, QByteArray, Args...>, "Setter must accept QByteArray and return bool");
+    Q_ASSERT(widget && settings);
 
-    Q_ASSERT(widget);
-    Q_ASSERT(settings);
-
-    auto value { settings->value(QString("%1/%2").arg(section, property)).toByteArray() };
-    if (!value.isEmpty()) {
-        std::invoke(function, widget, value, std::forward<Args>(args)...);
+    if (auto value = settings->value(section % "/" % property).toByteArray(); !value.isEmpty()) {
+        std::invoke(setter, widget, value, std::forward<Args>(args)...);
     }
 }
 
