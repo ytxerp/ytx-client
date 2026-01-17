@@ -56,27 +56,25 @@ elseif(WIN32)
 endif()
 
 find_package(OpenSSL REQUIRED)
-
 if(OpenSSL_FOUND)
     message(STATUS "✅ OpenSSL ${OPENSSL_VERSION} found")
     message(STATUS "   Include: ${OPENSSL_INCLUDE_DIR}")
     message(STATUS "   SSL Library: ${OPENSSL_SSL_LIBRARY}")
     message(STATUS "   Crypto Library: ${OPENSSL_CRYPTO_LIBRARY}")
-else()
-    message(FATAL_ERROR "❌ OpenSSL not found!")
 endif()
 
 option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
-
-if(CMAKE_BUILD_TYPE MATCHES Debug AND ENABLE_ASAN)
-    message(STATUS "Enabling AddressSanitizer for Debug build")
-    add_compile_options(
-        -O1
-        -g
-        -fsanitize=address
-        -fno-omit-frame-pointer
-    )
-    add_link_options(-fsanitize=address)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND ENABLE_ASAN)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU|AppleClang")
+        message(STATUS "✅ Enabling AddressSanitizer")
+        add_compile_options(
+            -fsanitize=address
+            -fno-omit-frame-pointer
+            -g
+            -O1
+        )
+        add_link_options(-fsanitize=address)
+    endif()
 endif()
 
 # Include directories & external libs
