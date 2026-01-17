@@ -272,7 +272,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     emit SSyncPartner(node_id_, partner_id);
 
     if (sync_state_ == SyncState::kSynced) {
-        pending_update_.insert(kPartner, partner_id.toString(QUuid::WithoutBraces));
+        pending_update_.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
     }
 
     has_pending_update_ = true;
@@ -287,7 +287,7 @@ void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
     tmp_node_.employee_id = employee_id;
 
     if (sync_state_ == SyncState::kSynced) {
-        pending_update_.insert(kEmployee, employee_id.toString(QUuid::WithoutBraces));
+        pending_update_.insert(kEmployeeId, employee_id.toString(QUuid::WithoutBraces));
     }
 
     has_pending_update_ = true;

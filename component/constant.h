@@ -269,7 +269,6 @@ inline const QString kDescription = QStringLiteral("description");
 inline const QString kDirectionRule = QStringLiteral("direction_rule");
 inline const QString kName = QStringLiteral("name");
 inline const QString kDocument = QStringLiteral("document");
-inline const QString kEmployee = QStringLiteral("employee");
 inline const QString kCount = QStringLiteral("count");
 inline const QString kCountTotal = QStringLiteral("count_total");
 inline const QString kMeasure = QStringLiteral("measure");
