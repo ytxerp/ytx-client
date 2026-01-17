@@ -119,8 +119,8 @@ private slots:
 
     void RSectionGroup(int id);
 
-    void RStatementNode(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
-    void RStatementEntry(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
+    void RStatementNode(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
+    void RStatementEntry(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
 
     void RSettlement(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RSettlementItemAcked(Section section, const QUuid& widget_id, const QJsonArray& array);

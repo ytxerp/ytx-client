@@ -14,7 +14,7 @@ void MainWindow::on_actionStatement_triggered()
     auto* model { new StatementModel(sc_->info, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementWidget(model, start_, widget_id, this) };
+    auto* widget { new StatementWidget(model, widget_id, start_, this) };
 
     const int tab_index { ui->tabWidget->addTab(widget, tr("Statement")) };
     auto* tab_bar { ui->tabWidget->tabBar() };
@@ -39,6 +39,8 @@ void MainWindow::RStatement(Section section, const QUuid& widget_id, const QJson
         return;
 
     auto* d_widget { static_cast<StatementWidget*>(widget.data()) };
+    Q_ASSERT(d_widget != nullptr);
+
     auto* model { d_widget->Model() };
     model->ResetModel(array);
 }
@@ -52,6 +54,8 @@ void MainWindow::RStatementNodeAcked(Section section, const QUuid& widget_id, co
         return;
 
     auto* d_widget { static_cast<StatementNodeWidget*>(widget.data()) };
+    Q_ASSERT(d_widget != nullptr);
+
     auto* model { d_widget->Model() };
     model->ResetModel(array);
 }
@@ -65,18 +69,20 @@ void MainWindow::RStatementEntryAcked(Section section, const QUuid& widget_id, c
         return;
 
     auto* d_widget { static_cast<StatementEntryWidget*>(widget.data()) };
+    Q_ASSERT(d_widget != nullptr);
+
     auto* model { d_widget->Model() };
 
     model->ResetModel(array);
     d_widget->ResetTotal(total);
 }
 
-void MainWindow::RStatementNode(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
 {
     auto* model { new StatementNodeModel(sc_->info, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementNodeWidget(model, start_, widget_id, partner_id, unit, start, end, this) };
+    auto* widget { new StatementNodeWidget(model, widget_id, partner_id, start, end, start_, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement"), sc_p_.tree_model->Name(partner_id)) };
 
@@ -94,16 +100,22 @@ void MainWindow::RStatementNode(const QUuid& partner_id, int unit, const QDateTi
     RegisterWidget(widget_id, widget);
 }
 
-void MainWindow::RStatementEntry(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
 {
     auto tree_model_p { sc_p_.tree_model };
     const QString partner_name { tree_model_p->Name(partner_id) };
 
-    auto* model { new StatementEntryModel(sc_->info, this) };
+    auto* entry_hub_p { static_cast<EntryHubP*>(sc_p_.entry_hub.data()) };
+    auto* tree_model_i { static_cast<TreeModelI*>(sc_i_.tree_model.data()) };
+
+    Q_ASSERT(entry_hub_p != nullptr);
+    Q_ASSERT(tree_model_i != nullptr);
+
+    auto* model { new StatementEntryModel(entry_hub_p, sc_->info, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new StatementEntryWidget(
-        model, start_, widget_id, partner_id, unit, start, end, partner_name, app_config_.company_name, sc_i_.tree_model->LeafPath(), this) };
+        model, entry_hub_p, tree_model_i, widget_id, partner_id, start, end, partner_name, app_config_.company_name, start_, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("StatementDetail"), partner_name) };
 

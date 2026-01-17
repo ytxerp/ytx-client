@@ -41,8 +41,8 @@ signals:
     void SUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
 
 public:
-    explicit TableWidgetSettlement(CSectionConfig& config, TreeModel* tree_model_p, TableModelSettlement* model, const Settlement& settlement, Section section,
-        CUuid& widget_id, CUuid& parent_widget_id, SyncState sync_state, QWidget* parent = nullptr);
+    explicit TableWidgetSettlement(TreeModel* tree_model_p, TableModelSettlement* model, CSectionConfig& config, const Settlement& settlement, CUuid& widget_id,
+        CUuid& parent_widget_id, Section section, SyncState sync_state, QWidget* parent = nullptr);
     ~TableWidgetSettlement() override;
 
     QTableView* View() const;

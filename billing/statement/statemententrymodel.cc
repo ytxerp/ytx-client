@@ -7,9 +7,11 @@
 #include "global/resourcepool.h"
 #include "utils/compareutils.h"
 
-StatementEntryModel::StatementEntryModel(CSectionInfo& info, QObject* parent)
+StatementEntryModel::StatementEntryModel(EntryHubP* entry_hub_p, CSectionInfo& info, CUuid& partner_id, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
+    , entry_hub_p_ { entry_hub_p }
+    , partner_id_ { partner_id }
 {
 }
 
@@ -51,7 +53,7 @@ QVariant StatementEntryModel::data(const QModelIndex& index, int role) const
     case StatementEntryEnum::kInternalSku:
         return entry->internal_sku;
     case StatementEntryEnum::kExternalSku:
-        return entry->external_sku;
+        return entry_hub_p_->ExternalSku(partner_id_, entry->internal_sku);
     case StatementEntryEnum::kCount:
         return entry->count;
     case StatementEntryEnum::kMeasure:
@@ -118,7 +120,7 @@ void StatementEntryModel::sort(int column, Qt::SortOrder order)
         case StatementEntryEnum::kInternalSku:
             return Utils::CompareMember(lhs, rhs, &StatementEntry::internal_sku, order);
         case StatementEntryEnum::kExternalSku:
-            return Utils::CompareMember(lhs, rhs, &StatementEntry::external_sku, order);
+            return false;
         case StatementEntryEnum::kCount:
             return Utils::CompareMember(lhs, rhs, &StatementEntry::count, order);
         case StatementEntryEnum::kMeasure:

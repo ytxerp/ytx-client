@@ -11,8 +11,8 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementEntryWidget::StatementEntryWidget(StatementEntryModel* model, Section section, CUuid& widget_id, CUuid& partner_id, int unit, CDateTime& start,
-    CDateTime& end, CString& partner_name, CString& company_name, CUuidString& inventory_leaf, QWidget* parent)
+StatementEntryWidget::StatementEntryWidget(StatementEntryModel* model, EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CUuid& widget_id, CUuid& partner_id,
+    CDateTime& start, CDateTime& end, CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementEntryWidget)
     , unit_ { unit }
@@ -21,10 +21,11 @@ StatementEntryWidget::StatementEntryWidget(StatementEntryModel* model, Section s
     , model_ { model }
     , partner_name_ { partner_name }
     , company_name_ { company_name }
-    , inventory_leaf_ { inventory_leaf }
     , section_ { section }
     , widget_id_ { widget_id }
     , partner_id_ { partner_id }
+    , entry_hub_p_ { entry_hub_p }
+    , tree_model_i_ { tree_model_i }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -151,5 +152,5 @@ void StatementEntryWidget::on_pBtnExport_clicked()
     auto& list { model_->EntryList() };
     const QString unit_string { Utils::UnitString(NodeUnit(unit_)) };
 
-    ExportExcel::Instance().StatementAsync(destination, partner_name_, inventory_leaf_, unit_string, start_, adjust_end, total_, list);
+    ExportExcel::Instance().StatementAsync(entry_hub_p_, tree_model_i_, destination, partner_name_, partner_id_, unit_string, start_, adjust_end, total_, list);
 }

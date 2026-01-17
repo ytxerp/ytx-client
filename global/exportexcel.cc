@@ -9,11 +9,11 @@
 #include "document.h"
 #include "utils/mainwindowutils.h"
 
-void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuidString& inventory_leaf, CString& unit_string, CDateTime& start, CDateTime& end,
-    CJsonObject& total, CStatementEntryList& list)
+void ExportExcel::StatementAsync(EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CString& path, CString& partner_name, CUuid& partner_id,
+    CString& unit_string, CDateTime& start, CDateTime& end, CJsonObject& total, CStatementEntryList& list)
 {
     auto future = QtConcurrent::run(
-        [=]() -> bool { return ExportExcel::Instance().Statement(path, partner_name, inventory_leaf, unit_string, start, end, total, list); });
+        [=]() -> bool { return Statement(entry_hub_p, tree_model_i, path, partner_name, partner_id, unit_string, start, end, total, list); });
 
     auto* watcher = new QFutureWatcher<bool>();
     QObject::connect(watcher, &QFutureWatcher<bool>::finished, [watcher, path]() {
@@ -31,8 +31,8 @@ void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuidStri
     watcher->setFuture(future);
 }
 
-bool ExportExcel::Statement(CString& path, CString& partner_name, CUuidString& inventory_leaf, CString& unit_string, CDateTime& start, CDateTime& end,
-    CJsonObject& total, CStatementEntryList& list)
+bool ExportExcel::Statement(EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string,
+    CDateTime& start, CDateTime& end, CJsonObject& total, CStatementEntryList& list)
 {
     // Extract totals
     const double pbalance { total.value("pbalance").toString().toDouble() };
@@ -91,8 +91,10 @@ bool ExportExcel::Statement(CString& path, CString& partner_name, CUuidString& i
     int row { start_row + 9 };
 
     for (const auto* entry : list) {
-        QVariantList line { entry->issued_time.toString(kDateFST), inventory_leaf.value(entry->internal_sku), inventory_leaf.value(entry->external_sku),
-            entry->count, entry->measure, entry->unit_price, entry->description, entry->amount };
+        const QUuid external_sku { entry_hub_p->ExternalSku(partner_id, entry->internal_sku) };
+
+        QVariantList line { entry->issued_time.toString(kDateFST), tree_model_i->Path(entry->internal_sku), tree_model_i->Name(external_sku), entry->count,
+            entry->measure, entry->unit_price, entry->description, entry->amount };
 
         sheet->WriteRow(row++, 1, line);
     }

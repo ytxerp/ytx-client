@@ -9,8 +9,8 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TableWidgetSettlement::TableWidgetSettlement(CSectionConfig& config, TreeModel* tree_model_p, TableModelSettlement* model, const Settlement& settlement,
-    Section section, CUuid& widget_id, CUuid& parent_widget_id, SyncState sync_state, QWidget* parent)
+TableWidgetSettlement::TableWidgetSettlement(TreeModel* tree_model_p, TableModelSettlement* model, CSectionConfig& config, const Settlement& settlement,
+    CUuid& widget_id, CUuid& parent_widget_id, Section section, SyncState sync_state, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::TableWidgetSettlement)
     , settlement_ { settlement }

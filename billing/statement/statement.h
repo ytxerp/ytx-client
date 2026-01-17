@@ -133,7 +133,6 @@ struct StatementEntry {
     double amount {};
     int status {};
     QString description {};
-    QUuid external_sku {};
 
     void ResetState();
     void ReadJson(const QJsonObject& object);
@@ -149,7 +148,6 @@ inline void StatementEntry::ResetState()
     status = 0;
     description.clear();
     internal_sku = QUuid();
-    external_sku = QUuid();
 }
 
 inline void StatementEntry::ReadJson(const QJsonObject& object)
@@ -174,9 +172,6 @@ inline void StatementEntry::ReadJson(const QJsonObject& object)
 
     if (object.contains(kDescription))
         description = object[kDescription].toString();
-
-    if (object.contains(kExternalSku))
-        external_sku = QUuid(object[kExternalSku].toString());
 }
 
 using StatementEntryList = QList<StatementEntry*>;

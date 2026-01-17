@@ -24,6 +24,8 @@
 
 #include "billing/statement/statement.h"
 #include "component/using.h"
+#include "entryhub/entryhubp.h"
+#include "tree/model/treemodeli.h"
 
 class ExportExcel {
 public:
@@ -33,8 +35,8 @@ public:
         return instance;
     }
 
-    void StatementAsync(CString& path, CString& partner_name, CUuidString& inventory_leaf, CString& unit_string, CDateTime& start, CDateTime& end,
-        CJsonObject& total, CStatementEntryList& list);
+    void StatementAsync(EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string,
+        CDateTime& start, CDateTime& end, CJsonObject& total, CStatementEntryList& list);
 
     ExportExcel(const ExportExcel&) = delete;
     ExportExcel& operator=(const ExportExcel&) = delete;
@@ -45,8 +47,8 @@ private:
     ExportExcel() = default;
     ~ExportExcel() = default;
 
-    static bool Statement(CString& path, CString& partner_name, CUuidString& inventory_leaf, CString& unit_string, CDateTime& start, CDateTime& end,
-        CJsonObject& total, CStatementEntryList& list);
+    static bool Statement(EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string,
+        CDateTime& start, CDateTime& end, CJsonObject& total, CStatementEntryList& list);
 };
 
 #endif // EXPORTEXCEL_H

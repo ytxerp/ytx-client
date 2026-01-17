@@ -8,7 +8,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementWidget::StatementWidget(StatementModel* model, Section section, CUuid& widget_id, QWidget* parent)
+StatementWidget::StatementWidget(StatementModel* model, CUuid& widget_id, Section section, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementWidget)
     , unit_ { std::to_underlying(NodeUnit::OMonthly) }
@@ -132,6 +132,6 @@ void StatementWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
     if (index.column() == std::to_underlying(StatementEnum::kCBalance)) {
         const auto partner { index.siblingAtColumn(std::to_underlying(StatementEnum::kPartner)).data().toUuid() };
-        emit SStatementNode(partner, unit_, start_, end_);
+        emit SStatementNode(partner, start_, end_, unit_);
     }
 }

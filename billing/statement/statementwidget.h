@@ -35,10 +35,10 @@ class StatementWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SStatementNode(const QUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
+    void SStatementNode(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
 
 public:
-    StatementWidget(StatementModel* model, Section section, CUuid& widget_id, QWidget* parent = nullptr);
+    StatementWidget(StatementModel* model, CUuid& widget_id, Section section, QWidget* parent = nullptr);
     ~StatementWidget() override;
 
     QTableView* View() const;

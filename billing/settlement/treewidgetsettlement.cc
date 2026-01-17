@@ -9,7 +9,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TreeWidgetSettlement::TreeWidgetSettlement(TreeModelSettlement* model, Section section, CUuid& widget_id, QWidget* parent)
+TreeWidgetSettlement::TreeWidgetSettlement(TreeModelSettlement* model, CUuid& widget_id, Section section, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::TreeWidgetSettlement)
     , model_ { model }

@@ -34,7 +34,7 @@ class TreeWidgetSettlement final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit TreeWidgetSettlement(TreeModelSettlement* model, Section section, CUuid& widget_id, QWidget* parent = nullptr);
+    explicit TreeWidgetSettlement(TreeModelSettlement* model, CUuid& widget_id, Section section, QWidget* parent = nullptr);
     ~TreeWidgetSettlement() override;
 
     QTableView* View() const;

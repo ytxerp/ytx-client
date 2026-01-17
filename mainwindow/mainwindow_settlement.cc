@@ -19,7 +19,7 @@ void MainWindow::on_actionSettlement_triggered()
     auto* model { new TreeModelSettlement(sc_->info, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new TreeWidgetSettlement(model, start_, widget_id, this) };
+    auto* widget { new TreeWidgetSettlement(model, widget_id, start_, this) };
 
     {
         const int tab_index { ui->tabWidget->addTab(widget, tr("Settlement")) };
@@ -46,7 +46,7 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
     auto* model { new TableModelSettlement(sc_->info, SettlementStatus(settlement.status), this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new TableWidgetSettlement(sc_->section_config, sc_p_.tree_model, model, settlement, start_, widget_id, parent_widget_id, sync_state, this) };
+    auto* widget { new TableWidgetSettlement(sc_p_.tree_model, model, sc_->section_config, settlement, widget_id, parent_widget_id, start_, sync_state, this) };
     connect(model, &TableModelSettlement::SSyncAmount, widget, &TableWidgetSettlement::RSyncAmount);
     connect(widget, &TableWidgetSettlement::SUpdatePartner, this, &MainWindow::RUpdatePartner);
 
@@ -96,6 +96,8 @@ void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
             return;
 
         auto* settlement { static_cast<Settlement*>(index.internalPointer()) };
+        Q_ASSERT(settlement != nullptr);
+
         const QUuid settlement_widget_id { settlement_widget->WidgetId() };
 
         SettlementItemTab(settlement_widget_id, *settlement, SyncState::kSynced);
@@ -111,6 +113,8 @@ void MainWindow::RSettlementItemAcked(Section section, const QUuid& widget_id, c
         return;
 
     auto* d_widget { static_cast<TableWidgetSettlement*>(widget.data()) };
+    Q_ASSERT(d_widget != nullptr);
+
     auto* model { d_widget->Model() };
     model->ResetModel(array);
 }
@@ -130,6 +134,8 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
         auto widget { sc->widget_hash.value(widget_id, nullptr) };
         if (widget) {
             auto* d_widget { static_cast<TableWidgetSettlement*>(widget.data()) };
+            Q_ASSERT(d_widget != nullptr);
+
             d_widget->InsertSucceeded(version);
         }
     }
@@ -138,6 +144,8 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
         auto parent_widget { sc->widget_hash.value(parent_widget_id, nullptr) };
         if (parent_widget) {
             auto* d_parent_widget { static_cast<TreeWidgetSettlement*>(parent_widget.data()) };
+            Q_ASSERT(d_parent_widget != nullptr);
+
             auto* model { d_parent_widget->Model() };
 
             {
@@ -176,6 +184,8 @@ void MainWindow::RSettlementRecalled(const QJsonObject& obj)
         auto widget { sc->widget_hash.value(widget_id, nullptr) };
         if (widget) {
             auto* d_widget { static_cast<TableWidgetSettlement*>(widget.data()) };
+            Q_ASSERT(d_widget != nullptr);
+
             d_widget->RecallSucceeded(version);
         }
     }
@@ -184,6 +194,8 @@ void MainWindow::RSettlementRecalled(const QJsonObject& obj)
         auto parent_widget { sc->widget_hash.value(parent_widget_id, nullptr) };
         if (parent_widget) {
             auto* d_parent_widget { static_cast<TreeWidgetSettlement*>(parent_widget.data()) };
+            Q_ASSERT(d_parent_widget != nullptr);
+
             auto* model { d_parent_widget->Model() };
             model->RecallSucceeded(settlement_id, settlement, meta);
         }
@@ -206,6 +218,8 @@ void MainWindow::RSettlementUpdated(const QJsonObject& obj)
         auto widget { sc->widget_hash.value(widget_id, nullptr) };
         if (widget) {
             auto* d_widget { static_cast<TableWidgetSettlement*>(widget.data()) };
+            Q_ASSERT(d_widget != nullptr);
+
             d_widget->UpdateSucceeded(version);
         }
     }
@@ -214,6 +228,8 @@ void MainWindow::RSettlementUpdated(const QJsonObject& obj)
         auto parent_widget { sc->widget_hash.value(parent_widget_id, nullptr) };
         if (parent_widget) {
             auto* d_parent_widget { static_cast<TreeWidgetSettlement*>(parent_widget.data()) };
+            Q_ASSERT(d_parent_widget != nullptr);
+
             auto* model { d_parent_widget->Model() };
             model->UpdateSucceeded(settlement_id, settlement, meta);
         }
@@ -229,6 +245,8 @@ void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJso
         return;
 
     auto* d_widget { static_cast<TreeWidgetSettlement*>(widget.data()) };
+    Q_ASSERT(d_widget != nullptr);
+
     auto* model { d_widget->Model() };
     model->ResetModel(array);
 }
@@ -246,6 +264,8 @@ void MainWindow::RemoveSettlement(TreeWidgetSettlement* widget)
         return;
 
     auto* settlement { static_cast<Settlement*>(current_index.internalPointer()) };
+    Q_ASSERT(settlement != nullptr);
+
     if (settlement->status == SettlementStatus::kSettled) {
         QMessageBox::information(this, tr("Settlement Released"),
             tr("This settlement has already been released and cannot be deleted.\n"

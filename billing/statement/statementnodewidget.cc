@@ -11,7 +11,7 @@
 #include "websocket/websocket.h"
 
 StatementNodeWidget::StatementNodeWidget(
-    StatementNodeModel* model, Section section, CUuid& widget_id, CUuid& partner_id, int unit, CDateTime& start, CDateTime& end, QWidget* parent)
+    StatementNodeModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementNodeWidget)
     , unit_ { unit }
@@ -131,6 +131,6 @@ void StatementNodeWidget::InitTimer()
 void StatementNodeWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
     if (index.column() == std::to_underlying(StatementNodeEnum::kSettlement)) {
-        emit SStatementEntry(partner_id_, unit_, start_, end_);
+        emit SStatementEntry(partner_id_, start_, end_, unit_);
     }
 }

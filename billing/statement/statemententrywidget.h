@@ -26,6 +26,7 @@
 
 #include "component/using.h"
 #include "statemententrymodel.h"
+#include "tree/model/treemodeli.h"
 
 namespace Ui {
 class StatementEntryWidget;
@@ -35,8 +36,8 @@ class StatementEntryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    StatementEntryWidget(StatementEntryModel* model, Section section, CUuid& widget_id, CUuid& partner_id, int unit, CDateTime& start, CDateTime& end,
-        CString& partner_name, CString& company_name, CUuidString& inventory_leaf, QWidget* parent = nullptr);
+    StatementEntryWidget(StatementEntryModel* model, EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CUuid& widget_id, CUuid& partner_id, CDateTime& start,
+        CDateTime& end, CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent = nullptr);
     ~StatementEntryWidget() override;
 
     QTableView* View() const;
@@ -69,13 +70,14 @@ private:
     QJsonObject total_ {};
     const QString partner_name_ {};
     const QString company_name_ {};
-    const QHash<QUuid, QString>& inventory_leaf_;
 
     QButtonGroup* unit_group_ {};
     QTimer* cooldown_timer_ { nullptr };
     const Section section_ {};
     const QUuid widget_id_ {};
     CUuid partner_id_ {};
+    EntryHubP* entry_hub_p_ {};
+    TreeModelI* tree_model_i_ {};
 };
 
 #endif // STATEMENTENTRYWIDGET_H
