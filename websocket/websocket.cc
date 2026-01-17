@@ -5,6 +5,7 @@
 
 #include "component/constant.h"
 #include "component/using.h"
+#include "entryhub/entryhubp.h"
 #include "tree/model/treemodelo.h"
 #include "tree/model/treemodelp.h"
 #include "tree/model/treemodelt.h"
@@ -409,7 +410,7 @@ void WebSocket::ApplyTree(const QJsonObject& obj)
 
 void WebSocket::ApplyPartnerEntry(const QJsonArray& arr)
 {
-    auto entry_hub { entry_hub_hash_.value(Section::kPartner) };
+    auto* entry_hub { static_cast<EntryHubP*>(entry_hub_hash_.value(Section::kPartner).data()) };
     entry_hub->ApplyPartnerEntry(arr);
 }
 

@@ -71,7 +71,6 @@ public:
     void UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, bool is_parallel);
 
     void AckTable(const QUuid& node_id, const QJsonArray& array);
-    void ApplyPartnerEntry(const QJsonArray& array);
     void SearchEntry(const QJsonArray& array);
 
     void ActionEntry(const QUuid& node_id, EntryAction action);

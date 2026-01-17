@@ -174,8 +174,6 @@ void EntryO::ReadJson(const QJsonObject& object)
         updated_by = QUuid(object.value(kUpdatedBy).toString());
     if (object.contains(kUnitPrice))
         unit_price = object[kUnitPrice].toString().toDouble();
-    if (object.contains(kExternalSku))
-        external_sku = QUuid(object[kExternalSku].toString());
     if (object.contains(kCount))
         count = object[kCount].toString().toDouble();
     if (object.contains(kMeasure))
@@ -208,7 +206,6 @@ QJsonObject EntryO::WriteJson() const
     obj.insert(kInitial, QString::number(initial, 'f', kMaxNumericScale_4));
     obj.insert(kFinal, QString::number(final, 'f', kMaxNumericScale_4));
     obj.insert(kDiscount, QString::number(discount, 'f', kMaxNumericScale_4));
-    obj.insert(kExternalSku, external_sku.toString(QUuid::WithoutBraces));
 
     return obj;
 }

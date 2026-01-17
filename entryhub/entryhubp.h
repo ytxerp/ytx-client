@@ -31,6 +31,7 @@ public:
 
 public:
     std::optional<std::pair<QUuid, double>> ResolveFromInternal(const QUuid& partner_id, const QUuid& internal_sku) const;
+    QUuid ExternalSku(const QUuid& partner_id, const QUuid& internal_sku) const;
 
     void SearchEntry(QList<Entry*>& entry_list, CString& name) const;
     void PushEntry(const QUuid& node_id);
@@ -40,10 +41,19 @@ public:
     void UpdateEntry(const QUuid& id, const QJsonObject& update) override;
 
     void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
+    void ApplyPartnerEntry(const QJsonArray& array);
     // std::optional<std::pair<QUuid, double>> ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const;
 
 protected:
     void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;
+
+private:
+    struct EntryValue {
+        double unit_price { 0.0 };
+        QUuid external_sku {};
+    };
+
+    QHash<std::pair<QUuid, QUuid>, EntryValue> entry_map_ {};
 };
 
 #endif // ENTRYHUBP_H

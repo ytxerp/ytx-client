@@ -130,7 +130,7 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
     case EntryEnumO::kUnitDiscount:
         return d_entry->unit_discount;
     case EntryEnumO::kExternalSku:
-        return d_entry->external_sku;
+        return entry_hub_p_->ExternalSku(d_node_->partner_id, d_entry->rhs_node);
     default:
         return {};
     }

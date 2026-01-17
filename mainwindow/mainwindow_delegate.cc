@@ -341,17 +341,17 @@ void MainWindow::DelegateSaleReference(QTableView* table_view, CSectionConfig& c
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kIssuedTime), issued_time);
 
-    auto partner_tree_model { sc_p_.tree_model };
-    auto* external_sku { new NodePathR(partner_tree_model, table_view) };
+    auto tree_model_i { sc_i_.tree_model };
+    auto* external_sku { new NodeNameR(tree_model_i, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kExternalSku), external_sku);
 
     if (start_ == Section::kInventory) {
-        auto* name { new NodeNameR(partner_tree_model, table_view) };
+        auto* name { new NodeNameR(sc_p_.tree_model, table_view) };
         table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kNodeId), name);
     }
 
     if (start_ == Section::kPartner) {
-        auto* internal_sku { new NodeNameR(sc_i_.tree_model, table_view) };
+        auto* internal_sku { new NodePathR(sc_i_.tree_model, table_view) };
         table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kNodeId), internal_sku);
     }
 }
@@ -410,10 +410,10 @@ void MainWindow::DelegateStatementEntry(QTableView* table_view, CSectionConfig& 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kIssuedTime), issued_time);
 
-    auto* external_sku { new NodePathR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kExternalSku), external_sku);
-
     auto tree_model_i { sc_i_.tree_model };
+
+    auto* external_sku { new NodeNameR(tree_model_i, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kExternalSku), external_sku);
 
     auto* int_filter_model { tree_model_i->IncludeUnitModel(NodeUnit::IInternal, table_view) };
     auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
