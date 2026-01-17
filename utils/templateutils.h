@@ -38,14 +38,6 @@ concept MapType = std::is_same_v<typename T::mapped_type, QString> && (std::is_s
 
 namespace Utils {
 
-template <typename T> void SafeDelete(QPointer<T>& ptr)
-{
-    if (ptr) {
-        delete ptr;
-        ptr = nullptr;
-    }
-}
-
 template <MapType T> ItemModel* CreateModelFromMap(const T& map, QObject* parent)
 {
     auto* model { new ItemModel(parent) };
@@ -97,8 +89,6 @@ template <InheritQWidget T> void CloseWidgets(QHash<QUuid, QPointer<T>>& hash)
 
     hash.clear();
 }
-
-template <InheritQAbstractItemView T> bool HasSelection(QPointer<T> view) { return view && view->selectionModel() && view->selectionModel()->hasSelection(); }
 
 template <InheritQAbstractItemView T> bool HasSelection(T* view) { return view && view->selectionModel() && view->selectionModel()->hasSelection(); }
 

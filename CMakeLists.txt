@@ -494,6 +494,11 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
         PRIVATE -Wall
                 -Wextra
                 -Wconversion
+                -Wunused
+                -Wunused-function
+                -Wunused-parameter
+                -Wunused-variable
+                -Wunreachable-code
                 -Wno-shorten-64-to-32
                 -Wswitch
                 -Wswitch-enum
