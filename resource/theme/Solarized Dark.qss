@@ -543,6 +543,7 @@ DoubleSpinBox#dSpinGrossAmount {
 /* ==================== Combo Box ==================== */
 QComboBox::drop-down {
     border: none;
+    border-right: 1px solid #657B83;
     width: 24px;
 }
 
