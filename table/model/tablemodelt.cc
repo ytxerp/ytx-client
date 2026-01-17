@@ -12,7 +12,7 @@ TableModelT::TableModelT(CTableModelArg& arg, TreeModelT* tree_model_t, QObject*
 
 bool TableModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
-    assert(row >= 0 && row <= rowCount(parent));
+    Q_ASSERT(row >= 0 && row <= rowCount(parent));
     if (IsFinished(lhs_id_, QUuid()))
         return false;
 

@@ -16,21 +16,21 @@ TableSStation::TableSStation(QObject* parent)
 
 void TableSStation::RegisterModel(const QUuid& node_id, const TableModel* model)
 {
-    assert(!node_id.isNull());
-    assert(model);
+    Q_ASSERT(!node_id.isNull());
+    Q_ASSERT(model);
 
     model_hash_.insert(node_id, model);
 }
 
 void TableSStation::DeregisterModel(const QUuid& node_id)
 {
-    assert(!node_id.isNull());
+    Q_ASSERT(!node_id.isNull());
     model_hash_.remove(node_id);
 }
 
 void TableSStation::RAppendOneEntry(const QUuid& node_id, Entry* entry)
 {
-    assert(!node_id.isNull());
+    Q_ASSERT(!node_id.isNull());
 
     const auto* model { FindModel(node_id) };
 
@@ -43,8 +43,8 @@ void TableSStation::RAppendOneEntry(const QUuid& node_id, Entry* entry)
 
 void TableSStation::RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id)
 {
-    assert(!node_id.isNull());
-    assert(!entry_id.isNull());
+    Q_ASSERT(!node_id.isNull());
+    Q_ASSERT(!entry_id.isNull());
 
     const auto* model { FindModel(node_id) };
     if (!model)
@@ -56,8 +56,8 @@ void TableSStation::RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id)
 
 void TableSStation::RUpdateBalance(const QUuid& node_id, const QUuid& entry_id)
 {
-    assert(!node_id.isNull());
-    assert(!entry_id.isNull());
+    Q_ASSERT(!node_id.isNull());
+    Q_ASSERT(!entry_id.isNull());
 
     const auto* model { FindModel(node_id) };
     if (!model)
@@ -83,7 +83,7 @@ void TableSStation::RAppendMultiEntry(const QUuid& node_id, const EntryList& ent
 void TableSStation::RRefreshStatus(const QSet<QUuid>& affected_node)
 {
     for (const auto& node_id : affected_node) {
-        assert(!node_id.isNull());
+        Q_ASSERT(!node_id.isNull());
 
         const auto* model { FindModel(node_id) };
         if (!model)
@@ -96,8 +96,8 @@ void TableSStation::RRefreshStatus(const QSet<QUuid>& affected_node)
 
 void TableSStation::RRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end)
 {
-    assert(!node_id.isNull());
-    assert(!entry_id.isNull());
+    Q_ASSERT(!node_id.isNull());
+    Q_ASSERT(!entry_id.isNull());
 
     const auto* model { FindModel(node_id) };
     if (!model)
@@ -109,7 +109,7 @@ void TableSStation::RRefreshField(const QUuid& node_id, const QUuid& entry_id, i
 
 void TableSStation::RDirectionRule(const QUuid& node_id, bool rule)
 {
-    assert(!node_id.isNull());
+    Q_ASSERT(!node_id.isNull());
 
     const auto* model { FindModel(node_id) };
     if (!model)
@@ -123,7 +123,7 @@ void TableSStation::RRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash
 {
     for (auto it = entry_hash.constBegin(); it != entry_hash.constEnd(); ++it) {
         const QUuid& node_id = it.key();
-        assert(!node_id.isNull());
+        Q_ASSERT(!node_id.isNull());
 
         const QSet<QUuid>& entry_id_set = it.value();
 
@@ -138,7 +138,7 @@ void TableSStation::RRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash
 
 void TableSStation::RRemoveMultiEntry(const QUuid& node_id, const QSet<QUuid>& entry_id_set)
 {
-    assert(!node_id.isNull());
+    Q_ASSERT(!node_id.isNull());
 
     const auto* old_model { FindModel(node_id) };
     if (old_model) {

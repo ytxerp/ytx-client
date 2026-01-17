@@ -58,7 +58,7 @@ void SetupHeaderStatus(QHeaderView* header, const QSharedPointer<QSettings>& set
 #if 0
     void RestoreTab(NodeModel* tree_model, EntryHub* dbhub, LeafWgtHash& entry_wgt_hash, CUuidSet& set, CSectionInfo& info, CSectionConfig& config)
     {
-        assert(tree_model);
+        Q_ASSERT(tree_model);
 
         if (set.isEmpty() || info.section == Section::kSale || info.section == Section::kPurchase)
             return;
@@ -86,7 +86,7 @@ inline QVariantList SaveTab(CLeafWgtHash& entry_wgt_hash)
 
 inline QSet<QUuid> ReadTab(QSharedPointer<QSettings> settings, CString& section, CString& property)
 {
-    assert(settings);
+    Q_ASSERT(settings);
 
     auto variant { settings->value(QString("%1/%2").arg(section, property)) };
 

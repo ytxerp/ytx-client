@@ -61,7 +61,7 @@ const QSet<QUuid>* TreeModelI::UnitSet(NodeUnit unit) const
 
 void TreeModelI::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < node_header_.size());
+    Q_ASSERT(column >= 0 && column < node_header_.size());
 
     const NodeEnumI e_column { column };
 

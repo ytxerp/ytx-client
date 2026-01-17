@@ -14,7 +14,7 @@ void MainWindow::on_actionSettlement_triggered()
 {
     qInfo() << "[UI]" << "on_actionSettlement_triggered";
 
-    assert(IsOrderSection(start_));
+    Q_ASSERT(IsOrderSection(start_));
 
     auto* model { new TreeModelSettlement(sc_->info, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
@@ -41,7 +41,7 @@ void MainWindow::on_actionSettlement_triggered()
 
 void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settlement& settlement, SyncState sync_state)
 {
-    assert(IsOrderSection(start_));
+    Q_ASSERT(IsOrderSection(start_));
 
     auto* model { new TableModelSettlement(sc_->info, SettlementStatus(settlement.status), this) };
     const QUuid widget_id { QUuid::createUuidV7() };
@@ -236,7 +236,7 @@ void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJso
 void MainWindow::RemoveSettlement(TreeWidgetSettlement* widget)
 {
     auto* view { widget->View() };
-    assert(view);
+    Q_ASSERT(view);
 
     if (!Utils::HasSelection(view))
         return;
@@ -254,7 +254,7 @@ void MainWindow::RemoveSettlement(TreeWidgetSettlement* widget)
     }
 
     auto* model { widget->Model() };
-    assert(model);
+    Q_ASSERT(model);
 
     const int current_row { current_index.row() };
     if (!model->removeRows(current_row, 1)) {

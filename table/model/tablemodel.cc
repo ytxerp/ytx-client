@@ -345,7 +345,7 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
 
 void TableModel::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < info_.entry_header.size());
+    Q_ASSERT(column >= 0 && column < info_.entry_header.size());
 
     const EntryEnum e_column { column };
     if (e_column == EntryEnum::kBalance)
@@ -420,7 +420,7 @@ Qt::ItemFlags TableModel::flags(const QModelIndex& index) const
 
 bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
-    assert(row >= 0 && row <= rowCount(parent) - 1);
+    Q_ASSERT(row >= 0 && row <= rowCount(parent) - 1);
 
     auto* shadow = shadow_list_.at(row);
     const auto rhs_node_id { *shadow->rhs_node };

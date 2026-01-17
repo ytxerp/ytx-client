@@ -11,7 +11,7 @@ TableModelI::TableModelI(CTableModelArg& arg, QObject* parent)
 
 bool TableModelI::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
-    assert(row >= 0 && row <= rowCount(parent));
+    Q_ASSERT(row >= 0 && row <= rowCount(parent));
 
     InsertRowsImpl(row, parent);
 

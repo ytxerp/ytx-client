@@ -9,7 +9,7 @@ void MainWindow::on_actionStatement_triggered()
 {
     qInfo() << "[UI]" << "on_actionStatement_triggered";
 
-    assert(IsOrderSection(start_));
+    Q_ASSERT(IsOrderSection(start_));
 
     auto* model { new StatementModel(sc_->info, this) };
     const QUuid widget_id { QUuid::createUuidV7() };

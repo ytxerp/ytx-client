@@ -133,7 +133,7 @@ constexpr std::pair<int, int> EntryNumericColumnRange(Section section)
 template <typename T, typename F = std::nullptr_t>
 bool UpdateShadowIssuedTime(QJsonObject& update, T* object, CString& field, const QDateTime& value, QDateTime* T::* member, F&& restart_timer = nullptr)
 {
-    assert(object);
+    Q_ASSERT(object);
 
     QDateTime* current_value { object->*member };
 
@@ -158,7 +158,7 @@ bool UpdateShadowIssuedTime(QJsonObject& update, T* object, CString& field, cons
 template <typename T, typename F = std::nullptr_t>
 bool UpdateShadowDocument(QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList* T::* member, F&& restart_timer = nullptr)
 {
-    assert(object);
+    Q_ASSERT(object);
 
     QStringList* member_ptr { object->*member };
 
@@ -189,7 +189,7 @@ bool UpdateShadowDocument(QJsonObject& update, T* object, CString& field, const 
 template <typename Field, typename T, typename F = std::nullptr_t>
 bool UpdateShadowField(QJsonObject& update, T* object, CString& field, const Field& value, Field* T::* member, F&& restart_timer = nullptr)
 {
-    assert(object);
+    Q_ASSERT(object);
 
     Field* member_ptr { object->*member };
 

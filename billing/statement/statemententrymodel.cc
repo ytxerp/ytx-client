@@ -107,7 +107,7 @@ QVariant StatementEntryModel::headerData(int section, Qt::Orientation orientatio
 
 void StatementEntryModel::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < info_.statement_entry_header.size());
+    Q_ASSERT(column >= 0 && column < info_.statement_entry_header.size());
 
     const StatementEntryEnum e_column { column };
 

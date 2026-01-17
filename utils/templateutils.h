@@ -115,7 +115,7 @@ template <InheritQAbstractItemView T> bool HasSelection(T* view) { return view &
 
 inline void WriteConfig(const QSharedPointer<QSettings>& settings, const QVariant& value, CString& section, CString& property)
 {
-    assert(settings);
+    Q_ASSERT(settings);
     settings->setValue(QString("%1/%2").arg(section, property), value);
 }
 
@@ -124,8 +124,8 @@ void WriteConfig(Widget* widget, Function function, const QSharedPointer<QSettin
 {
     static_assert(std::is_same_v<decltype((std::declval<Widget>().*function)(std::forward<Args>(args)...)), QByteArray>, "Function must return QByteArray");
 
-    assert(widget);
-    assert(settings);
+    Q_ASSERT(widget);
+    Q_ASSERT(settings);
 
     auto value { std::invoke(function, widget, std::forward<Args>(args)...) };
     settings->setValue(QString("%1/%2").arg(section, property), value);
@@ -137,8 +137,8 @@ void ReadConfig(Widget* widget, Function function, const QSharedPointer<QSetting
     static_assert(std::is_same_v<decltype((std::declval<Widget>().*function)(std::declval<QByteArray>(), std::declval<Args>()...)), bool>,
         "Function must accept QByteArray and additional arguments, and return bool");
 
-    assert(widget);
-    assert(settings);
+    Q_ASSERT(widget);
+    Q_ASSERT(settings);
 
     auto value { settings->value(QString("%1/%2").arg(section, property)).toByteArray() };
     if (!value.isEmpty()) {

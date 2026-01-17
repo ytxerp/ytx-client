@@ -107,7 +107,7 @@ QVariant StatementNodeModel::headerData(int section, Qt::Orientation orientation
 
 void StatementNodeModel::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < info_.statement_node_header.size());
+    Q_ASSERT(column >= 0 && column < info_.statement_node_header.size());
 
     const StatementNodeEnum e_column { column };
 

@@ -12,7 +12,7 @@
 
 void MainWindow::EditNameO()
 {
-    assert(sc_->tree_widget);
+    Q_ASSERT(sc_->tree_widget);
 
     const auto index { sc_->tree_view->currentIndex() };
     if (!index.isValid())
@@ -200,7 +200,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
         return;
 
     const auto partner_id { node->partner_id };
-    assert(!partner_id.isNull());
+    Q_ASSERT(!partner_id.isNull());
 
     // Prepare dependencies
     auto tree_model_p { sc_p_.tree_model };

@@ -55,7 +55,7 @@ void EntryHub::RemoveLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
 
 void EntryHub::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
 {
-    assert(section_ != Section::kPurchase && section_ != Section::kSale && section_ != Section::kPartner
+    Q_ASSERT(section_ != Section::kPurchase && section_ != Section::kSale && section_ != Section::kPartner
         && "Invalid section: should not be kPurchase, kSales or kPartner");
 
     QSet<QUuid> entry_id_set {};

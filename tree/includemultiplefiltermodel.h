@@ -36,7 +36,7 @@ public:
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex& /*source_parent*/) const override
     {
-        assert(dynamic_cast<ItemModel*>(sourceModel()));
+        Q_ASSERT(dynamic_cast<ItemModel*>(sourceModel()));
         auto id { static_cast<ItemModel*>(sourceModel())->ItemData(source_row, Qt::UserRole).toUuid() };
 
         return set_->contains(id);

@@ -34,7 +34,7 @@ void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
     const auto order_id { index.siblingAtColumn(std::to_underlying(SaleReferenceEnum::kOrderId)).data().toUuid() };
     const int column { std::to_underlying(SaleReferenceEnum::kInitial) };
 
-    assert(!order_id.isNull());
+    Q_ASSERT(!order_id.isNull());
 
     if (index.column() != column)
         return;
@@ -55,8 +55,8 @@ void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
 
 void MainWindow::CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit)
 {
-    assert(tree_model);
-    assert(tree_model->Contains(node_id));
+    Q_ASSERT(tree_model);
+    Q_ASSERT(tree_model->Contains(node_id));
 
     const QString title { QString("%1-%2").arg(tr("Record"), tree_model->Name(node_id)) };
 

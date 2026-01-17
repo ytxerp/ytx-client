@@ -34,7 +34,7 @@ void MainWindow::on_actionAppendEntry_triggered()
         auto* widget { dynamic_cast<TableWidget*>(ui->tabWidget->currentWidget()) };
         if (widget) {
             auto* model { widget->Model() };
-            assert(model);
+            Q_ASSERT(model);
 
             const int new_row { model->rowCount() };
             if (!model->insertRows(new_row, 1))
@@ -53,7 +53,7 @@ void MainWindow::on_actionAppendEntry_triggered()
 void MainWindow::RemoveEntry(TableWidget* widget)
 {
     auto* view { widget->View() };
-    assert(view);
+    Q_ASSERT(view);
 
     if (!Utils::HasSelection(view))
         return;
@@ -63,7 +63,7 @@ void MainWindow::RemoveEntry(TableWidget* widget)
         return;
 
     auto* model { widget->Model() };
-    assert(model);
+    Q_ASSERT(model);
 
     const int current_row { current_index.row() };
     if (!model->removeRows(current_row, 1)) {
@@ -154,7 +154,7 @@ void MainWindow::RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id)
         return;
 
     auto widget { sc_->table_wgt_hash.value(node_id, nullptr) };
-    assert(widget);
+    Q_ASSERT(widget);
 
     auto* view { widget->View() };
     auto index { widget->Model()->GetIndex(entry_id) };
@@ -174,8 +174,8 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     const auto& info = sc->info;
     const auto& section_config = sc->section_config;
 
-    assert(tree_model);
-    assert(tree_model->Contains(node_id));
+    Q_ASSERT(tree_model);
+    Q_ASSERT(tree_model->Contains(node_id));
 
     const Section section { info.section };
 

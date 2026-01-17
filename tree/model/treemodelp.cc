@@ -12,7 +12,7 @@ TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, QObject* parent)
 
 void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)
 {
-    assert(!node_id.isNull());
+    Q_ASSERT(!node_id.isNull());
 
     if (FloatEqual(initial_delta, 0.0))
         return;
@@ -111,7 +111,7 @@ QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, do
 
 void TreeModelP::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < node_header_.size());
+    Q_ASSERT(column >= 0 && column < node_header_.size());
 
     const NodeEnumP e_column { column };
 

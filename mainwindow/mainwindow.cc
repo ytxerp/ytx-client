@@ -134,7 +134,7 @@ MainWindow::~MainWindow()
 void MainWindow::FocusTableWidget(const QUuid& node_id) const
 {
     auto widget { sc_->table_wgt_hash.value(node_id, nullptr) };
-    assert(widget);
+    Q_ASSERT(widget != nullptr);
 
     ui->tabWidget->setCurrentWidget(widget);
     widget->activateWindow();
@@ -166,7 +166,7 @@ void MainWindow::on_actionRemove_triggered()
     qInfo() << "[UI]" << "on_actionRemove_triggered";
 
     auto* widget { ui->tabWidget->currentWidget() };
-    assert(widget);
+    Q_ASSERT(widget);
 
     {
         auto* d_widget { dynamic_cast<TreeWidgetSettlement*>(widget) };
@@ -547,7 +547,7 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::RActionEntry(EntryAction action)
 {
     auto* leaf_widget { dynamic_cast<TableWidget*>(ui->tabWidget->currentWidget()) };
-    assert(leaf_widget);
+    Q_ASSERT(leaf_widget);
 
     auto table_model { leaf_widget->Model() };
     table_model->ActionEntry(action);

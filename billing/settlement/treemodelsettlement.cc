@@ -90,7 +90,7 @@ QVariant TreeModelSettlement::headerData(int section, Qt::Orientation orientatio
 
 void TreeModelSettlement::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < info_.settlement_header.size());
+    Q_ASSERT(column >= 0 && column < info_.settlement_header.size());
 
     const SettlementEnum e_column { column };
 

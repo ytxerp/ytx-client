@@ -220,7 +220,7 @@ void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
 QString PrintHub::GetColumnText(int col, const Entry* entry)
 {
     auto* d_entry { static_cast<const EntryO*>(entry) };
-    assert(section_config_);
+    Q_ASSERT(section_config_ != nullptr);
 
     switch (col) {
     case 0:

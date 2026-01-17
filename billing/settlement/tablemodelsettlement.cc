@@ -107,7 +107,7 @@ QVariant TableModelSettlement::headerData(int section, Qt::Orientation orientati
 
 void TableModelSettlement::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < info_.settlement_item_header.size());
+    Q_ASSERT(column >= 0 && column < info_.settlement_item_header.size());
 
     const SettlementItemEnum e_column { column };
 

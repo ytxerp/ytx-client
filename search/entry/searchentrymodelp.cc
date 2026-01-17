@@ -57,7 +57,7 @@ QVariant SearchEntryModelP::data(const QModelIndex& index, int role) const
 
 void SearchEntryModelP::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < info_.full_entry_header.size());
+    Q_ASSERT(column >= 0 && column < info_.full_entry_header.size());
 
     const EntryEnumP e_column { column };
 

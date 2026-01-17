@@ -597,8 +597,8 @@ void WebSocket::UpdateEntry(const QJsonObject& obj)
 
     auto entry_hub { entry_hub_hash_.value(section) };
 
-    assert(entry_hub);
-    assert(!entry_id.isNull());
+    Q_ASSERT(entry_hub);
+    Q_ASSERT(!entry_id.isNull());
 
     if (session_id != session_id_) {
         entry_hub->UpdateEntry(entry_id, update);
@@ -654,8 +654,8 @@ void WebSocket::UpdateEntryRate(const QJsonObject& obj)
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
 
-    assert(entry_hub);
-    assert(tree_model);
+    Q_ASSERT(entry_hub);
+    Q_ASSERT(tree_model);
 
     QJsonObject lhs_total {};
     QJsonObject rhs_total {};
@@ -691,8 +691,8 @@ void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
 
-    assert(entry_hub);
-    assert(tree_model);
+    Q_ASSERT(entry_hub);
+    Q_ASSERT(tree_model);
 
     QJsonObject lhs_total {};
     QJsonObject rhs_total {};
@@ -739,8 +739,8 @@ void WebSocket::InsertEntry(const QJsonObject& obj)
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
 
-    assert(entry_hub);
-    assert(tree_model);
+    Q_ASSERT(entry_hub);
+    Q_ASSERT(tree_model);
 
     QJsonObject lhs_total {};
     QJsonObject rhs_total {};
@@ -774,8 +774,8 @@ void WebSocket::RemoveEntry(const QJsonObject& obj)
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
 
-    assert(entry_hub);
-    assert(tree_model);
+    Q_ASSERT(entry_hub);
+    Q_ASSERT(tree_model);
 
     QJsonObject lhs_total {};
     QJsonObject rhs_total {};
@@ -856,7 +856,7 @@ void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_release)
 
     auto* base_model { tree_model_hash_.value(section).data() };
     auto* order_model = static_cast<TreeModelO*>(base_model);
-    assert(order_model != nullptr);
+    Q_ASSERT(order_model != nullptr);
 
     if (!order_model->Contains(node_id))
         return;
@@ -893,7 +893,7 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
 
     auto* base_model { tree_model_hash_.value(section).data() };
     auto* order_model = static_cast<TreeModelO*>(base_model);
-    assert(order_model != nullptr);
+    Q_ASSERT(order_model != nullptr);
 
     base_model->InsertNode(ancestor, node_obj);
     order_model->InsertMeta(descendant, meta);
@@ -921,7 +921,7 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
     auto* base_model { tree_model_hash_.value(section).data() };
 
     auto* order_model = static_cast<TreeModelO*>(base_model);
-    assert(order_model != nullptr);
+    Q_ASSERT(order_model != nullptr);
 
     if (!order_model->Contains(node_id))
         return;
@@ -950,7 +950,7 @@ void WebSocket::InsertSettlement(const QJsonObject& obj)
     auto* base_model { tree_model_hash_.value(section).data() };
 
     auto* order_model = static_cast<TreeModelO*>(base_model);
-    assert(order_model != nullptr);
+    Q_ASSERT(order_model != nullptr);
 
     for (const auto& v : selected_array) {
         const QUuid node_id { v.toString() };
@@ -973,7 +973,7 @@ void WebSocket::UpdateSettlement(const QJsonObject& obj)
     auto* base_model { tree_model_hash_.value(section).data() };
 
     auto* order_model = static_cast<TreeModelO*>(base_model);
-    assert(order_model != nullptr);
+    Q_ASSERT(order_model != nullptr);
 
     for (const auto& v : selected_array) {
         const QUuid node_id { v.toString() };
@@ -999,7 +999,7 @@ void WebSocket::RecallSettlement(const QJsonObject& obj)
     auto* base_model { tree_model_hash_.value(section).data() };
 
     auto* order_model = static_cast<TreeModelO*>(base_model);
-    assert(order_model != nullptr);
+    Q_ASSERT(order_model != nullptr);
 
     order_model->RecallSettlement(settlement_id);
 

@@ -54,7 +54,7 @@ void TableModelP::RAppendOneEntry(Entry* entry)
 
 bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
-    assert(row >= 0 && row <= rowCount(parent) - 1);
+    Q_ASSERT(row >= 0 && row <= rowCount(parent) - 1);
 
     auto* entry { entry_list_.at(row) };
     auto rhs_node_id { entry->rhs_node };
@@ -227,7 +227,7 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
 
 void TableModelP::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < info_.entry_header.size());
+    Q_ASSERT(column >= 0 && column < info_.entry_header.size());
 
     const EntryEnumP e_column { column };
 
@@ -292,7 +292,7 @@ Qt::ItemFlags TableModelP::flags(const QModelIndex& index) const
 
 bool TableModelP::insertRows(int row, int, const QModelIndex& parent)
 {
-    assert(row >= 0 && row <= rowCount(parent));
+    Q_ASSERT(row >= 0 && row <= rowCount(parent));
 
     auto* entry { EntryPool::Instance().Allocate(section_) };
     entry->id = QUuid::createUuidV7();

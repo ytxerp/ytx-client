@@ -53,7 +53,7 @@ QVariant SearchNodeModelP::data(const QModelIndex& index, int role) const
 
 void SearchNodeModelP::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < info_.node_header.size());
+    Q_ASSERT(column >= 0 && column < info_.node_header.size());
 
     const NodeEnumP e_column { column };
 

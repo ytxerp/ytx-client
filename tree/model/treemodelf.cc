@@ -103,7 +103,7 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
 
 void TreeModelF::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < node_header_.size());
+    Q_ASSERT(column >= 0 && column < node_header_.size());
 
     const NodeEnumF e_column { column };
 
@@ -172,7 +172,7 @@ Qt::ItemFlags TreeModelF::flags(const QModelIndex& index) const
 
 QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, double initial_delta, double final_delta)
 {
-    assert(node && node != root_ && node->parent);
+    Q_ASSERT(node && node != root_ && node->parent);
     QSet<QUuid> affected_ids {};
 
     if (node->parent == root_)

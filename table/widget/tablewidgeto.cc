@@ -80,7 +80,7 @@ bool TableWidgetO::HasPendingUpdate() const
 
 void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
 {
-    assert(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
+    Q_ASSERT(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
 
     {
         if (tmp_node_.direction_rule == Rule::kRO) {

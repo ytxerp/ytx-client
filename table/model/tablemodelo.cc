@@ -234,7 +234,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
 
 void TableModelO::sort(int column, Qt::SortOrder order)
 {
-    assert(column >= 0 && column < info_.entry_header.size());
+    Q_ASSERT(column >= 0 && column < info_.entry_header.size());
 
     const EntryEnumO e_column { column };
 
@@ -309,7 +309,7 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
 
 bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
-    assert(row >= 0 && row <= rowCount(parent));
+    Q_ASSERT(row >= 0 && row <= rowCount(parent));
     if (d_node_->status == NodeStatus::kFinished)
         return false;
 
@@ -331,7 +331,7 @@ bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 
 bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
-    assert(row >= 0 && row <= rowCount(parent) - 1);
+    Q_ASSERT(row >= 0 && row <= rowCount(parent) - 1);
     if (d_node_->status == NodeStatus::kFinished)
         return false;
 

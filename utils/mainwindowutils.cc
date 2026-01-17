@@ -1,4 +1,5 @@
 #include "mainwindowutils.h"
+
 #include <QtWidgets/qpushbutton.h>
 
 #include <QCoreApplication>
@@ -132,7 +133,7 @@ QString Utils::AccountIniFileName(const QString& email, const QString& workspace
 
 void Utils::SetupHeaderStatus(QHeaderView* header, const QSharedPointer<QSettings>& settings, Section section, const QString& key)
 {
-    assert(header && settings);
+    Q_ASSERT(header && settings);
 
     const auto section_name { kSectionString.value(section) };
 

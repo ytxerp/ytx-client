@@ -11,7 +11,7 @@ TableModelF::TableModelF(CTableModelArg& arg, QObject* parent)
 
 bool TableModelF::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
-    assert(row >= 0 && row <= rowCount(parent));
+    Q_ASSERT(row >= 0 && row <= rowCount(parent));
 
     auto* entry_shadow { InsertRowsImpl(row, parent) };
 
@@ -86,8 +86,8 @@ bool TableModelF::UpdateNumeric(EntryShadow* shadow, double value, int row, bool
     const double lhs_rate { *shadow->lhs_rate };
     const double rhs_rate { *shadow->rhs_rate };
 
-    assert(lhs_rate != 0.0);
-    assert(rhs_rate != 0.0);
+    Q_ASSERT(lhs_rate != 0.0);
+    Q_ASSERT(rhs_rate != 0.0);
 
     const double old_value { is_debit ? lhs_old_debit : lhs_old_credit };
     if (FloatEqual(old_value, value))

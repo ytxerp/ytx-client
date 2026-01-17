@@ -51,7 +51,7 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 
     {
         const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
-        assert(!node_id.isNull());
+        Q_ASSERT(!node_id.isNull());
 
         ShowLeafWidget(node_id);
     }
