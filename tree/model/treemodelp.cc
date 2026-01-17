@@ -27,7 +27,7 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)
     RefreshAffectedTotal(affected_ids);
 }
 
-const QSet<QUuid>* TreeModelP::UnitSet(NodeUnit unit) const
+QSet<QUuid>* TreeModelP::UnitSet(NodeUnit unit)
 {
     const NodeUnit kUnit { unit };
 
@@ -49,40 +49,6 @@ QSortFilterProxyModel* TreeModelP::IncludeUnitModel(NodeUnit unit, QObject* pare
     auto* model { new IncludeMultipleFilterModel(set, parent) };
     model->setSourceModel(leaf_path_model_);
     return model;
-}
-
-void TreeModelP::RemoveUnitSet(const QUuid& node_id, NodeUnit unit)
-{
-    switch (unit) {
-    case NodeUnit::PCustomer:
-        cset_.remove(node_id);
-        break;
-    case NodeUnit::PVendor:
-        vset_.remove(node_id);
-        break;
-    case NodeUnit::PEmployee:
-        eset_.remove(node_id);
-        break;
-    default:
-        break;
-    }
-}
-
-void TreeModelP::InsertUnitSet(const QUuid& node_id, NodeUnit unit)
-{
-    switch (unit) {
-    case NodeUnit::PCustomer:
-        cset_.insert(node_id);
-        break;
-    case NodeUnit::PVendor:
-        vset_.insert(node_id);
-        break;
-    case NodeUnit::PEmployee:
-        eset_.insert(node_id);
-        break;
-    default:
-        break;
-    }
 }
 
 QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, double /*final_delta*/)

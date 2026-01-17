@@ -44,8 +44,8 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
     bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild) override;
 
-    void AckTree(const QJsonObject& obj) override;
-    void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id) override;
+    void AckTree(const QJsonObject& obj);
+    void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id);
     void UpdateName(const QUuid& node_id, const QString& name) override;
 
     void InsertSettlement(const QUuid& node_id, const QUuid& settlement_id);

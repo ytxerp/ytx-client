@@ -43,9 +43,7 @@ public:
     void ResetColor(const QModelIndex& index) override;
 
 protected:
-    const QSet<QUuid>* UnitSet(NodeUnit unit) const override;
-    void RemoveUnitSet(const QUuid& node_id, NodeUnit unit) override;
-    void InsertUnitSet(const QUuid& node_id, NodeUnit unit) override;
+    QSet<QUuid>* UnitSet(NodeUnit unit) override;
 
 private:
     QSet<QUuid> pos_set_ {}; // Set of all nodes that are position-unit

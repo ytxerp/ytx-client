@@ -231,7 +231,7 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
 void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
 {
     auto* node = GetNode(node_id);
-    if (!node || node->name == name)
+    if (!node || node->name == name || name.isEmpty())
         return;
 
     node->name = name;
@@ -243,7 +243,6 @@ void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
 
     EmitRowChanged(node_id, name_column, name_column);
     emit SResizeColumnToContents(name_column);
-
     emit SUpdateName(node->id, node->name, node->kind == NodeKind::kBranch);
 }
 

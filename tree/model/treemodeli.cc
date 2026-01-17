@@ -11,41 +11,7 @@ TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, QObject* parent)
     leaf_path_model_->AppendItem(QString(), QUuid());
 }
 
-void TreeModelI::RemoveUnitSet(const QUuid& node_id, NodeUnit unit)
-{
-    switch (unit) {
-    case NodeUnit::IPosition:
-        pos_set_.remove(node_id);
-        break;
-    case NodeUnit::IInternal:
-        int_set_.remove(node_id);
-        break;
-    case NodeUnit::IExternal:
-        ext_set_.remove(node_id);
-        break;
-    default:
-        break;
-    }
-}
-
-void TreeModelI::InsertUnitSet(const QUuid& node_id, NodeUnit unit)
-{
-    switch (unit) {
-    case NodeUnit::IPosition:
-        pos_set_.insert(node_id);
-        break;
-    case NodeUnit::IInternal:
-        int_set_.insert(node_id);
-        break;
-    case NodeUnit::IExternal:
-        ext_set_.insert(node_id);
-        break;
-    default:
-        break;
-    }
-}
-
-const QSet<QUuid>* TreeModelI::UnitSet(NodeUnit unit) const
+QSet<QUuid>* TreeModelI::UnitSet(NodeUnit unit)
 {
     switch (unit) {
     case NodeUnit::IPosition:

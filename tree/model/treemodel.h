@@ -97,14 +97,6 @@ public:
     // WebSocket functions
     void ApplyTree(const QJsonObject& data);
 
-    virtual void AckTree(const QJsonObject& obj) { Q_UNUSED(obj) }
-    virtual void UpdateName(const QUuid& node_id, const QString& name);
-    virtual void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
-    {
-        Q_UNUSED(leaf_obj)
-        Q_UNUSED(ancestor_id)
-    }
-
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
     void InsertMeta(const QUuid& node_id, const QJsonObject& meta);
 
@@ -116,6 +108,8 @@ public:
 
     void SyncDirectionRule(const QUuid& node_id, bool direction_rule);
     void SyncTotalArray(const QJsonArray& total_array);
+
+    virtual void UpdateName(const QUuid& node_id, const QString& name);
 
     // Ytx's
     // Default implementations
@@ -154,14 +148,12 @@ public:
 
     // virtual functions
     virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
-
     virtual QSortFilterProxyModel* IncludeUnitModel(NodeUnit unit, QObject* parent)
     {
         Q_UNUSED(unit)
         Q_UNUSED(parent)
         return nullptr;
     }
-
     virtual QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& node_id, NodeUnit unit, QObject* parent)
     {
         Q_UNUSED(unit)
@@ -191,29 +183,30 @@ protected:
 
     QSet<QUuid> UpdateTotal(const QUuid& node_id, double initial_total, double final_total);
 
-    virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta);
+    void RemoveUnitSet(const QUuid& node_id, NodeUnit unit)
+    {
+        if (auto* set = UnitSet(unit)) {
+            set->remove(node_id);
+        }
+    }
+
+    void InsertUnitSet(const QUuid& node_id, NodeUnit unit)
+    {
+        if (auto* set = UnitSet(unit)) {
+            set->insert(node_id);
+        }
+    }
+
     virtual void RegisterPath(Node* node);
     virtual void RemovePath(Node* node, Node* parent_node);
+    virtual void HandleNode();
 
-    virtual const QSet<QUuid>* UnitSet(NodeUnit unit) const
+    virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta);
+    virtual QSet<QUuid>* UnitSet(NodeUnit unit)
     {
         Q_UNUSED(unit)
         return nullptr;
     }
-
-    virtual void RemoveUnitSet(const QUuid& node_id, NodeUnit unit)
-    {
-        Q_UNUSED(node_id)
-        Q_UNUSED(unit)
-    }
-
-    virtual void InsertUnitSet(const QUuid& node_id, NodeUnit unit)
-    {
-        Q_UNUSED(node_id)
-        Q_UNUSED(unit)
-    }
-
-    virtual void HandleNode();
 
 protected:
     Node* root_ {};
