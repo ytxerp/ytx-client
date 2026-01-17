@@ -113,6 +113,7 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     const bool is_settlement { IsTreeWidgetSettlement(widget) };
     const bool is_color_section { start_ == Section::kTask || start_ == Section::kInventory };
     const bool is_order_section { IsOrderSection(start_) };
+    const bool is_double_entry { IsDoubleEntry(start_) };
 
     ui->actionAppendNode->setEnabled(is_tree);
     ui->actionInsertNode->setEnabled(is_tree || is_table_o);
@@ -123,7 +124,8 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     ui->actionMarkAll->setEnabled(is_table_fipt);
     ui->actionMarkNone->setEnabled(is_table_fipt);
     ui->actionMarkToggle->setEnabled(is_table_fipt);
-    ui->actionJump->setEnabled(is_table_fipt);
+
+    ui->actionJump->setEnabled(is_double_entry);
 
     ui->actionStatement->setEnabled(is_order_section);
     ui->actionSettlement->setEnabled(is_order_section);
@@ -193,9 +195,10 @@ void MainWindow::on_actionJump_triggered()
     if (IsSingleEntry(start_))
         return;
 
-    auto* leaf_widget { dynamic_cast<TableWidget*>(ui->tabWidget->currentWidget()) };
-    if (!leaf_widget)
-        return;
+    auto* current_widget { ui->tabWidget->currentWidget() };
+
+    Q_ASSERT(qobject_cast<TableWidget*>(current_widget));
+    auto* leaf_widget { static_cast<TableWidget*>(current_widget) };
 
     const auto index { leaf_widget->View()->currentIndex() };
     if (!index.isValid())

@@ -195,12 +195,11 @@ void UpdatePathSeparator(CString& old_separator, CString& new_separator, QHash<Q
 
 void UpdateModelFunction(ItemModel* model, const QSet<QUuid>& update_range, CUuidString& source_path);
 
-template <typename Field, typename Node> const Field& Value(CNodeHash& hash, const QUuid& node_id, Field Node::* member)
+template <typename Field, typename T> const Field& Value(CNodeHash& hash, const QUuid& node_id, Field T::* member)
 {
     if (auto it = hash.constFind(node_id); it != hash.constEnd()) {
-        if (auto derived = dynamic_cast<Node*>(it.value())) {
-            return derived->*member;
-        }
+        auto* derived { static_cast<T*>(it.value()) };
+        return derived->*member;
     }
 
     // If the node_id does not exist, return a static empty object to ensure a safe default value

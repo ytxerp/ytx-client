@@ -12,10 +12,10 @@ void MainWindow::RemoveNode()
         return;
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
-    Q_ASSERT(node);
+    Q_ASSERT(node != nullptr);
 
     auto model { sc_->tree_model };
-    Q_ASSERT(model);
+    Q_ASSERT(model != nullptr);
 
     const QUuid node_id { node->id };
     if (node_pending_removal_.contains(node_id))

@@ -163,7 +163,7 @@ void TableModelSettlement::ResetModel(const QJsonArray& array)
                 list_.emplaceBack(entry);
         }
 
-        sort(static_cast<int>(SettlementItemEnum::kIssuedTime), Qt::AscendingOrder);
+        sort(std::to_underlying(SettlementItemEnum::kIssuedTime), Qt::AscendingOrder);
         endResetModel();
     }
 }
@@ -208,7 +208,7 @@ void TableModelSettlement::UpdateStatus(SettlementStatus status)
         }
     }
 
-    sort(static_cast<int>(SettlementItemEnum::kIsSelected), Qt::DescendingOrder);
+    sort(std::to_underlying(SettlementItemEnum::kIsSelected), Qt::DescendingOrder);
 }
 
 void TableModelSettlement::Finalize(QJsonObject& message)

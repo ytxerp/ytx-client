@@ -161,6 +161,6 @@ void StatementEntryModel::ResetModel(const QJsonArray& array)
         list_.emplaceBack(statement_secondary);
     }
 
-    sort(static_cast<int>(StatementEntryEnum::kIssuedTime), Qt::AscendingOrder);
+    sort(std::to_underlying(StatementEntryEnum::kIssuedTime), Qt::AscendingOrder);
     endResetModel();
 }

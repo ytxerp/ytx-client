@@ -145,13 +145,13 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section) const
     if (resize_column) {
         auto* current_widget { ui->tabWidget->currentWidget() };
 
-        if (const auto* leaf_widget = dynamic_cast<TableWidget*>(current_widget)) {
+        if (const auto* leaf_widget = qobject_cast<TableWidget*>(current_widget)) {
             auto* header { leaf_widget->View()->horizontalHeader() };
             ResizeColumn(header, Utils::EntryDescriptionColumn(start_));
             return;
         }
 
-        if (dynamic_cast<TreeWidget*>(current_widget)) {
+        if (qobject_cast<TreeWidget*>(current_widget)) {
             auto* header { sc_->tree_view->header() };
             ResizeColumn(header, Utils::NodeDescriptionColumn(start_));
         }

@@ -84,7 +84,11 @@ void MainWindow::ROrderReleased(Section section, const QUuid& node_id, int versi
 
     auto widget { sc->table_wgt_hash.value(node_id, nullptr) };
     if (widget) {
-        auto* d_widget { static_cast<TableWidgetO*>(widget.data()) };
+        auto* ptr { widget.data() };
+
+        Q_ASSERT(qobject_cast<TableWidgetO*>(ptr));
+        auto* d_widget { static_cast<TableWidgetO*>(ptr) };
+
         d_widget->ReleaseSucceeded(version);
     }
 }
@@ -95,7 +99,11 @@ void MainWindow::ROrderRecalled(Section section, const QUuid& node_id, int versi
 
     auto widget { sc->table_wgt_hash.value(node_id, nullptr) };
     if (widget) {
-        auto* d_widget { static_cast<TableWidgetO*>(widget.data()) };
+        auto* ptr { widget.data() };
+
+        Q_ASSERT(qobject_cast<TableWidgetO*>(ptr));
+        auto* d_widget { static_cast<TableWidgetO*>(ptr) };
+
         d_widget->RecallSucceeded(version);
     }
 }
@@ -106,7 +114,11 @@ void MainWindow::ROrderSaved(Section section, const QUuid& node_id, int version)
 
     auto widget { sc->table_wgt_hash.value(node_id, nullptr) };
     if (widget) {
-        auto* d_widget { static_cast<TableWidgetO*>(widget.data()) };
+        auto* ptr { widget.data() };
+
+        Q_ASSERT(qobject_cast<TableWidgetO*>(ptr));
+        auto* d_widget { static_cast<TableWidgetO*>(ptr) };
+
         d_widget->SaveSucceeded(version);
     }
 }
@@ -136,11 +148,6 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     auto* tab_widget = ui->tabWidget;
     auto* tab_bar = tab_widget->tabBar();
     auto* parent_node { sc_->tree_model->GetNodeByIndex(parent_index) };
-
-    // Validate tree model and node
-    auto* tree_model_o { static_cast<TreeModelO*>(sc_->tree_model.data()) };
-    if (!tree_model_o)
-        return;
 
     NodeO node {};
     node.id = QUuid::createUuidV7();
@@ -190,14 +197,9 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     auto* tab_widget = ui->tabWidget;
     auto* tab_bar = tab_widget->tabBar();
 
-    // Validate tree model and node
-    auto* tree_model_o = static_cast<TreeModelO*>(sc->tree_model.data());
-    if (!tree_model_o)
-        return;
-
-    auto* node { static_cast<NodeO*>(tree_model_o->GetNode(node_id)) };
-    if (!node)
-        return;
+    // Validate node
+    auto* node { static_cast<NodeO*>(sc_->tree_model->GetNode(node_id)) };
+    Q_ASSERT(node != nullptr);
 
     const auto partner_id { node->partner_id };
     Q_ASSERT(!partner_id.isNull());

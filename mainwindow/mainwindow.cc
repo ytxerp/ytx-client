@@ -68,7 +68,7 @@ void MainWindow::SetRemoveShortcut()
 
 QStringList MainWindow::ChildrenName(const Node* node) const
 {
-    Q_ASSERT(node);
+    Q_ASSERT(node != nullptr);
 
     QStringList list {};
 
@@ -78,7 +78,7 @@ QStringList MainWindow::ChildrenName(const Node* node) const
     list.reserve(node->children.size());
 
     for (const auto* child : std::as_const(node->children)) {
-        Q_ASSERT(child);
+        Q_ASSERT(child != nullptr);
 
         list.emplaceBack(child->name);
     }
@@ -88,7 +88,7 @@ QStringList MainWindow::ChildrenName(const Node* node) const
 
 QSet<QUuid> MainWindow::LeafChildrenId(const Node* node) const
 {
-    Q_ASSERT(node);
+    Q_ASSERT(node != nullptr);
 
     QSet<QUuid> set {};
 
@@ -166,22 +166,21 @@ void MainWindow::on_actionRemove_triggered()
     qInfo() << "[UI]" << "on_actionRemove_triggered";
 
     auto* widget { ui->tabWidget->currentWidget() };
-    Q_ASSERT(widget);
 
     {
-        auto* d_widget { dynamic_cast<TreeWidgetSettlement*>(widget) };
+        auto* d_widget { qobject_cast<TreeWidgetSettlement*>(widget) };
         if (d_widget) {
             RemoveSettlement(d_widget);
             return;
         }
     }
 
-    if (dynamic_cast<TreeWidget*>(widget)) {
+    if (qobject_cast<TreeWidget*>(widget)) {
         RemoveNode();
         return;
     }
 
-    if (auto* leaf_widget { dynamic_cast<TableWidget*>(widget) }) {
+    if (auto* leaf_widget { qobject_cast<TableWidget*>(widget) }) {
         RemoveEntry(leaf_widget);
     }
 }
@@ -250,7 +249,7 @@ void MainWindow::IniMarkGroup()
 
     connect(mark_group_, &QActionGroup::triggered, this, [this](QAction* action) {
         const int action_id { action->data().toInt() };
-        RActionEntry(static_cast<EntryAction>(action_id));
+        RActionEntry(EntryAction(action_id));
     });
 }
 
@@ -546,8 +545,10 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::RActionEntry(EntryAction action)
 {
-    auto* leaf_widget { dynamic_cast<TableWidget*>(ui->tabWidget->currentWidget()) };
-    Q_ASSERT(leaf_widget);
+    auto* current_widget { ui->tabWidget->currentWidget() };
+
+    Q_ASSERT(qobject_cast<TableWidget*>(current_widget));
+    auto* leaf_widget { static_cast<TableWidget*>(current_widget) };
 
     auto table_model { leaf_widget->Model() };
     table_model->ActionEntry(action);

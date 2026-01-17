@@ -11,7 +11,11 @@ void MainWindow::RSaleReference(Section section, const QUuid& widget_id, const Q
     if (!widget)
         return;
 
-    auto* d_widget { static_cast<SaleReferenceWidget*>(widget.data()) };
+    auto* ptr { widget.data() };
+
+    Q_ASSERT(qobject_cast<SaleReferenceWidget*>(ptr));
+    auto* d_widget { static_cast<SaleReferenceWidget*>(ptr) };
+
     auto* model { d_widget->Model() };
     model->ResetModel(array);
 }

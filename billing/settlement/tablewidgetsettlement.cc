@@ -99,7 +99,7 @@ bool TableWidgetSettlement::ValidateSyncState()
         return false;
     }
 
-    qDebug() << "[ValidateSyncState] Passed: sync_state =" << static_cast<int>(sync_state_);
+    qDebug() << "[ValidateSyncState] Passed: sync_state =" << std::to_underlying(sync_state_);
 
     return true;
 }

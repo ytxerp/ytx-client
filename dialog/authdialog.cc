@@ -42,7 +42,7 @@ void AuthDialog::RLoginFailed(int code)
     QString message {};
     QString title { tr("Login Failed") };
 
-    switch (static_cast<LoginOutcome>(code)) {
+    switch (LoginOutcome(code)) {
     case LoginOutcome::EmptyEmail:
         message = tr("Please enter your email.");
         break;

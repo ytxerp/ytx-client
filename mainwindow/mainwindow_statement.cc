@@ -39,7 +39,6 @@ void MainWindow::RStatement(Section section, const QUuid& widget_id, const QJson
         return;
 
     auto* d_widget { static_cast<StatementWidget*>(widget.data()) };
-    Q_ASSERT(d_widget != nullptr);
 
     auto* model { d_widget->Model() };
     model->ResetModel(array);
@@ -54,7 +53,6 @@ void MainWindow::RStatementNodeAcked(Section section, const QUuid& widget_id, co
         return;
 
     auto* d_widget { static_cast<StatementNodeWidget*>(widget.data()) };
-    Q_ASSERT(d_widget != nullptr);
 
     auto* model { d_widget->Model() };
     model->ResetModel(array);
@@ -69,7 +67,6 @@ void MainWindow::RStatementEntryAcked(Section section, const QUuid& widget_id, c
         return;
 
     auto* d_widget { static_cast<StatementEntryWidget*>(widget.data()) };
-    Q_ASSERT(d_widget != nullptr);
 
     auto* model { d_widget->Model() };
 

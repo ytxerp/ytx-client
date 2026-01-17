@@ -16,7 +16,7 @@ void MainWindow::on_actionAppendEntry_triggered()
     qInfo() << "[UI]" << "on_actionAppendEntry_triggered";
 
     {
-        auto* widget { dynamic_cast<TreeWidgetSettlement*>(ui->tabWidget->currentWidget()) };
+        auto* widget { qobject_cast<TreeWidgetSettlement*>(ui->tabWidget->currentWidget()) };
         if (widget) {
             const QUuid settlement_widget_id { widget->WidgetId() };
 
@@ -31,10 +31,9 @@ void MainWindow::on_actionAppendEntry_triggered()
     }
 
     {
-        auto* widget { dynamic_cast<TableWidget*>(ui->tabWidget->currentWidget()) };
+        auto* widget { qobject_cast<TableWidget*>(ui->tabWidget->currentWidget()) };
         if (widget) {
             auto* model { widget->Model() };
-            Q_ASSERT(model);
 
             const int new_row { model->rowCount() };
             if (!model->insertRows(new_row, 1))
@@ -53,7 +52,6 @@ void MainWindow::on_actionAppendEntry_triggered()
 void MainWindow::RemoveEntry(TableWidget* widget)
 {
     auto* view { widget->View() };
-    Q_ASSERT(view);
 
     if (!Utils::HasSelection(view))
         return;
@@ -63,7 +61,6 @@ void MainWindow::RemoveEntry(TableWidget* widget)
         return;
 
     auto* model { widget->Model() };
-    Q_ASSERT(model);
 
     const int current_row { current_index.row() };
     if (!model->removeRows(current_row, 1)) {
@@ -153,7 +150,7 @@ void MainWindow::RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id)
     if (entry_id.isNull() || node_id.isNull())
         return;
 
-    auto widget { sc_->table_wgt_hash.value(node_id, nullptr) };
+    auto widget { sc_->table_wgt_hash.value(node_id) };
     Q_ASSERT(widget);
 
     auto* view { widget->View() };
@@ -173,9 +170,6 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     auto tree_model { sc->tree_model };
     const auto& info = sc->info;
     const auto& section_config = sc->section_config;
-
-    Q_ASSERT(tree_model);
-    Q_ASSERT(tree_model->Contains(node_id));
 
     const Section section { info.section };
 

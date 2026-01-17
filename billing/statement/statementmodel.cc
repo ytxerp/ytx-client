@@ -127,6 +127,6 @@ void StatementModel::ResetModel(const QJsonArray& array)
         list_.emplaceBack(statement);
     }
 
-    sort(static_cast<int>(StatementEnum::kPartner), Qt::AscendingOrder);
+    sort(std::to_underlying(StatementEnum::kPartner), Qt::AscendingOrder);
     endResetModel();
 }
