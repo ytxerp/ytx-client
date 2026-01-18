@@ -225,9 +225,10 @@ set(HEADERS
     enum/entryenum.h
     enum/statementenum.h
     enum/reference.h
-    tree/includemultiplefiltermodel.h
-    tree/excludeonefiltermodel.h
-    tree/excludemultiplefiltermodel.h
+    tree/excludeidunitfiltermodel.h
+    tree/excludeidfiltermodel.h
+    tree/includeunitfiltermodel.h
+    tree/replaceselffiltermodel.h
     tree/node.h
     tree/itemmodel.h
     tree/widget/treewidgetp.h

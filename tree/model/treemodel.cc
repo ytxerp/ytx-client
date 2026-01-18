@@ -5,7 +5,10 @@
 
 #include "global/nodepool.h"
 #include "global/resourcepool.h"
-#include "tree/excludeonefiltermodel.h"
+#include "tree/excludeidfiltermodel.h"
+#include "tree/excludeidunitfiltermodel.h"
+#include "tree/includeunitfiltermodel.h"
+#include "tree/replaceselffiltermodel.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -561,9 +564,33 @@ QString TreeModel::Path(const QUuid& node_id) const
     return {};
 }
 
-QSortFilterProxyModel* TreeModel::ExcludeOneModel(const QUuid& node_id, QObject* parent)
+QSortFilterProxyModel* TreeModel::ExcludeId(const QUuid& node_id, QObject* parent)
 {
-    auto* model { new ExcludeOneFilterModel(node_id, parent) };
+    auto* model { new ExcludeIdFilterModel(node_id, parent) };
+    model->setSourceModel(leaf_path_model_);
+    return model;
+}
+
+QSortFilterProxyModel* TreeModel::IncludeUnit(NodeUnit unit, QObject* parent)
+{
+    auto* set { UnitSet(unit) };
+    auto* model { new IncludeUnitFilterModel(set, parent) };
+    model->setSourceModel(leaf_path_model_);
+    return model;
+}
+
+QSortFilterProxyModel* TreeModel::ExcludeIdUnit(const QUuid& node_id, NodeUnit unit, QObject* parent)
+{
+    auto* set { UnitSet(unit) };
+    auto* model { new ExcludeIdUnitFilterModel(node_id, set, parent) };
+    model->setSourceModel(leaf_path_model_);
+    return model;
+}
+
+QSortFilterProxyModel* TreeModel::ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent)
+{
+    auto* set { UnitSet(unit) };
+    auto* model { new ReplaceSelfFilterModel(node_id, set, parent) };
     model->setSourceModel(leaf_path_model_);
     return model;
 }

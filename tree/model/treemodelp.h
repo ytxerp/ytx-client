@@ -38,8 +38,6 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    QSortFilterProxyModel* IncludeUnitModel(NodeUnit unit, QObject* parent) override;
-
 protected:
     QSet<QUuid>* UnitSet(NodeUnit unit) override;
     QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta) override;

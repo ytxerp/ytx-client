@@ -89,11 +89,6 @@ public:
         Q_UNUSED(update);
     }
 
-    virtual void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const
-    {
-        Q_UNUSED(old_item_id);
-        Q_UNUSED(new_item_id);
-    }
     virtual void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
 protected:

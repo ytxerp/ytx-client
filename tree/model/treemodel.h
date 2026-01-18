@@ -144,23 +144,14 @@ public:
 
     QModelIndex GetIndex(const QUuid& node_id) const;
     Node* GetNodeByIndex(const QModelIndex& index) const;
-    QSortFilterProxyModel* ExcludeOneModel(const QUuid& node_id, QObject* parent);
+
+    QSortFilterProxyModel* ExcludeId(const QUuid& node_id, QObject* parent);
+    QSortFilterProxyModel* IncludeUnit(NodeUnit unit, QObject* parent);
+    QSortFilterProxyModel* ExcludeIdUnit(const QUuid& node_id, NodeUnit unit, QObject* parent);
+    QSortFilterProxyModel* ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent);
 
     // virtual functions
     virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
-    virtual QSortFilterProxyModel* IncludeUnitModel(NodeUnit unit, QObject* parent)
-    {
-        Q_UNUSED(unit)
-        Q_UNUSED(parent)
-        return nullptr;
-    }
-    virtual QSortFilterProxyModel* ExcludeMultipleModel(const QUuid& node_id, NodeUnit unit, QObject* parent)
-    {
-        Q_UNUSED(unit)
-        Q_UNUSED(node_id)
-        Q_UNUSED(parent)
-        return nullptr;
-    }
 
 protected:
     void SortModel();

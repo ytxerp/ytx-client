@@ -1,6 +1,5 @@
 #include "treemodelp.h"
 
-#include "tree/includemultiplefiltermodel.h"
 #include "utils/compareutils.h"
 
 TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, QObject* parent)
@@ -41,14 +40,6 @@ QSet<QUuid>* TreeModelP::UnitSet(NodeUnit unit)
     default:
         return nullptr;
     }
-}
-
-QSortFilterProxyModel* TreeModelP::IncludeUnitModel(NodeUnit unit, QObject* parent)
-{
-    auto* set { UnitSet(unit) };
-    auto* model { new IncludeMultipleFilterModel(set, parent) };
-    model->setSourceModel(leaf_path_model_);
-    return model;
 }
 
 QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, double /*final_delta*/)

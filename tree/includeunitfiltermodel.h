@@ -17,17 +17,17 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INCLUDEMULTIPLEFILTERMODEL_H
-#define INCLUDEMULTIPLEFILTERMODEL_H
+#ifndef INCLUDEUNITFILTERMODEL_H
+#define INCLUDEUNITFILTERMODEL_H
 
 #include <QSortFilterProxyModel>
 #include <QUuid>
 
 #include "tree/itemmodel.h"
 
-class IncludeMultipleFilterModel final : public QSortFilterProxyModel {
+class IncludeUnitFilterModel final : public QSortFilterProxyModel {
 public:
-    explicit IncludeMultipleFilterModel(const QSet<QUuid>* set, QObject* parent = nullptr)
+    explicit IncludeUnitFilterModel(const QSet<QUuid>* set, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }
         , set_ { set }
     {
@@ -49,4 +49,4 @@ private:
     const QSet<QUuid>* set_ {};
 };
 
-#endif // INCLUDEMULTIPLEFILTERMODEL_H
+#endif // INCLUDEUNITFILTERMODEL_H

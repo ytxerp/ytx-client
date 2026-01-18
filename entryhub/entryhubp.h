@@ -44,8 +44,8 @@ public:
     void ApplyPartnerEntry(const QJsonArray& array);
     // std::optional<std::pair<QUuid, double>> ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const;
 
-protected:
-    void ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const override;
+    void ApplyInventoryIntReplace(const QUuid& old_item_id, const QUuid& new_item_id);
+    void ApplyInventoryExtReplace(const QUuid& old_item_id, const QUuid& new_item_id);
 
 private:
     struct EntryValue {

@@ -17,18 +17,19 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef EXCLUDEONEFILTERMODEL_H
-#define EXCLUDEONEFILTERMODEL_H
+#ifndef EXCLUDEIDUNITFILTERMODEL_H
+#define EXCLUDEIDUNITFILTERMODEL_H
 
 #include <QSortFilterProxyModel>
 #include <QUuid>
 
 #include "tree/itemmodel.h"
 
-class ExcludeOneFilterModel final : public QSortFilterProxyModel {
+class ExcludeIdUnitFilterModel final : public QSortFilterProxyModel {
 public:
-    explicit ExcludeOneFilterModel(const QUuid& node_id, QObject* parent = nullptr)
+    explicit ExcludeIdUnitFilterModel(const QUuid& node_id, const QSet<QUuid>* set, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }
+        , set_ { set }
         , node_id_ { node_id }
     {
     }
@@ -42,11 +43,12 @@ protected:
         auto* item_model { static_cast<ItemModel*>(model) };
         auto id { item_model->ItemData(source_row, Qt::UserRole).toUuid() };
 
-        return id != node_id_;
+        return !set_->contains(id) && node_id_ != id;
     }
 
 private:
+    const QSet<QUuid>* set_ {};
     const QUuid node_id_ {};
 };
 
-#endif // EXCLUDEONEFILTERMODEL_H
+#endif // EXCLUDEIDUNITFILTERMODEL_H

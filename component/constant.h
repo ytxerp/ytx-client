@@ -163,11 +163,8 @@ inline const QString kInsideRef = QStringLiteral("inside_ref");
 // Internal inventory node is referenced by other sections, e.g., Partner, Sale, Purchase
 inline const QString kInventoryIntRef = QStringLiteral("inventory_int_ref");
 
-// External inventory node is referenced by other sections, e.g., Partner, Sale, Purchase
+// External inventory node is referenced by other sections, e.g., Partner
 inline const QString kInventoryExtRef = QStringLiteral("inventory_ext_ref");
-
-// Internal or External inventory node is referenced by other sections, e.g., Partner, Sale, Purchase
-inline const QString kInventoryOutsideRef = QStringLiteral("inventory_outside_ref");
 
 // Partner node (customer or supplier) is referenced in other sections, e.g., Sale, Purchase
 inline const QString kPartnerRef = QStringLiteral("partner_ref");

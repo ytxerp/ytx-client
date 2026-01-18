@@ -36,7 +36,7 @@ QJsonObject LeafRemove(Section section, CUuid& node_id);
 QJsonObject BranchRemove(Section section, CUuid& node_id, CUuid& parent_id);
 
 QJsonObject LeafRemoveCheck(Section section, CUuid& node_id);
-QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, bool inventory_external_ref, NodeUnit unit);
+QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id);
 
 QJsonObject EntryAction(Section section, CUuid& node_id, int action);
 QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update);

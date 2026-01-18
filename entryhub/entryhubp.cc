@@ -12,16 +12,47 @@ EntryHubP::EntryHubP(CSectionInfo& info, QObject* parent)
 
 void EntryHubP::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
 
-void EntryHubP::ApplyInventoryReplace(const QUuid& old_item_id, const QUuid& new_item_id) const
+void EntryHubP::ApplyInventoryIntReplace(const QUuid& old_item_id, const QUuid& new_item_id)
 {
     for (auto* entry : std::as_const(entry_cache_)) {
         auto* d_entry = static_cast<EntryP*>(entry);
 
         if (d_entry->rhs_node == old_item_id)
             d_entry->rhs_node = new_item_id;
+    }
+
+    {
+        QHash<std::pair<QUuid, QUuid>, EntryValue> new_map {};
+        new_map.reserve(entry_map_.size());
+
+        for (auto it = entry_map_.cbegin(); it != entry_map_.cend(); ++it) {
+            auto key = it.key();
+            auto value = it.value();
+
+            if (key.second == old_item_id) {
+                key.second = new_item_id;
+            }
+
+            new_map.insert(key, value);
+        }
+
+        entry_map_.swap(new_map);
+    }
+}
+
+void EntryHubP::ApplyInventoryExtReplace(const QUuid& old_item_id, const QUuid& new_item_id)
+{
+    for (auto* entry : std::as_const(entry_cache_)) {
+        auto* d_entry = static_cast<EntryP*>(entry);
 
         if (d_entry->external_sku == old_item_id)
             d_entry->external_sku = new_item_id;
+    }
+
+    for (auto it = entry_map_.begin(); it != entry_map_.end(); ++it) {
+        if (it.value().external_sku == old_item_id) {
+            it.value().external_sku = new_item_id;
+        }
     }
 }
 

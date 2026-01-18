@@ -559,12 +559,23 @@ void WebSocket::NotifyLeafRemoveDenied(const QJsonObject& obj) { emit SLeafRemov
 
 void WebSocket::ReplaceLeaf(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kSection));
+    Q_ASSERT(obj.contains(kSessionId));
+    Q_ASSERT(obj.contains(kResult));
+    Q_ASSERT(obj.contains(kInventoryIntRef));
+    Q_ASSERT(obj.contains(kInventoryExtRef));
+    Q_ASSERT(obj.contains(kOldNodeId));
+    Q_ASSERT(obj.contains(kNewNodeId));
+
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const bool result { obj.value(kResult).toBool() };
-    const bool inventory_outside_ref { obj.value(kInventoryOutsideRef).toBool() };
+    const bool inventory_int_ref { obj.value(kInventoryIntRef).toBool() };
+    const bool inventory_ext_ref { obj.value(kInventoryExtRef).toBool() };
     const QUuid old_node_id(obj.value(kOldNodeId).toString());
     const QUuid new_node_id(obj.value(kNewNodeId).toString());
+
+    Q_ASSERT(section == Section::kInventory);
 
     if (session_id == session_id_) {
         emit SReplaceResult(result);
@@ -576,8 +587,14 @@ void WebSocket::ReplaceLeaf(const QJsonObject& obj)
     auto entry_hub { entry_hub_hash_.value(section) };
     entry_hub->ReplaceLeaf(old_node_id, new_node_id);
 
-    if (section == Section::kInventory && inventory_outside_ref) {
-        entry_hub_hash_.value(Section::kSale)->ApplyInventoryReplace(old_node_id, new_node_id);
+    {
+        auto entry_hub_p { static_cast<EntryHubP*>(entry_hub_hash_.value(Section::kPartner).data()) };
+
+        if (inventory_int_ref)
+            entry_hub_p->ApplyInventoryIntReplace(old_node_id, new_node_id);
+
+        if (inventory_ext_ref)
+            entry_hub_p->ApplyInventoryExtReplace(old_node_id, new_node_id);
     }
 
     auto tree_model { tree_model_hash_.value(section) };

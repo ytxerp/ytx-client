@@ -17,17 +17,17 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef EXCLUDEMULTIPLEFILTERMODEL_H
-#define EXCLUDEMULTIPLEFILTERMODEL_H
+#ifndef REPLACESELFFILTERMODEL_H
+#define REPLACESELFFILTERMODEL_H
 
 #include <QSortFilterProxyModel>
 #include <QUuid>
 
 #include "tree/itemmodel.h"
 
-class ExcludeMultipleFilterModel final : public QSortFilterProxyModel {
+class ReplaceSelfFilterModel final : public QSortFilterProxyModel {
 public:
-    explicit ExcludeMultipleFilterModel(const QUuid& node_id, const QSet<QUuid>* set, QObject* parent = nullptr)
+    explicit ReplaceSelfFilterModel(const QUuid& node_id, const QSet<QUuid>* set, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }
         , set_ { set }
         , node_id_ { node_id }
@@ -43,7 +43,7 @@ protected:
         auto* item_model { static_cast<ItemModel*>(model) };
         auto id { item_model->ItemData(source_row, Qt::UserRole).toUuid() };
 
-        return !set_->contains(id) && node_id_ != id;
+        return set_->contains(id) && node_id_ != id;
     }
 
 private:
@@ -51,4 +51,4 @@ private:
     const QUuid node_id_ {};
 };
 
-#endif // EXCLUDEMULTIPLEFILTERMODEL_H
+#endif // REPLACESELFFILTERMODEL_H

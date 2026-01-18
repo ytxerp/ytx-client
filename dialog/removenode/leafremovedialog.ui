@@ -87,6 +87,9 @@
       </item>
       <item row="1" column="0">
        <widget class="QRadioButton" name="rBtnReplace">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -105,6 +108,19 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="1">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
     </widget>
    </item>
@@ -114,7 +130,7 @@
       <item>
        <widget class="QCheckBox" name="chkBoxInside">
         <property name="toolTip">
-         <string>Referenced by “Linked Node” in its own section.</string>
+         <string>Currently referenced by linked nodes within the same section.</string>
         </property>
         <property name="text">
          <string>Inside</string>
@@ -124,7 +140,7 @@
       <item>
        <widget class="QCheckBox" name="chkBoxInventoryInt">
         <property name="toolTip">
-         <string>This inventory node (internal ID) is referenced by Partner, Sale, or Purchase entries.</string>
+         <string>This inventory node (internal unit) is currently referenced by partner, sale, or purchase entries.</string>
         </property>
         <property name="text">
          <string>Inventory INT</string>
@@ -134,7 +150,7 @@
       <item>
        <widget class="QCheckBox" name="chkBoxInventoryExt">
         <property name="toolTip">
-         <string>This inventory node (external ID) is referenced by Partner, Sale, or Purchase entries.</string>
+         <string>This inventory node (external unit) is currently referenced by partner entries.</string>
         </property>
         <property name="text">
          <string>Inventory EXT</string>
@@ -144,7 +160,7 @@
       <item>
        <widget class="QCheckBox" name="chkBoxPartner">
         <property name="toolTip">
-         <string>This partner node (customer or vendor) is referenced by Sale or Purchase entries.</string>
+         <string>This partner node (customer or vendor) is currently referenced by sale or purchase nodes.</string>
         </property>
         <property name="text">
          <string>Partner</string>
@@ -154,7 +170,7 @@
       <item>
        <widget class="QCheckBox" name="chkBoxEmployee">
         <property name="toolTip">
-         <string>This partner node (employee) is referenced by Sale or Purchase entries.</string>
+         <string>This partner node (employee) is currently referenced by sale or purchase nodes.</string>
         </property>
         <property name="text">
          <string>Employee</string>
@@ -164,7 +180,7 @@
       <item>
        <widget class="QCheckBox" name="chkBoxSettlement">
         <property name="toolTip">
-         <string>This order node (sale or purchase) has already been settled.</string>
+         <string>This order node (sale or purchase) is currently settled.</string>
         </property>
         <property name="text">
          <string>Settlement</string>

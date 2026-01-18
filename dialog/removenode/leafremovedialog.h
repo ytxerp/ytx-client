@@ -36,7 +36,7 @@ signals:
     void SRemoveNode(const QUuid& node_id);
 
 public:
-    LeafRemoveDialog(CTreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, NodeUnit unit, QWidget* parent = nullptr);
+    LeafRemoveDialog(TreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, NodeUnit unit, QWidget* parent = nullptr);
     ~LeafRemoveDialog() override;
 
 private slots:
@@ -66,7 +66,7 @@ private:
     const bool employee_ref_ {};
     const bool settlement_ref_ {};
 
-    CTreeModel* model_ {};
+    TreeModel* model_ {};
     CSectionInfo& info_ {};
 };
 

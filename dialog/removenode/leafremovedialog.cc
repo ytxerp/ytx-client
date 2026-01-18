@@ -3,12 +3,11 @@
 #include <QMessageBox>
 
 #include "component/signalblocker.h"
-#include "tree/excludeonefiltermodel.h"
 #include "ui_leafremovedialog.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-LeafRemoveDialog::LeafRemoveDialog(CTreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, NodeUnit unit, QWidget* parent)
+LeafRemoveDialog::LeafRemoveDialog(TreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, NodeUnit unit, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::LeafRemoveDialog)
     , node_id_ { node_id }
@@ -56,6 +55,8 @@ void LeafRemoveDialog::InitCheckBoxGroup()
     ui->chkBoxPartner->hide();
     ui->chkBoxEmployee->hide();
     ui->chkBoxSettlement->hide();
+    ui->rBtnReplace->hide();
+    ui->comboBox->hide();
 
     switch (info_.section) {
     case Section::kInventory:
@@ -66,6 +67,9 @@ void LeafRemoveDialog::InitCheckBoxGroup()
         ui->chkBoxInventoryExt->show();
         ui->chkBoxInventoryExt->setChecked(inventory_ext_ref_);
         ui->chkBoxInventoryExt->setEnabled(false);
+
+        ui->rBtnReplace->show();
+        ui->comboBox->show();
         break;
     case Section::kPartner:
         if (node_unit_ == NodeUnit::PEmployee) {
@@ -132,9 +136,7 @@ void LeafRemoveDialog::on_pBtnOk_clicked()
         if (ui->rBtnReplace->isChecked()) {
             const auto new_node_id { ui->comboBox->currentData().toUuid() };
 
-            const bool inventory_outside_ref { inventory_int_ref_ || inventory_ext_ref_ };
-
-            const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id, inventory_outside_ref, node_unit_) };
+            const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id) };
             WebSocket::Instance()->SendMessage(kLeafReplace, message);
         }
     }
@@ -154,14 +156,12 @@ void LeafRemoveDialog::IniData(Section section)
         ui->label->setText(tr("The node has external references, so it can’t be removed."));
     }
 
-    if (section == Section::kSale || section == Section::kPurchase || section == Section::kPartner) {
-        ui->rBtnReplace->setEnabled(false);
-        ui->comboBox->setEnabled(false);
+    if (section != Section::kInventory)
         return;
-    }
 
-    auto* filter_model { new ExcludeOneFilterModel(node_id_, this) };
-    filter_model->setSourceModel(model_->LeafModel());
+    ui->rBtnReplace->setEnabled(true);
+
+    auto* filter_model { model_->ReplaceSelf(node_id_, node_unit_, this) };
 
     ui->comboBox->setModel(filter_model);
     ui->comboBox->setCurrentIndex(-1);
@@ -170,12 +170,12 @@ void LeafRemoveDialog::IniData(Section section)
 void LeafRemoveDialog::RcomboBoxCurrentIndexChanged(int /*index*/)
 {
     const auto new_node_id { ui->comboBox->currentData().toUuid() };
-    ui->pBtnOk->setEnabled(!new_node_id.isNull() && model_->Unit(new_node_id) == node_unit_);
+    ui->pBtnOk->setEnabled(!new_node_id.isNull());
 }
 
 void LeafRemoveDialog::RButtonGroup(int id)
 {
-    ui->pBtnOk->setEnabled(true);
+    ui->pBtnOk->setEnabled(id == 0 || ui->comboBox->currentIndex() != -1);
     ui->comboBox->setEnabled(id == 1);
 }
 

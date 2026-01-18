@@ -46,7 +46,7 @@ void TableWidgetSettlement::RSyncAmount(double amount)
 
 void TableWidgetSettlement::InitWidget()
 {
-    auto* pmodel { tree_model_p_->IncludeUnitModel(section_ == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor, this) };
+    auto* pmodel { tree_model_p_->IncludeUnit(section_ == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor, this) };
     ui->comboPartner->setModel(pmodel);
     ui->comboPartner->setCurrentIndex(-1);
 

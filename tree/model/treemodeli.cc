@@ -1,7 +1,5 @@
 #include "treemodeli.h"
 
-#include "tree/excludemultiplefiltermodel.h"
-#include "tree/includemultiplefiltermodel.h"
 #include "utils/compareutils.h"
 
 TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, QObject* parent)
@@ -211,22 +209,6 @@ Qt::ItemFlags TreeModelI::flags(const QModelIndex& index) const
     }
 
     return flags;
-}
-
-QSortFilterProxyModel* TreeModelI::IncludeUnitModel(NodeUnit unit, QObject* parent)
-{
-    auto* set { UnitSet(unit) };
-    auto* model { new IncludeMultipleFilterModel(set, parent) };
-    model->setSourceModel(leaf_path_model_);
-    return model;
-}
-
-QSortFilterProxyModel* TreeModelI::ExcludeMultipleModel(const QUuid& node_id, NodeUnit unit, QObject* parent)
-{
-    auto* set { UnitSet(unit) };
-    auto* model { new ExcludeMultipleFilterModel(node_id, set, parent) };
-    model->setSourceModel(leaf_path_model_);
-    return model;
 }
 
 void TreeModelI::ResetColor(const QModelIndex& index)
