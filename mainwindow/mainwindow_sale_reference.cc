@@ -22,15 +22,13 @@ void MainWindow::RSaleReference(Section section, const QUuid& widget_id, const Q
 
 void MainWindow::RSaleReferencePrimary(const QUuid& node_id, int unit)
 {
-    Q_ASSERT(sc_ && sc_->tree_widget);
-
     const bool allowed { (start_ == Section::kInventory && unit == std::to_underlying(NodeUnit::IInternal))
         || (start_ == Section::kPartner && unit == std::to_underlying(NodeUnit::PCustomer)) };
 
     if (!allowed)
         return;
 
-    CreateSaleReference(sc_->tree_model, sc_->info, node_id, unit);
+    CreateSaleReference(node_id, unit);
 }
 
 void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
@@ -57,10 +55,12 @@ void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
     RNodeLocation(Section::kSale, order_id);
 }
 
-void MainWindow::CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit)
+void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
 {
-    Q_ASSERT(tree_model);
-    Q_ASSERT(tree_model->Contains(node_id));
+    Q_ASSERT(sc_ && sc_->tree_model);
+
+    auto tree_model { sc_->tree_model };
+    const auto& info { sc_->info };
 
     const QString title { QString("%1-%2").arg(tr("Record"), tree_model->Name(node_id)) };
 

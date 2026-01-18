@@ -83,8 +83,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     virtual QModelIndex GetIndex(const QUuid& entry_id) const;
-
-    void ActionEntry(EntryAction action);
+    virtual void ActionEntry(EntryAction action);
 
 protected:
     virtual bool UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit)

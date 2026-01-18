@@ -176,7 +176,7 @@ private:
     void TableConnectP(QTableView* table_view, TableModel* table_model) const;
     void TableConnectO(QTableView* table_view, TableModelO* table_model_o, TableWidgetO* widget) const;
 
-    void CreateSaleReference(TreeModel* tree_model, CSectionInfo& info, const QUuid& node_id, int unit);
+    void CreateSaleReference(const QUuid& node_id, int unit);
     void DelegateSaleReference(QTableView* table_view, CSectionConfig& config) const;
     void SetTableViewSaleReference(QTableView* view) const;
 

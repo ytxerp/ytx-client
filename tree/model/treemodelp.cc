@@ -123,9 +123,8 @@ QVariant TreeModelP::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* d_node { DerivedPtr<NodeP>(GetNodeByIndex(index)) };
-    if (d_node == root_)
-        return QVariant();
+    auto* d_node { static_cast<NodeP*>(index.internalPointer()) };
+    Q_ASSERT(d_node != nullptr);
 
     const NodeEnumP column { index.column() };
 
@@ -170,11 +169,11 @@ bool TreeModelP::setData(const QModelIndex& index, const QVariant& value, int ro
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    auto* node { GetNodeByIndex(index) };
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    auto* d_node { static_cast<NodeP*>(node) };
 
-    auto* d_node { DerivedPtr<NodeP>(node) };
-    if (!d_node)
-        return false;
+    Q_ASSERT(node != nullptr);
+    Q_ASSERT(d_node != nullptr);
 
     const NodeEnumP column { index.column() };
     const QUuid id { node->id };

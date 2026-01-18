@@ -6,6 +6,9 @@ namespace Utils {
 
 void UpdatePath(QHash<QUuid, QString>& leaf, QHash<QUuid, QString>& branch, const Node* root, const Node* node, CString& separator)
 {
+    Q_ASSERT(root != nullptr);
+    Q_ASSERT(node != nullptr);
+
     QQueue<const Node*> queue {};
     queue.enqueue(node);
 
@@ -32,7 +35,10 @@ void UpdatePath(QHash<QUuid, QString>& leaf, QHash<QUuid, QString>& branch, cons
 
 bool IsDescendant(const Node* lhs, const Node* rhs)
 {
-    if (!lhs || !rhs || lhs == rhs)
+    Q_ASSERT(lhs != nullptr);
+    Q_ASSERT(rhs != nullptr);
+
+    if (lhs == rhs)
         return false;
 
     while (lhs && lhs != rhs)
@@ -43,7 +49,10 @@ bool IsDescendant(const Node* lhs, const Node* rhs)
 
 QString ConstructPath(const Node* root, const Node* node, CString& separator)
 {
-    if (!node || node == root)
+    Q_ASSERT(root != nullptr);
+    Q_ASSERT(node != nullptr);
+
+    if (node == root)
         return QString();
 
     QStringList tmp {};
@@ -58,7 +67,9 @@ QString ConstructPath(const Node* root, const Node* node, CString& separator)
 
 void LeafPathBranchPathModel(CUuidString& leaf, CUuidString& branch, ItemModel* model)
 {
-    if (!model || (leaf.isEmpty() && branch.isEmpty()))
+    Q_ASSERT(model != nullptr);
+
+    if (leaf.isEmpty() && branch.isEmpty())
         return;
 
     model->Reset();
@@ -83,8 +94,8 @@ void LeafPathBranchPathModel(CUuidString& leaf, CUuidString& branch, ItemModel* 
 
 void RemoveItem(ItemModel* model, const QUuid& node_id)
 {
-    if (!model || node_id.isNull())
-        return;
+    Q_ASSERT(model != nullptr);
+    Q_ASSERT(!node_id.isNull());
 
     for (int row = 0; row != model->rowCount(); ++row) {
         if (model->ItemData(row, Qt::UserRole).toUuid() == node_id) {
@@ -96,7 +107,10 @@ void RemoveItem(ItemModel* model, const QUuid& node_id)
 
 void UpdateModel(const QHash<QUuid, QString>& leaf_path, ItemModel* leaf_path_model, const Node* node)
 {
-    if (!node)
+    Q_ASSERT(node != nullptr);
+    Q_ASSERT(leaf_path_model != nullptr);
+
+    if (leaf_path.isEmpty())
         return;
 
     QQueue<const Node*> queue {};
@@ -127,7 +141,10 @@ void UpdateModel(const QHash<QUuid, QString>& leaf_path, ItemModel* leaf_path_mo
 
 void UpdatePathSeparator(CString& old_separator, CString& new_separator, QHash<QUuid, QString>& source_path)
 {
-    if (old_separator == new_separator || new_separator.isEmpty() || source_path.isEmpty())
+    Q_ASSERT(!new_separator.isEmpty());
+    Q_ASSERT(!old_separator.isEmpty());
+
+    if (old_separator == new_separator || source_path.isEmpty())
         return;
 
     for (auto& path : source_path)
@@ -136,7 +153,9 @@ void UpdatePathSeparator(CString& old_separator, CString& new_separator, QHash<Q
 
 void UpdateModelFunction(ItemModel* model, const QSet<QUuid>& update_range, CUuidString& source_path)
 {
-    if (!model || update_range.isEmpty() || source_path.isEmpty())
+    Q_ASSERT(model != nullptr);
+
+    if (update_range.isEmpty() || source_path.isEmpty())
         return;
 
     for (int row = 0; row != model->rowCount(); ++row) {

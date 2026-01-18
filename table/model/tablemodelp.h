@@ -44,6 +44,7 @@ public:
     bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
     QModelIndex GetIndex(const QUuid& entry_id) const override;
+    void ActionEntry(EntryAction action) override;
 
 protected:
     bool UpdateInternalSku(EntryP* entry, const QUuid& value);

@@ -134,7 +134,7 @@ MainWindow::~MainWindow()
 void MainWindow::FocusTableWidget(const QUuid& node_id) const
 {
     auto widget { sc_->table_wgt_hash.value(node_id, nullptr) };
-    Q_ASSERT(widget != nullptr);
+    Q_ASSERT_X(widget, "MainWindow::FocusTableWidget", "Table widget not found for node_id");
 
     ui->tabWidget->setCurrentWidget(widget);
     widget->activateWindow();

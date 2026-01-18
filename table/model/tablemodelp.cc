@@ -1,6 +1,7 @@
 #include "tablemodelp.h"
 
 #include <QDateTime>
+#include <QtConcurrent>
 
 #include "component/constant.h"
 #include "enum/entryenum.h"
@@ -90,6 +91,43 @@ QModelIndex TableModelP::GetIndex(const QUuid& entry_id) const
     }
 
     return QModelIndex();
+}
+
+void TableModelP::ActionEntry(EntryAction action)
+{
+    if (entry_list_.isEmpty())
+        return;
+
+    QJsonObject message { JsonGen::EntryAction(section_, lhs_id_, std::to_underlying(action)) };
+    WebSocket::Instance()->SendMessage(kEntryAction, message);
+
+    auto Update = [action](Entry* entry) {
+        switch (action) {
+        case EntryAction::kMarkAll:
+            entry->status = std::to_underlying(EntryStatus::kMarked);
+            break;
+        case EntryAction::kMarkNone:
+            entry->status = std::to_underlying(EntryStatus::kUnmarked);
+            break;
+        case EntryAction::kMarkToggle:
+            entry->status ^= std::to_underlying(EntryStatus::kMarked);
+            break;
+        default:
+            break;
+        }
+    };
+
+    auto future { QtConcurrent::map(entry_list_, Update) };
+    auto* watcher { new QFutureWatcher<void>(this) };
+
+    connect(watcher, &QFutureWatcher<void>::finished, this, [this, watcher]() {
+        const int column { std::to_underlying(EntryEnumP::kStatus) };
+        emit dataChanged(index(0, column), index(rowCount() - 1, column));
+
+        watcher->deleteLater();
+    });
+
+    watcher->setFuture(future);
 }
 
 bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)

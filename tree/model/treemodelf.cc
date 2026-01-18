@@ -13,9 +13,8 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* node { GetNodeByIndex(index) };
-    if (node == root_)
-        return QVariant();
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    Q_ASSERT(node != nullptr);
 
     const NodeEnumF column { index.column() };
 
@@ -62,9 +61,8 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    auto* node { GetNodeByIndex(index) };
-    if (node == root_)
-        return false;
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    Q_ASSERT(node != nullptr);
 
     const NodeEnumF column { index.column() };
     const QUuid id { node->id };

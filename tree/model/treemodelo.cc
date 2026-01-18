@@ -79,9 +79,6 @@ void TreeModelO::AckTree(const QJsonObject& obj)
 
 void TreeModelO::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
 {
-    if (!node_hash_.contains(ancestor_id)) {
-        qCritical() << "AckNode: ancestor_id not found in node_hash_:" << ancestor_id;
-    }
     Q_ASSERT(node_hash_.contains(ancestor_id));
 
     auto* node = NodePool::Instance().Allocate(section_);
@@ -119,6 +116,8 @@ void TreeModelO::InsertSettlement(const QUuid& node_id, const QUuid& settlement_
     auto* node = GetNode(node_id);
     if (node) {
         auto* d_node { static_cast<NodeO*>(node) };
+        Q_ASSERT(d_node != nullptr);
+
         d_node->is_settled = true;
         d_node->settlement_id = settlement_id;
     }
@@ -128,10 +127,11 @@ void TreeModelO::RecallSettlement(const QUuid& settlement_id)
 {
     for (auto it = node_hash_.begin(); it != node_hash_.end(); ++it) {
         auto* node = it.value();
-        if (!node)
-            continue;
+        Q_ASSERT(node != nullptr);
 
         auto* d_node = static_cast<NodeO*>(node);
+        Q_ASSERT(d_node != nullptr);
+
         if (d_node->settlement_id == settlement_id) {
             d_node->is_settled = false;
         }
@@ -142,10 +142,11 @@ void TreeModelO::DeleteSettlement(const QUuid& settlement_id)
 {
     for (auto it = node_hash_.begin(); it != node_hash_.end(); ++it) {
         auto* node = it.value();
-        if (!node)
-            continue;
+        Q_ASSERT(node != nullptr);
 
         auto* d_node = static_cast<NodeO*>(node);
+        Q_ASSERT(d_node != nullptr);
+
         if (d_node->settlement_id == settlement_id) {
             d_node->is_settled = false;
             d_node->settlement_id = QUuid();
@@ -322,9 +323,8 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* d_node { DerivedPtr<NodeO>(GetNodeByIndex(index)) };
-    if (!d_node)
-        return false;
+    auto* d_node { static_cast<NodeO*>(index.internalPointer()) };
+    Q_ASSERT(d_node != nullptr);
 
     const NodeEnumO column { index.column() };
     bool branch { d_node->kind == NodeKind::kBranch };
@@ -403,11 +403,6 @@ Qt::ItemFlags TreeModelO::flags(const QModelIndex& index) const
 
 bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild)
 {
-    if (!sourceParent.isValid() || !destinationParent.isValid()) {
-        qCritical() << "moveRows: Invalid source or destination parent index";
-        return false;
-    }
-
     if (sourceParent == destinationParent) {
         qWarning() << "moveRows: same parent move is not supported";
         return false;

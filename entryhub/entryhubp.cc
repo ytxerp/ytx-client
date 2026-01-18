@@ -50,12 +50,7 @@ void EntryHubP::SearchEntry(QList<Entry*>& entry_list, CString& name) const
     entry_list.reserve(entry_cache_.size() / 2);
 
     for (const auto& [id, entry] : entry_cache_.asKeyValueRange()) {
-        if (!entry) {
-            qCritical().noquote() << "[EntryHubP::SearchEntry] Unexpected null entry detected!"
-                                  << "id =" << id.toString(QUuid::WithoutBraces);
-            Q_ASSERT(entry && "EntryHubP::SearchEntry encountered null entry in cache");
-            continue;
-        }
+        Q_ASSERT(entry && "EntryHubP::SearchEntry encountered null entry in cache");
 
         if (entry->description.contains(name, Qt::CaseInsensitive)) {
             entry_list.emplaceBack(entry);
@@ -68,12 +63,7 @@ void EntryHubP::PushEntry(const QUuid& node_id)
     EntryList entry_list {};
 
     for (const auto& [id, entry] : entry_cache_.asKeyValueRange()) {
-        if (!entry) {
-            qCritical().noquote() << "[EntryHubP::PushEntry] Unexpected null entry detected!"
-                                  << "id =" << id.toString(QUuid::WithoutBraces);
-            Q_ASSERT(entry && "EntryHubP::PushEntry encountered null entry in cache");
-            continue;
-        }
+        Q_ASSERT(entry && "EntryHubP::PushEntry encountered null entry in cache");
 
         if (entry->lhs_node == node_id) {
             entry_list.emplaceBack(entry);

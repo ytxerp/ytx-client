@@ -118,8 +118,6 @@ void MainWindow::on_actionResetColor_triggered()
 
     Q_ASSERT_X(start_ == Section::kInventory || start_ == Section::kTask, Q_FUNC_INFO, "ResetColor action is only valid in Inventory or Task section");
 
-    Q_ASSERT(sc_->tree_widget);
-
     const auto index { sc_->tree_view->currentIndex() };
     if (!index.isValid())
         return;

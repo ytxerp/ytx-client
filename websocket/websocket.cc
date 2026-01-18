@@ -38,8 +38,6 @@ WebSocket::~WebSocket()
 WebSocket* WebSocket::Instance()
 {
     static auto* instance = new WebSocket(qApp);
-
-    Q_ASSERT(instance != nullptr);
     return instance;
 }
 
@@ -580,8 +578,6 @@ void WebSocket::ReplaceLeaf(const QJsonObject& obj)
 
     if (section == Section::kInventory && inventory_outside_ref) {
         entry_hub_hash_.value(Section::kSale)->ApplyInventoryReplace(old_node_id, new_node_id);
-        entry_hub_hash_.value(Section::kPurchase)->ApplyInventoryReplace(old_node_id, new_node_id);
-        entry_hub_hash_.value(Section::kPartner)->ApplyInventoryReplace(old_node_id, new_node_id);
     }
 
     auto tree_model { tree_model_hash_.value(section) };

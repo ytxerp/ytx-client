@@ -163,8 +163,7 @@ bool IsDescendant(const Node* lhs, const Node* rhs);
 
 template <typename F> void SortIterative(Node* node, F&& Compare)
 {
-    if (!node)
-        return;
+    Q_ASSERT(node != nullptr);
 
     QQueue<Node*> queue {};
     queue.enqueue(node);
@@ -218,7 +217,7 @@ template <typename Field, typename T> const Field& Value(CNodeHash& hash, const 
 template <typename Field, typename T, typename F = std::nullptr_t>
 bool UpdateField(QJsonObject& update, T* object, CString& field, const Field& value, Field T::* member, F&& restart_timer = nullptr)
 {
-    Q_ASSERT(object);
+    Q_ASSERT(object != nullptr);
 
     Field& current_value { object->*member };
 
@@ -238,7 +237,7 @@ bool UpdateField(QJsonObject& update, T* object, CString& field, const Field& va
 template <typename Field, typename T, typename F = std::nullptr_t>
 bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& value, Field T::* member, F&& restart_timer = nullptr)
 {
-    Q_ASSERT(object);
+    Q_ASSERT(object != nullptr);
 
     Field& current_value { object->*member };
 
@@ -258,7 +257,7 @@ bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& v
 template <typename T, typename F = std::nullptr_t>
 bool UpdateDocument(QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList T::* member, F&& restart_timer = nullptr)
 {
-    Q_ASSERT(object);
+    Q_ASSERT(object != nullptr);
 
     QStringList& current_value { object->*member };
 
@@ -278,7 +277,7 @@ bool UpdateDocument(QJsonObject& update, T* object, CString& field, const QStrin
 template <typename T, typename F = std::nullptr_t>
 bool UpdateUuid(QJsonObject& update, T* object, CString& field, const QUuid& value, QUuid T::* member, F&& restart_timer = nullptr)
 {
-    Q_ASSERT(object);
+    Q_ASSERT(object != nullptr);
 
     QUuid& current_value { object->*member };
 
@@ -298,7 +297,7 @@ bool UpdateUuid(QJsonObject& update, T* object, CString& field, const QUuid& val
 template <typename T, typename F = std::nullptr_t>
 bool UpdateIssuedTime(QJsonObject& update, T* object, CString& field, const QDateTime& value, QDateTime T::* member, F&& restart_timer = nullptr)
 {
-    Q_ASSERT(object);
+    Q_ASSERT(object != nullptr);
 
     QDateTime& current_value { object->*member };
 

@@ -24,13 +24,13 @@ namespace Utils {
 
 template <typename Derived, typename Base> Derived* DerivedPtr(Base* base)
 {
-    Q_ASSERT(base);
+    Q_ASSERT(base != nullptr);
     return static_cast<Derived*>(base);
 }
 
 template <typename Derived, typename Base> const Derived* DerivedPtr(const Base* base)
 {
-    Q_ASSERT(base);
+    Q_ASSERT(base != nullptr);
     return static_cast<const Derived*>(base);
 }
 

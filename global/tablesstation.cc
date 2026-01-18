@@ -5,7 +5,6 @@
 TableSStation* TableSStation::Instance()
 {
     static auto* instance = new TableSStation(qApp);
-    Q_ASSERT(instance != nullptr);
     return instance;
 }
 
@@ -69,6 +68,8 @@ void TableSStation::RUpdateBalance(const QUuid& node_id, const QUuid& entry_id)
 
 void TableSStation::RAppendMultiEntry(const QUuid& node_id, const EntryList& entry_list)
 {
+    Q_ASSERT(!node_id.isNull());
+
     if (entry_list.isEmpty())
         return;
 

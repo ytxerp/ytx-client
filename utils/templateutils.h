@@ -52,15 +52,9 @@ template <MapType T> ItemModel* CreateModelFromMap(const T& map, QObject* parent
 
 template <InheritQWidget T> void CloseWidget(const QUuid& node_id, QHash<QUuid, QPointer<T>>& hash)
 {
-    auto it = hash.constFind(node_id);
-    if (it != hash.constEnd()) {
-        auto widget { it.value() };
-
-        if (widget) {
-            hash.erase(it);
-            widget->setAttribute(Qt::WA_DeleteOnClose);
-            widget->close();
-        }
+    if (auto widget { hash.take(node_id) }) {
+        widget->setAttribute(Qt::WA_DeleteOnClose);
+        widget->close();
     }
 }
 

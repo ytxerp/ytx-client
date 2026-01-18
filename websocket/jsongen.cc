@@ -8,6 +8,8 @@ namespace JsonGen {
 
 QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id)
 {
+    Q_ASSERT(node != nullptr);
+
     const QJsonObject node_json { node->WriteJson() };
 
     QJsonObject path_json {};

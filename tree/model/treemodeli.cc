@@ -81,9 +81,8 @@ QVariant TreeModelI::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* d_node { DerivedPtr<NodeI>(GetNodeByIndex(index)) };
-    if (d_node == root_)
-        return QVariant();
+    auto* d_node { static_cast<NodeI*>(index.internalPointer()) };
+    Q_ASSERT(d_node != nullptr);
 
     const NodeEnumI column { index.column() };
 
@@ -136,11 +135,11 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    auto* node { GetNodeByIndex(index) };
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    auto* d_node { static_cast<NodeI*>(node) };
 
-    auto* d_node { DerivedPtr<NodeI>(node) };
-    if (!d_node)
-        return false;
+    Q_ASSERT(node != nullptr);
+    Q_ASSERT(d_node != nullptr);
 
     const NodeEnumI column { index.column() };
     const QUuid id { node->id };
@@ -232,8 +231,8 @@ QSortFilterProxyModel* TreeModelI::ExcludeMultipleModel(const QUuid& node_id, No
 
 void TreeModelI::ResetColor(const QModelIndex& index)
 {
-    auto* node { GetNodeByIndex(index) };
-    auto* d_node { DerivedPtr<NodeI>(node) };
+    auto* d_node { static_cast<NodeI*>(index.internalPointer()) };
+    Q_ASSERT(d_node != nullptr);
     const QUuid id { d_node->id };
 
     d_node->color.clear();

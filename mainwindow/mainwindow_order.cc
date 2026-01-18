@@ -5,15 +5,12 @@
 #include "global/nodepool.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
-#include "tree/model/treemodelo.h"
 #include "ui_mainwindow.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
 void MainWindow::EditNameO()
 {
-    Q_ASSERT(sc_->tree_widget);
-
     const auto index { sc_->tree_view->currentIndex() };
     if (!index.isValid())
         return;

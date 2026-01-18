@@ -113,7 +113,7 @@ void TableModel::ActionEntry(EntryAction action)
             *entry_shadow->status = std::to_underlying(EntryStatus::kUnmarked);
             break;
         case EntryAction::kMarkToggle:
-            *entry_shadow->status = std::to_underlying(EntryStatus::kMarked) - *entry_shadow->status;
+            *entry_shadow->status ^= std::to_underlying(EntryStatus::kMarked);
             break;
         default:
             break;

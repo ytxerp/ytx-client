@@ -329,7 +329,7 @@ void EntryHub::EntryActionImpl(Entry* entry, EntryAction action)
         entry->status = std::to_underlying(EntryStatus::kUnmarked);
         break;
     case EntryAction::kMarkToggle:
-        entry->status = std::to_underlying(EntryStatus::kMarked) - entry->status;
+        entry->status ^= std::to_underlying(EntryStatus::kMarked);
         break;
     default:
         break;

@@ -17,10 +17,8 @@ QVariant TreeModelT::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* d_node { DerivedPtr<NodeT>(GetNodeByIndex(index)) };
-
-    if (d_node == root_)
-        return QVariant();
+    auto* d_node { static_cast<NodeT*>(index.internalPointer()) };
+    Q_ASSERT(d_node != nullptr);
 
     const NodeEnumT column { index.column() };
 
@@ -75,11 +73,11 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    auto* node { GetNodeByIndex(index) };
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    auto* d_node { static_cast<NodeT*>(node) };
 
-    auto* d_node { DerivedPtr<NodeT>(node) };
-    if (!d_node)
-        return false;
+    Q_ASSERT(node != nullptr);
+    Q_ASSERT(d_node != nullptr);
 
     const NodeEnumT column { index.column() };
 
@@ -220,8 +218,9 @@ Qt::ItemFlags TreeModelT::flags(const QModelIndex& index) const
 
 void TreeModelT::ResetColor(const QModelIndex& index)
 {
-    auto* node { GetNodeByIndex(index) };
-    auto* d_node { DerivedPtr<NodeT>(node) };
+    auto* d_node { static_cast<NodeT*>(index.internalPointer()) };
+    Q_ASSERT(d_node != nullptr);
+
     const QUuid node_id { d_node->id };
 
     d_node->color.clear();

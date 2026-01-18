@@ -145,14 +145,13 @@ void Utils::SetupHeaderStatus(QHeaderView* header, const QSharedPointer<QSetting
 
 void Utils::ResetSectionContext(SectionContext& ctx)
 {
-    if (ctx.tree_widget)
-        ctx.tree_widget->Reset();
+    Q_ASSERT(ctx.tree_widget);
+    Q_ASSERT(ctx.entry_hub);
+    Q_ASSERT(ctx.tree_model);
 
-    if (ctx.entry_hub)
-        ctx.entry_hub->Reset();
-
-    if (ctx.tree_model)
-        ctx.tree_model->Reset();
+    ctx.tree_widget->Reset();
+    ctx.entry_hub->Reset();
+    ctx.tree_model->Reset();
 
     ctx.section_config = SectionConfig {};
     ctx.shared_config = SharedConfig {};
@@ -164,8 +163,7 @@ void Utils::ResetSectionContext(SectionContext& ctx)
 
 void Utils::SetConnectionStatus(QLabel* label, ConnectionStatus status)
 {
-    if (!label)
-        return;
+    Q_ASSERT(label != nullptr);
 
     switch (status) {
     case ConnectionStatus::Connecting:
@@ -190,8 +188,7 @@ void Utils::SetConnectionStatus(QLabel* label, ConnectionStatus status)
 
 void Utils::SetLoginStatus(QLabel* label, LoginStatus status)
 {
-    if (!label)
-        return;
+    Q_ASSERT(label != nullptr);
 
     switch (status) {
     case LoginStatus::LoggedIn:
@@ -211,6 +208,8 @@ void Utils::SetLoginStatus(QLabel* label, LoginStatus status)
 
 void Utils::SetButton(QPushButton* btn, const QString& text, const QKeySequence& ks)
 {
+    Q_ASSERT(btn != nullptr);
+
     btn->setShortcut(ks);
     btn->setText(text);
     btn->setToolTip(QString("%1 (%2)").arg(text, ks.toString()));

@@ -61,15 +61,14 @@ void TreeModel::SyncTotalArray(const QJsonArray& total_array)
 
 void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
 {
-    if (!node_hash_.contains(ancestor)) {
-        qCritical() << "ApplyNodeInsert: ancestor not found in node_hash_, ancestor =" << ancestor;
-        return;
-    }
+    Q_ASSERT(node_hash_.contains(ancestor));
 
     auto* node { NodePool::Instance().Allocate(section_) };
     node->ReadJson(data);
 
     Node* parent { node_hash_.value(ancestor) };
+    Q_ASSERT(parent != nullptr);
+
     const auto row { parent->children.size() };
 
     auto parent_index { GetIndex(parent->id) };
@@ -212,8 +211,8 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     auto* old_node { GetNode(old_node_id) };
     auto* new_node { GetNode(new_node_id) };
 
-    if (!old_node || !new_node)
-        return;
+    Q_ASSERT(old_node != nullptr);
+    Q_ASSERT(new_node != nullptr);
 
     const int multiplier { old_node->direction_rule == new_node->direction_rule ? 1 : -1 };
     const double initial_delta { multiplier * old_node->initial_total };
@@ -231,7 +230,11 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
 void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
 {
     auto* node = GetNode(node_id);
-    if (!node || node->name == name || name.isEmpty())
+
+    Q_ASSERT(node != nullptr);
+    Q_ASSERT(!name.isEmpty());
+
+    if (node->name == name)
         return;
 
     node->name = name;
@@ -302,12 +305,11 @@ QModelIndex TreeModel::parent(const QModelIndex& index) const
     if (!index.isValid())
         return QModelIndex();
 
-    auto* node { GetNodeByIndex(index) };
-    if (node->id.isNull())
-        return QModelIndex();
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    Q_ASSERT(node != nullptr);
 
     auto* parent_node { node->parent };
-    if (parent_node->id.isNull())
+    if (parent_node == root_)
         return QModelIndex();
 
     return createIndex(parent_node->parent->children.indexOf(parent_node), 0, parent_node);
@@ -321,7 +323,10 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex& parent) con
     auto* parent_node { GetNodeByIndex(parent) };
     auto* node { parent_node->children.at(row) };
 
-    return node ? createIndex(row, column, node) : QModelIndex();
+    Q_ASSERT(parent_node != nullptr);
+    Q_ASSERT(node != nullptr);
+
+    return createIndex(row, column, node);
 }
 
 int TreeModel::rowCount(const QModelIndex& parent) const { return GetNodeByIndex(parent)->children.size(); }
@@ -426,11 +431,6 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
 
 bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild)
 {
-    if (!sourceParent.isValid() || !destinationParent.isValid()) {
-        qCritical() << "moveRows: Invalid source or destination parent index";
-        return false;
-    }
-
     if (sourceParent == destinationParent) {
         qWarning() << "moveRows: same parent move is not supported";
         return false;
