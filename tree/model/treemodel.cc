@@ -261,10 +261,7 @@ void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant)
 
     // Get the destination parent node
     auto* destination_node { GetNode(ancestor) };
-    if (!destination_node) {
-        qCritical() << "DragNode: ancestor node not found:" << ancestor;
-        return;
-    }
+    Q_ASSERT(destination_node != nullptr);
 
     // Calculate the destination row (insert at the end)
     const qsizetype destination_child { destination_node->children.size() };

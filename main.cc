@@ -31,10 +31,6 @@ int main(int argc, char* argv[])
     // Create the Qt application instance
     QApplication application(argc, argv);
 
-#ifdef QT_DEBUG
-    Utils::CheckOpenSSLRuntime();
-#endif
-
     // Register resource file (contains icons, translations, themes, etc.)
     const QString resource_file { Utils::ResourceFile() };
     if (!QResource::registerResource(resource_file)) {
