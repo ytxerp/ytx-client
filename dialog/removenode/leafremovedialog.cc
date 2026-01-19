@@ -159,8 +159,6 @@ void LeafRemoveDialog::IniData(Section section)
     if (section != Section::kInventory)
         return;
 
-    ui->rBtnReplace->setEnabled(true);
-
     auto* filter_model { model_->ReplaceSelf(node_id_, node_unit_, this) };
 
     ui->comboBox->setModel(filter_model);
@@ -182,8 +180,9 @@ void LeafRemoveDialog::RButtonGroup(int id)
 void LeafRemoveDialog::RReplaceResult(bool result)
 {
     if (result) {
-        this->accept();
-    } else
-        QMessageBox::critical(this, tr("Replacement Conflict"),
-            tr("A reference conflict exists between the linked nodes of the old node and the new node. The replacement operation has been canceled."));
+        accept();
+    } else {
+        QMessageBox::critical(
+            this, tr("Replacement Conflict"), tr("The old node cannot be replaced because linked nodes or partner entries conflict with the new node."));
+    }
 }
