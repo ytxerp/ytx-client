@@ -30,7 +30,7 @@
 class LineEdit final : public QLineEdit {
 public:
     explicit LineEdit(QWidget* parent = nullptr)
-        : QLineEdit(parent)
+        : QLineEdit { parent }
     {
     }
 
@@ -40,12 +40,18 @@ public:
 protected:
     void keyPressEvent(QKeyEvent* event) override
     {
-        if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_Semicolon) {
-            return insert(QDate::currentDate().toString(kDateFST));
-        }
+        const Qt::KeyboardModifiers modifiers { event->modifiers() };
 
-        if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier) && event->key() == Qt::Key_Semicolon)
-            return insert(QDateTime::currentDateTime().toString(kDateTimeFST));
+        if (event->key() == Qt::Key_Semicolon) {
+            if (modifiers == Qt::ControlModifier) {
+                insert(QDate::currentDate().toString(kDateFST));
+                return;
+            }
+            if (modifiers == (Qt::ControlModifier | Qt::ShiftModifier)) {
+                insert(QDateTime::currentDateTime().toString(kDateTimeFST));
+                return;
+            }
+        }
 
         QLineEdit::keyPressEvent(event);
     }

@@ -13,13 +13,7 @@ QModelIndex ItemModel::index(int row, int column, const QModelIndex& parent) con
     return createIndex(row, column);
 }
 
-QVariant ItemModel::data(const QModelIndex& index, int role) const
-{
-    if (!index.isValid())
-        return {};
-
-    return ItemData(index.row(), role);
-}
+QVariant ItemModel::data(const QModelIndex& index, int role) const { return ItemData(index.row(), role); }
 
 void ItemModel::sort(int column, Qt::SortOrder order)
 {
@@ -86,7 +80,10 @@ void ItemModel::Reset()
 
 void ItemModel::UpdateSeparator(const QString& old_separator, const QString& new_separator)
 {
-    if (old_separator == new_separator || old_separator.isEmpty() || new_separator.isEmpty())
+    Q_ASSERT(!new_separator.isEmpty());
+    Q_ASSERT(!old_separator.isEmpty());
+
+    if (old_separator == new_separator)
         return;
 
     for (auto& item : items_) {

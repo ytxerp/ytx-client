@@ -538,7 +538,10 @@ void TreeModel::LeafPathBranchPathModel(ItemModel* model) const { Utils::LeafPat
 
 void TreeModel::UpdateSeparator(CString& old_separator, CString& new_separator)
 {
-    if (old_separator == new_separator || old_separator.isEmpty() || new_separator.isEmpty())
+    Q_ASSERT(!new_separator.isEmpty());
+    Q_ASSERT(!old_separator.isEmpty());
+
+    if (old_separator == new_separator)
         return;
 
     Utils::UpdatePathSeparator(old_separator, new_separator, leaf_path_);
@@ -589,23 +592,29 @@ void TreeModel::Reset()
 
 QModelIndex TreeModel::GetIndex(const QUuid& node_id) const
 {
+    // Return an invalid index if the node_id is null
     if (node_id.isNull())
         return QModelIndex();
 
-    if (!node_hash_.contains(node_id)) {
-        qCritical() << "GetIndex: node_id not found in node_hash_:" << node_id;
-        return QModelIndex();
+    // Look up the node in the hash table
+    Node* node { node_hash_.value(node_id, nullptr) };
+    if (!node) {
+        qCritical() << "GetIndex: node_id not found in node_hash_";
+        return QModelIndex(); // Node not found → return invalid index
     }
 
-    Node* node { node_hash_.value(node_id) };
-
+    // If the node has no parent, it is a root node → return invalid index
     if (!node->parent)
         return QModelIndex();
 
+    // Find the row of this node in its parent's children list
     auto row { node->parent->children.indexOf(node) };
-    if (row == -1)
-        return QModelIndex();
+    if (row == -1) {
+        qCritical() << "GetIndex: node not found in parent's children list";
+        return QModelIndex(); // Data inconsistency → return invalid index
+    }
 
+    // Create and return the QModelIndex for this node (single column model)
     return createIndex(row, 0, node);
 }
 

@@ -12,10 +12,8 @@ DateTimeEdit::DateTimeEdit(QWidget* parent)
 
 void DateTimeEdit::keyPressEvent(QKeyEvent* event)
 {
-    const int key { event->key() };
-    QDateTime date_time { this->dateTime() };
-
-    if (HandleSpecialKeys(key, date_time)) {
+    QDateTime date_time { dateTime() };
+    if (HandleSpecialKeys(event->key(), date_time)) {
         setDateTime(date_time);
         event->accept();
         return;
@@ -32,16 +30,14 @@ void DateTimeEdit::focusInEvent(QFocusEvent* event)
 bool DateTimeEdit::LastMonthEnd(QDateTime& date_time)
 {
     QDate date { date_time.date().addMonths(-1) };
-    date.setDate(date.year(), date.month(), date.daysInMonth());
-    date_time.setDate(date);
+    date_time.setDate(QDate(date.year(), date.month(), date.daysInMonth()));
     return true;
 }
 
 bool DateTimeEdit::NextMonthStart(QDateTime& date_time)
 {
     QDate date { date_time.date().addMonths(1) };
-    date.setDate(date.year(), date.month(), 1);
-    date_time.setDate(date);
+    date_time.setDate(QDate(date.year(), date.month(), 1));
     return true;
 }
 

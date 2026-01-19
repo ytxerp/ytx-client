@@ -50,6 +50,9 @@ void MainWindow::UpdateAppConfig(CAppConfig& app)
     auto new_separator { app.separator };
     auto old_separator { app_config_.separator };
 
+    Q_ASSERT(!new_separator.isEmpty());
+    Q_ASSERT(!old_separator.isEmpty());
+
     if (old_separator != new_separator) {
         sc_f_.tree_model->UpdateSeparator(old_separator, new_separator);
         sc_p_.tree_model->UpdateSeparator(old_separator, new_separator);

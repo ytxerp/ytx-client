@@ -37,7 +37,7 @@ public:
     }
 
 protected:
-    void wheelEvent(QWheelEvent* event) override { event->ignore(); };
+    void wheelEvent(QWheelEvent* event) override { event->ignore(); }
     void keyPressEvent(QKeyEvent* event) override
     {
         if (event->text() == kFullWidthPeriod) {
