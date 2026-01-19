@@ -12,7 +12,9 @@ void MainWindow::RemoveNode()
         return;
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
-    Q_ASSERT(node != nullptr);
+    if (!node) {
+        return;
+    }
 
     auto model { sc_->tree_model };
     Q_ASSERT(model != nullptr);

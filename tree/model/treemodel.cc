@@ -64,13 +64,12 @@ void TreeModel::SyncTotalArray(const QJsonArray& total_array)
 
 void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
 {
-    Q_ASSERT(node_hash_.contains(ancestor));
+    Node* parent { node_hash_.value(ancestor) };
+    if (!parent)
+        return;
 
     auto* node { NodePool::Instance().Allocate(section_) };
     node->ReadJson(data);
-
-    Node* parent { node_hash_.value(ancestor) };
-    Q_ASSERT(parent != nullptr);
 
     const auto row { parent->children.size() };
 
@@ -214,8 +213,8 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     auto* old_node { GetNode(old_node_id) };
     auto* new_node { GetNode(new_node_id) };
 
-    Q_ASSERT(old_node != nullptr);
-    Q_ASSERT(new_node != nullptr);
+    if (!old_node || !new_node)
+        return;
 
     const int multiplier { old_node->direction_rule == new_node->direction_rule ? 1 : -1 };
     const double initial_delta { multiplier * old_node->initial_total };
@@ -233,9 +232,8 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
 void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
 {
     auto* node = GetNode(node_id);
-
-    Q_ASSERT(node != nullptr);
-    Q_ASSERT(!name.isEmpty());
+    if (!node)
+        return;
 
     if (node->name == name)
         return;
@@ -256,46 +254,60 @@ void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant)
 {
     // Get the node to be moved
     auto* node { GetNode(descendant) };
-    if (!node)
+    if (!node) {
+        qWarning() << "DragNode: descendant node not found, skip move";
         return;
+    }
 
-    // Get the destination parent node
+    // Get destination parent node
     auto* destination_node { GetNode(ancestor) };
-    Q_ASSERT(destination_node != nullptr);
+    if (!destination_node) {
+        qWarning() << "DragNode: destination node not found, skip move";
+        return;
+    }
+
+    // Get source parent node
+    Node* source_parent_node { node->parent };
+    if (!source_parent_node) {
+        qWarning() << "DragNode: node has no source parent (top-level or detached), skip move";
+        return;
+    }
+
+    // Same parent, nothing to do
+    if (source_parent_node == destination_node) {
+        qWarning() << "DragNode: source and destination parent are the same, skip move";
+        return;
+    }
+
+    // Check for circular dependency (destination is descendant of node)
+    if (Utils::IsDescendant(destination_node, node)) {
+        qWarning() << "DragNode: cannot move node to its descendant, skip move";
+        return;
+    }
 
     // Calculate the destination row (insert at the end)
     const qsizetype destination_child { destination_node->children.size() };
     const QModelIndex destination_parent_index { GetIndex(ancestor) };
-
     if (!destination_parent_index.isValid()) {
-        qWarning() << "DragNode: invalid destination index for node" << ancestor;
-        return;
-    }
-
-    // Get the source parent node
-    Node* source_parent_node { node->parent };
-    if (!source_parent_node) {
-        qWarning() << "DragNode: node has no parent, cannot move:" << descendant;
-        return;
+        qInfo() << "DragNode: moving node to top-level";
     }
 
     // Find the row of the node in its parent's children list
     const qsizetype source_row { source_parent_node->children.indexOf(node) };
     if (source_row == -1) {
-        qWarning() << "DragNode: node not found in parent's children list:" << descendant;
+        qWarning() << "DragNode: node not found in source parent's children, skip move";
         return;
     }
 
     // Get the source parent index
     QModelIndex source_parent_index { GetIndex(source_parent_node->id) };
     if (!source_parent_index.isValid()) {
-        qWarning() << "DragNode: invalid source parent index for node" << descendant;
-        return;
+        qInfo() << "DragNode: moving top-level node";
     }
 
     // Perform the row move
     if (!moveRows(source_parent_index, source_row, 1, destination_parent_index, destination_child)) {
-        qDebug() << "DragNode: moveRows failed for node" << descendant;
+        qWarning() << "DragNode: moveRows failed";
     }
 }
 
@@ -306,13 +318,30 @@ QModelIndex TreeModel::parent(const QModelIndex& index) const
         return QModelIndex();
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
-    Q_ASSERT(node != nullptr);
+    if (!node) {
+        qWarning() << "parent: invalid internal pointer in index";
+        return QModelIndex();
+    }
 
+    // Node has no parent or parent is root
     auto* parent_node { node->parent };
-    if (parent_node == root_)
+    if (!parent_node || parent_node == root_)
         return QModelIndex();
 
-    return createIndex(parent_node->parent->children.indexOf(parent_node), 0, parent_node);
+    // Parent node should have a parent (grandparent)
+    if (!parent_node->parent) {
+        qWarning() << "parent: parent_node has no parent (should be root)";
+        return QModelIndex();
+    }
+
+    // Find parent's row in grandparent's children
+    const qsizetype row { parent_node->parent->children.indexOf(parent_node) };
+    if (row == -1) {
+        qWarning() << "parent: parent_node not found in grandparent's children";
+        return QModelIndex();
+    }
+
+    return createIndex(row, 0, parent_node);
 }
 
 QModelIndex TreeModel::index(int row, int column, const QModelIndex& parent) const
@@ -321,10 +350,23 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex& parent) con
         return QModelIndex();
 
     auto* parent_node { GetNodeByIndex(parent) };
-    auto* node { parent_node->children.at(row) };
+    if (!parent_node) {
+        qWarning() << "index: parent node not found";
+        return QModelIndex();
+    }
 
-    Q_ASSERT(parent_node != nullptr);
-    Q_ASSERT(node != nullptr);
+    // Check row is within bounds
+    if (row < 0 || row >= parent_node->children.size()) {
+        qWarning() << "index: row out of bounds"
+                   << "row:" << row << "children size:" << parent_node->children.size();
+        return QModelIndex();
+    }
+
+    auto* node { parent_node->children.at(row) };
+    if (!node) {
+        qWarning() << "index: child node at row" << row << "is null";
+        return QModelIndex();
+    }
 
     return createIndex(row, column, node);
 }
@@ -386,19 +428,33 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
         return false;
 
     auto* destination_parent { GetNodeByIndex(parent) };
+    if (!destination_parent) {
+        qWarning() << "dropMimeData: destination parent not found";
+        return false;
+    }
+
     if (destination_parent->kind != NodeKind::kBranch)
         return false;
 
-    QUuid node_id {};
+    const auto mime { data->data(kYTX) };
+    if (mime.isEmpty()) {
+        qWarning() << "dropMimeData: MIME data is empty";
+        return false;
+    }
 
-    if (auto mime { data->data(kYTX) }; !mime.isEmpty())
-        node_id = QUuid::fromRfc4122(mime);
+    const QUuid node_id { QUuid::fromRfc4122(mime) };
+    if (node_id.isNull()) {
+        qWarning() << "dropMimeData: invalid UUID in MIME data";
+        return false;
+    }
 
     auto* node { node_hash_.value(node_id) };
     if (!node) {
-        qCritical() << "dropMimeData: Node not found for UUID:" << node_id;
+        qWarning() << "dropMimeData: node not found (possibly deleted during drag)" << node_id;
         return false;
     }
+
+    qInfo() << "[UI] dropMimeData";
 
     if (node->parent == destination_parent || Utils::IsDescendant(destination_parent, node))
         return false;
@@ -410,10 +466,13 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
     destination_child = qBound(0, destination_child, destination_parent->children.size());
 
     auto* source_parent_node { node->parent };
-    Q_ASSERT(source_parent_node != nullptr);
+    if (!source_parent_node) {
+        qWarning() << "dropMimeData: source parent is null (node was orphaned during drag)";
+        return false;
+    }
 
     qsizetype source_row { source_parent_node->children.indexOf(node) };
-    if (source_row < 0) {
+    if (source_row == -1) {
         qCritical() << "dropMimeData: source row not found for node:" << node->id;
         return false;
     }

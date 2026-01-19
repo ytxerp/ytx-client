@@ -345,8 +345,6 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
 
 void TableModel::sort(int column, Qt::SortOrder order)
 {
-    Q_ASSERT(column >= 0 && column < info_.entry_header.size());
-
     const EntryEnum e_column { column };
     if (e_column == EntryEnum::kBalance)
         return;

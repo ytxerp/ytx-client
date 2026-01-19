@@ -109,8 +109,6 @@ QVariant StatementEntryModel::headerData(int section, Qt::Orientation orientatio
 
 void StatementEntryModel::sort(int column, Qt::SortOrder order)
 {
-    Q_ASSERT(column >= 0 && column < info_.statement_entry_header.size());
-
     const StatementEntryEnum e_column { column };
 
     auto Compare = [e_column, order](const StatementEntry* lhs, const StatementEntry* rhs) -> bool {

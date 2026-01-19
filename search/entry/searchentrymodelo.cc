@@ -63,8 +63,6 @@ QVariant SearchEntryModelO::data(const QModelIndex& index, int role) const
 
 void SearchEntryModelO::sort(int column, Qt::SortOrder order)
 {
-    Q_ASSERT(column >= 0 && column < info_.full_entry_header.size());
-
     const EntryEnumO e_column { column };
 
     auto Compare = [e_column, order](const Entry* lhs, const Entry* rhs) -> bool {

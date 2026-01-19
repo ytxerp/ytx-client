@@ -265,8 +265,6 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
 
 void TableModelP::sort(int column, Qt::SortOrder order)
 {
-    Q_ASSERT(column >= 0 && column < info_.entry_header.size());
-
     const EntryEnumP e_column { column };
 
     auto Compare = [e_column, order](Entry* lhs, Entry* rhs) -> bool {

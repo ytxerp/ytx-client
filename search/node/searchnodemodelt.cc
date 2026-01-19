@@ -65,8 +65,6 @@ QVariant SearchNodeModelT::data(const QModelIndex& index, int role) const
 
 void SearchNodeModelT::sort(int column, Qt::SortOrder order)
 {
-    Q_ASSERT(column >= 0 && column < info_.node_header.size());
-
     const NodeEnumT e_column { column };
 
     auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {

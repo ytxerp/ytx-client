@@ -196,7 +196,9 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 
     // Validate node
     auto* node { static_cast<NodeO*>(sc_->tree_model->GetNode(node_id)) };
-    Q_ASSERT(node != nullptr);
+    if (!node) {
+        return;
+    }
 
     const auto partner_id { node->partner_id };
     Q_ASSERT(!partner_id.isNull());

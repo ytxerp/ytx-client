@@ -68,8 +68,6 @@ void MainWindow::SetRemoveShortcut()
 
 QStringList MainWindow::ChildrenName(const Node* node) const
 {
-    Q_ASSERT(node != nullptr);
-
     QStringList list {};
 
     if (!node || node->kind != NodeKind::kBranch || node->children.isEmpty())
@@ -78,9 +76,8 @@ QStringList MainWindow::ChildrenName(const Node* node) const
     list.reserve(node->children.size());
 
     for (const auto* child : std::as_const(node->children)) {
-        Q_ASSERT(child != nullptr);
-
-        list.emplaceBack(child->name);
+        if (child)
+            list.emplaceBack(child->name);
     }
 
     return list;
@@ -88,8 +85,6 @@ QStringList MainWindow::ChildrenName(const Node* node) const
 
 QSet<QUuid> MainWindow::LeafChildrenId(const Node* node) const
 {
-    Q_ASSERT(node != nullptr);
-
     QSet<QUuid> set {};
 
     if (!node || node->kind != NodeKind::kBranch || node->children.isEmpty())

@@ -64,8 +64,6 @@ void EntryShadow::BindEntry(Entry* base, bool parallel)
 
 QJsonObject EntryShadow::WriteJson() const
 {
-    Q_ASSERT(id != nullptr);
-
     QJsonObject obj {};
     obj.insert(kId, id->toString(QUuid::WithoutBraces));
     obj.insert(kIssuedTime, issued_time->toString(Qt::ISODate));

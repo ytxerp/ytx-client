@@ -234,8 +234,6 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
 
 void TableModelO::sort(int column, Qt::SortOrder order)
 {
-    Q_ASSERT(column >= 0 && column < info_.entry_header.size());
-
     const EntryEnumO e_column { column };
 
     auto Compare = [order, e_column](Entry* lhs, Entry* rhs) -> bool {
