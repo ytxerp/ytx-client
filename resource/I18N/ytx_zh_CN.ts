@@ -1041,49 +1041,77 @@ Rage, rage against the dying of the light.</source>
         <translation>替换</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="117"/>
-        <source>Referenced by “Linked Node” in its own section.</source>
-        <translation>节点被同一版块内的“关联”列引用。</translation>
+        <source>Currently referenced by linked nodes in the same section.</source>
+        <translation type="vanished">当前在本版块内被关联节点引用。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="120"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="130"/>
+        <source>Currently referenced by linked nodes within the same section.</source>
+        <translation>当前在本版块内被关联节点引用。</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="140"/>
+        <source>This inventory node (internal unit) is currently referenced by partner, sale, or purchase entries.</source>
+        <translation>此存货节点（内部单位）当前被合作方、销售或采购条目引用。</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="150"/>
+        <source>This inventory node (external unit) is currently referenced by partner entries.</source>
+        <translation>此库存节点（外部单位）当前被合作方条目引用。</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="160"/>
+        <source>This partner node (customer or vendor) is currently referenced by sale or purchase nodes.</source>
+        <translation>此合作方节点（客户或供应商）当前被销售或采购节点引用。</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="170"/>
+        <source>This partner node (employee) is currently referenced by sale or purchase nodes.</source>
+        <translation>此合作方节点（员工）当前被销售或采购节点引用。</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="180"/>
+        <source>This order node (sale or purchase) is currently settled.</source>
+        <translation>此订单节点（销售或采购）已完成结算。</translation>
+    </message>
+    <message>
+        <source>Referenced by “Linked Node” in its own section.</source>
+        <translation type="vanished">节点被同一版块内的“关联”列引用。</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="133"/>
         <source>Inside</source>
         <translation>内部</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="127"/>
         <source>This inventory node (internal ID) is referenced by Partner, Sale, or Purchase entries.</source>
-        <translation>存货节点（内部编号）被合作、销售或采购引用。</translation>
+        <translation type="vanished">存货节点（内部编号）被合作、销售或采购引用。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="130"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="143"/>
         <source>Inventory INT</source>
         <translation>存货（内）</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="137"/>
         <source>This inventory node (external ID) is referenced by Partner, Sale, or Purchase entries.</source>
-        <translation>存货节点（外部编号）被合作、销售或采购引用。</translation>
+        <translation type="vanished">存货节点（外部编号）被合作、销售或采购引用。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="140"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="153"/>
         <source>Inventory EXT</source>
         <translation>存货（外）</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="147"/>
         <source>This partner node (customer or vendor) is referenced by Sale or Purchase entries.</source>
-        <translation>合作节点（客户或供应商）被销售或采购引用。</translation>
+        <translation type="vanished">合作节点（客户或供应商）被销售或采购引用。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="157"/>
         <source>This partner node (employee) is referenced by Sale or Purchase entries.</source>
-        <translation>合作节点（职工）被销售或采购引用。</translation>
+        <translation type="vanished">合作节点（职工）被销售或采购引用。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="167"/>
         <source>This order node (sale or purchase) has already been settled.</source>
-        <translation>订单节点（销售或采购）已经结算。</translation>
+        <translation type="vanished">订单节点（销售或采购）已经结算。</translation>
     </message>
     <message>
         <source>This order (sale or purchase) node has already been settled.</source>
@@ -1126,9 +1154,9 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">这个职员节点正被其他版块引用，例如：销售、采购。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="160"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="173"/>
         <source>Employee</source>
-        <translation>职员</translation>
+        <translation>员工</translation>
     </message>
     <message>
         <source>This node (from Sale or Purchase) has already been settled.</source>
@@ -1139,12 +1167,12 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">这个节点（销售或采购）已经结算。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="170"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="183"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="180"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="193"/>
         <source>This node is about to be removed but is still referenced. How do you want to handle it?</source>
         <translation>这个节点即将被删除，但仍然存在引用。你希望如何处理它？</translation>
     </message>
@@ -1165,7 +1193,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">外部存货</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.ui" line="150"/>
+        <location filename="../../dialog/removenode/leafremovedialog.ui" line="163"/>
         <source>Partner</source>
         <translation>合作</translation>
     </message>
@@ -1187,44 +1215,52 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../dialog/removenode/leafremovedialog.ui" line="20"/>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="110"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="114"/>
         <source>Remove Node</source>
         <translation>删除节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="111"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="115"/>
         <source>Remove %1 and all its references. Are you sure</source>
         <translation>删除节点 %1 和所有的引用，确定吗</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="115"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="119"/>
         <source>Replace Node</source>
         <translation>替换节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="116"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="120"/>
         <source>Replace %1 with %2. This action is risky and cannot be undone. Are you sure?</source>
         <translation>确定要将相关记录中的 %1 替换为 %2 吗？</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="150"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="152"/>
         <source>Remove %1</source>
         <translation>删除 %1</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="154"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="156"/>
         <source>The node has external references, so it can’t be removed.</source>
         <translation>该节点存在外部引用，无法删除。</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="187"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="186"/>
         <source>Replacement Conflict</source>
         <translation>替换冲突</translation>
     </message>
     <message>
-        <location filename="../../dialog/removenode/leafremovedialog.cc" line="188"/>
+        <location filename="../../dialog/removenode/leafremovedialog.cc" line="186"/>
+        <source>The old node cannot be replaced because linked nodes or partner entries conflict with the new node.</source>
+        <translation>无法替换旧节点，因为关联节点或合作方条目与新节点存在冲突。</translation>
+    </message>
+    <message>
+        <source>The old node cannot be replaced because linked nodes or partner entries conflict with the new node. The replacement operation has been canceled.</source>
+        <translation type="vanished">无法替换旧节点，因为关联节点或合作方条目与新节点存在冲突。替换操作已被取消。</translation>
+    </message>
+    <message>
         <source>A reference conflict exists between the linked nodes of the old node and the new node. The replacement operation has been canceled.</source>
-        <translation>旧节点与新节点之间已存在记录，替换操作已被取消。</translation>
+        <translation type="vanished">旧节点与新节点之间已存在记录，替换操作已被取消。</translation>
     </message>
 </context>
 <context>
@@ -1627,14 +1663,14 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="382"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="622"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="623"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="387"/>
         <location filename="../../mainwindow/mainwindow_statement.cc" line="19"/>
-        <location filename="../../mainwindow/mainwindow_statement.cc" line="81"/>
+        <location filename="../../mainwindow/mainwindow_statement.cc" line="84"/>
         <source>Statement</source>
         <translation>帐单</translation>
     </message>
@@ -1658,7 +1694,7 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="434"/>
         <location filename="../../mainwindow/mainwindow.ui" line="437"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="215"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="214"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="43"/>
         <source>Email</source>
         <translation>邮箱</translation>
@@ -1666,7 +1702,7 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="442"/>
         <location filename="../../mainwindow/mainwindow.ui" line="445"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="216"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="215"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="44"/>
         <source>Workspace</source>
         <translation>工区</translation>
@@ -1713,7 +1749,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="494"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="217"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="216"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="45"/>
         <source>Expire Date</source>
         <translation>期限</translation>
@@ -1752,7 +1788,7 @@ Rage, rage against the dying of the light.</source>
         <translation>将删除此分支，且所有直系子节点提升至同级。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="172"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="174"/>
         <source>Unsaved Data</source>
         <translation>未保存的数据</translation>
     </message>
@@ -1810,7 +1846,7 @@ Please check your network and try reconnecting.</source>
         <translation type="vanished">无法连接到服务器，或连接已中断。\n请检查网络并重新连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="172"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="174"/>
         <source>This page contains unsaved data.
 
 Do you want to save before closing?</source>
@@ -1855,7 +1891,7 @@ Do you want to save before closing?</source>
         <translation type="vanished">帐单明细</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_sale_reference.cc" line="61"/>
+        <location filename="../../mainwindow/mainwindow_sale_reference.cc" line="65"/>
         <source>Record</source>
         <translation>记录</translation>
     </message>
@@ -1880,64 +1916,64 @@ Do you want to save before closing?</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="632"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="633"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="632"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="633"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="632"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="633"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="666"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="667"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="666"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="667"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="669"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="670"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="669"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="670"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="689"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="696"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="690"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="697"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="689"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="690"/>
         <source>Failed to check updates:
 %1</source>
         <translation>检查更新失败：\n%1</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="696"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="697"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="709"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="710"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="709"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="710"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1946,12 +1982,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="715"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="716"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="715"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="716"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -1974,29 +2010,29 @@ Please refresh the data and try again.</source>
 请刷新当前数据后重新尝试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="250"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="286"/>
         <source>Settlement Released</source>
         <translation>结算单已发布</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="251"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="287"/>
         <source>This settlement has already been released and cannot be deleted.
 You need to recall it first before making changes.</source>
         <translation>该结算单已发布，无法直接删除。
 请先撤回结算单，再进行修改或删除操作。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_statement.cc" line="108"/>
+        <location filename="../../mainwindow/mainwindow_statement.cc" line="117"/>
         <source>StatementDetail</source>
         <translation>帐单明细</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_order.cc" line="117"/>
+        <location filename="../../mainwindow/mainwindow_order.cc" line="126"/>
         <source>Invalid Operation</source>
         <translation>无效操作</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_order.cc" line="117"/>
+        <location filename="../../mainwindow/mainwindow_order.cc" line="126"/>
         <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
@@ -2146,12 +2182,12 @@ You need to recall it first before making changes.</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="325"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="324"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="332"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="331"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -2177,8 +2213,8 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="221"/>
         <location filename="../../component/stringinitializer.cc" line="244"/>
         <location filename="../../component/stringinitializer.cc" line="267"/>
-        <location filename="../../component/stringinitializer.cc" line="357"/>
-        <location filename="../../component/stringinitializer.cc" line="372"/>
+        <location filename="../../component/stringinitializer.cc" line="355"/>
+        <location filename="../../component/stringinitializer.cc" line="370"/>
         <source>Id</source>
         <translation></translation>
     </message>
@@ -2196,7 +2232,7 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="222"/>
         <location filename="../../component/stringinitializer.cc" line="245"/>
         <location filename="../../component/stringinitializer.cc" line="268"/>
-        <location filename="../../component/stringinitializer.cc" line="358"/>
+        <location filename="../../component/stringinitializer.cc" line="356"/>
         <source>UserId</source>
         <translation></translation>
     </message>
@@ -2214,7 +2250,7 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="223"/>
         <location filename="../../component/stringinitializer.cc" line="246"/>
         <location filename="../../component/stringinitializer.cc" line="269"/>
-        <location filename="../../component/stringinitializer.cc" line="359"/>
+        <location filename="../../component/stringinitializer.cc" line="357"/>
         <source>CreatedTime</source>
         <translation></translation>
     </message>
@@ -2232,7 +2268,7 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="224"/>
         <location filename="../../component/stringinitializer.cc" line="247"/>
         <location filename="../../component/stringinitializer.cc" line="270"/>
-        <location filename="../../component/stringinitializer.cc" line="360"/>
+        <location filename="../../component/stringinitializer.cc" line="358"/>
         <source>CreatedBy</source>
         <translation></translation>
     </message>
@@ -2250,7 +2286,7 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="225"/>
         <location filename="../../component/stringinitializer.cc" line="248"/>
         <location filename="../../component/stringinitializer.cc" line="271"/>
-        <location filename="../../component/stringinitializer.cc" line="361"/>
+        <location filename="../../component/stringinitializer.cc" line="359"/>
         <source>UpdatedTime</source>
         <translation></translation>
     </message>
@@ -2268,7 +2304,7 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="226"/>
         <location filename="../../component/stringinitializer.cc" line="249"/>
         <location filename="../../component/stringinitializer.cc" line="272"/>
-        <location filename="../../component/stringinitializer.cc" line="362"/>
+        <location filename="../../component/stringinitializer.cc" line="360"/>
         <source>UpdatedBy</source>
         <translation></translation>
     </message>
@@ -2286,7 +2322,7 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="227"/>
         <location filename="../../component/stringinitializer.cc" line="250"/>
         <location filename="../../component/stringinitializer.cc" line="273"/>
-        <location filename="../../component/stringinitializer.cc" line="363"/>
+        <location filename="../../component/stringinitializer.cc" line="361"/>
         <source>Version</source>
         <translation></translation>
     </message>
@@ -2319,13 +2355,13 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="234"/>
         <location filename="../../component/stringinitializer.cc" line="257"/>
         <location filename="../../component/stringinitializer.cc" line="280"/>
-        <location filename="../../component/stringinitializer.cc" line="302"/>
-        <location filename="../../component/stringinitializer.cc" line="315"/>
-        <location filename="../../component/stringinitializer.cc" line="326"/>
-        <location filename="../../component/stringinitializer.cc" line="337"/>
-        <location filename="../../component/stringinitializer.cc" line="350"/>
-        <location filename="../../component/stringinitializer.cc" line="366"/>
-        <location filename="../../component/stringinitializer.cc" line="376"/>
+        <location filename="../../component/stringinitializer.cc" line="301"/>
+        <location filename="../../component/stringinitializer.cc" line="313"/>
+        <location filename="../../component/stringinitializer.cc" line="324"/>
+        <location filename="../../component/stringinitializer.cc" line="335"/>
+        <location filename="../../component/stringinitializer.cc" line="348"/>
+        <location filename="../../component/stringinitializer.cc" line="364"/>
+        <location filename="../../component/stringinitializer.cc" line="374"/>
         <location filename="../../global/exportexcel.cc" line="84"/>
         <source>Description</source>
         <translation>描述</translation>
@@ -2383,8 +2419,8 @@ You need to recall it first before making changes.</source>
     <message>
         <location filename="../../component/stringinitializer.cc" line="63"/>
         <location filename="../../component/stringinitializer.cc" line="103"/>
-        <location filename="../../component/stringinitializer.cc" line="367"/>
-        <location filename="../../component/stringinitializer.cc" line="375"/>
+        <location filename="../../component/stringinitializer.cc" line="365"/>
+        <location filename="../../component/stringinitializer.cc" line="373"/>
         <source>Status</source>
         <translation>状态</translation>
     </message>
@@ -2392,9 +2428,9 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="38"/>
         <location filename="../../component/stringinitializer.cc" line="194"/>
         <location filename="../../component/stringinitializer.cc" line="209"/>
-        <location filename="../../component/stringinitializer.cc" line="300"/>
-        <location filename="../../component/stringinitializer.cc" line="313"/>
-        <location filename="../../component/stringinitializer.cc" line="348"/>
+        <location filename="../../component/stringinitializer.cc" line="299"/>
+        <location filename="../../component/stringinitializer.cc" line="311"/>
+        <location filename="../../component/stringinitializer.cc" line="346"/>
         <location filename="../../global/exportexcel.cc" line="84"/>
         <source>UnitPrice</source>
         <translation>单价</translation>
@@ -2432,11 +2468,11 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="251"/>
         <location filename="../../component/stringinitializer.cc" line="274"/>
         <location filename="../../component/stringinitializer.cc" line="294"/>
-        <location filename="../../component/stringinitializer.cc" line="307"/>
-        <location filename="../../component/stringinitializer.cc" line="333"/>
-        <location filename="../../component/stringinitializer.cc" line="344"/>
-        <location filename="../../component/stringinitializer.cc" line="364"/>
-        <location filename="../../component/stringinitializer.cc" line="373"/>
+        <location filename="../../component/stringinitializer.cc" line="306"/>
+        <location filename="../../component/stringinitializer.cc" line="331"/>
+        <location filename="../../component/stringinitializer.cc" line="342"/>
+        <location filename="../../component/stringinitializer.cc" line="362"/>
+        <location filename="../../component/stringinitializer.cc" line="371"/>
         <source>IssuedTime</source>
         <translation>日期</translation>
     </message>
@@ -2463,8 +2499,8 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="102"/>
-        <location filename="../../component/stringinitializer.cc" line="339"/>
-        <location filename="../../component/stringinitializer.cc" line="377"/>
+        <location filename="../../component/stringinitializer.cc" line="337"/>
+        <location filename="../../component/stringinitializer.cc" line="375"/>
         <source>Employee</source>
         <translation>职员</translation>
     </message>
@@ -2501,8 +2537,8 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="236"/>
         <location filename="../../component/stringinitializer.cc" line="259"/>
         <location filename="../../component/stringinitializer.cc" line="282"/>
-        <location filename="../../component/stringinitializer.cc" line="338"/>
-        <location filename="../../component/stringinitializer.cc" line="351"/>
+        <location filename="../../component/stringinitializer.cc" line="336"/>
+        <location filename="../../component/stringinitializer.cc" line="349"/>
         <source>S</source>
         <translation></translation>
     </message>
@@ -2516,8 +2552,8 @@ You need to recall it first before making changes.</source>
     <message>
         <location filename="../../component/stringinitializer.cc" line="195"/>
         <location filename="../../component/stringinitializer.cc" line="206"/>
-        <location filename="../../component/stringinitializer.cc" line="309"/>
-        <location filename="../../component/stringinitializer.cc" line="345"/>
+        <location filename="../../component/stringinitializer.cc" line="308"/>
+        <location filename="../../component/stringinitializer.cc" line="343"/>
         <location filename="../../global/exportexcel.cc" line="83"/>
         <source>InternalSku</source>
         <translation>内部货号</translation>
@@ -2525,9 +2561,7 @@ You need to recall it first before making changes.</source>
     <message>
         <location filename="../../component/stringinitializer.cc" line="193"/>
         <location filename="../../component/stringinitializer.cc" line="211"/>
-        <location filename="../../component/stringinitializer.cc" line="297"/>
-        <location filename="../../component/stringinitializer.cc" line="310"/>
-        <location filename="../../component/stringinitializer.cc" line="352"/>
+        <location filename="../../component/stringinitializer.cc" line="350"/>
         <location filename="../../global/exportexcel.cc" line="83"/>
         <source>ExternalSku</source>
         <translation>外部货号</translation>
@@ -2544,8 +2578,8 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="214"/>
-        <location filename="../../component/stringinitializer.cc" line="303"/>
-        <location filename="../../component/stringinitializer.cc" line="316"/>
+        <location filename="../../component/stringinitializer.cc" line="302"/>
+        <location filename="../../component/stringinitializer.cc" line="314"/>
         <source>Gross</source>
         <translation>总额</translation>
     </message>
@@ -2560,12 +2594,12 @@ You need to recall it first before making changes.</source>
         <translation>客户</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="323"/>
+        <location filename="../../component/stringinitializer.cc" line="321"/>
         <source>CCount</source>
         <translation>计数</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="324"/>
+        <location filename="../../component/stringinitializer.cc" line="322"/>
         <source>CMeasure</source>
         <translation>度量</translation>
     </message>
@@ -2592,8 +2626,8 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="98"/>
-        <location filename="../../component/stringinitializer.cc" line="321"/>
-        <location filename="../../component/stringinitializer.cc" line="365"/>
+        <location filename="../../component/stringinitializer.cc" line="319"/>
+        <location filename="../../component/stringinitializer.cc" line="363"/>
         <source>Partner</source>
         <translation>合作</translation>
     </message>
@@ -2612,7 +2646,7 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="253"/>
         <location filename="../../component/stringinitializer.cc" line="276"/>
         <location filename="../../component/stringinitializer.cc" line="295"/>
-        <location filename="../../component/stringinitializer.cc" line="308"/>
+        <location filename="../../component/stringinitializer.cc" line="307"/>
         <source>LhsNode</source>
         <translation>左节点</translation>
     </message>
@@ -2706,28 +2740,28 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="207"/>
-        <location filename="../../component/stringinitializer.cc" line="298"/>
-        <location filename="../../component/stringinitializer.cc" line="311"/>
-        <location filename="../../component/stringinitializer.cc" line="334"/>
-        <location filename="../../component/stringinitializer.cc" line="346"/>
+        <location filename="../../component/stringinitializer.cc" line="297"/>
+        <location filename="../../component/stringinitializer.cc" line="309"/>
+        <location filename="../../component/stringinitializer.cc" line="332"/>
+        <location filename="../../component/stringinitializer.cc" line="344"/>
         <location filename="../../global/exportexcel.cc" line="83"/>
         <source>Count</source>
         <translation>计数</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="208"/>
-        <location filename="../../component/stringinitializer.cc" line="299"/>
-        <location filename="../../component/stringinitializer.cc" line="312"/>
-        <location filename="../../component/stringinitializer.cc" line="335"/>
-        <location filename="../../component/stringinitializer.cc" line="347"/>
+        <location filename="../../component/stringinitializer.cc" line="298"/>
+        <location filename="../../component/stringinitializer.cc" line="310"/>
+        <location filename="../../component/stringinitializer.cc" line="333"/>
+        <location filename="../../component/stringinitializer.cc" line="345"/>
         <location filename="../../global/exportexcel.cc" line="83"/>
         <source>Measure</source>
         <translation>度量</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="213"/>
-        <location filename="../../component/stringinitializer.cc" line="301"/>
-        <location filename="../../component/stringinitializer.cc" line="314"/>
+        <location filename="../../component/stringinitializer.cc" line="300"/>
+        <location filename="../../component/stringinitializer.cc" line="312"/>
         <source>UnitDiscount</source>
         <translation>单价优惠</translation>
     </message>
@@ -2797,7 +2831,7 @@ You need to recall it first before making changes.</source>
         <translation type="vanished">版块</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="322"/>
+        <location filename="../../component/stringinitializer.cc" line="320"/>
         <source>PBalance</source>
         <translation>期初余额</translation>
     </message>
@@ -2814,31 +2848,31 @@ You need to recall it first before making changes.</source>
         <translation type="vanished">当期交易</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="328"/>
+        <location filename="../../component/stringinitializer.cc" line="326"/>
         <source>CBalance</source>
         <translation>期末余额</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="327"/>
+        <location filename="../../component/stringinitializer.cc" line="325"/>
         <source>CSettlement</source>
         <translation>本期结算</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="325"/>
+        <location filename="../../component/stringinitializer.cc" line="323"/>
         <source>CAmount</source>
         <translation>本期金额</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="336"/>
-        <location filename="../../component/stringinitializer.cc" line="349"/>
-        <location filename="../../component/stringinitializer.cc" line="368"/>
-        <location filename="../../component/stringinitializer.cc" line="374"/>
+        <location filename="../../component/stringinitializer.cc" line="334"/>
+        <location filename="../../component/stringinitializer.cc" line="347"/>
+        <location filename="../../component/stringinitializer.cc" line="366"/>
+        <location filename="../../component/stringinitializer.cc" line="372"/>
         <location filename="../../global/exportexcel.cc" line="84"/>
         <source>Amount</source>
         <translation>金额</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="340"/>
+        <location filename="../../component/stringinitializer.cc" line="338"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -2938,27 +2972,27 @@ You need to recall it first before making changes.</source>
         <translation type="vanished">正在连接服务器…</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="172"/>
+        <location filename="../../utils/mainwindowutils.cc" line="171"/>
         <source>Connecting to server...</source>
         <translation>正在连接服务器…</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="177"/>
+        <location filename="../../utils/mainwindowutils.cc" line="176"/>
         <source>Connected to server</source>
         <translation>已连接</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="182"/>
+        <location filename="../../utils/mainwindowutils.cc" line="181"/>
         <source>Disconnected from server</source>
         <translation>已断开</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="198"/>
+        <location filename="../../utils/mainwindowutils.cc" line="196"/>
         <source>Logged in</source>
         <translation>已登录</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="203"/>
+        <location filename="../../utils/mainwindowutils.cc" line="201"/>
         <source>Logged out</source>
         <translation>已登出</translation>
     </message>
@@ -3240,7 +3274,7 @@ You need to recall it first before making changes.</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.cc" line="145"/>
+        <location filename="../../billing/statement/statemententrywidget.cc" line="146"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
