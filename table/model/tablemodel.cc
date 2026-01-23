@@ -465,12 +465,11 @@ EntryShadow* TableModel::InsertRowsImpl(int row, const QModelIndex& parent)
         last_issued_ = last_issued_.isValid() ? last_issued_.addSecs(1) : QDateTime::currentDateTimeUtc();
         *entry_shadow->issued_time = last_issued_;
 
-        const auto size { shadow_list_.size() };
-        entry_shadow->balance = size >= 1 ? shadow_list_.at(size - 1)->balance : 0.0;
+        entry_shadow->balance = row >= 1 ? shadow_list_.at(row - 1)->balance : 0.0;
     }
 
     beginInsertRows(parent, row, row);
-    shadow_list_.emplaceBack(entry_shadow);
+    shadow_list_.insert(row, entry_shadow);
     endInsertRows();
 
     return entry_shadow;

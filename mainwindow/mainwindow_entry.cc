@@ -34,16 +34,19 @@ void MainWindow::on_actionAppendEntry_triggered()
         auto* widget { qobject_cast<TableWidget*>(ui->tabWidget->currentWidget()) };
         if (widget) {
             auto* model { widget->Model() };
+            auto* view { widget->View() };
+            const auto current_idx { view->currentIndex() };
 
-            const int new_row { model->rowCount() };
+            const int new_row { current_idx.isValid() ? current_idx.row() + 1 : model->rowCount() };
             if (!model->insertRows(new_row, 1))
                 return;
 
             const int linked_node_col { Utils::LinkedNodeColumn(start_) };
-            QModelIndex target_index { model->index(new_row, linked_node_col) };
+            const QModelIndex target_index { model->index(new_row, linked_node_col) };
 
             if (target_index.isValid()) {
-                widget->View()->setCurrentIndex(target_index);
+                view->setCurrentIndex(target_index);
+                view->scrollTo(target_index, QAbstractItemView::PositionAtCenter);
             }
         }
     }
