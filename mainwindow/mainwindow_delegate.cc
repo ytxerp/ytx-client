@@ -165,8 +165,8 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kCountTotal), quantity_r);
 
     auto* name_r { new NodeNameR(sc_p_.tree_model, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployee), name_r);
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kPartner), name_r);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployeeId), name_r);
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kPartnerId), name_r);
 
     auto* issued_time { new IssuedTimeR(section.date_format, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time);

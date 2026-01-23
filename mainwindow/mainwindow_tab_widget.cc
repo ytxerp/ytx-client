@@ -29,7 +29,7 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     qInfo() << "[UI]" << "RTreeViewDoubleClicked";
 
     {
-        const int expected_column { IsOrderSection(start_) ? std::to_underlying(NodeEnumO::kPartner) : std::to_underlying(NodeEnum::kName) };
+        const int expected_column { IsOrderSection(start_) ? std::to_underlying(NodeEnumO::kPartnerId) : std::to_underlying(NodeEnum::kName) };
 
         if (index.column() != expected_column)
             return;

@@ -68,9 +68,9 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
         return std::to_underlying(d_node->kind);
     case NodeEnumO::kUnit:
         return std::to_underlying(d_node->unit);
-    case NodeEnumO::kPartner:
+    case NodeEnumO::kPartnerId:
         return d_node->partner_id;
-    case NodeEnumO::kEmployee:
+    case NodeEnumO::kEmployeeId:
         return d_node->employee_id;
     case NodeEnumO::kIssuedTime:
         return d_node->issued_time;
@@ -114,9 +114,9 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumO::kUnit:
             return Utils::CompareMember(lhs, rhs, &Node::unit, order);
-        case NodeEnumO::kPartner:
+        case NodeEnumO::kPartnerId:
             return Utils::CompareMember(d_lhs, d_rhs, &NodeO::partner_id, order);
-        case NodeEnumO::kEmployee:
+        case NodeEnumO::kEmployeeId:
             return Utils::CompareMember(d_lhs, d_rhs, &NodeO::employee_id, order);
         case NodeEnumO::kIssuedTime:
             return Utils::CompareMember(d_lhs, d_rhs, &NodeO::issued_time, order);

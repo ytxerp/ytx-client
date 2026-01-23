@@ -30,8 +30,8 @@ void SearchDialogO::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), check_);
 
     auto* partner_name { new SearchPathTableR(partner_node_, view) };
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kPartner), partner_name);
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployee), partner_name);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kPartnerId), partner_name);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployeeId), partner_name);
 }
 
 void SearchDialogO::TableViewDelegate(QTableView* view)
