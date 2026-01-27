@@ -1,24 +1,23 @@
-# YTX Client
+<div align="center">
+  <h1>YTX Client</h1>
+  <p><em>Client for YTX Double-Entry ERP Program.</em></p>
+</div>
 
-- [YTX Client](#ytx-client)
-  - [Introduction](#introduction)
-  - [License](#license)
-  - [Developer Tutorial](#developer-tutorial)
-    - [Requirement](#requirement)
-    - [Dependency](#dependency)
-    - [Step](#step)
-  - [User Tutorial](#user-tutorial)
-    - [Location](#location)
-    - [Guide](#guide)
-  - [Support Me](#support-me)
+<div align="center">
+  <a href="https://github.com/ytxerp/ytx-client/stargazers""><img src="https://img.shields.io/github/stars/ytxerp/ytx-client?style=flat-square" alt="Stars" /></a>
+  <a href="https://github.com/ytxerp/ytx-client/releases""><img src="https://img.shields.io/github/v/tag/ytxerp/ytx-client?label=version&style=flat-square" alt="Version" /></a>
+  <a href="LICENSE""><img src="https://img.shields.io/badge/license-GPL--3.0-blue.svg?style=flat-square" alt="License" /></a>
+  <a href="https://github.com/ytxerp/ytx-client/commits""><img src="https://img.shields.io/github/commit-activity/m/ytxerp/ytx-client?style=flat-square" alt="Commits" /></a>
+  <a href="https://x.com/ytxerp""><img src="https://img.shields.io/badge/twitter-ytxerp-black?style=flat-square&logo=x" alt="X" /></a>
+</div>
 
 ## Introduction
 
-**YTX** is a lightweight ERP software designed for small businesses, with full support for **multi-user online operation**. It provides a complete solution for managing daily operations across key modules such as **Finance**, **Inventory**, **Task**, **Sale**, **Purchase**, and **Partner**.
+**YTX** is a lightweight ERP software designed for businesses, with full support for **multi-user online operation**. It provides a complete solution for managing daily operations across key modules such as **Finance**, **Inventory**, **Task**, **Sale**, **Purchase**, and **Partner**.
 
 Originally built as a desktop application, YTX has evolved into a **fully-featured online ERP system**. With the support of the companion **ytx-server backend service**, it can be deployed on a **local server** using PostgreSQL to enable **real-time collaboration** within teams, without relying on third-party cloud services.
 
-With its **user-friendly interface** and **modular design**, YTX is an efficient and flexible tool for small enterprises seeking modern business management.
+With its **user-friendly interface** and **modular design**, YTX is an efficient and flexible tool for enterprises seeking modern business management.
 
 ## License
 
@@ -27,11 +26,15 @@ With its **user-friendly interface** and **modular design**, YTX is an efficient
 **Important Notes:**
 
 - **Client**: The YTX client application is **open source** and available in this repository.
-- **Server**: The ytx-server backend service is **proprietary software** and is **not open source**. For server licensing and deployment inquiries, please contact the maintainer.
 
 This project uses the Qt framework under LGPLv3. You can find more information about Qt's licensing at [https://www.qt.io/licensing/](https://www.qt.io/licensing/).
 
 By using, modifying, or distributing this software, you agree to comply with the terms of the LGPLv3 license. See the [LICENSE](LICENSE) file for full details.
+
+## Server
+
+The ytx-server backend service is **proprietary software** and is **not open source**.
+For server licensing and deployment inquiries, please **contact the maintainer**.
 
 ## Developer Tutorial
 
@@ -50,6 +53,8 @@ By using, modifying, or distributing this software, you agree to comply with the
 
 ### Dependency
 
+#### yxlsx
+
 - Clone the [yxlsx](https://github.com/ytxerp/yxlsx) repository into the `external/` folder of the project:
 
 ```bash
@@ -60,6 +65,32 @@ By using, modifying, or distributing this software, you agree to comply with the
 
 ```cmake
   add_subdirectory(external/yxlsx/)
+```
+
+#### openssl
+
+```bash
+# Debian / Ubuntu
+sudo apt-get install libssl-dev
+
+# macOS (Homebrew)
+brew install openssl
+
+# Windows (Qt / LLVM-MinGW)
+
+# Download and install MSYS2 from: https://www.msys2.org/
+#
+# Open the MSYS2 shell and update the system, Close the shell when prompted, then reopen and run again.
+pacman -Syu
+#
+# Launch "MSYS2 MinGW64" (important: NOT MSYS, NOT UCRT)
+#
+# Install OpenSSL for MinGW-w64:
+pacman -S mingw-w64-x86_64-openssl
+#
+# After installation, OpenSSL will be located at: D:/msys64/mingw64
+#
+# Use this path as OPENSSL_ROOT_DIR when building with Qt + LLVM-MinGW
 ```
 
 ### Step
@@ -90,7 +121,3 @@ If YTX has been helpful to you, I'd be truly grateful for your support. Your enc
 May the force be with you!
 
 [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="160" height="40">](https://buymeacoffee.com/ytx.cash)
-
----
-
-**Note**: For commercial use, enterprise support, or server deployment services, please contact the project maintainer.
