@@ -110,7 +110,7 @@ void Preferences::IniData(Section section)
 
     ui->spinAmountDecimal->setMaximum(kMaxNumericScale_4);
     ui->spinRateDecimal->setMaximum(kMaxNumericScale_8);
-    ui->spinQuantityDecimal->setMaximum(section == Section::kFinance ? kMaxNumericScale_4 : kMaxNumericScale_8);
+    ui->spinQuantityDecimal->setMaximum(kMaxNumericScale_8);
 
     ResizeLine(ui->lineStatic, section_.static_label);
     ResizeLine(ui->lineDynamic, section_.dynamic_label);
