@@ -211,40 +211,36 @@ void PrintHub::DrawTable(QPainter* painter, long long start_index, long long end
 
         for (int col = 0; col != columns; ++col) {
             const int col_width { column_widths_.at(col) };
-            if (col_width == 0) {
+            if (col_width <= 0) {
                 continue;
             }
 
             const QRect cell_rect(x, top + row * row_height_, col_width, row_height_);
             const QString text { GetColumnText(col, entry) };
             const int text_width { fm.horizontalAdvance(text) };
+            const int available_width { col_width - padding * 2 };
 
-            {
-                if (text_width > col_width - padding) {
-                    // Reset to original font for each cell
-                    QFont font { original_font };
-                    const int best_size { FindBestFontSize(painter, text, col_width - padding, max_font_size) };
+            // Find and apply best font size
+            if (text_width > available_width) {
+                // Reset to original font for each cell
+                QFont font { original_font };
+                const int best_size { FindBestFontSize(painter, text, available_width, max_font_size) };
 
-                    font.setPointSize(best_size);
-                    painter->setFont(font);
+                font.setPointSize(best_size);
+                painter->setFont(font);
 
-                    qDebug() << "Shrink font:"
-                             << "Text=" << text << "ColWidth=" << col_width << "TextWidth=" << text_width << "BestSize=" << best_size;
-                } else {
-                    painter->setFont(original_font);
-
-                    qDebug() << "Use original font:"
-                             << "Text=" << text << "ColWidth=" << col_width << "TextWidth=" << text_width;
-                }
-            }
-
-            // Determine alignment based on content
-            Qt::Alignment align { Qt::AlignVCenter };
-            if (IsNumber(text)) {
-                align |= Qt::AlignRight;
+                qDebug() << "Shrink font:"
+                         << "Text=" << text << "ColWidth=" << col_width << "TextWidth=" << text_width << "BestSize=" << best_size;
             } else {
-                align |= Qt::AlignLeft;
+                painter->setFont(original_font);
+
+                qDebug() << "Use original font:"
+                         << "Text=" << text << "ColWidth=" << col_width << "TextWidth=" << text_width;
             }
+
+            // Determine alignment
+            Qt::Alignment align { Qt::AlignVCenter };
+            align |= IsNumber(text) ? Qt::AlignRight : Qt::AlignLeft;
 
             painter->drawText(cell_rect, static_cast<int>(align), text);
 
