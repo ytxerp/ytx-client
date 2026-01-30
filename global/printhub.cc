@@ -175,29 +175,85 @@ void PrintHub::DrawHeader(QPainter* painter)
     DrawText(painter, QStringLiteral("issued_time"), node_o_->issued_time.toLocalTime().toString(kDateTimeFST));
 }
 
+/*!
+ * \brief Draw table rows with auto-fit text (shrink to fit cell width)
+ *
+ * Table columns (left to right):
+ * 0: Internal Sku    - Internal product SKU/code
+ * 1: External Sku    - Customer/external product SKU/code
+ * 2: Description     - Product description
+ * 3: Count           - Quantity count
+ * 4: Measure         - Unit of measure
+ * 5: Unit Price      - Price per unit
+ * 6: Amount          - Total amount (Count × Unit Price)
+ *
+ * \param painter Painter object for drawing
+ * \param start_index Start index in entry_list_
+ * \param end_index End index in entry_list_ (exclusive)
+ *
+ * \note Text automatically shrinks to fit column width (min font size: 1pt)
+ * \note Numbers are right-aligned, text is left-aligned
+ */
 void PrintHub::DrawTable(QPainter* painter, long long start_index, long long end_index)
 {
     const int columns { GetFieldY(QStringLiteral("rows_columns"), 0) };
     const int left { GetFieldX(QStringLiteral("left_top"), 0) };
     const int top { GetFieldY(QStringLiteral("left_top"), 0) };
 
+    const QFont original_font { painter->font() }; // Save original font
+    const QFontMetrics fm(original_font);
+    const int max_font_size { original_font.pointSize() };
+    const int padding { 4 }; // Cell padding
+
     for (int row = 0; row != end_index - start_index; ++row) {
         const auto* entry { entry_list_.at(start_index + row) };
-
         int x { left };
+
         for (int col = 0; col != columns; ++col) {
             const int col_width { column_widths_.at(col) };
-
             if (col_width == 0) {
                 continue;
             }
 
-            const QRect cellRect(x, top + row * row_height_, col_width, row_height_);
+            const QRect cell_rect(x, top + row * row_height_, col_width, row_height_);
+            const QString text { GetColumnText(col, entry) };
+            const int text_width { fm.horizontalAdvance(text) };
 
-            painter->drawText(cellRect, Qt::AlignCenter, GetColumnText(col, entry));
+            {
+                if (text_width > col_width - padding) {
+                    // Reset to original font for each cell
+                    QFont font { original_font };
+                    const int best_size { FindBestFontSize(painter, text, col_width - padding, max_font_size) };
+
+                    font.setPointSize(best_size);
+                    painter->setFont(font);
+
+                    qDebug() << "Shrink font:"
+                             << "Text=" << text << "ColWidth=" << col_width << "TextWidth=" << text_width << "BestSize=" << best_size;
+                } else {
+                    painter->setFont(original_font);
+
+                    qDebug() << "Use original font:"
+                             << "Text=" << text << "ColWidth=" << col_width << "TextWidth=" << text_width;
+                }
+            }
+
+            // Determine alignment based on content
+            Qt::Alignment align { Qt::AlignVCenter };
+            if (IsNumber(text)) {
+                align |= Qt::AlignRight;
+            } else {
+                align |= Qt::AlignLeft;
+            }
+
+            painter->drawText(cell_rect, static_cast<int>(align), text);
+
             x += col_width;
         }
     }
+
+    // Restore original font
+    painter->setFont(original_font);
 }
 
 void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
@@ -215,6 +271,37 @@ void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
     DrawText(painter, QStringLiteral("initial_total"), amount_str);
     DrawText(painter, QStringLiteral("initial_total_upper"), QStringLiteral("大写：") + NumberToChineseUpper(amount_str.toDouble()));
     DrawText(painter, QStringLiteral("page_info"), QString::asprintf("%d/%d", page_num, total_pages));
+}
+
+int PrintHub::FindBestFontSize(QPainter* painter, const QString& text, int max_width, int max_font, int min_font)
+{
+    // Binary search boundaries
+    int low { min_font };
+    int high { max_font };
+    int best { min_font }; // Best font size found so far
+
+    // Copy current painter font
+    QFont font { painter->font() };
+
+    // Perform binary search to find the largest font size that fits
+    while (low <= high) {
+        const int mid { (low + high) / 2 }; // Middle font size to test
+        font.setPointSize(mid);
+
+        const QFontMetrics fm { font };
+        const int text_width { fm.horizontalAdvance(text) }; // Width of text in current font
+
+        if (text_width <= max_width) {
+            // Current font fits, try a larger size
+            best = mid;
+            low = mid + 1;
+        } else {
+            // Too wide, try a smaller size
+            high = mid - 1;
+        }
+    }
+
+    return best; // Return the largest font size that fits
 }
 
 QString PrintHub::GetColumnText(int col, const Entry* entry)

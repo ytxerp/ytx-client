@@ -68,6 +68,15 @@ private:
     void DrawHeader(QPainter* painter);
     void DrawTable(QPainter* painter, long long start_index, long long end_index);
     void DrawFooter(QPainter* painter, int page_num, int total_pages);
+    static bool IsNumber(const QString& text)
+    {
+        // Match: optional minus, digits with optional thousand separators, optional decimal part
+        // Examples: "123", "-456", "1,234", "1,234.56", "-1,234.56"
+        static const QRegularExpression re(R"(^-?(\d{1,3}(,\d{3})*|\d+)(\.\d+)?$)");
+        return re.match(text).hasMatch();
+    }
+
+    static int FindBestFontSize(QPainter* painter, const QString& text, int max_width, int max_font, int min_font = 1);
 
     QString GetColumnText(int col, const Entry* entry);
 
