@@ -26,7 +26,7 @@ class SearchDialogO final : public SearchDialog {
     Q_OBJECT
 
 public:
-    SearchDialogO(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* item_node, CTreeModel* partner_node,
+    SearchDialogO(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* inventory, CTreeModel* partner,
         CSectionConfig& config, CSectionInfo& info, QWidget* parent = nullptr);
 
 private slots:
@@ -38,8 +38,8 @@ private:
     void TableViewDelegate(QTableView* view) override;
 
 private:
-    CTreeModel* item_node_ {};
-    CTreeModel* partner_node_ {};
+    CTreeModel* inventory_ {};
+    CTreeModel* partner_ {};
 };
 
 #endif // SEARCHDIALOGO_H

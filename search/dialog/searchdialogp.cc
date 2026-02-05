@@ -6,10 +6,10 @@
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 
-SearchDialogP::SearchDialogP(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* tree_model_i, CSectionConfig& config,
+SearchDialogP::SearchDialogP(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* inventory, CSectionConfig& config,
     CSectionInfo& info, QWidget* parent)
     : SearchDialog(tree, search_node, search_entry, config, info, parent)
-    , tree_model_i_ { tree_model_i }
+    , inventory_ { inventory }
 {
     TreeViewDelegate(ui->searchViewNode);
     TableViewDelegate(ui->searchViewEntry);
@@ -29,7 +29,7 @@ void SearchDialogP::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kUnitPrice), rate_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kLhsNode), table_path_);
 
-    auto* rhs_node_name { new SearchPathTableR(tree_model_i_, view) };
+    auto* rhs_node_name { new SearchPathTableR(inventory_, view) };
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), rhs_node_name);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kExternalSku), rhs_node_name);
 

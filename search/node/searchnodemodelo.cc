@@ -7,9 +7,8 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SearchNodeModelO::SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, CTreeModel* partner_tree_model, QObject* parent)
+SearchNodeModelO::SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, QObject* parent)
     : SearchNodeModel { info, tree_model, parent }
-    , partner_tree_model_ { partner_tree_model }
 {
 }
 
@@ -62,6 +61,8 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
         return d_node->user_id;
     case NodeEnumO::kDescription:
         return d_node->description;
+    case NodeEnumO::kCode:
+        return d_node->code;
     case NodeEnumO::kDirectionRule:
         return d_node->direction_rule;
     case NodeEnumO::kKind:
@@ -120,6 +121,8 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(d_lhs, d_rhs, &NodeO::employee_id, order);
         case NodeEnumO::kIssuedTime:
             return Utils::CompareMember(d_lhs, d_rhs, &NodeO::issued_time, order);
+        case NodeEnumO::kCode:
+            return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumO::kCountTotal:
             return Utils::CompareMember(d_lhs, d_rhs, &NodeO::count_total, order);
         case NodeEnumO::kMeasureTotal:

@@ -5,11 +5,11 @@
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 
-SearchDialogO::SearchDialogO(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* item_node, CTreeModel* partner_node,
+SearchDialogO::SearchDialogO(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* inventory, CTreeModel* partner,
     CSectionConfig& config, CSectionInfo& info, QWidget* parent)
     : SearchDialog(tree, search_node, search_entry, config, info, parent)
-    , item_node_ { item_node }
-    , partner_node_ { partner_node }
+    , inventory_ { inventory }
+    , partner_ { partner }
 {
     TreeViewDelegate(ui->searchViewNode);
     TableViewDelegate(ui->searchViewEntry);
@@ -29,7 +29,7 @@ void SearchDialogO::TreeViewDelegate(QTableView* view)
 
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), check_);
 
-    auto* partner_name { new SearchPathTableR(partner_node_, view) };
+    auto* partner_name { new SearchPathTableR(partner_, view) };
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kPartnerId), partner_name);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployeeId), partner_name);
 }
@@ -47,7 +47,7 @@ void SearchDialogO::TableViewDelegate(QTableView* view)
 
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kLhsNode), table_path_);
 
-    auto* item_name { new SearchPathTableR(item_node_, view) };
+    auto* item_name { new SearchPathTableR(inventory_, view) };
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalSku), item_name);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kRhsNode), item_name);
 }

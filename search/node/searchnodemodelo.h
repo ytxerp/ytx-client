@@ -26,7 +26,7 @@ class SearchNodeModelO final : public SearchNodeModel {
     Q_OBJECT
 
 public:
-    SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, CTreeModel* partner_tree_model, QObject* parent = nullptr);
+    SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, QObject* parent = nullptr);
 
 public slots:
     void RNodeSearch(const QJsonObject& obj) override;
@@ -36,9 +36,6 @@ public:
     void sort(int column, Qt::SortOrder order) override;
 
     void Search(CString& text) override;
-
-private:
-    CTreeModel* partner_tree_model_ {};
 };
 
 #endif // SEARCHNODEMODELO_H

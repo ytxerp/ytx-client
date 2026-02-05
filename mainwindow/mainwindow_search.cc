@@ -52,7 +52,7 @@ void MainWindow::on_actionSearch_triggered()
         break;
     case Section::kSale:
     case Section::kPurchase:
-        node = new SearchNodeModelO(sc_->info, sc_->tree_model, sc_p_.tree_model, this);
+        node = new SearchNodeModelO(sc_->info, sc_->tree_model, this);
         entry = new SearchEntryModelO(sc_->info, this);
         dialog = new SearchDialogO(sc_->tree_model, node, entry, sc_i_.tree_model, sc_p_.tree_model, sc_->section_config, sc_->info, this);
         connect(WebSocket::Instance(), &WebSocket::SNodeSearch, node, &SearchNodeModel::RNodeSearch);
