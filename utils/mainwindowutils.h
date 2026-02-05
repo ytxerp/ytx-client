@@ -36,6 +36,7 @@ void SetLoginStatus(QLabel* label, LoginStatus status);
 void SetButton(QPushButton* btn, const QString& text, const QKeySequence& ks);
 
 QString AccountIniFileName(const QString& email, const QString& workspace);
+QString UuidToShortCode(const QUuid& uuid, int length = 10);
 
 void ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where = true);
 void Message(QMessageBox::Icon icon, CString& title, CString& text, int timeout);

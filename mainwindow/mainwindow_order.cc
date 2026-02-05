@@ -6,6 +6,7 @@
 #include "global/tablesstation.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -152,6 +153,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     node.unit = parent_index.isValid() ? parent_node->unit : NodeUnit(sc_->shared_config.default_unit);
     node.parent = parent_node;
     node.issued_time = QDateTime::currentDateTimeUtc();
+    node.code = Utils::UuidToShortCode(node.id);
 
     const QUuid node_id { node.id };
 

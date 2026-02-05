@@ -232,6 +232,8 @@ void NodeO::ReadJson(const QJsonObject& object)
         name = object.value(kName).toString();
     if (object.contains(kId))
         id = QUuid(object.value(kId).toString());
+    if (object.contains(kCode))
+        code = object.value(kCode).toString();
     if (object.contains(kDescription))
         description = object.value(kDescription).toString();
     if (object.contains(kKind))
@@ -281,6 +283,7 @@ QJsonObject NodeO::WriteJson() const
     QJsonObject obj {};
     obj.insert(kName, name);
     obj.insert(kId, id.toString(QUuid::WithoutBraces));
+    obj.insert(kCode, code);
     obj.insert(kDescription, description);
     obj.insert(kKind, std::to_underlying(kind));
     obj.insert(kDirectionRule, direction_rule);

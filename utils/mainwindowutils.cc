@@ -214,3 +214,46 @@ void Utils::SetButton(QPushButton* btn, const QString& text, const QKeySequence&
     btn->setText(text);
     btn->setToolTip(QString("%1 (%2)").arg(text, ks.toString()));
 }
+
+/**
+ * Convert UUID v7 to a short display code for orders
+ *
+ * @param uuid The UUID v7 to convert
+ * @param length Total length of the short code (excluding separator)
+ * @return Formatted short code (e.g., "AB12-3XYZ45" for length 10)
+ *
+ * Note: This is one-way conversion for display purposes only.
+ * The original UUID should be stored in database for lookups.
+ */
+QString Utils::UuidToShortCode(const QUuid& uuid, int length)
+{
+    // Extract 16 bytes from UUID
+    const QByteArray bytes { uuid.toRfc4122() };
+    QString base32 {};
+
+    // Bit manipulation for Base32 encoding
+    int bit_buffer { 0 };
+    int bits_left { 0 };
+
+    // Process each byte
+    for (char byte : bytes) {
+        bit_buffer = (bit_buffer << 8) | static_cast<unsigned char>(byte);
+        bits_left += 8;
+
+        // Extract 5-bit chunks for Base32
+        while (bits_left >= 5) {
+            bits_left -= 5;
+            int index { (bit_buffer >> bits_left) & 0x1F };
+            base32.append(kBase32Crockford[index]);
+        }
+    }
+
+    // Handle remaining bits (if any)
+    if (bits_left > 0) {
+        int index { (bit_buffer << (5 - bits_left)) & 0x1F };
+        base32.append(kBase32Crockford[index]);
+    }
+
+    // Return plain code (add separator only when displaying/printing)
+    return base32.left(length);
+}

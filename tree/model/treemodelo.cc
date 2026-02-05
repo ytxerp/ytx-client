@@ -272,6 +272,8 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
         switch (e_column) {
         case NodeEnumO::kName:
             return Utils::CompareMember(lhs, rhs, &Node::name, order);
+        case NodeEnumO::kCode:
+            return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumO::kDescription:
             return Utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumO::kDirectionRule:
@@ -342,6 +344,8 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return d_node->updated_time;
     case NodeEnumO::kUpdateBy:
         return d_node->updated_by;
+    case NodeEnumO::kCode:
+        return d_node->code;
     case NodeEnumO::kVersion:
         return d_node->version;
     case NodeEnumO::kDescription:

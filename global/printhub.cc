@@ -100,7 +100,7 @@ bool PrintHub::LoadTemplate(const QString& template_name)
         settings.endGroup();
     }
 
-    static const QList<QString> header_fields { QStringLiteral("partner"), QStringLiteral("issued_time") };
+    static const QList<QString> header_fields { QStringLiteral("partner"), QStringLiteral("issued_time"), QStringLiteral("code") };
     static const QList<QString> table_fields { QStringLiteral("left_top"), QStringLiteral("rows_columns") };
     static const QList<QString> footer_fields { QStringLiteral("employee"), QStringLiteral("unit"), QStringLiteral("initial_total"),
         QStringLiteral("initial_total_upper"), QStringLiteral("page_info") };
@@ -169,10 +169,9 @@ void PrintHub::RenderAllPages(QPrinter* printer)
 
 void PrintHub::DrawHeader(QPainter* painter)
 {
-    // Example: Draw a header at the specified position
-
     DrawText(painter, QStringLiteral("partner"), partner_->Name(node_o_->partner_id));
-    DrawText(painter, QStringLiteral("issued_time"), node_o_->issued_time.toLocalTime().toString(kDateTimeFST));
+    DrawText(painter, QStringLiteral("issued_time"), node_o_->issued_time.toLocalTime().toString(kDateFST));
+    DrawText(painter, QStringLiteral("code"), node_o_->code);
 }
 
 /*!
@@ -461,10 +460,14 @@ QString PrintHub::ConvertSection(int section, const QStringList& digits)
 void PrintHub::DrawText(QPainter* painter, const QString& field, const QString& text)
 {
     const auto& opt_pos { field_position_.value(field) };
-    if (!opt_pos.has_value())
+    if (!opt_pos.has_value()) {
+        qDebug() << "Field not found in config:" << field;
         return;
+    }
 
     const FieldPosition& pos { *opt_pos };
+    qDebug() << "Drawing field:" << field << "at position:" << pos.x << "," << pos.y << "text:" << text;
+
     painter->drawText(pos.x, pos.y, text);
 }
 
