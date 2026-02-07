@@ -128,7 +128,7 @@ inline const QString kStatementNodeAcked = QStringLiteral("statement_node_acked"
 inline const QString kStatementEntryAcked = QStringLiteral("statement_entry_acked");
 inline const QString kSettlementAcked = QStringLiteral("settlement_acked");
 inline const QString kSettlementItemAcked = QStringLiteral("settlement_item_acked");
-inline const QString kSettlementDeleted = QStringLiteral("settlement_removed");
+inline const QString kSettlementDeleted = QStringLiteral("settlement_deleted");
 
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");
@@ -149,9 +149,9 @@ inline const QString kOperation = QStringLiteral("operation");
 inline const QString kStaticLabel = QStringLiteral("static_label");
 inline const QString kStaticNode = QStringLiteral("static_node");
 
-inline const QString kLeafDeleteCheck = QStringLiteral("leaf_remove_check");
-inline const QString kLeafDeleteDenied = QStringLiteral("leaf_remove_denied");
-inline const QString kLeafDelete = QStringLiteral("leaf_remove");
+inline const QString kLeafDeleteCheck = QStringLiteral("leaf_delete_check");
+inline const QString kLeafDeleteDenied = QStringLiteral("leaf_delete_denied");
+inline const QString kLeafDelete = QStringLiteral("leaf_delete");
 inline const QString kLeafReplace = QStringLiteral("leaf_replace");
 
 inline const QString kExternalSku = QStringLiteral("external_sku");
@@ -216,7 +216,7 @@ inline const QString kServer = QStringLiteral("server");
 inline const QString kLoginResult = QStringLiteral("login_result");
 inline const QString kWorkspace = QStringLiteral("workspace");
 inline const QString kHost = QStringLiteral("host");
-inline const QString kBranchDelete = QStringLiteral("branch_remove");
+inline const QString kBranchDelete = QStringLiteral("branch_delete");
 inline const QString kNode = QStringLiteral("node");
 inline const QString kNodeSearch = QStringLiteral("node_search");
 inline const QString kNodeArray = QStringLiteral("node_array");
@@ -233,7 +233,7 @@ inline const QString kTagUpdate = QStringLiteral("tag_update");
 inline const QString kTagDelete = QStringLiteral("tag_delete");
 inline const QString kEntryInsert = QStringLiteral("entry_insert");
 inline const QString kEntryUpdate = QStringLiteral("entry_update");
-inline const QString kEntryDelete = QStringLiteral("entry_remove");
+inline const QString kEntryDelete = QStringLiteral("entry_delete");
 inline const QString kEntrySearch = QStringLiteral("entry_search");
 inline const QString kEntryArray = QStringLiteral("entry_array");
 inline const QString kUnsettledOrder = QStringLiteral("unsettled_order");
@@ -249,7 +249,7 @@ inline const QString kArray = QStringLiteral("array");
 inline const QString kDocumentDir = QStringLiteral("document_dir");
 inline const QString kDefaultUnit = QStringLiteral("default_unit");
 inline const QString kUpdateDefaultUnitFailure = QStringLiteral("update_default_unit_failure");
-inline const QString kLeafDeleteSafely = QStringLiteral("leaf_remove_safely");
+inline const QString kLeafDeleteSafely = QStringLiteral("leaf_delete_safely");
 
 inline const QString kPBalance = QStringLiteral("pbalance");
 inline const QString kCCount = QStringLiteral("ccount");
