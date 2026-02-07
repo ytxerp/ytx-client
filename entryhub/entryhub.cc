@@ -16,10 +16,10 @@ EntryHub::EntryHub(CSectionInfo& info, QObject* parent)
 
 EntryHub::~EntryHub() { Reset(); }
 
-void EntryHub::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
+void EntryHub::DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
 {
-    emit SRemoveEntryHash(leaf_entry);
-    RemoveLeafFunction(leaf_entry);
+    emit SDeleteEntryHash(leaf_entry);
+    DeleteLeafFunction(leaf_entry);
 }
 
 void EntryHub::RAppendOneEntry(Entry* entry)
@@ -28,12 +28,12 @@ void EntryHub::RAppendOneEntry(Entry* entry)
     emit SAppendOneEntry(entry->rhs_node, entry);
 }
 
-void EntryHub::RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id)
+void EntryHub::RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id)
 {
     auto it = entry_cache_.find(entry_id);
     if (it != entry_cache_.end()) {
         if (!node_id.isNull())
-            emit SRemoveOneEntry(node_id, entry_id);
+            emit SDeleteOneEntry(node_id, entry_id);
 
         EntryPool::Instance().Recycle(it.value(), section_);
         entry_cache_.erase(it);
@@ -42,7 +42,7 @@ void EntryHub::RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id)
 
 void EntryHub::Reset() { EntryPool::Instance().Recycle(entry_cache_, section_); }
 
-void EntryHub::RemoveLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
+void EntryHub::DeleteLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
 {
     // Recycle entry resources
     for (auto it = leaf_entry.constBegin(); it != leaf_entry.constEnd(); ++it) {
@@ -63,7 +63,7 @@ void EntryHub::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
 
     ReplaceLeafFunction(entry_id_set, entry_list, old_node_id, new_node_id);
 
-    emit SRemoveMultiEntry(old_node_id, entry_id_set);
+    emit SDeleteMultiEntry(old_node_id, entry_id_set);
     emit SAppendMultiEntry(new_node_id, entry_list);
 }
 
@@ -94,14 +94,14 @@ void EntryHub::InsertMeta(const QUuid& entry_id, const QJsonObject& meta)
     };
 }
 
-void EntryHub::RemoveEntry(const QUuid& entry_id)
+void EntryHub::DeleteEntry(const QUuid& entry_id)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
         auto* entry = it.value();
 
-        emit SRemoveOneEntry(entry->lhs_node, entry_id);
-        emit SRemoveOneEntry(entry->rhs_node, entry_id);
+        emit SDeleteOneEntry(entry->lhs_node, entry_id);
+        emit SDeleteOneEntry(entry->rhs_node, entry_id);
 
         EntryPool::Instance().Recycle(entry, section_);
     }
@@ -163,7 +163,7 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
 
         const int rhs_node_column { Utils::LinkedNodeColumn(section_) };
 
-        emit SRemoveOneEntry(old_node_id, id);
+        emit SDeleteOneEntry(old_node_id, id);
         emit SRefreshField(lhs_node, id, rhs_node_column, rhs_node_column);
     } else {
         entry = EntryPool::Instance().Allocate(section_);

@@ -57,7 +57,7 @@ public:
 protected:
     void RegisterPath(Node* /*node*/) override { };
 
-    void RemovePath(Node* node, Node* parent_node) override;
+    void DeletePath(Node* node, Node* parent_node) override;
 
     void HandleNode() override;
 

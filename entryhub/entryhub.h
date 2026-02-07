@@ -37,13 +37,13 @@ protected:
     explicit EntryHub(CSectionInfo& info, QObject* parent = nullptr);
 
 signals:
-    // send to LeafSStation; partner and order entries are removed directly
-    void SRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash);
-    void SRemoveMultiEntry(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
+    // send to LeafSStation; partner and order entries are deleted directly
+    void SDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash);
+    void SDeleteMultiEntry(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
     void SAppendMultiEntry(const QUuid& node_id, const EntryList& entry_list);
 
     void SAppendOneEntry(const QUuid& node_id, Entry* entry);
-    void SRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
+    void SDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void SRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
     void SRefreshStatus(const QSet<QUuid>& affected_node);
@@ -56,13 +56,13 @@ signals:
 public slots:
     // receive from TableModel
     void RAppendOneEntry(Entry* entry);
-    void RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
+    void RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
 public:
     void Reset();
 
     virtual void InsertEntry(const QJsonObject& data);
-    virtual void RemoveEntry(const QUuid& entry_id);
+    virtual void DeleteEntry(const QUuid& entry_id);
     virtual void UpdateEntry(const QUuid& id, const QJsonObject& update);
 
     void InsertMeta(const QUuid& entry_id, const QJsonObject& meta);
@@ -89,13 +89,13 @@ public:
         Q_UNUSED(update);
     }
 
-    virtual void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
+    virtual void DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
 protected:
     virtual EntryList ProcessEntryArray(const QJsonArray& array);
 
     void ReplaceLeafFunction(QSet<QUuid>& entry_id_set, EntryList& entry_list, const QUuid& old_node_id, const QUuid& new_node_id) const;
-    void RemoveLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
+    void DeleteLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
     void EntryActionImpl(Entry* entry, EntryAction action);
 

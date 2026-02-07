@@ -37,10 +37,10 @@ public:
     void PushEntry(const QUuid& node_id);
 
     void InsertEntry(const QJsonObject& data) override;
-    void RemoveEntry(const QUuid& entry_id) override;
+    void DeleteEntry(const QUuid& entry_id) override;
     void UpdateEntry(const QUuid& id, const QJsonObject& update) override;
 
-    void RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
+    void DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
     void ApplyPartnerEntry(const QJsonArray& array);
     // std::optional<std::pair<QUuid, double>> ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const;
 

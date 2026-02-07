@@ -57,8 +57,8 @@ signals:
     void SInitStatus();
 
 public slots:
-    // receive from RemoveDialog
-    void RRemoveNode(const QUuid& node_id);
+    // receive from DeleteDialog
+    void RDeleteNode(const QUuid& node_id);
 
 public:
     // Qt's
@@ -189,7 +189,7 @@ protected:
     }
 
     virtual void RegisterPath(Node* node);
-    virtual void RemovePath(Node* node, Node* parent_node);
+    virtual void DeletePath(Node* node, Node* parent_node);
     virtual void HandleNode();
 
     virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta);

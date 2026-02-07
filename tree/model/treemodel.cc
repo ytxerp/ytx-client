@@ -27,7 +27,7 @@ TreeModel::~TreeModel()
     NodePool::Instance().Recycle(node_hash_, section_);
 }
 
-void TreeModel::RRemoveNode(const QUuid& node_id)
+void TreeModel::RDeleteNode(const QUuid& node_id)
 {
     if (!node_hash_.contains(node_id)) {
         return;
@@ -226,7 +226,7 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     const auto affected_ids { UpdateAncestorTotal(new_node, initial_delta, final_delta) };
     RefreshAffectedTotal(affected_ids);
 
-    RRemoveNode(old_node_id);
+    RDeleteNode(old_node_id);
 }
 
 void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
@@ -410,7 +410,7 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex& parent)
     parent_node->children.removeOne(node);
     endRemoveRows();
 
-    RemovePath(node, parent_node);
+    DeletePath(node, parent_node);
 
     ResourcePool<Node>::Instance().Recycle(node);
     node_hash_.remove(node_id);
@@ -669,7 +669,7 @@ void TreeModel::AckNode(const QUuid& node_id) const
     WebSocket::Instance()->SendMessage(kNodeAcked, message);
 }
 
-void TreeModel::RemovePath(Node* node, Node* parent_node)
+void TreeModel::DeletePath(Node* node, Node* parent_node)
 {
     const auto node_id { node->id };
     const NodeKind kind { node->kind };

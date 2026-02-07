@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget* parent)
     SetTabWidget();
     SetIcon();
     SetUniqueConnection();
-    SetRemoveShortcut();
+    SetDeleteShortcut();
     SetAction(false);
 
     StringInitializer::SetHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget* parent)
     QTimer::singleShot(0, this, &::MainWindow::InitilizeContext);
 }
 
-void MainWindow::SetRemoveShortcut()
+void MainWindow::SetDeleteShortcut()
 {
 #ifdef Q_OS_WIN
     ui->actionDelete->setShortcut(QKeySequence::Delete);
@@ -365,7 +365,7 @@ void MainWindow::SetUniqueConnection() const
 
     connect(section_group_, &QButtonGroup::idClicked, this, &MainWindow::RSectionGroup);
 
-    connect(WebSocket::Instance(), &WebSocket::SLeafRemoveDenied, this, &MainWindow::RLeafRemoveDenied);
+    connect(WebSocket::Instance(), &WebSocket::SLeafDeleteDenied, this, &MainWindow::RLeafDeleteDenied);
     connect(WebSocket::Instance(), &WebSocket::SSharedConfig, this, &MainWindow::RSharedConfig);
     connect(WebSocket::Instance(), &WebSocket::SDefaultUnit, this, &MainWindow::RDefaultUnit);
     connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);

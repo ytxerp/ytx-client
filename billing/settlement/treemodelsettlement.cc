@@ -126,8 +126,8 @@ bool TreeModelSettlement::removeRows(int row, int /*count*/, const QModelIndex& 
     auto* settlement { list_.takeAt(row) };
     endRemoveRows();
 
-    QJsonObject message { JsonGen::SettlementRemoved(info_.section, settlement->id) };
-    WebSocket::Instance()->SendMessage(kSettlementRemoved, message);
+    QJsonObject message { JsonGen::SettlementDelete(info_.section, settlement->id) };
+    WebSocket::Instance()->SendMessage(kSettlementDeleted, message);
 
     ResourcePool<Settlement>::Instance().Recycle(settlement);
     return true;

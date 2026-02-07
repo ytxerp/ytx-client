@@ -40,7 +40,7 @@ void TableSStation::RAppendOneEntry(const QUuid& node_id, Entry* entry)
     emit SAppendOneEntry(entry);
 }
 
-void TableSStation::RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id)
+void TableSStation::RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id)
 {
     Q_ASSERT(!node_id.isNull());
     Q_ASSERT(!entry_id.isNull());
@@ -49,8 +49,8 @@ void TableSStation::RRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id)
     if (!model)
         return;
 
-    connect(this, &TableSStation::SRemoveOneEntry, model, &TableModel::RRemoveOneEntry, Qt::SingleShotConnection);
-    emit SRemoveOneEntry(entry_id);
+    connect(this, &TableSStation::SDeleteOneEntry, model, &TableModel::RDeleteOneEntry, Qt::SingleShotConnection);
+    emit SDeleteOneEntry(entry_id);
 }
 
 void TableSStation::RUpdateBalance(const QUuid& node_id, const QUuid& entry_id)
@@ -120,7 +120,7 @@ void TableSStation::RDirectionRule(const QUuid& node_id, bool rule)
     emit SDirectionRule(rule);
 }
 
-void TableSStation::RRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash)
+void TableSStation::RDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash)
 {
     for (auto it = entry_hash.constBegin(); it != entry_hash.constEnd(); ++it) {
         const QUuid& node_id = it.key();
@@ -132,18 +132,18 @@ void TableSStation::RRemoveEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash
         if (!model)
             continue;
 
-        connect(this, &TableSStation::SRemoveMultiEntry, model, &TableModel::RRemoveMultiEntry, Qt::SingleShotConnection);
-        emit SRemoveMultiEntry(entry_id_set);
+        connect(this, &TableSStation::SDeleteMultiEntry, model, &TableModel::RDeleteMultiEntry, Qt::SingleShotConnection);
+        emit SDeleteMultiEntry(entry_id_set);
     }
 }
 
-void TableSStation::RRemoveMultiEntry(const QUuid& node_id, const QSet<QUuid>& entry_id_set)
+void TableSStation::RDeleteMultiEntry(const QUuid& node_id, const QSet<QUuid>& entry_id_set)
 {
     Q_ASSERT(!node_id.isNull());
 
     const auto* old_model { FindModel(node_id) };
     if (old_model) {
-        connect(this, &TableSStation::SRemoveMultiEntry, old_model, &TableModel::RRemoveMultiEntry, Qt::SingleShotConnection);
-        emit SRemoveMultiEntry(entry_id_set);
+        connect(this, &TableSStation::SDeleteMultiEntry, old_model, &TableModel::RDeleteMultiEntry, Qt::SingleShotConnection);
+        emit SDeleteMultiEntry(entry_id_set);
     }
 }

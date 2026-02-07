@@ -10,7 +10,7 @@ EntryHubP::EntryHubP(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubP::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
+void EntryHubP::DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { DeleteLeafFunction(leaf_entry); }
 
 void EntryHubP::ApplyInventoryIntReplace(const QUuid& old_item_id, const QUuid& new_item_id)
 {
@@ -131,7 +131,7 @@ void EntryHubP::InsertEntry(const QJsonObject& data)
     emit SAppendOneEntry(entry->lhs_node, entry);
 }
 
-void EntryHubP::RemoveEntry(const QUuid& entry_id)
+void EntryHubP::DeleteEntry(const QUuid& entry_id)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
@@ -139,7 +139,7 @@ void EntryHubP::RemoveEntry(const QUuid& entry_id)
 
         entry_map_.remove({ entry->lhs_node, entry->rhs_node });
 
-        emit SRemoveOneEntry(entry->lhs_node, entry_id);
+        emit SDeleteOneEntry(entry->lhs_node, entry_id);
 
         EntryPool::Instance().Recycle(entry, section_);
     }

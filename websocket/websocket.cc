@@ -185,18 +185,18 @@ void WebSocket::InitHandler()
     handler_obj_[kTreeSyncFinished] = [this](const QJsonObject& /*obj*/) { NotifyTreeSyncFinished(); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
     handler_obj_[kNodeAcked] = [this](const QJsonObject& obj) { AckNode(obj); };
-    handler_obj_[kLeafRemove] = [this](const QJsonObject& obj) { RemoveLeaf(obj); };
-    handler_obj_[kBranchRemove] = [this](const QJsonObject& obj) { RemoveBranch(obj); };
+    handler_obj_[kLeafDelete] = [this](const QJsonObject& obj) { DeleteLeaf(obj); };
+    handler_obj_[kBranchDelete] = [this](const QJsonObject& obj) { DeleteBranch(obj); };
     handler_obj_[kLeafReplace] = [this](const QJsonObject& obj) { ReplaceLeaf(obj); };
     handler_obj_[kNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
     handler_obj_[kEntryInsert] = [this](const QJsonObject& obj) { InsertEntry(obj); };
     handler_obj_[kEntrySearch] = [this](const QJsonObject& obj) { SearchEntry(obj); };
     handler_obj_[kNodeSearch] = [this](const QJsonObject& obj) { SearchNode(obj); };
     handler_obj_[kEntryUpdate] = [this](const QJsonObject& obj) { UpdateEntry(obj); };
-    handler_obj_[kEntryRemove] = [this](const QJsonObject& obj) { RemoveEntry(obj); };
+    handler_obj_[kEntryDelete] = [this](const QJsonObject& obj) { DeleteEntry(obj); };
     handler_obj_[kDirectionRule] = [this](const QJsonObject& obj) { UpdateDirectionRule(obj); };
     handler_obj_[kNodeStatus] = [this](const QJsonObject& obj) { UpdateNodeStatus(obj); };
-    handler_obj_[kLeafRemoveDenied] = [this](const QJsonObject& obj) { NotifyLeafRemoveDenied(obj); };
+    handler_obj_[kLeafDeleteDenied] = [this](const QJsonObject& obj) { NotifyLeafDeleteDenied(obj); };
     handler_obj_[kNodeDrag] = [this](const QJsonObject& obj) { DragNode(obj); };
     handler_obj_[kEntryAction] = [this](const QJsonObject& obj) { ActionEntry(obj); };
 
@@ -204,7 +204,7 @@ void WebSocket::InitHandler()
     handler_obj_[kEntryLinkedNode] = [this](const QJsonObject& obj) { UpdateEntryLinkedNode(obj); };
     handler_obj_[kEntryRate] = [this](const QJsonObject& obj) { UpdateEntryRate(obj); };
     handler_obj_[kEntryNumeric] = [this](const QJsonObject& obj) { UpdateEntryNumeric(obj); };
-    handler_obj_[kLeafRemoveSafely] = [this](const QJsonObject& obj) { RemoveLeafSafely(obj); };
+    handler_obj_[kLeafDeleteSafely] = [this](const QJsonObject& obj) { DeleteLeafSafely(obj); };
     handler_obj_[kOrderInsertSaved] = [this](const QJsonObject& obj) { InsertOrder(obj, false); };
     handler_obj_[kOrderUpdateSaved] = [this](const QJsonObject& obj) { UpdateOrder(obj, false); };
     handler_obj_[kOrderInsertReleased] = [this](const QJsonObject& obj) { InsertOrder(obj, true); };
@@ -509,7 +509,7 @@ void WebSocket::AckSettlementItem(const QJsonObject& obj)
     emit SSettlementItemAcked(section, widget_id, array);
 }
 
-void WebSocket::RemoveLeaf(const QJsonObject& obj)
+void WebSocket::DeleteLeaf(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
@@ -523,27 +523,23 @@ void WebSocket::RemoveLeaf(const QJsonObject& obj)
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
 
-    entry_hub->RemoveLeaf(leaf_entry);
+    entry_hub->DeleteLeaf(leaf_entry);
     tree_model->SyncTotalArray(total_array);
 
     if (session_id != session_id_)
-        tree_model->RRemoveNode(QUuid(node_id));
+        tree_model->RDeleteNode(QUuid(node_id));
 }
 
-void WebSocket::RemoveLeafSafely(const QJsonObject& obj)
+void WebSocket::DeleteLeafSafely(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     auto tree_model { tree_model_hash_.value(section) };
-    tree_model->RRemoveNode(node_id);
-
-    if (session_id == session_id_)
-        emit SNodeRemoveConfirmed(node_id);
+    tree_model->RDeleteNode(node_id);
 }
 
-void WebSocket::RemoveBranch(const QJsonObject& obj)
+void WebSocket::DeleteBranch(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
@@ -552,10 +548,10 @@ void WebSocket::RemoveBranch(const QJsonObject& obj)
     auto tree_model { tree_model_hash_.value(section) };
 
     if (session_id != session_id_)
-        tree_model->RRemoveNode(QUuid(node_id));
+        tree_model->RDeleteNode(QUuid(node_id));
 }
 
-void WebSocket::NotifyLeafRemoveDenied(const QJsonObject& obj) { emit SLeafRemoveDenied(obj); }
+void WebSocket::NotifyLeafDeleteDenied(const QJsonObject& obj) { emit SLeafDeleteDenied(obj); }
 
 void WebSocket::ReplaceLeaf(const QJsonObject& obj)
 {
@@ -778,7 +774,7 @@ void WebSocket::InsertEntry(const QJsonObject& obj)
     entry_hub->InsertMeta(entry_id, meta);
 }
 
-void WebSocket::RemoveEntry(const QJsonObject& obj)
+void WebSocket::DeleteEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
@@ -807,7 +803,7 @@ void WebSocket::RemoveEntry(const QJsonObject& obj)
     }
 
     if (session_id != session_id_) {
-        entry_hub->RemoveEntry(entry_id);
+        entry_hub->DeleteEntry(entry_id);
     }
 }
 

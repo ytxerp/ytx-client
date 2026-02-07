@@ -11,13 +11,13 @@ void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(tree_model, &TreeModel::SResizeColumnToContents, tree_view, &QTreeView::resizeColumnToContents, Qt::UniqueConnection);
 
-    connect(entry_hub, &EntryHub::SRemoveEntryHash, TableSStation::Instance(), &TableSStation::RRemoveEntryHash, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRemoveMultiEntry, TableSStation::Instance(), &TableSStation::RRemoveMultiEntry, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SDeleteEntryHash, TableSStation::Instance(), &TableSStation::RDeleteEntryHash, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SDeleteMultiEntry, TableSStation::Instance(), &TableSStation::RDeleteMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, TableSStation::Instance(), &TableSStation::RAppendMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRefreshStatus, TableSStation::Instance(), &TableSStation::RRefreshStatus, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAppendOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRemoveOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SDeleteOneEntry, TableSStation::Instance(), &TableSStation::RDeleteOneEntry, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SRefreshField, TableSStation::Instance(), &TableSStation::RRefreshField, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance, Qt::UniqueConnection);
@@ -35,13 +35,13 @@ void MainWindow::TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(tree_model, &TreeModel::SResizeColumnToContents, tree_view, &QTreeView::resizeColumnToContents, Qt::UniqueConnection);
 
-    connect(entry_hub, &EntryHub::SRemoveEntryHash, TableSStation::Instance(), &TableSStation::RRemoveEntryHash, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRemoveMultiEntry, TableSStation::Instance(), &TableSStation::RRemoveMultiEntry, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SDeleteEntryHash, TableSStation::Instance(), &TableSStation::RDeleteEntryHash, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SDeleteMultiEntry, TableSStation::Instance(), &TableSStation::RDeleteMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, TableSStation::Instance(), &TableSStation::RAppendMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRefreshStatus, TableSStation::Instance(), &TableSStation::RRefreshStatus, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAppendOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRemoveOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SDeleteOneEntry, TableSStation::Instance(), &TableSStation::RDeleteOneEntry, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SRefreshField, TableSStation::Instance(), &TableSStation::RRefreshField, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance, Qt::UniqueConnection);
@@ -59,13 +59,13 @@ void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(tree_model, &TreeModel::SResizeColumnToContents, tree_view, &QTreeView::resizeColumnToContents, Qt::UniqueConnection);
 
-    connect(entry_hub, &EntryHub::SRemoveEntryHash, TableSStation::Instance(), &TableSStation::RRemoveEntryHash, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRemoveMultiEntry, TableSStation::Instance(), &TableSStation::RRemoveMultiEntry, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SDeleteEntryHash, TableSStation::Instance(), &TableSStation::RDeleteEntryHash, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SDeleteMultiEntry, TableSStation::Instance(), &TableSStation::RDeleteMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, TableSStation::Instance(), &TableSStation::RAppendMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRefreshStatus, TableSStation::Instance(), &TableSStation::RRefreshStatus, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SAppendOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRemoveOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SDeleteOneEntry, TableSStation::Instance(), &TableSStation::RDeleteOneEntry, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SRefreshField, TableSStation::Instance(), &TableSStation::RRefreshField, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance, Qt::UniqueConnection);
@@ -80,7 +80,7 @@ void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(entry_hub, &EntryHub::SAppendMultiEntry, TableSStation::Instance(), &TableSStation::RAppendMultiEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry, Qt::UniqueConnection);
-    connect(entry_hub, &EntryHub::SRemoveOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry, Qt::UniqueConnection);
+    connect(entry_hub, &EntryHub::SDeleteOneEntry, TableSStation::Instance(), &TableSStation::RDeleteOneEntry, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SRefreshField, TableSStation::Instance(), &TableSStation::RRefreshField, Qt::UniqueConnection);
 
     connect(tree_model, &TreeModel::SUpdateName, this, &MainWindow::RUpdateName, Qt::UniqueConnection);
@@ -108,10 +108,10 @@ void MainWindow::TableConnectF(QTableView* table_view, TableModel* table_model) 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
     connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
-    connect(table_model, &TableModel::SRemoveOneEntry, entry_hub, &EntryHub::RRemoveOneEntry);
+    connect(table_model, &TableModel::SDeleteOneEntry, entry_hub, &EntryHub::RDeleteOneEntry);
 
     connect(table_model, &TableModel::SAttachOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry);
-    connect(table_model, &TableModel::SDetachOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry);
+    connect(table_model, &TableModel::SDetachOneEntry, TableSStation::Instance(), &TableSStation::RDeleteOneEntry);
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
 }
 
@@ -123,10 +123,10 @@ void MainWindow::TableConnectI(QTableView* table_view, TableModel* table_model) 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
     connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
-    connect(table_model, &TableModel::SRemoveOneEntry, entry_hub, &EntryHub::RRemoveOneEntry);
+    connect(table_model, &TableModel::SDeleteOneEntry, entry_hub, &EntryHub::RDeleteOneEntry);
 
     connect(table_model, &TableModel::SAttachOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry);
-    connect(table_model, &TableModel::SDetachOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry);
+    connect(table_model, &TableModel::SDetachOneEntry, TableSStation::Instance(), &TableSStation::RDeleteOneEntry);
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
 }
 
@@ -138,10 +138,10 @@ void MainWindow::TableConnectT(QTableView* table_view, TableModel* table_model) 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 
     connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
-    connect(table_model, &TableModel::SRemoveOneEntry, entry_hub, &EntryHub::RRemoveOneEntry);
+    connect(table_model, &TableModel::SDeleteOneEntry, entry_hub, &EntryHub::RDeleteOneEntry);
 
     connect(table_model, &TableModel::SAttachOneEntry, TableSStation::Instance(), &TableSStation::RAppendOneEntry);
-    connect(table_model, &TableModel::SDetachOneEntry, TableSStation::Instance(), &TableSStation::RRemoveOneEntry);
+    connect(table_model, &TableModel::SDetachOneEntry, TableSStation::Instance(), &TableSStation::RDeleteOneEntry);
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
 }
 
@@ -150,7 +150,7 @@ void MainWindow::TableConnectP(QTableView* table_view, TableModel* table_model) 
     auto entry_hub { sc_p_.entry_hub };
 
     connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
-    connect(table_model, &TableModel::SRemoveOneEntry, entry_hub, &EntryHub::RRemoveOneEntry);
+    connect(table_model, &TableModel::SDeleteOneEntry, entry_hub, &EntryHub::RDeleteOneEntry);
 
     connect(table_model, &TableModel::SResizeColumnToContents, table_view, &QTableView::resizeColumnToContents);
 }

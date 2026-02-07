@@ -17,22 +17,26 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYHUBO_H
-#define ENTRYHUBO_H
+#ifndef TAGMANAGERDLG_H
+#define TAGMANAGERDLG_H
 
-#include "entryhub.h"
+#include <QDialog>
 
-class EntryHubO final : public EntryHub {
+namespace Ui {
+
+class TagManagerDlg;
+
+}
+
+class TagManagerDlg : public QDialog {
     Q_OBJECT
 
 public:
-    explicit EntryHubO(CSectionInfo& info, QObject* parent = nullptr);
+    explicit TagManagerDlg(QWidget* parent = nullptr);
+    ~TagManagerDlg() override;
 
-public:
-    void DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
-
-protected:
-    EntryList ProcessEntryArray(const QJsonArray& array) override;
+private:
+    Ui::TagManagerDlg* ui;
 };
 
-#endif // ENTRYHUBO_H
+#endif // TAGMANAGERDLG_H

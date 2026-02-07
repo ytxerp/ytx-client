@@ -154,7 +154,7 @@ void TreeModelO::DeleteSettlement(const QUuid& settlement_id)
     }
 }
 
-void TreeModelO::RemovePath(Node* node, Node* parent_node)
+void TreeModelO::DeletePath(Node* node, Node* parent_node)
 {
     auto* d_node { DerivedPtr<NodeO>(node) };
     const NodeKind kind { d_node->kind };

@@ -38,7 +38,7 @@ public:
 
 private slots:
     void on_pBtnAdd_clicked();
-    void on_pBtnRemove_clicked();
+    void on_pBtnDelete_clicked();
     void on_pBtnOk_clicked();
     void on_listView_doubleClicked(const QModelIndex& index);
 

@@ -1,6 +1,6 @@
 #include <QtWidgets/qmessagebox.h>
 
-#include "dialog/removenode/leafremovedialog.h"
+#include "dialog/removenode/leafdeletedialog.h"
 #include "mainwindow.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -31,8 +31,8 @@ void MainWindow::DeleteNode()
         break;
     }
     case NodeKind::kLeaf: {
-        const auto message { JsonGen::LeafRemoveCheck(sc_->info.section, node_id) };
-        WebSocket::Instance()->SendMessage(kLeafRemoveCheck, message);
+        const auto message { JsonGen::LeafDeleteCheck(sc_->info.section, node_id) };
+        WebSocket::Instance()->SendMessage(kLeafDeleteCheck, message);
         break;
     }
     default:
@@ -40,7 +40,7 @@ void MainWindow::DeleteNode()
     }
 }
 
-void MainWindow::RLeafRemoveDenied(const QJsonObject& obj)
+void MainWindow::RLeafDeleteDenied(const QJsonObject& obj)
 {
     Section section { obj.value(kSection).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
@@ -50,12 +50,12 @@ void MainWindow::RLeafRemoveDenied(const QJsonObject& obj)
     auto model { section_contex->tree_model };
     const auto unit { model->Unit(node_id) };
 
-    auto* dialog { new LeafRemoveDialog(model, section_contex->info, obj, node_id, unit, this) };
+    auto* dialog { new LeafDeleteDialog(model, section_contex->info, obj, node_id, unit, this) };
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setModal(true);
     dialog->show();
 
-    connect(dialog, &LeafRemoveDialog::SRemoveNode, model, &TreeModel::RRemoveNode, Qt::SingleShotConnection);
+    connect(dialog, &LeafDeleteDialog::SDeleteNode, model, &TreeModel::RDeleteNode, Qt::SingleShotConnection);
     connect(dialog, &QObject::destroyed, this, [this, node_id]() { node_pending_deletion_.remove(node_id); });
 }
 
@@ -63,15 +63,15 @@ void MainWindow::DeleteBranch(TreeModel* tree_model, const QModelIndex& index, c
 {
     QMessageBox msg {};
     msg.setIcon(QMessageBox::Question);
-    msg.setText(tr("Remove %1").arg(tree_model->Path(node_id)));
-    msg.setInformativeText(tr("The branch will be removed, and its direct children will be promoted to the same level."));
+    msg.setText(tr("Delete %1").arg(tree_model->Path(node_id)));
+    msg.setInformativeText(tr("The branch will be deleted, and its direct children will be promoted to the same level."));
     msg.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
 
     if (msg.exec() == QMessageBox::Ok) {
         const QUuid parent_id { sc_->tree_model->GetNode(node_id)->parent->id };
 
-        const auto message { JsonGen::BranchRemove(sc_->info.section, node_id, parent_id) };
-        WebSocket::Instance()->SendMessage(kBranchRemove, message);
+        const auto message { JsonGen::BranchDelete(sc_->info.section, node_id, parent_id) };
+        WebSocket::Instance()->SendMessage(kBranchDelete, message);
         tree_model->removeRows(index.row(), 1, index.parent());
     }
 

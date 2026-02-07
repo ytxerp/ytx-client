@@ -133,7 +133,7 @@ private slots:
     void ROrderSaved(Section section, const QUuid& node_id, int version);
     void RInvalidOperation();
 
-    void RLeafRemoveDenied(const QJsonObject& obj);
+    void RLeafDeleteDenied(const QJsonObject& obj);
 
     void RSharedConfig(const QJsonArray& arr);
     void RDocumentDir(Section section, const QString& document_dir);
@@ -250,7 +250,7 @@ private:
     void InitSystemTray();
     void InitStatusLabel();
 
-    void SetRemoveShortcut();
+    void SetDeleteShortcut();
     QStringList ChildrenName(const Node* node) const;
     QSet<QUuid> LeafChildrenId(const Node* node) const;
 

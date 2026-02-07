@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LeafRemoveDialog</class>
- <widget class="QDialog" name="LeafRemoveDialog">
+ <class>LeafDeleteDialog</class>
+ <widget class="QDialog" name="LeafDeleteDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Remove Node</string>
+   <string>Delete Node</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <property name="verticalSpacing">
@@ -73,7 +73,7 @@
     <widget class="QGroupBox" name="groupBox">
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="QRadioButton" name="rBtnRemove">
+       <widget class="QRadioButton" name="rBtnDelete">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -81,7 +81,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Remove</string>
+         <string>Delete</string>
         </property>
        </widget>
       </item>
@@ -190,7 +190,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>This node is about to be removed but is still referenced. How do you want to handle it?</string>
+      <string>This node is about to be deleted but is still referenced. How do you want to handle it?</string>
      </property>
     </widget>
    </item>
@@ -206,7 +206,7 @@
  <tabstops>
   <tabstop>rBtnReplace</tabstop>
   <tabstop>comboBox</tabstop>
-  <tabstop>rBtnRemove</tabstop>
+  <tabstop>rBtnDelete</tabstop>
   <tabstop>pBtnOk</tabstop>
   <tabstop>pBtnCancel</tabstop>
  </tabstops>
@@ -215,7 +215,7 @@
   <connection>
    <sender>pBtnCancel</sender>
    <signal>clicked()</signal>
-   <receiver>LeafRemoveDialog</receiver>
+   <receiver>LeafDeleteDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

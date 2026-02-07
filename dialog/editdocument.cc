@@ -49,7 +49,7 @@ void EditDocument::on_pBtnAdd_clicked()
     }
 }
 
-void EditDocument::on_pBtnRemove_clicked()
+void EditDocument::on_pBtnDelete_clicked()
 {
     auto index { ui->listView->currentIndex() };
     list_model_->removeRow(index.row(), QModelIndex());

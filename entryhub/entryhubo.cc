@@ -10,7 +10,7 @@ EntryHubO::EntryHubO(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubO::RemoveLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { RemoveLeafFunction(leaf_entry); }
+void EntryHubO::DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { DeleteLeafFunction(leaf_entry); }
 
 /**
  * @brief Convert a JSON array of entries (from server) into an EntryList.

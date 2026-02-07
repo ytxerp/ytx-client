@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LEAFREMOVEDIALOG_H
-#define LEAFREMOVEDIALOG_H
+#ifndef LEAFDELETEDIALOG_H
+#define LEAFDELETEDIALOG_H
 
 #include <QButtonGroup>
 #include <QDialog>
@@ -26,18 +26,18 @@
 #include "tree/model/treemodel.h"
 
 namespace Ui {
-class LeafRemoveDialog;
+class LeafDeleteDialog;
 }
 
-class LeafRemoveDialog final : public QDialog {
+class LeafDeleteDialog final : public QDialog {
     Q_OBJECT
 
 signals:
-    void SRemoveNode(const QUuid& node_id);
+    void SDeleteNode(const QUuid& node_id);
 
 public:
-    LeafRemoveDialog(TreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, NodeUnit unit, QWidget* parent = nullptr);
-    ~LeafRemoveDialog() override;
+    LeafDeleteDialog(TreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, NodeUnit unit, QWidget* parent = nullptr);
+    ~LeafDeleteDialog() override;
 
 private slots:
     void on_pBtnOk_clicked();
@@ -47,13 +47,12 @@ private slots:
 
 private:
     void IniData(Section section);
-    void DisableRemove();
     void IniConnect();
     void IniOptionGroup();
     void InitCheckBoxGroup();
 
 private:
-    Ui::LeafRemoveDialog* ui;
+    Ui::LeafDeleteDialog* ui;
     QButtonGroup* option_group_ {};
 
     const QUuid node_id_ {};
@@ -70,4 +69,4 @@ private:
     CSectionInfo& info_ {};
 };
 
-#endif // LEAFREMOVEDIALOG_H
+#endif // LEAFDELETEDIALOG_H

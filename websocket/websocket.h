@@ -58,12 +58,11 @@ signals:
     void SRemoteHostClosed();
     void SSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id);
 
-    void SLeafRemoveDenied(const QJsonObject& obj);
+    void SLeafDeleteDenied(const QJsonObject& obj);
     void SSharedConfig(const QJsonArray& arr);
     void SDocumentDir(Section section, const QString& document_dir);
     void SDefaultUnit(Section section, int unit);
     void SUpdateDefaultUnitFailed(const QString& section);
-    void SNodeRemoveConfirmed(const QUuid& node_id);
 
     void SReplaceResult(bool result);
     void SSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array);
@@ -148,7 +147,7 @@ private:
     void SearchEntry(const QJsonObject& obj);
     void SearchNode(const QJsonObject& obj);
 
-    void NotifyLeafRemoveDenied(const QJsonObject& obj);
+    void NotifyLeafDeleteDenied(const QJsonObject& obj);
     void NotifyUpdateDefaultUnitFailure(const QJsonObject& obj);
     void NotifyInvalidOperation();
     void NotifyTreeSyncFinished();
@@ -162,9 +161,9 @@ private:
     void UpdateNode(const QJsonObject& obj);
     void DragNode(const QJsonObject& obj);
     void ReplaceLeaf(const QJsonObject& obj);
-    void RemoveLeaf(const QJsonObject& obj);
-    void RemoveLeafSafely(const QJsonObject& obj);
-    void RemoveBranch(const QJsonObject& obj);
+    void DeleteLeaf(const QJsonObject& obj);
+    void DeleteLeafSafely(const QJsonObject& obj);
+    void DeleteBranch(const QJsonObject& obj);
     void UpdateDirectionRule(const QJsonObject& obj);
     void UpdateNodeStatus(const QJsonObject& obj);
     void UpdateNodeName(const QJsonObject& obj);
@@ -183,7 +182,7 @@ private:
 
     void UpdateEntry(const QJsonObject& obj);
     void InsertEntry(const QJsonObject& obj);
-    void RemoveEntry(const QJsonObject& obj);
+    void DeleteEntry(const QJsonObject& obj);
     void ActionEntry(const QJsonObject& obj);
     void UpdateEntryLinkedNode(const QJsonObject& obj);
     void UpdateEntryRate(const QJsonObject& obj);

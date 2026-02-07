@@ -1,15 +1,15 @@
-#include "leafremovedialog.h"
+#include "leafdeletedialog.h"
 
 #include <QMessageBox>
 
 #include "component/signalblocker.h"
-#include "ui_leafremovedialog.h"
+#include "ui_leafdeletedialog.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-LeafRemoveDialog::LeafRemoveDialog(TreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, NodeUnit unit, QWidget* parent)
+LeafDeleteDialog::LeafDeleteDialog(TreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, NodeUnit unit, QWidget* parent)
     : QDialog(parent)
-    , ui(new Ui::LeafRemoveDialog)
+    , ui(new Ui::LeafDeleteDialog)
     , node_id_ { node_id }
     , node_unit_ { unit }
     , inside_ref_ { obj.value(kInsideRef).toBool() }
@@ -29,23 +29,23 @@ LeafRemoveDialog::LeafRemoveDialog(TreeModel* model, CSectionInfo& info, CJsonOb
     IniConnect();
 }
 
-LeafRemoveDialog::~LeafRemoveDialog() { delete ui; }
+LeafDeleteDialog::~LeafDeleteDialog() { delete ui; }
 
-void LeafRemoveDialog::IniConnect()
+void LeafDeleteDialog::IniConnect()
 {
-    connect(WebSocket::Instance(), &WebSocket::SReplaceResult, this, &LeafRemoveDialog::RReplaceResult);
-    connect(option_group_, &QButtonGroup::idClicked, this, &LeafRemoveDialog::RButtonGroup);
-    connect(ui->comboBox, &QComboBox::currentIndexChanged, this, &LeafRemoveDialog::RcomboBoxCurrentIndexChanged);
+    connect(WebSocket::Instance(), &WebSocket::SReplaceResult, this, &LeafDeleteDialog::RReplaceResult);
+    connect(option_group_, &QButtonGroup::idClicked, this, &LeafDeleteDialog::RButtonGroup);
+    connect(ui->comboBox, &QComboBox::currentIndexChanged, this, &LeafDeleteDialog::RcomboBoxCurrentIndexChanged);
 }
 
-void LeafRemoveDialog::IniOptionGroup()
+void LeafDeleteDialog::IniOptionGroup()
 {
     option_group_ = new QButtonGroup(this);
-    option_group_->addButton(ui->rBtnRemove, 0);
+    option_group_->addButton(ui->rBtnDelete, 0);
     option_group_->addButton(ui->rBtnReplace, 1);
 }
 
-void LeafRemoveDialog::InitCheckBoxGroup()
+void LeafDeleteDialog::InitCheckBoxGroup()
 {
     ui->chkBoxInside->setChecked(inside_ref_);
     ui->chkBoxInside->setEnabled(false);
@@ -96,9 +96,9 @@ void LeafRemoveDialog::InitCheckBoxGroup()
     }
 }
 
-void LeafRemoveDialog::on_pBtnOk_clicked()
+void LeafDeleteDialog::on_pBtnOk_clicked()
 {
-    if (!ui->rBtnRemove->isChecked() && !ui->rBtnReplace->isChecked()) {
+    if (!ui->rBtnDelete->isChecked() && !ui->rBtnReplace->isChecked()) {
         return;
     }
 
@@ -110,9 +110,9 @@ void LeafRemoveDialog::on_pBtnOk_clicked()
     QString text {};
     QString informative_text {};
 
-    if (ui->rBtnRemove->isChecked()) {
-        text = tr("Remove Node");
-        informative_text = tr("Remove %1 and all its references. Are you sure").arg(path);
+    if (ui->rBtnDelete->isChecked()) {
+        text = tr("Delete Node");
+        informative_text = tr("Delete %1 and all its references. Are you sure").arg(path);
     }
 
     if (ui->rBtnReplace->isChecked()) {
@@ -124,11 +124,11 @@ void LeafRemoveDialog::on_pBtnOk_clicked()
     msg.setInformativeText(informative_text);
 
     if (msg.exec() == QMessageBox::Ok) {
-        if (ui->rBtnRemove->isChecked()) {
-            emit SRemoveNode(node_id_);
+        if (ui->rBtnDelete->isChecked()) {
+            emit SDeleteNode(node_id_);
 
-            const auto message { JsonGen::LeafRemove(info_.section, node_id_) };
-            WebSocket::Instance()->SendMessage(kLeafRemove, message);
+            const auto message { JsonGen::LeafDelete(info_.section, node_id_) };
+            WebSocket::Instance()->SendMessage(kLeafDelete, message);
 
             accept();
         }
@@ -142,18 +142,18 @@ void LeafRemoveDialog::on_pBtnOk_clicked()
     }
 }
 
-void LeafRemoveDialog::IniData(Section section)
+void LeafDeleteDialog::IniData(Section section)
 {
     ui->label->setWordWrap(true);
     ui->pBtnCancel->setDefault(true);
 
     InitCheckBoxGroup();
 
-    this->setWindowTitle(tr("Remove %1").arg(model_->Path(node_id_)));
+    this->setWindowTitle(tr("Delete %1").arg(model_->Path(node_id_)));
 
     if (inventory_int_ref_ || inventory_ext_ref_ || partner_ref_ || employee_ref_ || settlement_ref_) {
-        ui->rBtnRemove->setEnabled(false);
-        ui->label->setText(tr("The node has external references, so it can’t be removed."));
+        ui->rBtnDelete->setEnabled(false);
+        ui->label->setText(tr("The node has external references, so it can’t be deleted."));
     }
 
     if (section != Section::kInventory)
@@ -165,19 +165,19 @@ void LeafRemoveDialog::IniData(Section section)
     ui->comboBox->setCurrentIndex(-1);
 }
 
-void LeafRemoveDialog::RcomboBoxCurrentIndexChanged(int /*index*/)
+void LeafDeleteDialog::RcomboBoxCurrentIndexChanged(int /*index*/)
 {
     const auto new_node_id { ui->comboBox->currentData().toUuid() };
     ui->pBtnOk->setEnabled(!new_node_id.isNull());
 }
 
-void LeafRemoveDialog::RButtonGroup(int id)
+void LeafDeleteDialog::RButtonGroup(int id)
 {
     ui->pBtnOk->setEnabled(id == 0 || ui->comboBox->currentIndex() != -1);
     ui->comboBox->setEnabled(id == 1);
 }
 
-void LeafRemoveDialog::RReplaceResult(bool result)
+void LeafDeleteDialog::RReplaceResult(bool result)
 {
     if (result) {
         accept();
