@@ -88,8 +88,11 @@ void TableModelO::Finalize(QJsonObject& message)
 
 QVariant TableModelO::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
-        return {};
+    if (!index.isValid())
+        return QVariant();
+
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
+        return QVariant();
 
     auto* d_entry = DerivedPtr<EntryO>(entry_list_.at(index.row()));
     const EntryEnumO column { index.column() };
@@ -142,6 +145,9 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         return false;
 
     if (d_node_->status == NodeStatus::kFinished)
+        return false;
+
+    if (data(index, role) == value)
         return false;
 
     const EntryEnumO column { index.column() };

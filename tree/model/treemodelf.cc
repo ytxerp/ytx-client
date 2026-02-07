@@ -10,7 +10,10 @@ TreeModelF::TreeModelF(CSectionInfo& info, CString& separator, QObject* parent)
 
 QVariant TreeModelF::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
+    if (!index.isValid())
+        return QVariant();
+
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
@@ -59,6 +62,9 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
 bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
+        return false;
+
+    if (data(index, role) == value)
         return false;
 
     auto* node { static_cast<Node*>(index.internalPointer()) };

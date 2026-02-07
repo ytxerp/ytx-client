@@ -232,7 +232,10 @@ QModelIndex TableModel::GetIndex(const QUuid& entry_id) const
 
 QVariant TableModel::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
+    if (!index.isValid())
+        return QVariant();
+
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
     auto* shadow = shadow_list_.at(index.row());
@@ -278,14 +281,15 @@ QVariant TableModel::data(const QModelIndex& index, int role) const
         return *shadow->lhs_credit;
     case EntryEnum::kBalance:
         return shadow->balance;
-    default:
-        return QVariant();
     }
 }
 
 bool TableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
+        return false;
+
+    if (data(index, role) == value)
         return false;
 
     const EntryEnum column { index.column() };

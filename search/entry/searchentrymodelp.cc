@@ -34,6 +34,8 @@ QVariant SearchEntryModelP::data(const QModelIndex& index, int role) const
         return d_entry->user_id;
     case EntryEnumP::kIssuedTime:
         return d_entry->issued_time;
+    case EntryEnumP::kTag:
+        return d_entry->tag;
     case EntryEnumP::kCode:
         return d_entry->code;
     case EntryEnumP::kLhsNode:

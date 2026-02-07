@@ -166,7 +166,10 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
 
 QVariant TableModelP::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
+    if (!index.isValid())
+        return QVariant();
+
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
     auto* d_entry = DerivedPtr<EntryP>(entry_list_.at(index.row()));
@@ -216,6 +219,9 @@ QVariant TableModelP::data(const QModelIndex& index, int role) const
 bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
+        return false;
+
+    if (data(index, role) == value)
         return false;
 
     const EntryEnumP column { index.column() };

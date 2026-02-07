@@ -44,7 +44,10 @@ int StatementNodeModel::columnCount(const QModelIndex& parent) const
 
 QVariant StatementNodeModel::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
+    if (!index.isValid())
+        return QVariant();
+
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
     auto* statement_primary { list_.at(index.row()) };

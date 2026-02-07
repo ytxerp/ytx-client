@@ -320,7 +320,10 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
 
 QVariant TreeModelO::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
+    if (!index.isValid())
+        return QVariant();
+
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
     auto* d_node { static_cast<NodeO*>(index.internalPointer()) };

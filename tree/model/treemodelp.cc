@@ -109,7 +109,10 @@ void TreeModelP::sort(int column, Qt::SortOrder order)
 
 QVariant TreeModelP::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
+    if (!index.isValid())
+        return QVariant();
+
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
     auto* d_node { static_cast<NodeP*>(index.internalPointer()) };
@@ -156,6 +159,9 @@ QVariant TreeModelP::data(const QModelIndex& index, int role) const
 bool TreeModelP::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
+        return false;
+
+    if (data(index, role) == value)
         return false;
 
     auto* node { static_cast<Node*>(index.internalPointer()) };

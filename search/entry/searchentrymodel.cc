@@ -86,6 +86,8 @@ QVariant SearchEntryModel::data(const QModelIndex& index, int role) const
         return entry->issued_time;
     case FullEntryEnum::kCode:
         return entry->code;
+    case FullEntryEnum::kTag:
+        return entry->tag;
     case FullEntryEnum::kLhsNode:
         return entry->lhs_node;
     case FullEntryEnum::kLhsRate:

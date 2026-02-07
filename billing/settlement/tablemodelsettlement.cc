@@ -44,7 +44,10 @@ int TableModelSettlement::columnCount(const QModelIndex& parent) const
 
 QVariant TableModelSettlement::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
+    if (!index.isValid())
+        return QVariant();
+
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
     const SettlementItemEnum column { index.column() };
@@ -77,6 +80,9 @@ bool TableModelSettlement::setData(const QModelIndex& index, const QVariant& val
         return false;
 
     if (status_ == SettlementStatus::kSettled)
+        return false;
+
+    if (data(index, role) == value)
         return false;
 
     auto* settlement_node { static_cast<SettlementItem*>(index.internalPointer()) };
