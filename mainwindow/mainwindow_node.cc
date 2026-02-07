@@ -112,7 +112,7 @@ void MainWindow::EditNameFIPT()
     edit_name->exec();
 }
 
-void MainWindow::on_actionResetColor_triggered()
+void MainWindow::on_actionClearColor_triggered()
 {
     qInfo() << "[UI]" << "on_actionResetColor_triggered";
 

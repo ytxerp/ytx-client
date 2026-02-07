@@ -5,7 +5,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-void MainWindow::RemoveNode()
+void MainWindow::DeleteNode()
 {
     const auto index { sc_->tree_view->currentIndex() };
     if (!index.isValid())
@@ -20,14 +20,14 @@ void MainWindow::RemoveNode()
     Q_ASSERT(model != nullptr);
 
     const QUuid node_id { node->id };
-    if (node_pending_removal_.contains(node_id))
+    if (node_pending_deletion_.contains(node_id))
         return;
 
-    node_pending_removal_.insert(node_id);
+    node_pending_deletion_.insert(node_id);
 
     switch (NodeKind(node->kind)) {
     case NodeKind::kBranch: {
-        BranchRemove(model, index, node_id);
+        DeleteBranch(model, index, node_id);
         break;
     }
     case NodeKind::kLeaf: {
@@ -56,10 +56,10 @@ void MainWindow::RLeafRemoveDenied(const QJsonObject& obj)
     dialog->show();
 
     connect(dialog, &LeafRemoveDialog::SRemoveNode, model, &TreeModel::RRemoveNode, Qt::SingleShotConnection);
-    connect(dialog, &QObject::destroyed, this, [this, node_id]() { node_pending_removal_.remove(node_id); });
+    connect(dialog, &QObject::destroyed, this, [this, node_id]() { node_pending_deletion_.remove(node_id); });
 }
 
-void MainWindow::BranchRemove(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id)
+void MainWindow::DeleteBranch(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id)
 {
     QMessageBox msg {};
     msg.setIcon(QMessageBox::Question);
@@ -75,5 +75,5 @@ void MainWindow::BranchRemove(TreeModel* tree_model, const QModelIndex& index, c
         tree_model->removeRows(index.row(), 1, index.parent());
     }
 
-    node_pending_removal_.remove(node_id);
+    node_pending_deletion_.remove(node_id);
 }

@@ -61,12 +61,12 @@ protected:
 private slots:
     void on_actionInsertNode_triggered();
     void on_actionAppendEntry_triggered();
-    void on_actionRemove_triggered();
+    void on_actionDelete_triggered();
     void on_actionAppendNode_triggered();
-    void on_actionEditName_triggered();
-    void on_actionResetColor_triggered();
-    void on_actionNewGroup_triggered();
-    void on_actionJump_triggered();
+    void on_actionRename_triggered();
+    void on_actionClearColor_triggered();
+    void on_actionNewBranch_triggered();
+    void on_actionJumpEntry_triggered();
     void on_actionAbout_triggered();
     void on_actionPreferences_triggered();
     void on_actionSearch_triggered();
@@ -75,7 +75,7 @@ private slots:
     void on_actionSignOut_triggered();
     void on_actionReconnect_triggered();
 
-    void on_actionCheckforUpdates_triggered();
+    void on_actionCheckUpdates_triggered();
     void on_actionExportExcel_triggered();
 
     void on_actionStatement_triggered();
@@ -217,10 +217,10 @@ private:
     void InsertNodeFIPT(const QModelIndex& parent_index); // Finance Inventory Partner Task
     void InsertNodeO(const QModelIndex& parent_index); // Purchase Sales
 
-    void RemoveNode();
-    void RemoveEntry(TableWidget* widget);
-    void BranchRemove(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id);
-    void RemoveSettlement(TreeWidgetSettlement* widget);
+    void DeleteNode();
+    void DeleteEntry(TableWidget* widget);
+    void DeleteBranch(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id);
+    void DeleteSettlement(TreeWidgetSettlement* widget);
 
     void UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool branch) const;
 
@@ -269,7 +269,7 @@ private:
     QSystemTrayIcon* tray_icon_ {};
     QMenu* tray_menu_ {};
 
-    QSet<QUuid> node_pending_removal_ {};
+    QSet<QUuid> node_pending_deletion_ {};
 
     QTranslator qt_translator_ {};
     QTranslator ytx_translator_ {};

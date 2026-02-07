@@ -30,7 +30,7 @@ void MainWindow::EditNameO()
     edit_name->exec();
 }
 
-void MainWindow::on_actionNewGroup_triggered()
+void MainWindow::on_actionNewBranch_triggered()
 {
     qInfo() << "[UI]" << "on_actionNewGroup_triggered";
 

@@ -26,16 +26,16 @@ void MainWindow::SetAction(bool enable) const
     ui->actionMarkAll->setEnabled(enable);
     ui->actionMarkNone->setEnabled(enable);
     ui->actionMarkToggle->setEnabled(enable);
-    ui->actionEditName->setEnabled(enable);
+    ui->actionRename->setEnabled(enable);
     ui->actionInsertNode->setEnabled(enable);
-    ui->actionJump->setEnabled(enable);
-    ui->actionRemove->setEnabled(enable);
+    ui->actionJumpEntry->setEnabled(enable);
+    ui->actionDelete->setEnabled(enable);
     ui->actionAppendEntry->setEnabled(enable);
     ui->actionExportExcel->setEnabled(enable);
     ui->actionStatement->setEnabled(enable);
     ui->actionSettlement->setEnabled(enable);
-    ui->actionResetColor->setEnabled(enable);
-    ui->actionNewGroup->setEnabled(enable);
+    ui->actionClearColor->setEnabled(enable);
+    ui->actionNewBranch->setEnabled(enable);
 }
 
 void MainWindow::UpdateAccountInfo(const QString& user, const QString& database, const QString& expire_date)

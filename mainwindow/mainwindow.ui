@@ -185,7 +185,7 @@
     </property>
     <addaction name="actionAbout"/>
     <addaction name="actionPreferences"/>
-    <addaction name="actionCheckforUpdates"/>
+    <addaction name="actionCheckUpdates"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -195,17 +195,18 @@
     </property>
     <addaction name="actionInsertNode"/>
     <addaction name="actionAppendNode"/>
+    <addaction name="actionNewBranch"/>
     <addaction name="separator"/>
-    <addaction name="actionEditName"/>
-    <addaction name="actionResetColor"/>
-    <addaction name="actionNewGroup"/>
+    <addaction name="actionRename"/>
+    <addaction name="actionClearColor"/>
     <addaction name="separator"/>
     <addaction name="actionAppendEntry"/>
+    <addaction name="actionJumpEntry"/>
     <addaction name="separator"/>
-    <addaction name="actionRemove"/>
+    <addaction name="actionDelete"/>
     <addaction name="separator"/>
-    <addaction name="actionJump"/>
     <addaction name="actionSearch"/>
+    <addaction name="actionTags"/>
    </widget>
    <widget class="QMenu" name="menuAccount">
     <property name="title">
@@ -243,14 +244,15 @@
    </attribute>
    <addaction name="actionInsertNode"/>
    <addaction name="actionAppendNode"/>
+   <addaction name="actionNewBranch"/>
    <addaction name="separator"/>
-   <addaction name="actionEditName"/>
-   <addaction name="actionResetColor"/>
-   <addaction name="actionNewGroup"/>
+   <addaction name="actionRename"/>
+   <addaction name="actionClearColor"/>
    <addaction name="separator"/>
    <addaction name="actionAppendEntry"/>
+   <addaction name="actionJumpEntry"/>
    <addaction name="separator"/>
-   <addaction name="actionRemove"/>
+   <addaction name="actionDelete"/>
    <addaction name="separator"/>
    <addaction name="actionMarkAll"/>
    <addaction name="actionMarkToggle"/>
@@ -262,48 +264,51 @@
   </widget>
   <action name="actionInsertNode">
    <property name="text">
-    <string>Insert</string>
+    <string>Insert Node...</string>
    </property>
    <property name="toolTip">
-    <string>Insert Node</string>
+    <string>Insert a new node at the end of the current level</string>
    </property>
    <property name="shortcut">
     <string>Alt+N</string>
    </property>
   </action>
-  <action name="actionRemove">
+  <action name="actionDelete">
    <property name="text">
-    <string>Remove</string>
+    <string>Delete...</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete</string>
    </property>
   </action>
   <action name="actionAppendNode">
    <property name="text">
-    <string>Append</string>
+    <string>Append Node...</string>
    </property>
    <property name="toolTip">
-    <string>Append Node</string>
+    <string>Append a new node under the selected branch</string>
    </property>
    <property name="shortcut">
     <string>Alt+P</string>
    </property>
   </action>
-  <action name="actionJump">
+  <action name="actionJumpEntry">
    <property name="text">
-    <string>Jump</string>
+    <string>Jump Entry</string>
    </property>
    <property name="toolTip">
-    <string>Jump</string>
+    <string>Jump to the linked entry in the other node tab</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+J</string>
    </property>
   </action>
-  <action name="actionEditName">
+  <action name="actionRename">
    <property name="text">
-    <string>Edit Name</string>
+    <string>Rename...</string>
    </property>
    <property name="toolTip">
-    <string>Edit Name</string>
+    <string>Rename</string>
    </property>
    <property name="shortcut">
     <string>Alt+E</string>
@@ -311,7 +316,7 @@
   </action>
   <action name="actionSearch">
    <property name="text">
-    <string>Search</string>
+    <string>Search...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>
@@ -341,7 +346,10 @@
   </action>
   <action name="actionMarkAll">
    <property name="text">
-    <string>MarkAll</string>
+    <string>Mark All</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark All</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
@@ -349,7 +357,10 @@
   </action>
   <action name="actionMarkNone">
    <property name="text">
-    <string>MarkNone</string>
+    <string>Mark None</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark None</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
@@ -357,7 +368,10 @@
   </action>
   <action name="actionMarkToggle">
    <property name="text">
-    <string>MarkToggle</string>
+    <string>Mark Toggle</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark Toggle</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
@@ -365,7 +379,7 @@
   </action>
   <action name="actionAppendEntry">
    <property name="text">
-    <string>Append</string>
+    <string>Append Entry</string>
    </property>
    <property name="toolTip">
     <string>Append Entry</string>
@@ -445,12 +459,12 @@
     <string>Workspace</string>
    </property>
   </action>
-  <action name="actionResetColor">
+  <action name="actionClearColor">
    <property name="text">
-    <string>Reset Color</string>
+    <string>Clear Color</string>
    </property>
    <property name="toolTip">
-    <string>Reset Color</string>
+    <string>Clear Color</string>
    </property>
    <property name="shortcut">
     <string>Alt+R</string>
@@ -478,9 +492,12 @@
     <enum>QAction::MenuRole::QuitRole</enum>
    </property>
   </action>
-  <action name="actionNewGroup">
+  <action name="actionNewBranch">
    <property name="text">
-    <string>New Group</string>
+    <string>New Branch...</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new branch node to organize order nodes</string>
    </property>
    <property name="shortcut">
     <string>Alt+G</string>
@@ -494,12 +511,20 @@
     <string>Expire Date</string>
    </property>
   </action>
-  <action name="actionCheckforUpdates">
+  <action name="actionCheckUpdates">
    <property name="text">
-    <string>Check for Updates</string>
+    <string>Check Updates</string>
+   </property>
+   <property name="toolTip">
+    <string>Check Updates</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::ApplicationSpecificRole</enum>
+   </property>
+  </action>
+  <action name="actionTags">
+   <property name="text">
+    <string>Tags...</string>
    </property>
   </action>
  </widget>

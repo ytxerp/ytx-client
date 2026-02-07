@@ -58,11 +58,11 @@ MainWindow::MainWindow(QWidget* parent)
 void MainWindow::SetRemoveShortcut()
 {
 #ifdef Q_OS_WIN
-    ui->actionRemove->setShortcut(QKeySequence::Delete);
+    ui->actionDelete->setShortcut(QKeySequence::Delete);
 #elif defined(Q_OS_MACOS)
-    ui->actionRemove->setShortcut(Qt::Key_Backspace);
+    ui->actionDelete->setShortcut(Qt::Key_Backspace);
 #else
-    ui->actionRemove->setShortcut(QKeySequence::Delete);
+    ui->actionDelete->setShortcut(QKeySequence::Delete);
 #endif
 }
 
@@ -156,27 +156,27 @@ void MainWindow::InsertNodeFunction(const QModelIndex& parent_index)
     Q_UNREACHABLE();
 }
 
-void MainWindow::on_actionRemove_triggered()
+void MainWindow::on_actionDelete_triggered()
 {
-    qInfo() << "[UI]" << "on_actionRemove_triggered";
+    qInfo() << "[UI]" << "on_actionDelete_triggered";
 
     auto* widget { ui->tabWidget->currentWidget() };
 
     {
         auto* d_widget { qobject_cast<TreeWidgetSettlement*>(widget) };
         if (d_widget) {
-            RemoveSettlement(d_widget);
+            DeleteSettlement(d_widget);
             return;
         }
     }
 
     if (qobject_cast<TreeWidget*>(widget)) {
-        RemoveNode();
+        DeleteNode();
         return;
     }
 
     if (auto* leaf_widget { qobject_cast<TableWidget*>(widget) }) {
-        RemoveEntry(leaf_widget);
+        DeleteEntry(leaf_widget);
     }
 }
 
@@ -397,12 +397,12 @@ void MainWindow::SetUniqueConnection() const
 void MainWindow::SetIcon() const
 {
     ui->actionInsertNode->setIcon(QIcon(":/solarized_dark/solarized_dark/insert.png"));
-    ui->actionEditName->setIcon(QIcon(":/solarized_dark/solarized_dark/edit.png"));
-    ui->actionRemove->setIcon(QIcon(":/solarized_dark/solarized_dark/remove.png"));
+    ui->actionRename->setIcon(QIcon(":/solarized_dark/solarized_dark/edit.png"));
+    ui->actionDelete->setIcon(QIcon(":/solarized_dark/solarized_dark/remove.png"));
     ui->actionAbout->setIcon(QIcon(":/solarized_dark/solarized_dark/about.png"));
-    ui->actionCheckforUpdates->setIcon(QIcon(":/solarized_dark/solarized_dark/update.png"));
+    ui->actionCheckUpdates->setIcon(QIcon(":/solarized_dark/solarized_dark/update.png"));
     ui->actionAppendNode->setIcon(QIcon(":/solarized_dark/solarized_dark/append.png"));
-    ui->actionJump->setIcon(QIcon(":/solarized_dark/solarized_dark/jump.png"));
+    ui->actionJumpEntry->setIcon(QIcon(":/solarized_dark/solarized_dark/jump.png"));
     ui->actionPreferences->setIcon(QIcon(":/solarized_dark/solarized_dark/settings.png"));
     ui->actionSearch->setIcon(QIcon(":/solarized_dark/solarized_dark/search.png"));
     ui->actionMarkAll->setIcon(QIcon(":/solarized_dark/solarized_dark/mark-all.png"));
@@ -411,8 +411,8 @@ void MainWindow::SetIcon() const
     ui->actionAppendEntry->setIcon(QIcon(":/solarized_dark/solarized_dark/append_trans.png"));
     ui->actionStatement->setIcon(QIcon(":/solarized_dark/solarized_dark/statement.png"));
     ui->actionSettlement->setIcon(QIcon(":/solarized_dark/solarized_dark/settle.png"));
-    ui->actionResetColor->setIcon(QIcon(":/solarized_dark/solarized_dark/reset_color.png"));
-    ui->actionNewGroup->setIcon(QIcon(":/solarized_dark/solarized_dark/new-group.png"));
+    ui->actionClearColor->setIcon(QIcon(":/solarized_dark/solarized_dark/reset_color.png"));
+    ui->actionNewBranch->setIcon(QIcon(":/solarized_dark/solarized_dark/new-group.png"));
     ui->actionQuit->setIcon(QIcon(":/solarized_dark/solarized_dark/quit.png"));
 }
 
@@ -469,15 +469,15 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
     menu->addAction(ui->actionInsertNode);
     menu->addAction(ui->actionAppendNode);
     menu->addSeparator();
-    menu->addAction(ui->actionEditName);
-    menu->addAction(ui->actionResetColor);
+    menu->addAction(ui->actionRename);
+    menu->addAction(ui->actionClearColor);
     menu->addSeparator();
-    menu->addAction(ui->actionRemove);
+    menu->addAction(ui->actionDelete);
 
     menu->exec(QCursor::pos());
 }
 
-void MainWindow::on_actionEditName_triggered()
+void MainWindow::on_actionRename_triggered()
 {
     qInfo() << "[UI]" << "on_actionEditName_triggered";
 
@@ -669,7 +669,7 @@ void MainWindow::on_actionExportExcel_triggered()
     watcher->setFuture(future);
 }
 
-void MainWindow::on_actionCheckforUpdates_triggered()
+void MainWindow::on_actionCheckUpdates_triggered()
 {
     const QString url { "https://api.github.com/repos/ytxerp/ytx-client/releases/latest" };
 

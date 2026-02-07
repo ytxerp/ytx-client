@@ -52,7 +52,7 @@ void MainWindow::on_actionAppendEntry_triggered()
     }
 }
 
-void MainWindow::RemoveEntry(TableWidget* widget)
+void MainWindow::DeleteEntry(TableWidget* widget)
 {
     auto* view { widget->View() };
 

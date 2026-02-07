@@ -118,21 +118,21 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     ui->actionAppendNode->setEnabled(is_tree);
     ui->actionInsertNode->setEnabled(is_tree || is_table_o);
 
-    ui->actionEditName->setEnabled(is_tree);
-    ui->actionResetColor->setEnabled(is_tree && is_color_section);
+    ui->actionRename->setEnabled(is_tree);
+    ui->actionClearColor->setEnabled(is_tree && is_color_section);
 
     ui->actionMarkAll->setEnabled(is_table_fipt);
     ui->actionMarkNone->setEnabled(is_table_fipt);
     ui->actionMarkToggle->setEnabled(is_table_fipt);
 
-    ui->actionJump->setEnabled(is_double_entry);
+    ui->actionJumpEntry->setEnabled(is_double_entry && is_table_fipt);
 
     ui->actionStatement->setEnabled(is_order_section);
     ui->actionSettlement->setEnabled(is_order_section);
-    ui->actionNewGroup->setEnabled(is_order_section);
+    ui->actionNewBranch->setEnabled(is_order_section);
 
     ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o || is_settlement);
-    ui->actionRemove->setEnabled(is_tree || is_table_fipt || is_table_o || is_settlement);
+    ui->actionDelete->setEnabled(is_tree || is_table_fipt || is_table_o || is_settlement);
 }
 
 void MainWindow::on_tabWidget_tabBarDoubleClicked(int index)
@@ -188,9 +188,9 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
     }
 }
 
-void MainWindow::on_actionJump_triggered()
+void MainWindow::on_actionJumpEntry_triggered()
 {
-    qInfo() << "[UI]" << "on_actionJump_triggered";
+    qInfo() << "[UI]" << "on_actionJumpEntry_triggered";
 
     if (IsSingleEntry(start_))
         return;

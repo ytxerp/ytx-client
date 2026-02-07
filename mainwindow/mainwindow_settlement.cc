@@ -268,7 +268,7 @@ void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJso
     model->ResetModel(array);
 }
 
-void MainWindow::RemoveSettlement(TreeWidgetSettlement* widget)
+void MainWindow::DeleteSettlement(TreeWidgetSettlement* widget)
 {
     auto* view { widget->View() };
     Q_ASSERT(view != nullptr);
