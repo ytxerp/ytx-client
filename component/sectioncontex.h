@@ -25,6 +25,7 @@
 #include "component/config.h"
 #include "entryhub/entryhub.h"
 #include "table/widget/tablewidget.h"
+#include "tag/tag.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidget.h"
 
@@ -42,6 +43,10 @@ struct SectionContext {
 
     QHash<QUuid, QPointer<TableWidget>> table_wgt_hash {};
     QHash<QUuid, QPointer<QWidget>> widget_hash {};
+
+    // key: id
+    // value: {name, color}
+    QHash<QUuid, Tag> raw_tags {};
 };
 
 #endif // SECTIONCONTEX_H

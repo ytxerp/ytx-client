@@ -29,7 +29,7 @@ void TableModelP::RAppendMultiEntry(const EntryList& entry_list)
     sort(std::to_underlying(EntryEnum::kIssuedTime), Qt::AscendingOrder);
 }
 
-void TableModelP::RRemoveOneEntry(const QUuid& entry_id)
+void TableModelP::RDeleteOneEntry(const QUuid& entry_id)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -67,10 +67,10 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
     const auto entry_id { entry->id };
 
     if (!rhs_node_id.isNull()) {
-        QJsonObject message { JsonGen::EntryRemove(section_, entry_id) };
-        WebSocket::Instance()->SendMessage(kEntryRemove, message);
+        QJsonObject message { JsonGen::EntryDelete(section_, entry_id) };
+        WebSocket::Instance()->SendMessage(kEntryDelete, message);
 
-        emit SRemoveOneEntry(QUuid(), entry_id);
+        emit SDeleteOneEntry(QUuid(), entry_id);
     } else {
         EntryPool::Instance().Recycle(entry, section_);
     }
@@ -200,6 +200,8 @@ QVariant TableModelP::data(const QModelIndex& index, int role) const
         return d_entry->description;
     case EntryEnumP::kDocument:
         return d_entry->document;
+    case EntryEnumP::kTag:
+        return d_entry->tag;
     case EntryEnumP::kStatus:
         return d_entry->status;
     case EntryEnumP::kRhsNode:
@@ -232,6 +234,9 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         break;
     case EntryEnumP::kDocument:
         Utils::UpdateDocument(pending_updates_[id], entry, kDocument, value.toStringList(), &Entry::document, [id, this]() { RestartTimer(id); });
+        break;
+    case EntryEnumP::kTag:
+        Utils::UpdateDocument(pending_updates_[id], entry, kTag, value.toStringList(), &Entry::tag, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kRhsNode:
         UpdateInternalSku(d_entry, value.toUuid());
@@ -282,6 +287,8 @@ void TableModelP::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(d_lhs, d_rhs, &EntryP::unit_price, order);
         case EntryEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
+        case EntryEnumP::kTag:
+            return Utils::CompareMember(lhs, rhs, &EntryP::tag, order);
         case EntryEnumP::kStatus:
             return Utils::CompareMember(lhs, rhs, &Entry::status, order);
         case EntryEnumP::kExternalSku:
@@ -324,6 +331,14 @@ Qt::ItemFlags TableModelP::flags(const QModelIndex& index) const
     }
 
     return flags;
+}
+
+QModelIndex TableModelP::index(int row, int column, const QModelIndex& parent) const
+{
+    if (!hasIndex(row, column, parent))
+        return QModelIndex();
+
+    return createIndex(row, column, entry_list_.at(row));
 }
 
 bool TableModelP::insertRows(int row, int, const QModelIndex& parent)

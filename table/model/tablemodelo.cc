@@ -304,6 +304,14 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
     return flags;
 }
 
+QModelIndex TableModelO::index(int row, int column, const QModelIndex& parent) const
+{
+    if (!hasIndex(row, column, parent))
+        return QModelIndex();
+
+    return createIndex(row, column, entry_list_.at(row));
+}
+
 bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     Q_ASSERT(row >= 0 && row <= rowCount(parent));

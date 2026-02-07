@@ -69,7 +69,9 @@ private slots:
     void on_actionJumpEntry_triggered();
     void on_actionAbout_triggered();
     void on_actionPreferences_triggered();
+
     void on_actionSearch_triggered();
+    void on_actionTags_triggered();
 
     void on_actionSignIn_triggered();
     void on_actionSignOut_triggered();
@@ -187,6 +189,9 @@ private:
     void DelegateSettlement(QTableView* table_view, CSectionConfig& config) const;
     void SetSettlementItemView(QTableView* view, int stretch_column) const;
     void DelegateSettlementNode(QTableView* table_view, CSectionConfig& config) const;
+
+    void SetTagView(QTableView* view) const;
+    void DelegateTagView(QTableView* table_view) const;
 
     void DelegateStatementNode(QTableView* table_view, CSectionConfig& config) const;
     void DelegateStatementEntry(QTableView* table_view, CSectionConfig& config) const;

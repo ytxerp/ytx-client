@@ -31,6 +31,7 @@ struct EntryShadow {
     QUuid* lhs_node {};
     QString* description {};
     QStringList* document {};
+    QStringList* tag {};
     int* status {};
     QUuid* rhs_node {};
     double* lhs_rate {};

@@ -32,17 +32,18 @@ QJsonObject Register(CString& email, CString& password);
 QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id);
 QJsonObject NodeDrag(Section section, CUuid& node_id, CUuid& parent_id);
 
-QJsonObject LeafRemove(Section section, CUuid& node_id);
-QJsonObject BranchRemove(Section section, CUuid& node_id, CUuid& parent_id);
+QJsonObject LeafDelete(Section section, CUuid& node_id);
+QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id);
 
-QJsonObject LeafRemoveCheck(Section section, CUuid& node_id);
+QJsonObject LeafDeleteCheck(Section section, CUuid& node_id);
 QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id);
 
 QJsonObject EntryAction(Section section, CUuid& node_id, int action);
 QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update);
 QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bool is_parallel);
-QJsonObject EntryRemove(Section section, CUuid& entry_id);
+QJsonObject EntryDelete(Section section, CUuid& entry_id);
 QJsonObject EntryLinkedNode(Section section, CUuid& entry_id);
+QJsonObject TagUpdate(Section section, CUuid& tag_id, CJsonObject& update, int version);
 
 QJsonObject TreeAcked(Section section, const QDateTime& start, const QDateTime& end);
 QJsonObject LeafEntry(Section section, CUuid& node_id, CUuid& entry_id = {});
@@ -53,7 +54,7 @@ QJsonObject StatementNodeAcked(Section section, CUuid& widget_id, CUuid& partner
 QJsonObject StatementEntryAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 QJsonObject SettlementAcked(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end);
 QJsonObject SettlementNodeAcked(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id);
-QJsonObject SettlementRemoved(Section section, CUuid& settlement_id);
+QJsonObject SettlementDelete(Section section, CUuid& settlement_id);
 
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule);
 QJsonObject NodeStatus(Section section, CUuid& node_id, NodeStatus status);

@@ -17,37 +17,42 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TAGMANAGERDLG_H
-#define TAGMANAGERDLG_H
+#ifndef TAG_H
+#define TAG_H
 
-#include <QDialog>
-#include <QTableView>
+#include <QJsonObject>
+#include <QString>
+#include <QUuid>
 
-#include "tag/tagmodel.h"
+#include "component/constant.h"
 
-namespace Ui {
-class TagManagerDlg;
-}
+struct Tag {
+    QUuid id {};
+    QString name {};
+    QString color {};
+    int version {};
+    bool is_new {}; // is_new: client-only state, not persisted, not synced
 
-class TagManagerDlg : public QDialog {
-    Q_OBJECT
-
-public:
-    explicit TagManagerDlg(QWidget* parent = nullptr);
-    ~TagManagerDlg() override;
-
-    void SetModel(TagModel* model);
-    QTableView* View();
-
-private slots:
-    void on_pBtnInsert_clicked();
-    void on_pBtnDelete_clicked();
-
-private:
-    Ui::TagManagerDlg* ui;
-
-private:
-    TagModel* model_ {};
+    void ResetState();
+    QJsonObject WriteJson() const;
 };
 
-#endif // TAGMANAGERDLG_H
+inline void Tag::ResetState()
+{
+    id = QUuid();
+    name = {};
+    color = {};
+    version = 0;
+    is_new = false;
+}
+
+inline QJsonObject Tag::WriteJson() const
+{
+    QJsonObject obj {};
+    obj.insert(kId, id.toString(QUuid::WithoutBraces));
+    obj.insert(kName, name);
+    obj.insert(kColor, color);
+    return obj;
+}
+
+#endif // TAG_H

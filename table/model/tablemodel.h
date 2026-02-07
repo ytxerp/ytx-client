@@ -51,14 +51,14 @@ signals:
 
     // send to entryhub, FIPT
     void SAppendOneEntry(Entry* entry);
-    void SRemoveOneEntry(const QUuid& node_id, const QUuid& entry_id);
+    void SDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
 public slots:
     virtual void RAppendMultiEntry(const EntryList& entry_list);
-    virtual void RRemoveOneEntry(const QUuid& entry_id);
+    virtual void RDeleteOneEntry(const QUuid& entry_id);
     virtual void RAppendOneEntry(Entry* entry);
 
-    void RRemoveMultiEntry(const QSet<QUuid>& entry_id_set);
+    void RDeleteMultiEntry(const QSet<QUuid>& entry_id_set);
 
     void RUpdateBalance(const QUuid& entry_id);
     void RRefreshStatus();

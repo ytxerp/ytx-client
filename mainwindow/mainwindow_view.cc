@@ -2,6 +2,7 @@
 
 #include "enum/reference.h"
 #include "enum/settlementenum.h"
+#include "enum/tagenum.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 
@@ -188,4 +189,23 @@ void MainWindow::SetSettlementItemView(QTableView* view, int stretch_column) con
         v_header->setSectionResizeMode(QHeaderView::Fixed);
         v_header->setHidden(true);
     }
+}
+
+void MainWindow::SetTagView(QTableView* view) const
+{
+    view->setSortingEnabled(true);
+    view->setSelectionMode(QAbstractItemView::SingleSelection);
+    view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    view->setAlternatingRowColors(true);
+
+    view->setColumnHidden(std::to_underlying(TagEnum::kId), kIsHidden);
+    view->setColumnHidden(std::to_underlying(TagEnum::kVersion), kIsHidden);
+
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    view->horizontalHeader()->setSectionResizeMode(std::to_underlying(TagEnum::kColor), QHeaderView::Stretch);
+
+    auto* v_header { view->verticalHeader() };
+    v_header->setDefaultSectionSize(kRowHeight);
+    v_header->setSectionResizeMode(QHeaderView::Fixed);
+    v_header->setHidden(true);
 }

@@ -40,7 +40,7 @@ QJsonObject NodeDrag(Section section, CUuid& node_id, CUuid& parent_id)
     return message;
 }
 
-QJsonObject LeafRemove(Section section, CUuid& node_id)
+QJsonObject LeafDelete(Section section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -52,7 +52,7 @@ QJsonObject LeafRemove(Section section, CUuid& node_id)
     return message;
 }
 
-QJsonObject BranchRemove(Section section, CUuid& node_id, CUuid& parent_id)
+QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -73,7 +73,7 @@ QJsonObject Login(CString& email, CString& password, CString& workspace)
     return message;
 }
 
-QJsonObject LeafRemoveCheck(Section section, CUuid& node_id)
+QJsonObject LeafDeleteCheck(Section section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -277,7 +277,7 @@ QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bo
     return message;
 }
 
-QJsonObject EntryRemove(Section section, CUuid& entry_id)
+QJsonObject EntryDelete(Section section, CUuid& entry_id)
 {
     QJsonObject message {};
 
@@ -398,12 +398,24 @@ QJsonObject SettlementNodeAcked(Section section, CUuid& widget_id, CUuid& partne
     return message;
 }
 
-QJsonObject SettlementRemoved(Section section, CUuid& settlement_id)
+QJsonObject SettlementDelete(Section section, CUuid& settlement_id)
 {
     QJsonObject message {};
 
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
+
+    return message;
+}
+
+QJsonObject TagUpdate(Section section, CUuid& tag_id, CJsonObject& update, int version)
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kId, tag_id.toString(QUuid::WithoutBraces));
+    message.insert(kSessionId, QString());
+    message.insert(kUpdate, update);
+    message.insert(kVersion, version);
 
     return message;
 }

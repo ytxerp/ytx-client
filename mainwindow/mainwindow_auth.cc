@@ -23,13 +23,12 @@ void MainWindow::on_actionSignIn_triggered()
 {
     qInfo() << "[UI]" << "on_actionSignIn_triggered";
 
-    static AuthDialog* dialog = nullptr;
+    static QPointer<AuthDialog> dialog {};
 
     if (!dialog) {
         dialog = new AuthDialog(app_settings_, this);
-        dialog->setWindowFlags(Qt::Dialog);
+        dialog->setModal(true);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
-        connect(dialog, &QDialog::destroyed, this, [=]() { dialog = nullptr; });
     }
 
     dialog->show();

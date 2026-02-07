@@ -24,6 +24,7 @@
 #include "enum/reference.h"
 #include "enum/settlementenum.h"
 #include "enum/statementenum.h"
+#include "enum/tagenum.h"
 #include "mainwindow.h"
 
 void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
@@ -452,4 +453,10 @@ void MainWindow::DelegateSettlementNode(QTableView* table_view, CSectionConfig& 
 
     auto* issued_time { new IssuedTimeR(kDateFST, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementItemEnum::kIssuedTime), issued_time);
+}
+
+void MainWindow::DelegateTagView(QTableView* table_view) const
+{
+    auto* color { new Color(table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(TagEnum::kColor), color);
 }

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Tags</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
@@ -49,9 +49,9 @@
     </spacer>
    </item>
    <item row="1" column="1">
-    <widget class="QPushButton" name="pBtnAdd">
+    <widget class="QPushButton" name="pBtnInsert">
      <property name="text">
-      <string>Add</string>
+      <string>Insert</string>
      </property>
     </widget>
    </item>

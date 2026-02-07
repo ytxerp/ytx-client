@@ -87,6 +87,10 @@ QDialog QDoubleSpinBox {
     border: 1px solid #657B83;
 }
 
+QDialog#TagManagerDlg QLineEdit {
+    border: none;
+}
+
 /* ==================== Frame Dividers ==================== */
 QFrame[frameShape="5"] {
     border: none;

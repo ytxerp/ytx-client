@@ -70,7 +70,7 @@ void TableModel::RAppendOneEntry(Entry* entry)
     emit dataChanged(index(row, balance_column), index(row, balance_column));
 }
 
-void TableModel::RRemoveOneEntry(const QUuid& entry_id)
+void TableModel::RDeleteOneEntry(const QUuid& entry_id)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -206,7 +206,7 @@ QModelIndex TableModel::index(int row, int column, const QModelIndex& parent) co
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column);
+    return createIndex(row, column, shadow_list_.at(row));
 }
 
 QVariant TableModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -270,6 +270,8 @@ QVariant TableModel::data(const QModelIndex& index, int role) const
         return *shadow->status;
     case EntryEnum::kDocument:
         return *shadow->document;
+    case EntryEnum::kTag:
+        return *shadow->tag;
     case EntryEnum::kDebit:
         return *shadow->lhs_debit;
     case EntryEnum::kCredit:
@@ -314,6 +316,9 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         break;
     case EntryEnum::kDocument:
         Utils::UpdateShadowDocument(pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
+        break;
+    case EntryEnum::kTag:
+        Utils::UpdateShadowDocument(pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnum::kLhsRate:
         UpdateRate(shadow, value.toDouble());
@@ -365,6 +370,8 @@ void TableModel::sort(int column, Qt::SortOrder order)
             return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::status, order);
         case EntryEnum::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
+        case EntryEnum::kTag:
+            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::tag, order);
         case EntryEnum::kDebit:
             return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_debit, order);
         case EntryEnum::kCredit:
@@ -433,8 +440,8 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
     const auto entry_id { *shadow->id };
 
     if (!rhs_node_id.isNull()) {
-        QJsonObject message { JsonGen::EntryRemove(section_, entry_id) };
-        WebSocket::Instance()->SendMessage(kEntryRemove, message);
+        QJsonObject message { JsonGen::EntryDelete(section_, entry_id) };
+        WebSocket::Instance()->SendMessage(kEntryDelete, message);
 
         const double lhs_initial_delta { *shadow->lhs_credit - *shadow->lhs_debit };
         const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
@@ -443,7 +450,7 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
             AccumulateBalance(row);
         }
 
-        emit SRemoveOneEntry(rhs_node_id, entry_id);
+        emit SDeleteOneEntry(rhs_node_id, entry_id);
     } else {
         EntryPool::Instance().Recycle(shadow->entry, section_);
     }
@@ -475,7 +482,7 @@ EntryShadow* TableModel::InsertRowsImpl(int row, const QModelIndex& parent)
     return entry_shadow;
 }
 
-void TableModel::RRemoveMultiEntry(const QSet<QUuid>& entry_id_set)
+void TableModel::RDeleteMultiEntry(const QSet<QUuid>& entry_id_set)
 {
     int min_row { std::numeric_limits<int>::max() };
 

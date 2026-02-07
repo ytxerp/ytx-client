@@ -1,6 +1,7 @@
 #include "entryshadow.h"
 
 #include "component/constant.h"
+#include "utils/entryutils.h"
 
 void EntryShadow::ResetState()
 {
@@ -12,6 +13,7 @@ void EntryShadow::ResetState()
     rhs_node = nullptr;
     status = nullptr;
     document = nullptr;
+    tag = nullptr;
     lhs_rate = nullptr;
     rhs_rate = nullptr;
     lhs_debit = nullptr;
@@ -40,6 +42,7 @@ void EntryShadow::BindEntry(Entry* base, bool parallel)
     code = &base->code;
     description = &base->description;
     document = &base->document;
+    tag = &base->tag;
     status = &base->status;
 
     is_parallel = parallel;
@@ -79,6 +82,7 @@ QJsonObject EntryShadow::WriteJson() const
     obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', kMaxNumericScale_4));
     obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', kMaxNumericScale_4));
     obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', kMaxNumericScale_4));
+    obj.insert(kTag, Utils::WriteUuidArray(*tag));
 
     return obj;
 }

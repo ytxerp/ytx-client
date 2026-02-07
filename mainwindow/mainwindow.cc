@@ -16,8 +16,10 @@
 #include "component/stringinitializer.h"
 #include "dialog/about.h"
 #include "dialog/preferences.h"
+#include "dialog/tagmanagerdlg.h"
 #include "document.h"
 #include "global/tablesstation.h"
+#include "tag/tagmodel.h"
 #include "ui_mainwindow.h"
 #include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
@@ -525,16 +527,15 @@ void MainWindow::on_actionAbout_triggered()
 {
     qInfo() << "[UI]" << "on_actionAbout_triggered";
 
-    static About* dialog { nullptr };
+    static QPointer<About> dialog {};
 
     if (!dialog) {
         dialog = new About(this);
-        dialog->setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
-        connect(dialog, &QDialog::destroyed, this, [=]() { dialog = nullptr; });
     }
 
     dialog->show();
+    dialog->raise();
     dialog->activateWindow();
 }
 
@@ -711,4 +712,27 @@ void MainWindow::on_actionCheckUpdates_triggered()
             QMessageBox::information(this, tr("No Update"), tr("You are using the latest version."));
         }
     });
+}
+
+void MainWindow::on_actionTags_triggered()
+{
+    qInfo() << "[UI]" << "on_actionTags_triggered";
+
+    static QPointer<TagManagerDlg> dialog {};
+
+    if (!dialog) {
+        auto* model { new TagModel(start_, sc_->raw_tags, this) };
+
+        dialog = new TagManagerDlg(this);
+        dialog->SetModel(model);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+
+        auto* view { dialog->View() };
+        SetTagView(view);
+        DelegateTagView(view);
+    }
+
+    dialog->show();
+    dialog->raise();
+    dialog->activateWindow();
 }

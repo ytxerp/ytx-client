@@ -1,8 +1,10 @@
 #include "entry.h"
 
+#include <QJsonArray>
 #include <QJsonObject>
 
 #include "component/constant.h"
+#include "utils/entryutils.h"
 
 void Entry::ResetState()
 {
@@ -11,6 +13,7 @@ void Entry::ResetState()
     code.clear();
     lhs_node = QUuid();
     description.clear();
+    tag.clear();
     rhs_node = QUuid();
     status = 0;
     document.clear();
@@ -71,6 +74,8 @@ void Entry::ReadJson(const QJsonObject& object)
         rhs_debit = object[kRhsDebit].toString().toDouble();
     if (object.contains(kRhsCredit))
         rhs_credit = object[kRhsCredit].toString().toDouble();
+
+    tag = Utils::ReadUuidArray(object, kTag);
 }
 
 void EntryP::ResetState()
@@ -115,6 +120,8 @@ void EntryP::ReadJson(const QJsonObject& object)
         unit_price = object[kUnitPrice].toString().toDouble();
     if (object.contains(kExternalSku))
         external_sku = QUuid(object[kExternalSku].toString());
+
+    tag = Utils::ReadUuidArray(object, kTag);
 }
 
 QJsonObject EntryP::WriteJson() const
@@ -129,6 +136,7 @@ QJsonObject EntryP::WriteJson() const
     obj.insert(kDocument, document.join(kSemicolon));
     obj.insert(kStatus, status);
     obj.insert(kRhsNode, rhs_node.toString(QUuid::WithoutBraces));
+    obj.insert(kTag, Utils::WriteUuidArray(tag));
 
     obj.insert(kUnitPrice, QString::number(unit_price, 'f', kMaxNumericScale_8));
     obj.insert(kExternalSku, external_sku.toString(QUuid::WithoutBraces));

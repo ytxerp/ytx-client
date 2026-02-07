@@ -20,6 +20,7 @@
 #ifndef ENTRYUTILS_H
 #define ENTRYUTILS_H
 
+#include <QJsonArray>
 #include <QJsonObject>
 
 #include "component/constant.h"
@@ -28,6 +29,31 @@
 #include "enum/section.h"
 
 namespace Utils {
+
+inline QStringList ReadUuidArray(const QJsonObject& object, const QString& key)
+{
+    QStringList result {};
+
+    if (object.contains(key)) {
+        const QJsonArray array { object[key].toArray() };
+        for (const QJsonValue& value : array) {
+            result.append(value.toString());
+        }
+    }
+
+    return result;
+}
+
+inline QJsonArray WriteUuidArray(const QStringList& uuids)
+{
+    QJsonArray array {};
+
+    for (const auto& uuid : uuids) {
+        array.append(uuid);
+    }
+
+    return array;
+}
 
 constexpr int LinkedNodeColumn(Section section)
 {

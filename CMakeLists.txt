@@ -165,7 +165,8 @@ set(SOURCES
     dialog/editnodenameo.cc
     dialog/about.cc
     dialog/preferences.cc
-    dialog/removenode/leafremovedialog.cc
+    dialog/tagmanagerdlg.cc
+    dialog/removenode/leafdeletedialog.cc
     dialog/insertnode/insertnodefinance.cc
     dialog/insertnode/insertnodei.cc
     dialog/insertnode/insertnodep.cc
@@ -216,6 +217,7 @@ set(SOURCES
     mainwindow/mainwindow_view.cc
     billing/settlement/tablewidgetsettlement.cc
     billing/settlement/tablemodelsettlement.cc
+    tag/tagmodel.cc
 )
 
 set(HEADERS
@@ -231,6 +233,7 @@ set(HEADERS
     tree/replaceselffiltermodel.h
     tree/node.h
     tree/itemmodel.h
+    tag/tag.h
     tree/widget/treewidgetp.h
     tree/widget/treewidget.h
     tree/widget/treewidgetf.h
@@ -326,8 +329,9 @@ set(HEADERS
     dialog/editnodenameo.h
     dialog/editdocument.h
     dialog/preferences.h
+    dialog/tagmanagerdlg.h
     dialog/authdialog.h
-    dialog/removenode/leafremovedialog.h
+    dialog/removenode/leafdeletedialog.h
     dialog/insertnode/insertnodep.h
     dialog/insertnode/insertnodebranch.h
     dialog/insertnode/insertnodei.h
@@ -371,6 +375,8 @@ set(HEADERS
     enum/statusenum.h
     billing/settlement/tablewidgetsettlement.h
     billing/settlement/tablemodelsettlement.h
+    tag/tagmodel.h
+    enum/tagenum.h
 )
 
 set(UIS
@@ -386,7 +392,8 @@ set(UIS
     dialog/preferences.ui
     dialog/editdocument.ui
     dialog/authdialog.ui
-    dialog/removenode/leafremovedialog.ui
+    dialog/tagmanagerdlg.ui
+    dialog/removenode/leafdeletedialog.ui
     dialog/insertnode/insertnodebranch.ui
     dialog/insertnode/insertnodep.ui
     dialog/insertnode/insertnodetask.ui

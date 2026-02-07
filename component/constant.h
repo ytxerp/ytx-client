@@ -230,6 +230,7 @@ inline const QString kUser = QStringLiteral("user");
 
 inline const QString kTagInsert = QStringLiteral("tag_insert");
 inline const QString kTagUpdate = QStringLiteral("tag_update");
+inline const QString kTagDelete = QStringLiteral("tag_delete");
 inline const QString kEntryInsert = QStringLiteral("entry_insert");
 inline const QString kEntryUpdate = QStringLiteral("entry_update");
 inline const QString kEntryDelete = QStringLiteral("entry_remove");

@@ -17,37 +17,9 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TAGMANAGERDLG_H
-#define TAGMANAGERDLG_H
+#ifndef TAGENUM_H
+#define TAGENUM_H
 
-#include <QDialog>
-#include <QTableView>
+enum class TagEnum : int { kId = 0, kName, kColor, kVersion };
 
-#include "tag/tagmodel.h"
-
-namespace Ui {
-class TagManagerDlg;
-}
-
-class TagManagerDlg : public QDialog {
-    Q_OBJECT
-
-public:
-    explicit TagManagerDlg(QWidget* parent = nullptr);
-    ~TagManagerDlg() override;
-
-    void SetModel(TagModel* model);
-    QTableView* View();
-
-private slots:
-    void on_pBtnInsert_clicked();
-    void on_pBtnDelete_clicked();
-
-private:
-    Ui::TagManagerDlg* ui;
-
-private:
-    TagModel* model_ {};
-};
-
-#endif // TAGMANAGERDLG_H
+#endif // TAGENUM_H
