@@ -1,7 +1,5 @@
 #include "tablewidgeto.h"
 
-#include <QMessageBox>
-
 #include "component/signalblocker.h"
 #include "global/printhub.h"
 #include "ui_tablewidgeto.h"
@@ -392,7 +390,7 @@ void TableWidgetO::on_pBtnPreview_clicked()
 bool TableWidgetO::PreparePrint()
 {
     if (ui->comboTemplate->currentIndex() == -1) {
-        QMessageBox::warning(this, tr("No Template"), tr("No printable template was found."));
+        Utils::ShowNotification(QMessageBox::Warning, tr("No Template"), tr("No printable template was found."), kThreeThousand);
         return false;
     }
 
@@ -441,12 +439,13 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
 
     if (tmp_node_.is_settled) {
-        QMessageBox::information(this, tr("Order Settled"), tr("This order has already been settled and cannot be operated."));
+        Utils::ShowNotification(QMessageBox::Information, tr("Order Settled"), tr("This order has already been settled and cannot be operated."), kThreeThousand);
         return;
     }
 
     if (!tmp_node_.settlement_id.isNull()) {
-        QMessageBox::information(this, tr("Order Selected"), tr("This order has already been selected in a settlement and cannot be operated."));
+        Utils::ShowNotification(
+            QMessageBox::Information, tr("Order Selected"), tr("This order has already been selected in a settlement and cannot be operated."), kThreeThousand);
         return;
     }
 
@@ -463,7 +462,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
 bool TableWidgetO::ValidatePartner()
 {
     if (tmp_node_.partner_id.isNull()) {
-        QMessageBox::warning(this, tr("Partner Required"), tr("Please select a partner before performing this action."));
+        Utils::ShowNotification(QMessageBox::Warning, tr("Partner Required"), tr("Please select a partner before performing this action."), kThreeThousand);
         return false;
     }
 
@@ -474,8 +473,8 @@ bool TableWidgetO::ValidatePartner()
 bool TableWidgetO::ValidateSyncState()
 {
     if (sync_state_ == SyncState::kOutOfSync) {
-        QMessageBox::information(
-            this, tr("Invalid Operation"), tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."));
+        Utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
+            tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), kThreeThousand);
         return false;
     }
 

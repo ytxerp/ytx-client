@@ -1,5 +1,4 @@
 #include <QtConcurrent/qtconcurrentrun.h>
-#include <QtWidgets/qmessagebox.h>
 
 #include <QFutureWatcher>
 
@@ -7,6 +6,7 @@
 #include "tree/model/treemodelo.h"
 #include "ui_mainwindow.h"
 #include "utils/entryutils.h"
+#include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -171,14 +171,25 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
                 return;
 
             if (widget->HasPendingUpdate()) {
-                auto ret = QMessageBox::warning(this, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nDo you want to save before closing?"),
-                    QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
+                auto* dlg = Utils::CreateMessageBox(QMessageBox::Warning, tr("Unsaved Data"),
+                    tr("This page contains unsaved data.\n\nDo you want to save before closing?"), true,
+                    QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, this);
 
-                if (ret == QMessageBox::Save) {
-                    widget->SaveOrder();
-                } else if (ret == QMessageBox::Cancel) {
-                    return;
-                }
+                dlg->setDefaultButton(QMessageBox::Cancel);
+
+                QObject::connect(dlg, &QMessageBox::finished, this, [&widget](int ret) {
+                    switch (ret) {
+                    case QMessageBox::Save:
+                        widget->SaveOrder();
+                        break;
+                    case QMessageBox::Cancel:
+                        return;
+                    default:
+                        break;
+                    }
+                });
+
+                dlg->show();
             }
         }
     }

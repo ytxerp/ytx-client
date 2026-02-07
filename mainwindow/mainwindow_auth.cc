@@ -1,7 +1,6 @@
 #include <QtCore/qstandardpaths.h>
 
 #include <QDir>
-#include <QMessageBox>
 
 #include "dialog/authdialog.h"
 #include "global/logininfo.h"
@@ -57,7 +56,7 @@ void MainWindow::RConnectionRefused()
     ui->actionReconnect->setEnabled(true);
 
     Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
-    QMessageBox::warning(this, tr("Connection Refused"), tr("Unable to connect to the server. Please try again."));
+    Utils::ShowNotification(QMessageBox::Warning, tr("Connection Refused"), tr("Unable to connect to the server. Please try again."), kThreeThousand);
 }
 
 void MainWindow::RConnectionSucceeded()
@@ -72,11 +71,7 @@ void MainWindow::RConnectionSucceeded()
 
 void MainWindow::RRemoteHostClosed()
 {
-    auto* msg_box { new QMessageBox(
-        QMessageBox::Warning, tr("Remote Host Closed"), tr("The server has closed the connection. Please try reconnecting."), QMessageBox::Ok, this) };
-
-    msg_box->setAttribute(Qt::WA_DeleteOnClose);
-    msg_box->show();
+    Utils::ShowNotification(QMessageBox::Warning, tr("Remote Host Closed"), tr("The server has closed the connection. Please try reconnecting."), kThreeThousand);
 
     on_actionSignOut_triggered();
     Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);

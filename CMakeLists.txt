@@ -166,7 +166,8 @@ set(SOURCES
     dialog/about.cc
     dialog/preferences.cc
     dialog/tagmanagerdlg.cc
-    dialog/removenode/leafdeletedialog.cc
+    dialog/deletenode/leafdeletedialog.cc
+    dialog/deletenode/exactmatchconfirmdialog.cc
     dialog/insertnode/insertnodefinance.cc
     dialog/insertnode/insertnodei.cc
     dialog/insertnode/insertnodep.cc
@@ -331,7 +332,8 @@ set(HEADERS
     dialog/preferences.h
     dialog/tagmanagerdlg.h
     dialog/authdialog.h
-    dialog/removenode/leafdeletedialog.h
+    dialog/deletenode/leafdeletedialog.h
+    dialog/deletenode/exactmatchconfirmdialog.h
     dialog/insertnode/insertnodep.h
     dialog/insertnode/insertnodebranch.h
     dialog/insertnode/insertnodei.h
@@ -393,7 +395,8 @@ set(UIS
     dialog/editdocument.ui
     dialog/authdialog.ui
     dialog/tagmanagerdlg.ui
-    dialog/removenode/leafdeletedialog.ui
+    dialog/deletenode/leafdeletedialog.ui
+    dialog/deletenode/exactmatchconfirmdialog.ui
     dialog/insertnode/insertnodebranch.ui
     dialog/insertnode/insertnodep.ui
     dialog/insertnode/insertnodetask.ui

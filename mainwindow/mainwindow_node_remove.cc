@@ -1,7 +1,6 @@
-#include <QtWidgets/qmessagebox.h>
-
-#include "dialog/removenode/leafdeletedialog.h"
+#include "dialog/deletenode/leafdeletedialog.h"
 #include "mainwindow.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -55,25 +54,25 @@ void MainWindow::RLeafDeleteDenied(const QJsonObject& obj)
     dialog->setModal(true);
     dialog->show();
 
-    connect(dialog, &LeafDeleteDialog::SDeleteNode, model, &TreeModel::RDeleteNode, Qt::SingleShotConnection);
     connect(dialog, &QObject::destroyed, this, [this, node_id]() { node_pending_deletion_.remove(node_id); });
 }
 
 void MainWindow::DeleteBranch(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id)
 {
-    QMessageBox msg {};
-    msg.setIcon(QMessageBox::Question);
-    msg.setText(tr("Delete %1").arg(tree_model->Path(node_id)));
-    msg.setInformativeText(tr("The branch will be deleted, and its direct children will be promoted to the same level."));
-    msg.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+    auto* dlg = Utils::CreateMessageBox(QMessageBox::Question, tr("Delete %1").arg(tree_model->Path(node_id)),
+        tr("The branch will be deleted, and its direct children will be promoted to the same level."), true, QMessageBox::Ok | QMessageBox::Cancel, this);
 
-    if (msg.exec() == QMessageBox::Ok) {
-        const QUuid parent_id { sc_->tree_model->GetNode(node_id)->parent->id };
+    dlg->setDefaultButton(QMessageBox::Cancel);
 
-        const auto message { JsonGen::BranchDelete(sc_->info.section, node_id, parent_id) };
-        WebSocket::Instance()->SendMessage(kBranchDelete, message);
-        tree_model->removeRows(index.row(), 1, index.parent());
-    }
+    QObject::connect(dlg, &QMessageBox::finished, this, [=, this](int ret) {
+        if (ret == QMessageBox::Ok) {
+            const QUuid parent_id { tree_model->GetNode(node_id)->parent->id };
+            const auto message { JsonGen::BranchDelete(sc_->info.section, node_id, parent_id) };
+            WebSocket::Instance()->SendMessage(kBranchDelete, message);
+            tree_model->removeRows(index.row(), 1, index.parent());
+        }
+        node_pending_deletion_.remove(node_id);
+    });
 
-    node_pending_deletion_.remove(node_id);
+    dlg->show();
 }

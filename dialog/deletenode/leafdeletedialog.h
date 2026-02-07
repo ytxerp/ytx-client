@@ -32,9 +32,6 @@ class LeafDeleteDialog;
 class LeafDeleteDialog final : public QDialog {
     Q_OBJECT
 
-signals:
-    void SDeleteNode(const QUuid& node_id);
-
 public:
     LeafDeleteDialog(TreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, NodeUnit unit, QWidget* parent = nullptr);
     ~LeafDeleteDialog() override;
@@ -50,6 +47,9 @@ private:
     void IniConnect();
     void IniOptionGroup();
     void InitCheckBoxGroup();
+
+    void ReplaceNode();
+    void DeleteNode();
 
 private:
     Ui::LeafDeleteDialog* ui;

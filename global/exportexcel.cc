@@ -21,10 +21,11 @@ void ExportExcel::StatementAsync(EntryHubP* entry_hub_p, TreeModelI* tree_model_
         watcher->deleteLater();
 
         if (ok) {
-            Utils::Message(QMessageBox::Information, QObject::tr("Export Completed"), QObject::tr("Export completed successfully."), 3000);
+            Utils::ShowNotification(QMessageBox::Information, QObject::tr("Export Completed"), QObject::tr("Export completed successfully."), kThreeThousand);
         } else {
             QFile::remove(path);
-            Utils::Message(QMessageBox::Critical, QObject::tr("Export Failed"), QObject::tr("Export failed. The file has been deleted."), 3000);
+            Utils::ShowNotification(
+                QMessageBox::Critical, QObject::tr("Export Failed"), QObject::tr("Export failed. The file has been deleted."), kThreeThousand);
         }
     });
 

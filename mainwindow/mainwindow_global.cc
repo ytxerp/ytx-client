@@ -1,7 +1,7 @@
 #include <QJsonArray>
-#include <QMessageBox>
 
 #include "mainwindow.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -45,7 +45,8 @@ void MainWindow::RDefaultUnit(Section section, int unit)
 
 void MainWindow::RUpdateDefaultUnitFailed(const QString& /*section*/)
 {
-    QMessageBox::warning(this, tr("Update Failed"), tr("Cannot change the base unit for section Finance because related entries already exist."));
+    Utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"),
+        tr("Cannot change the base unit for section Finance because related entries already exist."), kThreeThousand);
 }
 
 void MainWindow::UpdateSharedConfig(CSharedConfig& shared)

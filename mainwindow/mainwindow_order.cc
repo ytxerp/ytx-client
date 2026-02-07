@@ -1,5 +1,3 @@
-#include <QMessageBox>
-
 #include "dialog/editnodenameo.h"
 #include "dialog/insertnode/insertnodebranch.h"
 #include "global/nodepool.h"
@@ -123,8 +121,8 @@ void MainWindow::ROrderSaved(Section section, const QUuid& node_id, int version)
 
 void MainWindow::RInvalidOperation()
 {
-    QMessageBox::information(
-        this, tr("Invalid Operation"), tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."));
+    Utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
+        tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), kThreeThousand);
 }
 
 void MainWindow::RNodeSelected(Section section, const QUuid& node_id)

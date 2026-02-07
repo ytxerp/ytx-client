@@ -512,7 +512,6 @@ void WebSocket::AckSettlementItem(const QJsonObject& obj)
 void WebSocket::DeleteLeaf(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     const QJsonObject linked_entry_obj { obj.value(kLinkedEntry).toObject() };
@@ -525,9 +524,7 @@ void WebSocket::DeleteLeaf(const QJsonObject& obj)
 
     entry_hub->DeleteLeaf(leaf_entry);
     tree_model->SyncTotalArray(total_array);
-
-    if (session_id != session_id_)
-        tree_model->RDeleteNode(QUuid(node_id));
+    tree_model->RDeleteNode(QUuid(node_id));
 }
 
 void WebSocket::DeleteLeafSafely(const QJsonObject& obj)

@@ -58,14 +58,27 @@ void Utils::ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& 
     // }
 }
 
-void Utils::Message(QMessageBox::Icon icon, CString& title, CString& text, int timeout)
+void Utils::ShowNotification(QMessageBox::Icon icon, CString& title, CString& text, int duration_ms, QMessageBox::StandardButtons buttons, QWidget* parent)
 {
-    auto* box { new QMessageBox(icon, title, text, QMessageBox::NoButton) };
-    QTimer::singleShot(timeout, box, &QMessageBox::accept);
-    QObject::connect(box, &QMessageBox::finished, box, &QMessageBox::deleteLater);
+    assert(duration_ms >= 0);
 
-    box->setModal(false);
+    auto* box { new QMessageBox(icon, title, text, buttons, parent) };
+    box->setAttribute(Qt::WA_DeleteOnClose);
+
+    if (duration_ms > 0) {
+        QTimer::singleShot(duration_ms, box, &QMessageBox::accept);
+    }
+
     box->show();
+}
+
+QMessageBox* Utils::CreateMessageBox(QMessageBox::Icon icon, CString& title, CString& text, bool modal, QMessageBox::StandardButtons buttons, QWidget* parent)
+{
+    auto* box { new QMessageBox(icon, title, text, buttons, parent) };
+    box->setAttribute(Qt::WA_DeleteOnClose);
+    box->setModal(modal);
+
+    return box;
 }
 
 void Utils::SwitchDialog(const SectionContext* sc, bool enable)

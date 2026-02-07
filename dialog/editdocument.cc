@@ -2,11 +2,11 @@
 
 #include <QDesktopServices>
 #include <QFileDialog>
-#include <QMessageBox>
 #include <QStandardPaths>
 
 #include "component/signalblocker.h"
 #include "ui_editdocument.h"
+#include "utils/mainwindowutils.h"
 
 EditDocument::EditDocument(QStringList& document, CString& document_path, QWidget* parent)
     : QDialog(parent)
@@ -67,11 +67,7 @@ void EditDocument::on_listView_doubleClicked(const QModelIndex& index)
         return;
     }
 
-    QMessageBox msg {};
-    msg.setIcon(QMessageBox::Critical);
-    msg.setText(tr("Not Found"));
-    msg.setInformativeText(tr("Couldn't find the document. Please check and try again."));
-    msg.exec();
+    Utils::ShowNotification(QMessageBox::Critical, tr("Not Found"), tr("Couldn't find the document. Please check and try again."), kThreeThousand);
 }
 
 void EditDocument::CreateList(QStringList& document)

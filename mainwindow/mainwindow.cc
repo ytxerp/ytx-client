@@ -4,7 +4,6 @@
 #include <QDesktopServices>
 #include <QFileDialog>
 #include <QHeaderView>
-#include <QMessageBox>
 #include <QNetworkReply>
 #include <QQueue>
 #include <QScrollBar>
@@ -660,10 +659,10 @@ void MainWindow::on_actionExportExcel_triggered()
 
         bool success { watcher->future().result() };
         if (success) {
-            Utils::Message(QMessageBox::Information, tr("Export Completed"), tr("Export completed successfully."), kThreeThousand);
+            Utils::ShowNotification(QMessageBox::Information, tr("Export Completed"), tr("Export completed successfully."), kThreeThousand);
         } else {
             QFile::remove(destination);
-            Utils::Message(QMessageBox::Critical, tr("Export Failed"), tr("Export failed. The file has been deleted."), kThreeThousand);
+            Utils::ShowNotification(QMessageBox::Critical, tr("Export Failed"), tr("Export failed. The file has been deleted."), kThreeThousand);
         }
     });
 
@@ -683,14 +682,14 @@ void MainWindow::on_actionCheckUpdates_triggered()
         reply->deleteLater();
 
         if (reply->error() != QNetworkReply::NoError) {
-            QMessageBox::warning(this, tr("Update Check"), tr("Failed to check updates:\n%1").arg(reply->errorString()));
+            Utils::ShowNotification(QMessageBox::Warning, tr("Update Check"), tr("Failed to check updates."), kThreeThousand);
             return;
         }
 
         const QByteArray data { reply->readAll() };
         QJsonDocument doc { QJsonDocument::fromJson(data) };
         if (!doc.isObject()) {
-            QMessageBox::warning(this, tr("Update Check"), tr("Invalid update information received."));
+            Utils::ShowNotification(QMessageBox::Warning, tr("Update Check"), tr("Invalid update information received."), kThreeThousand);
             return;
         }
 
@@ -702,14 +701,20 @@ void MainWindow::on_actionCheckUpdates_triggered()
             = is_chinese ? "https://gitee.com/ytxerp/ytx-client/releases/latest" : "https://github.com/ytxerp/ytx-client/releases/latest";
 
         if (Utils::CompareVersion(latest_tag, QCoreApplication::applicationVersion()) > 0) {
-            QMessageBox::StandardButton btn = QMessageBox::information(
-                this, tr("Update Available"), tr("A new version %1 is available!\n\nDownload now?").arg(latest_tag), QMessageBox::Yes | QMessageBox::No);
+            auto* dlg = Utils::CreateMessageBox(QMessageBox::Information, tr("Update Available"),
+                tr("A new version %1 is available!\n\nDownload now?").arg(latest_tag), true, QMessageBox::Yes | QMessageBox::No, this);
 
-            if (btn == QMessageBox::Yes) {
-                QDesktopServices::openUrl(QUrl(download_url));
-            }
+            dlg->setDefaultButton(QMessageBox::Yes);
+
+            QObject::connect(dlg, &QMessageBox::finished, this, [download_url](int ret) {
+                if (ret == QMessageBox::Yes) {
+                    QDesktopServices::openUrl(QUrl(download_url));
+                }
+            });
+
+            dlg->show();
         } else {
-            QMessageBox::information(this, tr("No Update"), tr("You are using the latest version."));
+            Utils::ShowNotification(QMessageBox::Information, tr("No Update"), tr("You are using the latest version."), kThreeThousand);
         }
     });
 }

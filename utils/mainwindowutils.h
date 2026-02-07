@@ -39,7 +39,12 @@ QString AccountIniFileName(const QString& email, const QString& workspace);
 QString UuidToShortCode(const QUuid& uuid, int length = 10);
 
 void ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where = true);
-void Message(QMessageBox::Icon icon, CString& title, CString& text, int timeout);
+
+QMessageBox* CreateMessageBox(QMessageBox::Icon icon, CString& title, CString& text, bool modal = false,
+    QMessageBox::StandardButtons buttons = QMessageBox::NoButton, QWidget* parent = nullptr);
+
+void ShowNotification(QMessageBox::Icon icon, CString& title, CString& text, int duration_ms = 0, QMessageBox::StandardButtons buttons = QMessageBox::NoButton,
+    QWidget* parent = nullptr);
 
 bool PrepareNewFile(QString& file_path, CString& suffix);
 void SwitchDialog(const SectionContext* sc, bool enable);

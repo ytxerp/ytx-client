@@ -1,5 +1,3 @@
-#include <QMessageBox>
-
 #include "billing/settlement/tablemodelsettlement.h"
 #include "billing/settlement/tablewidgetsettlement.h"
 #include "billing/settlement/treemodelsettlement.h"
@@ -8,6 +6,7 @@
 #include "global/resourcepool.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
 
 void MainWindow::on_actionSettlement_triggered()
@@ -283,9 +282,8 @@ void MainWindow::DeleteSettlement(TreeWidgetSettlement* widget)
     auto* settlement { static_cast<Settlement*>(current_index.internalPointer()) };
 
     if (settlement->status == SettlementStatus::kSettled) {
-        QMessageBox::information(this, tr("Settlement Released"),
-            tr("This settlement has already been released and cannot be deleted.\n"
-               "You need to recall it first before making changes."));
+        Utils::ShowNotification(QMessageBox::Information, tr("Settlement Released"),
+            tr("This settlement has already been released and cannot be deleted.\nYou need to recall it first before making changes."), kThreeThousand);
         return;
     }
 

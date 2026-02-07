@@ -1,9 +1,9 @@
 #include "leafdeletedialog.h"
 
-#include <QMessageBox>
-
 #include "component/signalblocker.h"
+#include "exactmatchconfirmdialog.h"
 #include "ui_leafdeletedialog.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -96,50 +96,56 @@ void LeafDeleteDialog::InitCheckBoxGroup()
     }
 }
 
-void LeafDeleteDialog::on_pBtnOk_clicked()
+void LeafDeleteDialog::ReplaceNode()
 {
-    if (!ui->rBtnDelete->isChecked() && !ui->rBtnReplace->isChecked()) {
+    if (!ui->rBtnReplace->isChecked())
         return;
-    }
 
-    QMessageBox msg(this);
-    msg.setIcon(QMessageBox::Question);
-    msg.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    const QString path { model_->Path(node_id_) };
+    const QString new_path { ui->comboBox->currentText() };
+    const QString info { tr("Replace <b>%1</b> with <b>%2</b>.<br>"
+                            "<span style='color:#d32f2f; font-weight:bold;'><br>⚠️ This action is risky and cannot be undone!</span>")
+            .arg(path, new_path) };
+
+    auto* dlg { new ExactMatchConfirmDialog(info, path, tr("Replace"), this) };
+    dlg->setModal(true);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+    dlg->show();
+
+    connect(dlg, &ExactMatchConfirmDialog::accepted, this, [=, this]() {
+        const auto new_node_id { ui->comboBox->currentData().toUuid() };
+        const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id) };
+        WebSocket::Instance()->SendMessage(kLeafReplace, message);
+    });
+}
+
+void LeafDeleteDialog::DeleteNode()
+{
+    if (!ui->rBtnDelete->isChecked())
+        return;
 
     const auto& path { model_->Path(node_id_) };
-    QString text {};
-    QString informative_text {};
+    const QString info { tr("Delete <b>%1</b> and all its references.<br>"
+                            "<span style='color:#d32f2f; font-weight:bold;'><br>⚠️ Permanent deletion! Cannot be undone!</span>"
+                            "<br><br><i>Tip: It is recommended to move all entries referencing this node before deletion.</i>")
+            .arg(path) };
 
-    if (ui->rBtnDelete->isChecked()) {
-        text = tr("Delete Node");
-        informative_text = tr("Delete %1 and all its references. Are you sure").arg(path);
-    }
+    auto* dlg { new ExactMatchConfirmDialog(info, path, tr("Delete"), this) };
+    dlg->setModal(true);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+    dlg->show();
 
-    if (ui->rBtnReplace->isChecked()) {
-        text = tr("Replace Node");
-        informative_text = tr("Replace %1 with %2. This action is risky and cannot be undone. Are you sure?").arg(path, ui->comboBox->currentText());
-    }
+    connect(dlg, &ExactMatchConfirmDialog::accepted, this, [=, this]() {
+        const auto message { JsonGen::LeafDelete(info_.section, node_id_) };
+        WebSocket::Instance()->SendMessage(kLeafDelete, message);
+        accept();
+    });
+}
 
-    msg.setText(text);
-    msg.setInformativeText(informative_text);
-
-    if (msg.exec() == QMessageBox::Ok) {
-        if (ui->rBtnDelete->isChecked()) {
-            emit SDeleteNode(node_id_);
-
-            const auto message { JsonGen::LeafDelete(info_.section, node_id_) };
-            WebSocket::Instance()->SendMessage(kLeafDelete, message);
-
-            accept();
-        }
-
-        if (ui->rBtnReplace->isChecked()) {
-            const auto new_node_id { ui->comboBox->currentData().toUuid() };
-
-            const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id) };
-            WebSocket::Instance()->SendMessage(kLeafReplace, message);
-        }
-    }
+void LeafDeleteDialog::on_pBtnOk_clicked()
+{
+    DeleteNode();
+    ReplaceNode();
 }
 
 void LeafDeleteDialog::IniData(Section section)
@@ -182,7 +188,7 @@ void LeafDeleteDialog::RReplaceResult(bool result)
     if (result) {
         accept();
     } else {
-        QMessageBox::critical(
-            this, tr("Replacement Conflict"), tr("The old node cannot be replaced because linked nodes or partner entries conflict with the new node."));
+        Utils::ShowNotification(QMessageBox::Critical, tr("Replacement Conflict"),
+            tr("The old node cannot be replaced because linked nodes or partner entries conflict with the new node."), kThreeThousand);
     }
 }

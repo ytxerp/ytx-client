@@ -1,7 +1,5 @@
 #include "tablewidgetsettlement.h"
 
-#include <QMessageBox>
-
 #include "component/signalblocker.h"
 #include "enum/settlementenum.h"
 #include "ui_tablewidgetsettlement.h"
@@ -94,8 +92,8 @@ void TableWidgetSettlement::HideWidget(bool is_settled)
 bool TableWidgetSettlement::ValidateSyncState()
 {
     if (sync_state_ == SyncState::kOutOfSync) {
-        QMessageBox::information(
-            this, tr("Invalid Operation"), tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."));
+        Utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
+            tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), kThreeThousand);
         return false;
     }
 
