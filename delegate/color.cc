@@ -34,7 +34,7 @@ bool Color::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOp
     if (!color.isValid())
         color = Qt::white;
 
-    QColor selected_color { QColorDialog::getColor(color, nullptr, tr("Choose Color"), QColorDialog::ShowAlphaChannel) };
+    QColor selected_color { QColorDialog::getColor(color, nullptr, QObject::tr("Color"), QColorDialog::ShowAlphaChannel) };
 
     if (selected_color.isValid())
         model->setData(index, selected_color.name(QColor::HexArgb));

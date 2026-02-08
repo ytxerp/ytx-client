@@ -497,7 +497,7 @@
     <string>New Branch...</string>
    </property>
    <property name="toolTip">
-    <string>Create a new branch node to organize order nodes</string>
+    <string>Create a new branch node to organize other nodes</string>
    </property>
    <property name="shortcut">
     <string>Alt+G</string>
