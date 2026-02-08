@@ -38,7 +38,7 @@ void Preferences::IniDialog(ItemModel* unit_model, Section section)
     ui->pBtnOk->setDefault(true);
 
     this->setWindowTitle(tr("Preferences"));
-    this->setFixedSize(800, 600);
+    this->setMinimumSize(800, 600);
 
     IniCombo(ui->comboDateFormat, date_format_list_);
     IniCombo(ui->comboLanguage, language_list_);

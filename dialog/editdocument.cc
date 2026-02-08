@@ -18,6 +18,7 @@ EditDocument::EditDocument(QStringList& document, CString& document_path, QWidge
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
+    setMinimumSize(400, 300);
     CreateList(document);
 }
 
@@ -27,7 +28,7 @@ EditDocument::~EditDocument()
     delete ui;
 }
 
-void EditDocument::on_pBtnAdd_clicked()
+void EditDocument::on_pBtnInsert_clicked()
 {
     const QString filter("*.*");
     const QString base_path { QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) };

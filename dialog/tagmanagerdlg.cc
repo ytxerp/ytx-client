@@ -8,7 +8,7 @@ TagManagerDlg::TagManagerDlg(QWidget* parent)
     , ui(new Ui::TagManagerDlg)
 {
     ui->setupUi(this);
-    setMinimumSize(400, 320);
+    setMinimumSize(400, 300);
 }
 
 TagManagerDlg::~TagManagerDlg() { delete ui; }

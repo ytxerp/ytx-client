@@ -2,13 +2,11 @@
 <ui version="4.0">
  <class>TagManagerDlg</class>
  <widget class="QDialog" name="TagManagerDlg">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
+  <property name="minimumSize">
+   <size>
     <width>400</width>
     <height>300</height>
-   </rect>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Tags</string>
@@ -25,12 +23,6 @@
    </property>
    <property name="bottomMargin">
     <number>8</number>
-   </property>
-   <property name="horizontalSpacing">
-    <number>-1</number>
-   </property>
-   <property name="verticalSpacing">
-    <number>0</number>
    </property>
    <item row="0" column="0" colspan="3">
     <widget class="QTableView" name="tableView"/>
@@ -52,6 +44,9 @@
     <widget class="QPushButton" name="pBtnInsert">
      <property name="text">
       <string>Insert</string>
+     </property>
+     <property name="default">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
