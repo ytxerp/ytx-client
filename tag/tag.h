@@ -35,6 +35,7 @@ struct Tag {
 
     void ResetState();
     QJsonObject WriteJson() const;
+    void ReadJson(const QJsonObject& object);
 };
 
 inline void Tag::ResetState()
@@ -53,6 +54,21 @@ inline QJsonObject Tag::WriteJson() const
     obj.insert(kName, name);
     obj.insert(kColor, color);
     return obj;
+}
+
+inline void Tag::ReadJson(const QJsonObject& object)
+{
+    if (object.contains(kId))
+        id = QUuid(object[kId].toString());
+
+    if (object.contains(kName))
+        name = object[kName].toString();
+
+    if (object.contains(kColor))
+        color = object[kColor].toString();
+
+    if (object.contains(kVersion))
+        version = object[kVersion].toInt();
 }
 
 #endif // TAG_H

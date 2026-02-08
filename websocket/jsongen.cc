@@ -412,10 +412,34 @@ QJsonObject TagUpdate(Section section, CUuid& tag_id, CJsonObject& update, int v
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kId, tag_id.toString(QUuid::WithoutBraces));
     message.insert(kSessionId, QString());
+    message.insert(kMeta, QJsonObject());
+    message.insert(kId, tag_id.toString(QUuid::WithoutBraces));
     message.insert(kUpdate, update);
     message.insert(kVersion, version);
+
+    return message;
+}
+
+QJsonObject TagInsert(Section section, const Tag* tag)
+{
+    QJsonObject message {};
+
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kSessionId, QString());
+    message.insert(kTag, tag->WriteJson());
+    message.insert(kMeta, QJsonObject());
+
+    return message;
+}
+
+QJsonObject TagDelete(Section section, CUuid& tag_id)
+{
+    QJsonObject message {};
+
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kSessionId, QString());
+    message.insert(kId, tag_id.toString(QUuid::WithoutBraces));
 
     return message;
 }

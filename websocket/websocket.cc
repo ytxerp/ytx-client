@@ -180,8 +180,9 @@ void WebSocket::InitHandler()
     handler_obj_[kSettlementRecalled] = [this](const QJsonObject& obj) { RecallSettlement(obj); };
     handler_obj_[kPartnerUpdated] = [this](const QJsonObject& obj) { UpdatePartner(obj); };
     handler_obj_[kInvalidOperation] = [this](const QJsonObject& /*obj*/) { NotifyInvalidOperation(); };
-
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
+    handler_obj_[kTagApplied] = [this](const QJsonObject& obj) { ApplyTag(obj); };
+
     handler_obj_[kTreeSyncFinished] = [this](const QJsonObject& /*obj*/) { NotifyTreeSyncFinished(); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
     handler_obj_[kNodeAcked] = [this](const QJsonObject& obj) { AckNode(obj); };
@@ -404,6 +405,13 @@ void WebSocket::ApplyTree(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     auto tree_model { tree_model_hash_.value(section) };
     tree_model->ApplyTree(obj);
+}
+
+void WebSocket::ApplyTag(const QJsonObject& obj)
+{
+    Q_ASSERT(obj.contains(kSection));
+
+    emit SApplyTag(obj);
 }
 
 void WebSocket::ApplyPartnerEntry(const QJsonArray& arr)

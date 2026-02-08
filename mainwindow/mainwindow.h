@@ -138,6 +138,7 @@ private slots:
     void RLeafDeleteDenied(const QJsonObject& obj);
 
     void RSharedConfig(const QJsonArray& arr);
+    void RApplyTag(const QJsonObject& obj);
     void RDocumentDir(Section section, const QString& document_dir);
     void RDefaultUnit(Section section, int unit);
     void RUpdateDefaultUnitFailed(const QString& section);

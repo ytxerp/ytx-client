@@ -132,6 +132,7 @@ inline const QString kSettlementDeleted = QStringLiteral("settlement_deleted");
 
 // Server-initiated data push
 inline const QString kTreeApplied = QStringLiteral("tree_applied");
+inline const QString kTagApplied = QStringLiteral("tag_applied");
 inline const QString kSharedConfig = QStringLiteral("shared_config");
 inline const QString kTreeSyncFinished = QStringLiteral("tree_sync_finished");
 
@@ -305,6 +306,7 @@ inline const QString kLhsCredit = QStringLiteral("lhs_credit");
 inline const QString kRhsDebit = QStringLiteral("rhs_debit");
 inline const QString kRhsCredit = QStringLiteral("rhs_credit");
 inline const QString kTag = QStringLiteral("tag");
+inline const QString kTagArray = QStringLiteral("tag_array");
 
 inline const QString kInitial = QStringLiteral("initial");
 inline const QString kInitialDelta = QStringLiteral("initial_delta");

@@ -159,6 +159,7 @@ bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
 
     auto* tag { ResourcePool<Tag>::Instance().Allocate() };
     tag->is_new = true;
+    tag->id = QUuid::createUuidV7();
 
     beginInsertRows(parent, row, row);
     tags_.insert(row, tag);
@@ -177,11 +178,7 @@ bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
     endRemoveRows();
 
     if (!tag->is_new) {
-        QJsonObject message {};
-        message.insert(kSection, std::to_underlying(section_));
-        message.insert(kId, tag->id.toString(QUuid::WithoutBraces));
-        message.insert(kSessionId, QString());
-
+        const QJsonObject message { JsonGen::TagDelete(section_, tag->id) };
         WebSocket::Instance()->SendMessage(kTagDelete, message);
     }
 
@@ -209,7 +206,8 @@ bool TagModel::UpdateName(Tag* tag, const QString& new_name, QJsonObject& update
 
     if (tag->is_new) {
         if (!tag->color.isEmpty()) {
-            WebSocket::Instance()->SendMessage(kTagInsert, tag->WriteJson());
+            const QJsonObject message { JsonGen::TagInsert(section_, tag) };
+            WebSocket::Instance()->SendMessage(kTagInsert, message);
             tag->is_new = false;
         }
     } else {
@@ -231,7 +229,8 @@ bool TagModel::UpdateColor(Tag* tag, const QString& new_color, QJsonObject& upda
 
     if (tag->is_new) {
         if (!tag->name.isEmpty()) {
-            WebSocket::Instance()->SendMessage(kTagInsert, tag->WriteJson());
+            const QJsonObject message { JsonGen::TagInsert(section_, tag) };
+            WebSocket::Instance()->SendMessage(kTagInsert, message);
             tag->is_new = false;
         }
     } else {

@@ -60,6 +60,7 @@ signals:
 
     void SLeafDeleteDenied(const QJsonObject& obj);
     void SSharedConfig(const QJsonArray& arr);
+    void SApplyTag(const QJsonObject& obj);
     void SDocumentDir(Section section, const QString& document_dir);
     void SDefaultUnit(Section section, int unit);
     void SUpdateDefaultUnitFailed(const QString& section);
@@ -155,6 +156,7 @@ private:
 private:
     void ApplySharedConfig(const QJsonArray& arr);
     void ApplyTree(const QJsonObject& obj);
+    void ApplyTag(const QJsonObject& obj);
     void ApplyPartnerEntry(const QJsonArray& arr);
 
     void InsertNode(const QJsonObject& obj);

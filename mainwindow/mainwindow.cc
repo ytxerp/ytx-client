@@ -368,6 +368,7 @@ void MainWindow::SetUniqueConnection() const
 
     connect(WebSocket::Instance(), &WebSocket::SLeafDeleteDenied, this, &MainWindow::RLeafDeleteDenied);
     connect(WebSocket::Instance(), &WebSocket::SSharedConfig, this, &MainWindow::RSharedConfig);
+    connect(WebSocket::Instance(), &WebSocket::SApplyTag, this, &MainWindow::RApplyTag);
     connect(WebSocket::Instance(), &WebSocket::SDefaultUnit, this, &MainWindow::RDefaultUnit);
     connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
     connect(WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
@@ -740,4 +741,30 @@ void MainWindow::on_actionTags_triggered()
     dialog->show();
     dialog->raise();
     dialog->activateWindow();
+}
+
+void MainWindow::RApplyTag(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+
+    auto* sc { GetSectionContex(section) };
+    if (!sc)
+        return;
+
+    const QJsonArray tags = obj.value(kTagArray).toArray();
+
+    for (const QJsonValue& value : tags) {
+        if (!value.isObject())
+            continue;
+
+        const QJsonObject tag_obj { value.toObject() };
+
+        Tag tag {};
+        tag.ReadJson(tag_obj);
+        qDebug() << tag.name;
+
+        if (!tag.id.isNull()) {
+            sc->raw_tags.insert(tag.id, tag);
+        }
+    }
 }

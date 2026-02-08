@@ -19,6 +19,7 @@
 
 #include "component/using.h"
 #include "enum/section.h"
+#include "tag/tag.h"
 #include "tree/node.h"
 
 #ifndef JSONGEN_H
@@ -43,7 +44,10 @@ QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update);
 QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bool is_parallel);
 QJsonObject EntryDelete(Section section, CUuid& entry_id);
 QJsonObject EntryLinkedNode(Section section, CUuid& entry_id);
+
 QJsonObject TagUpdate(Section section, CUuid& tag_id, CJsonObject& update, int version);
+QJsonObject TagInsert(Section section, const Tag* tag);
+QJsonObject TagDelete(Section section, CUuid& tag_id);
 
 QJsonObject TreeAcked(Section section, const QDateTime& start, const QDateTime& end);
 QJsonObject LeafEntry(Section section, CUuid& node_id, CUuid& entry_id = {});

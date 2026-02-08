@@ -55,7 +55,7 @@ private:
     void RestartTimer(const QUuid& id);
 
 private:
-    const QHash<QUuid, Tag>& raw_tags_;
+    const QHash<QUuid, Tag> raw_tags_;
     const Section section_ {};
 
     QSet<QString> names_ {};
