@@ -17,6 +17,7 @@ EditDocument::EditDocument(QStringList& document, CString& document_path, QWidge
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
+    InitConnect();
 
     setMinimumSize(400, 300);
     CreateList(document);
@@ -75,4 +76,13 @@ void EditDocument::CreateList(QStringList& document)
 {
     list_model_->setStringList(document);
     ui->listView->setModel(list_model_);
+}
+
+void EditDocument::InitConnect()
+{
+    // Connect OK button to accept the dialog
+    connect(ui->pBtnOk, &QPushButton::clicked, this, &QDialog::accept);
+
+    // Connect Cancel button to reject the dialog
+    connect(ui->pBtnCancel, &QPushButton::clicked, this, &QDialog::reject);
 }

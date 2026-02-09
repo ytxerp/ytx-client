@@ -44,6 +44,7 @@ private slots:
 
 private:
     void CreateList(QStringList& document);
+    void InitConnect();
 
 private:
     Ui::EditDocument* ui;
