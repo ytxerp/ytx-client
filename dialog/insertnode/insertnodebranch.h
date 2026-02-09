@@ -55,8 +55,8 @@ private:
     Ui::InsertNodeBranch* ui;
     Node* node_ {};
 
-    CString& parent_path_ {};
-    CStringList& name_list_ {};
+    CString parent_path_ {};
+    CStringList name_list_ {};
 };
 
 #endif // INSERTNODEBRANCH_H

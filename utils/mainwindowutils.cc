@@ -86,8 +86,8 @@ void Utils::SwitchDialog(const SectionContext* sc, bool enable)
     if (!sc)
         return;
 
-    const auto& list { sc->dialog_list };
-    for (const auto& dialog : list) {
+    const auto& dialog_hash { sc->dialog_hash };
+    for (const auto& dialog : dialog_hash) {
         if (dialog) {
             dialog->setVisible(enable);
         }
@@ -169,8 +169,8 @@ void Utils::ResetSectionContext(SectionContext& ctx)
     ctx.section_config = SectionConfig {};
     ctx.shared_config = SharedConfig {};
 
-    Utils::CloseWidgets(ctx.dialog_list);
-    Utils::CloseWidgets(ctx.table_wgt_hash);
+    Utils::CloseWidgets(ctx.dialog_hash);
+    Utils::CloseWidgets(ctx.tab_hash);
     Utils::CloseWidgets(ctx.widget_hash);
 }
 
@@ -269,4 +269,18 @@ QString Utils::UuidToShortCode(const QUuid& uuid, int length)
 
     // Return plain code (add separator only when displaying/printing)
     return base32.left(length);
+}
+
+QUuid Utils::ManageDialog(QHash<QUuid, QPointer<QDialog>>& dialog_hash, QDialog* dialog)
+{
+    Q_ASSERT(dialog);
+
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+
+    const QUuid id = QUuid::createUuidV7();
+    dialog_hash.insert(id, dialog);
+
+    QObject::connect(dialog, &QDialog::destroyed, [=, &dialog_hash]() { dialog_hash.remove(id); });
+
+    return id;
 }

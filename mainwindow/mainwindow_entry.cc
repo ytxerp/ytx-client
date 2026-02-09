@@ -96,16 +96,16 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
         return;
 
     QUuid node_id {};
-    auto& leaf_wgt_hash { sc_->table_wgt_hash };
+    auto& tab_hash { sc_->tab_hash };
 
-    if (leaf_wgt_hash.contains(lhs_node_id)) {
+    if (tab_hash.contains(lhs_node_id)) {
         node_id = lhs_node_id;
-    } else if (leaf_wgt_hash.contains(rhs_node_id)) {
+    } else if (tab_hash.contains(rhs_node_id)) {
         node_id = rhs_node_id;
     }
 
     if (!node_id.isNull()) {
-        FocusTableWidget(node_id);
+        FocusTabWidget(node_id);
         RSelectLeafEntry(node_id, entry_id);
         return;
     }
@@ -138,7 +138,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
         break;
     }
 
-    FocusTableWidget(node_id);
+    FocusTabWidget(node_id);
 }
 
 // RSelectLeafEntry - Scroll to and select the specified entry (slot)
@@ -153,7 +153,7 @@ void MainWindow::RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id)
     if (entry_id.isNull() || node_id.isNull())
         return;
 
-    auto widget { sc_->table_wgt_hash.value(node_id) };
+    auto widget { sc_->tab_hash.value(node_id) };
     Q_ASSERT(widget);
 
     auto* view { widget->View() };
@@ -244,5 +244,16 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         }
     }
 
-    sc->table_wgt_hash.insert(node_id, widget);
+    sc->tab_hash.insert(node_id, widget);
+}
+
+void MainWindow::RActionEntry(EntryAction action)
+{
+    auto* current_widget { ui->tabWidget->currentWidget() };
+
+    Q_ASSERT(qobject_cast<TableWidget*>(current_widget));
+    auto* leaf_widget { static_cast<TableWidget*>(current_widget) };
+
+    auto table_model { leaf_widget->Model() };
+    table_model->ActionEntry(action);
 }

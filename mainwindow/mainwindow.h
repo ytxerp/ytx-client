@@ -137,8 +137,12 @@ private slots:
 
     void RLeafDeleteDenied(const QJsonObject& obj);
 
-    void RSharedConfig(const QJsonArray& arr);
     void RApplyTag(const QJsonObject& obj);
+    void RInsertTag(const QJsonObject& obj);
+    void RUpdateTag(const QJsonObject& obj);
+    void RDeleteTag(const QJsonObject& obj);
+
+    void RSharedConfig(const QJsonArray& arr);
     void RDocumentDir(Section section, const QString& document_dir);
     void RDefaultUnit(Section section, int unit);
     void RUpdateDefaultUnitFailed(const QString& section);
@@ -247,7 +251,7 @@ private:
     void IniSectionGroup();
     void IniMarkGroup();
 
-    void FocusTableWidget(const QUuid& node_id) const;
+    void FocusTabWidget(const QUuid& node_id) const;
 
     void RegisterWidget(const QUuid& widget_id, QWidget* widget);
     void WriteConfig();

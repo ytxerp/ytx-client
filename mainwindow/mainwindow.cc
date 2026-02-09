@@ -15,10 +15,8 @@
 #include "component/stringinitializer.h"
 #include "dialog/about.h"
 #include "dialog/preferences.h"
-#include "dialog/tagmanagerdlg.h"
 #include "document.h"
 #include "global/tablesstation.h"
-#include "tag/tagmodel.h"
 #include "ui_mainwindow.h"
 #include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
@@ -120,16 +118,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// FocusTableWidget - Activate and focus the leaf widget tab
+// FocusTabWidget - Activate and focus the leaf widget tab
 // -------------------------------
 // Used for:
 //  • Node double-click → navigate to node's tab
 //  • Entry jump → switch between different node tabs
 //
 // Note: Clears view selection after switching
-void MainWindow::FocusTableWidget(const QUuid& node_id) const
+void MainWindow::FocusTabWidget(const QUuid& node_id) const
 {
-    auto widget { sc_->table_wgt_hash.value(node_id, nullptr) };
+    auto widget { sc_->tab_hash.value(node_id, nullptr) };
     Q_ASSERT_X(widget, "MainWindow::FocusTableWidget", "Table widget not found for node_id");
 
     ui->tabWidget->setCurrentWidget(widget);
@@ -253,7 +251,7 @@ void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 {
     auto* sc { GetSectionContex(section) };
 
-    Utils::CloseWidget(node_id, sc->table_wgt_hash);
+    Utils::CloseWidget(node_id, sc->tab_hash);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
@@ -369,6 +367,9 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SLeafDeleteDenied, this, &MainWindow::RLeafDeleteDenied);
     connect(WebSocket::Instance(), &WebSocket::SSharedConfig, this, &MainWindow::RSharedConfig);
     connect(WebSocket::Instance(), &WebSocket::SApplyTag, this, &MainWindow::RApplyTag);
+    connect(WebSocket::Instance(), &WebSocket::SInsertTag, this, &MainWindow::RInsertTag);
+    connect(WebSocket::Instance(), &WebSocket::SUpdateTag, this, &MainWindow::RUpdateTag);
+    connect(WebSocket::Instance(), &WebSocket::SDeleteTag, this, &MainWindow::RDeleteTag);
     connect(WebSocket::Instance(), &WebSocket::SDefaultUnit, this, &MainWindow::RDefaultUnit);
     connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
     connect(WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
@@ -518,9 +519,13 @@ void MainWindow::on_actionPreferences_triggered()
 
     auto model { sc_->tree_model };
 
-    auto* preference { new Preferences(model, sc_->info, app_config_, sc_->shared_config, sc_->section_config, this) };
-    connect(preference, &Preferences::SUpdateConfig, this, &MainWindow::RUpdateConfig);
-    preference->exec();
+    auto* dialog { new Preferences(model, sc_->info, app_config_, sc_->shared_config, sc_->section_config, this) };
+
+    Utils::ManageDialog(sc_->dialog_hash, dialog);
+    dialog->setModal(true);
+
+    connect(dialog, &Preferences::SUpdateConfig, this, &MainWindow::RUpdateConfig);
+    dialog->show();
 }
 
 void MainWindow::on_actionAbout_triggered()
@@ -537,17 +542,6 @@ void MainWindow::on_actionAbout_triggered()
     dialog->show();
     dialog->raise();
     dialog->activateWindow();
-}
-
-void MainWindow::RActionEntry(EntryAction action)
-{
-    auto* current_widget { ui->tabWidget->currentWidget() };
-
-    Q_ASSERT(qobject_cast<TableWidget*>(current_widget));
-    auto* leaf_widget { static_cast<TableWidget*>(current_widget) };
-
-    auto table_model { leaf_widget->Model() };
-    table_model->ActionEntry(action);
 }
 
 void MainWindow::SwitchSection(Section section, const QUuid& last_tab) const
@@ -718,53 +712,4 @@ void MainWindow::on_actionCheckUpdates_triggered()
             Utils::ShowNotification(QMessageBox::Information, tr("No Update"), tr("You are using the latest version."), kThreeThousand);
         }
     });
-}
-
-void MainWindow::on_actionTags_triggered()
-{
-    qInfo() << "[UI]" << "on_actionTags_triggered";
-
-    static QPointer<TagManagerDlg> dialog {};
-
-    if (!dialog) {
-        auto* model { new TagModel(start_, sc_->raw_tags, this) };
-
-        dialog = new TagManagerDlg(this);
-        dialog->SetModel(model);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-
-        auto* view { dialog->View() };
-        SetTagView(view);
-        DelegateTagView(view);
-    }
-
-    dialog->show();
-    dialog->raise();
-    dialog->activateWindow();
-}
-
-void MainWindow::RApplyTag(const QJsonObject& obj)
-{
-    const Section section { obj.value(kSection).toInt() };
-
-    auto* sc { GetSectionContex(section) };
-    if (!sc)
-        return;
-
-    const QJsonArray tags = obj.value(kTagArray).toArray();
-
-    for (const QJsonValue& value : tags) {
-        if (!value.isObject())
-            continue;
-
-        const QJsonObject tag_obj { value.toObject() };
-
-        Tag tag {};
-        tag.ReadJson(tag_obj);
-        qDebug() << tag.name;
-
-        if (!tag.id.isNull()) {
-            sc->raw_tags.insert(tag.id, tag);
-        }
-    }
 }

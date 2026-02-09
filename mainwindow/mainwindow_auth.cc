@@ -71,7 +71,8 @@ void MainWindow::RConnectionSucceeded()
 
 void MainWindow::RRemoteHostClosed()
 {
-    Utils::ShowNotification(QMessageBox::Warning, tr("Remote Host Closed"), tr("The server has closed the connection. Please try reconnecting."), kThreeThousand);
+    Utils::ShowNotification(
+        QMessageBox::Warning, tr("Remote Host Closed"), tr("The server has closed the connection. Please try reconnecting."), kThreeThousand);
 
     on_actionSignOut_triggered();
     Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);

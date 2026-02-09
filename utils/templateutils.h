@@ -52,35 +52,29 @@ template <MapType T> ItemModel* CreateModelFromMap(const T& map, QObject* parent
 
 template <InheritQWidget T> void CloseWidget(const QUuid& node_id, QHash<QUuid, QPointer<T>>& hash)
 {
+    // Take removes the widget from hash and returns it
     if (auto widget { hash.take(node_id) }) {
-        widget->setAttribute(Qt::WA_DeleteOnClose);
-        widget->close();
-    }
-}
-
-// QList<QPointer<T>>
-template <InheritQWidget T> void CloseWidgets(QList<QPointer<T>>& list)
-{
-    for (auto& widget : list) {
+        // Check if QPointer is still valid (widget not already deleted)
         if (widget) {
-            widget->setAttribute(Qt::WA_DeleteOnClose);
-            widget->close();
+            // Schedule asynchronous deletion (safe, won't trigger signals immediately)
+            widget->deleteLater();
         }
     }
-
-    list.clear();
 }
 
-// QHash<QUuid, QPointer<T>>
+// Close and delete all widgets in the hash
 template <InheritQWidget T> void CloseWidgets(QHash<QUuid, QPointer<T>>& hash)
 {
+    // Schedule all widgets for asynchronous deletion
+    // deleteLater() queues deletion without triggering signals immediately
     for (auto& widget : hash) {
         if (widget) {
-            widget->setAttribute(Qt::WA_DeleteOnClose);
-            widget->close();
+            widget->deleteLater();
         }
     }
 
+    // Clear hash immediately (prevents lambda callbacks from accessing it)
+    // When destroyed signals fire later, hash.remove() will be harmless
     hash.clear();
 }
 

@@ -35,13 +35,12 @@ struct SectionContext {
     QPointer<TreeModel> tree_model {};
     QPointer<QTreeView> tree_view {};
 
-    QList<QPointer<QDialog>> dialog_list {};
-
     SectionConfig section_config {};
     SectionInfo info {};
     SharedConfig shared_config {};
 
-    QHash<QUuid, QPointer<TableWidget>> table_wgt_hash {};
+    QHash<QUuid, QPointer<QDialog>> dialog_hash {};
+    QHash<QUuid, QPointer<TableWidget>> tab_hash {};
     QHash<QUuid, QPointer<QWidget>> widget_hash {};
 
     // key: id

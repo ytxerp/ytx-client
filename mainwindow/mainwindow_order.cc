@@ -20,12 +20,17 @@ void MainWindow::EditNameO()
 
     auto model { sc_->tree_model };
 
-    auto* edit_name { new EditNodeNameO(node->name, this) };
-    connect(edit_name, &QDialog::accepted, this, [=, this]() {
-        const auto message { JsonGen::NodeName(start_, node->id, edit_name->GetName()) };
+    auto* dialog { new EditNodeNameO(node->name, this) };
+
+    Utils::ManageDialog(sc_->dialog_hash, dialog);
+    dialog->setModal(true);
+
+    connect(dialog, &QDialog::accepted, this, [=, this]() {
+        const auto message { JsonGen::NodeName(start_, node->id, dialog->GetName()) };
         WebSocket::Instance()->SendMessage(kNodeName, message);
     });
-    edit_name->exec();
+
+    dialog->show();
 }
 
 void MainWindow::on_actionNewBranch_triggered()
@@ -63,22 +68,26 @@ void MainWindow::on_actionNewBranch_triggered()
 
     const auto children_name { ChildrenName(parent_node) };
 
-    QDialog* dialog { new InsertNodeBranch(node, unit_model, parent_path, children_name, this) };
+    auto* dialog { new InsertNodeBranch(node, unit_model, parent_path, children_name, this) };
+
+    Utils::ManageDialog(sc_->dialog_hash, dialog);
+    dialog->setModal(true);
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {
         const auto message { JsonGen::NodeInsert(start_, node, node->parent->id) };
         WebSocket::Instance()->SendMessage(kNodeInsert, message);
     });
 
-    connect(dialog, &QDialog::finished, this, [=, this]() { NodePool::Instance().Recycle(node, start_); });
-    dialog->exec();
+    connect(dialog, &QDialog::destroyed, this, [=, this]() { NodePool::Instance().Recycle(node, start_); });
+
+    dialog->show();
 }
 
 void MainWindow::ROrderReleased(Section section, const QUuid& node_id, int version)
 {
     auto* sc { GetSectionContex(section) };
 
-    auto widget { sc->table_wgt_hash.value(node_id, nullptr) };
+    auto widget { sc->tab_hash.value(node_id, nullptr) };
     if (widget) {
         auto* ptr { widget.data() };
 
@@ -93,7 +102,7 @@ void MainWindow::ROrderRecalled(Section section, const QUuid& node_id, int versi
 {
     auto* sc { GetSectionContex(section) };
 
-    auto widget { sc->table_wgt_hash.value(node_id, nullptr) };
+    auto widget { sc->tab_hash.value(node_id, nullptr) };
     if (widget) {
         auto* ptr { widget.data() };
 
@@ -108,7 +117,7 @@ void MainWindow::ROrderSaved(Section section, const QUuid& node_id, int version)
 {
     auto* sc { GetSectionContex(section) };
 
-    auto widget { sc->table_wgt_hash.value(node_id, nullptr) };
+    auto widget { sc->tab_hash.value(node_id, nullptr) };
     if (widget) {
         auto* ptr { widget.data() };
 
@@ -183,8 +192,8 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     SetTableView(view, sc_->info.section, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
     TableDelegateO(view, section_config);
 
-    sc_->table_wgt_hash.insert(node_id, widget);
-    FocusTableWidget(node_id);
+    sc_->tab_hash.insert(node_id, widget);
+    FocusTabWidget(node_id);
 }
 
 void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
@@ -231,7 +240,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     TableConnectO(view, table_model, widget);
     TableDelegateO(view, section_config);
 
-    sc->table_wgt_hash.insert(node_id, widget);
+    sc->tab_hash.insert(node_id, widget);
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 

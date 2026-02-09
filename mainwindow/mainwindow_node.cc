@@ -7,6 +7,7 @@
 #include "global/nodepool.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -53,13 +54,16 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
         return;
     }
 
+    Utils::ManageDialog(sc_->dialog_hash, dialog);
+    dialog->setModal(true);
+
     connect(dialog, &QDialog::accepted, this, [=, this]() {
         const auto message { JsonGen::NodeInsert(start_, node, parent_node->id) };
         WebSocket::Instance()->SendMessage(kNodeInsert, message);
     });
+    connect(dialog, &QDialog::destroyed, this, [=, this]() { NodePool::Instance().Recycle(node, start_); });
 
-    connect(dialog, &QDialog::finished, this, [=, this]() { NodePool::Instance().Recycle(node, start_); });
-    dialog->exec();
+    dialog->show();
 }
 
 void MainWindow::RNodeLocation(Section section, const QUuid& node_id)
@@ -104,12 +108,17 @@ void MainWindow::EditNameFIPT()
     CString name { model->Name(node_id) };
     const auto children_name { ChildrenName(parent_node) };
 
-    auto* edit_name { new EditNodeName(name, parent_path, children_name, this) };
-    connect(edit_name, &QDialog::accepted, this, [=, this]() {
-        const auto message { JsonGen::NodeName(start_, node_id, edit_name->GetName()) };
+    auto* dialog { new EditNodeName(name, parent_path, children_name, this) };
+
+    Utils::ManageDialog(sc_->dialog_hash, dialog);
+    dialog->setModal(true);
+
+    connect(dialog, &QDialog::accepted, this, [=, this]() {
+        const auto message { JsonGen::NodeName(start_, node_id, dialog->GetName()) };
         WebSocket::Instance()->SendMessage(kNodeName, message);
     });
-    edit_name->exec();
+
+    dialog->show();
 }
 
 void MainWindow::on_actionClearColor_triggered()

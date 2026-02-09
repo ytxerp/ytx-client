@@ -64,8 +64,8 @@ private:
     QButtonGroup* rule_group_ {};
     QButtonGroup* kind_group_ {};
 
-    CString& parent_path_ {};
-    CStringList& name_list_ {};
+    CString parent_path_ {};
+    CStringList name_list_ {};
 };
 
 #endif // EDITNODEFIANNCE_H

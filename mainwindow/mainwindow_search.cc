@@ -15,6 +15,7 @@
 #include "search/node/searchnodemodelo.h"
 #include "search/node/searchnodemodelp.h"
 #include "search/node/searchnodemodelt.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -61,13 +62,11 @@ void MainWindow::on_actionSearch_triggered()
         break;
     }
 
-    dialog->setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
+    Utils::ManageDialog(sc_->dialog_hash, dialog);
 
     connect(dialog, &SearchDialog::SNodeLocation, this, &MainWindow::RNodeLocation);
     connect(dialog, &SearchDialog::SEntryLocation, this, &MainWindow::REntryLocation);
     connect(sc_->entry_hub, &EntryHub::SSearchEntry, entry, &SearchEntryModel::RSearchEntry);
-    connect(dialog, &QDialog::finished, this, [=, this]() { sc_->dialog_list.removeOne(dialog); });
 
-    sc_->dialog_list.append(dialog);
     dialog->show();
 }

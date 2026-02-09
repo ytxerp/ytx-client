@@ -219,6 +219,7 @@ set(SOURCES
     billing/settlement/tablewidgetsettlement.cc
     billing/settlement/tablemodelsettlement.cc
     tag/tagmodel.cc
+    mainwindow/mainwindow_tag.cc
 )
 
 set(HEADERS

@@ -107,7 +107,7 @@ void InsertNodeTask::IniRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->
 
 void InsertNodeTask::RNameEdited(const QString& arg1)
 {
-    const auto& simplified { arg1.simplified() };
+    const auto simplified { arg1.simplified() };
     this->setWindowTitle(parent_path_ + simplified);
     ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_list_.contains(simplified));
 }

@@ -61,8 +61,8 @@ private:
     NodeP* node_ {};
     QButtonGroup* kind_group_ {};
 
-    CString& parent_path_ {};
-    CStringList& name_list_ {};
+    CString parent_path_ {};
+    CStringList name_list_ {};
 };
 
 #endif // INSERTNODEP_H

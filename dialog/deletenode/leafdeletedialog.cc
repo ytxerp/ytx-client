@@ -110,13 +110,14 @@ void LeafDeleteDialog::ReplaceNode()
     auto* dlg { new ExactMatchConfirmDialog(info, path, tr("Replace"), this) };
     dlg->setModal(true);
     dlg->setAttribute(Qt::WA_DeleteOnClose);
-    dlg->show();
 
     connect(dlg, &ExactMatchConfirmDialog::accepted, this, [=, this]() {
         const auto new_node_id { ui->comboBox->currentData().toUuid() };
         const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id) };
         WebSocket::Instance()->SendMessage(kLeafReplace, message);
     });
+
+    dlg->show();
 }
 
 void LeafDeleteDialog::DeleteNode()
@@ -133,13 +134,14 @@ void LeafDeleteDialog::DeleteNode()
     auto* dlg { new ExactMatchConfirmDialog(info, path, tr("Delete"), this) };
     dlg->setModal(true);
     dlg->setAttribute(Qt::WA_DeleteOnClose);
-    dlg->show();
 
     connect(dlg, &ExactMatchConfirmDialog::accepted, this, [=, this]() {
         const auto message { JsonGen::LeafDelete(info_.section, node_id_) };
         WebSocket::Instance()->SendMessage(kLeafDelete, message);
         accept();
     });
+
+    dlg->show();
 }
 
 void LeafDeleteDialog::on_pBtnOk_clicked()

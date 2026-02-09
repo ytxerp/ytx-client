@@ -181,7 +181,11 @@ void WebSocket::InitHandler()
     handler_obj_[kPartnerUpdated] = [this](const QJsonObject& obj) { UpdatePartner(obj); };
     handler_obj_[kInvalidOperation] = [this](const QJsonObject& /*obj*/) { NotifyInvalidOperation(); };
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
+
     handler_obj_[kTagApplied] = [this](const QJsonObject& obj) { ApplyTag(obj); };
+    handler_obj_[kTagInsert] = [this](const QJsonObject& obj) { InsertTag(obj); };
+    handler_obj_[kTagUpdate] = [this](const QJsonObject& obj) { UpdateTag(obj); };
+    handler_obj_[kTagDelete] = [this](const QJsonObject& obj) { DeleteTag(obj); };
 
     handler_obj_[kTreeSyncFinished] = [this](const QJsonObject& /*obj*/) { NotifyTreeSyncFinished(); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
@@ -412,6 +416,24 @@ void WebSocket::ApplyTag(const QJsonObject& obj)
     Q_ASSERT(obj.contains(kSection));
 
     emit SApplyTag(obj);
+}
+
+void WebSocket::InsertTag(const QJsonObject& obj)
+{
+    Q_ASSERT(obj.contains(kSection));
+    emit SInsertTag(obj);
+}
+
+void WebSocket::UpdateTag(const QJsonObject& obj)
+{
+    Q_ASSERT(obj.contains(kSection));
+    emit SUpdateTag(obj);
+}
+
+void WebSocket::DeleteTag(const QJsonObject& obj)
+{
+    Q_ASSERT(obj.contains(kSection));
+    emit SDeleteTag(obj);
 }
 
 void WebSocket::ApplyPartnerEntry(const QJsonArray& arr)

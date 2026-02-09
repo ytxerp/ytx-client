@@ -38,6 +38,7 @@ void SetButton(QPushButton* btn, const QString& text, const QKeySequence& ks);
 QString AccountIniFileName(const QString& email, const QString& workspace);
 QString UuidToShortCode(const QUuid& uuid, int length = 10);
 
+QUuid ManageDialog(QHash<QUuid, QPointer<QDialog>>& dialog_hash, QDialog* dialog);
 void ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where = true);
 
 QMessageBox* CreateMessageBox(QMessageBox::Icon icon, CString& title, CString& text, bool modal = false,

@@ -71,10 +71,8 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
 {
     {
-        auto& table_wgt_hash { sc_->table_wgt_hash };
-
-        if (table_wgt_hash.contains(node_id)) {
-            FocusTableWidget(node_id);
+        if (sc_->tab_hash.contains(node_id)) {
+            FocusTabWidget(node_id);
             RSelectLeafEntry(node_id, entry_id);
             return;
         }
@@ -92,7 +90,7 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
             CreateLeafFIPT(sc_, node_id);
         }
 
-        FocusTableWidget(node_id);
+        FocusTabWidget(node_id);
     }
 }
 
@@ -143,7 +141,7 @@ void MainWindow::on_tabWidget_tabBarDoubleClicked(int index)
     const auto tab_info { tab_bar->tabData(index).value<TabInfo>() };
     const QUuid id { tab_info.id };
 
-    if (sc_->table_wgt_hash.contains(id))
+    if (sc_->tab_hash.contains(id))
         RNodeLocation(start_, id);
 }
 
@@ -165,7 +163,7 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 
     {
         if (IsOrderSection(start_)) {
-            auto* widget { static_cast<TableWidgetO*>(sc_->table_wgt_hash.value(node_id).data()) };
+            auto* widget { static_cast<TableWidgetO*>(sc_->tab_hash.value(node_id).data()) };
 
             if (!widget)
                 return;
@@ -245,7 +243,7 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
         if (start_ == Section::kPartner)
             UpdatePartnerReference(nodes, branch);
 
-        if (!sc_->table_wgt_hash.contains(node_id))
+        if (!sc_->tab_hash.contains(node_id))
             return;
     }
 

@@ -50,11 +50,12 @@ void MainWindow::RLeafDeleteDenied(const QJsonObject& obj)
     const auto unit { model->Unit(node_id) };
 
     auto* dialog { new LeafDeleteDialog(model, section_contex->info, obj, node_id, unit, this) };
-    dialog->setAttribute(Qt::WA_DeleteOnClose);
-    dialog->setModal(true);
-    dialog->show();
 
-    connect(dialog, &QObject::destroyed, this, [this, node_id]() { node_pending_deletion_.remove(node_id); });
+    Utils::ManageDialog(sc_->dialog_hash, dialog);
+    dialog->setModal(true);
+
+    connect(dialog, &QDialog::destroyed, this, [this, node_id]() { node_pending_deletion_.remove(node_id); });
+    dialog->show();
 }
 
 void MainWindow::DeleteBranch(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id)
@@ -71,8 +72,10 @@ void MainWindow::DeleteBranch(TreeModel* tree_model, const QModelIndex& index, c
             WebSocket::Instance()->SendMessage(kBranchDelete, message);
             tree_model->removeRows(index.row(), 1, index.parent());
         }
-        node_pending_deletion_.remove(node_id);
     });
+
+    // ✅ Resource cleanup - ensure pending state is always cleared
+    QObject::connect(dlg, &QMessageBox::destroyed, this, [this, node_id]() { node_pending_deletion_.remove(node_id); });
 
     dlg->show();
 }

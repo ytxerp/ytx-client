@@ -72,8 +72,8 @@ private:
     QButtonGroup* kind_group_ {};
     QButtonGroup* status_group_ {};
 
-    CString& parent_path_ {};
-    CStringList& name_list_ {};
+    CString parent_path_ {};
+    CStringList name_list_ {};
 };
 
 #endif // INSERTNODETASK_H

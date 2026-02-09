@@ -60,10 +60,14 @@ signals:
 
     void SLeafDeleteDenied(const QJsonObject& obj);
     void SSharedConfig(const QJsonArray& arr);
-    void SApplyTag(const QJsonObject& obj);
     void SDocumentDir(Section section, const QString& document_dir);
     void SDefaultUnit(Section section, int unit);
     void SUpdateDefaultUnitFailed(const QString& section);
+
+    void SApplyTag(const QJsonObject& obj);
+    void SInsertTag(const QJsonObject& obj);
+    void SUpdateTag(const QJsonObject& obj);
+    void SDeleteTag(const QJsonObject& obj);
 
     void SReplaceResult(bool result);
     void SSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array);
@@ -169,6 +173,10 @@ private:
     void UpdateDirectionRule(const QJsonObject& obj);
     void UpdateNodeStatus(const QJsonObject& obj);
     void UpdateNodeName(const QJsonObject& obj);
+
+    void InsertTag(const QJsonObject& obj);
+    void UpdateTag(const QJsonObject& obj);
+    void DeleteTag(const QJsonObject& obj);
 
     void UpdateOrder(const QJsonObject& obj, bool is_release);
     void InsertOrder(const QJsonObject& obj, bool is_release);
