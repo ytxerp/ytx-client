@@ -26,8 +26,8 @@
 struct NodeInsertArg {
     Node* node {};
     ItemModel* unit_model {};
-    const QString& parent_path {};
-    const QStringList& name_list {};
+    QString parent_path {};
+    QSet<QString> name_set {};
 };
 
 using CNodeInsertArg = const NodeInsertArg;

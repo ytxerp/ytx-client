@@ -11,7 +11,7 @@ InsertNodeI::InsertNodeI(CNodeInsertArg& arg, int rate_decimal, QWidget* parent)
     , ui(new Ui::InsertNodeI)
     , node_ { static_cast<NodeI*>(arg.node) }
     , parent_path_ { arg.parent_path }
-    , name_list_ { arg.name_list }
+    , name_set_ { arg.name_set }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -99,7 +99,7 @@ void InsertNodeI::RNameEdited(const QString& arg1)
 {
     const auto& simplified { arg1.simplified() };
     this->setWindowTitle(parent_path_ + simplified);
-    ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_list_.contains(simplified));
+    ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_set_.contains(simplified));
 }
 
 void InsertNodeI::on_lineEditName_editingFinished() { node_->name = ui->lineEditName->text(); }

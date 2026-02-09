@@ -70,7 +70,7 @@ private:
     QButtonGroup* kind_group_ {};
 
     CString parent_path_ {};
-    CStringList name_list_ {};
+    const QSet<QString> name_set_ {};
 };
 
 #endif // INSERTNODEI_H

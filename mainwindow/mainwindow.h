@@ -261,7 +261,7 @@ private:
     void InitStatusLabel();
 
     void SetDeleteShortcut();
-    QStringList ChildrenName(const Node* node) const;
+    QSet<QString> ChildrenName(const Node* node) const;
     QSet<QUuid> LeafChildrenId(const Node* node) const;
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }

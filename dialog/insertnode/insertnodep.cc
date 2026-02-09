@@ -9,7 +9,7 @@ InsertNodeP::InsertNodeP(CNodeInsertArg& arg, QWidget* parent)
     , ui(new Ui::InsertNodeP)
     , node_ { static_cast<NodeP*>(arg.node) }
     , parent_path_ { arg.parent_path }
-    , name_list_ { arg.name_list }
+    , name_set_ { arg.name_set }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -63,7 +63,7 @@ void InsertNodeP::RNameEdited(const QString& arg1)
 {
     const auto& simplified { arg1.simplified() };
     this->setWindowTitle(parent_path_ + simplified);
-    ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_list_.contains(simplified));
+    ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_set_.contains(simplified));
 }
 
 void InsertNodeP::on_lineEditName_editingFinished() { node_->name = ui->lineEditName->text(); }

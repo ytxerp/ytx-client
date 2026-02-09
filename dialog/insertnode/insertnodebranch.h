@@ -35,7 +35,7 @@ class InsertNodeBranch final : public QDialog {
     Q_OBJECT
 
 public:
-    InsertNodeBranch(Node* node, ItemModel* unit_model, CString& parent_path, CStringList& name_list, QWidget* parent = nullptr);
+    InsertNodeBranch(Node* node, ItemModel* unit_model, CString& parent_path, const QSet<QString>& name_set, QWidget* parent = nullptr);
     ~InsertNodeBranch() override;
 
 private slots:
@@ -56,7 +56,7 @@ private:
     Node* node_ {};
 
     CString parent_path_ {};
-    CStringList name_list_ {};
+    const QSet<QString> name_set_ {};
 };
 
 #endif // INSERTNODEBRANCH_H

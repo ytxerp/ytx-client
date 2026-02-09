@@ -3,12 +3,12 @@
 #include "component/signalblocker.h"
 #include "ui_insertnodebranch.h"
 
-InsertNodeBranch::InsertNodeBranch(Node* node, ItemModel* unit_model, CString& parent_path, CStringList& name_list, QWidget* parent)
+InsertNodeBranch::InsertNodeBranch(Node* node, ItemModel* unit_model, CString& parent_path, const QSet<QString>& name_set, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::InsertNodeBranch)
     , node_ { node }
     , parent_path_ { parent_path }
-    , name_list_ { name_list }
+    , name_set_ { name_set }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -43,7 +43,7 @@ void InsertNodeBranch::RNameEdited(const QString& arg1)
 {
     const auto& simplified { arg1.simplified() };
     this->setWindowTitle(parent_path_ + simplified);
-    ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_list_.contains(simplified));
+    ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_set_.contains(simplified));
 }
 
 void InsertNodeBranch::on_lineName_editingFinished() { node_->name = ui->lineName->text(); }

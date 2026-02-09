@@ -32,7 +32,7 @@ class EditNodeName final : public QDialog {
     Q_OBJECT
 
 public:
-    EditNodeName(CString& name, CString& parent_path, CStringList& children_name, QWidget* parent = nullptr);
+    EditNodeName(CString& name, CString& parent_path, const QSet<QString>& name_set, QWidget* parent = nullptr);
     ~EditNodeName() override;
 
 private slots:
@@ -48,8 +48,8 @@ private:
 
 private:
     Ui::EditNodeName* ui;
-    CString& parent_path_ {};
-    CStringList& name_list_ {};
+    CString parent_path_ {};
+    const QSet<QString> name_set_ {};
 };
 
 #endif // EDITNODENAME_H

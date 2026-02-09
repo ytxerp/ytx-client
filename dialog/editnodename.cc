@@ -3,11 +3,11 @@
 #include "component/signalblocker.h"
 #include "ui_editnodename.h"
 
-EditNodeName::EditNodeName(CString& name, CString& parent_path, CStringList& children_name, QWidget* parent)
+EditNodeName::EditNodeName(CString& name, CString& parent_path, const QSet<QString>& name_set, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::EditNodeName)
     , parent_path_ { parent_path }
-    , name_list_ { children_name }
+    , name_set_ { name_set }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -40,7 +40,7 @@ void EditNodeName::RNameEdited(const QString& arg1)
 {
     const auto& simplified { arg1.simplified() };
     this->setWindowTitle(parent_path_ + simplified);
-    ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_list_.contains(simplified));
+    ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_set_.contains(simplified));
 }
 
 QString EditNodeName::GetName() const { return ui->lineName->text(); }

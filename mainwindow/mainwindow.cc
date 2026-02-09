@@ -65,21 +65,21 @@ void MainWindow::SetDeleteShortcut()
 #endif
 }
 
-QStringList MainWindow::ChildrenName(const Node* node) const
+QSet<QString> MainWindow::ChildrenName(const Node* node) const
 {
-    QStringList list {};
+    QSet<QString> set {};
 
     if (!node || node->kind != NodeKind::kBranch || node->children.isEmpty())
-        return list;
+        return set;
 
-    list.reserve(node->children.size());
+    set.reserve(node->children.size());
 
     for (const auto* child : std::as_const(node->children)) {
         if (child)
-            list.emplaceBack(child->name);
+            set.insert(child->name);
     }
 
-    return list;
+    return set;
 }
 
 QSet<QUuid> MainWindow::LeafChildrenId(const Node* node) const

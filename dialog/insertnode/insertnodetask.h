@@ -73,7 +73,7 @@ private:
     QButtonGroup* status_group_ {};
 
     CString parent_path_ {};
-    CStringList name_list_ {};
+    const QSet<QString> name_set_ {};
 };
 
 #endif // INSERTNODETASK_H

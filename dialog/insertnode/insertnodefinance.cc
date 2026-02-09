@@ -9,7 +9,7 @@ InsertNodeFinance::InsertNodeFinance(CNodeInsertArg& arg, QWidget* parent)
     , ui(new Ui::InsertNodeFinance)
     , node_ { static_cast<NodeF*>(arg.node) }
     , parent_path_ { arg.parent_path }
-    , name_list_ { arg.name_list }
+    , name_set_ { arg.name_set }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -77,7 +77,7 @@ void InsertNodeFinance::RNameEdited(const QString& arg1)
 {
     const auto& simplified { arg1.simplified() };
     this->setWindowTitle(parent_path_ + simplified);
-    ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_list_.contains(simplified));
+    ui->pBtnOk->setEnabled(!simplified.isEmpty() && !name_set_.contains(simplified));
 }
 
 void InsertNodeFinance::on_lineName_editingFinished() { node_->name = ui->lineName->text(); }
