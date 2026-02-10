@@ -39,6 +39,12 @@ inline constexpr int kTwoThousand = 2000;
 inline constexpr int HEARTBEAT_INTERVAL = 30000;
 inline constexpr int TIMEOUT_THRESHOLD = 75000;
 
+inline constexpr int kTagHPadding = 4; // Horizontal padding inside each tag (distance from text to left/right edge of color block)
+inline constexpr int kTagVPadding = 2; // Vertical padding inside each tag (distance from text to top/bottom edge of color block)
+inline constexpr int kTagRadius = 3; // Corner radius of the tag rectangle
+inline constexpr int kTagSpacing = 6; // Horizontal spacing between adjacent tags
+inline constexpr int kTagMargin = 6; // Horizontal margin between tag group and cell border
+
 namespace Pool {
 inline constexpr qsizetype kExpandSize { 100 };
 inline constexpr qsizetype kMaxSize { 1000 };

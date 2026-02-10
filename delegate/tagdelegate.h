@@ -25,18 +25,13 @@
 
 class TagDelegate final : public StyledItemDelegate {
 public:
-    explicit TagDelegate(const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
+    explicit TagDelegate(const QHash<QUuid, Tag*>& tag_hash, const QHash<QUuid, QPixmap>& tag_pixmap, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
     const QHash<QUuid, Tag*>& tag_hash_ {};
-
-    inline static const int kHPadding = 8; // Horizontal padding inside tag
-    inline static const int kVPadding = 4; // Vertical padding inside tag
-    inline static const int kTagSpacing = 6; // Spacing between tags
-    inline static const int kMargin = 6; // Left/right margin of the cell
-    inline static const int kRadius = 4; // Corner radius of the tag
+    const QHash<QUuid, QPixmap>& tag_pixmap_ {};
 };
 
 #endif // TAGDELEGATE_H

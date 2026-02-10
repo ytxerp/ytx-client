@@ -44,6 +44,9 @@ struct SectionContext {
     QHash<QUuid, QPointer<QWidget>> widget_hash {};
 
     QHash<QUuid, Tag*> tag_hash {};
+    QHash<QUuid, QIcon> tag_icon {};
+    QHash<QUuid, QIcon> tag_icon_checked {};
+    QHash<QUuid, QPixmap> tag_pixmap {};
 };
 
 #endif // SECTIONCONTEX_H

@@ -19,10 +19,10 @@ void MainWindow::DeleteNode()
     Q_ASSERT(model != nullptr);
 
     const QUuid node_id { node->id };
-    if (node_pending_deletion_.contains(node_id))
+    if (deleting_node_.contains(node_id))
         return;
 
-    node_pending_deletion_.insert(node_id);
+    deleting_node_.insert(node_id);
 
     switch (NodeKind(node->kind)) {
     case NodeKind::kBranch: {
@@ -54,7 +54,7 @@ void MainWindow::RLeafDeleteDenied(const QJsonObject& obj)
     Utils::ManageDialog(sc_->dialog_hash, dialog);
     dialog->setModal(true);
 
-    connect(dialog, &QDialog::destroyed, this, [this, node_id]() { node_pending_deletion_.remove(node_id); });
+    connect(dialog, &QDialog::destroyed, this, [this, node_id]() { deleting_node_.remove(node_id); });
     dialog->show();
 }
 
@@ -75,7 +75,7 @@ void MainWindow::DeleteBranch(TreeModel* tree_model, const QModelIndex& index, c
     });
 
     // ✅ Resource cleanup - ensure pending state is always cleared
-    QObject::connect(dlg, &QMessageBox::destroyed, this, [this, node_id]() { node_pending_deletion_.remove(node_id); });
+    QObject::connect(dlg, &QMessageBox::destroyed, this, [this, node_id]() { deleting_node_.remove(node_id); });
 
     dlg->show();
 }

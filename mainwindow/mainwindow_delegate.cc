@@ -207,7 +207,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
 
-    auto* tag { new TagDelegate(sc_f_.tag_hash, table_view) };
+    auto* tag { new TagDelegate(sc_f_.tag_hash, sc_f_.tag_pixmap, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
 }
 
@@ -241,7 +241,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
 
-    auto* tag { new TagDelegate(sc_i_.tag_hash, table_view) };
+    auto* tag { new TagDelegate(sc_i_.tag_hash, sc_i_.tag_pixmap, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
 }
 
@@ -275,7 +275,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
 
-    auto* tag { new TagDelegate(sc_t_.tag_hash, table_view) };
+    auto* tag { new TagDelegate(sc_t_.tag_hash, sc_t_.tag_pixmap, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
 }
 
@@ -307,7 +307,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), internal_sku);
 
-    auto* tag { new TagDelegate(sc_p_.tag_hash, table_view) };
+    auto* tag { new TagDelegate(sc_p_.tag_hash, sc_p_.tag_pixmap, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kTag), tag);
 }
 

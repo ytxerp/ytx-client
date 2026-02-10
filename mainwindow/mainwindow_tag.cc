@@ -31,6 +31,8 @@ void MainWindow::on_actionTags_triggered()
         DelegateTagView(view);
     }
 
+    dialog->raise();
+    dialog->activateWindow();
     dialog->show();
 }
 
@@ -67,6 +69,7 @@ void MainWindow::RApplyTag(const QJsonObject& obj)
         tag->state = Tag::State::SYNCED;
 
         sc->tag_hash.insert(id, tag);
+        UpdateTagIcon(sc, tag);
     }
 }
 
@@ -105,6 +108,7 @@ void MainWindow::RInsertTag(const QJsonObject& obj, bool is_same_session)
     tag->ReadJson(tag_obj);
     tag->state = Tag::State::SYNCED;
     sc->tag_hash.insert(tag->id, tag);
+    UpdateTagIcon(sc, tag);
 }
 
 void MainWindow::RUpdateTag(const QJsonObject& obj)
@@ -136,7 +140,7 @@ void MainWindow::RUpdateTag(const QJsonObject& obj)
     const QJsonObject update_obj { obj.value(kUpdate).toObject() };
     tag->ReadJson(update_obj);
 
-    InvalidateTagIconCache(tag->id);
+    UpdateTagIcon(sc, tag);
 }
 
 void MainWindow::RDeleteTag(const QJsonObject& obj)
@@ -154,7 +158,7 @@ void MainWindow::RDeleteTag(const QJsonObject& obj)
 
     auto* tag { sc->tag_hash.take(id) };
     if (tag) {
-        InvalidateTagIconCache(tag->id);
+        InvalidateTagIconCache(sc, tag->id);
         ResourcePool<Tag>::Instance().Recycle(tag);
     } else {
         qWarning() << "RDeleteTag: tag not found";
@@ -195,7 +199,7 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
 
             const bool is_checked { entry->tag.contains(tag->id.toString(QUuid::WithoutBraces)) };
 
-            tag_action->setIcon(GetTagIcon(tag, is_checked));
+            tag_action->setIcon(GetTagIcon(sc_, tag, is_checked));
             tag_action->setIconVisibleInMenu(true);
 
             connect(tag_action, &QAction::triggered, this, [=, this]() {
@@ -215,37 +219,44 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     menu->exec(QCursor::pos());
 }
 
-QIcon MainWindow::GetTagIcon(const Tag* tag, bool checked)
+void MainWindow::UpdateTagIcon(SectionContext* sc, const Tag* tag)
 {
-    auto& cache = checked ? tag_icon_checked_cache_ : tag_icon_cache_;
+    Q_ASSERT(sc);
+    Q_ASSERT(tag);
 
-    if (cache.contains(tag->id)) {
-        return cache[tag->id];
+    const QUuid& tag_id { tag->id };
+
+    // Rebuild pixmap (used by delegates)
+    const QPixmap pixmap { Utils::CreateTagPixmap(tag) };
+    if (!pixmap.isNull()) {
+        sc->tag_pixmap.insert(tag_id, pixmap);
     }
 
-    const qreal dpr { qApp->devicePixelRatio() };
-    QPixmap pixmap(static_cast<int>(16 * dpr), static_cast<int>(16 * dpr));
-    pixmap.setDevicePixelRatio(dpr);
-    pixmap.fill(Qt::transparent);
+    // Rebuild icons (used by menus / actions)
+    sc->tag_icon.insert(tag_id, Utils::CreateTagIcon(tag, /*checked=*/false));
+    sc->tag_icon_checked.insert(tag_id, Utils::CreateTagIcon(tag, /*checked=*/true));
+}
 
-    QPainter painter(&pixmap);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setBrush(QBrush(QColor(tag->color)));
-    painter.setPen(Qt::NoPen);
-    painter.drawRoundedRect(1, 1, 15, 15, 3, 3);
+QIcon MainWindow::GetTagIcon(SectionContext* sc, const Tag* tag, bool checked)
+{
+    auto& cache = checked ? sc->tag_icon_checked : sc->tag_icon;
 
-    if (checked) {
-        painter.setPen(Utils::GetContrastColor(tag->color));
-        painter.setBrush(Qt::NoBrush);
-        painter.drawLine(QPointF(4, 8), QPointF(7, 11));
-        painter.drawLine(QPointF(7, 11), QPointF(12, 5));
+    auto it = cache.find(tag->id);
+    if (it == cache.end()) {
+        it = cache.insert(tag->id, Utils::CreateTagIcon(tag, checked));
     }
 
-    painter.end();
+    return it.value();
+}
 
-    QIcon icon(pixmap);
-    cache[tag->id] = icon;
-    return icon;
+QPixmap MainWindow::GetTagPixmap(SectionContext* sc, const Tag* tag)
+{
+    auto it = sc->tag_pixmap.find(tag->id);
+    if (it == sc->tag_pixmap.end()) {
+        it = sc->tag_pixmap.insert(tag->id, Utils::CreateTagPixmap(tag));
+    }
+
+    return it.value();
 }
 
 void MainWindow::RInsertTagIntoCurrentRow(const Tag* tag, TableModel* model, const Entry* entry)

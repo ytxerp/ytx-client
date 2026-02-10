@@ -107,6 +107,7 @@ protected:
     CSectionConfig& config_;
     CSectionInfo& info_;
     const QHash<QUuid, Tag*>& tag_hash_ {};
+    const QHash<QUuid, QPixmap>& tag_pixmap_ {};
 };
 
 #endif // SEARCHDIALOG_H

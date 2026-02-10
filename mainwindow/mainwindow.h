@@ -269,12 +269,16 @@ private:
     QSet<QString> ChildrenName(const Node* node) const;
     QSet<QUuid> LeafChildrenId(const Node* node) const;
 
-    QIcon GetTagIcon(const Tag* tag, bool checked);
-    inline void InvalidateTagIconCache(const QUuid& tag_id)
+    QIcon GetTagIcon(SectionContext* sc, const Tag* tag, bool checked);
+    QPixmap GetTagPixmap(SectionContext* sc, const Tag* tag);
+
+    inline void InvalidateTagIconCache(SectionContext* sc, const QUuid& tag_id)
     {
-        tag_icon_cache_.remove(tag_id);
-        tag_icon_checked_cache_.remove(tag_id);
+        sc->tag_icon.remove(tag_id);
+        sc->tag_icon_checked.remove(tag_id);
+        sc->tag_pixmap.remove(tag_id);
     }
+    void UpdateTagIcon(SectionContext* sc, const Tag* tag);
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
     inline bool IsTableWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kTableWidgetFIPT); }
@@ -291,10 +295,7 @@ private:
     QSystemTrayIcon* tray_icon_ {};
     QMenu* tray_menu_ {};
 
-    QHash<QUuid, QIcon> tag_icon_cache_ {};
-    QHash<QUuid, QIcon> tag_icon_checked_cache_ {};
-
-    QSet<QUuid> node_pending_deletion_ {};
+    QSet<QUuid> deleting_node_ {};
     QHash<QUuid, Tag*> inserting_tag_ {};
 
     QTranslator qt_translator_ {};

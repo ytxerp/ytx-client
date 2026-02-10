@@ -2,11 +2,10 @@
 
 #include <QPainter>
 
-#include "utils/mainwindowutils.h"
-
-TagDelegate::TagDelegate(const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+TagDelegate::TagDelegate(const QHash<QUuid, Tag*>& tag_hash, const QHash<QUuid, QPixmap>& tag_pixmap, QObject* parent)
     : StyledItemDelegate { parent }
     , tag_hash_ { tag_hash }
+    , tag_pixmap_ { tag_pixmap }
 {
 }
 
@@ -20,37 +19,29 @@ void TagDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, c
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
 
-    QFont font { option.font };
-    font.setPointSize(font.pointSize() - 1);
-    const QFontMetrics fm { font };
-    painter->setFont(font);
-
-    int x { option.rect.left() + kMargin };
-    const int tag_height { option.rect.height() - 2 * kVPadding }; // Shrink inside the cell
-    const int y { option.rect.top() + kVPadding }; // Top padding
+    int x { option.rect.left() + kTagMargin };
 
     for (const QString& id_str : tag_ids) {
         const QUuid tag_id { QUuid::fromString(id_str) };
         if (tag_id.isNull())
             continue;
 
-        const auto it { tag_hash_.find(tag_id) };
-        if (it == tag_hash_.end() || !it.value())
+        const auto it { tag_pixmap_.find(tag_id) };
+        if (it == tag_pixmap_.end() || it->isNull())
             continue;
 
-        const Tag* tag { it.value() };
-        const int text_width { fm.horizontalAdvance(tag->name) };
-        const int tag_width { text_width + 2 * kHPadding };
+        const QPixmap& pixmap { *it };
 
-        const QRect tag_rect { x, y, tag_width, tag_height };
-        painter->setPen(Qt::NoPen);
-        painter->setBrush(tag->color);
-        painter->drawRoundedRect(tag_rect, kRadius, kRadius);
+        // Logical size (important!)
+        const int logical_width { static_cast<int>(pixmap.width() / pixmap.devicePixelRatio()) };
+        const int logical_height { static_cast<int>(pixmap.height() / pixmap.devicePixelRatio()) };
 
-        painter->setPen(Utils::GetContrastColor(tag->color));
-        painter->drawText(tag_rect, Qt::AlignCenter, tag->name);
+        // Vertically center inside the item rect
+        const int y { option.rect.top() + (option.rect.height() - logical_height) / 2 };
 
-        x += tag_width + kTagSpacing;
+        painter->drawPixmap(x, y, pixmap);
+
+        x += logical_width + kTagSpacing;
     }
 
     painter->restore();
@@ -59,30 +50,30 @@ void TagDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, c
 QSize TagDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const QStringList tag_ids { index.data().toStringList() };
-
     if (tag_ids.isEmpty()) {
         return {};
     }
 
-    QFont font { option.font };
-    font.setPointSize(font.pointSize() - 1);
-    const QFontMetrics fm { font };
-
-    int total_width { kMargin * 2 }; // Left and right margin
+    int total_width { kTagMargin * 2 };
 
     for (const QString& id_str : tag_ids) {
         const QUuid tag_id { QUuid::fromString(id_str) };
-        const auto it { tag_hash_.find(tag_id) };
+        const auto pixmap_it { tag_pixmap_.find(tag_id) };
 
-        if (it != tag_hash_.end() && it.value()) {
-            const int text_width { fm.horizontalAdvance(it.value()->name) };
-            total_width += text_width + 2 * kHPadding + kTagSpacing; // Add tag width + horizontal padding + spacing
+        if (pixmap_it != tag_pixmap_.end() && !pixmap_it->isNull()) {
+            const int logical_width { static_cast<int>(pixmap_it->width() / pixmap_it->devicePixelRatio()) };
+            total_width += logical_width + kTagSpacing;
         }
     }
 
-    total_width -= kTagSpacing; // Subtract the extra spacing after the last tag
+    if (total_width > kTagMargin * 2) {
+        total_width -= kTagSpacing;
+    }
 
-    const int height { fm.height() + 2 * kVPadding + 2 * kMargin }; // Tag height + vertical padding + top/bottom margin
+    // Use a fixed height if all tags have the same height
+    QFont font { option.font };
+    font.setPointSize(font.pointSize() - 1);
+    const int height { QFontMetrics(font).height() + 2 * kTagVPadding + 2 * kTagMargin };
 
     return QSize(total_width, height);
 }
