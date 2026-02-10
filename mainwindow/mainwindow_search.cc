@@ -34,28 +34,28 @@ void MainWindow::on_actionSearch_triggered()
     case Section::kFinance:
         node = new SearchNodeModelF(sc_->info, sc_->tree_model, this);
         entry = new SearchEntryModelF(sc_->info, sc_->tag_hash, this);
-        dialog = new SearchDialogF(sc_->tree_model, node, entry, sc_->section_config, sc_->info, sc_->tag_hash, this);
+        dialog = new SearchDialogF(sc_, node, entry, this);
         break;
     case Section::kInventory:
         node = new SearchNodeModelI(sc_->info, sc_->tree_model, this);
         entry = new SearchEntryModelI(sc_->info, sc_->tag_hash, this);
-        dialog = new SearchDialogI(sc_->tree_model, node, entry, sc_->section_config, sc_->info, sc_->tag_hash, this);
+        dialog = new SearchDialogI(sc_, node, entry, this);
         break;
     case Section::kTask:
         node = new SearchNodeModelT(sc_->info, sc_->tree_model, this);
         entry = new SearchEntryModelT(sc_->info, sc_->tag_hash, this);
-        dialog = new SearchDialogT(sc_->tree_model, node, entry, sc_->section_config, sc_->info, sc_->tag_hash, this);
+        dialog = new SearchDialogT(sc_, node, entry, this);
         break;
     case Section::kPartner:
         node = new SearchNodeModelP(sc_->info, sc_->tree_model, this);
         entry = new SearchEntryModelP(sc_->entry_hub, sc_->info, sc_->tag_hash, this);
-        dialog = new SearchDialogP(sc_->tree_model, node, entry, sc_i_.tree_model, sc_->section_config, sc_->info, sc_->tag_hash, this);
+        dialog = new SearchDialogP(sc_, node, entry, sc_i_.tree_model, this);
         break;
     case Section::kSale:
     case Section::kPurchase:
         node = new SearchNodeModelO(sc_->info, sc_->tree_model, this);
         entry = new SearchEntryModelO(sc_->info, sc_->tag_hash, this);
-        dialog = new SearchDialogO(sc_->tree_model, node, entry, sc_i_.tree_model, sc_p_.tree_model, sc_->section_config, sc_->info, sc_->tag_hash, this);
+        dialog = new SearchDialogO(sc_, node, entry, sc_i_.tree_model, sc_p_.tree_model, this);
         connect(WebSocket::Instance(), &WebSocket::SNodeSearch, node, &SearchNodeModel::RNodeSearch);
         break;
     default:

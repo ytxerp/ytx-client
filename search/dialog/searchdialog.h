@@ -25,6 +25,7 @@
 #include <QTableView>
 
 #include "component/config.h"
+#include "component/sectioncontex.h"
 #include "delegate/int.h"
 #include "delegate/readonly/boolstringr.h"
 #include "delegate/readonly/colorr.h"
@@ -47,8 +48,7 @@ class SearchDialog : public QDialog {
     Q_OBJECT
 
 protected:
-    SearchDialog(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CSectionConfig& config, CSectionInfo& info,
-        const QHash<QUuid, Tag*>& tag_hash, QWidget* parent = nullptr);
+    SearchDialog(SectionContext* sc, SearchNodeModel* search_node, SearchEntryModel* search_entry, QWidget* parent = nullptr);
     ~SearchDialog() override;
 
 signals:

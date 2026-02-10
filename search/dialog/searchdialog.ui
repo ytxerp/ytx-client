@@ -36,7 +36,7 @@
      <item>
       <widget class="QLineEdit" name="lineEditEntry">
        <property name="placeholderText">
-        <string>Entry Description</string>
+        <string>Entry Description or [Tag]</string>
        </property>
       </widget>
      </item>

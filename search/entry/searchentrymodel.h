@@ -61,6 +61,7 @@ public:
 
 protected:
     SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Tag*>& tag_hash);
+    void ClearModel();
 
 protected:
     EntryList entry_list_ {};

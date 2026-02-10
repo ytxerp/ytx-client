@@ -7,16 +7,15 @@
 #include "ui_searchdialog.h"
 #include "utils/entryutils.h"
 
-SearchDialog::SearchDialog(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CSectionConfig& config, CSectionInfo& info,
-    const QHash<QUuid, Tag*>& tag_hash, QWidget* parent)
+SearchDialog::SearchDialog(SectionContext* sc, SearchNodeModel* search_node, SearchEntryModel* search_entry, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::SearchDialog)
     , search_node_ { search_node }
     , search_entry_ { search_entry }
-    , tree_model_ { tree }
-    , config_ { config }
-    , info_ { info }
-    , tag_hash_ { tag_hash }
+    , tree_model_ { sc->tree_model }
+    , config_ { sc->section_config }
+    , info_ { sc->info }
+    , tag_hash_ { sc->tag_hash }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);

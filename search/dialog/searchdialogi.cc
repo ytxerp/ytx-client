@@ -3,9 +3,8 @@
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 
-SearchDialogI::SearchDialogI(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CSectionConfig& config, CSectionInfo& info,
-    const QHash<QUuid, Tag*>& tag_hash, QWidget* parent)
-    : SearchDialog(tree, search_node, search_entry, config, info, tag_hash, parent)
+SearchDialogI::SearchDialogI(SectionContext* sc, SearchNodeModel* search_node, SearchEntryModel* search_entry, QWidget* parent)
+    : SearchDialog(sc, search_node, search_entry, parent)
 {
     TreeViewDelegate(ui->searchViewNode);
     TableViewDelegate(ui->searchViewEntry);

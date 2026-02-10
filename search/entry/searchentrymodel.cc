@@ -51,12 +51,8 @@ QVariant SearchEntryModel::headerData(int section, Qt::Orientation orientation, 
 void SearchEntryModel::Search(const QString& text)
 {
     // 1. Handle empty search input: clear the model if it has data
-    if (text.isEmpty()) {
-        if (!entry_list_.isEmpty()) {
-            beginResetModel();
-            entry_list_.clear();
-            endResetModel();
-        }
+    if (text.trimmed().isEmpty()) {
+        ClearModel();
         return;
     }
 
@@ -65,12 +61,18 @@ void SearchEntryModel::Search(const QString& text)
 
     // 3. Perform the search (tag search has higher priority)
     if (!query.tags.isEmpty()) {
-        // Send tag search request to server
         WebSocket::Instance()->SendMessage(kEntryTagSearch, JsonGen::EntryTagSearch(info_.section, query.tags));
-    } else if (!query.text.isEmpty()) {
-        // Send description text search request to server
-        WebSocket::Instance()->SendMessage(kEntryDescriptionSearch, JsonGen::EntryDescriptionSearch(info_.section, query.text));
+        return;
     }
+
+    // 4.Send description text search request to server
+    if (!query.text.isEmpty()) {
+        WebSocket::Instance()->SendMessage(kEntryDescriptionSearch, JsonGen::EntryDescriptionSearch(info_.section, query.text));
+        return;
+    }
+
+    // 5.Both tags and text are empty → clear the model
+    ClearModel();
 }
 
 SearchQuery SearchEntryModel::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag*>& tag_hash)
@@ -107,6 +109,15 @@ SearchQuery SearchEntryModel::ParseSearchQuery(const QString& input, const QHash
     query.text = text.trimmed();
 
     return query;
+}
+
+void SearchEntryModel::ClearModel()
+{
+    if (!entry_list_.isEmpty()) {
+        beginResetModel();
+        entry_list_.clear();
+        endResetModel();
+    }
 }
 
 QVariant SearchEntryModel::data(const QModelIndex& index, int role) const
