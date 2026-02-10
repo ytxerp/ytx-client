@@ -136,8 +136,7 @@ void MainWindow::RUpdateTag(const QJsonObject& obj)
     const QJsonObject update_obj { obj.value(kUpdate).toObject() };
     tag->ReadJson(update_obj);
 
-    tag_icon_cache_.remove(tag->id);
-    tag_icon_checked_cache_.remove(tag->id);
+    InvalidateTagIconCache(tag->id);
 }
 
 void MainWindow::RDeleteTag(const QJsonObject& obj)
@@ -155,6 +154,7 @@ void MainWindow::RDeleteTag(const QJsonObject& obj)
 
     auto* tag { sc->tag_hash.take(id) };
     if (tag) {
+        InvalidateTagIconCache(tag->id);
         ResourcePool<Tag>::Instance().Recycle(tag);
     } else {
         qWarning() << "RDeleteTag: tag not found";

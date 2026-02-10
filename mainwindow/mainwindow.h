@@ -270,6 +270,11 @@ private:
     QSet<QUuid> LeafChildrenId(const Node* node) const;
 
     QIcon GetTagIcon(const Tag* tag, bool checked);
+    inline void InvalidateTagIconCache(const QUuid& tag_id)
+    {
+        tag_icon_cache_.remove(tag_id);
+        tag_icon_checked_cache_.remove(tag_id);
+    }
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
     inline bool IsTableWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kTableWidgetFIPT); }
