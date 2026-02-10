@@ -31,9 +31,9 @@ void MainWindow::on_actionTags_triggered()
         DelegateTagView(view);
     }
 
+    dialog->show();
     dialog->raise();
     dialog->activateWindow();
-    dialog->show();
 }
 
 void MainWindow::RApplyTag(const QJsonObject& obj)
@@ -263,7 +263,7 @@ void MainWindow::RInsertTagIntoCurrentRow(const Tag* tag, TableModel* model, con
 {
     qDebug() << "RInsertTagIntoCurrentRow";
     auto list { entry->tag };
-    list.emplaceBack(tag->id.toString(QUuid::WithoutBraces));
+    list.emplaceFront(tag->id.toString(QUuid::WithoutBraces));
 
     auto index { model->GetIndex(entry->id) };
     if (!index.isValid()) {
