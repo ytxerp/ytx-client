@@ -329,6 +329,7 @@ Qt::ItemFlags TableModelP::flags(const QModelIndex& index) const
     switch (column) {
     case EntryEnumP::kId:
     case EntryEnumP::kDocument:
+    case EntryEnumP::kTag:
     case EntryEnumP::kStatus:
         flags &= ~Qt::ItemIsEditable;
         break;

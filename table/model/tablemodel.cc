@@ -319,7 +319,8 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         Utils::UpdateShadowField(pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnum::kDocument:
-        Utils::UpdateShadowStringList(pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
+        Utils::UpdateShadowStringList(
+            pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnum::kTag:
         Utils::UpdateShadowStringList(pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [id, this]() { RestartTimer(id); });
@@ -412,6 +413,7 @@ Qt::ItemFlags TableModel::flags(const QModelIndex& index) const
     case EntryEnum::kId:
     case EntryEnum::kBalance:
     case EntryEnum::kDocument:
+    case EntryEnum::kTag:
     case EntryEnum::kStatus:
         flags &= ~Qt::ItemIsEditable;
         break;
