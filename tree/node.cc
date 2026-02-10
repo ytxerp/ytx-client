@@ -1,6 +1,7 @@
 #include "node.h"
 
 #include "component/constant.h"
+#include "utils/entryutils.h"
 
 void Node::ResetState()
 {
@@ -127,12 +128,12 @@ void NodeT::ReadJson(const QJsonObject& object)
 
     if (object.contains(kColor))
         color = object.value(kColor).toString();
-    if (object.contains(kDocument))
-        document = object.value(kDocument).toString().split(kSemicolon, Qt::SkipEmptyParts);
     if (object.contains(kStatus))
         status = NodeStatus(object.value(kStatus).toInt());
     if (object.contains(kIssuedTime))
         issued_time = QDateTime::fromString(object.value(kIssuedTime).toString(), Qt::ISODate);
+
+    document = Utils::ReadStringList(object, kDocument);
 }
 
 QJsonObject NodeT::WriteJson() const
@@ -140,9 +141,9 @@ QJsonObject NodeT::WriteJson() const
     QJsonObject obj = Node::WriteJson();
 
     obj.insert(kColor, color);
-    obj.insert(kDocument, document.join(kSemicolon));
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kStatus, std::to_underlying(status));
+    obj.insert(kDocument, Utils::WriteStringList(document));
 
     return obj;
 }

@@ -23,14 +23,13 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include "component/constant.h"
 #include "component/using.h"
 #include "enum/entryenum.h"
 #include "enum/section.h"
 
 namespace Utils {
 
-inline QStringList ReadUuidArray(const QJsonObject& object, const QString& key)
+inline QStringList ReadStringList(const QJsonObject& object, const QString& key)
 {
     QStringList result {};
 
@@ -44,11 +43,11 @@ inline QStringList ReadUuidArray(const QJsonObject& object, const QString& key)
     return result;
 }
 
-inline QJsonArray WriteUuidArray(const QStringList& uuids)
+inline QJsonArray WriteStringList(const QStringList& list)
 {
     QJsonArray array {};
 
-    for (const auto& uuid : uuids) {
+    for (const auto& uuid : list) {
         array.append(uuid);
     }
 
@@ -182,7 +181,7 @@ bool UpdateShadowIssuedTime(QJsonObject& update, T* object, CString& field, cons
 }
 
 template <typename T, typename F = std::nullptr_t>
-bool UpdateShadowDocument(QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList* T::* member, F&& restart_timer = nullptr)
+bool UpdateShadowStringList(QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList* T::* member, F&& restart_timer = nullptr)
 {
     Q_ASSERT(object != nullptr);
 
@@ -203,7 +202,7 @@ bool UpdateShadowDocument(QJsonObject& update, T* object, CString& field, const 
         return true;
     }
 
-    update.insert(field, value.join(kSemicolon));
+    update.insert(field, WriteStringList(value));
 
     if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();

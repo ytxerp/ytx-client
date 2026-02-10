@@ -32,10 +32,13 @@
    <property name="bottomMargin">
     <number>8</number>
    </property>
-   <item row="0" column="0" colspan="6">
-    <widget class="QListView" name="listView">
-     <property name="editTriggers">
-      <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+   <item row="1" column="4">
+    <widget class="QPushButton" name="pBtnOk">
+     <property name="text">
+      <string>Ok</string>
+     </property>
+     <property name="default">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -52,13 +55,6 @@
      </property>
     </spacer>
    </item>
-   <item row="1" column="4">
-    <widget class="QPushButton" name="pBtnInsert">
-     <property name="text">
-      <string>Insert</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0">
     <widget class="QPushButton" name="pBtnCancel">
      <property name="text">
@@ -66,20 +62,24 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="3">
-    <widget class="QPushButton" name="pBtnDelete">
+   <item row="0" column="0" colspan="7">
+    <widget class="QListView" name="listView">
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="5">
+    <widget class="QPushButton" name="pBtnInsert">
      <property name="text">
-      <string>Delete</string>
+      <string>Insert</string>
      </property>
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QPushButton" name="pBtnOk">
+    <widget class="QPushButton" name="pBtnDelete">
      <property name="text">
-      <string>Ok</string>
-     </property>
-     <property name="default">
-      <bool>true</bool>
+      <string>Delete</string>
      </property>
     </widget>
    </item>
@@ -87,8 +87,6 @@
  </widget>
  <tabstops>
   <tabstop>pBtnInsert</tabstop>
-  <tabstop>pBtnDelete</tabstop>
-  <tabstop>pBtnOk</tabstop>
   <tabstop>pBtnCancel</tabstop>
   <tabstop>listView</tabstop>
  </tabstops>

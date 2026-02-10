@@ -83,6 +83,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     virtual QModelIndex GetIndex(const QUuid& entry_id) const;
+    inline virtual Entry* GetEntry(const QModelIndex& index) const { return shadow_list_.at(index.row())->entry; }
     virtual void ActionEntry(EntryAction action);
 
 protected:

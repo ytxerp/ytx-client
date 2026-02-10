@@ -84,7 +84,6 @@ inline const QString kColon = QStringLiteral(":");
 inline const QString kDash = QStringLiteral("-");
 inline const QString kHalfWidthPeriod = QStringLiteral(".");
 inline const QString kFullWidthPeriod = QStringLiteral("。");
-inline const QString kSemicolon = QStringLiteral(";");
 inline const QString kSlash = QStringLiteral("/");
 
 inline const QString kSeparator = QStringLiteral("separator");

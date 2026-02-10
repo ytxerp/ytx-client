@@ -143,6 +143,10 @@ private slots:
     void RDeleteTag(const QJsonObject& obj);
     inline void RInsertingTag(Tag* tag) { inserting_tag_.insert(tag->id, tag); }
 
+    void RTableViewCustomContextMenuRequested(const QPoint& pos);
+    void RInsertTagIntoCurrentRow(const Tag* tag, TableModel* model, const Entry* entry);
+    void RRemoveTagFromCurrentRow(const Tag* tag, TableModel* model, const Entry* entry);
+
     void RSharedConfig(const QJsonArray& arr);
     void RDocumentDir(Section section, const QString& document_dir);
     void RDefaultUnit(Section section, int unit);
@@ -265,6 +269,8 @@ private:
     QSet<QString> ChildrenName(const Node* node) const;
     QSet<QUuid> LeafChildrenId(const Node* node) const;
 
+    QIcon GetTagIcon(const Tag* tag, bool checked);
+
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
     inline bool IsTableWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kTableWidgetFIPT); }
     inline bool IsTableWidgetO(const QWidget* widget) { return widget && widget->inherits(kTableWidgetO); }
@@ -279,6 +285,9 @@ private:
 
     QSystemTrayIcon* tray_icon_ {};
     QMenu* tray_menu_ {};
+
+    QHash<QUuid, QIcon> tag_icon_cache_ {};
+    QHash<QUuid, QIcon> tag_icon_checked_cache_ {};
 
     QSet<QUuid> node_pending_deletion_ {};
     QHash<QUuid, Tag*> inserting_tag_ {};

@@ -319,10 +319,10 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         Utils::UpdateShadowField(pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnum::kDocument:
-        Utils::UpdateShadowDocument(pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
+        Utils::UpdateShadowStringList(pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnum::kTag:
-        Utils::UpdateShadowDocument(pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [id, this]() { RestartTimer(id); });
+        Utils::UpdateShadowStringList(pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnum::kLhsRate:
         UpdateRate(shadow, value.toDouble());

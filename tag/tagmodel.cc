@@ -247,7 +247,20 @@ void TagModel::RestartTimer(const QUuid& id)
 
         connect(timer, &QTimer::timeout, this, [this, id]() {
             auto* expired_timer { pending_timers_.take(id) };
-            pending_updates_.remove(id);
+
+            // auto it = std::find_if(tag_list_.begin(), tag_list_.end(), [id](const Tag* tag) { return tag && tag->id == id; });
+
+            // if (it != tag_list_.end()) {
+            //     const auto* tag = *it;
+            //     qDebug() << "update tag" << tag->name;
+
+            //     const QJsonObject message = JsonGen::TagUpdate(section_, tag);
+            //     WebSocket::Instance()->SendMessage(kTagUpdate, message);
+
+            //     pending_updates_.remove(tag->id);
+            // } else {
+            //     qDebug() << "tag not found in tag_list_, id:" << id;
+            // }
 
             if (auto it = tag_hash_.find(id); it != tag_hash_.end()) {
                 const auto* tag { it.value() };

@@ -47,6 +47,8 @@ void MainWindow::on_actionAppendEntry_triggered()
             if (target_index.isValid()) {
                 view->setCurrentIndex(target_index);
                 view->scrollTo(target_index, QAbstractItemView::PositionAtCenter);
+
+                view->edit(target_index);
             }
         }
     }
@@ -216,6 +218,9 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         tab_bar->setTabToolTip(tab_index, tree_model->Path(node_id));
 
         auto* view { widget->View() };
+
+        view->setContextMenuPolicy(Qt::CustomContextMenu);
+        connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
 
         const int description_column { Utils::EntryDescriptionColumn(section) };
         SetTableView(view, section, description_column, std::to_underlying(EntryEnum::kLhsNode));

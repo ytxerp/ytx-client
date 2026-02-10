@@ -44,8 +44,6 @@ void Entry::ReadJson(const QJsonObject& object)
         lhs_node = QUuid(object[kLhsNode].toString());
     if (object.contains(kDescription))
         description = object[kDescription].toString();
-    if (object.contains(kDocument))
-        document = object[kDocument].toString().split(kSemicolon, Qt::SkipEmptyParts);
     if (object.contains(kStatus))
         status = object[kStatus].toInt();
     if (object.contains(kRhsNode))
@@ -75,7 +73,8 @@ void Entry::ReadJson(const QJsonObject& object)
     if (object.contains(kRhsCredit))
         rhs_credit = object[kRhsCredit].toString().toDouble();
 
-    tag = Utils::ReadUuidArray(object, kTag);
+    tag = Utils::ReadStringList(object, kTag);
+    document = Utils::ReadStringList(object, kDocument);
 }
 
 void EntryP::ResetState()
@@ -98,8 +97,6 @@ void EntryP::ReadJson(const QJsonObject& object)
         lhs_node = QUuid(object[kLhsNode].toString());
     if (object.contains(kDescription))
         description = object[kDescription].toString();
-    if (object.contains(kDocument))
-        document = object[kDocument].toString().split(kSemicolon, Qt::SkipEmptyParts);
     if (object.contains(kStatus))
         status = object[kStatus].toInt();
     if (object.contains(kRhsNode))
@@ -121,7 +118,8 @@ void EntryP::ReadJson(const QJsonObject& object)
     if (object.contains(kExternalSku))
         external_sku = QUuid(object[kExternalSku].toString());
 
-    tag = Utils::ReadUuidArray(object, kTag);
+    tag = Utils::ReadStringList(object, kTag);
+    document = Utils::ReadStringList(object, kDocument);
 }
 
 QJsonObject EntryP::WriteJson() const
@@ -133,10 +131,10 @@ QJsonObject EntryP::WriteJson() const
     obj.insert(kCode, code);
     obj.insert(kLhsNode, lhs_node.toString(QUuid::WithoutBraces));
     obj.insert(kDescription, description);
-    obj.insert(kDocument, document.join(kSemicolon));
     obj.insert(kStatus, status);
     obj.insert(kRhsNode, rhs_node.toString(QUuid::WithoutBraces));
-    obj.insert(kTag, Utils::WriteUuidArray(tag));
+    obj.insert(kTag, Utils::WriteStringList(tag));
+    obj.insert(kDocument, Utils::WriteStringList(document));
 
     obj.insert(kUnitPrice, QString::number(unit_price, 'f', kMaxNumericScale_8));
     obj.insert(kExternalSku, external_sku.toString(QUuid::WithoutBraces));

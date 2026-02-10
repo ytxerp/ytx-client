@@ -65,7 +65,7 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
         view->setSelectionBehavior(QAbstractItemView::SelectRows);
         view->setAlternatingRowColors(true);
         view->setSortingEnabled(true);
-        view->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::CurrentChanged);
+        view->setEditTriggers(QAbstractItemView::DoubleClicked);
 
         view->setColumnHidden(std::to_underlying(EntryEnum::kId), kIsHidden);
         view->setColumnHidden(lhs_node_column, kIsHidden);

@@ -40,8 +40,6 @@ struct Tag {
 
     State state { State::NEW };
 
-    bool is_new {}; // is_new: client-only state, not persisted, not synced
-
     void ResetState();
     QJsonObject WriteJson() const;
     void ReadJson(const QJsonObject& object);
@@ -54,7 +52,6 @@ inline void Tag::ResetState()
     color = {};
     version = 0;
     state = State::NEW;
-    is_new = false;
 }
 
 inline QJsonObject Tag::WriteJson() const

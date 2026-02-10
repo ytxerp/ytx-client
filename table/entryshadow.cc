@@ -73,7 +73,7 @@ QJsonObject EntryShadow::WriteJson() const
     obj.insert(kCode, *code);
     obj.insert(kLhsNode, lhs_node->toString(QUuid::WithoutBraces));
     obj.insert(kDescription, *description);
-    obj.insert(kDocument, document->join(kSemicolon));
+    obj.insert(kDocument, Utils::WriteStringList(*document));
     obj.insert(kStatus, *status);
     obj.insert(kRhsNode, rhs_node->toString(QUuid::WithoutBraces));
     obj.insert(kLhsRate, QString::number(*lhs_rate, 'f', kMaxNumericScale_8));
@@ -82,7 +82,7 @@ QJsonObject EntryShadow::WriteJson() const
     obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', kMaxNumericScale_4));
     obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', kMaxNumericScale_4));
     obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', kMaxNumericScale_4));
-    obj.insert(kTag, Utils::WriteUuidArray(*tag));
+    obj.insert(kTag, Utils::WriteStringList(*tag));
 
     return obj;
 }

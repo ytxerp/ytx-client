@@ -28,6 +28,7 @@
 #include "enum/section.h"
 #include "tree/itemmodel.h"
 #include "tree/node.h"
+#include "utils/entryutils.h"
 
 namespace Utils {
 
@@ -255,7 +256,7 @@ bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& v
 }
 
 template <typename T, typename F = std::nullptr_t>
-bool UpdateDocument(QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList T::* member, F&& restart_timer = nullptr)
+bool UpdateStringList(QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList T::* member, F&& restart_timer = nullptr)
 {
     Q_ASSERT(object != nullptr);
 
@@ -265,7 +266,7 @@ bool UpdateDocument(QJsonObject& update, T* object, CString& field, const QStrin
         return false;
 
     current_value = value;
-    update.insert(field, value.join(kSemicolon));
+    update.insert(field, Utils::WriteStringList(value));
 
     if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();

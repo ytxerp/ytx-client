@@ -114,7 +114,7 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
         Utils::UpdateIssuedTime(pending_updates_[id], d_node, kIssuedTime, value.toDateTime(), &NodeT::issued_time, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDocument:
-        Utils::UpdateDocument(pending_updates_[id], d_node, kDocument, value.toStringList(), &NodeT::document, [id, this]() { RestartTimer(id); });
+        Utils::UpdateStringList(pending_updates_[id], d_node, kDocument, value.toStringList(), &NodeT::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kStatus:
         UpdateStatus(node, NodeStatus(value.toInt()));

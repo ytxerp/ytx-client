@@ -239,10 +239,10 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         Utils::UpdateField(pending_updates_[id], entry, kCode, value.toString(), &Entry::code, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kDocument:
-        Utils::UpdateDocument(pending_updates_[id], entry, kDocument, value.toStringList(), &Entry::document, [id, this]() { RestartTimer(id); });
+        Utils::UpdateStringList(pending_updates_[id], entry, kDocument, value.toStringList(), &Entry::document, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kTag:
-        Utils::UpdateDocument(pending_updates_[id], entry, kTag, value.toStringList(), &Entry::tag, [id, this]() { RestartTimer(id); });
+        Utils::UpdateStringList(pending_updates_[id], entry, kTag, value.toStringList(), &Entry::tag, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kRhsNode:
         UpdateInternalSku(d_entry, value.toUuid());

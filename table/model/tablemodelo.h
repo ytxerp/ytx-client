@@ -82,6 +82,7 @@ public:
     void Finalize(QJsonObject& message);
     bool HasPendingUpdate() const { return !pending_insert_.isEmpty() || !pending_delete_.isEmpty() || !pending_update_.isEmpty(); }
     void SetNode(const NodeO* node) { d_node_ = node; }
+    inline Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
 
 private:
     bool UpdateInternalSku(EntryO* entry, const QUuid& value, bool is_persisted);
