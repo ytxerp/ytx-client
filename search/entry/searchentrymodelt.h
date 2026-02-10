@@ -25,7 +25,7 @@
 class SearchEntryModelT final : public SearchEntryModel {
     Q_OBJECT
 public:
-    explicit SearchEntryModelT(CSectionInfo& info, QObject* parent = nullptr);
+    explicit SearchEntryModelT(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
 };
 
 #endif // SEARCHENTRYMODELT_H

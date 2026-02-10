@@ -4,9 +4,10 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SearchEntryModel::SearchEntryModel(CSectionInfo& info, QObject* parent)
+SearchEntryModel::SearchEntryModel(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
+    , tag_hash_ { tag_hash }
 {
 }
 
@@ -49,14 +50,63 @@ QVariant SearchEntryModel::headerData(int section, Qt::Orientation orientation, 
 
 void SearchEntryModel::Search(const QString& text)
 {
+    // 1. Handle empty search input: clear the model if it has data
     if (text.isEmpty()) {
-        beginResetModel();
-        entry_list_.clear();
-        endResetModel();
+        if (!entry_list_.isEmpty()) {
+            beginResetModel();
+            entry_list_.clear();
+            endResetModel();
+        }
         return;
     }
 
-    WebSocket::Instance()->SendMessage(kEntrySearch, JsonGen::EntrySearch(info_.section, text));
+    // 2. Parse the search input into text and tag set
+    const SearchQuery query { ParseSearchQuery(text, tag_hash_) };
+
+    // 3. Perform the search (tag search has higher priority)
+    if (!query.tags.isEmpty()) {
+        // Send tag search request to server
+        WebSocket::Instance()->SendMessage(kEntryTagSearch, JsonGen::EntryTagSearch(info_.section, query.tags));
+    } else if (!query.text.isEmpty()) {
+        // Send description text search request to server
+        WebSocket::Instance()->SendMessage(kEntryDescriptionSearch, JsonGen::EntryDescriptionSearch(info_.section, query.text));
+    }
+}
+
+SearchQuery SearchEntryModel::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag*>& tag_hash)
+{
+    SearchQuery query {};
+
+    static const QRegularExpression kTagRegex { R"(\[([^\]]+)\])" };
+
+    QRegularExpressionMatchIterator it = kTagRegex.globalMatch(input);
+
+    while (it.hasNext()) {
+        const QRegularExpressionMatch match = it.next();
+        const QString tag_name = match.captured(1).trimmed();
+
+        if (tag_name.isEmpty())
+            continue;
+
+        // Resolve tag name -> tag id
+        for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
+            const Tag* tag = it.value();
+            if (!tag)
+                continue;
+
+            if (tag->name.compare(tag_name, Qt::CaseInsensitive) == 0) {
+                query.tags.insert(it.key().toString(QUuid::WithoutBraces));
+                break;
+            }
+        }
+    }
+
+    // Remove all [xxx] from text
+    QString text = input;
+    text.remove(kTagRegex);
+    query.text = text.trimmed();
+
+    return query;
 }
 
 QVariant SearchEntryModel::data(const QModelIndex& index, int role) const
@@ -137,6 +187,8 @@ void SearchEntryModel::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Entry::description, order);
         case FullEntryEnum::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
+        case FullEntryEnum::kTag:
+            return Utils::CompareMember(lhs, rhs, &Entry::tag, order);
         case FullEntryEnum::kStatus:
             return Utils::CompareMember(lhs, rhs, &Entry::status, order);
         case FullEntryEnum::kRhsCredit:

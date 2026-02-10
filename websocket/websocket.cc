@@ -195,7 +195,8 @@ void WebSocket::InitHandler()
     handler_obj_[kLeafReplace] = [this](const QJsonObject& obj) { ReplaceLeaf(obj); };
     handler_obj_[kNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
     handler_obj_[kEntryInsert] = [this](const QJsonObject& obj) { InsertEntry(obj); };
-    handler_obj_[kEntrySearch] = [this](const QJsonObject& obj) { SearchEntry(obj); };
+    handler_obj_[kEntryDescriptionSearch] = [this](const QJsonObject& obj) { SearchEntry(obj); };
+    handler_obj_[kEntryTagSearch] = [this](const QJsonObject& obj) { SearchEntry(obj); };
     handler_obj_[kNodeSearch] = [this](const QJsonObject& obj) { SearchNode(obj); };
     handler_obj_[kEntryUpdate] = [this](const QJsonObject& obj) { UpdateEntry(obj); };
     handler_obj_[kEntryDelete] = [this](const QJsonObject& obj) { DeleteEntry(obj); };

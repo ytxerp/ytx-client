@@ -3,8 +3,8 @@
 #include "enum/entryenum.h"
 #include "utils/compareutils.h"
 
-SearchEntryModelP::SearchEntryModelP(EntryHub* entry_hub, CSectionInfo& info, QObject* parent)
-    : SearchEntryModel { info, parent }
+SearchEntryModelP::SearchEntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+    : SearchEntryModel { info, tag_hash, parent }
     , entry_hub_p_ { static_cast<EntryHubP*>(entry_hub) }
 {
 }
@@ -80,6 +80,8 @@ void SearchEntryModelP::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case EntryEnumP::kStatus:
             return Utils::CompareMember(lhs, rhs, &Entry::status, order);
+        case EntryEnumP::kTag:
+            return Utils::CompareMember(lhs, rhs, &Entry::tag, order);
         case EntryEnumP::kUnitPrice:
             return Utils::CompareMember(d_lhs, d_rhs, &EntryP::unit_price, order);
         case EntryEnumP::kRhsNode:
@@ -102,12 +104,24 @@ void SearchEntryModelP::sort(int column, Qt::SortOrder order)
 
 void SearchEntryModelP::Search(const QString& text)
 {
+    // 1. Prepare the result list (do not modify the model yet)
+    QList<Entry*> results {};
+
+    if (!text.isEmpty()) {
+        // Parse search input into text and tag set
+        const SearchQuery query { ParseSearchQuery(text, tag_hash_) };
+
+        if (!query.tags.isEmpty()) {
+            // Tag search has higher priority
+            entry_hub_p_->SearchTag(results, query.tags);
+        } else if (!query.text.isEmpty()) {
+            // Search by description text if no tags
+            entry_hub_p_->SearchDescription(results, query.text);
+        }
+    }
+
+    // 2. Update the model in one step
     beginResetModel();
-
-    entry_list_.clear();
-
-    if (!text.isEmpty())
-        entry_hub_p_->SearchEntry(entry_list_, text);
-
+    entry_list_ = std::move(results); // Move results to avoid copying
     endResetModel();
 }

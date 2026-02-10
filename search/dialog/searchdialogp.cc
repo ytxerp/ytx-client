@@ -7,8 +7,8 @@
 #include "ui_searchdialog.h"
 
 SearchDialogP::SearchDialogP(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* inventory, CSectionConfig& config,
-    CSectionInfo& info, QWidget* parent)
-    : SearchDialog(tree, search_node, search_entry, config, info, parent)
+    CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QWidget* parent)
+    : SearchDialog(tree, search_node, search_entry, config, info, tag_hash, parent)
     , inventory_ { inventory }
 {
     TreeViewDelegate(ui->searchViewNode);
@@ -37,6 +37,7 @@ void SearchDialogP::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIssuedTime), issued_time_);
 
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kDocument), document_);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kTag), tag_);
 }
 
 void SearchDialogP::REntryDoubleClicked(const QModelIndex& index)

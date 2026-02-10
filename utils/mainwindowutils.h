@@ -43,7 +43,7 @@ void ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& workshe
 
 inline QColor GetContrastColor(const QColor& bg_color)
 {
-    int brightness = (bg_color.red() * 299 + bg_color.green() * 587 + bg_color.blue() * 114) / 1000;
+    const int brightness { (bg_color.red() * 299 + bg_color.green() * 587 + bg_color.blue() * 114) / 1000 };
     return brightness > 128 ? Qt::black : Qt::white;
 }
 

@@ -46,12 +46,16 @@ QVariant SearchNodeModel::headerData(int section, Qt::Orientation orientation, i
 
 void SearchNodeModel::Search(const QString& text)
 {
+    // 1. Prepare a temporary list to hold search results
+    QList<Node*> results {};
+
+    if (!text.isEmpty()) {
+        // Perform the search in the underlying tree model
+        tree_model_->SearchNode(results, text);
+    }
+
+    // 2. Update the model in one step
     beginResetModel();
-
-    node_list_.clear();
-
-    if (!text.isEmpty())
-        tree_model_->SearchNode(node_list_, text);
-
+    node_list_ = std::move(results); // Move results to avoid unnecessary copy
     endResetModel();
 }

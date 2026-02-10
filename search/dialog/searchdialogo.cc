@@ -6,8 +6,8 @@
 #include "ui_searchdialog.h"
 
 SearchDialogO::SearchDialogO(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CTreeModel* inventory, CTreeModel* partner,
-    CSectionConfig& config, CSectionInfo& info, QWidget* parent)
-    : SearchDialog(tree, search_node, search_entry, config, info, parent)
+    CSectionConfig& config, CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QWidget* parent)
+    : SearchDialog(tree, search_node, search_entry, config, info, tag_hash, parent)
     , inventory_ { inventory }
     , partner_ { partner }
 {

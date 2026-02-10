@@ -7,8 +7,8 @@
 #include "ui_searchdialog.h"
 #include "utils/entryutils.h"
 
-SearchDialog::SearchDialog(
-    CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CSectionConfig& config, CSectionInfo& info, QWidget* parent)
+SearchDialog::SearchDialog(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CSectionConfig& config, CSectionInfo& info,
+    const QHash<QUuid, Tag*>& tag_hash, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::SearchDialog)
     , search_node_ { search_node }
@@ -16,6 +16,7 @@ SearchDialog::SearchDialog(
     , tree_model_ { tree }
     , config_ { config }
     , info_ { info }
+    , tag_hash_ { tag_hash }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -78,6 +79,7 @@ void SearchDialog::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kIssuedTime), issued_time_);
 
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kDocument), document_);
+    view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kTag), tag_);
 }
 
 void SearchDialog::IniContentGroup()
@@ -102,6 +104,7 @@ void SearchDialog::InitDelegate()
     issued_time_ = new IssuedTimeR(config_.date_format, this);
     document_ = new DocumentR(this);
     int_ = new Int(0, 36500, this);
+    tag_ = new TagDelegate(tag_hash_, this);
 }
 
 void SearchDialog::HideTreeColumn(QTableView* view)

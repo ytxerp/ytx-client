@@ -26,7 +26,7 @@
 class SearchEntryModelP final : public SearchEntryModel {
     Q_OBJECT
 public:
-    SearchEntryModelP(EntryHub* entry_hub, CSectionInfo& info, QObject* parent = nullptr);
+    SearchEntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

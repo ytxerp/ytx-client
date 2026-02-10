@@ -67,7 +67,8 @@ QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& update);
 QJsonObject DocumentDir(Section section, CString& document_dir);
 QJsonObject DefaultUnit(Section section, int unit);
 
-QJsonObject EntrySearch(Section section, CString& keyword);
+QJsonObject EntryDescriptionSearch(Section section, CString& keyword);
+QJsonObject EntryTagSearch(Section section, const QSet<QString>& tags);
 QJsonObject NodeSearch(Section section, CString& keyword);
 
 QJsonObject OrderRecalled(Section section, CUuid& node_id, CJsonObject& update);

@@ -14,23 +14,32 @@ SearchNodeModelO::SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, Q
 
 void SearchNodeModelO::RNodeSearch(const QJsonObject& obj)
 {
+    // 1. Prepare temporary list to store nodes
+    QList<Node*> temp_list {};
+
     const QJsonArray node_array { obj.value(kNodeArray).toArray() };
 
+    for (const QJsonValue& val : node_array) {
+        const QJsonObject node_obj { val.toObject() };
+
+        Node* node { NodePool::Instance().Allocate(section_) };
+        node->ReadJson(node_obj);
+
+        temp_list.append(node);
+    }
+
+    // 2. Update model in one step
     beginResetModel();
 
+    // Recycle old nodes
     if (!node_list_.isEmpty()) {
         NodePool::Instance().Recycle(node_list_, section_);
         node_list_.clear();
     }
 
-    for (const QJsonValue& val : node_array) {
-        const QJsonObject obj { val.toObject() };
+    // Move new nodes into model
+    node_list_ = std::move(temp_list);
 
-        Node* node { NodePool::Instance().Allocate(section_) };
-        node->ReadJson(obj);
-
-        node_list_.append(node);
-    }
     endResetModel();
 }
 

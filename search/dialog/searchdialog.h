@@ -35,6 +35,7 @@
 #include "delegate/readonly/statusr.h"
 #include "delegate/search/searchpathtabler.h"
 #include "delegate/search/searchpathtreer.h"
+#include "delegate/tagdelegate.h"
 #include "search/entry/searchentrymodel.h"
 #include "search/node/searchnodemodel.h"
 
@@ -46,8 +47,8 @@ class SearchDialog : public QDialog {
     Q_OBJECT
 
 protected:
-    SearchDialog(
-        CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CSectionConfig& config, CSectionInfo& info, QWidget* parent = nullptr);
+    SearchDialog(CTreeModel* tree, SearchNodeModel* search_node, SearchEntryModel* search_entry, CSectionConfig& config, CSectionInfo& info,
+        const QHash<QUuid, Tag*>& tag_hash, QWidget* parent = nullptr);
     ~SearchDialog() override;
 
 signals:
@@ -101,9 +102,11 @@ protected:
     ColorR* color_ {};
     SearchPathTableR* table_path_ {};
     Int* int_ {};
+    TagDelegate* tag_ {};
 
     CSectionConfig& config_;
     CSectionInfo& info_;
+    const QHash<QUuid, Tag*>& tag_hash_ {};
 };
 
 #endif // SEARCHDIALOG_H

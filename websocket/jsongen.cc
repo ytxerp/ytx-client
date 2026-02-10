@@ -161,12 +161,28 @@ QJsonObject Register(CString& email, CString& password)
     return message;
 }
 
-QJsonObject EntrySearch(Section section, CString& keyword)
+QJsonObject EntryDescriptionSearch(Section section, CString& keyword)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kKeyword, keyword);
     message.insert(kEntryArray, QJsonArray());
+
+    return message;
+}
+
+QJsonObject EntryTagSearch(Section section, const QSet<QString>& tags)
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kEntryArray, QJsonArray());
+
+    // Convert QSet<QString> to QJsonArray
+    QJsonArray tag_array {};
+    for (const QString& tag_id : tags) {
+        tag_array.append(tag_id);
+    }
+    message.insert(kTagArray, tag_array);
 
     return message;
 }

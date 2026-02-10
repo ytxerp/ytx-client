@@ -76,15 +76,33 @@ QUuid EntryHubP::ExternalSku(const QUuid& partner_id, const QUuid& internal_sku)
     return QUuid();
 }
 
-void EntryHubP::SearchEntry(QList<Entry*>& entry_list, CString& name) const
+void EntryHubP::SearchDescription(QList<Entry*>& entry_list, CString& text) const
 {
     entry_list.reserve(entry_cache_.size() / 2);
 
     for (const auto& [id, entry] : entry_cache_.asKeyValueRange()) {
         Q_ASSERT(entry && "EntryHubP::SearchEntry encountered null entry in cache");
 
-        if (entry->description.contains(name, Qt::CaseInsensitive)) {
+        if (entry->description.contains(text, Qt::CaseInsensitive)) {
             entry_list.emplaceBack(entry);
+        }
+    }
+}
+
+void EntryHubP::SearchTag(QList<Entry*>& entry_list, const QSet<QString>& tag_set) const
+{
+    if (tag_set.isEmpty())
+        return;
+
+    for (const auto& [id, entry] : entry_cache_.asKeyValueRange()) {
+        Q_ASSERT(entry && "EntryHubP::SearchTag encountered null entry in cache");
+
+        const QStringList& entry_tags { entry->tag };
+        for (const QString& tag_id : entry_tags) {
+            if (tag_set.contains(tag_id)) {
+                entry_list.emplaceBack(entry);
+                break; // IMPORTANT: avoid duplicate insertion
+            }
         }
     }
 }

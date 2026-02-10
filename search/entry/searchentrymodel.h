@@ -24,7 +24,13 @@
 
 #include "component/info.h"
 #include "table/entry.h"
+#include "tag/tag.h"
 #include "utils/castutils.h"
+
+struct SearchQuery {
+    QString text {}; // Normal search text (without [tag])
+    QSet<QString> tags {}; // Tag names or tag IDs (depending on your mapping)
+};
 
 using Utils::DerivedPtr;
 
@@ -34,7 +40,7 @@ public:
     ~SearchEntryModel() override { };
 
 protected:
-    explicit SearchEntryModel(CSectionInfo& info, QObject* parent = nullptr);
+    explicit SearchEntryModel(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
 
 public slots:
     void RSearchEntry(const EntryList& entry_list);
@@ -54,8 +60,12 @@ public:
     virtual void Search(const QString& text);
 
 protected:
+    SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Tag*>& tag_hash);
+
+protected:
     EntryList entry_list_ {};
     CSectionInfo& info_;
+    const QHash<QUuid, Tag*>& tag_hash_ {};
 };
 
 #endif // SEARCHENTRYMODEL_H
