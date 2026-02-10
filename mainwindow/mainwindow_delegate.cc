@@ -21,6 +21,7 @@
 #include "delegate/readonly/statusr.h"
 #include "delegate/rhsnode.h"
 #include "delegate/status.h"
+#include "delegate/tagdelegate.h"
 #include "enum/reference.h"
 #include "enum/settlementenum.h"
 #include "enum/statementenum.h"
@@ -205,6 +206,9 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
 
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
+
+    auto* tag { new TagDelegate(sc_f_.tag_hash, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
 }
 
 void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
@@ -236,6 +240,9 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
 
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
+
+    auto* tag { new TagDelegate(sc_i_.tag_hash, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
 }
 
 void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
@@ -267,6 +274,9 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
 
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
+
+    auto* tag { new TagDelegate(sc_t_.tag_hash, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
 }
 
 void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) const
@@ -296,6 +306,9 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     auto* int_filter_model { tree_model_i->IncludeUnit(NodeUnit::IInternal, table_view) };
     auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), internal_sku);
+
+    auto* tag { new TagDelegate(sc_p_.tag_hash, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kTag), tag);
 }
 
 void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) const

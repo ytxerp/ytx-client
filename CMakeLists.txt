@@ -200,6 +200,7 @@ set(SOURCES
     global/exportexcel.cc
     websocket/websocket.cc
     websocket/jsongen.cc
+    delegate/tagdelegate.cc
     mainwindow/mainwindow_settlement.cc
     mainwindow/mainwindow_statement.cc
     mainwindow/mainwindow_sale_reference.cc
@@ -330,6 +331,7 @@ set(HEADERS
     dialog/editnodename.h
     dialog/editnodenameo.h
     dialog/editdocument.h
+    delegate/tagdelegate.h
     dialog/preferences.h
     dialog/tagmanagerdlg.h
     dialog/authdialog.h

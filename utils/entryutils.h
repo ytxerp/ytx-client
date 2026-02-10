@@ -71,6 +71,23 @@ constexpr int LinkedNodeColumn(Section section)
     Q_UNREACHABLE();
 }
 
+constexpr int EntryTagColumn(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+    case Section::kTask:
+    case Section::kInventory:
+        return std::to_underlying(EntryEnum::kTag);
+    case Section::kPartner:
+        return std::to_underlying(EntryEnumP::kTag);
+    case Section::kSale:
+    case Section::kPurchase:
+        return -1;
+    }
+
+    Q_UNREACHABLE();
+}
+
 constexpr int EntryDescriptionColumn(Section section)
 {
     switch (section) {
