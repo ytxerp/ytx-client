@@ -459,4 +459,7 @@ void MainWindow::DelegateTagView(QTableView* table_view) const
 {
     auto* color { new Color(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(TagEnum::kColor), color);
+
+    auto* line { new Line(table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(TagEnum::kName), line);
 }

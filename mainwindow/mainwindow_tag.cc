@@ -1,6 +1,7 @@
 #include <QJsonArray>
 
 #include "dialog/tagmanagerdlg.h"
+#include "global/resourcepool.h"
 #include "mainwindow.h"
 #include "tag/tagmodel.h"
 #include "utils/mainwindowutils.h"
@@ -12,7 +13,8 @@ void MainWindow::on_actionTags_triggered()
     static QPointer<TagManagerDlg> dialog {};
 
     if (!dialog) {
-        auto* model { new TagModel(start_, sc_->raw_tags, this) };
+        auto* model { new TagModel(start_, sc_->tag_hash, this) };
+        connect(model, &TagModel::SInsertingTag, this, &MainWindow::RInsertingTag);
 
         dialog = new TagManagerDlg(this);
 
@@ -26,8 +28,6 @@ void MainWindow::on_actionTags_triggered()
     }
 
     dialog->show();
-    dialog->raise();
-    dialog->activateWindow();
 }
 
 void MainWindow::RApplyTag(const QJsonObject& obj)
@@ -51,20 +51,22 @@ void MainWindow::RApplyTag(const QJsonObject& obj)
         }
 
         const QJsonObject tag_obj { value.toObject() };
+        const QUuid id { tag_obj.value(kId).toString() };
 
-        Tag tag {};
-        tag.ReadJson(tag_obj);
-
-        if (tag.id.isNull()) {
+        if (id.isNull()) {
             qWarning() << "RApplyTag: tag id is null, skip entry";
             continue;
         }
 
-        sc->raw_tags.insert(tag.id, tag);
+        auto* tag { ResourcePool<Tag>::Instance().Allocate() };
+        tag->ReadJson(tag_obj);
+        tag->state = Tag::State::SYNCED;
+
+        sc->tag_hash.insert(id, tag);
     }
 }
 
-void MainWindow::RInsertTag(const QJsonObject& obj)
+void MainWindow::RInsertTag(const QJsonObject& obj, bool is_same_session)
 {
     const Section section { obj.value(kSection).toInt() };
 
@@ -77,16 +79,28 @@ void MainWindow::RInsertTag(const QJsonObject& obj)
     }
 
     const QJsonObject tag_obj { obj.value(kTag).toObject() };
+    const QUuid id { tag_obj.value(kId).toString() };
 
-    Tag tag {};
-    tag.ReadJson(tag_obj);
-
-    if (tag.id.isNull()) {
+    if (id.isNull()) {
         qWarning() << "RInsertTag: tag id is null";
         return;
     }
 
-    sc->raw_tags.insert(tag.id, tag);
+    Tag* tag {};
+
+    if (is_same_session) {
+        tag = inserting_tag_.take(id);
+        if (!tag) {
+            qWarning() << "RInsertTag: pending tag not found" << id;
+            return;
+        }
+    } else {
+        tag = ResourcePool<Tag>::Instance().Allocate();
+    }
+
+    tag->ReadJson(tag_obj);
+    tag->state = Tag::State::SYNCED;
+    sc->tag_hash.insert(tag->id, tag);
 }
 
 void MainWindow::RUpdateTag(const QJsonObject& obj)
@@ -102,8 +116,8 @@ void MainWindow::RUpdateTag(const QJsonObject& obj)
         return;
     }
 
-    auto it = sc->raw_tags.find(id);
-    if (it == sc->raw_tags.end()) {
+    auto it = sc->tag_hash.find(id);
+    if (it == sc->tag_hash.end()) {
         qWarning() << "RUpdateTag: tag not found, id =" << id;
         return;
     }
@@ -114,7 +128,7 @@ void MainWindow::RUpdateTag(const QJsonObject& obj)
     }
 
     const QJsonObject update_obj { obj.value(kUpdate).toObject() };
-    it->ReadJson(update_obj);
+    it.value()->ReadJson(update_obj);
 }
 
 void MainWindow::RDeleteTag(const QJsonObject& obj)
@@ -130,7 +144,10 @@ void MainWindow::RDeleteTag(const QJsonObject& obj)
         return;
     }
 
-    if (!sc->raw_tags.remove(id)) {
-        qWarning() << "RDeleteTag: tag not found, id =" << id;
+    auto* tag { sc->tag_hash.take(id) };
+    if (tag) {
+        ResourcePool<Tag>::Instance().Recycle(tag);
+    } else {
+        qWarning() << "RDeleteTag: tag not found";
     }
 }

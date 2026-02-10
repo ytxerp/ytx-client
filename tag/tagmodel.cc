@@ -9,28 +9,17 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TagModel::TagModel(Section section, const QHash<QUuid, Tag>& raw_tags, QObject* parent)
+TagModel::TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
     : QAbstractItemModel(parent)
-    , raw_tags_ { raw_tags }
     , section_ { section }
+    , tag_hash_ { tag_hash }
 {
-    for (auto it = raw_tags.cbegin(); it != raw_tags.cend(); ++it) {
-        const QString& name { it.value().name };
-
-        auto* tag { ResourcePool<Tag>::Instance().Allocate() };
-        tag->name = name;
-        tag->color = it.value().color;
-        tag->id = it.key();
-
-        tags_.append(tag);
-        names_.insert(name);
+    for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
+        tag_list_.append(it.value());
+        names_.insert(it.value()->name);
     }
-}
 
-TagModel::~TagModel()
-{
-    ResourcePool<Tag>::Instance().Recycle(tags_);
-    tags_.clear();
+    std::sort(tag_list_.begin(), tag_list_.end(), [](const Tag* a, const Tag* b) { return a->name < b->name; });
 }
 
 QVariant TagModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -58,7 +47,7 @@ QModelIndex TagModel::index(int row, int column, const QModelIndex& parent) cons
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column, tags_.at(row));
+    return createIndex(row, column, tag_list_.at(row));
 }
 
 QVariant TagModel::data(const QModelIndex& index, int role) const
@@ -69,7 +58,10 @@ QVariant TagModel::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* tag { tags_.at(index.row()) };
+    auto* tag { tag_list_.at(index.row()) };
+    if (tag->id.isNull())
+        return {};
+
     const TagEnum column { index.column() };
 
     switch (column) {
@@ -92,14 +84,16 @@ bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role
     if (data(index, role) == value)
         return false;
 
-    auto* tag { tags_.at(index.row()) };
+    auto* tag { tag_list_.at(index.row()) };
+    if (tag->id.isNull())
+        return {};
 
     switch (static_cast<TagEnum>(index.column())) {
     case TagEnum::kName:
-        UpdateName(tag, value.toString(), pending_updates_[tag->id]);
+        UpdateName(tag, value.toString());
         break;
     case TagEnum::kColor:
-        UpdateColor(tag, value.toString(), pending_updates_[tag->id]);
+        UpdateColor(tag, value.toString());
         break;
     case TagEnum::kId:
     case TagEnum::kVersion:
@@ -127,7 +121,7 @@ void TagModel::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(tags_.begin(), tags_.end(), Compare);
+    std::sort(tag_list_.begin(), tag_list_.end(), Compare);
     emit layoutChanged();
 }
 
@@ -154,15 +148,19 @@ Qt::ItemFlags TagModel::flags(const QModelIndex& index) const
 
 bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
 {
-    if (count != 1 || row < 0 || row > tags_.size())
+    if (count != 1 || row < 0 || row > tag_list_.size())
         return false;
 
     auto* tag { ResourcePool<Tag>::Instance().Allocate() };
-    tag->is_new = true;
+
     tag->id = QUuid::createUuidV7();
+    tag->state = Tag::State::NEW;
 
     beginInsertRows(parent, row, row);
-    tags_.insert(row, tag);
+
+    tag_list_.insert(row, tag);
+    tag_hash_.insert(tag->id, tag);
+
     endInsertRows();
 
     return true;
@@ -170,25 +168,31 @@ bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
 
 bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
 {
-    if (count != 1 || row < 0 || row >= tags_.size())
+    if (count != 1 || row < 0 || row >= tag_list_.size())
         return false;
 
+    Tag* tag = tag_list_.at(row);
+
     beginRemoveRows(parent, row, row);
-    auto* tag = tags_.takeAt(row);
+
+    tag_list_.removeAt(row);
+    tag_hash_.remove(tag->id);
+    names_.remove(tag->name);
+    pending_updates_.remove(tag->id);
+
     endRemoveRows();
 
-    if (!tag->is_new) {
+    if (tag->state == Tag::State::SYNCED) {
         const QJsonObject message { JsonGen::TagDelete(section_, tag->id) };
         WebSocket::Instance()->SendMessage(kTagDelete, message);
+    } else {
+        ResourcePool<Tag>::Instance().Recycle(tag);
     }
-
-    names_.remove(tag->name);
-    ResourcePool<Tag>::Instance().Recycle(tag);
 
     return true;
 }
 
-bool TagModel::UpdateName(Tag* tag, const QString& new_name, QJsonObject& update)
+bool TagModel::UpdateName(Tag* tag, const QString& new_name)
 {
     if (!tag)
         return false;
@@ -202,39 +206,31 @@ bool TagModel::UpdateName(Tag* tag, const QString& new_name, QJsonObject& update
         return false;
 
     tag->name = new_name;
+
     names_.insert(new_name);
+    names_.remove(old_name);
 
-    if (tag->is_new) {
-        if (!tag->color.isEmpty()) {
-            const QJsonObject message { JsonGen::TagInsert(section_, tag) };
-            WebSocket::Instance()->SendMessage(kTagInsert, message);
-            tag->is_new = false;
-        }
-    } else {
-        update.insert(kName, new_name);
-        names_.remove(old_name);
-
+    if (tag->state == Tag::State::NEW && !tag->color.isEmpty()) {
+        TryInsert(tag);
+    } else if (tag->state == Tag::State::SYNCED) {
+        pending_updates_.insert(tag->id);
         RestartTimer(tag->id);
     }
 
     return true;
 }
 
-bool TagModel::UpdateColor(Tag* tag, const QString& new_color, QJsonObject& update)
+bool TagModel::UpdateColor(Tag* tag, const QString& new_color)
 {
     if (!tag || tag->color == new_color)
         return false;
 
     tag->color = new_color;
 
-    if (tag->is_new) {
-        if (!tag->name.isEmpty()) {
-            const QJsonObject message { JsonGen::TagInsert(section_, tag) };
-            WebSocket::Instance()->SendMessage(kTagInsert, message);
-            tag->is_new = false;
-        }
-    } else {
-        update.insert(kColor, new_color);
+    if (tag->state == Tag::State::NEW && !tag->name.isEmpty()) {
+        TryInsert(tag);
+    } else if (tag->state == Tag::State::SYNCED) {
+        pending_updates_.insert(tag->id);
         RestartTimer(tag->id);
     }
 
@@ -251,16 +247,13 @@ void TagModel::RestartTimer(const QUuid& id)
 
         connect(timer, &QTimer::timeout, this, [this, id]() {
             auto* expired_timer { pending_timers_.take(id) };
+            pending_updates_.remove(id);
 
-            if (auto it = pending_updates_.find(id); it != pending_updates_.end()) {
-                const auto& update { it.value() };
-
-                if (!update.isEmpty()) {
-                    const QJsonObject message { JsonGen::TagUpdate(section_, id, update, raw_tags_.value(id).version) };
-                    WebSocket::Instance()->SendMessage(kTagUpdate, message);
-                }
-
-                pending_updates_.erase(it);
+            if (auto it = tag_hash_.find(id); it != tag_hash_.end()) {
+                const auto* tag { it.value() };
+                const QJsonObject message { JsonGen::TagUpdate(section_, tag) };
+                WebSocket::Instance()->SendMessage(kTagUpdate, message);
+                pending_updates_.remove(tag->id);
             }
 
             expired_timer->deleteLater();
@@ -269,4 +262,17 @@ void TagModel::RestartTimer(const QUuid& id)
     }
 
     pending_timers_[id]->start(kThreeThousand);
+}
+
+void TagModel::TryInsert(Tag* tag)
+{
+    if (!tag || tag->state != Tag::State::NEW)
+        return;
+
+    tag->state = Tag::State::INSERTING;
+
+    const QJsonObject message { JsonGen::TagInsert(section_, tag) };
+    WebSocket::Instance()->SendMessage(kTagInsert, message);
+
+    emit SInsertingTag(tag);
 }

@@ -45,7 +45,7 @@ QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bo
 QJsonObject EntryDelete(Section section, CUuid& entry_id);
 QJsonObject EntryLinkedNode(Section section, CUuid& entry_id);
 
-QJsonObject TagUpdate(Section section, CUuid& tag_id, CJsonObject& update, int version);
+QJsonObject TagUpdate(Section section, const Tag* tag);
 QJsonObject TagInsert(Section section, const Tag* tag);
 QJsonObject TagDelete(Section section, CUuid& tag_id);
 

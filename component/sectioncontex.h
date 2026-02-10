@@ -43,9 +43,7 @@ struct SectionContext {
     QHash<QUuid, QPointer<TableWidget>> tab_hash {};
     QHash<QUuid, QPointer<QWidget>> widget_hash {};
 
-    // key: id
-    // value: {name, color}
-    QHash<QUuid, Tag> raw_tags {};
+    QHash<QUuid, Tag*> tag_hash {};
 };
 
 #endif // SECTIONCONTEX_H

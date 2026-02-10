@@ -27,10 +27,19 @@
 #include "component/constant.h"
 
 struct Tag {
+    enum class State {
+        NEW,
+        INSERTING,
+        SYNCED,
+    };
+
     QUuid id {};
     QString name {};
     QString color {};
     int version {};
+
+    State state { State::NEW };
+
     bool is_new {}; // is_new: client-only state, not persisted, not synced
 
     void ResetState();
@@ -44,6 +53,7 @@ inline void Tag::ResetState()
     name = {};
     color = {};
     version = 0;
+    state = State::NEW;
     is_new = false;
 }
 

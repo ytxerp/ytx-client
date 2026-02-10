@@ -10,9 +10,12 @@
 class TagModel : public QAbstractItemModel {
     Q_OBJECT
 
+signals:
+    void SInsertingTag(Tag* tag);
+
 public:
-    explicit TagModel(Section section, const QHash<QUuid, Tag>& raw_tags, QObject* parent = nullptr);
-    ~TagModel() override;
+    explicit TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
+    ~TagModel() override = default;
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -27,7 +30,7 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent)
-        return tags_.size();
+        return tag_list_.size();
     }
     int columnCount(const QModelIndex& parent = QModelIndex()) const override
     {
@@ -49,19 +52,20 @@ public:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
 private:
-    bool UpdateName(Tag* tag, const QString& new_name, QJsonObject& update);
-    bool UpdateColor(Tag* tag, const QString& new_color, QJsonObject& update);
+    bool UpdateName(Tag* tag, const QString& new_name);
+    bool UpdateColor(Tag* tag, const QString& new_color);
 
     void RestartTimer(const QUuid& id);
+    void TryInsert(Tag* tag);
 
 private:
-    const QHash<QUuid, Tag> raw_tags_;
     const Section section_ {};
 
     QSet<QString> names_ {};
-    QList<Tag*> tags_ {}; // owns
+    QList<Tag*> tag_list_ {}; // non-owning
+    QHash<QUuid, Tag*> tag_hash_ {}; // non-owning
 
-    QHash<QUuid, QJsonObject> pending_updates_ {};
+    QSet<QUuid> pending_updates_ {};
     QHash<QUuid, QTimer*> pending_timers_ {};
 };
 

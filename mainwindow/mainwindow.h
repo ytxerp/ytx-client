@@ -138,9 +138,10 @@ private slots:
     void RLeafDeleteDenied(const QJsonObject& obj);
 
     void RApplyTag(const QJsonObject& obj);
-    void RInsertTag(const QJsonObject& obj);
+    void RInsertTag(const QJsonObject& obj, bool is_same_session);
     void RUpdateTag(const QJsonObject& obj);
     void RDeleteTag(const QJsonObject& obj);
+    inline void RInsertingTag(Tag* tag) { inserting_tag_.insert(tag->id, tag); }
 
     void RSharedConfig(const QJsonArray& arr);
     void RDocumentDir(Section section, const QString& document_dir);
@@ -280,6 +281,7 @@ private:
     QMenu* tray_menu_ {};
 
     QSet<QUuid> node_pending_deletion_ {};
+    QHash<QUuid, Tag*> inserting_tag_ {};
 
     QTranslator qt_translator_ {};
     QTranslator ytx_translator_ {};

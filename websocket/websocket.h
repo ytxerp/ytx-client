@@ -65,7 +65,7 @@ signals:
     void SUpdateDefaultUnitFailed(const QString& section);
 
     void SApplyTag(const QJsonObject& obj);
-    void SInsertTag(const QJsonObject& obj);
+    void SInsertTag(const QJsonObject& obj, bool is_same_session);
     void SUpdateTag(const QJsonObject& obj);
     void SDeleteTag(const QJsonObject& obj);
 

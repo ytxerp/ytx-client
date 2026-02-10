@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QHeaderView>
 
+#include "global/resourcepool.h"
 #include "utils/templateutils.h"
 
 bool Utils::PrepareNewFile(QString& file_path, CString& suffix)
@@ -172,6 +173,8 @@ void Utils::ResetSectionContext(SectionContext& ctx)
     Utils::CloseWidgets(ctx.dialog_hash);
     Utils::CloseWidgets(ctx.tab_hash);
     Utils::CloseWidgets(ctx.widget_hash);
+
+    ResourcePool<Tag>::Instance().Recycle(ctx.tag_hash);
 }
 
 void Utils::SetConnectionStatus(QLabel* label, ConnectionStatus status)
@@ -279,8 +282,6 @@ QUuid Utils::ManageDialog(QHash<QUuid, QPointer<QDialog>>& dialog_hash, QDialog*
 
     const QUuid id = QUuid::createUuidV7();
     dialog_hash.insert(id, dialog);
-
-    QObject::connect(dialog, &QDialog::destroyed, [=, &dialog_hash]() { dialog_hash.remove(id); });
 
     return id;
 }

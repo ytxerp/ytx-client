@@ -421,7 +421,9 @@ void WebSocket::ApplyTag(const QJsonObject& obj)
 void WebSocket::InsertTag(const QJsonObject& obj)
 {
     Q_ASSERT(obj.contains(kSection));
-    emit SInsertTag(obj);
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
+
+    emit SInsertTag(obj, session_id_ == session_id);
 }
 
 void WebSocket::UpdateTag(const QJsonObject& obj)
