@@ -825,20 +825,24 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     const QJsonArray node_array { data.value(kNodeArray).toArray() };
     const QJsonArray path_array { data.value(kPathArray).toArray() };
 
-    beginResetModel();
-
-    for (const QJsonValue& val : node_array) {
-        const QJsonObject obj { val.toObject() };
-        auto* node = NodePool::Instance().Allocate(section_);
-        node->ReadJson(obj);
-        node_hash_.insert(node->id, node);
+    {
+        for (const QJsonValue& val : node_array) {
+            const QJsonObject obj { val.toObject() };
+            auto* node = NodePool::Instance().Allocate(section_);
+            node->ReadJson(obj);
+            node_hash_.insert(node->id, node);
+        }
     }
 
-    BuildHierarchy(path_array);
-    HandleNode();
+    {
+        beginResetModel();
 
-    sort(std::to_underlying(NodeEnum::kName), Qt::AscendingOrder);
-    endResetModel();
+        BuildHierarchy(path_array);
+        HandleNode();
+        sort(std::to_underlying(NodeEnum::kName), Qt::AscendingOrder);
+
+        endResetModel();
+    }
 
     emit SInitStatus();
 }
