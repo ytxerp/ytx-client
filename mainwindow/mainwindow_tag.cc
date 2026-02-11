@@ -181,9 +181,9 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
 
     auto* menu = new QMenu(this);
 
-    if (!tag_hash.isEmpty()) {
-        auto* tag_menu = menu->addMenu(tr("Tags"));
+    auto* tag_menu = menu->addMenu(tr("Tags"));
 
+    if (!tag_hash.isEmpty()) {
         QList<Tag*> sorted_tags = tag_hash.values();
         std::sort(sorted_tags.begin(), sorted_tags.end(), [](const Tag* a, const Tag* b) { return a->name < b->name; });
 
@@ -207,14 +207,21 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
             });
         }
 
-        menu->addSeparator();
+        tag_menu->addSeparator();
     }
 
+    auto* manage_action = tag_menu->addAction(tr("Manage..."));
+    // manage_action->setIcon(QIcon(":/icons/settings.png"));
+    connect(manage_action, &QAction::triggered, this, [this]() { on_actionTags_triggered(); });
+
+    menu->addSeparator();
     menu->addAction(ui->actionInsertNode);
     menu->addAction(ui->actionAppendNode);
+
     menu->addSeparator();
     menu->addAction(ui->actionRename);
     menu->addAction(ui->actionClearColor);
+
     menu->addSeparator();
     menu->addAction(ui->actionDelete);
 
@@ -276,10 +283,9 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     const auto& tag_hash { sc_->tag_hash };
 
     auto* menu = new QMenu(this);
+    auto* tag_menu = menu->addMenu(tr("Tags"));
 
     if (!tag_hash.isEmpty()) {
-        auto* tag_menu = menu->addMenu(tr("Tags"));
-
         QList<Tag*> sorted_tags = tag_hash.values();
         std::sort(sorted_tags.begin(), sorted_tags.end(), [](const Tag* a, const Tag* b) { return a->name < b->name; });
 
@@ -303,9 +309,14 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
             });
         }
 
-        menu->addSeparator();
+        tag_menu->addSeparator();
     }
 
+    auto* manage_action { tag_menu->addAction(tr("Manage...")) };
+    // manage_action->setIcon(QIcon(":/icons/settings.png"));
+    connect(manage_action, &QAction::triggered, this, [this]() { on_actionTags_triggered(); });
+
+    menu->addSeparator();
     menu->addAction(ui->actionDelete);
 
     menu->exec(QCursor::pos());
