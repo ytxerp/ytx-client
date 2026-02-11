@@ -51,7 +51,9 @@ void SearchDialog::IniDialog()
 
     ui->stackedWidget->setCurrentIndex(0);
     ui->pBtnClose->setAutoDefault(false);
-    this->setWindowTitle(tr("Search"));
+
+    setWindowTitle(tr("Search"));
+    setMinimumSize(800, 600);
 }
 
 void SearchDialog::IniConnect()
