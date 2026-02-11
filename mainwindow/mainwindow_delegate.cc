@@ -46,6 +46,9 @@ void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kKind), kind);
 
+    auto* color { new Color(tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kColor), color);
+
     auto* final_total { new AmountR(section.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kFinalTotal), final_total);
 
@@ -125,6 +128,9 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
 
 void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {
+    auto* color { new Color(tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kColor), color);
+
     auto* line { new Line(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kCode), line);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kDescription), line);

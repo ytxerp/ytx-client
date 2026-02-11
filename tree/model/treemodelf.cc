@@ -44,6 +44,8 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
         return node->description;
     case NodeEnumF::kNote:
         return node->note;
+    case NodeEnumF::kColor:
+        return node->color;
     case NodeEnumF::kDirectionRule:
         return node->direction_rule;
     case NodeEnumF::kKind:
@@ -79,6 +81,9 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
         break;
     case NodeEnumF::kDescription:
         Utils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        break;
+    case NodeEnumF::kColor:
+        Utils::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kNote:
         Utils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
@@ -125,6 +130,8 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumF::kUnit:
             return Utils::CompareMember(lhs, rhs, &Node::unit, order);
+        case NodeEnumF::kColor:
+            return Utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumF::kInitialTotal:
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumF::kFinalTotal:
@@ -161,6 +168,7 @@ Qt::ItemFlags TreeModelF::flags(const QModelIndex& index) const
     case NodeEnumF::kInitialTotal:
     case NodeEnumF::kFinalTotal:
     case NodeEnumF::kKind:
+    case NodeEnumF::kColor:
     case NodeEnumF::kUnit:
         flags &= ~Qt::ItemIsEditable;
         break;

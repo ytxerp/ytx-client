@@ -87,7 +87,7 @@ void SearchNodeModelI::sort(int column, Qt::SortOrder order)
         case NodeEnumI::kFinalTotal:
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumI::kColor:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeI::color, order);
+            return Utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumI::kCommission:
             return Utils::CompareMember(d_lhs, d_rhs, &NodeI::commission, order);
         case NodeEnumI::kUnitPrice:

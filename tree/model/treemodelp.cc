@@ -91,6 +91,8 @@ void TreeModelP::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(d_lhs, d_rhs, &NodeP::payment_term, order);
         case NodeEnumP::kInitialTotal:
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
+        case NodeEnumP::kColor:
+            return Utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumP::kId:
         case NodeEnumP::kUpdateBy:
         case NodeEnumP::kUpdateTime:
@@ -151,6 +153,8 @@ QVariant TreeModelP::data(const QModelIndex& index, int role) const
         return d_node->payment_term;
     case NodeEnumP::kInitialTotal:
         return d_node->initial_total;
+    case NodeEnumP::kColor:
+        return d_node->color;
     default:
         return QVariant();
     }
@@ -186,6 +190,9 @@ bool TreeModelP::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumP::kPaymentTerm:
         Utils::UpdateField(pending_updates_[id], d_node, kPaymentTerm, value.toInt(), &NodeP::payment_term, [id, this]() { RestartTimer(id); });
         break;
+    case NodeEnumP::kColor:
+        Utils::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
+        break;
     case NodeEnumP::kId:
     case NodeEnumP::kUpdateBy:
     case NodeEnumP::kUpdateTime:
@@ -219,6 +226,7 @@ Qt::ItemFlags TreeModelP::flags(const QModelIndex& index) const
         break;
     case NodeEnumP::kInitialTotal:
     case NodeEnumP::kUnit:
+    case NodeEnumP::kColor:
     case NodeEnumP::kKind:
         flags &= ~Qt::ItemIsEditable;
         break;

@@ -34,6 +34,8 @@ QVariant SearchNodeModelF::data(const QModelIndex& index, int role) const
         return node->id;
     case NodeEnumF::kCode:
         return node->code;
+    case NodeEnumF::kColor:
+        return node->color;
     case NodeEnumF::kDescription:
         return node->description;
     case NodeEnumF::kNote:
@@ -71,6 +73,8 @@ void SearchNodeModelF::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumF::kKind:
             return Utils::CompareMember(lhs, rhs, &Node::kind, order);
+        case NodeEnumF::kColor:
+            return Utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumF::kUnit:
             return Utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumF::kInitialTotal:

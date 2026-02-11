@@ -9,6 +9,7 @@ void Node::ResetState()
     id = QUuid();
     code.clear();
     description.clear();
+    color.clear();
     note.clear();
     direction_rule = false;
     kind = {};
@@ -66,12 +67,15 @@ void Node::ReadJson(const QJsonObject& object)
         updated_by = QUuid(object.value(kUpdatedBy).toString());
     if (object.contains(kVersion))
         version = object.value(kVersion).toInt();
+    if (object.contains(kColor))
+        color = object.value(kColor).toString();
 }
 
 QJsonObject Node::WriteJson() const
 {
     QJsonObject obj {};
     obj.insert(kName, name);
+    obj.insert(kColor, color);
     obj.insert(kId, id.toString(QUuid::WithoutBraces));
     obj.insert(kCode, code);
     obj.insert(kDescription, description);
@@ -87,7 +91,6 @@ QJsonObject Node::WriteJson() const
 void NodeI::ResetState()
 {
     Node::ResetState();
-    color.clear();
     unit_price = 0.0;
     commission = 0.0;
 }
@@ -96,8 +99,6 @@ void NodeI::ReadJson(const QJsonObject& object)
 {
     Node::ReadJson(object);
 
-    if (object.contains(kColor))
-        color = object.value(kColor).toString();
     if (object.contains(kUnitPrice))
         unit_price = object.value(kUnitPrice).toString().toDouble();
     if (object.contains(kCommission))
@@ -107,7 +108,6 @@ void NodeI::ReadJson(const QJsonObject& object)
 QJsonObject NodeI::WriteJson() const
 {
     QJsonObject obj { Node::WriteJson() };
-    obj.insert(kColor, color);
     obj.insert(kUnitPrice, QString::number(unit_price, 'f', kMaxNumericScale_8));
     obj.insert(kCommission, QString::number(commission, 'f', kMaxNumericScale_8));
     return obj;
@@ -116,7 +116,6 @@ QJsonObject NodeI::WriteJson() const
 void NodeT::ResetState()
 {
     Node::ResetState();
-    color.clear();
     document.clear();
     issued_time = {};
     status = {};
@@ -126,8 +125,6 @@ void NodeT::ReadJson(const QJsonObject& object)
 {
     Node::ReadJson(object);
 
-    if (object.contains(kColor))
-        color = object.value(kColor).toString();
     if (object.contains(kStatus))
         status = NodeStatus(object.value(kStatus).toInt());
     if (object.contains(kIssuedTime))
@@ -140,7 +137,6 @@ QJsonObject NodeT::WriteJson() const
 {
     QJsonObject obj = Node::WriteJson();
 
-    obj.insert(kColor, color);
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kStatus, std::to_underlying(status));
     obj.insert(kDocument, Utils::WriteStringList(document));
@@ -186,6 +182,8 @@ void NodeP::ReadJson(const QJsonObject& object)
         payment_term = object.value(kPaymentTerm).toInt();
     if (object.contains(kVersion))
         version = object.value(kVersion).toInt();
+    if (object.contains(kColor))
+        color = object.value(kColor).toString();
 }
 
 QJsonObject NodeP::WriteJson() const
@@ -200,6 +198,7 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kUnit, std::to_underlying(unit));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
     obj.insert(kPaymentTerm, payment_term);
+    obj.insert(kColor, color);
 
     return obj;
 }

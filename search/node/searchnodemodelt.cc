@@ -91,7 +91,7 @@ void SearchNodeModelT::sort(int column, Qt::SortOrder order)
         case NodeEnumT::kIssuedTime:
             return Utils::CompareMember(d_lhs, d_rhs, &NodeT::issued_time, order);
         case NodeEnumT::kColor:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeT::color, order);
+            return Utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumT::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumT::kInitialTotal:

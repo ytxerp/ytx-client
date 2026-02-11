@@ -150,9 +150,6 @@ public:
     QSortFilterProxyModel* ExcludeIdUnit(const QUuid& node_id, NodeUnit unit, QObject* parent);
     QSortFilterProxyModel* ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent);
 
-    // virtual functions
-    virtual void ResetColor(const QModelIndex& index) { Q_UNUSED(index); };
-
 protected:
     void SortModel();
 

@@ -35,6 +35,7 @@ struct Node {
     NodeKind kind {};
     bool direction_rule {};
     NodeUnit unit {};
+    QString color {};
 
     double final_total {};
     double initial_total {};
@@ -61,7 +62,6 @@ struct Node {
 struct NodeF final : Node { };
 
 struct NodeI final : Node {
-    QString color {};
     double unit_price {};
     double commission {};
 
@@ -72,7 +72,6 @@ struct NodeI final : Node {
 };
 
 struct NodeT final : Node {
-    QString color {};
     QStringList document {};
     QDateTime issued_time {};
     NodeStatus status {};

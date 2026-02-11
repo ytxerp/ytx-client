@@ -108,6 +108,25 @@ constexpr int NodeDescriptionColumn(Section section)
     Q_UNREACHABLE();
 }
 
+constexpr int NodeColorColumn(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+        return std::to_underlying(NodeEnumF::kColor);
+    case Section::kTask:
+        return std::to_underlying(NodeEnumT::kColor);
+    case Section::kPartner:
+        return std::to_underlying(NodeEnumP::kColor);
+    case Section::kInventory:
+        return std::to_underlying(NodeEnumI::kColor);
+    case Section::kSale:
+    case Section::kPurchase:
+        return -1;
+    }
+
+    Q_UNREACHABLE();
+}
+
 constexpr std::pair<int, int> NodeNumericColumnRange(Section section)
 {
     switch (section) {

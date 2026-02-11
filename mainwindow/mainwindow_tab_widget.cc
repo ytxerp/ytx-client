@@ -109,7 +109,6 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     const bool is_table_fipt { IsTableWidgetFIPT(widget) };
     const bool is_table_o { IsTableWidgetO(widget) };
     const bool is_settlement { IsTreeWidgetSettlement(widget) };
-    const bool is_color_section { start_ == Section::kTask || start_ == Section::kInventory };
     const bool is_order_section { IsOrderSection(start_) };
     const bool is_double_entry { IsDoubleEntry(start_) };
 
@@ -117,7 +116,7 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     ui->actionInsertNode->setEnabled(is_tree || is_table_o);
 
     ui->actionRename->setEnabled(is_tree);
-    ui->actionClearColor->setEnabled(is_tree && is_color_section);
+    ui->actionClearColor->setEnabled(!is_order_section);
 
     ui->actionMarkAll->setEnabled(is_table_fipt);
     ui->actionMarkNone->setEnabled(is_table_fipt);

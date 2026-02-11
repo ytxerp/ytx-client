@@ -47,7 +47,7 @@ void TreeModelI::sort(int column, Qt::SortOrder order)
         case NodeEnumI::kUnit:
             return Utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumI::kColor:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeI::color, order);
+            return Utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumI::kCommission:
             return Utils::CompareMember(d_lhs, d_rhs, &NodeI::commission, order);
         case NodeEnumI::kUnitPrice:
@@ -158,7 +158,7 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
         UpdateDirectionRule(node, value.toBool());
         break;
     case NodeEnumI::kColor:
-        Utils::UpdateField(pending_updates_[id], d_node, kColor, value.toString(), &NodeI::color, [id, this]() { RestartTimer(id); });
+        Utils::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kCommission:
         Utils::UpdateDouble(pending_updates_[id], d_node, kCommission, value.toDouble(), &NodeI::commission, [id, this]() { RestartTimer(id); });
@@ -211,18 +211,4 @@ Qt::ItemFlags TreeModelI::flags(const QModelIndex& index) const
     }
 
     return flags;
-}
-
-void TreeModelI::ResetColor(const QModelIndex& index)
-{
-    auto* d_node { static_cast<NodeI*>(index.internalPointer()) };
-    Q_ASSERT(d_node != nullptr);
-    const QUuid id { d_node->id };
-
-    d_node->color.clear();
-    emit dataChanged(index.siblingAtColumn(std::to_underlying(NodeEnumI::kColor)), index.siblingAtColumn(std::to_underlying(NodeEnumI::kColor)));
-
-    auto& update { pending_updates_[d_node->id] };
-    RestartTimer(id);
-    update.insert(kColor, QString());
 }

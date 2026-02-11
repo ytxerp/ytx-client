@@ -123,14 +123,18 @@ void MainWindow::EditNameFIPT()
 
 void MainWindow::on_actionClearColor_triggered()
 {
-    qInfo() << "[UI]" << "on_actionResetColor_triggered";
+    qInfo() << "[UI]" << "on_actionClearColor_triggered";
 
-    Q_ASSERT_X(start_ == Section::kInventory || start_ == Section::kTask, Q_FUNC_INFO, "ResetColor action is only valid in Inventory or Task section");
+    Q_ASSERT_X(start_ != Section::kSale && start_ != Section::kPurchase, Q_FUNC_INFO, "ClearColor action is not allowed in Sale or Purchase sections");
 
     const auto index { sc_->tree_view->currentIndex() };
     if (!index.isValid())
         return;
 
     auto model { sc_->tree_model };
-    model->ResetColor(index);
+
+    const int color_column { Utils::NodeColorColumn(start_) };
+    const QModelIndex color_index { index.siblingAtColumn(color_column) };
+
+    model->setData(color_index, QVariant());
 }
