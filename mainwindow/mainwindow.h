@@ -106,6 +106,7 @@ private slots:
     void RTreeSyncFinished();
 
     void RFreeWidget(Section section, const QUuid& node_id);
+    void RFlushCaches();
 
     void RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RSaleReferencePrimary(const QUuid& node_id, int unit);
@@ -267,6 +268,8 @@ private:
     SectionContext* GetSectionContex(Section section);
     void InitSystemTray();
     void InitStatusLabel();
+
+    void FlushCaches(SectionContext& sc);
 
     void SetDeleteShortcut();
     QSet<QString> ChildrenName(const Node* node) const;

@@ -132,6 +132,7 @@ public:
     void SearchTag(QList<Node*>& node_list, const QSet<QString>& tag_set) const;
 
     void Reset();
+    void FlushCaches();
 
     inline bool Contains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
     inline Node* GetNode(const QUuid& node_id) const
@@ -159,7 +160,6 @@ protected:
     void BuildHierarchy(const QJsonArray& path_array);
 
     void RestartTimer(const QUuid& id);
-    void FlushCaches();
     void EmitRowChanged(const QUuid& node_id, int start_column, int end_column);
 
     void UpdateDirectionRule(Node* node, bool value);

@@ -811,6 +811,9 @@ void TreeModel::RestartTimer(const QUuid& id)
 
 void TreeModel::FlushCaches()
 {
+    if (pending_updates_.isEmpty())
+        return;
+
     for (auto* timer : std::as_const(pending_timers_)) {
         timer->stop();
         timer->deleteLater();

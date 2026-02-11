@@ -255,6 +255,28 @@ void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
+void MainWindow::RFlushCaches()
+{
+    FlushCaches(sc_f_);
+    FlushCaches(sc_i_);
+    FlushCaches(sc_p_);
+    FlushCaches(sc_t_);
+
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 500);
+}
+
+void MainWindow::FlushCaches(SectionContext& sc)
+{
+    sc.tree_model->FlushCaches();
+
+    const auto& tab_hash { sc.tab_hash };
+
+    for (const auto& tab : tab_hash) {
+        if (auto* model = tab->Model())
+            model->FlushCaches();
+    }
+}
+
 void MainWindow::RegisterWidget(const QUuid& widget_id, QWidget* widget)
 {
     sc_->widget_hash.insert(widget_id, widget);
@@ -360,6 +382,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 void MainWindow::SetUniqueConnection() const
 {
+    connect(qApp, &QCoreApplication::aboutToQuit, this, &MainWindow::RFlushCaches);
     connect(ui->actionQuit, &QAction::triggered, qApp, &QCoreApplication::quit);
 
     connect(section_group_, &QButtonGroup::idClicked, this, &MainWindow::RSectionGroup);

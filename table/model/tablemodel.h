@@ -86,6 +86,8 @@ public:
     inline virtual Entry* GetEntry(const QModelIndex& index) const { return shadow_list_.at(index.row())->entry; }
     virtual void ActionEntry(EntryAction action);
 
+    void FlushCaches();
+
 protected:
     virtual bool UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit)
     {
@@ -120,7 +122,6 @@ protected:
     };
 
     void RestartTimer(const QUuid& id);
-    void FlushCaches();
     double CalculateBalance(EntryShadow* shadow) const { return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit); }
 
     EntryShadow* InsertRowsImpl(int row, const QModelIndex& parent = QModelIndex());

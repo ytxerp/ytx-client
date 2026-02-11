@@ -184,6 +184,9 @@ void TableModel::RestartTimer(const QUuid& id)
 
 void TableModel::FlushCaches()
 {
+    if (pending_updates_.isEmpty())
+        return;
+
     for (auto* timer : std::as_const(pending_timers_)) {
         timer->stop();
         timer->deleteLater();
