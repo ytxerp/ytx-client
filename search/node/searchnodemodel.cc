@@ -2,11 +2,14 @@
 
 #include <QJsonArray>
 
-SearchNodeModel::SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, QObject* parent)
+#include "utils/tagutils.h"
+
+SearchNodeModel::SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
     , tree_model_ { tree_model }
     , section_ { info.section }
+    , tag_hash_ { tag_hash }
 {
 }
 
@@ -46,16 +49,24 @@ QVariant SearchNodeModel::headerData(int section, Qt::Orientation orientation, i
 
 void SearchNodeModel::Search(const QString& text)
 {
-    // 1. Prepare a temporary list to hold search results
+    // 1. Prepare the result list (do not modify the model yet)
     QList<Node*> results {};
 
     if (!text.isEmpty()) {
-        // Perform the search in the underlying tree model
-        tree_model_->SearchNode(results, text);
+        // Parse search input into text and tag set
+        const SearchQuery query { Utils::ParseSearchQuery(text, tag_hash_) };
+
+        if (!query.tags.isEmpty()) {
+            // Tag search has higher priority
+            tree_model_->SearchTag(results, query.tags);
+        } else if (!query.text.isEmpty()) {
+            // Search by description text if no tags
+            tree_model_->SearchName(results, query.text);
+        }
     }
 
     // 2. Update the model in one step
     beginResetModel();
-    node_list_ = std::move(results); // Move results to avoid unnecessary copy
+    node_list_ = std::move(results); // Move results to avoid copying
     endResetModel();
 }

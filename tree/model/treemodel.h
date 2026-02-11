@@ -128,7 +128,8 @@ public:
     void UpdateSeparator(CString& old_separator, CString& new_separator);
 
     void AckNode(const QUuid& node_id) const;
-    void SearchNode(QList<Node*>& node_list, CString& name) const;
+    void SearchName(QList<Node*>& node_list, CString& name) const;
+    void SearchTag(QList<Node*>& node_list, const QSet<QString>& tag_set) const;
 
     void Reset();
 

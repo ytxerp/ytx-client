@@ -5,6 +5,7 @@
 #include "enum/tagenum.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
+#include "utils/templateutils.h"
 
 void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
 {
@@ -78,10 +79,7 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
     }
 
     {
-        auto* v_header { view->verticalHeader() };
-        v_header->setDefaultSectionSize(kRowHeight);
-        v_header->setSectionResizeMode(QHeaderView::Fixed);
-        v_header->setHidden(true);
+        Utils::SetupVerticalHeader(view, kRowHeight);
     }
 }
 

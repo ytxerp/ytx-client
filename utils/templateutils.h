@@ -21,6 +21,7 @@
 #define TEMPLATEUTILS_H
 
 #include <QAbstractItemView>
+#include <QHeaderView>
 #include <QSettings>
 #include <QTableView>
 
@@ -48,6 +49,20 @@ template <MapType T> ItemModel* CreateModelFromMap(const T& map, QObject* parent
 
     model->sort(0);
     return model;
+}
+
+template <InheritQAbstractItemView T> void SetupVerticalHeader(T* view, int row_height)
+{
+    if (!view)
+        return;
+
+    auto* v_header = view->verticalHeader();
+    if (!v_header)
+        return;
+
+    v_header->setDefaultSectionSize(row_height);
+    v_header->setSectionResizeMode(QHeaderView::Fixed);
+    v_header->setHidden(true);
 }
 
 template <InheritQWidget T> void CloseWidget(const QUuid& node_id, QHash<QUuid, QPointer<T>>& hash)

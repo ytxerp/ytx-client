@@ -9,6 +9,7 @@
 #include "tag/tagmodel.h"
 #include "utils/entryutils.h"
 #include "utils/mainwindowutils.h"
+#include "utils/tagutils.h"
 
 void MainWindow::on_actionTags_triggered()
 {

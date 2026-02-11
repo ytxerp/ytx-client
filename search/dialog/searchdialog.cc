@@ -6,6 +6,7 @@
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 #include "utils/entryutils.h"
+#include "utils/templateutils.h"
 
 SearchDialog::SearchDialog(SectionContext* sc, SearchNodeModel* search_node, SearchEntryModel* search_entry, QWidget* parent)
     : QDialog(parent)
@@ -145,7 +146,8 @@ void SearchDialog::IniView(QTableView* view)
     view->setSelectionBehavior(QAbstractItemView::SelectRows);
     view->setAlternatingRowColors(true);
     view->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    view->verticalHeader()->setHidden(true);
+
+    Utils::SetupVerticalHeader(view, kRowHeight);
 }
 
 void SearchDialog::ResizeTreeColumn(QHeaderView* header)

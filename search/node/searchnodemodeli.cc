@@ -2,8 +2,8 @@
 
 #include "utils/compareutils.h"
 
-SearchNodeModelI::SearchNodeModelI(CSectionInfo& info, CTreeModel* tree_model, QObject* parent)
-    : SearchNodeModel { info, tree_model, parent }
+SearchNodeModelI::SearchNodeModelI(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+    : SearchNodeModel { info, tree_model, tag_hash, parent }
 {
 }
 
@@ -34,6 +34,8 @@ QVariant SearchNodeModelI::data(const QModelIndex& index, int role) const
         return d_node->user_id;
     case NodeEnumI::kCode:
         return d_node->code;
+    case NodeEnumI::kTag:
+        return d_node->tag;
     case NodeEnumI::kDescription:
         return d_node->description;
     case NodeEnumI::kNote:
@@ -86,6 +88,8 @@ void SearchNodeModelI::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumI::kFinalTotal:
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
+        case NodeEnumI::kTag:
+            return Utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumI::kColor:
             return Utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumI::kCommission:

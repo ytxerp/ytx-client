@@ -550,11 +550,10 @@ void TreeModel::UpdateSeparator(CString& old_separator, CString& new_separator)
     leaf_path_model_->UpdateSeparator(old_separator, new_separator);
 }
 
-void TreeModel::SearchNode(QList<Node*>& node_list, CString& name) const
+void TreeModel::SearchName(QList<Node*>& node_list, CString& name) const
 {
-    if (node_hash_.size() >= 50) {
-        node_list.reserve(node_hash_.size() / 2);
-    }
+    if (name.isEmpty())
+        return;
 
     for (const auto& [id, node_ptr] : node_hash_.asKeyValueRange()) {
         if (!node_ptr)
@@ -562,6 +561,24 @@ void TreeModel::SearchNode(QList<Node*>& node_list, CString& name) const
 
         if (node_ptr->name.contains(name, Qt::CaseInsensitive)) {
             node_list.emplaceBack(node_ptr);
+        }
+    }
+}
+
+void TreeModel::SearchTag(QList<Node*>& node_list, const QSet<QString>& tag_set) const
+{
+    if (tag_set.isEmpty())
+        return;
+
+    for (const auto& [id, node] : node_hash_.asKeyValueRange()) {
+        Q_ASSERT(node && "EntryHubP::SearchTag encountered null entry in cache");
+
+        const QStringList& tags { node->tag };
+        for (const QString& tag_id : tags) {
+            if (tag_set.contains(tag_id)) {
+                node_list.emplaceBack(node);
+                break; // IMPORTANT: avoid duplicate insertion
+            }
         }
     }
 }

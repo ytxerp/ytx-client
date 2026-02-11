@@ -26,7 +26,7 @@ class SearchNodeModelT final : public SearchNodeModel {
     Q_OBJECT
 
 public:
-    SearchNodeModelT(CSectionInfo& info, CTreeModel* tree_model, QObject* parent = nullptr);
+    SearchNodeModelT(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

@@ -1,6 +1,7 @@
 #include "searchentrymodel.h"
 
 #include "utils/compareutils.h"
+#include "utils/tagutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -57,7 +58,7 @@ void SearchEntryModel::Search(const QString& text)
     }
 
     // 2. Parse the search input into text and tag set
-    const SearchQuery query { ParseSearchQuery(text, tag_hash_) };
+    const SearchQuery query { Utils::ParseSearchQuery(text, tag_hash_) };
 
     // 3. Perform the search (tag search has higher priority)
     if (!query.tags.isEmpty()) {
@@ -73,42 +74,6 @@ void SearchEntryModel::Search(const QString& text)
 
     // 5.Both tags and text are empty → clear the model
     ClearModel();
-}
-
-SearchQuery SearchEntryModel::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag*>& tag_hash)
-{
-    SearchQuery query {};
-
-    static const QRegularExpression kTagRegex { R"(\[([^\]]+)\])" };
-
-    QRegularExpressionMatchIterator it = kTagRegex.globalMatch(input);
-
-    while (it.hasNext()) {
-        const QRegularExpressionMatch match = it.next();
-        const QString tag_name = match.captured(1).trimmed();
-
-        if (tag_name.isEmpty())
-            continue;
-
-        // Resolve tag name -> tag id
-        for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
-            const Tag* tag = it.value();
-            if (!tag)
-                continue;
-
-            if (tag->name.compare(tag_name, Qt::CaseInsensitive) == 0) {
-                query.tags.insert(it.key().toString(QUuid::WithoutBraces));
-                break;
-            }
-        }
-    }
-
-    // Remove all [xxx] from text
-    QString text = input;
-    text.remove(kTagRegex);
-    query.text = text.trimmed();
-
-    return query;
 }
 
 void SearchEntryModel::ClearModel()

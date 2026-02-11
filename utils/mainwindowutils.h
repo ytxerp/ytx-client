@@ -41,14 +41,6 @@ QString UuidToShortCode(const QUuid& uuid, int length = 10);
 QUuid ManageDialog(QHash<QUuid, QPointer<QDialog>>& dialog_hash, QDialog* dialog);
 void ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where = true);
 
-inline QColor GetContrastColor(const QColor& bg_color)
-{
-    const int brightness { (bg_color.red() * 299 + bg_color.green() * 587 + bg_color.blue() * 114) / 1000 };
-    return brightness > 128 ? Qt::black : Qt::white;
-}
-QIcon CreateTagIcon(const Tag* tag, bool checked);
-QPixmap CreateTagPixmap(const Tag* tag);
-
 QMessageBox* CreateMessageBox(QMessageBox::Icon icon, CString& title, CString& text, bool modal = false,
     QMessageBox::StandardButtons buttons = QMessageBox::NoButton, QWidget* parent = nullptr);
 

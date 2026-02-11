@@ -29,14 +29,14 @@
      <item>
       <widget class="QLineEdit" name="lineEditNode">
        <property name="placeholderText">
-        <string>Node Name</string>
+        <string>Name or [Tag]</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLineEdit" name="lineEditEntry">
        <property name="placeholderText">
-        <string>Entry Description or [Tag]</string>
+        <string>Description or [Tag]</string>
        </property>
       </widget>
      </item>

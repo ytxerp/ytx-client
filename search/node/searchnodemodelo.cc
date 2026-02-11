@@ -7,8 +7,8 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SearchNodeModelO::SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, QObject* parent)
-    : SearchNodeModel { info, tree_model, parent }
+SearchNodeModelO::SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+    : SearchNodeModel { info, tree_model, tag_hash, parent }
 {
 }
 

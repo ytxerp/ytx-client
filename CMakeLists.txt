@@ -221,6 +221,7 @@ set(SOURCES
     billing/settlement/tablemodelsettlement.cc
     tag/tagmodel.cc
     mainwindow/mainwindow_tag.cc
+    utils/tagutils.cc
 )
 
 set(HEADERS
@@ -382,6 +383,7 @@ set(HEADERS
     billing/settlement/tablemodelsettlement.h
     tag/tagmodel.h
     enum/tagenum.h
+    utils/tagutils.h
 )
 
 set(UIS

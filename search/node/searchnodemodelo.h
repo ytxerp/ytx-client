@@ -26,7 +26,7 @@ class SearchNodeModelO final : public SearchNodeModel {
     Q_OBJECT
 
 public:
-    SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, QObject* parent = nullptr);
+    SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
 
 public slots:
     void RNodeSearch(const QJsonObject& obj) override;

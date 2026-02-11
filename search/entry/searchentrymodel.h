@@ -27,11 +27,6 @@
 #include "tag/tag.h"
 #include "utils/castutils.h"
 
-struct SearchQuery {
-    QString text {}; // Normal search text (without [tag])
-    QSet<QString> tags {}; // Tag names or tag IDs (depending on your mapping)
-};
-
 using Utils::DerivedPtr;
 
 class SearchEntryModel : public QAbstractItemModel {
@@ -60,7 +55,6 @@ public:
     virtual void Search(const QString& text);
 
 protected:
-    SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Tag*>& tag_hash);
     void ClearModel();
 
 protected:

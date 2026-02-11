@@ -2,6 +2,7 @@
 
 #include "enum/entryenum.h"
 #include "utils/compareutils.h"
+#include "utils/tagutils.h"
 
 SearchEntryModelP::SearchEntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
     : SearchEntryModel { info, tag_hash, parent }
@@ -109,7 +110,7 @@ void SearchEntryModelP::Search(const QString& text)
 
     if (!text.isEmpty()) {
         // Parse search input into text and tag set
-        const SearchQuery query { ParseSearchQuery(text, tag_hash_) };
+        const SearchQuery query { Utils::ParseSearchQuery(text, tag_hash_) };
 
         if (!query.tags.isEmpty()) {
             // Tag search has higher priority
