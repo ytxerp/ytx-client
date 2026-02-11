@@ -1,5 +1,7 @@
 #include "tagdelegate.h"
 
+#include <QtWidgets/qapplication.h>
+
 #include <QPainter>
 
 TagDelegate::TagDelegate(const QHash<QUuid, Tag*>& tag_hash, const QHash<QUuid, QPixmap>& tag_pixmap, QObject* parent)
@@ -15,6 +17,9 @@ void TagDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, c
     if (tag_ids.isEmpty()) {
         return PaintEmpty(painter, option, index);
     }
+
+    static QStyle* style { QApplication::style() };
+    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
 
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
@@ -70,10 +75,5 @@ QSize TagDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInde
         total_width -= kTagSpacing;
     }
 
-    // Use a fixed height if all tags have the same height
-    QFont font { option.font };
-    font.setPointSize(font.pointSize() - 1);
-    const int height { QFontMetrics(font).height() + 2 * kTagVPadding + 2 * kTagMargin };
-
-    return QSize(total_width, height);
+    return QSize(total_width, option.rect.height());
 }

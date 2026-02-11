@@ -36,6 +36,7 @@ struct Node {
     bool direction_rule {};
     NodeUnit unit {};
     QString color {};
+    QStringList tag {};
 
     double final_total {};
     double initial_total {};

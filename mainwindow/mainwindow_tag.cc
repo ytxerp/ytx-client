@@ -165,6 +165,98 @@ void MainWindow::RDeleteTag(const QJsonObject& obj)
     }
 }
 
+void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
+{
+    Q_UNUSED(pos);
+
+    const auto index { sc_->tree_view->currentIndex() };
+    if (!index.isValid())
+        return;
+
+    auto model { sc_->tree_model };
+    const auto* node { static_cast<Node*>(index.internalPointer()) };
+
+    const auto& tag_hash { sc_->tag_hash };
+
+    auto* menu = new QMenu(this);
+
+    if (!tag_hash.isEmpty()) {
+        auto* tag_menu = menu->addMenu(tr("Tags"));
+
+        QList<Tag*> sorted_tags = tag_hash.values();
+        std::sort(sorted_tags.begin(), sorted_tags.end(), [](const Tag* a, const Tag* b) { return a->name < b->name; });
+
+        for (const auto* tag : std::as_const(sorted_tags)) {
+            if (!tag || tag->id.isNull())
+                continue;
+
+            auto* tag_action { tag_menu->addAction(tag->name) };
+
+            const bool is_checked { node->tag.contains(tag->id.toString(QUuid::WithoutBraces)) };
+
+            tag_action->setIcon(GetTagIcon(sc_, tag, is_checked));
+            tag_action->setIconVisibleInMenu(true);
+
+            connect(tag_action, &QAction::triggered, this, [=, this]() {
+                if (is_checked) {
+                    RRemoveNodeTag(tag, model, node);
+                } else {
+                    RInsertNodeTag(tag, model, node);
+                }
+            });
+        }
+
+        menu->addSeparator();
+    }
+
+    menu->addAction(ui->actionInsertNode);
+    menu->addAction(ui->actionAppendNode);
+    menu->addSeparator();
+    menu->addAction(ui->actionRename);
+    menu->addAction(ui->actionClearColor);
+    menu->addSeparator();
+    menu->addAction(ui->actionDelete);
+
+    menu->exec(QCursor::pos());
+}
+
+void MainWindow::RInsertNodeTag(const Tag* tag, TreeModel* model, const Node* node)
+{
+    qDebug() << "RInsertNodeTag";
+    auto list { node->tag };
+    list.emplaceFront(tag->id.toString(QUuid::WithoutBraces));
+
+    auto index { model->GetIndex(node->id) };
+    if (!index.isValid()) {
+        qWarning() << "Invalid index for node:" << node->name;
+        return;
+    }
+
+    const int column { Utils::NodeTagColumn(start_) };
+    const QModelIndex tag_index { model->index(index.row(), column) };
+
+    model->setData(tag_index, list);
+}
+
+void MainWindow::RRemoveNodeTag(const Tag* tag, TreeModel* model, const Node* node)
+{
+    qDebug() << "RRemoveNodeTag";
+
+    auto list { node->tag };
+    list.removeAll(tag->id.toString(QUuid::WithoutBraces));
+
+    auto index { model->GetIndex(node->id) };
+    if (!index.isValid()) {
+        qWarning() << "Invalid index for node:" << node->name;
+        return;
+    }
+
+    const int column { Utils::NodeTagColumn(start_) };
+    const QModelIndex tag_index { model->index(index.row(), column) };
+
+    model->setData(tag_index, list);
+}
+
 void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
 {
     Q_UNUSED(pos);
@@ -183,7 +275,6 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     const auto& tag_hash { sc_->tag_hash };
 
     auto* menu = new QMenu(this);
-    menu->setObjectName("tagMenu");
 
     if (!tag_hash.isEmpty()) {
         auto* tag_menu = menu->addMenu(tr("Tags"));
@@ -204,9 +295,9 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
 
             connect(tag_action, &QAction::triggered, this, [=, this]() {
                 if (is_checked) {
-                    RRemoveTagFromCurrentRow(tag, model, entry);
+                    RRemoveEntryTag(tag, model, entry);
                 } else {
-                    RInsertTagIntoCurrentRow(tag, model, entry);
+                    RInsertEntryTag(tag, model, entry);
                 }
             });
         }
@@ -259,9 +350,9 @@ QPixmap MainWindow::GetTagPixmap(SectionContext* sc, const Tag* tag)
     return it.value();
 }
 
-void MainWindow::RInsertTagIntoCurrentRow(const Tag* tag, TableModel* model, const Entry* entry)
+void MainWindow::RInsertEntryTag(const Tag* tag, TableModel* model, const Entry* entry)
 {
-    qDebug() << "RInsertTagIntoCurrentRow";
+    qDebug() << "RInsertEntryTag";
     auto list { entry->tag };
     list.emplaceFront(tag->id.toString(QUuid::WithoutBraces));
 
@@ -277,15 +368,15 @@ void MainWindow::RInsertTagIntoCurrentRow(const Tag* tag, TableModel* model, con
     model->setData(tag_index, list);
 }
 
-void MainWindow::RRemoveTagFromCurrentRow(const Tag* tag, TableModel* model, const Entry* entry)
+void MainWindow::RRemoveEntryTag(const Tag* tag, TableModel* model, const Entry* entry)
 {
-    qDebug() << "RRemoveTagFromCurrentRow";
+    qDebug() << "RRemoveEntryTag";
     auto list { entry->tag };
     list.removeAll(tag->id.toString(QUuid::WithoutBraces));
 
     auto index { model->GetIndex(entry->id) };
     if (!index.isValid()) {
-        qWarning() << "Invalid index for entry:" << entry->id;
+        qWarning() << "Invalid index for entry";
         return;
     }
 

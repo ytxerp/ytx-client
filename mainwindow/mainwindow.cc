@@ -464,22 +464,6 @@ void MainWindow::on_actionAppendNode_triggered()
     InsertNodeFunction(index);
 }
 
-void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
-{
-    Q_UNUSED(pos);
-
-    auto* menu = new QMenu(this);
-    menu->addAction(ui->actionInsertNode);
-    menu->addAction(ui->actionAppendNode);
-    menu->addSeparator();
-    menu->addAction(ui->actionRename);
-    menu->addAction(ui->actionClearColor);
-    menu->addSeparator();
-    menu->addAction(ui->actionDelete);
-
-    menu->exec(QCursor::pos());
-}
-
 void MainWindow::on_actionRename_triggered()
 {
     qInfo() << "[UI]" << "on_actionEditName_triggered";

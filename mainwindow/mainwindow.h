@@ -116,6 +116,9 @@ private slots:
     void RStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
+    void RInsertNodeTag(const Tag* tag, TreeModel* model, const Node* node);
+    void RRemoveNodeTag(const Tag* tag, TreeModel* model, const Node* node);
+
     void RTreeViewDoubleClicked(const QModelIndex& index);
     void RSettlementTableViewDoubleClicked(const QModelIndex& index);
 
@@ -144,8 +147,8 @@ private slots:
     inline void RInsertingTag(Tag* tag) { inserting_tag_.insert(tag->id, tag); }
 
     void RTableViewCustomContextMenuRequested(const QPoint& pos);
-    void RInsertTagIntoCurrentRow(const Tag* tag, TableModel* model, const Entry* entry);
-    void RRemoveTagFromCurrentRow(const Tag* tag, TableModel* model, const Entry* entry);
+    void RInsertEntryTag(const Tag* tag, TableModel* model, const Entry* entry);
+    void RRemoveEntryTag(const Tag* tag, TableModel* model, const Entry* entry);
 
     void RSharedConfig(const QJsonArray& arr);
     void RDocumentDir(Section section, const QString& document_dir);

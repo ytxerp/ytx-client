@@ -11,6 +11,7 @@ void Node::ResetState()
     description.clear();
     color.clear();
     note.clear();
+    tag.clear();
     direction_rule = false;
     kind = {};
     unit = {};
@@ -69,6 +70,8 @@ void Node::ReadJson(const QJsonObject& object)
         version = object.value(kVersion).toInt();
     if (object.contains(kColor))
         color = object.value(kColor).toString();
+
+    tag = Utils::ReadStringList(object, kTag);
 }
 
 QJsonObject Node::WriteJson() const
@@ -85,6 +88,8 @@ QJsonObject Node::WriteJson() const
     obj.insert(kUnit, std::to_underlying(unit));
     obj.insert(kFinalTotal, QString::number(final_total, 'f', kMaxNumericScale_4));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
+    obj.insert(kTag, Utils::WriteStringList(tag));
+
     return obj;
 }
 

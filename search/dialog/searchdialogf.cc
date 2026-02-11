@@ -19,6 +19,7 @@ void SearchDialogF::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kKind), kind_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kName), tree_path_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kColor), color_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kTag), tag_);
 }
 
 void SearchDialogF::REntryDoubleClicked(const QModelIndex& index)
