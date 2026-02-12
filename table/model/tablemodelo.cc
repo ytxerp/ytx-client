@@ -151,8 +151,9 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         return false;
 
     const EntryEnumO column { index.column() };
+    const int row { index.row() };
 
-    auto* entry = entry_list_.at(index.row());
+    auto* entry = entry_list_.at(row);
     auto* d_entry = DerivedPtr<EntryO>(entry);
 
     const double old_count { d_entry->count };
@@ -174,19 +175,19 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         UpdateDescription(d_entry, value.toString(), is_persisted);
         break;
     case EntryEnumO::kRhsNode:
-        unit_price_changed = UpdateInternalSku(d_entry, value.toUuid(), is_persisted);
+        unit_price_changed = UpdateInternalSku(d_entry, row, value.toUuid(), is_persisted);
         break;
     case EntryEnumO::kUnitPrice:
-        unit_price_changed = UpdateUnitPrice(d_entry, value.toDouble(), is_persisted);
+        unit_price_changed = UpdateUnitPrice(d_entry, row, value.toDouble(), is_persisted);
         break;
     case EntryEnumO::kMeasure:
-        measure_changed = UpdateMeasure(d_entry, value.toDouble(), is_persisted);
+        measure_changed = UpdateMeasure(d_entry, row, value.toDouble(), is_persisted);
         break;
     case EntryEnumO::kCount:
         count_changed = UpdateCount(d_entry, value.toDouble(), is_persisted);
         break;
     case EntryEnumO::kUnitDiscount:
-        unit_discount_changed = UpdateUnitDiscount(d_entry, value.toDouble(), is_persisted);
+        unit_discount_changed = UpdateUnitDiscount(d_entry, row, value.toDouble(), is_persisted);
         break;
     case EntryEnumO::kId:
     case EntryEnumO::kUpdateBy:
@@ -203,7 +204,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         return false;
     }
 
-    emit SResizeColumnToContents(index.column());
+    emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
 
     if (count_changed)
         emit SSyncDeltaO(d_entry->lhs_node, 0.0, 0.0, d_entry->count - old_count, 0.0, 0.0);
@@ -376,66 +377,10 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
-#if 0
-/// @brief Update entry by customer product code (external_sku)
-/// @note Responsibility: Handle insertion and clearing, not deletion
-/// @note If mapping not found, rhs_node is cleared but entry is kept for later correction
-bool TableModelO::UpdateExternalSku(EntryO* entry, const QUuid& value)
-{
-    if (entry->external_sku == value)
-        return false;
-
-    const double old_unit_price { entry->unit_price };
-    const QUuid old_rhs_node { entry->rhs_node };
-
-    entry->external_sku = value;
-    ResolveFromExternal(entry, value);
-
-    const QUuid new_rhs_node { entry->rhs_node };
-    const auto entry_id { entry->id };
-
-    const bool price_changed { FloatChanged(old_unit_price, entry->unit_price) };
-    const bool rhs_changed { old_rhs_node != new_rhs_node };
-
-    if (price_changed) {
-        RecalculateAmount(entry);
-    }
-
-    if (!pending_inserts_.contains(entry_id)) {
-        auto& update { pending_updates_[entry_id] };
-        update.insert(kExternalSku, value.toString(QUuid::WithoutBraces));
-
-        if (price_changed) {
-            update.insert(kUnitPrice, QString::number(entry->unit_price, 'f', kMaxNumericScale_4));
-            update.insert(kInitial, QString::number(entry->initial, 'f', kMaxNumericScale_4));
-            update.insert(kFinal, QString::number(entry->final, 'f', kMaxNumericScale_4));
-        }
-
-        if (rhs_changed) {
-            update.insert(kRhsNode, new_rhs_node.toString(QUuid::WithoutBraces));
-        }
-
-        ScheduleUpdate(entry_id);
-    }
-
-    if (rhs_changed) {
-        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kRhsNode));
-    }
-
-    if (price_changed) {
-        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kUnitPrice));
-        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
-        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kFinal));
-    }
-
-    return price_changed;
-}
-#endif
-
 /// @brief Update entry by internal product ID (rhs_node)
 /// @note Responsibility: Handle insertion and update, not deletion
 /// @note rhs_node must be valid, external_sku is auto-filled
-bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value, bool is_persisted)
+bool TableModelO::UpdateInternalSku(EntryO* entry, int row, const QUuid& value, bool is_persisted)
 {
     if (value.isNull())
         return false;
@@ -460,19 +405,17 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, const QUuid& value, bool is_p
     }
 
     if (entry_hub_p_->ExternalSku(d_node_->partner_id, old_rhs_node) != entry_hub_p_->ExternalSku(d_node_->partner_id, value)) {
-        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kExternalSku));
+        EmitRowChanged(row, std::to_underlying(EntryEnumO::kExternalSku), std::to_underlying(EntryEnumO::kExternalSku));
     }
 
     if (price_changed) {
-        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kUnitPrice));
-        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
-        emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kFinal));
+        EmitRowChanged(row, std::to_underlying(EntryEnumO::kUnitPrice), std::to_underlying(EntryEnumO::kFinal));
     }
 
     return price_changed;
 }
 
-bool TableModelO::UpdateUnitPrice(EntryO* entry, double value, bool is_persisted)
+bool TableModelO::UpdateUnitPrice(EntryO* entry, int row, double value, bool is_persisted)
 {
     if (FloatEqual(entry->unit_price, value))
         return false;
@@ -485,13 +428,12 @@ bool TableModelO::UpdateUnitPrice(EntryO* entry, double value, bool is_persisted
         pending_update_.insert(entry->id, entry);
     }
 
-    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
-    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kFinal));
+    EmitRowChanged(row, std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kFinal));
 
     return true;
 }
 
-bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value, bool is_persisted)
+bool TableModelO::UpdateUnitDiscount(EntryO* entry, int row, double value, bool is_persisted)
 {
     if (FloatEqual(entry->unit_discount, value))
         return false;
@@ -504,12 +446,11 @@ bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value, bool is_persis
         pending_update_.insert(entry->id, entry);
     }
 
-    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kDiscount));
-    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kFinal));
+    EmitRowChanged(row, std::to_underlying(EntryEnumO::kDiscount), std::to_underlying(EntryEnumO::kFinal));
     return true;
 }
 
-bool TableModelO::UpdateMeasure(EntryO* entry, double value, bool is_persisted)
+bool TableModelO::UpdateMeasure(EntryO* entry, int row, double value, bool is_persisted)
 {
     if (FloatEqual(entry->measure, value))
         return false;
@@ -524,9 +465,8 @@ bool TableModelO::UpdateMeasure(EntryO* entry, double value, bool is_persisted)
         pending_update_.insert(entry->id, entry);
     }
 
-    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kInitial));
-    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kDiscount));
-    emit SResizeColumnToContents(std::to_underlying(EntryEnumO::kFinal));
+    EmitRowChanged(row, std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kFinal));
+
     return true;
 }
 

@@ -108,7 +108,6 @@ void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
     const int name_column { std::to_underlying(NodeEnumO::kName) };
 
     EmitRowChanged(node_id, name_column, name_column);
-    emit SResizeColumnToContents(name_column);
 }
 
 void TreeModelO::InsertSettlement(const QUuid& node_id, const QUuid& settlement_id)
@@ -451,7 +450,6 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
     endMoveRows();
 
     RefreshAffectedTotal(affected_ids_destination.unite(affected_ids_source));
-    emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
 
     return true;
 }

@@ -46,9 +46,6 @@ signals:
     void SDetachOneEntry(const QUuid& node_id, const QUuid& entry_id);
     void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
-    // send to its table view
-    void SResizeColumnToContents(int column);
-
     // send to entryhub, FIPT
     void SAppendOneEntry(Entry* entry);
     void SDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
@@ -125,6 +122,7 @@ protected:
     double CalculateBalance(EntryShadow* shadow) const { return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit); }
 
     EntryShadow* InsertRowsImpl(int row, const QModelIndex& parent = QModelIndex());
+    void EmitRowChanged(int row, int start_column, int end_column);
 
 protected:
     CSectionInfo& info_;

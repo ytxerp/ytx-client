@@ -50,7 +50,7 @@ void TableModelP::RAppendOneEntry(Entry* entry)
     endInsertRows();
 
     if (entry_list_.size() == 1)
-        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
+        EmitRowChanged(row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
 }
 
 bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
@@ -270,7 +270,7 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         return false;
     }
 
-    emit SResizeColumnToContents(index.column());
+    emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
     return true;
 }
 
@@ -364,7 +364,7 @@ bool TableModelP::insertRows(int row, int, const QModelIndex& parent)
     endInsertRows();
 
     if (entry_list_.size() == 1)
-        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
+        EmitRowChanged(row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
 
     return true;
 }

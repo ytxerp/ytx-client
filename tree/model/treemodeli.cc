@@ -188,7 +188,7 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
         return false;
     }
 
-    emit SResizeColumnToContents(index.column());
+    emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
     return true;
 }
 

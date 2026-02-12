@@ -352,7 +352,7 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         return false;
     }
 
-    emit SResizeColumnToContents(index.column());
+    emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
     return true;
 }
 
@@ -489,6 +489,20 @@ EntryShadow* TableModel::InsertRowsImpl(int row, const QModelIndex& parent)
     endInsertRows();
 
     return entry_shadow;
+}
+
+void TableModel::EmitRowChanged(int row, int start_column, int end_column)
+{
+    if (row < 0 || row >= rowCount())
+        return;
+
+    if (start_column < 0 || end_column >= columnCount() || start_column > end_column)
+        return;
+
+    const QModelIndex left { index(row, start_column) };
+    const QModelIndex right { index(row, end_column) };
+
+    emit dataChanged(left, right, { Qt::DisplayRole, Qt::EditRole });
 }
 
 void TableModel::RDeleteMultiEntry(const QSet<QUuid>& entry_id_set)

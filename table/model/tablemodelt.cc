@@ -19,7 +19,7 @@ bool TableModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
     InsertRowsImpl(row, parent);
 
     if (shadow_list_.size() == 1)
-        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
+        EmitRowChanged(row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
 
     return true;
 }
@@ -77,7 +77,7 @@ bool TableModelT::UpdateNumeric(EntryShadow* shadow, double value, int row, bool
     if (has_leaf_delta) {
         AccumulateBalance(row);
 
-        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kBalance));
+        EmitRowChanged(row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
         emit SUpdateBalance(rhs_id, *shadow->id);
     }
 
@@ -138,7 +138,7 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
         const bool has_leaf_delta { std::abs(lhs_debit - lhs_credit) > kTolerance };
         if (has_leaf_delta) {
             AccumulateBalance(row);
-            emit SResizeColumnToContents(std::to_underlying(EntryEnum::kBalance));
+            EmitRowChanged(row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
         }
 
         emit SAppendOneEntry(shadow->entry);

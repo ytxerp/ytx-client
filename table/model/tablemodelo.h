@@ -85,10 +85,10 @@ public:
     inline Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
 
 private:
-    bool UpdateInternalSku(EntryO* entry, const QUuid& value, bool is_persisted);
-    bool UpdateUnitPrice(EntryO* entry, double value, bool is_persisted);
-    bool UpdateUnitDiscount(EntryO* entry, double value, bool is_persisted);
-    bool UpdateMeasure(EntryO* entry, double value, bool is_persisted);
+    bool UpdateInternalSku(EntryO* entry, int row, const QUuid& value, bool is_persisted);
+    bool UpdateUnitPrice(EntryO* entry, int row, double value, bool is_persisted);
+    bool UpdateUnitDiscount(EntryO* entry, int row, double value, bool is_persisted);
+    bool UpdateMeasure(EntryO* entry, int row, double value, bool is_persisted);
     bool UpdateCount(EntryO* entry, double value, bool is_persisted);
     bool UpdateDescription(EntryO* entry, const QString& value, bool is_persisted);
 

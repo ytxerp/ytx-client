@@ -186,11 +186,11 @@ private:
 
     void SetTableView(QTableView* view, Section section, int stretch_column, int lhs_node_column) const;
 
-    void TableConnectF(QTableView* table_view, TableModel* table_model) const;
-    void TableConnectI(QTableView* table_view, TableModel* table_model) const;
-    void TableConnectT(QTableView* table_view, TableModel* table_model) const;
-    void TableConnectP(QTableView* table_view, TableModel* table_model) const;
-    void TableConnectO(QTableView* table_view, TableModelO* table_model_o, TableWidgetO* widget) const;
+    void TableConnectF(TableModel* table_model) const;
+    void TableConnectI(TableModel* table_model) const;
+    void TableConnectT(TableModel* table_model) const;
+    void TableConnectP(TableModel* table_model) const;
+    void TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const;
 
     void CreateSaleReference(const QUuid& node_id, int unit);
     void DelegateSaleReference(QTableView* table_view, CSectionConfig& config) const;

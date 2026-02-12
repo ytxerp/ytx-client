@@ -19,7 +19,7 @@ bool TableModelF::insertRows(int row, int /*count*/, const QModelIndex& parent)
     *entry_shadow->rhs_rate = 1.0;
 
     if (shadow_list_.size() == 1)
-        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kIssuedTime));
+        EmitRowChanged(0, std::to_underlying(EntryEnum::kIssuedTime), std::to_underlying(EntryEnum::kIssuedTime));
 
     return true;
 }
@@ -49,7 +49,7 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
         const bool has_leaf_delta { std::abs(lhs_debit - lhs_credit) > kTolerance };
         if (has_leaf_delta) {
             AccumulateBalance(row);
-            emit SResizeColumnToContents(std::to_underlying(EntryEnum::kBalance));
+            EmitRowChanged(row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
         }
 
         emit SAppendOneEntry(shadow->entry);
@@ -132,8 +132,8 @@ bool TableModelF::UpdateNumeric(EntryShadow* shadow, double value, int row, bool
 
     if (has_leaf_delta) {
         AccumulateBalance(row);
+        EmitRowChanged(row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
 
-        emit SResizeColumnToContents(std::to_underlying(EntryEnum::kBalance));
         emit SUpdateBalance(rhs_id, *shadow->id);
     }
 

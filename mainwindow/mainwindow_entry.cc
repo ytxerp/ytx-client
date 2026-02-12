@@ -241,19 +241,19 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         switch (section) {
         case Section::kFinance:
             TableDelegateF(view, tree_model, section_config, node_id);
-            TableConnectF(view, table_model);
+            TableConnectF(table_model);
             break;
         case Section::kInventory:
             TableDelegateI(view, tree_model, section_config, node_id);
-            TableConnectI(view, table_model);
+            TableConnectI(table_model);
             break;
         case Section::kTask:
             TableDelegateT(view, tree_model, section_config, node_id);
-            TableConnectT(view, table_model);
+            TableConnectT(table_model);
             break;
         case Section::kPartner:
             TableDelegateP(view, section_config);
-            TableConnectP(view, table_model);
+            TableConnectP(table_model);
             static_cast<EntryHubP*>(sc_->entry_hub.data())->PushEntry(node_id);
             break;
         case Section::kSale:

@@ -45,9 +45,6 @@ signals:
     // send to LeafSStation
     void SDirectionRule(const QUuid& node_id, bool value);
 
-    // send to its view
-    void SResizeColumnToContents(int column);
-
     // send to Mainwindow
     void SUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void SFreeWidget(Section section, const QUuid& node_id);

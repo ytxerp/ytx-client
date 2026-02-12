@@ -246,7 +246,6 @@ void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
     const int name_column { std::to_underlying(NodeEnum::kName) };
 
     EmitRowChanged(node_id, name_column, name_column);
-    emit SResizeColumnToContents(name_column);
     emit SUpdateName(node->id, node->name, node->kind == NodeKind::kBranch);
 }
 
@@ -416,7 +415,6 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex& parent)
     node_hash_.remove(node_id);
 
     emit SSyncValue();
-    emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
     emit SFreeWidget(section_, node_id);
 
     return true;
@@ -529,7 +527,6 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int cou
     Utils::UpdateModel(leaf_path_, leaf_path_model_, node);
 
     emit SUpdateName(node->id, node->name, node->kind == NodeKind::kBranch);
-    emit SResizeColumnToContents(std::to_underlying(NodeEnum::kName));
 
     return true;
 }
