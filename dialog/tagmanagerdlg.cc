@@ -1,5 +1,6 @@
 #include "tagmanagerdlg.h"
 
+#include "dialog/deletenode/exactmatchconfirmdialog.h"
 #include "enum/tagenum.h"
 #include "ui_tagmanagerdlg.h"
 
@@ -9,6 +10,9 @@ TagManagerDlg::TagManagerDlg(QWidget* parent)
 {
     ui->setupUi(this);
     setMinimumSize(400, 300);
+
+    ui->pBtnInsert->setShortcut(QKeySequence::New);
+    ui->pBtnDelete->setShortcut(QKeySequence::Delete);
 }
 
 TagManagerDlg::~TagManagerDlg() { delete ui; }
@@ -47,5 +51,23 @@ void TagManagerDlg::on_pBtnDelete_clicked()
     if (!idx.isValid())
         return;
 
-    model_->removeRows(idx.row(), 1);
+    const auto* tag { static_cast<Tag*>(idx.internalPointer()) };
+    if (!tag)
+        return;
+
+    if (tag->name.isEmpty()) {
+        model_->removeRows(idx.row(), 1);
+        return;
+    }
+
+    const QString info { tr("Delete tag <b>%1</b>?<br>"
+                            "<span style='color:#d32f2f; font-weight:bold;'><br>⚠️ Permanent deletion! Cannot be undone!</span>"
+                            "<br><br><i>Note: Tag references in nodes and entries will be preserved but no longer displayed.</i>")
+            .arg(tag->name) };
+
+    auto* dlg { new ExactMatchConfirmDialog(info, tag->name, tr("Delete"), this) };
+    dlg->setModal(true);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+    connect(dlg, &ExactMatchConfirmDialog::accepted, this, [=, this]() { model_->removeRows(idx.row(), 1); });
+    dlg->show();
 }

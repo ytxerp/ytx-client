@@ -40,7 +40,6 @@ MainWindow::MainWindow(QWidget* parent)
     SetTabWidget();
     SetIcon();
     SetUniqueConnection();
-    SetDeleteShortcut();
     SetAction(false);
 
     StringInitializer::SetHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
@@ -52,17 +51,6 @@ MainWindow::MainWindow(QWidget* parent)
     Utils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
 
     QTimer::singleShot(0, this, &::MainWindow::InitilizeContext);
-}
-
-void MainWindow::SetDeleteShortcut()
-{
-#ifdef Q_OS_WIN
-    ui->actionDelete->setShortcut(QKeySequence::Delete);
-#elif defined(Q_OS_MACOS)
-    ui->actionDelete->setShortcut(Qt::Key_Backspace);
-#else
-    ui->actionDelete->setShortcut(QKeySequence::Delete);
-#endif
 }
 
 QSet<QString> MainWindow::ChildrenName(const Node* node) const

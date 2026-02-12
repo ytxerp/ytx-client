@@ -271,7 +271,6 @@ private:
 
     void FlushCaches(SectionContext& sc);
 
-    void SetDeleteShortcut();
     QSet<QString> ChildrenName(const Node* node) const;
     QSet<QUuid> LeafChildrenId(const Node* node) const;
 

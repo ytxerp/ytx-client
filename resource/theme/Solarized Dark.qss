@@ -87,8 +87,14 @@ QDialog QDoubleSpinBox {
     border: 1px solid #657B83;
 }
 
+/* TagManagerDlg's QLineEdit overrides to no border */
 QDialog#TagManagerDlg QLineEdit {
     border: none;
+}
+
+/* ExactMatchConfirmDialog's QLineEdit explicitly sets border */
+QDialog#ExactMatchConfirmDialog QLineEdit {
+    border: 1px solid #657B83;
 }
 
 /* ==================== Frame Dividers ==================== */

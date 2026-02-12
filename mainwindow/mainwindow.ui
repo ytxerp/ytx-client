@@ -280,6 +280,9 @@
    <property name="toolTip">
     <string>Delete</string>
    </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
   </action>
   <action name="actionAppendNode">
    <property name="text">

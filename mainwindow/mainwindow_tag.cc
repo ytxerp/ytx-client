@@ -24,6 +24,7 @@ void MainWindow::on_actionTags_triggered()
         dialog = new TagManagerDlg(this);
 
         Utils::ManageDialog(sc_->dialog_hash, dialog);
+        dialog->setModal(true);
 
         dialog->SetModel(model);
 
@@ -222,9 +223,6 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
     menu->addAction(ui->actionRename);
     menu->addAction(ui->actionClearColor);
 
-    menu->addSeparator();
-    menu->addAction(ui->actionDelete);
-
     menu->exec(QCursor::pos());
 }
 
@@ -317,7 +315,7 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     connect(manage_action, &QAction::triggered, this, [this]() { on_actionTags_triggered(); });
 
     menu->addSeparator();
-    menu->addAction(ui->actionDelete);
+    menu->addAction(ui->actionJumpEntry);
 
     menu->exec(QCursor::pos());
 }
