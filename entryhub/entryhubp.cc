@@ -98,11 +98,9 @@ void EntryHubP::SearchTag(QList<Entry*>& entry_list, const QSet<QString>& tag_se
         Q_ASSERT(entry && "EntryHubP::SearchTag encountered null entry in cache");
 
         const QStringList& entry_tags { entry->tag };
-        for (const QString& tag_id : entry_tags) {
-            if (tag_set.contains(tag_id)) {
-                entry_list.emplaceBack(entry);
-                break; // IMPORTANT: avoid duplicate insertion
-            }
+
+        if (std::any_of(entry_tags.cbegin(), entry_tags.cend(), [&tag_set](const QString& tag_id) { return tag_set.contains(tag_id); })) {
+            entry_list.emplaceBack(entry);
         }
     }
 }

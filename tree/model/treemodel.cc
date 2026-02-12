@@ -568,14 +568,12 @@ void TreeModel::SearchTag(QList<Node*>& node_list, const QSet<QString>& tag_set)
         return;
 
     for (const auto& [id, node] : node_hash_.asKeyValueRange()) {
-        Q_ASSERT(node && "EntryHubP::SearchTag encountered null entry in cache");
+        Q_ASSERT(node && "TreeModel::SearchTag encountered null entry in cache");
 
         const QStringList& tags { node->tag };
-        for (const QString& tag_id : tags) {
-            if (tag_set.contains(tag_id)) {
-                node_list.emplaceBack(node);
-                break; // IMPORTANT: avoid duplicate insertion
-            }
+
+        if (std::any_of(tags.cbegin(), tags.cend(), [&tag_set](const QString& tag_id) { return tag_set.contains(tag_id); })) {
+            node_list.emplaceBack(node);
         }
     }
 }
