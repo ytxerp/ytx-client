@@ -1,6 +1,7 @@
 #include "tagmodel.h"
 
 #include <QJsonObject>
+#include <QRandomGenerator>
 
 #include "component/constant.h"
 #include "enum/tagenum.h"
@@ -155,6 +156,10 @@ bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
 
     tag->id = QUuid::createUuidV7();
     tag->state = Tag::State::NEW;
+
+    const QColor color { QColor::fromHsv(
+        QRandomGenerator::global()->bounded(360), QRandomGenerator::global()->bounded(128, 256), QRandomGenerator::global()->bounded(180, 256)) };
+    tag->color = color.name(QColor::HexArgb);
 
     beginInsertRows(parent, row, row);
 
