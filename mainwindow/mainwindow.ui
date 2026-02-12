@@ -221,8 +221,15 @@
     <addaction name="actionWorkspace"/>
     <addaction name="actionExpireDate"/>
    </widget>
+   <widget class="QMenu" name="menuCharts">
+    <property name="title">
+     <string>Charts</string>
+    </property>
+    <addaction name="actionEntryJournal"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuCharts"/>
    <addaction name="menuAccount"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -525,6 +532,14 @@
   <action name="actionTags">
    <property name="text">
     <string>Tags...</string>
+   </property>
+  </action>
+  <action name="actionEntryJournal">
+   <property name="text">
+    <string>Entry Journal</string>
+   </property>
+   <property name="toolTip">
+    <string>Entry Journal</string>
    </property>
   </action>
  </widget>

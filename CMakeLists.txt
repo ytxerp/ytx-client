@@ -222,6 +222,7 @@ set(SOURCES
     tag/tagmodel.cc
     mainwindow/mainwindow_tag.cc
     utils/tagutils.cc
+    mainwindow/mainwindow_charts.cc
 )
 
 set(HEADERS
