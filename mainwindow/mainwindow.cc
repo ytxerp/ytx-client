@@ -247,6 +247,16 @@ void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 
 void MainWindow::RFlushCaches()
 {
+    auto* widget { ui->tabWidget->currentWidget() };
+
+    if (qobject_cast<TreeWidget*>(widget)) {
+        sc_->tree_model->FlushCaches();
+    }
+
+    if (auto* leaf_widget { qobject_cast<TableWidget*>(widget) }) {
+        leaf_widget->Model()->FlushCaches();
+    }
+
     FlushCaches(sc_f_);
     FlushCaches(sc_i_);
     FlushCaches(sc_p_);
