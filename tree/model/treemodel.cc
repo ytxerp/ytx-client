@@ -568,7 +568,7 @@ void TreeModel::SearchTag(QList<Node*>& node_list, const QSet<QString>& tag_set)
         return;
 
     for (const auto& [id, node] : node_hash_.asKeyValueRange()) {
-        Q_ASSERT(node && "TreeModel::SearchTag encountered null entry in cache");
+        Q_ASSERT(node && "TreeModel::SearchTag encountered null node in cache");
 
         const QStringList& tags { node->tag };
 
