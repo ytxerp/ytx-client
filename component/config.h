@@ -41,12 +41,13 @@ struct AppConfig {
     QString separator {};
     QString printer {};
     QString company_name {};
+    bool delete_confirm {};
 
     // Equality operator overload to compare two AppConfig structs
     bool operator==(const AppConfig& other) const noexcept
     {
-        return std::tie(theme, language, separator, printer, company_name)
-            == std::tie(other.theme, other.language, other.separator, other.printer, other.company_name);
+        return std::tie(theme, language, separator, printer, company_name, delete_confirm)
+            == std::tie(other.theme, other.language, other.separator, other.printer, other.company_name, other.delete_confirm);
     }
 
     // Inequality operator overload to compare two AppConfig structs

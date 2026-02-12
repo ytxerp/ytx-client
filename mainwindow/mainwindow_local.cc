@@ -18,6 +18,7 @@ void MainWindow::ReadLocalConfig()
     app_config_.language = app_settings_->value(kLanguage, QLocale::system().name()).toString();
     app_config_.theme = app_settings_->value(kTheme, kSolarizedDark).toString();
     app_config_.separator = app_settings_->value(kSeparator, kDash).toString();
+    app_config_.delete_confirm = app_settings_->value(kDeleteConfirm, true).toBool();
     app_settings_->endGroup();
 
     app_settings_->beginGroup(kPrint);
@@ -77,6 +78,7 @@ void MainWindow::UpdateAppConfig(CAppConfig& app)
     app_settings_->setValue(kLanguage, app.language);
     app_settings_->setValue(kSeparator, app.separator);
     app_settings_->setValue(kTheme, app.theme);
+    app_settings_->setValue(kDeleteConfirm, app.delete_confirm);
     app_settings_->endGroup();
 
     app_settings_->beginGroup(kPrint);

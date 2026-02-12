@@ -93,6 +93,7 @@ inline const QString kFullWidthPeriod = QStringLiteral("。");
 inline const QString kSlash = QStringLiteral("/");
 
 inline const QString kSeparator = QStringLiteral("separator");
+inline const QString kDeleteConfirm = QStringLiteral("delete_confirm");
 
 // Operator symbols
 inline const QString kMinux = QStringLiteral("-");

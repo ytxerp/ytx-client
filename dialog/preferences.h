@@ -70,6 +70,8 @@ private slots:
 
     void on_spinQuantityDecimal_editingFinished();
 
+    void on_chkBoxDeleteConfirm_checkStateChanged(const Qt::CheckState& arg1);
+
 private:
     void IniDialog(ItemModel* unit_model, Section section);
     void IniCombo(QComboBox* combo, CStringList& list);

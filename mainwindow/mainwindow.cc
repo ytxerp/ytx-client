@@ -51,6 +51,8 @@ MainWindow::MainWindow(QWidget* parent)
     Utils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
 
     QTimer::singleShot(0, this, &::MainWindow::InitilizeContext);
+
+    ui->actionDelete->setShortcut(QKeySequence::Delete);
 }
 
 QSet<QString> MainWindow::ChildrenName(const Node* node) const

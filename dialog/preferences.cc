@@ -24,7 +24,6 @@ Preferences::Preferences(CTreeModel* model, CSectionInfo& info, CAppConfig& app,
     IniStringList();
     IniDialog(info.unit_model, info.section);
     IniConnect();
-
     IniData(info.section);
     IniText(info.section);
 }
@@ -80,6 +79,7 @@ void Preferences::IniData(Section section)
     IniDataCombo(ui->comboPrinter, app_.printer);
 
     ui->lineCompanyName->setText(app_.company_name);
+    ui->chkBoxDeleteConfirm->setChecked(app_.delete_confirm);
 
     IniDataCombo(ui->comboDateFormat, section_.date_format);
     ui->spinAmountDecimal->setValue(section_.amount_decimal);
@@ -269,3 +269,5 @@ void Preferences::on_comboPrinter_currentIndexChanged(int index)
 }
 
 void Preferences::on_spinQuantityDecimal_editingFinished() { section_.quantity_decimal = ui->spinQuantityDecimal->value(); }
+
+void Preferences::on_chkBoxDeleteConfirm_checkStateChanged(const Qt::CheckState& arg1) { app_.delete_confirm = (arg1 == Qt::Checked); }

@@ -7,6 +7,7 @@
 #include "table/model/tablemodelt.h"
 #include "ui_mainwindow.h"
 #include "utils/entryutils.h"
+#include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -64,6 +65,18 @@ void MainWindow::DeleteEntry(TableWidget* widget)
     const QModelIndex current_index { view->currentIndex() };
     if (!current_index.isValid())
         return;
+
+    if (app_config_.delete_confirm) {
+        auto* msg_box { Utils::CreateMessageBox(QMessageBox::Warning, tr("Delete Entry"),
+            tr("Delete this entry?<br>"
+               "<span style='color:#d32f2f; font-weight:bold;'>⚠️ Permanent deletion! Cannot be undone!</span>"
+               "<br><br><i>Note: You can disable this confirmation in Preferences.</i>"),
+            true, QMessageBox::Yes | QMessageBox::No, this) };
+
+        msg_box->setDefaultButton(QMessageBox::No);
+        if (msg_box->exec() != QMessageBox::Yes)
+            return;
+    }
 
     auto* model { widget->Model() };
 
