@@ -263,7 +263,7 @@ private:
 
     void FocusTabWidget(const QUuid& node_id) const;
 
-    void RegisterWidget(QWidget* widget, const QUuid& widget_id, WidgetRolele role);
+    void RegisterWidget(QWidget* widget, const QUuid& widget_id, WidgetRole role);
     void WriteConfig();
 
     SectionContext* GetSectionContex(Section section);

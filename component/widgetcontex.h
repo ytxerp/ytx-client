@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef VIEWCONTEX_H
-#define VIEWCONTEX_H
+#ifndef WIDGETCONTEX_H
+#define WIDGETCONTEX_H
 
 #include <QPointer>
 #include <QUuid>
@@ -41,4 +41,4 @@ struct WidgetContext {
     WidgetRole role {};
 };
 
-#endif // VIEWCONTEX_H
+#endif // WIDGETCONTEX_H

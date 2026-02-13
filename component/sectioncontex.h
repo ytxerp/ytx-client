@@ -25,7 +25,7 @@
 #include "tag/tag.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidget.h"
-#include "viewcontex.h"
+#include "widgetcontex.h"
 
 struct SectionContext {
     QPointer<TreeWidget> tree_widget {};
