@@ -212,6 +212,22 @@ QMenuBar::item:selected {
     color: #2BB3EB;
 }
 
+QMenu {
+    border: 1px solid #657B83;
+}
+
+QMenu::separator {
+    height: 1px;
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0 rgba(101,123,131,0),
+        stop:0.5 rgba(101,123,131,0.5),
+        stop:1 rgba(101,123,131,0)
+    );
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
 /* ==================== Checkboxes ==================== */
 QCheckBox::indicator {
     width: 16px;
