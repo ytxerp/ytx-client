@@ -241,7 +241,7 @@ void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 {
     auto* sc { GetSectionContex(section) };
 
-    Utils::CloseWidget(node_id, sc->tab_hash);
+    Utils::CloseWidget(node_id, sc->view_hash);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
@@ -277,11 +277,15 @@ void MainWindow::FlushCaches(SectionContext& sc)
     }
 }
 
-void MainWindow::RegisterWidget(const QUuid& widget_id, QWidget* widget)
+void MainWindow::RegisterWidget(QWidget* widget, const QUuid& widget_id, ViewRole role)
 {
-    sc_->widget_hash.insert(widget_id, widget);
+    Q_ASSERT(widget);
+
+    ViewContext ctx { widget, widget_id, role };
+
+    sc_->view_hash.insert(widget_id, ctx);
+
     ui->tabWidget->setCurrentWidget(widget);
-    widget->activateWindow();
 }
 
 void MainWindow::WriteConfig()

@@ -5,7 +5,7 @@
 
 #include "enum/settlementenum.h"
 #include "global/resourcepool.h"
-#include "utils/compareutils.h"
+#include "utils/templateutils.h"
 
 TableModelSettlement::TableModelSettlement(CSectionInfo& info, SettlementStatus status, QObject* parent)
     : QAbstractItemModel { parent }

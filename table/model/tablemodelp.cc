@@ -6,7 +6,6 @@
 #include "component/constant.h"
 #include "enum/entryenum.h"
 #include "global/entrypool.h"
-#include "utils/compareutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 

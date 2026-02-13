@@ -1,7 +1,5 @@
 #include "treemodeli.h"
 
-#include "utils/compareutils.h"
-
 TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, QObject* parent)
     : TreeModel(info, separator, parent)
 {

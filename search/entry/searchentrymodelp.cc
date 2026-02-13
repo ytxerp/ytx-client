@@ -1,7 +1,6 @@
 #include "searchentrymodelp.h"
 
 #include "enum/entryenum.h"
-#include "utils/compareutils.h"
 #include "utils/tagutils.h"
 
 SearchEntryModelP::SearchEntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)

@@ -4,7 +4,6 @@
 
 #include "enum/settlementenum.h"
 #include "global/resourcepool.h"
-#include "utils/compareutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 

@@ -281,7 +281,7 @@ QUuid Utils::ManageDialog(QHash<QUuid, ViewContext>& view_hash, QDialog* dialog)
     dialog->setAttribute(Qt::WA_DeleteOnClose);
 
     const QUuid id { QUuid::createUuidV7() };
-    ViewContext ctx { id, ViewRole::kDialog, dialog };
+    ViewContext ctx { dialog, id, ViewRole::kDialog };
 
     view_hash.insert(id, ctx);
     return id;

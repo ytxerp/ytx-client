@@ -35,7 +35,7 @@ void MainWindow::on_actionSettlement_triggered()
         DelegateSettlement(view, sc_->section_config);
     }
 
-    RegisterWidget(widget_id, widget);
+    RegisterWidget(widget, widget_id, ViewRole::kSettlement);
 }
 
 void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settlement& settlement, SyncState sync_state)
@@ -65,7 +65,7 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
         DelegateSettlementNode(view, sc_->section_config);
     }
 
-    RegisterWidget(widget_id, widget);
+    RegisterWidget(widget, widget_id, ViewRole::kSettlement);
 }
 
 void MainWindow::RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id)
@@ -108,7 +108,7 @@ void MainWindow::RSettlementItemAcked(Section section, const QUuid& widget_id, c
 {
     auto* sc { GetSectionContex(section) };
 
-    auto widget { sc->widget_hash.value(widget_id, nullptr) };
+    auto widget { sc->view_hash.value(widget_id).widget };
     if (!widget)
         return;
 
@@ -133,7 +133,7 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
     auto* sc { GetSectionContex(section) };
 
     {
-        auto widget { sc->widget_hash.value(widget_id, nullptr) };
+        auto widget { sc->view_hash.value(widget_id).widget };
         if (widget) {
             auto* ptr { widget.data() };
 
@@ -145,7 +145,7 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
     }
 
     {
-        auto parent_widget { sc->widget_hash.value(parent_widget_id, nullptr) };
+        auto parent_widget { sc->view_hash.value(parent_widget_id).widget };
         if (parent_widget) {
             auto* ptr { parent_widget.data() };
 
@@ -187,7 +187,7 @@ void MainWindow::RSettlementRecalled(const QJsonObject& obj)
     auto* sc { GetSectionContex(section) };
 
     {
-        auto widget { sc->widget_hash.value(widget_id, nullptr) };
+        auto widget { sc->view_hash.value(widget_id).widget };
         if (widget) {
             auto* ptr { widget.data() };
 
@@ -199,7 +199,7 @@ void MainWindow::RSettlementRecalled(const QJsonObject& obj)
     }
 
     {
-        auto parent_widget { sc->widget_hash.value(parent_widget_id, nullptr) };
+        auto parent_widget { sc->view_hash.value(parent_widget_id).widget };
         if (parent_widget) {
             auto* ptr { parent_widget.data() };
 
@@ -225,7 +225,7 @@ void MainWindow::RSettlementUpdated(const QJsonObject& obj)
     auto* sc { GetSectionContex(section) };
 
     {
-        auto widget { sc->widget_hash.value(widget_id, nullptr) };
+        auto widget { sc->view_hash.value(widget_id).widget };
         if (widget) {
             auto* ptr { widget.data() };
 
@@ -237,7 +237,7 @@ void MainWindow::RSettlementUpdated(const QJsonObject& obj)
     }
 
     {
-        auto parent_widget { sc->widget_hash.value(parent_widget_id, nullptr) };
+        auto parent_widget { sc->view_hash.value(parent_widget_id).widget };
         if (parent_widget) {
             auto* ptr { parent_widget.data() };
 
@@ -254,7 +254,7 @@ void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJso
 {
     auto* sc { GetSectionContex(section) };
 
-    auto widget { sc->widget_hash.value(widget_id, nullptr) };
+    auto widget { sc->view_hash.value(widget_id).widget };
     if (!widget)
         return;
 

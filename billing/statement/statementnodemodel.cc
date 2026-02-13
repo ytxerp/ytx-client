@@ -5,7 +5,7 @@
 
 #include "enum/statementenum.h"
 #include "global/resourcepool.h"
-#include "utils/compareutils.h"
+#include "utils/templateutils.h"
 
 StatementNodeModel::StatementNodeModel(CSectionInfo& info, const QUuid& partner_id, QObject* parent)
     : QAbstractItemModel { parent }

@@ -26,7 +26,7 @@
 #include "component/arg/tablemodelarg.h"
 #include "enum/entryenum.h"
 #include "table/entryshadow.h"
-#include "utils/castutils.h"
+#include "utils/templateutils.h"
 
 using Utils::DerivedPtr;
 

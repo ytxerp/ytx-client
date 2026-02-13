@@ -4,7 +4,6 @@
 
 #include "global/entrypool.h"
 #include "global/resourcepool.h"
-#include "utils/compareutils.h"
 #include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"

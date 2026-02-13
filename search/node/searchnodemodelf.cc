@@ -1,7 +1,5 @@
 #include "searchnodemodelf.h"
 
-#include "utils/compareutils.h"
-
 SearchNodeModelF::SearchNodeModelF(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
     : SearchNodeModel { info, tree_model, tag_hash, parent }
 {

@@ -25,15 +25,20 @@
 #include <QWidget>
 
 enum class ViewRole {
-    kNodeTab,
+    kNodeTabFIT,
+    kNodeTabO,
+    kNodeTabP,
     kDialog,
-    kAuxiliary,
+    kCharts,
+    kSettlement,
+    kStatement,
+    kSaleReference,
 };
 
 struct ViewContext {
+    QPointer<QWidget> widget {};
     QUuid id {};
     ViewRole role {};
-    QPointer<QWidget> widget {};
 };
 
 #endif // VIEWCONTEX_H

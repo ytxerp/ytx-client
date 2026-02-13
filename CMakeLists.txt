@@ -306,8 +306,6 @@ set(HEADERS
     utils/templateutils.h
     utils/entryutils.h
     utils/mainwindowutils.h
-    utils/compareutils.h
-    utils/castutils.h
     utils/mainutils.h
     global/printhub.h
     global/password_encryption.h

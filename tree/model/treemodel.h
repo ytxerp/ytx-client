@@ -27,8 +27,8 @@
 
 #include "component/constant.h"
 #include "component/info.h"
-#include "utils/castutils.h"
 #include "utils/nodeutils.h"
+#include "utils/templateutils.h"
 
 using Utils::DerivedPtr;
 

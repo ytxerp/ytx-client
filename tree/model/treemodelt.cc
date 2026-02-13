@@ -2,7 +2,6 @@
 
 #include <QJsonArray>
 
-#include "utils/compareutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 

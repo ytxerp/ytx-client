@@ -4,7 +4,7 @@
 
 #include "enum/reference.h"
 #include "global/resourcepool.h"
-#include "utils/compareutils.h"
+#include "utils/templateutils.h"
 
 SaleReferenceModel::SaleReferenceModel(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }

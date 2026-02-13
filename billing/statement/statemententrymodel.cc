@@ -5,7 +5,7 @@
 
 #include "enum/statementenum.h"
 #include "global/resourcepool.h"
-#include "utils/compareutils.h"
+#include "utils/templateutils.h"
 
 StatementEntryModel::StatementEntryModel(EntryHubP* entry_hub_p, CSectionInfo& info, CUuid& partner_id, QObject* parent)
     : QAbstractItemModel { parent }

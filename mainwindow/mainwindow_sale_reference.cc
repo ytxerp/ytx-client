@@ -7,7 +7,7 @@ void MainWindow::RSaleReference(Section section, const QUuid& widget_id, const Q
 {
     auto* sc { GetSectionContex(section) };
 
-    auto widget { sc->widget_hash.value(widget_id, nullptr) };
+    auto widget { sc->view_hash.value(widget_id).widget };
     if (!widget)
         return;
 
@@ -82,5 +82,5 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
 
     connect(view, &QTableView::doubleClicked, this, &MainWindow::RSaleReferenceSecondary);
 
-    RegisterWidget(widget_id, widget);
+    RegisterWidget(widget, widget_id, ViewRole::kSaleReference);
 }

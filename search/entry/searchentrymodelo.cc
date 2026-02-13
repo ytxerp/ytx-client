@@ -2,7 +2,6 @@
 
 #include "enum/entryenum.h"
 #include "global/entrypool.h"
-#include "utils/compareutils.h"
 
 SearchEntryModelO::SearchEntryModelO(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
     : SearchEntryModel { info, tag_hash, parent }

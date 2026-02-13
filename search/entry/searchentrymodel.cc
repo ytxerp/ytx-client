@@ -1,6 +1,5 @@
 #include "searchentrymodel.h"
 
-#include "utils/compareutils.h"
 #include "utils/tagutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"

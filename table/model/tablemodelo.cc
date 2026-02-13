@@ -4,7 +4,6 @@
 
 #include "enum/entryenum.h"
 #include "global/entrypool.h"
-#include "utils/compareutils.h"
 #include "websocket/jsongen.h"
 
 TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)

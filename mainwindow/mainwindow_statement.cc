@@ -27,14 +27,14 @@ void MainWindow::on_actionStatement_triggered()
 
     connect(widget, &StatementWidget::SStatementNode, this, &MainWindow::RStatementNode);
 
-    RegisterWidget(widget_id, widget);
+    RegisterWidget(widget, widget_id, ViewRole::kStatement);
 }
 
 void MainWindow::RStatement(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
-    auto widget { sc->widget_hash.value(widget_id, nullptr) };
+    auto widget { sc->view_hash.value(widget_id).widget };
     if (!widget)
         return;
 
@@ -48,7 +48,7 @@ void MainWindow::RStatementNodeAcked(Section section, const QUuid& widget_id, co
 {
     auto* sc { GetSectionContex(section) };
 
-    auto widget { sc->widget_hash.value(widget_id, nullptr) };
+    auto widget { sc->view_hash.value(widget_id).widget };
     if (!widget)
         return;
 
@@ -62,7 +62,7 @@ void MainWindow::RStatementEntryAcked(Section section, const QUuid& widget_id, c
 {
     auto* sc { GetSectionContex(section) };
 
-    auto widget { sc->widget_hash.value(widget_id, nullptr) };
+    auto widget { sc->view_hash.value(widget_id).widget };
     if (!widget)
         return;
 
@@ -94,7 +94,7 @@ void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start,
 
     connect(widget, &StatementNodeWidget::SStatementEntry, this, &MainWindow::RStatementEntry);
 
-    RegisterWidget(widget_id, widget);
+    RegisterWidget(widget, widget_id, ViewRole::kStatement);
 }
 
 void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
@@ -125,5 +125,5 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
     SetStatementView(view, std::to_underlying(StatementEntryEnum::kDescription));
     DelegateStatementEntry(view, sc_->section_config);
 
-    RegisterWidget(widget_id, widget);
+    RegisterWidget(widget, widget_id, ViewRole::kStatement);
 }

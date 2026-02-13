@@ -25,7 +25,7 @@
 #include "component/info.h"
 #include "table/entry.h"
 #include "tag/tag.h"
-#include "utils/castutils.h"
+#include "utils/templateutils.h"
 
 using Utils::DerivedPtr;
 

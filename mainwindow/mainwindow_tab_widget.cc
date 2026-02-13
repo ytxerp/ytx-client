@@ -2,12 +2,12 @@
 
 #include <QFutureWatcher>
 
+#include "global/tablesstation.h"
 #include "mainwindow.h"
 #include "tree/model/treemodelo.h"
 #include "ui_mainwindow.h"
 #include "utils/entryutils.h"
 #include "utils/mainwindowutils.h"
-#include "utils/templateutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -148,24 +148,15 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 {
     qInfo() << "[UI]" << "on_tabWidget_tabCloseRequested";
 
-    if (index == 0)
-        return;
-
     const auto node_id { ui->tabWidget->tabBar()->tabData(index).value<TabInfo>().id };
 
-    {
-        if (sc_->widget_hash.contains(node_id)) {
-            Utils::CloseWidget(node_id, sc_->widget_hash);
-            return;
-        }
-    }
+    const auto& vc { sc_->view_hash.value(node_id) };
+    Q_ASSERT(vc.widget);
 
     {
-        if (IsOrderSection(start_)) {
-            auto* widget { static_cast<TableWidgetO*>(sc_->tab_hash.value(node_id).data()) };
-
-            if (!widget)
-                return;
+        if (vc.role == ViewRole::kNodeTabO) {
+            auto* widget { qobject_cast<TableWidgetO*>(vc.widget.data()) };
+            Q_ASSERT(vc.widget);
 
             if (widget->HasPendingUpdate()) {
                 auto* dlg = Utils::CreateMessageBox(QMessageBox::Warning, tr("Unsaved Data"),
@@ -174,25 +165,22 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 
                 dlg->setDefaultButton(QMessageBox::Cancel);
 
-                QObject::connect(dlg, &QMessageBox::finished, this, [&widget](int ret) {
-                    switch (ret) {
-                    case QMessageBox::Save:
-                        widget->SaveOrder();
-                        break;
-                    case QMessageBox::Cancel:
-                        return;
-                    default:
-                        break;
-                    }
-                });
+                const int ret { dlg->exec() };
 
-                dlg->show();
+                if (ret == QMessageBox::Cancel)
+                    return;
+
+                if (ret == QMessageBox::Save)
+                    widget->SaveOrder();
             }
         }
     }
 
     {
-        RFreeWidget(start_, node_id);
+        Utils::CloseWidget(node_id, sc_->view_hash);
+
+        if (vc.role == ViewRole::kNodeTabFIT)
+            TableSStation::Instance()->DeregisterModel(node_id);
     }
 }
 

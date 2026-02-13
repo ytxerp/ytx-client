@@ -26,7 +26,7 @@
 #include <QTableView>
 
 #include "component/using.h"
-#include "component/viewcontex.h"
+#include "global/collator.h"
 #include "tree/itemmodel.h"
 
 template <typename T>
@@ -39,6 +39,54 @@ template <typename T>
 concept MapType = std::is_same_v<typename T::mapped_type, QString> && (std::is_same_v<typename T::key_type, int> || std::is_same_v<typename T::key_type, bool>);
 
 namespace Utils {
+
+template <typename Obj, typename T> inline bool CompareMember(const Obj* lhs, const Obj* rhs, const T Obj::* member, Qt::SortOrder order)
+{
+    Q_ASSERT(lhs != nullptr);
+    Q_ASSERT(rhs != nullptr);
+
+    if constexpr (std::is_same_v<T, QString>) {
+        // QString comparison using collator
+        const auto& collator = Collator::Instance();
+        const int r = collator.compare(lhs->*member, rhs->*member);
+        return (order == Qt::AscendingOrder) ? (r < 0) : (r > 0);
+    } else {
+        // Regular comparison for other types
+        return (order == Qt::AscendingOrder) ? (lhs->*member < rhs->*member) : (lhs->*member > rhs->*member);
+    }
+}
+
+template <typename Obj, typename T> inline bool CompareShadowMember(const Obj* lhs, const Obj* rhs, T* Obj::* member, Qt::SortOrder order)
+{
+    Q_ASSERT(lhs != nullptr);
+    Q_ASSERT(rhs != nullptr);
+
+    const T* lp = lhs->*member;
+    const T* rp = rhs->*member;
+
+    Q_ASSERT(lp != nullptr);
+    Q_ASSERT(rp != nullptr);
+
+    if constexpr (std::is_same_v<T, QString>) {
+        const auto& collator = Collator::Instance();
+        const int r = collator.compare(*lp, *rp);
+        return (order == Qt::AscendingOrder) ? (r < 0) : (r > 0);
+    } else {
+        return (order == Qt::AscendingOrder) ? (*lp < *rp) : (*lp > *rp);
+    }
+}
+
+template <typename Derived, typename Base> Derived* DerivedPtr(Base* base)
+{
+    Q_ASSERT(base != nullptr);
+    return static_cast<Derived*>(base);
+}
+
+template <typename Derived, typename Base> const Derived* DerivedPtr(const Base* base)
+{
+    Q_ASSERT(base != nullptr);
+    return static_cast<const Derived*>(base);
+}
 
 template <MapType T> ItemModel* CreateModelFromMap(const T& map, QObject* parent)
 {
@@ -64,30 +112,6 @@ template <InheritQAbstractItemView T> void SetupVerticalHeader(T* view, int row_
     v_header->setDefaultSectionSize(row_height);
     v_header->setSectionResizeMode(QHeaderView::Fixed);
     v_header->setHidden(true);
-}
-
-template <InheritQWidget T> void CloseWidget(const QUuid& node_id, QHash<QUuid, QPointer<T>>& hash)
-{
-    // Take removes the widget from hash and returns it
-    if (auto widget { hash.take(node_id) }) {
-        // Check if QPointer is still valid (widget not already deleted)
-        if (widget) {
-            // Schedule asynchronous deletion (safe, won't trigger signals immediately)
-            widget->deleteLater();
-        }
-    }
-}
-
-inline void CloseWidgets(QHash<QUuid, ViewContext>& hash)
-{
-    // Schedule all widgets for asynchronous deletion
-    for (auto& vc : hash) {
-        if (vc.widget)
-            vc.widget->deleteLater();
-    }
-
-    // Clear hash immediately
-    hash.clear();
 }
 
 template <InheritQAbstractItemView T> bool HasSelection(T* view) { return view && view->selectionModel() && view->selectionModel()->hasSelection(); }
@@ -118,6 +142,6 @@ void ReadConfig(Widget* widget, Function setter, const QSharedPointer<QSettings>
     }
 }
 
-} // namespace WidgetUtils
+}
 
 #endif // TEMPLATEUTILS_H

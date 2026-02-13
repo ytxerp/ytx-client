@@ -26,7 +26,6 @@
 #include "component/using.h"
 #include "tag/tag.h"
 #include "tree/model/treemodel.h"
-#include "utils/castutils.h"
 
 using Utils::DerivedPtr;
 

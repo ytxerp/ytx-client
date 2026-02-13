@@ -41,6 +41,30 @@ QString UuidToShortCode(const QUuid& uuid, int length = 10);
 QUuid ManageDialog(QHash<QUuid, ViewContext>& view_hash, QDialog* dialog);
 void ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where = true);
 
+inline void CloseWidget(const QUuid& node_id, QHash<QUuid, ViewContext>& view_hash)
+{
+    // Take removes the widget from hash and returns it
+    if (auto widget { view_hash.take(node_id).widget }) {
+        // Check if QPointer is still valid (widget not already deleted)
+        if (widget) {
+            // Schedule asynchronous deletion (safe, won't trigger signals immediately)
+            widget->deleteLater();
+        }
+    }
+}
+
+inline void CloseWidgets(QHash<QUuid, ViewContext>& hash)
+{
+    // Schedule all widgets for asynchronous deletion
+    for (auto& vc : hash) {
+        if (vc.widget)
+            vc.widget->deleteLater();
+    }
+
+    // Clear hash immediately
+    hash.clear();
+}
+
 QMessageBox* CreateMessageBox(QMessageBox::Icon icon, CString& title, CString& text, bool modal = false,
     QMessageBox::StandardButtons buttons = QMessageBox::NoButton, QWidget* parent = nullptr);
 
