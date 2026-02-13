@@ -180,18 +180,6 @@ void MainWindow::ResetMainwindow()
     section_settings_.clear();
 
     {
-        auto tab_widget { sc_->tab_widget };
-        auto* tab_bar { tab_widget->tabBar() };
-        const int count { tab_widget->count() };
-
-        for (int index = count - 1; index >= 0; --index) {
-            const auto id { tab_bar->tabData(index).toUuid() };
-            if (!id.isNull())
-                tab_widget->removeTab(index);
-        }
-    }
-
-    {
         Utils::ResetSectionContext(sc_f_);
         Utils::ResetSectionContext(sc_i_);
         Utils::ResetSectionContext(sc_t_);

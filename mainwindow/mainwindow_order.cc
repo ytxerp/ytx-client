@@ -251,11 +251,12 @@ void MainWindow::RSyncPartner(const QUuid& node_id, const QUuid& value)
     auto model { sc_p_.tree_model };
     auto widget { sc_->tab_widget };
     auto* tab_bar { widget->tabBar() };
-    int count { widget->count() };
+    const int count { widget->count() };
 
     for (int index = 0; index != count; ++index) {
-        if (widget->isTabVisible(index) && tab_bar->tabData(index).toUuid() == node_id) {
+        if (tab_bar->tabData(index).toUuid() == node_id) {
             tab_bar->setTabText(index, model->Name(value));
+            break;
         }
     }
 }

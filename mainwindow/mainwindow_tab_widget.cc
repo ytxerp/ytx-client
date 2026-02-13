@@ -95,7 +95,7 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
 
 void MainWindow::tabWidget_currentChanged()
 {
-    qDebug() << "[UI]" << "on_tabWidget_currentChanged";
+    qDebug() << "[UI]" << "tabWidget_currentChanged";
 
     if (!section_settings_)
         return;
@@ -133,7 +133,7 @@ void MainWindow::tabWidget_currentChanged()
 
 void MainWindow::tabWidget_tabBarDoubleClicked(int index)
 {
-    qInfo() << "[UI]" << "on_tabWidget_tabBarDoubleClicked";
+    qInfo() << "[UI]" << "tabWidget_tabBarDoubleClicked";
 
     auto* tab_bar { sc_->tab_widget->tabBar() };
     const auto id { tab_bar->tabData(index).toUuid() };

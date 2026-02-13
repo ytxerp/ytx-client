@@ -159,22 +159,37 @@ void Utils::SetupHeaderStatus(QHeaderView* header, const QSharedPointer<QSetting
         [header, settings, section_name, key]() { Utils::WriteConfig(header, &QHeaderView::saveState, settings, section_name, key); });
 }
 
-void Utils::ResetSectionContext(SectionContext& ctx)
+void Utils::ResetSectionContext(SectionContext& sc)
 {
-    Q_ASSERT(ctx.tree_widget);
-    Q_ASSERT(ctx.entry_hub);
-    Q_ASSERT(ctx.tree_model);
+    Q_ASSERT(sc.tree_widget);
+    Q_ASSERT(sc.entry_hub);
+    Q_ASSERT(sc.tree_model);
 
-    ctx.tree_widget->Reset();
-    ctx.entry_hub->Reset();
-    ctx.tree_model->Reset();
+    sc.tree_widget->Reset();
+    sc.entry_hub->Reset();
+    sc.tree_model->Reset();
 
-    ctx.section_config = SectionConfig {};
-    ctx.shared_config = SharedConfig {};
+    sc.section_config = SectionConfig {};
+    sc.shared_config = SharedConfig {};
 
-    Utils::CloseWidgets(ctx.widget_hash);
+    {
+        auto tab_widget { sc.tab_widget };
+        auto* tab_bar { tab_widget->tabBar() };
+        const int count { tab_widget->count() };
 
-    ResourcePool<Tag>::Instance().Recycle(ctx.tag_hash);
+        for (int index = count - 1; index >= 0; --index) {
+            const auto id { tab_bar->tabData(index).toUuid() };
+            if (!id.isNull())
+                tab_widget->removeTab(index);
+        }
+    }
+
+    Utils::CloseWidgets(sc.widget_hash);
+
+    ResourcePool<Tag>::Instance().Recycle(sc.tag_hash);
+    sc.tag_icon.clear();
+    sc.tag_icon_checked.clear();
+    sc.tag_pixmap.clear();
 }
 
 void Utils::SetConnectionStatus(QLabel* label, ConnectionStatus status)
