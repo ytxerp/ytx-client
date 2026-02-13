@@ -20,6 +20,7 @@
 #ifndef TAG_H
 #define TAG_H
 
+#include <QIcon>
 #include <QJsonObject>
 #include <QString>
 #include <QUuid>
@@ -77,5 +78,11 @@ inline void Tag::ReadJson(const QJsonObject& object)
     if (object.contains(kVersion))
         version = object[kVersion].toInt();
 }
+
+struct TagIcons {
+    QIcon icon {};
+    QIcon icon_checked {};
+    QPixmap pixmap {};
+};
 
 #endif // TAG_H

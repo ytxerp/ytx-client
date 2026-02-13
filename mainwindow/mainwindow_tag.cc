@@ -160,7 +160,7 @@ void MainWindow::RDeleteTag(const QJsonObject& obj)
 
     auto* tag { sc->tag_hash.take(id) };
     if (tag) {
-        InvalidateTagIconCache(sc, tag->id);
+        sc->tag_icons_hash.remove(id);
         ResourcePool<Tag>::Instance().Recycle(tag);
     } else {
         qWarning() << "RDeleteTag: tag not found";
@@ -326,38 +326,38 @@ void MainWindow::UpdateTagIcon(SectionContext* sc, const Tag* tag)
     Q_ASSERT(tag);
 
     const QUuid& tag_id { tag->id };
+    if (tag_id.isNull())
+        return;
 
-    // Rebuild pixmap (used by delegates)
-    const QPixmap pixmap { Utils::CreateTagPixmap(tag) };
-    if (!pixmap.isNull()) {
-        sc->tag_pixmap.insert(tag_id, pixmap);
-    }
+    TagIcons icons {};
+    icons.pixmap = Utils::CreateTagPixmap(tag);
+    icons.icon = Utils::CreateTagIcon(tag, /*checked=*/false);
+    icons.icon_checked = Utils::CreateTagIcon(tag, /*checked=*/true);
 
-    // Rebuild icons (used by menus / actions)
-    sc->tag_icon.insert(tag_id, Utils::CreateTagIcon(tag, /*checked=*/false));
-    sc->tag_icon_checked.insert(tag_id, Utils::CreateTagIcon(tag, /*checked=*/true));
+    sc->tag_icons_hash.insert(tag_id, icons);
 }
 
 QIcon MainWindow::GetTagIcon(SectionContext* sc, const Tag* tag, bool checked)
 {
-    auto& cache = checked ? sc->tag_icon_checked : sc->tag_icon;
+    Q_ASSERT(sc);
+    Q_ASSERT(tag);
 
-    auto it = cache.find(tag->id);
-    if (it == cache.end()) {
-        it = cache.insert(tag->id, Utils::CreateTagIcon(tag, checked));
+    const QUuid& tag_id { tag->id };
+    if (tag_id.isNull()) {
+        return QIcon();
     }
 
-    return it.value();
-}
+    auto it = sc->tag_icons_hash.find(tag_id);
+    if (it == sc->tag_icons_hash.end()) {
+        TagIcons icons {};
+        icons.pixmap = Utils::CreateTagPixmap(tag);
+        icons.icon = Utils::CreateTagIcon(tag, false);
+        icons.icon_checked = Utils::CreateTagIcon(tag, true);
 
-QPixmap MainWindow::GetTagPixmap(SectionContext* sc, const Tag* tag)
-{
-    auto it = sc->tag_pixmap.find(tag->id);
-    if (it == sc->tag_pixmap.end()) {
-        it = sc->tag_pixmap.insert(tag->id, Utils::CreateTagPixmap(tag));
+        it = sc->tag_icons_hash.insert(tag_id, icons);
     }
 
-    return it.value();
+    return checked ? it->icon_checked : it->icon;
 }
 
 void MainWindow::RInsertEntryTag(const Tag* tag, TableModel* model, const Entry* entry)

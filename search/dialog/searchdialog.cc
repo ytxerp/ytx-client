@@ -17,7 +17,7 @@ SearchDialog::SearchDialog(SectionContext* sc, SearchNodeModel* search_node, Sea
     , config_ { sc->section_config }
     , info_ { sc->info }
     , tag_hash_ { sc->tag_hash }
-    , tag_pixmap_ { sc->tag_pixmap }
+    , tag_icons_hash_ { sc->tag_icons_hash }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -107,7 +107,7 @@ void SearchDialog::InitDelegate()
     issued_time_ = new IssuedTimeR(config_.date_format, this);
     document_ = new DocumentR(this);
     int_ = new Int(0, 36500, this);
-    tag_ = new TagDelegate(tag_hash_, tag_pixmap_, this);
+    tag_ = new TagDelegate(tag_hash_, tag_icons_hash_, this);
 }
 
 void SearchDialog::HideTreeColumn(QTableView* view)

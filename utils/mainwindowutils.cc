@@ -187,9 +187,7 @@ void Utils::ResetSectionContext(SectionContext& sc)
     Utils::CloseWidgets(sc.widget_hash);
 
     ResourcePool<Tag>::Instance().Recycle(sc.tag_hash);
-    sc.tag_icon.clear();
-    sc.tag_icon_checked.clear();
-    sc.tag_pixmap.clear();
+    sc.tag_icons_hash.clear();
 }
 
 void Utils::SetConnectionStatus(QLabel* label, ConnectionStatus status)

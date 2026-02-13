@@ -4,10 +4,10 @@
 
 #include <QPainter>
 
-TagDelegate::TagDelegate(const QHash<QUuid, Tag*>& tag_hash, const QHash<QUuid, QPixmap>& tag_pixmap, QObject* parent)
+TagDelegate::TagDelegate(const QHash<QUuid, Tag*>& tag_hash, const QHash<QUuid, TagIcons>& tag_icons_hash, QObject* parent)
     : StyledItemDelegate { parent }
     , tag_hash_ { tag_hash }
-    , tag_pixmap_ { tag_pixmap }
+    , tag_icons_hash_ { tag_icons_hash }
 {
 }
 
@@ -18,7 +18,7 @@ void TagDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, c
         return PaintEmpty(painter, option, index);
     }
 
-    static QStyle* style { QApplication::style() };
+    QStyle* style { option.widget ? option.widget->style() : QApplication::style() };
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
 
     painter->save();
@@ -31,15 +31,19 @@ void TagDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, c
         if (tag_id.isNull())
             continue;
 
-        const auto it { tag_pixmap_.find(tag_id) };
-        if (it == tag_pixmap_.end() || it->isNull())
+        const auto it { tag_icons_hash_.constFind(tag_id) };
+        if (it == tag_icons_hash_.constEnd()) {
             continue;
+        }
 
-        const QPixmap& pixmap { *it };
+        const QPixmap& pixmap { it->pixmap };
+        if (pixmap.isNull()) {
+            continue;
+        }
 
         // Logical size (important!)
-        const int logical_width { static_cast<int>(pixmap.width() / pixmap.devicePixelRatio()) };
-        const int logical_height { static_cast<int>(pixmap.height() / pixmap.devicePixelRatio()) };
+        const int logical_width { qRound(pixmap.width() / pixmap.devicePixelRatio()) };
+        const int logical_height { qRound(pixmap.height() / pixmap.devicePixelRatio()) };
 
         // Vertically center inside the item rect
         const int y { option.rect.top() + (option.rect.height() - logical_height) / 2 };
@@ -56,22 +60,32 @@ QSize TagDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInde
 {
     const QStringList tag_ids { index.data().toStringList() };
     if (tag_ids.isEmpty()) {
-        return {};
+        return QSize(0, option.rect.height());
     }
 
     int total_width { kTagMargin * 2 };
+    bool has_valid_tag { false };
 
     for (const QString& id_str : tag_ids) {
         const QUuid tag_id { QUuid::fromString(id_str) };
-        const auto pixmap_it { tag_pixmap_.find(tag_id) };
+        const auto it { tag_icons_hash_.constFind(tag_id) };
 
-        if (pixmap_it != tag_pixmap_.end() && !pixmap_it->isNull()) {
-            const int logical_width { static_cast<int>(pixmap_it->width() / pixmap_it->devicePixelRatio()) };
-            total_width += logical_width + kTagSpacing;
+        if (it == tag_icons_hash_.constEnd()) {
+            continue;
         }
+
+        const QPixmap& pixmap { it->pixmap };
+        if (pixmap.isNull()) {
+            continue;
+        }
+
+        const int logical_width { qRound(pixmap.width() / pixmap.devicePixelRatio()) };
+
+        total_width += logical_width + kTagSpacing;
+        has_valid_tag = true;
     }
 
-    if (total_width > kTagMargin * 2) {
+    if (has_valid_tag) {
         total_width -= kTagSpacing;
     }
 

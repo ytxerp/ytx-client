@@ -276,14 +276,7 @@ private:
     QSet<QUuid> LeafChildrenId(const Node* node) const;
 
     QIcon GetTagIcon(SectionContext* sc, const Tag* tag, bool checked);
-    QPixmap GetTagPixmap(SectionContext* sc, const Tag* tag);
 
-    inline void InvalidateTagIconCache(SectionContext* sc, const QUuid& tag_id)
-    {
-        sc->tag_icon.remove(tag_id);
-        sc->tag_icon_checked.remove(tag_id);
-        sc->tag_pixmap.remove(tag_id);
-    }
     void UpdateTagIcon(SectionContext* sc, const Tag* tag);
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }

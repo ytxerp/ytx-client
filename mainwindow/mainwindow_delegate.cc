@@ -55,7 +55,7 @@ void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* initial_total { new FinanceForeignR(section.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kInitialTotal), initial_total);
 
-    auto* tag { new TagDelegate(sc_f_.tag_hash, sc_f_.tag_pixmap, tree_view) };
+    auto* tag { new TagDelegate(sc_f_.tag_hash, sc_f_.tag_icons_hash, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kTag), tag);
 }
 
@@ -95,7 +95,7 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* issued_time { new IssuedTime(section.date_format, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kIssuedTime), issued_time);
 
-    auto* tag { new TagDelegate(sc_t_.tag_hash, sc_t_.tag_pixmap, tree_view) };
+    auto* tag { new TagDelegate(sc_t_.tag_hash, sc_t_.tag_icons_hash, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kTag), tag);
 }
 
@@ -131,7 +131,7 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* color { new Color(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kColor), color);
 
-    auto* tag { new TagDelegate(sc_i_.tag_hash, sc_i_.tag_pixmap, tree_view) };
+    auto* tag { new TagDelegate(sc_i_.tag_hash, sc_i_.tag_icons_hash, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kTag), tag);
 }
 
@@ -160,7 +160,7 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* payment_term { new Int(0, 36500, tree_view) }; // one hundred years
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kPaymentTerm), payment_term);
 
-    auto* tag { new TagDelegate(sc_p_.tag_hash, sc_p_.tag_pixmap, tree_view) };
+    auto* tag { new TagDelegate(sc_p_.tag_hash, sc_p_.tag_icons_hash, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kTag), tag);
 }
 
@@ -225,7 +225,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
 
-    auto* tag { new TagDelegate(sc_f_.tag_hash, sc_f_.tag_pixmap, table_view) };
+    auto* tag { new TagDelegate(sc_f_.tag_hash, sc_f_.tag_icons_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
 }
 
@@ -259,7 +259,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
 
-    auto* tag { new TagDelegate(sc_i_.tag_hash, sc_i_.tag_pixmap, table_view) };
+    auto* tag { new TagDelegate(sc_i_.tag_hash, sc_i_.tag_icons_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
 }
 
@@ -293,7 +293,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
 
-    auto* tag { new TagDelegate(sc_t_.tag_hash, sc_t_.tag_pixmap, table_view) };
+    auto* tag { new TagDelegate(sc_t_.tag_hash, sc_t_.tag_icons_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
 }
 
@@ -325,7 +325,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), internal_sku);
 
-    auto* tag { new TagDelegate(sc_p_.tag_hash, sc_p_.tag_pixmap, table_view) };
+    auto* tag { new TagDelegate(sc_p_.tag_hash, sc_p_.tag_icons_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kTag), tag);
 }
 
