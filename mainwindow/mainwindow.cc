@@ -528,7 +528,7 @@ void MainWindow::on_actionPreferences_triggered()
 
     auto* dialog { new Preferences(model, sc_->info, app_config_, sc_->shared_config, sc_->section_config, this) };
 
-    Utils::ManageDialog(sc_->dialog_hash, dialog);
+    Utils::ManageDialog(sc_->view_hash, dialog);
     dialog->setModal(true);
 
     connect(dialog, &Preferences::SUpdateConfig, this, &MainWindow::RUpdateConfig);

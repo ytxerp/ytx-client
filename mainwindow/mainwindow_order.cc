@@ -22,7 +22,7 @@ void MainWindow::EditNameO()
 
     auto* dialog { new EditNodeNameO(node->name, this) };
 
-    Utils::ManageDialog(sc_->dialog_hash, dialog);
+    Utils::ManageDialog(sc_->view_hash, dialog);
     dialog->setModal(true);
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {
@@ -70,7 +70,7 @@ void MainWindow::on_actionNewBranch_triggered()
 
     auto* dialog { new InsertNodeBranch(node, unit_model, parent_path, children_name, this) };
 
-    Utils::ManageDialog(sc_->dialog_hash, dialog);
+    Utils::ManageDialog(sc_->view_hash, dialog);
     dialog->setModal(true);
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {

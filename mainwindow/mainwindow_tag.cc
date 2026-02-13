@@ -23,7 +23,7 @@ void MainWindow::on_actionTags_triggered()
 
         dialog = new TagManagerDlg(this);
 
-        Utils::ManageDialog(sc_->dialog_hash, dialog);
+        Utils::ManageDialog(sc_->view_hash, dialog);
         dialog->setModal(true);
 
         dialog->SetModel(model);

@@ -385,6 +385,7 @@ set(HEADERS
     tag/tagmodel.h
     enum/tagenum.h
     utils/tagutils.h
+    component/viewcontex.h
 )
 
 set(UIS

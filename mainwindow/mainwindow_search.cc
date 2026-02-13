@@ -62,7 +62,7 @@ void MainWindow::on_actionSearch_triggered()
         break;
     }
 
-    Utils::ManageDialog(sc_->dialog_hash, dialog);
+    Utils::ManageDialog(sc_->view_hash, dialog);
 
     connect(dialog, &SearchDialog::SNodeLocation, this, &MainWindow::RNodeLocation);
     connect(dialog, &SearchDialog::SEntryLocation, this, &MainWindow::REntryLocation);

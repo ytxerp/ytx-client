@@ -26,6 +26,7 @@
 #include <QTableView>
 
 #include "component/using.h"
+#include "component/viewcontex.h"
 #include "tree/itemmodel.h"
 
 template <typename T>
@@ -77,19 +78,15 @@ template <InheritQWidget T> void CloseWidget(const QUuid& node_id, QHash<QUuid, 
     }
 }
 
-// Close and delete all widgets in the hash
-template <InheritQWidget T> void CloseWidgets(QHash<QUuid, QPointer<T>>& hash)
+inline void CloseWidgets(QHash<QUuid, ViewContext>& hash)
 {
     // Schedule all widgets for asynchronous deletion
-    // deleteLater() queues deletion without triggering signals immediately
-    for (auto& widget : hash) {
-        if (widget) {
-            widget->deleteLater();
-        }
+    for (auto& vc : hash) {
+        if (vc.widget)
+            vc.widget->deleteLater();
     }
 
-    // Clear hash immediately (prevents lambda callbacks from accessing it)
-    // When destroyed signals fire later, hash.remove() will be harmless
+    // Clear hash immediately
     hash.clear();
 }
 

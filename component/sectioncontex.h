@@ -20,14 +20,13 @@
 #ifndef SECTIONCONTEX_H
 #define SECTIONCONTEX_H
 
-#include <QPointer>
-
 #include "component/config.h"
 #include "entryhub/entryhub.h"
 #include "table/widget/tablewidget.h"
 #include "tag/tag.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidget.h"
+#include "viewcontex.h"
 
 struct SectionContext {
     QPointer<TreeWidget> tree_widget {};
@@ -39,7 +38,8 @@ struct SectionContext {
     SectionInfo info {};
     SharedConfig shared_config {};
 
-    QHash<QUuid, QPointer<QDialog>> dialog_hash {};
+    QHash<QUuid, ViewContext> view_hash {};
+
     QHash<QUuid, QPointer<TableWidget>> tab_hash {};
     QHash<QUuid, QPointer<QWidget>> widget_hash {};
 
