@@ -230,40 +230,77 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
         return;
     }
 
-    QSet<QUuid> nodes;
     if (branch) {
-        if (auto* node = model->GetNode(node_id)) {
-            nodes = LeafChildrenId(node);
-        }
-    } else {
-        if (sc_->widget_hash.contains(node_id)) {
-            nodes.insert(node_id);
-        }
+        UpdateBranchNodeName(node_id);
+        return;
     }
+
+    UpdateLeafNodeName(node_id, name);
+}
+
+void MainWindow::UpdateLeafNodeName(const QUuid& node_id, const QString& name)
+{
+    if (!sc_->widget_hash.contains(node_id)) {
+        return;
+    }
+
+    QSet<QUuid> nodes { node_id };
 
     if (start_ == Section::kPartner) {
-        UpdatePartnerReference(sc_sale_, nodes, branch);
-        UpdatePartnerReference(sc_purchase_, nodes, branch);
+        UpdatePartnerReference(sc_sale_, nodes, false);
+        UpdatePartnerReference(sc_purchase_, nodes, false);
     }
 
-    if (nodes.isEmpty())
-        return;
+    UpdateLeafTabBar(node_id, name);
+}
 
+void MainWindow::UpdateLeafTabBar(const QUuid& node_id, const QString& name)
+{
+    auto widget { sc_->tab_widget };
+    auto model { sc_->tree_model };
     auto* tab_bar { widget->tabBar() };
     const int count { widget->count() };
 
     for (int index = 0; index != count; ++index) {
-        const auto id { tab_bar->tabData(index).toUuid() };
+        const QUuid id { tab_bar->tabData(index).toUuid() };
+        if (id != node_id)
+            continue;
 
-        if (nodes.contains(id)) {
-            const auto path { model->Path(id) };
+        tab_bar->setTabText(index, name);
+        tab_bar->setTabToolTip(index, model->Path(id));
+        break;
+    }
+}
 
-            if (!branch) {
-                tab_bar->setTabText(index, name);
-            }
+void MainWindow::UpdateBranchNodeName(const QUuid& node_id)
+{
+    auto model { sc_->tree_model };
 
-            tab_bar->setTabToolTip(index, path);
+    if (auto* node = model->GetNode(node_id)) {
+        const QSet<QUuid> nodes { LeafChildrenId(node) };
+
+        if (start_ == Section::kPartner) {
+            UpdatePartnerReference(sc_sale_, nodes, true);
+            UpdatePartnerReference(sc_purchase_, nodes, true);
         }
+
+        UpdateBranchTabBar(nodes);
+    }
+}
+
+void MainWindow::UpdateBranchTabBar(const QSet<QUuid>& nodes)
+{
+    auto widget { sc_->tab_widget };
+    auto model { sc_->tree_model };
+    auto* tab_bar { widget->tabBar() };
+    const int count { widget->count() };
+
+    for (int index = 0; index != count; ++index) {
+        const QUuid id { tab_bar->tabData(index).toUuid() };
+        if (!nodes.contains(id))
+            continue;
+
+        tab_bar->setTabToolTip(index, model->Path(id));
     }
 }
 
