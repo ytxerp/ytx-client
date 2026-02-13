@@ -12,10 +12,10 @@ SearchQuery Utils::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag
 
     static const QRegularExpression kTagRegex { R"(\[([^\]]+)\])" };
 
-    QRegularExpressionMatchIterator it = kTagRegex.globalMatch(input);
+    QRegularExpressionMatchIterator match_it { kTagRegex.globalMatch(input) };
 
-    while (it.hasNext()) {
-        const QRegularExpressionMatch match = it.next();
+    while (match_it.hasNext()) {
+        const QRegularExpressionMatch match = match_it.next();
         const QString tag_name = match.captured(1).trimmed();
 
         if (tag_name.isEmpty())

@@ -30,7 +30,7 @@
 
 namespace Utils {
 
-void ResetSectionContext(SectionContext& ctx);
+void ResetSectionContext(SectionContext& sc);
 void SetConnectionStatus(QLabel* label, ConnectionStatus status);
 void SetLoginStatus(QLabel* label, LoginStatus status);
 void SetButton(QPushButton* btn, const QString& text, const QKeySequence& ks);

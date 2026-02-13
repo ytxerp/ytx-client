@@ -161,7 +161,7 @@ private slots:
     void RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id);
 
 private:
-    void SetTabWidget(QTabWidget* widget);
+    void SetTabWidget(QTabWidget* tab_widget);
     void ResetMainwindow();
 
     void SetUniqueConnection() const;
