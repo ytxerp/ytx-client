@@ -5,7 +5,6 @@
 #include "table/model/tablemodeli.h"
 #include "table/model/tablemodelp.h"
 #include "table/model/tablemodelt.h"
-#include "ui_mainwindow.h"
 #include "utils/entryutils.h"
 #include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
@@ -17,7 +16,7 @@ void MainWindow::on_actionAppendEntry_triggered()
     qInfo() << "[UI]" << "on_actionAppendEntry_triggered";
 
     {
-        auto* widget { qobject_cast<TreeWidgetSettlement*>(ui->tabWidget->currentWidget()) };
+        auto* widget { qobject_cast<TreeWidgetSettlement*>(sc_->tab_widget->currentWidget()) };
         if (widget) {
             const QUuid settlement_widget_id { widget->WidgetId() };
 
@@ -32,7 +31,7 @@ void MainWindow::on_actionAppendEntry_triggered()
     }
 
     {
-        auto* widget { qobject_cast<TableWidget*>(ui->tabWidget->currentWidget()) };
+        auto* widget { qobject_cast<TableWidget*>(sc_->tab_widget->currentWidget()) };
         if (widget) {
             auto* model { widget->Model() };
             auto* view { widget->View() };
@@ -225,8 +224,8 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
 
     {
         CString name { tree_model->Name(node_id) };
-        const int tab_index { ui->tabWidget->addTab(widget, name) };
-        auto* tab_bar { ui->tabWidget->tabBar() };
+        const int tab_index { sc_->tab_widget->addTab(widget, name) };
+        auto* tab_bar { sc_->tab_widget->tabBar() };
 
         tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, node_id }));
         tab_bar->setTabToolTip(tab_index, tree_model->Path(node_id));
@@ -269,7 +268,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
 
 void MainWindow::RActionEntry(EntryAction action)
 {
-    auto* current_widget { ui->tabWidget->currentWidget() };
+    auto* current_widget { sc_->tab_widget->currentWidget() };
 
     Q_ASSERT(qobject_cast<TableWidget*>(current_widget));
     auto* leaf_widget { static_cast<TableWidget*>(current_widget) };

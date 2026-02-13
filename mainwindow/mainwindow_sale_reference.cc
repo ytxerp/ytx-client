@@ -71,8 +71,8 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
     auto* model { new SaleReferenceModel(info, this) };
     auto* widget { new SaleReferenceWidget(model, section, widget_id, node_id, unit, this) };
 
-    const int tab_index { ui->tabWidget->addTab(widget, title) };
-    auto* tab_bar { ui->tabWidget->tabBar() };
+    const int tab_index { sc_->tab_widget->addTab(widget, title) };
+    auto* tab_bar { sc_->tab_widget->tabBar() };
 
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, widget_id }));
 

@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
 void MainWindow::on_actionEntryJournal_triggered()
 {
@@ -13,8 +12,8 @@ void MainWindow::on_actionEntryJournal_triggered()
     auto* widget { new TreeWidgetSettlement(model, widget_id, start_, this) };
 
     {
-        const int tab_index { ui->tabWidget->addTab(widget, tr("Entry Journal")) };
-        auto* tab_bar { ui->tabWidget->tabBar() };
+        const int tab_index { sc_->tab_widget->addTab(widget, tr("Entry Journal")) };
+        auto* tab_bar { sc_->tab_widget->tabBar() };
 
         tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
     }

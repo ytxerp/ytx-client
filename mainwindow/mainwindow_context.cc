@@ -47,7 +47,7 @@ void MainWindow::UpdateAccountInfo(const QString& user, const QString& database,
 
 void MainWindow::CreateSection(SectionContext& sc, CString& name)
 {
-    auto* tab_widget { ui->tabWidget };
+    auto tab_widget { sc.tab_widget };
     auto tree_widget { sc.tree_widget };
 
     auto view { sc.tree_view };
@@ -80,7 +80,7 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
         break;
     case Section::kSale:
     case Section::kPurchase:
-        TreeConnectO(view, tree_model, entry_hub);
+        TreeConnectO(view, tree_model, entry_hub, section);
         break;
     default:
         break;
@@ -199,6 +199,8 @@ void MainWindow::InitContextFinance()
     tree_widget = new TreeWidgetF(tree_model, info, shared_config, section_config, this);
     tree_view = tree_widget->View();
 
+    sc_f_.tab_widget = ui->tabWidgetF;
+
     connect(tree_model, &TreeModel::SSyncValue, tree_widget, &TreeWidget::RSyncValue, Qt::UniqueConnection);
     connect(tree_model, &TreeModel::SInitStatus, tree_widget, &TreeWidget::RInitStatus, Qt::UniqueConnection);
 }
@@ -239,6 +241,8 @@ void MainWindow::InitContextInventory()
 
     tree_widget = new TreeWidgetIT(tree_model, section_config, this);
     tree_view = tree_widget->View();
+
+    sc_i_.tab_widget = ui->tabWidgetI;
 
     connect(tree_model, &TreeModel::SSyncValue, tree_widget, &TreeWidget::RSyncValue, Qt::UniqueConnection);
     connect(tree_model, &TreeModel::SInitStatus, tree_widget, &TreeWidget::RInitStatus, Qt::UniqueConnection);
@@ -281,6 +285,8 @@ void MainWindow::InitContextTask()
     tree_widget = new TreeWidgetIT(tree_model, section_config, this);
     tree_view = tree_widget->View();
 
+    sc_t_.tab_widget = ui->tabWidgetT;
+
     connect(tree_model, &TreeModel::SSyncValue, tree_widget, &TreeWidget::RSyncValue, Qt::UniqueConnection);
     connect(tree_model, &TreeModel::SInitStatus, tree_widget, &TreeWidget::RInitStatus, Qt::UniqueConnection);
 }
@@ -317,6 +323,8 @@ void MainWindow::InitContextPartner()
 
     tree_widget = new TreeWidgetP(tree_model, section_config, this);
     tree_view = tree_widget->View();
+
+    sc_p_.tab_widget = ui->tabWidgetP;
 
     connect(tree_model, &TreeModel::SSyncValue, tree_widget, &TreeWidget::RSyncValue, Qt::UniqueConnection);
     connect(tree_model, &TreeModel::SInitStatus, tree_widget, &TreeWidget::RInitStatus, Qt::UniqueConnection);
@@ -368,6 +376,8 @@ void MainWindow::InitContextSale()
     tree_widget = new TreeWidgetO(Section::kSale, tree_model, start_dt, end_dt, this);
     tree_view = tree_widget->View();
 
+    sc_sale_.tab_widget = ui->tabWidgetSale;
+
     connect(tree_model_o, &TreeModelO::SUpdateAmount, static_cast<TreeModelP*>(sc_p_.tree_model.data()), &TreeModelP::RUpdateAmount);
 }
 
@@ -416,6 +426,8 @@ void MainWindow::InitContextPurchase()
 
     tree_widget = new TreeWidgetO(Section::kPurchase, tree_model, start_dt, end_dt, this);
     tree_view = tree_widget->View();
+
+    sc_purchase_.tab_widget = ui->tabWidgetPurchase;
 
     connect(tree_model_o, &TreeModelO::SUpdateAmount, static_cast<TreeModelP*>(sc_p_.tree_model.data()), &TreeModelP::RUpdateAmount);
 }

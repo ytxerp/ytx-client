@@ -1,5 +1,6 @@
 #include "global/tablesstation.h"
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 
 void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
 {
@@ -21,6 +22,10 @@ void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance, Qt::UniqueConnection);
 
     connect(tree_model, &TreeModel::SDirectionRule, TableSStation::Instance(), &TableSStation::RDirectionRule, Qt::UniqueConnection);
+
+    connect(ui->tabWidgetF, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
+    connect(ui->tabWidgetF, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);
+    connect(ui->tabWidgetF, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedFIT, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
@@ -43,6 +48,10 @@ void MainWindow::TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance, Qt::UniqueConnection);
 
     connect(tree_model, &TreeModel::SDirectionRule, TableSStation::Instance(), &TableSStation::RDirectionRule, Qt::UniqueConnection);
+
+    connect(ui->tabWidgetI, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
+    connect(ui->tabWidgetI, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);
+    connect(ui->tabWidgetI, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedFIT, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
@@ -65,6 +74,10 @@ void MainWindow::TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const
     connect(entry_hub, &EntryHub::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance, Qt::UniqueConnection);
 
     connect(tree_model, &TreeModel::SDirectionRule, TableSStation::Instance(), &TableSStation::RDirectionRule, Qt::UniqueConnection);
+
+    connect(ui->tabWidgetT, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
+    connect(ui->tabWidgetT, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);
+    connect(ui->tabWidgetT, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedFIT, Qt::UniqueConnection);
 }
 
 void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
@@ -81,14 +94,24 @@ void MainWindow::TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const
     connect(tree_model, &TreeModel::SFreeWidget, this, &MainWindow::RFreeWidget, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SRefreshStatus, TableSStation::Instance(), &TableSStation::RRefreshStatus, Qt::UniqueConnection);
+
+    connect(ui->tabWidgetP, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
+    connect(ui->tabWidgetP, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);
+    connect(ui->tabWidgetP, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedP, Qt::UniqueConnection);
 }
 
-void MainWindow::TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
+void MainWindow::TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub, Section section) const
 {
     connect(tree_view, &QTreeView::doubleClicked, this, &MainWindow::RTreeViewDoubleClicked, Qt::UniqueConnection);
     connect(tree_view, &QTreeView::customContextMenuRequested, this, &MainWindow::RTreeViewCustomContextMenuRequested, Qt::UniqueConnection);
     connect(tree_model, &TreeModel::SFreeWidget, this, &MainWindow::RFreeWidget, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SAppendMultiEntry, TableSStation::Instance(), &TableSStation::RAppendMultiEntry, Qt::UniqueConnection);
+
+    auto* tab_widget { section == Section::kSale ? ui->tabWidgetSale : ui->tabWidgetPurchase };
+
+    connect(tab_widget, &QTabWidget::currentChanged, this, &MainWindow::tabWidget_currentChanged, Qt::UniqueConnection);
+    connect(tab_widget, &QTabWidget::tabBarDoubleClicked, this, &MainWindow::tabWidget_tabBarDoubleClicked, Qt::UniqueConnection);
+    connect(tab_widget, &QTabWidget::tabCloseRequested, this, &MainWindow::tabWidget_tabCloseRequestedO, Qt::UniqueConnection);
 }
 
 void MainWindow::TableConnectF(TableModel* table_model) const

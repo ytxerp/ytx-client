@@ -1,10 +1,10 @@
 #include <QtCore/qdir.h>
 #include <QtCore/qstandardpaths.h>
+#include <QtWidgets/qapplication.h>
 
 #include "global/collator.h"
 #include "global/logininfo.h"
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "utils/entryutils.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/websocket.h"
@@ -60,11 +60,11 @@ void MainWindow::UpdateAppConfig(CAppConfig& app)
         sc_i_.tree_model->UpdateSeparator(old_separator, new_separator);
         sc_t_.tree_model->UpdateSeparator(old_separator, new_separator);
 
-        auto* widget { ui->tabWidget };
-        int count { ui->tabWidget->count() };
+        auto tab_widget { sc_->tab_widget };
+        int count { sc_->tab_widget->count() };
 
         for (int index = 0; index != count; ++index)
-            widget->setTabToolTip(index, widget->tabToolTip(index).replace(old_separator, new_separator));
+            tab_widget->setTabToolTip(index, tab_widget->tabToolTip(index).replace(old_separator, new_separator));
     }
 
     if (app_config_.language != app.language) {
@@ -148,7 +148,7 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section) const
     section_settings_->endGroup();
 
     if (resize_column) {
-        auto* current_widget { ui->tabWidget->currentWidget() };
+        auto* current_widget { sc_->tab_widget->currentWidget() };
 
         if (const auto* leaf_widget = qobject_cast<TableWidget*>(current_widget)) {
             auto* header { leaf_widget->View()->horizontalHeader() };

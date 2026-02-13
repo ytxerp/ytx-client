@@ -6,7 +6,6 @@
 #include "dialog/insertnode/insertnodetask.h"
 #include "global/nodepool.h"
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -78,7 +77,7 @@ void MainWindow::RNodeLocation(Section section, const QUuid& node_id)
         return;
 
     auto widget { sc->tree_widget };
-    ui->tabWidget->setCurrentWidget(widget);
+    sc_->tab_widget->setCurrentWidget(widget);
     widget->activateWindow();
 
     widget->View()->setCurrentIndex(index);

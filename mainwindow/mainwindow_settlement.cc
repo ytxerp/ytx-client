@@ -5,7 +5,6 @@
 #include "enum/settlementenum.h"
 #include "global/resourcepool.h"
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
 
@@ -21,8 +20,8 @@ void MainWindow::on_actionSettlement_triggered()
     auto* widget { new TreeWidgetSettlement(model, widget_id, start_, this) };
 
     {
-        const int tab_index { ui->tabWidget->addTab(widget, tr("Settlement")) };
-        auto* tab_bar { ui->tabWidget->tabBar() };
+        const int tab_index { sc_->tab_widget->addTab(widget, tr("Settlement")) };
+        auto* tab_bar { sc_->tab_widget->tabBar() };
 
         tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
     }
@@ -53,8 +52,8 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
         const QString name { sc_p_.tree_model->Name(settlement.partner_id) };
         const QString label { sync_state == SyncState::kSynced ? QString("%1-%2").arg(tr("Settlement"), name) : tr("Settlement") };
 
-        const int tab_index { ui->tabWidget->addTab(widget, label) };
-        auto* tab_bar { ui->tabWidget->tabBar() };
+        const int tab_index { sc_->tab_widget->addTab(widget, label) };
+        auto* tab_bar { sc_->tab_widget->tabBar() };
 
         tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
     }
@@ -71,7 +70,7 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
 void MainWindow::RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id)
 {
     auto model { sc_p_.tree_model };
-    auto* widget { ui->tabWidget };
+    auto widget { sc_->tab_widget };
     auto* tab_bar { widget->tabBar() };
     int count { widget->count() };
 
@@ -89,7 +88,7 @@ void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
 {
     qInfo() << "[UI]" << "RSettlementTableViewDoubleClicked";
 
-    auto* current_widget { ui->tabWidget->currentWidget() };
+    auto* current_widget { sc_->tab_widget->currentWidget() };
 
     Q_ASSERT(qobject_cast<TreeWidgetSettlement*>(current_widget));
     auto* settlement_widget { static_cast<TreeWidgetSettlement*>(current_widget) };

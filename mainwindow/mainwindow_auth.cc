@@ -139,5 +139,5 @@ void MainWindow::RLoginFailed()
 void MainWindow::RTreeSyncFinished()
 {
     qDebug() << "RTreeSyncFinished";
-    on_tabWidget_currentChanged(0);
+    tabWidget_currentChanged();
 }

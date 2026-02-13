@@ -3,7 +3,6 @@
 #include "billing/statement/statementwidget.h"
 #include "enum/statementenum.h"
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
 void MainWindow::on_actionStatement_triggered()
 {
@@ -16,8 +15,8 @@ void MainWindow::on_actionStatement_triggered()
 
     auto* widget { new StatementWidget(model, widget_id, start_, this) };
 
-    const int tab_index { ui->tabWidget->addTab(widget, tr("Statement")) };
-    auto* tab_bar { ui->tabWidget->tabBar() };
+    const int tab_index { sc_->tab_widget->addTab(widget, tr("Statement")) };
+    auto* tab_bar { sc_->tab_widget->tabBar() };
 
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
 
@@ -83,8 +82,8 @@ void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start,
 
     const QString title { QString("%1-%2").arg(tr("Statement"), sc_p_.tree_model->Name(partner_id)) };
 
-    const int tab_index { ui->tabWidget->addTab(widget, title) };
-    auto* tab_bar { ui->tabWidget->tabBar() };
+    const int tab_index { sc_->tab_widget->addTab(widget, title) };
+    auto* tab_bar { sc_->tab_widget->tabBar() };
 
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
 
@@ -116,8 +115,8 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
 
     const QString title { QString("%1-%2").arg(tr("StatementDetail"), partner_name) };
 
-    const int tab_index { ui->tabWidget->addTab(widget, title) };
-    auto* tab_bar { ui->tabWidget->tabBar() };
+    const int tab_index { sc_->tab_widget->addTab(widget, title) };
+    auto* tab_bar { sc_->tab_widget->tabBar() };
 
     tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
 

@@ -150,7 +150,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
 {
     // Extract frequently used shortcuts
     auto& section_config = sc_->section_config;
-    auto* tab_widget = ui->tabWidget;
+    auto tab_widget = sc_->tab_widget;
     auto* tab_bar = tab_widget->tabBar();
     auto* parent_node { sc_->tree_model->GetNodeByIndex(parent_index) };
 
@@ -201,7 +201,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 {
     // Extract frequently used shortcuts
     auto& section_config = sc->section_config;
-    auto* tab_widget = ui->tabWidget;
+    auto tab_widget = sc_->tab_widget;
     auto* tab_bar = tab_widget->tabBar();
 
     // Validate node
@@ -249,7 +249,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 void MainWindow::RSyncPartner(const QUuid& node_id, const QUuid& value)
 {
     auto model { sc_p_.tree_model };
-    auto* widget { ui->tabWidget };
+    auto widget { sc_->tab_widget };
     auto* tab_bar { widget->tabBar() };
     int count { widget->count() };
 

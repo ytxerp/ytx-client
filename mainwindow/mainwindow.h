@@ -84,9 +84,11 @@ private slots:
     void on_actionSettlement_triggered();
     void on_actionEntryJournal_triggered();
 
-    void on_tabWidget_currentChanged(int);
-    void on_tabWidget_tabBarDoubleClicked(int index);
-    void on_tabWidget_tabCloseRequested(int index);
+    void tabWidget_currentChanged();
+    void tabWidget_tabBarDoubleClicked(int index);
+    void tabWidget_tabCloseRequestedFIT(int index);
+    void tabWidget_tabCloseRequestedP(int index);
+    void tabWidget_tabCloseRequestedO(int index);
 
     void RNodeLocation(Section section, const QUuid& node_id);
     void REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
@@ -159,7 +161,7 @@ private slots:
     void RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id);
 
 private:
-    void SetTabWidget();
+    void SetTabWidget(QTabWidget* widget);
     void ResetMainwindow();
 
     void SetUniqueConnection() const;
@@ -212,8 +214,6 @@ private:
     void DelegateStatementEntry(QTableView* table_view, CSectionConfig& config) const;
 
     void CreateSection(SectionContext& sc, CString& name);
-    void SwitchSection(Section section, const QUuid& last_tab) const;
-    void SaveLastTab() const;
 
     void EditNameFIPT();
     void EditNameO();
@@ -231,7 +231,7 @@ private:
     void TreeConnectI(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectT(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
     void TreeConnectP(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
-    void TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const;
+    void TreeConnectO(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub, Section section) const;
 
     void InsertNodeFunction(const QModelIndex& parent_index);
     void InsertNodeFIPT(const QModelIndex& parent_index); // Finance Inventory Partner Task

@@ -32,6 +32,7 @@ struct SectionContext {
     QPointer<EntryHub> entry_hub {};
     QPointer<TreeModel> tree_model {};
     QPointer<QTreeView> tree_view {};
+    QPointer<QTabWidget> tab_widget {};
 
     SectionConfig section_config {};
     SectionInfo info {};

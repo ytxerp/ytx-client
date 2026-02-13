@@ -11,9 +11,8 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-void MainWindow::SetTabWidget()
+void MainWindow::SetTabWidget(QTabWidget* tab_widget)
 {
-    auto* tab_widget { ui->tabWidget };
     auto* tab_bar { tab_widget->tabBar() };
 
     tab_bar->setDocumentMode(true);
@@ -94,14 +93,14 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
     }
 }
 
-void MainWindow::on_tabWidget_currentChanged(int /*index*/)
+void MainWindow::tabWidget_currentChanged()
 {
     qDebug() << "[UI]" << "on_tabWidget_currentChanged";
 
     if (!section_settings_)
         return;
 
-    auto* widget { ui->tabWidget->currentWidget() };
+    auto* widget { sc_->tab_widget->currentWidget() };
     if (!widget)
         return;
 
@@ -116,7 +115,7 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     ui->actionInsertNode->setEnabled(is_tree || is_table_o);
 
     ui->actionRename->setEnabled(is_tree);
-    ui->actionClearColor->setEnabled(!is_order_section);
+    ui->actionClearColor->setEnabled(is_tree && !is_order_section);
 
     ui->actionMarkAll->setEnabled(is_table_fipt);
     ui->actionMarkNone->setEnabled(is_table_fipt);
@@ -132,11 +131,11 @@ void MainWindow::on_tabWidget_currentChanged(int /*index*/)
     ui->actionDelete->setEnabled(is_tree || is_table_fipt || is_table_o || is_settlement);
 }
 
-void MainWindow::on_tabWidget_tabBarDoubleClicked(int index)
+void MainWindow::tabWidget_tabBarDoubleClicked(int index)
 {
     qInfo() << "[UI]" << "on_tabWidget_tabBarDoubleClicked";
 
-    auto* tab_bar { ui->tabWidget->tabBar() };
+    auto* tab_bar { sc_->tab_widget->tabBar() };
     const auto tab_info { tab_bar->tabData(index).value<TabInfo>() };
     const QUuid id { tab_info.id };
 
@@ -144,44 +143,60 @@ void MainWindow::on_tabWidget_tabBarDoubleClicked(int index)
         RNodeLocation(start_, id);
 }
 
-void MainWindow::on_tabWidget_tabCloseRequested(int index)
+void MainWindow::tabWidget_tabCloseRequestedFIT(int index)
 {
-    qInfo() << "[UI]" << "on_tabWidget_tabCloseRequested";
+    qInfo() << "[UI]" << "tabWidget_tabCloseRequested";
 
-    const auto node_id { ui->tabWidget->tabBar()->tabData(index).value<TabInfo>().id };
+    const auto node_id { sc_->tab_widget->tabBar()->tabData(index).value<TabInfo>().id };
 
     const auto& wc { sc_->widget_hash.value(node_id) };
     Q_ASSERT(wc.widget);
 
-    {
-        if (wc.role == WidgetRole::kNodeTabO) {
-            auto* widget { qobject_cast<TableWidgetO*>(wc.widget.data()) };
-            Q_ASSERT(wc.widget);
+    Utils::CloseWidget(node_id, sc_->widget_hash);
+    TableSStation::Instance()->DeregisterModel(node_id);
+}
 
-            if (widget->HasPendingUpdate()) {
-                auto* dlg = Utils::CreateMessageBox(QMessageBox::Warning, tr("Unsaved Data"),
-                    tr("This page contains unsaved data.\n\nDo you want to save before closing?"), true,
-                    QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, this);
+void MainWindow::tabWidget_tabCloseRequestedP(int index)
+{
+    qInfo() << "[UI]" << "tabWidget_tabCloseRequestedP";
 
-                dlg->setDefaultButton(QMessageBox::Cancel);
+    const auto node_id { sc_->tab_widget->tabBar()->tabData(index).value<TabInfo>().id };
 
-                const int ret { dlg->exec() };
+    const auto& wc { sc_->widget_hash.value(node_id) };
+    Q_ASSERT(wc.widget);
 
-                if (ret == QMessageBox::Cancel)
-                    return;
+    Utils::CloseWidget(node_id, sc_->widget_hash);
+}
 
-                if (ret == QMessageBox::Save)
-                    widget->SaveOrder();
-            }
-        }
+void MainWindow::tabWidget_tabCloseRequestedO(int index)
+{
+    qInfo() << "[UI]" << "tabWidget_tabCloseRequestedO";
+
+    const auto node_id { sc_->tab_widget->tabBar()->tabData(index).value<TabInfo>().id };
+
+    const auto& wc { sc_->widget_hash.value(node_id) };
+    Q_ASSERT(wc.widget);
+
+    auto* widget { qobject_cast<TableWidgetO*>(wc.widget.data()) };
+    Q_ASSERT(wc.widget);
+
+    if (widget->HasPendingUpdate()) {
+        auto* dlg
+            = Utils::CreateMessageBox(QMessageBox::Warning, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nDo you want to save before closing?"),
+                true, QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, this);
+
+        dlg->setDefaultButton(QMessageBox::Cancel);
+
+        const int ret { dlg->exec() };
+
+        if (ret == QMessageBox::Cancel)
+            return;
+
+        if (ret == QMessageBox::Save)
+            widget->SaveOrder();
     }
 
-    {
-        Utils::CloseWidget(node_id, sc_->widget_hash);
-
-        if (wc.role == WidgetRole::kNodeTabFIT)
-            TableSStation::Instance()->DeregisterModel(node_id);
-    }
+    Utils::CloseWidget(node_id, sc_->widget_hash);
 }
 
 void MainWindow::on_actionJumpEntry_triggered()
@@ -191,10 +206,10 @@ void MainWindow::on_actionJumpEntry_triggered()
     if (IsSingleEntry(start_))
         return;
 
-    auto* current_widget { ui->tabWidget->currentWidget() };
+    auto* widget { sc_->tab_widget->currentWidget() };
 
-    Q_ASSERT(qobject_cast<TableWidget*>(current_widget));
-    auto* leaf_widget { static_cast<TableWidget*>(current_widget) };
+    Q_ASSERT(qobject_cast<TableWidget*>(widget));
+    auto* leaf_widget { static_cast<TableWidget*>(widget) };
 
     const auto index { leaf_widget->View()->currentIndex() };
     if (!index.isValid())
@@ -214,7 +229,7 @@ void MainWindow::on_actionJumpEntry_triggered()
 void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool branch)
 {
     auto model { sc_->tree_model };
-    auto* widget { ui->tabWidget };
+    auto widget { sc_->tab_widget };
 
     auto* tab_bar { widget->tabBar() };
     int count { widget->count() };
@@ -254,7 +269,7 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
 
 void MainWindow::UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool branch) const
 {
-    auto* widget { ui->tabWidget };
+    auto widget { sc_->tab_widget };
     auto partner_model { sc_->tree_model };
     auto* order_model { static_cast<TreeModelO*>(sc_sale_.tree_model.data()) };
     auto* tab_bar { widget->tabBar() };

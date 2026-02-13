@@ -37,7 +37,13 @@ MainWindow::MainWindow(QWidget* parent)
     InitSystemTray();
     InitStatusLabel();
 
-    SetTabWidget();
+    SetTabWidget(ui->tabWidgetF);
+    SetTabWidget(ui->tabWidgetI);
+    SetTabWidget(ui->tabWidgetT);
+    SetTabWidget(ui->tabWidgetP);
+    SetTabWidget(ui->tabWidgetSale);
+    SetTabWidget(ui->tabWidgetPurchase);
+
     SetIcon();
     SetUniqueConnection();
     SetAction(false);
@@ -120,7 +126,7 @@ void MainWindow::FocusTabWidget(const QUuid& node_id) const
     auto widget { qobject_cast<TableWidget*>(sc_->widget_hash.value(node_id).widget) };
     Q_ASSERT_X(widget, "MainWindow::FocusTableWidget", "Table widget not found for node_id");
 
-    ui->tabWidget->setCurrentWidget(widget);
+    sc_->tab_widget->setCurrentWidget(widget);
     widget->activateWindow();
 
     widget->View()->setCurrentIndex(QModelIndex());
@@ -149,7 +155,7 @@ void MainWindow::on_actionDelete_triggered()
 {
     qInfo() << "[UI]" << "on_actionDelete_triggered";
 
-    auto* widget { ui->tabWidget->currentWidget() };
+    auto* widget { sc_->tab_widget->currentWidget() };
 
     {
         auto* d_widget { qobject_cast<TreeWidgetSettlement*>(widget) };
@@ -174,7 +180,7 @@ void MainWindow::ResetMainwindow()
     section_settings_.clear();
 
     {
-        auto* tab_widget { ui->tabWidget };
+        auto tab_widget { sc_->tab_widget };
         auto* tab_bar { tab_widget->tabBar() };
         const int count { tab_widget->count() };
 
@@ -247,7 +253,7 @@ void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 
 void MainWindow::RFlushCaches()
 {
-    auto* widget { ui->tabWidget->currentWidget() };
+    auto* widget { sc_->tab_widget->currentWidget() };
 
     if (qobject_cast<TreeWidget*>(widget)) {
         sc_->tree_model->FlushCaches();
@@ -300,7 +306,7 @@ void MainWindow::RegisterWidget(QWidget* widget, const QUuid& widget_id, WidgetR
 
     sc_->widget_hash.insert(widget_id, wc);
 
-    ui->tabWidget->setCurrentWidget(widget);
+    sc_->tab_widget->setCurrentWidget(widget);
 }
 
 void MainWindow::WriteConfig()
@@ -465,7 +471,7 @@ void MainWindow::on_actionInsertNode_triggered()
 {
     qInfo() << "[UI]" << "on_actionInsertNode_triggered";
 
-    auto* widget { ui->tabWidget->currentWidget() };
+    auto* widget { sc_->tab_widget->currentWidget() };
     if (!IsTreeWidget(widget) && !IsTableWidgetO(widget)) {
         return;
     }
@@ -480,7 +486,7 @@ void MainWindow::on_actionAppendNode_triggered()
 {
     qInfo() << "[UI]" << "on_actionAppendNode_triggered";
 
-    auto* widget { ui->tabWidget->currentWidget() };
+    auto* widget { sc_->tab_widget->currentWidget() };
     if (!IsTreeWidget(widget)) {
         return;
     }
@@ -570,21 +576,6 @@ void MainWindow::on_actionAbout_triggered()
     dialog->activateWindow();
 }
 
-void MainWindow::SwitchSection(Section section, const QUuid& last_tab) const
-{
-    auto* tab_widget { ui->tabWidget };
-    auto* tab_bar { tab_widget->tabBar() };
-    const int count { tab_widget->count() };
-
-    for (int index = 0; index != count; ++index) {
-        const auto tab { tab_bar->tabData(index).value<TabInfo>() };
-        tab_widget->setTabVisible(index, tab.section == section);
-
-        if (!last_tab.isNull() && tab.id == last_tab)
-            tab_widget->setCurrentIndex(index);
-    }
-}
-
 void MainWindow::RSectionGroup(int id)
 {
     qInfo() << "[UI]" << "Switched to section:" << kSectionString.value(Section(id));
@@ -593,7 +584,6 @@ void MainWindow::RSectionGroup(int id)
     start_ = section;
 
     Utils::SwitchDialog(sc_, false);
-    SaveLastTab();
 
     switch (section) {
     case Section::kFinance:
@@ -618,17 +608,10 @@ void MainWindow::RSectionGroup(int id)
         break;
     }
 
-    SwitchSection(start_, sc_->info.last_tab_id);
+    ui->stackedWidget->setCurrentIndex(id);
+    tabWidget_currentChanged();
+
     Utils::SwitchDialog(sc_, true);
-}
-
-void MainWindow::SaveLastTab() const
-{
-    if (!sc_)
-        return;
-
-    auto index { ui->tabWidget->currentIndex() };
-    sc_->info.last_tab_id = ui->tabWidget->tabBar()->tabData(index).value<TabInfo>().id;
 }
 
 void MainWindow::on_actionExportExcel_triggered()

@@ -267,7 +267,7 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
 {
     Q_UNUSED(pos);
 
-    auto* widget { qobject_cast<TableWidget*>(ui->tabWidget->currentWidget()) };
+    auto* widget { qobject_cast<TableWidget*>(sc_->tab_widget->currentWidget()) };
     if (!widget)
         return;
 
