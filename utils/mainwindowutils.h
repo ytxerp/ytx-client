@@ -38,13 +38,13 @@ void SetButton(QPushButton* btn, const QString& text, const QKeySequence& ks);
 QString AccountIniFileName(const QString& email, const QString& workspace);
 QString UuidToShortCode(const QUuid& uuid, int length = 10);
 
-QUuid ManageDialog(QHash<QUuid, ViewContext>& view_hash, QDialog* dialog);
+QUuid ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog);
 void ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where = true);
 
-inline void CloseWidget(const QUuid& node_id, QHash<QUuid, ViewContext>& view_hash)
+inline void CloseWidget(const QUuid& node_id, QHash<QUuid, WidgetContext>& widget_hash)
 {
     // Take removes the widget from hash and returns it
-    if (auto widget { view_hash.take(node_id).widget }) {
+    if (auto widget { widget_hash.take(node_id).widget }) {
         // Check if QPointer is still valid (widget not already deleted)
         if (widget) {
             // Schedule asynchronous deletion (safe, won't trigger signals immediately)
@@ -53,7 +53,7 @@ inline void CloseWidget(const QUuid& node_id, QHash<QUuid, ViewContext>& view_ha
     }
 }
 
-inline void CloseWidgets(QHash<QUuid, ViewContext>& hash)
+inline void CloseWidgets(QHash<QUuid, WidgetContext>& hash)
 {
     // Schedule all widgets for asynchronous deletion
     for (auto& vc : hash) {

@@ -54,7 +54,7 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
         return;
     }
 
-    Utils::ManageDialog(sc_->view_hash, dialog);
+    Utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setModal(true);
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {
@@ -110,7 +110,7 @@ void MainWindow::EditNameFIPT()
 
     auto* dialog { new EditNodeName(name, parent_path, children_name, this) };
 
-    Utils::ManageDialog(sc_->view_hash, dialog);
+    Utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setModal(true);
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {

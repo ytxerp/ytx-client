@@ -51,7 +51,7 @@ void MainWindow::RLeafDeleteDenied(const QJsonObject& obj)
 
     auto* dialog { new LeafDeleteDialog(model, section_contex->info, obj, node_id, unit, this) };
 
-    Utils::ManageDialog(sc_->view_hash, dialog);
+    Utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setModal(true);
 
     connect(dialog, &QDialog::destroyed, this, [this, node_id]() { deleting_node_.remove(node_id); });

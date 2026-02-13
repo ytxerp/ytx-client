@@ -89,10 +89,10 @@ void Utils::SwitchDialog(const SectionContext* sc, bool enable)
     if (!sc)
         return;
 
-    const auto& view_hash { sc->view_hash };
-    for (const auto& vc : view_hash) {
-        if (vc.widget) {
-            vc.widget->setVisible(enable);
+    const auto& widget_hash { sc->widget_hash };
+    for (const auto& wc : widget_hash) {
+        if (wc.widget && wc.role == WidgetRole::kDialog) {
+            wc.widget->setVisible(enable);
         }
     }
 }
@@ -172,7 +172,7 @@ void Utils::ResetSectionContext(SectionContext& ctx)
     ctx.section_config = SectionConfig {};
     ctx.shared_config = SharedConfig {};
 
-    Utils::CloseWidgets(ctx.view_hash);
+    Utils::CloseWidgets(ctx.widget_hash);
 
     ResourcePool<Tag>::Instance().Recycle(ctx.tag_hash);
 }
@@ -274,15 +274,15 @@ QString Utils::UuidToShortCode(const QUuid& uuid, int length)
     return base32.left(length);
 }
 
-QUuid Utils::ManageDialog(QHash<QUuid, ViewContext>& view_hash, QDialog* dialog)
+QUuid Utils::ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog)
 {
     Q_ASSERT(dialog);
 
     dialog->setAttribute(Qt::WA_DeleteOnClose);
 
     const QUuid id { QUuid::createUuidV7() };
-    ViewContext ctx { dialog, id, ViewRole::kDialog };
+    WidgetContext wc { dialog, id, WidgetRole::kDialog };
 
-    view_hash.insert(id, ctx);
+    widget_hash.insert(id, wc);
     return id;
 }

@@ -24,7 +24,7 @@
 #include <QUuid>
 #include <QWidget>
 
-enum class ViewRole {
+enum class WidgetRole {
     kNodeTabFIT,
     kNodeTabO,
     kNodeTabP,
@@ -35,10 +35,10 @@ enum class ViewRole {
     kSaleReference,
 };
 
-struct ViewContext {
+struct WidgetContext {
     QPointer<QWidget> widget {};
     QUuid id {};
-    ViewRole role {};
+    WidgetRole role {};
 };
 
 #endif // VIEWCONTEX_H

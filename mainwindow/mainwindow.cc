@@ -117,7 +117,7 @@ MainWindow::~MainWindow()
 // Note: Clears view selection after switching
 void MainWindow::FocusTabWidget(const QUuid& node_id) const
 {
-    auto widget { qobject_cast<TableWidget*>(sc_->view_hash.value(node_id).widget) };
+    auto widget { qobject_cast<TableWidget*>(sc_->widget_hash.value(node_id).widget) };
     Q_ASSERT_X(widget, "MainWindow::FocusTableWidget", "Table widget not found for node_id");
 
     ui->tabWidget->setCurrentWidget(widget);
@@ -241,7 +241,7 @@ void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 {
     auto* sc { GetSectionContex(section) };
 
-    Utils::CloseWidget(node_id, sc->view_hash);
+    Utils::CloseWidget(node_id, sc->widget_hash);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
@@ -272,19 +272,19 @@ void MainWindow::FlushCaches(SectionContext& sc)
         sc.tree_model->FlushCaches();
 
     // Iterate through all views in the view_hash
-    for (auto it = sc.view_hash.begin(); it != sc.view_hash.end(); ++it) {
-        const auto& vc = it.value();
+    for (auto it = sc.widget_hash.begin(); it != sc.widget_hash.end(); ++it) {
+        const auto& wc = it.value();
 
         // Skip if the widget pointer is null
-        if (!vc.widget)
+        if (!wc.widget)
             continue;
 
         // Only process specific NodeTab types
-        if (vc.role != ViewRole::kNodeTabFIT && vc.role != ViewRole::kNodeTabO)
+        if (wc.role != WidgetRole::kNodeTabFIT && wc.role != WidgetRole::kNodeTabO)
             continue;
 
         // Safely cast the widget to TableWidget
-        if (auto* table_widget = qobject_cast<TableWidget*>(vc.widget)) {
+        if (auto* table_widget = qobject_cast<TableWidget*>(wc.widget)) {
             // Flush caches of the model if it exists
             if (auto* model = table_widget->Model())
                 model->FlushCaches();
@@ -292,13 +292,13 @@ void MainWindow::FlushCaches(SectionContext& sc)
     }
 }
 
-void MainWindow::RegisterWidget(QWidget* widget, const QUuid& widget_id, ViewRole role)
+void MainWindow::RegisterWidget(QWidget* widget, const QUuid& widget_id, WidgetRole role)
 {
     Q_ASSERT(widget);
 
-    ViewContext ctx { widget, widget_id, role };
+    WidgetContext wc { widget, widget_id, role };
 
-    sc_->view_hash.insert(widget_id, ctx);
+    sc_->widget_hash.insert(widget_id, wc);
 
     ui->tabWidget->setCurrentWidget(widget);
 }
@@ -547,7 +547,7 @@ void MainWindow::on_actionPreferences_triggered()
 
     auto* dialog { new Preferences(model, sc_->info, app_config_, sc_->shared_config, sc_->section_config, this) };
 
-    Utils::ManageDialog(sc_->view_hash, dialog);
+    Utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setModal(true);
 
     connect(dialog, &Preferences::SUpdateConfig, this, &MainWindow::RUpdateConfig);
@@ -583,8 +583,6 @@ void MainWindow::SwitchSection(Section section, const QUuid& last_tab) const
         if (!last_tab.isNull() && tab.id == last_tab)
             tab_widget->setCurrentIndex(index);
     }
-
-    Utils::SwitchDialog(sc_, true);
 }
 
 void MainWindow::RSectionGroup(int id)
@@ -595,7 +593,7 @@ void MainWindow::RSectionGroup(int id)
     start_ = section;
 
     Utils::SwitchDialog(sc_, false);
-    UpdateLastTab();
+    SaveLastTab();
 
     switch (section) {
     case Section::kFinance:
@@ -621,9 +619,10 @@ void MainWindow::RSectionGroup(int id)
     }
 
     SwitchSection(start_, sc_->info.last_tab_id);
+    Utils::SwitchDialog(sc_, true);
 }
 
-void MainWindow::UpdateLastTab() const
+void MainWindow::SaveLastTab() const
 {
     if (!sc_)
         return;

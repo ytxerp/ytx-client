@@ -111,11 +111,11 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
         return;
 
     QUuid node_id {};
-    auto& view_hash { sc_->view_hash };
+    auto& widget_hash { sc_->widget_hash };
 
-    if (view_hash.contains(lhs_node_id)) {
+    if (widget_hash.contains(lhs_node_id)) {
         node_id = lhs_node_id;
-    } else if (view_hash.contains(rhs_node_id)) {
+    } else if (widget_hash.contains(rhs_node_id)) {
         node_id = rhs_node_id;
     }
 
@@ -168,7 +168,7 @@ void MainWindow::RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id)
     if (entry_id.isNull() || node_id.isNull())
         return;
 
-    auto widget { qobject_cast<TableWidget*>(sc_->view_hash.value(node_id).widget) };
+    auto widget { qobject_cast<TableWidget*>(sc_->widget_hash.value(node_id).widget) };
     Q_ASSERT(widget);
 
     auto* view { widget->View() };
@@ -221,7 +221,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 
     TableWidgetFIPT* widget { new TableWidgetFIPT(table_model, this) };
-    ViewContext vc { widget, node_id, ViewRole::kNodeTabFIT };
+    WidgetContext wc { widget, node_id, WidgetRole::kNodeTabFIT };
 
     {
         CString name { tree_model->Name(node_id) };
@@ -256,7 +256,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
             TableDelegateP(view, section_config);
             TableConnectP(table_model);
             static_cast<EntryHubP*>(sc_->entry_hub.data())->PushEntry(node_id);
-            vc.role = ViewRole::kNodeTabP;
+            wc.role = WidgetRole::kNodeTabP;
             break;
         case Section::kSale:
         case Section::kPurchase:
@@ -264,7 +264,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         }
     }
 
-    sc->view_hash.insert(node_id, vc);
+    sc->widget_hash.insert(node_id, wc);
 }
 
 void MainWindow::RActionEntry(EntryAction action)

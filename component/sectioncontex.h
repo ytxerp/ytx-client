@@ -37,7 +37,7 @@ struct SectionContext {
     SectionInfo info {};
     SharedConfig shared_config {};
 
-    QHash<QUuid, ViewContext> view_hash {};
+    QHash<QUuid, WidgetContext> widget_hash {};
 
     QHash<QUuid, Tag*> tag_hash {};
     QHash<QUuid, QIcon> tag_icon {};

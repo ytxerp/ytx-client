@@ -27,5 +27,5 @@ void MainWindow::on_actionEntryJournal_triggered()
         DelegateSettlement(view, sc_->section_config);
     }
 
-    RegisterWidget(widget, widget_id, ViewRole::kCharts);
+    RegisterWidget(widget, widget_id, WidgetRole::kCharts);
 }
