@@ -1,7 +1,3 @@
-#include <QtConcurrent/qtconcurrentrun.h>
-
-#include <QFutureWatcher>
-
 #include "global/tablesstation.h"
 #include "mainwindow.h"
 #include "tree/model/treemodelo.h"
@@ -230,30 +226,36 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
     auto model { sc_->tree_model };
     auto widget { sc_->tab_widget };
 
-    auto* tab_bar { widget->tabBar() };
-    int count { widget->count() };
+    if (!model || !widget) {
+        return;
+    }
 
     QSet<QUuid> nodes;
-
     if (branch) {
-        auto* node { model->GetNode(node_id) };
-        nodes = LeafChildrenId(node);
-    } else {
-        nodes.insert(node_id);
-
-        if (start_ == Section::kPartner) {
-            UpdatePartnerReference(sc_sale_, nodes, branch);
-            UpdatePartnerReference(sc_purchase_, nodes, branch);
+        if (auto* node = model->GetNode(node_id)) {
+            nodes = LeafChildrenId(node);
         }
-
-        if (!sc_->widget_hash.contains(node_id))
-            return;
+    } else {
+        if (sc_->widget_hash.contains(node_id)) {
+            nodes.insert(node_id);
+        }
     }
+
+    if (start_ == Section::kPartner) {
+        UpdatePartnerReference(sc_sale_, nodes, branch);
+        UpdatePartnerReference(sc_purchase_, nodes, branch);
+    }
+
+    if (nodes.isEmpty())
+        return;
+
+    auto* tab_bar { widget->tabBar() };
+    const int count { widget->count() };
 
     for (int index = 0; index != count; ++index) {
         const auto id { tab_bar->tabData(index).toUuid() };
 
-        if (widget->isTabVisible(index) && nodes.contains(id)) {
+        if (nodes.contains(id)) {
             const auto path { model->Path(id) };
 
             if (!branch) {
@@ -263,61 +265,39 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
             tab_bar->setTabToolTip(index, path);
         }
     }
-
-    if (start_ == Section::kPartner) {
-        UpdatePartnerReference(sc_sale_, nodes, branch);
-        UpdatePartnerReference(sc_purchase_, nodes, branch);
-    }
 }
 
-void MainWindow::UpdatePartnerReference(const SectionContext& sc, const QSet<QUuid>& partner_nodes, bool branch) const
+void MainWindow::UpdatePartnerReference(const SectionContext& sc, const QSet<QUuid>& partner_nodes, const bool branch) const
 {
     auto widget { sc.tab_widget };
     auto partner_model { sc_p_.tree_model };
     auto* order_model { static_cast<TreeModelO*>(sc.tree_model.data()) };
+
+    if (!widget || !partner_model || !order_model) {
+        return;
+    }
+
     auto* tab_bar { widget->tabBar() };
     const int count { widget->count() };
 
-    // 使用 QtConcurrent::run 启动后台线程
-    auto future = QtConcurrent::run([=]() -> QVector<std::tuple<int, QString, QString>> {
-        QVector<std::tuple<int, QString, QString>> updates;
-
-        // 遍历所有选项卡，计算需要更新的项
-        for (int index = 0; index != count; ++index) {
-            const auto& node_id { tab_bar->tabData(index).toUuid() };
-
-            if (node_id.isNull())
-                continue;
-
-            const auto order_partner { order_model->Partner(node_id) };
-            if (!partner_nodes.contains(order_partner))
-                continue;
-
-            QString name { partner_model->Name(order_partner) };
-            QString path { partner_model->Path(order_partner) };
-
-            // 收集需要更新的信息
-            updates.append(std::make_tuple(index, name, path));
+    for (int index = 0; index != count; ++index) {
+        const QUuid node_id { tab_bar->tabData(index).toUuid() };
+        if (node_id.isNull()) {
+            continue;
         }
 
-        return updates;
-    });
+        const QUuid partner_id { order_model->Partner(node_id) };
+        if (!partner_nodes.contains(partner_id)) {
+            continue;
+        }
 
-    auto watcher { std::make_unique<QFutureWatcher<QVector<std::tuple<int, QString, QString>>>>() };
+        const QString path { partner_model->Path(partner_id) };
 
-    // 获取原始指针用于信号连接
-    auto* raw_watcher = watcher.get();
+        if (!branch) {
+            const QString name { partner_model->Name(partner_id) };
+            tab_bar->setTabText(index, name);
+        }
 
-    connect(
-        raw_watcher, &QFutureWatcher<QVector<std::tuple<int, QString, QString>>>::finished, this, [watcher = std::move(watcher), tab_bar, branch]() mutable {
-            const auto& updates = watcher->result();
-
-            for (const auto& [index, name, path] : updates) {
-                if (!branch)
-                    tab_bar->setTabText(index, name);
-                tab_bar->setTabToolTip(index, path);
-            }
-        });
-
-    raw_watcher->setFuture(future);
+        tab_bar->setTabToolTip(index, path);
+    }
 }

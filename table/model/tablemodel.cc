@@ -1,7 +1,5 @@
 #include "tablemodel.h"
 
-#include <QtConcurrent>
-
 #include "global/entrypool.h"
 #include "global/resourcepool.h"
 #include "utils/entryutils.h"
@@ -100,10 +98,10 @@ void TableModel::ActionEntry(EntryAction action)
     if (shadow_list_.isEmpty())
         return;
 
-    QJsonObject message { JsonGen::EntryAction(section_, lhs_id_, std::to_underlying(action)) };
+    const QJsonObject message { JsonGen::EntryAction(section_, lhs_id_, std::to_underlying(action)) };
     WebSocket::Instance()->SendMessage(kEntryAction, message);
 
-    auto Update = [action](EntryShadow* entry_shadow) {
+    for (auto* entry_shadow : std::as_const(shadow_list_)) {
         switch (action) {
         case EntryAction::kMarkAll:
             *entry_shadow->status = std::to_underlying(EntryStatus::kMarked);
@@ -114,22 +112,11 @@ void TableModel::ActionEntry(EntryAction action)
         case EntryAction::kMarkToggle:
             *entry_shadow->status ^= std::to_underlying(EntryStatus::kMarked);
             break;
-        default:
-            break;
         }
-    };
+    }
 
-    auto future { QtConcurrent::map(shadow_list_, Update) };
-    auto* watcher { new QFutureWatcher<void>(this) };
-
-    connect(watcher, &QFutureWatcher<void>::finished, this, [this, watcher]() {
-        const int column { std::to_underlying(EntryEnum::kStatus) };
-        emit dataChanged(index(0, column), index(rowCount() - 1, column));
-
-        watcher->deleteLater();
-    });
-
-    watcher->setFuture(future);
+    const int column { std::to_underlying(EntryEnum::kStatus) };
+    emit dataChanged(index(0, column), index(rowCount() - 1, column));
 }
 
 void TableModel::AccumulateBalance(int start)
