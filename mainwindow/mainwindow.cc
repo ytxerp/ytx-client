@@ -185,8 +185,8 @@ void MainWindow::ResetMainwindow()
         const int count { tab_widget->count() };
 
         for (int index = count - 1; index >= 0; --index) {
-            const auto tab { tab_bar->tabData(index).value<TabInfo>() };
-            if (!tab.id.isNull())
+            const auto id { tab_bar->tabData(index).toUuid() };
+            if (!id.isNull())
                 tab_widget->removeTab(index);
         }
     }

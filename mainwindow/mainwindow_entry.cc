@@ -227,7 +227,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         const int tab_index { sc_->tab_widget->addTab(widget, name) };
         auto* tab_bar { sc_->tab_widget->tabBar() };
 
-        tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { section, node_id }));
+        tab_bar->setTabData(tab_index, node_id);
         tab_bar->setTabToolTip(tab_index, tree_model->Path(node_id));
 
         auto* view { widget->View() };

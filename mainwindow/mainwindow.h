@@ -242,7 +242,7 @@ private:
     void DeleteBranch(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id);
     void DeleteSettlement(TreeWidgetSettlement* widget);
 
-    void UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool branch) const;
+    void UpdatePartnerReference(const SectionContext& sc, const QSet<QUuid>& partner_nodes, bool branch) const;
 
     void LoadAndInstallTranslator(CString& language);
     void ResizeColumn(QHeaderView* header, int stretch_column) const;

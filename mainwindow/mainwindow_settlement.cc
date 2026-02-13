@@ -23,7 +23,7 @@ void MainWindow::on_actionSettlement_triggered()
         const int tab_index { sc_->tab_widget->addTab(widget, tr("Settlement")) };
         auto* tab_bar { sc_->tab_widget->tabBar() };
 
-        tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
+        tab_bar->setTabData(tab_index, widget_id);
     }
 
     {
@@ -55,7 +55,7 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
         const int tab_index { sc_->tab_widget->addTab(widget, label) };
         auto* tab_bar { sc_->tab_widget->tabBar() };
 
-        tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
+        tab_bar->setTabData(tab_index, widget_id);
     }
 
     {
@@ -75,7 +75,7 @@ void MainWindow::RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id)
     int count { widget->count() };
 
     for (int index = 0; index != count; ++index) {
-        if (widget->isTabVisible(index) && tab_bar->tabData(index).value<TabInfo>().id == widget_id) {
+        if (widget->isTabVisible(index) && tab_bar->tabData(index).toUuid() == widget_id) {
             const QString name { model->Name(partner_id) };
             const QString label { QString("%1-%2").arg(tr("Settlement"), name) };
 

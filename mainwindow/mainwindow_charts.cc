@@ -15,7 +15,7 @@ void MainWindow::on_actionEntryJournal_triggered()
         const int tab_index { sc_->tab_widget->addTab(widget, tr("Entry Journal")) };
         auto* tab_bar { sc_->tab_widget->tabBar() };
 
-        tab_bar->setTabData(tab_index, QVariant::fromValue(TabInfo { start_, widget_id }));
+        tab_bar->setTabData(tab_index, widget_id);
     }
 
     {

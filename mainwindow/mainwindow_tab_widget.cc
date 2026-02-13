@@ -136,8 +136,7 @@ void MainWindow::tabWidget_tabBarDoubleClicked(int index)
     qInfo() << "[UI]" << "on_tabWidget_tabBarDoubleClicked";
 
     auto* tab_bar { sc_->tab_widget->tabBar() };
-    const auto tab_info { tab_bar->tabData(index).value<TabInfo>() };
-    const QUuid id { tab_info.id };
+    const auto id { tab_bar->tabData(index).toUuid() };
 
     if (sc_->widget_hash.contains(id))
         RNodeLocation(start_, id);
@@ -147,7 +146,7 @@ void MainWindow::tabWidget_tabCloseRequestedFIT(int index)
 {
     qInfo() << "[UI]" << "tabWidget_tabCloseRequested";
 
-    const auto node_id { sc_->tab_widget->tabBar()->tabData(index).value<TabInfo>().id };
+    const auto node_id { sc_->tab_widget->tabBar()->tabData(index).toUuid() };
 
     const auto& wc { sc_->widget_hash.value(node_id) };
     Q_ASSERT(wc.widget);
@@ -160,7 +159,7 @@ void MainWindow::tabWidget_tabCloseRequestedP(int index)
 {
     qInfo() << "[UI]" << "tabWidget_tabCloseRequestedP";
 
-    const auto node_id { sc_->tab_widget->tabBar()->tabData(index).value<TabInfo>().id };
+    const auto node_id { sc_->tab_widget->tabBar()->tabData(index).toUuid() };
 
     const auto& wc { sc_->widget_hash.value(node_id) };
     Q_ASSERT(wc.widget);
@@ -172,7 +171,7 @@ void MainWindow::tabWidget_tabCloseRequestedO(int index)
 {
     qInfo() << "[UI]" << "tabWidget_tabCloseRequestedO";
 
-    const auto node_id { sc_->tab_widget->tabBar()->tabData(index).value<TabInfo>().id };
+    const auto node_id { sc_->tab_widget->tabBar()->tabData(index).toUuid() };
 
     const auto& wc { sc_->widget_hash.value(node_id) };
     Q_ASSERT(wc.widget);
@@ -242,15 +241,17 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
     } else {
         nodes.insert(node_id);
 
-        if (start_ == Section::kPartner)
-            UpdatePartnerReference(nodes, branch);
+        if (start_ == Section::kPartner) {
+            UpdatePartnerReference(sc_sale_, nodes, branch);
+            UpdatePartnerReference(sc_purchase_, nodes, branch);
+        }
 
         if (!sc_->widget_hash.contains(node_id))
             return;
     }
 
     for (int index = 0; index != count; ++index) {
-        const auto id { tab_bar->tabData(index).value<TabInfo>().id };
+        const auto id { tab_bar->tabData(index).toUuid() };
 
         if (widget->isTabVisible(index) && nodes.contains(id)) {
             const auto path { model->Path(id) };
@@ -263,15 +264,17 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
         }
     }
 
-    if (start_ == Section::kPartner)
-        UpdatePartnerReference(nodes, branch);
+    if (start_ == Section::kPartner) {
+        UpdatePartnerReference(sc_sale_, nodes, branch);
+        UpdatePartnerReference(sc_purchase_, nodes, branch);
+    }
 }
 
-void MainWindow::UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool branch) const
+void MainWindow::UpdatePartnerReference(const SectionContext& sc, const QSet<QUuid>& partner_nodes, bool branch) const
 {
-    auto widget { sc_->tab_widget };
-    auto partner_model { sc_->tree_model };
-    auto* order_model { static_cast<TreeModelO*>(sc_sale_.tree_model.data()) };
+    auto widget { sc.tab_widget };
+    auto partner_model { sc_p_.tree_model };
+    auto* order_model { static_cast<TreeModelO*>(sc.tree_model.data()) };
     auto* tab_bar { widget->tabBar() };
     const int count { widget->count() };
 
@@ -281,24 +284,20 @@ void MainWindow::UpdatePartnerReference(const QSet<QUuid>& partner_nodes, bool b
 
         // 遍历所有选项卡，计算需要更新的项
         for (int index = 0; index != count; ++index) {
-            const auto& data { tab_bar->tabData(index).value<TabInfo>() };
-            bool update { data.section == Section::kSale || data.section == Section::kPurchase };
+            const auto& node_id { tab_bar->tabData(index).toUuid() };
 
-            if (!widget->isTabVisible(index) && update) {
-                const auto order_node_id { data.id };
-                if (order_node_id.isNull())
-                    continue;
+            if (node_id.isNull())
+                continue;
 
-                const auto order_partner { order_model->Partner(order_node_id) };
-                if (!partner_nodes.contains(order_partner))
-                    continue;
+            const auto order_partner { order_model->Partner(node_id) };
+            if (!partner_nodes.contains(order_partner))
+                continue;
 
-                QString name { partner_model->Name(order_partner) };
-                QString path { partner_model->Path(order_partner) };
+            QString name { partner_model->Name(order_partner) };
+            QString path { partner_model->Path(order_partner) };
 
-                // 收集需要更新的信息
-                updates.append(std::make_tuple(index, name, path));
-            }
+            // 收集需要更新的信息
+            updates.append(std::make_tuple(index, name, path));
         }
 
         return updates;

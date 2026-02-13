@@ -59,17 +59,6 @@ struct SectionInfo {
     QPointer<ItemModel> rule_model {};
 };
 
-struct TabInfo {
-    Section section {};
-    QUuid id {};
-
-    // Equality operator overload to compare two TabInfo structs
-    bool operator==(const TabInfo& other) const noexcept { return std::tie(section, id) == std::tie(other.section, other.id); }
-
-    // Inequality operator overload to compare two TabInfo structs
-    bool operator!=(const TabInfo& other) const noexcept { return !(*this == other); }
-};
-
 using CSectionInfo = const SectionInfo;
 
 #endif // INFO_H

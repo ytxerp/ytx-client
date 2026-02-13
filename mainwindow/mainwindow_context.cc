@@ -62,7 +62,7 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
     auto* tab_bar = tab_widget->tabBar();
     const int index { tab_widget->addTab(tree_widget, name) };
 
-    tab_bar->setTabData(index, QVariant::fromValue(TabInfo { section, QUuid() }));
+    tab_bar->setTabData(index, QUuid());
     tab_bar->setTabButton(index, QTabBar::RightSide, nullptr);
 
     switch (info.section) {
