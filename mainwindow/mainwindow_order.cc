@@ -87,7 +87,7 @@ void MainWindow::ROrderReleased(Section section, const QUuid& node_id, int versi
 {
     auto* sc { GetSectionContex(section) };
 
-    auto widget { sc->tab_hash.value(node_id, nullptr) };
+    auto widget { sc->view_hash.value(node_id).widget };
     if (widget) {
         auto* ptr { widget.data() };
 
@@ -102,7 +102,7 @@ void MainWindow::ROrderRecalled(Section section, const QUuid& node_id, int versi
 {
     auto* sc { GetSectionContex(section) };
 
-    auto widget { sc->tab_hash.value(node_id, nullptr) };
+    auto widget { sc->view_hash.value(node_id).widget };
     if (widget) {
         auto* ptr { widget.data() };
 
@@ -117,7 +117,7 @@ void MainWindow::ROrderSaved(Section section, const QUuid& node_id, int version)
 {
     auto* sc { GetSectionContex(section) };
 
-    auto widget { sc->tab_hash.value(node_id, nullptr) };
+    auto widget { sc->view_hash.value(node_id).widget };
     if (widget) {
         auto* ptr { widget.data() };
 
@@ -181,6 +181,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
         start_,
     };
     auto* widget { new TableWidgetO(order_arg, node, SyncState::kLocalOnly, this) };
+    ViewContext vc { widget, node_id, ViewRole::kNodeTabO };
 
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, QString()) };
@@ -192,7 +193,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     SetTableView(view, sc_->info.section, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
     TableDelegateO(view, section_config);
 
-    sc_->tab_hash.insert(node_id, widget);
+    sc_->view_hash.insert(node_id, vc);
     FocusTabWidget(node_id);
 }
 
@@ -229,6 +230,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
         start_,
     };
     auto* widget = new TableWidgetO(order_arg, *node, SyncState::kSynced, this);
+    ViewContext vc { widget, node_id, ViewRole::kNodeTabO };
 
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, tree_model_p->Name(partner_id)) };
@@ -240,7 +242,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     TableConnectO(table_model, widget);
     TableDelegateO(view, section_config);
 
-    sc->tab_hash.insert(node_id, widget);
+    sc->view_hash.insert(node_id, vc);
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 

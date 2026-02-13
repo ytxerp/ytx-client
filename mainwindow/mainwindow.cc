@@ -117,7 +117,7 @@ MainWindow::~MainWindow()
 // Note: Clears view selection after switching
 void MainWindow::FocusTabWidget(const QUuid& node_id) const
 {
-    auto widget { sc_->tab_hash.value(node_id, nullptr) };
+    auto widget { qobject_cast<TableWidget*>(sc_->view_hash.value(node_id).widget) };
     Q_ASSERT_X(widget, "MainWindow::FocusTableWidget", "Table widget not found for node_id");
 
     ui->tabWidget->setCurrentWidget(widget);
@@ -267,13 +267,28 @@ void MainWindow::RFlushCaches()
 
 void MainWindow::FlushCaches(SectionContext& sc)
 {
-    sc.tree_model->FlushCaches();
+    // First, flush the caches of the tree model
+    if (sc.tree_model)
+        sc.tree_model->FlushCaches();
 
-    const auto& tab_hash { sc.tab_hash };
+    // Iterate through all views in the view_hash
+    for (auto it = sc.view_hash.begin(); it != sc.view_hash.end(); ++it) {
+        const auto& vc = it.value();
 
-    for (const auto& tab : tab_hash) {
-        if (auto* model = tab->Model())
-            model->FlushCaches();
+        // Skip if the widget pointer is null
+        if (!vc.widget)
+            continue;
+
+        // Only process specific NodeTab types
+        if (vc.role != ViewRole::kNodeTabFIT && vc.role != ViewRole::kNodeTabO)
+            continue;
+
+        // Safely cast the widget to TableWidget
+        if (auto* table_widget = qobject_cast<TableWidget*>(vc.widget)) {
+            // Flush caches of the model if it exists
+            if (auto* model = table_widget->Model())
+                model->FlushCaches();
+        }
     }
 }
 

@@ -22,7 +22,6 @@
 
 #include "component/config.h"
 #include "entryhub/entryhub.h"
-#include "table/widget/tablewidget.h"
 #include "tag/tag.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidget.h"
@@ -39,8 +38,6 @@ struct SectionContext {
     SharedConfig shared_config {};
 
     QHash<QUuid, ViewContext> view_hash {};
-
-    QHash<QUuid, QPointer<TableWidget>> tab_hash {};
 
     QHash<QUuid, Tag*> tag_hash {};
     QHash<QUuid, QIcon> tag_icon {};

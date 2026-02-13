@@ -71,7 +71,7 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
 {
     {
-        if (sc_->tab_hash.contains(node_id)) {
+        if (sc_->view_hash.contains(node_id)) {
             FocusTabWidget(node_id);
             RSelectLeafEntry(node_id, entry_id);
             return;
@@ -140,7 +140,7 @@ void MainWindow::on_tabWidget_tabBarDoubleClicked(int index)
     const auto tab_info { tab_bar->tabData(index).value<TabInfo>() };
     const QUuid id { tab_info.id };
 
-    if (sc_->tab_hash.contains(id))
+    if (sc_->view_hash.contains(id))
         RNodeLocation(start_, id);
 }
 
@@ -230,7 +230,7 @@ void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool bra
         if (start_ == Section::kPartner)
             UpdatePartnerReference(nodes, branch);
 
-        if (!sc_->tab_hash.contains(node_id))
+        if (!sc_->view_hash.contains(node_id))
             return;
     }
 
