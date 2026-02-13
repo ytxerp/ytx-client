@@ -276,10 +276,10 @@ private:
     QSet<QUuid> LeafChildrenId(const Node* node) const;
 
     void UpdateLeafNodeName(const QUuid& node_id, const QString& name);
-    void UpdateLeafTabBar(const QUuid& node_id, const QString& name);
+    void UpdateOneTab(const QUuid& node_id, const QString& name);
 
     void UpdateBranchNodeName(const QUuid& node_id);
-    void UpdateBranchTabBar(const QSet<QUuid>& nodes);
+    void UpdateMultiTabs(const QSet<QUuid>& nodes);
 
     QIcon GetTagIcon(SectionContext* sc, const Tag* tag, bool checked);
 

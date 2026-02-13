@@ -244,17 +244,17 @@ void MainWindow::UpdateLeafNodeName(const QUuid& node_id, const QString& name)
         return;
     }
 
-    QSet<QUuid> nodes { node_id };
+    const QSet<QUuid> nodes { node_id };
 
     if (start_ == Section::kPartner) {
         UpdatePartnerReference(sc_sale_, nodes, false);
         UpdatePartnerReference(sc_purchase_, nodes, false);
     }
 
-    UpdateLeafTabBar(node_id, name);
+    UpdateOneTab(node_id, name);
 }
 
-void MainWindow::UpdateLeafTabBar(const QUuid& node_id, const QString& name)
+void MainWindow::UpdateOneTab(const QUuid& node_id, const QString& name)
 {
     auto widget { sc_->tab_widget };
     auto model { sc_->tree_model };
@@ -284,11 +284,11 @@ void MainWindow::UpdateBranchNodeName(const QUuid& node_id)
             UpdatePartnerReference(sc_purchase_, nodes, true);
         }
 
-        UpdateBranchTabBar(nodes);
+        UpdateMultiTabs(nodes);
     }
 }
 
-void MainWindow::UpdateBranchTabBar(const QSet<QUuid>& nodes)
+void MainWindow::UpdateMultiTabs(const QSet<QUuid>& nodes)
 {
     auto widget { sc_->tab_widget };
     auto model { sc_->tree_model };
