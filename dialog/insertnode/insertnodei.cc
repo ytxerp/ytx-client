@@ -1,7 +1,5 @@
 #include "insertnodei.h"
 
-#include <QColorDialog>
-
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
 #include "ui_insertnodei.h"
@@ -63,22 +61,6 @@ void InsertNodeI::IniData(Node* node)
     ui->pBtnOk->setEnabled(false);
 }
 
-void InsertNodeI::UpdateColor(QColor color)
-{
-    if (color.isValid()) {
-        ui->pBtnColor->setStyleSheet(QString(R"(
-        background-color: %1;
-        border: 1px solid %1;
-        border-radius: 4px;
-        )")
-                .arg(node_->color)
-
-        );
-
-        ui->pBtnColor->setText(QString());
-    }
-}
-
 void InsertNodeI::IniKindGroup()
 {
     kind_group_ = new QButtonGroup(this);
@@ -119,19 +101,6 @@ void InsertNodeI::on_plainTextEdit_textChanged() { node_->note = ui->plainTextEd
 void InsertNodeI::on_dSpinBoxUnitPrice_editingFinished() { node_->unit_price = ui->dSpinBoxUnitPrice->value(); }
 
 void InsertNodeI::on_dSpinBoxCommission_editingFinished() { node_->commission = ui->dSpinBoxCommission->value(); }
-
-void InsertNodeI::on_pBtnColor_clicked()
-{
-    QColor color(node_->color);
-    if (!color.isValid())
-        color = Qt::white;
-
-    QColor selected_color { QColorDialog::getColor(color, nullptr, tr("Choose Color"), QColorDialog::ShowAlphaChannel) };
-    if (selected_color.isValid()) {
-        node_->color = selected_color.name(QColor::HexArgb);
-        UpdateColor(selected_color);
-    }
-}
 
 void InsertNodeI::RRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
 

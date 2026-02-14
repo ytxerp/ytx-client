@@ -51,15 +51,12 @@ private slots:
 
     void on_plainTextEdit_textChanged();
 
-    void on_pBtnColor_clicked();
-
     void on_issuedTime_dateTimeChanged(const QDateTime& dateTime);
 
 private:
     void IniDialog(ItemModel* unit_model);
     void IniData(Node* node);
     void IniConnect();
-    void UpdateColor(QColor color);
     void IniKindGroup();
     void IniRuleGroup();
     void IniStatusGroup();

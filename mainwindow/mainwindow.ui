@@ -343,7 +343,13 @@
     <property name="title">
      <string>Charts</string>
     </property>
-    <addaction name="actionEntryJournal"/>
+    <addaction name="actionFinance"/>
+    <addaction name="actionTask"/>
+    <addaction name="actionInventory"/>
+    <addaction name="actionPartner"/>
+    <addaction name="actionSale"/>
+    <addaction name="actionPurchase"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -652,12 +658,34 @@
     <string>Tags...</string>
    </property>
   </action>
-  <action name="actionEntryJournal">
+  <action name="actionFinance">
    <property name="text">
-    <string>Entry Journal</string>
+    <string>Finance</string>
    </property>
-   <property name="toolTip">
-    <string>Entry Journal</string>
+  </action>
+  <action name="actionTask">
+   <property name="text">
+    <string>Task</string>
+   </property>
+  </action>
+  <action name="actionInventory">
+   <property name="text">
+    <string>Inventory</string>
+   </property>
+  </action>
+  <action name="actionPartner">
+   <property name="text">
+    <string>Partner</string>
+   </property>
+  </action>
+  <action name="actionSale">
+   <property name="text">
+    <string>Sale</string>
+   </property>
+  </action>
+  <action name="actionPurchase">
+   <property name="text">
+    <string>Purchase</string>
    </property>
   </action>
  </widget>

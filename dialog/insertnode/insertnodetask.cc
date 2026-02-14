@@ -1,7 +1,5 @@
 #include "insertnodetask.h"
 
-#include <QColorDialog>
-
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
 #include "ui_insertnodetask.h"
@@ -66,22 +64,6 @@ void InsertNodeTask::IniConnect()
     connect(status_group_, &QButtonGroup::idClicked, this, &InsertNodeTask::RStatusGroupClicked);
 }
 
-void InsertNodeTask::UpdateColor(QColor color)
-{
-    if (color.isValid()) {
-        ui->pBtnColor->setStyleSheet(QString(R"(
-        background-color: %1;
-        border: 1px solid %1;
-        border-radius: 4px;
-        )")
-                .arg(node_->color)
-
-        );
-
-        ui->pBtnColor->setText(QString());
-    }
-}
-
 void InsertNodeTask::IniKindGroup()
 {
     kind_group_ = new QButtonGroup(this);
@@ -125,19 +107,6 @@ void InsertNodeTask::on_comboUnit_currentIndexChanged(int index)
 }
 
 void InsertNodeTask::on_plainTextEdit_textChanged() { node_->note = ui->plainTextEdit->toPlainText(); }
-
-void InsertNodeTask::on_pBtnColor_clicked()
-{
-    QColor color(node_->color);
-    if (!color.isValid())
-        color = Qt::white;
-
-    QColor selected_color { QColorDialog::getColor(color, nullptr, tr("Choose Color"), QColorDialog::ShowAlphaChannel) };
-    if (selected_color.isValid()) {
-        node_->color = selected_color.name(QColor::HexArgb);
-        UpdateColor(selected_color);
-    }
-}
 
 void InsertNodeTask::RRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
 

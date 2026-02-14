@@ -31,16 +31,6 @@
      </property>
     </spacer>
    </item>
-   <item row="9" column="0">
-    <widget class="QPushButton" name="pBtnColor">
-     <property name="text">
-      <string>Color</string>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
    <item row="9" column="3">
     <widget class="QPushButton" name="pBtnOk">
      <property name="sizePolicy">

@@ -52,13 +52,10 @@ private slots:
 
     void on_plainTextEdit_textChanged();
 
-    void on_pBtnColor_clicked();
-
 private:
     void IniDialog(ItemModel* unit_model, int amount_decimal);
     void IniConnect();
     void IniData(Node* node);
-    void UpdateColor(QColor color);
     void IniKindGroup();
     void IniRuleGroup();
     void IniDirectionRule(bool rule);
