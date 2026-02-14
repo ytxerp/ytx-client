@@ -63,20 +63,6 @@ if(OpenSSL_FOUND)
     message(STATUS "   Crypto Library: ${OPENSSL_CRYPTO_LIBRARY}")
 endif()
 
-option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND ENABLE_ASAN)
-    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU|AppleClang")
-        message(STATUS "✅ Enabling AddressSanitizer")
-        add_compile_options(
-            -fsanitize=address
-            -fno-omit-frame-pointer
-            -g
-            -O1
-        )
-        add_link_options(-fsanitize=address)
-    endif()
-endif()
-
 # Include directories & external libs
 add_subdirectory(external/yxlsx/)
 
@@ -545,3 +531,30 @@ target_link_libraries(
             OpenSSL::SSL
             OpenSSL::Crypto
 )
+
+# -----------------------------
+# Option to enable AddressSanitizer
+# -----------------------------
+# ENABLE_ASAN: ON  -> Enable ASan for Debug builds OFF -> Disable ASan
+option(ENABLE_ASAN "Enable AddressSanitizer" ON)
+
+# -----------------------------
+# Configure AddressSanitizer for Debug builds
+# -----------------------------
+# Notes: 1. We use generator expressions $<$<CONFIG:Debug>:...> so that ASan is only enabled for
+# Debug configuration. 2. This works for both single-config generators (Makefile/Ninja) and
+# multi-config generators (Xcode, Visual Studio). 3. ASan runtime must be linked; we add
+# -fsanitize=address to both compile and link. 4. The -fno-omit-frame-pointer flag ensures proper
+# stack traces in ASan reports. 5. -g adds debug symbols; optimization level defaults to Debug (-O0
+# or -O1).
+if(ENABLE_ASAN AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang"))
+    message(STATUS "✅ Enabling AddressSanitizer for Debug targets")
+
+    # Add compile flags for Debug builds
+    target_compile_options(
+        ${PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:-fsanitize=address -fno-omit-frame-pointer -g>
+    )
+
+    # Add link flags for Debug builds
+    target_link_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:-fsanitize=address>)
+endif()

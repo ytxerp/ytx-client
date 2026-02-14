@@ -1,19 +1,21 @@
-# Clazy configuration file
+# Clazy configuration for Qt projects
 
 # Check levels (0-3, higher = more checks)
 # level0: Very few false positives, 100% safe
 # level1: Few false positives
 # level2: Can have false positives, but very useful
 # level3: Experimental, many false positives
+
 level2
 
-# Specific checks to enable (in addition to level)
-# Qt best practices
-enable-checks=container-inside-loop,inefficient-qlist,qstring-arg,qstring-allocations,reserve-candidates
+enable-checks=container-inside-loop,
+              inefficient-qlist,
+              qstring-arg,
+              qstring-allocations,
+              reserve-candidates,
+              detaching-temporary
 
-# Specific checks to disable
-# Reduce noise for Qt projects
-disable-checks=qproperty-without-notify,missing-qobject-macro,old-style-connect
-
-# Additional options
-export-fixes=clazy-fixes.yaml
+disable-checks=qproperty-without-notify,
+               missing-qobject-macro,
+               old-style-connect,
+               connect-by-name

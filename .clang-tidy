@@ -43,4 +43,4 @@ CheckOptions:
     value: 'NULL,Q_NULLPTR'
   # Qt types are intentionally passed by value
   - key: performance-unnecessary-value-param.AllowedTypes
-    value: 'QString;QStringView;QByteArray;QVariant;QModelIndex;QPersistentModelIndex;QPoint;QPointF;QSize;QSizeF;QRect;QRectF'
+    value: 'QString;QStringView;QByteArray;QVariant;QModelIndex;QPersistentModelIndex;QPoint;QPointF;QSize;QSizeF;QRect;QRectF;QUrl;QColor;QFont;QBrush;QPen'
