@@ -48,5 +48,6 @@
         <file>solarized_dark/eye_open.png</file>
         <file>solarized_dark/update.png</file>
         <file>solarized_dark/quit.png</file>
+        <file>solarized_dark/tag.png</file>
     </qresource>
 </RCC>

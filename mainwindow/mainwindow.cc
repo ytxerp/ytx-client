@@ -453,6 +453,7 @@ void MainWindow::SetIcon() const
     ui->actionClearColor->setIcon(QIcon(":/solarized_dark/solarized_dark/reset_color.png"));
     ui->actionNewBranch->setIcon(QIcon(":/solarized_dark/solarized_dark/new-group.png"));
     ui->actionQuit->setIcon(QIcon(":/solarized_dark/solarized_dark/quit.png"));
+    ui->actionTags->setIcon(QIcon(":/solarized_dark/solarized_dark/tag.png"));
 }
 
 void MainWindow::on_actionInsertNode_triggered()
