@@ -61,7 +61,7 @@ void MainWindow::RConnectionSucceeded()
 {
     ui->actionSignIn->setEnabled(true);
     ui->actionSignOut->setEnabled(false);
-    ui->actionReconnect->setEnabled(true);
+    ui->actionReconnect->setEnabled(false);
 
     on_actionSignIn_triggered();
     Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connected);
