@@ -168,7 +168,7 @@ void TreeModel::InsertMeta(Node* node, const QJsonObject& meta)
     node->created_by = QUuid(meta[kCreatedBy].toString());
 }
 
-void TreeModel::UpdateDirectionRule(Node* node, bool value)
+void TreeModel::UpdateDirectionRule(Node* node, bool value, int row)
 {
     if (node->direction_rule == value)
         return;
@@ -176,19 +176,28 @@ void TreeModel::UpdateDirectionRule(Node* node, bool value)
     QJsonObject message { JsonGen::NodeDirectionRule(section_, node->id, value) };
     WebSocket::Instance()->SendMessage(kDirectionRule, message);
 
-    DirectionRuleImpl(node, value);
+    DirectionRuleImpl(node, value, row);
 }
 
 void TreeModel::SyncDirectionRule(const QUuid& node_id, bool direction_rule)
 {
-    auto* node = GetNode(node_id);
+    const auto index { GetIndex(node_id) };
+    if (!index.isValid())
+        return;
+
+    auto* node { GetNode(node_id) };
     if (!node)
         return;
 
-    DirectionRuleImpl(node, direction_rule);
+    const int row { index.row() };
+
+    DirectionRuleImpl(node, direction_rule, row);
+
+    const int column { Utils::DirectionRuleColumn(section_) };
+    EmitDataChanged(row, row, column, column);
 }
 
-void TreeModel::DirectionRuleImpl(Node* node, bool value)
+void TreeModel::DirectionRuleImpl(Node* node, bool value, int row)
 {
     node->InvertTotal();
     node->direction_rule = value;
@@ -199,11 +208,8 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value)
         emit SDirectionRule(node_id, node->direction_rule);
     }
 
-    const int rule_column { Utils::DirectionRuleColumn(section_) };
-    EmitRowChanged(node_id, rule_column, rule_column);
-
     const auto [start_col, end_col] = Utils::NodeNumericColumnRange(section_);
-    EmitRowChanged(node_id, start_col, end_col);
+    EmitDataChanged(row, row, start_col, end_col);
 
     emit SSyncValue();
 }
@@ -243,9 +249,10 @@ void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
     Utils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
     Utils::UpdateModel(leaf_path_, leaf_path_model_, node);
 
-    const int name_column { std::to_underlying(NodeEnum::kName) };
+    const int column { std::to_underlying(NodeEnum::kName) };
+    const int row { GetIndex(node_id).row() };
 
-    EmitRowChanged(node_id, name_column, name_column);
+    EmitDataChanged(row, row, column, column);
     emit SUpdateName(node->id, node->name, node->kind == NodeKind::kBranch);
 }
 
@@ -774,7 +781,7 @@ void TreeModel::RefreshAffectedTotal(const QSet<QUuid>& affected_ids)
             continue;
 
         const auto [start_col, end_col] = Utils::NodeNumericColumnRange(section_);
-        emit dataChanged(index(idx.row(), start_col, idx.parent()), index(idx.row(), end_col, idx.parent()), { Qt::DisplayRole });
+        emit dataChanged(index(idx.row(), start_col, idx.parent()), index(idx.row(), end_col, idx.parent()), { Qt::DisplayRole, Qt::EditRole });
     }
 }
 
@@ -826,13 +833,18 @@ void TreeModel::FlushCaches()
     pending_updates_.clear();
 }
 
-void TreeModel::EmitRowChanged(const QUuid& node_id, int start_column, int end_column)
+void TreeModel::EmitDataChanged(int start_row, int end_row, int start_column, int end_column)
 {
-    auto index { GetIndex(node_id) };
-    if (!index.isValid())
+    if (start_row < 0 || end_row >= rowCount() || start_row > end_row)
         return;
 
-    emit dataChanged(index.siblingAtColumn(start_column), index.siblingAtColumn(end_column));
+    if (start_column < 0 || end_column >= columnCount() || start_column > end_column)
+        return;
+
+    const QModelIndex top_left { index(start_row, start_column) };
+    const QModelIndex bottom_right { index(end_row, end_column) };
+
+    emit dataChanged(top_left, bottom_right, QList<int> { Qt::DisplayRole, Qt::EditRole });
 }
 
 void TreeModel::ApplyTree(const QJsonObject& data)

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30.5)
 project(
     YTX
-    VERSION 0.3.2
+    VERSION 0.3.3
     LANGUAGES CXX
 )
 

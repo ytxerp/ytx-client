@@ -339,21 +339,8 @@
     <addaction name="actionWorkspace"/>
     <addaction name="actionExpireDate"/>
    </widget>
-   <widget class="QMenu" name="menuCharts">
-    <property name="title">
-     <string>Charts</string>
-    </property>
-    <addaction name="actionFinance"/>
-    <addaction name="actionTask"/>
-    <addaction name="actionInventory"/>
-    <addaction name="actionPartner"/>
-    <addaction name="actionSale"/>
-    <addaction name="actionPurchase"/>
-    <addaction name="separator"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menuCharts"/>
    <addaction name="menuAccount"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

@@ -122,7 +122,7 @@ protected:
     double CalculateBalance(EntryShadow* shadow) const { return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit); }
 
     EntryShadow* InsertRowsImpl(int row, const QModelIndex& parent = QModelIndex());
-    void EmitRowChanged(int row, int start_column, int end_column);
+    void EmitDataChanged(int start_row, int end_row, int start_column, int end_column);
 
 protected:
     CSectionInfo& info_;

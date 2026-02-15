@@ -48,7 +48,7 @@ void TableModelP::RAppendOneEntry(Entry* entry)
     endInsertRows();
 
     if (entry_list_.size() == 1)
-        EmitRowChanged(row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
+        EmitDataChanged(row, row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
 }
 
 bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
@@ -114,7 +114,7 @@ void TableModelP::ActionEntry(EntryAction action)
     }
 
     const int column { std::to_underlying(EntryEnumP::kStatus) };
-    emit dataChanged(index(0, column), index(rowCount() - 1, column));
+    EmitDataChanged(0, rowCount() - 1, column, column);
 }
 
 bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
@@ -351,7 +351,7 @@ bool TableModelP::insertRows(int row, int, const QModelIndex& parent)
     endInsertRows();
 
     if (entry_list_.size() == 1)
-        EmitRowChanged(row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
+        EmitDataChanged(row, row, std::to_underlying(EntryEnumP::kIssuedTime), std::to_underlying(EntryEnumP::kIssuedTime));
 
     return true;
 }

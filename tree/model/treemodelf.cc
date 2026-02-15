@@ -92,7 +92,7 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
         Utils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kDirectionRule:
-        UpdateDirectionRule(node, value.toBool());
+        UpdateDirectionRule(node, value.toBool(), index.row());
         break;
     case NodeEnumF::kId:
     case NodeEnumF::kUpdateBy:

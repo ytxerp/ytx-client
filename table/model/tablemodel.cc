@@ -32,7 +32,7 @@ void TableModel::RDirectionRule(bool value)
 void TableModel::RRefreshStatus()
 {
     const int column { std::to_underlying(EntryEnum::kStatus) };
-    emit dataChanged(index(0, column), index(rowCount() - 1, column));
+    EmitDataChanged(0, rowCount() - 1, column, column);
 }
 
 void TableModel::RRefreshField(const QUuid& entry_id, int start, int end)
@@ -43,10 +43,7 @@ void TableModel::RRefreshField(const QUuid& entry_id, int start, int end)
 
     int row { idx.row() };
 
-    if (start > end)
-        std::swap(start, end);
-
-    emit dataChanged(index(row, start), index(row, end));
+    EmitDataChanged(row, row, start, end);
 }
 
 void TableModel::RAppendOneEntry(Entry* entry)
@@ -64,7 +61,7 @@ void TableModel::RAppendOneEntry(Entry* entry)
     entry_shadow->balance = CalculateBalance(entry_shadow) + previous_balance;
 
     const int balance_column { Utils::BalanceColumn(section_) };
-    emit dataChanged(index(row, balance_column), index(row, balance_column));
+    EmitDataChanged(row, row, balance_column, balance_column);
 }
 
 void TableModel::RDeleteOneEntry(const QUuid& entry_id)
@@ -87,7 +84,7 @@ void TableModel::RUpdateBalance(const QUuid& entry_id)
     const int row { entry_index.row() };
 
     const auto [debit, credit] = Utils::EntryNumericColumnRange(section_);
-    emit dataChanged(index(row, debit), index(row, credit));
+    EmitDataChanged(row, row, debit, credit);
 
     if (entry_index.isValid())
         AccumulateBalance(row);
@@ -116,7 +113,7 @@ void TableModel::ActionEntry(EntryAction action)
     }
 
     const int column { std::to_underlying(EntryEnum::kStatus) };
-    emit dataChanged(index(0, column), index(rowCount() - 1, column));
+    EmitDataChanged(0, rowCount() - 1, column, column);
 }
 
 void TableModel::AccumulateBalance(int start)
@@ -135,7 +132,7 @@ void TableModel::AccumulateBalance(int start)
     });
 
     const int balance_column { Utils::BalanceColumn(section_) };
-    emit dataChanged(index(start, balance_column), index(rowCount() - 1, balance_column));
+    EmitDataChanged(start, rowCount() - 1, balance_column, balance_column);
 }
 
 void TableModel::RestartTimer(const QUuid& id)
@@ -477,18 +474,18 @@ EntryShadow* TableModel::InsertRowsImpl(int row, const QModelIndex& parent)
     return entry_shadow;
 }
 
-void TableModel::EmitRowChanged(int row, int start_column, int end_column)
+void TableModel::EmitDataChanged(int start_row, int end_row, int start_column, int end_column)
 {
-    if (row < 0 || row >= rowCount())
+    if (start_row < 0 || end_row >= rowCount() || start_row > end_row)
         return;
 
     if (start_column < 0 || end_column >= columnCount() || start_column > end_column)
         return;
 
-    const QModelIndex left { index(row, start_column) };
-    const QModelIndex right { index(row, end_column) };
+    const QModelIndex top_left { index(start_row, start_column) };
+    const QModelIndex bottom_right { index(end_row, end_column) };
 
-    emit dataChanged(left, right, { Qt::DisplayRole, Qt::EditRole });
+    emit dataChanged(top_left, bottom_right, QList<int> { Qt::DisplayRole, Qt::EditRole });
 }
 
 void TableModel::RDeleteMultiEntry(const QSet<QUuid>& entry_id_set)

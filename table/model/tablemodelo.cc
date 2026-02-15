@@ -404,11 +404,11 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, int row, const QUuid& value, 
     }
 
     if (entry_hub_p_->ExternalSku(d_node_->partner_id, old_rhs_node) != entry_hub_p_->ExternalSku(d_node_->partner_id, value)) {
-        EmitRowChanged(row, std::to_underlying(EntryEnumO::kExternalSku), std::to_underlying(EntryEnumO::kExternalSku));
+        EmitDataChanged(row, row, std::to_underlying(EntryEnumO::kExternalSku), std::to_underlying(EntryEnumO::kExternalSku));
     }
 
     if (price_changed) {
-        EmitRowChanged(row, std::to_underlying(EntryEnumO::kUnitPrice), std::to_underlying(EntryEnumO::kFinal));
+        EmitDataChanged(row, row, std::to_underlying(EntryEnumO::kUnitPrice), std::to_underlying(EntryEnumO::kFinal));
     }
 
     return price_changed;
@@ -427,7 +427,7 @@ bool TableModelO::UpdateUnitPrice(EntryO* entry, int row, double value, bool is_
         pending_update_.insert(entry->id, entry);
     }
 
-    EmitRowChanged(row, std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kFinal));
+    EmitDataChanged(row, row, std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kFinal));
 
     return true;
 }
@@ -445,7 +445,7 @@ bool TableModelO::UpdateUnitDiscount(EntryO* entry, int row, double value, bool 
         pending_update_.insert(entry->id, entry);
     }
 
-    EmitRowChanged(row, std::to_underlying(EntryEnumO::kDiscount), std::to_underlying(EntryEnumO::kFinal));
+    EmitDataChanged(row, row, std::to_underlying(EntryEnumO::kDiscount), std::to_underlying(EntryEnumO::kFinal));
     return true;
 }
 
@@ -464,8 +464,7 @@ bool TableModelO::UpdateMeasure(EntryO* entry, int row, double value, bool is_pe
         pending_update_.insert(entry->id, entry);
     }
 
-    EmitRowChanged(row, std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kFinal));
-
+    EmitDataChanged(row, row, std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kFinal));
     return true;
 }
 
