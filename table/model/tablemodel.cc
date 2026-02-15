@@ -27,6 +27,7 @@ void TableModel::RDirectionRule(bool value)
         entry_shadow->balance = -entry_shadow->balance;
 
     direction_rule_ = value;
+    EmitDataChanged(0, rowCount() - 1, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
 }
 
 void TableModel::RRefreshStatus()

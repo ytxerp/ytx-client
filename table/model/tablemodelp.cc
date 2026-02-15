@@ -48,7 +48,7 @@ void TableModelP::RAppendOneEntry(Entry* entry)
     endInsertRows();
 
     if (entry_list_.size() == 1)
-        EmitDataChanged(row, row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
+        EmitDataChanged(row, row, std::to_underlying(EntryEnumP::kIssuedTime), std::to_underlying(EntryEnumP::kIssuedTime));
 }
 
 bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
