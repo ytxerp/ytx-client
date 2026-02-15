@@ -37,13 +37,13 @@ protected:
     explicit EntryHub(CSectionInfo& info, QObject* parent = nullptr);
 
 signals:
-    // send to LeafSStation; partner and order entries are deleted directly
+    // send to LeafSStation
     void SDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash);
-    void SDeleteMultiEntry(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
-    void SAppendMultiEntry(const QUuid& node_id, const EntryList& entry_list);
+    void SDeleteMultiEntries(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
+    void SAppendMultiEntries(const QUuid& node_id, const EntryList& entry_list);
 
-    void SAppendOneEntry(const QUuid& node_id, Entry* entry);
-    void SDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
+    void SAttachOneEntry(const QUuid& node_id, Entry* entry);
+    void SDetachOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void SRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
     void SRefreshStatus(const QSet<QUuid>& affected_node);

@@ -65,7 +65,7 @@ signals:
     void SSyncDeltaO(const QUuid& node_id, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
 
 public slots:
-    void RAppendMultiEntry(const EntryList& entry_list) override;
+    void RAppendMultiEntries(const EntryList& entry_list) override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

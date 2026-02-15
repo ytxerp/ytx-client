@@ -51,11 +51,11 @@ signals:
     void SDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
 public slots:
-    virtual void RAppendMultiEntry(const EntryList& entry_list);
-    virtual void RDeleteOneEntry(const QUuid& entry_id);
-    virtual void RAppendOneEntry(Entry* entry);
+    virtual void RAppendMultiEntries(const EntryList& entry_list);
+    virtual void RDetachOneEntry(const QUuid& entry_id);
+    virtual void RAttachOneEntry(Entry* entry);
 
-    void RDeleteMultiEntry(const QSet<QUuid>& entry_id_set);
+    void RDeleteMultiEntries(const QSet<QUuid>& entry_id_set);
 
     void RUpdateBalance(const QUuid& entry_id);
     void RRefreshStatus();

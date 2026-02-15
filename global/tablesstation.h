@@ -41,21 +41,21 @@ public:
 
 signals:
     // send to TableModel
-    void SAppendOneEntry(Entry* entry);
-    void SDeleteOneEntry(const QUuid& entry_id);
+    void SAttachOneEntry(Entry* entry);
+    void SDetachOneEntry(const QUuid& entry_id);
 
     void SUpdateBalance(const QUuid& entry_id);
     void SDirectionRule(bool rule);
     void SRefreshStatus();
 
-    void SAppendMultiEntry(const EntryList& entry_list);
-    void SDeleteMultiEntry(const QSet<QUuid>& entry_id_set);
+    void SAppendMultiEntries(const EntryList& entry_list);
+    void SDeleteMultiEntries(const QSet<QUuid>& entry_id_set);
 
     void SRefreshField(const QUuid& entry_id, int start, int end);
 
 public slots:
-    void RAppendOneEntry(const QUuid& node_id, Entry* entry);
-    void RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
+    void RAttachOneEntry(const QUuid& node_id, Entry* entry);
+    void RDetachOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
     void RDirectionRule(const QUuid& node_id, bool rule);
     void RRefreshStatus(const QSet<QUuid>& affected_node);
@@ -63,8 +63,8 @@ public slots:
 
     // receive from EntryHub
     void RDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash);
-    void RDeleteMultiEntry(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
-    void RAppendMultiEntry(const QUuid& node_id, const EntryList& entry_list);
+    void RDeleteMultiEntries(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
+    void RAppendMultiEntries(const QUuid& node_id, const EntryList& entry_list);
 
     void RRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
 

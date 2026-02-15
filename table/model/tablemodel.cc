@@ -47,7 +47,7 @@ void TableModel::RRefreshField(const QUuid& entry_id, int start, int end)
     EmitDataChanged(row, row, start, end);
 }
 
-void TableModel::RAppendOneEntry(Entry* entry)
+void TableModel::RAttachOneEntry(Entry* entry)
 {
     auto* entry_shadow { ResourcePool<EntryShadow>::Instance().Allocate() };
     entry_shadow->BindEntry(entry, lhs_id_ == entry->lhs_node);
@@ -65,7 +65,7 @@ void TableModel::RAppendOneEntry(Entry* entry)
     EmitDataChanged(row, row, balance_column, balance_column);
 }
 
-void TableModel::RDeleteOneEntry(const QUuid& entry_id)
+void TableModel::RDetachOneEntry(const QUuid& entry_id)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -489,7 +489,7 @@ void TableModel::EmitDataChanged(int start_row, int end_row, int start_column, i
     emit dataChanged(top_left, bottom_right, QList<int> { Qt::DisplayRole, Qt::EditRole });
 }
 
-void TableModel::RDeleteMultiEntry(const QSet<QUuid>& entry_id_set)
+void TableModel::RDeleteMultiEntries(const QSet<QUuid>& entry_id_set)
 {
     int min_row { std::numeric_limits<int>::max() };
 
@@ -509,7 +509,7 @@ void TableModel::RDeleteMultiEntry(const QSet<QUuid>& entry_id_set)
         AccumulateBalance(min_row);
 }
 
-void TableModel::RAppendMultiEntry(const EntryList& entry_list)
+void TableModel::RAppendMultiEntries(const EntryList& entry_list)
 {
     EntryShadowList shadow_list {};
     for (auto* entry : entry_list) {

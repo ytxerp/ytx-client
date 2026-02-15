@@ -25,7 +25,7 @@ void EntryHub::DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
 void EntryHub::RAppendOneEntry(Entry* entry)
 {
     entry_cache_.insert(entry->id, entry);
-    emit SAppendOneEntry(entry->rhs_node, entry);
+    emit SAttachOneEntry(entry->rhs_node, entry);
 }
 
 void EntryHub::RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id)
@@ -33,7 +33,7 @@ void EntryHub::RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id)
     auto it = entry_cache_.find(entry_id);
     if (it != entry_cache_.end()) {
         if (!node_id.isNull())
-            emit SDeleteOneEntry(node_id, entry_id);
+            emit SDetachOneEntry(node_id, entry_id);
 
         EntryPool::Instance().Recycle(it.value(), section_);
         entry_cache_.erase(it);
@@ -55,16 +55,15 @@ void EntryHub::DeleteLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
 
 void EntryHub::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
 {
-    Q_ASSERT(section_ != Section::kPurchase && section_ != Section::kSale && section_ != Section::kPartner
-        && "Invalid section: should not be kPurchase, kSales or kPartner");
+    Q_ASSERT(section_ == Section::kInventory && "Invalid section: only Inventory nodes are allowed to be replaced");
 
     QSet<QUuid> entry_id_set {};
     EntryList entry_list {};
 
     ReplaceLeafFunction(entry_id_set, entry_list, old_node_id, new_node_id);
 
-    emit SDeleteMultiEntry(old_node_id, entry_id_set);
-    emit SAppendMultiEntry(new_node_id, entry_list);
+    emit SDeleteMultiEntries(old_node_id, entry_id_set);
+    emit SAppendMultiEntries(new_node_id, entry_list);
 }
 
 void EntryHub::InsertEntry(const QJsonObject& data)
@@ -74,8 +73,8 @@ void EntryHub::InsertEntry(const QJsonObject& data)
 
     entry_cache_.insert(entry->id, entry);
 
-    emit SAppendOneEntry(entry->lhs_node, entry);
-    emit SAppendOneEntry(entry->rhs_node, entry);
+    emit SAttachOneEntry(entry->lhs_node, entry);
+    emit SAttachOneEntry(entry->rhs_node, entry);
 }
 
 void EntryHub::InsertMeta(const QUuid& entry_id, const QJsonObject& meta)
@@ -100,8 +99,8 @@ void EntryHub::DeleteEntry(const QUuid& entry_id)
     if (it != entry_cache_.constEnd()) {
         auto* entry = it.value();
 
-        emit SDeleteOneEntry(entry->lhs_node, entry_id);
-        emit SDeleteOneEntry(entry->rhs_node, entry_id);
+        emit SDetachOneEntry(entry->lhs_node, entry_id);
+        emit SDetachOneEntry(entry->rhs_node, entry_id);
 
         EntryPool::Instance().Recycle(entry, section_);
     }
@@ -163,7 +162,7 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
 
         const int rhs_node_column { Utils::LinkedNodeColumn(section_) };
 
-        emit SDeleteOneEntry(old_node_id, id);
+        emit SDetachOneEntry(old_node_id, id);
         emit SRefreshField(lhs_node, id, rhs_node_column, rhs_node_column);
     } else {
         entry = EntryPool::Instance().Allocate(section_);
@@ -171,7 +170,7 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
         entry_cache_.insert(entry->id, entry);
     }
 
-    emit SAppendOneEntry(new_node_id, entry);
+    emit SAttachOneEntry(new_node_id, entry);
 }
 
 /**
@@ -267,7 +266,7 @@ void EntryHub::AckTable(const QUuid& node_id, const QJsonArray& array)
         return;
 
     const EntryList entry_list { ProcessEntryArray(array) };
-    emit SAppendMultiEntry(node_id, entry_list);
+    emit SAppendMultiEntries(node_id, entry_list);
 }
 
 void EntryHub::SearchEntry(const QJsonArray& array)

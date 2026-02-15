@@ -117,7 +117,7 @@ void EntryHubP::PushEntry(const QUuid& node_id)
         }
     }
 
-    emit SAppendMultiEntry(node_id, entry_list);
+    emit SAppendMultiEntries(node_id, entry_list);
 }
 
 void EntryHubP::ApplyPartnerEntry(const QJsonArray& array)
@@ -144,7 +144,7 @@ void EntryHubP::InsertEntry(const QJsonObject& data)
     entry_cache_.insert(entry->id, entry);
     entry_map_.insert({ entry->lhs_node, entry->rhs_node }, { entry->unit_price, entry->external_sku });
 
-    emit SAppendOneEntry(entry->lhs_node, entry);
+    emit SAttachOneEntry(entry->lhs_node, entry);
 }
 
 void EntryHubP::DeleteEntry(const QUuid& entry_id)
@@ -155,7 +155,7 @@ void EntryHubP::DeleteEntry(const QUuid& entry_id)
 
         entry_map_.remove({ entry->lhs_node, entry->rhs_node });
 
-        emit SDeleteOneEntry(entry->lhs_node, entry_id);
+        emit SDetachOneEntry(entry->lhs_node, entry_id);
 
         EntryPool::Instance().Recycle(entry, section_);
     }

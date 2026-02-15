@@ -15,7 +15,7 @@ TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, E
 
 TableModelO::~TableModelO() { EntryPool::Instance().Recycle(entry_list_, section_); }
 
-void TableModelO::RAppendMultiEntry(const EntryList& entry_list)
+void TableModelO::RAppendMultiEntries(const EntryList& entry_list)
 {
     if (entry_list.isEmpty())
         return;

@@ -13,7 +13,7 @@ TableModelP::TableModelP(CTableModelArg& arg, QObject* parent)
 {
 }
 
-void TableModelP::RAppendMultiEntry(const EntryList& entry_list)
+void TableModelP::RAppendMultiEntries(const EntryList& entry_list)
 {
     if (entry_list.isEmpty())
         return;
@@ -27,7 +27,7 @@ void TableModelP::RAppendMultiEntry(const EntryList& entry_list)
     sort(std::to_underlying(EntryEnum::kIssuedTime), Qt::AscendingOrder);
 }
 
-void TableModelP::RDeleteOneEntry(const QUuid& entry_id)
+void TableModelP::RDetachOneEntry(const QUuid& entry_id)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -39,7 +39,7 @@ void TableModelP::RDeleteOneEntry(const QUuid& entry_id)
     endRemoveRows();
 }
 
-void TableModelP::RAppendOneEntry(Entry* entry)
+void TableModelP::RAttachOneEntry(Entry* entry)
 {
     auto row { entry_list_.size() };
 

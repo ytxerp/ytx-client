@@ -30,9 +30,9 @@ public:
     ~TableModelP() override = default;
 
 public slots:
-    void RAppendMultiEntry(const EntryList& entry_list) override;
-    void RDeleteOneEntry(const QUuid& entry_id) override;
-    void RAppendOneEntry(Entry* entry) override;
+    void RAppendMultiEntries(const EntryList& entry_list) override;
+    void RDetachOneEntry(const QUuid& entry_id) override;
+    void RAttachOneEntry(Entry* entry) override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
