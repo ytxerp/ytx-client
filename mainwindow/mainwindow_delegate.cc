@@ -7,7 +7,6 @@
 #include "delegate/int.h"
 #include "delegate/issuedtime.h"
 #include "delegate/line.h"
-#include "delegate/plaintext.h"
 #include "delegate/readonly/amountr.h"
 #include "delegate/readonly/amountsalereferencer.h"
 #include "delegate/readonly/boolstringr.h"
@@ -33,9 +32,6 @@ void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* line { new Line(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kCode), line);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kDescription), line);
-
-    auto* plain_text { new PlainText(tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kNote), plain_text);
 
     auto* direction_rule { new BoolString(info.rule_map, QEvent::MouseButtonDblClick, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kDirectionRule), direction_rule);
@@ -64,9 +60,6 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* line { new Line(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kCode), line);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kDescription), line);
-
-    auto* plain_text { new PlainText(tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kNote), plain_text);
 
     auto* direction_rule { new BoolString(info.rule_map, QEvent::MouseButtonDblClick, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kDirectionRule), direction_rule);
@@ -105,9 +98,6 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kCode), line);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kDescription), line);
 
-    auto* plain_text { new PlainText(tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kNote), plain_text);
-
     auto* direction_rule { new BoolString(info.rule_map, QEvent::MouseButtonDblClick, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kDirectionRule), direction_rule);
 
@@ -143,9 +133,6 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* line { new Line(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kCode), line);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kDescription), line);
-
-    auto* plain_text { new PlainText(tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kNote), plain_text);
 
     auto* unit { new IntStringR(info.unit_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kUnit), unit);

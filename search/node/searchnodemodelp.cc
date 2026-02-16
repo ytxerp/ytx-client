@@ -38,8 +38,6 @@ QVariant SearchNodeModelP::data(const QModelIndex& index, int role) const
         return d_node->color;
     case NodeEnumP::kDescription:
         return d_node->description;
-    case NodeEnumP::kNote:
-        return d_node->note;
     case NodeEnumP::kKind:
         return std::to_underlying(d_node->kind);
     case NodeEnumP::kUnit:
@@ -68,8 +66,6 @@ void SearchNodeModelP::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumP::kDescription:
             return Utils::CompareMember(lhs, rhs, &Node::description, order);
-        case NodeEnumP::kNote:
-            return Utils::CompareMember(lhs, rhs, &Node::note, order);
         case NodeEnumP::kTag:
             return Utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumP::kKind:

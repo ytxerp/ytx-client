@@ -10,7 +10,6 @@ void Node::ResetState()
     code.clear();
     description.clear();
     color.clear();
-    note.clear();
     tag.clear();
     direction_rule = false;
     kind = {};
@@ -44,8 +43,6 @@ void Node::ReadJson(const QJsonObject& object)
         code = object.value(kCode).toString();
     if (object.contains(kDescription))
         description = object.value(kDescription).toString();
-    if (object.contains(kNote))
-        note = object.value(kNote).toString();
     if (object.contains(kKind))
         kind = NodeKind(object.value(kKind).toInt());
     if (object.contains(kDirectionRule))
@@ -82,7 +79,6 @@ QJsonObject Node::WriteJson() const
     obj.insert(kId, id.toString(QUuid::WithoutBraces));
     obj.insert(kCode, code);
     obj.insert(kDescription, description);
-    obj.insert(kNote, note);
     obj.insert(kKind, std::to_underlying(kind));
     obj.insert(kDirectionRule, direction_rule);
     obj.insert(kUnit, std::to_underlying(unit));
@@ -165,8 +161,6 @@ void NodeP::ReadJson(const QJsonObject& object)
         code = object.value(kCode).toString();
     if (object.contains(kDescription))
         description = object.value(kDescription).toString();
-    if (object.contains(kNote))
-        note = object.value(kNote).toString();
     if (object.contains(kKind))
         kind = NodeKind(object.value(kKind).toInt());
     if (object.contains(kUnit))
@@ -198,7 +192,6 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kId, id.toString(QUuid::WithoutBraces));
     obj.insert(kCode, code);
     obj.insert(kDescription, description);
-    obj.insert(kNote, note);
     obj.insert(kKind, std::to_underlying(kind));
     obj.insert(kUnit, std::to_underlying(unit));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));

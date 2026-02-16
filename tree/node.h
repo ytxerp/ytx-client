@@ -31,7 +31,6 @@ struct Node {
     QUuid id {};
     QString code {};
     QString description {};
-    QString note {};
     NodeKind kind {};
     bool direction_rule {};
     NodeUnit unit {};

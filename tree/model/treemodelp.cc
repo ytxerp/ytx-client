@@ -79,8 +79,6 @@ void TreeModelP::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumP::kDescription:
             return Utils::CompareMember(lhs, rhs, &Node::description, order);
-        case NodeEnumP::kNote:
-            return Utils::CompareMember(lhs, rhs, &Node::note, order);
         case NodeEnumP::kKind:
             return Utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumP::kUnit:
@@ -143,8 +141,6 @@ QVariant TreeModelP::data(const QModelIndex& index, int role) const
         return d_node->code;
     case NodeEnumP::kDescription:
         return d_node->description;
-    case NodeEnumP::kNote:
-        return d_node->note;
     case NodeEnumP::kKind:
         return std::to_underlying(d_node->kind);
     case NodeEnumP::kTag:
@@ -188,9 +184,6 @@ bool TreeModelP::setData(const QModelIndex& index, const QVariant& value, int ro
         break;
     case NodeEnumP::kDescription:
         Utils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
-        break;
-    case NodeEnumP::kNote:
-        Utils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kPaymentTerm:
         Utils::UpdateField(pending_updates_[id], d_node, kPaymentTerm, value.toInt(), &NodeP::payment_term, [id, this]() { RestartTimer(id); });

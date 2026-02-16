@@ -50,8 +50,6 @@ private slots:
 
     void on_comboUnit_currentIndexChanged(int index);
 
-    void on_plainTextEdit_textChanged();
-
 private:
     void IniDialog(ItemModel* unit_model, int amount_decimal);
     void IniConnect();

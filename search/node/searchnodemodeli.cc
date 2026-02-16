@@ -36,8 +36,6 @@ QVariant SearchNodeModelI::data(const QModelIndex& index, int role) const
         return d_node->tag;
     case NodeEnumI::kDescription:
         return d_node->description;
-    case NodeEnumI::kNote:
-        return d_node->note;
     case NodeEnumI::kDirectionRule:
         return d_node->direction_rule;
     case NodeEnumI::kKind:
@@ -74,8 +72,6 @@ void SearchNodeModelI::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumI::kDescription:
             return Utils::CompareMember(lhs, rhs, &Node::description, order);
-        case NodeEnumI::kNote:
-            return Utils::CompareMember(lhs, rhs, &Node::note, order);
         case NodeEnumI::kDirectionRule:
             return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumI::kKind:

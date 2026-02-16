@@ -28,7 +28,7 @@ void InsertNodeP::IniDialog(ItemModel* unit_model)
     ui->lineEditName->setValidator(&LineEdit::kInputValidator);
 
     this->setWindowTitle(parent_path_);
-    this->setFixedSize(300, 500);
+    this->setMinimumSize(270, 360);
 
     ui->comboUnit->setModel(unit_model);
     ui->spinPaymentTerm->setRange(0, std::numeric_limits<int>::max());
@@ -71,8 +71,6 @@ void InsertNodeP::on_lineEditName_editingFinished() { node_->name = ui->lineEdit
 void InsertNodeP::on_lineEditCode_editingFinished() { node_->code = ui->lineEditCode->text(); }
 
 void InsertNodeP::on_lineEditDescription_editingFinished() { node_->description = ui->lineEditDescription->text(); }
-
-void InsertNodeP::on_plainTextEdit_textChanged() { node_->note = ui->plainTextEdit->toPlainText(); }
 
 void InsertNodeP::on_comboUnit_currentIndexChanged(int index)
 {

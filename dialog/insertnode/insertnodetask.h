@@ -49,8 +49,6 @@ private slots:
 
     void on_comboUnit_currentIndexChanged(int index);
 
-    void on_plainTextEdit_textChanged();
-
     void on_issuedTime_dateTimeChanged(const QDateTime& dateTime);
 
 private:

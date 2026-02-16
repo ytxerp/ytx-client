@@ -29,7 +29,7 @@ void InsertNodeI::IniDialog(ItemModel* unit_model, int amount_decimal)
     ui->lineEditName->setValidator(&LineEdit::kInputValidator);
 
     this->setWindowTitle(parent_path_);
-    this->setFixedSize(360, 600);
+    this->setMinimumSize(300, 400);
 
     ui->comboUnit->setModel(unit_model);
     ui->dSpinBoxUnitPrice->setRange(0.0, kDoubleMax);
@@ -95,8 +95,6 @@ void InsertNodeI::on_comboUnit_currentIndexChanged(int index)
     Q_UNUSED(index)
     node_->unit = NodeUnit(ui->comboUnit->currentData().toInt());
 }
-
-void InsertNodeI::on_plainTextEdit_textChanged() { node_->note = ui->plainTextEdit->toPlainText(); }
 
 void InsertNodeI::on_dSpinBoxUnitPrice_editingFinished() { node_->unit_price = ui->dSpinBoxUnitPrice->value(); }
 

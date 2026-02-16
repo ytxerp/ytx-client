@@ -6,118 +6,11 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>356</width>
-    <height>561</height>
+    <width>300</width>
+    <height>400</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="8" column="1" colspan="3">
-    <widget class="PlainTextEdit" name="plainTextEdit">
-     <property name="tabChangesFocus">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>103</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="9" column="3">
-    <widget class="QPushButton" name="pBtnOk">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Ok</string>
-     </property>
-     <property name="default">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="labUnitPrice">
-     <property name="text">
-      <string>UnitPrice</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1" colspan="3">
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string/>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <property name="leftMargin">
-       <number>8</number>
-      </property>
-      <property name="topMargin">
-       <number>8</number>
-      </property>
-      <property name="rightMargin">
-       <number>8</number>
-      </property>
-      <property name="bottomMargin">
-       <number>8</number>
-      </property>
-      <property name="spacing">
-       <number>-1</number>
-      </property>
-      <item row="0" column="2">
-       <widget class="QRadioButton" name="rBtnBranch">
-        <property name="toolTip">
-         <string>Branch Node</string>
-        </property>
-        <property name="text">
-         <string notr="true">&amp;B</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QRadioButton" name="rBtnLeaf">
-        <property name="toolTip">
-         <string>Leaf Node</string>
-        </property>
-        <property name="text">
-         <string notr="true">&amp;L</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="9" column="2">
-    <widget class="QPushButton" name="pBtnCancel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Cancel</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="labUnit">
-     <property name="text">
-      <string>Unit</string>
-     </property>
-    </widget>
-   </item>
    <item row="4" column="1" colspan="3">
     <widget class="QGroupBox" name="groupBox">
      <property name="sizePolicy">
@@ -165,84 +58,6 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="labCode">
-     <property name="text">
-      <string>Code</string>
-     </property>
-     <property name="buddy">
-      <cstring>lineEditCode</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="labRule">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Rule</string>
-     </property>
-     <property name="buddy">
-      <cstring>rBtnDICD</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="labDescription">
-     <property name="text">
-      <string>Description</string>
-     </property>
-     <property name="buddy">
-      <cstring>lineEditDescription</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="labNote">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Note</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
-     </property>
-     <property name="buddy">
-      <cstring>plainTextEdit</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="labCommission">
-     <property name="text">
-      <string>Commission</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="labKind">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Kind</string>
-     </property>
-     <property name="buddy">
-      <cstring>rBtnDICD</cstring>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="labName">
      <property name="sizePolicy">
@@ -259,23 +74,101 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1" colspan="3">
-    <widget class="LineEdit" name="lineEditCode">
+   <item row="7" column="0">
+    <widget class="QLabel" name="labCommission">
+     <property name="text">
+      <string>Commission</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="3">
+    <widget class="LineEdit" name="lineEditName">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
     </widget>
    </item>
-   <item row="2" column="1" colspan="3">
-    <widget class="LineEdit" name="lineEditDescription">
+   <item row="9" column="3">
+    <widget class="QPushButton" name="pBtnOk">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Ok</string>
+     </property>
+     <property name="default">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="labDescription">
+     <property name="text">
+      <string>Description</string>
+     </property>
+     <property name="buddy">
+      <cstring>lineEditDescription</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1" colspan="3">
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <property name="leftMargin">
+      <number>8</number>
+     </property>
+     <property name="topMargin">
+      <number>8</number>
+     </property>
+     <property name="rightMargin">
+      <number>8</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
+     </property>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="ComboBox" name="comboUnit">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <property name="insertPolicy">
+        <enum>QComboBox::InsertPolicy::NoInsert</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="labRule">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Rule</string>
+     </property>
+     <property name="buddy">
+      <cstring>rBtnDICD</cstring>
      </property>
     </widget>
    </item>
@@ -318,6 +211,86 @@
      </item>
     </layout>
    </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="labKind">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Kind</string>
+     </property>
+     <property name="buddy">
+      <cstring>rBtnDICD</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="3">
+    <widget class="LineEdit" name="lineEditCode">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="3">
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string/>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <property name="leftMargin">
+       <number>8</number>
+      </property>
+      <property name="topMargin">
+       <number>8</number>
+      </property>
+      <property name="rightMargin">
+       <number>8</number>
+      </property>
+      <property name="bottomMargin">
+       <number>8</number>
+      </property>
+      <property name="spacing">
+       <number>-1</number>
+      </property>
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="rBtnBranch">
+        <property name="toolTip">
+         <string>Branch Node</string>
+        </property>
+        <property name="text">
+         <string notr="true">&amp;B</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="rBtnLeaf">
+        <property name="toolTip">
+         <string>Leaf Node</string>
+        </property>
+        <property name="text">
+         <string notr="true">&amp;L</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="3">
+    <widget class="LineEdit" name="lineEditDescription">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
    <item row="6" column="1" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <property name="leftMargin">
@@ -357,54 +330,68 @@
      </item>
     </layout>
    </item>
-   <item row="5" column="1" colspan="3">
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <property name="leftMargin">
-      <number>8</number>
+   <item row="5" column="0">
+    <widget class="QLabel" name="labUnit">
+     <property name="text">
+      <string>Unit</string>
      </property>
-     <property name="topMargin">
-      <number>8</number>
-     </property>
-     <property name="rightMargin">
-      <number>8</number>
-     </property>
-     <property name="bottomMargin">
-      <number>8</number>
-     </property>
-     <item>
-      <spacer name="horizontalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="ComboBox" name="comboUnit">
-       <property name="editable">
-        <bool>true</bool>
-       </property>
-       <property name="insertPolicy">
-        <enum>QComboBox::InsertPolicy::NoInsert</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    </widget>
    </item>
-   <item row="0" column="1" colspan="3">
-    <widget class="LineEdit" name="lineEditName">
+   <item row="6" column="0">
+    <widget class="QLabel" name="labUnitPrice">
+     <property name="text">
+      <string>UnitPrice</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="labCode">
+     <property name="text">
+      <string>Code</string>
+     </property>
+     <property name="buddy">
+      <cstring>lineEditCode</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>103</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="9" column="2">
+    <widget class="QPushButton" name="pBtnCancel">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="text">
+      <string>Cancel</string>
+     </property>
     </widget>
+   </item>
+   <item row="8" column="0" colspan="4">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
@@ -420,11 +407,6 @@
    <header location="global">widget/combobox.h</header>
   </customwidget>
   <customwidget>
-   <class>PlainTextEdit</class>
-   <extends>QPlainTextEdit</extends>
-   <header location="global">widget/plaintextedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>DoubleSpinBox</class>
    <extends>QDoubleSpinBox</extends>
    <header location="global">widget/doublespinbox.h</header>
@@ -433,7 +415,6 @@
  <tabstops>
   <tabstop>lineEditName</tabstop>
   <tabstop>lineEditCode</tabstop>
-  <tabstop>plainTextEdit</tabstop>
   <tabstop>pBtnOk</tabstop>
   <tabstop>pBtnCancel</tabstop>
  </tabstops>

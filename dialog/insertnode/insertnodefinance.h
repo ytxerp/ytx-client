@@ -48,8 +48,6 @@ private slots:
 
     void on_comboUnit_currentIndexChanged(int index);
 
-    void on_plainNote_textChanged();
-
 private:
     void IniDialog(ItemModel* unit_model);
     void IniData(Node* node);

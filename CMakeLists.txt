@@ -96,7 +96,6 @@ set(SOURCES
     widget/datetimeedit.cc
     component/stringinitializer.cc
     delegate/status.cc
-    delegate/plaintext.cc
     delegate/int.cc
     delegate/double.cc
     delegate/boolstring.cc
@@ -242,7 +241,6 @@ set(HEADERS
     entryhub/entryhub.h
     entryhub/entryhubt.h
     entryhub/entryhubi.h
-    widget/plaintextedit.h
     widget/spinbox.h
     widget/combobox.h
     widget/doublespinbox.h
@@ -260,7 +258,6 @@ set(HEADERS
     component/arg/nodeinsertarg.h
     delegate/boolstring.h
     delegate/styleditemdelegate.h
-    delegate/plaintext.h
     delegate/line.h
     delegate/int.h
     delegate/status.h

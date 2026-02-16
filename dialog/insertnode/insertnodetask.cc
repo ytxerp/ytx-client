@@ -30,7 +30,7 @@ void InsertNodeTask::IniDialog(ItemModel* unit_model)
     ui->lineEditName->setValidator(&LineEdit::kInputValidator);
 
     this->setWindowTitle(parent_path_);
-    this->setFixedSize(360, 600);
+    this->setMinimumSize(315, 420);
 
     ui->comboUnit->setModel(unit_model);
     ui->issuedTime->setDisplayFormat(kDateFST);
@@ -105,8 +105,6 @@ void InsertNodeTask::on_comboUnit_currentIndexChanged(int index)
     Q_UNUSED(index)
     node_->unit = NodeUnit(ui->comboUnit->currentData().toInt());
 }
-
-void InsertNodeTask::on_plainTextEdit_textChanged() { node_->note = ui->plainTextEdit->toPlainText(); }
 
 void InsertNodeTask::RRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
 

@@ -169,7 +169,7 @@ constexpr std::pair<int, int> NodeCacheColumnRange(Section section)
 {
     switch (section) {
     case Section::kFinance:
-        return { std::to_underlying(NodeEnumF::kCode), std::to_underlying(NodeEnumF::kNote) };
+        return { std::to_underlying(NodeEnumF::kCode), std::to_underlying(NodeEnumF::kColor) };
     case Section::kTask:
         return { std::to_underlying(NodeEnumT::kCode), std::to_underlying(NodeEnumT::kDocument) };
     case Section::kPartner:

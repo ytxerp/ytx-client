@@ -40,8 +40,6 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
         return node->code;
     case NodeEnumF::kDescription:
         return node->description;
-    case NodeEnumF::kNote:
-        return node->note;
     case NodeEnumF::kTag:
         return node->tag;
     case NodeEnumF::kColor:
@@ -88,9 +86,6 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumF::kTag:
         Utils::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
         break;
-    case NodeEnumF::kNote:
-        Utils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
-        break;
     case NodeEnumF::kDirectionRule:
         UpdateDirectionRule(node, value.toBool(), index.row());
         break;
@@ -125,8 +120,6 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumF::kDescription:
             return Utils::CompareMember(lhs, rhs, &Node::description, order);
-        case NodeEnumF::kNote:
-            return Utils::CompareMember(lhs, rhs, &Node::note, order);
         case NodeEnumF::kDirectionRule:
             return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumF::kKind:

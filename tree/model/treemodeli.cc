@@ -36,8 +36,6 @@ void TreeModelI::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumI::kDescription:
             return Utils::CompareMember(lhs, rhs, &Node::description, order);
-        case NodeEnumI::kNote:
-            return Utils::CompareMember(lhs, rhs, &Node::note, order);
         case NodeEnumI::kDirectionRule:
             return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumI::kKind:
@@ -108,8 +106,6 @@ QVariant TreeModelI::data(const QModelIndex& index, int role) const
         return d_node->tag;
     case NodeEnumI::kDescription:
         return d_node->description;
-    case NodeEnumI::kNote:
-        return d_node->note;
     case NodeEnumI::kDirectionRule:
         return d_node->direction_rule;
     case NodeEnumI::kKind:
@@ -155,9 +151,6 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
         break;
     case NodeEnumI::kTag:
         Utils::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
-        break;
-    case NodeEnumI::kNote:
-        Utils::UpdateField(pending_updates_[id], node, kNote, value.toString(), &Node::note, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kDirectionRule:
         UpdateDirectionRule(node, value.toBool(), index.row());
