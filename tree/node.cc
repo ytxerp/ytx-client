@@ -197,6 +197,7 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
     obj.insert(kPaymentTerm, payment_term);
     obj.insert(kColor, color);
+    obj.insert(kTag, Utils::WriteStringList(tag));
 
     return obj;
 }
