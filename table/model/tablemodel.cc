@@ -475,16 +475,25 @@ EntryShadow* TableModel::InsertRowsImpl(int row, const QModelIndex& parent)
     return entry_shadow;
 }
 
-void TableModel::EmitDataChanged(int start_row, int end_row, int start_column, int end_column)
+void TableModel::EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent)
 {
-    if (start_row < 0 || end_row >= rowCount() || start_row > end_row)
-        return;
+    // top_left and bottom_right must share the same parent, behavior is undefined otherwise
+    Q_ASSERT(!parent.isValid() || parent.model() == this);
 
-    if (start_column < 0 || end_column >= columnCount() || start_column > end_column)
+    if (start_row < 0 || end_row >= rowCount(parent) || start_row > end_row) {
+        qDebug() << "EmitDataChanged: invalid row range" << start_row << end_row << "rowCount" << rowCount(parent);
         return;
+    }
 
-    const QModelIndex top_left { index(start_row, start_column) };
-    const QModelIndex bottom_right { index(end_row, end_column) };
+    if (start_column < 0 || end_column >= columnCount(parent) || start_column > end_column) {
+        qDebug() << "EmitDataChanged: invalid column range" << start_column << end_column << "columnCount" << columnCount(parent);
+        return;
+    }
+
+    const QModelIndex top_left { index(start_row, start_column, parent) };
+    const QModelIndex bottom_right { index(end_row, end_column, parent) };
+
+    Q_ASSERT(top_left.parent() == bottom_right.parent());
 
     emit dataChanged(top_left, bottom_right, QList<int> { Qt::DisplayRole, Qt::EditRole });
 }

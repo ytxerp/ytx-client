@@ -102,12 +102,16 @@ void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
     if (!node)
         return;
 
+    const auto index { GetIndex(node_id) };
+    if (!index.isValid())
+        return;
+
     node->name = name;
 
     const int column { std::to_underlying(NodeEnumO::kName) };
     const int row { GetIndex(node_id).row() };
 
-    EmitDataChanged(row, row, column, column);
+    EmitDataChanged(row, row, column, column, index.parent());
 }
 
 void TreeModelO::InsertSettlement(const QUuid& node_id, const QUuid& settlement_id)

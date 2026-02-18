@@ -131,12 +131,13 @@ void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
 
     node->ReadJson(update);
 
-    auto index { GetIndex(node_id) };
-    if (index.isValid()) {
-        const auto [start, end] = Utils::NodeCacheColumnRange(section_);
-        if (end != -1)
-            emit dataChanged(index.siblingAtColumn(start), index.siblingAtColumn(end));
-    }
+    const auto index { GetIndex(node_id) };
+    if (!index.isValid())
+        return;
+
+    const int row { index.row() };
+    const auto [start, end] = Utils::NodeCacheColumnRange(section_);
+    EmitDataChanged(row, row, start, end, index.parent());
 }
 
 void TreeModel::UpdateMeta(const QUuid& node_id, const QJsonObject& meta)
@@ -168,7 +169,7 @@ void TreeModel::InsertMeta(Node* node, const QJsonObject& meta)
     node->created_by = QUuid(meta[kCreatedBy].toString());
 }
 
-void TreeModel::UpdateDirectionRule(Node* node, bool value, int row)
+void TreeModel::UpdateDirectionRule(Node* node, bool value, const QModelIndex& index)
 {
     if (node->direction_rule == value)
         return;
@@ -176,7 +177,7 @@ void TreeModel::UpdateDirectionRule(Node* node, bool value, int row)
     QJsonObject message { JsonGen::NodeDirectionRule(section_, node->id, value) };
     WebSocket::Instance()->SendMessage(kDirectionRule, message);
 
-    DirectionRuleImpl(node, value, row);
+    DirectionRuleImpl(node, value, index);
 }
 
 void TreeModel::SyncDirectionRule(const QUuid& node_id, bool direction_rule)
@@ -191,13 +192,13 @@ void TreeModel::SyncDirectionRule(const QUuid& node_id, bool direction_rule)
 
     const int row { index.row() };
 
-    DirectionRuleImpl(node, direction_rule, row);
+    DirectionRuleImpl(node, direction_rule, index);
 
     const int column { Utils::DirectionRuleColumn(section_) };
-    EmitDataChanged(row, row, column, column);
+    EmitDataChanged(row, row, column, column, index.parent());
 }
 
-void TreeModel::DirectionRuleImpl(Node* node, bool value, int row)
+void TreeModel::DirectionRuleImpl(Node* node, bool value, const QModelIndex& index)
 {
     node->InvertTotal();
     node->direction_rule = value;
@@ -208,9 +209,10 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value, int row)
         emit SDirectionRule(node_id, node->direction_rule);
     }
 
+    const int row { index.row() };
     const auto [start_col, end_col] = Utils::NodeNumericColumnRange(section_);
-    EmitDataChanged(row, row, start_col, end_col);
 
+    EmitDataChanged(row, row, start_col, end_col, index.parent());
     emit SSyncValue();
 }
 
@@ -241,6 +243,10 @@ void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
     if (!node)
         return;
 
+    const auto index { GetIndex(node_id) };
+    if (!index.isValid())
+        return;
+
     if (node->name == name)
         return;
 
@@ -252,7 +258,7 @@ void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
     const int column { std::to_underlying(NodeEnum::kName) };
     const int row { GetIndex(node_id).row() };
 
-    EmitDataChanged(row, row, column, column);
+    EmitDataChanged(row, row, column, column, index.parent());
     emit SUpdateName(node->id, node->name, node->kind == NodeKind::kBranch);
 }
 
@@ -776,12 +782,13 @@ QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, dou
 void TreeModel::RefreshAffectedTotal(const QSet<QUuid>& affected_ids)
 {
     for (const QUuid& id : affected_ids) {
-        QModelIndex idx = GetIndex(id);
-        if (!idx.isValid())
+        const QModelIndex index = GetIndex(id);
+        if (!index.isValid())
             continue;
 
-        const auto [start_col, end_col] = Utils::NodeNumericColumnRange(section_);
-        emit dataChanged(index(idx.row(), start_col, idx.parent()), index(idx.row(), end_col, idx.parent()), { Qt::DisplayRole, Qt::EditRole });
+        const int row { index.row() };
+        const auto [start, end] = Utils::NodeNumericColumnRange(section_);
+        EmitDataChanged(row, row, start, end, index.parent());
     }
 }
 
@@ -833,16 +840,25 @@ void TreeModel::FlushCaches()
     pending_updates_.clear();
 }
 
-void TreeModel::EmitDataChanged(int start_row, int end_row, int start_column, int end_column)
+void TreeModel::EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent)
 {
-    if (start_row < 0 || end_row >= rowCount() || start_row > end_row)
-        return;
+    // top_left and bottom_right must share the same parent, behavior is undefined otherwise
+    Q_ASSERT(!parent.isValid() || parent.model() == this);
 
-    if (start_column < 0 || end_column >= columnCount() || start_column > end_column)
+    if (start_row < 0 || end_row >= rowCount(parent) || start_row > end_row) {
+        qDebug() << "EmitDataChanged: invalid row range" << start_row << end_row << "rowCount" << rowCount(parent);
         return;
+    }
 
-    const QModelIndex top_left { index(start_row, start_column) };
-    const QModelIndex bottom_right { index(end_row, end_column) };
+    if (start_column < 0 || end_column >= columnCount(parent) || start_column > end_column) {
+        qDebug() << "EmitDataChanged: invalid column range" << start_column << end_column << "columnCount" << columnCount(parent);
+        return;
+    }
+
+    const QModelIndex top_left { index(start_row, start_column, parent) };
+    const QModelIndex bottom_right { index(end_row, end_column, parent) };
+
+    Q_ASSERT(top_left.parent() == bottom_right.parent());
 
     emit dataChanged(top_left, bottom_right, QList<int> { Qt::DisplayRole, Qt::EditRole });
 }

@@ -104,7 +104,7 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
         Utils::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDirectionRule:
-        UpdateDirectionRule(node, value.toBool(), index.row());
+        UpdateDirectionRule(node, value.toBool(), index);
         break;
     case NodeEnumT::kColor:
         Utils::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
@@ -226,13 +226,17 @@ void TreeModelT::UpdateStatus(const QUuid& node_id, NodeStatus status)
     if (!node)
         return;
 
+    const auto index { GetIndex(node_id) };
+    if (!index.isValid())
+        return;
+
     auto* d_node { DerivedPtr<NodeT>(node) };
     d_node->status = status;
 
     const int column { std::to_underlying(NodeEnumT::kStatus) };
     const int row { GetIndex(node_id).row() };
 
-    EmitDataChanged(row, row, column, column);
+    EmitDataChanged(row, row, column, column, index.parent());
 }
 
 void TreeModelT::UpdateStatus(Node* node, NodeStatus value)

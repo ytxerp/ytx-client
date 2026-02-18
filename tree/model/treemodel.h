@@ -157,10 +157,10 @@ protected:
     void BuildHierarchy(const QJsonArray& path_array);
 
     void RestartTimer(const QUuid& id);
-    void EmitDataChanged(int start_row, int end_row, int start_column, int end_column);
+    void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent);
 
-    void UpdateDirectionRule(Node* node, bool value, int row);
-    void DirectionRuleImpl(Node* node, bool value, int row);
+    void UpdateDirectionRule(Node* node, bool value, const QModelIndex& index);
+    void DirectionRuleImpl(Node* node, bool value, const QModelIndex& index);
 
     void UpdateMeta(Node* node, const QJsonObject& meta);
     void InsertMeta(Node* node, const QJsonObject& meta);
