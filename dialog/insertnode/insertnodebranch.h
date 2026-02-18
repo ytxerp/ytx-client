@@ -43,6 +43,7 @@ private slots:
 
     void on_lineName_editingFinished();
     void on_lineDescription_editingFinished();
+    void on_lineCode_editingFinished();
 
     void on_comboUnit_currentIndexChanged(int index);
 

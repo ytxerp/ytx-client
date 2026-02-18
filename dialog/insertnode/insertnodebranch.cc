@@ -55,3 +55,5 @@ void InsertNodeBranch::on_comboUnit_currentIndexChanged(int index)
     Q_UNUSED(index)
     node_->unit = NodeUnit(ui->comboUnit->currentData().toInt());
 }
+
+void InsertNodeBranch::on_lineCode_editingFinished() { node_->code = ui->lineCode->text(); }

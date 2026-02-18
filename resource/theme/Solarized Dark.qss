@@ -77,19 +77,12 @@ QWidget#tableViewOSave {
 }
 
 /* Dialog elements with borders */
-QGroupBox QComboBox,
-QGroupBox QSpinBox,
-QDialog QLineEdit,
-QDialog QComboBox,
-QDialog QDateTimeEdit,
-QDialog QSpinBox,
-QDialog QDoubleSpinBox {
+QDialog > QLineEdit,
+QDialog > QComboBox,
+QDialog > QDateTimeEdit,
+QDialog > QSpinBox,
+QDialog > QDoubleSpinBox {
     border: 1px solid #657B83;
-}
-
-/* TagManagerDlg's QLineEdit overrides to no border */
-QDialog#TagManagerDlg QLineEdit {
-    border: none;
 }
 
 /* ExactMatchConfirmDialog's QLineEdit explicitly sets border */
@@ -121,13 +114,6 @@ QRadioButton {
 QListView::item,
 QTreeView::item {
     height: 24px;
-}
-
-QComboBox,
-QLineEdit,
-QSpinBox,
-QDoubleSpinBox {
-    padding: 2px 0;
 }
 
 /* Minimum widths for specific controls */
@@ -566,17 +552,36 @@ DoubleSpinBox#dSpinGrossAmount {
     font-weight: bold;
 }
 
+/* ==================== min-height ==================== */
+QGroupBox > QRadioButton,
+QDialog > QComboBox,
+QDialog > QSpinBox,
+QDialog > QLineEdit,
+QDialog > QDoubleSpinBox,
+QDialog > QDateTimeEdit {
+    min-height: 24px;
+}
+
 /* ==================== Combo Box ==================== */
-QTableView QComboBox::drop-down {
+QComboBox::drop-down {
     border: none;
+    background: transparent;
+}
+
+QTableView QComboBox::drop-down {
     border-right: 1px solid #657B83;
-    width: 24px;
 }
 
 QComboBox::down-arrow {
     width: 12px;
     height: 12px;
     image: url(:/solarized_dark/solarized_dark/down.png);
+}
+
+QComboBox::down-arrow:on {
+    width: 12px;
+    height: 12px;
+    image: url(:/solarized_dark/solarized_dark/up.png);
 }
 
 /* ==================== List/Combo Popup ==================== */
