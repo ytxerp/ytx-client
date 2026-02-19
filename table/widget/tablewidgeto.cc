@@ -137,8 +137,8 @@ void TableWidgetO::IniWidget()
         ui->dSpinMeasureTotal->setDecimals(config_.quantity_decimal);
         ui->dSpinCountTotal->setDecimals(config_.quantity_decimal);
 
-        ui->dSpinDiscountTotal->setAlignment(Qt::AlignRight | Qt::AlignBottom);
-        ui->dSpinFinalTotal->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
+        ui->dSpinDiscountTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        ui->dSpinFinalTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         ui->dSpinCountTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         ui->dSpinMeasureTotal->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     }
@@ -439,7 +439,8 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
 
     if (tmp_node_.is_settled) {
-        Utils::ShowNotification(QMessageBox::Information, tr("Order Settled"), tr("This order has already been settled and cannot be operated."), kThreeThousand);
+        Utils::ShowNotification(
+            QMessageBox::Information, tr("Order Settled"), tr("This order has already been settled and cannot be operated."), kThreeThousand);
         return;
     }
 
