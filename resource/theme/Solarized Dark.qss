@@ -49,7 +49,7 @@ QSpinBox,
 QDoubleSpinBox,
 QDateTimeEdit,
 QListView,
-QWidget#tableViewOSave,
+QWidget#widgetBottomO,
 QHeaderView::section,
 QTabBar::tab,
 QToolBar,
@@ -81,7 +81,7 @@ QTableView#tableViewO {
 
 QGroupBox#treeGroup,
 QTableView#tableViewO,
-QWidget#tableViewOSave {
+QWidget#widgetBottomO {
     border-top: none;
 }
 

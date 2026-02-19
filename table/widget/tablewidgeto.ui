@@ -30,7 +30,7 @@
     <widget class="QTableView" name="tableViewO"/>
    </item>
    <item row="2" column="0">
-    <widget class="QWidget" name="tableViewOSave" native="true">
+    <widget class="QWidget" name="widgetBottomO" native="true">
      <layout class="QHBoxLayout" name="tableViewOHL4">
       <property name="topMargin">
        <number>0</number>
@@ -85,7 +85,7 @@
     </widget>
    </item>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="tableGroupO">
+    <widget class="QGroupBox" name="groupBox">
      <layout class="QGridLayout" name="gridLayout">
       <item row="2" column="4">
        <layout class="QHBoxLayout" name="horizontalLayout_4">
