@@ -43,22 +43,31 @@ QGroupBox,
 QPlainTextEdit,
 QTreeView,
 QTableView,
+QComboBox,
+QLineEdit,
+QSpinBox,
+QDoubleSpinBox,
+QDateTimeEdit,
 QListView,
 QWidget#tableViewOSave,
 QHeaderView::section,
 QTabBar::tab,
 QToolBar,
+QMenu,
 QToolTip {
     border: 1px solid #657B83;
 }
 
 /* No borders by default */
-QComboBox,
-QSpinBox,
-QDoubleSpinBox,
-QDateEdit,
-QDateTimeEdit,
-QLineEdit {
+QAbstractItemView QLineEdit,
+QAbstractItemView QComboBox,
+QAbstractItemView QSpinBox,
+QAbstractItemView QDoubleSpinBox,
+QAbstractItemView QDateTimeEdit,
+QWidget#TreeWidgetO QDateTimeEdit,
+QWidget#TableWidgetO QDoubleSpinBox,
+QDoubleSpinBox#dspin_box_dynamic_,
+QDoubleSpinBox#dspin_box_static_ {
     border: none;
 }
 
@@ -74,20 +83,6 @@ QGroupBox#treeGroup,
 QTableView#tableViewO,
 QWidget#tableViewOSave {
     border-top: none;
-}
-
-/* Dialog elements with borders */
-QDialog > QLineEdit,
-QDialog > QComboBox,
-QDialog > QDateTimeEdit,
-QDialog > QSpinBox,
-QDialog > QDoubleSpinBox {
-    border: 1px solid #657B83;
-}
-
-/* ExactMatchConfirmDialog's QLineEdit explicitly sets border */
-QDialog#ExactMatchConfirmDialog QLineEdit {
-    border: 1px solid #657B83;
 }
 
 /* ==================== Frame Dividers ==================== */
@@ -198,10 +193,6 @@ QMenuBar::item:selected {
     color: #2BB3EB;
 }
 
-QMenu {
-    border: 1px solid #657B83;
-}
-
 QMenu::separator {
     height: 1px;
     background: qlineargradient(
@@ -273,7 +264,6 @@ QTreeView::branch:open:has-children {
 /* ==================== Toolbar ==================== */
 QToolBar {
     spacing: 2px;
-    border: 1px solid #657B83;
 }
 
 QToolBar::separator {
@@ -302,7 +292,6 @@ QTabBar::tab {
     min-width: 60px;
     height: 16px;
     padding: 2px 4px;
-    border: 1px solid #657B83;
     border-bottom: none;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
@@ -339,8 +328,7 @@ QTabBar::close-button:first {
 /* ==================== Push Buttons ==================== */
 QPushButton {
     background-color: transparent;
-    border: 1px solid #657B83;
-    border-radius: 6px;
+    border-radius: 4px;
     padding: 4px 8px;
 }
 
@@ -538,15 +526,6 @@ QHeaderView::down-arrow {
     height: 0;
 }
 
-/* ==================== Spin Boxes ==================== */
-QSpinBox::up-button,
-QSpinBox::down-button,
-QDoubleSpinBox::up-button,
-QDoubleSpinBox::down-button {
-    width: 0;
-    height: 0;
-}
-
 DoubleSpinBox#dSpinGrossAmount {
     font-size: 24pt;
     font-weight: bold;
@@ -554,6 +533,12 @@ DoubleSpinBox#dSpinGrossAmount {
 
 /* ==================== min-height ==================== */
 QGroupBox > QRadioButton,
+QGroupBox > QComboBox,
+QGroupBox > QSpinBox,
+QGroupBox > QLineEdit,
+QGroupBox > QDoubleSpinBox,
+QGroupBox > QDateTimeEdit,
+QDialog > QRadioButton,
 QDialog > QComboBox,
 QDialog > QSpinBox,
 QDialog > QLineEdit,
