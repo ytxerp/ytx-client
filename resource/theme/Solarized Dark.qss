@@ -569,6 +569,18 @@ QComboBox::down-arrow:on {
     image: url(:/solarized_dark/solarized_dark/up.png);
 }
 
+/* ==================== QDateTimeEdit ==================== */
+QDateTimeEdit::drop-down {
+    border: none;
+    background: transparent;
+}
+
+QDateTimeEdit::down-arrow {
+    width: 12px;
+    height: 12px;
+    image: url(:/solarized_dark/solarized_dark/down.png);
+}
+
 /* ==================== List/Combo Popup ==================== */
 QComboBox QAbstractItemView {
     border: 1px solid #657B83;
@@ -620,4 +632,33 @@ QDockWidget::float-button {
 QDockWidget::close-button:hover,
 QDockWidget::float-button:hover {
     background-color: #586E75;
+}
+
+/* ==================== QCalendarWidget ==================== */
+
+/* Prev / next month arrows */
+QCalendarWidget QToolButton#qt_calendar_prevmonth {
+    qproperty-icon: url(:/solarized_dark/solarized_dark/left.png);
+    qproperty-iconSize: 12px 12px;
+}
+
+QCalendarWidget QToolButton#qt_calendar_nextmonth {
+    qproperty-icon: url(:/solarized_dark/solarized_dark/right.png);
+    qproperty-iconSize: 12px 12px;
+}
+
+/* Year spinbox */
+QCalendarWidget QSpinBox {
+    background: transparent;
+    border: none;
+}
+
+QCalendarWidget QSpinBox::up-button,
+QCalendarWidget QSpinBox::down-button {
+    width: 0;
+    height: 0;
+}
+
+QCalendarWidget {
+    min-width: 240px;
 }
