@@ -68,21 +68,26 @@ public:
     bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent) override;
     bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild) override;
 
-    inline Qt::DropActions supportedDropActions() const override { return Qt::CopyAction | Qt::MoveAction; }
-    inline QStringList mimeTypes() const override { return QStringList { kYTX }; }
+    Qt::DropActions supportedDropActions() const override { return Qt::CopyAction | Qt::MoveAction; }
+    QStringList mimeTypes() const override { return QStringList { kYTX }; }
 
-    inline bool canDropMimeData(const QMimeData* data, Qt::DropAction action, int /*row*/, int /*column*/, const QModelIndex& /*parent*/) const override
+    bool canDropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent) const override
     {
-        return data && data->hasFormat(kYTX) && action != Qt::IgnoreAction;
+        if (!QAbstractItemModel::canDropMimeData(data, action, row, column, parent))
+            return false;
+
+        // dropping onto an item requires it to be a branch node
+        auto* node { GetNodeByIndex(parent) };
+        return node && node->kind == NodeKind::kBranch;
     }
 
-    inline int columnCount(const QModelIndex& parent = QModelIndex()) const override
+    int columnCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent);
         return node_header_.size();
     }
 
-    inline QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override
     {
         if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
             return node_header_.at(section);

@@ -30,7 +30,7 @@
     <number>0</number>
    </property>
    <item row="1" column="0">
-    <widget class="QTreeView" name="treeViewO"/>
+    <widget class="TreeView" name="treeViewO"/>
    </item>
    <item row="0" column="0">
     <widget class="QGroupBox" name="treeGroupO">
@@ -105,6 +105,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>TreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">widget/treeview.h</header>
+  </customwidget>
   <customwidget>
    <class>DateTimeEdit</class>
    <extends>QDateTimeEdit</extends>

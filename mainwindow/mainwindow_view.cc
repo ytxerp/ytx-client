@@ -32,14 +32,6 @@ void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
         view->setColumnHidden(std::to_underlying(NodeEnum::kUpdateTime), kIsHidden);
         view->setColumnHidden(std::to_underlying(NodeEnum::kUpdateBy), kIsHidden);
         view->setColumnHidden(std::to_underlying(NodeEnum::kVersion), kIsHidden);
-
-        view->setSelectionMode(QAbstractItemView::SingleSelection);
-        view->setDragDropMode(QAbstractItemView::DragDrop);
-        view->setEditTriggers(QAbstractItemView::DoubleClicked);
-        view->setDropIndicatorShown(true);
-        view->setSortingEnabled(true);
-        view->setContextMenuPolicy(Qt::CustomContextMenu);
-        view->setExpandsOnDoubleClick(true);
     }
 }
 

@@ -208,6 +208,7 @@ set(SOURCES
     mainwindow/mainwindow_tag.cc
     utils/tagutils.cc
     mainwindow/mainwindow_charts.cc
+    widget/treeview.cc
 )
 
 set(HEADERS
@@ -367,6 +368,7 @@ set(HEADERS
     enum/tagenum.h
     utils/tagutils.h
     component/widgetcontex.h
+    widget/treeview.h
 )
 
 set(UIS

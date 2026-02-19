@@ -30,7 +30,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTreeView" name="treeView"/>
+    <widget class="TreeView" name="treeView"/>
    </item>
    <item>
     <widget class="QGroupBox" name="treeGroup">
@@ -130,6 +130,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">widget/treeview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
