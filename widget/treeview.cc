@@ -14,9 +14,10 @@ TreeView::TreeView(QWidget* parent)
     setDropIndicatorShown(true);
     setUniformRowHeights(true);
     setSortingEnabled(true);
-    setExpandsOnDoubleClick(false);
 
+    setExpandsOnDoubleClick(false);
     setDragDropOverwriteMode(false);
+
     setAutoExpandDelay(800);
 }
 
