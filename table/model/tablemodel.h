@@ -65,9 +65,9 @@ public slots:
 
 public:
     // implemented functions
-    inline int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return shadow_list_.size(); }
-    inline int columnCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return info_.entry_header.size(); }
-    inline QModelIndex parent(const QModelIndex& /*index*/) const override { return QModelIndex(); }
+    int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return shadow_list_.size(); }
+    int columnCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return info_.entry_header.size(); }
+    QModelIndex parent(const QModelIndex& /*index*/) const override { return QModelIndex(); }
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -80,7 +80,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     virtual QModelIndex GetIndex(const QUuid& entry_id) const;
-    inline virtual Entry* GetEntry(const QModelIndex& index) const { return shadow_list_.at(index.row())->entry; }
+    virtual Entry* GetEntry(const QModelIndex& index) const { return shadow_list_.at(index.row())->entry; }
     virtual void ActionEntry(EntryAction action);
 
     void FlushCaches();

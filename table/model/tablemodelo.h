@@ -72,7 +72,7 @@ public:
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
-    inline int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return entry_list_.size(); }
+    int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return entry_list_.size(); }
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
 
     bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
@@ -82,7 +82,7 @@ public:
     void Finalize(QJsonObject& message);
     bool HasPendingUpdate() const { return !pending_insert_.isEmpty() || !pending_delete_.isEmpty() || !pending_update_.isEmpty(); }
     void SetNode(const NodeO* node) { d_node_ = node; }
-    inline Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
+    Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
 
 private:
     bool UpdateInternalSku(EntryO* entry, int row, const QUuid& value, bool is_persisted);

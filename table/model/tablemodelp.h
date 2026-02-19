@@ -39,13 +39,13 @@ public:
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
-    inline int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return entry_list_.size(); }
+    int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override { return entry_list_.size(); }
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
 
     bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
     QModelIndex GetIndex(const QUuid& entry_id) const override;
-    inline Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
+    Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
     void ActionEntry(EntryAction action) override;
 
 protected:
