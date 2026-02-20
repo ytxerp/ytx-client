@@ -332,7 +332,7 @@ bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
     entry->issued_time = last_issued_;
 
     beginInsertRows(parent, row, row);
-    entry_list_.emplaceBack(entry);
+    entry_list_.insert(row, entry);
     endInsertRows();
 
     pending_insert_.insert(entry->id, entry);

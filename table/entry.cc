@@ -72,9 +72,10 @@ void Entry::ReadJson(const QJsonObject& object)
         rhs_debit = object[kRhsDebit].toString().toDouble();
     if (object.contains(kRhsCredit))
         rhs_credit = object[kRhsCredit].toString().toDouble();
-
-    tag = Utils::ReadStringList(object, kTag);
-    document = Utils::ReadStringList(object, kDocument);
+    if (object.contains(kTag))
+        tag = Utils::ReadStringList(object, kTag);
+    if (object.contains(kDocument))
+        document = Utils::ReadStringList(object, kDocument);
 }
 
 void EntryP::ResetState()
@@ -117,9 +118,10 @@ void EntryP::ReadJson(const QJsonObject& object)
         unit_price = object[kUnitPrice].toString().toDouble();
     if (object.contains(kExternalSku))
         external_sku = QUuid(object[kExternalSku].toString());
-
-    tag = Utils::ReadStringList(object, kTag);
-    document = Utils::ReadStringList(object, kDocument);
+    if (object.contains(kTag))
+        tag = Utils::ReadStringList(object, kTag);
+    if (object.contains(kDocument))
+        document = Utils::ReadStringList(object, kDocument);
 }
 
 QJsonObject EntryP::WriteJson() const

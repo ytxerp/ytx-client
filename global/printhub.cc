@@ -146,6 +146,7 @@ void PrintHub::RenderAllPages(QPrinter* printer)
     const long long total_pages { (entry_list_.size() + rows - 1) / rows }; // Ceiling division to determine total pages
 
     QPainter painter(printer);
+    painter.setPen(QPen(Qt::black, 0));
 
     // Start rendering each page
     for (long long page_num = 0; page_num != total_pages; ++page_num) {
@@ -169,9 +170,13 @@ void PrintHub::RenderAllPages(QPrinter* printer)
 
 void PrintHub::DrawHeader(QPainter* painter)
 {
+    painter->save();
+
     DrawText(painter, QStringLiteral("partner"), partner_->Name(node_o_->partner_id));
     DrawText(painter, QStringLiteral("issued_time"), node_o_->issued_time.toLocalTime().toString(kDateFST));
     DrawText(painter, QStringLiteral("code"), node_o_->code);
+
+    painter->restore();
 }
 
 /*!
@@ -195,6 +200,8 @@ void PrintHub::DrawHeader(QPainter* painter)
  */
 void PrintHub::DrawTable(QPainter* painter, long long start_index, long long end_index)
 {
+    painter->save();
+
     const int columns { GetFieldY(QStringLiteral("rows_columns"), 0) };
     const int left { GetFieldX(QStringLiteral("left_top"), 0) };
     const int top { GetFieldY(QStringLiteral("left_top"), 0) };
@@ -247,12 +254,14 @@ void PrintHub::DrawTable(QPainter* painter, long long start_index, long long end
         }
     }
 
-    // Restore original font
-    painter->setFont(original_font);
+    // Restore original painter
+    painter->restore();
 }
 
 void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
 {
+    painter->save();
+
     DrawText(painter, QStringLiteral("employee"), partner_->Name(node_o_->employee_id));
 
     // unit
@@ -266,6 +275,8 @@ void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
     DrawText(painter, QStringLiteral("initial_total"), amount_str);
     DrawText(painter, QStringLiteral("initial_total_upper"), QStringLiteral("大写：") + NumberToChineseUpper(amount_str.toDouble()));
     DrawText(painter, QStringLiteral("page_info"), QString::asprintf("%d/%d", page_num, total_pages));
+
+    painter->restore();
 }
 
 int PrintHub::FindBestFontSize(QPainter* painter, const QString& text, int max_width, int max_font, int min_font)

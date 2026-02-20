@@ -148,6 +148,9 @@
             <strikeout>false</strikeout>
            </font>
           </property>
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
           <property name="frame">
            <bool>true</bool>
           </property>
@@ -320,6 +323,9 @@
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="dSpinCountTotal">
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
           <property name="readOnly">
            <bool>true</bool>
           </property>
@@ -343,6 +349,9 @@
         </item>
         <item>
          <widget class="DoubleSpinBox" name="dSpinMeasureTotal">
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
           <property name="readOnly">
            <bool>true</bool>
           </property>
@@ -378,6 +387,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
           <property name="layoutDirection">
            <enum>Qt::LayoutDirection::RightToLeft</enum>
           </property>
@@ -409,6 +421,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="readOnly">
            <bool>true</bool>
@@ -447,6 +462,24 @@
    <header location="global">widget/doublespinbox.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>pBtnRelease</tabstop>
+  <tabstop>pBtnSave</tabstop>
+  <tabstop>pBtnRecall</tabstop>
+  <tabstop>comboPartner</tabstop>
+  <tabstop>comboEmployee</tabstop>
+  <tabstop>rBtnIS</tabstop>
+  <tabstop>rBtnMS</tabstop>
+  <tabstop>rBtnPEND</tabstop>
+  <tabstop>rBtnTO</tabstop>
+  <tabstop>rBtnRO</tabstop>
+  <tabstop>dateTimeEdit</tabstop>
+  <tabstop>lineDescription</tabstop>
+  <tabstop>pBtnPreview</tabstop>
+  <tabstop>comboTemplate</tabstop>
+  <tabstop>pBtnPrint</tabstop>
+  <tabstop>tableViewO</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

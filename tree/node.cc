@@ -67,8 +67,8 @@ void Node::ReadJson(const QJsonObject& object)
         version = object.value(kVersion).toInt();
     if (object.contains(kColor))
         color = object.value(kColor).toString();
-
-    tag = Utils::ReadStringList(object, kTag);
+    if (object.contains(kTag))
+        tag = Utils::ReadStringList(object, kTag);
 }
 
 QJsonObject Node::WriteJson() const
@@ -130,8 +130,8 @@ void NodeT::ReadJson(const QJsonObject& object)
         status = NodeStatus(object.value(kStatus).toInt());
     if (object.contains(kIssuedTime))
         issued_time = QDateTime::fromString(object.value(kIssuedTime).toString(), Qt::ISODate);
-
-    document = Utils::ReadStringList(object, kDocument);
+    if (object.contains(kDocument))
+        document = Utils::ReadStringList(object, kDocument);
 }
 
 QJsonObject NodeT::WriteJson() const
@@ -183,6 +183,8 @@ void NodeP::ReadJson(const QJsonObject& object)
         version = object.value(kVersion).toInt();
     if (object.contains(kColor))
         color = object.value(kColor).toString();
+    if (object.contains(kTag))
+        tag = Utils::ReadStringList(object, kTag);
 }
 
 QJsonObject NodeP::WriteJson() const

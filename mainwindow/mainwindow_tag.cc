@@ -239,7 +239,7 @@ void MainWindow::RInsertNodeTag(const Tag* tag, TreeModel* model, const Node* no
     }
 
     const int column { Utils::NodeTagColumn(start_) };
-    const QModelIndex tag_index { model->index(index.row(), column) };
+    const QModelIndex tag_index { model->index(index.row(), column, index.parent()) };
 
     model->setData(tag_index, list);
 }
@@ -258,7 +258,7 @@ void MainWindow::RRemoveNodeTag(const Tag* tag, TreeModel* model, const Node* no
     }
 
     const int column { Utils::NodeTagColumn(start_) };
-    const QModelIndex tag_index { model->index(index.row(), column) };
+    const QModelIndex tag_index { model->index(index.row(), column, index.parent()) };
 
     model->setData(tag_index, list);
 }
