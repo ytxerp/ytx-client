@@ -173,9 +173,7 @@ void MainWindow::tabWidget_tabCloseRequestedO(int index)
     Q_ASSERT(wc.widget);
 
     auto* widget { qobject_cast<TableWidgetO*>(wc.widget.data()) };
-    Q_ASSERT(wc.widget);
-
-    if (widget->HasPendingUpdate()) {
+    if (widget && widget->HasPendingUpdate()) {
         auto* dlg
             = Utils::CreateMessageBox(QMessageBox::Warning, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nDo you want to save before closing?"),
                 true, QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, this);

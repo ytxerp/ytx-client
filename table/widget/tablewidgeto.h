@@ -125,7 +125,7 @@ private:
     QButtonGroup* rule_group_ {};
     QButtonGroup* unit_group_ {};
 
-    bool has_pending_update_ {};
+    bool has_pending_update_ { false };
     QJsonObject pending_update_ {};
 
     SyncState sync_state_ {};

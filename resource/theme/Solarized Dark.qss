@@ -47,7 +47,6 @@ QComboBox,
 QLineEdit,
 QSpinBox,
 QDoubleSpinBox,
-QDateTimeEdit,
 QListView,
 QWidget#widgetBottomO,
 QHeaderView::section,
@@ -59,13 +58,13 @@ QToolTip {
 }
 
 /* No borders by default */
+QDateTimeEdit,
 QAbstractItemView QLineEdit,
 QAbstractItemView QComboBox,
 QAbstractItemView QSpinBox,
 QAbstractItemView QDoubleSpinBox,
-QAbstractItemView QDateTimeEdit,
-QWidget#TreeWidgetO QDateTimeEdit,
 QWidget#TableWidgetO QDoubleSpinBox,
+QWidget#TableWidgetSettlement QDoubleSpinBox,
 QDoubleSpinBox#dspin_box_dynamic_,
 QDoubleSpinBox#dspin_box_static_ {
     border: none;
@@ -83,6 +82,14 @@ QGroupBox#treeGroup,
 QTableView#tableViewO,
 QWidget#widgetBottomO {
     border-top: none;
+}
+
+/* Specific border adds */
+QDialog > QDateTimeEdit,
+QWidget#TableWidgetO QDateTimeEdit,
+QWidget#TableWidgetSettlement QDateTimeEdit
+{
+    border: 1px solid #657B83;
 }
 
 /* ==================== Frame Dividers ==================== */

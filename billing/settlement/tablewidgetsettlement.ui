@@ -71,14 +71,14 @@
         <item>
          <widget class="DoubleSpinBox" name="dSpinAmount">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="font">
            <font>
-            <pointsize>26</pointsize>
+            <pointsize>24</pointsize>
             <bold>true</bold>
             <strikeout>false</strikeout>
            </font>
