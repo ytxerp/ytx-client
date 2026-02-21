@@ -36,6 +36,7 @@ enum class StatementNodeEnum {
 
 enum class StatementEntryEnum {
     kIssuedTime = 0,
+    kCode,
     kInternalSku,
     kCount,
     kMeasure,

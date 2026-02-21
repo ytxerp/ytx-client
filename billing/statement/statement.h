@@ -95,7 +95,7 @@ inline void StatementNode::ResetState()
     measure = 0.0;
     amount = 0.0;
     status = 0;
-    description.clear();
+    description = {};
     employee_id = QUuid();
     settlement = 0.0;
 }
@@ -126,6 +126,7 @@ inline void StatementNode::ReadJson(const QJsonObject& object)
 
 struct StatementEntry {
     QDateTime issued_time {};
+    QString code {};
     QUuid internal_sku {};
     double count {};
     double measure {};
@@ -141,12 +142,13 @@ struct StatementEntry {
 inline void StatementEntry::ResetState()
 {
     issued_time = {};
+    code = {};
     count = 0.0;
     measure = 0.0;
     amount = 0.0;
     unit_price = 0.0;
     status = 0;
-    description.clear();
+    description = {};
     internal_sku = QUuid();
 }
 
@@ -172,6 +174,9 @@ inline void StatementEntry::ReadJson(const QJsonObject& object)
 
     if (object.contains(kDescription))
         description = object[kDescription].toString();
+
+    if (object.contains(kCode))
+        code = object[kCode].toString();
 }
 
 using StatementEntryList = QList<StatementEntry*>;

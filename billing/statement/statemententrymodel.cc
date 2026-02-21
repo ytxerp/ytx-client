@@ -65,12 +65,12 @@ QVariant StatementEntryModel::data(const QModelIndex& index, int role) const
         return entry->unit_price;
     case StatementEntryEnum::kDescription:
         return entry->description;
+    case StatementEntryEnum::kCode:
+        return entry->code;
     case StatementEntryEnum::kAmount:
         return entry->amount;
     case StatementEntryEnum::kStatus:
         return entry->status;
-    default:
-        return QVariant();
     }
 }
 
@@ -99,6 +99,7 @@ bool StatementEntryModel::setData(const QModelIndex& index, const QVariant& valu
     case StatementEntryEnum::kUnitPrice:
     case StatementEntryEnum::kInternalSku:
     case StatementEntryEnum::kExternalSku:
+    case StatementEntryEnum::kCode:
         return false;
     }
 
@@ -133,12 +134,12 @@ void StatementEntryModel::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &StatementEntry::unit_price, order);
         case StatementEntryEnum::kDescription:
             return Utils::CompareMember(lhs, rhs, &StatementEntry::description, order);
+        case StatementEntryEnum::kCode:
+            return Utils::CompareMember(lhs, rhs, &StatementEntry::code, order);
         case StatementEntryEnum::kAmount:
             return Utils::CompareMember(lhs, rhs, &StatementEntry::amount, order);
         case StatementEntryEnum::kStatus:
             return Utils::CompareMember(lhs, rhs, &StatementEntry::status, order);
-        default:
-            return false;
         }
     };
 

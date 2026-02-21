@@ -350,6 +350,7 @@ void StringInitializer::SetHeader(
 
     sale.statement_entry_header = {
         QObject::tr("IssuedTime"),
+        QObject::tr("Code"),
         QObject::tr("InternalSku"),
         QObject::tr("Count"),
         QObject::tr("Measure"),

@@ -70,8 +70,6 @@ QVariant StatementNodeModel::data(const QModelIndex& index, int role) const
         return statement_primary->amount;
     case StatementNodeEnum::kSettlement:
         return statement_primary->settlement;
-    default:
-        return QVariant();
     }
 }
 
@@ -130,8 +128,6 @@ void StatementNodeModel::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &StatementNode::settlement, order);
         case StatementNodeEnum::kAmount:
             return Utils::CompareMember(lhs, rhs, &StatementNode::amount, order);
-        default:
-            return false;
         }
     };
 
