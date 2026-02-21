@@ -466,6 +466,9 @@
   <tabstop>pBtnRelease</tabstop>
   <tabstop>pBtnSave</tabstop>
   <tabstop>pBtnRecall</tabstop>
+  <tabstop>pBtnPrint</tabstop>
+  <tabstop>pBtnPreview</tabstop>
+  <tabstop>comboTemplate</tabstop>
   <tabstop>comboPartner</tabstop>
   <tabstop>comboEmployee</tabstop>
   <tabstop>rBtnIS</tabstop>
@@ -475,9 +478,6 @@
   <tabstop>rBtnRO</tabstop>
   <tabstop>dateTimeEdit</tabstop>
   <tabstop>lineDescription</tabstop>
-  <tabstop>pBtnPreview</tabstop>
-  <tabstop>comboTemplate</tabstop>
-  <tabstop>pBtnPrint</tabstop>
   <tabstop>tableViewO</tabstop>
  </tabstops>
  <resources/>

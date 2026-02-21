@@ -213,27 +213,29 @@ void TableWidgetO::IniData(const NodeO& node)
 
 void TableWidgetO::LockWidgets(NodeStatus value)
 {
-    const bool unfinished { value == NodeStatus::kUnfinished };
+    const bool is_unfinished { value == NodeStatus::kUnfinished };
+    const bool is_finished { value == NodeStatus::kFinished };
+    const bool is_local { sync_state_ == SyncState::kLocalOnly };
 
-    ui->comboPartner->setEnabled(unfinished);
-    ui->comboEmployee->setEnabled(unfinished);
+    ui->comboPartner->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
+    ui->comboEmployee->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
 
-    ui->rBtnRO->setEnabled(sync_state_ == SyncState::kLocalOnly);
-    ui->rBtnTO->setEnabled(sync_state_ == SyncState::kLocalOnly);
+    ui->rBtnRO->setEnabled(is_local);
+    ui->rBtnTO->setEnabled(is_local);
 
-    ui->rBtnIS->setEnabled(unfinished);
-    ui->rBtnMS->setEnabled(unfinished);
-    ui->rBtnPEND->setEnabled(unfinished);
+    ui->rBtnIS->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
+    ui->rBtnMS->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
+    ui->rBtnPEND->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
 
-    ui->lineDescription->setEnabled(unfinished);
-    ui->dateTimeEdit->setEnabled(unfinished);
+    ui->lineDescription->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
+    ui->dateTimeEdit->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
 
-    const bool can_print { !unfinished || tmp_node_.unit == NodeUnit::OPending };
+    const bool can_print { is_finished || tmp_node_.unit == NodeUnit::OPending };
     ui->pBtnPrint->setEnabled(can_print);
 
-    ui->pBtnSave->setVisible(unfinished);
-    ui->pBtnRelease->setVisible(unfinished && tmp_node_.unit != NodeUnit::OPending);
-    ui->pBtnRecall->setVisible(!unfinished);
+    ui->pBtnSave->setVisible(is_unfinished);
+    ui->pBtnRelease->setVisible(is_unfinished && tmp_node_.unit != NodeUnit::OPending);
+    ui->pBtnRecall->setVisible(is_finished);
 }
 
 void TableWidgetO::IniUiValue()
