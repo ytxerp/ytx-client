@@ -130,7 +130,7 @@ void StatementNodeWidget::InitTimer()
 
 void StatementNodeWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
-    if (index.column() == std::to_underlying(StatementNodeEnum::kSettlement)) {
+    if (index.column() == std::to_underlying(StatementNodeEnum::kIssuedTime)) {
         emit SStatementEntry(partner_id_, start_, end_, unit_);
     }
 }

@@ -130,7 +130,7 @@ void StatementWidget::InitTimer()
 
 void StatementWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
-    if (index.column() == std::to_underlying(StatementEnum::kCBalance)) {
+    if (index.column() == std::to_underlying(StatementEnum::kPartner)) {
         const auto partner { index.siblingAtColumn(std::to_underlying(StatementEnum::kPartner)).data().toUuid() };
         emit SStatementNode(partner, start_, end_, unit_);
     }
