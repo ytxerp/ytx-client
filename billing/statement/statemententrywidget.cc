@@ -140,7 +140,7 @@ void StatementEntryWidget::on_pBtnExport_clicked()
 
     // Build default export file name ---
     QDir dir(QDir::homePath());
-    const QString file_name { QString("%1-%2-%3.xlsx").arg(partner_name_, company_name_, adjust_end.toString(kMonthFST)) };
+    const QString file_name { QString("%1-%2-%3.xlsx").arg(company_name_, partner_name_, adjust_end.toString(kMonthFST)) };
     const QString full_path { dir.filePath(file_name) };
 
     QString destination { QFileDialog::getSaveFileName(nullptr, tr("Export Excel"), full_path, "*.xlsx") };

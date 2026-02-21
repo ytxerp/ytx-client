@@ -126,3 +126,14 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
 }
+
+void MainWindow::RStatementActionEntry(EntryAction action)
+{
+    auto* current_widget { sc_->tab_widget->currentWidget() };
+
+    Q_ASSERT(qobject_cast<StatementEntryWidget*>(current_widget));
+    auto* widget { static_cast<StatementEntryWidget*>(current_widget) };
+
+    auto* model { widget->Model() };
+    model->ActionEntry(action);
+}

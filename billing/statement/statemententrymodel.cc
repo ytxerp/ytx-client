@@ -169,3 +169,30 @@ void StatementEntryModel::ResetModel(const QJsonArray& array)
     sort(std::to_underlying(StatementEntryEnum::kIssuedTime), Qt::AscendingOrder);
     endResetModel();
 }
+
+void StatementEntryModel::ActionEntry(EntryAction action)
+{
+    if (list_.isEmpty())
+        return;
+
+    for (auto* entry : std::as_const(list_)) {
+        switch (action) {
+        case EntryAction::kMarkAll:
+            entry->status = std::to_underlying(EntryStatus::kMarked);
+            break;
+        case EntryAction::kMarkNone:
+            entry->status = std::to_underlying(EntryStatus::kUnmarked);
+            break;
+        case EntryAction::kMarkToggle:
+            entry->status ^= std::to_underlying(EntryStatus::kMarked);
+            break;
+        }
+    }
+
+    const int column { std::to_underlying(StatementEntryEnum::kStatus) };
+
+    const QModelIndex top_left { index(0, column) };
+    const QModelIndex bottom_right { index(rowCount() - 1, column) };
+
+    emit dataChanged(top_left, bottom_right, QList<int> { Qt::DisplayRole, Qt::EditRole });
+}

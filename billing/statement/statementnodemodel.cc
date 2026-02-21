@@ -56,6 +56,8 @@ QVariant StatementNodeModel::data(const QModelIndex& index, int role) const
     switch (column) {
     case StatementNodeEnum::kDescription:
         return statement_primary->description;
+    case StatementNodeEnum::kCode:
+        return statement_primary->code;
     case StatementNodeEnum::kEmployee:
         return statement_primary->employee_id;
     case StatementNodeEnum::kIssuedTime:
@@ -92,6 +94,7 @@ bool StatementNodeModel::setData(const QModelIndex& index, const QVariant& value
     case StatementNodeEnum::kMeasure:
     case StatementNodeEnum::kEmployee:
     case StatementNodeEnum::kSettlement:
+    case StatementNodeEnum::kCode:
         return false;
     }
 
@@ -114,6 +117,8 @@ void StatementNodeModel::sort(int column, Qt::SortOrder order)
         switch (e_column) {
         case StatementNodeEnum::kDescription:
             return Utils::CompareMember(lhs, rhs, &StatementNode::description, order);
+        case StatementNodeEnum::kCode:
+            return Utils::CompareMember(lhs, rhs, &StatementNode::code, order);
         case StatementNodeEnum::kEmployee:
             return Utils::CompareMember(lhs, rhs, &StatementNode::employee_id, order);
         case StatementNodeEnum::kIssuedTime:

@@ -226,8 +226,18 @@ void MainWindow::IniMarkGroup()
     mark_group_->addAction(ui->actionMarkToggle);
 
     connect(mark_group_, &QActionGroup::triggered, this, [this](QAction* action) {
-        const int action_id { action->data().toInt() };
-        RActionEntry(EntryAction(action_id));
+        const EntryAction act { action->data().toInt() };
+
+        auto* widget { sc_->tab_widget->currentWidget() };
+
+        if (IsTableWidgetFIPT(widget)) {
+            RActionEntry(act);
+            return;
+        }
+
+        if (IsStatementEntryWidget(widget)) {
+            RStatementActionEntry(act);
+        }
     });
 }
 

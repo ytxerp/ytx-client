@@ -32,6 +32,7 @@
 
 #include "billing/settlement/settlement.h"
 #include "billing/settlement/treewidgetsettlement.h"
+#include "billing/statement/statemententrywidget.h"
 #include "component/config.h"
 #include "component/info.h"
 #include "component/sectioncontex.h"
@@ -41,6 +42,7 @@
 #include "table/widget/tablewidgetfipt.h"
 #include "table/widget/tablewidgeto.h"
 #include "tree/model/treemodel.h"
+#include "tree/widget/treewidgeto.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -97,7 +99,9 @@ private slots:
     void RSyncPartner(const QUuid& node_id, const QUuid& value);
     void RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
+
     void RActionEntry(EntryAction action);
+    void RStatementActionEntry(EntryAction action);
 
     void RConnectionRefused();
     void RConnectionSucceeded();
@@ -285,9 +289,11 @@ private:
     void UpdateTagIcon(SectionContext* sc, const Tag* tag);
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
+    inline bool IsTreeWidgetO(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetO); }
     inline bool IsTableWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kTableWidgetFIPT); }
     inline bool IsTableWidgetO(const QWidget* widget) { return widget && widget->inherits(kTableWidgetO); }
     inline bool IsTreeWidgetSettlement(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetSettlement); }
+    inline bool IsStatementEntryWidget(const QWidget* widget) { return widget && widget->inherits(kStatementEntryWidget); }
 
 private:
     Ui::MainWindow* ui {};

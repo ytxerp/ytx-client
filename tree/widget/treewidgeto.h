@@ -57,4 +57,6 @@ private:
     QTimer* cooldown_timer_ { nullptr };
 };
 
+inline const char* kTreeWidgetO = "TreeWidgetO";
+
 #endif // TREEWIDGETO_H

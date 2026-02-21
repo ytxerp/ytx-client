@@ -81,8 +81,8 @@ bool ExportExcel::Statement(EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CS
     // ===========================
     // Table Header
     // ===========================
-    const QStringList header { QObject::tr("Date"), QObject::tr("InternalSku"), QObject::tr("ExternalSku"), QObject::tr("Count"), QObject::tr("Measure"),
-        QObject::tr("UnitPrice"), QObject::tr("Description"), QObject::tr("Amount") };
+    const QStringList header { QObject::tr("Date"), QObject::tr("Code"), QObject::tr("InternalSku"), QObject::tr("ExternalSku"), QObject::tr("Count"),
+        QObject::tr("Measure"), QObject::tr("UnitPrice"), QObject::tr("Description"), QObject::tr("Amount") };
 
     sheet->WriteRow(start_row + 8, 1, header);
 
@@ -94,8 +94,8 @@ bool ExportExcel::Statement(EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CS
     for (const auto* entry : list) {
         const QUuid external_sku { entry_hub_p->ExternalSku(partner_id, entry->internal_sku) };
 
-        QVariantList line { entry->issued_time.toString(kDateFST), tree_model_i->Path(entry->internal_sku), tree_model_i->Name(external_sku), entry->count,
-            entry->measure, entry->unit_price, entry->description, entry->amount };
+        QVariantList line { entry->issued_time.toString(kDateFST), entry->code, tree_model_i->Path(entry->internal_sku), tree_model_i->Name(external_sku),
+            entry->count, entry->measure, entry->unit_price, entry->description, entry->amount };
 
         sheet->WriteRow(row++, 1, line);
     }

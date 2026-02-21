@@ -339,6 +339,7 @@ void StringInitializer::SetHeader(
 
     sale.statement_node_header = {
         QObject::tr("IssuedTime"),
+        QObject::tr("Code"),
         QObject::tr("Count"),
         QObject::tr("Measure"),
         QObject::tr("Amount"),

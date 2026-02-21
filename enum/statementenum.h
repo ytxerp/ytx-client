@@ -25,6 +25,7 @@ enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCAmount
 
 enum class StatementNodeEnum {
     kIssuedTime = 0,
+    kCode,
     kCount,
     kMeasure,
     kAmount,

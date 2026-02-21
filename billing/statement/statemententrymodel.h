@@ -46,6 +46,7 @@ public:
 
     void sort(int column, Qt::SortOrder order) override;
     void ResetModel(const QJsonArray& array);
+    void ActionEntry(EntryAction action);
 
     const QList<StatementEntry*>& EntryList() const { return list_; }
 

@@ -101,7 +101,9 @@ void MainWindow::tabWidget_currentChanged()
         return;
 
     const bool is_tree { IsTreeWidget(widget) };
+    const bool is_tree_o { IsTreeWidgetO(widget) };
     const bool is_table_fipt { IsTableWidgetFIPT(widget) };
+    const bool is_statement_entry { IsStatementEntryWidget(widget) };
     const bool is_table_o { IsTableWidgetO(widget) };
     const bool is_settlement { IsTreeWidgetSettlement(widget) };
     const bool is_order_section { IsOrderSection(start_) };
@@ -113,15 +115,15 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionRename->setEnabled(is_tree);
     ui->actionClearColor->setEnabled(is_tree && !is_order_section);
 
-    ui->actionMarkAll->setEnabled(is_table_fipt);
-    ui->actionMarkNone->setEnabled(is_table_fipt);
-    ui->actionMarkToggle->setEnabled(is_table_fipt);
+    ui->actionMarkAll->setEnabled(is_table_fipt || is_statement_entry);
+    ui->actionMarkNone->setEnabled(is_table_fipt || is_statement_entry);
+    ui->actionMarkToggle->setEnabled(is_table_fipt || is_statement_entry);
 
     ui->actionJumpEntry->setEnabled(is_double_entry && is_table_fipt);
 
     ui->actionStatement->setEnabled(is_order_section);
     ui->actionSettlement->setEnabled(is_order_section);
-    ui->actionNewBranch->setEnabled(is_order_section);
+    ui->actionNewBranch->setEnabled(is_tree_o);
 
     ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o || is_settlement);
     ui->actionDelete->setEnabled(is_tree || is_table_fipt || is_table_o || is_settlement);

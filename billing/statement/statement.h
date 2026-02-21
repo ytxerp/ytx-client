@@ -76,6 +76,7 @@ inline void Statement::ReadJson(const QJsonObject& object)
 
 struct StatementNode {
     QDateTime issued_time {};
+    QString code {};
     double count {};
     double measure {};
     double amount {};
@@ -96,6 +97,7 @@ inline void StatementNode::ResetState()
     amount = 0.0;
     status = 0;
     description = {};
+    code = {};
     employee_id = QUuid();
     settlement = 0.0;
 }
@@ -116,6 +118,9 @@ inline void StatementNode::ReadJson(const QJsonObject& object)
 
     if (object.contains(kDescription))
         description = object[kDescription].toString();
+
+    if (object.contains(kCode))
+        code = object[kCode].toString();
 
     if (object.contains(kEmployeeId))
         employee_id = QUuid(object[kEmployeeId].toString());

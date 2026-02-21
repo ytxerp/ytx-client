@@ -80,4 +80,6 @@ private:
     TreeModelI* tree_model_i_ {};
 };
 
+inline const char* kStatementEntryWidget = "StatementEntryWidget";
+
 #endif // STATEMENTENTRYWIDGET_H
