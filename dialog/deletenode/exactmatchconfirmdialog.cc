@@ -4,20 +4,19 @@
 
 #include "ui_exactmatchconfirmdialog.h"
 
-ExactMatchConfirmDialog::ExactMatchConfirmDialog(CString& info, CString& match_text, CString& accept_text, QWidget* parent)
+ExactMatchConfirmDialog::ExactMatchConfirmDialog(CString& info, CString& accept_text, QString match_text, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::ExactMatchConfirmDialog)
-    , match_text_ { match_text }
 {
     ui->setupUi(this);
 
-    if (match_text_.isEmpty()) {
+    if (match_text.isEmpty()) {
         const int num { QRandomGenerator::global()->bounded(1000, 10000) }; // [1000,9999]
-        match_text_ = QString::number(num);
+        match_text = QString::number(num);
     }
 
     ui->label->setText(info);
-    ui->lineEditMatchText->setText(match_text_);
+    ui->lineEditMatchText->setText(match_text);
     ui->pBtnApply->setText(accept_text);
     ui->lineEditInput->setFocus();
 

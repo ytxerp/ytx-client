@@ -3,7 +3,6 @@
 #include "global/nodepool.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -23,7 +22,7 @@ void MainWindow::EditNameO()
     auto* dialog { new EditNodeNameO(node->name, this) };
 
     Utils::ManageDialog(sc_->widget_hash, dialog);
-    dialog->setModal(true);
+    dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {
         const auto message { JsonGen::NodeName(start_, node->id, dialog->GetName()) };
@@ -71,7 +70,7 @@ void MainWindow::on_actionNewBranch_triggered()
     auto* dialog { new InsertNodeBranch(node, unit_model, parent_path, children_name, this) };
 
     Utils::ManageDialog(sc_->widget_hash, dialog);
-    dialog->setModal(true);
+    dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {
         const auto message { JsonGen::NodeInsert(start_, node, node->parent->id) };

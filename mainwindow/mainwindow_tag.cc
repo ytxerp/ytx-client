@@ -24,7 +24,6 @@ void MainWindow::on_actionTags_triggered()
         dialog = new TagManagerDlg(this);
 
         Utils::ManageDialog(sc_->widget_hash, dialog);
-        dialog->setModal(true);
 
         dialog->SetModel(model);
 

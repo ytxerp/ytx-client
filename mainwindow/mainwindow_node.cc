@@ -54,7 +54,7 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
     }
 
     Utils::ManageDialog(sc_->widget_hash, dialog);
-    dialog->setModal(true);
+    dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {
         const auto message { JsonGen::NodeInsert(start_, node, parent_node->id) };
@@ -110,7 +110,7 @@ void MainWindow::EditNameFIPT()
     auto* dialog { new EditNodeName(name, parent_path, children_name, this) };
 
     Utils::ManageDialog(sc_->widget_hash, dialog);
-    dialog->setModal(true);
+    dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &QDialog::accepted, this, [=, this]() {
         const auto message { JsonGen::NodeName(start_, node_id, dialog->GetName()) };

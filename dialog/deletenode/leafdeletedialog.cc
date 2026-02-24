@@ -107,11 +107,17 @@ void LeafDeleteDialog::ReplaceNode()
                             "<span style='color:#d32f2f; font-weight:bold;'><br>⚠️ This action is risky and cannot be undone!</span>")
             .arg(path, new_path) };
 
-    auto* dlg { new ExactMatchConfirmDialog(info, path, tr("Replace"), this) };
-    dlg->setModal(true);
+    auto* dlg { new ExactMatchConfirmDialog(info, tr("Replace"), path, this) };
+    dlg->setWindowModality(Qt::WindowModal);
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
-    connect(dlg, &ExactMatchConfirmDialog::accepted, this, [=, this]() {
+    connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, path]() {
+        if (!model_->Contains(node_id_))
+            return;
+
+        if (model_->Path(node_id_) != path)
+            return;
+
         const auto new_node_id { ui->comboBox->currentData().toUuid() };
         const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id) };
         WebSocket::Instance()->SendMessage(kLeafReplace, message);
@@ -131,14 +137,20 @@ void LeafDeleteDialog::DeleteNode()
                             "<br><br><i>Tip: It is recommended to move all entries referencing this node before deletion.</i>")
             .arg(path) };
 
-    auto* dlg { new ExactMatchConfirmDialog(info, path, tr("Delete"), this) };
-    dlg->setModal(true);
+    auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), path, this) };
+    dlg->setWindowModality(Qt::WindowModal);
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
-    connect(dlg, &ExactMatchConfirmDialog::accepted, this, [=, this]() {
+    connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, path]() {
+        if (!model_->Contains(node_id_))
+            return;
+
+        if (model_->Path(node_id_) != path)
+            return;
+
         const auto message { JsonGen::LeafDelete(info_.section, node_id_) };
         WebSocket::Instance()->SendMessage(kLeafDelete, message);
-        accept();
+        close();
     });
 
     dlg->show();
@@ -188,7 +200,7 @@ void LeafDeleteDialog::RButtonGroup(int id)
 void LeafDeleteDialog::RReplaceResult(bool result)
 {
     if (result) {
-        accept();
+        close();
     } else {
         Utils::ShowNotification(QMessageBox::Critical, tr("Replacement Conflict"),
             tr("The old node cannot be replaced because linked nodes or partner entries conflict with the new node."), kThreeThousand);

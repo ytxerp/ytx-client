@@ -553,7 +553,7 @@ void MainWindow::on_actionPreferences_triggered()
     auto* dialog { new Preferences(model, sc_->info, app_config_, sc_->shared_config, sc_->section_config, this) };
 
     Utils::ManageDialog(sc_->widget_hash, dialog);
-    dialog->setModal(true);
+    dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &Preferences::SUpdateConfig, this, &MainWindow::RUpdateConfig);
     dialog->show();
