@@ -85,12 +85,12 @@ void MainWindow::SetTableViewSaleReferenceI(QTableView* view) const
     }
 
     {
-        view->setColumnHidden(std::to_underlying(SaleReferenceIEnum::kOrderId), kIsHidden);
+        view->setColumnHidden(std::to_underlying(SaleReferenceEnumI::kOrderId), kIsHidden);
     }
 
     {
         auto* h_header { view->horizontalHeader() };
-        ResizeColumn(h_header, std::to_underlying(SaleReferenceIEnum::kDescription));
+        ResizeColumn(h_header, std::to_underlying(SaleReferenceEnumI::kDescription));
     }
 
     {
@@ -111,12 +111,12 @@ void MainWindow::SetTableViewSaleReferenceP(QTableView* view) const
     }
 
     {
-        view->setColumnHidden(std::to_underlying(SaleReferencePEnum::kOrderId), kIsHidden);
+        view->setColumnHidden(std::to_underlying(SaleReferenceEnumP::kOrderId), kIsHidden);
     }
 
     {
         auto* h_header { view->horizontalHeader() };
-        ResizeColumn(h_header, std::to_underlying(SaleReferencePEnum::kDescription));
+        ResizeColumn(h_header, std::to_underlying(SaleReferenceEnumP::kDescription));
     }
 
     {

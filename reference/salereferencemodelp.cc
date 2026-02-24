@@ -1,4 +1,4 @@
-#include "salereferenceimodel.h"
+#include "salereferencemodelp.h"
 
 #include <QJsonArray>
 
@@ -6,67 +6,73 @@
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
 
-SaleReferenceIModel::SaleReferenceIModel(CSectionInfo& info, QObject* parent)
+SaleReferenceModelP::SaleReferenceModelP(CSectionInfo& info, TreeModel* tree_model_i, EntryHub* entry_hub_p, QObject* parent)
     : SaleReferenceModel { info, parent }
+    , tree_model_i_ { tree_model_i }
+    , entry_hub_p_ { static_cast<EntryHubP*>(entry_hub_p) }
 {
 }
 
-SaleReferenceIModel::~SaleReferenceIModel() { ResourcePool<SaleReference>::Instance().Recycle(list_); }
+SaleReferenceModelP::~SaleReferenceModelP() { ResourcePool<SaleReference>::Instance().Recycle(list_); }
 
-QVariant SaleReferenceIModel::data(const QModelIndex& index, int role) const
+QVariant SaleReferenceModelP::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
     auto* sale_reference { list_.at(index.row()) };
-    const SaleReferenceIEnum column { index.column() };
+    const SaleReferenceEnumP column { index.column() };
 
     switch (column) {
-    case SaleReferenceIEnum::kIssuedTime:
+    case SaleReferenceEnumP::kIssuedTime:
         return sale_reference->issued_time;
-    case SaleReferenceIEnum::kPartnerId:
+    case SaleReferenceEnumP::kInternalSku:
         return sale_reference->node_id;
-    case SaleReferenceIEnum::kOrderId:
+    case SaleReferenceEnumP::kOrderId:
         return sale_reference->order_id;
-    case SaleReferenceIEnum::kCount:
+    case SaleReferenceEnumP::kCount:
         return sale_reference->count;
-    case SaleReferenceIEnum::kMeasure:
+    case SaleReferenceEnumP::kMeasure:
         return sale_reference->measure;
-    case SaleReferenceIEnum::kUnitPrice:
+    case SaleReferenceEnumP::kUnitPrice:
         return sale_reference->unit_price;
-    case SaleReferenceIEnum::kDescription:
+    case SaleReferenceEnumP::kDescription:
         return sale_reference->description;
-    case SaleReferenceIEnum::kInitial:
+    case SaleReferenceEnumP::kInitial:
         return sale_reference->initial;
-    default:
-        return QVariant();
+    case SaleReferenceEnumP::kColor:
+        return tree_model_i_->Color(sale_reference->node_id);
+    case SaleReferenceEnumP::kExternalSku:
+        return entry_hub_p_->ExternalSku(sale_reference->order_id, sale_reference->node_id);
     }
 }
 
-void SaleReferenceIModel::sort(int column, Qt::SortOrder order)
+void SaleReferenceModelP::sort(int column, Qt::SortOrder order)
 {
     if (column <= -1 || column >= info_.node_referenced_header.size() - 1)
         return;
 
-    const SaleReferenceIEnum e_column { column };
+    const SaleReferenceEnumP e_column { column };
 
     auto Compare = [e_column, order](const SaleReference* lhs, const SaleReference* rhs) -> bool {
         switch (e_column) {
-        case SaleReferenceIEnum::kIssuedTime:
+        case SaleReferenceEnumP::kIssuedTime:
             return Utils::CompareMember(lhs, rhs, &SaleReference::issued_time, order);
-        case SaleReferenceIEnum::kPartnerId:
+        case SaleReferenceEnumP::kInternalSku:
             return Utils::CompareMember(lhs, rhs, &SaleReference::node_id, order);
-        case SaleReferenceIEnum::kUnitPrice:
+        case SaleReferenceEnumP::kUnitPrice:
             return Utils::CompareMember(lhs, rhs, &SaleReference::unit_price, order);
-        case SaleReferenceIEnum::kCount:
+        case SaleReferenceEnumP::kCount:
             return Utils::CompareMember(lhs, rhs, &SaleReference::count, order);
-        case SaleReferenceIEnum::kMeasure:
+        case SaleReferenceEnumP::kMeasure:
             return Utils::CompareMember(lhs, rhs, &SaleReference::measure, order);
-        case SaleReferenceIEnum::kDescription:
+        case SaleReferenceEnumP::kDescription:
             return Utils::CompareMember(lhs, rhs, &SaleReference::description, order);
-        case SaleReferenceIEnum::kInitial:
+        case SaleReferenceEnumP::kInitial:
             return Utils::CompareMember(lhs, rhs, &SaleReference::initial, order);
-        case SaleReferenceIEnum::kOrderId:
+        case SaleReferenceEnumP::kOrderId:
+        case SaleReferenceEnumP::kExternalSku:
+        case SaleReferenceEnumP::kColor:
             return false;
         }
     };

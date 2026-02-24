@@ -20,7 +20,7 @@
 #ifndef REFERENCE_H
 #define REFERENCE_H
 
-enum class SaleReferenceIEnum {
+enum class SaleReferenceEnumI {
     kIssuedTime = 0,
     kOrderId,
     kPartnerId,
@@ -31,7 +31,7 @@ enum class SaleReferenceIEnum {
     kInitial,
 };
 
-enum class SaleReferencePEnum {
+enum class SaleReferenceEnumP {
     kIssuedTime = 0,
     kOrderId,
     kInternalSku,

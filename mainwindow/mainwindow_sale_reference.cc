@@ -1,6 +1,6 @@
 #include "mainwindow.h"
-#include "reference/salereferenceimodel.h"
-#include "reference/salereferencepmodel.h"
+#include "reference/salereferencemodeli.h"
+#include "reference/salereferencemodelp.h"
 #include "reference/salereferencewidget.h"
 
 void MainWindow::RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array)
@@ -49,10 +49,10 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
     {
         switch (section) {
         case Section::kInventory:
-            model = new SaleReferenceIModel(info, nullptr);
+            model = new SaleReferenceModelI(info, nullptr);
             break;
         case Section::kPartner:
-            model = new SaleReferencePModel(info, sc_i_.tree_model, sc_p_.entry_hub, nullptr);
+            model = new SaleReferenceModelP(info, sc_i_.tree_model, sc_p_.entry_hub, nullptr);
             break;
         case Section::kSale:
         case Section::kPurchase:

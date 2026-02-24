@@ -17,28 +17,22 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SALEREFERENCEPMODEL_H
-#define SALEREFERENCEPMODEL_H
+#ifndef SALEREFERENCEMODELI_H
+#define SALEREFERENCEMODELI_H
 
 #include "component/info.h"
-#include "entryhub/entryhubp.h"
 #include "reference/salereferencemodel.h"
-#include "tree/model/treemodel.h"
 
-class SaleReferencePModel final : public SaleReferenceModel {
+class SaleReferenceModelI final : public SaleReferenceModel {
     Q_OBJECT
 
 public:
-    explicit SaleReferencePModel(CSectionInfo& info, TreeModel* tree_model_i, EntryHub* entry_hub_p, QObject* parent = nullptr);
-    ~SaleReferencePModel() override;
+    explicit SaleReferenceModelI(CSectionInfo& info, QObject* parent = nullptr);
+    ~SaleReferenceModelI() override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
-
-private:
-    TreeModel* tree_model_i_ {};
-    EntryHubP* entry_hub_p_ {};
 };
 
-#endif // SALEREFERENCEPMODEL_H
+#endif // SALEREFERENCEMODELI_H
