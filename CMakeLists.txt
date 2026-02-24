@@ -177,6 +177,8 @@ set(SOURCES
     billing/statement/statementnodewidget.cc
     billing/statement/statemententrymodel.cc
     reference/salereferencemodel.cc
+    reference/salereferencepmodel.cc
+    reference/salereferenceimodel.cc
     billing/settlement/treemodelsettlement.cc
     billing/statement/statementmodel.cc
     global/logininfo.cc
@@ -350,6 +352,8 @@ set(HEADERS
     billing/settlement/treemodelsettlement.h
     billing/statement/statementmodel.h
     reference/salereferencemodel.h
+    reference/salereferencepmodel.h
+    reference/salereferenceimodel.h
     global/dailylogger.h
     global/entrypool.h
     global/resourcepool.h

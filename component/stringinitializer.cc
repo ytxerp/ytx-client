@@ -315,6 +315,8 @@ void StringInitializer::SetHeader(
         QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
         QObject::tr("InternalSku"),
+        QObject::tr("Color"),
+        QObject::tr("ExternalSku"),
         QObject::tr("Count"),
         QObject::tr("Measure"),
         QObject::tr("UnitPrice"),

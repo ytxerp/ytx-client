@@ -75,7 +75,7 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
     }
 }
 
-void MainWindow::SetTableViewSaleReference(QTableView* view) const
+void MainWindow::SetTableViewSaleReferenceI(QTableView* view) const
 {
     {
         view->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -85,12 +85,38 @@ void MainWindow::SetTableViewSaleReference(QTableView* view) const
     }
 
     {
-        view->setColumnHidden(std::to_underlying(SaleReferenceEnum::kOrderId), kIsHidden);
+        view->setColumnHidden(std::to_underlying(SaleReferenceIEnum::kOrderId), kIsHidden);
     }
 
     {
         auto* h_header { view->horizontalHeader() };
-        ResizeColumn(h_header, std::to_underlying(SaleReferenceEnum::kDescription));
+        ResizeColumn(h_header, std::to_underlying(SaleReferenceIEnum::kDescription));
+    }
+
+    {
+        auto* v_header { view->verticalHeader() };
+        v_header->setDefaultSectionSize(kRowHeight);
+        v_header->setSectionResizeMode(QHeaderView::Fixed);
+        v_header->setHidden(true);
+    }
+}
+
+void MainWindow::SetTableViewSaleReferenceP(QTableView* view) const
+{
+    {
+        view->setSelectionMode(QAbstractItemView::SingleSelection);
+        view->setSelectionBehavior(QAbstractItemView::SelectRows);
+        view->setAlternatingRowColors(true);
+        view->setSortingEnabled(true);
+    }
+
+    {
+        view->setColumnHidden(std::to_underlying(SaleReferencePEnum::kOrderId), kIsHidden);
+    }
+
+    {
+        auto* h_header { view->horizontalHeader() };
+        ResizeColumn(h_header, std::to_underlying(SaleReferencePEnum::kDescription));
     }
 
     {

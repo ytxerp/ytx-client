@@ -120,6 +120,7 @@ public:
     NodeUnit Unit(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::unit); }
     bool Rule(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::direction_rule); }
     QString Name(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::name); }
+    QString Color(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::color); }
     QString Path(const QUuid& node_id) const;
 
     inline ItemModel* LeafModel() const { return leaf_path_model_; }

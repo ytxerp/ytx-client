@@ -116,7 +116,6 @@ private slots:
 
     void RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RSaleReferencePrimary(const QUuid& node_id, int unit);
-    void RSaleReferenceSecondary(const QModelIndex& index);
 
     void RStatement(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
@@ -199,8 +198,10 @@ private:
     void TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const;
 
     void CreateSaleReference(const QUuid& node_id, int unit);
-    void DelegateSaleReference(QTableView* table_view, CSectionConfig& config) const;
-    void SetTableViewSaleReference(QTableView* view) const;
+    void DelegateSaleReferenceI(QTableView* table_view, CSectionConfig& config) const;
+    void DelegateSaleReferenceP(QTableView* table_view, CSectionConfig& config) const;
+    void SetTableViewSaleReferenceI(QTableView* view) const;
+    void SetTableViewSaleReferenceP(QTableView* view) const;
 
     void SetStatementView(QTableView* view, int stretch_column) const;
     void DelegateStatement(QTableView* table_view, CSectionConfig& config) const;

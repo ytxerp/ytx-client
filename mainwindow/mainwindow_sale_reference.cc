@@ -1,7 +1,7 @@
-#include "enum/reference.h"
 #include "mainwindow.h"
+#include "reference/salereferenceimodel.h"
+#include "reference/salereferencepmodel.h"
 #include "reference/salereferencewidget.h"
-#include "ui_mainwindow.h"
 
 void MainWindow::RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
@@ -31,30 +31,6 @@ void MainWindow::RSaleReferencePrimary(const QUuid& node_id, int unit)
     CreateSaleReference(node_id, unit);
 }
 
-void MainWindow::RSaleReferenceSecondary(const QModelIndex& index)
-{
-    const auto order_id { index.siblingAtColumn(std::to_underlying(SaleReferenceEnum::kOrderId)).data().toUuid() };
-    const int column { std::to_underlying(SaleReferenceEnum::kInitial) };
-
-    Q_ASSERT(!order_id.isNull());
-
-    if (index.column() != column)
-        return;
-
-    RSectionGroup(std::to_underlying(Section::kSale));
-    ui->rBtnSale->setChecked(true);
-
-    auto* sc { GetSectionContex(Section::kSale) };
-    auto tree_model { sc->tree_model };
-
-    if (!tree_model->Contains(order_id)) {
-        tree_model->AckNode(order_id);
-        return;
-    }
-
-    RNodeLocation(Section::kSale, order_id);
-}
-
 void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
 {
     Q_ASSERT(sc_ && sc_->tree_model);
@@ -68,7 +44,24 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
     const QUuid widget_id { QUuid::createUuidV7() };
 
     // The widget will take ownership of the model
-    auto* model { new SaleReferenceModel(info, this) };
+    SaleReferenceModel* model {};
+
+    {
+        switch (section) {
+        case Section::kInventory:
+            model = new SaleReferenceIModel(info, nullptr);
+            break;
+        case Section::kPartner:
+            model = new SaleReferencePModel(info, sc_i_.tree_model, sc_p_.entry_hub, nullptr);
+            break;
+        case Section::kSale:
+        case Section::kPurchase:
+        case Section::kFinance:
+        case Section::kTask:
+            return;
+        }
+    }
+
     auto* widget { new SaleReferenceWidget(model, section, widget_id, node_id, unit, this) };
 
     const int tab_index { sc_->tab_widget->addTab(widget, title) };
@@ -77,10 +70,24 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    SetTableViewSaleReference(view);
-    DelegateSaleReference(view, sc_sale_.section_config);
 
-    connect(view, &QTableView::doubleClicked, this, &MainWindow::RSaleReferenceSecondary);
+    {
+        switch (section) {
+        case Section::kInventory:
+            SetTableViewSaleReferenceI(view);
+            DelegateSaleReferenceI(view, sc_i_.section_config);
+            break;
+        case Section::kPartner:
+            SetTableViewSaleReferenceP(view);
+            DelegateSaleReferenceP(view, sc_p_.section_config);
+            break;
+        case Section::kSale:
+        case Section::kPurchase:
+        case Section::kFinance:
+        case Section::kTask:
+            return;
+        }
+    }
 
     RegisterWidget(widget, widget_id, WidgetRole::kSaleReference);
 }

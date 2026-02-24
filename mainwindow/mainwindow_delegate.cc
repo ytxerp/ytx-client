@@ -10,6 +10,7 @@
 #include "delegate/readonly/amountr.h"
 #include "delegate/readonly/amountsalereferencer.h"
 #include "delegate/readonly/boolstringr.h"
+#include "delegate/readonly/colorr.h"
 #include "delegate/readonly/doublespinnonezeror.h"
 #include "delegate/readonly/financeforeignr.h"
 #include "delegate/readonly/intstringr.h"
@@ -344,30 +345,48 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) 
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kFinal), amount);
 }
 
-void MainWindow::DelegateSaleReference(QTableView* table_view, CSectionConfig& config) const
+void MainWindow::DelegateSaleReferenceI(QTableView* table_view, CSectionConfig& config) const
 {
     auto* price { new DoubleSpinNoneZeroR(config.rate_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kUnitPrice), price);
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceIEnum::kUnitPrice), price);
 
     auto* quantity { new DoubleSpinNoneZeroR(config.quantity_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kMeasure), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceIEnum::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceIEnum::kMeasure), quantity);
 
     auto* amount { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kInitial), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceIEnum::kInitial), amount);
 
-    auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kIssuedTime), issued_time);
+    auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceIEnum::kIssuedTime), issued_time);
 
-    if (start_ == Section::kInventory) {
-        auto* name { new NodeNameR(sc_p_.tree_model, table_view) };
-        table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kNodeId), name);
-    }
+    auto* name { new NodeNameR(sc_p_.tree_model, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceIEnum::kPartnerId), name);
+}
 
-    if (start_ == Section::kPartner) {
-        auto* internal_sku { new NodePathR(sc_i_.tree_model, table_view) };
-        table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kNodeId), internal_sku);
-    }
+void MainWindow::DelegateSaleReferenceP(QTableView* table_view, CSectionConfig& config) const
+{
+    auto* price { new DoubleSpinNoneZeroR(config.rate_decimal, kCoefficient16, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferencePEnum::kUnitPrice), price);
+
+    auto* quantity { new DoubleSpinNoneZeroR(config.quantity_decimal, kCoefficient16, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferencePEnum::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferencePEnum::kMeasure), quantity);
+
+    auto* amount { new DoubleSpinNoneZeroR(config.amount_decimal, kCoefficient16, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferencePEnum::kInitial), amount);
+
+    auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferencePEnum::kIssuedTime), issued_time);
+
+    auto* internal_sku { new NodePathR(sc_i_.tree_model, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferencePEnum::kInternalSku), internal_sku);
+
+    auto* name_r { new NodeNameR(sc_i_.tree_model, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferencePEnum::kExternalSku), name_r);
+
+    auto* color { new ColorR(table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferencePEnum::kColor), color);
 }
 
 void MainWindow::DelegateStatement(QTableView* table_view, CSectionConfig& config) const
