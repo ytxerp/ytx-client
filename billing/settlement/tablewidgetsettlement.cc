@@ -180,6 +180,7 @@ void TableWidgetSettlement::on_pBtnRelease_clicked()
         }
 
         if (sync_state_ == SyncState::kLocalOnly) {
+            settlement_.status = SettlementStatus::kSettled;
             message.insert(kSettlement, settlement_.WriteJson());
             WebSocket::Instance()->SendMessage(kSettlementInserted, message);
         }
