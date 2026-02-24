@@ -40,6 +40,7 @@ private:
 
 private:
     Ui::ExactMatchConfirmDialog* ui;
+    QString match_text_ {};
 };
 
 #endif // EXACTMATCHCONFIRMDIALOG_H
