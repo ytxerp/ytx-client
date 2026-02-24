@@ -185,7 +185,6 @@ private:
     void InsertSettlement(const QJsonObject& obj);
     void UpdateSettlement(const QJsonObject& obj);
     void RecallSettlement(const QJsonObject& obj);
-    void UpdatePartner(const QJsonObject& obj);
 
     void UpdateDocumentDir(const QJsonObject& obj);
     void UpdateDefaultUnit(const QJsonObject& obj);

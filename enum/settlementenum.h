@@ -41,7 +41,7 @@ enum class SettlementItemEnum {
     kId = 0,
     kIssuedTime,
     kAmount,
-    kIsSelected,
+    kIsSettled,
     kDescription,
     kEmployee,
 };

@@ -50,7 +50,6 @@ public:
 
     void InsertSettlement(const QUuid& node_id, const QUuid& settlement_id);
     void RecallSettlement(const QUuid& settlement_id);
-    void DeleteSettlement(const QUuid& settlement_id);
 
     QUuid Partner(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &NodeO::partner_id); };
 

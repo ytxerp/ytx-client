@@ -198,7 +198,6 @@ inline const QString kSettlementUpdated = QStringLiteral("settlement_updated");
 inline const QString kSettlementRecalled = QStringLiteral("settlement_recalled");
 inline const QString kSettlementItemDeselected = QStringLiteral("settlement_item_deselected");
 inline const QString kSettlementItemSelected = QStringLiteral("settlement_item_selected");
-inline const QString kPartnerUpdated = QStringLiteral("partner_updated");
 
 inline const QString kNodeTotal = QStringLiteral("node_total");
 inline const QString kDeletedEntryArray = QStringLiteral("deleted_entry_array");
@@ -302,7 +301,6 @@ inline const QString kUpdate = QStringLiteral("update");
 inline const QString kResult = QStringLiteral("result");
 inline const QString kLhsTotal = QStringLiteral("lhs_total");
 inline const QString kRhsTotal = QStringLiteral("rhs_total");
-inline const QString kIsSelected = QStringLiteral("is_selected");
 
 inline const QString kLhsRate = QStringLiteral("lhs_rate");
 inline const QString kRhsRate = QStringLiteral("rhs_rate");

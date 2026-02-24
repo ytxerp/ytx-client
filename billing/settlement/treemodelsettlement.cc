@@ -125,7 +125,7 @@ bool TreeModelSettlement::removeRows(int row, int /*count*/, const QModelIndex& 
     auto* settlement { list_.takeAt(row) };
     endRemoveRows();
 
-    QJsonObject message { JsonGen::SettlementDelete(info_.section, settlement->id) };
+    QJsonObject message { JsonGen::SettlementDelete(info_.section, settlement->id, settlement->version) };
     WebSocket::Instance()->SendMessage(kSettlementDeleted, message);
 
     ResourcePool<Settlement>::Instance().Recycle(settlement);
@@ -159,9 +159,13 @@ void TreeModelSettlement::RecallSucceeded(const QUuid& settlement_id, const QJso
     auto* settlement { FindSettlement(settlement_id) };
     Q_ASSERT_X(settlement != nullptr, "SettlementModel::RecallSettlement", "Settlement must exist for recalled operation");
 
+    if (!settlement)
+        return;
+
     settlement->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
     settlement->updated_by = QUuid(meta[kUpdatedBy].toString());
     settlement->ReadJson(update);
+    settlement->amount = 0.0;
 }
 
 void TreeModelSettlement::UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update, const QJsonObject& meta)

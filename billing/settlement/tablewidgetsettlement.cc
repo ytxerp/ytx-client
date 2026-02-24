@@ -87,6 +87,9 @@ void TableWidgetSettlement::HideWidget(bool is_settled)
 {
     ui->pBtnRelease->setVisible(!is_settled);
     ui->pBtnRecall->setVisible(is_settled);
+
+    ui->lineDescription->setAttribute(Qt::WA_TransparentForMouseEvents, is_settled);
+    ui->dateTimeEdit->setAttribute(Qt::WA_TransparentForMouseEvents, is_settled);
 }
 
 bool TableWidgetSettlement::ValidateSyncState()
@@ -147,12 +150,10 @@ void TableWidgetSettlement::on_comboPartner_currentIndexChanged(int /*index*/)
 void TableWidgetSettlement::on_pBtnRelease_clicked()
 {
     Q_ASSERT(!settlement_.partner_id.isNull());
-    Q_ASSERT(settlement_.status != SettlementStatus::kSettled);
-
-    model_->NormalizeBuffer();
+    Q_ASSERT(settlement_.status == SettlementStatus::kUnsettled);
 
     {
-        if (!model_->HasSelected() && !model_->HasPendingUpdate()) {
+        if (!model_->HasPendingUpdate()) {
             return;
         }
 
@@ -191,7 +192,7 @@ void TableWidgetSettlement::on_pBtnRelease_clicked()
 
 void TableWidgetSettlement::on_pBtnRecall_clicked()
 {
-    Q_ASSERT(settlement_.status != SettlementStatus::kUnsettled);
+    Q_ASSERT(settlement_.status == SettlementStatus::kSettled);
 
     if (!ValidateSyncState())
         return;
@@ -221,12 +222,13 @@ void TableWidgetSettlement::InsertSucceeded(int version)
 
 void TableWidgetSettlement::RecallSucceeded(int version)
 {
-    ui->lineDescription->setReadOnly(false);
-    ui->dateTimeEdit->setReadOnly(false);
+    ui->dSpinAmount->setValue(0.0);
+    settlement_.amount = 0.0;
 
     settlement_.version = version;
-    sync_state_ = SyncState::kSynced;
     settlement_.status = SettlementStatus::kUnsettled;
+
+    sync_state_ = SyncState::kSynced;
     model_->UpdateStatus(SettlementStatus::kUnsettled);
 
     HideWidget(false);
@@ -234,12 +236,10 @@ void TableWidgetSettlement::RecallSucceeded(int version)
 
 void TableWidgetSettlement::UpdateSucceeded(int version)
 {
-    ui->lineDescription->setReadOnly(true);
-    ui->dateTimeEdit->setReadOnly(true);
-
     settlement_.version = version;
-    sync_state_ = SyncState::kSynced;
     settlement_.status = SettlementStatus::kSettled;
+
+    sync_state_ = SyncState::kSynced;
     model_->UpdateStatus(SettlementStatus::kSettled);
 
     ui->tableView->clearSelection();

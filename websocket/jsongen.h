@@ -58,7 +58,7 @@ QJsonObject StatementNodeAcked(Section section, CUuid& widget_id, CUuid& partner
 QJsonObject StatementEntryAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 QJsonObject SettlementAcked(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end);
 QJsonObject SettlementNodeAcked(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id);
-QJsonObject SettlementDelete(Section section, CUuid& settlement_id);
+QJsonObject SettlementDelete(Section section, CUuid& settlement_id, int version);
 
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule);
 QJsonObject NodeStatus(Section section, CUuid& node_id, NodeStatus status);

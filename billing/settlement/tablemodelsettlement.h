@@ -52,12 +52,7 @@ public:
     void ResetModel(const QJsonArray& array);
     void UpdateStatus(SettlementStatus status);
     void Finalize(QJsonObject& message);
-    bool HasPendingUpdate() const { return !pending_selected_.isEmpty() || !pending_deselected_.isEmpty(); }
-    bool HasSelected() const
-    {
-        return std::ranges::any_of(list_, [](const auto* item) { return item->is_selected; });
-    }
-    void NormalizeBuffer();
+    bool HasPendingUpdate() const { return !pending_selected_.isEmpty(); }
 
 private:
     CSectionInfo& info_;
@@ -67,7 +62,6 @@ private:
     QList<SettlementItem*> list_ {};
     QList<SettlementItem*> list_cache_ {};
 
-    QSet<QUuid> pending_deselected_ {};
     QSet<QUuid> pending_selected_ {};
 };
 

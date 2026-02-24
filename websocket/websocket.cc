@@ -178,7 +178,6 @@ void WebSocket::InitHandler()
     handler_obj_[kSettlementInserted] = [this](const QJsonObject& obj) { InsertSettlement(obj); };
     handler_obj_[kSettlementUpdated] = [this](const QJsonObject& obj) { UpdateSettlement(obj); };
     handler_obj_[kSettlementRecalled] = [this](const QJsonObject& obj) { RecallSettlement(obj); };
-    handler_obj_[kPartnerUpdated] = [this](const QJsonObject& obj) { UpdatePartner(obj); };
     handler_obj_[kInvalidOperation] = [this](const QJsonObject& /*obj*/) { NotifyInvalidOperation(); };
     handler_obj_[kTreeApplied] = [this](const QJsonObject& obj) { ApplyTree(obj); };
 
@@ -986,19 +985,30 @@ void WebSocket::InsertSettlement(const QJsonObject& obj)
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
     const QJsonArray selected_array { obj.value(kSettlementItemSelected).toArray() };
+    const auto settlement { obj.value(kSettlement).toObject() };
 
-    auto* base_model { tree_model_hash_.value(section).data() };
-
-    auto* order_model = static_cast<TreeModelO*>(base_model);
+    auto* order_model = static_cast<TreeModelO*>(tree_model_hash_.value(section).data());
     Q_ASSERT(order_model != nullptr);
-
-    for (const auto& v : selected_array) {
-        const QUuid node_id { v.toString() };
-        order_model->InsertSettlement(node_id, settlement_id);
-    }
 
     if (session_id == session_id_) {
         emit SSettlementInserted(obj);
+    }
+
+    {
+        for (const auto& v : selected_array) {
+            const QUuid node_id { v.toString() };
+            order_model->InsertSettlement(node_id, settlement_id);
+        }
+    }
+
+    {
+        auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
+        Q_ASSERT(partner_model != nullptr);
+
+        const auto partner_id { QUuid(settlement.value(kPartnerId).toString()) };
+        const double initial_delta { settlement.value(kAmount).toString().toDouble() };
+
+        partner_model->RUpdateAmount(partner_id, -initial_delta);
     }
 }
 
@@ -1008,25 +1018,32 @@ void WebSocket::UpdateSettlement(const QJsonObject& obj)
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
     const QJsonArray selected_array { obj.value(kSettlementItemSelected).toArray() };
-    const QJsonArray deselected_array { obj.value(kSettlementItemDeselected).toArray() };
+    const auto settlement { obj.value(kSettlement).toObject() };
 
     auto* base_model { tree_model_hash_.value(section).data() };
 
     auto* order_model = static_cast<TreeModelO*>(base_model);
     Q_ASSERT(order_model != nullptr);
 
-    for (const auto& v : selected_array) {
-        const QUuid node_id { v.toString() };
-        order_model->InsertSettlement(node_id, settlement_id);
-    }
-
-    for (const auto& v : deselected_array) {
-        const QUuid node_id { v.toString() };
-        order_model->DeleteSettlement(settlement_id);
-    }
-
     if (session_id == session_id_) {
         emit SSettlementUpdated(obj);
+    }
+
+    {
+        for (const auto& v : selected_array) {
+            const QUuid node_id { v.toString() };
+            order_model->InsertSettlement(node_id, settlement_id);
+        }
+    }
+
+    {
+        auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
+        Q_ASSERT(partner_model != nullptr);
+
+        const auto partner_id { QUuid(settlement.value(kPartnerId).toString()) };
+        const double initial_delta { settlement.value(kAmount).toString().toDouble() };
+
+        partner_model->RUpdateAmount(partner_id, -initial_delta);
     }
 }
 
@@ -1035,28 +1052,34 @@ void WebSocket::RecallSettlement(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
+    const QJsonArray selected_array { obj.value(kSettlementItemSelected).toArray() };
+    const auto settlement { obj.value(kSettlement).toObject() };
 
     auto* base_model { tree_model_hash_.value(section).data() };
 
     auto* order_model = static_cast<TreeModelO*>(base_model);
     Q_ASSERT(order_model != nullptr);
 
-    order_model->RecallSettlement(settlement_id);
-
     if (session_id == session_id_) {
         emit SSettlementRecalled(obj);
     }
-}
 
-void WebSocket::UpdatePartner(const QJsonObject& obj)
-{
-    auto* base_model { tree_model_hash_.value(Section::kPartner).data() };
-    auto* partner_model = static_cast<TreeModelP*>(base_model);
+    {
+        for (const auto& v : selected_array) {
+            const QUuid node_id { v.toString() };
+            order_model->RecallSettlement(settlement_id);
+        }
+    }
 
-    const auto partner_id { QUuid(obj.value(kId).toString()) };
-    const double initial_delta { obj.value(kInitialDelta).toString().toDouble() };
+    {
+        auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
+        Q_ASSERT(partner_model != nullptr);
 
-    partner_model->RUpdateAmount(partner_id, initial_delta);
+        const auto partner_id { QUuid(settlement.value(kPartnerId).toString()) };
+        const double initial_delta { settlement.value(kAmount).toString().toDouble() };
+
+        partner_model->RUpdateAmount(partner_id, initial_delta);
+    }
 }
 
 void WebSocket::ActionEntry(const QJsonObject& obj)

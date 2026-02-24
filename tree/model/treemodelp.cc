@@ -19,6 +19,7 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)
         return;
 
     node->initial_total += initial_delta;
+    node->version += 1;
 
     const auto& affected_ids { UpdateAncestorTotal(node, initial_delta, 0.0) };
     RefreshAffectedTotal(affected_ids);

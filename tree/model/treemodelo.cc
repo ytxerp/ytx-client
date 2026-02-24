@@ -123,6 +123,8 @@ void TreeModelO::InsertSettlement(const QUuid& node_id, const QUuid& settlement_
 
         d_node->is_settled = true;
         d_node->settlement_id = settlement_id;
+        d_node->final_total = d_node->initial_total - d_node->discount_total;
+        d_node->version += 1;
     }
 }
 
@@ -137,22 +139,9 @@ void TreeModelO::RecallSettlement(const QUuid& settlement_id)
 
         if (d_node->settlement_id == settlement_id) {
             d_node->is_settled = false;
-        }
-    }
-}
-
-void TreeModelO::DeleteSettlement(const QUuid& settlement_id)
-{
-    for (auto it = node_hash_.begin(); it != node_hash_.end(); ++it) {
-        auto* node = it.value();
-        Q_ASSERT(node != nullptr);
-
-        auto* d_node = static_cast<NodeO*>(node);
-        Q_ASSERT(d_node != nullptr);
-
-        if (d_node->settlement_id == settlement_id) {
-            d_node->is_settled = false;
-            d_node->settlement_id = QUuid();
+            d_node->settlement_id = {};
+            d_node->final_total = {};
+            d_node->version += 1;
         }
     }
 }
