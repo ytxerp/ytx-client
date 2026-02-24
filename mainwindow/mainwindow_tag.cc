@@ -198,7 +198,7 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
             tag_action->setIcon(GetTagIcon(sc_, tag, is_checked));
             tag_action->setIconVisibleInMenu(true);
 
-            connect(tag_action, &QAction::triggered, this, [=, this]() {
+            connect(tag_action, &QAction::triggered, this, [this, is_checked, model, tag, node]() {
                 if (is_checked) {
                     RRemoveNodeTag(tag, model, node);
                 } else {
@@ -297,7 +297,7 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
             tag_action->setIcon(GetTagIcon(sc_, tag, is_checked));
             tag_action->setIconVisibleInMenu(true);
 
-            connect(tag_action, &QAction::triggered, this, [=, this]() {
+            connect(tag_action, &QAction::triggered, this, [this, is_checked, entry, model, tag]() {
                 if (is_checked) {
                     RRemoveEntryTag(tag, model, entry);
                 } else {

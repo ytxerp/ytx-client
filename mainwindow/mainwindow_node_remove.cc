@@ -65,7 +65,7 @@ void MainWindow::DeleteBranch(TreeModel* tree_model, const QModelIndex& index, c
 
     dlg->setDefaultButton(QMessageBox::Cancel);
 
-    QObject::connect(dlg, &QMessageBox::finished, this, [=, this](int ret) {
+    QObject::connect(dlg, &QMessageBox::finished, this, [this, node_id, tree_model, index](int ret) {
         if (ret == QMessageBox::Ok) {
             const QUuid parent_id { tree_model->GetNode(node_id)->parent->id };
             const auto message { JsonGen::BranchDelete(sc_->info.section, node_id, parent_id) };

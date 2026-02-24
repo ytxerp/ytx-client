@@ -56,11 +56,11 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
     Utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setWindowModality(Qt::WindowModal);
 
-    connect(dialog, &QDialog::accepted, this, [=, this]() {
+    connect(dialog, &QDialog::accepted, this, [this, node, parent_node]() {
         const auto message { JsonGen::NodeInsert(start_, node, parent_node->id) };
         WebSocket::Instance()->SendMessage(kNodeInsert, message);
     });
-    connect(dialog, &QDialog::destroyed, this, [=, this]() { NodePool::Instance().Recycle(node, start_); });
+    connect(dialog, &QDialog::destroyed, this, [this, node]() { NodePool::Instance().Recycle(node, start_); });
 
     dialog->show();
 }
@@ -112,7 +112,7 @@ void MainWindow::EditNameFIPT()
     Utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setWindowModality(Qt::WindowModal);
 
-    connect(dialog, &QDialog::accepted, this, [=, this]() {
+    connect(dialog, &QDialog::accepted, this, [this, node_id, dialog]() {
         const auto message { JsonGen::NodeName(start_, node_id, dialog->GetName()) };
         WebSocket::Instance()->SendMessage(kNodeName, message);
     });

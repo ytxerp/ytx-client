@@ -29,7 +29,7 @@ ExactMatchConfirmDialog::~ExactMatchConfirmDialog() { delete ui; }
 void ExactMatchConfirmDialog::InitConnect()
 {
     connect(ui->lineEditInput, &QLineEdit::textChanged, this,
-        [=, this](const QString& text) { ui->pBtnApply->setEnabled(!text.isEmpty() && text == ui->lineEditMatchText->text()); });
+        [this](const QString& text) { ui->pBtnApply->setEnabled(!text.isEmpty() && text == ui->lineEditMatchText->text()); });
 
     // Cancel
     connect(ui->pBtnCancel, &QPushButton::clicked, this, &QDialog::reject);

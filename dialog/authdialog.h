@@ -51,7 +51,7 @@ private slots:
 private:
     void InitConnect();
     void SyncLoginInfo();
-    void CreateAction(QLineEdit* lineEdit);
+    void CreateAction(QLineEdit* line_edit);
 
     bool ValidateEmail(const QString& email);
     bool ValidatePassword(const QString& password);

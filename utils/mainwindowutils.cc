@@ -79,7 +79,10 @@ QMessageBox* Utils::CreateMessageBox(QMessageBox::Icon icon, CString& title, CSt
 {
     auto* box { new QMessageBox(icon, title, text, buttons, parent) };
     box->setAttribute(Qt::WA_DeleteOnClose);
-    box->setModal(modal);
+
+    if (modal && parent) {
+        box->setWindowModality(Qt::WindowModal);
+    }
 
     return box;
 }

@@ -24,7 +24,7 @@ void MainWindow::EditNameO()
     Utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setWindowModality(Qt::WindowModal);
 
-    connect(dialog, &QDialog::accepted, this, [=, this]() {
+    connect(dialog, &QDialog::accepted, this, [this, dialog, node]() {
         const auto message { JsonGen::NodeName(start_, node->id, dialog->GetName()) };
         WebSocket::Instance()->SendMessage(kNodeName, message);
     });
@@ -72,12 +72,12 @@ void MainWindow::on_actionNewBranch_triggered()
     Utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setWindowModality(Qt::WindowModal);
 
-    connect(dialog, &QDialog::accepted, this, [=, this]() {
+    connect(dialog, &QDialog::accepted, this, [this, node]() {
         const auto message { JsonGen::NodeInsert(start_, node, node->parent->id) };
         WebSocket::Instance()->SendMessage(kNodeInsert, message);
     });
 
-    connect(dialog, &QDialog::destroyed, this, [=, this]() { NodePool::Instance().Recycle(node, start_); });
+    connect(dialog, &QDialog::destroyed, this, [this, node]() { NodePool::Instance().Recycle(node, start_); });
 
     dialog->show();
 }

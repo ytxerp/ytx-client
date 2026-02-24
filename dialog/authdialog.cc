@@ -220,20 +220,20 @@ void AuthDialog::SyncLoginInfo()
     login_info.SetPassword(remember ? ui->lineEditPassword->text() : QString());
 }
 
-void AuthDialog::CreateAction(QLineEdit* lineEdit)
+void AuthDialog::CreateAction(QLineEdit* line_edit)
 {
-    QAction* action { new QAction(lineEdit) };
+    QAction* action { new QAction(line_edit) };
     action->setCheckable(true);
-    lineEdit->addAction(action, QLineEdit::TrailingPosition);
+    line_edit->addAction(action, QLineEdit::TrailingPosition);
 
     action->setIcon(QIcon(":/solarized_dark/solarized_dark/eye_closed.png"));
 
-    connect(action, &QAction::toggled, this, [=](bool checked) {
+    connect(action, &QAction::toggled, this, [line_edit, action](bool checked) {
         if (checked) {
-            lineEdit->setEchoMode(QLineEdit::Normal);
+            line_edit->setEchoMode(QLineEdit::Normal);
             action->setIcon(QIcon(":/solarized_dark/solarized_dark/eye_open.png"));
         } else {
-            lineEdit->setEchoMode(QLineEdit::Password);
+            line_edit->setEchoMode(QLineEdit::Password);
             action->setIcon(QIcon(":/solarized_dark/solarized_dark/eye_closed.png"));
         }
     });
