@@ -139,7 +139,7 @@ void TreeModelO::RecallSettlement(const QUuid& settlement_id)
 
         if (d_node->settlement_id == settlement_id) {
             d_node->is_settled = false;
-            d_node->settlement_id = {};
+            d_node->settlement_id = QUuid();
             d_node->final_total = {};
             d_node->version += 1;
         }

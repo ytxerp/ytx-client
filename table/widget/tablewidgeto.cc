@@ -440,15 +440,9 @@ void TableWidgetO::on_pBtnRecall_clicked()
     if (!ValidateSyncState())
         return;
 
-    if (tmp_node_.is_settled) {
+    if (tmp_node_.is_settled || !tmp_node_.settlement_id.isNull()) {
         Utils::ShowNotification(
             QMessageBox::Information, tr("Order Settled"), tr("This order has already been settled and cannot be operated."), kThreeThousand);
-        return;
-    }
-
-    if (!tmp_node_.settlement_id.isNull()) {
-        Utils::ShowNotification(
-            QMessageBox::Information, tr("Order Selected"), tr("This order has already been selected in a settlement and cannot be operated."), kThreeThousand);
         return;
     }
 
