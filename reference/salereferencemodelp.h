@@ -29,7 +29,7 @@ class SaleReferenceModelP final : public SaleReferenceModel {
     Q_OBJECT
 
 public:
-    explicit SaleReferenceModelP(CSectionInfo& info, TreeModel* tree_model_i, EntryHub* entry_hub_p, QObject* parent = nullptr);
+    explicit SaleReferenceModelP(CSectionInfo& info, const QUuid& partner_id, TreeModel* tree_model_i, EntryHub* entry_hub_p, QObject* parent = nullptr);
     ~SaleReferenceModelP() override;
 
 public:
@@ -39,6 +39,7 @@ public:
 private:
     TreeModel* tree_model_i_ {};
     EntryHubP* entry_hub_p_ {};
+    const QUuid partner_id_ {};
 };
 
 #endif // SALEREFERENCEMODELP_H

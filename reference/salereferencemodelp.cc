@@ -6,10 +6,11 @@
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
 
-SaleReferenceModelP::SaleReferenceModelP(CSectionInfo& info, TreeModel* tree_model_i, EntryHub* entry_hub_p, QObject* parent)
+SaleReferenceModelP::SaleReferenceModelP(CSectionInfo& info, const QUuid& partner_id, TreeModel* tree_model_i, EntryHub* entry_hub_p, QObject* parent)
     : SaleReferenceModel { info, parent }
     , tree_model_i_ { tree_model_i }
     , entry_hub_p_ { static_cast<EntryHubP*>(entry_hub_p) }
+    , partner_id_ { partner_id }
 {
 }
 
@@ -43,7 +44,7 @@ QVariant SaleReferenceModelP::data(const QModelIndex& index, int role) const
     case SaleReferenceEnumP::kColor:
         return tree_model_i_->Color(sale_reference->node_id);
     case SaleReferenceEnumP::kExternalSku:
-        return entry_hub_p_->ExternalSku(sale_reference->order_id, sale_reference->node_id);
+        return entry_hub_p_->ExternalSku(partner_id_, sale_reference->node_id);
     }
 }
 
