@@ -57,8 +57,6 @@ QVariant SaleReferenceModel::data(const QModelIndex& index, int role) const
         return sale_reference->measure;
     case SaleReferenceEnum::kUnitPrice:
         return sale_reference->unit_price;
-    case SaleReferenceEnum::kUnitDiscount:
-        return sale_reference->unit_discount;
     case SaleReferenceEnum::kDescription:
         return sale_reference->description;
     case SaleReferenceEnum::kInitial:
@@ -99,8 +97,6 @@ void SaleReferenceModel::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &SaleReference::description, order);
         case SaleReferenceEnum::kInitial:
             return Utils::CompareMember(lhs, rhs, &SaleReference::initial, order);
-        case SaleReferenceEnum::kUnitDiscount:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::unit_discount, order);
         case SaleReferenceEnum::kOrderId:
             return false;
         }

@@ -35,7 +35,6 @@ struct SaleReference {
     double count {};
     double measure {};
     double unit_price {};
-    double unit_discount {};
     double initial {};
     QString description {};
 
@@ -51,7 +50,6 @@ inline void SaleReference::ResetState()
     count = 0.0;
     measure = 0.0;
     unit_price = 0.0;
-    unit_discount = 0.0;
     initial = 0.0;
     description.clear();
 }
@@ -72,8 +70,6 @@ inline void SaleReference::ReadJson(const QJsonObject& object)
         measure = object[kMeasure].toString().toDouble();
     if (object.contains(kInitial))
         initial = object[kInitial].toString().toDouble();
-    if (object.contains(kUnitDiscount))
-        unit_discount = object[kUnitDiscount].toString().toDouble();
     if (object.contains(kUnitPrice))
         unit_price = object[kUnitPrice].toString().toDouble();
 }

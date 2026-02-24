@@ -348,7 +348,6 @@ void MainWindow::DelegateSaleReference(QTableView* table_view, CSectionConfig& c
 {
     auto* price { new DoubleSpinNoneZeroR(config.rate_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kUnitPrice), price);
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kUnitDiscount), price);
 
     auto* quantity { new DoubleSpinNoneZeroR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnum::kCount), quantity);

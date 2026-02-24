@@ -307,7 +307,6 @@ void StringInitializer::SetHeader(
         QObject::tr("Count"),
         QObject::tr("Measure"),
         QObject::tr("UnitPrice"),
-        QObject::tr("UnitDiscount"),
         QObject::tr("Description"),
         QObject::tr("Gross"),
     };
@@ -319,7 +318,6 @@ void StringInitializer::SetHeader(
         QObject::tr("Count"),
         QObject::tr("Measure"),
         QObject::tr("UnitPrice"),
-        QObject::tr("UnitDiscount"),
         QObject::tr("Description"),
         QObject::tr("Gross"),
     };

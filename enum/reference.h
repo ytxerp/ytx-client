@@ -28,7 +28,6 @@ enum class SaleReferenceEnum {
     kCount,
     kMeasure,
     kUnitPrice,
-    kUnitDiscount,
     kDescription,
     kInitial,
 };
