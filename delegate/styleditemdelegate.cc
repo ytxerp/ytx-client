@@ -95,11 +95,11 @@ void StyledItemDelegate::PaintColorRect(QPainter* painter, const QStyleOptionVie
     static QStyle* style { QApplication::style() };
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
 
-    const QRect color_rect { option.rect.adjusted(2, 2, -2, -2) };
+    const QRect color_rect { option.rect.adjusted(4, 4, -4, -4) };
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(Qt::NoPen);
     painter->setBrush(QColor(color_string));
-    painter->drawRoundedRect(color_rect, 2, 2);
+    painter->drawRoundedRect(color_rect, kCornerRadius, kCornerRadius);
     painter->restore();
 }

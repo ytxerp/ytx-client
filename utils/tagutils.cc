@@ -97,7 +97,7 @@ QPixmap Utils::CreateTagPixmap(const Tag* tag)
 
     // Draw background with integer coordinates to avoid blurriness
     const QRect background_rect { 0, 0, tag_width, tag_height };
-    painter.drawRoundedRect(background_rect, kTagRadius, kTagRadius);
+    painter.drawRoundedRect(background_rect, kCornerRadius, kCornerRadius);
 
     // Draw text
     painter.setPen(Utils::GetContrastColor(tag->color));
