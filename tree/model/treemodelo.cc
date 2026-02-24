@@ -109,40 +109,70 @@ void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
     node->name = name;
 
     const int column { std::to_underlying(NodeEnumO::kName) };
-    const int row { GetIndex(node_id).row() };
+    const int row { index.row() };
 
     EmitDataChanged(row, row, column, column, index.parent());
 }
 
-void TreeModelO::InsertSettlement(const QUuid& node_id, const QUuid& settlement_id)
+void TreeModelO::InsertSettlement(const QSet<QUuid>& settled_set, const QUuid& settlement_id)
 {
-    auto* node = GetNode(node_id);
-    if (node) {
-        auto* d_node { static_cast<NodeO*>(node) };
+    if (settled_set.isEmpty() || settlement_id.isNull())
+        return;
+
+    for (auto it = node_hash_.constBegin(); it != node_hash_.constEnd(); ++it) {
+        auto* node = it.value();
+        Q_ASSERT(node != nullptr);
+
+        if (!settled_set.contains(node->id))
+            continue;
+
+        auto* d_node = static_cast<NodeO*>(node);
         Q_ASSERT(d_node != nullptr);
 
         d_node->is_settled = true;
         d_node->settlement_id = settlement_id;
         d_node->final_total = d_node->initial_total - d_node->discount_total;
         d_node->version += 1;
+
+        const auto index { GetIndex(node->id) };
+        if (!index.isValid())
+            continue;
+
+        const int column { std::to_underlying(NodeEnumO::kFinalTotal) };
+        const int row { index.row() };
+
+        EmitDataChanged(row, row, column, column, index.parent());
     }
 }
 
 void TreeModelO::RecallSettlement(const QUuid& settlement_id)
 {
-    for (auto it = node_hash_.begin(); it != node_hash_.end(); ++it) {
+    if (settlement_id.isNull())
+        return;
+
+    for (auto it = node_hash_.constBegin(); it != node_hash_.constEnd(); ++it) {
         auto* node = it.value();
         Q_ASSERT(node != nullptr);
 
         auto* d_node = static_cast<NodeO*>(node);
         Q_ASSERT(d_node != nullptr);
 
-        if (d_node->settlement_id == settlement_id) {
-            d_node->is_settled = false;
-            d_node->settlement_id = QUuid();
-            d_node->final_total = {};
-            d_node->version += 1;
-        }
+        if (d_node->settlement_id != settlement_id)
+            continue;
+
+        d_node->is_settled = false;
+        d_node->settlement_id = QUuid();
+        d_node->final_total = {};
+        d_node->version += 1;
+
+        const auto index { GetIndex(d_node->id) };
+        if (!index.isValid())
+            continue;
+
+        const int column { std::to_underlying(NodeEnumO::kFinalTotal) };
+        const int row { index.row() };
+
+        EmitDataChanged(row, row, column, column, index.parent());
     }
 }
 

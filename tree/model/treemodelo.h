@@ -48,7 +48,7 @@ public:
     void AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id);
     void UpdateName(const QUuid& node_id, const QString& name) override;
 
-    void InsertSettlement(const QUuid& node_id, const QUuid& settlement_id);
+    void InsertSettlement(const QSet<QUuid>& settled_set, const QUuid& settlement_id);
     void RecallSettlement(const QUuid& settlement_id);
 
     QUuid Partner(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &NodeO::partner_id); };

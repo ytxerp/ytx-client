@@ -995,10 +995,14 @@ void WebSocket::InsertSettlement(const QJsonObject& obj)
     }
 
     {
+        QSet<QUuid> settled_set {};
+
         for (const auto& v : selected_array) {
             const QUuid node_id { v.toString() };
-            order_model->InsertSettlement(node_id, settlement_id);
+            settled_set.insert(node_id);
         }
+
+        order_model->InsertSettlement(settled_set, settlement_id);
     }
 
     {
@@ -1030,10 +1034,14 @@ void WebSocket::UpdateSettlement(const QJsonObject& obj)
     }
 
     {
+        QSet<QUuid> settled_set {};
+
         for (const auto& v : selected_array) {
             const QUuid node_id { v.toString() };
-            order_model->InsertSettlement(node_id, settlement_id);
+            settled_set.insert(node_id);
         }
+
+        order_model->InsertSettlement(settled_set, settlement_id);
     }
 
     {
@@ -1065,10 +1073,7 @@ void WebSocket::RecallSettlement(const QJsonObject& obj)
     }
 
     {
-        for (const auto& v : selected_array) {
-            const QUuid node_id { v.toString() };
-            order_model->RecallSettlement(settlement_id);
-        }
+        order_model->RecallSettlement(settlement_id);
     }
 
     {
