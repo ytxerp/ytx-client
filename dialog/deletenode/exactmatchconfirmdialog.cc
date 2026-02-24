@@ -12,7 +12,7 @@ ExactMatchConfirmDialog::ExactMatchConfirmDialog(CString& info, CString& match_t
     ui->setupUi(this);
 
     if (match_text_.isEmpty()) {
-        int num = QRandomGenerator::global()->bounded(1000, 10000); // [1000,9999]
+        const int num { QRandomGenerator::global()->bounded(1000, 10000) }; // [1000,9999]
         match_text_ = QString::number(num);
     }
 
