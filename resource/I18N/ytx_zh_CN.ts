@@ -1074,7 +1074,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="84"/>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="134"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="140"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
@@ -1155,27 +1155,27 @@ Rage, rage against the dying of the light.</source>
         <translation>将 &lt;b&gt;%1&lt;/b&gt; 替换为 &lt;b&gt;%2&lt;/b&gt;。&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ 此操作具有风险，且无法撤销！&lt;/span&gt;</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="129"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="135"/>
         <source>Delete &lt;b&gt;%1&lt;/b&gt; and all its references.&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ Permanent deletion! Cannot be undone!&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;Tip: It is recommended to move all entries referencing this node before deletion.&lt;/i&gt;</source>
         <translation>删除 &lt;b&gt;%1&lt;/b&gt; 及其所有引用。&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ 永久删除！无法撤销！&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;提示：建议在删除前，先移动所有引用该节点的条目。&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="160"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="172"/>
         <source>Delete %1</source>
         <translation>删除 %1</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="164"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="176"/>
         <source>The node has external references, so it can’t be deleted.</source>
         <translation>节点存在外部引用，无法删除。</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="193"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="205"/>
         <source>Replacement Conflict</source>
         <translation>替换冲突</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="194"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="206"/>
         <source>The old node cannot be replaced because linked nodes or partner entries conflict with the new node.</source>
         <translation>无法替换旧节点，因为关联节点或合作方条目与新节点存在冲突。</translation>
     </message>
@@ -2283,12 +2283,12 @@ You need to recall it first before making changes.</source>
         <translation>帐单明细</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_order.cc" line="133"/>
+        <location filename="../../mainwindow/mainwindow_order.cc" line="132"/>
         <source>Invalid Operation</source>
         <translation>无效操作</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_order.cc" line="134"/>
+        <location filename="../../mainwindow/mainwindow_order.cc" line="133"/>
         <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
@@ -2303,14 +2303,14 @@ You need to recall it first before making changes.</source>
         <translation>将删除此分支、所有直系子节点提升至同级。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="185"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="284"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="184"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="283"/>
         <source>Tags</source>
         <translation>标签</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="214"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="313"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="213"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="312"/>
         <source>Manage...</source>
         <translation>管理...</translation>
     </message>
@@ -3304,27 +3304,27 @@ You need to recall it first before making changes.</source>
         <translation type="vanished">正在连接服务器…</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="200"/>
+        <location filename="../../utils/mainwindowutils.cc" line="203"/>
         <source>Connecting to server...</source>
         <translation>正在连接服务器…</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="205"/>
+        <location filename="../../utils/mainwindowutils.cc" line="208"/>
         <source>Connected to server</source>
         <translation>已连接</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="210"/>
+        <location filename="../../utils/mainwindowutils.cc" line="213"/>
         <source>Disconnected from server</source>
         <translation>已断开</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="225"/>
+        <location filename="../../utils/mainwindowutils.cc" line="228"/>
         <source>Logged in</source>
         <translation>已登录</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="230"/>
+        <location filename="../../utils/mainwindowutils.cc" line="233"/>
         <source>Logged out</source>
         <translation>已登出</translation>
     </message>
@@ -4129,12 +4129,12 @@ You cannot release it again.</source>
         <translation>撤回</translation>
     </message>
     <message>
-        <location filename="../../billing/settlement/tablewidgetsettlement.cc" line="98"/>
+        <location filename="../../billing/settlement/tablewidgetsettlement.cc" line="96"/>
         <source>Invalid Operation</source>
         <translation>无效操作</translation>
     </message>
     <message>
-        <location filename="../../billing/settlement/tablewidgetsettlement.cc" line="99"/>
+        <location filename="../../billing/settlement/tablewidgetsettlement.cc" line="97"/>
         <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
@@ -4164,7 +4164,7 @@ You cannot release it again.</source>
     <message>
         <location filename="../../dialog/tagmanagerdlg.cc" line="63"/>
         <source>Delete tag &lt;b&gt;%1&lt;/b&gt;?&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ Permanent deletion! Cannot be undone!&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;Note: Tag references in nodes and entries will be preserved but no longer displayed.&lt;/i&gt;</source>
-        <translation>&quot;删除标签 &lt;b&gt;%1&lt;/b&gt;？&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ 永久删除！无法撤销！&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;注意：节点和记录中的标签引用将被保留，但不再显示。&lt;/i&gt;</translation>
+        <translation>删除标签 &lt;b&gt;%1&lt;/b&gt;？&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ 永久删除！无法撤销！&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;注意：节点和记录中的标签引用将被保留，但不再显示。&lt;/i&gt;</translation>
     </message>
 </context>
 <context>
