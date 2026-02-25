@@ -2143,7 +2143,7 @@ Do you want to save before closing?</source>
         <translation type="vanished">帐单明细</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_sale_reference.cc" line="41"/>
+        <location filename="../../mainwindow/mainwindow_order_reference.cc" line="56"/>
         <source>Record</source>
         <translation>记录</translation>
     </message>
@@ -2346,6 +2346,14 @@ You need to recall it first before making changes.</source>
     <message>
         <source>Fetch</source>
         <translation type="vanished">刷新</translation>
+    </message>
+</context>
+<context>
+    <name>OrderReferenceWidget</name>
+    <message>
+        <location filename="../../reference/orderreferencewidget.ui" line="82"/>
+        <source>Fetch</source>
+        <translation>刷新</translation>
     </message>
 </context>
 <context>
@@ -3464,9 +3472,8 @@ You need to recall it first before making changes.</source>
 <context>
     <name>SaleReferenceWidget</name>
     <message>
-        <location filename="../../reference/salereferencewidget.ui" line="82"/>
         <source>Fetch</source>
-        <translation>刷新</translation>
+        <translation type="vanished">刷新</translation>
     </message>
 </context>
 <context>
