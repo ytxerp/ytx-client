@@ -59,8 +59,8 @@ void OrderReferenceWidget::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::SaleReferenceAcked(section_, widget_id_, node_id_, node_unit_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance()->SendMessage(kSaleReferenceAcked, message);
+    const auto message { JsonGen::OrderReferenceAck(section_, widget_id_, node_id_, node_unit_, start_.toUTC(), end_.toUTC()) };
+    WebSocket::Instance()->SendMessage(kOrderReferenceAck, message);
 
     cooldown_timer_->start(kTwoThousand);
 }

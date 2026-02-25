@@ -169,7 +169,7 @@ void WebSocket::InitHandler()
 
     handler_obj_[kTreeAcked] = [this](const QJsonObject& obj) { AckTree(obj); };
     handler_obj_[kTableAcked] = [this](const QJsonObject& obj) { AckTable(obj); };
-    handler_obj_[kSaleReferenceAcked] = [this](const QJsonObject& obj) { AckSaleReference(obj); };
+    handler_obj_[kOrderReferenceAck] = [this](const QJsonObject& obj) { AckOrderReference(obj); };
     handler_obj_[kStatementAcked] = [this](const QJsonObject& obj) { AckStatement(obj); };
     handler_obj_[kStatementNodeAcked] = [this](const QJsonObject& obj) { AckStatementNode(obj); };
     handler_obj_[kStatementEntryAcked] = [this](const QJsonObject& obj) { AckStatementEntry(obj); };
@@ -486,7 +486,7 @@ void WebSocket::AckNode(const QJsonObject& obj)
     emit SNodeLocation(section, node_id);
 }
 
-void WebSocket::AckSaleReference(const QJsonObject& obj)
+void WebSocket::AckOrderReference(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };

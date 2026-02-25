@@ -142,7 +142,7 @@ private:
     void AckTree(const QJsonObject& obj);
     void AckTable(const QJsonObject& obj);
     void AckNode(const QJsonObject& obj);
-    void AckSaleReference(const QJsonObject& obj);
+    void AckOrderReference(const QJsonObject& obj);
     void AckStatement(const QJsonObject& obj);
     void AckStatementNode(const QJsonObject& obj);
     void AckStatementEntry(const QJsonObject& obj);

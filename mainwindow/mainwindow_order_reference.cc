@@ -22,8 +22,23 @@ void MainWindow::ROrderReference(Section section, const QUuid& widget_id, const 
 
 void MainWindow::ROrderReferencePrimary(const QUuid& node_id, int unit)
 {
-    const bool allowed { (start_ == Section::kInventory && unit == std::to_underlying(NodeUnit::IInternal))
-        || (start_ == Section::kPartner && unit == std::to_underlying(NodeUnit::PCustomer)) };
+    bool allowed { false };
+    const NodeUnit node_unit { unit };
+
+    switch (start_) {
+    case Section::kInventory:
+        allowed = (node_unit == NodeUnit::IInternal);
+        break;
+    case Section::kPartner:
+        allowed = (node_unit == NodeUnit::PCustomer || node_unit == NodeUnit::PVendor);
+        break;
+    case Section::kFinance:
+    case Section::kSale:
+    case Section::kPurchase:
+    case Section::kTask:
+    default:
+        return;
+    }
 
     if (!allowed)
         return;

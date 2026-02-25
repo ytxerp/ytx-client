@@ -328,7 +328,7 @@ QJsonObject EntryLinkedNode(Section section, CUuid& entry_id)
     return message;
 }
 
-QJsonObject SaleReferenceAcked(Section section, CUuid& widget_id, CUuid& node_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject OrderReferenceAck(Section section, CUuid& widget_id, CUuid& node_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 
