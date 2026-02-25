@@ -17,20 +17,20 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SALEREFERENCEMODEL_H
-#define SALEREFERENCEMODEL_H
+#ifndef ORDERREFERENCEMODEL_H
+#define ORDERREFERENCEMODEL_H
 
 #include <QAbstractItemModel>
 
 #include "component/info.h"
-#include "salereference.h"
+#include "orderreference.h"
 
-class SaleReferenceModel : public QAbstractItemModel {
+class OrderReferenceModel : public QAbstractItemModel {
     Q_OBJECT
 
 protected:
-    explicit SaleReferenceModel(CSectionInfo& info, QObject* parent = nullptr);
-    ~SaleReferenceModel() override;
+    explicit OrderReferenceModel(CSectionInfo& info, QObject* parent = nullptr);
+    ~OrderReferenceModel() override;
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -45,7 +45,7 @@ public:
 
 protected:
     CSectionInfo& info_;
-    SaleReferenceList list_ {};
+    QList<OrderReference*> list_ {};
 };
 
-#endif // SALEREFERENCEMODEL_H
+#endif // ORDERREFERENCEMODEL_H

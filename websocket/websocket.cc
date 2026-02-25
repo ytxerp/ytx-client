@@ -492,7 +492,7 @@ void WebSocket::AckSaleReference(const QJsonObject& obj)
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonArray array { obj.value(kArray).toArray() };
 
-    emit SSaleReference(section, widget_id, array);
+    emit SOrderReference(section, widget_id, array);
 }
 
 void WebSocket::AckStatement(const QJsonObject& obj)

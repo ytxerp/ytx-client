@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SALEREFERENCEWIDGET_H
-#define SALEREFERENCEWIDGET_H
+#ifndef ORDERREFERENCEWIDGET_H
+#define ORDERREFERENCEWIDGET_H
 
 #include <QDateTime>
 #include <QTableView>
@@ -26,21 +26,21 @@
 
 #include "component/using.h"
 #include "enum/section.h"
-#include "reference/salereferencemodel.h"
+#include "reference/orderreferencemodel.h"
 
 namespace Ui {
-class SaleReferenceWidget;
+class OrderReferenceWidget;
 }
 
-class SaleReferenceWidget final : public QWidget {
+class OrderReferenceWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    SaleReferenceWidget(SaleReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, int node_unit, QWidget* parent = nullptr);
-    ~SaleReferenceWidget() override;
+    OrderReferenceWidget(OrderReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, int node_unit, QWidget* parent = nullptr);
+    ~OrderReferenceWidget() override;
 
     QTableView* View() const;
-    SaleReferenceModel* Model() const { return model_; }
+    OrderReferenceModel* Model() const { return model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -52,10 +52,10 @@ private:
     void InitTimer();
 
 private:
-    Ui::SaleReferenceWidget* ui;
+    Ui::OrderReferenceWidget* ui;
     QDateTime start_ {};
     QDateTime end_ {};
-    SaleReferenceModel* model_ {};
+    OrderReferenceModel* model_ {};
 
     QTimer* cooldown_timer_ { nullptr };
 
@@ -65,4 +65,4 @@ private:
     const Section section_ {};
 };
 
-#endif // SALEREFERENCEWIDGET_H
+#endif // ORDERREFERENCEWIDGET_H

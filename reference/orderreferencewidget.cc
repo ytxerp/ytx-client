@@ -1,14 +1,14 @@
-#include "salereferencewidget.h"
+#include "orderreferencewidget.h"
 
 #include "component/constant.h"
 #include "component/signalblocker.h"
-#include "ui_salereferencewidget.h"
+#include "ui_orderreferencewidget.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SaleReferenceWidget::SaleReferenceWidget(SaleReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, int node_unit, QWidget* parent)
+OrderReferenceWidget::OrderReferenceWidget(OrderReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, int node_unit, QWidget* parent)
     : QWidget(parent)
-    , ui(new Ui::SaleReferenceWidget)
+    , ui(new Ui::OrderReferenceWidget)
     , start_ { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) }
     , end_ { QDateTime(QDate(QDate::currentDate().year() + 1, 1, 1), kStartTime) }
     , model_ { model }
@@ -26,14 +26,14 @@ SaleReferenceWidget::SaleReferenceWidget(SaleReferenceModel* model, Section sect
     IniWidget();
     InitTimer();
 
-    QTimer::singleShot(0, this, &SaleReferenceWidget::on_pBtnFetch_clicked);
+    QTimer::singleShot(0, this, &OrderReferenceWidget::on_pBtnFetch_clicked);
 }
 
-SaleReferenceWidget::~SaleReferenceWidget() { delete ui; }
+OrderReferenceWidget::~OrderReferenceWidget() { delete ui; }
 
-QTableView* SaleReferenceWidget::View() const { return ui->tableView; }
+QTableView* OrderReferenceWidget::View() const { return ui->tableView; }
 
-void SaleReferenceWidget::on_start_dateChanged(const QDate& date)
+void OrderReferenceWidget::on_start_dateChanged(const QDate& date)
 {
     const bool valid { date <= end_.date() };
     start_.setDate(date);
@@ -42,7 +42,7 @@ void SaleReferenceWidget::on_start_dateChanged(const QDate& date)
     ui->pBtnFetch->setEnabled(valid);
 }
 
-void SaleReferenceWidget::on_end_dateChanged(const QDate& date)
+void OrderReferenceWidget::on_end_dateChanged(const QDate& date)
 {
     const bool valid { date >= start_.date() };
 
@@ -51,7 +51,7 @@ void SaleReferenceWidget::on_end_dateChanged(const QDate& date)
     end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
-void SaleReferenceWidget::on_pBtnFetch_clicked()
+void OrderReferenceWidget::on_pBtnFetch_clicked()
 {
     if (!ui->pBtnFetch->isEnabled()) {
         return;
@@ -65,7 +65,7 @@ void SaleReferenceWidget::on_pBtnFetch_clicked()
     cooldown_timer_->start(kTwoThousand);
 }
 
-void SaleReferenceWidget::IniWidget()
+void OrderReferenceWidget::IniWidget()
 {
     ui->start->setDisplayFormat(kDateFST);
     ui->end->setDisplayFormat(kDateFST);
@@ -75,7 +75,7 @@ void SaleReferenceWidget::IniWidget()
     ui->pBtnFetch->setFocus();
 }
 
-void SaleReferenceWidget::InitTimer()
+void OrderReferenceWidget::InitTimer()
 {
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);

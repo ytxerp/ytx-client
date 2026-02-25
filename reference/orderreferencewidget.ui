@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SaleReferenceWidget</class>
- <widget class="QWidget" name="SaleReferenceWidget">
+ <class>OrderReferenceWidget</class>
+ <widget class="QWidget" name="OrderReferenceWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

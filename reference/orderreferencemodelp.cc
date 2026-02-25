@@ -1,4 +1,4 @@
-#include "salereferencemodelp.h"
+#include "orderreferencemodelp.h"
 
 #include <QJsonArray>
 
@@ -6,17 +6,17 @@
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
 
-SaleReferenceModelP::SaleReferenceModelP(CSectionInfo& info, const QUuid& partner_id, TreeModel* tree_model_i, EntryHub* entry_hub_p, QObject* parent)
-    : SaleReferenceModel { info, parent }
+OrderReferenceModelP::OrderReferenceModelP(CSectionInfo& info, const QUuid& partner_id, TreeModel* tree_model_i, EntryHub* entry_hub_p, QObject* parent)
+    : OrderReferenceModel { info, parent }
     , tree_model_i_ { tree_model_i }
     , entry_hub_p_ { static_cast<EntryHubP*>(entry_hub_p) }
     , partner_id_ { partner_id }
 {
 }
 
-SaleReferenceModelP::~SaleReferenceModelP() { ResourcePool<SaleReference>::Instance().Recycle(list_); }
+OrderReferenceModelP::~OrderReferenceModelP() { ResourcePool<OrderReference>::Instance().Recycle(list_); }
 
-QVariant SaleReferenceModelP::data(const QModelIndex& index, int role) const
+QVariant OrderReferenceModelP::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -48,29 +48,29 @@ QVariant SaleReferenceModelP::data(const QModelIndex& index, int role) const
     }
 }
 
-void SaleReferenceModelP::sort(int column, Qt::SortOrder order)
+void OrderReferenceModelP::sort(int column, Qt::SortOrder order)
 {
     if (column <= -1 || column >= info_.node_referenced_header.size() - 1)
         return;
 
     const SaleReferenceEnumP e_column { column };
 
-    auto Compare = [e_column, order](const SaleReference* lhs, const SaleReference* rhs) -> bool {
+    auto Compare = [e_column, order](const OrderReference* lhs, const OrderReference* rhs) -> bool {
         switch (e_column) {
         case SaleReferenceEnumP::kIssuedTime:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::issued_time, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::issued_time, order);
         case SaleReferenceEnumP::kInternalSku:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::node_id, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::node_id, order);
         case SaleReferenceEnumP::kUnitPrice:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::unit_price, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::unit_price, order);
         case SaleReferenceEnumP::kCount:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::count, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::count, order);
         case SaleReferenceEnumP::kMeasure:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::measure, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::measure, order);
         case SaleReferenceEnumP::kDescription:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::description, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::description, order);
         case SaleReferenceEnumP::kInitial:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::initial, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::initial, order);
         case SaleReferenceEnumP::kOrderId:
         case SaleReferenceEnumP::kExternalSku:
         case SaleReferenceEnumP::kColor:

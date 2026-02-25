@@ -21,9 +21,9 @@
 #define SALEREFERENCEMODELI_H
 
 #include "component/info.h"
-#include "reference/salereferencemodel.h"
+#include "reference/orderreferencemodel.h"
 
-class SaleReferenceModelI final : public SaleReferenceModel {
+class SaleReferenceModelI final : public OrderReferenceModel {
     Q_OBJECT
 
 public:

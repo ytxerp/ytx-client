@@ -7,8 +7,8 @@
 #include "delegate/int.h"
 #include "delegate/issuedtime.h"
 #include "delegate/line.h"
+#include "delegate/readonly/amountorderreferencer.h"
 #include "delegate/readonly/amountr.h"
-#include "delegate/readonly/amountsalereferencer.h"
 #include "delegate/readonly/boolstringr.h"
 #include "delegate/readonly/colorr.h"
 #include "delegate/readonly/doublespinnonezeror.h"
@@ -111,9 +111,9 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* quantity { new QuantityR(section.quantity_decimal, kCoefficient16, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kInitialTotal), quantity);
 
-    auto* amount { new AmountSaleReferenceR(info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
+    auto* amount { new AmountOrderReferenceR(info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kFinalTotal), amount);
-    connect(amount, &AmountSaleReferenceR::SSaleReferencePrimary, this, &MainWindow::RSaleReferencePrimary);
+    connect(amount, &AmountOrderReferenceR::SOrderReferencePrimary, this, &MainWindow::ROrderReferencePrimary);
 
     auto* unit_price { new Double(section.rate_decimal, 0.0, kDoubleMax, kCoefficient8, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kUnitPrice), unit_price);
@@ -141,9 +141,9 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kKind), kind);
 
-    auto* amount { new AmountSaleReferenceR(info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
+    auto* amount { new AmountOrderReferenceR(info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kInitialTotal), amount);
-    connect(amount, &AmountSaleReferenceR::SSaleReferencePrimary, this, &MainWindow::RSaleReferencePrimary);
+    connect(amount, &AmountOrderReferenceR::SOrderReferencePrimary, this, &MainWindow::ROrderReferencePrimary);
 
     auto* payment_term { new Int(0, 36500, tree_view) }; // one hundred years
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kPaymentTerm), payment_term);

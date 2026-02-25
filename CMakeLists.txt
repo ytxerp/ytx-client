@@ -113,7 +113,7 @@ set(SOURCES
     delegate/readonly/doublespinnonezeror.cc
     delegate/readonly/quantityr.cc
     delegate/readonly/boolstringr.cc
-    delegate/readonly/amountsalereferencer.cc
+    delegate/readonly/amountorderreferencer.cc
     delegate/readonly/statusr.cc
     delegate/readonly/nodepathr.cc
     delegate/issuedtime.cc
@@ -169,15 +169,15 @@ set(SOURCES
     table/model/tablemodelo.cc
     table/model/tablemodelp.cc
     billing/settlement/settlement.cc
-    reference/salereferencewidget.cc
+    reference/orderreferencewidget.cc
     billing/statement/statementwidget.cc
     billing/settlement/treewidgetsettlement.cc
     billing/statement/statementnodemodel.cc
     billing/statement/statemententrywidget.cc
     billing/statement/statementnodewidget.cc
     billing/statement/statemententrymodel.cc
-    reference/salereferencemodel.cc
-    reference/salereferencemodelp.cc
+    reference/orderreferencemodel.cc
+    reference/orderreferencemodelp.cc
     reference/salereferencemodeli.cc
     billing/settlement/treemodelsettlement.cc
     billing/statement/statementmodel.cc
@@ -190,7 +190,7 @@ set(SOURCES
     delegate/tagdelegate.cc
     mainwindow/mainwindow_settlement.cc
     mainwindow/mainwindow_statement.cc
-    mainwindow/mainwindow_sale_reference.cc
+    mainwindow/mainwindow_order_reference.cc
     mainwindow/mainwindow_global.cc
     mainwindow/mainwindow_node_remove.cc
     mainwindow/mainwindow_auth.cc
@@ -279,7 +279,7 @@ set(HEADERS
     delegate/readonly/intstringr.h
     delegate/readonly/nodenamer.h
     delegate/readonly/nodepathr.h
-    delegate/readonly/amountsalereferencer.h
+    delegate/readonly/amountorderreferencer.h
     delegate/issuedtime.h
     delegate/color.h
     delegate/readonly/financeforeignr.h
@@ -339,20 +339,20 @@ set(HEADERS
     table/model/tablemodelf.h
     table/model/tablemodeli.h
     table/model/tablemodel.h
-    reference/salereference.h
+    reference/orderreference.h
     billing/statement/statement.h
     billing/settlement/settlement.h
     billing/settlement/treewidgetsettlement.h
     billing/statement/statementwidget.h
     billing/statement/statementnodewidget.h
     billing/statement/statemententrywidget.h
-    reference/salereferencewidget.h
+    reference/orderreferencewidget.h
     billing/statement/statementnodemodel.h
     billing/statement/statemententrymodel.h
     billing/settlement/treemodelsettlement.h
     billing/statement/statementmodel.h
-    reference/salereferencemodel.h
-    reference/salereferencemodelp.h
+    reference/orderreferencemodel.h
+    reference/orderreferencemodelp.h
     reference/salereferencemodeli.h
     global/dailylogger.h
     global/entrypool.h
@@ -402,7 +402,7 @@ set(UIS
     billing/statement/statementnodewidget.ui
     billing/statement/statemententrywidget.ui
     billing/settlement/treewidgetsettlement.ui
-    reference/salereferencewidget.ui
+    reference/orderreferencewidget.ui
     billing/settlement/tablewidgetsettlement.ui
 )
 

@@ -1,9 +1,9 @@
 #include "mainwindow.h"
+#include "reference/orderreferencemodelp.h"
+#include "reference/orderreferencewidget.h"
 #include "reference/salereferencemodeli.h"
-#include "reference/salereferencemodelp.h"
-#include "reference/salereferencewidget.h"
 
-void MainWindow::RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::ROrderReference(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -13,14 +13,14 @@ void MainWindow::RSaleReference(Section section, const QUuid& widget_id, const Q
 
     auto* ptr { widget.data() };
 
-    Q_ASSERT(qobject_cast<SaleReferenceWidget*>(ptr));
-    auto* d_widget { static_cast<SaleReferenceWidget*>(ptr) };
+    Q_ASSERT(qobject_cast<OrderReferenceWidget*>(ptr));
+    auto* d_widget { static_cast<OrderReferenceWidget*>(ptr) };
 
     auto* model { d_widget->Model() };
     model->ResetModel(array);
 }
 
-void MainWindow::RSaleReferencePrimary(const QUuid& node_id, int unit)
+void MainWindow::ROrderReferencePrimary(const QUuid& node_id, int unit)
 {
     const bool allowed { (start_ == Section::kInventory && unit == std::to_underlying(NodeUnit::IInternal))
         || (start_ == Section::kPartner && unit == std::to_underlying(NodeUnit::PCustomer)) };
@@ -44,7 +44,7 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
     const QUuid widget_id { QUuid::createUuidV7() };
 
     // The widget will take ownership of the model
-    SaleReferenceModel* model {};
+    OrderReferenceModel* model {};
 
     {
         switch (section) {
@@ -52,7 +52,7 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
             model = new SaleReferenceModelI(info, nullptr);
             break;
         case Section::kPartner:
-            model = new SaleReferenceModelP(info, node_id, sc_i_.tree_model, sc_p_.entry_hub, nullptr);
+            model = new OrderReferenceModelP(info, node_id, sc_i_.tree_model, sc_p_.entry_hub, nullptr);
             break;
         case Section::kSale:
         case Section::kPurchase:
@@ -62,7 +62,7 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
         }
     }
 
-    auto* widget { new SaleReferenceWidget(model, section, widget_id, node_id, unit, this) };
+    auto* widget { new OrderReferenceWidget(model, section, widget_id, node_id, unit, this) };
 
     const int tab_index { sc_->tab_widget->addTab(widget, title) };
     auto* tab_bar { sc_->tab_widget->tabBar() };

@@ -114,8 +114,8 @@ private slots:
     void RFreeWidget(Section section, const QUuid& node_id);
     void RFlushCaches();
 
-    void RSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RSaleReferencePrimary(const QUuid& node_id, int unit);
+    void ROrderReference(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void ROrderReferencePrimary(const QUuid& node_id, int unit);
 
     void RStatement(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& array);

@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SALEREFERENCE_H
-#define SALEREFERENCE_H
+#ifndef ORDERREFERENCE_H
+#define ORDERREFERENCE_H
 
 #include <QDateTime>
 #include <QJsonObject>
@@ -28,10 +28,10 @@
 
 #include "component/constant.h"
 
-struct SaleReference {
+struct OrderReference {
     QDateTime issued_time {};
     QUuid order_id {};
-    QUuid node_id {}; // partner or inventory uuid
+    QUuid node_id {}; // partner or inventory id
     double count {};
     double measure {};
     double unit_price {};
@@ -42,7 +42,7 @@ struct SaleReference {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void SaleReference::ResetState()
+inline void OrderReference::ResetState()
 {
     issued_time = {};
     order_id = QUuid();
@@ -54,7 +54,7 @@ inline void SaleReference::ResetState()
     description.clear();
 }
 
-inline void SaleReference::ReadJson(const QJsonObject& object)
+inline void OrderReference::ReadJson(const QJsonObject& object)
 {
     if (object.contains(kIssuedTime))
         issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
@@ -74,6 +74,4 @@ inline void SaleReference::ReadJson(const QJsonObject& object)
         unit_price = object[kUnitPrice].toString().toDouble();
 }
 
-using SaleReferenceList = QList<SaleReference*>;
-
-#endif // SALEREFERENCE_H
+#endif // ORDERREFERENCE_H

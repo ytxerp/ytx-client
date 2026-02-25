@@ -17,21 +17,21 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AMOUNTSALEREFERENCER_H
-#define AMOUNTSALEREFERENCER_H
+#ifndef AMOUNTORDERREFERENCER_H
+#define AMOUNTORDERREFERENCER_H
 
 #include "component/using.h"
 #include "delegate/styleditemdelegate.h"
 #include "enum/section.h"
 
-class AmountSaleReferenceR final : public StyledItemDelegate {
+class AmountOrderReferenceR final : public StyledItemDelegate {
     Q_OBJECT
 
 signals:
-    void SSaleReferencePrimary(const QUuid& node_id, int unit);
+    void SOrderReferencePrimary(const QUuid& node_id, int unit);
 
 public:
-    AmountSaleReferenceR(Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, QObject* parent = nullptr);
+    AmountOrderReferenceR(Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
@@ -46,4 +46,4 @@ private:
     CIntString& unit_symbol_map_;
 };
 
-#endif // AMOUNTSALEREFERENCER_H
+#endif // AMOUNTORDERREFERENCER_H

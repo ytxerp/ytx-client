@@ -70,7 +70,7 @@ signals:
     void SDeleteTag(const QJsonObject& obj);
 
     void SReplaceResult(bool result);
-    void SSaleReference(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SOrderReference(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatement(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);

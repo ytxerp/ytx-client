@@ -7,11 +7,11 @@
 #include "utils/templateutils.h"
 
 SaleReferenceModelI::SaleReferenceModelI(CSectionInfo& info, QObject* parent)
-    : SaleReferenceModel { info, parent }
+    : OrderReferenceModel { info, parent }
 {
 }
 
-SaleReferenceModelI::~SaleReferenceModelI() { ResourcePool<SaleReference>::Instance().Recycle(list_); }
+SaleReferenceModelI::~SaleReferenceModelI() { ResourcePool<OrderReference>::Instance().Recycle(list_); }
 
 QVariant SaleReferenceModelI::data(const QModelIndex& index, int role) const
 {
@@ -50,22 +50,22 @@ void SaleReferenceModelI::sort(int column, Qt::SortOrder order)
 
     const SaleReferenceEnumI e_column { column };
 
-    auto Compare = [e_column, order](const SaleReference* lhs, const SaleReference* rhs) -> bool {
+    auto Compare = [e_column, order](const OrderReference* lhs, const OrderReference* rhs) -> bool {
         switch (e_column) {
         case SaleReferenceEnumI::kIssuedTime:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::issued_time, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::issued_time, order);
         case SaleReferenceEnumI::kPartnerId:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::node_id, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::node_id, order);
         case SaleReferenceEnumI::kUnitPrice:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::unit_price, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::unit_price, order);
         case SaleReferenceEnumI::kCount:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::count, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::count, order);
         case SaleReferenceEnumI::kMeasure:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::measure, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::measure, order);
         case SaleReferenceEnumI::kDescription:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::description, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::description, order);
         case SaleReferenceEnumI::kInitial:
-            return Utils::CompareMember(lhs, rhs, &SaleReference::initial, order);
+            return Utils::CompareMember(lhs, rhs, &OrderReference::initial, order);
         case SaleReferenceEnumI::kOrderId:
             return false;
         }
