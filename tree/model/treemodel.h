@@ -100,10 +100,10 @@ public:
     void ApplyTree(const QJsonObject& data);
 
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
-    void InsertMeta(const QUuid& node_id, const QJsonObject& meta);
+    void InsertMeta(const QUuid& node_id, const QJsonObject& meta) const;
 
     void SyncNode(const QUuid& node_id, const QJsonObject& update);
-    void UpdateMeta(const QUuid& node_id, const QJsonObject& meta);
+    void UpdateMeta(const QUuid& node_id, const QJsonObject& meta) const;
 
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
     void DragNode(const QUuid& ancestor, const QUuid& descendant);
@@ -150,7 +150,7 @@ public:
     QModelIndex GetIndex(const QUuid& node_id) const;
     Node* GetNodeByIndex(const QModelIndex& index) const;
 
-    QSortFilterProxyModel* ExcludeId(const QUuid& node_id, QObject* parent);
+    QSortFilterProxyModel* ExcludeId(const QUuid& node_id, QObject* parent) const;
     QSortFilterProxyModel* IncludeUnit(NodeUnit unit, QObject* parent);
     QSortFilterProxyModel* ExcludeIdUnit(const QUuid& node_id, NodeUnit unit, QObject* parent);
     QSortFilterProxyModel* ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent);
@@ -168,8 +168,8 @@ protected:
     void UpdateDirectionRule(Node* node, bool value, const QModelIndex& index);
     void DirectionRuleImpl(Node* node, bool value, const QModelIndex& index);
 
-    void UpdateMeta(Node* node, const QJsonObject& meta);
-    void InsertMeta(Node* node, const QJsonObject& meta);
+    void UpdateMeta(Node* node, const QJsonObject& meta) const;
+    void InsertMeta(Node* node, const QJsonObject& meta) const;
 
     void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
 

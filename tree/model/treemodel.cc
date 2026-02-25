@@ -106,7 +106,7 @@ QSet<QUuid> TreeModel::UpdateTotal(const QUuid& node_id, double initial_total, d
     return affected_ids;
 }
 
-void TreeModel::InsertMeta(const QUuid& node_id, const QJsonObject& meta)
+void TreeModel::InsertMeta(const QUuid& node_id, const QJsonObject& meta) const
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -139,7 +139,7 @@ void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
     EmitDataChanged(row, row, start, end, index.parent());
 }
 
-void TreeModel::UpdateMeta(const QUuid& node_id, const QJsonObject& meta)
+void TreeModel::UpdateMeta(const QUuid& node_id, const QJsonObject& meta) const
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -148,7 +148,7 @@ void TreeModel::UpdateMeta(const QUuid& node_id, const QJsonObject& meta)
     UpdateMeta(node, meta);
 }
 
-void TreeModel::UpdateMeta(Node* node, const QJsonObject& meta)
+void TreeModel::UpdateMeta(Node* node, const QJsonObject& meta) const
 {
     Q_ASSERT_X(meta.contains(kUpdatedBy), "TreeModel::UpdateMeta", "Missing 'updated_by' in meta");
     Q_ASSERT_X(meta.contains(kUpdatedTime), "TreeModel::UpdateMeta", "Missing 'updated_time' in meta");
@@ -157,7 +157,7 @@ void TreeModel::UpdateMeta(Node* node, const QJsonObject& meta)
     node->updated_by = QUuid(meta[kUpdatedBy].toString());
 }
 
-void TreeModel::InsertMeta(Node* node, const QJsonObject& meta)
+void TreeModel::InsertMeta(Node* node, const QJsonObject& meta) const
 {
     Q_ASSERT_X(meta.contains(kUserId), "TreeModel::InsertMeta", "Missing 'user_id' in meta");
     Q_ASSERT_X(meta.contains(kCreatedTime), "TreeModel::InsertMeta", "Missing 'created_time' in meta");
@@ -653,7 +653,7 @@ QString TreeModel::Path(const QUuid& node_id) const
     return {};
 }
 
-QSortFilterProxyModel* TreeModel::ExcludeId(const QUuid& node_id, QObject* parent)
+QSortFilterProxyModel* TreeModel::ExcludeId(const QUuid& node_id, QObject* parent) const
 {
     auto* model { new ExcludeIdFilterModel(node_id, parent) };
     model->setSourceModel(leaf_path_model_);
