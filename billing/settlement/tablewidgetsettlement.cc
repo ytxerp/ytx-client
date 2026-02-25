@@ -68,8 +68,6 @@ void TableWidgetSettlement::InitData()
     ui->comboPartner->setEnabled(sync_state_ == SyncState::kLocalOnly);
 
     const bool is_settled { settlement_.status == SettlementStatus::kSettled };
-    ui->lineDescription->setReadOnly(is_settled);
-    ui->dateTimeEdit->setReadOnly(is_settled);
 
     HideWidget(is_settled);
 }
