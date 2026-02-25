@@ -21,7 +21,7 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)
     node->initial_total += initial_delta;
     node->version += 1;
 
-    const auto& affected_ids { UpdateAncestorTotal(node, initial_delta, 0.0) };
+    const auto& affected_ids { UpdateAncestorTotal(node, initial_delta) };
     RefreshAffectedTotal(affected_ids);
 }
 
@@ -41,11 +41,16 @@ QSet<QUuid>* TreeModelP::UnitSet(NodeUnit unit)
     }
 }
 
-QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, double /*final_delta*/)
+QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, double, double, double, double) const
 {
     QSet<QUuid> affected_ids {};
 
-    if (!node || !node->parent || node->parent == root_)
+    if (!node || node == root_)
+        return affected_ids;
+
+    affected_ids.insert(node->id);
+
+    if (!node->parent || node->parent == root_)
         return affected_ids;
 
     if (FloatEqual(initial_delta, 0.0))

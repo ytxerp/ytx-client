@@ -179,15 +179,19 @@ Qt::ItemFlags TreeModelF::flags(const QModelIndex& index) const
     return flags;
 }
 
-QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, double initial_delta, double final_delta)
+QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, double initial_delta, double final_delta, double, double, double) const
 {
-    Q_ASSERT(node && node != root_ && node->parent);
     QSet<QUuid> affected_ids {};
 
-    if (node->parent == root_)
+    if (!node || node == root_)
         return affected_ids;
 
-    if (initial_delta == 0.0 && final_delta == 0.0)
+    affected_ids.insert(node->id);
+
+    if (!node->parent || node->parent == root_)
+        return affected_ids;
+
+    if (FloatEqual(initial_delta, 0.0) && FloatEqual(final_delta, 0.0))
         return affected_ids;
 
     const auto unit { node->unit };

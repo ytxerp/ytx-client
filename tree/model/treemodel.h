@@ -193,7 +193,7 @@ protected:
     virtual void DeletePath(Node* node, Node* parent_node);
     virtual void HandleNode();
 
-    virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta);
+    virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const;
     virtual QSet<QUuid>* UnitSet(NodeUnit unit)
     {
         Q_UNUSED(unit)

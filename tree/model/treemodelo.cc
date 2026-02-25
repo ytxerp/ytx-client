@@ -18,7 +18,7 @@ void TreeModelO::RNodeStatus(const QUuid& node_id, NodeStatus value)
 
     const int coefficient { value == NodeStatus::kFinished ? 1 : -1 };
 
-    const auto& affected_ids { UpdateAncestorTotalOrder(d_node, coefficient * d_node->initial_total, coefficient * d_node->final_total,
+    const auto affected_ids { UpdateAncestorTotal(d_node, coefficient * d_node->initial_total, coefficient * d_node->final_total,
         coefficient * d_node->count_total, coefficient * d_node->measure_total, coefficient * d_node->discount_total) };
 
     if (d_node->unit == NodeUnit::OMonthly && FloatChanged(d_node->initial_total, 0.0))
@@ -190,7 +190,7 @@ void TreeModelO::DeletePath(Node* node, Node* parent_node)
         break;
     case NodeKind::kLeaf:
         if (d_node->status == NodeStatus::kFinished) {
-            UpdateAncestorTotalOrder(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
+            UpdateAncestorTotal(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
 
             if (node->unit == NodeUnit::OMonthly && FloatChanged(-node->initial_total, 0.0))
                 emit SUpdateAmount(d_node->partner_id, -node->initial_total);
@@ -201,16 +201,21 @@ void TreeModelO::DeletePath(Node* node, Node* parent_node)
     }
 }
 
-QSet<QUuid> TreeModelO::UpdateAncestorTotalOrder(
-    Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta)
+QSet<QUuid> TreeModelO::UpdateAncestorTotal(
+    Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta) const
 {
-    Q_ASSERT(node && node != root_ && node->parent);
     QSet<QUuid> affected_ids {};
 
-    if (node->parent == root_)
+    if (!node || node == root_)
         return affected_ids;
 
-    if (initial_delta == 0.0 && final_delta == 0.0 && count_delta == 0.0 && measure_delta == 0.0 && discount_delta == 0.0)
+    affected_ids.insert(node->id);
+
+    if (!node->parent || node->parent == root_)
+        return affected_ids;
+
+    if (FloatEqual(initial_delta, 0.0) && FloatEqual(final_delta, 0.0) && FloatEqual(count_delta, 0.0) && FloatEqual(measure_delta, 0.0)
+        && FloatEqual(discount_delta, 0.0))
         return affected_ids;
 
     const auto kUnit { node->unit };
@@ -239,7 +244,7 @@ void TreeModelO::HandleNode()
         auto* d_node { DerivedPtr<NodeO>(node) };
 
         if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kFinished)
-            UpdateAncestorTotalOrder(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
+            UpdateAncestorTotal(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
     }
 }
 
@@ -459,7 +464,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
 
     if (update_ancestor) {
         affected_ids_source
-            = UpdateAncestorTotalOrder(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);
+            = UpdateAncestorTotal(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);
     }
 
     destination_parent->children.insert(destinationChild, node);
@@ -467,7 +472,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
 
     if (update_ancestor) {
         affected_ids_destination
-            = UpdateAncestorTotalOrder(node, node->initial_total, node->final_total, node->count_total, node->measure_total, node->discount_total);
+            = UpdateAncestorTotal(node, node->initial_total, node->final_total, node->count_total, node->measure_total, node->discount_total);
     }
 
     endMoveRows();

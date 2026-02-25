@@ -63,8 +63,9 @@ protected:
     void ResetBranch(Node* node);
     void ClearModel();
 
-private:
-    QSet<QUuid> UpdateAncestorTotalOrder(Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta);
+protected:
+    QSet<QUuid> UpdateAncestorTotal(
+        Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta) const override;
 };
 
 #endif // TREEMODELO_H

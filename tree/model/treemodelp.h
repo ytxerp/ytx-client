@@ -40,7 +40,7 @@ public:
 
 protected:
     QSet<QUuid>* UnitSet(NodeUnit unit) override;
-    QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta) override;
+    QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double = 0.0, double = 0.0, double = 0.0, double = 0.0) const override;
 
 private:
     QSet<QUuid> cset_ {}; // Set of all nodes that are customer unit

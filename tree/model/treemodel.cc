@@ -99,8 +99,7 @@ QSet<QUuid> TreeModel::UpdateTotal(const QUuid& node_id, double initial_total, d
     node->final_total = final_total;
 
     // Propagate adjusted deltas to ancestor nodes
-    auto affected_ids { UpdateAncestorTotal(node, initial_delta, final_delta) };
-    affected_ids.insert(node_id);
+    const auto affected_ids { UpdateAncestorTotal(node, initial_delta, final_delta) };
 
     emit SSyncValue();
 
@@ -747,14 +746,19 @@ Node* TreeModel::GetNodeByIndex(const QModelIndex& index) const
     return root_;
 }
 
-QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, double final_delta)
+QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, double final_delta, double, double, double) const
 {
     QSet<QUuid> affected_ids {};
 
-    if (!node || !node->parent || node->parent == root_)
+    if (!node || node == root_)
         return affected_ids;
 
-    if (initial_delta == 0.0 && final_delta == 0.0)
+    affected_ids.insert(node->id);
+
+    if (!node->parent || node->parent == root_)
+        return affected_ids;
+
+    if (FloatEqual(initial_delta, 0.0) && FloatEqual(final_delta, 0.0))
         return affected_ids;
 
     const auto unit { node->unit };
