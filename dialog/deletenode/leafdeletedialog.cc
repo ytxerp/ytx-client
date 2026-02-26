@@ -132,9 +132,9 @@ void LeafDeleteDialog::DeleteNode()
         return;
 
     const auto& path { model_->Path(node_id_) };
-    const QString info { tr("Delete <b>%1</b> and all its references.<br>"
+    const QString info { tr("Delete <b>%1</b> and all its entries.<br>"
                             "<span style='color:#d32f2f; font-weight:bold;'><br>⚠️ Permanent deletion! Cannot be undone!</span>"
-                            "<br><br><i>Tip: It is recommended to move all entries referencing this node before deletion.</i>")
+                            "<br><br><i>Tip: It is recommended to relocate all entries belonging to this node before deletion.</i>")
             .arg(path) };
 
     auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), path, this) };
