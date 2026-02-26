@@ -21,13 +21,19 @@ With its **user-friendly interface** and **modular design**, YTX is an efficient
 
 ## License
 
-**YTX Client** is open source software licensed under the **GNU Lesser General Public License v3.0 (LGPLv3)**, in compliance with the Qt framework's open source license requirements.
+YTX Client is open source software licensed under the GNU Lesser General Public License v3 (LGPLv3).
+
+This product uses the Qt framework, which is licensed under the GNU Lesser General Public License v3.
+
+Qt is © The Qt Company Ltd.
+
+You should have received a copy of the GNU Lesser General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 **Important Notes:**
 
 - **Client**: The YTX client application is **open source** and available in this repository.
 
-This project uses the Qt framework under LGPLv3. You can find more information about Qt's licensing at [https://www.qt.io/licensing/](https://www.qt.io/licensing/).
+For more information about Qt licensing, see: <https://www.qt.io/licensing/>
 
 By using, modifying, or distributing this software, you agree to comply with the terms of the LGPLv3 license. See the [LICENSE](LICENSE) file for full details.
 
