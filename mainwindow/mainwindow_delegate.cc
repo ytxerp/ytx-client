@@ -80,14 +80,8 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* color { new Color(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kColor), color);
 
-    auto* status { new Status(QEvent::MouseButtonDblClick, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kStatus), status);
-
     auto* document { new Document(sc_t_.shared_config.document_dir, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kDocument), document);
-
-    auto* issued_time { new IssuedTime(section.date_format, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kIssuedTime), issued_time);
 
     auto* tag { new TagDelegate(sc_t_.tag_hash, sc_t_.tag_icons_hash, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kTag), tag);

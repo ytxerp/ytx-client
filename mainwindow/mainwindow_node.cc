@@ -39,7 +39,6 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
         dialog = new InsertNodeFinance(arg, this);
         break;
     case Section::kTask:
-        static_cast<NodeT*>(node)->issued_time = QDateTime::currentDateTimeUtc();
         dialog = new InsertNodeTask(arg, this);
         break;
     case Section::kPartner:

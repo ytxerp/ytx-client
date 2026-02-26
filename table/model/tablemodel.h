@@ -111,12 +111,6 @@ protected:
     }
 
     virtual void AccumulateBalance(int start);
-    virtual bool IsFinished(const QUuid& lhs_node, const QUuid& rhs_node) const
-    {
-        Q_UNUSED(lhs_node)
-        Q_UNUSED(rhs_node)
-        return false;
-    };
 
     void RestartTimer(const QUuid& id);
     double CalculateBalance(EntryShadow* shadow) const { return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit); }

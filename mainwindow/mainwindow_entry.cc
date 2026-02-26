@@ -206,7 +206,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
             table_model = new TableModelI(arg, nullptr);
             break;
         case Section::kTask:
-            table_model = new TableModelT(arg, static_cast<TreeModelT*>(tree_model.data()), nullptr);
+            table_model = new TableModelT(arg, nullptr);
             break;
         case Section::kPartner:
             table_model = new TableModelP(arg, nullptr);

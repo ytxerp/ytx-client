@@ -34,12 +34,6 @@ public:
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
-
-    NodeStatus Status(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &NodeT::status); }
-    void UpdateStatus(const QUuid& node_id, NodeStatus status);
-
-private:
-    void UpdateStatus(Node* node, NodeStatus value);
 };
 
 #endif // TREEMODELT_H

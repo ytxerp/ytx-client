@@ -73,8 +73,6 @@ struct NodeI final : Node {
 
 struct NodeT final : Node {
     QStringList document {};
-    QDateTime issued_time {};
-    NodeStatus status {};
 
     void ResetState() override;
 

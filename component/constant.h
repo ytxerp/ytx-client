@@ -336,7 +336,6 @@ inline const QString kPasswordRemembered = QStringLiteral("password_remembered")
 
 inline const QString kIssuedTime = QStringLiteral("issued_time");
 inline const QString kStatus = QStringLiteral("status");
-inline const QString kNodeStatus = QStringLiteral("node_status");
 inline const QString kKind = QStringLiteral("kind");
 inline const QString kNote = QStringLiteral("note");
 inline const QString kPaymentTerm = QStringLiteral("payment_term");

@@ -18,7 +18,6 @@ InsertNodeTask::InsertNodeTask(CNodeInsertArg& arg, QWidget* parent)
     IniData(arg.node);
     IniRuleGroup();
     IniKindGroup();
-    IniStatusGroup();
     IniConnect();
 }
 
@@ -30,18 +29,14 @@ void InsertNodeTask::IniDialog(ItemModel* unit_model)
     ui->lineEditName->setValidator(&LineEdit::kInputValidator);
 
     this->setWindowTitle(parent_path_);
-    this->setMinimumSize(315, 420);
+    this->setMinimumSize(270, 360);
 
     ui->comboUnit->setModel(unit_model);
-    ui->issuedTime->setDisplayFormat(kDateFST);
-    ui->issuedTime->setDateTime(node_->issued_time.toLocalTime());
 
     ui->rBtnBranch->setShortcut(QKeySequence(Qt::ALT | Qt::Key_B));
     ui->rBtnLeaf->setShortcut(QKeySequence(Qt::ALT | Qt::Key_L));
     ui->rBtnDICD->setShortcut(QKeySequence(Qt::ALT | Qt::Key_D));
     ui->rBtnDDCI->setShortcut(QKeySequence(Qt::ALT | Qt::Key_C));
-    ui->rBtnUnfinished->setShortcut(QKeySequence(Qt::ALT | Qt::Key_U));
-    ui->rBtnFinished->setShortcut(QKeySequence(Qt::ALT | Qt::Key_F));
 }
 
 void InsertNodeTask::IniData(Node* node)
@@ -52,7 +47,6 @@ void InsertNodeTask::IniData(Node* node)
     IniRule(node->direction_rule);
 
     ui->rBtnLeaf->setChecked(true);
-    ui->rBtnUnfinished->setChecked(true);
     ui->pBtnOk->setEnabled(false);
 }
 
@@ -61,7 +55,6 @@ void InsertNodeTask::IniConnect()
     connect(ui->lineEditName, &QLineEdit::textEdited, this, &InsertNodeTask::RNameEdited);
     connect(rule_group_, &QButtonGroup::idClicked, this, &InsertNodeTask::RRuleGroupClicked);
     connect(kind_group_, &QButtonGroup::idClicked, this, &InsertNodeTask::RKindGroupClicked);
-    connect(status_group_, &QButtonGroup::idClicked, this, &InsertNodeTask::RStatusGroupClicked);
 }
 
 void InsertNodeTask::IniKindGroup()
@@ -76,13 +69,6 @@ void InsertNodeTask::IniRuleGroup()
     rule_group_ = new QButtonGroup(this);
     rule_group_->addButton(ui->rBtnDDCI, static_cast<int>(Rule::kDDCI));
     rule_group_->addButton(ui->rBtnDICD, static_cast<int>(Rule::kDICD));
-}
-
-void InsertNodeTask::IniStatusGroup()
-{
-    status_group_ = new QButtonGroup(this);
-    status_group_->addButton(ui->rBtnUnfinished, std::to_underlying(NodeStatus::kUnfinished));
-    status_group_->addButton(ui->rBtnFinished, std::to_underlying(NodeStatus::kFinished));
 }
 
 void InsertNodeTask::IniRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }
@@ -109,7 +95,3 @@ void InsertNodeTask::on_comboUnit_currentIndexChanged(int index)
 void InsertNodeTask::RRuleGroupClicked(int id) { node_->direction_rule = static_cast<bool>(id); }
 
 void InsertNodeTask::RKindGroupClicked(int id) { node_->kind = NodeKind(id); }
-
-void InsertNodeTask::RStatusGroupClicked(int id) { node_->status = NodeStatus(id); }
-
-void InsertNodeTask::on_issuedTime_dateTimeChanged(const QDateTime& dateTime) { node_->issued_time = dateTime.toUTC(); }

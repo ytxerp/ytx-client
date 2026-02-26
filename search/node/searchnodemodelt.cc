@@ -46,16 +46,12 @@ QVariant SearchNodeModelT::data(const QModelIndex& index, int role) const
         return std::to_underlying(d_node->unit);
     case NodeEnumT::kColor:
         return d_node->color;
-    case NodeEnumT::kStatus:
-        return std::to_underlying(d_node->status);
     case NodeEnumT::kDocument:
         return d_node->document;
     case NodeEnumT::kInitialTotal:
         return d_node->initial_total;
     case NodeEnumT::kFinalTotal:
         return d_node->final_total;
-    case NodeEnumT::kIssuedTime:
-        return d_node->issued_time;
     default:
         return QVariant();
     }
@@ -84,10 +80,6 @@ void SearchNodeModelT::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumT::kUnit:
             return Utils::CompareMember(lhs, rhs, &Node::unit, order);
-        case NodeEnumT::kStatus:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeT::status, order);
-        case NodeEnumT::kIssuedTime:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeT::issued_time, order);
         case NodeEnumT::kColor:
             return Utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumT::kDocument:

@@ -41,7 +41,6 @@ private slots:
     void RNameEdited(const QString& arg1);
     void RRuleGroupClicked(int id);
     void RKindGroupClicked(int id);
-    void RStatusGroupClicked(int id);
 
     void on_lineEditName_editingFinished();
     void on_lineEditCode_editingFinished();
@@ -49,15 +48,12 @@ private slots:
 
     void on_comboUnit_currentIndexChanged(int index);
 
-    void on_issuedTime_dateTimeChanged(const QDateTime& dateTime);
-
 private:
     void IniDialog(ItemModel* unit_model);
     void IniData(Node* node);
     void IniConnect();
     void IniKindGroup();
     void IniRuleGroup();
-    void IniStatusGroup();
     void IniRule(bool rule);
 
 private:
@@ -65,7 +61,6 @@ private:
     NodeT* node_ {};
     QButtonGroup* rule_group_ {};
     QButtonGroup* kind_group_ {};
-    QButtonGroup* status_group_ {};
 
     CString parent_path_ {};
     const QSet<QString> name_set_ {};

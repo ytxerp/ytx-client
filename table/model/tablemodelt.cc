@@ -4,17 +4,14 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TableModelT::TableModelT(CTableModelArg& arg, TreeModelT* tree_model_t, QObject* parent)
+TableModelT::TableModelT(CTableModelArg& arg, QObject* parent)
     : TableModel { arg, parent }
-    , tree_model_t_ { tree_model_t }
 {
 }
 
 bool TableModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     Q_ASSERT(row >= 0 && row <= rowCount(parent));
-    if (IsFinished(lhs_id_, QUuid()))
-        return false;
 
     InsertRowsImpl(row, parent);
 
@@ -112,11 +109,6 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
 {
     if (value.isNull())
         return false;
-
-    if (tree_model_t_->Status(value) == NodeStatus::kFinished) {
-        qInfo() << "UpdateLinkedNode ignored: node is finished.";
-        return false;
-    }
 
     auto old_node { *shadow->rhs_node };
     if (old_node == value)

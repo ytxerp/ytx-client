@@ -210,18 +210,6 @@ QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_ru
     return message;
 }
 
-QJsonObject NodeStatus(Section section, CUuid& node_id, enum NodeStatus status)
-{
-    QJsonObject message {};
-    message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
-    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kStatus, std::to_underlying(status));
-    message.insert(kMeta, QJsonObject());
-
-    return message;
-}
-
 QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update)
 {
     QJsonObject message {};

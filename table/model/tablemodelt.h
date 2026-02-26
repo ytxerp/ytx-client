@@ -21,13 +21,12 @@
 #define TABLEMODELT_H
 
 #include "tablemodel.h"
-#include "tree/model/treemodelt.h"
 
 class TableModelT final : public TableModel {
     Q_OBJECT
 
 public:
-    TableModelT(CTableModelArg& arg, TreeModelT* tree_model_t, QObject* parent = nullptr);
+    TableModelT(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelT() override = default;
 
     bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
@@ -36,13 +35,6 @@ protected:
     bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row) override;
     bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit) override;
     bool UpdateRate(EntryShadow* shadow, double value) override;
-    bool IsFinished(const QUuid& lhs_node, const QUuid& rhs_node) const override
-    {
-        return tree_model_t_->Status(lhs_node) == NodeStatus::kFinished || tree_model_t_->Status(rhs_node) == NodeStatus::kFinished;
-    };
-
-private:
-    TreeModelT* tree_model_t_ {};
 };
 
 #endif // TABLEMODELT_H

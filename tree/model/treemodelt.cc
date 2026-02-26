@@ -3,7 +3,6 @@
 #include <QJsonArray>
 
 #include "websocket/jsongen.h"
-#include "websocket/websocket.h"
 
 TreeModelT::TreeModelT(CSectionInfo& info, CString& separator, QObject* parent)
     : TreeModel(info, separator, parent)
@@ -55,10 +54,6 @@ QVariant TreeModelT::data(const QModelIndex& index, int role) const
         return std::to_underlying(d_node->unit);
     case NodeEnumT::kColor:
         return d_node->color;
-    case NodeEnumT::kIssuedTime:
-        return d_node->issued_time;
-    case NodeEnumT::kStatus:
-        return std::to_underlying(d_node->status);
     case NodeEnumT::kDocument:
         return d_node->document;
     case NodeEnumT::kInitialTotal:
@@ -86,11 +81,6 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
 
     const NodeEnumT column { index.column() };
 
-    if (d_node->status == NodeStatus::kFinished && column != NodeEnumT::kStatus) {
-        qInfo() << "Edit ignored: node is released";
-        return false;
-    }
-
     const QUuid id { node->id };
 
     switch (column) {
@@ -109,14 +99,8 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumT::kColor:
         Utils::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
         break;
-    case NodeEnumT::kIssuedTime:
-        Utils::UpdateIssuedTime(pending_updates_[id], d_node, kIssuedTime, value.toDateTime(), &NodeT::issued_time, [id, this]() { RestartTimer(id); });
-        break;
     case NodeEnumT::kDocument:
         Utils::UpdateStringList(pending_updates_[id], d_node, kDocument, value.toStringList(), &NodeT::document, [id, this]() { RestartTimer(id); });
-        break;
-    case NodeEnumT::kStatus:
-        UpdateStatus(node, NodeStatus(value.toInt()));
         break;
     case NodeEnumT::kId:
     case NodeEnumT::kUpdateBy:
@@ -158,10 +142,6 @@ void TreeModelT::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumT::kUnit:
             return Utils::CompareMember(lhs, rhs, &Node::unit, order);
-        case NodeEnumT::kStatus:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeT::status, order);
-        case NodeEnumT::kIssuedTime:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeT::issued_time, order);
         case NodeEnumT::kColor:
             return Utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumT::kDocument:
@@ -213,43 +193,5 @@ Qt::ItemFlags TreeModelT::flags(const QModelIndex& index) const
         break;
     }
 
-    const int status { index.siblingAtColumn(std::to_underlying(NodeEnumT::kStatus)).data().toInt() };
-    if (status == std::to_underlying(NodeStatus::kFinished))
-        flags &= ~Qt::ItemIsEditable;
-
     return flags;
-}
-
-void TreeModelT::UpdateStatus(const QUuid& node_id, NodeStatus status)
-{
-    auto* node = GetNode(node_id);
-    if (!node)
-        return;
-
-    const auto index { GetIndex(node_id) };
-    if (!index.isValid())
-        return;
-
-    auto* d_node { DerivedPtr<NodeT>(node) };
-    d_node->status = status;
-
-    const int column { std::to_underlying(NodeEnumT::kStatus) };
-    const int row { GetIndex(node_id).row() };
-
-    EmitDataChanged(row, row, column, column, index.parent());
-}
-
-void TreeModelT::UpdateStatus(Node* node, NodeStatus value)
-{
-    auto* d_node { DerivedPtr<NodeT>(node) };
-    if (!d_node)
-        return;
-
-    if (d_node->status == value)
-        return;
-
-    d_node->status = value;
-
-    QJsonObject message { JsonGen::NodeStatus(section_, node->id, value) };
-    WebSocket::Instance()->SendMessage(kNodeStatus, message);
 }
