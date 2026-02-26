@@ -124,9 +124,9 @@ inline const QString kStartSection = QStringLiteral("start/section");
 inline const QString kTheme = QStringLiteral("theme");
 
 // Client-initiated data requests
-inline const QString kTreeAcked = QStringLiteral("tree_acked");
-inline const QString kNodeAcked = QStringLiteral("node_acked");
-inline const QString kTableAcked = QStringLiteral("table_acked");
+inline const QString kTreeAck = QStringLiteral("tree_ack");
+inline const QString kNodeAck = QStringLiteral("node_ack");
+inline const QString kTableAck = QStringLiteral("table_ack");
 inline const QString kLinkedEntry = QStringLiteral("linked_entry");
 inline const QString kOrderReferenceAck = QStringLiteral("order_reference_ack");
 inline const QString kStatementAcked = QStringLiteral("statement_acked");

@@ -134,8 +134,8 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
         }
     }
 
-    const auto message { JsonGen::LeafEntry(sc_->info.section, node_id, entry_id) };
-    WebSocket::Instance()->SendMessage(kTableAcked, message);
+    const auto message { JsonGen::TableAck(sc_->info.section, node_id, entry_id) };
+    WebSocket::Instance()->SendMessage(kTableAck, message);
 
     switch (start_) {
     case Section::kSale:

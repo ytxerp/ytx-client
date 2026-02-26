@@ -75,8 +75,8 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
 
     {
         if (start_ != Section::kPartner) {
-            const auto message { JsonGen::LeafEntry(sc_->info.section, node_id, entry_id) };
-            WebSocket::Instance()->SendMessage(kTableAcked, message);
+            const auto message { JsonGen::TableAck(sc_->info.section, node_id, entry_id) };
+            WebSocket::Instance()->SendMessage(kTableAck, message);
         }
 
         if (IsOrderSection(start_)) {

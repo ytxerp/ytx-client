@@ -49,9 +49,9 @@ QJsonObject TagUpdate(Section section, const Tag* tag);
 QJsonObject TagInsert(Section section, const Tag* tag);
 QJsonObject TagDelete(Section section, CUuid& tag_id);
 
-QJsonObject TreeAcked(Section section, const QDateTime& start, const QDateTime& end);
-QJsonObject LeafEntry(Section section, CUuid& node_id, CUuid& entry_id = {});
-QJsonObject NodeAcked(Section section, CUuid& node_id);
+QJsonObject TreeAck(Section section, const QDateTime& start, const QDateTime& end);
+QJsonObject TableAck(Section section, CUuid& node_id, CUuid& entry_id = {});
+QJsonObject NodeAck(Section section, CUuid& node_id);
 QJsonObject OrderReferenceAck(Section section, CUuid& widget_id, CUuid& node_id, int unit, const QDateTime& start, const QDateTime& end);
 QJsonObject StatementAcked(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end);
 QJsonObject StatementNodeAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);

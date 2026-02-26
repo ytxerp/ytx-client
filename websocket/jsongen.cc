@@ -103,7 +103,7 @@ QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id)
     return message;
 }
 
-QJsonObject LeafEntry(Section section, CUuid& node_id, CUuid& entry_id)
+QJsonObject TableAck(Section section, CUuid& node_id, CUuid& entry_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -124,7 +124,7 @@ QJsonObject EntryAction(Section section, CUuid& node_id, int action)
     return message;
 }
 
-QJsonObject TreeAcked(Section section, const QDateTime& start, const QDateTime& end)
+QJsonObject TreeAck(Section section, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -187,7 +187,7 @@ QJsonObject EntryTagSearch(Section section, const QSet<QString>& tags)
     return message;
 }
 
-QJsonObject NodeAcked(Section section, CUuid& node_id)
+QJsonObject NodeAck(Section section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));

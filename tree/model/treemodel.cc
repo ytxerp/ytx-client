@@ -689,8 +689,8 @@ void TreeModel::AckNode(const QUuid& node_id) const
     if (node_hash_.contains(node_id))
         return;
 
-    const auto message { JsonGen::NodeAcked(section_, node_id) };
-    WebSocket::Instance()->SendMessage(kNodeAcked, message);
+    const auto message { JsonGen::NodeAck(section_, node_id) };
+    WebSocket::Instance()->SendMessage(kNodeAck, message);
 }
 
 void TreeModel::DeletePath(Node* node, Node* parent_node)

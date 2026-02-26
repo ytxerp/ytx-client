@@ -167,8 +167,8 @@ void WebSocket::InitHandler()
     handler_obj_[kUpdateDefaultUnitFailure] = [this](const QJsonObject& obj) { NotifyUpdateDefaultUnitFailure(obj); };
     handler_obj_[kDocumentDir] = [this](const QJsonObject& obj) { UpdateDocumentDir(obj); };
 
-    handler_obj_[kTreeAcked] = [this](const QJsonObject& obj) { AckTree(obj); };
-    handler_obj_[kTableAcked] = [this](const QJsonObject& obj) { AckTable(obj); };
+    handler_obj_[kTreeAck] = [this](const QJsonObject& obj) { AckTree(obj); };
+    handler_obj_[kTableAck] = [this](const QJsonObject& obj) { AckTable(obj); };
     handler_obj_[kOrderReferenceAck] = [this](const QJsonObject& obj) { AckOrderReference(obj); };
     handler_obj_[kStatementAcked] = [this](const QJsonObject& obj) { AckStatement(obj); };
     handler_obj_[kStatementNodeAcked] = [this](const QJsonObject& obj) { AckStatementNode(obj); };
@@ -188,7 +188,7 @@ void WebSocket::InitHandler()
 
     handler_obj_[kTreeSyncFinished] = [this](const QJsonObject& /*obj*/) { NotifyTreeSyncFinished(); };
     handler_obj_[kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
-    handler_obj_[kNodeAcked] = [this](const QJsonObject& obj) { AckNode(obj); };
+    handler_obj_[kNodeAck] = [this](const QJsonObject& obj) { AckNode(obj); };
     handler_obj_[kLeafDelete] = [this](const QJsonObject& obj) { DeleteLeaf(obj); };
     handler_obj_[kBranchDelete] = [this](const QJsonObject& obj) { DeleteBranch(obj); };
     handler_obj_[kLeafReplace] = [this](const QJsonObject& obj) { ReplaceLeaf(obj); };
