@@ -69,7 +69,7 @@ void TableWidgetSettlement::InitData()
 
     const bool is_settled { settlement_.status == SettlementStatus::kSettled };
 
-    HideWidget(is_settled);
+    LockWidget(is_settled);
 }
 
 void TableWidgetSettlement::FetchNode()
@@ -81,10 +81,10 @@ void TableWidgetSettlement::FetchNode()
     WebSocket::Instance()->SendMessage(kSettlementItemAcked, message);
 }
 
-void TableWidgetSettlement::HideWidget(bool is_settled)
+void TableWidgetSettlement::LockWidget(bool is_settled)
 {
-    ui->pBtnRelease->setVisible(!is_settled);
-    ui->pBtnRecall->setVisible(is_settled);
+    ui->pBtnRelease->setEnabled(!is_settled);
+    ui->pBtnRecall->setEnabled(is_settled);
 
     ui->lineDescription->setAttribute(Qt::WA_TransparentForMouseEvents, is_settled);
     ui->dateTimeEdit->setAttribute(Qt::WA_TransparentForMouseEvents, is_settled);
@@ -229,7 +229,7 @@ void TableWidgetSettlement::RecallSucceeded(int version)
     sync_state_ = SyncState::kSynced;
     model_->UpdateStatus(SettlementStatus::kUnsettled);
 
-    HideWidget(false);
+    LockWidget(false);
 }
 
 void TableWidgetSettlement::UpdateSucceeded(int version)
@@ -241,5 +241,5 @@ void TableWidgetSettlement::UpdateSucceeded(int version)
     model_->UpdateStatus(SettlementStatus::kSettled);
 
     ui->tableView->clearSelection();
-    HideWidget(true);
+    LockWidget(true);
 }

@@ -68,7 +68,7 @@ private:
     void InitWidget();
     void InitData();
     void FetchNode();
-    void HideWidget(bool is_settled);
+    void LockWidget(bool is_settled);
     bool ValidateSyncState();
 
 private:

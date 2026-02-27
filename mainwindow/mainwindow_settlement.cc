@@ -93,7 +93,7 @@ void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
     Q_ASSERT(qobject_cast<TreeWidgetSettlement*>(current_widget));
     auto* settlement_widget { static_cast<TreeWidgetSettlement*>(current_widget) };
 
-    if (index.column() != std::to_underlying(SettlementEnum::kIssuedTime))
+    if (index.column() != std::to_underlying(SettlementEnum::kPartner))
         return;
 
     auto* settlement { static_cast<Settlement*>(index.internalPointer()) };
