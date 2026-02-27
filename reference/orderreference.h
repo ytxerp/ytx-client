@@ -28,7 +28,7 @@
 
 #include "component/constant.h"
 
-struct OrderReference {
+struct OrderReference final {
     QDateTime issued_time {};
     QUuid order_id {};
     QUuid node_id {}; // partner or inventory id

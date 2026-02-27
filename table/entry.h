@@ -34,9 +34,10 @@ struct Entry {
     QStringList tag {};
     int status {};
     QUuid rhs_node {};
+
+    // NOTE: Following fields are only used by base Entry, not EntryP or EntryO
     double lhs_rate {};
     double rhs_rate {};
-
     double lhs_debit {};
     double lhs_credit {};
     double rhs_debit {};

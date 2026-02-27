@@ -22,11 +22,11 @@ void Node::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kDescription); val.isString())
         description = val.toString();
     if (const auto val = object.value(kKind); val.isDouble())
-        kind = NodeKind(val.toInt());
+        kind = static_cast<NodeKind>(val.toInt());
     if (const auto val = object.value(kDirectionRule); val.isBool())
         direction_rule = val.toBool();
     if (const auto val = object.value(kUnit); val.isDouble())
-        unit = NodeUnit(val.toInt());
+        unit = static_cast<NodeUnit>(val.toInt());
     if (const auto val = object.value(kFinalTotal); val.isString())
         final_total = val.toString().toDouble();
     if (const auto val = object.value(kInitialTotal); val.isString())
@@ -145,7 +145,7 @@ void NodeO::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kDiscountTotal); val.isString())
         discount_total = val.toString().toDouble();
     if (const auto val = object.value(kStatus); val.isDouble())
-        status = NodeStatus(val.toInt());
+        status = static_cast<NodeStatus>(val.toInt());
     if (const auto val = object.value(kSettlementId); val.isString())
         settlement_id = QUuid(val.toString());
     if (const auto val = object.value(kIsSettled); val.isBool())

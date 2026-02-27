@@ -33,6 +33,7 @@ struct Tag final {
     QString color {};
     int version {};
 
+    // state is local only, not serialized
     SyncState state { SyncState::kNew };
 
     void Reset();

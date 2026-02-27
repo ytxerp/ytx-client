@@ -65,6 +65,7 @@ struct StatementNode final {
     double count {};
     double measure {};
     double amount {};
+    // NOTE: status is local only, not serialized
     int status {};
     QString description {};
     QUuid employee_id {};
@@ -104,6 +105,7 @@ struct StatementEntry final {
     double measure {};
     double unit_price {};
     double amount {};
+    // NOTE: status is local only, not serialized
     int status {};
     QString description {};
 

@@ -15,7 +15,7 @@ void Settlement::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kDescription); val.isString())
         description = val.toString();
     if (const auto val = object.value(kStatus); val.isDouble())
-        status = SettlementStatus(val.toInt());
+        status = static_cast<SettlementStatus>(val.toInt());
     if (const auto val = object.value(kAmount); val.isString())
         amount = val.toString().toDouble();
     if (const auto val = object.value(kUserId); val.isString())
