@@ -182,6 +182,7 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
     auto* menu = new QMenu(this);
 
     auto* tag_menu = menu->addMenu(tr("Tags"));
+    tag_menu->setIcon(ui->actionTags->icon());
 
     if (!tag_hash.isEmpty()) {
         QList<Tag*> sorted_tags = tag_hash.values();

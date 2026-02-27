@@ -24,7 +24,7 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, const NodeO& node, SyncState sy
     IniWidget();
     IniRuleGroup();
     IniUnitGroup();
-    IniData(node);
+    IniData(tmp_node_);
     IniConnect();
 
     if (sync_state == SyncState::kNew)
