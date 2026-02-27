@@ -233,9 +233,9 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     const bool can_print { is_finished || tmp_node_.unit == NodeUnit::OPending };
     ui->pBtnPrint->setEnabled(can_print);
 
-    ui->pBtnSave->setVisible(is_unfinished);
-    ui->pBtnRelease->setVisible(is_unfinished && tmp_node_.unit != NodeUnit::OPending);
-    ui->pBtnRecall->setVisible(is_finished);
+    ui->pBtnSave->setEnabled(is_unfinished);
+    ui->pBtnRelease->setEnabled(is_unfinished && tmp_node_.unit != NodeUnit::OPending);
+    ui->pBtnRecall->setEnabled(is_finished);
 }
 
 void TableWidgetO::IniUiValue()

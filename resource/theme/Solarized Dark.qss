@@ -48,7 +48,6 @@ QLineEdit,
 QSpinBox,
 QDoubleSpinBox,
 QListView,
-QWidget#widgetBottomO,
 QHeaderView::section,
 QTabBar::tab,
 QToolBar,
@@ -72,14 +71,12 @@ QDoubleSpinBox#dspin_box_static_ {
 
 /* Specific border removals */
 QGroupBox#treeGroupO,
-QGroupBox#tableGroup,
-QTableView#tableViewO {
+QGroupBox#tableGroup {
     border-bottom: none;
 }
 
 QGroupBox#treeGroup,
-QTableView#tableViewO,
-QWidget#widgetBottomO {
+QTableView#tableViewO {
     border-top: none;
 }
 
