@@ -448,6 +448,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
     pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kUnfinished));
     pending_update_.insert(kVersion, tmp_node_.version);
+    qInfo() << "on_pBtnRecall_clicked: tmp_node_ version" << tmp_node_.version;
 
     WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_id_, pending_update_));
 
@@ -509,6 +510,8 @@ void TableWidgetO::SaveOrder()
         ui->rBtnTO->setEnabled(false);
     }
 
+    qInfo() << "SaveOrder: tmp_node_ version" << tmp_node_.version;
+
     sync_state_ = SyncState::kDirty;
     has_pending_update_ = false;
     ui->tableViewO->clearSelection();
@@ -544,6 +547,8 @@ void TableWidgetO::on_pBtnRelease_clicked()
         ui->rBtnRO->setEnabled(false);
         ui->rBtnTO->setEnabled(false);
     }
+
+    qInfo() << "on_pBtnRelease_clicked: tmp_node_ version" << tmp_node_.version;
 
     sync_state_ = SyncState::kDirty;
     has_pending_update_ = false;
