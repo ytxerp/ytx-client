@@ -51,7 +51,7 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
     case NodeEnumF::kUnit:
         return std::to_underlying(node->unit);
     case NodeEnumF::kInitialTotal:
-        return node->unit == root_->unit ? QVariant() : node->initial_total;
+        return node->initial_total;
     case NodeEnumF::kFinalTotal:
         return node->final_total;
     case NodeEnumF::kDocument:

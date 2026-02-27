@@ -32,7 +32,7 @@ public:
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    QString Format(const QModelIndex& index) const;
+    QString Format(const QModelIndex& index, int unit) const;
 
 private:
     const int& decimal_;

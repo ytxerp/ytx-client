@@ -12,22 +12,27 @@ FinanceForeignR::FinanceForeignR(const int& decimal, const int& default_unit, CI
 
 void FinanceForeignR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    PaintText(Format(index), painter, option, index, Qt::AlignRight | Qt::AlignVCenter);
+    const int unit { index.siblingAtColumn(std::to_underlying(NodeEnumF::kUnit)).data().toInt() };
+    if (unit == default_unit_)
+        return PaintEmpty(painter, option, index);
+
+    PaintText(Format(index, unit), painter, option, index, Qt::AlignRight | Qt::AlignVCenter);
 }
 
 QSize FinanceForeignR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    return CalculateTextSize(Format(index), option, kCoefficient16);
+    const int unit { index.siblingAtColumn(std::to_underlying(NodeEnumF::kUnit)).data().toInt() };
+    if (unit == default_unit_)
+        return option.rect.size();
+
+    return CalculateTextSize(Format(index, unit), option, kCoefficient16);
 }
 
-QString FinanceForeignR::Format(const QModelIndex& index) const
+QString FinanceForeignR::Format(const QModelIndex& index, int unit) const
 {
-    const int unit { index.siblingAtColumn(std::to_underlying(NodeEnumF::kUnit)).data().toInt() };
     auto it { unit_symbol_map_.constFind(unit) };
-
-    if (unit == default_unit_ || it == unit_symbol_map_.constEnd())
+    if (it == unit_symbol_map_.constEnd())
         return kEmptyString;
 
-    double value { index.data().toDouble() };
-    return it.value() + locale_.toString(value, 'f', decimal_);
+    return it.value() + locale_.toString(index.data().toDouble(), 'f', decimal_);
 }
