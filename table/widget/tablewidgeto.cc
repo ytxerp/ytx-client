@@ -446,6 +446,8 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
     }
 
+    tmp_node_.status = NodeStatus::kUnfinished;
+
     pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kUnfinished));
     pending_update_.insert(kVersion, tmp_node_.version);
     qInfo() << "on_pBtnRecall_clicked: tmp_node_ version" << tmp_node_.version;
@@ -492,6 +494,8 @@ void TableWidgetO::SaveOrder()
     if (!HasPendingUpdate())
         return;
 
+    tmp_node_.status = NodeStatus::kUnfinished;
+
     QJsonObject order_message { JsonGen::MetaMessage(section_) };
     table_model_order_->Finalize(order_message);
 
@@ -526,6 +530,8 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
     if (!ValidateSyncState())
         return;
+
+    tmp_node_.status = NodeStatus::kFinished;
 
     QJsonObject order_message { JsonGen::MetaMessage(section_) };
     table_model_order_->Finalize(order_message);
