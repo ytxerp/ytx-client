@@ -23,6 +23,7 @@
 #include "component/config.h"
 #include "entryhub/entryhub.h"
 #include "tag/tag.h"
+#include "tag/tagicon.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidget.h"
 #include "widgetcontex.h"
@@ -41,7 +42,7 @@ struct SectionContext {
     QHash<QUuid, WidgetContext> widget_hash {};
 
     QHash<QUuid, Tag*> tag_hash {};
-    QHash<QUuid, TagIcons> tag_icons_hash {};
+    QHash<QUuid, TagIcon> tag_icon_hash {};
 };
 
 #endif // SECTIONCONTEX_H

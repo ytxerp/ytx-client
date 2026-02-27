@@ -100,7 +100,7 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
         Utils::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDocument:
-        Utils::UpdateStringList(pending_updates_[id], d_node, kDocument, value.toStringList(), &NodeT::document, [id, this]() { RestartTimer(id); });
+        Utils::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kId:
     case NodeEnumT::kUpdateBy:

@@ -24,7 +24,7 @@
 
 #include "table/entry.h"
 
-struct EntryShadow {
+struct EntryShadow final {
     QUuid* id {};
     QDateTime* issued_time {};
     QString* code {};
@@ -59,18 +59,13 @@ struct EntryShadow {
     bool is_parallel {};
 
     // BindEntry connects the shadow to a concrete Entry instance.
-    // Subclasses can:
-    //   1. Call the base implementation to bind common fields, or
-    //   2. Partially bind only relevant fields (e.g., EntryShadowO for order entries),
-    //      skipping unused common fields like issued_time, document, or status.
-    virtual void BindEntry(Entry* base, bool parallel);
+    void BindEntry(Entry* base, bool parallel);
 
-    // ResetState clears all bound pointers and restores the shadow to default values.
-    virtual void ResetState();
+    // Reset clears all bound pointers and restores the shadow to default values.
+    void Reset();
 
     // Serialize shadow to JSON.
-    virtual QJsonObject WriteJson() const;
-    virtual ~EntryShadow() = default;
+    QJsonObject WriteJson() const;
 };
 
 using EntryShadowList = QList<EntryShadow*>;

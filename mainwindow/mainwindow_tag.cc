@@ -67,7 +67,7 @@ void MainWindow::RApplyTag(const QJsonObject& obj)
 
         auto* tag { ResourcePool<Tag>::Instance().Allocate() };
         tag->ReadJson(tag_obj);
-        tag->state = Tag::State::SYNCED;
+        tag->state = SyncState::kSynced;
 
         sc->tag_hash.insert(id, tag);
         UpdateTagIcon(sc, tag);
@@ -107,7 +107,7 @@ void MainWindow::RInsertTag(const QJsonObject& obj, bool is_same_session)
     }
 
     tag->ReadJson(tag_obj);
-    tag->state = Tag::State::SYNCED;
+    tag->state = SyncState::kSynced;
     sc->tag_hash.insert(tag->id, tag);
     UpdateTagIcon(sc, tag);
 }
@@ -159,7 +159,7 @@ void MainWindow::RDeleteTag(const QJsonObject& obj)
 
     auto* tag { sc->tag_hash.take(id) };
     if (tag) {
-        sc->tag_icons_hash.remove(id);
+        sc->tag_icon_hash.remove(id);
         ResourcePool<Tag>::Instance().Recycle(tag);
     } else {
         qWarning() << "RDeleteTag: tag not found";
@@ -328,12 +328,12 @@ void MainWindow::UpdateTagIcon(SectionContext* sc, const Tag* tag)
     if (tag_id.isNull())
         return;
 
-    TagIcons icons {};
-    icons.pixmap = Utils::CreateTagPixmap(tag);
-    icons.icon = Utils::CreateTagIcon(tag, /*checked=*/false);
-    icons.icon_checked = Utils::CreateTagIcon(tag, /*checked=*/true);
+    TagIcon icon {};
+    icon.pixmap = Utils::CreateTagPixmap(tag);
+    icon.icon = Utils::CreateTagIcon(tag, /*checked=*/false);
+    icon.icon_checked = Utils::CreateTagIcon(tag, /*checked=*/true);
 
-    sc->tag_icons_hash.insert(tag_id, icons);
+    sc->tag_icon_hash.insert(tag_id, icon);
 }
 
 QIcon MainWindow::GetTagIcon(SectionContext* sc, const Tag* tag, bool checked)
@@ -346,14 +346,14 @@ QIcon MainWindow::GetTagIcon(SectionContext* sc, const Tag* tag, bool checked)
         return QIcon();
     }
 
-    auto it = sc->tag_icons_hash.find(tag_id);
-    if (it == sc->tag_icons_hash.end()) {
-        TagIcons icons {};
-        icons.pixmap = Utils::CreateTagPixmap(tag);
-        icons.icon = Utils::CreateTagIcon(tag, false);
-        icons.icon_checked = Utils::CreateTagIcon(tag, true);
+    auto it = sc->tag_icon_hash.find(tag_id);
+    if (it == sc->tag_icon_hash.end()) {
+        TagIcon icon {};
+        icon.pixmap = Utils::CreateTagPixmap(tag);
+        icon.icon = Utils::CreateTagIcon(tag, false);
+        icon.icon_checked = Utils::CreateTagIcon(tag, true);
 
-        it = sc->tag_icons_hash.insert(tag_id, icons);
+        it = sc->tag_icon_hash.insert(tag_id, icon);
     }
 
     return checked ? it->icon_checked : it->icon;

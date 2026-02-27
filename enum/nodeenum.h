@@ -25,7 +25,6 @@ enum class NodeKind { kLeaf = 0, kBranch };
 
 /** @brief Workflow status of a node. Just for Task and Order sections. */
 enum class NodeStatus { kUnfinished = 0, kFinished };
-enum class SyncState { kLocalOnly, kSynced, kOutOfSync };
 
 /** @brief NodeUnit, global unit identifier across ERP. */
 /**
@@ -214,6 +213,7 @@ enum class NodeEnumF {
     kDescription,
     kTag,
     kColor,
+    kDocument,
     kDirectionRule,
     kKind,
     kUnit,
@@ -234,6 +234,7 @@ enum class NodeEnumI {
     kDescription,
     kTag,
     kColor,
+    kDocument,
     kUnitPrice,
     kCommission,
     kDirectionRule,
@@ -277,6 +278,7 @@ enum class NodeEnumP {
     kDescription,
     kTag,
     kColor,
+    kDocument,
     kPaymentTerm,
     kKind,
     kUnit,

@@ -49,17 +49,16 @@ struct Entry {
     QUuid updated_by {};
     int version {};
 
-    virtual void ResetState();
+    virtual void Reset();
     virtual void ReadJson(const QJsonObject& object);
     virtual QJsonObject WriteJson() const { return QJsonObject(); }
-    virtual ~Entry() = default;
 };
 
 struct EntryP final : Entry {
     double unit_price {};
     QUuid external_sku {};
 
-    void ResetState() override;
+    void Reset() override;
     void ReadJson(const QJsonObject& object) override;
     QJsonObject WriteJson() const override;
 };
@@ -74,7 +73,7 @@ struct EntryO final : Entry {
     double discount {};
     double unit_discount {};
 
-    void ResetState() override;
+    void Reset() override;
     void ReadJson(const QJsonObject& object) override;
     QJsonObject WriteJson() const override;
 };

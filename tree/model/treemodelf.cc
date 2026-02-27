@@ -54,8 +54,8 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
         return node->unit == root_->unit ? QVariant() : node->initial_total;
     case NodeEnumF::kFinalTotal:
         return node->final_total;
-    default:
-        return QVariant();
+    case NodeEnumF::kDocument:
+        return node->document;
     }
 }
 
@@ -89,6 +89,9 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumF::kDirectionRule:
         UpdateDirectionRule(node, value.toBool(), index);
         break;
+    case NodeEnumF::kDocument:
+        Utils::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
+        break;
     case NodeEnumF::kId:
     case NodeEnumF::kUpdateBy:
     case NodeEnumF::kUpdateTime:
@@ -101,7 +104,7 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumF::kUnit:
     case NodeEnumF::kInitialTotal:
     case NodeEnumF::kFinalTotal:
-        break;
+        return false;
     }
 
     emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
@@ -134,6 +137,8 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumF::kFinalTotal:
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
+        case NodeEnumF::kDocument:
+            return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case NodeEnumF::kId:
         case NodeEnumF::kUpdateBy:
         case NodeEnumF::kUpdateTime:
@@ -168,6 +173,7 @@ Qt::ItemFlags TreeModelF::flags(const QModelIndex& index) const
     case NodeEnumF::kKind:
     case NodeEnumF::kColor:
     case NodeEnumF::kTag:
+    case NodeEnumF::kDocument:
     case NodeEnumF::kUnit:
         flags &= ~Qt::ItemIsEditable;
         break;

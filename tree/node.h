@@ -36,6 +36,7 @@ struct Node {
     NodeUnit unit {};
     QString color {};
     QStringList tag {};
+    QStringList document {};
 
     double final_total {};
     double initial_total {};
@@ -50,7 +51,7 @@ struct Node {
     Node* parent {};
     QList<Node*> children {};
 
-    virtual void ResetState();
+    virtual void Reset();
     virtual void InvertTotal();
 
     virtual void ReadJson(const QJsonObject& object);
@@ -65,25 +66,18 @@ struct NodeI final : Node {
     double unit_price {};
     double commission {};
 
-    void ResetState() override;
+    void Reset() override;
 
     void ReadJson(const QJsonObject& object) override;
     QJsonObject WriteJson() const override;
 };
 
-struct NodeT final : Node {
-    QStringList document {};
-
-    void ResetState() override;
-
-    void ReadJson(const QJsonObject& object) override;
-    QJsonObject WriteJson() const override;
-};
+struct NodeT final : Node { };
 
 struct NodeP final : Node {
     int payment_term {};
 
-    void ResetState() override;
+    void Reset() override;
 
     void ReadJson(const QJsonObject& object) override;
     QJsonObject WriteJson() const override;
@@ -105,7 +99,7 @@ struct NodeO final : Node {
     double discount_total {};
     NodeStatus status {};
 
-    void ResetState() override;
+    void Reset() override;
     void InvertTotal() override;
 
     void ReadJson(const QJsonObject& object) override;

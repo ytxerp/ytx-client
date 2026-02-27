@@ -52,8 +52,6 @@ QVariant SearchNodeModelT::data(const QModelIndex& index, int role) const
         return d_node->initial_total;
     case NodeEnumT::kFinalTotal:
         return d_node->final_total;
-    default:
-        return QVariant();
     }
 }
 

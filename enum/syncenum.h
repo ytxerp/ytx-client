@@ -17,22 +17,9 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TAGDELEGATE_H
-#define TAGDELEGATE_H
+#ifndef SYNCENUM_H
+#define SYNCENUM_H
 
-#include "delegate/styleditemdelegate.h"
-#include "tag/tag.h"
-#include "tag/tagicon.h"
+enum class SyncState { kNew, kSynced, kDirty };
 
-class TagDelegate final : public StyledItemDelegate {
-public:
-    explicit TagDelegate(const QHash<QUuid, Tag*>& tag_hash, const QHash<QUuid, TagIcon>& tag_icon_hash, QObject* parent = nullptr);
-    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-
-private:
-    const QHash<QUuid, Tag*>& tag_hash_ {};
-    const QHash<QUuid, TagIcon>& tag_icon_hash_ {};
-};
-
-#endif // TAGDELEGATE_H
+#endif // SYNCENUM_H

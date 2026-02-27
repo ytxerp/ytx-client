@@ -20,15 +20,9 @@
 #ifndef CONCEPTS_H
 #define CONCEPTS_H
 
-#include <concepts>
 #include <ranges>
 
 template <typename Container>
 concept Iterable = std::ranges::input_range<Container>;
-
-template <typename T>
-concept Resettable = requires(T& t) {
-    { t.ResetState() } -> std::same_as<void>;
-};
 
 #endif // CONCEPTS_H

@@ -38,40 +38,30 @@ struct OrderReference {
     double initial {};
     QString description {};
 
-    void ResetState();
+    void Reset();
     void ReadJson(const QJsonObject& object);
 };
 
-inline void OrderReference::ResetState()
-{
-    issued_time = {};
-    order_id = QUuid();
-    node_id = QUuid();
-    count = 0.0;
-    measure = 0.0;
-    unit_price = 0.0;
-    initial = 0.0;
-    description.clear();
-}
+inline void OrderReference::Reset() { *this = OrderReference {}; }
 
 inline void OrderReference::ReadJson(const QJsonObject& object)
 {
-    if (object.contains(kIssuedTime))
-        issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
-    if (object.contains(kNodeId))
-        node_id = QUuid(object[kNodeId].toString());
-    if (object.contains(kOrderId))
-        order_id = QUuid(object[kOrderId].toString());
-    if (object.contains(kDescription))
-        description = object[kDescription].toString();
-    if (object.contains(kCount))
-        count = object[kCount].toString().toDouble();
-    if (object.contains(kMeasure))
-        measure = object[kMeasure].toString().toDouble();
-    if (object.contains(kInitial))
-        initial = object[kInitial].toString().toDouble();
-    if (object.contains(kUnitPrice))
-        unit_price = object[kUnitPrice].toString().toDouble();
+    if (const auto val = object.value(kIssuedTime); val.isString())
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kNodeId); val.isString())
+        node_id = QUuid(val.toString());
+    if (const auto val = object.value(kOrderId); val.isString())
+        order_id = QUuid(val.toString());
+    if (const auto val = object.value(kDescription); val.isString())
+        description = val.toString();
+    if (const auto val = object.value(kCount); val.isString())
+        count = val.toString().toDouble();
+    if (const auto val = object.value(kMeasure); val.isString())
+        measure = val.toString().toDouble();
+    if (const auto val = object.value(kInitial); val.isString())
+        initial = val.toString().toDouble();
+    if (const auto val = object.value(kUnitPrice); val.isString())
+        unit_price = val.toString().toDouble();
 }
 
 #endif // ORDERREFERENCE_H

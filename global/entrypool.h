@@ -143,7 +143,7 @@ inline void EntryPool::Recycle(Entry* entry, Section section)
         return;
     }
 
-    entry->ResetState();
+    entry->Reset();
     pool.push_back(entry);
 }
 
@@ -164,7 +164,7 @@ template <Iterable Container> inline void EntryPool::Recycle(Container& containe
 
     for (Entry* e : container) {
         if (e) {
-            e->ResetState();
+            e->Reset();
             pool.push_back(e);
         }
     }

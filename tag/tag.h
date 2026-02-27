@@ -20,69 +20,50 @@
 #ifndef TAG_H
 #define TAG_H
 
-#include <QIcon>
 #include <QJsonObject>
 #include <QString>
 #include <QUuid>
 
 #include "component/constant.h"
+#include "enum/syncenum.h"
 
-struct Tag {
-    enum class State {
-        NEW,
-        INSERTING,
-        SYNCED,
-    };
-
+struct Tag final {
     QUuid id {};
     QString name {};
     QString color {};
     int version {};
 
-    State state { State::NEW };
+    SyncState state { SyncState::kNew };
 
-    void ResetState();
+    void Reset();
     QJsonObject WriteJson() const;
     void ReadJson(const QJsonObject& object);
 };
 
-inline void Tag::ResetState()
-{
-    id = QUuid();
-    name = {};
-    color = {};
-    version = 0;
-    state = State::NEW;
-}
+inline void Tag::Reset() { *this = Tag {}; }
 
 inline QJsonObject Tag::WriteJson() const
 {
     QJsonObject obj {};
+
     obj.insert(kId, id.toString(QUuid::WithoutBraces));
     obj.insert(kName, name);
     obj.insert(kColor, color);
+
+    // version is managed by the server, not written to json
     return obj;
 }
 
 inline void Tag::ReadJson(const QJsonObject& object)
 {
-    if (object.contains(kId))
-        id = QUuid(object[kId].toString());
-
-    if (object.contains(kName))
-        name = object[kName].toString();
-
-    if (object.contains(kColor))
-        color = object[kColor].toString();
-
-    if (object.contains(kVersion))
-        version = object[kVersion].toInt();
+    if (const auto val = object.value(kId); val.isString())
+        id = QUuid(val.toString());
+    if (const auto val = object.value(kName); val.isString())
+        name = val.toString();
+    if (const auto val = object.value(kColor); val.isString())
+        color = val.toString();
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
 }
-
-struct TagIcons {
-    QIcon icon {};
-    QIcon icon_checked {};
-    QPixmap pixmap {};
-};
 
 #endif // TAG_H

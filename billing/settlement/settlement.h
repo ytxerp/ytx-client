@@ -26,7 +26,7 @@
 
 #include "enum/settlementenum.h"
 
-struct Settlement {
+struct Settlement final {
     QUuid id {};
     QUuid partner_id {};
     QDateTime issued_time {};
@@ -41,13 +41,13 @@ struct Settlement {
     QUuid updated_by {};
     int version {};
 
-    void ResetState();
+    void Reset();
 
     void ReadJson(const QJsonObject& object);
     QJsonObject WriteJson() const;
 };
 
-struct SettlementItem {
+struct SettlementItem final {
     QUuid id {};
     QUuid employee_id {};
     QDateTime issued_time {};
@@ -55,7 +55,7 @@ struct SettlementItem {
     double amount {};
     bool is_settled {};
 
-    void ResetState();
+    void Reset();
 
     void ReadJson(const QJsonObject& object);
 };

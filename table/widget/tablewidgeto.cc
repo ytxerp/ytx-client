@@ -27,7 +27,7 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, const NodeO& node, SyncState sy
     IniData(node);
     IniConnect();
 
-    if (sync_state == SyncState::kLocalOnly)
+    if (sync_state == SyncState::kNew)
         QTimer::singleShot(0, this, [this]() { ui->comboPartner->setFocus(); });
 }
 
@@ -195,7 +195,7 @@ void TableWidgetO::IniData(const NodeO& node)
         LockWidgets(NodeStatus(node.status));
     }
 
-    if (sync_state_ == SyncState::kLocalOnly)
+    if (sync_state_ == SyncState::kNew)
         return;
 
     {
@@ -215,13 +215,13 @@ void TableWidgetO::LockWidgets(NodeStatus value)
 {
     const bool is_unfinished { value == NodeStatus::kUnfinished };
     const bool is_finished { value == NodeStatus::kFinished };
-    const bool is_local { sync_state_ == SyncState::kLocalOnly };
+    const bool is_new { sync_state_ == SyncState::kNew };
 
     ui->comboPartner->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
     ui->comboEmployee->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
 
-    ui->rBtnRO->setEnabled(is_local);
-    ui->rBtnTO->setEnabled(is_local);
+    ui->rBtnRO->setEnabled(is_new);
+    ui->rBtnTO->setEnabled(is_new);
 
     ui->rBtnIS->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
     ui->rBtnMS->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
@@ -451,7 +451,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
     WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_id_, pending_update_));
 
-    sync_state_ = SyncState::kOutOfSync;
+    sync_state_ = SyncState::kDirty;
     pending_update_ = QJsonObject();
     has_pending_update_ = false;
 }
@@ -469,7 +469,7 @@ bool TableWidgetO::ValidatePartner()
 
 bool TableWidgetO::ValidateSyncState()
 {
-    if (sync_state_ == SyncState::kOutOfSync) {
+    if (sync_state_ == SyncState::kDirty) {
         Utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
             tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), kThreeThousand);
         return false;
@@ -501,7 +501,7 @@ void TableWidgetO::SaveOrder()
         pending_update_ = QJsonObject();
     }
 
-    if (sync_state_ == SyncState::kLocalOnly) {
+    if (sync_state_ == SyncState::kNew) {
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_message);
 
@@ -509,7 +509,7 @@ void TableWidgetO::SaveOrder()
         ui->rBtnTO->setEnabled(false);
     }
 
-    sync_state_ = SyncState::kOutOfSync;
+    sync_state_ = SyncState::kDirty;
     has_pending_update_ = false;
     ui->tableViewO->clearSelection();
 }
@@ -537,7 +537,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
         pending_update_ = QJsonObject();
     }
 
-    if (sync_state_ == SyncState::kLocalOnly) {
+    if (sync_state_ == SyncState::kNew) {
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_message);
 
@@ -545,7 +545,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
         ui->rBtnTO->setEnabled(false);
     }
 
-    sync_state_ = SyncState::kOutOfSync;
+    sync_state_ = SyncState::kDirty;
     has_pending_update_ = false;
     ui->tableViewO->clearSelection();
 }

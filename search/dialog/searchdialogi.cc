@@ -22,6 +22,7 @@ void SearchDialogI::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kUnitPrice), quantity_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kCommission), quantity_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kTag), tag_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kDocument), document_);
 }
 
 void SearchDialogI::REntryDoubleClicked(const QModelIndex& index)

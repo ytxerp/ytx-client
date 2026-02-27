@@ -4,10 +4,10 @@
 
 #include <QPainter>
 
-TagDelegate::TagDelegate(const QHash<QUuid, Tag*>& tag_hash, const QHash<QUuid, TagIcons>& tag_icons_hash, QObject* parent)
+TagDelegate::TagDelegate(const QHash<QUuid, Tag*>& tag_hash, const QHash<QUuid, TagIcon>& tag_icon_hash, QObject* parent)
     : StyledItemDelegate { parent }
     , tag_hash_ { tag_hash }
-    , tag_icons_hash_ { tag_icons_hash }
+    , tag_icon_hash_ { tag_icon_hash }
 {
 }
 
@@ -31,8 +31,8 @@ void TagDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, c
         if (tag_id.isNull())
             continue;
 
-        const auto it { tag_icons_hash_.constFind(tag_id) };
-        if (it == tag_icons_hash_.constEnd()) {
+        const auto it { tag_icon_hash_.constFind(tag_id) };
+        if (it == tag_icon_hash_.constEnd()) {
             continue;
         }
 
@@ -68,9 +68,9 @@ QSize TagDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInde
 
     for (const QString& id_str : tag_ids) {
         const QUuid tag_id { QUuid::fromString(id_str) };
-        const auto it { tag_icons_hash_.constFind(tag_id) };
+        const auto it { tag_icon_hash_.constFind(tag_id) };
 
-        if (it == tag_icons_hash_.constEnd()) {
+        if (it == tag_icon_hash_.constEnd()) {
             continue;
         }
 

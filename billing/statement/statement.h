@@ -26,7 +26,7 @@
 
 #include "component/constant.h"
 
-struct Statement {
+struct Statement final {
     QUuid partner_id {};
     double pbalance {};
     double ccount {};
@@ -35,46 +35,31 @@ struct Statement {
     double cbalance {};
     double csettlement {};
 
-    void ResetState();
+    void Reset();
     void ReadJson(const QJsonObject& object);
 };
 
-inline void Statement::ResetState()
-{
-    partner_id = QUuid();
-    pbalance = 0.0;
-    ccount = 0.0;
-    cmeasure = 0.0;
-    camount = 0.0;
-    cbalance = 0.0;
-    csettlement = 0.0;
-}
+inline void Statement::Reset() { *this = Statement {}; }
 
 inline void Statement::ReadJson(const QJsonObject& object)
 {
-    if (object.contains(kPartnerId))
-        partner_id = QUuid(object[kPartnerId].toString());
-
-    if (object.contains(kPBalance))
-        pbalance = object[kPBalance].toString().toDouble();
-
-    if (object.contains(kCCount))
-        ccount = object[kCCount].toString().toDouble();
-
-    if (object.contains(kCMeasure))
-        cmeasure = object[kCMeasure].toString().toDouble();
-
-    if (object.contains(kCAmount))
-        camount = object[kCAmount].toString().toDouble();
-
-    if (object.contains(kCBalance))
-        cbalance = object[kCBalance].toString().toDouble();
-
-    if (object.contains(kCSettlement))
-        csettlement = object[kCSettlement].toString().toDouble();
+    if (const auto val = object.value(kPartnerId); val.isString())
+        partner_id = QUuid(val.toString());
+    if (const auto val = object.value(kPBalance); val.isString())
+        pbalance = val.toString().toDouble();
+    if (const auto val = object.value(kCCount); val.isString())
+        ccount = val.toString().toDouble();
+    if (const auto val = object.value(kCMeasure); val.isString())
+        cmeasure = val.toString().toDouble();
+    if (const auto val = object.value(kCAmount); val.isString())
+        camount = val.toString().toDouble();
+    if (const auto val = object.value(kCBalance); val.isString())
+        cbalance = val.toString().toDouble();
+    if (const auto val = object.value(kCSettlement); val.isString())
+        csettlement = val.toString().toDouble();
 }
 
-struct StatementNode {
+struct StatementNode final {
     QDateTime issued_time {};
     QString code {};
     double count {};
@@ -85,51 +70,33 @@ struct StatementNode {
     QUuid employee_id {};
     double settlement {};
 
-    void ResetState();
+    void Reset();
     void ReadJson(const QJsonObject& object);
 };
 
-inline void StatementNode::ResetState()
-{
-    issued_time = {};
-    count = 0.0;
-    measure = 0.0;
-    amount = 0.0;
-    status = 0;
-    description = {};
-    code = {};
-    employee_id = QUuid();
-    settlement = 0.0;
-}
+inline void StatementNode::Reset() { *this = StatementNode {}; }
 
 inline void StatementNode::ReadJson(const QJsonObject& object)
 {
-    if (object.contains(kIssuedTime))
-        issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
-
-    if (object.contains(kCount))
-        count = object[kCount].toString().toDouble();
-
-    if (object.contains(kMeasure))
-        measure = object[kMeasure].toString().toDouble();
-
-    if (object.contains(kAmount))
-        amount = object[kAmount].toString().toDouble();
-
-    if (object.contains(kDescription))
-        description = object[kDescription].toString();
-
-    if (object.contains(kCode))
-        code = object[kCode].toString();
-
-    if (object.contains(kEmployeeId))
-        employee_id = QUuid(object[kEmployeeId].toString());
-
-    if (object.contains(kSettlement))
-        settlement = object[kSettlement].toString().toDouble();
+    if (const auto val = object.value(kIssuedTime); val.isString())
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kCount); val.isString())
+        count = val.toString().toDouble();
+    if (const auto val = object.value(kMeasure); val.isString())
+        measure = val.toString().toDouble();
+    if (const auto val = object.value(kAmount); val.isString())
+        amount = val.toString().toDouble();
+    if (const auto val = object.value(kDescription); val.isString())
+        description = val.toString();
+    if (const auto val = object.value(kCode); val.isString())
+        code = val.toString();
+    if (const auto val = object.value(kEmployeeId); val.isString())
+        employee_id = QUuid(val.toString());
+    if (const auto val = object.value(kSettlement); val.isString())
+        settlement = val.toString().toDouble();
 }
 
-struct StatementEntry {
+struct StatementEntry final {
     QDateTime issued_time {};
     QString code {};
     QUuid internal_sku {};
@@ -140,48 +107,30 @@ struct StatementEntry {
     int status {};
     QString description {};
 
-    void ResetState();
+    void Reset();
     void ReadJson(const QJsonObject& object);
 };
 
-inline void StatementEntry::ResetState()
-{
-    issued_time = {};
-    code = {};
-    count = 0.0;
-    measure = 0.0;
-    amount = 0.0;
-    unit_price = 0.0;
-    status = 0;
-    description = {};
-    internal_sku = QUuid();
-}
+inline void StatementEntry::Reset() { *this = StatementEntry {}; }
 
 inline void StatementEntry::ReadJson(const QJsonObject& object)
 {
-    if (object.contains(kIssuedTime))
-        issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
-
-    if (object.contains(kInternalSku))
-        internal_sku = QUuid(object[kInternalSku].toString());
-
-    if (object.contains(kCount))
-        count = object[kCount].toString().toDouble();
-
-    if (object.contains(kMeasure))
-        measure = object[kMeasure].toString().toDouble();
-
-    if (object.contains(kUnitPrice))
-        unit_price = object[kUnitPrice].toString().toDouble();
-
-    if (object.contains(kAmount))
-        amount = object[kAmount].toString().toDouble();
-
-    if (object.contains(kDescription))
-        description = object[kDescription].toString();
-
-    if (object.contains(kCode))
-        code = object[kCode].toString();
+    if (const auto val = object.value(kIssuedTime); val.isString())
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kInternalSku); val.isString())
+        internal_sku = QUuid(val.toString());
+    if (const auto val = object.value(kCount); val.isString())
+        count = val.toString().toDouble();
+    if (const auto val = object.value(kMeasure); val.isString())
+        measure = val.toString().toDouble();
+    if (const auto val = object.value(kUnitPrice); val.isString())
+        unit_price = val.toString().toDouble();
+    if (const auto val = object.value(kAmount); val.isString())
+        amount = val.toString().toDouble();
+    if (const auto val = object.value(kDescription); val.isString())
+        description = val.toString();
+    if (const auto val = object.value(kCode); val.isString())
+        code = val.toString();
 }
 
 using StatementEntryList = QList<StatementEntry*>;

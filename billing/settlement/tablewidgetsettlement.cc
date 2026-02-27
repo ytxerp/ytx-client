@@ -65,7 +65,7 @@ void TableWidgetSettlement::InitData()
     ui->dateTimeEdit->setDateTime(settlement_.issued_time.toLocalTime());
     ui->dSpinAmount->setValue(settlement_.amount);
 
-    ui->comboPartner->setEnabled(sync_state_ == SyncState::kLocalOnly);
+    ui->comboPartner->setEnabled(sync_state_ == SyncState::kNew);
 
     const bool is_settled { settlement_.status == SettlementStatus::kSettled };
 
@@ -92,7 +92,7 @@ void TableWidgetSettlement::HideWidget(bool is_settled)
 
 bool TableWidgetSettlement::ValidateSyncState()
 {
-    if (sync_state_ == SyncState::kOutOfSync) {
+    if (sync_state_ == SyncState::kDirty) {
         Utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
             tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), kThreeThousand);
         return false;
@@ -178,13 +178,13 @@ void TableWidgetSettlement::on_pBtnRelease_clicked()
             pending_update_ = QJsonObject();
         }
 
-        if (sync_state_ == SyncState::kLocalOnly) {
+        if (sync_state_ == SyncState::kNew) {
             settlement_.status = SettlementStatus::kSettled;
             message.insert(kSettlement, settlement_.WriteJson());
             WebSocket::Instance()->SendMessage(kSettlementInserted, message);
         }
 
-        sync_state_ = SyncState::kOutOfSync;
+        sync_state_ = SyncState::kDirty;
     }
 }
 
@@ -209,7 +209,7 @@ void TableWidgetSettlement::on_pBtnRecall_clicked()
     WebSocket::Instance()->SendMessage(kSettlementRecalled, message);
     pending_update_ = QJsonObject();
 
-    sync_state_ = SyncState::kOutOfSync;
+    sync_state_ = SyncState::kDirty;
 }
 
 void TableWidgetSettlement::InsertSucceeded(int version)

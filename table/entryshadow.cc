@@ -3,35 +3,7 @@
 #include "component/constant.h"
 #include "utils/entryutils.h"
 
-void EntryShadow::ResetState()
-{
-    id = nullptr;
-    issued_time = nullptr;
-    code = nullptr;
-    lhs_node = nullptr;
-    description = nullptr;
-    rhs_node = nullptr;
-    status = nullptr;
-    document = nullptr;
-    tag = nullptr;
-    lhs_rate = nullptr;
-    rhs_rate = nullptr;
-    lhs_debit = nullptr;
-    lhs_credit = nullptr;
-    rhs_debit = nullptr;
-    rhs_credit = nullptr;
-
-    user_id = nullptr;
-    created_time = nullptr;
-    created_by = nullptr;
-    updated_time = nullptr;
-    updated_by = nullptr;
-    entry = nullptr;
-    version = nullptr;
-
-    balance = 0.0;
-    is_parallel = {};
-}
+void EntryShadow::Reset() { *this = EntryShadow {}; }
 
 void EntryShadow::BindEntry(Entry* base, bool parallel)
 {
@@ -49,13 +21,13 @@ void EntryShadow::BindEntry(Entry* base, bool parallel)
 
     lhs_node = parallel ? &base->lhs_node : &base->rhs_node;
     rhs_node = parallel ? &base->rhs_node : &base->lhs_node;
-    lhs_rate = is_parallel ? &entry->lhs_rate : &entry->rhs_rate;
-    lhs_debit = is_parallel ? &entry->lhs_debit : &entry->rhs_debit;
-    lhs_credit = is_parallel ? &entry->lhs_credit : &entry->rhs_credit;
+    lhs_rate = parallel ? &base->lhs_rate : &base->rhs_rate;
+    lhs_debit = parallel ? &base->lhs_debit : &base->rhs_debit;
+    lhs_credit = parallel ? &base->lhs_credit : &base->rhs_credit;
 
-    rhs_rate = is_parallel ? &entry->rhs_rate : &entry->lhs_rate;
-    rhs_debit = is_parallel ? &entry->rhs_debit : &entry->lhs_debit;
-    rhs_credit = is_parallel ? &entry->rhs_credit : &entry->lhs_credit;
+    rhs_rate = parallel ? &base->rhs_rate : &base->lhs_rate;
+    rhs_debit = parallel ? &base->rhs_debit : &base->lhs_debit;
+    rhs_credit = parallel ? &base->rhs_credit : &base->lhs_credit;
 
     user_id = &base->user_id;
     created_time = &base->created_time;

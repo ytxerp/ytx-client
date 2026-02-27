@@ -34,6 +34,8 @@ QVariant SearchNodeModelI::data(const QModelIndex& index, int role) const
         return d_node->code;
     case NodeEnumI::kTag:
         return d_node->tag;
+    case NodeEnumI::kDocument:
+        return d_node->document;
     case NodeEnumI::kDescription:
         return d_node->description;
     case NodeEnumI::kDirectionRule:
@@ -52,8 +54,6 @@ QVariant SearchNodeModelI::data(const QModelIndex& index, int role) const
         return d_node->initial_total;
     case NodeEnumI::kFinalTotal:
         return d_node->final_total;
-    default:
-        return QVariant();
     }
 }
 
@@ -90,6 +90,8 @@ void SearchNodeModelI::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(d_lhs, d_rhs, &NodeI::commission, order);
         case NodeEnumI::kUnitPrice:
             return Utils::CompareMember(d_lhs, d_rhs, &NodeI::unit_price, order);
+        case NodeEnumI::kDocument:
+            return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumI::kId:
         case NodeEnumI::kUpdateBy:
         case NodeEnumI::kUpdateTime:

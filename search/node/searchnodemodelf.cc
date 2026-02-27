@@ -48,8 +48,8 @@ QVariant SearchNodeModelF::data(const QModelIndex& index, int role) const
         return node->initial_total;
     case NodeEnumF::kFinalTotal:
         return node->final_total;
-    default:
-        return QVariant();
+    case NodeEnumF::kDocument:
+        return node->document;
     }
 }
 
@@ -79,6 +79,8 @@ void SearchNodeModelF::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumF::kTag:
             return Utils::CompareMember(lhs, rhs, &Node::tag, order);
+        case NodeEnumF::kDocument:
+            return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case NodeEnumF::kId:
         case NodeEnumF::kUpdateBy:
         case NodeEnumF::kUpdateTime:

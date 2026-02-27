@@ -3,29 +3,7 @@
 #include "component/constant.h"
 #include "utils/entryutils.h"
 
-void Node::ResetState()
-{
-    name.clear();
-    id = QUuid();
-    code.clear();
-    description.clear();
-    color.clear();
-    tag.clear();
-    direction_rule = false;
-    kind = {};
-    unit = {};
-    final_total = 0.0;
-    initial_total = 0.0;
-    parent = nullptr;
-    children.clear();
-
-    user_id = QUuid();
-    created_time = {};
-    created_by = QUuid();
-    updated_time = {};
-    updated_by = QUuid();
-    version = 0;
-}
+void Node::Reset() { *this = Node {}; }
 
 void Node::InvertTotal()
 {
@@ -35,40 +13,42 @@ void Node::InvertTotal()
 
 void Node::ReadJson(const QJsonObject& object)
 {
-    if (object.contains(kName))
-        name = object.value(kName).toString();
-    if (object.contains(kId))
-        id = QUuid(object.value(kId).toString());
-    if (object.contains(kCode))
-        code = object.value(kCode).toString();
-    if (object.contains(kDescription))
-        description = object.value(kDescription).toString();
-    if (object.contains(kKind))
-        kind = NodeKind(object.value(kKind).toInt());
-    if (object.contains(kDirectionRule))
-        direction_rule = object.value(kDirectionRule).toBool();
-    if (object.contains(kUnit))
-        unit = NodeUnit(object.value(kUnit).toInt());
-    if (object.contains(kFinalTotal))
-        final_total = object.value(kFinalTotal).toString().toDouble();
-    if (object.contains(kInitialTotal))
-        initial_total = object.value(kInitialTotal).toString().toDouble();
-    if (object.contains(kUserId))
-        user_id = QUuid(object.value(kUserId).toString());
-    if (object.contains(kCreatedTime))
-        created_time = QDateTime::fromString(object.value(kCreatedTime).toString(), Qt::ISODate);
-    if (object.contains(kCreatedBy))
-        created_by = QUuid(object.value(kCreatedBy).toString());
-    if (object.contains(kUpdatedTime))
-        updated_time = QDateTime::fromString(object.value(kUpdatedTime).toString(), Qt::ISODate);
-    if (object.contains(kUpdatedBy))
-        updated_by = QUuid(object.value(kUpdatedBy).toString());
-    if (object.contains(kVersion))
-        version = object.value(kVersion).toInt();
-    if (object.contains(kColor))
-        color = object.value(kColor).toString();
-    if (object.contains(kTag))
+    if (const auto val = object.value(kName); val.isString())
+        name = val.toString();
+    if (const auto val = object.value(kId); val.isString())
+        id = QUuid(val.toString());
+    if (const auto val = object.value(kCode); val.isString())
+        code = val.toString();
+    if (const auto val = object.value(kDescription); val.isString())
+        description = val.toString();
+    if (const auto val = object.value(kKind); val.isDouble())
+        kind = NodeKind(val.toInt());
+    if (const auto val = object.value(kDirectionRule); val.isBool())
+        direction_rule = val.toBool();
+    if (const auto val = object.value(kUnit); val.isDouble())
+        unit = NodeUnit(val.toInt());
+    if (const auto val = object.value(kFinalTotal); val.isString())
+        final_total = val.toString().toDouble();
+    if (const auto val = object.value(kInitialTotal); val.isString())
+        initial_total = val.toString().toDouble();
+    if (const auto val = object.value(kUserId); val.isString())
+        user_id = QUuid(val.toString());
+    if (const auto val = object.value(kCreatedTime); val.isString())
+        created_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kCreatedBy); val.isString())
+        created_by = QUuid(val.toString());
+    if (const auto val = object.value(kUpdatedTime); val.isString())
+        updated_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kUpdatedBy); val.isString())
+        updated_by = QUuid(val.toString());
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
+    if (const auto val = object.value(kColor); val.isString())
+        color = val.toString();
+    if (object.value(kTag).isArray())
         tag = Utils::ReadStringList(object, kTag);
+    if (object.value(kDocument).isArray())
+        document = Utils::ReadStringList(object, kDocument);
 }
 
 QJsonObject Node::WriteJson() const
@@ -85,25 +65,22 @@ QJsonObject Node::WriteJson() const
     obj.insert(kFinalTotal, QString::number(final_total, 'f', kMaxNumericScale_4));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
     obj.insert(kTag, Utils::WriteStringList(tag));
+    obj.insert(kDocument, Utils::WriteStringList(document));
 
+    // user_id, created_time, created_by, updated_time, updated_by, version
+    // are managed by the server, not written to json
     return obj;
 }
 
-void NodeI::ResetState()
-{
-    Node::ResetState();
-    unit_price = 0.0;
-    commission = 0.0;
-}
+void NodeI::Reset() { *this = NodeI {}; }
 
 void NodeI::ReadJson(const QJsonObject& object)
 {
     Node::ReadJson(object);
-
-    if (object.contains(kUnitPrice))
-        unit_price = object.value(kUnitPrice).toString().toDouble();
-    if (object.contains(kCommission))
-        commission = object.value(kCommission).toString().toDouble();
+    if (const auto val = object.value(kUnitPrice); val.isString())
+        unit_price = val.toString().toDouble();
+    if (const auto val = object.value(kCommission); val.isString())
+        commission = val.toString().toDouble();
 }
 
 QJsonObject NodeI::WriteJson() const
@@ -114,69 +91,13 @@ QJsonObject NodeI::WriteJson() const
     return obj;
 }
 
-void NodeT::ResetState()
-{
-    Node::ResetState();
-    document.clear();
-}
-
-void NodeT::ReadJson(const QJsonObject& object)
-{
-    Node::ReadJson(object);
-
-    if (object.contains(kDocument))
-        document = Utils::ReadStringList(object, kDocument);
-}
-
-QJsonObject NodeT::WriteJson() const
-{
-    QJsonObject obj = Node::WriteJson();
-
-    obj.insert(kDocument, Utils::WriteStringList(document));
-
-    return obj;
-}
-
-void NodeP::ResetState()
-{
-    Node::ResetState();
-    payment_term = 0;
-}
+void NodeP::Reset() { *this = NodeP {}; }
 
 void NodeP::ReadJson(const QJsonObject& object)
 {
-    if (object.contains(kName))
-        name = object.value(kName).toString();
-    if (object.contains(kId))
-        id = QUuid(object.value(kId).toString());
-    if (object.contains(kCode))
-        code = object.value(kCode).toString();
-    if (object.contains(kDescription))
-        description = object.value(kDescription).toString();
-    if (object.contains(kKind))
-        kind = NodeKind(object.value(kKind).toInt());
-    if (object.contains(kUnit))
-        unit = NodeUnit(object.value(kUnit).toInt());
-    if (object.contains(kInitialTotal))
-        initial_total = object.value(kInitialTotal).toString().toDouble();
-    if (object.contains(kUserId))
-        user_id = QUuid(object.value(kUserId).toString());
-    if (object.contains(kCreatedTime))
-        created_time = QDateTime::fromString(object.value(kCreatedTime).toString(), Qt::ISODate);
-    if (object.contains(kCreatedBy))
-        created_by = QUuid(object.value(kCreatedBy).toString());
-    if (object.contains(kUpdatedTime))
-        updated_time = QDateTime::fromString(object.value(kUpdatedTime).toString(), Qt::ISODate);
-    if (object.contains(kUpdatedBy))
-        updated_by = QUuid(object.value(kUpdatedBy).toString());
-    if (object.contains(kPaymentTerm))
-        payment_term = object.value(kPaymentTerm).toInt();
-    if (object.contains(kVersion))
-        version = object.value(kVersion).toInt();
-    if (object.contains(kColor))
-        color = object.value(kColor).toString();
-    if (object.contains(kTag))
-        tag = Utils::ReadStringList(object, kTag);
+    Node::ReadJson(object);
+    if (const auto val = object.value(kPaymentTerm); val.isDouble())
+        payment_term = val.toInt();
 }
 
 QJsonObject NodeP::WriteJson() const
@@ -192,23 +113,12 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kPaymentTerm, payment_term);
     obj.insert(kColor, color);
     obj.insert(kTag, Utils::WriteStringList(tag));
+    obj.insert(kDocument, Utils::WriteStringList(document));
 
     return obj;
 }
 
-void NodeO::ResetState()
-{
-    Node::ResetState();
-    employee_id = QUuid();
-    partner_id = QUuid();
-    issued_time = {};
-    count_total = 0.0;
-    measure_total = 0.0;
-    discount_total = 0.0;
-    status = {};
-    is_settled = false;
-    settlement_id = QUuid();
-}
+void NodeO::Reset() { *this = NodeO {}; }
 
 void NodeO::InvertTotal()
 {
@@ -221,54 +131,25 @@ void NodeO::InvertTotal()
 
 void NodeO::ReadJson(const QJsonObject& object)
 {
-    if (object.contains(kName))
-        name = object.value(kName).toString();
-    if (object.contains(kId))
-        id = QUuid(object.value(kId).toString());
-    if (object.contains(kCode))
-        code = object.value(kCode).toString();
-    if (object.contains(kDescription))
-        description = object.value(kDescription).toString();
-    if (object.contains(kKind))
-        kind = NodeKind(object.value(kKind).toInt());
-    if (object.contains(kDirectionRule))
-        direction_rule = object.value(kDirectionRule).toBool();
-    if (object.contains(kUnit))
-        unit = NodeUnit(object.value(kUnit).toInt());
-    if (object.contains(kFinalTotal))
-        final_total = object.value(kFinalTotal).toString().toDouble();
-    if (object.contains(kInitialTotal))
-        initial_total = object.value(kInitialTotal).toString().toDouble();
-    if (object.contains(kUserId))
-        user_id = QUuid(object.value(kUserId).toString());
-    if (object.contains(kCreatedTime))
-        created_time = QDateTime::fromString(object.value(kCreatedTime).toString(), Qt::ISODate);
-    if (object.contains(kCreatedBy))
-        created_by = QUuid(object.value(kCreatedBy).toString());
-    if (object.contains(kUpdatedTime))
-        updated_time = QDateTime::fromString(object.value(kUpdatedTime).toString(), Qt::ISODate);
-    if (object.contains(kUpdatedBy))
-        updated_by = QUuid(object.value(kUpdatedBy).toString());
-    if (object.contains(kEmployeeId))
-        employee_id = QUuid(object.value(kEmployeeId).toString());
-    if (object.contains(kPartnerId))
-        partner_id = QUuid(object.value(kPartnerId).toString());
-    if (object.contains(kIssuedTime))
-        issued_time = QDateTime::fromString(object.value(kIssuedTime).toString(), Qt::ISODate);
-    if (object.contains(kCountTotal))
-        count_total = object.value(kCountTotal).toString().toDouble();
-    if (object.contains(kMeasureTotal))
-        measure_total = object.value(kMeasureTotal).toString().toDouble();
-    if (object.contains(kDiscountTotal))
-        discount_total = object.value(kDiscountTotal).toString().toDouble();
-    if (object.contains(kStatus))
-        status = NodeStatus(object.value(kStatus).toInt());
-    if (object.contains(kSettlementId))
-        settlement_id = QUuid(object.value(kSettlementId).toString());
-    if (object.contains(kIsSettled))
-        is_settled = object.value(kIsSettled).toBool();
-    if (object.contains(kVersion))
-        version = object.value(kVersion).toInt();
+    Node::ReadJson(object);
+    if (const auto val = object.value(kEmployeeId); val.isString())
+        employee_id = QUuid(val.toString());
+    if (const auto val = object.value(kPartnerId); val.isString())
+        partner_id = QUuid(val.toString());
+    if (const auto val = object.value(kIssuedTime); val.isString())
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kCountTotal); val.isString())
+        count_total = val.toString().toDouble();
+    if (const auto val = object.value(kMeasureTotal); val.isString())
+        measure_total = val.toString().toDouble();
+    if (const auto val = object.value(kDiscountTotal); val.isString())
+        discount_total = val.toString().toDouble();
+    if (const auto val = object.value(kStatus); val.isDouble())
+        status = NodeStatus(val.toInt());
+    if (const auto val = object.value(kSettlementId); val.isString())
+        settlement_id = QUuid(val.toString());
+    if (const auto val = object.value(kIsSettled); val.isBool())
+        is_settled = val.toBool();
 }
 
 QJsonObject NodeO::WriteJson() const

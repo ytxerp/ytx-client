@@ -6,122 +6,63 @@
 #include "component/constant.h"
 #include "utils/entryutils.h"
 
-void Entry::ResetState()
-{
-    id = QUuid();
-    issued_time = {};
-    code.clear();
-    lhs_node = QUuid();
-    description.clear();
-    tag.clear();
-    rhs_node = QUuid();
-    status = 0;
-    document.clear();
-    lhs_rate = 0.0;
-    rhs_rate = 0.0;
-    lhs_debit = 0.0;
-    lhs_credit = 0.0;
-    rhs_debit = 0.0;
-    rhs_credit = 0.0;
-
-    user_id = QUuid();
-    created_time = {};
-    created_by = QUuid();
-    updated_time = {};
-    updated_by = QUuid();
-    version = 0;
-}
+void Entry::Reset() { *this = Entry {}; }
 
 void Entry::ReadJson(const QJsonObject& object)
 {
-    if (object.contains(kId))
-        id = QUuid(object[kId].toString());
-    if (object.contains(kIssuedTime))
-        issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
-    if (object.contains(kCode))
-        code = object[kCode].toString();
-    if (object.contains(kLhsNode))
-        lhs_node = QUuid(object[kLhsNode].toString());
-    if (object.contains(kDescription))
-        description = object[kDescription].toString();
-    if (object.contains(kStatus))
-        status = object[kStatus].toInt();
-    if (object.contains(kRhsNode))
-        rhs_node = QUuid(object[kRhsNode].toString());
-    if (object.contains(kUserId))
-        user_id = QUuid(object.value(kUserId).toString());
-    if (object.contains(kCreatedTime))
-        created_time = QDateTime::fromString(object.value(kCreatedTime).toString(), Qt::ISODate);
-    if (object.contains(kCreatedBy))
-        created_by = QUuid(object.value(kCreatedBy).toString());
-    if (object.contains(kUpdatedTime))
-        updated_time = QDateTime::fromString(object.value(kUpdatedTime).toString(), Qt::ISODate);
-    if (object.contains(kUpdatedBy))
-        updated_by = QUuid(object.value(kUpdatedBy).toString());
-    if (object.contains(kVersion))
-        version = object.value(kVersion).toInt();
-    if (object.contains(kLhsRate))
-        lhs_rate = object[kLhsRate].toString().toDouble();
-    if (object.contains(kRhsRate))
-        rhs_rate = object[kRhsRate].toString().toDouble();
-    if (object.contains(kLhsDebit))
-        lhs_debit = object[kLhsDebit].toString().toDouble();
-    if (object.contains(kLhsCredit))
-        lhs_credit = object[kLhsCredit].toString().toDouble();
-    if (object.contains(kRhsDebit))
-        rhs_debit = object[kRhsDebit].toString().toDouble();
-    if (object.contains(kRhsCredit))
-        rhs_credit = object[kRhsCredit].toString().toDouble();
-    if (object.contains(kTag))
+    if (const auto val = object.value(kId); val.isString())
+        id = QUuid(val.toString());
+    if (const auto val = object.value(kIssuedTime); val.isString())
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kCode); val.isString())
+        code = val.toString();
+    if (const auto val = object.value(kLhsNode); val.isString())
+        lhs_node = QUuid(val.toString());
+    if (const auto val = object.value(kDescription); val.isString())
+        description = val.toString();
+    if (const auto val = object.value(kStatus); val.isDouble())
+        status = val.toInt();
+    if (const auto val = object.value(kRhsNode); val.isString())
+        rhs_node = QUuid(val.toString());
+    if (const auto val = object.value(kUserId); val.isString())
+        user_id = QUuid(val.toString());
+    if (const auto val = object.value(kCreatedTime); val.isString())
+        created_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kCreatedBy); val.isString())
+        created_by = QUuid(val.toString());
+    if (const auto val = object.value(kUpdatedTime); val.isString())
+        updated_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kUpdatedBy); val.isString())
+        updated_by = QUuid(val.toString());
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
+    if (const auto val = object.value(kLhsRate); val.isString())
+        lhs_rate = val.toString().toDouble();
+    if (const auto val = object.value(kRhsRate); val.isString())
+        rhs_rate = val.toString().toDouble();
+    if (const auto val = object.value(kLhsDebit); val.isString())
+        lhs_debit = val.toString().toDouble();
+    if (const auto val = object.value(kLhsCredit); val.isString())
+        lhs_credit = val.toString().toDouble();
+    if (const auto val = object.value(kRhsDebit); val.isString())
+        rhs_debit = val.toString().toDouble();
+    if (const auto val = object.value(kRhsCredit); val.isString())
+        rhs_credit = val.toString().toDouble();
+    if (object.value(kTag).isArray())
         tag = Utils::ReadStringList(object, kTag);
-    if (object.contains(kDocument))
+    if (object.value(kDocument).isArray())
         document = Utils::ReadStringList(object, kDocument);
 }
 
-void EntryP::ResetState()
-{
-    Entry::ResetState();
-
-    unit_price = 0.0;
-    external_sku = QUuid();
-}
+void EntryP::Reset() { *this = EntryP {}; }
 
 void EntryP::ReadJson(const QJsonObject& object)
 {
-    if (object.contains(kId))
-        id = QUuid(object[kId].toString());
-    if (object.contains(kIssuedTime))
-        issued_time = QDateTime::fromString(object[kIssuedTime].toString(), Qt::ISODate);
-    if (object.contains(kCode))
-        code = object[kCode].toString();
-    if (object.contains(kLhsNode))
-        lhs_node = QUuid(object[kLhsNode].toString());
-    if (object.contains(kDescription))
-        description = object[kDescription].toString();
-    if (object.contains(kStatus))
-        status = object[kStatus].toInt();
-    if (object.contains(kRhsNode))
-        rhs_node = QUuid(object[kRhsNode].toString());
-    if (object.contains(kUserId))
-        user_id = QUuid(object.value(kUserId).toString());
-    if (object.contains(kCreatedTime))
-        created_time = QDateTime::fromString(object.value(kCreatedTime).toString(), Qt::ISODate);
-    if (object.contains(kCreatedBy))
-        created_by = QUuid(object.value(kCreatedBy).toString());
-    if (object.contains(kUpdatedTime))
-        updated_time = QDateTime::fromString(object.value(kUpdatedTime).toString(), Qt::ISODate);
-    if (object.contains(kUpdatedBy))
-        updated_by = QUuid(object.value(kUpdatedBy).toString());
-    if (object.contains(kVersion))
-        version = object.value(kVersion).toInt();
-    if (object.contains(kUnitPrice))
-        unit_price = object[kUnitPrice].toString().toDouble();
-    if (object.contains(kExternalSku))
-        external_sku = QUuid(object[kExternalSku].toString());
-    if (object.contains(kTag))
-        tag = Utils::ReadStringList(object, kTag);
-    if (object.contains(kDocument))
-        document = Utils::ReadStringList(object, kDocument);
+    Entry::ReadJson(object);
+    if (const auto val = object.value(kUnitPrice); val.isString())
+        unit_price = val.toString().toDouble();
+    if (const auto val = object.value(kExternalSku); val.isString())
+        external_sku = QUuid(val.toString());
 }
 
 QJsonObject EntryP::WriteJson() const
@@ -143,58 +84,45 @@ QJsonObject EntryP::WriteJson() const
     return obj;
 }
 
-void EntryO::ResetState()
-{
-    Entry::ResetState();
-
-    unit_price = 0.0;
-
-    count = 0.0;
-    measure = 0.0;
-
-    initial = 0.0;
-    final = 0.0;
-    discount = 0.0;
-    unit_discount = 0.0;
-}
+void EntryO::Reset() { *this = EntryO {}; }
 
 // Note: Fields like issued_time, document, code and status are ignored for Order entries
 void EntryO::ReadJson(const QJsonObject& object)
 {
-    if (object.contains(kId))
-        id = QUuid(object[kId].toString());
-    if (object.contains(kDescription))
-        description = object[kDescription].toString();
-    if (object.contains(kLhsNode))
-        lhs_node = QUuid(object[kLhsNode].toString());
-    if (object.contains(kRhsNode))
-        rhs_node = QUuid(object[kRhsNode].toString());
-    if (object.contains(kUserId))
-        user_id = QUuid(object.value(kUserId).toString());
-    if (object.contains(kCreatedTime))
-        created_time = QDateTime::fromString(object.value(kCreatedTime).toString(), Qt::ISODate);
-    if (object.contains(kCreatedBy))
-        created_by = QUuid(object.value(kCreatedBy).toString());
-    if (object.contains(kUpdatedTime))
-        updated_time = QDateTime::fromString(object.value(kUpdatedTime).toString(), Qt::ISODate);
-    if (object.contains(kUpdatedBy))
-        updated_by = QUuid(object.value(kUpdatedBy).toString());
-    if (object.contains(kUnitPrice))
-        unit_price = object[kUnitPrice].toString().toDouble();
-    if (object.contains(kCount))
-        count = object[kCount].toString().toDouble();
-    if (object.contains(kMeasure))
-        measure = object[kMeasure].toString().toDouble();
-    if (object.contains(kInitial))
-        initial = object[kInitial].toString().toDouble();
-    if (object.contains(kFinal))
-        final = object[kFinal].toString().toDouble();
-    if (object.contains(kDiscount))
-        discount = object[kDiscount].toString().toDouble();
-    if (object.contains(kUnitDiscount))
-        unit_discount = object[kUnitDiscount].toString().toDouble();
-    if (object.contains(kVersion))
-        version = object.value(kVersion).toInt();
+    if (const auto val = object.value(kId); val.isString())
+        id = QUuid(val.toString());
+    if (const auto val = object.value(kDescription); val.isString())
+        description = val.toString();
+    if (const auto val = object.value(kLhsNode); val.isString())
+        lhs_node = QUuid(val.toString());
+    if (const auto val = object.value(kRhsNode); val.isString())
+        rhs_node = QUuid(val.toString());
+    if (const auto val = object.value(kUserId); val.isString())
+        user_id = QUuid(val.toString());
+    if (const auto val = object.value(kCreatedTime); val.isString())
+        created_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kCreatedBy); val.isString())
+        created_by = QUuid(val.toString());
+    if (const auto val = object.value(kUpdatedTime); val.isString())
+        updated_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kUpdatedBy); val.isString())
+        updated_by = QUuid(val.toString());
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
+    if (const auto val = object.value(kUnitPrice); val.isString())
+        unit_price = val.toString().toDouble();
+    if (const auto val = object.value(kCount); val.isString())
+        count = val.toString().toDouble();
+    if (const auto val = object.value(kMeasure); val.isString())
+        measure = val.toString().toDouble();
+    if (const auto val = object.value(kInitial); val.isString())
+        initial = val.toString().toDouble();
+    if (const auto val = object.value(kFinal); val.isString())
+        final = val.toString().toDouble();
+    if (const auto val = object.value(kDiscount); val.isString())
+        discount = val.toString().toDouble();
+    if (const auto val = object.value(kUnitDiscount); val.isString())
+        unit_discount = val.toString().toDouble();
 }
 
 QJsonObject EntryO::WriteJson() const

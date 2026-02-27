@@ -52,8 +52,11 @@ void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* initial_total { new FinanceForeignR(section.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kInitialTotal), initial_total);
 
-    auto* tag { new TagDelegate(sc_f_.tag_hash, sc_f_.tag_icons_hash, tree_view) };
+    auto* tag { new TagDelegate(sc_f_.tag_hash, sc_f_.tag_icon_hash, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kTag), tag);
+
+    auto* document { new Document(sc_f_.shared_config.document_dir, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kDocument), document);
 }
 
 void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
@@ -83,8 +86,8 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* document { new Document(sc_t_.shared_config.document_dir, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kDocument), document);
 
-    auto* tag { new TagDelegate(sc_t_.tag_hash, sc_t_.tag_icons_hash, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kTag), tag);
+    auto* tag { new TagDelegate(sc_t_.tag_hash, sc_t_.tag_icon_hash, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kTag), tag);
 }
 
 void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
@@ -116,8 +119,11 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* color { new Color(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kColor), color);
 
-    auto* tag { new TagDelegate(sc_i_.tag_hash, sc_i_.tag_icons_hash, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kTag), tag);
+    auto* tag { new TagDelegate(sc_i_.tag_hash, sc_i_.tag_icon_hash, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kTag), tag);
+
+    auto* document { new Document(sc_i_.shared_config.document_dir, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kDocument), document);
 }
 
 void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
@@ -142,8 +148,11 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* payment_term { new Int(0, 36500, tree_view) }; // one hundred years
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kPaymentTerm), payment_term);
 
-    auto* tag { new TagDelegate(sc_p_.tag_hash, sc_p_.tag_icons_hash, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kTag), tag);
+    auto* tag { new TagDelegate(sc_p_.tag_hash, sc_p_.tag_icon_hash, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kTag), tag);
+
+    auto* document { new Document(sc_p_.shared_config.document_dir, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kDocument), document);
 }
 
 void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
@@ -207,7 +216,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
 
-    auto* tag { new TagDelegate(sc_f_.tag_hash, sc_f_.tag_icons_hash, table_view) };
+    auto* tag { new TagDelegate(sc_f_.tag_hash, sc_f_.tag_icon_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
 }
 
@@ -241,7 +250,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
 
-    auto* tag { new TagDelegate(sc_i_.tag_hash, sc_i_.tag_icons_hash, table_view) };
+    auto* tag { new TagDelegate(sc_i_.tag_hash, sc_i_.tag_icon_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
 }
 
@@ -275,7 +284,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     auto* quantity { new QuantityR(config.quantity_decimal, kCoefficient16, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), quantity);
 
-    auto* tag { new TagDelegate(sc_t_.tag_hash, sc_t_.tag_icons_hash, table_view) };
+    auto* tag { new TagDelegate(sc_t_.tag_hash, sc_t_.tag_icon_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
 }
 
@@ -307,7 +316,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), internal_sku);
 
-    auto* tag { new TagDelegate(sc_p_.tag_hash, sc_p_.tag_icons_hash, table_view) };
+    auto* tag { new TagDelegate(sc_p_.tag_hash, sc_p_.tag_icon_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kTag), tag);
 }
 

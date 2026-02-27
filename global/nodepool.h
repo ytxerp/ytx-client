@@ -147,7 +147,7 @@ inline void NodePool::Recycle(Node* node, Section section)
         return;
     }
 
-    node->ResetState();
+    node->Reset();
     pool.push_back(node);
 }
 
@@ -167,7 +167,7 @@ template <Iterable Container> inline void NodePool::Recycle(Container& container
 
     for (Node* n : container) {
         if (n) {
-            n->ResetState();
+            n->Reset();
             pool.push_back(n);
         }
     }

@@ -54,6 +54,8 @@ void TreeModelI::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumI::kTag:
             return Utils::CompareMember(lhs, rhs, &Node::tag, order);
+        case NodeEnumI::kDocument:
+            return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumI::kId:
         case NodeEnumI::kUpdateBy:
         case NodeEnumI::kUpdateTime:
@@ -122,6 +124,8 @@ QVariant TreeModelI::data(const QModelIndex& index, int role) const
         return d_node->initial_total;
     case NodeEnumI::kFinalTotal:
         return d_node->final_total;
+    case NodeEnumI::kDocument:
+        return d_node->document;
     }
 }
 
@@ -164,6 +168,9 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumI::kUnitPrice:
         Utils::UpdateDouble(pending_updates_[id], d_node, kUnitPrice, value.toDouble(), &NodeI::unit_price, [id, this]() { RestartTimer(id); });
         break;
+    case NodeEnumI::kDocument:
+        Utils::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
+        break;
     case NodeEnumI::kId:
     case NodeEnumI::kUpdateBy:
     case NodeEnumI::kUpdateTime:
@@ -202,6 +209,7 @@ Qt::ItemFlags TreeModelI::flags(const QModelIndex& index) const
     case NodeEnumI::kTag:
     case NodeEnumI::kKind:
     case NodeEnumI::kUnit:
+    case NodeEnumI::kDocument:
         flags &= ~Qt::ItemIsEditable;
         break;
     default:

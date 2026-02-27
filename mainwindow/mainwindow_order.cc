@@ -179,7 +179,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
         section_config,
         start_,
     };
-    auto* widget { new TableWidgetO(order_arg, node, SyncState::kLocalOnly, this) };
+    auto* widget { new TableWidgetO(order_arg, node, SyncState::kNew, this) };
     WidgetContext wc { widget, node_id, WidgetRole::kNodeTabO };
 
     // Setup tab

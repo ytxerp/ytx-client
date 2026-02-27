@@ -17,22 +17,15 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TAGDELEGATE_H
-#define TAGDELEGATE_H
+#ifndef TAGICON_H
+#define TAGICON_H
 
-#include "delegate/styleditemdelegate.h"
-#include "tag/tag.h"
-#include "tag/tagicon.h"
+#include <QIcon>
 
-class TagDelegate final : public StyledItemDelegate {
-public:
-    explicit TagDelegate(const QHash<QUuid, Tag*>& tag_hash, const QHash<QUuid, TagIcon>& tag_icon_hash, QObject* parent = nullptr);
-    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-
-private:
-    const QHash<QUuid, Tag*>& tag_hash_ {};
-    const QHash<QUuid, TagIcon>& tag_icon_hash_ {};
+struct TagIcon final {
+    QIcon icon {};
+    QIcon icon_checked {};
+    QPixmap pixmap {};
 };
 
-#endif // TAGDELEGATE_H
+#endif // TAGICON_H

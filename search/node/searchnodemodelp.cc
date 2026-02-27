@@ -36,6 +36,8 @@ QVariant SearchNodeModelP::data(const QModelIndex& index, int role) const
         return d_node->code;
     case NodeEnumP::kColor:
         return d_node->color;
+    case NodeEnumP::kDocument:
+        return d_node->document;
     case NodeEnumP::kDescription:
         return d_node->description;
     case NodeEnumP::kKind:
@@ -46,8 +48,6 @@ QVariant SearchNodeModelP::data(const QModelIndex& index, int role) const
         return d_node->payment_term;
     case NodeEnumP::kInitialTotal:
         return d_node->initial_total;
-    default:
-        return QVariant();
     }
 }
 
@@ -78,6 +78,8 @@ void SearchNodeModelP::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(d_lhs, d_rhs, &NodeP::payment_term, order);
         case NodeEnumP::kInitialTotal:
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
+        case NodeEnumP::kDocument:
+            return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumP::kId:
         case NodeEnumP::kUpdateBy:
         case NodeEnumP::kUpdateTime:

@@ -32,14 +32,9 @@ namespace Utils {
 inline QStringList ReadStringList(const QJsonObject& object, const QString& key)
 {
     QStringList result {};
-
-    if (object.contains(key)) {
-        const QJsonArray array { object[key].toArray() };
-        for (const QJsonValue& value : array) {
-            result.append(value.toString());
-        }
-    }
-
+    const QJsonArray array { object.value(key).toArray() };
+    for (const QJsonValue& value : array)
+        result.append(value.toString());
     return result;
 }
 

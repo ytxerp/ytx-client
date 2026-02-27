@@ -23,6 +23,7 @@ void SearchDialogP::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kPaymentTerm), int_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kColor), color_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kTag), tag_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kDocument), document_);
 }
 
 void SearchDialogP::TableViewDelegate(QTableView* view)

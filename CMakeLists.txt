@@ -369,10 +369,12 @@ set(HEADERS
     billing/settlement/tablewidgetsettlement.h
     billing/settlement/tablemodelsettlement.h
     tag/tagmodel.h
+    tag/tagicon.h
     enum/tagenum.h
     utils/tagutils.h
     component/widgetcontex.h
     widget/treeview.h
+    enum/syncenum.h
 )
 
 set(UIS

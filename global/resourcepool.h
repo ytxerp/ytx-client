@@ -26,6 +26,11 @@
 #include "component/constant.h"
 #include "concepts.h"
 
+template <typename T>
+concept Resettable = requires(T& t) {
+    { t.Reset() } -> std::same_as<void>;
+};
+
 template <Resettable T> class ResourcePool {
 public:
     static ResourcePool& Instance();
@@ -85,7 +90,7 @@ template <Resettable T> void ResourcePool<T>::Recycle(T* resource)
         return;
     }
 
-    resource->ResetState();
+    resource->Reset();
     pool_.push_back(resource);
 }
 
@@ -104,7 +109,7 @@ template <Resettable T> template <Iterable Container> void ResourcePool<T>::Recy
 
     for (T* resource : container) {
         if (resource) {
-            resource->ResetState();
+            resource->Reset();
             pool_.push_back(resource);
         }
     }
