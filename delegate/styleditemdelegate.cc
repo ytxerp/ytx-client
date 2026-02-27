@@ -38,7 +38,7 @@ void StyledItemDelegate::PaintText(
     opt.text = text;
     opt.displayAlignment = alignment;
 
-    static QStyle* style { QApplication::style() };
+    QStyle* style { QApplication::style() };
     style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, opt.widget);
 }
 
@@ -47,7 +47,7 @@ void StyledItemDelegate::PaintCheckBox(QPainter* painter, const QStyleOptionView
     QStyleOptionViewItem opt { option };
     initStyleOption(&opt, index);
 
-    static QStyle* style { QApplication::style() };
+    QStyle* style { QApplication::style() };
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
 
     QStyleOptionButton check_box {};
@@ -83,7 +83,7 @@ void StyledItemDelegate::PaintCheckBox(QPainter* painter, const QStyleOptionView
 
 void StyledItemDelegate::PaintEmpty(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& /*index*/) const
 {
-    static QStyle* style { QApplication::style() };
+    QStyle* style { QApplication::style() };
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
 }
 
@@ -92,7 +92,7 @@ void StyledItemDelegate::PaintColorRect(QPainter* painter, const QStyleOptionVie
     if (color_string.isEmpty() || !QColor::isValidColorName(color_string))
         return;
 
-    static QStyle* style { QApplication::style() };
+    QStyle* style { QApplication::style() };
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
 
     const QRect color_rect { option.rect.adjusted(4, 4, -4, -4) };
