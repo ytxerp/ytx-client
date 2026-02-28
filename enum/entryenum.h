@@ -65,9 +65,9 @@ enum class EntryEnumP {
     kTag,
     kDocument,
     kStatus,
-    kExternalSku,
-    kUnitPrice,
     kRhsNode,
+    kUnitPrice,
+    kExternalSku,
 };
 
 // FullEntryEnumO is same as EntryEnumO

@@ -26,6 +26,10 @@
 class EntryHubP final : public EntryHub {
     Q_OBJECT
 
+public slots:
+    // receive from TableModel
+    void RAppendOneEntry(Entry* entry) override;
+
 public:
     explicit EntryHubP(CSectionInfo& info, QObject* parent = nullptr);
 

@@ -10,6 +10,8 @@ EntryHubP::EntryHubP(CSectionInfo& info, QObject* parent)
 {
 }
 
+void EntryHubP::RAppendOneEntry(Entry* entry) { entry_cache_.insert(entry->id, entry); }
+
 void EntryHubP::DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { DeleteLeafFunction(leaf_entry); }
 
 void EntryHubP::ApplyInventoryIntReplace(const QUuid& old_item_id, const QUuid& new_item_id)

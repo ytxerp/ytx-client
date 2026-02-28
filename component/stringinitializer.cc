@@ -198,9 +198,9 @@ void StringInitializer::SetHeader(
         QObject::tr("Tag"),
         QObject::tr("Document"),
         QObject::tr("S"),
-        QObject::tr("ExternalSku"),
-        QObject::tr("UnitPrice"),
         QObject::tr("InternalSku"),
+        QObject::tr("UnitPrice"),
+        QObject::tr("ExternalSku"),
     };
 
     sale.entry_header = {

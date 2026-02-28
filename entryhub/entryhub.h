@@ -55,7 +55,7 @@ signals:
 
 public slots:
     // receive from TableModel
-    void RAppendOneEntry(Entry* entry);
+    virtual void RAppendOneEntry(Entry* entry);
     void RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
 public:
