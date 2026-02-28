@@ -30,6 +30,8 @@ TableWidgetSettlement::TableWidgetSettlement(TreeModel* tree_model_p, TableModel
     InitData();
 
     QTimer::singleShot(0, this, &TableWidgetSettlement::FetchNode);
+    if (sync_state == SyncState::kNew)
+        QTimer::singleShot(0, this, [this]() { ui->comboPartner->setFocus(); });
 }
 
 TableWidgetSettlement::~TableWidgetSettlement() { delete ui; }

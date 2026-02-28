@@ -141,7 +141,7 @@ constexpr std::pair<int, int> EntryCacheColumnRange(Section section)
     case Section::kTask:
         return { std::to_underlying(EntryEnum::kCode), std::to_underlying(EntryEnum::kStatus) };
     case Section::kPartner:
-        return { std::to_underlying(EntryEnumP::kIssuedTime), std::to_underlying(EntryEnumP::kRhsNode) };
+        return { std::to_underlying(EntryEnumP::kIssuedTime), std::to_underlying(EntryEnumP::kExternalSku) };
     case Section::kSale:
     case Section::kPurchase:
         return { std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kExternalSku) };

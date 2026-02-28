@@ -159,6 +159,7 @@ void MainWindow::TableConnectP(TableModel* table_model) const
 
     connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
     connect(table_model, &TableModel::SDeleteOneEntry, entry_hub, &EntryHub::RDeleteOneEntry);
+    connect(table_model, &TableModel::SUpdateOneEntry, entry_hub, &EntryHub::RUpdateOneEntry);
 }
 
 void MainWindow::TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const

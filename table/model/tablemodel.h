@@ -50,6 +50,9 @@ signals:
     void SAppendOneEntry(Entry* entry);
     void SDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
+    // Just for partner
+    void SUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node);
+
 public slots:
     virtual void RAppendMultiEntries(const EntryList& entry_list);
     virtual void RDetachOneEntry(const QUuid& entry_id);

@@ -23,8 +23,8 @@
 /** @brief Kind of node in a tree structure. */
 enum class NodeKind { kLeaf = 0, kBranch };
 
-/** @brief Workflow status of a node. Just for Task and Order sections. */
-enum class NodeStatus { kUnfinished = 0, kFinished };
+/** @brief Workflow status of a node. Just for Order section. */
+enum class NodeStatus { kUnreleased = 0, kReleased };
 
 /** @brief NodeUnit, global unit identifier across ERP. */
 /**

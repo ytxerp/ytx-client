@@ -177,8 +177,8 @@ private:
     void UpdateTag(const QJsonObject& obj);
     void DeleteTag(const QJsonObject& obj);
 
-    void UpdateOrder(const QJsonObject& obj, bool is_release);
-    void InsertOrder(const QJsonObject& obj, bool is_release);
+    void UpdateOrder(const QJsonObject& obj, bool is_released);
+    void InsertOrder(const QJsonObject& obj, bool is_released);
     void RecallOrder(const QJsonObject& obj);
 
     void InsertSettlement(const QJsonObject& obj);

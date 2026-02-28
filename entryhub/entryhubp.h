@@ -26,12 +26,14 @@
 class EntryHubP final : public EntryHub {
     Q_OBJECT
 
+public:
+    explicit EntryHubP(CSectionInfo& info, QObject* parent = nullptr);
+
 public slots:
     // receive from TableModel
     void RAppendOneEntry(Entry* entry) override;
-
-public:
-    explicit EntryHubP(CSectionInfo& info, QObject* parent = nullptr);
+    void RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id) override;
+    void RUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node) override;
 
 public:
     std::optional<double> UnitPrice(const QUuid& partner_id, const QUuid& internal_sku) const;

@@ -153,15 +153,15 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     auto* tab_bar = tab_widget->tabBar();
     auto* parent_node { sc_->tree_model->GetNodeByIndex(parent_index) };
 
-    NodeO node {};
-    node.id = QUuid::createUuidV7();
-    node.direction_rule = parent_node->direction_rule;
-    node.unit = parent_index.isValid() ? parent_node->unit : NodeUnit(sc_->shared_config.default_unit);
-    node.parent = parent_node;
-    node.issued_time = QDateTime::currentDateTimeUtc();
-    node.code = Utils::UuidToShortCode(node.id);
+    NodeO* node { static_cast<NodeO*>(NodePool::Instance().Allocate(start_)) };
+    node->id = QUuid::createUuidV7();
+    node->direction_rule = parent_node->direction_rule;
+    node->unit = parent_index.isValid() ? parent_node->unit : NodeUnit(sc_->shared_config.default_unit);
+    node->parent = parent_node;
+    node->issued_time = QDateTime::currentDateTimeUtc();
+    node->code = Utils::UuidToShortCode(node->id);
 
-    const QUuid node_id { node.id };
+    const QUuid node_id { node->id };
 
     // Prepare dependencies
     auto tree_model_p { sc_p_.tree_model };
@@ -170,6 +170,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     // Create model and widget
     TableModelArg table_model_arg { sc_->info, node_id, true };
     auto* table_model { new TableModelO(table_model_arg, tree_model_i, sc_p_.entry_hub, this) };
+    table_model->SetNode(node);
 
     OrderWidgetArg order_arg {
         table_model,
@@ -209,7 +210,10 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
         return;
     }
 
-    const auto partner_id { node->partner_id };
+    NodeO* tmp_node { static_cast<NodeO*>(NodePool::Instance().Allocate(start_)) };
+    *tmp_node = *node;
+
+    const auto partner_id { tmp_node->partner_id };
     Q_ASSERT(!partner_id.isNull());
 
     // Prepare dependencies
@@ -217,8 +221,9 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     auto tree_model_i { sc_i_.tree_model };
 
     // Create model and widget
-    TableModelArg table_model_arg { sc->info, node_id, node->direction_rule };
+    TableModelArg table_model_arg { sc->info, node_id, tmp_node->direction_rule };
     auto* table_model = new TableModelO(table_model_arg, tree_model_i, sc_p_.entry_hub, nullptr);
+    table_model->SetNode(tmp_node);
 
     OrderWidgetArg order_arg {
         table_model,
@@ -228,7 +233,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
         section_config,
         start_,
     };
-    auto* widget = new TableWidgetO(order_arg, *node, SyncState::kSynced, this);
+    auto* widget = new TableWidgetO(order_arg, tmp_node, SyncState::kSynced, this);
     WidgetContext wc { widget, node_id, WidgetRole::kNodeTabO };
 
     // Setup tab

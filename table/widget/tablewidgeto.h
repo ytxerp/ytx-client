@@ -58,7 +58,7 @@ class TableWidgetO final : public TableWidget {
     Q_OBJECT
 
 public:
-    explicit TableWidgetO(COrderWidgetArg& arg, const NodeO& node, SyncState sync_state, QWidget* parent = nullptr);
+    explicit TableWidgetO(COrderWidgetArg& arg, NodeO* node, SyncState sync_state, QWidget* parent = nullptr);
     ~TableWidgetO() override;
 
 signals:
@@ -101,7 +101,7 @@ private slots:
 private:
     void IniWidget();
     void IniConnect();
-    void IniData(const NodeO& node);
+    void IniData(const NodeO* node);
     void LockWidgets(NodeStatus value);
     void IniRuleGroup();
     void IniUnitGroup();
@@ -118,7 +118,7 @@ private:
 
 private:
     Ui::TableWidgetO* ui;
-    NodeO tmp_node_ {};
+    NodeO* tmp_node_ {};
 
     TableModelO* table_model_order_ {};
     TreeModel* tree_model_partner_ {};

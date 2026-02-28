@@ -351,8 +351,6 @@ void MainWindow::InitContextSale()
     tree_view = tree_widget->View();
 
     sc_sale_.tab_widget = ui->tabWidgetSale;
-
-    connect(tree_model_o, &TreeModelO::SUpdateAmount, static_cast<TreeModelP*>(sc_p_.tree_model.data()), &TreeModelP::RUpdateAmount);
 }
 
 void MainWindow::InitContextPurchase()
@@ -401,6 +399,4 @@ void MainWindow::InitContextPurchase()
     tree_view = tree_widget->View();
 
     sc_purchase_.tab_widget = ui->tabWidgetPurchase;
-
-    connect(tree_model_o, &TreeModelO::SUpdateAmount, static_cast<TreeModelP*>(sc_p_.tree_model.data()), &TreeModelP::RUpdateAmount);
 }

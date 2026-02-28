@@ -10,7 +10,34 @@ EntryHubP::EntryHubP(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubP::RAppendOneEntry(Entry* entry) { entry_cache_.insert(entry->id, entry); }
+void EntryHubP::RAppendOneEntry(Entry* entry)
+{
+    auto* entry_p { static_cast<EntryP*>(entry) };
+    entry_cache_.insert(entry_p->id, entry_p);
+    entry_map_.insert({ entry_p->lhs_node, entry_p->rhs_node }, { entry_p->unit_price, entry_p->external_sku });
+}
+
+void EntryHubP::RDeleteOneEntry(const QUuid& /*node_id*/, const QUuid& entry_id)
+{
+    auto it = entry_cache_.constFind(entry_id);
+    if (it != entry_cache_.constEnd()) {
+        auto* entry { static_cast<EntryP*>(it.value()) };
+
+        entry_map_.remove({ entry->lhs_node, entry->rhs_node });
+
+        EntryPool::Instance().Recycle(entry, section_);
+    }
+}
+
+void EntryHubP::RUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node)
+{
+    auto* entry_p { static_cast<EntryP*>(entry) };
+
+    if (entry_p->rhs_node != old_rhs_node)
+        entry_map_.remove({ entry_p->lhs_node, old_rhs_node });
+
+    entry_map_[{ entry_p->lhs_node, entry_p->rhs_node }] = { entry_p->unit_price, entry_p->external_sku };
+}
 
 void EntryHubP::DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { DeleteLeafFunction(leaf_entry); }
 

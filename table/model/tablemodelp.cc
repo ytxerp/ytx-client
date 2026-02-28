@@ -216,7 +216,10 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
     auto* entry { entry_list_.at(index.row()) };
     auto* d_entry = DerivedPtr<EntryP>(entry);
 
+    bool update_entry_hub { false };
+
     const QUuid id { entry->id };
+    const QUuid old_rhs_node { entry->rhs_node };
 
     switch (column) {
     case EntryEnumP::kIssuedTime:
@@ -232,10 +235,11 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         Utils::UpdateStringList(pending_updates_[id], entry, kTag, value.toStringList(), &Entry::tag, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kRhsNode:
-        UpdateInternalSku(d_entry, value.toUuid());
+        update_entry_hub = UpdateInternalSku(d_entry, value.toUuid());
         break;
     case EntryEnumP::kUnitPrice:
-        Utils::UpdateDouble(pending_updates_[id], d_entry, kUnitPrice, value.toDouble(), &EntryP::unit_price, [id, this]() { RestartTimer(id); });
+        update_entry_hub
+            = Utils::UpdateDouble(pending_updates_[id], d_entry, kUnitPrice, value.toDouble(), &EntryP::unit_price, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kDescription:
         Utils::UpdateField(pending_updates_[id], entry, kDescription, value.toString(), &Entry::description, [id, this]() { RestartTimer(id); });
@@ -244,7 +248,8 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         Utils::UpdateField(pending_updates_[id], entry, kStatus, value.toInt(), &Entry::status, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kExternalSku:
-        Utils::UpdateUuid(pending_updates_[id], d_entry, kExternalSku, value.toUuid(), &EntryP::external_sku, [id, this]() { RestartTimer(id); });
+        update_entry_hub
+            = Utils::UpdateUuid(pending_updates_[id], d_entry, kExternalSku, value.toUuid(), &EntryP::external_sku, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kId:
     case EntryEnumP::kUpdateBy:
@@ -256,6 +261,9 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
     case EntryEnumP::kLhsNode:
         return false;
     }
+
+    if (update_entry_hub)
+        emit SUpdateOneEntry(entry, old_rhs_node);
 
     emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
     return true;

@@ -1,13 +1,14 @@
 #include "tablewidgeto.h"
 
 #include "component/signalblocker.h"
+#include "global/nodepool.h"
 #include "global/printhub.h"
 #include "ui_tablewidgeto.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TableWidgetO::TableWidgetO(COrderWidgetArg& arg, const NodeO& node, SyncState sync_state, QWidget* parent)
+TableWidgetO::TableWidgetO(COrderWidgetArg& arg, NodeO* node, SyncState sync_state, QWidget* parent)
     : TableWidget(parent)
     , ui(new Ui::TableWidgetO)
     , tmp_node_ { node }
@@ -15,7 +16,7 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, const NodeO& node, SyncState sy
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
     , sync_state_ { sync_state }
-    , node_id_ { node.id }
+    , node_id_ { node->id }
     , section_ { arg.section }
 {
     ui->setupUi(this);
@@ -31,37 +32,39 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, const NodeO& node, SyncState sy
         QTimer::singleShot(0, this, [this]() { ui->comboPartner->setFocus(); });
 }
 
-TableWidgetO::~TableWidgetO() { delete ui; }
+TableWidgetO::~TableWidgetO()
+{
+    NodePool::Instance().Recycle(tmp_node_, section_);
+    delete ui;
+}
 
 QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
 void TableWidgetO::ReleaseSucceeded(int version)
 {
-    ui->pBtnPrint->setFocus();
-    ui->pBtnPrint->setDefault(true);
+    qDebug() << "TableWidgetO::ReleaseSucceeded";
 
     MarkSynced(version);
-
-    tmp_node_.status = NodeStatus::kFinished;
-    LockWidgets(NodeStatus::kFinished);
+    LockWidgets(NodeStatus::kReleased);
 }
 
 void TableWidgetO::RecallSucceeded(int version)
 {
-    ui->pBtnRelease->setFocus();
-    ui->pBtnRelease->setDefault(true);
+    qDebug() << "TableWidgetO::RecallSucceeded";
 
     MarkSynced(version);
-
-    tmp_node_.status = NodeStatus::kUnfinished;
-    LockWidgets(NodeStatus::kUnfinished);
+    LockWidgets(NodeStatus::kUnreleased);
 }
 
-void TableWidgetO::SaveSucceeded(int version) { MarkSynced(version); }
+void TableWidgetO::SaveSucceeded(int version)
+{
+    qDebug() << "TableWidgetO::SaveSucceeded";
+    MarkSynced(version);
+}
 
 void TableWidgetO::MarkSynced(int version)
 {
-    tmp_node_.version = version;
+    tmp_node_->version = version;
     sync_state_ = SyncState::kSynced;
 }
 
@@ -81,7 +84,7 @@ void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, doubl
     Q_ASSERT(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
 
     {
-        if (tmp_node_.direction_rule == Rule::kRO) {
+        if (tmp_node_->direction_rule == Rule::kRO) {
             initial_delta *= -1;
             final_delta *= -1;
             count_delta *= -1;
@@ -90,14 +93,14 @@ void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, doubl
         }
     }
 
-    const double adjusted_final_delta { tmp_node_.unit == NodeUnit::OImmediate ? final_delta : 0.0 };
+    const double adjusted_final_delta { tmp_node_->unit == NodeUnit::OImmediate ? final_delta : 0.0 };
 
     {
-        tmp_node_.count_total += count_delta;
-        tmp_node_.measure_total += measure_delta;
-        tmp_node_.initial_total += initial_delta;
-        tmp_node_.discount_total += discount_delta;
-        tmp_node_.final_total += adjusted_final_delta;
+        tmp_node_->count_total += count_delta;
+        tmp_node_->measure_total += measure_delta;
+        tmp_node_->initial_total += initial_delta;
+        tmp_node_->discount_total += discount_delta;
+        tmp_node_->final_total += adjusted_final_delta;
 
         IniUiValue();
     }
@@ -165,16 +168,15 @@ void TableWidgetO::IniConnect()
     connect(unit_group_, &QButtonGroup::idClicked, this, &TableWidgetO::RUnitGroupClicked);
 }
 
-void TableWidgetO::IniData(const NodeO& node)
+void TableWidgetO::IniData(const NodeO* node)
 {
     {
-        (node.direction_rule ? ui->rBtnRO : ui->rBtnFO)->setChecked(true);
-        ui->dateTimeEdit->setDateTime(node.issued_time.toLocalTime());
-        table_model_order_->SetNode(&tmp_node_);
+        (node->direction_rule ? ui->rBtnRO : ui->rBtnFO)->setChecked(true);
+        ui->dateTimeEdit->setDateTime(node->issued_time.toLocalTime());
     }
 
     {
-        const NodeUnit kUnit { node.unit };
+        const NodeUnit kUnit { node->unit };
 
         switch (kUnit) {
         case NodeUnit::OImmediate:
@@ -192,7 +194,7 @@ void TableWidgetO::IniData(const NodeO& node)
     }
 
     {
-        LockWidgets(NodeStatus(node.status));
+        LockWidgets(NodeStatus(node->status));
     }
 
     if (sync_state_ == SyncState::kNew)
@@ -201,47 +203,47 @@ void TableWidgetO::IniData(const NodeO& node)
     {
         IniUiValue();
 
-        ui->lineDescription->setText(node.description);
+        ui->lineDescription->setText(node->description);
 
-        int partner_index { ui->comboPartner->findData(node.partner_id) };
+        int partner_index { ui->comboPartner->findData(node->partner_id) };
         ui->comboPartner->setCurrentIndex(partner_index);
 
-        int employee_index { ui->comboEmployee->findData(node.employee_id) };
+        int employee_index { ui->comboEmployee->findData(node->employee_id) };
         ui->comboEmployee->setCurrentIndex(employee_index);
     }
 }
 
 void TableWidgetO::LockWidgets(NodeStatus value)
 {
-    const bool is_unfinished { value == NodeStatus::kUnfinished };
-    const bool is_finished { value == NodeStatus::kFinished };
+    const bool is_unreleased { value == NodeStatus::kUnreleased };
+    const bool is_released { value == NodeStatus::kReleased };
     const bool is_new { sync_state_ == SyncState::kNew };
 
-    ui->comboPartner->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
-    ui->comboEmployee->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
+    ui->comboPartner->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
+    ui->comboEmployee->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
 
     ui->rBtnRO->setEnabled(is_new);
     ui->rBtnFO->setEnabled(is_new);
 
-    ui->rBtnIS->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
-    ui->rBtnMS->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
-    ui->rBtnPEND->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
+    ui->rBtnIS->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
+    ui->rBtnMS->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
+    ui->rBtnPEND->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
 
-    ui->lineDescription->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
-    ui->dateTimeEdit->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
+    ui->lineDescription->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
+    ui->dateTimeEdit->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
 
-    ui->pBtnSave->setEnabled(is_unfinished);
-    ui->pBtnRelease->setEnabled(is_unfinished && tmp_node_.unit != NodeUnit::OPending);
-    ui->pBtnRecall->setEnabled(is_finished);
+    ui->pBtnSave->setEnabled(is_unreleased);
+    ui->pBtnRelease->setEnabled(is_unreleased && tmp_node_->unit != NodeUnit::OPending);
+    ui->pBtnRecall->setEnabled(is_released);
 }
 
 void TableWidgetO::IniUiValue()
 {
-    ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
-    ui->dSpinDiscountTotal->setValue(tmp_node_.discount_total);
-    ui->dSpinCountTotal->setValue(tmp_node_.count_total);
-    ui->dSpinMeasureTotal->setValue(tmp_node_.measure_total);
-    ui->dSpinInitialTotal->setValue(tmp_node_.initial_total);
+    ui->dSpinFinalTotal->setValue(tmp_node_->final_total);
+    ui->dSpinDiscountTotal->setValue(tmp_node_->discount_total);
+    ui->dSpinCountTotal->setValue(tmp_node_->count_total);
+    ui->dSpinMeasureTotal->setValue(tmp_node_->measure_total);
+    ui->dSpinInitialTotal->setValue(tmp_node_->initial_total);
 }
 
 void TableWidgetO::IniRuleGroup()
@@ -262,10 +264,10 @@ void TableWidgetO::IniUnitGroup()
 void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
 {
     const QUuid partner_id { ui->comboPartner->currentData().toUuid() };
-    if (tmp_node_.partner_id == partner_id)
+    if (tmp_node_->partner_id == partner_id)
         return;
 
-    tmp_node_.partner_id = partner_id;
+    tmp_node_->partner_id = partner_id;
     emit SSyncPartner(node_id_, partner_id);
 
     if (sync_state_ == SyncState::kSynced) {
@@ -278,10 +280,10 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
 void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 {
     const QUuid employee_id { ui->comboEmployee->currentData().toUuid() };
-    if (tmp_node_.employee_id == employee_id)
+    if (tmp_node_->employee_id == employee_id)
         return;
 
-    tmp_node_.employee_id = employee_id;
+    tmp_node_->employee_id = employee_id;
 
     if (sync_state_ == SyncState::kSynced) {
         pending_update_.insert(kEmployeeId, employee_id.toString(QUuid::WithoutBraces));
@@ -293,10 +295,10 @@ void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
     const QDateTime utc_time { date_time.toUTC() };
-    if (tmp_node_.issued_time == utc_time)
+    if (tmp_node_->issued_time == utc_time)
         return;
 
-    tmp_node_.issued_time = utc_time;
+    tmp_node_->issued_time = utc_time;
 
     if (sync_state_ == SyncState::kSynced) {
         pending_update_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
@@ -307,10 +309,10 @@ void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 
 void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 {
-    if (tmp_node_.description == arg1)
+    if (tmp_node_->description == arg1)
         return;
 
-    tmp_node_.description = arg1;
+    tmp_node_->description = arg1;
 
     if (sync_state_ == SyncState::kSynced) {
         pending_update_.insert(kDescription, arg1);
@@ -324,14 +326,14 @@ void TableWidgetO::RRuleGroupClicked(int id)
     if (sync_state_ == SyncState::kSynced)
         return;
 
-    tmp_node_.direction_rule = static_cast<bool>(id);
+    tmp_node_->direction_rule = static_cast<bool>(id);
     has_pending_update_ = true;
 
-    tmp_node_.count_total *= -1;
-    tmp_node_.measure_total *= -1;
-    tmp_node_.initial_total *= -1;
-    tmp_node_.discount_total *= -1;
-    tmp_node_.final_total *= -1;
+    tmp_node_->count_total *= -1;
+    tmp_node_->measure_total *= -1;
+    tmp_node_->initial_total *= -1;
+    tmp_node_->discount_total *= -1;
+    tmp_node_->final_total *= -1;
 
     IniUiValue();
 }
@@ -342,20 +344,20 @@ void TableWidgetO::RUnitGroupClicked(int id)
 
     switch (unit) {
     case NodeUnit::OImmediate:
-        tmp_node_.final_total = tmp_node_.initial_total - tmp_node_.discount_total;
+        tmp_node_->final_total = tmp_node_->initial_total - tmp_node_->discount_total;
         break;
     case NodeUnit::OMonthly:
-        tmp_node_.final_total = 0.0;
+        tmp_node_->final_total = 0.0;
         break;
     case NodeUnit::OPending:
-        tmp_node_.final_total = 0.0;
+        tmp_node_->final_total = 0.0;
         break;
     default:
         break;
     }
 
-    tmp_node_.unit = NodeUnit(id);
-    ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
+    tmp_node_->unit = NodeUnit(id);
+    ui->dSpinFinalTotal->setValue(tmp_node_->final_total);
 
     const bool is_pending { unit == NodeUnit::OPending };
     ui->pBtnRelease->setEnabled(!is_pending);
@@ -397,17 +399,17 @@ bool TableWidgetO::PreparePrint()
     }
 
     PrintHub::Instance().SetSectionConfig(&config_);
-    PrintHub::Instance().SetValue(&tmp_node_, table_model_order_->GetEntryList());
+    PrintHub::Instance().SetValue(tmp_node_, table_model_order_->GetEntryList());
 
     return true;
 }
 
 void TableWidgetO::BuildNodeInsert(QJsonObject& order_message)
 {
-    const QJsonObject node_json { tmp_node_.WriteJson() };
+    const QJsonObject node_json { tmp_node_->WriteJson() };
 
     QJsonObject path_json {};
-    path_json.insert(kAncestor, tmp_node_.parent->id.toString(QUuid::WithoutBraces));
+    path_json.insert(kAncestor, tmp_node_->parent->id.toString(QUuid::WithoutBraces));
     path_json.insert(kDescendant, node_id_.toString(QUuid::WithoutBraces));
 
     order_message.insert(kNode, node_json);
@@ -417,36 +419,32 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_message)
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
 {
     if (pending_update_.contains(kUnit))
-        pending_update_.insert(kFinalTotal, QString::number(tmp_node_.final_total, 'f', kMaxNumericScale_4));
+        pending_update_.insert(kFinalTotal, QString::number(tmp_node_->final_total, 'f', kMaxNumericScale_4));
 
-    pending_update_.insert(kVersion, tmp_node_.version);
+    pending_update_.insert(kVersion, tmp_node_->version);
 
     order_message.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
-    order_message.insert(kPartnerId, tmp_node_.partner_id.toString(QUuid::WithoutBraces));
+    order_message.insert(kPartnerId, tmp_node_->partner_id.toString(QUuid::WithoutBraces));
     order_message.insert(kNodeUpdate, pending_update_);
 }
 
 void TableWidgetO::on_pBtnRecall_clicked()
 {
-    Q_ASSERT(tmp_node_.status == NodeStatus::kFinished);
-
-    if (!ValidatePartner())
-        return;
-
     if (!ValidateSyncState())
         return;
 
-    if (tmp_node_.is_settled || !tmp_node_.settlement_id.isNull()) {
+    if (tmp_node_->is_settled || !tmp_node_->settlement_id.isNull()) {
         Utils::ShowNotification(
             QMessageBox::Information, tr("Order Settled"), tr("This order has already been settled and cannot be operated."), kThreeThousand);
         return;
     }
 
-    tmp_node_.status = NodeStatus::kUnfinished;
+    tmp_node_->status = NodeStatus::kUnreleased;
 
-    pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kUnfinished));
-    pending_update_.insert(kVersion, tmp_node_.version);
-    qInfo() << "on_pBtnRecall_clicked: tmp_node_ version" << tmp_node_.version;
+    pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kUnreleased));
+    pending_update_.insert(kVersion, tmp_node_->version);
+
+    qInfo() << "on_pBtnRecall_clicked: tmp_node_ version" << tmp_node_->version;
 
     WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_id_, pending_update_));
 
@@ -457,12 +455,12 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
 bool TableWidgetO::ValidatePartner()
 {
-    if (tmp_node_.partner_id.isNull()) {
+    if (tmp_node_->partner_id.isNull()) {
         Utils::ShowNotification(QMessageBox::Warning, tr("Partner Required"), tr("Please select a partner before performing this action."), kThreeThousand);
         return false;
     }
 
-    qDebug() << "[ValidatePartner] Partner is set" << tree_model_partner_->Name(tmp_node_.partner_id);
+    qDebug() << "[ValidatePartner] Partner is set" << tree_model_partner_->Name(tmp_node_->partner_id);
     return true;
 }
 
@@ -490,7 +488,7 @@ void TableWidgetO::SaveOrder()
     if (!HasPendingUpdate())
         return;
 
-    tmp_node_.status = NodeStatus::kUnfinished;
+    tmp_node_->status = NodeStatus::kUnreleased;
 
     QJsonObject order_message { JsonGen::MetaMessage(section_) };
     table_model_order_->Finalize(order_message);
@@ -510,7 +508,7 @@ void TableWidgetO::SaveOrder()
         ui->rBtnFO->setEnabled(false);
     }
 
-    qInfo() << "SaveOrder: tmp_node_ version" << tmp_node_.version;
+    qInfo() << "SaveOrder: tmp_node_ version" << tmp_node_->version;
 
     sync_state_ = SyncState::kDirty;
     has_pending_update_ = false;
@@ -519,21 +517,19 @@ void TableWidgetO::SaveOrder()
 
 void TableWidgetO::on_pBtnRelease_clicked()
 {
-    Q_ASSERT(tmp_node_.status == NodeStatus::kUnfinished);
-
     if (!ValidatePartner())
         return;
 
     if (!ValidateSyncState())
         return;
 
-    tmp_node_.status = NodeStatus::kFinished;
+    tmp_node_->status = NodeStatus::kReleased;
 
     QJsonObject order_message { JsonGen::MetaMessage(section_) };
     table_model_order_->Finalize(order_message);
 
     if (sync_state_ == SyncState::kSynced) {
-        pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kFinished));
+        pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
 
         BuildNodeUpdate(order_message);
 
@@ -550,7 +546,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
         ui->rBtnFO->setEnabled(false);
     }
 
-    qInfo() << "on_pBtnRelease_clicked: tmp_node_ version" << tmp_node_.version;
+    qInfo() << "on_pBtnRelease_clicked: tmp_node_ version" << tmp_node_->version;
 
     sync_state_ = SyncState::kDirty;
     has_pending_update_ = false;

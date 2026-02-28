@@ -56,7 +56,14 @@ signals:
 public slots:
     // receive from TableModel
     virtual void RAppendOneEntry(Entry* entry);
-    void RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
+    virtual void RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
+
+    // Just for partner
+    virtual void RUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node)
+    {
+        Q_UNUSED(entry)
+        Q_UNUSED(old_rhs_node)
+    }
 
 public:
     void Reset();

@@ -867,20 +867,32 @@ void WebSocket::UpdateNodeName(const QJsonObject& obj)
     tree_model->UpdateMeta(node_id, meta);
 }
 
-void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_release)
+void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_released)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+    const auto node_update { obj.value(kNodeUpdate).toObject() };
 
-    auto* base_model { tree_model_hash_.value(section).data() };
-    auto* order_model = static_cast<TreeModelO*>(base_model);
+    auto* order_model { static_cast<TreeModelO*>(tree_model_hash_.value(section).data()) };
     Q_ASSERT(order_model != nullptr);
+
+    {
+        const NodeUnit unit { node_update.value(kUnit).toInt() };
+        if (is_released && unit == NodeUnit::OMonthly) {
+            auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
+            Q_ASSERT(partner_model != nullptr);
+
+            const auto partner_id { QUuid(obj.value(kPartnerId).toString()) };
+            const double initial_delta { node_update.value(kInitialTotal).toString().toDouble() };
+
+            partner_model->RUpdateAmount(partner_id, initial_delta);
+        }
+    }
 
     if (!order_model->Contains(node_id))
         return;
 
-    const auto node_update { obj.value(kNodeUpdate).toObject() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
 
     order_model->SyncNode(node_id, node_update);
@@ -888,17 +900,17 @@ void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_release)
     const int version { node_update.value(kVersion).toInt() };
 
     if (session_id == session_id_) {
-        if (is_release)
+        if (is_released)
             emit SOrderReleased(section, node_id, version);
         else
             emit SOrderSaved(section, node_id, version);
     }
 
-    if (is_release)
-        order_model->RNodeStatus(node_id, NodeStatus::kFinished);
+    if (is_released)
+        order_model->RNodeStatus(node_id, NodeStatus::kReleased);
 }
 
-void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
+void WebSocket::InsertOrder(const QJsonObject& obj, bool is_released)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
@@ -910,42 +922,66 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_release)
     const auto node_id { QUuid(node_obj.value(kId).toString()) };
     const QJsonObject meta { obj.value(kMeta).toObject() };
 
-    auto* base_model { tree_model_hash_.value(section).data() };
-    auto* order_model = static_cast<TreeModelO*>(base_model);
+    auto* order_model { static_cast<TreeModelO*>(tree_model_hash_.value(section).data()) };
     Q_ASSERT(order_model != nullptr);
 
-    base_model->InsertNode(ancestor, node_obj);
+    order_model->InsertNode(ancestor, node_obj);
     order_model->InsertMeta(descendant, meta);
     const int version { node_obj.value(kVersion).toInt() };
 
     if (session_id == session_id_) {
         emit SNodeSelected(section, descendant);
 
-        if (is_release)
+        if (is_released)
             emit SOrderReleased(section, node_id, version);
         else
             emit SOrderSaved(section, node_id, version);
     }
 
-    if (is_release)
-        order_model->RNodeStatus(node_id, NodeStatus::kFinished);
+    if (is_released) {
+        const NodeUnit unit { node_obj.value(kUnit).toInt() };
+
+        if (unit == NodeUnit::OMonthly) {
+            auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
+            Q_ASSERT(partner_model != nullptr);
+
+            const auto partner_id { QUuid(node_obj.value(kPartnerId).toString()) };
+            const double initial_delta { node_obj.value(kInitialTotal).toString().toDouble() };
+
+            partner_model->RUpdateAmount(partner_id, initial_delta);
+        }
+
+        order_model->RNodeStatus(node_id, NodeStatus::kReleased);
+    }
 }
 
 void WebSocket::RecallOrder(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
-
+    const auto node_update { obj.value(kNodeUpdate).toObject() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
-    auto* base_model { tree_model_hash_.value(section).data() };
 
-    auto* order_model = static_cast<TreeModelO*>(base_model);
+    const NodeUnit unit { node_update.value(kUnit).toInt() };
+
+    auto* order_model = static_cast<TreeModelO*>(tree_model_hash_.value(section).data());
     Q_ASSERT(order_model != nullptr);
+
+    {
+        if (unit == NodeUnit::OMonthly) {
+            auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
+            Q_ASSERT(partner_model != nullptr);
+
+            const auto partner_id { QUuid(node_update.value(kPartnerId).toString()) };
+            const double initial_delta { node_update.value(kInitialTotal).toString().toDouble() };
+
+            partner_model->RUpdateAmount(partner_id, -initial_delta);
+        }
+    }
 
     if (!order_model->Contains(node_id))
         return;
 
-    const auto node_update { obj.value(kNodeUpdate).toObject() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
     const int version { node_update.value(kVersion).toInt() };
 
@@ -955,7 +991,7 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
         emit SOrderRecalled(section, node_id, version);
     }
 
-    order_model->RNodeStatus(node_id, NodeStatus::kUnfinished);
+    order_model->RNodeStatus(node_id, NodeStatus::kUnreleased);
     order_model->UpdateMeta(node_id, meta);
 }
 
