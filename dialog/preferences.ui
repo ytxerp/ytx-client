@@ -54,7 +54,7 @@
    <item row="0" column="1">
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="page_1">
       <layout class="QGridLayout" name="gridLayout_3">
@@ -723,6 +723,31 @@
    <header location="global">widget/spinbox.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>listWidget</tabstop>
+  <tabstop>comboDefaultUnit</tabstop>
+  <tabstop>pBtnDocumentDir</tabstop>
+  <tabstop>pBtnResetDocumentDir</tabstop>
+  <tabstop>comboLanguage</tabstop>
+  <tabstop>comboSeparator</tabstop>
+  <tabstop>comboPrinter</tabstop>
+  <tabstop>comboTheme</tabstop>
+  <tabstop>chkBoxDeleteConfirm</tabstop>
+  <tabstop>lineCompanyName</tabstop>
+  <tabstop>spinQuantityDecimal</tabstop>
+  <tabstop>spinRateDecimal</tabstop>
+  <tabstop>spinAmountDecimal</tabstop>
+  <tabstop>comboDateFormat</tabstop>
+  <tabstop>lineStatic</tabstop>
+  <tabstop>comboStatic</tabstop>
+  <tabstop>lineDynamic</tabstop>
+  <tabstop>comboDynamicLhs</tabstop>
+  <tabstop>comboOperation</tabstop>
+  <tabstop>comboDynamicRhs</tabstop>
+  <tabstop>pBtnOk</tabstop>
+  <tabstop>pBtnCancel</tabstop>
+  <tabstop>pBtnApply</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

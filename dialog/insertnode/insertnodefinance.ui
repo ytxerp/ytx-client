@@ -10,14 +10,14 @@
     <height>360</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::FocusPolicy::StrongFocus</enum>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="0">
     <widget class="QLabel" name="labDescription">
      <property name="text">
       <string>Description</string>
-     </property>
-     <property name="buddy">
-      <cstring>lineDescription</cstring>
      </property>
     </widget>
    </item>
@@ -42,9 +42,6 @@
      <property name="text">
       <string>Rule</string>
      </property>
-     <property name="buddy">
-      <cstring>rBtnDICD</cstring>
-     </property>
     </widget>
    </item>
    <item row="3" column="0">
@@ -57,9 +54,6 @@
      </property>
      <property name="text">
       <string>Kind</string>
-     </property>
-     <property name="buddy">
-      <cstring>rBtnDICD</cstring>
      </property>
     </widget>
    </item>
@@ -80,9 +74,6 @@
      </property>
      <property name="text">
       <string>Name</string>
-     </property>
-     <property name="buddy">
-      <cstring>lineName</cstring>
      </property>
     </widget>
    </item>
@@ -116,6 +107,9 @@
       </property>
       <item>
        <widget class="QRadioButton" name="rBtnDICD">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::NoFocus</enum>
+        </property>
         <property name="toolTip">
          <string>Debit Increase, Credit Decrease</string>
         </property>
@@ -126,6 +120,9 @@
       </item>
       <item>
        <widget class="QRadioButton" name="rBtnDDCI">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::NoFocus</enum>
+        </property>
         <property name="toolTip">
          <string>Debit Decrease, Credit Increase</string>
         </property>
@@ -160,6 +157,9 @@
       </property>
       <item row="1" column="0">
        <widget class="QRadioButton" name="rBtnLeaf">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::NoFocus</enum>
+        </property>
         <property name="toolTip">
          <string>Leaf Node</string>
         </property>
@@ -170,6 +170,9 @@
       </item>
       <item row="1" column="1">
        <widget class="QRadioButton" name="rBtnBranch">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::NoFocus</enum>
+        </property>
         <property name="toolTip">
          <string>Branch Node</string>
         </property>
@@ -189,6 +192,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::FocusPolicy::NoFocus</enum>
+     </property>
      <property name="text">
       <string>Cancel</string>
      </property>
@@ -199,9 +205,6 @@
      <property name="text">
       <string>Code</string>
      </property>
-     <property name="buddy">
-      <cstring>lineCode</cstring>
-     </property>
     </widget>
    </item>
    <item row="7" column="3">
@@ -211,6 +214,9 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::FocusPolicy::NoFocus</enum>
      </property>
      <property name="text">
       <string>Ok</string>
@@ -303,9 +309,8 @@
  <tabstops>
   <tabstop>lineName</tabstop>
   <tabstop>lineCode</tabstop>
-  <tabstop>pBtnOk</tabstop>
-  <tabstop>pBtnCancel</tabstop>
-  <tabstop>rBtnDICD</tabstop>
+  <tabstop>lineDescription</tabstop>
+  <tabstop>comboUnit</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -316,8 +321,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>358</x>
-     <y>495</y>
+     <x>200</x>
+     <y>355</y>
     </hint>
     <hint type="destinationlabel">
      <x>260</x>
@@ -332,8 +337,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>425</x>
-     <y>506</y>
+     <x>257</x>
+     <y>355</y>
     </hint>
     <hint type="destinationlabel">
      <x>101</x>

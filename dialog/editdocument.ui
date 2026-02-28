@@ -90,6 +90,9 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>pBtnInsert</tabstop>
+  <tabstop>pBtnOk</tabstop>
+  <tabstop>pBtnDelete</tabstop>
   <tabstop>pBtnCancel</tabstop>
   <tabstop>listView</tabstop>
  </tabstops>

@@ -349,9 +349,6 @@
           <property name="text">
            <string>Discount</string>
           </property>
-          <property name="buddy">
-           <cstring>dSpinDiscountTotal</cstring>
-          </property>
          </widget>
         </item>
         <item>
@@ -420,11 +417,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>DateTimeEdit</class>
-   <extends>QDateTimeEdit</extends>
-   <header location="global">widget/datetimeedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>LineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">widget/lineedit.h</header>
@@ -438,6 +430,11 @@
    <class>DoubleSpinBox</class>
    <extends>QDoubleSpinBox</extends>
    <header location="global">widget/doublespinbox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DateTimeEdit</class>
+   <extends>QDateTimeEdit</extends>
+   <header location="global">widget/datetimeedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

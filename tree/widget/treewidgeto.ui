@@ -106,16 +106,22 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>TreeView</class>
-   <extends>QTreeView</extends>
-   <header location="global">widget/treeview.h</header>
-  </customwidget>
-  <customwidget>
    <class>DateTimeEdit</class>
    <extends>QDateTimeEdit</extends>
    <header location="global">widget/datetimeedit.h</header>
   </customwidget>
+  <customwidget>
+   <class>TreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">widget/treeview.h</header>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>start</tabstop>
+  <tabstop>end</tabstop>
+  <tabstop>pBtnFetch</tabstop>
+  <tabstop>treeViewO</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

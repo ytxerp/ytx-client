@@ -35,9 +35,6 @@
      <property name="text">
       <string>Name</string>
      </property>
-     <property name="buddy">
-      <cstring>lineName</cstring>
-     </property>
     </widget>
    </item>
    <item row="2" column="3">

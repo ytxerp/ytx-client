@@ -168,7 +168,7 @@
         <string>Register</string>
        </property>
        <property name="default">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </item>

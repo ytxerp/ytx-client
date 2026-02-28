@@ -69,8 +69,8 @@
  </widget>
  <tabstops>
   <tabstop>pBtnInsert</tabstop>
-  <tabstop>tableView</tabstop>
   <tabstop>pBtnDelete</tabstop>
+  <tabstop>tableView</tabstop>
  </tabstops>
  <resources/>
  <connections/>
