@@ -1888,6 +1888,13 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="41"/>
         <location filename="../../component/stringinitializer.cc" line="64"/>
         <location filename="../../component/stringinitializer.cc" line="85"/>
+        <location filename="../../component/stringinitializer.cc" line="134"/>
+        <location filename="../../component/stringinitializer.cc" line="156"/>
+        <location filename="../../component/stringinitializer.cc" line="178"/>
+        <location filename="../../component/stringinitializer.cc" line="199"/>
+        <location filename="../../component/stringinitializer.cc" line="244"/>
+        <location filename="../../component/stringinitializer.cc" line="268"/>
+        <location filename="../../component/stringinitializer.cc" line="292"/>
         <source>Document</source>
         <translation>文件</translation>
     </message>
@@ -2073,15 +2080,8 @@ You need to recall it first before making changes.</source>
         <translation>汇率</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="134"/>
-        <location filename="../../component/stringinitializer.cc" line="156"/>
-        <location filename="../../component/stringinitializer.cc" line="178"/>
-        <location filename="../../component/stringinitializer.cc" line="199"/>
-        <location filename="../../component/stringinitializer.cc" line="244"/>
-        <location filename="../../component/stringinitializer.cc" line="268"/>
-        <location filename="../../component/stringinitializer.cc" line="292"/>
         <source>D</source>
-        <translation></translation>
+        <translation type="vanished">文件</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="137"/>
