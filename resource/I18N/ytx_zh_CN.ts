@@ -369,7 +369,7 @@ Rage, rage against the dying of the light.</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../../dialog/editnodenameo.ui" line="52"/>
+        <location filename="../../dialog/editnodenameo.ui" line="49"/>
         <source>Ok</source>
         <translation>确认</translation>
     </message>
@@ -448,17 +448,17 @@ Rage, rage against the dying of the light.</source>
 <context>
     <name>InsertNodeFinance</name>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="17"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="20"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="216"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="222"/>
         <source>Ok</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="193"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="199"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -468,12 +468,12 @@ Rage, rage against the dying of the light.</source>
         <translation>规则</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="69"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="63"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="120"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="114"/>
         <source>Debit Increase, Credit Decrease</source>
         <translation>借方增加，贷方减少</translation>
     </message>
@@ -483,27 +483,27 @@ Rage, rage against the dying of the light.</source>
         <translation>叶节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="174"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="177"/>
         <source>Branch Node</source>
         <translation>枝节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="130"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="127"/>
         <source>Debit Decrease, Credit Increase</source>
         <translation>借方减少，贷方增加</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="82"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="76"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="200"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="206"/>
         <source>Code</source>
         <translation>编号</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="59"/>
+        <location filename="../../dialog/insertnode/insertnodefinance.ui" line="56"/>
         <source>Kind</source>
         <translation>类型</translation>
     </message>
@@ -511,17 +511,17 @@ Rage, rage against the dying of the light.</source>
 <context>
     <name>InsertNodeI</name>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="51"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="57"/>
         <source>Debit Decrease, Credit Increase</source>
         <translation>借方减少，贷方增加</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="41"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="44"/>
         <source>Debit Increase, Credit Decrease</source>
         <translation>借方增加，贷方减少</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="314"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="317"/>
         <source>Code</source>
         <translation>编号</translation>
     </message>
@@ -531,32 +531,32 @@ Rage, rage against the dying of the light.</source>
         <translation>枝节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="250"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="253"/>
         <source>Leaf Node</source>
         <translation>叶节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="300"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="303"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="343"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="333"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="103"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="109"/>
         <source>Ok</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="113"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="119"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="156"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="159"/>
         <source>Rule</source>
         <translation>规则</translation>
     </message>
@@ -566,17 +566,17 @@ Rage, rage against the dying of the light.</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="70"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="76"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="80"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="83"/>
         <source>Commission</source>
         <translation>提成</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodei.ui" line="307"/>
+        <location filename="../../dialog/insertnode/insertnodei.ui" line="310"/>
         <source>UnitPrice</source>
         <translation>单价</translation>
     </message>
@@ -584,12 +584,12 @@ Rage, rage against the dying of the light.</source>
 <context>
     <name>InsertNodeP</name>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="199"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="202"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="33"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="30"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
@@ -599,22 +599,22 @@ Rage, rage against the dying of the light.</source>
         <translation>枝节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="123"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="126"/>
         <source>Leaf Node</source>
         <translation>叶节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="261"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="264"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="62"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="59"/>
         <source>Ok</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="159"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="162"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
@@ -629,7 +629,7 @@ Rage, rage against the dying of the light.</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodep.ui" line="49"/>
+        <location filename="../../dialog/insertnode/insertnodep.ui" line="43"/>
         <source>PaymentTerm</source>
         <translation>帐期</translation>
     </message>
@@ -637,7 +637,7 @@ Rage, rage against the dying of the light.</source>
 <context>
     <name>InsertNodeTask</name>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="84"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="87"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
@@ -652,7 +652,7 @@ Rage, rage against the dying of the light.</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="282"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="288"/>
         <source>Kind</source>
         <translation>类型</translation>
     </message>
@@ -662,12 +662,12 @@ Rage, rage against the dying of the light.</source>
         <translation>枝节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="65"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="68"/>
         <source>Leaf Node</source>
         <translation>叶节点</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="209"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="212"/>
         <source>Rule</source>
         <translation>规则</translation>
     </message>
@@ -693,7 +693,7 @@ Rage, rage against the dying of the light.</source>
         <translation type="vanished">日期</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="196"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="199"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -703,12 +703,12 @@ Rage, rage against the dying of the light.</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="253"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="259"/>
         <source>Debit Decrease, Credit Increase</source>
         <translation>借方减少，贷方增加</translation>
     </message>
     <message>
-        <location filename="../../dialog/insertnode/insertnodetask.ui" line="243"/>
+        <location filename="../../dialog/insertnode/insertnodetask.ui" line="246"/>
         <source>Debit Increase, Credit Decrease</source>
         <translation>借方增加，贷方减少</translation>
     </message>
@@ -1086,7 +1086,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="514"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="620"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="638"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
@@ -1109,7 +1109,7 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="566"/>
         <location filename="../../mainwindow/mainwindow.ui" line="569"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="192"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="193"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="43"/>
         <source>Email</source>
         <translation>邮箱</translation>
@@ -1117,7 +1117,7 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="574"/>
         <location filename="../../mainwindow/mainwindow.ui" line="577"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="193"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="194"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="44"/>
         <source>Workspace</source>
         <translation>工区</translation>
@@ -1149,7 +1149,7 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="629"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="194"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="195"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="45"/>
         <source>Expire Date</source>
         <translation>期限</translation>
@@ -1214,63 +1214,63 @@ Do you want to save before closing?</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="630"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="648"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="630"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="648"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="630"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="648"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="664"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="682"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="664"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="682"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="667"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="685"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="667"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="685"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="687"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="694"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="705"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="712"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="687"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="705"/>
         <source>Failed to check updates.</source>
         <translation>检查更新失败。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="694"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="712"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="706"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="724"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="707"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="725"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1279,12 +1279,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="719"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="737"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="719"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="737"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -1614,12 +1614,12 @@ You need to recall it first before making changes.</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="363"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="381"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="370"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="388"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -2442,7 +2442,7 @@ You need to recall it first before making changes.</source>
 <context>
     <name>TableWidgetO</name>
     <message>
-        <location filename="../../table/widget/tablewidgeto.ui" line="388"/>
+        <location filename="../../table/widget/tablewidgeto.ui" line="385"/>
         <source>NetAmount</source>
         <translation>结算</translation>
     </message>
