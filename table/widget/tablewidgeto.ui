@@ -248,6 +248,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pBtnRelease">
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
           <property name="text">
            <string>Release</string>
           </property>
@@ -258,6 +261,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pBtnSave">
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
           <property name="text">
            <string>Save</string>
           </property>
@@ -265,6 +271,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pBtnRecall">
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
           <property name="text">
            <string>Recall</string>
           </property>
@@ -435,15 +444,15 @@
   <tabstop>pBtnPrint</tabstop>
   <tabstop>pBtnPreview</tabstop>
   <tabstop>comboTemplate</tabstop>
-  <tabstop>comboPartner</tabstop>
-  <tabstop>comboEmployee</tabstop>
+  <tabstop>dateTimeEdit</tabstop>
+  <tabstop>lineDescription</tabstop>
   <tabstop>rBtnIS</tabstop>
   <tabstop>rBtnMS</tabstop>
   <tabstop>rBtnPEND</tabstop>
   <tabstop>rBtnTO</tabstop>
   <tabstop>rBtnRO</tabstop>
-  <tabstop>dateTimeEdit</tabstop>
-  <tabstop>lineDescription</tabstop>
+  <tabstop>comboPartner</tabstop>
+  <tabstop>comboEmployee</tabstop>
   <tabstop>tableViewO</tabstop>
  </tabstops>
  <resources/>

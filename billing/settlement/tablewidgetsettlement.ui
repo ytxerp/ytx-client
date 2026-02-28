@@ -108,6 +108,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pBtnRecall">
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
           <property name="text">
            <string>Recall</string>
           </property>
@@ -115,6 +118,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pBtnRelease">
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
           <property name="text">
            <string>Release</string>
           </property>
@@ -157,6 +163,9 @@
             <bold>true</bold>
             <strikeout>false</strikeout>
            </font>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="frame">
            <bool>true</bool>
@@ -214,6 +223,15 @@
    <header location="global">widget/doublespinbox.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tableView</tabstop>
+  <tabstop>pBtnRelease</tabstop>
+  <tabstop>pBtnRecall</tabstop>
+  <tabstop>dateTimeEdit</tabstop>
+  <tabstop>lineDescription</tabstop>
+  <tabstop>comboPartner</tabstop>
+  <tabstop>dSpinAmount</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

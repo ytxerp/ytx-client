@@ -230,9 +230,6 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->lineDescription->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
     ui->dateTimeEdit->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
 
-    const bool can_print { is_finished || tmp_node_.unit == NodeUnit::OPending };
-    ui->pBtnPrint->setEnabled(can_print);
-
     ui->pBtnSave->setEnabled(is_unfinished);
     ui->pBtnRelease->setEnabled(is_unfinished && tmp_node_.unit != NodeUnit::OPending);
     ui->pBtnRecall->setEnabled(is_finished);
@@ -361,8 +358,7 @@ void TableWidgetO::RUnitGroupClicked(int id)
     ui->dSpinFinalTotal->setValue(tmp_node_.final_total);
 
     const bool is_pending { unit == NodeUnit::OPending };
-    ui->pBtnPrint->setEnabled(is_pending);
-    ui->pBtnRelease->setHidden(is_pending);
+    ui->pBtnRelease->setEnabled(!is_pending);
 
     if (sync_state_ == SyncState::kSynced) {
         pending_update_.insert(kUnit, id);
