@@ -50,6 +50,7 @@ struct Entry {
     QUuid updated_by {};
     int version {};
 
+    virtual ~Entry() = default;
     virtual void Reset();
     virtual void ReadJson(const QJsonObject& object);
     virtual QJsonObject WriteJson() const { return QJsonObject(); }
