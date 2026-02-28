@@ -30,8 +30,8 @@ void IssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) const
 
 void IssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
-    auto* cast_ediotr { static_cast<DateTimeEdit*>(editor) };
-    auto issued_time { cast_ediotr->dateTime().toUTC() };
+    auto* cast_editor { static_cast<DateTimeEdit*>(editor) };
+    auto issued_time { cast_editor->dateTime().toUTC() };
 
     model->setData(index, issued_time);
 }

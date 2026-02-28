@@ -109,7 +109,7 @@ void TableWidgetSettlement::on_dateTimeEdit_dateTimeChanged(const QDateTime& dat
     if (settlement_.issued_time == utc_time)
         return;
 
-    settlement_.issued_time = dateTime.toUTC();
+    settlement_.issued_time = utc_time;
 
     if (sync_state_ == SyncState::kSynced)
         pending_update_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
