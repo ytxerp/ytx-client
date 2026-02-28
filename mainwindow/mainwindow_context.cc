@@ -108,30 +108,8 @@ void MainWindow::InitilizeContext()
     }
 
     {
-        switch (start_) {
-        case Section::kFinance:
-            ui->rBtnFinance->setChecked(true);
-            break;
-        case Section::kTask:
-            ui->rBtnTask->setChecked(true);
-            break;
-        case Section::kInventory:
-            ui->rBtnInventory->setChecked(true);
-            break;
-        case Section::kPartner:
-            ui->rBtnPartner->setChecked(true);
-            break;
-        case Section::kSale:
-            ui->rBtnSale->setChecked(true);
-            break;
-        case Section::kPurchase:
-            ui->rBtnPurchase->setChecked(true);
-            break;
-        default:
-            break;
-        }
-
-        RSectionGroup(std::to_underlying(start_));
+        if (auto* btn { section_group_->button(std::to_underlying(start_)) })
+            btn->click();
     }
 
     {
