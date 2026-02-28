@@ -55,20 +55,18 @@ inline constexpr bool kIsHidden = true;
 
 namespace Rule {
 // Finance/Inventory/Task: Credit increase, Debit decrease; calculation: credit - debit
-// Order: Refund Order (returned transaction)
+// Order: Return Order (returned transaction)
 inline constexpr bool kDDCI = true;
 inline constexpr bool kRO = true;
 
 // Finance/Inventory/Task: Debit increase, Credit decrease; calculation: debit - credit
-// Order: Trade Order (normal transaction)
+// Order: Forward Order (normal transaction)
 inline constexpr bool kDICD = false;
-inline constexpr bool kTO = false;
+inline constexpr bool kFO = false;
 
 inline const QString kStrDDCI = QStringLiteral("DDCI");
 inline const QString kStrDICD = QStringLiteral("DICD");
 
-inline const QString kStrTO = QStringLiteral("TO");
-inline const QString kStrRO = QStringLiteral("RO");
 }
 
 inline constexpr double kDoubleMax = std::numeric_limits<double>::max();

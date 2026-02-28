@@ -168,7 +168,7 @@ void TableWidgetO::IniConnect()
 void TableWidgetO::IniData(const NodeO& node)
 {
     {
-        (node.direction_rule ? ui->rBtnRO : ui->rBtnTO)->setChecked(true);
+        (node.direction_rule ? ui->rBtnRO : ui->rBtnFO)->setChecked(true);
         ui->dateTimeEdit->setDateTime(node.issued_time.toLocalTime());
         table_model_order_->SetNode(&tmp_node_);
     }
@@ -221,7 +221,7 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->comboEmployee->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
 
     ui->rBtnRO->setEnabled(is_new);
-    ui->rBtnTO->setEnabled(is_new);
+    ui->rBtnFO->setEnabled(is_new);
 
     ui->rBtnIS->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
     ui->rBtnMS->setAttribute(Qt::WA_TransparentForMouseEvents, is_finished);
@@ -248,7 +248,7 @@ void TableWidgetO::IniRuleGroup()
 {
     rule_group_ = new QButtonGroup(this);
     rule_group_->addButton(ui->rBtnRO, static_cast<int>(Rule::kRO));
-    rule_group_->addButton(ui->rBtnTO, static_cast<int>(Rule::kTO));
+    rule_group_->addButton(ui->rBtnFO, static_cast<int>(Rule::kFO));
 }
 
 void TableWidgetO::IniUnitGroup()
@@ -507,7 +507,7 @@ void TableWidgetO::SaveOrder()
         WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_message);
 
         ui->rBtnRO->setEnabled(false);
-        ui->rBtnTO->setEnabled(false);
+        ui->rBtnFO->setEnabled(false);
     }
 
     qInfo() << "SaveOrder: tmp_node_ version" << tmp_node_.version;
@@ -547,7 +547,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
         WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_message);
 
         ui->rBtnRO->setEnabled(false);
-        ui->rBtnTO->setEnabled(false);
+        ui->rBtnFO->setEnabled(false);
     }
 
     qInfo() << "on_pBtnRelease_clicked: tmp_node_ version" << tmp_node_.version;

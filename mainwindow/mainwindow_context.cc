@@ -219,10 +219,9 @@ void MainWindow::InitContextInventory()
     info.path = kInventoryPath;
     info.entry = kInventoryEntry;
 
-    for (NodeUnit c : { NodeUnit::IInternal, NodeUnit::IPosition, NodeUnit::IExternal }) {
-        const int key { std::to_underlying(c) };
-        info.unit_map.insert(key, kUnitCode(c));
-    }
+    info.unit_map.insert(std::to_underlying(NodeUnit::IInternal), tr("INT", "Internal"));
+    info.unit_map.insert(std::to_underlying(NodeUnit::IPosition), tr("POS", "Position"));
+    info.unit_map.insert(std::to_underlying(NodeUnit::IExternal), tr("EXT", "External"));
 
     info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
     info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
@@ -262,10 +261,9 @@ void MainWindow::InitContextTask()
     info.path = kTaskPath;
     info.entry = kTaskEntry;
 
-    for (NodeUnit c : { NodeUnit::TTarget, NodeUnit::TAction, NodeUnit::TSource }) {
-        const int key { std::to_underlying(c) };
-        info.unit_map.insert(key, kUnitCode(c));
-    }
+    info.unit_map.insert(std::to_underlying(NodeUnit::TTarget), tr("TGT", "Target"));
+    info.unit_map.insert(std::to_underlying(NodeUnit::TAction), tr("ACT", "Action"));
+    info.unit_map.insert(std::to_underlying(NodeUnit::TSource), tr("SRC", "Source"));
 
     info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
     info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
@@ -305,10 +303,9 @@ void MainWindow::InitContextPartner()
     info.path = kPartnerPath;
     info.entry = kPartnerEntry;
 
-    for (NodeUnit c : { NodeUnit::PCustomer, NodeUnit::PEmployee, NodeUnit::PVendor }) {
-        const int key { std::to_underlying(c) };
-        info.unit_map.insert(key, kUnitCode(c));
-    }
+    info.unit_map.insert(std::to_underlying(NodeUnit::PCustomer), tr("CUS", "Customer"));
+    info.unit_map.insert(std::to_underlying(NodeUnit::PEmployee), tr("EMP", "Employee"));
+    info.unit_map.insert(std::to_underlying(NodeUnit::PVendor), tr("VEN", "Vendor"));
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
@@ -344,13 +341,12 @@ void MainWindow::InitContextSale()
     info.entry = kSaleEntry;
     info.settlement = kSaleSettlement;
 
-    info.rule_map.insert(Rule::kRO, Rule::kStrRO);
-    info.rule_map.insert(Rule::kTO, Rule::kStrTO);
+    info.rule_map.insert(Rule::kRO, tr("RO", "Return Order"));
+    info.rule_map.insert(Rule::kFO, tr("FO", "Forward Order"));
 
-    for (NodeUnit c : { NodeUnit::OImmediate, NodeUnit::OMonthly, NodeUnit::OPending }) {
-        const int key { std::to_underlying(c) };
-        info.unit_map.insert(key, kUnitCode(c));
-    }
+    info.unit_map.insert(std::to_underlying(NodeUnit::OImmediate), tr("IMM", "Immediate"));
+    info.unit_map.insert(std::to_underlying(NodeUnit::OMonthly), tr("MON", "Monthly"));
+    info.unit_map.insert(std::to_underlying(NodeUnit::OPending), tr("PEND", "Pending"));
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
@@ -395,13 +391,12 @@ void MainWindow::InitContextPurchase()
     info.entry = kPurchaseEntry;
     info.settlement = kPurchaseSettlement;
 
-    info.rule_map.insert(Rule::kRO, Rule::kStrRO);
-    info.rule_map.insert(Rule::kTO, Rule::kStrTO);
+    info.rule_map.insert(Rule::kRO, tr("RO", "Return Order"));
+    info.rule_map.insert(Rule::kFO, tr("FO", "Forward Order"));
 
-    for (NodeUnit c : { NodeUnit::OImmediate, NodeUnit::OMonthly, NodeUnit::OPending }) {
-        const int key { std::to_underlying(c) };
-        info.unit_map.insert(key, kUnitCode(c));
-    }
+    info.unit_map.insert(std::to_underlying(NodeUnit::OImmediate), tr("IMM", "Immediate"));
+    info.unit_map.insert(std::to_underlying(NodeUnit::OMonthly), tr("MON", "Monthly"));
+    info.unit_map.insert(std::to_underlying(NodeUnit::OPending), tr("PEND", "Pending"));
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);

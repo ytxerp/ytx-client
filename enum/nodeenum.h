@@ -28,11 +28,14 @@ enum class NodeStatus { kUnfinished = 0, kFinished };
 
 /** @brief NodeUnit, global unit identifier across ERP. */
 /**
- * 1–499   : Financial units (Currency)
+ * 0–499   : Financial units (Currency)
  * 500–599 : Task units
  * 600–699 : Inventory units
  * 700–799 : Partner units
  * 800–899 : Order units
+ *
+ * WARNING: Do NOT modify existing values.
+ * These identifiers must remain in sync with the server.
  */
 enum class NodeUnit : int {
     // Financial units (Currency), 0–499

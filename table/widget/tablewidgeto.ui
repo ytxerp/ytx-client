@@ -32,16 +32,16 @@
       <item row="2" column="4">
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="QRadioButton" name="rBtnTO">
+         <widget class="QRadioButton" name="rBtnFO">
           <property name="text">
-           <string>TO</string>
+           <string>Forward</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QRadioButton" name="rBtnRO">
           <property name="text">
-           <string>RO</string>
+           <string>Return</string>
           </property>
          </widget>
         </item>
@@ -449,7 +449,7 @@
   <tabstop>rBtnIS</tabstop>
   <tabstop>rBtnMS</tabstop>
   <tabstop>rBtnPEND</tabstop>
-  <tabstop>rBtnTO</tabstop>
+  <tabstop>rBtnFO</tabstop>
   <tabstop>rBtnRO</tabstop>
   <tabstop>comboPartner</tabstop>
   <tabstop>comboEmployee</tabstop>
