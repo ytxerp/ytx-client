@@ -7,6 +7,7 @@
 #include <QNetworkReply>
 #include <QQueue>
 #include <QScrollBar>
+#include <QShortcut>
 #include <QUrl>
 #include <QtConcurrent>
 
@@ -211,6 +212,23 @@ void MainWindow::IniSectionGroup()
     section_group_->addButton(ui->rBtnPartner, std::to_underlying(Section::kPartner));
     section_group_->addButton(ui->rBtnSale, std::to_underlying(Section::kSale));
     section_group_->addButton(ui->rBtnPurchase, std::to_underlying(Section::kPurchase));
+
+    const QList<QPair<QKeySequence, int>> shortcuts = {
+        { Qt::ALT | Qt::Key_1, std::to_underlying(Section::kFinance) },
+        { Qt::ALT | Qt::Key_2, std::to_underlying(Section::kTask) },
+        { Qt::ALT | Qt::Key_3, std::to_underlying(Section::kInventory) },
+        { Qt::ALT | Qt::Key_4, std::to_underlying(Section::kPartner) },
+        { Qt::ALT | Qt::Key_5, std::to_underlying(Section::kSale) },
+        { Qt::ALT | Qt::Key_6, std::to_underlying(Section::kPurchase) },
+    };
+
+    for (auto& [key, id] : shortcuts) {
+        auto* shortcut { new QShortcut(key, this) };
+        connect(shortcut, &QShortcut::activated, this, [this, id]() {
+            if (auto* btn { section_group_->button(id) })
+                btn->click();
+        });
+    }
 }
 
 void MainWindow::IniMarkGroup()
