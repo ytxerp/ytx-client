@@ -884,9 +884,9 @@ void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_released)
             Q_ASSERT(partner_model != nullptr);
 
             const auto partner_id { QUuid(obj.value(kPartnerId).toString()) };
-            const double initial_delta { node_update.value(kInitialTotal).toString().toDouble() };
+            const double initial_total { node_update.value(kInitialTotal).toString().toDouble() };
 
-            partner_model->RUpdateAmount(partner_id, initial_delta);
+            partner_model->RUpdateAmount(partner_id, initial_total);
         }
     }
 
@@ -946,9 +946,9 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_released)
             Q_ASSERT(partner_model != nullptr);
 
             const auto partner_id { QUuid(node_obj.value(kPartnerId).toString()) };
-            const double initial_delta { node_obj.value(kInitialTotal).toString().toDouble() };
+            const double initial_total { node_obj.value(kInitialTotal).toString().toDouble() };
 
-            partner_model->RUpdateAmount(partner_id, initial_delta);
+            partner_model->RUpdateAmount(partner_id, initial_total);
         }
 
         order_model->RNodeStatus(node_id, NodeStatus::kReleased);
@@ -973,9 +973,9 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
             Q_ASSERT(partner_model != nullptr);
 
             const auto partner_id { QUuid(node_update.value(kPartnerId).toString()) };
-            const double initial_delta { node_update.value(kInitialTotal).toString().toDouble() };
+            const double initial_total { node_update.value(kInitialTotal).toString().toDouble() };
 
-            partner_model->RUpdateAmount(partner_id, -initial_delta);
+            partner_model->RUpdateAmount(partner_id, -initial_total);
         }
     }
 
