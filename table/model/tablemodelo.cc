@@ -534,7 +534,9 @@ void TableModelO::PurifyEntry()
             continue;
 
         beginRemoveRows(QModelIndex(), i, i);
-        EntryPool::Instance().Recycle(entry_list_.takeAt(i), section_);
+        auto* taken { entry_list_.takeAt(i) };
+        pending_insert_.remove(taken->id);
+        EntryPool::Instance().Recycle(taken, section_);
         endRemoveRows();
     }
 }
