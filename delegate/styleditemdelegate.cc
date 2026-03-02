@@ -42,6 +42,25 @@ void StyledItemDelegate::PaintText(
     style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, opt.widget);
 }
 
+void StyledItemDelegate::PaintColorText(
+    CString& text, CString& color, QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, Qt::Alignment alignment) const
+{
+    QStyleOptionViewItem opt(option);
+    initStyleOption(&opt, index);
+
+    const QColor text_color(color);
+    if (text_color.isValid()) {
+        opt.palette.setColor(QPalette::Text, text_color);
+        opt.palette.setColor(QPalette::HighlightedText, text_color);
+    }
+
+    opt.text = text;
+    opt.displayAlignment = alignment;
+
+    QStyle* style { QApplication::style() };
+    style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, opt.widget);
+}
+
 void StyledItemDelegate::PaintCheckBox(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     QStyleOptionViewItem opt { option };

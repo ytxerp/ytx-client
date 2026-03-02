@@ -118,6 +118,7 @@ set(SOURCES
     delegate/readonly/nodepathr.cc
     delegate/issuedtime.cc
     delegate/color.cc
+    delegate/readonly/boolcolorstringr.cc
     delegate/readonly/financeforeignr.cc
     delegate/search/searchpathtreer.cc
     delegate/search/searchpathtabler.cc
@@ -267,6 +268,7 @@ set(HEADERS
     delegate/bool.h
     delegate/double.h
     delegate/document.h
+    delegate/readonly/boolcolorstringr.h
     delegate/readonly/documentr.h
     delegate/filterunit.h
     delegate/readonly/boolstringr.h

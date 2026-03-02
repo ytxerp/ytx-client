@@ -120,6 +120,7 @@ inline const QString kStart = QStringLiteral("start");
 inline const QString kEnd = QStringLiteral("end");
 inline const QString kStartSection = QStringLiteral("start/section");
 inline const QString kTheme = QStringLiteral("theme");
+inline const QString kWarningColor = QStringLiteral("#DC322F");
 
 // Client-initiated data requests
 inline const QString kTreeAck = QStringLiteral("tree_ack");

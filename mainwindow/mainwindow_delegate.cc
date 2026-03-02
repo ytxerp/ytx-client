@@ -9,7 +9,7 @@
 #include "delegate/line.h"
 #include "delegate/readonly/amountorderreferencer.h"
 #include "delegate/readonly/amountr.h"
-#include "delegate/readonly/boolstringr.h"
+#include "delegate/readonly/boolcolorstringr.h"
 #include "delegate/readonly/colorr.h"
 #include "delegate/readonly/doublespinnonezeror.h"
 #include "delegate/readonly/financeforeignr.h"
@@ -157,7 +157,7 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
 
 void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {
-    auto* direction_rule_r { new BoolStringR(info.rule_map, tree_view) };
+    auto* direction_rule_r { new BoolColorStringR(info.rule_map, kWarningColor, kEmptyString, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDirectionRule), direction_rule_r);
 
     auto* unit_r { new IntStringR(info.unit_map, tree_view) };
