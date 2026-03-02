@@ -214,6 +214,7 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
     auto* manage_action = tag_menu->addAction(tr("Manage..."));
     // manage_action->setIcon(QIcon(":/icons/settings.png"));
     connect(manage_action, &QAction::triggered, this, [this]() { on_actionTags_triggered(); });
+    manage_action->setEnabled(!IsOrderSection(start_));
 
     menu->addSeparator();
     menu->addAction(ui->actionInsertNode);
