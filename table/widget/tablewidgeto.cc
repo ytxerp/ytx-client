@@ -64,6 +64,8 @@ void TableWidgetO::SaveSucceeded(int version)
 
 void TableWidgetO::MarkSynced(int version)
 {
+    ui->pBtnPrint->setFocus();
+
     tmp_node_->version = version;
     sync_state_ = SyncState::kSynced;
 }
