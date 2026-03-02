@@ -47,5 +47,5 @@ void IssuedTime::paint(QPainter* painter, const QStyleOptionViewItem& option, co
 QSize IssuedTime::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     auto text { index.data().toDateTime().toString(date_format_) };
-    return CalculateTextSize(text, option, kCoefficient5);
+    return CalculateTextSize(text, option, kCoefficient8);
 }
