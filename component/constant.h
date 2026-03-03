@@ -52,7 +52,6 @@ inline const QString kDotSuffixINI = QStringLiteral(".ini");
 inline const QString kDotSuffixXLSX = QStringLiteral(".xlsx");
 
 // Node rule, kind, unit
-
 inline const QString kBranchKind = QStringLiteral("B");
 inline const QString kLeafKind = QStringLiteral("L");
 
@@ -73,23 +72,7 @@ inline const QString kTheme = QStringLiteral("theme");
 inline const QString kWarningColor = QStringLiteral("#DC322F");
 
 // Client-initiated data requests
-inline const QString kTreeAck = QStringLiteral("tree_ack");
-inline const QString kNodeAck = QStringLiteral("node_ack");
-inline const QString kTableAck = QStringLiteral("table_ack");
 inline const QString kLinkedEntry = QStringLiteral("linked_entry");
-inline const QString kOrderReferenceAck = QStringLiteral("order_reference_ack");
-inline const QString kStatementAcked = QStringLiteral("statement_acked");
-inline const QString kStatementNodeAcked = QStringLiteral("statement_node_acked");
-inline const QString kStatementEntryAcked = QStringLiteral("statement_entry_acked");
-inline const QString kSettlementAcked = QStringLiteral("settlement_acked");
-inline const QString kSettlementItemAcked = QStringLiteral("settlement_item_acked");
-inline const QString kSettlementDeleted = QStringLiteral("settlement_deleted");
-
-// Server-initiated data push
-inline const QString kTreeApplied = QStringLiteral("tree_applied");
-inline const QString kTagApplied = QStringLiteral("tag_applied");
-inline const QString kSharedConfig = QStringLiteral("shared_config");
-inline const QString kTreeSyncFinished = QStringLiteral("tree_sync_finished");
 
 // Decimal config
 inline const QString kAmountDecimal = QStringLiteral("amount_decimal");
@@ -104,11 +87,6 @@ inline const QString kDynamicNodeRhs = QStringLiteral("dynamic_node_rhs");
 inline const QString kOperation = QStringLiteral("operation");
 inline const QString kStaticLabel = QStringLiteral("static_label");
 inline const QString kStaticNode = QStringLiteral("static_node");
-
-inline const QString kLeafDeleteCheck = QStringLiteral("leaf_delete_check");
-inline const QString kLeafDeleteDenied = QStringLiteral("leaf_delete_denied");
-inline const QString kLeafDelete = QStringLiteral("leaf_delete");
-inline const QString kLeafReplace = QStringLiteral("leaf_replace");
 
 inline const QString kExternalSku = QStringLiteral("external_sku");
 inline const QString kInternalSku = QStringLiteral("internal_sku");
@@ -131,20 +109,6 @@ inline const QString kEmployeeRef = QStringLiteral("employee_ref");
 // Node from Sale or Purchase is referenced by settlement entries
 inline const QString kSettlementRef = QStringLiteral("settlement_ref");
 
-inline const QString kNodeInsert = QStringLiteral("node_insert");
-inline const QString kNodeDrag = QStringLiteral("node_drag");
-inline const QString kNodeUpdate = QStringLiteral("node_update");
-inline const QString kNodeName = QStringLiteral("node_name");
-
-inline const QString kOrderInsertSaved = QStringLiteral("order_insert_saved");
-inline const QString kOrderUpdateSaved = QStringLiteral("order_update_saved");
-inline const QString kOrderInsertReleased = QStringLiteral("order_insert_released");
-inline const QString kOrderUpdateReleased = QStringLiteral("order_update_released");
-inline const QString kOrderRecalled = QStringLiteral("order_recalled");
-
-inline const QString kSettlementInserted = QStringLiteral("settlement_inserted");
-inline const QString kSettlementUpdated = QStringLiteral("settlement_updated");
-inline const QString kSettlementRecalled = QStringLiteral("settlement_recalled");
 inline const QString kSettlementItemDeselected = QStringLiteral("settlement_item_deselected");
 inline const QString kSettlementItemSelected = QStringLiteral("settlement_item_selected");
 
@@ -166,14 +130,10 @@ inline const QString kEmail = QStringLiteral("email");
 inline const QString kPassword = QStringLiteral("password");
 inline const QString kKeyword = QStringLiteral("keyword");
 inline const QString kRegister = QStringLiteral("register");
-inline const QString kRegisterResult = QStringLiteral("register_result");
 inline const QString kServer = QStringLiteral("server");
-inline const QString kLoginResult = QStringLiteral("login_result");
 inline const QString kWorkspace = QStringLiteral("workspace");
 inline const QString kHost = QStringLiteral("host");
-inline const QString kBranchDelete = QStringLiteral("branch_delete");
 inline const QString kNode = QStringLiteral("node");
-inline const QString kNodeSearch = QStringLiteral("node_search");
 inline const QString kNodeArray = QStringLiteral("node_array");
 inline const QString kPath = QStringLiteral("path");
 inline const QString kPathArray = QStringLiteral("path_array");
@@ -183,29 +143,14 @@ inline const QString kPort = QStringLiteral("port");
 inline const QString kSourceConnection = QStringLiteral("source_connection");
 inline const QString kUser = QStringLiteral("user");
 
-inline const QString kTagInsert = QStringLiteral("tag_insert");
-inline const QString kTagUpdate = QStringLiteral("tag_update");
-inline const QString kTagDelete = QStringLiteral("tag_delete");
-inline const QString kEntryInsert = QStringLiteral("entry_insert");
-inline const QString kEntryUpdate = QStringLiteral("entry_update");
-inline const QString kEntryDelete = QStringLiteral("entry_delete");
-inline const QString kEntryDescriptionSearch = QStringLiteral("entry_description_search");
-inline const QString kEntryTagSearch = QStringLiteral("entry_tag_search");
 inline const QString kEntryArray = QStringLiteral("entry_array");
 inline const QString kUnsettledOrder = QStringLiteral("unsettled_order");
-inline const QString kEntryLinkedNode = QStringLiteral("entry_linked_node");
-inline const QString kEntryRate = QStringLiteral("entry_rate");
 inline const QString kUpdateEntryDebit = QStringLiteral("update_entry_debit");
 inline const QString kUpdateEntryCredit = QStringLiteral("update_entry_credit");
-inline const QString kEntryNumeric = QStringLiteral("entry_numeric");
 
 inline const QString kTotal = QStringLiteral("total");
 inline const QString kTotalArray = QStringLiteral("total_array");
 inline const QString kArray = QStringLiteral("array");
-inline const QString kDocumentDir = QStringLiteral("document_dir");
-inline const QString kDefaultUnit = QStringLiteral("default_unit");
-inline const QString kUpdateDefaultUnitFailure = QStringLiteral("update_default_unit_failure");
-inline const QString kLeafDeleteSafely = QStringLiteral("leaf_delete_safely");
 
 inline const QString kPBalance = QStringLiteral("pbalance");
 inline const QString kCCount = QStringLiteral("ccount");
@@ -276,11 +221,9 @@ inline const QString kDiscount = QStringLiteral("discount");
 inline const QString kUnitDiscount = QStringLiteral("unit_discount");
 inline const QString kDiscountTotal = QStringLiteral("discount_total");
 
-inline constexpr char kAction[] = "action";
 // Crockford Base32 alphabet (excludes I, L, O, U to avoid confusion)
 inline constexpr char kBase32Crockford[] = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
-inline const QString kEntryAction = QStringLiteral("entry_action");
 inline const QString kPasswordRemembered = QStringLiteral("password_remembered");
 
 inline const QString kIssuedTime = QStringLiteral("issued_time");
@@ -302,7 +245,6 @@ inline const QString kUpdatedBy = QStringLiteral("updated_by");
 inline const QString kVersion = QStringLiteral("version");
 inline const QString kAncestor = QStringLiteral("ancestor");
 inline const QString kDescendant = QStringLiteral("descendant");
-inline const QString kInvalidOperation = QStringLiteral("invalid_operation");
 
 // Others
 inline const QString kYTX = QStringLiteral("ytx");

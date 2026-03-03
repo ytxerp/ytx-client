@@ -39,7 +39,7 @@ QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id);
 QJsonObject LeafDeleteCheck(Section section, CUuid& node_id);
 QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id);
 
-QJsonObject EntryAction(Section section, CUuid& node_id, int action);
+QJsonObject BatchMark(Section section, CUuid& node_id, int mark);
 QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update);
 QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bool is_parallel);
 QJsonObject EntryDelete(Section section, CUuid& entry_id);
@@ -53,11 +53,11 @@ QJsonObject TreeAck(Section section, const QDateTime& start, const QDateTime& en
 QJsonObject TableAck(Section section, CUuid& node_id, CUuid& entry_id = {});
 QJsonObject NodeAck(Section section, CUuid& node_id);
 QJsonObject OrderReferenceAck(Section section, CUuid& widget_id, CUuid& node_id, int unit, const QDateTime& start, const QDateTime& end);
-QJsonObject StatementAcked(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end);
-QJsonObject StatementNodeAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
-QJsonObject StatementEntryAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
-QJsonObject SettlementAcked(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end);
-QJsonObject SettlementNodeAcked(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id);
+QJsonObject StatementAck(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end);
+QJsonObject StatementNodeAck(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
+QJsonObject StatementEntryAck(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
+QJsonObject SettlementAck(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end);
+QJsonObject SettlementNodeAck(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id);
 QJsonObject SettlementDelete(Section section, CUuid& settlement_id, int version);
 
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule);
@@ -70,7 +70,7 @@ QJsonObject EntryDescriptionSearch(Section section, CString& keyword);
 QJsonObject EntryTagSearch(Section section, const QSet<QString>& tags);
 QJsonObject NodeSearch(Section section, CString& keyword);
 
-QJsonObject OrderRecalled(Section section, CUuid& node_id, CJsonObject& update);
+QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update);
 QJsonObject MetaMessage(Section section);
 
 }

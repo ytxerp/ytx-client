@@ -47,7 +47,7 @@ void MainWindow::on_actionSignOut_triggered()
     Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
 }
 
-void MainWindow::RConnectionRefused()
+void MainWindow::RDenyConnection()
 {
     ui->actionSignIn->setEnabled(false);
     ui->actionSignOut->setEnabled(false);
@@ -57,7 +57,7 @@ void MainWindow::RConnectionRefused()
     Utils::ShowNotification(QMessageBox::Warning, tr("Connection Refused"), tr("Unable to connect to the server. Please try again."), TimeConst::kAutoCloseMs);
 }
 
-void MainWindow::RConnectionSucceeded()
+void MainWindow::RAllowConnection()
 {
     ui->actionSignIn->setEnabled(true);
     ui->actionSignOut->setEnabled(false);
@@ -76,7 +76,7 @@ void MainWindow::RRemoteHostClosed()
     Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
 }
 
-void MainWindow::RLoginSucceeded(const QString& expire_date)
+void MainWindow::RAllowLogin(const QString& expire_date)
 {
     {
         LoginInfo& login_info { LoginInfo::Instance() };
@@ -128,7 +128,7 @@ void MainWindow::RLoginSucceeded(const QString& expire_date)
     }
 }
 
-void MainWindow::RLoginFailed()
+void MainWindow::RDenyLogin()
 {
     ui->actionSignIn->setEnabled(true);
     ui->actionSignOut->setEnabled(false);
@@ -136,7 +136,7 @@ void MainWindow::RLoginFailed()
     Utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
 }
 
-void MainWindow::RTreeSyncFinished()
+void MainWindow::RFinishTreeSync()
 {
     qDebug() << "RTreeSyncFinished";
     tabWidget_currentChanged();

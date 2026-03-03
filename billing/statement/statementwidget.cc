@@ -1,6 +1,7 @@
 #include "statementwidget.h"
 
 #include "component/constant.h"
+#include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
 #include "enum/statementenum.h"
@@ -62,8 +63,8 @@ void StatementWidget::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::StatementAcked(section_, widget_id_, unit_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance()->SendMessage(kStatementAcked, message);
+    const auto message { JsonGen::StatementAck(section_, widget_id_, unit_, start_.toUTC(), end_.toUTC()) };
+    WebSocket::Instance()->SendMessage(WsKey::kStatementAck, message);
 
     cooldown_timer_->start(TimeConst::kCooldownMs);
 }

@@ -1,5 +1,6 @@
 #include "treewidgeto.h"
 
+#include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "ui_treewidgeto.h"
 #include "websocket/jsongen.h"
@@ -59,7 +60,7 @@ void TreeWidgetO::on_pBtnFetch_clicked()
     ui->pBtnFetch->setEnabled(false);
 
     const auto message { JsonGen::TreeAck(section_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance()->SendMessage(kTreeAck, message);
+    WebSocket::Instance()->SendMessage(WsKey::kTreeAck, message);
 
     cooldown_timer_->start(TimeConst::kCooldownMs);
 }

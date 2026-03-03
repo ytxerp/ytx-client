@@ -4,6 +4,7 @@
 #include <QFileDialog>
 
 #include "component/constant.h"
+#include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "global/exportexcel.h"
 #include "ui_statemententrywidget.h"
@@ -72,8 +73,8 @@ void StatementEntryWidget::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::StatementEntryAcked(section_, widget_id_, partner_id_, unit_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance()->SendMessage(kStatementEntryAcked, message);
+    const auto message { JsonGen::StatementEntryAck(section_, widget_id_, partner_id_, unit_, start_.toUTC(), end_.toUTC()) };
+    WebSocket::Instance()->SendMessage(WsKey::kStatementEntryAck, message);
 
     cooldown_timer_->start(TimeConst::kCooldownMs);
 }

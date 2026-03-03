@@ -21,7 +21,7 @@
 #include "delegate/readonly/nodepathr.h"
 #include "delegate/readonly/statusr.h"
 #include "delegate/rhsnode.h"
-#include "delegate/status.h"
+#include "delegate/statusdelegate.h"
 #include "delegate/tagdelegate.h"
 #include "enum/reference.h"
 #include "enum/settlementenum.h"
@@ -205,7 +205,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDocument), document);
 
-    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeId(node_id, table_view) };
@@ -239,7 +239,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDocument), document);
 
-    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeIdUnit(node_id, NodeUnit::IExternal, table_view) };
@@ -273,7 +273,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDocument), document);
 
-    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeId(node_id, table_view) };
@@ -313,7 +313,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kDocument), document);
 
-    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kStatus), status);
 
     auto* int_filter_model { tree_model_i->IncludeUnit(NodeUnit::IInternal, table_view) };
@@ -425,7 +425,7 @@ void MainWindow::DelegateStatementNode(QTableView* table_view, CSectionConfig& c
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kEmployee), employee);
 
-    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kStatus), status);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
@@ -444,7 +444,7 @@ void MainWindow::DelegateStatementEntry(QTableView* table_view, CSectionConfig& 
     auto* unit_price { new DoubleNoneZeroR(config.rate_decimal, StringConst::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kUnitPrice), unit_price);
 
-    auto* status { new Status(QEvent::MouseButtonRelease, table_view) };
+    auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kStatus), status);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
@@ -466,7 +466,7 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, StringConst::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kAmount), amount);
 
-    auto* status { new Status(QEvent::MouseButtonDblClick, table_view) };
+    auto* status { new StatusDelegate(QEvent::MouseButtonDblClick, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kStatus), status);
 
     auto* line { new Line(table_view) };

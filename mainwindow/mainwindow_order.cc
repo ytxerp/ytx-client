@@ -1,3 +1,4 @@
+#include "component/constantwebsocket.h"
 #include "dialog/editnodenameo.h"
 #include "dialog/insertnode/insertnodebranch.h"
 #include "global/nodepool.h"
@@ -26,7 +27,7 @@ void MainWindow::EditNameO()
 
     connect(dialog, &QDialog::accepted, this, [this, dialog, node]() {
         const auto message { JsonGen::NodeName(start_, node->id, dialog->GetName()) };
-        WebSocket::Instance()->SendMessage(kNodeName, message);
+        WebSocket::Instance()->SendMessage(WsKey::kNodeNameUpdate, message);
     });
 
     dialog->show();
@@ -74,7 +75,7 @@ void MainWindow::on_actionNewBranch_triggered()
 
     connect(dialog, &QDialog::accepted, this, [this, node]() {
         const auto message { JsonGen::NodeInsert(start_, node, node->parent->id) };
-        WebSocket::Instance()->SendMessage(kNodeInsert, message);
+        WebSocket::Instance()->SendMessage(WsKey::kNodeInsert, message);
     });
 
     connect(dialog, &QDialog::destroyed, this, [this, node]() { NodePool::Instance().Recycle(node, start_); });
@@ -82,7 +83,7 @@ void MainWindow::on_actionNewBranch_triggered()
     dialog->show();
 }
 
-void MainWindow::ROrderReleased(Section section, const QUuid& node_id, int version)
+void MainWindow::RReleaseOrder(Section section, const QUuid& node_id, int version)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -97,7 +98,7 @@ void MainWindow::ROrderReleased(Section section, const QUuid& node_id, int versi
     }
 }
 
-void MainWindow::ROrderRecalled(Section section, const QUuid& node_id, int version)
+void MainWindow::RRecallOrder(Section section, const QUuid& node_id, int version)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -112,7 +113,7 @@ void MainWindow::ROrderRecalled(Section section, const QUuid& node_id, int versi
     }
 }
 
-void MainWindow::ROrderSaved(Section section, const QUuid& node_id, int version)
+void MainWindow::RSaveOrder(Section section, const QUuid& node_id, int version)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -127,13 +128,13 @@ void MainWindow::ROrderSaved(Section section, const QUuid& node_id, int version)
     }
 }
 
-void MainWindow::RInvalidOperation()
+void MainWindow::RDenyOperation()
 {
     Utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
         tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), TimeConst::kAutoCloseMs);
 }
 
-void MainWindow::RNodeSelected(Section section, const QUuid& node_id)
+void MainWindow::RSelectNode(Section section, const QUuid& node_id)
 {
     auto* sc { GetSectionContex(section) };
     auto tree_model { sc->tree_model };

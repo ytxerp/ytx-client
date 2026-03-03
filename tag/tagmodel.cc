@@ -3,7 +3,7 @@
 #include <QJsonObject>
 #include <QRandomGenerator>
 
-#include "component/constant.h"
+#include "component/constantwebsocket.h"
 #include "enum/tagenum.h"
 #include "global/resourcepool.h"
 #include "websocket/jsongen.h"
@@ -188,7 +188,7 @@ bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
 
     if (tag->state == SyncState::kSynced) {
         const QJsonObject message { JsonGen::TagDelete(section_, tag->id) };
-        WebSocket::Instance()->SendMessage(kTagDelete, message);
+        WebSocket::Instance()->SendMessage(WsKey::kTagDelete, message);
     } else {
         ResourcePool<Tag>::Instance().Recycle(tag);
     }
@@ -269,7 +269,7 @@ void TagModel::RestartTimer(const QUuid& id)
             if (auto it = tag_hash_.find(id); it != tag_hash_.end()) {
                 const auto* tag { it.value() };
                 const QJsonObject message { JsonGen::TagUpdate(section_, tag) };
-                WebSocket::Instance()->SendMessage(kTagUpdate, message);
+                WebSocket::Instance()->SendMessage(WsKey::kTagUpdate, message);
                 pending_updates_.remove(tag->id);
             }
 
@@ -289,7 +289,7 @@ void TagModel::TryInsert(Tag* tag)
     tag->state = SyncState::kDirty;
 
     const QJsonObject message { JsonGen::TagInsert(section_, tag) };
-    WebSocket::Instance()->SendMessage(kTagInsert, message);
+    WebSocket::Instance()->SendMessage(WsKey::kTagInsert, message);
 
     emit SInsertingTag(tag);
 }

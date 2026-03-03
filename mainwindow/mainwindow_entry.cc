@@ -1,4 +1,5 @@
 #include "billing/settlement/treewidgetsettlement.h"
+#include "component/constantwebsocket.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
 #include "table/model/tablemodelf.h"
@@ -120,7 +121,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
 
     if (!node_id.isNull()) {
         FocusTabWidget(node_id);
-        RSelectLeafEntry(node_id, entry_id);
+        RSelectEntry(node_id, entry_id);
         return;
     }
 
@@ -135,7 +136,7 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
     }
 
     const auto message { JsonGen::TableAck(sc_->info.section, node_id, entry_id) };
-    WebSocket::Instance()->SendMessage(kTableAck, message);
+    WebSocket::Instance()->SendMessage(WsKey::kTableAck, message);
 
     switch (start_) {
     case Section::kSale:
@@ -155,14 +156,14 @@ void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id,
     FocusTabWidget(node_id);
 }
 
-// RSelectLeafEntry - Scroll to and select the specified entry (slot)
+// RSelectEntry - Scroll to and select the specified entry (slot)
 // -------------------------------
 // Behavior:
 //  1. Skip if entry_id is null (no target to scroll to)
 //  2. Find and select the entry in the view
 //  3. Scroll to center the IssuedTime column
 //  4. Close any persistent editor on that row
-void MainWindow::RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id)
+void MainWindow::RSelectEntry(const QUuid& node_id, const QUuid& entry_id)
 {
     if (entry_id.isNull() || node_id.isNull())
         return;
@@ -266,7 +267,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     sc->widget_hash.insert(node_id, wc);
 }
 
-void MainWindow::RActionEntry(EntryAction action)
+void MainWindow::RMarkBatch(Mark mark)
 {
     auto* current_widget { sc_->tab_widget->currentWidget() };
 
@@ -274,5 +275,5 @@ void MainWindow::RActionEntry(EntryAction action)
     auto* leaf_widget { static_cast<TableWidget*>(current_widget) };
 
     auto table_model { leaf_widget->Model() };
-    table_model->ActionEntry(action);
+    table_model->ActionEntry(mark);
 }

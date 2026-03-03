@@ -302,13 +302,13 @@ EntryList EntryHub::ProcessEntryArray(const QJsonArray& array)
     return list;
 }
 
-void EntryHub::ActionEntry(const QUuid& node_id, EntryAction action)
+void EntryHub::MarkBatch(const QUuid& node_id, Mark mark)
 {
     QSet<QUuid> affected_node {};
 
     for (auto* entry : std::as_const(entry_cache_)) {
         if (entry->lhs_node == node_id || entry->rhs_node == node_id) {
-            EntryActionImpl(entry, action);
+            MarkAction(entry, mark);
 
             affected_node.insert(entry->lhs_node);
             affected_node.insert(entry->rhs_node);
@@ -318,17 +318,17 @@ void EntryHub::ActionEntry(const QUuid& node_id, EntryAction action)
     emit SRefreshStatus(affected_node);
 }
 
-void EntryHub::EntryActionImpl(Entry* entry, EntryAction action)
+void EntryHub::MarkAction(Entry* entry, Mark mark)
 {
-    switch (action) {
-    case EntryAction::kMarkAll:
-        entry->status = std::to_underlying(EntryStatus::kMarked);
+    switch (mark) {
+    case Mark::kSelect:
+        entry->status = std::to_underlying(Status::kMarked);
         break;
-    case EntryAction::kMarkNone:
-        entry->status = std::to_underlying(EntryStatus::kUnmarked);
+    case Mark::kClear:
+        entry->status = std::to_underlying(Status::kUnmarked);
         break;
-    case EntryAction::kMarkToggle:
-        entry->status ^= std::to_underlying(EntryStatus::kMarked);
+    case Mark::kToggle:
+        entry->status ^= std::to_underlying(Status::kMarked);
         break;
     default:
         break;

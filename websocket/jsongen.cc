@@ -3,6 +3,7 @@
 #include <QJsonArray>
 
 #include "component/constant.h"
+#include "component/constantwebsocket.h"
 
 namespace JsonGen {
 
@@ -113,13 +114,13 @@ QJsonObject TableAck(Section section, CUuid& node_id, CUuid& entry_id)
     return message;
 }
 
-QJsonObject EntryAction(Section section, CUuid& node_id, int action)
+QJsonObject BatchMark(Section section, CUuid& node_id, int mark)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kAction, action);
+    message.insert(WsField::kMark, mark);
 
     return message;
 }
@@ -140,7 +141,7 @@ QJsonObject DocumentDir(Section section, CString& document_dir)
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
-    message.insert(kDocumentDir, document_dir);
+    message.insert(WsField::kDocumentDir, document_dir);
     return message;
 }
 
@@ -148,7 +149,7 @@ QJsonObject DefaultUnit(Section section, int unit)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kDefaultUnit, unit);
+    message.insert(WsField::kDefaultUnit, unit);
     return message;
 }
 
@@ -256,13 +257,13 @@ QJsonObject NodeSearch(Section section, CString& keyword)
     return message;
 }
 
-QJsonObject OrderRecalled(Section section, CUuid& node_id, CJsonObject& update)
+QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kMeta, QJsonObject());
-    message.insert(kNodeUpdate, update);
+    message.insert(WsField::kNodeUpdate, update);
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     return message;
 }
@@ -331,7 +332,7 @@ QJsonObject OrderReferenceAck(Section section, CUuid& widget_id, CUuid& node_id,
     return message;
 }
 
-QJsonObject StatementAcked(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject StatementAck(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 
@@ -345,7 +346,7 @@ QJsonObject StatementAcked(Section section, CUuid& widget_id, int unit, const QD
     return message;
 }
 
-QJsonObject StatementNodeAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject StatementNodeAck(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 
@@ -360,7 +361,7 @@ QJsonObject StatementNodeAcked(Section section, CUuid& widget_id, CUuid& partner
     return message;
 }
 
-QJsonObject StatementEntryAcked(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject StatementEntryAck(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 
@@ -376,7 +377,7 @@ QJsonObject StatementEntryAcked(Section section, CUuid& widget_id, CUuid& partne
     return message;
 }
 
-QJsonObject SettlementAcked(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end)
+QJsonObject SettlementAck(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 
@@ -389,7 +390,7 @@ QJsonObject SettlementAcked(Section section, CUuid& widget_id, const QDateTime& 
     return message;
 }
 
-QJsonObject SettlementNodeAcked(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id)
+QJsonObject SettlementNodeAck(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id)
 {
     QJsonObject message {};
 

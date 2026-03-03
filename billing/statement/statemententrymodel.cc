@@ -170,21 +170,21 @@ void StatementEntryModel::ResetModel(const QJsonArray& array)
     endResetModel();
 }
 
-void StatementEntryModel::ActionEntry(EntryAction action)
+void StatementEntryModel::MarkBatch(Mark mark)
 {
     if (list_.isEmpty())
         return;
 
     for (auto* entry : std::as_const(list_)) {
-        switch (action) {
-        case EntryAction::kMarkAll:
-            entry->status = std::to_underlying(EntryStatus::kMarked);
+        switch (mark) {
+        case Mark::kSelect:
+            entry->status = std::to_underlying(Status::kMarked);
             break;
-        case EntryAction::kMarkNone:
-            entry->status = std::to_underlying(EntryStatus::kUnmarked);
+        case Mark::kClear:
+            entry->status = std::to_underlying(Status::kUnmarked);
             break;
-        case EntryAction::kMarkToggle:
-            entry->status ^= std::to_underlying(EntryStatus::kMarked);
+        case Mark::kToggle:
+            entry->status ^= std::to_underlying(Status::kMarked);
             break;
         }
     }

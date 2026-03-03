@@ -2,6 +2,7 @@
 
 #include <QJsonArray>
 
+#include "component/constantwebsocket.h"
 #include "enum/settlementenum.h"
 #include "global/resourcepool.h"
 #include "websocket/jsongen.h"
@@ -126,7 +127,7 @@ bool TreeModelSettlement::removeRows(int row, int /*count*/, const QModelIndex& 
     endRemoveRows();
 
     QJsonObject message { JsonGen::SettlementDelete(info_.section, settlement->id, settlement->version) };
-    WebSocket::Instance()->SendMessage(kSettlementDeleted, message);
+    WebSocket::Instance()->SendMessage(WsKey::kSettlementDelete, message);
 
     ResourcePool<Settlement>::Instance().Recycle(settlement);
     return true;

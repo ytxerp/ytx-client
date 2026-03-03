@@ -3,6 +3,7 @@
 #include <QJsonArray>
 #include <QQueue>
 
+#include "component/constantwebsocket.h"
 #include "global/nodepool.h"
 #include "global/resourcepool.h"
 #include "tree/excludeidfiltermodel.h"
@@ -174,12 +175,12 @@ void TreeModel::UpdateDirectionRule(Node* node, bool value, const QModelIndex& i
         return;
 
     QJsonObject message { JsonGen::NodeDirectionRule(section_, node->id, value) };
-    WebSocket::Instance()->SendMessage(kDirectionRule, message);
+    WebSocket::Instance()->SendMessage(WsKey::kNodeDirectionRuleUpdate, message);
 
     DirectionRuleImpl(node, value, index);
 }
 
-void TreeModel::SyncDirectionRule(const QUuid& node_id, bool direction_rule)
+void TreeModel::UpdateDirectionRule(const QUuid& node_id, bool direction_rule)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
@@ -491,7 +492,7 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
 
     if (moveRows(source_parent_index, source_row, 1, parent, destination_child)) {
         const auto message { JsonGen::NodeDrag(section_, node_id, destination_parent->id) };
-        WebSocket::Instance()->SendMessage(kNodeDrag, message);
+        WebSocket::Instance()->SendMessage(WsKey::kNodeDrag, message);
         return true;
     }
 
@@ -690,7 +691,7 @@ void TreeModel::AckNode(const QUuid& node_id) const
         return;
 
     const auto message { JsonGen::NodeAck(section_, node_id) };
-    WebSocket::Instance()->SendMessage(kNodeAck, message);
+    WebSocket::Instance()->SendMessage(WsKey::kNodeAck, message);
 }
 
 void TreeModel::DeletePath(Node* node, Node* parent_node)
@@ -810,7 +811,7 @@ void TreeModel::RestartTimer(const QUuid& id)
 
             if (!update.isEmpty()) {
                 const auto message { JsonGen::NodeUpdate(section_, id, update) };
-                WebSocket::Instance()->SendMessage(kNodeUpdate, message);
+                WebSocket::Instance()->SendMessage(WsKey::kNodeUpdate, message);
             }
 
             expired_timer->deleteLater();
@@ -837,7 +838,7 @@ void TreeModel::FlushCaches()
     for (auto it = pending_updates_.cbegin(); it != pending_updates_.cend(); ++it) {
         if (!it.value().isEmpty()) {
             const auto message { JsonGen::NodeUpdate(section_, it.key(), it.value()) };
-            WebSocket::Instance()->SendMessage(kNodeUpdate, message);
+            WebSocket::Instance()->SendMessage(WsKey::kNodeUpdate, message);
         }
     }
 

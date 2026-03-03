@@ -1,5 +1,6 @@
 #include "leafdeletedialog.h"
 
+#include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "exactmatchconfirmdialog.h"
 #include "ui_leafdeletedialog.h"
@@ -120,7 +121,7 @@ void LeafDeleteDialog::ReplaceNode()
 
         const auto new_node_id { ui->comboBox->currentData().toUuid() };
         const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id) };
-        WebSocket::Instance()->SendMessage(kLeafReplace, message);
+        WebSocket::Instance()->SendMessage(WsKey::kLeafReplace, message);
     });
 
     dlg->show();
@@ -149,7 +150,7 @@ void LeafDeleteDialog::DeleteNode()
             return;
 
         const auto message { JsonGen::LeafDelete(info_.section, node_id_) };
-        WebSocket::Instance()->SendMessage(kLeafDelete, message);
+        WebSocket::Instance()->SendMessage(WsKey::kLeafDelete, message);
         close();
     });
 

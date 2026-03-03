@@ -1,24 +1,24 @@
-#include "status.h"
+#include "statusdelegate.h"
 
 #include <QMouseEvent>
 
 #include "enum/entryenum.h"
 
-Status::Status(QEvent::Type type, QObject* parent)
+StatusDelegate::StatusDelegate(QEvent::Type type, QObject* parent)
     : StyledItemDelegate { parent }
     , type_ { type }
 {
 }
 
-void Status::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void StatusDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    if (index.data().toInt() == std::to_underlying(EntryStatus::kUnmarked))
+    if (index.data().toInt() == std::to_underlying(Status::kUnmarked))
         return PaintEmpty(painter, option, index);
 
     PaintCheckBox(painter, option, index);
 }
 
-bool Status::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
+bool StatusDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
 {
     if (event->type() != type_)
         return false;

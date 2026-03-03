@@ -1,6 +1,7 @@
 #include "tablemodelf.h"
 
 #include "component/constant.h"
+#include "component/constantwebsocket.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -41,7 +42,7 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
 
     if (old_node.isNull()) {
         message.insert(kEntry, shadow->WriteJson());
-        WebSocket::Instance()->SendMessage(kEntryInsert, message);
+        WebSocket::Instance()->SendMessage(WsKey::kEntryInsert, message);
 
         const double lhs_debit { *shadow->lhs_debit };
         const double lhs_credit { *shadow->lhs_credit };
@@ -70,7 +71,7 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
         message.insert(kUpdate, update);
         message.insert(kIsParallel, is_parallel);
 
-        WebSocket::Instance()->SendMessage(kEntryLinkedNode, message);
+        WebSocket::Instance()->SendMessage(WsKey::kEntryLinkedNodeUpdate, message);
 
         emit SDetachOneEntry(old_node, entry_id);
         emit SAttachOneEntry(value, shadow->entry);
@@ -128,7 +129,7 @@ bool TableModelF::UpdateNumeric(EntryShadow* shadow, double value, int row, bool
     const double lhs_initial_delta { *shadow->lhs_debit - *shadow->lhs_credit - (lhs_old_debit - lhs_old_credit) };
     const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
 
-    WebSocket::Instance()->SendMessage(kEntryNumeric, message);
+    WebSocket::Instance()->SendMessage(WsKey::kEntryNumericUpdate, message);
 
     if (has_leaf_delta) {
         AccumulateBalance(row);
@@ -241,7 +242,7 @@ bool TableModelF::UpdateRate(EntryShadow* shadow, double value)
     update.insert(is_parallel ? kLhsRate : kRhsRate, QString::number(*shadow->lhs_rate, 'f', NumericConst::kDecimalPlaces8));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
-    WebSocket::Instance()->SendMessage(kEntryRate, message);
+    WebSocket::Instance()->SendMessage(WsKey::kEntryRateUpdate, message);
 
     const double rhs_initial_delta { *shadow->rhs_debit - *shadow->rhs_credit - (rhs_old_debit - rhs_old_credit) };
     const bool has_leaf_delta { std::abs(rhs_initial_delta) > kTolerance };

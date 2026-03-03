@@ -48,44 +48,44 @@ public:
     WebSocket& operator=(WebSocket&&) = delete;
 
 signals:
-    void SConnectionSucceeded();
-    void SConnectionRefused();
+    void SConnectionAllow();
+    void SConnectionDeny();
 
-    void SLoginSucceeded(const QString& expire_date);
-    void SLoginFailed(int code);
+    void SLoginAllow(const QString& expire_date);
+    void SLoginDeny(int code);
 
     void SRegisterResult(bool result, int code);
     void SRemoteHostClosed();
-    void SSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id);
+    void SEntrySelect(const QUuid& node_id, const QUuid& entry_id);
 
-    void SLeafDeleteDenied(const QJsonObject& obj);
-    void SSharedConfig(const QJsonArray& arr);
-    void SDocumentDir(Section section, const QString& document_dir);
-    void SDefaultUnit(Section section, int unit);
-    void SUpdateDefaultUnitFailed(const QString& section);
+    void SLeafDeleteDeny(const QJsonObject& obj);
+    void SSharedConfigApply(const QJsonArray& arr);
+    void SDocumentDirUpdate(Section section, const QString& document_dir);
+    void SDefaultUnitUpdate(Section section, int unit);
+    void SDefaultUnitDeny(const QString& section);
 
-    void SApplyTag(const QJsonObject& obj);
-    void SInsertTag(const QJsonObject& obj, bool is_same_session);
-    void SUpdateTag(const QJsonObject& obj);
-    void SDeleteTag(const QJsonObject& obj);
+    void STagApply(const QJsonObject& obj);
+    void STagInsert(const QJsonObject& obj, bool is_same_session);
+    void STagUpdate(const QJsonObject& obj);
+    void STagDelete(const QJsonObject& obj);
 
     void SReplaceResult(bool result);
-    void SOrderReference(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SStatement(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
-    void SSettlement(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SSettlementItemAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SSettlementInserted(const QJsonObject& obj);
-    void SSettlementRecalled(const QJsonObject& obj);
-    void SSettlementUpdated(const QJsonObject& obj);
-    void SOrderReleased(Section section, const QUuid& node_id, int version);
-    void SOrderRecalled(Section section, const QUuid& node_id, int version);
-    void SOrderSaved(Section section, const QUuid& node_id, int version);
-    void SInvalidOperation();
-    void SNodeSelected(Section section, const QUuid& node_id);
-    void SNodeLocation(Section section, const QUuid& node_id);
-    void STreeSyncFinished();
+    void SOrderReferenceAck(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SStatementAck(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SStatementNodeAck(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SStatementEntryAck(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
+    void SSettlementAck(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SSettlementItemAck(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SSettlementInsert(const QJsonObject& obj);
+    void SSettlementRecall(const QJsonObject& obj);
+    void SSettlementUpdate(const QJsonObject& obj);
+    void SOrderRelease(Section section, const QUuid& node_id, int version);
+    void SOrderRecall(Section section, const QUuid& node_id, int version);
+    void SOrderSave(Section section, const QUuid& node_id, int version);
+    void SOperationDeny();
+    void SNodeSelect(Section section, const QUuid& node_id);
+    void SNodeLocate(Section section, const QUuid& node_id);
+    void STreeSyncFinish();
 
     // send to SearchNodeModel
     void SNodeSearch(const QJsonObject& obj);
@@ -136,8 +136,8 @@ private:
     QHash<QUuid, QSet<QUuid>> ParseNodeReference(const QJsonObject& obj);
 
 private:
-    void NotifyRegisterResult(const QJsonObject& obj);
-    void NotifyLoginResult(const QJsonObject& obj);
+    void NotifyRegister(const QJsonObject& obj);
+    void NotifyLogin(const QJsonObject& obj);
 
     void AckTree(const QJsonObject& obj);
     void AckTable(const QJsonObject& obj);
@@ -152,10 +152,10 @@ private:
     void SearchEntry(const QJsonObject& obj);
     void SearchNode(const QJsonObject& obj);
 
-    void NotifyLeafDeleteDenied(const QJsonObject& obj);
-    void NotifyUpdateDefaultUnitFailure(const QJsonObject& obj);
-    void NotifyInvalidOperation();
-    void NotifyTreeSyncFinished();
+    void DenyLeafDelete(const QJsonObject& obj);
+    void DenyDefaultUnit(const QJsonObject& obj);
+    void DenyOperation();
+    void FinishTreeSync();
 
 private:
     void ApplySharedConfig(const QJsonArray& arr);
@@ -168,9 +168,9 @@ private:
     void DragNode(const QJsonObject& obj);
     void ReplaceLeaf(const QJsonObject& obj);
     void DeleteLeaf(const QJsonObject& obj);
-    void DeleteLeafSafely(const QJsonObject& obj);
+    void AllowLeafDelete(const QJsonObject& obj);
     void DeleteBranch(const QJsonObject& obj);
-    void UpdateDirectionRule(const QJsonObject& obj);
+    void UpdateNodeDirectionRule(const QJsonObject& obj);
     void UpdateNodeName(const QJsonObject& obj);
 
     void InsertTag(const QJsonObject& obj);
@@ -191,7 +191,7 @@ private:
     void UpdateEntry(const QJsonObject& obj);
     void InsertEntry(const QJsonObject& obj);
     void DeleteEntry(const QJsonObject& obj);
-    void ActionEntry(const QJsonObject& obj);
+    void MarkBatch(const QJsonObject& obj);
     void UpdateEntryLinkedNode(const QJsonObject& obj);
     void UpdateEntryRate(const QJsonObject& obj);
     void UpdateEntryNumeric(const QJsonObject& obj);

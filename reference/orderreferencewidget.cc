@@ -1,6 +1,7 @@
 #include "orderreferencewidget.h"
 
 #include "component/constant.h"
+#include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "ui_orderreferencewidget.h"
 #include "websocket/jsongen.h"
@@ -60,7 +61,7 @@ void OrderReferenceWidget::on_pBtnFetch_clicked()
     ui->pBtnFetch->setEnabled(false);
 
     const auto message { JsonGen::OrderReferenceAck(section_, widget_id_, node_id_, node_unit_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance()->SendMessage(kOrderReferenceAck, message);
+    WebSocket::Instance()->SendMessage(WsKey::kOrderReferenceAck, message);
 
     cooldown_timer_->start(TimeConst::kCooldownMs);
 }

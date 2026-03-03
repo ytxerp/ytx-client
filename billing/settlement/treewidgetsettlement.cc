@@ -4,6 +4,7 @@
 #include <QTimer>
 
 #include "component/constant.h"
+#include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "ui_treewidgetsettlement.h"
 #include "websocket/jsongen.h"
@@ -60,8 +61,8 @@ void TreeWidgetSettlement::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::SettlementAcked(section_, widget_id_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance()->SendMessage(kSettlementAcked, message);
+    const auto message { JsonGen::SettlementAck(section_, widget_id_, start_.toUTC(), end_.toUTC()) };
+    WebSocket::Instance()->SendMessage(WsKey::kSettlementAck, message);
 
     cooldown_timer_->start(TimeConst::kCooldownMs);
 }

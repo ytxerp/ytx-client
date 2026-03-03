@@ -1,6 +1,7 @@
 #include "tablemodeli.h"
 
 #include "component/constant.h"
+#include "component/constantwebsocket.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -40,7 +41,7 @@ bool TableModelI::UpdateRate(EntryShadow* shadow, double value)
     update.insert(kRhsRate, QString::number(value, 'f', NumericConst::kDecimalPlaces8));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, shadow->is_parallel) };
-    WebSocket::Instance()->SendMessage(kEntryRate, message);
+    WebSocket::Instance()->SendMessage(WsKey::kEntryRateUpdate, message);
 
     return true;
 }
@@ -83,7 +84,7 @@ bool TableModelI::UpdateNumeric(EntryShadow* shadow, double value, int row, bool
     update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*shadow->rhs_credit, 'f', NumericConst::kDecimalPlaces8));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
-    WebSocket::Instance()->SendMessage(kEntryNumeric, message);
+    WebSocket::Instance()->SendMessage(WsKey::kEntryNumericUpdate, message);
 
     // Delta calculation follows the DICD rule (Debit - Credit).
     // After the delta is computed, both the node and the server
@@ -122,7 +123,7 @@ bool TableModelI::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
 
     if (old_node.isNull()) {
         message.insert(kEntry, shadow->WriteJson());
-        WebSocket::Instance()->SendMessage(kEntryInsert, message);
+        WebSocket::Instance()->SendMessage(WsKey::kEntryInsert, message);
 
         const double lhs_debit { *shadow->lhs_debit };
         const double lhs_credit { *shadow->lhs_credit };
@@ -146,7 +147,7 @@ bool TableModelI::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
         message.insert(kUpdate, update);
         message.insert(kIsParallel, is_parallel);
 
-        WebSocket::Instance()->SendMessage(kEntryLinkedNode, message);
+        WebSocket::Instance()->SendMessage(WsKey::kEntryLinkedNodeUpdate, message);
 
         emit SAttachOneEntry(value, shadow->entry);
         emit SDetachOneEntry(old_node, entry_id);

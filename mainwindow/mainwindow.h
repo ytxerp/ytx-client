@@ -91,35 +91,35 @@ private slots:
     void tabWidget_tabCloseRequestedP(int index);
     void tabWidget_tabCloseRequestedO(int index);
 
-    void RNodeLocation(Section section, const QUuid& node_id);
+    void RLocateNode(Section section, const QUuid& node_id);
     void REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id);
-    void RNodeSelected(Section section, const QUuid& node_id);
+    void RSelectNode(Section section, const QUuid& node_id);
 
     void RUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section);
     void RSyncPartner(const QUuid& node_id, const QUuid& value);
     void RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
 
-    void RActionEntry(EntryAction action);
-    void RStatementActionEntry(EntryAction action);
+    void RMarkBatch(Mark mark);
+    void RStatementMarkBatch(Mark mark);
 
-    void RConnectionRefused();
-    void RConnectionSucceeded();
+    void RDenyConnection();
+    void RAllowConnection();
     void RRemoteHostClosed();
 
-    void RLoginSucceeded(const QString& expire_date);
-    void RLoginFailed();
-    void RTreeSyncFinished();
+    void RAllowLogin(const QString& expire_date);
+    void RDenyLogin();
+    void RFinishTreeSync();
 
     void RFreeWidget(Section section, const QUuid& node_id);
     void RFlushCaches();
 
-    void ROrderReference(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RAckOrderReference(Section section, const QUuid& widget_id, const QJsonArray& array);
     void ROrderReferencePrimary(const QUuid& node_id, int unit);
 
-    void RStatement(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
+    void RAckStatement(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RAckStatementNode(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RAckStatementEntry(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
     void RInsertNodeTag(const Tag* tag, TreeModel* model, const Node* node);
@@ -133,18 +133,18 @@ private slots:
     void RStatementNode(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
     void RStatementEntry(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
 
-    void RSettlement(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RSettlementItemAcked(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RSettlementInserted(const QJsonObject& obj);
-    void RSettlementRecalled(const QJsonObject& obj);
-    void RSettlementUpdated(const QJsonObject& obj);
+    void RAckSettlement(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RAckSettlementItem(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RInsertSettlement(const QJsonObject& obj);
+    void RRecallSettlement(const QJsonObject& obj);
+    void RUpdateSettlement(const QJsonObject& obj);
 
-    void ROrderReleased(Section section, const QUuid& node_id, int version);
-    void ROrderRecalled(Section section, const QUuid& node_id, int version);
-    void ROrderSaved(Section section, const QUuid& node_id, int version);
-    void RInvalidOperation();
+    void RReleaseOrder(Section section, const QUuid& node_id, int version);
+    void RRecallOrder(Section section, const QUuid& node_id, int version);
+    void RSaveOrder(Section section, const QUuid& node_id, int version);
+    void RDenyOperation();
 
-    void RLeafDeleteDenied(const QJsonObject& obj);
+    void RDenyLeafDelete(const QJsonObject& obj);
 
     void RApplyTag(const QJsonObject& obj);
     void RInsertTag(const QJsonObject& obj, bool is_same_session);
@@ -156,11 +156,11 @@ private slots:
     void RInsertEntryTag(const Tag* tag, TableModel* model, const Entry* entry);
     void RRemoveEntryTag(const Tag* tag, TableModel* model, const Entry* entry);
 
-    void RSharedConfig(const QJsonArray& arr);
-    void RDocumentDir(Section section, const QString& document_dir);
-    void RDefaultUnit(Section section, int unit);
-    void RUpdateDefaultUnitFailed(const QString& section);
-    void RSelectLeafEntry(const QUuid& node_id, const QUuid& entry_id);
+    void RApplySharedConfig(const QJsonArray& arr);
+    void RUpdateDocumentDir(Section section, const QString& document_dir);
+    void RUpdateDefaultUnit(Section section, int unit);
+    void RDenyDefaultUnit(const QString& section);
+    void RSelectEntry(const QUuid& node_id, const QUuid& entry_id);
 
 private:
     void SetTabWidget(QTabWidget* tab_widget);

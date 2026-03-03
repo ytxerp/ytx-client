@@ -20,11 +20,11 @@
 #ifndef ENTRYENUM_H
 #define ENTRYENUM_H
 
-/** @brief Action applied to all entries in a leaf table widget. */
-enum class EntryAction { kMarkNone = 0, kMarkAll, kMarkToggle };
+/** @brief Operation applied to all entries in a leaf table widget. */
+enum class Mark { kClear = 0, kSelect, kToggle };
 
 /** @brief Status of an entry. */
-enum class EntryStatus { kUnmarked = 0, kMarked };
+enum class Status { kUnmarked = 0, kMarked };
 
 // defining entry column
 enum class EntryEnum {

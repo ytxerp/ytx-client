@@ -1,3 +1,4 @@
+#include "component/constantwebsocket.h"
 #include "dialog/deletenode/leafdeletedialog.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
@@ -31,7 +32,7 @@ void MainWindow::DeleteNode()
     }
     case NodeKind::kLeaf: {
         const auto message { JsonGen::LeafDeleteCheck(sc_->info.section, node_id) };
-        WebSocket::Instance()->SendMessage(kLeafDeleteCheck, message);
+        WebSocket::Instance()->SendMessage(WsKey::kLeafDeleteCheck, message);
         break;
     }
     default:
@@ -39,7 +40,7 @@ void MainWindow::DeleteNode()
     }
 }
 
-void MainWindow::RLeafDeleteDenied(const QJsonObject& obj)
+void MainWindow::RDenyLeafDelete(const QJsonObject& obj)
 {
     Section section { obj.value(kSection).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
@@ -69,7 +70,7 @@ void MainWindow::DeleteBranch(TreeModel* tree_model, const QModelIndex& index, c
         if (ret == QMessageBox::Ok) {
             const QUuid parent_id { tree_model->GetNode(node_id)->parent->id };
             const auto message { JsonGen::BranchDelete(sc_->info.section, node_id, parent_id) };
-            WebSocket::Instance()->SendMessage(kBranchDelete, message);
+            WebSocket::Instance()->SendMessage(WsKey::kBranchDelete, message);
             tree_model->removeRows(index.row(), 1, index.parent());
         }
     });

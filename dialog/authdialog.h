@@ -38,8 +38,8 @@ public:
 public slots:
     void RRegisterResult(bool result, int code);
 
-    void RLoginSucceeded();
-    void RLoginFailed(int code);
+    void RAllowLogin();
+    void RDenyLogin(int code);
 
 private slots:
     void on_pushButtonLogin_clicked();

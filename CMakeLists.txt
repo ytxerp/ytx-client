@@ -95,7 +95,7 @@ set(SOURCES
     entryhub/entryhubt.cc
     widget/datetimeedit.cc
     component/stringinitializer.cc
-    delegate/status.cc
+    delegate/statusdelegate.cc
     delegate/int.cc
     delegate/double.cc
     delegate/boolstring.cc
@@ -264,7 +264,7 @@ set(HEADERS
     delegate/styleditemdelegate.h
     delegate/line.h
     delegate/int.h
-    delegate/status.h
+    delegate/statusdelegate.h
     delegate/bool.h
     delegate/double.h
     delegate/document.h
@@ -381,6 +381,7 @@ set(HEADERS
     component/constantdouble.h
     component/constantbool.h
     component/constantint.h
+    component/constantwebsocket.h
 )
 
 set(UIS

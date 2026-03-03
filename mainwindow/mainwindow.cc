@@ -235,26 +235,26 @@ void MainWindow::IniMarkGroup()
 {
     mark_group_ = new QActionGroup(this);
 
-    ui->actionMarkAll->setData(std::to_underlying(EntryAction::kMarkAll));
-    ui->actionMarkNone->setData(std::to_underlying(EntryAction::kMarkNone));
-    ui->actionMarkToggle->setData(std::to_underlying(EntryAction::kMarkToggle));
+    ui->actionMarkAll->setData(std::to_underlying(Mark::kSelect));
+    ui->actionMarkNone->setData(std::to_underlying(Mark::kClear));
+    ui->actionMarkToggle->setData(std::to_underlying(Mark::kToggle));
 
     mark_group_->addAction(ui->actionMarkAll);
     mark_group_->addAction(ui->actionMarkNone);
     mark_group_->addAction(ui->actionMarkToggle);
 
     connect(mark_group_, &QActionGroup::triggered, this, [this](QAction* action) {
-        const EntryAction act { action->data().toInt() };
+        const Mark mark { action->data().toInt() };
 
         auto* widget { sc_->tab_widget->currentWidget() };
 
         if (IsTableWidgetFIPT(widget)) {
-            RActionEntry(act);
+            RMarkBatch(mark);
             return;
         }
 
         if (IsStatementEntryWidget(widget)) {
-            RStatementActionEntry(act);
+            RStatementMarkBatch(mark);
         }
     });
 }
@@ -428,37 +428,37 @@ void MainWindow::SetUniqueConnection() const
 
     connect(section_group_, &QButtonGroup::idClicked, this, &MainWindow::RSectionGroup);
 
-    connect(WebSocket::Instance(), &WebSocket::SLeafDeleteDenied, this, &MainWindow::RLeafDeleteDenied);
-    connect(WebSocket::Instance(), &WebSocket::SSharedConfig, this, &MainWindow::RSharedConfig);
-    connect(WebSocket::Instance(), &WebSocket::SApplyTag, this, &MainWindow::RApplyTag);
-    connect(WebSocket::Instance(), &WebSocket::SInsertTag, this, &MainWindow::RInsertTag);
-    connect(WebSocket::Instance(), &WebSocket::SUpdateTag, this, &MainWindow::RUpdateTag);
-    connect(WebSocket::Instance(), &WebSocket::SDeleteTag, this, &MainWindow::RDeleteTag);
-    connect(WebSocket::Instance(), &WebSocket::SDefaultUnit, this, &MainWindow::RDefaultUnit);
-    connect(WebSocket::Instance(), &WebSocket::SUpdateDefaultUnitFailed, this, &MainWindow::RUpdateDefaultUnitFailed);
-    connect(WebSocket::Instance(), &WebSocket::SDocumentDir, this, &MainWindow::RDocumentDir);
-    connect(WebSocket::Instance(), &WebSocket::SConnectionSucceeded, this, &MainWindow::RConnectionSucceeded);
-    connect(WebSocket::Instance(), &WebSocket::SConnectionRefused, this, &MainWindow::RConnectionRefused);
-    connect(WebSocket::Instance(), &WebSocket::SLoginSucceeded, this, &MainWindow::RLoginSucceeded);
-    connect(WebSocket::Instance(), &WebSocket::SLoginFailed, this, &MainWindow::RLoginFailed);
+    connect(WebSocket::Instance(), &WebSocket::SLeafDeleteDeny, this, &MainWindow::RDenyLeafDelete);
+    connect(WebSocket::Instance(), &WebSocket::SSharedConfigApply, this, &MainWindow::RApplySharedConfig);
+    connect(WebSocket::Instance(), &WebSocket::STagApply, this, &MainWindow::RApplyTag);
+    connect(WebSocket::Instance(), &WebSocket::STagInsert, this, &MainWindow::RInsertTag);
+    connect(WebSocket::Instance(), &WebSocket::STagUpdate, this, &MainWindow::RUpdateTag);
+    connect(WebSocket::Instance(), &WebSocket::STagDelete, this, &MainWindow::RDeleteTag);
+    connect(WebSocket::Instance(), &WebSocket::SDefaultUnitUpdate, this, &MainWindow::RUpdateDefaultUnit);
+    connect(WebSocket::Instance(), &WebSocket::SDefaultUnitDeny, this, &MainWindow::RDenyDefaultUnit);
+    connect(WebSocket::Instance(), &WebSocket::SDocumentDirUpdate, this, &MainWindow::RUpdateDocumentDir);
+    connect(WebSocket::Instance(), &WebSocket::SConnectionAllow, this, &MainWindow::RAllowConnection);
+    connect(WebSocket::Instance(), &WebSocket::SConnectionDeny, this, &MainWindow::RDenyConnection);
+    connect(WebSocket::Instance(), &WebSocket::SLoginAllow, this, &MainWindow::RAllowLogin);
+    connect(WebSocket::Instance(), &WebSocket::SLoginDeny, this, &MainWindow::RDenyLogin);
     connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::RRemoteHostClosed);
-    connect(WebSocket::Instance(), &WebSocket::SSelectLeafEntry, this, &MainWindow::RSelectLeafEntry);
-    connect(WebSocket::Instance(), &WebSocket::SOrderReference, this, &MainWindow::ROrderReference);
-    connect(WebSocket::Instance(), &WebSocket::SStatement, this, &MainWindow::RStatement);
-    connect(WebSocket::Instance(), &WebSocket::SStatementNodeAcked, this, &MainWindow::RStatementNodeAcked);
-    connect(WebSocket::Instance(), &WebSocket::SStatementEntryAcked, this, &MainWindow::RStatementEntryAcked);
-    connect(WebSocket::Instance(), &WebSocket::SSettlement, this, &MainWindow::RSettlement);
-    connect(WebSocket::Instance(), &WebSocket::SSettlementItemAcked, this, &MainWindow::RSettlementItemAcked);
-    connect(WebSocket::Instance(), &WebSocket::SSettlementInserted, this, &MainWindow::RSettlementInserted);
-    connect(WebSocket::Instance(), &WebSocket::SSettlementRecalled, this, &MainWindow::RSettlementRecalled);
-    connect(WebSocket::Instance(), &WebSocket::SSettlementUpdated, this, &MainWindow::RSettlementUpdated);
-    connect(WebSocket::Instance(), &WebSocket::SOrderReleased, this, &MainWindow::ROrderReleased);
-    connect(WebSocket::Instance(), &WebSocket::SOrderRecalled, this, &MainWindow::ROrderRecalled);
-    connect(WebSocket::Instance(), &WebSocket::SOrderSaved, this, &MainWindow::ROrderSaved);
-    connect(WebSocket::Instance(), &WebSocket::SInvalidOperation, this, &MainWindow::RInvalidOperation);
-    connect(WebSocket::Instance(), &WebSocket::SNodeSelected, this, &MainWindow::RNodeSelected);
-    connect(WebSocket::Instance(), &WebSocket::SNodeLocation, this, &MainWindow::RNodeLocation);
-    connect(WebSocket::Instance(), &WebSocket::STreeSyncFinished, this, &MainWindow::RTreeSyncFinished);
+    connect(WebSocket::Instance(), &WebSocket::SEntrySelect, this, &MainWindow::RSelectEntry);
+    connect(WebSocket::Instance(), &WebSocket::SOrderReferenceAck, this, &MainWindow::RAckOrderReference);
+    connect(WebSocket::Instance(), &WebSocket::SStatementAck, this, &MainWindow::RAckStatement);
+    connect(WebSocket::Instance(), &WebSocket::SStatementNodeAck, this, &MainWindow::RAckStatementNode);
+    connect(WebSocket::Instance(), &WebSocket::SStatementEntryAck, this, &MainWindow::RAckStatementEntry);
+    connect(WebSocket::Instance(), &WebSocket::SSettlementAck, this, &MainWindow::RAckSettlement);
+    connect(WebSocket::Instance(), &WebSocket::SSettlementItemAck, this, &MainWindow::RAckSettlementItem);
+    connect(WebSocket::Instance(), &WebSocket::SSettlementInsert, this, &MainWindow::RInsertSettlement);
+    connect(WebSocket::Instance(), &WebSocket::SSettlementRecall, this, &MainWindow::RRecallSettlement);
+    connect(WebSocket::Instance(), &WebSocket::SSettlementUpdate, this, &MainWindow::RUpdateSettlement);
+    connect(WebSocket::Instance(), &WebSocket::SOrderRelease, this, &MainWindow::RReleaseOrder);
+    connect(WebSocket::Instance(), &WebSocket::SOrderRecall, this, &MainWindow::RRecallOrder);
+    connect(WebSocket::Instance(), &WebSocket::SOrderSave, this, &MainWindow::RSaveOrder);
+    connect(WebSocket::Instance(), &WebSocket::SOperationDeny, this, &MainWindow::RDenyOperation);
+    connect(WebSocket::Instance(), &WebSocket::SNodeSelect, this, &MainWindow::RSelectNode);
+    connect(WebSocket::Instance(), &WebSocket::SNodeLocate, this, &MainWindow::RLocateNode);
+    connect(WebSocket::Instance(), &WebSocket::STreeSyncFinish, this, &MainWindow::RFinishTreeSync);
 }
 
 void MainWindow::SetIcon() const

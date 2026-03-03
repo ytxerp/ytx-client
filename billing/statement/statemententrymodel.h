@@ -46,7 +46,7 @@ public:
 
     void sort(int column, Qt::SortOrder order) override;
     void ResetModel(const QJsonArray& array);
-    void ActionEntry(EntryAction action);
+    void MarkBatch(Mark mark);
 
     const QList<StatementEntry*>& EntryList() const { return list_; }
 

@@ -1,5 +1,6 @@
 #include "authdialog.h"
 
+#include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "enum/authenum.h"
 #include "global/logininfo.h"
@@ -30,13 +31,13 @@ AuthDialog::AuthDialog(const QSharedPointer<QSettings>& local_settings, QWidget*
 
 AuthDialog::~AuthDialog() { delete ui; }
 
-void AuthDialog::RLoginSucceeded()
+void AuthDialog::RAllowLogin()
 {
     qInfo() << "[Auth]" << "Login succeeded" << ui->lineEditEmail->text().trimmed() << ui->lineEditWorkspace->text().trimmed();
     close();
 }
 
-void AuthDialog::RLoginFailed(int code)
+void AuthDialog::RDenyLogin(int code)
 {
     QString message {};
     QString title { tr("Login Failed") };
@@ -143,7 +144,7 @@ void AuthDialog::on_pushButtonLogin_clicked()
         return;
     }
 
-    WebSocket::Instance()->SendMessage(kLogin, JsonGen::Login(email, password, workspace));
+    WebSocket::Instance()->SendMessage(WsKey::kLogin, JsonGen::Login(email, password, workspace));
 
     SyncLoginInfo();
     LoginInfo::Instance().WriteConfig(local_settings_);
@@ -200,8 +201,8 @@ void AuthDialog::RLoginDialog()
 
 void AuthDialog::InitConnect()
 {
-    connect(WebSocket::Instance(), &WebSocket::SLoginSucceeded, this, &AuthDialog::RLoginSucceeded);
-    connect(WebSocket::Instance(), &WebSocket::SLoginFailed, this, &AuthDialog::RLoginFailed);
+    connect(WebSocket::Instance(), &WebSocket::SLoginAllow, this, &AuthDialog::RAllowLogin);
+    connect(WebSocket::Instance(), &WebSocket::SLoginDeny, this, &AuthDialog::RDenyLogin);
     connect(WebSocket::Instance(), &WebSocket::SRegisterResult, this, &AuthDialog::RRegisterResult);
 
     connect(ui->labelSignUp, &QLabel::linkActivated, this, &AuthDialog::RRegisterDialog);
@@ -313,5 +314,5 @@ void AuthDialog::on_pushButtonRegister_clicked()
         return;
     }
 
-    WebSocket::Instance()->SendMessage(kRegister, JsonGen::Register(email, password));
+    WebSocket::Instance()->SendMessage(WsKey::kRegister, JsonGen::Register(email, password));
 }

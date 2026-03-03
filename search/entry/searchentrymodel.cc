@@ -1,5 +1,6 @@
 #include "searchentrymodel.h"
 
+#include "component/constantwebsocket.h"
 #include "utils/tagutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -61,13 +62,13 @@ void SearchEntryModel::Search(const QString& text)
 
     // 3. Perform the search (tag search has higher priority)
     if (!query.tags.isEmpty()) {
-        WebSocket::Instance()->SendMessage(kEntryTagSearch, JsonGen::EntryTagSearch(info_.section, query.tags));
+        WebSocket::Instance()->SendMessage(WsKey::kEntryTagSearch, JsonGen::EntryTagSearch(info_.section, query.tags));
         return;
     }
 
     // 4.Send description text search request to server
     if (!query.text.isEmpty()) {
-        WebSocket::Instance()->SendMessage(kEntryDescriptionSearch, JsonGen::EntryDescriptionSearch(info_.section, query.text));
+        WebSocket::Instance()->SendMessage(WsKey::kEntryDescriptionSearch, JsonGen::EntryDescriptionSearch(info_.section, query.text));
         return;
     }
 

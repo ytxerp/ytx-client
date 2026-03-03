@@ -1,11 +1,12 @@
 #include <QJsonArray>
 
+#include "component/constantwebsocket.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-void MainWindow::RSharedConfig(const QJsonArray& arr)
+void MainWindow::RApplySharedConfig(const QJsonArray& arr)
 {
     for (const QJsonValue& val : arr) {
         if (!val.isObject()) {
@@ -28,13 +29,13 @@ void MainWindow::RSharedConfig(const QJsonArray& arr)
     }
 }
 
-void MainWindow::RDocumentDir(Section section, const QString& document_dir)
+void MainWindow::RUpdateDocumentDir(Section section, const QString& document_dir)
 {
     auto* sc { GetSectionContex(section) };
     sc->shared_config.document_dir = document_dir;
 }
 
-void MainWindow::RDefaultUnit(Section section, int unit)
+void MainWindow::RUpdateDefaultUnit(Section section, int unit)
 {
     auto* sc { GetSectionContex(section) };
     sc->shared_config.default_unit = unit;
@@ -43,7 +44,7 @@ void MainWindow::RDefaultUnit(Section section, int unit)
         sc_->tree_widget->RInitStatus();
 }
 
-void MainWindow::RUpdateDefaultUnitFailed(const QString& /*section*/)
+void MainWindow::RDenyDefaultUnit(const QString& /*section*/)
 {
     Utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"),
         tr("Cannot change the base unit for section Finance because related entries already exist."), TimeConst::kAutoCloseMs);
@@ -60,12 +61,12 @@ void MainWindow::UpdateSharedConfig(CSharedConfig& shared)
 
     if (current_shared.document_dir != shared.document_dir) {
         const auto message { JsonGen::DocumentDir(sc_->info.section, shared.document_dir) };
-        WebSocket::Instance()->SendMessage(kDocumentDir, message);
+        WebSocket::Instance()->SendMessage(WsKey::kDocumentDirUpdate, message);
         current_shared.document_dir = shared.document_dir;
     }
 
     if (current_shared.default_unit != shared.default_unit) {
         const auto message { JsonGen::DefaultUnit(sc_->info.section, shared.default_unit) };
-        WebSocket::Instance()->SendMessage(kDefaultUnit, message);
+        WebSocket::Instance()->SendMessage(WsKey::kDefaultUnitUpdate, message);
     }
 }

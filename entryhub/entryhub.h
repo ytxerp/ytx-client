@@ -80,7 +80,7 @@ public:
     void AckTable(const QUuid& node_id, const QJsonArray& array);
     void SearchEntry(const QJsonArray& array);
 
-    void ActionEntry(const QUuid& node_id, EntryAction action);
+    void MarkBatch(const QUuid& node_id, Mark mark);
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
 
     virtual void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool is_parallel)
@@ -104,7 +104,7 @@ protected:
     void ReplaceLeafFunction(QSet<QUuid>& entry_id_set, EntryList& entry_list, const QUuid& old_node_id, const QUuid& new_node_id) const;
     void DeleteLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
-    void EntryActionImpl(Entry* entry, EntryAction action);
+    void MarkAction(Entry* entry, Mark mark);
 
 protected:
     QHash<QUuid, Entry*> entry_cache_ {};

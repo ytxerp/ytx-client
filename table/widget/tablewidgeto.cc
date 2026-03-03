@@ -1,5 +1,6 @@
 #include "tablewidgeto.h"
 
+#include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "global/nodepool.h"
 #include "global/printhub.h"
@@ -427,7 +428,7 @@ void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
 
     order_message.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
     order_message.insert(kPartnerId, tmp_node_->partner_id.toString(QUuid::WithoutBraces));
-    order_message.insert(kNodeUpdate, pending_update_);
+    order_message.insert(WsField::kNodeUpdate, pending_update_);
 }
 
 void TableWidgetO::on_pBtnRecall_clicked()
@@ -448,7 +449,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
     qInfo() << "on_pBtnRecall_clicked: tmp_node_ version" << tmp_node_->version;
 
-    WebSocket::Instance()->SendMessage(kOrderRecalled, JsonGen::OrderRecalled(section_, node_id_, pending_update_));
+    WebSocket::Instance()->SendMessage(WsKey::kOrderRecall, JsonGen::OrderRecall(section_, node_id_, pending_update_));
 
     sync_state_ = SyncState::kDirty;
     pending_update_ = QJsonObject();
@@ -498,14 +499,14 @@ void TableWidgetO::SaveOrder()
 
     if (sync_state_ == SyncState::kSynced) {
         BuildNodeUpdate(order_message);
-        WebSocket::Instance()->SendMessage(kOrderUpdateSaved, order_message);
+        WebSocket::Instance()->SendMessage(WsKey::kOrderUpdateSave, order_message);
 
         pending_update_ = QJsonObject();
     }
 
     if (sync_state_ == SyncState::kNew) {
         BuildNodeInsert(order_message);
-        WebSocket::Instance()->SendMessage(kOrderInsertSaved, order_message);
+        WebSocket::Instance()->SendMessage(WsKey::kOrderInsertSave, order_message);
 
         ui->rBtnRO->setEnabled(false);
         ui->rBtnFO->setEnabled(false);
@@ -536,14 +537,14 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
         BuildNodeUpdate(order_message);
 
-        WebSocket::Instance()->SendMessage(kOrderUpdateReleased, order_message);
+        WebSocket::Instance()->SendMessage(WsKey::kOrderUpdateRelease, order_message);
 
         pending_update_ = QJsonObject();
     }
 
     if (sync_state_ == SyncState::kNew) {
         BuildNodeInsert(order_message);
-        WebSocket::Instance()->SendMessage(kOrderInsertReleased, order_message);
+        WebSocket::Instance()->SendMessage(WsKey::kOrderInsertRelease, order_message);
 
         ui->rBtnRO->setEnabled(false);
         ui->rBtnFO->setEnabled(false);

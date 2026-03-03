@@ -1,3 +1,4 @@
+#include "component/constantwebsocket.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
 #include "tree/model/treemodelo.h"
@@ -68,7 +69,7 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
     {
         if (sc_->widget_hash.contains(node_id)) {
             FocusTabWidget(node_id);
-            RSelectLeafEntry(node_id, entry_id);
+            RSelectEntry(node_id, entry_id);
             return;
         }
     }
@@ -76,7 +77,7 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
     {
         if (start_ != Section::kPartner) {
             const auto message { JsonGen::TableAck(sc_->info.section, node_id, entry_id) };
-            WebSocket::Instance()->SendMessage(kTableAck, message);
+            WebSocket::Instance()->SendMessage(WsKey::kTableAck, message);
         }
 
         if (IsOrderSection(start_)) {
@@ -138,7 +139,7 @@ void MainWindow::tabWidget_tabBarDoubleClicked(int index)
     const auto id { tab_bar->tabData(index).toUuid() };
 
     if (sc_->widget_hash.contains(id))
-        RNodeLocation(start_, id);
+        RLocateNode(start_, id);
 }
 
 void MainWindow::tabWidget_tabCloseRequestedFIT(int index)

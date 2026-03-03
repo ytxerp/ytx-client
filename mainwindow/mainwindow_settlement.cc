@@ -103,7 +103,7 @@ void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
     SettlementItemTab(settlement_widget_id, *settlement, SyncState::kSynced);
 }
 
-void MainWindow::RSettlementItemAcked(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RAckSettlementItem(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -120,7 +120,7 @@ void MainWindow::RSettlementItemAcked(Section section, const QUuid& widget_id, c
     model->ResetModel(array);
 }
 
-void MainWindow::RSettlementInserted(const QJsonObject& obj)
+void MainWindow::RInsertSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
@@ -173,7 +173,7 @@ void MainWindow::RSettlementInserted(const QJsonObject& obj)
     }
 }
 
-void MainWindow::RSettlementRecalled(const QJsonObject& obj)
+void MainWindow::RRecallSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
@@ -211,7 +211,7 @@ void MainWindow::RSettlementRecalled(const QJsonObject& obj)
     }
 }
 
-void MainWindow::RSettlementUpdated(const QJsonObject& obj)
+void MainWindow::RUpdateSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QJsonObject meta { obj.value(kMeta).toObject() };
@@ -249,7 +249,7 @@ void MainWindow::RSettlementUpdated(const QJsonObject& obj)
     }
 }
 
-void MainWindow::RSettlement(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RAckSettlement(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 

@@ -3,6 +3,7 @@
 #include <QDateTime>
 
 #include "component/constant.h"
+#include "component/constantwebsocket.h"
 #include "enum/entryenum.h"
 #include "global/entrypool.h"
 #include "websocket/jsongen.h"
@@ -66,7 +67,7 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
     if (!rhs_node_id.isNull()) {
         QJsonObject message { JsonGen::EntryDelete(section_, entry_id) };
-        WebSocket::Instance()->SendMessage(kEntryDelete, message);
+        WebSocket::Instance()->SendMessage(WsKey::kEntryDelete, message);
 
         emit SDeleteOneEntry(QUuid(), entry_id);
     } else {
@@ -91,24 +92,24 @@ QModelIndex TableModelP::GetIndex(const QUuid& entry_id) const
     return QModelIndex();
 }
 
-void TableModelP::ActionEntry(EntryAction action)
+void TableModelP::ActionEntry(Mark mark)
 {
     if (entry_list_.isEmpty())
         return;
 
-    const QJsonObject message { JsonGen::EntryAction(section_, lhs_id_, std::to_underlying(action)) };
-    WebSocket::Instance()->SendMessage(kEntryAction, message);
+    const QJsonObject message { JsonGen::BatchMark(section_, lhs_id_, std::to_underlying(mark)) };
+    WebSocket::Instance()->SendMessage(WsKey::kBatchMark, message);
 
     for (auto* entry : std::as_const(entry_list_)) {
-        switch (action) {
-        case EntryAction::kMarkAll:
-            entry->status = std::to_underlying(EntryStatus::kMarked);
+        switch (mark) {
+        case Mark::kSelect:
+            entry->status = std::to_underlying(Status::kMarked);
             break;
-        case EntryAction::kMarkNone:
-            entry->status = std::to_underlying(EntryStatus::kUnmarked);
+        case Mark::kClear:
+            entry->status = std::to_underlying(Status::kUnmarked);
             break;
-        case EntryAction::kMarkToggle:
-            entry->status ^= std::to_underlying(EntryStatus::kMarked);
+        case Mark::kToggle:
+            entry->status ^= std::to_underlying(Status::kMarked);
             break;
         }
     }
@@ -138,7 +139,7 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
 
     if (old_node.isNull()) {
         message.insert(kEntry, entry->WriteJson());
-        WebSocket::Instance()->SendMessage(kEntryInsert, message);
+        WebSocket::Instance()->SendMessage(WsKey::kEntryInsert, message);
 
         emit SAppendOneEntry(entry);
     }

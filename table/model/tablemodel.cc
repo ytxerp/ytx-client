@@ -1,5 +1,6 @@
 #include "tablemodel.h"
 
+#include "component/constantwebsocket.h"
 #include "global/entrypool.h"
 #include "global/resourcepool.h"
 #include "utils/entryutils.h"
@@ -91,24 +92,24 @@ void TableModel::RUpdateBalance(const QUuid& entry_id)
         AccumulateBalance(row);
 }
 
-void TableModel::ActionEntry(EntryAction action)
+void TableModel::ActionEntry(Mark mark)
 {
     if (shadow_list_.isEmpty())
         return;
 
-    const QJsonObject message { JsonGen::EntryAction(section_, lhs_id_, std::to_underlying(action)) };
-    WebSocket::Instance()->SendMessage(kEntryAction, message);
+    const QJsonObject message { JsonGen::BatchMark(section_, lhs_id_, std::to_underlying(mark)) };
+    WebSocket::Instance()->SendMessage(WsKey::kBatchMark, message);
 
     for (auto* entry_shadow : std::as_const(shadow_list_)) {
-        switch (action) {
-        case EntryAction::kMarkAll:
-            *entry_shadow->status = std::to_underlying(EntryStatus::kMarked);
+        switch (mark) {
+        case Mark::kSelect:
+            *entry_shadow->status = std::to_underlying(Status::kMarked);
             break;
-        case EntryAction::kMarkNone:
-            *entry_shadow->status = std::to_underlying(EntryStatus::kUnmarked);
+        case Mark::kClear:
+            *entry_shadow->status = std::to_underlying(Status::kUnmarked);
             break;
-        case EntryAction::kMarkToggle:
-            *entry_shadow->status ^= std::to_underlying(EntryStatus::kMarked);
+        case Mark::kToggle:
+            *entry_shadow->status ^= std::to_underlying(Status::kMarked);
             break;
         }
     }
@@ -152,7 +153,7 @@ void TableModel::RestartTimer(const QUuid& id)
 
                 if (!update.isEmpty()) {
                     const QJsonObject message { JsonGen::EntryUpdate(section_, id, update) };
-                    WebSocket::Instance()->SendMessage(kEntryUpdate, message);
+                    WebSocket::Instance()->SendMessage(WsKey::kEntryUpdate, message);
                 }
 
                 pending_updates_.erase(it);
@@ -181,7 +182,7 @@ void TableModel::FlushCaches()
     for (auto it = pending_updates_.cbegin(); it != pending_updates_.cend(); ++it) {
         if (!it.value().isEmpty()) {
             const auto message { JsonGen::EntryUpdate(section_, it.key(), it.value()) };
-            WebSocket::Instance()->SendMessage(kEntryUpdate, message);
+            WebSocket::Instance()->SendMessage(WsKey::kEntryUpdate, message);
         }
     }
 
@@ -424,7 +425,7 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
     if (!rhs_node_id.isNull()) {
         QJsonObject message { JsonGen::EntryDelete(section_, entry_id) };
-        WebSocket::Instance()->SendMessage(kEntryDelete, message);
+        WebSocket::Instance()->SendMessage(WsKey::kEntryDelete, message);
 
         const double lhs_initial_delta { *shadow->lhs_credit - *shadow->lhs_debit };
         const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };

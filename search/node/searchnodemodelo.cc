@@ -2,6 +2,7 @@
 
 #include <QJsonArray>
 
+#include "component/constantwebsocket.h"
 #include "global/nodepool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -173,5 +174,5 @@ void SearchNodeModelO::Search(CString& text)
         return;
     }
 
-    WebSocket::Instance()->SendMessage(kNodeSearch, JsonGen::NodeSearch(section_, text));
+    WebSocket::Instance()->SendMessage(WsKey::kNodeSearch, JsonGen::NodeSearch(section_, text));
 }

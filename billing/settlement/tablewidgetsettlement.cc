@@ -1,5 +1,6 @@
 #include "tablewidgetsettlement.h"
 
+#include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "enum/settlementenum.h"
 #include "ui_tablewidgetsettlement.h"
@@ -79,8 +80,8 @@ void TableWidgetSettlement::FetchNode()
     if (settlement_.partner_id.isNull())
         return;
 
-    const auto message { JsonGen::SettlementNodeAcked(section_, widget_id_, settlement_.partner_id, settlement_.id) };
-    WebSocket::Instance()->SendMessage(kSettlementItemAcked, message);
+    const auto message { JsonGen::SettlementNodeAck(section_, widget_id_, settlement_.partner_id, settlement_.id) };
+    WebSocket::Instance()->SendMessage(WsKey::kSettlementItemAck, message);
 }
 
 void TableWidgetSettlement::LockWidget(bool is_settled)
@@ -176,14 +177,14 @@ void TableWidgetSettlement::on_pBtnRelease_clicked()
 
             message.insert(kSettlement, pending_update_);
 
-            WebSocket::Instance()->SendMessage(kSettlementUpdated, message);
+            WebSocket::Instance()->SendMessage(WsKey::kSettlementUpdate, message);
             pending_update_ = QJsonObject();
         }
 
         if (sync_state_ == SyncState::kNew) {
             settlement_.status = SettlementStatus::kSettled;
             message.insert(kSettlement, settlement_.WriteJson());
-            WebSocket::Instance()->SendMessage(kSettlementInserted, message);
+            WebSocket::Instance()->SendMessage(WsKey::kSettlementInsert, message);
         }
 
         sync_state_ = SyncState::kDirty;
@@ -208,7 +209,7 @@ void TableWidgetSettlement::on_pBtnRecall_clicked()
     message.insert(kSettlementId, settlement_.id.toString(QUuid::WithoutBraces));
     message.insert(kSettlement, pending_update_);
 
-    WebSocket::Instance()->SendMessage(kSettlementRecalled, message);
+    WebSocket::Instance()->SendMessage(WsKey::kSettlementRecall, message);
     pending_update_ = QJsonObject();
 
     sync_state_ = SyncState::kDirty;

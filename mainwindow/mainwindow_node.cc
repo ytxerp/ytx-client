@@ -1,4 +1,5 @@
 #include "component/arg/nodeinsertarg.h"
+#include "component/constantwebsocket.h"
 #include "dialog/editnodename.h"
 #include "dialog/insertnode/insertnodefinance.h"
 #include "dialog/insertnode/insertnodei.h"
@@ -57,14 +58,14 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
 
     connect(dialog, &QDialog::accepted, this, [this, node, parent_node]() {
         const auto message { JsonGen::NodeInsert(start_, node, parent_node->id) };
-        WebSocket::Instance()->SendMessage(kNodeInsert, message);
+        WebSocket::Instance()->SendMessage(WsKey::kNodeInsert, message);
     });
     connect(dialog, &QDialog::destroyed, this, [this, node]() { NodePool::Instance().Recycle(node, start_); });
 
     dialog->show();
 }
 
-void MainWindow::RNodeLocation(Section section, const QUuid& node_id)
+void MainWindow::RLocateNode(Section section, const QUuid& node_id)
 {
     if (node_id.isNull())
         return;
@@ -113,7 +114,7 @@ void MainWindow::EditNameFIPT()
 
     connect(dialog, &QDialog::accepted, this, [this, node_id, dialog]() {
         const auto message { JsonGen::NodeName(start_, node_id, dialog->GetName()) };
-        WebSocket::Instance()->SendMessage(kNodeName, message);
+        WebSocket::Instance()->SendMessage(WsKey::kNodeNameUpdate, message);
     });
 
     dialog->show();

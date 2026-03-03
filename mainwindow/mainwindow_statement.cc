@@ -29,7 +29,7 @@ void MainWindow::on_actionStatement_triggered()
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
 }
 
-void MainWindow::RStatement(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RAckStatement(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -43,7 +43,7 @@ void MainWindow::RStatement(Section section, const QUuid& widget_id, const QJson
     model->ResetModel(array);
 }
 
-void MainWindow::RStatementNodeAcked(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RAckStatementNode(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -57,7 +57,7 @@ void MainWindow::RStatementNodeAcked(Section section, const QUuid& widget_id, co
     model->ResetModel(array);
 }
 
-void MainWindow::RStatementEntryAcked(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total)
+void MainWindow::RAckStatementEntry(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -127,7 +127,7 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
 }
 
-void MainWindow::RStatementActionEntry(EntryAction action)
+void MainWindow::RStatementMarkBatch(Mark mark)
 {
     auto* current_widget { sc_->tab_widget->currentWidget() };
 
@@ -135,5 +135,5 @@ void MainWindow::RStatementActionEntry(EntryAction action)
     auto* widget { static_cast<StatementEntryWidget*>(current_widget) };
 
     auto* model { widget->Model() };
-    model->ActionEntry(action);
+    model->MarkBatch(mark);
 }

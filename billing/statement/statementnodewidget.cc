@@ -3,6 +3,7 @@
 #include <QTimer>
 
 #include "component/constant.h"
+#include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
 #include "enum/statementenum.h"
@@ -67,8 +68,8 @@ void StatementNodeWidget::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::StatementNodeAcked(section_, widget_id_, partner_id_, unit_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance()->SendMessage(kStatementNodeAcked, message);
+    const auto message { JsonGen::StatementNodeAck(section_, widget_id_, partner_id_, unit_, start_.toUTC(), end_.toUTC()) };
+    WebSocket::Instance()->SendMessage(WsKey::kStatementNodeAck, message);
 
     cooldown_timer_->start(TimeConst::kCooldownMs);
 }

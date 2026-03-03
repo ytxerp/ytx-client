@@ -23,9 +23,9 @@
 #include <QString>
 
 namespace StringConst {
-inline const QString kEightDigits = "+00,000,000.00";
-inline const QString kFourDigits = "+0,000.00";
-inline const QString kEmpty = {};
+inline const QString kEightDigits = QStringLiteral("+00,000,000.00");
+inline const QString kFourDigits = QStringLiteral("+0,000.00");
+inline const QString kEmpty = QStringLiteral("");
 }
 
 #endif // CONSTANTSTRING_H
