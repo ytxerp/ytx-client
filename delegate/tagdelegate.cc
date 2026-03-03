@@ -60,11 +60,12 @@ QSize TagDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInde
 {
     const QStringList tag_ids { index.data().toStringList() };
     if (tag_ids.isEmpty()) {
-        return QSize(0, option.rect.height());
+        // Return original cell width when no tags
+        return QSize { option.rect.width(), option.rect.height() };
     }
 
-    int total_width { UiConst::kTagMargin * 2 };
-    bool has_valid_tag { false };
+    int total_width { UiConst::kTagMargin * 2 }; // Left and right margins
+    int valid_count { 0 }; // Number of valid tags with pixmap
 
     for (const QString& id_str : tag_ids) {
         const QUuid tag_id { QUuid::fromString(id_str) };
@@ -79,15 +80,17 @@ QSize TagDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInde
             continue;
         }
 
+        // Logical width for high-DPI support
         const int logical_width { qRound(pixmap.width() / pixmap.devicePixelRatio()) };
+        total_width += logical_width;
 
-        total_width += logical_width + UiConst::kTagSpacing;
-        has_valid_tag = true;
+        ++valid_count;
     }
 
-    if (has_valid_tag) {
-        total_width -= UiConst::kTagSpacing;
+    if (valid_count > 1) {
+        // Add spacing between adjacent tags
+        total_width += UiConst::kTagSpacing * (valid_count - 1);
     }
 
-    return QSize(total_width, option.rect.height());
+    return QSize { total_width, option.rect.height() };
 }
