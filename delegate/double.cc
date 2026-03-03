@@ -1,13 +1,14 @@
 #include "double.h"
 
+#include "component/constantdouble.h"
 #include "widget/doublespinbox.h"
 
-Double::Double(const int& decimal, double min, double max, int coefficient, QObject* parent)
+Double::Double(const int& decimal, double min, double max, CString& placeholder, QObject* parent)
     : StyledItemDelegate { parent }
     , decimal_ { decimal }
     , max_ { max }
     , min_ { min }
-    , coefficient_ { coefficient }
+    , placeholder_ { placeholder }
 {
 }
 
@@ -47,6 +48,7 @@ void Double::paint(QPainter* painter, const QStyleOptionViewItem& option, const 
 
 QSize Double::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const double value { index.data().toDouble() };
-    return CalculateTextSize(locale_.toString(value, 'f', decimal_), option, coefficient_);
+    const QString text { locale_.toString(index.data().toDouble(), 'f', decimal_) };
+    const QString& str { text.size() > placeholder_.size() ? text : placeholder_ };
+    return CalculateTextSize(str, option);
 }

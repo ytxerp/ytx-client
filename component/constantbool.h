@@ -17,20 +17,23 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOUBLESPINNONEZEROR_H
-#define DOUBLESPINNONEZEROR_H
+#ifndef CONSTANTBOOL_H
+#define CONSTANTBOOL_H
 
-#include "delegate/styleditemdelegate.h"
+// Boolean constants
+inline constexpr bool kIsHidden = true;
 
-class DoubleSpinNoneZeroR final : public StyledItemDelegate {
-public:
-    DoubleSpinNoneZeroR(const int& decimal, int coefficient, QObject* parent = nullptr);
-    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+namespace Rule {
+// Finance/Inventory/Task: Credit increase, Debit decrease; calculation: credit - debit
+// Order: Return Order (returned transaction)
+inline constexpr bool kDDCI = true;
+inline constexpr bool kRO = true;
 
-private:
-    const int& decimal_ {};
-    const int coefficient_ {};
-};
+// Finance/Inventory/Task: Debit increase, Credit decrease; calculation: debit - credit
+// Order: Forward Order (normal transaction)
+inline constexpr bool kDICD = false;
+inline constexpr bool kFO = false;
 
-#endif // DOUBLESPINNONEZEROR_H
+}
+
+#endif // CONSTANTBOOL_H

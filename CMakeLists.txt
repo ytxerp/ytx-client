@@ -110,8 +110,8 @@ set(SOURCES
     delegate/readonly/colorr.cc
     delegate/readonly/amountr.cc
     delegate/readonly/intstringr.cc
-    delegate/readonly/doublespinnonezeror.cc
-    delegate/readonly/quantityr.cc
+    delegate/readonly/doublenonezeror.cc
+    delegate/readonly/doubler.cc
     delegate/readonly/boolstringr.cc
     delegate/readonly/amountorderreferencer.cc
     delegate/readonly/statusr.cc
@@ -272,9 +272,9 @@ set(HEADERS
     delegate/readonly/documentr.h
     delegate/filterunit.h
     delegate/readonly/boolstringr.h
-    delegate/readonly/quantityr.h
+    delegate/readonly/doubler.h
     delegate/readonly/amountr.h
-    delegate/readonly/doublespinnonezeror.h
+    delegate/readonly/doublenonezeror.h
     delegate/readonly/statusr.h
     delegate/readonly/issuedtimer.h
     delegate/readonly/colorr.h
@@ -377,6 +377,10 @@ set(HEADERS
     component/widgetcontex.h
     widget/treeview.h
     enum/syncenum.h
+    component/constantstring.h
+    component/constantdouble.h
+    component/constantbool.h
+    component/constantint.h
 )
 
 set(UIS

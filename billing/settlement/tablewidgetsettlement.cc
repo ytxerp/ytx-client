@@ -96,7 +96,7 @@ bool TableWidgetSettlement::ValidateSyncState()
 {
     if (sync_state_ == SyncState::kDirty) {
         Utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
-            tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), kThreeThousand);
+            tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), TimeConst::kAutoCloseMs);
         return false;
     }
 
@@ -171,7 +171,7 @@ void TableWidgetSettlement::on_pBtnRelease_clicked()
 
         if (sync_state_ == SyncState::kSynced) {
             pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kSettled));
-            pending_update_.insert(kAmount, QString::number(settlement_.amount, 'f', kMaxNumericScale_4));
+            pending_update_.insert(kAmount, QString::number(settlement_.amount, 'f', NumericConst::kDecimalPlaces4));
             pending_update_.insert(kVersion, settlement_.version);
 
             message.insert(kSettlement, pending_update_);

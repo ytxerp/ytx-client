@@ -62,7 +62,7 @@ void OrderReferenceWidget::on_pBtnFetch_clicked()
     const auto message { JsonGen::OrderReferenceAck(section_, widget_id_, node_id_, node_unit_, start_.toUTC(), end_.toUTC()) };
     WebSocket::Instance()->SendMessage(kOrderReferenceAck, message);
 
-    cooldown_timer_->start(kTwoThousand);
+    cooldown_timer_->start(TimeConst::kCooldownMs);
 }
 
 void OrderReferenceWidget::IniWidget()

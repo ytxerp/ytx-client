@@ -24,7 +24,7 @@
 #include <array>
 #include <deque>
 
-#include "component/constant.h"
+#include "component/constantint.h"
 #include "concepts.h"
 #include "enum/section.h"
 #include "tree/node.h"
@@ -84,7 +84,7 @@ inline NodePool& NodePool::Instance()
 inline NodePool::NodePool()
 {
     for (size_t i = 0; i != kSectionArray.size(); ++i) {
-        Expand(pools_[i], kSectionArray[i], Pool::kExpandSize);
+        Expand(pools_[i], kSectionArray[i], PoolConst::kExpandSize);
     }
 }
 
@@ -123,7 +123,7 @@ inline Node* NodePool::Allocate(Section section)
     auto& pool = pools_[static_cast<size_t>(section)];
 
     if (pool.empty()) {
-        Expand(pool, section, Pool::kExpandSize);
+        Expand(pool, section, PoolConst::kExpandSize);
     }
 
     Node* n = pool.front();
@@ -141,7 +141,7 @@ inline void NodePool::Recycle(Node* node, Section section)
     auto& pool = pools_[static_cast<size_t>(section)];
 
     // If pool exceeds threshold, delete node instead of recycling
-    if (static_cast<qsizetype>(pool.size()) + 1 >= Pool::kMaxSize) {
+    if (static_cast<qsizetype>(pool.size()) + 1 >= PoolConst::kMaxSize) {
         locker.unlock();
         delete node;
         return;
@@ -159,7 +159,7 @@ template <Iterable Container> inline void NodePool::Recycle(Container& container
     QMutexLocker locker(&mutex_);
     auto& pool = pools_[static_cast<size_t>(section)];
 
-    if (static_cast<qsizetype>(pool.size()) + container.size() >= Pool::kMaxSize) {
+    if (static_cast<qsizetype>(pool.size()) + container.size() >= PoolConst::kMaxSize) {
         locker.unlock();
         qDeleteAll(container);
         return;

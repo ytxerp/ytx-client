@@ -278,7 +278,7 @@ void TagModel::RestartTimer(const QUuid& id)
         pending_timers_[id] = timer;
     }
 
-    pending_timers_[id]->start(kThreeThousand);
+    pending_timers_[id]->start(TimeConst::kAutoCloseMs);
 }
 
 void TagModel::TryInsert(Tag* tag)

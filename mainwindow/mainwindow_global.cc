@@ -46,7 +46,7 @@ void MainWindow::RDefaultUnit(Section section, int unit)
 void MainWindow::RUpdateDefaultUnitFailed(const QString& /*section*/)
 {
     Utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"),
-        tr("Cannot change the base unit for section Finance because related entries already exist."), kThreeThousand);
+        tr("Cannot change the base unit for section Finance because related entries already exist."), TimeConst::kAutoCloseMs);
 }
 
 void MainWindow::UpdateSharedConfig(CSharedConfig& shared)

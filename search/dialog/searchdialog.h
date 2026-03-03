@@ -30,7 +30,7 @@
 #include "delegate/readonly/boolstringr.h"
 #include "delegate/readonly/colorr.h"
 #include "delegate/readonly/documentr.h"
-#include "delegate/readonly/doublespinnonezeror.h"
+#include "delegate/readonly/doublenonezeror.h"
 #include "delegate/readonly/intstringr.h"
 #include "delegate/readonly/issuedtimer.h"
 #include "delegate/readonly/statusr.h"
@@ -86,9 +86,9 @@ protected:
     CTreeModel* tree_model_ {};
     QButtonGroup* content_group_ {};
 
-    DoubleSpinNoneZeroR* amount_ {};
-    DoubleSpinNoneZeroR* rate_ {};
-    DoubleSpinNoneZeroR* quantity_ {};
+    DoubleNoneZeroR* amount_ {};
+    DoubleNoneZeroR* rate_ {};
+    DoubleNoneZeroR* quantity_ {};
 
     IssuedTimeR* issued_time_ {};
     DocumentR* document_ {};

@@ -75,7 +75,7 @@ void StatementEntryWidget::on_pBtnFetch_clicked()
     const auto message { JsonGen::StatementEntryAcked(section_, widget_id_, partner_id_, unit_, start_.toUTC(), end_.toUTC()) };
     WebSocket::Instance()->SendMessage(kStatementEntryAcked, message);
 
-    cooldown_timer_->start(kTwoThousand);
+    cooldown_timer_->start(TimeConst::kCooldownMs);
 }
 
 void StatementEntryWidget::RUnitGroupClicked(int id)

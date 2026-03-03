@@ -17,20 +17,15 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TAGDELEGATE_H
-#define TAGDELEGATE_H
+#ifndef CONSTANTSTRING_H
+#define CONSTANTSTRING_H
 
-#include "delegate/styleditemdelegate.h"
-#include "tag/tagicon.h"
+#include <QString>
 
-class TagDelegate final : public StyledItemDelegate {
-public:
-    explicit TagDelegate(const QHash<QUuid, TagIcon>& tag_icon_hash, QObject* parent = nullptr);
-    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+namespace StringConst {
+inline const QString kEightDigits = "+00,000,000.00";
+inline const QString kFourDigits = "+0,000.00";
+inline const QString kEmpty = {};
+}
 
-private:
-    const QHash<QUuid, TagIcon>& tag_icon_hash_ {};
-};
-
-#endif // TAGDELEGATE_H
+#endif // CONSTANTSTRING_H

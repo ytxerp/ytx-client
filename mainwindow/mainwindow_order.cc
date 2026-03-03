@@ -130,7 +130,7 @@ void MainWindow::ROrderSaved(Section section, const QUuid& node_id, int version)
 void MainWindow::RInvalidOperation()
 {
     Utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
-        tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), kThreeThousand);
+        tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), TimeConst::kAutoCloseMs);
 }
 
 void MainWindow::RNodeSelected(Section section, const QUuid& node_id)

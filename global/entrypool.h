@@ -24,7 +24,7 @@
 #include <array>
 #include <deque>
 
-#include "component/constant.h"
+#include "component/constantint.h"
 #include "concepts.h"
 #include "enum/section.h"
 #include "table/entry.h"
@@ -75,7 +75,7 @@ inline EntryPool& EntryPool::Instance()
 inline EntryPool::EntryPool()
 {
     for (size_t i = 0; i != kSectionArray.size(); ++i) {
-        Expand(pools_[i], kSectionArray[i], Pool::kExpandSize);
+        Expand(pools_[i], kSectionArray[i], PoolConst::kExpandSize);
     }
 }
 
@@ -115,7 +115,7 @@ inline Entry* EntryPool::Allocate(Section section)
     auto& pool = pools_[static_cast<size_t>(section)];
 
     if (pool.empty()) {
-        Expand(pool, section, Pool::kExpandSize);
+        Expand(pool, section, PoolConst::kExpandSize);
     }
 
     if (pool.empty()) {
@@ -137,7 +137,7 @@ inline void EntryPool::Recycle(Entry* entry, Section section)
     QMutexLocker locker(&mutex_);
     auto& pool = pools_[static_cast<size_t>(section)];
 
-    if (static_cast<qsizetype>(pool.size()) + 1 >= Pool::kMaxSize) {
+    if (static_cast<qsizetype>(pool.size()) + 1 >= PoolConst::kMaxSize) {
         locker.unlock();
         delete entry;
         return;
@@ -156,7 +156,7 @@ template <Iterable Container> inline void EntryPool::Recycle(Container& containe
     QMutexLocker locker(&mutex_);
     auto& pool = pools_[static_cast<size_t>(section)];
 
-    if (static_cast<qsizetype>(pool.size()) + container.size() >= Pool::kMaxSize) {
+    if (static_cast<qsizetype>(pool.size()) + container.size() >= PoolConst::kMaxSize) {
         locker.unlock();
         qDeleteAll(container);
         return;

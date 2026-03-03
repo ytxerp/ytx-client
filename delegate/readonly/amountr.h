@@ -25,7 +25,7 @@
 
 class AmountR final : public StyledItemDelegate {
 public:
-    AmountR(const int& decimal, const int& unit, CIntString& unit_symbol_map, QObject* parent = nullptr);
+    AmountR(const int& decimal, const int& unit, CIntString& unit_symbol_map, CString& placeholder, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
@@ -36,6 +36,7 @@ private:
     const int& decimal_ {};
     const int& unit_ {};
     CIntString& unit_symbol_map_;
+    CString& placeholder_;
 };
 
 #endif // AMOUNTR_H

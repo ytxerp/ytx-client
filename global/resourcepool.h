@@ -23,7 +23,7 @@
 #include <QMutex>
 #include <deque>
 
-#include "component/constant.h"
+#include "component/constantint.h"
 #include "concepts.h"
 
 template <typename T>
@@ -65,7 +65,7 @@ template <Resettable T> T* ResourcePool<T>::Allocate()
     QMutexLocker locker(&mutex_);
 
     if (pool_.empty())
-        Expand(Pool::kExpandSize);
+        Expand(PoolConst::kExpandSize);
 
     if (pool_.empty()) {
         return new T();
@@ -84,7 +84,7 @@ template <Resettable T> void ResourcePool<T>::Recycle(T* resource)
 
     QMutexLocker locker(&mutex_);
 
-    if (static_cast<qsizetype>(pool_.size()) + 1 >= Pool::kMaxSize) {
+    if (static_cast<qsizetype>(pool_.size()) + 1 >= PoolConst::kMaxSize) {
         locker.unlock();
         delete resource;
         return;
@@ -101,7 +101,7 @@ template <Resettable T> template <Iterable Container> void ResourcePool<T>::Recy
 
     QMutexLocker locker(&mutex_);
 
-    if (static_cast<qsizetype>(pool_.size()) + container.size() >= Pool::kMaxSize) {
+    if (static_cast<qsizetype>(pool_.size()) + container.size() >= PoolConst::kMaxSize) {
         locker.unlock();
         qDeleteAll(container);
         return;
@@ -117,7 +117,7 @@ template <Resettable T> template <Iterable Container> void ResourcePool<T>::Recy
     container.clear();
 }
 
-template <Resettable T> ResourcePool<T>::ResourcePool() { Expand(Pool::kExpandSize); }
+template <Resettable T> ResourcePool<T>::ResourcePool() { Expand(PoolConst::kExpandSize); }
 
 template <Resettable T> void ResourcePool<T>::Expand(qsizetype size)
 {

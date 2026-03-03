@@ -5,12 +5,14 @@
 #include "enum/nodeenum.h"
 #include "utils/nodeutils.h"
 
-AmountOrderReferenceR::AmountOrderReferenceR(Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, QObject* parent)
+AmountOrderReferenceR::AmountOrderReferenceR(
+    Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, CString& placeholder, QObject* parent)
     : StyledItemDelegate { parent }
     , decimal_ { decimal }
     , unit_ { unit }
     , section_ { section }
     , unit_symbol_map_ { unit_symbol_map }
+    , placeholder_ { placeholder }
 {
 }
 
@@ -21,13 +23,15 @@ void AmountOrderReferenceR::paint(QPainter* painter, const QStyleOptionViewItem&
 
 QSize AmountOrderReferenceR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    return { CalculateTextSize(Format(index), option, kCoefficient16) };
+    const QString text { Format(index) };
+    const QString& str { text.size() > placeholder_.size() ? text : placeholder_ };
+    return CalculateTextSize(str, option);
 }
 
 QString AmountOrderReferenceR::Format(const QModelIndex& index) const
 {
     auto it { unit_symbol_map_.constFind(unit_) };
-    auto symbol { (it != unit_symbol_map_.constEnd()) ? it.value() : kEmptyString };
+    auto symbol { (it != unit_symbol_map_.constEnd()) ? it.value() : StringConst::kEmpty };
 
     return symbol + locale_.toString(index.data().toDouble(), 'f', decimal_);
 }

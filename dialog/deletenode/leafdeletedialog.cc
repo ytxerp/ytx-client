@@ -203,6 +203,6 @@ void LeafDeleteDialog::RReplaceResult(bool result)
         close();
     } else {
         Utils::ShowNotification(QMessageBox::Critical, tr("Replacement Conflict"),
-            tr("The old node cannot be replaced because linked nodes or partner entries conflict with the new node."), kThreeThousand);
+            tr("The old node cannot be replaced because linked nodes or partner entries conflict with the new node."), TimeConst::kAutoCloseMs);
     }
 }

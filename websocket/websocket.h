@@ -98,7 +98,7 @@ private slots:
     void RPong()
     {
         qDebug() << "← Pong received, reset timeout_timer_";
-        timeout_timer_->start(TIMEOUT_THRESHOLD);
+        timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
     }
 
     void RSendPing()

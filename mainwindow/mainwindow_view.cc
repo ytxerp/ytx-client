@@ -71,7 +71,7 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
     }
 
     {
-        Utils::SetupVerticalHeader(view, kRowHeight);
+        Utils::SetupVerticalHeader(view, UiConst::kRowHeight);
     }
 }
 
@@ -95,7 +95,7 @@ void MainWindow::SetTableViewSaleReferenceI(QTableView* view) const
 
     {
         auto* v_header { view->verticalHeader() };
-        v_header->setDefaultSectionSize(kRowHeight);
+        v_header->setDefaultSectionSize(UiConst::kRowHeight);
         v_header->setSectionResizeMode(QHeaderView::Fixed);
         v_header->setHidden(true);
     }
@@ -121,7 +121,7 @@ void MainWindow::SetTableViewSaleReferenceP(QTableView* view) const
 
     {
         auto* v_header { view->verticalHeader() };
-        v_header->setDefaultSectionSize(kRowHeight);
+        v_header->setDefaultSectionSize(UiConst::kRowHeight);
         v_header->setSectionResizeMode(QHeaderView::Fixed);
         v_header->setHidden(true);
     }
@@ -143,7 +143,7 @@ void MainWindow::SetStatementView(QTableView* view, int stretch_column) const
 
     {
         auto* v_header { view->verticalHeader() };
-        v_header->setDefaultSectionSize(kRowHeight);
+        v_header->setDefaultSectionSize(UiConst::kRowHeight);
         v_header->setSectionResizeMode(QHeaderView::Fixed);
         v_header->setHidden(true);
     }
@@ -175,7 +175,7 @@ void MainWindow::SetSettlementView(QTableView* view, int stretch_column) const
 
     {
         auto* v_header { view->verticalHeader() };
-        v_header->setDefaultSectionSize(kRowHeight);
+        v_header->setDefaultSectionSize(UiConst::kRowHeight);
         v_header->setSectionResizeMode(QHeaderView::Fixed);
         v_header->setHidden(true);
     }
@@ -201,7 +201,7 @@ void MainWindow::SetSettlementItemView(QTableView* view, int stretch_column) con
 
     {
         auto* v_header { view->verticalHeader() };
-        v_header->setDefaultSectionSize(kRowHeight);
+        v_header->setDefaultSectionSize(UiConst::kRowHeight);
         v_header->setSectionResizeMode(QHeaderView::Fixed);
         v_header->setHidden(true);
     }
@@ -221,7 +221,7 @@ void MainWindow::SetTagView(QTableView* view) const
     view->horizontalHeader()->setSectionResizeMode(std::to_underlying(TagEnum::kColor), QHeaderView::Stretch);
 
     auto* v_header { view->verticalHeader() };
-    v_header->setDefaultSectionSize(kRowHeight);
+    v_header->setDefaultSectionSize(UiConst::kRowHeight);
     v_header->setSectionResizeMode(QHeaderView::Fixed);
     v_header->setHidden(true);
 }

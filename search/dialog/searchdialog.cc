@@ -2,6 +2,8 @@
 
 #include <QHeaderView>
 
+#include "component/constantbool.h"
+#include "component/constantstring.h"
 #include "component/signalblocker.h"
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
@@ -99,9 +101,9 @@ void SearchDialog::IniContentGroup()
 
 void SearchDialog::InitDelegate()
 {
-    amount_ = new DoubleSpinNoneZeroR(config_.amount_decimal, kCoefficient8, this);
-    rate_ = new DoubleSpinNoneZeroR(config_.rate_decimal, kCoefficient8, this);
-    quantity_ = new DoubleSpinNoneZeroR(config_.quantity_decimal, kCoefficient8, this);
+    amount_ = new DoubleNoneZeroR(config_.amount_decimal, StringConst::kEightDigits, this);
+    rate_ = new DoubleNoneZeroR(config_.rate_decimal, StringConst::kFourDigits, this);
+    quantity_ = new DoubleNoneZeroR(config_.quantity_decimal, StringConst::kFourDigits, this);
     unit_ = new IntStringR(info_.unit_map, this);
     direction_rule_ = new BoolStringR(info_.rule_map, this);
     kind_ = new IntStringR(info_.kind_map, this);
@@ -112,7 +114,7 @@ void SearchDialog::InitDelegate()
     issued_time_ = new IssuedTimeR(config_.date_format, this);
     document_ = new DocumentR(this);
     int_ = new Int(0, 36500, this);
-    tag_ = new TagDelegate(tag_hash_, tag_icon_hash_, this);
+    tag_ = new TagDelegate(tag_icon_hash_, this);
 }
 
 void SearchDialog::HideTreeColumn(QTableView* view)
@@ -154,7 +156,7 @@ void SearchDialog::IniView(QTableView* view)
     view->setAlternatingRowColors(true);
     view->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    Utils::SetupVerticalHeader(view, kRowHeight);
+    Utils::SetupVerticalHeader(view, UiConst::kRowHeight);
 }
 
 void SearchDialog::ResizeTreeColumn(QHeaderView* header)

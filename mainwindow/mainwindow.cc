@@ -679,10 +679,10 @@ void MainWindow::on_actionExportExcel_triggered()
 
         bool success { watcher->future().result() };
         if (success) {
-            Utils::ShowNotification(QMessageBox::Information, tr("Export Completed"), tr("Export completed successfully."), kThreeThousand);
+            Utils::ShowNotification(QMessageBox::Information, tr("Export Completed"), tr("Export completed successfully."), TimeConst::kAutoCloseMs);
         } else {
             QFile::remove(destination);
-            Utils::ShowNotification(QMessageBox::Critical, tr("Export Failed"), tr("Export failed. The file has been deleted."), kThreeThousand);
+            Utils::ShowNotification(QMessageBox::Critical, tr("Export Failed"), tr("Export failed. The file has been deleted."), TimeConst::kAutoCloseMs);
         }
     });
 
@@ -702,14 +702,14 @@ void MainWindow::on_actionCheckUpdates_triggered()
         reply->deleteLater();
 
         if (reply->error() != QNetworkReply::NoError) {
-            Utils::ShowNotification(QMessageBox::Warning, tr("Update Check"), tr("Failed to check updates."), kThreeThousand);
+            Utils::ShowNotification(QMessageBox::Warning, tr("Update Check"), tr("Failed to check updates."), TimeConst::kAutoCloseMs);
             return;
         }
 
         const QByteArray data { reply->readAll() };
         QJsonDocument doc { QJsonDocument::fromJson(data) };
         if (!doc.isObject()) {
-            Utils::ShowNotification(QMessageBox::Warning, tr("Update Check"), tr("Invalid update information received."), kThreeThousand);
+            Utils::ShowNotification(QMessageBox::Warning, tr("Update Check"), tr("Invalid update information received."), TimeConst::kAutoCloseMs);
             return;
         }
 
@@ -734,7 +734,7 @@ void MainWindow::on_actionCheckUpdates_triggered()
 
             dlg->show();
         } else {
-            Utils::ShowNotification(QMessageBox::Information, tr("No Update"), tr("You are using the latest version."), kThreeThousand);
+            Utils::ShowNotification(QMessageBox::Information, tr("No Update"), tr("You are using the latest version."), TimeConst::kAutoCloseMs);
         }
     });
 }

@@ -24,7 +24,7 @@
 
 class Double final : public StyledItemDelegate {
 public:
-    Double(const int& decimal, double min, double max, int coefficient, QObject* parent = nullptr);
+    Double(const int& decimal, double min, double max, CString& placeholder, QObject* parent = nullptr);
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
@@ -35,7 +35,7 @@ private:
     const int& decimal_;
     double max_ {};
     double min_ {};
-    const int coefficient_ {};
+    CString& placeholder_;
 };
 
 #endif // DOUBLE_H

@@ -69,7 +69,7 @@ void EditDocument::on_listView_doubleClicked(const QModelIndex& index)
         return;
     }
 
-    Utils::ShowNotification(QMessageBox::Critical, tr("Not Found"), tr("Couldn't find the document. Please check and try again."), kThreeThousand);
+    Utils::ShowNotification(QMessageBox::Critical, tr("Not Found"), tr("Couldn't find the document. Please check and try again."), TimeConst::kAutoCloseMs);
 }
 
 void EditDocument::CreateList(QStringList& document)

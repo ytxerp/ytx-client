@@ -108,9 +108,9 @@ void Preferences::IniData(Section section)
         IniDataCombo(ui->comboDynamicRhs, section_.dynamic_node_rhs);
     }
 
-    ui->spinAmountDecimal->setMaximum(kMaxNumericScale_4);
-    ui->spinRateDecimal->setMaximum(kMaxNumericScale_8);
-    ui->spinQuantityDecimal->setMaximum(kMaxNumericScale_8);
+    ui->spinAmountDecimal->setMaximum(NumericConst::kDecimalPlaces4);
+    ui->spinRateDecimal->setMaximum(NumericConst::kDecimalPlaces8);
+    ui->spinQuantityDecimal->setMaximum(NumericConst::kDecimalPlaces8);
 
     ResizeLine(ui->lineStatic, section_.static_label);
     ResizeLine(ui->lineDynamic, section_.dynamic_label);

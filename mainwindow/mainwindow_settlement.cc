@@ -282,7 +282,8 @@ void MainWindow::DeleteSettlement(TreeWidgetSettlement* widget)
 
     if (settlement->status == SettlementStatus::kSettled) {
         Utils::ShowNotification(QMessageBox::Information, tr("Settlement Released"),
-            tr("This settlement has already been released and cannot be deleted.\nYou need to recall it first before making changes."), kThreeThousand);
+            tr("This settlement has already been released and cannot be deleted.\nYou need to recall it first before making changes."),
+            TimeConst::kAutoCloseMs);
         return;
     }
 

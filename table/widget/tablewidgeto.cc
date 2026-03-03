@@ -392,7 +392,7 @@ void TableWidgetO::on_pBtnPreview_clicked()
 bool TableWidgetO::PreparePrint()
 {
     if (ui->comboTemplate->currentIndex() == -1) {
-        Utils::ShowNotification(QMessageBox::Warning, tr("No Template"), tr("No printable template was found."), kThreeThousand);
+        Utils::ShowNotification(QMessageBox::Warning, tr("No Template"), tr("No printable template was found."), TimeConst::kAutoCloseMs);
         return false;
     }
 
@@ -421,7 +421,7 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_message)
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
 {
     if (pending_update_.contains(kUnit))
-        pending_update_.insert(kFinalTotal, QString::number(tmp_node_->final_total, 'f', kMaxNumericScale_4));
+        pending_update_.insert(kFinalTotal, QString::number(tmp_node_->final_total, 'f', NumericConst::kDecimalPlaces4));
 
     pending_update_.insert(kVersion, tmp_node_->version);
 
@@ -437,7 +437,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
     if (tmp_node_->is_settled || !tmp_node_->settlement_id.isNull()) {
         Utils::ShowNotification(
-            QMessageBox::Information, tr("Order Settled"), tr("This order has already been settled and cannot be operated."), kThreeThousand);
+            QMessageBox::Information, tr("Order Settled"), tr("This order has already been settled and cannot be operated."), TimeConst::kAutoCloseMs);
         return;
     }
 
@@ -458,7 +458,8 @@ void TableWidgetO::on_pBtnRecall_clicked()
 bool TableWidgetO::ValidatePartner()
 {
     if (tmp_node_->partner_id.isNull()) {
-        Utils::ShowNotification(QMessageBox::Warning, tr("Partner Required"), tr("Please select a partner before performing this action."), kThreeThousand);
+        Utils::ShowNotification(
+            QMessageBox::Warning, tr("Partner Required"), tr("Please select a partner before performing this action."), TimeConst::kAutoCloseMs);
         return false;
     }
 
@@ -470,7 +471,7 @@ bool TableWidgetO::ValidateSyncState()
 {
     if (sync_state_ == SyncState::kDirty) {
         Utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
-            tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), kThreeThousand);
+            tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), TimeConst::kAutoCloseMs);
         return false;
     }
 

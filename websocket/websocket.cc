@@ -8,7 +8,6 @@
 #include "entryhub/entryhubp.h"
 #include "tree/model/treemodelo.h"
 #include "tree/model/treemodelp.h"
-#include "tree/model/treemodelt.h"
 #include "websocket/jsongen.h"
 
 WebSocket::WebSocket(QObject* parent)
@@ -233,7 +232,7 @@ void WebSocket::InitTimer()
 
     if (!ping_timer_) {
         ping_timer_ = new QTimer(this);
-        ping_timer_->setInterval(HEARTBEAT_INTERVAL);
+        ping_timer_->setInterval(TimeConst::kHeartbeatIntervalMs);
         connect(ping_timer_, &QTimer::timeout, this, &WebSocket::RSendPing);
     }
 
@@ -244,7 +243,7 @@ void WebSocket::InitTimer()
     }
 
     ping_timer_->start();
-    timeout_timer_->start(TIMEOUT_THRESHOLD);
+    timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
 }
 
 void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
@@ -263,7 +262,7 @@ void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
 void WebSocket::RTextMessageReceived(const QString& message)
 {
     // Any incoming server message indicates the connection is alive, reset timeout
-    timeout_timer_->start(TIMEOUT_THRESHOLD);
+    timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
 
     QJsonParseError err {};
     const QJsonValue root { QJsonValue::fromJson(message.toUtf8(), &err) };

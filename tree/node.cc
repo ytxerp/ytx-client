@@ -1,6 +1,7 @@
 #include "node.h"
 
 #include "component/constant.h"
+#include "component/constantint.h"
 #include "utils/entryutils.h"
 
 void Node::Reset() { *this = Node {}; }
@@ -62,8 +63,8 @@ QJsonObject Node::WriteJson() const
     obj.insert(kKind, std::to_underlying(kind));
     obj.insert(kDirectionRule, direction_rule);
     obj.insert(kUnit, std::to_underlying(unit));
-    obj.insert(kFinalTotal, QString::number(final_total, 'f', kMaxNumericScale_4));
-    obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
+    obj.insert(kFinalTotal, QString::number(final_total, 'f', NumericConst::kDecimalPlaces4));
+    obj.insert(kInitialTotal, QString::number(initial_total, 'f', NumericConst::kDecimalPlaces4));
     obj.insert(kTag, Utils::WriteStringList(tag));
     obj.insert(kDocument, Utils::WriteStringList(document));
 
@@ -86,8 +87,8 @@ void NodeI::ReadJson(const QJsonObject& object)
 QJsonObject NodeI::WriteJson() const
 {
     QJsonObject obj { Node::WriteJson() };
-    obj.insert(kUnitPrice, QString::number(unit_price, 'f', kMaxNumericScale_8));
-    obj.insert(kCommission, QString::number(commission, 'f', kMaxNumericScale_8));
+    obj.insert(kUnitPrice, QString::number(unit_price, 'f', NumericConst::kDecimalPlaces8));
+    obj.insert(kCommission, QString::number(commission, 'f', NumericConst::kDecimalPlaces8));
     return obj;
 }
 
@@ -109,7 +110,7 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kDescription, description);
     obj.insert(kKind, std::to_underlying(kind));
     obj.insert(kUnit, std::to_underlying(unit));
-    obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
+    obj.insert(kInitialTotal, QString::number(initial_total, 'f', NumericConst::kDecimalPlaces4));
     obj.insert(kPaymentTerm, payment_term);
     obj.insert(kColor, color);
     obj.insert(kTag, Utils::WriteStringList(tag));
@@ -162,14 +163,14 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kKind, std::to_underlying(kind));
     obj.insert(kDirectionRule, direction_rule);
     obj.insert(kUnit, std::to_underlying(unit));
-    obj.insert(kFinalTotal, QString::number(final_total, 'f', kMaxNumericScale_4));
-    obj.insert(kInitialTotal, QString::number(initial_total, 'f', kMaxNumericScale_4));
-    obj.insert(kDiscountTotal, QString::number(discount_total, 'f', kMaxNumericScale_4));
+    obj.insert(kFinalTotal, QString::number(final_total, 'f', NumericConst::kDecimalPlaces4));
+    obj.insert(kInitialTotal, QString::number(initial_total, 'f', NumericConst::kDecimalPlaces4));
+    obj.insert(kDiscountTotal, QString::number(discount_total, 'f', NumericConst::kDecimalPlaces4));
     obj.insert(kEmployeeId, employee_id.toString(QUuid::WithoutBraces));
     obj.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
-    obj.insert(kCountTotal, QString::number(count_total, 'f', kMaxNumericScale_8));
-    obj.insert(kMeasureTotal, QString::number(measure_total, 'f', kMaxNumericScale_8));
+    obj.insert(kCountTotal, QString::number(count_total, 'f', NumericConst::kDecimalPlaces8));
+    obj.insert(kMeasureTotal, QString::number(measure_total, 'f', NumericConst::kDecimalPlaces8));
     obj.insert(kStatus, std::to_underlying(status));
 
     return obj;

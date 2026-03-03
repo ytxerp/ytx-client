@@ -17,34 +17,20 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AMOUNTORDERREFERENCER_H
-#define AMOUNTORDERREFERENCER_H
+#ifndef DOUBLER_H
+#define DOUBLER_H
 
-#include "component/using.h"
 #include "delegate/styleditemdelegate.h"
-#include "enum/section.h"
 
-class AmountOrderReferenceR final : public StyledItemDelegate {
-    Q_OBJECT
-
-signals:
-    void SOrderReferencePrimary(const QUuid& node_id, int unit);
-
+class DoubleR final : public StyledItemDelegate {
 public:
-    AmountOrderReferenceR(Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, CString& placeholder, QObject* parent = nullptr);
+    DoubleR(const int& decimal, CString& placeholder, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
 
 private:
-    QString Format(const QModelIndex& index) const;
-
-private:
-    const int& decimal_ {};
-    const int& unit_ {};
-    const Section section_ {};
-    CIntString& unit_symbol_map_;
+    const int& decimal_;
     CString& placeholder_;
 };
 
-#endif // AMOUNTORDERREFERENCER_H
+#endif // DOUBLER_H

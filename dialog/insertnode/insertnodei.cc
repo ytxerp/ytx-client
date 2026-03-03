@@ -1,5 +1,7 @@
 #include "insertnodei.h"
 
+#include "component/constantbool.h"
+#include "component/constantdouble.h"
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
 #include "ui_insertnodei.h"

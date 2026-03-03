@@ -24,6 +24,7 @@
 #include <QTimer>
 
 #include "component/arg/tablemodelarg.h"
+#include "component/constantbool.h"
 #include "enum/entryenum.h"
 #include "table/entryshadow.h"
 #include "utils/templateutils.h"

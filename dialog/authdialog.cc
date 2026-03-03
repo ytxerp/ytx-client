@@ -79,7 +79,7 @@ void AuthDialog::RLoginFailed(int code)
     }
 
     qWarning() << "[Auth]" << "Login failed" << ui->lineEditEmail->text().trimmed() << ui->lineEditWorkspace->text().trimmed() << message;
-    Utils::ShowNotification(QMessageBox::Critical, title, message, kThreeThousand);
+    Utils::ShowNotification(QMessageBox::Critical, title, message, TimeConst::kAutoCloseMs);
 }
 
 void AuthDialog::RRegisterResult(bool result, int code)
@@ -90,7 +90,8 @@ void AuthDialog::RRegisterResult(bool result, int code)
 
         RLoginDialog();
         qInfo() << "[Auth]" << "Registration successful";
-        Utils::ShowNotification(QMessageBox::Information, tr("Registration Successful"), tr("Your account has been registered successfully."), kThreeThousand);
+        Utils::ShowNotification(
+            QMessageBox::Information, tr("Registration Successful"), tr("Your account has been registered successfully."), TimeConst::kAutoCloseMs);
         return;
     }
 
@@ -120,7 +121,7 @@ void AuthDialog::RRegisterResult(bool result, int code)
         }
 
         qWarning() << "[Auth]" << "Registration failed" << message;
-        Utils::ShowNotification(QMessageBox::Critical, tr("Registration Failed"), message, kThreeThousand);
+        Utils::ShowNotification(QMessageBox::Critical, tr("Registration Failed"), message, TimeConst::kAutoCloseMs);
     }
 }
 
@@ -138,7 +139,7 @@ void AuthDialog::on_pushButtonLogin_clicked()
     }
 
     if (workspace.isEmpty()) {
-        Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Workspace"), tr("Workspace cannot be empty"), kThreeThousand);
+        Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Workspace"), tr("Workspace cannot be empty"), TimeConst::kAutoCloseMs);
         return;
     }
 
@@ -242,14 +243,14 @@ void AuthDialog::CreateAction(QLineEdit* line_edit)
 bool AuthDialog::ValidateEmail(const QString& email)
 {
     if (email.isEmpty()) {
-        Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Email"), tr("Email cannot be empty"), kThreeThousand);
+        Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Email"), tr("Email cannot be empty"), TimeConst::kAutoCloseMs);
         return false;
     }
 
     static QRegularExpression re(R"(^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$)");
 
     if (!re.match(email).hasMatch()) {
-        Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Email"), tr("Please enter a valid email address."), kThreeThousand);
+        Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Email"), tr("Please enter a valid email address."), TimeConst::kAutoCloseMs);
         return false;
     }
 
@@ -259,7 +260,7 @@ bool AuthDialog::ValidateEmail(const QString& email)
 bool AuthDialog::ValidatePassword(const QString& password)
 {
     if (password.length() < 8) {
-        Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Password"), tr("Password must be at least 8 characters long."), kThreeThousand);
+        Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Password"), tr("Password must be at least 8 characters long."), TimeConst::kAutoCloseMs);
         return false;
     }
 
@@ -267,7 +268,7 @@ bool AuthDialog::ValidatePassword(const QString& password)
         static QRegularExpression re(R"([A-Za-z])");
 
         if (!password.contains(re)) {
-            Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Password"), tr("Password must include at least one letter."), kThreeThousand);
+            Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Password"), tr("Password must include at least one letter."), TimeConst::kAutoCloseMs);
             return false;
         }
     }
@@ -276,7 +277,7 @@ bool AuthDialog::ValidatePassword(const QString& password)
         static QRegularExpression re(R"(\d)");
 
         if (!password.contains(re)) {
-            Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Password"), tr("Password must include at least one digit."), kThreeThousand);
+            Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Password"), tr("Password must include at least one digit."), TimeConst::kAutoCloseMs);
             return false;
         }
     }
@@ -285,7 +286,8 @@ bool AuthDialog::ValidatePassword(const QString& password)
         static QRegularExpression re(R"([^\w\s])");
 
         if (!password.contains(re)) {
-            Utils::ShowNotification(QMessageBox::Warning, tr("Invalid Password"), tr("Password must include at least one special character."), kThreeThousand);
+            Utils::ShowNotification(
+                QMessageBox::Warning, tr("Invalid Password"), tr("Password must include at least one special character."), TimeConst::kAutoCloseMs);
             return false;
         }
     }
@@ -307,7 +309,7 @@ void AuthDialog::on_pushButtonRegister_clicked()
     }
 
     if (password != confirm_pwd) {
-        Utils::ShowNotification(QMessageBox::Warning, tr("Password Mismatch"), tr("The passwords do not match."), kThreeThousand);
+        Utils::ShowNotification(QMessageBox::Warning, tr("Password Mismatch"), tr("The passwords do not match."), TimeConst::kAutoCloseMs);
         return;
     }
 

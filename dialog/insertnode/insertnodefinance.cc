@@ -1,5 +1,6 @@
 #include "insertnodefinance.h"
 
+#include "component/constantbool.h"
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
 #include "ui_insertnodefinance.h"

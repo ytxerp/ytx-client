@@ -6,6 +6,8 @@
 #include <QPainter>
 #include <QPixmap>
 
+#include "component/constantint.h"
+
 SearchQuery Utils::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag*>& tag_hash)
 {
     SearchQuery query {};
@@ -78,8 +80,8 @@ QPixmap Utils::CreateTagPixmap(const Tag* tag)
     QFontMetrics fm { font };
 
     const int text_width { fm.horizontalAdvance(tag->name) };
-    const int tag_width { text_width + 2 * kTagHPadding };
-    const int tag_height { fm.height() + 2 * kTagVPadding };
+    const int tag_width { text_width + 2 * UiConst::kTagHPadding };
+    const int tag_height { fm.height() + 2 * UiConst::kTagVPadding };
 
     // Create physical pixmap (actual pixels = logical pixels * dpr)
     QPixmap pixmap { static_cast<int>(tag_width * dpr), static_cast<int>(tag_height * dpr) };
@@ -97,7 +99,7 @@ QPixmap Utils::CreateTagPixmap(const Tag* tag)
 
     // Draw background with integer coordinates to avoid blurriness
     const QRect background_rect { 0, 0, tag_width, tag_height };
-    painter.drawRoundedRect(background_rect, kCornerRadius, kCornerRadius);
+    painter.drawRoundedRect(background_rect, UiConst::kCornerRadius, UiConst::kCornerRadius);
 
     // Draw text
     painter.setPen(Utils::GetContrastColor(tag->color));

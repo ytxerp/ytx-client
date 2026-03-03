@@ -1,6 +1,7 @@
 #include "entryshadow.h"
 
 #include "component/constant.h"
+#include "component/constantint.h"
 #include "utils/entryutils.h"
 
 void EntryShadow::Reset() { *this = EntryShadow {}; }
@@ -47,12 +48,12 @@ QJsonObject EntryShadow::WriteJson() const
     obj.insert(kDescription, *description);
     obj.insert(kStatus, *status);
     obj.insert(kRhsNode, rhs_node->toString(QUuid::WithoutBraces));
-    obj.insert(kLhsRate, QString::number(*lhs_rate, 'f', kMaxNumericScale_8));
-    obj.insert(kRhsRate, QString::number(*rhs_rate, 'f', kMaxNumericScale_8));
-    obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', kMaxNumericScale_4));
-    obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', kMaxNumericScale_4));
-    obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', kMaxNumericScale_4));
-    obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', kMaxNumericScale_4));
+    obj.insert(kLhsRate, QString::number(*lhs_rate, 'f', NumericConst::kDecimalPlaces8));
+    obj.insert(kRhsRate, QString::number(*rhs_rate, 'f', NumericConst::kDecimalPlaces8));
+    obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', NumericConst::kDecimalPlaces4));
+    obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', NumericConst::kDecimalPlaces4));
+    obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', NumericConst::kDecimalPlaces4));
+    obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', NumericConst::kDecimalPlaces4));
     obj.insert(kTag, Utils::WriteStringList(*tag));
     obj.insert(kDocument, Utils::WriteStringList(*document));
 

@@ -16,7 +16,7 @@ void StyledItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptio
     editor->setGeometry(option.rect);
 }
 
-QSize StyledItemDelegate::CalculateTextSize(CString& text, const QStyleOptionViewItem& option, int coefficient)
+QSize StyledItemDelegate::CalculateTextSize(CString& text, const QStyleOptionViewItem& option, int margin_factor)
 {
     const QFontMetrics fm(option.font);
 
@@ -24,7 +24,7 @@ QSize StyledItemDelegate::CalculateTextSize(CString& text, const QStyleOptionVie
         return QSize(option.rect.width(), fm.height());
 
     const int text_margin { QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr, option.widget) };
-    const int width { std::max(fm.horizontalAdvance(text) + coefficient * text_margin, option.rect.width()) };
+    const int width { std::max(fm.horizontalAdvance(text) + margin_factor * text_margin, option.rect.width()) };
     const int height { std::max(fm.height(), option.rect.height()) };
 
     return QSize(width, height);
@@ -119,6 +119,6 @@ void StyledItemDelegate::PaintColorRect(QPainter* painter, const QStyleOptionVie
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(Qt::NoPen);
     painter->setBrush(QColor(color_string));
-    painter->drawRoundedRect(color_rect, kCornerRadius, kCornerRadius);
+    painter->drawRoundedRect(color_rect, UiConst::kCornerRadius, UiConst::kCornerRadius);
     painter->restore();
 }

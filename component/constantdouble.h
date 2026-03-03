@@ -17,20 +17,17 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef QUANTITYR_H
-#define QUANTITYR_H
+#ifndef CONSTANTDOUBLE_H
+#define CONSTANTDOUBLE_H
 
-#include "delegate/styleditemdelegate.h"
+#include <cstdlib>
+#include <limits>
 
-class QuantityR final : public StyledItemDelegate {
-public:
-    QuantityR(const int& decimal, int coefficient, QObject* parent = nullptr);
-    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+inline constexpr double kTolerance = 1e-8;
+inline constexpr double kDoubleMax = std::numeric_limits<double>::max();
+inline constexpr double kDoubleLowest = std::numeric_limits<double>::lowest();
 
-private:
-    const int& decimal_ {};
-    const int coefficient_ {};
-};
+inline bool FloatEqual(double a, double b) noexcept { return std::abs(a - b) < kTolerance; }
+inline bool FloatChanged(double a, double b) noexcept { return !FloatEqual(a, b); }
 
-#endif // QUANTITYR_H
+#endif // CONSTANTDOUBLE_H

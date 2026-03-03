@@ -3,10 +3,10 @@
 #include <QtWidgets/qapplication.h>
 
 #include <QPainter>
+#include <QUuid>
 
-TagDelegate::TagDelegate(const QHash<QUuid, Tag*>& tag_hash, const QHash<QUuid, TagIcon>& tag_icon_hash, QObject* parent)
+TagDelegate::TagDelegate(const QHash<QUuid, TagIcon>& tag_icon_hash, QObject* parent)
     : StyledItemDelegate { parent }
-    , tag_hash_ { tag_hash }
     , tag_icon_hash_ { tag_icon_hash }
 {
 }
@@ -24,7 +24,7 @@ void TagDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, c
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
 
-    int x { option.rect.left() + kTagMargin };
+    int x { option.rect.left() + UiConst::kTagMargin };
 
     for (const QString& id_str : tag_ids) {
         const QUuid tag_id { QUuid::fromString(id_str) };
@@ -50,7 +50,7 @@ void TagDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, c
 
         painter->drawPixmap(x, y, pixmap);
 
-        x += logical_width + kTagSpacing;
+        x += logical_width + UiConst::kTagSpacing;
     }
 
     painter->restore();
@@ -63,7 +63,7 @@ QSize TagDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInde
         return QSize(0, option.rect.height());
     }
 
-    int total_width { kTagMargin * 2 };
+    int total_width { UiConst::kTagMargin * 2 };
     bool has_valid_tag { false };
 
     for (const QString& id_str : tag_ids) {
@@ -81,12 +81,12 @@ QSize TagDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInde
 
         const int logical_width { qRound(pixmap.width() / pixmap.devicePixelRatio()) };
 
-        total_width += logical_width + kTagSpacing;
+        total_width += logical_width + UiConst::kTagSpacing;
         has_valid_tag = true;
     }
 
     if (has_valid_tag) {
-        total_width -= kTagSpacing;
+        total_width -= UiConst::kTagSpacing;
     }
 
     return QSize(total_width, option.rect.height());

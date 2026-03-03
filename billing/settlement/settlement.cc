@@ -1,6 +1,7 @@
 #include "settlement.h"
 
 #include "component/constant.h"
+#include "component/constantint.h"
 
 void Settlement::Reset() { *this = Settlement {}; }
 
@@ -41,7 +42,7 @@ QJsonObject Settlement::WriteJson() const
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kDescription, description);
     obj.insert(kStatus, std::to_underlying(status));
-    obj.insert(kAmount, QString::number(amount, 'f', kMaxNumericScale_4));
+    obj.insert(kAmount, QString::number(amount, 'f', NumericConst::kDecimalPlaces4));
 
     return obj;
 }

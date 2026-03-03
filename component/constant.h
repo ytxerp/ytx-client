@@ -23,57 +23,8 @@
 #include <QString>
 #include <QTime>
 
-// Numeric constants
-inline constexpr int kCoefficient5 = 5;
-inline constexpr int kCoefficient8 = 8;
-inline constexpr int kCoefficient16 = 16;
-
-inline constexpr double kTolerance = 1e-8;
-inline bool FloatEqual(double a, double b) noexcept { return std::abs(a - b) < kTolerance; }
-inline bool FloatChanged(double a, double b) noexcept { return !FloatEqual(a, b); }
-
-inline constexpr int kRowHeight = 24;
-inline constexpr int kThreeThousand = 3000;
-inline constexpr int kTwoThousand = 2000;
-
-inline constexpr int HEARTBEAT_INTERVAL = 30000;
-inline constexpr int TIMEOUT_THRESHOLD = 75000;
-
-inline constexpr int kCornerRadius = 2; // Corner radius of the tag/color rectangle
-inline constexpr int kTagHPadding = 4; // Horizontal padding inside each tag (distance from text to left/right edge of color block)
-inline constexpr int kTagVPadding = 2; // Vertical padding inside each tag (distance from text to top/bottom edge of color block)
-inline constexpr int kTagSpacing = 6; // Horizontal spacing between adjacent tags
-inline constexpr int kTagMargin = 6; // Horizontal margin between tag group and cell border
-
-namespace Pool {
-inline constexpr qsizetype kExpandSize { 100 };
-inline constexpr qsizetype kMaxSize { 1000 };
-}
-
-// Boolean constants
-inline constexpr bool kIsHidden = true;
-
-namespace Rule {
-// Finance/Inventory/Task: Credit increase, Debit decrease; calculation: credit - debit
-// Order: Return Order (returned transaction)
-inline constexpr bool kDDCI = true;
-inline constexpr bool kRO = true;
-
-// Finance/Inventory/Task: Debit increase, Credit decrease; calculation: debit - credit
-// Order: Forward Order (normal transaction)
-inline constexpr bool kDICD = false;
-inline constexpr bool kFO = false;
-
 inline const QString kStrDDCI = QStringLiteral("DDCI");
 inline const QString kStrDICD = QStringLiteral("DICD");
-
-}
-
-inline constexpr double kDoubleMax = std::numeric_limits<double>::max();
-inline constexpr double kDoubleLowest = std::numeric_limits<double>::lowest();
-
-inline constexpr int kMaxNumericScale_4 = 4;
-inline constexpr int kMaxNumericScale_8 = 8;
 
 // Time constants
 inline const QString kDateTimeFST = QStringLiteral("yyyy-MM-dd HH:mm");
@@ -83,7 +34,6 @@ inline const QString kMonthFST = QStringLiteral("yyyyMM");
 inline const QTime kStartTime = { 0, 0 }; // 00:00
 
 // Empty & punctuation
-inline const QString kEmptyString = {};
 inline const QString kColon = QStringLiteral(":");
 inline const QString kDash = QStringLiteral("-");
 inline const QString kHalfWidthPeriod = QStringLiteral(".");

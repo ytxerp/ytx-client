@@ -1,5 +1,7 @@
 #include "treemodelf.h"
 
+#include "component/constantdouble.h"
+
 TreeModelF::TreeModelF(CSectionInfo& info, CString& separator, QObject* parent)
     : TreeModel(info, separator, parent)
 {

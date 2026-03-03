@@ -27,7 +27,7 @@
 
 class FinanceForeignR final : public StyledItemDelegate {
 public:
-    FinanceForeignR(const int& decimal, const int& default_unit, CIntString& unit_symbol_map, QObject* parent = nullptr);
+    FinanceForeignR(const int& decimal, const int& default_unit, CIntString& unit_symbol_map, CString& placeholder, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
@@ -38,6 +38,7 @@ private:
     const int& decimal_;
     const int& default_unit_;
     CIntString& unit_symbol_map_;
+    CString& placeholder_;
 };
 
 #endif // FINANCEFOREIGNR_H

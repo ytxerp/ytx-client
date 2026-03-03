@@ -36,8 +36,8 @@ bool TableModelI::UpdateRate(EntryShadow* shadow, double value)
     const QUuid entry_id { *shadow->id };
 
     QJsonObject update {};
-    update.insert(kLhsRate, QString::number(value, 'f', kMaxNumericScale_8));
-    update.insert(kRhsRate, QString::number(value, 'f', kMaxNumericScale_8));
+    update.insert(kLhsRate, QString::number(value, 'f', NumericConst::kDecimalPlaces8));
+    update.insert(kRhsRate, QString::number(value, 'f', NumericConst::kDecimalPlaces8));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, shadow->is_parallel) };
     WebSocket::Instance()->SendMessage(kEntryRate, message);
@@ -77,10 +77,10 @@ bool TableModelI::UpdateNumeric(EntryShadow* shadow, double value, int row, bool
     QJsonObject update {};
     const bool is_parallel { shadow->is_parallel };
 
-    update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*shadow->lhs_debit, 'f', kMaxNumericScale_8));
-    update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*shadow->lhs_credit, 'f', kMaxNumericScale_8));
-    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*shadow->rhs_debit, 'f', kMaxNumericScale_8));
-    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*shadow->rhs_credit, 'f', kMaxNumericScale_8));
+    update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*shadow->lhs_debit, 'f', NumericConst::kDecimalPlaces8));
+    update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*shadow->lhs_credit, 'f', NumericConst::kDecimalPlaces8));
+    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*shadow->rhs_debit, 'f', NumericConst::kDecimalPlaces8));
+    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*shadow->rhs_credit, 'f', NumericConst::kDecimalPlaces8));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
     WebSocket::Instance()->SendMessage(kEntryNumeric, message);

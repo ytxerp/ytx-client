@@ -22,7 +22,9 @@
 
 #include <QQueue>
 
-#include "component/constant.h"
+#include "component/constantdouble.h"
+#include "component/constantint.h"
+#include "component/constantstring.h"
 #include "component/using.h"
 #include "enum/nodeenum.h"
 #include "enum/section.h"
@@ -194,7 +196,7 @@ inline QString UnitString(NodeUnit unit)
     case NodeUnit::OPending:
         return QObject::tr("PEN");
     default:
-        return kEmptyString;
+        return StringConst::kEmpty;
     }
 }
 
@@ -284,7 +286,7 @@ bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& v
         return false;
 
     current_value = value;
-    update.insert(field, QString::number(value, 'f', kMaxNumericScale_8));
+    update.insert(field, QString::number(value, 'f', NumericConst::kDecimalPlaces8));
 
     if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();

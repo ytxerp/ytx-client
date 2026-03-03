@@ -1,7 +1,6 @@
 #include <QtCore/qdir.h>
 #include <QtWidgets/qheaderview.h>
 
-#include "component/signalblocker.h"
 #include "entryhub/entryhubf.h"
 #include "entryhub/entryhubi.h"
 #include "entryhub/entryhubo.h"
@@ -159,8 +158,8 @@ void MainWindow::InitContextFinance()
         info.unit_symbol_map.insert(key, kUnitSymbol(c));
     }
 
-    info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
-    info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
+    info.rule_map.insert(Rule::kDDCI, kStrDDCI);
+    info.rule_map.insert(Rule::kDICD, kStrDICD);
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
@@ -201,8 +200,8 @@ void MainWindow::InitContextInventory()
     info.unit_map.insert(std::to_underlying(NodeUnit::IPosition), tr("POS", "Position"));
     info.unit_map.insert(std::to_underlying(NodeUnit::IExternal), tr("EXT", "External"));
 
-    info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
-    info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
+    info.rule_map.insert(Rule::kDDCI, kStrDDCI);
+    info.rule_map.insert(Rule::kDICD, kStrDICD);
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
@@ -243,8 +242,8 @@ void MainWindow::InitContextTask()
     info.unit_map.insert(std::to_underlying(NodeUnit::TAction), tr("ACT", "Action"));
     info.unit_map.insert(std::to_underlying(NodeUnit::TSource), tr("SRC", "Source"));
 
-    info.rule_map.insert(Rule::kDDCI, Rule::kStrDDCI);
-    info.rule_map.insert(Rule::kDICD, Rule::kStrDICD);
+    info.rule_map.insert(Rule::kDDCI, kStrDDCI);
+    info.rule_map.insert(Rule::kDICD, kStrDICD);
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);

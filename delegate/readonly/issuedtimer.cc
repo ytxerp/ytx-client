@@ -1,5 +1,7 @@
 #include "issuedtimer.h"
 
+#include <QtCore/qdatetime.h>
+
 IssuedTimeR::IssuedTimeR(const QString& date_format, QObject* parent)
     : StyledItemDelegate { parent }
     , date_format_ { date_format }
@@ -16,5 +18,5 @@ void IssuedTimeR::paint(QPainter* painter, const QStyleOptionViewItem& option, c
 QSize IssuedTimeR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const auto text { index.data().toDateTime().toString(date_format_) };
-    return CalculateTextSize(text, option, kCoefficient8);
+    return CalculateTextSize(text, option);
 }

@@ -61,7 +61,7 @@ void TreeWidgetO::on_pBtnFetch_clicked()
     const auto message { JsonGen::TreeAck(section_, start_.toUTC(), end_.toUTC()) };
     WebSocket::Instance()->SendMessage(kTreeAck, message);
 
-    cooldown_timer_->start(kTwoThousand);
+    cooldown_timer_->start(TimeConst::kCooldownMs);
 }
 
 void TreeWidgetO::InitTimer()
