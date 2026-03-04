@@ -160,7 +160,6 @@ inline const QString kCBalance = QStringLiteral("cbalance");
 inline const QString kCSettlement = QStringLiteral("csettlement");
 
 // Message fields
-inline const QString kValue = QStringLiteral("value");
 
 // Tree & table columns
 inline const QString kCode = QStringLiteral("code");

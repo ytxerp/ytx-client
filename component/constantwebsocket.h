@@ -143,6 +143,8 @@ inline const QString kMark { QStringLiteral("mark") };
 inline const QString kNodeUpdate { QStringLiteral("node_update") };
 inline const QString kDefaultUnit { QStringLiteral("default_unit") };
 inline const QString kDocumentDir { QStringLiteral("document_dir") };
+inline const QString kKey { QStringLiteral("key") };
+inline const QString kValue { QStringLiteral("value") };
 }
 
 #endif // CONSTANTWEBSOCKET_H

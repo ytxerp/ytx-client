@@ -246,15 +246,15 @@ void WebSocket::InitTimer()
     timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
 }
 
-void WebSocket::SendMessage(const QString& type, const QJsonObject& value)
+void WebSocket::SendMessage(const QString& key, const QJsonObject& value)
 {
     if (socket_.state() != QAbstractSocket::ConnectedState) {
-        qWarning() << "[WS]" << "Cannot send message: WebSocket is not connected.";
+        qWarning() << "[WS] Cannot send message: WebSocket is not connected.";
         return;
     }
 
-    const QJsonValue message { QJsonObject { { kKind, type }, { kValue, value } } };
-    const QByteArray json { message.toJson(QJsonDocument::Compact) };
+    const QJsonObject root { { WsField::kKey, key }, { WsField::kValue, value } };
+    const QByteArray json { QJsonValue(root).toJson(QJsonValue::JsonFormat::Compact) };
 
     socket_.sendTextMessage(QString::fromUtf8(json));
 }
@@ -273,24 +273,34 @@ void WebSocket::RTextMessageReceived(const QString& message)
     }
 
     const QJsonObject obj { root.toObject() };
-    const QString msg_type { obj.value(kKind).toString() };
-    const QJsonValue value { obj.value(kValue) };
+    const QString key { obj.value(WsField::kKey).toString() };
+    const QJsonValue value { obj.value(WsField::kValue) };
+
+    if (key.isEmpty()) {
+        qWarning() << "[WS] Missing key in server message:" << message;
+        return;
+    }
+
+    if (!value.isObject() && !value.isArray()) {
+        qWarning() << "[WS] Unsupported value type for key:" << key;
+        return;
+    }
 
     if (value.isObject()) {
-        if (const auto it { handler_obj_.constFind(msg_type) }; it != handler_obj_.constEnd()) {
+        if (const auto it { handler_obj_.constFind(key) }; it != handler_obj_.constEnd()) {
             it.value()(value.toObject());
             return;
         }
     }
 
     if (value.isArray()) {
-        if (const auto it { handler_arr_.constFind(msg_type) }; it != handler_arr_.constEnd()) {
+        if (const auto it { handler_arr_.constFind(key) }; it != handler_arr_.constEnd()) {
             it.value()(value.toArray());
             return;
         }
     }
 
-    qWarning() << "[WS]" << "Unsupported server message type:" << msg_type;
+    qWarning() << "[WS]" << "Unsupported server message:" << key;
 }
 
 void WebSocket::NotifyLogin(const QJsonObject& obj)
