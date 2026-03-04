@@ -281,19 +281,22 @@ void WebSocket::RTextMessageReceived(const QString& message)
         return;
     }
 
-    if (!value.isObject() && !value.isArray()) {
+    const bool is_object { value.isObject() };
+    const bool is_array { value.isArray() };
+
+    if (!is_object && !is_array) {
         qWarning() << "[WS] Unsupported value type for key:" << key;
         return;
     }
 
-    if (value.isObject()) {
+    if (is_object) {
         if (const auto it { handler_obj_.constFind(key) }; it != handler_obj_.constEnd()) {
             it.value()(value.toObject());
             return;
         }
     }
 
-    if (value.isArray()) {
+    if (is_array) {
         if (const auto it { handler_arr_.constFind(key) }; it != handler_arr_.constEnd()) {
             it.value()(value.toArray());
             return;

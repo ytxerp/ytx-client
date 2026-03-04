@@ -16,6 +16,7 @@
 #include "component/stringinitializer.h"
 #include "dialog/about.h"
 #include "dialog/preferences.h"
+#include "dialog/tagmanagerdlg.h"
 #include "document.h"
 #include "global/tablesstation.h"
 #include "ui_mainwindow.h"
@@ -156,14 +157,16 @@ void MainWindow::on_actionDelete_triggered()
 {
     qInfo() << "[UI]" << "on_actionDelete_triggered";
 
+    if (auto* d_dialog { qobject_cast<TagManagerDlg*>(QApplication::activeWindow()) }) {
+        d_dialog->on_pBtnDelete_clicked();
+        return;
+    }
+
     auto* widget { sc_->tab_widget->currentWidget() };
 
-    {
-        auto* d_widget { qobject_cast<TreeWidgetSettlement*>(widget) };
-        if (d_widget) {
-            DeleteSettlement(d_widget);
-            return;
-        }
+    if (auto* d_widget { qobject_cast<TreeWidgetSettlement*>(widget) }) {
+        DeleteSettlement(d_widget);
+        return;
     }
 
     if (qobject_cast<TreeWidget*>(widget)) {
@@ -171,8 +174,9 @@ void MainWindow::on_actionDelete_triggered()
         return;
     }
 
-    if (auto* leaf_widget { qobject_cast<TableWidget*>(widget) }) {
-        DeleteEntry(leaf_widget);
+    if (auto* d_widget { qobject_cast<TableWidget*>(widget) }) {
+        DeleteEntry(d_widget);
+        return;
     }
 }
 

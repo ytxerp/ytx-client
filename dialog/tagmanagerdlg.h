@@ -39,9 +39,11 @@ public:
     void SetModel(TagModel* model);
     QTableView* View();
 
+public slots:
+    void on_pBtnDelete_clicked();
+
 private slots:
     void on_pBtnInsert_clicked();
-    void on_pBtnDelete_clicked();
 
 private:
     Ui::TagManagerDlg* ui;
