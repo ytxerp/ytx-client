@@ -20,7 +20,7 @@
 #ifndef ENTRYENUM_H
 #define ENTRYENUM_H
 
-/** @brief Operation applied to all entries in a leaf table widget. */
+/** @brief Operation */
 enum class Mark { kClear = 0, kSelect, kToggle };
 
 /** @brief Status of an entry. */
