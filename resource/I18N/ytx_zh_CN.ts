@@ -123,17 +123,9 @@ Rage, rage against the dying of the light.</source>
         <translation>注册失败</translation>
     </message>
     <message>
-        <source>Unable to register. Please contact the administrator for details.</source>
-        <translation type="vanished">无法注册，请联系管理员了解详情。</translation>
-    </message>
-    <message>
         <location filename="../../dialog/authdialog.cc" line="95"/>
         <source>Registration Successful</source>
         <translation>注册成功</translation>
-    </message>
-    <message>
-        <source>Your account has been registered successfully.</source>
-        <translation type="vanished">帐户已注册成功。</translation>
     </message>
     <message>
         <location filename="../../dialog/authdialog.cc" line="47"/>
@@ -148,45 +140,9 @@ Rage, rage against the dying of the light.</source>
         <translation>请输入您的密码。</translation>
     </message>
     <message>
-        <source>The email you entered was not found.</source>
-        <translation type="vanished">邮箱未找到。</translation>
-    </message>
-    <message>
-        <source>The password you entered is incorrect.</source>
-        <translation type="vanished">密码不正确。</translation>
-    </message>
-    <message>
-        <source>The specified workspace does not exist.</source>
-        <translation type="vanished">工区不存在。</translation>
-    </message>
-    <message>
-        <source>The workspace subscription has expired.</source>
-        <translation type="vanished">工区订阅已过期。</translation>
-    </message>
-    <message>
         <location filename="../../dialog/authdialog.cc" line="65"/>
         <source>Access Pending</source>
         <translation>权限申请</translation>
-    </message>
-    <message>
-        <source>Your access to workspace &quot;%1&quot; for email &quot;%2&quot; is pending approval.</source>
-        <translation type="vanished">&quot;%2&quot; 对 &quot;%1&quot; 的访问请求正在等待审批。</translation>
-    </message>
-    <message>
-        <source>You are already logged in.</source>
-        <translation type="vanished">您已经登录过了。</translation>
-    </message>
-    <message>
-        <source>Unable to log in. Please contact the administrator for details.</source>
-        <translation type="vanished">无法登录，请联系管理员了解详情。</translation>
-    </message>
-    <message>
-        <source>The email format is invalid.</source>
-        <translation type="vanished">邮箱的格式不正确。</translation>
-    </message>
-    <message>
-        <source>This email is already registered.</source>
-        <translation type="vanished">邮箱已经注册过了。</translation>
     </message>
     <message>
         <location filename="../../dialog/authdialog.cc" line="143"/>
@@ -212,10 +168,6 @@ Rage, rage against the dying of the light.</source>
         <location filename="../../dialog/authdialog.cc" line="313"/>
         <source>The passwords do not match.</source>
         <translation>两次输入的密码不一致。</translation>
-    </message>
-    <message>
-        <source>Server error occurred. Please try again later.</source>
-        <translation type="vanished">服务器出现了错误，请稍后重试。</translation>
     </message>
     <message>
         <location filename="../../dialog/authdialog.cc" line="143"/>
@@ -716,25 +668,9 @@ Rage, rage against the dying of the light.</source>
         <translation>规则</translation>
     </message>
     <message>
-        <source>Status</source>
-        <translation type="vanished">状态</translation>
-    </message>
-    <message>
-        <source>&amp;Unfinished</source>
-        <translation type="vanished">待办(&amp;U)</translation>
-    </message>
-    <message>
-        <source>&amp;Finished</source>
-        <translation type="vanished">已办(&amp;F)</translation>
-    </message>
-    <message>
         <location filename="../../dialog/insertnode/insertnodetask.ui" line="134"/>
         <source>Unit</source>
         <translation>单位</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation type="vanished">日期</translation>
     </message>
     <message>
         <location filename="../../dialog/insertnode/insertnodetask.ui" line="199"/>
@@ -755,10 +691,6 @@ Rage, rage against the dying of the light.</source>
         <location filename="../../dialog/insertnode/insertnodetask.ui" line="246"/>
         <source>Debit Increase, Credit Decrease</source>
         <translation>借方增加，贷方减少</translation>
-    </message>
-    <message>
-        <source>yyyy-MM-dd</source>
-        <translation type="vanished">yyyy-MM-dd</translation>
     </message>
 </context>
 <context>
@@ -792,76 +724,124 @@ Rage, rage against the dying of the light.</source>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="130"/>
-        <source>Currently referenced by linked nodes within the same section.</source>
-        <translation>本版块内被关联节点引用。</translation>
+        <source>This node is referenced within the section.</source>
+        <translation>该节点在当前版块内存在引用。</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="133"/>
-        <source>Inside</source>
+        <source>Within</source>
         <translation>内部</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="140"/>
-        <source>This inventory node (internal unit) is currently referenced by partner, sale, or purchase entries.</source>
-        <translation>存货节点（内部单位）被合作、销售或采购引用。</translation>
+        <source>Inventory (Internal): Referenced by partner, sale, or purchase.</source>
+        <translation>存货（内部）：被合作、销售或采购引用。</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="143"/>
-        <source>Inventory INT</source>
-        <translation>存货（内）</translation>
+        <source>Inventory (Int)</source>
+        <translation>存货（内部）</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="150"/>
-        <source>This inventory node (external unit) is currently referenced by partner entries.</source>
-        <translation>存货节点（外部单位）被合作引用。</translation>
+        <source>Inventory (External): Referenced by partner.</source>
+        <translation>存货（外部）：被合作引用。</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="153"/>
-        <source>Inventory EXT</source>
-        <translation>存货（外）</translation>
+        <source>Inventory (Ext)</source>
+        <translation>存货（外部）</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="160"/>
-        <source>This partner node (customer or vendor) is currently referenced by sale or purchase nodes.</source>
-        <translation>合作节点（客户或供应商）被销售或采购引用。</translation>
+        <source>Partner (Customer/Vendor): Referenced by sale or purchase.</source>
+        <translation>合作（客户/供应商）：被销售或采购引用。</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="163"/>
-        <source>Partner</source>
-        <translation>合作</translation>
+        <source>Partner (C/V)</source>
+        <translation>合作（客户/供应商）</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="170"/>
-        <source>This partner node (employee) is currently referenced by sale or purchase nodes.</source>
-        <translation>合作节点（员工）当前被销售或采购节点引用。</translation>
+        <source>Partner (Employee): Referenced by sale or purchase.</source>
+        <translation>合作（职员）：被销售或采购引用。</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="173"/>
-        <source>Employee</source>
-        <translation>员工</translation>
+        <source>Partner (Emp)</source>
+        <translation>合作（职员）</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="180"/>
-        <source>This order node (sale or purchase) is currently settled.</source>
-        <translation>订单节点（销售或采购）已经结算。</translation>
+        <source>Order: Already settled.</source>
+        <translation>订单：已结算。</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="183"/>
+        <source>Order</source>
+        <translation>订单</translation>
+    </message>
+    <message>
+        <source>Order Settled</source>
+        <translation type="obsolete">已结算</translation>
+    </message>
+    <message>
+        <source>Currently referenced by linked nodes within the same section.</source>
+        <translation type="vanished">本版块内被关联节点引用。</translation>
+    </message>
+    <message>
+        <source>Inside</source>
+        <translation type="vanished">内部</translation>
+    </message>
+    <message>
+        <source>This inventory node (internal unit) is currently referenced by partner, sale, or purchase entries.</source>
+        <translation type="vanished">存货节点（内部单位）被合作、销售或采购引用。</translation>
+    </message>
+    <message>
+        <source>Inventory INT</source>
+        <translation type="vanished">存货（内）</translation>
+    </message>
+    <message>
+        <source>This inventory node (external unit) is currently referenced by partner entries.</source>
+        <translation type="vanished">存货节点（外部单位）被合作引用。</translation>
+    </message>
+    <message>
+        <source>Inventory EXT</source>
+        <translation type="vanished">存货（外）</translation>
+    </message>
+    <message>
+        <source>This partner node (customer or vendor) is currently referenced by sale or purchase nodes.</source>
+        <translation type="vanished">合作节点（客户或供应商）被销售或采购引用。</translation>
+    </message>
+    <message>
+        <source>Partner</source>
+        <translation type="vanished">合作</translation>
+    </message>
+    <message>
+        <source>This partner node (employee) is currently referenced by sale or purchase nodes.</source>
+        <translation type="vanished">合作节点（员工）当前被销售或采购节点引用。</translation>
+    </message>
+    <message>
+        <source>Employee</source>
+        <translation type="vanished">员工</translation>
+    </message>
+    <message>
+        <source>This order node (sale or purchase) is currently settled.</source>
+        <translation type="vanished">订单节点（销售或采购）已经结算。</translation>
+    </message>
+    <message>
         <source>Settlement</source>
-        <translation>结算</translation>
+        <translation type="vanished">结算</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="193"/>
+        <source>This node is still in use. How would you like to proceed?</source>
+        <translation>该节点仍在使用中，你想要怎么处理？</translation>
+    </message>
+    <message>
         <source>This node is about to be deleted but is still referenced. How do you want to handle it?</source>
-        <translation>这个节点即将被删除，但仍然存在引用。你希望如何处理？</translation>
-    </message>
-    <message>
-        <source>Replace &lt;b&gt;%1&lt;/b&gt; with &lt;b&gt;%2&lt;/b&gt;.&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ This action is risky and cannot be undone!&lt;/span&gt;</source>
-        <translation type="vanished">将 &lt;b&gt;%1&lt;/b&gt; 替换为 &lt;b&gt;%2&lt;/b&gt;。&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ 此操作具有风险，且无法撤销！&lt;/span&gt;</translation>
-    </message>
-    <message>
-        <source>Delete &lt;b&gt;%1&lt;/b&gt; and all its entries.&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ Permanent deletion! Cannot be undone!&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;Tip: It is recommended to relocate all entries belonging to this node before deletion.&lt;/i&gt;</source>
-        <translation type="vanished">删除 &lt;b&gt;%1&lt;/b&gt; 及其所有记录。&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ 永久删除！无法撤销！&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;提示：建议在删除前，先移动该节点的所有记录。&lt;/i&gt;</translation>
+        <translation type="vanished">这个节点即将被删除，但仍然存在引用。你希望如何处理？</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="162"/>
@@ -1227,14 +1207,6 @@ Rage, rage against the dying of the light.</source>
         <translation>财务版块已存在记录，无法更改基准币种。</translation>
     </message>
     <message>
-        <source>The base unit for Finance cannot be changed because entries already exist.</source>
-        <translation type="vanished">财务版块已存在记录，无法更改基准币种。</translation>
-    </message>
-    <message>
-        <source>Cannot change the base unit for section Finance because related entries already exist.</source>
-        <translation type="vanished">无法更改财务版块的基准单位，因为已存在记录。</translation>
-    </message>
-    <message>
         <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="182"/>
         <source>Unsaved Data</source>
         <translation>未保存的数据</translation>
@@ -1416,43 +1388,6 @@ You need to recall it first before making changes.</source>
         <location filename="../../mainwindow/mainwindow_entry.cc" line="71"/>
         <source>Delete this entry?&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 Tip: You can disable this confirmation in Preferences.&lt;/i&gt;</source>
         <translation>删除该条记录？&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 提示：可在首选项中关闭此确认提示。&lt;/i&gt;</translation>
-    </message>
-    <message>
-        <source>Delete this entry?&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ Permanent deletion! Cannot be undone!&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;Note: You can disable this confirmation in Preferences.&lt;/i&gt;</source>
-        <translation type="vanished">删除此记录？&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ 永久删除！无法撤销！&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;注意：您可以在首选项中禁用此确认对话框。&lt;/i&gt;</translation>
-    </message>
-    <message>
-        <source>RO</source>
-        <translation type="vanished">红</translation>
-    </message>
-    <message>
-        <source>FO</source>
-        <translation type="vanished">正</translation>
-    </message>
-    <message>
-        <source>IMM</source>
-        <comment>unit map</comment>
-        <translation type="vanished">现</translation>
-    </message>
-    <message>
-        <source>MON</source>
-        <comment>unit map</comment>
-        <translation type="vanished">月</translation>
-    </message>
-    <message>
-        <source>PEND</source>
-        <comment>unit map</comment>
-        <translation type="vanished">挂</translation>
-    </message>
-    <message>
-        <source>RO</source>
-        <comment>rule map</comment>
-        <translation type="vanished">红</translation>
-    </message>
-    <message>
-        <source>FO</source>
-        <comment>rule map</comment>
-        <translation type="vanished">正</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_context.cc" line="199"/>
@@ -2154,10 +2089,6 @@ You need to recall it first before making changes.</source>
         <translation>汇率</translation>
     </message>
     <message>
-        <source>D</source>
-        <translation type="vanished">文件</translation>
-    </message>
-    <message>
         <location filename="../../component/stringinitializer.cc" line="137"/>
         <location filename="../../component/stringinitializer.cc" line="159"/>
         <location filename="../../component/stringinitializer.cc" line="181"/>
@@ -2536,14 +2467,6 @@ You need to recall it first before making changes.</source>
         <translation>优惠</translation>
     </message>
     <message>
-        <source>TO</source>
-        <translation type="vanished">交易</translation>
-    </message>
-    <message>
-        <source>RO</source>
-        <translation type="vanished">红单</translation>
-    </message>
-    <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="228"/>
         <source>Description</source>
         <translation>描述</translation>
@@ -2562,10 +2485,6 @@ You need to recall it first before making changes.</source>
         <location filename="../../table/widget/tablewidgeto.ui" line="215"/>
         <source>yyyy/MM/dd HH:mm</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>FO</source>
-        <translation type="vanished">正单</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="37"/>
