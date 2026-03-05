@@ -105,8 +105,11 @@ void LeafDeleteDialog::ReplaceNode()
 
     const QString path { model_->Path(node_id_) };
     const QString new_path { ui->comboBox->currentText() };
-    const QString info { tr("Replace <b>%1</b> with <b>%2</b>.<br>"
-                            "<span style='color:#d32f2f; font-weight:bold;'><br>⚠️ This action is risky and cannot be undone!</span>")
+    const QString info { tr("Replace <b>%1</b> with <b>%2</b>."
+                            "<br><br>"
+                            "<span style='color:#d32f2f; font-weight:bold;'>"
+                            "⚠️ This action is permanent and cannot be undone."
+                            "</span>")
             .arg(path, new_path) };
 
     auto* dlg { new ExactMatchConfirmDialog(info, tr("Replace"), path, this) };
