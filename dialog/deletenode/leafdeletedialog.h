@@ -57,6 +57,7 @@ private:
 
     const QUuid node_id_ {};
     const NodeUnit node_unit_ {};
+    const Section section_ {};
 
     const bool inside_ref_ {};
     const bool inventory_int_ref_ {};

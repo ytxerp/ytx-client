@@ -97,6 +97,7 @@ public:
     }
 
     virtual void DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
+    virtual void DeleteLeaf(const QSet<QUuid>& leaf_entry) { Q_UNUSED(leaf_entry); }
 
 protected:
     virtual EntryList ProcessEntryArray(const QJsonArray& array);

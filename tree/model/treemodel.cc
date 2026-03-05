@@ -28,7 +28,7 @@ TreeModel::~TreeModel()
     NodePool::Instance().Recycle(node_hash_, section_);
 }
 
-void TreeModel::RDeleteNode(const QUuid& node_id)
+void TreeModel::DeleteNode(const QUuid& node_id)
 {
     if (!node_hash_.contains(node_id)) {
         return;
@@ -234,7 +234,7 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     const auto affected_ids { UpdateAncestorTotal(new_node, initial_delta, final_delta) };
     RefreshAffectedTotal(affected_ids);
 
-    RDeleteNode(old_node_id);
+    DeleteNode(old_node_id);
 }
 
 void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
@@ -717,9 +717,10 @@ void TreeModel::DeletePath(Node* node, Node* parent_node)
         leaf_path_.remove(node_id);
         Utils::RemoveItem(leaf_path_model_, node_id);
 
-        const auto affected_ids { UpdateAncestorTotal(node, -node->initial_total, -node->final_total) };
-        RefreshAffectedTotal(affected_ids);
+        auto affected_ids { UpdateAncestorTotal(node, -node->initial_total, -node->final_total) };
+        affected_ids.remove(node_id);
 
+        RefreshAffectedTotal(affected_ids);
         RemoveUnitSet(node_id, node->unit);
     } break;
     default:

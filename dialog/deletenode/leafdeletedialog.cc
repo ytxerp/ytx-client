@@ -13,6 +13,7 @@ LeafDeleteDialog::LeafDeleteDialog(TreeModel* model, CSectionInfo& info, CJsonOb
     , ui(new Ui::LeafDeleteDialog)
     , node_id_ { node_id }
     , node_unit_ { unit }
+    , section_ { info.section }
     , inside_ref_ { obj.value(kInsideRef).toBool() }
     , inventory_int_ref_ { obj.value(kInventoryIntRef).toBool() }
     , inventory_ext_ref_ { obj.value(kInventoryExtRef).toBool() }
@@ -59,7 +60,7 @@ void LeafDeleteDialog::InitCheckBoxGroup()
     ui->rBtnReplace->hide();
     ui->comboBox->hide();
 
-    switch (info_.section) {
+    switch (section_) {
     case Section::kInventory:
         ui->chkBoxInventoryInt->show();
         ui->chkBoxInventoryInt->setChecked(inventory_int_ref_);
@@ -133,10 +134,38 @@ void LeafDeleteDialog::DeleteNode()
         return;
 
     const auto& path { model_->Path(node_id_) };
-    const QString info { tr("Delete <b>%1</b> and all its entries.<br>"
-                            "<span style='color:#d32f2f; font-weight:bold;'><br>⚠️ Permanent deletion! Cannot be undone!</span>"
-                            "<br><br><i>Tip: It is recommended to relocate all entries belonging to this node before deletion.</i>")
-            .arg(path) };
+    QString info {};
+
+    switch (section_) {
+    case Section::kSale:
+    case Section::kPurchase:
+        info = tr("Delete this order and all its entries."
+                  "<br><br>"
+                  "<span style='color:#d32f2f; font-weight:bold;'>"
+                  "⚠️ This action is permanent and cannot be undone."
+                  "</span>");
+        break;
+    case Section::kPartner:
+        info = tr("Delete <b>%1</b> and all its entries."
+                  "<br><br>"
+                  "<span style='color:#d32f2f; font-weight:bold;'>"
+                  "⚠️ This action is permanent and cannot be undone."
+                  "</span>")
+                   .arg(path);
+        break;
+    case Section::kFinance:
+    case Section::kTask:
+    case Section::kInventory:
+        info = tr("Delete <b>%1</b> and all its entries."
+                  "<br><br>"
+                  "<span style='color:#d32f2f; font-weight:bold;'>"
+                  "⚠️ This action is permanent and cannot be undone."
+                  "</span>"
+                  "<br><br>"
+                  "<i>💡 Tip: Consider relocating entries before deleting.</i>")
+                   .arg(path);
+        break;
+    }
 
     auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), path, this) };
     dlg->setWindowModality(Qt::WindowModal);
@@ -149,8 +178,28 @@ void LeafDeleteDialog::DeleteNode()
         if (model_->Path(node_id_) != path)
             return;
 
-        const auto message { JsonGen::LeafDelete(info_.section, node_id_) };
-        WebSocket::Instance()->SendMessage(WsKey::kLeafDelete, message);
+        QString key {};
+        QJsonObject value {};
+
+        switch (section_) {
+        case Section::kSale:
+        case Section::kPurchase:
+            key = WsKey::kLeafDeleteO;
+            value = JsonGen::LeafDeleteO(info_.section, node_id_);
+            break;
+        case Section::kPartner:
+            key = WsKey::kLeafDeleteP;
+            value = JsonGen::LeafDeleteP(info_.section, node_id_);
+            break;
+        case Section::kFinance:
+        case Section::kTask:
+        case Section::kInventory:
+            key = WsKey::kLeafDelete;
+            value = JsonGen::LeafDelete(info_.section, node_id_);
+            break;
+        }
+
+        WebSocket::Instance()->SendMessage(key, value);
         close();
     });
 

@@ -47,7 +47,7 @@ public:
     void DeleteEntry(const QUuid& entry_id) override;
     void UpdateEntry(const QUuid& id, const QJsonObject& update) override;
 
-    void DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
+    void DeleteLeaf(const QSet<QUuid>& leaf_entry) override;
     void ApplyPartnerEntry(const QJsonArray& array);
 
     void ApplyInventoryIntReplace(const QUuid& old_item_id, const QUuid& new_item_id);

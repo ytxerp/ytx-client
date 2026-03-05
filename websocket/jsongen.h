@@ -34,6 +34,8 @@ QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id);
 QJsonObject NodeDrag(Section section, CUuid& node_id, CUuid& parent_id);
 
 QJsonObject LeafDelete(Section section, CUuid& node_id);
+QJsonObject LeafDeleteP(Section section, CUuid& node_id);
+QJsonObject LeafDeleteO(Section section, CUuid& node_id);
 QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id);
 
 QJsonObject LeafDeleteCheck(Section section, CUuid& node_id);

@@ -189,6 +189,8 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
     handler_obj_[WsKey::kNodeAck] = [this](const QJsonObject& obj) { AckNode(obj); };
     handler_obj_[WsKey::kLeafDelete] = [this](const QJsonObject& obj) { DeleteLeaf(obj); };
+    handler_obj_[WsKey::kLeafDeleteP] = [this](const QJsonObject& obj) { DeleteLeafP(obj); };
+    handler_obj_[WsKey::kLeafDeleteO] = [this](const QJsonObject& obj) { DeleteLeafO(obj); };
     handler_obj_[WsKey::kBranchDelete] = [this](const QJsonObject& obj) { DeleteBranch(obj); };
     handler_obj_[WsKey::kLeafReplace] = [this](const QJsonObject& obj) { ReplaceLeaf(obj); };
     handler_obj_[WsKey::kNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
@@ -560,14 +562,52 @@ void WebSocket::DeleteLeaf(const QJsonObject& obj)
     const QJsonObject linked_entry_obj { obj.value(kLinkedEntry).toObject() };
     const QJsonArray total_array { obj.value(kTotalArray).toArray() };
 
-    const auto leaf_entry { ParseNodeReference(linked_entry_obj) };
+    const auto leaf_entry { ParseLinkedEntry(linked_entry_obj) };
 
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
 
     entry_hub->DeleteLeaf(leaf_entry);
     tree_model->SyncTotalArray(total_array);
-    tree_model->RDeleteNode(QUuid(node_id));
+    tree_model->DeleteNode(node_id);
+}
+
+void WebSocket::DeleteLeafO(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+    const int unit { obj.value(kUnit).toInt() };
+    const int status { obj.value(kStatus).toInt() };
+
+    auto entry_hub { entry_hub_hash_.value(section) };
+    auto tree_model { tree_model_hash_.value(section) };
+
+    if (NodeUnit(unit) == NodeUnit::OMonthly && NodeStatus(status) == NodeStatus::kReleased) {
+        auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
+        Q_ASSERT(partner_model != nullptr);
+
+        const auto partner_id { QUuid(obj.value(kPartnerId).toString()) };
+        const auto initial_total { obj.value(kInitialTotal).toString().toDouble() };
+
+        partner_model->RUpdateAmount(partner_id, -initial_total);
+    }
+
+    tree_model->DeleteNode(node_id);
+}
+
+void WebSocket::DeleteLeafP(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+
+    const auto linked_entry_array { obj.value(kLinkedEntry).toArray() };
+    const auto leaf_entry { ParseLinkedEntryP(linked_entry_array) };
+
+    auto entry_hub { entry_hub_hash_.value(section) };
+    auto tree_model { tree_model_hash_.value(section) };
+
+    entry_hub->DeleteLeaf(leaf_entry);
+    tree_model->DeleteNode(node_id);
 }
 
 void WebSocket::AllowLeafDelete(const QJsonObject& obj)
@@ -576,7 +616,7 @@ void WebSocket::AllowLeafDelete(const QJsonObject& obj)
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     auto tree_model { tree_model_hash_.value(section) };
-    tree_model->RDeleteNode(node_id);
+    tree_model->DeleteNode(node_id);
 }
 
 void WebSocket::DeleteBranch(const QJsonObject& obj)
@@ -588,7 +628,7 @@ void WebSocket::DeleteBranch(const QJsonObject& obj)
     auto tree_model { tree_model_hash_.value(section) };
 
     if (session_id != session_id_)
-        tree_model->RDeleteNode(QUuid(node_id));
+        tree_model->DeleteNode(node_id);
 }
 
 void WebSocket::DenyLeafDelete(const QJsonObject& obj) { emit SLeafDeleteDeny(obj); }
@@ -1153,7 +1193,7 @@ void WebSocket::DenyDefaultUnit(const QJsonObject& /*obj*/) { emit SDefaultUnitD
 
 void WebSocket::ApplySharedConfig(const QJsonArray& arr) { emit SSharedConfigApply(arr); }
 
-QHash<QUuid, QSet<QUuid>> WebSocket::ParseNodeReference(const QJsonObject& obj)
+QHash<QUuid, QSet<QUuid>> WebSocket::ParseLinkedEntry(const QJsonObject& obj) const
 {
     QHash<QUuid, QSet<QUuid>> map {};
 
@@ -1168,4 +1208,17 @@ QHash<QUuid, QSet<QUuid>> WebSocket::ParseNodeReference(const QJsonObject& obj)
     }
 
     return map;
+}
+
+QSet<QUuid> WebSocket::ParseLinkedEntryP(const QJsonArray& arr) const
+{
+    QSet<QUuid> set {};
+
+    for (const auto& val : arr) {
+        const QUuid uuid { val.toString() };
+        if (!uuid.isNull())
+            set.insert(uuid);
+    }
+
+    return set;
 }

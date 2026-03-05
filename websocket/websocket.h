@@ -133,7 +133,8 @@ private:
             timeout_timer_->stop();
     }
 
-    QHash<QUuid, QSet<QUuid>> ParseNodeReference(const QJsonObject& obj);
+    QHash<QUuid, QSet<QUuid>> ParseLinkedEntry(const QJsonObject& obj) const;
+    QSet<QUuid> ParseLinkedEntryP(const QJsonArray& arr) const;
 
 private:
     void NotifyRegister(const QJsonObject& obj);
@@ -168,6 +169,8 @@ private:
     void DragNode(const QJsonObject& obj);
     void ReplaceLeaf(const QJsonObject& obj);
     void DeleteLeaf(const QJsonObject& obj);
+    void DeleteLeafO(const QJsonObject& obj);
+    void DeleteLeafP(const QJsonObject& obj);
     void AllowLeafDelete(const QJsonObject& obj);
     void DeleteBranch(const QJsonObject& obj);
     void UpdateNodeDirectionRule(const QJsonObject& obj);

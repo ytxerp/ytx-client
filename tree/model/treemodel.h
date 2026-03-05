@@ -53,10 +53,6 @@ signals:
     void SSyncValue();
     void SInitStatus();
 
-public slots:
-    // receive from DeleteDialog
-    void RDeleteNode(const QUuid& node_id);
-
 public:
     // Qt's
     // Default implementations
@@ -110,6 +106,8 @@ public:
 
     void UpdateDirectionRule(const QUuid& node_id, bool direction_rule);
     void SyncTotalArray(const QJsonArray& total_array);
+
+    void DeleteNode(const QUuid& node_id);
 
     virtual void UpdateName(const QUuid& node_id, const QString& name);
 

@@ -97,6 +97,8 @@ inline const QString kNodeSearch { QStringLiteral("node_search") };
 inline const QString kNodeNameUpdate { QStringLiteral("node_name_update") };
 inline const QString kNodeDrag { QStringLiteral("node_drag") };
 inline const QString kLeafDelete { QStringLiteral("leaf_delete") };
+inline const QString kLeafDeleteP { QStringLiteral("leaf_delete_p") };
+inline const QString kLeafDeleteO { QStringLiteral("leaf_delete_o") };
 inline const QString kLeafReplace { QStringLiteral("leaf_replace") };
 inline const QString kBranchDelete { QStringLiteral("branch_delete") };
 inline const QString kNodeDirectionRuleUpdate { QStringLiteral("node_direction_rule_update") };

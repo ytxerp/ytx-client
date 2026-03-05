@@ -187,6 +187,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     // Setup tab
     const int tab_index { tab_widget->addTab(widget, QString()) };
     tab_bar->setTabData(tab_index, node_id);
+    tab_widget->setCurrentIndex(tab_index);
 
     // Configure view
     auto* view { widget->View() };
@@ -195,7 +196,6 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     TableDelegateO(view, section_config);
 
     sc_->widget_hash.insert(node_id, wc);
-    FocusTabWidget(node_id);
 }
 
 void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)

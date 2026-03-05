@@ -50,36 +50,36 @@ void AuthDialog::RDenyLogin(int code)
         message = tr("Please enter your password.");
         break;
     case LoginOutcome::EmailNotFound:
-        message = tr("The email you entered was not found.");
+        message = tr("No account found for this email.");
         break;
     case LoginOutcome::PasswordIncorrect:
-        message = tr("The password you entered is incorrect.");
+        message = tr("Incorrect password. Please try again.");
         break;
     case LoginOutcome::WorkspaceNotFound:
-        message = tr("The specified workspace does not exist.");
+        message = tr("Workspace not found. Please check the name and try again.");
         break;
     case LoginOutcome::WorkspaceExpired:
-        message = tr("The workspace subscription has expired.");
+        message = tr("This workspace's subscription has expired.");
         break;
     case LoginOutcome::WorkspaceAccessPending:
         title = tr("Access Pending");
-        message
-            = tr("Your access to workspace \"%1\" for email \"%2\" is pending approval.").arg(LoginInfo::Instance().Workspace(), LoginInfo::Instance().Email());
+        message = tr("Your request to join workspace \"%1\" is awaiting approval.").arg(LoginInfo::Instance().Workspace());
         break;
     case LoginOutcome::AlreadyLoggedIn:
-        message = tr("You are already logged in.");
+        message = tr("You're already logged in.");
         break;
     case LoginOutcome::ServerError:
-        message = tr("Server error occurred. Please try again later.");
+        message = tr("Something went wrong on our end. Please try again later.");
         break;
     case LoginOutcome::Success:
-        break;
+        return;
     default:
-        message = tr("Unable to log in. Please contact the administrator for details.");
+        message = tr("Unable to sign in. Please contact support for help.");
         break;
     }
 
-    qWarning() << "[Auth]" << "Login failed" << ui->lineEditEmail->text().trimmed() << ui->lineEditWorkspace->text().trimmed() << message;
+    qWarning() << "[Auth] Login failed"
+               << "| email:" << ui->lineEditEmail->text().trimmed() << "| workspace:" << ui->lineEditWorkspace->text().trimmed() << "| reason:" << message;
     Utils::ShowNotification(QMessageBox::Critical, title, message, TimeConst::kAutoCloseMs);
 }
 
@@ -88,42 +88,42 @@ void AuthDialog::RRegisterResult(bool result, int code)
     if (result) {
         SyncLoginInfo();
         LoginInfo::Instance().WriteConfig(local_settings_);
-
         RLoginDialog();
-        qInfo() << "[Auth]" << "Registration successful";
+        qInfo() << "[Auth] Registration successful"
+                << "| email:" << ui->lineEditEmail->text().trimmed();
         Utils::ShowNotification(
-            QMessageBox::Information, tr("Registration Successful"), tr("Your account has been registered successfully."), TimeConst::kAutoCloseMs);
+            QMessageBox::Information, tr("Registration Successful"), tr("Your account has been created. Welcome aboard!"), TimeConst::kAutoCloseMs);
         return;
     }
 
-    {
-        QString message {};
-        switch (RegisterOutcome(code)) {
-        case RegisterOutcome::EmptyEmail:
-            message = tr("Please enter your email.");
-            break;
-        case RegisterOutcome::EmptyPassword:
-            message = tr("Please enter your password.");
-            break;
-        case RegisterOutcome::InvalidEmail:
-            message = tr("The email format is invalid.");
-            break;
-        case RegisterOutcome::EmailAlreadyExists:
-            message = tr("This email is already registered.");
-            break;
-        case RegisterOutcome::ServerError:
-            message = tr("Server error occurred. Please try again later.");
-            break;
-        case RegisterOutcome::Success:
-            break;
-        default:
-            message = tr("Unable to register. Please contact the administrator for details.");
-            break;
-        }
-
-        qWarning() << "[Auth]" << "Registration failed" << message;
-        Utils::ShowNotification(QMessageBox::Critical, tr("Registration Failed"), message, TimeConst::kAutoCloseMs);
+    QString message {};
+    switch (RegisterOutcome(code)) {
+    case RegisterOutcome::EmptyEmail:
+        message = tr("Please enter your email.");
+        break;
+    case RegisterOutcome::EmptyPassword:
+        message = tr("Please enter your password.");
+        break;
+    case RegisterOutcome::InvalidEmail:
+        message = tr("Please enter a valid email address.");
+        break;
+    case RegisterOutcome::EmailAlreadyExists:
+        message = tr("This email is already registered. Try signing in instead.");
+        break;
+    case RegisterOutcome::ServerError:
+        message = tr("Something went wrong on our end. Please try again later.");
+        break;
+    case RegisterOutcome::Success:
+        return;
+    default:
+        message = tr("Unable to register. Please contact support for help.");
+        break;
     }
+
+    qWarning() << "[Auth] Registration failed"
+               << "| email:" << ui->lineEditEmail->text().trimmed() << "| reason:" << message;
+
+    Utils::ShowNotification(QMessageBox::Critical, tr("Registration Failed"), message, TimeConst::kAutoCloseMs);
 }
 
 void AuthDialog::on_pushButtonLogin_clicked()

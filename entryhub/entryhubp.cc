@@ -19,13 +19,14 @@ void EntryHubP::RAppendOneEntry(Entry* entry)
 
 void EntryHubP::RDeleteOneEntry(const QUuid& /*node_id*/, const QUuid& entry_id)
 {
-    auto it = entry_cache_.constFind(entry_id);
-    if (it != entry_cache_.constEnd()) {
+    auto it = entry_cache_.find(entry_id);
+    if (it != entry_cache_.end()) {
         auto* entry { static_cast<EntryP*>(it.value()) };
 
         entry_map_.remove({ entry->lhs_node, entry->rhs_node });
 
         EntryPool::Instance().Recycle(entry, section_);
+        entry_cache_.erase(it);
     }
 }
 
@@ -39,7 +40,21 @@ void EntryHubP::RUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node)
     entry_map_[{ entry_p->lhs_node, entry_p->rhs_node }] = { entry_p->unit_price, entry_p->external_sku };
 }
 
-void EntryHubP::DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { DeleteLeafFunction(leaf_entry); }
+void EntryHubP::DeleteLeaf(const QSet<QUuid>& leaf_entry)
+{
+    qInfo() << "EntryHubP::DeleteLeaf size:" << leaf_entry.size();
+
+    for (auto it = entry_cache_.begin(); it != entry_cache_.end();) {
+        if (leaf_entry.contains(it.key())) {
+            auto* entry { static_cast<EntryP*>(it.value()) };
+            entry_map_.remove({ entry->lhs_node, entry->rhs_node });
+            EntryPool::Instance().Recycle(entry, section_);
+            it = entry_cache_.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
 
 void EntryHubP::ApplyInventoryIntReplace(const QUuid& old_item_id, const QUuid& new_item_id)
 {
