@@ -59,12 +59,12 @@ private:
     const NodeUnit node_unit_ {};
     const Section section_ {};
 
-    const bool inside_ref_ {};
-    const bool inventory_int_ref_ {};
-    const bool inventory_ext_ref_ {};
-    const bool partner_ref_ {};
-    const bool employee_ref_ {};
-    const bool settlement_ref_ {};
+    const bool within_ {};
+    const bool inventory_int_ {};
+    const bool inventory_ext_ {};
+    const bool partner_cv_ {};
+    const bool partner_emp_ {};
+    const bool order_ {};
 
     TreeModel* model_ {};
     CSectionInfo& info_ {};

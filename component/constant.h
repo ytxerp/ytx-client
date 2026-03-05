@@ -91,24 +91,6 @@ inline const QString kStaticNode = QStringLiteral("static_node");
 inline const QString kExternalSku = QStringLiteral("external_sku");
 inline const QString kInternalSku = QStringLiteral("internal_sku");
 
-// Node is referenced by internal linked columns within the same section
-inline const QString kInsideRef = QStringLiteral("inside_ref");
-
-// Internal inventory node is referenced by other sections, e.g., Partner, Sale, Purchase
-inline const QString kInventoryIntRef = QStringLiteral("inventory_int_ref");
-
-// External inventory node is referenced by other sections, e.g., Partner
-inline const QString kInventoryExtRef = QStringLiteral("inventory_ext_ref");
-
-// Partner node (customer or supplier) is referenced in other sections, e.g., Sale, Purchase
-inline const QString kPartnerRef = QStringLiteral("partner_ref");
-
-// Employee node (staff) is referenced in other sections, e.g., Sale, Purchase
-inline const QString kEmployeeRef = QStringLiteral("employee_ref");
-
-// Node from Sale or Purchase is referenced by settlement entries
-inline const QString kSettlementRef = QStringLiteral("settlement_ref");
-
 inline const QString kSettlementItemDeselected = QStringLiteral("settlement_item_deselected");
 inline const QString kSettlementItemSelected = QStringLiteral("settlement_item_selected");
 

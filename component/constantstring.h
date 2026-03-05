@@ -28,4 +28,19 @@ inline const QString kFourDigits = QStringLiteral("+0,000.00");
 inline const QString kEmpty = QStringLiteral("");
 }
 
+namespace NodeRef {
+// Node is referenced by linked nodes within the same section
+inline const QString kWithin = QStringLiteral("within");
+// Internal inventory node is referenced by partner, sale, or purchase
+inline const QString kInventoryInt = QStringLiteral("inventory_int");
+// External inventory node is referenced by partner
+inline const QString kInventoryExt = QStringLiteral("inventory_ext");
+// Partner node (customer/vendor) is referenced by sale or purchase
+inline const QString kPartnerCV = QStringLiteral("partner_cv");
+// Partner node (employee) is referenced by sale or purchase
+inline const QString kPartnerEmp = QStringLiteral("partner_emp");
+// Sale or purchase order is already settled
+inline const QString kOrder = QStringLiteral("order");
+}
+
 #endif // CONSTANTSTRING_H

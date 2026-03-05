@@ -638,16 +638,16 @@ void WebSocket::ReplaceLeaf(const QJsonObject& obj)
     Q_ASSERT(obj.contains(kSection));
     Q_ASSERT(obj.contains(kSessionId));
     Q_ASSERT(obj.contains(kResult));
-    Q_ASSERT(obj.contains(kInventoryIntRef));
-    Q_ASSERT(obj.contains(kInventoryExtRef));
+    Q_ASSERT(obj.contains(NodeRef::kInventoryInt));
+    Q_ASSERT(obj.contains(NodeRef::kInventoryExt));
     Q_ASSERT(obj.contains(kOldNodeId));
     Q_ASSERT(obj.contains(kNewNodeId));
 
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const bool result { obj.value(kResult).toBool() };
-    const bool inventory_int_ref { obj.value(kInventoryIntRef).toBool() };
-    const bool inventory_ext_ref { obj.value(kInventoryExtRef).toBool() };
+    const bool inventory_int_ref { obj.value(NodeRef::kInventoryInt).toBool() };
+    const bool inventory_ext_ref { obj.value(NodeRef::kInventoryExt).toBool() };
     const QUuid old_node_id(obj.value(kOldNodeId).toString());
     const QUuid new_node_id(obj.value(kNewNodeId).toString());
 

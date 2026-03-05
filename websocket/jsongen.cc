@@ -3,6 +3,7 @@
 #include <QJsonArray>
 
 #include "component/constant.h"
+#include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 
 namespace JsonGen {
@@ -105,13 +106,12 @@ QJsonObject LeafDeleteCheck(Section section, CUuid& node_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kInsideRef, false);
-    message.insert(kInventoryIntRef, false);
-    message.insert(kInventoryExtRef, false);
-    message.insert(kPartnerRef, false);
-    message.insert(kEmployeeRef, false);
-    message.insert(kSettlementRef, false);
-
+    message.insert(NodeRef::kWithin, false);
+    message.insert(NodeRef::kInventoryInt, false);
+    message.insert(NodeRef::kInventoryExt, false);
+    message.insert(NodeRef::kPartnerCV, false);
+    message.insert(NodeRef::kPartnerEmp, false);
+    message.insert(NodeRef::kOrder, false);
     return message;
 }
 
@@ -123,8 +123,8 @@ QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id)
     message.insert(kResult, false);
     message.insert(kOldNodeId, old_id.toString(QUuid::WithoutBraces));
     message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
-    message.insert(kInventoryIntRef, false);
-    message.insert(kInventoryExtRef, false);
+    message.insert(NodeRef::kInventoryInt, false);
+    message.insert(NodeRef::kInventoryExt, false);
 
     return message;
 }

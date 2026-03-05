@@ -125,62 +125,62 @@
     <widget class="QGroupBox" name="groupBox_2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QCheckBox" name="chkBoxInside">
+       <widget class="QCheckBox" name="chkBoxWithin">
         <property name="toolTip">
-         <string>Currently referenced by linked nodes within the same section.</string>
+         <string>This node is referenced within the section.</string>
         </property>
         <property name="text">
-         <string>Inside</string>
+         <string>Within</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="chkBoxInventoryInt">
         <property name="toolTip">
-         <string>This inventory node (internal unit) is currently referenced by partner, sale, or purchase entries.</string>
+         <string>Inventory (Internal): Referenced by partner, sale, or purchase.</string>
         </property>
         <property name="text">
-         <string>Inventory INT</string>
+         <string>Inventory (Int)</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="chkBoxInventoryExt">
         <property name="toolTip">
-         <string>This inventory node (external unit) is currently referenced by partner entries.</string>
+         <string>Inventory (External): Referenced by partner.</string>
         </property>
         <property name="text">
-         <string>Inventory EXT</string>
+         <string>Inventory (Ext)</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxPartner">
+       <widget class="QCheckBox" name="chkBoxPartnerCV">
         <property name="toolTip">
-         <string>This partner node (customer or vendor) is currently referenced by sale or purchase nodes.</string>
+         <string>Partner (Customer/Vendor): Referenced by sale or purchase.</string>
         </property>
         <property name="text">
-         <string>Partner</string>
+         <string>Partner (C/V)</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxEmployee">
+       <widget class="QCheckBox" name="chkBoxPartnerEmp">
         <property name="toolTip">
-         <string>This partner node (employee) is currently referenced by sale or purchase nodes.</string>
+         <string>Partner (Employee): Referenced by sale or purchase.</string>
         </property>
         <property name="text">
-         <string>Employee</string>
+         <string>Partner (Emp)</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxSettlement">
+       <widget class="QCheckBox" name="chkBoxOrder">
         <property name="toolTip">
-         <string>This order node (sale or purchase) is currently settled.</string>
+         <string>Order: Already settled.</string>
         </property>
         <property name="text">
-         <string>Settlement</string>
+         <string>Order</string>
         </property>
        </widget>
       </item>
@@ -190,7 +190,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>This node is about to be deleted but is still referenced. How do you want to handle it?</string>
+      <string>This node is still in use. How would you like to proceed?</string>
      </property>
     </widget>
    </item>
