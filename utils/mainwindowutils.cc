@@ -310,35 +310,35 @@ QByteArray Utils::ZstdDecompress(const QByteArray& data)
         return {};
     }
 
-    ZSTD_DStream* stream = ZSTD_createDStream();
-    if (!stream) {
-        qWarning() << "[ZstdDecompress] Failed to create DStream";
+    // Attempt to retrieve the exact decompressed size from the zstd frame header.
+    // This is available in the vast majority of zstd frames.
+    unsigned long long const content_size { ZSTD_getFrameContentSize(data.constData(), static_cast<size_t>(data.size())) };
+
+    if (content_size == ZSTD_CONTENTSIZE_ERROR) {
+        qWarning() << "[ZstdDecompress] Not a valid zstd frame";
         return {};
     }
 
-    ZSTD_initDStream(stream);
-
-    ZSTD_inBuffer input { data.constData(), static_cast<size_t>(data.size()), 0 };
-
-    QByteArray result {};
-    result.reserve(data.size() * 4);
-
-    const size_t chunk_size = ZSTD_DStreamOutSize();
-    QByteArray chunk(static_cast<qsizetype>(chunk_size), 0);
-
-    while (input.pos < input.size) {
-        ZSTD_outBuffer output { chunk.data(), chunk_size, 0 };
-        const size_t ret = ZSTD_decompressStream(stream, &output, &input);
-
-        if (ZSTD_isError(ret)) {
-            qWarning() << "[ZstdDecompress] Error:" << ZSTD_getErrorName(ret);
-            ZSTD_freeDStream(stream);
-            return {};
-        }
-
-        result.append(chunk.constData(), static_cast<qsizetype>(output.pos));
+    if (content_size == ZSTD_CONTENTSIZE_UNKNOWN) {
+        qWarning() << "[ZstdDecompress] Content size unknown (old compressed data?)";
+        return {};
     }
 
-    ZSTD_freeDStream(stream);
+    // Allocate the output buffer without zero-initialisation for performance.
+    QByteArray result(static_cast<qsizetype>(content_size), Qt::Uninitialized);
+
+    // Decompress the entire input in a single call.
+    size_t const ret { ZSTD_decompress(result.data(), static_cast<size_t>(result.size()), data.constData(), static_cast<size_t>(data.size())) };
+
+    if (ZSTD_isError(ret)) {
+        qWarning() << "[ZstdDecompress] Error:" << ZSTD_getErrorName(ret);
+        return {};
+    }
+
+    if (ret != static_cast<size_t>(result.size())) {
+        qWarning() << "[ZstdDecompress] Decompressed size mismatch:" << ret << "!=" << result.size();
+        return {};
+    }
+
     return result;
 }

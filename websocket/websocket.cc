@@ -317,7 +317,7 @@ void WebSocket::RBinaryMessageReceived(const QByteArray& data)
 {
     timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
 
-    const QByteArray decompressed { Utils::ZstdDecompress(data) };
+    const QByteArray decompressed { Utils::IsZstdCompressed(data) ? Utils::ZstdDecompress(data) : data };
     if (decompressed.isEmpty()) {
         qWarning() << "[WS] Failed to decompress message";
         return;
