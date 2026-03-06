@@ -80,7 +80,7 @@ void TableWidgetSettlement::FetchNode()
     if (settlement_.partner_id.isNull())
         return;
 
-    const auto message { JsonGen::SettlementNodeAck(section_, widget_id_, settlement_.partner_id, settlement_.id) };
+    const auto message { JsonGen::SettlementItemAck(section_, widget_id_, settlement_.partner_id) };
     WebSocket::Instance()->SendMessage(WsKey::kSettlementItemAck, message);
 }
 

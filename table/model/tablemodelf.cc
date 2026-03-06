@@ -19,6 +19,11 @@ bool TableModelF::insertRows(int row, int /*count*/, const QModelIndex& parent)
     *entry_shadow->lhs_rate = 1.0;
     *entry_shadow->rhs_rate = 1.0;
 
+    if (last_issued_.isValid()) {
+        last_issued_ = last_issued_.addSecs(1);
+        *entry_shadow->issued_time = last_issued_;
+    }
+
     if (shadow_list_.size() == 1)
         EmitDataChanged(0, 0, std::to_underlying(EntryEnum::kIssuedTime), std::to_underlying(EntryEnum::kIssuedTime));
 

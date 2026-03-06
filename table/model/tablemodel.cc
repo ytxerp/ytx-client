@@ -277,11 +277,14 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    if (data(index, role) == value)
-        return false;
-
     const EntryEnum column { index.column() };
     const int row { index.row() };
+
+    if (section_ == Section::kFinance && column == EntryEnum::kIssuedTime)
+        last_issued_ = value.toDateTime();
+
+    if (data(index, role) == value)
+        return false;
 
     auto* shadow { shadow_list_.at(index.row()) };
 
@@ -289,9 +292,8 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case EntryEnum::kIssuedTime: {
-        const QDateTime new_time { value.toDateTime() };
-        Utils::UpdateShadowIssuedTime(pending_updates_[id], shadow, kIssuedTime, new_time, &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
-        last_issued_ = new_time;
+        Utils::UpdateShadowIssuedTime(
+            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
         break;
     }
     case EntryEnum::kCode:
@@ -453,9 +455,7 @@ EntryShadow* TableModel::InsertRowsImpl(int row, const QModelIndex& parent)
 
     {
         *entry_shadow->lhs_node = lhs_id_;
-        last_issued_ = last_issued_.isValid() ? last_issued_.addSecs(1) : QDateTime::currentDateTimeUtc();
-        *entry_shadow->issued_time = last_issued_;
-
+        *entry_shadow->issued_time = QDateTime::currentDateTimeUtc();
         entry_shadow->balance = row >= 1 ? shadow_list_.at(row - 1)->balance : 0.0;
     }
 
