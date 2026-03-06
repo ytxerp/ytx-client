@@ -126,6 +126,8 @@ inline Node* NodePool::Allocate(Section section)
         Expand(pool, section, PoolConst::kExpandSize);
     }
 
+    Q_ASSERT(!pool.empty());
+
     Node* n = pool.front();
     pool.pop_front();
 

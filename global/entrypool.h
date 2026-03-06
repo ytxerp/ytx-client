@@ -118,9 +118,7 @@ inline Entry* EntryPool::Allocate(Section section)
         Expand(pool, section, PoolConst::kExpandSize);
     }
 
-    if (pool.empty()) {
-        return NewResource(section);
-    }
+    Q_ASSERT(!pool.empty());
 
     Entry* e = pool.front();
     pool.pop_front();

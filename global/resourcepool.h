@@ -67,9 +67,7 @@ template <Resettable T> T* ResourcePool<T>::Allocate()
     if (pool_.empty())
         Expand(PoolConst::kExpandSize);
 
-    if (pool_.empty()) {
-        return new T();
-    }
+    Q_ASSERT(!pool_.empty());
 
     T* resource = pool_.front();
     pool_.pop_front();

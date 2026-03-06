@@ -512,6 +512,8 @@ void TableModel::RDeleteMultiEntries(const QSet<QUuid>& entry_id_set)
 void TableModel::RAppendMultiEntries(const EntryList& entry_list)
 {
     EntryShadowList shadow_list {};
+    shadow_list.reserve(entry_list.size());
+
     for (auto* entry : entry_list) {
         auto* entry_shadow { ResourcePool<EntryShadow>::Instance().Allocate() };
         entry_shadow->BindEntry(entry, lhs_id_ == entry->lhs_node);
