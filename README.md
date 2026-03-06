@@ -99,6 +99,31 @@ pacman -S mingw-w64-x86_64-openssl
 # Use this path as OPENSSL_ROOT_DIR when building with Qt + LLVM-MinGW
 ```
 
+#### zstd
+
+```bash
+# Debian / Ubuntu
+sudo apt-get install libzstd-dev
+
+# macOS (Homebrew)
+brew install zstd
+
+# Windows (Qt / LLVM-MinGW)
+# Download and install MSYS2 from: https://www.msys2.org/
+#
+# Open the MSYS2 shell and update the system, Close the shell when prompted, then reopen and run again.
+pacman -Syu
+#
+# Launch "MSYS2 MinGW64" (important: NOT MSYS, NOT UCRT)
+#
+# Install zstd for MinGW-w64:
+pacman -S mingw-w64-x86_64-zstd
+#
+# After installation, zstd will be located at: D:/msys64/mingw64
+#
+# Use this path as zstd_ROOT when building with Qt + LLVM-MinGW
+```
+
 ### Step
 
 1. Open the project in Qt Creator
