@@ -157,6 +157,7 @@ template <Iterable Container> inline void EntryPool::Recycle(Container& containe
     if (static_cast<qsizetype>(pool.size()) + container.size() >= PoolConst::kMaxSize) {
         locker.unlock();
         qDeleteAll(container);
+        container.clear();
         return;
     }
 

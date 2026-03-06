@@ -164,6 +164,7 @@ template <Iterable Container> inline void NodePool::Recycle(Container& container
     if (static_cast<qsizetype>(pool.size()) + container.size() >= PoolConst::kMaxSize) {
         locker.unlock();
         qDeleteAll(container);
+        container.clear();
         return;
     }
 

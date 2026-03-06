@@ -102,6 +102,7 @@ template <Resettable T> template <Iterable Container> void ResourcePool<T>::Recy
     if (static_cast<qsizetype>(pool_.size()) + container.size() >= PoolConst::kMaxSize) {
         locker.unlock();
         qDeleteAll(container);
+        container.clear();
         return;
     }
 
