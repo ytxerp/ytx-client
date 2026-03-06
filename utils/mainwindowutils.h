@@ -40,6 +40,7 @@ QString UuidToShortCode(const QUuid& uuid, int length = 10);
 
 QUuid ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog);
 void ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where = true);
+QByteArray ZstdDecompress(const QByteArray& data);
 
 inline void CloseWidget(const QUuid& node_id, QHash<QUuid, WidgetContext>& widget_hash)
 {

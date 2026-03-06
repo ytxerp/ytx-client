@@ -1,6 +1,7 @@
 #include "mainwindowutils.h"
 
 #include <QtWidgets/qpushbutton.h>
+#include <zstd.h>
 
 #include <QApplication>
 #include <QCoreApplication>
@@ -168,13 +169,6 @@ void Utils::ResetSectionContext(SectionContext& sc)
     Q_ASSERT(sc.entry_hub);
     Q_ASSERT(sc.tree_model);
 
-    sc.tree_widget->Reset();
-    sc.entry_hub->Reset();
-    sc.tree_model->Reset();
-
-    sc.section_config = SectionConfig {};
-    sc.shared_config = SharedConfig {};
-
     {
         auto tab_widget { sc.tab_widget };
         auto* tab_bar { tab_widget->tabBar() };
@@ -188,6 +182,13 @@ void Utils::ResetSectionContext(SectionContext& sc)
     }
 
     Utils::CloseWidgets(sc.widget_hash);
+
+    sc.tree_widget->Reset();
+    sc.tree_model->Reset();
+    sc.entry_hub->Reset();
+
+    sc.section_config = SectionConfig {};
+    sc.shared_config = SharedConfig {};
 
     ResourcePool<Tag>::Instance().Recycle(sc.tag_hash);
     sc.tag_icon_hash.clear();
@@ -301,4 +302,43 @@ QUuid Utils::ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dia
 
     widget_hash.insert(id, wc);
     return id;
+}
+
+QByteArray Utils::ZstdDecompress(const QByteArray& data)
+{
+    if (data.isEmpty()) {
+        return {};
+    }
+
+    ZSTD_DStream* stream = ZSTD_createDStream();
+    if (!stream) {
+        qWarning() << "[ZstdDecompress] Failed to create DStream";
+        return {};
+    }
+
+    ZSTD_initDStream(stream);
+
+    ZSTD_inBuffer input { data.constData(), static_cast<size_t>(data.size()), 0 };
+
+    QByteArray result {};
+    result.reserve(data.size() * 4);
+
+    const size_t chunk_size = ZSTD_DStreamOutSize();
+    QByteArray chunk(static_cast<qsizetype>(chunk_size), 0);
+
+    while (input.pos < input.size) {
+        ZSTD_outBuffer output { chunk.data(), chunk_size, 0 };
+        const size_t ret = ZSTD_decompressStream(stream, &output, &input);
+
+        if (ZSTD_isError(ret)) {
+            qWarning() << "[ZstdDecompress] Error:" << ZSTD_getErrorName(ret);
+            ZSTD_freeDStream(stream);
+            return {};
+        }
+
+        result.append(chunk.constData(), static_cast<qsizetype>(output.pos));
+    }
+
+    ZSTD_freeDStream(stream);
+    return result;
 }

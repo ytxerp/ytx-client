@@ -94,6 +94,7 @@ private slots:
     void RConnected();
     void RDisconnected();
     void RTextMessageReceived(const QString& message);
+    void RBinaryMessageReceived(const QByteArray& data);
     void RErrorOccurred(QAbstractSocket::SocketError error);
     void RPong()
     {
@@ -123,6 +124,8 @@ private:
     void InitHandler();
     void InitConnect();
     void InitTimer();
+
+    void ProcessMessage(const QByteArray& data);
 
     void StopTimer()
     {

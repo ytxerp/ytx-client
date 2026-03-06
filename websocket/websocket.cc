@@ -8,6 +8,7 @@
 #include "entryhub/entryhubp.h"
 #include "tree/model/treemodelo.h"
 #include "tree/model/treemodelp.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 
 WebSocket::WebSocket(QObject* parent)
@@ -223,6 +224,7 @@ void WebSocket::InitConnect()
     connect(&socket_, &QWebSocket::disconnected, this, &WebSocket::RDisconnected);
     connect(&socket_, &QWebSocket::errorOccurred, this, &WebSocket::RErrorOccurred);
     connect(&socket_, &QWebSocket::textMessageReceived, this, &WebSocket::RTextMessageReceived);
+    connect(&socket_, &QWebSocket::binaryMessageReceived, this, &WebSocket::RBinaryMessageReceived);
     connect(&socket_, &QWebSocket::pong, this, &WebSocket::RPong);
 }
 
@@ -261,16 +263,12 @@ void WebSocket::SendMessage(const QString& key, const QJsonObject& value)
     socket_.sendTextMessage(QString::fromUtf8(json));
 }
 
-void WebSocket::RTextMessageReceived(const QString& message)
+void WebSocket::ProcessMessage(const QByteArray& data)
 {
-    // Any incoming server message indicates the connection is alive, reset timeout
-    timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
-
     QJsonParseError err {};
-    const QJsonValue root { QJsonValue::fromJson(message.toUtf8(), &err) };
-
+    const QJsonValue root { QJsonValue::fromJson(data, &err) };
     if (err.error != QJsonParseError::NoError || !root.isObject()) {
-        qWarning() << "[WS]" << "Invalid message received from server:" << message;
+        qWarning() << "[WS] Invalid message received from server:" << data;
         return;
     }
 
@@ -279,7 +277,7 @@ void WebSocket::RTextMessageReceived(const QString& message)
     const QJsonValue value { obj.value(WsField::kValue) };
 
     if (key.isEmpty()) {
-        qWarning() << "[WS] Missing key in server message:" << message;
+        qWarning() << "[WS] Missing key in server message:" << data;
         return;
     }
 
@@ -306,6 +304,26 @@ void WebSocket::RTextMessageReceived(const QString& message)
     }
 
     qWarning() << "[WS]" << "Unsupported server message:" << key;
+}
+
+void WebSocket::RTextMessageReceived(const QString& message)
+{
+    // Any incoming server message indicates the connection is alive, reset timeout
+    timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
+    ProcessMessage(message.toUtf8());
+}
+
+void WebSocket::RBinaryMessageReceived(const QByteArray& data)
+{
+    timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
+
+    const QByteArray decompressed { Utils::ZstdDecompress(data) };
+    if (decompressed.isEmpty()) {
+        qWarning() << "[WS] Failed to decompress message";
+        return;
+    }
+
+    ProcessMessage(decompressed);
 }
 
 void WebSocket::NotifyLogin(const QJsonObject& obj)

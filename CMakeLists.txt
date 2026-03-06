@@ -51,9 +51,13 @@ endif()
 
 if(APPLE)
     set(OPENSSL_ROOT_DIR "/opt/homebrew/opt/openssl@3")
+    set(zstd_ROOT "/opt/homebrew/opt/zstd")
 elseif(WIN32)
     set(OPENSSL_ROOT_DIR "D:/msys64/mingw64")
+    set(zstd_ROOT "D:/msys64/mingw64")
 endif()
+
+find_package(zstd REQUIRED)
 
 find_package(OpenSSL REQUIRED)
 if(OpenSSL_FOUND)
@@ -542,6 +546,7 @@ target_link_libraries(
             YXlsx::YXlsx
             OpenSSL::SSL
             OpenSSL::Crypto
+            zstd::libzstd_static
 )
 
 # -----------------------------
