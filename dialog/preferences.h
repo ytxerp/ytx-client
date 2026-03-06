@@ -74,17 +74,17 @@ private slots:
 
 private:
     void IniDialog(ItemModel* unit_model, Section section);
-    void IniCombo(QComboBox* combo, CStringList& list);
+    static void IniCombo(QComboBox* combo, CStringList& list);
 
     void IniConnect();
     void IniStringList();
     void ResizeLine(QLineEdit* line, CString& text);
     void IniText(Section section);
 
-    void IniData(Section section);
-    void IniDataCombo(QComboBox* combo, const QUuid& value);
-    void IniDataCombo(QComboBox* combo, int value);
-    void IniDataCombo(QComboBox* combo, CString& string);
+    void IniData();
+    static void IniDataCombo(QComboBox* combo, const QUuid& value);
+    static void IniDataCombo(QComboBox* combo, int value);
+    static void IniDataCombo(QComboBox* combo, CString& string);
 
 private:
     Ui::Preferences* ui;

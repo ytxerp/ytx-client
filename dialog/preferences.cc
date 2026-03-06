@@ -24,7 +24,7 @@ Preferences::Preferences(CTreeModel* model, CSectionInfo& info, CAppConfig& app,
     IniStringList();
     IniDialog(info.unit_model, info.section);
     IniConnect();
-    IniData(info.section);
+    IniData();
     IniText(info.section);
 }
 
@@ -71,7 +71,7 @@ void Preferences::IniCombo(QComboBox* combo, CStringList& list) { combo->addItem
 
 void Preferences::IniConnect() { connect(ui->pBtnOk, &QPushButton::clicked, this, &Preferences::on_pBtnApply_clicked); }
 
-void Preferences::IniData(Section section)
+void Preferences::IniData()
 {
     IniDataCombo(ui->comboTheme, app_.theme);
     IniDataCombo(ui->comboLanguage, app_.language);

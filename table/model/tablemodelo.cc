@@ -504,7 +504,7 @@ void TableModelO::ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) 
     entry->unit_price = entry_hub_p_->UnitPrice(d_node_->partner_id, internal_sku).value_or(tree_model_i_->UnitPrice(internal_sku));
 }
 
-void TableModelO::RecalculateAmount(EntryO* entry) const
+void TableModelO::RecalculateAmount(EntryO* entry)
 {
     if (!entry)
         return;

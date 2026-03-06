@@ -93,7 +93,7 @@ private:
     bool UpdateDescription(EntryO* entry, const QString& value, bool is_persisted);
 
     void ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) const;
-    void RecalculateAmount(EntryO* entry) const;
+    static void RecalculateAmount(EntryO* entry);
 
     void PurifyEntry();
     void NormalizeEntryBuffer();
