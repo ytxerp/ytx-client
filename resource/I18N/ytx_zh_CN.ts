@@ -385,7 +385,7 @@ Rage, rage against the dying of the light.</source>
     <message>
         <location filename="../../dialog/deletenode/exactmatchconfirmdialog.ui" line="67"/>
         <source>Please enter the complete text to confirm!</source>
-        <translation>请输入完整文字进行确认！</translation>
+        <translation>请输入完整文本进行确认！</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/exactmatchconfirmdialog.ui" line="100"/>
@@ -2292,27 +2292,27 @@ You need to recall it first before making changes.</source>
         <translation>期末余额</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="203"/>
+        <location filename="../../utils/mainwindowutils.cc" line="204"/>
         <source>Connecting to server...</source>
         <translation>正在连接服务器…</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="208"/>
+        <location filename="../../utils/mainwindowutils.cc" line="209"/>
         <source>Connected to server</source>
         <translation>已连接</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="213"/>
+        <location filename="../../utils/mainwindowutils.cc" line="214"/>
         <source>Disconnected from server</source>
         <translation>已断开</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="228"/>
+        <location filename="../../utils/mainwindowutils.cc" line="229"/>
         <source>Logged in</source>
         <translation>已登录</translation>
     </message>
     <message>
-        <location filename="../../utils/mainwindowutils.cc" line="233"/>
+        <location filename="../../utils/mainwindowutils.cc" line="234"/>
         <source>Logged out</source>
         <translation>已登出</translation>
     </message>
