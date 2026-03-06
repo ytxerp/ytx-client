@@ -32,7 +32,7 @@ class ExactMatchConfirmDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit ExactMatchConfirmDialog(CString& info, CString& accept_text, QString match_text, QWidget* parent = nullptr);
+    explicit ExactMatchConfirmDialog(CString& info, CString& accept_text, QWidget* parent = nullptr);
     ~ExactMatchConfirmDialog() override;
 
 private:

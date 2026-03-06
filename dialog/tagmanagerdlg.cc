@@ -65,7 +65,7 @@ void TagManagerDlg::on_pBtnDelete_clicked()
                             "<br><br><i>Note: Tag references in nodes and entries will be preserved but no longer displayed.</i>")
             .arg(tag->name) };
 
-    auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), tag->name, this) };
+    auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), this) };
     dlg->setWindowModality(Qt::WindowModal);
     dlg->setAttribute(Qt::WA_DeleteOnClose);
     connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, idx]() { model_->removeRows(idx.row(), 1); });

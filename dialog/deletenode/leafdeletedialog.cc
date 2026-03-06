@@ -112,7 +112,7 @@ void LeafDeleteDialog::ReplaceNode()
                             "</span>")
             .arg(path, new_path) };
 
-    auto* dlg { new ExactMatchConfirmDialog(info, tr("Replace"), path, this) };
+    auto* dlg { new ExactMatchConfirmDialog(info, tr("Replace"), this) };
     dlg->setWindowModality(Qt::WindowModal);
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -170,7 +170,7 @@ void LeafDeleteDialog::DeleteNode()
         break;
     }
 
-    auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), path, this) };
+    auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), this) };
     dlg->setWindowModality(Qt::WindowModal);
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
