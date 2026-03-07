@@ -2378,18 +2378,30 @@ You need to recall it first before making changes.</source>
 <context>
     <name>StatementEntryWidget</name>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.ui" line="95"/>
         <source>IMM</source>
+        <translation type="vanished">现结</translation>
+    </message>
+    <message>
+        <source>MON</source>
+        <translation type="vanished">月结</translation>
+    </message>
+    <message>
+        <source>PEN</source>
+        <translation type="vanished">挂帐</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statemententrywidget.ui" line="95"/>
+        <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
         <location filename="../../billing/statement/statemententrywidget.ui" line="102"/>
-        <source>MON</source>
+        <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
         <location filename="../../billing/statement/statemententrywidget.ui" line="109"/>
-        <source>PEN</source>
+        <source>PEND</source>
         <translation>挂帐</translation>
     </message>
     <message>
@@ -2403,7 +2415,7 @@ You need to recall it first before making changes.</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.cc" line="147"/>
+        <location filename="../../billing/statement/statemententrywidget.cc" line="151"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
@@ -2411,18 +2423,30 @@ You need to recall it first before making changes.</source>
 <context>
     <name>StatementNodeWidget</name>
     <message>
-        <location filename="../../billing/statement/statementnodewidget.ui" line="95"/>
         <source>IMM</source>
+        <translation type="vanished">现结</translation>
+    </message>
+    <message>
+        <source>MON</source>
+        <translation type="vanished">月结</translation>
+    </message>
+    <message>
+        <source>PEN</source>
+        <translation type="vanished">挂帐</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statementnodewidget.ui" line="95"/>
+        <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
         <location filename="../../billing/statement/statementnodewidget.ui" line="102"/>
-        <source>MON</source>
+        <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
         <location filename="../../billing/statement/statementnodewidget.ui" line="109"/>
-        <source>PEN</source>
+        <source>PEND</source>
         <translation>挂帐</translation>
     </message>
     <message>
@@ -2434,18 +2458,30 @@ You need to recall it first before making changes.</source>
 <context>
     <name>StatementWidget</name>
     <message>
-        <location filename="../../billing/statement/statementwidget.ui" line="95"/>
         <source>IMM</source>
+        <translation type="vanished">现结</translation>
+    </message>
+    <message>
+        <source>MON</source>
+        <translation type="vanished">月结</translation>
+    </message>
+    <message>
+        <source>PEN</source>
+        <translation type="vanished">挂帐</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statementwidget.ui" line="95"/>
+        <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
         <location filename="../../billing/statement/statementwidget.ui" line="102"/>
-        <source>MON</source>
+        <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
         <location filename="../../billing/statement/statementwidget.ui" line="109"/>
-        <source>PEN</source>
+        <source>PEND</source>
         <translation>挂帐</translation>
     </message>
     <message>
@@ -2513,71 +2549,66 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="235"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="156"/>
         <source>Preview</source>
         <translation>预览</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="245"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="157"/>
         <source>Print</source>
         <translation>打印</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="271"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="153"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="281"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="155"/>
         <source>Recall</source>
         <translation>撤回</translation>
     </message>
     <message>
         <location filename="../../table/widget/tablewidgeto.ui" line="258"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="154"/>
         <source>Release</source>
         <translation>发布</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="396"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="402"/>
         <source>No Template</source>
         <translation>没有模板</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="396"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="402"/>
         <source>No printable template was found.</source>
         <translation>找不到可用的打印模板。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="441"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="447"/>
         <source>This order has already been settled and cannot be operated.</source>
         <translation>订单已经结算，无法再编辑了。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="463"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="469"/>
         <source>Please select a partner before performing this action.</source>
         <translation>请先选择一个交易对象。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="474"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="480"/>
         <source>Invalid Operation</source>
         <translation>无效操作</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="475"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="481"/>
         <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="441"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="447"/>
         <source>Order Settled</source>
         <translation>已结算</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="463"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="469"/>
         <source>Partner Required</source>
         <translation>必需选择交易对象</translation>
     </message>
@@ -2596,13 +2627,11 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../billing/settlement/tablewidgetsettlement.ui" line="125"/>
-        <location filename="../../billing/settlement/tablewidgetsettlement.cc" line="58"/>
         <source>Release</source>
         <translation>发布</translation>
     </message>
     <message>
         <location filename="../../billing/settlement/tablewidgetsettlement.ui" line="115"/>
-        <location filename="../../billing/settlement/tablewidgetsettlement.cc" line="59"/>
         <source>Recall</source>
         <translation>撤回</translation>
     </message>
