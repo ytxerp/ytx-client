@@ -90,23 +90,23 @@
        </spacer>
       </item>
       <item>
-       <widget class="QRadioButton" name="rBtnIMM">
+       <widget class="QRadioButton" name="rBtnIS">
         <property name="text">
-         <string>IMM</string>
+         <string>IS</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="rBtnMON">
+       <widget class="QRadioButton" name="rBtnMS">
         <property name="text">
-         <string>MON</string>
+         <string>MS</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="rBtnPEN">
+       <widget class="QRadioButton" name="rBtnPEND">
         <property name="text">
-         <string>PEN</string>
+         <string>PEND</string>
         </property>
        </widget>
       </item>

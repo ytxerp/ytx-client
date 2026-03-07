@@ -20,6 +20,8 @@
 #ifndef MAINWINDOWUTILS_H
 #define MAINWINDOWUTILS_H
 
+#include <QtWidgets/qradiobutton.h>
+
 #include <QLabel>
 #include <QMessageBox>
 #include <QSettings>
@@ -33,7 +35,8 @@ namespace Utils {
 void ResetSectionContext(SectionContext& sc);
 void SetConnectionStatus(QLabel* label, ConnectionStatus status);
 void SetLoginStatus(QLabel* label, LoginStatus status);
-void SetButton(QPushButton* btn, const QString& text, const QKeySequence& ks);
+void SetPushButton(QPushButton* btn, const QKeySequence& ks);
+void SetRadioButton(QRadioButton* btn, const QKeySequence& ks);
 
 QString AccountIniFileName(const QString& email, const QString& workspace);
 QString UuidToShortCode(const QUuid& uuid, int length = 10);

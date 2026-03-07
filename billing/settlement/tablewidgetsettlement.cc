@@ -55,8 +55,8 @@ void TableWidgetSettlement::InitWidget()
     ui->dSpinAmount->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
     ui->dSpinAmount->setDecimals(config_.amount_decimal);
 
-    Utils::SetButton(ui->pBtnRelease, tr("Release"), QKeySequence(Qt::CTRL | Qt::Key_Return));
-    Utils::SetButton(ui->pBtnRecall, tr("Recall"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
+    Utils::SetPushButton(ui->pBtnRelease, QKeySequence(Qt::CTRL | Qt::Key_Return));
+    Utils::SetPushButton(ui->pBtnRecall, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
 }
 
 void TableWidgetSettlement::InitData()

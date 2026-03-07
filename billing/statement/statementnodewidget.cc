@@ -8,6 +8,7 @@
 #include "enum/nodeenum.h"
 #include "enum/statementenum.h"
 #include "ui_statementnodewidget.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -85,9 +86,9 @@ void StatementNodeWidget::RUnitGroupClicked(int id)
 void StatementNodeWidget::IniUnitGroup()
 {
     unit_group_ = new QButtonGroup(this);
-    unit_group_->addButton(ui->rBtnIMM, std::to_underlying(NodeUnit::OImmediate));
-    unit_group_->addButton(ui->rBtnMON, std::to_underlying(NodeUnit::OMonthly));
-    unit_group_->addButton(ui->rBtnPEN, std::to_underlying(NodeUnit::OPending));
+    unit_group_->addButton(ui->rBtnIS, std::to_underlying(NodeUnit::OImmediate));
+    unit_group_->addButton(ui->rBtnMS, std::to_underlying(NodeUnit::OMonthly));
+    unit_group_->addButton(ui->rBtnPEND, std::to_underlying(NodeUnit::OPending));
 }
 
 void StatementNodeWidget::IniConnect() { connect(unit_group_, &QButtonGroup::idClicked, this, &StatementNodeWidget::RUnitGroupClicked); }
@@ -98,13 +99,13 @@ void StatementNodeWidget::IniUnit(int unit)
 
     switch (kUnit) {
     case NodeUnit::OImmediate:
-        ui->rBtnIMM->setChecked(true);
+        ui->rBtnIS->setChecked(true);
         break;
     case NodeUnit::OMonthly:
-        ui->rBtnMON->setChecked(true);
+        ui->rBtnMS->setChecked(true);
         break;
     case NodeUnit::OPending:
-        ui->rBtnPEN->setChecked(true);
+        ui->rBtnPEND->setChecked(true);
         break;
     default:
         break;
@@ -120,6 +121,10 @@ void StatementNodeWidget::IniWidget()
 
     ui->start->setDateTime(start_);
     ui->end->setDateTime(end_.addSecs(-1));
+
+    Utils::SetRadioButton(ui->rBtnIS, QKeySequence(Qt::CTRL | Qt::Key_1));
+    Utils::SetRadioButton(ui->rBtnMS, QKeySequence(Qt::CTRL | Qt::Key_2));
+    Utils::SetRadioButton(ui->rBtnPEND, QKeySequence(Qt::CTRL | Qt::Key_3));
 }
 
 void StatementNodeWidget::InitTimer()

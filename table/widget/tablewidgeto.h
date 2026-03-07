@@ -99,13 +99,13 @@ private slots:
     void on_pBtnRelease_clicked();
 
 private:
-    void IniWidget();
-    void IniConnect();
-    void IniData(const NodeO* node);
+    void InitWidget();
+    void InitConnect();
+    void InitData(const NodeO* node);
     void LockWidgets(NodeStatus value);
-    void IniRuleGroup();
-    void IniUnitGroup();
-    void IniUiValue();
+    void InitRuleGroup();
+    void InitUnitGroup();
+    void InitUiValue();
 
     bool PreparePrint();
 

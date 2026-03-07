@@ -23,11 +23,11 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, NodeO* node, SyncState sync_sta
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    IniWidget();
-    IniRuleGroup();
-    IniUnitGroup();
-    IniData(tmp_node_);
-    IniConnect();
+    InitWidget();
+    InitRuleGroup();
+    InitUnitGroup();
+    InitData(tmp_node_);
+    InitConnect();
 
     if (sync_state == SyncState::kNew)
         QTimer::singleShot(0, this, [this]() { ui->comboPartner->setFocus(); });
@@ -105,11 +105,11 @@ void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, doubl
         tmp_node_->discount_total += discount_delta;
         tmp_node_->final_total += adjusted_final_delta;
 
-        IniUiValue();
+        InitUiValue();
     }
 }
 
-void TableWidgetO::IniWidget()
+void TableWidgetO::InitWidget()
 {
     {
         auto* pmodel { tree_model_partner_->IncludeUnit(section_ == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor, this) };
@@ -150,11 +150,17 @@ void TableWidgetO::IniWidget()
     }
 
     {
-        Utils::SetButton(ui->pBtnSave, tr("Save"), QKeySequence::Save);
-        Utils::SetButton(ui->pBtnRelease, tr("Release"), QKeySequence(Qt::CTRL | Qt::Key_Return));
-        Utils::SetButton(ui->pBtnRecall, tr("Recall"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
-        Utils::SetButton(ui->pBtnPreview, tr("Preview"), QKeySequence(Qt::CTRL | Qt::Key_P));
-        Utils::SetButton(ui->pBtnPrint, tr("Print"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
+        Utils::SetPushButton(ui->pBtnSave, QKeySequence::Save);
+        Utils::SetPushButton(ui->pBtnRelease, QKeySequence(Qt::CTRL | Qt::Key_Return));
+        Utils::SetPushButton(ui->pBtnRecall, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
+        Utils::SetPushButton(ui->pBtnPreview, QKeySequence(Qt::CTRL | Qt::Key_P));
+        Utils::SetPushButton(ui->pBtnPrint, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
+
+        Utils::SetRadioButton(ui->rBtnIS, QKeySequence(Qt::CTRL | Qt::Key_1));
+        Utils::SetRadioButton(ui->rBtnMS, QKeySequence(Qt::CTRL | Qt::Key_2));
+        Utils::SetRadioButton(ui->rBtnPEND, QKeySequence(Qt::CTRL | Qt::Key_3));
+        Utils::SetRadioButton(ui->rBtnRO, QKeySequence(Qt::CTRL | Qt::Key_4));
+        Utils::SetRadioButton(ui->rBtnFO, QKeySequence(Qt::CTRL | Qt::Key_5));
     }
 
     {
@@ -165,13 +171,13 @@ void TableWidgetO::IniWidget()
     }
 }
 
-void TableWidgetO::IniConnect()
+void TableWidgetO::InitConnect()
 {
     connect(rule_group_, &QButtonGroup::idClicked, this, &TableWidgetO::RRuleGroupClicked);
     connect(unit_group_, &QButtonGroup::idClicked, this, &TableWidgetO::RUnitGroupClicked);
 }
 
-void TableWidgetO::IniData(const NodeO* node)
+void TableWidgetO::InitData(const NodeO* node)
 {
     {
         (node->direction_rule ? ui->rBtnRO : ui->rBtnFO)->setChecked(true);
@@ -204,7 +210,7 @@ void TableWidgetO::IniData(const NodeO* node)
         return;
 
     {
-        IniUiValue();
+        InitUiValue();
 
         ui->lineDescription->setText(node->description);
 
@@ -240,7 +246,7 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->pBtnRecall->setEnabled(is_released);
 }
 
-void TableWidgetO::IniUiValue()
+void TableWidgetO::InitUiValue()
 {
     ui->dSpinFinalTotal->setValue(tmp_node_->final_total);
     ui->dSpinDiscountTotal->setValue(tmp_node_->discount_total);
@@ -249,14 +255,14 @@ void TableWidgetO::IniUiValue()
     ui->dSpinInitialTotal->setValue(tmp_node_->initial_total);
 }
 
-void TableWidgetO::IniRuleGroup()
+void TableWidgetO::InitRuleGroup()
 {
     rule_group_ = new QButtonGroup(this);
     rule_group_->addButton(ui->rBtnRO, static_cast<int>(Rule::kRO));
     rule_group_->addButton(ui->rBtnFO, static_cast<int>(Rule::kFO));
 }
 
-void TableWidgetO::IniUnitGroup()
+void TableWidgetO::InitUnitGroup()
 {
     unit_group_ = new QButtonGroup(this);
     unit_group_->addButton(ui->rBtnIS, std::to_underlying(NodeUnit::OImmediate));
@@ -338,7 +344,7 @@ void TableWidgetO::RRuleGroupClicked(int id)
     tmp_node_->discount_total *= -1;
     tmp_node_->final_total *= -1;
 
-    IniUiValue();
+    InitUiValue();
 }
 
 void TableWidgetO::RUnitGroupClicked(int id)

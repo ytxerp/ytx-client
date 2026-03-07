@@ -239,13 +239,19 @@ void Utils::SetLoginStatus(QLabel* label, LoginStatus status)
     Q_UNREACHABLE();
 }
 
-void Utils::SetButton(QPushButton* btn, const QString& text, const QKeySequence& ks)
+void Utils::SetPushButton(QPushButton* btn, const QKeySequence& ks)
 {
     Q_ASSERT(btn != nullptr);
 
     btn->setShortcut(ks);
-    btn->setText(text);
-    btn->setToolTip(QString("%1 (%2)").arg(text, ks.toString()));
+    btn->setToolTip(QString("%1 (%2)").arg(btn->text(), ks.toString()));
+}
+
+void Utils::SetRadioButton(QRadioButton* btn, const QKeySequence& ks)
+{
+    Q_ASSERT(btn != nullptr);
+    btn->setShortcut(ks);
+    btn->setToolTip(QString("%1 (%2)").arg(btn->text(), ks.toString()));
 }
 
 /**

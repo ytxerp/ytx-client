@@ -90,9 +90,9 @@ void StatementEntryWidget::RUnitGroupClicked(int id)
 void StatementEntryWidget::IniUnitGroup()
 {
     unit_group_ = new QButtonGroup(this);
-    unit_group_->addButton(ui->rBtnIMM, std::to_underlying(NodeUnit::OImmediate));
-    unit_group_->addButton(ui->rBtnMON, std::to_underlying(NodeUnit::OMonthly));
-    unit_group_->addButton(ui->rBtnPEN, std::to_underlying(NodeUnit::OPending));
+    unit_group_->addButton(ui->rBtnIS, std::to_underlying(NodeUnit::OImmediate));
+    unit_group_->addButton(ui->rBtnMS, std::to_underlying(NodeUnit::OMonthly));
+    unit_group_->addButton(ui->rBtnPEND, std::to_underlying(NodeUnit::OPending));
 }
 
 void StatementEntryWidget::IniConnect() { connect(unit_group_, &QButtonGroup::idClicked, this, &StatementEntryWidget::RUnitGroupClicked); }
@@ -103,13 +103,13 @@ void StatementEntryWidget::IniUnit(int unit)
 
     switch (kUnit) {
     case NodeUnit::OImmediate:
-        ui->rBtnIMM->setChecked(true);
+        ui->rBtnIS->setChecked(true);
         break;
     case NodeUnit::OMonthly:
-        ui->rBtnMON->setChecked(true);
+        ui->rBtnMS->setChecked(true);
         break;
     case NodeUnit::OPending:
-        ui->rBtnPEN->setChecked(true);
+        ui->rBtnPEND->setChecked(true);
         break;
     default:
         break;
@@ -125,6 +125,10 @@ void StatementEntryWidget::IniWidget()
 
     ui->start->setDateTime(start_);
     ui->end->setDateTime(end_.addSecs(-1));
+
+    Utils::SetRadioButton(ui->rBtnIS, QKeySequence(Qt::CTRL | Qt::Key_1));
+    Utils::SetRadioButton(ui->rBtnMS, QKeySequence(Qt::CTRL | Qt::Key_2));
+    Utils::SetRadioButton(ui->rBtnPEND, QKeySequence(Qt::CTRL | Qt::Key_3));
 }
 
 void StatementEntryWidget::InitTimer()
