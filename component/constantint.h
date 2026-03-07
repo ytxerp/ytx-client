@@ -50,4 +50,8 @@ inline constexpr qsizetype kExpandSize = 100;
 inline constexpr qsizetype kMaxSize = 1000;
 }
 
+namespace ZstdConst {
+inline constexpr qsizetype kCompressThreshold { 256 };
+}
+
 #endif // CONSTANTINT_H

@@ -223,7 +223,6 @@ void WebSocket::InitConnect()
     connect(&socket_, &QWebSocket::connected, this, &WebSocket::RConnected);
     connect(&socket_, &QWebSocket::disconnected, this, &WebSocket::RDisconnected);
     connect(&socket_, &QWebSocket::errorOccurred, this, &WebSocket::RErrorOccurred);
-    connect(&socket_, &QWebSocket::textMessageReceived, this, &WebSocket::RTextMessageReceived);
     connect(&socket_, &QWebSocket::binaryMessageReceived, this, &WebSocket::RBinaryMessageReceived);
     connect(&socket_, &QWebSocket::pong, this, &WebSocket::RPong);
 }
@@ -258,9 +257,9 @@ void WebSocket::SendMessage(const QString& key, const QJsonObject& value)
     }
 
     const QJsonObject root { { WsField::kKey, key }, { WsField::kValue, value } };
-    const QByteArray json { QJsonValue(root).toJson(QJsonValue::JsonFormat::Compact) };
+    const QByteArray byte { QJsonValue(root).toJson(QJsonValue::JsonFormat::Compact) };
 
-    socket_.sendTextMessage(QString::fromUtf8(json));
+    socket_.sendBinaryMessage(Utils::ZstdCompress(byte));
 }
 
 void WebSocket::ProcessMessage(const QByteArray& data)
@@ -306,25 +305,13 @@ void WebSocket::ProcessMessage(const QByteArray& data)
     qWarning() << "[WS]" << "Unsupported server message:" << key;
 }
 
-void WebSocket::RTextMessageReceived(const QString& message)
-{
-    // Any incoming server message indicates the connection is alive, reset timeout
-    timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
-    ProcessMessage(message.toUtf8());
-}
-
 void WebSocket::RBinaryMessageReceived(const QByteArray& data)
 {
+    Q_ASSERT(!data.isEmpty());
+
     timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
 
-    if (!Utils::IsZstdCompressed(data)) {
-        ProcessMessage(data);
-        return;
-    }
-
     const QByteArray decompressed { Utils::ZstdDecompress(data) };
-    Q_ASSERT(!decompressed.isEmpty());
-
     ProcessMessage(decompressed);
 }
 

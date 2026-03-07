@@ -312,9 +312,8 @@ QUuid Utils::ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dia
 
 QByteArray Utils::ZstdDecompress(const QByteArray& data)
 {
-    if (data.isEmpty()) {
-        return {};
-    }
+    if (!data.startsWith("\x28\xB5\x2F\xFD"))
+        return data;
 
     // Attempt to retrieve the exact decompressed size from the zstd frame header.
     // This is available in the vast majority of zstd frames.
@@ -326,15 +325,22 @@ QByteArray Utils::ZstdDecompress(const QByteArray& data)
     }
 
     if (content_size == ZSTD_CONTENTSIZE_UNKNOWN) {
-        qWarning() << "[ZstdDecompress] Content size unknown (old compressed data?)";
+        qWarning() << "[ZstdDecompress] Content size unknown";
         return {};
     }
 
     // Allocate the output buffer without zero-initialisation for performance.
     QByteArray result(static_cast<qsizetype>(content_size), Qt::Uninitialized);
 
-    // Decompress the entire input in a single call.
-    size_t const ret { ZSTD_decompress(result.data(), static_cast<size_t>(result.size()), data.constData(), static_cast<size_t>(data.size())) };
+    static ZSTD_DCtx* dctx { ZSTD_createDCtx() };
+    if (!dctx) {
+        qWarning() << "[ZstdDecompress] Failed to create DCtx";
+        return {};
+    }
+
+    ZSTD_DCtx_reset(dctx, ZSTD_reset_session_only);
+
+    size_t const ret { ZSTD_decompressDCtx(dctx, result.data(), static_cast<size_t>(result.size()), data.constData(), static_cast<size_t>(data.size())) };
 
     if (ZSTD_isError(ret)) {
         qWarning() << "[ZstdDecompress] Error:" << ZSTD_getErrorName(ret);
@@ -342,9 +348,41 @@ QByteArray Utils::ZstdDecompress(const QByteArray& data)
     }
 
     if (ret != static_cast<size_t>(result.size())) {
-        qWarning() << "[ZstdDecompress] Decompressed size mismatch:" << ret << "!=" << result.size();
+        qWarning() << "[ZstdDecompress] Size mismatch:" << ret << "!=" << result.size();
         return {};
     }
+
+    return result;
+}
+
+QByteArray Utils::ZstdCompress(const QByteArray& data)
+{
+    // Skip compression for small payloads, as zstd overhead may increase size.
+    if (data.size() < ZstdConst::kCompressThreshold)
+        return data;
+
+    size_t const bound { ZSTD_compressBound(static_cast<size_t>(data.size())) };
+    QByteArray result(static_cast<qsizetype>(bound), Qt::Uninitialized);
+
+    static ZSTD_CCtx* const cctx { ZSTD_createCCtx() };
+    if (!cctx) {
+        qWarning() << "Zstd compress error: failed to create CCtx";
+        return {};
+    }
+
+    ZSTD_CCtx_reset(cctx, ZSTD_reset_session_only);
+    ZSTD_CCtx_setParameter(cctx, ZSTD_c_contentSizeFlag, 1);
+    ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, 3);
+    ZSTD_CCtx_setPledgedSrcSize(cctx, static_cast<unsigned long long>(data.size()));
+
+    size_t const compressed_size { ZSTD_compress2(cctx, result.data(), bound, data.constData(), static_cast<size_t>(data.size())) };
+
+    if (ZSTD_isError(compressed_size)) {
+        qWarning() << "Zstd compress error:" << ZSTD_getErrorName(compressed_size);
+        return {};
+    }
+
+    result.resize(static_cast<qsizetype>(compressed_size));
 
     return result;
 }

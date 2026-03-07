@@ -44,16 +44,8 @@ QString UuidToShortCode(const QUuid& uuid, int length = 10);
 QUuid ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog);
 void ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where = true);
 
+QByteArray ZstdCompress(const QByteArray& data);
 QByteArray ZstdDecompress(const QByteArray& data);
-// Check zstd magic number (0xFD2FB528) to determine if data is compressed.
-inline bool IsZstdCompressed(const QByteArray& data)
-{
-    if (data.size() < 4) {
-        return false;
-    }
-
-    return memcmp(data.constData(), "\x28\xB5\x2F\xFD", 4) == 0;
-}
 
 inline void CloseWidget(const QUuid& node_id, QHash<QUuid, WidgetContext>& widget_hash)
 {
