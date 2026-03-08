@@ -51,93 +51,229 @@
 //     e.g. "node_insert" -> InsertNode(), "login_notify" -> NotifyLogin()
 // =============================================================
 
-namespace WsKey {
-// ---------------- Auth ----------------
-// Client requests
-inline const QString kLogin { QStringLiteral("login") }; // send-only: client login request
-inline const QString kRegister { QStringLiteral("register") }; // send-only: client register request
-// Server responses
-inline const QString kLoginNotify = QStringLiteral("login_notify"); // server response for login
-inline const QString kRegisterNotify = QStringLiteral("register_notify"); // server response for register
+enum class WsKey : uint8_t {
+    // --- Auth ---
+    kLogin = 1,
+    kRegister,
+    kLoginNotify,
+    kRegisterNotify,
 
-// Config
-inline const QString kSharedConfigApply { QStringLiteral("shared_config_apply") };
-inline const QString kPartnerEntryApply { QStringLiteral("partner_entry_apply") };
-inline const QString kDefaultUnitUpdate { QStringLiteral("default_unit_update") };
-inline const QString kDefaultUnitDeny { QStringLiteral("default_unit_deny") };
-inline const QString kDocumentDirUpdate { QStringLiteral("document_dir_update") };
+    // --- Config ---
+    kSharedConfigApply,
+    kPartnerEntryApply,
+    kDefaultUnitUpdate,
+    kDefaultUnitDeny,
+    kDocumentDirUpdate,
 
-// Ack
-inline const QString kTreeAck { QStringLiteral("tree_ack") };
-inline const QString kTableAck { QStringLiteral("table_ack") };
-inline const QString kOrderReferenceAck { QStringLiteral("order_reference_ack") };
-inline const QString kStatementAck { QStringLiteral("statement_ack") };
-inline const QString kStatementNodeAck { QStringLiteral("statement_node_ack") };
-inline const QString kStatementEntryAck { QStringLiteral("statement_entry_ack") };
-inline const QString kSettlementAck { QStringLiteral("settlement_ack") };
-inline const QString kSettlementItemAck { QStringLiteral("settlement_item_ack") };
-inline const QString kNodeAck { QStringLiteral("node_ack") };
+    // --- Ack ---
+    kTreeAck,
+    kTableAck,
+    kOrderReferenceAck,
+    kStatementAck,
+    kStatementNodeAck,
+    kStatementEntryAck,
+    kSettlementAck,
+    kSettlementItemAck,
+    kNodeAck,
 
-// ⚠️ no handler needed
-// server never emits this message
-// recall already synchronizes client state
-inline const QString kSettlementDelete = QStringLiteral("settlement_delete");
+    // --- Settlement ---
+    kSettlementInsert,
+    kSettlementUpdate,
+    kSettlementRecall,
 
-// Settlement
-inline const QString kSettlementInsert { QStringLiteral("settlement_insert") };
-inline const QString kSettlementUpdate { QStringLiteral("settlement_update") };
-inline const QString kSettlementRecall { QStringLiteral("settlement_recall") };
+    // ⚠️ no handler needed
+    // server never emits this message
+    // recall already synchronizes client state
+    kSettlementDelete,
 
-// Tree
-inline const QString kTreeApply { QStringLiteral("tree_apply") };
-inline const QString kTreeSyncFinish { QStringLiteral("tree_sync_finish") };
-inline const QString kNodeInsert { QStringLiteral("node_insert") };
-inline const QString kNodeUpdate { QStringLiteral("node_update") };
-inline const QString kNodeSearch { QStringLiteral("node_search") };
-inline const QString kNodeNameUpdate { QStringLiteral("node_name_update") };
-inline const QString kNodeDrag { QStringLiteral("node_drag") };
-inline const QString kLeafDelete { QStringLiteral("leaf_delete") };
-inline const QString kLeafDeleteP { QStringLiteral("leaf_delete_p") };
-inline const QString kLeafDeleteO { QStringLiteral("leaf_delete_o") };
-inline const QString kLeafReplace { QStringLiteral("leaf_replace") };
-inline const QString kBranchDelete { QStringLiteral("branch_delete") };
-inline const QString kNodeDirectionRuleUpdate { QStringLiteral("node_direction_rule_update") };
+    // --- Tree ---
+    kTreeApply,
+    kTreeSyncFinish,
+    kNodeInsert,
+    kNodeUpdate,
+    kNodeSearch,
+    kNodeNameUpdate,
+    kNodeDrag,
+    kLeafDelete,
+    kLeafDeleteP,
+    kLeafDeleteO,
+    kLeafReplace,
+    kBranchDelete,
+    kNodeDirectionRuleUpdate,
 
-// --- Leaf delete flow ---
-// client send: kLeafDeleteCheck
-// server response:
-//   - kLeafDeleteDenied
-//   - kLeafDeleteSafely
-inline const QString kLeafDeleteCheck = QStringLiteral("leaf_delete_check"); // send-only
-inline const QString kLeafDeleteDeny = QStringLiteral("leaf_delete_deny"); // push
-inline const QString kLeafDeleteAllow = QStringLiteral("leaf_delete_allow"); // push
+    // --- Leaf delete flow ---
+    kLeafDeleteCheck,
+    kLeafDeleteDeny,
+    kLeafDeleteAllow,
 
-// Tag
-inline const QString kTagApply { QStringLiteral("tag_apply") };
-inline const QString kTagInsert { QStringLiteral("tag_insert") };
-inline const QString kTagUpdate { QStringLiteral("tag_update") };
-inline const QString kTagDelete { QStringLiteral("tag_delete") };
+    // --- Tag ---
+    kTagApply,
+    kTagInsert,
+    kTagUpdate,
+    kTagDelete,
 
-// Entry
-inline const QString kEntryInsert { QStringLiteral("entry_insert") };
-inline const QString kEntryUpdate { QStringLiteral("entry_update") };
-inline const QString kEntryDelete { QStringLiteral("entry_delete") };
-inline const QString kEntryDescriptionSearch { QStringLiteral("entry_description_search") };
-inline const QString kEntryTagSearch { QStringLiteral("entry_tag_search") };
-inline const QString kBatchMark { QStringLiteral("batch_mark") };
-inline const QString kEntryLinkedNodeUpdate { QStringLiteral("entry_linked_node_update") };
-inline const QString kEntryRateUpdate { QStringLiteral("entry_rate_update") };
-inline const QString kEntryNumericUpdate { QStringLiteral("entry_numeric_update") };
+    // --- Entry ---
+    kEntryInsert,
+    kEntryUpdate,
+    kEntryDelete,
+    kEntryDescriptionSearch,
+    kEntryTagSearch,
+    kBatchMark,
+    kEntryLinkedNodeUpdate,
+    kEntryRateUpdate,
+    kEntryNumericUpdate,
 
-// Order
-inline const QString kOrderInsertSave { QStringLiteral("order_insert_save") };
-inline const QString kOrderUpdateSave { QStringLiteral("order_update_save") };
-inline const QString kOrderInsertRelease { QStringLiteral("order_insert_release") };
-inline const QString kOrderUpdateRelease { QStringLiteral("order_update_release") };
-inline const QString kOrderRecall { QStringLiteral("order_recall") };
+    // --- Order ---
+    kOrderInsertSave,
+    kOrderUpdateSave,
+    kOrderInsertRelease,
+    kOrderUpdateRelease,
+    kOrderRecall,
 
-// Misc
-inline const QString kOperationDeny { QStringLiteral("operation_deny") };
+    // --- Misc ---
+    kOperationDeny
+};
+
+constexpr const char* WsMsgToString(WsKey msg)
+{
+    switch (msg) {
+    // --- Auth ---
+    case WsKey::kLogin:
+        return "login";
+    case WsKey::kRegister:
+        return "register";
+    case WsKey::kLoginNotify:
+        return "login_notify";
+    case WsKey::kRegisterNotify:
+        return "register_notify";
+
+    // --- Config ---
+    case WsKey::kSharedConfigApply:
+        return "shared_config_apply";
+    case WsKey::kPartnerEntryApply:
+        return "partner_entry_apply";
+    case WsKey::kDefaultUnitUpdate:
+        return "default_unit_update";
+    case WsKey::kDefaultUnitDeny:
+        return "default_unit_deny";
+    case WsKey::kDocumentDirUpdate:
+        return "document_dir_update";
+
+    // --- Ack ---
+    case WsKey::kTreeAck:
+        return "tree_ack";
+    case WsKey::kTableAck:
+        return "table_ack";
+    case WsKey::kOrderReferenceAck:
+        return "order_reference_ack";
+    case WsKey::kStatementAck:
+        return "statement_ack";
+    case WsKey::kStatementNodeAck:
+        return "statement_node_ack";
+    case WsKey::kStatementEntryAck:
+        return "statement_entry_ack";
+    case WsKey::kSettlementAck:
+        return "settlement_ack";
+    case WsKey::kSettlementItemAck:
+        return "settlement_item_ack";
+    case WsKey::kNodeAck:
+        return "node_ack";
+
+    // --- Settlement ---
+    case WsKey::kSettlementInsert:
+        return "settlement_insert";
+    case WsKey::kSettlementUpdate:
+        return "settlement_update";
+    case WsKey::kSettlementRecall:
+        return "settlement_recall";
+    case WsKey::kSettlementDelete:
+        return "settlement_delete"; // no handler needed
+
+    // --- Tree ---
+    case WsKey::kTreeApply:
+        return "tree_apply";
+    case WsKey::kTreeSyncFinish:
+        return "tree_sync_finish";
+    case WsKey::kNodeInsert:
+        return "node_insert";
+    case WsKey::kNodeUpdate:
+        return "node_update";
+    case WsKey::kNodeSearch:
+        return "node_search";
+    case WsKey::kNodeNameUpdate:
+        return "node_name_update";
+    case WsKey::kNodeDrag:
+        return "node_drag";
+    case WsKey::kLeafDelete:
+        return "leaf_delete";
+    case WsKey::kLeafDeleteP:
+        return "leaf_delete_p";
+    case WsKey::kLeafDeleteO:
+        return "leaf_delete_o";
+    case WsKey::kLeafReplace:
+        return "leaf_replace";
+    case WsKey::kBranchDelete:
+        return "branch_delete";
+    case WsKey::kNodeDirectionRuleUpdate:
+        return "node_direction_rule_update";
+
+    // --- Leaf delete flow ---
+    case WsKey::kLeafDeleteCheck:
+        return "leaf_delete_check";
+    case WsKey::kLeafDeleteDeny:
+        return "leaf_delete_deny";
+    case WsKey::kLeafDeleteAllow:
+        return "leaf_delete_allow";
+
+    // --- Tag ---
+    case WsKey::kTagApply:
+        return "tag_apply";
+    case WsKey::kTagInsert:
+        return "tag_insert";
+    case WsKey::kTagUpdate:
+        return "tag_update";
+    case WsKey::kTagDelete:
+        return "tag_delete";
+
+    // --- Entry ---
+    case WsKey::kEntryInsert:
+        return "entry_insert";
+    case WsKey::kEntryUpdate:
+        return "entry_update";
+    case WsKey::kEntryDelete:
+        return "entry_delete";
+    case WsKey::kEntryDescriptionSearch:
+        return "entry_description_search";
+    case WsKey::kEntryTagSearch:
+        return "entry_tag_search";
+    case WsKey::kBatchMark:
+        return "batch_mark";
+    case WsKey::kEntryLinkedNodeUpdate:
+        return "entry_linked_node_update";
+    case WsKey::kEntryRateUpdate:
+        return "entry_rate_update";
+    case WsKey::kEntryNumericUpdate:
+        return "entry_numeric_update";
+
+    // --- Order ---
+    case WsKey::kOrderInsertSave:
+        return "order_insert_save";
+    case WsKey::kOrderUpdateSave:
+        return "order_update_save";
+    case WsKey::kOrderInsertRelease:
+        return "order_insert_release";
+    case WsKey::kOrderUpdateRelease:
+        return "order_update_release";
+    case WsKey::kOrderRecall:
+        return "order_recall";
+
+    // --- Misc ---
+    case WsKey::kOperationDeny:
+        return "operation_deny";
+
+    default:
+        return "unknown";
+    }
 }
 
 namespace WsField {

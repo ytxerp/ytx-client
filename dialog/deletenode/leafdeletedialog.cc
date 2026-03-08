@@ -181,7 +181,7 @@ void LeafDeleteDialog::DeleteNode()
         if (model_->Path(node_id_) != path)
             return;
 
-        QString key {};
+        WsKey key {};
         QJsonObject value {};
 
         switch (section_) {

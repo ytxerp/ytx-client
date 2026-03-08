@@ -249,34 +249,28 @@ void WebSocket::InitTimer()
     timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
 }
 
-void WebSocket::SendMessage(const QString& key, const QJsonObject& value)
+void WebSocket::SendMessage(WsKey key, const QJsonObject& value)
 {
     if (socket_.state() != QAbstractSocket::ConnectedState) {
         qWarning() << "[WS] Cannot send message: WebSocket is not connected.";
         return;
     }
 
-    const QJsonObject root { { WsField::kKey, key }, { WsField::kValue, value } };
-    const QByteArray byte { QJsonValue(root).toJson(QJsonValue::JsonFormat::Compact) };
+    const QByteArray json { QJsonValue(value).toJson(QJsonValue::JsonFormat::Compact) };
+    QByteArray compressed { Utils::ZstdCompress(json) };
 
-    socket_.sendBinaryMessage(Utils::ZstdCompress(byte));
+    assert(std::to_underlying(key) <= 255);
+    compressed.prepend(static_cast<char>(std::to_underlying(key)));
+
+    socket_.sendBinaryMessage(compressed);
 }
 
-void WebSocket::ProcessMessage(const QByteArray& data)
+void WebSocket::HandleMessage(WsKey key, const QByteArray& payload)
 {
     QJsonParseError err {};
-    const QJsonValue root { QJsonValue::fromJson(data, &err) };
-    if (err.error != QJsonParseError::NoError || !root.isObject()) {
-        qWarning() << "[WS] Invalid message received from server:" << data;
-        return;
-    }
-
-    const QJsonObject obj { root.toObject() };
-    const QString key { obj.value(WsField::kKey).toString() };
-    const QJsonValue value { obj.value(WsField::kValue) };
-
-    if (key.isEmpty()) {
-        qWarning() << "[WS] Missing key in server message:" << data;
+    const QJsonValue value { QJsonValue::fromJson(payload, &err) };
+    if (err.error != QJsonParseError::NoError) {
+        qWarning() << "[WS] Invalid message received from server:" << WsMsgToString(key);
         return;
     }
 
@@ -284,7 +278,7 @@ void WebSocket::ProcessMessage(const QByteArray& data)
     const bool is_array { value.isArray() };
 
     if (!is_object && !is_array) {
-        qWarning() << "[WS] Unsupported value type for key:" << key;
+        qWarning() << "[WS] Unsupported value type for key:" << WsMsgToString(key);
         return;
     }
 
@@ -302,17 +296,18 @@ void WebSocket::ProcessMessage(const QByteArray& data)
         }
     }
 
-    qWarning() << "[WS]" << "Unsupported server message:" << key;
+    qWarning() << "[WS] Unsupported server message:" << WsMsgToString(key);
 }
 
 void WebSocket::RBinaryMessageReceived(const QByteArray& data)
 {
     Q_ASSERT(!data.isEmpty());
-
     timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
 
-    const QByteArray decompressed { Utils::ZstdDecompress(data) };
-    ProcessMessage(decompressed);
+    const auto key { static_cast<WsKey>(static_cast<uint8_t>(data.at(0))) };
+    const QByteArray payload { Utils::ZstdDecompress(data.sliced(1)) };
+
+    HandleMessage(key, payload);
 }
 
 void WebSocket::NotifyLogin(const QJsonObject& obj)

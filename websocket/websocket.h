@@ -25,6 +25,7 @@
 #include <QSettings>
 #include <QWebSocket>
 
+#include "component/constantwebsocket.h"
 #include "entryhub/entryhub.h"
 #include "tree/model/treemodel.h"
 
@@ -36,7 +37,7 @@ public:
 
     void ReadConfig(const QSharedPointer<QSettings>& local_settings);
     void Connect();
-    void SendMessage(const QString& key, const QJsonObject& value);
+    void SendMessage(WsKey key, const QJsonObject& value);
     void Reset();
 
     void RegisterTreeModel(Section section, QPointer<TreeModel> node) { tree_model_hash_.insert(section, node); }
@@ -124,7 +125,7 @@ private:
     void InitConnect();
     void InitTimer();
 
-    void ProcessMessage(const QByteArray& data);
+    void HandleMessage(WsKey key, const QByteArray& payload);
 
     void StopTimer()
     {
@@ -211,8 +212,8 @@ private:
     QTimer* ping_timer_ {};
     QTimer* timeout_timer_ {};
 
-    QHash<QString, std::function<void(const QJsonObject&)>> handler_obj_ {};
-    QHash<QString, std::function<void(const QJsonArray&)>> handler_arr_ {};
+    QHash<WsKey, std::function<void(const QJsonObject&)>> handler_obj_ {};
+    QHash<WsKey, std::function<void(const QJsonArray&)>> handler_arr_ {};
     QHash<Section, QPointer<TreeModel>> tree_model_hash_ {};
     QHash<Section, QPointer<EntryHub>> entry_hub_hash_ {};
 };
