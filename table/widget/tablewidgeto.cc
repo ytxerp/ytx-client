@@ -71,6 +71,13 @@ void TableWidgetO::MarkSynced(int version)
     sync_state_ = SyncState::kSynced;
 }
 
+void TableWidgetO::MarkDirty()
+{
+    sync_state_ = SyncState::kDirty;
+    has_pending_update_ = false;
+    ui->tableViewO->clearSelection();
+}
+
 bool TableWidgetO::HasPendingUpdate() const
 {
     const bool node_pending { has_pending_update_ };
@@ -457,9 +464,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
     WebSocket::Instance()->SendMessage(WsKey::kOrderRecall, JsonGen::OrderRecall(section_, node_id_, pending_update_));
 
-    sync_state_ = SyncState::kDirty;
-    pending_update_ = QJsonObject();
-    has_pending_update_ = false;
+    MarkDirty();
 }
 
 bool TableWidgetO::ValidatePartner()
@@ -520,9 +525,7 @@ void TableWidgetO::SaveOrder()
 
     qInfo() << "SaveOrder: tmp_node_ version" << tmp_node_->version;
 
-    sync_state_ = SyncState::kDirty;
-    has_pending_update_ = false;
-    ui->tableViewO->clearSelection();
+    MarkDirty();
 }
 
 void TableWidgetO::on_pBtnRelease_clicked()
@@ -558,9 +561,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
     qInfo() << "on_pBtnRelease_clicked: tmp_node_ version" << tmp_node_->version;
 
-    sync_state_ = SyncState::kDirty;
-    has_pending_update_ = false;
-    ui->tableViewO->clearSelection();
+    MarkDirty();
 }
 
 void TableWidgetO::on_comboTemplate_currentIndexChanged(int /*index*/)

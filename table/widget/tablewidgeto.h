@@ -116,6 +116,7 @@ private:
     bool ValidatePartner();
     bool ValidateSyncState();
     void MarkSynced(int version);
+    void MarkDirty();
 
 private:
     Ui::TableWidgetO* ui;
