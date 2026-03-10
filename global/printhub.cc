@@ -70,8 +70,8 @@ void PrintHub::ScanTemplate()
     const QDir::Filters entry_filters { QDir::Files | QDir::NoSymLinks };
     const QFileInfoList file_list { dir.entryInfoList(name_filters, entry_filters) };
 
-    for (const auto& fileInfo : file_list) {
-        template_map_.insert(fileInfo.baseName(), fileInfo.absoluteFilePath());
+    for (const auto& file_info : file_list) {
+        template_map_.insert(file_info.baseName(), file_info.absoluteFilePath());
     }
 }
 
@@ -86,9 +86,15 @@ bool PrintHub::LoadTemplate(const QString& template_name)
 
     page_values_.clear();
     field_position_.clear();
+    column_widths_.clear();
+    row_height_ = 30;
 
     // Page settings
     QSettings settings(template_name, QSettings::IniFormat);
+    if (settings.status() != QSettings::NoError) {
+        qDebug() << "Failed to load template:" << template_name;
+        return false;
+    }
 
     {
         settings.beginGroup(QStringLiteral("page"));
@@ -477,8 +483,11 @@ void PrintHub::DrawText(QPainter* painter, const QString& field, const QString& 
     }
 
     const FieldPosition& pos { *opt_pos };
-    qDebug() << "Drawing field:" << field << "at position:" << pos.x << "," << pos.y << "text:" << text;
+    if (pos.x == 0 && pos.y == 0) {
+        return;
+    }
 
+    qDebug() << "Drawing field:" << field << "at position:" << pos.x << "," << pos.y << "text:" << text;
     painter->drawText(pos.x, pos.y, text);
 }
 

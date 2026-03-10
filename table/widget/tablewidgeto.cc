@@ -403,10 +403,6 @@ bool TableWidgetO::PreparePrint()
         return false;
     }
 
-    if (!PrintHub::Instance().LoadTemplate(ui->comboTemplate->currentData().toString())) {
-        return false;
-    }
-
     PrintHub::Instance().SetSectionConfig(&config_);
     PrintHub::Instance().SetValue(tmp_node_, table_model_order_->GetEntryList());
 
@@ -561,4 +557,11 @@ void TableWidgetO::on_pBtnRelease_clicked()
     sync_state_ = SyncState::kDirty;
     has_pending_update_ = false;
     ui->tableViewO->clearSelection();
+}
+
+void TableWidgetO::on_comboTemplate_currentIndexChanged(int /*index*/)
+{
+    if (!PrintHub::Instance().LoadTemplate(ui->comboTemplate->currentData().toString())) {
+        Utils::ShowNotification(QMessageBox::Warning, tr("Load Failed"), tr("Failed to load the print template."), TimeConst::kAutoCloseMs);
+    }
 }

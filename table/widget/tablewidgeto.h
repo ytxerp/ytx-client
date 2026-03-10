@@ -84,6 +84,7 @@ private slots:
 
     void on_comboPartner_currentIndexChanged(int index);
     void on_comboEmployee_currentIndexChanged(int index);
+    void on_comboTemplate_currentIndexChanged(int index);
 
     void on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time);
     void on_lineDescription_textChanged(const QString& arg1);
