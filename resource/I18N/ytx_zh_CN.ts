@@ -2583,32 +2583,42 @@ You need to recall it first before making changes.</source>
         <translation>找不到可用的打印模板。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="447"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="443"/>
         <source>This order has already been settled and cannot be operated.</source>
         <translation>订单已经结算，无法再编辑了。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="469"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="465"/>
         <source>Please select a partner before performing this action.</source>
         <translation>请先选择一个交易对象。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="480"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="476"/>
         <source>Invalid Operation</source>
         <translation>无效操作</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="481"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="477"/>
         <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="447"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="565"/>
+        <source>Load Failed</source>
+        <translation>加载失败</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="565"/>
+        <source>Failed to load the print template.</source>
+        <translation>打印模板加载失败。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="443"/>
         <source>Order Settled</source>
         <translation>已结算</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="469"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="465"/>
         <source>Partner Required</source>
         <translation>必需选择交易对象</translation>
     </message>
