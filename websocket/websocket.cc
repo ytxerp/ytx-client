@@ -283,6 +283,7 @@ void WebSocket::HandleMessage(WsKey key, const QByteArray& payload)
     }
 
     if (is_object) {
+        qDebug() << "[WS] Object key:" << WsMsgToString(key);
         if (const auto it { handler_obj_.constFind(key) }; it != handler_obj_.constEnd()) {
             it.value()(value.toObject());
             return;
@@ -290,6 +291,8 @@ void WebSocket::HandleMessage(WsKey key, const QByteArray& payload)
     }
 
     if (is_array) {
+        qDebug() << "[WS] Array key:" << WsMsgToString(key);
+
         if (const auto it { handler_arr_.constFind(key) }; it != handler_arr_.constEnd()) {
             it.value()(value.toArray());
             return;
