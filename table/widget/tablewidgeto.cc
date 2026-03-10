@@ -168,6 +168,10 @@ void TableWidgetO::InitWidget()
         for (auto it = templates.constBegin(); it != templates.constEnd(); ++it) {
             ui->comboTemplate->addItem(it.key(), it.value());
         }
+
+        if (ui->comboTemplate->count() > 0) {
+            PrintHub::Instance().LoadTemplate(ui->comboTemplate->currentData().toString());
+        }
     }
 }
 
