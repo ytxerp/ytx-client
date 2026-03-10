@@ -219,3 +219,25 @@ QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, double initial_delta, do
 
     return affected_ids;
 }
+
+void TreeModelF::InitAncestorTotal(Node* node, double initial_delta, double final_delta, double, double, double) const
+{
+    if (!node || node == root_ || !node->parent || node->parent == root_)
+        return;
+
+    if (FloatEqual(initial_delta, 0.0) && FloatEqual(final_delta, 0.0))
+        return;
+
+    const auto unit { node->unit };
+    const bool direction_rule { node->direction_rule };
+
+    for (Node* current = node->parent; current && current != root_; current = current->parent) {
+        const int multiplier { current->direction_rule == direction_rule ? 1 : -1 };
+
+        current->final_total += multiplier * final_delta;
+
+        if (current->unit == unit) {
+            current->initial_total += multiplier * initial_delta;
+        }
+    }
+}

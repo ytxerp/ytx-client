@@ -212,10 +212,10 @@ QSet<QUuid> TreeModelO::UpdateAncestorTotal(
         && FloatEqual(discount_delta, 0.0))
         return affected_ids;
 
-    const auto kUnit { node->unit };
+    const auto unit { node->unit };
 
     for (Node* current = node->parent; current && current != root_; current = current->parent) {
-        if (current->unit != kUnit)
+        if (current->unit != unit)
             continue;
 
         auto* d_node { DerivedPtr<NodeO>(current) };
@@ -232,13 +232,38 @@ QSet<QUuid> TreeModelO::UpdateAncestorTotal(
     return affected_ids;
 }
 
+void TreeModelO::InitAncestorTotal(Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta) const
+{
+    if (!node || node == root_ || !node->parent || node->parent == root_)
+        return;
+
+    if (FloatEqual(initial_delta, 0.0) && FloatEqual(final_delta, 0.0) && FloatEqual(count_delta, 0.0) && FloatEqual(measure_delta, 0.0)
+        && FloatEqual(discount_delta, 0.0))
+        return;
+
+    const auto unit { node->unit };
+
+    for (Node* current = node->parent; current && current != root_; current = current->parent) {
+        if (current->unit != unit)
+            continue;
+
+        auto* d_node { DerivedPtr<NodeO>(current) };
+
+        d_node->count_total += count_delta;
+        d_node->measure_total += measure_delta;
+        d_node->discount_total += discount_delta;
+        d_node->initial_total += initial_delta;
+        d_node->final_total += final_delta;
+    }
+}
+
 void TreeModelO::HandleNode()
 {
     for (auto* node : std::as_const(node_hash_)) {
         auto* d_node { DerivedPtr<NodeO>(node) };
 
         if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kReleased)
-            UpdateAncestorTotal(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
+            InitAncestorTotal(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
     }
 }
 

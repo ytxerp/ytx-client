@@ -55,12 +55,14 @@ protected:
     void DeletePath(Node* node, Node* parent_node) override;
 
     void HandleNode() override;
-
     void ResetBranch(Node* node);
     void ClearModel();
 
 protected:
     QSet<QUuid> UpdateAncestorTotal(
+        Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta) const override;
+
+    void InitAncestorTotal(
         Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta) const override;
 };
 

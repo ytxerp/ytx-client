@@ -733,8 +733,9 @@ void TreeModel::HandleNode()
     for (auto* node : std::as_const(node_hash_)) {
         RegisterPath(node);
 
-        if (node->kind == NodeKind::kLeaf)
-            UpdateAncestorTotal(node, node->initial_total, node->final_total);
+        if (node->kind == NodeKind::kLeaf) {
+            InitAncestorTotal(node, node->initial_total, node->final_total);
+        }
     }
 
     SortModel();
@@ -783,6 +784,30 @@ QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, dou
     }
 
     return affected_ids;
+}
+
+void TreeModel::InitAncestorTotal(Node* node, double initial_delta, double final_delta, double, double, double) const
+{
+    if (!node || node == root_ || !node->parent || node->parent == root_)
+        return;
+
+    if (FloatEqual(initial_delta, 0.0) && FloatEqual(final_delta, 0.0))
+        return;
+
+    const auto unit { node->unit };
+    const bool direction_rule { node->direction_rule };
+
+    // - If the ancestor has the same direction rule as the leaf, add the delta.
+    // - If the ancestor has the opposite direction rule, subtract the delta.
+    for (Node* current = node->parent; current && current != root_; current = current->parent) {
+        if (current->unit != unit)
+            continue;
+
+        const int multiplier { current->direction_rule == direction_rule ? 1 : -1 };
+
+        current->final_total += multiplier * final_delta;
+        current->initial_total += multiplier * initial_delta;
+    }
 }
 
 void TreeModel::RefreshAffectedTotal(const QSet<QUuid>& affected_ids)

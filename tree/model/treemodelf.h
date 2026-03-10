@@ -37,6 +37,7 @@ public:
 
 protected:
     QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const override;
+    void InitAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const override;
 };
 
 #endif // TREEMODELF_H

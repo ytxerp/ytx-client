@@ -70,6 +70,24 @@ QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, do
     return affected_ids;
 }
 
+void TreeModelP::InitAncestorTotal(Node* node, double initial_delta, double, double, double, double) const
+{
+    if (!node || node == root_ || !node->parent || node->parent == root_)
+        return;
+
+    if (FloatEqual(initial_delta, 0.0))
+        return;
+
+    const auto unit { node->unit };
+
+    for (Node* current = node->parent; current && current != root_; current = current->parent) {
+        if (current->unit != unit)
+            continue;
+
+        current->initial_total += initial_delta;
+    }
+}
+
 void TreeModelP::sort(int column, Qt::SortOrder order)
 {
     const NodeEnumP e_column { column };
