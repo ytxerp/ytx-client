@@ -56,7 +56,7 @@ void MainWindow::on_actionNewBranch_triggered()
     auto* node { NodePool::Instance().Allocate(start_) };
 
     node->id = QUuid::createUuidV7();
-    node->unit = parent_node->unit;
+    node->unit = parent_index.isValid() ? parent_node->unit : NodeUnit(sc_->shared_config.default_unit);
     node->kind = NodeKind::kBranch;
     node->parent = parent_node;
 
