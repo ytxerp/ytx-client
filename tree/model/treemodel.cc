@@ -25,6 +25,7 @@ TreeModel::TreeModel(CSectionInfo& info, CString& separator, QObject* parent)
 TreeModel::~TreeModel()
 {
     FlushCaches();
+    NodePool::Instance().Recycle(root_, section_);
     NodePool::Instance().Recycle(node_hash_, section_);
 }
 
@@ -67,7 +68,7 @@ void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
 {
     Node* parent { node_hash_.value(ancestor) };
     if (!parent)
-        return;
+        parent = root_;
 
     auto* node { NodePool::Instance().Allocate(section_) };
     node->ReadJson(data);
@@ -605,12 +606,8 @@ void TreeModel::Reset()
 
     {
         beginResetModel();
-
         NodePool::Instance().Recycle(node_hash_, section_);
-
-        root_ = nullptr;
-        InitRoot(root_);
-
+        root_->children.clear();
         endResetModel();
     }
 }
@@ -939,7 +936,6 @@ void TreeModel::InitRoot(Node*& root)
         root->direction_rule = false;
         root->name = QString();
         root->id = QUuid();
-        node_hash_.insert(QUuid(), root);
     }
 
     if (!root) {
@@ -960,9 +956,18 @@ void TreeModel::BuildHierarchy(const QJsonArray& path_array)
         Node* ancestor { node_hash_.value(ancestor_id, nullptr) };
         Node* descendant { node_hash_.value(descendant_id, nullptr) };
 
-        if (ancestor && descendant) {
-            ancestor->children.emplaceBack(descendant);
-            descendant->parent = ancestor;
+        assert(ancestor && "ancestor not found in node_hash_");
+        assert(descendant && "descendant not found in node_hash_");
+
+        ancestor->children.emplaceBack(descendant);
+        descendant->parent = ancestor;
+    }
+
+    // Attach nodes without parent to virtual root
+    for (Node* node : std::as_const(node_hash_)) {
+        if (!node->parent) {
+            root_->children.emplaceBack(node);
+            node->parent = root_;
         }
     }
 }
