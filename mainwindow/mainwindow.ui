@@ -447,9 +447,6 @@
    <property name="shortcut">
     <string>Ctrl+,</string>
    </property>
-   <property name="menuRole">
-    <enum>QAction::MenuRole::PreferencesRole</enum>
-   </property>
   </action>
   <action name="actionAbout">
    <property name="text">
@@ -457,9 +454,6 @@
    </property>
    <property name="toolTip">
     <string>About YTX</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::MenuRole::AboutRole</enum>
    </property>
   </action>
   <action name="actionMarkAll">
@@ -635,9 +629,6 @@
    </property>
    <property name="toolTip">
     <string>Check Updates</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::MenuRole::ApplicationSpecificRole</enum>
    </property>
   </action>
   <action name="actionTags">
