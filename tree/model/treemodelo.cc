@@ -376,7 +376,7 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
     Q_ASSERT(d_node != nullptr);
 
     const NodeEnumO column { index.column() };
-    bool branch { d_node->kind == NodeKind::kBranch };
+    const bool is_branch { d_node->kind == NodeKind::kBranch };
 
     switch (column) {
     case NodeEnumO::kName:
@@ -400,7 +400,7 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
     case NodeEnumO::kDescription:
         return d_node->description;
     case NodeEnumO::kDirectionRule:
-        return branch ? QVariant() : d_node->direction_rule;
+        return d_node->direction_rule;
     case NodeEnumO::kKind:
         return std::to_underlying(d_node->kind);
     case NodeEnumO::kUnit:
@@ -410,7 +410,7 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
     case NodeEnumO::kEmployeeId:
         return d_node->employee_id;
     case NodeEnumO::kIssuedTime:
-        return d_node->issued_time;
+        return is_branch ? QVariant() : d_node->issued_time;
     case NodeEnumO::kCountTotal:
         return d_node->count_total;
     case NodeEnumO::kMeasureTotal:
@@ -479,7 +479,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
     auto* node { DerivedPtr<NodeO>(source_parent->children.takeAt(sourceRow)) };
     Q_ASSERT(node);
 
-    bool update_ancestor { node->kind == NodeKind::kBranch || node->status == NodeStatus::kReleased };
+    const bool update_ancestor { node->kind == NodeKind::kBranch || node->status == NodeStatus::kReleased };
 
     if (update_ancestor) {
         affected_ids_source
