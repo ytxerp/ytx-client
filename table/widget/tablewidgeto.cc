@@ -166,8 +166,8 @@ void TableWidgetO::InitWidget()
         Utils::SetRadioButton(ui->rBtnIS, QKeySequence(Qt::CTRL | Qt::Key_1));
         Utils::SetRadioButton(ui->rBtnMS, QKeySequence(Qt::CTRL | Qt::Key_2));
         Utils::SetRadioButton(ui->rBtnPEND, QKeySequence(Qt::CTRL | Qt::Key_3));
-        Utils::SetRadioButton(ui->rBtnRO, QKeySequence(Qt::CTRL | Qt::Key_4));
-        Utils::SetRadioButton(ui->rBtnFO, QKeySequence(Qt::CTRL | Qt::Key_5));
+        Utils::SetRadioButton(ui->rBtnRO, QKeySequence(Qt::CTRL | Qt::Key_5));
+        Utils::SetRadioButton(ui->rBtnFO, QKeySequence(Qt::CTRL | Qt::Key_4));
     }
 
     {
