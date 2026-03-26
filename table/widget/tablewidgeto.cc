@@ -393,6 +393,9 @@ void TableWidgetO::on_pBtnSave_clicked() { SaveOrder(); }
 
 void TableWidgetO::on_pBtnPrint_clicked()
 {
+    QEvent leave_event(QEvent::Leave);
+    QApplication::sendEvent(ui->pBtnPrint, &leave_event);
+
     if (!PreparePrint())
         return;
 
@@ -401,6 +404,9 @@ void TableWidgetO::on_pBtnPrint_clicked()
 
 void TableWidgetO::on_pBtnPreview_clicked()
 {
+    QEvent leave_event(QEvent::Leave);
+    QApplication::sendEvent(ui->pBtnPreview, &leave_event);
+
     if (!PreparePrint())
         return;
 
