@@ -173,7 +173,8 @@ void TableWidgetO::InitWidget()
     {
         auto& templates { PrintHub::Instance().TemplateMap() };
         for (auto it = templates.constBegin(); it != templates.constEnd(); ++it) {
-            ui->comboTemplate->addItem(it.key(), it.value());
+            const QString display_name { it.key().section('_', 1) };
+            ui->comboTemplate->addItem(display_name, it.value());
         }
 
         if (ui->comboTemplate->count() > 0) {
