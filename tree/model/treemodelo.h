@@ -51,12 +51,8 @@ public:
 
 protected:
     void RegisterPath(Node* /*node*/) override { };
-
     void DeletePath(Node* node, Node* parent_node) override;
-
     void HandleNode() override;
-    void ResetBranch(Node* node);
-    void ClearModel();
 
 protected:
     QSet<QUuid> UpdateAncestorTotal(

@@ -30,44 +30,21 @@ void TreeModelO::AckTree(const QJsonObject& obj)
     const QJsonArray path_array { obj.value(kPathArray).toArray() };
 
     beginResetModel();
-    ClearModel();
+
+    {
+        NodePool::Instance().Recycle(node_hash_, section_);
+        root_->children.clear();
+    }
 
     for (const QJsonValue& val : node_array) {
         const QJsonObject obj { val.toObject() };
-
-        const QUuid id { QUuid(obj.value(kId).toString()) };
-
-        Q_ASSERT(!node_hash_.contains(id));
-
         Node* node { NodePool::Instance().Allocate(section_) };
         node->ReadJson(obj);
-        node_hash_.insert(id, node);
+        node_hash_.insert(node->id, node);
     }
 
-    for (const QJsonValue& val : path_array) {
-        const QJsonObject obj { val.toObject() };
-
-        const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
-        const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
-
-        Node* ancestor { node_hash_.value(ancestor_id) };
-        Node* descendant { node_hash_.value(descendant_id) };
-
-        Q_ASSERT((ancestor) && "Ancestor not found in node_model_");
-        Q_ASSERT((descendant) && "Descendant not found in node_model_");
-
-        descendant->parent = ancestor;
-    }
-
-    for (auto* node : std::as_const(node_hash_)) {
-        if (node != root_) {
-            node->parent->children.emplaceBack(node);
-        }
-    }
-
-    if (node_hash_.size() >= 2) {
-        HandleNode();
-    }
+    BuildHierarchy(path_array);
+    HandleNode();
 
     sort(std::to_underlying(NodeEnumO::kName), Qt::AscendingOrder);
     endResetModel();
@@ -75,12 +52,12 @@ void TreeModelO::AckTree(const QJsonObject& obj)
 
 void TreeModelO::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
 {
-    Q_ASSERT(node_hash_.contains(ancestor_id));
-
     auto* node = NodePool::Instance().Allocate(section_);
     node->ReadJson(leaf_obj);
 
-    Node* ancestor { node_hash_.value(ancestor_id) };
+    Node* ancestor { ancestor_id.isNull() ? root_ : node_hash_.value(ancestor_id) };
+
+    Q_ASSERT(ancestor);
 
     const long long row { ancestor->children.size() };
     const auto parent { GetIndex(ancestor_id) };
@@ -89,6 +66,18 @@ void TreeModelO::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
     ancestor->children.insert(row, node);
     node->parent = ancestor;
     endInsertRows();
+
+    {
+        auto* d_node { DerivedPtr<NodeO>(node) };
+
+        if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kReleased) {
+            auto ids { UpdateAncestorTotal(
+                node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total) };
+
+            ids.remove(node->id);
+            RefreshAffectedTotal(ids);
+        }
+    }
 
     node_hash_.insert(node->id, node);
 }
@@ -264,46 +253,6 @@ void TreeModelO::HandleNode()
 
         if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kReleased)
             InitAncestorTotal(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
-    }
-}
-
-void TreeModelO::ResetBranch(Node* node)
-{
-    Q_ASSERT(node->kind == NodeKind::kBranch && "ResetBranch: node must be of kind NodeKind::kBranch");
-
-    auto* d_node { DerivedPtr<NodeO>(node) };
-    d_node->count_total = 0.0;
-    d_node->measure_total = 0.0;
-    d_node->initial_total = 0.0;
-    d_node->discount_total = 0.0;
-    d_node->final_total = 0.0;
-    d_node->children.clear();
-}
-
-void TreeModelO::ClearModel()
-{
-    // Clear non-branch nodes from node_hash_, keep branch nodes and unfinidhws nodes
-    for (auto it = node_hash_.begin(); it != node_hash_.end();) {
-        auto* node = static_cast<NodeO*>(it.value());
-
-        if (node->kind == NodeKind::kBranch) {
-            ResetBranch(node);
-            ++it;
-            continue;
-        }
-
-        if (node->status == NodeStatus::kUnreleased) {
-            ++it;
-            continue;
-        }
-
-        if (node->unit == NodeUnit::OPending) {
-            ++it;
-            continue;
-        }
-
-        NodePool::Instance().Recycle(node, section_);
-        it = node_hash_.erase(it);
     }
 }
 

@@ -899,7 +899,7 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     {
         for (const QJsonValue& val : node_array) {
             const QJsonObject obj { val.toObject() };
-            auto* node = NodePool::Instance().Allocate(section_);
+            auto* node { NodePool::Instance().Allocate(section_) };
             node->ReadJson(obj);
             node_hash_.insert(node->id, node);
         }
