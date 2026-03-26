@@ -54,10 +54,12 @@ void MainWindow::on_actionNewBranch_triggered()
     const QUuid parent_id { parent_node->id };
 
     auto* node { NodePool::Instance().Allocate(start_) };
+    auto* d_node { static_cast<NodeO*>(node) };
 
     node->id = QUuid::createUuidV7();
     node->unit = parent_index.isValid() ? parent_node->unit : NodeUnit(sc_->shared_config.default_unit);
     node->kind = NodeKind::kBranch;
+    d_node->status = NodeStatus::kUnreleased; // Branch nodes are always unreleased
     node->parent = parent_node;
 
     static_cast<NodeO*>(node)->issued_time = QDateTime::currentDateTimeUtc();
