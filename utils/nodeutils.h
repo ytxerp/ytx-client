@@ -22,6 +22,7 @@
 
 #include <QQueue>
 
+#include "component/constantbool.h"
 #include "component/constantdouble.h"
 #include "component/constantint.h"
 #include "component/constantstring.h"
@@ -199,6 +200,8 @@ inline QString UnitString(NodeUnit unit)
         return StringConst::kEmpty;
     }
 }
+
+inline QString DirectionRuleString(bool direction_rule) { return direction_rule == Rule::kRO ? QObject::tr("RO") : QObject::tr("FO"); }
 
 bool IsDescendant(const Node* lhs, const Node* rhs);
 

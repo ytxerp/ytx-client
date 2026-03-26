@@ -270,10 +270,10 @@ void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
 
     DrawText(painter, QStringLiteral("employee"), partner_->Name(node_o_->employee_id));
 
-    // unit
+    // unit, direction_rule
     {
-        QString unit { Utils::UnitString(NodeUnit(node_o_->unit)) };
-        DrawText(painter, QStringLiteral("unit"), unit);
+        const QString text { Utils::UnitString(NodeUnit(node_o_->unit)) + "/" + Utils::DirectionRuleString(node_o_->direction_rule) };
+        DrawText(painter, QStringLiteral("unit"), text);
     }
 
     const QString amount_str { QString::number(node_o_->initial_total, 'f', section_config_->amount_decimal) };
