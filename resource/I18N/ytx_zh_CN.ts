@@ -9,12 +9,60 @@
         <translation>关于 YTX</translation>
     </message>
     <message>
-        <location filename="../../dialog/about.ui" line="22"/>
+        <location filename="../../dialog/about.ui" line="20"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../dialog/about.cc" line="17"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;.AppleSystemUIFont&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; font-weight:700;&quot;&gt;YTX v0.3.4&lt;/span&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;&lt;br /&gt;© 2026 YTX &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;YTX is an enterprise resource planning system designed to help businesses manage operations efficiently. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;Please review our Privacy Policy and Terms of Service for full details. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;privacy_policy.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;Privacy Policy&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; | &lt;/span&gt;&lt;a href=&quot;terms_of_service.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;Terms of Service&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="vanished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;.AppleSystemUIFont&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; font-weight:700;&quot;&gt;YTX v0.3.4&lt;/span&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;&lt;br /&gt;© 2026 YTX &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;YTX 是一款企业资源计划（ERP）系统，旨在帮助企业高效管理运营。 &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;请查看我们的隐私政策和服务条款以了解完整信息。 &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;privacy_policy.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;隐私政策&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; | &lt;/span&gt;&lt;a href=&quot;terms_of_service.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;服务条款&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;.AppleSystemUIFont&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; font-weight:700;&quot;&gt;YTX v0.3.4&lt;/span&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;&lt;br /&gt;© 2026 YTX &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;YTX is an enterprise resource planning system designed to help businesses manage operations efficiently. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;This software is provided &amp;quot;as-is&amp;quot; to help you manage your business efficiently. While we strive to ensure data accuracy and reliable service, users are responsible for verifying their business information and decisions. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;Please review our Privacy Policy and Terms of Service for full details. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;privacy_policy.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;Privacy Policy&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; | &lt;/span&gt;&lt;a href=&quot;terms_of_service.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;Terms of Service&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="vanished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;.AppleSystemUIFont&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; font-weight:700;&quot;&gt;YTX v0.3.4&lt;/span&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;&lt;br /&gt;© 2026 YTX &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;YTX 是一款企业资源计划（ERP）系统，旨在帮助企业高效管理运营。 &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;请查看我们的隐私政策和服务条款以了解完整信息。 &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;privacy_policy.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;隐私政策&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; | &lt;/span&gt;&lt;a href=&quot;terms_of_service.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;服务条款&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
         <source>Do Not Go Gentle into That Good Night
 
 Do not go gentle into that good night
@@ -42,7 +90,7 @@ Curse, bless, me now with your fierce tears, I pray
 Do not go gentle into that good night
 Rage, rage against the dying of the light.</source>
         <comment>About dialog poem. Feel free to translate the poem if appropriate.</comment>
-        <translation>侠客行
+        <translation type="vanished">侠客行
 
 赵客缦胡缨，吴钩霜雪明。
 银鞍照白马，飒沓如流星。
@@ -57,236 +105,296 @@ Rage, rage against the dying of the light.</source>
 纵死侠骨香，不惭世上英。
 谁能书阁下，白首太玄经。</translation>
     </message>
+    <message>
+        <location filename="../../dialog/about.cc" line="65"/>
+        <source>YTX is an enterprise resource planning system designed to help businesses manage operations efficiently.</source>
+        <translation>YTX 是一款企业资源计划（ERP）系统，旨在帮助企业高效管理运营。</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/about.cc" line="66"/>
+        <source>Please review our Privacy Policy and Terms of Service for full details.</source>
+        <translation>请查看我们的隐私政策和服务条款以了解完整信息。</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/about.cc" line="66"/>
+        <source>Privacy Policy</source>
+        <translation>隐私政策</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/about.cc" line="66"/>
+        <source>Terms of Service</source>
+        <translation>服务条款</translation>
+    </message>
 </context>
 <context>
     <name>AuthDialog</name>
     <message>
-        <location filename="../../dialog/authdialog.ui" line="185"/>
+        <location filename="../../dialog/authdialog.ui" line="161"/>
         <source>Login</source>
         <translation>登录</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.ui" line="37"/>
-        <location filename="../../dialog/authdialog.cc" line="185"/>
+        <location filename="../../dialog/authdialog.ui" line="38"/>
+        <location filename="../../dialog/authdialog.cc" line="191"/>
         <source>Log in to YTX account</source>
         <translation>登录 YTX 账号</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.ui" line="59"/>
+        <location filename="../../dialog/authdialog.ui" line="23"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.ui" line="69"/>
+        <source>&lt;a href=&apos;signin&apos;&gt;Sign In&lt;/a&gt;</source>
+        <translation type="vanished">&lt;a href=&apos;signin&apos;&gt;登录&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;signin&apos;&gt;Sign Up&lt;/a&gt;</source>
+        <translation type="obsolete">&lt;a href=&apos;signin&apos;&gt;Sign Up&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/authdialog.ui" line="119"/>
         <source>Password</source>
         <translation>密码</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.ui" line="112"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;Sign In&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;登录&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>View Terms of Service</source>
+        <translation type="vanished">查看服务条款</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.ui" line="168"/>
+        <location filename="../../dialog/authdialog.ui" line="202"/>
+        <source>I have read and agree to Privacy Policy</source>
+        <translation>我已阅读并同意隐私政策</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/authdialog.ui" line="222"/>
+        <source>I have read and agree to Terms of Service</source>
+        <translation>我已阅读并同意服务条款</translation>
+    </message>
+    <message>
+        <source>View Privacy Policy</source>
+        <translation type="vanished">查看隐私政策</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;Sign In&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;登录&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/authdialog.ui" line="144"/>
         <source>Register</source>
         <translation>注册</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.ui" line="178"/>
+        <location filename="../../dialog/authdialog.ui" line="154"/>
         <source>Password Remembered</source>
         <translation>记住密码</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.ui" line="105"/>
-        <location filename="../../dialog/authdialog.cc" line="186"/>
+        <location filename="../../dialog/authdialog.ui" line="68"/>
+        <location filename="../../dialog/authdialog.cc" line="192"/>
         <source>Don&apos;t have YTX account?</source>
         <translation>没有 YTX 账号？</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.ui" line="125"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;Sign Up&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;注册&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;注册&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.ui" line="78"/>
+        <location filename="../../dialog/authdialog.ui" line="195"/>
+        <location filename="../../dialog/authdialog.cc" line="230"/>
+        <source>Terms of Service</source>
+        <translation>服务条款</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/authdialog.ui" line="188"/>
+        <location filename="../../dialog/authdialog.cc" line="229"/>
+        <source>Privacy Policy</source>
+        <translation>隐私政策</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/authdialog.ui" line="233"/>
         <source>Workspace</source>
         <translation>工区</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="43"/>
+        <location filename="../../dialog/authdialog.cc" line="45"/>
         <source>Login Failed</source>
         <translation>登录失败</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="126"/>
+        <location filename="../../dialog/authdialog.cc" line="128"/>
         <source>Registration Failed</source>
         <translation>注册失败</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="95"/>
+        <location filename="../../dialog/authdialog.cc" line="97"/>
         <source>Registration Successful</source>
         <translation>注册成功</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="47"/>
-        <location filename="../../dialog/authdialog.cc" line="102"/>
+        <location filename="../../dialog/authdialog.cc" line="49"/>
+        <location filename="../../dialog/authdialog.cc" line="104"/>
         <source>Please enter your email.</source>
         <translation>请输入您的邮箱。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="50"/>
-        <location filename="../../dialog/authdialog.cc" line="105"/>
+        <location filename="../../dialog/authdialog.cc" line="52"/>
+        <location filename="../../dialog/authdialog.cc" line="107"/>
         <source>Please enter your password.</source>
         <translation>请输入您的密码。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="65"/>
+        <location filename="../../dialog/authdialog.cc" line="67"/>
         <source>Access Pending</source>
         <translation>权限申请</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="143"/>
+        <location filename="../../dialog/authdialog.cc" line="145"/>
         <source>Invalid Workspace</source>
         <translation>工区无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="171"/>
+        <location filename="../../dialog/authdialog.ui" line="88"/>
+        <location filename="../../dialog/authdialog.cc" line="177"/>
+        <location filename="../../dialog/authdialog.cc" line="228"/>
         <source>Sign Up</source>
         <translation>注册</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="197"/>
+        <location filename="../../dialog/authdialog.ui" line="75"/>
+        <location filename="../../dialog/authdialog.cc" line="207"/>
+        <location filename="../../dialog/authdialog.cc" line="227"/>
         <source>Sign In</source>
         <translation>登录</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="313"/>
+        <location filename="../../dialog/authdialog.cc" line="334"/>
         <source>Password Mismatch</source>
         <translation>密码不一致</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="313"/>
+        <location filename="../../dialog/authdialog.cc" line="334"/>
         <source>The passwords do not match.</source>
         <translation>两次输入的密码不一致。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="143"/>
+        <location filename="../../dialog/authdialog.cc" line="145"/>
         <source>Workspace cannot be empty</source>
         <translation>工区不能为空</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="159"/>
+        <location filename="../../dialog/authdialog.cc" line="161"/>
         <source>Need a YTX account?</source>
         <translation>需要 YTX 账号吗？</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="160"/>
+        <location filename="../../dialog/authdialog.cc" line="162"/>
         <source>Have YTX account?</source>
         <translation>已有 YTX 账号？</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.ui" line="88"/>
+        <location filename="../../dialog/authdialog.ui" line="243"/>
         <source>Confirm Password</source>
         <translation>确认密码</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="247"/>
+        <location filename="../../dialog/authdialog.cc" line="268"/>
         <source>Email cannot be empty</source>
         <translation>邮箱不能为空</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="247"/>
-        <location filename="../../dialog/authdialog.cc" line="254"/>
+        <location filename="../../dialog/authdialog.cc" line="268"/>
+        <location filename="../../dialog/authdialog.cc" line="275"/>
         <source>Invalid Email</source>
         <translation>邮箱无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="108"/>
-        <location filename="../../dialog/authdialog.cc" line="254"/>
+        <location filename="../../dialog/authdialog.cc" line="110"/>
+        <location filename="../../dialog/authdialog.cc" line="275"/>
         <source>Please enter a valid email address.</source>
         <translation>请输入有效的邮箱地址。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="53"/>
+        <location filename="../../dialog/authdialog.cc" line="55"/>
         <source>No account found for this email.</source>
         <translation>未找到该邮箱对应的账号。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="56"/>
+        <location filename="../../dialog/authdialog.cc" line="58"/>
         <source>Incorrect password. Please try again.</source>
         <translation>密码错误，请重试。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="59"/>
+        <location filename="../../dialog/authdialog.cc" line="61"/>
         <source>Workspace not found. Please check the name and try again.</source>
         <translation>工区不存在，请检查名称后重试。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="62"/>
+        <location filename="../../dialog/authdialog.cc" line="64"/>
         <source>This workspace&apos;s subscription has expired.</source>
         <translation>该工区的订阅已到期。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="66"/>
+        <location filename="../../dialog/authdialog.cc" line="68"/>
         <source>Your request to join workspace &quot;%1&quot; is awaiting approval.</source>
         <translation>您加入 \&quot;%1\&quot; 的申请正在等待审批。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="69"/>
+        <location filename="../../dialog/authdialog.cc" line="71"/>
         <source>You&apos;re already logged in.</source>
         <translation>您已登录。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="72"/>
-        <location filename="../../dialog/authdialog.cc" line="114"/>
+        <location filename="../../dialog/authdialog.cc" line="74"/>
+        <location filename="../../dialog/authdialog.cc" line="116"/>
         <source>Something went wrong on our end. Please try again later.</source>
         <translation>服务器出现问题，请稍后重试。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="77"/>
+        <location filename="../../dialog/authdialog.cc" line="79"/>
         <source>Unable to sign in. Please contact support for help.</source>
         <translation>登录失败，请联系客服获取帮助。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="95"/>
+        <location filename="../../dialog/authdialog.cc" line="97"/>
         <source>Your account has been created. Welcome aboard!</source>
         <translation>账号已创建，欢迎加入！</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="111"/>
+        <location filename="../../dialog/authdialog.cc" line="113"/>
         <source>This email is already registered. Try signing in instead.</source>
         <translation>该邮箱已注册，请直接登录。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="119"/>
+        <location filename="../../dialog/authdialog.cc" line="121"/>
         <source>Unable to register. Please contact support for help.</source>
         <translation>注册失败，请联系客服获取帮助。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="264"/>
-        <location filename="../../dialog/authdialog.cc" line="272"/>
-        <location filename="../../dialog/authdialog.cc" line="281"/>
-        <location filename="../../dialog/authdialog.cc" line="291"/>
+        <location filename="../../dialog/authdialog.cc" line="285"/>
+        <location filename="../../dialog/authdialog.cc" line="293"/>
+        <location filename="../../dialog/authdialog.cc" line="302"/>
+        <location filename="../../dialog/authdialog.cc" line="312"/>
         <source>Invalid Password</source>
         <translation>密码无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="264"/>
+        <location filename="../../dialog/authdialog.cc" line="285"/>
         <source>Password must be at least 8 characters long.</source>
         <translation>密码长度不能少于 8 位。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="272"/>
+        <location filename="../../dialog/authdialog.cc" line="293"/>
         <source>Password must include at least one letter.</source>
         <translation>密码必须至少包含一个字母。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="281"/>
+        <location filename="../../dialog/authdialog.cc" line="302"/>
         <source>Password must include at least one digit.</source>
         <translation>密码必须至少包含一个数字。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="291"/>
+        <location filename="../../dialog/authdialog.cc" line="312"/>
         <source>Password must include at least one special character.</source>
         <translation>密码必须至少包含一个特殊字符。</translation>
     </message>
@@ -1348,12 +1456,12 @@ You need to recall it first before making changes.</source>
         <translation>帐单明细</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_order.cc" line="133"/>
+        <location filename="../../mainwindow/mainwindow_order.cc" line="135"/>
         <source>Invalid Operation</source>
         <translation>无效操作</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_order.cc" line="134"/>
+        <location filename="../../mainwindow/mainwindow_order.cc" line="136"/>
         <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
@@ -2583,52 +2691,52 @@ You need to recall it first before making changes.</source>
         <translation>发布</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="413"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="420"/>
         <source>No Template</source>
         <translation>没有模板</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="413"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="420"/>
         <source>No printable template was found.</source>
         <translation>找不到可用的打印模板。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="454"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="461"/>
         <source>This order has already been settled and cannot be operated.</source>
         <translation>订单已经结算，无法再编辑了。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="474"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="481"/>
         <source>Please select a partner before performing this action.</source>
         <translation>请先选择一个交易对象。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="485"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="492"/>
         <source>Invalid Operation</source>
         <translation>无效操作</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="486"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="493"/>
         <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="570"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="577"/>
         <source>Load Failed</source>
         <translation>加载失败</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="570"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="577"/>
         <source>Failed to load the print template.</source>
         <translation>打印模板加载失败。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="454"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="461"/>
         <source>Order Settled</source>
         <translation>已结算</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="474"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="481"/>
         <source>Partner Required</source>
         <translation>必需选择交易对象</translation>
     </message>
