@@ -64,6 +64,11 @@ int main(int argc, char* argv[])
     // Install global logging system (DailyLogger)
     DailyLogger::Instance().Install();
 
+    // Set hyperlink color for QLabel HTML links globally
+    QPalette palette { qApp->palette() };
+    palette.setColor(QPalette::Link, QColor(43, 179, 235));
+    qApp->setPalette(palette);
+
     // Create the main window of the application
     MainWindow mainwindow {};
 

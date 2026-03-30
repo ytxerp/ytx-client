@@ -26,6 +26,7 @@ AuthDialog::AuthDialog(const QSharedPointer<QSettings>& local_settings, QWidget*
     CreateAction(ui->lineEditPassword);
     CreateAction(ui->lineEditPasswordConfirm);
 
+    InitDialog();
     RLoginDialog();
     InitConnect();
 }
@@ -166,8 +167,8 @@ void AuthDialog::RRegisterDialog()
     ui->pushButtonLogin->setHidden(true);
     ui->checkBoxPrivacy->setVisible(true);
     ui->checkBoxTerms->setVisible(true);
-    ui->pushButtonPrivacy->setVisible(true);
-    ui->pushButtonTerms->setVisible(true);
+    ui->labelPrivacy->setVisible(true);
+    ui->labelTerms->setVisible(true);
 
     ui->labelSignIn->show();
     ui->pushButtonRegister->show();
@@ -195,8 +196,8 @@ void AuthDialog::RLoginDialog()
     ui->lineEditPasswordConfirm->setHidden(true);
     ui->checkBoxPrivacy->setHidden(true);
     ui->checkBoxTerms->setHidden(true);
-    ui->pushButtonPrivacy->setHidden(true);
-    ui->pushButtonTerms->setHidden(true);
+    ui->labelPrivacy->setHidden(true);
+    ui->labelTerms->setHidden(true);
 
     ui->labelSignUp->show();
     ui->chkBoxPasswordRemembered->show();
@@ -216,6 +217,17 @@ void AuthDialog::InitConnect()
 
     connect(ui->labelSignUp, &QLabel::linkActivated, this, &AuthDialog::RRegisterDialog);
     connect(ui->labelSignIn, &QLabel::linkActivated, this, &AuthDialog::RLoginDialog);
+
+    connect(ui->labelPrivacy, &QLabel::linkActivated, this, &AuthDialog::ROpenPrivacyHtml);
+    connect(ui->labelTerms, &QLabel::linkActivated, this, &AuthDialog::ROpenTermsHtml);
+}
+
+void AuthDialog::InitDialog()
+{
+    ui->labelSignIn->setText(QString("<a href='signin'>%1</a>").arg(tr("Sign In")));
+    ui->labelSignUp->setText(QString("<a href='signup'>%1</a>").arg(tr("Sign Up")));
+    ui->labelPrivacy->setText(QString("<a href='privacy'>%1</a>").arg(tr("Privacy Policy")));
+    ui->labelTerms->setText(QString("<a href='terms'>%1</a>").arg(tr("Terms of Service")));
 }
 
 void AuthDialog::SyncLoginInfo()
@@ -340,6 +352,6 @@ void AuthDialog::on_checkBoxTerms_checkStateChanged(const Qt::CheckState& arg1)
     ui->pushButtonRegister->setEnabled(terms_checked && privacy_checked);
 }
 
-void AuthDialog::on_pushButtonPrivacy_clicked() { About::OpenResourceHtml("privacy_policy.html"); }
+void AuthDialog::ROpenPrivacyHtml() { About::OpenResourceHtml("privacy_policy.html"); }
 
-void AuthDialog::on_pushButtonTerms_clicked() { About::OpenResourceHtml("terms_of_service.html"); }
+void AuthDialog::ROpenTermsHtml() { About::OpenResourceHtml("terms_of_service.html"); }

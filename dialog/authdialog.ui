@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>320</height>
+    <height>292</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -72,7 +72,7 @@
      <item>
       <widget class="QLabel" name="labelSignIn">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;Sign In&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>Sign In</string>
        </property>
        <property name="textFormat">
         <enum>Qt::TextFormat::RichText</enum>
@@ -85,7 +85,7 @@
      <item>
       <widget class="QLabel" name="labelSignUp">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;Sign Up&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>Sign Up</string>
        </property>
        <property name="textFormat">
         <enum>Qt::TextFormat::RichText</enum>
@@ -169,46 +169,6 @@
    </item>
    <item row="4" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="2">
-      <widget class="QPushButton" name="pushButtonTerms">
-       <property name="text">
-        <string>Terms of Service</string>
-       </property>
-       <property name="autoDefault">
-        <bool>false</bool>
-       </property>
-       <property name="flat">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QCheckBox" name="checkBoxPrivacy">
-       <property name="text">
-        <string>I have read and agree to Privacy Policy</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QCheckBox" name="checkBoxTerms">
-       <property name="text">
-        <string>I have read and agree to Terms of Service</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QPushButton" name="pushButtonPrivacy">
-       <property name="text">
-        <string>Privacy Policy</string>
-       </property>
-       <property name="autoDefault">
-        <bool>false</bool>
-       </property>
-       <property name="flat">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="1">
       <spacer name="horizontalSpacer">
        <property name="orientation">
@@ -222,6 +182,27 @@
        </property>
       </spacer>
      </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="labelPrivacy">
+       <property name="text">
+        <string>Privacy Policy</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="labelTerms">
+       <property name="text">
+        <string>Terms of Service</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QCheckBox" name="checkBoxPrivacy">
+       <property name="text">
+        <string>I have read and agree to Privacy Policy</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="1">
       <spacer name="horizontalSpacer_5">
        <property name="orientation">
@@ -234,6 +215,13 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="checkBoxTerms">
+       <property name="text">
+        <string>I have read and agree to Terms of Service</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -266,7 +254,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>5</height>
+       <height>1</height>
       </size>
      </property>
     </spacer>

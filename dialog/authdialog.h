@@ -49,11 +49,12 @@ private slots:
     void on_pushButtonRegister_clicked();
     void on_checkBoxPrivacy_checkStateChanged(const Qt::CheckState& arg1);
     void on_checkBoxTerms_checkStateChanged(const Qt::CheckState& arg1);
-    void on_pushButtonPrivacy_clicked();
-    void on_pushButtonTerms_clicked();
+    void ROpenPrivacyHtml();
+    void ROpenTermsHtml();
 
 private:
     void InitConnect();
+    void InitDialog();
     void SyncLoginInfo();
     void CreateAction(QLineEdit* line_edit);
 
