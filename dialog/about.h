@@ -33,6 +33,9 @@ public:
     explicit About(QWidget* parent = nullptr);
     ~About() override;
 
+    // Static helper to open a resource HTML file in system browser
+    static void OpenResourceHtml(const QString& file_name);
+
 private:
     void IniDialog();
 

@@ -50,4 +50,8 @@
         <file>solarized_dark/quit.png</file>
         <file>solarized_dark/tag.png</file>
     </qresource>
+    <qresource prefix="/policies">
+        <file>policies/privacy_policy.html</file>
+        <file>policies/terms_of_service.html</file>
+    </qresource>
 </RCC>

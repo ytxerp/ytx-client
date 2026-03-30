@@ -40,6 +40,7 @@
 /* Standard borders */
 QPushButton,
 QGroupBox,
+QTextBrowser,
 QPlainTextEdit,
 QTreeView,
 QTableView,
@@ -353,6 +354,12 @@ QPushButton:pressed {
 QPushButton:disabled {
     color: #586E75;
     border-color: #586E75;
+}
+
+QPushButton#pushButtonTerms, QPushButton#pushButtonPrivacy {
+    border: none;
+    text-decoration: underline;
+    color: palette(link);
 }
 
 /* ==================== Scroll Bars - Horizontal ==================== */

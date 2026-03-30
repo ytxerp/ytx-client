@@ -1,5 +1,6 @@
 #include "authdialog.h"
 
+#include "about.h"
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "enum/authenum.h"
@@ -163,6 +164,10 @@ void AuthDialog::RRegisterDialog()
     ui->lineEditWorkspace->setHidden(true);
     ui->chkBoxPasswordRemembered->setHidden(true);
     ui->pushButtonLogin->setHidden(true);
+    ui->checkBoxPrivacy->setVisible(true);
+    ui->checkBoxTerms->setVisible(true);
+    ui->pushButtonPrivacy->setVisible(true);
+    ui->pushButtonTerms->setVisible(true);
 
     ui->labelSignIn->show();
     ui->pushButtonRegister->show();
@@ -188,6 +193,10 @@ void AuthDialog::RLoginDialog()
     ui->pushButtonRegister->setHidden(true);
     ui->labelSignIn->setHidden(true);
     ui->lineEditPasswordConfirm->setHidden(true);
+    ui->checkBoxPrivacy->setHidden(true);
+    ui->checkBoxTerms->setHidden(true);
+    ui->pushButtonPrivacy->setHidden(true);
+    ui->pushButtonTerms->setHidden(true);
 
     ui->labelSignUp->show();
     ui->chkBoxPasswordRemembered->show();
@@ -316,3 +325,21 @@ void AuthDialog::on_pushButtonRegister_clicked()
 
     WebSocket::Instance()->SendMessage(WsKey::kRegister, JsonGen::Register(email, password));
 }
+
+void AuthDialog::on_checkBoxPrivacy_checkStateChanged(const Qt::CheckState& arg1)
+{
+    const bool privacy_checked { arg1 == Qt::Checked };
+    const bool terms_checked { ui->checkBoxTerms->isChecked() };
+    ui->pushButtonRegister->setEnabled(terms_checked && privacy_checked);
+}
+
+void AuthDialog::on_checkBoxTerms_checkStateChanged(const Qt::CheckState& arg1)
+{
+    const bool terms_checked { arg1 == Qt::Checked };
+    const bool privacy_checked { ui->checkBoxPrivacy->isChecked() };
+    ui->pushButtonRegister->setEnabled(terms_checked && privacy_checked);
+}
+
+void AuthDialog::on_pushButtonPrivacy_clicked() { About::OpenResourceHtml("privacy_policy.html"); }
+
+void AuthDialog::on_pushButtonTerms_clicked() { About::OpenResourceHtml("terms_of_service.html"); }

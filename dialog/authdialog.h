@@ -47,6 +47,10 @@ private slots:
     void RLoginDialog();
 
     void on_pushButtonRegister_clicked();
+    void on_checkBoxPrivacy_checkStateChanged(const Qt::CheckState& arg1);
+    void on_checkBoxTerms_checkStateChanged(const Qt::CheckState& arg1);
+    void on_pushButtonPrivacy_clicked();
+    void on_pushButtonTerms_clicked();
 
 private:
     void InitConnect();
