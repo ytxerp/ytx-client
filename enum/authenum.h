@@ -27,6 +27,7 @@ enum class RegisterOutcome {
     InvalidEmail = 3,
     EmailAlreadyExists = 4,
     ServerError = 5,
+    UsernameGenerationFailed = 6,
 };
 
 enum class LoginOutcome {

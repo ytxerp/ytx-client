@@ -117,6 +117,9 @@ void AuthDialog::RRegisterResult(bool result, int code)
         break;
     case RegisterOutcome::Success:
         return;
+    case RegisterOutcome::UsernameGenerationFailed:
+        message = tr("Failed to generate a username. Please try again.");
+        break;
     default:
         message = tr("Unable to register. Please contact support for help.");
         break;
