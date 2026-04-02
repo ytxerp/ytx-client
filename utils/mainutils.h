@@ -1,6 +1,7 @@
 #ifndef MAINUTILS_H
 #define MAINUTILS_H
 
+#include <QtCore/qlibraryinfo.h>
 #include <QApplication>
 #include <QDir>
 #include <QIcon>
@@ -11,46 +12,44 @@ namespace Utils {
 
 inline QString ResourceFile()
 {
-    QString path {};
+    QString brc {};
 
 #ifdef Q_OS_WIN
-    path = QCoreApplication::applicationDirPath() + "/resource";
-
-    if (!QDir(path).exists() && !QDir().mkpath(path)) {
-        qDebug() << "Failed to create directory:" << path;
+    brc = QCoreApplication::applicationDirPath() + "/resource";
+    if (!QDir(brc).exists() && !QDir().mkpath(brc)) {
+        qDebug() << "Failed to create directory:" << brc;
         return {};
     }
-
-    path += "/resource.brc";
-
-#if 0
-    QString command { "D:/Qt/6.9.3/llvm-mingw_64/bin/rcc.exe" };
-    QStringList arguments {};
-    arguments << "-binary"
-              << "E:/ytx-client/resource/resource.qrc"
-              << "-o" << path;
-
-    QProcess process {};
-
-    process.start(command, arguments);
-    process.waitForFinished();
-#endif
-
+    brc += "/resource.brc";
 #elif defined(Q_OS_MACOS)
-    path = QCoreApplication::applicationDirPath() + "/../Resources/resource.brc";
+    brc = QDir::cleanPath(QCoreApplication::applicationDirPath() + "/../Resources/resource.brc");
+#endif
 
 #if 0
-    QString command { QDir::homePath() + "/Qt/6.9.3/macos/libexec/rcc" + " -binary " + QDir::homePath()
-        + "/Documents/GitHub/ytx-client/resource/resource.qrc -o " + path };
+
+    QString rcc { QLibraryInfo::path(QLibraryInfo::LibraryExecutablesPath) + "/rcc" };
+#ifdef Q_OS_WIN
+    rcc += ".exe";
+#endif
+
+    const QString qrc { QString(PROJECT_SOURCE_DIR) + "/resource/resource.qrc" };
+
+    qDebug() << "rcc:" << rcc;
+    qDebug() << "qrc:" << qrc;
+    qDebug() << "brc:" << brc;
+
+    const QStringList args { "-binary", qrc, "-o", brc };
+
 
     QProcess process {};
-    process.start("zsh", QStringList() << "-c" << command);
+    process.start(rcc, args);
     process.waitForFinished();
+
+    if (process.exitCode() != 0)
+        qDebug() << "rcc failed:" << process.readAllStandardError();
 #endif
 
-#endif
-
-    return path;
+    return brc;
 }
 
 inline void SetAppIcon(QApplication& app)
