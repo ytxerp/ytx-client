@@ -52,7 +52,7 @@ signals:
     void SConnectionAllow();
     void SConnectionDeny();
 
-    void SLoginAllow(const QString& expire_date);
+    void SLoginAllow(const QString& name, const QString& expire_date);
     void SLoginDeny(int code);
 
     void SRegisterResult(bool result, int code);
@@ -87,6 +87,8 @@ signals:
     void SNodeSelect(Section section, const QUuid& node_id);
     void SNodeLocate(Section section, const QUuid& node_id);
     void STreeSyncFinish();
+    void SAccountName(const QString& name);
+    void SAccountUsername(const QJsonObject& obj);
 
     // send to SearchNodeModel
     void SNodeSearch(const QJsonObject& obj);
@@ -178,6 +180,8 @@ private:
     void DeleteBranch(const QJsonObject& obj);
     void UpdateNodeDirectionRule(const QJsonObject& obj);
     void UpdateNodeName(const QJsonObject& obj);
+    void UpdateAccountName(const QJsonObject& obj);
+    void UpdateAccountUsername(const QJsonObject& obj);
 
     void InsertTag(const QJsonObject& obj);
     void UpdateTag(const QJsonObject& obj);

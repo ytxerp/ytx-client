@@ -74,6 +74,8 @@ QJsonObject NodeSearch(Section section, CString& keyword);
 
 QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update);
 QJsonObject MetaMessage(Section section);
+QJsonObject AccountName(CString& email, CString& name);
+QJsonObject AccountUsername(CString& email, CString& username);
 
 }
 

@@ -37,10 +37,10 @@ void MainWindow::SetAction(bool enable) const
     ui->actionNewBranch->setEnabled(enable);
 }
 
-void MainWindow::UpdateAccountInfo(const QString& user, const QString& database, const QString& expire_date)
+void MainWindow::UpdateAccountInfo(const QString& workspace, const QString& name, const QString& expire_date)
 {
-    ui->actionEmail->setText(tr("Email") + ": " + user);
-    ui->actionWorkspace->setText(tr("Workspace") + ": " + database);
+    ui->actionEmail->setText(tr("Name") + ": " + name);
+    ui->actionWorkspace->setText(tr("Workspace") + ": " + workspace);
     ui->actionExpireDate->setText(tr("Expire Date") + ": " + expire_date);
 }
 

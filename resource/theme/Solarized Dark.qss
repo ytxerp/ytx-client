@@ -90,6 +90,12 @@ QWidget#TableWidgetSettlement QDateTimeEdit
 }
 
 /* ==================== Frame Dividers ==================== */
+QFrame[frameShape="4"] {
+    border: none;
+    border-top: 1px solid #657B83;
+    margin: 0 6px;
+}
+
 QFrame[frameShape="5"] {
     border: none;
     border-left: 1px solid #657B83;

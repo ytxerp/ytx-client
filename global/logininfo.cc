@@ -53,14 +53,6 @@ void LoginInfo::ReadConfig(const QSharedPointer<QSettings>& local_settings)
     local_settings->endGroup();
 }
 
-void LoginInfo::Clear()
-{
-    email_.clear();
-    password_.clear();
-    workspace_.clear();
-    password_remembered_ = false;
-}
-
 LoginInfo::LoginInfo()
     : machine_key_ { PasswordEncryption::GetMachineKey() }
 {

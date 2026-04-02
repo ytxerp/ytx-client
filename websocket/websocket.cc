@@ -6,6 +6,7 @@
 #include "component/constantwebsocket.h"
 #include "component/using.h"
 #include "entryhub/entryhubp.h"
+#include "global/userprofile.h"
 #include "tree/model/treemodelo.h"
 #include "tree/model/treemodelp.h"
 #include "utils/mainwindowutils.h"
@@ -216,6 +217,9 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kOrderInsertRelease] = [this](const QJsonObject& obj) { InsertOrder(obj, true); };
     handler_obj_[WsKey::kOrderUpdateRelease] = [this](const QJsonObject& obj) { UpdateOrder(obj, true); };
     handler_obj_[WsKey::kOrderRecall] = [this](const QJsonObject& obj) { RecallOrder(obj); };
+
+    handler_obj_[WsKey::kAccountNameUpdate] = [this](const QJsonObject& obj) { UpdateAccountName(obj); };
+    handler_obj_[WsKey::kAccountUsernameUpdate] = [this](const QJsonObject& obj) { UpdateAccountUsername(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -323,9 +327,18 @@ void WebSocket::NotifyLogin(const QJsonObject& obj)
 
     if (result) {
         session_id_ = QUuid(obj[kSessionId].toString());
+
         const auto expire_time { QDateTime::fromString(obj[kExpireTime].toString(), Qt::ISODate) };
         const auto expire_date { expire_time.date().toString(kDateFST) };
-        emit SLoginAllow(expire_date);
+
+        const auto username { obj[kUsername].toString() };
+        const auto name { obj[kName].toString() };
+
+        UserProfile& profile { UserProfile::Instance() };
+        profile.SetUsername(username);
+        profile.SetName(name);
+
+        emit SLoginAllow(name, expire_date);
     } else {
         emit SLoginDeny(code);
     }
@@ -923,6 +936,14 @@ void WebSocket::UpdateNodeName(const QJsonObject& obj)
     tree_model->UpdateName(node_id, name);
     tree_model->UpdateMeta(node_id, meta);
 }
+
+void WebSocket::UpdateAccountName(const QJsonObject& obj)
+{
+    const auto name { obj.value(kName).toString() };
+    emit SAccountName(name);
+}
+
+void WebSocket::UpdateAccountUsername(const QJsonObject& obj) { emit SAccountUsername(obj); }
 
 void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_released)
 {

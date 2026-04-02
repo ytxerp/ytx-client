@@ -131,7 +131,12 @@ enum class WsKey : uint8_t {
     kOrderRecall,
 
     // --- Misc ---
-    kOperationDeny
+    kOperationDeny,
+
+    // --- Profile ---
+    kAccountNameUpdate,
+    kAccountUsernameUpdate,
+
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -270,6 +275,12 @@ constexpr const char* WsMsgToString(WsKey msg)
     // --- Misc ---
     case WsKey::kOperationDeny:
         return "operation_deny";
+
+    // --- Profile ---
+    case WsKey::kAccountNameUpdate:
+        return "account_name_update";
+    case WsKey::kAccountUsernameUpdate:
+        return "account_username_update";
 
     default:
         return "unknown";

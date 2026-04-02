@@ -463,6 +463,8 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SNodeSelect, this, &MainWindow::RSelectNode);
     connect(WebSocket::Instance(), &WebSocket::SNodeLocate, this, &MainWindow::RLocateNode);
     connect(WebSocket::Instance(), &WebSocket::STreeSyncFinish, this, &MainWindow::RFinishTreeSync);
+    connect(WebSocket::Instance(), &WebSocket::SAccountName, this, &MainWindow::RAccountName);
+    connect(WebSocket::Instance(), &WebSocket::SAccountUsername, this, &MainWindow::RAccountUsername);
 }
 
 void MainWindow::SetIcon() const

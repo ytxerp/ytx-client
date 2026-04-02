@@ -44,9 +44,6 @@ public:
     void SetWorkspace(const QString& value) { workspace_ = value; }
     void SetPasswordRemembered(bool value) { password_remembered_ = value; }
 
-    // Remove
-    void Clear();
-
     LoginInfo(const LoginInfo&) = delete;
     LoginInfo& operator=(const LoginInfo&) = delete;
     LoginInfo(LoginInfo&&) = delete;

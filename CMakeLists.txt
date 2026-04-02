@@ -216,6 +216,7 @@ set(SOURCES
     utils/tagutils.cc
     mainwindow/mainwindow_charts.cc
     widget/treeview.cc
+    dialog/userprofiledialog.cc
 )
 
 set(HEADERS
@@ -386,6 +387,8 @@ set(HEADERS
     component/constantbool.h
     component/constantint.h
     component/constantwebsocket.h
+    global/userprofile.h
+    dialog/userprofiledialog.h
 )
 
 set(UIS
@@ -417,6 +420,7 @@ set(UIS
     billing/settlement/treewidgetsettlement.ui
     reference/orderreferencewidget.ui
     billing/settlement/tablewidgetsettlement.ui
+    dialog/userprofiledialog.ui
 )
 
 # ------------------------

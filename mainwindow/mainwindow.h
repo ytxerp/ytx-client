@@ -78,6 +78,7 @@ private slots:
     void on_actionSignIn_triggered();
     void on_actionSignOut_triggered();
     void on_actionReconnect_triggered();
+    void on_actionProfile_triggered();
 
     void on_actionCheckUpdates_triggered();
     void on_actionExportExcel_triggered();
@@ -100,6 +101,9 @@ private slots:
     void RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
 
+    void RAccountName(const QString& name);
+    void RAccountUsername(const QJsonObject& obj);
+
     void RMarkBatch(Mark mark);
     void RStatementMarkBatch(Mark mark);
 
@@ -107,7 +111,7 @@ private slots:
     void RAllowConnection();
     void RRemoteHostClosed();
 
-    void RAllowLogin(const QString& expire_date);
+    void RAllowLogin(const QString& name, const QString& expire_date);
     void RDenyLogin();
     void RFinishTreeSync();
 
@@ -258,7 +262,7 @@ private:
     void UpdateSectionConfig(CSectionConfig& section) const;
     void UpdateSharedConfig(CSharedConfig& shared);
 
-    void UpdateAccountInfo(const QString& user, const QString& database, const QString& expire_date);
+    void UpdateAccountInfo(const QString& workspace, const QString& name, const QString& expire_date);
 
     void SetAction(bool enable) const;
 

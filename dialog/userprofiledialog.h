@@ -17,36 +17,32 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AUTHENUM_H
-#define AUTHENUM_H
+#ifndef USERPROFILEDIALOG_H
+#define USERPROFILEDIALOG_H
 
-enum class RegisterOutcome {
-    Success = 0,
-    EmptyEmail = 1,
-    EmptyPassword = 2,
-    InvalidEmail = 3,
-    EmailAlreadyExists = 4,
-    ServerError = 5,
-    UsernameGenerationFailed = 6,
+#include <QDialog>
+
+namespace Ui {
+class UserProfileDialog;
+}
+
+class UserProfileDialog : public QDialog {
+    Q_OBJECT
+
+public:
+    explicit UserProfileDialog(QWidget* parent = nullptr);
+    ~UserProfileDialog() override;
+
+private slots:
+    void on_pushButtonSave_clicked();
+
+private:
+    void InitDialog();
+    void EditUsernameFinished();
+    void EditNameFinished();
+
+private:
+    Ui::UserProfileDialog* ui;
 };
 
-enum class LoginOutcome {
-    Success = 0,
-    EmptyEmail = 1,
-    EmptyPassword = 2,
-    EmailNotFound = 3,
-    PasswordIncorrect = 4,
-    WorkspaceNotFound = 5,
-    WorkspaceExpired = 6,
-    WorkspaceAccessPending = 7,
-    AlreadyLoggedIn = 8,
-    ServerError = 9,
-};
-
-enum class AccountUsernameOutcome {
-    kSuccess = 0,
-    kInvalidFormat = 1,
-    kAlreadyExists = 2,
-};
-
-#endif // AUTHENUM_H
+#endif // USERPROFILEDIALOG_H

@@ -480,4 +480,22 @@ QJsonObject TagDelete(Section section, CUuid& tag_id)
     return message;
 }
 
+QJsonObject AccountName(CString& email, CString& name)
+{
+    QJsonObject message {};
+    message.insert(kEmail, email);
+    message.insert(kName, name);
+
+    return message;
+}
+
+QJsonObject AccountUsername(CString& email, CString& username)
+{
+    QJsonObject message {};
+    message.insert(kEmail, email);
+    message.insert(kUsername, username);
+
+    return message;
+}
+
 }

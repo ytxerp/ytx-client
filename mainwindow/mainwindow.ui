@@ -338,6 +338,8 @@
     <addaction name="actionEmail"/>
     <addaction name="actionWorkspace"/>
     <addaction name="actionExpireDate"/>
+    <addaction name="separator"/>
+    <addaction name="actionProfile"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -667,6 +669,11 @@
   <action name="actionPurchase">
    <property name="text">
     <string>Purchase</string>
+   </property>
+  </action>
+  <action name="actionProfile">
+   <property name="text">
+    <string>Profile</string>
    </property>
   </action>
  </widget>
