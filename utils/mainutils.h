@@ -2,6 +2,7 @@
 #define MAINUTILS_H
 
 #include <QtCore/qlibraryinfo.h>
+
 #include <QApplication>
 #include <QDir>
 #include <QIcon>

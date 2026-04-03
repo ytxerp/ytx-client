@@ -217,6 +217,7 @@ set(SOURCES
     mainwindow/mainwindow_charts.cc
     widget/treeview.cc
     dialog/userprofiledialog.cc
+    mainwindow/mainwindow_account.cpp
 )
 
 set(HEADERS
@@ -501,9 +502,11 @@ target_sources(
 # Define compile-time macros
 # ------------------------
 target_compile_definitions(
-    ${PROJECT_NAME} PRIVATE QT_USE_QSTRINGBUILDER QT_USE_FAST_OPERATOR_PLUS
-                            QT_DISABLE_DEPRECATED_BEFORE=0x060900
-                            PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
+    ${PROJECT_NAME}
+    PRIVATE QT_USE_QSTRINGBUILDER
+            QT_USE_FAST_OPERATOR_PLUS
+            QT_DISABLE_DEPRECATED_BEFORE=0x060900
+            PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 )
 
 # ------------------------
