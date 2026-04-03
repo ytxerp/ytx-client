@@ -29,7 +29,7 @@ namespace Ui {
 class TagManagerDlg;
 }
 
-class TagManagerDlg : public QDialog {
+class TagManagerDlg final : public QDialog {
     Q_OBJECT
 
 public:

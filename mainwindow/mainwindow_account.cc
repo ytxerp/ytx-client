@@ -1,3 +1,4 @@
+#include "dialog/memberdialog.h"
 #include "dialog/userprofiledialog.h"
 #include "enum/authenum.h"
 #include "mainwindow.h"
@@ -39,4 +40,14 @@ void MainWindow::RAccountUsername(const QJsonObject& obj)
     }
 
     Utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), message, TimeConst::kAutoCloseMs);
+}
+
+void MainWindow::on_actionMember_triggered()
+{
+    qInfo() << "[UI]" << "on_actionMember_triggered";
+
+    auto* dialog = new MemberDialog(this);
+    Utils::ManageDialog(sc_->widget_hash, dialog);
+
+    dialog->show();
 }

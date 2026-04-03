@@ -6,6 +6,7 @@
 #include "component/constantwebsocket.h"
 #include "component/using.h"
 #include "entryhub/entryhubp.h"
+#include "enum/workspaceroleenum.h"
 #include "global/userprofile.h"
 #include "tree/model/treemodelo.h"
 #include "tree/model/treemodelp.h"
@@ -333,10 +334,12 @@ void WebSocket::NotifyLogin(const QJsonObject& obj)
 
         const auto username { obj[kUsername].toString() };
         const auto name { obj[kName].toString() };
+        const auto workspace_role { static_cast<WorkspaceRole>(obj[kWorkspaceRole].toInt()) };
 
         UserProfile& profile { UserProfile::Instance() };
         profile.SetUsername(username);
         profile.SetName(name);
+        profile.SetWorkspaceRole(workspace_role);
 
         emit SLoginAllow(name, expire_date);
     } else {

@@ -157,6 +157,7 @@ inline const QString kMeasure = QStringLiteral("measure");
 inline const QString kAmount = QStringLiteral("amount");
 inline const QString kMeasureTotal = QStringLiteral("measure_total");
 inline const QString kUsername = QStringLiteral("username");
+inline const QString kWorkspaceRole = QStringLiteral("workspace_role");
 
 inline const QString kId = QStringLiteral("id");
 inline const QString kUserId = QStringLiteral("user_id");

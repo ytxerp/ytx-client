@@ -78,7 +78,9 @@ private slots:
     void on_actionSignIn_triggered();
     void on_actionSignOut_triggered();
     void on_actionReconnect_triggered();
+
     void on_actionProfile_triggered();
+    void on_actionMember_triggered();
 
     void on_actionCheckUpdates_triggered();
     void on_actionExportExcel_triggered();

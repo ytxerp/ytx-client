@@ -17,32 +17,14 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef USERPROFILEDIALOG_H
-#define USERPROFILEDIALOG_H
+#ifndef WORKSPACEROLE_H
+#define WORKSPACEROLE_H
 
-#include <QDialog>
-
-namespace Ui {
-class UserProfileDialog;
-}
-
-class UserProfileDialog final : public QDialog {
-    Q_OBJECT
-
-public:
-    explicit UserProfileDialog(QWidget* parent = nullptr);
-    ~UserProfileDialog() override;
-
-private slots:
-    void on_pushButtonSave_clicked();
-
-private:
-    void InitDialog();
-    void EditUsernameFinished();
-    void EditNameFinished();
-
-private:
-    Ui::UserProfileDialog* ui;
+enum class WorkspaceRole {
+    Guest = 0,
+    Member = 10,
+    Admin = 80,
+    Owner = 99,
 };
 
-#endif // USERPROFILEDIALOG_H
+#endif // WORKSPACEROLE_H

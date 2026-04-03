@@ -22,6 +22,8 @@
 
 #include <QString>
 
+#include "enum/workspaceroleenum.h"
+
 class UserProfile {
 public:
     static UserProfile& Instance()
@@ -32,14 +34,17 @@ public:
 
     const QString& Username() const { return username_; }
     const QString& Name() const { return name_; }
+    WorkspaceRole GetWorkspaceRole() const { return workspacer_role_; }
 
     void SetUsername(const QString& value) { username_ = value; }
     void SetName(const QString& value) { name_ = value; }
+    void SetWorkspaceRole(WorkspaceRole value) { workspacer_role_ = value; }
 
     void Reset()
     {
         username_.clear();
         name_.clear();
+        workspacer_role_ = WorkspaceRole::Guest;
     }
 
     UserProfile(const UserProfile&) = delete;
@@ -54,6 +59,7 @@ private:
 private:
     QString username_ {};
     QString name_ {};
+    WorkspaceRole workspacer_role_ { WorkspaceRole::Guest };
 };
 
 #endif // USERPROFILE_H

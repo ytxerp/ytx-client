@@ -183,6 +183,7 @@ void MainWindow::on_actionDelete_triggered()
 void MainWindow::ResetMainwindow()
 {
     section_settings_.clear();
+    ui->actionMember->setVisible(false);
 
     {
         Utils::ResetSectionContext(sc_f_);
