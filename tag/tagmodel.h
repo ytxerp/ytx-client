@@ -7,7 +7,7 @@
 #include "enum/section.h"
 #include "tag.h"
 
-class TagModel : public QAbstractItemModel {
+class TagModel final : public QAbstractItemModel {
     Q_OBJECT
 
 signals:

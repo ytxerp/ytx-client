@@ -837,7 +837,9 @@ void TreeModel::RestartTimer(const QUuid& id)
                 WebSocket::Instance()->SendMessage(WsKey::kNodeUpdate, message);
             }
 
-            expired_timer->deleteLater();
+            if (expired_timer) {
+                expired_timer->deleteLater();
+            }
         });
 
         pending_timers_[id] = timer;

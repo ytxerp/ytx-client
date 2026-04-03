@@ -139,32 +139,37 @@ void TableModel::AccumulateBalance(int start)
 
 void TableModel::RestartTimer(const QUuid& id)
 {
-    if (pending_timers_.contains(id)) {
-        pending_timers_[id]->stop();
-    } else {
-        auto* timer = new QTimer(this);
+    // Try to retrieve the existing timer using {} initialization
+    QTimer* timer { pending_timers_.value(id, nullptr) };
+
+    if (!timer) {
+        // Create and configure a new timer if it does not exist
+        timer = new QTimer { this };
         timer->setSingleShot(true);
 
         connect(timer, &QTimer::timeout, this, [this, id]() {
+            // Manage lifecycle by taking the timer from the hash
             auto* expired_timer { pending_timers_.take(id) };
 
-            if (auto it = pending_updates_.find(id); it != pending_updates_.end()) {
-                const auto& update { it.value() };
+            // Retrieve and remove the pending update content in one go
+            const auto update { pending_updates_.take(id) };
 
-                if (!update.isEmpty()) {
-                    const QJsonObject message { JsonGen::EntryUpdate(section_, id, update) };
-                    WebSocket::Instance()->SendMessage(WsKey::kEntryUpdate, message);
-                }
-
-                pending_updates_.erase(it);
+            // Only send the message if there are actual changes
+            if (!update.isEmpty()) {
+                const QJsonObject message { JsonGen::EntryUpdate(section_, id, update) };
+                WebSocket::Instance()->SendMessage(WsKey::kEntryUpdate, message);
             }
 
-            expired_timer->deleteLater();
+            if (expired_timer) {
+                expired_timer->deleteLater();
+            }
         });
+
         pending_timers_[id] = timer;
     }
 
-    pending_timers_[id]->start(TimeConst::kAutoCloseMs);
+    // Start or restart the timer
+    timer->start(TimeConst::kAutoCloseMs);
 }
 
 void TableModel::FlushCaches()
@@ -416,14 +421,22 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     Q_ASSERT(row >= 0 && row <= rowCount(parent) - 1);
 
-    auto* shadow = shadow_list_.at(row);
+    // Capture the shadow and IDs using {} initialization
+    auto* shadow { shadow_list_.at(row) };
+    const auto entry_id { *shadow->id };
     const auto rhs_node_id { *shadow->rhs_node };
+
+    // IMPORTANT: Clean up the pending timer first
+    // This prevents the timer from firing and trying to update a deleted entry.
+    if (auto* timer { pending_timers_.take(entry_id) }) {
+        timer->stop();
+        timer->deleteLater();
+    }
+    pending_updates_.remove(entry_id);
 
     beginRemoveRows(parent, row, row);
     shadow_list_.removeAt(row);
     endRemoveRows();
-
-    const auto entry_id { *shadow->id };
 
     if (!rhs_node_id.isNull()) {
         QJsonObject message { JsonGen::EntryDelete(section_, entry_id) };

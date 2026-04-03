@@ -172,22 +172,38 @@ bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
 
 bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
 {
-    if (count != 1 || row < 0 || row >= tag_list_.size())
+    // Basic validation
+    if (count != 1 || row < 0 || row >= tag_list_.size()) {
         return false;
+    }
 
-    Tag* tag = tag_list_.at(row);
+    // Capture the pointer and necessary values using {} initialization
+    Tag* tag { tag_list_.at(row) };
+    const QUuid tag_id { tag->id };
+    const QString tag_name { tag->name };
 
+    // Clean up the pending timer first (Safety)
+    // Prevent the timer from firing after the tag is recycled.
+    if (pending_timers_.contains(tag_id)) {
+        auto* timer { pending_timers_.take(tag_id) };
+        timer->stop();
+        timer->deleteLater();
+    }
+    pending_updates_.remove(tag_id);
+
+    // Notify views that rows are about to be removed
     beginRemoveRows(parent, row, row);
 
+    // Remove from all internal containers
     tag_list_.removeAt(row);
-    tag_hash_.remove(tag->id);
-    names_.remove(tag->name);
-    pending_updates_.remove(tag->id);
+    tag_hash_.remove(tag_id);
+    names_.remove(tag_name);
 
     endRemoveRows();
 
+    // Handle synchronization and network notification
     if (tag->state == SyncState::kSynced) {
-        const QJsonObject message { JsonGen::TagDelete(section_, tag->id) };
+        const QJsonObject message { JsonGen::TagDelete(section_, tag_id) };
         WebSocket::Instance()->SendMessage(WsKey::kTagDelete, message);
     } else {
         ResourcePool<Tag>::Instance().Recycle(tag);
@@ -243,42 +259,38 @@ bool TagModel::UpdateColor(Tag* tag, const QString& new_color)
 
 void TagModel::RestartTimer(const QUuid& id)
 {
-    if (pending_timers_.contains(id)) {
-        pending_timers_[id]->stop();
-    } else {
-        auto* timer = new QTimer(this);
+    // Try to retrieve the existing timer
+    QTimer* timer { pending_timers_.value(id, nullptr) };
+
+    if (!timer) {
+        // Create and configure a new timer if it does not exist
+        timer = new QTimer { this };
         timer->setSingleShot(true);
 
         connect(timer, &QTimer::timeout, this, [this, id]() {
+            // Manage lifecycle by taking the timer from the hash
             auto* expired_timer { pending_timers_.take(id) };
 
-            // auto it = std::find_if(tag_list_.begin(), tag_list_.end(), [id](const Tag* tag) { return tag && tag->id == id; });
-
-            // if (it != tag_list_.end()) {
-            //     const auto* tag = *it;
-            //     qDebug() << "update tag" << tag->name;
-
-            //     const QJsonObject message = JsonGen::TagUpdate(section_, tag);
-            //     WebSocket::Instance()->SendMessage(kTagUpdate, message);
-
-            //     pending_updates_.remove(tag->id);
-            // } else {
-            //     qDebug() << "tag not found in tag_list_, id:" << id;
-            // }
-
-            if (auto it = tag_hash_.find(id); it != tag_hash_.end()) {
+            // Check if tag still exists and send update
+            if (auto it { tag_hash_.find(id) }; it != tag_hash_.end()) {
                 const auto* tag { it.value() };
                 const QJsonObject message { JsonGen::TagUpdate(section_, tag) };
                 WebSocket::Instance()->SendMessage(WsKey::kTagUpdate, message);
-                pending_updates_.remove(tag->id);
             }
 
-            expired_timer->deleteLater();
+            // Always clear the update flag
+            pending_updates_.remove(id);
+
+            if (expired_timer) {
+                expired_timer->deleteLater();
+            }
         });
+
         pending_timers_[id] = timer;
     }
 
-    pending_timers_[id]->start(TimeConst::kAutoCloseMs);
+    // Start or restart the timer
+    timer->start(TimeConst::kAutoCloseMs);
 }
 
 void TagModel::TryInsert(Tag* tag)

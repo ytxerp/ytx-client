@@ -56,14 +56,22 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     Q_ASSERT(row >= 0 && row <= rowCount(parent) - 1);
 
+    // Capture the shadow and IDs using {} initialization
     auto* entry { entry_list_.at(row) };
-    auto rhs_node_id { entry->rhs_node };
+    const auto entry_id { entry->id };
+    const auto rhs_node_id { entry->rhs_node };
+
+    // IMPORTANT: Clean up the pending timer first
+    // This prevents the timer from firing and trying to update a deleted entry.
+    if (auto* timer { pending_timers_.take(entry_id) }) {
+        timer->stop();
+        timer->deleteLater();
+    }
+    pending_updates_.remove(entry_id);
 
     beginRemoveRows(parent, row, row);
     entry_list_.removeAt(row);
     endRemoveRows();
-
-    const auto entry_id { entry->id };
 
     if (!rhs_node_id.isNull()) {
         QJsonObject message { JsonGen::EntryDelete(section_, entry_id) };
