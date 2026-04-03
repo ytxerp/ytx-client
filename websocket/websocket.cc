@@ -6,7 +6,7 @@
 #include "component/constantwebsocket.h"
 #include "component/using.h"
 #include "entryhub/entryhubp.h"
-#include "enum/workspaceroleenum.h"
+#include "enum/workspacerole.h"
 #include "global/userprofile.h"
 #include "tree/model/treemodelo.h"
 #include "tree/model/treemodelp.h"

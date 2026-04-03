@@ -22,7 +22,7 @@
 
 #include <QString>
 
-#include "enum/workspaceroleenum.h"
+#include "enum/workspacerole.h"
 
 class UserProfile {
 public:
