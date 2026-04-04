@@ -96,10 +96,8 @@ public:
     void ApplyTree(const QJsonObject& data);
 
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
-    void InsertMeta(const QUuid& node_id, const QJsonObject& meta) const;
 
     void SyncNode(const QUuid& node_id, const QJsonObject& update);
-    void UpdateMeta(const QUuid& node_id, const QJsonObject& meta) const;
 
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
     void DragNode(const QUuid& ancestor, const QUuid& descendant);
@@ -165,9 +163,6 @@ protected:
 
     void UpdateDirectionRule(Node* node, bool value, const QModelIndex& index);
     void DirectionRuleImpl(Node* node, bool value, const QModelIndex& index);
-
-    void UpdateMeta(Node* node, const QJsonObject& meta) const;
-    void InsertMeta(Node* node, const QJsonObject& meta) const;
 
     void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
 

@@ -120,11 +120,6 @@ void SearchDialog::InitDelegate()
 void SearchDialog::HideTreeColumn(QTableView* view)
 {
     view->setColumnHidden(std::to_underlying(NodeEnum::kId), kIsHidden);
-    view->setColumnHidden(std::to_underlying(NodeEnum::kUserId), kIsHidden);
-    view->setColumnHidden(std::to_underlying(NodeEnum::kCreateBy), kIsHidden);
-    view->setColumnHidden(std::to_underlying(NodeEnum::kCreateTime), kIsHidden);
-    view->setColumnHidden(std::to_underlying(NodeEnum::kUpdateTime), kIsHidden);
-    view->setColumnHidden(std::to_underlying(NodeEnum::kUpdateBy), kIsHidden);
     view->setColumnHidden(std::to_underlying(NodeEnum::kVersion), kIsHidden);
 
     if (info_.section == Section::kSale || info_.section == Section::kPurchase) {

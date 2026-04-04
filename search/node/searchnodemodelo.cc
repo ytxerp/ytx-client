@@ -56,18 +56,8 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
         return d_node->name;
     case NodeEnumO::kId:
         return d_node->id;
-    case NodeEnumO::kUpdateBy:
-        return d_node->updated_by;
-    case NodeEnumO::kUpdateTime:
-        return d_node->updated_time;
-    case NodeEnumO::kCreateTime:
-        return d_node->created_time;
-    case NodeEnumO::kCreateBy:
-        return d_node->created_by;
     case NodeEnumO::kVersion:
         return d_node->version;
-    case NodeEnumO::kUserId:
-        return d_node->user_id;
     case NodeEnumO::kDescription:
         return d_node->description;
     case NodeEnumO::kCode:
@@ -145,12 +135,7 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
         case NodeEnumO::kFinalTotal:
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumO::kId:
-        case NodeEnumO::kUpdateBy:
-        case NodeEnumO::kUpdateTime:
-        case NodeEnumO::kCreateTime:
-        case NodeEnumO::kCreateBy:
         case NodeEnumO::kVersion:
-        case NodeEnumO::kUserId:
         case NodeEnumO::kIsSettled:
         case NodeEnumO::kSettlementId:
             return false;

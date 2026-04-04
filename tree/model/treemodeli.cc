@@ -57,12 +57,7 @@ void TreeModelI::sort(int column, Qt::SortOrder order)
         case NodeEnumI::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumI::kId:
-        case NodeEnumI::kUpdateBy:
-        case NodeEnumI::kUpdateTime:
-        case NodeEnumI::kCreateTime:
-        case NodeEnumI::kCreateBy:
         case NodeEnumI::kVersion:
-        case NodeEnumI::kUserId:
             return false;
         }
     };
@@ -90,16 +85,6 @@ QVariant TreeModelI::data(const QModelIndex& index, int role) const
         return d_node->name;
     case NodeEnumI::kId:
         return d_node->id;
-    case NodeEnumI::kUserId:
-        return d_node->user_id;
-    case NodeEnumI::kCreateTime:
-        return d_node->created_time;
-    case NodeEnumI::kCreateBy:
-        return d_node->created_by;
-    case NodeEnumI::kUpdateTime:
-        return d_node->updated_time;
-    case NodeEnumI::kUpdateBy:
-        return d_node->updated_by;
     case NodeEnumI::kVersion:
         return d_node->version;
     case NodeEnumI::kCode:
@@ -172,12 +157,7 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
         Utils::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kId:
-    case NodeEnumI::kUpdateBy:
-    case NodeEnumI::kUpdateTime:
-    case NodeEnumI::kCreateTime:
-    case NodeEnumI::kCreateBy:
     case NodeEnumI::kVersion:
-    case NodeEnumI::kUserId:
     case NodeEnumI::kName:
     case NodeEnumI::kKind:
     case NodeEnumI::kUnit:

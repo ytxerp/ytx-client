@@ -108,15 +108,6 @@ QSet<QUuid> TreeModel::UpdateTotal(const QUuid& node_id, double initial_total, d
     return affected_ids;
 }
 
-void TreeModel::InsertMeta(const QUuid& node_id, const QJsonObject& meta) const
-{
-    auto* node = GetNode(node_id);
-    if (!node)
-        return;
-
-    InsertMeta(node, meta);
-}
-
 void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
 {
     if (update.isEmpty()) {
@@ -139,35 +130,6 @@ void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
     const int row { index.row() };
     const auto [start, end] = Utils::NodeCacheColumnRange(section_);
     EmitDataChanged(row, row, start, end, index.parent());
-}
-
-void TreeModel::UpdateMeta(const QUuid& node_id, const QJsonObject& meta) const
-{
-    auto* node = GetNode(node_id);
-    if (!node)
-        return;
-
-    UpdateMeta(node, meta);
-}
-
-void TreeModel::UpdateMeta(Node* node, const QJsonObject& meta) const
-{
-    Q_ASSERT_X(meta.contains(kUpdatedBy), "TreeModel::UpdateMeta", "Missing 'updated_by' in meta");
-    Q_ASSERT_X(meta.contains(kUpdatedTime), "TreeModel::UpdateMeta", "Missing 'updated_time' in meta");
-
-    node->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
-    node->updated_by = QUuid(meta[kUpdatedBy].toString());
-}
-
-void TreeModel::InsertMeta(Node* node, const QJsonObject& meta) const
-{
-    Q_ASSERT_X(meta.contains(kUserId), "TreeModel::InsertMeta", "Missing 'user_id' in meta");
-    Q_ASSERT_X(meta.contains(kCreatedTime), "TreeModel::InsertMeta", "Missing 'created_time' in meta");
-    Q_ASSERT_X(meta.contains(kCreatedBy), "TreeModel::InsertMeta", "Missing 'created_by' in meta");
-
-    node->user_id = QUuid(meta[kUserId].toString());
-    node->created_time = QDateTime::fromString(meta[kCreatedTime].toString(), Qt::ISODate);
-    node->created_by = QUuid(meta[kCreatedBy].toString());
 }
 
 void TreeModel::UpdateDirectionRule(Node* node, bool value, const QModelIndex& index)

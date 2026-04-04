@@ -28,16 +28,6 @@ QVariant TreeModelT::data(const QModelIndex& index, int role) const
         return d_node->name;
     case NodeEnumT::kId:
         return d_node->id;
-    case NodeEnumT::kUserId:
-        return d_node->user_id;
-    case NodeEnumT::kCreateTime:
-        return d_node->created_time;
-    case NodeEnumT::kCreateBy:
-        return d_node->created_by;
-    case NodeEnumT::kUpdateTime:
-        return d_node->updated_time;
-    case NodeEnumT::kUpdateBy:
-        return d_node->updated_by;
     case NodeEnumT::kVersion:
         return d_node->version;
     case NodeEnumT::kCode:
@@ -103,12 +93,7 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
         Utils::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kId:
-    case NodeEnumT::kUpdateBy:
-    case NodeEnumT::kUpdateTime:
-    case NodeEnumT::kCreateTime:
-    case NodeEnumT::kCreateBy:
     case NodeEnumT::kVersion:
-    case NodeEnumT::kUserId:
     case NodeEnumT::kName:
     case NodeEnumT::kKind:
     case NodeEnumT::kUnit:
@@ -153,12 +138,7 @@ void TreeModelT::sort(int column, Qt::SortOrder order)
         case NodeEnumT::kTag:
             return Utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumT::kId:
-        case NodeEnumT::kUpdateBy:
-        case NodeEnumT::kUpdateTime:
-        case NodeEnumT::kCreateTime:
-        case NodeEnumT::kCreateBy:
         case NodeEnumT::kVersion:
-        case NodeEnumT::kUserId:
             return false;
         }
     };

@@ -32,16 +32,6 @@ void Node::ReadJson(const QJsonObject& object)
         final_total = val.toString().toDouble();
     if (const auto val = object.value(kInitialTotal); val.isString())
         initial_total = val.toString().toDouble();
-    if (const auto val = object.value(kUserId); val.isString())
-        user_id = QUuid(val.toString());
-    if (const auto val = object.value(kCreatedTime); val.isString())
-        created_time = QDateTime::fromString(val.toString(), Qt::ISODate);
-    if (const auto val = object.value(kCreatedBy); val.isString())
-        created_by = QUuid(val.toString());
-    if (const auto val = object.value(kUpdatedTime); val.isString())
-        updated_time = QDateTime::fromString(val.toString(), Qt::ISODate);
-    if (const auto val = object.value(kUpdatedBy); val.isString())
-        updated_by = QUuid(val.toString());
     if (const auto val = object.value(kVersion); val.isDouble())
         version = val.toInt();
     if (const auto val = object.value(kColor); val.isString())

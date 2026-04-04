@@ -41,11 +41,6 @@ struct Node {
     double final_total {};
     double initial_total {};
 
-    QUuid user_id {};
-    QDateTime created_time {};
-    QUuid created_by {};
-    QDateTime updated_time {};
-    QUuid updated_by {};
     int version {};
 
     Node* parent {};

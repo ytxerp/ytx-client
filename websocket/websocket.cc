@@ -383,7 +383,6 @@ void WebSocket::InsertNode(const QJsonObject& obj)
     auto tree_model { tree_model_hash_.value(section) };
 
     tree_model->InsertNode(ancestor, node_obj);
-    tree_model->InsertMeta(descendant, meta);
 
     if (session_id_ == session_id)
         emit SNodeSelect(section, descendant);
@@ -408,8 +407,6 @@ void WebSocket::UpdateNode(const QJsonObject& obj)
 
     if (session_id != session_id_)
         tree_model->SyncNode(node_id, update);
-
-    tree_model->UpdateMeta(node_id, meta);
 }
 
 void WebSocket::DragNode(const QJsonObject& obj)
@@ -737,9 +734,6 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
         lhs_total = obj.value(kLhsTotal).toObject();
         rhs_total = obj.value(kRhsTotal).toObject();
 
-        tree_model->UpdateMeta(QUuid(lhs_total.value(kId).toString()), meta);
-        tree_model->UpdateMeta(QUuid(rhs_total.value(kId).toString()), meta);
-
         const QJsonArray total_array { lhs_total, rhs_total };
         tree_model->SyncTotalArray(total_array);
     }
@@ -775,9 +769,6 @@ void WebSocket::UpdateEntryRate(const QJsonObject& obj)
         lhs_total = obj.value(kLhsTotal).toObject();
         rhs_total = obj.value(kRhsTotal).toObject();
 
-        tree_model->UpdateMeta(QUuid(lhs_total.value(kId).toString()), meta);
-        tree_model->UpdateMeta(QUuid(rhs_total.value(kId).toString()), meta);
-
         const QJsonArray total_array { lhs_total, rhs_total };
         tree_model->SyncTotalArray(total_array);
     }
@@ -811,9 +802,6 @@ void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
     if (has_total) {
         lhs_total = obj.value(kLhsTotal).toObject();
         rhs_total = obj.value(kRhsTotal).toObject();
-
-        tree_model->UpdateMeta(QUuid(lhs_total.value(kId).toString()), meta);
-        tree_model->UpdateMeta(QUuid(rhs_total.value(kId).toString()), meta);
 
         const QJsonArray total_array { lhs_total, rhs_total };
         tree_model->SyncTotalArray(total_array);
@@ -860,9 +848,6 @@ void WebSocket::InsertEntry(const QJsonObject& obj)
         lhs_total = obj.value(kLhsTotal).toObject();
         rhs_total = obj.value(kRhsTotal).toObject();
 
-        tree_model->UpdateMeta(QUuid(lhs_total.value(kId).toString()), meta);
-        tree_model->UpdateMeta(QUuid(rhs_total.value(kId).toString()), meta);
-
         const QJsonArray total_array { lhs_total, rhs_total };
         tree_model->SyncTotalArray(total_array);
     }
@@ -895,9 +880,6 @@ void WebSocket::DeleteEntry(const QJsonObject& obj)
         lhs_total = obj.value(kLhsTotal).toObject();
         rhs_total = obj.value(kRhsTotal).toObject();
 
-        tree_model->UpdateMeta(QUuid(lhs_total.value(kId).toString()), meta);
-        tree_model->UpdateMeta(QUuid(rhs_total.value(kId).toString()), meta);
-
         const QJsonArray total_array { lhs_total, rhs_total };
         tree_model->SyncTotalArray(total_array);
     }
@@ -920,8 +902,6 @@ void WebSocket::UpdateNodeDirectionRule(const QJsonObject& obj)
     if (session_id != session_id_) {
         tree_model->UpdateDirectionRule(node_id, direction_rule);
     }
-
-    tree_model->UpdateMeta(node_id, meta);
 }
 
 void WebSocket::UpdateNodeName(const QJsonObject& obj)
@@ -936,7 +916,6 @@ void WebSocket::UpdateNodeName(const QJsonObject& obj)
     auto tree_model { tree_model_hash_.value(section) };
 
     tree_model->UpdateName(node_id, name);
-    tree_model->UpdateMeta(node_id, meta);
 }
 
 void WebSocket::UpdateAccountName(const QJsonObject& obj)
@@ -976,7 +955,6 @@ void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_released)
     const QJsonObject meta { obj.value(kMeta).toObject() };
 
     order_model->SyncNode(node_id, node_update);
-    order_model->UpdateMeta(node_id, meta);
     const int version { node_update.value(kVersion).toInt() };
 
     if (session_id == session_id_) {
@@ -1006,7 +984,6 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_released)
     Q_ASSERT(order_model != nullptr);
 
     order_model->InsertNode(ancestor, node_obj);
-    order_model->InsertMeta(descendant, meta);
     const int version { node_obj.value(kVersion).toInt() };
 
     if (session_id == session_id_) {
@@ -1072,7 +1049,6 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
     }
 
     order_model->RNodeStatus(node_id, NodeStatus::kUnreleased);
-    order_model->UpdateMeta(node_id, meta);
 }
 
 void WebSocket::InsertSettlement(const QJsonObject& obj)

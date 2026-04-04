@@ -18,18 +18,8 @@ QVariant SearchNodeModelI::data(const QModelIndex& index, int role) const
         return d_node->name;
     case NodeEnumI::kId:
         return d_node->id;
-    case NodeEnumI::kUpdateBy:
-        return d_node->updated_by;
-    case NodeEnumI::kUpdateTime:
-        return d_node->updated_time;
-    case NodeEnumI::kCreateTime:
-        return d_node->created_time;
-    case NodeEnumI::kCreateBy:
-        return d_node->created_by;
     case NodeEnumI::kVersion:
         return d_node->version;
-    case NodeEnumI::kUserId:
-        return d_node->user_id;
     case NodeEnumI::kCode:
         return d_node->code;
     case NodeEnumI::kTag:
@@ -93,12 +83,7 @@ void SearchNodeModelI::sort(int column, Qt::SortOrder order)
         case NodeEnumI::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumI::kId:
-        case NodeEnumI::kUpdateBy:
-        case NodeEnumI::kUpdateTime:
-        case NodeEnumI::kCreateTime:
-        case NodeEnumI::kCreateBy:
         case NodeEnumI::kVersion:
-        case NodeEnumI::kUserId:
             return false;
         }
     };
