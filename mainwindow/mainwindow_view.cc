@@ -215,7 +215,6 @@ void MainWindow::SetTagView(QTableView* view) const
     view->setAlternatingRowColors(true);
 
     view->setColumnHidden(std::to_underlying(TagEnum::kId), kIsHidden);
-    view->setColumnHidden(std::to_underlying(TagEnum::kVersion), kIsHidden);
 
     view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     view->horizontalHeader()->setSectionResizeMode(std::to_underlying(TagEnum::kColor), QHeaderView::Stretch);

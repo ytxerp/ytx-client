@@ -439,20 +439,14 @@ QJsonObject SettlementDelete(Section section, CUuid& settlement_id, int version)
     return message;
 }
 
-QJsonObject TagUpdate(Section section, const Tag* tag)
+QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update)
 {
-    QJsonObject update {};
-
-    update.insert(kName, tag->name);
-    update.insert(kColor, tag->color);
-
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kMeta, QJsonObject());
-    message.insert(kId, tag->id.toString(QUuid::WithoutBraces));
+    message.insert(kId, id.toString(QUuid::WithoutBraces));
     message.insert(kUpdate, update);
-    message.insert(kVersion, tag->version);
 
     return message;
 }

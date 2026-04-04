@@ -35,7 +35,7 @@ public:
     int columnCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent)
-        return 4;
+        return 3;
     }
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -63,9 +63,8 @@ private:
 
     QSet<QString> names_ {};
     QList<Tag*> tag_list_ {}; // non-owning
-    QHash<QUuid, Tag*> tag_hash_ {}; // non-owning
 
-    QSet<QUuid> pending_updates_ {};
+    QHash<QUuid, QJsonObject> pending_updates_ {};
     QHash<QUuid, QTimer*> pending_timers_ {};
 };
 

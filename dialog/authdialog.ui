@@ -264,6 +264,13 @@
  <tabstops>
   <tabstop>lineEditEmail</tabstop>
   <tabstop>lineEditPassword</tabstop>
+  <tabstop>lineEditWorkspace</tabstop>
+  <tabstop>lineEditPasswordConfirm</tabstop>
+  <tabstop>checkBoxPrivacy</tabstop>
+  <tabstop>checkBoxTerms</tabstop>
+  <tabstop>pushButtonLogin</tabstop>
+  <tabstop>pushButtonRegister</tabstop>
+  <tabstop>chkBoxPasswordRemembered</tabstop>
  </tabstops>
  <resources/>
  <connections/>

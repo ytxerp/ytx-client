@@ -31,7 +31,6 @@ struct Tag final {
     QUuid id {};
     QString name {};
     QString color {};
-    int version {};
 
     // state is local only, not serialized
     SyncState state { SyncState::kNew };
@@ -63,8 +62,6 @@ inline void Tag::ReadJson(const QJsonObject& object)
         name = val.toString();
     if (const auto val = object.value(kColor); val.isString())
         color = val.toString();
-    if (const auto val = object.value(kVersion); val.isDouble())
-        version = val.toInt();
 }
 
 #endif // TAG_H

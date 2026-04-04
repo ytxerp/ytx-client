@@ -12,7 +12,6 @@
 TagModel::TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
     : QAbstractItemModel(parent)
     , section_ { section }
-    , tag_hash_ { tag_hash }
 {
     for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
         tag_list_.append(it.value());
@@ -37,8 +36,6 @@ QVariant TagModel::headerData(int section, Qt::Orientation orientation, int role
         return tr("Name");
     case TagEnum::kColor:
         return tr("Color");
-    case TagEnum::kVersion:
-        return tr("Version");
     }
 }
 
@@ -71,8 +68,6 @@ QVariant TagModel::data(const QModelIndex& index, int role) const
         return tag->name;
     case TagEnum::kColor:
         return tag->color;
-    case TagEnum::kVersion:
-        return tag->version;
     }
 }
 
@@ -96,7 +91,6 @@ bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role
         UpdateColor(tag, value.toString());
         break;
     case TagEnum::kId:
-    case TagEnum::kVersion:
         return false;
     }
 
@@ -115,7 +109,6 @@ void TagModel::sort(int column, Qt::SortOrder order)
         case TagEnum::kColor:
             return Utils::CompareMember(lhs, rhs, &Tag::color, order);
         case TagEnum::kId:
-        case TagEnum::kVersion:
             return false;
         }
     };
@@ -137,7 +130,6 @@ Qt::ItemFlags TagModel::flags(const QModelIndex& index) const
         flags |= Qt::ItemIsEditable;
         break;
     case TagEnum::kId:
-    case TagEnum::kVersion:
     case TagEnum::kColor:
         flags &= ~Qt::ItemIsEditable;
         break;
@@ -163,7 +155,6 @@ bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
     beginInsertRows(parent, row, row);
 
     tag_list_.insert(row, tag);
-    tag_hash_.insert(tag->id, tag);
 
     endInsertRows();
 
@@ -196,7 +187,6 @@ bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
 
     // Remove from all internal containers
     tag_list_.removeAt(row);
-    tag_hash_.remove(tag_id);
     names_.remove(tag_name);
 
     endRemoveRows();
@@ -233,7 +223,7 @@ bool TagModel::UpdateName(Tag* tag, const QString& new_name)
     if (tag->state == SyncState::kNew && !tag->color.isEmpty()) {
         TryInsert(tag);
     } else if (tag->state == SyncState::kSynced) {
-        pending_updates_.insert(tag->id);
+        pending_updates_[tag->id].insert(kName, new_name);
         RestartTimer(tag->id);
     }
 
@@ -250,7 +240,7 @@ bool TagModel::UpdateColor(Tag* tag, const QString& new_color)
     if (tag->state == SyncState::kNew && !tag->name.isEmpty()) {
         TryInsert(tag);
     } else if (tag->state == SyncState::kSynced) {
-        pending_updates_.insert(tag->id);
+        pending_updates_[tag->id].insert(kColor, new_color);
         RestartTimer(tag->id);
     }
 
@@ -271,10 +261,12 @@ void TagModel::RestartTimer(const QUuid& id)
             // Manage lifecycle by taking the timer from the hash
             auto* expired_timer { pending_timers_.take(id) };
 
-            // Check if tag still exists and send update
-            if (auto it { tag_hash_.find(id) }; it != tag_hash_.end()) {
-                const auto* tag { it.value() };
-                const QJsonObject message { JsonGen::TagUpdate(section_, tag) };
+            // Retrieve and remove the pending update content in one go
+            const auto update { pending_updates_.take(id) };
+
+            // Only send the message if there are actual changes
+            if (!update.isEmpty()) {
+                const QJsonObject message { JsonGen::TagUpdate(section_, id, update) };
                 WebSocket::Instance()->SendMessage(WsKey::kTagUpdate, message);
             }
 

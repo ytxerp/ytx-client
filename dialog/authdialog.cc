@@ -65,7 +65,7 @@ void AuthDialog::RDenyLogin(int code)
         break;
     case LoginOutcome::WorkspaceAccessPending:
         title = tr("Access Pending");
-        message = tr("Your request to join workspace \"%1\" is awaiting approval.").arg(LoginInfo::Instance().Workspace());
+        message = tr("Your request to join workspace %1 is awaiting approval.").arg(LoginInfo::Instance().Workspace());
         break;
     case LoginOutcome::AlreadyLoggedIn:
         message = tr("You're already logged in.");

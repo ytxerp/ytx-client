@@ -20,6 +20,6 @@
 #ifndef TAGENUM_H
 #define TAGENUM_H
 
-enum class TagEnum : int { kId = 0, kName, kColor, kVersion };
+enum class TagEnum : int { kId = 0, kName, kColor };
 
 #endif // TAGENUM_H

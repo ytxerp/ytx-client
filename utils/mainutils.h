@@ -41,7 +41,6 @@ inline QString ResourceFile()
 
     const QStringList args { "-binary", qrc, "-o", brc };
 
-
     QProcess process {};
     process.start(rcc, args);
     process.waitForFinished();
