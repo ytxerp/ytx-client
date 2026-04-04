@@ -419,6 +419,14 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex& parent)
 
     const auto node_id { node->id };
 
+    // IMPORTANT: Clean up the pending timer first
+    // This prevents the timer from firing and trying to update a deleted node.
+    if (auto* timer { pending_timers_.take(node_id) }) {
+        timer->stop();
+        timer->deleteLater();
+    }
+    pending_updates_.remove(node_id);
+
     beginRemoveRows(parent, row, row);
     parent_node->children.removeOne(node);
     endRemoveRows();
