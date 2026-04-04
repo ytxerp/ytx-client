@@ -366,13 +366,11 @@ void WebSocket::InsertNode(const QJsonObject& obj)
     Q_ASSERT(obj.contains(kSessionId));
     Q_ASSERT(obj.contains(kNode));
     Q_ASSERT(obj.contains(kPath));
-    Q_ASSERT(obj.contains(kMeta));
 
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QJsonObject node_obj { obj.value(kNode).toObject() };
     const QJsonObject path_obj { obj.value(kPath).toObject() };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
 
     Q_ASSERT(path_obj.contains(kDescendant));
     Q_ASSERT(path_obj.contains(kAncestor));
@@ -394,13 +392,11 @@ void WebSocket::UpdateNode(const QJsonObject& obj)
     Q_ASSERT(obj.contains(kSessionId));
     Q_ASSERT(obj.contains(kNodeId));
     Q_ASSERT(obj.contains(kUpdate));
-    Q_ASSERT(obj.contains(kMeta));
 
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
 
     auto tree_model { tree_model_hash_.value(section) };
     Q_ASSERT(tree_model != nullptr);
@@ -700,7 +696,6 @@ void WebSocket::UpdateEntry(const QJsonObject& obj)
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
 
@@ -718,7 +713,6 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid entry_id { obj.value(kEntryId).toString() };
     const bool is_parallel { obj.value(kIsParallel).toBool() };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
     const QJsonObject update { obj.value(kUpdate).toObject() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
@@ -749,7 +743,6 @@ void WebSocket::UpdateEntryRate(const QJsonObject& obj)
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
     const bool is_parallel { obj.value(kIsParallel).toBool() };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
@@ -781,7 +774,6 @@ void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
 
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
@@ -852,7 +844,6 @@ void WebSocket::DeleteEntry(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
@@ -883,7 +874,6 @@ void WebSocket::UpdateNodeDirectionRule(const QJsonObject& obj)
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const bool direction_rule { obj.value(kDirectionRule).toBool() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
 
     auto tree_model { tree_model_hash_.value(section) };
 
@@ -899,7 +889,6 @@ void WebSocket::UpdateNodeName(const QJsonObject& obj)
 
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const auto name { obj.value(kName).toString() };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
 
     auto tree_model { tree_model_hash_.value(section) };
 
@@ -940,8 +929,6 @@ void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_released)
     if (!order_model->Contains(node_id))
         return;
 
-    const QJsonObject meta { obj.value(kMeta).toObject() };
-
     order_model->SyncNode(node_id, node_update);
     const int version { node_update.value(kVersion).toInt() };
 
@@ -966,7 +953,6 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_released)
     const auto descendant { QUuid(path_obj.value(kDescendant).toString()) };
     const auto ancestor { QUuid(path_obj.value(kAncestor).toString()) };
     const auto node_id { QUuid(node_obj.value(kId).toString()) };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
 
     auto* order_model { static_cast<TreeModelO*>(tree_model_hash_.value(section).data()) };
     Q_ASSERT(order_model != nullptr);
@@ -1027,7 +1013,6 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
     if (!order_model->Contains(node_id))
         return;
 
-    const QJsonObject meta { obj.value(kMeta).toObject() };
     const int version { node_update.value(kVersion).toInt() };
 
     order_model->SyncNode(node_id, node_update);
