@@ -1,3 +1,4 @@
+#include "enum/reference.h"
 #include "mainwindow.h"
 #include "reference/orderreferencemodelp.h"
 #include "reference/orderreferencewidget.h"
@@ -89,11 +90,11 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
     {
         switch (section) {
         case Section::kInventory:
-            SetTableViewSaleReferenceI(view);
+            InitTableView(view, std::to_underlying(SaleReferenceEnumI::kOrderId), std::to_underlying(SaleReferenceEnumI::kDescription));
             DelegateSaleReferenceI(view, sc_i_.section_config);
             break;
         case Section::kPartner:
-            SetTableViewSaleReferenceP(view);
+            InitTableView(view, std::to_underlying(SaleReferenceEnumP::kOrderId), std::to_underlying(SaleReferenceEnumP::kDescription));
             DelegateSaleReferenceP(view, sc_p_.section_config);
             break;
         case Section::kSale:

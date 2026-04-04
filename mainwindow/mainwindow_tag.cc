@@ -4,6 +4,7 @@
 #include <QPainter>
 
 #include "dialog/tagmanagerdlg.h"
+#include "enum/tagenum.h"
 #include "global/resourcepool.h"
 #include "mainwindow.h"
 #include "tag/tagmodel.h"
@@ -28,7 +29,7 @@ void MainWindow::on_actionTags_triggered()
         dialog->SetModel(model);
 
         auto* view { dialog->View() };
-        SetTagView(view);
+        InitTableView(view, std::to_underlying(TagEnum::kId), std::to_underlying(TagEnum::kColor));
         DelegateTagView(view);
     }
 

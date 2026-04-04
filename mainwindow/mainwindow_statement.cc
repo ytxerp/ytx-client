@@ -21,7 +21,7 @@ void MainWindow::on_actionStatement_triggered()
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    SetStatementView(view, std::to_underlying(StatementEnum::kPlaceholder));
+    InitTableView(view, -1, std::to_underlying(StatementEnum::kPlaceholder));
     DelegateStatement(view, sc_->section_config);
 
     connect(widget, &StatementWidget::SStatementNode, this, &MainWindow::RStatementNode);
@@ -88,7 +88,7 @@ void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start,
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    SetStatementView(view, std::to_underlying(StatementNodeEnum::kDescription));
+    InitTableView(view, -1, std::to_underlying(StatementNodeEnum::kDescription));
     DelegateStatementNode(view, sc_->section_config);
 
     connect(widget, &StatementNodeWidget::SStatementEntry, this, &MainWindow::RStatementEntry);
@@ -121,7 +121,7 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    SetStatementView(view, std::to_underlying(StatementEntryEnum::kDescription));
+    InitTableView(view, -1, std::to_underlying(StatementEntryEnum::kDescription));
     DelegateStatementEntry(view, sc_->section_config);
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);

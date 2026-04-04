@@ -206,19 +206,17 @@ private:
     void CreateSaleReference(const QUuid& node_id, int unit);
     void DelegateSaleReferenceI(QTableView* table_view, CSectionConfig& config) const;
     void DelegateSaleReferenceP(QTableView* table_view, CSectionConfig& config) const;
-    void SetTableViewSaleReferenceI(QTableView* view) const;
-    void SetTableViewSaleReferenceP(QTableView* view) const;
 
-    void SetStatementView(QTableView* view, int stretch_column) const;
     void DelegateStatement(QTableView* table_view, CSectionConfig& config) const;
 
     void SetSettlementView(QTableView* view, int stretch_column) const;
     void DelegateSettlement(QTableView* table_view, CSectionConfig& config) const;
-    void SetSettlementItemView(QTableView* view, int stretch_column) const;
     void DelegateSettlementNode(QTableView* table_view, CSectionConfig& config) const;
 
-    void SetTagView(QTableView* view) const;
     void DelegateTagView(QTableView* table_view) const;
+
+    void DelegateWorkspaceMemberView(QTableView* table_view) const;
+    void InitTableView(QTableView* view, int id_column, int stretch_column) const;
 
     void DelegateStatementNode(QTableView* table_view, CSectionConfig& config) const;
     void DelegateStatementEntry(QTableView* table_view, CSectionConfig& config) const;

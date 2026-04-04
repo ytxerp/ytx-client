@@ -60,7 +60,7 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
 
     {
         auto* view { widget->View() };
-        SetSettlementItemView(view, std::to_underlying(SettlementItemEnum::kDescription));
+        InitTableView(view, std::to_underlying(SettlementItemEnum::kId), std::to_underlying(SettlementItemEnum::kDescription));
         DelegateSettlementNode(view, sc_->section_config);
     }
 
