@@ -1,9 +1,9 @@
-#include "dialog/memberdialog.h"
 #include "dialog/userprofiledialog.h"
 #include "enum/authenum.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "utils/mainwindowutils.h"
+#include "workspace_member/workspacememberdialog.h"
 
 void MainWindow::on_actionProfile_triggered()
 {
@@ -46,7 +46,7 @@ void MainWindow::on_actionMember_triggered()
 {
     qInfo() << "[UI]" << "on_actionMember_triggered";
 
-    auto* dialog = new MemberDialog(this);
+    auto* dialog = new WorkspaceMemberDialog(this);
     Utils::ManageDialog(sc_->widget_hash, dialog);
 
     dialog->show();

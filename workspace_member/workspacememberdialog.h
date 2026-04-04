@@ -34,6 +34,9 @@ public:
     ~WorkspaceMemberDialog() override;
 
 private:
+    void InitDialog();
+
+private:
     Ui::WorkspaceMemberDialog* ui;
 };
 
