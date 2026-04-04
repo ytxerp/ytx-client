@@ -14,98 +14,6 @@
         <translation>关闭</translation>
     </message>
     <message>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;.AppleSystemUIFont&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; font-weight:700;&quot;&gt;YTX v0.3.4&lt;/span&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;&lt;br /&gt;© 2026 YTX &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;YTX is an enterprise resource planning system designed to help businesses manage operations efficiently. &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;Please review our Privacy Policy and Terms of Service for full details. &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;privacy_policy.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;Privacy Policy&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; | &lt;/span&gt;&lt;a href=&quot;terms_of_service.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;Terms of Service&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;.AppleSystemUIFont&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; font-weight:700;&quot;&gt;YTX v0.3.4&lt;/span&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;&lt;br /&gt;© 2026 YTX &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;YTX 是一款企业资源计划（ERP）系统，旨在帮助企业高效管理运营。 &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;请查看我们的隐私政策和服务条款以了解完整信息。 &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;privacy_policy.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;隐私政策&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; | &lt;/span&gt;&lt;a href=&quot;terms_of_service.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;服务条款&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;.AppleSystemUIFont&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; font-weight:700;&quot;&gt;YTX v0.3.4&lt;/span&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;&lt;br /&gt;© 2026 YTX &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;YTX is an enterprise resource planning system designed to help businesses manage operations efficiently. &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;This software is provided &amp;quot;as-is&amp;quot; to help you manage your business efficiently. While we strive to ensure data accuracy and reliable service, users are responsible for verifying their business information and decisions. &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;Please review our Privacy Policy and Terms of Service for full details. &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;privacy_policy.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;Privacy Policy&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; | &lt;/span&gt;&lt;a href=&quot;terms_of_service.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;Terms of Service&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;.AppleSystemUIFont&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; font-weight:700;&quot;&gt;YTX v0.3.4&lt;/span&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;&lt;br /&gt;© 2026 YTX &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;YTX 是一款企业资源计划（ERP）系统，旨在帮助企业高效管理运营。 &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt;请查看我们的隐私政策和服务条款以了解完整信息。 &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;privacy_policy.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;隐私政策&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; | &lt;/span&gt;&lt;a href=&quot;terms_of_service.html&quot;&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;; text-decoration: underline; color:#27bf73;&quot;&gt;服务条款&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;sans-serif&apos;;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>Do Not Go Gentle into That Good Night
-
-Do not go gentle into that good night
-Old age should burn and rave at close of day
-Rage, rage against the dying of the light.
-
-Though wise men at their end know dark is right
-Because their words had forked no lightning they
-Do not go gentle into that good night.
-
-Good men, the last wave by, crying how bright
-Their frail deeds might have danced in a green bay
-Rage, rage against the dying of the light.
-
-Wild men who caught and sang the sun in flight
-And learn, too late, they grieved it on its way
-Do not go gentle into that good night.
-
-Grave men, near death, who see with blinding sight
-Blind eyes could blaze like meteors and be gay
-Rage, rage against the dying of the light.
-
-And you, my father, there on the sad height
-Curse, bless, me now with your fierce tears, I pray
-Do not go gentle into that good night
-Rage, rage against the dying of the light.</source>
-        <comment>About dialog poem. Feel free to translate the poem if appropriate.</comment>
-        <translation type="vanished">侠客行
-
-赵客缦胡缨，吴钩霜雪明。
-银鞍照白马，飒沓如流星。
-十步杀一人，千里不留行。
-事了拂衣去，深藏身与名。
-闲过信陵饮，脱剑膝前横。
-将炙啖朱亥，持觞劝侯嬴。
-三杯吐然诺，五岳倒为轻。
-眼花耳热后，意气素霓生。
-救赵挥金槌，邯郸先震惊。
-千秋二壮士，烜赫大梁城。
-纵死侠骨香，不惭世上英。
-谁能书阁下，白首太玄经。</translation>
-    </message>
-    <message>
         <location filename="../../dialog/about.cc" line="65"/>
         <source>YTX is an enterprise resource planning system designed to help businesses manage operations efficiently.</source>
         <translation>YTX 是一款企业资源计划（ERP）系统，旨在帮助企业高效管理运营。</translation>
@@ -145,21 +53,9 @@ Rage, rage against the dying of the light.</source>
         <translation>邮箱</translation>
     </message>
     <message>
-        <source>&lt;a href=&apos;signin&apos;&gt;Sign In&lt;/a&gt;</source>
-        <translation type="vanished">&lt;a href=&apos;signin&apos;&gt;登录&lt;/a&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;signin&apos;&gt;Sign Up&lt;/a&gt;</source>
-        <translation type="obsolete">&lt;a href=&apos;signin&apos;&gt;Sign Up&lt;/a&gt;</translation>
-    </message>
-    <message>
         <location filename="../../dialog/authdialog.ui" line="119"/>
         <source>Password</source>
         <translation>密码</translation>
-    </message>
-    <message>
-        <source>View Terms of Service</source>
-        <translation type="vanished">查看服务条款</translation>
     </message>
     <message>
         <location filename="../../dialog/authdialog.ui" line="202"/>
@@ -170,14 +66,6 @@ Rage, rage against the dying of the light.</source>
         <location filename="../../dialog/authdialog.ui" line="222"/>
         <source>I have read and agree to Terms of Service</source>
         <translation>我已阅读并同意服务条款</translation>
-    </message>
-    <message>
-        <source>View Privacy Policy</source>
-        <translation type="vanished">查看隐私政策</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;Sign In&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;登录&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../dialog/authdialog.ui" line="144"/>
@@ -194,10 +82,6 @@ Rage, rage against the dying of the light.</source>
         <location filename="../../dialog/authdialog.cc" line="195"/>
         <source>Don&apos;t have YTX account?</source>
         <translation>没有 YTX 账号？</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;Sign Up&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2bb3eb;&quot;&gt;注册&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../dialog/authdialog.ui" line="195"/>
@@ -283,6 +167,11 @@ Rage, rage against the dying of the light.</source>
         <translation>工区不能为空</translation>
     </message>
     <message>
+        <location filename="../../dialog/authdialog.cc" line="68"/>
+        <source>Your request to join workspace %1 is awaiting approval.</source>
+        <translation>您加入 %1 的申请正在等待审批。</translation>
+    </message>
+    <message>
         <location filename="../../dialog/authdialog.cc" line="164"/>
         <source>Need a YTX account?</source>
         <translation>需要 YTX 账号吗？</translation>
@@ -333,11 +222,6 @@ Rage, rage against the dying of the light.</source>
         <location filename="../../dialog/authdialog.cc" line="64"/>
         <source>This workspace&apos;s subscription has expired.</source>
         <translation>该工区的订阅已到期。</translation>
-    </message>
-    <message>
-        <location filename="../../dialog/authdialog.cc" line="68"/>
-        <source>Your request to join workspace &quot;%1&quot; is awaiting approval.</source>
-        <translation>您加入 \&quot;%1\&quot; 的申请正在等待审批。</translation>
     </message>
     <message>
         <location filename="../../dialog/authdialog.cc" line="71"/>
@@ -896,65 +780,9 @@ Rage, rage against the dying of the light.</source>
         <translation>订单</translation>
     </message>
     <message>
-        <source>Order Settled</source>
-        <translation type="obsolete">已结算</translation>
-    </message>
-    <message>
-        <source>Currently referenced by linked nodes within the same section.</source>
-        <translation type="vanished">本版块内被关联节点引用。</translation>
-    </message>
-    <message>
-        <source>Inside</source>
-        <translation type="vanished">内部</translation>
-    </message>
-    <message>
-        <source>This inventory node (internal unit) is currently referenced by partner, sale, or purchase entries.</source>
-        <translation type="vanished">存货节点（内部单位）被合作、销售或采购引用。</translation>
-    </message>
-    <message>
-        <source>Inventory INT</source>
-        <translation type="vanished">存货（内）</translation>
-    </message>
-    <message>
-        <source>This inventory node (external unit) is currently referenced by partner entries.</source>
-        <translation type="vanished">存货节点（外部单位）被合作引用。</translation>
-    </message>
-    <message>
-        <source>Inventory EXT</source>
-        <translation type="vanished">存货（外）</translation>
-    </message>
-    <message>
-        <source>This partner node (customer or vendor) is currently referenced by sale or purchase nodes.</source>
-        <translation type="vanished">合作节点（客户或供应商）被销售或采购引用。</translation>
-    </message>
-    <message>
-        <source>Partner</source>
-        <translation type="vanished">合作</translation>
-    </message>
-    <message>
-        <source>This partner node (employee) is currently referenced by sale or purchase nodes.</source>
-        <translation type="vanished">合作节点（员工）当前被销售或采购节点引用。</translation>
-    </message>
-    <message>
-        <source>Employee</source>
-        <translation type="vanished">员工</translation>
-    </message>
-    <message>
-        <source>This order node (sale or purchase) is currently settled.</source>
-        <translation type="vanished">订单节点（销售或采购）已经结算。</translation>
-    </message>
-    <message>
-        <source>Settlement</source>
-        <translation type="vanished">结算</translation>
-    </message>
-    <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="193"/>
         <source>This node is still in use. How would you like to proceed?</source>
         <translation>该节点仍在使用中，你想要怎么处理？</translation>
-    </message>
-    <message>
-        <source>This node is about to be deleted but is still referenced. How do you want to handle it?</source>
-        <translation type="vanished">这个节点即将被删除，但仍然存在引用。你希望如何处理？</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="162"/>
@@ -1001,42 +829,42 @@ Rage, rage against the dying of the light.</source>
     <name>MainWindow</name>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="82"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="646"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="647"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="101"/>
         <source>Finance</source>
         <translation>财务</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="101"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="651"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="652"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="104"/>
         <source>Task</source>
         <translation>任务</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="114"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="656"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="657"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="103"/>
         <source>Inventory</source>
         <translation>存货</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="127"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="661"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="662"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="102"/>
         <source>Partner</source>
         <translation>合作</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="143"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="666"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="667"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="105"/>
         <source>Sale</source>
         <translation>销售</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="159"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="671"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="672"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="106"/>
         <source>Purchase</source>
         <translation>采购</translation>
@@ -1057,209 +885,214 @@ Rage, rage against the dying of the light.</source>
         <translation>帐户</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="354"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="355"/>
         <source>toolBar</source>
         <translation>工具栏</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="393"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="394"/>
         <source>Alt+N</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="412"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="413"/>
         <source>Alt+P</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="423"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="424"/>
         <source>Ctrl+J</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="434"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="435"/>
         <source>Alt+E</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="387"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="388"/>
         <source>Insert Node...</source>
         <translation>插入节点...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="390"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="391"/>
         <source>Insert a new node at the end of the current level</source>
         <translation>在当前层级的末尾插入一个新节点</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="398"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="399"/>
         <source>Delete...</source>
         <translation>删除...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="401"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="402"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="406"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="407"/>
         <source>Append Node...</source>
         <translation>追加节点...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="409"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="410"/>
         <source>Append a new node under the selected branch</source>
         <translation>在所选分支下追加一个新节点</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="417"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="418"/>
         <source>Jump Entry</source>
         <translation>跳转</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="420"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="421"/>
         <source>Jump to the linked entry in the other node tab</source>
         <translation>跳转到关联节点标签页中的条目</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="428"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="429"/>
         <source>Rename...</source>
         <translation>重命名...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="431"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="432"/>
         <source>Rename</source>
         <translation>重命名</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="439"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="440"/>
         <source>Search...</source>
         <translation>搜索...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="442"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="443"/>
         <source>Ctrl+F</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="447"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="448"/>
         <source>Preferences...</source>
         <translation>首选项...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="450"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="451"/>
         <source>Ctrl+,</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="455"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="458"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="456"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="459"/>
         <source>About YTX</source>
         <translation>关于 YTX</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="463"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="466"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="464"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="467"/>
         <source>Mark All</source>
         <translation>全选</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="474"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="477"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="475"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="478"/>
         <source>Mark None</source>
         <translation>空选</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="485"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="488"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="486"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="489"/>
         <source>Mark Toggle</source>
         <translation>反选</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="537"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="538"/>
         <source>Sign In...</source>
         <translation>登录...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="540"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="541"/>
         <source>Sign In</source>
         <translation>登录</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="551"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="554"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="552"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="555"/>
         <source>Sign Out</source>
         <translation>登出</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="578"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="581"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="579"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="582"/>
         <source>Clear Color</source>
         <translation>清空颜色</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="611"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="612"/>
         <source>New Branch...</source>
         <translation>新建分枝...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="614"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="615"/>
         <source>Create a new branch node to organize other nodes</source>
         <translation>创建一个新的分支节点以管理其他节点</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="641"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="642"/>
         <source>Ctrl+T</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="676"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="677"/>
         <source>Profile</source>
         <translation>个人资料</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="630"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="633"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="682"/>
+        <source>Member</source>
+        <translation>工区成员</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow.ui" line="631"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="634"/>
         <source>Check Updates</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="638"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="639"/>
         <source>Tags...</source>
         <translation>标签...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="496"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="499"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="497"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="500"/>
         <source>Append Entry</source>
         <translation>追加记录</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="502"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="503"/>
         <source>Ctrl+N</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="507"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="508"/>
         <source>Export Excel...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="510"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="644"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="511"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="645"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="515"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="516"/>
         <location filename="../../mainwindow/mainwindow_statement.cc" line="18"/>
         <location filename="../../mainwindow/mainwindow_statement.cc" line="83"/>
         <source>Statement</source>
         <translation>帐单</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="523"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="526"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="524"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="527"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="23"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="53"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="80"/>
@@ -1267,55 +1100,55 @@ Rage, rage against the dying of the light.</source>
         <translation>结算</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="562"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="565"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="197"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="563"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="566"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="198"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="570"/>
-        <location filename="../../mainwindow/mainwindow.ui" line="573"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="198"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="571"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="574"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="199"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="43"/>
         <source>Workspace</source>
         <translation>工区</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="584"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="585"/>
         <source>Alt+R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="592"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="593"/>
         <source>Reconnect</source>
         <translation>重连</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="600"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="601"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="603"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="604"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="617"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="618"/>
         <source>Alt+G</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.ui" line="625"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="199"/>
+        <location filename="../../mainwindow/mainwindow.ui" line="626"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="200"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="44"/>
         <source>Expire Date</source>
         <translation>期限</translation>
     </message>
     <message>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="47"/>
         <location filename="../../mainwindow/mainwindow_global.cc" line="49"/>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="183"/>
         <source>Update Failed</source>
         <translation>更新失败</translation>
     </message>
@@ -1349,104 +1182,104 @@ Do you want to save before closing?</source>
 是否在关闭前保存？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_order_reference.cc" line="56"/>
+        <location filename="../../mainwindow/mainwindow_order_reference.cc" line="57"/>
         <source>Record</source>
         <translation>记录</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="61"/>
+        <location filename="../../mainwindow/mainwindow_auth.cc" line="59"/>
         <source>Connection Refused</source>
         <translation>连接被拒绝</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="61"/>
+        <location filename="../../mainwindow/mainwindow_auth.cc" line="59"/>
         <source>Unable to connect to the server. Please try again.</source>
         <translation>无法连接到服务器，请重新尝试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="77"/>
+        <location filename="../../mainwindow/mainwindow_auth.cc" line="75"/>
         <source>Remote Host Closed</source>
         <translation>连接已关闭</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="77"/>
+        <location filename="../../mainwindow/mainwindow_auth.cc" line="75"/>
         <source>The server has closed the connection. Please try reconnecting.</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="165"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="29"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="42"/>
         <source>Name</source>
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="176"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="40"/>
         <source>Username format is invalid. Use 3-32 lowercase letters, digits, or underscores. No consecutive or trailing underscores.</source>
         <translation>用户名格式无效，须为3-32位小写字母、数字或下划线，不允许连续或结尾使用下划线。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="179"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="43"/>
         <source>This username is already taken. Please choose another one.</source>
         <translation>该用户名已被占用，请选择其他用户名。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="654"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="655"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="654"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="655"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="654"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="655"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="688"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="689"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="688"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="689"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="691"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="692"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="691"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="692"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="711"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="718"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="712"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="719"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="711"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="712"/>
         <source>Failed to check updates.</source>
         <translation>检查更新失败。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="718"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="719"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="730"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="731"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="731"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="732"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1455,12 +1288,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="743"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="744"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="743"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="744"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -1502,14 +1335,14 @@ You need to recall it first before making changes.</source>
         <translation>将删除此分支、所有直系子节点提升至同级。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="184"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="285"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="185"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="286"/>
         <source>Tags</source>
         <translation>标签</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="214"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="314"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="215"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="315"/>
         <source>Manage...</source>
         <translation>管理...</translation>
     </message>
@@ -1757,12 +1590,12 @@ You need to recall it first before making changes.</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="385"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="386"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="392"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="393"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -2522,18 +2355,6 @@ You need to recall it first before making changes.</source>
 <context>
     <name>StatementEntryWidget</name>
     <message>
-        <source>IMM</source>
-        <translation type="vanished">现结</translation>
-    </message>
-    <message>
-        <source>MON</source>
-        <translation type="vanished">月结</translation>
-    </message>
-    <message>
-        <source>PEN</source>
-        <translation type="vanished">挂帐</translation>
-    </message>
-    <message>
         <location filename="../../billing/statement/statemententrywidget.ui" line="95"/>
         <source>IS</source>
         <translation>现结</translation>
@@ -2567,18 +2388,6 @@ You need to recall it first before making changes.</source>
 <context>
     <name>StatementNodeWidget</name>
     <message>
-        <source>IMM</source>
-        <translation type="vanished">现结</translation>
-    </message>
-    <message>
-        <source>MON</source>
-        <translation type="vanished">月结</translation>
-    </message>
-    <message>
-        <source>PEN</source>
-        <translation type="vanished">挂帐</translation>
-    </message>
-    <message>
         <location filename="../../billing/statement/statementnodewidget.ui" line="95"/>
         <source>IS</source>
         <translation>现结</translation>
@@ -2601,18 +2410,6 @@ You need to recall it first before making changes.</source>
 </context>
 <context>
     <name>StatementWidget</name>
-    <message>
-        <source>IMM</source>
-        <translation type="vanished">现结</translation>
-    </message>
-    <message>
-        <source>MON</source>
-        <translation type="vanished">月结</translation>
-    </message>
-    <message>
-        <source>PEN</source>
-        <translation type="vanished">挂帐</translation>
-    </message>
     <message>
         <location filename="../../billing/statement/statementwidget.ui" line="95"/>
         <source>IS</source>
@@ -2827,24 +2624,19 @@ You need to recall it first before making changes.</source>
 <context>
     <name>TagModel</name>
     <message>
-        <location filename="../../tag/tagmodel.cc" line="35"/>
+        <location filename="../../tag/tagmodel.cc" line="33"/>
         <source>Id</source>
         <translation>Id</translation>
     </message>
     <message>
-        <location filename="../../tag/tagmodel.cc" line="37"/>
+        <location filename="../../tag/tagmodel.cc" line="34"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../../tag/tagmodel.cc" line="39"/>
+        <location filename="../../tag/tagmodel.cc" line="35"/>
         <source>Color</source>
         <translation>颜色</translation>
-    </message>
-    <message>
-        <location filename="../../tag/tagmodel.cc" line="41"/>
-        <source>Version</source>
-        <translation></translation>
     </message>
 </context>
 <context>
@@ -2871,22 +2663,22 @@ You need to recall it first before making changes.</source>
         <translation>个人资料</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.ui" line="32"/>
+        <location filename="../../dialog/userprofiledialog.ui" line="38"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.ui" line="42"/>
+        <location filename="../../dialog/userprofiledialog.ui" line="48"/>
         <source>Username</source>
         <translation>用户名</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.ui" line="52"/>
+        <location filename="../../dialog/userprofiledialog.ui" line="58"/>
         <source>Name</source>
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.ui" line="64"/>
+        <location filename="../../dialog/userprofiledialog.ui" line="70"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
@@ -2899,6 +2691,52 @@ You need to recall it first before making changes.</source>
         <location filename="../../dialog/userprofiledialog.cc" line="45"/>
         <source>Username must be 3-32 characters, start with a letter, and contain only lowercase letters, digits, or underscores. No consecutive or trailing underscores.</source>
         <translation>用户名须为3-32位，以字母开头，只能包含小写字母、数字或下划线，不允许连续或结尾使用下划线。</translation>
+    </message>
+</context>
+<context>
+    <name>WorkspaceMemberDialog</name>
+    <message>
+        <location filename="../../workspace_member/workspacememberdialog.ui" line="14"/>
+        <source>Member</source>
+        <translation>工区成员</translation>
+    </message>
+</context>
+<context>
+    <name>WorkspaceMemberModel</name>
+    <message>
+        <location filename="../../workspace_member/workspacemembermodel.cc" line="20"/>
+        <source>Id</source>
+        <translation>Id</translation>
+    </message>
+    <message>
+        <location filename="../../workspace_member/workspacemembermodel.cc" line="21"/>
+        <source>Email</source>
+        <translation>邮箱</translation>
+    </message>
+    <message>
+        <location filename="../../workspace_member/workspacemembermodel.cc" line="22"/>
+        <source>Username</source>
+        <translation>用户名</translation>
+    </message>
+    <message>
+        <location filename="../../workspace_member/workspacemembermodel.cc" line="23"/>
+        <source>Name</source>
+        <translation>姓名</translation>
+    </message>
+    <message>
+        <location filename="../../workspace_member/workspacemembermodel.cc" line="24"/>
+        <source>WorkspaceRole</source>
+        <translation>工作区角色</translation>
+    </message>
+    <message>
+        <location filename="../../workspace_member/workspacemembermodel.cc" line="25"/>
+        <source>DatabaseRole</source>
+        <translation>数据库角色</translation>
+    </message>
+    <message>
+        <location filename="../../workspace_member/workspacemembermodel.cc" line="26"/>
+        <source>CreatedTime</source>
+        <translation>创建时间</translation>
     </message>
 </context>
 </TS>
