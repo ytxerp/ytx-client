@@ -163,7 +163,10 @@ void TableWidgetSettlement::on_pBtnRelease_clicked()
     }
 
     {
-        QJsonObject message { JsonGen::MetaMessage(section_) };
+        QJsonObject message {};
+        message.insert(kSection, std::to_underlying(section_));
+        message.insert(kSessionId, QString());
+
         model_->Finalize(message);
 
         message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
@@ -198,7 +201,10 @@ void TableWidgetSettlement::on_pBtnRecall_clicked()
     if (!ValidateSyncState())
         return;
 
-    QJsonObject message { JsonGen::MetaMessage(section_) };
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section_));
+    message.insert(kSessionId, QString());
+
     model_->Finalize(message);
 
     pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kUnsettled));

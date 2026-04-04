@@ -512,7 +512,10 @@ void TableWidgetO::SaveOrder()
 
     tmp_node_->status = NodeStatus::kUnreleased;
 
-    QJsonObject order_message { JsonGen::MetaMessage(section_) };
+    QJsonObject order_message {};
+    order_message.insert(kSection, std::to_underlying(section_));
+    order_message.insert(kSessionId, QString());
+
     table_model_order_->Finalize(order_message);
 
     if (sync_state_ == SyncState::kSynced) {
@@ -545,7 +548,9 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
     tmp_node_->status = NodeStatus::kReleased;
 
-    QJsonObject order_message { JsonGen::MetaMessage(section_) };
+    QJsonObject order_message {};
+    order_message.insert(kSection, std::to_underlying(section_));
+    order_message.insert(kSessionId, QString());
     table_model_order_->Finalize(order_message);
 
     if (sync_state_ == SyncState::kSynced) {
