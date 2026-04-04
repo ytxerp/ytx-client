@@ -137,7 +137,7 @@ enum class WsKey : uint8_t {
     kAccountNameUpdate,
     kAccountUsernameUpdate,
 
-    // --- Workspace ---
+    // --- Workspace Member ---
     kWorkspaceMemberAck,
     kWorkspaceMemberUpdate,
     kWorkspaceMemberDelete,
@@ -285,6 +285,14 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "account_name_update";
     case WsKey::kAccountUsernameUpdate:
         return "account_username_update";
+
+    // --- Workspace Member ---
+    case WsKey::kWorkspaceMemberAck:
+        return "workspace_member_ack";
+    case WsKey::kWorkspaceMemberUpdate:
+        return "workspace_member_update";
+    case WsKey::kWorkspaceMemberDelete:
+        return "workspace_member_delete";
 
     default:
         return "unknown";
