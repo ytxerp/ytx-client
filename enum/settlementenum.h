@@ -24,11 +24,6 @@ enum class SettlementStatus { kUnsettled = 0, kSettled };
 
 enum class SettlementEnum {
     kId = 0,
-    kUserId,
-    kCreateTime,
-    kCreateBy,
-    kUpdateTime,
-    kUpdateBy,
     kVersion,
     kPartner,
     kIssuedTime,

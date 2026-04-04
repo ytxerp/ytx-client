@@ -34,11 +34,6 @@ struct Settlement final {
     SettlementStatus status {};
     double amount {};
 
-    QUuid user_id {};
-    QDateTime created_time {};
-    QUuid created_by {};
-    QDateTime updated_time {};
-    QUuid updated_by {};
     int version {};
 
     void Reset();

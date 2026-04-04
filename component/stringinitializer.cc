@@ -301,11 +301,6 @@ void StringInitializer::SetHeader(
     // Settlement
     sale.settlement_header = {
         QObject::tr("Id"),
-        QObject::tr("UserId"),
-        QObject::tr("CreatedTime"),
-        QObject::tr("CreatedBy"),
-        QObject::tr("UpdatedTime"),
-        QObject::tr("UpdatedBy"),
         QObject::tr("Version"),
         QObject::tr("Partner"),
         QObject::tr("IssuedTime"),

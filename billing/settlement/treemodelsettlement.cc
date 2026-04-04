@@ -53,16 +53,6 @@ QVariant TreeModelSettlement::data(const QModelIndex& index, int role) const
     switch (column) {
     case SettlementEnum::kId:
         return settlement->id;
-    case SettlementEnum::kUserId:
-        return settlement->user_id;
-    case SettlementEnum::kCreateTime:
-        return settlement->created_time;
-    case SettlementEnum::kCreateBy:
-        return settlement->created_by;
-    case SettlementEnum::kUpdateTime:
-        return settlement->updated_time;
-    case SettlementEnum::kUpdateBy:
-        return settlement->updated_by;
     case SettlementEnum::kVersion:
         return settlement->version;
     case SettlementEnum::kIssuedTime:
@@ -105,12 +95,7 @@ void TreeModelSettlement::sort(int column, Qt::SortOrder order)
         case SettlementEnum::kAmount:
             return Utils::CompareMember(lhs, rhs, &Settlement::amount, order);
         case SettlementEnum::kId:
-        case SettlementEnum::kUpdateBy:
-        case SettlementEnum::kUpdateTime:
-        case SettlementEnum::kCreateTime:
-        case SettlementEnum::kCreateBy:
         case SettlementEnum::kVersion:
-        case SettlementEnum::kUserId:
             return false;
         }
     };
@@ -133,16 +118,8 @@ bool TreeModelSettlement::removeRows(int row, int /*count*/, const QModelIndex& 
     return true;
 }
 
-bool TreeModelSettlement::InsertSucceeded(Settlement* settlement, const QJsonObject& meta)
+bool TreeModelSettlement::InsertSucceeded(Settlement* settlement)
 {
-    Q_ASSERT_X(meta.contains(kUserId), "SettlementModel::InsertMeta", "Missing 'user_id' in meta");
-    Q_ASSERT_X(meta.contains(kCreatedTime), "SettlementModel::InsertMeta", "Missing 'created_time' in meta");
-    Q_ASSERT_X(meta.contains(kCreatedBy), "SettlementModel::InsertMeta", "Missing 'created_by' in meta");
-
-    settlement->user_id = QUuid(meta[kUserId].toString());
-    settlement->created_time = QDateTime::fromString(meta[kCreatedTime].toString(), Qt::ISODate);
-    settlement->created_by = QUuid(meta[kCreatedBy].toString());
-
     const int row { rowCount() };
 
     beginInsertRows(QModelIndex(), row, row);
@@ -152,36 +129,26 @@ bool TreeModelSettlement::InsertSucceeded(Settlement* settlement, const QJsonObj
     return true;
 }
 
-void TreeModelSettlement::RecallSucceeded(const QUuid& settlement_id, const QJsonObject& update, const QJsonObject& meta)
+void TreeModelSettlement::RecallSucceeded(const QUuid& settlement_id, const QJsonObject& update)
 {
-    Q_ASSERT_X(meta.contains(kUpdatedBy), "SettlementModel::UpdateMeta", "Missing 'updated_by' in meta");
-    Q_ASSERT_X(meta.contains(kUpdatedTime), "SettlementModel::UpdateMeta", "Missing 'updated_time' in meta");
-
     auto* settlement { FindSettlement(settlement_id) };
     Q_ASSERT_X(settlement != nullptr, "SettlementModel::RecallSettlement", "Settlement must exist for recalled operation");
 
     if (!settlement)
         return;
 
-    settlement->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
-    settlement->updated_by = QUuid(meta[kUpdatedBy].toString());
     settlement->ReadJson(update);
     settlement->amount = 0.0;
 }
 
-void TreeModelSettlement::UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update, const QJsonObject& meta)
+void TreeModelSettlement::UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update)
 {
-    Q_ASSERT_X(meta.contains(kUpdatedBy), "SettlementModel::UpdateMeta", "Missing 'updated_by' in meta");
-    Q_ASSERT_X(meta.contains(kUpdatedTime), "SettlementModel::UpdateMeta", "Missing 'updated_time' in meta");
-
     auto* settlement { FindSettlement(settlement_id) };
     Q_ASSERT_X(settlement != nullptr, "SettlementModel::RecallSettlement", "Settlement must exist for recalled operation");
 
     if (!settlement)
         return;
 
-    settlement->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
-    settlement->updated_by = QUuid(meta[kUpdatedBy].toString());
     settlement->ReadJson(update);
 }
 

@@ -74,11 +74,6 @@ void MainWindow::SetSettlementView(QTableView* view, int stretch_column) const
 
     {
         view->setColumnHidden(std::to_underlying(SettlementEnum::kId), kIsHidden);
-        view->setColumnHidden(std::to_underlying(SettlementEnum::kUserId), kIsHidden);
-        view->setColumnHidden(std::to_underlying(SettlementEnum::kCreateBy), kIsHidden);
-        view->setColumnHidden(std::to_underlying(SettlementEnum::kCreateTime), kIsHidden);
-        view->setColumnHidden(std::to_underlying(SettlementEnum::kUpdateTime), kIsHidden);
-        view->setColumnHidden(std::to_underlying(SettlementEnum::kUpdateBy), kIsHidden);
         view->setColumnHidden(std::to_underlying(SettlementEnum::kVersion), kIsHidden);
     }
 

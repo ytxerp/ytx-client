@@ -123,7 +123,6 @@ void MainWindow::RAckSettlementItem(Section section, const QUuid& widget_id, con
 void MainWindow::RInsertSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
     const QJsonObject settlement_obj { obj.value(kSettlement).toObject() };
@@ -157,7 +156,7 @@ void MainWindow::RInsertSettlement(const QJsonObject& obj)
                 auto* settlement { ResourcePool<Settlement>::Instance().Allocate() };
                 settlement->ReadJson(settlement_obj);
 
-                model->InsertSucceeded(settlement, meta);
+                model->InsertSucceeded(settlement);
             }
 
             {
@@ -176,7 +175,6 @@ void MainWindow::RInsertSettlement(const QJsonObject& obj)
 void MainWindow::RRecallSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
@@ -206,7 +204,7 @@ void MainWindow::RRecallSettlement(const QJsonObject& obj)
             auto* d_parent_widget { static_cast<TreeWidgetSettlement*>(ptr) };
 
             auto* model { d_parent_widget->Model() };
-            model->RecallSucceeded(settlement_id, settlement, meta);
+            model->RecallSucceeded(settlement_id, settlement);
         }
     }
 }
@@ -214,7 +212,6 @@ void MainWindow::RRecallSettlement(const QJsonObject& obj)
 void MainWindow::RUpdateSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
     const QJsonObject settlement { obj.value(kSettlement).toObject() };
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
@@ -244,7 +241,7 @@ void MainWindow::RUpdateSettlement(const QJsonObject& obj)
             auto* d_parent_widget { static_cast<TreeWidgetSettlement*>(ptr) };
 
             auto* model { d_parent_widget->Model() };
-            model->UpdateSucceeded(settlement_id, settlement, meta);
+            model->UpdateSucceeded(settlement_id, settlement);
         }
     }
 }
