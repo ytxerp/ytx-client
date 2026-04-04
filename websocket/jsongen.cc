@@ -451,6 +451,26 @@ QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update)
     return message;
 }
 
+QJsonObject WorkspaceMemberUpdate(CUuid& id, CJsonObject& update)
+{
+    QJsonObject message {};
+    message.insert(kSessionId, QString());
+    message.insert(kId, id.toString(QUuid::WithoutBraces));
+    message.insert(kUpdate, update);
+
+    return message;
+}
+
+QJsonObject WorkspaceMemberDelete(CUuid& id)
+{
+    QJsonObject message {};
+
+    message.insert(kSessionId, QString());
+    message.insert(kId, id.toString(QUuid::WithoutBraces));
+
+    return message;
+}
+
 QJsonObject TagInsert(Section section, const Tag* tag)
 {
     QJsonObject message {};
@@ -488,6 +508,15 @@ QJsonObject AccountUsername(CString& email, CString& username)
     QJsonObject message {};
     message.insert(kEmail, email);
     message.insert(kUsername, username);
+
+    return message;
+}
+
+QJsonObject WorkspaceMemberAck(CString& email, CString& workspace)
+{
+    QJsonObject message {};
+    message.insert(kEmail, email);
+    message.insert(kWorkspace, workspace);
 
     return message;
 }

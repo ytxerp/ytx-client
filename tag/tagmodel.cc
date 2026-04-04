@@ -9,12 +9,6 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-static const QStringList kHeaders = {
-    QObject::tr("Id"),
-    QObject::tr("Name"),
-    QObject::tr("Color"),
-};
-
 TagModel::TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
     : QAbstractItemModel(parent)
     , section_ { section }
@@ -35,6 +29,12 @@ QVariant TagModel::headerData(int section, Qt::Orientation orientation, int role
     if (role != Qt::DisplayRole)
         return {};
 
+    static const QStringList kHeaders = {
+        tr("Id"),
+        tr("Name"),
+        tr("Color"),
+    };
+
     if (section < 0 || section >= kHeaders.size())
         return {};
 
@@ -47,12 +47,6 @@ QModelIndex TagModel::index(int row, int column, const QModelIndex& parent) cons
         return QModelIndex();
 
     return createIndex(row, column, tag_list_.at(row));
-}
-
-int TagModel::columnCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent)
-    return kHeaders.size();
 }
 
 QVariant TagModel::data(const QModelIndex& index, int role) const

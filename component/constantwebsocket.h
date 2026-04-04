@@ -137,6 +137,10 @@ enum class WsKey : uint8_t {
     kAccountNameUpdate,
     kAccountUsernameUpdate,
 
+    // --- Workspace ---
+    kWorkspaceMemberAck,
+    kWorkspaceMemberUpdate,
+    kWorkspaceMemberDelete,
 };
 
 constexpr const char* WsMsgToString(WsKey msg)

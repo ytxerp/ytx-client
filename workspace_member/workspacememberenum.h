@@ -27,7 +27,7 @@ enum class WorkspaceMemberEnum : int {
     kName,
     kWorkspaceRole,
     kDatabaseRole,
-    kRegisterTime,
+    kCreatedTime,
 };
 
 #endif // WORKSPACEMEMBERENUM_H

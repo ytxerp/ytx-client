@@ -13,6 +13,8 @@ WorkspaceMemberDialog::WorkspaceMemberDialog(QWidget* parent)
 
 WorkspaceMemberDialog::~WorkspaceMemberDialog() { delete ui; }
 
+QTableView* WorkspaceMemberDialog::View() { return ui->tableView; }
+
 void WorkspaceMemberDialog::InitDialog()
 {
     auto* member_model { new WorkspaceMemberModel(ui->tableView) };

@@ -21,6 +21,7 @@
 #define WORKSPACEMEMBERDIALOG_H
 
 #include <QDialog>
+#include <QTableView>
 
 namespace Ui {
 class WorkspaceMemberDialog;
@@ -32,6 +33,8 @@ class WorkspaceMemberDialog final : public QDialog {
 public:
     explicit WorkspaceMemberDialog(QWidget* parent = nullptr);
     ~WorkspaceMemberDialog() override;
+
+    QTableView* View();
 
 private:
     void InitDialog();

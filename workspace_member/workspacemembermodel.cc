@@ -6,16 +6,6 @@
 #include "websocket/websocket.h"
 #include "workspacememberenum.h"
 
-static const QStringList kHeaders = {
-    QObject::tr("Id"),
-    QObject::tr("Email"),
-    QObject::tr("Username"),
-    QObject::tr("Name"),
-    QObject::tr("Workspace Role"),
-    QObject::tr("Database Role"),
-    QObject::tr("Register Time"),
-};
-
 WorkspaceMemberModel::WorkspaceMemberModel(QObject* parent)
     : QAbstractItemModel(parent)
 {
@@ -25,6 +15,16 @@ QVariant WorkspaceMemberModel::headerData(int section, Qt::Orientation orientati
 {
     if (orientation != Qt::Horizontal || role != Qt::DisplayRole)
         return {};
+
+    static const QStringList kHeaders = {
+        tr("Id"),
+        tr("Email"),
+        tr("Username"),
+        tr("Name"),
+        tr("WorkspaceRole"),
+        tr("DatabaseRole"),
+        tr("CreatedTime"),
+    };
 
     if (section < 0 || section >= kHeaders.size())
         return {};
@@ -38,12 +38,6 @@ QModelIndex WorkspaceMemberModel::index(int row, int column, const QModelIndex& 
         return QModelIndex();
 
     return createIndex(row, column, member_list_.at(row));
-}
-
-int WorkspaceMemberModel::columnCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent)
-    return kHeaders.size();
 }
 
 QVariant WorkspaceMemberModel::data(const QModelIndex& index, int role) const
@@ -74,7 +68,7 @@ QVariant WorkspaceMemberModel::data(const QModelIndex& index, int role) const
         return static_cast<int>(member->workspace_role);
     case WorkspaceMemberEnum::kDatabaseRole:
         return member->database_role;
-    case WorkspaceMemberEnum::kRegisterTime:
+    case WorkspaceMemberEnum::kCreatedTime:
         return member->register_time;
     }
 }
@@ -114,7 +108,7 @@ bool WorkspaceMemberModel::setData(const QModelIndex& index, const QVariant& val
     case WorkspaceMemberEnum::kUsername:
     case WorkspaceMemberEnum::kName:
     case WorkspaceMemberEnum::kId:
-    case WorkspaceMemberEnum::kRegisterTime:
+    case WorkspaceMemberEnum::kCreatedTime:
         // These columns are read-only in this model
         return false;
     }
@@ -146,7 +140,7 @@ void WorkspaceMemberModel::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &WorkspaceMember::workspace_role, order);
         case WorkspaceMemberEnum::kDatabaseRole:
             return Utils::CompareMember(lhs, rhs, &WorkspaceMember::database_role, order);
-        case WorkspaceMemberEnum::kRegisterTime:
+        case WorkspaceMemberEnum::kCreatedTime:
             return Utils::CompareMember(lhs, rhs, &WorkspaceMember::register_time, order);
         case WorkspaceMemberEnum::kId:
             return false;
@@ -186,7 +180,7 @@ Qt::ItemFlags WorkspaceMemberModel::flags(const QModelIndex& index) const
     case WorkspaceMemberEnum::kEmail:
     case WorkspaceMemberEnum::kUsername:
     case WorkspaceMemberEnum::kName:
-    case WorkspaceMemberEnum::kRegisterTime:
+    case WorkspaceMemberEnum::kCreatedTime:
     case WorkspaceMemberEnum::kId:
     default:
         // Disable editing for all other columns

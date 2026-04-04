@@ -28,6 +28,7 @@
 #include "enum/statementenum.h"
 #include "enum/tagenum.h"
 #include "mainwindow.h"
+#include "workspace_member/workspacememberenum.h"
 
 void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {
@@ -505,4 +506,10 @@ void MainWindow::DelegateTagView(QTableView* table_view) const
 
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(TagEnum::kName), line);
+}
+
+void MainWindow::DelegateWorkspaceMemberView(QTableView* table_view) const
+{
+    auto* created_time { new IssuedTimeR(kDateFST, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kCreatedTime), created_time);
 }

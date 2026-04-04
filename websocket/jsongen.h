@@ -51,6 +51,10 @@ QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update);
 QJsonObject TagInsert(Section section, const Tag* tag);
 QJsonObject TagDelete(Section section, CUuid& tag_id);
 
+QJsonObject WorkspaceMemberUpdate(CUuid& id, CJsonObject& update);
+QJsonObject WorkspaceMemberDelete(CUuid& id);
+QJsonObject WorkspaceMemberAck(CString& email, CString& workspace);
+
 QJsonObject TreeAck(Section section, const QDateTime& start, const QDateTime& end);
 QJsonObject TableAck(Section section, CUuid& node_id, CUuid& entry_id = {});
 QJsonObject NodeAck(Section section, CUuid& node_id);

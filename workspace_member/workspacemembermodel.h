@@ -28,7 +28,11 @@ public:
         Q_UNUSED(parent)
         return member_list_.size();
     }
-    int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const override
+    {
+        Q_UNUSED(parent)
+        return 7;
+    }
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
