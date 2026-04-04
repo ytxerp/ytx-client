@@ -710,8 +710,6 @@ void WebSocket::UpdateEntry(const QJsonObject& obj)
     if (session_id != session_id_) {
         entry_hub->UpdateEntry(entry_id, update);
     }
-
-    entry_hub->UpdateMeta(entry_id, meta);
 }
 
 void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
@@ -741,8 +739,6 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
     if (session_id != session_id_) {
         entry_hub->UpdateEntryLinkedNode(entry_id, update, is_parallel);
     }
-
-    entry_hub->UpdateMeta(entry_id, meta);
 }
 
 void WebSocket::UpdateEntryRate(const QJsonObject& obj)
@@ -776,8 +772,6 @@ void WebSocket::UpdateEntryRate(const QJsonObject& obj)
     if (session_id != session_id_) {
         entry_hub->UpdateEntryRate(entry_id, update, is_parallel);
     }
-
-    entry_hub->UpdateMeta(entry_id, update);
 }
 
 void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
@@ -810,8 +804,6 @@ void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
     if (session_id != session_id_) {
         entry_hub->UpdateEntryNumeric(entry_id, update);
     }
-
-    entry_hub->UpdateMeta(entry_id, meta);
 }
 
 void WebSocket::SearchEntry(const QJsonObject& obj)
@@ -829,10 +821,8 @@ void WebSocket::InsertEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
-    const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
 
     const QJsonObject entry { obj.value(kEntry).toObject() };
-    const QJsonObject meta { obj.value(kMeta).toObject() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
@@ -855,8 +845,6 @@ void WebSocket::InsertEntry(const QJsonObject& obj)
     if (session_id != session_id_) {
         entry_hub->InsertEntry(entry);
     }
-
-    entry_hub->InsertMeta(entry_id, meta);
 }
 
 void WebSocket::DeleteEntry(const QJsonObject& obj)

@@ -99,16 +99,6 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryEnumO::kId:
         return d_entry->id;
-    case EntryEnumO::kUserId:
-        return d_entry->user_id;
-    case EntryEnumO::kCreateTime:
-        return d_entry->created_time;
-    case EntryEnumO::kCreateBy:
-        return d_entry->created_by;
-    case EntryEnumO::kUpdateTime:
-        return d_entry->updated_time;
-    case EntryEnumO::kUpdateBy:
-        return d_entry->updated_by;
     case EntryEnumO::kVersion:
         return d_entry->version;
     case EntryEnumO::kLhsNode:
@@ -189,12 +179,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         unit_discount_changed = UpdateUnitDiscount(d_entry, row, value.toDouble(), is_persisted);
         break;
     case EntryEnumO::kId:
-    case EntryEnumO::kUpdateBy:
-    case EntryEnumO::kUpdateTime:
-    case EntryEnumO::kCreateTime:
-    case EntryEnumO::kCreateBy:
     case EntryEnumO::kVersion:
-    case EntryEnumO::kUserId:
     case EntryEnumO::kLhsNode:
     case EntryEnumO::kExternalSku:
     case EntryEnumO::kInitial:
@@ -266,12 +251,7 @@ void TableModelO::sort(int column, Qt::SortOrder order)
         case EntryEnumO::kDiscount:
             return Utils::CompareMember(d_lhs, d_rhs, &EntryO::discount, order);
         case EntryEnumO::kId:
-        case EntryEnumO::kUpdateBy:
-        case EntryEnumO::kUpdateTime:
-        case EntryEnumO::kCreateTime:
-        case EntryEnumO::kCreateBy:
         case EntryEnumO::kVersion:
-        case EntryEnumO::kUserId:
         case EntryEnumO::kLhsNode:
         case EntryEnumO::kExternalSku:
             return false;

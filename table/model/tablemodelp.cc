@@ -175,18 +175,8 @@ QVariant TableModelP::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryEnumP::kId:
         return d_entry->id;
-    case EntryEnumP::kUserId:
-        return d_entry->user_id;
-    case EntryEnumP::kCreateTime:
-        return d_entry->created_time;
-    case EntryEnumP::kCreateBy:
-        return d_entry->created_by;
-    case EntryEnumP::kUpdateTime:
-        return d_entry->updated_time;
     case EntryEnumP::kVersion:
         return d_entry->version;
-    case EntryEnumP::kUpdateBy:
-        return d_entry->updated_by;
     case EntryEnumP::kLhsNode:
         return d_entry->lhs_node;
     case EntryEnumP::kIssuedTime:
@@ -261,12 +251,7 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
             = Utils::UpdateUuid(pending_updates_[id], d_entry, kExternalSku, value.toUuid(), &EntryP::external_sku, [id, this]() { RestartTimer(id); });
         break;
     case EntryEnumP::kId:
-    case EntryEnumP::kUpdateBy:
-    case EntryEnumP::kUpdateTime:
-    case EntryEnumP::kCreateTime:
-    case EntryEnumP::kCreateBy:
     case EntryEnumP::kVersion:
-    case EntryEnumP::kUserId:
     case EntryEnumP::kLhsNode:
         return false;
     }
@@ -306,12 +291,7 @@ void TableModelP::sort(int column, Qt::SortOrder order)
         case EntryEnumP::kRhsNode:
             return Utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         case EntryEnumP::kId:
-        case EntryEnumP::kUpdateBy:
-        case EntryEnumP::kUpdateTime:
-        case EntryEnumP::kCreateTime:
-        case EntryEnumP::kCreateBy:
         case EntryEnumP::kVersion:
-        case EntryEnumP::kUserId:
         case EntryEnumP::kLhsNode:
             return false;
         }

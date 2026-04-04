@@ -238,16 +238,6 @@ QVariant TableModel::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryEnum::kId:
         return *shadow->id;
-    case EntryEnum::kUserId:
-        return *shadow->user_id;
-    case EntryEnum::kCreateTime:
-        return *shadow->created_time;
-    case EntryEnum::kCreateBy:
-        return *shadow->created_by;
-    case EntryEnum::kUpdateTime:
-        return *shadow->updated_time;
-    case EntryEnum::kUpdateBy:
-        return *shadow->updated_by;
     case EntryEnum::kVersion:
         return *shadow->version;
     case EntryEnum::kIssuedTime:
@@ -330,12 +320,7 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         UpdateNumeric(shadow, value.toDouble(), row, false);
         break;
     case EntryEnum::kId:
-    case EntryEnum::kUpdateBy:
-    case EntryEnum::kUpdateTime:
-    case EntryEnum::kCreateTime:
-    case EntryEnum::kCreateBy:
     case EntryEnum::kVersion:
-    case EntryEnum::kUserId:
     case EntryEnum::kLhsNode:
     case EntryEnum::kBalance:
         return false;
@@ -374,12 +359,7 @@ void TableModel::sort(int column, Qt::SortOrder order)
         case EntryEnum::kCredit:
             return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_credit, order);
         case EntryEnum::kId:
-        case EntryEnum::kUpdateBy:
-        case EntryEnum::kUpdateTime:
-        case EntryEnum::kCreateTime:
-        case EntryEnum::kCreateBy:
         case EntryEnum::kVersion:
-        case EntryEnum::kUserId:
         case EntryEnum::kLhsNode:
         case EntryEnum::kBalance:
             return false;

@@ -30,11 +30,6 @@ void EntryShadow::BindEntry(Entry* base, bool parallel)
     rhs_debit = parallel ? &base->rhs_debit : &base->lhs_debit;
     rhs_credit = parallel ? &base->rhs_credit : &base->lhs_credit;
 
-    user_id = &base->user_id;
-    created_time = &base->created_time;
-    created_by = &base->created_by;
-    updated_time = &base->updated_time;
-    updated_by = &base->updated_by;
     version = &base->version;
 }
 

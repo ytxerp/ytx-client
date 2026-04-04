@@ -55,11 +55,6 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
 
         view->setColumnHidden(std::to_underlying(EntryEnum::kId), kIsHidden);
         view->setColumnHidden(lhs_node_column, kIsHidden);
-        view->setColumnHidden(std::to_underlying(EntryEnum::kUserId), kIsHidden);
-        view->setColumnHidden(std::to_underlying(EntryEnum::kCreateBy), kIsHidden);
-        view->setColumnHidden(std::to_underlying(EntryEnum::kCreateTime), kIsHidden);
-        view->setColumnHidden(std::to_underlying(EntryEnum::kUpdateTime), kIsHidden);
-        view->setColumnHidden(std::to_underlying(EntryEnum::kUpdateBy), kIsHidden);
         view->setColumnHidden(std::to_underlying(EntryEnum::kVersion), kIsHidden);
     }
 

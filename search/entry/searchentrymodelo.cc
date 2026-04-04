@@ -21,18 +21,8 @@ QVariant SearchEntryModelO::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryEnumO::kId:
         return d_entry->id;
-    case EntryEnumO::kUpdateBy:
-        return d_entry->updated_by;
-    case EntryEnumO::kUpdateTime:
-        return d_entry->updated_time;
-    case EntryEnumO::kCreateTime:
-        return d_entry->created_time;
-    case EntryEnumO::kCreateBy:
-        return d_entry->created_by;
     case EntryEnumO::kVersion:
         return d_entry->version;
-    case EntryEnumO::kUserId:
-        return d_entry->user_id;
     case EntryEnumO::kLhsNode:
         return d_entry->lhs_node;
     case EntryEnumO::kUnitPrice:
@@ -90,12 +80,7 @@ void SearchEntryModelO::sort(int column, Qt::SortOrder order)
         case EntryEnumO::kDiscount:
             return Utils::CompareMember(d_lhs, d_rhs, &EntryO::discount, order);
         case EntryEnumO::kId:
-        case EntryEnumO::kUpdateBy:
-        case EntryEnumO::kUpdateTime:
-        case EntryEnumO::kCreateTime:
-        case EntryEnumO::kCreateBy:
         case EntryEnumO::kVersion:
-        case EntryEnumO::kUserId:
         case EntryEnumO::kExternalSku:
             return false;
         }

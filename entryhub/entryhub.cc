@@ -77,22 +77,6 @@ void EntryHub::InsertEntry(const QJsonObject& data)
     emit SAttachOneEntry(entry->rhs_node, entry);
 }
 
-void EntryHub::InsertMeta(const QUuid& entry_id, const QJsonObject& meta)
-{
-    Q_ASSERT_X(meta.contains(kUserId), "EntryHub::InsertMeta", "Missing 'user_id' in meta");
-    Q_ASSERT_X(meta.contains(kCreatedTime), "EntryHub::InsertMeta", "Missing 'created_time' in meta");
-    Q_ASSERT_X(meta.contains(kCreatedBy), "EntryHub::InsertMeta", "Missing 'created_by' in meta");
-
-    auto it = entry_cache_.constFind(entry_id);
-    if (it != entry_cache_.constEnd()) {
-        auto* entry = it.value();
-
-        entry->user_id = QUuid(meta.value(kUserId).toString());
-        entry->created_time = QDateTime::fromString(meta.value(kCreatedTime).toString(), Qt::ISODate);
-        entry->created_by = QUuid(meta.value(kCreatedBy).toString());
-    };
-}
-
 void EntryHub::DeleteEntry(const QUuid& entry_id)
 {
     auto it = entry_cache_.constFind(entry_id);
@@ -123,20 +107,6 @@ void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update)
 
         emit SRefreshField(entry->lhs_node, id, issued_time, issued_time);
         emit SRefreshField(entry->rhs_node, id, issued_time, issued_time);
-    };
-}
-
-void EntryHub::UpdateMeta(const QUuid& entry_id, const QJsonObject& meta)
-{
-    auto it = entry_cache_.constFind(entry_id);
-    if (it != entry_cache_.constEnd()) {
-        auto* entry = it.value();
-
-        if (meta.contains(kUpdatedTime))
-            entry->updated_time = QDateTime::fromString(meta[kUpdatedTime].toString(), Qt::ISODate);
-
-        if (meta.contains(kUpdatedBy))
-            entry->updated_by = QUuid(meta[kUpdatedBy].toString());
     };
 }
 

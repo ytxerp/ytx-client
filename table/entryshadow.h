@@ -44,11 +44,6 @@ struct EntryShadow final {
 
     double balance {};
 
-    QUuid* user_id {};
-    QDateTime* created_time {};
-    QUuid* created_by {};
-    QDateTime* updated_time {};
-    QUuid* updated_by {};
     int* version {};
 
     Entry* entry {};

@@ -94,11 +94,6 @@ void StringInitializer::SetHeader(
     // Entry
     finance.entry_header = {
         QObject::tr("Id"),
-        QObject::tr("UserId"),
-        QObject::tr("CreatedTime"),
-        QObject::tr("CreatedBy"),
-        QObject::tr("UpdatedTime"),
-        QObject::tr("UpdatedBy"),
         QObject::tr("Version"),
         QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
@@ -116,11 +111,6 @@ void StringInitializer::SetHeader(
 
     inventory.entry_header = {
         QObject::tr("Id"),
-        QObject::tr("UserId"),
-        QObject::tr("CreatedTime"),
-        QObject::tr("CreatedBy"),
-        QObject::tr("UpdatedTime"),
-        QObject::tr("UpdatedBy"),
         QObject::tr("Version"),
         QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
@@ -138,11 +128,6 @@ void StringInitializer::SetHeader(
 
     task.entry_header = {
         QObject::tr("Id"),
-        QObject::tr("UserId"),
-        QObject::tr("CreatedTime"),
-        QObject::tr("CreatedBy"),
-        QObject::tr("UpdatedTime"),
-        QObject::tr("UpdatedBy"),
         QObject::tr("Version"),
         QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
@@ -160,11 +145,6 @@ void StringInitializer::SetHeader(
 
     partner.entry_header = {
         QObject::tr("Id"),
-        QObject::tr("UserId"),
-        QObject::tr("CreatedTime"),
-        QObject::tr("CreatedBy"),
-        QObject::tr("UpdatedTime"),
-        QObject::tr("UpdatedBy"),
         QObject::tr("Version"),
         QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
@@ -180,11 +160,6 @@ void StringInitializer::SetHeader(
 
     sale.entry_header = {
         QObject::tr("Id"),
-        QObject::tr("UserId"),
-        QObject::tr("CreatedTime"),
-        QObject::tr("CreatedBy"),
-        QObject::tr("UpdatedTime"),
-        QObject::tr("UpdatedBy"),
         QObject::tr("Version"),
         QObject::tr("LhsNode"),
         QObject::tr("InternalSku"),
@@ -202,11 +177,6 @@ void StringInitializer::SetHeader(
     // Full Entry
     finance.full_entry_header = {
         QObject::tr("Id"),
-        QObject::tr("UserId"),
-        QObject::tr("CreatedTime"),
-        QObject::tr("CreatedBy"),
-        QObject::tr("UpdatedTime"),
-        QObject::tr("UpdatedBy"),
         QObject::tr("Version"),
         QObject::tr("IssuedTime"),
         QObject::tr("Code"),
@@ -226,11 +196,6 @@ void StringInitializer::SetHeader(
 
     inventory.full_entry_header = {
         QObject::tr("Id"),
-        QObject::tr("UserId"),
-        QObject::tr("CreatedTime"),
-        QObject::tr("CreatedBy"),
-        QObject::tr("UpdatedTime"),
-        QObject::tr("UpdatedBy"),
         QObject::tr("Version"),
         QObject::tr("IssuedTime"),
         QObject::tr("Code"),
@@ -250,11 +215,6 @@ void StringInitializer::SetHeader(
 
     task.full_entry_header = {
         QObject::tr("Id"),
-        QObject::tr("UserId"),
-        QObject::tr("CreatedTime"),
-        QObject::tr("CreatedBy"),
-        QObject::tr("UpdatedTime"),
-        QObject::tr("UpdatedBy"),
         QObject::tr("Version"),
         QObject::tr("IssuedTime"),
         QObject::tr("Code"),
