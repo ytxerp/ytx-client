@@ -89,6 +89,7 @@ signals:
     void STreeSyncFinish();
     void SAccountName(const QString& name);
     void SAccountUsername(const QJsonObject& obj);
+    void SWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
 
     // send to SearchNodeModel
     void SNodeSearch(const QJsonObject& obj);
@@ -154,6 +155,7 @@ private:
     void AckStatementEntry(const QJsonObject& obj);
     void AckSettlement(const QJsonObject& obj);
     void AckSettlementItem(const QJsonObject& obj);
+    void AckWorkspaceMember(const QJsonObject& obj);
 
     void SearchEntry(const QJsonObject& obj);
     void SearchNode(const QJsonObject& obj);

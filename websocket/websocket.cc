@@ -220,6 +220,8 @@ void WebSocket::InitHandler()
 
     handler_obj_[WsKey::kAccountNameUpdate] = [this](const QJsonObject& obj) { UpdateAccountName(obj); };
     handler_obj_[WsKey::kAccountUsernameUpdate] = [this](const QJsonObject& obj) { UpdateAccountUsername(obj); };
+
+    handler_obj_[WsKey::kWorkspaceMemberAck] = [this](const QJsonObject& obj) { AckWorkspaceMember(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -565,6 +567,14 @@ void WebSocket::AckSettlementItem(const QJsonObject& obj)
     const QJsonArray array { obj.value(kArray).toArray() };
 
     emit SSettlementItemAck(section, widget_id, array);
+}
+
+void WebSocket::AckWorkspaceMember(const QJsonObject& obj)
+{
+    const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
+    const QJsonArray array { obj.value(kMemberArray).toArray() };
+
+    emit SWorkspaceMemberAck(widget_id, array);
 }
 
 void WebSocket::DeleteLeaf(const QJsonObject& obj)

@@ -44,7 +44,7 @@ public:
     {
         username_.clear();
         name_.clear();
-        workspacer_role_ = WorkspaceRole::Guest;
+        workspacer_role_ = WorkspaceRole::kGuest;
     }
 
     UserProfile(const UserProfile&) = delete;
@@ -59,7 +59,7 @@ private:
 private:
     QString username_ {};
     QString name_ {};
-    WorkspaceRole workspacer_role_ { WorkspaceRole::Guest };
+    WorkspaceRole workspacer_role_ { WorkspaceRole::kGuest };
 };
 
 #endif // USERPROFILE_H

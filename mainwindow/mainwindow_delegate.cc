@@ -2,6 +2,7 @@
 #include "delegate/bool.h"
 #include "delegate/boolstring.h"
 #include "delegate/color.h"
+#include "delegate/databaseroledelegate.h"
 #include "delegate/document.h"
 #include "delegate/double.h"
 #include "delegate/filterunit.h"
@@ -23,6 +24,7 @@
 #include "delegate/rhsnode.h"
 #include "delegate/statusdelegate.h"
 #include "delegate/tagdelegate.h"
+#include "delegate/workspaceroledelegate.h"
 #include "enum/reference.h"
 #include "enum/settlementenum.h"
 #include "enum/statementenum.h"
@@ -508,8 +510,14 @@ void MainWindow::DelegateTagView(QTableView* table_view) const
     table_view->setItemDelegateForColumn(std::to_underlying(TagEnum::kName), line);
 }
 
-void MainWindow::DelegateWorkspaceMemberView(QTableView* table_view) const
+void MainWindow::DelegateWorkspaceMember(QTableView* table_view) const
 {
     auto* created_time { new IssuedTimeR(kDateFST, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kCreatedTime), created_time);
+
+    auto* workspace_role { new WorkspaceRoleDelegate(workspace_role_name_, workspace_role_list_, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kWorkspaceRole), workspace_role);
+
+    auto* database_role { new DatabaseRoleDelegate(database_role_name_, database_role_list_, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kDatabaseRole), database_role);
 }

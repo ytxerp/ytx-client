@@ -23,6 +23,8 @@
 #include <QDialog>
 #include <QTableView>
 
+#include "workspacemembermodel.h"
+
 namespace Ui {
 class WorkspaceMemberDialog;
 }
@@ -35,12 +37,16 @@ public:
     ~WorkspaceMemberDialog() override;
 
     QTableView* View();
+    WorkspaceMemberModel* Model() { return model_; }
 
 private:
     void InitDialog();
 
 private:
     Ui::WorkspaceMemberDialog* ui;
+
+private:
+    WorkspaceMemberModel* model_ {};
 };
 
 #endif // WORKSPACEMEMBERDIALOG_H

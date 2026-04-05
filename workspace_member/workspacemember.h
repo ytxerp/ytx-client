@@ -35,7 +35,7 @@ struct WorkspaceMember final {
 
     WorkspaceRole workspace_role {};
     QString database_role {};
-    QDateTime register_time {};
+    QDateTime created_time {};
 
     void Reset();
     void ReadJson(const QJsonObject& object);
@@ -47,9 +47,9 @@ inline void WorkspaceMember::Reset()
     name.clear();
     username.clear();
     email.clear();
-    workspace_role = WorkspaceRole::Guest;
+    workspace_role = WorkspaceRole::kGuest;
     database_role.clear();
-    register_time = QDateTime();
+    created_time = QDateTime();
 }
 
 inline void WorkspaceMember::ReadJson(const QJsonObject& object)
@@ -72,8 +72,8 @@ inline void WorkspaceMember::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kDatabaseRole); val.isString())
         database_role = val.toString();
 
-    if (const auto val = object.value(kRegisterTime); val.isString())
-        register_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kCreatedTime); val.isString())
+        created_time = QDateTime::fromString(val.toString(), Qt::ISODate);
 }
 
 #endif // WORKSPACEMEMBER_H

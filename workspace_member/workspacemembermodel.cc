@@ -69,7 +69,7 @@ QVariant WorkspaceMemberModel::data(const QModelIndex& index, int role) const
     case WorkspaceMemberEnum::kDatabaseRole:
         return member->database_role;
     case WorkspaceMemberEnum::kCreatedTime:
-        return member->register_time;
+        return member->created_time;
     }
 }
 
@@ -141,7 +141,7 @@ void WorkspaceMemberModel::sort(int column, Qt::SortOrder order)
         case WorkspaceMemberEnum::kDatabaseRole:
             return Utils::CompareMember(lhs, rhs, &WorkspaceMember::database_role, order);
         case WorkspaceMemberEnum::kCreatedTime:
-            return Utils::CompareMember(lhs, rhs, &WorkspaceMember::register_time, order);
+            return Utils::CompareMember(lhs, rhs, &WorkspaceMember::created_time, order);
         case WorkspaceMemberEnum::kId:
             return false;
         }
@@ -226,6 +226,35 @@ bool WorkspaceMemberModel::removeRows(int row, int count, const QModelIndex& par
     ResourcePool<WorkspaceMember>::Instance().Recycle(member);
 
     return true;
+}
+
+void WorkspaceMemberModel::ResetModel(const QJsonArray& array)
+{
+    if (array.isEmpty()) {
+        qWarning() << "[WorkspaceMemberModel]" << "Received empty member array";
+    }
+
+    // Parse outside the reset block
+    QList<WorkspaceMember*> new_list {};
+    new_list.reserve(array.size());
+
+    for (const auto& value : array) {
+        if (!value.isObject()) {
+            qWarning() << "[WorkspaceMemberModel]" << "Invalid member data, expected object:" << value;
+            continue;
+        }
+
+        auto* member { ResourcePool<WorkspaceMember>::Instance().Allocate() };
+        member->ReadJson(value.toObject());
+        new_list.emplaceBack(member);
+    }
+
+    // Keep reset block as short as possible
+    beginResetModel();
+    ResourcePool<WorkspaceMember>::Instance().Recycle(member_list_);
+    member_list_ = std::move(new_list);
+    sort(std::to_underlying(WorkspaceMemberEnum::kWorkspaceRole), Qt::DescendingOrder);
+    endResetModel();
 }
 
 void WorkspaceMemberModel::RestartTimer(const QUuid& id)

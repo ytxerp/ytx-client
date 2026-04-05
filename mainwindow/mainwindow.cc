@@ -23,6 +23,7 @@
 #include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
 #include "websocket/websocket.h"
+#include "workspace_member/workspacememberdialog.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -38,6 +39,7 @@ MainWindow::MainWindow(QWidget* parent)
     IniMarkGroup();
     InitSystemTray();
     InitStatusLabel();
+    InitAccountRoleName();
 
     SetTabWidget(ui->tabWidgetF);
     SetTabWidget(ui->tabWidgetI);
@@ -156,9 +158,22 @@ void MainWindow::InsertNodeFunction(const QModelIndex& parent_index)
 void MainWindow::on_actionDelete_triggered()
 {
     qInfo() << "[UI]" << "on_actionDelete_triggered";
+    auto* active_widget { QApplication::activeWindow() };
 
-    if (auto* d_dialog { qobject_cast<TagManagerDlg*>(QApplication::activeWindow()) }) {
+    if (auto* d_dialog { qobject_cast<TagManagerDlg*>(active_widget) }) {
         d_dialog->on_pBtnDelete_clicked();
+        return;
+    }
+
+    if (auto* d_dialog { qobject_cast<WorkspaceMemberDialog*>(active_widget) }) {
+        auto* view { d_dialog->View() };
+        const auto index { view->currentIndex() };
+        if (!index.isValid())
+            return;
+
+        const int row { index.row() };
+        auto* model { d_dialog->Model() };
+        model->removeRows(row, 1);
         return;
     }
 
@@ -183,7 +198,8 @@ void MainWindow::on_actionDelete_triggered()
 void MainWindow::ResetMainwindow()
 {
     section_settings_.clear();
-    ui->actionMember->setVisible(false);
+    ui->actionWorkspaceMember->setVisible(false);
+    Utils::CloseWidgets(widget_hash_);
 
     {
         Utils::ResetSectionContext(sc_f_);
@@ -383,14 +399,14 @@ void MainWindow::InitSystemTray()
     tray_icon_->setToolTip("YTX");
 
     tray_menu_ = new QMenu(this);
-    tray_menu_->addAction(QObject::tr("Show Window"), this, [this] {
+    tray_menu_->addAction(tr("Show Window"), this, [this] {
         this->showNormal();
         this->raise();
         this->activateWindow();
     });
 
     tray_menu_->addSeparator();
-    tray_menu_->addAction(QObject::tr("Quit"), qApp, &QCoreApplication::quit);
+    tray_menu_->addAction(tr("Quit"), qApp, &QCoreApplication::quit);
 
     tray_icon_->setContextMenu(tray_menu_);
     tray_icon_->show();
@@ -413,6 +429,35 @@ void MainWindow::InitStatusLabel()
 
     connection_label_ = new QLabel(this);
     ui->statusbar->addPermanentWidget(connection_label_);
+}
+
+void MainWindow::InitAccountRoleName()
+{
+    workspace_role_list_ = {
+        { static_cast<int>(WorkspaceRole::kGuest), tr("Guest") },
+        { static_cast<int>(WorkspaceRole::kMember), tr("Member") },
+        { static_cast<int>(WorkspaceRole::kAdmin), tr("Admin") },
+        { static_cast<int>(WorkspaceRole::kOwner), tr("Owner") },
+    };
+    workspace_role_name_ = QHash<int, QString>(workspace_role_list_.cbegin(), workspace_role_list_.cend());
+
+    database_role_list_ = {
+        { "ytx_main_readonly", tr("Main | Readonly") },
+        { "ytx_main_readwrite", tr("Main | Readwrite") },
+        { "ytx_finance_readonly", tr("Finance | Readonly") },
+        { "ytx_finance_readwrite", tr("Finance | Readwrite") },
+        { "ytx_task_readonly", tr("Task | Readonly") },
+        { "ytx_task_readwrite", tr("Task | Readwrite") },
+        { "ytx_inventory_readonly", tr("Inventory | Readonly") },
+        { "ytx_inventory_readwrite", tr("Inventory | Readwrite") },
+        { "ytx_partner_readonly", tr("Partner | Readonly") },
+        { "ytx_partner_readwrite", tr("Partner | Readwrite") },
+        { "ytx_sale_readonly", tr("Sale | Readonly") },
+        { "ytx_sale_readwrite", tr("Sale | Readwrite") },
+        { "ytx_purchase_readonly", tr("Purchase | Readonly") },
+        { "ytx_purchase_readwrite", tr("Purchase | Readwrite") },
+    };
+    database_role_name_ = QHash<QString, QString>(database_role_list_.cbegin(), database_role_list_.cend());
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
@@ -466,6 +511,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::STreeSyncFinish, this, &MainWindow::RFinishTreeSync);
     connect(WebSocket::Instance(), &WebSocket::SAccountName, this, &MainWindow::RAccountName);
     connect(WebSocket::Instance(), &WebSocket::SAccountUsername, this, &MainWindow::RAccountUsername);
+    connect(WebSocket::Instance(), &WebSocket::SWorkspaceMemberAck, this, &MainWindow::RWorkspaceMemberAck);
 }
 
 void MainWindow::SetIcon() const
@@ -733,7 +779,7 @@ void MainWindow::on_actionCheckUpdates_triggered()
 
             dlg->setDefaultButton(QMessageBox::Yes);
 
-            QObject::connect(dlg, &QMessageBox::finished, this, [download_url](int ret) {
+            connect(dlg, &QMessageBox::finished, this, [download_url](int ret) {
                 if (ret == QMessageBox::Yes) {
                     QDesktopServices::openUrl(QUrl(download_url));
                 }

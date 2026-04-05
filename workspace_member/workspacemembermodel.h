@@ -44,6 +44,8 @@ public:
     // Remove data:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
+    void ResetModel(const QJsonArray& array);
+
 private:
     void RestartTimer(const QUuid& id);
 

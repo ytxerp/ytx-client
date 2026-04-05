@@ -80,7 +80,7 @@ private slots:
     void on_actionReconnect_triggered();
 
     void on_actionProfile_triggered();
-    void on_actionMember_triggered();
+    void on_actionWorkspaceMember_triggered();
 
     void on_actionCheckUpdates_triggered();
     void on_actionExportExcel_triggered();
@@ -152,6 +152,8 @@ private slots:
 
     void RDenyLeafDelete(const QJsonObject& obj);
 
+    void RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
+
     void RApplyTag(const QJsonObject& obj);
     void RInsertTag(const QJsonObject& obj, bool is_same_session);
     void RUpdateTag(const QJsonObject& obj);
@@ -215,7 +217,7 @@ private:
 
     void DelegateTagView(QTableView* table_view) const;
 
-    void DelegateWorkspaceMemberView(QTableView* table_view) const;
+    void DelegateWorkspaceMember(QTableView* table_view) const;
     void InitTableView(QTableView* view, int id_column, int stretch_column) const;
 
     void DelegateStatementNode(QTableView* table_view, CSectionConfig& config) const;
@@ -277,6 +279,7 @@ private:
     SectionContext* GetSectionContex(Section section);
     void InitSystemTray();
     void InitStatusLabel();
+    void InitAccountRoleName();
 
     void FlushCaches(SectionContext& sc);
 
@@ -302,6 +305,13 @@ private:
 
 private:
     Ui::MainWindow* ui {};
+    QHash<QUuid, WidgetContext> widget_hash_ {};
+
+    QList<QPair<int, QString>> workspace_role_list_ {};
+    QHash<int, QString> workspace_role_name_ {};
+
+    QList<QPair<QString, QString>> database_role_list_ {};
+    QHash<QString, QString> database_role_name_ {};
 
     Section start_ {};
     QLabel* connection_label_ {};

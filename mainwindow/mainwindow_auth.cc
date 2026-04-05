@@ -84,7 +84,7 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
         LoginInfo& login_info { LoginInfo::Instance() };
         UpdateAccountInfo(login_info.Workspace(), name, expire_date);
 
-        ui->actionMember->setVisible(UserProfile::Instance().GetWorkspaceRole() >= WorkspaceRole::Admin);
+        ui->actionWorkspaceMember->setVisible(UserProfile::Instance().GetWorkspaceRole() >= WorkspaceRole::kAdmin);
 
         if (!section_settings_) {
             const QString ini_file { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator()

@@ -20,11 +20,15 @@
 #ifndef WORKSPACEROLE_H
 #define WORKSPACEROLE_H
 
+#include <QHash>
+#include <QObject>
+#include <QString>
+
 enum class WorkspaceRole {
-    Guest = 0,
-    Member = 10,
-    Admin = 80,
-    Owner = 99,
+    kGuest = 0,
+    kMember = 10,
+    kAdmin = 80,
+    kOwner = 99,
 };
 
 #endif // WORKSPACEROLE_H

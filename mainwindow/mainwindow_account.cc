@@ -47,21 +47,34 @@ void MainWindow::RAccountUsername(const QJsonObject& obj)
     Utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), message, TimeConst::kAutoCloseMs);
 }
 
-void MainWindow::on_actionMember_triggered()
+void MainWindow::on_actionWorkspaceMember_triggered()
 {
-    qInfo() << "[UI]" << "on_actionMember_triggered";
-
-    LoginInfo& login_info { LoginInfo::Instance() };
-
-    const auto message { JsonGen::WorkspaceMemberAck(login_info.Email(), login_info.Workspace()) };
-    WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberAck, message);
+    qInfo() << "[UI]" << "on_actionWorkspaceMember_triggered";
 
     auto* dialog = new WorkspaceMemberDialog(this);
-    Utils::ManageDialog(sc_->widget_hash, dialog);
+    const auto widget_id { Utils::ManageDialog(widget_hash_, dialog) };
+
+    const auto message { JsonGen::WorkspaceMemberAck(widget_id, LoginInfo::Instance().Workspace()) };
+    WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberAck, message);
 
     auto* view { dialog->View() };
     InitTableView(view, std::to_underlying(WorkspaceMemberEnum::kId), std::to_underlying(WorkspaceMemberEnum::kName));
-    DelegateWorkspaceMemberView(view);
+    DelegateWorkspaceMember(view);
 
     dialog->show();
+}
+
+void MainWindow::RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array)
+{
+    auto widget { widget_hash_.value(widget_id).widget };
+    if (!widget)
+        return;
+
+    auto* ptr { widget.data() };
+    Q_ASSERT(qobject_cast<WorkspaceMemberDialog*>(ptr));
+
+    auto* d_widget { static_cast<WorkspaceMemberDialog*>(ptr) };
+
+    auto* model { d_widget->Model() };
+    model->ResetModel(array);
 }

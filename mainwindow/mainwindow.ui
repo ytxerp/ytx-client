@@ -340,7 +340,7 @@
     <addaction name="actionExpireDate"/>
     <addaction name="separator"/>
     <addaction name="actionProfile"/>
-    <addaction name="actionMember"/>
+    <addaction name="actionWorkspaceMember"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -677,9 +677,12 @@
     <string>Profile</string>
    </property>
   </action>
-  <action name="actionMember">
+  <action name="actionWorkspaceMember">
    <property name="text">
-    <string>Member</string>
+    <string>Workspace Member</string>
+   </property>
+   <property name="toolTip">
+    <string>Workspace Member</string>
    </property>
   </action>
  </widget>
