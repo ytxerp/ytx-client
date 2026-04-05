@@ -21,6 +21,12 @@ TagModel::TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, QObject*
     std::sort(tag_list_.begin(), tag_list_.end(), [](const Tag* a, const Tag* b) { return a->name < b->name; });
 }
 
+TagModel::~TagModel()
+{
+    qDebug() << "~TagModel() FlushCaches";
+    FlushCaches();
+}
+
 QVariant TagModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation != Qt::Horizontal)
@@ -285,6 +291,28 @@ void TagModel::RestartTimer(const QUuid& id)
 
     // Start or restart the timer
     timer->start(TimeConst::kAutoCloseMs);
+}
+
+void TagModel::FlushCaches()
+{
+    if (pending_updates_.isEmpty())
+        return;
+
+    for (auto* timer : std::as_const(pending_timers_)) {
+        timer->stop();
+        timer->deleteLater();
+    }
+
+    pending_timers_.clear();
+
+    for (auto it = pending_updates_.cbegin(); it != pending_updates_.cend(); ++it) {
+        if (!it.value().isEmpty()) {
+            const QJsonObject message { JsonGen::TagUpdate(section_, it.key(), it.value()) };
+            WebSocket::Instance()->SendMessage(WsKey::kTagUpdate, message);
+        }
+    }
+
+    pending_updates_.clear();
 }
 
 void TagModel::TryInsert(Tag* tag)

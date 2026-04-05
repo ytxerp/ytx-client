@@ -15,7 +15,7 @@ signals:
 
 public:
     explicit TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
-    ~TagModel() override = default;
+    ~TagModel() override;
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -56,6 +56,8 @@ private:
     bool UpdateColor(Tag* tag, const QString& new_color);
 
     void RestartTimer(const QUuid& id);
+    void FlushCaches();
+
     void TryInsert(Tag* tag);
 
 private:

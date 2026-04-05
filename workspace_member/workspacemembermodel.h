@@ -11,7 +11,7 @@ class WorkspaceMemberModel final : public QAbstractItemModel {
 
 public:
     explicit WorkspaceMemberModel(QObject* parent = nullptr);
-    ~WorkspaceMemberModel() override = default;
+    ~WorkspaceMemberModel() override;
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -48,6 +48,7 @@ public:
 
 private:
     void RestartTimer(const QUuid& id);
+    void FlushCaches();
 
 private:
     QList<WorkspaceMember*> member_list_ {};
