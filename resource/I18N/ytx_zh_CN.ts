@@ -58,6 +58,11 @@
         <translation>密码</translation>
     </message>
     <message>
+        <location filename="../../dialog/authdialog.ui" line="154"/>
+        <source>Remember Password</source>
+        <translation>记住密码</translation>
+    </message>
+    <message>
         <location filename="../../dialog/authdialog.ui" line="202"/>
         <source>I have read and agree to Privacy Policy</source>
         <translation>我已阅读并同意隐私政策</translation>
@@ -71,11 +76,6 @@
         <location filename="../../dialog/authdialog.ui" line="144"/>
         <source>Register</source>
         <translation>注册</translation>
-    </message>
-    <message>
-        <location filename="../../dialog/authdialog.ui" line="154"/>
-        <source>Password Remembered</source>
-        <translation>记住密码</translation>
     </message>
     <message>
         <location filename="../../dialog/authdialog.ui" line="68"/>
@@ -1464,14 +1464,14 @@ You need to recall it first before making changes.</source>
         <translation>将删除此分支、所有直系子节点提升至同级。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="185"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="285"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="179"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="279"/>
         <source>Tags</source>
         <translation>标签</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="215"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="314"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="209"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="308"/>
         <source>Manage...</source>
         <translation>管理...</translation>
     </message>
@@ -1718,14 +1718,6 @@ You need to recall it first before making changes.</source>
 </context>
 <context>
     <name>QObject</name>
-    <message>
-        <source>Show Window</source>
-        <translation type="vanished">显示窗口</translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation type="vanished">退出</translation>
-    </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="8"/>
         <location filename="../../component/stringinitializer.cc" line="24"/>
@@ -2351,78 +2343,6 @@ You need to recall it first before making changes.</source>
         <source>FO</source>
         <translation>正</translation>
     </message>
-    <message>
-        <source>Main Readonly</source>
-        <translation type="vanished">全库 只读</translation>
-    </message>
-    <message>
-        <source>Main Readwrite</source>
-        <translation type="vanished">全库 读写</translation>
-    </message>
-    <message>
-        <source>Finance Readonly</source>
-        <translation type="vanished">财务 只读</translation>
-    </message>
-    <message>
-        <source>Finance Readwrite</source>
-        <translation type="vanished">财务 读写</translation>
-    </message>
-    <message>
-        <source>Inventory Readonly</source>
-        <translation type="vanished">存货 只读</translation>
-    </message>
-    <message>
-        <source>Inventory Readwrite</source>
-        <translation type="vanished">存货 读写</translation>
-    </message>
-    <message>
-        <source>Partner Readonly</source>
-        <translation type="vanished">合作 只读</translation>
-    </message>
-    <message>
-        <source>Partner Readwrite</source>
-        <translation type="vanished">合作 读写</translation>
-    </message>
-    <message>
-        <source>Purchase Readonly</source>
-        <translation type="vanished">采购 只读</translation>
-    </message>
-    <message>
-        <source>Purchase Readwrite</source>
-        <translation type="vanished">采购 读写</translation>
-    </message>
-    <message>
-        <source>Sale Readonly</source>
-        <translation type="vanished">销售 只读</translation>
-    </message>
-    <message>
-        <source>Sale Readwrite</source>
-        <translation type="vanished">销售 读写</translation>
-    </message>
-    <message>
-        <source>Task Readonly</source>
-        <translation type="vanished">任务 只读</translation>
-    </message>
-    <message>
-        <source>Task Readwrite</source>
-        <translation type="vanished">任务 读写</translation>
-    </message>
-    <message>
-        <source>Guest</source>
-        <translation type="vanished">访客</translation>
-    </message>
-    <message>
-        <source>Member</source>
-        <translation type="vanished">成员</translation>
-    </message>
-    <message>
-        <source>Admin</source>
-        <translation type="vanished">管理员</translation>
-    </message>
-    <message>
-        <source>Owner</source>
-        <translation type="vanished">所有者</translation>
-    </message>
 </context>
 <context>
     <name>SearchDialog</name>
@@ -2737,21 +2657,6 @@ You need to recall it first before making changes.</source>
     </message>
 </context>
 <context>
-    <name>TagModel</name>
-    <message>
-        <source>Id</source>
-        <translation type="vanished">Id</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation type="vanished">名称</translation>
-    </message>
-    <message>
-        <source>Color</source>
-        <translation type="vanished">颜色</translation>
-    </message>
-</context>
-<context>
     <name>TreeWidgetO</name>
     <message>
         <location filename="../../tree/widget/treewidgeto.ui" line="85"/>
@@ -2808,44 +2713,9 @@ You need to recall it first before making changes.</source>
 <context>
     <name>WorkspaceMemberDialog</name>
     <message>
-        <source>Member</source>
-        <translation type="vanished">工区成员</translation>
-    </message>
-    <message>
         <location filename="../../workspace_member/workspacememberdialog.ui" line="14"/>
         <source>Workspace Member</source>
         <translation>工区成员</translation>
-    </message>
-</context>
-<context>
-    <name>WorkspaceMemberModel</name>
-    <message>
-        <source>Id</source>
-        <translation type="vanished">Id</translation>
-    </message>
-    <message>
-        <source>Email</source>
-        <translation type="vanished">邮箱</translation>
-    </message>
-    <message>
-        <source>Username</source>
-        <translation type="vanished">用户名</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation type="vanished">姓名</translation>
-    </message>
-    <message>
-        <source>WorkspaceRole</source>
-        <translation type="vanished">工作区角色</translation>
-    </message>
-    <message>
-        <source>DatabaseRole</source>
-        <translation type="vanished">数据库角色</translation>
-    </message>
-    <message>
-        <source>CreatedTime</source>
-        <translation type="vanished">创建时间</translation>
     </message>
 </context>
 </TS>
