@@ -14,6 +14,9 @@ void EntryHubI::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update
     if (it != entry_cache_.constEnd()) {
         auto* d_entry = static_cast<Entry*>(it.value());
 
+        const int version { update.value(kVersion).toInt() };
+        d_entry->version = version;
+
         d_entry->lhs_rate = update[kLhsRate].toString().toDouble();
         d_entry->rhs_rate = update[kRhsRate].toString().toDouble();
 

@@ -242,6 +242,7 @@ bool TableModelF::UpdateRate(EntryShadow* shadow, double value)
     const QUuid entry_id { *shadow->id };
 
     QJsonObject update {};
+    update.insert(kVersion, *shadow->version);
 
     const bool is_parallel { shadow->is_parallel };
     update.insert(is_parallel ? kLhsRate : kRhsRate, QString::number(*shadow->lhs_rate, 'f', NumericConst::kDecimalPlaces8));

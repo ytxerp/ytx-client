@@ -16,6 +16,9 @@ void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update
         QUuid rhs_id {};
         QUuid lhs_id {};
 
+        const int version { update.value(kVersion).toInt() };
+        d_entry->version = version;
+
         if (is_parallel) {
             d_entry->lhs_rate = update[kLhsRate].toString().toDouble();
             d_entry->rhs_debit = update[kRhsDebit].toString().toDouble();

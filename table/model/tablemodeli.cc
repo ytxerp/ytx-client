@@ -37,6 +37,8 @@ bool TableModelI::UpdateRate(EntryShadow* shadow, double value)
     const QUuid entry_id { *shadow->id };
 
     QJsonObject update {};
+    update.insert(kVersion, *shadow->version);
+
     update.insert(kLhsRate, QString::number(value, 'f', NumericConst::kDecimalPlaces8));
     update.insert(kRhsRate, QString::number(value, 'f', NumericConst::kDecimalPlaces8));
 
