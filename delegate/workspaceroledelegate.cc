@@ -4,9 +4,9 @@
 #include "widget/combobox.h"
 
 WorkspaceRoleDelegate::WorkspaceRoleDelegate(
-    const QHash<int, QString>& workspace_role_name, const QList<QPair<int, QString>>& workspace_role_list, QObject* parent)
+    const QHash<int, QString>& workspace_role_hash, const QList<QPair<int, QString>>& workspace_role_list, QObject* parent)
     : StyledItemDelegate { parent }
-    , workspace_role_name_ { workspace_role_name }
+    , workspace_role_hash_ { workspace_role_hash }
     , workspace_role_list_ { workspace_role_list }
 {
 }
@@ -47,17 +47,17 @@ void WorkspaceRoleDelegate::setModelData(QWidget* editor, QAbstractItemModel* mo
 void WorkspaceRoleDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int key { index.data().toInt() };
-    if (!workspace_role_name_.contains(key))
+    if (!workspace_role_hash_.contains(key))
         return PaintEmpty(painter, option, index);
 
-    const QString text { workspace_role_name_.value(key) };
+    const QString text { workspace_role_hash_.value(key) };
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }
 
 QSize WorkspaceRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int key { index.data().toInt() };
-    const QString text { workspace_role_name_.value(key) };
+    const QString text { workspace_role_hash_.value(key) };
     return CalculateTextSize(text, option);
 }
 
@@ -65,7 +65,7 @@ void WorkspaceRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOp
 {
     const int bar_width { QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent) };
     const int key { index.data().toInt() };
-    const QString text { workspace_role_name_.value(key) };
+    const QString text { workspace_role_hash_.value(key) };
 
     const QSize text_size { CalculateTextSize(text, option) };
 

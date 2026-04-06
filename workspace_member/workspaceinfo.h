@@ -17,36 +17,19 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef WORKSPACEMEMBERDIALOG_H
-#define WORKSPACEMEMBERDIALOG_H
+#ifndef WORKSPACEINFO_H
+#define WORKSPACEINFO_H
 
-#include <QDialog>
-#include <QTableView>
+#include <QHash>
+#include <QList>
+#include <QString>
 
-#include "workspacemembermodel.h"
-
-namespace Ui {
-class WorkspaceMemberDialog;
-}
-
-class WorkspaceMemberDialog final : public QDialog {
-    Q_OBJECT
-
-public:
-    explicit WorkspaceMemberDialog(const QStringList& header, QWidget* parent = nullptr);
-    ~WorkspaceMemberDialog() override;
-
-    QTableView* View();
-    WorkspaceMemberModel* Model() { return model_; }
-
-private:
-    void InitDialog(const QStringList& header);
-
-private:
-    Ui::WorkspaceMemberDialog* ui;
-
-private:
-    WorkspaceMemberModel* model_ {};
+struct WorkspaceInfo {
+    QList<QPair<int, QString>> role_list {};
+    QHash<int, QString> role_hash {};
+    QList<QPair<QString, QString>> database_role_list {};
+    QHash<QString, QString> database_role_hash {};
+    QStringList header {};
 };
 
-#endif // WORKSPACEMEMBERDIALOG_H
+#endif // WORKSPACEINFO_H

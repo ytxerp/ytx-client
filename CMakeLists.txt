@@ -254,6 +254,7 @@ set(HEADERS
     workspace_member/workspacemembermodel.h
     workspace_member/workspacerole.h
     delegate/databaseroledelegate.h
+    workspace_member/workspaceinfo.h
 )
 
 set(SOURCES

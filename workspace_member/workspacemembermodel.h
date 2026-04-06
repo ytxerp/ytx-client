@@ -10,7 +10,7 @@ class WorkspaceMemberModel final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit WorkspaceMemberModel(QObject* parent = nullptr);
+    explicit WorkspaceMemberModel(const QStringList& header, QObject* parent = nullptr);
     ~WorkspaceMemberModel() override;
 
     // Header:
@@ -31,7 +31,7 @@ public:
     int columnCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent)
-        return 8;
+        return header_.size();
     }
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -52,6 +52,7 @@ private:
 
 private:
     QList<WorkspaceMember*> member_list_ {};
+    const QStringList& header_ {};
 
     QHash<QUuid, QJsonObject> pending_updates_ {};
     QHash<QUuid, QTimer*> pending_timers_ {};

@@ -431,35 +431,6 @@ void MainWindow::InitStatusLabel()
     ui->statusbar->addPermanentWidget(connection_label_);
 }
 
-void MainWindow::InitAccountRoleName()
-{
-    workspace_role_list_ = {
-        { static_cast<int>(WorkspaceRole::kGuest), tr("Guest") },
-        { static_cast<int>(WorkspaceRole::kMember), tr("Member") },
-        { static_cast<int>(WorkspaceRole::kAdmin), tr("Admin") },
-        { static_cast<int>(WorkspaceRole::kOwner), tr("Owner") },
-    };
-    workspace_role_name_ = QHash<int, QString>(workspace_role_list_.cbegin(), workspace_role_list_.cend());
-
-    database_role_list_ = {
-        { "ytx_main_readonly", tr("Main | Readonly") },
-        { "ytx_main_readwrite", tr("Main | Readwrite") },
-        { "ytx_finance_readonly", tr("Finance | Readonly") },
-        { "ytx_finance_readwrite", tr("Finance | Readwrite") },
-        { "ytx_task_readonly", tr("Task | Readonly") },
-        { "ytx_task_readwrite", tr("Task | Readwrite") },
-        { "ytx_inventory_readonly", tr("Inventory | Readonly") },
-        { "ytx_inventory_readwrite", tr("Inventory | Readwrite") },
-        { "ytx_partner_readonly", tr("Partner | Readonly") },
-        { "ytx_partner_readwrite", tr("Partner | Readwrite") },
-        { "ytx_sale_readonly", tr("Sale | Readonly") },
-        { "ytx_sale_readwrite", tr("Sale | Readwrite") },
-        { "ytx_purchase_readonly", tr("Purchase | Readonly") },
-        { "ytx_purchase_readwrite", tr("Purchase | Readwrite") },
-    };
-    database_role_name_ = QHash<QString, QString>(database_role_list_.cbegin(), database_role_list_.cend());
-}
-
 void MainWindow::closeEvent(QCloseEvent* event)
 {
     if (tray_icon_ && tray_icon_->isVisible()) {

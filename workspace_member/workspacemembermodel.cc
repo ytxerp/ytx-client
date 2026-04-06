@@ -6,8 +6,9 @@
 #include "websocket/websocket.h"
 #include "workspacememberenum.h"
 
-WorkspaceMemberModel::WorkspaceMemberModel(QObject* parent)
+WorkspaceMemberModel::WorkspaceMemberModel(const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
+    , header_ { header }
 {
 }
 
@@ -19,24 +20,10 @@ WorkspaceMemberModel::~WorkspaceMemberModel()
 
 QVariant WorkspaceMemberModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation != Qt::Horizontal || role != Qt::DisplayRole)
-        return {};
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+        return header_.at(section);
 
-    static const QStringList kHeaders = {
-        tr("Id"),
-        tr("Version"),
-        tr("Email"),
-        tr("Username"),
-        tr("Name"),
-        tr("WorkspaceRole"),
-        tr("DatabaseRole"),
-        tr("CreatedTime"),
-    };
-
-    if (section < 0 || section >= kHeaders.size())
-        return {};
-
-    return kHeaders.at(section);
+    return QVariant();
 }
 
 QModelIndex WorkspaceMemberModel::index(int row, int column, const QModelIndex& parent) const

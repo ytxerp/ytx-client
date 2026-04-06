@@ -47,11 +47,52 @@ void MainWindow::RAccountUsername(const QJsonObject& obj)
     Utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), message, TimeConst::kAutoCloseMs);
 }
 
+void MainWindow::InitAccountRoleName()
+{
+    workspace_info_.role_list = {
+        { static_cast<int>(WorkspaceRole::kGuest), tr("Guest") },
+        { static_cast<int>(WorkspaceRole::kMember), tr("Member") },
+        { static_cast<int>(WorkspaceRole::kAdmin), tr("Admin") },
+        { static_cast<int>(WorkspaceRole::kOwner), tr("Owner") },
+    };
+
+    workspace_info_.role_hash = QHash<int, QString>(workspace_info_.role_list.cbegin(), workspace_info_.role_list.cend());
+
+    workspace_info_.database_role_list = {
+        { "ytx_main_readonly", tr("Main | Readonly") },
+        { "ytx_main_readwrite", tr("Main | Readwrite") },
+        { "ytx_finance_readonly", tr("Finance | Readonly") },
+        { "ytx_finance_readwrite", tr("Finance | Readwrite") },
+        { "ytx_task_readonly", tr("Task | Readonly") },
+        { "ytx_task_readwrite", tr("Task | Readwrite") },
+        { "ytx_inventory_readonly", tr("Inventory | Readonly") },
+        { "ytx_inventory_readwrite", tr("Inventory | Readwrite") },
+        { "ytx_partner_readonly", tr("Partner | Readonly") },
+        { "ytx_partner_readwrite", tr("Partner | Readwrite") },
+        { "ytx_sale_readonly", tr("Sale | Readonly") },
+        { "ytx_sale_readwrite", tr("Sale | Readwrite") },
+        { "ytx_purchase_readonly", tr("Purchase | Readonly") },
+        { "ytx_purchase_readwrite", tr("Purchase | Readwrite") },
+    };
+    workspace_info_.database_role_hash = QHash<QString, QString>(workspace_info_.database_role_list.cbegin(), workspace_info_.database_role_list.cend());
+
+    workspace_info_.header = {
+        tr("Id"),
+        tr("Version"),
+        tr("Email"),
+        tr("Username"),
+        tr("Name"),
+        tr("WorkspaceRole"),
+        tr("DatabaseRole"),
+        tr("CreatedTime"),
+    };
+}
+
 void MainWindow::on_actionWorkspaceMember_triggered()
 {
     qInfo() << "[UI]" << "on_actionWorkspaceMember_triggered";
 
-    auto* dialog = new WorkspaceMemberDialog(this);
+    auto* dialog = new WorkspaceMemberDialog(workspace_info_.header, this);
     const auto widget_id { Utils::ManageDialog(widget_hash_, dialog) };
 
     const auto message { JsonGen::WorkspaceMemberAck(widget_id, LoginInfo::Instance().Workspace()) };

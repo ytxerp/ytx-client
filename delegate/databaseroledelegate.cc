@@ -3,9 +3,9 @@
 #include "widget/combobox.h"
 
 DatabaseRoleDelegate::DatabaseRoleDelegate(
-    const QHash<QString, QString>& database_role_name, const QList<QPair<QString, QString>>& database_role_list, QObject* parent)
+    const QHash<QString, QString>& database_role_hash, const QList<QPair<QString, QString>>& database_role_list, QObject* parent)
     : StyledItemDelegate { parent }
-    , database_role_name_ { database_role_name }
+    , database_role_hash_ { database_role_hash }
     , database_role_list_ { database_role_list }
 {
 }
@@ -41,17 +41,17 @@ void DatabaseRoleDelegate::setModelData(QWidget* editor, QAbstractItemModel* mod
 void DatabaseRoleDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const QString key { index.data().toString() };
-    if (!database_role_name_.contains(key))
+    if (!database_role_hash_.contains(key))
         return PaintEmpty(painter, option, index);
 
-    const QString text { database_role_name_.value(key) };
+    const QString text { database_role_hash_.value(key) };
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }
 
 QSize DatabaseRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const QString key { index.data().toString() };
-    const QString text { database_role_name_.value(key) };
+    const QString text { database_role_hash_.value(key) };
     return CalculateTextSize(text, option);
 }
 
@@ -60,7 +60,7 @@ void DatabaseRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOpt
     const int bar_width { QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent) };
 
     const QString key { index.data().toString() };
-    const QString text { database_role_name_.value(key) };
+    const QString text { database_role_hash_.value(key) };
 
     const QSize text_size { CalculateTextSize(text, option) };
 

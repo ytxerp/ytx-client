@@ -43,6 +43,7 @@
 #include "table/widget/tablewidgeto.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidgeto.h"
+#include "workspace_member/workspaceinfo.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -303,11 +304,7 @@ private:
     Ui::MainWindow* ui {};
     QHash<QUuid, WidgetContext> widget_hash_ {};
 
-    QList<QPair<int, QString>> workspace_role_list_ {};
-    QHash<int, QString> workspace_role_name_ {};
-
-    QList<QPair<QString, QString>> database_role_list_ {};
-    QHash<QString, QString> database_role_name_ {};
+    WorkspaceInfo workspace_info_ {};
 
     Section start_ {};
     QLabel* connection_label_ {};

@@ -2,20 +2,20 @@
 
 #include "ui_workspacememberdialog.h"
 
-WorkspaceMemberDialog::WorkspaceMemberDialog(QWidget* parent)
+WorkspaceMemberDialog::WorkspaceMemberDialog(const QStringList& header, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::WorkspaceMemberDialog)
 {
     ui->setupUi(this);
-    InitDialog();
+    InitDialog(header);
 }
 
 WorkspaceMemberDialog::~WorkspaceMemberDialog() { delete ui; }
 
 QTableView* WorkspaceMemberDialog::View() { return ui->tableView; }
 
-void WorkspaceMemberDialog::InitDialog()
+void WorkspaceMemberDialog::InitDialog(const QStringList& header)
 {
-    model_ = new WorkspaceMemberModel(ui->tableView);
+    model_ = new WorkspaceMemberModel(header, ui->tableView);
     ui->tableView->setModel(model_);
 }
