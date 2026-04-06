@@ -744,9 +744,13 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
         tree_model->SyncTotalArray(total_array);
     }
 
-    if (session_id != session_id_) {
-        entry_hub->UpdateEntryLinkedNode(entry_id, update, is_parallel);
+    if (session_id == session_id_) {
+        const int version { update.value(kVersion).toInt() };
+        entry_hub->UpdateVersion(entry_id, version);
+        return;
     }
+
+    entry_hub->UpdateEntryLinkedNode(entry_id, update, is_parallel);
 }
 
 void WebSocket::UpdateEntryRate(const QJsonObject& obj)

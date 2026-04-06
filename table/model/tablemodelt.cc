@@ -145,6 +145,7 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
 
         QJsonObject update {};
         update.insert(field, value.toString(QUuid::WithoutBraces));
+        update.insert(kVersion, *shadow->version);
 
         message.insert(kUpdate, update);
         message.insert(kIsParallel, is_parallel);

@@ -128,6 +128,9 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
     if (it != entry_cache_.constEnd()) {
         entry = it.value();
 
+        const int version { update.value(kVersion).toInt() };
+        entry->version = version;
+
         const QUuid old_node_id { is_parallel ? entry->rhs_node : entry->lhs_node };
         const QUuid lhs_node { is_parallel ? entry->lhs_node : entry->rhs_node };
 
