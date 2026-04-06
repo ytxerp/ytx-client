@@ -110,6 +110,13 @@ void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update)
     };
 }
 
+void EntryHub::UpdateVersion(const QUuid& id, int version)
+{
+    auto it = entry_cache_.find(id);
+    if (it != entry_cache_.end())
+        it.value()->version = version;
+}
+
 void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, bool is_parallel)
 {
     Entry* entry {};

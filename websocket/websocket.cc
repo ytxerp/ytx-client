@@ -844,9 +844,14 @@ void WebSocket::InsertEntry(const QJsonObject& obj)
         tree_model->SyncTotalArray(total_array);
     }
 
-    if (session_id != session_id_) {
-        entry_hub->InsertEntry(entry);
+    if (session_id == session_id_) {
+        const QUuid id { entry.value(kId).toString() };
+        const int version { entry.value(kVersion).toInt() };
+        entry_hub->UpdateVersion(id, version);
+        return;
     }
+
+    entry_hub->InsertEntry(entry);
 }
 
 void WebSocket::DeleteEntry(const QJsonObject& obj)

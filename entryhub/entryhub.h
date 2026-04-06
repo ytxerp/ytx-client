@@ -72,6 +72,8 @@ public:
     virtual void DeleteEntry(const QUuid& entry_id);
     virtual void UpdateEntry(const QUuid& id, const QJsonObject& update);
 
+    void UpdateVersion(const QUuid& id, int version);
+
     void UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, bool is_parallel);
 
     void AckTable(const QUuid& node_id, const QJsonArray& array);
