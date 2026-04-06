@@ -116,7 +116,7 @@ protected:
 
     virtual void AccumulateBalance(int start);
 
-    void RestartTimer(const QUuid& id);
+    void RestartTimer(const QUuid& id, int version);
     double CalculateBalance(EntryShadow* shadow) const { return (direction_rule_ == Rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit); }
 
     EntryShadow* InsertRowsImpl(int row, const QModelIndex& parent = QModelIndex());

@@ -712,9 +712,13 @@ void WebSocket::UpdateEntry(const QJsonObject& obj)
     Q_ASSERT(entry_hub);
     Q_ASSERT(!entry_id.isNull());
 
-    if (session_id != session_id_) {
-        entry_hub->UpdateEntry(entry_id, update);
+    if (session_id == session_id_) {
+        const int version { update.value(kVersion).toInt() };
+        entry_hub->UpdateVersion(entry_id, version);
+        return;
     }
+
+    entry_hub->UpdateEntry(entry_id, update);
 }
 
 void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)

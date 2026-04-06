@@ -137,7 +137,7 @@ void TableModel::AccumulateBalance(int start)
     EmitDataChanged(start, rowCount() - 1, balance_column, balance_column);
 }
 
-void TableModel::RestartTimer(const QUuid& id)
+void TableModel::RestartTimer(const QUuid& id, int version)
 {
     // Try to retrieve the existing timer using {} initialization
     QTimer* timer { pending_timers_.value(id, nullptr) };
@@ -147,12 +147,13 @@ void TableModel::RestartTimer(const QUuid& id)
         timer = new QTimer { this };
         timer->setSingleShot(true);
 
-        connect(timer, &QTimer::timeout, this, [this, id]() {
+        connect(timer, &QTimer::timeout, this, [this, id, version]() {
             // Manage lifecycle by taking the timer from the hash
             auto* expired_timer { pending_timers_.take(id) };
 
             // Retrieve and remove the pending update content in one go
-            const auto update { pending_updates_.take(id) };
+            auto update { pending_updates_.take(id) };
+            update.insert(kVersion, version);
 
             // Only send the message if there are actual changes
             if (!update.isEmpty()) {
@@ -284,28 +285,32 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
     auto* shadow { shadow_list_.at(index.row()) };
 
     const QUuid id { *shadow->id };
+    const int version { *shadow->version };
 
     switch (column) {
-    case EntryEnum::kIssuedTime: {
+    case EntryEnum::kIssuedTime:
         Utils::UpdateShadowIssuedTime(
-            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [id, this]() { RestartTimer(id); });
+            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [this, id, version]() { RestartTimer(id, version); });
         break;
-    }
     case EntryEnum::kCode:
-        Utils::UpdateShadowField(pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [id, this]() { RestartTimer(id); });
+        Utils::UpdateShadowField(
+            pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnum::kStatus:
-        Utils::UpdateShadowField(pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [id, this]() { RestartTimer(id); });
+        Utils::UpdateShadowField(
+            pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnum::kDescription:
-        Utils::UpdateShadowField(pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [id, this]() { RestartTimer(id); });
+        Utils::UpdateShadowField(
+            pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnum::kDocument:
         Utils::UpdateShadowStringList(
-            pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [id, this]() { RestartTimer(id); });
+            pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnum::kTag:
-        Utils::UpdateShadowStringList(pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [id, this]() { RestartTimer(id); });
+        Utils::UpdateShadowStringList(
+            pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnum::kLhsRate:
         UpdateRate(shadow, value.toDouble());
