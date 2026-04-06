@@ -195,7 +195,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     auto* view { widget->View() };
     TableConnectO(table_model, widget);
     SetTableView(view, sc_->info.section, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
-    TableDelegateO(view, section_config);
+    TableDelegateO(view, sc_->info, section_config);
 
     sc_->widget_hash.insert(node_id, wc);
 }
@@ -247,7 +247,10 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     auto* view = widget->View();
     SetTableView(view, sc->info.section, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
     TableConnectO(table_model, widget);
-    TableDelegateO(view, section_config);
+    TableDelegateO(view, sc->info, section_config);
+
+    view->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
 
     sc->widget_hash.insert(node_id, wc);
     TableSStation::Instance()->RegisterModel(node_id, table_model);

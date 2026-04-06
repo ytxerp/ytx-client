@@ -16,26 +16,20 @@ void MainWindow::on_actionTags_triggered()
 {
     qInfo() << "[UI]" << "on_actionTags_triggered";
 
-    static QPointer<TagManagerDlg> dialog {};
+    auto* model { new TagModel(start_, sc_->tag_hash, sc_->info, this) };
+    connect(model, &TagModel::SInsertingTag, this, &MainWindow::RInsertingTag);
 
-    if (!dialog) {
-        auto* model { new TagModel(start_, sc_->tag_hash, sc_->info, this) };
-        connect(model, &TagModel::SInsertingTag, this, &MainWindow::RInsertingTag);
+    auto* dialog { new TagManagerDlg(this) };
 
-        dialog = new TagManagerDlg(this);
+    Utils::ManageDialog(sc_->widget_hash, dialog);
 
-        Utils::ManageDialog(sc_->widget_hash, dialog);
+    dialog->SetModel(model);
 
-        dialog->SetModel(model);
-
-        auto* view { dialog->View() };
-        InitTableView(view, std::to_underlying(TagEnum::kId), std::to_underlying(TagEnum::kVersion), std::to_underlying(TagEnum::kColor));
-        DelegateTag(view);
-    }
+    auto* view { dialog->View() };
+    InitTableView(view, std::to_underlying(TagEnum::kId), std::to_underlying(TagEnum::kVersion), std::to_underlying(TagEnum::kColor));
+    DelegateTag(view);
 
     dialog->show();
-    dialog->raise();
-    dialog->activateWindow();
 }
 
 void MainWindow::RApplyTag(const QJsonObject& obj)
@@ -315,8 +309,10 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     // manage_action->setIcon(QIcon(":/icons/settings.png"));
     connect(manage_action, &QAction::triggered, this, [this]() { on_actionTags_triggered(); });
 
-    menu->addSeparator();
-    menu->addAction(ui->actionJumpEntry);
+    if (IsDoubleEntry(start_)) {
+        menu->addSeparator();
+        menu->addAction(ui->actionJumpEntry);
+    }
 
     menu->exec(QCursor::pos());
 }

@@ -196,7 +196,7 @@ private:
     void TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
     void TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
     void TableDelegateP(QTableView* table_view, CSectionConfig& config) const;
-    void TableDelegateO(QTableView* table_view, CSectionConfig& config) const;
+    void TableDelegateO(QTableView* table_view, CSectionInfo& info, CSectionConfig& config) const;
 
     void SetTableView(QTableView* view, Section section, int stretch_column, int lhs_node_column) const;
 

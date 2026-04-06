@@ -331,7 +331,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kTag), tag);
 }
 
-void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) const
+void MainWindow::TableDelegateO(QTableView* table_view, CSectionInfo& info, CSectionConfig& config) const
 {
     auto tree_model_i { sc_i_.tree_model };
     auto* int_filter_model { tree_model_i->IncludeUnit(NodeUnit::IInternal, table_view) };
@@ -357,6 +357,10 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionConfig& config) 
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kInitial), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDiscount), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kFinal), amount);
+
+    const auto& sc { info.section == Section::kSale ? sc_sale_ : sc_purchase_ };
+    auto* tag { new TagDelegate(sc.tag_icon_hash, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kTag), tag);
 }
 
 void MainWindow::DelegateSaleReferenceI(QTableView* table_view, CSectionConfig& config) const

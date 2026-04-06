@@ -77,7 +77,7 @@ constexpr int EntryTagColumn(Section section)
         return std::to_underlying(EntryEnumP::kTag);
     case Section::kSale:
     case Section::kPurchase:
-        return -1;
+        return std::to_underlying(EntryEnumO::kTag);
     }
 
     Q_UNREACHABLE();

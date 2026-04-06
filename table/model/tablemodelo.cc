@@ -85,6 +85,20 @@ void TableModelO::Finalize(QJsonObject& message)
     }
 }
 
+QModelIndex TableModelO::GetIndex(const QUuid& entry_id) const
+{
+    int row { 0 };
+
+    for (const auto* entry : entry_list_) {
+        if (entry->id == entry_id) {
+            return index(row, 0);
+        }
+        ++row;
+    }
+
+    return QModelIndex();
+}
+
 QVariant TableModelO::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())

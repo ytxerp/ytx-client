@@ -83,6 +83,7 @@ public:
     bool HasPendingUpdate() const { return !pending_insert_.isEmpty() || !pending_delete_.isEmpty() || !pending_update_.isEmpty(); }
     void SetNode(const NodeO* node) { d_node_ = node; }
     Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
+    QModelIndex GetIndex(const QUuid& entry_id) const override;
 
 private:
     bool UpdateInternalSku(EntryO* entry, int row, const QUuid& value, bool is_persisted);
