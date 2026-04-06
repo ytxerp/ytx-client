@@ -1052,7 +1052,7 @@
         <translation>工区成员</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="438"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="54"/>
         <source>Member</source>
         <translation>成员</translation>
     </message>
@@ -1085,7 +1085,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="511"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="691"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="662"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
@@ -1100,8 +1100,8 @@
         <location filename="../../mainwindow/mainwindow.ui" line="524"/>
         <location filename="../../mainwindow/mainwindow.ui" line="527"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="23"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="53"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="80"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="54"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="81"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1109,6 +1109,7 @@
         <location filename="../../mainwindow/mainwindow.ui" line="563"/>
         <location filename="../../mainwindow/mainwindow.ui" line="566"/>
         <location filename="../../mainwindow/mainwindow.cc" line="214"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="82"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
@@ -1165,7 +1166,7 @@
         <translation>财务版块已存在记录，无法更改基准币种。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="182"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="181"/>
         <source>Unsaved Data</source>
         <translation>未保存的数据</translation>
     </message>
@@ -1180,7 +1181,7 @@
         <translation>语言已更改，请重启应用程序以使更改生效。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="182"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="181"/>
         <source>This page contains unsaved data.
 
 Do you want to save before closing?</source>
@@ -1215,6 +1216,7 @@ Do you want to save before closing?</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_account.cc" line="29"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="84"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="42"/>
         <source>Name</source>
         <translation>姓名</translation>
@@ -1235,148 +1237,178 @@ Do you want to save before closing?</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="437"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="53"/>
         <source>Guest</source>
         <translation>访客</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="439"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="55"/>
         <source>Admin</source>
         <translation>管理员</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="440"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="56"/>
         <source>Owner</source>
         <translation>所有者</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="445"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="62"/>
         <source>Main | Readonly</source>
         <translation>全库 | 只读</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="446"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="63"/>
         <source>Main | Readwrite</source>
         <translation>全库 | 读写</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="447"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="64"/>
         <source>Finance | Readonly</source>
         <translation>财务 | 只读</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="448"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="65"/>
         <source>Finance | Readwrite</source>
         <translation>财务 | 读写</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="451"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="68"/>
         <source>Inventory | Readonly</source>
         <translation>存货 | 只读</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="452"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="69"/>
         <source>Inventory | Readwrite</source>
         <translation>存货 | 读写</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="453"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="70"/>
         <source>Partner | Readonly</source>
         <translation>合作 | 只读</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="454"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="71"/>
         <source>Partner | Readwrite</source>
         <translation>合作 | 读写</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="457"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="74"/>
         <source>Purchase | Readonly</source>
         <translation>采购 | 只读</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="458"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="75"/>
         <source>Purchase | Readwrite</source>
         <translation>采购 | 读写</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="455"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="80"/>
+        <source>Id</source>
+        <translation>Id</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="81"/>
+        <source>Version</source>
+        <translation>版本</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="83"/>
+        <source>Username</source>
+        <translation>用户名</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="85"/>
+        <source>WorkspaceRole</source>
+        <translation>工作区角色</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="86"/>
+        <source>DatabaseRole</source>
+        <translation>数据库角色</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="87"/>
+        <source>CreatedTime</source>
+        <translation>创建时间</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="72"/>
         <source>Sale | Readonly</source>
         <translation>销售 | 只读</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="456"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="73"/>
         <source>Sale | Readwrite</source>
         <translation>销售 | 读写</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="449"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="66"/>
         <source>Task | Readonly</source>
         <translation>任务 | 只读</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="450"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="67"/>
         <source>Task | Readwrite</source>
         <translation>任务 | 读写</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="701"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="672"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="701"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="672"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="701"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="672"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="735"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="706"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="735"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="706"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="738"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="709"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="738"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="709"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="758"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="765"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="729"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="736"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="758"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="729"/>
         <source>Failed to check updates.</source>
         <translation>检查更新失败。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="765"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="736"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="777"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="748"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="778"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="749"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1385,22 +1417,22 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="790"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="761"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="790"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="761"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="281"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="282"/>
         <source>Settlement Released</source>
         <translation>结算单已发布</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="282"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="283"/>
         <source>This settlement has already been released and cannot be deleted.
 You need to recall it first before making changes.</source>
         <translation>该结算单已发布，无法直接删除。
@@ -1433,13 +1465,13 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_tag.cc" line="185"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="286"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="285"/>
         <source>Tags</source>
         <translation>标签</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_tag.cc" line="215"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="315"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="314"/>
         <source>Manage...</source>
         <translation>管理...</translation>
     </message>
@@ -1699,6 +1731,7 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="24"/>
         <location filename="../../component/stringinitializer.cc" line="42"/>
         <location filename="../../component/stringinitializer.cc" line="58"/>
+        <location filename="../../component/stringinitializer.cc" line="327"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
@@ -1708,16 +1741,17 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="43"/>
         <location filename="../../component/stringinitializer.cc" line="59"/>
         <location filename="../../component/stringinitializer.cc" line="74"/>
-        <location filename="../../component/stringinitializer.cc" line="96"/>
-        <location filename="../../component/stringinitializer.cc" line="113"/>
-        <location filename="../../component/stringinitializer.cc" line="130"/>
-        <location filename="../../component/stringinitializer.cc" line="147"/>
-        <location filename="../../component/stringinitializer.cc" line="162"/>
-        <location filename="../../component/stringinitializer.cc" line="179"/>
-        <location filename="../../component/stringinitializer.cc" line="198"/>
-        <location filename="../../component/stringinitializer.cc" line="217"/>
-        <location filename="../../component/stringinitializer.cc" line="303"/>
-        <location filename="../../component/stringinitializer.cc" line="313"/>
+        <location filename="../../component/stringinitializer.cc" line="97"/>
+        <location filename="../../component/stringinitializer.cc" line="114"/>
+        <location filename="../../component/stringinitializer.cc" line="131"/>
+        <location filename="../../component/stringinitializer.cc" line="148"/>
+        <location filename="../../component/stringinitializer.cc" line="163"/>
+        <location filename="../../component/stringinitializer.cc" line="181"/>
+        <location filename="../../component/stringinitializer.cc" line="200"/>
+        <location filename="../../component/stringinitializer.cc" line="219"/>
+        <location filename="../../component/stringinitializer.cc" line="305"/>
+        <location filename="../../component/stringinitializer.cc" line="315"/>
+        <location filename="../../component/stringinitializer.cc" line="325"/>
         <source>Id</source>
         <translation></translation>
     </message>
@@ -1727,15 +1761,16 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="44"/>
         <location filename="../../component/stringinitializer.cc" line="60"/>
         <location filename="../../component/stringinitializer.cc" line="75"/>
-        <location filename="../../component/stringinitializer.cc" line="97"/>
-        <location filename="../../component/stringinitializer.cc" line="114"/>
-        <location filename="../../component/stringinitializer.cc" line="131"/>
-        <location filename="../../component/stringinitializer.cc" line="148"/>
-        <location filename="../../component/stringinitializer.cc" line="163"/>
-        <location filename="../../component/stringinitializer.cc" line="180"/>
-        <location filename="../../component/stringinitializer.cc" line="199"/>
-        <location filename="../../component/stringinitializer.cc" line="218"/>
-        <location filename="../../component/stringinitializer.cc" line="304"/>
+        <location filename="../../component/stringinitializer.cc" line="98"/>
+        <location filename="../../component/stringinitializer.cc" line="115"/>
+        <location filename="../../component/stringinitializer.cc" line="132"/>
+        <location filename="../../component/stringinitializer.cc" line="149"/>
+        <location filename="../../component/stringinitializer.cc" line="164"/>
+        <location filename="../../component/stringinitializer.cc" line="182"/>
+        <location filename="../../component/stringinitializer.cc" line="201"/>
+        <location filename="../../component/stringinitializer.cc" line="220"/>
+        <location filename="../../component/stringinitializer.cc" line="306"/>
+        <location filename="../../component/stringinitializer.cc" line="326"/>
         <source>Version</source>
         <translation></translation>
     </message>
@@ -1745,15 +1780,15 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="45"/>
         <location filename="../../component/stringinitializer.cc" line="61"/>
         <location filename="../../component/stringinitializer.cc" line="80"/>
-        <location filename="../../component/stringinitializer.cc" line="101"/>
-        <location filename="../../component/stringinitializer.cc" line="118"/>
-        <location filename="../../component/stringinitializer.cc" line="135"/>
-        <location filename="../../component/stringinitializer.cc" line="151"/>
-        <location filename="../../component/stringinitializer.cc" line="182"/>
-        <location filename="../../component/stringinitializer.cc" line="201"/>
-        <location filename="../../component/stringinitializer.cc" line="220"/>
-        <location filename="../../component/stringinitializer.cc" line="278"/>
-        <location filename="../../component/stringinitializer.cc" line="290"/>
+        <location filename="../../component/stringinitializer.cc" line="102"/>
+        <location filename="../../component/stringinitializer.cc" line="119"/>
+        <location filename="../../component/stringinitializer.cc" line="136"/>
+        <location filename="../../component/stringinitializer.cc" line="152"/>
+        <location filename="../../component/stringinitializer.cc" line="184"/>
+        <location filename="../../component/stringinitializer.cc" line="203"/>
+        <location filename="../../component/stringinitializer.cc" line="222"/>
+        <location filename="../../component/stringinitializer.cc" line="280"/>
+        <location filename="../../component/stringinitializer.cc" line="292"/>
         <location filename="../../global/exportexcel.cc" line="85"/>
         <source>Code</source>
         <translation>编号</translation>
@@ -1764,21 +1799,21 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="46"/>
         <location filename="../../component/stringinitializer.cc" line="62"/>
         <location filename="../../component/stringinitializer.cc" line="81"/>
-        <location filename="../../component/stringinitializer.cc" line="102"/>
-        <location filename="../../component/stringinitializer.cc" line="119"/>
-        <location filename="../../component/stringinitializer.cc" line="136"/>
-        <location filename="../../component/stringinitializer.cc" line="152"/>
-        <location filename="../../component/stringinitializer.cc" line="166"/>
-        <location filename="../../component/stringinitializer.cc" line="187"/>
-        <location filename="../../component/stringinitializer.cc" line="206"/>
-        <location filename="../../component/stringinitializer.cc" line="225"/>
-        <location filename="../../component/stringinitializer.cc" line="246"/>
-        <location filename="../../component/stringinitializer.cc" line="259"/>
-        <location filename="../../component/stringinitializer.cc" line="270"/>
-        <location filename="../../component/stringinitializer.cc" line="282"/>
-        <location filename="../../component/stringinitializer.cc" line="296"/>
-        <location filename="../../component/stringinitializer.cc" line="307"/>
-        <location filename="../../component/stringinitializer.cc" line="317"/>
+        <location filename="../../component/stringinitializer.cc" line="103"/>
+        <location filename="../../component/stringinitializer.cc" line="120"/>
+        <location filename="../../component/stringinitializer.cc" line="137"/>
+        <location filename="../../component/stringinitializer.cc" line="153"/>
+        <location filename="../../component/stringinitializer.cc" line="167"/>
+        <location filename="../../component/stringinitializer.cc" line="189"/>
+        <location filename="../../component/stringinitializer.cc" line="208"/>
+        <location filename="../../component/stringinitializer.cc" line="227"/>
+        <location filename="../../component/stringinitializer.cc" line="248"/>
+        <location filename="../../component/stringinitializer.cc" line="261"/>
+        <location filename="../../component/stringinitializer.cc" line="272"/>
+        <location filename="../../component/stringinitializer.cc" line="284"/>
+        <location filename="../../component/stringinitializer.cc" line="298"/>
+        <location filename="../../component/stringinitializer.cc" line="309"/>
+        <location filename="../../component/stringinitializer.cc" line="319"/>
         <location filename="../../global/exportexcel.cc" line="86"/>
         <source>Description</source>
         <translation>描述</translation>
@@ -1787,7 +1822,7 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="16"/>
         <location filename="../../component/stringinitializer.cc" line="34"/>
         <location filename="../../component/stringinitializer.cc" line="50"/>
-        <location filename="../../component/stringinitializer.cc" line="82"/>
+        <location filename="../../component/stringinitializer.cc" line="83"/>
         <source>DirectionRule</source>
         <translation>规则</translation>
     </message>
@@ -1796,7 +1831,7 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="35"/>
         <location filename="../../component/stringinitializer.cc" line="51"/>
         <location filename="../../component/stringinitializer.cc" line="67"/>
-        <location filename="../../component/stringinitializer.cc" line="83"/>
+        <location filename="../../component/stringinitializer.cc" line="84"/>
         <source>Kind</source>
         <translation>类型</translation>
     </message>
@@ -1805,7 +1840,7 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="36"/>
         <location filename="../../component/stringinitializer.cc" line="52"/>
         <location filename="../../component/stringinitializer.cc" line="68"/>
-        <location filename="../../component/stringinitializer.cc" line="84"/>
+        <location filename="../../component/stringinitializer.cc" line="85"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
@@ -1824,25 +1859,26 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="30"/>
         <location filename="../../component/stringinitializer.cc" line="48"/>
         <location filename="../../component/stringinitializer.cc" line="64"/>
-        <location filename="../../component/stringinitializer.cc" line="254"/>
+        <location filename="../../component/stringinitializer.cc" line="256"/>
+        <location filename="../../component/stringinitializer.cc" line="328"/>
         <location filename="../../delegate/color.cc" line="37"/>
         <source>Color</source>
         <translation>颜色</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="79"/>
-        <location filename="../../component/stringinitializer.cc" line="308"/>
-        <location filename="../../component/stringinitializer.cc" line="316"/>
+        <location filename="../../component/stringinitializer.cc" line="310"/>
+        <location filename="../../component/stringinitializer.cc" line="318"/>
         <source>Status</source>
         <translation>状态</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="32"/>
-        <location filename="../../component/stringinitializer.cc" line="157"/>
-        <location filename="../../component/stringinitializer.cc" line="169"/>
-        <location filename="../../component/stringinitializer.cc" line="245"/>
-        <location filename="../../component/stringinitializer.cc" line="258"/>
-        <location filename="../../component/stringinitializer.cc" line="294"/>
+        <location filename="../../component/stringinitializer.cc" line="158"/>
+        <location filename="../../component/stringinitializer.cc" line="171"/>
+        <location filename="../../component/stringinitializer.cc" line="247"/>
+        <location filename="../../component/stringinitializer.cc" line="260"/>
+        <location filename="../../component/stringinitializer.cc" line="296"/>
         <location filename="../../global/exportexcel.cc" line="86"/>
         <source>UnitPrice</source>
         <translation>单价</translation>
@@ -1869,31 +1905,31 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="31"/>
         <location filename="../../component/stringinitializer.cc" line="49"/>
         <location filename="../../component/stringinitializer.cc" line="65"/>
-        <location filename="../../component/stringinitializer.cc" line="104"/>
-        <location filename="../../component/stringinitializer.cc" line="121"/>
-        <location filename="../../component/stringinitializer.cc" line="138"/>
-        <location filename="../../component/stringinitializer.cc" line="154"/>
-        <location filename="../../component/stringinitializer.cc" line="189"/>
-        <location filename="../../component/stringinitializer.cc" line="208"/>
-        <location filename="../../component/stringinitializer.cc" line="227"/>
+        <location filename="../../component/stringinitializer.cc" line="105"/>
+        <location filename="../../component/stringinitializer.cc" line="122"/>
+        <location filename="../../component/stringinitializer.cc" line="139"/>
+        <location filename="../../component/stringinitializer.cc" line="155"/>
+        <location filename="../../component/stringinitializer.cc" line="191"/>
+        <location filename="../../component/stringinitializer.cc" line="210"/>
+        <location filename="../../component/stringinitializer.cc" line="229"/>
         <source>Document</source>
         <translation>文件</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="77"/>
-        <location filename="../../component/stringinitializer.cc" line="98"/>
-        <location filename="../../component/stringinitializer.cc" line="115"/>
-        <location filename="../../component/stringinitializer.cc" line="132"/>
-        <location filename="../../component/stringinitializer.cc" line="149"/>
-        <location filename="../../component/stringinitializer.cc" line="181"/>
-        <location filename="../../component/stringinitializer.cc" line="200"/>
-        <location filename="../../component/stringinitializer.cc" line="219"/>
-        <location filename="../../component/stringinitializer.cc" line="240"/>
-        <location filename="../../component/stringinitializer.cc" line="251"/>
-        <location filename="../../component/stringinitializer.cc" line="277"/>
-        <location filename="../../component/stringinitializer.cc" line="289"/>
-        <location filename="../../component/stringinitializer.cc" line="306"/>
-        <location filename="../../component/stringinitializer.cc" line="314"/>
+        <location filename="../../component/stringinitializer.cc" line="99"/>
+        <location filename="../../component/stringinitializer.cc" line="116"/>
+        <location filename="../../component/stringinitializer.cc" line="133"/>
+        <location filename="../../component/stringinitializer.cc" line="150"/>
+        <location filename="../../component/stringinitializer.cc" line="183"/>
+        <location filename="../../component/stringinitializer.cc" line="202"/>
+        <location filename="../../component/stringinitializer.cc" line="221"/>
+        <location filename="../../component/stringinitializer.cc" line="242"/>
+        <location filename="../../component/stringinitializer.cc" line="253"/>
+        <location filename="../../component/stringinitializer.cc" line="279"/>
+        <location filename="../../component/stringinitializer.cc" line="291"/>
+        <location filename="../../component/stringinitializer.cc" line="308"/>
+        <location filename="../../component/stringinitializer.cc" line="316"/>
         <source>IssuedTime</source>
         <translation>日期</translation>
     </message>
@@ -1904,33 +1940,33 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="78"/>
-        <location filename="../../component/stringinitializer.cc" line="284"/>
-        <location filename="../../component/stringinitializer.cc" line="318"/>
+        <location filename="../../component/stringinitializer.cc" line="286"/>
+        <location filename="../../component/stringinitializer.cc" line="320"/>
         <source>Employee</source>
         <translation>职员</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="85"/>
+        <location filename="../../component/stringinitializer.cc" line="86"/>
         <source>CountTotal</source>
         <translation>计数</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="86"/>
+        <location filename="../../component/stringinitializer.cc" line="87"/>
         <source>MeasureTotal</source>
         <translation>度量</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="87"/>
+        <location filename="../../component/stringinitializer.cc" line="88"/>
         <source>GrossTotal</source>
         <translation>总额</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="89"/>
+        <location filename="../../component/stringinitializer.cc" line="90"/>
         <source>NetTotal</source>
         <translation>结算</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="90"/>
+        <location filename="../../component/stringinitializer.cc" line="91"/>
         <source>IsSettled</source>
         <translation>结算</translation>
     </message>
@@ -1939,50 +1975,52 @@ You need to recall it first before making changes.</source>
         <location filename="../../component/stringinitializer.cc" line="29"/>
         <location filename="../../component/stringinitializer.cc" line="47"/>
         <location filename="../../component/stringinitializer.cc" line="63"/>
-        <location filename="../../component/stringinitializer.cc" line="103"/>
-        <location filename="../../component/stringinitializer.cc" line="120"/>
-        <location filename="../../component/stringinitializer.cc" line="137"/>
-        <location filename="../../component/stringinitializer.cc" line="153"/>
-        <location filename="../../component/stringinitializer.cc" line="188"/>
-        <location filename="../../component/stringinitializer.cc" line="207"/>
-        <location filename="../../component/stringinitializer.cc" line="226"/>
-        <source>Tag</source>
-        <translation>标签</translation>
-    </message>
-    <message>
-        <location filename="../../component/stringinitializer.cc" line="105"/>
-        <location filename="../../component/stringinitializer.cc" line="122"/>
-        <location filename="../../component/stringinitializer.cc" line="139"/>
-        <location filename="../../component/stringinitializer.cc" line="155"/>
+        <location filename="../../component/stringinitializer.cc" line="82"/>
+        <location filename="../../component/stringinitializer.cc" line="104"/>
+        <location filename="../../component/stringinitializer.cc" line="121"/>
+        <location filename="../../component/stringinitializer.cc" line="138"/>
+        <location filename="../../component/stringinitializer.cc" line="154"/>
+        <location filename="../../component/stringinitializer.cc" line="168"/>
         <location filename="../../component/stringinitializer.cc" line="190"/>
         <location filename="../../component/stringinitializer.cc" line="209"/>
         <location filename="../../component/stringinitializer.cc" line="228"/>
-        <location filename="../../component/stringinitializer.cc" line="283"/>
-        <location filename="../../component/stringinitializer.cc" line="297"/>
-        <source>S</source>
-        <translation></translation>
+        <source>Tag</source>
+        <translation>标签</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="106"/>
         <location filename="../../component/stringinitializer.cc" line="123"/>
         <location filename="../../component/stringinitializer.cc" line="140"/>
+        <location filename="../../component/stringinitializer.cc" line="156"/>
+        <location filename="../../component/stringinitializer.cc" line="192"/>
+        <location filename="../../component/stringinitializer.cc" line="211"/>
+        <location filename="../../component/stringinitializer.cc" line="230"/>
+        <location filename="../../component/stringinitializer.cc" line="285"/>
+        <location filename="../../component/stringinitializer.cc" line="299"/>
+        <source>S</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../component/stringinitializer.cc" line="107"/>
+        <location filename="../../component/stringinitializer.cc" line="124"/>
+        <location filename="../../component/stringinitializer.cc" line="141"/>
         <source>LinkedNode</source>
         <translation>关联</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="156"/>
-        <location filename="../../component/stringinitializer.cc" line="165"/>
-        <location filename="../../component/stringinitializer.cc" line="253"/>
-        <location filename="../../component/stringinitializer.cc" line="291"/>
+        <location filename="../../component/stringinitializer.cc" line="157"/>
+        <location filename="../../component/stringinitializer.cc" line="166"/>
+        <location filename="../../component/stringinitializer.cc" line="255"/>
+        <location filename="../../component/stringinitializer.cc" line="293"/>
         <location filename="../../global/exportexcel.cc" line="85"/>
         <source>InternalSku</source>
         <translation>内部货号</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="158"/>
-        <location filename="../../component/stringinitializer.cc" line="170"/>
-        <location filename="../../component/stringinitializer.cc" line="255"/>
-        <location filename="../../component/stringinitializer.cc" line="298"/>
+        <location filename="../../component/stringinitializer.cc" line="159"/>
+        <location filename="../../component/stringinitializer.cc" line="172"/>
+        <location filename="../../component/stringinitializer.cc" line="257"/>
+        <location filename="../../component/stringinitializer.cc" line="300"/>
         <location filename="../../global/exportexcel.cc" line="85"/>
         <source>ExternalSku</source>
         <translation>外部货号</translation>
@@ -1998,213 +2036,213 @@ You need to recall it first before making changes.</source>
         <translation>分组</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="172"/>
-        <location filename="../../component/stringinitializer.cc" line="247"/>
-        <location filename="../../component/stringinitializer.cc" line="260"/>
+        <location filename="../../component/stringinitializer.cc" line="174"/>
+        <location filename="../../component/stringinitializer.cc" line="249"/>
+        <location filename="../../component/stringinitializer.cc" line="262"/>
         <source>Gross</source>
         <translation>总额</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="174"/>
+        <location filename="../../component/stringinitializer.cc" line="176"/>
         <source>Net</source>
         <translation>结算</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="242"/>
+        <location filename="../../component/stringinitializer.cc" line="244"/>
         <source>Customer</source>
         <translation>客户</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="267"/>
+        <location filename="../../component/stringinitializer.cc" line="269"/>
         <source>CCount</source>
         <translation>计数</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="268"/>
+        <location filename="../../component/stringinitializer.cc" line="270"/>
         <source>CMeasure</source>
         <translation>度量</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="88"/>
+        <location filename="../../component/stringinitializer.cc" line="89"/>
         <source>DiscountTotal</source>
         <translation>优惠</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="76"/>
-        <location filename="../../component/stringinitializer.cc" line="265"/>
-        <location filename="../../component/stringinitializer.cc" line="305"/>
+        <location filename="../../component/stringinitializer.cc" line="267"/>
+        <location filename="../../component/stringinitializer.cc" line="307"/>
         <source>Partner</source>
         <translation>合作</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="91"/>
+        <location filename="../../component/stringinitializer.cc" line="92"/>
         <source>SettlementId</source>
         <translation>结算 ID</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="99"/>
-        <location filename="../../component/stringinitializer.cc" line="116"/>
-        <location filename="../../component/stringinitializer.cc" line="133"/>
-        <location filename="../../component/stringinitializer.cc" line="150"/>
-        <location filename="../../component/stringinitializer.cc" line="164"/>
-        <location filename="../../component/stringinitializer.cc" line="183"/>
-        <location filename="../../component/stringinitializer.cc" line="202"/>
-        <location filename="../../component/stringinitializer.cc" line="221"/>
-        <location filename="../../component/stringinitializer.cc" line="241"/>
-        <location filename="../../component/stringinitializer.cc" line="252"/>
+        <location filename="../../component/stringinitializer.cc" line="100"/>
+        <location filename="../../component/stringinitializer.cc" line="117"/>
+        <location filename="../../component/stringinitializer.cc" line="134"/>
+        <location filename="../../component/stringinitializer.cc" line="151"/>
+        <location filename="../../component/stringinitializer.cc" line="165"/>
+        <location filename="../../component/stringinitializer.cc" line="185"/>
+        <location filename="../../component/stringinitializer.cc" line="204"/>
+        <location filename="../../component/stringinitializer.cc" line="223"/>
+        <location filename="../../component/stringinitializer.cc" line="243"/>
+        <location filename="../../component/stringinitializer.cc" line="254"/>
         <source>LhsNode</source>
         <translation>左节点</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="100"/>
+        <location filename="../../component/stringinitializer.cc" line="101"/>
         <source>FXRate</source>
         <translation>汇率</translation>
-    </message>
-    <message>
-        <location filename="../../component/stringinitializer.cc" line="107"/>
-        <location filename="../../component/stringinitializer.cc" line="124"/>
-        <location filename="../../component/stringinitializer.cc" line="141"/>
-        <source>Debit</source>
-        <translation>借方</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="108"/>
         <location filename="../../component/stringinitializer.cc" line="125"/>
         <location filename="../../component/stringinitializer.cc" line="142"/>
-        <source>Credit</source>
-        <translation>贷方</translation>
+        <source>Debit</source>
+        <translation>借方</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="109"/>
         <location filename="../../component/stringinitializer.cc" line="126"/>
         <location filename="../../component/stringinitializer.cc" line="143"/>
+        <source>Credit</source>
+        <translation>贷方</translation>
+    </message>
+    <message>
+        <location filename="../../component/stringinitializer.cc" line="110"/>
+        <location filename="../../component/stringinitializer.cc" line="127"/>
+        <location filename="../../component/stringinitializer.cc" line="144"/>
         <source>Balance</source>
         <translation>余额</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="117"/>
-        <location filename="../../component/stringinitializer.cc" line="134"/>
+        <location filename="../../component/stringinitializer.cc" line="118"/>
+        <location filename="../../component/stringinitializer.cc" line="135"/>
         <source>UnitCost</source>
         <translation>成本</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="173"/>
+        <location filename="../../component/stringinitializer.cc" line="175"/>
         <source>Discount</source>
         <translation>优惠</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="167"/>
-        <location filename="../../component/stringinitializer.cc" line="243"/>
-        <location filename="../../component/stringinitializer.cc" line="256"/>
-        <location filename="../../component/stringinitializer.cc" line="279"/>
-        <location filename="../../component/stringinitializer.cc" line="292"/>
+        <location filename="../../component/stringinitializer.cc" line="169"/>
+        <location filename="../../component/stringinitializer.cc" line="245"/>
+        <location filename="../../component/stringinitializer.cc" line="258"/>
+        <location filename="../../component/stringinitializer.cc" line="281"/>
+        <location filename="../../component/stringinitializer.cc" line="294"/>
         <location filename="../../global/exportexcel.cc" line="85"/>
         <source>Count</source>
         <translation>计数</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="168"/>
-        <location filename="../../component/stringinitializer.cc" line="244"/>
-        <location filename="../../component/stringinitializer.cc" line="257"/>
-        <location filename="../../component/stringinitializer.cc" line="280"/>
-        <location filename="../../component/stringinitializer.cc" line="293"/>
+        <location filename="../../component/stringinitializer.cc" line="170"/>
+        <location filename="../../component/stringinitializer.cc" line="246"/>
+        <location filename="../../component/stringinitializer.cc" line="259"/>
+        <location filename="../../component/stringinitializer.cc" line="282"/>
+        <location filename="../../component/stringinitializer.cc" line="295"/>
         <location filename="../../global/exportexcel.cc" line="86"/>
         <source>Measure</source>
         <translation>度量</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="171"/>
+        <location filename="../../component/stringinitializer.cc" line="173"/>
         <source>UnitDiscount</source>
         <translation>单价优惠</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="184"/>
+        <location filename="../../component/stringinitializer.cc" line="186"/>
         <source>LhsFXRate</source>
         <translation>左汇率</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="185"/>
-        <location filename="../../component/stringinitializer.cc" line="204"/>
-        <location filename="../../component/stringinitializer.cc" line="223"/>
+        <location filename="../../component/stringinitializer.cc" line="187"/>
+        <location filename="../../component/stringinitializer.cc" line="206"/>
+        <location filename="../../component/stringinitializer.cc" line="225"/>
         <source>LhsDebit</source>
         <translation>左借方</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="186"/>
-        <location filename="../../component/stringinitializer.cc" line="205"/>
-        <location filename="../../component/stringinitializer.cc" line="224"/>
+        <location filename="../../component/stringinitializer.cc" line="188"/>
+        <location filename="../../component/stringinitializer.cc" line="207"/>
+        <location filename="../../component/stringinitializer.cc" line="226"/>
         <source>LhsCredit</source>
         <translation>左贷方</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="191"/>
-        <location filename="../../component/stringinitializer.cc" line="210"/>
-        <location filename="../../component/stringinitializer.cc" line="229"/>
+        <location filename="../../component/stringinitializer.cc" line="193"/>
+        <location filename="../../component/stringinitializer.cc" line="212"/>
+        <location filename="../../component/stringinitializer.cc" line="231"/>
         <source>RhsCredit</source>
         <translation>右贷方</translation>
-    </message>
-    <message>
-        <location filename="../../component/stringinitializer.cc" line="192"/>
-        <location filename="../../component/stringinitializer.cc" line="211"/>
-        <location filename="../../component/stringinitializer.cc" line="230"/>
-        <source>RhsDebit</source>
-        <translation>右借方</translation>
-    </message>
-    <message>
-        <location filename="../../component/stringinitializer.cc" line="193"/>
-        <source>RhsFXRate</source>
-        <translation>右汇率</translation>
     </message>
     <message>
         <location filename="../../component/stringinitializer.cc" line="194"/>
         <location filename="../../component/stringinitializer.cc" line="213"/>
         <location filename="../../component/stringinitializer.cc" line="232"/>
+        <source>RhsDebit</source>
+        <translation>右借方</translation>
+    </message>
+    <message>
+        <location filename="../../component/stringinitializer.cc" line="195"/>
+        <source>RhsFXRate</source>
+        <translation>右汇率</translation>
+    </message>
+    <message>
+        <location filename="../../component/stringinitializer.cc" line="196"/>
+        <location filename="../../component/stringinitializer.cc" line="215"/>
+        <location filename="../../component/stringinitializer.cc" line="234"/>
         <source>RhsNode</source>
         <translation>右节点</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="203"/>
-        <location filename="../../component/stringinitializer.cc" line="222"/>
+        <location filename="../../component/stringinitializer.cc" line="205"/>
+        <location filename="../../component/stringinitializer.cc" line="224"/>
         <source>LhsUnitCost</source>
         <translation>左成本</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="212"/>
-        <location filename="../../component/stringinitializer.cc" line="231"/>
+        <location filename="../../component/stringinitializer.cc" line="214"/>
+        <location filename="../../component/stringinitializer.cc" line="233"/>
         <source>RhsUnitCost</source>
         <translation>右成本</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="266"/>
+        <location filename="../../component/stringinitializer.cc" line="268"/>
         <source>PBalance</source>
         <translation>期初余额</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="272"/>
+        <location filename="../../component/stringinitializer.cc" line="274"/>
         <source>CBalance</source>
         <translation>期末余额</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="271"/>
+        <location filename="../../component/stringinitializer.cc" line="273"/>
         <source>CSettlement</source>
         <translation>本期结算</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="269"/>
+        <location filename="../../component/stringinitializer.cc" line="271"/>
         <source>CAmount</source>
         <translation>本期金额</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="281"/>
-        <location filename="../../component/stringinitializer.cc" line="295"/>
-        <location filename="../../component/stringinitializer.cc" line="309"/>
-        <location filename="../../component/stringinitializer.cc" line="315"/>
+        <location filename="../../component/stringinitializer.cc" line="283"/>
+        <location filename="../../component/stringinitializer.cc" line="297"/>
+        <location filename="../../component/stringinitializer.cc" line="311"/>
+        <location filename="../../component/stringinitializer.cc" line="317"/>
         <location filename="../../global/exportexcel.cc" line="86"/>
         <source>Amount</source>
         <translation>金额</translation>
     </message>
     <message>
-        <location filename="../../component/stringinitializer.cc" line="285"/>
+        <location filename="../../component/stringinitializer.cc" line="287"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -2701,19 +2739,16 @@ You need to recall it first before making changes.</source>
 <context>
     <name>TagModel</name>
     <message>
-        <location filename="../../tag/tagmodel.cc" line="33"/>
         <source>Id</source>
-        <translation>Id</translation>
+        <translation type="vanished">Id</translation>
     </message>
     <message>
-        <location filename="../../tag/tagmodel.cc" line="34"/>
         <source>Name</source>
-        <translation>名称</translation>
+        <translation type="vanished">名称</translation>
     </message>
     <message>
-        <location filename="../../tag/tagmodel.cc" line="35"/>
         <source>Color</source>
-        <translation>颜色</translation>
+        <translation type="vanished">颜色</translation>
     </message>
 </context>
 <context>
@@ -2785,39 +2820,32 @@ You need to recall it first before making changes.</source>
 <context>
     <name>WorkspaceMemberModel</name>
     <message>
-        <location filename="../../workspace_member/workspacemembermodel.cc" line="20"/>
         <source>Id</source>
-        <translation>Id</translation>
+        <translation type="vanished">Id</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/workspacemembermodel.cc" line="21"/>
         <source>Email</source>
-        <translation>邮箱</translation>
+        <translation type="vanished">邮箱</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/workspacemembermodel.cc" line="22"/>
         <source>Username</source>
-        <translation>用户名</translation>
+        <translation type="vanished">用户名</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/workspacemembermodel.cc" line="23"/>
         <source>Name</source>
-        <translation>姓名</translation>
+        <translation type="vanished">姓名</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/workspacemembermodel.cc" line="24"/>
         <source>WorkspaceRole</source>
-        <translation>工作区角色</translation>
+        <translation type="vanished">工作区角色</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/workspacemembermodel.cc" line="25"/>
         <source>DatabaseRole</source>
-        <translation>数据库角色</translation>
+        <translation type="vanished">数据库角色</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/workspacemembermodel.cc" line="26"/>
         <source>CreatedTime</source>
-        <translation>创建时间</translation>
+        <translation type="vanished">创建时间</translation>
     </message>
 </context>
 </TS>
