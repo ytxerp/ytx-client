@@ -46,6 +46,9 @@ void EntryHubF::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& upd
     if (it != entry_cache_.constEnd()) {
         auto* d_entry = static_cast<Entry*>(it.value());
 
+        const int version { update.value(kVersion).toInt() };
+        d_entry->version = version;
+
         d_entry->lhs_debit = update[kLhsDebit].toString().toDouble();
         d_entry->lhs_credit = update[kLhsCredit].toString().toDouble();
         d_entry->rhs_debit = update[kRhsDebit].toString().toDouble();

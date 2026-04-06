@@ -811,9 +811,13 @@ void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
         tree_model->SyncTotalArray(total_array);
     }
 
-    if (session_id != session_id_) {
-        entry_hub->UpdateEntryNumeric(entry_id, update);
+    if (session_id == session_id_) {
+        const int version { update.value(kVersion).toInt() };
+        entry_hub->UpdateVersion(entry_id, version);
+        return;
     }
+
+    entry_hub->UpdateEntryNumeric(entry_id, update);
 }
 
 void WebSocket::SearchEntry(const QJsonObject& obj)
