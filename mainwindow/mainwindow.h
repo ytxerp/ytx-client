@@ -276,7 +276,7 @@ private:
     SectionContext* GetSectionContex(Section section);
     void InitSystemTray();
     void InitStatusLabel();
-    void InitAccountRoleName();
+    void InitWorkspaceInfo();
 
     void FlushCaches(SectionContext& sc);
 

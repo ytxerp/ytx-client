@@ -149,9 +149,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="chkBoxPasswordRemembered">
+      <widget class="QCheckBox" name="chkBoxRememberPassword">
        <property name="text">
-        <string>Password Remembered</string>
+        <string>Remember Password</string>
        </property>
       </widget>
      </item>
@@ -270,7 +270,7 @@
   <tabstop>checkBoxTerms</tabstop>
   <tabstop>pushButtonLogin</tabstop>
   <tabstop>pushButtonRegister</tabstop>
-  <tabstop>chkBoxPasswordRemembered</tabstop>
+  <tabstop>chkBoxRememberPassword</tabstop>
  </tabstops>
  <resources/>
  <connections/>

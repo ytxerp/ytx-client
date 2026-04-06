@@ -47,7 +47,7 @@ void MainWindow::RAccountUsername(const QJsonObject& obj)
     Utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), message, TimeConst::kAutoCloseMs);
 }
 
-void MainWindow::InitAccountRoleName()
+void MainWindow::InitWorkspaceInfo()
 {
     workspace_info_.role_list = {
         { static_cast<int>(WorkspaceRole::kGuest), tr("Guest") },

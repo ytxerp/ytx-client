@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget* parent)
     IniMarkGroup();
     InitSystemTray();
     InitStatusLabel();
-    InitAccountRoleName();
+    InitWorkspaceInfo();
 
     SetTabWidget(ui->tabWidgetF);
     SetTabWidget(ui->tabWidgetI);

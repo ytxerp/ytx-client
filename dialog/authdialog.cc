@@ -166,7 +166,7 @@ void AuthDialog::RRegisterDialog()
 
     ui->labelSignUp->setHidden(true);
     ui->lineEditWorkspace->setHidden(true);
-    ui->chkBoxPasswordRemembered->setHidden(true);
+    ui->chkBoxRememberPassword->setHidden(true);
     ui->pushButtonLogin->setHidden(true);
     ui->checkBoxPrivacy->setVisible(true);
     ui->checkBoxTerms->setVisible(true);
@@ -189,7 +189,7 @@ void AuthDialog::RLoginDialog()
     ui->lineEditEmail->setText(login_info.Email());
     ui->lineEditWorkspace->setText(login_info.Workspace());
     ui->lineEditPassword->setText(login_info.Password());
-    ui->chkBoxPasswordRemembered->setChecked(login_info.PasswordRemembered());
+    ui->chkBoxRememberPassword->setChecked(login_info.PasswordRemembered());
 
     ui->labelHeader->setText(tr("Log in to YTX account"));
     ui->labelTail->setText(tr("Don't have YTX account?"));
@@ -203,7 +203,7 @@ void AuthDialog::RLoginDialog()
     ui->labelTerms->setHidden(true);
 
     ui->labelSignUp->show();
-    ui->chkBoxPasswordRemembered->show();
+    ui->chkBoxRememberPassword->show();
     ui->pushButtonLogin->show();
     ui->lineEditWorkspace->show();
 
@@ -240,10 +240,10 @@ void AuthDialog::SyncLoginInfo()
     login_info.SetEmail(ui->lineEditEmail->text().trimmed());
     login_info.SetWorkspace(ui->lineEditWorkspace->text().trimmed());
 
-    const bool remember { ui->chkBoxPasswordRemembered->isChecked() };
+    const bool remembered { ui->chkBoxRememberPassword->isChecked() };
 
-    login_info.SetPasswordRemembered(remember);
-    login_info.SetPassword(remember ? ui->lineEditPassword->text() : QString());
+    login_info.SetPasswordRemembered(remembered);
+    login_info.SetPassword(remembered ? ui->lineEditPassword->text() : QString());
 }
 
 void AuthDialog::CreateAction(QLineEdit* line_edit)
