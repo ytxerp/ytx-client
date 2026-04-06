@@ -58,7 +58,8 @@ void MainWindow::on_actionWorkspaceMember_triggered()
     WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberAck, message);
 
     auto* view { dialog->View() };
-    InitTableView(view, std::to_underlying(WorkspaceMemberEnum::kId), std::to_underlying(WorkspaceMemberEnum::kName));
+    InitTableView(
+        view, std::to_underlying(WorkspaceMemberEnum::kId), std::to_underlying(WorkspaceMemberEnum::kVersion), std::to_underlying(WorkspaceMemberEnum::kName));
     DelegateWorkspaceMember(view);
 
     dialog->show();

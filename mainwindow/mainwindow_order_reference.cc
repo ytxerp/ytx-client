@@ -90,11 +90,11 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
     {
         switch (section) {
         case Section::kInventory:
-            InitTableView(view, std::to_underlying(SaleReferenceEnumI::kOrderId), std::to_underlying(SaleReferenceEnumI::kDescription));
+            InitTableView(view, std::to_underlying(SaleReferenceEnumI::kOrderId), -1, std::to_underlying(SaleReferenceEnumI::kDescription));
             DelegateSaleReferenceI(view, sc_i_.section_config);
             break;
         case Section::kPartner:
-            InitTableView(view, std::to_underlying(SaleReferenceEnumP::kOrderId), std::to_underlying(SaleReferenceEnumP::kDescription));
+            InitTableView(view, std::to_underlying(SaleReferenceEnumP::kOrderId), -1, std::to_underlying(SaleReferenceEnumP::kDescription));
             DelegateSaleReferenceP(view, sc_p_.section_config);
             break;
         case Section::kSale:

@@ -141,6 +141,8 @@ void NodeO::ReadJson(const QJsonObject& object)
         settlement_id = QUuid(val.toString());
     if (const auto val = object.value(kIsSettled); val.isBool())
         is_settled = val.toBool();
+    if (object.value(kTag).isArray())
+        tag = Utils::ReadStringList(object, kTag);
 }
 
 QJsonObject NodeO::WriteJson() const
@@ -162,6 +164,7 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kCountTotal, QString::number(count_total, 'f', NumericConst::kDecimalPlaces8));
     obj.insert(kMeasureTotal, QString::number(measure_total, 'f', NumericConst::kDecimalPlaces8));
     obj.insert(kStatus, std::to_underlying(status));
+    obj.insert(kTag, Utils::WriteStringList(tag));
 
     return obj;
 }

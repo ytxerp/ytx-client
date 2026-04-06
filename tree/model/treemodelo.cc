@@ -295,6 +295,8 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumO::kFinalTotal:
             return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
+        case NodeEnumO::kTag:
+            return Utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumO::kId:
         case NodeEnumO::kVersion:
         case NodeEnumO::kIsSettled:
@@ -361,9 +363,36 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return d_node->is_settled;
     case NodeEnumO::kSettlementId:
         return d_node->settlement_id;
+    case NodeEnumO::kTag:
+        return d_node->tag;
     default:
         return QVariant();
     }
+}
+
+bool TreeModelO::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    if (!index.isValid() || role != Qt::EditRole)
+        return false;
+
+    if (data(index, role) == value)
+        return false;
+
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+
+    const NodeEnumO column { index.column() };
+    const QUuid id { node->id };
+
+    switch (column) {
+    case NodeEnumO::kTag:
+        Utils::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
+        break;
+    default:
+        return false;
+    }
+
+    emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
+    return true;
 }
 
 Qt::ItemFlags TreeModelO::flags(const QModelIndex& index) const

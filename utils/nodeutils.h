@@ -143,7 +143,7 @@ constexpr int NodeTagColumn(Section section)
         return std::to_underlying(NodeEnumP::kTag);
     case Section::kSale:
     case Section::kPurchase:
-        return -1;
+        return std::to_underlying(NodeEnumO::kTag);
     }
 
     Q_UNREACHABLE();

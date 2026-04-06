@@ -273,6 +273,7 @@ enum class NodeEnumO {
     kStatus,
     kCode,
     kDescription,
+    kTag,
     kDirectionRule,
     kKind,
     kUnit,

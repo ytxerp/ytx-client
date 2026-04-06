@@ -123,8 +123,8 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
         return d_entry->unit_discount;
     case EntryEnumO::kExternalSku:
         return entry_hub_p_->ExternalSku(d_node_->partner_id, d_entry->rhs_node);
-    default:
-        return {};
+    case EntryEnumO::kTag:
+        return d_entry->tag;
     }
 }
 
@@ -177,6 +177,9 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         break;
     case EntryEnumO::kUnitDiscount:
         unit_discount_changed = UpdateUnitDiscount(d_entry, row, value.toDouble(), is_persisted);
+        break;
+    case EntryEnumO::kTag:
+        UpdateTag(d_entry, value.toStringList(), is_persisted);
         break;
     case EntryEnumO::kId:
     case EntryEnumO::kVersion:
@@ -250,6 +253,8 @@ void TableModelO::sort(int column, Qt::SortOrder order)
             return Utils::CompareMember(d_lhs, d_rhs, &EntryO::unit_discount, order);
         case EntryEnumO::kDiscount:
             return Utils::CompareMember(d_lhs, d_rhs, &EntryO::discount, order);
+        case EntryEnumO::kTag:
+            return Utils::CompareMember(lhs, rhs, &EntryP::tag, order);
         case EntryEnumO::kId:
         case EntryEnumO::kVersion:
         case EntryEnumO::kLhsNode:
@@ -276,6 +281,7 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
     case EntryEnumO::kInitial:
     case EntryEnumO::kDiscount:
     case EntryEnumO::kFinal:
+    case EntryEnumO::kTag:
     case EntryEnumO::kExternalSku:
         flags &= ~Qt::ItemIsEditable;
         break;
@@ -468,6 +474,20 @@ bool TableModelO::UpdateDescription(EntryO* entry, const QString& value, bool is
         return false;
 
     entry->description = value;
+
+    if (is_persisted) {
+        pending_update_.insert(entry->id, entry);
+    }
+
+    return true;
+}
+
+bool TableModelO::UpdateTag(EntryO* entry, const QStringList& value, bool is_persisted)
+{
+    if (entry->tag == value)
+        return false;
+
+    entry->tag = value;
 
     if (is_persisted) {
         pending_update_.insert(entry->id, entry);

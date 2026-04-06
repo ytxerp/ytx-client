@@ -22,6 +22,7 @@
 
 enum class WorkspaceMemberEnum : int {
     kId = 0,
+    kVersion,
     kEmail,
     kUsername,
     kName,

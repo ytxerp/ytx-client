@@ -29,11 +29,13 @@
 
 struct WorkspaceMember final {
     QUuid id {};
+    int version {};
+
     QString email {};
     QString username {};
     QString name {};
 
-    WorkspaceRole workspace_role {};
+    WorkspaceRole workspace_role { WorkspaceRole::kGuest };
     QString database_role {};
     QDateTime created_time {};
 
@@ -41,21 +43,15 @@ struct WorkspaceMember final {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void WorkspaceMember::Reset()
-{
-    id = QUuid();
-    name.clear();
-    username.clear();
-    email.clear();
-    workspace_role = WorkspaceRole::kGuest;
-    database_role.clear();
-    created_time = QDateTime();
-}
+inline void WorkspaceMember::Reset() { *this = WorkspaceMember {}; }
 
 inline void WorkspaceMember::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());
+
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
 
     if (const auto val = object.value(kName); val.isString())
         name = val.toString();

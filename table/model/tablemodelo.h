@@ -91,6 +91,7 @@ private:
     bool UpdateMeasure(EntryO* entry, int row, double value, bool is_persisted);
     bool UpdateCount(EntryO* entry, double value, bool is_persisted);
     bool UpdateDescription(EntryO* entry, const QString& value, bool is_persisted);
+    bool UpdateTag(EntryO* entry, const QStringList& value, bool is_persisted);
 
     void ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) const;
     static void RecalculateAmount(EntryO* entry);

@@ -79,6 +79,7 @@ void StringInitializer::SetHeader(
         QObject::tr("Status"),
         QObject::tr("Code"),
         QObject::tr("Description"),
+        QObject::tr("Tag"),
         QObject::tr("DirectionRule"),
         QObject::tr("Kind"),
         QObject::tr("Unit"),
@@ -164,6 +165,7 @@ void StringInitializer::SetHeader(
         QObject::tr("LhsNode"),
         QObject::tr("InternalSku"),
         QObject::tr("Description"),
+        QObject::tr("Tag"),
         QObject::tr("Count"),
         QObject::tr("Measure"),
         QObject::tr("UnitPrice"),
@@ -317,6 +319,20 @@ void StringInitializer::SetHeader(
         QObject::tr("Description"),
         QObject::tr("Employee"),
     };
+
+    // Tag
+    finance.tag_header = {
+        QObject::tr("Id"),
+        QObject::tr("Version"),
+        QObject::tr("Name"),
+        QObject::tr("Color"),
+    };
+
+    task.tag_header = finance.tag_header;
+    inventory.tag_header = finance.tag_header;
+    partner.tag_header = finance.tag_header;
+    sale.tag_header = finance.tag_header;
+    purchase.tag_header = finance.tag_header;
 
     purchase.node_header = sale.node_header;
     purchase.entry_header = sale.entry_header;

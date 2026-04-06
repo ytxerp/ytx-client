@@ -30,7 +30,8 @@ void MainWindow::on_actionSettlement_triggered()
         auto* view { widget->View() };
 
         connect(view, &QTableView::doubleClicked, this, &MainWindow::RSettlementTableViewDoubleClicked);
-        SetSettlementView(view, std::to_underlying(SettlementEnum::kDescription));
+        InitTableView(
+            view, std::to_underlying(SettlementEnum::kId), std::to_underlying(SettlementEnum::kVersion), std::to_underlying(SettlementEnum::kDescription));
         DelegateSettlement(view, sc_->section_config);
     }
 
@@ -60,7 +61,7 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
 
     {
         auto* view { widget->View() };
-        InitTableView(view, std::to_underlying(SettlementItemEnum::kId), std::to_underlying(SettlementItemEnum::kDescription));
+        InitTableView(view, std::to_underlying(SettlementItemEnum::kId), -1, std::to_underlying(SettlementItemEnum::kDescription));
         DelegateSettlementNode(view, sc_->section_config);
     }
 

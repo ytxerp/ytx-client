@@ -29,6 +29,7 @@
 
 struct Tag final {
     QUuid id {};
+    int version {};
     QString name {};
     QString color {};
 
@@ -62,6 +63,8 @@ inline void Tag::ReadJson(const QJsonObject& object)
         name = val.toString();
     if (const auto val = object.value(kColor); val.isString())
         color = val.toString();
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
 }
 
 #endif // TAG_H

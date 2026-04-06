@@ -31,7 +31,7 @@ public:
     int columnCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent)
-        return 7;
+        return 8;
     }
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

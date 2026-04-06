@@ -49,6 +49,7 @@ struct SectionInfo {
     QStringList statement_entry_header {};
 
     QStringList full_entry_header {};
+    QStringList tag_header {};
 
     QMap<int, QString> unit_map {};
     QMap<int, QString> unit_symbol_map {};

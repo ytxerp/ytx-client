@@ -1,6 +1,5 @@
 #include <QHeaderView>
 
-#include "enum/settlementenum.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
@@ -63,52 +62,28 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
     }
 }
 
-void MainWindow::SetSettlementView(QTableView* view, int stretch_column) const
-{
-    {
-        view->setSortingEnabled(true);
-        view->setSelectionMode(QAbstractItemView::SingleSelection);
-        view->setSelectionBehavior(QAbstractItemView::SelectRows);
-        view->setAlternatingRowColors(true);
-    }
-
-    {
-        view->setColumnHidden(std::to_underlying(SettlementEnum::kId), kIsHidden);
-        view->setColumnHidden(std::to_underlying(SettlementEnum::kVersion), kIsHidden);
-    }
-
-    {
-        auto* h_header { view->horizontalHeader() };
-        ResizeColumn(h_header, stretch_column);
-    }
-
-    {
-        auto* v_header { view->verticalHeader() };
-        v_header->setDefaultSectionSize(UiConst::kRowHeight);
-        v_header->setSectionResizeMode(QHeaderView::Fixed);
-        v_header->setHidden(true);
-    }
-}
-
-void MainWindow::InitTableView(QTableView* view, int id_column, int stretch_column) const
+void MainWindow::InitTableView(QTableView* view, int id_column, int version_column, int stretch_column) const
 {
     view->setSortingEnabled(true);
     view->setSelectionMode(QAbstractItemView::SingleSelection);
     view->setSelectionBehavior(QAbstractItemView::SelectRows);
     view->setAlternatingRowColors(true);
 
-    if (id_column >= 0)
-        view->setColumnHidden(id_column, kIsHidden);
-
     auto* h_header { view->horizontalHeader() };
     h_header->setSectionResizeMode(QHeaderView::ResizeToContents);
-
-    if (stretch_column >= 0)
-        h_header->setSectionResizeMode(stretch_column, QHeaderView::Stretch);
 
     auto* v_header { view->verticalHeader() };
     v_header->setDefaultSectionSize(UiConst::kRowHeight);
     v_header->setSectionResizeMode(QHeaderView::Fixed);
     v_header->setHidden(true);
     h_header->setSectionsMovable(true);
+
+    if (id_column >= 0)
+        view->setColumnHidden(id_column, kIsHidden);
+
+    if (version_column >= 0)
+        view->setColumnHidden(version_column, kIsHidden);
+
+    if (stretch_column >= 0)
+        h_header->setSectionResizeMode(stretch_column, QHeaderView::Stretch);
 }

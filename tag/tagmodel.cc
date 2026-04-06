@@ -9,9 +9,10 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TagModel::TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+TagModel::TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, CSectionInfo& info, QObject* parent)
     : QAbstractItemModel(parent)
     , section_ { section }
+    , info_ { info }
 {
     for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
         tag_list_.append(it.value());
@@ -29,22 +30,10 @@ TagModel::~TagModel()
 
 QVariant TagModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation != Qt::Horizontal)
-        return {};
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+        return info_.tag_header.at(section);
 
-    if (role != Qt::DisplayRole)
-        return {};
-
-    static const QStringList kHeaders = {
-        tr("Id"),
-        tr("Name"),
-        tr("Color"),
-    };
-
-    if (section < 0 || section >= kHeaders.size())
-        return {};
-
-    return kHeaders.at(section);
+    return QVariant();
 }
 
 QModelIndex TagModel::index(int row, int column, const QModelIndex& parent) const
@@ -76,6 +65,8 @@ QVariant TagModel::data(const QModelIndex& index, int role) const
         return tag->name;
     case TagEnum::kColor:
         return tag->color;
+    case TagEnum::kVersion:
+        return tag->version;
     }
 }
 
@@ -99,6 +90,7 @@ bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role
         UpdateColor(tag, value.toString());
         break;
     case TagEnum::kId:
+    case TagEnum::kVersion:
         return false;
     }
 
@@ -117,6 +109,7 @@ void TagModel::sort(int column, Qt::SortOrder order)
         case TagEnum::kColor:
             return Utils::CompareMember(lhs, rhs, &Tag::color, order);
         case TagEnum::kId:
+        case TagEnum::kVersion:
             return false;
         }
     };
@@ -139,6 +132,7 @@ Qt::ItemFlags TagModel::flags(const QModelIndex& index) const
         break;
     case TagEnum::kId:
     case TagEnum::kColor:
+    case TagEnum::kVersion:
         flags &= ~Qt::ItemIsEditable;
         break;
     }

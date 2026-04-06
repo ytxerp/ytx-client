@@ -191,6 +191,10 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
 
     auto* status_r { new StatusR(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), status_r);
+
+    const auto& sc { info.section == Section::kSale ? sc_sale_ : sc_purchase_ };
+    auto* tag { new TagDelegate(sc.tag_icon_hash, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kTag), tag);
 }
 
 void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
@@ -501,7 +505,7 @@ void MainWindow::DelegateSettlementNode(QTableView* table_view, CSectionConfig& 
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementItemEnum::kIssuedTime), issued_time);
 }
 
-void MainWindow::DelegateTagView(QTableView* table_view) const
+void MainWindow::DelegateTag(QTableView* table_view) const
 {
     auto* color { new Color(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(TagEnum::kColor), color);

@@ -24,6 +24,7 @@ QVariant WorkspaceMemberModel::headerData(int section, Qt::Orientation orientati
 
     static const QStringList kHeaders = {
         tr("Id"),
+        tr("Version"),
         tr("Email"),
         tr("Username"),
         tr("Name"),
@@ -64,6 +65,8 @@ QVariant WorkspaceMemberModel::data(const QModelIndex& index, int role) const
     switch (column) {
     case WorkspaceMemberEnum::kId:
         return member->id;
+    case WorkspaceMemberEnum::kVersion:
+        return member->version;
     case WorkspaceMemberEnum::kEmail:
         return member->email;
     case WorkspaceMemberEnum::kUsername:
@@ -114,6 +117,7 @@ bool WorkspaceMemberModel::setData(const QModelIndex& index, const QVariant& val
     case WorkspaceMemberEnum::kUsername:
     case WorkspaceMemberEnum::kName:
     case WorkspaceMemberEnum::kId:
+    case WorkspaceMemberEnum::kVersion:
     case WorkspaceMemberEnum::kCreatedTime:
         // These columns are read-only in this model
         return false;
@@ -149,6 +153,7 @@ void WorkspaceMemberModel::sort(int column, Qt::SortOrder order)
         case WorkspaceMemberEnum::kCreatedTime:
             return Utils::CompareMember(lhs, rhs, &WorkspaceMember::created_time, order);
         case WorkspaceMemberEnum::kId:
+        case WorkspaceMemberEnum::kVersion:
             return false;
         }
     };
@@ -188,6 +193,7 @@ Qt::ItemFlags WorkspaceMemberModel::flags(const QModelIndex& index) const
     case WorkspaceMemberEnum::kName:
     case WorkspaceMemberEnum::kCreatedTime:
     case WorkspaceMemberEnum::kId:
+    case WorkspaceMemberEnum::kVersion:
     default:
         // Disable editing for all other columns
         flags &= ~Qt::ItemIsEditable;

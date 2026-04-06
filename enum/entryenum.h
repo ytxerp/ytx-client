@@ -67,6 +67,7 @@ enum class EntryEnumO {
     kLhsNode,
     kRhsNode,
     kDescription,
+    kTag,
     kCount,
     kMeasure,
     kUnitPrice,
