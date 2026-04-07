@@ -90,6 +90,7 @@ signals:
     void SAccountName(const QString& name);
     void SAccountUsername(const QJsonObject& obj);
     void SWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
+    void SAccountRoleUpdate();
 
     // send to SearchNodeModel
     void SNodeSearch(const QJsonObject& obj);
@@ -184,6 +185,7 @@ private:
     void UpdateNodeName(const QJsonObject& obj);
     void UpdateAccountName(const QJsonObject& obj);
     void UpdateAccountUsername(const QJsonObject& obj);
+    void UpdateAccountRole(const QJsonObject& obj);
 
     void InsertTag(const QJsonObject& obj);
     void UpdateTag(const QJsonObject& obj);

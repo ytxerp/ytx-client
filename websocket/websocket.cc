@@ -222,6 +222,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kAccountUsernameUpdate] = [this](const QJsonObject& obj) { UpdateAccountUsername(obj); };
 
     handler_obj_[WsKey::kWorkspaceMemberAck] = [this](const QJsonObject& obj) { AckWorkspaceMember(obj); };
+    handler_obj_[WsKey::kAccountRoleUpdate] = [this](const QJsonObject& obj) { UpdateAccountRole(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -933,6 +934,8 @@ void WebSocket::UpdateAccountName(const QJsonObject& obj)
 }
 
 void WebSocket::UpdateAccountUsername(const QJsonObject& obj) { emit SAccountUsername(obj); }
+
+void WebSocket::UpdateAccountRole(const QJsonObject& /*obj*/) { emit SAccountRoleUpdate(); }
 
 void WebSocket::UpdateOrder(const QJsonObject& obj, bool is_released)
 {

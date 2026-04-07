@@ -92,18 +92,25 @@ void MainWindow::on_actionWorkspaceMember_triggered()
 {
     qInfo() << "[UI]" << "on_actionWorkspaceMember_triggered";
 
-    auto* dialog = new WorkspaceMemberDialog(workspace_info_.header, this);
-    const auto widget_id { Utils::ManageDialog(widget_hash_, dialog) };
+    static QPointer<WorkspaceMemberDialog> dialog {};
 
-    const auto message { JsonGen::WorkspaceMemberAck(widget_id, LoginInfo::Instance().Workspace()) };
-    WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberAck, message);
+    if (!dialog) {
+        dialog = new WorkspaceMemberDialog(workspace_info_.header, this);
 
-    auto* view { dialog->View() };
-    InitTableView(
-        view, std::to_underlying(WorkspaceMemberEnum::kId), std::to_underlying(WorkspaceMemberEnum::kVersion), std::to_underlying(WorkspaceMemberEnum::kName));
-    DelegateWorkspaceMember(view);
+        const auto widget_id { Utils::ManageDialog(widget_hash_, dialog) };
+        const auto message { JsonGen::WorkspaceMemberAck(widget_id, LoginInfo::Instance().Workspace()) };
+
+        WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberAck, message);
+
+        auto* view { dialog->View() };
+        InitTableView(view, std::to_underlying(WorkspaceMemberEnum::kId), std::to_underlying(WorkspaceMemberEnum::kVersion),
+            std::to_underlying(WorkspaceMemberEnum::kName));
+        DelegateWorkspaceMember(view);
+    }
 
     dialog->show();
+    dialog->raise();
+    dialog->activateWindow();
 }
 
 void MainWindow::RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array)
@@ -119,4 +126,10 @@ void MainWindow::RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& a
 
     auto* model { d_widget->Model() };
     model->ResetModel(array);
+}
+
+void MainWindow::RAccountRoleUpdate()
+{
+    Utils::ShowNotification(QMessageBox::Information, tr("Role Updated"),
+        tr("Your account role has been updated. Please restart the application to enable new permissions."), TimeConst::kAutoCloseMs);
 }

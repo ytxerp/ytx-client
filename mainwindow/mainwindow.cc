@@ -483,6 +483,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SAccountName, this, &MainWindow::RAccountName);
     connect(WebSocket::Instance(), &WebSocket::SAccountUsername, this, &MainWindow::RAccountUsername);
     connect(WebSocket::Instance(), &WebSocket::SWorkspaceMemberAck, this, &MainWindow::RWorkspaceMemberAck);
+    connect(WebSocket::Instance(), &WebSocket::SAccountRoleUpdate, this, &MainWindow::RAccountRoleUpdate);
 }
 
 void MainWindow::SetIcon() const
