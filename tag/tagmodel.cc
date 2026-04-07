@@ -222,7 +222,7 @@ bool TagModel::UpdateName(Tag* tag, const QString& new_name)
     names_.insert(new_name);
     names_.remove(old_name);
 
-    if (tag->state == SyncState::kNew && !tag->color.isEmpty()) {
+    if (tag->state == SyncState::kNew) {
         TryInsert(tag);
     } else if (tag->state == SyncState::kSynced) {
         pending_updates_[tag->id].insert(kName, new_name);
