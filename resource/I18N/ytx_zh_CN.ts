@@ -1195,22 +1195,22 @@ Do you want to save before closing?</source>
         <translation>记录</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="59"/>
+        <location filename="../../mainwindow/mainwindow_auth.cc" line="61"/>
         <source>Connection Refused</source>
         <translation>连接被拒绝</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="59"/>
+        <location filename="../../mainwindow/mainwindow_auth.cc" line="61"/>
         <source>Unable to connect to the server. Please try again.</source>
         <translation>无法连接到服务器，请重新尝试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="75"/>
+        <location filename="../../mainwindow/mainwindow_auth.cc" line="77"/>
         <source>Remote Host Closed</source>
         <translation>连接已关闭</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_auth.cc" line="75"/>
+        <location filename="../../mainwindow/mainwindow_auth.cc" line="77"/>
         <source>The server has closed the connection. Please try reconnecting.</source>
         <translation>服务器已关闭连接，请重新尝试连接。</translation>
     </message>
@@ -1339,7 +1339,7 @@ Do you want to save before closing?</source>
     <message>
         <location filename="../../mainwindow/mainwindow_account.cc" line="134"/>
         <source>Your account role has been updated. Please restart the application to enable new permissions.</source>
-        <translation type="unfinished">您的账户权限已更新，请重启应用以生效。</translation>
+        <translation>您的账户权限已更新，请重启应用以生效。</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_account.cc" line="72"/>
