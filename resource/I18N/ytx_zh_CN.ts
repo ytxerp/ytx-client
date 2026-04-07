@@ -1085,7 +1085,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="511"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="662"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="663"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
@@ -1332,6 +1332,16 @@ Do you want to save before closing?</source>
         <translation>创建时间</translation>
     </message>
     <message>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="133"/>
+        <source>Role Updated</source>
+        <translation>权限更新</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="134"/>
+        <source>Your account role has been updated. Please restart the application to enable new permissions.</source>
+        <translation type="unfinished">您的账户权限已更新，请重启应用以生效。</translation>
+    </message>
+    <message>
         <location filename="../../mainwindow/mainwindow_account.cc" line="72"/>
         <source>Sale | Readonly</source>
         <translation>销售 | 只读</translation>
@@ -1352,63 +1362,63 @@ Do you want to save before closing?</source>
         <translation>任务 | 读写</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="672"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="673"/>
         <source>Ancestor</source>
         <translation>先祖</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="672"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="673"/>
         <source>Descendant</source>
         <translation>后代</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="672"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="673"/>
         <source>Distance</source>
         <translation>距离</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="706"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="707"/>
         <source>Export Completed</source>
         <translation>成功</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="706"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="707"/>
         <source>Export completed successfully.</source>
         <translation>导出已完成。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="709"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="710"/>
         <source>Export Failed</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="709"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="710"/>
         <source>Export failed. The file has been deleted.</source>
         <translation>导出失败，文件已删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="729"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="736"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="730"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="737"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="729"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="730"/>
         <source>Failed to check updates.</source>
         <translation>检查更新失败。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="736"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="737"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="748"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="749"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="749"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="750"/>
         <source>A new version %1 is available!
 
 Download now?</source>
@@ -1417,12 +1427,12 @@ Download now?</source>
 现在下载吗？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="761"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="762"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="761"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="762"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
