@@ -185,9 +185,37 @@ inline const char* kUnitSymbol(NodeUnit c)
     case NodeUnit::INR:
         return "₹";
 
-    // Default for other units or unknown
-    default:
-        return "";
+    // Task units
+    case NodeUnit::TTarget:
+        return "◎";
+    case NodeUnit::TSource:
+        return "◉";
+    case NodeUnit::TAction:
+        return "→";
+
+    // Inventory units
+    case NodeUnit::IInternal:
+        return "▣";
+    case NodeUnit::IPosition:
+        return "⌖";
+    case NodeUnit::IExternal:
+        return "⇄";
+
+    // Partner units
+    case NodeUnit::PCustomer:
+        return "◇";
+    case NodeUnit::PEmployee:
+        return "◈";
+    case NodeUnit::PVendor:
+        return "◆";
+
+    // Order units
+    case NodeUnit::OImmediate:
+        return "‼";
+    case NodeUnit::OMonthly:
+        return "◷";
+    case NodeUnit::OPending:
+        return "…";
     }
 }
 
