@@ -55,7 +55,7 @@ void About::IniDialog()
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
 <html>
 <body>
-    <p><b>YTX v0.3.5</b><br>© 2026 YTX</p>
+    <p><b>YTX v0.3.5</b><br>© 2026 YTX<br><br>This product uses Qt libraries licensed under LGPLv3.</p>
     <p>%1</p>
     <p>%2</p>
     <p><a href="privacy_policy.html">%3</a> | <a href="terms_of_service.html">%4</a></p>
