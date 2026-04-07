@@ -42,8 +42,6 @@ QVariant SearchEntryModelP::data(const QModelIndex& index, int role) const
         return d_entry->unit_price;
     case EntryEnumP::kRhsNode:
         return d_entry->rhs_node;
-    default:
-        return QVariant();
     }
 }
 

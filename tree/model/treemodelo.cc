@@ -365,8 +365,6 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return d_node->settlement_id;
     case NodeEnumO::kTag:
         return d_node->tag;
-    default:
-        return QVariant();
     }
 }
 

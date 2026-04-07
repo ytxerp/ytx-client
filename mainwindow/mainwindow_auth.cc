@@ -32,6 +32,8 @@ void MainWindow::on_actionSignIn_triggered()
     }
 
     dialog->show();
+    dialog->raise();
+    dialog->activateWindow();
 }
 
 void MainWindow::on_actionSignOut_triggered()

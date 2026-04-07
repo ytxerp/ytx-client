@@ -69,8 +69,6 @@ QVariant TableModelSettlement::data(const QModelIndex& index, int role) const
         return settlement_node->employee_id;
     case SettlementItemEnum::kIsSettled:
         return settlement_node->is_settled;
-    default:
-        return QVariant();
     }
 }
 

@@ -126,8 +126,6 @@ QVariant SearchEntryModel::data(const QModelIndex& index, int role) const
         return entry->rhs_rate;
     case FullEntryEnum::kRhsNode:
         return entry->rhs_node;
-    default:
-        return QVariant();
     }
 }
 

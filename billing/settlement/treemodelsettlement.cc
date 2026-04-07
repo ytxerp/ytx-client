@@ -65,8 +65,6 @@ QVariant TreeModelSettlement::data(const QModelIndex& index, int role) const
         return settlement->amount;
     case SettlementEnum::kPartner:
         return settlement->partner_id;
-    default:
-        return QVariant();
     }
 }
 

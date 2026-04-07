@@ -196,8 +196,6 @@ QVariant TableModelP::data(const QModelIndex& index, int role) const
         return d_entry->rhs_node;
     case EntryEnumP::kExternalSku:
         return d_entry->external_sku;
-    default:
-        return QVariant();
     }
 }
 
