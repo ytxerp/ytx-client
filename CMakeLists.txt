@@ -58,6 +58,9 @@ elseif(WIN32)
 endif()
 
 find_package(zstd REQUIRED)
+if(zstd_FOUND)
+    message(STATUS "✅ zstd ${zstd_VERSION} found")
+endif()
 
 find_package(OpenSSL REQUIRED)
 if(OpenSSL_FOUND)
