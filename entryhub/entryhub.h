@@ -73,8 +73,8 @@ public:
     virtual void UpdateEntry(const QUuid& id, const QJsonObject& update);
 
     void UpdateVersion(const QUuid& id, int version);
-
     void UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, bool is_parallel);
+    void UpdateEntryIssuedTime(const QUuid& id, const QDateTime& issued_time, int version);
 
     void AckTable(const QUuid& node_id, const QJsonArray& array);
     void SearchEntry(const QJsonArray& array);

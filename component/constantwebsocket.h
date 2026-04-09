@@ -50,100 +50,89 @@
 //   - Key verb is suffix, handler function verb is prefix
 //     e.g. "node_insert" -> InsertNode(), "login_notify" -> NotifyLogin()
 // =============================================================
-
 enum class WsKey : uint8_t {
     // --- Auth ---
     kLogin = 1,
-    kRegister,
-    kLoginNotify,
-    kRegisterNotify,
-
+    kRegister = 2,
+    kLoginNotify = 3,
+    kRegisterNotify = 4,
     // --- Config ---
-    kSharedConfigApply,
-    kPartnerEntryApply,
-    kDefaultUnitUpdate,
-    kDefaultUnitDeny,
-    kDocumentDirUpdate,
-
+    kSharedConfigApply = 5,
+    kPartnerEntryApply = 6,
+    kDefaultUnitUpdate = 7,
+    kDefaultUnitDeny = 8,
+    kDocumentDirUpdate = 9,
     // --- Ack ---
-    kTreeAck,
-    kTableAck,
-    kOrderReferenceAck,
-    kStatementAck,
-    kStatementNodeAck,
-    kStatementEntryAck,
-    kSettlementAck,
-    kSettlementItemAck,
-    kNodeAck,
-
+    kTreeAck = 10,
+    kTableAck = 11,
+    kOrderReferenceAck = 12,
+    kStatementAck = 13,
+    kStatementNodeAck = 14,
+    kStatementEntryAck = 15,
+    kSettlementAck = 16,
+    kSettlementItemAck = 17,
+    kNodeAck = 18,
     // --- Settlement ---
-    kSettlementInsert,
-    kSettlementUpdate,
-    kSettlementRecall,
-
+    kSettlementInsert = 19,
+    kSettlementUpdate = 20,
+    kSettlementRecall = 21,
     // ⚠️ no handler needed
     // server never emits this message
     // recall already synchronizes client state
-    kSettlementDelete,
-
+    kSettlementDelete = 22,
     // --- Tree ---
-    kTreeApply,
-    kTreeSyncFinish,
-    kNodeInsert,
-    kNodeUpdate,
-    kNodeSearch,
-    kNodeNameUpdate,
-    kNodeDrag,
-    kLeafDelete,
-    kLeafDeleteP,
-    kLeafDeleteO,
-    kLeafReplace,
-    kBranchDelete,
-    kNodeDirectionRuleUpdate,
-
+    kTreeApply = 23,
+    kTreeSyncFinish = 24,
+    kNodeInsert = 25,
+    kNodeUpdate = 26,
+    kNodeSearch = 27,
+    kNodeNameUpdate = 28,
+    kNodeDrag = 29,
+    kLeafDelete = 30,
+    kLeafDeleteP = 31,
+    kLeafDeleteO = 32,
+    kLeafReplace = 33,
+    kBranchDelete = 34,
+    kNodeDirectionRuleUpdate = 35,
     // --- Leaf delete flow ---
-    kLeafDeleteCheck,
-    kLeafDeleteDeny,
-    kLeafDeleteAllow,
-
+    kLeafDeleteCheck = 36,
+    kLeafDeleteDeny = 37,
+    kLeafDeleteAllow = 38,
     // --- Tag ---
-    kTagApply,
-    kTagInsert,
-    kTagUpdate,
-    kTagDelete,
-
+    kTagApply = 39,
+    kTagInsert = 40,
+    kTagUpdate = 41,
+    kTagDelete = 42,
     // --- Entry ---
-    kEntryInsert,
-    kEntryUpdate,
-    kEntryDelete,
-    kEntryDescriptionSearch,
-    kEntryTagSearch,
-    kBatchMark,
-    kEntryLinkedNodeUpdate,
-    kEntryRateUpdate,
-    kEntryNumericUpdate,
-
+    kEntryInsert = 43,
+    kEntryUpdate = 44,
+    kEntryDelete = 45,
+    kEntryDescriptionSearch = 46,
+    kEntryTagSearch = 47,
+    kBatchMark = 48,
+    kEntryLinkedNodeUpdate = 49,
+    kEntryRateUpdate = 50,
+    kEntryNumericUpdate = 51,
     // --- Order ---
-    kOrderInsertSave,
-    kOrderUpdateSave,
-    kOrderInsertRelease,
-    kOrderUpdateRelease,
-    kOrderRecall,
-
+    kOrderInsertSave = 52,
+    kOrderUpdateSave = 53,
+    kOrderInsertRelease = 54,
+    kOrderUpdateRelease = 55,
+    kOrderRecall = 56,
     // --- Misc ---
-    kOperationDeny,
-
+    kOperationDeny = 57,
     // --- Profile ---
-    kAccountNameUpdate,
-    kAccountUsernameUpdate,
-
+    kAccountNameUpdate = 58,
+    kAccountUsernameUpdate = 59,
     // --- Workspace Member ---
-    kWorkspaceMemberAck,
-    kWorkspaceMemberUpdate,
-    kWorkspaceMemberDelete,
+    kWorkspaceMemberAck = 60,
+    kWorkspaceMemberUpdate = 61,
+    kWorkspaceMemberDelete = 62,
     // --- Account Role ---
-    kAccountRoleUpdate,
-    kAccountRoleDelete,
+    kAccountRoleUpdate = 63,
+    kAccountRoleDelete = 64,
+    // --- Entry ---
+    kEntryIssuedTimeUpdate = 65,
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -300,6 +289,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "account_role_update";
     case WsKey::kAccountRoleDelete:
         return "account_role_delete";
+    case WsKey::kEntryIssuedTimeUpdate:
+        return "entry_issued_time_update";
     default:
         return "unknown";
     }

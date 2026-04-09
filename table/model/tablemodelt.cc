@@ -121,7 +121,7 @@ bool TableModelT::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
 
     const QUuid entry_id { *shadow->id };
 
-    QJsonObject message { JsonGen::EntryLinkedNode(section_, entry_id) };
+    QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
 
     if (old_node.isNull()) {
         message.insert(kEntry, shadow->WriteJson());

@@ -223,6 +223,7 @@ void WebSocket::InitHandler()
 
     handler_obj_[WsKey::kWorkspaceMemberAck] = [this](const QJsonObject& obj) { AckWorkspaceMember(obj); };
     handler_obj_[WsKey::kAccountRoleUpdate] = [this](const QJsonObject& obj) { UpdateAccountRole(obj); };
+    handler_obj_[WsKey::kEntryIssuedTimeUpdate] = [this](const QJsonObject& obj) { UpdateEntryIssuedTime(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -823,6 +824,24 @@ void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
     }
 
     entry_hub->UpdateEntryNumeric(entry_id, update);
+}
+
+void WebSocket::UpdateEntryIssuedTime(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
+    const int version { obj.value(kVersion).toInt() };
+    const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
+    const QDateTime issued_time { QDateTime::fromString(obj.value(kIssuedTime).toString(), Qt::ISODate) };
+
+    auto entry_hub { entry_hub_hash_.value(section) };
+
+    if (session_id == session_id_) {
+        entry_hub->UpdateVersion(entry_id, version);
+        return;
+    }
+
+    entry_hub->UpdateEntryIssuedTime(entry_id, issued_time, version);
 }
 
 void WebSocket::SearchEntry(const QJsonObject& obj)

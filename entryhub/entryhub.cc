@@ -98,15 +98,10 @@ void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update)
 
         entry->ReadJson(update);
 
-        const int issued_time { std::to_underlying(EntryEnum::kIssuedTime) };
-
         const auto [start, end] = Utils::EntryCacheColumnRange(section_);
 
         emit SRefreshField(entry->lhs_node, id, start, end);
         emit SRefreshField(entry->rhs_node, id, start, end);
-
-        emit SRefreshField(entry->lhs_node, id, issued_time, issued_time);
-        emit SRefreshField(entry->rhs_node, id, issued_time, issued_time);
     };
 }
 
@@ -151,6 +146,22 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
     }
 
     emit SAttachOneEntry(new_node_id, entry);
+}
+
+void EntryHub::UpdateEntryIssuedTime(const QUuid& id, const QDateTime& issued_time, int version)
+{
+    auto it = entry_cache_.constFind(id);
+    if (it == entry_cache_.constEnd())
+        return;
+
+    Entry* entry = it.value();
+    entry->issued_time = issued_time;
+    entry->version = version;
+
+    const int column { Utils::EntryIssuedTimeColumn(section_) };
+
+    emit SRefreshField(entry->lhs_node, id, column, column);
+    emit SRefreshField(entry->rhs_node, id, column, column);
 }
 
 /**

@@ -100,6 +100,23 @@ constexpr int EntryDescriptionColumn(Section section)
     Q_UNREACHABLE();
 }
 
+constexpr int EntryIssuedTimeColumn(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+    case Section::kInventory:
+    case Section::kTask:
+        return std::to_underlying(EntryEnum::kIssuedTime);
+    case Section::kPartner:
+        return std::to_underlying(EntryEnumP::kIssuedTime);
+    case Section::kSale:
+    case Section::kPurchase:
+        return -1;
+    }
+
+    Q_UNREACHABLE();
+}
+
 constexpr int SearchEntryDescriptionColumn(Section section)
 {
     switch (section) {
@@ -144,7 +161,7 @@ constexpr std::pair<int, int> EntryCacheColumnRange(Section section)
         return { std::to_underlying(EntryEnumP::kIssuedTime), std::to_underlying(EntryEnumP::kExternalSku) };
     case Section::kSale:
     case Section::kPurchase:
-        return { std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kExternalSku) };
+        return { -1, -1 };
     }
 
     Q_UNREACHABLE();
@@ -167,6 +184,7 @@ constexpr std::pair<int, int> EntryNumericColumnRange(Section section)
     Q_UNREACHABLE();
 }
 
+#if 0
 template <typename T, typename F = std::nullptr_t>
 bool UpdateShadowIssuedTime(QJsonObject& update, T* object, CString& field, const QDateTime& value, QDateTime* T::* member, F&& restart_timer = nullptr)
 {
@@ -191,6 +209,7 @@ bool UpdateShadowIssuedTime(QJsonObject& update, T* object, CString& field, cons
 
     return true;
 }
+#endif
 
 template <typename T, typename F = std::nullptr_t>
 bool UpdateShadowStringList(QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList* T::* member, F&& restart_timer = nullptr)

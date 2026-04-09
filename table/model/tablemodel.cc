@@ -195,6 +195,25 @@ void TableModel::FlushCaches()
     pending_updates_.clear();
 }
 
+bool TableModel::UpdateIssuedTime(EntryShadow* entry_shadow, const QDateTime& value)
+{
+    if (*entry_shadow->issued_time == value)
+        return false;
+
+    *entry_shadow->issued_time = value;
+
+    if (!entry_shadow->rhs_node || entry_shadow->rhs_node->isNull()) {
+        return true;
+    }
+
+    auto message { JsonGen::EntryMessage(section_, *entry_shadow->id) };
+    message.insert(kIssuedTime, value.toString(Qt::ISODate));
+    message.insert(kVersion, *entry_shadow->version);
+
+    WebSocket::Instance()->SendMessage(WsKey::kEntryIssuedTimeUpdate, message);
+    return true;
+}
+
 QModelIndex TableModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
@@ -289,8 +308,7 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case EntryEnum::kIssuedTime:
-        Utils::UpdateShadowIssuedTime(
-            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [this, id, version]() { RestartTimer(id, version); });
+        UpdateIssuedTime(shadow, value.toDateTime());
         break;
     case EntryEnum::kCode:
         Utils::UpdateShadowField(
@@ -424,7 +442,7 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
     endRemoveRows();
 
     if (!rhs_node_id.isNull()) {
-        QJsonObject message { JsonGen::EntryDelete(section_, entry_id) };
+        QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
         WebSocket::Instance()->SendMessage(WsKey::kEntryDelete, message);
 
         const double lhs_initial_delta { *shadow->lhs_credit - *shadow->lhs_debit };

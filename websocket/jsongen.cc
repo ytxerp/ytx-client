@@ -37,7 +37,6 @@ QJsonObject NodeDrag(Section section, CUuid& node_id, CUuid& parent_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kPath, path_json);
-
     return message;
 }
 
@@ -49,7 +48,6 @@ QJsonObject LeafDelete(Section section, CUuid& node_id)
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kLinkedEntry, QJsonObject());
     message.insert(kTotalArray, QJsonArray());
-
     return message;
 }
 
@@ -60,7 +58,6 @@ QJsonObject LeafDeleteP(Section section, CUuid& node_id)
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kLinkedEntry, QJsonArray());
-
     return message;
 }
 
@@ -74,7 +71,6 @@ QJsonObject LeafDeleteO(Section section, CUuid& node_id)
     message.insert(kUnit, int {});
     message.insert(kStatus, int {});
     message.insert(kInitialTotal, QString());
-
     return message;
 }
 
@@ -85,7 +81,6 @@ QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id)
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kParentId, parent_id.toString(QUuid::WithoutBraces));
-
     return message;
 }
 
@@ -95,7 +90,6 @@ QJsonObject Login(CString& email, CString& password, CString& workspace)
     message.insert(kEmail, email);
     message.insert(kPassword, password);
     message.insert(kWorkspace, workspace);
-
     return message;
 }
 
@@ -124,7 +118,6 @@ QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id)
     message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
     message.insert(NodeRef::kInventoryInt, false);
     message.insert(NodeRef::kInventoryExt, false);
-
     return message;
 }
 
@@ -145,7 +138,6 @@ QJsonObject BatchMark(Section section, CUuid& node_id, int mark)
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(WsField::kMark, mark);
-
     return message;
 }
 
@@ -182,7 +174,6 @@ QJsonObject Register(CString& email, CString& password)
     QJsonObject message {};
     message.insert(kEmail, email);
     message.insert(kPassword, password);
-
     return message;
 }
 
@@ -192,7 +183,6 @@ QJsonObject EntryDescriptionSearch(Section section, CString& keyword)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kKeyword, keyword);
     message.insert(kEntryArray, QJsonArray());
-
     return message;
 }
 
@@ -219,7 +209,6 @@ QJsonObject NodeAck(Section section, CUuid& node_id)
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kNode, QJsonObject());
     message.insert(kAncestor, QUuid().toString(QUuid::WithoutBraces));
-
     return message;
 }
 
@@ -230,7 +219,6 @@ QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_ru
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kDirectionRule, direction_rule);
-
     return message;
 }
 
@@ -241,7 +229,6 @@ QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update)
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
     message.insert(kSessionId, QString());
     message.insert(kUpdate, update);
-
     return message;
 }
 
@@ -252,7 +239,6 @@ QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& update)
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kSessionId, QString());
     message.insert(kUpdate, update);
-
     return message;
 }
 
@@ -263,7 +249,6 @@ QJsonObject NodeName(Section section, CUuid& node_id, CString& name)
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kSessionId, QString());
     message.insert(kName, name);
-
     return message;
 }
 
@@ -273,7 +258,6 @@ QJsonObject NodeSearch(Section section, CString& keyword)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kKeyword, keyword);
     message.insert(kNodeArray, QJsonArray());
-
     return message;
 }
 
@@ -296,29 +280,15 @@ QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bo
     message.insert(kUpdate, update);
     message.insert(kIsParallel, is_parallel);
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
-
     return message;
 }
 
-QJsonObject EntryDelete(Section section, CUuid& entry_id)
+QJsonObject EntryMessage(Section section, CUuid& entry_id)
 {
     QJsonObject message {};
-
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
-
-    return message;
-}
-
-QJsonObject EntryLinkedNode(Section section, CUuid& entry_id)
-{
-    QJsonObject message {};
-
-    message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
-    message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
-
     return message;
 }
 
@@ -437,7 +407,6 @@ QJsonObject WorkspaceMemberAck(CUuid& widget_id, CString& workspace)
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kWorkspace, workspace);
     message.insert(kMemberArray, QJsonArray());
-
     return message;
 }
 
@@ -447,7 +416,6 @@ QJsonObject WorkspaceMemberUpdate(CUuid& id, CJsonObject& update)
     message.insert(kSessionId, QString());
     message.insert(kId, id.toString(QUuid::WithoutBraces));
     message.insert(kUpdate, update);
-
     return message;
 }
 
@@ -488,7 +456,6 @@ QJsonObject AccountName(CString& email, CString& name)
     QJsonObject message {};
     message.insert(kEmail, email);
     message.insert(kName, name);
-
     return message;
 }
 
@@ -497,7 +464,6 @@ QJsonObject AccountUsername(CString& email, CString& username)
     QJsonObject message {};
     message.insert(kEmail, email);
     message.insert(kUsername, username);
-
     return message;
 }
 

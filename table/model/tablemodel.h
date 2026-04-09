@@ -114,6 +114,8 @@ protected:
         return false;
     }
 
+    bool UpdateIssuedTime(EntryShadow* entry_shadow, const QDateTime& value);
+
     virtual void AccumulateBalance(int start);
 
     void RestartTimer(const QUuid& id, int version);

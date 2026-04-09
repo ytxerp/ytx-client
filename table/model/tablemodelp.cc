@@ -74,7 +74,7 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
     endRemoveRows();
 
     if (!rhs_node_id.isNull()) {
-        QJsonObject message { JsonGen::EntryDelete(section_, entry_id) };
+        QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
         WebSocket::Instance()->SendMessage(WsKey::kEntryDelete, message);
 
         emit SDeleteOneEntry(QUuid(), entry_id);
@@ -143,7 +143,7 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
 
     const QUuid entry_id { entry->id };
 
-    QJsonObject message { JsonGen::EntryLinkedNode(section_, entry_id) };
+    QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
 
     if (old_node.isNull()) {
         message.insert(kEntry, entry->WriteJson());
