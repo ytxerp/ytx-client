@@ -583,6 +583,9 @@ void MainWindow::RUpdateConfig(const AppConfig& app, const SharedConfig& shared,
 
 void MainWindow::ResizeColumn(QHeaderView* header, int stretch_column) const
 {
+    if (stretch_column < 0)
+        return;
+
     header->setSectionResizeMode(QHeaderView::ResizeToContents);
     header->setSectionResizeMode(stretch_column, QHeaderView::Stretch);
 }

@@ -28,10 +28,12 @@ enum class Status { kUnmarked = 0, kMarked };
 
 // defining entry column
 enum class EntryEnum {
+    // --- Hidden ---
     kId = 0,
     kVersion,
-    kIssuedTime,
     kLhsNode,
+    // --- Visible ---
+    kIssuedTime,
     kLhsRate,
     kCode,
     kDescription,
@@ -46,10 +48,12 @@ enum class EntryEnum {
 
 // FullEntryEnumP is same as EntryEnumP
 enum class EntryEnumP {
+    // --- Hidden ---
     kId = 0,
     kVersion,
-    kIssuedTime,
     kLhsNode,
+    // --- Visible ---
+    kIssuedTime,
     kCode,
     kDescription,
     kTag,
@@ -62,9 +66,11 @@ enum class EntryEnumP {
 
 // FullEntryEnumO is same as EntryEnumO
 enum class EntryEnumO {
+    // --- Hidden ---
     kId = 0,
     kVersion,
     kLhsNode,
+    // --- Visible ---
     kRhsNode,
     kDescription,
     kTag,

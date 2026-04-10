@@ -199,7 +199,7 @@ private:
     void TableDelegateP(QTableView* table_view, CSectionConfig& config) const;
     void TableDelegateO(QTableView* table_view, CSectionInfo& info, CSectionConfig& config) const;
 
-    void SetTableView(QTableView* view, Section section, int stretch_column, int lhs_node_column) const;
+    void SetTableView(QTableView* view, Section section, int stretch_column) const;
 
     void TableConnectF(TableModel* table_model) const;
     void TableConnectI(TableModel* table_model) const;

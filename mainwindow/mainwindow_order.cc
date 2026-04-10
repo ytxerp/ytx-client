@@ -194,7 +194,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     // Configure view
     auto* view { widget->View() };
     TableConnectO(table_model, widget);
-    SetTableView(view, sc_->info.section, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
+    SetTableView(view, sc_->info.section, std::to_underlying(EntryEnumO::kDescription));
     TableDelegateO(view, sc_->info, section_config);
 
     sc_->widget_hash.insert(node_id, wc);
@@ -245,7 +245,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 
     // Configure view
     auto* view = widget->View();
-    SetTableView(view, sc->info.section, std::to_underlying(EntryEnumO::kDescription), std::to_underlying(EntryEnumO::kLhsNode));
+    SetTableView(view, sc->info.section, std::to_underlying(EntryEnumO::kDescription));
     TableConnectO(table_model, widget);
     TableDelegateO(view, sc->info, section_config);
 

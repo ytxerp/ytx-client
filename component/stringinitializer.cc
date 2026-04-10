@@ -96,8 +96,8 @@ void StringInitializer::SetHeader(
     finance.entry_header = {
         QObject::tr("Id"),
         QObject::tr("Version"),
-        QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
+        QObject::tr("IssuedTime"),
         QObject::tr("FXRate"),
         QObject::tr("Code"),
         QObject::tr("Description"),
@@ -113,8 +113,8 @@ void StringInitializer::SetHeader(
     inventory.entry_header = {
         QObject::tr("Id"),
         QObject::tr("Version"),
-        QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
+        QObject::tr("IssuedTime"),
         QObject::tr("UnitCost"),
         QObject::tr("Code"),
         QObject::tr("Description"),
@@ -130,8 +130,8 @@ void StringInitializer::SetHeader(
     task.entry_header = {
         QObject::tr("Id"),
         QObject::tr("Version"),
-        QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
+        QObject::tr("IssuedTime"),
         QObject::tr("UnitCost"),
         QObject::tr("Code"),
         QObject::tr("Description"),
@@ -147,8 +147,8 @@ void StringInitializer::SetHeader(
     partner.entry_header = {
         QObject::tr("Id"),
         QObject::tr("Version"),
-        QObject::tr("IssuedTime"),
         QObject::tr("LhsNode"),
+        QObject::tr("IssuedTime"),
         QObject::tr("Code"),
         QObject::tr("Description"),
         QObject::tr("Tag"),

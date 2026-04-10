@@ -241,7 +241,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
 
         const int description_column { Utils::EntryDescriptionColumn(section) };
-        SetTableView(view, section, description_column, std::to_underlying(EntryEnum::kLhsNode));
+        SetTableView(view, section, description_column);
 
         switch (section) {
         case Section::kFinance:
