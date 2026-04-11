@@ -13,7 +13,6 @@
 
 #include "component/constant.h"
 #include "component/signalblocker.h"
-#include "component/stringinitializer.h"
 #include "dialog/about.h"
 #include "dialog/preferences.h"
 #include "dialog/tagmanagerdlg.h"
@@ -39,7 +38,6 @@ MainWindow::MainWindow(QWidget* parent)
     IniMarkGroup();
     InitSystemTray();
     InitStatusLabel();
-    InitWorkspaceInfo();
 
     SetTabWidget(ui->tabWidgetF);
     SetTabWidget(ui->tabWidgetI);
@@ -51,8 +49,6 @@ MainWindow::MainWindow(QWidget* parent)
     SetIcon();
     SetUniqueConnection();
     SetAction(false);
-
-    StringInitializer::SetHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
 
     Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
     Utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
@@ -201,6 +197,8 @@ void MainWindow::ResetMainwindow()
     audit_info_.user_hash.clear();
 
     ui->actionWorkspaceMember->setVisible(false);
+    ui->actionAuditLog->setVisible(false);
+
     Utils::CloseWidgets(widget_hash_);
 
     {
