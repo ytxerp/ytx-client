@@ -341,6 +341,7 @@
     <addaction name="separator"/>
     <addaction name="actionProfile"/>
     <addaction name="actionWorkspaceMember"/>
+    <addaction name="actionAuditLog"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -683,6 +684,11 @@
    </property>
    <property name="toolTip">
     <string>Workspace Member</string>
+   </property>
+  </action>
+  <action name="actionAuditLog">
+   <property name="text">
+    <string>Audit Log</string>
    </property>
   </action>
  </widget>

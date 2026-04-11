@@ -258,6 +258,11 @@ set(HEADERS
     workspace_member/workspacerole.h
     delegate/databaseroledelegate.h
     workspace_member/workspaceinfo.h
+    audithub/auditentry.h
+    audithub/auditmodel.h
+    audithub/auditinfo.h
+    audithub/auditenum.h
+    audithub/auditdialog.h
 )
 
 set(SOURCES
@@ -406,6 +411,10 @@ set(SOURCES
     widget/treeview.cc
     workspace_member/workspacememberdialog.cc
     workspace_member/workspacemembermodel.cc
+    audithub/auditentry.cc
+    mainwindow/mainwindow_audit.cc
+    audithub/auditmodel.cc
+    audithub/auditdialog.cc
 )
 
 set(UIS
@@ -439,6 +448,7 @@ set(UIS
     tree/widget/treewidgeto.ui
     tree/widget/treewidgetp.ui
     workspace_member/workspacememberdialog.ui
+    audithub/auditdialog.ui
 )
 
 # ------------------------

@@ -133,6 +133,9 @@ enum class WsKey : uint8_t {
     kAccountRoleDelete = 64,
     // --- Entry ---
     kEntryIssuedTimeUpdate = 65,
+    // -- Audit Log ---
+    kAuditLogAck = 66,
+
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -291,6 +294,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "account_role_delete";
     case WsKey::kEntryIssuedTimeUpdate:
         return "entry_issued_time_update";
+    case WsKey::kAuditLogAck:
+        return "audit_log_ack";
     default:
         return "unknown";
     }

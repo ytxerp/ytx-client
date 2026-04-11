@@ -118,6 +118,10 @@ void MainWindow::InitilizeContext()
         PrintHub::Instance().SeTreeModelI(sc_i_.tree_model);
         PrintHub::Instance().SetEntryHubP(sc_p_.entry_hub.data());
     }
+
+    {
+        InitAuditInfo(); // sections must be ready before this
+    }
 }
 
 void MainWindow::InitContextFinance()

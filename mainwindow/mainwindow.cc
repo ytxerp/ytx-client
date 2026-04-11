@@ -198,6 +198,8 @@ void MainWindow::on_actionDelete_triggered()
 void MainWindow::ResetMainwindow()
 {
     section_settings_.clear();
+    audit_info_.user_hash.clear();
+
     ui->actionWorkspaceMember->setVisible(false);
     Utils::CloseWidgets(widget_hash_);
 
@@ -484,6 +486,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SAccountUsername, this, &MainWindow::RAccountUsername);
     connect(WebSocket::Instance(), &WebSocket::SWorkspaceMemberAck, this, &MainWindow::RWorkspaceMemberAck);
     connect(WebSocket::Instance(), &WebSocket::SAccountRoleUpdate, this, &MainWindow::RAccountRoleUpdate);
+    connect(WebSocket::Instance(), &WebSocket::SAuditLogAck, this, &MainWindow::RAuditLogAck);
 }
 
 void MainWindow::SetIcon() const

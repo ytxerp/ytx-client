@@ -30,6 +30,7 @@
 #include <QTableView>
 #include <QTranslator>
 
+#include "audithub/auditinfo.h"
 #include "billing/settlement/settlement.h"
 #include "billing/settlement/treewidgetsettlement.h"
 #include "billing/statement/statemententrywidget.h"
@@ -88,6 +89,7 @@ private slots:
 
     void on_actionStatement_triggered();
     void on_actionSettlement_triggered();
+    void on_actionAuditLog_triggered();
 
     void tabWidget_currentChanged();
     void tabWidget_tabBarDoubleClicked(int index);
@@ -154,6 +156,7 @@ private slots:
     void RDenyLeafDelete(const QJsonObject& obj);
 
     void RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
+    void RAuditLogAck(const QUuid& widget_id, const QJsonArray& array);
     void RAccountRoleUpdate();
 
     void RApplyTag(const QJsonObject& obj);
@@ -218,6 +221,7 @@ private:
     void DelegateSettlementNode(QTableView* table_view, CSectionConfig& config) const;
     void DelegateTag(QTableView* table_view) const;
     void DelegateWorkspaceMember(QTableView* table_view) const;
+    void DelegateAuditLog(QTableView* table_view) const;
 
     void InitTableView(QTableView* view, int id_column, int version_column, int stretch_column) const;
 
@@ -278,6 +282,7 @@ private:
     void InitSystemTray();
     void InitStatusLabel();
     void InitWorkspaceInfo();
+    void InitAuditInfo();
 
     void FlushCaches(SectionContext& sc);
 
@@ -306,6 +311,7 @@ private:
     QHash<QUuid, WidgetContext> widget_hash_ {};
 
     WorkspaceInfo workspace_info_ {};
+    audit_hub::AuditInfo audit_info_ {};
 
     Section start_ {};
     QLabel* connection_label_ {};

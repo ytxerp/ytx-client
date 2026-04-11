@@ -160,6 +160,7 @@ inline const QString kUsername = QStringLiteral("username");
 inline const QString kWorkspaceRole = QStringLiteral("workspace_role");
 inline const QString kDatabaseRole = QStringLiteral("database_role");
 inline const QString kMemberArray = QStringLiteral("member_array");
+inline const QString kLogArray = QStringLiteral("log_array");
 
 inline const QString kId = QStringLiteral("id");
 inline const QString kUserId = QStringLiteral("user_id");

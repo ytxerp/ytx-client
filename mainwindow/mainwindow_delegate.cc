@@ -1,3 +1,4 @@
+#include "audithub/auditenum.h"
 #include "component/constantstring.h"
 #include "delegate/bool.h"
 #include "delegate/boolstring.h"
@@ -528,4 +529,10 @@ void MainWindow::DelegateWorkspaceMember(QTableView* table_view) const
 
     auto* database_role { new DatabaseRoleDelegate(workspace_info_.database_role_hash, workspace_info_.database_role_list, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kDatabaseRole), database_role);
+}
+
+void MainWindow::DelegateAuditLog(QTableView* table_view) const
+{
+    auto* created_time { new IssuedTimeR(kDateTimeFST, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(audit_hub::AuditField::kCreatedTime), created_time);
 }

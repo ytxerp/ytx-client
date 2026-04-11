@@ -120,7 +120,8 @@ public:
     QString Path(const QUuid& node_id) const;
 
     inline ItemModel* LeafModel() const { return leaf_path_model_; }
-    inline CUuidString& LeafPath() const { return leaf_path_; }
+    inline CUuidString* LeafPath() const { return &leaf_path_; }
+    inline CUuidString* BranchPath() const { return &branch_path_; }
 
     void LeafPathBranchPathModel(ItemModel* model) const;
 

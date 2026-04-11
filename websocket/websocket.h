@@ -90,6 +90,7 @@ signals:
     void SAccountName(const QString& name);
     void SAccountUsername(const QJsonObject& obj);
     void SWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
+    void SAuditLogAck(const QUuid& widget_id, const QJsonArray& array);
     void SAccountRoleUpdate();
 
     // send to SearchNodeModel
@@ -157,6 +158,7 @@ private:
     void AckSettlement(const QJsonObject& obj);
     void AckSettlementItem(const QJsonObject& obj);
     void AckWorkspaceMember(const QJsonObject& obj);
+    void AckAuditLog(const QJsonObject& obj);
 
     void SearchEntry(const QJsonObject& obj);
     void SearchNode(const QJsonObject& obj);
