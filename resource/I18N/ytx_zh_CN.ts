@@ -42,7 +42,7 @@
         <translation>审计</translation>
     </message>
     <message>
-        <location filename="../../audithub/auditdialog.ui" line="50"/>
+        <location filename="../../audithub/auditdialog.ui" line="37"/>
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
@@ -1617,7 +1617,7 @@ You need to recall it first before making changes.</source>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="80"/>
         <source>Target ID</source>
-        <translation>目标编号</translation>
+        <translation>目标ID</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="81"/>
@@ -1662,7 +1662,7 @@ You need to recall it first before making changes.</source>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="89"/>
         <source>Target Code</source>
-        <translation>目标代码</translation>
+        <translation>目标编号</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="90"/>
