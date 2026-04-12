@@ -162,10 +162,9 @@ QVariant AuditModel::ResolveNode(const AuditEntry* entry, const QUuid& node_id) 
     case Section::kInventory:
         return NodePath(info_.i_leaf_path, info_.i_branch_path, node_id);
     case Section::kPartner:
-        return NodePath(info_.p_leaf_path, info_.p_branch_path, node_id);
     case Section::kSale:
     case Section::kPurchase:
-        return QVariant();
+        return NodePath(info_.p_leaf_path, info_.p_branch_path, node_id);
     }
     return QVariant();
 }
