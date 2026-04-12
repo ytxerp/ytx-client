@@ -46,9 +46,9 @@ QVariant AuditModel::data(const QModelIndex& index, int role) const
     case AuditField::kTargetCode:
         return entry->target_code;
     case AuditField::kBefore:
-        return QString(QJsonDocument(entry->before).toJson(QJsonDocument::Compact));
+        return JsonValueToString(entry->before);
     case AuditField::kAfter:
-        return QString(QJsonDocument(entry->after).toJson(QJsonDocument::Compact));
+        return JsonValueToString(entry->after);
     case AuditField::kId:
         return entry->id;
     case AuditField::kSection:
@@ -168,6 +168,25 @@ QVariant AuditModel::ResolveNode(const AuditEntry* entry, const QUuid& node_id) 
         return QVariant();
     }
     return QVariant();
+}
+
+QString AuditModel::JsonValueToString(const QJsonValue& value)
+{
+    switch (value.type()) {
+    case QJsonValue::String:
+        return value.toString();
+    case QJsonValue::Object:
+        return QString::fromUtf8(QJsonDocument(value.toObject()).toJson(QJsonDocument::Compact));
+    case QJsonValue::Array:
+        return QString::fromUtf8(QJsonDocument(value.toArray()).toJson(QJsonDocument::Compact));
+    case QJsonValue::Bool:
+        return value.toBool() ? QStringLiteral("true") : QStringLiteral("false");
+    case QJsonValue::Double:
+        return QString::number(value.toDouble());
+    case QJsonValue::Null:
+    case QJsonValue::Undefined:
+        return {};
+    }
 }
 
 }

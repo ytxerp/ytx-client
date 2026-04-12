@@ -64,6 +64,7 @@ public:
 private:
     const QString& NodePath(const QHash<QUuid, QString>* leaf, const QHash<QUuid, QString>* branch, const QUuid& node_id) const;
     QVariant ResolveNode(const AuditEntry* entry, const QUuid& node_id) const;
+    static QString JsonValueToString(const QJsonValue& value);
 
 private:
     QList<AuditEntry*> list_ {};

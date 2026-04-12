@@ -51,8 +51,8 @@ struct AuditEntry {
 
     // -- 4. Variable-length -----------------------------------------------------
     QString target_code {}; // Default: ""
-    QJsonObject before {}; // State before the action — maps to JSONB
-    QJsonObject after {}; // State after the action  — maps to JSONB
+    QJsonValue before {}; // State before the action — maps to JSONB
+    QJsonValue after {}; // State after the action  — maps to JSONB
 
     void Reset();
     void ReadJson(const QJsonObject& object);

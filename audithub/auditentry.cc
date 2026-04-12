@@ -40,8 +40,8 @@ void audit_hub::AuditEntry::ReadJson(const QJsonObject& object)
         level = val.toInt();
     if (const auto val = object.value(kTargetCode); val.isString())
         target_code = val.toString();
-    if (const auto val = object.value(kBefore); val.isObject())
-        before = val.toObject();
-    if (const auto val = object.value(kAfter); val.isObject())
-        after = val.toObject();
+    if (const auto val = object.value(kBefore); !val.isUndefined())
+        before = val;
+    if (const auto val = object.value(kAfter); !val.isUndefined())
+        after = val;
 }
