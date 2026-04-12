@@ -583,9 +583,10 @@ void WebSocket::AckWorkspaceMember(const QJsonObject& obj)
 void WebSocket::AckAuditLog(const QJsonObject& obj)
 {
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kLogArray).toArray() };
+    const QJsonArray log_array { obj.value(kLogArray).toArray() };
+    const QJsonArray user_array { obj.value(kUserArray).toArray() };
 
-    emit SAuditLogAck(widget_id, array);
+    emit SAuditLogAck(widget_id, log_array, user_array);
 }
 
 void WebSocket::DeleteLeaf(const QJsonObject& obj)

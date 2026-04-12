@@ -1,6 +1,7 @@
 #include "audithub/auditdialog.h"
 #include "audithub/auditenum.h"
 #include "component/constantwebsocket.h"
+#include "global/logininfo.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
@@ -16,17 +17,16 @@ void MainWindow::on_actionAuditLog_triggered()
         dialog = new AuditDialog(audit_info_, this);
 
         const auto widget_id { Utils::ManageDialog(widget_hash_, dialog) };
-        const auto message { JsonGen::AuditLogAck(widget_id) };
+        const auto message { JsonGen::AuditLogAck(widget_id, LoginInfo::Instance().Workspace()) };
 
         WebSocket::Instance()->SendMessage(WsKey::kAuditLogAck, message);
 
         auto* view { dialog->View() };
-        InitTableView(view, std::to_underlying(audit_hub::AuditField::kId), std::to_underlying(audit_hub::AuditField::kTargetId),
-            std::to_underlying(audit_hub::AuditField::kAfter));
+        InitTableView(view, std::to_underlying(audit_hub::AuditField::kId), -1, std::to_underlying(audit_hub::AuditField::kAfter));
         DelegateAuditLog(view);
 
         connect(dialog, &AuditDialog::SRefresh, this, [widget_id]() {
-            const auto message { JsonGen::AuditLogAck(widget_id) };
+            const auto message { JsonGen::AuditLogAck(widget_id, LoginInfo::Instance().Workspace()) };
             WebSocket::Instance()->SendMessage(WsKey::kAuditLogAck, message);
         });
     }
@@ -36,19 +36,39 @@ void MainWindow::on_actionAuditLog_triggered()
     dialog->activateWindow();
 }
 
-void MainWindow::RAuditLogAck(const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RAuditLogAck(const QUuid& widget_id, const QJsonArray& log_array, const QJsonArray& user_array)
 {
     auto widget { widget_hash_.value(widget_id).widget };
     if (!widget)
         return;
 
-    auto* ptr { widget.data() };
-    Q_ASSERT(qobject_cast<AuditDialog*>(ptr));
+    {
+        // Populate user_hash first so model can resolve user_id -> username
+        auto& user_hash { audit_info_.user_hash };
+        user_hash.clear();
 
-    auto* d_widget { static_cast<AuditDialog*>(ptr) };
+        for (const auto& value : user_array) {
+            if (!value.isObject())
+                continue;
 
-    auto* model { d_widget->Model() };
-    model->ResetModel(array);
+            const auto obj { value.toObject() };
+            const auto id { QUuid(obj.value(kId).toString()) };
+            const auto username { obj.value(kUsername).toString() };
+
+            if (!id.isNull())
+                user_hash.emplace(id, username);
+        }
+    }
+
+    {
+        auto* ptr { widget.data() };
+        Q_ASSERT(qobject_cast<AuditDialog*>(ptr));
+
+        auto* d_widget { static_cast<AuditDialog*>(ptr) };
+
+        auto* model { d_widget->Model() };
+        model->ResetModel(log_array);
+    }
 }
 
 void MainWindow::InitAuditInfo()

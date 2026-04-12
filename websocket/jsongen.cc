@@ -467,12 +467,14 @@ QJsonObject AccountUsername(CString& email, CString& username)
     return message;
 }
 
-QJsonObject AuditLogAck(CUuid& widget_id)
+QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace)
 {
     QJsonObject message {};
     message.insert(kSessionId, QString());
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kLogArray, QJsonArray());
+    message.insert(kUserArray, QJsonArray());
+    message.insert(kWorkspace, workspace);
     return message;
 }
 

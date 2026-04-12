@@ -38,7 +38,7 @@ QVariant AuditModel::data(const QModelIndex& index, int role) const
 
     switch (static_cast<AuditField>(index.column())) {
     case AuditField::kTargetId:
-        return entry->target_id.toString(QUuid::WithoutBraces);
+        return entry->target_id.toString(QUuid::WithoutBraces).left(12);
     case AuditField::kUserId:
         return info_.user_hash.value(entry->user_id);
     case AuditField::kCreatedTime:

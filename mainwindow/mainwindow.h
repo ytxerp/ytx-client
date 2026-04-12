@@ -156,7 +156,7 @@ private slots:
     void RDenyLeafDelete(const QJsonObject& obj);
 
     void RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
-    void RAuditLogAck(const QUuid& widget_id, const QJsonArray& array);
+    void RAuditLogAck(const QUuid& widget_id, const QJsonArray& array, const QJsonArray& user_array);
     void RAccountRoleUpdate();
 
     void RApplyTag(const QJsonObject& obj);
