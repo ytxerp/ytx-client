@@ -129,7 +129,6 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(WsKey::kSettlementDelete), tr("Settlement Delete") },
         // --- Tree ---
         { std::to_underlying(WsKey::kNodeInsert), tr("Node Insert") },
-        { std::to_underlying(WsKey::kNodeUpdate), tr("Node Update") },
         { std::to_underlying(WsKey::kNodeNameUpdate), tr("Node Name Update") },
         { std::to_underlying(WsKey::kNodeDrag), tr("Node Drag") },
         { std::to_underlying(WsKey::kLeafDelete), tr("Leaf Delete") },
@@ -140,7 +139,6 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(WsKey::kNodeDirectionRuleUpdate), tr("Node Direction Rule Update") },
         // --- Entry ---
         { std::to_underlying(WsKey::kEntryInsert), tr("Entry Insert") },
-        { std::to_underlying(WsKey::kEntryUpdate), tr("Entry Update") },
         { std::to_underlying(WsKey::kEntryDelete), tr("Entry Delete") },
         { std::to_underlying(WsKey::kEntryLinkedNodeUpdate), tr("Entry Linked Node Update") },
         { std::to_underlying(WsKey::kEntryRateUpdate), tr("Entry Rate Update") },
