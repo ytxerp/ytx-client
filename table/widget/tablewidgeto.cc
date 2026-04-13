@@ -47,6 +47,7 @@ void TableWidgetO::ReleaseSucceeded(int version)
 
     MarkSynced(version);
     LockWidgets(NodeStatus::kReleased);
+    tmp_node_->status = NodeStatus::kReleased;
 }
 
 void TableWidgetO::RecallSucceeded(int version)
@@ -54,7 +55,8 @@ void TableWidgetO::RecallSucceeded(int version)
     qDebug() << "TableWidgetO::RecallSucceeded";
 
     MarkSynced(version);
-    LockWidgets(NodeStatus::kUnreleased);
+    LockWidgets(NodeStatus::kRecalled);
+    tmp_node_->status = NodeStatus::kRecalled;
 }
 
 void TableWidgetO::SaveSucceeded(int version)
@@ -236,15 +238,14 @@ void TableWidgetO::InitData(const NodeO* node)
 
 void TableWidgetO::LockWidgets(NodeStatus value)
 {
-    const bool is_unreleased { value == NodeStatus::kUnreleased };
+    const bool is_draft { value == NodeStatus::kDraft };
     const bool is_released { value == NodeStatus::kReleased };
-    const bool is_new { sync_state_ == SyncState::kNew };
 
-    ui->comboPartner->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
+    ui->comboPartner->setAttribute(Qt::WA_TransparentForMouseEvents, !is_draft);
     ui->comboEmployee->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
 
-    ui->rBtnRO->setEnabled(is_new);
-    ui->rBtnFO->setEnabled(is_new);
+    ui->rBtnRO->setEnabled(is_draft);
+    ui->rBtnFO->setEnabled(is_draft);
 
     ui->rBtnIS->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
     ui->rBtnMS->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
@@ -253,8 +254,8 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->lineDescription->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
     ui->dateTimeEdit->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
 
-    ui->pBtnSave->setEnabled(is_unreleased);
-    ui->pBtnRelease->setEnabled(is_unreleased && tmp_node_->unit != NodeUnit::OPending);
+    ui->pBtnSave->setEnabled(!is_released);
+    ui->pBtnRelease->setEnabled(!is_released && tmp_node_->unit != NodeUnit::OPending);
     ui->pBtnRecall->setEnabled(is_released);
 }
 
@@ -462,9 +463,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
     }
 
-    tmp_node_->status = NodeStatus::kUnreleased;
-
-    pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kUnreleased));
+    pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
     pending_update_.insert(kVersion, tmp_node_->version);
 
     qInfo() << "on_pBtnRecall_clicked: tmp_node_ version" << tmp_node_->version;
@@ -510,8 +509,6 @@ void TableWidgetO::SaveOrder()
     if (!HasPendingUpdate())
         return;
 
-    tmp_node_->status = NodeStatus::kUnreleased;
-
     QJsonObject order_message {};
     order_message.insert(kSection, std::to_underlying(section_));
     order_message.insert(kSessionId, QString());
@@ -526,11 +523,10 @@ void TableWidgetO::SaveOrder()
     }
 
     if (sync_state_ == SyncState::kNew) {
+        tmp_node_->status = NodeStatus::kDraft; // Same as default
+
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(WsKey::kOrderInsertSave, order_message);
-
-        ui->rBtnRO->setEnabled(false);
-        ui->rBtnFO->setEnabled(false);
     }
 
     qInfo() << "SaveOrder: tmp_node_ version" << tmp_node_->version;
@@ -545,8 +541,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
     if (!ValidateSyncState())
         return;
-
-    tmp_node_->status = NodeStatus::kReleased;
 
     QJsonObject order_message {};
     order_message.insert(kSection, std::to_underlying(section_));
@@ -564,6 +558,8 @@ void TableWidgetO::on_pBtnRelease_clicked()
     }
 
     if (sync_state_ == SyncState::kNew) {
+        tmp_node_->status = NodeStatus::kReleased;
+
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(WsKey::kOrderInsertRelease, order_message);
 

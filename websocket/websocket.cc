@@ -1084,7 +1084,7 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
         emit SOrderRecall(section, node_id, version);
     }
 
-    order_model->RNodeStatus(node_id, NodeStatus::kUnreleased);
+    order_model->RNodeStatus(node_id, NodeStatus::kDraft);
 }
 
 void WebSocket::InsertSettlement(const QJsonObject& obj)

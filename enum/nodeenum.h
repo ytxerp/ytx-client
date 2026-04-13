@@ -24,7 +24,7 @@
 enum class NodeKind { kLeaf = 0, kBranch };
 
 /** @brief Workflow status of a node. Just for Order section. */
-enum class NodeStatus { kUnreleased = 0, kReleased };
+enum class NodeStatus { kDraft = 0, kReleased, kRecalled };
 
 /** @brief NodeUnit, global unit identifier across ERP. */
 /**

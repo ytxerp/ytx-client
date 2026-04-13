@@ -59,7 +59,7 @@ void MainWindow::on_actionNewBranch_triggered()
     node->id = QUuid::createUuidV7();
     node->unit = parent_index.isValid() ? parent_node->unit : NodeUnit(sc_->shared_config.default_unit);
     node->kind = NodeKind::kBranch;
-    d_node->status = NodeStatus::kUnreleased; // Branch nodes are always unreleased
+    d_node->status = NodeStatus::kDraft; // Branch nodes are always draft
     node->parent = parent_node;
 
     static_cast<NodeO*>(node)->issued_time = QDateTime::currentDateTimeUtc();
