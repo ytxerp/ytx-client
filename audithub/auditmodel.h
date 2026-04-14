@@ -65,6 +65,21 @@ private:
     const QString& NodePath(const QHash<QUuid, QString>* leaf, const QHash<QUuid, QString>* branch, const QUuid& node_id) const;
     QVariant ResolveNode(const AuditEntry* entry, const QUuid& node_id) const;
     static QString JsonValueToString(const QJsonValue& value);
+    static QString FormatArray(const QByteArray& json_data)
+    {
+        QString result { QString::fromUtf8(json_data) };
+
+        // Replace "},{" with "},\n{" for better readability
+        result.replace("},{", "}\n{");
+
+        // Remove outer brackets
+        if (result.startsWith('['))
+            result.remove(0, 1);
+        if (result.endsWith(']'))
+            result.chop(1);
+
+        return result.trimmed();
+    }
 
 private:
     QList<AuditEntry*> list_ {};

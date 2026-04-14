@@ -23,6 +23,9 @@ void MainWindow::on_actionAuditLog_triggered()
 
         auto* view { dialog->View() };
         InitTableView(view, std::to_underlying(audit_hub::AuditField::kId), -1, std::to_underlying(audit_hub::AuditField::kAfter));
+
+        view->horizontalHeader()->setSectionResizeMode(std::to_underlying<>(audit_hub::AuditField::kBefore), QHeaderView::Interactive);
+
         DelegateAuditLog(view);
 
         connect(dialog, &AuditDialog::SRefresh, this, [widget_id]() {
