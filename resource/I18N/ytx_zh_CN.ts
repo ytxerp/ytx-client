@@ -48,6 +48,14 @@
     </message>
 </context>
 <context>
+    <name>AuditTextDialog</name>
+    <message>
+        <location filename="../../dialog/audittextdialog.ui" line="14"/>
+        <source>Audit Detail</source>
+        <translation>审计明细</translation>
+    </message>
+</context>
+<context>
     <name>AuthDialog</name>
     <message>
         <location filename="../../dialog/authdialog.ui" line="161"/>
@@ -844,7 +852,7 @@
         <location filename="../../mainwindow/mainwindow.ui" line="82"/>
         <location filename="../../mainwindow/mainwindow.ui" line="648"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="107"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="104"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="107"/>
         <source>Finance</source>
         <translation>财务</translation>
     </message>
@@ -852,7 +860,7 @@
         <location filename="../../mainwindow/mainwindow.ui" line="101"/>
         <location filename="../../mainwindow/mainwindow.ui" line="653"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="110"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="105"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="108"/>
         <source>Task</source>
         <translation>任务</translation>
     </message>
@@ -860,7 +868,7 @@
         <location filename="../../mainwindow/mainwindow.ui" line="114"/>
         <location filename="../../mainwindow/mainwindow.ui" line="658"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="109"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="106"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="109"/>
         <source>Inventory</source>
         <translation>存货</translation>
     </message>
@@ -868,7 +876,7 @@
         <location filename="../../mainwindow/mainwindow.ui" line="127"/>
         <location filename="../../mainwindow/mainwindow.ui" line="663"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="108"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="107"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="110"/>
         <source>Partner</source>
         <translation>合作</translation>
     </message>
@@ -876,7 +884,7 @@
         <location filename="../../mainwindow/mainwindow.ui" line="143"/>
         <location filename="../../mainwindow/mainwindow.ui" line="668"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="111"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="108"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="111"/>
         <source>Sale</source>
         <translation>销售</translation>
     </message>
@@ -884,7 +892,7 @@
         <location filename="../../mainwindow/mainwindow.ui" line="159"/>
         <location filename="../../mainwindow/mainwindow.ui" line="673"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="112"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="109"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="112"/>
         <source>Purchase</source>
         <translation>采购</translation>
     </message>
@@ -1126,7 +1134,7 @@
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="23"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="54"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="81"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="115"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="118"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1610,212 +1618,212 @@ You need to recall it first before making changes.</source>
         <translation>挂</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="79"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="82"/>
         <source>ID</source>
         <translation>Id</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="80"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="83"/>
         <source>Target ID</source>
         <translation>目标ID</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="81"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="84"/>
         <source>User</source>
         <translation>用户</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="82"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="85"/>
         <source>LHS Node</source>
         <translation>左节点</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="83"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="86"/>
         <source>RHS Node</source>
         <translation>右节点</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="84"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="87"/>
         <source>Created Time</source>
         <translation>创建时间</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="85"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="88"/>
         <source>Section</source>
         <translation>版块</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="86"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="89"/>
         <source>WS Key</source>
         <translation>操作类型</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="87"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="90"/>
         <source>Target Type</source>
         <translation>目标类型</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="88"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="91"/>
         <source>Level</source>
         <translation>等级</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="89"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="92"/>
         <source>Target Code</source>
         <translation>目标编号</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="90"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="93"/>
         <source>Before</source>
         <translation>变更前</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="91"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="94"/>
         <source>After</source>
         <translation>变更后</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="113"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="116"/>
         <source>Node</source>
         <translation>节点</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="114"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="117"/>
         <source>Entry</source>
         <translation>记录</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="119"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="122"/>
         <source>Info</source>
         <translation>消息</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="120"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="123"/>
         <source>Warn</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="121"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="124"/>
         <source>Critical</source>
         <translation>严重</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="126"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="129"/>
         <source>Settlement Insert</source>
         <translation>结算新增</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="127"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="130"/>
         <source>Settlement Update</source>
         <translation>结算更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="128"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="131"/>
         <source>Settlement Recall</source>
         <translation>结算撤回</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="129"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="132"/>
         <source>Settlement Delete</source>
         <translation>结算删除</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="131"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="134"/>
         <source>Node Insert</source>
         <translation>节点新增</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="132"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="135"/>
         <source>Node Name Update</source>
         <translation>节点改名</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="133"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="136"/>
         <source>Node Drag</source>
         <translation>节点拖动</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="134"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="137"/>
         <source>Leaf Delete</source>
         <translation>叶节点删除</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="135"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="138"/>
         <source>Leaf Delete P</source>
         <translation>叶节点删除 合作</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="136"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="139"/>
         <source>Leaf Delete O</source>
         <translation>叶节点删除 订单</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="137"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="140"/>
         <source>Leaf Replace</source>
         <translation>叶节点替换</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="138"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="141"/>
         <source>Branch Delete</source>
         <translation>枝节点删除</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="139"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="142"/>
         <source>Node Direction Rule Update</source>
         <translation>节点规则更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="141"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="144"/>
         <source>Entry Insert</source>
         <translation>记录新增</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="142"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="145"/>
         <source>Entry Delete</source>
         <translation>记录删除</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="143"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="146"/>
         <source>Entry Linked Node Update</source>
         <translation>记录关联节点更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="144"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="147"/>
         <source>Entry Rate Update</source>
         <translation>记录比率更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="145"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="148"/>
         <source>Entry Numeric Update</source>
         <translation>记录数值更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="146"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="149"/>
         <source>Entry Issued Time Update</source>
         <translation>记录日期更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="148"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="151"/>
         <source>Order Insert Save</source>
         <translation>订单新增保存</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="149"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="152"/>
         <source>Order Update Save</source>
         <translation>订单更新保存</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="150"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="153"/>
         <source>Order Insert Release</source>
         <translation>订单新增发布</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="151"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="154"/>
         <source>Order Update Release</source>
         <translation>订单更新发布</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="152"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="155"/>
         <source>Order Recall</source>
         <translation>订单撤回</translation>
     </message>
@@ -2794,52 +2802,52 @@ You need to recall it first before making changes.</source>
         <translation>发布</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="420"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="421"/>
         <source>No Template</source>
         <translation>没有模板</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="420"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="421"/>
         <source>No printable template was found.</source>
         <translation>找不到可用的打印模板。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="461"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="462"/>
         <source>This order has already been settled and cannot be operated.</source>
         <translation>订单已经结算，无法再编辑了。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="481"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="480"/>
         <source>Please select a partner before performing this action.</source>
         <translation>请先选择一个交易对象。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="492"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="491"/>
         <source>Invalid Operation</source>
         <translation>无效操作</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="493"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="492"/>
         <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="582"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="578"/>
         <source>Load Failed</source>
         <translation>加载失败</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="582"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="578"/>
         <source>Failed to load the print template.</source>
         <translation>打印模板加载失败。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="461"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="462"/>
         <source>Order Settled</source>
         <translation>已结算</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="481"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="480"/>
         <source>Partner Required</source>
         <translation>必需选择交易对象</translation>
     </message>
