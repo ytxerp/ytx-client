@@ -263,6 +263,8 @@ set(HEADERS
     audithub/auditinfo.h
     audithub/auditenum.h
     audithub/auditdialog.h
+    delegate/readonly/audittextdelegate.h
+    dialog/audittextdialog.h
 )
 
 set(SOURCES
@@ -415,6 +417,8 @@ set(SOURCES
     mainwindow/mainwindow_audit.cc
     audithub/auditmodel.cc
     audithub/auditdialog.cc
+    delegate/readonly/audittextdelegate.cc
+    dialog/audittextdialog.cc
 )
 
 set(UIS
@@ -449,6 +453,7 @@ set(UIS
     tree/widget/treewidgetp.ui
     workspace_member/workspacememberdialog.ui
     audithub/auditdialog.ui
+    dialog/audittextdialog.ui
 )
 
 # ------------------------

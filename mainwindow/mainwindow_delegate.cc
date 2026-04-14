@@ -12,6 +12,7 @@
 #include "delegate/line.h"
 #include "delegate/readonly/amountorderreferencer.h"
 #include "delegate/readonly/amountr.h"
+#include "delegate/readonly/audittextdelegate.h"
 #include "delegate/readonly/boolcolorstringr.h"
 #include "delegate/readonly/colorr.h"
 #include "delegate/readonly/doublenonezeror.h"
@@ -535,4 +536,8 @@ void MainWindow::DelegateAuditLog(QTableView* table_view) const
 {
     auto* created_time { new IssuedTimeR(kDateTimeFST, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(audit_hub::AuditField::kCreatedTime), created_time);
+
+    auto* audit_text { new AuditTextDelegate(table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(audit_hub::AuditField::kBefore), audit_text);
+    table_view->setItemDelegateForColumn(std::to_underlying(audit_hub::AuditField::kAfter), audit_text);
 }
