@@ -15,9 +15,9 @@ bool AuditTextDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, co
     Q_UNUSED(option);
 
     if (event->type() == QEvent::MouseButtonDblClick) {
-        const QString text { index.data().toString() };
+        const QString text { index.data().toString().trimmed() };
 
-        if (text.startsWith('{') && text != "{}") {
+        if ((text.startsWith('{') || text.startsWith('[')) && text != "{}" && text != "[]") {
             auto* dialog = new AuditTextDialog(text, const_cast<QWidget*>(option.widget));
             dialog->setAttribute(Qt::WA_DeleteOnClose);
             dialog->show();

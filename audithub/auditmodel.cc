@@ -177,7 +177,7 @@ QString AuditModel::JsonValueToString(const QJsonValue& value)
     case QJsonValue::Object:
         return QString::fromUtf8(QJsonDocument(value.toObject()).toJson(QJsonDocument::Compact));
     case QJsonValue::Array:
-        return FormatArray(QJsonDocument(value.toArray()).toJson(QJsonDocument::Compact));
+        return QString::fromUtf8(QJsonDocument(value.toArray()).toJson(QJsonDocument::Indented));
     case QJsonValue::Bool:
         return value.toBool() ? QStringLiteral("true") : QStringLiteral("false");
     case QJsonValue::Double:
