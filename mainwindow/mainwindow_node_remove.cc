@@ -52,7 +52,7 @@ void MainWindow::RDenyLeafDelete(const QJsonObject& obj)
 
     auto* dialog { new LeafDeleteDialog(model, section_contex->info, obj, node_id, unit, this) };
 
-    Utils::ManageDialog(sc_->widget_hash, dialog);
+    utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &QDialog::destroyed, this, [this, node_id]() { deleting_node_.remove(node_id); });
@@ -61,7 +61,7 @@ void MainWindow::RDenyLeafDelete(const QJsonObject& obj)
 
 void MainWindow::DeleteBranch(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id)
 {
-    auto* dlg = Utils::CreateMessageBox(QMessageBox::Question, tr("Delete %1").arg(tree_model->Path(node_id)),
+    auto* dlg = utils::CreateMessageBox(QMessageBox::Question, tr("Delete %1").arg(tree_model->Path(node_id)),
         tr("The branch will be deleted, and its direct children will be promoted to the same level."), true, QMessageBox::Ok | QMessageBox::Cancel, this);
 
     dlg->setDefaultButton(QMessageBox::Cancel);

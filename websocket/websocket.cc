@@ -266,7 +266,7 @@ void WebSocket::SendMessage(WsKey key, const QJsonObject& value)
     }
 
     const QByteArray json { QJsonValue(value).toJson(QJsonValue::JsonFormat::Compact) };
-    QByteArray compressed { Utils::ZstdCompress(json) };
+    QByteArray compressed { utils::ZstdCompress(json) };
 
     assert(std::to_underlying(key) <= 255);
     compressed.prepend(static_cast<char>(std::to_underlying(key)));
@@ -317,7 +317,7 @@ void WebSocket::RBinaryMessageReceived(const QByteArray& data)
     timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
 
     const auto key { static_cast<WsKey>(static_cast<uint8_t>(data.at(0))) };
-    const QByteArray payload { Utils::ZstdDecompress(data.sliced(1)) };
+    const QByteArray payload { utils::ZstdDecompress(data.sliced(1)) };
 
     HandleMessage(key, payload);
 }

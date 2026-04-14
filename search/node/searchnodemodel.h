@@ -27,7 +27,7 @@
 #include "tag/tag.h"
 #include "tree/model/treemodel.h"
 
-using Utils::DerivedPtr;
+using utils::DerivedPtr;
 
 class SearchNodeModel : public QAbstractItemModel {
     Q_OBJECT

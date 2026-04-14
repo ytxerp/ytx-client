@@ -50,11 +50,11 @@ MainWindow::MainWindow(QWidget* parent)
     SetUniqueConnection();
     SetAction(false);
 
-    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
-    Utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
-    Utils::ReadConfig(ui->splitter, &QSplitter::restoreState, app_settings_, kSplitter, kState);
-    Utils::ReadConfig(this, &QMainWindow::restoreState, app_settings_, kMainwindow, kState, 0);
-    Utils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
+    utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
+    utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
+    utils::ReadConfig(ui->splitter, &QSplitter::restoreState, app_settings_, kSplitter, kState);
+    utils::ReadConfig(this, &QMainWindow::restoreState, app_settings_, kMainwindow, kState, 0);
+    utils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);
 
     QTimer::singleShot(0, this, &::MainWindow::InitilizeContext);
 
@@ -199,15 +199,15 @@ void MainWindow::ResetMainwindow()
     ui->actionWorkspaceMember->setVisible(false);
     ui->actionAuditLog->setVisible(false);
 
-    Utils::CloseWidgets(widget_hash_);
+    utils::CloseWidgets(widget_hash_);
 
     {
-        Utils::ResetSectionContext(sc_f_);
-        Utils::ResetSectionContext(sc_i_);
-        Utils::ResetSectionContext(sc_t_);
-        Utils::ResetSectionContext(sc_p_);
-        Utils::ResetSectionContext(sc_sale_);
-        Utils::ResetSectionContext(sc_purchase_);
+        utils::ResetSectionContext(sc_f_);
+        utils::ResetSectionContext(sc_i_);
+        utils::ResetSectionContext(sc_t_);
+        utils::ResetSectionContext(sc_p_);
+        utils::ResetSectionContext(sc_sale_);
+        utils::ResetSectionContext(sc_purchase_);
     }
 
     {
@@ -284,7 +284,7 @@ void MainWindow::RFreeWidget(Section section, const QUuid& node_id)
 {
     auto* sc { GetSectionContex(section) };
 
-    Utils::CloseWidget(node_id, sc->widget_hash);
+    utils::CloseWidget(node_id, sc->widget_hash);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
@@ -349,10 +349,10 @@ void MainWindow::RegisterWidget(QWidget* widget, const QUuid& widget_id, WidgetR
 void MainWindow::WriteConfig()
 {
     if (app_settings_) {
-        Utils::WriteConfig(ui->splitter, &QSplitter::saveState, app_settings_, kSplitter, kState);
-        Utils::WriteConfig(this, &QMainWindow::saveState, app_settings_, kMainwindow, kState, 0);
-        Utils::WriteConfig(this, &QMainWindow::saveGeometry, app_settings_, kMainwindow, kGeometry);
-        Utils::WriteConfig(app_settings_, std::to_underlying(start_), kStart, kSection);
+        utils::WriteConfig(ui->splitter, &QSplitter::saveState, app_settings_, kSplitter, kState);
+        utils::WriteConfig(this, &QMainWindow::saveState, app_settings_, kMainwindow, kState, 0);
+        utils::WriteConfig(this, &QMainWindow::saveGeometry, app_settings_, kMainwindow, kGeometry);
+        utils::WriteConfig(app_settings_, std::to_underlying(start_), kStart, kSection);
     }
 }
 
@@ -538,7 +538,7 @@ void MainWindow::on_actionAppendNode_triggered()
     if (!index.isValid())
         return;
 
-    const int kind_column { Utils::KindColumn(start_) };
+    const int kind_column { utils::KindColumn(start_) };
     const QModelIndex kind_index { index.siblingAtColumn(kind_column) };
 
     // Check if the sibling index is valid
@@ -599,7 +599,7 @@ void MainWindow::on_actionPreferences_triggered()
 
     auto* dialog { new Preferences(model, sc_->info, app_config_, sc_->shared_config, sc_->section_config, this) };
 
-    Utils::ManageDialog(sc_->widget_hash, dialog);
+    utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &Preferences::SUpdateConfig, this, &MainWindow::RUpdateConfig);
@@ -629,7 +629,7 @@ void MainWindow::RSectionGroup(int id)
     const Section section { id };
     start_ = section;
 
-    Utils::SwitchDialog(sc_, false);
+    utils::SwitchDialog(sc_, false);
 
     switch (section) {
     case Section::kFinance:
@@ -657,7 +657,7 @@ void MainWindow::RSectionGroup(int id)
     ui->stackedWidget->setCurrentIndex(id);
     tabWidget_currentChanged();
 
-    Utils::SwitchDialog(sc_, true);
+    utils::SwitchDialog(sc_, true);
 }
 
 void MainWindow::on_actionExportExcel_triggered()
@@ -665,7 +665,7 @@ void MainWindow::on_actionExportExcel_triggered()
     CString& source {};
 
     QString destination { QFileDialog::getSaveFileName(this, tr("Export Excel"), QDir::homePath(), QStringLiteral("*.xlsx")) };
-    if (!Utils::PrepareNewFile(destination, kDotSuffixXLSX))
+    if (!utils::PrepareNewFile(destination, kDotSuffixXLSX))
         return;
 
     auto future = QtConcurrent::run([source, destination, this]() {
@@ -681,16 +681,16 @@ void MainWindow::on_actionExportExcel_triggered()
             auto book1 { d.GetWorkbook() };
             book1->AppendSheet(sc_->info.node);
             book1->GetCurrentWorksheet()->WriteRow(1, 1, sc_->info.node_header);
-            Utils::ExportExcel(sc_->info.node, book1->GetCurrentWorksheet());
+            utils::ExportExcel(sc_->info.node, book1->GetCurrentWorksheet());
 
             book1->AppendSheet(sc_->info.path);
             book1->GetCurrentWorksheet()->WriteRow(1, 1, list);
-            Utils::ExportExcel(sc_->info.path, book1->GetCurrentWorksheet(), false);
+            utils::ExportExcel(sc_->info.path, book1->GetCurrentWorksheet(), false);
 
             book1->AppendSheet(sc_->info.entry);
             book1->GetCurrentWorksheet()->WriteRow(1, 1, sc_->info.full_entry_header);
             const bool where { start_ != Section::kPartner };
-            Utils::ExportExcel(sc_->info.entry, book1->GetCurrentWorksheet(), where);
+            utils::ExportExcel(sc_->info.entry, book1->GetCurrentWorksheet(), where);
 
             d.Save();
             // PublicUtils::RemoveDatabase(kSourceConnection);
@@ -708,10 +708,10 @@ void MainWindow::on_actionExportExcel_triggered()
 
         bool success { watcher->future().result() };
         if (success) {
-            Utils::ShowNotification(QMessageBox::Information, tr("Export Completed"), tr("Export completed successfully."), TimeConst::kAutoCloseMs);
+            utils::ShowNotification(QMessageBox::Information, tr("Export Completed"), tr("Export completed successfully."), TimeConst::kAutoCloseMs);
         } else {
             QFile::remove(destination);
-            Utils::ShowNotification(QMessageBox::Critical, tr("Export Failed"), tr("Export failed. The file has been deleted."), TimeConst::kAutoCloseMs);
+            utils::ShowNotification(QMessageBox::Critical, tr("Export Failed"), tr("Export failed. The file has been deleted."), TimeConst::kAutoCloseMs);
         }
     });
 
@@ -731,14 +731,14 @@ void MainWindow::on_actionCheckUpdates_triggered()
         reply->deleteLater();
 
         if (reply->error() != QNetworkReply::NoError) {
-            Utils::ShowNotification(QMessageBox::Warning, tr("Update Check"), tr("Failed to check updates."), TimeConst::kAutoCloseMs);
+            utils::ShowNotification(QMessageBox::Warning, tr("Update Check"), tr("Failed to check updates."), TimeConst::kAutoCloseMs);
             return;
         }
 
         const QByteArray data { reply->readAll() };
         QJsonDocument doc { QJsonDocument::fromJson(data) };
         if (!doc.isObject()) {
-            Utils::ShowNotification(QMessageBox::Warning, tr("Update Check"), tr("Invalid update information received."), TimeConst::kAutoCloseMs);
+            utils::ShowNotification(QMessageBox::Warning, tr("Update Check"), tr("Invalid update information received."), TimeConst::kAutoCloseMs);
             return;
         }
 
@@ -749,8 +749,8 @@ void MainWindow::on_actionCheckUpdates_triggered()
         const QString download_url
             = is_chinese ? "https://gitee.com/ytxerp/ytx-client/releases/latest" : "https://github.com/ytxerp/ytx-client/releases/latest";
 
-        if (Utils::CompareVersion(latest_tag, QCoreApplication::applicationVersion()) > 0) {
-            auto* dlg = Utils::CreateMessageBox(QMessageBox::Information, tr("Update Available"),
+        if (utils::CompareVersion(latest_tag, QCoreApplication::applicationVersion()) > 0) {
+            auto* dlg = utils::CreateMessageBox(QMessageBox::Information, tr("Update Available"),
                 tr("A new version %1 is available!\n\nDownload now?").arg(latest_tag), true, QMessageBox::Yes | QMessageBox::No, this);
 
             dlg->setDefaultButton(QMessageBox::Yes);
@@ -763,7 +763,7 @@ void MainWindow::on_actionCheckUpdates_triggered()
 
             dlg->show();
         } else {
-            Utils::ShowNotification(QMessageBox::Information, tr("No Update"), tr("You are using the latest version."), TimeConst::kAutoCloseMs);
+            utils::ShowNotification(QMessageBox::Information, tr("No Update"), tr("You are using the latest version."), TimeConst::kAutoCloseMs);
         }
     });
 }

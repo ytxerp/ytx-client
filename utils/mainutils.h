@@ -9,7 +9,7 @@
 #include <QProcess>
 #include <QSslSocket>
 
-namespace Utils {
+namespace utils {
 
 inline QString ResourceFile()
 {

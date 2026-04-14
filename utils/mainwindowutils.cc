@@ -12,7 +12,7 @@
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
 
-bool Utils::PrepareNewFile(QString& file_path, CString& suffix)
+bool utils::PrepareNewFile(QString& file_path, CString& suffix)
 {
     if (file_path.isEmpty())
         return false;
@@ -27,7 +27,7 @@ bool Utils::PrepareNewFile(QString& file_path, CString& suffix)
     return true;
 }
 
-void Utils::ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where)
+void utils::ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where)
 {
     if (!worksheet) {
         return;
@@ -62,7 +62,7 @@ void Utils::ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& 
     // }
 }
 
-void Utils::ShowNotification(QMessageBox::Icon icon, CString& title, CString& text, int duration_ms, QMessageBox::StandardButtons buttons, QWidget* parent)
+void utils::ShowNotification(QMessageBox::Icon icon, CString& title, CString& text, int duration_ms, QMessageBox::StandardButtons buttons, QWidget* parent)
 {
     assert(duration_ms >= 0);
 
@@ -76,7 +76,7 @@ void Utils::ShowNotification(QMessageBox::Icon icon, CString& title, CString& te
     box->show();
 }
 
-QMessageBox* Utils::CreateMessageBox(QMessageBox::Icon icon, CString& title, CString& text, bool modal, QMessageBox::StandardButtons buttons, QWidget* parent)
+QMessageBox* utils::CreateMessageBox(QMessageBox::Icon icon, CString& title, CString& text, bool modal, QMessageBox::StandardButtons buttons, QWidget* parent)
 {
     auto* box { new QMessageBox(icon, title, text, buttons, parent) };
     box->setAttribute(Qt::WA_DeleteOnClose);
@@ -88,7 +88,7 @@ QMessageBox* Utils::CreateMessageBox(QMessageBox::Icon icon, CString& title, CSt
     return box;
 }
 
-void Utils::SwitchDialog(const SectionContext* sc, bool enable)
+void utils::SwitchDialog(const SectionContext* sc, bool enable)
 {
     if (!sc)
         return;
@@ -101,7 +101,7 @@ void Utils::SwitchDialog(const SectionContext* sc, bool enable)
     }
 }
 
-int Utils::CompareVersion(const QString& v1, const QString& v2)
+int utils::CompareVersion(const QString& v1, const QString& v2)
 {
     const QStringList parts1 { v1.split('.') };
     const QStringList parts2 { v2.split('.') };
@@ -122,7 +122,7 @@ int Utils::CompareVersion(const QString& v1, const QString& v2)
     return 0; // equal
 }
 
-QString Utils::AccountIniFileName(const QString& email, const QString& workspace)
+QString utils::AccountIniFileName(const QString& email, const QString& workspace)
 {
     // Extract email parts
     QString email_user { email.section('@', 0, 0) };
@@ -151,19 +151,19 @@ QString Utils::AccountIniFileName(const QString& email, const QString& workspace
     return file_name;
 }
 
-void Utils::SetupHeaderStatus(QHeaderView* header, const QSharedPointer<QSettings>& settings, Section section, const QString& key)
+void utils::SetupHeaderStatus(QHeaderView* header, const QSharedPointer<QSettings>& settings, Section section, const QString& key)
 {
     Q_ASSERT(header && settings);
 
     const auto section_name { kSectionString.value(section) };
 
-    Utils::ReadConfig(header, &QHeaderView::restoreState, settings, section_name, key);
+    utils::ReadConfig(header, &QHeaderView::restoreState, settings, section_name, key);
 
     QObject::connect(header, &QHeaderView::sectionMoved,
-        [header, settings, section_name, key]() { Utils::WriteConfig(header, &QHeaderView::saveState, settings, section_name, key); });
+        [header, settings, section_name, key]() { utils::WriteConfig(header, &QHeaderView::saveState, settings, section_name, key); });
 }
 
-void Utils::ResetSectionContext(SectionContext& sc)
+void utils::ResetSectionContext(SectionContext& sc)
 {
     Q_ASSERT(sc.tree_widget);
     Q_ASSERT(sc.entry_hub);
@@ -181,7 +181,7 @@ void Utils::ResetSectionContext(SectionContext& sc)
         }
     }
 
-    Utils::CloseWidgets(sc.widget_hash);
+    utils::CloseWidgets(sc.widget_hash);
 
     sc.tree_widget->Reset();
     sc.tree_model->Reset();
@@ -194,7 +194,7 @@ void Utils::ResetSectionContext(SectionContext& sc)
     sc.tag_icon_hash.clear();
 }
 
-void Utils::SetConnectionStatus(QLabel* label, ConnectionStatus status)
+void utils::SetConnectionStatus(QLabel* label, ConnectionStatus status)
 {
     Q_ASSERT(label != nullptr);
 
@@ -219,7 +219,7 @@ void Utils::SetConnectionStatus(QLabel* label, ConnectionStatus status)
     Q_UNREACHABLE();
 }
 
-void Utils::SetLoginStatus(QLabel* label, LoginStatus status)
+void utils::SetLoginStatus(QLabel* label, LoginStatus status)
 {
     Q_ASSERT(label != nullptr);
 
@@ -239,7 +239,7 @@ void Utils::SetLoginStatus(QLabel* label, LoginStatus status)
     Q_UNREACHABLE();
 }
 
-void Utils::SetPushButton(QPushButton* btn, const QKeySequence& ks)
+void utils::SetPushButton(QPushButton* btn, const QKeySequence& ks)
 {
     Q_ASSERT(btn != nullptr);
 
@@ -247,7 +247,7 @@ void Utils::SetPushButton(QPushButton* btn, const QKeySequence& ks)
     btn->setToolTip(QString("%1 (%2)").arg(btn->text(), ks.toString()));
 }
 
-void Utils::SetRadioButton(QRadioButton* btn, const QKeySequence& ks)
+void utils::SetRadioButton(QRadioButton* btn, const QKeySequence& ks)
 {
     Q_ASSERT(btn != nullptr);
     btn->setShortcut(ks);
@@ -264,7 +264,7 @@ void Utils::SetRadioButton(QRadioButton* btn, const QKeySequence& ks)
  * Note: This is one-way conversion for display purposes only.
  * The original UUID should be stored in database for lookups.
  */
-QString Utils::UuidToShortCode(const QUuid& uuid, int length)
+QString utils::UuidToShortCode(const QUuid& uuid, int length)
 {
     // Extract 16 bytes from UUID
     const QByteArray bytes { uuid.toRfc4122() };
@@ -297,7 +297,7 @@ QString Utils::UuidToShortCode(const QUuid& uuid, int length)
     return base32.left(length);
 }
 
-QUuid Utils::ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog)
+QUuid utils::ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog)
 {
     Q_ASSERT(dialog);
 
@@ -310,7 +310,7 @@ QUuid Utils::ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dia
     return id;
 }
 
-QByteArray Utils::ZstdDecompress(const QByteArray& data)
+QByteArray utils::ZstdDecompress(const QByteArray& data)
 {
     if (!data.startsWith("\x28\xB5\x2F\xFD"))
         return data;
@@ -355,7 +355,7 @@ QByteArray Utils::ZstdDecompress(const QByteArray& data)
     return result;
 }
 
-QByteArray Utils::ZstdCompress(const QByteArray& data)
+QByteArray utils::ZstdCompress(const QByteArray& data)
 {
     // Skip compression for small payloads, as zstd overhead may increase size.
     if (data.size() < ZstdConst::kCompressThreshold)

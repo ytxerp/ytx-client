@@ -27,7 +27,7 @@
 #include "tag/tag.h"
 #include "utils/templateutils.h"
 
-using Utils::DerivedPtr;
+using utils::DerivedPtr;
 
 class SearchEntryModel : public QAbstractItemModel {
     Q_OBJECT

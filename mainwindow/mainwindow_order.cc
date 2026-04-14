@@ -22,7 +22,7 @@ void MainWindow::EditNameO()
 
     auto* dialog { new EditNodeNameO(node->name, this) };
 
-    Utils::ManageDialog(sc_->widget_hash, dialog);
+    utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &QDialog::accepted, this, [this, dialog, node]() {
@@ -72,7 +72,7 @@ void MainWindow::on_actionNewBranch_triggered()
 
     auto* dialog { new InsertNodeBranch(node, unit_model, parent_path, children_name, this) };
 
-    Utils::ManageDialog(sc_->widget_hash, dialog);
+    utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &QDialog::accepted, this, [this, node]() {
@@ -132,7 +132,7 @@ void MainWindow::RSaveOrder(Section section, const QUuid& node_id, int version)
 
 void MainWindow::RDenyOperation()
 {
-    Utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
+    utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
         tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), TimeConst::kAutoCloseMs);
 }
 
@@ -162,7 +162,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     node->unit = parent_index.isValid() ? parent_node->unit : NodeUnit(sc_->shared_config.default_unit);
     node->parent = parent_node;
     node->issued_time = QDateTime::currentDateTimeUtc();
-    node->code = Utils::UuidToShortCode(node->id);
+    node->code = utils::UuidToShortCode(node->id);
 
     const QUuid node_id { node->id };
 

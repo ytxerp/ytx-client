@@ -174,8 +174,8 @@ void MainWindow::InitContextFinance()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
-    info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
+    info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
+    info.rule_model = utils::CreateModelFromMap(info.rule_map, this);
 
     entry_hub = new EntryHubF(info, this);
     tree_model = new TreeModelF(info, app_config_.separator, this);
@@ -216,8 +216,8 @@ void MainWindow::InitContextInventory()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
-    info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
+    info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
+    info.rule_model = utils::CreateModelFromMap(info.rule_map, this);
 
     entry_hub = new EntryHubI(info, this);
     tree_model = new TreeModelI(info, app_config_.separator, this);
@@ -258,8 +258,8 @@ void MainWindow::InitContextTask()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
-    info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
+    info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
+    info.rule_model = utils::CreateModelFromMap(info.rule_map, this);
 
     entry_hub = new EntryHubT(info, this);
     tree_model = new TreeModelT(info, app_config_.separator, this);
@@ -297,7 +297,7 @@ void MainWindow::InitContextPartner()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
+    info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
 
     entry_hub = new EntryHubP(info, this);
     tree_model = new TreeModelP(info, app_config_.separator, this);
@@ -338,10 +338,10 @@ void MainWindow::InitContextSale()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
+    info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
     info.unit_model->sort(0, Qt::DescendingOrder);
 
-    info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
+    info.rule_model = utils::CreateModelFromMap(info.rule_map, this);
 
     auto* entry_hub_o = new EntryHubO(info, this);
     auto* tree_model_o = new TreeModelO(info, app_config_.separator, this);
@@ -386,10 +386,10 @@ void MainWindow::InitContextPurchase()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.unit_model = Utils::CreateModelFromMap(info.unit_map, this);
+    info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
     info.unit_model->sort(0, Qt::DescendingOrder);
 
-    info.rule_model = Utils::CreateModelFromMap(info.rule_map, this);
+    info.rule_model = utils::CreateModelFromMap(info.rule_map, this);
 
     auto* entry_hub_o = new EntryHubO(info, this);
     auto* tree_model_o = new TreeModelO(info, app_config_.separator, this);

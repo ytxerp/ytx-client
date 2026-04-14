@@ -48,7 +48,7 @@ public:
     void InsertSettlement(const QSet<QUuid>& settled_set, const QUuid& settlement_id);
     void RecallSettlement(const QUuid& settlement_id);
 
-    QUuid Partner(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &NodeO::partner_id); };
+    QUuid Partner(QUuid node_id) const { return utils::Value(node_hash_, node_id, &NodeO::partner_id); };
 
 protected:
     void RegisterPath(Node* /*node*/) override { };

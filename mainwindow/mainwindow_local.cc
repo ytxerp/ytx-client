@@ -68,7 +68,7 @@ void MainWindow::UpdateAppConfig(CAppConfig& app)
     }
 
     if (app_config_.language != app.language) {
-        Utils::ShowNotification(QMessageBox::Information, tr("Language Changed"),
+        utils::ShowNotification(QMessageBox::Information, tr("Language Changed"),
             tr("The language has been changed. Please restart the application for the changes to take effect."), TimeConst::kAutoCloseMs);
     }
 
@@ -152,13 +152,13 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section) const
 
         if (const auto* leaf_widget = qobject_cast<TableWidget*>(current_widget)) {
             auto* header { leaf_widget->View()->horizontalHeader() };
-            ResizeColumn(header, Utils::EntryDescriptionColumn(start_));
+            ResizeColumn(header, utils::EntryDescriptionColumn(start_));
             return;
         }
 
         if (qobject_cast<TreeWidget*>(current_widget)) {
             auto* header { sc_->tree_view->header() };
-            ResizeColumn(header, Utils::NodeDescriptionColumn(start_));
+            ResizeColumn(header, utils::NodeDescriptionColumn(start_));
         }
     }
 }

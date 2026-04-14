@@ -21,7 +21,7 @@ void MainWindow::on_actionTags_triggered()
 
     auto* dialog { new TagManagerDlg(this) };
 
-    Utils::ManageDialog(sc_->widget_hash, dialog);
+    utils::ManageDialog(sc_->widget_hash, dialog);
 
     dialog->SetModel(model);
 
@@ -233,7 +233,7 @@ void MainWindow::RInsertNodeTag(const Tag* tag, TreeModel* model, const Node* no
         return;
     }
 
-    const int column { Utils::NodeTagColumn(start_) };
+    const int column { utils::NodeTagColumn(start_) };
     const QModelIndex tag_index { model->index(index.row(), column, index.parent()) };
 
     model->setData(tag_index, list);
@@ -252,7 +252,7 @@ void MainWindow::RRemoveNodeTag(const Tag* tag, TreeModel* model, const Node* no
         return;
     }
 
-    const int column { Utils::NodeTagColumn(start_) };
+    const int column { utils::NodeTagColumn(start_) };
     const QModelIndex tag_index { model->index(index.row(), column, index.parent()) };
 
     model->setData(tag_index, list);
@@ -327,9 +327,9 @@ void MainWindow::UpdateTagIcon(SectionContext* sc, const Tag* tag)
         return;
 
     TagIcon icon {};
-    icon.pixmap = Utils::CreateTagPixmap(tag);
-    icon.icon = Utils::CreateTagIcon(tag, /*checked=*/false);
-    icon.icon_checked = Utils::CreateTagIcon(tag, /*checked=*/true);
+    icon.pixmap = utils::CreateTagPixmap(tag);
+    icon.icon = utils::CreateTagIcon(tag, /*checked=*/false);
+    icon.icon_checked = utils::CreateTagIcon(tag, /*checked=*/true);
 
     sc->tag_icon_hash.insert(tag_id, icon);
 }
@@ -347,9 +347,9 @@ QIcon MainWindow::GetTagIcon(SectionContext* sc, const Tag* tag, bool checked)
     auto it = sc->tag_icon_hash.find(tag_id);
     if (it == sc->tag_icon_hash.end()) {
         TagIcon icon {};
-        icon.pixmap = Utils::CreateTagPixmap(tag);
-        icon.icon = Utils::CreateTagIcon(tag, false);
-        icon.icon_checked = Utils::CreateTagIcon(tag, true);
+        icon.pixmap = utils::CreateTagPixmap(tag);
+        icon.icon = utils::CreateTagIcon(tag, false);
+        icon.icon_checked = utils::CreateTagIcon(tag, true);
 
         it = sc->tag_icon_hash.insert(tag_id, icon);
     }
@@ -369,7 +369,7 @@ void MainWindow::RInsertEntryTag(const Tag* tag, TableModel* model, const Entry*
         return;
     }
 
-    const int column { Utils::EntryTagColumn(start_) };
+    const int column { utils::EntryTagColumn(start_) };
 
     QModelIndex tag_index = model->index(index.row(), column);
     model->setData(tag_index, list);
@@ -387,7 +387,7 @@ void MainWindow::RRemoveEntryTag(const Tag* tag, TableModel* model, const Entry*
         return;
     }
 
-    const int column { Utils::EntryTagColumn(start_) };
+    const int column { utils::EntryTagColumn(start_) };
 
     QModelIndex tag_index = model->index(index.row(), column);
     model->setData(tag_index, list);

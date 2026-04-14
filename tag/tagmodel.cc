@@ -105,9 +105,9 @@ void TagModel::sort(int column, Qt::SortOrder order)
     auto Compare = [order, e_column](const Tag* lhs, const Tag* rhs) -> bool {
         switch (e_column) {
         case TagEnum::kName:
-            return Utils::CompareMember(lhs, rhs, &Tag::name, order);
+            return utils::CompareMember(lhs, rhs, &Tag::name, order);
         case TagEnum::kColor:
-            return Utils::CompareMember(lhs, rhs, &Tag::color, order);
+            return utils::CompareMember(lhs, rhs, &Tag::color, order);
         case TagEnum::kId:
         case TagEnum::kVersion:
             return false;

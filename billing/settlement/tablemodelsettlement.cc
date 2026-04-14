@@ -116,15 +116,15 @@ void TableModelSettlement::sort(int column, Qt::SortOrder order)
     auto Compare = [e_column, order](const SettlementItem* lhs, const SettlementItem* rhs) -> bool {
         switch (e_column) {
         case SettlementItemEnum::kEmployee:
-            return Utils::CompareMember(lhs, rhs, &SettlementItem::employee_id, order);
+            return utils::CompareMember(lhs, rhs, &SettlementItem::employee_id, order);
         case SettlementItemEnum::kIssuedTime:
-            return Utils::CompareMember(lhs, rhs, &SettlementItem::issued_time, order);
+            return utils::CompareMember(lhs, rhs, &SettlementItem::issued_time, order);
         case SettlementItemEnum::kDescription:
-            return Utils::CompareMember(lhs, rhs, &SettlementItem::description, order);
+            return utils::CompareMember(lhs, rhs, &SettlementItem::description, order);
         case SettlementItemEnum::kAmount:
-            return Utils::CompareMember(lhs, rhs, &SettlementItem::amount, order);
+            return utils::CompareMember(lhs, rhs, &SettlementItem::amount, order);
         case SettlementItemEnum::kIsSettled:
-            return Utils::CompareMember(lhs, rhs, &SettlementItem::is_settled, order);
+            return utils::CompareMember(lhs, rhs, &SettlementItem::is_settled, order);
         case SettlementItemEnum::kId:
             return false;
         }

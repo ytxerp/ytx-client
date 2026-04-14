@@ -269,7 +269,7 @@ void MainWindow::DeleteSettlement(TreeWidgetSettlement* widget)
     auto* view { widget->View() };
     Q_ASSERT(view != nullptr);
 
-    if (!Utils::HasSelection(view))
+    if (!utils::HasSelection(view))
         return;
 
     const QModelIndex current_index { view->currentIndex() };
@@ -279,7 +279,7 @@ void MainWindow::DeleteSettlement(TreeWidgetSettlement* widget)
     auto* settlement { static_cast<Settlement*>(current_index.internalPointer()) };
 
     if (settlement->status == SettlementStatus::kSettled) {
-        Utils::ShowNotification(QMessageBox::Information, tr("Settlement Released"),
+        utils::ShowNotification(QMessageBox::Information, tr("Settlement Released"),
             tr("This settlement has already been released and cannot be deleted.\nYou need to recall it first before making changes."),
             TimeConst::kAutoCloseMs);
         return;

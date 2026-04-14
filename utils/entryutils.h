@@ -27,7 +27,7 @@
 #include "enum/entryenum.h"
 #include "enum/section.h"
 
-namespace Utils {
+namespace utils {
 
 inline QStringList ReadStringList(const QJsonObject& object, const QString& key)
 {

@@ -51,23 +51,23 @@ void SearchNodeModelP::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case NodeEnumP::kName:
-            return Utils::CompareMember(lhs, rhs, &Node::name, order);
+            return utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumP::kCode:
-            return Utils::CompareMember(lhs, rhs, &Node::code, order);
+            return utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumP::kDescription:
-            return Utils::CompareMember(lhs, rhs, &Node::description, order);
+            return utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumP::kTag:
-            return Utils::CompareMember(lhs, rhs, &Node::tag, order);
+            return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumP::kKind:
-            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
+            return utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumP::kUnit:
-            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
+            return utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumP::kColor:
-            return Utils::CompareMember(lhs, rhs, &Node::color, order);
+            return utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumP::kPaymentTerm:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeP::payment_term, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeP::payment_term, order);
         case NodeEnumP::kInitialTotal:
-            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
+            return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumP::kId:

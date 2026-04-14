@@ -38,7 +38,7 @@ concept InheritQWidget = std::is_base_of_v<QWidget, T>;
 template <typename T>
 concept MapType = std::is_same_v<typename T::mapped_type, QString> && (std::is_same_v<typename T::key_type, int> || std::is_same_v<typename T::key_type, bool>);
 
-namespace Utils {
+namespace utils {
 
 template <typename Obj, typename T> inline bool CompareMember(const Obj* lhs, const Obj* rhs, const T Obj::* member, Qt::SortOrder order)
 {

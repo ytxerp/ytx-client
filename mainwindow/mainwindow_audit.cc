@@ -16,7 +16,7 @@ void MainWindow::on_actionAuditLog_triggered()
     if (!dialog) {
         dialog = new AuditDialog(audit_info_, this);
 
-        const auto widget_id { Utils::ManageDialog(widget_hash_, dialog) };
+        const auto widget_id { utils::ManageDialog(widget_hash_, dialog) };
         const auto message { JsonGen::AuditLogAck(widget_id, LoginInfo::Instance().Workspace()) };
 
         WebSocket::Instance()->SendMessage(WsKey::kAuditLogAck, message);

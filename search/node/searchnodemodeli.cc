@@ -57,29 +57,29 @@ void SearchNodeModelI::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case NodeEnumI::kName:
-            return Utils::CompareMember(lhs, rhs, &Node::name, order);
+            return utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumI::kCode:
-            return Utils::CompareMember(lhs, rhs, &Node::code, order);
+            return utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumI::kDescription:
-            return Utils::CompareMember(lhs, rhs, &Node::description, order);
+            return utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumI::kDirectionRule:
-            return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
+            return utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumI::kKind:
-            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
+            return utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumI::kUnit:
-            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
+            return utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumI::kInitialTotal:
-            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
+            return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumI::kFinalTotal:
-            return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
+            return utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumI::kTag:
-            return Utils::CompareMember(lhs, rhs, &Node::tag, order);
+            return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumI::kColor:
-            return Utils::CompareMember(lhs, rhs, &Node::color, order);
+            return utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumI::kCommission:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeI::commission, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeI::commission, order);
         case NodeEnumI::kUnitPrice:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeI::unit_price, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeI::unit_price, order);
         case NodeEnumI::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumI::kId:

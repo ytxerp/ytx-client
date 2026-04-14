@@ -11,7 +11,7 @@ void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
     {
         auto* header { view->header() };
 
-        ResizeColumn(header, Utils::NodeDescriptionColumn(section));
+        ResizeColumn(header, utils::NodeDescriptionColumn(section));
         header->setStretchLastSection(false);
         header->setDefaultAlignment(Qt::AlignCenter);
     }
@@ -30,7 +30,7 @@ void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
 void MainWindow::SetTreeHeader(QTreeView* view, Section section)
 {
     auto* header { view->header() };
-    Utils::SetupHeaderStatus(header, section_settings_, section, kTreeHeaderState);
+    utils::SetupHeaderStatus(header, section_settings_, section, kTreeHeaderState);
 }
 
 void MainWindow::SetTableView(QTableView* view, Section section, int stretch_column) const
@@ -49,7 +49,7 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
 
     {
         auto* h_header { view->horizontalHeader() };
-        Utils::SetupHeaderStatus(h_header, section_settings_, section, kTableHeaderState);
+        utils::SetupHeaderStatus(h_header, section_settings_, section, kTableHeaderState);
 
         h_header->setSectionsMovable(true);
         h_header->setHighlightSections(true);
@@ -58,7 +58,7 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
     }
 
     {
-        Utils::SetupVerticalHeader(view, UiConst::kRowHeight);
+        utils::SetupVerticalHeader(view, UiConst::kRowHeight);
     }
 }
 
@@ -86,6 +86,6 @@ void MainWindow::InitTableView(QTableView* view, int id_column, int version_colu
     }
 
     {
-        Utils::SetupVerticalHeader(view, UiConst::kRowHeight);
+        utils::SetupVerticalHeader(view, UiConst::kRowHeight);
     }
 }

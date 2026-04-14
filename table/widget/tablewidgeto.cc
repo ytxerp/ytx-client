@@ -159,17 +159,17 @@ void TableWidgetO::InitWidget()
     }
 
     {
-        Utils::SetPushButton(ui->pBtnSave, QKeySequence::Save);
-        Utils::SetPushButton(ui->pBtnRelease, QKeySequence(Qt::CTRL | Qt::Key_Return));
-        Utils::SetPushButton(ui->pBtnRecall, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
-        Utils::SetPushButton(ui->pBtnPreview, QKeySequence(Qt::CTRL | Qt::Key_P));
-        Utils::SetPushButton(ui->pBtnPrint, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
+        utils::SetPushButton(ui->pBtnSave, QKeySequence::Save);
+        utils::SetPushButton(ui->pBtnRelease, QKeySequence(Qt::CTRL | Qt::Key_Return));
+        utils::SetPushButton(ui->pBtnRecall, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
+        utils::SetPushButton(ui->pBtnPreview, QKeySequence(Qt::CTRL | Qt::Key_P));
+        utils::SetPushButton(ui->pBtnPrint, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
 
-        Utils::SetRadioButton(ui->rBtnIS, QKeySequence(Qt::CTRL | Qt::Key_1));
-        Utils::SetRadioButton(ui->rBtnMS, QKeySequence(Qt::CTRL | Qt::Key_2));
-        Utils::SetRadioButton(ui->rBtnPEND, QKeySequence(Qt::CTRL | Qt::Key_3));
-        Utils::SetRadioButton(ui->rBtnRO, QKeySequence(Qt::CTRL | Qt::Key_5));
-        Utils::SetRadioButton(ui->rBtnFO, QKeySequence(Qt::CTRL | Qt::Key_4));
+        utils::SetRadioButton(ui->rBtnIS, QKeySequence(Qt::CTRL | Qt::Key_1));
+        utils::SetRadioButton(ui->rBtnMS, QKeySequence(Qt::CTRL | Qt::Key_2));
+        utils::SetRadioButton(ui->rBtnPEND, QKeySequence(Qt::CTRL | Qt::Key_3));
+        utils::SetRadioButton(ui->rBtnRO, QKeySequence(Qt::CTRL | Qt::Key_5));
+        utils::SetRadioButton(ui->rBtnFO, QKeySequence(Qt::CTRL | Qt::Key_4));
     }
 
     {
@@ -418,7 +418,7 @@ void TableWidgetO::on_pBtnPreview_clicked()
 bool TableWidgetO::PreparePrint()
 {
     if (ui->comboTemplate->currentIndex() == -1) {
-        Utils::ShowNotification(QMessageBox::Warning, tr("No Template"), tr("No printable template was found."), TimeConst::kAutoCloseMs);
+        utils::ShowNotification(QMessageBox::Warning, tr("No Template"), tr("No printable template was found."), TimeConst::kAutoCloseMs);
         return false;
     }
 
@@ -458,7 +458,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
 
     if (tmp_node_->is_settled || !tmp_node_->settlement_id.isNull()) {
-        Utils::ShowNotification(
+        utils::ShowNotification(
             QMessageBox::Information, tr("Order Settled"), tr("This order has already been settled and cannot be operated."), TimeConst::kAutoCloseMs);
         return;
     }
@@ -476,7 +476,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
 bool TableWidgetO::ValidatePartner()
 {
     if (tmp_node_->partner_id.isNull()) {
-        Utils::ShowNotification(
+        utils::ShowNotification(
             QMessageBox::Warning, tr("Partner Required"), tr("Please select a partner before performing this action."), TimeConst::kAutoCloseMs);
         return false;
     }
@@ -488,7 +488,7 @@ bool TableWidgetO::ValidatePartner()
 bool TableWidgetO::ValidateSyncState()
 {
     if (sync_state_ == SyncState::kDirty) {
-        Utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
+        utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
             tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), TimeConst::kAutoCloseMs);
         return false;
     }
@@ -575,6 +575,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
 void TableWidgetO::on_comboTemplate_currentIndexChanged(int /*index*/)
 {
     if (!PrintHub::Instance().LoadTemplate(ui->comboTemplate->currentData().toString())) {
-        Utils::ShowNotification(QMessageBox::Warning, tr("Load Failed"), tr("Failed to load the print template."), TimeConst::kAutoCloseMs);
+        utils::ShowNotification(QMessageBox::Warning, tr("Load Failed"), tr("Failed to load the print template."), TimeConst::kAutoCloseMs);
     }
 }

@@ -121,25 +121,25 @@ void StatementEntryModel::sort(int column, Qt::SortOrder order)
     auto Compare = [e_column, order](const StatementEntry* lhs, const StatementEntry* rhs) -> bool {
         switch (e_column) {
         case StatementEntryEnum::kIssuedTime:
-            return Utils::CompareMember(lhs, rhs, &StatementEntry::issued_time, order);
+            return utils::CompareMember(lhs, rhs, &StatementEntry::issued_time, order);
         case StatementEntryEnum::kInternalSku:
-            return Utils::CompareMember(lhs, rhs, &StatementEntry::internal_sku, order);
+            return utils::CompareMember(lhs, rhs, &StatementEntry::internal_sku, order);
         case StatementEntryEnum::kExternalSku:
             return false;
         case StatementEntryEnum::kCount:
-            return Utils::CompareMember(lhs, rhs, &StatementEntry::count, order);
+            return utils::CompareMember(lhs, rhs, &StatementEntry::count, order);
         case StatementEntryEnum::kMeasure:
-            return Utils::CompareMember(lhs, rhs, &StatementEntry::measure, order);
+            return utils::CompareMember(lhs, rhs, &StatementEntry::measure, order);
         case StatementEntryEnum::kUnitPrice:
-            return Utils::CompareMember(lhs, rhs, &StatementEntry::unit_price, order);
+            return utils::CompareMember(lhs, rhs, &StatementEntry::unit_price, order);
         case StatementEntryEnum::kDescription:
-            return Utils::CompareMember(lhs, rhs, &StatementEntry::description, order);
+            return utils::CompareMember(lhs, rhs, &StatementEntry::description, order);
         case StatementEntryEnum::kCode:
-            return Utils::CompareMember(lhs, rhs, &StatementEntry::code, order);
+            return utils::CompareMember(lhs, rhs, &StatementEntry::code, order);
         case StatementEntryEnum::kAmount:
-            return Utils::CompareMember(lhs, rhs, &StatementEntry::amount, order);
+            return utils::CompareMember(lhs, rhs, &StatementEntry::amount, order);
         case StatementEntryEnum::kStatus:
-            return Utils::CompareMember(lhs, rhs, &StatementEntry::status, order);
+            return utils::CompareMember(lhs, rhs, &StatementEntry::status, order);
         }
     };
 

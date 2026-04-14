@@ -126,9 +126,9 @@ void StatementEntryWidget::IniWidget()
     ui->start->setDateTime(start_);
     ui->end->setDateTime(end_.addSecs(-1));
 
-    Utils::SetRadioButton(ui->rBtnIS, QKeySequence(Qt::CTRL | Qt::Key_1));
-    Utils::SetRadioButton(ui->rBtnMS, QKeySequence(Qt::CTRL | Qt::Key_2));
-    Utils::SetRadioButton(ui->rBtnPEND, QKeySequence(Qt::CTRL | Qt::Key_3));
+    utils::SetRadioButton(ui->rBtnIS, QKeySequence(Qt::CTRL | Qt::Key_1));
+    utils::SetRadioButton(ui->rBtnMS, QKeySequence(Qt::CTRL | Qt::Key_2));
+    utils::SetRadioButton(ui->rBtnPEND, QKeySequence(Qt::CTRL | Qt::Key_3));
 }
 
 void StatementEntryWidget::InitTimer()
@@ -151,11 +151,11 @@ void StatementEntryWidget::on_pBtnExport_clicked()
     QString destination { QFileDialog::getSaveFileName(nullptr, tr("Export Excel"), full_path, "*.xlsx") };
 
     // Prepare the file (remove if exists)
-    if (!Utils::PrepareNewFile(destination, kDotSuffixXLSX))
+    if (!utils::PrepareNewFile(destination, kDotSuffixXLSX))
         return;
 
     auto& list { model_->EntryList() };
-    const QString unit_string { Utils::UnitString(NodeUnit(unit_)) };
+    const QString unit_string { utils::UnitString(NodeUnit(unit_)) };
 
     ExportExcel::Instance().StatementAsync(entry_hub_p_, tree_model_i_, destination, partner_name_, partner_id_, unit_string, start_, adjust_end, total_, list);
 }

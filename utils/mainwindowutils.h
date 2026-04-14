@@ -30,7 +30,7 @@
 #include "enum/statusenum.h"
 #include "worksheet.h"
 
-namespace Utils {
+namespace utils {
 
 void ResetSectionContext(SectionContext& sc);
 void SetConnectionStatus(QLabel* label, ConnectionStatus status);

@@ -53,19 +53,19 @@ void SaleReferenceModelI::sort(int column, Qt::SortOrder order)
     auto Compare = [e_column, order](const OrderReference* lhs, const OrderReference* rhs) -> bool {
         switch (e_column) {
         case SaleReferenceEnumI::kIssuedTime:
-            return Utils::CompareMember(lhs, rhs, &OrderReference::issued_time, order);
+            return utils::CompareMember(lhs, rhs, &OrderReference::issued_time, order);
         case SaleReferenceEnumI::kPartnerId:
-            return Utils::CompareMember(lhs, rhs, &OrderReference::node_id, order);
+            return utils::CompareMember(lhs, rhs, &OrderReference::node_id, order);
         case SaleReferenceEnumI::kUnitPrice:
-            return Utils::CompareMember(lhs, rhs, &OrderReference::unit_price, order);
+            return utils::CompareMember(lhs, rhs, &OrderReference::unit_price, order);
         case SaleReferenceEnumI::kCount:
-            return Utils::CompareMember(lhs, rhs, &OrderReference::count, order);
+            return utils::CompareMember(lhs, rhs, &OrderReference::count, order);
         case SaleReferenceEnumI::kMeasure:
-            return Utils::CompareMember(lhs, rhs, &OrderReference::measure, order);
+            return utils::CompareMember(lhs, rhs, &OrderReference::measure, order);
         case SaleReferenceEnumI::kDescription:
-            return Utils::CompareMember(lhs, rhs, &OrderReference::description, order);
+            return utils::CompareMember(lhs, rhs, &OrderReference::description, order);
         case SaleReferenceEnumI::kInitial:
-            return Utils::CompareMember(lhs, rhs, &OrderReference::initial, order);
+            return utils::CompareMember(lhs, rhs, &OrderReference::initial, order);
         case SaleReferenceEnumI::kOrderId:
             return false;
         }

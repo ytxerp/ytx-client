@@ -40,9 +40,9 @@ void Entry::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kRhsCredit); val.isString())
         rhs_credit = val.toString().toDouble();
     if (object.value(kTag).isArray())
-        tag = Utils::ReadStringList(object, kTag);
+        tag = utils::ReadStringList(object, kTag);
     if (object.value(kDocument).isArray())
-        document = Utils::ReadStringList(object, kDocument);
+        document = utils::ReadStringList(object, kDocument);
 }
 
 void EntryP::Reset() { *this = EntryP {}; }
@@ -67,8 +67,8 @@ QJsonObject EntryP::WriteJson() const
     obj.insert(kDescription, description);
     obj.insert(kStatus, status);
     obj.insert(kRhsNode, rhs_node.toString(QUuid::WithoutBraces));
-    obj.insert(kTag, Utils::WriteStringList(tag));
-    obj.insert(kDocument, Utils::WriteStringList(document));
+    obj.insert(kTag, utils::WriteStringList(tag));
+    obj.insert(kDocument, utils::WriteStringList(document));
 
     obj.insert(kUnitPrice, QString::number(unit_price, 'f', NumericConst::kDecimalPlaces8));
     obj.insert(kExternalSku, external_sku.toString(QUuid::WithoutBraces));
@@ -105,7 +105,7 @@ void EntryO::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kUnitDiscount); val.isString())
         unit_discount = val.toString().toDouble();
     if (object.value(kTag).isArray())
-        tag = Utils::ReadStringList(object, kTag);
+        tag = utils::ReadStringList(object, kTag);
 }
 
 QJsonObject EntryO::WriteJson() const
@@ -124,7 +124,7 @@ QJsonObject EntryO::WriteJson() const
     obj.insert(kInitial, QString::number(initial, 'f', NumericConst::kDecimalPlaces4));
     obj.insert(kFinal, QString::number(final, 'f', NumericConst::kDecimalPlaces4));
     obj.insert(kDiscount, QString::number(discount, 'f', NumericConst::kDecimalPlaces4));
-    obj.insert(kTag, Utils::WriteStringList(tag));
+    obj.insert(kTag, utils::WriteStringList(tag));
 
     return obj;
 }

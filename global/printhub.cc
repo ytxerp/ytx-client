@@ -272,7 +272,7 @@ void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
 
     // unit, direction_rule
     {
-        const QString text { Utils::UnitString(NodeUnit(node_o_->unit)) + "/" + Utils::DirectionRuleString(node_o_->direction_rule) };
+        const QString text { utils::UnitString(NodeUnit(node_o_->unit)) + "/" + utils::DirectionRuleString(node_o_->direction_rule) };
         DrawText(painter, QStringLiteral("unit"), text);
     }
 

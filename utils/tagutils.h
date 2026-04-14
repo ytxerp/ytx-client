@@ -12,7 +12,7 @@ struct SearchQuery {
     QSet<QString> tags {}; // Tag names or tag IDs (depending on your mapping)
 };
 
-namespace Utils {
+namespace utils {
 
 SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Tag*>& tag_hash);
 QColor GetContrastColor(const QColor& bg_color);

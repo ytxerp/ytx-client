@@ -73,22 +73,22 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case NodeEnumT::kCode:
-        Utils::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        utils::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDescription:
-        Utils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        utils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kTag:
-        Utils::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
+        utils::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDirectionRule:
         UpdateDirectionRule(node, value.toBool(), index);
         break;
     case NodeEnumT::kColor:
-        Utils::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
+        utils::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDocument:
-        Utils::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
+        utils::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kId:
     case NodeEnumT::kVersion:
@@ -114,27 +114,27 @@ void TreeModelT::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case NodeEnumT::kName:
-            return Utils::CompareMember(lhs, rhs, &Node::name, order);
+            return utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumT::kCode:
-            return Utils::CompareMember(lhs, rhs, &Node::code, order);
+            return utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumT::kDescription:
-            return Utils::CompareMember(lhs, rhs, &Node::description, order);
+            return utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumT::kDirectionRule:
-            return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
+            return utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumT::kKind:
-            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
+            return utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumT::kUnit:
-            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
+            return utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumT::kColor:
-            return Utils::CompareMember(lhs, rhs, &Node::color, order);
+            return utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumT::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumT::kInitialTotal:
-            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
+            return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumT::kFinalTotal:
-            return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
+            return utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumT::kTag:
-            return Utils::CompareMember(lhs, rhs, &Node::tag, order);
+            return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumT::kId:
         case NodeEnumT::kVersion:
             return false;
@@ -142,7 +142,7 @@ void TreeModelT::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    Utils::SortIterative(root_, Compare);
+    utils::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 

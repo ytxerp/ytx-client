@@ -18,7 +18,7 @@ void MainWindow::on_actionProfile_triggered()
 
     if (!dialog) {
         dialog = new UserProfileDialog(this);
-        Utils::ManageDialog(sc_->widget_hash, dialog);
+        utils::ManageDialog(sc_->widget_hash, dialog);
     }
 
     dialog->show();
@@ -44,7 +44,7 @@ void MainWindow::RAccountUsername(const QJsonObject& obj)
         break;
     }
 
-    Utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), message, TimeConst::kAutoCloseMs);
+    utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), message, TimeConst::kAutoCloseMs);
 }
 
 void MainWindow::InitWorkspaceInfo()
@@ -97,7 +97,7 @@ void MainWindow::on_actionWorkspaceMember_triggered()
     if (!dialog) {
         dialog = new WorkspaceMemberDialog(workspace_info_.header, this);
 
-        const auto widget_id { Utils::ManageDialog(widget_hash_, dialog) };
+        const auto widget_id { utils::ManageDialog(widget_hash_, dialog) };
         const auto message { JsonGen::WorkspaceMemberAck(widget_id, LoginInfo::Instance().Workspace()) };
 
         WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberAck, message);
@@ -130,6 +130,6 @@ void MainWindow::RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& a
 
 void MainWindow::RAccountRoleUpdate()
 {
-    Utils::ShowNotification(QMessageBox::Information, tr("Role Updated"),
+    utils::ShowNotification(QMessageBox::Information, tr("Role Updated"),
         tr("Your account role has been updated. Please restart the application to enable new permissions."), TimeConst::kAutoCloseMs);
 }

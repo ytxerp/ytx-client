@@ -42,7 +42,7 @@ void MainWindow::on_actionAppendEntry_triggered()
             if (!model->insertRows(new_row, 1))
                 return;
 
-            const int linked_node_col { Utils::LinkedNodeColumn(start_) };
+            const int linked_node_col { utils::LinkedNodeColumn(start_) };
             const QModelIndex target_index { model->index(new_row, linked_node_col) };
 
             if (target_index.isValid()) {
@@ -59,7 +59,7 @@ void MainWindow::DeleteEntry(TableWidget* widget)
 {
     auto* view { widget->View() };
 
-    if (!Utils::HasSelection(view))
+    if (!utils::HasSelection(view))
         return;
 
     const QModelIndex current_index { view->currentIndex() };
@@ -67,7 +67,7 @@ void MainWindow::DeleteEntry(TableWidget* widget)
         return;
 
     if (app_config_.delete_confirm) {
-        auto* msg_box { Utils::CreateMessageBox(QMessageBox::Warning, tr("Delete Entry"),
+        auto* msg_box { utils::CreateMessageBox(QMessageBox::Warning, tr("Delete Entry"),
             tr("Delete this entry?"
                "<br><br>"
                "<span style='color:#d32f2f; font-weight:bold;'>"
@@ -240,7 +240,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         view->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
 
-        const int description_column { Utils::EntryDescriptionColumn(section) };
+        const int description_column { utils::EntryDescriptionColumn(section) };
         SetTableView(view, section, description_column);
 
         switch (section) {

@@ -15,7 +15,7 @@ void MainWindow::on_actionReconnect_triggered()
 {
     qInfo() << "[UI]" << "on_actionReconnect_triggered";
 
-    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
+    utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
     WebSocket::Instance()->Connect();
 }
 
@@ -47,8 +47,8 @@ void MainWindow::on_actionSignOut_triggered()
     UserProfile::Instance().Reset();
 
     SetAction(false);
-    Utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
-    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
+    utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
+    utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
 }
 
 void MainWindow::RDenyConnection()
@@ -57,8 +57,8 @@ void MainWindow::RDenyConnection()
     ui->actionSignOut->setEnabled(false);
     ui->actionReconnect->setEnabled(true);
 
-    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
-    Utils::ShowNotification(QMessageBox::Warning, tr("Connection Refused"), tr("Unable to connect to the server. Please try again."), TimeConst::kAutoCloseMs);
+    utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
+    utils::ShowNotification(QMessageBox::Warning, tr("Connection Refused"), tr("Unable to connect to the server. Please try again."), TimeConst::kAutoCloseMs);
 }
 
 void MainWindow::RAllowConnection()
@@ -68,16 +68,16 @@ void MainWindow::RAllowConnection()
     ui->actionReconnect->setEnabled(false);
 
     on_actionSignIn_triggered();
-    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connected);
+    utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connected);
 }
 
 void MainWindow::RRemoteHostClosed()
 {
-    Utils::ShowNotification(
+    utils::ShowNotification(
         QMessageBox::Warning, tr("Remote Host Closed"), tr("The server has closed the connection. Please try reconnecting."), TimeConst::kAutoCloseMs);
 
     on_actionSignOut_triggered();
-    Utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
+    utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
 }
 
 void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
@@ -92,7 +92,7 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
 
         if (!section_settings_) {
             const QString ini_file { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + QDir::separator()
-                + Utils::AccountIniFileName(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
+                + utils::AccountIniFileName(login_info.Email(), login_info.Workspace()) + kDotSuffixINI };
 
             section_settings_ = QSharedPointer<QSettings>::create(ini_file, QSettings::IniFormat);
         }
@@ -132,7 +132,7 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
     }
 
     {
-        Utils::SetLoginStatus(login_label_, LoginStatus::LoggedIn);
+        utils::SetLoginStatus(login_label_, LoginStatus::LoggedIn);
     }
 }
 
@@ -141,7 +141,7 @@ void MainWindow::RDenyLogin()
     ui->actionSignIn->setEnabled(true);
     ui->actionSignOut->setEnabled(false);
     ui->actionReconnect->setEnabled(true);
-    Utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
+    utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
 }
 
 void MainWindow::RFinishTreeSync()

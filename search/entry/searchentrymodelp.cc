@@ -55,25 +55,25 @@ void SearchEntryModelP::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case EntryEnumP::kIssuedTime:
-            return Utils::CompareMember(lhs, rhs, &Entry::issued_time, order);
+            return utils::CompareMember(lhs, rhs, &Entry::issued_time, order);
         case EntryEnumP::kCode:
-            return Utils::CompareMember(lhs, rhs, &Entry::code, order);
+            return utils::CompareMember(lhs, rhs, &Entry::code, order);
         case EntryEnumP::kLhsNode:
-            return Utils::CompareMember(lhs, rhs, &Entry::lhs_node, order);
+            return utils::CompareMember(lhs, rhs, &Entry::lhs_node, order);
         case EntryEnumP::kDescription:
-            return Utils::CompareMember(lhs, rhs, &Entry::description, order);
+            return utils::CompareMember(lhs, rhs, &Entry::description, order);
         case EntryEnumP::kExternalSku:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryP::external_sku, order);
+            return utils::CompareMember(d_lhs, d_rhs, &EntryP::external_sku, order);
         case EntryEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case EntryEnumP::kStatus:
-            return Utils::CompareMember(lhs, rhs, &Entry::status, order);
+            return utils::CompareMember(lhs, rhs, &Entry::status, order);
         case EntryEnumP::kTag:
-            return Utils::CompareMember(lhs, rhs, &Entry::tag, order);
+            return utils::CompareMember(lhs, rhs, &Entry::tag, order);
         case EntryEnumP::kUnitPrice:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryP::unit_price, order);
+            return utils::CompareMember(d_lhs, d_rhs, &EntryP::unit_price, order);
         case EntryEnumP::kRhsNode:
-            return Utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
+            return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         case EntryEnumP::kId:
         case EntryEnumP::kVersion:
             return false;
@@ -92,7 +92,7 @@ void SearchEntryModelP::Search(const QString& text)
 
     if (!text.isEmpty()) {
         // Parse search input into text and tag set
-        const SearchQuery query { Utils::ParseSearchQuery(text, tag_hash_) };
+        const SearchQuery query { utils::ParseSearchQuery(text, tag_hash_) };
 
         if (!query.tags.isEmpty()) {
             // Tag search has higher priority

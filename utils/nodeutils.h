@@ -33,7 +33,7 @@
 #include "tree/node.h"
 #include "utils/entryutils.h"
 
-namespace Utils {
+namespace utils {
 
 constexpr int KindColumn(Section section)
 {
@@ -309,7 +309,7 @@ bool UpdateStringList(QJsonObject& update, T* object, CString& field, const QStr
         return false;
 
     current_value = value;
-    update.insert(field, Utils::WriteStringList(value));
+    update.insert(field, utils::WriteStringList(value));
 
     if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();

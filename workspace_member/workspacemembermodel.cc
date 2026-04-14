@@ -127,18 +127,18 @@ void WorkspaceMemberModel::sort(int column, Qt::SortOrder order)
     auto Compare = [order, e_column](const WorkspaceMember* lhs, const WorkspaceMember* rhs) -> bool {
         switch (e_column) {
         case WorkspaceMemberEnum::kEmail:
-            return Utils::CompareMember(lhs, rhs, &WorkspaceMember::email, order);
+            return utils::CompareMember(lhs, rhs, &WorkspaceMember::email, order);
         case WorkspaceMemberEnum::kUsername:
-            return Utils::CompareMember(lhs, rhs, &WorkspaceMember::username, order);
+            return utils::CompareMember(lhs, rhs, &WorkspaceMember::username, order);
         case WorkspaceMemberEnum::kName:
-            return Utils::CompareMember(lhs, rhs, &WorkspaceMember::name, order);
+            return utils::CompareMember(lhs, rhs, &WorkspaceMember::name, order);
         case WorkspaceMemberEnum::kWorkspaceRole:
             // Sorting by the underlying integer value of the enum
-            return Utils::CompareMember(lhs, rhs, &WorkspaceMember::workspace_role, order);
+            return utils::CompareMember(lhs, rhs, &WorkspaceMember::workspace_role, order);
         case WorkspaceMemberEnum::kDatabaseRole:
-            return Utils::CompareMember(lhs, rhs, &WorkspaceMember::database_role, order);
+            return utils::CompareMember(lhs, rhs, &WorkspaceMember::database_role, order);
         case WorkspaceMemberEnum::kCreatedTime:
-            return Utils::CompareMember(lhs, rhs, &WorkspaceMember::created_time, order);
+            return utils::CompareMember(lhs, rhs, &WorkspaceMember::created_time, order);
         case WorkspaceMemberEnum::kId:
         case WorkspaceMemberEnum::kVersion:
             return false;

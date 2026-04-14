@@ -29,7 +29,7 @@
 #include "table/entryshadow.h"
 #include "utils/templateutils.h"
 
-using Utils::DerivedPtr;
+using utils::DerivedPtr;
 
 class TableModel : public QAbstractItemModel {
     Q_OBJECT

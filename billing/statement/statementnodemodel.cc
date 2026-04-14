@@ -116,23 +116,23 @@ void StatementNodeModel::sort(int column, Qt::SortOrder order)
     auto Compare = [e_column, order](const StatementNode* lhs, const StatementNode* rhs) -> bool {
         switch (e_column) {
         case StatementNodeEnum::kDescription:
-            return Utils::CompareMember(lhs, rhs, &StatementNode::description, order);
+            return utils::CompareMember(lhs, rhs, &StatementNode::description, order);
         case StatementNodeEnum::kCode:
-            return Utils::CompareMember(lhs, rhs, &StatementNode::code, order);
+            return utils::CompareMember(lhs, rhs, &StatementNode::code, order);
         case StatementNodeEnum::kEmployee:
-            return Utils::CompareMember(lhs, rhs, &StatementNode::employee_id, order);
+            return utils::CompareMember(lhs, rhs, &StatementNode::employee_id, order);
         case StatementNodeEnum::kIssuedTime:
-            return Utils::CompareMember(lhs, rhs, &StatementNode::issued_time, order);
+            return utils::CompareMember(lhs, rhs, &StatementNode::issued_time, order);
         case StatementNodeEnum::kCount:
-            return Utils::CompareMember(lhs, rhs, &StatementNode::count, order);
+            return utils::CompareMember(lhs, rhs, &StatementNode::count, order);
         case StatementNodeEnum::kMeasure:
-            return Utils::CompareMember(lhs, rhs, &StatementNode::measure, order);
+            return utils::CompareMember(lhs, rhs, &StatementNode::measure, order);
         case StatementNodeEnum::kStatus:
-            return Utils::CompareMember(lhs, rhs, &StatementNode::status, order);
+            return utils::CompareMember(lhs, rhs, &StatementNode::status, order);
         case StatementNodeEnum::kSettlement:
-            return Utils::CompareMember(lhs, rhs, &StatementNode::settlement, order);
+            return utils::CompareMember(lhs, rhs, &StatementNode::settlement, order);
         case StatementNodeEnum::kAmount:
-            return Utils::CompareMember(lhs, rhs, &StatementNode::amount, order);
+            return utils::CompareMember(lhs, rhs, &StatementNode::amount, order);
         }
     };
 

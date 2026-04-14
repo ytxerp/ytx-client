@@ -128,7 +128,7 @@ void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
         return;
 
     const int row { index.row() };
-    const auto [start, end] = Utils::NodeCacheColumnRange(section_);
+    const auto [start, end] = utils::NodeCacheColumnRange(section_);
     EmitDataChanged(row, row, start, end, index.parent());
 }
 
@@ -157,7 +157,7 @@ void TreeModel::UpdateDirectionRule(const QUuid& node_id, bool direction_rule)
 
     DirectionRuleImpl(node, direction_rule, index);
 
-    const int column { Utils::DirectionRuleColumn(section_) };
+    const int column { utils::DirectionRuleColumn(section_) };
     EmitDataChanged(row, row, column, column, index.parent());
 }
 
@@ -173,7 +173,7 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value, const QModelIndex& ind
     }
 
     const int row { index.row() };
-    const auto [start_col, end_col] = Utils::NodeNumericColumnRange(section_);
+    const auto [start_col, end_col] = utils::NodeNumericColumnRange(section_);
 
     EmitDataChanged(row, row, start_col, end_col, index.parent());
     emit SSyncValue();
@@ -215,8 +215,8 @@ void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
 
     node->name = name;
 
-    Utils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
-    Utils::UpdateModel(leaf_path_, leaf_path_model_, node);
+    utils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
+    utils::UpdateModel(leaf_path_, leaf_path_model_, node);
 
     const int column { std::to_underlying(NodeEnum::kName) };
     const int row { GetIndex(node_id).row() };
@@ -255,7 +255,7 @@ void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant)
     }
 
     // Check for circular dependency (destination is descendant of node)
-    if (Utils::IsDescendant(destination_node, node)) {
+    if (utils::IsDescendant(destination_node, node)) {
         qWarning() << "DragNode: cannot move node to its descendant, skip move";
         return;
     }
@@ -438,7 +438,7 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
 
     qInfo() << "[UI] dropMimeData";
 
-    if (node->parent == destination_parent || Utils::IsDescendant(destination_parent, node))
+    if (node->parent == destination_parent || utils::IsDescendant(destination_parent, node))
         return false;
 
     int destination_child { row };
@@ -507,15 +507,15 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int cou
 
     RefreshAffectedTotal(affected_ids_destination.unite(affected_ids_source));
 
-    Utils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
-    Utils::UpdateModel(leaf_path_, leaf_path_model_, node);
+    utils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
+    utils::UpdateModel(leaf_path_, leaf_path_model_, node);
 
     emit SUpdateName(node->id, node->name, node->kind == NodeKind::kBranch);
 
     return true;
 }
 
-void TreeModel::LeafPathBranchPathModel(ItemModel* model) const { Utils::LeafPathBranchPathModel(leaf_path_, branch_path_, model); }
+void TreeModel::LeafPathBranchPathModel(ItemModel* model) const { utils::LeafPathBranchPathModel(leaf_path_, branch_path_, model); }
 
 void TreeModel::UpdateSeparator(CString& old_separator, CString& new_separator)
 {
@@ -525,8 +525,8 @@ void TreeModel::UpdateSeparator(CString& old_separator, CString& new_separator)
     if (old_separator == new_separator)
         return;
 
-    Utils::UpdatePathSeparator(old_separator, new_separator, leaf_path_);
-    Utils::UpdatePathSeparator(old_separator, new_separator, branch_path_);
+    utils::UpdatePathSeparator(old_separator, new_separator, leaf_path_);
+    utils::UpdatePathSeparator(old_separator, new_separator, branch_path_);
 
     leaf_path_model_->UpdateSeparator(old_separator, new_separator);
 }
@@ -673,8 +673,8 @@ void TreeModel::DeletePath(Node* node, Node* parent_node)
             parent_node->children.emplace_back(child);
         }
 
-        Utils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
-        Utils::UpdateModel(leaf_path_, leaf_path_model_, node);
+        utils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
+        utils::UpdateModel(leaf_path_, leaf_path_model_, node);
 
         branch_path_.remove(node_id);
         emit SUpdateName(node_id, node->name, true);
@@ -682,7 +682,7 @@ void TreeModel::DeletePath(Node* node, Node* parent_node)
     } break;
     case NodeKind::kLeaf: {
         leaf_path_.remove(node_id);
-        Utils::RemoveItem(leaf_path_model_, node_id);
+        utils::RemoveItem(leaf_path_model_, node_id);
 
         auto affected_ids { UpdateAncestorTotal(node, -node->initial_total, -node->final_total) };
         affected_ids.remove(node_id);
@@ -785,7 +785,7 @@ void TreeModel::RefreshAffectedTotal(const QSet<QUuid>& affected_ids)
             continue;
 
         const int row { index.row() };
-        const auto [start, end] = Utils::NodeNumericColumnRange(section_);
+        const auto [start, end] = utils::NodeNumericColumnRange(section_);
         EmitDataChanged(row, row, start, end, index.parent());
     }
 }
@@ -946,7 +946,7 @@ void TreeModel::BuildHierarchy(const QJsonArray& path_array)
 
 void TreeModel::RegisterPath(Node* node)
 {
-    CString path { Utils::ConstructPath(root_, node, separator_) };
+    CString path { utils::ConstructPath(root_, node, separator_) };
     const NodeKind kind { node->kind };
 
     switch (kind) {

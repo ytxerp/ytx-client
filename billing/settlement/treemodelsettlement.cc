@@ -83,15 +83,15 @@ void TreeModelSettlement::sort(int column, Qt::SortOrder order)
     auto Compare = [e_column, order](const Settlement* lhs, const Settlement* rhs) -> bool {
         switch (e_column) {
         case SettlementEnum::kPartner:
-            return Utils::CompareMember(lhs, rhs, &Settlement::partner_id, order);
+            return utils::CompareMember(lhs, rhs, &Settlement::partner_id, order);
         case SettlementEnum::kIssuedTime:
-            return Utils::CompareMember(lhs, rhs, &Settlement::issued_time, order);
+            return utils::CompareMember(lhs, rhs, &Settlement::issued_time, order);
         case SettlementEnum::kDescription:
-            return Utils::CompareMember(lhs, rhs, &Settlement::description, order);
+            return utils::CompareMember(lhs, rhs, &Settlement::description, order);
         case SettlementEnum::kStatus:
-            return Utils::CompareMember(lhs, rhs, &Settlement::status, order);
+            return utils::CompareMember(lhs, rhs, &Settlement::status, order);
         case SettlementEnum::kAmount:
-            return Utils::CompareMember(lhs, rhs, &Settlement::amount, order);
+            return utils::CompareMember(lhs, rhs, &Settlement::amount, order);
         case SettlementEnum::kId:
         case SettlementEnum::kVersion:
             return false;

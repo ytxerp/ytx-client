@@ -54,7 +54,7 @@ void SearchNodeModel::Search(const QString& text)
 
     if (!text.isEmpty()) {
         // Parse search input into text and tag set
-        const SearchQuery query { Utils::ParseSearchQuery(text, tag_hash_) };
+        const SearchQuery query { utils::ParseSearchQuery(text, tag_hash_) };
 
         if (!query.tags.isEmpty()) {
             // Tag search has higher priority

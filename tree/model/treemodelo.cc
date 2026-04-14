@@ -266,37 +266,37 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case NodeEnumO::kName:
-            return Utils::CompareMember(lhs, rhs, &Node::name, order);
+            return utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumO::kCode:
-            return Utils::CompareMember(lhs, rhs, &Node::code, order);
+            return utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumO::kDescription:
-            return Utils::CompareMember(lhs, rhs, &Node::description, order);
+            return utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumO::kDirectionRule:
-            return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
+            return utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumO::kKind:
-            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
+            return utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumO::kUnit:
-            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
+            return utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumO::kPartnerId:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::partner_id, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeO::partner_id, order);
         case NodeEnumO::kEmployeeId:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::employee_id, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeO::employee_id, order);
         case NodeEnumO::kIssuedTime:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::issued_time, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeO::issued_time, order);
         case NodeEnumO::kCountTotal:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::count_total, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeO::count_total, order);
         case NodeEnumO::kMeasureTotal:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::measure_total, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeO::measure_total, order);
         case NodeEnumO::kDiscountTotal:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::discount_total, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeO::discount_total, order);
         case NodeEnumO::kStatus:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeO::status, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeO::status, order);
         case NodeEnumO::kInitialTotal:
-            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
+            return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumO::kFinalTotal:
-            return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
+            return utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumO::kTag:
-            return Utils::CompareMember(lhs, rhs, &Node::tag, order);
+            return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumO::kId:
         case NodeEnumO::kVersion:
         case NodeEnumO::kIsSettled:
@@ -306,7 +306,7 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    Utils::SortIterative(root_, Compare);
+    utils::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 
@@ -383,7 +383,7 @@ bool TreeModelO::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case NodeEnumO::kTag:
-        Utils::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
+        utils::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;

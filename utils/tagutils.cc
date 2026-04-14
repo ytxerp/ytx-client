@@ -8,7 +8,7 @@
 
 #include "component/constantint.h"
 
-SearchQuery Utils::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag*>& tag_hash)
+SearchQuery utils::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag*>& tag_hash)
 {
     SearchQuery query {};
 
@@ -44,7 +44,7 @@ SearchQuery Utils::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag
     return query;
 }
 
-QIcon Utils::CreateTagIcon(const Tag* tag, bool checked)
+QIcon utils::CreateTagIcon(const Tag* tag, bool checked)
 {
     const qreal dpr { qApp->devicePixelRatio() };
     QPixmap pixmap(static_cast<int>(16 * dpr), static_cast<int>(16 * dpr));
@@ -70,7 +70,7 @@ QIcon Utils::CreateTagIcon(const Tag* tag, bool checked)
     return icon;
 }
 
-QPixmap Utils::CreateTagPixmap(const Tag* tag)
+QPixmap utils::CreateTagPixmap(const Tag* tag)
 {
     const qreal dpr { qApp->devicePixelRatio() };
 
@@ -102,13 +102,13 @@ QPixmap Utils::CreateTagPixmap(const Tag* tag)
     painter.drawRoundedRect(background_rect, UiConst::kCornerRadius, UiConst::kCornerRadius);
 
     // Draw text
-    painter.setPen(Utils::GetContrastColor(tag->color));
+    painter.setPen(utils::GetContrastColor(tag->color));
     painter.drawText(background_rect, Qt::AlignCenter, tag->name);
 
     return pixmap;
 }
 
-QColor Utils::GetContrastColor(const QColor& bg_color)
+QColor utils::GetContrastColor(const QColor& bg_color)
 {
     const int brightness { (bg_color.red() * 299 + bg_color.green() * 587 + bg_color.blue() * 114) / 1000 };
     return brightness > 128 ? Qt::black : Qt::white;

@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     QApplication application(argc, argv);
 
     // Register resource file (contains icons, translations, themes, etc.)
-    const QString resource_file { Utils::ResourceFile() };
+    const QString resource_file { utils::ResourceFile() };
     if (!QResource::registerResource(resource_file)) {
         qCritical() << "Failed to load application resources:" << resource_file;
         return EXIT_FAILURE;
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
     application.setAttribute(Qt::AA_DontUseNativeDialogs);
 
     // Set application-level properties (requires resources)
-    Utils::SetAppIcon(application);
+    utils::SetAppIcon(application);
 
     // Ensure the configuration directory exists
     const QString config_location { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) };

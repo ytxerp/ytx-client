@@ -220,35 +220,35 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
 
     switch (column) {
     case EntryEnumP::kIssuedTime:
-        Utils::UpdateIssuedTime(
+        utils::UpdateIssuedTime(
             pending_updates_[id], entry, kIssuedTime, value.toDateTime(), &Entry::issued_time, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kCode:
-        Utils::UpdateField(pending_updates_[id], entry, kCode, value.toString(), &Entry::code, [this, id, version]() { RestartTimer(id, version); });
+        utils::UpdateField(pending_updates_[id], entry, kCode, value.toString(), &Entry::code, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kDocument:
-        Utils::UpdateStringList(
+        utils::UpdateStringList(
             pending_updates_[id], entry, kDocument, value.toStringList(), &Entry::document, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kTag:
-        Utils::UpdateStringList(pending_updates_[id], entry, kTag, value.toStringList(), &Entry::tag, [this, id, version]() { RestartTimer(id, version); });
+        utils::UpdateStringList(pending_updates_[id], entry, kTag, value.toStringList(), &Entry::tag, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kRhsNode:
         update_entry_hub = UpdateInternalSku(d_entry, value.toUuid());
         break;
     case EntryEnumP::kUnitPrice:
-        update_entry_hub = Utils::UpdateDouble(
+        update_entry_hub = utils::UpdateDouble(
             pending_updates_[id], d_entry, kUnitPrice, value.toDouble(), &EntryP::unit_price, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kDescription:
-        Utils::UpdateField(
+        utils::UpdateField(
             pending_updates_[id], entry, kDescription, value.toString(), &Entry::description, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kStatus:
-        Utils::UpdateField(pending_updates_[id], entry, kStatus, value.toInt(), &Entry::status, [this, id, version]() { RestartTimer(id, version); });
+        utils::UpdateField(pending_updates_[id], entry, kStatus, value.toInt(), &Entry::status, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kExternalSku:
-        update_entry_hub = Utils::UpdateUuid(
+        update_entry_hub = utils::UpdateUuid(
             pending_updates_[id], d_entry, kExternalSku, value.toUuid(), &EntryP::external_sku, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kId:
@@ -274,23 +274,23 @@ void TableModelP::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case EntryEnumP::kCode:
-            return Utils::CompareMember(lhs, rhs, &Entry::code, order);
+            return utils::CompareMember(lhs, rhs, &Entry::code, order);
         case EntryEnumP::kDescription:
-            return Utils::CompareMember(lhs, rhs, &Entry::description, order);
+            return utils::CompareMember(lhs, rhs, &Entry::description, order);
         case EntryEnumP::kIssuedTime:
-            return Utils::CompareMember(lhs, rhs, &Entry::issued_time, order);
+            return utils::CompareMember(lhs, rhs, &Entry::issued_time, order);
         case EntryEnumP::kUnitPrice:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryP::unit_price, order);
+            return utils::CompareMember(d_lhs, d_rhs, &EntryP::unit_price, order);
         case EntryEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case EntryEnumP::kTag:
-            return Utils::CompareMember(lhs, rhs, &EntryP::tag, order);
+            return utils::CompareMember(lhs, rhs, &EntryP::tag, order);
         case EntryEnumP::kStatus:
-            return Utils::CompareMember(lhs, rhs, &Entry::status, order);
+            return utils::CompareMember(lhs, rhs, &Entry::status, order);
         case EntryEnumP::kExternalSku:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryP::external_sku, order);
+            return utils::CompareMember(d_lhs, d_rhs, &EntryP::external_sku, order);
         case EntryEnumP::kRhsNode:
-            return Utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
+            return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         case EntryEnumP::kId:
         case EntryEnumP::kVersion:
         case EntryEnumP::kLhsNode:

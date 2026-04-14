@@ -226,7 +226,7 @@ void EntryHubP::UpdateEntry(const QUuid& id, const QJsonObject& update)
                 entry_map_[{ entry->lhs_node, old_rhs_node }] = { entry->unit_price, entry->external_sku };
         }
 
-        const auto [start, end] = Utils::EntryCacheColumnRange(section_);
+        const auto [start, end] = utils::EntryCacheColumnRange(section_);
         emit SRefreshField(entry->lhs_node, id, start, end);
     };
 }

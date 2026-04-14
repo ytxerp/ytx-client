@@ -62,7 +62,7 @@ void TableModel::RAttachOneEntry(Entry* entry)
     const double previous_balance { row >= 1 ? shadow_list_.at(row - 1)->balance : 0.0 };
     entry_shadow->balance = CalculateBalance(entry_shadow) + previous_balance;
 
-    const int balance_column { Utils::BalanceColumn(section_) };
+    const int balance_column { utils::BalanceColumn(section_) };
     EmitDataChanged(row, row, balance_column, balance_column);
 }
 
@@ -85,7 +85,7 @@ void TableModel::RUpdateBalance(const QUuid& entry_id)
     const auto entry_index { GetIndex(entry_id) };
     const int row { entry_index.row() };
 
-    const auto [debit, credit] = Utils::EntryNumericColumnRange(section_);
+    const auto [debit, credit] = utils::EntryNumericColumnRange(section_);
     EmitDataChanged(row, row, debit, credit);
 
     if (entry_index.isValid())
@@ -133,7 +133,7 @@ void TableModel::AccumulateBalance(int start)
         return entry_shadow->balance;
     });
 
-    const int balance_column { Utils::BalanceColumn(section_) };
+    const int balance_column { utils::BalanceColumn(section_) };
     EmitDataChanged(start, rowCount() - 1, balance_column, balance_column);
 }
 
@@ -311,23 +311,23 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         UpdateIssuedTime(shadow, value.toDateTime());
         break;
     case EntryEnum::kCode:
-        Utils::UpdateShadowField(
+        utils::UpdateShadowField(
             pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnum::kStatus:
-        Utils::UpdateShadowField(
+        utils::UpdateShadowField(
             pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnum::kDescription:
-        Utils::UpdateShadowField(
+        utils::UpdateShadowField(
             pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnum::kDocument:
-        Utils::UpdateShadowStringList(
+        utils::UpdateShadowStringList(
             pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnum::kTag:
-        Utils::UpdateShadowStringList(
+        utils::UpdateShadowStringList(
             pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnum::kLhsRate:
@@ -362,25 +362,25 @@ void TableModel::sort(int column, Qt::SortOrder order)
     auto Compare = [order, e_column](const EntryShadow* lhs, const EntryShadow* rhs) -> bool {
         switch (e_column) {
         case EntryEnum::kCode:
-            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::code, order);
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::code, order);
         case EntryEnum::kDescription:
-            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::description, order);
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::description, order);
         case EntryEnum::kIssuedTime:
-            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::issued_time, order);
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::issued_time, order);
         case EntryEnum::kLhsRate:
-            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_rate, order);
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_rate, order);
         case EntryEnum::kRhsNode:
-            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::rhs_node, order);
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::rhs_node, order);
         case EntryEnum::kStatus:
-            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::status, order);
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::status, order);
         case EntryEnum::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
         case EntryEnum::kTag:
-            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::tag, order);
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::tag, order);
         case EntryEnum::kDebit:
-            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_debit, order);
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_debit, order);
         case EntryEnum::kCredit:
-            return Utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_credit, order);
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_credit, order);
         case EntryEnum::kId:
         case EntryEnum::kVersion:
         case EntryEnum::kLhsNode:

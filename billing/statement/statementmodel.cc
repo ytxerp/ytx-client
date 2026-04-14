@@ -84,19 +84,19 @@ void StatementModel::sort(int column, Qt::SortOrder order)
     auto Compare = [e_column, order](const Statement* lhs, const Statement* rhs) -> bool {
         switch (e_column) {
         case StatementEnum::kPartner:
-            return Utils::CompareMember(lhs, rhs, &Statement::partner_id, order);
+            return utils::CompareMember(lhs, rhs, &Statement::partner_id, order);
         case StatementEnum::kPBalance:
-            return Utils::CompareMember(lhs, rhs, &Statement::pbalance, order);
+            return utils::CompareMember(lhs, rhs, &Statement::pbalance, order);
         case StatementEnum::kCAmount:
-            return Utils::CompareMember(lhs, rhs, &Statement::camount, order);
+            return utils::CompareMember(lhs, rhs, &Statement::camount, order);
         case StatementEnum::kCSettlement:
-            return Utils::CompareMember(lhs, rhs, &Statement::csettlement, order);
+            return utils::CompareMember(lhs, rhs, &Statement::csettlement, order);
         case StatementEnum::kCBalance:
-            return Utils::CompareMember(lhs, rhs, &Statement::cbalance, order);
+            return utils::CompareMember(lhs, rhs, &Statement::cbalance, order);
         case StatementEnum::kCCount:
-            return Utils::CompareMember(lhs, rhs, &Statement::ccount, order);
+            return utils::CompareMember(lhs, rhs, &Statement::ccount, order);
         case StatementEnum::kCMeasure:
-            return Utils::CompareMember(lhs, rhs, &Statement::cmeasure, order);
+            return utils::CompareMember(lhs, rhs, &Statement::cmeasure, order);
         case StatementEnum::kPlaceholder:
             return false;
         }

@@ -30,7 +30,7 @@
 #include "utils/nodeutils.h"
 #include "utils/templateutils.h"
 
-using Utils::DerivedPtr;
+using utils::DerivedPtr;
 
 class TreeModel : public QAbstractItemModel {
     Q_OBJECT
@@ -111,12 +111,12 @@ public:
 
     // Ytx's
     // Default implementations
-    double InitialTotal(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::initial_total); }
-    double FinalTotal(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::final_total); }
-    NodeUnit Unit(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::unit); }
-    bool Rule(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::direction_rule); }
-    QString Name(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::name); }
-    QString Color(QUuid node_id) const { return Utils::Value(node_hash_, node_id, &Node::color); }
+    double InitialTotal(QUuid node_id) const { return utils::Value(node_hash_, node_id, &Node::initial_total); }
+    double FinalTotal(QUuid node_id) const { return utils::Value(node_hash_, node_id, &Node::final_total); }
+    NodeUnit Unit(QUuid node_id) const { return utils::Value(node_hash_, node_id, &Node::unit); }
+    bool Rule(QUuid node_id) const { return utils::Value(node_hash_, node_id, &Node::direction_rule); }
+    QString Name(QUuid node_id) const { return utils::Value(node_hash_, node_id, &Node::name); }
+    QString Color(QUuid node_id) const { return utils::Value(node_hash_, node_id, &Node::color); }
     QString Path(const QUuid& node_id) const;
 
     inline ItemModel* LeafModel() const { return leaf_path_model_; }

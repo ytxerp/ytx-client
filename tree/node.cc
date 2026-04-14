@@ -37,9 +37,9 @@ void Node::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kColor); val.isString())
         color = val.toString();
     if (object.value(kTag).isArray())
-        tag = Utils::ReadStringList(object, kTag);
+        tag = utils::ReadStringList(object, kTag);
     if (object.value(kDocument).isArray())
-        document = Utils::ReadStringList(object, kDocument);
+        document = utils::ReadStringList(object, kDocument);
 }
 
 QJsonObject Node::WriteJson() const
@@ -55,8 +55,8 @@ QJsonObject Node::WriteJson() const
     obj.insert(kUnit, std::to_underlying(unit));
     obj.insert(kFinalTotal, QString::number(final_total, 'f', NumericConst::kDecimalPlaces4));
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', NumericConst::kDecimalPlaces4));
-    obj.insert(kTag, Utils::WriteStringList(tag));
-    obj.insert(kDocument, Utils::WriteStringList(document));
+    obj.insert(kTag, utils::WriteStringList(tag));
+    obj.insert(kDocument, utils::WriteStringList(document));
 
     // user_id, created_time, created_by, updated_time, updated_by, version
     // are managed by the server, not written to json
@@ -103,8 +103,8 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', NumericConst::kDecimalPlaces4));
     obj.insert(kPaymentTerm, payment_term);
     obj.insert(kColor, color);
-    obj.insert(kTag, Utils::WriteStringList(tag));
-    obj.insert(kDocument, Utils::WriteStringList(document));
+    obj.insert(kTag, utils::WriteStringList(tag));
+    obj.insert(kDocument, utils::WriteStringList(document));
 
     return obj;
 }
@@ -142,7 +142,7 @@ void NodeO::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kIsSettled); val.isBool())
         is_settled = val.toBool();
     if (object.value(kTag).isArray())
-        tag = Utils::ReadStringList(object, kTag);
+        tag = utils::ReadStringList(object, kTag);
 }
 
 QJsonObject NodeO::WriteJson() const
@@ -164,7 +164,7 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kCountTotal, QString::number(count_total, 'f', NumericConst::kDecimalPlaces8));
     obj.insert(kMeasureTotal, QString::number(measure_total, 'f', NumericConst::kDecimalPlaces8));
     obj.insert(kStatus, std::to_underlying(status));
-    obj.insert(kTag, Utils::WriteStringList(tag));
+    obj.insert(kTag, utils::WriteStringList(tag));
 
     return obj;
 }

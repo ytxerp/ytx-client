@@ -98,7 +98,7 @@ void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update)
 
         entry->ReadJson(update);
 
-        const auto [start, end] = Utils::EntryCacheColumnRange(section_);
+        const auto [start, end] = utils::EntryCacheColumnRange(section_);
 
         emit SRefreshField(entry->lhs_node, id, start, end);
         emit SRefreshField(entry->rhs_node, id, start, end);
@@ -135,7 +135,7 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
             entry->lhs_node = new_node_id;
         }
 
-        const int rhs_node_column { Utils::LinkedNodeColumn(section_) };
+        const int rhs_node_column { utils::LinkedNodeColumn(section_) };
 
         emit SDetachOneEntry(old_node_id, id);
         emit SRefreshField(lhs_node, id, rhs_node_column, rhs_node_column);
@@ -158,7 +158,7 @@ void EntryHub::UpdateEntryIssuedTime(const QUuid& id, const QDateTime& issued_ti
     entry->issued_time = issued_time;
     entry->version = version;
 
-    const int column { Utils::EntryIssuedTimeColumn(section_) };
+    const int column { utils::EntryIssuedTimeColumn(section_) };
 
     emit SRefreshField(entry->lhs_node, id, column, column);
     emit SRefreshField(entry->rhs_node, id, column, column);

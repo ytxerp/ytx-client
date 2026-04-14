@@ -53,7 +53,7 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
         return;
     }
 
-    Utils::ManageDialog(sc_->widget_hash, dialog);
+    utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &QDialog::accepted, this, [this, node, parent_node]() {
@@ -109,7 +109,7 @@ void MainWindow::EditNameFIPT()
 
     auto* dialog { new EditNodeName(name, parent_path, children_name, this) };
 
-    Utils::ManageDialog(sc_->widget_hash, dialog);
+    utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &QDialog::accepted, this, [this, node_id, dialog]() {
@@ -132,7 +132,7 @@ void MainWindow::on_actionClearColor_triggered()
 
     auto model { sc_->tree_model };
 
-    const int color_column { Utils::NodeColorColumn(start_) };
+    const int color_column { utils::NodeColorColumn(start_) };
     const QModelIndex color_index { index.siblingAtColumn(color_column) };
 
     model->setData(color_index, QVariant());

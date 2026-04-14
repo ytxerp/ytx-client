@@ -60,27 +60,27 @@ void SearchEntryModelO::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case EntryEnumO::kLhsNode:
-            return Utils::CompareMember(lhs, rhs, &Entry::lhs_node, order);
+            return utils::CompareMember(lhs, rhs, &Entry::lhs_node, order);
         case EntryEnumO::kRhsNode:
-            return Utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
+            return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         case EntryEnumO::kDescription:
-            return Utils::CompareMember(lhs, rhs, &Entry::description, order);
+            return utils::CompareMember(lhs, rhs, &Entry::description, order);
         case EntryEnumO::kCount:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::count, order);
+            return utils::CompareMember(d_lhs, d_rhs, &EntryO::count, order);
         case EntryEnumO::kUnitPrice:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::unit_price, order);
+            return utils::CompareMember(d_lhs, d_rhs, &EntryO::unit_price, order);
         case EntryEnumO::kMeasure:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::measure, order);
+            return utils::CompareMember(d_lhs, d_rhs, &EntryO::measure, order);
         case EntryEnumO::kUnitDiscount:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::unit_discount, order);
+            return utils::CompareMember(d_lhs, d_rhs, &EntryO::unit_discount, order);
         case EntryEnumO::kInitial:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::initial, order);
+            return utils::CompareMember(d_lhs, d_rhs, &EntryO::initial, order);
         case EntryEnumO::kFinal:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::final, order);
+            return utils::CompareMember(d_lhs, d_rhs, &EntryO::final, order);
         case EntryEnumO::kDiscount:
-            return Utils::CompareMember(d_lhs, d_rhs, &EntryO::discount, order);
+            return utils::CompareMember(d_lhs, d_rhs, &EntryO::discount, order);
         case EntryEnumO::kTag:
-            return Utils::CompareMember(lhs, rhs, &Entry::tag, order);
+            return utils::CompareMember(lhs, rhs, &Entry::tag, order);
         case EntryEnumO::kId:
         case EntryEnumO::kVersion:
         case EntryEnumO::kExternalSku:

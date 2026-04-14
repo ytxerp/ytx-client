@@ -50,25 +50,25 @@ void SearchNodeModelF::sort(int column, Qt::SortOrder order)
     auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
         switch (e_column) {
         case NodeEnumF::kName:
-            return Utils::CompareMember(lhs, rhs, &Node::name, order);
+            return utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumF::kCode:
-            return Utils::CompareMember(lhs, rhs, &Node::code, order);
+            return utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumF::kDescription:
-            return Utils::CompareMember(lhs, rhs, &Node::description, order);
+            return utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumF::kDirectionRule:
-            return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
+            return utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumF::kKind:
-            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
+            return utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumF::kColor:
-            return Utils::CompareMember(lhs, rhs, &Node::color, order);
+            return utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumF::kUnit:
-            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
+            return utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumF::kInitialTotal:
-            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
+            return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumF::kFinalTotal:
-            return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
+            return utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumF::kTag:
-            return Utils::CompareMember(lhs, rhs, &Node::tag, order);
+            return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumF::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case NodeEnumF::kId:

@@ -146,18 +146,18 @@ void SearchDialog::IniView(QTableView* view)
     view->setAlternatingRowColors(true);
     view->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    Utils::SetupVerticalHeader(view, UiConst::kRowHeight);
+    utils::SetupVerticalHeader(view, UiConst::kRowHeight);
 }
 
 void SearchDialog::ResizeTreeColumn(QHeaderView* header)
 {
     header->setSectionResizeMode(QHeaderView::ResizeToContents);
-    header->setSectionResizeMode(Utils::NodeDescriptionColumn(info_.section), QHeaderView::Stretch);
+    header->setSectionResizeMode(utils::NodeDescriptionColumn(info_.section), QHeaderView::Stretch);
 }
 
 void SearchDialog::ResizeTableColumn(QHeaderView* header)
 {
-    const int description_column { Utils::SearchEntryDescriptionColumn(info_.section) };
+    const int description_column { utils::SearchEntryDescriptionColumn(info_.section) };
     header->setSectionResizeMode(QHeaderView::ResizeToContents);
     header->setSectionResizeMode(description_column, QHeaderView::Stretch);
 }

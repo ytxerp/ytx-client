@@ -32,14 +32,14 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     }
 
     {
-        const int kind_column { Utils::KindColumn(start_) };
+        const int kind_column { utils::KindColumn(start_) };
         const NodeKind kind { index.siblingAtColumn(kind_column).data().toInt() };
         if (kind == NodeKind::kBranch)
             return;
     }
 
     {
-        const int unit_column { Utils::UnitColumn(start_) };
+        const int unit_column { utils::UnitColumn(start_) };
         const int unit { index.siblingAtColumn(unit_column).data().toInt() };
         if (start_ == Section::kInventory && unit == std::to_underlying(NodeUnit::IExternal))
             return;
@@ -150,7 +150,7 @@ void MainWindow::tabWidget_tabCloseRequestedFIT(int index)
     const auto& wc { sc_->widget_hash.value(node_id) };
     Q_ASSERT(wc.widget);
 
-    Utils::CloseWidget(node_id, sc_->widget_hash);
+    utils::CloseWidget(node_id, sc_->widget_hash);
     TableSStation::Instance()->DeregisterModel(node_id);
 }
 
@@ -163,7 +163,7 @@ void MainWindow::tabWidget_tabCloseRequestedP(int index)
     const auto& wc { sc_->widget_hash.value(node_id) };
     Q_ASSERT(wc.widget);
 
-    Utils::CloseWidget(node_id, sc_->widget_hash);
+    utils::CloseWidget(node_id, sc_->widget_hash);
 }
 
 void MainWindow::tabWidget_tabCloseRequestedO(int index)
@@ -178,7 +178,7 @@ void MainWindow::tabWidget_tabCloseRequestedO(int index)
     auto* widget { qobject_cast<TableWidgetO*>(wc.widget.data()) };
     if (widget && widget->HasPendingUpdate()) {
         auto* dlg
-            = Utils::CreateMessageBox(QMessageBox::Warning, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nDo you want to save before closing?"),
+            = utils::CreateMessageBox(QMessageBox::Warning, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nDo you want to save before closing?"),
                 true, QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, this);
 
         dlg->setDefaultButton(QMessageBox::Cancel);
@@ -192,7 +192,7 @@ void MainWindow::tabWidget_tabCloseRequestedO(int index)
             widget->SaveOrder();
     }
 
-    Utils::CloseWidget(node_id, sc_->widget_hash);
+    utils::CloseWidget(node_id, sc_->widget_hash);
 }
 
 void MainWindow::on_actionJumpEntry_triggered()
@@ -212,7 +212,7 @@ void MainWindow::on_actionJumpEntry_triggered()
         return;
 
     const int row { index.row() };
-    const int rhs_node_column { Utils::LinkedNodeColumn(start_) };
+    const int rhs_node_column { utils::LinkedNodeColumn(start_) };
 
     const auto rhs_node_id { index.sibling(row, rhs_node_column).data().toUuid() };
     if (rhs_node_id.isNull())

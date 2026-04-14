@@ -58,7 +58,7 @@ void SearchEntryModel::Search(const QString& text)
     }
 
     // 2. Parse the search input into text and tag set
-    const SearchQuery query { Utils::ParseSearchQuery(text, tag_hash_) };
+    const SearchQuery query { utils::ParseSearchQuery(text, tag_hash_) };
 
     // 3. Perform the search (tag search has higher priority)
     if (!query.tags.isEmpty()) {
@@ -136,33 +136,33 @@ void SearchEntryModel::sort(int column, Qt::SortOrder order)
     auto Compare = [e_column, order](const Entry* lhs, const Entry* rhs) -> bool {
         switch (e_column) {
         case FullEntryEnum::kIssuedTime:
-            return Utils::CompareMember(lhs, rhs, &Entry::issued_time, order);
+            return utils::CompareMember(lhs, rhs, &Entry::issued_time, order);
         case FullEntryEnum::kCode:
-            return Utils::CompareMember(lhs, rhs, &Entry::code, order);
+            return utils::CompareMember(lhs, rhs, &Entry::code, order);
         case FullEntryEnum::kLhsNode:
-            return Utils::CompareMember(lhs, rhs, &Entry::lhs_node, order);
+            return utils::CompareMember(lhs, rhs, &Entry::lhs_node, order);
         case FullEntryEnum::kLhsRate:
-            return Utils::CompareMember(lhs, rhs, &Entry::lhs_rate, order);
+            return utils::CompareMember(lhs, rhs, &Entry::lhs_rate, order);
         case FullEntryEnum::kLhsDebit:
-            return Utils::CompareMember(lhs, rhs, &Entry::lhs_debit, order);
+            return utils::CompareMember(lhs, rhs, &Entry::lhs_debit, order);
         case FullEntryEnum::kLhsCredit:
-            return Utils::CompareMember(lhs, rhs, &Entry::lhs_credit, order);
+            return utils::CompareMember(lhs, rhs, &Entry::lhs_credit, order);
         case FullEntryEnum::kDescription:
-            return Utils::CompareMember(lhs, rhs, &Entry::description, order);
+            return utils::CompareMember(lhs, rhs, &Entry::description, order);
         case FullEntryEnum::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case FullEntryEnum::kTag:
-            return Utils::CompareMember(lhs, rhs, &Entry::tag, order);
+            return utils::CompareMember(lhs, rhs, &Entry::tag, order);
         case FullEntryEnum::kStatus:
-            return Utils::CompareMember(lhs, rhs, &Entry::status, order);
+            return utils::CompareMember(lhs, rhs, &Entry::status, order);
         case FullEntryEnum::kRhsCredit:
-            return Utils::CompareMember(lhs, rhs, &Entry::rhs_credit, order);
+            return utils::CompareMember(lhs, rhs, &Entry::rhs_credit, order);
         case FullEntryEnum::kRhsDebit:
-            return Utils::CompareMember(lhs, rhs, &Entry::rhs_debit, order);
+            return utils::CompareMember(lhs, rhs, &Entry::rhs_debit, order);
         case FullEntryEnum::kRhsRate:
-            return Utils::CompareMember(lhs, rhs, &Entry::rhs_rate, order);
+            return utils::CompareMember(lhs, rhs, &Entry::rhs_rate, order);
         case FullEntryEnum::kRhsNode:
-            return Utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
+            return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         case FullEntryEnum::kId:
         case FullEntryEnum::kVersion:
             return false;

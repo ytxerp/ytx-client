@@ -55,8 +55,8 @@ void TableWidgetSettlement::InitWidget()
     ui->dSpinAmount->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
     ui->dSpinAmount->setDecimals(config_.amount_decimal);
 
-    Utils::SetPushButton(ui->pBtnRelease, QKeySequence(Qt::CTRL | Qt::Key_Return));
-    Utils::SetPushButton(ui->pBtnRecall, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
+    utils::SetPushButton(ui->pBtnRelease, QKeySequence(Qt::CTRL | Qt::Key_Return));
+    utils::SetPushButton(ui->pBtnRecall, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
 }
 
 void TableWidgetSettlement::InitData()
@@ -96,7 +96,7 @@ void TableWidgetSettlement::LockWidget(bool is_settled)
 bool TableWidgetSettlement::ValidateSyncState()
 {
     if (sync_state_ == SyncState::kDirty) {
-        Utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
+        utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
             tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), TimeConst::kAutoCloseMs);
         return false;
     }

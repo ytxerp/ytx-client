@@ -31,29 +31,29 @@ void TreeModelI::sort(int column, Qt::SortOrder order)
 
         switch (e_column) {
         case NodeEnumI::kName:
-            return Utils::CompareMember(lhs, rhs, &Node::name, order);
+            return utils::CompareMember(lhs, rhs, &Node::name, order);
         case NodeEnumI::kCode:
-            return Utils::CompareMember(lhs, rhs, &Node::code, order);
+            return utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumI::kDescription:
-            return Utils::CompareMember(lhs, rhs, &Node::description, order);
+            return utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumI::kDirectionRule:
-            return Utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
+            return utils::CompareMember(lhs, rhs, &Node::direction_rule, order);
         case NodeEnumI::kKind:
-            return Utils::CompareMember(lhs, rhs, &Node::kind, order);
+            return utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumI::kUnit:
-            return Utils::CompareMember(lhs, rhs, &Node::unit, order);
+            return utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumI::kColor:
-            return Utils::CompareMember(lhs, rhs, &Node::color, order);
+            return utils::CompareMember(lhs, rhs, &Node::color, order);
         case NodeEnumI::kCommission:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeI::commission, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeI::commission, order);
         case NodeEnumI::kUnitPrice:
-            return Utils::CompareMember(d_lhs, d_rhs, &NodeI::unit_price, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeI::unit_price, order);
         case NodeEnumI::kInitialTotal:
-            return Utils::CompareMember(lhs, rhs, &Node::initial_total, order);
+            return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumI::kFinalTotal:
-            return Utils::CompareMember(lhs, rhs, &Node::final_total, order);
+            return utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumI::kTag:
-            return Utils::CompareMember(lhs, rhs, &Node::tag, order);
+            return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumI::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumI::kId:
@@ -63,7 +63,7 @@ void TreeModelI::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    Utils::SortIterative(root_, Compare);
+    utils::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 
@@ -133,28 +133,28 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case NodeEnumI::kCode:
-        Utils::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        utils::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kDescription:
-        Utils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        utils::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kTag:
-        Utils::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
+        utils::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kDirectionRule:
         UpdateDirectionRule(node, value.toBool(), index);
         break;
     case NodeEnumI::kColor:
-        Utils::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
+        utils::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kCommission:
-        Utils::UpdateDouble(pending_updates_[id], d_node, kCommission, value.toDouble(), &NodeI::commission, [id, this]() { RestartTimer(id); });
+        utils::UpdateDouble(pending_updates_[id], d_node, kCommission, value.toDouble(), &NodeI::commission, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kUnitPrice:
-        Utils::UpdateDouble(pending_updates_[id], d_node, kUnitPrice, value.toDouble(), &NodeI::unit_price, [id, this]() { RestartTimer(id); });
+        utils::UpdateDouble(pending_updates_[id], d_node, kUnitPrice, value.toDouble(), &NodeI::unit_price, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kDocument:
-        Utils::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
+        utils::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kId:
     case NodeEnumI::kVersion:

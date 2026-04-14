@@ -75,25 +75,25 @@ void AuditModel::sort(int column, Qt::SortOrder order)
     auto Compare = [order, e_column](const AuditEntry* lhs, const AuditEntry* rhs) -> bool {
         switch (e_column) {
         case AuditField::kTargetId:
-            return Utils::CompareMember(lhs, rhs, &AuditEntry::target_id, order);
+            return utils::CompareMember(lhs, rhs, &AuditEntry::target_id, order);
         case AuditField::kUserId:
-            return Utils::CompareMember(lhs, rhs, &AuditEntry::user_id, order);
+            return utils::CompareMember(lhs, rhs, &AuditEntry::user_id, order);
         case AuditField::kLhsNode:
-            return Utils::CompareMember(lhs, rhs, &AuditEntry::lhs_node, order);
+            return utils::CompareMember(lhs, rhs, &AuditEntry::lhs_node, order);
         case AuditField::kRhsNode:
-            return Utils::CompareMember(lhs, rhs, &AuditEntry::rhs_node, order);
+            return utils::CompareMember(lhs, rhs, &AuditEntry::rhs_node, order);
         case AuditField::kTargetCode:
-            return Utils::CompareMember(lhs, rhs, &AuditEntry::target_code, order);
+            return utils::CompareMember(lhs, rhs, &AuditEntry::target_code, order);
         case AuditField::kSection:
-            return Utils::CompareMember(lhs, rhs, &AuditEntry::section, order);
+            return utils::CompareMember(lhs, rhs, &AuditEntry::section, order);
         case AuditField::kWsKey:
-            return Utils::CompareMember(lhs, rhs, &AuditEntry::ws_key, order);
+            return utils::CompareMember(lhs, rhs, &AuditEntry::ws_key, order);
         case AuditField::kTargetType:
-            return Utils::CompareMember(lhs, rhs, &AuditEntry::target_type, order);
+            return utils::CompareMember(lhs, rhs, &AuditEntry::target_type, order);
         case AuditField::kLevel:
-            return Utils::CompareMember(lhs, rhs, &AuditEntry::level, order);
+            return utils::CompareMember(lhs, rhs, &AuditEntry::level, order);
         case AuditField::kCreatedTime:
-            return Utils::CompareMember(lhs, rhs, &AuditEntry::created_time, order);
+            return utils::CompareMember(lhs, rhs, &AuditEntry::created_time, order);
         case AuditField::kId:
         case AuditField::kBefore:
         case AuditField::kAfter:
