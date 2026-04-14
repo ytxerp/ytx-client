@@ -2,7 +2,7 @@
 
 #include <QEvent>
 
-#include "dialog/audittextdialog.h"
+#include "audittextdialog.h"
 
 AuditTextDelegate::AuditTextDelegate(QObject* parent)
     : QStyledItemDelegate { parent }

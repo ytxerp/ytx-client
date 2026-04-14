@@ -1,4 +1,5 @@
 #include "audithub/auditenum.h"
+#include "audithub/audittextdelegate.h"
 #include "component/constantstring.h"
 #include "delegate/bool.h"
 #include "delegate/boolstring.h"
@@ -12,7 +13,6 @@
 #include "delegate/line.h"
 #include "delegate/readonly/amountorderreferencer.h"
 #include "delegate/readonly/amountr.h"
-#include "delegate/readonly/audittextdelegate.h"
 #include "delegate/readonly/boolcolorstringr.h"
 #include "delegate/readonly/colorr.h"
 #include "delegate/readonly/doublenonezeror.h"
