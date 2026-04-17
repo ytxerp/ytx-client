@@ -2,12 +2,13 @@
 
 #include "ui_audittextdialog.h"
 
-AuditTextDialog::AuditTextDialog(const QString& text, QWidget* parent)
+AuditTextDialog::AuditTextDialog(const QString& text, const QString& title, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::AuditTextDialog)
 {
     ui->setupUi(this);
     InitDialog(text);
+    this->setWindowTitle(title);
 }
 
 AuditTextDialog::~AuditTextDialog() { delete ui; }

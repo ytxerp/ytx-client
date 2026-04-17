@@ -2,6 +2,7 @@
 
 #include <QEvent>
 
+#include "audithub/auditenum.h"
 #include "audittextdialog.h"
 
 AuditTextDelegate::AuditTextDelegate(QObject* parent)
@@ -16,9 +17,11 @@ bool AuditTextDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, co
 
     if (event->type() == QEvent::MouseButtonDblClick) {
         const QString text { index.data().toString().trimmed() };
+        const QString title { index.column() == std::to_underlying(audit_hub::AuditField::kBefore) ? QObject::tr("Audit Detail - Before")
+                                                                                                   : QObject::tr("Audit Detail - After") };
 
         if ((text.startsWith('{') || text.startsWith('[')) && text != "{}" && text != "[]") {
-            auto* dialog = new AuditTextDialog(text, const_cast<QWidget*>(option.widget));
+            auto* dialog = new AuditTextDialog(text, title, const_cast<QWidget*>(option.widget));
             dialog->setAttribute(Qt::WA_DeleteOnClose);
             dialog->show();
             return true; // handled

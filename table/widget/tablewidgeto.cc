@@ -345,7 +345,7 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 
 void TableWidgetO::RRuleGroupClicked(int id)
 {
-    if (sync_state_ == SyncState::kSynced)
+    if (tmp_node_->status != NodeStatus::kDraft)
         return;
 
     tmp_node_->direction_rule = static_cast<bool>(id);
@@ -358,6 +358,10 @@ void TableWidgetO::RRuleGroupClicked(int id)
     tmp_node_->final_total *= -1;
 
     InitUiValue();
+
+    if (sync_state_ == SyncState::kSynced) {
+        pending_update_.insert(kDirectionRule, tmp_node_->direction_rule);
+    }
 }
 
 void TableWidgetO::RUnitGroupClicked(int id)

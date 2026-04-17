@@ -30,7 +30,7 @@ class AuditTextDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit AuditTextDialog(const QString& text, QWidget* parent = nullptr);
+    explicit AuditTextDialog(const QString& text, const QString& title, QWidget* parent = nullptr);
     ~AuditTextDialog() override;
 
 private:
