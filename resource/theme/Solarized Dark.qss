@@ -71,13 +71,13 @@ QDoubleSpinBox#dspin_box_static_ {
 }
 
 /* Specific border removals */
-QGroupBox#treeGroupO,
-QGroupBox#tableGroup {
+QGroupBox#tableGroup,
+QGroupBox#groupBoxTableO, QGroupBox#groupBoxTreeO,
+QGroupBox#groupBoxAudit {
     border-bottom: none;
 }
 
-QGroupBox#treeGroup,
-QTableView#tableViewO {
+QGroupBox#treeGroup {
     border-top: none;
 }
 

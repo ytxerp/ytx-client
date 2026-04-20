@@ -27,7 +27,7 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="groupBoxTableO">
      <layout class="QGridLayout" name="gridLayout">
       <item row="2" column="4">
        <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -420,6 +420,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>DateTimeEdit</class>
+   <extends>QDateTimeEdit</extends>
+   <header location="global">widget/datetimeedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>LineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">widget/lineedit.h</header>
@@ -433,11 +438,6 @@
    <class>DoubleSpinBox</class>
    <extends>QDoubleSpinBox</extends>
    <header location="global">widget/doublespinbox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>DateTimeEdit</class>
-   <extends>QDateTimeEdit</extends>
-   <header location="global">widget/datetimeedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -33,15 +33,12 @@
     <widget class="TreeView" name="treeViewO"/>
    </item>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="treeGroupO">
+    <widget class="QGroupBox" name="groupBoxTreeO">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
-     </property>
-     <property name="title">
-      <string/>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="spacing">
