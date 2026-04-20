@@ -45,8 +45,8 @@ QTableView* StatementNodeWidget::View() const { return ui->tableView; }
 
 void StatementNodeWidget::on_start_dateChanged(const QDate& date)
 {
-    const bool valid { date <= end_.date() };
-    start_.setDate(date);
+    const bool valid { date < end_.date() };
+    start_ = QDateTime(date, kStartTime);
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
@@ -120,7 +120,7 @@ void StatementNodeWidget::IniWidget()
     ui->pBtnFetch->setFocus();
 
     ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_.addSecs(-1));
+    ui->end->setDateTime(end_.addDays(-1));
 
     utils::SetRadioButton(ui->rBtnIS, QKeySequence(Qt::CTRL | Qt::Key_1));
     utils::SetRadioButton(ui->rBtnMS, QKeySequence(Qt::CTRL | Qt::Key_2));

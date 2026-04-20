@@ -36,8 +36,8 @@ QTableView* OrderReferenceWidget::View() const { return ui->tableView; }
 
 void OrderReferenceWidget::on_start_dateChanged(const QDate& date)
 {
-    const bool valid { date <= end_.date() };
-    start_.setDate(date);
+    const bool valid { date < end_.date() };
+    start_ = QDateTime(date, kStartTime);
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
@@ -71,7 +71,7 @@ void OrderReferenceWidget::IniWidget()
     ui->start->setDisplayFormat(kDateFST);
     ui->end->setDisplayFormat(kDateFST);
     ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_.addSecs(-1));
+    ui->end->setDateTime(end_.addDays(-1));
 
     ui->pBtnFetch->setFocus();
 }

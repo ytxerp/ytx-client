@@ -22,7 +22,7 @@ TreeWidgetO::TreeWidgetO(Section section, TreeModel* model, const QDateTime& sta
     ui->end->setDisplayFormat(kDateFST);
 
     ui->start->setDateTime(start_);
-    ui->end->setDateTime(end.addSecs(-1));
+    ui->end->setDateTime(end_.addDays(-1));
 
     ui->treeViewO->setModel(model);
     model->setParent(ui->treeViewO);
@@ -34,8 +34,8 @@ QTreeView* TreeWidgetO::View() const { return ui->treeViewO; }
 
 void TreeWidgetO::on_start_dateChanged(const QDate& date)
 {
-    const bool valid { date <= end_.date() };
-    start_.setDate(date);
+    const bool valid { date < end_.date() };
+    start_ = QDateTime(date, kStartTime);
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
