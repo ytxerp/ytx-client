@@ -1,11 +1,8 @@
 #include "audithub/auditdialog.h"
 #include "audithub/auditenum.h"
 #include "component/constantwebsocket.h"
-#include "global/logininfo.h"
 #include "mainwindow.h"
-#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
-#include "websocket/websocket.h"
 
 void MainWindow::on_actionAuditLog_triggered()
 {
@@ -14,12 +11,15 @@ void MainWindow::on_actionAuditLog_triggered()
     static QPointer<AuditDialog> dialog {};
 
     if (!dialog) {
-        dialog = new AuditDialog(audit_info_, this);
+        const QUuid widget_id { QUuid::createUuidV7() };
 
-        const auto widget_id { utils::ManageDialog(widget_hash_, dialog) };
-        const auto message { JsonGen::AuditLogAck(widget_id, LoginInfo::Instance().Workspace()) };
+        dialog = new AuditDialog(audit_info_, widget_id, this);
 
-        WebSocket::Instance()->SendMessage(WsKey::kAuditLogAck, message);
+        {
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            WidgetContext wc { dialog, widget_id, WidgetRole::kDialog };
+            widget_hash_.insert(widget_id, wc);
+        }
 
         auto* view { dialog->View() };
         InitTableView(view, std::to_underlying(audit_hub::AuditField::kId), -1, std::to_underlying(audit_hub::AuditField::kAfter));
@@ -27,11 +27,6 @@ void MainWindow::on_actionAuditLog_triggered()
         view->horizontalHeader()->setSectionResizeMode(std::to_underlying<>(audit_hub::AuditField::kBefore), QHeaderView::Interactive);
 
         DelegateAuditLog(view);
-
-        connect(dialog, &AuditDialog::SRefresh, this, [widget_id]() {
-            const auto message { JsonGen::AuditLogAck(widget_id, LoginInfo::Instance().Workspace()) };
-            WebSocket::Instance()->SendMessage(WsKey::kAuditLogAck, message);
-        });
     }
 
     dialog->show();

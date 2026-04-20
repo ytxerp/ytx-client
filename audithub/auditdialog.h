@@ -26,6 +26,7 @@
 
 #include "audithub/auditmodel.h"
 #include "auditinfo.h"
+#include "component/using.h"
 
 namespace Ui {
 class AuditDialog;
@@ -34,11 +35,8 @@ class AuditDialog;
 class AuditDialog final : public QDialog {
     Q_OBJECT
 
-signals:
-    void SRefresh();
-
 public:
-    explicit AuditDialog(const audit_hub::AuditInfo& info, QWidget* parent = nullptr);
+    explicit AuditDialog(const audit_hub::AuditInfo& info, CUuid& widget_id, QWidget* parent = nullptr);
     ~AuditDialog() override;
 
     QTableView* View();
@@ -48,12 +46,23 @@ private slots:
     void on_pBtnFetch_clicked();
     void InitTimer();
 
+    void on_dateTimeEditStart_dateChanged(const QDate& date);
+
+    void on_dateTimeEditEnd_dateChanged(const QDate& date);
+
+private:
+    void InitDialog();
+
 private:
     Ui::AuditDialog* ui;
     const audit_hub::AuditInfo& info_;
     audit_hub::AuditModel* model_ {};
 
+    QDateTime start_ {};
+    QDateTime end_ {};
     QTimer* cooldown_timer_ { nullptr };
+
+    const QUuid widget_id_ {};
 };
 
 #endif // AUDITDIALOG_H

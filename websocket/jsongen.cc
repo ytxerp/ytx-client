@@ -467,7 +467,7 @@ QJsonObject AccountUsername(CString& email, CString& username)
     return message;
 }
 
-QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace)
+QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
     message.insert(kSessionId, QString());
@@ -475,6 +475,8 @@ QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace)
     message.insert(kLogArray, QJsonArray());
     message.insert(kUserArray, QJsonArray());
     message.insert(kWorkspace, workspace);
+    message.insert(kStart, start.toString(Qt::ISODate));
+    message.insert(kEnd, end.toString(Qt::ISODate));
     return message;
 }
 
