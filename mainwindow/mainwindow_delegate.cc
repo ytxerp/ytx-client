@@ -15,6 +15,7 @@
 #include "delegate/readonly/amountr.h"
 #include "delegate/readonly/boolcolorstringr.h"
 #include "delegate/readonly/colorr.h"
+#include "delegate/readonly/documentr.h"
 #include "delegate/readonly/doublenonezeror.h"
 #include "delegate/readonly/doubler.h"
 #include "delegate/readonly/financeforeignr.h"
@@ -24,6 +25,7 @@
 #include "delegate/readonly/nodepathr.h"
 #include "delegate/readonly/statusr.h"
 #include "delegate/rhsnode.h"
+#include "delegate/search/searchpathtabler.h"
 #include "delegate/statusdelegate.h"
 #include "delegate/tagdelegate.h"
 #include "delegate/workspaceroledelegate.h"
@@ -540,4 +542,35 @@ void MainWindow::DelegateAuditLog(QTableView* table_view) const
     auto* audit_text { new AuditTextDelegate(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(audit_hub::AuditField::kBefore), audit_text);
     table_view->setItemDelegateForColumn(std::to_underlying(audit_hub::AuditField::kAfter), audit_text);
+}
+
+void MainWindow::DelegatePeriodClose(QTableView* table_view) const
+{
+    const auto& section_config { sc_f_.section_config };
+
+    auto* quantity = new DoubleNoneZeroR(section_config.quantity_decimal, StringConst::kFourDigits, table_view);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsDebit), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsDebit), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsCredit), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsCredit), quantity);
+
+    auto* rate { new DoubleNoneZeroR(section_config.rate_decimal, StringConst::kFourDigits, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsRate), rate);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsRate), rate);
+
+    auto* path { new SearchPathTableR(sc_f_.tree_model, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsNode), path);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsNode), path);
+
+    auto* issued_time { new IssuedTimeR(section_config.date_format, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kIssuedTime), issued_time);
+
+    auto* status { new StatusR(table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kStatus), status);
+
+    // auto* document { new DocumentR(table_view) };
+    // table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kDocument), document);
+
+    // auto* tag { new TagDelegate(sc_f_.tag_icon_hash, table_view) };
+    // table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kTag), tag);
 }

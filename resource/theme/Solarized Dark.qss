@@ -73,7 +73,7 @@ QDoubleSpinBox#dspin_box_static_ {
 /* Specific border removals */
 QGroupBox#tableGroup,
 QGroupBox#groupBoxTableO, QGroupBox#groupBoxTreeO,
-QGroupBox#groupBoxAudit {
+QGroupBox#groupBoxAudit, QGroupBox#groupBoxPeriodClose {
     border-bottom: none;
 }
 

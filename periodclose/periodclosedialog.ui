@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>781</width>
-    <height>487</height>
+    <width>1198</width>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,16 +30,30 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="groupBoxPeriodClose">
      <property name="title">
       <string/>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QComboBox" name="comboBox"/>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>From</string>
+        </property>
+       </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBox_2"/>
+       <widget class="ComboBox" name="comboBoxFrom"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>To</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="ComboBox" name="comboBoxTo"/>
       </item>
       <item>
        <spacer name="horizontalSpacer">
@@ -62,19 +76,28 @@
         <property name="readOnly">
          <bool>true</bool>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton">
-        <property name="text">
-         <string>PushButton</string>
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+        </property>
+        <property name="showGroupSeparator" stdset="0">
+         <bool>true</bool>
+        </property>
+        <property name="stepType">
+         <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="pushButtonPriview">
         <property name="text">
-         <string>PushButton</string>
+         <string>Priview</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonClose">
+        <property name="text">
+         <string>Close</string>
         </property>
        </widget>
       </item>
@@ -86,11 +109,17 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
+   <header location="global">widget/combobox.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
-  <tabstop>comboBox</tabstop>
-  <tabstop>comboBox_2</tabstop>
-  <tabstop>pushButton</tabstop>
-  <tabstop>pushButton_2</tabstop>
+  <tabstop>comboBoxTo</tabstop>
+  <tabstop>pushButtonPriview</tabstop>
+  <tabstop>pushButtonClose</tabstop>
   <tabstop>doubleSpinBox</tabstop>
   <tabstop>tableView</tabstop>
  </tabstops>
