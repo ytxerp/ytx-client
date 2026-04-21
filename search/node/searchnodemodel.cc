@@ -49,12 +49,14 @@ QVariant SearchNodeModel::headerData(int section, Qt::Orientation orientation, i
 
 void SearchNodeModel::Search(const QString& text)
 {
-    // 1. Prepare the result list (do not modify the model yet)
+    // Prepare the result list (do not modify the model yet)
     QList<Node*> results {};
 
-    if (!text.isEmpty()) {
+    const QString trimmed { text.trimmed() };
+
+    if (!trimmed.isEmpty()) {
         // Parse search input into text and tag set
-        const SearchQuery query { utils::ParseSearchQuery(text, tag_hash_) };
+        const SearchQuery query { utils::ParseSearchQuery(trimmed, tag_hash_) };
 
         if (!query.tags.isEmpty()) {
             // Tag search has higher priority
@@ -65,7 +67,7 @@ void SearchNodeModel::Search(const QString& text)
         }
     }
 
-    // 2. Update the model in one step
+    // Update the model in one step
     beginResetModel();
     node_list_ = std::move(results); // Move results to avoid copying
     endResetModel();

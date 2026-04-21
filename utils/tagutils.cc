@@ -12,9 +12,13 @@ SearchQuery utils::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag
 {
     SearchQuery query {};
 
-    static const QRegularExpression kTagRegex { R"(\[([^\]]+)\])" };
+    QString cleaned { input.trimmed() };
+    if (cleaned.isEmpty())
+        return query;
 
-    QRegularExpressionMatchIterator match_it { kTagRegex.globalMatch(input) };
+    static const QRegularExpression tag_regex { R"(\[([^\]]+)\])" };
+
+    QRegularExpressionMatchIterator match_it { tag_regex.globalMatch(cleaned) };
 
     while (match_it.hasNext()) {
         const QRegularExpressionMatch match = match_it.next();
@@ -36,10 +40,9 @@ SearchQuery utils::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag
         }
     }
 
-    // Remove all [xxx] from text
-    QString text = input;
-    text.remove(kTagRegex);
-    query.text = text.trimmed();
+    // Remove all [xxx] from trimmed
+    cleaned.remove(tag_regex);
+    query.text = cleaned.trimmed();
 
     return query;
 }

@@ -36,6 +36,9 @@ public:
     void sort(int column, Qt::SortOrder order) override;
 
     void Search(CString& text) override;
+
+private:
+    void ClearModel();
 };
 
 #endif // SEARCHNODEMODELO_H

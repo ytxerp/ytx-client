@@ -85,7 +85,7 @@ enum class WsKey : uint8_t {
     kTreeSyncFinish = 24,
     kNodeInsert = 25,
     kNodeUpdate = 26,
-    kNodeSearch = 27,
+    kNodeNameSearch = 27, // for order node
     kNodeNameUpdate = 28,
     kNodeDrag = 29,
     kLeafDelete = 30,
@@ -135,7 +135,7 @@ enum class WsKey : uint8_t {
     kEntryIssuedTimeUpdate = 65,
     // -- Audit Log ---
     kAuditLogAck = 66,
-
+    kNodeTagSearch = 67, // for order node
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -202,7 +202,7 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "node_insert";
     case WsKey::kNodeUpdate:
         return "node_update";
-    case WsKey::kNodeSearch:
+    case WsKey::kNodeNameSearch:
         return "node_search";
     case WsKey::kNodeNameUpdate:
         return "node_name_update";
@@ -296,6 +296,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "entry_issued_time_update";
     case WsKey::kAuditLogAck:
         return "audit_log_ack";
+    case WsKey::kNodeTagSearch:
+        return "node_tag_search";
     default:
         return "unknown";
     }

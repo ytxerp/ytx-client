@@ -26,6 +26,7 @@ void SearchDialogO::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDirectionRule), direction_rule_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kKind), kind_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kName), tree_path_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kTag), tag_);
 
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), check_);
 
@@ -41,6 +42,7 @@ void SearchDialogO::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDiscount), amount_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kInitial), amount_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kFinal), amount_);
+    view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kTag), tag_);
 
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitPrice), rate_);
     view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitDiscount), rate_);

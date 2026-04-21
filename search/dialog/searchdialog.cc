@@ -56,11 +56,6 @@ void SearchDialog::IniDialog()
 
     setWindowTitle(tr("Search"));
     setMinimumSize(800, 600);
-
-    if (info_.section == Section::kSale || info_.section == Section::kPurchase) {
-        ui->lineEditNode->setPlaceholderText(tr("Partner Name"));
-        ui->lineEditEntry->setPlaceholderText(tr("Description"));
-    }
 }
 
 void SearchDialog::IniConnect()

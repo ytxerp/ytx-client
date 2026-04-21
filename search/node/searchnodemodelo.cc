@@ -4,6 +4,7 @@
 
 #include "component/constantwebsocket.h"
 #include "global/nodepool.h"
+#include "utils/tagutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -34,7 +35,6 @@ void SearchNodeModelO::RNodeSearch(const QJsonObject& obj)
     // Recycle old nodes
     if (!node_list_.isEmpty()) {
         NodePool::Instance().Recycle(node_list_, section_);
-        node_list_.clear();
     }
 
     // Move new nodes into model
@@ -151,15 +151,35 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
 
 void SearchNodeModelO::Search(CString& text)
 {
-    if (text.isEmpty()) {
-        if (!node_list_.isEmpty()) {
-            beginResetModel();
-            NodePool::Instance().Recycle(node_list_, section_);
-            node_list_.clear();
-            endResetModel();
-        }
+    if (text.trimmed().isEmpty()) {
+        ClearModel();
         return;
     }
 
-    WebSocket::Instance()->SendMessage(WsKey::kNodeSearch, JsonGen::NodeSearch(section_, text));
+    // Parse search input into text and tag set
+    const SearchQuery query { utils::ParseSearchQuery(text, tag_hash_) };
+
+    // Perform the search (tag search has higher priority)
+    if (!query.tags.isEmpty()) {
+        WebSocket::Instance()->SendMessage(WsKey::kNodeTagSearch, JsonGen::NodeTagSearch(section_, query.tags));
+        return;
+    }
+
+    // Send order partner name search request to server
+    if (!query.text.isEmpty()) {
+        WebSocket::Instance()->SendMessage(WsKey::kNodeNameSearch, JsonGen::NodeNameSearch(section_, query.text));
+        return;
+    }
+
+    // Both tags and text are empty → clear the model
+    ClearModel();
+}
+
+void SearchNodeModelO::ClearModel()
+{
+    if (!node_list_.isEmpty()) {
+        beginResetModel();
+        NodePool::Instance().Recycle(node_list_, section_);
+        endResetModel();
+    }
 }
