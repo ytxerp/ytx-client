@@ -343,8 +343,15 @@
     <addaction name="actionWorkspaceMember"/>
     <addaction name="actionAuditLog"/>
    </widget>
+   <widget class="QMenu" name="menuFinance">
+    <property name="title">
+     <string>Finance</string>
+    </property>
+    <addaction name="actionPeriodClose"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuFinance"/>
    <addaction name="menuAccount"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -643,36 +650,6 @@
     <string>Ctrl+T</string>
    </property>
   </action>
-  <action name="actionFinance">
-   <property name="text">
-    <string>Finance</string>
-   </property>
-  </action>
-  <action name="actionTask">
-   <property name="text">
-    <string>Task</string>
-   </property>
-  </action>
-  <action name="actionInventory">
-   <property name="text">
-    <string>Inventory</string>
-   </property>
-  </action>
-  <action name="actionPartner">
-   <property name="text">
-    <string>Partner</string>
-   </property>
-  </action>
-  <action name="actionSale">
-   <property name="text">
-    <string>Sale</string>
-   </property>
-  </action>
-  <action name="actionPurchase">
-   <property name="text">
-    <string>Purchase</string>
-   </property>
-  </action>
   <action name="actionProfile">
    <property name="text">
     <string>Profile</string>
@@ -689,6 +666,11 @@
   <action name="actionAuditLog">
    <property name="text">
     <string>Audit Log</string>
+   </property>
+  </action>
+  <action name="actionPeriodClose">
+   <property name="text">
+    <string>Period Close</string>
    </property>
   </action>
  </widget>

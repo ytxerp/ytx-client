@@ -90,6 +90,7 @@ private slots:
     void on_actionStatement_triggered();
     void on_actionSettlement_triggered();
     void on_actionAuditLog_triggered();
+    void on_actionPeriodClose_triggered();
 
     void tabWidget_currentChanged();
     void tabWidget_tabBarDoubleClicked(int index);

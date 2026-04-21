@@ -27,8 +27,8 @@ void MainWindow::on_actionSignIn_triggered()
 
     if (!dialog) {
         dialog = new AuthDialog(app_settings_, this);
-        setWindowModality(Qt::WindowModal);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->setWindowModality(Qt::ApplicationModal);
     }
 
     dialog->show();

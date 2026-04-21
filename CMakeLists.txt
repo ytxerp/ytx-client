@@ -265,6 +265,7 @@ set(HEADERS
     audithub/auditdialog.h
     audithub/audittextdelegate.h
     audithub/audittextdialog.h
+    periodclose/periodclosedialog.h
 )
 
 set(SOURCES
@@ -342,7 +343,6 @@ set(SOURCES
     mainwindow/mainwindow.cc
     mainwindow/mainwindow_account.cc
     mainwindow/mainwindow_auth.cc
-    mainwindow/mainwindow_charts.cc
     mainwindow/mainwindow_connect.cc
     mainwindow/mainwindow_context.cc
     mainwindow/mainwindow_delegate.cc
@@ -419,6 +419,8 @@ set(SOURCES
     audithub/auditdialog.cc
     audithub/audittextdelegate.cc
     audithub/audittextdialog.cc
+    mainwindow/mainwindow_period_close.cc
+    periodclose/periodclosedialog.cc
 )
 
 set(UIS
@@ -454,6 +456,7 @@ set(UIS
     workspace_member/workspacememberdialog.ui
     audithub/auditdialog.ui
     audithub/audittextdialog.ui
+    periodclose/periodclosedialog.ui
 )
 
 # ------------------------
