@@ -101,7 +101,7 @@ void MainWindow::on_actionWorkspaceMember_triggered()
 
         auto* view { dialog->View() };
         InitTableView(view, std::to_underlying(WorkspaceMemberEnum::kId), std::to_underlying(WorkspaceMemberEnum::kVersion),
-            std::to_underlying(WorkspaceMemberEnum::kName));
+            std::to_underlying(WorkspaceMemberEnum::kDatabaseRole));
         DelegateWorkspaceMember(view);
     }
 

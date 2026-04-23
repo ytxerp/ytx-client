@@ -19,13 +19,20 @@ public:
 
     QTableView* View();
 
+private slots:
+    void on_pushButtonPriview_clicked();
+
 private:
     void InitDialog();
+    QVector<Entry*> ConstructEntry(const QSet<Node*>& leaf_node, Node* to_node);
 
 private:
     Ui::PeriodCloseDialog* ui;
 
     CTreeModel* model_ {};
+    QSet<Node*> leaf_node_ {};
+    QSet<Node*> branch_node_ {};
+    QVector<Entry*> entries;
 };
 
 #endif // PERIODCLOSEDIALOG_H

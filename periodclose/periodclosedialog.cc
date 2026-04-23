@@ -40,3 +40,54 @@ void PeriodCloseDialog::InitDialog()
         ui->comboBoxTo->setCurrentIndex(-1);
     }
 }
+
+QVector<Entry*> PeriodCloseDialog::ConstructEntry(const QSet<Node*>& leaf_node, Node* to_node)
+{
+    QVector<Entry*> entries;
+
+    if (!to_node || leaf_node.isEmpty())
+        return entries;
+
+    for (Node* node : leaf_node) {
+        if (!node || FloatEqual(node->final_total, 0.0))
+            continue;
+    }
+}
+
+void PeriodCloseDialog::on_pushButtonPriview_clicked()
+{
+    if (ui->comboBoxFrom->currentIndex() == -1 || ui->comboBoxTo->currentIndex() == -1)
+        return;
+
+    const auto from_id { ui->comboBoxFrom->currentData().toUuid() };
+    const auto to_id { ui->comboBoxTo->currentData().toUuid() };
+
+    auto* from_node { model_->GetNode(from_id) };
+    auto* to_node { model_->GetNode(to_id) };
+
+    if (!from_node || !to_node)
+        return;
+
+    leaf_node_.clear();
+    branch_node_.clear();
+
+    {
+        QQueue<Node*> queue {};
+        queue.enqueue(from_node);
+
+        while (!queue.isEmpty()) {
+            Node* current = queue.dequeue();
+
+            if (current->kind == NodeKind::kLeaf) {
+                leaf_node_.insert(current);
+                continue;
+            }
+
+            branch_node_.insert(current);
+
+            for (Node* child : std::as_const(current->children)) {
+                queue.enqueue(child);
+            }
+        }
+    }
+}
