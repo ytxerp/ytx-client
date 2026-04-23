@@ -21,11 +21,11 @@
 #define DATABASEROLEDELEGATE_H
 
 #include "styleditemdelegate.h"
+#include "workspace_member/workspaceinfo.h"
 
 class DatabaseRoleDelegate final : public StyledItemDelegate {
 public:
-    DatabaseRoleDelegate(
-        const QHash<QString, QString>& database_role_hash, const QList<QPair<QString, QString>>& database_role_list, QObject* parent = nullptr);
+    DatabaseRoleDelegate(const QList<PermissionItem>& database_role_list, QObject* parent = nullptr);
 
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
@@ -35,8 +35,10 @@ public:
     void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    const QHash<QString, QString>& database_role_hash_ {};
-    const QList<QPair<QString, QString>>& database_role_list_ {};
+    QString FlagsToDisplay(PermissionBits::Flags flags) const;
+
+private:
+    const QList<PermissionItem>& database_role_list_;
 };
 
 #endif // DATABASEROLEDELEGATE_H

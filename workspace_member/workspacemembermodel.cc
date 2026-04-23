@@ -63,7 +63,7 @@ QVariant WorkspaceMemberModel::data(const QModelIndex& index, int role) const
     case WorkspaceMemberEnum::kWorkspaceRole:
         return static_cast<int>(member->workspace_role);
     case WorkspaceMemberEnum::kDatabaseRole:
-        return member->database_role;
+        return static_cast<int>(member->database_role);
     case WorkspaceMemberEnum::kCreatedTime:
         return member->created_time;
     }
@@ -96,10 +96,12 @@ bool WorkspaceMemberModel::setData(const QModelIndex& index, const QVariant& val
         member->workspace_role = static_cast<WorkspaceRole>(value.toInt());
         pending_updates_[id].insert(kWorkspaceRole, static_cast<int>(member->workspace_role));
         break;
-    case WorkspaceMemberEnum::kDatabaseRole:
-        member->database_role = value.toString();
-        pending_updates_[id].insert(kDatabaseRole, member->database_role);
+    case WorkspaceMemberEnum::kDatabaseRole: {
+        const auto flags { static_cast<PermissionBits::Flags>(value.toInt()) };
+        member->database_role = flags;
+        pending_updates_[id].insert(kDatabaseRole, static_cast<int>(flags));
         break;
+    }
     case WorkspaceMemberEnum::kEmail:
     case WorkspaceMemberEnum::kUsername:
     case WorkspaceMemberEnum::kName:

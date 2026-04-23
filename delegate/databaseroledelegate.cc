@@ -1,21 +1,31 @@
 #include "databaseroledelegate.h"
 
+#include <QStandardItem>
+
 #include "widget/combobox.h"
 
-DatabaseRoleDelegate::DatabaseRoleDelegate(
-    const QHash<QString, QString>& database_role_hash, const QList<QPair<QString, QString>>& database_role_list, QObject* parent)
+DatabaseRoleDelegate::DatabaseRoleDelegate(const QList<PermissionItem>& database_role_list, QObject* parent)
     : StyledItemDelegate { parent }
-    , database_role_hash_ { database_role_hash }
     , database_role_list_ { database_role_list }
 {
 }
 
-QWidget* DatabaseRoleDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/) const
+QWidget* DatabaseRoleDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&, const QModelIndex&) const
 {
     auto* editor { new ComboBox(parent) };
 
-    for (const auto& [key, display] : database_role_list_)
-        editor->addItem(display, key); // key stored as UserData
+    auto* model { new QStandardItemModel(editor) };
+    editor->setModel(model);
+
+    for (const auto& item : database_role_list_) {
+        auto* model_item { new QStandardItem(item.text) };
+
+        model_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+        model_item->setData(static_cast<int>(item.flag), Qt::UserRole);
+        model_item->setCheckState(Qt::Unchecked);
+
+        model->appendRow(model_item);
+    }
 
     return editor;
 }
@@ -24,47 +34,66 @@ void DatabaseRoleDelegate::setEditorData(QWidget* editor, const QModelIndex& ind
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
 
-    const QString key { index.data().toString() };
-    const int idx { cast_editor->findData(key) };
+    const int value { index.data().toInt() };
+    const PermissionBits::Flags flags(value);
 
-    if (idx != -1)
-        cast_editor->setCurrentIndex(idx);
+    auto* model { qobject_cast<QStandardItemModel*>(cast_editor->model()) };
+
+    for (int i = 0; i != model->rowCount(); ++i) {
+        auto* item { model->item(i) };
+
+        const int flag { item->data(Qt::UserRole).toInt() };
+        const bool checked { static_cast<int>(flags & flag) == flag };
+        item->setCheckState(checked ? Qt::Checked : Qt::Unchecked);
+    }
+
+    // Set line edit text to show all selected roles
+    cast_editor->setEditText(FlagsToDisplay(flags));
 }
 
 void DatabaseRoleDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
-    const QString key { cast_editor->currentData().toString() };
-    model->setData(index, key);
+    auto* cast_model { qobject_cast<QStandardItemModel*>(cast_editor->model()) };
+
+    int result { 0 };
+
+    for (int i = 0; i != cast_model->rowCount(); ++i) {
+        auto* item { cast_model->item(i) };
+
+        if (item->checkState() == Qt::Checked) {
+            result |= item->data(Qt::UserRole).toInt();
+        }
+    }
+
+    model->setData(index, result);
 }
 
 void DatabaseRoleDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString key { index.data().toString() };
-    if (!database_role_hash_.contains(key))
-        return PaintEmpty(painter, option, index);
+    const int value { index.data().toInt() };
+    const QString text { FlagsToDisplay(PermissionBits::Flags(value)) };
 
-    const QString text { database_role_hash_.value(key) };
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }
 
 QSize DatabaseRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const QString key { index.data().toString() };
-    const QString text { database_role_hash_.value(key) };
+    const int value { index.data().toInt() };
+    const QString text { FlagsToDisplay(PermissionBits::Flags(value)) };
+
     return CalculateTextSize(text, option);
 }
 
 void DatabaseRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int bar_width { QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent) };
+    const int value { index.data().toInt() };
+    const QString display_text { FlagsToDisplay(PermissionBits::Flags(value)) };
 
-    const QString key { index.data().toString() };
-    const QString text { database_role_hash_.value(key) };
+    const QSize text_size { CalculateTextSize(display_text, option) };
 
-    const QSize text_size { CalculateTextSize(text, option) };
-
-    const int width { std::max(option.rect.width(), text_size.width() + bar_width) };
+    const int width { std::max(option.rect.width(), text_size.width() + bar_width * 3) };
     const int height { std::max(option.rect.height(), text_size.height()) };
 
     QRect geom { option.rect };
@@ -72,4 +101,19 @@ void DatabaseRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOpt
     geom.setHeight(height);
 
     editor->setGeometry(geom);
+}
+
+QString DatabaseRoleDelegate::FlagsToDisplay(PermissionBits::Flags flags) const
+{
+    QString result {};
+
+    for (const auto& item : database_role_list_) {
+        if ((flags & item.flag) == item.flag) { // exact match
+            if (!result.isEmpty())
+                result += " | ";
+            result += item.text;
+        }
+    }
+
+    return result;
 }

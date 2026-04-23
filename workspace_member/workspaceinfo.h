@@ -24,11 +24,17 @@
 #include <QList>
 #include <QString>
 
+#include "databaserole.h"
+
+struct PermissionItem {
+    PermissionBits::Flag flag {};
+    QString text {};
+};
+
 struct WorkspaceInfo {
     QList<QPair<int, QString>> role_list {};
     QHash<int, QString> role_hash {};
-    QList<QPair<QString, QString>> database_role_list {};
-    QHash<QString, QString> database_role_hash {};
+    QList<PermissionItem> database_role_list {};
     QStringList header {};
 };
 

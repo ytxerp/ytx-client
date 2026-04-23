@@ -25,6 +25,7 @@
 #include <QUuid>
 
 #include "component/constant.h"
+#include "databaserole.h"
 #include "workspacerole.h"
 
 struct WorkspaceMember final {
@@ -36,7 +37,7 @@ struct WorkspaceMember final {
     QString name {};
 
     WorkspaceRole workspace_role { WorkspaceRole::kGuest };
-    QString database_role {};
+    PermissionBits::Flags database_role {};
     QDateTime created_time {};
 
     void Reset();
@@ -65,8 +66,8 @@ inline void WorkspaceMember::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kWorkspaceRole); val.isDouble())
         workspace_role = static_cast<WorkspaceRole>(val.toInt());
 
-    if (const auto val = object.value(kDatabaseRole); val.isString())
-        database_role = val.toString();
+    if (const auto val = object.value(kDatabaseRole); val.isDouble())
+        database_role = PermissionBits::Flags(val.toInt());
 
     if (const auto val = object.value(kCreatedTime); val.isString())
         created_time = QDateTime::fromString(val.toString(), Qt::ISODate);

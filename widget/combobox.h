@@ -74,6 +74,10 @@ protected:
         // Apply width to popup
         popup_view->setFixedWidth(final_width);
 
+        // Also expand the combobox itself so line edit matches
+        if (final_width > combobox_width)
+            setFixedWidth(final_width);
+
         // Call base implementation to show popup
         QComboBox::showPopup();
     }

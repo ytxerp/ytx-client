@@ -59,22 +59,19 @@ void MainWindow::InitWorkspaceInfo()
     workspace_info_.role_hash = QHash<int, QString>(workspace_info_.role_list.cbegin(), workspace_info_.role_list.cend());
 
     workspace_info_.database_role_list = {
-        { "ytx_main_readonly", tr("Main | Readonly") },
-        { "ytx_main_readwrite", tr("Main | Readwrite") },
-        { "ytx_finance_readonly", tr("Finance | Readonly") },
-        { "ytx_finance_readwrite", tr("Finance | Readwrite") },
-        { "ytx_task_readonly", tr("Task | Readonly") },
-        { "ytx_task_readwrite", tr("Task | Readwrite") },
-        { "ytx_inventory_readonly", tr("Inventory | Readonly") },
-        { "ytx_inventory_readwrite", tr("Inventory | Readwrite") },
-        { "ytx_partner_readonly", tr("Partner | Readonly") },
-        { "ytx_partner_readwrite", tr("Partner | Readwrite") },
-        { "ytx_sale_readonly", tr("Sale | Readonly") },
-        { "ytx_sale_readwrite", tr("Sale | Readwrite") },
-        { "ytx_purchase_readonly", tr("Purchase | Readonly") },
-        { "ytx_purchase_readwrite", tr("Purchase | Readwrite") },
+        { PermissionBits::FINANCE_READONLY, tr("Finance R") },
+        { PermissionBits::FINANCE_READWRITE, tr("Finance W") },
+        { PermissionBits::TASK_READONLY, tr("Task R") },
+        { PermissionBits::TASK_READWRITE, tr("Task W") },
+        { PermissionBits::INVENTORY_READONLY, tr("Inventory R") },
+        { PermissionBits::INVENTORY_READWRITE, tr("Inventory W") },
+        { PermissionBits::PARTNER_READONLY, tr("Partner R") },
+        { PermissionBits::PARTNER_READWRITE, tr("Partner W") },
+        { PermissionBits::SALE_READONLY, tr("Sale R") },
+        { PermissionBits::SALE_READWRITE, tr("Sale W") },
+        { PermissionBits::PURCHASE_READONLY, tr("Purchase R") },
+        { PermissionBits::PURCHASE_READWRITE, tr("Purchase W") },
     };
-    workspace_info_.database_role_hash = QHash<QString, QString>(workspace_info_.database_role_list.cbegin(), workspace_info_.database_role_list.cend());
 
     workspace_info_.header = {
         tr("Id"),

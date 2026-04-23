@@ -266,6 +266,7 @@ set(HEADERS
     audithub/audittextdelegate.h
     audithub/audittextdialog.h
     periodclose/periodclosedialog.h
+    workspace_member/databaserole.h
 )
 
 set(SOURCES
