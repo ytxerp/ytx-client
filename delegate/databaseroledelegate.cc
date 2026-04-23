@@ -93,7 +93,7 @@ void DatabaseRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOpt
 
     const QSize text_size { CalculateTextSize(display_text, option) };
 
-    const int width { std::max(option.rect.width(), text_size.width() + bar_width * 3) };
+    const int width { std::max(option.rect.width(), text_size.width() + bar_width) };
     const int height { std::max(option.rect.height(), text_size.height()) };
 
     QRect geom { option.rect };
