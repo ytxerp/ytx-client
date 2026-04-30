@@ -267,6 +267,7 @@ set(HEADERS
     audithub/audittextdialog.h
     periodclose/periodclosedialog.h
     workspace_member/databaserole.h
+    periodclose/periodclosemodel.h
 )
 
 set(SOURCES
@@ -422,6 +423,7 @@ set(SOURCES
     audithub/audittextdialog.cc
     mainwindow/mainwindow_period_close.cc
     periodclose/periodclosedialog.cc
+    periodclose/periodclosemodel.cc
 )
 
 set(UIS

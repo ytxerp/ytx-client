@@ -566,10 +566,4 @@ void MainWindow::DelegatePeriodClose(QTableView* table_view) const
 
     auto* status { new StatusR(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kStatus), status);
-
-    // auto* document { new DocumentR(table_view) };
-    // table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kDocument), document);
-
-    // auto* tag { new TagDelegate(sc_f_.tag_icon_hash, table_view) };
-    // table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kTag), tag);
 }

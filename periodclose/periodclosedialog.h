@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "search/entry/searchentrymodel.h"
+#include "periodclosemodel.h"
 #include "tree/model/treemodel.h"
 
 namespace Ui {
@@ -14,25 +14,30 @@ class PeriodCloseDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit PeriodCloseDialog(CTreeModel* model, SearchEntryModel* table_model, QWidget* parent = nullptr);
+    explicit PeriodCloseDialog(Section section, CTreeModel* tree_model, PeriodCloseModel* table_model, QWidget* parent = nullptr);
     ~PeriodCloseDialog() override;
 
     QTableView* View();
 
 private slots:
-    void on_pushButtonPriview_clicked();
+    void on_pushButtonPreview_clicked();
+
+    void on_pushButtonCommit_clicked();
 
 private:
     void InitDialog();
-    QVector<Entry*> ConstructEntry(const QSet<Node*>& leaf_node, Node* to_node);
+    void ConstructEntry(const QSet<Node*>& leaf_node, const Node* to_node);
 
 private:
     Ui::PeriodCloseDialog* ui;
+    const Section section_;
 
-    CTreeModel* model_ {};
+    CTreeModel* tree_model_ {};
+    PeriodCloseModel* table_model_ {};
+
     QSet<Node*> leaf_node_ {};
     QSet<Node*> branch_node_ {};
-    QVector<Entry*> entries;
+    QList<Entry*> list_ {};
 };
 
 #endif // PERIODCLOSEDIALOG_H

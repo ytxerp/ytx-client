@@ -36,7 +36,7 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="labelFrom">
         <property name="text">
          <string>From</string>
         </property>
@@ -46,7 +46,7 @@
        <widget class="ComboBox" name="comboBoxFrom"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="labelTo">
         <property name="text">
          <string>To</string>
         </property>
@@ -69,35 +69,16 @@
        </spacer>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBox">
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="buttonSymbols">
-         <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
-        </property>
-        <property name="showGroupSeparator" stdset="0">
-         <bool>true</bool>
-        </property>
-        <property name="stepType">
-         <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+       <widget class="QPushButton" name="pushButtonPreview">
+        <property name="text">
+         <string>Preview</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonPriview">
+       <widget class="QPushButton" name="pushButtonCommit">
         <property name="text">
-         <string>Priview</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButtonClose">
-        <property name="text">
-         <string>Close</string>
+         <string>Commit</string>
         </property>
        </widget>
       </item>
@@ -117,10 +98,10 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>comboBoxFrom</tabstop>
   <tabstop>comboBoxTo</tabstop>
-  <tabstop>pushButtonPriview</tabstop>
-  <tabstop>pushButtonClose</tabstop>
-  <tabstop>doubleSpinBox</tabstop>
+  <tabstop>pushButtonPreview</tabstop>
+  <tabstop>pushButtonCommit</tabstop>
   <tabstop>tableView</tabstop>
  </tabstops>
  <resources/>

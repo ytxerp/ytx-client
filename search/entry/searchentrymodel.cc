@@ -39,7 +39,11 @@ int SearchEntryModel::rowCount(const QModelIndex& parent) const
     return entry_list_.size();
 }
 
-int SearchEntryModel::columnCount(const QModelIndex& /*parent*/) const { return info_.full_entry_header.size(); }
+int SearchEntryModel::columnCount(const QModelIndex& parent) const
+{
+    Q_UNUSED(parent);
+    return info_.full_entry_header.size();
+}
 
 QVariant SearchEntryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
