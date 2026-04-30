@@ -1920,14 +1920,22 @@ You need to recall it first before making changes.</source>
         <translation>终点</translation>
     </message>
     <message>
-        <location filename="../../periodclose/periodclosedialog.ui" line="93"/>
-        <source>Priview</source>
+        <location filename="../../periodclose/periodclosedialog.ui" line="74"/>
+        <source>Preview</source>
         <translation>预览</translation>
     </message>
     <message>
-        <location filename="../../periodclose/periodclosedialog.ui" line="100"/>
+        <location filename="../../periodclose/periodclosedialog.ui" line="81"/>
+        <source>Commit</source>
+        <translation>提交</translation>
+    </message>
+    <message>
+        <source>Priview</source>
+        <translation type="vanished">预览</translation>
+    </message>
+    <message>
         <source>Close</source>
-        <translation>关闭</translation>
+        <translation type="vanished">关闭</translation>
     </message>
 </context>
 <context>
