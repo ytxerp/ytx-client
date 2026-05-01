@@ -21,12 +21,16 @@ public:
 
 private slots:
     void on_pushButtonPreview_clicked();
-
     void on_pushButtonCommit_clicked();
 
 private:
     void InitDialog();
     void ConstructEntry(const QSet<Node*>& leaf_node, const Node* to_node);
+    void ResetState();
+
+    QJsonArray BuildUuidArray(const QSet<Node*>& set);
+    QJsonArray BuildEntryArray(const QList<Entry*>& list);
+    QJsonArray BuildNodeTotalArray(const QHash<QUuid, double>& hash);
 
 private:
     Ui::PeriodCloseDialog* ui;
@@ -37,6 +41,7 @@ private:
 
     QSet<Node*> leaf_node_ {};
     QSet<Node*> branch_node_ {};
+    QHash<QUuid, double> leaf_node_total_ {};
     QList<Entry*> list_ {};
 };
 
