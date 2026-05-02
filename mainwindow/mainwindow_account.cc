@@ -12,7 +12,7 @@
 
 void MainWindow::on_actionProfile_triggered()
 {
-    qInfo() << "[UI]" << "on_actionProfile_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     static QPointer<UserProfileDialog> dialog {};
 
@@ -87,7 +87,7 @@ void MainWindow::InitWorkspaceInfo()
 
 void MainWindow::on_actionWorkspaceMember_triggered()
 {
-    qInfo() << "[UI]" << "on_actionWorkspaceMember_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     static QPointer<WorkspaceMemberDialog> dialog {};
 

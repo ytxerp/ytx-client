@@ -6,7 +6,7 @@
 
 void MainWindow::on_actionAuditLog_triggered()
 {
-    qInfo() << "[UI]" << "on_actionAuditLog_triggered";
+    qInfo() << Q_FUNC_INFO;;
 
     static QPointer<AuditDialog> dialog {};
 

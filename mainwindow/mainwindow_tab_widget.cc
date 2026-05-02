@@ -22,7 +22,7 @@ void MainWindow::SetTabWidget(QTabWidget* tab_widget)
 
 void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 {
-    qInfo() << "[UI]" << "RTreeViewDoubleClicked";
+    qInfo() << Q_FUNC_INFO;
 
     {
         const int expected_column { IsOrderSection(start_) ? std::to_underlying(NodeEnumO::kPartnerId) : std::to_underlying(NodeEnum::kName) };
@@ -92,7 +92,7 @@ void MainWindow::ShowLeafWidget(const QUuid& node_id, const QUuid& entry_id)
 
 void MainWindow::tabWidget_currentChanged()
 {
-    qDebug() << "[UI]" << "tabWidget_currentChanged";
+    qInfo() << Q_FUNC_INFO;
 
     if (!section_settings_)
         return;
@@ -132,7 +132,7 @@ void MainWindow::tabWidget_currentChanged()
 
 void MainWindow::tabWidget_tabBarDoubleClicked(int index)
 {
-    qInfo() << "[UI]" << "tabWidget_tabBarDoubleClicked";
+    qInfo() << Q_FUNC_INFO;
 
     auto* tab_bar { sc_->tab_widget->tabBar() };
     const auto id { tab_bar->tabData(index).toUuid() };
@@ -143,7 +143,7 @@ void MainWindow::tabWidget_tabBarDoubleClicked(int index)
 
 void MainWindow::tabWidget_tabCloseRequestedFIT(int index)
 {
-    qInfo() << "[UI]" << "tabWidget_tabCloseRequested";
+    qInfo() << Q_FUNC_INFO;
 
     const auto node_id { sc_->tab_widget->tabBar()->tabData(index).toUuid() };
 
@@ -156,7 +156,7 @@ void MainWindow::tabWidget_tabCloseRequestedFIT(int index)
 
 void MainWindow::tabWidget_tabCloseRequestedP(int index)
 {
-    qInfo() << "[UI]" << "tabWidget_tabCloseRequestedP";
+    qInfo() << Q_FUNC_INFO;
 
     const auto node_id { sc_->tab_widget->tabBar()->tabData(index).toUuid() };
 
@@ -168,7 +168,7 @@ void MainWindow::tabWidget_tabCloseRequestedP(int index)
 
 void MainWindow::tabWidget_tabCloseRequestedO(int index)
 {
-    qInfo() << "[UI]" << "tabWidget_tabCloseRequestedO";
+    qInfo() << Q_FUNC_INFO;
 
     const auto node_id { sc_->tab_widget->tabBar()->tabData(index).toUuid() };
 
@@ -197,7 +197,7 @@ void MainWindow::tabWidget_tabCloseRequestedO(int index)
 
 void MainWindow::on_actionJumpEntry_triggered()
 {
-    qInfo() << "[UI]" << "on_actionJumpEntry_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     if (IsSingleEntry(start_))
         return;

@@ -14,7 +14,7 @@
 
 void MainWindow::on_actionAppendEntry_triggered()
 {
-    qInfo() << "[UI]" << "on_actionAppendEntry_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     {
         auto* widget { qobject_cast<TreeWidgetSettlement*>(sc_->tab_widget->currentWidget()) };

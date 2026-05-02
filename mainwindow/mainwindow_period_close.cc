@@ -5,7 +5,7 @@
 
 void MainWindow::on_actionPeriodClose_triggered()
 {
-    qInfo() << "[UI]" << "on_actionPeriodClose_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     auto* table_model { new PeriodCloseModel(sc_f_.info, this) };
     auto* dialog { new PeriodCloseDialog(Section::kFinance, sc_f_.tree_model, table_model, this) };

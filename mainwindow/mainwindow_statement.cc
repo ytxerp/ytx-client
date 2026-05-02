@@ -6,7 +6,7 @@
 
 void MainWindow::on_actionStatement_triggered()
 {
-    qInfo() << "[UI]" << "on_actionStatement_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     Q_ASSERT(IsOrderSection(start_));
 

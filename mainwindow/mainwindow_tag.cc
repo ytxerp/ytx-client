@@ -14,7 +14,7 @@
 
 void MainWindow::on_actionTags_triggered()
 {
-    qInfo() << "[UI]" << "on_actionTags_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     auto* model { new TagModel(start_, sc_->tag_hash, sc_->info, this) };
     connect(model, &TagModel::SInsertingTag, this, &MainWindow::RInsertingTag);

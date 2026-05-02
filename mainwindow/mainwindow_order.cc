@@ -35,7 +35,7 @@ void MainWindow::EditNameO()
 
 void MainWindow::on_actionNewBranch_triggered()
 {
-    qInfo() << "[UI]" << "on_actionNewGroup_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     if (start_ != Section::kSale && start_ != Section::kPurchase)
         return;

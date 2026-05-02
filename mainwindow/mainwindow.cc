@@ -153,7 +153,7 @@ void MainWindow::InsertNodeFunction(const QModelIndex& parent_index)
 
 void MainWindow::on_actionDelete_triggered()
 {
-    qInfo() << "[UI]" << "on_actionDelete_triggered";
+    qInfo() << Q_FUNC_INFO;
     auto* active_widget { QApplication::activeWindow() };
 
     if (auto* d_dialog { qobject_cast<TagManagerDlg*>(active_widget) }) {
@@ -512,7 +512,7 @@ void MainWindow::SetIcon() const
 
 void MainWindow::on_actionInsertNode_triggered()
 {
-    qInfo() << "[UI]" << "on_actionInsertNode_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     auto* widget { sc_->tab_widget->currentWidget() };
     if (!IsTreeWidget(widget) && !IsTableWidgetO(widget)) {
@@ -527,7 +527,7 @@ void MainWindow::on_actionInsertNode_triggered()
 
 void MainWindow::on_actionAppendNode_triggered()
 {
-    qInfo() << "[UI]" << "on_actionAppendNode_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     auto* widget { sc_->tab_widget->currentWidget() };
     if (!IsTreeWidget(widget)) {
@@ -557,7 +557,7 @@ void MainWindow::on_actionAppendNode_triggered()
 
 void MainWindow::on_actionRename_triggered()
 {
-    qInfo() << "[UI]" << "on_actionEditName_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     switch (start_) {
     case Section::kSale:
@@ -593,7 +593,7 @@ void MainWindow::ResizeColumn(QHeaderView* header, int stretch_column) const
 
 void MainWindow::on_actionPreferences_triggered()
 {
-    qInfo() << "[UI]" << "on_actionPreferences_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     auto model { sc_->tree_model };
 
@@ -608,7 +608,7 @@ void MainWindow::on_actionPreferences_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    qInfo() << "[UI]" << "on_actionAbout_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     static QPointer<About> dialog {};
 
@@ -624,7 +624,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::RSectionGroup(int id)
 {
-    qInfo() << "[UI]" << "Switched to section:" << kSectionString.value(Section(id));
+    qInfo() << Q_FUNC_INFO << kSectionString.value(Section(id));
 
     const Section section { id };
     start_ = section;

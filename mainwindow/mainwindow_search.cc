@@ -21,7 +21,7 @@
 
 void MainWindow::on_actionSearch_triggered()
 {
-    qInfo() << "[UI]" << "on_actionSearch_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     if (!section_settings_)
         return;

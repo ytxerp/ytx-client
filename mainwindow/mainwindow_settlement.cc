@@ -10,7 +10,7 @@
 
 void MainWindow::on_actionSettlement_triggered()
 {
-    qInfo() << "[UI]" << "on_actionSettlement_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     Q_ASSERT(IsOrderSection(start_));
 
@@ -87,7 +87,7 @@ void MainWindow::RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id)
 
 void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
 {
-    qInfo() << "[UI]" << "RSettlementTableViewDoubleClicked";
+    qInfo() << Q_FUNC_INFO;
 
     auto* current_widget { sc_->tab_widget->currentWidget() };
 

@@ -13,7 +13,7 @@
 
 void MainWindow::on_actionReconnect_triggered()
 {
-    qInfo() << "[UI]" << "on_actionReconnect_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
     WebSocket::Instance()->Connect();
@@ -21,7 +21,7 @@ void MainWindow::on_actionReconnect_triggered()
 
 void MainWindow::on_actionSignIn_triggered()
 {
-    qInfo() << "[UI]" << "on_actionSignIn_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     static QPointer<AuthDialog> dialog {};
 
@@ -38,7 +38,7 @@ void MainWindow::on_actionSignIn_triggered()
 
 void MainWindow::on_actionSignOut_triggered()
 {
-    qInfo() << "[UI]" << "on_actionSignOut_triggered";
+    qInfo() << Q_FUNC_INFO;
 
     ResetMainwindow();
 
