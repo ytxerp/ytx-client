@@ -45,10 +45,10 @@ QJsonObject EntryShadow::WriteJson() const
     obj.insert(kRhsNode, rhs_node->toString(QUuid::WithoutBraces));
     obj.insert(kLhsRate, QString::number(*lhs_rate, 'f', NumericConst::kDecimalPlaces8));
     obj.insert(kRhsRate, QString::number(*rhs_rate, 'f', NumericConst::kDecimalPlaces8));
-    obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', NumericConst::kDecimalPlaces4));
-    obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', NumericConst::kDecimalPlaces4));
-    obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', NumericConst::kDecimalPlaces4));
-    obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', NumericConst::kDecimalPlaces4));
+    obj.insert(kLhsDebit, QString::number(*lhs_debit, 'f', NumericConst::kDecimalPlaces8));
+    obj.insert(kLhsCredit, QString::number(*lhs_credit, 'f', NumericConst::kDecimalPlaces8));
+    obj.insert(kRhsDebit, QString::number(*rhs_debit, 'f', NumericConst::kDecimalPlaces8));
+    obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', NumericConst::kDecimalPlaces8));
     obj.insert(kTag, utils::WriteStringList(*tag));
     obj.insert(kDocument, utils::WriteStringList(*document));
 
