@@ -25,12 +25,10 @@ private slots:
 
 private:
     void InitDialog();
-    void ConstructEntry(const QSet<Node*>& leaf_node, const Node* to_node);
+    void ConstructEntry(const QSet<Node*>& closing_leaf_node, const Node* summary_node);
     void ResetState();
 
     QJsonArray BuildUuidArray(const QSet<Node*>& set);
-    QJsonArray BuildEntryArray(const QList<Entry*>& list);
-    QJsonArray BuildNodeTotalArray(const QHash<QUuid, double>& hash);
 
 private:
     Ui::PeriodCloseDialog* ui;
@@ -39,10 +37,10 @@ private:
     CTreeModel* tree_model_ {};
     PeriodCloseModel* table_model_ {};
 
-    QSet<Node*> leaf_node_ {};
-    QSet<Node*> branch_node_ {};
-    QHash<QUuid, double> leaf_node_total_ {};
-    QList<Entry*> list_ {};
+    QUuid summary_node_id_ {};
+    QSet<Node*> closing_leaf_node_ {};
+
+    QList<Entry*> entry_list_ {};
 };
 
 #endif // PERIODCLOSEDIALOG_H

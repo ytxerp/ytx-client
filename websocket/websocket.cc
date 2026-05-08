@@ -221,6 +221,7 @@ void WebSocket::InitHandler()
 
     handler_obj_[WsKey::kAccountNameUpdate] = [this](const QJsonObject& obj) { UpdateAccountName(obj); };
     handler_obj_[WsKey::kAccountUsernameUpdate] = [this](const QJsonObject& obj) { UpdateAccountUsername(obj); };
+    handler_obj_[WsKey::kPeriodClose] = [this](const QJsonObject& obj) { PeriodClose(obj); };
 
     handler_obj_[WsKey::kWorkspaceMemberAck] = [this](const QJsonObject& obj) { AckWorkspaceMember(obj); };
     handler_obj_[WsKey::kAccountRoleUpdate] = [this](const QJsonObject& obj) { UpdateAccountRole(obj); };
@@ -468,6 +469,26 @@ void WebSocket::DeleteTag(const QJsonObject& obj)
 {
     Q_ASSERT(obj.contains(kSection));
     emit STagDelete(obj);
+}
+
+void WebSocket::PeriodClose(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const QJsonArray entry_array { obj.value(kEntryArray).toArray() };
+    const QJsonArray total_array { obj.value(kTotalArray).toArray() };
+    const QJsonObject summary_total { obj.value(kSummaryTotal).toObject() };
+
+    const QUuid summary_node_id { summary_total.value(kId).toString() };
+
+    {
+        auto entry_hub { entry_hub_hash_.value(section) };
+        entry_hub->AckTable(summary_node_id, entry_array);
+    }
+
+    {
+        auto tree_model { tree_model_hash_.value(section) };
+        tree_model->SyncTotalArray(total_array);
+    }
 }
 
 void WebSocket::ApplyPartnerEntry(const QJsonArray& arr)

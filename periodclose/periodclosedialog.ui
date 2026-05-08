@@ -36,24 +36,24 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="labelFrom">
+       <widget class="QLabel" name="labelClosing">
         <property name="text">
-         <string>From</string>
+         <string>Closing</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="ComboBox" name="comboBoxFrom"/>
+       <widget class="ComboBox" name="comboBoxClosing"/>
       </item>
       <item>
-       <widget class="QLabel" name="labelTo">
+       <widget class="QLabel" name="labelSummary">
         <property name="text">
-         <string>To</string>
+         <string>Summary</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="ComboBox" name="comboBoxTo"/>
+       <widget class="ComboBox" name="comboBoxSummary"/>
       </item>
       <item>
        <spacer name="horizontalSpacer">
@@ -98,8 +98,8 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>comboBoxFrom</tabstop>
-  <tabstop>comboBoxTo</tabstop>
+  <tabstop>comboBoxClosing</tabstop>
+  <tabstop>comboBoxSummary</tabstop>
   <tabstop>pushButtonPreview</tabstop>
   <tabstop>pushButtonCommit</tabstop>
   <tabstop>tableView</tabstop>

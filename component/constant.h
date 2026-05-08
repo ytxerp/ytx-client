@@ -142,6 +142,8 @@ inline const QString kCBalance = QStringLiteral("cbalance");
 inline const QString kCSettlement = QStringLiteral("csettlement");
 
 // Message fields
+inline const QString kClosingLeafNode = QStringLiteral("closing_leaf_node");
+inline const QString kSummaryTotal = QStringLiteral("summary_total");
 
 // Tree & table columns
 inline const QString kCode = QStringLiteral("code");
