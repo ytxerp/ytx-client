@@ -262,8 +262,17 @@ void EntryHub::AckTable(const QUuid& node_id, const QJsonArray& array)
 
 void EntryHub::SearchEntry(const QJsonArray& array)
 {
-    EntryList list = ProcessEntryArray(array);
+    const EntryList list { ProcessEntryArray(array) };
     emit SSearchEntry(list);
+}
+
+void EntryHub::PeriodClose(const QJsonArray& array)
+{
+    const EntryList list { ProcessEntryArray(array) };
+
+    for (auto* entry : list) {
+        emit SAttachOneEntry(entry->lhs_node, entry);
+    }
 }
 
 EntryList EntryHub::ProcessEntryArray(const QJsonArray& array)

@@ -78,6 +78,7 @@ public:
 
     void AckTable(const QUuid& node_id, const QJsonArray& array);
     void SearchEntry(const QJsonArray& array);
+    void PeriodClose(const QJsonArray& array);
 
     void MarkBatch(const QUuid& node_id, Mark mark);
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);

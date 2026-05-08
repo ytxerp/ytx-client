@@ -483,6 +483,7 @@ void WebSocket::PeriodClose(const QJsonObject& obj)
     {
         auto entry_hub { entry_hub_hash_.value(section) };
         entry_hub->AckTable(summary_node_id, entry_array);
+        entry_hub->PeriodClose(entry_array);
     }
 
     {

@@ -74,14 +74,16 @@ void PeriodCloseDialog::ConstructEntry(const QSet<Node*>& closing_leaf_node, con
         entry->issued_time = date_time;
         entry->id = QUuid::createUuidV7();
 
-        const double amount { node->final_total };
+        const double abs_amount { std::abs(node->final_total) };
+        const bool is_positive { node->final_total > 0.0 };
+        const bool is_dicd { node->direction_rule == Rule::kDICD };
 
-        if (node->direction_rule == Rule::kDICD) {
-            entry->lhs_credit = amount;
-            entry->rhs_debit = amount;
+        if (is_positive == is_dicd) {
+            entry->lhs_credit = abs_amount;
+            entry->rhs_debit = abs_amount;
         } else {
-            entry->lhs_debit = amount;
-            entry->rhs_credit = amount;
+            entry->lhs_debit = abs_amount;
+            entry->rhs_credit = abs_amount;
         }
 
         entry_list_.emplaceBack(entry);
@@ -127,6 +129,9 @@ void PeriodCloseDialog::on_pushButtonPreview_clicked()
     auto* summary_node { tree_model_->GetNode(summary_node_id_) };
 
     if (!closing_node || !summary_node || closing_node == summary_node)
+        return;
+
+    if (utils::IsDescendant(summary_node, closing_node))
         return;
 
     ResetState();
