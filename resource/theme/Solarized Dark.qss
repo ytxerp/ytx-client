@@ -131,7 +131,8 @@ QComboBox#comboDefaultUnit {
 }
 
 QWidget#TableWidgetO QComboBox,
-QWidget#TableWidgetSettlement QComboBox {
+QWidget#TableWidgetSettlement QComboBox,
+QDialog#PeriodCloseDialog QComboBox {
     min-width: 80px;
 }
 
