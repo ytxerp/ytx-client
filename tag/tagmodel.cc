@@ -22,11 +22,7 @@ TagModel::TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, CSection
     std::sort(tag_list_.begin(), tag_list_.end(), [](const Tag* a, const Tag* b) { return a->name < b->name; });
 }
 
-TagModel::~TagModel()
-{
-    qDebug() << "~TagModel() FlushCaches";
-    FlushCaches();
-}
+TagModel::~TagModel() { FlushCaches(); }
 
 QVariant TagModel::headerData(int section, Qt::Orientation orientation, int role) const
 {

@@ -101,16 +101,11 @@ private slots:
     void RDisconnected();
     void RBinaryMessageReceived(const QByteArray& data);
     void RErrorOccurred(QAbstractSocket::SocketError error);
-    void RPong()
-    {
-        qDebug() << "← Pong received, reset timeout_timer_";
-        timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
-    }
+    void RPong() { timeout_timer_->start(TimeConst::kTimeoutThresholdMs); }
 
     void RSendPing()
     {
         if (socket_.state() == QAbstractSocket::ConnectedState) {
-            qDebug() << "→ Ping sent";
             socket_.ping();
         }
     }

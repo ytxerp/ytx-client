@@ -6,7 +6,7 @@
 
 void MainWindow::on_actionAuditLog_triggered()
 {
-    qInfo() << Q_FUNC_INFO;;
+    qInfo() << Q_FUNC_INFO;
 
     static QPointer<AuditDialog> dialog {};
 
@@ -150,6 +150,7 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(WsKey::kOrderInsertRelease), tr("Order Insert Release") },
         { std::to_underlying(WsKey::kOrderUpdateRelease), tr("Order Update Release") },
         { std::to_underlying(WsKey::kOrderRecall), tr("Order Recall") },
-
+        // --- Period Close ---
+        { std::to_underlying(WsKey::kPeriodClose), tr("Period Close") },
     };
 }

@@ -11,7 +11,6 @@ void MainWindow::on_actionPeriodClose_triggered()
     auto* dialog { new PeriodCloseDialog(Section::kFinance, sc_f_.tree_model, table_model, this) };
 
     utils::ManageDialog(sc_f_.widget_hash, dialog);
-    dialog->setWindowModality(Qt::ApplicationModal);
 
     {
         auto* view { dialog->View() };
