@@ -48,24 +48,6 @@
     </message>
 </context>
 <context>
-    <name>AuditTextDelegate</name>
-    <message>
-        <source>Audit Detail - Before</source>
-        <translation type="vanished">审计明细 - 前</translation>
-    </message>
-    <message>
-        <source>Audit Detail - After</source>
-        <translation type="vanished">审计明细 - 后</translation>
-    </message>
-</context>
-<context>
-    <name>AuditTextDialog</name>
-    <message>
-        <source>Audit Detail</source>
-        <translation type="vanished">审计明细</translation>
-    </message>
-</context>
-<context>
     <name>AuthDialog</name>
     <message>
         <location filename="../../dialog/authdialog.ui" line="161"/>
@@ -1090,6 +1072,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="673"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="154"/>
         <source>Period Close</source>
         <translation>结转</translation>
     </message>
@@ -1295,46 +1278,6 @@ Do you want to save before closing?</source>
         <translation>所有者</translation>
     </message>
     <message>
-        <source>Main | Readonly</source>
-        <translation type="vanished">全库 | 只读</translation>
-    </message>
-    <message>
-        <source>Main | Readwrite</source>
-        <translation type="vanished">全库 | 读写</translation>
-    </message>
-    <message>
-        <source>Finance | Readonly</source>
-        <translation type="vanished">财务 | 只读</translation>
-    </message>
-    <message>
-        <source>Finance | Readwrite</source>
-        <translation type="vanished">财务 | 读写</translation>
-    </message>
-    <message>
-        <source>Inventory | Readonly</source>
-        <translation type="vanished">存货 | 只读</translation>
-    </message>
-    <message>
-        <source>Inventory | Readwrite</source>
-        <translation type="vanished">存货 | 读写</translation>
-    </message>
-    <message>
-        <source>Partner | Readonly</source>
-        <translation type="vanished">合作 | 只读</translation>
-    </message>
-    <message>
-        <source>Partner | Readwrite</source>
-        <translation type="vanished">合作 | 读写</translation>
-    </message>
-    <message>
-        <source>Purchase | Readonly</source>
-        <translation type="vanished">采购 | 只读</translation>
-    </message>
-    <message>
-        <source>Purchase | Readwrite</source>
-        <translation type="vanished">采购 | 读写</translation>
-    </message>
-    <message>
         <location filename="../../mainwindow/mainwindow_account.cc" line="62"/>
         <source>Finance R</source>
         <translation>财务 只读</translation>
@@ -1433,22 +1376,6 @@ Do you want to save before closing?</source>
         <location filename="../../mainwindow/mainwindow_account.cc" line="131"/>
         <source>Your account role has been updated. Please restart the application to enable new permissions.</source>
         <translation>您的账户权限已更新，请重启应用以生效。</translation>
-    </message>
-    <message>
-        <source>Sale | Readonly</source>
-        <translation type="vanished">销售 | 只读</translation>
-    </message>
-    <message>
-        <source>Sale | Readwrite</source>
-        <translation type="vanished">销售 | 读写</translation>
-    </message>
-    <message>
-        <source>Task | Readonly</source>
-        <translation type="vanished">任务 | 只读</translation>
-    </message>
-    <message>
-        <source>Task | Readwrite</source>
-        <translation type="vanished">任务 | 读写</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.cc" line="677"/>
@@ -1911,13 +1838,13 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../periodclose/periodclosedialog.ui" line="41"/>
-        <source>From</source>
-        <translation>起点</translation>
+        <source>Closing</source>
+        <translation>结转</translation>
     </message>
     <message>
         <location filename="../../periodclose/periodclosedialog.ui" line="51"/>
-        <source>To</source>
-        <translation>终点</translation>
+        <source>Summary</source>
+        <translation>汇总</translation>
     </message>
     <message>
         <location filename="../../periodclose/periodclosedialog.ui" line="74"/>
@@ -1928,14 +1855,6 @@ You need to recall it first before making changes.</source>
         <location filename="../../periodclose/periodclosedialog.ui" line="81"/>
         <source>Commit</source>
         <translation>提交</translation>
-    </message>
-    <message>
-        <source>Priview</source>
-        <translation type="vanished">预览</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation type="vanished">关闭</translation>
     </message>
 </context>
 <context>
@@ -2740,14 +2659,6 @@ You need to recall it first before making changes.</source>
         <location filename="../../search/dialog/searchdialog.cc" line="57"/>
         <source>Search</source>
         <translation>搜索</translation>
-    </message>
-    <message>
-        <source>Partner Name</source>
-        <translation type="vanished">合作名称</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation type="vanished">描述</translation>
     </message>
 </context>
 <context>
