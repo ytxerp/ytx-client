@@ -83,7 +83,6 @@ void WebSocket::Connect()
 
 void WebSocket::RConnected()
 {
-    qInfo() << "[WS]" << "Connected";
     emit SConnectionAllow();
     InitTimer();
 }

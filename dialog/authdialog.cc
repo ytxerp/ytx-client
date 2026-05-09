@@ -35,7 +35,7 @@ AuthDialog::~AuthDialog() { delete ui; }
 
 void AuthDialog::RAllowLogin()
 {
-    qInfo() << "[Auth]" << "Login succeeded" << ui->lineEditEmail->text().trimmed() << ui->lineEditWorkspace->text().trimmed();
+    qInfo() << "[Auth]" << "Login succeeded";
     close();
 }
 
