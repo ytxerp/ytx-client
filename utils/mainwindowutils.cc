@@ -142,7 +142,9 @@ QString utils::AccountIniFileName(const QString& email, const QString& workspace
     QString file_name { email_user + "_" + domain_main + "_" + sanitized_workspace };
 
     // Clean up: remove consecutive underscores and trim
-    file_name.replace(QRegularExpression("_+"), "_");
+    static const QRegularExpression kUnderscores { "_+" };
+
+    file_name.replace(kUnderscores, "_");
     while (file_name.startsWith('_'))
         file_name.remove(0, 1);
     while (file_name.endsWith('_'))

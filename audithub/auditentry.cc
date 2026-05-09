@@ -3,13 +3,13 @@
 #include "component/constant.h"
 
 namespace audit_hub::keys {
-const QString kTargetId = QStringLiteral("target_id");
-const QString kTargetType = QStringLiteral("target_type");
-const QString kWsKey = QStringLiteral("ws_key");
-const QString kLevel = QStringLiteral("level");
-const QString kTargetCode = QStringLiteral("target_code");
-const QString kBefore = QStringLiteral("before");
-const QString kAfter = QStringLiteral("after");
+constexpr QLatin1StringView kTargetId { "target_id" };
+constexpr QLatin1StringView kTargetType { "target_type" };
+constexpr QLatin1StringView kWsKey { "ws_key" };
+constexpr QLatin1StringView kLevel { "level" };
+constexpr QLatin1StringView kTargetCode { "target_code" };
+constexpr QLatin1StringView kBefore { "before" };
+constexpr QLatin1StringView kAfter { "after" };
 }
 
 void audit_hub::AuditEntry::Reset() { *this = AuditEntry {}; }

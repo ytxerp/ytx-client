@@ -1,15 +1,17 @@
 ﻿#include "mainwindow.h"
 
+#include <QtConcurrent/qtconcurrentrun.h>
+
 #include <QCloseEvent>
 #include <QDesktopServices>
 #include <QFileDialog>
+#include <QFutureWatcher>
 #include <QHeaderView>
 #include <QNetworkReply>
 #include <QQueue>
 #include <QScrollBar>
 #include <QShortcut>
 #include <QUrl>
-#include <QtConcurrent>
 
 #include "component/constant.h"
 #include "component/signalblocker.h"

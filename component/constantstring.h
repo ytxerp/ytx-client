@@ -25,7 +25,7 @@
 namespace StringConst {
 inline const QString kEightDigits = QStringLiteral("+00,000,000.00");
 inline const QString kFourDigits = QStringLiteral("+0,000.00");
-inline const QString kEmpty = QStringLiteral("");
+constexpr QLatin1StringView kEmpty { "" };
 }
 
 namespace NodeRef {

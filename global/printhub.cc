@@ -354,7 +354,6 @@ QString PrintHub::NumberToChineseUpper(double value)
 
     // Static constants initialized once
     static const QStringList digits { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖" };
-    static const QStringList units { "", "拾", "佰", "仟" };
     static const QStringList big_units { "", "万", "亿", "兆" };
     static const QRegularExpression multi_zero("零{2,}");
     static const QRegularExpression zero_before_unit("零([万亿兆])");

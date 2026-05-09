@@ -146,7 +146,7 @@ void Preferences::IniStringList()
     theme_list_.emplaceBack(kSolarizedDark);
 
     operation_list_.emplaceBack(kPlus);
-    operation_list_.emplaceBack(kMinux);
+    operation_list_.emplaceBack(kMinus);
 
     date_format_list_.emplaceBack(kDateTimeFST);
     date_format_list_.emplaceBack(kDateFST);

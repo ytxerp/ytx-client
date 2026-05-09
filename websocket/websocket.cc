@@ -969,7 +969,6 @@ void WebSocket::UpdateNodeDirectionRule(const QJsonObject& obj)
 void WebSocket::UpdateNodeName(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    CString session_id { obj.value(kSessionId).toString() };
 
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const auto name { obj.value(kName).toString() };
@@ -1191,7 +1190,6 @@ void WebSocket::RecallSettlement(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
-    const QJsonArray selected_array { obj.value(kSettlementItemSelected).toArray() };
     const auto settlement { obj.value(kSettlement).toObject() };
 
     auto* base_model { tree_model_hash_.value(section).data() };

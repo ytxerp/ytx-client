@@ -44,7 +44,7 @@ inline const QString kSeparator = QStringLiteral("separator");
 inline const QString kDeleteConfirm = QStringLiteral("delete_confirm");
 
 // Operator symbols
-inline const QString kMinux = QStringLiteral("-");
+inline const QString kMinus = QStringLiteral("-");
 inline const QString kPlus = QStringLiteral("+");
 
 // File suffixes
