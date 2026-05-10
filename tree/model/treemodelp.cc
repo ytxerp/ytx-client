@@ -112,7 +112,7 @@ void TreeModelP::sort(int column, Qt::SortOrder order)
         case NodeEnumP::kInitialTotal:
             return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumP::kColor:
-            return utils::CompareMember(lhs, rhs, &Node::color, order);
+            return utils::CompareColor(lhs, rhs, order);
         case NodeEnumP::kTag:
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumP::kDocument:

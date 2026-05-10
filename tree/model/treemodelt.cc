@@ -62,10 +62,7 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
         return false;
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
-    auto* d_node { static_cast<NodeT*>(node) };
-
     Q_ASSERT(node != nullptr);
-    Q_ASSERT(d_node != nullptr);
 
     const NodeEnumT column { index.column() };
 
@@ -126,7 +123,7 @@ void TreeModelT::sort(int column, Qt::SortOrder order)
         case NodeEnumT::kUnit:
             return utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumT::kColor:
-            return utils::CompareMember(lhs, rhs, &Node::color, order);
+            return utils::CompareColor(lhs, rhs, order);
         case NodeEnumT::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
         case NodeEnumT::kInitialTotal:

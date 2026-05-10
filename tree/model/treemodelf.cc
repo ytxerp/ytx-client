@@ -117,7 +117,7 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
         case NodeEnumF::kUnit:
             return utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumF::kColor:
-            return utils::CompareMember(lhs, rhs, &Node::color, order);
+            return utils::CompareColor(lhs, rhs, order);
         case NodeEnumF::kTag:
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumF::kInitialTotal:

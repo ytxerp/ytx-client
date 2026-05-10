@@ -187,6 +187,37 @@ constexpr std::pair<int, int> NodeCacheColumnRange(Section section)
     Q_UNREACHABLE();
 }
 
+inline std::tuple<int, int, int> ColorSortKey(const QString& color_name)
+{
+    const QColor color(color_name);
+
+    // Invalid/empty colors sort first
+    if (!color.isValid())
+        return { -1, -1, -1 };
+
+    int hue = color.hsvHue();
+
+    // Qt returns -1 for grayscale colors
+    // Put grayscale colors after normal hues
+    if (hue < 0)
+        hue = 360;
+
+    return { hue,
+        -color.hsvSaturation(), // vivid first
+        color.value() };
+}
+
+inline bool CompareColor(const Node* lhs, const Node* rhs, Qt::SortOrder order)
+{
+    Q_ASSERT(lhs != nullptr);
+    Q_ASSERT(rhs != nullptr);
+
+    const auto l_key = ColorSortKey(lhs->color);
+    const auto r_key = ColorSortKey(rhs->color);
+
+    return (order == Qt::AscendingOrder) ? (l_key < r_key) : (l_key > r_key);
+}
+
 inline QString UnitString(NodeUnit unit)
 {
     switch (unit) {

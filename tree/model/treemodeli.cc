@@ -43,7 +43,7 @@ void TreeModelI::sort(int column, Qt::SortOrder order)
         case NodeEnumI::kUnit:
             return utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumI::kColor:
-            return utils::CompareMember(lhs, rhs, &Node::color, order);
+            return utils::CompareColor(lhs, rhs, order);
         case NodeEnumI::kCommission:
             return utils::CompareMember(d_lhs, d_rhs, &NodeI::commission, order);
         case NodeEnumI::kUnitPrice:
