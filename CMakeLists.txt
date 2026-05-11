@@ -424,6 +424,7 @@ set(SOURCES
     mainwindow/mainwindow_period_close.cc
     periodclose/periodclosedialog.cc
     periodclose/periodclosemodel.cc
+    workspace_member/databaserole.cc
 )
 
 set(UIS

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>246</width>
-    <height>143</height>
+    <width>333</width>
+    <height>174</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,6 +61,20 @@
      </item>
      <item row="2" column="1">
       <widget class="QLineEdit" name="lineEditName"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Role</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="lineEditRole">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

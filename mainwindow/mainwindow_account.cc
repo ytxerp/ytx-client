@@ -58,21 +58,6 @@ void MainWindow::InitWorkspaceInfo()
 
     workspace_info_.role_hash = QHash<int, QString>(workspace_info_.role_list.cbegin(), workspace_info_.role_list.cend());
 
-    workspace_info_.database_role_list = {
-        { PermissionBits::FINANCE_READONLY, tr("Finance R") },
-        { PermissionBits::FINANCE_READWRITE, tr("Finance W") },
-        { PermissionBits::TASK_READONLY, tr("Task R") },
-        { PermissionBits::TASK_READWRITE, tr("Task W") },
-        { PermissionBits::INVENTORY_READONLY, tr("Inventory R") },
-        { PermissionBits::INVENTORY_READWRITE, tr("Inventory W") },
-        { PermissionBits::PARTNER_READONLY, tr("Partner R") },
-        { PermissionBits::PARTNER_READWRITE, tr("Partner W") },
-        { PermissionBits::SALE_READONLY, tr("Sale R") },
-        { PermissionBits::SALE_READWRITE, tr("Sale W") },
-        { PermissionBits::PURCHASE_READONLY, tr("Purchase R") },
-        { PermissionBits::PURCHASE_READWRITE, tr("Purchase W") },
-    };
-
     workspace_info_.header = {
         tr("Id"),
         tr("Version"),

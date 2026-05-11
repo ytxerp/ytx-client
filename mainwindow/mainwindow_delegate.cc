@@ -529,7 +529,7 @@ void MainWindow::DelegateWorkspaceMember(QTableView* table_view) const
     auto* workspace_role { new WorkspaceRoleDelegate(workspace_info_.role_hash, workspace_info_.role_list, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kWorkspaceRole), workspace_role);
 
-    auto* database_role { new DatabaseRoleDelegate(workspace_info_.database_role_list, table_view) };
+    auto* database_role { new DatabaseRoleDelegate(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kDatabaseRole), database_role);
 }
 

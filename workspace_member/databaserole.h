@@ -29,6 +29,13 @@ enum Flag {
 Q_DECLARE_FLAGS(Flags, Flag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(Flags)
 
+struct PermissionItem {
+    PermissionBits::Flag flag {};
+    QString text {};
+};
+
+std::span<const PermissionItem> DatabaseRoleList();
+QString DatabaseRoleToDisplay(PermissionBits::Flags flags);
 }
 
 #endif // DATABASEROLE_H
