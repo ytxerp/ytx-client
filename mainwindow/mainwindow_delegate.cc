@@ -526,7 +526,7 @@ void MainWindow::DelegateWorkspaceMember(QTableView* table_view) const
     auto* created_time { new IssuedTimeR(kDateFST, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kCreatedTime), created_time);
 
-    auto* workspace_role { new WorkspaceRoleDelegate(workspace_info_.role_hash, workspace_info_.role_list, table_view) };
+    auto* workspace_role { new WorkspaceRoleDelegate(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kWorkspaceRole), workspace_role);
 
     auto* database_role { new DatabaseRoleDelegate(table_view) };

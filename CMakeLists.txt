@@ -425,6 +425,7 @@ set(SOURCES
     periodclose/periodclosedialog.cc
     periodclose/periodclosemodel.cc
     workspace_member/databaserole.cc
+    workspace_member/workspacerole.cc
 )
 
 set(UIS

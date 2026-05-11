@@ -3,11 +3,8 @@
 #include "global/userprofile.h"
 #include "widget/combobox.h"
 
-WorkspaceRoleDelegate::WorkspaceRoleDelegate(
-    const QHash<int, QString>& workspace_role_hash, const QList<QPair<int, QString>>& workspace_role_list, QObject* parent)
+WorkspaceRoleDelegate::WorkspaceRoleDelegate(QObject* parent)
     : StyledItemDelegate { parent }
-    , workspace_role_hash_ { workspace_role_hash }
-    , workspace_role_list_ { workspace_role_list }
 {
 }
 
@@ -17,7 +14,7 @@ QWidget* WorkspaceRoleDelegate::createEditor(QWidget* parent, const QStyleOption
 
     const auto current_role { static_cast<int>(UserProfile::Instance().GetWorkspaceRole()) };
 
-    for (const auto& [key, value] : workspace_role_list_) {
+    for (const auto& [key, value] : workspace_role::RoleList()) {
         if (key < current_role)
             editor->addItem(value, key);
     }
@@ -47,17 +44,17 @@ void WorkspaceRoleDelegate::setModelData(QWidget* editor, QAbstractItemModel* mo
 void WorkspaceRoleDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int key { index.data().toInt() };
-    if (!workspace_role_hash_.contains(key))
+    if (!workspace_role::RoleHash().contains(key))
         return PaintEmpty(painter, option, index);
 
-    const QString text { workspace_role_hash_.value(key) };
+    const QString text { workspace_role::RoleHash().value(key) };
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }
 
 QSize WorkspaceRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int key { index.data().toInt() };
-    const QString text { workspace_role_hash_.value(key) };
+    const QString text { workspace_role::RoleHash().value(key) };
     return CalculateTextSize(text, option);
 }
 
@@ -65,7 +62,7 @@ void WorkspaceRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOp
 {
     const int bar_width { QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent) };
     const int key { index.data().toInt() };
-    const QString text { workspace_role_hash_.value(key) };
+    const QString text { workspace_role::RoleHash().value(key) };
 
     const QSize text_size { CalculateTextSize(text, option) };
 

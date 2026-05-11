@@ -25,8 +25,6 @@
 #include <QString>
 
 struct WorkspaceInfo {
-    QList<QPair<int, QString>> role_list {};
-    QHash<int, QString> role_hash {};
     QStringList header {};
 };
 

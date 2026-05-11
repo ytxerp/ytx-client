@@ -31,4 +31,14 @@ enum class WorkspaceRole {
     kOwner = 99,
 };
 
+namespace workspace_role {
+struct Item {
+    int role {};
+    QString text {};
+};
+
+std::span<const Item> RoleList();
+QHash<int, QString> RoleHash();
+}
+
 #endif // WORKSPACEROLE_H

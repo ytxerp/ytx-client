@@ -49,15 +49,6 @@ void MainWindow::RAccountUsername(const QJsonObject& obj)
 
 void MainWindow::InitWorkspaceInfo()
 {
-    workspace_info_.role_list = {
-        { static_cast<int>(WorkspaceRole::kGuest), tr("Guest") },
-        { static_cast<int>(WorkspaceRole::kMember), tr("Member") },
-        { static_cast<int>(WorkspaceRole::kAdmin), tr("Admin") },
-        { static_cast<int>(WorkspaceRole::kOwner), tr("Owner") },
-    };
-
-    workspace_info_.role_hash = QHash<int, QString>(workspace_info_.role_list.cbegin(), workspace_info_.role_list.cend());
-
     workspace_info_.header = {
         tr("Id"),
         tr("Version"),
