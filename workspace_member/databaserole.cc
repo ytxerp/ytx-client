@@ -28,11 +28,20 @@ QString RoleDisplay(PermissionBits bits)
 {
     QStringList result {};
 
-    for (const auto& item : RoleList()) {
-        if ((bits & item.bit) == item.bit) {
-            result.emplaceBack(item.text);
+    auto AppendRole = [&](PermissionBit read_bit, PermissionBit write_bit, const QString& read_text, const QString& write_text) {
+        if ((bits & write_bit) == write_bit) {
+            result.emplaceBack(write_text);
+        } else if ((bits & read_bit) == read_bit) {
+            result.emplaceBack(read_text);
         }
-    }
+    };
+
+    AppendRole(FINANCE_READONLY, FINANCE_READWRITE, QObject::tr("Finance R"), QObject::tr("Finance W"));
+    AppendRole(TASK_READONLY, TASK_READWRITE, QObject::tr("Task R"), QObject::tr("Task W"));
+    AppendRole(INVENTORY_READONLY, INVENTORY_READWRITE, QObject::tr("Inventory R"), QObject::tr("Inventory W"));
+    AppendRole(PARTNER_READONLY, PARTNER_READWRITE, QObject::tr("Partner R"), QObject::tr("Partner W"));
+    AppendRole(SALE_READONLY, SALE_READWRITE, QObject::tr("Sale R"), QObject::tr("Sale W"));
+    AppendRole(PURCHASE_READONLY, PURCHASE_READWRITE, QObject::tr("Purchase R"), QObject::tr("Purchase W"));
 
     return result.join(" | ");
 }
