@@ -47,6 +47,7 @@ enum class AccountUsernameOutcome {
     kSuccess = 0,
     kInvalidFormat = 1,
     kAlreadyExists = 2,
+    kUserNotFound = 3,
 };
 
 #endif // AUTHENUM_H

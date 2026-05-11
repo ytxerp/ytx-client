@@ -42,6 +42,9 @@ void MainWindow::RAccountUsername(const QJsonObject& obj)
     case AccountUsernameOutcome::kAlreadyExists:
         message = tr("This username is already taken. Please choose another one.");
         break;
+    case AccountUsernameOutcome::kUserNotFound:
+        message = tr("User account was not found.");
+        break;
     }
 
     utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), message, TimeConst::kAutoCloseMs);
