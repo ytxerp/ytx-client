@@ -1077,10 +1077,6 @@
         <translation>结转</translation>
     </message>
     <message>
-        <source>Member</source>
-        <translation type="vanished">成员</translation>
-    </message>
-    <message>
         <location filename="../../mainwindow/mainwindow.ui" line="639"/>
         <location filename="../../mainwindow/mainwindow.ui" line="642"/>
         <source>Check Updates</source>
@@ -1134,7 +1130,7 @@
         <location filename="../../mainwindow/mainwindow.ui" line="571"/>
         <location filename="../../mainwindow/mainwindow.ui" line="574"/>
         <location filename="../../mainwindow/mainwindow.cc" line="216"/>
-        <location filename="../../mainwindow/mainwindow_account.cc" line="55"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="58"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
@@ -1180,7 +1176,7 @@
         <translation>期限</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_account.cc" line="47"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="50"/>
         <location filename="../../mainwindow/mainwindow_global.cc" line="49"/>
         <source>Update Failed</source>
         <translation>更新失败</translation>
@@ -1241,7 +1237,7 @@ Do you want to save before closing?</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_account.cc" line="29"/>
-        <location filename="../../mainwindow/mainwindow_account.cc" line="57"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="60"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="43"/>
         <source>Name</source>
         <translation>姓名</translation>
@@ -1262,102 +1258,47 @@ Do you want to save before closing?</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <source>Guest</source>
-        <translation type="vanished">访客</translation>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="46"/>
+        <source>User account was not found.</source>
+        <translation>未找到用户账号。</translation>
     </message>
     <message>
-        <source>Admin</source>
-        <translation type="vanished">管理员</translation>
-    </message>
-    <message>
-        <source>Owner</source>
-        <translation type="vanished">所有者</translation>
-    </message>
-    <message>
-        <source>Finance R</source>
-        <translation type="vanished">财务 只读</translation>
-    </message>
-    <message>
-        <source>Finance W</source>
-        <translation type="vanished">财务 读写</translation>
-    </message>
-    <message>
-        <source>Task R</source>
-        <translation type="vanished">任务 只读</translation>
-    </message>
-    <message>
-        <source>Task W</source>
-        <translation type="vanished">任务 读写</translation>
-    </message>
-    <message>
-        <source>Inventory R</source>
-        <translation type="vanished">存货 只读</translation>
-    </message>
-    <message>
-        <source>Inventory W</source>
-        <translation type="vanished">存货 读写</translation>
-    </message>
-    <message>
-        <source>Partner R</source>
-        <translation type="vanished">合作 只读</translation>
-    </message>
-    <message>
-        <source>Partner W</source>
-        <translation type="vanished">合作 读写</translation>
-    </message>
-    <message>
-        <source>Sale R</source>
-        <translation type="vanished">销售 只读</translation>
-    </message>
-    <message>
-        <source>Sale W</source>
-        <translation type="vanished">销售 读写</translation>
-    </message>
-    <message>
-        <source>Purchase R</source>
-        <translation type="vanished">采购 只读</translation>
-    </message>
-    <message>
-        <source>Purchase W</source>
-        <translation type="vanished">采购 读写</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_account.cc" line="53"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="56"/>
         <source>Id</source>
         <translation>Id</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_account.cc" line="54"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="57"/>
         <source>Version</source>
         <translation>版本</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_account.cc" line="56"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="59"/>
         <source>Username</source>
         <translation>用户名</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_account.cc" line="58"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="61"/>
         <source>WorkspaceRole</source>
         <translation>工作区角色</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_account.cc" line="59"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="62"/>
         <source>DatabaseRole</source>
         <translation>数据库角色</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_account.cc" line="60"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="63"/>
         <source>CreatedTime</source>
         <translation>创建时间</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_account.cc" line="106"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="109"/>
         <source>Role Updated</source>
         <translation>权限更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_account.cc" line="107"/>
+        <location filename="../../mainwindow/mainwindow_account.cc" line="110"/>
         <source>Your account role has been updated. Please restart the application to enable new permissions.</source>
         <translation>您的账户权限已更新，请重启应用以生效。</translation>
     </message>
@@ -2613,61 +2554,73 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../workspace_member/databaserole.cc" line="10"/>
+        <location filename="../../workspace_member/databaserole.cc" line="39"/>
         <source>Finance R</source>
         <translation>财务 只读</translation>
     </message>
     <message>
         <location filename="../../workspace_member/databaserole.cc" line="11"/>
+        <location filename="../../workspace_member/databaserole.cc" line="39"/>
         <source>Finance W</source>
         <translation>财务 读写</translation>
     </message>
     <message>
         <location filename="../../workspace_member/databaserole.cc" line="12"/>
+        <location filename="../../workspace_member/databaserole.cc" line="40"/>
         <source>Task R</source>
         <translation>任务 只读</translation>
     </message>
     <message>
         <location filename="../../workspace_member/databaserole.cc" line="13"/>
+        <location filename="../../workspace_member/databaserole.cc" line="40"/>
         <source>Task W</source>
         <translation>任务 读写</translation>
     </message>
     <message>
         <location filename="../../workspace_member/databaserole.cc" line="14"/>
+        <location filename="../../workspace_member/databaserole.cc" line="41"/>
         <source>Inventory R</source>
         <translation>存货 只读</translation>
     </message>
     <message>
         <location filename="../../workspace_member/databaserole.cc" line="15"/>
+        <location filename="../../workspace_member/databaserole.cc" line="41"/>
         <source>Inventory W</source>
         <translation>存货 读写</translation>
     </message>
     <message>
         <location filename="../../workspace_member/databaserole.cc" line="16"/>
+        <location filename="../../workspace_member/databaserole.cc" line="42"/>
         <source>Partner R</source>
         <translation>合作 只读</translation>
     </message>
     <message>
         <location filename="../../workspace_member/databaserole.cc" line="17"/>
+        <location filename="../../workspace_member/databaserole.cc" line="42"/>
         <source>Partner W</source>
         <translation>合作 读写</translation>
     </message>
     <message>
         <location filename="../../workspace_member/databaserole.cc" line="18"/>
+        <location filename="../../workspace_member/databaserole.cc" line="43"/>
         <source>Sale R</source>
         <translation>销售 只读</translation>
     </message>
     <message>
         <location filename="../../workspace_member/databaserole.cc" line="19"/>
+        <location filename="../../workspace_member/databaserole.cc" line="43"/>
         <source>Sale W</source>
         <translation>销售 读写</translation>
     </message>
     <message>
         <location filename="../../workspace_member/databaserole.cc" line="20"/>
+        <location filename="../../workspace_member/databaserole.cc" line="44"/>
         <source>Purchase R</source>
         <translation>采购 只读</translation>
     </message>
     <message>
         <location filename="../../workspace_member/databaserole.cc" line="21"/>
+        <location filename="../../workspace_member/databaserole.cc" line="44"/>
         <source>Purchase W</source>
         <translation>采购 读写</translation>
     </message>
