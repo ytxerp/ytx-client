@@ -37,7 +37,7 @@ struct WorkspaceMember final {
     QString name {};
 
     WorkspaceRole workspace_role { WorkspaceRole::kGuest };
-    PermissionBits::Flags database_role {};
+    database_role::PermissionBits database_role {};
     QDateTime created_time {};
 
     void Reset();
@@ -67,7 +67,7 @@ inline void WorkspaceMember::ReadJson(const QJsonObject& object)
         workspace_role = static_cast<WorkspaceRole>(val.toInt());
 
     if (const auto val = object.value(kDatabaseRole); val.isDouble())
-        database_role = PermissionBits::Flags(val.toInt());
+        database_role = database_role::PermissionBits(val.toInt());
 
     if (const auto val = object.value(kCreatedTime); val.isString())
         created_time = QDateTime::fromString(val.toString(), Qt::ISODate);

@@ -97,7 +97,7 @@ bool WorkspaceMemberModel::setData(const QModelIndex& index, const QVariant& val
         pending_updates_[id].insert(kWorkspaceRole, static_cast<int>(member->workspace_role));
         break;
     case WorkspaceMemberEnum::kDatabaseRole: {
-        const auto flags { static_cast<PermissionBits::Flags>(value.toInt()) };
+        const auto flags { static_cast<database_role::PermissionBits>(value.toInt()) };
         member->database_role = flags;
         pending_updates_[id].insert(kDatabaseRole, static_cast<int>(flags));
         break;

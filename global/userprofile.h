@@ -36,12 +36,12 @@ public:
     const QString& Username() const { return username_; }
     const QString& Name() const { return name_; }
     WorkspaceRole GetWorkspaceRole() const { return workspacer_role_; }
-    PermissionBits::Flags GetDatabaseRole() const { return database_role_; }
+    database_role::PermissionBits GetDatabaseRole() const { return database_role_; }
 
     void SetUsername(const QString& value) { username_ = value; }
     void SetName(const QString& value) { name_ = value; }
     void SetWorkspaceRole(WorkspaceRole value) { workspacer_role_ = value; }
-    void SetDatabaseRole(PermissionBits::Flags value) { database_role_ = value; }
+    void SetDatabaseRole(database_role::PermissionBits value) { database_role_ = value; }
 
     void Reset()
     {
@@ -63,7 +63,7 @@ private:
     QString username_ {};
     QString name_ {};
     WorkspaceRole workspacer_role_ { WorkspaceRole::kGuest };
-    PermissionBits::Flags database_role_ {};
+    database_role::PermissionBits database_role_ {};
 };
 
 #endif // USERPROFILE_H

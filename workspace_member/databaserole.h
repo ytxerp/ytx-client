@@ -2,11 +2,12 @@
 #define DATABASEROLE_H
 
 #include <QFlags>
-#include <QStringList>
+#include <QString>
+#include <span>
 
-namespace PermissionBits {
+namespace database_role {
 
-enum Flag {
+enum PermissionBit {
     FINANCE_READONLY = 0b01,
     FINANCE_READWRITE = 0b11,
 
@@ -26,16 +27,16 @@ enum Flag {
     PURCHASE_READWRITE = 0b11 << 10,
 };
 
-Q_DECLARE_FLAGS(Flags, Flag)
-Q_DECLARE_OPERATORS_FOR_FLAGS(Flags)
+Q_DECLARE_FLAGS(PermissionBits, PermissionBit)
+Q_DECLARE_OPERATORS_FOR_FLAGS(PermissionBits)
 
 struct PermissionItem {
-    PermissionBits::Flag flag {};
+    PermissionBit bit {};
     QString text {};
 };
 
-std::span<const PermissionItem> DatabaseRoleList();
-QString DatabaseRoleToDisplay(PermissionBits::Flags flags);
+std::span<const PermissionItem> RoleList();
+QString RoleDisplay(PermissionBits bits);
 }
 
 #endif // DATABASEROLE_H

@@ -341,7 +341,7 @@ void WebSocket::NotifyLogin(const QJsonObject& obj)
         const auto username { obj[kUsername].toString() };
         const auto name { obj[kName].toString() };
         const auto workspace_role { static_cast<WorkspaceRole>(obj[kWorkspaceRole].toInt()) };
-        const PermissionBits::Flags database_role { obj[kDatabaseRole].toInt() };
+        const database_role::PermissionBits database_role { obj[kDatabaseRole].toInt() };
 
         UserProfile& profile { UserProfile::Instance() };
         profile.SetUsername(username);
