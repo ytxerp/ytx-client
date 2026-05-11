@@ -2,6 +2,7 @@
 
 #include <QStandardItem>
 
+#include "global/userprofile.h"
 #include "widget/combobox.h"
 #include "workspace_member/databaserole.h"
 
@@ -17,7 +18,14 @@ QWidget* DatabaseRoleDelegate::createEditor(QWidget* parent, const QStyleOptionV
     auto* model { new QStandardItemModel(editor) };
     editor->setModel(model);
 
+    UserProfile& profile { UserProfile::Instance() };
+    const auto database_role { profile.GetDatabaseRole() };
+
     for (const auto& item : database_role::RoleList()) {
+        if ((database_role & item.bit) != item.bit) {
+            continue;
+        }
+
         auto* model_item { new QStandardItem(item.text) };
 
         model_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
