@@ -177,6 +177,9 @@ void PeriodCloseDialog::on_pushButtonPreview_clicked()
 
 void PeriodCloseDialog::on_pushButtonCommit_clicked()
 {
+    if (summary_node_id_.isNull() || closing_leaf_node_.isEmpty())
+        return;
+
     QJsonObject message {};
 
     QJsonObject summary_total {};
