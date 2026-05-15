@@ -23,13 +23,13 @@
 #include <QAbstractItemModel>
 #include <QJsonObject>
 
-#include "component/info.h"
+#include "enum/section.h"
 #include "settlement.h"
 
 class TreeModelSettlement final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit TreeModelSettlement(CSectionInfo& info, QObject* parent = nullptr);
+    explicit TreeModelSettlement(const QStringList& header, Section section, QObject* parent = nullptr);
     ~TreeModelSettlement() override;
 
 public:
@@ -57,7 +57,8 @@ public:
     }
 
 private:
-    CSectionInfo& info_;
+    const QStringList& header_;
+    const Section section_ {};
     QList<Settlement*> list_ {};
 };
 

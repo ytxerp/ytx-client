@@ -14,7 +14,7 @@ void MainWindow::on_actionSettlement_triggered()
 
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new TreeModelSettlement(sc_->info, this) };
+    auto* model { new TreeModelSettlement(header_info_.settlement, start_, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new TreeWidgetSettlement(model, widget_id, start_, this) };
@@ -42,7 +42,7 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
 {
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new TableModelSettlement(sc_->info, SettlementStatus(settlement.status), this) };
+    auto* model { new TableModelSettlement(header_info_.settlement_item, SettlementStatus(settlement.status), this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new TableWidgetSettlement(sc_p_.tree_model, model, sc_->section_config, settlement, widget_id, parent_widget_id, start_, sync_state, this) };

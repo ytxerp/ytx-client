@@ -44,7 +44,7 @@
 #include "table/widget/tablewidgeto.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidgeto.h"
-#include "workspace_member/workspaceinfo.h"
+#include "workspace_member/headerinfo.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -283,7 +283,7 @@ private:
     SectionContext* GetSectionContex(Section section);
     void InitSystemTray();
     void InitStatusLabel();
-    void InitWorkspaceInfo();
+    void InitHeader();
     void InitAuditInfo();
 
     void FlushCaches(SectionContext& sc);
@@ -312,7 +312,7 @@ private:
     Ui::MainWindow* ui {};
     QHash<QUuid, WidgetContext> widget_hash_ {};
 
-    WorkspaceInfo workspace_info_ {};
+    HeaderInfo header_info_ {};
     audit_hub::AuditInfo audit_info_ {};
 
     Section start_ {};

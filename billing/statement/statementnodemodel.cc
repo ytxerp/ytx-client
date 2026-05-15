@@ -7,9 +7,9 @@
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
 
-StatementNodeModel::StatementNodeModel(CSectionInfo& info, const QUuid& partner_id, QObject* parent)
+StatementNodeModel::StatementNodeModel(const QStringList& header, const QUuid& partner_id, QObject* parent)
     : QAbstractItemModel { parent }
-    , info_ { info }
+    , header_ { header }
     , partner_id_ { partner_id }
 {
 }
@@ -39,7 +39,7 @@ int StatementNodeModel::rowCount(const QModelIndex& parent) const
 int StatementNodeModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return info_.statement_node_header.size();
+    return header_.size();
 }
 
 QVariant StatementNodeModel::data(const QModelIndex& index, int role) const
@@ -104,7 +104,7 @@ bool StatementNodeModel::setData(const QModelIndex& index, const QVariant& value
 QVariant StatementNodeModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.statement_node_header.at(section);
+        return header_.at(section);
 
     return QVariant();
 }

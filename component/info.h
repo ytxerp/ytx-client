@@ -34,22 +34,12 @@ struct SectionInfo {
     QString node {}; // SQL database node table name, also used as QSettings section name, be carefull with it
     QString path {}; // SQL database node_path table name
     QString entry {}; // SQL database node_entry table name
-    QString settlement {}; // SQL database node_settlement table name
 
     QStringList node_header {};
     QStringList entry_header {};
+    QStringList full_entry_header {};
 
     QStringList node_referenced_header {};
-
-    QStringList settlement_header {};
-    QStringList settlement_item_header {};
-
-    QStringList statement_header {};
-    QStringList statement_node_header {};
-    QStringList statement_entry_header {};
-
-    QStringList full_entry_header {};
-    QStringList tag_header {};
 
     QMap<int, QString> unit_map {};
     QMap<int, QString> unit_symbol_map {};

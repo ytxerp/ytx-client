@@ -8,9 +8,10 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TreeModelSettlement::TreeModelSettlement(CSectionInfo& info, QObject* parent)
+TreeModelSettlement::TreeModelSettlement(const QStringList& header, Section section, QObject* parent)
     : QAbstractItemModel { parent }
-    , info_ { info }
+    , header_ { header }
+    , section_ { section }
 {
 }
 
@@ -39,7 +40,7 @@ int TreeModelSettlement::rowCount(const QModelIndex& parent) const
 int TreeModelSettlement::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return info_.settlement_header.size();
+    return header_.size();
 }
 
 QVariant TreeModelSettlement::data(const QModelIndex& index, int role) const
@@ -71,7 +72,7 @@ QVariant TreeModelSettlement::data(const QModelIndex& index, int role) const
 QVariant TreeModelSettlement::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.settlement_header.at(section);
+        return header_.at(section);
 
     return QVariant();
 }
@@ -109,7 +110,7 @@ bool TreeModelSettlement::removeRows(int row, int /*count*/, const QModelIndex& 
     auto* settlement { list_.takeAt(row) };
     endRemoveRows();
 
-    QJsonObject message { JsonGen::SettlementDelete(info_.section, settlement->id, settlement->version) };
+    QJsonObject message { JsonGen::SettlementDelete(section_, settlement->id, settlement->version) };
     WebSocket::Instance()->SendMessage(WsKey::kSettlementDelete, message);
 
     ResourcePool<Settlement>::Instance().Recycle(settlement);

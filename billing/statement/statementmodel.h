@@ -22,13 +22,12 @@
 
 #include <QAbstractItemModel>
 
-#include "component/info.h"
 #include "statement.h"
 
 class StatementModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit StatementModel(CSectionInfo& info, QObject* parent = nullptr);
+    explicit StatementModel(const QStringList& header, QObject* parent = nullptr);
     ~StatementModel() override;
 
 public:
@@ -46,7 +45,7 @@ public:
     void ResetModel(const QJsonArray& array);
 
 private:
-    CSectionInfo& info_;
+    const QStringList& header_;
     QList<Statement*> list_ {};
 };
 

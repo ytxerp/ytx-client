@@ -6,171 +6,171 @@ void StringInitializer::SetHeader(
     // Node
     finance.node_header = {
         QObject::tr("Name"),
-        QObject::tr("Id"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
         QObject::tr("Code"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
         QObject::tr("Color"),
         QObject::tr("Document"),
-        QObject::tr("DirectionRule"),
+        QObject::tr("Direction Rule"),
         QObject::tr("Kind"),
         QObject::tr("Unit"),
-        QObject::tr("ForeignTotal"),
-        QObject::tr("LocalTotal"),
+        QObject::tr("Foreign Total"),
+        QObject::tr("Local Total"),
     };
 
     inventory.node_header = {
         QObject::tr("Name"),
-        QObject::tr("Id"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
         QObject::tr("Code"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
         QObject::tr("Color"),
         QObject::tr("Document"),
-        QObject::tr("UnitPrice"),
+        QObject::tr("Unit Price"),
         QObject::tr("Commission"),
-        QObject::tr("DirectionRule"),
+        QObject::tr("Direction Rule"),
         QObject::tr("Kind"),
         QObject::tr("Unit"),
-        QObject::tr("QuantityTotal"),
-        QObject::tr("AmountTotal"),
+        QObject::tr("Quantity Total"),
+        QObject::tr("Amount Total"),
     };
 
     task.node_header = {
         QObject::tr("Name"),
-        QObject::tr("Id"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
         QObject::tr("Code"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
         QObject::tr("Color"),
         QObject::tr("Document"),
-        QObject::tr("DirectionRule"),
+        QObject::tr("Direction Rule"),
         QObject::tr("Kind"),
         QObject::tr("Unit"),
-        QObject::tr("QuantityTotal"),
-        QObject::tr("AmountTotal"),
+        QObject::tr("Quantity Total"),
+        QObject::tr("Amount Total"),
     };
 
     partner.node_header = {
         QObject::tr("Name"),
-        QObject::tr("Id"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
         QObject::tr("Code"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
         QObject::tr("Color"),
         QObject::tr("Document"),
-        QObject::tr("PaymentTerm"),
+        QObject::tr("Payment Term"),
         QObject::tr("Kind"),
         QObject::tr("Unit"),
-        QObject::tr("UnpaidTotal"),
+        QObject::tr("Unpaid Total"),
     };
 
     sale.node_header = {
-        QObject::tr("GroupName"),
-        QObject::tr("Id"),
+        QObject::tr("Group Name"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
         QObject::tr("Partner"),
-        QObject::tr("IssuedTime"),
+        QObject::tr("Issued Time"),
         QObject::tr("Employee"),
         QObject::tr("Status"),
         QObject::tr("Code"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
-        QObject::tr("DirectionRule"),
+        QObject::tr("Direction Rule"),
         QObject::tr("Kind"),
         QObject::tr("Unit"),
-        QObject::tr("CountTotal"),
-        QObject::tr("MeasureTotal"),
-        QObject::tr("GrossTotal"),
-        QObject::tr("DiscountTotal"),
-        QObject::tr("NetTotal"),
-        QObject::tr("IsSettled"),
-        QObject::tr("SettlementId"),
+        QObject::tr("Count Total"),
+        QObject::tr("Measure Total"),
+        QObject::tr("Gross Total"),
+        QObject::tr("Discount Total"),
+        QObject::tr("Net Total"),
+        QObject::tr("Is Settled"),
+        QObject::tr("Settlement ID"),
     };
 
     // Entry
     finance.entry_header = {
-        QObject::tr("Id"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
-        QObject::tr("LhsNode"),
-        QObject::tr("IssuedTime"),
-        QObject::tr("FXRate"),
+        QObject::tr("LHS Node"),
+        QObject::tr("Issued Time"),
+        QObject::tr("FX Rate"),
         QObject::tr("Code"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
         QObject::tr("Document"),
-        QObject::tr("S"),
-        QObject::tr("LinkedNode"),
+        QObject::tr("Status"),
+        QObject::tr("Linked Node"),
         QObject::tr("Debit"),
         QObject::tr("Credit"),
         QObject::tr("Balance"),
     };
 
     inventory.entry_header = {
-        QObject::tr("Id"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
-        QObject::tr("LhsNode"),
-        QObject::tr("IssuedTime"),
-        QObject::tr("UnitCost"),
+        QObject::tr("LHS Node"),
+        QObject::tr("Issued Time"),
+        QObject::tr("Unit Cost"),
         QObject::tr("Code"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
         QObject::tr("Document"),
-        QObject::tr("S"),
-        QObject::tr("LinkedNode"),
+        QObject::tr("Status"),
+        QObject::tr("Linked Node"),
         QObject::tr("Debit"),
         QObject::tr("Credit"),
         QObject::tr("Balance"),
     };
 
     task.entry_header = {
-        QObject::tr("Id"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
-        QObject::tr("LhsNode"),
-        QObject::tr("IssuedTime"),
-        QObject::tr("UnitCost"),
+        QObject::tr("LHS Node"),
+        QObject::tr("Issued Time"),
+        QObject::tr("Unit Cost"),
         QObject::tr("Code"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
         QObject::tr("Document"),
-        QObject::tr("S"),
-        QObject::tr("LinkedNode"),
+        QObject::tr("Status"),
+        QObject::tr("Linked Node"),
         QObject::tr("Debit"),
         QObject::tr("Credit"),
         QObject::tr("Balance"),
     };
 
     partner.entry_header = {
-        QObject::tr("Id"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
-        QObject::tr("LhsNode"),
-        QObject::tr("IssuedTime"),
+        QObject::tr("LHS Node"),
+        QObject::tr("Issued Time"),
         QObject::tr("Code"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
         QObject::tr("Document"),
-        QObject::tr("S"),
-        QObject::tr("InternalSku"),
-        QObject::tr("UnitPrice"),
-        QObject::tr("ExternalSku"),
+        QObject::tr("Status"),
+        QObject::tr("Internal SKU"),
+        QObject::tr("Unit Price"),
+        QObject::tr("External SKU"),
     };
 
     sale.entry_header = {
-        QObject::tr("Id"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
-        QObject::tr("LhsNode"),
-        QObject::tr("InternalSku"),
+        QObject::tr("LHS Node"),
+        QObject::tr("Internal SKU"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
         QObject::tr("Count"),
         QObject::tr("Measure"),
-        QObject::tr("UnitPrice"),
-        QObject::tr("ExternalSku"),
-        QObject::tr("UnitDiscount"),
+        QObject::tr("Unit Price"),
+        QObject::tr("External SKU"),
+        QObject::tr("Unit Discount"),
         QObject::tr("Gross"),
         QObject::tr("Discount"),
         QObject::tr("Net"),
@@ -178,60 +178,60 @@ void StringInitializer::SetHeader(
 
     // Full Entry
     finance.full_entry_header = {
-        QObject::tr("Id"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
-        QObject::tr("IssuedTime"),
+        QObject::tr("Issued Time"),
         QObject::tr("Code"),
-        QObject::tr("LhsNode"),
-        QObject::tr("LhsFXRate"),
-        QObject::tr("LhsDebit"),
-        QObject::tr("LhsCredit"),
+        QObject::tr("LHS Node"),
+        QObject::tr("LHS FX Rate"),
+        QObject::tr("LHS Debit"),
+        QObject::tr("LHS Credit"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
         QObject::tr("Document"),
-        QObject::tr("S"),
-        QObject::tr("RhsCredit"),
-        QObject::tr("RhsDebit"),
-        QObject::tr("RhsFXRate"),
-        QObject::tr("RhsNode"),
+        QObject::tr("Status"),
+        QObject::tr("RHS Credit"),
+        QObject::tr("RHS Debit"),
+        QObject::tr("RHS FX Rate"),
+        QObject::tr("RHS Node"),
     };
 
     inventory.full_entry_header = {
-        QObject::tr("Id"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
-        QObject::tr("IssuedTime"),
+        QObject::tr("Issued Time"),
         QObject::tr("Code"),
-        QObject::tr("LhsNode"),
-        QObject::tr("LhsUnitCost"),
-        QObject::tr("LhsDebit"),
-        QObject::tr("LhsCredit"),
+        QObject::tr("LHS Node"),
+        QObject::tr("LHS Unit Cost"),
+        QObject::tr("LHS Debit"),
+        QObject::tr("LHS Credit"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
         QObject::tr("Document"),
-        QObject::tr("S"),
-        QObject::tr("RhsCredit"),
-        QObject::tr("RhsDebit"),
-        QObject::tr("RhsUnitCost"),
-        QObject::tr("RhsNode"),
+        QObject::tr("Status"),
+        QObject::tr("RHS Credit"),
+        QObject::tr("RHS Debit"),
+        QObject::tr("RHS Unit Cost"),
+        QObject::tr("RHS Node"),
     };
 
     task.full_entry_header = {
-        QObject::tr("Id"),
+        QObject::tr("ID"),
         QObject::tr("Version"),
-        QObject::tr("IssuedTime"),
+        QObject::tr("Issued Time"),
         QObject::tr("Code"),
-        QObject::tr("LhsNode"),
-        QObject::tr("LhsUnitCost"),
-        QObject::tr("LhsDebit"),
-        QObject::tr("LhsCredit"),
+        QObject::tr("LHS Node"),
+        QObject::tr("LHS Unit Cost"),
+        QObject::tr("LHS Debit"),
+        QObject::tr("LHS Credit"),
         QObject::tr("Description"),
         QObject::tr("Tag"),
         QObject::tr("Document"),
-        QObject::tr("S"),
-        QObject::tr("RhsCredit"),
-        QObject::tr("RhsDebit"),
-        QObject::tr("RhsUnitCost"),
-        QObject::tr("RhsNode"),
+        QObject::tr("Status"),
+        QObject::tr("RHS Credit"),
+        QObject::tr("RHS Debit"),
+        QObject::tr("RHS Unit Cost"),
+        QObject::tr("RHS Node"),
     };
 
     partner.full_entry_header = partner.entry_header;
@@ -239,107 +239,30 @@ void StringInitializer::SetHeader(
 
     // SaleReference
     inventory.node_referenced_header = {
-        QObject::tr("IssuedTime"),
-        QObject::tr("LhsNode"),
+        QObject::tr("Issued Time"),
+        QObject::tr("LHS Node"),
         QObject::tr("Customer"),
         QObject::tr("Count"),
         QObject::tr("Measure"),
-        QObject::tr("UnitPrice"),
+        QObject::tr("Unit Price"),
         QObject::tr("Description"),
         QObject::tr("Gross"),
     };
 
     partner.node_referenced_header = {
-        QObject::tr("IssuedTime"),
-        QObject::tr("LhsNode"),
-        QObject::tr("InternalSku"),
+        QObject::tr("Issued Time"),
+        QObject::tr("LHS Node"),
+        QObject::tr("Internal SKU"),
         QObject::tr("Color"),
-        QObject::tr("ExternalSku"),
+        QObject::tr("External SKU"),
         QObject::tr("Count"),
         QObject::tr("Measure"),
-        QObject::tr("UnitPrice"),
+        QObject::tr("Unit Price"),
         QObject::tr("Description"),
         QObject::tr("Gross"),
     };
 
-    // Statement
-    sale.statement_header = {
-        QObject::tr("Partner"),
-        QObject::tr("PBalance"),
-        QObject::tr("CCount"),
-        QObject::tr("CMeasure"),
-        QObject::tr("CAmount"),
-        QObject::tr("Description"),
-        QObject::tr("CSettlement"),
-        QObject::tr("CBalance"),
-
-    };
-
-    sale.statement_node_header = {
-        QObject::tr("IssuedTime"),
-        QObject::tr("Code"),
-        QObject::tr("Count"),
-        QObject::tr("Measure"),
-        QObject::tr("Amount"),
-        QObject::tr("Description"),
-        QObject::tr("S"),
-        QObject::tr("Employee"),
-        QObject::tr("Settlement"),
-    };
-
-    sale.statement_entry_header = {
-        QObject::tr("IssuedTime"),
-        QObject::tr("Code"),
-        QObject::tr("InternalSku"),
-        QObject::tr("Count"),
-        QObject::tr("Measure"),
-        QObject::tr("UnitPrice"),
-        QObject::tr("Amount"),
-        QObject::tr("Description"),
-        QObject::tr("S"),
-        QObject::tr("ExternalSku"),
-    };
-
-    // Settlement
-    sale.settlement_header = {
-        QObject::tr("Id"),
-        QObject::tr("Version"),
-        QObject::tr("Partner"),
-        QObject::tr("IssuedTime"),
-        QObject::tr("Description"),
-        QObject::tr("Status"),
-        QObject::tr("Amount"),
-    };
-
-    sale.settlement_item_header = {
-        QObject::tr("Id"),
-        QObject::tr("IssuedTime"),
-        QObject::tr("Amount"),
-        QObject::tr("Status"),
-        QObject::tr("Description"),
-        QObject::tr("Employee"),
-    };
-
-    // Tag
-    finance.tag_header = {
-        QObject::tr("Id"),
-        QObject::tr("Version"),
-        QObject::tr("Name"),
-        QObject::tr("Color"),
-    };
-
-    task.tag_header = finance.tag_header;
-    inventory.tag_header = finance.tag_header;
-    partner.tag_header = finance.tag_header;
-    sale.tag_header = finance.tag_header;
-    purchase.tag_header = finance.tag_header;
-
     purchase.node_header = sale.node_header;
     purchase.entry_header = sale.entry_header;
     purchase.full_entry_header = sale.full_entry_header;
-    purchase.statement_header = sale.statement_header;
-    purchase.statement_node_header = sale.statement_node_header;
-    purchase.statement_entry_header = sale.statement_entry_header;
-    purchase.settlement_header = sale.settlement_header;
-    purchase.settlement_item_header = sale.settlement_item_header;
 }

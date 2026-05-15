@@ -4,7 +4,6 @@
 #include <QAbstractItemModel>
 #include <QTimer>
 
-#include "component/info.h"
 #include "enum/section.h"
 #include "tag.h"
 
@@ -15,7 +14,7 @@ signals:
     void SInsertingTag(Tag* tag);
 
 public:
-    explicit TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, CSectionInfo& info, QObject* parent = nullptr);
+    explicit TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, const QStringList& header, QObject* parent = nullptr);
     ~TagModel() override;
 
     // Header:
@@ -36,7 +35,7 @@ public:
     int columnCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent)
-        return info_.tag_header.size();
+        return header_.size();
     }
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -63,7 +62,7 @@ private:
 
 private:
     const Section section_ {};
-    CSectionInfo& info_ {};
+    const QStringList& header_;
 
     QSet<QString> names_ {};
     QList<Tag*> tag_list_ {}; // non-owning

@@ -25,6 +25,7 @@
 #include <QTableView>
 
 #include "component/using.h"
+#include "enum/section.h"
 #include "statementmodel.h"
 
 namespace Ui {

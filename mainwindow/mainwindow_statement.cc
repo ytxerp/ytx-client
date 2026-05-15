@@ -10,7 +10,7 @@ void MainWindow::on_actionStatement_triggered()
 
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new StatementModel(sc_->info, this) };
+    auto* model { new StatementModel(header_info_.statement, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new StatementWidget(model, widget_id, start_, this) };
@@ -75,7 +75,7 @@ void MainWindow::RAckStatementEntry(Section section, const QUuid& widget_id, con
 
 void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
 {
-    auto* model { new StatementNodeModel(sc_->info, partner_id, this) };
+    auto* model { new StatementNodeModel(header_info_.statement_node, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new StatementNodeWidget(model, widget_id, partner_id, start, end, start_, unit, this) };
@@ -107,13 +107,13 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
     Q_ASSERT(entry_hub_p != nullptr);
     Q_ASSERT(tree_model_i != nullptr);
 
-    auto* model { new StatementEntryModel(entry_hub_p, sc_->info, partner_id, this) };
+    auto* model { new StatementEntryModel(entry_hub_p, header_info_.statement_entry, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new StatementEntryWidget(
         model, entry_hub_p, tree_model_i, widget_id, partner_id, start, end, partner_name, app_config_.company_name, start_, unit, this) };
 
-    const QString title { QString("%1-%2").arg(tr("StatementDetail"), partner_name) };
+    const QString title { QString("%1-%2").arg(tr("Statement Detail"), partner_name) };
 
     const int tab_index { sc_->tab_widget->addTab(widget, title) };
     auto* tab_bar { sc_->tab_widget->tabBar() };

@@ -3,13 +3,14 @@
 #include <QJsonArray>
 #include <QTimer>
 
+#include "component/constant.h"
 #include "enum/settlementenum.h"
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
 
-TableModelSettlement::TableModelSettlement(CSectionInfo& info, SettlementStatus status, QObject* parent)
+TableModelSettlement::TableModelSettlement(const QStringList& header, SettlementStatus status, QObject* parent)
     : QAbstractItemModel { parent }
-    , info_ { info }
+    , header_ { header }
     , status_ { status }
 {
 }
@@ -39,7 +40,7 @@ int TableModelSettlement::rowCount(const QModelIndex& parent) const
 int TableModelSettlement::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return info_.settlement_item_header.size();
+    return header_.size();
 }
 
 QVariant TableModelSettlement::data(const QModelIndex& index, int role) const
@@ -104,7 +105,7 @@ bool TableModelSettlement::setData(const QModelIndex& index, const QVariant& val
 QVariant TableModelSettlement::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.settlement_item_header.at(section);
+        return header_.at(section);
 
     return QVariant();
 }

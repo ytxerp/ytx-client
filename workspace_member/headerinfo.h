@@ -17,15 +17,21 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef WORKSPACEINFO_H
-#define WORKSPACEINFO_H
+#ifndef HEADERINFO_H
+#define HEADERINFO_H
 
-#include <QHash>
 #include <QList>
 #include <QString>
 
-struct WorkspaceInfo {
-    QStringList header {};
+struct HeaderInfo {
+    QStringList workspace {};
+    QStringList inventory_heat {};
+    QStringList tag {};
+    QStringList statement {};
+    QStringList statement_node {};
+    QStringList statement_entry {};
+    QStringList settlement {};
+    QStringList settlement_item {};
 };
 
-#endif // WORKSPACEINFO_H
+#endif // HEADERINFO_H

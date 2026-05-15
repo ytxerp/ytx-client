@@ -22,14 +22,13 @@
 
 #include <QAbstractItemModel>
 
-#include "component/info.h"
 #include "enum/settlementenum.h"
 #include "settlement.h"
 
 class TableModelSettlement final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    TableModelSettlement(CSectionInfo& info, SettlementStatus status, QObject* parent = nullptr);
+    TableModelSettlement(const QStringList& header, SettlementStatus status, QObject* parent = nullptr);
     ~TableModelSettlement() override;
 
 signals:
@@ -55,7 +54,7 @@ public:
     bool HasPendingUpdate() const { return !pending_selected_.isEmpty(); }
 
 private:
-    CSectionInfo& info_;
+    const QStringList& header_;
 
     SettlementStatus status_ {};
 

@@ -50,17 +50,91 @@ void MainWindow::RAccountUsername(const QJsonObject& obj)
     utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), message, TimeConst::kAutoCloseMs);
 }
 
-void MainWindow::InitWorkspaceInfo()
+void MainWindow::InitHeader()
 {
-    workspace_info_.header = {
-        tr("Id"),
+    header_info_.workspace = {
+        tr("ID"),
         tr("Version"),
         tr("Email"),
         tr("Username"),
         tr("Name"),
-        tr("WorkspaceRole"),
-        tr("DatabaseRole"),
-        tr("CreatedTime"),
+        tr("Workspace Role"),
+        tr("Database Role"),
+        tr("Created Time"),
+    };
+
+    header_info_.inventory_heat = {
+        tr("Inventory Node"),
+        tr("Order Count"),
+        tr("Partner Count"),
+        tr("Active Months"),
+        tr("Active Days"),
+        tr("Total Quantity"),
+        tr("Heat Score"),
+    };
+
+    header_info_.tag = {
+        tr("ID"),
+        tr("Version"),
+        tr("Name"),
+        tr("Color"),
+    };
+
+    // Statement
+    header_info_.statement = {
+        tr("Partner"),
+        tr("Previous Balance"),
+        tr("Current Count"),
+        tr("Current Measure"),
+        tr("Current Amount"),
+        tr("Description"),
+        tr("Current Settlement"),
+        tr("Current Balance"),
+    };
+
+    header_info_.statement_node = {
+        tr("Issued Time"),
+        tr("Code"),
+        tr("Count"),
+        tr("Measure"),
+        tr("Amount"),
+        tr("Description"),
+        tr("Status"),
+        tr("Employee"),
+        tr("Settlement"),
+    };
+
+    header_info_.statement_entry = {
+        tr("Issued Time"),
+        tr("Code"),
+        tr("Internal SKU"),
+        tr("Count"),
+        tr("Measure"),
+        tr("Unit Price"),
+        tr("Amount"),
+        tr("Description"),
+        tr("Status"),
+        tr("External SKU"),
+    };
+
+    // Settlement
+    header_info_.settlement = {
+        tr("ID"),
+        tr("Version"),
+        tr("Partner"),
+        tr("Issued Time"),
+        tr("Description"),
+        tr("Status"),
+        tr("Amount"),
+    };
+
+    header_info_.settlement_item = {
+        tr("ID"),
+        tr("Issued Time"),
+        tr("Amount"),
+        tr("Status"),
+        tr("Description"),
+        tr("Employee"),
     };
 }
 
@@ -71,7 +145,7 @@ void MainWindow::on_actionWorkspaceMember_triggered()
     static QPointer<WorkspaceMemberDialog> dialog {};
 
     if (!dialog) {
-        dialog = new WorkspaceMemberDialog(workspace_info_.header, this);
+        dialog = new WorkspaceMemberDialog(header_info_.workspace, this);
 
         const auto widget_id { utils::ManageDialog(widget_hash_, dialog) };
         const auto message { JsonGen::WorkspaceMemberAck(widget_id, LoginInfo::Instance().Workspace()) };

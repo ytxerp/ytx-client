@@ -90,7 +90,7 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
 void MainWindow::InitilizeContext()
 {
     {
-        InitWorkspaceInfo();
+        InitHeader();
         StringInitializer::SetHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
     }
 
@@ -326,7 +326,6 @@ void MainWindow::InitContextSale()
     info.node = kSaleNode;
     info.path = kSalePath;
     info.entry = kSaleEntry;
-    info.settlement = kSaleSettlement;
 
     info.rule_map.insert(Rule::kRO, tr("RO", "Return Order"));
     info.rule_map.insert(Rule::kFO, tr("FO", "Forward Order"));
@@ -374,7 +373,6 @@ void MainWindow::InitContextPurchase()
     info.node = kPurchaseNode;
     info.path = kPurchasePath;
     info.entry = kPurchaseEntry;
-    info.settlement = kPurchaseSettlement;
 
     info.rule_map.insert(Rule::kRO, tr("RO", "Return Order"));
     info.rule_map.insert(Rule::kFO, tr("FO", "Forward Order"));

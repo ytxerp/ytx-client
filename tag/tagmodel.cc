@@ -9,10 +9,10 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TagModel::TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, CSectionInfo& info, QObject* parent)
+TagModel::TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
     , section_ { section }
-    , info_ { info }
+    , header_ { header }
 {
     for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
         tag_list_.append(it.value());
@@ -27,7 +27,7 @@ TagModel::~TagModel() { FlushCaches(); }
 QVariant TagModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.tag_header.at(section);
+        return header_.at(section);
 
     return QVariant();
 }

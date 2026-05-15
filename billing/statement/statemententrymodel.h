@@ -22,14 +22,13 @@
 
 #include <QAbstractItemModel>
 
-#include "component/info.h"
 #include "entryhub/entryhubp.h"
 #include "statement.h"
 
 class StatementEntryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit StatementEntryModel(EntryHubP* entry_hub_p, CSectionInfo& info, CUuid& partner_id, QObject* parent = nullptr);
+    explicit StatementEntryModel(EntryHubP* entry_hub_p, const QStringList& header, CUuid& partner_id, QObject* parent = nullptr);
     ~StatementEntryModel() override;
 
 public:
@@ -51,7 +50,7 @@ public:
     const QList<StatementEntry*>& EntryList() const { return list_; }
 
 private:
-    CSectionInfo& info_;
+    const QStringList& header_;
     QList<StatementEntry*> list_ {};
 
     EntryHubP* entry_hub_p_ {};

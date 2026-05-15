@@ -256,13 +256,11 @@ inline const QString kInventoryEntry = QStringLiteral("inventory_entry");
 inline const QString kPurchase = QStringLiteral("purchase");
 inline const QString kPurchaseNode = QStringLiteral("purchase_node");
 inline const QString kPurchasePath = QStringLiteral("purchase_path");
-inline const QString kPurchaseSettlement = QStringLiteral("purchase_settlement");
 inline const QString kPurchaseEntry = QStringLiteral("purchase_entry");
 
 inline const QString kSale = QStringLiteral("sale");
 inline const QString kSaleNode = QStringLiteral("sale_node");
 inline const QString kSalePath = QStringLiteral("sale_path");
-inline const QString kSaleSettlement = QStringLiteral("sale_settlement");
 inline const QString kSaleEntry = QStringLiteral("sale_entry");
 
 inline const QString kPartner = QStringLiteral("partner");

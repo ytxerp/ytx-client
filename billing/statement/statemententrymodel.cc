@@ -7,9 +7,9 @@
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
 
-StatementEntryModel::StatementEntryModel(EntryHubP* entry_hub_p, CSectionInfo& info, CUuid& partner_id, QObject* parent)
+StatementEntryModel::StatementEntryModel(EntryHubP* entry_hub_p, const QStringList& header, CUuid& partner_id, QObject* parent)
     : QAbstractItemModel { parent }
-    , info_ { info }
+    , header_ { header }
     , entry_hub_p_ { entry_hub_p }
     , partner_id_ { partner_id }
 {
@@ -37,7 +37,7 @@ int StatementEntryModel::rowCount(const QModelIndex& parent) const
     return list_.size();
 }
 
-int StatementEntryModel::columnCount(const QModelIndex& /*parent*/) const { return info_.statement_entry_header.size(); }
+int StatementEntryModel::columnCount(const QModelIndex& /*parent*/) const { return header_.size(); }
 
 QVariant StatementEntryModel::data(const QModelIndex& index, int role) const
 {
@@ -109,7 +109,7 @@ bool StatementEntryModel::setData(const QModelIndex& index, const QVariant& valu
 QVariant StatementEntryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.statement_entry_header.at(section);
+        return header_.at(section);
 
     return QVariant();
 }
