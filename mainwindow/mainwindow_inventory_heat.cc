@@ -15,6 +15,7 @@ void MainWindow::on_actionHeat_triggered()
     {
         auto* view { dialog->View() };
         InitTableView(view, -1, -1, std::to_underlying(InventoryHeatEnum::kPlaceholder));
+        DelegateInventoryHeat(view);
     }
 
     utils::ManageDialog(sc_i_.widget_hash, dialog, widget_id);
@@ -29,6 +30,8 @@ void MainWindow::RInventoryHeatAck(const QUuid& widget_id, const QJsonArray& arr
         return;
 
     auto* d_widget { static_cast<InventoryHeatDialog*>(widget.data()) };
+    if (!d_widget)
+        return;
 
     auto* model { d_widget->Model() };
     model->ResetModel(array);

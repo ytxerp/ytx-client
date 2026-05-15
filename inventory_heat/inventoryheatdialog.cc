@@ -40,6 +40,9 @@ void InventoryHeatDialog::InitDialog()
     ui->dateTimeEditStart->setDateTime(start_);
     ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
     ui->radioButtonSale->setChecked(true);
+    ui->spinBoxMinOrderCount->setRange(1, INT_MAX);
+    ui->spinBoxMinPartnerCount->setRange(1, INT_MAX);
+    ui->spinBoxMinActiveMonths->setRange(1, INT_MAX);
 
     ui->pushButtonFetch->setFocus();
 }

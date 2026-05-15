@@ -38,7 +38,7 @@ struct InventoryHeatRow final {
 
 inline void InventoryHeatRow::ReadJson(const QJsonObject& obj)
 {
-    if (const auto val = obj.value("rhs_node"); val.isString())
+    if (const auto val = obj.value("inventory_node"); val.isString())
         rhs_node = QUuid::fromString(val.toString());
 
     if (const auto val = obj.value("order_count"); val.isDouble())

@@ -227,6 +227,7 @@ private:
     void DelegateWorkspaceMember(QTableView* table_view) const;
     void DelegateAuditLog(QTableView* table_view) const;
     void DelegatePeriodClose(QTableView* table_view) const;
+    void DelegateInventoryHeat(QTableView* table_view) const;
 
     void InitTableView(QTableView* view, int id_column, int version_column, int stretch_column) const;
 

@@ -15,6 +15,7 @@
 #include "delegate/readonly/amountr.h"
 #include "delegate/readonly/boolcolorstringr.h"
 #include "delegate/readonly/colorr.h"
+#include "delegate/readonly/doublenonedecimalr.h"
 #include "delegate/readonly/doublenonezeror.h"
 #include "delegate/readonly/doubler.h"
 #include "delegate/readonly/financeforeignr.h"
@@ -32,6 +33,7 @@
 #include "enum/settlementenum.h"
 #include "enum/statementenum.h"
 #include "enum/tagenum.h"
+#include "inventory_heat/inventoryheatenum.h"
 #include "mainwindow.h"
 #include "workspace_member/workspacememberenum.h"
 
@@ -566,4 +568,16 @@ void MainWindow::DelegatePeriodClose(QTableView* table_view) const
 
     auto* status { new StatusR(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kStatus), status);
+}
+
+void MainWindow::DelegateInventoryHeat(QTableView* table_view) const
+{
+    auto* path { new SearchPathTableR(sc_i_.tree_model, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(InventoryHeatEnum::kInventoryNode), path);
+
+    auto* quantity { new DoubleR(sc_i_.section_config.quantity_decimal, StringConst::kEightDigits, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(InventoryHeatEnum::kTotalQuantity), quantity);
+
+    auto* score { new DoubleNoneDecimalR(StringConst::kEightDigits, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(InventoryHeatEnum::kHeatScore), score);
 }

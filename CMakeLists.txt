@@ -272,6 +272,7 @@ set(HEADERS
     inventory_heat/inventoryheatrow.h
     inventory_heat/inventoryheatmodel.h
     inventory_heat/inventoryheatenum.h
+    delegate/readonly/doublenonedecimalr.h
 )
 
 set(SOURCES
@@ -433,6 +434,7 @@ set(SOURCES
     inventory_heat/inventoryheatdialog.cc
     inventory_heat/inventoryheatmodel.cc
     mainwindow/mainwindow_inventory_heat.cc
+    delegate/readonly/doublenonedecimalr.cc
 )
 
 set(UIS
