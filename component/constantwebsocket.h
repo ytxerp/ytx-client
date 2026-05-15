@@ -137,6 +137,8 @@ enum class WsKey : uint8_t {
     kAuditLogAck = 66,
     kNodeTagSearch = 67, // for order node
     kPeriodClose = 68,
+    kInventoryHeat = 69,
+
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -301,6 +303,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "node_tag_search";
     case WsKey::kPeriodClose:
         return "period_close";
+    case WsKey::kInventoryHeat:
+        return "inventory_heat";
     default:
         return "unknown";
     }

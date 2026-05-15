@@ -42,6 +42,8 @@ QString AccountIniFileName(const QString& email, const QString& workspace);
 QString UuidToShortCode(const QUuid& uuid, int length = 10);
 
 QUuid ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog);
+void ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog, const QUuid& id);
+
 void ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where = true);
 
 QByteArray ZstdCompress(const QByteArray& data);

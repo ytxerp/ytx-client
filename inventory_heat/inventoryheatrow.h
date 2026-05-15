@@ -1,0 +1,65 @@
+/*
+ * Copyright (C) 2023 YTX
+ *
+ * This file is part of YTX.
+ *
+ * YTX is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * YTX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with YTX. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#ifndef INVENTORYHEATROW_H
+#define INVENTORYHEATROW_H
+
+#include <QJsonObject>
+#include <QUuid>
+
+struct InventoryHeatRow final {
+    QUuid rhs_node {};
+    qint64 order_count {};
+    qint64 partner_count {};
+    qint64 active_months {};
+    qint64 active_days {};
+    double total_quantity {};
+    double heat_score {};
+
+    void ReadJson(const QJsonObject& obj);
+    void Reset();
+};
+
+inline void InventoryHeatRow::ReadJson(const QJsonObject& obj)
+{
+    if (const auto val = obj.value("rhs_node"); val.isString())
+        rhs_node = QUuid::fromString(val.toString());
+
+    if (const auto val = obj.value("order_count"); val.isDouble())
+        order_count = val.toInteger();
+
+    if (const auto val = obj.value("partner_count"); val.isDouble())
+        partner_count = val.toInteger();
+
+    if (const auto val = obj.value("active_months"); val.isDouble())
+        active_months = val.toInteger();
+
+    if (const auto val = obj.value("active_days"); val.isDouble())
+        active_days = val.toInteger();
+
+    if (const auto val = obj.value("total_quantity"); val.isDouble())
+        total_quantity = val.toDouble();
+
+    if (const auto val = obj.value("heat_score"); val.isDouble())
+        heat_score = val.toDouble();
+}
+
+inline void InventoryHeatRow::Reset() { *this = InventoryHeatRow {}; }
+
+#endif // INVENTORYHEATROW_H

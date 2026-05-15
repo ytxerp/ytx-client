@@ -349,9 +349,16 @@
     </property>
     <addaction name="actionPeriodClose"/>
    </widget>
+   <widget class="QMenu" name="menuInventory">
+    <property name="title">
+     <string>Inventory</string>
+    </property>
+    <addaction name="actionHeat"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuFinance"/>
+   <addaction name="menuInventory"/>
    <addaction name="menuAccount"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -671,6 +678,11 @@
   <action name="actionPeriodClose">
    <property name="text">
     <string>Period Close</string>
+   </property>
+  </action>
+  <action name="actionHeat">
+   <property name="text">
+    <string>Heat</string>
    </property>
   </action>
  </widget>

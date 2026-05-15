@@ -91,6 +91,7 @@ private slots:
     void on_actionSettlement_triggered();
     void on_actionAuditLog_triggered();
     void on_actionPeriodClose_triggered();
+    void on_actionHeat_triggered();
 
     void tabWidget_currentChanged();
     void tabWidget_tabBarDoubleClicked(int index);
@@ -158,6 +159,8 @@ private slots:
 
     void RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
     void RAuditLogAck(const QUuid& widget_id, const QJsonArray& array, const QJsonArray& user_array);
+    void RInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array);
+
     void RAccountRoleUpdate();
 
     void RApplyTag(const QJsonObject& obj);

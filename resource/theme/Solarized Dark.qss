@@ -71,7 +71,7 @@ QDoubleSpinBox#dspin_box_static_ {
 }
 
 /* Specific border removals */
-QGroupBox#tableGroup,
+QGroupBox#tableGroup, QGroupBox#groupBoxInventoryHeat,
 QGroupBox#groupBoxTableO, QGroupBox#groupBoxTreeO,
 QGroupBox#groupBoxAudit, QGroupBox#groupBoxPeriodClose {
     border-bottom: none;

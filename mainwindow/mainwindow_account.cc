@@ -65,6 +65,7 @@ void MainWindow::InitHeader()
 
     header_info_.inventory_heat = {
         tr("Inventory Node"),
+        tr("Placeholder"),
         tr("Order Count"),
         tr("Partner Count"),
         tr("Active Months"),

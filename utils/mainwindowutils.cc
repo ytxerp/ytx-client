@@ -312,6 +312,17 @@ QUuid utils::ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dia
     return id;
 }
 
+void utils::ManageDialog(QHash<QUuid, WidgetContext>& widget_hash, QDialog* dialog, const QUuid& id)
+{
+    Q_ASSERT(dialog);
+
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+
+    WidgetContext wc { dialog, id, WidgetRole::kDialog };
+
+    widget_hash.insert(id, wc);
+}
+
 QByteArray utils::ZstdDecompress(const QByteArray& data)
 {
     if (!data.startsWith("\x28\xB5\x2F\xFD"))
