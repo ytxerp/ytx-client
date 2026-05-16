@@ -82,6 +82,7 @@ QJsonObject AccountName(CString& email, CString& name);
 QJsonObject AccountUsername(CString& email, CString& username);
 
 QJsonObject InventoryHeadAck(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end, int moc, int mpc, int mam);
+QJsonObject PartnerHeadAck(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end, int moc, int mid, int mam);
 
 }
 

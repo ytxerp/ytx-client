@@ -511,4 +511,19 @@ QJsonObject NodeTagSearch(Section section, const QSet<QString>& tags)
     return message;
 }
 
+QJsonObject PartnerHeadAck(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end, int moc, int mid, int mam)
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kSessionId, QString());
+    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
+    message.insert(kStart, start.toString(Qt::ISODate));
+    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert("min_order_count", moc);
+    message.insert("min_inventory_diversity", mid);
+    message.insert("min_active_months", mam);
+    message.insert(kArray, QJsonArray());
+    return message;
+}
+
 }

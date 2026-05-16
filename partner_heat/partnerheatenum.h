@@ -17,22 +17,18 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef HEADERINFO_H
-#define HEADERINFO_H
+#ifndef PARTNERHEATENUM_H
+#define PARTNERHEATENUM_H
 
-#include <QList>
-#include <QString>
-
-struct HeaderInfo {
-    QStringList workspace {};
-    QStringList inventory_heat {};
-    QStringList tag {};
-    QStringList statement {};
-    QStringList statement_node {};
-    QStringList statement_entry {};
-    QStringList settlement {};
-    QStringList settlement_item {};
-    QStringList partner_heat {};
+enum class PartnerHeatEnum : int {
+    kPartnerNode = 0,
+    kPlaceholder,
+    kOrderCount,
+    kInventoryDiversity,
+    kActiveMonths,
+    kActiveDays,
+    kTotalQuantity,
+    kHeatScore,
 };
 
-#endif // HEADERINFO_H
+#endif // PARTNERHEATENUM_H

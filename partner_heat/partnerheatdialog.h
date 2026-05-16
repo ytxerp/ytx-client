@@ -17,27 +17,27 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INVENTORYHEATDIALOG_H
-#define INVENTORYHEATDIALOG_H
+#ifndef PARTNERHEATDIALOG_H
+#define PARTNERHEATDIALOG_H
 
 #include <QDialog>
 #include <QTableView>
 
-#include "inventoryheatmodel.h"
+#include "partnerheatmodel.h"
 
 namespace Ui {
-class InventoryHeatDialog;
+class PartnerHeatDialog;
 }
 
-class InventoryHeatDialog final : public QDialog {
+class PartnerHeatDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit InventoryHeatDialog(InventoryHeatModel* model, const QUuid& widget_id, QWidget* parent = nullptr);
-    ~InventoryHeatDialog() override;
+    explicit PartnerHeatDialog(PartnerHeatModel* model, const QUuid& widget_id, QWidget* parent = nullptr);
+    ~PartnerHeatDialog() override;
 
     QTableView* View();
-    InventoryHeatModel* Model() { return model_; }
+    PartnerHeatModel* Model() { return model_; }
 
 private slots:
     void on_pushButtonFetch_clicked();
@@ -49,15 +49,15 @@ private:
     void InitTimer();
 
 private:
-    Ui::InventoryHeatDialog* ui;
+    Ui::PartnerHeatDialog* ui;
 
     QDateTime start_ {};
     QDateTime end_ {};
 
     QTimer* cooldown_timer_ { nullptr };
 
-    InventoryHeatModel* model_ {};
+    PartnerHeatModel* model_ {};
     const QUuid widget_id_ {};
 };
 
-#endif // INVENTORYHEATDIALOG_H
+#endif // PARTNERHEATDIALOG_H

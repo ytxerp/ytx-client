@@ -93,6 +93,7 @@ signals:
     void SAuditLogAck(const QUuid& widget_id, const QJsonArray& array, const QJsonArray& user_array);
     void SAccountRoleUpdate();
     void SInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array);
+    void SPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);
 
     // send to SearchNodeModel
     void SNodeSearch(const QJsonObject& obj);
@@ -156,6 +157,7 @@ private:
     void AckWorkspaceMember(const QJsonObject& obj);
     void AckAuditLog(const QJsonObject& obj);
     void AckInventoryHeat(const QJsonObject& obj);
+    void AckPartnerHeat(const QJsonObject& obj);
 
     void SearchEntry(const QJsonObject& obj);
     void SearchNode(const QJsonObject& obj);

@@ -91,7 +91,9 @@ private slots:
     void on_actionSettlement_triggered();
     void on_actionAuditLog_triggered();
     void on_actionPeriodClose_triggered();
-    void on_actionHeat_triggered();
+
+    void on_actionHeatInventory_triggered();
+    void on_actionHeatPartner_triggered();
 
     void tabWidget_currentChanged();
     void tabWidget_tabBarDoubleClicked(int index);
@@ -160,6 +162,7 @@ private slots:
     void RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
     void RAuditLogAck(const QUuid& widget_id, const QJsonArray& array, const QJsonArray& user_array);
     void RInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array);
+    void RPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);
 
     void RAccountRoleUpdate();
 
@@ -228,6 +231,7 @@ private:
     void DelegateAuditLog(QTableView* table_view) const;
     void DelegatePeriodClose(QTableView* table_view) const;
     void DelegateInventoryHeat(QTableView* table_view) const;
+    void DelegatePartnerHeat(QTableView* table_view) const;
 
     void InitTableView(QTableView* view, int id_column, int version_column, int stretch_column) const;
 

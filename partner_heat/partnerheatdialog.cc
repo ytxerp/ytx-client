@@ -1,17 +1,19 @@
-#include "inventoryheatdialog.h"
+#include "partnerheatdialog.h"
 
 #include <QTimer>
 
 #include "component/constant.h"
 #include "component/constantint.h"
+#include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
-#include "ui_inventoryheatdialog.h"
+#include "enum/section.h"
+#include "ui_partnerheatdialog.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-InventoryHeatDialog::InventoryHeatDialog(InventoryHeatModel* model, const QUuid& widget_id, QWidget* parent)
+PartnerHeatDialog::PartnerHeatDialog(PartnerHeatModel* model, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
-    , ui(new Ui::InventoryHeatDialog)
+    , ui(new Ui::PartnerHeatDialog)
     , start_ { QDateTime(QDate::currentDate().addYears(-2), kStartTime) }
     , end_ { QDateTime(QDate::currentDate().addDays(1), kStartTime) }
     , model_ { model }
@@ -26,14 +28,14 @@ InventoryHeatDialog::InventoryHeatDialog(InventoryHeatModel* model, const QUuid&
     ui->tableView->setModel(model);
     model->setParent(ui->tableView);
 
-    QTimer::singleShot(0, this, &InventoryHeatDialog::on_pushButtonFetch_clicked);
+    QTimer::singleShot(0, this, &PartnerHeatDialog::on_pushButtonFetch_clicked);
 }
 
-InventoryHeatDialog::~InventoryHeatDialog() { delete ui; }
+PartnerHeatDialog::~PartnerHeatDialog() { delete ui; }
 
-QTableView* InventoryHeatDialog::View() { return ui->tableView; }
+QTableView* PartnerHeatDialog::View() { return ui->tableView; }
 
-void InventoryHeatDialog::InitDialog()
+void PartnerHeatDialog::InitDialog()
 {
     ui->dateTimeEditStart->setDisplayFormat(kDateFST);
     ui->dateTimeEditEnd->setDisplayFormat(kDateFST);
@@ -41,20 +43,20 @@ void InventoryHeatDialog::InitDialog()
     ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
     ui->radioButtonSale->setChecked(true);
     ui->spinBoxMinOrderCount->setRange(1, INT_MAX);
-    ui->spinBoxMinPartnerCount->setRange(1, INT_MAX);
+    ui->spinBoxMinInventoryDiversity->setRange(1, INT_MAX);
     ui->spinBoxMinActiveMonths->setRange(1, INT_MAX);
 
     ui->pushButtonFetch->setFocus();
 }
 
-void InventoryHeatDialog::InitTimer()
+void PartnerHeatDialog::InitTimer()
 {
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pushButtonFetch->setEnabled(true); });
 }
 
-void InventoryHeatDialog::on_pushButtonFetch_clicked()
+void PartnerHeatDialog::on_pushButtonFetch_clicked()
 {
     if (!ui->pushButtonFetch->isEnabled()) {
         return;
@@ -64,16 +66,16 @@ void InventoryHeatDialog::on_pushButtonFetch_clicked()
 
     const Section section { ui->radioButtonSale->isChecked() ? Section::kSale : Section::kPurchase };
     const int moc { ui->spinBoxMinOrderCount->value() };
-    const int mpc { ui->spinBoxMinPartnerCount->value() };
+    const int mid { ui->spinBoxMinInventoryDiversity->value() };
     const int mam { ui->spinBoxMinActiveMonths->value() };
 
-    const auto message { JsonGen::InventoryHeadAck(section, widget_id_, start_.toUTC(), end_.toUTC(), moc, mpc, mam) };
-    WebSocket::Instance()->SendMessage(WsKey::kInventoryHeatAck, message);
+    const auto message { JsonGen::PartnerHeadAck(section, widget_id_, start_.toUTC(), end_.toUTC(), moc, mid, mam) };
+    WebSocket::Instance()->SendMessage(WsKey::kPartnerHeatAck, message);
 
     cooldown_timer_->start(TimeConst::kCooldownMs);
 }
 
-void InventoryHeatDialog::on_dateTimeEditStart_dateChanged(const QDate& date)
+void PartnerHeatDialog::on_dateTimeEditStart_dateChanged(const QDate& date)
 {
     const bool valid { date < end_.date() };
     start_ = QDateTime(date, kStartTime);
@@ -82,7 +84,7 @@ void InventoryHeatDialog::on_dateTimeEditStart_dateChanged(const QDate& date)
     ui->pushButtonFetch->setEnabled(valid);
 }
 
-void InventoryHeatDialog::on_dateTimeEditEnd_dateChanged(const QDate& date)
+void PartnerHeatDialog::on_dateTimeEditEnd_dateChanged(const QDate& date)
 {
     const bool valid { date >= start_.date() };
 

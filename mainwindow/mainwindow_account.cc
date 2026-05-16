@@ -74,6 +74,17 @@ void MainWindow::InitHeader()
         tr("Heat Score"),
     };
 
+    header_info_.partner_heat = {
+        tr("Partner Node"),
+        tr("Placeholder"),
+        tr("Order Count"),
+        tr("Inventory Diversity"),
+        tr("Active Months"),
+        tr("Active Days"),
+        tr("Total Quantity"),
+        tr("Heat Score"),
+    };
+
     header_info_.tag = {
         tr("ID"),
         tr("Version"),

@@ -353,12 +353,19 @@
     <property name="title">
      <string>Inventory</string>
     </property>
-    <addaction name="actionHeat"/>
+    <addaction name="actionHeatInventory"/>
+   </widget>
+   <widget class="QMenu" name="menuPartner">
+    <property name="title">
+     <string>Partner</string>
+    </property>
+    <addaction name="actionHeatPartner"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuFinance"/>
    <addaction name="menuInventory"/>
+   <addaction name="menuPartner"/>
    <addaction name="menuAccount"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -680,7 +687,12 @@
     <string>Period Close</string>
    </property>
   </action>
-  <action name="actionHeat">
+  <action name="actionHeatInventory">
+   <property name="text">
+    <string>Heat</string>
+   </property>
+  </action>
+  <action name="actionHeatPartner">
    <property name="text">
     <string>Heat</string>
    </property>

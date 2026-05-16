@@ -273,6 +273,10 @@ set(HEADERS
     inventory_heat/inventoryheatmodel.h
     inventory_heat/inventoryheatenum.h
     delegate/readonly/doublenonedecimalr.h
+    partner_heat/partnerheatrow.h
+    partner_heat/partnerheatmodel.h
+    partner_heat/partnerheatenum.h
+    partner_heat/partnerheatdialog.h
 )
 
 set(SOURCES
@@ -435,6 +439,9 @@ set(SOURCES
     inventory_heat/inventoryheatmodel.cc
     mainwindow/mainwindow_inventory_heat.cc
     delegate/readonly/doublenonedecimalr.cc
+    mainwindow/mainwindow_partner_heat.cc
+    partner_heat/partnerheatmodel.cc
+    partner_heat/partnerheatdialog.cc
 )
 
 set(UIS
@@ -472,6 +479,7 @@ set(UIS
     audithub/audittextdialog.ui
     periodclose/periodclosedialog.ui
     inventory_heat/inventoryheatdialog.ui
+    partner_heat/partnerheatdialog.ui
 )
 
 # ------------------------

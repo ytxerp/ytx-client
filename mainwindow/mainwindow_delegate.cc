@@ -35,6 +35,7 @@
 #include "enum/tagenum.h"
 #include "inventory_heat/inventoryheatenum.h"
 #include "mainwindow.h"
+#include "partner_heat/partnerheatenum.h"
 #include "workspace_member/workspacememberenum.h"
 
 void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
@@ -580,4 +581,16 @@ void MainWindow::DelegateInventoryHeat(QTableView* table_view) const
 
     auto* score { new DoubleNoneDecimalR(StringConst::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(InventoryHeatEnum::kHeatScore), score);
+}
+
+void MainWindow::DelegatePartnerHeat(QTableView* table_view) const
+{
+    auto* path { new SearchPathTableR(sc_p_.tree_model, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(PartnerHeatEnum::kPartnerNode), path);
+
+    auto* quantity { new DoubleR(sc_p_.section_config.quantity_decimal, StringConst::kEightDigits, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(PartnerHeatEnum::kTotalQuantity), quantity);
+
+    auto* score { new DoubleNoneDecimalR(StringConst::kEightDigits, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(PartnerHeatEnum::kHeatScore), score);
 }

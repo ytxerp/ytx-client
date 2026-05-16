@@ -227,7 +227,8 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kAccountRoleUpdate] = [this](const QJsonObject& obj) { UpdateAccountRole(obj); };
     handler_obj_[WsKey::kEntryIssuedTimeUpdate] = [this](const QJsonObject& obj) { UpdateEntryIssuedTime(obj); };
     handler_obj_[WsKey::kAuditLogAck] = [this](const QJsonObject& obj) { AckAuditLog(obj); };
-    handler_obj_[WsKey::kInventoryHeat] = [this](const QJsonObject& obj) { AckInventoryHeat(obj); };
+    handler_obj_[WsKey::kInventoryHeatAck] = [this](const QJsonObject& obj) { AckInventoryHeat(obj); };
+    handler_obj_[WsKey::kPartnerHeatAck] = [this](const QJsonObject& obj) { AckPartnerHeat(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -630,6 +631,23 @@ void WebSocket::AckInventoryHeat(const QJsonObject& obj)
     const QJsonArray array { obj.value(kArray).toArray() };
 
     emit SInventoryHeatAck(widget_id, array);
+}
+
+void WebSocket::AckPartnerHeat(const QJsonObject& obj)
+{
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
+    if (session_id != session_id_)
+        return;
+
+    const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
+    if (widget_id.isNull()) {
+        qWarning() << Q_FUNC_INFO << "widget_id is null";
+        return;
+    }
+
+    const QJsonArray array { obj.value(kArray).toArray() };
+
+    emit SPartnerHeatAck(widget_id, array);
 }
 
 void WebSocket::DeleteLeaf(const QJsonObject& obj)
