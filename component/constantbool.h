@@ -23,7 +23,7 @@
 // Boolean constants
 inline constexpr bool kIsHidden = true;
 
-namespace Rule {
+namespace direction_rule {
 // Finance/Inventory/Task: Credit increase, Debit decrease; calculation: credit - debit
 // Order: Return Order (returned transaction)
 inline constexpr bool kDDCI = true;

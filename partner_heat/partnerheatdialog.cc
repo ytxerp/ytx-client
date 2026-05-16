@@ -72,7 +72,7 @@ void PartnerHeatDialog::on_pushButtonFetch_clicked()
     const auto message { JsonGen::PartnerHeadAck(section, widget_id_, start_.toUTC(), end_.toUTC(), moc, mid, mam) };
     WebSocket::Instance()->SendMessage(WsKey::kPartnerHeatAck, message);
 
-    cooldown_timer_->start(TimeConst::kCooldownMs);
+    cooldown_timer_->start(time_const::kCooldownMs);
 }
 
 void PartnerHeatDialog::on_dateTimeEditStart_dateChanged(const QDate& date)

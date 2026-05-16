@@ -119,6 +119,6 @@ void StyledItemDelegate::PaintColorRect(QPainter* painter, const QStyleOptionVie
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(Qt::NoPen);
     painter->setBrush(QColor(color_string));
-    painter->drawRoundedRect(color_rect, UiConst::kCornerRadius, UiConst::kCornerRadius);
+    painter->drawRoundedRect(color_rect, ui_const::kCornerRadius, ui_const::kCornerRadius);
     painter->restore();
 }

@@ -32,7 +32,7 @@ QJsonObject Settlement::WriteJson() const
     obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
     obj.insert(kDescription, description);
     obj.insert(kStatus, std::to_underlying(status));
-    obj.insert(kAmount, QString::number(amount, 'f', NumericConst::kDecimalPlaces4));
+    obj.insert(kAmount, QString::number(amount, 'f', numeric_const::kDecimalPlaces4));
 
     return obj;
 }

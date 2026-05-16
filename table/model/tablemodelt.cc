@@ -55,10 +55,10 @@ bool TableModelT::UpdateNumeric(EntryShadow* shadow, double value, int row, bool
     const bool is_parallel { shadow->is_parallel };
 
     update.insert(kVersion, *shadow->version);
-    update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*shadow->lhs_debit, 'f', NumericConst::kDecimalPlaces8));
-    update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*shadow->lhs_credit, 'f', NumericConst::kDecimalPlaces8));
-    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*shadow->rhs_debit, 'f', NumericConst::kDecimalPlaces8));
-    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*shadow->rhs_credit, 'f', NumericConst::kDecimalPlaces8));
+    update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*shadow->lhs_debit, 'f', numeric_const::kDecimalPlaces8));
+    update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*shadow->lhs_credit, 'f', numeric_const::kDecimalPlaces8));
+    update.insert(is_parallel ? kRhsDebit : kLhsDebit, QString::number(*shadow->rhs_debit, 'f', numeric_const::kDecimalPlaces8));
+    update.insert(is_parallel ? kRhsCredit : kLhsCredit, QString::number(*shadow->rhs_credit, 'f', numeric_const::kDecimalPlaces8));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
     WebSocket::Instance()->SendMessage(WsKey::kEntryNumericUpdate, message);
@@ -99,8 +99,8 @@ bool TableModelT::UpdateRate(EntryShadow* shadow, double value)
     QJsonObject update {};
     update.insert(kVersion, *shadow->version);
 
-    update.insert(kLhsRate, QString::number(value, 'f', NumericConst::kDecimalPlaces8));
-    update.insert(kRhsRate, QString::number(value, 'f', NumericConst::kDecimalPlaces8));
+    update.insert(kLhsRate, QString::number(value, 'f', numeric_const::kDecimalPlaces8));
+    update.insert(kRhsRate, QString::number(value, 'f', numeric_const::kDecimalPlaces8));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, shadow->is_parallel) };
     WebSocket::Instance()->SendMessage(WsKey::kEntryRateUpdate, message);

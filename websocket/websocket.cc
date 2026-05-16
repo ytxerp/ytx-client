@@ -248,7 +248,7 @@ void WebSocket::InitTimer()
 
     if (!ping_timer_) {
         ping_timer_ = new QTimer(this);
-        ping_timer_->setInterval(TimeConst::kHeartbeatIntervalMs);
+        ping_timer_->setInterval(time_const::kHeartbeatIntervalMs);
         connect(ping_timer_, &QTimer::timeout, this, &WebSocket::RSendPing);
     }
 
@@ -259,7 +259,7 @@ void WebSocket::InitTimer()
     }
 
     ping_timer_->start();
-    timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
+    timeout_timer_->start(time_const::kTimeoutThresholdMs);
 }
 
 void WebSocket::SendMessage(WsKey key, const QJsonObject& value)
@@ -318,7 +318,7 @@ void WebSocket::HandleMessage(WsKey key, const QByteArray& payload)
 void WebSocket::RBinaryMessageReceived(const QByteArray& data)
 {
     Q_ASSERT(!data.isEmpty());
-    timeout_timer_->start(TimeConst::kTimeoutThresholdMs);
+    timeout_timer_->start(time_const::kTimeoutThresholdMs);
 
     const auto key { static_cast<WsKey>(static_cast<uint8_t>(data.at(0))) };
     const QByteArray payload { utils::ZstdDecompress(data.sliced(1)) };
@@ -734,16 +734,16 @@ void WebSocket::ReplaceLeaf(const QJsonObject& obj)
     Q_ASSERT(obj.contains(kSection));
     Q_ASSERT(obj.contains(kSessionId));
     Q_ASSERT(obj.contains(kResult));
-    Q_ASSERT(obj.contains(NodeRef::kInventoryInt));
-    Q_ASSERT(obj.contains(NodeRef::kInventoryExt));
+    Q_ASSERT(obj.contains(node_ref::kInventoryInt));
+    Q_ASSERT(obj.contains(node_ref::kInventoryExt));
     Q_ASSERT(obj.contains(kOldNodeId));
     Q_ASSERT(obj.contains(kNewNodeId));
 
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const bool result { obj.value(kResult).toBool() };
-    const bool inventory_int_ref { obj.value(NodeRef::kInventoryInt).toBool() };
-    const bool inventory_ext_ref { obj.value(NodeRef::kInventoryExt).toBool() };
+    const bool inventory_int_ref { obj.value(node_ref::kInventoryInt).toBool() };
+    const bool inventory_ext_ref { obj.value(node_ref::kInventoryExt).toBool() };
     const QUuid old_node_id(obj.value(kOldNodeId).toString());
     const QUuid new_node_id(obj.value(kNewNodeId).toString());
 

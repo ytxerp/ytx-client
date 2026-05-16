@@ -33,7 +33,7 @@ QString FinanceForeignR::Format(const QModelIndex& index, int unit) const
 {
     auto it { unit_symbol_map_.constFind(unit) };
     if (it == unit_symbol_map_.constEnd())
-        return StringConst::kEmpty;
+        return string_const::kEmpty;
 
     return it.value() + locale_.toString(index.data().toDouble(), 'f', decimal_);
 }

@@ -168,8 +168,8 @@ void MainWindow::InitContextFinance()
         info.unit_symbol_map.insert(key, kUnitSymbol(c));
     }
 
-    info.rule_map.insert(Rule::kDDCI, kStrDDCI);
-    info.rule_map.insert(Rule::kDICD, kStrDICD);
+    info.rule_map.insert(direction_rule::kDDCI, kStrDDCI);
+    info.rule_map.insert(direction_rule::kDICD, kStrDICD);
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
@@ -210,8 +210,8 @@ void MainWindow::InitContextInventory()
     info.unit_map.insert(std::to_underlying(NodeUnit::IPosition), tr("POS", "Position"));
     info.unit_map.insert(std::to_underlying(NodeUnit::IExternal), tr("EXT", "External"));
 
-    info.rule_map.insert(Rule::kDDCI, kStrDDCI);
-    info.rule_map.insert(Rule::kDICD, kStrDICD);
+    info.rule_map.insert(direction_rule::kDDCI, kStrDDCI);
+    info.rule_map.insert(direction_rule::kDICD, kStrDICD);
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
@@ -252,8 +252,8 @@ void MainWindow::InitContextTask()
     info.unit_map.insert(std::to_underlying(NodeUnit::TAction), tr("ACT", "Action"));
     info.unit_map.insert(std::to_underlying(NodeUnit::TSource), tr("SRC", "Source"));
 
-    info.rule_map.insert(Rule::kDDCI, kStrDDCI);
-    info.rule_map.insert(Rule::kDICD, kStrDICD);
+    info.rule_map.insert(direction_rule::kDDCI, kStrDDCI);
+    info.rule_map.insert(direction_rule::kDICD, kStrDICD);
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
@@ -327,8 +327,8 @@ void MainWindow::InitContextSale()
     info.path = kSalePath;
     info.entry = kSaleEntry;
 
-    info.rule_map.insert(Rule::kRO, tr("RO", "Return Order"));
-    info.rule_map.insert(Rule::kFO, tr("FO", "Forward Order"));
+    info.rule_map.insert(direction_rule::kRO, tr("RO", "Return Order"));
+    info.rule_map.insert(direction_rule::kFO, tr("FO", "Forward Order"));
 
     info.unit_map.insert(std::to_underlying(NodeUnit::OImmediate), tr("IMM", "Immediate"));
     info.unit_map.insert(std::to_underlying(NodeUnit::OMonthly), tr("MON", "Monthly"));
@@ -374,8 +374,8 @@ void MainWindow::InitContextPurchase()
     info.path = kPurchasePath;
     info.entry = kPurchaseEntry;
 
-    info.rule_map.insert(Rule::kRO, tr("RO", "Return Order"));
-    info.rule_map.insert(Rule::kFO, tr("FO", "Forward Order"));
+    info.rule_map.insert(direction_rule::kRO, tr("RO", "Return Order"));
+    info.rule_map.insert(direction_rule::kFO, tr("FO", "Forward Order"));
 
     info.unit_map.insert(std::to_underlying(NodeUnit::OImmediate), tr("IMM", "Immediate"));
     info.unit_map.insert(std::to_underlying(NodeUnit::OMonthly), tr("MON", "Monthly"));

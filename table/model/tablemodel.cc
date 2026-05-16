@@ -170,7 +170,7 @@ void TableModel::RestartTimer(const QUuid& id, int version)
     }
 
     // Start or restart the timer
-    timer->start(TimeConst::kAutoCloseMs);
+    timer->start(time_const::kAutoCloseMs);
 }
 
 void TableModel::FlushCaches()

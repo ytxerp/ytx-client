@@ -815,7 +815,7 @@ void TreeModel::RestartTimer(const QUuid& id)
         pending_timers_[id] = timer;
     }
 
-    timer->start(TimeConst::kAutoCloseMs);
+    timer->start(time_const::kAutoCloseMs);
 }
 
 void TreeModel::FlushCaches()

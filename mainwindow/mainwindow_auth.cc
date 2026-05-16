@@ -58,7 +58,7 @@ void MainWindow::RDenyConnection()
     ui->actionReconnect->setEnabled(true);
 
     utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
-    utils::ShowNotification(QMessageBox::Warning, tr("Connection Refused"), tr("Unable to connect to the server. Please try again."), TimeConst::kAutoCloseMs);
+    utils::ShowNotification(QMessageBox::Warning, tr("Connection Refused"), tr("Unable to connect to the server. Please try again."), time_const::kAutoCloseMs);
 }
 
 void MainWindow::RAllowConnection()
@@ -74,7 +74,7 @@ void MainWindow::RAllowConnection()
 void MainWindow::RRemoteHostClosed()
 {
     utils::ShowNotification(
-        QMessageBox::Warning, tr("Remote Host Closed"), tr("The server has closed the connection. Please try reconnecting."), TimeConst::kAutoCloseMs);
+        QMessageBox::Warning, tr("Remote Host Closed"), tr("The server has closed the connection. Please try reconnecting."), time_const::kAutoCloseMs);
 
     on_actionSignOut_triggered();
     utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);

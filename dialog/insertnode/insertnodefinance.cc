@@ -68,8 +68,8 @@ void InsertNodeFinance::IniKindGroup()
 void InsertNodeFinance::IniRuleGroup()
 {
     rule_group_ = new QButtonGroup(this);
-    rule_group_->addButton(ui->rBtnDDCI, static_cast<int>(Rule::kDDCI));
-    rule_group_->addButton(ui->rBtnDICD, static_cast<int>(Rule::kDICD));
+    rule_group_->addButton(ui->rBtnDDCI, static_cast<int>(direction_rule::kDDCI));
+    rule_group_->addButton(ui->rBtnDICD, static_cast<int>(direction_rule::kDICD));
 }
 
 void InsertNodeFinance::IniDirectionRule(bool rule) { (rule ? ui->rBtnDDCI : ui->rBtnDICD)->setChecked(true); }

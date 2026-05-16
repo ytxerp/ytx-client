@@ -22,7 +22,7 @@
 
 #include <QtCore/qtypes.h>
 
-namespace UiConst {
+namespace ui_const {
 inline constexpr int kRowHeight = 24;
 inline constexpr int kCornerRadius = 2; // Corner radius of the tag/color rectangle
 inline constexpr int kTextMarginFactor = 8;
@@ -33,24 +33,24 @@ inline constexpr int kTagSpacing = 6; // Horizontal spacing between adjacent tag
 inline constexpr int kTagMargin = 6; // Horizontal margin between tag group and cell border
 }
 
-namespace NumericConst {
+namespace numeric_const {
 inline constexpr int kDecimalPlaces4 = 4;
 inline constexpr int kDecimalPlaces8 = 8;
 }
 
-namespace TimeConst {
+namespace time_const {
 inline constexpr int kHeartbeatIntervalMs = 30000;
 inline constexpr int kTimeoutThresholdMs = 75000;
 inline constexpr int kAutoCloseMs = 3000;
 inline constexpr int kCooldownMs = 2000;
 }
 
-namespace PoolConst {
+namespace pool_const {
 inline constexpr qsizetype kExpandSize = 100;
 inline constexpr qsizetype kMaxSize = 1000;
 }
 
-namespace ZstdConst {
+namespace zstd_const {
 inline constexpr qsizetype kCompressThreshold { 256 };
 }
 

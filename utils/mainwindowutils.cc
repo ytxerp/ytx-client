@@ -371,7 +371,7 @@ QByteArray utils::ZstdDecompress(const QByteArray& data)
 QByteArray utils::ZstdCompress(const QByteArray& data)
 {
     // Skip compression for small payloads, as zstd overhead may increase size.
-    if (data.size() < ZstdConst::kCompressThreshold)
+    if (data.size() < zstd_const::kCompressThreshold)
         return data;
 
     size_t const bound { ZSTD_compressBound(static_cast<size_t>(data.size())) };

@@ -22,13 +22,13 @@
 
 #include <QString>
 
-namespace StringConst {
+namespace string_const {
 inline const QString kEightDigits = QStringLiteral("+00,000,000.00");
 inline const QString kFourDigits = QStringLiteral("+0,000.00");
 inline const QString kEmpty = QStringLiteral("");
 }
 
-namespace NodeRef {
+namespace node_ref {
 // Node is referenced by linked nodes within the same section
 inline const QString kWithin = QStringLiteral("within");
 // Internal inventory node is referenced by partner, sale, or purchase
@@ -41,6 +41,13 @@ inline const QString kPartnerCV = QStringLiteral("partner_cv");
 inline const QString kPartnerEmp = QStringLiteral("partner_emp");
 // Sale or purchase order is already settled
 inline const QString kOrder = QStringLiteral("order");
+}
+
+namespace section_heat {
+inline const QString kMinOrderCount = QStringLiteral("min_order_count");
+inline const QString kMinInventoryDiversity = QStringLiteral("min_inventory_diversity");
+inline const QString kMinActiveMonths = QStringLiteral("min_active_months");
+inline const QString kMinPartnerCount = QStringLiteral("min_partner_count");
 }
 
 #endif // CONSTANTSTRING_H

@@ -70,7 +70,7 @@ QJsonObject EntryP::WriteJson() const
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kDocument, utils::WriteStringList(document));
 
-    obj.insert(kUnitPrice, QString::number(unit_price, 'f', NumericConst::kDecimalPlaces8));
+    obj.insert(kUnitPrice, QString::number(unit_price, 'f', numeric_const::kDecimalPlaces8));
     obj.insert(kExternalSku, external_sku.toString(QUuid::WithoutBraces));
     return obj;
 }
@@ -117,13 +117,13 @@ QJsonObject EntryO::WriteJson() const
     obj.insert(kLhsNode, lhs_node.toString(QUuid::WithoutBraces));
     obj.insert(kRhsNode, rhs_node.toString(QUuid::WithoutBraces));
 
-    obj.insert(kUnitPrice, QString::number(unit_price, 'f', NumericConst::kDecimalPlaces8));
-    obj.insert(kUnitDiscount, QString::number(unit_discount, 'f', NumericConst::kDecimalPlaces8));
-    obj.insert(kCount, QString::number(count, 'f', NumericConst::kDecimalPlaces8));
-    obj.insert(kMeasure, QString::number(measure, 'f', NumericConst::kDecimalPlaces8));
-    obj.insert(kInitial, QString::number(initial, 'f', NumericConst::kDecimalPlaces4));
-    obj.insert(kFinal, QString::number(final, 'f', NumericConst::kDecimalPlaces4));
-    obj.insert(kDiscount, QString::number(discount, 'f', NumericConst::kDecimalPlaces4));
+    obj.insert(kUnitPrice, QString::number(unit_price, 'f', numeric_const::kDecimalPlaces8));
+    obj.insert(kUnitDiscount, QString::number(unit_discount, 'f', numeric_const::kDecimalPlaces8));
+    obj.insert(kCount, QString::number(count, 'f', numeric_const::kDecimalPlaces8));
+    obj.insert(kMeasure, QString::number(measure, 'f', numeric_const::kDecimalPlaces8));
+    obj.insert(kInitial, QString::number(initial, 'f', numeric_const::kDecimalPlaces4));
+    obj.insert(kFinal, QString::number(final, 'f', numeric_const::kDecimalPlaces4));
+    obj.insert(kDiscount, QString::number(discount, 'f', numeric_const::kDecimalPlaces4));
     obj.insert(kTag, utils::WriteStringList(tag));
 
     return obj;

@@ -290,7 +290,7 @@ void WorkspaceMemberModel::RestartTimer(const QUuid& id)
     }
 
     // Start or restart the timer
-    timer->start(TimeConst::kAutoCloseMs);
+    timer->start(time_const::kAutoCloseMs);
 }
 
 void WorkspaceMemberModel::FlushCaches()

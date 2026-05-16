@@ -44,7 +44,7 @@ void AuditDialog::on_pBtnFetch_clicked()
     const auto message { JsonGen::AuditLogAck(widget_id_, LoginInfo::Instance().Workspace(), start_.toUTC(), end_.toUTC()) };
     WebSocket::Instance()->SendMessage(WsKey::kAuditLogAck, message);
 
-    cooldown_timer_->start(TimeConst::kCooldownMs);
+    cooldown_timer_->start(time_const::kCooldownMs);
 }
 
 void AuditDialog::InitTimer()

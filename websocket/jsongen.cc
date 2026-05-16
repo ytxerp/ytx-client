@@ -99,12 +99,12 @@ QJsonObject LeafDeleteCheck(Section section, CUuid& node_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(NodeRef::kWithin, false);
-    message.insert(NodeRef::kInventoryInt, false);
-    message.insert(NodeRef::kInventoryExt, false);
-    message.insert(NodeRef::kPartnerCV, false);
-    message.insert(NodeRef::kPartnerEmp, false);
-    message.insert(NodeRef::kOrder, false);
+    message.insert(node_ref::kWithin, false);
+    message.insert(node_ref::kInventoryInt, false);
+    message.insert(node_ref::kInventoryExt, false);
+    message.insert(node_ref::kPartnerCV, false);
+    message.insert(node_ref::kPartnerEmp, false);
+    message.insert(node_ref::kOrder, false);
     return message;
 }
 
@@ -116,8 +116,8 @@ QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id)
     message.insert(kResult, false);
     message.insert(kOldNodeId, old_id.toString(QUuid::WithoutBraces));
     message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
-    message.insert(NodeRef::kInventoryInt, false);
-    message.insert(NodeRef::kInventoryExt, false);
+    message.insert(node_ref::kInventoryInt, false);
+    message.insert(node_ref::kInventoryExt, false);
     return message;
 }
 
@@ -160,9 +160,9 @@ QJsonObject InventoryHeadAck(Section section, CUuid& widget_id, const QDateTime&
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert("min_order_count", moc);
-    message.insert("min_partner_count", mpc);
-    message.insert("min_active_months", mam);
+    message.insert(section_heat::kMinOrderCount, moc);
+    message.insert(section_heat::kMinPartnerCount, mpc);
+    message.insert(section_heat::kMinActiveMonths, mam);
     message.insert(kArray, QJsonArray());
     return message;
 }
@@ -519,9 +519,9 @@ QJsonObject PartnerHeadAck(Section section, CUuid& widget_id, const QDateTime& s
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert("min_order_count", moc);
-    message.insert("min_inventory_diversity", mid);
-    message.insert("min_active_months", mam);
+    message.insert(section_heat::kMinOrderCount, moc);
+    message.insert(section_heat::kMinInventoryDiversity, mid);
+    message.insert(section_heat::kMinActiveMonths, mam);
     message.insert(kArray, QJsonArray());
     return message;
 }

@@ -64,7 +64,7 @@ void TreeWidgetSettlement::on_pBtnFetch_clicked()
     const auto message { JsonGen::SettlementAck(section_, widget_id_, start_.toUTC(), end_.toUTC()) };
     WebSocket::Instance()->SendMessage(WsKey::kSettlementAck, message);
 
-    cooldown_timer_->start(TimeConst::kCooldownMs);
+    cooldown_timer_->start(time_const::kCooldownMs);
 }
 
 void TreeWidgetSettlement::IniWidget()

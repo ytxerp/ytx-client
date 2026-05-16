@@ -58,7 +58,7 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
     }
 
     {
-        utils::SetupVerticalHeader(view, UiConst::kRowHeight);
+        utils::SetupVerticalHeader(view, ui_const::kRowHeight);
     }
 }
 
@@ -86,6 +86,6 @@ void MainWindow::InitTableView(QTableView* view, int id_column, int version_colu
     }
 
     {
-        utils::SetupVerticalHeader(view, UiConst::kRowHeight);
+        utils::SetupVerticalHeader(view, ui_const::kRowHeight);
     }
 }

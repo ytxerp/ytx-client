@@ -47,7 +47,7 @@ void MainWindow::RAccountUsername(const QJsonObject& obj)
         break;
     }
 
-    utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), message, TimeConst::kAutoCloseMs);
+    utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), message, time_const::kAutoCloseMs);
 }
 
 void MainWindow::InitHeader()
@@ -193,5 +193,5 @@ void MainWindow::RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& a
 void MainWindow::RAccountRoleUpdate()
 {
     utils::ShowNotification(QMessageBox::Information, tr("Role Updated"),
-        tr("Your account role has been updated. Please restart the application to enable new permissions."), TimeConst::kAutoCloseMs);
+        tr("Your account role has been updated. Please restart the application to enable new permissions."), time_const::kAutoCloseMs);
 }

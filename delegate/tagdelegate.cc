@@ -24,7 +24,7 @@ void TagDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, c
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
 
-    int x { option.rect.left() + UiConst::kTagMargin };
+    int x { option.rect.left() + ui_const::kTagMargin };
 
     for (const QString& id_str : tag_ids) {
         const QUuid tag_id { QUuid::fromString(id_str) };
@@ -50,7 +50,7 @@ void TagDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, c
 
         painter->drawPixmap(x, y, pixmap);
 
-        x += logical_width + UiConst::kTagSpacing;
+        x += logical_width + ui_const::kTagSpacing;
     }
 
     painter->restore();
@@ -64,7 +64,7 @@ QSize TagDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInde
         return QSize { option.rect.width(), option.rect.height() };
     }
 
-    int total_width { UiConst::kTagMargin * 2 }; // Left and right margins
+    int total_width { ui_const::kTagMargin * 2 }; // Left and right margins
     int valid_count { 0 }; // Number of valid tags with pixmap
 
     for (const QString& id_str : tag_ids) {
@@ -89,7 +89,7 @@ QSize TagDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInde
 
     if (valid_count > 1) {
         // Add spacing between adjacent tags
-        total_width += UiConst::kTagSpacing * (valid_count - 1);
+        total_width += ui_const::kTagSpacing * (valid_count - 1);
     }
 
     return QSize { total_width, option.rect.height() };

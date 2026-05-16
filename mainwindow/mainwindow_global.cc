@@ -47,7 +47,7 @@ void MainWindow::RUpdateDefaultUnit(Section section, int unit)
 void MainWindow::RDenyDefaultUnit(const QString& /*section*/)
 {
     utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), tr("The base currency for Finance cannot be changed because entries already exist."),
-        TimeConst::kAutoCloseMs);
+        time_const::kAutoCloseMs);
 }
 
 void MainWindow::UpdateSharedConfig(CSharedConfig& shared)

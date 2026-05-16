@@ -32,7 +32,7 @@ public:
     void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 protected:
-    static QSize CalculateTextSize(CString& text, const QStyleOptionViewItem& option, int margin_factor = UiConst::kTextMarginFactor);
+    static QSize CalculateTextSize(CString& text, const QStyleOptionViewItem& option, int margin_factor = ui_const::kTextMarginFactor);
 
     void PaintText(CString& text, QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, Qt::Alignment alignment) const;
     void PaintColorText(

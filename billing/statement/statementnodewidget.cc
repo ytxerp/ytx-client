@@ -72,7 +72,7 @@ void StatementNodeWidget::on_pBtnFetch_clicked()
     const auto message { JsonGen::StatementNodeAck(section_, widget_id_, partner_id_, unit_, start_.toUTC(), end_.toUTC()) };
     WebSocket::Instance()->SendMessage(WsKey::kStatementNodeAck, message);
 
-    cooldown_timer_->start(TimeConst::kCooldownMs);
+    cooldown_timer_->start(time_const::kCooldownMs);
 }
 
 void StatementNodeWidget::RUnitGroupClicked(int id)

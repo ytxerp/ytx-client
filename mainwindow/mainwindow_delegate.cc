@@ -56,11 +56,11 @@ void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* color { new Color(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kColor), color);
 
-    auto* final_total { new AmountR(section.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, StringConst::kEightDigits, tree_view) };
+    auto* final_total { new AmountR(section.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, string_const::kEightDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kFinalTotal), final_total);
 
     auto* initial_total { new FinanceForeignR(
-        section.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, StringConst::kEightDigits, tree_view) };
+        section.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, string_const::kEightDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kInitialTotal), initial_total);
 
     auto* tag { new TagDelegate(sc_f_.tag_icon_hash, tree_view) };
@@ -85,10 +85,10 @@ void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kKind), kind);
 
-    auto* quantity { new DoubleR(section.quantity_decimal, StringConst::kEightDigits, tree_view) };
+    auto* quantity { new DoubleR(section.quantity_decimal, string_const::kEightDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kInitialTotal), quantity);
 
-    auto* amount { new AmountR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, StringConst::kEightDigits, tree_view) };
+    auto* amount { new AmountR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, string_const::kEightDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumT::kFinalTotal), amount);
 
     auto* color { new Color(tree_view) };
@@ -116,15 +116,15 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kKind), kind);
 
-    auto* quantity { new DoubleR(section.quantity_decimal, StringConst::kEightDigits, tree_view) };
+    auto* quantity { new DoubleR(section.quantity_decimal, string_const::kEightDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kInitialTotal), quantity);
 
     auto* amount { new AmountOrderReferenceR(
-        info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, StringConst::kEightDigits, tree_view) };
+        info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, string_const::kEightDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kFinalTotal), amount);
     connect(amount, &AmountOrderReferenceR::SOrderReferencePrimary, this, &MainWindow::ROrderReferencePrimary);
 
-    auto* unit_price { new Double(section.rate_decimal, 0.0, kDoubleMax, StringConst::kFourDigits, tree_view) };
+    auto* unit_price { new Double(section.rate_decimal, 0.0, kDoubleMax, string_const::kFourDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kUnitPrice), unit_price);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kCommission), unit_price);
 
@@ -154,7 +154,7 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kKind), kind);
 
     auto* amount { new AmountOrderReferenceR(
-        info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, StringConst::kEightDigits, tree_view) };
+        info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, string_const::kEightDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kInitialTotal), amount);
     connect(amount, &AmountOrderReferenceR::SOrderReferencePrimary, this, &MainWindow::ROrderReferencePrimary);
 
@@ -170,7 +170,7 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
 
 void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {
-    auto* direction_rule_r { new BoolColorStringR(info.rule_map, kWarningColor, StringConst::kEmpty, tree_view) };
+    auto* direction_rule_r { new BoolColorStringR(info.rule_map, kWarningColor, string_const::kEmpty, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDirectionRule), direction_rule_r);
 
     auto* unit_r { new IntStringR(info.unit_map, tree_view) };
@@ -179,12 +179,12 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind_r { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kKind), kind_r);
 
-    auto* amount { new AmountR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, StringConst::kEightDigits, tree_view) };
+    auto* amount { new AmountR(section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, string_const::kEightDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kInitialTotal), amount);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kFinalTotal), amount);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDiscountTotal), amount);
 
-    auto* quantity_r { new DoubleNoneZeroR(section.quantity_decimal, StringConst::kFourDigits, tree_view) };
+    auto* quantity_r { new DoubleNoneZeroR(section.quantity_decimal, string_const::kFourDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kMeasureTotal), quantity_r);
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kCountTotal), quantity_r);
 
@@ -208,7 +208,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* issued_time { new IssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
 
-    auto* lhs_rate { new Double(config.rate_decimal, 0.0, kDoubleMax, StringConst::kFourDigits, table_view) };
+    auto* lhs_rate { new Double(config.rate_decimal, 0.0, kDoubleMax, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kLhsRate), lhs_rate);
 
     auto* line { new Line(table_view) };
@@ -226,11 +226,11 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* node { new RhsNode(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
 
-    auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, StringConst::kFourDigits, table_view) };
+    auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDebit), value);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kCredit), value);
 
-    auto* balance { new DoubleR(config.quantity_decimal, StringConst::kEightDigits, table_view) };
+    auto* balance { new DoubleR(config.quantity_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), balance);
 
     auto* tag { new TagDelegate(sc_f_.tag_icon_hash, table_view) };
@@ -242,7 +242,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* issued_time { new IssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
 
-    auto* unit_cost { new Double(config.rate_decimal, 0.0, kDoubleMax, StringConst::kFourDigits, table_view) };
+    auto* unit_cost { new Double(config.rate_decimal, 0.0, kDoubleMax, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kLhsRate), unit_cost);
 
     auto* line { new Line(table_view) };
@@ -260,11 +260,11 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* node { new RhsNode(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
 
-    auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, StringConst::kFourDigits, table_view) };
+    auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDebit), value);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kCredit), value);
 
-    auto* balance { new DoubleR(config.quantity_decimal, StringConst::kEightDigits, table_view) };
+    auto* balance { new DoubleR(config.quantity_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), balance);
 
     auto* tag { new TagDelegate(sc_i_.tag_icon_hash, table_view) };
@@ -276,7 +276,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     auto* issued_time { new IssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
 
-    auto* unit_cost { new Double(config.rate_decimal, 0.0, kDoubleMax, StringConst::kFourDigits, table_view) };
+    auto* unit_cost { new Double(config.rate_decimal, 0.0, kDoubleMax, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kLhsRate), unit_cost);
 
     auto* line { new Line(table_view) };
@@ -294,11 +294,11 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     auto* node { new RhsNode(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
 
-    auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, StringConst::kFourDigits, table_view) };
+    auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDebit), value);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kCredit), value);
 
-    auto* balance { new DoubleR(config.quantity_decimal, StringConst::kEightDigits, table_view) };
+    auto* balance { new DoubleR(config.quantity_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), balance);
 
     auto* tag { new TagDelegate(sc_t_.tag_icon_hash, table_view) };
@@ -310,7 +310,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     auto* issued_time { new IssuedTime(config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIssuedTime), issued_time);
 
-    auto* unit_price { new Double(config.rate_decimal, 0.0, kDoubleMax, StringConst::kFourDigits, table_view) };
+    auto* unit_price { new Double(config.rate_decimal, 0.0, kDoubleMax, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kUnitPrice), unit_price);
 
     auto* line { new Line(table_view) };
@@ -351,15 +351,15 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionInfo& info, CSec
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDescription), line);
 
-    auto* price { new Double(config.rate_decimal, 0.0, kDoubleMax, StringConst::kFourDigits, table_view) };
+    auto* price { new Double(config.rate_decimal, 0.0, kDoubleMax, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitPrice), price);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kUnitDiscount), price);
 
-    auto* quantity { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, StringConst::kFourDigits, table_view) };
+    auto* quantity { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kCount), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kMeasure), quantity);
 
-    auto* amount { new DoubleNoneZeroR(config.amount_decimal, StringConst::kEightDigits, table_view) };
+    auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kInitial), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDiscount), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kFinal), amount);
@@ -371,14 +371,14 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionInfo& info, CSec
 
 void MainWindow::DelegateSaleReferenceI(QTableView* table_view, CSectionConfig& config) const
 {
-    auto* price { new DoubleNoneZeroR(config.rate_decimal, StringConst::kFourDigits, table_view) };
+    auto* price { new DoubleNoneZeroR(config.rate_decimal, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumI::kUnitPrice), price);
 
-    auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, StringConst::kFourDigits, table_view) };
+    auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumI::kCount), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumI::kMeasure), quantity);
 
-    auto* amount { new DoubleNoneZeroR(config.amount_decimal, StringConst::kEightDigits, table_view) };
+    auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumI::kInitial), amount);
 
     auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
@@ -390,14 +390,14 @@ void MainWindow::DelegateSaleReferenceI(QTableView* table_view, CSectionConfig& 
 
 void MainWindow::DelegateSaleReferenceP(QTableView* table_view, CSectionConfig& config) const
 {
-    auto* price { new DoubleNoneZeroR(config.rate_decimal, StringConst::kFourDigits, table_view) };
+    auto* price { new DoubleNoneZeroR(config.rate_decimal, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kUnitPrice), price);
 
-    auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, StringConst::kFourDigits, table_view) };
+    auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kCount), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kMeasure), quantity);
 
-    auto* amount { new DoubleNoneZeroR(config.amount_decimal, StringConst::kEightDigits, table_view) };
+    auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kInitial), amount);
 
     auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
@@ -415,11 +415,11 @@ void MainWindow::DelegateSaleReferenceP(QTableView* table_view, CSectionConfig& 
 
 void MainWindow::DelegateStatement(QTableView* table_view, CSectionConfig& config) const
 {
-    auto* quantity { new DoubleNoneZeroR(config.amount_decimal, StringConst::kFourDigits, table_view) };
+    auto* quantity { new DoubleNoneZeroR(config.amount_decimal, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCCount), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCMeasure), quantity);
 
-    auto* amount { new DoubleNoneZeroR(config.amount_decimal, StringConst::kEightDigits, table_view) };
+    auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCAmount), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kCSettlement), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEnum::kPBalance), amount);
@@ -431,11 +431,11 @@ void MainWindow::DelegateStatement(QTableView* table_view, CSectionConfig& confi
 
 void MainWindow::DelegateStatementNode(QTableView* table_view, CSectionConfig& config) const
 {
-    auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, StringConst::kFourDigits, table_view) };
+    auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kCount), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kMeasure), quantity);
 
-    auto* amount { new DoubleNoneZeroR(config.amount_decimal, StringConst::kEightDigits, table_view) };
+    auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kAmount), amount);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementNodeEnum::kSettlement), amount);
 
@@ -451,14 +451,14 @@ void MainWindow::DelegateStatementNode(QTableView* table_view, CSectionConfig& c
 
 void MainWindow::DelegateStatementEntry(QTableView* table_view, CSectionConfig& config) const
 {
-    auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, StringConst::kFourDigits, table_view) };
+    auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kCount), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kMeasure), quantity);
 
-    auto* amount { new DoubleNoneZeroR(config.amount_decimal, StringConst::kEightDigits, table_view) };
+    auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kAmount), amount);
 
-    auto* unit_price { new DoubleNoneZeroR(config.rate_decimal, StringConst::kFourDigits, table_view) };
+    auto* unit_price { new DoubleNoneZeroR(config.rate_decimal, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(StatementEntryEnum::kUnitPrice), unit_price);
 
     auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
@@ -480,7 +480,7 @@ void MainWindow::DelegateStatementEntry(QTableView* table_view, CSectionConfig& 
 
 void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& config) const
 {
-    auto* amount { new DoubleNoneZeroR(config.amount_decimal, StringConst::kEightDigits, table_view) };
+    auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kAmount), amount);
 
     auto* status { new StatusDelegate(QEvent::MouseButtonDblClick, table_view) };
@@ -502,7 +502,7 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
 
 void MainWindow::DelegateSettlementNode(QTableView* table_view, CSectionConfig& config) const
 {
-    auto* amount { new DoubleNoneZeroR(config.amount_decimal, StringConst::kEightDigits, table_view) };
+    auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementItemEnum::kAmount), amount);
 
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
@@ -550,13 +550,13 @@ void MainWindow::DelegatePeriodClose(QTableView* table_view) const
 {
     const auto& section_config { sc_f_.section_config };
 
-    auto* quantity = new DoubleNoneZeroR(section_config.quantity_decimal, StringConst::kFourDigits, table_view);
+    auto* quantity = new DoubleNoneZeroR(section_config.quantity_decimal, string_const::kFourDigits, table_view);
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsDebit), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsDebit), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsCredit), quantity);
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsCredit), quantity);
 
-    auto* rate { new DoubleNoneZeroR(section_config.rate_decimal, StringConst::kFourDigits, table_view) };
+    auto* rate { new DoubleNoneZeroR(section_config.rate_decimal, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsRate), rate);
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsRate), rate);
 
@@ -576,10 +576,10 @@ void MainWindow::DelegateInventoryHeat(QTableView* table_view) const
     auto* path { new SearchPathTableR(sc_i_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(InventoryHeatEnum::kInventoryNode), path);
 
-    auto* quantity { new DoubleR(sc_i_.section_config.quantity_decimal, StringConst::kEightDigits, table_view) };
+    auto* quantity { new DoubleR(sc_i_.section_config.quantity_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(InventoryHeatEnum::kTotalQuantity), quantity);
 
-    auto* score { new DoubleNoneDecimalR(StringConst::kEightDigits, table_view) };
+    auto* score { new DoubleNoneDecimalR(string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(InventoryHeatEnum::kHeatScore), score);
 }
 
@@ -588,9 +588,9 @@ void MainWindow::DelegatePartnerHeat(QTableView* table_view) const
     auto* path { new SearchPathTableR(sc_p_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(PartnerHeatEnum::kPartnerNode), path);
 
-    auto* quantity { new DoubleR(sc_p_.section_config.quantity_decimal, StringConst::kEightDigits, table_view) };
+    auto* quantity { new DoubleR(sc_p_.section_config.quantity_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(PartnerHeatEnum::kTotalQuantity), quantity);
 
-    auto* score { new DoubleNoneDecimalR(StringConst::kEightDigits, table_view) };
+    auto* score { new DoubleNoneDecimalR(string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(PartnerHeatEnum::kHeatScore), score);
 }

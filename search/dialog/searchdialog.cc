@@ -96,9 +96,9 @@ void SearchDialog::IniContentGroup()
 
 void SearchDialog::InitDelegate()
 {
-    amount_ = new DoubleNoneZeroR(config_.amount_decimal, StringConst::kEightDigits, this);
-    rate_ = new DoubleNoneZeroR(config_.rate_decimal, StringConst::kFourDigits, this);
-    quantity_ = new DoubleNoneZeroR(config_.quantity_decimal, StringConst::kFourDigits, this);
+    amount_ = new DoubleNoneZeroR(config_.amount_decimal, string_const::kEightDigits, this);
+    rate_ = new DoubleNoneZeroR(config_.rate_decimal, string_const::kFourDigits, this);
+    quantity_ = new DoubleNoneZeroR(config_.quantity_decimal, string_const::kFourDigits, this);
     unit_ = new IntStringR(info_.unit_map, this);
     direction_rule_ = new BoolStringR(info_.rule_map, this);
     kind_ = new IntStringR(info_.kind_map, this);
@@ -141,7 +141,7 @@ void SearchDialog::IniView(QTableView* view)
     view->setAlternatingRowColors(true);
     view->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    utils::SetupVerticalHeader(view, UiConst::kRowHeight);
+    utils::SetupVerticalHeader(view, ui_const::kRowHeight);
 }
 
 void SearchDialog::ResizeTreeColumn(QHeaderView* header)

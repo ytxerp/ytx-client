@@ -103,7 +103,7 @@ private slots:
     void RDisconnected();
     void RBinaryMessageReceived(const QByteArray& data);
     void RErrorOccurred(QAbstractSocket::SocketError error);
-    void RPong() { timeout_timer_->start(TimeConst::kTimeoutThresholdMs); }
+    void RPong() { timeout_timer_->start(time_const::kTimeoutThresholdMs); }
 
     void RSendPing()
     {

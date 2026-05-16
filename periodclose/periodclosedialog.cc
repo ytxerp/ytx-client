@@ -76,7 +76,7 @@ void PeriodCloseDialog::ConstructEntry(const QSet<Node*>& closing_leaf_node, con
 
         const double abs_amount { std::abs(node->final_total) };
         const bool is_positive { node->final_total > 0.0 };
-        const bool is_dicd { node->direction_rule == Rule::kDICD };
+        const bool is_dicd { node->direction_rule == direction_rule::kDICD };
 
         // Direction logic truth table:
         // is_dicd | is_positive | is_dicd == is_positive | direction

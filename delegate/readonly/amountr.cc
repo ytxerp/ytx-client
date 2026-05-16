@@ -26,7 +26,7 @@ QSize AmountR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& i
 QString AmountR::Format(const QModelIndex& index) const
 {
     auto it { unit_symbol_map_.constFind(unit_) };
-    auto symbol { (it != unit_symbol_map_.constEnd()) ? it.value() : StringConst::kEmpty };
+    auto symbol { (it != unit_symbol_map_.constEnd()) ? it.value() : string_const::kEmpty };
 
     return symbol + locale_.toString(index.data().toDouble(), 'f', decimal_);
 }

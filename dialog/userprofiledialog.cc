@@ -46,7 +46,7 @@ void UserProfileDialog::EditUsernameFinished()
         utils::ShowNotification(QMessageBox::Warning, tr("Invalid Username"),
             tr("Username must be 3-32 characters, start with a letter, and contain only lowercase letters, digits, or underscores. No consecutive or trailing "
                "underscores."),
-            TimeConst::kAutoCloseMs);
+            time_const::kAutoCloseMs);
         return;
     }
 

@@ -96,7 +96,7 @@ void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, doubl
     Q_ASSERT(node_id_ == node_id && "RSyncDelta called with mismatched node_id");
 
     {
-        if (tmp_node_->direction_rule == Rule::kRO) {
+        if (tmp_node_->direction_rule == direction_rule::kRO) {
             initial_delta *= -1;
             final_delta *= -1;
             count_delta *= -1;
@@ -271,8 +271,8 @@ void TableWidgetO::InitUiValue()
 void TableWidgetO::InitRuleGroup()
 {
     rule_group_ = new QButtonGroup(this);
-    rule_group_->addButton(ui->rBtnRO, static_cast<int>(Rule::kRO));
-    rule_group_->addButton(ui->rBtnFO, static_cast<int>(Rule::kFO));
+    rule_group_->addButton(ui->rBtnRO, static_cast<int>(direction_rule::kRO));
+    rule_group_->addButton(ui->rBtnFO, static_cast<int>(direction_rule::kFO));
 }
 
 void TableWidgetO::InitUnitGroup()
@@ -422,7 +422,7 @@ void TableWidgetO::on_pBtnPreview_clicked()
 bool TableWidgetO::PreparePrint()
 {
     if (ui->comboTemplate->currentIndex() == -1) {
-        utils::ShowNotification(QMessageBox::Warning, tr("No Template"), tr("No printable template was found."), TimeConst::kAutoCloseMs);
+        utils::ShowNotification(QMessageBox::Warning, tr("No Template"), tr("No printable template was found."), time_const::kAutoCloseMs);
         return false;
     }
 
@@ -447,7 +447,7 @@ void TableWidgetO::BuildNodeInsert(QJsonObject& order_message)
 void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
 {
     if (pending_update_.contains(kUnit))
-        pending_update_.insert(kFinalTotal, QString::number(tmp_node_->final_total, 'f', NumericConst::kDecimalPlaces4));
+        pending_update_.insert(kFinalTotal, QString::number(tmp_node_->final_total, 'f', numeric_const::kDecimalPlaces4));
 
     pending_update_.insert(kVersion, tmp_node_->version);
 
@@ -463,7 +463,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
     if (tmp_node_->is_settled || !tmp_node_->settlement_id.isNull()) {
         utils::ShowNotification(
-            QMessageBox::Information, tr("Order Settled"), tr("This order has already been settled and cannot be operated."), TimeConst::kAutoCloseMs);
+            QMessageBox::Information, tr("Order Settled"), tr("This order has already been settled and cannot be operated."), time_const::kAutoCloseMs);
         return;
     }
 
@@ -481,7 +481,7 @@ bool TableWidgetO::ValidatePartner()
 {
     if (tmp_node_->partner_id.isNull()) {
         utils::ShowNotification(
-            QMessageBox::Warning, tr("Partner Required"), tr("Please select a partner before performing this action."), TimeConst::kAutoCloseMs);
+            QMessageBox::Warning, tr("Partner Required"), tr("Please select a partner before performing this action."), time_const::kAutoCloseMs);
         return false;
     }
 
@@ -493,7 +493,7 @@ bool TableWidgetO::ValidateSyncState()
 {
     if (sync_state_ == SyncState::kDirty) {
         utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
-            tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), TimeConst::kAutoCloseMs);
+            tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), time_const::kAutoCloseMs);
         return false;
     }
 
@@ -579,6 +579,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
 void TableWidgetO::on_comboTemplate_currentIndexChanged(int /*index*/)
 {
     if (!PrintHub::Instance().LoadTemplate(ui->comboTemplate->currentData().toString())) {
-        utils::ShowNotification(QMessageBox::Warning, tr("Load Failed"), tr("Failed to load the print template."), TimeConst::kAutoCloseMs);
+        utils::ShowNotification(QMessageBox::Warning, tr("Load Failed"), tr("Failed to load the print template."), time_const::kAutoCloseMs);
     }
 }

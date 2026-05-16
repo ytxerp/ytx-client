@@ -14,12 +14,12 @@ LeafDeleteDialog::LeafDeleteDialog(TreeModel* model, CSectionInfo& info, CJsonOb
     , node_id_ { node_id }
     , node_unit_ { unit }
     , section_ { info.section }
-    , within_ { obj.value(NodeRef::kWithin).toBool() }
-    , inventory_int_ { obj.value(NodeRef::kInventoryInt).toBool() }
-    , inventory_ext_ { obj.value(NodeRef::kInventoryExt).toBool() }
-    , partner_cv_ { obj.value(NodeRef::kPartnerCV).toBool() }
-    , partner_emp_ { obj.value(NodeRef::kPartnerEmp).toBool() }
-    , order_ { obj.value(NodeRef::kOrder).toBool() }
+    , within_ { obj.value(node_ref::kWithin).toBool() }
+    , inventory_int_ { obj.value(node_ref::kInventoryInt).toBool() }
+    , inventory_ext_ { obj.value(node_ref::kInventoryExt).toBool() }
+    , partner_cv_ { obj.value(node_ref::kPartnerCV).toBool() }
+    , partner_emp_ { obj.value(node_ref::kPartnerEmp).toBool() }
+    , order_ { obj.value(node_ref::kOrder).toBool() }
     , model_ { model }
     , info_ { info }
 {
@@ -256,6 +256,6 @@ void LeafDeleteDialog::RReplaceResult(bool result)
         close();
     } else {
         utils::ShowNotification(QMessageBox::Critical, tr("Replacement Conflict"),
-            tr("The old node cannot be replaced because linked nodes or partner entries conflict with the new node."), TimeConst::kAutoCloseMs);
+            tr("The old node cannot be replaced because linked nodes or partner entries conflict with the new node."), time_const::kAutoCloseMs);
     }
 }

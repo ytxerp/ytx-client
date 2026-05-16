@@ -25,6 +25,6 @@ QSize DocumentR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex&
     const QStringList list { index.data().toStringList() };
     const auto size { list.size() };
 
-    const QString text { size == 0 ? StringConst::kEmpty : QString::number(size) };
+    const QString text { size == 0 ? string_const::kEmpty : QString::number(size) };
     return CalculateTextSize(text, option);
 }

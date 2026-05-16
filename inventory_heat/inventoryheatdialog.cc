@@ -70,7 +70,7 @@ void InventoryHeatDialog::on_pushButtonFetch_clicked()
     const auto message { JsonGen::InventoryHeadAck(section, widget_id_, start_.toUTC(), end_.toUTC(), moc, mpc, mam) };
     WebSocket::Instance()->SendMessage(WsKey::kInventoryHeatAck, message);
 
-    cooldown_timer_->start(TimeConst::kCooldownMs);
+    cooldown_timer_->start(time_const::kCooldownMs);
 }
 
 void InventoryHeatDialog::on_dateTimeEditStart_dateChanged(const QDate& date)
