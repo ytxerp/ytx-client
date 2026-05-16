@@ -24,7 +24,7 @@
 #include <QUuid>
 
 struct InventoryHeatRow final {
-    QUuid rhs_node {};
+    QUuid inventory_node {};
     qint64 order_count {};
     qint64 partner_count {};
     qint64 active_months {};
@@ -39,7 +39,7 @@ struct InventoryHeatRow final {
 inline void InventoryHeatRow::ReadJson(const QJsonObject& obj)
 {
     if (const auto val = obj.value("inventory_node"); val.isString())
-        rhs_node = QUuid::fromString(val.toString());
+        inventory_node = QUuid::fromString(val.toString());
 
     if (const auto val = obj.value("order_count"); val.isDouble())
         order_count = val.toInteger();

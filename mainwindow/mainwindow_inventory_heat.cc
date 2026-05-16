@@ -3,7 +3,7 @@
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 
-void MainWindow::on_actionHeat_triggered()
+void MainWindow::on_actionHeatInventory_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 

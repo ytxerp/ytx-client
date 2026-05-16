@@ -24,7 +24,7 @@
 
 #include "inventoryheatrow.h"
 
-class InventoryHeatModel : public QAbstractItemModel {
+class InventoryHeatModel final : public QAbstractItemModel {
     Q_OBJECT
 
 public:

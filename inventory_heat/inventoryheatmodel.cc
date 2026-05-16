@@ -47,7 +47,7 @@ QVariant InventoryHeatModel::data(const QModelIndex& index, int role) const
 
     switch (column) {
     case InventoryHeatEnum::kInventoryNode:
-        return member->rhs_node.toString(QUuid::WithoutBraces);
+        return member->inventory_node.toString(QUuid::WithoutBraces);
     case InventoryHeatEnum::kOrderCount:
         return member->order_count;
     case InventoryHeatEnum::kPartnerCount:
@@ -73,7 +73,7 @@ void InventoryHeatModel::sort(int column, Qt::SortOrder order)
     auto Compare = [order, e_column](const InventoryHeatRow* lhs, const InventoryHeatRow* rhs) -> bool {
         switch (e_column) {
         case InventoryHeatEnum::kInventoryNode:
-            return utils::CompareMember(lhs, rhs, &InventoryHeatRow::rhs_node, order);
+            return utils::CompareMember(lhs, rhs, &InventoryHeatRow::inventory_node, order);
         case InventoryHeatEnum::kOrderCount:
             return utils::CompareMember(lhs, rhs, &InventoryHeatRow::order_count, order);
         case InventoryHeatEnum::kPartnerCount:
