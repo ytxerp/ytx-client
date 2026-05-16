@@ -20,6 +20,8 @@
 #ifndef TABLEMODELARG_H
 #define TABLEMODELARG_H
 
+#include <QUuid>
+
 #include "component/info.h"
 
 struct TableModelArg {

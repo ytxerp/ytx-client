@@ -23,7 +23,6 @@
 #include <QMap>
 #include <QPointer>
 #include <QStringList>
-#include <QUuid>
 
 #include "enum/section.h"
 #include "tree/itemmodel.h"
