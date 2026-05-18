@@ -17,18 +17,18 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLEMODELSETTLEMENT_H
-#define TABLEMODELSETTLEMENT_H
+#ifndef SETTLEMENTSECONDARYMODEL_H
+#define SETTLEMENTSECONDARYMODEL_H
 
 #include <QAbstractItemModel>
 
 #include "settlement.h"
 
-class TableModelSettlement final : public QAbstractItemModel {
+class SettlementSecondaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    TableModelSettlement(const QStringList& header, SettlementStatus status, QObject* parent = nullptr);
-    ~TableModelSettlement() override;
+    SettlementSecondaryModel(const QStringList& header, SettlementStatus status, QObject* parent = nullptr);
+    ~SettlementSecondaryModel() override;
 
 signals:
     void SSyncAmount(double amount);
@@ -57,10 +57,10 @@ private:
 
     SettlementStatus status_ {};
 
-    QList<SettlementItem*> list_ {};
-    QList<SettlementItem*> list_cache_ {};
+    QList<SettlementSecondary*> list_ {};
+    QList<SettlementSecondary*> list_cache_ {};
 
     QSet<QUuid> pending_selected_ {};
 };
 
-#endif // TABLEMODELSETTLEMENT_H
+#endif // SETTLEMENTSECONDARYMODEL_H

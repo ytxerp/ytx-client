@@ -1,4 +1,4 @@
-#include "tablemodelsettlement.h"
+#include "settlementsecondarymodel.h"
 
 #include <QJsonArray>
 #include <QTimer>
@@ -8,16 +8,16 @@
 #include "settlementenum.h"
 #include "utils/templateutils.h"
 
-TableModelSettlement::TableModelSettlement(const QStringList& header, SettlementStatus status, QObject* parent)
+SettlementSecondaryModel::SettlementSecondaryModel(const QStringList& header, SettlementStatus status, QObject* parent)
     : QAbstractItemModel { parent }
     , header_ { header }
     , status_ { status }
 {
 }
 
-TableModelSettlement::~TableModelSettlement() { ResourcePool<SettlementItem>::Instance().Recycle(list_cache_); }
+SettlementSecondaryModel::~SettlementSecondaryModel() { ResourcePool<SettlementSecondary>::Instance().Recycle(list_cache_); }
 
-QModelIndex TableModelSettlement::index(int row, int column, const QModelIndex& parent) const
+QModelIndex SettlementSecondaryModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -25,25 +25,25 @@ QModelIndex TableModelSettlement::index(int row, int column, const QModelIndex& 
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex TableModelSettlement::parent(const QModelIndex& index) const
+QModelIndex SettlementSecondaryModel::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int TableModelSettlement::rowCount(const QModelIndex& parent) const
+int SettlementSecondaryModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return list_.size();
 }
 
-int TableModelSettlement::columnCount(const QModelIndex& parent) const
+int SettlementSecondaryModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return header_.size();
 }
 
-QVariant TableModelSettlement::data(const QModelIndex& index, int role) const
+QVariant SettlementSecondaryModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -51,31 +51,31 @@ QVariant TableModelSettlement::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    const SettlementItemEnum column { index.column() };
+    const SettlementSecondaryEnum column { index.column() };
 
-    auto* settlement_node { static_cast<SettlementItem*>(index.internalPointer()) };
+    auto* settlement_node { static_cast<SettlementSecondary*>(index.internalPointer()) };
     if (!settlement_node)
         return QVariant();
 
     switch (column) {
-    case SettlementItemEnum::kId:
+    case SettlementSecondaryEnum::kId:
         return settlement_node->id;
-    case SettlementItemEnum::kIssuedTime:
+    case SettlementSecondaryEnum::kIssuedTime:
         return settlement_node->issued_time;
-    case SettlementItemEnum::kDescription:
+    case SettlementSecondaryEnum::kDescription:
         return settlement_node->description;
-    case SettlementItemEnum::kAmount:
+    case SettlementSecondaryEnum::kAmount:
         return settlement_node->amount;
-    case SettlementItemEnum::kEmployee:
+    case SettlementSecondaryEnum::kEmployee:
         return settlement_node->employee_id;
-    case SettlementItemEnum::kIsSettled:
+    case SettlementSecondaryEnum::kIsSettled:
         return settlement_node->is_settled;
     }
 }
 
-bool TableModelSettlement::setData(const QModelIndex& index, const QVariant& value, int role)
+bool SettlementSecondaryModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if (!index.isValid() || index.column() != std::to_underlying(SettlementItemEnum::kIsSettled) || role != Qt::EditRole)
+    if (!index.isValid() || index.column() != std::to_underlying(SettlementSecondaryEnum::kIsSettled) || role != Qt::EditRole)
         return false;
 
     if (status_ == SettlementStatus::kSettled)
@@ -84,7 +84,7 @@ bool TableModelSettlement::setData(const QModelIndex& index, const QVariant& val
     if (data(index, role) == value)
         return false;
 
-    auto* settlement_node { static_cast<SettlementItem*>(index.internalPointer()) };
+    auto* settlement_node { static_cast<SettlementSecondary*>(index.internalPointer()) };
     if (!settlement_node)
         return false;
 
@@ -102,7 +102,7 @@ bool TableModelSettlement::setData(const QModelIndex& index, const QVariant& val
     return true;
 }
 
-QVariant TableModelSettlement::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant SettlementSecondaryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return header_.at(section);
@@ -110,23 +110,23 @@ QVariant TableModelSettlement::headerData(int section, Qt::Orientation orientati
     return QVariant();
 }
 
-void TableModelSettlement::sort(int column, Qt::SortOrder order)
+void SettlementSecondaryModel::sort(int column, Qt::SortOrder order)
 {
-    const SettlementItemEnum e_column { column };
+    const SettlementSecondaryEnum e_column { column };
 
-    auto Compare = [e_column, order](const SettlementItem* lhs, const SettlementItem* rhs) -> bool {
+    auto Compare = [e_column, order](const SettlementSecondary* lhs, const SettlementSecondary* rhs) -> bool {
         switch (e_column) {
-        case SettlementItemEnum::kEmployee:
-            return utils::CompareMember(lhs, rhs, &SettlementItem::employee_id, order);
-        case SettlementItemEnum::kIssuedTime:
-            return utils::CompareMember(lhs, rhs, &SettlementItem::issued_time, order);
-        case SettlementItemEnum::kDescription:
-            return utils::CompareMember(lhs, rhs, &SettlementItem::description, order);
-        case SettlementItemEnum::kAmount:
-            return utils::CompareMember(lhs, rhs, &SettlementItem::amount, order);
-        case SettlementItemEnum::kIsSettled:
-            return utils::CompareMember(lhs, rhs, &SettlementItem::is_settled, order);
-        case SettlementItemEnum::kId:
+        case SettlementSecondaryEnum::kEmployee:
+            return utils::CompareMember(lhs, rhs, &SettlementSecondary::employee_id, order);
+        case SettlementSecondaryEnum::kIssuedTime:
+            return utils::CompareMember(lhs, rhs, &SettlementSecondary::issued_time, order);
+        case SettlementSecondaryEnum::kDescription:
+            return utils::CompareMember(lhs, rhs, &SettlementSecondary::description, order);
+        case SettlementSecondaryEnum::kAmount:
+            return utils::CompareMember(lhs, rhs, &SettlementSecondary::amount, order);
+        case SettlementSecondaryEnum::kIsSettled:
+            return utils::CompareMember(lhs, rhs, &SettlementSecondary::is_settled, order);
+        case SettlementSecondaryEnum::kId:
             return false;
         }
     };
@@ -136,9 +136,9 @@ void TableModelSettlement::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void TableModelSettlement::ResetModel(const QJsonArray& array)
+void SettlementSecondaryModel::ResetModel(const QJsonArray& array)
 {
-    ResourcePool<SettlementItem>::Instance().Recycle(list_cache_);
+    ResourcePool<SettlementSecondary>::Instance().Recycle(list_cache_);
 
     for (const auto& value : array) {
         if (!value.isObject())
@@ -146,7 +146,7 @@ void TableModelSettlement::ResetModel(const QJsonArray& array)
 
         const QJsonObject obj { value.toObject() };
 
-        auto* settlement { ResourcePool<SettlementItem>::Instance().Allocate() };
+        auto* settlement { ResourcePool<SettlementSecondary>::Instance().Allocate() };
 
         settlement->ReadJson(obj);
 
@@ -166,12 +166,12 @@ void TableModelSettlement::ResetModel(const QJsonArray& array)
                 list_.emplaceBack(entry);
         }
 
-        sort(std::to_underlying(SettlementItemEnum::kIssuedTime), Qt::AscendingOrder);
+        sort(std::to_underlying(SettlementSecondaryEnum::kIssuedTime), Qt::AscendingOrder);
         endResetModel();
     }
 }
 
-void TableModelSettlement::UpdateStatus(SettlementStatus status)
+void SettlementSecondaryModel::UpdateStatus(SettlementStatus status)
 {
     if (status_ == status)
         return;
@@ -181,7 +181,7 @@ void TableModelSettlement::UpdateStatus(SettlementStatus status)
     beginResetModel();
 
     if (status == SettlementStatus::kSettled) {
-        list_.erase(std::remove_if(list_.begin(), list_.end(), [](const SettlementItem* node) { return !node->is_settled; }), list_.end());
+        list_.erase(std::remove_if(list_.begin(), list_.end(), [](const SettlementSecondary* node) { return !node->is_settled; }), list_.end());
     }
 
     if (status == SettlementStatus::kUnsettled) {
@@ -194,7 +194,7 @@ void TableModelSettlement::UpdateStatus(SettlementStatus status)
     endResetModel();
 }
 
-void TableModelSettlement::Finalize(QJsonObject& message)
+void SettlementSecondaryModel::Finalize(QJsonObject& message)
 {
     {
         QJsonArray selected_array {};

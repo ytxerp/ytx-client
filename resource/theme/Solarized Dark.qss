@@ -64,7 +64,7 @@ QAbstractItemView QComboBox,
 QAbstractItemView QSpinBox,
 QAbstractItemView QDoubleSpinBox,
 QWidget#TableWidgetO QDoubleSpinBox,
-QWidget#TableWidgetSettlement QDoubleSpinBox,
+QWidget#SettlementSecondaryWidget QDoubleSpinBox,
 QDoubleSpinBox#dspin_box_dynamic_,
 QDoubleSpinBox#dspin_box_static_ {
     border: none;
@@ -84,7 +84,7 @@ QGroupBox#treeGroup {
 /* Specific border adds */
 QDialog > QDateTimeEdit,
 QWidget#TableWidgetO QDateTimeEdit,
-QWidget#TableWidgetSettlement QDateTimeEdit
+QWidget#SettlementSecondaryWidget QDateTimeEdit
 {
     border: 1px solid #657B83;
 }
@@ -131,7 +131,7 @@ QComboBox#comboDefaultUnit {
 }
 
 QWidget#TableWidgetO QComboBox,
-QWidget#TableWidgetSettlement QComboBox,
+QWidget#SettlementSecondaryWidget QComboBox,
 QDialog#PeriodCloseDialog QComboBox {
     min-width: 80px;
 }

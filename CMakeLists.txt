@@ -82,8 +82,8 @@ set(BRC "${CMAKE_CURRENT_SOURCE_DIR}/resource/resource.brc")
 
 set(HEADERS
     billing/settlement/settlement.h
-    billing/settlement/tablemodelsettlement.h
-    billing/settlement/tablewidgetsettlement.h
+    billing/settlement/settlementsecondarymodel.h
+    billing/settlement/settlementsecondarywidget.h
     billing/settlement/settlementprimarymodel.h
     billing/settlement/settlementprimarywidget.h
     billing/statement/statement.h
@@ -281,8 +281,8 @@ set(HEADERS
 
 set(SOURCES
     billing/settlement/settlement.cc
-    billing/settlement/tablemodelsettlement.cc
-    billing/settlement/tablewidgetsettlement.cc
+    billing/settlement/settlementsecondarymodel.cc
+    billing/settlement/settlementsecondarywidget.cc
     billing/settlement/settlementprimarymodel.cc
     billing/settlement/settlementprimarywidget.cc
     billing/statement/statemententrymodel.cc
@@ -445,7 +445,7 @@ set(SOURCES
 )
 
 set(UIS
-    billing/settlement/tablewidgetsettlement.ui
+    billing/settlement/settlementsecondarywidget.ui
     billing/settlement/settlementprimarywidget.ui
     billing/statement/statemententrywidget.ui
     billing/statement/statementnodewidget.ui

@@ -42,7 +42,7 @@ struct SettlementPrimary final {
     QJsonObject WriteJson() const;
 };
 
-struct SettlementItem final {
+struct SettlementSecondary final {
     QUuid id {};
     QUuid employee_id {};
     QDateTime issued_time {};

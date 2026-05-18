@@ -503,16 +503,16 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
 void MainWindow::DelegateSettlementNode(QTableView* table_view, CSectionConfig& config) const
 {
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementItemEnum::kAmount), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementSecondaryEnum::kAmount), amount);
 
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementItemEnum::kEmployee), employee);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementSecondaryEnum::kEmployee), employee);
 
     auto* status { new Bool(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementItemEnum::kIsSettled), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementSecondaryEnum::kIsSettled), status);
 
     auto* issued_time { new IssuedTimeR(kDateFST, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementItemEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementSecondaryEnum::kIssuedTime), issued_time);
 }
 
 void MainWindow::DelegateTag(QTableView* table_view) const

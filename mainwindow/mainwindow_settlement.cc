@@ -1,8 +1,8 @@
 #include "billing/settlement/settlementenum.h"
 #include "billing/settlement/settlementprimarymodel.h"
 #include "billing/settlement/settlementprimarywidget.h"
-#include "billing/settlement/tablemodelsettlement.h"
-#include "billing/settlement/tablewidgetsettlement.h"
+#include "billing/settlement/settlementsecondarymodel.h"
+#include "billing/settlement/settlementsecondarywidget.h"
 #include "global/resourcepool.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
@@ -42,12 +42,13 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
 {
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new TableModelSettlement(header_info_.settlement_item, SettlementStatus(settlement.status), this) };
+    auto* model { new SettlementSecondaryModel(header_info_.settlement_item, SettlementStatus(settlement.status), this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new TableWidgetSettlement(sc_p_.tree_model, model, sc_->section_config, settlement, widget_id, parent_widget_id, start_, sync_state, this) };
-    connect(model, &TableModelSettlement::SSyncAmount, widget, &TableWidgetSettlement::RSyncAmount);
-    connect(widget, &TableWidgetSettlement::SUpdatePartner, this, &MainWindow::RUpdatePartner);
+    auto* widget { new SettlementSecondaryWidget(
+        sc_p_.tree_model, model, sc_->section_config, settlement, widget_id, parent_widget_id, start_, sync_state, this) };
+    connect(model, &SettlementSecondaryModel::SSyncAmount, widget, &SettlementSecondaryWidget::RSyncAmount);
+    connect(widget, &SettlementSecondaryWidget::SUpdatePartner, this, &MainWindow::RUpdatePartner);
 
     {
         const QString name { sc_p_.tree_model->Name(settlement.partner_id) };
@@ -61,7 +62,7 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
 
     {
         auto* view { widget->View() };
-        InitTableView(view, std::to_underlying(SettlementItemEnum::kId), -1, std::to_underlying(SettlementItemEnum::kDescription));
+        InitTableView(view, std::to_underlying(SettlementSecondaryEnum::kId), -1, std::to_underlying(SettlementSecondaryEnum::kDescription));
         DelegateSettlementNode(view, sc_->section_config);
     }
 
@@ -114,8 +115,8 @@ void MainWindow::RAckSettlementItem(Section section, const QUuid& widget_id, con
 
     auto* ptr { widget.data() };
 
-    Q_ASSERT(qobject_cast<TableWidgetSettlement*>(ptr));
-    auto* d_widget { static_cast<TableWidgetSettlement*>(ptr) };
+    Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
+    auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
 
     auto* model { d_widget->Model() };
     model->ResetModel(array);
@@ -136,8 +137,8 @@ void MainWindow::RInsertSettlement(const QJsonObject& obj)
         if (widget) {
             auto* ptr { widget.data() };
 
-            Q_ASSERT(qobject_cast<TableWidgetSettlement*>(ptr));
-            auto* d_widget { static_cast<TableWidgetSettlement*>(ptr) };
+            Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
+            auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
 
             d_widget->InsertSucceeded(version);
         }
@@ -189,8 +190,8 @@ void MainWindow::RRecallSettlement(const QJsonObject& obj)
         if (widget) {
             auto* ptr { widget.data() };
 
-            Q_ASSERT(qobject_cast<TableWidgetSettlement*>(ptr));
-            auto* d_widget { static_cast<TableWidgetSettlement*>(ptr) };
+            Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
+            auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
 
             d_widget->RecallSucceeded(version);
         }
@@ -226,8 +227,8 @@ void MainWindow::RUpdateSettlement(const QJsonObject& obj)
         if (widget) {
             auto* ptr { widget.data() };
 
-            Q_ASSERT(qobject_cast<TableWidgetSettlement*>(ptr));
-            auto* d_widget { static_cast<TableWidgetSettlement*>(ptr) };
+            Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
+            auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
 
             d_widget->UpdateSucceeded(version);
         }

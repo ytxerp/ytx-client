@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLEWIDGETSETTLEMENT_H
-#define TABLEWIDGETSETTLEMENT_H
+#ifndef SETTLEMENTSECONDARYWIDGET_H
+#define SETTLEMENTSECONDARYWIDGET_H
 
 #include <QTableView>
 #include <QWidget>
@@ -28,26 +28,26 @@
 #include "enum/section.h"
 #include "enum/syncenum.h"
 #include "settlement.h"
-#include "tablemodelsettlement.h"
+#include "settlementsecondarymodel.h"
 #include "tree/model/treemodel.h"
 
 namespace Ui {
-class TableWidgetSettlement;
+class SettlementSecondaryWidget;
 }
 
-class TableWidgetSettlement final : public QWidget {
+class SettlementSecondaryWidget final : public QWidget {
     Q_OBJECT
 
 signals:
     void SUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
 
 public:
-    explicit TableWidgetSettlement(TreeModel* tree_model_p, TableModelSettlement* model, CSectionConfig& config, const SettlementPrimary& settlement, CUuid& widget_id,
-        CUuid& parent_widget_id, Section section, SyncState sync_state, QWidget* parent = nullptr);
-    ~TableWidgetSettlement() override;
+    explicit SettlementSecondaryWidget(TreeModel* tree_model_p, SettlementSecondaryModel* model, CSectionConfig& config, const SettlementPrimary& settlement,
+        CUuid& widget_id, CUuid& parent_widget_id, Section section, SyncState sync_state, QWidget* parent = nullptr);
+    ~SettlementSecondaryWidget() override;
 
     QTableView* View() const;
-    TableModelSettlement* Model() const { return model_; }
+    SettlementSecondaryModel* Model() const { return model_; }
 
     void InsertSucceeded(int version);
     void RecallSucceeded(int version);
@@ -72,10 +72,10 @@ private:
     bool ValidateSyncState();
 
 private:
-    Ui::TableWidgetSettlement* ui;
+    Ui::SettlementSecondaryWidget* ui;
 
     SettlementPrimary settlement_ {};
-    TableModelSettlement* model_ {};
+    SettlementSecondaryModel* model_ {};
     CSectionConfig& config_ {};
 
     TreeModel* tree_model_p_ {};
@@ -87,4 +87,4 @@ private:
     SyncState sync_state_ {};
 };
 
-#endif // TABLEWIDGETSETTLEMENT_H
+#endif // SETTLEMENTSECONDARYWIDGET_H

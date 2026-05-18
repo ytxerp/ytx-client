@@ -37,9 +37,9 @@ QJsonObject SettlementPrimary::WriteJson() const
     return obj;
 }
 
-void SettlementItem::Reset() { *this = SettlementItem {}; }
+void SettlementSecondary::Reset() { *this = SettlementSecondary {}; }
 
-void SettlementItem::ReadJson(const QJsonObject& object)
+void SettlementSecondary::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());

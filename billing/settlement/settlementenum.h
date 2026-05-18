@@ -32,7 +32,7 @@ enum class SettlementPrimaryEnum {
     kAmount,
 };
 
-enum class SettlementItemEnum {
+enum class SettlementSecondaryEnum {
     kId = 0,
     kIssuedTime,
     kAmount,
