@@ -2009,27 +2009,27 @@ You need to recall it first before making changes.</source>
 <context>
     <name>PeriodCloseDialog</name>
     <message>
-        <location filename="../../periodclose/periodclosedialog.ui" line="14"/>
+        <location filename="../../period_close/periodclosedialog.ui" line="14"/>
         <source>Period Close</source>
         <translation>结转</translation>
     </message>
     <message>
-        <location filename="../../periodclose/periodclosedialog.ui" line="41"/>
+        <location filename="../../period_close/periodclosedialog.ui" line="41"/>
         <source>Closing</source>
         <translation>结转</translation>
     </message>
     <message>
-        <location filename="../../periodclose/periodclosedialog.ui" line="51"/>
+        <location filename="../../period_close/periodclosedialog.ui" line="51"/>
         <source>Summary</source>
         <translation>汇总</translation>
     </message>
     <message>
-        <location filename="../../periodclose/periodclosedialog.ui" line="74"/>
+        <location filename="../../period_close/periodclosedialog.ui" line="74"/>
         <source>Preview</source>
         <translation>预览</translation>
     </message>
     <message>
-        <location filename="../../periodclose/periodclosedialog.ui" line="81"/>
+        <location filename="../../period_close/periodclosedialog.ui" line="81"/>
         <source>Commit</source>
         <translation>提交</translation>
     </message>
@@ -3112,27 +3112,46 @@ You need to recall it first before making changes.</source>
     </message>
 </context>
 <context>
-    <name>TagManagerDlg</name>
+    <name>TagDialog</name>
     <message>
-        <location filename="../../dialog/tagmanagerdlg.ui" line="20"/>
+        <location filename="../../tag/tagdialog.ui" line="20"/>
         <source>Tags</source>
         <translation>标签</translation>
     </message>
     <message>
-        <location filename="../../dialog/tagmanagerdlg.ui" line="41"/>
+        <location filename="../../tag/tagdialog.ui" line="41"/>
         <source>Insert</source>
         <translation>插入</translation>
     </message>
     <message>
-        <location filename="../../dialog/tagmanagerdlg.ui" line="64"/>
-        <location filename="../../dialog/tagmanagerdlg.cc" line="68"/>
+        <location filename="../../tag/tagdialog.ui" line="64"/>
+        <location filename="../../tag/tagdialog.cc" line="68"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../../dialog/tagmanagerdlg.cc" line="63"/>
+        <location filename="../../tag/tagdialog.cc" line="63"/>
         <source>Delete tag &lt;b&gt;%1&lt;/b&gt;?&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ Permanent deletion! Cannot be undone!&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;Note: Tag references in nodes and entries will be preserved but no longer displayed.&lt;/i&gt;</source>
         <translation>删除标签 &lt;b&gt;%1&lt;/b&gt;？&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ 永久删除！无法撤销！&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;注意：节点和记录中的标签引用将被保留，但不再显示。&lt;/i&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>TagManagerDlg</name>
+    <message>
+        <source>Tags</source>
+        <translation type="vanished">标签</translation>
+    </message>
+    <message>
+        <source>Insert</source>
+        <translation type="vanished">插入</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="vanished">删除</translation>
+    </message>
+    <message>
+        <source>Delete tag &lt;b&gt;%1&lt;/b&gt;?&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ Permanent deletion! Cannot be undone!&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;Note: Tag references in nodes and entries will be preserved but no longer displayed.&lt;/i&gt;</source>
+        <translation type="vanished">删除标签 &lt;b&gt;%1&lt;/b&gt;？&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ 永久删除！无法撤销！&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;注意：节点和记录中的标签引用将被保留，但不再显示。&lt;/i&gt;</translation>
     </message>
 </context>
 <context>
