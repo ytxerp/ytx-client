@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>TagManagerDlg</class>
- <widget class="QDialog" name="TagManagerDlg">
+ <class>TagDialog</class>
+ <widget class="QDialog" name="TagDialog">
   <property name="geometry">
    <rect>
     <x>0</x>

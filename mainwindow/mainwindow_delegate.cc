@@ -32,10 +32,10 @@
 #include "enum/reference.h"
 #include "enum/settlementenum.h"
 #include "enum/statementenum.h"
-#include "enum/tagenum.h"
 #include "inventory_heat/inventoryheatenum.h"
 #include "mainwindow.h"
 #include "partner_heat/partnerheatenum.h"
+#include "tag/tagenum.h"
 #include "workspace_member/workspacememberenum.h"
 
 void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const

@@ -152,7 +152,7 @@ set(HEADERS
     dialog/insertnode/insertnodep.h
     dialog/insertnode/insertnodetask.h
     dialog/preferences.h
-    dialog/tagmanagerdlg.h
+    tag/tagdialog.h
     dialog/userprofiledialog.h
     entryhub/entryhub.h
     entryhub/entryhubf.h
@@ -169,7 +169,7 @@ set(HEADERS
     enum/statementenum.h
     enum/statusenum.h
     enum/syncenum.h
-    enum/tagenum.h
+    tag/tagenum.h
     global/collator.h
     global/concepts.h
     global/dailylogger.h
@@ -336,7 +336,7 @@ set(SOURCES
     dialog/insertnode/insertnodep.cc
     dialog/insertnode/insertnodetask.cc
     dialog/preferences.cc
-    dialog/tagmanagerdlg.cc
+    tag/tagdialog.cc
     dialog/userprofiledialog.cc
     entryhub/entryhub.cc
     entryhub/entryhubf.cc
@@ -463,7 +463,7 @@ set(UIS
     dialog/insertnode/insertnodep.ui
     dialog/insertnode/insertnodetask.ui
     dialog/preferences.ui
-    dialog/tagmanagerdlg.ui
+    tag/tagdialog.ui
     dialog/userprofiledialog.ui
     mainwindow/mainwindow.ui
     reference/orderreferencewidget.ui

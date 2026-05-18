@@ -4,8 +4,8 @@
 #include <QRandomGenerator>
 
 #include "component/constantwebsocket.h"
-#include "enum/tagenum.h"
 #include "global/resourcepool.h"
+#include "tag/tagenum.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 

@@ -17,24 +17,24 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TAGMANAGERDLG_H
-#define TAGMANAGERDLG_H
+#ifndef TAGDIALOG_H
+#define TAGDIALOG_H
 
 #include <QDialog>
 #include <QTableView>
 
-#include "tag/tagmodel.h"
+#include "tagmodel.h"
 
 namespace Ui {
-class TagManagerDlg;
+class TagDialog;
 }
 
-class TagManagerDlg final : public QDialog {
+class TagDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit TagManagerDlg(QWidget* parent = nullptr);
-    ~TagManagerDlg() override;
+    explicit TagDialog(QWidget* parent = nullptr);
+    ~TagDialog() override;
 
     void SetModel(TagModel* model);
     QTableView* View();
@@ -46,10 +46,10 @@ private slots:
     void on_pBtnInsert_clicked();
 
 private:
-    Ui::TagManagerDlg* ui;
+    Ui::TagDialog* ui;
 
 private:
     TagModel* model_ {};
 };
 
-#endif // TAGMANAGERDLG_H
+#endif // TAGDIALOG_H

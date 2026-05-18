@@ -3,10 +3,10 @@
 #include <QJsonArray>
 #include <QPainter>
 
-#include "dialog/tagmanagerdlg.h"
-#include "enum/tagenum.h"
 #include "global/resourcepool.h"
 #include "mainwindow.h"
+#include "tag/tagdialog.h"
+#include "tag/tagenum.h"
 #include "tag/tagmodel.h"
 #include "utils/entryutils.h"
 #include "utils/mainwindowutils.h"
@@ -19,7 +19,7 @@ void MainWindow::on_actionTags_triggered()
     auto* model { new TagModel(start_, sc_->tag_hash, header_info_.tag, this) };
     connect(model, &TagModel::SInsertingTag, this, &MainWindow::RInsertingTag);
 
-    auto* dialog { new TagManagerDlg(this) };
+    auto* dialog { new TagDialog(this) };
 
     utils::ManageDialog(sc_->widget_hash, dialog);
 

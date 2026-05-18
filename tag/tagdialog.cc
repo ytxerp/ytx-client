@@ -1,12 +1,12 @@
-#include "tagmanagerdlg.h"
+#include "tagdialog.h"
 
 #include "dialog/deletenode/exactmatchconfirmdialog.h"
-#include "enum/tagenum.h"
-#include "ui_tagmanagerdlg.h"
+#include "tagenum.h"
+#include "ui_tagdialog.h"
 
-TagManagerDlg::TagManagerDlg(QWidget* parent)
+TagDialog::TagDialog(QWidget* parent)
     : QDialog(parent)
-    , ui(new Ui::TagManagerDlg)
+    , ui(new Ui::TagDialog)
 {
     ui->setupUi(this);
     setMinimumSize(400, 300);
@@ -15,9 +15,9 @@ TagManagerDlg::TagManagerDlg(QWidget* parent)
     ui->pBtnDelete->setShortcut(QKeySequence::Delete);
 }
 
-TagManagerDlg::~TagManagerDlg() { delete ui; }
+TagDialog::~TagDialog() { delete ui; }
 
-void TagManagerDlg::SetModel(TagModel* model)
+void TagDialog::SetModel(TagModel* model)
 {
     model_ = model;
 
@@ -25,9 +25,9 @@ void TagManagerDlg::SetModel(TagModel* model)
     model->setParent(ui->tableView);
 }
 
-QTableView* TagManagerDlg::View() { return ui->tableView; }
+QTableView* TagDialog::View() { return ui->tableView; }
 
-void TagManagerDlg::on_pBtnInsert_clicked()
+void TagDialog::on_pBtnInsert_clicked()
 {
     if (!model_)
         return;
@@ -42,7 +42,7 @@ void TagManagerDlg::on_pBtnInsert_clicked()
     }
 }
 
-void TagManagerDlg::on_pBtnDelete_clicked()
+void TagDialog::on_pBtnDelete_clicked()
 {
     if (!model_)
         return;

@@ -240,7 +240,6 @@ inline const QString kYTX = QStringLiteral("ytx");
 inline const QString kUi = QStringLiteral("ui");
 inline const QString kPrint = QStringLiteral("print");
 inline const QString kExport = QStringLiteral("export");
-inline const QString kField = QStringLiteral("field");
 
 // Constants for sections
 inline const QString kFinance = QStringLiteral("finance");

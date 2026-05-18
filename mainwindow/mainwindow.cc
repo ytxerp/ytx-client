@@ -17,9 +17,9 @@
 #include "component/signalblocker.h"
 #include "dialog/about.h"
 #include "dialog/preferences.h"
-#include "dialog/tagmanagerdlg.h"
 #include "document.h"
 #include "global/tablesstation.h"
+#include "tag/tagdialog.h"
 #include "ui_mainwindow.h"
 #include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
@@ -158,7 +158,7 @@ void MainWindow::on_actionDelete_triggered()
     qInfo() << Q_FUNC_INFO;
     auto* active_widget { QApplication::activeWindow() };
 
-    if (auto* d_dialog { qobject_cast<TagManagerDlg*>(active_widget) }) {
+    if (auto* d_dialog { qobject_cast<TagDialog*>(active_widget) }) {
         d_dialog->on_pBtnDelete_clicked();
         return;
     }
