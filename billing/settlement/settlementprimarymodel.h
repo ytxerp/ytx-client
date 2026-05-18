@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEMODELSETTLEMENT_H
-#define TREEMODELSETTLEMENT_H
+#ifndef SETTLEMENTPRIMARYMODEL_H
+#define SETTLEMENTPRIMARYMODEL_H
 
 #include <QAbstractItemModel>
 #include <QJsonObject>
@@ -26,11 +26,11 @@
 #include "enum/section.h"
 #include "settlement.h"
 
-class TreeModelSettlement final : public QAbstractItemModel {
+class SettlementPrimaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit TreeModelSettlement(const QStringList& header, Section section, QObject* parent = nullptr);
-    ~TreeModelSettlement() override;
+    explicit SettlementPrimaryModel(const QStringList& header, Section section, QObject* parent = nullptr);
+    ~SettlementPrimaryModel() override;
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -45,21 +45,21 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-    bool InsertSucceeded(Settlement* settlement);
+    bool InsertSucceeded(SettlementPrimary* settlement);
     void RecallSucceeded(const QUuid& settlement_id, const QJsonObject& update);
     void UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update);
     void ResetModel(const QJsonArray& array);
 
-    Settlement* FindSettlement(const QUuid& settlement_id) const
+    SettlementPrimary* FindSettlement(const QUuid& settlement_id) const
     {
-        auto it = std::ranges::find_if(list_, [&settlement_id](const Settlement* s) { return s && s->id == settlement_id; });
+        auto it = std::ranges::find_if(list_, [&settlement_id](const SettlementPrimary* s) { return s && s->id == settlement_id; });
         return it != list_.end() ? *it : nullptr;
     }
 
 private:
     const QStringList& header_;
     const Section section_ {};
-    QList<Settlement*> list_ {};
+    QList<SettlementPrimary*> list_ {};
 };
 
-#endif // TREEMODELSETTLEMENT_H
+#endif // SETTLEMENTPRIMARYMODEL_H

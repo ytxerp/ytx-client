@@ -177,7 +177,7 @@ void MainWindow::on_actionDelete_triggered()
 
     auto* widget { sc_->tab_widget->currentWidget() };
 
-    if (auto* d_widget { qobject_cast<TreeWidgetSettlement*>(widget) }) {
+    if (auto* d_widget { qobject_cast<SettlementPrimaryWidget*>(widget) }) {
         DeleteSettlement(d_widget);
         return;
     }

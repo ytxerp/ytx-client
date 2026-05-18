@@ -22,7 +22,6 @@
 
 #include <QAbstractItemModel>
 
-#include "enum/settlementenum.h"
 #include "settlement.h"
 
 class TableModelSettlement final : public QAbstractItemModel {

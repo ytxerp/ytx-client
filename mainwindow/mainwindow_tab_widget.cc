@@ -106,7 +106,7 @@ void MainWindow::tabWidget_currentChanged()
     const bool is_table_fipt { IsTableWidgetFIPT(widget) };
     const bool is_statement_entry { IsStatementEntryWidget(widget) };
     const bool is_table_o { IsTableWidgetO(widget) };
-    const bool is_settlement { IsTreeWidgetSettlement(widget) };
+    const bool is_settlement_primary { IsSettlementPrimaryWidget(widget) };
     const bool is_order_section { IsOrderSection(start_) };
     const bool is_double_entry { IsDoubleEntry(start_) };
 
@@ -126,8 +126,8 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionSettlement->setEnabled(is_order_section);
     ui->actionNewBranch->setEnabled(is_tree_o);
 
-    ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o || is_settlement);
-    ui->actionDelete->setEnabled(is_tree || is_table_fipt || is_table_o || is_settlement);
+    ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o || is_settlement_primary);
+    ui->actionDelete->setEnabled(is_tree || is_table_fipt || is_table_o || is_settlement_primary);
 }
 
 void MainWindow::tabWidget_tabBarDoubleClicked(int index)

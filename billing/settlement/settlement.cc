@@ -3,9 +3,9 @@
 #include "component/constant.h"
 #include "component/constantint.h"
 
-void Settlement::Reset() { *this = Settlement {}; }
+void SettlementPrimary::Reset() { *this = SettlementPrimary {}; }
 
-void Settlement::ReadJson(const QJsonObject& object)
+void SettlementPrimary::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());
@@ -23,7 +23,7 @@ void Settlement::ReadJson(const QJsonObject& object)
         version = val.toInt();
 }
 
-QJsonObject Settlement::WriteJson() const
+QJsonObject SettlementPrimary::WriteJson() const
 {
     QJsonObject obj {};
 

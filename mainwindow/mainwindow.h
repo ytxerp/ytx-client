@@ -32,7 +32,7 @@
 
 #include "audithub/auditinfo.h"
 #include "billing/settlement/settlement.h"
-#include "billing/settlement/treewidgetsettlement.h"
+#include "billing/settlement/settlementprimarywidget.h"
 #include "billing/statement/statemententrywidget.h"
 #include "component/config.h"
 #include "component/info.h"
@@ -201,7 +201,7 @@ private:
 
     void CreateLeafFIPT(SectionContext* sc, const QUuid& node_id);
     void CreateLeafO(SectionContext* sc, const QUuid& node_id);
-    void SettlementItemTab(const QUuid& parent_widget_id, const Settlement& settlement, SyncState sync_state);
+    void SettlementItemTab(const QUuid& parent_widget_id, const SettlementPrimary& settlement, SyncState sync_state);
 
     void TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
     void TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const;
@@ -262,7 +262,7 @@ private:
     void DeleteNode();
     void DeleteEntry(TableWidget* widget);
     void DeleteBranch(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id);
-    void DeleteSettlement(TreeWidgetSettlement* widget);
+    void DeleteSettlement(SettlementPrimaryWidget* widget);
 
     void UpdatePartnerReference(const SectionContext& sc, const QSet<QUuid>& partner_nodes, bool branch) const;
 
@@ -313,7 +313,7 @@ private:
     inline bool IsTreeWidgetO(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetO); }
     inline bool IsTableWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kTableWidgetFIPT); }
     inline bool IsTableWidgetO(const QWidget* widget) { return widget && widget->inherits(kTableWidgetO); }
-    inline bool IsTreeWidgetSettlement(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetSettlement); }
+    inline bool IsSettlementPrimaryWidget(const QWidget* widget) { return widget && widget->inherits(kSettlementPrimaryWidget); }
     inline bool IsStatementEntryWidget(const QWidget* widget) { return widget && widget->inherits(kStatementEntryWidget); }
 
 private:

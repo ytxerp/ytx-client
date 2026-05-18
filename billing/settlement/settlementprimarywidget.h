@@ -17,28 +17,28 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEWIDGETSETTLEMENT_H
-#define TREEWIDGETSETTLEMENT_H
+#ifndef SETTLEMENTPRIMARYWIDGET_H
+#define SETTLEMENTPRIMARYWIDGET_H
 
 #include <QDateTime>
 #include <QTableView>
 
 #include "component/using.h"
-#include "treemodelsettlement.h"
+#include "settlementprimarymodel.h"
 
 namespace Ui {
-class TreeWidgetSettlement;
+class SettlementPrimaryWidget;
 }
 
-class TreeWidgetSettlement final : public QWidget {
+class SettlementPrimaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit TreeWidgetSettlement(TreeModelSettlement* model, CUuid& widget_id, Section section, QWidget* parent = nullptr);
-    ~TreeWidgetSettlement() override;
+    explicit SettlementPrimaryWidget(SettlementPrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent = nullptr);
+    ~SettlementPrimaryWidget() override;
 
     QTableView* View() const;
-    TreeModelSettlement* Model() const { return model_; }
+    SettlementPrimaryModel* Model() const { return model_; }
     QUuid WidgetId() const { return widget_id_; }
 
 private slots:
@@ -51,8 +51,8 @@ private:
     void InitTimer();
 
 private:
-    Ui::TreeWidgetSettlement* ui;
-    TreeModelSettlement* model_ {};
+    Ui::SettlementPrimaryWidget* ui;
+    SettlementPrimaryModel* model_ {};
     QDateTime start_ {};
     QDateTime end_ {};
     QTimer* cooldown_timer_ { nullptr };
@@ -61,6 +61,6 @@ private:
     const QUuid widget_id_ {};
 };
 
-inline const char* kTreeWidgetSettlement = "TreeWidgetSettlement";
+inline const char* kSettlementPrimaryWidget = "SettlementPrimaryWidget";
 
-#endif // TREEWIDGETSETTLEMENT_H
+#endif // SETTLEMENTPRIMARYWIDGET_H

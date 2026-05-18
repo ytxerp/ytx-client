@@ -1,4 +1,4 @@
-#include "treewidgetsettlement.h"
+#include "settlementprimarywidget.h"
 
 #include <QJsonArray>
 #include <QTimer>
@@ -6,13 +6,13 @@
 #include "component/constant.h"
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
-#include "ui_treewidgetsettlement.h"
+#include "ui_settlementprimarywidget.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TreeWidgetSettlement::TreeWidgetSettlement(TreeModelSettlement* model, CUuid& widget_id, Section section, QWidget* parent)
+SettlementPrimaryWidget::SettlementPrimaryWidget(SettlementPrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent)
     : QWidget(parent)
-    , ui(new Ui::TreeWidgetSettlement)
+    , ui(new Ui::SettlementPrimaryWidget)
     , model_ { model }
     , start_ { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) }
     , end_ { QDateTime(QDate(QDate::currentDate().year() + 1, 1, 1), kStartTime) }
@@ -28,14 +28,14 @@ TreeWidgetSettlement::TreeWidgetSettlement(TreeModelSettlement* model, CUuid& wi
     IniWidget();
     InitTimer();
 
-    QTimer::singleShot(0, this, &TreeWidgetSettlement::on_pBtnFetch_clicked);
+    QTimer::singleShot(0, this, &SettlementPrimaryWidget::on_pBtnFetch_clicked);
 }
 
-TreeWidgetSettlement::~TreeWidgetSettlement() { delete ui; }
+SettlementPrimaryWidget::~SettlementPrimaryWidget() { delete ui; }
 
-QTableView* TreeWidgetSettlement::View() const { return ui->tableView; }
+QTableView* SettlementPrimaryWidget::View() const { return ui->tableView; }
 
-void TreeWidgetSettlement::on_start_dateChanged(const QDate& date)
+void SettlementPrimaryWidget::on_start_dateChanged(const QDate& date)
 {
     const bool valid { date < end_.date() };
     start_ = QDateTime(date, kStartTime);
@@ -44,7 +44,7 @@ void TreeWidgetSettlement::on_start_dateChanged(const QDate& date)
     ui->pBtnFetch->setEnabled(valid);
 }
 
-void TreeWidgetSettlement::on_end_dateChanged(const QDate& date)
+void SettlementPrimaryWidget::on_end_dateChanged(const QDate& date)
 {
     const bool valid { date >= start_.date() };
 
@@ -53,7 +53,7 @@ void TreeWidgetSettlement::on_end_dateChanged(const QDate& date)
     end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
-void TreeWidgetSettlement::on_pBtnFetch_clicked()
+void SettlementPrimaryWidget::on_pBtnFetch_clicked()
 {
     if (!ui->pBtnFetch->isEnabled()) {
         return;
@@ -67,7 +67,7 @@ void TreeWidgetSettlement::on_pBtnFetch_clicked()
     cooldown_timer_->start(time_const::kCooldownMs);
 }
 
-void TreeWidgetSettlement::IniWidget()
+void SettlementPrimaryWidget::IniWidget()
 {
     ui->start->setDisplayFormat(kDateFST);
     ui->end->setDisplayFormat(kDateFST);
@@ -78,7 +78,7 @@ void TreeWidgetSettlement::IniWidget()
     ui->end->setDateTime(end_.addDays(-1));
 }
 
-void TreeWidgetSettlement::InitTimer()
+void SettlementPrimaryWidget::InitTimer()
 {
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);

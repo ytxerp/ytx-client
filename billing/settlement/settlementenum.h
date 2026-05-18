@@ -22,7 +22,7 @@
 
 enum class SettlementStatus { kUnsettled = 0, kSettled };
 
-enum class SettlementEnum {
+enum class SettlementPrimaryEnum {
     kId = 0,
     kVersion,
     kPartner,

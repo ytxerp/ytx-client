@@ -24,9 +24,9 @@
 #include <QStringList>
 #include <QUuid>
 
-#include "enum/settlementenum.h"
+#include "settlementenum.h"
 
-struct Settlement final {
+struct SettlementPrimary final {
     QUuid id {};
     QUuid partner_id {};
     QDateTime issued_time {};

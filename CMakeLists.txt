@@ -84,8 +84,8 @@ set(HEADERS
     billing/settlement/settlement.h
     billing/settlement/tablemodelsettlement.h
     billing/settlement/tablewidgetsettlement.h
-    billing/settlement/treemodelsettlement.h
-    billing/settlement/treewidgetsettlement.h
+    billing/settlement/settlementprimarymodel.h
+    billing/settlement/settlementprimarywidget.h
     billing/statement/statement.h
     billing/statement/statemententrymodel.h
     billing/statement/statemententrywidget.h
@@ -165,7 +165,7 @@ set(HEADERS
     enum/nodeenum.h
     enum/reference.h
     enum/section.h
-    enum/settlementenum.h
+    billing/settlement/settlementenum.h
     enum/statementenum.h
     enum/statusenum.h
     enum/syncenum.h
@@ -283,8 +283,8 @@ set(SOURCES
     billing/settlement/settlement.cc
     billing/settlement/tablemodelsettlement.cc
     billing/settlement/tablewidgetsettlement.cc
-    billing/settlement/treemodelsettlement.cc
-    billing/settlement/treewidgetsettlement.cc
+    billing/settlement/settlementprimarymodel.cc
+    billing/settlement/settlementprimarywidget.cc
     billing/statement/statemententrymodel.cc
     billing/statement/statemententrywidget.cc
     billing/statement/statementmodel.cc
@@ -446,7 +446,7 @@ set(SOURCES
 
 set(UIS
     billing/settlement/tablewidgetsettlement.ui
-    billing/settlement/treewidgetsettlement.ui
+    billing/settlement/settlementprimarywidget.ui
     billing/statement/statemententrywidget.ui
     billing/statement/statementnodewidget.ui
     billing/statement/statementwidget.ui

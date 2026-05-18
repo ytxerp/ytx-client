@@ -2,13 +2,13 @@
 
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
-#include "enum/settlementenum.h"
+#include "settlementenum.h"
 #include "ui_tablewidgetsettlement.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TableWidgetSettlement::TableWidgetSettlement(TreeModel* tree_model_p, TableModelSettlement* model, CSectionConfig& config, const Settlement& settlement,
+TableWidgetSettlement::TableWidgetSettlement(TreeModel* tree_model_p, TableModelSettlement* model, CSectionConfig& config, const SettlementPrimary& settlement,
     CUuid& widget_id, CUuid& parent_widget_id, Section section, SyncState sync_state, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::TableWidgetSettlement)

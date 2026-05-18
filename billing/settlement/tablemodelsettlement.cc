@@ -4,8 +4,8 @@
 #include <QTimer>
 
 #include "component/constant.h"
-#include "enum/settlementenum.h"
 #include "global/resourcepool.h"
+#include "settlementenum.h"
 #include "utils/templateutils.h"
 
 TableModelSettlement::TableModelSettlement(const QStringList& header, SettlementStatus status, QObject* parent)

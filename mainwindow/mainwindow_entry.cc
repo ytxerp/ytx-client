@@ -1,4 +1,4 @@
-#include "billing/settlement/treewidgetsettlement.h"
+#include "billing/settlement/settlementprimarywidget.h"
 #include "component/constantwebsocket.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
@@ -17,11 +17,11 @@ void MainWindow::on_actionAppendEntry_triggered()
     qInfo() << Q_FUNC_INFO;
 
     {
-        auto* widget { qobject_cast<TreeWidgetSettlement*>(sc_->tab_widget->currentWidget()) };
+        auto* widget { qobject_cast<SettlementPrimaryWidget*>(sc_->tab_widget->currentWidget()) };
         if (widget) {
             const QUuid settlement_widget_id { widget->WidgetId() };
 
-            Settlement settlement {};
+            SettlementPrimary settlement {};
 
             settlement.issued_time = QDateTime::currentDateTimeUtc();
             settlement.id = QUuid::createUuidV7();

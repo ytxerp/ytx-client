@@ -1,5 +1,6 @@
 #include "audithub/auditenum.h"
 #include "audithub/audittextdelegate.h"
+#include "billing/settlement/settlementenum.h"
 #include "component/constantstring.h"
 #include "delegate/bool.h"
 #include "delegate/boolstring.h"
@@ -30,7 +31,6 @@
 #include "delegate/tagdelegate.h"
 #include "delegate/workspaceroledelegate.h"
 #include "enum/reference.h"
-#include "enum/settlementenum.h"
 #include "enum/statementenum.h"
 #include "inventory_heat/inventoryheatenum.h"
 #include "mainwindow.h"
@@ -481,23 +481,23 @@ void MainWindow::DelegateStatementEntry(QTableView* table_view, CSectionConfig& 
 void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& config) const
 {
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kAmount), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kAmount), amount);
 
     auto* status { new StatusDelegate(QEvent::MouseButtonDblClick, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kStatus), status);
 
     auto* line { new Line(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kDescription), line);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kDescription), line);
 
     auto* issued_time { new IssuedTime(kDateFST, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kIssuedTime), issued_time);
 
     auto model { sc_p_.tree_model };
     const auto unit { start_ == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor };
 
     auto* filter_model { model->IncludeUnit(unit, table_view) };
     auto* node { new RhsNode(model, filter_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementEnum::kPartner), node);
+    table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kPartner), node);
 }
 
 void MainWindow::DelegateSettlementNode(QTableView* table_view, CSectionConfig& config) const
