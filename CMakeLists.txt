@@ -265,9 +265,9 @@ set(HEADERS
     audithub/auditdialog.h
     audithub/audittextdelegate.h
     audithub/audittextdialog.h
-    periodclose/periodclosedialog.h
+    period_close/periodclosedialog.h
     workspace_member/databaserole.h
-    periodclose/periodclosemodel.h
+    period_close/periodclosemodel.h
     inventory_heat/inventoryheatdialog.h
     inventory_heat/inventoryheatrow.h
     inventory_heat/inventoryheatmodel.h
@@ -431,8 +431,8 @@ set(SOURCES
     audithub/audittextdelegate.cc
     audithub/audittextdialog.cc
     mainwindow/mainwindow_period_close.cc
-    periodclose/periodclosedialog.cc
-    periodclose/periodclosemodel.cc
+    period_close/periodclosedialog.cc
+    period_close/periodclosemodel.cc
     workspace_member/databaserole.cc
     workspace_member/workspacerole.cc
     inventory_heat/inventoryheatdialog.cc
@@ -477,7 +477,7 @@ set(UIS
     workspace_member/workspacememberdialog.ui
     audithub/auditdialog.ui
     audithub/audittextdialog.ui
-    periodclose/periodclosedialog.ui
+    period_close/periodclosedialog.ui
     inventory_heat/inventoryheatdialog.ui
     partner_heat/partnerheatdialog.ui
 )

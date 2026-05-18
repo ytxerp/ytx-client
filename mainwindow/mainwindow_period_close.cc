@@ -1,6 +1,6 @@
 #include "mainwindow.h"
-#include "periodclose/periodclosedialog.h"
-#include "periodclose/periodclosemodel.h"
+#include "period_close/periodclosedialog.h"
+#include "period_close/periodclosemodel.h"
 #include "utils/mainwindowutils.h"
 
 void MainWindow::on_actionPeriodClose_triggered()
