@@ -23,8 +23,8 @@
 #include <QAbstractItemModel>
 #include <QJsonArray>
 
-#include "auditentry.h"
 #include "auditinfo.h"
+#include "auditrow.h"
 
 namespace audit_hub {
 
@@ -63,11 +63,11 @@ public:
 
 private:
     const QString& NodePath(const QHash<QUuid, QString>* leaf, const QHash<QUuid, QString>* branch, const QUuid& node_id) const;
-    QVariant ResolveNode(const AuditEntry* entry, const QUuid& node_id) const;
+    QVariant ResolveNode(const AuditRow* row, const QUuid& node_id) const;
     static QString JsonValueToString(const QJsonValue& value);
 
 private:
-    QList<AuditEntry*> list_ {};
+    QList<AuditRow*> list_ {};
     const AuditInfo& info_; // owned by MainWindow, outlives model
 };
 }

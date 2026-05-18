@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AUDITENTRY_H
-#define AUDITENTRY_H
+#ifndef AUDITROW_H
+#define AUDITROW_H
 
 #include <QDateTime>
 #include <QJsonObject>
@@ -32,7 +32,7 @@ namespace audit_hub {
 //   2. Timestamps (8 bytes)
 //   3. Integers (4 bytes)
 //   4. Variable-length (TEXT / JSONB)
-struct AuditEntry {
+struct AuditRow {
     // -- 1. UUIDs ---------------------------------------------------------------
     QUuid id {}; // PRIMARY KEY — generated client-side before shipping
     QUuid target_id {}; // The entity being audited
@@ -59,4 +59,4 @@ struct AuditEntry {
 };
 }
 
-#endif // AUDITENTRY_H
+#endif // AUDITROW_H

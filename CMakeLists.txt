@@ -258,7 +258,7 @@ set(HEADERS
     workspace_member/workspacerole.h
     delegate/databaseroledelegate.h
     workspace_member/headerinfo.h
-    audithub/auditentry.h
+    audithub/auditrow.h
     audithub/auditmodel.h
     audithub/auditinfo.h
     audithub/auditenum.h
@@ -424,7 +424,7 @@ set(SOURCES
     widget/treeview.cc
     workspace_member/workspacememberdialog.cc
     workspace_member/workspacemembermodel.cc
-    audithub/auditentry.cc
+    audithub/auditrow.cc
     mainwindow/mainwindow_audit.cc
     audithub/auditmodel.cc
     audithub/auditdialog.cc

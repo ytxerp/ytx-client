@@ -34,35 +34,35 @@ QVariant AuditModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    const auto* entry { static_cast<AuditEntry*>(index.internalPointer()) };
+    const auto* row { static_cast<AuditRow*>(index.internalPointer()) };
 
     switch (static_cast<AuditField>(index.column())) {
     case AuditField::kTargetId:
-        return entry->target_id.toString(QUuid::WithoutBraces).left(12);
+        return row->target_id.toString(QUuid::WithoutBraces).left(12);
     case AuditField::kUserId:
-        return info_.user_hash.value(entry->user_id);
+        return info_.user_hash.value(row->user_id);
     case AuditField::kCreatedTime:
-        return entry->created_time;
+        return row->created_time;
     case AuditField::kTargetCode:
-        return entry->target_code;
+        return row->target_code;
     case AuditField::kBefore:
-        return JsonValueToString(entry->before);
+        return JsonValueToString(row->before);
     case AuditField::kAfter:
-        return JsonValueToString(entry->after);
+        return JsonValueToString(row->after);
     case AuditField::kId:
-        return entry->id;
+        return row->id;
     case AuditField::kSection:
-        return info_.section_hash.value(entry->section);
+        return info_.section_hash.value(row->section);
     case AuditField::kWsKey:
-        return info_.ws_key_hash.value(entry->ws_key);
+        return info_.ws_key_hash.value(row->ws_key);
     case AuditField::kLevel:
-        return info_.level_hash.value(entry->level);
+        return info_.level_hash.value(row->level);
     case AuditField::kTargetType:
-        return info_.target_type_hash.value(entry->target_type);
+        return info_.target_type_hash.value(row->target_type);
     case AuditField::kLhsNode:
-        return ResolveNode(entry, entry->lhs_node);
+        return ResolveNode(row, row->lhs_node);
     case AuditField::kRhsNode:
-        return ResolveNode(entry, entry->rhs_node);
+        return ResolveNode(row, row->rhs_node);
     }
 }
 
@@ -72,28 +72,28 @@ void AuditModel::sort(int column, Qt::SortOrder order)
     const auto e_column { static_cast<AuditField>(column) };
 
     // Define a lambda for comparison based on the selected column and sort order
-    auto Compare = [order, e_column](const AuditEntry* lhs, const AuditEntry* rhs) -> bool {
+    auto Compare = [order, e_column](const AuditRow* lhs, const AuditRow* rhs) -> bool {
         switch (e_column) {
         case AuditField::kTargetId:
-            return utils::CompareMember(lhs, rhs, &AuditEntry::target_id, order);
+            return utils::CompareMember(lhs, rhs, &AuditRow::target_id, order);
         case AuditField::kUserId:
-            return utils::CompareMember(lhs, rhs, &AuditEntry::user_id, order);
+            return utils::CompareMember(lhs, rhs, &AuditRow::user_id, order);
         case AuditField::kLhsNode:
-            return utils::CompareMember(lhs, rhs, &AuditEntry::lhs_node, order);
+            return utils::CompareMember(lhs, rhs, &AuditRow::lhs_node, order);
         case AuditField::kRhsNode:
-            return utils::CompareMember(lhs, rhs, &AuditEntry::rhs_node, order);
+            return utils::CompareMember(lhs, rhs, &AuditRow::rhs_node, order);
         case AuditField::kTargetCode:
-            return utils::CompareMember(lhs, rhs, &AuditEntry::target_code, order);
+            return utils::CompareMember(lhs, rhs, &AuditRow::target_code, order);
         case AuditField::kSection:
-            return utils::CompareMember(lhs, rhs, &AuditEntry::section, order);
+            return utils::CompareMember(lhs, rhs, &AuditRow::section, order);
         case AuditField::kWsKey:
-            return utils::CompareMember(lhs, rhs, &AuditEntry::ws_key, order);
+            return utils::CompareMember(lhs, rhs, &AuditRow::ws_key, order);
         case AuditField::kTargetType:
-            return utils::CompareMember(lhs, rhs, &AuditEntry::target_type, order);
+            return utils::CompareMember(lhs, rhs, &AuditRow::target_type, order);
         case AuditField::kLevel:
-            return utils::CompareMember(lhs, rhs, &AuditEntry::level, order);
+            return utils::CompareMember(lhs, rhs, &AuditRow::level, order);
         case AuditField::kCreatedTime:
-            return utils::CompareMember(lhs, rhs, &AuditEntry::created_time, order);
+            return utils::CompareMember(lhs, rhs, &AuditRow::created_time, order);
         case AuditField::kId:
         case AuditField::kBefore:
         case AuditField::kAfter:
@@ -118,7 +118,7 @@ void AuditModel::ResetModel(const QJsonArray& array)
     }
 
     // Parse outside the reset block
-    QList<AuditEntry*> new_list {};
+    QList<AuditRow*> new_list {};
     new_list.reserve(array.size());
 
     for (const auto& value : array) {
@@ -127,14 +127,14 @@ void AuditModel::ResetModel(const QJsonArray& array)
             continue;
         }
 
-        auto* entry { ResourcePool<AuditEntry>::Instance().Allocate() };
+        auto* entry { ResourcePool<AuditRow>::Instance().Allocate() };
         entry->ReadJson(value.toObject());
         new_list.emplaceBack(entry);
     }
 
     // Keep reset block as short as possible
     beginResetModel();
-    ResourcePool<AuditEntry>::Instance().Recycle(list_);
+    ResourcePool<AuditRow>::Instance().Recycle(list_);
     list_ = std::move(new_list);
     sort(std::to_underlying(AuditField::kCreatedTime), Qt::AscendingOrder);
     endResetModel();
@@ -152,9 +152,9 @@ const QString& AuditModel::NodePath(const QHash<QUuid, QString>* leaf, const QHa
     return kEmpty;
 }
 
-QVariant AuditModel::ResolveNode(const AuditEntry* entry, const QUuid& node_id) const
+QVariant AuditModel::ResolveNode(const AuditRow* row, const QUuid& node_id) const
 {
-    switch (static_cast<Section>(entry->section)) {
+    switch (static_cast<Section>(row->section)) {
     case Section::kFinance:
         return NodePath(info_.f_leaf_path, info_.f_branch_path, node_id);
     case Section::kTask:
