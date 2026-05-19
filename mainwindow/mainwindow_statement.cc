@@ -1,7 +1,7 @@
 #include "billing/statement/statemententrywidget.h"
 #include "billing/statement/statementenum.h"
-#include "billing/statement/statementnodewidget.h"
 #include "billing/statement/statementprimarywidget.h"
+#include "billing/statement/statementsecondarywidget.h"
 #include "mainwindow.h"
 
 void MainWindow::on_actionStatement_triggered()
@@ -51,7 +51,7 @@ void MainWindow::RAckStatementNode(Section section, const QUuid& widget_id, cons
     if (!widget)
         return;
 
-    auto* d_widget { static_cast<StatementNodeWidget*>(widget.data()) };
+    auto* d_widget { static_cast<StatementSecondaryWidget*>(widget.data()) };
 
     auto* model { d_widget->Model() };
     model->ResetModel(array);
@@ -75,10 +75,10 @@ void MainWindow::RAckStatementEntry(Section section, const QUuid& widget_id, con
 
 void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
 {
-    auto* model { new StatementNodeModel(header_info_.statement_node, partner_id, this) };
+    auto* model { new StatementSecondaryModel(header_info_.statement_node, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementNodeWidget(model, widget_id, partner_id, start, end, start_, unit, this) };
+    auto* widget { new StatementSecondaryWidget(model, widget_id, partner_id, start, end, start_, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement"), sc_p_.tree_model->Name(partner_id)) };
 
@@ -91,7 +91,7 @@ void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start,
     InitTableView(view, -1, -1, std::to_underlying(StatementNodeEnum::kDescription));
     DelegateStatementNode(view, sc_->section_config);
 
-    connect(widget, &StatementNodeWidget::SStatementEntry, this, &MainWindow::RStatementEntry);
+    connect(widget, &StatementSecondaryWidget::SStatementEntry, this, &MainWindow::RStatementEntry);
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
 }

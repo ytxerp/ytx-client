@@ -17,18 +17,18 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTNODEMODEL_H
-#define STATEMENTNODEMODEL_H
+#ifndef STATEMENTSECONDARYMODEL_H
+#define STATEMENTSECONDARYMODEL_H
 
 #include <QAbstractItemModel>
 
 #include "statement.h"
 
-class StatementNodeModel final : public QAbstractItemModel {
+class StatementSecondaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    StatementNodeModel(const QStringList& header, const QUuid& partner_id, QObject* parent = nullptr);
-    ~StatementNodeModel() override;
+    StatementSecondaryModel(const QStringList& header, const QUuid& partner_id, QObject* parent = nullptr);
+    ~StatementSecondaryModel() override;
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -49,7 +49,7 @@ private:
     const QStringList& header_;
     const QUuid partner_id_ {};
 
-    QList<StatementNode*> list_ {};
+    QList<StatementSecondary*> list_ {};
 };
 
-#endif // STATEMENTNODEMODEL_H
+#endif // STATEMENTSECONDARYMODEL_H

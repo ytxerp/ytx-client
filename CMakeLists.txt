@@ -90,8 +90,8 @@ set(HEADERS
     billing/statement/statemententrymodel.h
     billing/statement/statemententrywidget.h
     billing/statement/statementprimarymodel.h
-    billing/statement/statementnodemodel.h
-    billing/statement/statementnodewidget.h
+    billing/statement/statementsecondarymodel.h
+    billing/statement/statementsecondarywidget.h
     billing/statement/statementprimarywidget.h
     component/arg/nodeinsertarg.h
     component/arg/orderwidgetarg.h
@@ -288,8 +288,8 @@ set(SOURCES
     billing/statement/statemententrymodel.cc
     billing/statement/statemententrywidget.cc
     billing/statement/statementprimarymodel.cc
-    billing/statement/statementnodemodel.cc
-    billing/statement/statementnodewidget.cc
+    billing/statement/statementsecondarymodel.cc
+    billing/statement/statementsecondarywidget.cc
     billing/statement/statementprimarywidget.cc
     component/stringinitializer.cc
     delegate/bool.cc
@@ -448,7 +448,7 @@ set(UIS
     billing/settlement/settlementsecondarywidget.ui
     billing/settlement/settlementprimarywidget.ui
     billing/statement/statemententrywidget.ui
-    billing/statement/statementnodewidget.ui
+    billing/statement/statementsecondarywidget.ui
     billing/statement/statementprimarywidget.ui
     dialog/about.ui
     dialog/authdialog.ui

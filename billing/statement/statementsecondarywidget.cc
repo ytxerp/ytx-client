@@ -1,4 +1,4 @@
-#include "statementnodewidget.h"
+#include "statementsecondarywidget.h"
 
 #include <QTimer>
 
@@ -7,15 +7,15 @@
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
 #include "statementenum.h"
-#include "ui_statementnodewidget.h"
+#include "ui_statementsecondarywidget.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementNodeWidget::StatementNodeWidget(
-    StatementNodeModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, Section section, int unit, QWidget* parent)
+StatementSecondaryWidget::StatementSecondaryWidget(
+    StatementSecondaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, Section section, int unit, QWidget* parent)
     : QWidget(parent)
-    , ui(new Ui::StatementNodeWidget)
+    , ui(new Ui::StatementSecondaryWidget)
     , unit_ { unit }
     , start_ { start }
     , end_ { end }
@@ -36,14 +36,14 @@ StatementNodeWidget::StatementNodeWidget(
     IniUnit(unit);
     IniConnect();
 
-    QTimer::singleShot(0, this, &StatementNodeWidget::on_pBtnFetch_clicked);
+    QTimer::singleShot(0, this, &StatementSecondaryWidget::on_pBtnFetch_clicked);
 }
 
-StatementNodeWidget::~StatementNodeWidget() { delete ui; }
+StatementSecondaryWidget::~StatementSecondaryWidget() { delete ui; }
 
-QTableView* StatementNodeWidget::View() const { return ui->tableView; }
+QTableView* StatementSecondaryWidget::View() const { return ui->tableView; }
 
-void StatementNodeWidget::on_start_dateChanged(const QDate& date)
+void StatementSecondaryWidget::on_start_dateChanged(const QDate& date)
 {
     const bool valid { date < end_.date() };
     start_ = QDateTime(date, kStartTime);
@@ -52,7 +52,7 @@ void StatementNodeWidget::on_start_dateChanged(const QDate& date)
     ui->pBtnFetch->setEnabled(valid);
 }
 
-void StatementNodeWidget::on_end_dateChanged(const QDate& date)
+void StatementSecondaryWidget::on_end_dateChanged(const QDate& date)
 {
     const bool valid { date >= start_.date() };
 
@@ -61,7 +61,7 @@ void StatementNodeWidget::on_end_dateChanged(const QDate& date)
     end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
-void StatementNodeWidget::on_pBtnFetch_clicked()
+void StatementSecondaryWidget::on_pBtnFetch_clicked()
 {
     if (!ui->pBtnFetch->isEnabled()) {
         return;
@@ -75,7 +75,7 @@ void StatementNodeWidget::on_pBtnFetch_clicked()
     cooldown_timer_->start(time_const::kCooldownMs);
 }
 
-void StatementNodeWidget::RUnitGroupClicked(int id)
+void StatementSecondaryWidget::RUnitGroupClicked(int id)
 {
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(start_ <= end_);
@@ -83,7 +83,7 @@ void StatementNodeWidget::RUnitGroupClicked(int id)
     unit_ = id;
 }
 
-void StatementNodeWidget::IniUnitGroup()
+void StatementSecondaryWidget::IniUnitGroup()
 {
     unit_group_ = new QButtonGroup(this);
     unit_group_->addButton(ui->rBtnIS, std::to_underlying(NodeUnit::OImmediate));
@@ -91,9 +91,9 @@ void StatementNodeWidget::IniUnitGroup()
     unit_group_->addButton(ui->rBtnPEND, std::to_underlying(NodeUnit::OPending));
 }
 
-void StatementNodeWidget::IniConnect() { connect(unit_group_, &QButtonGroup::idClicked, this, &StatementNodeWidget::RUnitGroupClicked); }
+void StatementSecondaryWidget::IniConnect() { connect(unit_group_, &QButtonGroup::idClicked, this, &StatementSecondaryWidget::RUnitGroupClicked); }
 
-void StatementNodeWidget::IniUnit(int unit)
+void StatementSecondaryWidget::IniUnit(int unit)
 {
     const NodeUnit kUnit { unit };
 
@@ -112,7 +112,7 @@ void StatementNodeWidget::IniUnit(int unit)
     }
 }
 
-void StatementNodeWidget::IniWidget()
+void StatementSecondaryWidget::IniWidget()
 {
     ui->start->setDisplayFormat(kDateFST);
     ui->end->setDisplayFormat(kDateFST);
@@ -127,14 +127,14 @@ void StatementNodeWidget::IniWidget()
     utils::SetRadioButton(ui->rBtnPEND, QKeySequence(Qt::CTRL | Qt::Key_3));
 }
 
-void StatementNodeWidget::InitTimer()
+void StatementSecondaryWidget::InitTimer()
 {
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
 }
 
-void StatementNodeWidget::on_tableView_doubleClicked(const QModelIndex& index)
+void StatementSecondaryWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
     if (index.column() == std::to_underlying(StatementNodeEnum::kIssuedTime)) {
         emit SStatementEntry(partner_id_, start_, end_, unit_);

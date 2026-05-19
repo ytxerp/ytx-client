@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTNODEWIDGET_H
-#define STATEMENTNODEWIDGET_H
+#ifndef STATEMENTSECONDARYWIDGET_H
+#define STATEMENTSECONDARYWIDGET_H
 
 #include <QButtonGroup>
 #include <QDateTime>
@@ -26,25 +26,25 @@
 
 #include "component/using.h"
 #include "enum/section.h"
-#include "statementnodemodel.h"
+#include "statementsecondarymodel.h"
 
 namespace Ui {
-class StatementNodeWidget;
+class StatementSecondaryWidget;
 }
 
-class StatementNodeWidget final : public QWidget {
+class StatementSecondaryWidget final : public QWidget {
     Q_OBJECT
 
 signals:
     void SStatementEntry(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
 
 public:
-    StatementNodeWidget(
-        StatementNodeModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, Section section, int unit, QWidget* parent = nullptr);
-    ~StatementNodeWidget() override;
+    StatementSecondaryWidget(StatementSecondaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, Section section, int unit,
+        QWidget* parent = nullptr);
+    ~StatementSecondaryWidget() override;
 
     QTableView* View() const;
-    StatementNodeModel* Model() const { return model_; }
+    StatementSecondaryModel* Model() const { return model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -62,12 +62,12 @@ private:
     void InitTimer();
 
 private:
-    Ui::StatementNodeWidget* ui;
+    Ui::StatementSecondaryWidget* ui;
     int unit_ {};
     QDateTime start_ {};
     QDateTime end_ {};
 
-    StatementNodeModel* model_ {};
+    StatementSecondaryModel* model_ {};
     QTimer* cooldown_timer_ { nullptr };
 
     QButtonGroup* unit_group_ {};
@@ -76,4 +76,4 @@ private:
     CUuid partner_id_ {};
 };
 
-#endif // STATEMENTNODEWIDGET_H
+#endif // STATEMENTSECONDARYWIDGET_H

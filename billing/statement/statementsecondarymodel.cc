@@ -1,4 +1,4 @@
-#include "statementnodemodel.h"
+#include "statementsecondarymodel.h"
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -7,16 +7,16 @@
 #include "statementenum.h"
 #include "utils/templateutils.h"
 
-StatementNodeModel::StatementNodeModel(const QStringList& header, const QUuid& partner_id, QObject* parent)
+StatementSecondaryModel::StatementSecondaryModel(const QStringList& header, const QUuid& partner_id, QObject* parent)
     : QAbstractItemModel { parent }
     , header_ { header }
     , partner_id_ { partner_id }
 {
 }
 
-StatementNodeModel::~StatementNodeModel() { ResourcePool<StatementNode>::Instance().Recycle(list_); }
+StatementSecondaryModel::~StatementSecondaryModel() { ResourcePool<StatementSecondary>::Instance().Recycle(list_); }
 
-QModelIndex StatementNodeModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex StatementSecondaryModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -24,25 +24,25 @@ QModelIndex StatementNodeModel::index(int row, int column, const QModelIndex& pa
     return createIndex(row, column);
 }
 
-QModelIndex StatementNodeModel::parent(const QModelIndex& index) const
+QModelIndex StatementSecondaryModel::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int StatementNodeModel::rowCount(const QModelIndex& parent) const
+int StatementSecondaryModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return list_.size();
 }
 
-int StatementNodeModel::columnCount(const QModelIndex& parent) const
+int StatementSecondaryModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return header_.size();
 }
 
-QVariant StatementNodeModel::data(const QModelIndex& index, int role) const
+QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -75,7 +75,7 @@ QVariant StatementNodeModel::data(const QModelIndex& index, int role) const
     }
 }
 
-bool StatementNodeModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool StatementSecondaryModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
         return false;
@@ -101,7 +101,7 @@ bool StatementNodeModel::setData(const QModelIndex& index, const QVariant& value
     return true;
 }
 
-QVariant StatementNodeModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant StatementSecondaryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return header_.at(section);
@@ -109,30 +109,30 @@ QVariant StatementNodeModel::headerData(int section, Qt::Orientation orientation
     return QVariant();
 }
 
-void StatementNodeModel::sort(int column, Qt::SortOrder order)
+void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
 {
     const StatementNodeEnum e_column { column };
 
-    auto Compare = [e_column, order](const StatementNode* lhs, const StatementNode* rhs) -> bool {
+    auto Compare = [e_column, order](const StatementSecondary* lhs, const StatementSecondary* rhs) -> bool {
         switch (e_column) {
         case StatementNodeEnum::kDescription:
-            return utils::CompareMember(lhs, rhs, &StatementNode::description, order);
+            return utils::CompareMember(lhs, rhs, &StatementSecondary::description, order);
         case StatementNodeEnum::kCode:
-            return utils::CompareMember(lhs, rhs, &StatementNode::code, order);
+            return utils::CompareMember(lhs, rhs, &StatementSecondary::code, order);
         case StatementNodeEnum::kEmployee:
-            return utils::CompareMember(lhs, rhs, &StatementNode::employee_id, order);
+            return utils::CompareMember(lhs, rhs, &StatementSecondary::employee_id, order);
         case StatementNodeEnum::kIssuedTime:
-            return utils::CompareMember(lhs, rhs, &StatementNode::issued_time, order);
+            return utils::CompareMember(lhs, rhs, &StatementSecondary::issued_time, order);
         case StatementNodeEnum::kCount:
-            return utils::CompareMember(lhs, rhs, &StatementNode::count, order);
+            return utils::CompareMember(lhs, rhs, &StatementSecondary::count, order);
         case StatementNodeEnum::kMeasure:
-            return utils::CompareMember(lhs, rhs, &StatementNode::measure, order);
+            return utils::CompareMember(lhs, rhs, &StatementSecondary::measure, order);
         case StatementNodeEnum::kStatus:
-            return utils::CompareMember(lhs, rhs, &StatementNode::status, order);
+            return utils::CompareMember(lhs, rhs, &StatementSecondary::status, order);
         case StatementNodeEnum::kSettlement:
-            return utils::CompareMember(lhs, rhs, &StatementNode::settlement, order);
+            return utils::CompareMember(lhs, rhs, &StatementSecondary::settlement, order);
         case StatementNodeEnum::kAmount:
-            return utils::CompareMember(lhs, rhs, &StatementNode::amount, order);
+            return utils::CompareMember(lhs, rhs, &StatementSecondary::amount, order);
         }
     };
 
@@ -141,11 +141,11 @@ void StatementNodeModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void StatementNodeModel::ResetModel(const QJsonArray& array)
+void StatementSecondaryModel::ResetModel(const QJsonArray& array)
 {
     beginResetModel();
 
-    ResourcePool<StatementNode>::Instance().Recycle(list_);
+    ResourcePool<StatementSecondary>::Instance().Recycle(list_);
 
     for (const auto& value : array) {
         if (!value.isObject())
@@ -153,7 +153,7 @@ void StatementNodeModel::ResetModel(const QJsonArray& array)
 
         const QJsonObject obj { value.toObject() };
 
-        auto* statement_primary { ResourcePool<StatementNode>::Instance().Allocate() };
+        auto* statement_primary { ResourcePool<StatementSecondary>::Instance().Allocate() };
         statement_primary->ReadJson(obj);
 
         list_.emplaceBack(statement_primary);

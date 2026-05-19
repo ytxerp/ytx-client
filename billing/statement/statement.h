@@ -59,7 +59,7 @@ inline void StatementPrimary::ReadJson(const QJsonObject& object)
         csettlement = val.toString().toDouble();
 }
 
-struct StatementNode final {
+struct StatementSecondary final {
     QDateTime issued_time {};
     QString code {};
     double count {};
@@ -75,9 +75,9 @@ struct StatementNode final {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void StatementNode::Reset() { *this = StatementNode {}; }
+inline void StatementSecondary::Reset() { *this = StatementSecondary {}; }
 
-inline void StatementNode::ReadJson(const QJsonObject& object)
+inline void StatementSecondary::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kIssuedTime); val.isString())
         issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
