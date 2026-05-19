@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTWIDGET_H
-#define STATEMENTWIDGET_H
+#ifndef STATEMENTPRIMARYWIDGET_H
+#define STATEMENTPRIMARYWIDGET_H
 
 #include <QButtonGroup>
 #include <QDateTime>
@@ -26,24 +26,24 @@
 
 #include "component/using.h"
 #include "enum/section.h"
-#include "statementmodel.h"
+#include "statementprimarymodel.h"
 
 namespace Ui {
-class StatementWidget;
+class StatementPrimaryWidget;
 }
 
-class StatementWidget final : public QWidget {
+class StatementPrimaryWidget final : public QWidget {
     Q_OBJECT
 
 signals:
     void SStatementNode(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
 
 public:
-    StatementWidget(StatementModel* model, CUuid& widget_id, Section section, QWidget* parent = nullptr);
-    ~StatementWidget() override;
+    StatementPrimaryWidget(StatementPrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent = nullptr);
+    ~StatementPrimaryWidget() override;
 
     QTableView* View() const;
-    StatementModel* Model() const { return model_; }
+    StatementPrimaryModel* Model() const { return model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -61,11 +61,11 @@ private:
     void InitTimer();
 
 private:
-    Ui::StatementWidget* ui;
+    Ui::StatementPrimaryWidget* ui;
     int unit_ {};
     QDateTime start_ {};
     QDateTime end_ {};
-    StatementModel* model_ {};
+    StatementPrimaryModel* model_ {};
     QTimer* cooldown_timer_ { nullptr };
 
     const Section section_ {};
@@ -74,4 +74,4 @@ private:
     QButtonGroup* unit_group_ {};
 };
 
-#endif // STATEMENTWIDGET_H
+#endif // STATEMENTPRIMARYWIDGET_H

@@ -26,7 +26,7 @@
 
 #include "component/constant.h"
 
-struct Statement final {
+struct StatementPrimary final {
     QUuid partner_id {};
     double pbalance {};
     double ccount {};
@@ -39,9 +39,9 @@ struct Statement final {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void Statement::Reset() { *this = Statement {}; }
+inline void StatementPrimary::Reset() { *this = StatementPrimary {}; }
 
-inline void Statement::ReadJson(const QJsonObject& object)
+inline void StatementPrimary::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kPartnerId); val.isString())
         partner_id = QUuid(val.toString());

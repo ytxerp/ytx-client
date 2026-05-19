@@ -3,8 +3,8 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include "enum/statementenum.h"
 #include "global/resourcepool.h"
+#include "statementenum.h"
 #include "utils/templateutils.h"
 
 StatementEntryModel::StatementEntryModel(EntryHubP* entry_hub_p, const QStringList& header, CUuid& partner_id, QObject* parent)

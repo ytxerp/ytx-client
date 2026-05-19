@@ -3,8 +3,8 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include "enum/statementenum.h"
 #include "global/resourcepool.h"
+#include "statementenum.h"
 #include "utils/templateutils.h"
 
 StatementNodeModel::StatementNodeModel(const QStringList& header, const QUuid& partner_id, QObject* parent)

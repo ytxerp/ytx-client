@@ -89,10 +89,10 @@ set(HEADERS
     billing/statement/statement.h
     billing/statement/statemententrymodel.h
     billing/statement/statemententrywidget.h
-    billing/statement/statementmodel.h
+    billing/statement/statementprimarymodel.h
     billing/statement/statementnodemodel.h
     billing/statement/statementnodewidget.h
-    billing/statement/statementwidget.h
+    billing/statement/statementprimarywidget.h
     component/arg/nodeinsertarg.h
     component/arg/orderwidgetarg.h
     component/arg/tablemodelarg.h
@@ -166,7 +166,7 @@ set(HEADERS
     enum/reference.h
     enum/section.h
     billing/settlement/settlementenum.h
-    enum/statementenum.h
+    billing/statement/statementenum.h
     enum/statusenum.h
     enum/syncenum.h
     tag/tagenum.h
@@ -287,10 +287,10 @@ set(SOURCES
     billing/settlement/settlementprimarywidget.cc
     billing/statement/statemententrymodel.cc
     billing/statement/statemententrywidget.cc
-    billing/statement/statementmodel.cc
+    billing/statement/statementprimarymodel.cc
     billing/statement/statementnodemodel.cc
     billing/statement/statementnodewidget.cc
-    billing/statement/statementwidget.cc
+    billing/statement/statementprimarywidget.cc
     component/stringinitializer.cc
     delegate/bool.cc
     delegate/boolstring.cc
@@ -449,7 +449,7 @@ set(UIS
     billing/settlement/settlementprimarywidget.ui
     billing/statement/statemententrywidget.ui
     billing/statement/statementnodewidget.ui
-    billing/statement/statementwidget.ui
+    billing/statement/statementprimarywidget.ui
     dialog/about.ui
     dialog/authdialog.ui
     dialog/deletenode/exactmatchconfirmdialog.ui

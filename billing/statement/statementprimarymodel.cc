@@ -1,21 +1,21 @@
-#include "statementmodel.h"
+#include "statementprimarymodel.h"
 
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include "enum/statementenum.h"
 #include "global/resourcepool.h"
+#include "statementenum.h"
 #include "utils/templateutils.h"
 
-StatementModel::StatementModel(const QStringList& header, QObject* parent)
+StatementPrimaryModel::StatementPrimaryModel(const QStringList& header, QObject* parent)
     : QAbstractItemModel { parent }
     , header_ { header }
 {
 }
 
-StatementModel::~StatementModel() { ResourcePool<Statement>::Instance().Recycle(list_); }
+StatementPrimaryModel::~StatementPrimaryModel() { ResourcePool<StatementPrimary>::Instance().Recycle(list_); }
 
-QModelIndex StatementModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex StatementPrimaryModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -23,25 +23,25 @@ QModelIndex StatementModel::index(int row, int column, const QModelIndex& parent
     return createIndex(row, column);
 }
 
-QModelIndex StatementModel::parent(const QModelIndex& index) const
+QModelIndex StatementPrimaryModel::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int StatementModel::rowCount(const QModelIndex& parent) const
+int StatementPrimaryModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return list_.size();
 }
 
-int StatementModel::columnCount(const QModelIndex& parent) const
+int StatementPrimaryModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return header_.size();
 }
 
-QVariant StatementModel::data(const QModelIndex& index, int role) const
+QVariant StatementPrimaryModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -69,7 +69,7 @@ QVariant StatementModel::data(const QModelIndex& index, int role) const
     }
 }
 
-QVariant StatementModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant StatementPrimaryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return header_.at(section);
@@ -77,26 +77,26 @@ QVariant StatementModel::headerData(int section, Qt::Orientation orientation, in
     return QVariant();
 }
 
-void StatementModel::sort(int column, Qt::SortOrder order)
+void StatementPrimaryModel::sort(int column, Qt::SortOrder order)
 {
     const StatementEnum e_column { column };
 
-    auto Compare = [e_column, order](const Statement* lhs, const Statement* rhs) -> bool {
+    auto Compare = [e_column, order](const StatementPrimary* lhs, const StatementPrimary* rhs) -> bool {
         switch (e_column) {
         case StatementEnum::kPartner:
-            return utils::CompareMember(lhs, rhs, &Statement::partner_id, order);
+            return utils::CompareMember(lhs, rhs, &StatementPrimary::partner_id, order);
         case StatementEnum::kPBalance:
-            return utils::CompareMember(lhs, rhs, &Statement::pbalance, order);
+            return utils::CompareMember(lhs, rhs, &StatementPrimary::pbalance, order);
         case StatementEnum::kCAmount:
-            return utils::CompareMember(lhs, rhs, &Statement::camount, order);
+            return utils::CompareMember(lhs, rhs, &StatementPrimary::camount, order);
         case StatementEnum::kCSettlement:
-            return utils::CompareMember(lhs, rhs, &Statement::csettlement, order);
+            return utils::CompareMember(lhs, rhs, &StatementPrimary::csettlement, order);
         case StatementEnum::kCBalance:
-            return utils::CompareMember(lhs, rhs, &Statement::cbalance, order);
+            return utils::CompareMember(lhs, rhs, &StatementPrimary::cbalance, order);
         case StatementEnum::kCCount:
-            return utils::CompareMember(lhs, rhs, &Statement::ccount, order);
+            return utils::CompareMember(lhs, rhs, &StatementPrimary::ccount, order);
         case StatementEnum::kCMeasure:
-            return utils::CompareMember(lhs, rhs, &Statement::cmeasure, order);
+            return utils::CompareMember(lhs, rhs, &StatementPrimary::cmeasure, order);
         case StatementEnum::kPlaceholder:
             return false;
         }
@@ -107,11 +107,11 @@ void StatementModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void StatementModel::ResetModel(const QJsonArray& array)
+void StatementPrimaryModel::ResetModel(const QJsonArray& array)
 {
     beginResetModel();
 
-    ResourcePool<Statement>::Instance().Recycle(list_);
+    ResourcePool<StatementPrimary>::Instance().Recycle(list_);
 
     for (const auto& value : array) {
         if (!value.isObject())
@@ -119,7 +119,7 @@ void StatementModel::ResetModel(const QJsonArray& array)
 
         const QJsonObject obj { value.toObject() };
 
-        auto* statement { ResourcePool<Statement>::Instance().Allocate() };
+        auto* statement { ResourcePool<StatementPrimary>::Instance().Allocate() };
         statement->ReadJson(obj);
 
         list_.emplaceBack(statement);

@@ -1,7 +1,7 @@
 #include "billing/statement/statemententrywidget.h"
+#include "billing/statement/statementenum.h"
 #include "billing/statement/statementnodewidget.h"
-#include "billing/statement/statementwidget.h"
-#include "enum/statementenum.h"
+#include "billing/statement/statementprimarywidget.h"
 #include "mainwindow.h"
 
 void MainWindow::on_actionStatement_triggered()
@@ -10,10 +10,10 @@ void MainWindow::on_actionStatement_triggered()
 
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new StatementModel(header_info_.statement, this) };
+    auto* model { new StatementPrimaryModel(header_info_.statement, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementWidget(model, widget_id, start_, this) };
+    auto* widget { new StatementPrimaryWidget(model, widget_id, start_, this) };
 
     const int tab_index { sc_->tab_widget->addTab(widget, tr("Statement")) };
     auto* tab_bar { sc_->tab_widget->tabBar() };
@@ -24,7 +24,7 @@ void MainWindow::on_actionStatement_triggered()
     InitTableView(view, -1, -1, std::to_underlying(StatementEnum::kPlaceholder));
     DelegateStatement(view, sc_->section_config);
 
-    connect(widget, &StatementWidget::SStatementNode, this, &MainWindow::RStatementNode);
+    connect(widget, &StatementPrimaryWidget::SStatementNode, this, &MainWindow::RStatementNode);
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
 }
@@ -37,7 +37,7 @@ void MainWindow::RAckStatement(Section section, const QUuid& widget_id, const QJ
     if (!widget)
         return;
 
-    auto* d_widget { static_cast<StatementWidget*>(widget.data()) };
+    auto* d_widget { static_cast<StatementPrimaryWidget*>(widget.data()) };
 
     auto* model { d_widget->Model() };
     model->ResetModel(array);

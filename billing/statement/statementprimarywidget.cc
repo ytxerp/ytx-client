@@ -1,18 +1,18 @@
-#include "statementwidget.h"
+#include "statementprimarywidget.h"
 
 #include "component/constant.h"
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
-#include "enum/statementenum.h"
-#include "ui_statementwidget.h"
+#include "statementenum.h"
+#include "ui_statementprimarywidget.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementWidget::StatementWidget(StatementModel* model, CUuid& widget_id, Section section, QWidget* parent)
+StatementPrimaryWidget::StatementPrimaryWidget(StatementPrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent)
     : QWidget(parent)
-    , ui(new Ui::StatementWidget)
+    , ui(new Ui::StatementPrimaryWidget)
     , unit_ { std::to_underlying(NodeUnit::OMonthly) }
     , model_ { model }
     , section_ { section }
@@ -31,14 +31,14 @@ StatementWidget::StatementWidget(StatementModel* model, CUuid& widget_id, Sectio
     IniUnit(unit_);
     IniConnect();
 
-    QTimer::singleShot(0, this, &StatementWidget::on_pBtnFetch_clicked);
+    QTimer::singleShot(0, this, &StatementPrimaryWidget::on_pBtnFetch_clicked);
 }
 
-StatementWidget::~StatementWidget() { delete ui; }
+StatementPrimaryWidget::~StatementPrimaryWidget() { delete ui; }
 
-QTableView* StatementWidget::View() const { return ui->tableView; }
+QTableView* StatementPrimaryWidget::View() const { return ui->tableView; }
 
-void StatementWidget::on_start_dateChanged(const QDate& date)
+void StatementPrimaryWidget::on_start_dateChanged(const QDate& date)
 {
     const bool valid { date < end_.date() };
     start_ = QDateTime(date, kStartTime);
@@ -47,7 +47,7 @@ void StatementWidget::on_start_dateChanged(const QDate& date)
     ui->pBtnFetch->setEnabled(valid);
 }
 
-void StatementWidget::on_end_dateChanged(const QDate& date)
+void StatementPrimaryWidget::on_end_dateChanged(const QDate& date)
 {
     const bool valid { date >= start_.date() };
 
@@ -56,7 +56,7 @@ void StatementWidget::on_end_dateChanged(const QDate& date)
     end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
-void StatementWidget::on_pBtnFetch_clicked()
+void StatementPrimaryWidget::on_pBtnFetch_clicked()
 {
     if (!ui->pBtnFetch->isEnabled()) {
         return;
@@ -70,7 +70,7 @@ void StatementWidget::on_pBtnFetch_clicked()
     cooldown_timer_->start(time_const::kCooldownMs);
 }
 
-void StatementWidget::RUnitGroupClicked(int id)
+void StatementPrimaryWidget::RUnitGroupClicked(int id)
 {
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(start_ <= end_);
@@ -78,7 +78,7 @@ void StatementWidget::RUnitGroupClicked(int id)
     unit_ = id;
 }
 
-void StatementWidget::IniUnitGroup()
+void StatementPrimaryWidget::IniUnitGroup()
 {
     unit_group_ = new QButtonGroup(this);
     unit_group_->addButton(ui->rBtnIS, std::to_underlying(NodeUnit::OImmediate));
@@ -86,9 +86,9 @@ void StatementWidget::IniUnitGroup()
     unit_group_->addButton(ui->rBtnPEND, std::to_underlying(NodeUnit::OPending));
 }
 
-void StatementWidget::IniConnect() { connect(unit_group_, &QButtonGroup::idClicked, this, &StatementWidget::RUnitGroupClicked); }
+void StatementPrimaryWidget::IniConnect() { connect(unit_group_, &QButtonGroup::idClicked, this, &StatementPrimaryWidget::RUnitGroupClicked); }
 
-void StatementWidget::IniUnit(int unit)
+void StatementPrimaryWidget::IniUnit(int unit)
 {
     const NodeUnit kUnit { unit };
 
@@ -107,7 +107,7 @@ void StatementWidget::IniUnit(int unit)
     }
 }
 
-void StatementWidget::IniWidget()
+void StatementPrimaryWidget::IniWidget()
 {
     start_ = QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime);
 
@@ -127,14 +127,14 @@ void StatementWidget::IniWidget()
     utils::SetRadioButton(ui->rBtnPEND, QKeySequence(Qt::CTRL | Qt::Key_3));
 }
 
-void StatementWidget::InitTimer()
+void StatementPrimaryWidget::InitTimer()
 {
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
 }
 
-void StatementWidget::on_tableView_doubleClicked(const QModelIndex& index)
+void StatementPrimaryWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
     if (index.column() == std::to_underlying(StatementEnum::kPartner)) {
         const auto partner { index.siblingAtColumn(std::to_underlying(StatementEnum::kPartner)).data().toUuid() };
