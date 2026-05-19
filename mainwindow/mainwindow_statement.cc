@@ -1,7 +1,7 @@
-#include "billing/statement/statemententrywidget.h"
 #include "billing/statement/statementenum.h"
 #include "billing/statement/statementprimarywidget.h"
 #include "billing/statement/statementsecondarywidget.h"
+#include "billing/statement/statementtertiarywidget.h"
 #include "mainwindow.h"
 
 void MainWindow::on_actionStatement_triggered()
@@ -21,7 +21,7 @@ void MainWindow::on_actionStatement_triggered()
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    InitTableView(view, -1, -1, std::to_underlying(StatementEnum::kPlaceholder));
+    InitTableView(view, -1, -1, std::to_underlying(StatementPrimaryEnum::kPlaceholder));
     DelegateStatement(view, sc_->section_config);
 
     connect(widget, &StatementPrimaryWidget::SStatementNode, this, &MainWindow::RStatementNode);
@@ -65,7 +65,7 @@ void MainWindow::RAckStatementEntry(Section section, const QUuid& widget_id, con
     if (!widget)
         return;
 
-    auto* d_widget { static_cast<StatementEntryWidget*>(widget.data()) };
+    auto* d_widget { static_cast<StatementTertiaryWidget*>(widget.data()) };
 
     auto* model { d_widget->Model() };
 
@@ -88,7 +88,7 @@ void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start,
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    InitTableView(view, -1, -1, std::to_underlying(StatementNodeEnum::kDescription));
+    InitTableView(view, -1, -1, std::to_underlying(StatementSecondaryEnum::kDescription));
     DelegateStatementNode(view, sc_->section_config);
 
     connect(widget, &StatementSecondaryWidget::SStatementEntry, this, &MainWindow::RStatementEntry);
@@ -107,10 +107,10 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
     Q_ASSERT(entry_hub_p != nullptr);
     Q_ASSERT(tree_model_i != nullptr);
 
-    auto* model { new StatementEntryModel(entry_hub_p, header_info_.statement_entry, partner_id, this) };
+    auto* model { new StatementTertiaryModel(entry_hub_p, header_info_.statement_entry, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementEntryWidget(
+    auto* widget { new StatementTertiaryWidget(
         model, entry_hub_p, tree_model_i, widget_id, partner_id, start, end, partner_name, app_config_.company_name, start_, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement Detail"), partner_name) };
@@ -121,7 +121,7 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    InitTableView(view, -1, -1, std::to_underlying(StatementEntryEnum::kDescription));
+    InitTableView(view, -1, -1, std::to_underlying(StatementTertiaryEnum::kDescription));
     DelegateStatementEntry(view, sc_->section_config);
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
@@ -131,8 +131,8 @@ void MainWindow::RStatementMarkBatch(Mark mark)
 {
     auto* current_widget { sc_->tab_widget->currentWidget() };
 
-    Q_ASSERT(qobject_cast<StatementEntryWidget*>(current_widget));
-    auto* widget { static_cast<StatementEntryWidget*>(current_widget) };
+    Q_ASSERT(qobject_cast<StatementTertiaryWidget*>(current_widget));
+    auto* widget { static_cast<StatementTertiaryWidget*>(current_widget) };
 
     auto* model { widget->Model() };
     model->MarkBatch(mark);

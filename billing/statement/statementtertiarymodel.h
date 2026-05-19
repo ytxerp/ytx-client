@@ -17,19 +17,19 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTENTRYMODEL_H
-#define STATEMENTENTRYMODEL_H
+#ifndef STATEMENTTERTIARYMODEL_H
+#define STATEMENTTERTIARYMODEL_H
 
 #include <QAbstractItemModel>
 
 #include "entryhub/entryhubp.h"
 #include "statement.h"
 
-class StatementEntryModel final : public QAbstractItemModel {
+class StatementTertiaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit StatementEntryModel(EntryHubP* entry_hub_p, const QStringList& header, CUuid& partner_id, QObject* parent = nullptr);
-    ~StatementEntryModel() override;
+    explicit StatementTertiaryModel(EntryHubP* entry_hub_p, const QStringList& header, CUuid& partner_id, QObject* parent = nullptr);
+    ~StatementTertiaryModel() override;
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -47,14 +47,14 @@ public:
     void ResetModel(const QJsonArray& array);
     void MarkBatch(Mark mark);
 
-    const QList<StatementEntry*>& EntryList() const { return list_; }
+    const QList<StatementTertiary*>& EntryList() const { return list_; }
 
 private:
     const QStringList& header_;
-    QList<StatementEntry*> list_ {};
+    QList<StatementTertiary*> list_ {};
 
     EntryHubP* entry_hub_p_ {};
     const QUuid partner_id_ {};
 };
 
-#endif // STATEMENTENTRYMODEL_H
+#endif // STATEMENTTERTIARYMODEL_H

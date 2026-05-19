@@ -46,25 +46,25 @@ QVariant StatementPrimaryModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    const StatementEnum column { index.column() };
+    const StatementPrimaryEnum column { index.column() };
     auto* statement { list_.at(index.row()) };
 
     switch (column) {
-    case StatementEnum::kPartner:
+    case StatementPrimaryEnum::kPartner:
         return statement->partner_id;
-    case StatementEnum::kPBalance:
+    case StatementPrimaryEnum::kPBalance:
         return statement->pbalance;
-    case StatementEnum::kCAmount:
+    case StatementPrimaryEnum::kCAmount:
         return statement->camount;
-    case StatementEnum::kCSettlement:
+    case StatementPrimaryEnum::kCSettlement:
         return statement->csettlement;
-    case StatementEnum::kCBalance:
+    case StatementPrimaryEnum::kCBalance:
         return statement->cbalance;
-    case StatementEnum::kCCount:
+    case StatementPrimaryEnum::kCCount:
         return statement->ccount;
-    case StatementEnum::kCMeasure:
+    case StatementPrimaryEnum::kCMeasure:
         return statement->cmeasure;
-    case StatementEnum::kPlaceholder:
+    case StatementPrimaryEnum::kPlaceholder:
         return QVariant();
     }
 }
@@ -79,25 +79,25 @@ QVariant StatementPrimaryModel::headerData(int section, Qt::Orientation orientat
 
 void StatementPrimaryModel::sort(int column, Qt::SortOrder order)
 {
-    const StatementEnum e_column { column };
+    const StatementPrimaryEnum e_column { column };
 
     auto Compare = [e_column, order](const StatementPrimary* lhs, const StatementPrimary* rhs) -> bool {
         switch (e_column) {
-        case StatementEnum::kPartner:
+        case StatementPrimaryEnum::kPartner:
             return utils::CompareMember(lhs, rhs, &StatementPrimary::partner_id, order);
-        case StatementEnum::kPBalance:
+        case StatementPrimaryEnum::kPBalance:
             return utils::CompareMember(lhs, rhs, &StatementPrimary::pbalance, order);
-        case StatementEnum::kCAmount:
+        case StatementPrimaryEnum::kCAmount:
             return utils::CompareMember(lhs, rhs, &StatementPrimary::camount, order);
-        case StatementEnum::kCSettlement:
+        case StatementPrimaryEnum::kCSettlement:
             return utils::CompareMember(lhs, rhs, &StatementPrimary::csettlement, order);
-        case StatementEnum::kCBalance:
+        case StatementPrimaryEnum::kCBalance:
             return utils::CompareMember(lhs, rhs, &StatementPrimary::cbalance, order);
-        case StatementEnum::kCCount:
+        case StatementPrimaryEnum::kCCount:
             return utils::CompareMember(lhs, rhs, &StatementPrimary::ccount, order);
-        case StatementEnum::kCMeasure:
+        case StatementPrimaryEnum::kCMeasure:
             return utils::CompareMember(lhs, rhs, &StatementPrimary::cmeasure, order);
-        case StatementEnum::kPlaceholder:
+        case StatementPrimaryEnum::kPlaceholder:
             return false;
         }
     };
@@ -125,6 +125,6 @@ void StatementPrimaryModel::ResetModel(const QJsonArray& array)
         list_.emplaceBack(statement);
     }
 
-    sort(std::to_underlying(StatementEnum::kPartner), Qt::AscendingOrder);
+    sort(std::to_underlying(StatementPrimaryEnum::kPartner), Qt::AscendingOrder);
     endResetModel();
 }

@@ -21,9 +21,18 @@
 #define STATEMENTENUM_H
 
 // P:Previous, C:Current, Statement
-enum class StatementEnum { kPartner = 0, kPBalance, kCCount, kCMeasure, kCAmount, kPlaceholder, kCSettlement, kCBalance };
+enum class StatementPrimaryEnum {
+    kPartner = 0,
+    kPBalance,
+    kCCount,
+    kCMeasure,
+    kCAmount,
+    kPlaceholder,
+    kCSettlement,
+    kCBalance,
+};
 
-enum class StatementNodeEnum {
+enum class StatementSecondaryEnum {
     kIssuedTime = 0,
     kCode,
     kCount,
@@ -35,7 +44,7 @@ enum class StatementNodeEnum {
     kSettlement,
 };
 
-enum class StatementEntryEnum {
+enum class StatementTertiaryEnum {
     kIssuedTime = 0,
     kCode,
     kInternalSku,

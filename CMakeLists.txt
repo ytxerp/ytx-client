@@ -87,8 +87,8 @@ set(HEADERS
     billing/settlement/settlementprimarymodel.h
     billing/settlement/settlementprimarywidget.h
     billing/statement/statement.h
-    billing/statement/statemententrymodel.h
-    billing/statement/statemententrywidget.h
+    billing/statement/statementtertiarymodel.h
+    billing/statement/statementtertiarywidget.h
     billing/statement/statementprimarymodel.h
     billing/statement/statementsecondarymodel.h
     billing/statement/statementsecondarywidget.h
@@ -285,8 +285,8 @@ set(SOURCES
     billing/settlement/settlementsecondarywidget.cc
     billing/settlement/settlementprimarymodel.cc
     billing/settlement/settlementprimarywidget.cc
-    billing/statement/statemententrymodel.cc
-    billing/statement/statemententrywidget.cc
+    billing/statement/statementtertiarymodel.cc
+    billing/statement/statementtertiarywidget.cc
     billing/statement/statementprimarymodel.cc
     billing/statement/statementsecondarymodel.cc
     billing/statement/statementsecondarywidget.cc
@@ -447,7 +447,7 @@ set(SOURCES
 set(UIS
     billing/settlement/settlementsecondarywidget.ui
     billing/settlement/settlementprimarywidget.ui
-    billing/statement/statemententrywidget.ui
+    billing/statement/statementtertiarywidget.ui
     billing/statement/statementsecondarywidget.ui
     billing/statement/statementprimarywidget.ui
     dialog/about.ui

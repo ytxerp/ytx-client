@@ -97,7 +97,7 @@ inline void StatementSecondary::ReadJson(const QJsonObject& object)
         settlement = val.toString().toDouble();
 }
 
-struct StatementEntry final {
+struct StatementTertiary final {
     QDateTime issued_time {};
     QString code {};
     QUuid internal_sku {};
@@ -113,9 +113,9 @@ struct StatementEntry final {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void StatementEntry::Reset() { *this = StatementEntry {}; }
+inline void StatementTertiary::Reset() { *this = StatementTertiary {}; }
 
-inline void StatementEntry::ReadJson(const QJsonObject& object)
+inline void StatementTertiary::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kIssuedTime); val.isString())
         issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
@@ -135,7 +135,6 @@ inline void StatementEntry::ReadJson(const QJsonObject& object)
         code = val.toString();
 }
 
-using StatementEntryList = QList<StatementEntry*>;
-using CStatementEntryList = const QList<StatementEntry*>;
+using CStatementTertiaryList = const QList<StatementTertiary*>;
 
 #endif // STATEMENT_H

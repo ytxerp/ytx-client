@@ -51,26 +51,26 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* statement_primary { list_.at(index.row()) };
-    const StatementNodeEnum column { index.column() };
+    const StatementSecondaryEnum column { index.column() };
 
     switch (column) {
-    case StatementNodeEnum::kDescription:
+    case StatementSecondaryEnum::kDescription:
         return statement_primary->description;
-    case StatementNodeEnum::kCode:
+    case StatementSecondaryEnum::kCode:
         return statement_primary->code;
-    case StatementNodeEnum::kEmployee:
+    case StatementSecondaryEnum::kEmployee:
         return statement_primary->employee_id;
-    case StatementNodeEnum::kIssuedTime:
+    case StatementSecondaryEnum::kIssuedTime:
         return statement_primary->issued_time;
-    case StatementNodeEnum::kCount:
+    case StatementSecondaryEnum::kCount:
         return statement_primary->count;
-    case StatementNodeEnum::kMeasure:
+    case StatementSecondaryEnum::kMeasure:
         return statement_primary->measure;
-    case StatementNodeEnum::kStatus:
+    case StatementSecondaryEnum::kStatus:
         return statement_primary->status;
-    case StatementNodeEnum::kAmount:
+    case StatementSecondaryEnum::kAmount:
         return statement_primary->amount;
-    case StatementNodeEnum::kSettlement:
+    case StatementSecondaryEnum::kSettlement:
         return statement_primary->settlement;
     }
 }
@@ -80,21 +80,21 @@ bool StatementSecondaryModel::setData(const QModelIndex& index, const QVariant& 
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    const StatementNodeEnum column { index.column() };
+    const StatementSecondaryEnum column { index.column() };
     auto* node { list_.at(index.row()) };
 
     switch (column) {
-    case StatementNodeEnum::kStatus:
+    case StatementSecondaryEnum::kStatus:
         node->status = value.toInt();
         break;
-    case StatementNodeEnum::kIssuedTime:
-    case StatementNodeEnum::kAmount:
-    case StatementNodeEnum::kCount:
-    case StatementNodeEnum::kDescription:
-    case StatementNodeEnum::kMeasure:
-    case StatementNodeEnum::kEmployee:
-    case StatementNodeEnum::kSettlement:
-    case StatementNodeEnum::kCode:
+    case StatementSecondaryEnum::kIssuedTime:
+    case StatementSecondaryEnum::kAmount:
+    case StatementSecondaryEnum::kCount:
+    case StatementSecondaryEnum::kDescription:
+    case StatementSecondaryEnum::kMeasure:
+    case StatementSecondaryEnum::kEmployee:
+    case StatementSecondaryEnum::kSettlement:
+    case StatementSecondaryEnum::kCode:
         return false;
     }
 
@@ -111,27 +111,27 @@ QVariant StatementSecondaryModel::headerData(int section, Qt::Orientation orient
 
 void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
 {
-    const StatementNodeEnum e_column { column };
+    const StatementSecondaryEnum e_column { column };
 
     auto Compare = [e_column, order](const StatementSecondary* lhs, const StatementSecondary* rhs) -> bool {
         switch (e_column) {
-        case StatementNodeEnum::kDescription:
+        case StatementSecondaryEnum::kDescription:
             return utils::CompareMember(lhs, rhs, &StatementSecondary::description, order);
-        case StatementNodeEnum::kCode:
+        case StatementSecondaryEnum::kCode:
             return utils::CompareMember(lhs, rhs, &StatementSecondary::code, order);
-        case StatementNodeEnum::kEmployee:
+        case StatementSecondaryEnum::kEmployee:
             return utils::CompareMember(lhs, rhs, &StatementSecondary::employee_id, order);
-        case StatementNodeEnum::kIssuedTime:
+        case StatementSecondaryEnum::kIssuedTime:
             return utils::CompareMember(lhs, rhs, &StatementSecondary::issued_time, order);
-        case StatementNodeEnum::kCount:
+        case StatementSecondaryEnum::kCount:
             return utils::CompareMember(lhs, rhs, &StatementSecondary::count, order);
-        case StatementNodeEnum::kMeasure:
+        case StatementSecondaryEnum::kMeasure:
             return utils::CompareMember(lhs, rhs, &StatementSecondary::measure, order);
-        case StatementNodeEnum::kStatus:
+        case StatementSecondaryEnum::kStatus:
             return utils::CompareMember(lhs, rhs, &StatementSecondary::status, order);
-        case StatementNodeEnum::kSettlement:
+        case StatementSecondaryEnum::kSettlement:
             return utils::CompareMember(lhs, rhs, &StatementSecondary::settlement, order);
-        case StatementNodeEnum::kAmount:
+        case StatementSecondaryEnum::kAmount:
             return utils::CompareMember(lhs, rhs, &StatementSecondary::amount, order);
         }
     };
@@ -159,6 +159,6 @@ void StatementSecondaryModel::ResetModel(const QJsonArray& array)
         list_.emplaceBack(statement_primary);
     }
 
-    sort(std::to_underlying(StatementNodeEnum::kIssuedTime), Qt::AscendingOrder);
+    sort(std::to_underlying(StatementSecondaryEnum::kIssuedTime), Qt::AscendingOrder);
     endResetModel();
 }

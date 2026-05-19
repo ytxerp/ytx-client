@@ -33,7 +33,7 @@
 #include "audithub/auditinfo.h"
 #include "billing/settlement/settlement.h"
 #include "billing/settlement/settlementprimarywidget.h"
-#include "billing/statement/statemententrywidget.h"
+#include "billing/statement/statementtertiarywidget.h"
 #include "component/config.h"
 #include "component/info.h"
 #include "component/sectioncontex.h"

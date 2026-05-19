@@ -17,31 +17,31 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTENTRYWIDGET_H
-#define STATEMENTENTRYWIDGET_H
+#ifndef STATEMENTTERTIARYWIDGET_H
+#define STATEMENTTERTIARYWIDGET_H
 
 #include <QButtonGroup>
 #include <QDateTime>
 #include <QTableView>
 
 #include "component/using.h"
-#include "statemententrymodel.h"
+#include "statementtertiarymodel.h"
 #include "tree/model/treemodeli.h"
 
 namespace Ui {
-class StatementEntryWidget;
+class StatementTertiaryWidget;
 }
 
-class StatementEntryWidget final : public QWidget {
+class StatementTertiaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    StatementEntryWidget(StatementEntryModel* model, EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CUuid& widget_id, CUuid& partner_id, CDateTime& start,
+    StatementTertiaryWidget(StatementTertiaryModel* model, EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CUuid& widget_id, CUuid& partner_id, CDateTime& start,
         CDateTime& end, CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent = nullptr);
-    ~StatementEntryWidget() override;
+    ~StatementTertiaryWidget() override;
 
     QTableView* View() const;
-    StatementEntryModel* Model() const { return model_; }
+    StatementTertiaryModel* Model() const { return model_; }
 
     void ResetTotal(const QJsonObject& total) { total_ = total; }
 
@@ -61,11 +61,11 @@ private:
     void InitTimer();
 
 private:
-    Ui::StatementEntryWidget* ui;
+    Ui::StatementTertiaryWidget* ui;
     int unit_ {};
     QDateTime start_ {};
     QDateTime end_ {};
-    StatementEntryModel* model_ {};
+    StatementTertiaryModel* model_ {};
 
     QJsonObject total_ {};
     const QString partner_name_ {};
@@ -82,4 +82,4 @@ private:
 
 inline const char* kStatementEntryWidget = "StatementEntryWidget";
 
-#endif // STATEMENTENTRYWIDGET_H
+#endif // STATEMENTTERTIARYWIDGET_H
