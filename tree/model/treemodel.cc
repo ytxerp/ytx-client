@@ -289,58 +289,63 @@ void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant)
 QModelIndex TreeModel::parent(const QModelIndex& index) const
 {
     // root_'s index is QModelIndex(), root_'s id == -1
-    if (!index.isValid())
-        return QModelIndex();
+    if (!index.isValid()) {
+        qDebug() << Q_FUNC_INFO << "invalid index";
+        return {};
+    }
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
     if (!node) {
-        qWarning() << "parent: invalid internal pointer in index";
-        return QModelIndex();
+        qDebug() << Q_FUNC_INFO << "null node from internalPointer";
+        return {};
     }
 
     // Node has no parent or parent is root
-    auto* parent_node { node->parent };
-    if (!parent_node || parent_node == root_)
-        return QModelIndex();
+    auto* parent { node->parent };
+    if (!parent) {
+        qDebug() << Q_FUNC_INFO << "node has no parent:" << node->name;
+        return {};
+    }
+
+    if (parent == root_) {
+        return {};
+    }
 
     // Parent node should have a parent (grandparent)
-    if (!parent_node->parent) {
-        qWarning() << "parent: parent_node has no parent (should be root)";
-        return QModelIndex();
+    auto* grandparent { parent->parent };
+    if (!grandparent) {
+        qDebug() << Q_FUNC_INFO << "parent has no grandparent:" << parent->name;
+        return {};
     }
 
     // Find parent's row in grandparent's children
-    const qsizetype row { parent_node->parent->children.indexOf(parent_node) };
-    if (row == -1) {
-        qWarning() << "parent: parent_node not found in grandparent's children";
-        return QModelIndex();
+    const qsizetype row { grandparent->children.indexOf(parent) };
+    if (row < 0) {
+        qDebug() << Q_FUNC_INFO << "parent not found in grandparent children"
+                 << "parent =" << parent->name << "grandparent =" << grandparent->name << "child_count =" << grandparent->children.size();
+
+        Q_ASSERT(row >= 0);
+        return {};
     }
 
-    return createIndex(row, 0, parent_node);
+    return createIndex(row, 0, parent);
 }
 
 QModelIndex TreeModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
-        return QModelIndex();
+        return {};
 
     auto* parent_node { GetNodeByIndex(parent) };
     if (!parent_node) {
-        qWarning() << "index: parent node not found";
-        return QModelIndex();
-    }
-
-    // Check row is within bounds
-    if (row < 0 || row >= parent_node->children.size()) {
-        qWarning() << "index: row out of bounds"
-                   << "row:" << row << "children size:" << parent_node->children.size();
-        return QModelIndex();
+        qDebug() << "index: parent node not found";
+        return {};
     }
 
     auto* node { parent_node->children.at(row) };
     if (!node) {
-        qWarning() << "index: child node at row" << row << "is null";
-        return QModelIndex();
+        qDebug() << "index: child node at row" << row << "is null";
+        return {};
     }
 
     return createIndex(row, column, node);
