@@ -33,6 +33,15 @@
 #include "tree/node.h"
 #include "utils/entryutils.h"
 
+template <typename T>
+concept TreeNode = requires(T node) {
+    { node.parent } -> std::same_as<T*&>;
+    { node.children } -> std::same_as<QList<T*>&>;
+};
+
+template <typename T>
+concept HasColor = requires(T node) { node.color; };
+
 namespace utils {
 
 constexpr int KindColumn(Section section)
@@ -207,7 +216,7 @@ inline std::tuple<int, int, int> ColorSortKey(const QString& color_name)
         color.value() };
 }
 
-inline bool CompareColor(const Node* lhs, const Node* rhs, Qt::SortOrder order)
+template <HasColor T> inline bool CompareColor(const T* lhs, const T* rhs, Qt::SortOrder order)
 {
     Q_ASSERT(lhs != nullptr);
     Q_ASSERT(rhs != nullptr);
@@ -236,22 +245,22 @@ inline QString DirectionRuleString(bool direction_rule) { return direction_rule 
 
 bool IsDescendant(const Node* lhs, const Node* rhs);
 
-template <typename F> void SortIterative(Node* node, F&& Compare)
+template <TreeNode T, typename F> void SortIterative(T* node, F&& compare)
 {
     Q_ASSERT(node != nullptr);
 
-    QQueue<Node*> queue {};
+    QQueue<T*> queue;
     queue.enqueue(node);
 
     while (!queue.isEmpty()) {
-        Node* current = queue.dequeue();
+        T* current = queue.dequeue();
 
         if (current->children.isEmpty())
             continue;
 
-        std::sort(current->children.begin(), current->children.end(), std::forward<F>(Compare));
+        std::sort(current->children.begin(), current->children.end(), compare);
 
-        for (Node* child : std::as_const(current->children)) {
+        for (T* child : std::as_const(current->children)) {
             queue.enqueue(child);
         }
     }
