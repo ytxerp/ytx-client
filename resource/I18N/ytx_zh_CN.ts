@@ -1169,8 +1169,8 @@
         <location filename="../../mainwindow/mainwindow.ui" line="549"/>
         <location filename="../../mainwindow/mainwindow_account.cc" line="116"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="23"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="54"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="81"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="55"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="82"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="113"/>
         <source>Settlement</source>
         <translation>结算</translation>
@@ -1583,12 +1583,12 @@ Download now?</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="282"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="283"/>
         <source>Settlement Released</source>
         <translation>结算单已发布</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="283"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="284"/>
         <source>This settlement has already been released and cannot be deleted.
 You need to recall it first before making changes.</source>
         <translation>该结算单已发布，无法直接删除。
@@ -1966,10 +1966,6 @@ You need to recall it first before making changes.</source>
 </context>
 <context>
     <name>PartnerHeatDialog</name>
-    <message>
-        <source>Inventory Heat</source>
-        <translation type="obsolete">存货热度</translation>
-    </message>
     <message>
         <location filename="../../partner_heat/partnerheatdialog.ui" line="14"/>
         <source>Partner Heat</source>
@@ -2867,82 +2863,123 @@ You need to recall it first before making changes.</source>
     </message>
 </context>
 <context>
-    <name>StatementEntryWidget</name>
+    <name>SettlementPrimaryWidget</name>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.ui" line="95"/>
+        <location filename="../../billing/settlement/settlementprimarywidget.ui" line="95"/>
+        <source>Fetch</source>
+        <translation>刷新</translation>
+    </message>
+</context>
+<context>
+    <name>SettlementSecondaryWidget</name>
+    <message>
+        <location filename="../../billing/settlement/settlementsecondarywidget.ui" line="80"/>
+        <source>Description</source>
+        <translation>描述</translation>
+    </message>
+    <message>
+        <location filename="../../billing/settlement/settlementsecondarywidget.ui" line="99"/>
+        <source>yyyy/MM/dd HH:mm</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../billing/settlement/settlementsecondarywidget.ui" line="115"/>
+        <source>Recall</source>
+        <translation>撤回</translation>
+    </message>
+    <message>
+        <location filename="../../billing/settlement/settlementsecondarywidget.ui" line="125"/>
+        <source>Release</source>
+        <translation>发布</translation>
+    </message>
+    <message>
+        <location filename="../../billing/settlement/settlementsecondarywidget.cc" line="99"/>
+        <source>Invalid Operation</source>
+        <translation>无效操作</translation>
+    </message>
+    <message>
+        <location filename="../../billing/settlement/settlementsecondarywidget.cc" line="100"/>
+        <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
+        <translation>本地数据已过期，请刷新后重试。</translation>
+    </message>
+</context>
+<context>
+    <name>StatementPrimaryWidget</name>
+    <message>
+        <location filename="../../billing/statement/statementprimarywidget.ui" line="95"/>
         <source>IS</source>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.ui" line="102"/>
+        <location filename="../../billing/statement/statementprimarywidget.ui" line="102"/>
         <source>MS</source>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.ui" line="109"/>
+        <location filename="../../billing/statement/statementprimarywidget.ui" line="109"/>
         <source>PEND</source>
         <translation>挂帐</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.ui" line="123"/>
+        <location filename="../../billing/statement/statementprimarywidget.ui" line="116"/>
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
+</context>
+<context>
+    <name>StatementSecondaryWidget</name>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.ui" line="116"/>
+        <location filename="../../billing/statement/statementsecondarywidget.ui" line="95"/>
+        <source>IS</source>
+        <translation>现结</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statementsecondarywidget.ui" line="102"/>
+        <source>MS</source>
+        <translation>月结</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statementsecondarywidget.ui" line="109"/>
+        <source>PEND</source>
+        <translation>挂帐</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statementsecondarywidget.ui" line="116"/>
+        <source>Fetch</source>
+        <translation>刷新</translation>
+    </message>
+</context>
+<context>
+    <name>StatementTertiaryWidget</name>
+    <message>
+        <location filename="../../billing/statement/statementtertiarywidget.ui" line="95"/>
+        <source>IS</source>
+        <translation>现结</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statementtertiarywidget.ui" line="102"/>
+        <source>MS</source>
+        <translation>月结</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statementtertiarywidget.ui" line="109"/>
+        <source>PEND</source>
+        <translation>挂帐</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statementtertiarywidget.ui" line="116"/>
         <source>Export</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statemententrywidget.cc" line="151"/>
+        <location filename="../../billing/statement/statementtertiarywidget.ui" line="123"/>
+        <source>Fetch</source>
+        <translation>刷新</translation>
+    </message>
+    <message>
+        <location filename="../../billing/statement/statementtertiarywidget.cc" line="151"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
-    </message>
-</context>
-<context>
-    <name>StatementNodeWidget</name>
-    <message>
-        <location filename="../../billing/statement/statementnodewidget.ui" line="95"/>
-        <source>IS</source>
-        <translation>现结</translation>
-    </message>
-    <message>
-        <location filename="../../billing/statement/statementnodewidget.ui" line="102"/>
-        <source>MS</source>
-        <translation>月结</translation>
-    </message>
-    <message>
-        <location filename="../../billing/statement/statementnodewidget.ui" line="109"/>
-        <source>PEND</source>
-        <translation>挂帐</translation>
-    </message>
-    <message>
-        <location filename="../../billing/statement/statementnodewidget.ui" line="116"/>
-        <source>Fetch</source>
-        <translation>刷新</translation>
-    </message>
-</context>
-<context>
-    <name>StatementWidget</name>
-    <message>
-        <location filename="../../billing/statement/statementwidget.ui" line="95"/>
-        <source>IS</source>
-        <translation>现结</translation>
-    </message>
-    <message>
-        <location filename="../../billing/statement/statementwidget.ui" line="102"/>
-        <source>MS</source>
-        <translation>月结</translation>
-    </message>
-    <message>
-        <location filename="../../billing/statement/statementwidget.ui" line="109"/>
-        <source>PEND</source>
-        <translation>挂帐</translation>
-    </message>
-    <message>
-        <location filename="../../billing/statement/statementwidget.ui" line="116"/>
-        <source>Fetch</source>
-        <translation>刷新</translation>
     </message>
 </context>
 <context>
@@ -3079,39 +3116,6 @@ You need to recall it first before making changes.</source>
     </message>
 </context>
 <context>
-    <name>TableWidgetSettlement</name>
-    <message>
-        <location filename="../../billing/settlement/tablewidgetsettlement.ui" line="80"/>
-        <source>Description</source>
-        <translation>描述</translation>
-    </message>
-    <message>
-        <location filename="../../billing/settlement/tablewidgetsettlement.ui" line="99"/>
-        <source>yyyy/MM/dd HH:mm</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../billing/settlement/tablewidgetsettlement.ui" line="125"/>
-        <source>Release</source>
-        <translation>发布</translation>
-    </message>
-    <message>
-        <location filename="../../billing/settlement/tablewidgetsettlement.ui" line="115"/>
-        <source>Recall</source>
-        <translation>撤回</translation>
-    </message>
-    <message>
-        <location filename="../../billing/settlement/tablewidgetsettlement.cc" line="99"/>
-        <source>Invalid Operation</source>
-        <translation>无效操作</translation>
-    </message>
-    <message>
-        <location filename="../../billing/settlement/tablewidgetsettlement.cc" line="100"/>
-        <source>The operation you attempted is invalid because your local data is outdated. Please refresh and try again.</source>
-        <translation>本地数据已过期，请刷新后重试。</translation>
-    </message>
-</context>
-<context>
     <name>TagDialog</name>
     <message>
         <location filename="../../tag/tagdialog.ui" line="20"/>
@@ -3136,36 +3140,9 @@ You need to recall it first before making changes.</source>
     </message>
 </context>
 <context>
-    <name>TagManagerDlg</name>
-    <message>
-        <source>Tags</source>
-        <translation type="vanished">标签</translation>
-    </message>
-    <message>
-        <source>Insert</source>
-        <translation type="vanished">插入</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="vanished">删除</translation>
-    </message>
-    <message>
-        <source>Delete tag &lt;b&gt;%1&lt;/b&gt;?&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ Permanent deletion! Cannot be undone!&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;Note: Tag references in nodes and entries will be preserved but no longer displayed.&lt;/i&gt;</source>
-        <translation type="vanished">删除标签 &lt;b&gt;%1&lt;/b&gt;？&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ 永久删除！无法撤销！&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;注意：节点和记录中的标签引用将被保留，但不再显示。&lt;/i&gt;</translation>
-    </message>
-</context>
-<context>
     <name>TreeWidgetO</name>
     <message>
         <location filename="../../tree/widget/treewidgeto.ui" line="82"/>
-        <source>Fetch</source>
-        <translation>刷新</translation>
-    </message>
-</context>
-<context>
-    <name>TreeWidgetSettlement</name>
-    <message>
-        <location filename="../../billing/settlement/treewidgetsettlement.ui" line="95"/>
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
