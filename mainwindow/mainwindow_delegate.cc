@@ -19,7 +19,6 @@
 #include "delegate/readonly/boolcolorstringr.h"
 #include "delegate/readonly/boolstringr.h"
 #include "delegate/readonly/colorr.h"
-#include "delegate/readonly/documentr.h"
 #include "delegate/readonly/doublenonedecimalr.h"
 #include "delegate/readonly/doublenonezeror.h"
 #include "delegate/readonly/doubler.h"
@@ -602,15 +601,6 @@ void MainWindow::DelegateBalanceSheet(QTreeView* view) const
 {
     auto* amount { new DoubleNoneZeroR(sc_f_.section_config.amount_decimal, string_const::kFourDigits, view) };
     view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kFinalTotal), amount);
-
-    auto* color { new ColorR(view) };
-    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kColor), color);
-
-    auto* document { new DocumentR(view) };
-    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kDocument), document);
-
-    auto* tag { new TagDelegate(sc_f_.tag_icon_hash, view) };
-    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kTag), tag);
 
     const auto& info { sc_f_.info };
 

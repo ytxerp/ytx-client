@@ -126,18 +126,12 @@ QVariant BalanceSheetModel::data(const QModelIndex& index, int role) const
         return node->code;
     case BalanceSheetEnum::kDescription:
         return node->description;
-    case BalanceSheetEnum::kTag:
-        return node->tag;
-    case BalanceSheetEnum::kColor:
-        return node->color;
     case BalanceSheetEnum::kDirectionRule:
         return node->direction_rule;
     case BalanceSheetEnum::kKind:
         return std::to_underlying(node->kind);
     case BalanceSheetEnum::kFinalTotal:
         return node->final_total;
-    case BalanceSheetEnum::kDocument:
-        return node->document;
     }
 }
 
@@ -157,14 +151,8 @@ void BalanceSheetModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &BalanceSheetRow::direction_rule, order);
         case BalanceSheetEnum::kKind:
             return utils::CompareMember(lhs, rhs, &BalanceSheetRow::kind, order);
-        case BalanceSheetEnum::kColor:
-            return utils::CompareColor(lhs, rhs, order);
-        case BalanceSheetEnum::kTag:
-            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::tag, order);
         case BalanceSheetEnum::kFinalTotal:
             return utils::CompareMember(lhs, rhs, &BalanceSheetRow::final_total, order);
-        case BalanceSheetEnum::kDocument:
-            return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case BalanceSheetEnum::kId:
             return false;
         }
@@ -185,21 +173,23 @@ void BalanceSheetModel::ResetModel(const QJsonArray& node_array, const QJsonArra
         qWarning() << Q_FUNC_INFO << "Received empty path array";
     }
 
+    // Build new hash outside the model reset lock
+    QHash<QUuid, BalanceSheetRow*> new_hash;
+    for (const QJsonValue& val : node_array) {
+        const QJsonObject obj { val.toObject() };
+        BalanceSheetRow* node { ResourcePool<BalanceSheetRow>::Instance().Allocate() };
+        node->ReadJson(obj);
+        new_hash.insert(node->id, node);
+    }
+
     beginResetModel();
 
     {
         ResourcePool<BalanceSheetRow>::Instance().Recycle(node_hash_);
         root_->children.clear();
+        node_hash_ = std::move(new_hash);
+        BuildHierarchy(path_array);
     }
-
-    for (const QJsonValue& val : node_array) {
-        const QJsonObject obj { val.toObject() };
-        BalanceSheetRow* node { ResourcePool<BalanceSheetRow>::Instance().Allocate() };
-        node->ReadJson(obj);
-        node_hash_.insert(node->id, node);
-    }
-
-    BuildHierarchy(path_array);
 
     sort(std::to_underlying(BalanceSheetEnum::kName), Qt::AscendingOrder);
     endResetModel();

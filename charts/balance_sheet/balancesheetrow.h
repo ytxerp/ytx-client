@@ -27,7 +27,6 @@
 
 #include "component/constant.h"
 #include "enum/nodeenum.h"
-#include "utils/entryutils.h"
 
 struct BalanceSheetRow final {
     QString name {};
@@ -36,9 +35,6 @@ struct BalanceSheetRow final {
     QString description {};
     NodeKind kind {};
     bool direction_rule {};
-    QString color {};
-    QStringList tag {};
-    QStringList document {};
 
     double final_total {};
 
@@ -62,12 +58,6 @@ struct BalanceSheetRow final {
             direction_rule = val.toBool();
         if (const auto val = object.value(kFinalTotal); val.isString())
             final_total = val.toString().toDouble();
-        if (const auto val = object.value(kColor); val.isString())
-            color = val.toString();
-        if (object.value(kTag).isArray())
-            tag = utils::ReadStringList(object, kTag);
-        if (object.value(kDocument).isArray())
-            document = utils::ReadStringList(object, kDocument);
     }
 };
 

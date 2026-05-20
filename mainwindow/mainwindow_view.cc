@@ -94,7 +94,6 @@ void MainWindow::InitTreeView(QTreeView* view, int id_column, int stretch_column
 {
     {
         view->setSortingEnabled(true);
-        view->setAlternatingRowColors(true);
         view->setSelectionMode(QAbstractItemView::SingleSelection);
         view->setSelectionBehavior(QAbstractItemView::SelectRows);
 

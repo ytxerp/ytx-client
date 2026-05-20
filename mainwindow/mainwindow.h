@@ -164,6 +164,7 @@ private slots:
     void RAuditLogAck(const QUuid& widget_id, const QJsonArray& array, const QJsonArray& user_array);
     void RInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void RPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);
+    void RBalanceSheetAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
 
     void RAccountRoleUpdate();
 

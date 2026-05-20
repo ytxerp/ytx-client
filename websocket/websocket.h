@@ -94,6 +94,7 @@ signals:
     void SAccountRoleUpdate();
     void SInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void SPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);
+    void SBalanceSheetAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
 
     // send to SearchNodeModel
     void SNodeSearch(const QJsonObject& obj);
@@ -158,6 +159,7 @@ private:
     void AckAuditLog(const QJsonObject& obj);
     void AckInventoryHeat(const QJsonObject& obj);
     void AckPartnerHeat(const QJsonObject& obj);
+    void AckBalanceSheet(const QJsonObject& obj);
 
     void SearchEntry(const QJsonObject& obj);
     void SearchNode(const QJsonObject& obj);
