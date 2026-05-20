@@ -243,7 +243,7 @@ inline QString UnitString(NodeUnit unit)
 
 inline QString DirectionRuleString(bool direction_rule) { return direction_rule == direction_rule::kRO ? QObject::tr("RO") : QObject::tr("FO"); }
 
-bool IsDescendant(const Node* lhs, const Node* rhs);
+bool IsDescendant(const Node* descendant, const Node* ancestor);
 
 template <TreeNode T, typename F> void SortIterative(T* node, F&& compare)
 {

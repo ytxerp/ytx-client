@@ -1,5 +1,7 @@
 #include "periodclosedialog.h"
 
+#include <QMessageBox>
+
 #include "component/signalblocker.h"
 #include "global/entrypool.h"
 #include "ui_periodclosedialog.h"
@@ -135,11 +137,18 @@ void PeriodCloseDialog::on_pushButtonPreview_clicked()
     auto* closing_node { tree_model_->GetNode(closing_node_id) };
     auto* summary_node { tree_model_->GetNode(summary_node_id_) };
 
-    if (!closing_node || !summary_node || closing_node == summary_node)
+    if (!closing_node || !summary_node)
         return;
 
-    if (utils::IsDescendant(summary_node, closing_node))
+    if (closing_node == summary_node) {
+        QMessageBox::warning(this, tr("Warning"), tr("Closing and summary nodes must be different."));
         return;
+    }
+
+    if (utils::IsDescendant(summary_node, closing_node) || utils::IsDescendant(closing_node, summary_node)) {
+        QMessageBox::warning(this, tr("Warning"), tr("Closing and summary nodes must not have ancestor-descendant relationships."));
+        return;
+    }
 
     ResetState();
 

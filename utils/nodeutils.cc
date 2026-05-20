@@ -33,18 +33,18 @@ void UpdatePath(QHash<QUuid, QString>& leaf, QHash<QUuid, QString>& branch, cons
     }
 }
 
-bool IsDescendant(const Node* lhs, const Node* rhs)
+bool IsDescendant(const Node* descendant, const Node* ancestor)
 {
-    Q_ASSERT(lhs != nullptr);
-    Q_ASSERT(rhs != nullptr);
+    Q_ASSERT(descendant != nullptr);
+    Q_ASSERT(ancestor != nullptr);
 
-    if (lhs == rhs)
+    if (descendant == ancestor)
         return false;
 
-    while (lhs && lhs != rhs)
-        lhs = lhs->parent;
+    while (descendant && descendant != ancestor)
+        descendant = descendant->parent;
 
-    return lhs == rhs;
+    return descendant == ancestor;
 }
 
 QString ConstructPath(const Node* root, const Node* node, CString& separator)
