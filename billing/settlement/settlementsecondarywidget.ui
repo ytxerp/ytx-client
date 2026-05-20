@@ -33,7 +33,7 @@
     <widget class="QTableView" name="tableView"/>
    </item>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="tableGroup">
+    <widget class="QGroupBox" name="groupBoxView">
      <layout class="QGridLayout" name="gridLayout_3">
       <property name="leftMargin">
        <number>8</number>
@@ -134,7 +134,7 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="0">
+      <item row="1" column="0" colspan="3">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <spacer name="horizontalSpacer_2">

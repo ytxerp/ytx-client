@@ -14,18 +14,6 @@
    <string>Audit</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
    <property name="verticalSpacing">
     <number>0</number>
    </property>
@@ -37,7 +25,7 @@
     </widget>
    </item>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBoxAudit">
+    <widget class="QGroupBox" name="groupBoxView">
      <layout class="QHBoxLayout">
       <property name="leftMargin">
        <number>0</number>

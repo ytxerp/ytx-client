@@ -33,7 +33,7 @@
     <widget class="TreeView" name="treeViewO"/>
    </item>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBoxTreeO">
+    <widget class="QGroupBox" name="groupBoxView">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>

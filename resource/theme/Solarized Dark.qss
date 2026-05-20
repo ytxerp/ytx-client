@@ -71,9 +71,8 @@ QDoubleSpinBox#dspin_box_static_ {
 }
 
 /* Specific border removals */
-QGroupBox#tableGroup, QGroupBox#groupBoxInventoryHeat, QGroupBox#groupBoxPartnerHeat,
-QGroupBox#groupBoxTableO, QGroupBox#groupBoxTreeO,
-QGroupBox#groupBoxAudit, QGroupBox#groupBoxPeriodClose {
+QGroupBox#groupBoxView
+{
     border-bottom: none;
 }
 
@@ -132,7 +131,8 @@ QComboBox#comboDefaultUnit {
 
 QWidget#TableWidgetO QComboBox,
 QWidget#SettlementSecondaryWidget QComboBox,
-QDialog#PeriodCloseDialog QComboBox {
+QDialog#PeriodCloseDialog QComboBox,
+QDialog#BalanceSheetDialog QComboBox {
     min-width: 80px;
 }
 

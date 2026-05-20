@@ -18,7 +18,7 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBoxInventoryHeat">
+    <widget class="QGroupBox" name="groupBoxView">
      <property name="title">
       <string/>
      </property>
