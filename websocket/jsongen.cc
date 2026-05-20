@@ -526,4 +526,19 @@ QJsonObject PartnerHeadAck(Section section, CUuid& widget_id, const QDateTime& s
     return message;
 }
 
+QJsonObject BalanceSheetAck(CUuid& widget_id, CUuid& asset, CUuid& liability, CUuid& equity, const QDateTime& end, int level)
+{
+    QJsonObject message {};
+    message.insert(kSessionId, QString());
+    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
+    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(balance_sheet::kAssetId, asset.toString(QUuid::WithoutBraces));
+    message.insert(balance_sheet::kLiabilityId, liability.toString(QUuid::WithoutBraces));
+    message.insert(balance_sheet::kEquityId, equity.toString(QUuid::WithoutBraces));
+    message.insert(balance_sheet::kLevel, level);
+    message.insert(kNodeArray, QJsonArray());
+    message.insert(kPathArray, QJsonArray());
+    return message;
+}
+
 }

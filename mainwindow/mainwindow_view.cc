@@ -89,3 +89,26 @@ void MainWindow::InitTableView(QTableView* view, int id_column, int version_colu
         utils::SetupVerticalHeader(view, ui_const::kRowHeight);
     }
 }
+
+void MainWindow::InitTreeView(QTreeView* view, int id_column, int stretch_column) const
+{
+    {
+        view->setSortingEnabled(true);
+        view->setAlternatingRowColors(true);
+        view->setSelectionMode(QAbstractItemView::SingleSelection);
+        view->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+        if (id_column >= 0)
+            view->setColumnHidden(id_column, kIsHidden);
+    }
+
+    {
+        auto* header { view->header() };
+        header->setSectionsMovable(true);
+        header->setHighlightSections(true);
+        header->setStretchLastSection(false);
+        header->setDefaultAlignment(Qt::AlignCenter);
+
+        ResizeColumn(header, stretch_column);
+    }
+}

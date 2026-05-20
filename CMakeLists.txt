@@ -277,6 +277,10 @@ set(HEADERS
     partner_heat/partnerheatmodel.h
     partner_heat/partnerheatenum.h
     partner_heat/partnerheatdialog.h
+    charts/balance_sheet/balancesheetdialog.h
+    charts/balance_sheet/balancesheetmodel.h
+    charts/balance_sheet/balancesheetrow.h
+    charts/balance_sheet/balancesheetenum.h
 )
 
 set(SOURCES
@@ -442,6 +446,9 @@ set(SOURCES
     mainwindow/mainwindow_partner_heat.cc
     partner_heat/partnerheatmodel.cc
     partner_heat/partnerheatdialog.cc
+    charts/balance_sheet/balancesheetdialog.cc
+    charts/balance_sheet/balancesheetmodel.cc
+    mainwindow/balance_sheet.cc
 )
 
 set(UIS
@@ -480,6 +487,7 @@ set(UIS
     period_close/periodclosedialog.ui
     inventory_heat/inventoryheatdialog.ui
     partner_heat/partnerheatdialog.ui
+    charts/balance_sheet/balancesheetdialog.ui
 )
 
 # ------------------------

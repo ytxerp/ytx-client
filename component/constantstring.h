@@ -50,4 +50,11 @@ inline const QString kMinActiveMonths = QStringLiteral("min_active_months");
 inline const QString kMinPartnerCount = QStringLiteral("min_partner_count");
 }
 
+namespace balance_sheet {
+inline const QString kAssetId = QStringLiteral("asset_id");
+inline const QString kLiabilityId = QStringLiteral("liability_id");
+inline const QString kEquityId = QStringLiteral("equity_id");
+inline const QString kLevel = QStringLiteral("level");
+}
+
 #endif // CONSTANTSTRING_H

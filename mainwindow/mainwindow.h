@@ -94,6 +94,7 @@ private slots:
 
     void on_actionHeatInventory_triggered();
     void on_actionHeatPartner_triggered();
+    void on_actionBalanceSheet_triggered();
 
     void tabWidget_currentChanged();
     void tabWidget_tabBarDoubleClicked(int index);
@@ -232,8 +233,10 @@ private:
     void DelegatePeriodClose(QTableView* table_view) const;
     void DelegateInventoryHeat(QTableView* table_view) const;
     void DelegatePartnerHeat(QTableView* table_view) const;
+    void DelegateBalanceSheet(QTreeView* view) const;
 
     void InitTableView(QTableView* view, int id_column, int version_column, int stretch_column) const;
+    void InitTreeView(QTreeView* view, int id_column, int stretch_column) const;
 
     void CreateSection(SectionContext& sc, CString& name);
 

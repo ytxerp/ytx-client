@@ -348,6 +348,8 @@
      <string>Finance</string>
     </property>
     <addaction name="actionPeriodClose"/>
+    <addaction name="separator"/>
+    <addaction name="actionBalanceSheet"/>
    </widget>
    <widget class="QMenu" name="menuInventory">
     <property name="title">
@@ -695,6 +697,11 @@
   <action name="actionHeatPartner">
    <property name="text">
     <string>Heat</string>
+   </property>
+  </action>
+  <action name="actionBalanceSheet">
+   <property name="text">
+    <string>Balance Sheet</string>
    </property>
   </action>
  </widget>

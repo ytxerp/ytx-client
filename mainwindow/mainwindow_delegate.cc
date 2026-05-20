@@ -2,6 +2,7 @@
 #include "audithub/audittextdelegate.h"
 #include "billing/settlement/settlementenum.h"
 #include "billing/statement/statementenum.h"
+#include "charts/balance_sheet/balancesheetenum.h"
 #include "component/constantstring.h"
 #include "delegate/bool.h"
 #include "delegate/boolstring.h"
@@ -16,7 +17,9 @@
 #include "delegate/readonly/amountorderreferencer.h"
 #include "delegate/readonly/amountr.h"
 #include "delegate/readonly/boolcolorstringr.h"
+#include "delegate/readonly/boolstringr.h"
 #include "delegate/readonly/colorr.h"
+#include "delegate/readonly/documentr.h"
 #include "delegate/readonly/doublenonedecimalr.h"
 #include "delegate/readonly/doublenonezeror.h"
 #include "delegate/readonly/doubler.h"
@@ -593,4 +596,27 @@ void MainWindow::DelegatePartnerHeat(QTableView* table_view) const
 
     auto* score { new DoubleNoneDecimalR(string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(PartnerHeatEnum::kHeatScore), score);
+}
+
+void MainWindow::DelegateBalanceSheet(QTreeView* view) const
+{
+    auto* amount { new DoubleNoneZeroR(sc_f_.section_config.amount_decimal, string_const::kFourDigits, view) };
+    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kFinalTotal), amount);
+
+    auto* color { new ColorR(view) };
+    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kColor), color);
+
+    auto* document { new DocumentR(view) };
+    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kDocument), document);
+
+    auto* tag { new TagDelegate(sc_f_.tag_icon_hash, view) };
+    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kTag), tag);
+
+    const auto& info { sc_f_.info };
+
+    auto* direction_rule { new BoolStringR(info.rule_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kDirectionRule), direction_rule);
+
+    auto* kind { new IntStringR(info.kind_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kKind), kind);
 }

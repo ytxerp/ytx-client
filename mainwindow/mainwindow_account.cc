@@ -63,6 +63,19 @@ void MainWindow::InitHeader()
         tr("Created Time"),
     };
 
+    header_info_.balance_sheet = {
+        tr("Name"),
+        tr("ID"),
+        tr("Code"),
+        tr("Description"),
+        tr("Tag"),
+        tr("Color"),
+        tr("Document"),
+        tr("Direction Rule"),
+        tr("Kind"),
+        tr("Local Total"),
+    };
+
     header_info_.inventory_heat = {
         tr("Inventory Node"),
         tr("Placeholder"),

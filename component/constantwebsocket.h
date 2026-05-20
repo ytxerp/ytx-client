@@ -139,7 +139,7 @@ enum class WsKey : uint8_t {
     kPeriodClose = 68,
     kInventoryHeatAck = 69,
     kPartnerHeatAck = 70,
-
+    kBalanceSheetAck = 71,
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -308,6 +308,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "inventory_heat_ack";
     case WsKey::kPartnerHeatAck:
         return "partner_heat_ack";
+    case WsKey::kBalanceSheetAck:
+        return "balance_sheet_ack";
     default:
         return "unknown";
     }
