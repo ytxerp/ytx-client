@@ -132,7 +132,8 @@ QComboBox#comboDefaultUnit {
 QWidget#TableWidgetO QComboBox,
 QWidget#SettlementSecondaryWidget QComboBox,
 QDialog#PeriodCloseDialog QComboBox,
-QDialog#BalanceSheetDialog QComboBox {
+QDialog#BalanceSheetDialog QComboBox,
+QDialog#IncomeStatementDialog QComboBox {
     min-width: 80px;
 }
 
