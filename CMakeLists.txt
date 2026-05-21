@@ -281,6 +281,10 @@ set(HEADERS
     charts/balance_sheet/balancesheetmodel.h
     charts/balance_sheet/balancesheetrow.h
     charts/balance_sheet/balancesheetenum.h
+    charts/income_statement/incomestatementdialog.h
+    charts/income_statement/incomestatementrow.h
+    charts/income_statement/incomestatementenum.h
+    charts/income_statement/incomestatementmodel.h
 )
 
 set(SOURCES
@@ -448,7 +452,10 @@ set(SOURCES
     partner_heat/partnerheatdialog.cc
     charts/balance_sheet/balancesheetdialog.cc
     charts/balance_sheet/balancesheetmodel.cc
-    mainwindow/balance_sheet.cc
+    mainwindow/mainwindow_balance_sheet.cc
+    charts/income_statement/incomestatementdialog.cc
+    charts/income_statement/incomestatementmodel.cc
+    mainwindow/mainwindow_income_statement.cc
 )
 
 set(UIS
@@ -488,6 +495,7 @@ set(UIS
     inventory_heat/inventoryheatdialog.ui
     partner_heat/partnerheatdialog.ui
     charts/balance_sheet/balancesheetdialog.ui
+    charts/income_statement/incomestatementdialog.ui
 )
 
 # ------------------------

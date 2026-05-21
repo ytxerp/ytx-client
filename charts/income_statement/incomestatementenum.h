@@ -17,24 +17,17 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef HEADERINFO_H
-#define HEADERINFO_H
+#ifndef INCOMESTATEMENTENUM_H
+#define INCOMESTATEMENTENUM_H
 
-#include <QList>
-#include <QString>
-
-struct HeaderInfo {
-    QStringList workspace {};
-    QStringList inventory_heat {};
-    QStringList tag {};
-    QStringList statement {};
-    QStringList statement_node {};
-    QStringList statement_entry {};
-    QStringList settlement {};
-    QStringList settlement_item {};
-    QStringList partner_heat {};
-    QStringList balance_sheet {};
-    QStringList income_statement {};
+enum class IncomeStatementEnum {
+    kName = 0,
+    kId,
+    kCode,
+    kDescription,
+    kDirectionRule,
+    kKind,
+    kFinalTotal,
 };
 
-#endif // HEADERINFO_H
+#endif // INCOMESTATEMENTENUM_H

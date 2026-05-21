@@ -73,6 +73,16 @@ void MainWindow::InitHeader()
         tr("Local Total"),
     };
 
+    header_info_.income_statement = {
+        tr("Name"),
+        tr("ID"),
+        tr("Code"),
+        tr("Description"),
+        tr("Direction Rule"),
+        tr("Kind"),
+        tr("Local Total"),
+    };
+
     header_info_.inventory_heat = {
         tr("Inventory Node"),
         tr("Placeholder"),

@@ -3,6 +3,7 @@
 #include <QJsonArray>
 
 #include "component/constant.h"
+#include "component/constantint.h"
 #include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 
@@ -536,7 +537,24 @@ QJsonObject BalanceSheetAck(CUuid& widget_id, CUuid& asset, CUuid& liability, CU
     message.insert(balance_sheet::kAssetId, asset.toString(QUuid::WithoutBraces));
     message.insert(balance_sheet::kLiabilityId, liability.toString(QUuid::WithoutBraces));
     message.insert(balance_sheet::kEquityId, equity.toString(QUuid::WithoutBraces));
-    message.insert(balance_sheet::kLevel, level);
+    message.insert(kLevel, level);
+    message.insert(kNodeArray, QJsonArray());
+    message.insert(kPathArray, QJsonArray());
+    return message;
+}
+
+QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, const QDateTime& start, const QDateTime& end, int level)
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(Section::kFinance));
+    message.insert(kSessionId, QString());
+    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
+    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kStart, start.toString(Qt::ISODate));
+    message.insert(income_statement::kNetProfit, QString::number(0, 'f', numeric_const::kDecimalPlaces4));
+    message.insert(income_statement::kIncomeId, income.toString(QUuid::WithoutBraces));
+    message.insert(income_statement::kExpenseId, expense.toString(QUuid::WithoutBraces));
+    message.insert(kLevel, level);
     message.insert(kNodeArray, QJsonArray());
     message.insert(kPathArray, QJsonArray());
     return message;

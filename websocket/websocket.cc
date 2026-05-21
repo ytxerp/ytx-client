@@ -230,6 +230,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kInventoryHeatAck] = [this](const QJsonObject& obj) { AckInventoryHeat(obj); };
     handler_obj_[WsKey::kPartnerHeatAck] = [this](const QJsonObject& obj) { AckPartnerHeat(obj); };
     handler_obj_[WsKey::kBalanceSheetAck] = [this](const QJsonObject& obj) { AckBalanceSheet(obj); };
+    handler_obj_[WsKey::kIncomeStatementAck] = [this](const QJsonObject& obj) { AckIncomeStatement(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -667,6 +668,25 @@ void WebSocket::AckBalanceSheet(const QJsonObject& obj)
     const QJsonArray path_array { obj.value(kPathArray).toArray() };
 
     emit SBalanceSheetAck(widget_id, node_array, path_array);
+}
+
+void WebSocket::AckIncomeStatement(const QJsonObject& obj)
+{
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
+    if (session_id != session_id_)
+        return;
+
+    const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
+    if (widget_id.isNull()) {
+        qWarning() << Q_FUNC_INFO << "widget_id is null";
+        return;
+    }
+
+    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
+    const QJsonArray path_array { obj.value(kPathArray).toArray() };
+    const double net_profit { obj.value(income_statement::kNetProfit).toString().toDouble() };
+
+    emit SIncomeStatementAck(widget_id, node_array, path_array, net_profit);
 }
 
 void WebSocket::DeleteLeaf(const QJsonObject& obj)

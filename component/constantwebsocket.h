@@ -140,6 +140,7 @@ enum class WsKey : uint8_t {
     kInventoryHeatAck = 69,
     kPartnerHeatAck = 70,
     kBalanceSheetAck = 71,
+    kIncomeStatementAck = 72,
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -287,29 +288,31 @@ constexpr const char* WsMsgToString(WsKey msg)
 
     // --- Workspace Member ---
     case WsKey::kWorkspaceMemberAck:
-        return "workspace_member_ack";
+        return "kWorkspaceMemberAck";
     case WsKey::kWorkspaceMemberUpdate:
-        return "workspace_member_update";
+        return "kWorkspaceMemberUpdate";
     case WsKey::kWorkspaceMemberDelete:
-        return "workspace_member_delete";
+        return "kWorkspaceMemberDelete";
     case WsKey::kAccountRoleUpdate:
-        return "account_role_update";
+        return "kAccountRoleUpdate";
     case WsKey::kAccountRoleDelete:
-        return "account_role_delete";
+        return "kAccountRoleDelete";
     case WsKey::kEntryIssuedTimeUpdate:
-        return "entry_issued_time_update";
+        return "kEntryIssuedTimeUpdate";
     case WsKey::kAuditLogAck:
-        return "audit_log_ack";
+        return "kAuditLogAck";
     case WsKey::kNodeTagSearch:
-        return "node_tag_search";
+        return "kNodeTagSearch";
     case WsKey::kPeriodClose:
-        return "period_close";
+        return "kPeriodClose";
     case WsKey::kInventoryHeatAck:
-        return "inventory_heat_ack";
+        return "kInventoryHeatAck";
     case WsKey::kPartnerHeatAck:
-        return "partner_heat_ack";
+        return "kPartnerHeatAck";
     case WsKey::kBalanceSheetAck:
-        return "balance_sheet_ack";
+        return "kBalanceSheetAck";
+    case WsKey::kIncomeStatementAck:
+        return "kIncomeStatementAck";
     default:
         return "unknown";
     }

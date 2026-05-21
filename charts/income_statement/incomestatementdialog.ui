@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>BalanceSheetDialog</class>
- <widget class="QDialog" name="BalanceSheetDialog">
+ <class>IncomeStatementDialog</class>
+ <widget class="QDialog" name="IncomeStatementDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1080</width>
-    <height>547</height>
+    <width>933</width>
+    <height>506</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Balance Sheet</string>
+   <string>Income Statement</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="verticalSpacing">
@@ -26,35 +26,25 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Asset</string>
+         <string>Income</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="ComboBox" name="comboBoxAsset"/>
+       <widget class="ComboBox" name="comboBoxIncome"/>
       </item>
       <item>
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Liabilitiy</string>
+         <string>Expense</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="ComboBox" name="comboBoxLiability"/>
+       <widget class="ComboBox" name="comboBoxExpense"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Equity</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="ComboBox" name="comboBoxEquity"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="label_5">
         <property name="text">
          <string>Level</string>
         </property>
@@ -68,7 +58,7 @@
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer_2">
+       <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
         </property>
@@ -81,17 +71,21 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="label_5">
+       <widget class="DateTimeEdit" name="dateTimeEditStart">
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>End</string>
+         <string>-</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="DateTimeEdit" name="dateTimeEditEnd">
-        <property name="displayFormat">
-         <string>d/M/yyyy</string>
-        </property>
         <property name="calendarPopup">
          <bool>true</bool>
         </property>
@@ -120,6 +114,63 @@
    <item row="1" column="0">
     <widget class="QTreeView" name="treeView"/>
    </item>
+   <item row="2" column="0">
+    <widget class="QGroupBox" name="groupBoxUnderView">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="5,1,1">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Net Profit</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="DoubleSpinBox" name="dspin_box_static_">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::NoFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+        </property>
+        <property name="showGroupSeparator" stdset="0">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -138,7 +189,22 @@
    <extends>QSpinBox</extends>
    <header location="global">widget/spinbox.h</header>
   </customwidget>
+  <customwidget>
+   <class>DoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header location="global">widget/doublespinbox.h</header>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>comboBoxIncome</tabstop>
+  <tabstop>comboBoxExpense</tabstop>
+  <tabstop>spinBoxLevel</tabstop>
+  <tabstop>dateTimeEditStart</tabstop>
+  <tabstop>dateTimeEditEnd</tabstop>
+  <tabstop>pushButtonFetch</tabstop>
+  <tabstop>pushButtonExport</tabstop>
+  <tabstop>treeView</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

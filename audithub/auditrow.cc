@@ -6,7 +6,6 @@ namespace audit_hub::keys {
 constexpr QLatin1StringView kTargetId { "target_id" };
 constexpr QLatin1StringView kTargetType { "target_type" };
 constexpr QLatin1StringView kWsKey { "ws_key" };
-constexpr QLatin1StringView kLevel { "level" };
 constexpr QLatin1StringView kTargetCode { "target_code" };
 constexpr QLatin1StringView kBefore { "before" };
 constexpr QLatin1StringView kAfter { "after" };

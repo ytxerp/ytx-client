@@ -95,6 +95,7 @@ private slots:
     void on_actionHeatInventory_triggered();
     void on_actionHeatPartner_triggered();
     void on_actionBalanceSheet_triggered();
+    void on_actionIncomeStatement_triggered();
 
     void tabWidget_currentChanged();
     void tabWidget_tabBarDoubleClicked(int index);
@@ -165,6 +166,7 @@ private slots:
     void RInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void RPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void RBalanceSheetAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
+    void RIncomeStatementAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array, double net_profit);
 
     void RAccountRoleUpdate();
 
