@@ -26,7 +26,7 @@ void MainWindow::on_actionProfile_triggered()
     dialog->activateWindow();
 }
 
-void MainWindow::RAccountName(const QString& name) { ui->actionEmail->setText(tr("Name") + ": " + name); }
+void MainWindow::RAccountName(const QString& name) { ui->actionName->setText(tr("Name", "Person") + ": " + name); }
 
 void MainWindow::RAccountUsername(const QJsonObject& obj)
 {
@@ -57,7 +57,7 @@ void MainWindow::InitHeader()
         tr("Version"),
         tr("Email"),
         tr("Username"),
-        tr("Name"),
+        tr("Name", "Person"),
         tr("Workspace Role"),
         tr("Database Role"),
         tr("Created Time"),
@@ -84,7 +84,7 @@ void MainWindow::InitHeader()
     };
 
     header_info_.inventory_heat = {
-        tr("Inventory Node"),
+        tr("Name"),
         tr("Placeholder"),
         tr("Order Count"),
         tr("Partner Count"),
@@ -95,7 +95,7 @@ void MainWindow::InitHeader()
     };
 
     header_info_.partner_heat = {
-        tr("Partner Node"),
+        tr("Name"),
         tr("Placeholder"),
         tr("Order Count"),
         tr("Inventory Diversity"),

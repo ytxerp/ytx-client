@@ -213,7 +213,7 @@ void MainWindow::ResetMainwindow()
     }
 
     {
-        ui->actionEmail->setText(tr("Email"));
+        ui->actionName->setText(tr("Name", "Person"));
         ui->actionWorkspace->setText(tr("Workspace"));
         ui->actionExpireDate->setText(tr("Expire Date"));
     }

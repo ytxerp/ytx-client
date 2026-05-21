@@ -40,7 +40,7 @@ void MainWindow::SetAction(bool enable) const
 
 void MainWindow::UpdateAccountInfo(const QString& workspace, const QString& name, const QString& expire_date)
 {
-    ui->actionEmail->setText(tr("Name") + ": " + name);
+    ui->actionName->setText(tr("Name", "Person") + ": " + name);
     ui->actionWorkspace->setText(tr("Workspace") + ": " + workspace);
     ui->actionExpireDate->setText(tr("Expire Date") + ": " + expire_date);
 }

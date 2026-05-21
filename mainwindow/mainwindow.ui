@@ -335,7 +335,7 @@
     <addaction name="separator"/>
     <addaction name="actionReconnect"/>
     <addaction name="separator"/>
-    <addaction name="actionEmail"/>
+    <addaction name="actionName"/>
     <addaction name="actionWorkspace"/>
     <addaction name="actionExpireDate"/>
     <addaction name="separator"/>
@@ -583,12 +583,12 @@
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionEmail">
+  <action name="actionName">
    <property name="text">
-    <string>Email</string>
+    <string comment="Person">Name</string>
    </property>
    <property name="toolTip">
-    <string>Email</string>
+    <string>Name</string>
    </property>
   </action>
   <action name="actionWorkspace">
