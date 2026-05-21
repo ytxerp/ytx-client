@@ -25,6 +25,7 @@
 #include <QUuid>
 
 #include "enum/nodeenum.h"
+#include "tree/finance_role.h"
 
 struct Node {
     QString name {};
@@ -55,7 +56,15 @@ struct Node {
     virtual ~Node() = default;
 };
 
-struct NodeF final : Node { };
+struct NodeF final : Node {
+    finance::Roles roles {};
+    finance::CashKind cash_kind {};
+
+    void Reset() override;
+
+    void ReadJson(const QJsonObject& object) override;
+    QJsonObject WriteJson() const override;
+};
 
 struct NodeI final : Node {
     double unit_price {};

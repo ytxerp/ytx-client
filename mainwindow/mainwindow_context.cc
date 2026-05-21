@@ -175,7 +175,16 @@ void MainWindow::InitContextFinance()
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
-    info.rule_model = utils::CreateModelFromMap(info.rule_map, this);
+
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kNone), string_const::kEmpty);
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOperatingIn), tr("Operating In"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestingIn), tr("Investing In"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kFinancingIn), tr("Financing In"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOperatingOut), tr("Operating Out"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestingOut), tr("Investing Out"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kFinancingOut), tr("Financing Out"));
+
+    info.cash_kind_model = utils::CreateModelFromMap(info.cash_kind_map, this);
 
     entry_hub = new EntryHubF(info, this);
     tree_model = new TreeModelF(info, app_config_.separator, this);
@@ -217,7 +226,6 @@ void MainWindow::InitContextInventory()
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
-    info.rule_model = utils::CreateModelFromMap(info.rule_map, this);
 
     entry_hub = new EntryHubI(info, this);
     tree_model = new TreeModelI(info, app_config_.separator, this);
@@ -259,7 +267,6 @@ void MainWindow::InitContextTask()
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
-    info.rule_model = utils::CreateModelFromMap(info.rule_map, this);
 
     entry_hub = new EntryHubT(info, this);
     tree_model = new TreeModelT(info, app_config_.separator, this);
@@ -340,8 +347,6 @@ void MainWindow::InitContextSale()
     info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
     info.unit_model->sort(0, Qt::DescendingOrder);
 
-    info.rule_model = utils::CreateModelFromMap(info.rule_map, this);
-
     auto* entry_hub_o = new EntryHubO(info, this);
     auto* tree_model_o = new TreeModelO(info, app_config_.separator, this);
 
@@ -386,8 +391,6 @@ void MainWindow::InitContextPurchase()
 
     info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
     info.unit_model->sort(0, Qt::DescendingOrder);
-
-    info.rule_model = utils::CreateModelFromMap(info.rule_map, this);
 
     auto* entry_hub_o = new EntryHubO(info, this);
     auto* tree_model_o = new TreeModelO(info, app_config_.separator, this);

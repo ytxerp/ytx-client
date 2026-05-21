@@ -5,9 +5,9 @@
 #include <QString>
 #include <span>
 
-namespace database_role {
+namespace database {
 
-enum PermissionBit {
+enum Role {
     FINANCE_READONLY = 0b01,
     FINANCE_READWRITE = 0b11,
 
@@ -27,16 +27,16 @@ enum PermissionBit {
     PURCHASE_READWRITE = 0b11 << 10,
 };
 
-Q_DECLARE_FLAGS(PermissionBits, PermissionBit)
-Q_DECLARE_OPERATORS_FOR_FLAGS(PermissionBits)
+Q_DECLARE_FLAGS(Roles, Role)
+Q_DECLARE_OPERATORS_FOR_FLAGS(Roles)
 
-struct PermissionItem {
-    PermissionBit bit {};
+struct RoleItem {
+    Role role {};
     QString text {};
 };
 
-std::span<const PermissionItem> RoleList();
-QString RoleDisplay(PermissionBits bits);
+std::span<const RoleItem> RoleList();
+QString RoleDisplay(Roles roles);
 }
 
 #endif // DATABASEROLE_H

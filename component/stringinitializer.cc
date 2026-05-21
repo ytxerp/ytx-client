@@ -14,6 +14,8 @@ void StringInitializer::SetHeader(
         QObject::tr("Color"),
         QObject::tr("Document"),
         QObject::tr("Direction Rule"),
+        QObject::tr("Role"),
+        QObject::tr("Cash Kind"),
         QObject::tr("Kind"),
         QObject::tr("Unit"),
         QObject::tr("Foreign Total"),

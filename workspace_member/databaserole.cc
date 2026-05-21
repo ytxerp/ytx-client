@@ -2,11 +2,13 @@
 
 #include <QtCore/qobject.h>
 
-namespace database_role {
+#include "component/constantstring.h"
 
-std::span<const PermissionItem> RoleList()
+namespace database {
+
+std::span<const RoleItem> RoleList()
 {
-    static const PermissionItem list[] = {
+    static const RoleItem list[] = {
         { FINANCE_READONLY, QObject::tr("Finance R") },
         { FINANCE_READWRITE, QObject::tr("Finance W") },
         { TASK_READONLY, QObject::tr("Task R") },
@@ -24,14 +26,18 @@ std::span<const PermissionItem> RoleList()
     return list;
 }
 
-QString RoleDisplay(PermissionBits bits)
+QString RoleDisplay(Roles roles)
 {
+    if (roles == 0) {
+        return string_const::kEmpty;
+    }
+
     QStringList result {};
 
-    auto AppendRole = [&](PermissionBit read_bit, PermissionBit write_bit, const QString& read_text, const QString& write_text) {
-        if ((bits & write_bit) == write_bit) {
+    auto AppendRole = [&](Role read_bit, Role write_bit, const QString& read_text, const QString& write_text) {
+        if ((roles & write_bit) == write_bit) {
             result.emplaceBack(write_text);
-        } else if ((bits & read_bit) == read_bit) {
+        } else if ((roles & read_bit) == read_bit) {
             result.emplaceBack(read_text);
         }
     };

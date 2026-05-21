@@ -63,7 +63,7 @@ QVariant WorkspaceMemberModel::data(const QModelIndex& index, int role) const
     case WorkspaceMemberEnum::kWorkspaceRole:
         return static_cast<int>(member->workspace_role);
     case WorkspaceMemberEnum::kDatabaseRole:
-        return static_cast<int>(member->database_role);
+        return static_cast<int>(member->database_roles);
     case WorkspaceMemberEnum::kCreatedTime:
         return member->created_time;
     }
@@ -92,14 +92,16 @@ bool WorkspaceMemberModel::setData(const QModelIndex& index, const QVariant& val
     // Handle updates based on the column index
     // Assuming MemberColumn is your enum for WorkspaceMember columns
     switch (static_cast<WorkspaceMemberEnum>(index.column())) {
-    case WorkspaceMemberEnum::kWorkspaceRole:
-        member->workspace_role = static_cast<WorkspaceRole>(value.toInt());
-        pending_updates_[id].insert(kWorkspaceRole, static_cast<int>(member->workspace_role));
+    case WorkspaceMemberEnum::kWorkspaceRole: {
+        const int raw { value.toInt() };
+        member->workspace_role = static_cast<workspace::Role>(raw);
+        pending_updates_[id].insert(kWorkspaceRole, raw);
         break;
+    }
     case WorkspaceMemberEnum::kDatabaseRole: {
-        const auto flags { static_cast<database_role::PermissionBits>(value.toInt()) };
-        member->database_role = flags;
-        pending_updates_[id].insert(kDatabaseRole, static_cast<int>(flags));
+        const int raw { value.toInt() };
+        member->database_roles = static_cast<database::Roles>(raw);
+        pending_updates_[id].insert(kDatabaseRole, raw);
         break;
     }
     case WorkspaceMemberEnum::kEmail:
@@ -138,7 +140,7 @@ void WorkspaceMemberModel::sort(int column, Qt::SortOrder order)
             // Sorting by the underlying integer value of the enum
             return utils::CompareMember(lhs, rhs, &WorkspaceMember::workspace_role, order);
         case WorkspaceMemberEnum::kDatabaseRole:
-            return utils::CompareMember(lhs, rhs, &WorkspaceMember::database_role, order);
+            return utils::CompareMember(lhs, rhs, &WorkspaceMember::database_roles, order);
         case WorkspaceMemberEnum::kCreatedTime:
             return utils::CompareMember(lhs, rhs, &WorkspaceMember::created_time, order);
         case WorkspaceMemberEnum::kId:

@@ -1,31 +1,23 @@
-#include "databaseroledelegate.h"
+#include "financeroledelegate.h"
 
 #include <QStandardItem>
 
-#include "global/userprofile.h"
 #include "widget/combobox.h"
-#include "workspace_member/databaserole.h"
 
-DatabaseRoleDelegate::DatabaseRoleDelegate(QObject* parent)
+FinanceRoleDelegate::FinanceRoleDelegate(std::span<const finance::RoleItem> roles, QObject* parent)
     : StyledItemDelegate { parent }
+    , roles_ { roles }
 {
 }
 
-QWidget* DatabaseRoleDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&, const QModelIndex&) const
+QWidget* FinanceRoleDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&, const QModelIndex& /*index*/) const
 {
     auto* editor { new ComboBox(parent) };
 
     auto* model { new QStandardItemModel(editor) };
     editor->setModel(model);
 
-    UserProfile& profile { UserProfile::Instance() };
-    const auto database_role { profile.GetDatabaseRole() };
-
-    for (const auto& item : database::RoleList()) {
-        if ((database_role & item.role) != item.role) {
-            continue;
-        }
-
+    for (const auto& item : roles_) {
         auto* model_item { new QStandardItem(item.text) };
 
         model_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
@@ -38,12 +30,12 @@ QWidget* DatabaseRoleDelegate::createEditor(QWidget* parent, const QStyleOptionV
     return editor;
 }
 
-void DatabaseRoleDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
+void FinanceRoleDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
 
     const int value { index.data().toInt() };
-    const database::Roles roles(value);
+    const finance::Roles roles(value);
 
     auto* model { qobject_cast<QStandardItemModel*>(cast_editor->model()) };
 
@@ -56,10 +48,10 @@ void DatabaseRoleDelegate::setEditorData(QWidget* editor, const QModelIndex& ind
     }
 
     // Set line edit text to show all selected roles
-    cast_editor->setEditText(database::RoleDisplay(roles));
+    cast_editor->setEditText(finance::RoleDisplay(roles));
 }
 
-void DatabaseRoleDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
+void FinanceRoleDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
     auto* cast_model { qobject_cast<QStandardItemModel*>(cast_editor->model()) };
@@ -77,29 +69,29 @@ void DatabaseRoleDelegate::setModelData(QWidget* editor, QAbstractItemModel* mod
     model->setData(index, result);
 }
 
-void DatabaseRoleDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void FinanceRoleDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int value { index.data().toInt() };
     if (value == 0)
         return PaintEmpty(painter, option, index);
 
-    const QString text { database::RoleDisplay(database::Roles(value)) };
+    const QString text { finance::RoleDisplay(finance::Role(value)) };
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }
 
-QSize DatabaseRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+QSize FinanceRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int value { index.data().toInt() };
-    const QString text { database::RoleDisplay(database::Roles(value)) };
+    const QString text { finance::RoleDisplay(finance::Role(value)) };
 
     return CalculateTextSize(text, option);
 }
 
-void DatabaseRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void FinanceRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int bar_width { QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent) };
     const int value { index.data().toInt() };
-    const QString display_text { database::RoleDisplay(database::Roles(value)) };
+    const QString display_text { finance::RoleDisplay(finance::Role(value)) };
 
     const QSize text_size { CalculateTextSize(display_text, option) };
 

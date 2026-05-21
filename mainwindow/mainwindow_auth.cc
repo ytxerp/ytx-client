@@ -86,7 +86,7 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
         LoginInfo& login_info { LoginInfo::Instance() };
         UpdateAccountInfo(login_info.Workspace(), name, expire_date);
 
-        const bool is_admin { UserProfile::Instance().GetWorkspaceRole() >= WorkspaceRole::kAdmin };
+        const bool is_admin { UserProfile::Instance().GetWorkspaceRole() >= workspace::Role::kAdmin };
         ui->actionWorkspaceMember->setVisible(is_admin);
         ui->actionAuditLog->setVisible(is_admin);
 

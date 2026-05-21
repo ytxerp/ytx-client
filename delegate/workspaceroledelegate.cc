@@ -14,7 +14,7 @@ QWidget* WorkspaceRoleDelegate::createEditor(QWidget* parent, const QStyleOption
 
     const auto current_role { static_cast<int>(UserProfile::Instance().GetWorkspaceRole()) };
 
-    for (const auto& [key, value] : workspace_role::RoleList()) {
+    for (const auto& [key, value] : workspace::RoleList()) {
         if (key < current_role)
             editor->addItem(value, key);
     }
@@ -44,17 +44,17 @@ void WorkspaceRoleDelegate::setModelData(QWidget* editor, QAbstractItemModel* mo
 void WorkspaceRoleDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int key { index.data().toInt() };
-    if (!workspace_role::RoleHash().contains(key))
+    if (!workspace::RoleHash().contains(key))
         return PaintEmpty(painter, option, index);
 
-    const QString text { workspace_role::RoleHash().value(key) };
+    const QString text { workspace::RoleHash().value(key) };
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }
 
 QSize WorkspaceRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int key { index.data().toInt() };
-    const QString text { workspace_role::RoleHash().value(key) };
+    const QString text { workspace::RoleHash().value(key) };
     return CalculateTextSize(text, option);
 }
 
@@ -62,7 +62,7 @@ void WorkspaceRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOp
 {
     const int bar_width { QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent) };
     const int key { index.data().toInt() };
-    const QString text { workspace_role::RoleHash().value(key) };
+    const QString text { workspace::RoleHash().value(key) };
 
     const QSize text_size { CalculateTextSize(text, option) };
 

@@ -11,7 +11,9 @@
 #include "delegate/document.h"
 #include "delegate/double.h"
 #include "delegate/filterunit.h"
+#include "delegate/financeroledelegate.h"
 #include "delegate/int.h"
+#include "delegate/intstringnonezero.h"
 #include "delegate/issuedtime.h"
 #include "delegate/line.h"
 #include "delegate/readonly/amountorderreferencer.h"
@@ -70,6 +72,12 @@ void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectio
 
     auto* document { new Document(sc_f_.shared_config.document_dir, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kDocument), document);
+
+    auto* role { new FinanceRoleDelegate(finance::RoleList(), tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kRole), role);
+
+    auto* cash_kind { new IntStringNoneZero(info.cash_kind_model, info.cash_kind_map, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kCashKind), cash_kind);
 }
 
 void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const

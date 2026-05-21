@@ -38,6 +38,14 @@ public:
 protected:
     QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const override;
     void InitAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const override;
+
+private:
+    inline bool IsCashFlowCarrier(finance::Roles roles)
+    {
+        constexpr finance::Roles kCarrierRoles { finance::kCash | finance::kBank | finance::kWallet };
+
+        return (roles & kCarrierRoles) != 0;
+    }
 };
 
 #endif // TREEMODELF_H

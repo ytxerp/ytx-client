@@ -51,7 +51,7 @@ inline const QString kPlus = QStringLiteral("+");
 inline const QString kDotSuffixINI = QStringLiteral(".ini");
 inline const QString kDotSuffixXLSX = QStringLiteral(".xlsx");
 
-// Node rule, kind, unit
+// Node kind
 inline const QString kBranchKind = QStringLiteral("B");
 inline const QString kLeafKind = QStringLiteral("L");
 
@@ -165,6 +165,8 @@ inline const QString kDatabaseRole = QStringLiteral("database_role");
 inline const QString kMemberArray = QStringLiteral("member_array");
 inline const QString kLogArray = QStringLiteral("log_array");
 inline const QString kUserArray = QStringLiteral("user_array");
+inline const QString kRole = QStringLiteral("role");
+inline const QString kCashKind = QStringLiteral("cash_kind");
 
 inline const QString kId = QStringLiteral("id");
 inline const QString kUserId = QStringLiteral("user_id");

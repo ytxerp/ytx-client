@@ -35,19 +35,19 @@ public:
 
     const QString& Username() const { return username_; }
     const QString& Name() const { return name_; }
-    WorkspaceRole GetWorkspaceRole() const { return workspacer_role_; }
-    database_role::PermissionBits GetDatabaseRole() const { return database_role_; }
+    workspace::Role GetWorkspaceRole() const { return workspacer_role_; }
+    database::Roles GetDatabaseRole() const { return database_role_; }
 
     void SetUsername(const QString& value) { username_ = value; }
     void SetName(const QString& value) { name_ = value; }
-    void SetWorkspaceRole(WorkspaceRole value) { workspacer_role_ = value; }
-    void SetDatabaseRole(database_role::PermissionBits value) { database_role_ = value; }
+    void SetWorkspaceRole(workspace::Role value) { workspacer_role_ = value; }
+    void SetDatabaseRole(database::Roles value) { database_role_ = value; }
 
     void Reset()
     {
         username_.clear();
         name_.clear();
-        workspacer_role_ = WorkspaceRole::kGuest;
+        workspacer_role_ = workspace::Role::kGuest;
     }
 
     UserProfile(const UserProfile&) = delete;
@@ -62,8 +62,8 @@ private:
 private:
     QString username_ {};
     QString name_ {};
-    WorkspaceRole workspacer_role_ { WorkspaceRole::kGuest };
-    database_role::PermissionBits database_role_ {};
+    workspace::Role workspacer_role_ { workspace::Role::kGuest };
+    database::Roles database_role_ {};
 };
 
 #endif // USERPROFILE_H

@@ -24,20 +24,21 @@
 #include <QObject>
 #include <QString>
 
-enum class WorkspaceRole {
+namespace workspace {
+
+enum class Role {
     kGuest = 0,
     kMember = 10,
     kAdmin = 80,
     kOwner = 99,
 };
 
-namespace workspace_role {
-struct Item {
+struct RoleItem {
     int role {};
     QString text {};
 };
 
-std::span<const Item> RoleList();
+std::span<const RoleItem> RoleList();
 QHash<int, QString> RoleHash();
 }
 

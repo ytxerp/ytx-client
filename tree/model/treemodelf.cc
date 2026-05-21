@@ -1,6 +1,7 @@
 #include "treemodelf.h"
 
 #include "component/constantdouble.h"
+#include "tree/finance_role.h"
 
 TreeModelF::TreeModelF(CSectionInfo& info, CString& separator, QObject* parent)
     : TreeModel(info, separator, parent)
@@ -16,7 +17,7 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* node { static_cast<Node*>(index.internalPointer()) };
+    auto* node { static_cast<NodeF*>(index.internalPointer()) };
     Q_ASSERT(node != nullptr);
 
     const NodeEnumF column { index.column() };
@@ -48,6 +49,10 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
         return node->final_total;
     case NodeEnumF::kDocument:
         return node->document;
+    case NodeEnumF::kRole:
+        return static_cast<int>(node->roles);
+    case NodeEnumF::kCashKind:
+        return static_cast<int>(node->cash_kind);
     }
 }
 
@@ -60,6 +65,7 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
         return false;
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
+    auto* d_node { static_cast<NodeF*>(node) };
     Q_ASSERT(node != nullptr);
 
     const NodeEnumF column { index.column() };
@@ -84,6 +90,30 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumF::kDocument:
         utils::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
+    case NodeEnumF::kRole: {
+        const int raw { value.toInt() };
+        const auto roles { static_cast<finance::Roles>(raw) };
+
+        if (IsCashFlowCarrier(roles) && d_node->cash_kind != finance::CashKind::kNone)
+            return false;
+
+        d_node->roles = roles;
+        pending_updates_[id].insert(kRole, raw);
+        RestartTimer(id);
+        break;
+    }
+    case NodeEnumF::kCashKind: {
+        const int raw { value.toInt() };
+        const auto cash_kind { static_cast<finance::CashKind>(raw) };
+
+        if (cash_kind != finance::CashKind::kNone && IsCashFlowCarrier(d_node->roles))
+            return false;
+
+        d_node->cash_kind = cash_kind;
+        pending_updates_[id].insert(kCashKind, raw);
+        RestartTimer(id);
+        break;
+    }
     case NodeEnumF::kId:
     case NodeEnumF::kVersion:
     case NodeEnumF::kName:
@@ -103,6 +133,9 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
     const NodeEnumF e_column { column };
 
     auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
+        auto* d_lhs { DerivedPtr<NodeF>(lhs) };
+        auto* d_rhs { DerivedPtr<NodeF>(rhs) };
+
         switch (e_column) {
         case NodeEnumF::kName:
             return utils::CompareMember(lhs, rhs, &Node::name, order);
@@ -126,6 +159,10 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumF::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
+        case NodeEnumF::kRole:
+            return utils::CompareMember(d_lhs, d_rhs, &NodeF::roles, order);
+        case NodeEnumF::kCashKind:
+            return utils::CompareMember(d_lhs, d_rhs, &NodeF::cash_kind, order);
         case NodeEnumF::kId:
         case NodeEnumF::kVersion:
             return false;

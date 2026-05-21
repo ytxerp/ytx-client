@@ -28,7 +28,7 @@ void UserProfileDialog::InitDialog()
     ui->lineEditUsername->setText(profile.Username());
     ui->lineEditName->setText(profile.Name());
 
-    ui->lineEditRole->setText(database_role::RoleDisplay(profile.GetDatabaseRole()));
+    ui->lineEditRole->setText(database::RoleDisplay(profile.GetDatabaseRole()));
 
     ui->pushButtonSave->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
 }
