@@ -226,6 +226,13 @@ enum class NodeEnum {
     kVersion,
 };
 
+enum class CashKind {
+    kNone = 0,
+    kOperating = 1,
+    kInvesting = 2,
+    kFinancing = 3,
+};
+
 enum class NodeEnumF {
     kName = 0,
     kId,
@@ -236,6 +243,8 @@ enum class NodeEnumF {
     kColor,
     kDocument,
     kDirectionRule,
+    kIsCash,
+    kCashKind,
     kKind,
     kUnit,
     kInitialTotal,

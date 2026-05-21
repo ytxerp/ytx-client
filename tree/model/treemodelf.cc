@@ -16,7 +16,7 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* node { static_cast<Node*>(index.internalPointer()) };
+    auto* node { static_cast<NodeF*>(index.internalPointer()) };
     Q_ASSERT(node != nullptr);
 
     const NodeEnumF column { index.column() };
@@ -48,6 +48,10 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
         return node->final_total;
     case NodeEnumF::kDocument:
         return node->document;
+    case NodeEnumF::kIsCash:
+        return node->is_cash;
+    case NodeEnumF::kCashKind:
+        return node->cask_kind;
     }
 }
 
@@ -60,6 +64,7 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
         return false;
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
+    auto* d_node { static_cast<NodeF*>(node) };
     Q_ASSERT(node != nullptr);
 
     const NodeEnumF column { index.column() };
@@ -84,6 +89,12 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumF::kDocument:
         utils::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
+    case NodeEnumF::kIsCash:
+        utils::UpdateField(pending_updates_[id], d_node, kIsCash, value.toBool(), &NodeF::is_cash, [id, this]() { RestartTimer(id); });
+        break;
+    case NodeEnumF::kCashKind:
+        utils::UpdateField(pending_updates_[id], d_node, kCashKind, value.toInt(), &NodeF::cask_kind, [id, this]() { RestartTimer(id); });
+        break;
     case NodeEnumF::kId:
     case NodeEnumF::kVersion:
     case NodeEnumF::kName:
@@ -103,6 +114,9 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
     const NodeEnumF e_column { column };
 
     auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
+        auto* d_lhs { DerivedPtr<NodeF>(lhs) };
+        auto* d_rhs { DerivedPtr<NodeF>(rhs) };
+
         switch (e_column) {
         case NodeEnumF::kName:
             return utils::CompareMember(lhs, rhs, &Node::name, order);
@@ -126,6 +140,10 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumF::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
+        case NodeEnumF::kIsCash:
+            return utils::CompareMember(d_lhs, d_rhs, &NodeF::is_cash, order);
+        case NodeEnumF::kCashKind:
+            return utils::CompareMember(d_lhs, d_rhs, &NodeF::cask_kind, order);
         case NodeEnumF::kId:
         case NodeEnumF::kVersion:
             return false;

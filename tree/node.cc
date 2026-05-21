@@ -63,6 +63,26 @@ QJsonObject Node::WriteJson() const
     return obj;
 }
 
+void NodeF::Reset() { *this = NodeF {}; }
+
+void NodeF::ReadJson(const QJsonObject& object)
+{
+    Node::ReadJson(object);
+
+    if (const auto val = object.value(kCashKind); val.isDouble())
+        cask_kind = val.toInt();
+    if (const auto val = object.value(kIsCash); val.isBool())
+        is_cash = val.toBool();
+}
+
+QJsonObject NodeF::WriteJson() const
+{
+    QJsonObject obj { Node::WriteJson() };
+    obj.insert(kCashKind, cask_kind);
+    obj.insert(kIsCash, is_cash);
+    return obj;
+}
+
 void NodeI::Reset() { *this = NodeI {}; }
 
 void NodeI::ReadJson(const QJsonObject& object)

@@ -55,7 +55,15 @@ struct Node {
     virtual ~Node() = default;
 };
 
-struct NodeF final : Node { };
+struct NodeF final : Node {
+    bool is_cash {};
+    int cask_kind {};
+
+    void Reset() override;
+
+    void ReadJson(const QJsonObject& object) override;
+    QJsonObject WriteJson() const override;
+};
 
 struct NodeI final : Node {
     double unit_price {};

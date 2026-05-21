@@ -177,6 +177,11 @@ void MainWindow::InitContextFinance()
     info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
     info.rule_model = utils::CreateModelFromMap(info.rule_map, this);
 
+    info.cash_kind_map.insert(std::to_underlying(CashKind::kNone), kNone);
+    info.cash_kind_map.insert(std::to_underlying(CashKind::kFinancing), kFinancing);
+    info.cash_kind_map.insert(std::to_underlying(CashKind::kInvesting), kInvesting);
+    info.cash_kind_map.insert(std::to_underlying(CashKind::kOperating), kOperating);
+
     entry_hub = new EntryHubF(info, this);
     tree_model = new TreeModelF(info, app_config_.separator, this);
 

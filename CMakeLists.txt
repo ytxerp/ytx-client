@@ -285,6 +285,7 @@ set(HEADERS
     charts/income_statement/incomestatementrow.h
     charts/income_statement/incomestatementenum.h
     charts/income_statement/incomestatementmodel.h
+    delegate/intstringnonezero.h
 )
 
 set(SOURCES
@@ -456,6 +457,7 @@ set(SOURCES
     charts/income_statement/incomestatementdialog.cc
     charts/income_statement/incomestatementmodel.cc
     mainwindow/mainwindow_income_statement.cc
+    delegate/intstringnonezero.cc
 )
 
 set(UIS
