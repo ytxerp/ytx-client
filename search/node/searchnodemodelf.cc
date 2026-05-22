@@ -11,6 +11,8 @@ QVariant SearchNodeModelF::data(const QModelIndex& index, int role) const
         return QVariant();
 
     auto* node { node_list_.at(index.row()) };
+    auto* d_node { DerivedPtr<NodeF>(node) };
+
     const NodeEnumF column { index.column() };
 
     switch (column) {
@@ -40,6 +42,10 @@ QVariant SearchNodeModelF::data(const QModelIndex& index, int role) const
         return node->final_total;
     case NodeEnumF::kDocument:
         return node->document;
+    case NodeEnumF::kRoles:
+        return static_cast<int>(d_node->roles);
+    case NodeEnumF::kCashKind:
+        return static_cast<int>(d_node->cash_kind);
     }
 }
 
@@ -48,6 +54,9 @@ void SearchNodeModelF::sort(int column, Qt::SortOrder order)
     const NodeEnumF e_column { column };
 
     auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
+        auto* d_lhs = DerivedPtr<NodeF>(lhs);
+        auto* d_rhs = DerivedPtr<NodeF>(rhs);
+
         switch (e_column) {
         case NodeEnumF::kName:
             return utils::CompareMember(lhs, rhs, &Node::name, order);
@@ -71,6 +80,10 @@ void SearchNodeModelF::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumF::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
+        case NodeEnumF::kRoles:
+            return utils::CompareMember(d_lhs, d_rhs, &NodeF::roles, order);
+        case NodeEnumF::kCashKind:
+            return utils::CompareMember(d_lhs, d_rhs, &NodeF::cash_kind, order);
         case NodeEnumF::kId:
         case NodeEnumF::kVersion:
             return false;

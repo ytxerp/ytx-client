@@ -6,7 +6,7 @@
 
 namespace finance {
 
-std::span<const RoleItem> RoleList()
+std::span<const RoleItem> RoleItemList()
 {
     static const RoleItem list[] = {
         // Asset accounts
@@ -32,7 +32,7 @@ std::span<const RoleItem> RoleList()
     return list;
 }
 
-QString RoleDisplay(Roles roles)
+QString RolesDisplay(Roles roles)
 {
     if (roles == 0) {
         return string_const::kEmpty;
@@ -40,7 +40,7 @@ QString RoleDisplay(Roles roles)
 
     QStringList result {};
 
-    for (const auto& item : RoleList()) {
+    for (const auto& item : RoleItemList()) {
         if ((roles & item.role) == item.role) {
             result.append(item.text);
         }

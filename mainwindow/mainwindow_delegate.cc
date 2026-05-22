@@ -73,8 +73,8 @@ void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* document { new Document(sc_f_.shared_config.document_dir, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kDocument), document);
 
-    auto* role { new FinanceRoleDelegate(finance::RoleList(), tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kRole), role);
+    auto* roles { new FinanceRoleDelegate(finance::RoleItemList(), tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kRoles), roles);
 
     auto* cash_kind { new IntStringNoneZero(info.cash_kind_model, info.cash_kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kCashKind), cash_kind);

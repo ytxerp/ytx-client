@@ -49,10 +49,10 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
         return node->final_total;
     case NodeEnumF::kDocument:
         return node->document;
-    case NodeEnumF::kRole:
+    case NodeEnumF::kRoles:
         return static_cast<int>(node->roles);
     case NodeEnumF::kCashKind:
-        return static_cast<int>(node->cash_kind);
+        return std::to_underlying(node->cash_kind);
     }
 }
 
@@ -90,7 +90,7 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumF::kDocument:
         utils::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
-    case NodeEnumF::kRole: {
+    case NodeEnumF::kRoles: {
         const int raw { value.toInt() };
         const auto roles { static_cast<finance::Roles>(raw) };
 
@@ -98,7 +98,7 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
             return false;
 
         d_node->roles = roles;
-        pending_updates_[id].insert(kRole, raw);
+        pending_updates_[id].insert(kRoles, raw);
         RestartTimer(id);
         break;
     }
@@ -159,7 +159,7 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumF::kDocument:
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
-        case NodeEnumF::kRole:
+        case NodeEnumF::kRoles:
             return utils::CompareMember(d_lhs, d_rhs, &NodeF::roles, order);
         case NodeEnumF::kCashKind:
             return utils::CompareMember(d_lhs, d_rhs, &NodeF::cash_kind, order);

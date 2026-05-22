@@ -101,7 +101,7 @@ bool WorkspaceMemberModel::setData(const QModelIndex& index, const QVariant& val
     case WorkspaceMemberEnum::kDatabaseRole: {
         const int raw { value.toInt() };
         member->database_roles = static_cast<database::Roles>(raw);
-        pending_updates_[id].insert(kDatabaseRole, raw);
+        pending_updates_[id].insert(kDatabaseRoles, raw);
         break;
     }
     case WorkspaceMemberEnum::kEmail:

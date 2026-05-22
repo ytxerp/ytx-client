@@ -14,7 +14,7 @@ QWidget* WorkspaceRoleDelegate::createEditor(QWidget* parent, const QStyleOption
 
     const auto current_role { static_cast<int>(UserProfile::Instance().GetWorkspaceRole()) };
 
-    for (const auto& [key, value] : workspace::RoleList()) {
+    for (const auto& [key, value] : workspace::RoleItemList()) {
         if (key < current_role)
             editor->addItem(value, key);
     }

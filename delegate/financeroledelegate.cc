@@ -48,7 +48,7 @@ void FinanceRoleDelegate::setEditorData(QWidget* editor, const QModelIndex& inde
     }
 
     // Set line edit text to show all selected roles
-    cast_editor->setEditText(finance::RoleDisplay(roles));
+    cast_editor->setEditText(finance::RolesDisplay(roles));
 }
 
 void FinanceRoleDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
@@ -75,14 +75,14 @@ void FinanceRoleDelegate::paint(QPainter* painter, const QStyleOptionViewItem& o
     if (value == 0)
         return PaintEmpty(painter, option, index);
 
-    const QString text { finance::RoleDisplay(finance::Role(value)) };
+    const QString text { finance::RolesDisplay(finance::Role(value)) };
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }
 
 QSize FinanceRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int value { index.data().toInt() };
-    const QString text { finance::RoleDisplay(finance::Role(value)) };
+    const QString text { finance::RolesDisplay(finance::Role(value)) };
 
     return CalculateTextSize(text, option);
 }
@@ -91,7 +91,7 @@ void FinanceRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOpti
 {
     const int bar_width { QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent) };
     const int value { index.data().toInt() };
-    const QString display_text { finance::RoleDisplay(finance::Role(value)) };
+    const QString display_text { finance::RolesDisplay(finance::Role(value)) };
 
     const QSize text_size { CalculateTextSize(display_text, option) };
 

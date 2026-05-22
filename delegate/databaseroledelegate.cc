@@ -19,10 +19,10 @@ QWidget* DatabaseRoleDelegate::createEditor(QWidget* parent, const QStyleOptionV
     editor->setModel(model);
 
     UserProfile& profile { UserProfile::Instance() };
-    const auto database_role { profile.GetDatabaseRole() };
+    const auto database_roles { profile.GetDatabaseRoles() };
 
-    for (const auto& item : database::RoleList()) {
-        if ((database_role & item.role) != item.role) {
+    for (const auto& item : database::RoleItemList()) {
+        if ((database_roles & item.role) != item.role) {
             continue;
         }
 
@@ -56,7 +56,7 @@ void DatabaseRoleDelegate::setEditorData(QWidget* editor, const QModelIndex& ind
     }
 
     // Set line edit text to show all selected roles
-    cast_editor->setEditText(database::RoleDisplay(roles));
+    cast_editor->setEditText(database::RolesDisplay(roles));
 }
 
 void DatabaseRoleDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
@@ -83,14 +83,14 @@ void DatabaseRoleDelegate::paint(QPainter* painter, const QStyleOptionViewItem& 
     if (value == 0)
         return PaintEmpty(painter, option, index);
 
-    const QString text { database::RoleDisplay(database::Roles(value)) };
+    const QString text { database::RolesDisplay(database::Roles(value)) };
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }
 
 QSize DatabaseRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int value { index.data().toInt() };
-    const QString text { database::RoleDisplay(database::Roles(value)) };
+    const QString text { database::RolesDisplay(database::Roles(value)) };
 
     return CalculateTextSize(text, option);
 }
@@ -99,7 +99,7 @@ void DatabaseRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOpt
 {
     const int bar_width { QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent) };
     const int value { index.data().toInt() };
-    const QString display_text { database::RoleDisplay(database::Roles(value)) };
+    const QString display_text { database::RolesDisplay(database::Roles(value)) };
 
     const QSize text_size { CalculateTextSize(display_text, option) };
 

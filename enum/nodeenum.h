@@ -236,7 +236,7 @@ enum class NodeEnumF {
     kColor,
     kDocument,
     kDirectionRule,
-    kRole,
+    kRoles,
     kCashKind,
     kKind,
     kUnit,

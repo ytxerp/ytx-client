@@ -71,15 +71,15 @@ void NodeF::ReadJson(const QJsonObject& object)
 
     if (const auto val = object.value(kCashKind); val.isDouble())
         cash_kind = static_cast<finance::CashKind>(val.toInt());
-    if (const auto val = object.value(kRole); val.isDouble())
+    if (const auto val = object.value(kRoles); val.isDouble())
         roles = static_cast<finance::Roles>(val.toInt());
 }
 
 QJsonObject NodeF::WriteJson() const
 {
     QJsonObject obj { Node::WriteJson() };
-    obj.insert(kCashKind, static_cast<int>(cash_kind));
-    obj.insert(kRole, static_cast<int>(roles));
+    obj.insert(kCashKind, std::to_underlying(cash_kind));
+    obj.insert(kRoles, static_cast<int>(roles));
     return obj;
 }
 

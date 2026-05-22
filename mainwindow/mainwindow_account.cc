@@ -59,7 +59,7 @@ void MainWindow::InitHeader()
         tr("Username"),
         tr("Name", "Person"),
         tr("Workspace Role"),
-        tr("Database Role"),
+        tr("Database Roles"),
         tr("Created Time"),
     };
 

@@ -35,8 +35,8 @@ struct RoleItem {
     QString text {};
 };
 
-std::span<const RoleItem> RoleList();
-QString RoleDisplay(Roles roles);
+std::span<const RoleItem> RoleItemList();
+QString RolesDisplay(Roles roles);
 }
 
 #endif // DATABASEROLE_H

@@ -345,13 +345,13 @@ void WebSocket::NotifyLogin(const QJsonObject& obj)
         const auto username { obj[kUsername].toString() };
         const auto name { obj[kName].toString() };
         const auto workspace_role { static_cast<workspace::Role>(obj[kWorkspaceRole].toInt()) };
-        const database::Roles database_role { obj[kDatabaseRole].toInt() };
+        const database::Roles database_roles { obj[kDatabaseRoles].toInt() };
 
         UserProfile& profile { UserProfile::Instance() };
         profile.SetUsername(username);
         profile.SetName(name);
         profile.SetWorkspaceRole(workspace_role);
-        profile.SetDatabaseRole(database_role);
+        profile.SetDatabaseRoles(database_roles);
 
         emit SLoginAllow(name, expire_date);
     } else {

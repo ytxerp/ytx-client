@@ -6,7 +6,7 @@
 
 namespace database {
 
-std::span<const RoleItem> RoleList()
+std::span<const RoleItem> RoleItemList()
 {
     static const RoleItem list[] = {
         { FINANCE_READONLY, QObject::tr("Finance R") },
@@ -26,7 +26,7 @@ std::span<const RoleItem> RoleList()
     return list;
 }
 
-QString RoleDisplay(Roles roles)
+QString RolesDisplay(Roles roles)
 {
     if (roles == 0) {
         return string_const::kEmpty;

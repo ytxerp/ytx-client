@@ -161,11 +161,11 @@ inline const QString kAmount = QStringLiteral("amount");
 inline const QString kMeasureTotal = QStringLiteral("measure_total");
 inline const QString kUsername = QStringLiteral("username");
 inline const QString kWorkspaceRole = QStringLiteral("workspace_role");
-inline const QString kDatabaseRole = QStringLiteral("database_role");
+inline const QString kDatabaseRoles = QStringLiteral("database_roles");
 inline const QString kMemberArray = QStringLiteral("member_array");
 inline const QString kLogArray = QStringLiteral("log_array");
 inline const QString kUserArray = QStringLiteral("user_array");
-inline const QString kRole = QStringLiteral("role");
+inline const QString kRoles = QStringLiteral("roles");
 inline const QString kCashKind = QStringLiteral("cash_kind");
 
 inline const QString kId = QStringLiteral("id");

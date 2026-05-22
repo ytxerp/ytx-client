@@ -38,7 +38,7 @@ struct RoleItem {
     QString text {};
 };
 
-std::span<const RoleItem> RoleList();
+std::span<const RoleItem> RoleItemList();
 QHash<int, QString> RoleHash();
 }
 

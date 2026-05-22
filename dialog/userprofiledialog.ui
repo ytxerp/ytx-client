@@ -52,12 +52,12 @@
      <item row="3" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Role</string>
+        <string>Roles</string>
        </property>
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QLineEdit" name="lineEditRole">
+      <widget class="QLineEdit" name="lineEditRoles">
        <property name="readOnly">
         <bool>true</bool>
        </property>
