@@ -7,37 +7,59 @@
 
 namespace finance {
 
+// Describes the cash flow category of a cash flow statement node.
+// This is used to mark report/tree nodes, not bank/cash accounts.
+// All transactions under a node inherit the node's CashKind.
 enum class CashKind {
     kNone = 0,
+
+    // Operating activities
     kOperatingIn = 1,
     kOperatingOut = 2,
+
+    // Investing activities
     kInvestingIn = 3,
     kInvestingOut = 4,
+
+    // Financing activities
     kFinancingIn = 5,
     kFinancingOut = 6,
 };
 
-// Describes the accounting role of an account.
+// Describes the business semantic role of an account.
 // Multiple roles can be combined through QFlags.
+//
+// NOTE:
+// - Financial statement structure is managed by the account tree.
+// - Cash flow behavior is managed separately by CashKind.
+// - Role only describes business capabilities / semantic traits.
 enum Role {
-    // Asset accounts
+    // Fund carriers
     kCash = 0b1 << 0,
     kBank = 0b1 << 1,
     kWallet = 0b1 << 2,
+
+    // Settlement carriers
     kReceivable = 0b1 << 3,
-    kInventory = 0b1 << 4,
-    kFixedAsset = 0b1 << 5,
+    kPayable = 0b1 << 4,
 
-    // Liability accounts
-    kPayable = 0b1 << 6,
-    kTax = 0b1 << 7,
+    // Asset operation carriers
+    kInventory = 0b1 << 5,
+    kFixedAsset = 0b1 << 6,
+    kIntangibleAsset = 0b1 << 7,
 
-    // Equity
-    kEquity = 0b1 << 8,
+    // Deferral / accrual carriers
+    kPrepaidExpense = 0b1 << 8,
+    kAccruedLiability = 0b1 << 9,
+    kDeferredRevenue = 0b1 << 10,
 
-    // Profit & loss
-    kRevenue = 0b1 << 9,
-    kExpense = 0b1 << 10,
+    // Tax carrier
+    kTax = 0b1 << 11,
+
+    // Financing carriers
+    kDebt = 0b1 << 12,
+    kEquity = 0b1 << 13,
+    kRetainedEarnings = 0b1 << 14,
 };
 
 Q_DECLARE_FLAGS(Roles, Role)

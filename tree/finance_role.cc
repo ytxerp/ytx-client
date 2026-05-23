@@ -9,24 +9,32 @@ namespace finance {
 std::span<const RoleItem> RoleItemList()
 {
     static const RoleItem list[] = {
-        // Asset accounts
+        // Fund carriers
         { kCash, QObject::tr("Cash") },
         { kBank, QObject::tr("Bank") },
         { kWallet, QObject::tr("Wallet") },
+
+        // Settlement carriers
         { kReceivable, QObject::tr("Receivable") },
+        { kPayable, QObject::tr("Payable") },
+
+        // Asset operation carriers
         { kInventory, QObject::tr("Inventory") },
         { kFixedAsset, QObject::tr("Fixed Asset") },
+        { kIntangibleAsset, QObject::tr("Intangible Asset") },
 
-        // Liability accounts
-        { kPayable, QObject::tr("Payable") },
+        // Deferral / accrual carriers
+        { kPrepaidExpense, QObject::tr("Prepaid Expense") },
+        { kAccruedLiability, QObject::tr("Accrued Liability") },
+        { kDeferredRevenue, QObject::tr("Deferred Revenue") },
+
+        // Tax carrier
         { kTax, QObject::tr("Tax") },
 
-        // Equity
+        // Financing carriers
+        { kDebt, QObject::tr("Debt") },
         { kEquity, QObject::tr("Equity") },
-
-        // Profit & Loss
-        { kRevenue, QObject::tr("Revenue") },
-        { kExpense, QObject::tr("Expense") },
+        { kRetainedEarnings, QObject::tr("Retained Earnings") },
     };
 
     return list;
