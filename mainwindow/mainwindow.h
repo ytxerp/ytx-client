@@ -96,6 +96,7 @@ private slots:
     void on_actionHeatPartner_triggered();
     void on_actionBalanceSheet_triggered();
     void on_actionIncomeStatement_triggered();
+    void on_actionCashFlowStatement_triggered();
 
     void tabWidget_currentChanged();
     void tabWidget_tabBarDoubleClicked(int index);
@@ -167,6 +168,8 @@ private slots:
     void RPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void RBalanceSheetAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
     void RIncomeStatementAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array, double net_profit);
+    void RCashFlowStatementAck(const QUuid& widget_id, const QJsonArray& o_node, const QJsonArray& o_path, const QJsonArray& i_node, const QJsonArray& i_path,
+        const QJsonArray& f_node, const QJsonArray& f_path);
 
     void RAccountRoleUpdate();
 
@@ -237,6 +240,7 @@ private:
     void DelegateInventoryHeat(QTableView* table_view) const;
     void DelegatePartnerHeat(QTableView* table_view) const;
     void DelegateBalanceSheet(QTreeView* view) const;
+    void DelegateCashFlowStatement(QTreeView* view) const;
 
     void InitTableView(QTableView* view, int id_column, int version_column, int stretch_column) const;
     void InitTreeView(QTreeView* view, int id_column, int stretch_column) const;

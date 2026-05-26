@@ -288,6 +288,11 @@ set(HEADERS
     delegate/intstringnonezero.h
     tree/finance_role.h
     delegate/financeroledelegate.h
+    charts/cash_flow_statement/cashflowstatementdialog.h
+    charts/cash_flow_statement/cashflowstatementmodel.h
+    charts/cash_flow_statement/cashflowstatementrow.h
+    charts/cash_flow_statement/cashflowstatementenum.h
+    delegate/readonly/intstringnonezeror.h
 )
 
 set(SOURCES
@@ -462,6 +467,10 @@ set(SOURCES
     delegate/intstringnonezero.cc
     tree/finance_role.cc
     delegate/financeroledelegate.cc
+    charts/cash_flow_statement/cashflowstatementdialog.cc
+    charts/cash_flow_statement/cashflowstatementmodel.cc
+    mainwindow/mainwindow_cash_flow_statement.cc
+    delegate/readonly/intstringnonezeror.cc
 )
 
 set(UIS
@@ -502,6 +511,7 @@ set(UIS
     partner_heat/partnerheatdialog.ui
     charts/balance_sheet/balancesheetdialog.ui
     charts/income_statement/incomestatementdialog.ui
+    charts/cash_flow_statement/cashflowstatementdialog.ui
 )
 
 # ------------------------

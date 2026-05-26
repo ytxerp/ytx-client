@@ -351,6 +351,7 @@
     <addaction name="separator"/>
     <addaction name="actionBalanceSheet"/>
     <addaction name="actionIncomeStatement"/>
+    <addaction name="actionCashFlowStatement"/>
    </widget>
    <widget class="QMenu" name="menuInventory">
     <property name="title">
@@ -708,6 +709,11 @@
   <action name="actionIncomeStatement">
    <property name="text">
     <string>Income Statement</string>
+   </property>
+  </action>
+  <action name="actionCashFlowStatement">
+   <property name="text">
+    <string>Cash Flow Statement</string>
    </property>
   </action>
  </widget>

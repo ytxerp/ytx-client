@@ -17,25 +17,18 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef HEADERINFO_H
-#define HEADERINFO_H
+#ifndef INTSTRINGNONEZEROR_H
+#define INTSTRINGNONEZEROR_H
 
-#include <QList>
-#include <QString>
+#include "delegate/styleditemdelegate.h"
 
-struct HeaderInfo {
-    QStringList workspace {};
-    QStringList inventory_heat {};
-    QStringList tag {};
-    QStringList statement {};
-    QStringList statement_node {};
-    QStringList statement_entry {};
-    QStringList settlement {};
-    QStringList settlement_item {};
-    QStringList partner_heat {};
-    QStringList balance_sheet {};
-    QStringList income_statement {};
-    QStringList cash_flow_statement {};
+class IntStringNoneZeroR final : public StyledItemDelegate {
+public:
+    explicit IntStringNoneZeroR( CIntString& map, QObject* parent = nullptr);
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+
+private:
+    CIntString& map_;
 };
 
-#endif // HEADERINFO_H
+#endif // INTSTRINGNONEZEROR_H

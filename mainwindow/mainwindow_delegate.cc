@@ -3,6 +3,7 @@
 #include "billing/settlement/settlementenum.h"
 #include "billing/statement/statementenum.h"
 #include "charts/balance_sheet/balancesheetenum.h"
+#include "charts/cash_flow_statement/cashflowstatementenum.h"
 #include "component/constantstring.h"
 #include "delegate/bool.h"
 #include "delegate/boolstring.h"
@@ -25,6 +26,7 @@
 #include "delegate/readonly/doublenonezeror.h"
 #include "delegate/readonly/doubler.h"
 #include "delegate/readonly/financeforeignr.h"
+#include "delegate/readonly/intstringnonezeror.h"
 #include "delegate/readonly/intstringr.h"
 #include "delegate/readonly/issuedtimer.h"
 #include "delegate/readonly/nodenamer.h"
@@ -617,4 +619,21 @@ void MainWindow::DelegateBalanceSheet(QTreeView* view) const
 
     auto* kind { new IntStringR(info.kind_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kKind), kind);
+}
+
+void MainWindow::DelegateCashFlowStatement(QTreeView* view) const
+{
+    auto* amount { new DoubleNoneZeroR(sc_f_.section_config.amount_decimal, string_const::kFourDigits, view) };
+    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kFinalTotal), amount);
+
+    const auto& info { sc_f_.info };
+
+    auto* direction_rule { new BoolStringR(info.rule_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kDirectionRule), direction_rule);
+
+    auto* kind { new IntStringR(info.kind_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kKind), kind);
+
+    auto* cash_kind { new IntStringNoneZeroR(info.cash_kind_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kCashKind), cash_kind);
 }

@@ -63,6 +63,17 @@ void MainWindow::InitHeader()
         tr("Created Time"),
     };
 
+    header_info_.cash_flow_statement = {
+        tr("Name"),
+        tr("ID"),
+        tr("Code"),
+        tr("Description"),
+        tr("Direction Rule"),
+        tr("Kind"),
+        tr("Cash Kind"),
+        tr("Local Total"),
+    };
+
     header_info_.balance_sheet = {
         tr("Name"),
         tr("ID"),

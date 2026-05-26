@@ -560,4 +560,22 @@ QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, 
     return message;
 }
 
+QJsonObject CashFlowStatementAck(CUuid& widget_id, const QDateTime& start, const QDateTime& end, int level)
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(Section::kFinance));
+    message.insert(kSessionId, QString());
+    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
+    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kStart, start.toString(Qt::ISODate));
+    message.insert(kLevel, level);
+    message.insert(cash_flow_statement::kOperatingNodeArray, QJsonArray());
+    message.insert(cash_flow_statement::kOperatingPathArray, QJsonArray());
+    message.insert(cash_flow_statement::kInvestingNodeArray, QJsonArray());
+    message.insert(cash_flow_statement::kInvestingPathArray, QJsonArray());
+    message.insert(cash_flow_statement::kFinancingNodeArray, QJsonArray());
+    message.insert(cash_flow_statement::kFinancingPathArray, QJsonArray());
+    return message;
+}
+
 }

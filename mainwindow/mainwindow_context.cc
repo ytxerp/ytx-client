@@ -177,12 +177,12 @@ void MainWindow::InitContextFinance()
     info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
 
     info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kNone), string_const::kEmpty);
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOperatingIn), tr("Operating In"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestingIn), tr("Investing In"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kFinancingIn), tr("Financing In"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOperatingOut), tr("Operating Out"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestingOut), tr("Investing Out"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kFinancingOut), tr("Financing Out"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOperatingIn), tr("Ope. In"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestingIn), tr("Inv. In"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kFinancingIn), tr("Fin. In"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOperatingOut), tr("Ope. Out"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestingOut), tr("Inv. Out"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kFinancingOut), tr("Fin. Out"));
 
     info.cash_kind_model = utils::CreateModelFromMap(info.cash_kind_map, this);
 

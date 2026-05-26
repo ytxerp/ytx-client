@@ -491,6 +491,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SPartnerHeatAck, this, &MainWindow::RPartnerHeatAck);
     connect(WebSocket::Instance(), &WebSocket::SBalanceSheetAck, this, &MainWindow::RBalanceSheetAck);
     connect(WebSocket::Instance(), &WebSocket::SIncomeStatementAck, this, &MainWindow::RIncomeStatementAck);
+    connect(WebSocket::Instance(), &WebSocket::SCashFlowStatementAck, this, &MainWindow::RCashFlowStatementAck);
 }
 
 void MainWindow::SetIcon() const
