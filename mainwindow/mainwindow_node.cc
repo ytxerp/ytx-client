@@ -84,6 +84,11 @@ void MainWindow::RLocateNode(Section section, const QUuid& node_id)
     widget->View()->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
 
+void MainWindow::RMessage(QMessageBox::Icon icon, const QString& message)
+{
+    utils::ShowNotification(icon, tr("Constraint Violation"), message, time_const::kAutoCloseMs, QMessageBox::NoButton, this);
+}
+
 void MainWindow::EditNameFIPT()
 {
     Q_ASSERT_X(start_ != Section::kSale && start_ != Section::kPurchase, Q_FUNC_INFO, "EditNameFIPT must not be used in Sale or Purchase section");

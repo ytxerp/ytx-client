@@ -23,6 +23,7 @@
 #include <QActionGroup>
 #include <QLabel>
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QPointer>
 #include <QSettings>
@@ -112,6 +113,7 @@ private slots:
     void RSyncPartner(const QUuid& node_id, const QUuid& value);
     void RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
+    void RMessage(QMessageBox::Icon icon, const QString& message);
 
     void RAccountName(const QString& name);
     void RAccountUsername(const QJsonObject& obj);

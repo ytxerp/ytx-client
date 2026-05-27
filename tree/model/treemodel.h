@@ -21,6 +21,7 @@
 #define TREEMODEL_H
 
 #include <QAbstractItemModel>
+#include <QMessageBox>
 #include <QMimeData>
 #include <QSortFilterProxyModel>
 #include <QTimer>
@@ -48,6 +49,7 @@ signals:
     // send to Mainwindow
     void SUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void SFreeWidget(Section section, const QUuid& node_id);
+    void SMessage(QMessageBox::Icon icon, const QString& message);
 
     // send to NodeWidget
     void SSyncValue();

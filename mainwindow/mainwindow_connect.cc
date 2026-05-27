@@ -9,6 +9,7 @@ void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const
 
     connect(tree_model, &TreeModel::SUpdateName, this, &MainWindow::RUpdateName, Qt::UniqueConnection);
     connect(tree_model, &TreeModel::SFreeWidget, this, &MainWindow::RFreeWidget, Qt::UniqueConnection);
+    connect(tree_model, &TreeModel::SMessage, this, &MainWindow::RMessage, Qt::UniqueConnection);
 
     connect(entry_hub, &EntryHub::SDeleteEntryHash, TableSStation::Instance(), &TableSStation::RDeleteEntryHash, Qt::UniqueConnection);
     connect(entry_hub, &EntryHub::SDeleteMultiEntries, TableSStation::Instance(), &TableSStation::RDeleteMultiEntries, Qt::UniqueConnection);

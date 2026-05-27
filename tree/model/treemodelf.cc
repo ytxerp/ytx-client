@@ -94,8 +94,10 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
         const int raw { value.toInt() };
         const auto roles { static_cast<finance::Roles>(raw) };
 
-        if (IsCashFlowCarrier(roles) && d_node->cash_kind != finance::CashKind::kNone)
+        if (IsCashFlowCarrier(roles) && d_node->cash_kind != finance::CashKind::kNone) {
+            emit SMessage(QMessageBox::Warning, tr("Cannot set roles: node already has a cash kind assigned."));
             return false;
+        }
 
         d_node->roles = roles;
         pending_updates_[id].insert(kRoles, raw);
@@ -106,8 +108,10 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
         const int raw { value.toInt() };
         const auto cash_kind { static_cast<finance::CashKind>(raw) };
 
-        if (cash_kind != finance::CashKind::kNone && IsCashFlowCarrier(d_node->roles))
+        if (cash_kind != finance::CashKind::kNone && IsCashFlowCarrier(d_node->roles)) {
+            emit SMessage(QMessageBox::Warning, tr("Cannot set cash kind: node is a cash flow carrier."));
             return false;
+        }
 
         d_node->cash_kind = cash_kind;
         pending_updates_[id].insert(kCashKind, raw);
