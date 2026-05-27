@@ -45,17 +45,17 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
 
-    void ResetModel(CJsonArray& operating_node, CJsonArray& operating_path, CJsonArray& investing_node, CJsonArray& investing_path, CJsonArray& finance_node,
-        CJsonArray& finance_path);
+    void ResetModel(CJsonArray& node_array);
 
 private:
     CashFlowStatementRow* GetNodeByIndex(const QModelIndex& index) const;
-    CashFlowStatementRow* CreateBranchNode(const QString& name, finance::CashKind cash_kind, bool direction_rule);
+    CashFlowStatementRow* CreateBranchNode(const QString& name, finance::CashKind cash_kind, bool direction_rule) const;
 
     void InitFixedNodes();
-    QHash<QUuid, CashFlowStatementRow*> AddServerRows(const CJsonArray& node_array, const CJsonArray& path_array);
-    void BuildHierarchy(const QHash<QUuid, CashFlowStatementRow*>& hash, CJsonArray& path_array);
+    QHash<QUuid, CashFlowStatementRow*> AddServerRows(const CJsonArray& node_array);
+    void BuildHierarchy() const;
     CashFlowStatementRow* FindGroupNode(finance::CashKind kind) const;
+    void UpdateAncestorTotal(CashFlowStatementRow* node, double final_delta) const;
 
 private:
     const QStringList& header_;

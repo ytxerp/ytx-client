@@ -702,14 +702,8 @@ void WebSocket::AckCashFlowStatement(const QJsonObject& obj)
         return;
     }
 
-    const QJsonArray operating_node { obj.value(cash_flow_statement::kOperatingNodeArray).toArray() };
-    const QJsonArray operating_path { obj.value(cash_flow_statement::kOperatingPathArray).toArray() };
-    const QJsonArray investing_node { obj.value(cash_flow_statement::kInvestingNodeArray).toArray() };
-    const QJsonArray investing_path { obj.value(cash_flow_statement::kInvestingPathArray).toArray() };
-    const QJsonArray financing_node { obj.value(cash_flow_statement::kFinancingNodeArray).toArray() };
-    const QJsonArray financing_path { obj.value(cash_flow_statement::kFinancingPathArray).toArray() };
-
-    emit SCashFlowStatementAck(widget_id, operating_node, operating_path, investing_node, investing_path, financing_node, financing_path);
+    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
+    emit SCashFlowStatementAck(widget_id, node_array);
 }
 
 void WebSocket::DeleteLeaf(const QJsonObject& obj)

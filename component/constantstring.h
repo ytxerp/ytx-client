@@ -62,15 +62,4 @@ inline const QString kExpenseId = QStringLiteral("expense_id");
 inline const QString kNetProfit = QStringLiteral("net_profit");
 }
 
-namespace cash_flow_statement {
-inline const QString kOperatingNodeArray = QStringLiteral("operating_node_array");
-inline const QString kOperatingPathArray = QStringLiteral("operating_path_array");
-
-inline const QString kInvestingNodeArray = QStringLiteral("investing_node_array");
-inline const QString kInvestingPathArray = QStringLiteral("investing_path_array");
-
-inline const QString kFinancingNodeArray = QStringLiteral("financing_node_array");
-inline const QString kFinancingPathArray = QStringLiteral("financing_path_array");
-}
-
 #endif // CONSTANTSTRING_H

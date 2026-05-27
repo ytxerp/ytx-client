@@ -57,9 +57,7 @@ void CashFlowStatementDialog::on_pushButtonFetch_clicked()
         return;
     }
 
-    const int level { ui->spinBoxLevel->value() };
-
-    const auto message { JsonGen::CashFlowStatementAck(widget_id_, start_.toUTC(), end_.toUTC(), level) };
+    const auto message { JsonGen::CashFlowStatementAck(widget_id_, start_.toUTC(), end_.toUTC()) };
 
     WebSocket::Instance()->SendMessage(WsKey::kCashFlowStatementAck, message);
 

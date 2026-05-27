@@ -169,12 +169,9 @@ void CashFlowStatementModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void CashFlowStatementModel::ResetModel(CJsonArray& operating_node, CJsonArray& operating_path, CJsonArray& investing_node, CJsonArray& investing_path,
-    CJsonArray& finance_node, CJsonArray& finance_path)
+void CashFlowStatementModel::ResetModel(CJsonArray& node_array)
 {
-    const auto operating_hash { AddServerRows(operating_node, operating_path) };
-    const auto investing_hash { AddServerRows(investing_node, investing_path) };
-    const auto finance_hash { AddServerRows(finance_node, finance_path) };
+    const auto new_node_hash { AddServerRows(node_array) };
 
     beginResetModel();
 
@@ -183,16 +180,13 @@ void CashFlowStatementModel::ResetModel(CJsonArray& operating_node, CJsonArray& 
         for (auto* node : std::as_const(cash_flow_group_nodes_)) {
             node->children.clear();
         }
-
-        node_hash_.insert(operating_hash);
-        node_hash_.insert(investing_hash);
-        node_hash_.insert(finance_hash);
     }
 
-    {
-        BuildHierarchy(operating_hash, operating_path);
-        BuildHierarchy(investing_hash, investing_path);
-        BuildHierarchy(finance_hash, finance_path);
+    node_hash_ = new_node_hash;
+    BuildHierarchy();
+
+    for (auto* node : std::as_const(node_hash_)) {
+        UpdateAncestorTotal(node, node->final_total);
     }
 
     sort(std::to_underlying(CashFlowStatementEnum::kName), Qt::AscendingOrder);
@@ -257,14 +251,10 @@ void CashFlowStatementModel::InitFixedNodes()
     }
 }
 
-QHash<QUuid, CashFlowStatementRow*> CashFlowStatementModel::AddServerRows(const CJsonArray& node_array, const CJsonArray& path_array)
+QHash<QUuid, CashFlowStatementRow*> CashFlowStatementModel::AddServerRows(const CJsonArray& node_array)
 {
     if (node_array.isEmpty()) {
         qWarning() << Q_FUNC_INFO << "Received empty node array";
-    }
-
-    if (path_array.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "Received empty path array";
     }
 
     QHash<QUuid, CashFlowStatementRow*> hash {};
@@ -279,26 +269,10 @@ QHash<QUuid, CashFlowStatementRow*> CashFlowStatementModel::AddServerRows(const 
     return hash;
 }
 
-void CashFlowStatementModel::BuildHierarchy(const QHash<QUuid, CashFlowStatementRow*>& hash, CJsonArray& path_array)
+void CashFlowStatementModel::BuildHierarchy() const
 {
-    for (const QJsonValue& val : path_array) {
-        const QJsonObject obj { val.toObject() };
-
-        const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
-        const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
-
-        auto* ancestor { hash.value(ancestor_id, nullptr) };
-        auto* descendant { hash.value(descendant_id, nullptr) };
-
-        assert(ancestor && "ancestor not found in node_hash_");
-        assert(descendant && "descendant not found in node_hash_");
-
-        ancestor->children.emplaceBack(descendant);
-        descendant->parent = ancestor;
-    }
-
     // Attach nodes without parent to virtual root
-    for (auto* node : std::as_const(hash)) {
+    for (auto* node : std::as_const(node_hash_)) {
         if (!node->parent) {
             auto* root { FindGroupNode(node->cash_kind) };
 
@@ -315,16 +289,29 @@ void CashFlowStatementModel::BuildHierarchy(const QHash<QUuid, CashFlowStatement
 
 CashFlowStatementRow* CashFlowStatementModel::FindGroupNode(finance::CashKind kind) const
 {
-    for (auto* node : std::as_const(cash_flow_group_nodes_)) {
-        if (node->cash_kind == kind) {
-            return node;
-        }
-    }
+    auto it = std::find_if(cash_flow_group_nodes_.cbegin(), cash_flow_group_nodes_.cend(), [kind](const auto* node) { return node->cash_kind == kind; });
 
-    return nullptr;
+    return it != cash_flow_group_nodes_.cend() ? *it : nullptr;
 }
 
-CashFlowStatementRow* CashFlowStatementModel::CreateBranchNode(const QString& name, finance::CashKind cash_kind, bool direction_rule)
+void CashFlowStatementModel::UpdateAncestorTotal(CashFlowStatementRow* node, double final_delta) const
+{
+    if (!node || node == root_ || !node->parent || node->parent == root_)
+        return;
+
+    if (FloatEqual(final_delta, 0.0))
+        return;
+
+    const bool rule { node->direction_rule };
+
+    for (auto* current = node->parent; current && current != root_; current = current->parent) {
+        const int multiplier { current->direction_rule == rule ? 1 : -1 };
+
+        current->final_total += multiplier * final_delta;
+    }
+}
+
+CashFlowStatementRow* CashFlowStatementModel::CreateBranchNode(const QString& name, finance::CashKind cash_kind, bool direction_rule) const
 {
     auto* node = ResourcePool<CashFlowStatementRow>::Instance().Allocate();
 
