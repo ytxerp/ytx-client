@@ -290,6 +290,7 @@ set(HEADERS
     charts/cash_flow_statement/cashflowstatementenum.h
     delegate/readonly/intstringnonezeror.h
     delegate/readonly/financerolesdelegater.h
+    delegate/readonly/cashflownamer.h
 )
 
 set(SOURCES
@@ -469,6 +470,7 @@ set(SOURCES
     mainwindow/mainwindow_cash_flow_statement.cc
     delegate/readonly/intstringnonezeror.cc
     delegate/readonly/financerolesdelegater.cc
+    delegate/readonly/cashflownamer.cc
 )
 
 set(UIS

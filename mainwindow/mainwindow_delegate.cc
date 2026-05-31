@@ -21,6 +21,7 @@
 #include "delegate/readonly/amountr.h"
 #include "delegate/readonly/boolcolorstringr.h"
 #include "delegate/readonly/boolstringr.h"
+#include "delegate/readonly/cashflownamer.h"
 #include "delegate/readonly/colorr.h"
 #include "delegate/readonly/doublenonedecimalr.h"
 #include "delegate/readonly/doublenonezeror.h"
@@ -640,4 +641,7 @@ void MainWindow::DelegateCashFlowStatement(QTreeView* view) const
 
     auto* roles { new FinanceRolesDelegateR(view) };
     view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kRoles), roles);
+
+    auto* name { new CashFlowNameR(sc_f_.tree_model, std::to_underlying(CashFlowStatementEnum::kId), view) };
+    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kName), name);
 }

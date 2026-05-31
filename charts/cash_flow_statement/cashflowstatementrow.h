@@ -47,8 +47,8 @@ struct CashFlowStatementRow final {
     inline void Reset() { *this = CashFlowStatementRow {}; }
     inline void ReadJson(const QJsonObject& object)
     {
-        if (const auto val = object.value(kName); val.isString())
-            name = val.toString();
+        // if (const auto val = object.value(kName); val.isString())
+        //     name = val.toString();
         if (const auto val = object.value(kId); val.isString())
             id = QUuid(val.toString());
         if (const auto val = object.value(kCode); val.isString())
