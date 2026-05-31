@@ -23,7 +23,7 @@ void MainWindow::on_actionCashFlowStatement_triggered()
     dialog->show();
 }
 
-void MainWindow::RCashFlowStatementAck(const QUuid& widget_id, const QJsonArray& node_array)
+void MainWindow::RCashFlowStatementAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& carrier_array)
 {
     auto widget { sc_f_.widget_hash.value(widget_id).widget };
     if (!widget)
@@ -34,5 +34,5 @@ void MainWindow::RCashFlowStatementAck(const QUuid& widget_id, const QJsonArray&
         return;
 
     auto* model { d_widget->Model() };
-    model->ResetModel(node_array);
+    model->ResetModel(node_array, carrier_array);
 }

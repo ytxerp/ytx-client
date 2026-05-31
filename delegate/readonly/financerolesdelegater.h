@@ -17,19 +17,17 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CASHFLOWSTATEMENTENUM_H
-#define CASHFLOWSTATEMENTENUM_H
+#ifndef FINANCEROLESDELEGATER_H
+#define FINANCEROLESDELEGATER_H
 
-enum class CashFlowStatementEnum {
-    kName = 0,
-    kId,
-    kCode,
-    kDescription,
-    kDirectionRule,
-    kKind,
-    kRoles,
-    kCashKind,
-    kFinalTotal,
+#include "delegate/styleditemdelegate.h"
+
+class FinanceRolesDelegateR final : public StyledItemDelegate {
+public:
+    explicit FinanceRolesDelegateR(QObject* parent = nullptr);
+
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
 
-#endif // CASHFLOWSTATEMENTENUM_H
+#endif // FINANCEROLESDELEGATER_H

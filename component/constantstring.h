@@ -62,4 +62,8 @@ inline const QString kExpenseId = QStringLiteral("expense_id");
 inline const QString kNetProfit = QStringLiteral("net_profit");
 }
 
+namespace cash_flow_statement {
+inline const QString kCarrierArray = QStringLiteral("carrier_array");
+}
+
 #endif // CONSTANTSTRING_H

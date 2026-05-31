@@ -70,6 +70,7 @@ void MainWindow::InitHeader()
         tr("Description"),
         tr("Direction Rule"),
         tr("Kind"),
+        tr("Roles"),
         tr("Cash Kind"),
         tr("Local Total"),
     };

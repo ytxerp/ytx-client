@@ -569,6 +569,7 @@ QJsonObject CashFlowStatementAck(CUuid& widget_id, const QDateTime& start, const
     message.insert(kEnd, end.toString(Qt::ISODate));
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kNodeArray, QJsonArray());
+    message.insert(cash_flow_statement::kCarrierArray, QJsonArray());
     return message;
 }
 

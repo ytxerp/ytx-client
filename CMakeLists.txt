@@ -289,6 +289,7 @@ set(HEADERS
     charts/cash_flow_statement/cashflowstatementrow.h
     charts/cash_flow_statement/cashflowstatementenum.h
     delegate/readonly/intstringnonezeror.h
+    delegate/readonly/financerolesdelegater.h
 )
 
 set(SOURCES
@@ -467,6 +468,7 @@ set(SOURCES
     charts/cash_flow_statement/cashflowstatementmodel.cc
     mainwindow/mainwindow_cash_flow_statement.cc
     delegate/readonly/intstringnonezeror.cc
+    delegate/readonly/financerolesdelegater.cc
 )
 
 set(UIS

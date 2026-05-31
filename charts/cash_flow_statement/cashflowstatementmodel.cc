@@ -136,6 +136,8 @@ QVariant CashFlowStatementModel::data(const QModelIndex& index, int role) const
         return node->final_total;
     case CashFlowStatementEnum::kCashKind:
         return std::to_underlying(node->cash_kind);
+    case CashFlowStatementEnum::kRoles:
+        return static_cast<int>(node->roles);
     }
 }
 
@@ -161,6 +163,8 @@ void CashFlowStatementModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::cash_kind, order);
         case CashFlowStatementEnum::kId:
             return false;
+        case CashFlowStatementEnum::kRoles:
+            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::roles, order);
         }
     };
 
@@ -169,20 +173,25 @@ void CashFlowStatementModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void CashFlowStatementModel::ResetModel(CJsonArray& node_array)
+void CashFlowStatementModel::ResetModel(CJsonArray& node_array, CJsonArray& carrier_array)
 {
-    const auto new_node_hash { AddServerRows(node_array) };
+    const auto new_node_hash { AddRowsHash(node_array) };
+    const auto new_node_list { AddRowsList(carrier_array) };
 
     beginResetModel();
 
     {
         ResourcePool<CashFlowStatementRow>::Instance().Recycle(node_hash_);
+        ResourcePool<CashFlowStatementRow>::Instance().Recycle(carrier_->children);
+
         for (auto* node : std::as_const(cash_flow_group_nodes_)) {
             node->children.clear();
         }
     }
 
     node_hash_ = new_node_hash;
+    carrier_->children = new_node_list;
+
     BuildHierarchy();
 
     for (auto* node : std::as_const(node_hash_)) {
@@ -204,6 +213,7 @@ CashFlowStatementRow* CashFlowStatementModel::GetNodeByIndex(const QModelIndex& 
 void CashFlowStatementModel::InitFixedNodes()
 {
     root_ = CreateBranchNode(string_const::kEmpty, finance::CashKind::kNone, direction_rule::kDICD);
+    carrier_ = CreateBranchNode(tr("Carrier"), finance::CashKind::kNone, direction_rule::kDICD);
 
     auto* operating { CreateBranchNode(tr("Operating"), finance::CashKind::kNone, direction_rule::kDDCI) };
     auto* investing { CreateBranchNode(tr("Investing"), finance::CashKind::kNone, direction_rule::kDDCI) };
@@ -214,6 +224,7 @@ void CashFlowStatementModel::InitFixedNodes()
         fixed_nodes_.emplaceBack(operating);
         fixed_nodes_.emplaceBack(investing);
         fixed_nodes_.emplaceBack(financing);
+        fixed_nodes_.emplaceBack(carrier_);
     }
 
     {
@@ -221,11 +232,13 @@ void CashFlowStatementModel::InitFixedNodes()
             operating,
             investing,
             financing,
+            carrier_,
         };
 
         operating->parent = root_;
         investing->parent = root_;
         financing->parent = root_;
+        carrier_->parent = root_;
     }
 
     {
@@ -251,7 +264,7 @@ void CashFlowStatementModel::InitFixedNodes()
     }
 }
 
-QHash<QUuid, CashFlowStatementRow*> CashFlowStatementModel::AddServerRows(const CJsonArray& node_array)
+QHash<QUuid, CashFlowStatementRow*> CashFlowStatementModel::AddRowsHash(const CJsonArray& node_array)
 {
     if (node_array.isEmpty()) {
         qWarning() << Q_FUNC_INFO << "Received empty node array";
@@ -269,6 +282,24 @@ QHash<QUuid, CashFlowStatementRow*> CashFlowStatementModel::AddServerRows(const 
     return hash;
 }
 
+QList<CashFlowStatementRow*> CashFlowStatementModel::AddRowsList(const CJsonArray& node_array)
+{
+    if (node_array.isEmpty()) {
+        qWarning() << Q_FUNC_INFO << "Received empty node array";
+    }
+
+    QList<CashFlowStatementRow*> list {};
+
+    for (const QJsonValue& val : node_array) {
+        const QJsonObject obj { val.toObject() };
+        auto* node { ResourcePool<CashFlowStatementRow>::Instance().Allocate() };
+        node->ReadJson(obj);
+        list.emplaceBack(node);
+    }
+
+    return list;
+}
+
 void CashFlowStatementModel::BuildHierarchy() const
 {
     // Attach nodes without parent to virtual root
@@ -284,6 +315,10 @@ void CashFlowStatementModel::BuildHierarchy() const
             root->children.emplaceBack(node);
             node->parent = root;
         }
+    }
+
+    for (auto* node : std::as_const(carrier_->children)) {
+        node->parent = carrier_;
     }
 }
 

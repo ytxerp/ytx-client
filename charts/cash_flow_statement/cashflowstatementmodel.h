@@ -45,14 +45,16 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
 
-    void ResetModel(CJsonArray& node_array);
+    void ResetModel(CJsonArray& node_array, CJsonArray& carrier_array);
 
 private:
     CashFlowStatementRow* GetNodeByIndex(const QModelIndex& index) const;
     CashFlowStatementRow* CreateBranchNode(const QString& name, finance::CashKind cash_kind, bool direction_rule) const;
 
     void InitFixedNodes();
-    QHash<QUuid, CashFlowStatementRow*> AddServerRows(const CJsonArray& node_array);
+    QHash<QUuid, CashFlowStatementRow*> AddRowsHash(const CJsonArray& node_array);
+    QList<CashFlowStatementRow*> AddRowsList(const CJsonArray& node_array);
+
     void BuildHierarchy() const;
     CashFlowStatementRow* FindGroupNode(finance::CashKind kind) const;
     void UpdateAncestorTotal(CashFlowStatementRow* node, double final_delta) const;
@@ -60,6 +62,7 @@ private:
 private:
     const QStringList& header_;
     CashFlowStatementRow* root_ {};
+    CashFlowStatementRow* carrier_ {};
 
     QList<CashFlowStatementRow*> fixed_nodes_ {};
     QList<CashFlowStatementRow*> cash_flow_group_nodes_ {};

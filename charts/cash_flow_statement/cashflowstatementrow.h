@@ -36,6 +36,7 @@ struct CashFlowStatementRow final {
     QString description {};
     NodeKind kind {};
     finance::CashKind cash_kind {};
+    finance::Roles roles {};
     bool direction_rule {};
 
     double final_total {};
@@ -62,6 +63,8 @@ struct CashFlowStatementRow final {
             direction_rule = val.toBool();
         if (const auto val = object.value(kFinalTotal); val.isString())
             final_total = val.toString().toDouble();
+        if (const auto val = object.value(kRoles); val.isDouble())
+            roles = static_cast<finance::Roles>(val.toInt());
     }
 };
 
