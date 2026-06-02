@@ -42,7 +42,11 @@ void MainWindow::InitHeader()
         tr("Description"),
         tr("Direction Rule"),
         tr("Kind"),
-        tr("Local Total"),
+        tr("Current Period"),
+        tr("Yoy"),
+        tr("YoY %"),
+        tr("Mom"),
+        tr("MoM %"),
     };
 
     header_info_.inventory_heat = {

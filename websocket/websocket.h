@@ -95,7 +95,7 @@ signals:
     void SInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void SPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void SBalanceSheetAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
-    void SIncomeStatementAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array, double net_profit);
+    void SIncomeStatementAck(const QUuid& widget_id, const QJsonObject& obj);
     void SCashFlowStatementAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& carrier_array);
 
     // send to SearchNodeModel

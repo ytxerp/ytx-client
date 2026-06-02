@@ -17,21 +17,16 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INCOMESTATEMENTENUM_H
-#define INCOMESTATEMENTENUM_H
+#ifndef GROWTHRATER_H
+#define GROWTHRATER_H
 
-enum class IncomeStatementEnum {
-    kName = 0,
-    kId,
-    kCode,
-    kDescription,
-    kDirectionRule,
-    kKind,
-    kFinalTotal,
-    kYoyFinalTotal,
-    kYoyGrowthRate,
-    kMomFinalTotal,
-    kMomGrowthRate,
+#include "delegate/styleditemdelegate.h"
+
+class GrowthRateR final : public StyledItemDelegate {
+public:
+    explicit GrowthRateR(QObject* parent = nullptr);
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
 
-#endif // INCOMESTATEMENTENUM_H
+#endif // GROWTHRATER_H

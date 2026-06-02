@@ -4,6 +4,7 @@
 #include "billing/statement/statementenum.h"
 #include "charts/balance_sheet/balancesheetenum.h"
 #include "charts/cash_flow_statement/cashflowstatementenum.h"
+#include "charts/income_statement/incomestatementenum.h"
 #include "component/constantstring.h"
 #include "delegate/bool.h"
 #include "delegate/boolstring.h"
@@ -28,6 +29,7 @@
 #include "delegate/readonly/doubler.h"
 #include "delegate/readonly/financeforeignr.h"
 #include "delegate/readonly/financerolesdelegater.h"
+#include "delegate/readonly/growthrater.h"
 #include "delegate/readonly/intstringnonezeror.h"
 #include "delegate/readonly/intstringr.h"
 #include "delegate/readonly/issuedtimer.h"
@@ -621,6 +623,26 @@ void MainWindow::DelegateBalanceSheet(QTreeView* view) const
 
     auto* kind { new IntStringR(info.kind_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kKind), kind);
+}
+
+void MainWindow::DelegateIncomeStatement(QTreeView* view) const
+{
+    const auto& info { sc_f_.info };
+
+    auto* amount { new AmountR(sc_f_.section_config.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, string_const::kEightDigits, view) };
+    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kFinalTotal), amount);
+    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kYoyFinalTotal), amount);
+    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kMomFinalTotal), amount);
+
+    auto* growth_rate { new GrowthRateR(view) };
+    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kYoyGrowthRate), growth_rate);
+    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kMomGrowthRate), growth_rate);
+
+    auto* direction_rule { new BoolStringR(info.rule_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kDirectionRule), direction_rule);
+
+    auto* kind { new IntStringR(info.kind_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kKind), kind);
 }
 
 void MainWindow::DelegateCashFlowStatement(QTreeView* view) const

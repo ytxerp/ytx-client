@@ -60,6 +60,17 @@ namespace income_statement {
 inline const QString kIncomeId = QStringLiteral("income_id");
 inline const QString kExpenseId = QStringLiteral("expense_id");
 inline const QString kNetProfit = QStringLiteral("net_profit");
+inline const QString kYoyNetProfit = QStringLiteral("yoy_net_profit");
+inline const QString kMomNetProfit = QStringLiteral("mom_net_profit");
+inline const QString kYoyFinalTotal = QStringLiteral("yoy_final_total");
+inline const QString kMomFinalTotal = QStringLiteral("mom_final_total");
+
+inline const QString kYoyStart = QStringLiteral("yoy_start");
+inline const QString kYoyEnd = QStringLiteral("yoy_end");
+
+inline const QString kMomStart = QStringLiteral("mom_start");
+inline const QString kMomEnd = QStringLiteral("mom_end");
+
 }
 
 namespace cash_flow_statement {

@@ -131,6 +131,14 @@ QVariant IncomeStatementModel::data(const QModelIndex& index, int role) const
         return std::to_underlying(node->kind);
     case IncomeStatementEnum::kFinalTotal:
         return node->final_total;
+    case IncomeStatementEnum::kYoyFinalTotal:
+        return node->yoy_final_total;
+    case IncomeStatementEnum::kMomFinalTotal:
+        return node->mom_final_total;
+    case IncomeStatementEnum::kYoyGrowthRate:
+        return node->yoy_growth_rate;
+    case IncomeStatementEnum::kMomGrowthRate:
+        return node->mom_growth_rate;
     }
 }
 
@@ -154,6 +162,14 @@ void IncomeStatementModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &IncomeStatementRow::final_total, order);
         case IncomeStatementEnum::kId:
             return false;
+        case IncomeStatementEnum::kYoyFinalTotal:
+            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::yoy_final_total, order);
+        case IncomeStatementEnum::kMomFinalTotal:
+            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::mom_final_total, order);
+        case IncomeStatementEnum::kYoyGrowthRate:
+            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::yoy_growth_rate, order);
+        case IncomeStatementEnum::kMomGrowthRate:
+            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::mom_growth_rate, order);
         }
     };
 
@@ -162,7 +178,8 @@ void IncomeStatementModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void IncomeStatementModel::ResetModel(const QJsonArray& node_array, const QJsonArray& path_array, double net_profit)
+void IncomeStatementModel::ResetModel(
+    const QJsonArray& node_array, const QJsonArray& path_array, double net_profit, double yoy_net_profit, double mom_net_profit)
 {
     if (node_array.isEmpty()) {
         qWarning() << Q_FUNC_INFO << "Received empty node array";
@@ -189,10 +206,23 @@ void IncomeStatementModel::ResetModel(const QJsonArray& node_array, const QJsonA
         node_hash_ = std::move(new_hash);
         BuildHierarchy(path_array);
         net_profit_->final_total = net_profit;
+        net_profit_->yoy_final_total = yoy_net_profit;
+        net_profit_->mom_final_total = mom_net_profit;
+
+        net_profit_->yoy_growth_rate = GrowthRate(net_profit, yoy_net_profit);
+        net_profit_->mom_growth_rate = GrowthRate(net_profit, mom_net_profit);
     }
 
     sort(std::to_underlying(IncomeStatementEnum::kName), Qt::AscendingOrder);
     endResetModel();
+}
+
+void IncomeStatementModel::UpdateHeader(const QString& yoy_title, const QString& mom_title)
+{
+    header_[std::to_underlying(IncomeStatementEnum::kYoyFinalTotal)] = yoy_title;
+    header_[std::to_underlying(IncomeStatementEnum::kMomFinalTotal)] = mom_title;
+
+    emit headerDataChanged(Qt::Horizontal, static_cast<int>(IncomeStatementEnum::kYoyFinalTotal), static_cast<int>(IncomeStatementEnum::kMomGrowthRate));
 }
 
 IncomeStatementRow* IncomeStatementModel::GetNodeByIndex(const QModelIndex& index) const

@@ -16,7 +16,7 @@ void MainWindow::on_actionIncomeStatement_triggered()
     {
         auto* view { dialog->View() };
         InitTreeView(view, std::to_underlying(IncomeStatementEnum::kId), std::to_underlying(IncomeStatementEnum::kDescription));
-        DelegateBalanceSheet(view);
+        DelegateIncomeStatement(view);
     }
 
     utils::ManageDialog(sc_f_.widget_hash, dialog, widget_id);
@@ -24,7 +24,7 @@ void MainWindow::on_actionIncomeStatement_triggered()
     dialog->show();
 }
 
-void MainWindow::RIncomeStatementAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array, double net_profit)
+void MainWindow::RIncomeStatementAck(const QUuid& widget_id, const QJsonObject& obj)
 {
     auto widget { sc_f_.widget_hash.value(widget_id).widget };
     if (!widget)
@@ -34,6 +34,21 @@ void MainWindow::RIncomeStatementAck(const QUuid& widget_id, const QJsonArray& n
     if (!d_widget)
         return;
 
+    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
+    const QJsonArray path_array { obj.value(kPathArray).toArray() };
+    const double net_profit { obj.value(income_statement::kNetProfit).toString().toDouble() };
+    const double yoy_net_profit { obj.value(income_statement::kYoyNetProfit).toString().toDouble() };
+    const double mom_net_profit { obj.value(income_statement::kMomNetProfit).toString().toDouble() };
+
+    const auto yoy_start { QDateTime::fromString(obj.value(income_statement::kYoyStart).toString(), Qt::ISODate).toLocalTime() };
+    const auto yoy_end { QDateTime::fromString(obj.value(income_statement::kYoyEnd).toString(), Qt::ISODate).toLocalTime().addDays(-1) };
+    const auto mom_start { QDateTime::fromString(obj.value(income_statement::kMomStart).toString(), Qt::ISODate).toLocalTime() };
+    const auto mom_end { QDateTime::fromString(obj.value(income_statement::kMomEnd).toString(), Qt::ISODate).toLocalTime().addDays(-1) };
+
+    const QString yoy_title { QString("YoY (%1~%2)").arg(yoy_start.toString(kDateFST), yoy_end.toString(kDateFST)) };
+    const QString mom_title { QString("MoM (%1~%2)").arg(mom_start.toString(kDateFST), mom_end.toString(kDateFST)) };
+
     auto* model { d_widget->Model() };
-    model->ResetModel(node_array, path_array, net_profit);
+    model->UpdateHeader(yoy_title, mom_title);
+    model->ResetModel(node_array, path_array, net_profit, yoy_net_profit, mom_net_profit);
 }

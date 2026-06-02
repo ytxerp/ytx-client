@@ -7,7 +7,16 @@
 #include <QUuid>
 
 #include "component/constant.h"
+#include "component/constantstring.h"
 #include "enum/nodeenum.h"
+
+inline double GrowthRate(double current, double previous)
+{
+    if (qFuzzyIsNull(previous))
+        return 0.0;
+
+    return (current - previous) / previous;
+}
 
 struct IncomeStatementRow final {
     QString name {};
@@ -18,6 +27,11 @@ struct IncomeStatementRow final {
     bool direction_rule {};
 
     double final_total {};
+    double yoy_final_total {};
+    double yoy_growth_rate {};
+
+    double mom_final_total {};
+    double mom_growth_rate {};
 
     IncomeStatementRow* parent {};
     QList<IncomeStatementRow*> children {};
@@ -39,6 +53,13 @@ struct IncomeStatementRow final {
             direction_rule = val.toBool();
         if (const auto val = object.value(kFinalTotal); val.isString())
             final_total = val.toString().toDouble();
+        if (const auto val = object.value(income_statement::kYoyFinalTotal); val.isString())
+            yoy_final_total = val.toString().toDouble();
+        if (const auto val = object.value(income_statement::kMomFinalTotal); val.isString())
+            mom_final_total = val.toString().toDouble();
+
+        yoy_growth_rate = GrowthRate(final_total, yoy_final_total);
+        mom_growth_rate = GrowthRate(final_total, mom_final_total);
     }
 };
 

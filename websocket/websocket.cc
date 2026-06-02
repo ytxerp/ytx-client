@@ -683,11 +683,7 @@ void WebSocket::AckIncomeStatement(const QJsonObject& obj)
         return;
     }
 
-    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
-    const QJsonArray path_array { obj.value(kPathArray).toArray() };
-    const double net_profit { obj.value(income_statement::kNetProfit).toString().toDouble() };
-
-    emit SIncomeStatementAck(widget_id, node_array, path_array, net_profit);
+    emit SIncomeStatementAck(widget_id, obj);
 }
 
 void WebSocket::AckCashFlowStatement(const QJsonObject& obj)

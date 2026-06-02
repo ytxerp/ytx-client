@@ -169,7 +169,7 @@ private slots:
     void RInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void RPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void RBalanceSheetAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
-    void RIncomeStatementAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array, double net_profit);
+    void RIncomeStatementAck(const QUuid& widget_id, const QJsonObject& obj);
     void RCashFlowStatementAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& carrier_array);
 
     void RAccountRoleUpdate();
@@ -241,6 +241,7 @@ private:
     void DelegateInventoryHeat(QTableView* table_view) const;
     void DelegatePartnerHeat(QTableView* table_view) const;
     void DelegateBalanceSheet(QTreeView* view) const;
+    void DelegateIncomeStatement(QTreeView* view) const;
     void DelegateCashFlowStatement(QTreeView* view) const;
 
     void InitTableView(QTableView* view, int id_column, int version_column, int stretch_column) const;
