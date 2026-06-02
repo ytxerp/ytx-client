@@ -1,7 +1,6 @@
 #include <QtCore/qdir.h>
 #include <QtWidgets/qheaderview.h>
 
-#include "component/stringinitializer.h"
 #include "entryhub/entryhubf.h"
 #include "entryhub/entryhubi.h"
 #include "entryhub/entryhubo.h"
@@ -91,7 +90,7 @@ void MainWindow::InitilizeContext()
 {
     {
         InitHeader();
-        StringInitializer::SetHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
+        InitHeader(sc_f_.info, sc_i_.info, sc_t_.info, sc_p_.info, sc_sale_.info, sc_purchase_.info);
     }
 
     {

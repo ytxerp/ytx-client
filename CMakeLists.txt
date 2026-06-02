@@ -102,7 +102,6 @@ set(HEADERS
     component/info.h
     component/sectioncontex.h
     component/signalblocker.h
-    component/stringinitializer.h
     component/using.h
     component/widgetcontex.h
     delegate/bool.h
@@ -305,7 +304,6 @@ set(SOURCES
     billing/statement/statementsecondarymodel.cc
     billing/statement/statementsecondarywidget.cc
     billing/statement/statementprimarywidget.cc
-    component/stringinitializer.cc
     delegate/bool.cc
     delegate/boolstring.cc
     delegate/color.cc
@@ -471,6 +469,7 @@ set(SOURCES
     delegate/readonly/intstringnonezeror.cc
     delegate/readonly/financerolesdelegater.cc
     delegate/readonly/cashflownamer.cc
+    mainwindow/mainwindow_header.cc
 )
 
 set(UIS

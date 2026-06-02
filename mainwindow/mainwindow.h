@@ -303,6 +303,7 @@ private:
     void InitSystemTray();
     void InitStatusLabel();
     void InitHeader();
+    void InitHeader(SectionInfo& finance, SectionInfo& inventory, SectionInfo& task, SectionInfo& partner, SectionInfo& sale, SectionInfo& purchase);
     void InitAuditInfo();
 
     void FlushCaches(SectionContext& sc);
