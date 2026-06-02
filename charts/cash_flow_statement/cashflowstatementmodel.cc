@@ -348,9 +348,9 @@ void CashFlowStatementModel::UpdateAncestorTotal(CashFlowStatementRow* node, dou
 
 CashFlowStatementRow* CashFlowStatementModel::CreateBranchNode(const QString& name, finance::CashKind cash_kind, bool direction_rule) const
 {
-    auto* node = ResourcePool<CashFlowStatementRow>::Instance().Allocate();
+    auto* node { ResourcePool<CashFlowStatementRow>::Instance().Allocate() };
 
-    node->id = QUuid::createUuid();
+    node->id = QUuid::createUuidV7();
     node->kind = NodeKind::kBranch;
 
     node->name = name;
