@@ -34,8 +34,6 @@ void MainWindow::RIncomeStatementAck(const QUuid& widget_id, const QJsonArray& n
     if (!d_widget)
         return;
 
-    d_widget->ResetNetProfit(net_profit);
-
     auto* model { d_widget->Model() };
-    model->ResetModel(node_array, path_array);
+    model->ResetModel(node_array, path_array, net_profit);
 }

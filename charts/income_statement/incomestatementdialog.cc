@@ -32,8 +32,6 @@ IncomeStatementDialog::~IncomeStatementDialog() { delete ui; }
 
 QTreeView* IncomeStatementDialog::View() { return ui->treeView; }
 
-void IncomeStatementDialog::ResetNetProfit(double value) { ui->dspin_box_static_->setValue(value); }
-
 void IncomeStatementDialog::on_dateTimeEditEnd_dateChanged(const QDate& date)
 {
     const bool valid { date >= start_.date() };
@@ -111,7 +109,6 @@ void IncomeStatementDialog::InitDialog()
     ui->dateTimeEditEnd->setDisplayFormat(kDateFST);
     ui->dateTimeEditStart->setDateTime(start_);
     ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
-    ui->dspin_box_static_->setRange(kDoubleLowest, kDoubleMax);
 
     ui->pushButtonFetch->setFocus();
 }

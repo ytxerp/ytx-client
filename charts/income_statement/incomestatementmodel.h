@@ -44,15 +44,19 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
 
-    void ResetModel(const QJsonArray& node_array, const QJsonArray& path_array);
+    void ResetModel(const QJsonArray& node_array, const QJsonArray& path_array, double net_profit);
 
 private:
     IncomeStatementRow* GetNodeByIndex(const QModelIndex& index) const;
     void BuildHierarchy(const QJsonArray& path_array);
 
+    void InitFixedNodes();
+    IncomeStatementRow* CreateBranchNode(const QString& name, bool direction_rule) const;
+
 private:
     const QStringList& header_;
     IncomeStatementRow* root_ {};
+    IncomeStatementRow* net_profit_ {};
     QHash<QUuid, IncomeStatementRow*> node_hash_ {};
 };
 

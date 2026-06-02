@@ -39,7 +39,6 @@ public:
 
     QTreeView* View();
     IncomeStatementModel* Model() { return model_; }
-    void ResetNetProfit(double value);
 
 private slots:
     void on_dateTimeEditEnd_dateChanged(const QDate& date);

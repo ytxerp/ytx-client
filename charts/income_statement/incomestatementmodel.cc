@@ -11,17 +11,14 @@ IncomeStatementModel::IncomeStatementModel(const QStringList& header, QObject* p
     : QAbstractItemModel(parent)
     , header_ { header }
 {
-    root_ = ResourcePool<IncomeStatementRow>::Instance().Allocate();
-    root_->kind = NodeKind::kBranch;
-    root_->direction_rule = false;
-    root_->name = QString();
-    root_->id = QUuid();
+    InitFixedNodes();
 }
 
 IncomeStatementModel::~IncomeStatementModel()
 {
     ResourcePool<IncomeStatementRow>::Instance().Recycle(node_hash_);
     ResourcePool<IncomeStatementRow>::Instance().Recycle(root_);
+    ResourcePool<IncomeStatementRow>::Instance().Recycle(net_profit_);
 }
 
 QVariant IncomeStatementModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -161,11 +158,11 @@ void IncomeStatementModel::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    utils::SortIterative(root_, Compare);
+    utils::SortIterative(net_profit_, Compare);
     emit layoutChanged();
 }
 
-void IncomeStatementModel::ResetModel(const QJsonArray& node_array, const QJsonArray& path_array)
+void IncomeStatementModel::ResetModel(const QJsonArray& node_array, const QJsonArray& path_array, double net_profit)
 {
     if (node_array.isEmpty()) {
         qWarning() << Q_FUNC_INFO << "Received empty node array";
@@ -188,9 +185,10 @@ void IncomeStatementModel::ResetModel(const QJsonArray& node_array, const QJsonA
 
     {
         ResourcePool<IncomeStatementRow>::Instance().Recycle(node_hash_);
-        root_->children.clear();
+        net_profit_->children.clear();
         node_hash_ = std::move(new_hash);
         BuildHierarchy(path_array);
+        net_profit_->final_total = net_profit;
     }
 
     sort(std::to_underlying(IncomeStatementEnum::kName), Qt::AscendingOrder);
@@ -226,8 +224,30 @@ void IncomeStatementModel::BuildHierarchy(const QJsonArray& path_array)
     // Attach nodes without parent to virtual root
     for (IncomeStatementRow* node : std::as_const(node_hash_)) {
         if (!node->parent) {
-            root_->children.emplaceBack(node);
-            node->parent = root_;
+            net_profit_->children.emplaceBack(node);
+            node->parent = net_profit_;
         }
     }
+}
+
+void IncomeStatementModel::InitFixedNodes()
+{
+    root_ = CreateBranchNode(string_const::kEmpty, false);
+    net_profit_ = CreateBranchNode(tr("Net Profit"), direction_rule::kDDCI);
+
+    root_->children.emplaceBack(net_profit_);
+    net_profit_->parent = root_;
+}
+
+IncomeStatementRow* IncomeStatementModel::CreateBranchNode(const QString& name, bool direction_rule) const
+{
+    auto* node { ResourcePool<IncomeStatementRow>::Instance().Allocate() };
+
+    node->id = QUuid::createUuidV7();
+    node->kind = NodeKind::kBranch;
+
+    node->name = name;
+    node->direction_rule = direction_rule;
+
+    return node;
 }

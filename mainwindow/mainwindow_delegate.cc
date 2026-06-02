@@ -611,10 +611,10 @@ void MainWindow::DelegatePartnerHeat(QTableView* table_view) const
 
 void MainWindow::DelegateBalanceSheet(QTreeView* view) const
 {
-    auto* amount { new DoubleNoneZeroR(sc_f_.section_config.amount_decimal, string_const::kFourDigits, view) };
-    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kFinalTotal), amount);
-
     const auto& info { sc_f_.info };
+
+    auto* amount { new AmountR(sc_f_.section_config.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, string_const::kEightDigits, view) };
+    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kFinalTotal), amount);
 
     auto* direction_rule { new BoolStringR(info.rule_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kDirectionRule), direction_rule);
@@ -625,10 +625,10 @@ void MainWindow::DelegateBalanceSheet(QTreeView* view) const
 
 void MainWindow::DelegateCashFlowStatement(QTreeView* view) const
 {
-    auto* amount { new DoubleNoneZeroR(sc_f_.section_config.amount_decimal, string_const::kFourDigits, view) };
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kFinalTotal), amount);
-
     const auto& info { sc_f_.info };
+
+    auto* amount { new AmountR(sc_f_.section_config.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, string_const::kEightDigits, view) };
+    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kFinalTotal), amount);
 
     auto* direction_rule { new BoolStringR(info.rule_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kDirectionRule), direction_rule);
