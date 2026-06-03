@@ -80,8 +80,6 @@ void AuthDialog::RDenyLogin(int code)
         break;
     }
 
-    qWarning() << "[Auth] Login failed"
-               << "| email:" << ui->lineEditEmail->text().trimmed() << "| workspace:" << ui->lineEditWorkspace->text().trimmed() << "| reason:" << message;
     utils::ShowNotification(QMessageBox::Critical, title, message, time_const::kAutoCloseMs);
 }
 

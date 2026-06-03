@@ -10,9 +10,6 @@ TagDialog::TagDialog(QWidget* parent)
 {
     ui->setupUi(this);
     setMinimumSize(400, 300);
-
-    ui->pBtnInsert->setShortcut(QKeySequence::New);
-    ui->pBtnDelete->setShortcut(QKeySequence::Delete);
 }
 
 TagDialog::~TagDialog() { delete ui; }

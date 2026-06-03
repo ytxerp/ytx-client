@@ -20,14 +20,14 @@
 #ifndef CONSTANTDOUBLE_H
 #define CONSTANTDOUBLE_H
 
-#include <cstdlib>
+#include <QtNumeric>
 #include <limits>
 
 inline constexpr double kTolerance = 1e-8;
 inline constexpr double kDoubleMax = std::numeric_limits<double>::max();
 inline constexpr double kDoubleLowest = std::numeric_limits<double>::lowest();
 
-inline bool FloatEqual(double a, double b) noexcept { return std::abs(a - b) < kTolerance; }
-inline bool FloatChanged(double a, double b) noexcept { return !FloatEqual(a, b); }
+inline bool FloatEqual(double a, double b) noexcept { return qFuzzyIsNull(a - b); }
+inline bool FloatChanged(double a, double b) noexcept { return !qFuzzyIsNull(a - b); }
 
 #endif // CONSTANTDOUBLE_H

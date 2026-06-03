@@ -19,12 +19,10 @@
 #include "dialog/preferences.h"
 #include "document.h"
 #include "global/tablesstation.h"
-#include "tag/tagdialog.h"
 #include "ui_mainwindow.h"
 #include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
 #include "websocket/websocket.h"
-#include "workspace_member/workspacememberdialog.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -61,6 +59,7 @@ MainWindow::MainWindow(QWidget* parent)
     QTimer::singleShot(0, this, &::MainWindow::InitilizeContext);
 
     ui->actionDelete->setShortcut(QKeySequence::Delete);
+    ui->actionDelete->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 }
 
 QSet<QString> MainWindow::ChildrenName(const Node* node) const
@@ -156,24 +155,9 @@ void MainWindow::InsertNodeFunction(const QModelIndex& parent_index)
 void MainWindow::on_actionDelete_triggered()
 {
     qInfo() << Q_FUNC_INFO;
-    auto* active_widget { QApplication::activeWindow() };
 
-    if (auto* d_dialog { qobject_cast<TagDialog*>(active_widget) }) {
-        d_dialog->on_pBtnDelete_clicked();
+    if (QApplication::activeWindow() != this)
         return;
-    }
-
-    if (auto* d_dialog { qobject_cast<WorkspaceMemberDialog*>(active_widget) }) {
-        auto* view { d_dialog->View() };
-        const auto index { view->currentIndex() };
-        if (!index.isValid())
-            return;
-
-        const int row { index.row() };
-        auto* model { d_dialog->Model() };
-        model->removeRows(row, 1);
-        return;
-    }
 
     auto* widget { sc_->tab_widget->currentWidget() };
 
@@ -521,6 +505,9 @@ void MainWindow::on_actionInsertNode_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
+    if (QApplication::activeWindow() != this)
+        return;
+
     auto* widget { sc_->tab_widget->currentWidget() };
     if (!IsTreeWidget(widget) && !IsTableWidgetO(widget)) {
         return;
@@ -535,6 +522,9 @@ void MainWindow::on_actionInsertNode_triggered()
 void MainWindow::on_actionAppendNode_triggered()
 {
     qInfo() << Q_FUNC_INFO;
+
+    if (QApplication::activeWindow() != this)
+        return;
 
     auto* widget { sc_->tab_widget->currentWidget() };
     if (!IsTreeWidget(widget)) {
@@ -565,6 +555,14 @@ void MainWindow::on_actionAppendNode_triggered()
 void MainWindow::on_actionRename_triggered()
 {
     qInfo() << Q_FUNC_INFO;
+
+    if (QApplication::activeWindow() != this)
+        return;
+
+    auto* widget { sc_->tab_widget->currentWidget() };
+    if (!IsTreeWidget(widget)) {
+        return;
+    }
 
     switch (start_) {
     case Section::kSale:

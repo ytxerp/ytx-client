@@ -39,13 +39,14 @@ public:
     QTableView* View();
     WorkspaceMemberModel* Model() { return model_; }
 
+private slots:
+    void on_pushButtonDelete_clicked();
+
 private:
     void InitDialog(const QStringList& header);
 
 private:
     Ui::WorkspaceMemberDialog* ui;
-
-private:
     WorkspaceMemberModel* model_ {};
 };
 
