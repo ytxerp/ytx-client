@@ -175,7 +175,7 @@ void MainWindow::InitContextFinance()
 
     info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
 
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kNone), string_const::kEmpty);
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kNone), QString());
     info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOperatingIn), tr("Ope. In"));
     info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestingIn), tr("Inv. In"));
     info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kFinancingIn), tr("Fin. In"));

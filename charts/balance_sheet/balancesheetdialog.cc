@@ -4,6 +4,7 @@
 #include <QUuid>
 
 #include "component/constant.h"
+#include "component/constantstring.h"
 #include "component/signalblocker.h"
 #include "ui_balancesheetdialog.h"
 #include "websocket/jsongen.h"

@@ -2,7 +2,6 @@
 
 #include <QMouseEvent>
 
-#include "component/constantstring.h"
 #include "dialog/editdocument.h"
 
 Document::Document(CString& document_path, QObject* parent)
@@ -47,6 +46,6 @@ QSize Document::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& 
     const QStringList list { index.data().toStringList() };
     const auto size { list.size() };
 
-    const QString text { size == 0 ? string_const::kEmpty : QString::number(size) };
+    const QString text { size == 0 ? QString() : QString::number(size) };
     return CalculateTextSize(text, option);
 }

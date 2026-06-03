@@ -31,7 +31,7 @@ QSize AmountOrderReferenceR::sizeHint(const QStyleOptionViewItem& option, const 
 QString AmountOrderReferenceR::Format(const QModelIndex& index) const
 {
     auto it { unit_symbol_map_.constFind(unit_) };
-    auto symbol { (it != unit_symbol_map_.constEnd()) ? it.value() : string_const::kEmpty };
+    auto symbol { (it != unit_symbol_map_.constEnd()) ? it.value() : QString() };
 
     return symbol + locale_.toString(index.data().toDouble(), 'f', decimal_);
 }

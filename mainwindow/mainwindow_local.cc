@@ -2,6 +2,7 @@
 #include <QtCore/qstandardpaths.h>
 #include <QtWidgets/qapplication.h>
 
+#include "component/constantstring.h"
 #include "global/collator.h"
 #include "global/logininfo.h"
 #include "mainwindow.h"

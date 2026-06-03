@@ -4,6 +4,7 @@
 
 #include "component/constant.h"
 #include "component/constantint.h"
+#include "component/constantstring.h"
 #include "component/signalblocker.h"
 #include "ui_inventoryheatdialog.h"
 #include "websocket/jsongen.h"

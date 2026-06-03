@@ -262,7 +262,7 @@ void IncomeStatementModel::BuildHierarchy(const QJsonArray& path_array)
 
 void IncomeStatementModel::InitFixedNodes()
 {
-    root_ = CreateBranchNode(string_const::kEmpty, false);
+    root_ = CreateBranchNode(QString(), false);
     net_profit_ = CreateBranchNode(tr("Net Profit"), direction_rule::kDDCI);
 
     root_->children.emplaceBack(net_profit_);

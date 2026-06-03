@@ -10,6 +10,8 @@
 #include <QPrinterInfo>
 #include <QVariant>
 
+#include "component/constantstring.h"
+
 void PrintHub::SetValue(const NodeO* node_o, const QList<Entry*>& entry_list)
 {
     node_o_ = node_o;

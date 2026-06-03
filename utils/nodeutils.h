@@ -25,7 +25,6 @@
 #include "component/constantbool.h"
 #include "component/constantdouble.h"
 #include "component/constantint.h"
-#include "component/constantstring.h"
 #include "component/using.h"
 #include "enum/nodeenum.h"
 #include "enum/section.h"
@@ -237,7 +236,7 @@ inline QString UnitString(NodeUnit unit)
     case NodeUnit::OPending:
         return QObject::tr("PEN");
     default:
-        return string_const::kEmpty;
+        return QString();
     }
 }
 

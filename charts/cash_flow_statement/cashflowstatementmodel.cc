@@ -5,7 +5,6 @@
 
 #include "cashflowstatementenum.h"
 #include "component/constantbool.h"
-#include "component/constantstring.h"
 #include "global/resourcepool.h"
 #include "utils/nodeutils.h"
 #include "utils/templateutils.h"
@@ -212,7 +211,7 @@ CashFlowStatementRow* CashFlowStatementModel::GetNodeByIndex(const QModelIndex& 
 
 void CashFlowStatementModel::InitFixedNodes()
 {
-    root_ = CreateBranchNode(string_const::kEmpty, finance::CashKind::kNone, direction_rule::kDICD);
+    root_ = CreateBranchNode(QString(), finance::CashKind::kNone, direction_rule::kDICD);
     carrier_ = CreateBranchNode(tr("Carrier"), finance::CashKind::kNone, direction_rule::kDICD);
 
     auto* operating { CreateBranchNode(tr("Operating"), finance::CashKind::kNone, direction_rule::kDDCI) };

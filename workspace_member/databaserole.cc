@@ -2,8 +2,6 @@
 
 #include <QtCore/qobject.h>
 
-#include "component/constantstring.h"
-
 namespace database {
 
 std::span<const RoleItem> RoleItemList()
@@ -29,7 +27,7 @@ std::span<const RoleItem> RoleItemList()
 QString RolesDisplay(Roles roles)
 {
     if (roles == 0) {
-        return string_const::kEmpty;
+        return QString();
     }
 
     QStringList result {};

@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QJsonArray>
 
+#include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 #include "component/using.h"
 #include "entryhub/entryhubp.h"

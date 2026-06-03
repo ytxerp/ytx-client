@@ -2,6 +2,7 @@
 
 #include "component/constant.h"
 #include "component/constantint.h"
+#include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "ui_cashflowstatementdialog.h"

@@ -4,6 +4,7 @@
 #include <QFileDialog>
 
 #include "component/constant.h"
+#include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "global/exportexcel.h"
@@ -12,8 +13,8 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementTertiaryWidget::StatementTertiaryWidget(StatementTertiaryModel* model, EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CUuid& widget_id, CUuid& partner_id,
-    CDateTime& start, CDateTime& end, CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent)
+StatementTertiaryWidget::StatementTertiaryWidget(StatementTertiaryModel* model, EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CUuid& widget_id,
+    CUuid& partner_id, CDateTime& start, CDateTime& end, CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementTertiaryWidget)
     , unit_ { unit }

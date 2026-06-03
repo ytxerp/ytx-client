@@ -7,6 +7,7 @@
 #include <QStandardPaths>
 
 #include "component/constant.h"
+#include "component/constantstring.h"
 #include "component/signalblocker.h"
 #include "ui_preferences.h"
 

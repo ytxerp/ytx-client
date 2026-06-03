@@ -1,6 +1,5 @@
 #include "financeforeignr.h"
 
-#include "component/constantstring.h"
 #include "enum/nodeenum.h"
 
 FinanceForeignR::FinanceForeignR(const int& decimal, const int& default_unit, CIntString& unit_symbol_map, CString& placeholder, QObject* parent)
@@ -33,7 +32,7 @@ QString FinanceForeignR::Format(const QModelIndex& index, int unit) const
 {
     auto it { unit_symbol_map_.constFind(unit) };
     if (it == unit_symbol_map_.constEnd())
-        return string_const::kEmpty;
+        return QString();
 
     return it.value() + locale_.toString(index.data().toDouble(), 'f', decimal_);
 }

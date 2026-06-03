@@ -186,7 +186,7 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
 
 void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {
-    auto* direction_rule_r { new BoolColorStringR(info.rule_map, kWarningColor, string_const::kEmpty, tree_view) };
+    auto* direction_rule_r { new BoolColorStringR(info.rule_map, kWarningColor, QString(), tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDirectionRule), direction_rule_r);
 
     auto* unit_r { new IntStringR(info.unit_map, tree_view) };

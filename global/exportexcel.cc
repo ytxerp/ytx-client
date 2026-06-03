@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QFileDialog>
 
+#include "component/constantstring.h"
 #include "document.h"
 #include "utils/mainwindowutils.h"
 
@@ -95,8 +96,8 @@ bool ExportExcel::Statement(EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CS
     for (const auto* entry : list) {
         const QUuid external_sku { entry_hub_p->ExternalSku(partner_id, entry->internal_sku) };
 
-        QVariantList line { entry->issued_time.toString(datetime_format::kDate), entry->code, tree_model_i->Path(entry->internal_sku), tree_model_i->Name(external_sku),
-            entry->count, entry->measure, entry->unit_price, entry->description, entry->amount };
+        QVariantList line { entry->issued_time.toString(datetime_format::kDate), entry->code, tree_model_i->Path(entry->internal_sku),
+            tree_model_i->Name(external_sku), entry->count, entry->measure, entry->unit_price, entry->description, entry->amount };
 
         sheet->WriteRow(row++, 1, line);
     }

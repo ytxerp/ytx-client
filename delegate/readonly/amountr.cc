@@ -1,7 +1,5 @@
 #include "amountr.h"
 
-#include "component/constantstring.h"
-
 AmountR::AmountR(const int& decimal, const int& unit, CIntString& unit_symbol_map, CString& placeholder, QObject* parent)
     : StyledItemDelegate { parent }
     , decimal_ { decimal }
@@ -26,7 +24,7 @@ QSize AmountR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& i
 QString AmountR::Format(const QModelIndex& index) const
 {
     auto it { unit_symbol_map_.constFind(unit_) };
-    auto symbol { (it != unit_symbol_map_.constEnd()) ? it.value() : string_const::kEmpty };
+    auto symbol { (it != unit_symbol_map_.constEnd()) ? it.value() : QString() };
 
     return symbol + locale_.toString(index.data().toDouble(), 'f', decimal_);
 }
