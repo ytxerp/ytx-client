@@ -59,7 +59,6 @@ MainWindow::MainWindow(QWidget* parent)
     QTimer::singleShot(0, this, &::MainWindow::InitilizeContext);
 
     ui->actionDelete->setShortcut(QKeySequence::Delete);
-    ui->actionDelete->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 }
 
 QSet<QString> MainWindow::ChildrenName(const Node* node) const
