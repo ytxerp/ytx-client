@@ -110,7 +110,7 @@ void IncomeStatementDialog::InitDialog()
     ui->dateTimeEditStart->setDateTime(start_);
     ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
 
-    ui->pushButtonFetch->setFocus();
+    ui->comboBoxIncome->setFocus();
 }
 
 void IncomeStatementDialog::InitTimer()

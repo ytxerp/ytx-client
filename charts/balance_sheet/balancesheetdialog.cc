@@ -50,7 +50,7 @@ void BalanceSheetDialog::InitDialog()
     ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDate);
     ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
 
-    ui->pushButtonFetch->setFocus();
+    ui->comboBoxAsset->setFocus();
 }
 
 void BalanceSheetDialog::InitTimer()

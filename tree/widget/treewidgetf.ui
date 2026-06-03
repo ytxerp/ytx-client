@@ -33,7 +33,7 @@
     <widget class="TreeView" name="treeView"/>
    </item>
    <item>
-    <widget class="QGroupBox" name="treeGroup">
+    <widget class="QGroupBox" name="groupBoxUnderView">
      <layout class="QHBoxLayout" name="horizontalLayout" stretch="5,1,1,2,1,1">
       <property name="leftMargin">
        <number>0</number>

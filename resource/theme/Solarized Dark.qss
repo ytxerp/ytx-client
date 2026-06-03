@@ -76,7 +76,7 @@ QGroupBox#groupBoxView
     border-bottom: none;
 }
 
-QGroupBox#treeGroup, QGroupBox#groupBoxUnderView {
+QGroupBox#groupBoxUnderView {
     border-top: none;
 }
 
