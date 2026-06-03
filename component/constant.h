@@ -26,11 +26,6 @@
 inline const QString kStrDDCI = QStringLiteral("DDCI");
 inline const QString kStrDICD = QStringLiteral("DICD");
 
-// Time constants
-inline const QString kDateTimeFST = QStringLiteral("yyyy-MM-dd HH:mm");
-inline const QString kDateFST = QStringLiteral("yyyy-MM-dd");
-inline const QString kMonthFST = QStringLiteral("yyyyMM");
-
 inline const QTime kStartTime = { 0, 0 }; // 00:00
 
 // Empty & punctuation

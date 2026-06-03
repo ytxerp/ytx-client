@@ -104,7 +104,7 @@ void MainWindow::ReadSectionConfig(SectionConfig& config, CString& section_name)
         config.dynamic_node_rhs = section_settings_->value(kDynamicNodeRhs, QUuid()).toUuid();
     }
 
-    config.date_format = section_settings_->value(kDateFormat, kDateTimeFST).toString();
+    config.date_format = section_settings_->value(kDateFormat, datetime_format::kDateTime).toString();
     config.amount_decimal = section_settings_->value(kAmountDecimal, 2).toInt();
     config.rate_decimal = section_settings_->value(kRateDecimal, 2).toInt();
     config.quantity_decimal = section_settings_->value(kQuantityDecimal, 2).toInt();

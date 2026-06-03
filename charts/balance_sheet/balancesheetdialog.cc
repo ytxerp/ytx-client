@@ -47,7 +47,7 @@ void BalanceSheetDialog::InitDialog()
         ui->comboBoxLiability->setCurrentIndex(-1);
     }
 
-    ui->dateTimeEditEnd->setDisplayFormat(kDateFST);
+    ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDate);
     ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
 
     ui->pushButtonFetch->setFocus();

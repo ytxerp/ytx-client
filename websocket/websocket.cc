@@ -341,7 +341,7 @@ void WebSocket::NotifyLogin(const QJsonObject& obj)
         session_id_ = QUuid(obj[kSessionId].toString());
 
         const auto expire_time { QDateTime::fromString(obj[kExpireTime].toString(), Qt::ISODate) };
-        const auto expire_date { expire_time.date().toString(kDateFST) };
+        const auto expire_date { expire_time.date().toString(datetime_format::kDate) };
 
         const auto username { obj[kUsername].toString() };
         const auto name { obj[kName].toString() };

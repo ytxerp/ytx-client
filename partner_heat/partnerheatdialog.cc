@@ -37,8 +37,8 @@ QTableView* PartnerHeatDialog::View() { return ui->tableView; }
 
 void PartnerHeatDialog::InitDialog()
 {
-    ui->dateTimeEditStart->setDisplayFormat(kDateFST);
-    ui->dateTimeEditEnd->setDisplayFormat(kDateFST);
+    ui->dateTimeEditStart->setDisplayFormat(datetime_format::kDate);
+    ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDate);
     ui->dateTimeEditStart->setDateTime(start_);
     ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
     ui->radioButtonSale->setChecked(true);

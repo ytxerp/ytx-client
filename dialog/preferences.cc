@@ -148,8 +148,8 @@ void Preferences::IniStringList()
     operation_list_.emplaceBack(kPlus);
     operation_list_.emplaceBack(kMinus);
 
-    date_format_list_.emplaceBack(kDateTimeFST);
-    date_format_list_.emplaceBack(kDateFST);
+    date_format_list_.emplaceBack(datetime_format::kDateTime);
+    date_format_list_.emplaceBack(datetime_format::kDate);
 }
 
 void Preferences::on_pBtnApply_clicked() { emit SUpdateConfig(app_, shared_, section_); }

@@ -118,8 +118,8 @@ void StatementTertiaryWidget::IniUnit(int unit)
 
 void StatementTertiaryWidget::IniWidget()
 {
-    ui->start->setDisplayFormat(kDateFST);
-    ui->end->setDisplayFormat(kDateFST);
+    ui->start->setDisplayFormat(datetime_format::kDate);
+    ui->end->setDisplayFormat(datetime_format::kDate);
 
     ui->pBtnFetch->setFocus();
 
@@ -145,7 +145,7 @@ void StatementTertiaryWidget::on_pBtnExport_clicked()
 
     // Build default export file name ---
     QDir dir(QDir::homePath());
-    const QString file_name { QString("%1-%2-%3.xlsx").arg(company_name_, partner_name_, adjust_end.toString(kMonthFST)) };
+    const QString file_name { QString("%1-%2-%3.xlsx").arg(company_name_, partner_name_, adjust_end.toString(datetime_format::kYearMonth)) };
     const QString full_path { dir.filePath(file_name) };
 
     QString destination { QFileDialog::getSaveFileName(nullptr, tr("Export Excel"), full_path, "*.xlsx") };

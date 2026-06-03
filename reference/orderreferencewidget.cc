@@ -68,8 +68,8 @@ void OrderReferenceWidget::on_pBtnFetch_clicked()
 
 void OrderReferenceWidget::IniWidget()
 {
-    ui->start->setDisplayFormat(kDateFST);
-    ui->end->setDisplayFormat(kDateFST);
+    ui->start->setDisplayFormat(datetime_format::kDate);
+    ui->end->setDisplayFormat(datetime_format::kDate);
     ui->start->setDateTime(start_);
     ui->end->setDateTime(end_.addDays(-1));
 

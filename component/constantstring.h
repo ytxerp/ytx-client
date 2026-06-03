@@ -77,4 +77,11 @@ namespace cash_flow_statement {
 inline const QString kCarrierArray = QStringLiteral("carrier_array");
 }
 
+namespace datetime_format {
+inline const QString kDateTime = QStringLiteral("yyyy-MM-dd HH:mm");
+inline const QString kDate = QStringLiteral("yyyy-MM-dd");
+inline const QString kCompactDate = QStringLiteral("yyyyMMdd");
+inline const QString kYearMonth = QStringLiteral("yyyyMM");
+}
+
 #endif // CONSTANTSTRING_H

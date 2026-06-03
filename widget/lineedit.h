@@ -25,7 +25,7 @@
 #include <QLineEdit>
 #include <QRegularExpressionValidator>
 
-#include "component/constant.h"
+#include "component/constantstring.h"
 
 class LineEdit final : public QLineEdit {
 public:
@@ -44,11 +44,11 @@ protected:
 
         if (event->key() == Qt::Key_Semicolon) {
             if (modifiers == Qt::ControlModifier) {
-                insert(QDate::currentDate().toString(kDateFST));
+                insert(QDate::currentDate().toString(datetime_format::kDate));
                 return;
             }
             if (modifiers == (Qt::ControlModifier | Qt::ShiftModifier)) {
-                insert(QDateTime::currentDateTime().toString(kDateTimeFST));
+                insert(QDateTime::currentDateTime().toString(datetime_format::kDateTime));
                 return;
             }
         }

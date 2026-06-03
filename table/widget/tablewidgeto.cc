@@ -136,7 +136,7 @@ void TableWidgetO::InitWidget()
     }
 
     {
-        ui->dateTimeEdit->setDisplayFormat(kDateTimeFST);
+        ui->dateTimeEdit->setDisplayFormat(datetime_format::kDateTime);
     }
 
     {

@@ -114,8 +114,8 @@ void StatementPrimaryWidget::IniWidget()
     const QDate first_of_next_month { QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1).addMonths(1) };
     end_ = QDateTime(first_of_next_month, kStartTime);
 
-    ui->start->setDisplayFormat(kDateFST);
-    ui->end->setDisplayFormat(kDateFST);
+    ui->start->setDisplayFormat(datetime_format::kDate);
+    ui->end->setDisplayFormat(datetime_format::kDate);
 
     ui->pBtnFetch->setFocus();
 

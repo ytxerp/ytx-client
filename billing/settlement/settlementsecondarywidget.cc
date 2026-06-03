@@ -51,7 +51,7 @@ void SettlementSecondaryWidget::InitWidget()
     ui->comboPartner->setModel(pmodel);
     ui->comboPartner->setCurrentIndex(-1);
 
-    ui->dateTimeEdit->setDisplayFormat(kDateTimeFST);
+    ui->dateTimeEdit->setDisplayFormat(datetime_format::kDateTime);
     ui->dSpinAmount->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
     ui->dSpinAmount->setDecimals(config_.amount_decimal);
 

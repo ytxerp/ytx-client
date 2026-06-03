@@ -18,8 +18,8 @@ TreeWidgetO::TreeWidgetO(Section section, TreeModel* model, const QDateTime& sta
     SignalBlocker blocker(this);
     InitTimer();
 
-    ui->start->setDisplayFormat(kDateFST);
-    ui->end->setDisplayFormat(kDateFST);
+    ui->start->setDisplayFormat(datetime_format::kDate);
+    ui->end->setDisplayFormat(datetime_format::kDate);
 
     ui->start->setDateTime(start_);
     ui->end->setDateTime(end_.addDays(-1));
