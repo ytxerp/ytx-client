@@ -26,7 +26,9 @@
 #include <QUuid>
 
 #include "component/constant.h"
+#include "component/constantstring.h"
 #include "enum/nodeenum.h"
+#include "utils/nodeutils.h"
 
 struct BalanceSheetRow final {
     QString name {};
@@ -36,7 +38,11 @@ struct BalanceSheetRow final {
     NodeKind kind {};
     bool direction_rule {};
 
-    double final_total {};
+    double opening_balance {};
+    double closing_balance {};
+
+    double change_amount {};
+    double change_rate {};
 
     BalanceSheetRow* parent {};
     QList<BalanceSheetRow*> children {};
@@ -56,8 +62,13 @@ struct BalanceSheetRow final {
             kind = static_cast<NodeKind>(val.toInt());
         if (const auto val = object.value(kDirectionRule); val.isBool())
             direction_rule = val.toBool();
-        if (const auto val = object.value(kFinalTotal); val.isString())
-            final_total = val.toString().toDouble();
+        if (const auto val = object.value(balance_sheet::kClosingBalance); val.isString())
+            closing_balance = val.toString().toDouble();
+        if (const auto val = object.value(balance_sheet::kOpeningBalance); val.isString())
+            opening_balance = val.toString().toDouble();
+
+        change_amount = closing_balance - opening_balance;
+        change_rate = utils::GrowthRate(closing_balance, opening_balance);
     }
 };
 

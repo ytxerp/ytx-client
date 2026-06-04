@@ -527,12 +527,13 @@ QJsonObject PartnerHeadAck(Section section, CUuid& widget_id, const QDateTime& s
     return message;
 }
 
-QJsonObject BalanceSheetAck(CUuid& widget_id, CUuid& asset, CUuid& liability, CUuid& equity, const QDateTime& end, int level)
+QJsonObject BalanceSheetAck(CUuid& widget_id, CUuid& asset, CUuid& liability, CUuid& equity, const QDateTime& start, const QDateTime& end, int level)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(Section::kFinance));
     message.insert(kSessionId, QString());
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
+    message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
     message.insert(balance_sheet::kAssetId, asset.toString(QUuid::WithoutBraces));
     message.insert(balance_sheet::kLiabilityId, liability.toString(QUuid::WithoutBraces));

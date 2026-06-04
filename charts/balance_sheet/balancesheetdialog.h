@@ -45,6 +45,7 @@ public:
 private slots:
     void on_dateTimeEditEnd_dateChanged(const QDate& date);
     void on_pushButtonFetch_clicked();
+    void on_dateTimeEditStart_dateChanged(const QDate& date);
 
 private:
     void InitDialog();
@@ -53,7 +54,9 @@ private:
 private:
     Ui::BalanceSheetDialog* ui;
 
+    QDateTime start_ {};
     QDateTime end_ {};
+
     const QUuid widget_id_ {};
 
     BalanceSheetModel* model_ {};

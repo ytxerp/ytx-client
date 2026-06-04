@@ -43,6 +43,7 @@ protected:
 
 protected:
     static const QLocale locale_;
+    QString FormatPercentage(double value) const;
 };
 
 #endif // STYLEDITEMDELEGATE_H

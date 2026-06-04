@@ -122,3 +122,11 @@ void StyledItemDelegate::PaintColorRect(QPainter* painter, const QStyleOptionVie
     painter->drawRoundedRect(color_rect, ui_const::kCornerRadius, ui_const::kCornerRadius);
     painter->restore();
 }
+
+QString StyledItemDelegate::FormatPercentage(double value) const
+{
+    if (qIsNaN(value))
+        return QStringLiteral("--");
+
+    return locale_.toString(value * 100.0, 'f', 2) + QLatin1Char('%');
+}

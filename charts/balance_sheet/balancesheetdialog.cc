@@ -13,13 +13,17 @@
 BalanceSheetDialog::BalanceSheetDialog(CTreeModel* tree_model, BalanceSheetModel* model, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::BalanceSheetDialog)
-    , end_ { QDateTime(QDate::currentDate().addDays(1), kStartTime) }
     , widget_id_ { widget_id }
     , model_ { model }
     , tree_model_ { tree_model }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
+
+    const QDate today = QDate::currentDate();
+
+    start_ = QDateTime(QDate(today.year(), today.month(), 1), kStartTime);
+    end_ = QDateTime(today.addDays(1), kStartTime);
 
     InitTimer();
     InitDialog();
@@ -47,6 +51,9 @@ void BalanceSheetDialog::InitDialog()
         ui->comboBoxEquity->setCurrentIndex(-1);
         ui->comboBoxLiability->setCurrentIndex(-1);
     }
+
+    ui->dateTimeEditStart->setDisplayFormat(datetime_format::kDate);
+    ui->dateTimeEditStart->setDateTime(start_);
 
     ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDate);
     ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
@@ -113,9 +120,18 @@ void BalanceSheetDialog::on_pushButtonFetch_clicked()
 
     const int level { ui->spinBoxLevel->value() };
 
-    const auto message { JsonGen::BalanceSheetAck(widget_id_, asset_id, liability_id, equity_id, end_.toUTC(), level) };
+    const auto message { JsonGen::BalanceSheetAck(widget_id_, asset_id, liability_id, equity_id, start_.toUTC(), end_.toUTC(), level) };
 
     WebSocket::Instance()->SendMessage(WsKey::kBalanceSheetAck, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
+}
+
+void BalanceSheetDialog::on_dateTimeEditStart_dateChanged(const QDate& date)
+{
+    const bool valid { date < end_.date() };
+    start_ = QDateTime(date, kStartTime);
+
+    cooldown_timer_->stop();
+    ui->pushButtonFetch->setEnabled(valid);
 }

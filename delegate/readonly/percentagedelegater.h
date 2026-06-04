@@ -17,16 +17,16 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef GROWTHRATER_H
-#define GROWTHRATER_H
+#ifndef PERCENTAGEDELEGATER_H
+#define PERCENTAGEDELEGATER_H
 
 #include "delegate/styleditemdelegate.h"
 
-class GrowthRateR final : public StyledItemDelegate {
+class PercentageDelegateR final : public StyledItemDelegate {
 public:
-    explicit GrowthRateR(QObject* parent = nullptr);
+    explicit PercentageDelegateR(QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
 
-#endif // GROWTHRATER_H
+#endif // PERCENTAGEDELEGATER_H

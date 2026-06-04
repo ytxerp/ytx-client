@@ -27,7 +27,10 @@ enum class BalanceSheetEnum {
     kDescription,
     kDirectionRule,
     kKind,
-    kFinalTotal,
+    kOpeningBalance,
+    kClosingBalance,
+    kChangeAmount,
+    kChangeRate,
 };
 
 #endif // BALANCESHEETENUM_H

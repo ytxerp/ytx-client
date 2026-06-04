@@ -9,14 +9,7 @@
 #include "component/constant.h"
 #include "component/constantstring.h"
 #include "enum/nodeenum.h"
-
-inline double GrowthRate(double current, double previous)
-{
-    if (qFuzzyIsNull(previous))
-        return 0.0;
-
-    return (current - previous) / previous;
-}
+#include "utils/nodeutils.h"
 
 struct IncomeStatementRow final {
     QString name {};
@@ -58,8 +51,8 @@ struct IncomeStatementRow final {
         if (const auto val = object.value(income_statement::kMomFinalTotal); val.isString())
             mom_final_total = val.toString().toDouble();
 
-        yoy_growth_rate = GrowthRate(final_total, yoy_final_total);
-        mom_growth_rate = GrowthRate(final_total, mom_final_total);
+        yoy_growth_rate = utils::GrowthRate(final_total, yoy_final_total);
+        mom_growth_rate = utils::GrowthRate(final_total, mom_final_total);
     }
 };
 

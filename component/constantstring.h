@@ -53,6 +53,9 @@ namespace balance_sheet {
 inline const QString kAssetId = QStringLiteral("asset_id");
 inline const QString kLiabilityId = QStringLiteral("liability_id");
 inline const QString kEquityId = QStringLiteral("equity_id");
+
+inline const QString kOpeningBalance = QStringLiteral("opening_balance");
+inline const QString kClosingBalance = QStringLiteral("closing_balance");
 }
 
 namespace income_statement {

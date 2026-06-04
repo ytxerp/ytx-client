@@ -290,7 +290,7 @@ set(HEADERS
     delegate/readonly/intstringnonezeror.h
     delegate/readonly/financerolesdelegater.h
     delegate/readonly/cashflownamer.h
-    delegate/readonly/growthrater.h
+    delegate/readonly/percentagedelegater.h
 )
 
 set(SOURCES
@@ -471,7 +471,7 @@ set(SOURCES
     delegate/readonly/financerolesdelegater.cc
     delegate/readonly/cashflownamer.cc
     mainwindow/mainwindow_header.cc
-    delegate/readonly/growthrater.cc
+    delegate/readonly/percentagedelegater.cc
 )
 
 set(UIS

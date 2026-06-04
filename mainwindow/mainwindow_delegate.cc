@@ -29,12 +29,12 @@
 #include "delegate/readonly/doubler.h"
 #include "delegate/readonly/financeforeignr.h"
 #include "delegate/readonly/financerolesdelegater.h"
-#include "delegate/readonly/growthrater.h"
 #include "delegate/readonly/intstringnonezeror.h"
 #include "delegate/readonly/intstringr.h"
 #include "delegate/readonly/issuedtimer.h"
 #include "delegate/readonly/nodenamer.h"
 #include "delegate/readonly/nodepathr.h"
+#include "delegate/readonly/percentagedelegater.h"
 #include "delegate/readonly/statusr.h"
 #include "delegate/rhsnode.h"
 #include "delegate/search/searchpathtabler.h"
@@ -616,13 +616,18 @@ void MainWindow::DelegateBalanceSheet(QTreeView* view) const
     const auto& info { sc_f_.info };
 
     auto* amount { new AmountR(sc_f_.section_config.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, string_const::kEightDigits, view) };
-    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kFinalTotal), amount);
+    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kClosingBalance), amount);
+    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kOpeningBalance), amount);
+    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kChangeAmount), amount);
 
     auto* direction_rule { new BoolStringR(info.rule_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kDirectionRule), direction_rule);
 
     auto* kind { new IntStringR(info.kind_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kKind), kind);
+
+    auto* growth_rate { new PercentageDelegateR(view) };
+    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kChangeRate), growth_rate);
 }
 
 void MainWindow::DelegateIncomeStatement(QTreeView* view) const
@@ -634,7 +639,7 @@ void MainWindow::DelegateIncomeStatement(QTreeView* view) const
     view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kYoyFinalTotal), amount);
     view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kMomFinalTotal), amount);
 
-    auto* growth_rate { new GrowthRateR(view) };
+    auto* growth_rate { new PercentageDelegateR(view) };
     view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kYoyGrowthRate), growth_rate);
     view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kMomGrowthRate), growth_rate);
 

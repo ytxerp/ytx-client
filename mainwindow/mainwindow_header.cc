@@ -32,7 +32,10 @@ void MainWindow::InitHeader()
         tr("Description"),
         tr("Direction Rule"),
         tr("Kind"),
-        tr("Local Total"),
+        tr("Opening Balance"),
+        tr("Closing Balance"),
+        tr("Change Amount"),
+        tr("Change Rate"),
     };
 
     header_info_.income_statement = {

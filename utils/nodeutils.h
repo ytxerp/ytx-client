@@ -244,6 +244,14 @@ inline QString DirectionRuleString(bool direction_rule) { return direction_rule 
 
 bool IsDescendant(const Node* descendant, const Node* ancestor);
 
+inline double GrowthRate(double current, double previous)
+{
+    if (qFuzzyIsNull(previous))
+        return std::numeric_limits<double>::quiet_NaN();
+
+    return (current - previous) / previous;
+}
+
 template <TreeNode T, typename F> void SortIterative(T* node, F&& compare)
 {
     Q_ASSERT(node != nullptr);

@@ -81,9 +81,19 @@
        </spacer>
       </item>
       <item>
+       <widget class="DateTimeEdit" name="dateTimeEditStart">
+        <property name="displayFormat">
+         <string>d/M/yyyy</string>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>End</string>
+         <string>-</string>
         </property>
        </widget>
       </item>

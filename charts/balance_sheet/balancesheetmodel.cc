@@ -130,8 +130,14 @@ QVariant BalanceSheetModel::data(const QModelIndex& index, int role) const
         return node->direction_rule;
     case BalanceSheetEnum::kKind:
         return std::to_underlying(node->kind);
-    case BalanceSheetEnum::kFinalTotal:
-        return node->final_total;
+    case BalanceSheetEnum::kClosingBalance:
+        return node->closing_balance;
+    case BalanceSheetEnum::kOpeningBalance:
+        return node->opening_balance;
+    case BalanceSheetEnum::kChangeAmount:
+        return node->change_amount;
+    case BalanceSheetEnum::kChangeRate:
+        return node->change_rate;
     }
 }
 
@@ -151,8 +157,14 @@ void BalanceSheetModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &BalanceSheetRow::direction_rule, order);
         case BalanceSheetEnum::kKind:
             return utils::CompareMember(lhs, rhs, &BalanceSheetRow::kind, order);
-        case BalanceSheetEnum::kFinalTotal:
-            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::final_total, order);
+        case BalanceSheetEnum::kClosingBalance:
+            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::closing_balance, order);
+        case BalanceSheetEnum::kOpeningBalance:
+            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::opening_balance, order);
+        case BalanceSheetEnum::kChangeAmount:
+            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::change_amount, order);
+        case BalanceSheetEnum::kChangeRate:
+            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::change_rate, order);
         case BalanceSheetEnum::kId:
             return false;
         }

@@ -209,8 +209,8 @@ void IncomeStatementModel::ResetModel(
         net_profit_->yoy_final_total = yoy_net_profit;
         net_profit_->mom_final_total = mom_net_profit;
 
-        net_profit_->yoy_growth_rate = GrowthRate(net_profit, yoy_net_profit);
-        net_profit_->mom_growth_rate = GrowthRate(net_profit, mom_net_profit);
+        net_profit_->yoy_growth_rate = utils::GrowthRate(net_profit, yoy_net_profit);
+        net_profit_->mom_growth_rate = utils::GrowthRate(net_profit, mom_net_profit);
     }
 
     sort(std::to_underlying(IncomeStatementEnum::kName), Qt::AscendingOrder);
