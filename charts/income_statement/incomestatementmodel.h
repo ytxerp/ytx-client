@@ -45,7 +45,7 @@ public:
     void sort(int column, Qt::SortOrder order) override;
 
     void ResetModel(const QJsonArray& node_array, const QJsonArray& path_array, double net_profit, double yoy_net_profit, double mom_net_profit);
-    void UpdateHeader(const QString& yoy_title, const QString& mom_title);
+    void UpdateHeaderTooltip(const QString& yoy_tooltip, const QString& mom_tooltip);
 
 private:
     IncomeStatementRow* GetNodeByIndex(const QModelIndex& index) const;
@@ -59,6 +59,8 @@ private:
     IncomeStatementRow* root_ {};
     IncomeStatementRow* net_profit_ {};
     QHash<QUuid, IncomeStatementRow*> node_hash_ {};
+    QString yoy_tooltip_ {};
+    QString mom_tooltip_ {};
 };
 
 #endif // INCOMESTATEMENTMODEL_H

@@ -23,11 +23,34 @@ IncomeStatementModel::~IncomeStatementModel()
 
 QVariant IncomeStatementModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+    if (orientation != Qt::Horizontal) {
+        return {};
+    }
+
+    if (role == Qt::DisplayRole) {
         return header_.at(section);
     }
 
-    return QVariant();
+    if (role == Qt::ToolTipRole) {
+        switch (static_cast<IncomeStatementEnum>(section)) {
+        case IncomeStatementEnum::kYoyFinalTotal:
+        case IncomeStatementEnum::kYoyGrowthRate:
+            return yoy_tooltip_;
+        case IncomeStatementEnum::kMomFinalTotal:
+        case IncomeStatementEnum::kMomGrowthRate:
+            return mom_tooltip_;
+        case IncomeStatementEnum::kName:
+        case IncomeStatementEnum::kId:
+        case IncomeStatementEnum::kCode:
+        case IncomeStatementEnum::kDescription:
+        case IncomeStatementEnum::kDirectionRule:
+        case IncomeStatementEnum::kKind:
+        case IncomeStatementEnum::kFinalTotal:
+            return {};
+        }
+    }
+
+    return {};
 }
 
 QModelIndex IncomeStatementModel::index(int row, int column, const QModelIndex& parent) const
@@ -217,10 +240,10 @@ void IncomeStatementModel::ResetModel(
     endResetModel();
 }
 
-void IncomeStatementModel::UpdateHeader(const QString& yoy_title, const QString& mom_title)
+void IncomeStatementModel::UpdateHeaderTooltip(const QString& yoy_tooltip, const QString& mom_tooltip)
 {
-    header_[std::to_underlying(IncomeStatementEnum::kYoyFinalTotal)] = yoy_title;
-    header_[std::to_underlying(IncomeStatementEnum::kMomFinalTotal)] = mom_title;
+    yoy_tooltip_ = yoy_tooltip;
+    mom_tooltip_ = mom_tooltip;
 
     emit headerDataChanged(Qt::Horizontal, static_cast<int>(IncomeStatementEnum::kYoyFinalTotal), static_cast<int>(IncomeStatementEnum::kMomGrowthRate));
 }
