@@ -1588,14 +1588,24 @@ Do you want to save before closing?</source>
         <translation>本币</translation>
     </message>
     <message>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="49"/>
+        <source>YoY</source>
+        <translation>同比</translation>
+    </message>
+    <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="50"/>
         <source>YoY %</source>
-        <translation></translation>
+        <translation>同比 %</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="51"/>
+        <source>MoM</source>
+        <translation>环比</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="52"/>
         <source>MoM %</source>
-        <translation></translation>
+        <translation>环比 %</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="57"/>
@@ -1773,16 +1783,6 @@ Do you want to save before closing?</source>
         <location filename="../../mainwindow/mainwindow_header.cc" line="48"/>
         <source>Current Period</source>
         <translation>本期</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="49"/>
-        <source>Yoy</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="51"/>
-        <source>Mom</source>
-        <translation></translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="99"/>
@@ -2639,6 +2639,16 @@ You need to recall it first before making changes.</source>
         <location filename="../../mainwindow/mainwindow_node.cc" line="89"/>
         <source>Constraint Violation</source>
         <translation>操作无效</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_income_statement.cc" line="51"/>
+        <source>YoY %1~%2</source>
+        <translation>同比 %1~%2</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_income_statement.cc" line="52"/>
+        <source>MoM %1~%2</source>
+        <translation>环比 %1~%2</translation>
     </message>
 </context>
 <context>
