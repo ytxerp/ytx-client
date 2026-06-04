@@ -36,14 +36,17 @@ void MainWindow::RIncomeStatementAck(const QUuid& widget_id, const QJsonObject& 
 
     const QJsonArray node_array { obj.value(kNodeArray).toArray() };
     const QJsonArray path_array { obj.value(kPathArray).toArray() };
-    const double net_profit { obj.value(income_statement::kNetProfit).toString().toDouble() };
-    const double yoy_net_profit { obj.value(income_statement::kYoyNetProfit).toString().toDouble() };
-    const double mom_net_profit { obj.value(income_statement::kMomNetProfit).toString().toDouble() };
 
-    const auto yoy_start { QDateTime::fromString(obj.value(income_statement::kYoyStart).toString(), Qt::ISODate).toLocalTime() };
-    const auto yoy_end { QDateTime::fromString(obj.value(income_statement::kYoyEnd).toString(), Qt::ISODate).toLocalTime().addDays(-1) };
-    const auto mom_start { QDateTime::fromString(obj.value(income_statement::kMomStart).toString(), Qt::ISODate).toLocalTime() };
-    const auto mom_end { QDateTime::fromString(obj.value(income_statement::kMomEnd).toString(), Qt::ISODate).toLocalTime().addDays(-1) };
+    const auto profits { obj.value(income_statement::kProfits).toObject() };
+    const double net_profit { profits.value(income_statement::kNetProfit).toString().toDouble() };
+    const double yoy_net_profit { profits.value(income_statement::kYoyNetProfit).toString().toDouble() };
+    const double mom_net_profit { profits.value(income_statement::kMomNetProfit).toString().toDouble() };
+
+    const auto date_range { obj.value(income_statement::kDateRange).toObject() };
+    const auto yoy_start { QDateTime::fromString(date_range.value(income_statement::kYoyStart).toString(), Qt::ISODate).toLocalTime() };
+    const auto yoy_end { QDateTime::fromString(date_range.value(income_statement::kYoyEnd).toString(), Qt::ISODate).toLocalTime().addDays(-1) };
+    const auto mom_start { QDateTime::fromString(date_range.value(income_statement::kMomStart).toString(), Qt::ISODate).toLocalTime() };
+    const auto mom_end { QDateTime::fromString(date_range.value(income_statement::kMomEnd).toString(), Qt::ISODate).toLocalTime().addDays(-1) };
 
     const QString yoy_title { QString("YoY (%1~%2)").arg(yoy_start.toString(datetime_format::kCompactDate), yoy_end.toString(datetime_format::kCompactDate)) };
     const QString mom_title { QString("MoM (%1~%2)").arg(mom_start.toString(datetime_format::kCompactDate), mom_end.toString(datetime_format::kCompactDate)) };

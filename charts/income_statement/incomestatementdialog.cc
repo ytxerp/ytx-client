@@ -84,7 +84,26 @@ void IncomeStatementDialog::on_pushButtonFetch_clicked()
 
     const int level { ui->spinBoxLevel->value() };
 
-    const auto message { JsonGen::IncomeStatementAck(widget_id_, income_id, expense_id, start_.toUTC(), end_.toUTC(), level) };
+    const auto start_date { ui->dateTimeEditStart->dateTime().date() };
+    const auto end_date { ui->dateTimeEditEnd->dateTime().date() };
+
+    const int years { end_date.year() - start_date.year() + 1 };
+    const int months { (end_date.year() - start_date.year()) * 12 + end_date.month() - start_date.month() + 1 };
+    const int days { static_cast<int>(start_date.daysTo(end_date) + 1) };
+
+    QJsonObject duration {};
+    duration.insert(income_statement::kYears, years);
+    duration.insert(income_statement::kMonths, months);
+    duration.insert(income_statement::kDays, days);
+
+    QJsonObject date_range {};
+    date_range.insert(kStart, start_.toUTC().toString(Qt::ISODate));
+    date_range.insert(kEnd, end_.toUTC().toString(Qt::ISODate));
+
+    auto message { JsonGen::IncomeStatementAck(widget_id_, income_id, expense_id, level) };
+
+    message.insert(income_statement::kDuration, duration);
+    message.insert(income_statement::kDateRange, date_range);
 
     WebSocket::Instance()->SendMessage(WsKey::kIncomeStatementAck, message);
 

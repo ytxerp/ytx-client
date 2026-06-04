@@ -66,9 +66,15 @@ inline const QString kMomFinalTotal = QStringLiteral("mom_final_total");
 
 inline const QString kYoyStart = QStringLiteral("yoy_start");
 inline const QString kYoyEnd = QStringLiteral("yoy_end");
+inline const QString kMonths = QStringLiteral("months");
+inline const QString kYears = QStringLiteral("years");
+inline const QString kDays = QStringLiteral("days");
+inline const QString kDuration = QStringLiteral("duration");
 
 inline const QString kMomStart = QStringLiteral("mom_start");
 inline const QString kMomEnd = QStringLiteral("mom_end");
+inline const QString kProfits = QStringLiteral("profits");
+inline const QString kDateRange = QStringLiteral("date_range");
 
 }
 

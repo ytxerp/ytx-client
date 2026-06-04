@@ -543,26 +543,18 @@ QJsonObject BalanceSheetAck(CUuid& widget_id, CUuid& asset, CUuid& liability, CU
     return message;
 }
 
-QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, const QDateTime& start, const QDateTime& end, int level)
+QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, int level)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(Section::kFinance));
     message.insert(kSessionId, QString());
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
-    message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kStart, start.toString(Qt::ISODate));
-    message.insert(income_statement::kYoyStart, start.toString(Qt::ISODate));
-    message.insert(income_statement::kYoyEnd, end.toString(Qt::ISODate));
-    message.insert(income_statement::kMomStart, start.toString(Qt::ISODate));
-    message.insert(income_statement::kMomEnd, end.toString(Qt::ISODate));
-    message.insert(income_statement::kNetProfit, QString::number(0, 'f', numeric_const::kDecimalPlaces4));
-    message.insert(income_statement::kYoyNetProfit, QString::number(0, 'f', numeric_const::kDecimalPlaces4));
-    message.insert(income_statement::kMomNetProfit, QString::number(0, 'f', numeric_const::kDecimalPlaces4));
     message.insert(income_statement::kIncomeId, income.toString(QUuid::WithoutBraces));
     message.insert(income_statement::kExpenseId, expense.toString(QUuid::WithoutBraces));
     message.insert(kLevel, level);
     message.insert(kNodeArray, QJsonArray());
     message.insert(kPathArray, QJsonArray());
+    message.insert(income_statement::kProfits, QJsonObject());
     return message;
 }
 
