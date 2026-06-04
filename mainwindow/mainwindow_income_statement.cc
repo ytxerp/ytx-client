@@ -48,8 +48,8 @@ void MainWindow::RIncomeStatementAck(const QUuid& widget_id, const QJsonObject& 
     const auto mom_start { QDateTime::fromString(date_range.value(income_statement::kMomStart).toString(), Qt::ISODate).toLocalTime() };
     const auto mom_end { QDateTime::fromString(date_range.value(income_statement::kMomEnd).toString(), Qt::ISODate).toLocalTime().addDays(-1) };
 
-    const QString yoy_title { QString("YoY %1~%2").arg(yoy_start.toString(datetime_format::kCompactDate), yoy_end.toString(datetime_format::kCompactDate)) };
-    const QString mom_title { QString("MoM %1~%2").arg(mom_start.toString(datetime_format::kCompactDate), mom_end.toString(datetime_format::kCompactDate)) };
+    const QString yoy_title { tr("YoY %1~%2").arg(yoy_start.toString(datetime_format::kCompactDate), yoy_end.toString(datetime_format::kCompactDate)) };
+    const QString mom_title { tr("MoM %1~%2").arg(mom_start.toString(datetime_format::kCompactDate), mom_end.toString(datetime_format::kCompactDate)) };
 
     auto* model { d_widget->Model() };
     model->UpdateHeader(yoy_title, mom_title);

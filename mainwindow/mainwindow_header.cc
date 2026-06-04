@@ -46,9 +46,9 @@ void MainWindow::InitHeader()
         tr("Direction Rule"),
         tr("Kind"),
         tr("Current Period"),
-        tr("Yoy"),
+        tr("YoY"),
         tr("YoY %"),
-        tr("Mom"),
+        tr("MoM"),
         tr("MoM %"),
     };
 
