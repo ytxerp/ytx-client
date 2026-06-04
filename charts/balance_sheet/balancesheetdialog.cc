@@ -52,10 +52,10 @@ void BalanceSheetDialog::InitDialog()
         ui->comboBoxLiability->setCurrentIndex(-1);
     }
 
-    ui->dateTimeEditStart->setDisplayFormat(datetime_format::kDate);
+    ui->dateTimeEditStart->setDisplayFormat(datetime_format::kDashedDate);
     ui->dateTimeEditStart->setDateTime(start_);
 
-    ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDate);
+    ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDashedDate);
     ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
 
     ui->comboBoxAsset->setFocus();

@@ -65,8 +65,8 @@ bool ExportExcel::Statement(EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CS
     sheet->Write(start_row, 3, unit_string);
 
     sheet->Write(start_row + 2, 1, QObject::tr("Period"));
-    sheet->Write(start_row + 2, 2, start.toString(datetime_format::kDate));
-    sheet->Write(start_row + 2, 3, end.toString(datetime_format::kDate));
+    sheet->Write(start_row + 2, 2, start.toString(datetime_format::kDashedDate));
+    sheet->Write(start_row + 2, 3, end.toString(datetime_format::kDashedDate));
 
     sheet->Write(start_row + 3, 1, QObject::tr("Previous Balance"));
     sheet->Write(start_row + 3, 3, pbalance);
@@ -96,7 +96,7 @@ bool ExportExcel::Statement(EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CS
     for (const auto* entry : list) {
         const QUuid external_sku { entry_hub_p->ExternalSku(partner_id, entry->internal_sku) };
 
-        QVariantList line { entry->issued_time.toString(datetime_format::kDate), entry->code, tree_model_i->Path(entry->internal_sku),
+        QVariantList line { entry->issued_time.toString(datetime_format::kDashedDate), entry->code, tree_model_i->Path(entry->internal_sku),
             tree_model_i->Name(external_sku), entry->count, entry->measure, entry->unit_price, entry->description, entry->amount };
 
         sheet->WriteRow(row++, 1, line);

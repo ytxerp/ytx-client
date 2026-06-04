@@ -44,7 +44,7 @@ protected:
 
         if (event->key() == Qt::Key_Semicolon) {
             if (modifiers == Qt::ControlModifier) {
-                insert(QDate::currentDate().toString(datetime_format::kDate));
+                insert(QDate::currentDate().toString(datetime_format::kDashedDate));
                 return;
             }
             if (modifiers == (Qt::ControlModifier | Qt::ShiftModifier)) {

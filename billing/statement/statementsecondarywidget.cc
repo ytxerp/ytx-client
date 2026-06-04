@@ -115,8 +115,8 @@ void StatementSecondaryWidget::IniUnit(int unit)
 
 void StatementSecondaryWidget::IniWidget()
 {
-    ui->start->setDisplayFormat(datetime_format::kDate);
-    ui->end->setDisplayFormat(datetime_format::kDate);
+    ui->start->setDisplayFormat(datetime_format::kDashedDate);
+    ui->end->setDisplayFormat(datetime_format::kDashedDate);
 
     ui->pBtnFetch->setFocus();
 

@@ -505,7 +505,7 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kDescription), line);
 
-    auto* issued_time { new IssuedTime(datetime_format::kDate, table_view) };
+    auto* issued_time { new IssuedTime(datetime_format::kDashedDate, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kIssuedTime), issued_time);
 
     auto model { sc_p_.tree_model };
@@ -527,7 +527,7 @@ void MainWindow::DelegateSettlementNode(QTableView* table_view, CSectionConfig& 
     auto* status { new Bool(QEvent::MouseButtonRelease, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementSecondaryEnum::kIsSettled), status);
 
-    auto* issued_time { new IssuedTimeR(datetime_format::kDate, table_view) };
+    auto* issued_time { new IssuedTimeR(datetime_format::kDashedDate, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementSecondaryEnum::kIssuedTime), issued_time);
 }
 
@@ -542,7 +542,7 @@ void MainWindow::DelegateTag(QTableView* table_view) const
 
 void MainWindow::DelegateWorkspaceMember(QTableView* table_view) const
 {
-    auto* created_time { new IssuedTimeR(datetime_format::kDate, table_view) };
+    auto* created_time { new IssuedTimeR(datetime_format::kDashedDate, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kCreatedTime), created_time);
 
     auto* workspace_role { new WorkspaceRoleDelegate(table_view) };

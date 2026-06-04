@@ -119,8 +119,8 @@ void StatementTertiaryWidget::IniUnit(int unit)
 
 void StatementTertiaryWidget::IniWidget()
 {
-    ui->start->setDisplayFormat(datetime_format::kDate);
-    ui->end->setDisplayFormat(datetime_format::kDate);
+    ui->start->setDisplayFormat(datetime_format::kDashedDate);
+    ui->end->setDisplayFormat(datetime_format::kDashedDate);
 
     ui->pBtnFetch->setFocus();
 

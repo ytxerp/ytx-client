@@ -75,8 +75,8 @@ void AuditDialog::on_dateTimeEditEnd_dateChanged(const QDate& date)
 
 void AuditDialog::InitDialog()
 {
-    ui->dateTimeEditStart->setDisplayFormat(datetime_format::kDate);
-    ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDate);
+    ui->dateTimeEditStart->setDisplayFormat(datetime_format::kDashedDate);
+    ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDashedDate);
 
     ui->pBtnFetch->setFocus();
 
