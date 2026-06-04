@@ -249,7 +249,7 @@ inline double GrowthRate(double current, double previous)
     if (qFuzzyIsNull(previous))
         return std::numeric_limits<double>::quiet_NaN();
 
-    return (current - previous) / previous;
+    return (current - previous) / std::abs(previous);
 }
 
 template <TreeNode T, typename F> void SortIterative(T* node, F&& compare)
