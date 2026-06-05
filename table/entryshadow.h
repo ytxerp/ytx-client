@@ -24,7 +24,7 @@
 
 #include "table/entry.h"
 
-struct EntryShadow final {
+struct EntryShadow {
     QUuid* id {};
     QDateTime* issued_time {};
     QString* code {};
@@ -53,14 +53,24 @@ struct EntryShadow final {
     // • Cross binding:    shadow.lhs_node → entry.rhs_node, shadow.rhs_node → entry.lhs_node
     bool is_parallel {};
 
+    virtual ~EntryShadow() = default;
+
     // BindEntry connects the shadow to a concrete Entry instance.
-    void BindEntry(Entry* base, bool parallel);
+    virtual void BindEntry(Entry* base, bool parallel);
 
     // Reset clears all bound pointers and restores the shadow to default values.
-    void Reset();
+    virtual void Reset();
 
     // Serialize shadow to JSON.
-    QJsonObject WriteJson() const;
+    virtual QJsonObject WriteJson() const;
+};
+
+struct EntryShadowF final : EntryShadow {
+    finance::CashKind* cash_kind {};
+
+    void BindEntry(Entry* base, bool parallel) override;
+    void Reset() override;
+    QJsonObject WriteJson() const override;
 };
 
 using EntryShadowList = QList<EntryShadow*>;

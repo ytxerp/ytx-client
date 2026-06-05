@@ -17,8 +17,8 @@ CashFlowStatementModel::CashFlowStatementModel(const QStringList& header, QObjec
 
 CashFlowStatementModel::~CashFlowStatementModel()
 {
-    ResourcePool<CashFlowStatementRow>::Instance().Recycle(carrier_node_hash_);
-    ResourcePool<CashFlowStatementRow>::Instance().Recycle(category_node_hash_);
+    ResourcePool<CashFlowStatementRow>::Instance().Recycle(root_);
+    ResourcePool<CashFlowStatementRow>::Instance().Recycle(node_list_);
     ResourcePool<CashFlowStatementRow>::Instance().Recycle(first_level_nodes_);
     ResourcePool<CashFlowStatementRow>::Instance().Recycle(second_level_nodes_);
 }
@@ -164,29 +164,25 @@ void CashFlowStatementModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void CashFlowStatementModel::ResetModel(CJsonArray& node_array, CJsonArray& carrier_array)
+void CashFlowStatementModel::ResetModel(CJsonArray& node_array)
 {
-    const auto category_node_hash { AddRowsHash(node_array) };
-    const auto carrier_node_hash { AddRowsHash(carrier_array) };
+    const auto node_list { AddRowsList(node_array) };
 
     beginResetModel();
 
     {
-        ResourcePool<CashFlowStatementRow>::Instance().Recycle(category_node_hash_);
-        ResourcePool<CashFlowStatementRow>::Instance().Recycle(carrier_node_hash_);
+        ResourcePool<CashFlowStatementRow>::Instance().Recycle(node_list_);
 
         for (auto* node : std::as_const(second_level_nodes_)) {
             node->children.clear();
         }
     }
 
-    category_node_hash_ = category_node_hash;
-    carrier_node_hash_ = carrier_node_hash;
+    node_list_ = node_list;
 
-    BuildCategoryHierarchy();
-    BuildCarrierHierarchy();
+    BuildHierarchy();
 
-    for (auto* node : std::as_const(category_node_hash_)) {
+    for (auto* node : std::as_const(node_list_)) {
         UpdateAncestorTotal(node, node->final_total);
     }
 
@@ -210,93 +206,75 @@ void CashFlowStatementModel::InitFixedNodes()
     auto* investing { CreateBranchNode(tr("Investing"), finance::CashKind::kNone, direction_rule::kDDCI) };
     auto* financing { CreateBranchNode(tr("Financing"), finance::CashKind::kNone, direction_rule::kDDCI) };
 
-    auto* carrier { CreateBranchNode(tr("Carrier"), finance::CashKind::kNone, direction_rule::kDICD) };
-    auto* cash { CreateBranchNode(tr("Cash"), finance::Role::kCash, direction_rule::kDICD) };
-    auto* bank { CreateBranchNode(tr("Bank"), finance::Role::kBank, direction_rule::kDICD) };
-    auto* wallet { CreateBranchNode(tr("Wallet"), finance::Role::kWallet, direction_rule::kDICD) };
-
-    {
-        first_level_nodes_.emplaceBack(root_);
-        first_level_nodes_.emplaceBack(operating);
-        first_level_nodes_.emplaceBack(investing);
-        first_level_nodes_.emplaceBack(financing);
-        first_level_nodes_.emplaceBack(carrier);
-    }
-
     {
         root_->children = {
             operating,
             investing,
             financing,
-            carrier,
         };
 
         operating->parent = root_;
         investing->parent = root_;
         financing->parent = root_;
-        carrier->parent = root_;
+
+        first_level_nodes_.emplaceBack(operating);
+        first_level_nodes_.emplaceBack(investing);
+        first_level_nodes_.emplaceBack(financing);
     }
 
     {
-        carrier->children = { cash, bank, wallet };
-        cash->parent = carrier;
-        bank->parent = carrier;
-        wallet->parent = carrier;
-    }
+        operating_in_ = CreateBranchNode(tr("Inflows"), finance::CashKind::kNone, direction_rule::kDDCI);
+        operating_out_ = CreateBranchNode(tr("Outflows"), finance::CashKind::kNone, direction_rule::kDICD);
+        investing_in_ = CreateBranchNode(tr("Inflows"), finance::CashKind::kNone, direction_rule::kDDCI);
+        investing_out_ = CreateBranchNode(tr("Outflows"), finance::CashKind::kNone, direction_rule::kDICD);
+        financing_in_ = CreateBranchNode(tr("Inflows"), finance::CashKind::kNone, direction_rule::kDDCI);
+        financing_out_ = CreateBranchNode(tr("Outflows"), finance::CashKind::kNone, direction_rule::kDICD);
 
-    {
-        second_level_nodes_.emplaceBack(cash);
-        second_level_nodes_.emplaceBack(bank);
-        second_level_nodes_.emplaceBack(wallet);
-    }
+        operating->children = { operating_in_, operating_out_ };
+        operating_in_->parent = operating;
+        operating_out_->parent = operating;
 
-    {
-        auto AddSecondLevelNodes = [&](CashFlowStatementRow* parent, finance::CashKind in_flow, finance::CashKind out_flow) {
-            auto* in_node { CreateBranchNode(tr("Inflows"), in_flow, direction_rule::kDDCI) };
-            auto* out_node { CreateBranchNode(tr("Outflows"), out_flow, direction_rule::kDICD) };
+        investing->children = { investing_in_, investing_out_ };
+        investing_in_->parent = investing;
+        investing_out_->parent = investing;
 
-            second_level_nodes_.emplaceBack(in_node);
-            second_level_nodes_.emplaceBack(out_node);
+        financing->children = { financing_in_, financing_out_ };
+        financing_in_->parent = financing;
+        financing_out_->parent = financing;
 
-            in_node->parent = parent;
-            out_node->parent = parent;
-
-            parent->children = {
-                in_node,
-                out_node,
-            };
-        };
-
-        AddSecondLevelNodes(operating, finance::CashKind::kOperatingIn, finance::CashKind::kOperatingOut);
-        AddSecondLevelNodes(investing, finance::CashKind::kInvestingIn, finance::CashKind::kInvestingOut);
-        AddSecondLevelNodes(financing, finance::CashKind::kFinancingIn, finance::CashKind::kFinancingOut);
+        second_level_nodes_.emplaceBack(operating_in_);
+        second_level_nodes_.emplaceBack(operating_out_);
+        second_level_nodes_.emplaceBack(investing_in_);
+        second_level_nodes_.emplaceBack(investing_out_);
+        second_level_nodes_.emplaceBack(financing_in_);
+        second_level_nodes_.emplaceBack(financing_out_);
     }
 }
 
-QHash<QUuid, CashFlowStatementRow*> CashFlowStatementModel::AddRowsHash(const CJsonArray& node_array)
+QList<CashFlowStatementRow*> CashFlowStatementModel::AddRowsList(const CJsonArray& node_array)
 {
     if (node_array.isEmpty()) {
         qWarning() << Q_FUNC_INFO << "Received empty node array";
     }
 
-    QHash<QUuid, CashFlowStatementRow*> hash {};
+    QList<CashFlowStatementRow*> hash {};
 
     for (const QJsonValue& val : node_array) {
         const QJsonObject obj { val.toObject() };
         auto* node { ResourcePool<CashFlowStatementRow>::Instance().Allocate() };
         node->ReadJson(obj);
-        hash.insert(node->id, node);
+        hash.emplaceBack(node);
     }
 
     return hash;
 }
 
-void CashFlowStatementModel::BuildCategoryHierarchy() const
+void CashFlowStatementModel::BuildHierarchy() const
 {
     // Attach nodes without parent to virtual root
-    for (auto* node : std::as_const(category_node_hash_)) {
+    for (auto* node : std::as_const(node_list_)) {
         if (!node->parent) {
-            auto* root { FindCategoryGroup(node->cash_kind) };
+            auto* root { FindNodeGroup(node->cash_kind) };
 
             if (!root) {
                 qWarning() << Q_FUNC_INFO << "Cannot find group node for cash kind:" << std::to_underlying(node->cash_kind);
@@ -305,40 +283,36 @@ void CashFlowStatementModel::BuildCategoryHierarchy() const
 
             root->children.emplaceBack(node);
             node->parent = root;
+
+            node->name = CashKindName(node->cash_kind);
         }
     }
 }
 
-void CashFlowStatementModel::BuildCarrierHierarchy() const
+CashFlowStatementRow* CashFlowStatementModel::FindNodeGroup(finance::CashKind kind) const
 {
-    // Attach nodes without parent to virtual root
-    for (auto* node : std::as_const(carrier_node_hash_)) {
-        if (!node->parent) {
-            auto* root { FindCarrierGroup(node->roles) };
+    switch (static_cast<int>(kind)) {
+    // Operating
+    case 100 ... 199:
+        return operating_in_;
+    case 200 ... 299:
+        return operating_out_;
 
-            if (!root) {
-                qWarning() << Q_FUNC_INFO << "Cannot find group node for roles";
-                continue;
-            }
+        // Investing
+    case 300 ... 399:
+        return investing_in_;
+    case 400 ... 499:
+        return investing_out_;
 
-            root->children.emplaceBack(node);
-            node->parent = root;
-        }
+        // Financing
+    case 500 ... 599:
+        return financing_in_;
+    case 600 ... 699:
+        return financing_out_;
+
+    default:
+        return nullptr;
     }
-}
-
-CashFlowStatementRow* CashFlowStatementModel::FindCategoryGroup(finance::CashKind kind) const
-{
-    auto it = std::find_if(second_level_nodes_.cbegin(), second_level_nodes_.cend(), [kind](const auto* node) { return node->cash_kind == kind; });
-
-    return it != second_level_nodes_.cend() ? *it : nullptr;
-}
-
-CashFlowStatementRow* CashFlowStatementModel::FindCarrierGroup(finance::Roles roles) const
-{
-    auto it = std::find_if(second_level_nodes_.cbegin(), second_level_nodes_.cend(), [roles](const auto* node) { return roles & node->roles; });
-
-    return it != second_level_nodes_.cend() ? *it : nullptr;
 }
 
 void CashFlowStatementModel::UpdateAncestorTotal(CashFlowStatementRow* node, double final_delta) const
@@ -367,20 +341,6 @@ CashFlowStatementRow* CashFlowStatementModel::CreateBranchNode(const QString& na
 
     node->name = name;
     node->cash_kind = cash_kind;
-    node->direction_rule = direction_rule;
-
-    return node;
-}
-
-CashFlowStatementRow* CashFlowStatementModel::CreateBranchNode(const QString& name, finance::Roles roles, bool direction_rule) const
-{
-    auto* node { ResourcePool<CashFlowStatementRow>::Instance().Allocate() };
-
-    node->id = QUuid::createUuidV7();
-    node->kind = NodeKind::kBranch;
-
-    node->name = name;
-    node->roles = roles;
     node->direction_rule = direction_rule;
 
     return node;

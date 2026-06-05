@@ -59,6 +59,8 @@ enum class Section { kFinance = 0, kTask, kInventory, kPartner, kSale, kPurchase
 inline constexpr std::array<Section, 6> kSectionArray
     = { Section::kFinance, Section::kTask, Section::kInventory, Section::kPartner, Section::kSale, Section::kPurchase };
 
+inline constexpr std::array<Section, 3> kDoubleSectionArray = { Section::kFinance, Section::kTask, Section::kInventory };
+
 /**
  * @brief Whether the given section belongs to a double-entry module.
  *

@@ -44,8 +44,6 @@ QVariant SearchNodeModelF::data(const QModelIndex& index, int role) const
         return node->document;
     case NodeEnumF::kRoles:
         return static_cast<int>(d_node->roles);
-    case NodeEnumF::kCashKind:
-        return static_cast<int>(d_node->cash_kind);
     }
 }
 
@@ -82,8 +80,6 @@ void SearchNodeModelF::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case NodeEnumF::kRoles:
             return utils::CompareMember(d_lhs, d_rhs, &NodeF::roles, order);
-        case NodeEnumF::kCashKind:
-            return utils::CompareMember(d_lhs, d_rhs, &NodeF::cash_kind, order);
         case NodeEnumF::kId:
         case NodeEnumF::kVersion:
             return false;

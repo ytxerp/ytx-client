@@ -79,9 +79,6 @@ void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectio
 
     auto* roles { new FinanceRoleDelegate(finance::RoleItemList(), tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kRoles), roles);
-
-    auto* cash_kind { new IntStringNoneZero(info.cash_kind_model, info.cash_kind_map, tree_view) };
-    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kCashKind), cash_kind);
 }
 
 void MainWindow::TreeDelegateT(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
@@ -220,35 +217,39 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
 void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
 {
     auto* issued_time { new IssuedTime(config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kIssuedTime), issued_time);
 
     auto* lhs_rate { new Double(config.rate_decimal, 0.0, kDoubleMax, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kLhsRate), lhs_rate);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kLhsRate), lhs_rate);
 
     auto* line { new Line(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kCode), line);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDescription), line);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kCode), line);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDescription), line);
 
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDocument), document);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDocument), document);
 
     auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeId(node_id, table_view) };
 
     auto* node { new RhsNode(tree_model, filter_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kRhsNode), node);
 
     auto* value { new Double(config.quantity_decimal, kDoubleLowest, kDoubleMax, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDebit), value);
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kCredit), value);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDebit), value);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kCredit), value);
 
     auto* balance { new DoubleR(config.quantity_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kBalance), balance);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kBalance), balance);
 
     auto* tag { new TagDelegate(sc_f_.tag_icon_hash, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kTag), tag);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kTag), tag);
+
+    const auto& info { sc_f_.info };
+    auto* cash_kind { new IntStringNoneZero(info.cash_kind_model, info.cash_kind_map, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kCashKind), cash_kind);
 }
 
 void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const

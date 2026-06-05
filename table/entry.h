@@ -24,6 +24,8 @@
 #include <QJsonObject>
 #include <QUuid>
 
+#include "tree/finance_role.h"
+
 struct Entry {
     QUuid id {};
     QDateTime issued_time {};
@@ -49,6 +51,13 @@ struct Entry {
     virtual void Reset();
     virtual void ReadJson(const QJsonObject& object);
     virtual QJsonObject WriteJson() const { return QJsonObject(); }
+};
+
+struct EntryF final : Entry {
+    finance::CashKind cash_kind {};
+
+    void Reset() override;
+    void ReadJson(const QJsonObject& object) override;
 };
 
 struct EntryP final : Entry {

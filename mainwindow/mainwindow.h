@@ -170,7 +170,7 @@ private slots:
     void RPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void RBalanceSheetAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array);
     void RIncomeStatementAck(const QUuid& widget_id, const QJsonObject& obj);
-    void RCashFlowStatementAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& carrier_array);
+    void RCashFlowStatementAck(const QUuid& widget_id, const QJsonObject& obj);
 
     void RAccountRoleUpdate();
 

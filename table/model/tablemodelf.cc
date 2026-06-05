@@ -10,6 +10,200 @@ TableModelF::TableModelF(CTableModelArg& arg, QObject* parent)
 {
 }
 
+QVariant TableModelF::data(const QModelIndex& index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
+        return QVariant();
+
+    auto* d_shadow { DerivedPtr<EntryShadowF>(shadow_list_.at(index.row())) };
+
+    const EntryEnumF column { index.column() };
+
+    switch (column) {
+    case EntryEnumF::kId:
+        return *d_shadow->id;
+    case EntryEnumF::kVersion:
+        return *d_shadow->version;
+    case EntryEnumF::kIssuedTime:
+        return *d_shadow->issued_time;
+    case EntryEnumF::kLhsNode:
+        return *d_shadow->lhs_node;
+    case EntryEnumF::kCode:
+        return *d_shadow->code;
+    case EntryEnumF::kLhsRate:
+        return *d_shadow->lhs_rate;
+    case EntryEnumF::kDescription:
+        return *d_shadow->description;
+    case EntryEnumF::kRhsNode:
+        return *d_shadow->rhs_node;
+    case EntryEnumF::kStatus:
+        return *d_shadow->status;
+    case EntryEnumF::kDocument:
+        return *d_shadow->document;
+    case EntryEnumF::kTag:
+        return *d_shadow->tag;
+    case EntryEnumF::kDebit:
+        return *d_shadow->lhs_debit;
+    case EntryEnumF::kCredit:
+        return *d_shadow->lhs_credit;
+    case EntryEnumF::kBalance:
+        return d_shadow->balance;
+    case EntryEnumF::kCashKind:
+        return std::to_underlying(*d_shadow->cash_kind);
+    }
+}
+
+bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    if (!index.isValid() || role != Qt::EditRole)
+        return false;
+
+    const EntryEnumF column { index.column() };
+    const int row { index.row() };
+
+    if (section_ == Section::kFinance && column == EntryEnumF::kIssuedTime)
+        last_issued_ = value.toDateTime();
+
+    if (data(index, role) == value)
+        return false;
+
+    auto* shadow { shadow_list_.at(index.row()) };
+    auto* d_shadow { DerivedPtr<EntryShadowF>(shadow) };
+
+    const QUuid id { *shadow->id };
+    const int version { *shadow->version };
+
+    switch (column) {
+    case EntryEnumF::kIssuedTime:
+        UpdateIssuedTime(shadow, value.toDateTime());
+        break;
+    case EntryEnumF::kCode:
+        utils::UpdateShadowField(
+            pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [this, id, version]() { RestartTimer(id, version); });
+        break;
+    case EntryEnumF::kStatus:
+        utils::UpdateShadowField(
+            pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [this, id, version]() { RestartTimer(id, version); });
+        break;
+    case EntryEnumF::kDescription:
+        utils::UpdateShadowField(
+            pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [this, id, version]() { RestartTimer(id, version); });
+        break;
+    case EntryEnumF::kDocument:
+        utils::UpdateShadowStringList(
+            pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [this, id, version]() { RestartTimer(id, version); });
+        break;
+    case EntryEnumF::kTag:
+        utils::UpdateShadowStringList(
+            pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [this, id, version]() { RestartTimer(id, version); });
+        break;
+    case EntryEnumF::kLhsRate:
+        UpdateRate(shadow, value.toDouble());
+        break;
+    case EntryEnumF::kRhsNode:
+        UpdateLinkedNode(shadow, value.toUuid(), row);
+        break;
+    case EntryEnumF::kDebit:
+        UpdateNumeric(shadow, value.toDouble(), row, true);
+        break;
+    case EntryEnumF::kCredit:
+        UpdateNumeric(shadow, value.toDouble(), row, false);
+        break;
+    case EntryEnumF::kCashKind: {
+        const int raw { value.toInt() };
+        const auto cash_kind { static_cast<finance::CashKind>(raw) };
+
+        *d_shadow->cash_kind = cash_kind;
+        pending_updates_[id].insert(kCashKind, raw);
+        RestartTimer(id, version);
+        break;
+    }
+    case EntryEnumF::kId:
+    case EntryEnumF::kVersion:
+    case EntryEnumF::kLhsNode:
+    case EntryEnumF::kBalance:
+        return false;
+    }
+
+    emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
+    return true;
+}
+
+void TableModelF::sort(int column, Qt::SortOrder order)
+{
+    const EntryEnumF e_column { column };
+    if (e_column == EntryEnumF::kBalance)
+        return;
+
+    auto Compare = [order, e_column](const EntryShadow* lhs, const EntryShadow* rhs) -> bool {
+        auto* d_lhs { DerivedPtr<EntryShadowF>(lhs) };
+        auto* d_rhs { DerivedPtr<EntryShadowF>(rhs) };
+
+        switch (e_column) {
+        case EntryEnumF::kCode:
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::code, order);
+        case EntryEnumF::kDescription:
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::description, order);
+        case EntryEnumF::kIssuedTime:
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::issued_time, order);
+        case EntryEnumF::kLhsRate:
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_rate, order);
+        case EntryEnumF::kRhsNode:
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::rhs_node, order);
+        case EntryEnumF::kStatus:
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::status, order);
+        case EntryEnumF::kDocument:
+            return (order == Qt::AscendingOrder) ? (lhs->document->size() < rhs->document->size()) : (lhs->document->size() > rhs->document->size());
+        case EntryEnumF::kTag:
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::tag, order);
+        case EntryEnumF::kDebit:
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_debit, order);
+        case EntryEnumF::kCredit:
+            return utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_credit, order);
+        case EntryEnumF::kCashKind:
+            return utils::CompareShadowMember(d_lhs, d_rhs, &EntryShadowF::cash_kind, order);
+        case EntryEnumF::kId:
+        case EntryEnumF::kVersion:
+        case EntryEnumF::kLhsNode:
+        case EntryEnumF::kBalance:
+            return false;
+        }
+    };
+
+    emit layoutAboutToBeChanged();
+    std::sort(shadow_list_.begin(), shadow_list_.end(), Compare);
+    emit layoutChanged();
+
+    AccumulateBalance(0);
+}
+
+Qt::ItemFlags TableModelF::flags(const QModelIndex& index) const
+{
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    auto flags { QAbstractItemModel::flags(index) };
+    const EntryEnumF column { index.column() };
+
+    switch (column) {
+    case EntryEnumF::kId:
+    case EntryEnumF::kBalance:
+    case EntryEnumF::kDocument:
+    case EntryEnumF::kTag:
+    case EntryEnumF::kStatus:
+        flags &= ~Qt::ItemIsEditable;
+        break;
+    default:
+        flags |= Qt::ItemIsEditable;
+        break;
+    }
+
+    return flags;
+}
+
 bool TableModelF::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     Q_ASSERT(row >= 0 && row <= rowCount(parent));
@@ -25,7 +219,7 @@ bool TableModelF::insertRows(int row, int /*count*/, const QModelIndex& parent)
     }
 
     if (shadow_list_.size() == 1)
-        EmitDataChanged(0, 0, std::to_underlying(EntryEnum::kIssuedTime), std::to_underlying(EntryEnum::kIssuedTime));
+        EmitDataChanged(0, 0, std::to_underlying(EntryEnumF::kIssuedTime), std::to_underlying(EntryEnumF::kIssuedTime));
 
     return true;
 }
@@ -55,7 +249,7 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
         const bool has_leaf_delta { std::abs(lhs_debit - lhs_credit) > kTolerance };
         if (has_leaf_delta) {
             AccumulateBalance(row);
-            EmitDataChanged(row, row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
+            EmitDataChanged(row, row, std::to_underlying(EntryEnumF::kBalance), std::to_underlying(EntryEnumF::kBalance));
         }
 
         emit SAppendOneEntry(shadow->entry);
@@ -140,7 +334,7 @@ bool TableModelF::UpdateNumeric(EntryShadow* shadow, double value, int row, bool
 
     if (has_leaf_delta) {
         AccumulateBalance(row);
-        EmitDataChanged(row, row, std::to_underlying(EntryEnum::kBalance), std::to_underlying(EntryEnum::kBalance));
+        EmitDataChanged(row, row, std::to_underlying(EntryEnumF::kBalance), std::to_underlying(EntryEnumF::kBalance));
 
         emit SUpdateBalance(rhs_id, *shadow->id);
     }

@@ -26,6 +26,9 @@ class SearchEntryModelF final : public SearchEntryModel {
     Q_OBJECT
 public:
     explicit SearchEntryModelF(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
+
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    void sort(int column, Qt::SortOrder order) override;
 };
 
 #endif // SEARCHENTRYMODELF_H

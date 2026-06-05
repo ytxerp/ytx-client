@@ -3,7 +3,6 @@
 #include <QJsonArray>
 
 #include "component/constant.h"
-#include "component/constantint.h"
 #include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 
@@ -569,6 +568,9 @@ QJsonObject CashFlowStatementAck(CUuid& widget_id, const QDateTime& start, const
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kNodeArray, QJsonArray());
     message.insert(cash_flow_statement::kCarrierArray, QJsonArray());
+    message.insert(cash_flow_statement::kSpecialArray, QJsonArray());
+    message.insert(cash_flow_statement::kWrongEntryArray, QJsonArray());
+
     return message;
 }
 

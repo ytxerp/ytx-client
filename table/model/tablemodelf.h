@@ -29,6 +29,11 @@ public:
     explicit TableModelF(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelF() override = default;
 
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
+    void sort(int column, Qt::SortOrder order) override;
+    Qt::ItemFlags flags(const QModelIndex& index) const override;
+
     bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
 protected:

@@ -1,5 +1,6 @@
 #include "charts/cash_flow_statement/cashflowstatementdialog.h"
 #include "charts/cash_flow_statement/cashflowstatementenum.h"
+#include "component/constantstring.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 
@@ -23,7 +24,7 @@ void MainWindow::on_actionCashFlowStatement_triggered()
     dialog->show();
 }
 
-void MainWindow::RCashFlowStatementAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& carrier_array)
+void MainWindow::RCashFlowStatementAck(const QUuid& widget_id, const QJsonObject& obj)
 {
     auto widget { sc_f_.widget_hash.value(widget_id).widget };
     if (!widget)
@@ -33,6 +34,11 @@ void MainWindow::RCashFlowStatementAck(const QUuid& widget_id, const QJsonArray&
     if (!d_widget)
         return;
 
+    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
+    const QJsonArray carrier_array { obj.value(cash_flow_statement::kCarrierArray).toArray() };
+    const QJsonArray special_array { obj.value(cash_flow_statement::kSpecialArray).toArray() };
+    const QJsonArray wrong_entry_array { obj.value(cash_flow_statement::kWrongEntryArray).toArray() };
+
     auto* model { d_widget->Model() };
-    model->ResetModel(node_array, carrier_array);
+    model->ResetModel(node_array);
 }

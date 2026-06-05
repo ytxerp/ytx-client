@@ -699,10 +699,7 @@ void WebSocket::AckCashFlowStatement(const QJsonObject& obj)
         return;
     }
 
-    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
-    const QJsonArray carrier_array { obj.value(cash_flow_statement::kCarrierArray).toArray() };
-
-    emit SCashFlowStatementAck(widget_id, node_array, carrier_array);
+    emit SCashFlowStatementAck(widget_id, obj);
 }
 
 void WebSocket::DeleteLeaf(const QJsonObject& obj)

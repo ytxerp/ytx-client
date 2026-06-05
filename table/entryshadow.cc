@@ -54,3 +54,19 @@ QJsonObject EntryShadow::WriteJson() const
 
     return obj;
 }
+
+void EntryShadowF::BindEntry(Entry* base, bool parallel)
+{
+    EntryShadow::BindEntry(base, parallel);
+    cash_kind = &(static_cast<EntryF*>(base)->cash_kind);
+}
+
+void EntryShadowF::Reset() { *this = EntryShadowF {}; }
+
+QJsonObject EntryShadowF::WriteJson() const
+{
+    QJsonObject obj { EntryShadow::WriteJson() };
+    obj.insert(kCashKind, std::to_underlying(*cash_kind));
+
+    return obj;
+}

@@ -45,6 +45,16 @@ void Entry::ReadJson(const QJsonObject& object)
         document = utils::ReadStringList(object, kDocument);
 }
 
+void EntryF::Reset() { *this = EntryF {}; }
+
+void EntryF::ReadJson(const QJsonObject& object)
+{
+    Entry::ReadJson(object);
+
+    if (const auto val = object.value(kCashKind); val.isDouble())
+        cash_kind = static_cast<finance::CashKind>(val.toInt());
+}
+
 void EntryP::Reset() { *this = EntryP {}; }
 
 void EntryP::ReadJson(const QJsonObject& object)

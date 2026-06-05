@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYPOOL_H
-#define ENTRYPOOL_H
+#ifndef ENTRYSHADOWPOOL_H
+#define ENTRYSHADOWPOOL_H
 
 #include <QMutex>
 #include <array>
@@ -27,10 +27,10 @@
 #include "component/constantint.h"
 #include "concepts.h"
 #include "enum/section.h"
-#include "table/entry.h"
+#include "table/entryshadow.h"
 
 /*
- * EntryPool is a singleton object pool for Entry-derived objects.
+ * EntryShadowPool is a singleton object pool for EntryShadow-derived objects.
  *
  * Features:
  * 1. Thread-safe allocation and recycling using QMutex.
@@ -39,51 +39,51 @@
  * 4. Batch recycling is optimized: only one lock acquisition for all entries.
  * 5. Modern C++ style using std::array for fixed-size section pools.
  */
-class EntryPool {
+class EntryShadowPool {
 public:
-    static EntryPool& Instance();
-    Entry* Allocate(Section section);
+    static EntryShadowPool& Instance();
+    EntryShadow* Allocate(Section section);
 
-    void Recycle(Entry* entry, Section section);
+    void Recycle(EntryShadow* entry_shadow, Section section);
     template <Iterable Container> void Recycle(Container& container, Section section);
 
-    EntryPool(const EntryPool&) = delete;
-    EntryPool& operator=(const EntryPool&) = delete;
-    EntryPool(EntryPool&&) = delete;
-    EntryPool& operator=(EntryPool&&) = delete;
+    EntryShadowPool(const EntryShadowPool&) = delete;
+    EntryShadowPool& operator=(const EntryShadowPool&) = delete;
+    EntryShadowPool(EntryShadowPool&&) = delete;
+    EntryShadowPool& operator=(EntryShadowPool&&) = delete;
 
 private:
-    EntryPool();
-    ~EntryPool();
+    EntryShadowPool();
+    ~EntryShadowPool();
 
-    static Entry* NewResource(Section section);
-    static void Expand(std::deque<Entry*>& pool, Section section, qsizetype count);
+    static EntryShadow* NewResource(Section section);
+    static void Expand(std::deque<EntryShadow*>& pool, Section section, qsizetype count);
 
 private:
-    std::array<std::deque<Entry*>, 6> pools_ {}; // Pools for each Section
+    std::array<std::deque<EntryShadow*>, 3> pools_ {}; // Pools for each Section
     QMutex mutex_ {}; // Mutex protecting all pools
 };
 
 // Singleton
-inline EntryPool& EntryPool::Instance()
+inline EntryShadowPool& EntryShadowPool::Instance()
 {
-    static EntryPool instance;
+    static EntryShadowPool instance;
     return instance;
 }
 
 // Constructor: pre-fill pools
-inline EntryPool::EntryPool()
+inline EntryShadowPool::EntryShadowPool()
 {
-    for (size_t i = 0; i != kSectionArray.size(); ++i) {
-        Expand(pools_[i], kSectionArray[i], pool_const::kExpandSize);
+    for (size_t i = 0; i != kDoubleSectionArray.size(); ++i) {
+        Expand(pools_[i], kDoubleSectionArray[i], pool_const::kExpandSize);
     }
 }
 
 // Destructor: delete remaining entries
-inline EntryPool::~EntryPool() { }
+inline EntryShadowPool::~EntryShadowPool() { }
 
 // Expand pool with 'count' new entries
-inline void EntryPool::Expand(std::deque<Entry*>& pool, Section section, qsizetype count)
+inline void EntryShadowPool::Expand(std::deque<EntryShadow*>& pool, Section section, qsizetype count)
 {
     for (qsizetype i = 0; i != count; ++i) {
         pool.push_back(NewResource(section));
@@ -91,26 +91,23 @@ inline void EntryPool::Expand(std::deque<Entry*>& pool, Section section, qsizety
 }
 
 // Factory function: create a new entry based on section
-inline Entry* EntryPool::NewResource(Section section)
+inline EntryShadow* EntryShadowPool::NewResource(Section section)
 {
     switch (section) {
     case Section::kFinance:
-        return new EntryF();
+        return new EntryShadowF();
     case Section::kTask:
     case Section::kInventory:
-        return new Entry();
+        return new EntryShadow();
     case Section::kPartner:
-        return new EntryP();
     case Section::kSale:
     case Section::kPurchase:
-        return new EntryO();
-    default:
         Q_UNREACHABLE();
     }
 }
 
-// Allocate one entry (LIFO)
-inline Entry* EntryPool::Allocate(Section section)
+// Allocate one entry
+inline EntryShadow* EntryShadowPool::Allocate(Section section)
 {
     QMutexLocker locker(&mutex_);
     auto& pool = pools_[static_cast<size_t>(section)];
@@ -121,16 +118,16 @@ inline Entry* EntryPool::Allocate(Section section)
 
     Q_ASSERT(!pool.empty());
 
-    Entry* e = pool.front();
+    EntryShadow* e = pool.front();
     pool.pop_front();
 
     return e;
 }
 
 // Recycle one entry
-inline void EntryPool::Recycle(Entry* entry, Section section)
+inline void EntryShadowPool::Recycle(EntryShadow* entry_shadow, Section section)
 {
-    if (!entry)
+    if (!entry_shadow)
         return;
 
     QMutexLocker locker(&mutex_);
@@ -138,16 +135,16 @@ inline void EntryPool::Recycle(Entry* entry, Section section)
 
     if (static_cast<qsizetype>(pool.size()) + 1 >= pool_const::kMaxSize) {
         locker.unlock();
-        delete entry;
+        delete entry_shadow;
         return;
     }
 
-    entry->Reset();
-    pool.push_back(entry);
+    entry_shadow->Reset();
+    pool.push_back(entry_shadow);
 }
 
 // Batch recycle
-template <Iterable Container> inline void EntryPool::Recycle(Container& container, Section section)
+template <Iterable Container> inline void EntryShadowPool::Recycle(Container& container, Section section)
 {
     if (container.isEmpty())
         return;
@@ -162,7 +159,7 @@ template <Iterable Container> inline void EntryPool::Recycle(Container& containe
         return;
     }
 
-    for (Entry* e : container) {
+    for (EntryShadow* e : container) {
         if (e) {
             e->Reset();
             pool.push_back(e);
@@ -172,4 +169,4 @@ template <Iterable Container> inline void EntryPool::Recycle(Container& containe
     container.clear();
 }
 
-#endif // ENTRYPOOL_H
+#endif // ENTRYSHADOWPOOL_H

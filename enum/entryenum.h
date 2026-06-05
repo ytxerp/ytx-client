@@ -46,6 +46,26 @@ enum class EntryEnum {
     kBalance,
 };
 
+enum class EntryEnumF {
+    // --- Hidden ---
+    kId = 0,
+    kVersion,
+    kLhsNode,
+    // --- Visible ---
+    kIssuedTime,
+    kLhsRate,
+    kCode,
+    kDescription,
+    kCashKind,
+    kTag,
+    kDocument,
+    kStatus,
+    kRhsNode,
+    kDebit,
+    kCredit,
+    kBalance,
+};
+
 // FullEntryEnumP is same as EntryEnumP
 enum class EntryEnumP {
     // --- Hidden ---
@@ -94,6 +114,26 @@ enum class FullEntryEnum {
     kLhsDebit,
     kLhsCredit,
     kDescription,
+    kTag,
+    kDocument,
+    kStatus,
+    kRhsCredit,
+    kRhsDebit,
+    kRhsRate,
+    kRhsNode,
+};
+
+enum class FullEntryEnumF {
+    kId = 0,
+    kVersion,
+    kIssuedTime,
+    kCode,
+    kLhsNode,
+    kLhsRate,
+    kLhsDebit,
+    kLhsCredit,
+    kDescription,
+    kCashKind,
     kTag,
     kDocument,
     kStatus,

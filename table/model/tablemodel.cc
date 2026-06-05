@@ -2,7 +2,7 @@
 
 #include "component/constantwebsocket.h"
 #include "global/entrypool.h"
-#include "global/resourcepool.h"
+#include "global/entryshadowpool.h"
 #include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -19,7 +19,7 @@ TableModel::TableModel(CTableModelArg& arg, QObject* parent)
 TableModel::~TableModel()
 {
     FlushCaches();
-    ResourcePool<EntryShadow>::Instance().Recycle(shadow_list_);
+    EntryShadowPool::Instance().Recycle(shadow_list_, section_);
 }
 
 void TableModel::RDirectionRule(bool value)
@@ -50,7 +50,7 @@ void TableModel::RRefreshField(const QUuid& entry_id, int start, int end)
 
 void TableModel::RAttachOneEntry(Entry* entry)
 {
-    auto* entry_shadow { ResourcePool<EntryShadow>::Instance().Allocate() };
+    auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
     entry_shadow->BindEntry(entry, lhs_id_ == entry->lhs_node);
 
     auto row { shadow_list_.size() };
@@ -74,7 +74,7 @@ void TableModel::RDetachOneEntry(const QUuid& entry_id)
 
     int row { idx.row() };
     beginRemoveRows(QModelIndex(), row, row);
-    ResourcePool<EntryShadow>::Instance().Recycle(shadow_list_.takeAt(row));
+    EntryShadowPool::Instance().Recycle(shadow_list_.takeAt(row), section_);
     endRemoveRows();
 
     AccumulateBalance(row);
@@ -457,7 +457,7 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
         EntryPool::Instance().Recycle(shadow->entry, section_);
     }
 
-    ResourcePool<EntryShadow>::Instance().Recycle(shadow);
+    EntryShadowPool::Instance().Recycle(shadow, section_);
     return true;
 }
 
@@ -466,7 +466,7 @@ EntryShadow* TableModel::InsertRowsImpl(int row, const QModelIndex& parent)
     auto* entry { EntryPool::Instance().Allocate(section_) };
     entry->id = QUuid::createUuidV7();
 
-    auto* entry_shadow { ResourcePool<EntryShadow>::Instance().Allocate() };
+    auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
     entry_shadow->BindEntry(entry, true);
 
     {
@@ -516,7 +516,7 @@ void TableModel::RDeleteMultiEntries(const QSet<QUuid>& entry_id_set)
             min_row = i;
 
             beginRemoveRows(QModelIndex(), i, i);
-            ResourcePool<EntryShadow>::Instance().Recycle(shadow_list_.takeAt(i));
+            EntryShadowPool::Instance().Recycle(shadow_list_.takeAt(i), section_);
             endRemoveRows();
         }
     }
@@ -531,7 +531,7 @@ void TableModel::RAppendMultiEntries(const EntryList& entry_list)
     shadow_list.reserve(entry_list.size());
 
     for (auto* entry : entry_list) {
-        auto* entry_shadow { ResourcePool<EntryShadow>::Instance().Allocate() };
+        auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
         entry_shadow->BindEntry(entry, lhs_id_ == entry->lhs_node);
         shadow_list.emplaceBack(entry_shadow);
     }

@@ -51,8 +51,6 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
         return node->document;
     case NodeEnumF::kRoles:
         return static_cast<int>(node->roles);
-    case NodeEnumF::kCashKind:
-        return std::to_underlying(node->cash_kind);
     }
 }
 
@@ -94,27 +92,8 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
         const int raw { value.toInt() };
         const auto roles { static_cast<finance::Roles>(raw) };
 
-        if (IsCashFlowCarrier(roles) && d_node->cash_kind != finance::CashKind::kNone) {
-            emit SMessage(QMessageBox::Warning, tr("Cannot set roles: node already has a cash kind assigned."));
-            return false;
-        }
-
         d_node->roles = roles;
         pending_updates_[id].insert(kRoles, raw);
-        RestartTimer(id);
-        break;
-    }
-    case NodeEnumF::kCashKind: {
-        const int raw { value.toInt() };
-        const auto cash_kind { static_cast<finance::CashKind>(raw) };
-
-        if (cash_kind != finance::CashKind::kNone && IsCashFlowCarrier(d_node->roles)) {
-            emit SMessage(QMessageBox::Warning, tr("Cannot set cash kind: node is a cash flow carrier."));
-            return false;
-        }
-
-        d_node->cash_kind = cash_kind;
-        pending_updates_[id].insert(kCashKind, raw);
         RestartTimer(id);
         break;
     }
@@ -165,8 +144,6 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case NodeEnumF::kRoles:
             return utils::CompareMember(d_lhs, d_rhs, &NodeF::roles, order);
-        case NodeEnumF::kCashKind:
-            return utils::CompareMember(d_lhs, d_rhs, &NodeF::cash_kind, order);
         case NodeEnumF::kId:
         case NodeEnumF::kVersion:
             return false;

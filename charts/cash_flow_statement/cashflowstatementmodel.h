@@ -45,21 +45,18 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
 
-    void ResetModel(CJsonArray& node_array, CJsonArray& carrier_array);
+    void ResetModel(CJsonArray& node_array);
 
 private:
     CashFlowStatementRow* GetNodeByIndex(const QModelIndex& index) const;
     CashFlowStatementRow* CreateBranchNode(const QString& name, finance::CashKind cash_kind, bool direction_rule) const;
-    CashFlowStatementRow* CreateBranchNode(const QString& name, finance::Roles roles, bool direction_rule) const;
 
     void InitFixedNodes();
-    QHash<QUuid, CashFlowStatementRow*> AddRowsHash(const CJsonArray& node_array);
+    QList<CashFlowStatementRow*> AddRowsList(const CJsonArray& node_array);
 
-    void BuildCategoryHierarchy() const;
-    void BuildCarrierHierarchy() const;
+    void BuildHierarchy() const;
 
-    CashFlowStatementRow* FindCategoryGroup(finance::CashKind kind) const;
-    CashFlowStatementRow* FindCarrierGroup(finance::Roles roles) const;
+    CashFlowStatementRow* FindNodeGroup(finance::CashKind kind) const;
 
     void UpdateAncestorTotal(CashFlowStatementRow* node, double final_delta) const;
 
@@ -70,8 +67,14 @@ private:
     QList<CashFlowStatementRow*> first_level_nodes_ {};
     QList<CashFlowStatementRow*> second_level_nodes_ {};
 
-    QHash<QUuid, CashFlowStatementRow*> category_node_hash_ {};
-    QHash<QUuid, CashFlowStatementRow*> carrier_node_hash_ {};
+    CashFlowStatementRow* operating_in_ {};
+    CashFlowStatementRow* operating_out_ {};
+    CashFlowStatementRow* investing_in_ {};
+    CashFlowStatementRow* investing_out_ {};
+    CashFlowStatementRow* financing_in_ {};
+    CashFlowStatementRow* financing_out_ {};
+
+    QList<CashFlowStatementRow*> node_list_ {};
 };
 
 #endif // CASHFLOWSTATEMENTMODEL_H

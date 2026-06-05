@@ -58,7 +58,6 @@ struct Node {
 
 struct NodeF final : Node {
     finance::Roles roles {};
-    finance::CashKind cash_kind {};
 
     void Reset() override;
 

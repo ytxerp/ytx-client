@@ -35,6 +35,7 @@ private slots:
 
 private:
     void TreeViewDelegate(QTableView* view) override;
+    void TableViewDelegate(QTableView* view) override;
 
 private:
     IntStringNoneZeroR* cash_kind_ {};
