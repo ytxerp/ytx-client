@@ -9,13 +9,16 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-CashFlowStatementDialog::CashFlowStatementDialog(CashFlowStatementModel* model, const QUuid& widget_id, QWidget* parent)
+CashFlowStatementDialog::CashFlowStatementDialog(
+    CashFlowStatementModel* model, CashFlowCarrierModel* carrier, CashFlowSpecialModel* special, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::CashFlowStatementDialog)
     , start_ { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime) }
     , end_ { QDateTime(QDate::currentDate().addDays(1), kStartTime) }
     , widget_id_ { widget_id }
     , model_ { model }
+    , carrier_ { carrier }
+    , special_ { special }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -26,12 +29,22 @@ CashFlowStatementDialog::CashFlowStatementDialog(CashFlowStatementModel* model, 
     ui->treeView->setModel(model);
     model->setParent(ui->treeView);
 
+    ui->treeViewCarrier->setModel(carrier);
+    carrier->setParent(ui->treeViewCarrier);
+
+    ui->treeViewSpecial->setModel(special);
+    special->setParent(ui->treeViewSpecial);
+
     QTimer::singleShot(0, this, &::CashFlowStatementDialog::on_pushButtonFetch_clicked);
 }
 
 CashFlowStatementDialog::~CashFlowStatementDialog() { delete ui; }
 
 QTreeView* CashFlowStatementDialog::View() { return ui->treeView; }
+
+QTreeView* CashFlowStatementDialog::CarrierView() { return ui->treeViewCarrier; }
+
+QTreeView* CashFlowStatementDialog::SpecialView() { return ui->treeViewSpecial; }
 
 void CashFlowStatementDialog::on_dateTimeEditEnd_dateChanged(const QDate& date)
 {
@@ -75,6 +88,10 @@ void CashFlowStatementDialog::InitDialog()
     ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
 
     ui->pushButtonFetch->setFocus();
+
+    ui->splitter_root->setSizes({ 800, 200 });
+    ui->splitter_h->setSizes({ 700, 300 });
+    ui->splitter_v->setSizes({ 600, 400 });
 }
 
 void CashFlowStatementDialog::InitTimer()

@@ -285,12 +285,15 @@ set(HEADERS
     delegate/financeroledelegate.h
     charts/cash_flow_statement/cashflowstatementdialog.h
     charts/cash_flow_statement/cashflowstatementmodel.h
+    charts/cash_flow_statement/cashflowcarriermodel.h
+    charts/cash_flow_statement/cashflowspecialmodel.h
     charts/cash_flow_statement/cashflowstatementrow.h
     charts/cash_flow_statement/cashflowstatementenum.h
     delegate/readonly/intstringnonezeror.h
     delegate/readonly/financerolesdelegater.h
     delegate/readonly/cashflownamer.h
     delegate/readonly/percentagedelegater.h
+    global/entryshadowpool.h
 )
 
 set(SOURCES
@@ -466,6 +469,8 @@ set(SOURCES
     delegate/financeroledelegate.cc
     charts/cash_flow_statement/cashflowstatementdialog.cc
     charts/cash_flow_statement/cashflowstatementmodel.cc
+    charts/cash_flow_statement/cashflowspecialmodel.cc
+    charts/cash_flow_statement/cashflowcarriermodel.cc
     mainwindow/mainwindow_cash_flow_statement.cc
     delegate/readonly/intstringnonezeror.cc
     delegate/readonly/financerolesdelegater.cc
