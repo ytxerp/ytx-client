@@ -28,8 +28,6 @@
 #include "delegate/readonly/doublenonezeror.h"
 #include "delegate/readonly/doubler.h"
 #include "delegate/readonly/financeforeignr.h"
-#include "delegate/readonly/financerolesdelegater.h"
-#include "delegate/readonly/intstringnonezeror.h"
 #include "delegate/readonly/intstringr.h"
 #include "delegate/readonly/issuedtimer.h"
 #include "delegate/readonly/nodenamer.h"
@@ -662,12 +660,6 @@ void MainWindow::DelegateCashFlowStatement(QTreeView* view) const
 
     auto* kind { new IntStringR(info.kind_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kKind), kind);
-
-    auto* cash_kind { new IntStringNoneZeroR(info.cash_kind_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kCashKind), cash_kind);
-
-    auto* roles { new FinanceRolesDelegateR(view) };
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kRoles), roles);
 
     auto* name { new CashFlowNameR(sc_f_.tree_model, std::to_underlying(CashFlowStatementEnum::kId), view) };
     view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kName), name);

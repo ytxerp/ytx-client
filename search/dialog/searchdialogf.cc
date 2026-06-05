@@ -6,6 +6,9 @@
 SearchDialogF::SearchDialogF(SectionContext* sc, SearchNodeModel* search_node, SearchEntryModel* search_entry, QWidget* parent)
     : SearchDialog(sc, search_node, search_entry, parent)
 {
+    cash_kind_ = new IntStringNoneZeroR(info_.cash_kind_map, this);
+    roles_ = new FinanceRolesDelegateR(this);
+
     TreeViewDelegate(ui->searchViewNode);
     TableViewDelegate(ui->searchViewEntry);
 }
@@ -21,6 +24,8 @@ void SearchDialogF::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kColor), color_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kTag), tag_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kDocument), document_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kCashKind), cash_kind_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumF::kRoles), roles_);
 }
 
 void SearchDialogF::REntryDoubleClicked(const QModelIndex& index)

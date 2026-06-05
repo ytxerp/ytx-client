@@ -27,8 +27,6 @@ enum class CashFlowStatementEnum {
     kDescription,
     kDirectionRule,
     kKind,
-    kRoles,
-    kCashKind,
     kFinalTotal,
 };
 

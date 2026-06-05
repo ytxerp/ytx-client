@@ -20,6 +20,8 @@
 #ifndef SEARCHDIALOGF_H
 #define SEARCHDIALOGF_H
 
+#include "delegate/readonly/financerolesdelegater.h"
+#include "delegate/readonly/intstringnonezeror.h"
 #include "searchdialog.h"
 
 class SearchDialogF final : public SearchDialog {
@@ -33,6 +35,10 @@ private slots:
 
 private:
     void TreeViewDelegate(QTableView* view) override;
+
+private:
+    IntStringNoneZeroR* cash_kind_ {};
+    FinanceRolesDelegateR* roles_ {};
 };
 
 #endif // SEARCHDIALOGF_H
