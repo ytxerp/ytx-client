@@ -96,7 +96,6 @@ template <MapType T> ItemModel* CreateModelFromMap(const T& map, QObject* parent
         model->AppendItem(it.value(), it.key());
     }
 
-    model->sort(0);
     return model;
 }
 
