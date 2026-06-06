@@ -125,16 +125,17 @@ void StyledItemDelegate::PaintColorRect(QPainter* painter, const QStyleOptionVie
 
 void StyledItemDelegate::UpdateComboBoxGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const int bar_width { QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent) };
-    const QSize text_size { sizeHint(option, index) };
+    const int button_width { QApplication::style()->pixelMetric(QStyle::PM_MenuButtonIndicator) };
+    const int checkbox_width { QApplication::style()->pixelMetric(QStyle::PM_IndicatorWidth) };
+    const int spacing { QApplication::style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing) };
 
-    const int width { std::max(option.rect.width(), text_size.width() + bar_width * 2) };
-    const int height { std::max(option.rect.height(), text_size.height()) };
+    const QSize text_size { sizeHint(option, index) };
+    const int width { std::max(option.rect.width(), text_size.width() + button_width + checkbox_width + spacing) };
 
     QRect geom { option.rect };
     geom.setWidth(width);
-    geom.setHeight(height);
 
+    editor->setFixedHeight(option.rect.height());
     editor->setGeometry(geom);
 }
 
