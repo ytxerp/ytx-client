@@ -19,8 +19,20 @@ void MainWindow::InitHeader()
         tr("Code"),
         tr("Description"),
         tr("Direction Rule"),
-        tr("Kind"),
         tr("Local Total"),
+    };
+
+    header_info_.cash_flow_statement_wrong = {
+        tr("ID"),
+        tr("Issued Time"),
+        tr("LHS Node"),
+        tr("LHS Debit"),
+        tr("LHS Credit"),
+        tr("Description"),
+        tr("Cash Kind"),
+        tr("RHS Credit"),
+        tr("RHS Debit"),
+        tr("RHS Node"),
     };
 
     header_info_.balance_sheet = {
@@ -325,6 +337,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("LHS Debit"),
         tr("LHS Credit"),
         tr("Description"),
+        tr("Cash Kind"),
         tr("Tag"),
         tr("Document"),
         tr("Status"),

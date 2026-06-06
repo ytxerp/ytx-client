@@ -70,42 +70,51 @@ enum class CashKind {
 
 QString CashKindName(finance::CashKind kind);
 
-// Describes the business semantic role of an account.
-// Multiple roles can be combined through QFlags.
+// Describes the business semantic role of a node.
+// Multiple roles can be combined via bitwise OR.
 //
 // NOTE:
-// - Financial statement structure is managed by the account tree.
-// - Cash flow behavior is managed separately by CashKind.
-// - Role only describes business capabilities / semantic traits.
+// - Financial statement structure is managed by the node tree.
+// - Nodes with Fund carrier roles (Cash/Bank/Wallet) are used as
+//   carriers in cash flow entries.
 enum Role {
     kNone = 0,
 
     // Fund carriers
-    kCash = 0b1 << 0,
-    kBank = 0b1 << 1,
-    kWallet = 0b1 << 2,
+    kCash = 0b1 << 0, // Cash on hand
+    kBank = 0b1 << 1, // Bank deposit
+    kWallet = 0b1 << 2, // Digital wallet
 
     // Settlement carriers
-    kReceivable = 0b1 << 3,
-    kPayable = 0b1 << 4,
+    kReceivable = 0b1 << 3, // Accounts receivable
+    kPayable = 0b1 << 4, // Accounts payable
+    kPrepayment = 0b1 << 5, // Prepayment to suppliers
+    kAdvanceReceipt = 0b1 << 6, // Advance receipt from customers
 
-    // Asset operation carriers
-    kInventory = 0b1 << 5,
-    kFixedAsset = 0b1 << 6,
-    kIntangibleAsset = 0b1 << 7,
+    // Asset carriers
+    kInventory = 0b1 << 7, // Inventory
+    kFixedAsset = 0b1 << 8, // Fixed assets
+    kIntangibleAsset = 0b1 << 9, // Intangible assets
+    kLongTermInvestment = 0b1 << 10, // Long-term investment
 
     // Deferral / accrual carriers
-    kPrepaidExpense = 0b1 << 8,
-    kAccruedLiability = 0b1 << 9,
-    kDeferredRevenue = 0b1 << 10,
+    kPrepaidExpense = 0b1 << 11, // Prepaid expense
+    kAccruedLiability = 0b1 << 12, // Accrued liability
+    kDeferredRevenue = 0b1 << 13, // Deferred revenue
 
     // Tax carrier
-    kTax = 0b1 << 11,
+    kTax = 0b1 << 14, // Tax payable / receivable
 
     // Financing carriers
-    kDebt = 0b1 << 12,
-    kEquity = 0b1 << 13,
-    kRetainedEarnings = 0b1 << 14,
+    kDebt = 0b1 << 15, // Loans and borrowings
+
+    // Equity carriers
+    kEquity = 0b1 << 16, // Paid-in capital
+    kRetainedEarning = 0b1 << 17, // Retained earnings
+
+    // Income / Expense carriers
+    kIncome = 0b1 << 18, // Revenue and income
+    kExpense = 0b1 << 19, // Cost and expense
 };
 
 Q_DECLARE_FLAGS(Roles, Role)

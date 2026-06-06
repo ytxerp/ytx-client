@@ -53,6 +53,7 @@ constexpr int LinkedNodeColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:
+        return std::to_underlying(EntryEnumF::kRhsNode);
     case Section::kTask:
     case Section::kInventory:
         return std::to_underlying(EntryEnum::kRhsNode);

@@ -130,8 +130,6 @@ QVariant CashFlowCarrierModel::data(const QModelIndex& index, int role) const
         return node->description;
     case CashFlowStatementEnum::kDirectionRule:
         return node->direction_rule;
-    case CashFlowStatementEnum::kKind:
-        return std::to_underlying(node->kind);
     case CashFlowStatementEnum::kFinalTotal:
         return node->final_total;
     }
@@ -151,8 +149,6 @@ void CashFlowCarrierModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::description, order);
         case CashFlowStatementEnum::kDirectionRule:
             return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::direction_rule, order);
-        case CashFlowStatementEnum::kKind:
-            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::kind, order);
         case CashFlowStatementEnum::kFinalTotal:
             return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::final_total, order);
         case CashFlowStatementEnum::kId:
@@ -300,7 +296,6 @@ CashFlowStatementRow* CashFlowCarrierModel::CreateBranchNode(const QString& name
     auto* node { ResourcePool<CashFlowStatementRow>::Instance().Allocate() };
 
     node->id = QUuid::createUuidV7();
-    node->kind = NodeKind::kBranch;
 
     node->name = name;
     node->roles = roles;

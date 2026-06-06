@@ -19,3 +19,15 @@ void IntStringR::paint(QPainter* painter, const QStyleOptionViewItem& option, co
 
     PaintText(it.value(), painter, option, index, Qt::AlignCenter);
 }
+
+QSize IntStringR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    const int key { index.data().toInt() };
+
+    auto it { map_.constFind(key) };
+    if (it == map_.constEnd()) {
+        return QSize();
+    }
+
+    return CalculateTextSize(it.value(), option);
+}

@@ -11,30 +11,31 @@ std::span<const RoleItem> RoleItemList()
         { kCash, QObject::tr("Cash") },
         { kBank, QObject::tr("Bank") },
         { kWallet, QObject::tr("Wallet") },
-
         // Settlement carriers
         { kReceivable, QObject::tr("Receivable") },
         { kPayable, QObject::tr("Payable") },
-
-        // Asset operation carriers
+        { kPrepayment, QObject::tr("Prepayment") },
+        { kAdvanceReceipt, QObject::tr("Advance Receipt") },
+        // Asset carriers
         { kInventory, QObject::tr("Inventory") },
         { kFixedAsset, QObject::tr("Fixed Asset") },
         { kIntangibleAsset, QObject::tr("Intangible Asset") },
-
+        { kLongTermInvestment, QObject::tr("Long Term Investment") },
         // Deferral / accrual carriers
         { kPrepaidExpense, QObject::tr("Prepaid Expense") },
         { kAccruedLiability, QObject::tr("Accrued Liability") },
         { kDeferredRevenue, QObject::tr("Deferred Revenue") },
-
         // Tax carrier
         { kTax, QObject::tr("Tax") },
-
         // Financing carriers
         { kDebt, QObject::tr("Debt") },
+        // Equity carriers
         { kEquity, QObject::tr("Equity") },
-        { kRetainedEarnings, QObject::tr("Retained Earnings") },
+        { kRetainedEarning, QObject::tr("Retained Earning") },
+        // Income / Expense carriers
+        { kIncome, QObject::tr("Income") },
+        { kExpense, QObject::tr("Expense") },
     };
-
     return list;
 }
 

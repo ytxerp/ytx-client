@@ -26,8 +26,20 @@ enum class CashFlowStatementEnum {
     kCode,
     kDescription,
     kDirectionRule,
-    kKind,
     kFinalTotal,
+};
+
+enum class CashFlowStatementWrongEnum {
+    kId = 0,
+    kIssuedTime,
+    kLhsNode,
+    kLhsDebit,
+    kLhsCredit,
+    kDescription,
+    kCashKind,
+    kRhsCredit,
+    kRhsDebit,
+    kRhsNode,
 };
 
 #endif // CASHFLOWSTATEMENTENUM_H

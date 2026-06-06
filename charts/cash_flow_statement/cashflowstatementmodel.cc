@@ -129,8 +129,6 @@ QVariant CashFlowStatementModel::data(const QModelIndex& index, int role) const
         return node->description;
     case CashFlowStatementEnum::kDirectionRule:
         return node->direction_rule;
-    case CashFlowStatementEnum::kKind:
-        return std::to_underlying(node->kind);
     case CashFlowStatementEnum::kFinalTotal:
         return node->final_total;
     }
@@ -150,8 +148,6 @@ void CashFlowStatementModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::description, order);
         case CashFlowStatementEnum::kDirectionRule:
             return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::direction_rule, order);
-        case CashFlowStatementEnum::kKind:
-            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::kind, order);
         case CashFlowStatementEnum::kFinalTotal:
             return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::final_total, order);
         case CashFlowStatementEnum::kId:
@@ -257,16 +253,16 @@ QList<CashFlowStatementRow*> CashFlowStatementModel::AddRowsList(const CJsonArra
         qWarning() << Q_FUNC_INFO << "Received empty node array";
     }
 
-    QList<CashFlowStatementRow*> hash {};
+    QList<CashFlowStatementRow*> list {};
 
     for (const QJsonValue& val : node_array) {
         const QJsonObject obj { val.toObject() };
         auto* node { ResourcePool<CashFlowStatementRow>::Instance().Allocate() };
         node->ReadJson(obj);
-        hash.emplaceBack(node);
+        list.emplaceBack(node);
     }
 
-    return hash;
+    return list;
 }
 
 void CashFlowStatementModel::BuildHierarchy() const
@@ -337,7 +333,6 @@ CashFlowStatementRow* CashFlowStatementModel::CreateBranchNode(const QString& na
     auto* node { ResourcePool<CashFlowStatementRow>::Instance().Allocate() };
 
     node->id = QUuid::createUuidV7();
-    node->kind = NodeKind::kBranch;
 
     node->name = name;
     node->cash_kind = cash_kind;

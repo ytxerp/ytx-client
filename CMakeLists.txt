@@ -287,6 +287,7 @@ set(HEADERS
     charts/cash_flow_statement/cashflowstatementmodel.h
     charts/cash_flow_statement/cashflowcarriermodel.h
     charts/cash_flow_statement/cashflowspecialmodel.h
+    charts/cash_flow_statement/cashflowwrongmodel.h
     charts/cash_flow_statement/cashflowstatementrow.h
     charts/cash_flow_statement/cashflowstatementenum.h
     delegate/readonly/intstringnonezeror.h
@@ -471,6 +472,7 @@ set(SOURCES
     charts/cash_flow_statement/cashflowstatementmodel.cc
     charts/cash_flow_statement/cashflowspecialmodel.cc
     charts/cash_flow_statement/cashflowcarriermodel.cc
+    charts/cash_flow_statement/cashflowwrongmodel.cc
     mainwindow/mainwindow_cash_flow_statement.cc
     delegate/readonly/intstringnonezeror.cc
     delegate/readonly/financerolesdelegater.cc

@@ -178,51 +178,47 @@ void MainWindow::InitContextFinance()
     info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kNone), QString());
 
     // Operating Inflow
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSalesReceipt), tr("Cash received from sales of goods and rendering of services"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kTaxRefund), tr("Tax refunds received"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherOperatingReceipt), tr("Other cash received relating to operating activities"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSalesReceipt), QObject::tr("Sales Receipt"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kTaxRefund), QObject::tr("Tax Refund"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherOperatingReceipt), QObject::tr("Other Operating Receipt"));
 
     // Operating Outflow
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kPurchasePayment), tr("Cash paid for goods and services received"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSalaryPayment), tr("Cash paid to and on behalf of employees"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kTaxPayment), tr("Cash paid for all types of taxes"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherOperatingPayment), tr("Other cash paid relating to operating activities"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kPurchasePayment), QObject::tr("Purchase Payment"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSalaryPayment), QObject::tr("Salary Payment"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kTaxPayment), QObject::tr("Tax Payment"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherOperatingPayment), QObject::tr("Other Operating Payment"));
 
     // Investing Inflow
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestmentReceipt), tr("Cash received from recovery of investments"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestmentIncomeReceipt), tr("Cash received from investment income"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAssetDisposalReceipt),
-        tr("Net cash received from disposal of fixed assets, intangibles and other long-term assets"));
-    info.cash_kind_map.insert(
-        std::to_underlying(finance::CashKind::kSubsidiaryDisposalReceipt), tr("Net cash received from disposal of subsidiaries and other business units"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kLoanRepaymentReceipt), tr("Cash received from repayment of loans extended"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherInvestingReceipt), tr("Other cash received relating to investing activities"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestmentReceipt), QObject::tr("Investment Receipt"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestmentIncomeReceipt), QObject::tr("Investment Income Receipt"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAssetDisposalReceipt), QObject::tr("Asset Disposal Receipt"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSubsidiaryDisposalReceipt), QObject::tr("Subsidiary Disposal Receipt"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kLoanRepaymentReceipt), QObject::tr("Loan Repayment Receipt"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherInvestingReceipt), QObject::tr("Other Investing Receipt"));
 
     // Investing Outflow
-    info.cash_kind_map.insert(
-        std::to_underlying(finance::CashKind::kAssetPurchasePayment), tr("Cash paid for acquisition of fixed assets, intangibles and other long-term assets"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestmentPayment), tr("Cash paid for investments"));
-    info.cash_kind_map.insert(
-        std::to_underlying(finance::CashKind::kSubsidiaryAcquisitionPayment), tr("Net cash paid for acquisition of subsidiaries and other business units"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kLoanPayment), tr("Cash paid for loans extended to other parties"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherInvestingPayment), tr("Other cash paid relating to investing activities"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAssetPurchasePayment), QObject::tr("Asset Purchase Payment"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInvestmentPayment), QObject::tr("Investment Payment"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kSubsidiaryAcquisitionPayment), QObject::tr("Subsidiary Acquisition Payment"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kLoanPayment), QObject::tr("Loan Payment"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherInvestingPayment), QObject::tr("Other Investing Payment"));
 
     // Financing Inflow
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kCapitalContributionReceipt), tr("Cash received from capital contributions"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kBorrowingReceipt), tr("Cash received from borrowings"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherFinancingReceipt), tr("Other cash received relating to financing activities"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kCapitalContributionReceipt), QObject::tr("Capital Contribution Receipt"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kBorrowingReceipt), QObject::tr("Borrowing Receipt"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherFinancingReceipt), QObject::tr("Other Financing Receipt"));
 
     // Financing Outflow
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kDebtRepaymentPayment), tr("Cash repayments of amounts borrowed"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kDividendPayment), tr("Cash paid for dividends and profit distributions"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInterestPayment), tr("Cash paid for interest"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherFinancingPayment), tr("Other cash paid relating to financing activities"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kDebtRepaymentPayment), QObject::tr("Debt Repayment Payment"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kDividendPayment), QObject::tr("Dividend Payment"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInterestPayment), QObject::tr("Interest Payment"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherFinancingPayment), QObject::tr("Other Financing Payment"));
 
     // Special
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInternalTransfer), tr("Internal cash transfer between accounts"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kExchangeRateEffect), tr("Effect of foreign exchange rate changes on cash"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAdjustment), tr("System adjustment or reversal entry"));
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kUnclassified), tr("Unclassified"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInternalTransfer), QObject::tr("Internal Transfer"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kExchangeRateEffect), QObject::tr("Exchange Rate Effect"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAdjustment), QObject::tr("Adjustment"));
+    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kUnclassified), QObject::tr("Unclassified"));
 
     info.cash_kind_model = utils::CreateModelFromMap(info.cash_kind_map, this);
 

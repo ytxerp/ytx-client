@@ -22,6 +22,7 @@
 
 #include <QDateTime>
 #include <QDialog>
+#include <QTableView>
 #include <QTimer>
 #include <QTreeView>
 #include <QUuid>
@@ -29,6 +30,7 @@
 #include "cashflowcarriermodel.h"
 #include "cashflowspecialmodel.h"
 #include "cashflowstatementmodel.h"
+#include "cashflowwrongmodel.h"
 
 namespace Ui {
 class CashFlowStatementDialog;
@@ -38,17 +40,19 @@ class CashFlowStatementDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit CashFlowStatementDialog(
-        CashFlowStatementModel* model, CashFlowCarrierModel* carrier, CashFlowSpecialModel* special, const QUuid& widget_id, QWidget* parent = nullptr);
+    explicit CashFlowStatementDialog(CashFlowStatementModel* model, CashFlowCarrierModel* carrier, CashFlowSpecialModel* special, CashFlowWrongModel* wrong,
+        const QUuid& widget_id, QWidget* parent = nullptr);
     ~CashFlowStatementDialog() override;
 
     QTreeView* View();
     QTreeView* CarrierView();
     QTreeView* SpecialView();
+    QTableView* WrongView();
 
     CashFlowStatementModel* Model() { return model_; }
     CashFlowCarrierModel* CarrierModel() { return carrier_; }
     CashFlowSpecialModel* SpecialModel() { return special_; }
+    CashFlowWrongModel* WrongModel() { return wrong_; }
 
 private slots:
     void on_dateTimeEditEnd_dateChanged(const QDate& date);
@@ -69,6 +73,7 @@ private:
     CashFlowStatementModel* model_ {};
     CashFlowCarrierModel* carrier_ {};
     CashFlowSpecialModel* special_ {};
+    CashFlowWrongModel* wrong_ {};
 
     QTimer* cooldown_timer_ { nullptr };
 };
