@@ -47,3 +47,14 @@ void IntStringNoneZero::paint(QPainter* painter, const QStyleOptionViewItem& opt
 
     PaintText(it.value(), painter, option, index, Qt::AlignCenter);
 }
+
+QSize IntStringNoneZero::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    const int key { index.data().toInt() };
+    return CalculateTextSize(map_.value(key), option);
+}
+
+void IntStringNoneZero::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    UpdateComboBoxGeometry(editor, option, index);
+}

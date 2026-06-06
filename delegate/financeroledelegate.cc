@@ -89,18 +89,5 @@ QSize FinanceRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const QM
 
 void FinanceRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const int bar_width { QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent) };
-    const int value { index.data().toInt() };
-    const QString display_text { finance::RolesDisplay(finance::Role(value)) };
-
-    const QSize text_size { CalculateTextSize(display_text, option) };
-
-    const int width { std::max(option.rect.width(), text_size.width() + bar_width) };
-    const int height { std::max(option.rect.height(), text_size.height()) };
-
-    QRect geom { option.rect };
-    geom.setWidth(width);
-    geom.setHeight(height);
-
-    editor->setGeometry(geom);
+    UpdateComboBoxGeometry(editor, option, index);
 }

@@ -23,11 +23,5 @@ void IntStringR::paint(QPainter* painter, const QStyleOptionViewItem& option, co
 QSize IntStringR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const int key { index.data().toInt() };
-
-    auto it { map_.constFind(key) };
-    if (it == map_.constEnd()) {
-        return QSize();
-    }
-
-    return CalculateTextSize(it.value(), option);
+    return CalculateTextSize(map_.value(key), option);
 }

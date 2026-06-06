@@ -123,7 +123,22 @@ void StyledItemDelegate::PaintColorRect(QPainter* painter, const QStyleOptionVie
     painter->restore();
 }
 
-QString StyledItemDelegate::FormatPercentage(double value) const
+void StyledItemDelegate::UpdateComboBoxGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    const int bar_width { QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent) };
+    const QSize text_size { sizeHint(option, index) };
+
+    const int width { std::max(option.rect.width(), text_size.width() + bar_width * 2) };
+    const int height { std::max(option.rect.height(), text_size.height()) };
+
+    QRect geom { option.rect };
+    geom.setWidth(width);
+    geom.setHeight(height);
+
+    editor->setGeometry(geom);
+}
+
+QString StyledItemDelegate::FormatPercentage(double value)
 {
     if (qIsNaN(value))
         return QStringLiteral("--");

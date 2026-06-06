@@ -33,6 +33,7 @@ public:
 
 protected:
     static QSize CalculateTextSize(CString& text, const QStyleOptionViewItem& option, int margin_factor = ui_const::kTextMarginFactor);
+    static QString FormatPercentage(double value);
 
     void PaintText(CString& text, QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, Qt::Alignment alignment) const;
     void PaintColorText(
@@ -41,9 +42,10 @@ protected:
     void PaintEmpty(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
     void PaintColorRect(QPainter* painter, const QStyleOptionViewItem& option, const QString& color_string) const;
 
+    void UpdateComboBoxGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+
 protected:
     static const QLocale locale_;
-    QString FormatPercentage(double value) const;
 };
 
 #endif // STYLEDITEMDELEGATE_H
