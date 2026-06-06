@@ -672,7 +672,7 @@ void MainWindow::DelegateCashFlowStatementWrong(QTableView* view) const
     auto* issued_time { new IssuedTimeR(config.date_format, view) };
     view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kIssuedTime), issued_time);
 
-    auto* value { new DoubleR(config.quantity_decimal, string_const::kFourDigits, view) };
+    auto* value { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, view) };
     view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kLhsDebit), value);
     view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kLhsCredit), value);
     view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kRhsDebit), value);

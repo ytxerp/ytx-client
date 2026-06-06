@@ -1,6 +1,5 @@
 #include "double.h"
 
-#include "component/constantdouble.h"
 #include "widget/doublespinbox.h"
 
 Double::Double(const int& decimal, double min, double max, CString& placeholder, QObject* parent)
@@ -40,7 +39,7 @@ void Double::setModelData(QWidget* editor, QAbstractItemModel* model, const QMod
 void Double::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const double value { index.data().toDouble() };
-    if (std::abs(value) < kTolerance)
+    if (qFuzzyIsNull(value))
         return PaintEmpty(painter, option, index);
 
     PaintText(locale_.toString(value, 'f', decimal_), painter, option, index, Qt::AlignRight | Qt::AlignVCenter);

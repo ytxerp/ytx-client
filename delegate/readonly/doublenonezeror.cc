@@ -1,7 +1,5 @@
 #include "doublenonezeror.h"
 
-#include "component/constantdouble.h"
-
 DoubleNoneZeroR::DoubleNoneZeroR(const int& decimal, CString& placeholder, QObject* parent)
     : StyledItemDelegate { parent }
     , decimal_ { decimal }
@@ -13,7 +11,7 @@ void DoubleNoneZeroR::paint(QPainter* painter, const QStyleOptionViewItem& optio
 {
     const double value { index.data().toDouble() };
 
-    if (std::abs(value) < kTolerance)
+    if (qFuzzyIsNull(value))
         return PaintEmpty(painter, option, index);
 
     PaintText(locale_.toString(value, 'f', decimal_), painter, option, index, Qt::AlignRight | Qt::AlignVCenter);
