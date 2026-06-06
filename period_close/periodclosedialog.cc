@@ -65,8 +65,8 @@ void PeriodCloseDialog::ConstructEntry(const QSet<Node*>& closing_leaf_node, con
             continue;
         }
 
-        if (FloatEqual(node->final_total, 0.0))
-            continue;
+        if (qFuzzyIsNull(node->final_total))
+            return;
 
         auto* entry { EntryPool::Instance().Allocate(section_) };
         entry->lhs_rate = 1;
@@ -165,7 +165,7 @@ void PeriodCloseDialog::on_pushButtonPreview_clicked()
             }
 
             if (current->kind == NodeKind::kLeaf) {
-                if (!FloatEqual(current->final_total, 0.0)) {
+                if (!qFuzzyIsNull(current->final_total)) {
                     closing_leaf_node_.insert(current);
                 }
 

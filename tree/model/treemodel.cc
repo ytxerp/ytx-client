@@ -733,7 +733,7 @@ QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, dou
     if (!node->parent || node->parent == root_)
         return affected_ids;
 
-    if (FloatEqual(initial_delta, 0.0) && FloatEqual(final_delta, 0.0))
+    if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta))
         return affected_ids;
 
     const auto unit { node->unit };
@@ -763,7 +763,7 @@ void TreeModel::InitAncestorTotal(Node* node, double initial_delta, double final
     if (!node || node == root_ || !node->parent || node->parent == root_)
         return;
 
-    if (FloatEqual(initial_delta, 0.0) && FloatEqual(final_delta, 0.0))
+    if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta))
         return;
 
     const auto unit { node->unit };

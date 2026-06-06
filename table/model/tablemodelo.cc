@@ -216,7 +216,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double discount_delta { d_entry->discount - old_discount };
         const double final_delta { d_entry->final - old_final };
 
-        if (FloatChanged(measure_delta, 0.0) || FloatChanged(initial_delta, 0.0) || FloatChanged(discount_delta, 0.0) || FloatChanged(final_delta, 0.0)) {
+        if (!qFuzzyIsNull(measure_delta) || !qFuzzyIsNull(initial_delta) || !qFuzzyIsNull(discount_delta) || !qFuzzyIsNull(final_delta)) {
             emit SSyncDeltaO(d_entry->lhs_node, initial_delta, final_delta, 0.0, measure_delta, discount_delta);
         }
     }
@@ -225,7 +225,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double initial_delta { d_entry->initial - old_initial };
         const double final_delta { d_entry->final - old_final };
 
-        if (FloatChanged(initial_delta, 0.0) || FloatChanged(final_delta, 0.0))
+        if (!qFuzzyIsNull(initial_delta) || !qFuzzyIsNull(final_delta))
             emit SSyncDeltaO(d_entry->lhs_node, initial_delta, final_delta, 0.0, 0.0, 0.0);
     }
 
@@ -233,7 +233,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         const double discount_delta { d_entry->discount - old_discount };
         const double final_delta { d_entry->final - old_final };
 
-        if (FloatChanged(discount_delta, 0.0) || FloatChanged(final_delta, 0.0))
+        if (!qFuzzyIsNull(discount_delta) || !qFuzzyIsNull(final_delta))
             emit SSyncDeltaO(d_entry->lhs_node, 0.0, final_delta, 0.0, 0.0, discount_delta);
     }
 
@@ -363,8 +363,8 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
         const double initial_delta { -d_entry->initial };
         const double final_delta { -d_entry->final };
 
-        if (FloatChanged(count_delta, 0.0) || FloatChanged(measure_delta, 0.0) || FloatChanged(discount_delta, 0.0) || FloatChanged(initial_delta, 0.0)
-            || FloatChanged(final_delta, 0.0)) {
+        if (!qFuzzyIsNull(count_delta) || !qFuzzyIsNull(measure_delta) || !qFuzzyIsNull(discount_delta) || !qFuzzyIsNull(initial_delta)
+            || !qFuzzyIsNull(final_delta)) {
             emit SSyncDeltaO(lhs_node, initial_delta, final_delta, count_delta, measure_delta, discount_delta);
         }
     }

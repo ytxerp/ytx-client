@@ -316,7 +316,7 @@ void CashFlowStatementModel::UpdateAncestorTotal(CashFlowStatementRow* node, dou
     if (!node || node == root_ || !node->parent || node->parent == root_)
         return;
 
-    if (FloatEqual(final_delta, 0.0))
+    if (qFuzzyIsNull(final_delta))
         return;
 
     const bool rule { node->direction_rule };

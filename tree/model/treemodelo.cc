@@ -197,8 +197,7 @@ QSet<QUuid> TreeModelO::UpdateAncestorTotal(
     if (!node->parent || node->parent == root_)
         return affected_ids;
 
-    if (FloatEqual(initial_delta, 0.0) && FloatEqual(final_delta, 0.0) && FloatEqual(count_delta, 0.0) && FloatEqual(measure_delta, 0.0)
-        && FloatEqual(discount_delta, 0.0))
+    if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta) && qFuzzyIsNull(count_delta) && qFuzzyIsNull(measure_delta) && qFuzzyIsNull(discount_delta))
         return affected_ids;
 
     const auto unit { node->unit };
@@ -226,8 +225,7 @@ void TreeModelO::InitAncestorTotal(Node* node, double initial_delta, double fina
     if (!node || node == root_ || !node->parent || node->parent == root_)
         return;
 
-    if (FloatEqual(initial_delta, 0.0) && FloatEqual(final_delta, 0.0) && FloatEqual(count_delta, 0.0) && FloatEqual(measure_delta, 0.0)
-        && FloatEqual(discount_delta, 0.0))
+    if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta) && qFuzzyIsNull(count_delta) && qFuzzyIsNull(measure_delta) && qFuzzyIsNull(discount_delta))
         return;
 
     const auto unit { node->unit };

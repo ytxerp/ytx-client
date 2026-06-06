@@ -11,7 +11,7 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)
 {
     Q_ASSERT(!node_id.isNull());
 
-    if (FloatEqual(initial_delta, 0.0))
+    if (qFuzzyIsNull(initial_delta))
         return;
 
     auto* node { node_hash_.value(node_id) };
@@ -53,7 +53,7 @@ QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, do
     if (!node->parent || node->parent == root_)
         return affected_ids;
 
-    if (FloatEqual(initial_delta, 0.0))
+    if (qFuzzyIsNull(initial_delta))
         return affected_ids;
 
     const auto unit { node->unit };
@@ -75,7 +75,7 @@ void TreeModelP::InitAncestorTotal(Node* node, double initial_delta, double, dou
     if (!node || node == root_ || !node->parent || node->parent == root_)
         return;
 
-    if (FloatEqual(initial_delta, 0.0))
+    if (qFuzzyIsNull(initial_delta))
         return;
 
     const auto unit { node->unit };
