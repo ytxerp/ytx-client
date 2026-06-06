@@ -329,10 +329,6 @@
         <translation>等级</translation>
     </message>
     <message>
-        <source>End</source>
-        <translation type="vanished">止期</translation>
-    </message>
-    <message>
         <location filename="../../charts/balance_sheet/balancesheetdialog.ui" line="86"/>
         <location filename="../../charts/balance_sheet/balancesheetdialog.ui" line="103"/>
         <source>d/M/yyyy</source>
@@ -438,10 +434,6 @@
 <context>
     <name>CashFlowStatementModel</name>
     <message>
-        <source>Carrier</source>
-        <translation type="vanished">载体</translation>
-    </message>
-    <message>
         <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="201"/>
         <source>Operating</source>
         <translation>经营活动</translation>
@@ -455,18 +447,6 @@
         <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="203"/>
         <source>Financing</source>
         <translation>筹资活动</translation>
-    </message>
-    <message>
-        <source>Cash</source>
-        <translation type="vanished">现金</translation>
-    </message>
-    <message>
-        <source>Bank</source>
-        <translation type="vanished">银行</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation type="vanished">钱包</translation>
     </message>
     <message>
         <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="222"/>
@@ -2314,114 +2294,90 @@ You need to recall it first before making changes.</source>
         <translation>删除该条记录？&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 提示：可在首选项中关闭此确认提示。&lt;/i&gt;</translation>
     </message>
     <message>
-        <source>Ope. In</source>
-        <translation type="vanished">经营流入</translation>
-    </message>
-    <message>
-        <source>Inv. In</source>
-        <translation type="vanished">投资流入</translation>
-    </message>
-    <message>
-        <source>Fin. In</source>
-        <translation type="vanished">筹资流入</translation>
-    </message>
-    <message>
-        <source>Ope. Out</source>
-        <translation type="vanished">经营流出</translation>
-    </message>
-    <message>
-        <source>Inv. Out</source>
-        <translation type="vanished">投资流出</translation>
-    </message>
-    <message>
-        <source>Fin. Out</source>
-        <translation type="vanished">筹资流出</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="254"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="253"/>
         <source>INT</source>
         <comment>Internal</comment>
         <translation>内</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="255"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="254"/>
         <source>POS</source>
         <comment>Position</comment>
         <translation>位</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="256"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="255"/>
         <source>EXT</source>
         <comment>External</comment>
         <translation>外</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="295"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="294"/>
         <source>TGT</source>
         <comment>Target</comment>
         <translation>标</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="296"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="295"/>
         <source>ACT</source>
         <comment>Action</comment>
         <translation>行</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="297"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="296"/>
         <source>SRC</source>
         <comment>Source</comment>
         <translation>源</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="336"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="335"/>
         <source>CUS</source>
         <comment>Customer</comment>
         <translation>客</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="337"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="336"/>
         <source>EMP</source>
         <comment>Employee</comment>
         <translation>职</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="338"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="337"/>
         <source>VEN</source>
         <comment>Vendor</comment>
         <translation>供</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="373"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="418"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="372"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="417"/>
         <source>RO</source>
         <comment>Return Order</comment>
         <translation>红</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="374"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="419"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="373"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="418"/>
         <source>FO</source>
         <comment>Forward Order</comment>
         <translation>正</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="376"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="421"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="375"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="420"/>
         <source>IMM</source>
         <comment>Immediate</comment>
         <translation>现</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="377"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="422"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="376"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="421"/>
         <source>MON</source>
         <comment>Monthly</comment>
         <translation>月</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="378"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="423"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="377"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="422"/>
         <source>PEND</source>
         <comment>Pending</comment>
         <translation>挂</translation>
@@ -2692,14 +2648,6 @@ You need to recall it first before making changes.</source>
         <location filename="../../mainwindow/mainwindow_node.cc" line="89"/>
         <source>Constraint Violation</source>
         <translation>操作无效</translation>
-    </message>
-    <message>
-        <source>YoY %1~%2</source>
-        <translation type="vanished">同比 %1~%2</translation>
-    </message>
-    <message>
-        <source>MoM %1~%2</source>
-        <translation type="vanished">环比 %1~%2</translation>
     </message>
 </context>
 <context>
@@ -3265,10 +3213,6 @@ You need to recall it first before making changes.</source>
         <translation>权益</translation>
     </message>
     <message>
-        <source>Retained Earnings</source>
-        <translation type="vanished">留存收益</translation>
-    </message>
-    <message>
         <location filename="../../tree/finance_role.cc" line="34"/>
         <source>Retained Earning</source>
         <translation>留存收益</translation>
@@ -3436,24 +3380,18 @@ You need to recall it first before making changes.</source>
     <message>
         <location filename="../../mainwindow/mainwindow_context.cc" line="218"/>
         <location filename="../../tree/finance_role.cc" line="140"/>
-        <source>Internal Transfer</source>
-        <translation>内部划转</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="219"/>
-        <location filename="../../tree/finance_role.cc" line="142"/>
         <source>Exchange Rate Effect</source>
         <translation>汇率影响</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="220"/>
-        <location filename="../../tree/finance_role.cc" line="144"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="219"/>
+        <location filename="../../tree/finance_role.cc" line="142"/>
         <source>Adjustment</source>
         <translation>调账冲销</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="221"/>
-        <location filename="../../tree/finance_role.cc" line="146"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="220"/>
+        <location filename="../../tree/finance_role.cc" line="144"/>
         <source>Unclassified</source>
         <translation>未分类</translation>
     </message>
@@ -3766,17 +3704,6 @@ You need to recall it first before making changes.</source>
         <location filename="../../tag/tagdialog.cc" line="60"/>
         <source>Delete tag &lt;b&gt;%1&lt;/b&gt;?&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ Permanent deletion! Cannot be undone!&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;Note: Tag references in nodes and entries will be preserved but no longer displayed.&lt;/i&gt;</source>
         <translation>删除标签 &lt;b&gt;%1&lt;/b&gt;？&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ 永久删除！无法撤销！&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;注意：节点和记录中的标签引用将被保留，但不再显示。&lt;/i&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>TreeModelF</name>
-    <message>
-        <source>Cannot set roles: node already has a cash kind assigned.</source>
-        <translation type="vanished">无法设置角色：该节点已分配现金流类型。</translation>
-    </message>
-    <message>
-        <source>Cannot set cash kind: node is a cash flow carrier.</source>
-        <translation type="vanished">无法设置现金流类型：该节点已是现金流载体。</translation>
     </message>
 </context>
 <context>
