@@ -62,9 +62,8 @@ enum class CashKind {
     // =====================================================
     // Non-Cash / Special  [900-999]
     // =====================================================
-    kInternalTransfer = 900, // Internal cash transfer between accounts (e.g. cash on hand <-> bank deposit)
-    kExchangeRateEffect = 901, // Effect of foreign exchange rate changes on cash
-    kAdjustment = 902, // System adjustment or reversal entry
+    kExchangeRateEffect = 900, // Effect of foreign exchange rate changes on cash
+    kAdjustment = 901, // System adjustment or reversal entry
     kUnclassified = 999, // Unclassified, used to detect missing configuration
 };
 

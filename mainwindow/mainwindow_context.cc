@@ -215,7 +215,6 @@ void MainWindow::InitContextFinance()
     info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kOtherFinancingPayment), QObject::tr("Other Financing Payment"));
 
     // Special
-    info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kInternalTransfer), QObject::tr("Internal Transfer"));
     info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kExchangeRateEffect), QObject::tr("Exchange Rate Effect"));
     info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAdjustment), QObject::tr("Adjustment"));
     info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kUnclassified), QObject::tr("Unclassified"));

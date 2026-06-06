@@ -136,8 +136,6 @@ QString CashKindName(CashKind kind)
         // =====================================================
         // Non-Cash / Special
         // =====================================================
-    case finance::CashKind::kInternalTransfer:
-        return QObject::tr("Internal Transfer");
     case finance::CashKind::kExchangeRateEffect:
         return QObject::tr("Exchange Rate Effect");
     case finance::CashKind::kAdjustment:
