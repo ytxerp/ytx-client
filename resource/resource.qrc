@@ -27,7 +27,7 @@
         <file>solarized_dark/left.png</file>
         <file>solarized_dark/right.png</file>
         <file>solarized_dark/up.png</file>
-        <file>solarized_dark/handle-1.png</file>
+        <file>solarized_dark/handle-h.png</file>
         <file>solarized_dark/handle-2.png</file>
         <file>solarized_dark/mark-all.png</file>
         <file>solarized_dark/mark-none.png</file>
@@ -49,6 +49,7 @@
         <file>solarized_dark/update.png</file>
         <file>solarized_dark/quit.png</file>
         <file>solarized_dark/tag.png</file>
+        <file>solarized_dark/handle-v.png</file>
     </qresource>
     <qresource prefix="/policies">
         <file>policies/privacy_policy.html</file>

@@ -474,10 +474,17 @@ QTreeView::corner {
 }
 
 /* ==================== Splitter ==================== */
-QSplitter::handle {
-    image: url(:/solarized_dark/solarized_dark/handle-1.png);
+/* Horizontal splitter handle (vertical line between left/right panels) */
+QSplitter::handle:horizontal {
+    image: url(:/solarized_dark/solarized_dark/handle-h.png);
     margin: 2px;
     width: 8px;
+}
+
+/* Vertical splitter handle (horizontal line between top/bottom panels) */
+QSplitter::handle:vertical {
+    image: url(:/solarized_dark/solarized_dark/handle-v.png);
+    margin: 2px;
     height: 8px;
 }
 
