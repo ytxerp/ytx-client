@@ -13,6 +13,8 @@ StyledItemDelegate::StyledItemDelegate(QObject* parent)
 
 void StyledItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& /*index*/) const
 {
+    editor->setMinimumWidth(option.rect.width());
+    editor->setFixedHeight(option.rect.height());
     editor->setGeometry(option.rect);
 }
 
@@ -25,9 +27,8 @@ QSize StyledItemDelegate::CalculateTextSize(CString& text, const QStyleOptionVie
 
     const int text_margin { QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr, option.widget) };
     const int width { std::max(fm.horizontalAdvance(text) + margin_factor * text_margin, option.rect.width()) };
-    const int height { std::max(fm.height(), option.rect.height()) };
 
-    return QSize(width, height);
+    return QSize(width, option.rect.height());
 }
 
 void StyledItemDelegate::PaintText(
@@ -121,22 +122,6 @@ void StyledItemDelegate::PaintColorRect(QPainter* painter, const QStyleOptionVie
     painter->setBrush(QColor(color_string));
     painter->drawRoundedRect(color_rect, ui_const::kCornerRadius, ui_const::kCornerRadius);
     painter->restore();
-}
-
-void StyledItemDelegate::UpdateComboBoxGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-    const int button_width { QApplication::style()->pixelMetric(QStyle::PM_MenuButtonIndicator) };
-    const int checkbox_width { QApplication::style()->pixelMetric(QStyle::PM_IndicatorWidth) };
-    const int spacing { QApplication::style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing) };
-
-    const QSize text_size { sizeHint(option, index) };
-    const int width { std::max(option.rect.width(), text_size.width() + button_width + checkbox_width + spacing) };
-
-    QRect geom { option.rect };
-    geom.setWidth(width);
-
-    editor->setFixedHeight(option.rect.height());
-    editor->setGeometry(geom);
 }
 
 QString StyledItemDelegate::FormatPercentage(double value)

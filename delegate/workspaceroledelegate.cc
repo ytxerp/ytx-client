@@ -57,8 +57,3 @@ QSize WorkspaceRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const 
     const QString text { workspace::RoleHash().value(key) };
     return CalculateTextSize(text, option);
 }
-
-void WorkspaceRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-    UpdateComboBoxGeometry(editor, option, index);
-}

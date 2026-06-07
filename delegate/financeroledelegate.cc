@@ -86,8 +86,3 @@ QSize FinanceRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const QM
 
     return CalculateTextSize(text, option);
 }
-
-void FinanceRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-    UpdateComboBoxGeometry(editor, option, index);
-}

@@ -94,8 +94,3 @@ QSize DatabaseRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const Q
 
     return CalculateTextSize(text, option);
 }
-
-void DatabaseRoleDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-    UpdateComboBoxGeometry(editor, option, index);
-}

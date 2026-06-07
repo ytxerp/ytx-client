@@ -42,8 +42,6 @@ protected:
     void PaintEmpty(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
     void PaintColorRect(QPainter* painter, const QStyleOptionViewItem& option, const QString& color_string) const;
 
-    void UpdateComboBoxGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const;
-
 protected:
     static const QLocale locale_;
 };

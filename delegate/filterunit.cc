@@ -53,8 +53,3 @@ QSize FilterUnit::sizeHint(const QStyleOptionViewItem& option, const QModelIndex
     const QString& text = tree_model_->Path(index.data().toUuid());
     return CalculateTextSize(text, option);
 }
-
-void FilterUnit::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-    UpdateComboBoxGeometry(editor, option, index);
-}

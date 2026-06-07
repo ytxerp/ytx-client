@@ -53,8 +53,3 @@ QSize IntStringNoneZero::sizeHint(const QStyleOptionViewItem& option, const QMod
     const int key { index.data().toInt() };
     return CalculateTextSize(map_.value(key), option);
 }
-
-void IntStringNoneZero::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-    UpdateComboBoxGeometry(editor, option, index);
-}

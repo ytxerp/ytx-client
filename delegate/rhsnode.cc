@@ -60,8 +60,3 @@ QSize RhsNode::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& i
     const QString text { tree_model_->Path(index.data().toUuid()) };
     return CalculateTextSize(text, option);
 }
-
-void RhsNode::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-    UpdateComboBoxGeometry(editor, option, index);
-}
