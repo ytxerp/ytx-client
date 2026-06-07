@@ -2297,37 +2297,37 @@ You need to recall it first before making changes.</source>
         <location filename="../../mainwindow/mainwindow_context.cc" line="253"/>
         <source>INT</source>
         <comment>Internal</comment>
-        <translation>内</translation>
+        <translation>内部</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_context.cc" line="254"/>
         <source>POS</source>
         <comment>Position</comment>
-        <translation>位</translation>
+        <translation>位置</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_context.cc" line="255"/>
         <source>EXT</source>
         <comment>External</comment>
-        <translation>外</translation>
+        <translation>外部</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_context.cc" line="294"/>
         <source>TGT</source>
         <comment>Target</comment>
-        <translation>标</translation>
+        <translation>目标</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_context.cc" line="295"/>
         <source>ACT</source>
         <comment>Action</comment>
-        <translation>行</translation>
+        <translation>行为</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_context.cc" line="296"/>
         <source>SRC</source>
         <comment>Source</comment>
-        <translation>源</translation>
+        <translation>起源</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_context.cc" line="335"/>
