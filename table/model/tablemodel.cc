@@ -195,25 +195,6 @@ void TableModel::FlushCaches()
     pending_updates_.clear();
 }
 
-bool TableModel::UpdateIssuedTime(EntryShadow* entry_shadow, const QDateTime& value)
-{
-    if (*entry_shadow->issued_time == value)
-        return false;
-
-    *entry_shadow->issued_time = value;
-
-    if (!entry_shadow->rhs_node || entry_shadow->rhs_node->isNull()) {
-        return true;
-    }
-
-    auto message { JsonGen::EntryMessage(section_, *entry_shadow->id) };
-    message.insert(kIssuedTime, value.toString(Qt::ISODate));
-    message.insert(kVersion, *entry_shadow->version);
-
-    WebSocket::Instance()->SendMessage(WsKey::kEntryIssuedTimeUpdate, message);
-    return true;
-}
-
 QModelIndex TableModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
@@ -330,7 +311,8 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case EntryEnum::kIssuedTime:
-        UpdateIssuedTime(shadow, value.toDateTime());
+        utils::UpdateShadowIssuedTime(
+            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnum::kCode:
         utils::UpdateShadowField(

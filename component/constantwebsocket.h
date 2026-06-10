@@ -131,17 +131,15 @@ enum class WsKey : uint8_t {
     // --- Account Role ---
     kAccountRoleUpdate = 63,
     kAccountRoleDelete = 64,
-    // --- Entry ---
-    kEntryIssuedTimeUpdate = 65,
     // -- Audit Log ---
-    kAuditLogAck = 66,
-    kNodeTagSearch = 67, // for order node
-    kPeriodClose = 68,
-    kInventoryHeatAck = 69,
-    kPartnerHeatAck = 70,
-    kBalanceSheetAck = 71,
-    kIncomeStatementAck = 72,
-    kCashFlowStatementAck = 73,
+    kAuditLogAck = 65,
+    kNodeTagSearch = 66, // for order node
+    kPeriodClose = 67,
+    kInventoryHeatAck = 68,
+    kPartnerHeatAck = 69,
+    kBalanceSheetAck = 70,
+    kIncomeStatementAck = 71,
+    kCashFlowStatementAck = 72,
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -298,8 +296,6 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kAccountRoleUpdate";
     case WsKey::kAccountRoleDelete:
         return "kAccountRoleDelete";
-    case WsKey::kEntryIssuedTimeUpdate:
-        return "kEntryIssuedTimeUpdate";
     case WsKey::kAuditLogAck:
         return "kAuditLogAck";
     case WsKey::kNodeTagSearch:

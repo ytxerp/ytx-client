@@ -148,22 +148,6 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
     emit SAttachOneEntry(new_node_id, entry);
 }
 
-void EntryHub::UpdateEntryIssuedTime(const QUuid& id, const QDateTime& issued_time, int version)
-{
-    auto it = entry_cache_.constFind(id);
-    if (it == entry_cache_.constEnd())
-        return;
-
-    Entry* entry = it.value();
-    entry->issued_time = issued_time;
-    entry->version = version;
-
-    const int column { utils::EntryIssuedTimeColumn(section_) };
-
-    emit SRefreshField(entry->lhs_node, id, column, column);
-    emit SRefreshField(entry->rhs_node, id, column, column);
-}
-
 /**
  * @brief Returns SQL to remove indirect relationships in a branch (obsolete).
  *

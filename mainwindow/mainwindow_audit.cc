@@ -143,7 +143,6 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(WsKey::kEntryLinkedNodeUpdate), tr("Entry Linked Node Update") },
         { std::to_underlying(WsKey::kEntryRateUpdate), tr("Entry Rate Update") },
         { std::to_underlying(WsKey::kEntryNumericUpdate), tr("Entry Numeric Update") },
-        { std::to_underlying(WsKey::kEntryIssuedTimeUpdate), tr("Entry Issued Time Update") },
         // --- Order ---
         { std::to_underlying(WsKey::kOrderInsertSave), tr("Order Insert Save") },
         { std::to_underlying(WsKey::kOrderUpdateSave), tr("Order Update Save") },

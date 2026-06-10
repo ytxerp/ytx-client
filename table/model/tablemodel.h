@@ -117,8 +117,6 @@ protected:
 
     virtual void AccumulateBalance(int start);
 
-    bool UpdateIssuedTime(EntryShadow* entry_shadow, const QDateTime& value);
-
     void RestartTimer(const QUuid& id, int version);
     double CalculateBalance(EntryShadow* shadow) const
     {

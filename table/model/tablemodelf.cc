@@ -75,7 +75,8 @@ bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int r
 
     switch (column) {
     case EntryEnumF::kIssuedTime:
-        UpdateIssuedTime(shadow, value.toDateTime());
+        utils::UpdateShadowIssuedTime(
+            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumF::kCode:
         utils::UpdateShadowField(
