@@ -2,7 +2,7 @@
 
 #include <widget/combobox.h>
 
-IntStringNoneZeroR::IntStringNoneZeroR( CIntString& map, QObject* parent)
+IntStringNoneZeroR::IntStringNoneZeroR(CIntString& map, QObject* parent)
     : StyledItemDelegate { parent }
     , map_ { map }
 {

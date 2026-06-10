@@ -24,7 +24,7 @@
 
 class IntStringNoneZeroR final : public StyledItemDelegate {
 public:
-    explicit IntStringNoneZeroR( CIntString& map, QObject* parent = nullptr);
+    explicit IntStringNoneZeroR(CIntString& map, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:

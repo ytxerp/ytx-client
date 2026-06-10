@@ -119,7 +119,10 @@ protected:
     virtual void AccumulateBalance(int start);
 
     void RestartTimer(const QUuid& id, int version);
-    double CalculateBalance(EntryShadow* shadow) const { return (direction_rule_ == direction_rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit); }
+    double CalculateBalance(EntryShadow* shadow) const
+    {
+        return (direction_rule_ == direction_rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit);
+    }
 
     EntryShadow* InsertRowsImpl(int row, const QModelIndex& parent = QModelIndex());
     void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent = QModelIndex());
