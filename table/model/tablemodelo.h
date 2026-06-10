@@ -57,7 +57,7 @@ class TableModelO final : public TableModel {
     Q_OBJECT
 
 public:
-    TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
+    explicit TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
     ~TableModelO() override;
 
 signals:

@@ -212,14 +212,18 @@ void MainWindow::on_actionJumpEntry_triggered()
         return;
 
     const int row { index.row() };
-    const int rhs_node_column { utils::LinkedNodeColumn(start_) };
+    const int linked_node_column { utils::LinkedNodeColumn(start_) };
 
-    const auto rhs_node_id { index.sibling(row, rhs_node_column).data().toUuid() };
-    if (rhs_node_id.isNull())
+    const auto linked_node_id { index.sibling(row, linked_node_column).data().toUuid() };
+    if (linked_node_id.isNull()) {
+        const QModelIndex linked_node_index { index.sibling(row, linked_node_column) };
+        leaf_widget->View()->setCurrentIndex(linked_node_index);
+        leaf_widget->View()->edit(linked_node_index);
         return;
+    }
 
     const auto entry_id { index.sibling(row, std::to_underlying(EntryEnum::kId)).data().toUuid() };
-    ShowLeafWidget(rhs_node_id, entry_id);
+    ShowLeafWidget(linked_node_id, entry_id);
 }
 
 void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool branch)

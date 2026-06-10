@@ -10,18 +10,6 @@ TableModelT::TableModelT(CTableModelArg& arg, QObject* parent)
 {
 }
 
-bool TableModelT::insertRows(int row, int /*count*/, const QModelIndex& parent)
-{
-    Q_ASSERT(row >= 0 && row <= rowCount(parent));
-
-    InsertRowsImpl(row, parent);
-
-    if (shadow_list_.size() == 1)
-        EmitDataChanged(0, 0, std::to_underlying(EntryEnum::kIssuedTime), std::to_underlying(EntryEnum::kIssuedTime));
-
-    return true;
-}
-
 bool TableModelT::UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit)
 {
     const double lhs_old_debit { *shadow->lhs_debit };

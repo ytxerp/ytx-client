@@ -217,7 +217,7 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
 
 void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
 {
-    auto* issued_time { new IssuedTime(config.date_format, table_view) };
+    auto* issued_time { new IssuedTime(config.date_format, true, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kIssuedTime), issued_time);
 
     auto* lhs_rate { new Double(config.rate_decimal, 0.0, kDoubleMax, string_const::kFourDigits, table_view) };
@@ -255,7 +255,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
 
 void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
 {
-    auto* issued_time { new IssuedTime(config.date_format, table_view) };
+    auto* issued_time { new IssuedTime(config.date_format, false, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
 
     auto* unit_cost { new Double(config.rate_decimal, 0.0, kDoubleMax, string_const::kFourDigits, table_view) };
@@ -289,7 +289,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
 
 void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, CSectionConfig& config, const QUuid& node_id) const
 {
-    auto* issued_time { new IssuedTime(config.date_format, table_view) };
+    auto* issued_time { new IssuedTime(config.date_format, false, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kIssuedTime), issued_time);
 
     auto* unit_cost { new Double(config.rate_decimal, 0.0, kDoubleMax, string_const::kFourDigits, table_view) };
@@ -323,7 +323,7 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
 
 void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) const
 {
-    auto* issued_time { new IssuedTime(config.date_format, table_view) };
+    auto* issued_time { new IssuedTime(config.date_format, false, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kIssuedTime), issued_time);
 
     auto* unit_price { new Double(config.rate_decimal, 0.0, kDoubleMax, string_const::kFourDigits, table_view) };
@@ -505,7 +505,7 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kDescription), line);
 
-    auto* issued_time { new IssuedTime(datetime_format::kDashedDate, table_view) };
+    auto* issued_time { new IssuedTime(datetime_format::kDashedDate, false, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kIssuedTime), issued_time);
 
     auto model { sc_p_.tree_model };

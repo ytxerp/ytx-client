@@ -105,7 +105,7 @@ void TableModelP::ActionEntry(Mark mark)
     if (entry_list_.isEmpty())
         return;
 
-    const QJsonObject message { JsonGen::BatchMark(section_, lhs_id_, std::to_underlying(mark)) };
+    const QJsonObject message { JsonGen::BatchMark(section_, node_id_, std::to_underlying(mark)) };
     WebSocket::Instance()->SendMessage(WsKey::kBatchMark, message);
 
     for (auto* entry : std::as_const(entry_list_)) {
@@ -339,17 +339,11 @@ bool TableModelP::insertRows(int row, int, const QModelIndex& parent)
 
     auto* entry { EntryPool::Instance().Allocate(section_) };
     entry->id = QUuid::createUuidV7();
-    entry->lhs_node = lhs_id_;
-
-    last_issued_ = last_issued_.isValid() ? last_issued_.addSecs(1) : QDateTime::currentDateTimeUtc();
-    entry->issued_time = last_issued_;
+    entry->lhs_node = node_id_;
 
     beginInsertRows(parent, row, row);
     entry_list_.emplaceBack(entry);
     endInsertRows();
-
-    if (entry_list_.size() == 1)
-        EmitDataChanged(row, row, std::to_underlying(EntryEnumP::kIssuedTime), std::to_underlying(EntryEnumP::kIssuedTime));
 
     return true;
 }

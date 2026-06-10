@@ -2,9 +2,10 @@
 
 #include "widget/datetimeedit.h"
 
-IssuedTime::IssuedTime(const QString& date_format, QObject* parent)
+IssuedTime::IssuedTime(const QString& date_format, bool remember_last, QObject* parent)
     : StyledItemDelegate { parent }
     , date_format_ { date_format }
+    , remember_last_ { remember_last }
 {
 }
 
@@ -23,7 +24,9 @@ void IssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) const
         return;
 
     auto issued_time { index.data().toDateTime().toLocalTime() };
-    Q_ASSERT(issued_time.isValid());
+
+    if (!issued_time.isValid())
+        issued_time = (remember_last_ && last_issued_.isValid()) ? last_issued_ : QDateTime::currentDateTime();
 
     cast_editor->setDateTime(issued_time);
 }
@@ -33,19 +36,23 @@ void IssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, const 
     auto* cast_editor { static_cast<DateTimeEdit*>(editor) };
     auto issued_time { cast_editor->dateTime().toUTC() };
 
+    if (remember_last_)
+        last_issued_ = issued_time;
+
     model->setData(index, issued_time);
 }
 
 void IssuedTime::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     auto issued_time { index.data().toDateTime().toLocalTime() };
-    Q_ASSERT(issued_time.isValid());
+    if (!issued_time.isValid())
+        return QStyledItemDelegate::paint(painter, option, index);
 
     PaintText(issued_time.toString(date_format_), painter, option, index, Qt::AlignCenter);
 }
 
 QSize IssuedTime::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    auto text { index.data().toDateTime().toString(date_format_) };
+    auto text { index.data().toDateTime().toLocalTime().toString(date_format_) };
     return CalculateTextSize(text, option);
 }

@@ -11,7 +11,7 @@ TableModel::TableModel(CTableModelArg& arg, QObject* parent)
     : QAbstractItemModel(parent)
     , info_ { arg.info }
     , direction_rule_ { arg.direction_rule }
-    , lhs_id_ { arg.node_id }
+    , node_id_ { arg.node_id }
     , section_ { arg.info.section }
 {
 }
@@ -51,7 +51,7 @@ void TableModel::RRefreshField(const QUuid& entry_id, int start, int end)
 void TableModel::RAttachOneEntry(Entry* entry)
 {
     auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
-    entry_shadow->BindEntry(entry, lhs_id_ == entry->lhs_node);
+    entry_shadow->BindEntry(entry, node_id_ == entry->lhs_node);
 
     auto row { shadow_list_.size() };
 
@@ -97,7 +97,7 @@ void TableModel::ActionEntry(Mark mark)
     if (shadow_list_.isEmpty())
         return;
 
-    const QJsonObject message { JsonGen::BatchMark(section_, lhs_id_, std::to_underlying(mark)) };
+    const QJsonObject message { JsonGen::BatchMark(section_, node_id_, std::to_underlying(mark)) };
     WebSocket::Instance()->SendMessage(WsKey::kBatchMark, message);
 
     for (auto* entry_shadow : std::as_const(shadow_list_)) {
@@ -222,6 +222,31 @@ QModelIndex TableModel::index(int row, int column, const QModelIndex& parent) co
     return createIndex(row, column, shadow_list_.at(row));
 }
 
+bool TableModel::insertRows(int row, int /*count*/, const QModelIndex& parent)
+{
+    auto* entry { EntryPool::Instance().Allocate(section_) };
+    entry->id = QUuid::createUuidV7();
+
+    auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
+    entry_shadow->BindEntry(entry, true);
+
+    if (section_ == Section::kFinance) {
+        *entry_shadow->lhs_rate = 1.0;
+        *entry_shadow->rhs_rate = 1.0;
+    }
+
+    {
+        *entry_shadow->lhs_node = node_id_;
+        entry_shadow->balance = row >= 1 ? shadow_list_.at(row - 1)->balance : 0.0;
+    }
+
+    beginInsertRows(parent, row, row);
+    shadow_list_.insert(row, entry_shadow);
+    endInsertRows();
+
+    return true;
+}
+
 QVariant TableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
@@ -294,9 +319,6 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
 
     const EntryEnum column { index.column() };
     const int row { index.row() };
-
-    if (section_ == Section::kFinance && column == EntryEnum::kIssuedTime)
-        last_issued_ = value.toDateTime();
 
     if (data(index, role) == value)
         return false;
@@ -461,27 +483,6 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
-EntryShadow* TableModel::InsertRowsImpl(int row, const QModelIndex& parent)
-{
-    auto* entry { EntryPool::Instance().Allocate(section_) };
-    entry->id = QUuid::createUuidV7();
-
-    auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
-    entry_shadow->BindEntry(entry, true);
-
-    {
-        *entry_shadow->lhs_node = lhs_id_;
-        *entry_shadow->issued_time = QDateTime::currentDateTimeUtc();
-        entry_shadow->balance = row >= 1 ? shadow_list_.at(row - 1)->balance : 0.0;
-    }
-
-    beginInsertRows(parent, row, row);
-    shadow_list_.insert(row, entry_shadow);
-    endInsertRows();
-
-    return entry_shadow;
-}
-
 void TableModel::EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent)
 {
     // top_left and bottom_right must share the same parent, behavior is undefined otherwise
@@ -532,7 +533,7 @@ void TableModel::RAppendMultiEntries(const EntryList& entry_list)
 
     for (auto* entry : entry_list) {
         auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
-        entry_shadow->BindEntry(entry, lhs_id_ == entry->lhs_node);
+        entry_shadow->BindEntry(entry, node_id_ == entry->lhs_node);
         shadow_list.emplaceBack(entry_shadow);
     }
 

@@ -64,9 +64,6 @@ bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int r
     const EntryEnumF column { index.column() };
     const int row { index.row() };
 
-    if (section_ == Section::kFinance && column == EntryEnumF::kIssuedTime)
-        last_issued_ = value.toDateTime();
-
     if (data(index, role) == value)
         return false;
 
@@ -202,26 +199,6 @@ Qt::ItemFlags TableModelF::flags(const QModelIndex& index) const
     }
 
     return flags;
-}
-
-bool TableModelF::insertRows(int row, int /*count*/, const QModelIndex& parent)
-{
-    Q_ASSERT(row >= 0 && row <= rowCount(parent));
-
-    auto* entry_shadow { InsertRowsImpl(row, parent) };
-
-    *entry_shadow->lhs_rate = 1.0;
-    *entry_shadow->rhs_rate = 1.0;
-
-    if (last_issued_.isValid()) {
-        last_issued_ = last_issued_.addSecs(1);
-        *entry_shadow->issued_time = last_issued_;
-    }
-
-    if (shadow_list_.size() == 1)
-        EmitDataChanged(0, 0, std::to_underlying(EntryEnumF::kIssuedTime), std::to_underlying(EntryEnumF::kIssuedTime));
-
-    return true;
 }
 
 bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row)

@@ -26,7 +26,7 @@
 
 class IssuedTime final : public StyledItemDelegate {
 public:
-    explicit IssuedTime(const QString& date_format, QObject* parent);
+    explicit IssuedTime(const QString& date_format, bool remember_last = false, QObject* parent = nullptr);
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
@@ -35,6 +35,8 @@ public:
 
 private:
     const QString& date_format_;
+    mutable QDateTime last_issued_ {};
+    const bool remember_last_ {};
 };
 
 #endif // ISSUEDTIME_H

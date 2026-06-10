@@ -42,8 +42,8 @@ void MainWindow::on_actionAppendEntry_triggered()
             if (!model->insertRows(new_row, 1))
                 return;
 
-            const int linked_node_col { utils::LinkedNodeColumn(start_) };
-            const QModelIndex target_index { model->index(new_row, linked_node_col) };
+            const int target_col { utils::EntryIssuedTimeColumn(start_) };
+            const QModelIndex target_index { model->index(new_row, target_col) };
 
             if (target_index.isValid()) {
                 view->setCurrentIndex(target_index);
