@@ -42,8 +42,8 @@ void MainWindow::on_actionAppendEntry_triggered()
             if (!model->insertRows(new_row, 1))
                 return;
 
-            const int target_col { utils::EntryIssuedTimeColumn(start_) };
-            const QModelIndex target_index { model->index(new_row, target_col) };
+            const int issued_time_col { entry::IssuedTimeColumn(start_) };
+            const QModelIndex target_index { model->index(new_row, issued_time_col) };
 
             if (target_index.isValid()) {
                 view->setCurrentIndex(target_index);
@@ -240,7 +240,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
         view->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
 
-        const int description_column { utils::EntryDescriptionColumn(section) };
+        const int description_column { entry::DescriptionColumn(section) };
         SetTableView(view, section, description_column);
 
         switch (section) {

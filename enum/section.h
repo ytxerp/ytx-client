@@ -62,14 +62,6 @@ inline constexpr std::array<Section, 6> kSectionArray
 inline constexpr std::array<Section, 3> kDoubleSectionArray = { Section::kFinance, Section::kTask, Section::kInventory };
 
 /**
- * @brief Whether the given section belongs to a double-entry module.
- *
- * Double-entry modules involve two-sided (LHS / RHS) records and require
- * synchronized or balanced relationships, similar to double-entry accounting.
- */
-inline bool IsDoubleEntry(Section s) { return s == Section::kFinance || s == Section::kInventory || s == Section::kTask; }
-
-/**
  * @brief Whether the given section belongs to a single-entry module.
  *
  * Single-entry modules describe one-sided records only and do not require

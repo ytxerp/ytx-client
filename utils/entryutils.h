@@ -23,6 +23,8 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include "component/constantdouble.h"
+#include "component/constantint.h"
 #include "component/using.h"
 #include "enum/entryenum.h"
 #include "enum/section.h"
@@ -48,6 +50,9 @@ inline QJsonArray WriteStringList(const QStringList& list)
 
     return array;
 }
+}
+
+namespace entry {
 
 constexpr int LinkedNodeColumn(Section section)
 {
@@ -67,7 +72,7 @@ constexpr int LinkedNodeColumn(Section section)
     Q_UNREACHABLE();
 }
 
-constexpr int EntryTagColumn(Section section)
+constexpr int TagColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:
@@ -85,7 +90,7 @@ constexpr int EntryTagColumn(Section section)
     Q_UNREACHABLE();
 }
 
-constexpr int EntryDescriptionColumn(Section section)
+constexpr int DescriptionColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:
@@ -103,7 +108,7 @@ constexpr int EntryDescriptionColumn(Section section)
     Q_UNREACHABLE();
 }
 
-constexpr int EntryIssuedTimeColumn(Section section)
+constexpr int IssuedTimeColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:
@@ -123,7 +128,7 @@ constexpr int EntryIssuedTimeColumn(Section section)
     Q_UNREACHABLE();
 }
 
-constexpr int SearchEntryDescriptionColumn(Section section)
+constexpr int SearchDescriptionColumn(Section section)
 {
     switch (section) {
     case Section::kFinance:
@@ -158,7 +163,7 @@ constexpr int BalanceColumn(Section section)
     Q_UNREACHABLE();
 }
 
-constexpr std::pair<int, int> EntryCacheColumnRange(Section section)
+constexpr std::pair<int, int> CacheColumnRange(Section section)
 {
     switch (section) {
     case Section::kFinance:
@@ -176,7 +181,7 @@ constexpr std::pair<int, int> EntryCacheColumnRange(Section section)
     Q_UNREACHABLE();
 }
 
-constexpr std::pair<int, int> EntryNumericColumnRange(Section section)
+constexpr std::pair<int, int> NumericColumnRange(Section section)
 {
     switch (section) {
     case Section::kFinance:
@@ -199,12 +204,16 @@ bool UpdateShadowIssuedTime(QJsonObject& update, T* object, CString& field, cons
 {
     Q_ASSERT(object != nullptr);
 
-    QDateTime* current_value { object->*member };
+    QDateTime* member_ptr { object->*member };
+    if (!member_ptr) {
+        qWarning() << "Member pointer must not be null.";
+        return false;
+    }
 
-    if (*current_value == value)
+    if (*member_ptr == value)
         return false;
 
-    *current_value = value;
+    *member_ptr = value;
 
     if (!object->rhs_node || object->rhs_node->isNull()) {
         return true;
@@ -241,7 +250,7 @@ bool UpdateShadowStringList(QJsonObject& update, T* object, CString& field, cons
         return true;
     }
 
-    update.insert(field, WriteStringList(value));
+    update.insert(field, utils::WriteStringList(value));
 
     if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
@@ -280,6 +289,136 @@ bool UpdateShadowField(QJsonObject& update, T* object, CString& field, const Fie
 
     return true;
 }
-};
+
+template <typename T, typename F = std::nullptr_t>
+bool UpdateIssuedTime(QJsonObject& update, T* object, CString& field, const QDateTime& value, QDateTime T::* member, F&& restart_timer = nullptr)
+{
+    Q_ASSERT(object != nullptr);
+
+    QDateTime& current_value { object->*member };
+
+    if (current_value == value)
+        return false;
+
+    current_value = value;
+
+    // If rhs_node is null, update local value only and skip JSON update
+    if (object->rhs_node.isNull()) {
+        return true;
+    }
+
+    update.insert(field, value.toString(Qt::ISODate));
+
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
+        restart_timer();
+    }
+
+    return true;
+}
+
+template <typename T, typename F = std::nullptr_t>
+bool UpdateStringList(QJsonObject& update, T* object, CString& field, const QStringList& value, QStringList T::* member, F&& restart_timer = nullptr)
+{
+    Q_ASSERT(object != nullptr);
+
+    QStringList& current_value { object->*member };
+
+    if (current_value == value)
+        return false;
+
+    current_value = value;
+
+    // If rhs_node is null, update local value only and skip JSON update
+    if (object->rhs_node.isNull()) {
+        return true;
+    }
+
+    update.insert(field, utils::WriteStringList(value));
+
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
+        restart_timer();
+    }
+
+    return true;
+}
+
+template <typename Field, typename T, typename F = std::nullptr_t>
+bool UpdateField(QJsonObject& update, T* object, CString& field, const Field& value, Field T::* member, F&& restart_timer = nullptr)
+{
+    Q_ASSERT(object != nullptr);
+
+    Field& current_value { object->*member };
+
+    if (current_value == value)
+        return false;
+
+    current_value = value;
+
+    // If rhs_node is null, update local value only and skip JSON update
+    if (object->rhs_node.isNull()) {
+        return true;
+    }
+
+    update.insert(field, value);
+
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
+        restart_timer();
+    }
+
+    return true;
+}
+
+template <typename Field, typename T, typename F = std::nullptr_t>
+bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& value, Field T::* member, F&& restart_timer = nullptr)
+{
+    Q_ASSERT(object != nullptr);
+
+    Field& current_value { object->*member };
+
+    if (FloatEqual(current_value, value))
+        return false;
+
+    current_value = value;
+
+    // If rhs_node is null, update local value only and skip JSON update
+    if (object->rhs_node.isNull()) {
+        return true;
+    }
+
+    update.insert(field, QString::number(value, 'f', numeric_const::kDecimalPlaces8));
+
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
+        restart_timer();
+    }
+
+    return true;
+}
+
+template <typename T, typename F = std::nullptr_t>
+bool UpdateUuid(QJsonObject& update, T* object, CString& field, const QUuid& value, QUuid T::* member, F&& restart_timer = nullptr)
+{
+    Q_ASSERT(object != nullptr);
+
+    QUuid& current_value { object->*member };
+
+    if (current_value == value)
+        return false;
+
+    current_value = value;
+
+    // If rhs_node is null, update local value only and skip JSON update
+    if (object->rhs_node.isNull()) {
+        return true;
+    }
+
+    update.insert(field, value.toString(QUuid::WithoutBraces));
+
+    if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
+        restart_timer();
+    }
+
+    return true;
+}
+}
 
 #endif // ENTRYUTILS_H

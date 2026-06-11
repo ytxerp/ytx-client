@@ -82,7 +82,7 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
         EntryPool::Instance().Recycle(entry, section_);
     }
 
-    internal_sku_.remove(rhs_node_id);
+    internal_sku_set_.remove(rhs_node_id);
     return true;
 }
 
@@ -131,7 +131,7 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
     if (value.isNull())
         return false;
 
-    if (internal_sku_.contains(value))
+    if (internal_sku_set_.contains(value))
         return false;
 
     auto old_node { entry->rhs_node };
@@ -139,7 +139,7 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
         return false;
 
     entry->rhs_node = value;
-    internal_sku_.insert(value);
+    internal_sku_set_.insert(value);
 
     const QUuid entry_id { entry->id };
 
@@ -220,35 +220,35 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
 
     switch (column) {
     case EntryEnumP::kIssuedTime:
-        utils::UpdateIssuedTime(
+        entry::UpdateIssuedTime(
             pending_updates_[id], entry, kIssuedTime, value.toDateTime(), &Entry::issued_time, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kCode:
-        utils::UpdateField(pending_updates_[id], entry, kCode, value.toString(), &Entry::code, [this, id, version]() { RestartTimer(id, version); });
+        entry::UpdateField(pending_updates_[id], entry, kCode, value.toString(), &Entry::code, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kDocument:
-        utils::UpdateStringList(
+        entry::UpdateStringList(
             pending_updates_[id], entry, kDocument, value.toStringList(), &Entry::document, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kTag:
-        utils::UpdateStringList(pending_updates_[id], entry, kTag, value.toStringList(), &Entry::tag, [this, id, version]() { RestartTimer(id, version); });
+        entry::UpdateStringList(pending_updates_[id], entry, kTag, value.toStringList(), &Entry::tag, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kRhsNode:
         update_entry_hub = UpdateInternalSku(d_entry, value.toUuid());
         break;
     case EntryEnumP::kUnitPrice:
-        update_entry_hub = utils::UpdateDouble(
+        update_entry_hub = entry::UpdateDouble(
             pending_updates_[id], d_entry, kUnitPrice, value.toDouble(), &EntryP::unit_price, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kDescription:
-        utils::UpdateField(
+        entry::UpdateField(
             pending_updates_[id], entry, kDescription, value.toString(), &Entry::description, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kStatus:
-        utils::UpdateField(pending_updates_[id], entry, kStatus, value.toInt(), &Entry::status, [this, id, version]() { RestartTimer(id, version); });
+        entry::UpdateField(pending_updates_[id], entry, kStatus, value.toInt(), &Entry::status, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kExternalSku:
-        update_entry_hub = utils::UpdateUuid(
+        update_entry_hub = entry::UpdateUuid(
             pending_updates_[id], d_entry, kExternalSku, value.toUuid(), &EntryP::external_sku, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kId:

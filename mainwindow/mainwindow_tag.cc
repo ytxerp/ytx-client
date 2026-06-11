@@ -309,10 +309,8 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     // manage_action->setIcon(QIcon(":/icons/settings.png"));
     connect(manage_action, &QAction::triggered, this, [this]() { on_actionTags_triggered(); });
 
-    if (IsDoubleEntry(start_)) {
-        menu->addSeparator();
-        menu->addAction(ui->actionJumpEntry);
-    }
+    menu->addSeparator();
+    menu->addAction(ui->actionJumpEntry);
 
     menu->exec(QCursor::pos());
 }
@@ -369,7 +367,7 @@ void MainWindow::RInsertEntryTag(const Tag* tag, TableModel* model, const Entry*
         return;
     }
 
-    const int column { utils::EntryTagColumn(start_) };
+    const int column { entry::TagColumn(start_) };
 
     QModelIndex tag_index = model->index(index.row(), column);
     model->setData(tag_index, list);
@@ -387,7 +385,7 @@ void MainWindow::RRemoveEntryTag(const Tag* tag, TableModel* model, const Entry*
         return;
     }
 
-    const int column { utils::EntryTagColumn(start_) };
+    const int column { entry::TagColumn(start_) };
 
     QModelIndex tag_index = model->index(index.row(), column);
     model->setData(tag_index, list);

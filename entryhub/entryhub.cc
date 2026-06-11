@@ -98,7 +98,7 @@ void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update)
 
         entry->ReadJson(update);
 
-        const auto [start, end] = utils::EntryCacheColumnRange(section_);
+        const auto [start, end] = entry::CacheColumnRange(section_);
 
         emit SRefreshField(entry->lhs_node, id, start, end);
         emit SRefreshField(entry->rhs_node, id, start, end);
@@ -135,10 +135,10 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
             entry->lhs_node = new_node_id;
         }
 
-        const int rhs_node_column { utils::LinkedNodeColumn(section_) };
+        const int linked_node_column { entry::LinkedNodeColumn(section_) };
 
         emit SDetachOneEntry(old_node_id, id);
-        emit SRefreshField(lhs_node, id, rhs_node_column, rhs_node_column);
+        emit SRefreshField(lhs_node, id, linked_node_column, linked_node_column);
     } else {
         entry = EntryPool::Instance().Allocate(section_);
         entry->ReadJson(update);

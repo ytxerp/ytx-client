@@ -27,7 +27,6 @@ void MainWindow::SetAction(bool enable) const
     ui->actionMarkToggle->setEnabled(enable);
     ui->actionRename->setEnabled(enable);
     ui->actionInsertNode->setEnabled(enable);
-    ui->actionJumpEntry->setEnabled(enable);
     ui->actionDelete->setEnabled(enable);
     ui->actionAppendEntry->setEnabled(enable);
     ui->actionExportExcel->setEnabled(enable);

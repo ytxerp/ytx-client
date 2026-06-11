@@ -153,7 +153,7 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section) const
 
         if (const auto* leaf_widget = qobject_cast<TableWidget*>(current_widget)) {
             auto* header { leaf_widget->View()->horizontalHeader() };
-            ResizeColumn(header, utils::EntryDescriptionColumn(start_));
+            ResizeColumn(header, entry::DescriptionColumn(start_));
             return;
         }
 

@@ -152,7 +152,7 @@ void SearchDialog::ResizeTreeColumn(QHeaderView* header)
 
 void SearchDialog::ResizeTableColumn(QHeaderView* header)
 {
-    const int description_column { utils::SearchEntryDescriptionColumn(info_.section) };
+    const int description_column { entry::SearchDescriptionColumn(info_.section) };
     header->setSectionResizeMode(QHeaderView::ResizeToContents);
     header->setSectionResizeMode(description_column, QHeaderView::Stretch);
 }

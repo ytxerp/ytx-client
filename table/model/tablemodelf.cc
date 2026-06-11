@@ -75,27 +75,27 @@ bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int r
 
     switch (column) {
     case EntryEnumF::kIssuedTime:
-        utils::UpdateShadowIssuedTime(
+        entry::UpdateShadowIssuedTime(
             pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumF::kCode:
-        utils::UpdateShadowField(
+        entry::UpdateShadowField(
             pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumF::kStatus:
-        utils::UpdateShadowField(
+        entry::UpdateShadowField(
             pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumF::kDescription:
-        utils::UpdateShadowField(
+        entry::UpdateShadowField(
             pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumF::kDocument:
-        utils::UpdateShadowStringList(
+        entry::UpdateShadowStringList(
             pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumF::kTag:
-        utils::UpdateShadowStringList(
+        entry::UpdateShadowStringList(
             pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumF::kLhsRate:

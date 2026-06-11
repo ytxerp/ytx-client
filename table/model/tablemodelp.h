@@ -52,7 +52,7 @@ protected:
     bool UpdateInternalSku(EntryP* entry, const QUuid& value);
 
 private:
-    QSet<QUuid> internal_sku_ {};
+    QSet<QUuid> internal_sku_set_ {};
     QList<Entry*> entry_list_ {};
 };
 

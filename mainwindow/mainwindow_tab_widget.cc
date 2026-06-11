@@ -108,7 +108,6 @@ void MainWindow::tabWidget_currentChanged()
     const bool is_table_o { IsTableWidgetO(widget) };
     const bool is_settlement_primary { IsSettlementPrimaryWidget(widget) };
     const bool is_order_section { IsOrderSection(start_) };
-    const bool is_double_entry { IsDoubleEntry(start_) };
 
     ui->actionAppendNode->setEnabled(is_tree);
     ui->actionInsertNode->setEnabled(is_tree || is_table_o);
@@ -119,8 +118,6 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionMarkAll->setEnabled(is_table_fipt || is_statement_entry);
     ui->actionMarkNone->setEnabled(is_table_fipt || is_statement_entry);
     ui->actionMarkToggle->setEnabled(is_table_fipt || is_statement_entry);
-
-    ui->actionJumpEntry->setEnabled(is_double_entry && is_table_fipt);
 
     ui->actionStatement->setEnabled(is_order_section);
     ui->actionSettlement->setEnabled(is_order_section);
@@ -199,9 +196,6 @@ void MainWindow::on_actionJumpEntry_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    if (IsSingleEntry(start_))
-        return;
-
     auto* widget { sc_->tab_widget->currentWidget() };
 
     Q_ASSERT(qobject_cast<TableWidget*>(widget));
@@ -212,7 +206,7 @@ void MainWindow::on_actionJumpEntry_triggered()
         return;
 
     const int row { index.row() };
-    const int linked_node_column { utils::LinkedNodeColumn(start_) };
+    const int linked_node_column { entry::LinkedNodeColumn(start_) };
 
     const auto linked_node_id { index.sibling(row, linked_node_column).data().toUuid() };
     if (linked_node_id.isNull()) {
@@ -221,6 +215,9 @@ void MainWindow::on_actionJumpEntry_triggered()
         leaf_widget->View()->edit(linked_node_index);
         return;
     }
+
+    if (IsSingleEntry(start_))
+        return;
 
     const auto entry_id { index.sibling(row, std::to_underlying(EntryEnum::kId)).data().toUuid() };
     ShowLeafWidget(linked_node_id, entry_id);
