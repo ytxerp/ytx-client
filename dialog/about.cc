@@ -55,14 +55,14 @@ void About::IniDialog()
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
 <html>
 <body>
-    <p><b>YTX v0.3.6</b><br>© 2026 YTX<br><br>This product uses Qt libraries licensed under LGPLv3.</p>
-    <p>%1</p>
+    <p><b>YTX v%1</b><br>© 2026 YTX<br><br>This product uses Qt libraries licensed under LGPLv3.</p>
     <p>%2</p>
-    <p><a href="privacy_policy.html">%3</a> | <a href="terms_of_service.html">%4</a></p>
+    <p>%3</p>
+    <p><a href="privacy_policy.html">%4</a> | <a href="terms_of_service.html">%5</a></p>
 </body>
 </html>
 )")
-              .arg(tr("YTX is an enterprise resource planning system designed to help businesses manage operations efficiently."),
+              .arg(APP_VERSION, tr("YTX is an enterprise resource planning system designed to help businesses manage operations efficiently."),
                   tr("Please review our Privacy Policy and Terms of Service for full details."), tr("Privacy Policy"), tr("Terms of Service"));
 
     ui->textBrowser->setHtml(html);

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30.5)
-project(YTX VERSION 0.3.6 LANGUAGES CXX)
+project(YTX VERSION 0.3.7 LANGUAGES CXX)
 
 # ------------------------
 # Qt setup
@@ -619,6 +619,7 @@ target_compile_definitions(
         QT_USE_FAST_OPERATOR_PLUS
         QT_DISABLE_DEPRECATED_BEFORE=0x060900
         PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
+        APP_VERSION="${PROJECT_VERSION}"
 )
 
 # ------------------------
