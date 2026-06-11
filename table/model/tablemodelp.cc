@@ -19,16 +19,26 @@ void TableModelP::RAppendMultiEntries(const EntryList& entry_list)
     if (entry_list.isEmpty())
         return;
 
-    const auto row { entry_list_.size() };
+    EntryList list {};
 
-    beginInsertRows(QModelIndex(), row, row + entry_list.size() - 1);
-    entry_list_.append(entry_list);
+    for (auto* entry : entry_list) {
+        if (internal_sku_set_.contains(entry->rhs_node))
+            continue;
+
+        list.emplaceBack(entry);
+        internal_sku_set_.insert(entry->rhs_node);
+    }
+
+    const auto row { list.size() };
+
+    beginInsertRows(QModelIndex(), row, row + list.size() - 1);
+    entry_list_.append(list);
     endInsertRows();
 
     sort(std::to_underlying(EntryEnum::kIssuedTime), Qt::AscendingOrder);
 }
 
-void TableModelP::RDetachOneEntry(const QUuid& entry_id)
+void TableModelP::RDetachOneEntry(const QUuid& entry_id, const QUuid& extra_value)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -38,6 +48,8 @@ void TableModelP::RDetachOneEntry(const QUuid& entry_id)
     beginRemoveRows(QModelIndex(), row, row);
     entry_list_.remove(row);
     endRemoveRows();
+
+    internal_sku_set_.remove(extra_value);
 }
 
 void TableModelP::RAttachOneEntry(Entry* entry)
@@ -47,6 +59,8 @@ void TableModelP::RAttachOneEntry(Entry* entry)
     beginInsertRows(QModelIndex(), row, row);
     entry_list_.emplaceBack(entry);
     endInsertRows();
+
+    internal_sku_set_.insert(entry->rhs_node);
 
     if (entry_list_.size() == 1)
         EmitDataChanged(row, row, std::to_underlying(EntryEnumP::kIssuedTime), std::to_underlying(EntryEnumP::kIssuedTime));
@@ -140,6 +154,7 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
 
     entry->rhs_node = value;
     internal_sku_set_.insert(value);
+    internal_sku_set_.remove(old_node);
 
     const QUuid entry_id { entry->id };
 

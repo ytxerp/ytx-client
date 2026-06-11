@@ -80,14 +80,17 @@ void EntryHub::InsertEntry(const QJsonObject& data)
 void EntryHub::DeleteEntry(const QUuid& entry_id)
 {
     auto it = entry_cache_.constFind(entry_id);
-    if (it != entry_cache_.constEnd()) {
-        auto* entry = it.value();
-
-        emit SDetachOneEntry(entry->lhs_node, entry_id);
-        emit SDetachOneEntry(entry->rhs_node, entry_id);
-
-        EntryPool::Instance().Recycle(entry, section_);
+    if (it == entry_cache_.constEnd()) {
+        return;
     }
+
+    auto* entry = it.value();
+
+    emit SDetachOneEntry(entry->lhs_node, entry_id);
+    emit SDetachOneEntry(entry->rhs_node, entry_id);
+
+    entry_cache_.erase(it);
+    EntryPool::Instance().Recycle(entry, section_);
 }
 
 void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update)

@@ -66,7 +66,7 @@ void TableModel::RAttachOneEntry(Entry* entry)
     EmitDataChanged(row, row, balance_column, balance_column);
 }
 
-void TableModel::RDetachOneEntry(const QUuid& entry_id)
+void TableModel::RDetachOneEntry(const QUuid& entry_id, const QUuid& /*extra_value*/)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())

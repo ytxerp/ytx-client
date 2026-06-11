@@ -1,5 +1,6 @@
 #include "global/tablesstation.h"
 #include "mainwindow.h"
+#include "table/model/tablemodelp.h"
 #include "ui_mainwindow.h"
 
 void MainWindow::TreeConnectF(QTreeView* tree_view, TreeModel* tree_model, const EntryHub* entry_hub) const
@@ -156,11 +157,13 @@ void MainWindow::TableConnectT(TableModel* table_model) const
 
 void MainWindow::TableConnectP(TableModel* table_model) const
 {
-    auto entry_hub { sc_p_.entry_hub };
+    auto* entry_hub { static_cast<EntryHubP*>(sc_p_.entry_hub.data()) };
+    auto* model { static_cast<TableModelP*>(table_model) };
 
     connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
     connect(table_model, &TableModel::SDeleteOneEntry, entry_hub, &EntryHub::RDeleteOneEntry);
-    connect(table_model, &TableModel::SUpdateOneEntry, entry_hub, &EntryHub::RUpdateOneEntry);
+
+    connect(model, &TableModelP::SUpdateOneEntry, entry_hub, &EntryHubP::RUpdateOneEntry);
 }
 
 void MainWindow::TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const

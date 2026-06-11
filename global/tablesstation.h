@@ -42,7 +42,7 @@ public:
 signals:
     // send to TableModel
     void SAttachOneEntry(Entry* entry);
-    void SDetachOneEntry(const QUuid& entry_id);
+    void SDetachOneEntry(const QUuid& entry_id, const QUuid& extra_value = {});
 
     void SUpdateBalance(const QUuid& entry_id);
     void SDirectionRule(bool rule);
@@ -55,7 +55,7 @@ signals:
 
 public slots:
     void RAttachOneEntry(const QUuid& node_id, Entry* entry);
-    void RDetachOneEntry(const QUuid& node_id, const QUuid& entry_id);
+    void RDetachOneEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& extra_value = {});
 
     void RDirectionRule(const QUuid& node_id, bool rule);
     void RRefreshStatus(const QSet<QUuid>& affected_node);

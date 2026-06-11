@@ -44,19 +44,16 @@ protected:
 signals:
     // send to LeafSStation
     void SAttachOneEntry(const QUuid& node_id, Entry* entry);
-    void SDetachOneEntry(const QUuid& node_id, const QUuid& entry_id);
+    void SDetachOneEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& extra_value = {});
     void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
     // send to entryhub, FIPT
     void SAppendOneEntry(Entry* entry);
     void SDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
 
-    // Just for partner
-    void SUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node);
-
 public slots:
     virtual void RAppendMultiEntries(const EntryList& entry_list);
-    virtual void RDetachOneEntry(const QUuid& entry_id);
+    virtual void RDetachOneEntry(const QUuid& entry_id, const QUuid& extra_value = {});
     virtual void RAttachOneEntry(Entry* entry);
 
     void RDeleteMultiEntries(const QSet<QUuid>& entry_id_set);

@@ -33,7 +33,8 @@ public slots:
     // receive from TableModel
     void RAppendOneEntry(Entry* entry) override;
     void RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id) override;
-    void RUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node) override;
+
+    void RUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node);
 
 public:
     std::optional<double> UnitPrice(const QUuid& partner_id, const QUuid& internal_sku) const;
