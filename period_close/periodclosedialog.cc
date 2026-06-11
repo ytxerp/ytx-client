@@ -145,7 +145,7 @@ void PeriodCloseDialog::on_pushButtonPreview_clicked()
         return;
     }
 
-    if (utils::IsDescendant(summary_node, closing_node) || utils::IsDescendant(closing_node, summary_node)) {
+    if (node::IsDescendant(summary_node, closing_node) || node::IsDescendant(closing_node, summary_node)) {
         QMessageBox::warning(this, tr("Warning"), tr("Closing and summary nodes must not have ancestor-descendant relationships."));
         return;
     }

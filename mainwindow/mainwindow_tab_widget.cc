@@ -32,14 +32,14 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     }
 
     {
-        const int kind_column { utils::KindColumn(start_) };
+        const int kind_column { node::KindColumn(start_) };
         const NodeKind kind { index.siblingAtColumn(kind_column).data().toInt() };
         if (kind == NodeKind::kBranch)
             return;
     }
 
     {
-        const int unit_column { utils::UnitColumn(start_) };
+        const int unit_column { node::UnitColumn(start_) };
         const int unit { index.siblingAtColumn(unit_column).data().toInt() };
         if (start_ == Section::kInventory && unit == std::to_underlying(NodeUnit::IExternal))
             return;

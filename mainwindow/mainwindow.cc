@@ -534,7 +534,7 @@ void MainWindow::on_actionAppendNode_triggered()
     if (!index.isValid())
         return;
 
-    const int kind_column { utils::KindColumn(start_) };
+    const int kind_column { node::KindColumn(start_) };
     const QModelIndex kind_index { index.siblingAtColumn(kind_column) };
 
     // Check if the sibling index is valid

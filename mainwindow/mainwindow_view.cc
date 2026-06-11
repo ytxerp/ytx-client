@@ -11,7 +11,7 @@ void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
     {
         auto* header { view->header() };
 
-        ResizeColumn(header, utils::NodeDescriptionColumn(section));
+        ResizeColumn(header, node::DescriptionColumn(section));
         header->setStretchLastSection(false);
         header->setDefaultAlignment(Qt::AlignCenter);
     }

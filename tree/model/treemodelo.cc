@@ -304,7 +304,7 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    utils::SortIterative(root_, Compare);
+    node::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 
@@ -381,7 +381,7 @@ bool TreeModelO::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case NodeEnumO::kTag:
-        utils::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
+        node::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;

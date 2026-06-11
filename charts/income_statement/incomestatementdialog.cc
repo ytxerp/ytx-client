@@ -72,7 +72,7 @@ void IncomeStatementDialog::on_pushButtonFetch_clicked()
     }
 
     {
-        const bool overlap { utils::IsDescendant(income, expense) || utils::IsDescendant(expense, income) };
+        const bool overlap { node::IsDescendant(income, expense) || node::IsDescendant(expense, income) };
 
         if (overlap) {
             QMessageBox::warning(this, tr("Warning"), tr("Income and expense nodes must not have ancestor-descendant relationships."));

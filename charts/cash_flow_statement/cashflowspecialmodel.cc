@@ -155,7 +155,7 @@ void CashFlowSpecialModel::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    utils::SortIterative(root_, Compare);
+    node::SortIterative(root_, Compare);
     emit layoutChanged();
 }
 

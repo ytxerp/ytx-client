@@ -137,7 +137,7 @@ void MainWindow::on_actionClearColor_triggered()
 
     auto model { sc_->tree_model };
 
-    const int color_column { utils::NodeColorColumn(start_) };
+    const int color_column { node::ColorColumn(start_) };
     const QModelIndex color_index { index.siblingAtColumn(color_column) };
 
     model->setData(color_index, QVariant());

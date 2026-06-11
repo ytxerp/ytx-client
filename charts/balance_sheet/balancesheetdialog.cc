@@ -107,8 +107,8 @@ void BalanceSheetDialog::on_pushButtonFetch_clicked()
     }
 
     {
-        const bool overlap { utils::IsDescendant(asset, liability) || utils::IsDescendant(liability, asset) || utils::IsDescendant(asset, equity)
-            || utils::IsDescendant(equity, asset) || utils::IsDescendant(liability, equity) || utils::IsDescendant(equity, liability) };
+        const bool overlap { node::IsDescendant(asset, liability) || node::IsDescendant(liability, asset) || node::IsDescendant(asset, equity)
+            || node::IsDescendant(equity, asset) || node::IsDescendant(liability, equity) || node::IsDescendant(equity, liability) };
 
         if (overlap) {
             QMessageBox::warning(this, tr("Warning"), tr("Asset, liability, and equity nodes must not have ancestor-descendant relationships."));

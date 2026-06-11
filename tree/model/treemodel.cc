@@ -128,7 +128,7 @@ void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
         return;
 
     const int row { index.row() };
-    const auto [start, end] = utils::NodeCacheColumnRange(section_);
+    const auto [start, end] = node::CacheColumnRange(section_);
     EmitDataChanged(row, row, start, end, index.parent());
 }
 
@@ -157,7 +157,7 @@ void TreeModel::UpdateDirectionRule(const QUuid& node_id, bool direction_rule)
 
     DirectionRuleImpl(node, direction_rule, index);
 
-    const int column { utils::DirectionRuleColumn(section_) };
+    const int column { node::DirectionRuleColumn(section_) };
     EmitDataChanged(row, row, column, column, index.parent());
 }
 
@@ -173,7 +173,7 @@ void TreeModel::DirectionRuleImpl(Node* node, bool value, const QModelIndex& ind
     }
 
     const int row { index.row() };
-    const auto [start_col, end_col] = utils::NodeNumericColumnRange(section_);
+    const auto [start_col, end_col] = node::NumericColumnRange(section_);
 
     EmitDataChanged(row, row, start_col, end_col, index.parent());
     emit SSyncValue();
@@ -255,7 +255,7 @@ void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant)
     }
 
     // Check for circular dependency (destination is descendant of node)
-    if (utils::IsDescendant(destination_node, node)) {
+    if (node::IsDescendant(destination_node, node)) {
         qWarning() << "DragNode: cannot move node to its descendant, skip move";
         return;
     }
@@ -443,7 +443,7 @@ bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int r
 
     qInfo() << "[UI] dropMimeData";
 
-    if (node->parent == destination_parent || utils::IsDescendant(destination_parent, node))
+    if (node->parent == destination_parent || node::IsDescendant(destination_parent, node))
         return false;
 
     int destination_child { row };
@@ -790,7 +790,7 @@ void TreeModel::RefreshAffectedTotal(const QSet<QUuid>& affected_ids)
             continue;
 
         const int row { index.row() };
-        const auto [start, end] = utils::NodeNumericColumnRange(section_);
+        const auto [start, end] = node::NumericColumnRange(section_);
         EmitDataChanged(row, row, start, end, index.parent());
     }
 }
@@ -951,7 +951,7 @@ void TreeModel::BuildHierarchy(const QJsonArray& path_array)
 
 void TreeModel::RegisterPath(Node* node)
 {
-    CString path { utils::ConstructPath(root_, node, separator_) };
+    CString path { node::ConstructPath(root_, node, separator_) };
     const NodeKind kind { node->kind };
 
     switch (kind) {

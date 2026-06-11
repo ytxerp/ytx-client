@@ -4,67 +4,6 @@
 
 namespace utils {
 
-void UpdatePath(QHash<QUuid, QString>& leaf, QHash<QUuid, QString>& branch, const Node* root, const Node* node, CString& separator)
-{
-    Q_ASSERT(root != nullptr);
-    Q_ASSERT(node != nullptr);
-
-    QQueue<const Node*> queue {};
-    queue.enqueue(node);
-
-    while (!queue.isEmpty()) {
-        const auto* current { queue.dequeue() };
-        const auto path { ConstructPath(root, current, separator) };
-        const NodeKind kind { current->kind };
-
-        switch (kind) {
-        case NodeKind::kBranch:
-            for (const auto* child : current->children)
-                queue.enqueue(child);
-
-            branch.insert(current->id, path);
-            break;
-        case NodeKind::kLeaf:
-            leaf.insert(current->id, path);
-            break;
-        default:
-            break;
-        }
-    }
-}
-
-bool IsDescendant(const Node* descendant, const Node* ancestor)
-{
-    Q_ASSERT(descendant != nullptr);
-    Q_ASSERT(ancestor != nullptr);
-
-    if (descendant == ancestor)
-        return false;
-
-    while (descendant && descendant != ancestor)
-        descendant = descendant->parent;
-
-    return descendant == ancestor;
-}
-
-QString ConstructPath(const Node* root, const Node* node, CString& separator)
-{
-    Q_ASSERT(root != nullptr);
-    Q_ASSERT(node != nullptr);
-
-    if (node == root)
-        return QString();
-
-    QStringList tmp {};
-
-    while (node && node != root) {
-        tmp.prepend(node->name);
-        node = node->parent;
-    }
-
-    return tmp.join(separator);
-}
-
 void LeafPathBranchPathModel(CUuidString& leaf, CUuidString& branch, ItemModel* model)
 {
     Q_ASSERT(model != nullptr);
@@ -167,4 +106,65 @@ void UpdateModelFunction(ItemModel* model, const QSet<QUuid>& update_range, CUui
     }
 }
 
+void UpdatePath(QHash<QUuid, QString>& leaf, QHash<QUuid, QString>& branch, const Node* root, const Node* node, CString& separator)
+{
+    Q_ASSERT(root != nullptr);
+    Q_ASSERT(node != nullptr);
+
+    QQueue<const Node*> queue {};
+    queue.enqueue(node);
+
+    while (!queue.isEmpty()) {
+        const auto* current { queue.dequeue() };
+        const auto path { node::ConstructPath(root, current, separator) };
+        const NodeKind kind { current->kind };
+
+        switch (kind) {
+        case NodeKind::kBranch:
+            for (const auto* child : current->children)
+                queue.enqueue(child);
+
+            branch.insert(current->id, path);
+            break;
+        case NodeKind::kLeaf:
+            leaf.insert(current->id, path);
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+}
+
+QString node::ConstructPath(const Node* root, const Node* node, CString& separator)
+{
+    Q_ASSERT(root != nullptr);
+    Q_ASSERT(node != nullptr);
+
+    if (node == root)
+        return QString();
+
+    QStringList tmp {};
+
+    while (node && node != root) {
+        tmp.prepend(node->name);
+        node = node->parent;
+    }
+
+    return tmp.join(separator);
+}
+
+bool node::IsDescendant(const Node* descendant, const Node* ancestor)
+{
+    Q_ASSERT(descendant != nullptr);
+    Q_ASSERT(ancestor != nullptr);
+
+    if (descendant == ancestor)
+        return false;
+
+    while (descendant && descendant != ancestor)
+        descendant = descendant->parent;
+
+    return descendant == ancestor;
 }

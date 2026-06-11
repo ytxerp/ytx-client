@@ -159,7 +159,7 @@ void MainWindow::UpdateSectionConfig(CSectionConfig& section) const
 
         if (qobject_cast<TreeWidget*>(current_widget)) {
             auto* header { sc_->tree_view->header() };
-            ResizeColumn(header, utils::NodeDescriptionColumn(start_));
+            ResizeColumn(header, node::DescriptionColumn(start_));
         }
     }
 }

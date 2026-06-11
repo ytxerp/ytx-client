@@ -156,7 +156,7 @@ void StatementTertiaryWidget::on_pBtnExport_clicked()
         return;
 
     auto& list { model_->EntryList() };
-    const QString unit_string { utils::UnitString(NodeUnit(unit_)) };
+    const QString unit_string { node::UnitString(NodeUnit(unit_)) };
 
     ExportExcel::Instance().StatementAsync(entry_hub_p_, tree_model_i_, destination, partner_name_, partner_id_, unit_string, start_, adjust_end, total_, list);
 }
