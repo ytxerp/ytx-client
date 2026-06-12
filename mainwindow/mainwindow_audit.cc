@@ -79,14 +79,14 @@ void MainWindow::InitAuditInfo()
         tr("User"),
         tr("LHS Node"),
         tr("RHS Node"),
-        tr("Created Time"),
+        tr("Issued Time"),
         tr("Section"),
         tr("Target"),
         tr("Code"),
         tr("Operation"),
         tr("Level"),
-        tr("Before"),
-        tr("After"),
+        tr("Before Change"),
+        tr("After Change"),
     };
 
     audit_info_.f_leaf_path = sc_f_.tree_model->LeafPath();

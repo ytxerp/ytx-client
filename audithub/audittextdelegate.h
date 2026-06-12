@@ -20,12 +20,13 @@
 #ifndef AUDITTEXTDELEGATE_H
 #define AUDITTEXTDELEGATE_H
 
-#include <QStyledItemDelegate>
+#include "delegate/styleditemdelegate.h"
 
-class AuditTextDelegate final : public QStyledItemDelegate {
+class AuditTextDelegate final : public StyledItemDelegate {
 public:
     explicit AuditTextDelegate(QObject* parent = nullptr);
     bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
 
 #endif // AUDITTEXTDELEGATE_H
