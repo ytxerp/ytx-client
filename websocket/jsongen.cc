@@ -99,12 +99,11 @@ QJsonObject LeafDeleteCheck(Section section, CUuid& node_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(node_ref::kWithin, false);
-    message.insert(node_ref::kInventoryInt, false);
-    message.insert(node_ref::kInventoryExt, false);
-    message.insert(node_ref::kPartnerCV, false);
-    message.insert(node_ref::kPartnerEmp, false);
-    message.insert(node_ref::kOrder, false);
+    message.insert(node_ref::kInternal, false);
+    message.insert(node_ref::kSale, false);
+    message.insert(node_ref::kPartner, false);
+    message.insert(node_ref::kSettlement, false);
+    message.insert(node_ref::kPurchase, false);
     return message;
 }
 
@@ -116,8 +115,8 @@ QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id)
     message.insert(kResult, false);
     message.insert(kOldNodeId, old_id.toString(QUuid::WithoutBraces));
     message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
-    message.insert(node_ref::kInventoryInt, false);
-    message.insert(node_ref::kInventoryExt, false);
+    message.insert(node_ref::kPartnerInt, false);
+    message.insert(node_ref::kPartnerExt, false);
     return message;
 }
 

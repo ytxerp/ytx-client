@@ -15,12 +15,11 @@ LeafDeleteDialog::LeafDeleteDialog(TreeModel* model, CSectionInfo& info, CJsonOb
     , node_id_ { node_id }
     , node_unit_ { unit }
     , section_ { info.section }
-    , within_ { obj.value(node_ref::kWithin).toBool() }
-    , inventory_int_ { obj.value(node_ref::kInventoryInt).toBool() }
-    , inventory_ext_ { obj.value(node_ref::kInventoryExt).toBool() }
-    , partner_cv_ { obj.value(node_ref::kPartnerCV).toBool() }
-    , partner_emp_ { obj.value(node_ref::kPartnerEmp).toBool() }
-    , order_ { obj.value(node_ref::kOrder).toBool() }
+    , internal_ { obj.value(node_ref::kInternal).toBool() }
+    , sale_ { obj.value(node_ref::kSale).toBool() }
+    , purchase_ { obj.value(node_ref::kPurchase).toBool() }
+    , partner_ { obj.value(node_ref::kPartner).toBool() }
+    , settlement_ { obj.value(node_ref::kSettlement).toBool() }
     , model_ { model }
     , info_ { info }
 {
@@ -50,46 +49,47 @@ void LeafDeleteDialog::IniOptionGroup()
 
 void LeafDeleteDialog::InitCheckBoxGroup()
 {
-    ui->chkBoxWithin->setChecked(within_);
-    ui->chkBoxWithin->setEnabled(false);
+    ui->chkBoxInternal->setChecked(internal_);
+    ui->chkBoxInternal->setEnabled(false);
 
-    ui->chkBoxInventoryInt->hide();
-    ui->chkBoxInventoryExt->hide();
-    ui->chkBoxPartnerCV->hide();
-    ui->chkBoxPartnerEmp->hide();
-    ui->chkBoxOrder->hide();
+    ui->chkBoxPartner->hide();
+    ui->chkBoxSale->hide();
+    ui->chkBoxPurchase->hide();
+    ui->chkBoxSettlement->hide();
     ui->rBtnReplace->hide();
     ui->comboBox->hide();
 
     switch (section_) {
     case Section::kInventory:
-        ui->chkBoxInventoryInt->show();
-        ui->chkBoxInventoryInt->setChecked(inventory_int_);
-        ui->chkBoxInventoryInt->setEnabled(false);
+        ui->chkBoxSale->show();
+        ui->chkBoxSale->setChecked(sale_);
+        ui->chkBoxSale->setEnabled(false);
 
-        ui->chkBoxInventoryExt->show();
-        ui->chkBoxInventoryExt->setChecked(inventory_ext_);
-        ui->chkBoxInventoryExt->setEnabled(false);
+        ui->chkBoxPurchase->show();
+        ui->chkBoxPurchase->setChecked(purchase_);
+        ui->chkBoxPurchase->setEnabled(false);
+
+        ui->chkBoxPartner->show();
+        ui->chkBoxPartner->setChecked(partner_);
+        ui->chkBoxPartner->setEnabled(false);
 
         ui->rBtnReplace->show();
         ui->comboBox->show();
         break;
     case Section::kPartner:
-        if (node_unit_ == NodeUnit::PEmployee) {
-            ui->chkBoxPartnerEmp->show();
-            ui->chkBoxPartnerEmp->setChecked(partner_emp_);
-            ui->chkBoxPartnerEmp->setEnabled(false);
-        } else {
-            ui->chkBoxPartnerCV->show();
-            ui->chkBoxPartnerCV->setChecked(partner_cv_);
-            ui->chkBoxPartnerCV->setEnabled(false);
-        }
+        ui->chkBoxSale->show();
+        ui->chkBoxSale->setChecked(sale_);
+        ui->chkBoxSale->setEnabled(false);
+
+        ui->chkBoxPurchase->show();
+        ui->chkBoxPurchase->setChecked(purchase_);
+        ui->chkBoxPurchase->setEnabled(false);
         break;
     case Section::kSale:
     case Section::kPurchase:
-        ui->chkBoxOrder->show();
-        ui->chkBoxOrder->setChecked(order_);
-        ui->chkBoxOrder->setEnabled(false);
+        ui->chkBoxSettlement->show();
+        ui->chkBoxSettlement->setChecked(settlement_);
+        ui->chkBoxSettlement->setEnabled(false);
         break;
     case Section::kFinance:
     case Section::kTask:
@@ -225,7 +225,7 @@ void LeafDeleteDialog::IniData(Section section)
 
     this->setWindowTitle(tr("Delete %1").arg(model_->Path(node_id_)));
 
-    if (inventory_int_ || inventory_ext_ || partner_cv_ || partner_emp_ || order_) {
+    if (sale_ || partner_ || partner_cv_ || partner_emp_ || settlement_) {
         ui->rBtnDelete->setEnabled(false);
         ui->label->setText(tr("The node has external references, so it can’t be deleted."));
     }

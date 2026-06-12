@@ -28,18 +28,24 @@ inline const QString kFourDigits = QStringLiteral("+0,000.00");
 }
 
 namespace node_ref {
-// Node is referenced by linked nodes within the same section
-inline const QString kWithin = QStringLiteral("within");
-// Internal inventory node is referenced by partner, sale, or purchase
-inline const QString kInventoryInt = QStringLiteral("inventory_int");
-// External inventory node is referenced by partner
-inline const QString kInventoryExt = QStringLiteral("inventory_ext");
-// Partner node (customer/vendor) is referenced by sale or purchase
-inline const QString kPartnerCV = QStringLiteral("partner_cv");
-// Partner node (employee) is referenced by sale or purchase
-inline const QString kPartnerEmp = QStringLiteral("partner_emp");
-// Sale or purchase order is already settled
-inline const QString kOrder = QStringLiteral("order");
+
+// Referenced by internal entries
+inline const QString kInternal = QStringLiteral("internal");
+
+// Referenced by sales orders (entry or node)
+inline const QString kSale = QStringLiteral("sale");
+
+// Referenced by purchase orders (entry or node)
+inline const QString kPurchase = QStringLiteral("purchase");
+
+// Referenced by partner entries
+inline const QString kPartner = QStringLiteral("partner");
+inline const QString kPartnerInt = QStringLiteral("partner_int");
+inline const QString kPartnerExt = QStringLiteral("partner_ext");
+
+// Indicates whether this order has been settled
+inline const QString kSettlement = QStringLiteral("settlement");
+
 }
 
 namespace section_heat {

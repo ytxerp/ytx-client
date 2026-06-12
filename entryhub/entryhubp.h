@@ -51,8 +51,8 @@ public:
     void DeleteLeaf(const QSet<QUuid>& leaf_entry) override;
     void ApplyPartnerEntry(const QJsonArray& array);
 
-    void ApplyInventoryIntReplace(const QUuid& old_item_id, const QUuid& new_item_id);
-    void ApplyInventoryExtReplace(const QUuid& old_item_id, const QUuid& new_item_id);
+    void ReplacePartnerIntRef(const QUuid& old_item_id, const QUuid& new_item_id);
+    void ReplacePartnerExtRef(const QUuid& old_item_id, const QUuid& new_item_id);
 
 private:
     struct EntryValue {

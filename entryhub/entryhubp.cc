@@ -56,7 +56,7 @@ void EntryHubP::DeleteLeaf(const QSet<QUuid>& leaf_entry)
     }
 }
 
-void EntryHubP::ApplyInventoryIntReplace(const QUuid& old_item_id, const QUuid& new_item_id)
+void EntryHubP::ReplacePartnerIntRef(const QUuid& old_item_id, const QUuid& new_item_id)
 {
     for (auto* entry : std::as_const(entry_cache_)) {
         auto* d_entry = static_cast<EntryP*>(entry);
@@ -84,7 +84,7 @@ void EntryHubP::ApplyInventoryIntReplace(const QUuid& old_item_id, const QUuid& 
     }
 }
 
-void EntryHubP::ApplyInventoryExtReplace(const QUuid& old_item_id, const QUuid& new_item_id)
+void EntryHubP::ReplacePartnerExtRef(const QUuid& old_item_id, const QUuid& new_item_id)
 {
     for (auto* entry : std::as_const(entry_cache_)) {
         auto* d_entry = static_cast<EntryP*>(entry);

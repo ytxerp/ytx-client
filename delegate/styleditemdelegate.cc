@@ -44,15 +44,14 @@ void StyledItemDelegate::PaintText(
 }
 
 void StyledItemDelegate::PaintColorText(
-    CString& text, CString& color, QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, Qt::Alignment alignment) const
+    CString& text, const QColor& color, QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, Qt::Alignment alignment) const
 {
     QStyleOptionViewItem opt(option);
     initStyleOption(&opt, index);
 
-    const QColor text_color(color);
-    if (text_color.isValid()) {
-        opt.palette.setColor(QPalette::Text, text_color);
-        opt.palette.setColor(QPalette::HighlightedText, text_color);
+    if (color.isValid()) {
+        opt.palette.setColor(QPalette::Text, color);
+        opt.palette.setColor(QPalette::HighlightedText, color);
     }
 
     opt.text = text;

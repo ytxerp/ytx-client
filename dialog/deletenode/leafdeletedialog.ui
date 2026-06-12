@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>682</width>
-    <height>439</height>
+    <width>716</width>
+    <height>443</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -125,62 +125,52 @@
     <widget class="QGroupBox" name="groupBox_2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QCheckBox" name="chkBoxWithin">
+       <widget class="QCheckBox" name="chkBoxInternal">
         <property name="toolTip">
-         <string>This node is referenced within the section.</string>
+         <string>Whether the node is referenced by internal entries.</string>
         </property>
         <property name="text">
-         <string>Within</string>
+         <string>Internal</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxInventoryInt">
+       <widget class="QCheckBox" name="chkBoxPartner">
         <property name="toolTip">
-         <string>Inventory (Internal): Referenced by partner, sale, or purchase.</string>
+         <string>Whether the node is referenced by partner entries.</string>
         </property>
         <property name="text">
-         <string>Inventory (Int)</string>
+         <string>Partner</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxInventoryExt">
+       <widget class="QCheckBox" name="chkBoxSale">
         <property name="toolTip">
-         <string>Inventory (External): Referenced by partner.</string>
+         <string>Whether the node is referenced by sales orders.</string>
         </property>
         <property name="text">
-         <string>Inventory (Ext)</string>
+         <string>Sale</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxPartnerCV">
+       <widget class="QCheckBox" name="chkBoxPurchase">
         <property name="toolTip">
-         <string>Partner (Customer/Vendor): Referenced by sale or purchase.</string>
+         <string>Whether the node is referenced by purchase orders.</string>
         </property>
         <property name="text">
-         <string>Partner (C/V)</string>
+         <string>Purchase</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="chkBoxPartnerEmp">
+       <widget class="QCheckBox" name="chkBoxSettlement">
         <property name="toolTip">
-         <string>Partner (Employee): Referenced by sale or purchase.</string>
+         <string>Whether the order has been settled.</string>
         </property>
         <property name="text">
-         <string>Partner (Emp)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="chkBoxOrder">
-        <property name="toolTip">
-         <string>Order: Already settled.</string>
-        </property>
-        <property name="text">
-         <string>Order</string>
+         <string>Settlement</string>
         </property>
        </widget>
       </item>
