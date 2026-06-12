@@ -45,12 +45,12 @@ struct AuditRow {
 
     // -- 3. Integers ------------------------------------------------------------
     int section {}; // Audit section category
-    int ws_key {}; // Workspace key
-    int target_type {}; // Discriminator for the audited entity type
+    int operation {}; // Workspace key
+    int target {}; // Discriminator for the audited entity type
     int level {}; // Default: 0
 
     // -- 4. Variable-length -----------------------------------------------------
-    QString target_code {}; // Default: ""
+    QString code {}; // Default: ""
     QJsonValue before {}; // State before the action — maps to JSONB
     QJsonValue after {}; // State after the action  — maps to JSONB
 

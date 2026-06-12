@@ -43,8 +43,8 @@ QVariant AuditModel::data(const QModelIndex& index, int role) const
         return info_.user_hash.value(row->user_id);
     case AuditField::kCreatedTime:
         return row->created_time;
-    case AuditField::kTargetCode:
-        return row->target_code;
+    case AuditField::kCode:
+        return row->code;
     case AuditField::kBefore:
         return JsonValueToString(row->before);
     case AuditField::kAfter:
@@ -53,12 +53,12 @@ QVariant AuditModel::data(const QModelIndex& index, int role) const
         return row->id;
     case AuditField::kSection:
         return info_.section_hash.value(row->section);
-    case AuditField::kWsKey:
-        return info_.ws_key_hash.value(row->ws_key);
+    case AuditField::kOperation:
+        return info_.ws_key_hash.value(row->operation);
     case AuditField::kLevel:
         return info_.level_hash.value(row->level);
-    case AuditField::kTargetType:
-        return info_.target_type_hash.value(row->target_type);
+    case AuditField::kTarget:
+        return info_.target_type_hash.value(row->target);
     case AuditField::kLhsNode:
         return ResolveNode(row, row->lhs_node);
     case AuditField::kRhsNode:
@@ -82,14 +82,14 @@ void AuditModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &AuditRow::lhs_node, order);
         case AuditField::kRhsNode:
             return utils::CompareMember(lhs, rhs, &AuditRow::rhs_node, order);
-        case AuditField::kTargetCode:
-            return utils::CompareMember(lhs, rhs, &AuditRow::target_code, order);
+        case AuditField::kCode:
+            return utils::CompareMember(lhs, rhs, &AuditRow::code, order);
         case AuditField::kSection:
             return utils::CompareMember(lhs, rhs, &AuditRow::section, order);
-        case AuditField::kWsKey:
-            return utils::CompareMember(lhs, rhs, &AuditRow::ws_key, order);
-        case AuditField::kTargetType:
-            return utils::CompareMember(lhs, rhs, &AuditRow::target_type, order);
+        case AuditField::kOperation:
+            return utils::CompareMember(lhs, rhs, &AuditRow::operation, order);
+        case AuditField::kTarget:
+            return utils::CompareMember(lhs, rhs, &AuditRow::target, order);
         case AuditField::kLevel:
             return utils::CompareMember(lhs, rhs, &AuditRow::level, order);
         case AuditField::kCreatedTime:

@@ -42,10 +42,10 @@ enum class AuditField {
     kRhsNode,
     kCreatedTime,
     kSection,
-    kWsKey,
-    kTargetType,
+    kTarget,
+    kCode,
+    kOperation,
     kLevel,
-    kTargetCode,
     kBefore,
     kAfter,
 };

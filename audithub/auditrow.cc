@@ -32,13 +32,13 @@ void audit_hub::AuditRow::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kSection); val.isDouble())
         section = val.toInt();
     if (const auto val = object.value(kWsKey); val.isDouble())
-        ws_key = val.toInt();
+        operation = val.toInt();
     if (const auto val = object.value(kTargetType); val.isDouble())
-        target_type = val.toInt();
+        target = val.toInt();
     if (const auto val = object.value(kLevel); val.isDouble())
         level = val.toInt();
     if (const auto val = object.value(kTargetCode); val.isString())
-        target_code = val.toString();
+        code = val.toString();
     if (const auto val = object.value(kBefore); !val.isUndefined())
         before = val;
     if (const auto val = object.value(kAfter); !val.isUndefined())
