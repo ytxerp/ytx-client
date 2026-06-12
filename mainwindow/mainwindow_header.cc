@@ -10,7 +10,7 @@ void MainWindow::InitHeader()
         tr("Name", "Person"),
         tr("Workspace Role"),
         tr("Database Roles"),
-        tr("Created Time"),
+        tr("Issued Time"),
     };
 
     header_info_.cash_flow_statement = {
