@@ -131,10 +131,8 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(WsKey::kNodeNameUpdate), tr("Name Update") },
         { std::to_underlying(WsKey::kNodeDrag), tr("Drag") },
         { std::to_underlying(WsKey::kLeafDelete), tr("Delete") },
-        { std::to_underlying(WsKey::kLeafDeleteP), tr("Delete P") },
         { std::to_underlying(WsKey::kLeafDeleteO), tr("Delete O") },
         { std::to_underlying(WsKey::kLeafReplace), tr("Replace") },
-        { std::to_underlying(WsKey::kBranchDelete), tr("Branch Delete") },
         { std::to_underlying(WsKey::kNodeDirectionRuleUpdate), tr("Direction Rule Update") },
         // --- Entry ---
         { std::to_underlying(WsKey::kEntryInsert), tr("Insert") },
