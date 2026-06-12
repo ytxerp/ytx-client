@@ -478,7 +478,7 @@
     <message>
         <location filename="../../dialog/editdocument.ui" line="62"/>
         <source>Insert</source>
-        <translation>插入</translation>
+        <translation>新建</translation>
     </message>
     <message>
         <location filename="../../dialog/editdocument.ui" line="35"/>
@@ -1006,10 +1006,6 @@
         <translation>是否被内部记录引用。</translation>
     </message>
     <message>
-        <source>This node is referenced within the section.</source>
-        <translation type="vanished">该节点在当前版块内存在引用。</translation>
-    </message>
-    <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="133"/>
         <source>Internal</source>
         <translation>内部</translation>
@@ -1053,50 +1049,6 @@
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="173"/>
         <source>Settlement</source>
         <translation>结算</translation>
-    </message>
-    <message>
-        <source>Within</source>
-        <translation type="vanished">内部</translation>
-    </message>
-    <message>
-        <source>Inventory (Internal): Referenced by partner, sale, or purchase.</source>
-        <translation type="vanished">存货（内部）：被合作、销售或采购引用。</translation>
-    </message>
-    <message>
-        <source>Inventory (Int)</source>
-        <translation type="vanished">存货（内部）</translation>
-    </message>
-    <message>
-        <source>Inventory (External): Referenced by partner.</source>
-        <translation type="vanished">存货（外部）：被合作引用。</translation>
-    </message>
-    <message>
-        <source>Inventory (Ext)</source>
-        <translation type="vanished">存货（外部）</translation>
-    </message>
-    <message>
-        <source>Partner (Customer/Vendor): Referenced by sale or purchase.</source>
-        <translation type="vanished">合作（客户/供应商）：被销售或采购引用。</translation>
-    </message>
-    <message>
-        <source>Partner (C/V)</source>
-        <translation type="vanished">合作（客户/供应商）</translation>
-    </message>
-    <message>
-        <source>Partner (Employee): Referenced by sale or purchase.</source>
-        <translation type="vanished">合作（职员）：被销售或采购引用。</translation>
-    </message>
-    <message>
-        <source>Partner (Emp)</source>
-        <translation type="vanished">合作（职员）</translation>
-    </message>
-    <message>
-        <source>Order: Already settled.</source>
-        <translation type="vanished">订单：已结算。</translation>
-    </message>
-    <message>
-        <source>Order</source>
-        <translation type="vanished">订单</translation>
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="183"/>
@@ -1251,6 +1203,9 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="428"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="127"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="133"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="142"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
@@ -1790,6 +1745,8 @@ Do you want to save before closing?</source>
         <translation>期末余额</translation>
     </message>
     <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="82"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="13"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="27"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="107"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="119"/>
@@ -1809,6 +1766,7 @@ Do you want to save before closing?</source>
         <translation>日期</translation>
     </message>
     <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="85"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="19"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="41"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="54"/>
@@ -2185,12 +2143,12 @@ Do you want to save before closing?</source>
     <message>
         <location filename="../../mainwindow/mainwindow_account.cc" line="95"/>
         <source>Role Updated</source>
-        <translation>权限更新</translation>
+        <translation>权限变更</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_account.cc" line="96"/>
         <source>Your account role has been updated. Please restart the application to enable new permissions.</source>
-        <translation>您的账户权限已更新，请重启应用以生效。</translation>
+        <translation>您的账户权限已变更，请重启应用以生效。</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="589"/>
@@ -2482,44 +2440,33 @@ You need to recall it first before making changes.</source>
         <translation>右节点</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="82"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="13"/>
-        <source>Created Time</source>
-        <translation>创建时间</translation>
-    </message>
-    <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="83"/>
         <source>Section</source>
         <translation>版块</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="84"/>
-        <source>WS Key</source>
-        <translation>操作类型</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="85"/>
-        <source>Target Type</source>
-        <translation>目标类型</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="86"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="87"/>
         <source>Level</source>
         <translation>等级</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="87"/>
-        <source>Target Code</source>
-        <translation>目标编号</translation>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="84"/>
+        <source>Target</source>
+        <translation>目标</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="86"/>
+        <source>Operation</source>
+        <translation>操作</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="88"/>
-        <source>Before</source>
+        <source>Before Change</source>
         <translation>变更前</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="89"/>
-        <source>After</source>
+        <source>After Change</source>
         <translation>变更后</translation>
     </message>
     <message>
@@ -2549,132 +2496,93 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="124"/>
-        <source>Settlement Insert</source>
-        <translation>结算新增</translation>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="129"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="140"/>
+        <source>Insert</source>
+        <translation>新建</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="125"/>
-        <source>Settlement Update</source>
-        <translation>结算更新</translation>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="130"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="141"/>
+        <source>Update</source>
+        <translation>变更</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="126"/>
-        <source>Settlement Recall</source>
-        <translation>结算撤回</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="127"/>
-        <source>Settlement Delete</source>
-        <translation>结算删除</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="129"/>
-        <source>Node Insert</source>
-        <translation>节点新增</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="130"/>
-        <source>Node Update</source>
-        <translation>节点更新</translation>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="151"/>
+        <source>Recall</source>
+        <translation>撤回</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="131"/>
-        <source>Node Name Update</source>
-        <translation>节点改名</translation>
+        <source>Name Update</source>
+        <translation>更名</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="132"/>
-        <source>Node Drag</source>
-        <translation>节点拖动</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="133"/>
-        <source>Leaf Delete</source>
-        <translation>叶节点删除</translation>
+        <source>Drag</source>
+        <translation>拖动</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="134"/>
-        <source>Leaf Delete P</source>
-        <translation>叶节点删除 合作</translation>
+        <source>Delete P</source>
+        <translation>删除 合作</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="135"/>
-        <source>Leaf Delete O</source>
-        <translation>叶节点删除 订单</translation>
+        <source>Delete O</source>
+        <translation>删除 订单</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="136"/>
-        <source>Leaf Replace</source>
-        <translation>叶节点替换</translation>
+        <source>Replace</source>
+        <translation>替换</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="138"/>
+        <source>Direction Rule Update</source>
+        <translation>规则变更</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="143"/>
+        <source>Linked Node Update</source>
+        <translation>关联节点变更</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="144"/>
+        <source>Rate Update</source>
+        <translation>比率变更</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="145"/>
+        <source>Numeric Update</source>
+        <translation>数值变更</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="147"/>
+        <source>Insert Save</source>
+        <translation>新建保存</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="148"/>
+        <source>Update Save</source>
+        <translation>修改保存</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="149"/>
+        <source>Insert Release</source>
+        <translation>新建提交</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="150"/>
+        <source>Update Release</source>
+        <translation>修改提交</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="137"/>
         <source>Branch Delete</source>
         <translation>枝节点删除</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="138"/>
-        <source>Node Direction Rule Update</source>
-        <translation>节点规则更新</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="140"/>
-        <source>Entry Insert</source>
-        <translation>记录新增</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="141"/>
-        <source>Entry Update</source>
-        <translation>记录更新</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="142"/>
-        <source>Entry Delete</source>
-        <translation>记录删除</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="143"/>
-        <source>Entry Linked Node Update</source>
-        <translation>记录关联节点更新</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="144"/>
-        <source>Entry Rate Update</source>
-        <translation>记录比率更新</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="145"/>
-        <source>Entry Numeric Update</source>
-        <translation>记录数值更新</translation>
-    </message>
-    <message>
-        <source>Entry Issued Time Update</source>
-        <translation type="vanished">记录日期更新</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="147"/>
-        <source>Order Insert Save</source>
-        <translation>订单新增保存</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="148"/>
-        <source>Order Update Save</source>
-        <translation>订单更新保存</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="149"/>
-        <source>Order Insert Release</source>
-        <translation>订单新增发布</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="150"/>
-        <source>Order Update Release</source>
-        <translation>订单更新发布</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="151"/>
-        <source>Order Recall</source>
-        <translation>订单撤回</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_statement.cc" line="116"/>
@@ -3063,16 +2971,6 @@ You need to recall it first before making changes.</source>
         <translation>正</translation>
     </message>
     <message>
-        <location filename="../../audithub/audittextdelegate.cc" line="20"/>
-        <source>Audit Detail - Before</source>
-        <translation>审计明细 - 前</translation>
-    </message>
-    <message>
-        <location filename="../../audithub/audittextdelegate.cc" line="21"/>
-        <source>Audit Detail - After</source>
-        <translation>审计明细 - 后</translation>
-    </message>
-    <message>
         <location filename="../../workspace_member/databaserole.cc" line="10"/>
         <location filename="../../workspace_member/databaserole.cc" line="43"/>
         <source>Finance R</source>
@@ -3432,6 +3330,16 @@ You need to recall it first before making changes.</source>
         <source>Unclassified</source>
         <translation>未分类</translation>
     </message>
+    <message>
+        <location filename="../../audithub/audittextdelegate.cc" line="20"/>
+        <source>Before Change</source>
+        <translation>变更前</translation>
+    </message>
+    <message>
+        <location filename="../../audithub/audittextdelegate.cc" line="21"/>
+        <source>After Change</source>
+        <translation>变更后</translation>
+    </message>
 </context>
 <context>
     <name>SearchDialog</name>
@@ -3729,7 +3637,7 @@ You need to recall it first before making changes.</source>
     <message>
         <location filename="../../tag/tagdialog.ui" line="41"/>
         <source>Insert</source>
-        <translation>插入</translation>
+        <translation>新建</translation>
     </message>
     <message>
         <location filename="../../tag/tagdialog.ui" line="64"/>
