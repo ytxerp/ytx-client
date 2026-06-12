@@ -31,8 +31,8 @@ public:
 
 private:
     CBoolString& map_;
-    CString& true_color_;
-    CString& false_color_;
+    CString true_color_ {};
+    CString false_color_ {};
 };
 
 #endif // BOOLCOLORSTRINGR_H

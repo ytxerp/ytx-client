@@ -17,6 +17,6 @@ void BoolColorStringR::paint(QPainter* painter, const QStyleOptionViewItem& opti
         return;
     }
 
-    const QString& color { key ? true_color_ : false_color_ };
+    const QColor color { key ? true_color_ : false_color_ };
     PaintColorText(it.value(), color, painter, option, index, Qt::AlignCenter);
 }
