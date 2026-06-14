@@ -1205,7 +1205,7 @@
         <location filename="../../mainwindow/mainwindow.ui" line="428"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="127"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="133"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="142"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="140"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
@@ -1338,7 +1338,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="691"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="153"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="151"/>
         <source>Period Close</source>
         <translation>结转</translation>
     </message>
@@ -1472,7 +1472,7 @@
         <translation>财务版块已存在记录，无法更改基准币种。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="178"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="181"/>
         <source>Unsaved Data</source>
         <translation>未保存的数据</translation>
     </message>
@@ -1487,7 +1487,7 @@
         <translation>语言已更改，请重启应用程序以使更改生效。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="178"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="181"/>
         <source>This page contains unsaved data.
 
 Do you want to save before closing?</source>
@@ -2497,20 +2497,20 @@ You need to recall it first before making changes.</source>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="124"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="129"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="140"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="138"/>
         <source>Insert</source>
         <translation>新建</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="125"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="130"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="141"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="139"/>
         <source>Update</source>
         <translation>变更</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="126"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="151"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="149"/>
         <source>Recall</source>
         <translation>撤回</translation>
     </message>
@@ -2526,63 +2526,53 @@ You need to recall it first before making changes.</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="134"/>
-        <source>Delete P</source>
-        <translation>删除 合作</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="135"/>
         <source>Delete O</source>
         <translation>删除 订单</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="136"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="135"/>
         <source>Replace</source>
         <translation>替换</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="138"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="136"/>
         <source>Direction Rule Update</source>
         <translation>规则变更</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="143"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="141"/>
         <source>Linked Node Update</source>
         <translation>关联节点变更</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="144"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="142"/>
         <source>Rate Update</source>
         <translation>比率变更</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="145"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="143"/>
         <source>Numeric Update</source>
         <translation>数值变更</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="147"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="145"/>
         <source>Insert Save</source>
         <translation>新建保存</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="148"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="146"/>
         <source>Update Save</source>
         <translation>修改保存</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="149"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="147"/>
         <source>Insert Release</source>
         <translation>新建提交</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="150"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="148"/>
         <source>Update Release</source>
         <translation>修改提交</translation>
-    </message>
-    <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="137"/>
-        <source>Branch Delete</source>
-        <translation>枝节点删除</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_statement.cc" line="116"/>
