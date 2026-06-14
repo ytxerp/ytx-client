@@ -119,6 +119,8 @@ void MainWindow::tabWidget_currentChanged()
     ui->actionMarkNone->setEnabled(is_table_fipt || is_statement_entry);
     ui->actionMarkToggle->setEnabled(is_table_fipt || is_statement_entry);
 
+    ui->actionJumpEntry->setEnabled(is_table_fipt || is_table_o);
+
     ui->actionStatement->setEnabled(is_order_section);
     ui->actionSettlement->setEnabled(is_order_section);
     ui->actionNewBranch->setEnabled(is_tree_o);
