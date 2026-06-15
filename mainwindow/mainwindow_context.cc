@@ -34,6 +34,7 @@ void MainWindow::SetAction(bool enable) const
     ui->actionSettlement->setEnabled(enable);
     ui->actionClearColor->setEnabled(enable);
     ui->actionNewBranch->setEnabled(enable);
+    ui->actionJumpEntry->setEnabled(enable);
 }
 
 void MainWindow::UpdateAccountInfo(const QString& workspace, const QString& name, const QString& expire_date)

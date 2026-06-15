@@ -213,6 +213,9 @@ void MainWindow::on_actionJumpEntry_triggered()
     const auto linked_node_id { index.sibling(row, linked_node_column).data().toUuid() };
     if (linked_node_id.isNull()) {
         const QModelIndex linked_node_index { index.sibling(row, linked_node_column) };
+        if (index == linked_node_index) // already on the linked node column, already editing
+            return;
+
         leaf_widget->View()->setCurrentIndex(linked_node_index);
         leaf_widget->View()->edit(linked_node_index);
         return;

@@ -33,7 +33,7 @@ void TableModel::RDirectionRule(bool value)
 
 void TableModel::RRefreshStatus()
 {
-    const int column { std::to_underlying(EntryEnum::kStatus) };
+    const int column { entry::StatusColumn(section_) };
     EmitDataChanged(0, rowCount() - 1, column, column);
 }
 
@@ -114,7 +114,7 @@ void TableModel::ActionEntry(Mark mark)
         }
     }
 
-    const int column { std::to_underlying(EntryEnum::kStatus) };
+    const int column { entry::StatusColumn(section_) };
     EmitDataChanged(0, rowCount() - 1, column, column);
 }
 

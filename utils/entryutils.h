@@ -163,6 +163,24 @@ constexpr int BalanceColumn(Section section)
     Q_UNREACHABLE();
 }
 
+constexpr int StatusColumn(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+        return std::to_underlying(EntryEnumF::kStatus);
+    case Section::kTask:
+    case Section::kInventory:
+        return std::to_underlying(EntryEnum::kStatus);
+    case Section::kPartner:
+        return std::to_underlying(EntryEnumP::kStatus);
+    case Section::kSale:
+    case Section::kPurchase:
+        return -1;
+    }
+
+    Q_UNREACHABLE();
+}
+
 constexpr std::pair<int, int> CacheColumnRange(Section section)
 {
     switch (section) {

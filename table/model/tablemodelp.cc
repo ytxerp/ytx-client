@@ -114,32 +114,6 @@ QModelIndex TableModelP::GetIndex(const QUuid& entry_id) const
     return QModelIndex();
 }
 
-void TableModelP::ActionEntry(Mark mark)
-{
-    if (entry_list_.isEmpty())
-        return;
-
-    const QJsonObject message { JsonGen::BatchMark(section_, node_id_, std::to_underlying(mark)) };
-    WebSocket::Instance()->SendMessage(WsKey::kBatchMark, message);
-
-    for (auto* entry : std::as_const(entry_list_)) {
-        switch (mark) {
-        case Mark::kSelect:
-            entry->status = std::to_underlying(Status::kMarked);
-            break;
-        case Mark::kClear:
-            entry->status = std::to_underlying(Status::kUnmarked);
-            break;
-        case Mark::kToggle:
-            entry->status ^= std::to_underlying(Status::kMarked);
-            break;
-        }
-    }
-
-    const int column { std::to_underlying(EntryEnumP::kStatus) };
-    EmitDataChanged(0, rowCount() - 1, column, column);
-}
-
 bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
 {
     if (value.isNull())

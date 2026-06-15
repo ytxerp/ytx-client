@@ -83,8 +83,8 @@ public:
 
     virtual QModelIndex GetIndex(const QUuid& entry_id) const;
     virtual Entry* GetEntry(const QModelIndex& index) const { return shadow_list_.at(index.row())->entry; }
-    virtual void ActionEntry(Mark mark);
 
+    void ActionEntry(Mark mark);
     void FlushCaches();
 
 protected:
