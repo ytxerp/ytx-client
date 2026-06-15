@@ -47,6 +47,8 @@ void MainWindow::on_actionSignOut_triggered()
     UserProfile::Instance().Reset();
 
     SetAction(false);
+    SetLoginAction(false);
+
     utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
     utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
 }
@@ -133,6 +135,7 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
 
     {
         utils::SetLoginStatus(login_label_, LoginStatus::LoggedIn);
+        SetLoginAction(true);
     }
 }
 

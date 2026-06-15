@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget* parent)
     SetIcon();
     SetUniqueConnection();
     SetAction(false);
+    SetLoginAction(false);
 
     utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
     utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);

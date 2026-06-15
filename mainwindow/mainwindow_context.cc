@@ -37,6 +37,21 @@ void MainWindow::SetAction(bool enable) const
     ui->actionJumpEntry->setEnabled(enable);
 }
 
+void MainWindow::SetLoginAction(bool enable) const
+{
+    ui->actionSearch->setEnabled(enable);
+    ui->actionTags->setEnabled(enable);
+    ui->actionPeriodClose->setEnabled(enable);
+    ui->actionBalanceSheet->setEnabled(enable);
+    ui->actionCashFlowStatement->setEnabled(enable);
+    ui->actionIncomeStatement->setEnabled(enable);
+    ui->actionHeatInventory->setEnabled(enable);
+    ui->actionHeatPartner->setEnabled(enable);
+    ui->actionProfile->setEnabled(enable);
+    ui->actionWorkspaceMember->setEnabled(enable);
+    ui->actionAuditLog->setEnabled(enable);
+}
+
 void MainWindow::UpdateAccountInfo(const QString& workspace, const QString& name, const QString& expire_date)
 {
     ui->actionName->setText(tr("Name", "Person") + ": " + name);
