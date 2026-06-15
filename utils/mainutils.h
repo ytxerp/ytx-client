@@ -7,7 +7,6 @@
 #include <QDir>
 #include <QIcon>
 #include <QProcess>
-#include <QSslSocket>
 
 namespace utils {
 
