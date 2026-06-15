@@ -112,8 +112,7 @@ protected:
         return false;
     }
 
-    virtual void AccumulateBalance(int start);
-
+    void AccumulateBalance(int start);
     void RestartTimer(const QUuid& id, int version);
     double CalculateBalance(EntryShadow* shadow) const
     {
