@@ -21,7 +21,6 @@
 #define NODE_H
 
 #include <QJsonObject>
-#include <QStringList>
 #include <QUuid>
 
 #include "enum/nodeenum.h"

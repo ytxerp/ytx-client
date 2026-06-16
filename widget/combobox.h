@@ -20,7 +20,6 @@
 #ifndef COMBOBOX_H
 #define COMBOBOX_H
 
-#include <QAbstractItemView>
 #include <QApplication>
 #include <QComboBox>
 #include <QCompleter>

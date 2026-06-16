@@ -21,7 +21,6 @@
 #define SETTLEMENT_H
 
 #include <QJsonObject>
-#include <QStringList>
 #include <QUuid>
 
 #include "settlementenum.h"

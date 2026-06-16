@@ -20,10 +20,9 @@
 #ifndef MAINWINDOWUTILS_H
 #define MAINWINDOWUTILS_H
 
-#include <QtWidgets/qradiobutton.h>
-
 #include <QLabel>
 #include <QMessageBox>
+#include <QRadioButton>
 #include <QSettings>
 
 #include "component/sectioncontex.h"
