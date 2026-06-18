@@ -17,7 +17,6 @@
 #include "component/signalblocker.h"
 #include "dialog/about.h"
 #include "dialog/preferences.h"
-#include "document.h"
 #include "global/tablesstation.h"
 #include "ui_mainwindow.h"
 #include "utils/mainwindowutils.h"
@@ -663,64 +662,6 @@ void MainWindow::RSectionGroup(int id)
     tabWidget_currentChanged();
 
     utils::SwitchDialog(sc_, true);
-}
-
-void MainWindow::on_actionExportExcel_triggered()
-{
-    CString& source {};
-
-    QString destination { QFileDialog::getSaveFileName(this, tr("Export Excel"), QDir::homePath(), QStringLiteral("*.xlsx")) };
-    if (!utils::PrepareNewFile(destination, kDotSuffixXLSX))
-        return;
-
-    auto future = QtConcurrent::run([source, destination, this]() {
-        // QSqlDatabase source_db;
-        // if (!PublicUtils::AddDatabase(source_db, source, kSourceConnection))
-        //     return false;
-
-        try {
-            const QStringList list { tr("Ancestor"), tr("Descendant"), tr("Distance") };
-
-            YXlsx::Document d(destination);
-
-            auto book1 { d.GetWorkbook() };
-            book1->AppendSheet(sc_->info.node);
-            book1->GetCurrentWorksheet()->WriteRow(1, 1, sc_->info.node_header);
-            utils::ExportExcel(sc_->info.node, book1->GetCurrentWorksheet());
-
-            book1->AppendSheet(sc_->info.path);
-            book1->GetCurrentWorksheet()->WriteRow(1, 1, list);
-            utils::ExportExcel(sc_->info.path, book1->GetCurrentWorksheet(), false);
-
-            book1->AppendSheet(sc_->info.entry);
-            book1->GetCurrentWorksheet()->WriteRow(1, 1, sc_->info.full_entry_header);
-            const bool where { start_ != Section::kPartner };
-            utils::ExportExcel(sc_->info.entry, book1->GetCurrentWorksheet(), where);
-
-            d.Save();
-            // PublicUtils::RemoveDatabase(kSourceConnection);
-            return true;
-        } catch (...) {
-            qWarning() << "Export failed due to an unknown exception.";
-            // PublicUtils::RemoveDatabase(kSourceConnection);
-            return false;
-        }
-    });
-
-    auto* watcher = new QFutureWatcher<bool>(this);
-    connect(watcher, &QFutureWatcher<bool>::finished, this, [watcher, destination]() {
-        watcher->deleteLater();
-
-        bool success { watcher->future().result() };
-        if (success) {
-            utils::ShowNotification(QMessageBox::Information, tr("Export Completed"), tr("Export completed successfully."), time_const::kAutoCloseMs);
-        } else {
-            QFile::remove(destination);
-            utils::ShowNotification(QMessageBox::Critical, tr("Export Failed"), tr("Export failed. The file has been deleted."), time_const::kAutoCloseMs);
-        }
-    });
-
-    watcher->setFuture(future);
 }
 
 void MainWindow::on_actionCheckUpdates_triggered()

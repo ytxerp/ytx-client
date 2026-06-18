@@ -86,7 +86,6 @@ private slots:
     void on_actionWorkspaceMember_triggered();
 
     void on_actionCheckUpdates_triggered();
-    void on_actionExportExcel_triggered();
 
     void on_actionStatement_triggered();
     void on_actionSettlement_triggered();

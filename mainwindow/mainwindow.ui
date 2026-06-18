@@ -529,14 +529,6 @@
     <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="actionExportExcel">
-   <property name="text">
-    <string>Export Excel...</string>
-   </property>
-   <property name="toolTip">
-    <string>Export Excel</string>
-   </property>
-  </action>
   <action name="actionStatement">
    <property name="text">
     <string>Statement</string>

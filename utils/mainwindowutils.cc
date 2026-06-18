@@ -27,41 +27,6 @@ bool utils::PrepareNewFile(QString& file_path, CString& suffix)
     return true;
 }
 
-void utils::ExportExcel(CString& table, const QSharedPointer<YXlsx::Worksheet>& worksheet, bool where)
-{
-    if (!worksheet) {
-        return;
-    }
-
-    // QSqlDatabase source_db { PublicUtils::GetDatabase(kSourceConnection) };
-    // if (!source_db.isValid())
-    //     return;
-
-    // QSqlQuery source_query(source_db);
-    // QString select_query { QString("SELECT * FROM %1 WHERE is_valid = TRUE;").arg(table) };
-
-    // if (!where)
-    //     select_query = QString("SELECT * FROM %1;").arg(table);
-
-    // if (!source_query.exec(select_query)) {
-    //     qDebug() << "Failed to execute SELECT query for table in ExportExcel" << source_query.lastError().text();
-    //     return;
-    // }
-
-    // const int column { source_query.record().count() };
-    // QList<QVariantList> list(column);
-
-    // while (source_query.next()) {
-    //     for (int col = 0; col != column; ++col) {
-    //         list[col].append(source_query.value(col));
-    //     }
-    // }
-
-    // for (int col = 0; col != column; ++col) {
-    //     worksheet->WriteColumn(2, col + 1, list.at(col));
-    // }
-}
-
 void utils::ShowNotification(QMessageBox::Icon icon, CString& title, CString& text, int duration_ms, QMessageBox::StandardButtons buttons, QWidget* parent)
 {
     assert(duration_ms >= 0);
