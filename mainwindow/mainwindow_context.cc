@@ -29,7 +29,6 @@ void MainWindow::SetAction(bool enable) const
     ui->actionInsertNode->setEnabled(enable);
     ui->actionDelete->setEnabled(enable);
     ui->actionAppendEntry->setEnabled(enable);
-    ui->actionExportExcel->setEnabled(enable);
     ui->actionStatement->setEnabled(enable);
     ui->actionSettlement->setEnabled(enable);
     ui->actionClearColor->setEnabled(enable);
