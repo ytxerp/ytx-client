@@ -175,9 +175,12 @@
  </widget>
  <tabstops>
   <tabstop>lineEditNode</tabstop>
+  <tabstop>lineEditEntry</tabstop>
   <tabstop>rBtnNode</tabstop>
   <tabstop>rBtnEntry</tabstop>
   <tabstop>pBtnClose</tabstop>
+  <tabstop>searchViewNode</tabstop>
+  <tabstop>searchViewEntry</tabstop>
  </tabstops>
  <resources/>
  <connections>

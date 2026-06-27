@@ -142,6 +142,16 @@
    <header location="global">widget/spinbox.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>comboBoxAsset</tabstop>
+  <tabstop>comboBoxLiability</tabstop>
+  <tabstop>comboBoxEquity</tabstop>
+  <tabstop>spinBoxLevel</tabstop>
+  <tabstop>dateTimeEditStart</tabstop>
+  <tabstop>dateTimeEditEnd</tabstop>
+  <tabstop>pushButtonFetch</tabstop>
+  <tabstop>treeView</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

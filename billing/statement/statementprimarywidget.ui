@@ -132,6 +132,15 @@
    <header location="global">widget/datetimeedit.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>start</tabstop>
+  <tabstop>end</tabstop>
+  <tabstop>rBtnIS</tabstop>
+  <tabstop>rBtnMS</tabstop>
+  <tabstop>rBtnPEND</tabstop>
+  <tabstop>pBtnFetch</tabstop>
+  <tabstop>tableView</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

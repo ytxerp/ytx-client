@@ -26,7 +26,7 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <property name="spacing">
+   <property name="verticalSpacing">
     <number>0</number>
    </property>
    <item row="0" column="0">
@@ -139,6 +139,16 @@
    <header location="global">widget/datetimeedit.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>start</tabstop>
+  <tabstop>end</tabstop>
+  <tabstop>rBtnIS</tabstop>
+  <tabstop>rBtnMS</tabstop>
+  <tabstop>rBtnPEND</tabstop>
+  <tabstop>pBtnExport</tabstop>
+  <tabstop>pBtnFetch</tabstop>
+  <tabstop>tableView</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
