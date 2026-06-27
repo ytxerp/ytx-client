@@ -101,13 +101,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="pushButtonExport">
-        <property name="text">
-         <string>Export</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -140,7 +133,6 @@
   <tabstop>dateTimeEditStart</tabstop>
   <tabstop>dateTimeEditEnd</tabstop>
   <tabstop>pushButtonFetch</tabstop>
-  <tabstop>pushButtonExport</tabstop>
   <tabstop>treeView</tabstop>
  </tabstops>
  <resources/>
