@@ -1,7 +1,7 @@
 ---
 # Minimal noise configuration for Qt projects
-Checks: >
-  -*,
+# 使用单引号并用逗号和换行连接，防止 YAML 块指示符解析出错
+Checks: '-*,
   bugprone-assert-side-effect,
   bugprone-dangling-handle,
   bugprone-inaccurate-erase,
@@ -31,7 +31,7 @@ Checks: >
   readability-container-size-empty,
   readability-redundant-string-cstr,
   readability-simplify-boolean-expr,
-  readability-string-compare
+  readability-string-compare'
 
 WarningsAsErrors: ''
 
@@ -39,7 +39,7 @@ WarningsAsErrors: ''
 HeaderFilterRegex: '^(src|include|tree|table|billing|global)/.*'
 
 CheckOptions:
-  - key: modernize-use-nullptr.NullMacros
-    value: 'NULL,Q_NULLPTR'
-  - key: performance-unnecessary-value-param.AllowedTypes
-    value: 'QString;QStringView;QByteArray;QVariant;QModelIndex;QPersistentModelIndex;QPoint;QPointF;QSize;QSizeF;QRect;QRectF;QUrl;QColor;QFont;QBrush;QPen'
+  - key:             modernize-use-nullptr.NullMacros
+    value:           'NULL,Q_NULLPTR'
+  - key:             performance-unnecessary-value-param.AllowedTypes
+    value:           'QString;QStringView;QByteArray;QVariant;QModelIndex;QPersistentModelIndex;QPoint;QPointF;QSize;QSizeF;QRect;QRectF;QUrl;QColor;QFont;QBrush;QPen'
