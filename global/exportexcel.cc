@@ -44,7 +44,7 @@ bool ExportExcel::Statement(EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CS
     const double cbalance { total.value("cbalance").toString().toDouble() };
 
     // Create excel document
-    YXlsx::Document d(path);
+    yxlsx::Document d(path);
     auto book { d.GetWorkbook() };
     if (!book)
         return false;
