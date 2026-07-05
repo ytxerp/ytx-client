@@ -33,15 +33,12 @@ void LeafPathBranchPathModel(CUuidString& leaf, CUuidString& branch, ItemModel* 
 
 void RemoveItem(ItemModel* model, const QUuid& node_id)
 {
-    Q_ASSERT(model != nullptr);
+    Q_ASSERT(model);
     Q_ASSERT(!node_id.isNull());
 
-    for (int row = 0; row != model->rowCount(); ++row) {
-        if (model->ItemData(row, Qt::UserRole).toUuid() == node_id) {
-            model->RemoveItem(row);
-            return;
-        }
-    }
+    const int row { model->FindRow(node_id) };
+    if (row != -1)
+        model->removeRows(row);
 }
 
 void UpdateModel(const QHash<QUuid, QString>& leaf_path, ItemModel* leaf_path_model, const Node* node)
@@ -97,11 +94,15 @@ void UpdateModelFunction(ItemModel* model, const QSet<QUuid>& update_range, CUui
     if (update_range.isEmpty() || source_path.isEmpty())
         return;
 
-    for (int row = 0; row != model->rowCount(); ++row) {
-        auto id { model->ItemData(row, Qt::UserRole).toUuid() };
+    for (const QUuid& id : update_range) {
+        const int row { model->FindRow(id) };
+        if (row == -1)
+            continue;
 
-        if (update_range.contains(id)) {
-            model->SetDisplay(row, source_path.value(id, QString {}));
+        const QString value { source_path.value(id, QString {}) };
+        if (!value.isEmpty()) {
+            const QModelIndex index { model->index(row, 0) };
+            model->setData(index, value, Qt::EditRole);
         }
     }
 }

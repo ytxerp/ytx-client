@@ -7,13 +7,59 @@ ItemModel::ItemModel(QObject* parent)
 
 QModelIndex ItemModel::index(int row, int column, const QModelIndex& parent) const
 {
-    if (parent.isValid() || row < 0 || row >= items_.size() || column != 0)
-        return {};
+    if (!hasIndex(row, column, parent))
+        return QModelIndex();
 
     return createIndex(row, column);
 }
 
-QVariant ItemModel::data(const QModelIndex& index, int role) const { return ItemData(index.row(), role); }
+QVariant ItemModel::data(const QModelIndex& index, int role) const
+{
+    if (!index.isValid() || index.column() != 0)
+        return {};
+
+    const int row { index.row() };
+    if (row < 0 || row >= items_.size())
+        return {};
+
+    const Item& item { items_[row] };
+
+    switch (role) {
+    case Qt::DisplayRole:
+    case Qt::EditRole:
+        return item.display;
+
+    case Qt::UserRole:
+        return item.user;
+
+    default:
+        return {};
+    }
+}
+
+bool ItemModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    if (!index.isValid() || index.column() != 0)
+        return false;
+
+    if (role != Qt::EditRole)
+        return false;
+
+    const int row { index.row() };
+    if (row < 0 || row >= items_.size())
+        return false;
+
+    Item& item { items_[row] };
+
+    const QString new_value { value.toString() };
+    if (item.display == new_value)
+        return false;
+
+    item.display = new_value;
+
+    emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
+    return true;
+}
 
 void ItemModel::sort(int column, Qt::SortOrder order)
 {
@@ -25,50 +71,36 @@ void ItemModel::sort(int column, Qt::SortOrder order)
         = [order](const Item& lhs, const Item& rhs) { return (order == Qt::AscendingOrder) ? (lhs.display < rhs.display) : (lhs.display > rhs.display); };
 
     emit layoutAboutToBeChanged();
-    std::sort(items_.begin(), items_.end(), compare);
+    std::ranges::sort(items_, compare);
     emit layoutChanged();
 }
 
-QVariant ItemModel::ItemData(int row, int role) const
+bool ItemModel::removeRows(int row, int count, const QModelIndex& parent)
 {
+    if (parent.isValid())
+        return false;
+
+    if (count != 1)
+        return false;
+
     if (row < 0 || row >= items_.size())
-        return {};
+        return false;
 
-    const Item& item { items_.at(row) };
+    beginRemoveRows(parent, row, row);
 
-    switch (role) {
-    case Qt::DisplayRole:
-    case Qt::EditRole:
-        return item.display;
-    case Qt::UserRole:
-        return item.user;
-    default:
-        return {};
-    }
+    items_.removeAt(row);
+
+    endRemoveRows();
+
+    return true;
 }
 
-void ItemModel::AppendItem(const QString& display, const QVariant& user)
+void ItemModel::AppendItem(const QString& display, const QUuid& user)
 {
     const long long row { items_.size() };
     beginInsertRows(QModelIndex(), row, row);
     items_.emplace_back(Item { display, user });
     endInsertRows();
-}
-
-void ItemModel::RemoveItem(int row)
-{
-    beginRemoveRows(QModelIndex(), row, row);
-    items_.removeAt(row);
-    endRemoveRows();
-}
-
-void ItemModel::SetDisplay(int row, const QString& display)
-{
-    if (row < 0 || row >= items_.size() || items_[row].display == display)
-        return;
-
-    items_[row].display = display;
-    emit dataChanged(index(row, 0), index(row, 0), { Qt::DisplayRole });
 }
 
 void ItemModel::Reset()
@@ -95,4 +127,14 @@ void ItemModel::UpdateSeparator(const QString& old_separator, const QString& new
         const QModelIndex bottom { index(rowCount() - 1, 0) };
         emit dataChanged(top, bottom, { Qt::DisplayRole, Qt::EditRole });
     }
+}
+
+int ItemModel::FindRow(const QUuid& id) const
+{
+    for (int row = 0; row != items_.size(); ++row) {
+        if (items_[row].user == id)
+            return row;
+    }
+
+    return -1;
 }

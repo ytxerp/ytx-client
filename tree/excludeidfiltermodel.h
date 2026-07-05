@@ -23,8 +23,6 @@
 #include <QSortFilterProxyModel>
 #include <QUuid>
 
-#include "tree/itemmodel.h"
-
 class ExcludeIdFilterModel final : public QSortFilterProxyModel {
 public:
     explicit ExcludeIdFilterModel(const QUuid& node_id, QObject* parent = nullptr)
@@ -34,13 +32,10 @@ public:
     }
 
 protected:
-    bool filterAcceptsRow(int source_row, const QModelIndex& /*source_parent*/) const override
+    bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const override
     {
-        auto* model { sourceModel() };
-        Q_ASSERT(qobject_cast<ItemModel*>(model));
-
-        auto* item_model { static_cast<ItemModel*>(model) };
-        auto id { item_model->ItemData(source_row, Qt::UserRole).toUuid() };
+        const QModelIndex index { sourceModel()->index(source_row, 0, source_parent) };
+        const QUuid id { index.data(Qt::UserRole).toUuid() };
 
         return id != node_id_;
     }
