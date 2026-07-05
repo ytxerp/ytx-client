@@ -295,6 +295,7 @@ set(HEADERS
     delegate/readonly/cashflownamer.h
     delegate/readonly/percentagedelegater.h
     global/entryshadowpool.h
+    table/unitmodel.h
 )
 
 set(SOURCES
@@ -479,6 +480,7 @@ set(SOURCES
     delegate/readonly/cashflownamer.cc
     mainwindow/mainwindow_header.cc
     delegate/readonly/percentagedelegater.cc
+    table/unitmodel.cc
 )
 
 set(UIS

@@ -25,7 +25,7 @@ InsertNodeI::InsertNodeI(CNodeInsertArg& arg, int rate_decimal, QWidget* parent)
 
 InsertNodeI::~InsertNodeI() { delete ui; }
 
-void InsertNodeI::IniDialog(ItemModel* unit_model, int amount_decimal)
+void InsertNodeI::IniDialog(UnitModel* unit_model, int amount_decimal)
 {
     ui->lineEditName->setFocus();
     ui->lineEditName->setValidator(&LineEdit::kInputValidator);

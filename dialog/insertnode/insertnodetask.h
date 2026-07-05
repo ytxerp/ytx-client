@@ -49,7 +49,7 @@ private slots:
     void on_comboUnit_currentIndexChanged(int index);
 
 private:
-    void IniDialog(ItemModel* unit_model);
+    void IniDialog(UnitModel* unit_model);
     void IniData(Node* node);
     void IniConnect();
     void IniKindGroup();

@@ -51,7 +51,7 @@ private slots:
     void on_comboUnit_currentIndexChanged(int index);
 
 private:
-    void IniDialog(ItemModel* unit_model, int amount_decimal);
+    void IniDialog(UnitModel* unit_model, int amount_decimal);
     void IniConnect();
     void IniData(Node* node);
     void IniKindGroup();

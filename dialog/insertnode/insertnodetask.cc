@@ -24,7 +24,7 @@ InsertNodeTask::InsertNodeTask(CNodeInsertArg& arg, QWidget* parent)
 
 InsertNodeTask::~InsertNodeTask() { delete ui; }
 
-void InsertNodeTask::IniDialog(ItemModel* unit_model)
+void InsertNodeTask::IniDialog(UnitModel* unit_model)
 {
     ui->lineEditName->setFocus();
     ui->lineEditName->setValidator(&LineEdit::kInputValidator);

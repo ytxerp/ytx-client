@@ -20,12 +20,12 @@
 #ifndef NODEINSERTARG_H
 #define NODEINSERTARG_H
 
-#include "tree/itemmodel.h"
+#include "table/unitmodel.h"
 #include "tree/node.h"
 
 struct NodeInsertArg {
     Node* node {};
-    ItemModel* unit_model {};
+    UnitModel* unit_model {};
     QString parent_path {};
     QSet<QString> name_set {};
 };

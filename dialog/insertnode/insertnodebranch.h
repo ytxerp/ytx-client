@@ -24,7 +24,7 @@
 #include <QDialog>
 
 #include "component/using.h"
-#include "tree/itemmodel.h"
+#include "table/unitmodel.h"
 #include "tree/node.h"
 
 namespace Ui {
@@ -35,7 +35,7 @@ class InsertNodeBranch final : public QDialog {
     Q_OBJECT
 
 public:
-    InsertNodeBranch(Node* node, ItemModel* unit_model, CString& parent_path, const QSet<QString>& name_set, QWidget* parent = nullptr);
+    InsertNodeBranch(Node* node, UnitModel* unit_model, CString& parent_path, const QSet<QString>& name_set, QWidget* parent = nullptr);
     ~InsertNodeBranch() override;
 
 private slots:
@@ -48,7 +48,7 @@ private slots:
     void on_comboUnit_currentIndexChanged(int index);
 
 private:
-    void IniDialog(ItemModel* unit_model);
+    void IniDialog(UnitModel* unit_model);
     void IniData(Node* node);
     void IniConnect();
 

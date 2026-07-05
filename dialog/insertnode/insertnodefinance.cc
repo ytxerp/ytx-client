@@ -24,7 +24,7 @@ InsertNodeFinance::InsertNodeFinance(CNodeInsertArg& arg, QWidget* parent)
 
 InsertNodeFinance::~InsertNodeFinance() { delete ui; }
 
-void InsertNodeFinance::IniDialog(ItemModel* unit_model)
+void InsertNodeFinance::IniDialog(UnitModel* unit_model)
 {
     ui->lineName->setFocus();
     ui->lineName->setValidator(&LineEdit::kInputValidator);

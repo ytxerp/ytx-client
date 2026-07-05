@@ -27,7 +27,7 @@
 
 #include "component/using.h"
 #include "global/collator.h"
-#include "tree/itemmodel.h"
+#include "table/unitmodel.h"
 
 template <typename T>
 concept InheritQAbstractItemView = std::is_base_of_v<QAbstractItemView, T>;
@@ -88,9 +88,9 @@ template <typename Derived, typename Base> const Derived* DerivedPtr(const Base*
     return static_cast<const Derived*>(base);
 }
 
-template <MapType T> ItemModel* CreateModelFromMap(const T& map, QObject* parent)
+template <MapType T> UnitModel* CreateModelFromMap(const T& map, QObject* parent)
 {
-    auto* model { new ItemModel(parent) };
+    auto* model { new UnitModel(parent) };
 
     for (auto it = map.constBegin(); it != map.constEnd(); ++it) {
         model->AppendItem(it.value(), it.key());

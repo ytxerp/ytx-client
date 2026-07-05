@@ -21,11 +21,11 @@
 #define INTSTRINGNONEZERO_H
 
 #include "delegate/styleditemdelegate.h"
-#include "tree/itemmodel.h"
+#include "table/unitmodel.h"
 
 class IntStringNoneZero final : public StyledItemDelegate {
 public:
-    explicit IntStringNoneZero(ItemModel* model, CIntString& map, QObject* parent = nullptr);
+    explicit IntStringNoneZero(UnitModel* model, CIntString& map, QObject* parent = nullptr);
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
@@ -33,7 +33,7 @@ public:
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    ItemModel* model_ {};
+    UnitModel* model_ {};
     CIntString& map_;
 };
 

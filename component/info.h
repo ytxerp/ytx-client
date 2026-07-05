@@ -25,7 +25,7 @@
 #include <QStringList>
 
 #include "enum/section.h"
-#include "tree/itemmodel.h"
+#include "table/unitmodel.h"
 
 struct SectionInfo {
     Section section {};
@@ -46,8 +46,8 @@ struct SectionInfo {
     QMap<int, QString> kind_map {};
     QMap<int, QString> cash_kind_map {};
 
-    QPointer<ItemModel> unit_model {};
-    QPointer<ItemModel> cash_kind_model {};
+    QPointer<UnitModel> unit_model {};
+    QPointer<UnitModel> cash_kind_model {};
 };
 
 using CSectionInfo = const SectionInfo;

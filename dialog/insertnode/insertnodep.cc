@@ -22,7 +22,7 @@ InsertNodeP::InsertNodeP(CNodeInsertArg& arg, QWidget* parent)
 
 InsertNodeP::~InsertNodeP() { delete ui; }
 
-void InsertNodeP::IniDialog(ItemModel* unit_model)
+void InsertNodeP::IniDialog(UnitModel* unit_model)
 {
     ui->lineEditName->setFocus();
     ui->lineEditName->setValidator(&LineEdit::kInputValidator);

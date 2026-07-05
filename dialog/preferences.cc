@@ -31,7 +31,7 @@ Preferences::Preferences(CTreeModel* model, CSectionInfo& info, CAppConfig& app,
 
 Preferences::~Preferences() { delete ui; }
 
-void Preferences::IniDialog(ItemModel* unit_model, Section section)
+void Preferences::IniDialog(UnitModel* unit_model, Section section)
 {
     ui->listWidget->setCurrentRow(0);
     ui->stackedWidget->setCurrentIndex(0);

@@ -3,7 +3,7 @@
 #include "component/signalblocker.h"
 #include "ui_insertnodebranch.h"
 
-InsertNodeBranch::InsertNodeBranch(Node* node, ItemModel* unit_model, CString& parent_path, const QSet<QString>& name_set, QWidget* parent)
+InsertNodeBranch::InsertNodeBranch(Node* node, UnitModel* unit_model, CString& parent_path, const QSet<QString>& name_set, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::InsertNodeBranch)
     , node_ { node }
@@ -20,7 +20,7 @@ InsertNodeBranch::InsertNodeBranch(Node* node, ItemModel* unit_model, CString& p
 
 InsertNodeBranch::~InsertNodeBranch() { delete ui; }
 
-void InsertNodeBranch::IniDialog(ItemModel* unit_model)
+void InsertNodeBranch::IniDialog(UnitModel* unit_model)
 {
     ui->lineName->setFocus();
     ui->lineName->setValidator(&LineEdit::kInputValidator);
