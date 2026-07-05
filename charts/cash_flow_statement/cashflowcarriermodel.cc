@@ -157,7 +157,7 @@ void CashFlowCarrierModel::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    node::SortIterative(root_, Compare);
+    node::SortSubtree(root_, Compare);
     emit layoutChanged();
 }
 

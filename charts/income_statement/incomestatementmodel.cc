@@ -197,7 +197,7 @@ void IncomeStatementModel::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    node::SortIterative(net_profit_, Compare);
+    node::SortSubtree(net_profit_, Compare);
     emit layoutChanged();
 }
 

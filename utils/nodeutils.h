@@ -316,7 +316,7 @@ bool UpdateIssuedTime(QJsonObject& update, T* object, CString& field, const QDat
     return true;
 }
 
-template <TreeNode T, typename F> void SortIterative(T* node, F&& compare)
+template <TreeNode T, typename F> void SortSubtree(T* node, F&& compare)
 {
     Q_ASSERT(node != nullptr);
 
