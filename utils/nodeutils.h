@@ -329,7 +329,7 @@ template <TreeNode T, typename F> void SortIterative(T* node, F&& compare)
         if (current->children.isEmpty())
             continue;
 
-        std::sort(current->children.begin(), current->children.end(), compare);
+        std::ranges::sort(current->children, compare);
 
         for (T* child : std::as_const(current->children)) {
             queue.enqueue(child);

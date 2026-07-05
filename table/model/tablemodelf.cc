@@ -172,7 +172,7 @@ void TableModelF::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(shadow_list_.begin(), shadow_list_.end(), Compare);
+    std::ranges::sort(shadow_list_, Compare);
     emit layoutChanged();
 
     AccumulateBalance(0);

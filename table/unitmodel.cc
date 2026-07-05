@@ -7,8 +7,8 @@ UnitModel::UnitModel(QObject* parent)
 
 QModelIndex UnitModel::index(int row, int column, const QModelIndex& parent) const
 {
-    if (parent.isValid() || row < 0 || row >= items_.size() || column != 0)
-        return {};
+    if (!hasIndex(row, column, parent))
+        return QModelIndex();
 
     return createIndex(row, column);
 }
@@ -46,7 +46,7 @@ void UnitModel::sort(int column, Qt::SortOrder order)
         = [order](const Item& lhs, const Item& rhs) { return (order == Qt::AscendingOrder) ? (lhs.display < rhs.display) : (lhs.display > rhs.display); };
 
     emit layoutAboutToBeChanged();
-    std::sort(items_.begin(), items_.end(), compare);
+    std::ranges::sort(items_, compare);
     emit layoutChanged();
 }
 
