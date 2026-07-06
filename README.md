@@ -141,10 +141,6 @@ pacman -S mingw-w64-x86_64-zstd
   - macOS: `~/Library/Application Support/YTX`
   - Windows: `C:/Users/<USER>/AppData/Roaming/YTX`
 
-### Guide
-
-- [Inventory](tutorial/user/inventory.md)
-
 ## Support Me
 
 If YTX has been helpful to you, I'd be truly grateful for your support. Your encouragement helps me keep improving and creating!
