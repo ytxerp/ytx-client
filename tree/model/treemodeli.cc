@@ -143,7 +143,7 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
         node::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumI::kDirectionRule:
-        UpdateDirectionRule(node, value.toBool(), index);
+        UpdateDirectionRuleActive(node, value.toBool(), index);
         break;
     case NodeEnumI::kColor:
         node::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });

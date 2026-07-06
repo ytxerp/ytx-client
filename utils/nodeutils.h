@@ -20,6 +20,8 @@
 #ifndef NODEUTILS_H
 #define NODEUTILS_H
 
+#include <QQueue>
+
 #include "component/constantbool.h"
 #include "component/constantdouble.h"
 #include "component/constantint.h"

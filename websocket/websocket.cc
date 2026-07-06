@@ -1035,7 +1035,7 @@ void WebSocket::UpdateNodeDirectionRule(const QJsonObject& obj)
     auto tree_model { tree_model_hash_.value(section) };
 
     if (session_id != session_id_) {
-        tree_model->UpdateDirectionRule(node_id, direction_rule);
+        tree_model->UpdateDirectionRulePassive(node_id, direction_rule);
     }
 }
 

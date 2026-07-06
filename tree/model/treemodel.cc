@@ -20,7 +20,7 @@ TreeModel::TreeModel(CSectionInfo& info, CString& separator, QObject* parent)
     , section_ { info.section }
     , node_header_ { info.node_header }
 {
-    InitRoot(root_);
+    InitRoot();
 }
 
 TreeModel::~TreeModel()
@@ -225,7 +225,7 @@ void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
     EmitDataChanged(row, row, start, end, index.parent());
 }
 
-void TreeModel::UpdateDirectionRule(Node* node, bool value, const QModelIndex& index)
+void TreeModel::UpdateDirectionRuleActive(Node* node, bool value, const QModelIndex& index)
 {
     if (node->direction_rule == value)
         return;
@@ -233,10 +233,10 @@ void TreeModel::UpdateDirectionRule(Node* node, bool value, const QModelIndex& i
     QJsonObject message { JsonGen::NodeDirectionRule(section_, node->id, value) };
     WebSocket::Instance()->SendMessage(WsKey::kNodeDirectionRuleUpdate, message);
 
-    DirectionRuleImpl(node, value, index);
+    UpdateDirectionRuleLocal(node, value, index);
 }
 
-void TreeModel::UpdateDirectionRule(const QUuid& node_id, bool direction_rule)
+void TreeModel::UpdateDirectionRulePassive(const QUuid& node_id, bool direction_rule)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
@@ -248,13 +248,13 @@ void TreeModel::UpdateDirectionRule(const QUuid& node_id, bool direction_rule)
 
     const int row { index.row() };
 
-    DirectionRuleImpl(node, direction_rule, index);
+    UpdateDirectionRuleLocal(node, direction_rule, index);
 
     const int column { node::DirectionRuleColumn(section_) };
     EmitDataChanged(row, row, column, column, index.parent());
 }
 
-void TreeModel::DirectionRuleImpl(Node* node, bool value, const QModelIndex& index)
+void TreeModel::UpdateDirectionRuleLocal(Node* node, bool value, const QModelIndex& index)
 {
     node->InvertTotal();
     node->direction_rule = value;
@@ -1019,21 +1019,21 @@ void TreeModel::SortModel()
 // Initialize the root node.
 // Root is always represented by an empty QUuid as its ID.
 // Root always has direction_rule = true by definition.
-void TreeModel::InitRoot(Node*& root)
+void TreeModel::InitRoot()
 {
-    if (root == nullptr) {
-        root = NodePool::Instance().Allocate(section_);
-        root->kind = NodeKind::kBranch;
-        root->direction_rule = false;
-        root->name = QString();
-        root->id = QUuid();
+    if (root_ == nullptr) {
+        root_ = NodePool::Instance().Allocate(section_);
+        root_->kind = NodeKind::kBranch;
+        root_->direction_rule = false;
+        root_->name = QString();
+        root_->id = QUuid();
     }
 
-    if (!root) {
+    if (!root_) {
         qCritical() << "InitRoot: root node allocation failed!";
     }
 
-    Q_ASSERT(root != nullptr);
+    Q_ASSERT(root_ != nullptr);
 }
 
 void TreeModel::BuildHierarchy(const QJsonArray& path_array)

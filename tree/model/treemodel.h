@@ -17,6 +17,26 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// -----------------------------Naming convention------------------------------
+// Active / Passive / Local
+//
+// *Active   - Triggered by a local user action. Validates the change,
+//             sends the update to the remote peer via WebSocket, then
+//             applies the change locally (via the *Local counterpart).
+//
+// *Passive  - Triggered by an incoming remote message (e.g. WebSocket
+//             callback). Applies the change locally only; must NOT send
+//             another network message, to avoid update loops.
+//
+// *Local    - Shared implementation that actually mutates local state
+//             (model data, emits signals, refreshes UI). Contains no
+//             network I/O. Called by both *Active and *Passive.
+//
+// Rule of thumb: UI-triggered code paths call *Active; network-callback
+// code paths call *Passive. Neither should call *Local directly unless
+// they are implementing one of the two entry points above.
+// ---------------------------------------------------------------------------
+
 #ifndef TREEMODEL_H
 #define TREEMODEL_H
 
@@ -105,7 +125,7 @@ public:
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
     void DragNode(const QUuid& ancestor, const QUuid& descendant);
 
-    void UpdateDirectionRule(const QUuid& node_id, bool direction_rule);
+    void UpdateDirectionRulePassive(const QUuid& node_id, bool direction_rule);
     void SyncTotalArray(const QJsonArray& total_array);
 
     void DeleteNode(const QUuid& node_id);
@@ -156,35 +176,14 @@ public:
     QSortFilterProxyModel* ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent);
 
 protected:
-    void SortModel();
-
-    void InitRoot(Node*& root);
-
     void BuildHierarchy(const QJsonArray& path_array);
 
     void RestartTimer(const QUuid& id);
     void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent);
 
-    void UpdateDirectionRule(Node* node, bool value, const QModelIndex& index);
-    void DirectionRuleImpl(Node* node, bool value, const QModelIndex& index);
+    void UpdateDirectionRuleActive(Node* node, bool value, const QModelIndex& index);
 
     void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
-
-    QSet<QUuid> UpdateTotal(const QUuid& node_id, double initial_total, double final_total);
-
-    void RemoveUnitSet(const QUuid& node_id, NodeUnit unit)
-    {
-        if (auto* set = UnitSet(unit)) {
-            set->remove(node_id);
-        }
-    }
-
-    void InsertUnitSet(const QUuid& node_id, NodeUnit unit)
-    {
-        if (auto* set = UnitSet(unit)) {
-            set->insert(node_id);
-        }
-    }
 
     virtual void RegisterPath(Node* node);
     virtual void DeletePath(Node* node, Node* parent_node);
@@ -217,11 +216,32 @@ protected:
     }
 
 private:
+    void SortModel();
+    void InitRoot();
+
+    QString ConstructPath(const Node* node) const;
     void UpdatePath(const Node* node);
+
     QSet<QUuid> ExtractLeafIds(const Node* node) const;
     void SyncLeafModel(const QSet<QUuid>& leaf_ids) const;
 
-    QString ConstructPath(const Node* node) const;
+    QSet<QUuid> UpdateTotal(const QUuid& node_id, double initial_total, double final_total);
+
+    void UpdateDirectionRuleLocal(Node* node, bool value, const QModelIndex& index);
+
+    void RemoveUnitSet(const QUuid& node_id, NodeUnit unit)
+    {
+        if (auto* set = UnitSet(unit)) {
+            set->remove(node_id);
+        }
+    }
+
+    void InsertUnitSet(const QUuid& node_id, NodeUnit unit)
+    {
+        if (auto* set = UnitSet(unit)) {
+            set->insert(node_id);
+        }
+    }
 
 protected:
     Node* root_ {};
