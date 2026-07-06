@@ -20,8 +20,6 @@
 #ifndef TREEWIDGETO_H
 #define TREEWIDGETO_H
 
-#include <QTimer>
-
 #include "tree/model/treemodel.h"
 #include "treewidget.h"
 

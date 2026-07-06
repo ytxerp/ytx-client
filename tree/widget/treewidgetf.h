@@ -20,8 +20,6 @@
 #ifndef TREEWIDGETF_H
 #define TREEWIDGETF_H
 
-#include <QDoubleSpinBox>
-
 #include "component/config.h"
 #include "component/info.h"
 #include "tree/model/treemodel.h"
