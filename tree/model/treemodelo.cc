@@ -2,7 +2,6 @@
 
 #include <QJsonArray>
 
-#include "global/nodepool.h"
 #include "utils/nodeutils.h"
 #include "websocket/jsongen.h"
 
@@ -25,68 +24,13 @@ void TreeModelO::RNodeStatus(const QUuid& node_id, NodeStatus value)
     RefreshAffectedTotal(affected_ids);
 }
 
-void TreeModelO::AckTree(const QJsonObject& obj)
-{
-    const QJsonArray node_array { obj.value(kNodeArray).toArray() };
-    const QJsonArray path_array { obj.value(kPathArray).toArray() };
-
-    beginResetModel();
-
-    {
-        NodePool::Instance().Recycle(node_hash_, section_);
-        root_->children.clear();
-    }
-
-    for (const QJsonValue& val : node_array) {
-        const QJsonObject obj { val.toObject() };
-        Node* node { NodePool::Instance().Allocate(section_) };
-        node->ReadJson(obj);
-        node_hash_.insert(node->id, node);
-    }
-
-    BuildHierarchy(path_array);
-    HandleNode();
-
-    sort(std::to_underlying(NodeEnumO::kName), Qt::AscendingOrder);
-    endResetModel();
-}
-
-void TreeModelO::AckNode(const QJsonObject& leaf_obj, const QUuid& ancestor_id)
-{
-    auto* node = NodePool::Instance().Allocate(section_);
-    node->ReadJson(leaf_obj);
-
-    Node* ancestor { ancestor_id.isNull() ? root_ : node_hash_.value(ancestor_id) };
-
-    Q_ASSERT(ancestor);
-
-    const long long row { ancestor->children.size() };
-    const auto parent { GetIndex(ancestor_id) };
-
-    beginInsertRows(parent, row, row);
-    ancestor->children.insert(row, node);
-    node->parent = ancestor;
-    endInsertRows();
-
-    {
-        auto* d_node { DerivedPtr<NodeO>(node) };
-
-        if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kReleased) {
-            auto ids { UpdateAncestorTotal(
-                node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total) };
-
-            ids.remove(node->id);
-            RefreshAffectedTotal(ids);
-        }
-    }
-
-    node_hash_.insert(node->id, node);
-}
-
 void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
 {
     auto* node = GetNode(node_id);
     if (!node)
+        return;
+
+    if (node->kind != NodeKind::kBranch)
         return;
 
     const auto index { GetIndex(node_id) };
@@ -94,6 +38,7 @@ void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
         return;
 
     node->name = name;
+    RefreshPath(node);
 
     const int column { std::to_underlying(NodeEnumO::kName) };
     const int row { index.row() };
@@ -163,25 +108,62 @@ void TreeModelO::RecallSettlement(const QUuid& settlement_id)
     }
 }
 
-void TreeModelO::DeletePath(Node* node, Node* parent_node)
+void TreeModelO::RegisterPath(Node* node)
 {
+    // NOTE 1: In this section (Sale/Purchase), only branch nodes have a
+    // meaningful hierarchical path. Leaf nodes (orders) are displayed by
+    // their partner name rather than a path, so there is no leaf_path_
+    // entry to register here — unlike TreeModel::RegisterPath, which
+    // handles both branch and leaf kinds.
+    //
+    // NOTE 2: RegisterPath is also called inside the initialization loop
+    // (see InitTreeData / HandleNode), which iterates over every node in
+    // node_hash_ in an arbitrary order. At that point ancestor totals are
+    // separately initialized via InitAncestorTotal, so RegisterPath must
+    // remain a pure "register into path index" operation and must NOT
+    // trigger UpdateAncestorTotal here — doing so during initialization
+    // could double-count totals or update ancestors that haven't been
+    // fully linked/registered yet.
+    const NodeKind kind { node->kind };
+    if (kind != NodeKind::kBranch)
+        return;
+
+    CString path { BuildPath(node) };
+    branch_path_.insert(node->id, path);
+}
+
+void TreeModelO::UnregisterPath(Node* node, Node* parent_node)
+{
+    // NOTE: Unlike RegisterPath, UnregisterPath is only called when a node
+    // is actually being removed from the live tree (not during batch
+    // initialization), so it is safe here to reverse the node's
+    // contribution to ancestor totals via UpdateAncestorTotal (using
+    // negated deltas) before removing it from the path index.
+
+    const auto node_id { node->id };
     auto* d_node { DerivedPtr<NodeO>(node) };
     const NodeKind kind { d_node->kind };
 
     switch (kind) {
-    case NodeKind::kBranch:
+    case NodeKind::kBranch: {
         for (auto* child : std::as_const(node->children)) {
             child->parent = parent_node;
             parent_node->children.emplace_back(child);
         }
-        break;
-    case NodeKind::kLeaf:
+
+        RefreshPath(node);
+
+        branch_path_.remove(node_id);
+    } break;
+    case NodeKind::kLeaf: {
         if (d_node->status == NodeStatus::kReleased) {
-            UpdateAncestorTotal(node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total);
+            auto affected_ids { UpdateAncestorTotal(
+                node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total) };
+
+            affected_ids.remove(node_id);
+            RefreshAffectedTotal(affected_ids);
         }
-        break;
-    default:
-        break;
+    } break;
     }
 }
 
@@ -245,13 +227,26 @@ void TreeModelO::InitAncestorTotal(Node* node, double initial_delta, double fina
     }
 }
 
-void TreeModelO::HandleNode()
+void TreeModelO::InitTreeData()
 {
     for (auto* node : std::as_const(node_hash_)) {
         auto* d_node { DerivedPtr<NodeO>(node) };
 
+        RegisterPath(node);
+
         if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kReleased)
             InitAncestorTotal(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
+    }
+}
+
+void TreeModelO::AfterNodeInserted(Node* node)
+{
+    auto* d_node { DerivedPtr<NodeO>(node) };
+
+    if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kReleased) {
+        auto ids { UpdateAncestorTotal(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total) };
+        ids.remove(node->id);
+        RefreshAffectedTotal(ids);
     }
 }
 

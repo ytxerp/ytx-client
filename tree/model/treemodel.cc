@@ -5,7 +5,6 @@
 
 #include "component/constantwebsocket.h"
 #include "global/nodepool.h"
-#include "global/resourcepool.h"
 #include "tree/excludeidfiltermodel.h"
 #include "tree/excludeidunitfiltermodel.h"
 #include "tree/includeunitfiltermodel.h"
@@ -85,7 +84,7 @@ void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
 
     node_hash_.insert(node->id, node);
     RegisterPath(node);
-    leaf_path_model_->sort(0);
+    AfterNodeInserted(node);
 }
 
 QSet<QUuid> TreeModel::UpdateTotal(const QUuid& node_id, double initial_total, double final_total)
@@ -158,7 +157,7 @@ void TreeModel::SyncLeafModel(const QSet<QUuid>& leaf_ids) const
     }
 }
 
-QString TreeModel::ConstructPath(const Node* node) const
+QString TreeModel::BuildPath(const Node* node) const
 {
     Q_ASSERT(node != nullptr);
 
@@ -175,14 +174,14 @@ QString TreeModel::ConstructPath(const Node* node) const
     return tmp.join(separator_);
 }
 
-void TreeModel::UpdatePath(const Node* node)
+void TreeModel::RefreshPath(const Node* node)
 {
     QQueue<const Node*> queue {};
     queue.enqueue(node);
 
     while (!queue.isEmpty()) {
         const auto* current { queue.dequeue() };
-        const auto path { ConstructPath(current) };
+        const auto path { BuildPath(current) };
         const NodeKind kind { current->kind };
 
         switch (kind) {
@@ -194,8 +193,6 @@ void TreeModel::UpdatePath(const Node* node)
             break;
         case NodeKind::kLeaf:
             leaf_path_.insert(current->id, path);
-            break;
-        default:
             break;
         }
     }
@@ -308,7 +305,7 @@ void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
 
     node->name = name;
 
-    UpdatePath(node);
+    RefreshPath(node);
     const auto leaf_ids { ExtractLeafIds(node) };
     SyncLeafModel(leaf_ids);
 
@@ -492,9 +489,9 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex& parent)
     parent_node->children.removeOne(node);
     endRemoveRows();
 
-    DeletePath(node, parent_node);
+    UnregisterPath(node, parent_node);
 
-    ResourcePool<Node>::Instance().Recycle(node);
+    NodePool::Instance().Recycle(node, section_);
     node_hash_.remove(node_id);
 
     emit SSyncValue();
@@ -606,7 +603,7 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int cou
 
     RefreshAffectedTotal(affected_ids_destination.unite(affected_ids_source));
 
-    UpdatePath(node);
+    RefreshPath(node);
     const auto leaf_ids { ExtractLeafIds(node) };
     SyncLeafModel(leaf_ids);
 
@@ -779,8 +776,13 @@ void TreeModel::AckNode(const QUuid& node_id) const
     WebSocket::Instance()->SendMessage(WsKey::kNodeAck, message);
 }
 
-void TreeModel::DeletePath(Node* node, Node* parent_node)
+void TreeModel::UnregisterPath(Node* node, Node* parent_node)
 {
+    // NOTE: A leaf node being removed may already carry real data
+    // (initial_total/final_total), so its contribution must be reversed
+    // from all ancestors via UpdateAncestorTotal (negated deltas) before
+    // the node is dropped from the path index.
+
     const auto node_id { node->id };
     const NodeKind kind { node->kind };
 
@@ -791,7 +793,7 @@ void TreeModel::DeletePath(Node* node, Node* parent_node)
             parent_node->children.emplace_back(child);
         }
 
-        UpdatePath(node);
+        RefreshPath(node);
         const auto leaf_ids { ExtractLeafIds(node) };
         SyncLeafModel(leaf_ids);
 
@@ -809,12 +811,10 @@ void TreeModel::DeletePath(Node* node, Node* parent_node)
         RefreshAffectedTotal(affected_ids);
         RemoveUnitSet(node_id, node->unit);
     } break;
-    default:
-        break;
     }
 }
 
-void TreeModel::HandleNode()
+void TreeModel::InitTreeData()
 {
     for (auto* node : std::as_const(node_hash_)) {
         RegisterPath(node);
@@ -987,6 +987,15 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     const QJsonArray node_array { data.value(kNodeArray).toArray() };
     const QJsonArray path_array { data.value(kPathArray).toArray() };
 
+    beginResetModel();
+
+    {
+        NodePool::Instance().Recycle(node_hash_, section_);
+        root_->children.clear();
+        branch_path_.clear();
+        leaf_path_.clear();
+    }
+
     {
         for (const QJsonValue& val : node_array) {
             const QJsonObject obj { val.toObject() };
@@ -997,14 +1006,12 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     }
 
     {
-        beginResetModel();
-
         BuildHierarchy(path_array);
-        HandleNode();
+        InitTreeData();
         sort(std::to_underlying(NodeEnum::kName), Qt::AscendingOrder);
-
-        endResetModel();
     }
+
+    endResetModel();
 
     emit SInitStatus();
 }
@@ -1058,7 +1065,15 @@ void TreeModel::BuildHierarchy(const QJsonArray& path_array)
 
 void TreeModel::RegisterPath(Node* node)
 {
-    CString path { ConstructPath(node) };
+    // NOTE: Unlike UnregisterPath, RegisterPath does not call
+    // UpdateAncestorTotal here. Newly inserted nodes in this section
+    // (Finance/Task/Inventory/Partner) are always created
+    // with empty/default totals — values are filled in later by the user
+    // — so there is nothing meaningful to propagate to ancestors at
+    // registration time. Ancestor totals only need to be adjusted when a
+    // node with actual data is removed (see UnregisterPath).
+
+    CString path { BuildPath(node) };
     const NodeKind kind { node->kind };
 
     switch (kind) {
@@ -1069,8 +1084,6 @@ void TreeModel::RegisterPath(Node* node)
         leaf_path_.insert(node->id, path);
         leaf_path_model_->AppendItem(path, node->id);
         InsertUnitSet(node->id, node->unit);
-        break;
-    default:
         break;
     }
 }

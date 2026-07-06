@@ -510,8 +510,8 @@ void WebSocket::AckTree(const QJsonObject& obj)
     Q_ASSERT(obj.contains(kSection));
 
     const Section section { obj.value(kSection).toInt() };
-    auto* tree_model { static_cast<TreeModelO*>(tree_model_hash_.value(section).data()) };
-    tree_model->AckTree(obj);
+    auto tree_model { tree_model_hash_.value(section) };
+    tree_model->ApplyTree(obj);
 }
 
 void WebSocket::AckTable(const QJsonObject& obj)
@@ -541,8 +541,8 @@ void WebSocket::AckNode(const QJsonObject& obj)
     const QUuid ancestor { QUuid(obj.value(kAncestor).toString()) };
     const auto node_id { QUuid(leaf_obj.value(kId).toString()) };
 
-    auto* tree_model { static_cast<TreeModelO*>(tree_model_hash_.value(section).data()) };
-    tree_model->AckNode(leaf_obj, ancestor);
+    auto tree_model { tree_model_hash_.value(section) };
+    tree_model->InsertNode(ancestor, leaf_obj);
 
     emit SNodeLocate(section, node_id);
 }

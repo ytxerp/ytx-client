@@ -116,6 +116,7 @@ public:
     }
 
     // WebSocket functions
+
     void ApplyTree(const QJsonObject& data);
 
     void InsertNode(const QUuid& ancestor, const QJsonObject& data);
@@ -185,9 +186,18 @@ protected:
 
     void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
 
+    QString BuildPath(const Node* node) const;
+    void RefreshPath(const Node* node);
+
     virtual void RegisterPath(Node* node);
-    virtual void DeletePath(Node* node, Node* parent_node);
-    virtual void HandleNode();
+    virtual void UnregisterPath(Node* node, Node* parent_node);
+
+    virtual void InitTreeData();
+    virtual void AfterNodeInserted(Node* node)
+    {
+        Q_UNUSED(node);
+        leaf_path_model_->sort(0);
+    }
 
     virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const;
     virtual void InitAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const;
@@ -217,9 +227,6 @@ protected:
 
 private:
     void InitRoot();
-
-    QString ConstructPath(const Node* node) const;
-    void UpdatePath(const Node* node);
 
     QSet<QUuid> ExtractLeafIds(const Node* node) const;
     void SyncLeafModel(const QSet<QUuid>& leaf_ids) const;
