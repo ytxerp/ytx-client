@@ -85,7 +85,7 @@ void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
 
     node_hash_.insert(node->id, node);
     RegisterPath(node);
-    SortModel();
+    leaf_path_model_->sort(0);
 }
 
 QSet<QUuid> TreeModel::UpdateTotal(const QUuid& node_id, double initial_total, double final_total)
@@ -824,7 +824,7 @@ void TreeModel::HandleNode()
         }
     }
 
-    SortModel();
+    leaf_path_model_->sort(0);
 }
 
 Node* TreeModel::GetNodeByIndex(const QModelIndex& index) const
@@ -1007,13 +1007,6 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     }
 
     emit SInitStatus();
-}
-
-void TreeModel::SortModel()
-{
-    if (leaf_path_model_ != nullptr) {
-        leaf_path_model_->sort(0);
-    }
 }
 
 // Initialize the root node.

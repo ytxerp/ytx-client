@@ -216,7 +216,6 @@ protected:
     }
 
 private:
-    void SortModel();
     void InitRoot();
 
     QString ConstructPath(const Node* node) const;
