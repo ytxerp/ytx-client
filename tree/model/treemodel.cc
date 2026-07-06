@@ -993,6 +993,9 @@ void TreeModel::ApplyTree(const QJsonObject& data)
         root_->children.clear();
         branch_path_.clear();
         leaf_path_.clear();
+
+        if (leaf_path_model_)
+            leaf_path_model_->Reset();
     }
 
     {
