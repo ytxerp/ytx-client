@@ -1,4 +1,5 @@
 #include "treemodelp.h"
+#include "utils/nodeutils.h"
 
 TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, QObject* parent)
     : TreeModel(info, separator, parent)

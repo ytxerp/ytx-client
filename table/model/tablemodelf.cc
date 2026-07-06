@@ -2,6 +2,7 @@
 
 #include "component/constant.h"
 #include "component/constantwebsocket.h"
+#include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 

@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QFileDialog>
 
+#include "component/constantint.h"
 #include "component/constantstring.h"
 #include "document.h"
 #include "utils/mainwindowutils.h"

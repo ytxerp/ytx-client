@@ -2,6 +2,7 @@
 
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
+#include "utils/nodeutils.h"
 #include "utils/templateutils.h"
 
 void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const

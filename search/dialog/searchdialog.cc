@@ -8,6 +8,7 @@
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 #include "utils/entryutils.h"
+#include "utils/nodeutils.h"
 #include "utils/templateutils.h"
 
 SearchDialog::SearchDialog(SectionContext* sc, SearchNodeModel* search_node, SearchEntryModel* search_entry, QWidget* parent)

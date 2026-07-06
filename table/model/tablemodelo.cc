@@ -2,6 +2,7 @@
 
 #include <QJsonArray>
 
+#include "component/constantdouble.h"
 #include "enum/entryenum.h"
 #include "global/entrypool.h"
 #include "websocket/jsongen.h"

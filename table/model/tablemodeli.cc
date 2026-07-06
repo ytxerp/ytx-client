@@ -1,6 +1,7 @@
 #include "tablemodeli.h"
 
 #include "component/constant.h"
+#include "component/constantdouble.h"
 #include "component/constantwebsocket.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"

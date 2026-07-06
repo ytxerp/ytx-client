@@ -11,6 +11,7 @@
 #include <QVariant>
 
 #include "component/constantstring.h"
+#include "utils/nodeutils.h"
 
 void PrintHub::SetValue(const NodeO* node_o, const QList<Entry*>& entry_list)
 {

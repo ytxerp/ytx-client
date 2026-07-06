@@ -1,3 +1,5 @@
+#include <QJsonArray>
+
 #include "charts/cash_flow_statement/cashflowcarriermodel.h"
 #include "charts/cash_flow_statement/cashflowspecialmodel.h"
 #include "charts/cash_flow_statement/cashflowstatementdialog.h"

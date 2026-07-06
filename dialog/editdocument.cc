@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 
+#include "component/constantint.h"
 #include "component/signalblocker.h"
 #include "ui_editdocument.h"
 #include "utils/mainwindowutils.h"

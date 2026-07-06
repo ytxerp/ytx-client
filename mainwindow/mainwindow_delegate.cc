@@ -5,6 +5,7 @@
 #include "charts/balance_sheet/balancesheetenum.h"
 #include "charts/cash_flow_statement/cashflowstatementenum.h"
 #include "charts/income_statement/incomestatementenum.h"
+#include "component/constantdouble.h"
 #include "component/constantstring.h"
 #include "delegate/bool.h"
 #include "delegate/boolstring.h"

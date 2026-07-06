@@ -1,5 +1,7 @@
 #include "workspacemembermodel.h"
 
+#include <QJsonArray>
+
 #include "component/constantwebsocket.h"
 #include "global/resourcepool.h"
 #include "websocket/jsongen.h"

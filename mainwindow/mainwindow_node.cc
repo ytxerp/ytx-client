@@ -8,6 +8,7 @@
 #include "global/nodepool.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
+#include "utils/nodeutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 

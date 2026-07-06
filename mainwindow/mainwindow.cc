@@ -20,6 +20,7 @@
 #include "global/tablesstation.h"
 #include "ui_mainwindow.h"
 #include "utils/mainwindowutils.h"
+#include "utils/nodeutils.h"
 #include "utils/templateutils.h"
 #include "websocket/websocket.h"
 

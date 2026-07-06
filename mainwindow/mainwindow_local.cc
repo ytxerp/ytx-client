@@ -8,6 +8,7 @@
 #include "mainwindow.h"
 #include "utils/entryutils.h"
 #include "utils/mainwindowutils.h"
+#include "utils/nodeutils.h"
 #include "websocket/websocket.h"
 
 void MainWindow::ReadLocalConfig()

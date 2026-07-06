@@ -25,6 +25,7 @@
 #include <QSettings>
 #include <QWebSocket>
 
+#include "component/constantint.h"
 #include "component/constantwebsocket.h"
 #include "entryhub/entryhub.h"
 #include "tree/model/treemodel.h"

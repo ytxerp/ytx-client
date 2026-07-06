@@ -6,6 +6,7 @@
 #include "component/constantwebsocket.h"
 #include "enum/entryenum.h"
 #include "global/entrypool.h"
+#include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
