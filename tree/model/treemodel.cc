@@ -799,7 +799,6 @@ void TreeModel::UnregisterPath(Node* node, Node* parent_node)
 
         branch_path_.remove(node_id);
         emit SUpdateName(node_id, node->name, true);
-
     } break;
     case NodeKind::kLeaf: {
         leaf_path_.remove(node_id);

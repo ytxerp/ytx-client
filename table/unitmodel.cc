@@ -26,6 +26,7 @@ QVariant UnitModel::data(const QModelIndex& index, int role) const
 
     switch (role) {
     case Qt::DisplayRole:
+    case Qt::EditRole:
         return item.display;
 
     case Qt::UserRole:
@@ -50,7 +51,7 @@ void UnitModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void UnitModel::AppendItem(const QString& display, const int& user)
+void UnitModel::AppendItem(const QString& display, int user)
 {
     const long long row { items_.size() };
     beginInsertRows(QModelIndex(), row, row);

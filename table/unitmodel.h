@@ -42,7 +42,7 @@ public:
         return 1;
     }
 
-    void AppendItem(const QString& display, const int& user);
+    void AppendItem(const QString& display, int user);
 
 protected:
     struct Item {
