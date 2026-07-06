@@ -1,10 +1,13 @@
 #include "periodclosedialog.h"
 
+#include <QJsonArray>
 #include <QMessageBox>
 
+#include "component/constantbool.h"
 #include "component/signalblocker.h"
 #include "global/entrypool.h"
 #include "ui_periodclosedialog.h"
+#include "utils/nodeutils.h"
 #include "websocket/websocket.h"
 
 PeriodCloseDialog::PeriodCloseDialog(Section section, CTreeModel* tree_model, PeriodCloseModel* table_model, QWidget* parent)
@@ -34,11 +37,8 @@ QTableView* PeriodCloseDialog::View() { return ui->tableView; }
 void PeriodCloseDialog::InitDialog()
 {
     {
-        auto* leaf_path_branch_path_model = new ItemModel(this);
-        tree_model_->LeafPathBranchPathModel(leaf_path_branch_path_model);
-        leaf_path_branch_path_model->sort(0);
-
-        ui->comboBoxClosing->setModel(leaf_path_branch_path_model);
+        auto* path_model { tree_model_->PathModel(this) };
+        ui->comboBoxClosing->setModel(path_model);
         ui->comboBoxClosing->setCurrentIndex(-1);
     }
 

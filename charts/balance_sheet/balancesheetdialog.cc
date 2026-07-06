@@ -39,13 +39,11 @@ QTreeView* BalanceSheetDialog::View() { return ui->treeView; }
 void BalanceSheetDialog::InitDialog()
 {
     {
-        auto* leaf_path_branch_path_model = new ItemModel(this);
-        tree_model_->LeafPathBranchPathModel(leaf_path_branch_path_model);
-        leaf_path_branch_path_model->sort(0);
+        auto* path_model { tree_model_->PathModel(this) };
 
-        ui->comboBoxAsset->setModel(leaf_path_branch_path_model);
-        ui->comboBoxEquity->setModel(leaf_path_branch_path_model);
-        ui->comboBoxLiability->setModel(leaf_path_branch_path_model);
+        ui->comboBoxAsset->setModel(path_model);
+        ui->comboBoxEquity->setModel(path_model);
+        ui->comboBoxLiability->setModel(path_model);
 
         ui->comboBoxAsset->setCurrentIndex(-1);
         ui->comboBoxEquity->setCurrentIndex(-1);

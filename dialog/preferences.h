@@ -95,7 +95,7 @@ private:
     QStringList operation_list_ {};
     QStringList date_format_list_ {};
 
-    ItemModel* leaf_path_branch_path_model_ {};
+    ItemModel* path_model_ {};
 
     AppConfig app_ {};
     SectionConfig section_ {};

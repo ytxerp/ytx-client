@@ -113,12 +113,10 @@ void IncomeStatementDialog::on_pushButtonFetch_clicked()
 void IncomeStatementDialog::InitDialog()
 {
     {
-        auto* leaf_path_branch_path_model = new ItemModel(this);
-        tree_model_->LeafPathBranchPathModel(leaf_path_branch_path_model);
-        leaf_path_branch_path_model->sort(0);
+        auto* path_model { tree_model_->PathModel(this) };
 
-        ui->comboBoxIncome->setModel(leaf_path_branch_path_model);
-        ui->comboBoxExpense->setModel(leaf_path_branch_path_model);
+        ui->comboBoxIncome->setModel(path_model);
+        ui->comboBoxExpense->setModel(path_model);
 
         ui->comboBoxIncome->setCurrentIndex(-1);
         ui->comboBoxExpense->setCurrentIndex(-1);

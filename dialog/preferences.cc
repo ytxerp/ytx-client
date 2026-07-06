@@ -7,6 +7,7 @@
 #include <QStandardPaths>
 
 #include "component/constant.h"
+#include "component/constantint.h"
 #include "component/constantstring.h"
 #include "component/signalblocker.h"
 #include "ui_preferences.h"
@@ -91,13 +92,11 @@ void Preferences::IniData()
     ui->pBtnDocumentDir->setText(shared_.document_dir);
 
     if (is_enable_status_) {
-        leaf_path_branch_path_model_ = new ItemModel(this);
-        model_->LeafPathBranchPathModel(leaf_path_branch_path_model_);
-        leaf_path_branch_path_model_->sort(0);
+        path_model_ = model_->PathModel(this);
 
-        ui->comboStatic->setModel(leaf_path_branch_path_model_);
-        ui->comboDynamicLhs->setModel(leaf_path_branch_path_model_);
-        ui->comboDynamicRhs->setModel(leaf_path_branch_path_model_);
+        ui->comboStatic->setModel(path_model_);
+        ui->comboDynamicLhs->setModel(path_model_);
+        ui->comboDynamicRhs->setModel(path_model_);
 
         IniCombo(ui->comboOperation, operation_list_);
 
