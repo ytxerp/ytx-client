@@ -28,7 +28,6 @@
 #include "component/using.h"
 #include "enum/nodeenum.h"
 #include "enum/section.h"
-#include "tree/itemmodel.h"
 #include "tree/node.h"
 #include "utils/entryutils.h"
 
@@ -212,7 +211,6 @@ inline QString UnitString(NodeUnit unit)
 inline QString DirectionRuleString(bool direction_rule) { return direction_rule == direction_rule::kRO ? QObject::tr("RO") : QObject::tr("FO"); }
 
 bool IsDescendant(const Node* descendant, const Node* ancestor);
-QString ConstructPath(const Node* root, const Node* node, CString& separator);
 
 // Update a QString or int field of an object and update the change in a QJsonObject.
 // Returns true if the value was changed.
@@ -369,13 +367,6 @@ inline double GrowthRate(double current, double previous)
     return (current - previous) / std::abs(previous);
 }
 
-void LeafPathBranchPathModel(CUuidString& leaf, CUuidString& branch, ItemModel* model);
-void RemoveItem(ItemModel* model, const QUuid& node_id);
-void UpdateModel(const QHash<QUuid, QString>& leaf_path, ItemModel* leaf_path_model, const Node* node);
-void UpdatePathSeparator(CString& old_separator, CString& new_separator, QHash<QUuid, QString>& source_path);
-void UpdatePath(QHash<QUuid, QString>& leaf, QHash<QUuid, QString>& branch, const Node* root, const Node* node, CString& separator);
-void UpdateModelFunction(ItemModel* model, const QSet<QUuid>& update_range, CUuidString& source_path);
-
 template <HasColor T> inline bool CompareColor(const T* lhs, const T* rhs, Qt::SortOrder order)
 {
     Q_ASSERT(lhs != nullptr);
@@ -385,24 +376,6 @@ template <HasColor T> inline bool CompareColor(const T* lhs, const T* rhs, Qt::S
     const auto r_key = ColorSortKey(rhs->color);
 
     return (order == Qt::AscendingOrder) ? (l_key < r_key) : (l_key > r_key);
-}
-
-template <typename Field, typename T> const Field& Value(CNodeHash& hash, const QUuid& node_id, Field T::* member)
-{
-    if (auto it = hash.constFind(node_id); it != hash.constEnd()) {
-        auto* derived { static_cast<T*>(it.value()) };
-        return derived->*member;
-    }
-
-    // If the node_id does not exist, return a static empty object to ensure a safe default value
-    // Examples:
-    // double InitialTotal(QUuid node_id) const { return GetValue(node_id, &Node::initial_total); }
-    // double FinalTotal(QUuid node_id) const { return GetValue(node_id, &Node::final_total); }
-    // Note: In the SetStatus() function of TreeWidget,
-    // a node_id of 0 may be passed, so empty{} is needed to prevent illegal access
-
-    static const Field empty {};
-    return empty;
 }
 
 };

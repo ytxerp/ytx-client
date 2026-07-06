@@ -28,7 +28,8 @@
 
 #include "component/constant.h"
 #include "component/info.h"
-#include "utils/nodeutils.h"
+#include "tree/itemmodel.h"
+#include "tree/node.h"
 #include "utils/templateutils.h"
 
 using utils::DerivedPtr;
@@ -113,19 +114,19 @@ public:
 
     // Ytx's
     // Default implementations
-    double InitialTotal(QUuid node_id) const { return utils::Value(node_hash_, node_id, &Node::initial_total); }
-    double FinalTotal(QUuid node_id) const { return utils::Value(node_hash_, node_id, &Node::final_total); }
-    NodeUnit Unit(QUuid node_id) const { return utils::Value(node_hash_, node_id, &Node::unit); }
-    bool Rule(QUuid node_id) const { return utils::Value(node_hash_, node_id, &Node::direction_rule); }
-    QString Name(QUuid node_id) const { return utils::Value(node_hash_, node_id, &Node::name); }
-    QString Color(QUuid node_id) const { return utils::Value(node_hash_, node_id, &Node::color); }
+    double InitialTotal(QUuid node_id) const { return Value(node_id, &Node::initial_total); }
+    double FinalTotal(QUuid node_id) const { return Value(node_id, &Node::final_total); }
+    NodeUnit Unit(QUuid node_id) const { return Value(node_id, &Node::unit); }
+    bool Rule(QUuid node_id) const { return Value(node_id, &Node::direction_rule); }
+    QString Name(QUuid node_id) const { return Value(node_id, &Node::name); }
+    QString Color(QUuid node_id) const { return Value(node_id, &Node::color); }
     QString Path(const QUuid& node_id) const;
 
     inline ItemModel* LeafModel() const { return leaf_path_model_; }
     inline CUuidString* LeafPath() const { return &leaf_path_; }
     inline CUuidString* BranchPath() const { return &branch_path_; }
 
-    void LeafPathBranchPathModel(ItemModel* model) const;
+    ItemModel* PathModel(QWidget* parent) const;
 
     void UpdateSeparator(CString& old_separator, CString& new_separator);
 
@@ -196,6 +197,31 @@ protected:
         Q_UNUSED(unit)
         return nullptr;
     }
+
+    template <typename Field, typename T> const Field& Value(const QUuid& node_id, Field T::* member) const
+    {
+        if (auto it = node_hash_.constFind(node_id); it != node_hash_.constEnd()) {
+            auto* derived { static_cast<T*>(it.value()) };
+            return derived->*member;
+        }
+
+        // If the node_id does not exist, return a static empty object to ensure a safe default value
+        // Examples:
+        // double InitialTotal(QUuid node_id) const { return GetValue(node_id, &Node::initial_total); }
+        // double FinalTotal(QUuid node_id) const { return GetValue(node_id, &Node::final_total); }
+        // Note: In the SetStatus() function of TreeWidget,
+        // a node_id of 0 may be passed, so empty{} is needed to prevent illegal access
+
+        static const Field empty {};
+        return empty;
+    }
+
+private:
+    void UpdatePath(const Node* node);
+    QSet<QUuid> ExtractLeafIds(const Node* node) const;
+    void SyncLeafModel(const QSet<QUuid>& leaf_ids) const;
+
+    QString ConstructPath(const Node* node) const;
 
 protected:
     Node* root_ {};

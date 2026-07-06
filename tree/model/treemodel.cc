@@ -10,6 +10,7 @@
 #include "tree/excludeidunitfiltermodel.h"
 #include "tree/includeunitfiltermodel.h"
 #include "tree/replaceselffiltermodel.h"
+#include "utils/nodeutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -106,6 +107,98 @@ QSet<QUuid> TreeModel::UpdateTotal(const QUuid& node_id, double initial_total, d
     emit SSyncValue();
 
     return affected_ids;
+}
+
+QSet<QUuid> TreeModel::ExtractLeafIds(const Node* node) const
+{
+    if (leaf_path_.isEmpty())
+        return {};
+
+    QQueue<const Node*> queue {};
+    queue.enqueue(node);
+
+    QSet<QUuid> leaf_ids {};
+
+    while (!queue.isEmpty()) {
+        const auto* current { queue.dequeue() };
+        const NodeKind kind { current->kind };
+
+        switch (kind) {
+        case NodeKind::kBranch:
+            for (const auto* child : current->children)
+                queue.enqueue(child);
+
+            break;
+        case NodeKind::kLeaf:
+            leaf_ids.insert(current->id);
+            break;
+        default:
+            break;
+        }
+    }
+
+    return leaf_ids;
+}
+
+void TreeModel::SyncLeafModel(const QSet<QUuid>& leaf_ids) const
+{
+    if (leaf_ids.isEmpty() || leaf_path_.isEmpty())
+        return;
+
+    for (const QUuid& id : leaf_ids) {
+        const int row { leaf_path_model_->FindRow(id) };
+        if (row == -1)
+            continue;
+
+        const QString value { leaf_path_.value(id, QString {}) };
+        if (!value.isEmpty()) {
+            const QModelIndex index { leaf_path_model_->index(row, 0) };
+            leaf_path_model_->setData(index, value, Qt::EditRole);
+        }
+    }
+}
+
+QString TreeModel::ConstructPath(const Node* node) const
+{
+    Q_ASSERT(node != nullptr);
+
+    if (node == root_)
+        return QString();
+
+    QStringList tmp {};
+
+    while (node && node != root_) {
+        tmp.prepend(node->name);
+        node = node->parent;
+    }
+
+    return tmp.join(separator_);
+}
+
+void TreeModel::UpdatePath(const Node* node)
+{
+    QQueue<const Node*> queue {};
+    queue.enqueue(node);
+
+    while (!queue.isEmpty()) {
+        const auto* current { queue.dequeue() };
+        const auto path { ConstructPath(current) };
+        const NodeKind kind { current->kind };
+
+        switch (kind) {
+        case NodeKind::kBranch:
+            for (const auto* child : current->children)
+                queue.enqueue(child);
+
+            branch_path_.insert(current->id, path);
+            break;
+        case NodeKind::kLeaf:
+            leaf_path_.insert(current->id, path);
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
@@ -215,8 +308,9 @@ void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
 
     node->name = name;
 
-    utils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
-    utils::UpdateModel(leaf_path_, leaf_path_model_, node);
+    UpdatePath(node);
+    const auto leaf_ids { ExtractLeafIds(node) };
+    SyncLeafModel(leaf_ids);
 
     const int column { std::to_underlying(NodeEnum::kName) };
     const int row { GetIndex(node_id).row() };
@@ -512,15 +606,29 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int cou
 
     RefreshAffectedTotal(affected_ids_destination.unite(affected_ids_source));
 
-    utils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
-    utils::UpdateModel(leaf_path_, leaf_path_model_, node);
+    UpdatePath(node);
+    const auto leaf_ids { ExtractLeafIds(node) };
+    SyncLeafModel(leaf_ids);
 
     emit SUpdateName(node->id, node->name, node->kind == NodeKind::kBranch);
 
     return true;
 }
 
-void TreeModel::LeafPathBranchPathModel(ItemModel* model) const { utils::LeafPathBranchPathModel(leaf_path_, branch_path_, model); }
+ItemModel* TreeModel::PathModel(QWidget* parent) const
+{
+    auto* model { new ItemModel(parent) };
+
+    for (const auto& [id, path] : leaf_path_.asKeyValueRange())
+        model->AppendItem(path, id);
+
+    for (const auto& [id, path] : branch_path_.asKeyValueRange())
+        model->AppendItem(path, id);
+
+    model->sort(0);
+
+    return model;
+}
 
 void TreeModel::UpdateSeparator(CString& old_separator, CString& new_separator)
 {
@@ -530,8 +638,13 @@ void TreeModel::UpdateSeparator(CString& old_separator, CString& new_separator)
     if (old_separator == new_separator)
         return;
 
-    utils::UpdatePathSeparator(old_separator, new_separator, leaf_path_);
-    utils::UpdatePathSeparator(old_separator, new_separator, branch_path_);
+    auto update_path_separator = [&](QHash<QUuid, QString>& source_path) {
+        for (auto& path : source_path)
+            path.replace(old_separator, new_separator);
+    };
+
+    update_path_separator(leaf_path_);
+    update_path_separator(branch_path_);
 
     leaf_path_model_->UpdateSeparator(old_separator, new_separator);
 }
@@ -678,8 +791,9 @@ void TreeModel::DeletePath(Node* node, Node* parent_node)
             parent_node->children.emplace_back(child);
         }
 
-        utils::UpdatePath(leaf_path_, branch_path_, root_, node, separator_);
-        utils::UpdateModel(leaf_path_, leaf_path_model_, node);
+        UpdatePath(node);
+        const auto leaf_ids { ExtractLeafIds(node) };
+        SyncLeafModel(leaf_ids);
 
         branch_path_.remove(node_id);
         emit SUpdateName(node_id, node->name, true);
@@ -687,7 +801,7 @@ void TreeModel::DeletePath(Node* node, Node* parent_node)
     } break;
     case NodeKind::kLeaf: {
         leaf_path_.remove(node_id);
-        utils::RemoveItem(leaf_path_model_, node_id);
+        leaf_path_model_->RemoveItem(node_id);
 
         auto affected_ids { UpdateAncestorTotal(node, -node->initial_total, -node->final_total) };
         affected_ids.remove(node_id);
@@ -951,7 +1065,7 @@ void TreeModel::BuildHierarchy(const QJsonArray& path_array)
 
 void TreeModel::RegisterPath(Node* node)
 {
-    CString path { node::ConstructPath(root_, node, separator_) };
+    CString path { ConstructPath(node) };
     const NodeKind kind { node->kind };
 
     switch (kind) {
