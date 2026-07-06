@@ -95,12 +95,20 @@ bool ItemModel::removeRows(int row, int count, const QModelIndex& parent)
     return true;
 }
 
-void ItemModel::AppendItem(const QString& display, const QUuid& user)
+void ItemModel::AppendItem(const QString& display, const QUuid& id)
 {
     const long long row { items_.size() };
     beginInsertRows(QModelIndex(), row, row);
-    items_.emplace_back(Item { display, user });
+    items_.emplace_back(Item { display, id });
     endInsertRows();
+}
+
+bool ItemModel::RemoveItem(const QUuid& id)
+{
+    if (const int row { FindRow(id) }; row != -1)
+        return removeRows(row);
+
+    return false;
 }
 
 void ItemModel::Reset()

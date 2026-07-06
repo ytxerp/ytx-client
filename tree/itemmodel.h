@@ -46,7 +46,9 @@ public:
 
     bool removeRows(int row, int count = 1, const QModelIndex& parent = QModelIndex()) override;
 
-    void AppendItem(const QString& display, const QUuid& user);
+    void AppendItem(const QString& display, const QUuid& id);
+    bool RemoveItem(const QUuid& id);
+
     void UpdateSeparator(const QString& old_separator, const QString& new_separator);
 
     int FindRow(const QUuid& id) const;
