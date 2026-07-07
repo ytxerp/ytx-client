@@ -37,16 +37,17 @@ public slots:
     void RUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node);
 
 public:
+    void InsertEntry(const QJsonObject& data) override;
+    void DeleteEntry(const QUuid& entry_id) override;
+    void UpdateEntry(const QUuid& id, const QJsonObject& update) override;
+
+    void PushEntry(const QUuid& node_id);
+
     std::optional<double> UnitPrice(const QUuid& partner_id, const QUuid& internal_sku) const;
     QUuid ExternalSku(const QUuid& partner_id, const QUuid& internal_sku) const;
 
     void SearchDescription(QList<Entry*>& entry_list, CString& text) const;
     void SearchTag(QList<Entry*>& entry_list, const QSet<QString>& tag_set) const;
-    void PushEntry(const QUuid& node_id);
-
-    void InsertEntry(const QJsonObject& data) override;
-    void DeleteEntry(const QUuid& entry_id) override;
-    void UpdateEntry(const QUuid& id, const QJsonObject& update) override;
 
     void DeleteSingleLeaf(const QSet<QUuid>& leaf_entry);
     void ApplyPartnerEntry(const QJsonArray& array);
