@@ -303,13 +303,21 @@ Qt::ItemFlags TableModelP::flags(const QModelIndex& index) const
 
     switch (column) {
     case EntryEnumP::kId:
+    case EntryEnumP::kVersion:
     case EntryEnumP::kDocument:
     case EntryEnumP::kTag:
     case EntryEnumP::kStatus:
+    case EntryEnumP::kLhsNode:
         flags &= ~Qt::ItemIsEditable;
         break;
-    default:
+    case EntryEnumP::kIssuedTime:
+    case EntryEnumP::kRhsNode:
+    case EntryEnumP::kCode:
+    case EntryEnumP::kDescription:
+    case EntryEnumP::kUnitPrice:
+    case EntryEnumP::kExternalSku:
         flags |= Qt::ItemIsEditable;
+        break;
     }
 
     return flags;

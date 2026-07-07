@@ -410,13 +410,21 @@ Qt::ItemFlags TableModel::flags(const QModelIndex& index) const
 
     switch (column) {
     case EntryEnum::kId:
+    case EntryEnum::kVersion:
     case EntryEnum::kBalance:
     case EntryEnum::kDocument:
     case EntryEnum::kTag:
     case EntryEnum::kStatus:
+    case EntryEnum::kLhsNode:
         flags &= ~Qt::ItemIsEditable;
         break;
-    default:
+    case EntryEnum::kIssuedTime:
+    case EntryEnum::kLhsRate:
+    case EntryEnum::kRhsNode:
+    case EntryEnum::kCode:
+    case EntryEnum::kDescription:
+    case EntryEnum::kDebit:
+    case EntryEnum::kCredit:
         flags |= Qt::ItemIsEditable;
         break;
     }

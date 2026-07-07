@@ -293,6 +293,8 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
 
     switch (column) {
     case EntryEnumO::kId:
+    case EntryEnumO::kVersion:
+    case EntryEnumO::kLhsNode:
     case EntryEnumO::kInitial:
     case EntryEnumO::kDiscount:
     case EntryEnumO::kFinal:
@@ -300,7 +302,12 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
     case EntryEnumO::kExternalSku:
         flags &= ~Qt::ItemIsEditable;
         break;
-    default:
+    case EntryEnumO::kRhsNode:
+    case EntryEnumO::kDescription:
+    case EntryEnumO::kCount:
+    case EntryEnumO::kMeasure:
+    case EntryEnumO::kUnitPrice:
+    case EntryEnumO::kUnitDiscount:
         flags |= Qt::ItemIsEditable;
         break;
     }
