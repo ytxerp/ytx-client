@@ -31,7 +31,7 @@ SettlementSecondaryWidget::SettlementSecondaryWidget(TreeModel* tree_model_p, Se
     InitData();
 
     QTimer::singleShot(0, this, &SettlementSecondaryWidget::FetchNode);
-    if (sync_state == SyncState::kNew)
+    if (sync_state == SyncState::kCreating)
         QTimer::singleShot(0, this, [this]() { ui->comboPartner->setFocus(); });
 }
 
@@ -68,7 +68,7 @@ void SettlementSecondaryWidget::InitData()
     ui->dateTimeEdit->setDateTime(settlement_.issued_time.toLocalTime());
     ui->dSpinAmount->setValue(settlement_.amount);
 
-    ui->comboPartner->setEnabled(sync_state_ == SyncState::kNew);
+    ui->comboPartner->setEnabled(sync_state_ == SyncState::kCreating);
 
     const bool is_settled { settlement_.status == SettlementStatus::kSettled };
 
@@ -95,7 +95,7 @@ void SettlementSecondaryWidget::LockWidget(bool is_settled)
 
 bool SettlementSecondaryWidget::ValidateSyncState()
 {
-    if (sync_state_ == SyncState::kDirty) {
+    if (sync_state_ == SyncState::kUpdating) {
         utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
             tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), time_const::kAutoCloseMs);
         return false;
@@ -184,13 +184,13 @@ void SettlementSecondaryWidget::on_pBtnRelease_clicked()
             pending_update_ = QJsonObject();
         }
 
-        if (sync_state_ == SyncState::kNew) {
+        if (sync_state_ == SyncState::kCreating) {
             settlement_.status = SettlementStatus::kSettled;
             message.insert(kSettlement, settlement_.WriteJson());
             WebSocket::Instance()->SendMessage(WsKey::kSettlementInsert, message);
         }
 
-        sync_state_ = SyncState::kDirty;
+        sync_state_ = SyncState::kUpdating;
     }
 }
 
@@ -218,7 +218,7 @@ void SettlementSecondaryWidget::on_pBtnRecall_clicked()
     WebSocket::Instance()->SendMessage(WsKey::kSettlementRecall, message);
     pending_update_ = QJsonObject();
 
-    sync_state_ = SyncState::kDirty;
+    sync_state_ = SyncState::kUpdating;
 }
 
 void SettlementSecondaryWidget::InsertSucceeded(int version)

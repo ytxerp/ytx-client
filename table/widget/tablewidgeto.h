@@ -23,7 +23,7 @@
 #include <QButtonGroup>
 
 #include "component/arg/orderwidgetarg.h"
-#include "enum/syncenum.h"
+#include "enum/stateenum.h"
 #include "table/model/tablemodelo.h"
 #include "tablewidget.h"
 
@@ -116,7 +116,7 @@ private:
     bool ValidatePartner();
     bool ValidateSyncState();
     void MarkSynced(int version);
-    void MarkDirty();
+    void MarkUpdating();
 
 private:
     Ui::TableWidgetO* ui;

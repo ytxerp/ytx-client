@@ -29,7 +29,7 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, NodeO* node, SyncState sync_sta
     InitData(tmp_node_);
     InitConnect();
 
-    if (sync_state == SyncState::kNew)
+    if (sync_state == SyncState::kCreating)
         QTimer::singleShot(0, this, [this]() { ui->comboPartner->setFocus(); });
 }
 
@@ -73,9 +73,9 @@ void TableWidgetO::MarkSynced(int version)
     sync_state_ = SyncState::kSynced;
 }
 
-void TableWidgetO::MarkDirty()
+void TableWidgetO::MarkUpdating()
 {
-    sync_state_ = SyncState::kDirty;
+    sync_state_ = SyncState::kUpdating;
     has_pending_update_ = false;
     ui->tableViewO->clearSelection();
 }
@@ -220,7 +220,7 @@ void TableWidgetO::InitData(const NodeO* node)
         LockWidgets(NodeStatus(node->status));
     }
 
-    if (sync_state_ == SyncState::kNew)
+    if (sync_state_ == SyncState::kCreating)
         return;
 
     {
@@ -474,7 +474,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
     WebSocket::Instance()->SendMessage(WsKey::kOrderRecall, JsonGen::OrderRecall(section_, node_id_, pending_update_));
 
-    MarkDirty();
+    MarkUpdating();
 }
 
 bool TableWidgetO::ValidatePartner()
@@ -491,7 +491,7 @@ bool TableWidgetO::ValidatePartner()
 
 bool TableWidgetO::ValidateSyncState()
 {
-    if (sync_state_ == SyncState::kDirty) {
+    if (sync_state_ == SyncState::kUpdating) {
         utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
             tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), time_const::kAutoCloseMs);
         return false;
@@ -526,7 +526,7 @@ void TableWidgetO::SaveOrder()
         pending_update_ = QJsonObject();
     }
 
-    if (sync_state_ == SyncState::kNew) {
+    if (sync_state_ == SyncState::kCreating) {
         tmp_node_->status = NodeStatus::kDraft; // Same as default
 
         BuildNodeInsert(order_message);
@@ -535,7 +535,7 @@ void TableWidgetO::SaveOrder()
 
     qInfo() << "SaveOrder: tmp_node_ version" << tmp_node_->version;
 
-    MarkDirty();
+    MarkUpdating();
 }
 
 void TableWidgetO::on_pBtnRelease_clicked()
@@ -561,7 +561,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
         pending_update_ = QJsonObject();
     }
 
-    if (sync_state_ == SyncState::kNew) {
+    if (sync_state_ == SyncState::kCreating) {
         tmp_node_->status = NodeStatus::kReleased;
 
         BuildNodeInsert(order_message);
@@ -573,7 +573,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
     qInfo() << "on_pBtnRelease_clicked: tmp_node_ version" << tmp_node_->version;
 
-    MarkDirty();
+    MarkUpdating();
 }
 
 void TableWidgetO::on_comboTemplate_currentIndexChanged(int /*index*/)

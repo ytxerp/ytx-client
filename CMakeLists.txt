@@ -162,8 +162,7 @@ set(HEADERS
     enum/section.h
     billing/settlement/settlementenum.h
     billing/statement/statementenum.h
-    enum/statusenum.h
-    enum/syncenum.h
+    enum/stateenum.h
     tag/tagenum.h
     global/collator.h
     global/concepts.h

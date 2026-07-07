@@ -161,22 +161,22 @@ void utils::ResetSectionContext(SectionContext& sc)
     sc.tag_icon_hash.clear();
 }
 
-void utils::SetConnectionStatus(QLabel* label, ConnectionStatus status)
+void utils::SetConnectionStatus(QLabel* label, ConnectionState status)
 {
     Q_ASSERT(label != nullptr);
 
     switch (status) {
-    case ConnectionStatus::Connecting:
+    case ConnectionState::Connecting:
         label->setText("…");
         label->setToolTip(QObject::tr("Connecting to server..."));
         label->setStyleSheet("QLabel {color: orange;}");
         return;
-    case ConnectionStatus::Connected:
+    case ConnectionState::Connected:
         label->setText("●");
         label->setToolTip(QObject::tr("Connected to server"));
         label->setStyleSheet("QLabel {color: green;}");
         return;
-    case ConnectionStatus::Disconnected:
+    case ConnectionState::Disconnected:
         label->setText("○");
         label->setToolTip(QObject::tr("Disconnected from server"));
         label->setStyleSheet("QLabel {color: red;}");
@@ -186,17 +186,17 @@ void utils::SetConnectionStatus(QLabel* label, ConnectionStatus status)
     Q_UNREACHABLE();
 }
 
-void utils::SetLoginStatus(QLabel* label, LoginStatus status)
+void utils::SetLoginStatus(QLabel* label, LoginState status)
 {
     Q_ASSERT(label != nullptr);
 
     switch (status) {
-    case LoginStatus::LoggedIn:
+    case LoginState::LoggedIn:
         label->setText("●");
         label->setToolTip(QObject::tr("Logged in"));
         label->setStyleSheet("QLabel { color: green; }");
         return;
-    case LoginStatus::LoggedOut:
+    case LoginState::LoggedOut:
         label->setText("○");
         label->setToolTip(QObject::tr("Logged out"));
         label->setStyleSheet("QLabel { color: red; }");

@@ -15,7 +15,7 @@ void MainWindow::on_actionReconnect_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
+    utils::SetConnectionStatus(connection_label_, ConnectionState::Connecting);
     WebSocket::Instance()->Connect();
 }
 
@@ -49,8 +49,8 @@ void MainWindow::on_actionSignOut_triggered()
     SetAction(false);
     SetLoginAction(false);
 
-    utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
-    utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
+    utils::SetLoginStatus(login_label_, LoginState::LoggedOut);
+    utils::SetConnectionStatus(connection_label_, ConnectionState::Connecting);
 }
 
 void MainWindow::RDenyConnection()
@@ -59,7 +59,7 @@ void MainWindow::RDenyConnection()
     ui->actionSignOut->setEnabled(false);
     ui->actionReconnect->setEnabled(true);
 
-    utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
+    utils::SetConnectionStatus(connection_label_, ConnectionState::Disconnected);
     utils::ShowNotification(QMessageBox::Warning, tr("Connection Refused"), tr("Unable to connect to the server. Please try again."), time_const::kAutoCloseMs);
 }
 
@@ -70,7 +70,7 @@ void MainWindow::RAllowConnection()
     ui->actionReconnect->setEnabled(false);
 
     on_actionSignIn_triggered();
-    utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connected);
+    utils::SetConnectionStatus(connection_label_, ConnectionState::Connected);
 }
 
 void MainWindow::RRemoteHostClosed()
@@ -79,7 +79,7 @@ void MainWindow::RRemoteHostClosed()
         QMessageBox::Warning, tr("Remote Host Closed"), tr("The server has closed the connection. Please try reconnecting."), time_const::kAutoCloseMs);
 
     on_actionSignOut_triggered();
-    utils::SetConnectionStatus(connection_label_, ConnectionStatus::Disconnected);
+    utils::SetConnectionStatus(connection_label_, ConnectionState::Disconnected);
 }
 
 void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
@@ -134,7 +134,7 @@ void MainWindow::RAllowLogin(const QString& name, const QString& expire_date)
     }
 
     {
-        utils::SetLoginStatus(login_label_, LoginStatus::LoggedIn);
+        utils::SetLoginStatus(login_label_, LoginState::LoggedIn);
         SetLoginAction(true);
     }
 }
@@ -144,7 +144,7 @@ void MainWindow::RDenyLogin()
     ui->actionSignIn->setEnabled(true);
     ui->actionSignOut->setEnabled(false);
     ui->actionReconnect->setEnabled(true);
-    utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
+    utils::SetLoginStatus(login_label_, LoginState::LoggedOut);
 }
 
 void MainWindow::RFinishTreeSync()

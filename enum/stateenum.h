@@ -17,10 +17,21 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATUSENUM_H
-#define STATUSENUM_H
+#ifndef STATEENUM_H
+#define STATEENUM_H
 
-enum class ConnectionStatus { Connecting, Connected, Disconnected };
-enum class LoginStatus { LoggedIn, LoggedOut };
+enum class ConnectionState {
+    Connecting,
+    Connected,
+    Disconnected,
+};
 
-#endif // STATUSENUM_H
+enum class LoginState { LoggedIn, LoggedOut };
+
+enum class SyncState {
+    kCreating,
+    kSynced,
+    kUpdating,
+};
+
+#endif // STATEENUM_H

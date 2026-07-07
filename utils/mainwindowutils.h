@@ -26,13 +26,13 @@
 #include <QSettings>
 
 #include "component/sectioncontex.h"
-#include "enum/statusenum.h"
+#include "enum/stateenum.h"
 
 namespace utils {
 
 void ResetSectionContext(SectionContext& sc);
-void SetConnectionStatus(QLabel* label, ConnectionStatus status);
-void SetLoginStatus(QLabel* label, LoginStatus status);
+void SetConnectionStatus(QLabel* label, ConnectionState status);
+void SetLoginStatus(QLabel* label, LoginState status);
 void SetPushButton(QPushButton* btn, const QKeySequence& ks);
 void SetRadioButton(QRadioButton* btn, const QKeySequence& ks);
 

@@ -26,7 +26,7 @@
 #include "component/config.h"
 #include "component/using.h"
 #include "enum/section.h"
-#include "enum/syncenum.h"
+#include "enum/stateenum.h"
 #include "settlement.h"
 #include "settlementsecondarymodel.h"
 #include "tree/model/treemodel.h"

@@ -144,7 +144,7 @@ bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
     auto* tag { ResourcePool<Tag>::Instance().Allocate() };
 
     tag->id = QUuid::createUuidV7();
-    tag->state = SyncState::kNew;
+    tag->state = SyncState::kCreating;
 
     const QColor color { QColor::fromHsv(
         QRandomGenerator::global()->bounded(360), QRandomGenerator::global()->bounded(128, 256), QRandomGenerator::global()->bounded(180, 256)) };
@@ -218,7 +218,7 @@ bool TagModel::UpdateName(Tag* tag, const QString& new_name)
     names_.insert(new_name);
     names_.remove(old_name);
 
-    if (tag->state == SyncState::kNew) {
+    if (tag->state == SyncState::kCreating) {
         TryInsert(tag);
     } else if (tag->state == SyncState::kSynced) {
         pending_updates_[tag->id].insert(kName, new_name);
@@ -235,7 +235,7 @@ bool TagModel::UpdateColor(Tag* tag, const QString& new_color)
 
     tag->color = new_color;
 
-    if (tag->state == SyncState::kNew && !tag->name.isEmpty()) {
+    if (tag->state == SyncState::kCreating && !tag->name.isEmpty()) {
         TryInsert(tag);
     } else if (tag->state == SyncState::kSynced) {
         pending_updates_[tag->id].insert(kColor, new_color);
@@ -307,10 +307,10 @@ void TagModel::FlushCaches()
 
 void TagModel::TryInsert(Tag* tag)
 {
-    if (!tag || tag->state != SyncState::kNew)
+    if (!tag || tag->state != SyncState::kCreating)
         return;
 
-    tag->state = SyncState::kDirty;
+    tag->state = SyncState::kUpdating;
 
     const QJsonObject message { JsonGen::TagInsert(section_, tag) };
     WebSocket::Instance()->SendMessage(WsKey::kTagInsert, message);

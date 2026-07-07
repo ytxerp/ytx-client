@@ -51,8 +51,8 @@ MainWindow::MainWindow(QWidget* parent)
     SetAction(false);
     SetLoginAction(false);
 
-    utils::SetConnectionStatus(connection_label_, ConnectionStatus::Connecting);
-    utils::SetLoginStatus(login_label_, LoginStatus::LoggedOut);
+    utils::SetConnectionStatus(connection_label_, ConnectionState::Connecting);
+    utils::SetLoginStatus(login_label_, LoginState::LoggedOut);
     utils::ReadConfig(ui->splitter, &QSplitter::restoreState, app_settings_, kSplitter, kState);
     utils::ReadConfig(this, &QMainWindow::restoreState, app_settings_, kMainwindow, kState, 0);
     utils::ReadConfig(this, &QMainWindow::restoreGeometry, app_settings_, kMainwindow, kGeometry);

@@ -25,7 +25,7 @@
 #include <QUuid>
 
 #include "component/constant.h"
-#include "enum/syncenum.h"
+#include "enum/stateenum.h"
 
 struct Tag final {
     QUuid id {};
@@ -34,7 +34,7 @@ struct Tag final {
     QString color {};
 
     // state is local only, not serialized
-    SyncState state { SyncState::kNew };
+    SyncState state { SyncState::kCreating };
 
     void Reset();
     QJsonObject WriteJson() const;
