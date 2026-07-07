@@ -6,6 +6,7 @@
 #include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 #include "component/using.h"
+#include "entryhub/entryhubi.h"
 #include "entryhub/entryhubp.h"
 #include "global/userprofile.h"
 #include "tree/model/treemodelo.h"
@@ -714,7 +715,7 @@ void WebSocket::DeleteLeaf(const QJsonObject& obj)
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
 
-    entry_hub->DeleteLeaf(leaf_entry);
+    entry_hub->DeleteDoubleLeaf(leaf_entry);
     tree_model->SyncTotalArray(total_array);
     tree_model->DeleteNode(node_id);
 }
@@ -750,10 +751,10 @@ void WebSocket::DeleteLeafP(const QJsonObject& obj)
     const auto linked_entry_array { obj.value(kLinkedEntry).toArray() };
     const auto leaf_entry { ParseLinkedEntryP(linked_entry_array) };
 
-    auto entry_hub { entry_hub_hash_.value(section) };
+    auto* entry_hub { static_cast<EntryHubP*>(entry_hub_hash_.value(section).data()) };
     auto tree_model { tree_model_hash_.value(section) };
 
-    entry_hub->DeleteLeaf(leaf_entry);
+    entry_hub->DeleteSingleLeaf(leaf_entry);
     tree_model->DeleteNode(node_id);
 }
 
@@ -808,7 +809,7 @@ void WebSocket::ReplaceLeaf(const QJsonObject& obj)
         return;
 
     {
-        auto entry_hub { entry_hub_hash_.value(section) };
+        auto* entry_hub { static_cast<EntryHubI*>(entry_hub_hash_.value(section).data()) };
         entry_hub->ReplaceLeaf(old_node_id, new_node_id);
     }
 
@@ -816,10 +817,10 @@ void WebSocket::ReplaceLeaf(const QJsonObject& obj)
         auto entry_hub_p { static_cast<EntryHubP*>(entry_hub_hash_.value(Section::kPartner).data()) };
 
         if (partner_int)
-            entry_hub_p->ReplacePartnerIntRef(old_node_id, new_node_id);
+            entry_hub_p->ReplaceInternalInventoryRef(old_node_id, new_node_id);
 
         if (partner_ext)
-            entry_hub_p->ReplacePartnerExtRef(old_node_id, new_node_id);
+            entry_hub_p->ReplaceExternalInventoryRef(old_node_id, new_node_id);
     }
 
     auto tree_model { tree_model_hash_.value(section) };

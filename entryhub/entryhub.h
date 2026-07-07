@@ -73,7 +73,8 @@ public:
     void PeriodClose(const QJsonArray& array);
 
     void MarkBatch(const QUuid& node_id, Mark mark);
-    void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
+
+    void DeleteDoubleLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
     virtual void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool is_parallel)
     {
@@ -88,14 +89,8 @@ public:
         Q_UNUSED(update);
     }
 
-    virtual void DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
-    virtual void DeleteLeaf(const QSet<QUuid>& leaf_entry) { Q_UNUSED(leaf_entry); }
-
 protected:
     virtual EntryList ProcessEntryArray(const QJsonArray& array);
-
-    void ReplaceLeafFunction(QSet<QUuid>& entry_id_set, EntryList& entry_list, const QUuid& old_node_id, const QUuid& new_node_id) const;
-    void DeleteLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
     void MarkAction(Entry* entry, Mark mark);
 

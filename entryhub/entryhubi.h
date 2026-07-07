@@ -29,6 +29,8 @@ public:
 public:
     void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool is_parallel) override;
     void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update) override;
+
+    void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
 };
 
 #endif // ENTRYHUBI_H

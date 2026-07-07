@@ -16,10 +16,17 @@ EntryHub::EntryHub(CSectionInfo& info, QObject* parent)
 
 EntryHub::~EntryHub() { Reset(); }
 
-void EntryHub::DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
+void EntryHub::DeleteDoubleLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
 {
     emit SDeleteEntryHash(leaf_entry);
-    DeleteLeafFunction(leaf_entry);
+
+    // Recycle entry resources
+    for (auto it = leaf_entry.constBegin(); it != leaf_entry.constEnd(); ++it) {
+        const QSet<QUuid>& entry_set = it.value();
+        for (const QUuid& entry_id : entry_set) {
+            EntryPool::Instance().Recycle(entry_cache_.take(entry_id), section_);
+        }
+    }
 }
 
 void EntryHub::RAppendOneEntry(Entry* entry)
@@ -41,30 +48,6 @@ void EntryHub::RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id)
 }
 
 void EntryHub::Reset() { EntryPool::Instance().Recycle(entry_cache_, section_); }
-
-void EntryHub::DeleteLeafFunction(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
-{
-    // Recycle entry resources
-    for (auto it = leaf_entry.constBegin(); it != leaf_entry.constEnd(); ++it) {
-        const QSet<QUuid>& entry_set = it.value();
-        for (const QUuid& entry_id : entry_set) {
-            EntryPool::Instance().Recycle(entry_cache_.take(entry_id), section_);
-        }
-    }
-}
-
-void EntryHub::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
-{
-    Q_ASSERT(section_ == Section::kInventory && "Invalid section: only Inventory nodes are allowed to be replaced");
-
-    QSet<QUuid> entry_id_set {};
-    EntryList entry_list {};
-
-    ReplaceLeafFunction(entry_id_set, entry_list, old_node_id, new_node_id);
-
-    emit SDeleteMultiEntries(old_node_id, entry_id_set);
-    emit SAppendMultiEntries(new_node_id, entry_list);
-}
 
 void EntryHub::InsertEntry(const QJsonObject& data)
 {
@@ -319,22 +302,5 @@ void EntryHub::MarkAction(Entry* entry, Mark mark)
         break;
     default:
         break;
-    }
-}
-
-void EntryHub::ReplaceLeafFunction(QSet<QUuid>& entry_id_set, EntryList& entry_list, const QUuid& old_node_id, const QUuid& new_node_id) const
-{
-    for (auto* entry : std::as_const(entry_cache_)) {
-        if (entry->lhs_node == old_node_id && entry->rhs_node != new_node_id) {
-            entry_id_set.insert(entry->id);
-            entry_list.emplaceBack(entry);
-            entry->lhs_node = new_node_id;
-        }
-
-        if (entry->rhs_node == old_node_id && entry->lhs_node != new_node_id) {
-            entry_id_set.insert(entry->id);
-            entry_list.emplaceBack(entry);
-            entry->rhs_node = new_node_id;
-        }
     }
 }

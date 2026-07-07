@@ -28,9 +28,6 @@ class EntryHubO final : public EntryHub {
 public:
     explicit EntryHubO(CSectionInfo& info, QObject* parent = nullptr);
 
-public:
-    void DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) override;
-
 protected:
     EntryList ProcessEntryArray(const QJsonArray& array) override;
 };

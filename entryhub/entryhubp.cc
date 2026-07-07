@@ -40,23 +40,21 @@ void EntryHubP::RUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node)
     entry_map_[{ entry_p->lhs_node, entry_p->rhs_node }] = { entry_p->unit_price, entry_p->external_sku };
 }
 
-void EntryHubP::DeleteLeaf(const QSet<QUuid>& leaf_entry)
+void EntryHubP::DeleteSingleLeaf(const QSet<QUuid>& leaf_entry)
 {
     qInfo() << "EntryHubP::DeleteLeaf size:" << leaf_entry.size();
 
-    for (auto it = entry_cache_.begin(); it != entry_cache_.end();) {
-        if (leaf_entry.contains(it.key())) {
-            auto* entry { static_cast<EntryP*>(it.value()) };
-            entry_map_.remove({ entry->lhs_node, entry->rhs_node });
-            EntryPool::Instance().Recycle(entry, section_);
-            it = entry_cache_.erase(it);
-        } else {
-            ++it;
-        }
+    for (const QUuid& entry_id : leaf_entry) {
+        Entry* entry { entry_cache_.take(entry_id) };
+        if (!entry)
+            continue;
+
+        entry_map_.remove({ entry->lhs_node, entry->rhs_node });
+        EntryPool::Instance().Recycle(entry, section_);
     }
 }
 
-void EntryHubP::ReplacePartnerIntRef(const QUuid& old_item_id, const QUuid& new_item_id)
+void EntryHubP::ReplaceInternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id)
 {
     for (auto* entry : std::as_const(entry_cache_)) {
         auto* d_entry = static_cast<EntryP*>(entry);
@@ -84,7 +82,7 @@ void EntryHubP::ReplacePartnerIntRef(const QUuid& old_item_id, const QUuid& new_
     }
 }
 
-void EntryHubP::ReplacePartnerExtRef(const QUuid& old_item_id, const QUuid& new_item_id)
+void EntryHubP::ReplaceExternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id)
 {
     for (auto* entry : std::as_const(entry_cache_)) {
         auto* d_entry = static_cast<EntryP*>(entry);
@@ -198,7 +196,7 @@ void EntryHubP::DeleteEntry(const QUuid& entry_id)
         return;
     }
 
-    auto* entry { static_cast<EntryP*>(it.value()) };
+    auto* entry { it.value() };
 
     entry_map_.remove({ entry->lhs_node, entry->rhs_node });
 
@@ -211,27 +209,29 @@ void EntryHubP::DeleteEntry(const QUuid& entry_id)
 void EntryHubP::UpdateEntry(const QUuid& id, const QJsonObject& update)
 {
     auto it = entry_cache_.constFind(id);
-    if (it != entry_cache_.constEnd()) {
-        auto* entry { static_cast<EntryP*>(it.value()) };
+    if (it == entry_cache_.constEnd()) {
+        return;
+    }
 
-        const QUuid old_rhs_node { entry->rhs_node };
+    auto* entry { static_cast<EntryP*>(it.value()) };
 
-        entry->ReadJson(update);
+    const QUuid old_rhs_node { entry->rhs_node };
 
-        {
-            const bool update_map_value { update.contains(kUnitPrice) || update.contains(kExternalSku) };
-            const bool update_map_key { update.contains(kRhsNode) };
+    entry->ReadJson(update);
 
-            if (update_map_key) {
-                entry_map_.remove({ entry->lhs_node, old_rhs_node });
-                entry_map_.insert({ entry->lhs_node, entry->rhs_node }, { entry->unit_price, entry->external_sku });
-            } else if (update_map_value)
-                entry_map_[{ entry->lhs_node, old_rhs_node }] = { entry->unit_price, entry->external_sku };
-        }
+    {
+        const bool update_map_value { update.contains(kUnitPrice) || update.contains(kExternalSku) };
+        const bool update_map_key { update.contains(kRhsNode) };
 
-        const auto [start, end] = entry::CacheColumnRange(section_);
-        emit SRefreshField(entry->lhs_node, id, start, end);
-    };
+        if (update_map_key) {
+            entry_map_.remove({ entry->lhs_node, old_rhs_node });
+            entry_map_.insert({ entry->lhs_node, entry->rhs_node }, { entry->unit_price, entry->external_sku });
+        } else if (update_map_value)
+            entry_map_[{ entry->lhs_node, old_rhs_node }] = { entry->unit_price, entry->external_sku };
+    }
+
+    const auto [start, end] = entry::CacheColumnRange(section_);
+    emit SRefreshField(entry->lhs_node, id, start, end);
 }
 
 #if 0

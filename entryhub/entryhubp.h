@@ -48,11 +48,11 @@ public:
     void DeleteEntry(const QUuid& entry_id) override;
     void UpdateEntry(const QUuid& id, const QJsonObject& update) override;
 
-    void DeleteLeaf(const QSet<QUuid>& leaf_entry) override;
+    void DeleteSingleLeaf(const QSet<QUuid>& leaf_entry);
     void ApplyPartnerEntry(const QJsonArray& array);
 
-    void ReplacePartnerIntRef(const QUuid& old_item_id, const QUuid& new_item_id);
-    void ReplacePartnerExtRef(const QUuid& old_item_id, const QUuid& new_item_id);
+    void ReplaceInternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id);
+    void ReplaceExternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id);
 
 private:
     struct EntryValue {

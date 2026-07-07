@@ -1,6 +1,5 @@
 #include "entryhubo.h"
 
-#include <QDate>
 #include <QJsonArray>
 
 #include "global/entrypool.h"
@@ -9,8 +8,6 @@ EntryHubO::EntryHubO(CSectionInfo& info, QObject* parent)
     : EntryHub(info, parent)
 {
 }
-
-void EntryHubO::DeleteLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry) { DeleteLeafFunction(leaf_entry); }
 
 /**
  * @brief Convert a JSON array of entries (from server) into an EntryList.
