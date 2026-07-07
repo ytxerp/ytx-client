@@ -6,7 +6,6 @@ TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, QObject* parent)
     : TreeModel(info, separator, parent)
 {
     leaf_path_model_ = new ItemModel(this);
-    leaf_path_model_->AppendItem(QString(), QUuid());
 }
 
 QSet<QUuid>* TreeModelI::UnitSet(NodeUnit unit)

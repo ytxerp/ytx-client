@@ -6,7 +6,6 @@ TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, QObject* parent)
     : TreeModel(info, separator, parent)
 {
     leaf_path_model_ = new ItemModel(this);
-    leaf_path_model_->AppendItem(QString(), QUuid());
 }
 
 void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)

@@ -681,20 +681,9 @@ void TreeModel::Reset()
 {
     FlushCaches();
 
-    {
-        leaf_path_.clear();
-        branch_path_.clear();
-
-        if (leaf_path_model_)
-            leaf_path_model_->Reset();
-    }
-
-    {
-        beginResetModel();
-        NodePool::Instance().Recycle(node_hash_, section_);
-        root_->children.clear();
-        endResetModel();
-    }
+    beginResetModel();
+    ResetTreeData();
+    endResetModel();
 }
 
 QModelIndex TreeModel::GetIndex(const QUuid& node_id) const
@@ -989,13 +978,7 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     beginResetModel();
 
     {
-        NodePool::Instance().Recycle(node_hash_, section_);
-        root_->children.clear();
-        branch_path_.clear();
-        leaf_path_.clear();
-
-        if (leaf_path_model_)
-            leaf_path_model_->Reset();
+        ResetTreeData();
     }
 
     {
@@ -1036,6 +1019,29 @@ void TreeModel::InitRoot()
     }
 
     Q_ASSERT(root_ != nullptr);
+}
+
+void TreeModel::ResetTreeData()
+{
+    NodePool::Instance().Recycle(node_hash_, section_);
+
+    root_->children.clear();
+    leaf_path_.clear();
+    branch_path_.clear();
+
+    if (leaf_path_model_) {
+        leaf_path_model_->Reset();
+
+        // NOTE: For Partner/Inventory sections, leaf_path_model_ must
+        // always contain an empty placeholder item (empty path + null
+        // QUuid) after being reset. Partner's external_sku and Order's employee
+        // fields are optional and may be left blank, and they rely on
+        // this placeholder to represent "no selection" in their
+        // dropdown UI. Without it, those fields would have no
+        // valid option to fall back to when the user leaves them empty.
+        if (section_ == Section::kInventory || section_ == Section::kPartner)
+            leaf_path_model_->AppendItem(QString(), QUuid());
+    }
 }
 
 void TreeModel::BuildHierarchy(const QJsonArray& path_array)
