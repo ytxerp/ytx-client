@@ -175,9 +175,14 @@ Qt::ItemFlags TreeModelF::flags(const QModelIndex& index) const
     case NodeEnumF::kTag:
     case NodeEnumF::kDocument:
     case NodeEnumF::kUnit:
+    case NodeEnumF::kId:
+    case NodeEnumF::kVersion:
+    case NodeEnumF::kDirectionRule:
         flags &= ~Qt::ItemIsEditable;
         break;
-    default:
+    case NodeEnumF::kCode:
+    case NodeEnumF::kDescription:
+    case NodeEnumF::kRoles:
         flags |= Qt::ItemIsEditable;
         break;
     }

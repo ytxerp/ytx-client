@@ -235,14 +235,14 @@ private:
 
     void UpdateDirectionRuleLocal(Node* node, bool value, const QModelIndex& index);
 
-    void RemoveUnitSet(const QUuid& node_id, NodeUnit unit)
+    void UnitSetRemove(const QUuid& node_id, NodeUnit unit)
     {
         if (auto* set = UnitSet(unit)) {
             set->remove(node_id);
         }
     }
 
-    void InsertUnitSet(const QUuid& node_id, NodeUnit unit)
+    void UnitSetInsert(const QUuid& node_id, NodeUnit unit)
     {
         if (auto* set = UnitSet(unit)) {
             set->insert(node_id);

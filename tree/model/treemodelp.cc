@@ -1,4 +1,5 @@
 #include "treemodelp.h"
+
 #include "utils/nodeutils.h"
 
 TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, QObject* parent)
@@ -28,9 +29,7 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)
 
 QSet<QUuid>* TreeModelP::UnitSet(NodeUnit unit)
 {
-    const NodeUnit kUnit { unit };
-
-    switch (kUnit) {
+    switch (unit) {
     case NodeUnit::PCustomer:
         return &cset_;
     case NodeUnit::PVendor:
@@ -238,9 +237,13 @@ Qt::ItemFlags TreeModelP::flags(const QModelIndex& index) const
     case NodeEnumP::kTag:
     case NodeEnumP::kDocument:
     case NodeEnumP::kKind:
+    case NodeEnumP::kId:
+    case NodeEnumP::kVersion:
         flags &= ~Qt::ItemIsEditable;
         break;
-    default:
+    case NodeEnumP::kPaymentTerm:
+    case NodeEnumP::kCode:
+    case NodeEnumP::kDescription:
         flags |= Qt::ItemIsEditable;
         break;
     }

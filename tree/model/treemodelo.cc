@@ -399,7 +399,25 @@ Qt::ItemFlags TreeModelO::flags(const QModelIndex& index) const
     case NodeEnumO::kName:
         flags |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
         break;
-    default:
+    case NodeEnumO::kCode:
+    case NodeEnumO::kDescription:
+    case NodeEnumO::kId:
+    case NodeEnumO::kVersion:
+    case NodeEnumO::kPartnerId:
+    case NodeEnumO::kIssuedTime:
+    case NodeEnumO::kEmployeeId:
+    case NodeEnumO::kStatus:
+    case NodeEnumO::kTag:
+    case NodeEnumO::kDirectionRule:
+    case NodeEnumO::kKind:
+    case NodeEnumO::kUnit:
+    case NodeEnumO::kCountTotal:
+    case NodeEnumO::kMeasureTotal:
+    case NodeEnumO::kInitialTotal:
+    case NodeEnumO::kDiscountTotal:
+    case NodeEnumO::kFinalTotal:
+    case NodeEnumO::kIsSettled:
+    case NodeEnumO::kSettlementId:
         flags &= ~Qt::ItemIsEditable;
         break;
     }

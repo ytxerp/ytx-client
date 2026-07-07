@@ -808,7 +808,7 @@ void TreeModel::UnregisterPath(Node* node, Node* parent_node)
         affected_ids.remove(node_id);
 
         RefreshAffectedTotal(affected_ids);
-        RemoveUnitSet(node_id, node->unit);
+        UnitSetRemove(node_id, node->unit);
     } break;
     }
 }
@@ -1085,7 +1085,7 @@ void TreeModel::RegisterPath(Node* node)
     case NodeKind::kLeaf:
         leaf_path_.insert(node->id, path);
         leaf_path_model_->AppendItem(path, node->id);
-        InsertUnitSet(node->id, node->unit);
+        UnitSetInsert(node->id, node->unit);
         break;
     }
 }

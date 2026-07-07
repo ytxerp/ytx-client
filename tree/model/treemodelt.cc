@@ -155,6 +155,7 @@ Qt::ItemFlags TreeModelT::flags(const QModelIndex& index) const
     switch (column) {
     case NodeEnumT::kName:
         flags |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+        flags &= ~Qt::ItemIsEditable;
         break;
     case NodeEnumT::kFinalTotal:
     case NodeEnumT::kInitialTotal:
@@ -162,9 +163,14 @@ Qt::ItemFlags TreeModelT::flags(const QModelIndex& index) const
     case NodeEnumT::kUnit:
     case NodeEnumT::kTag:
     case NodeEnumT::kKind:
+    case NodeEnumT::kDocument:
+    case NodeEnumT::kId:
+    case NodeEnumT::kVersion:
+    case NodeEnumT::kDirectionRule:
         flags &= ~Qt::ItemIsEditable;
         break;
-    default:
+    case NodeEnumT::kCode:
+    case NodeEnumT::kDescription:
         flags |= Qt::ItemIsEditable;
         break;
     }

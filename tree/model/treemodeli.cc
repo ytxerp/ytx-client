@@ -1,4 +1,5 @@
 #include "treemodeli.h"
+
 #include "utils/nodeutils.h"
 
 TreeModelI::TreeModelI(CSectionInfo& info, CString& separator, QObject* parent)
@@ -191,9 +192,15 @@ Qt::ItemFlags TreeModelI::flags(const QModelIndex& index) const
     case NodeEnumI::kKind:
     case NodeEnumI::kUnit:
     case NodeEnumI::kDocument:
+    case NodeEnumI::kId:
+    case NodeEnumI::kVersion:
+    case NodeEnumI::kDirectionRule:
         flags &= ~Qt::ItemIsEditable;
         break;
-    default:
+    case NodeEnumI::kCode:
+    case NodeEnumI::kDescription:
+    case NodeEnumI::kUnitPrice:
+    case NodeEnumI::kCommission:
         flags |= Qt::ItemIsEditable;
         break;
     }
