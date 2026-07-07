@@ -310,8 +310,10 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     // manage_action->setIcon(QIcon(":/icons/settings.png"));
     connect(manage_action, &QAction::triggered, this, [this]() { on_actionTags_triggered(); });
 
-    menu->addSeparator();
-    menu->addAction(ui->actionJumpEntry);
+    if (IsDoubleEntry(start_)) {
+        menu->addSeparator();
+        menu->addAction(ui->actionJumpEntry);
+    }
 
     menu->exec(QCursor::pos());
 }

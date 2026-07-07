@@ -197,6 +197,9 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     SetTableView(view, sc_->info.section, std::to_underlying(EntryEnumO::kDescription));
     TableDelegateO(view, sc_->info, section_config);
 
+    view->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::RTableViewCustomContextMenuRequested);
+
     sc_->widget_hash.insert(node_id, wc);
 }
 

@@ -74,6 +74,20 @@ inline constexpr std::array<Section, 3> kDoubleSectionArray = { Section::kFinanc
 inline bool IsSingleEntry(Section s) { return s == Section::kPartner || s == Section::kSale || s == Section::kPurchase; }
 
 /**
+ * @brief Whether the given section belongs to a double-entry module.
+ *
+ * Double-entry modules record transactions that involve two related nodes
+ * (e.g. a debit side and a credit side, or a lhs/rhs node pair) which must
+ * be kept in sync with each other whenever an entry is created, edited, or
+ * removed.
+ *
+ * Note:
+ *   This is the complement of IsSingleEntry(), but is explicitly defined
+ *   for clarity and readability.
+ */
+inline bool IsDoubleEntry(Section s) { return s == Section::kTask || s == Section::kFinance || s == Section::kInventory; }
+
+/**
  * @brief Whether the given section represents an order-type module.
  *
  * Order modules include:
