@@ -109,7 +109,7 @@ private slots:
     void RSelectNode(Section section, const QUuid& node_id);
 
     void RUpdateConfig(const AppConfig& app, const SharedConfig& shared, const SectionConfig& section);
-    void RSyncPartner(const QUuid& node_id, const QUuid& value);
+    void RSyncPartner(const QUuid& parent_id, const QUuid& node_id, const QUuid& partner_id);
     void RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
     void RUpdateName(const QUuid& node_id, const QString& name, bool branch);
     void RMessage(QMessageBox::Icon icon, const QString& message);

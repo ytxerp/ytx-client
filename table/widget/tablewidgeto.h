@@ -63,7 +63,7 @@ public:
 
 signals:
     // send to MainWindow
-    void SSyncPartner(const QUuid& node_id, const QUuid& value);
+    void SSyncPartner(const QUuid& parent_id, const QUuid& node_id, const QUuid& partner_id);
 
 public slots:
     // receive from TableModelOrder

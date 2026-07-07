@@ -71,14 +71,13 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
 
 void MainWindow::RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id)
 {
-    auto model { sc_p_.tree_model };
     auto widget { sc_->tab_widget };
     auto* tab_bar { widget->tabBar() };
     int count { widget->count() };
 
     for (int index = 0; index != count; ++index) {
-        if (widget->isTabVisible(index) && tab_bar->tabData(index).toUuid() == widget_id) {
-            const QString name { model->Name(partner_id) };
+        if (tab_bar->tabData(index).toUuid() == widget_id) {
+            const QString name { sc_p_.tree_model->Name(partner_id) };
             const QString label { QString("%1-%2").arg(tr("Settlement"), name) };
 
             tab_bar->setTabText(index, label);

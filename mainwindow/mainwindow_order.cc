@@ -262,16 +262,19 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
     TableSStation::Instance()->RegisterModel(node_id, table_model);
 }
 
-void MainWindow::RSyncPartner(const QUuid& node_id, const QUuid& value)
+void MainWindow::RSyncPartner(const QUuid& parent_id, const QUuid& node_id, const QUuid& partner_id)
 {
-    auto model { sc_p_.tree_model };
     auto widget { sc_->tab_widget };
     auto* tab_bar { widget->tabBar() };
     const int count { widget->count() };
 
     for (int index = 0; index != count; ++index) {
         if (tab_bar->tabData(index).toUuid() == node_id) {
-            tab_bar->setTabText(index, model->Name(value));
+            const QString partner_name { sc_p_.tree_model->Name(partner_id) };
+
+            tab_bar->setTabText(index, partner_name);
+            tab_bar->setTabToolTip(index, sc_->tree_model->Path(parent_id) + app_config_.separator + partner_name);
+
             break;
         }
     }

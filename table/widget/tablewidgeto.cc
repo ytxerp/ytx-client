@@ -290,7 +290,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
         return;
 
     tmp_node_->partner_id = partner_id;
-    emit SSyncPartner(node_id_, partner_id);
+    emit SSyncPartner(tmp_node_->parent->id, node_id_, partner_id);
 
     if (sync_state_ == SyncState::kSynced) {
         pending_update_.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
