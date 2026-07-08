@@ -17,6 +17,7 @@ void EntryShadow::BindEntry(Entry* base, bool parallel)
     document = &base->document;
     tag = &base->tag;
     status = &base->status;
+    sync_state = &base->sync_state;
 
     is_parallel = parallel;
 

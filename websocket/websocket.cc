@@ -1000,7 +1000,6 @@ void WebSocket::InsertEntry(const QJsonObject& obj)
 void WebSocket::DeleteEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
 
     auto entry_hub { entry_hub_hash_.value(section) };
@@ -1009,21 +1008,16 @@ void WebSocket::DeleteEntry(const QJsonObject& obj)
     Q_ASSERT(entry_hub);
     Q_ASSERT(tree_model);
 
-    QJsonObject lhs_total {};
-    QJsonObject rhs_total {};
-
     const bool has_total { obj.contains(kLhsTotal) && obj.value(kLhsTotal).isObject() && obj.contains(kRhsTotal) && obj.value(kRhsTotal).isObject() };
     if (has_total) {
-        lhs_total = obj.value(kLhsTotal).toObject();
-        rhs_total = obj.value(kRhsTotal).toObject();
+        const QJsonObject lhs_total { obj.value(kLhsTotal).toObject() };
+        const QJsonObject rhs_total { obj.value(kRhsTotal).toObject() };
 
         const QJsonArray total_array { lhs_total, rhs_total };
         tree_model->SyncTotalArray(total_array);
     }
 
-    if (session_id != session_id_) {
-        entry_hub->DeleteEntry(entry_id);
-    }
+    entry_hub->DeleteEntry(entry_id);
 }
 
 void WebSocket::UpdateNodeDirectionRule(const QJsonObject& obj)

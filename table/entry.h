@@ -24,6 +24,7 @@
 #include <QJsonObject>
 #include <QUuid>
 
+#include "enum/stateenum.h"
 #include "tree/finance_role.h"
 
 struct Entry {
@@ -36,6 +37,9 @@ struct Entry {
     QStringList tag {};
     int status {};
     QUuid rhs_node {};
+
+    // New local object starts as pending creation
+    SyncState sync_state { SyncState::kCreating };
 
     // NOTE: Following fields are only used by base Entry, not EntryP or EntryO
     double lhs_rate {};

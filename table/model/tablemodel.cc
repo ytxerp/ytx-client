@@ -257,7 +257,7 @@ QVariant TableModel::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* shadow = shadow_list_.at(index.row());
+    auto* shadow { static_cast<EntryShadow*>(index.internalPointer()) };
 
     const EntryEnum column { index.column() };
 
@@ -304,7 +304,7 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
     if (data(index, role) == value)
         return false;
 
-    auto* shadow { shadow_list_.at(index.row()) };
+    auto* shadow { static_cast<EntryShadow*>(index.internalPointer()) };
 
     const QUuid id { *shadow->id };
     const int version { *shadow->version };
@@ -429,6 +429,11 @@ Qt::ItemFlags TableModel::flags(const QModelIndex& index) const
         break;
     }
 
+    auto* shadow { static_cast<EntryShadow*>(index.internalPointer()) };
+
+    if (*shadow->sync_state == SyncState::kDeleting)
+        flags &= ~Qt::ItemIsEditable;
+
     return flags;
 }
 
@@ -438,38 +443,31 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
 
     // Capture the shadow and IDs using {} initialization
     auto* shadow { shadow_list_.at(row) };
+    if (*shadow->sync_state == SyncState::kDeleting)
+        return true;
+
     const auto entry_id { *shadow->id };
-    const auto rhs_node_id { *shadow->rhs_node };
 
-    // IMPORTANT: Clean up the pending timer first
-    // This prevents the timer from firing and trying to update a deleted entry.
-    if (auto* timer { pending_timers_.take(entry_id) }) {
-        timer->stop();
-        timer->deleteLater();
-    }
-    pending_updates_.remove(entry_id);
+    CancelPendingUpdate(entry_id);
 
-    beginRemoveRows(parent, row, row);
-    shadow_list_.removeAt(row);
-    endRemoveRows();
+    if (*shadow->sync_state == SyncState::kCreating) {
+        beginRemoveRows(parent, row, row);
+        shadow_list_.removeAt(row);
+        endRemoveRows();
 
-    if (!rhs_node_id.isNull()) {
-        QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
-        WebSocket::Instance()->SendMessage(WsKey::kEntryDelete, message);
-
-        const double lhs_initial_delta { *shadow->lhs_credit - *shadow->lhs_debit };
-        const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
-
-        if (has_leaf_delta) {
-            AccumulateBalance(row);
-        }
-
-        emit SDeleteOneEntry(rhs_node_id, entry_id);
-    } else {
+        // Recycle the entry before recycling the shadow.
+        // The shadow holds a pointer to the entry, so the entry must be released first.
         EntryPool::Instance().Recycle(shadow->entry, section_);
+        EntryShadowPool::Instance().Recycle(shadow, section_);
+
+        return true;
     }
 
-    EntryShadowPool::Instance().Recycle(shadow, section_);
+    *shadow->sync_state = SyncState::kDeleting;
+
+    QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
+    WebSocket::Instance()->SendMessage(WsKey::kEntryDelete, message);
+
     return true;
 }
 
@@ -494,6 +492,18 @@ void TableModel::EmitDataChanged(int start_row, int end_row, int start_column, i
     Q_ASSERT(top_left.parent() == bottom_right.parent());
 
     emit dataChanged(top_left, bottom_right, QList<int> { Qt::DisplayRole, Qt::EditRole });
+}
+
+void TableModel::CancelPendingUpdate(const QUuid& entry_id)
+{
+    // IMPORTANT: Clean up the pending timer first.
+    // This prevents the timer from firing and trying to update a deleted entry.
+    if (auto* timer { pending_timers_.take(entry_id) }) {
+        timer->stop();
+        timer->deleteLater();
+    }
+
+    pending_updates_.remove(entry_id);
 }
 
 void TableModel::RDeleteMultiEntries(const QSet<QUuid>& entry_id_set)

@@ -48,8 +48,7 @@ signals:
     void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
     // send to entryhub, FIPT
-    void SAppendOneEntry(Entry* entry);
-    void SDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id);
+    void STransferOneEntry(Entry* entry);
 
 public slots:
     virtual void RAppendMultiEntries(const EntryList& entry_list);
@@ -74,7 +73,7 @@ public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
 
     bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
-    bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+    bool removeRows(int row, int count = 1, const QModelIndex& parent = QModelIndex()) override;
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
@@ -120,6 +119,7 @@ protected:
     }
 
     void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent = QModelIndex());
+    void CancelPendingUpdate(const QUuid& entry_id);
 
 protected:
     CSectionInfo& info_;

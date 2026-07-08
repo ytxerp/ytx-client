@@ -10,24 +10,11 @@ EntryHubP::EntryHubP(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubP::RAppendOneEntry(Entry* entry)
+void EntryHubP::RTransferOneEntry(Entry* entry)
 {
     auto* entry_p { static_cast<EntryP*>(entry) };
     entry_cache_.insert(entry_p->id, entry_p);
     entry_map_.insert({ entry_p->lhs_node, entry_p->rhs_node }, { entry_p->unit_price, entry_p->external_sku });
-}
-
-void EntryHubP::RDeleteOneEntry(const QUuid& /*node_id*/, const QUuid& entry_id)
-{
-    auto it = entry_cache_.find(entry_id);
-    if (it != entry_cache_.end()) {
-        auto* entry { static_cast<EntryP*>(it.value()) };
-
-        entry_map_.remove({ entry->lhs_node, entry->rhs_node });
-
-        EntryPool::Instance().Recycle(entry, section_);
-        entry_cache_.erase(it);
-    }
 }
 
 void EntryHubP::RUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node)

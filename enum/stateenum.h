@@ -32,6 +32,8 @@ enum class SyncState {
     kCreating,
     kSynced,
     kUpdating,
+    kDeleting,
+    kError,
 };
 
 #endif // STATEENUM_H

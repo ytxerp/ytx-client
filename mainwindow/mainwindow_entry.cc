@@ -85,27 +85,7 @@ void MainWindow::DeleteEntry(TableWidget* widget)
     auto* model { widget->Model() };
 
     const int current_row { current_index.row() };
-    if (!model->removeRows(current_row, 1)) {
-        qDebug() << "Failed to remove row:" << current_row;
-        return;
-    }
-
-    const int new_row_count { model->rowCount() };
-    if (new_row_count == 0)
-        return;
-
-    QModelIndex new_index {};
-    if (current_row < new_row_count) {
-        new_index = model->index(current_row, 0);
-    } else {
-        new_index = model->index(new_row_count - 1, 0);
-    }
-
-    if (new_index.isValid()) {
-        view->setCurrentIndex(new_index);
-        view->selectionModel()->select(new_index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-        view->closePersistentEditor(new_index);
-    }
+    model->removeRows(current_row);
 }
 
 void MainWindow::REntryLocation(const QUuid& entry_id, const QUuid& lhs_node_id, const QUuid& rhs_node_id)

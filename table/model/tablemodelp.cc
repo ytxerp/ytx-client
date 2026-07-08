@@ -67,40 +67,6 @@ void TableModelP::RAttachOneEntry(Entry* entry)
         EmitDataChanged(row, row, std::to_underlying(EntryEnumP::kIssuedTime), std::to_underlying(EntryEnumP::kIssuedTime));
 }
 
-bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& parent)
-{
-    Q_ASSERT(row >= 0 && row <= rowCount(parent) - 1);
-
-    // Capture the shadow and IDs using {} initialization
-    auto* entry { entry_list_.at(row) };
-    const auto entry_id { entry->id };
-    const auto rhs_node_id { entry->rhs_node };
-
-    // IMPORTANT: Clean up the pending timer first
-    // This prevents the timer from firing and trying to update a deleted entry.
-    if (auto* timer { pending_timers_.take(entry_id) }) {
-        timer->stop();
-        timer->deleteLater();
-    }
-    pending_updates_.remove(entry_id);
-
-    beginRemoveRows(parent, row, row);
-    entry_list_.removeAt(row);
-    endRemoveRows();
-
-    if (!rhs_node_id.isNull()) {
-        QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
-        WebSocket::Instance()->SendMessage(WsKey::kEntryDelete, message);
-
-        emit SDeleteOneEntry(QUuid(), entry_id);
-    } else {
-        EntryPool::Instance().Recycle(entry, section_);
-    }
-
-    internal_sku_set_.remove(rhs_node_id);
-    return true;
-}
-
 QModelIndex TableModelP::GetIndex(const QUuid& entry_id) const
 {
     int row { 0 };
@@ -115,16 +81,45 @@ QModelIndex TableModelP::GetIndex(const QUuid& entry_id) const
     return QModelIndex();
 }
 
+bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& /*parent*/)
+{
+    Q_ASSERT(row >= 0 && row <= entry_list_.size() - 1);
+
+    auto* entry { entry_list_.at(row) };
+    if (entry->sync_state == SyncState::kDeleting)
+        return true;
+
+    const auto entry_id { entry->id };
+
+    CancelPendingUpdate(entry_id);
+
+    if (entry->sync_state == SyncState::kCreating) {
+        // Never synced to server, safe to remove locally without a round trip.
+        beginRemoveRows({}, row, row);
+        entry_list_.removeAt(row);
+        endRemoveRows();
+
+        EntryPool::Instance().Recycle(entry, section_);
+        return true;
+    }
+
+    entry->sync_state = SyncState::kDeleting;
+
+    QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
+    WebSocket::Instance()->SendMessage(WsKey::kEntryDelete, message);
+    return true;
+}
+
 bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
 {
     if (value.isNull())
         return false;
 
-    if (internal_sku_set_.contains(value))
+    const QUuid old_node { entry->rhs_node };
+    if (old_node == value)
         return false;
 
-    auto old_node { entry->rhs_node };
-    if (old_node == value)
+    if (internal_sku_set_.contains(value))
         return false;
 
     entry->rhs_node = value;
@@ -136,10 +131,12 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
     QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
 
     if (old_node.isNull()) {
+        entry->sync_state = SyncState::kSynced;
+
         message.insert(kEntry, entry->WriteJson());
         WebSocket::Instance()->SendMessage(WsKey::kEntryInsert, message);
 
-        emit SAppendOneEntry(entry);
+        emit STransferOneEntry(entry);
         return true;
     }
 
@@ -157,7 +154,7 @@ QVariant TableModelP::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* d_entry = DerivedPtr<EntryP>(entry_list_.at(index.row()));
+    auto* d_entry { static_cast<EntryP*>(index.internalPointer()) };
 
     const EntryEnumP column { index.column() };
 
@@ -199,8 +196,8 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
 
     const EntryEnumP column { index.column() };
 
-    auto* entry { entry_list_.at(index.row()) };
-    auto* d_entry = DerivedPtr<EntryP>(entry);
+    auto* entry { static_cast<Entry*>(index.internalPointer()) };
+    auto* d_entry = static_cast<EntryP*>(entry);
 
     bool update_entry_hub { false };
 
@@ -319,6 +316,11 @@ Qt::ItemFlags TableModelP::flags(const QModelIndex& index) const
         flags |= Qt::ItemIsEditable;
         break;
     }
+
+    auto* entry { static_cast<Entry*>(index.internalPointer()) };
+
+    if (entry->sync_state == SyncState::kDeleting)
+        flags &= ~Qt::ItemIsEditable;
 
     return flags;
 }

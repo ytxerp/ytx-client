@@ -29,22 +29,10 @@ void EntryHub::DeleteDoubleLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
     }
 }
 
-void EntryHub::RAppendOneEntry(Entry* entry)
+void EntryHub::RTransferOneEntry(Entry* entry)
 {
     entry_cache_.insert(entry->id, entry);
     emit SAttachOneEntry(entry->rhs_node, entry);
-}
-
-void EntryHub::RDeleteOneEntry(const QUuid& node_id, const QUuid& entry_id)
-{
-    auto it = entry_cache_.find(entry_id);
-    if (it != entry_cache_.end()) {
-        if (!node_id.isNull())
-            emit SDetachOneEntry(node_id, entry_id);
-
-        EntryPool::Instance().Recycle(it.value(), section_);
-        entry_cache_.erase(it);
-    }
 }
 
 void EntryHub::Reset() { EntryPool::Instance().Recycle(entry_cache_, section_); }

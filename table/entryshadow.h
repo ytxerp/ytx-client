@@ -36,6 +36,7 @@ struct EntryShadow {
     QUuid* rhs_node {};
     double* lhs_rate {};
     double* rhs_rate {};
+    SyncState* sync_state {};
 
     double* lhs_debit {};
     double* lhs_credit {};

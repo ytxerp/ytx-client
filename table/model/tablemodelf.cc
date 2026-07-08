@@ -19,7 +19,7 @@ QVariant TableModelF::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* d_shadow { DerivedPtr<EntryShadowF>(shadow_list_.at(index.row())) };
+    auto* d_shadow { static_cast<EntryShadowF*>(index.internalPointer()) };
 
     const EntryEnumF column { index.column() };
 
@@ -68,8 +68,7 @@ bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int r
     if (data(index, role) == value)
         return false;
 
-    auto* shadow { shadow_list_.at(index.row()) };
-    auto* d_shadow { DerivedPtr<EntryShadowF>(shadow) };
+    auto* shadow { static_cast<EntryShadow*>(index.internalPointer()) };
 
     const QUuid id { *shadow->id };
     const int version { *shadow->version };
@@ -112,6 +111,8 @@ bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int r
         UpdateNumeric(shadow, value.toDouble(), row, false);
         break;
     case EntryEnumF::kCashKind: {
+        auto* d_shadow { static_cast<EntryShadowF*>(shadow) };
+
         const int raw { value.toInt() };
         const auto cash_kind { static_cast<finance::CashKind>(raw) };
 
@@ -209,6 +210,11 @@ Qt::ItemFlags TableModelF::flags(const QModelIndex& index) const
         break;
     }
 
+    auto* shadow { static_cast<EntryShadow*>(index.internalPointer()) };
+
+    if (*shadow->sync_state == SyncState::kDeleting)
+        flags &= ~Qt::ItemIsEditable;
+
     return flags;
 }
 
@@ -217,7 +223,7 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
     if (value.isNull())
         return false;
 
-    auto old_node { *shadow->rhs_node };
+    const QUuid old_node { *shadow->rhs_node };
     if (old_node == value)
         return false;
 
@@ -228,6 +234,8 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
     QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
 
     if (old_node.isNull()) {
+        *shadow->sync_state = SyncState::kSynced;
+
         message.insert(kEntry, shadow->WriteJson());
         WebSocket::Instance()->SendMessage(WsKey::kEntryInsert, message);
 
@@ -240,7 +248,7 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
             EmitDataChanged(row, row, std::to_underlying(EntryEnumF::kBalance), std::to_underlying(EntryEnumF::kBalance));
         }
 
-        emit SAppendOneEntry(shadow->entry);
+        emit STransferOneEntry(shadow->entry);
     }
 
     if (!old_node.isNull()) {

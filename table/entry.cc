@@ -11,6 +11,9 @@ void Entry::Reset() { *this = Entry {}; }
 
 void Entry::ReadJson(const QJsonObject& object)
 {
+    // Data loaded from server
+    sync_state = SyncState::kSynced;
+
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());
     if (const auto val = object.value(kIssuedTime); val.isString())

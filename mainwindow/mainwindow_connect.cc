@@ -121,8 +121,7 @@ void MainWindow::TableConnectF(TableModel* table_model) const
     auto tree_model { sc_f_.tree_model };
     auto entry_hub { sc_f_.entry_hub };
 
-    connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
-    connect(table_model, &TableModel::SDeleteOneEntry, entry_hub, &EntryHub::RDeleteOneEntry);
+    connect(table_model, &TableModel::STransferOneEntry, entry_hub, &EntryHub::RTransferOneEntry);
 
     connect(table_model, &TableModel::SAttachOneEntry, TableSStation::Instance(), &TableSStation::RAttachOneEntry);
     connect(table_model, &TableModel::SDetachOneEntry, TableSStation::Instance(), &TableSStation::RDetachOneEntry);
@@ -134,8 +133,7 @@ void MainWindow::TableConnectI(TableModel* table_model) const
     auto tree_model { sc_i_.tree_model };
     auto entry_hub { sc_i_.entry_hub };
 
-    connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
-    connect(table_model, &TableModel::SDeleteOneEntry, entry_hub, &EntryHub::RDeleteOneEntry);
+    connect(table_model, &TableModel::STransferOneEntry, entry_hub, &EntryHub::RTransferOneEntry);
 
     connect(table_model, &TableModel::SAttachOneEntry, TableSStation::Instance(), &TableSStation::RAttachOneEntry);
     connect(table_model, &TableModel::SDetachOneEntry, TableSStation::Instance(), &TableSStation::RDetachOneEntry);
@@ -147,8 +145,7 @@ void MainWindow::TableConnectT(TableModel* table_model) const
     auto tree_model { sc_t_.tree_model };
     auto entry_hub { sc_t_.entry_hub };
 
-    connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
-    connect(table_model, &TableModel::SDeleteOneEntry, entry_hub, &EntryHub::RDeleteOneEntry);
+    connect(table_model, &TableModel::STransferOneEntry, entry_hub, &EntryHub::RTransferOneEntry);
 
     connect(table_model, &TableModel::SAttachOneEntry, TableSStation::Instance(), &TableSStation::RAttachOneEntry);
     connect(table_model, &TableModel::SDetachOneEntry, TableSStation::Instance(), &TableSStation::RDetachOneEntry);
@@ -160,9 +157,7 @@ void MainWindow::TableConnectP(TableModel* table_model) const
     auto* entry_hub { static_cast<EntryHubP*>(sc_p_.entry_hub.data()) };
     auto* model { static_cast<TableModelP*>(table_model) };
 
-    connect(table_model, &TableModel::SAppendOneEntry, entry_hub, &EntryHub::RAppendOneEntry);
-    connect(table_model, &TableModel::SDeleteOneEntry, entry_hub, &EntryHub::RDeleteOneEntry);
-
+    connect(table_model, &TableModel::STransferOneEntry, entry_hub, &EntryHub::RTransferOneEntry);
     connect(model, &TableModelP::SUpdateOneEntry, entry_hub, &EntryHubP::RUpdateOneEntry);
 }
 
