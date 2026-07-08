@@ -187,8 +187,7 @@ private:
     void DeleteLeaf(const QJsonObject& obj);
     void DeleteLeafO(const QJsonObject& obj);
     void DeleteLeafP(const QJsonObject& obj);
-    void AllowLeafDelete(const QJsonObject& obj);
-    void DeleteBranch(const QJsonObject& obj);
+    void CommitDeleteNode(const QJsonObject& obj);
     void UpdateNodeDirectionRule(const QJsonObject& obj);
     void UpdateNodeName(const QJsonObject& obj);
     void UpdateAccountName(const QJsonObject& obj);

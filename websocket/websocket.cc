@@ -195,7 +195,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kLeafDelete] = [this](const QJsonObject& obj) { DeleteLeaf(obj); };
     handler_obj_[WsKey::kLeafDeleteP] = [this](const QJsonObject& obj) { DeleteLeafP(obj); };
     handler_obj_[WsKey::kLeafDeleteO] = [this](const QJsonObject& obj) { DeleteLeafO(obj); };
-    handler_obj_[WsKey::kBranchDelete] = [this](const QJsonObject& obj) { DeleteBranch(obj); };
+    handler_obj_[WsKey::kBranchDelete] = [this](const QJsonObject& obj) { CommitDeleteNode(obj); };
     handler_obj_[WsKey::kLeafReplace] = [this](const QJsonObject& obj) { ReplaceLeaf(obj); };
     handler_obj_[WsKey::kNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
     handler_obj_[WsKey::kEntryInsert] = [this](const QJsonObject& obj) { InsertEntry(obj); };
@@ -214,7 +214,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kEntryLinkedNodeUpdate] = [this](const QJsonObject& obj) { UpdateEntryLinkedNode(obj); };
     handler_obj_[WsKey::kEntryRateUpdate] = [this](const QJsonObject& obj) { UpdateEntryRate(obj); };
     handler_obj_[WsKey::kEntryNumericUpdate] = [this](const QJsonObject& obj) { UpdateEntryNumeric(obj); };
-    handler_obj_[WsKey::kLeafDeleteAllow] = [this](const QJsonObject& obj) { AllowLeafDelete(obj); };
+    handler_obj_[WsKey::kLeafDeleteAllow] = [this](const QJsonObject& obj) { CommitDeleteNode(obj); };
     handler_obj_[WsKey::kOrderInsertSave] = [this](const QJsonObject& obj) { InsertOrder(obj, false); };
     handler_obj_[WsKey::kOrderUpdateSave] = [this](const QJsonObject& obj) { UpdateOrder(obj, false); };
     handler_obj_[WsKey::kOrderInsertRelease] = [this](const QJsonObject& obj) { InsertOrder(obj, true); };
@@ -758,16 +758,7 @@ void WebSocket::DeleteLeafP(const QJsonObject& obj)
     tree_model->DeleteNode(node_id);
 }
 
-void WebSocket::AllowLeafDelete(const QJsonObject& obj)
-{
-    const Section section { obj.value(kSection).toInt() };
-    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
-
-    auto tree_model { tree_model_hash_.value(section) };
-    tree_model->DeleteNode(node_id);
-}
-
-void WebSocket::DeleteBranch(const QJsonObject& obj)
+void WebSocket::CommitDeleteNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
