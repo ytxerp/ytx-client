@@ -394,7 +394,6 @@ void MainWindow::InitContextSale()
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
-    info.unit_model->sort(0, Qt::DescendingOrder);
 
     auto* entry_hub_o = new EntryHubO(info, this);
     auto* tree_model_o = new TreeModelO(info, app_config_.separator, this);
@@ -439,7 +438,6 @@ void MainWindow::InitContextPurchase()
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     info.unit_model = utils::CreateModelFromMap(info.unit_map, this);
-    info.unit_model->sort(0, Qt::DescendingOrder);
 
     auto* entry_hub_o = new EntryHubO(info, this);
     auto* tree_model_o = new TreeModelO(info, app_config_.separator, this);
