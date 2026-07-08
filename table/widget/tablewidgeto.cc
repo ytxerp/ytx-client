@@ -9,14 +9,13 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TableWidgetO::TableWidgetO(COrderWidgetArg& arg, NodeO* node, SyncState sync_state, QWidget* parent)
+TableWidgetO::TableWidgetO(COrderWidgetArg& arg, NodeO* node, QWidget* parent)
     : TableWidget(parent)
     , ui(new Ui::TableWidgetO)
     , tmp_node_ { node }
     , table_model_order_ { qobject_cast<TableModelO*>(arg.table_model) }
     , tree_model_partner_ { arg.tree_model_partner }
     , config_ { arg.section_config }
-    , sync_state_ { sync_state }
     , node_id_ { node->id }
     , section_ { arg.section }
 {
@@ -29,7 +28,7 @@ TableWidgetO::TableWidgetO(COrderWidgetArg& arg, NodeO* node, SyncState sync_sta
     InitData(tmp_node_);
     InitConnect();
 
-    if (sync_state == SyncState::kCreating)
+    if (node->sync_state == SyncState::kCreating)
         QTimer::singleShot(0, this, [this]() { ui->comboPartner->setFocus(); });
 }
 
@@ -70,12 +69,12 @@ void TableWidgetO::MarkSynced(int version)
     ui->pBtnPrint->setFocus();
 
     tmp_node_->version = version;
-    sync_state_ = SyncState::kSynced;
+    tmp_node_->sync_state = SyncState::kSynced;
 }
 
 void TableWidgetO::MarkUpdating()
 {
-    sync_state_ = SyncState::kUpdating;
+    tmp_node_->sync_state = SyncState::kUpdating;
     has_pending_update_ = false;
     ui->tableViewO->clearSelection();
 }
@@ -220,7 +219,7 @@ void TableWidgetO::InitData(const NodeO* node)
         LockWidgets(NodeStatus(node->status));
     }
 
-    if (sync_state_ == SyncState::kCreating)
+    if (tmp_node_->sync_state == SyncState::kCreating)
         return;
 
     {
@@ -292,7 +291,7 @@ void TableWidgetO::on_comboPartner_currentIndexChanged(int /*index*/)
     tmp_node_->partner_id = partner_id;
     emit SSyncPartner(tmp_node_->parent->id, node_id_, partner_id);
 
-    if (sync_state_ == SyncState::kSynced) {
+    if (tmp_node_->sync_state == SyncState::kSynced) {
         pending_update_.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
     }
 
@@ -307,7 +306,7 @@ void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 
     tmp_node_->employee_id = employee_id;
 
-    if (sync_state_ == SyncState::kSynced) {
+    if (tmp_node_->sync_state == SyncState::kSynced) {
         pending_update_.insert(kEmployeeId, employee_id.toString(QUuid::WithoutBraces));
     }
 
@@ -322,7 +321,7 @@ void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 
     tmp_node_->issued_time = utc_time;
 
-    if (sync_state_ == SyncState::kSynced) {
+    if (tmp_node_->sync_state == SyncState::kSynced) {
         pending_update_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
     }
 
@@ -336,7 +335,7 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 
     tmp_node_->description = arg1;
 
-    if (sync_state_ == SyncState::kSynced) {
+    if (tmp_node_->sync_state == SyncState::kSynced) {
         pending_update_.insert(kDescription, arg1);
     }
 
@@ -359,7 +358,7 @@ void TableWidgetO::RRuleGroupClicked(int id)
 
     InitUiValue();
 
-    if (sync_state_ == SyncState::kSynced) {
+    if (tmp_node_->sync_state == SyncState::kSynced) {
         pending_update_.insert(kDirectionRule, tmp_node_->direction_rule);
     }
 }
@@ -388,7 +387,7 @@ void TableWidgetO::RUnitGroupClicked(int id)
     const bool is_pending { unit == NodeUnit::OPending };
     ui->pBtnRelease->setEnabled(!is_pending);
 
-    if (sync_state_ == SyncState::kSynced) {
+    if (tmp_node_->sync_state == SyncState::kSynced) {
         pending_update_.insert(kUnit, id);
     }
 
@@ -491,13 +490,13 @@ bool TableWidgetO::ValidatePartner()
 
 bool TableWidgetO::ValidateSyncState()
 {
-    if (sync_state_ == SyncState::kUpdating) {
+    if (tmp_node_->sync_state == SyncState::kUpdating) {
         utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
             tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), time_const::kAutoCloseMs);
         return false;
     }
 
-    qDebug() << "[ValidateSyncState] Passed: sync_state =" << static_cast<int>(sync_state_);
+    qDebug() << "[ValidateSyncState] Passed: sync_state =" << static_cast<int>(tmp_node_->sync_state);
 
     return true;
 }
@@ -519,14 +518,14 @@ void TableWidgetO::SaveOrder()
 
     table_model_order_->Finalize(order_message);
 
-    if (sync_state_ == SyncState::kSynced) {
+    if (tmp_node_->sync_state == SyncState::kSynced) {
         BuildNodeUpdate(order_message);
         WebSocket::Instance()->SendMessage(WsKey::kOrderUpdateSave, order_message);
 
         pending_update_ = QJsonObject();
     }
 
-    if (sync_state_ == SyncState::kCreating) {
+    if (tmp_node_->sync_state == SyncState::kCreating) {
         tmp_node_->status = NodeStatus::kDraft; // Same as default
 
         BuildNodeInsert(order_message);
@@ -551,7 +550,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
     order_message.insert(kSessionId, QString());
     table_model_order_->Finalize(order_message);
 
-    if (sync_state_ == SyncState::kSynced) {
+    if (tmp_node_->sync_state == SyncState::kSynced) {
         pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
 
         BuildNodeUpdate(order_message);
@@ -561,7 +560,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
         pending_update_ = QJsonObject();
     }
 
-    if (sync_state_ == SyncState::kCreating) {
+    if (tmp_node_->sync_state == SyncState::kCreating) {
         tmp_node_->status = NodeStatus::kReleased;
 
         BuildNodeInsert(order_message);

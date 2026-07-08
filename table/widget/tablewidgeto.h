@@ -58,7 +58,7 @@ class TableWidgetO final : public TableWidget {
     Q_OBJECT
 
 public:
-    explicit TableWidgetO(COrderWidgetArg& arg, NodeO* node, SyncState sync_state, QWidget* parent = nullptr);
+    explicit TableWidgetO(COrderWidgetArg& arg, NodeO* node, QWidget* parent = nullptr);
     ~TableWidgetO() override;
 
 signals:
@@ -130,8 +130,6 @@ private:
 
     bool has_pending_update_ { false };
     QJsonObject pending_update_ {};
-
-    SyncState sync_state_ {};
 
     const QUuid node_id_ {};
     const Section section_ {};

@@ -14,6 +14,9 @@ void Node::InvertTotal()
 
 void Node::ReadJson(const QJsonObject& object)
 {
+    // Data loaded from server
+    sync_state = SyncState::kSynced;
+
     if (const auto val = object.value(kName); val.isString())
         name = val.toString();
     if (const auto val = object.value(kId); val.isString())

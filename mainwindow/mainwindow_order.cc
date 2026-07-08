@@ -183,7 +183,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
         section_config,
         start_,
     };
-    auto* widget { new TableWidgetO(order_arg, node, SyncState::kCreating, this) };
+    auto* widget { new TableWidgetO(order_arg, node, this) };
     WidgetContext wc { widget, node_id, WidgetRole::kNodeTabO };
 
     // Setup tab
@@ -239,7 +239,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
         section_config,
         start_,
     };
-    auto* widget = new TableWidgetO(order_arg, tmp_node, SyncState::kSynced, this);
+    auto* widget = new TableWidgetO(order_arg, tmp_node, this);
     WidgetContext wc { widget, node_id, WidgetRole::kNodeTabO };
 
     // Setup tab

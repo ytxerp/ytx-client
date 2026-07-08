@@ -31,9 +31,8 @@ TreeModel::~TreeModel()
 
 void TreeModel::DeleteNode(const QUuid& node_id)
 {
-    if (!node_hash_.contains(node_id)) {
+    if (!node_hash_.contains(node_id))
         return;
-    }
 
     auto index { GetIndex(node_id) };
     removeRows(index.row(), 1, index.parent());
@@ -491,11 +490,13 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex& parent)
 
     UnregisterPath(node, parent_node);
 
+    if (node->kind == NodeKind::kLeaf) {
+        emit SInitStatus();
+        emit SFreeWidget(section_, node_id);
+    }
+
     NodePool::Instance().Recycle(node, section_);
     node_hash_.remove(node_id);
-
-    emit SSyncValue();
-    emit SFreeWidget(section_, node_id);
 
     return true;
 }

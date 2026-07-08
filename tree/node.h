@@ -24,6 +24,7 @@
 #include <QUuid>
 
 #include "enum/nodeenum.h"
+#include "enum/stateenum.h"
 #include "tree/finance_role.h"
 
 struct Node {
@@ -37,6 +38,9 @@ struct Node {
     QString color {};
     QStringList tag {};
     QStringList document {};
+
+    // New local object starts as pending creation
+    SyncState sync_state { SyncState::kCreating };
 
     double final_total {};
     double initial_total {};

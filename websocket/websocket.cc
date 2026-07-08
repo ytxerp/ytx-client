@@ -770,13 +770,11 @@ void WebSocket::AllowLeafDelete(const QJsonObject& obj)
 void WebSocket::DeleteBranch(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
 
     auto tree_model { tree_model_hash_.value(section) };
 
-    if (session_id != session_id_)
-        tree_model->DeleteNode(node_id);
+    tree_model->DeleteNode(node_id);
 }
 
 void WebSocket::DenyLeafDelete(const QJsonObject& obj) { emit SLeafDeleteDeny(obj); }

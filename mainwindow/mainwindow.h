@@ -273,7 +273,7 @@ private:
 
     void DeleteNode();
     void DeleteEntry(TableWidget* widget);
-    void DeleteBranch(TreeModel* tree_model, const QModelIndex& index, const QUuid& node_id);
+    void DeleteBranch(const QUuid& node_id);
     void DeleteSettlement(SettlementPrimaryWidget* widget);
 
     void UpdatePartnerReference(const SectionContext& sc, const QSet<QUuid>& partner_nodes, bool branch) const;
@@ -344,7 +344,6 @@ private:
     QSystemTrayIcon* tray_icon_ {};
     QMenu* tray_menu_ {};
 
-    QSet<QUuid> deleting_node_ {};
     QHash<QUuid, Tag*> inserting_tag_ {};
 
     QTranslator qt_translator_ {};
