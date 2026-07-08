@@ -197,7 +197,7 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
     const EntryEnumP column { index.column() };
 
     auto* entry { static_cast<Entry*>(index.internalPointer()) };
-    auto* d_entry = static_cast<EntryP*>(entry);
+    auto* d_entry { static_cast<EntryP*>(entry) };
 
     bool update_entry_hub { false };
 

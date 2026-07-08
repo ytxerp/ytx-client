@@ -108,7 +108,7 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* d_entry = DerivedPtr<EntryO>(entry_list_.at(index.row()));
+    auto* d_entry { static_cast<EntryO*>(index.internalPointer()) };
     const EntryEnumO column { index.column() };
 
     switch (column) {
@@ -157,8 +157,8 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     const EntryEnumO column { index.column() };
     const int row { index.row() };
 
-    auto* entry = entry_list_.at(row);
-    auto* d_entry = DerivedPtr<EntryO>(entry);
+    auto* entry { static_cast<Entry*>(index.internalPointer()) };
+    auto* d_entry { static_cast<EntryO*>(entry) };
 
     const double old_count { d_entry->count };
     const double old_measure { d_entry->measure };
