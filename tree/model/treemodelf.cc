@@ -161,6 +161,11 @@ Qt::ItemFlags TreeModelF::flags(const QModelIndex& index) const
         return Qt::NoItemFlags;
 
     auto flags { QAbstractItemModel::flags(index) };
+
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    if (node->sync_state == SyncState::kDeleting)
+        return flags & ~Qt::ItemIsEditable;
+
     const NodeEnumF column { index.column() };
 
     switch (column) {

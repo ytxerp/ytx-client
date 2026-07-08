@@ -186,6 +186,11 @@ Qt::ItemFlags TableModelF::flags(const QModelIndex& index) const
         return Qt::NoItemFlags;
 
     auto flags { QAbstractItemModel::flags(index) };
+
+    auto* shadow { static_cast<EntryShadow*>(index.internalPointer()) };
+    if (*shadow->sync_state == SyncState::kDeleting)
+        return flags & ~Qt::ItemIsEditable;
+
     const EntryEnumF column { index.column() };
 
     switch (column) {
@@ -209,11 +214,6 @@ Qt::ItemFlags TableModelF::flags(const QModelIndex& index) const
         flags |= Qt::ItemIsEditable;
         break;
     }
-
-    auto* shadow { static_cast<EntryShadow*>(index.internalPointer()) };
-
-    if (*shadow->sync_state == SyncState::kDeleting)
-        flags &= ~Qt::ItemIsEditable;
 
     return flags;
 }
