@@ -4,6 +4,7 @@
 
 #include "dialog/authdialog.h"
 #include "global/logininfo.h"
+#include "global/partner_inventory_registry.h"
 #include "global/tablesstation.h"
 #include "global/userprofile.h"
 #include "mainwindow.h"
@@ -45,6 +46,7 @@ void MainWindow::on_actionSignOut_triggered()
     WebSocket::Instance()->Reset();
     TableSStation::Instance()->Reset();
     UserProfile::Instance().Reset();
+    PartnerInventoryRegistry::Instance().Reset();
 
     SetAction(false);
     SetLoginAction(false);

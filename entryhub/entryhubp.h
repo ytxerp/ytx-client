@@ -33,17 +33,12 @@ public slots:
     // receive from TableModel
     void RTransferOneEntry(Entry* entry) override;
 
-    void RUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node);
-
 public:
     void InsertEntry(const QJsonObject& data) override;
     void DeleteEntry(const QUuid& entry_id) override;
     void UpdateEntry(const QUuid& id, const QJsonObject& update) override;
 
     void PushEntry(const QUuid& node_id);
-
-    std::optional<double> UnitPrice(const QUuid& partner_id, const QUuid& internal_sku) const;
-    QUuid ExternalSku(const QUuid& partner_id, const QUuid& internal_sku) const;
 
     void SearchDescription(QList<Entry*>& entry_list, CString& text) const;
     void SearchTag(QList<Entry*>& entry_list, const QSet<QString>& tag_set) const;
@@ -53,14 +48,6 @@ public:
 
     void ReplaceInternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id);
     void ReplaceExternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id);
-
-private:
-    struct EntryValue {
-        double unit_price { 0.0 };
-        QUuid external_sku {};
-    };
-
-    QHash<std::pair<QUuid, QUuid>, EntryValue> entry_map_ {};
 };
 
 #endif // ENTRYHUBP_H

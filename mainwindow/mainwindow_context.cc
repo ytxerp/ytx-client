@@ -4,6 +4,7 @@
 #include "entryhub/entryhubf.h"
 #include "entryhub/entryhubi.h"
 #include "entryhub/entryhubo.h"
+#include "entryhub/entryhubp.h"
 #include "entryhub/entryhubt.h"
 #include "global/printhub.h"
 #include "mainwindow.h"
@@ -135,7 +136,6 @@ void MainWindow::InitilizeContext()
         PrintHub::Instance().SetAppConfig(&app_config_);
         PrintHub::Instance().SetTreeModelP(sc_p_.tree_model);
         PrintHub::Instance().SeTreeModelI(sc_i_.tree_model);
-        PrintHub::Instance().SetEntryHubP(sc_p_.entry_hub.data());
     }
 
     {

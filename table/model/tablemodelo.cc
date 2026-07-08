@@ -5,12 +5,12 @@
 #include "component/constantdouble.h"
 #include "enum/entryenum.h"
 #include "global/entrypool.h"
+#include "global/partner_inventory_registry.h"
 #include "websocket/jsongen.h"
 
-TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent)
+TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, QObject* parent)
     : TableModel { arg, parent }
     , tree_model_i_ { static_cast<TreeModelI*>(tree_model_inventory) }
-    , entry_hub_p_ { static_cast<EntryHubP*>(entry_hub_partner) }
 {
 }
 
@@ -145,7 +145,7 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
     case EntryEnumO::kUnitDiscount:
         return d_entry->unit_discount;
     case EntryEnumO::kExternalSku:
-        return entry_hub_p_->ExternalSku(d_node_->partner_id, d_entry->rhs_node);
+        return PartnerInventoryRegistry::Instance().ExternalSku(d_node_->partner_id, d_entry->rhs_node);
     case EntryEnumO::kTag:
         return d_entry->tag;
     }
@@ -399,8 +399,7 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, int row, const QUuid& value)
     const double old_unit_price { entry->unit_price };
 
     entry->rhs_node = value;
-
-    ResolveFromInternal(entry, value);
+    entry->unit_price = PartnerInventoryRegistry::Instance().UnitPrice(d_node_->partner_id, value).value_or(tree_model_i_->UnitPrice(value));
 
     const bool price_changed { FloatChanged(old_unit_price, entry->unit_price) };
 
@@ -410,7 +409,9 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, int row, const QUuid& value)
     if (entry->sync_state == SyncState::kSynced)
         entry->sync_state = SyncState::kUpdating;
 
-    if (entry_hub_p_->ExternalSku(d_node_->partner_id, old_rhs_node) != entry_hub_p_->ExternalSku(d_node_->partner_id, value)) {
+    const auto& registry { PartnerInventoryRegistry::Instance() };
+
+    if (registry.ExternalSku(d_node_->partner_id, old_rhs_node) != registry.ExternalSku(d_node_->partner_id, value)) {
         EmitDataChanged(row, row, std::to_underlying(EntryEnumO::kExternalSku), std::to_underlying(EntryEnumO::kExternalSku));
     }
 
@@ -509,14 +510,6 @@ bool TableModelO::UpdateTag(EntryO* entry, const QStringList& value)
         entry->sync_state = SyncState::kUpdating;
 
     return true;
-}
-
-void TableModelO::ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) const
-{
-    if (!entry || !entry_hub_p_ || internal_sku.isNull())
-        return;
-
-    entry->unit_price = entry_hub_p_->UnitPrice(d_node_->partner_id, internal_sku).value_or(tree_model_i_->UnitPrice(internal_sku));
 }
 
 void TableModelO::RecalculateAmount(EntryO* entry)

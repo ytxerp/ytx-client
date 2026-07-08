@@ -172,7 +172,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
 
     // Create model and widget
     TableModelArg table_model_arg { sc_->info, node_id, true };
-    auto* table_model { new TableModelO(table_model_arg, tree_model_i, sc_p_.entry_hub, this) };
+    auto* table_model { new TableModelO(table_model_arg, tree_model_i, this) };
     table_model->SetNode(node);
 
     OrderWidgetArg order_arg {
@@ -228,7 +228,7 @@ void MainWindow::CreateLeafO(SectionContext* sc, const QUuid& node_id)
 
     // Create model and widget
     TableModelArg table_model_arg { sc->info, node_id, tmp_node->direction_rule };
-    auto* table_model = new TableModelO(table_model_arg, tree_model_i, sc_p_.entry_hub, nullptr);
+    auto* table_model = new TableModelO(table_model_arg, tree_model_i, nullptr);
     table_model->SetNode(tmp_node);
 
     OrderWidgetArg order_arg {

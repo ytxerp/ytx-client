@@ -3,13 +3,13 @@
 #include <QJsonArray>
 
 #include "enum/reference.h"
+#include "global/partner_inventory_registry.h"
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
 
-OrderReferenceModelP::OrderReferenceModelP(CSectionInfo& info, const QUuid& partner_id, TreeModel* tree_model_i, EntryHub* entry_hub_p, QObject* parent)
+OrderReferenceModelP::OrderReferenceModelP(CSectionInfo& info, const QUuid& partner_id, TreeModel* tree_model_i, QObject* parent)
     : OrderReferenceModel { info, parent }
     , tree_model_i_ { tree_model_i }
-    , entry_hub_p_ { static_cast<EntryHubP*>(entry_hub_p) }
     , partner_id_ { partner_id }
 {
 }
@@ -44,7 +44,7 @@ QVariant OrderReferenceModelP::data(const QModelIndex& index, int role) const
     case SaleReferenceEnumP::kColor:
         return tree_model_i_->Color(sale_reference->node_id);
     case SaleReferenceEnumP::kExternalSku:
-        return entry_hub_p_->ExternalSku(partner_id_, sale_reference->node_id);
+        return PartnerInventoryRegistry::Instance().ExternalSku(partner_id_, sale_reference->node_id);
     }
 }
 

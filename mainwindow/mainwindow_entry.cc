@@ -1,5 +1,6 @@
 #include "billing/settlement/settlementprimarywidget.h"
 #include "component/constantwebsocket.h"
+#include "entryhub/entryhubp.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
 #include "table/model/tablemodelf.h"

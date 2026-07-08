@@ -295,6 +295,7 @@ set(HEADERS
     delegate/readonly/percentagedelegater.h
     global/entryshadowpool.h
     table/unitmodel.h
+    global/partner_inventory_registry.h
 )
 
 set(SOURCES

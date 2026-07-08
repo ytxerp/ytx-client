@@ -22,13 +22,14 @@
 
 #include <QAbstractItemModel>
 
-#include "entryhub/entryhubp.h"
+#include "component/using.h"
+#include "enum/entryenum.h"
 #include "statement.h"
 
 class StatementTertiaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit StatementTertiaryModel(EntryHubP* entry_hub_p, const QStringList& header, CUuid& partner_id, QObject* parent = nullptr);
+    explicit StatementTertiaryModel(const QStringList& header, CUuid& partner_id, QObject* parent = nullptr);
     ~StatementTertiaryModel() override;
 
 public:
@@ -53,7 +54,6 @@ private:
     const QStringList& header_;
     QList<StatementTertiary*> list_ {};
 
-    EntryHubP* entry_hub_p_ {};
     const QUuid partner_id_ {};
 };
 

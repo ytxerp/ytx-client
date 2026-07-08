@@ -3,14 +3,14 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include "global/partner_inventory_registry.h"
 #include "global/resourcepool.h"
 #include "statementenum.h"
 #include "utils/templateutils.h"
 
-StatementTertiaryModel::StatementTertiaryModel(EntryHubP* entry_hub_p, const QStringList& header, CUuid& partner_id, QObject* parent)
+StatementTertiaryModel::StatementTertiaryModel(const QStringList& header, CUuid& partner_id, QObject* parent)
     : QAbstractItemModel { parent }
     , header_ { header }
-    , entry_hub_p_ { entry_hub_p }
     , partner_id_ { partner_id }
 {
 }
@@ -56,7 +56,7 @@ QVariant StatementTertiaryModel::data(const QModelIndex& index, int role) const
     case StatementTertiaryEnum::kInternalSku:
         return entry->internal_sku;
     case StatementTertiaryEnum::kExternalSku:
-        return entry_hub_p_->ExternalSku(partner_id_, entry->internal_sku);
+        return PartnerInventoryRegistry::Instance().ExternalSku(partner_id_, entry->internal_sku);
     case StatementTertiaryEnum::kCount:
         return entry->count;
     case StatementTertiaryEnum::kMeasure:

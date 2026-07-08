@@ -6,6 +6,7 @@
 #include "component/constantwebsocket.h"
 #include "enum/entryenum.h"
 #include "global/entrypool.h"
+#include "global/partner_inventory_registry.h"
 #include "utils/entryutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
@@ -199,7 +200,8 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
     auto* entry { static_cast<Entry*>(index.internalPointer()) };
     auto* d_entry { static_cast<EntryP*>(entry) };
 
-    bool update_entry_hub { false };
+    bool insert_registry { false };
+    bool update_registry { false };
 
     const QUuid id { entry->id };
     const QUuid old_rhs_node { entry->rhs_node };
@@ -221,10 +223,10 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         entry::UpdateStringList(pending_updates_[id], entry, kTag, value.toStringList(), &Entry::tag, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kRhsNode:
-        update_entry_hub = UpdateInternalSku(d_entry, value.toUuid());
+        insert_registry = UpdateInternalSku(d_entry, value.toUuid());
         break;
     case EntryEnumP::kUnitPrice:
-        update_entry_hub = entry::UpdateDouble(
+        update_registry = entry::UpdateDouble(
             pending_updates_[id], d_entry, kUnitPrice, value.toDouble(), &EntryP::unit_price, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kDescription:
@@ -235,7 +237,7 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         entry::UpdateField(pending_updates_[id], entry, kStatus, value.toInt(), &Entry::status, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kExternalSku:
-        update_entry_hub = entry::UpdateUuid(
+        update_registry = entry::UpdateUuid(
             pending_updates_[id], d_entry, kExternalSku, value.toUuid(), &EntryP::external_sku, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kId:
@@ -244,8 +246,16 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         return false;
     }
 
-    if (update_entry_hub)
-        emit SUpdateOneEntry(entry, old_rhs_node);
+    auto& registry { PartnerInventoryRegistry::Instance() };
+
+    if (update_registry) {
+        registry.Insert(d_entry->lhs_node, d_entry->rhs_node, d_entry->unit_price, d_entry->external_sku);
+    }
+
+    if (insert_registry) {
+        registry.Remove(d_entry->lhs_node, old_rhs_node);
+        registry.Insert(d_entry->lhs_node, d_entry->rhs_node, d_entry->unit_price, d_entry->external_sku);
+    }
 
     emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
     return true;

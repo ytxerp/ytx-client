@@ -36,8 +36,8 @@ class StatementTertiaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    StatementTertiaryWidget(StatementTertiaryModel* model, EntryHubP* entry_hub_p, TreeModelI* tree_model_i, CUuid& widget_id, CUuid& partner_id,
-        CDateTime& start, CDateTime& end, CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent = nullptr);
+    StatementTertiaryWidget(StatementTertiaryModel* model, TreeModelI* tree_model_i, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end,
+        CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent = nullptr);
     ~StatementTertiaryWidget() override;
 
     QTableView* View() const;
@@ -76,7 +76,6 @@ private:
     const Section section_ {};
     const QUuid widget_id_ {};
     CUuid partner_id_ {};
-    EntryHubP* entry_hub_p_ {};
     TreeModelI* tree_model_i_ {};
 };
 

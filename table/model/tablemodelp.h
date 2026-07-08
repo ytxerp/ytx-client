@@ -29,9 +29,6 @@ public:
     explicit TableModelP(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelP() override = default;
 
-signals:
-    void SUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node);
-
 public slots:
     void RAppendMultiEntries(const EntryList& entry_list) override;
     void RDetachOneEntry(const QUuid& entry_id, const QUuid& extra_value) override;

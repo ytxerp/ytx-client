@@ -21,7 +21,6 @@
 #define ORDERREFERENCEMODELP_H
 
 #include "component/info.h"
-#include "entryhub/entryhubp.h"
 #include "reference/orderreferencemodel.h"
 #include "tree/model/treemodel.h"
 
@@ -29,7 +28,7 @@ class OrderReferenceModelP final : public OrderReferenceModel {
     Q_OBJECT
 
 public:
-    explicit OrderReferenceModelP(CSectionInfo& info, const QUuid& partner_id, TreeModel* tree_model_i, EntryHub* entry_hub_p, QObject* parent = nullptr);
+    explicit OrderReferenceModelP(CSectionInfo& info, const QUuid& partner_id, TreeModel* tree_model_i, QObject* parent = nullptr);
     ~OrderReferenceModelP() override;
 
 public:
@@ -38,7 +37,6 @@ public:
 
 private:
     TreeModel* tree_model_i_ {};
-    EntryHubP* entry_hub_p_ {};
     const QUuid partner_id_ {};
 };
 

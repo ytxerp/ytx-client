@@ -3,6 +3,7 @@
 #include <QJsonArray>
 
 #include "global/entrypool.h"
+#include "global/partner_inventory_registry.h"
 #include "utils/entryutils.h"
 
 EntryHubP::EntryHubP(CSectionInfo& info, QObject* parent)
@@ -14,17 +15,8 @@ void EntryHubP::RTransferOneEntry(Entry* entry)
 {
     auto* entry_p { static_cast<EntryP*>(entry) };
     entry_cache_.insert(entry_p->id, entry_p);
-    entry_map_.insert({ entry_p->lhs_node, entry_p->rhs_node }, { entry_p->unit_price, entry_p->external_sku });
-}
 
-void EntryHubP::RUpdateOneEntry(Entry* entry, const QUuid& old_rhs_node)
-{
-    auto* entry_p { static_cast<EntryP*>(entry) };
-
-    if (entry_p->rhs_node != old_rhs_node)
-        entry_map_.remove({ entry_p->lhs_node, old_rhs_node });
-
-    entry_map_[{ entry_p->lhs_node, entry_p->rhs_node }] = { entry_p->unit_price, entry_p->external_sku };
+    PartnerInventoryRegistry::Instance().Insert(entry_p->lhs_node, entry_p->rhs_node, entry_p->unit_price, entry_p->external_sku);
 }
 
 void EntryHubP::DeleteSingleLeaf(const QSet<QUuid>& leaf_entry)
@@ -36,7 +28,7 @@ void EntryHubP::DeleteSingleLeaf(const QSet<QUuid>& leaf_entry)
         if (!entry)
             continue;
 
-        entry_map_.remove({ entry->lhs_node, entry->rhs_node });
+        PartnerInventoryRegistry::Instance().Remove(entry->lhs_node, entry->rhs_node);
         EntryPool::Instance().Recycle(entry, section_);
     }
 }
@@ -50,23 +42,7 @@ void EntryHubP::ReplaceInternalInventoryRef(const QUuid& old_item_id, const QUui
             d_entry->rhs_node = new_item_id;
     }
 
-    {
-        QHash<std::pair<QUuid, QUuid>, EntryValue> new_map {};
-        new_map.reserve(entry_map_.size());
-
-        for (auto it = entry_map_.cbegin(); it != entry_map_.cend(); ++it) {
-            auto key = it.key();
-            auto value = it.value();
-
-            if (key.second == old_item_id) {
-                key.second = new_item_id;
-            }
-
-            new_map.insert(key, value);
-        }
-
-        entry_map_.swap(new_map);
-    }
+    PartnerInventoryRegistry::Instance().ReplaceInternalSku(old_item_id, new_item_id);
 }
 
 void EntryHubP::ReplaceExternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id)
@@ -78,31 +54,7 @@ void EntryHubP::ReplaceExternalInventoryRef(const QUuid& old_item_id, const QUui
             d_entry->external_sku = new_item_id;
     }
 
-    for (auto it = entry_map_.begin(); it != entry_map_.end(); ++it) {
-        if (it.value().external_sku == old_item_id) {
-            it.value().external_sku = new_item_id;
-        }
-    }
-}
-
-std::optional<double> EntryHubP::UnitPrice(const QUuid& partner_id, const QUuid& internal_sku) const
-{
-    auto it = entry_map_.constFind({ partner_id, internal_sku });
-    if (it != entry_map_.constEnd()) {
-        return it->unit_price;
-    }
-
-    return std::nullopt;
-}
-
-QUuid EntryHubP::ExternalSku(const QUuid& partner_id, const QUuid& internal_sku) const
-{
-    auto it = entry_map_.constFind({ partner_id, internal_sku });
-    if (it != entry_map_.constEnd()) {
-        return it->external_sku;
-    }
-
-    return QUuid();
+    PartnerInventoryRegistry::Instance().ReplaceExternalSku(old_item_id, new_item_id);
 }
 
 void EntryHubP::SearchDescription(QList<Entry*>& entry_list, CString& text) const
@@ -161,7 +113,7 @@ void EntryHubP::ApplyPartnerEntry(const QJsonArray& array)
         EntryP* entry { static_cast<EntryP*>(EntryPool::Instance().Allocate(section_)) };
         entry->ReadJson(obj);
         entry_cache_.insert(id, entry);
-        entry_map_.insert({ entry->lhs_node, entry->rhs_node }, { entry->unit_price, entry->external_sku });
+        PartnerInventoryRegistry::Instance().Insert(entry->lhs_node, entry->rhs_node, entry->unit_price, entry->external_sku);
     }
 }
 
@@ -171,7 +123,7 @@ void EntryHubP::InsertEntry(const QJsonObject& data)
     entry->ReadJson(data);
 
     entry_cache_.insert(entry->id, entry);
-    entry_map_.insert({ entry->lhs_node, entry->rhs_node }, { entry->unit_price, entry->external_sku });
+    PartnerInventoryRegistry::Instance().Insert(entry->lhs_node, entry->rhs_node, entry->unit_price, entry->external_sku);
 
     emit SAttachOneEntry(entry->lhs_node, entry);
 }
@@ -185,7 +137,7 @@ void EntryHubP::DeleteEntry(const QUuid& entry_id)
 
     auto* entry { it.value() };
 
-    entry_map_.remove({ entry->lhs_node, entry->rhs_node });
+    PartnerInventoryRegistry::Instance().Remove(entry->lhs_node, entry->rhs_node);
 
     emit SDetachOneEntry(entry->lhs_node, entry_id, entry->rhs_node);
 
@@ -211,10 +163,10 @@ void EntryHubP::UpdateEntry(const QUuid& id, const QJsonObject& update)
         const bool update_map_key { update.contains(kRhsNode) };
 
         if (update_map_key) {
-            entry_map_.remove({ entry->lhs_node, old_rhs_node });
-            entry_map_.insert({ entry->lhs_node, entry->rhs_node }, { entry->unit_price, entry->external_sku });
+            PartnerInventoryRegistry::Instance().Remove(entry->lhs_node, old_rhs_node);
+            PartnerInventoryRegistry::Instance().Insert(entry->lhs_node, entry->rhs_node, entry->unit_price, entry->external_sku);
         } else if (update_map_value)
-            entry_map_[{ entry->lhs_node, old_rhs_node }] = { entry->unit_price, entry->external_sku };
+            PartnerInventoryRegistry::Instance().Insert(entry->lhs_node, old_rhs_node, entry->unit_price, entry->external_sku);
     }
 
     const auto [start, end] = entry::CacheColumnRange(section_);

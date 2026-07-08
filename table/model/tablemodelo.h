@@ -20,7 +20,6 @@
 #ifndef TABLEMODELO_H
 #define TABLEMODELO_H
 
-#include "entryhub/entryhubp.h"
 #include "tablemodel.h"
 #include "tree/model/treemodel.h"
 #include "tree/model/treemodeli.h"
@@ -81,7 +80,7 @@ class TableModelO final : public TableModel {
     Q_OBJECT
 
 public:
-    explicit TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, EntryHub* entry_hub_partner, QObject* parent = nullptr);
+    explicit TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, QObject* parent = nullptr);
     ~TableModelO() override;
 
 signals:
@@ -119,14 +118,12 @@ private:
     bool UpdateDescription(EntryO* entry, const QString& value);
     bool UpdateTag(EntryO* entry, const QStringList& value);
 
-    void ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) const;
     static void RecalculateAmount(EntryO* entry);
 
     void PurifyEntry();
 
 private:
     TreeModelI* tree_model_i_ {};
-    EntryHubP* entry_hub_p_ {};
     const NodeO* d_node_ {};
 
     QList<Entry*> entry_list_ {};

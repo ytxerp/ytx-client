@@ -68,7 +68,7 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
             model = new SaleReferenceModelI(info, nullptr);
             break;
         case Section::kPartner:
-            model = new OrderReferenceModelP(info, node_id, sc_i_.tree_model, sc_p_.entry_hub, nullptr);
+            model = new OrderReferenceModelP(info, node_id, sc_i_.tree_model, nullptr);
             break;
         case Section::kSale:
         case Section::kPurchase:
