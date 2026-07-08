@@ -481,6 +481,7 @@ set(SOURCES
     mainwindow/mainwindow_header.cc
     delegate/readonly/percentagedelegater.cc
     table/unitmodel.cc
+    global/partner_inventory_registry.cc
 )
 
 set(UIS

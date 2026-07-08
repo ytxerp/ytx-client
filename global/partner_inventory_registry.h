@@ -48,6 +48,9 @@ public:
 
     std::optional<double> UnitPrice(const QUuid& partner_id, const QUuid& inventory_id) const
     {
+        if (partner_id.isNull() || inventory_id.isNull())
+            return std::nullopt;
+
         const auto it { map_.constFind({ partner_id, inventory_id }) };
         if (it == map_.constEnd())
             return std::nullopt;
@@ -57,48 +60,31 @@ public:
 
     QUuid ExternalSku(const QUuid& partner_id, const QUuid& inventory_id) const
     {
+        if (partner_id.isNull() || inventory_id.isNull())
+            return QUuid();
+
         const auto it { map_.constFind({ partner_id, inventory_id }) };
         return it == map_.constEnd() ? QUuid() : it->external_sku;
     }
 
     void Insert(const QUuid& partner_id, const QUuid& inventory_id, double unit_price, const QUuid& external_sku)
     {
+        if (partner_id.isNull() || inventory_id.isNull())
+            return;
+
         map_.insert({ partner_id, inventory_id }, Value { unit_price, external_sku });
     }
 
-    void ReplaceExternalSku(const QUuid& old_id, const QUuid& new_id)
+    void Remove(const QUuid& partner_id, const QUuid& inventory_id)
     {
-        for (auto& value : map_) {
-            if (value.external_sku == old_id)
-                value.external_sku = new_id;
-        }
+        if (partner_id.isNull() || inventory_id.isNull())
+            return;
+
+        map_.remove({ partner_id, inventory_id });
     }
 
-    void ReplaceInternalSku(const QUuid& old_id, const QUuid& new_id)
-    {
-        QVector<Value> values {};
-        QVector<std::pair<QUuid, QUuid>> keys {};
-
-        for (auto it = map_.begin(); it != map_.end();) {
-            if (it.key().second != old_id) {
-                ++it;
-                continue;
-            }
-
-            auto key = it.key();
-            key.second = new_id;
-
-            keys.push_back(key);
-            values.push_back(it.value());
-
-            it = map_.erase(it);
-        }
-
-        for (int i = 0; i < keys.size(); ++i)
-            map_.insert(keys[i], values[i]);
-    }
-
-    void Remove(const QUuid& partner_id, const QUuid& inventory_id) { map_.remove({ partner_id, inventory_id }); }
+    void ReplaceExternalSku(const QUuid& old_id, const QUuid& new_id);
+    void ReplaceInternalSku(const QUuid& old_id, const QUuid& new_id);
     void Reset() { map_.clear(); }
 
     PartnerInventoryRegistry(const PartnerInventoryRegistry&) = delete;
