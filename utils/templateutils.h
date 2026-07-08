@@ -88,7 +88,7 @@ template <typename Derived, typename Base> const Derived* DerivedPtr(const Base*
     return static_cast<const Derived*>(base);
 }
 
-template <MapType T> UnitModel* CreateModelFromMap(const T& map, QObject* parent)
+template <MapType T> UnitModel* CreateUnitModel(const T& map, QObject* parent)
 {
     auto* model { new UnitModel(parent) };
 

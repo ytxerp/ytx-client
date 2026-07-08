@@ -20,6 +20,13 @@
 #ifndef STATEENUM_H
 #define STATEENUM_H
 
+// NOTE: All enums in this file represent transient, in-memory client-side
+// state only. None of these values are persisted to the database or sent
+// as part of the domain data itself — they exist purely to track the
+// runtime status of the connection, session, or local objects awaiting
+// server confirmation. Do not serialize them as part of ReadJson/WriteJson
+// or any other data persistence path.
+
 enum class ConnectionState {
     Connecting,
     Connected,
@@ -28,6 +35,10 @@ enum class ConnectionState {
 
 enum class LoginState { LoggedIn, LoggedOut };
 
+// Tracks whether a locally held object (Node, Entry, etc.) is in sync with
+// the server. This is purely a client-side bookkeeping state used to drive
+// UI feedback (e.g. disabling edits, showing visual cues) and to guard
+// against operating on data whose server-side outcome is not yet known.
 enum class SyncState {
     kCreating,
     kSynced,
