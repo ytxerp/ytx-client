@@ -162,11 +162,13 @@ void EntryHubP::UpdateEntry(const QUuid& id, const QJsonObject& update)
         const bool update_map_value { update.contains(kUnitPrice) || update.contains(kExternalSku) };
         const bool update_map_key { update.contains(kRhsNode) };
 
+        auto& registry { PartnerInventoryRegistry::Instance() };
+
         if (update_map_key) {
-            PartnerInventoryRegistry::Instance().Remove(entry->lhs_node, old_rhs_node);
-            PartnerInventoryRegistry::Instance().Insert(entry->lhs_node, entry->rhs_node, entry->unit_price, entry->external_sku);
+            registry.Remove(entry->lhs_node, old_rhs_node);
+            registry.Insert(entry->lhs_node, entry->rhs_node, entry->unit_price, entry->external_sku);
         } else if (update_map_value)
-            PartnerInventoryRegistry::Instance().Insert(entry->lhs_node, old_rhs_node, entry->unit_price, entry->external_sku);
+            registry.Insert(entry->lhs_node, old_rhs_node, entry->unit_price, entry->external_sku);
     }
 
     const auto [start, end] = entry::CacheColumnRange(section_);
