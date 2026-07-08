@@ -29,10 +29,6 @@ class EntryHubP final : public EntryHub {
 public:
     explicit EntryHubP(CSectionInfo& info, QObject* parent = nullptr);
 
-public slots:
-    // receive from TableModel
-    void RTransferOneEntry(Entry* entry) override;
-
 public:
     void InsertEntry(const QJsonObject& data) override;
     void DeleteEntry(const QUuid& entry_id) override;

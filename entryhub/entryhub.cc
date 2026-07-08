@@ -29,12 +29,6 @@ void EntryHub::DeleteDoubleLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry)
     }
 }
 
-void EntryHub::RTransferOneEntry(Entry* entry)
-{
-    entry_cache_.insert(entry->id, entry);
-    emit SAttachOneEntry(entry->rhs_node, entry);
-}
-
 void EntryHub::Reset() { EntryPool::Instance().Recycle(entry_cache_, section_); }
 
 void EntryHub::InsertEntry(const QJsonObject& data)

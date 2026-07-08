@@ -230,6 +230,7 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
     *shadow->rhs_node = value;
 
     const QUuid entry_id { *shadow->id };
+    auto* entry { shadow->entry };
 
     QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
 
@@ -248,7 +249,7 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
             EmitDataChanged(row, row, std::to_underlying(EntryEnumF::kBalance), std::to_underlying(EntryEnumF::kBalance));
         }
 
-        emit STransferOneEntry(shadow->entry);
+        emit STransferOneEntry(entry);
     }
 
     if (!old_node.isNull()) {
@@ -270,9 +271,9 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
         WebSocket::Instance()->SendMessage(WsKey::kEntryLinkedNodeUpdate, message);
 
         emit SDetachOneEntry(old_node, entry_id);
-        emit SAttachOneEntry(value, shadow->entry);
     }
 
+    emit SAttachOneEntry(value, entry);
     return true;
 }
 

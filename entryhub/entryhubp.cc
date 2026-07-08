@@ -11,14 +11,6 @@ EntryHubP::EntryHubP(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubP::RTransferOneEntry(Entry* entry)
-{
-    auto* entry_p { static_cast<EntryP*>(entry) };
-    entry_cache_.insert(entry_p->id, entry_p);
-
-    PartnerInventoryRegistry::Instance().Insert(entry_p->lhs_node, entry_p->rhs_node, entry_p->unit_price, entry_p->external_sku);
-}
-
 void EntryHubP::DeleteSingleLeaf(const QSet<QUuid>& leaf_entry)
 {
     qInfo() << "EntryHubP::DeleteLeaf size:" << leaf_entry.size();

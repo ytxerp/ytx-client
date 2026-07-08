@@ -55,7 +55,7 @@ signals:
 
 public slots:
     // receive from TableModel
-    virtual void RTransferOneEntry(Entry* entry);
+    void RTransferOneEntry(Entry* entry) { entry_cache_.insert(entry->id, entry); }
 
 public:
     void Reset();
