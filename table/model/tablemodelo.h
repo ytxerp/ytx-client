@@ -28,29 +28,53 @@
 /*
  * TableModelO design notes:
  *
- * 1. New entries (inserted into a draft order) are cached locally in `pending_inserts_`.
- *    - These entries are NOT immediately sent to the server.
- *    - When the user clicks "Save" or "Release", all pending inserts are processed:
- *        a) Entries with null rhs_node (internal SKU not selected) are removed.
- *        b) Remaining entries are serialized into JSON and sent as a batch.
- *    - This ensures that incomplete or invalid entries are never sent to the server.
+ * 1. Every entry carries a `sync_state` (kCreating / kSynced / kUpdating) that
+ *    tracks its relationship to the server, replacing the old approach of
+ *    tracking pending inserts/updates in separate containers.
+ *    - `kCreating`: a brand-new entry added to this draft order, never sent
+ *      to the server.
+ *    - `kSynced`: an entry that matches what the server has.
+ *    - `kUpdating`: a previously synced entry that has been edited in this
+ *      session but not yet resubmitted.
  *
- * 2. Updates to existing entries (already persisted) are cached in `pending_updates_`.
- *    - These updates use a debounced timer to delay sending changes, preventing excessive network traffic.
- *    - The timer restarts on subsequent edits to the same entry, ensuring that only the latest state is sent.
+ * 2. No network requests are sent as edits happen. All changes accumulate
+ *    locally on `entry_list_` until the user explicitly submits the order
+ *    (e.g. clicking "Save"/"Release"), at which point `Finalize()` collects
+ *    everything in a single batch:
+ *      a) PurifyEntry() removes any kCreating entries with a null rhs_node
+ *         (internal SKU never selected) — these are incomplete drafts and
+ *         must never reach the server.
+ *      b) Remaining entries are classified by sync_state: kCreating entries
+ *         go into the insert array, kUpdating entries go into the update
+ *         array, each serialized to JSON.
+ *      c) After being packaged, every entry's sync_state is reset to
+ *         kSynced — this submission attempt is considered closed regardless
+ *         of the eventual server outcome (see note 5).
  *
  * 3. Deletions:
- *    - If the entry is in `pending_inserts_`, deletion is local only (no server message needed).
- *    - If the entry has already been persisted, the debounced timer is stopped, and a delete message is sent to the server.
+ *    - If the entry being removed is still kCreating (never synced), it is
+ *      simply dropped from entry_list_ and recycled; the server never knew
+ *      it existed, so nothing further is needed.
+ *    - If the entry is kSynced or kUpdating (i.e. the server already has a
+ *      record of it), its id is recorded in `pending_delete_` so Finalize()
+ *      can include it in the delete array sent to the server.
  *
- * 4. Save button behavior:
- *    - Only affects new, unpersisted entries (drafts).
- *    - Existing entries are synchronized automatically via the debounced timer; no manual save required.
+ * 4. There is no per-entry confirmation step after submission. This section
+ *    relies on the order node's version for optimistic concurrency control:
+ *    if a submission is rejected (e.g. due to a stale version), the correct
+ *    recovery is to discard this editing session and reopen the order with
+ *    fresh data — not to retry or roll back individual entries. This is why
+ *    sync_state is reset to kSynced immediately after Finalize(), rather
+ *    than waiting for a server acknowledgment.
  *
- * 5. PurifyEntry ensures that only valid new entries are saved.
+ * 5. kDeleting and kError (from the shared SyncState enum) are not used in
+ *    this model; they only apply to sections with per-entry, real-time
+ *    server synchronization (see TableModel/TableModelP).
  *
- * This design cleanly separates new inserts from updates, ensures safe multi-client synchronization,
- * and prevents sending incomplete or redundant data to the server.
+ * This design keeps all edits local and batched until an explicit submit,
+ * avoids sending incomplete or redundant data to the server, and offloads
+ * conflict handling to the order's version check rather than fine-grained
+ * per-entry retry logic.
  */
 
 class TableModelO final : public TableModel {
@@ -78,27 +102,27 @@ public:
     bool insertRows(int row, int /*count*/, const QModelIndex& parent) override;
     bool removeRows(int row, int, const QModelIndex& parent = QModelIndex()) override;
 
-    const QList<Entry*>& GetEntryList() const { return entry_list_; }
-    void Finalize(QJsonObject& message);
-    bool HasPendingUpdate() const { return !pending_insert_.isEmpty() || !pending_delete_.isEmpty() || !pending_update_.isEmpty(); }
-    void SetNode(const NodeO* node) { d_node_ = node; }
     Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
     QModelIndex GetIndex(const QUuid& entry_id) const override;
 
+    const QList<Entry*>& GetEntryList() const { return entry_list_; }
+    void Finalize(QJsonObject& message);
+    bool HasPendingUpdate() const;
+    void SetNode(const NodeO* node) { d_node_ = node; }
+
 private:
-    bool UpdateInternalSku(EntryO* entry, int row, const QUuid& value, bool is_persisted);
-    bool UpdateUnitPrice(EntryO* entry, int row, double value, bool is_persisted);
-    bool UpdateUnitDiscount(EntryO* entry, int row, double value, bool is_persisted);
-    bool UpdateMeasure(EntryO* entry, int row, double value, bool is_persisted);
-    bool UpdateCount(EntryO* entry, double value, bool is_persisted);
-    bool UpdateDescription(EntryO* entry, const QString& value, bool is_persisted);
-    bool UpdateTag(EntryO* entry, const QStringList& value, bool is_persisted);
+    bool UpdateInternalSku(EntryO* entry, int row, const QUuid& value);
+    bool UpdateUnitPrice(EntryO* entry, int row, double value);
+    bool UpdateUnitDiscount(EntryO* entry, int row, double value);
+    bool UpdateMeasure(EntryO* entry, int row, double value);
+    bool UpdateCount(EntryO* entry, double value);
+    bool UpdateDescription(EntryO* entry, const QString& value);
+    bool UpdateTag(EntryO* entry, const QStringList& value);
 
     void ResolveFromInternal(EntryO* entry, const QUuid& internal_sku) const;
     static void RecalculateAmount(EntryO* entry);
 
     void PurifyEntry();
-    void NormalizeEntryBuffer();
 
 private:
     TreeModelI* tree_model_i_ {};
@@ -108,8 +132,6 @@ private:
     QList<Entry*> entry_list_ {};
 
     QSet<QUuid> pending_delete_ {};
-    QHash<QUuid, Entry*> pending_insert_ {};
-    QHash<QUuid, Entry*> pending_update_ {};
 };
 
 #endif // TABLEMODELO_H

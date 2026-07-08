@@ -36,12 +36,6 @@ void TableModelO::Finalize(QJsonObject& message)
         // - Remove entries from entry_list_ that have no linked rhs_node (i.e., internal SKU not selected).
         // - Mark them as deleted in deleted_entries_ and recycle the entry.
         PurifyEntry();
-
-        // Normalize diff buffers (inserted / deleted)
-        // to ensure no conflict states remain before packaging.
-        // e.g. inserted+deleted ⇒ remove both
-        // NOTE: update caches are implicitly consistent: newly inserted never have update update.
-        NormalizeEntryBuffer();
     }
 
     // deleted
@@ -55,35 +49,49 @@ void TableModelO::Finalize(QJsonObject& message)
         }
     }
 
-    // insert
+    // insert and update
     {
-        if (!pending_insert_.isEmpty()) {
-            QJsonArray inserted_entry_array {};
-            for (auto it = pending_insert_.cbegin(); it != pending_insert_.cend(); ++it) {
-                const QJsonObject obj { it.value()->WriteJson() };
-                inserted_entry_array.append(obj);
-            }
-            message.insert(kInsertedEntryArray, inserted_entry_array);
-        }
-    }
+        QJsonArray inserted_entry_array {};
+        QJsonArray updated_entry_array {};
 
-    // update
-    {
-        if (!pending_update_.isEmpty()) {
-            QJsonArray updated_entry_array {};
-            for (auto it = pending_update_.begin(); it != pending_update_.end(); ++it) {
-                updated_entry_array.append(it.value()->WriteJson());
+        for (auto* entry : std::as_const(entry_list_)) {
+            switch (entry->sync_state) {
+            case SyncState::kCreating:
+                inserted_entry_array.append(entry->WriteJson());
+                break;
+            case SyncState::kUpdating:
+                updated_entry_array.append(entry->WriteJson());
+                break;
+            case SyncState::kSynced:
+            case SyncState::kDeleting:
+            case SyncState::kError:
+                break;
             }
-            message.insert(kUpdatedEntryArray, updated_entry_array);
+
+            entry->sync_state = SyncState::kSynced;
         }
+
+        if (!inserted_entry_array.isEmpty())
+            message.insert(kInsertedEntryArray, inserted_entry_array);
+
+        if (!updated_entry_array.isEmpty())
+            message.insert(kUpdatedEntryArray, updated_entry_array);
     }
 
     // clear
-    {
-        pending_insert_.clear();
-        pending_delete_.clear();
-        pending_update_.clear();
+    pending_delete_.clear();
+}
+
+bool TableModelO::HasPendingUpdate() const
+{
+    if (!pending_delete_.isEmpty())
+        return true;
+
+    for (auto* entry : std::as_const(entry_list_)) {
+        if (entry->sync_state == SyncState::kCreating || entry->sync_state == SyncState::kUpdating)
+            return true;
     }
+    return false;
 }
 
 QModelIndex TableModelO::GetIndex(const QUuid& entry_id) const
@@ -157,17 +165,13 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     const EntryEnumO column { index.column() };
     const int row { index.row() };
 
-    auto* entry { static_cast<Entry*>(index.internalPointer()) };
-    auto* d_entry { static_cast<EntryO*>(entry) };
+    auto* d_entry { static_cast<EntryO*>(index.internalPointer()) };
 
     const double old_count { d_entry->count };
     const double old_measure { d_entry->measure };
     const double old_discount { d_entry->discount };
     const double old_initial { d_entry->initial };
     const double old_final { d_entry->final };
-
-    const auto entry_id { d_entry->id };
-    const bool is_persisted { !pending_insert_.contains(entry_id) };
 
     bool count_changed { false };
     bool measure_changed { false };
@@ -176,25 +180,25 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
 
     switch (column) {
     case EntryEnumO::kDescription:
-        UpdateDescription(d_entry, value.toString(), is_persisted);
+        UpdateDescription(d_entry, value.toString());
         break;
     case EntryEnumO::kRhsNode:
-        unit_price_changed = UpdateInternalSku(d_entry, row, value.toUuid(), is_persisted);
+        unit_price_changed = UpdateInternalSku(d_entry, row, value.toUuid());
         break;
     case EntryEnumO::kUnitPrice:
-        unit_price_changed = UpdateUnitPrice(d_entry, row, value.toDouble(), is_persisted);
+        unit_price_changed = UpdateUnitPrice(d_entry, row, value.toDouble());
         break;
     case EntryEnumO::kMeasure:
-        measure_changed = UpdateMeasure(d_entry, row, value.toDouble(), is_persisted);
+        measure_changed = UpdateMeasure(d_entry, row, value.toDouble());
         break;
     case EntryEnumO::kCount:
-        count_changed = UpdateCount(d_entry, value.toDouble(), is_persisted);
+        count_changed = UpdateCount(d_entry, value.toDouble());
         break;
     case EntryEnumO::kUnitDiscount:
-        unit_discount_changed = UpdateUnitDiscount(d_entry, row, value.toDouble(), is_persisted);
+        unit_discount_changed = UpdateUnitDiscount(d_entry, row, value.toDouble());
         break;
     case EntryEnumO::kTag:
-        UpdateTag(d_entry, value.toStringList(), is_persisted);
+        UpdateTag(d_entry, value.toStringList());
         break;
     case EntryEnumO::kId:
     case EntryEnumO::kVersion:
@@ -341,8 +345,6 @@ bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
     entry_list_.insert(row, entry);
     endInsertRows();
 
-    pending_insert_.insert(entry->id, entry);
-
     return true;
 }
 
@@ -375,8 +377,8 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
         }
     }
 
-    pending_delete_.insert(entry_id);
-    pending_update_.remove(entry_id);
+    if (d_entry->sync_state != SyncState::kCreating)
+        pending_delete_.insert(entry_id);
 
     EntryPool::Instance().Recycle(d_entry, section_);
     return true;
@@ -385,7 +387,7 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 /// @brief Update entry by internal product ID (rhs_node)
 /// @note Responsibility: Handle insertion and update, not deletion
 /// @note rhs_node must be valid, external_sku is auto-filled
-bool TableModelO::UpdateInternalSku(EntryO* entry, int row, const QUuid& value, bool is_persisted)
+bool TableModelO::UpdateInternalSku(EntryO* entry, int row, const QUuid& value)
 {
     if (value.isNull())
         return false;
@@ -405,9 +407,8 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, int row, const QUuid& value, 
     if (price_changed)
         RecalculateAmount(entry);
 
-    if (is_persisted) {
-        pending_update_.insert(entry->id, entry);
-    }
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
 
     if (entry_hub_p_->ExternalSku(d_node_->partner_id, old_rhs_node) != entry_hub_p_->ExternalSku(d_node_->partner_id, value)) {
         EmitDataChanged(row, row, std::to_underlying(EntryEnumO::kExternalSku), std::to_underlying(EntryEnumO::kExternalSku));
@@ -420,7 +421,7 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, int row, const QUuid& value, 
     return price_changed;
 }
 
-bool TableModelO::UpdateUnitPrice(EntryO* entry, int row, double value, bool is_persisted)
+bool TableModelO::UpdateUnitPrice(EntryO* entry, int row, double value)
 {
     if (FloatEqual(entry->unit_price, value))
         return false;
@@ -429,16 +430,15 @@ bool TableModelO::UpdateUnitPrice(EntryO* entry, int row, double value, bool is_
     entry->final = entry->initial - entry->discount;
     entry->unit_price = value;
 
-    if (is_persisted) {
-        pending_update_.insert(entry->id, entry);
-    }
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
 
     EmitDataChanged(row, row, std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kFinal));
 
     return true;
 }
 
-bool TableModelO::UpdateUnitDiscount(EntryO* entry, int row, double value, bool is_persisted)
+bool TableModelO::UpdateUnitDiscount(EntryO* entry, int row, double value)
 {
     if (FloatEqual(entry->unit_discount, value))
         return false;
@@ -447,15 +447,14 @@ bool TableModelO::UpdateUnitDiscount(EntryO* entry, int row, double value, bool 
     entry->final = entry->initial - entry->discount;
     entry->unit_discount = value;
 
-    if (is_persisted) {
-        pending_update_.insert(entry->id, entry);
-    }
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
 
     EmitDataChanged(row, row, std::to_underlying(EntryEnumO::kDiscount), std::to_underlying(EntryEnumO::kFinal));
     return true;
 }
 
-bool TableModelO::UpdateMeasure(EntryO* entry, int row, double value, bool is_persisted)
+bool TableModelO::UpdateMeasure(EntryO* entry, int row, double value)
 {
     if (FloatEqual(entry->measure, value))
         return false;
@@ -466,52 +465,48 @@ bool TableModelO::UpdateMeasure(EntryO* entry, int row, double value, bool is_pe
 
     entry->measure = value;
 
-    if (is_persisted) {
-        pending_update_.insert(entry->id, entry);
-    }
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
 
     EmitDataChanged(row, row, std::to_underlying(EntryEnumO::kInitial), std::to_underlying(EntryEnumO::kFinal));
     return true;
 }
 
-bool TableModelO::UpdateCount(EntryO* entry, double value, bool is_persisted)
+bool TableModelO::UpdateCount(EntryO* entry, double value)
 {
     if (FloatEqual(entry->count, value))
         return false;
 
     entry->count = value;
 
-    if (is_persisted) {
-        pending_update_.insert(entry->id, entry);
-    }
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
 
     return true;
 }
 
-bool TableModelO::UpdateDescription(EntryO* entry, const QString& value, bool is_persisted)
+bool TableModelO::UpdateDescription(EntryO* entry, const QString& value)
 {
     if (entry->description == value)
         return false;
 
     entry->description = value;
 
-    if (is_persisted) {
-        pending_update_.insert(entry->id, entry);
-    }
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
 
     return true;
 }
 
-bool TableModelO::UpdateTag(EntryO* entry, const QStringList& value, bool is_persisted)
+bool TableModelO::UpdateTag(EntryO* entry, const QStringList& value)
 {
     if (entry->tag == value)
         return false;
 
     entry->tag = value;
 
-    if (is_persisted) {
-        pending_update_.insert(entry->id, entry);
-    }
+    if (entry->sync_state == SyncState::kSynced)
+        entry->sync_state = SyncState::kUpdating;
 
     return true;
 }
@@ -554,27 +549,7 @@ void TableModelO::PurifyEntry()
             continue;
 
         beginRemoveRows(QModelIndex(), i, i);
-        auto* taken { entry_list_.takeAt(i) };
-        pending_insert_.remove(taken->id);
-        EntryPool::Instance().Recycle(taken, section_);
+        EntryPool::Instance().Recycle(entry_list_.takeAt(i), section_);
         endRemoveRows();
     }
-}
-
-// Entries that were inserted and then deleted.
-// → These should be removed from both inserted_entries_ and deleted_entries_.
-void TableModelO::NormalizeEntryBuffer()
-{
-    QSet<QUuid> to_remove_from_deleted {};
-
-    for (const QUuid& id : std::as_const(pending_delete_)) {
-        auto it = pending_insert_.find(id);
-        if (it != pending_insert_.end()) {
-            pending_insert_.erase(it);
-            to_remove_from_deleted.insert(id);
-        }
-    }
-
-    // Efficiently remove all matching ids from the deleted set.
-    pending_delete_.subtract(to_remove_from_deleted);
 }
