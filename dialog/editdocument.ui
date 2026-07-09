@@ -57,9 +57,12 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pBtnInsert">
+      <widget class="QPushButton" name="pBtnAdd">
+       <property name="toolTip">
+        <string>Add one or more file links to this entry. Only file paths are stored.</string>
+       </property>
        <property name="text">
-        <string>Insert</string>
+        <string>Add</string>
        </property>
       </widget>
      </item>
@@ -78,7 +81,7 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>pBtnInsert</tabstop>
+  <tabstop>pBtnAdd</tabstop>
   <tabstop>pBtnOk</tabstop>
   <tabstop>pBtnDelete</tabstop>
   <tabstop>pBtnCancel</tabstop>

@@ -30,7 +30,7 @@ EditDocument::~EditDocument()
     delete ui;
 }
 
-void EditDocument::on_pBtnInsert_clicked()
+void EditDocument::on_pBtnAdd_clicked()
 {
     const QString filter("*.*");
     const QString base_path { QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) };
