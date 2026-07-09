@@ -297,6 +297,7 @@ set(HEADERS
     table/unitmodel.h
     global/partner_inventory_registry.h
     global/masterdataregistry.h
+    enum/statusenum.h
 )
 
 set(SOURCES

@@ -23,9 +23,6 @@
 /** @brief Operation */
 enum class Mark { kClear = 0, kSelect, kToggle };
 
-/** @brief Status of an entry. */
-enum class Status { kUnmarked = 0, kMarked };
-
 // defining entry column
 enum class EntryEnum {
     // --- Hidden ---

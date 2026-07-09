@@ -17,15 +17,21 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEENUM_H
-#define STATEENUM_H
-
 // NOTE: All enums in this file represent transient, in-memory client-side
 // state only. None of these values are persisted to the database or sent
 // as part of the domain data itself — they exist purely to track the
 // runtime status of the connection, session, or local objects awaiting
 // server confirmation. Do not serialize them as part of ReadJson/WriteJson
 // or any other data persistence path.
+//
+// Naming convention: enums suffixed with `State` are transient/runtime-only
+// (this file). Enums suffixed with `Status` (e.g. NodeStatus, SettlementStatus)
+// represent persisted business/domain fields that are stored in the database
+// and/or serialized via ReadJson/WriteJson. Keep this distinction consistent
+// when adding new enums.
+
+#ifndef STATEENUM_H
+#define STATEENUM_H
 
 enum class ConnectionState {
     Connecting,

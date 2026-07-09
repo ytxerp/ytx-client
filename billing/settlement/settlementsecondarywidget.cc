@@ -2,14 +2,13 @@
 
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
-#include "settlementenum.h"
 #include "ui_settlementsecondarywidget.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
 SettlementSecondaryWidget::SettlementSecondaryWidget(TreeModel* tree_model_p, SettlementSecondaryModel* model, CSectionConfig& config,
-    const SettlementPrimary& settlement, CUuid& widget_id, CUuid& parent_widget_id, Section section, SyncState sync_state, QWidget* parent)
+    const SettlementPrimary& settlement, CUuid& widget_id, CUuid& parent_widget_id, Section section, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SettlementSecondaryWidget)
     , settlement_ { settlement }
@@ -19,7 +18,6 @@ SettlementSecondaryWidget::SettlementSecondaryWidget(TreeModel* tree_model_p, Se
     , widget_id_ { widget_id }
     , parent_widget_id_ { parent_widget_id }
     , section_ { section }
-    , sync_state_ { sync_state }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -31,7 +29,7 @@ SettlementSecondaryWidget::SettlementSecondaryWidget(TreeModel* tree_model_p, Se
     InitData();
 
     QTimer::singleShot(0, this, &SettlementSecondaryWidget::FetchNode);
-    if (sync_state == SyncState::kCreating)
+    if (settlement.sync_state == SyncState::kCreating)
         QTimer::singleShot(0, this, [this]() { ui->comboPartner->setFocus(); });
 }
 
@@ -68,7 +66,7 @@ void SettlementSecondaryWidget::InitData()
     ui->dateTimeEdit->setDateTime(settlement_.issued_time.toLocalTime());
     ui->dSpinAmount->setValue(settlement_.amount);
 
-    ui->comboPartner->setEnabled(sync_state_ == SyncState::kCreating);
+    ui->comboPartner->setEnabled(settlement_.sync_state == SyncState::kCreating);
 
     const bool is_settled { settlement_.status == SettlementStatus::kSettled };
 
@@ -95,13 +93,13 @@ void SettlementSecondaryWidget::LockWidget(bool is_settled)
 
 bool SettlementSecondaryWidget::ValidateSyncState()
 {
-    if (sync_state_ == SyncState::kUpdating) {
+    if (settlement_.sync_state == SyncState::kUpdating) {
         utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
             tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), time_const::kAutoCloseMs);
         return false;
     }
 
-    qDebug() << "[ValidateSyncState] Passed: sync_state =" << std::to_underlying(sync_state_);
+    qDebug() << "[ValidateSyncState] Passed: sync_state =" << std::to_underlying(settlement_.sync_state);
 
     return true;
 }
@@ -114,7 +112,7 @@ void SettlementSecondaryWidget::on_dateTimeEdit_dateTimeChanged(const QDateTime&
 
     settlement_.issued_time = utc_time;
 
-    if (sync_state_ == SyncState::kSynced)
+    if (settlement_.sync_state == SyncState::kSynced)
         pending_update_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
 }
 
@@ -122,13 +120,13 @@ void SettlementSecondaryWidget::on_lineDescription_textChanged(const QString& ar
 {
     settlement_.description = arg1;
 
-    if (sync_state_ == SyncState::kSynced)
+    if (settlement_.sync_state == SyncState::kSynced)
         pending_update_.insert(kDescription, arg1);
 }
 
 void SettlementSecondaryWidget::on_comboPartner_currentIndexChanged(int /*index*/)
 {
-    if (sync_state_ == SyncState::kSynced)
+    if (settlement_.sync_state == SyncState::kSynced)
         return;
 
     const QUuid partner_id { ui->comboPartner->currentData().toUuid() };
@@ -173,7 +171,7 @@ void SettlementSecondaryWidget::on_pBtnRelease_clicked()
         message.insert(kParentWidgetId, parent_widget_id_.toString(QUuid::WithoutBraces));
         message.insert(kSettlementId, settlement_.id.toString(QUuid::WithoutBraces));
 
-        if (sync_state_ == SyncState::kSynced) {
+        if (settlement_.sync_state == SyncState::kSynced) {
             pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kSettled));
             pending_update_.insert(kAmount, QString::number(settlement_.amount, 'f', numeric_const::kDecimalPlaces4));
             pending_update_.insert(kVersion, settlement_.version);
@@ -184,13 +182,13 @@ void SettlementSecondaryWidget::on_pBtnRelease_clicked()
             pending_update_ = QJsonObject();
         }
 
-        if (sync_state_ == SyncState::kCreating) {
+        if (settlement_.sync_state == SyncState::kCreating) {
             settlement_.status = SettlementStatus::kSettled;
             message.insert(kSettlement, settlement_.WriteJson());
             WebSocket::Instance()->SendMessage(WsKey::kSettlementInsert, message);
         }
 
-        sync_state_ = SyncState::kUpdating;
+        settlement_.sync_state = SyncState::kUpdating;
     }
 }
 
@@ -218,7 +216,7 @@ void SettlementSecondaryWidget::on_pBtnRecall_clicked()
     WebSocket::Instance()->SendMessage(WsKey::kSettlementRecall, message);
     pending_update_ = QJsonObject();
 
-    sync_state_ = SyncState::kUpdating;
+    settlement_.sync_state = SyncState::kUpdating;
 }
 
 void SettlementSecondaryWidget::InsertSucceeded(int version)
@@ -235,7 +233,7 @@ void SettlementSecondaryWidget::RecallSucceeded(int version)
     settlement_.version = version;
     settlement_.status = SettlementStatus::kUnsettled;
 
-    sync_state_ = SyncState::kSynced;
+    settlement_.sync_state = SyncState::kSynced;
     model_->UpdateStatus(SettlementStatus::kUnsettled);
 
     LockWidget(false);
@@ -246,7 +244,7 @@ void SettlementSecondaryWidget::UpdateSucceeded(int version)
     settlement_.version = version;
     settlement_.status = SettlementStatus::kSettled;
 
-    sync_state_ = SyncState::kSynced;
+    settlement_.sync_state = SyncState::kSynced;
     model_->UpdateStatus(SettlementStatus::kSettled);
 
     ui->tableView->clearSelection();

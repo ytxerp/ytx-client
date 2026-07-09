@@ -3,6 +3,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include "enum/statusenum.h"
 #include "global/partner_inventory_registry.h"
 #include "global/resourcepool.h"
 #include "statementenum.h"
@@ -178,13 +179,13 @@ void StatementTertiaryModel::MarkBatch(Mark mark)
     for (auto* entry : std::as_const(list_)) {
         switch (mark) {
         case Mark::kSelect:
-            entry->status = std::to_underlying(Status::kMarked);
+            entry->status = std::to_underlying(EntryStatus::kMarked);
             break;
         case Mark::kClear:
-            entry->status = std::to_underlying(Status::kUnmarked);
+            entry->status = std::to_underlying(EntryStatus::kUnmarked);
             break;
         case Mark::kToggle:
-            entry->status ^= std::to_underlying(Status::kMarked);
+            entry->status ^= std::to_underlying(EntryStatus::kMarked);
             break;
         }
     }

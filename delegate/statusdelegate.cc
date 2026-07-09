@@ -2,7 +2,7 @@
 
 #include <QMouseEvent>
 
-#include "enum/entryenum.h"
+#include "enum/statusenum.h"
 
 StatusDelegate::StatusDelegate(QEvent::Type type, QObject* parent)
     : StyledItemDelegate { parent }
@@ -12,7 +12,7 @@ StatusDelegate::StatusDelegate(QEvent::Type type, QObject* parent)
 
 void StatusDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    if (index.data().toInt() == std::to_underlying(Status::kUnmarked))
+    if (index.data().toInt() == std::to_underlying(EntryStatus::kUnmarked))
         return PaintEmpty(painter, option, index);
 
     PaintCheckBox(painter, option, index);

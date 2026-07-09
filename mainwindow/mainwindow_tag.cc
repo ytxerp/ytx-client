@@ -63,7 +63,7 @@ void MainWindow::RApplyTag(const QJsonObject& obj)
 
         auto* tag { ResourcePool<Tag>::Instance().Allocate() };
         tag->ReadJson(tag_obj);
-        tag->state = SyncState::kSynced;
+        tag->sync_state = SyncState::kSynced;
 
         sc->tag_hash.insert(id, tag);
         UpdateTagIcon(sc, tag);
@@ -103,7 +103,7 @@ void MainWindow::RInsertTag(const QJsonObject& obj, bool is_same_session)
     }
 
     tag->ReadJson(tag_obj);
-    tag->state = SyncState::kSynced;
+    tag->sync_state = SyncState::kSynced;
     sc->tag_hash.insert(tag->id, tag);
     UpdateTagIcon(sc, tag);
 }

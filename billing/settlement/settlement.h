@@ -23,7 +23,8 @@
 #include <QJsonObject>
 #include <QUuid>
 
-#include "settlementenum.h"
+#include "enum/stateenum.h"
+#include "enum/statusenum.h"
 
 struct SettlementPrimary final {
     QUuid id {};
@@ -32,11 +33,12 @@ struct SettlementPrimary final {
     QString description {};
     SettlementStatus status {};
     double amount {};
-
     int version {};
 
-    void Reset();
+    // New local object starts as pending creation
+    SyncState sync_state { SyncState::kCreating };
 
+    void Reset();
     void ReadJson(const QJsonObject& object);
     QJsonObject WriteJson() const;
 };
@@ -50,7 +52,6 @@ struct SettlementSecondary final {
     bool is_settled {};
 
     void Reset();
-
     void ReadJson(const QJsonObject& object);
 };
 

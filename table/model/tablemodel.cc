@@ -103,13 +103,13 @@ void TableModel::ActionEntry(Mark mark)
     for (auto* entry_shadow : std::as_const(shadow_list_)) {
         switch (mark) {
         case Mark::kSelect:
-            *entry_shadow->status = std::to_underlying(Status::kMarked);
+            *entry_shadow->status = std::to_underlying(EntryStatus::kMarked);
             break;
         case Mark::kClear:
-            *entry_shadow->status = std::to_underlying(Status::kUnmarked);
+            *entry_shadow->status = std::to_underlying(EntryStatus::kUnmarked);
             break;
         case Mark::kToggle:
-            *entry_shadow->status ^= std::to_underlying(Status::kMarked);
+            *entry_shadow->status ^= std::to_underlying(EntryStatus::kMarked);
             break;
         }
     }

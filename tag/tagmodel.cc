@@ -144,7 +144,7 @@ bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
     auto* tag { ResourcePool<Tag>::Instance().Allocate() };
 
     tag->id = QUuid::createUuidV7();
-    tag->state = SyncState::kCreating;
+    tag->sync_state = SyncState::kCreating;
 
     const QColor color { QColor::fromHsv(
         QRandomGenerator::global()->bounded(360), QRandomGenerator::global()->bounded(128, 256), QRandomGenerator::global()->bounded(180, 256)) };
@@ -190,7 +190,7 @@ bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
     endRemoveRows();
 
     // Handle synchronization and network notification
-    if (tag->state == SyncState::kSynced) {
+    if (tag->sync_state == SyncState::kSynced) {
         const QJsonObject message { JsonGen::TagDelete(section_, tag_id) };
         WebSocket::Instance()->SendMessage(WsKey::kTagDelete, message);
     } else {
@@ -218,9 +218,9 @@ bool TagModel::UpdateName(Tag* tag, const QString& new_name)
     names_.insert(new_name);
     names_.remove(old_name);
 
-    if (tag->state == SyncState::kCreating) {
+    if (tag->sync_state == SyncState::kCreating) {
         TryInsert(tag);
-    } else if (tag->state == SyncState::kSynced) {
+    } else if (tag->sync_state == SyncState::kSynced) {
         pending_updates_[tag->id].insert(kName, new_name);
         RestartTimer(tag->id);
     }
@@ -235,9 +235,9 @@ bool TagModel::UpdateColor(Tag* tag, const QString& new_color)
 
     tag->color = new_color;
 
-    if (tag->state == SyncState::kCreating && !tag->name.isEmpty()) {
+    if (tag->sync_state == SyncState::kCreating && !tag->name.isEmpty()) {
         TryInsert(tag);
-    } else if (tag->state == SyncState::kSynced) {
+    } else if (tag->sync_state == SyncState::kSynced) {
         pending_updates_[tag->id].insert(kColor, new_color);
         RestartTimer(tag->id);
     }
@@ -307,10 +307,10 @@ void TagModel::FlushCaches()
 
 void TagModel::TryInsert(Tag* tag)
 {
-    if (!tag || tag->state != SyncState::kCreating)
+    if (!tag || tag->sync_state != SyncState::kCreating)
         return;
 
-    tag->state = SyncState::kUpdating;
+    tag->sync_state = SyncState::kUpdating;
 
     const QJsonObject message { JsonGen::TagInsert(section_, tag) };
     WebSocket::Instance()->SendMessage(WsKey::kTagInsert, message);

@@ -33,8 +33,8 @@ struct Tag final {
     QString name {};
     QString color {};
 
-    // state is local only, not serialized
-    SyncState state { SyncState::kCreating };
+    // sync_state is local only, not serialized
+    SyncState sync_state { SyncState::kCreating };
 
     void Reset();
     QJsonObject WriteJson() const;
@@ -57,6 +57,9 @@ inline QJsonObject Tag::WriteJson() const
 
 inline void Tag::ReadJson(const QJsonObject& object)
 {
+    // Data loaded from server
+    sync_state = SyncState::kSynced;
+
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());
     if (const auto val = object.value(kName); val.isString())

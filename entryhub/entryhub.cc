@@ -274,13 +274,13 @@ void EntryHub::MarkAction(Entry* entry, Mark mark)
 {
     switch (mark) {
     case Mark::kSelect:
-        entry->status = std::to_underlying(Status::kMarked);
+        entry->status = std::to_underlying(EntryStatus::kMarked);
         break;
     case Mark::kClear:
-        entry->status = std::to_underlying(Status::kUnmarked);
+        entry->status = std::to_underlying(EntryStatus::kUnmarked);
         break;
     case Mark::kToggle:
-        entry->status ^= std::to_underlying(Status::kMarked);
+        entry->status ^= std::to_underlying(EntryStatus::kMarked);
         break;
     default:
         break;

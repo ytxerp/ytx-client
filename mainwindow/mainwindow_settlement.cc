@@ -38,21 +38,20 @@ void MainWindow::on_actionSettlement_triggered()
     RegisterWidget(widget, widget_id, WidgetRole::kSettlement);
 }
 
-void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const SettlementPrimary& settlement, SyncState sync_state)
+void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const SettlementPrimary& settlement)
 {
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new SettlementSecondaryModel(header_info_.settlement_item, SettlementStatus(settlement.status), this) };
+    auto* model { new SettlementSecondaryModel(header_info_.settlement_item, settlement.status, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new SettlementSecondaryWidget(
-        sc_p_.tree_model, model, sc_->section_config, settlement, widget_id, parent_widget_id, start_, sync_state, this) };
+    auto* widget { new SettlementSecondaryWidget(sc_p_.tree_model, model, sc_->section_config, settlement, widget_id, parent_widget_id, start_, this) };
     connect(model, &SettlementSecondaryModel::SSyncAmount, widget, &SettlementSecondaryWidget::RSyncAmount);
     connect(widget, &SettlementSecondaryWidget::SUpdatePartner, this, &MainWindow::RUpdatePartner);
 
     {
         const QString name { sc_p_.tree_model->Name(settlement.partner_id) };
-        const QString label { sync_state == SyncState::kSynced ? QString("%1-%2").arg(tr("Settlement"), name) : tr("Settlement") };
+        const QString label { settlement.sync_state == SyncState::kSynced ? QString("%1-%2").arg(tr("Settlement"), name) : tr("Settlement") };
 
         const int tab_index { sc_->tab_widget->addTab(widget, label) };
         auto* tab_bar { sc_->tab_widget->tabBar() };
@@ -101,7 +100,7 @@ void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
 
     const QUuid settlement_widget_id { settlement_widget->WidgetId() };
 
-    SettlementItemTab(settlement_widget_id, *settlement, SyncState::kSynced);
+    SettlementItemTab(settlement_widget_id, *settlement);
 }
 
 void MainWindow::RAckSettlementItem(Section section, const QUuid& widget_id, const QJsonArray& array)

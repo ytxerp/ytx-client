@@ -26,7 +26,6 @@
 #include "component/config.h"
 #include "component/using.h"
 #include "enum/section.h"
-#include "enum/stateenum.h"
 #include "settlement.h"
 #include "settlementsecondarymodel.h"
 #include "tree/model/treemodel.h"
@@ -43,7 +42,7 @@ signals:
 
 public:
     explicit SettlementSecondaryWidget(TreeModel* tree_model_p, SettlementSecondaryModel* model, CSectionConfig& config, const SettlementPrimary& settlement,
-        CUuid& widget_id, CUuid& parent_widget_id, Section section, SyncState sync_state, QWidget* parent = nullptr);
+        CUuid& widget_id, CUuid& parent_widget_id, Section section, QWidget* parent = nullptr);
     ~SettlementSecondaryWidget() override;
 
     QTableView* View() const;
@@ -84,7 +83,6 @@ private:
     const QUuid widget_id_ {};
     const QUuid parent_widget_id_ {};
     const Section section_ {};
-    SyncState sync_state_ {};
 };
 
 #endif // SETTLEMENTSECONDARYWIDGET_H

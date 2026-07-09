@@ -23,9 +23,6 @@
 /** @brief Kind of node in a tree structure. */
 enum class NodeKind { kLeaf = 0, kBranch };
 
-/** @brief Workflow status of a node. Just for Order section. */
-enum class NodeStatus { kDraft = 0, kReleased, kRecalled };
-
 /** @brief NodeUnit, global unit identifier across ERP. */
 /**
  * 0–499   : Financial units (Currency)

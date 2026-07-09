@@ -7,6 +7,9 @@ void SettlementPrimary::Reset() { *this = SettlementPrimary {}; }
 
 void SettlementPrimary::ReadJson(const QJsonObject& object)
 {
+    // Data loaded from server
+    sync_state = SyncState::kSynced;
+
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());
     if (const auto val = object.value(kPartnerId); val.isString())
