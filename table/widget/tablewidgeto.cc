@@ -240,18 +240,18 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     const bool is_draft { value == NodeStatus::kDraft };
     const bool is_released { value == NodeStatus::kReleased };
 
-    ui->comboPartner->setAttribute(Qt::WA_TransparentForMouseEvents, !is_draft);
-    ui->comboEmployee->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
+    ui->comboPartner->setReadOnly(!is_draft);
+    ui->comboEmployee->setReadOnly(is_released);
 
     ui->rBtnRO->setEnabled(is_draft);
     ui->rBtnFO->setEnabled(is_draft);
 
-    ui->rBtnIS->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
-    ui->rBtnMS->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
-    ui->rBtnPEND->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
+    ui->rBtnIS->setEnabled(!is_released);
+    ui->rBtnMS->setEnabled(!is_released);
+    ui->rBtnPEND->setEnabled(!is_released);
 
-    ui->lineDescription->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
-    ui->dateTimeEdit->setAttribute(Qt::WA_TransparentForMouseEvents, is_released);
+    ui->lineDescription->setReadOnly(is_released);
+    ui->dateTimeEdit->setReadOnly(is_released);
 
     ui->pBtnSave->setEnabled(!is_released);
     ui->pBtnRelease->setEnabled(!is_released && tmp_node_->unit != NodeUnit::OPending);
@@ -469,7 +469,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
     pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
     pending_update_.insert(kVersion, tmp_node_->version);
 
-    qInfo() << "on_pBtnRecall_clicked: tmp_node_ version" << tmp_node_->version;
+    qDebug() << "on_pBtnRecall_clicked: tmp_node_ version" << tmp_node_->version;
 
     WebSocket::Instance()->SendMessage(WsKey::kOrderRecall, JsonGen::OrderRecall(section_, node_id_, pending_update_));
 

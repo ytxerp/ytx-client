@@ -66,7 +66,7 @@ void SettlementSecondaryWidget::InitData()
     ui->dateTimeEdit->setDateTime(settlement_.issued_time.toLocalTime());
     ui->dSpinAmount->setValue(settlement_.amount);
 
-    ui->comboPartner->setEnabled(settlement_.sync_state == SyncState::kCreating);
+    ui->comboPartner->setReadOnly(settlement_.sync_state != SyncState::kCreating);
 
     const bool is_settled { settlement_.status == SettlementStatus::kSettled };
 
@@ -87,8 +87,8 @@ void SettlementSecondaryWidget::LockWidget(bool is_settled)
     ui->pBtnRelease->setEnabled(!is_settled);
     ui->pBtnRecall->setEnabled(is_settled);
 
-    ui->lineDescription->setAttribute(Qt::WA_TransparentForMouseEvents, is_settled);
-    ui->dateTimeEdit->setAttribute(Qt::WA_TransparentForMouseEvents, is_settled);
+    ui->lineDescription->setReadOnly(is_settled);
+    ui->dateTimeEdit->setReadOnly(is_settled);
 }
 
 bool SettlementSecondaryWidget::ValidateSyncState()

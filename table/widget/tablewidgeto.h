@@ -23,7 +23,6 @@
 #include <QButtonGroup>
 
 #include "component/arg/orderwidgetarg.h"
-#include "enum/stateenum.h"
 #include "table/model/tablemodelo.h"
 #include "tablewidget.h"
 

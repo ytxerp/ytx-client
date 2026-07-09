@@ -23,6 +23,7 @@
 #include <QApplication>
 #include <QComboBox>
 #include <QCompleter>
+#include <QWheelEvent>
 
 class ComboBox final : public QComboBox {
 public:
@@ -40,6 +41,9 @@ public:
         setSizeAdjustPolicy(QComboBox::AdjustToContents);
     }
 
+    void setReadOnly(bool read_only) { read_only_ = read_only; }
+    bool isReadOnly() const { return read_only_; }
+
 protected:
     QSize sizeHint() const override
     {
@@ -52,6 +56,37 @@ protected:
         sz.setWidth(sz.width() + button_width + checkbox_width + spacing);
         return sz;
     }
+
+    void showPopup() override
+    {
+        if (read_only_)
+            return;
+
+        QComboBox::showPopup();
+    }
+
+    void wheelEvent(QWheelEvent* event) override
+    {
+        if (read_only_) {
+            event->accept();
+            return;
+        }
+
+        QComboBox::wheelEvent(event);
+    }
+
+    void keyPressEvent(QKeyEvent* event) override
+    {
+        if (read_only_) {
+            event->accept();
+            return;
+        }
+
+        QComboBox::keyPressEvent(event);
+    }
+
+private:
+    bool read_only_ { false };
 };
 
 #endif // COMBOBOX_H
