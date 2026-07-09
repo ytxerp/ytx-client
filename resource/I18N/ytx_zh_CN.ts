@@ -485,7 +485,7 @@
     <message>
         <location filename="../../dialog/editdocument.ui" line="62"/>
         <source>Add one or more file links to this entry. Only file paths are stored.</source>
-        <translation>为此条目添加一个或多个文件链接，仅保存文件路径。</translation>
+        <translation>为此记录添加一个或多个文件链接，仅保存文件路径。</translation>
     </message>
     <message>
         <location filename="../../dialog/editdocument.ui" line="65"/>
