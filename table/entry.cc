@@ -62,11 +62,34 @@ void EntryP::Reset() { *this = EntryP {}; }
 
 void EntryP::ReadJson(const QJsonObject& object)
 {
-    Entry::ReadJson(object);
-    if (const auto val = object.value(kUnitPrice); val.isString())
-        unit_price = val.toString().toDouble();
+    // Data loaded from server
+    sync_state = SyncState::kSynced;
+
+    if (const auto val = object.value(kId); val.isString())
+        id = QUuid(val.toString());
+    if (const auto val = object.value(kIssuedTime); val.isString())
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kCode); val.isString())
+        code = val.toString();
+    if (const auto val = object.value(kLhsNode); val.isString())
+        lhs_node = QUuid(val.toString());
+    if (const auto val = object.value(kRhsNode); val.isString())
+        rhs_node = QUuid(val.toString());
     if (const auto val = object.value(kExternalSku); val.isString())
         external_sku = QUuid(val.toString());
+    if (const auto val = object.value(kDescription); val.isString())
+        description = val.toString();
+    if (const auto val = object.value(kStatus); val.isDouble())
+        status = val.toInt();
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
+    if (const auto val = object.value(kUnitPrice); val.isString())
+        unit_price = val.toString().toDouble();
+
+    if (object.value(kTag).isArray())
+        tag = utils::ReadStringList(object, kTag);
+    if (object.value(kDocument).isArray())
+        document = utils::ReadStringList(object, kDocument);
 }
 
 QJsonObject EntryP::WriteJson() const
@@ -93,6 +116,9 @@ void EntryO::Reset() { *this = EntryO {}; }
 // Note: Fields like issued_time, document, code and status are ignored for Order entries
 void EntryO::ReadJson(const QJsonObject& object)
 {
+    // Data loaded from server
+    sync_state = SyncState::kSynced;
+
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());
     if (const auto val = object.value(kDescription); val.isString())
