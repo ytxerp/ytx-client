@@ -106,9 +106,34 @@ void NodeP::Reset() { *this = NodeP {}; }
 
 void NodeP::ReadJson(const QJsonObject& object)
 {
-    Node::ReadJson(object);
+    // Data loaded from server
+    sync_state = SyncState::kSynced;
+
+    if (const auto val = object.value(kId); val.isString())
+        id = QUuid(val.toString());
+    if (const auto val = object.value(kName); val.isString())
+        name = val.toString();
+    if (const auto val = object.value(kCode); val.isString())
+        code = val.toString();
+    if (const auto val = object.value(kDescription); val.isString())
+        description = val.toString();
+    if (const auto val = object.value(kKind); val.isDouble())
+        kind = static_cast<NodeKind>(val.toInt());
+    if (const auto val = object.value(kUnit); val.isDouble())
+        unit = static_cast<NodeUnit>(val.toInt());
+    if (const auto val = object.value(kInitialTotal); val.isString())
+        initial_total = val.toString().toDouble();
     if (const auto val = object.value(kPaymentTerm); val.isDouble())
         payment_term = val.toInt();
+    if (const auto val = object.value(kColor); val.isString())
+        color = val.toString();
+
+    if (object.value(kTag).isArray())
+        tag = utils::ReadStringList(object, kTag);
+    if (object.value(kDocument).isArray())
+        document = utils::ReadStringList(object, kDocument);
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
 }
 
 QJsonObject NodeP::WriteJson() const
@@ -142,25 +167,53 @@ void NodeO::InvertTotal()
 
 void NodeO::ReadJson(const QJsonObject& object)
 {
-    Node::ReadJson(object);
-    if (const auto val = object.value(kEmployeeId); val.isString())
-        employee_id = QUuid(val.toString());
+    // Data loaded from server
+    sync_state = SyncState::kSynced;
+
+    if (const auto val = object.value(kId); val.isString())
+        id = QUuid(val.toString());
     if (const auto val = object.value(kPartnerId); val.isString())
         partner_id = QUuid(val.toString());
-    if (const auto val = object.value(kIssuedTime); val.isString())
-        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+    if (const auto val = object.value(kEmployeeId); val.isString())
+        employee_id = QUuid(val.toString());
+    if (const auto val = object.value(kSettlementId); val.isString())
+        settlement_id = QUuid(val.toString());
+
+    if (const auto val = object.value(kName); val.isString())
+        name = val.toString();
+    if (const auto val = object.value(kCode); val.isString())
+        code = val.toString();
+    if (const auto val = object.value(kDescription); val.isString())
+        description = val.toString();
+
+    if (const auto val = object.value(kKind); val.isDouble())
+        kind = static_cast<NodeKind>(val.toInt());
+    if (const auto val = object.value(kUnit); val.isDouble())
+        unit = static_cast<NodeUnit>(val.toInt());
+    if (const auto val = object.value(kStatus); val.isDouble())
+        status = static_cast<NodeStatus>(val.toInt());
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
+
+    if (const auto val = object.value(kInitialTotal); val.isString())
+        initial_total = val.toString().toDouble();
+    if (const auto val = object.value(kDiscountTotal); val.isString())
+        discount_total = val.toString().toDouble();
+    if (const auto val = object.value(kFinalTotal); val.isString())
+        final_total = val.toString().toDouble();
     if (const auto val = object.value(kCountTotal); val.isString())
         count_total = val.toString().toDouble();
     if (const auto val = object.value(kMeasureTotal); val.isString())
         measure_total = val.toString().toDouble();
-    if (const auto val = object.value(kDiscountTotal); val.isString())
-        discount_total = val.toString().toDouble();
-    if (const auto val = object.value(kStatus); val.isDouble())
-        status = static_cast<NodeStatus>(val.toInt());
-    if (const auto val = object.value(kSettlementId); val.isString())
-        settlement_id = QUuid(val.toString());
+
+    if (const auto val = object.value(kIssuedTime); val.isString())
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+
     if (const auto val = object.value(kIsSettled); val.isBool())
         is_settled = val.toBool();
+    if (const auto val = object.value(kDirectionRule); val.isBool())
+        direction_rule = val.toBool();
+
     if (object.value(kTag).isArray())
         tag = utils::ReadStringList(object, kTag);
 }
