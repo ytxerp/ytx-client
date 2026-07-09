@@ -11,7 +11,6 @@
 #include <QVariant>
 
 #include "component/constantstring.h"
-#include "global/partner_inventory_registry.h"
 #include "utils/nodeutils.h"
 
 void PrintHub::SetValue(const NodeO* node_o, const QList<Entry*>& entry_list)
@@ -182,7 +181,7 @@ void PrintHub::DrawHeader(QPainter* painter)
 {
     painter->save();
 
-    DrawText(painter, QStringLiteral("partner"), partner_->Name(node_o_->partner_id));
+    DrawText(painter, QStringLiteral("partner"), MasterDataRegistry::Instance().PartnerName(node_o_->partner_id));
     DrawText(painter, QStringLiteral("issued_time"), node_o_->issued_time.toLocalTime().toString(datetime_format::kDashedDate));
     DrawText(painter, QStringLiteral("code"), node_o_->code);
 
@@ -221,6 +220,9 @@ void PrintHub::DrawTable(QPainter* painter, long long start_index, long long end
     const int max_font_size { original_font.pointSize() };
     const int padding { 4 }; // Cell padding
 
+    const auto& master { MasterDataRegistry::Instance() };
+    const auto& partner { PartnerInventoryRegistry::Instance() };
+
     for (int row = 0; row != end_index - start_index; ++row) {
         const auto* entry { entry_list_.at(start_index + row) };
         int x { left };
@@ -232,7 +234,7 @@ void PrintHub::DrawTable(QPainter* painter, long long start_index, long long end
             }
 
             const QRect cell_rect(x, top + row * row_height_, col_width, row_height_);
-            const QString text { GetColumnText(col, entry) };
+            const QString text { GetColumnText(col, entry, master, partner) };
             const int text_width { fm.horizontalAdvance(text) };
             const int available_width { col_width - padding * 2 };
 
@@ -272,7 +274,7 @@ void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
 {
     painter->save();
 
-    DrawText(painter, QStringLiteral("employee"), partner_->Name(node_o_->employee_id));
+    DrawText(painter, QStringLiteral("employee"), MasterDataRegistry::Instance().PartnerName(node_o_->employee_id));
 
     // unit, direction_rule
     {
@@ -320,15 +322,15 @@ int PrintHub::FindBestFontSize(QPainter* painter, const QString& text, int max_w
     return best; // Return the largest font size that fits
 }
 
-QString PrintHub::GetColumnText(int col, const Entry* entry)
+QString PrintHub::GetColumnText(int col, const Entry* entry, const MasterDataRegistry& master, const PartnerInventoryRegistry& partner) const
 {
-    auto* d_entry { static_cast<const EntryO*>(entry) };
+    const auto* d_entry { static_cast<const EntryO*>(entry) };
 
     switch (col) {
     case 0:
-        return inventory_->Path(entry->rhs_node);
+        return master.InventoryPath(entry->rhs_node);
     case 1:
-        return inventory_->Name(PartnerInventoryRegistry::Instance().ExternalSku(node_o_->partner_id, entry->rhs_node));
+        return master.InventoryName(partner.ExternalSku(node_o_->partner_id, entry->rhs_node));
     case 2:
         return entry->description;
     case 3:
@@ -340,7 +342,7 @@ QString PrintHub::GetColumnText(int col, const Entry* entry)
     case 6:
         return QString::number(d_entry->initial, 'f', section_config_->amount_decimal);
     default:
-        return QString();
+        return {};
     }
 }
 

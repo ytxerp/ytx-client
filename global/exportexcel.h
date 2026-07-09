@@ -20,11 +20,8 @@
 #ifndef EXPORTEXCEL_H
 #define EXPORTEXCEL_H
 
-#include <QJsonObject>
-
 #include "billing/statement/statement.h"
 #include "component/using.h"
-#include "tree/model/treemodeli.h"
 
 class ExportExcel {
 public:
@@ -34,8 +31,8 @@ public:
         return instance;
     }
 
-    void StatementAsync(TreeModelI* tree_model_i, CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start,
-        CDateTime& end, CJsonObject& total, CStatementTertiaryList& list);
+    void StatementAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start, CDateTime& end, CJsonObject& total,
+        CStatementTertiaryList& list);
 
     ExportExcel(const ExportExcel&) = delete;
     ExportExcel& operator=(const ExportExcel&) = delete;
@@ -46,8 +43,8 @@ private:
     ExportExcel() = default;
     ~ExportExcel() = default;
 
-    static bool Statement(TreeModelI* tree_model_i, CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start,
-        CDateTime& end, CJsonObject& total, CStatementTertiaryList& list);
+    static bool Statement(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start, CDateTime& end, CJsonObject& total,
+        CStatementTertiaryList& list);
 };
 
 #endif // EXPORTEXCEL_H

@@ -24,8 +24,9 @@
 #include <QSettings>
 
 #include "component/config.h"
+#include "global/masterdataregistry.h"
+#include "global/partner_inventory_registry.h"
 #include "table/entry.h"
-#include "tree/model/treemodel.h"
 
 struct FieldPosition {
     int x {};
@@ -45,8 +46,6 @@ public:
 
     void SetAppConfig(CAppConfig* app) { app_config_ = app; }
     void SetSectionConfig(CSectionConfig* section) { section_config_ = section; }
-    void SeTreeModelI(TreeModel* inventory) { inventory_ = inventory; }
-    void SetTreeModelP(TreeModel* partner) { partner_ = partner; }
 
     bool LoadTemplate(const QString& template_name);
     void SetValue(const NodeO* node_o, const QList<Entry*>& entry_list);
@@ -76,7 +75,7 @@ private:
 
     static int FindBestFontSize(QPainter* painter, const QString& text, int max_width, int max_font, int min_font = 1);
 
-    QString GetColumnText(int col, const Entry* entry);
+    QString GetColumnText(int col, const Entry* entry, const MasterDataRegistry& master, const PartnerInventoryRegistry& partner) const;
 
     static QString NumberToChineseUpper(double value);
     static QString ConvertSection(int section, const QStringList& digits);
@@ -108,9 +107,6 @@ private:
     QList<Entry*> entry_list_ {};
     const NodeO* node_o_ {};
     QString current_template_ {};
-
-    TreeModel* inventory_ {};
-    TreeModel* partner_ {};
 
     int row_height_ {};
     QList<int> column_widths_ {};

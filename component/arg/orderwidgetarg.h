@@ -27,7 +27,6 @@
 struct OrderWidgetArg {
     TableModel* table_model {};
     TreeModel* tree_model_partner {};
-    TreeModel* tree_model_inventory;
     CAppConfig& app_config {};
     CSectionConfig& section_config {};
     Section section {};

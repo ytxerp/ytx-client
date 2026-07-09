@@ -101,14 +101,10 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
     auto tree_model_p { sc_p_.tree_model };
     const QString partner_name { tree_model_p->Name(partner_id) };
 
-    auto* tree_model_i { static_cast<TreeModelI*>(sc_i_.tree_model.data()) };
-    Q_ASSERT(tree_model_i != nullptr);
-
     auto* model { new StatementTertiaryModel(header_info_.statement_entry, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementTertiaryWidget(
-        model, tree_model_i, widget_id, partner_id, start, end, partner_name, app_config_.company_name, start_, unit, this) };
+    auto* widget { new StatementTertiaryWidget(model, widget_id, partner_id, start, end, partner_name, app_config_.company_name, start_, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement Detail"), partner_name) };
 

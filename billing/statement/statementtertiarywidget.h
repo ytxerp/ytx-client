@@ -25,8 +25,8 @@
 #include <QTableView>
 
 #include "component/using.h"
+#include "enum/section.h"
 #include "statementtertiarymodel.h"
-#include "tree/model/treemodeli.h"
 
 namespace Ui {
 class StatementTertiaryWidget;
@@ -36,8 +36,8 @@ class StatementTertiaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    StatementTertiaryWidget(StatementTertiaryModel* model, TreeModelI* tree_model_i, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end,
-        CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent = nullptr);
+    StatementTertiaryWidget(StatementTertiaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, CString& partner_name,
+        CString& company_name, Section section, int unit, QWidget* parent = nullptr);
     ~StatementTertiaryWidget() override;
 
     QTableView* View() const;
@@ -76,7 +76,6 @@ private:
     const Section section_ {};
     const QUuid widget_id_ {};
     CUuid partner_id_ {};
-    TreeModelI* tree_model_i_ {};
 };
 
 inline const char* kStatementEntryWidget = "StatementEntryWidget";

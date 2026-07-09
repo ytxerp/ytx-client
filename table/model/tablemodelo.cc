@@ -5,12 +5,12 @@
 #include "component/constantdouble.h"
 #include "enum/entryenum.h"
 #include "global/entrypool.h"
+#include "global/masterdataregistry.h"
 #include "global/partner_inventory_registry.h"
 #include "websocket/jsongen.h"
 
-TableModelO::TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, QObject* parent)
+TableModelO::TableModelO(CTableModelArg& arg, QObject* parent)
     : TableModel { arg, parent }
-    , tree_model_i_ { static_cast<TreeModelI*>(tree_model_inventory) }
 {
 }
 
@@ -399,7 +399,9 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, int row, const QUuid& value)
     const double old_unit_price { entry->unit_price };
 
     entry->rhs_node = value;
-    entry->unit_price = PartnerInventoryRegistry::Instance().UnitPrice(d_node_->partner_id, value).value_or(tree_model_i_->UnitPrice(value));
+
+    const auto unit_price { PartnerInventoryRegistry::Instance().UnitPrice(d_node_->partner_id, value) };
+    entry->unit_price = unit_price.value_or(MasterDataRegistry::Instance().InventoryUnitPrice(value));
 
     const bool price_changed { FloatChanged(old_unit_price, entry->unit_price) };
 

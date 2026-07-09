@@ -296,6 +296,7 @@ set(HEADERS
     global/entryshadowpool.h
     table/unitmodel.h
     global/partner_inventory_registry.h
+    global/masterdataregistry.h
 )
 
 set(SOURCES

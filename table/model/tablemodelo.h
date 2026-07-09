@@ -17,13 +17,6 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLEMODELO_H
-#define TABLEMODELO_H
-
-#include "tablemodel.h"
-#include "tree/model/treemodel.h"
-#include "tree/model/treemodeli.h"
-
 /*
  * TableModelO design notes:
  *
@@ -76,11 +69,17 @@
  * per-entry retry logic.
  */
 
+#ifndef TABLEMODELO_H
+#define TABLEMODELO_H
+
+#include "tablemodel.h"
+#include "tree/node.h"
+
 class TableModelO final : public TableModel {
     Q_OBJECT
 
 public:
-    explicit TableModelO(CTableModelArg& arg, TreeModel* tree_model_inventory, QObject* parent = nullptr);
+    explicit TableModelO(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelO() override;
 
 signals:
@@ -123,7 +122,6 @@ private:
     void PurifyEntry();
 
 private:
-    TreeModelI* tree_model_i_ {};
     const NodeO* d_node_ {};
 
     QList<Entry*> entry_list_ {};

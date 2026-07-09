@@ -9,13 +9,14 @@
 #include "component/constantint.h"
 #include "component/constantstring.h"
 #include "document.h"
+#include "global/masterdataregistry.h"
 #include "global/partner_inventory_registry.h"
 #include "utils/mainwindowutils.h"
 
-void ExportExcel::StatementAsync(TreeModelI* tree_model_i, CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start,
-    CDateTime& end, CJsonObject& total, CStatementTertiaryList& list)
+void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start, CDateTime& end,
+    CJsonObject& total, CStatementTertiaryList& list)
 {
-    auto future = QtConcurrent::run([=]() -> bool { return Statement(tree_model_i, path, partner_name, partner_id, unit_string, start, end, total, list); });
+    auto future = QtConcurrent::run([=]() -> bool { return Statement(path, partner_name, partner_id, unit_string, start, end, total, list); });
 
     auto* watcher = new QFutureWatcher<bool>();
     QObject::connect(watcher, &QFutureWatcher<bool>::finished, [watcher, path]() {
@@ -35,8 +36,8 @@ void ExportExcel::StatementAsync(TreeModelI* tree_model_i, CString& path, CStrin
     watcher->setFuture(future);
 }
 
-bool ExportExcel::Statement(TreeModelI* tree_model_i, CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start,
-    CDateTime& end, CJsonObject& total, CStatementTertiaryList& list)
+bool ExportExcel::Statement(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start, CDateTime& end, CJsonObject& total,
+    CStatementTertiaryList& list)
 {
     // Extract totals
     const double pbalance { total.value("pbalance").toString().toDouble() };
@@ -93,12 +94,14 @@ bool ExportExcel::Statement(TreeModelI* tree_model_i, CString& path, CString& pa
     // Table Data
     // ===========================
     int row { start_row + 9 };
+    const auto& master { MasterDataRegistry::Instance() };
+    const auto& partner { PartnerInventoryRegistry::Instance() };
 
     for (const auto* entry : list) {
-        const QUuid external_sku = PartnerInventoryRegistry::Instance().ExternalSku(partner_id, entry->internal_sku);
+        const QUuid external_sku { partner.ExternalSku(partner_id, entry->internal_sku) };
 
-        QVariantList line { entry->issued_time.toString(datetime_format::kDashedDate), entry->code, tree_model_i->Path(entry->internal_sku),
-            tree_model_i->Name(external_sku), entry->count, entry->measure, entry->unit_price, entry->description, entry->amount };
+        QVariantList line { entry->issued_time.toString(datetime_format::kDashedDate), entry->code, master.InventoryPath(entry->internal_sku),
+            master.InventoryName(external_sku), entry->count, entry->measure, entry->unit_price, entry->description, entry->amount };
 
         sheet->WriteRow(row++, 1, line);
     }

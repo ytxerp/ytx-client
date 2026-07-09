@@ -14,8 +14,8 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementTertiaryWidget::StatementTertiaryWidget(StatementTertiaryModel* model, TreeModelI* tree_model_i, CUuid& widget_id, CUuid& partner_id, CDateTime& start,
-    CDateTime& end, CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent)
+StatementTertiaryWidget::StatementTertiaryWidget(StatementTertiaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end,
+    CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementTertiaryWidget)
     , unit_ { unit }
@@ -27,7 +27,6 @@ StatementTertiaryWidget::StatementTertiaryWidget(StatementTertiaryModel* model, 
     , section_ { section }
     , widget_id_ { widget_id }
     , partner_id_ { partner_id }
-    , tree_model_i_ { tree_model_i }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -158,5 +157,5 @@ void StatementTertiaryWidget::on_pBtnExport_clicked()
     auto& list { model_->EntryList() };
     const QString unit_string { node::UnitString(NodeUnit(unit_)) };
 
-    ExportExcel::Instance().StatementAsync(tree_model_i_, destination, partner_name_, partner_id_, unit_string, start_, adjust_end, total_, list);
+    ExportExcel::Instance().StatementAsync(destination, partner_name_, partner_id_, unit_string, start_, adjust_end, total_, list);
 }

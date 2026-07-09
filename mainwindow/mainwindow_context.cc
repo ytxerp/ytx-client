@@ -6,6 +6,7 @@
 #include "entryhub/entryhubo.h"
 #include "entryhub/entryhubp.h"
 #include "entryhub/entryhubt.h"
+#include "global/masterdataregistry.h"
 #include "global/printhub.h"
 #include "mainwindow.h"
 #include "tree/model/treemodelf.h"
@@ -134,8 +135,6 @@ void MainWindow::InitilizeContext()
     {
         PrintHub::Instance().ScanTemplate();
         PrintHub::Instance().SetAppConfig(&app_config_);
-        PrintHub::Instance().SetTreeModelP(sc_p_.tree_model);
-        PrintHub::Instance().SeTreeModelI(sc_i_.tree_model);
     }
 
     {
@@ -282,6 +281,8 @@ void MainWindow::InitContextInventory()
     WebSocket::Instance()->RegisterTreeModel(Section::kInventory, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kInventory, entry_hub);
 
+    MasterDataRegistry::Instance().RegisterTreeModel(Section::kInventory, tree_model);
+
     tree_widget = new TreeWidgetIT(tree_model, section_config, this);
     tree_view = tree_widget->View();
 
@@ -360,6 +361,8 @@ void MainWindow::InitContextPartner()
 
     WebSocket::Instance()->RegisterTreeModel(Section::kPartner, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kPartner, entry_hub);
+
+    MasterDataRegistry::Instance().RegisterTreeModel(Section::kPartner, tree_model);
 
     tree_widget = new TreeWidgetP(tree_model, section_config, this);
     tree_view = tree_widget->View();
