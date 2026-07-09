@@ -117,8 +117,8 @@ private slots:
     void RAccountName(const QString& name);
     void RAccountUsername(const QJsonObject& obj);
 
-    void RMarkBatch(Mark mark);
-    void RStatementMarkBatch(Mark mark);
+    void RMarkEntries(MarkOperation operation);
+    void RStatementMarkEntries(MarkOperation operation);
 
     void RDenyConnection();
     void RAllowConnection();

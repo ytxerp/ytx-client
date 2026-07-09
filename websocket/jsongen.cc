@@ -130,13 +130,13 @@ QJsonObject TableAck(Section section, CUuid& node_id, CUuid& entry_id)
     return message;
 }
 
-QJsonObject BatchMark(Section section, CUuid& node_id, int mark)
+QJsonObject MarkEntries(Section section, CUuid& node_id, int operation)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(WsField::kMark, mark);
+    message.insert(WsField::kMarkOperation, operation);
     return message;
 }
 

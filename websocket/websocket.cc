@@ -208,7 +208,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kNodeDirectionRuleUpdate] = [this](const QJsonObject& obj) { UpdateNodeDirectionRule(obj); };
     handler_obj_[WsKey::kLeafDeleteDeny] = [this](const QJsonObject& obj) { DenyLeafDelete(obj); };
     handler_obj_[WsKey::kNodeDrag] = [this](const QJsonObject& obj) { DragNode(obj); };
-    handler_obj_[WsKey::kBatchMark] = [this](const QJsonObject& obj) { MarkBatch(obj); };
+    handler_obj_[WsKey::kEntriesMark] = [this](const QJsonObject& obj) { MarkEntries(obj); };
 
     handler_obj_[WsKey::kNodeNameUpdate] = [this](const QJsonObject& obj) { UpdateNodeName(obj); };
     handler_obj_[WsKey::kEntryLinkedNodeUpdate] = [this](const QJsonObject& obj) { UpdateEntryLinkedNode(obj); };
@@ -1273,18 +1273,18 @@ void WebSocket::RecallSettlement(const QJsonObject& obj)
     }
 }
 
-void WebSocket::MarkBatch(const QJsonObject& obj)
+void WebSocket::MarkEntries(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
 
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
-    const Mark mark { Mark(obj.value(WsField::kMark).toInt()) };
+    const MarkOperation operation { obj.value(WsField::kMarkOperation).toInt() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
 
     if (session_id != session_id_) {
-        entry_hub->MarkBatch(node_id, mark);
+        entry_hub->MarkEntries(node_id, operation);
     }
 }
 

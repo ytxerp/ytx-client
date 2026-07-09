@@ -120,7 +120,7 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
 }
 
-void MainWindow::RStatementMarkBatch(Mark mark)
+void MainWindow::RStatementMarkEntries(MarkOperation operation)
 {
     auto* current_widget { sc_->tab_widget->currentWidget() };
 
@@ -128,5 +128,5 @@ void MainWindow::RStatementMarkBatch(Mark mark)
     auto* widget { static_cast<StatementTertiaryWidget*>(current_widget) };
 
     auto* model { widget->Model() };
-    model->MarkBatch(mark);
+    model->MarkEntries(operation);
 }

@@ -252,7 +252,7 @@ void MainWindow::CreateLeafFIPT(SectionContext* sc, CUuid& node_id)
     sc->widget_hash.insert(node_id, wc);
 }
 
-void MainWindow::RMarkBatch(Mark mark)
+void MainWindow::RMarkEntries(MarkOperation operation)
 {
     auto* current_widget { sc_->tab_widget->currentWidget() };
 
@@ -260,5 +260,5 @@ void MainWindow::RMarkBatch(Mark mark)
     auto* leaf_widget { static_cast<TableWidget*>(current_widget) };
 
     auto table_model { leaf_widget->Model() };
-    table_model->ActionEntry(mark);
+    table_model->MarkEntries(operation);
 }

@@ -41,7 +41,7 @@ QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id);
 QJsonObject LeafDeleteCheck(Section section, CUuid& node_id);
 QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id);
 
-QJsonObject BatchMark(Section section, CUuid& node_id, int mark);
+QJsonObject MarkEntries(Section section, CUuid& node_id, int operation);
 QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update);
 QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bool is_parallel);
 QJsonObject EntryMessage(Section section, CUuid& entry_id);

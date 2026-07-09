@@ -92,23 +92,23 @@ void TableModel::RUpdateBalance(const QUuid& entry_id)
         AccumulateBalance(row);
 }
 
-void TableModel::ActionEntry(Mark mark)
+void TableModel::MarkEntries(MarkOperation operation)
 {
     if (shadow_list_.isEmpty())
         return;
 
-    const QJsonObject message { JsonGen::BatchMark(section_, node_id_, std::to_underlying(mark)) };
-    WebSocket::Instance()->SendMessage(WsKey::kBatchMark, message);
+    const QJsonObject message { JsonGen::MarkEntries(section_, node_id_, std::to_underlying(operation)) };
+    WebSocket::Instance()->SendMessage(WsKey::kEntriesMark, message);
 
     for (auto* entry_shadow : std::as_const(shadow_list_)) {
-        switch (mark) {
-        case Mark::kSelect:
+        switch (operation) {
+        case MarkOperation::kSelect:
             *entry_shadow->status = std::to_underlying(EntryStatus::kMarked);
             break;
-        case Mark::kClear:
+        case MarkOperation::kClear:
             *entry_shadow->status = std::to_underlying(EntryStatus::kUnmarked);
             break;
-        case Mark::kToggle:
+        case MarkOperation::kToggle:
             *entry_shadow->status ^= std::to_underlying(EntryStatus::kMarked);
             break;
         }

@@ -254,13 +254,13 @@ EntryList EntryHub::ProcessEntryArray(const QJsonArray& array)
     return list;
 }
 
-void EntryHub::MarkBatch(const QUuid& node_id, Mark mark)
+void EntryHub::MarkEntries(const QUuid& node_id, MarkOperation operation)
 {
     QSet<QUuid> affected_node {};
 
     for (auto* entry : std::as_const(entry_cache_)) {
         if (entry->lhs_node == node_id || entry->rhs_node == node_id) {
-            MarkAction(entry, mark);
+            MarkEntry(entry, operation);
 
             affected_node.insert(entry->lhs_node);
             affected_node.insert(entry->rhs_node);
@@ -270,16 +270,16 @@ void EntryHub::MarkBatch(const QUuid& node_id, Mark mark)
     emit SRefreshStatus(affected_node);
 }
 
-void EntryHub::MarkAction(Entry* entry, Mark mark)
+void EntryHub::MarkEntry(Entry* entry, MarkOperation operation)
 {
-    switch (mark) {
-    case Mark::kSelect:
+    switch (operation) {
+    case MarkOperation::kSelect:
         entry->status = std::to_underlying(EntryStatus::kMarked);
         break;
-    case Mark::kClear:
+    case MarkOperation::kClear:
         entry->status = std::to_underlying(EntryStatus::kUnmarked);
         break;
-    case Mark::kToggle:
+    case MarkOperation::kToggle:
         entry->status ^= std::to_underlying(EntryStatus::kMarked);
         break;
     default:

@@ -109,7 +109,7 @@ enum class WsKey : uint8_t {
     kEntryDelete = 45,
     kEntryDescriptionSearch = 46,
     kEntryTagSearch = 47,
-    kBatchMark = 48,
+    kEntriesMark = 48,
     kEntryLinkedNodeUpdate = 49,
     kEntryRateUpdate = 50,
     kEntryNumericUpdate = 51,
@@ -254,8 +254,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "entry_description_search";
     case WsKey::kEntryTagSearch:
         return "entry_tag_search";
-    case WsKey::kBatchMark:
-        return "batch_mark";
+    case WsKey::kEntriesMark:
+        return "kMarkEntries";
     case WsKey::kEntryLinkedNodeUpdate:
         return "entry_linked_node_update";
     case WsKey::kEntryRateUpdate:
@@ -318,7 +318,11 @@ constexpr const char* WsMsgToString(WsKey msg)
 }
 
 namespace WsField {
-inline const QString kMark { QStringLiteral("mark") };
+// TODO: rename JSON key to "mark_operation" to match the `MarkOperation`
+// semantics (see WsKey::kEntriesMark / server-side EntriesMark::mark).
+// Must be changed together with the server, otherwise (de)serialization
+// will break.
+inline const QString kMarkOperation { QStringLiteral("mark") };
 inline const QString kNodeUpdate { QStringLiteral("node_update") };
 inline const QString kDefaultUnit { QStringLiteral("default_unit") };
 inline const QString kDocumentDir { QStringLiteral("document_dir") };

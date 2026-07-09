@@ -171,20 +171,20 @@ void StatementTertiaryModel::ResetModel(const QJsonArray& array)
     endResetModel();
 }
 
-void StatementTertiaryModel::MarkBatch(Mark mark)
+void StatementTertiaryModel::MarkEntries(MarkOperation operation)
 {
     if (list_.isEmpty())
         return;
 
     for (auto* entry : std::as_const(list_)) {
-        switch (mark) {
-        case Mark::kSelect:
+        switch (operation) {
+        case MarkOperation::kSelect:
             entry->status = std::to_underlying(EntryStatus::kMarked);
             break;
-        case Mark::kClear:
+        case MarkOperation::kClear:
             entry->status = std::to_underlying(EntryStatus::kUnmarked);
             break;
-        case Mark::kToggle:
+        case MarkOperation::kToggle:
             entry->status ^= std::to_underlying(EntryStatus::kMarked);
             break;
         }

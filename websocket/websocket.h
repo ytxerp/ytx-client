@@ -214,7 +214,7 @@ private:
     void UpdateEntry(const QJsonObject& obj);
     void InsertEntry(const QJsonObject& obj);
     void DeleteEntry(const QJsonObject& obj);
-    void MarkBatch(const QJsonObject& obj);
+    void MarkEntries(const QJsonObject& obj);
     void UpdateEntryLinkedNode(const QJsonObject& obj);
     void UpdateEntryRate(const QJsonObject& obj);
     void UpdateEntryNumeric(const QJsonObject& obj);

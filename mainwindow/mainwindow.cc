@@ -242,26 +242,26 @@ void MainWindow::IniMarkGroup()
 {
     mark_group_ = new QActionGroup(this);
 
-    ui->actionMarkAll->setData(std::to_underlying(Mark::kSelect));
-    ui->actionMarkNone->setData(std::to_underlying(Mark::kClear));
-    ui->actionMarkToggle->setData(std::to_underlying(Mark::kToggle));
+    ui->actionMarkAll->setData(std::to_underlying(MarkOperation::kSelect));
+    ui->actionMarkNone->setData(std::to_underlying(MarkOperation::kClear));
+    ui->actionMarkToggle->setData(std::to_underlying(MarkOperation::kToggle));
 
     mark_group_->addAction(ui->actionMarkAll);
     mark_group_->addAction(ui->actionMarkNone);
     mark_group_->addAction(ui->actionMarkToggle);
 
     connect(mark_group_, &QActionGroup::triggered, this, [this](QAction* action) {
-        const Mark mark { action->data().toInt() };
+        const MarkOperation operation { action->data().toInt() };
 
         auto* widget { sc_->tab_widget->currentWidget() };
 
         if (IsTableWidgetFIPT(widget)) {
-            RMarkBatch(mark);
+            RMarkEntries(operation);
             return;
         }
 
         if (IsStatementEntryWidget(widget)) {
-            RStatementMarkBatch(mark);
+            RStatementMarkEntries(operation);
         }
     });
 }

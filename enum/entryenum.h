@@ -21,7 +21,7 @@
 #define ENTRYENUM_H
 
 /** @brief Operation */
-enum class Mark { kClear = 0, kSelect, kToggle };
+enum class MarkOperation { kClear = 0, kSelect, kToggle };
 
 // defining entry column
 enum class EntryEnum {

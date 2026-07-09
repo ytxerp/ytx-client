@@ -71,7 +71,7 @@ public:
     void SearchEntry(const QJsonArray& array);
     void PeriodClose(const QJsonArray& array);
 
-    void MarkBatch(const QUuid& node_id, Mark mark);
+    void MarkEntries(const QUuid& node_id, MarkOperation operation);
 
     void DeleteDoubleLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
@@ -91,7 +91,7 @@ public:
 protected:
     virtual EntryList ProcessEntryArray(const QJsonArray& array);
 
-    void MarkAction(Entry* entry, Mark mark);
+    void MarkEntry(Entry* entry, MarkOperation operation);
 
 protected:
     QHash<QUuid, Entry*> entry_cache_ {};
