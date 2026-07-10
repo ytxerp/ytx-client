@@ -56,6 +56,14 @@ template <typename Obj, typename T> inline bool CompareMember(const Obj* lhs, co
     }
 }
 
+inline bool CompareString(const QString& lhs, const QString& rhs, Qt::SortOrder order)
+{
+    const auto& collator = Collator::Instance();
+    const int r = collator.compare(lhs, rhs);
+
+    return (order == Qt::AscendingOrder) ? (r < 0) : (r > 0);
+}
+
 template <typename Obj, typename T> inline bool CompareShadowMember(const Obj* lhs, const Obj* rhs, T* Obj::* member, Qt::SortOrder order)
 {
     Q_ASSERT(lhs != nullptr);

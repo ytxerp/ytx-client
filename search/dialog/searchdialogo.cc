@@ -25,13 +25,11 @@ void SearchDialogO::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kUnit), unit_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDirectionRule), direction_rule_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kKind), kind_);
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kName), tree_path_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kTag), tag_);
 
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), check_);
 
     auto* partner_name { new SearchPathTableR(partner_, view) };
-    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kPartnerId), partner_name);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kEmployeeId), partner_name);
 }
 

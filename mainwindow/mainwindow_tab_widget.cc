@@ -26,9 +26,7 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     qInfo() << Q_FUNC_INFO;
 
     {
-        const int expected_column { IsOrderSection(start_) ? std::to_underlying(NodeEnumO::kPartnerId) : std::to_underlying(NodeEnum::kName) };
-
-        if (index.column() != expected_column)
+        if (index.column() != std::to_underlying(NodeEnum::kName))
             return;
     }
 
@@ -42,7 +40,9 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
     {
         const int unit_column { node::UnitColumn(start_) };
         const int unit { index.siblingAtColumn(unit_column).data().toInt() };
-        if (start_ == Section::kInventory && unit == std::to_underlying(NodeUnit::IExternal))
+
+        if ((start_ == Section::kInventory && unit == std::to_underlying(NodeUnit::IExternal))
+            || (start_ == Section::kPartner && unit == std::to_underlying(NodeUnit::PEmployee)))
             return;
     }
 

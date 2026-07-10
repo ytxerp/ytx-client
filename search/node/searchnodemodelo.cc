@@ -3,6 +3,7 @@
 #include <QJsonArray>
 
 #include "component/constantwebsocket.h"
+#include "global/masterdataregistry.h"
 #include "global/nodepool.h"
 #include "utils/tagutils.h"
 #include "websocket/jsongen.h"
@@ -48,12 +49,12 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* d_node { DerivedPtr<NodeO>(node_list_.at(index.row())) };
+    auto* d_node { static_cast<NodeO*>(index.internalPointer()) };
     const NodeEnumO column { index.column() };
 
     switch (column) {
     case NodeEnumO::kName:
-        return d_node->name;
+        return MasterDataRegistry::Instance().PartnerName(d_node->partner_id);
     case NodeEnumO::kId:
         return d_node->id;
     case NodeEnumO::kVersion:
@@ -68,8 +69,6 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
         return std::to_underlying(d_node->kind);
     case NodeEnumO::kUnit:
         return std::to_underlying(d_node->unit);
-    case NodeEnumO::kPartnerId:
-        return d_node->partner_id;
     case NodeEnumO::kEmployeeId:
         return d_node->employee_id;
     case NodeEnumO::kIssuedTime:
@@ -104,8 +103,10 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
         auto* d_rhs = DerivedPtr<NodeO>(rhs);
 
         switch (e_column) {
-        case NodeEnumO::kName:
-            return utils::CompareMember(lhs, rhs, &Node::name, order);
+        case NodeEnumO::kName: {
+            const auto& master = MasterDataRegistry::Instance();
+            return utils::CompareString(master.PartnerName(d_lhs->partner_id), master.PartnerName(d_rhs->partner_id), order);
+        }
         case NodeEnumO::kDescription:
             return utils::CompareMember(lhs, rhs, &Node::description, order);
         case NodeEnumO::kDirectionRule:
@@ -114,8 +115,6 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumO::kUnit:
             return utils::CompareMember(lhs, rhs, &Node::unit, order);
-        case NodeEnumO::kPartnerId:
-            return utils::CompareMember(d_lhs, d_rhs, &NodeO::partner_id, order);
         case NodeEnumO::kEmployeeId:
             return utils::CompareMember(d_lhs, d_rhs, &NodeO::employee_id, order);
         case NodeEnumO::kIssuedTime:

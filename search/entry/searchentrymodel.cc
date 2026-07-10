@@ -24,7 +24,7 @@ QModelIndex SearchEntryModel::index(int row, int column, const QModelIndex& pare
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column);
+    return createIndex(row, column, entry_list_.at(row));
 }
 
 QModelIndex SearchEntryModel::parent(const QModelIndex& index) const

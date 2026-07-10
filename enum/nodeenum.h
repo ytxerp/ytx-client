@@ -293,7 +293,6 @@ enum class NodeEnumO {
     kName = 0,
     kId,
     kVersion,
-    kPartnerId,
     kIssuedTime,
     kEmployeeId,
     kStatus,

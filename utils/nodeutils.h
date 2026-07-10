@@ -188,7 +188,7 @@ constexpr std::pair<int, int> CacheColumnRange(Section section)
         return { std::to_underlying(NodeEnumI::kCode), std::to_underlying(NodeEnumI::kCommission) };
     case Section::kSale:
     case Section::kPurchase:
-        return { std::to_underlying(NodeEnumO::kPartnerId), std::to_underlying(NodeEnumO::kFinalTotal) };
+        return { std::to_underlying(NodeEnumO::kIssuedTime), std::to_underlying(NodeEnumO::kFinalTotal) };
     }
 
     Q_UNREACHABLE();

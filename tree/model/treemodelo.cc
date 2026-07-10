@@ -2,6 +2,7 @@
 
 #include <QJsonArray>
 
+#include "global/masterdataregistry.h"
 #include "utils/nodeutils.h"
 #include "websocket/jsongen.h"
 
@@ -254,13 +255,20 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
 {
     const NodeEnumO e_column { column };
 
-    auto Compare = [e_column, order](const Node* lhs, const Node* rhs) -> bool {
+    auto DisplayName = [](const NodeO* node) -> const QString {
+        if (node->kind == NodeKind::kBranch)
+            return node->name;
+
+        return MasterDataRegistry::Instance().PartnerName(node->partner_id);
+    };
+
+    auto Compare = [e_column, order, DisplayName](const Node* lhs, const Node* rhs) -> bool {
         auto* d_lhs = DerivedPtr<NodeO>(lhs);
         auto* d_rhs = DerivedPtr<NodeO>(rhs);
 
         switch (e_column) {
         case NodeEnumO::kName:
-            return utils::CompareMember(lhs, rhs, &Node::name, order);
+            return utils::CompareString(DisplayName(d_lhs), DisplayName(d_rhs), order);
         case NodeEnumO::kCode:
             return utils::CompareMember(lhs, rhs, &Node::code, order);
         case NodeEnumO::kDescription:
@@ -271,8 +279,6 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumO::kUnit:
             return utils::CompareMember(lhs, rhs, &Node::unit, order);
-        case NodeEnumO::kPartnerId:
-            return utils::CompareMember(d_lhs, d_rhs, &NodeO::partner_id, order);
         case NodeEnumO::kEmployeeId:
             return utils::CompareMember(d_lhs, d_rhs, &NodeO::employee_id, order);
         case NodeEnumO::kIssuedTime:
@@ -320,7 +326,7 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
 
     switch (column) {
     case NodeEnumO::kName:
-        return d_node->name;
+        return is_branch ? d_node->name : MasterDataRegistry::Instance().PartnerName(d_node->partner_id);
     case NodeEnumO::kId:
         return d_node->id;
     case NodeEnumO::kCode:
@@ -335,8 +341,6 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return std::to_underlying(d_node->kind);
     case NodeEnumO::kUnit:
         return std::to_underlying(d_node->unit);
-    case NodeEnumO::kPartnerId:
-        return d_node->partner_id;
     case NodeEnumO::kEmployeeId:
         return d_node->employee_id;
     case NodeEnumO::kIssuedTime:
@@ -403,7 +407,6 @@ Qt::ItemFlags TreeModelO::flags(const QModelIndex& index) const
     case NodeEnumO::kDescription:
     case NodeEnumO::kId:
     case NodeEnumO::kVersion:
-    case NodeEnumO::kPartnerId:
     case NodeEnumO::kIssuedTime:
     case NodeEnumO::kEmployeeId:
     case NodeEnumO::kStatus:

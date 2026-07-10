@@ -18,7 +18,7 @@ QModelIndex SearchNodeModel::index(int row, int column, const QModelIndex& paren
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column);
+    return createIndex(row, column, node_list_.at(row));
 }
 
 QModelIndex SearchNodeModel::parent(const QModelIndex& index) const

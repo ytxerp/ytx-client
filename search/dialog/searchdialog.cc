@@ -55,6 +55,10 @@ void SearchDialog::IniDialog()
     ui->stackedWidget->setCurrentIndex(0);
     ui->pBtnClose->setAutoDefault(false);
 
+    if (info_.section == Section::kSale || info_.section == Section::kPurchase) {
+        ui->lineEditNode->setPlaceholderText(tr("Partner Name or [Tag]"));
+    }
+
     setWindowTitle(tr("Search"));
     setMinimumSize(800, 600);
 }
@@ -131,6 +135,7 @@ void SearchDialog::HideTableColumn(QTableView* view)
 
     if (info_.section == Section::kSale || info_.section == Section::kPurchase) {
         view->setColumnHidden(std::to_underlying(EntryEnumO::kExternalSku), kIsHidden);
+        view->setColumnHidden(std::to_underlying(EntryEnumO::kLhsNode), kIsHidden);
     }
 }
 

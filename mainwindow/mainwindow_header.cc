@@ -219,10 +219,9 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     };
 
     sale.node_header = {
-        tr("Group Name"),
+        tr("Name"),
         tr("ID"),
         tr("Version"),
-        tr("Partner"),
         tr("Issued Time"),
         tr("Employee"),
         tr("Status"),
