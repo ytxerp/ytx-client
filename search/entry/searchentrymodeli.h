@@ -22,10 +22,12 @@
 
 #include "searchentrymodel.h"
 
-class SearchEntryModelI final : public SearchEntryModel {
+namespace search {
+class EntryModelI final : public EntryModel {
     Q_OBJECT
 public:
-    explicit SearchEntryModelI(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
+    explicit EntryModelI(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
 };
+}
 
 #endif // SEARCHENTRYMODELI_H

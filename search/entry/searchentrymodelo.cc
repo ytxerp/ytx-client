@@ -3,14 +3,15 @@
 #include "enum/entryenum.h"
 #include "global/entrypool.h"
 
-SearchEntryModelO::SearchEntryModelO(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
-    : SearchEntryModel { info, tag_hash, parent }
+namespace search {
+EntryModelO::EntryModelO(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+    : EntryModel { info, tag_hash, parent }
 {
 }
 
-SearchEntryModelO::~SearchEntryModelO() { EntryPool::Instance().Recycle(entry_list_, info_.section); }
+EntryModelO::~EntryModelO() { EntryPool::Instance().Recycle(entry_list_, info_.section); }
 
-QVariant SearchEntryModelO::data(const QModelIndex& index, int role) const
+QVariant EntryModelO::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -50,7 +51,7 @@ QVariant SearchEntryModelO::data(const QModelIndex& index, int role) const
     }
 }
 
-void SearchEntryModelO::sort(int column, Qt::SortOrder order)
+void EntryModelO::sort(int column, Qt::SortOrder order)
 {
     const EntryEnumO e_column { column };
 
@@ -91,4 +92,5 @@ void SearchEntryModelO::sort(int column, Qt::SortOrder order)
     emit layoutAboutToBeChanged();
     std::sort(entry_list_.begin(), entry_list_.end(), Compare);
     emit layoutChanged();
+}
 }

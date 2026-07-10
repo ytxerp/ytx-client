@@ -23,10 +23,12 @@
 #include "entryhub/entryhubp.h"
 #include "searchentrymodel.h"
 
-class SearchEntryModelP final : public SearchEntryModel {
+namespace search {
+
+class EntryModelP final : public EntryModel {
     Q_OBJECT
 public:
-    SearchEntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
+    EntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -37,5 +39,6 @@ public:
 private:
     EntryHubP* entry_hub_p_ {};
 };
+}
 
 #endif // SEARCHENTRYMODELP_H

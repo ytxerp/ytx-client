@@ -27,34 +27,34 @@ void MainWindow::on_actionSearch_triggered()
         return;
 
     SearchNodeModel* node {};
-    SearchEntryModel* entry {};
+    search::EntryModel* entry {};
     SearchDialog* dialog {};
 
     switch (start_) {
     case Section::kFinance:
         node = new SearchNodeModelF(sc_->info, sc_->tree_model, sc_->tag_hash, this);
-        entry = new SearchEntryModelF(sc_->info, sc_->tag_hash, this);
+        entry = new search::EntryModelF(sc_->info, sc_->tag_hash, this);
         dialog = new SearchDialogF(sc_, node, entry, this);
         break;
     case Section::kInventory:
         node = new SearchNodeModelI(sc_->info, sc_->tree_model, sc_->tag_hash, this);
-        entry = new SearchEntryModelI(sc_->info, sc_->tag_hash, this);
+        entry = new search::EntryModelI(sc_->info, sc_->tag_hash, this);
         dialog = new SearchDialogI(sc_, node, entry, this);
         break;
     case Section::kTask:
         node = new SearchNodeModelT(sc_->info, sc_->tree_model, sc_->tag_hash, this);
-        entry = new SearchEntryModelT(sc_->info, sc_->tag_hash, this);
+        entry = new search::EntryModelT(sc_->info, sc_->tag_hash, this);
         dialog = new SearchDialogT(sc_, node, entry, this);
         break;
     case Section::kPartner:
         node = new SearchNodeModelP(sc_->info, sc_->tree_model, sc_->tag_hash, this);
-        entry = new SearchEntryModelP(sc_->entry_hub, sc_->info, sc_->tag_hash, this);
+        entry = new search::EntryModelP(sc_->entry_hub, sc_->info, sc_->tag_hash, this);
         dialog = new SearchDialogP(sc_, node, entry, sc_i_.tree_model, this);
         break;
     case Section::kSale:
     case Section::kPurchase:
         node = new SearchNodeModelO(sc_->info, sc_->tree_model, sc_->tag_hash, this);
-        entry = new SearchEntryModelO(sc_->info, sc_->tag_hash, this);
+        entry = new search::EntryModelO(sc_->info, sc_->tag_hash, this);
         dialog = new SearchDialogO(sc_, node, entry, sc_i_.tree_model, sc_p_.tree_model, this);
         connect(WebSocket::Instance(), &WebSocket::SNodeSearch, node, &SearchNodeModel::RNodeSearch);
         break;
@@ -66,7 +66,7 @@ void MainWindow::on_actionSearch_triggered()
 
     connect(dialog, &SearchDialog::SNodeLocation, this, &MainWindow::RLocateNode);
     connect(dialog, &SearchDialog::SEntryLocation, this, &MainWindow::REntryLocation);
-    connect(sc_->entry_hub, &EntryHub::SSearchEntry, entry, &SearchEntryModel::RSearchEntry);
+    connect(sc_->entry_hub, &EntryHub::SSearchEntry, entry, &search::EntryModel::RSearchEntry);
 
     dialog->show();
 }

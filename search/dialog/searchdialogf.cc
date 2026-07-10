@@ -3,7 +3,7 @@
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 
-SearchDialogF::SearchDialogF(SectionContext* sc, SearchNodeModel* search_node, SearchEntryModel* search_entry, QWidget* parent)
+SearchDialogF::SearchDialogF(SectionContext* sc, SearchNodeModel* search_node, search::EntryModel* search_entry, QWidget* parent)
     : SearchDialog(sc, search_node, search_entry, parent)
 {
     cash_kind_ = new IntStringNoneZeroR(info_.cash_kind_map, this);

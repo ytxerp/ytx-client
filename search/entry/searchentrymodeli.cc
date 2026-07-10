@@ -1,6 +1,8 @@
 #include "searchentrymodeli.h"
 
-SearchEntryModelI::SearchEntryModelI(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
-    : SearchEntryModel { info, tag_hash, parent }
+namespace search {
+EntryModelI::EntryModelI(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+    : EntryModel { info, tag_hash, parent }
 {
+}
 }

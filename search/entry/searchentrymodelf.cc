@@ -2,12 +2,13 @@
 
 #include "enum/entryenum.h"
 
-SearchEntryModelF::SearchEntryModelF(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
-    : SearchEntryModel { info, tag_hash, parent }
+namespace search {
+EntryModelF::EntryModelF(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+    : EntryModel { info, tag_hash, parent }
 {
 }
 
-QVariant SearchEntryModelF::data(const QModelIndex& index, int role) const
+QVariant EntryModelF::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -53,7 +54,7 @@ QVariant SearchEntryModelF::data(const QModelIndex& index, int role) const
     }
 }
 
-void SearchEntryModelF::sort(int column, Qt::SortOrder order)
+void EntryModelF::sort(int column, Qt::SortOrder order)
 {
     const FullEntryEnumF e_column { column };
 
@@ -101,4 +102,5 @@ void SearchEntryModelF::sort(int column, Qt::SortOrder order)
     emit layoutAboutToBeChanged();
     std::sort(entry_list_.begin(), entry_list_.end(), Compare);
     emit layoutChanged();
+}
 }

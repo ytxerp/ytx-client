@@ -5,21 +5,22 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SearchEntryModel::SearchEntryModel(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+namespace search {
+EntryModel::EntryModel(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
     , tag_hash_ { tag_hash }
 {
 }
 
-void SearchEntryModel::RSearchEntry(const EntryList& entry_list)
+void EntryModel::RSearchEntry(const EntryList& entry_list)
 {
     beginResetModel();
     entry_list_ = entry_list;
     endResetModel();
 }
 
-QModelIndex SearchEntryModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex EntryModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -27,25 +28,25 @@ QModelIndex SearchEntryModel::index(int row, int column, const QModelIndex& pare
     return createIndex(row, column, entry_list_.at(row));
 }
 
-QModelIndex SearchEntryModel::parent(const QModelIndex& index) const
+QModelIndex EntryModel::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int SearchEntryModel::rowCount(const QModelIndex& parent) const
+int EntryModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return entry_list_.size();
 }
 
-int SearchEntryModel::columnCount(const QModelIndex& parent) const
+int EntryModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return info_.full_entry_header.size();
 }
 
-QVariant SearchEntryModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant EntryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return info_.full_entry_header.at(section);
@@ -53,7 +54,7 @@ QVariant SearchEntryModel::headerData(int section, Qt::Orientation orientation, 
     return QVariant();
 }
 
-void SearchEntryModel::Search(const QString& text)
+void EntryModel::Search(const QString& text)
 {
     // 1. Handle empty search input: clear the model if it has data
     if (text.trimmed().isEmpty()) {
@@ -80,7 +81,7 @@ void SearchEntryModel::Search(const QString& text)
     ClearModel();
 }
 
-void SearchEntryModel::ClearModel()
+void EntryModel::ClearModel()
 {
     if (!entry_list_.isEmpty()) {
         beginResetModel();
@@ -89,7 +90,7 @@ void SearchEntryModel::ClearModel()
     }
 }
 
-QVariant SearchEntryModel::data(const QModelIndex& index, int role) const
+QVariant EntryModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -133,7 +134,7 @@ QVariant SearchEntryModel::data(const QModelIndex& index, int role) const
     }
 }
 
-void SearchEntryModel::sort(int column, Qt::SortOrder order)
+void EntryModel::sort(int column, Qt::SortOrder order)
 {
     const FullEntryEnum e_column { column };
 
@@ -176,4 +177,5 @@ void SearchEntryModel::sort(int column, Qt::SortOrder order)
     emit layoutAboutToBeChanged();
     std::sort(entry_list_.begin(), entry_list_.end(), Compare);
     emit layoutChanged();
+}
 }

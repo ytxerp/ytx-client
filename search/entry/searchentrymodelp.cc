@@ -3,13 +3,15 @@
 #include "enum/entryenum.h"
 #include "utils/tagutils.h"
 
-SearchEntryModelP::SearchEntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
-    : SearchEntryModel { info, tag_hash, parent }
+namespace search {
+
+EntryModelP::EntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+    : EntryModel { info, tag_hash, parent }
     , entry_hub_p_ { static_cast<EntryHubP*>(entry_hub) }
 {
 }
 
-QVariant SearchEntryModelP::data(const QModelIndex& index, int role) const
+QVariant EntryModelP::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -45,7 +47,7 @@ QVariant SearchEntryModelP::data(const QModelIndex& index, int role) const
     }
 }
 
-void SearchEntryModelP::sort(int column, Qt::SortOrder order)
+void EntryModelP::sort(int column, Qt::SortOrder order)
 {
     const EntryEnumP e_column { column };
 
@@ -85,7 +87,7 @@ void SearchEntryModelP::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SearchEntryModelP::Search(const QString& text)
+void EntryModelP::Search(const QString& text)
 {
     // 1. Prepare the result list (do not modify the model yet)
     QList<Entry*> results {};
@@ -107,4 +109,5 @@ void SearchEntryModelP::Search(const QString& text)
     beginResetModel();
     entry_list_ = std::move(results); // Move results to avoid copying
     endResetModel();
+}
 }

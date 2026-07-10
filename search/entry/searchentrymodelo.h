@@ -22,15 +22,17 @@
 
 #include "searchentrymodel.h"
 
-class SearchEntryModelO final : public SearchEntryModel {
+namespace search {
+
+class EntryModelO final : public EntryModel {
     Q_OBJECT
 public:
-    explicit SearchEntryModelO(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
-    ~SearchEntryModelO() override;
+    explicit EntryModelO(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
+    ~EntryModelO() override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
 };
-
+}
 #endif // SEARCHENTRYMODELO_H

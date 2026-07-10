@@ -29,13 +29,15 @@
 
 using utils::DerivedPtr;
 
-class SearchEntryModel : public QAbstractItemModel {
+namespace search {
+
+class EntryModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    ~SearchEntryModel() override { };
+    ~EntryModel() override { };
 
 protected:
-    explicit SearchEntryModel(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
+    explicit EntryModel(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
 
 public slots:
     void RSearchEntry(const EntryList& entry_list);
@@ -62,5 +64,6 @@ protected:
     CSectionInfo& info_;
     const QHash<QUuid, Tag*>& tag_hash_ {};
 };
+}
 
 #endif // SEARCHENTRYMODEL_H
