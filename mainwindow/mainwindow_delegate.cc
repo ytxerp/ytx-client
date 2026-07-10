@@ -1,5 +1,5 @@
-#include "audithub/auditenum.h"
-#include "audithub/audittextdelegate.h"
+#include "audit/auditenum.h"
+#include "audit/audittextdelegate.h"
 #include "billing/settlement/settlementenum.h"
 #include "billing/statement/statementenum.h"
 #include "charts/balance_sheet/balancesheetenum.h"
@@ -46,7 +46,7 @@
 #include "mainwindow.h"
 #include "partner_heat/partnerheatenum.h"
 #include "tag/tagenum.h"
-#include "workspace_member/workspaceenum.h"
+#include "workspace/workspaceenum.h"
 
 void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {

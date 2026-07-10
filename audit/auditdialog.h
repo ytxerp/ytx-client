@@ -24,8 +24,8 @@
 #include <QTableView>
 #include <QTimer>
 
-#include "audithub/auditmodel.h"
 #include "auditinfo.h"
+#include "auditmodel.h"
 #include "component/using.h"
 
 namespace Ui {

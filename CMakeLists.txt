@@ -245,22 +245,22 @@ set(HEADERS
     widget/lineedit.h
     widget/spinbox.h
     widget/treeview.h
-    workspace_member/workspacemember.h
-    workspace_member/workspacedialog.h
-    workspace_member/workspaceenum.h
-    workspace_member/workspacemodel.h
-    workspace_member/workspacerole.h
+    workspace/workspacemember.h
+    workspace/workspacedialog.h
+    workspace/workspaceenum.h
+    workspace/workspacemodel.h
+    workspace/workspacerole.h
     delegate/databaseroledelegate.h
-    workspace_member/headerinfo.h
-    audithub/auditrow.h
-    audithub/auditmodel.h
-    audithub/auditinfo.h
-    audithub/auditenum.h
-    audithub/auditdialog.h
-    audithub/audittextdelegate.h
-    audithub/audittextdialog.h
+    workspace/headerinfo.h
+    audit/auditrow.h
+    audit/auditmodel.h
+    audit/auditinfo.h
+    audit/auditenum.h
+    audit/auditdialog.h
+    audit/audittextdelegate.h
+    audit/audittextdialog.h
     period_close/periodclosedialog.h
-    workspace_member/databaserole.h
+    workspace/databaserole.h
     period_close/periodclosemodel.h
     inventory_heat/inventoryheatdialog.h
     inventory_heat/inventoryheatrow.h
@@ -442,19 +442,19 @@ set(SOURCES
     websocket/websocket.cc
     widget/datetimeedit.cc
     widget/treeview.cc
-    workspace_member/workspacedialog.cc
-    workspace_member/workspacemodel.cc
-    audithub/auditrow.cc
+    workspace/workspacedialog.cc
+    workspace/workspacemodel.cc
+    audit/auditrow.cc
     mainwindow/mainwindow_audit.cc
-    audithub/auditmodel.cc
-    audithub/auditdialog.cc
-    audithub/audittextdelegate.cc
-    audithub/audittextdialog.cc
+    audit/auditmodel.cc
+    audit/auditdialog.cc
+    audit/audittextdelegate.cc
+    audit/audittextdialog.cc
     mainwindow/mainwindow_period_close.cc
     period_close/periodclosedialog.cc
     period_close/periodclosemodel.cc
-    workspace_member/databaserole.cc
-    workspace_member/workspacerole.cc
+    workspace/databaserole.cc
+    workspace/workspacerole.cc
     inventory_heat/inventoryheatdialog.cc
     inventory_heat/inventoryheatmodel.cc
     mainwindow/mainwindow_inventory_heat.cc
@@ -516,9 +516,9 @@ set(UIS
     tree/widget/treewidgetit.ui
     tree/widget/treewidgeto.ui
     tree/widget/treewidgetp.ui
-    workspace_member/workspacedialog.ui
-    audithub/auditdialog.ui
-    audithub/audittextdialog.ui
+    workspace/workspacedialog.ui
+    audit/auditdialog.ui
+    audit/audittextdialog.ui
     period_close/periodclosedialog.ui
     inventory_heat/inventoryheatdialog.ui
     partner_heat/partnerheatdialog.ui

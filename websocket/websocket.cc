@@ -13,7 +13,7 @@
 #include "tree/model/treemodelp.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
-#include "workspace_member/databaserole.h"
+#include "workspace/databaserole.h"
 
 WebSocket::WebSocket(QObject* parent)
     : QObject(parent)

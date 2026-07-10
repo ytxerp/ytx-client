@@ -31,7 +31,7 @@
 #include <QTableView>
 #include <QTranslator>
 
-#include "audithub/auditinfo.h"
+#include "audit/auditinfo.h"
 #include "billing/settlement/settlement.h"
 #include "billing/settlement/settlementprimarywidget.h"
 #include "billing/statement/statementtertiarywidget.h"
@@ -45,7 +45,7 @@
 #include "table/widget/tablewidgeto.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidgeto.h"
-#include "workspace_member/headerinfo.h"
+#include "workspace/headerinfo.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

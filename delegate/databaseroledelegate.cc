@@ -4,7 +4,7 @@
 
 #include "global/userprofile.h"
 #include "widget/combobox.h"
-#include "workspace_member/databaserole.h"
+#include "workspace/databaserole.h"
 
 DatabaseRoleDelegate::DatabaseRoleDelegate(QObject* parent)
     : StyledItemDelegate { parent }

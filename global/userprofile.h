@@ -22,8 +22,8 @@
 
 #include <QString>
 
-#include "workspace_member/databaserole.h"
-#include "workspace_member/workspacerole.h"
+#include "workspace/databaserole.h"
+#include "workspace/workspacerole.h"
 
 class UserProfile {
 public:

@@ -1,5 +1,5 @@
-#include "audithub/auditdialog.h"
-#include "audithub/auditenum.h"
+#include "audit/auditdialog.h"
+#include "audit/auditenum.h"
 #include "component/constantwebsocket.h"
 #include "mainwindow.h"
 #include "websocket/jsongen.h"

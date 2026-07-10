@@ -7,8 +7,8 @@
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
-#include "workspace_member/workspacedialog.h"
-#include "workspace_member/workspaceenum.h"
+#include "workspace/workspacedialog.h"
+#include "workspace/workspaceenum.h"
 
 void MainWindow::on_actionProfile_triggered()
 {
