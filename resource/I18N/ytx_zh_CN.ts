@@ -37,12 +37,12 @@
 <context>
     <name>AuditDialog</name>
     <message>
-        <location filename="../../audithub/auditdialog.ui" line="14"/>
+        <location filename="../../audit/auditdialog.ui" line="14"/>
         <source>Audit</source>
         <translation>审计</translation>
     </message>
     <message>
-        <location filename="../../audithub/auditdialog.ui" line="59"/>
+        <location filename="../../audit/auditdialog.ui" line="59"/>
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
@@ -345,10 +345,6 @@
         <translation>刷新</translation>
     </message>
     <message>
-        <source>Export</source>
-        <translation type="vanished">导出</translation>
-    </message>
-    <message>
         <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="91"/>
         <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="102"/>
         <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="112"/>
@@ -372,42 +368,6 @@
     </message>
 </context>
 <context>
-    <name>CashFlowCarrierModel</name>
-    <message>
-        <location filename="../../charts/cash_flow_statement/cashflowcarriermodel.cc" line="204"/>
-        <source>Carrier</source>
-        <translation>载体</translation>
-    </message>
-    <message>
-        <location filename="../../charts/cash_flow_statement/cashflowcarriermodel.cc" line="205"/>
-        <source>Counterpart</source>
-        <translation>对方</translation>
-    </message>
-    <message>
-        <location filename="../../charts/cash_flow_statement/cashflowcarriermodel.cc" line="221"/>
-        <source>Cash</source>
-        <translation>现金</translation>
-    </message>
-    <message>
-        <location filename="../../charts/cash_flow_statement/cashflowcarriermodel.cc" line="222"/>
-        <source>Bank</source>
-        <translation>银行</translation>
-    </message>
-    <message>
-        <location filename="../../charts/cash_flow_statement/cashflowcarriermodel.cc" line="223"/>
-        <source>Wallet</source>
-        <translation>钱包</translation>
-    </message>
-</context>
-<context>
-    <name>CashFlowSpecialModel</name>
-    <message>
-        <location filename="../../charts/cash_flow_statement/cashflowspecialmodel.cc" line="192"/>
-        <source>Special</source>
-        <translation>特殊项目</translation>
-    </message>
-</context>
-<context>
     <name>CashFlowStatementDialog</name>
     <message>
         <location filename="../../charts/cash_flow_statement/cashflowstatementdialog.ui" line="14"/>
@@ -424,42 +384,6 @@
         <source>Fetch</source>
         <translation>刷新</translation>
     </message>
-    <message>
-        <source>Export</source>
-        <translation type="vanished">导出</translation>
-    </message>
-</context>
-<context>
-    <name>CashFlowStatementModel</name>
-    <message>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="201"/>
-        <source>Operating</source>
-        <translation>经营活动</translation>
-    </message>
-    <message>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="202"/>
-        <source>Investing</source>
-        <translation>投资活动</translation>
-    </message>
-    <message>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="203"/>
-        <source>Financing</source>
-        <translation>筹资活动</translation>
-    </message>
-    <message>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="222"/>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="224"/>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="226"/>
-        <source>Inflows</source>
-        <translation>流入</translation>
-    </message>
-    <message>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="223"/>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="225"/>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="227"/>
-        <source>Outflows</source>
-        <translation>流出</translation>
-    </message>
 </context>
 <context>
     <name>EditDocument</name>
@@ -472,10 +396,6 @@
         <location filename="../../dialog/editdocument.ui" line="42"/>
         <source>Delete</source>
         <translation>删除</translation>
-    </message>
-    <message>
-        <source>Insert</source>
-        <translation type="vanished">新建</translation>
     </message>
     <message>
         <location filename="../../dialog/editdocument.ui" line="35"/>
@@ -615,10 +535,6 @@
         <translation>刷新</translation>
     </message>
     <message>
-        <source>Export</source>
-        <translation type="vanished">导出</translation>
-    </message>
-    <message>
         <location filename="../../charts/income_statement/incomestatementdialog.cc" line="59"/>
         <location filename="../../charts/income_statement/incomestatementdialog.cc" line="69"/>
         <location filename="../../charts/income_statement/incomestatementdialog.cc" line="78"/>
@@ -639,14 +555,6 @@
         <location filename="../../charts/income_statement/incomestatementdialog.cc" line="78"/>
         <source>Income and expense nodes must not have ancestor-descendant relationships.</source>
         <translation>收入和支出节点不能存在祖先-后代关系。</translation>
-    </message>
-</context>
-<context>
-    <name>IncomeStatementModel</name>
-    <message>
-        <location filename="../../charts/income_statement/incomestatementmodel.cc" line="289"/>
-        <source>Net Profit</source>
-        <translation>净利润</translation>
     </message>
 </context>
 <context>
@@ -1333,8 +1241,8 @@
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="670"/>
         <location filename="../../mainwindow/mainwindow.ui" line="673"/>
-        <source>Workspace Member</source>
-        <translation>工区成员</translation>
+        <source>Workspace Manager</source>
+        <translation>工区管理</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="678"/>
@@ -1389,10 +1297,6 @@
         <location filename="../../mainwindow/mainwindow.ui" line="529"/>
         <source>Ctrl+N</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>Export Excel</source>
-        <translation type="vanished">导出 Excel</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="534"/>
@@ -1928,10 +1832,6 @@ Do you want to save before closing?</source>
         <translation>未付</translation>
     </message>
     <message>
-        <source>Group Name</source>
-        <translation type="vanished">分组</translation>
-    </message>
-    <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="234"/>
         <source>Count Total</source>
         <translation>计数</translation>
@@ -2157,34 +2057,6 @@ Do you want to save before closing?</source>
         <source>Name</source>
         <comment>Person</comment>
         <translation>姓名</translation>
-    </message>
-    <message>
-        <source>Ancestor</source>
-        <translation type="vanished">先祖</translation>
-    </message>
-    <message>
-        <source>Descendant</source>
-        <translation type="vanished">后代</translation>
-    </message>
-    <message>
-        <source>Distance</source>
-        <translation type="vanished">距离</translation>
-    </message>
-    <message>
-        <source>Export Completed</source>
-        <translation type="vanished">成功</translation>
-    </message>
-    <message>
-        <source>Export completed successfully.</source>
-        <translation type="vanished">导出已完成。</translation>
-    </message>
-    <message>
-        <source>Export Failed</source>
-        <translation type="vanished">失败</translation>
-    </message>
-    <message>
-        <source>Export failed. The file has been deleted.</source>
-        <translation type="vanished">导出失败，文件已删除。</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.cc" line="681"/>
@@ -2952,94 +2824,94 @@ You need to recall it first before making changes.</source>
         <translation>正</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/databaserole.cc" line="10"/>
-        <location filename="../../workspace_member/databaserole.cc" line="43"/>
+        <location filename="../../workspace/databaserole.cc" line="10"/>
+        <location filename="../../workspace/databaserole.cc" line="43"/>
         <source>Finance R</source>
         <translation>财务 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/databaserole.cc" line="11"/>
-        <location filename="../../workspace_member/databaserole.cc" line="43"/>
+        <location filename="../../workspace/databaserole.cc" line="11"/>
+        <location filename="../../workspace/databaserole.cc" line="43"/>
         <source>Finance W</source>
         <translation>财务 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/databaserole.cc" line="12"/>
-        <location filename="../../workspace_member/databaserole.cc" line="44"/>
+        <location filename="../../workspace/databaserole.cc" line="12"/>
+        <location filename="../../workspace/databaserole.cc" line="44"/>
         <source>Task R</source>
         <translation>任务 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/databaserole.cc" line="13"/>
-        <location filename="../../workspace_member/databaserole.cc" line="44"/>
+        <location filename="../../workspace/databaserole.cc" line="13"/>
+        <location filename="../../workspace/databaserole.cc" line="44"/>
         <source>Task W</source>
         <translation>任务 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/databaserole.cc" line="14"/>
-        <location filename="../../workspace_member/databaserole.cc" line="45"/>
+        <location filename="../../workspace/databaserole.cc" line="14"/>
+        <location filename="../../workspace/databaserole.cc" line="45"/>
         <source>Inventory R</source>
         <translation>存货 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/databaserole.cc" line="15"/>
-        <location filename="../../workspace_member/databaserole.cc" line="45"/>
+        <location filename="../../workspace/databaserole.cc" line="15"/>
+        <location filename="../../workspace/databaserole.cc" line="45"/>
         <source>Inventory W</source>
         <translation>存货 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/databaserole.cc" line="16"/>
-        <location filename="../../workspace_member/databaserole.cc" line="46"/>
+        <location filename="../../workspace/databaserole.cc" line="16"/>
+        <location filename="../../workspace/databaserole.cc" line="46"/>
         <source>Partner R</source>
         <translation>合作 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/databaserole.cc" line="17"/>
-        <location filename="../../workspace_member/databaserole.cc" line="46"/>
+        <location filename="../../workspace/databaserole.cc" line="17"/>
+        <location filename="../../workspace/databaserole.cc" line="46"/>
         <source>Partner W</source>
         <translation>合作 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/databaserole.cc" line="18"/>
-        <location filename="../../workspace_member/databaserole.cc" line="47"/>
+        <location filename="../../workspace/databaserole.cc" line="18"/>
+        <location filename="../../workspace/databaserole.cc" line="47"/>
         <source>Sale R</source>
         <translation>销售 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/databaserole.cc" line="19"/>
-        <location filename="../../workspace_member/databaserole.cc" line="47"/>
+        <location filename="../../workspace/databaserole.cc" line="19"/>
+        <location filename="../../workspace/databaserole.cc" line="47"/>
         <source>Sale W</source>
         <translation>销售 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/databaserole.cc" line="20"/>
-        <location filename="../../workspace_member/databaserole.cc" line="48"/>
+        <location filename="../../workspace/databaserole.cc" line="20"/>
+        <location filename="../../workspace/databaserole.cc" line="48"/>
         <source>Purchase R</source>
         <translation>采购 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/databaserole.cc" line="21"/>
-        <location filename="../../workspace_member/databaserole.cc" line="48"/>
+        <location filename="../../workspace/databaserole.cc" line="21"/>
+        <location filename="../../workspace/databaserole.cc" line="48"/>
         <source>Purchase W</source>
         <translation>采购 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/workspacerole.cc" line="7"/>
+        <location filename="../../workspace/workspacerole.cc" line="7"/>
         <source>Guest</source>
         <translation>访客</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/workspacerole.cc" line="8"/>
+        <location filename="../../workspace/workspacerole.cc" line="8"/>
         <source>Member</source>
         <translation>成员</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/workspacerole.cc" line="9"/>
+        <location filename="../../workspace/workspacerole.cc" line="9"/>
         <source>Admin</source>
         <translation>管理员</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/workspacerole.cc" line="10"/>
+        <location filename="../../workspace/workspacerole.cc" line="10"/>
         <source>Owner</source>
         <translation>所有者</translation>
     </message>
@@ -3312,12 +3184,12 @@ You need to recall it first before making changes.</source>
         <translation>未分类</translation>
     </message>
     <message>
-        <location filename="../../audithub/audittextdelegate.cc" line="20"/>
+        <location filename="../../audit/audittextdelegate.cc" line="20"/>
         <source>Before Change</source>
         <translation>变更前</translation>
     </message>
     <message>
-        <location filename="../../audithub/audittextdelegate.cc" line="21"/>
+        <location filename="../../audit/audittextdelegate.cc" line="20"/>
         <source>After Change</source>
         <translation>变更后</translation>
     </message>
@@ -3690,16 +3562,92 @@ You need to recall it first before making changes.</source>
     </message>
 </context>
 <context>
-    <name>WorkspaceMemberDialog</name>
+    <name>WorkspaceDialog</name>
     <message>
-        <location filename="../../workspace_member/workspacememberdialog.ui" line="14"/>
-        <source>Workspace Member</source>
-        <translation>工区成员</translation>
+        <location filename="../../workspace/workspacedialog.ui" line="14"/>
+        <source>Workspace Manager</source>
+        <translation>工区管理</translation>
     </message>
     <message>
-        <location filename="../../workspace_member/workspacememberdialog.ui" line="38"/>
+        <location filename="../../workspace/workspacedialog.ui" line="38"/>
         <source>Delete</source>
         <translation>删除</translation>
+    </message>
+</context>
+<context>
+    <name>cash_flow::CarrierModel</name>
+    <message>
+        <location filename="../../charts/cash_flow_statement/cashflowcarriermodel.cc" line="206"/>
+        <source>Carrier</source>
+        <translation>载体</translation>
+    </message>
+    <message>
+        <location filename="../../charts/cash_flow_statement/cashflowcarriermodel.cc" line="207"/>
+        <source>Counterpart</source>
+        <translation>对方</translation>
+    </message>
+    <message>
+        <location filename="../../charts/cash_flow_statement/cashflowcarriermodel.cc" line="223"/>
+        <source>Cash</source>
+        <translation>现金</translation>
+    </message>
+    <message>
+        <location filename="../../charts/cash_flow_statement/cashflowcarriermodel.cc" line="224"/>
+        <source>Bank</source>
+        <translation>银行</translation>
+    </message>
+    <message>
+        <location filename="../../charts/cash_flow_statement/cashflowcarriermodel.cc" line="225"/>
+        <source>Wallet</source>
+        <translation>钱包</translation>
+    </message>
+</context>
+<context>
+    <name>cash_flow::Model</name>
+    <message>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="203"/>
+        <source>Operating</source>
+        <translation>经营活动</translation>
+    </message>
+    <message>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="204"/>
+        <source>Investing</source>
+        <translation>投资活动</translation>
+    </message>
+    <message>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="205"/>
+        <source>Financing</source>
+        <translation>筹资活动</translation>
+    </message>
+    <message>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="224"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="226"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="228"/>
+        <source>Inflows</source>
+        <translation>流入</translation>
+    </message>
+    <message>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="225"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="227"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="229"/>
+        <source>Outflows</source>
+        <translation>流出</translation>
+    </message>
+</context>
+<context>
+    <name>cash_flow::SpecialModel</name>
+    <message>
+        <location filename="../../charts/cash_flow_statement/cashflowspecialmodel.cc" line="194"/>
+        <source>Special</source>
+        <translation>特殊项目</translation>
+    </message>
+</context>
+<context>
+    <name>income_statement::Model</name>
+    <message>
+        <location filename="../../charts/income_statement/incomestatementmodel.cc" line="291"/>
+        <source>Net Profit</source>
+        <translation>净利润</translation>
     </message>
 </context>
 </TS>
