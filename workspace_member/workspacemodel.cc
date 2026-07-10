@@ -1,4 +1,4 @@
-#include "workspacemembermodel.h"
+#include "workspacemodel.h"
 
 #include <QJsonArray>
 
@@ -6,21 +6,22 @@
 #include "global/resourcepool.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
-#include "workspacememberenum.h"
+#include "workspaceenum.h"
 
-WorkspaceMemberModel::WorkspaceMemberModel(const QStringList& header, QObject* parent)
+namespace workspace {
+Model::Model(const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
     , header_ { header }
 {
 }
 
-WorkspaceMemberModel::~WorkspaceMemberModel()
+Model::~Model()
 {
     qDebug() << "~WorkspaceMemberModel() FlushCaches";
     FlushCaches();
 }
 
-QVariant WorkspaceMemberModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return header_.at(section);
@@ -28,18 +29,18 @@ QVariant WorkspaceMemberModel::headerData(int section, Qt::Orientation orientati
     return QVariant();
 }
 
-QModelIndex WorkspaceMemberModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column, member_list_.at(row));
+    return createIndex(row, column, list_.at(row));
 }
 
-QVariant WorkspaceMemberModel::data(const QModelIndex& index, int role) const
+QVariant Model::data(const QModelIndex& index, int role) const
 {
     // Basic validation to prevent out-of-bounds access
-    if (!index.isValid() || index.row() >= member_list_.size()) {
+    if (!index.isValid() || index.row() >= list_.size()) {
         return {};
     }
 
@@ -48,30 +49,30 @@ QVariant WorkspaceMemberModel::data(const QModelIndex& index, int role) const
         return {};
     }
 
-    const WorkspaceMemberEnum column { index.column() };
-    auto* member { static_cast<WorkspaceMember*>(index.internalPointer()) };
+    const MemberField column { index.column() };
+    auto* member { static_cast<Member*>(index.internalPointer()) };
 
     switch (column) {
-    case WorkspaceMemberEnum::kId:
+    case MemberField::kId:
         return member->id;
-    case WorkspaceMemberEnum::kVersion:
+    case MemberField::kVersion:
         return member->version;
-    case WorkspaceMemberEnum::kEmail:
+    case MemberField::kEmail:
         return member->email;
-    case WorkspaceMemberEnum::kUsername:
+    case MemberField::kUsername:
         return member->username;
-    case WorkspaceMemberEnum::kName:
+    case MemberField::kName:
         return member->name;
-    case WorkspaceMemberEnum::kWorkspaceRole:
+    case MemberField::kWorkspaceRole:
         return static_cast<int>(member->workspace_role);
-    case WorkspaceMemberEnum::kDatabaseRole:
+    case MemberField::kDatabaseRole:
         return static_cast<int>(member->database_roles);
-    case WorkspaceMemberEnum::kCreatedTime:
+    case MemberField::kCreatedTime:
         return member->created_time;
     }
 }
 
-bool WorkspaceMemberModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     // Basic validation for index and role
     if (!index.isValid() || role != Qt::EditRole) {
@@ -84,7 +85,7 @@ bool WorkspaceMemberModel::setData(const QModelIndex& index, const QVariant& val
     }
 
     // Get the member pointer using {} initialization
-    auto* member { static_cast<WorkspaceMember*>(index.internalPointer()) };
+    auto* member { static_cast<Member*>(index.internalPointer()) };
     const QUuid id { member->id };
 
     if (id.isNull()) {
@@ -93,25 +94,25 @@ bool WorkspaceMemberModel::setData(const QModelIndex& index, const QVariant& val
 
     // Handle updates based on the column index
     // Assuming MemberColumn is your enum for WorkspaceMember columns
-    switch (static_cast<WorkspaceMemberEnum>(index.column())) {
-    case WorkspaceMemberEnum::kWorkspaceRole: {
+    switch (static_cast<MemberField>(index.column())) {
+    case MemberField::kWorkspaceRole: {
         const int raw { value.toInt() };
         member->workspace_role = static_cast<workspace::Role>(raw);
         pending_updates_[id].insert(kWorkspaceRole, raw);
         break;
     }
-    case WorkspaceMemberEnum::kDatabaseRole: {
+    case MemberField::kDatabaseRole: {
         const int raw { value.toInt() };
         member->database_roles = static_cast<database::Roles>(raw);
         pending_updates_[id].insert(kDatabaseRoles, raw);
         break;
     }
-    case WorkspaceMemberEnum::kEmail:
-    case WorkspaceMemberEnum::kUsername:
-    case WorkspaceMemberEnum::kName:
-    case WorkspaceMemberEnum::kId:
-    case WorkspaceMemberEnum::kVersion:
-    case WorkspaceMemberEnum::kCreatedTime:
+    case MemberField::kEmail:
+    case MemberField::kUsername:
+    case MemberField::kName:
+    case MemberField::kId:
+    case MemberField::kVersion:
+    case MemberField::kCreatedTime:
         // These columns are read-only in this model
         return false;
     }
@@ -124,29 +125,29 @@ bool WorkspaceMemberModel::setData(const QModelIndex& index, const QVariant& val
     return true;
 }
 
-void WorkspaceMemberModel::sort(int column, Qt::SortOrder order)
+void Model::sort(int column, Qt::SortOrder order)
 {
     // Convert integer column to the structured enum using brace initialization
-    const WorkspaceMemberEnum e_column { column };
+    const MemberField e_column { column };
 
     // Define a lambda for comparison based on the selected column and sort order
-    auto Compare = [order, e_column](const WorkspaceMember* lhs, const WorkspaceMember* rhs) -> bool {
+    auto Compare = [order, e_column](const Member* lhs, const Member* rhs) -> bool {
         switch (e_column) {
-        case WorkspaceMemberEnum::kEmail:
-            return utils::CompareMember(lhs, rhs, &WorkspaceMember::email, order);
-        case WorkspaceMemberEnum::kUsername:
-            return utils::CompareMember(lhs, rhs, &WorkspaceMember::username, order);
-        case WorkspaceMemberEnum::kName:
-            return utils::CompareMember(lhs, rhs, &WorkspaceMember::name, order);
-        case WorkspaceMemberEnum::kWorkspaceRole:
+        case MemberField::kEmail:
+            return utils::CompareMember(lhs, rhs, &Member::email, order);
+        case MemberField::kUsername:
+            return utils::CompareMember(lhs, rhs, &Member::username, order);
+        case MemberField::kName:
+            return utils::CompareMember(lhs, rhs, &Member::name, order);
+        case MemberField::kWorkspaceRole:
             // Sorting by the underlying integer value of the enum
-            return utils::CompareMember(lhs, rhs, &WorkspaceMember::workspace_role, order);
-        case WorkspaceMemberEnum::kDatabaseRole:
-            return utils::CompareMember(lhs, rhs, &WorkspaceMember::database_roles, order);
-        case WorkspaceMemberEnum::kCreatedTime:
-            return utils::CompareMember(lhs, rhs, &WorkspaceMember::created_time, order);
-        case WorkspaceMemberEnum::kId:
-        case WorkspaceMemberEnum::kVersion:
+            return utils::CompareMember(lhs, rhs, &Member::workspace_role, order);
+        case MemberField::kDatabaseRole:
+            return utils::CompareMember(lhs, rhs, &Member::database_roles, order);
+        case MemberField::kCreatedTime:
+            return utils::CompareMember(lhs, rhs, &Member::created_time, order);
+        case MemberField::kId:
+        case MemberField::kVersion:
             return false;
         }
     };
@@ -155,13 +156,13 @@ void WorkspaceMemberModel::sort(int column, Qt::SortOrder order)
     emit layoutAboutToBeChanged();
 
     // Perform the sort on the underlying data list
-    std::sort(member_list_.begin(), member_list_.end(), Compare);
+    std::sort(list_.begin(), list_.end(), Compare);
 
     // Notify the view that the layout has been updated
     emit layoutChanged();
 }
 
-Qt::ItemFlags WorkspaceMemberModel::flags(const QModelIndex& index) const
+Qt::ItemFlags Model::flags(const QModelIndex& index) const
 {
     // Return early if index is invalid
     if (!index.isValid()) {
@@ -172,21 +173,21 @@ Qt::ItemFlags WorkspaceMemberModel::flags(const QModelIndex& index) const
     Qt::ItemFlags flags { QAbstractItemModel::flags(index) };
 
     // Convert column to enum for safe processing
-    const WorkspaceMemberEnum column { index.column() };
+    const MemberField column { index.column() };
 
     switch (column) {
-    case WorkspaceMemberEnum::kWorkspaceRole:
-    case WorkspaceMemberEnum::kDatabaseRole:
+    case MemberField::kWorkspaceRole:
+    case MemberField::kDatabaseRole:
         // Enable editing for specific roles
         flags |= Qt::ItemIsEditable;
         break;
 
-    case WorkspaceMemberEnum::kEmail:
-    case WorkspaceMemberEnum::kUsername:
-    case WorkspaceMemberEnum::kName:
-    case WorkspaceMemberEnum::kCreatedTime:
-    case WorkspaceMemberEnum::kId:
-    case WorkspaceMemberEnum::kVersion:
+    case MemberField::kEmail:
+    case MemberField::kUsername:
+    case MemberField::kName:
+    case MemberField::kCreatedTime:
+    case MemberField::kId:
+    case MemberField::kVersion:
     default:
         // Disable editing for all other columns
         flags &= ~Qt::ItemIsEditable;
@@ -196,15 +197,15 @@ Qt::ItemFlags WorkspaceMemberModel::flags(const QModelIndex& index) const
     return flags;
 }
 
-bool WorkspaceMemberModel::removeRows(int row, int count, const QModelIndex& parent)
+bool Model::removeRows(int row, int count, const QModelIndex& parent)
 {
     // Basic validation
-    if (count != 1 || row < 0 || row >= member_list_.size()) {
+    if (count != 1 || row < 0 || row >= list_.size()) {
         return false;
     }
 
     // Capture the pointer before removal
-    auto* member { member_list_.at(row) };
+    auto* member { list_.at(row) };
     const QUuid member_id { member->id };
 
     // IMPORTANT: Clean up the pending timer if it exists
@@ -220,7 +221,7 @@ bool WorkspaceMemberModel::removeRows(int row, int count, const QModelIndex& par
 
     // Notify views that rows are about to be removed
     beginRemoveRows(parent, row, row);
-    member_list_.removeAt(row);
+    list_.removeAt(row);
     endRemoveRows();
 
     // Send the WebSocket message using the captured ID
@@ -228,19 +229,19 @@ bool WorkspaceMemberModel::removeRows(int row, int count, const QModelIndex& par
     WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberDelete, message);
 
     // Recycle the member back to the ResourcePool
-    ResourcePool<WorkspaceMember>::Instance().Recycle(member);
+    ResourcePool<Member>::Instance().Recycle(member);
 
     return true;
 }
 
-void WorkspaceMemberModel::ResetModel(const QJsonArray& array)
+void Model::ResetModel(const QJsonArray& array)
 {
     if (array.isEmpty()) {
         qWarning() << "[WorkspaceMemberModel]" << "Received empty member array";
     }
 
     // Parse outside the reset block
-    QList<WorkspaceMember*> new_list {};
+    QList<Member*> new_list {};
     new_list.reserve(array.size());
 
     for (const auto& value : array) {
@@ -249,20 +250,20 @@ void WorkspaceMemberModel::ResetModel(const QJsonArray& array)
             continue;
         }
 
-        auto* member { ResourcePool<WorkspaceMember>::Instance().Allocate() };
+        auto* member { ResourcePool<Member>::Instance().Allocate() };
         member->ReadJson(value.toObject());
         new_list.emplaceBack(member);
     }
 
     // Keep reset block as short as possible
     beginResetModel();
-    ResourcePool<WorkspaceMember>::Instance().Recycle(member_list_);
-    member_list_ = std::move(new_list);
-    sort(std::to_underlying(WorkspaceMemberEnum::kWorkspaceRole), Qt::DescendingOrder);
+    ResourcePool<Member>::Instance().Recycle(list_);
+    list_ = std::move(new_list);
+    sort(std::to_underlying(MemberField::kWorkspaceRole), Qt::DescendingOrder);
     endResetModel();
 }
 
-void WorkspaceMemberModel::RestartTimer(const QUuid& id)
+void Model::RestartTimer(const QUuid& id)
 {
     // Try to retrieve the existing timer
     QTimer* timer { pending_timers_.value(id, nullptr) };
@@ -297,7 +298,7 @@ void WorkspaceMemberModel::RestartTimer(const QUuid& id)
     timer->start(time_const::kAutoCloseMs);
 }
 
-void WorkspaceMemberModel::FlushCaches()
+void Model::FlushCaches()
 {
     if (pending_updates_.isEmpty())
         return;
@@ -317,4 +318,5 @@ void WorkspaceMemberModel::FlushCaches()
     }
 
     pending_updates_.clear();
+}
 }

@@ -246,9 +246,9 @@ set(HEADERS
     widget/spinbox.h
     widget/treeview.h
     workspace_member/workspacemember.h
-    workspace_member/workspacememberdialog.h
-    workspace_member/workspacememberenum.h
-    workspace_member/workspacemembermodel.h
+    workspace_member/workspacedialog.h
+    workspace_member/workspaceenum.h
+    workspace_member/workspacemodel.h
     workspace_member/workspacerole.h
     delegate/databaseroledelegate.h
     workspace_member/headerinfo.h
@@ -442,8 +442,8 @@ set(SOURCES
     websocket/websocket.cc
     widget/datetimeedit.cc
     widget/treeview.cc
-    workspace_member/workspacememberdialog.cc
-    workspace_member/workspacemembermodel.cc
+    workspace_member/workspacedialog.cc
+    workspace_member/workspacemodel.cc
     audithub/auditrow.cc
     mainwindow/mainwindow_audit.cc
     audithub/auditmodel.cc
@@ -516,7 +516,7 @@ set(UIS
     tree/widget/treewidgetit.ui
     tree/widget/treewidgeto.ui
     tree/widget/treewidgetp.ui
-    workspace_member/workspacememberdialog.ui
+    workspace_member/workspacedialog.ui
     audithub/auditdialog.ui
     audithub/audittextdialog.ui
     period_close/periodclosedialog.ui

@@ -7,8 +7,8 @@
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
-#include "workspace_member/workspacememberdialog.h"
-#include "workspace_member/workspacememberenum.h"
+#include "workspace_member/workspacedialog.h"
+#include "workspace_member/workspaceenum.h"
 
 void MainWindow::on_actionProfile_triggered()
 {
@@ -54,10 +54,10 @@ void MainWindow::on_actionWorkspaceMember_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    static QPointer<WorkspaceMemberDialog> dialog {};
+    static QPointer<WorkspaceDialog> dialog {};
 
     if (!dialog) {
-        dialog = new WorkspaceMemberDialog(header_info_.workspace, this);
+        dialog = new WorkspaceDialog(header_info_.workspace, this);
 
         const auto widget_id { utils::ManageDialog(widget_hash_, dialog) };
         const auto message { JsonGen::WorkspaceMemberAck(widget_id, LoginInfo::Instance().Workspace()) };
@@ -65,8 +65,8 @@ void MainWindow::on_actionWorkspaceMember_triggered()
         WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberAck, message);
 
         auto* view { dialog->View() };
-        InitTableView(view, std::to_underlying(WorkspaceMemberEnum::kId), std::to_underlying(WorkspaceMemberEnum::kVersion),
-            std::to_underlying(WorkspaceMemberEnum::kDatabaseRole));
+        InitTableView(view, std::to_underlying(workspace::MemberField::kId), std::to_underlying(workspace::MemberField::kVersion),
+            std::to_underlying(workspace::MemberField::kDatabaseRole));
         DelegateWorkspaceMember(view);
     }
 
@@ -82,9 +82,9 @@ void MainWindow::RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& a
         return;
 
     auto* ptr { widget.data() };
-    Q_ASSERT(qobject_cast<WorkspaceMemberDialog*>(ptr));
+    Q_ASSERT(qobject_cast<WorkspaceDialog*>(ptr));
 
-    auto* d_widget { static_cast<WorkspaceMemberDialog*>(ptr) };
+    auto* d_widget { static_cast<WorkspaceDialog*>(ptr) };
 
     auto* model { d_widget->Model() };
     model->ResetModel(array);

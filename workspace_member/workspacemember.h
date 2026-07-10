@@ -28,7 +28,9 @@
 #include "databaserole.h"
 #include "workspacerole.h"
 
-struct WorkspaceMember final {
+namespace workspace {
+
+struct Member final {
     QUuid id {};
     int version {};
 
@@ -36,7 +38,7 @@ struct WorkspaceMember final {
     QString username {};
     QString name {};
 
-    workspace::Role workspace_role { workspace::Role::kGuest };
+    Role workspace_role { Role::kGuest };
     database::Roles database_roles {};
     QDateTime created_time {};
 
@@ -44,9 +46,9 @@ struct WorkspaceMember final {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void WorkspaceMember::Reset() { *this = WorkspaceMember {}; }
+inline void Member::Reset() { *this = Member {}; }
 
-inline void WorkspaceMember::ReadJson(const QJsonObject& object)
+inline void Member::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());
@@ -71,6 +73,7 @@ inline void WorkspaceMember::ReadJson(const QJsonObject& object)
 
     if (const auto val = object.value(kCreatedTime); val.isString())
         created_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+}
 }
 
 #endif // WORKSPACEMEMBER_H

@@ -46,7 +46,7 @@
 #include "mainwindow.h"
 #include "partner_heat/partnerheatenum.h"
 #include "tag/tagenum.h"
-#include "workspace_member/workspacememberenum.h"
+#include "workspace_member/workspaceenum.h"
 
 void MainWindow::TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {
@@ -543,13 +543,13 @@ void MainWindow::DelegateTag(QTableView* table_view) const
 void MainWindow::DelegateWorkspaceMember(QTableView* table_view) const
 {
     auto* created_time { new IssuedTimeR(datetime_format::kDashedDate, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kCreatedTime), created_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kCreatedTime), created_time);
 
     auto* workspace_role { new WorkspaceRoleDelegate(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kWorkspaceRole), workspace_role);
+    table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kWorkspaceRole), workspace_role);
 
     auto* database_role { new DatabaseRoleDelegate(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(WorkspaceMemberEnum::kDatabaseRole), database_role);
+    table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kDatabaseRole), database_role);
 }
 
 void MainWindow::DelegateAuditLog(QTableView* table_view) const

@@ -6,12 +6,14 @@
 
 #include "workspacemember.h"
 
-class WorkspaceMemberModel final : public QAbstractItemModel {
+namespace workspace {
+
+class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit WorkspaceMemberModel(const QStringList& header, QObject* parent = nullptr);
-    ~WorkspaceMemberModel() override;
+    explicit Model(const QStringList& header, QObject* parent = nullptr);
+    ~Model() override;
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -26,7 +28,7 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent)
-        return member_list_.size();
+        return list_.size();
     }
     int columnCount(const QModelIndex& parent = QModelIndex()) const override
     {
@@ -51,11 +53,12 @@ private:
     void FlushCaches();
 
 private:
-    QList<WorkspaceMember*> member_list_ {};
+    QList<Member*> list_ {};
     const QStringList& header_ {};
 
     QHash<QUuid, QJsonObject> pending_updates_ {};
     QHash<QUuid, QTimer*> pending_timers_ {};
 };
+}
 
 #endif // WORKSPACEMEMBERMODEL_H

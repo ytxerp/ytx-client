@@ -17,18 +17,37 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef WORKSPACEMEMBERENUM_H
-#define WORKSPACEMEMBERENUM_H
+#ifndef WORKSPACEDIALOG_H
+#define WORKSPACEDIALOG_H
 
-enum class WorkspaceMemberEnum : int {
-    kId = 0,
-    kVersion,
-    kEmail,
-    kUsername,
-    kName,
-    kWorkspaceRole,
-    kDatabaseRole,
-    kCreatedTime,
+#include <QDialog>
+#include <QTableView>
+
+#include "workspacemodel.h"
+
+namespace Ui {
+class WorkspaceDialog;
+}
+
+class WorkspaceDialog final : public QDialog {
+    Q_OBJECT
+
+public:
+    explicit WorkspaceDialog(const QStringList& header, QWidget* parent = nullptr);
+    ~WorkspaceDialog() override;
+
+    QTableView* View();
+    workspace::Model* Model() { return model_; }
+
+private slots:
+    void on_pushButtonDelete_clicked();
+
+private:
+    void InitDialog(const QStringList& header);
+
+private:
+    Ui::WorkspaceDialog* ui;
+    workspace::Model* model_ {};
 };
 
-#endif // WORKSPACEMEMBERENUM_H
+#endif // WORKSPACEDIALOG_H
