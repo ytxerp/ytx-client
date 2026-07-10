@@ -13,8 +13,8 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementSecondaryWidget::StatementSecondaryWidget(
-    StatementSecondaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, Section section, int unit, QWidget* parent)
+StatementSecondaryWidget::StatementSecondaryWidget(statement::SecondaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start,
+    CDateTime& end, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementSecondaryWidget)
     , unit_ { unit }
@@ -137,7 +137,7 @@ void StatementSecondaryWidget::InitTimer()
 
 void StatementSecondaryWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
-    if (index.column() == std::to_underlying(StatementSecondaryEnum::kIssuedTime)) {
+    if (index.column() == std::to_underlying(statement::SecondaryField::kIssuedTime)) {
         emit SStatementEntry(partner_id_, start_, end_, unit_);
     }
 }

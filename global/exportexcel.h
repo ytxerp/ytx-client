@@ -32,7 +32,7 @@ public:
     }
 
     void StatementAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start, CDateTime& end, CJsonObject& total,
-        CStatementTertiaryList& list);
+        statement::CTertiaryList& list);
 
     ExportExcel(const ExportExcel&) = delete;
     ExportExcel& operator=(const ExportExcel&) = delete;
@@ -44,7 +44,7 @@ private:
     ~ExportExcel() = default;
 
     static bool Statement(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start, CDateTime& end, CJsonObject& total,
-        CStatementTertiaryList& list);
+        statement::CTertiaryList& list);
 };
 
 #endif // EXPORTEXCEL_H

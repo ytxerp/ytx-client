@@ -7,16 +7,17 @@
 #include "statementenum.h"
 #include "utils/templateutils.h"
 
-StatementSecondaryModel::StatementSecondaryModel(const QStringList& header, const QUuid& partner_id, QObject* parent)
+namespace statement {
+SecondaryModel::SecondaryModel(const QStringList& header, const QUuid& partner_id, QObject* parent)
     : QAbstractItemModel { parent }
     , header_ { header }
     , partner_id_ { partner_id }
 {
 }
 
-StatementSecondaryModel::~StatementSecondaryModel() { ResourcePool<StatementSecondary>::Instance().Recycle(list_); }
+SecondaryModel::~SecondaryModel() { ResourcePool<SecondaryRow>::Instance().Recycle(list_); }
 
-QModelIndex StatementSecondaryModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex SecondaryModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -24,25 +25,25 @@ QModelIndex StatementSecondaryModel::index(int row, int column, const QModelInde
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex StatementSecondaryModel::parent(const QModelIndex& index) const
+QModelIndex SecondaryModel::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int StatementSecondaryModel::rowCount(const QModelIndex& parent) const
+int SecondaryModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return list_.size();
 }
 
-int StatementSecondaryModel::columnCount(const QModelIndex& parent) const
+int SecondaryModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return header_.size();
 }
 
-QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
+QVariant SecondaryModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -50,58 +51,58 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    const StatementSecondaryEnum column { index.column() };
-    auto* statement { static_cast<StatementSecondary*>(index.internalPointer()) };
+    const SecondaryField column { index.column() };
+    auto* statement { static_cast<SecondaryRow*>(index.internalPointer()) };
 
     switch (column) {
-    case StatementSecondaryEnum::kDescription:
+    case SecondaryField::kDescription:
         return statement->description;
-    case StatementSecondaryEnum::kCode:
+    case SecondaryField::kCode:
         return statement->code;
-    case StatementSecondaryEnum::kEmployee:
+    case SecondaryField::kEmployee:
         return statement->employee_id;
-    case StatementSecondaryEnum::kIssuedTime:
+    case SecondaryField::kIssuedTime:
         return statement->issued_time;
-    case StatementSecondaryEnum::kCount:
+    case SecondaryField::kCount:
         return statement->count;
-    case StatementSecondaryEnum::kMeasure:
+    case SecondaryField::kMeasure:
         return statement->measure;
-    case StatementSecondaryEnum::kStatus:
+    case SecondaryField::kStatus:
         return statement->status;
-    case StatementSecondaryEnum::kAmount:
+    case SecondaryField::kAmount:
         return statement->amount;
-    case StatementSecondaryEnum::kSettlement:
+    case SecondaryField::kSettlement:
         return statement->settlement;
     }
 }
 
-bool StatementSecondaryModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool SecondaryModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    const StatementSecondaryEnum column { index.column() };
-    auto* statement { static_cast<StatementSecondary*>(index.internalPointer()) };
+    const SecondaryField column { index.column() };
+    auto* statement { static_cast<SecondaryRow*>(index.internalPointer()) };
 
     switch (column) {
-    case StatementSecondaryEnum::kStatus:
+    case SecondaryField::kStatus:
         statement->status = value.toInt();
         break;
-    case StatementSecondaryEnum::kIssuedTime:
-    case StatementSecondaryEnum::kAmount:
-    case StatementSecondaryEnum::kCount:
-    case StatementSecondaryEnum::kDescription:
-    case StatementSecondaryEnum::kMeasure:
-    case StatementSecondaryEnum::kEmployee:
-    case StatementSecondaryEnum::kSettlement:
-    case StatementSecondaryEnum::kCode:
+    case SecondaryField::kIssuedTime:
+    case SecondaryField::kAmount:
+    case SecondaryField::kCount:
+    case SecondaryField::kDescription:
+    case SecondaryField::kMeasure:
+    case SecondaryField::kEmployee:
+    case SecondaryField::kSettlement:
+    case SecondaryField::kCode:
         return false;
     }
 
     return true;
 }
 
-QVariant StatementSecondaryModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant SecondaryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return header_.at(section);
@@ -109,30 +110,30 @@ QVariant StatementSecondaryModel::headerData(int section, Qt::Orientation orient
     return QVariant();
 }
 
-void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
+void SecondaryModel::sort(int column, Qt::SortOrder order)
 {
-    const StatementSecondaryEnum e_column { column };
+    const SecondaryField e_column { column };
 
-    auto Compare = [e_column, order](const StatementSecondary* lhs, const StatementSecondary* rhs) -> bool {
+    auto Compare = [e_column, order](const SecondaryRow* lhs, const SecondaryRow* rhs) -> bool {
         switch (e_column) {
-        case StatementSecondaryEnum::kDescription:
-            return utils::CompareMember(lhs, rhs, &StatementSecondary::description, order);
-        case StatementSecondaryEnum::kCode:
-            return utils::CompareMember(lhs, rhs, &StatementSecondary::code, order);
-        case StatementSecondaryEnum::kEmployee:
-            return utils::CompareMember(lhs, rhs, &StatementSecondary::employee_id, order);
-        case StatementSecondaryEnum::kIssuedTime:
-            return utils::CompareMember(lhs, rhs, &StatementSecondary::issued_time, order);
-        case StatementSecondaryEnum::kCount:
-            return utils::CompareMember(lhs, rhs, &StatementSecondary::count, order);
-        case StatementSecondaryEnum::kMeasure:
-            return utils::CompareMember(lhs, rhs, &StatementSecondary::measure, order);
-        case StatementSecondaryEnum::kStatus:
-            return utils::CompareMember(lhs, rhs, &StatementSecondary::status, order);
-        case StatementSecondaryEnum::kSettlement:
-            return utils::CompareMember(lhs, rhs, &StatementSecondary::settlement, order);
-        case StatementSecondaryEnum::kAmount:
-            return utils::CompareMember(lhs, rhs, &StatementSecondary::amount, order);
+        case SecondaryField::kDescription:
+            return utils::CompareMember(lhs, rhs, &SecondaryRow::description, order);
+        case SecondaryField::kCode:
+            return utils::CompareMember(lhs, rhs, &SecondaryRow::code, order);
+        case SecondaryField::kEmployee:
+            return utils::CompareMember(lhs, rhs, &SecondaryRow::employee_id, order);
+        case SecondaryField::kIssuedTime:
+            return utils::CompareMember(lhs, rhs, &SecondaryRow::issued_time, order);
+        case SecondaryField::kCount:
+            return utils::CompareMember(lhs, rhs, &SecondaryRow::count, order);
+        case SecondaryField::kMeasure:
+            return utils::CompareMember(lhs, rhs, &SecondaryRow::measure, order);
+        case SecondaryField::kStatus:
+            return utils::CompareMember(lhs, rhs, &SecondaryRow::status, order);
+        case SecondaryField::kSettlement:
+            return utils::CompareMember(lhs, rhs, &SecondaryRow::settlement, order);
+        case SecondaryField::kAmount:
+            return utils::CompareMember(lhs, rhs, &SecondaryRow::amount, order);
         }
     };
 
@@ -141,11 +142,11 @@ void StatementSecondaryModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void StatementSecondaryModel::ResetModel(const QJsonArray& array)
+void SecondaryModel::ResetModel(const QJsonArray& array)
 {
     beginResetModel();
 
-    ResourcePool<StatementSecondary>::Instance().Recycle(list_);
+    ResourcePool<SecondaryRow>::Instance().Recycle(list_);
 
     for (const auto& value : array) {
         if (!value.isObject())
@@ -153,12 +154,13 @@ void StatementSecondaryModel::ResetModel(const QJsonArray& array)
 
         const QJsonObject obj { value.toObject() };
 
-        auto* statement_primary { ResourcePool<StatementSecondary>::Instance().Allocate() };
+        auto* statement_primary { ResourcePool<SecondaryRow>::Instance().Allocate() };
         statement_primary->ReadJson(obj);
 
         list_.emplaceBack(statement_primary);
     }
 
-    sort(std::to_underlying(StatementSecondaryEnum::kIssuedTime), Qt::AscendingOrder);
+    sort(std::to_underlying(SecondaryField::kIssuedTime), Qt::AscendingOrder);
     endResetModel();
+}
 }

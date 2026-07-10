@@ -24,11 +24,13 @@
 
 #include "statement.h"
 
-class StatementSecondaryModel final : public QAbstractItemModel {
+namespace statement {
+
+class SecondaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    StatementSecondaryModel(const QStringList& header, const QUuid& partner_id, QObject* parent = nullptr);
-    ~StatementSecondaryModel() override;
+    SecondaryModel(const QStringList& header, const QUuid& partner_id, QObject* parent = nullptr);
+    ~SecondaryModel() override;
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -49,7 +51,8 @@ private:
     const QStringList& header_;
     const QUuid partner_id_ {};
 
-    QList<StatementSecondary*> list_ {};
+    QList<SecondaryRow*> list_ {};
 };
+}
 
 #endif // STATEMENTSECONDARYMODEL_H

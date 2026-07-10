@@ -10,7 +10,7 @@ void MainWindow::on_actionStatement_triggered()
 
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new StatementPrimaryModel(header_info_.statement, this) };
+    auto* model { new statement::PrimaryModel(header_info_.statement, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new StatementPrimaryWidget(model, widget_id, start_, this) };
@@ -21,7 +21,7 @@ void MainWindow::on_actionStatement_triggered()
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    InitTableView(view, -1, -1, std::to_underlying(StatementPrimaryEnum::kPlaceholder));
+    InitTableView(view, -1, -1, std::to_underlying(statement::PrimaryField::kPlaceholder));
     DelegateStatement(view, sc_->section_config);
 
     connect(widget, &StatementPrimaryWidget::SStatementNode, this, &MainWindow::RStatementNode);
@@ -75,7 +75,7 @@ void MainWindow::RAckStatementEntry(Section section, const QUuid& widget_id, con
 
 void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
 {
-    auto* model { new StatementSecondaryModel(header_info_.statement_node, partner_id, this) };
+    auto* model { new statement::SecondaryModel(header_info_.statement_node, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new StatementSecondaryWidget(model, widget_id, partner_id, start, end, start_, unit, this) };
@@ -88,7 +88,7 @@ void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start,
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    InitTableView(view, -1, -1, std::to_underlying(StatementSecondaryEnum::kDescription));
+    InitTableView(view, -1, -1, std::to_underlying(statement::SecondaryField::kDescription));
     DelegateStatementNode(view, sc_->section_config);
 
     connect(widget, &StatementSecondaryWidget::SStatementEntry, this, &MainWindow::RStatementEntry);
@@ -101,7 +101,7 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
     auto tree_model_p { sc_p_.tree_model };
     const QString partner_name { tree_model_p->Name(partner_id) };
 
-    auto* model { new StatementTertiaryModel(header_info_.statement_entry, partner_id, this) };
+    auto* model { new statement::TertiaryModel(header_info_.statement_entry, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new StatementTertiaryWidget(model, widget_id, partner_id, start, end, partner_name, app_config_.company_name, start_, unit, this) };
@@ -114,7 +114,7 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    InitTableView(view, -1, -1, std::to_underlying(StatementTertiaryEnum::kDescription));
+    InitTableView(view, -1, -1, std::to_underlying(statement::TertiaryField::kDescription));
     DelegateStatementEntry(view, sc_->section_config);
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);

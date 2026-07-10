@@ -20,8 +20,10 @@
 #ifndef STATEMENTENUM_H
 #define STATEMENTENUM_H
 
+namespace statement {
+
 // P:Previous, C:Current, Statement
-enum class StatementPrimaryEnum {
+enum class PrimaryField {
     kPartner = 0,
     kPBalance,
     kCCount,
@@ -32,7 +34,7 @@ enum class StatementPrimaryEnum {
     kCBalance,
 };
 
-enum class StatementSecondaryEnum {
+enum class SecondaryField {
     kIssuedTime = 0,
     kCode,
     kCount,
@@ -44,7 +46,7 @@ enum class StatementSecondaryEnum {
     kSettlement,
 };
 
-enum class StatementTertiaryEnum {
+enum class TertiaryField {
     kIssuedTime = 0,
     kCode,
     kInternalSku,
@@ -56,5 +58,7 @@ enum class StatementTertiaryEnum {
     kStatus,
     kExternalSku,
 };
+
+}
 
 #endif // STATEMENTENUM_H

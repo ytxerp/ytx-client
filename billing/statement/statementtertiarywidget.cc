@@ -14,7 +14,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementTertiaryWidget::StatementTertiaryWidget(StatementTertiaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end,
+StatementTertiaryWidget::StatementTertiaryWidget(statement::TertiaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end,
     CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementTertiaryWidget)

@@ -432,66 +432,66 @@ void MainWindow::DelegateSaleReferenceP(QTableView* table_view, CSectionConfig& 
 void MainWindow::DelegateStatement(QTableView* table_view, CSectionConfig& config) const
 {
     auto* quantity { new DoubleNoneZeroR(config.amount_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kCCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kCMeasure), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCMeasure), quantity);
 
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kCAmount), amount);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kCSettlement), amount);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kPBalance), amount);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kCBalance), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCAmount), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCSettlement), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kPBalance), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCBalance), amount);
 
     auto* name { new NodeNameR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementPrimaryEnum::kPartner), name);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kPartner), name);
 }
 
 void MainWindow::DelegateStatementNode(QTableView* table_view, CSectionConfig& config) const
 {
     auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kMeasure), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kMeasure), quantity);
 
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kAmount), amount);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kSettlement), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kAmount), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kSettlement), amount);
 
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kEmployee), employee);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kEmployee), employee);
 
     auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kStatus), status);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementSecondaryEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kIssuedTime), issued_time);
 }
 
 void MainWindow::DelegateStatementEntry(QTableView* table_view, CSectionConfig& config) const
 {
     auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementTertiaryEnum::kCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementTertiaryEnum::kMeasure), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kMeasure), quantity);
 
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementTertiaryEnum::kAmount), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kAmount), amount);
 
     auto* unit_price { new DoubleNoneZeroR(config.rate_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementTertiaryEnum::kUnitPrice), unit_price);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kUnitPrice), unit_price);
 
     auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementTertiaryEnum::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kStatus), status);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementTertiaryEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kIssuedTime), issued_time);
 
     auto tree_model_i { sc_i_.tree_model };
 
     auto* external_sku { new NodeNameR(tree_model_i, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementTertiaryEnum::kExternalSku), external_sku);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kExternalSku), external_sku);
 
     auto* int_filter_model { tree_model_i->IncludeUnit(NodeUnit::IInternal, table_view) };
     auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
 
-    table_view->setItemDelegateForColumn(std::to_underlying(StatementTertiaryEnum::kInternalSku), internal_sku);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kInternalSku), internal_sku);
 }
 
 void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& config) const

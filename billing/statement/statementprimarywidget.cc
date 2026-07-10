@@ -11,7 +11,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementPrimaryWidget::StatementPrimaryWidget(StatementPrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent)
+StatementPrimaryWidget::StatementPrimaryWidget(statement::PrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementPrimaryWidget)
     , unit_ { std::to_underlying(NodeUnit::OMonthly) }
@@ -137,8 +137,8 @@ void StatementPrimaryWidget::InitTimer()
 
 void StatementPrimaryWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
-    if (index.column() == std::to_underlying(StatementPrimaryEnum::kPartner)) {
-        const auto partner { index.siblingAtColumn(std::to_underlying(StatementPrimaryEnum::kPartner)).data().toUuid() };
+    if (index.column() == std::to_underlying(statement::PrimaryField::kPartner)) {
+        const auto partner { index.siblingAtColumn(std::to_underlying(statement::PrimaryField::kPartner)).data().toUuid() };
         emit SStatementNode(partner, start_, end_, unit_);
     }
 }

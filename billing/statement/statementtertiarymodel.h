@@ -26,11 +26,13 @@
 #include "enum/entryenum.h"
 #include "statement.h"
 
-class StatementTertiaryModel final : public QAbstractItemModel {
+namespace statement {
+
+class TertiaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit StatementTertiaryModel(const QStringList& header, CUuid& partner_id, QObject* parent = nullptr);
-    ~StatementTertiaryModel() override;
+    explicit TertiaryModel(const QStringList& header, CUuid& partner_id, QObject* parent = nullptr);
+    ~TertiaryModel() override;
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -48,13 +50,14 @@ public:
     void ResetModel(const QJsonArray& array);
     void MarkEntries(MarkOperation operation);
 
-    const QList<StatementTertiary*>& EntryList() const { return list_; }
+    const QList<TertiaryRow*>& EntryList() const { return list_; }
 
 private:
     const QStringList& header_;
-    QList<StatementTertiary*> list_ {};
+    QList<TertiaryRow*> list_ {};
 
     const QUuid partner_id_ {};
 };
+}
 
 #endif // STATEMENTTERTIARYMODEL_H

@@ -14,7 +14,7 @@
 #include "utils/mainwindowutils.h"
 
 void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start, CDateTime& end,
-    CJsonObject& total, CStatementTertiaryList& list)
+    CJsonObject& total, statement::CTertiaryList& list)
 {
     auto future = QtConcurrent::run([=]() -> bool { return Statement(path, partner_name, partner_id, unit_string, start, end, total, list); });
 
@@ -37,7 +37,7 @@ void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuid& pa
 }
 
 bool ExportExcel::Statement(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start, CDateTime& end, CJsonObject& total,
-    CStatementTertiaryList& list)
+    statement::CTertiaryList& list)
 {
     // Extract totals
     const double pbalance { total.value("pbalance").toString().toDouble() };

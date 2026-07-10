@@ -26,7 +26,9 @@
 
 #include "component/constant.h"
 
-struct StatementPrimary final {
+namespace statement {
+
+struct PrimaryRow final {
     QUuid partner_id {};
     double pbalance {};
     double ccount {};
@@ -39,9 +41,9 @@ struct StatementPrimary final {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void StatementPrimary::Reset() { *this = StatementPrimary {}; }
+inline void PrimaryRow::Reset() { *this = PrimaryRow {}; }
 
-inline void StatementPrimary::ReadJson(const QJsonObject& object)
+inline void PrimaryRow::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kPartnerId); val.isString())
         partner_id = QUuid(val.toString());
@@ -59,7 +61,7 @@ inline void StatementPrimary::ReadJson(const QJsonObject& object)
         csettlement = val.toString().toDouble();
 }
 
-struct StatementSecondary final {
+struct SecondaryRow final {
     QDateTime issued_time {};
     QString code {};
     double count {};
@@ -75,9 +77,9 @@ struct StatementSecondary final {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void StatementSecondary::Reset() { *this = StatementSecondary {}; }
+inline void SecondaryRow::Reset() { *this = SecondaryRow {}; }
 
-inline void StatementSecondary::ReadJson(const QJsonObject& object)
+inline void SecondaryRow::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kIssuedTime); val.isString())
         issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
@@ -97,7 +99,7 @@ inline void StatementSecondary::ReadJson(const QJsonObject& object)
         settlement = val.toString().toDouble();
 }
 
-struct StatementTertiary final {
+struct TertiaryRow final {
     QDateTime issued_time {};
     QString code {};
     QUuid internal_sku {};
@@ -113,9 +115,9 @@ struct StatementTertiary final {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void StatementTertiary::Reset() { *this = StatementTertiary {}; }
+inline void TertiaryRow::Reset() { *this = TertiaryRow {}; }
 
-inline void StatementTertiary::ReadJson(const QJsonObject& object)
+inline void TertiaryRow::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kIssuedTime); val.isString())
         issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
@@ -135,6 +137,8 @@ inline void StatementTertiary::ReadJson(const QJsonObject& object)
         code = val.toString();
 }
 
-using CStatementTertiaryList = const QList<StatementTertiary*>;
+using CTertiaryList = const QList<TertiaryRow*>;
+
+}
 
 #endif // STATEMENT_H

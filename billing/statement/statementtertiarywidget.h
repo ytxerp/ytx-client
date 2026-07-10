@@ -36,12 +36,12 @@ class StatementTertiaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    StatementTertiaryWidget(StatementTertiaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, CString& partner_name,
+    StatementTertiaryWidget(statement::TertiaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, CString& partner_name,
         CString& company_name, Section section, int unit, QWidget* parent = nullptr);
     ~StatementTertiaryWidget() override;
 
     QTableView* View() const;
-    StatementTertiaryModel* Model() const { return model_; }
+    statement::TertiaryModel* Model() const { return model_; }
 
     void ResetTotal(const QJsonObject& total) { total_ = total; }
 
@@ -65,7 +65,7 @@ private:
     int unit_ {};
     QDateTime start_ {};
     QDateTime end_ {};
-    StatementTertiaryModel* model_ {};
+    statement::TertiaryModel* model_ {};
 
     QJsonObject total_ {};
     const QString partner_name_ {};

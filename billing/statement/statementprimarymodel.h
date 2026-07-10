@@ -24,11 +24,13 @@
 
 #include "statement.h"
 
-class StatementPrimaryModel final : public QAbstractItemModel {
+namespace statement {
+
+class PrimaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit StatementPrimaryModel(const QStringList& header, QObject* parent = nullptr);
-    ~StatementPrimaryModel() override;
+    explicit PrimaryModel(const QStringList& header, QObject* parent = nullptr);
+    ~PrimaryModel() override;
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -46,7 +48,9 @@ public:
 
 private:
     const QStringList& header_;
-    QList<StatementPrimary*> list_ {};
+    QList<PrimaryRow*> list_ {};
 };
+
+}
 
 #endif // STATEMENTPRIMARYMODEL_H
