@@ -25,11 +25,13 @@
 #include "cashflowstatementrow.h"
 #include "component/using.h"
 
-class CashFlowWrongModel final : public QAbstractItemModel {
+namespace cash_flow {
+
+class WrongModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit CashFlowWrongModel(const QStringList& header, QObject* parent = nullptr);
-    ~CashFlowWrongModel() override;
+    explicit WrongModel(const QStringList& header, QObject* parent = nullptr);
+    ~WrongModel() override;
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -45,11 +47,12 @@ public:
     void ResetModel(CJsonArray& node_array);
 
 private:
-    QList<CashFlowStatementWrongRow*> AddRowsList(const CJsonArray& node_array);
+    QList<WrongRow*> AddRowsList(const CJsonArray& node_array);
 
 private:
     const QStringList& header_;
-    QList<CashFlowStatementWrongRow*> list_ {};
+    QList<WrongRow*> list_ {};
 };
+}
 
 #endif // CASHFLOWWRONGMODEL_H

@@ -12,31 +12,31 @@ void MainWindow::on_actionCashFlowStatement_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    auto* model { new CashFlowStatementModel(header_info_.cash_flow_statement, this) };
+    auto* model { new cash_flow::Model(header_info_.cash_flow_statement, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* carrier_model { new CashFlowCarrierModel(header_info_.cash_flow_statement, this) };
-    auto* special_model { new CashFlowSpecialModel(header_info_.cash_flow_statement, this) };
-    auto* wrong_model { new CashFlowWrongModel(header_info_.cash_flow_statement_wrong, this) };
+    auto* carrier_model { new cash_flow::CarrierModel(header_info_.cash_flow_statement, this) };
+    auto* special_model { new cash_flow::SpecialModel(header_info_.cash_flow_statement, this) };
+    auto* wrong_model { new cash_flow::WrongModel(header_info_.cash_flow_statement_wrong, this) };
 
     auto* dialog { new CashFlowStatementDialog(model, carrier_model, special_model, wrong_model, widget_id, this) };
 
     {
         auto* view { dialog->View() };
-        InitTreeView(view, std::to_underlying(CashFlowStatementEnum::kId), std::to_underlying(CashFlowStatementEnum::kDescription));
+        InitTreeView(view, std::to_underlying(cash_flow::RowField::kId), std::to_underlying(cash_flow::RowField::kDescription));
         DelegateCashFlowStatement(view);
 
         auto* carrier_view { dialog->CarrierView() };
-        InitTreeView(carrier_view, std::to_underlying(CashFlowStatementEnum::kId), std::to_underlying(CashFlowStatementEnum::kDescription));
+        InitTreeView(carrier_view, std::to_underlying(cash_flow::RowField::kId), std::to_underlying(cash_flow::RowField::kDescription));
         DelegateCashFlowStatement(carrier_view);
-        carrier_view->setColumnHidden(std::to_underlying(CashFlowStatementEnum::kFinalTotal), kIsHidden);
+        carrier_view->setColumnHidden(std::to_underlying(cash_flow::RowField::kFinalTotal), kIsHidden);
 
         auto* special_view { dialog->SpecialView() };
-        InitTreeView(special_view, std::to_underlying(CashFlowStatementEnum::kId), std::to_underlying(CashFlowStatementEnum::kDescription));
+        InitTreeView(special_view, std::to_underlying(cash_flow::RowField::kId), std::to_underlying(cash_flow::RowField::kDescription));
         DelegateCashFlowStatement(special_view);
 
         auto* wrong_view { dialog->WrongView() };
-        InitTableView(wrong_view, std::to_underlying(CashFlowStatementWrongEnum::kId), -1, std::to_underlying(CashFlowStatementWrongEnum::kDescription));
+        InitTableView(wrong_view, std::to_underlying(cash_flow::WrongRowField::kId), -1, std::to_underlying(cash_flow::WrongRowField::kDescription));
         DelegateCashFlowStatementWrong(wrong_view);
     }
 
@@ -56,10 +56,10 @@ void MainWindow::RCashFlowStatementAck(const QUuid& widget_id, const QJsonObject
         return;
 
     const QJsonArray node_array { obj.value(kNodeArray).toArray() };
-    const QJsonArray carrier_array { obj.value(cash_flow_statement::kCarrierArray).toArray() };
-    const QJsonArray counterpart_array { obj.value(cash_flow_statement::kCounterPartArray).toArray() };
-    const QJsonArray special_array { obj.value(cash_flow_statement::kSpecialArray).toArray() };
-    const QJsonArray wrong_entry_array { obj.value(cash_flow_statement::kWrongEntryArray).toArray() };
+    const QJsonArray carrier_array { obj.value(cash_flow::kCarrierArray).toArray() };
+    const QJsonArray counterpart_array { obj.value(cash_flow::kCounterPartArray).toArray() };
+    const QJsonArray special_array { obj.value(cash_flow::kSpecialArray).toArray() };
+    const QJsonArray wrong_entry_array { obj.value(cash_flow::kWrongEntryArray).toArray() };
 
     auto* model { d_widget->Model() };
     model->ResetModel(node_array);

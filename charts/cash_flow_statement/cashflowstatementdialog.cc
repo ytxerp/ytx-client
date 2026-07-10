@@ -9,8 +9,8 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-CashFlowStatementDialog::CashFlowStatementDialog(CashFlowStatementModel* model, CashFlowCarrierModel* carrier, CashFlowSpecialModel* special,
-    CashFlowWrongModel* wrong, const QUuid& widget_id, QWidget* parent)
+CashFlowStatementDialog::CashFlowStatementDialog(cash_flow::Model* model, cash_flow::CarrierModel* carrier, cash_flow::SpecialModel* special,
+    cash_flow::WrongModel* wrong, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::CashFlowStatementDialog)
     , start_ { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime) }

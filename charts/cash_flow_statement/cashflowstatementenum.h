@@ -20,7 +20,9 @@
 #ifndef CASHFLOWSTATEMENTENUM_H
 #define CASHFLOWSTATEMENTENUM_H
 
-enum class CashFlowStatementEnum {
+namespace cash_flow {
+
+enum class RowField {
     kName = 0,
     kId,
     kCode,
@@ -29,7 +31,7 @@ enum class CashFlowStatementEnum {
     kFinalTotal,
 };
 
-enum class CashFlowStatementWrongEnum {
+enum class WrongRowField {
     kId = 0,
     kIssuedTime,
     kLhsNode,
@@ -41,5 +43,6 @@ enum class CashFlowStatementWrongEnum {
     kRhsDebit,
     kRhsNode,
 };
+}
 
 #endif // CASHFLOWSTATEMENTENUM_H

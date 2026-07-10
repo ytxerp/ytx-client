@@ -8,23 +8,25 @@
 #include "utils/nodeutils.h"
 #include "utils/templateutils.h"
 
-CashFlowCarrierModel::CashFlowCarrierModel(const QStringList& header, QObject* parent)
+namespace cash_flow {
+
+CarrierModel::CarrierModel(const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
     , header_ { header }
 {
     InitFixedNodes();
 }
 
-CashFlowCarrierModel::~CashFlowCarrierModel()
+CarrierModel::~CarrierModel()
 {
-    ResourcePool<CashFlowStatementRow>::Instance().Recycle(root_);
-    ResourcePool<CashFlowStatementRow>::Instance().Recycle(carrier_list_);
-    ResourcePool<CashFlowStatementRow>::Instance().Recycle(counterpart_list_);
-    ResourcePool<CashFlowStatementRow>::Instance().Recycle(first_level_nodes_);
-    ResourcePool<CashFlowStatementRow>::Instance().Recycle(second_level_nodes_);
+    ResourcePool<Row>::Instance().Recycle(root_);
+    ResourcePool<Row>::Instance().Recycle(carrier_list_);
+    ResourcePool<Row>::Instance().Recycle(counterpart_list_);
+    ResourcePool<Row>::Instance().Recycle(first_level_nodes_);
+    ResourcePool<Row>::Instance().Recycle(second_level_nodes_);
 }
 
-QVariant CashFlowCarrierModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant CarrierModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         return header_.at(section);
@@ -33,7 +35,7 @@ QVariant CashFlowCarrierModel::headerData(int section, Qt::Orientation orientati
     return QVariant();
 }
 
-QModelIndex CashFlowCarrierModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex CarrierModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return {};
@@ -53,7 +55,7 @@ QModelIndex CashFlowCarrierModel::index(int row, int column, const QModelIndex& 
     return createIndex(row, column, node);
 }
 
-QModelIndex CashFlowCarrierModel::parent(const QModelIndex& index) const
+QModelIndex CarrierModel::parent(const QModelIndex& index) const
 {
     // root_'s index is QModelIndex(), root_'s id == -1
     if (!index.isValid()) {
@@ -61,7 +63,7 @@ QModelIndex CashFlowCarrierModel::parent(const QModelIndex& index) const
         return {};
     }
 
-    auto* node { static_cast<CashFlowStatementRow*>(index.internalPointer()) };
+    auto* node { static_cast<Row*>(index.internalPointer()) };
     if (!node) {
         qDebug() << Q_FUNC_INFO << "null node from internalPointer";
         return {};
@@ -98,15 +100,15 @@ QModelIndex CashFlowCarrierModel::parent(const QModelIndex& index) const
     return createIndex(row, 0, parent);
 }
 
-int CashFlowCarrierModel::rowCount(const QModelIndex& parent) const { return GetNodeByIndex(parent)->children.size(); }
+int CarrierModel::rowCount(const QModelIndex& parent) const { return GetNodeByIndex(parent)->children.size(); }
 
-int CashFlowCarrierModel::columnCount(const QModelIndex& parent) const
+int CarrierModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
     return header_.size();
 }
 
-QVariant CashFlowCarrierModel::data(const QModelIndex& index, int role) const
+QVariant CarrierModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -114,44 +116,44 @@ QVariant CashFlowCarrierModel::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* node { static_cast<CashFlowStatementRow*>(index.internalPointer()) };
+    auto* node { static_cast<Row*>(index.internalPointer()) };
     Q_ASSERT(node != nullptr);
 
-    const CashFlowStatementEnum column { index.column() };
+    const RowField column { index.column() };
 
     switch (column) {
-    case CashFlowStatementEnum::kName:
+    case RowField::kName:
         return node->name;
-    case CashFlowStatementEnum::kId:
+    case RowField::kId:
         return node->id;
-    case CashFlowStatementEnum::kCode:
+    case RowField::kCode:
         return node->code;
-    case CashFlowStatementEnum::kDescription:
+    case RowField::kDescription:
         return node->description;
-    case CashFlowStatementEnum::kDirectionRule:
+    case RowField::kDirectionRule:
         return node->direction_rule;
-    case CashFlowStatementEnum::kFinalTotal:
+    case RowField::kFinalTotal:
         return node->final_total;
     }
 }
 
-void CashFlowCarrierModel::sort(int column, Qt::SortOrder order)
+void CarrierModel::sort(int column, Qt::SortOrder order)
 {
-    const CashFlowStatementEnum e_column { column };
+    const RowField e_column { column };
 
-    auto Compare = [e_column, order](const CashFlowStatementRow* lhs, const CashFlowStatementRow* rhs) -> bool {
+    auto Compare = [e_column, order](const Row* lhs, const Row* rhs) -> bool {
         switch (e_column) {
-        case CashFlowStatementEnum::kName:
-            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::name, order);
-        case CashFlowStatementEnum::kCode:
-            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::code, order);
-        case CashFlowStatementEnum::kDescription:
-            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::description, order);
-        case CashFlowStatementEnum::kDirectionRule:
-            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::direction_rule, order);
-        case CashFlowStatementEnum::kFinalTotal:
-            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::final_total, order);
-        case CashFlowStatementEnum::kId:
+        case RowField::kName:
+            return utils::CompareMember(lhs, rhs, &Row::name, order);
+        case RowField::kCode:
+            return utils::CompareMember(lhs, rhs, &Row::code, order);
+        case RowField::kDescription:
+            return utils::CompareMember(lhs, rhs, &Row::description, order);
+        case RowField::kDirectionRule:
+            return utils::CompareMember(lhs, rhs, &Row::direction_rule, order);
+        case RowField::kFinalTotal:
+            return utils::CompareMember(lhs, rhs, &Row::final_total, order);
+        case RowField::kId:
             return false;
         }
     };
@@ -161,7 +163,7 @@ void CashFlowCarrierModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void CashFlowCarrierModel::ResetModel(CJsonArray& carrier_array, CJsonArray& counterpart_array)
+void CarrierModel::ResetModel(CJsonArray& carrier_array, CJsonArray& counterpart_array)
 {
     const auto carrier_list { AddRowsList(carrier_array) };
     const auto counterpart_list { AddRowsList(counterpart_array) };
@@ -169,8 +171,8 @@ void CashFlowCarrierModel::ResetModel(CJsonArray& carrier_array, CJsonArray& cou
     beginResetModel();
 
     {
-        ResourcePool<CashFlowStatementRow>::Instance().Recycle(carrier_list_);
-        ResourcePool<CashFlowStatementRow>::Instance().Recycle(counterpart_list_);
+        ResourcePool<Row>::Instance().Recycle(carrier_list_);
+        ResourcePool<Row>::Instance().Recycle(counterpart_list_);
 
         for (auto* node : std::as_const(second_level_nodes_)) {
             node->children.clear();
@@ -185,19 +187,19 @@ void CashFlowCarrierModel::ResetModel(CJsonArray& carrier_array, CJsonArray& cou
     BuildCarrierHierarchy();
     BuildCounterPartHierarchy();
 
-    sort(std::to_underlying(CashFlowStatementEnum::kName), Qt::AscendingOrder);
+    sort(std::to_underlying(RowField::kName), Qt::AscendingOrder);
     endResetModel();
 }
 
-CashFlowStatementRow* CashFlowCarrierModel::GetNodeByIndex(const QModelIndex& index) const
+Row* CarrierModel::GetNodeByIndex(const QModelIndex& index) const
 {
     if (index.isValid() && index.internalPointer())
-        return static_cast<CashFlowStatementRow*>(index.internalPointer());
+        return static_cast<Row*>(index.internalPointer());
 
     return root_;
 }
 
-void CashFlowCarrierModel::InitFixedNodes()
+void CarrierModel::InitFixedNodes()
 {
     root_ = CreateBranchNode(QString(), finance::Role::kNone, direction_rule::kDICD);
 
@@ -233,17 +235,17 @@ void CashFlowCarrierModel::InitFixedNodes()
     }
 }
 
-QList<CashFlowStatementRow*> CashFlowCarrierModel::AddRowsList(const CJsonArray& node_array)
+QList<Row*> CarrierModel::AddRowsList(const CJsonArray& node_array)
 {
     if (node_array.isEmpty()) {
         qWarning() << Q_FUNC_INFO << "Received empty node array";
     }
 
-    QList<CashFlowStatementRow*> list {};
+    QList<Row*> list {};
 
     for (const QJsonValue& val : node_array) {
         const QJsonObject obj { val.toObject() };
-        auto* node { ResourcePool<CashFlowStatementRow>::Instance().Allocate() };
+        auto* node { ResourcePool<Row>::Instance().Allocate() };
         node->ReadJson(obj);
         list.emplaceBack(node);
     }
@@ -251,7 +253,7 @@ QList<CashFlowStatementRow*> CashFlowCarrierModel::AddRowsList(const CJsonArray&
     return list;
 }
 
-void CashFlowCarrierModel::BuildCarrierHierarchy() const
+void CarrierModel::BuildCarrierHierarchy() const
 {
     // Attach nodes without parent to virtual root
     for (auto* node : std::as_const(carrier_list_)) {
@@ -269,7 +271,7 @@ void CashFlowCarrierModel::BuildCarrierHierarchy() const
     }
 }
 
-void CashFlowCarrierModel::BuildCounterPartHierarchy() const
+void CarrierModel::BuildCounterPartHierarchy() const
 {
     for (auto* node : std::as_const(counterpart_list_)) {
         node->parent = counterpart_;
@@ -277,7 +279,7 @@ void CashFlowCarrierModel::BuildCounterPartHierarchy() const
     }
 }
 
-CashFlowStatementRow* CashFlowCarrierModel::FindCarrierGroup(finance::Roles roles) const
+Row* CarrierModel::FindCarrierGroup(finance::Roles roles) const
 {
     if (roles.testFlag(finance::Role::kCash))
         return cash_;
@@ -291,9 +293,9 @@ CashFlowStatementRow* CashFlowCarrierModel::FindCarrierGroup(finance::Roles role
     return nullptr;
 }
 
-CashFlowStatementRow* CashFlowCarrierModel::CreateBranchNode(const QString& name, finance::Roles roles, bool direction_rule) const
+Row* CarrierModel::CreateBranchNode(const QString& name, finance::Roles roles, bool direction_rule) const
 {
-    auto* node { ResourcePool<CashFlowStatementRow>::Instance().Allocate() };
+    auto* node { ResourcePool<Row>::Instance().Allocate() };
 
     node->id = QUuid::createUuidV7();
 
@@ -302,4 +304,5 @@ CashFlowStatementRow* CashFlowCarrierModel::CreateBranchNode(const QString& name
     node->direction_rule = direction_rule;
 
     return node;
+}
 }

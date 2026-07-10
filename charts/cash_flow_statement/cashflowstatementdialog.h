@@ -40,7 +40,7 @@ class CashFlowStatementDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit CashFlowStatementDialog(CashFlowStatementModel* model, CashFlowCarrierModel* carrier, CashFlowSpecialModel* special, CashFlowWrongModel* wrong,
+    explicit CashFlowStatementDialog(cash_flow::Model* model, cash_flow::CarrierModel* carrier, cash_flow::SpecialModel* special, cash_flow::WrongModel* wrong,
         const QUuid& widget_id, QWidget* parent = nullptr);
     ~CashFlowStatementDialog() override;
 
@@ -49,10 +49,10 @@ public:
     QTreeView* SpecialView();
     QTableView* WrongView();
 
-    CashFlowStatementModel* Model() { return model_; }
-    CashFlowCarrierModel* CarrierModel() { return carrier_; }
-    CashFlowSpecialModel* SpecialModel() { return special_; }
-    CashFlowWrongModel* WrongModel() { return wrong_; }
+    cash_flow::Model* Model() { return model_; }
+    cash_flow::CarrierModel* CarrierModel() { return carrier_; }
+    cash_flow::SpecialModel* SpecialModel() { return special_; }
+    cash_flow::WrongModel* WrongModel() { return wrong_; }
 
 private slots:
     void on_dateTimeEditEnd_dateChanged(const QDate& date);
@@ -70,10 +70,10 @@ private:
     QDateTime end_ {};
     const QUuid widget_id_ {};
 
-    CashFlowStatementModel* model_ {};
-    CashFlowCarrierModel* carrier_ {};
-    CashFlowSpecialModel* special_ {};
-    CashFlowWrongModel* wrong_ {};
+    cash_flow::Model* model_ {};
+    cash_flow::CarrierModel* carrier_ {};
+    cash_flow::SpecialModel* special_ {};
+    cash_flow::WrongModel* wrong_ {};
 
     QTimer* cooldown_timer_ { nullptr };
 };

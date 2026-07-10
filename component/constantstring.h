@@ -87,7 +87,7 @@ inline const QString kDateRange = QStringLiteral("date_range");
 
 }
 
-namespace cash_flow_statement {
+namespace cash_flow {
 inline const QString kCarrierArray = QStringLiteral("carrier_array");
 inline const QString kCounterPartArray = QStringLiteral("counterpart_array");
 inline const QString kSpecialArray = QStringLiteral("special_array");

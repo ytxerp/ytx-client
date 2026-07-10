@@ -8,22 +8,24 @@
 #include "utils/nodeutils.h"
 #include "utils/templateutils.h"
 
-CashFlowStatementModel::CashFlowStatementModel(const QStringList& header, QObject* parent)
+namespace cash_flow {
+
+Model::Model(const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
     , header_ { header }
 {
     InitFixedNodes();
 }
 
-CashFlowStatementModel::~CashFlowStatementModel()
+Model::~Model()
 {
-    ResourcePool<CashFlowStatementRow>::Instance().Recycle(root_);
-    ResourcePool<CashFlowStatementRow>::Instance().Recycle(node_list_);
-    ResourcePool<CashFlowStatementRow>::Instance().Recycle(first_level_nodes_);
-    ResourcePool<CashFlowStatementRow>::Instance().Recycle(second_level_nodes_);
+    ResourcePool<Row>::Instance().Recycle(root_);
+    ResourcePool<Row>::Instance().Recycle(node_list_);
+    ResourcePool<Row>::Instance().Recycle(first_level_nodes_);
+    ResourcePool<Row>::Instance().Recycle(second_level_nodes_);
 }
 
-QVariant CashFlowStatementModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         return header_.at(section);
@@ -32,7 +34,7 @@ QVariant CashFlowStatementModel::headerData(int section, Qt::Orientation orienta
     return QVariant();
 }
 
-QModelIndex CashFlowStatementModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return {};
@@ -52,7 +54,7 @@ QModelIndex CashFlowStatementModel::index(int row, int column, const QModelIndex
     return createIndex(row, column, node);
 }
 
-QModelIndex CashFlowStatementModel::parent(const QModelIndex& index) const
+QModelIndex Model::parent(const QModelIndex& index) const
 {
     // root_'s index is QModelIndex(), root_'s id == -1
     if (!index.isValid()) {
@@ -60,7 +62,7 @@ QModelIndex CashFlowStatementModel::parent(const QModelIndex& index) const
         return {};
     }
 
-    auto* node { static_cast<CashFlowStatementRow*>(index.internalPointer()) };
+    auto* node { static_cast<Row*>(index.internalPointer()) };
     if (!node) {
         qDebug() << Q_FUNC_INFO << "null node from internalPointer";
         return {};
@@ -97,15 +99,15 @@ QModelIndex CashFlowStatementModel::parent(const QModelIndex& index) const
     return createIndex(row, 0, parent);
 }
 
-int CashFlowStatementModel::rowCount(const QModelIndex& parent) const { return GetNodeByIndex(parent)->children.size(); }
+int Model::rowCount(const QModelIndex& parent) const { return GetNodeByIndex(parent)->children.size(); }
 
-int CashFlowStatementModel::columnCount(const QModelIndex& parent) const
+int Model::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
     return header_.size();
 }
 
-QVariant CashFlowStatementModel::data(const QModelIndex& index, int role) const
+QVariant Model::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -113,44 +115,44 @@ QVariant CashFlowStatementModel::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* node { static_cast<CashFlowStatementRow*>(index.internalPointer()) };
+    auto* node { static_cast<Row*>(index.internalPointer()) };
     Q_ASSERT(node != nullptr);
 
-    const CashFlowStatementEnum column { index.column() };
+    const RowField column { index.column() };
 
     switch (column) {
-    case CashFlowStatementEnum::kName:
+    case RowField::kName:
         return node->name;
-    case CashFlowStatementEnum::kId:
+    case RowField::kId:
         return node->id;
-    case CashFlowStatementEnum::kCode:
+    case RowField::kCode:
         return node->code;
-    case CashFlowStatementEnum::kDescription:
+    case RowField::kDescription:
         return node->description;
-    case CashFlowStatementEnum::kDirectionRule:
+    case RowField::kDirectionRule:
         return node->direction_rule;
-    case CashFlowStatementEnum::kFinalTotal:
+    case RowField::kFinalTotal:
         return node->final_total;
     }
 }
 
-void CashFlowStatementModel::sort(int column, Qt::SortOrder order)
+void Model::sort(int column, Qt::SortOrder order)
 {
-    const CashFlowStatementEnum e_column { column };
+    const RowField e_column { column };
 
-    auto Compare = [e_column, order](const CashFlowStatementRow* lhs, const CashFlowStatementRow* rhs) -> bool {
+    auto Compare = [e_column, order](const Row* lhs, const Row* rhs) -> bool {
         switch (e_column) {
-        case CashFlowStatementEnum::kName:
-            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::name, order);
-        case CashFlowStatementEnum::kCode:
-            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::code, order);
-        case CashFlowStatementEnum::kDescription:
-            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::description, order);
-        case CashFlowStatementEnum::kDirectionRule:
-            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::direction_rule, order);
-        case CashFlowStatementEnum::kFinalTotal:
-            return utils::CompareMember(lhs, rhs, &CashFlowStatementRow::final_total, order);
-        case CashFlowStatementEnum::kId:
+        case RowField::kName:
+            return utils::CompareMember(lhs, rhs, &Row::name, order);
+        case RowField::kCode:
+            return utils::CompareMember(lhs, rhs, &Row::code, order);
+        case RowField::kDescription:
+            return utils::CompareMember(lhs, rhs, &Row::description, order);
+        case RowField::kDirectionRule:
+            return utils::CompareMember(lhs, rhs, &Row::direction_rule, order);
+        case RowField::kFinalTotal:
+            return utils::CompareMember(lhs, rhs, &Row::final_total, order);
+        case RowField::kId:
             return false;
         }
     };
@@ -160,14 +162,14 @@ void CashFlowStatementModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void CashFlowStatementModel::ResetModel(CJsonArray& node_array)
+void Model::ResetModel(CJsonArray& node_array)
 {
     const auto node_list { AddRowsList(node_array) };
 
     beginResetModel();
 
     {
-        ResourcePool<CashFlowStatementRow>::Instance().Recycle(node_list_);
+        ResourcePool<Row>::Instance().Recycle(node_list_);
 
         for (auto* node : std::as_const(second_level_nodes_)) {
             node->children.clear();
@@ -182,19 +184,19 @@ void CashFlowStatementModel::ResetModel(CJsonArray& node_array)
         UpdateAncestorTotal(node, node->final_total);
     }
 
-    sort(std::to_underlying(CashFlowStatementEnum::kName), Qt::AscendingOrder);
+    sort(std::to_underlying(RowField::kName), Qt::AscendingOrder);
     endResetModel();
 }
 
-CashFlowStatementRow* CashFlowStatementModel::GetNodeByIndex(const QModelIndex& index) const
+Row* Model::GetNodeByIndex(const QModelIndex& index) const
 {
     if (index.isValid() && index.internalPointer())
-        return static_cast<CashFlowStatementRow*>(index.internalPointer());
+        return static_cast<Row*>(index.internalPointer());
 
     return root_;
 }
 
-void CashFlowStatementModel::InitFixedNodes()
+void Model::InitFixedNodes()
 {
     root_ = CreateBranchNode(QString(), finance::CashKind::kNone, direction_rule::kDICD);
 
@@ -247,17 +249,17 @@ void CashFlowStatementModel::InitFixedNodes()
     }
 }
 
-QList<CashFlowStatementRow*> CashFlowStatementModel::AddRowsList(const CJsonArray& node_array)
+QList<Row*> Model::AddRowsList(const CJsonArray& node_array)
 {
     if (node_array.isEmpty()) {
         qWarning() << Q_FUNC_INFO << "Received empty node array";
     }
 
-    QList<CashFlowStatementRow*> list {};
+    QList<Row*> list {};
 
     for (const QJsonValue& val : node_array) {
         const QJsonObject obj { val.toObject() };
-        auto* node { ResourcePool<CashFlowStatementRow>::Instance().Allocate() };
+        auto* node { ResourcePool<Row>::Instance().Allocate() };
         node->ReadJson(obj);
         list.emplaceBack(node);
     }
@@ -265,7 +267,7 @@ QList<CashFlowStatementRow*> CashFlowStatementModel::AddRowsList(const CJsonArra
     return list;
 }
 
-void CashFlowStatementModel::BuildHierarchy() const
+void Model::BuildHierarchy() const
 {
     // Attach nodes without parent to virtual root
     for (auto* node : std::as_const(node_list_)) {
@@ -285,7 +287,7 @@ void CashFlowStatementModel::BuildHierarchy() const
     }
 }
 
-CashFlowStatementRow* CashFlowStatementModel::FindNodeGroup(finance::CashKind kind) const
+Row* Model::FindNodeGroup(finance::CashKind kind) const
 {
     switch (static_cast<int>(kind)) {
     // Operating
@@ -311,7 +313,7 @@ CashFlowStatementRow* CashFlowStatementModel::FindNodeGroup(finance::CashKind ki
     }
 }
 
-void CashFlowStatementModel::UpdateAncestorTotal(CashFlowStatementRow* node, double final_delta) const
+void Model::UpdateAncestorTotal(Row* node, double final_delta) const
 {
     if (!node || node == root_ || !node->parent || node->parent == root_)
         return;
@@ -328,9 +330,9 @@ void CashFlowStatementModel::UpdateAncestorTotal(CashFlowStatementRow* node, dou
     }
 }
 
-CashFlowStatementRow* CashFlowStatementModel::CreateBranchNode(const QString& name, finance::CashKind cash_kind, bool direction_rule) const
+Row* Model::CreateBranchNode(const QString& name, finance::CashKind cash_kind, bool direction_rule) const
 {
-    auto* node { ResourcePool<CashFlowStatementRow>::Instance().Allocate() };
+    auto* node { ResourcePool<Row>::Instance().Allocate() };
 
     node->id = QUuid::createUuidV7();
 
@@ -339,4 +341,5 @@ CashFlowStatementRow* CashFlowStatementModel::CreateBranchNode(const QString& na
     node->direction_rule = direction_rule;
 
     return node;
+}
 }

@@ -655,13 +655,13 @@ void MainWindow::DelegateCashFlowStatement(QTreeView* view) const
     const auto& info { sc_f_.info };
 
     auto* amount { new AmountR(sc_f_.section_config.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, string_const::kEightDigits, view) };
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kFinalTotal), amount);
+    view->setItemDelegateForColumn(std::to_underlying(cash_flow::RowField::kFinalTotal), amount);
 
     auto* direction_rule { new BoolStringR(info.rule_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kDirectionRule), direction_rule);
+    view->setItemDelegateForColumn(std::to_underlying(cash_flow::RowField::kDirectionRule), direction_rule);
 
-    auto* name { new CashFlowNameR(sc_f_.tree_model, std::to_underlying(CashFlowStatementEnum::kId), view) };
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementEnum::kName), name);
+    auto* name { new CashFlowNameR(sc_f_.tree_model, std::to_underlying(cash_flow::RowField::kId), view) };
+    view->setItemDelegateForColumn(std::to_underlying(cash_flow::RowField::kName), name);
 }
 
 void MainWindow::DelegateCashFlowStatementWrong(QTableView* view) const
@@ -670,21 +670,21 @@ void MainWindow::DelegateCashFlowStatementWrong(QTableView* view) const
     const auto& info { sc_f_.info };
 
     auto* issued_time { new IssuedTimeR(config.date_format, view) };
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kIssuedTime), issued_time);
+    view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kIssuedTime), issued_time);
 
     auto* value { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, view) };
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kLhsDebit), value);
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kLhsCredit), value);
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kRhsDebit), value);
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kRhsCredit), value);
+    view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kLhsDebit), value);
+    view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kLhsCredit), value);
+    view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kRhsDebit), value);
+    view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kRhsCredit), value);
 
     auto* cash_kind { new IntStringNoneZeroR(info.cash_kind_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kCashKind), cash_kind);
+    view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kCashKind), cash_kind);
 
     auto* node_path { new NodePathR(sc_f_.tree_model, view) };
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kLhsNode), node_path);
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kRhsNode), node_path);
+    view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kLhsNode), node_path);
+    view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kRhsNode), node_path);
 
     auto* kind { new IntStringR(info.cash_kind_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(CashFlowStatementWrongEnum::kCashKind), kind);
+    view->setItemDelegateForColumn(std::to_underlying(cash_flow::WrongRowField::kCashKind), kind);
 }

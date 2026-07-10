@@ -25,12 +25,14 @@
 #include "cashflowstatementrow.h"
 #include "component/using.h"
 
-class CashFlowCarrierModel final : public QAbstractItemModel {
+namespace cash_flow {
+
+class CarrierModel final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit CashFlowCarrierModel(const QStringList& header, QObject* parent = nullptr);
-    ~CashFlowCarrierModel() override;
+    explicit CarrierModel(const QStringList& header, QObject* parent = nullptr);
+    ~CarrierModel() override;
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -48,31 +50,32 @@ public:
     void ResetModel(CJsonArray& carrier_array, CJsonArray& counterpart_array);
 
 private:
-    CashFlowStatementRow* GetNodeByIndex(const QModelIndex& index) const;
-    CashFlowStatementRow* CreateBranchNode(const QString& name, finance::Roles roles, bool direction_rule) const;
+    Row* GetNodeByIndex(const QModelIndex& index) const;
+    Row* CreateBranchNode(const QString& name, finance::Roles roles, bool direction_rule) const;
 
     void InitFixedNodes();
-    QList<CashFlowStatementRow*> AddRowsList(const CJsonArray& node_array);
+    QList<Row*> AddRowsList(const CJsonArray& node_array);
 
     void BuildCarrierHierarchy() const;
     void BuildCounterPartHierarchy() const;
 
-    CashFlowStatementRow* FindCarrierGroup(finance::Roles roles) const;
+    Row* FindCarrierGroup(finance::Roles roles) const;
 
 private:
     const QStringList& header_;
-    CashFlowStatementRow* root_ {};
-    CashFlowStatementRow* counterpart_ {};
+    Row* root_ {};
+    Row* counterpart_ {};
 
-    QList<CashFlowStatementRow*> first_level_nodes_ {};
-    QList<CashFlowStatementRow*> second_level_nodes_ {};
+    QList<Row*> first_level_nodes_ {};
+    QList<Row*> second_level_nodes_ {};
 
-    CashFlowStatementRow* cash_ {};
-    CashFlowStatementRow* bank_ {};
-    CashFlowStatementRow* wallet_ {};
+    Row* cash_ {};
+    Row* bank_ {};
+    Row* wallet_ {};
 
-    QList<CashFlowStatementRow*> carrier_list_ {};
-    QList<CashFlowStatementRow*> counterpart_list_ {};
+    QList<Row*> carrier_list_ {};
+    QList<Row*> counterpart_list_ {};
 };
+}
 
 #endif // CASHFLOWCARRIERMODEL_H

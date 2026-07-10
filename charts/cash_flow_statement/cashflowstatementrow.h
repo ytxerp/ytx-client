@@ -28,7 +28,9 @@
 #include "component/constant.h"
 #include "tree/finance_role.h"
 
-struct CashFlowStatementRow final {
+namespace cash_flow {
+
+struct Row final {
     QString name {};
     QUuid id {};
     QString code {};
@@ -39,10 +41,10 @@ struct CashFlowStatementRow final {
 
     double final_total {};
 
-    CashFlowStatementRow* parent {};
-    QList<CashFlowStatementRow*> children {};
+    Row* parent {};
+    QList<Row*> children {};
 
-    inline void Reset() { *this = CashFlowStatementRow {}; }
+    inline void Reset() { *this = Row {}; }
     inline void ReadJson(const QJsonObject& object)
     {
         // if (const auto val = object.value(kName); val.isString())
@@ -64,7 +66,7 @@ struct CashFlowStatementRow final {
     }
 };
 
-struct CashFlowStatementWrongRow final {
+struct WrongRow final {
     QUuid id {};
     QDateTime issued_time {};
     QUuid lhs_node {};
@@ -77,7 +79,7 @@ struct CashFlowStatementWrongRow final {
     double rhs_debit {};
     double rhs_credit {};
 
-    inline void Reset() { *this = CashFlowStatementWrongRow {}; }
+    inline void Reset() { *this = WrongRow {}; }
     inline void ReadJson(const QJsonObject& object)
     {
         if (const auto val = object.value(kId); val.isString())
@@ -102,5 +104,6 @@ struct CashFlowStatementWrongRow final {
             cash_kind = static_cast<finance::CashKind>(val.toInt());
     }
 };
+}
 
 #endif // CASHFLOWSTATEMENTROW_H

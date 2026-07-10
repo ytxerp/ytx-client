@@ -25,12 +25,14 @@
 #include "cashflowstatementrow.h"
 #include "component/using.h"
 
-class CashFlowSpecialModel final : public QAbstractItemModel {
+namespace cash_flow {
+
+class SpecialModel final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit CashFlowSpecialModel(const QStringList& header, QObject* parent = nullptr);
-    ~CashFlowSpecialModel() override;
+    explicit SpecialModel(const QStringList& header, QObject* parent = nullptr);
+    ~SpecialModel() override;
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -48,20 +50,21 @@ public:
     void ResetModel(CJsonArray& special_array);
 
 private:
-    CashFlowStatementRow* GetNodeByIndex(const QModelIndex& index) const;
-    CashFlowStatementRow* CreateBranchNode(const QString& name, finance::Roles roles, bool direction_rule) const;
+    Row* GetNodeByIndex(const QModelIndex& index) const;
+    Row* CreateBranchNode(const QString& name, finance::Roles roles, bool direction_rule) const;
 
     void InitFixedNodes();
-    QList<CashFlowStatementRow*> AddRowsList(const CJsonArray& node_array);
+    QList<Row*> AddRowsList(const CJsonArray& node_array);
 
     void BuildCounterPartHierarchy() const;
 
 private:
     const QStringList& header_;
-    CashFlowStatementRow* root_ {};
-    CashFlowStatementRow* special_ {};
+    Row* root_ {};
+    Row* special_ {};
 
-    QList<CashFlowStatementRow*> special_list_ {};
+    QList<Row*> special_list_ {};
 };
+}
 
 #endif // CASHFLOWSPECIALMODEL_H

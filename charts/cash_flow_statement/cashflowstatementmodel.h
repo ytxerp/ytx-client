@@ -25,12 +25,14 @@
 #include "cashflowstatementrow.h"
 #include "component/using.h"
 
-class CashFlowStatementModel final : public QAbstractItemModel {
+namespace cash_flow {
+
+class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit CashFlowStatementModel(const QStringList& header, QObject* parent = nullptr);
-    ~CashFlowStatementModel() override;
+    explicit Model(const QStringList& header, QObject* parent = nullptr);
+    ~Model() override;
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -48,33 +50,34 @@ public:
     void ResetModel(CJsonArray& node_array);
 
 private:
-    CashFlowStatementRow* GetNodeByIndex(const QModelIndex& index) const;
-    CashFlowStatementRow* CreateBranchNode(const QString& name, finance::CashKind cash_kind, bool direction_rule) const;
+    Row* GetNodeByIndex(const QModelIndex& index) const;
+    Row* CreateBranchNode(const QString& name, finance::CashKind cash_kind, bool direction_rule) const;
 
     void InitFixedNodes();
-    QList<CashFlowStatementRow*> AddRowsList(const CJsonArray& node_array);
+    QList<Row*> AddRowsList(const CJsonArray& node_array);
 
     void BuildHierarchy() const;
 
-    CashFlowStatementRow* FindNodeGroup(finance::CashKind kind) const;
+    Row* FindNodeGroup(finance::CashKind kind) const;
 
-    void UpdateAncestorTotal(CashFlowStatementRow* node, double final_delta) const;
+    void UpdateAncestorTotal(Row* node, double final_delta) const;
 
 private:
     const QStringList& header_;
-    CashFlowStatementRow* root_ {};
+    Row* root_ {};
 
-    QList<CashFlowStatementRow*> first_level_nodes_ {};
-    QList<CashFlowStatementRow*> second_level_nodes_ {};
+    QList<Row*> first_level_nodes_ {};
+    QList<Row*> second_level_nodes_ {};
 
-    CashFlowStatementRow* operating_in_ {};
-    CashFlowStatementRow* operating_out_ {};
-    CashFlowStatementRow* investing_in_ {};
-    CashFlowStatementRow* investing_out_ {};
-    CashFlowStatementRow* financing_in_ {};
-    CashFlowStatementRow* financing_out_ {};
+    Row* operating_in_ {};
+    Row* operating_out_ {};
+    Row* investing_in_ {};
+    Row* investing_out_ {};
+    Row* financing_in_ {};
+    Row* financing_out_ {};
 
-    QList<CashFlowStatementRow*> node_list_ {};
+    QList<Row*> node_list_ {};
 };
+}
 
 #endif // CASHFLOWSTATEMENTMODEL_H
