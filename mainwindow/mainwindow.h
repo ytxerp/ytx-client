@@ -36,6 +36,7 @@
 #include "billing/settlement/settlementprimarywidget.h"
 #include "billing/statement/statementtertiarywidget.h"
 #include "component/config.h"
+#include "component/headerinfo.h"
 #include "component/info.h"
 #include "component/sectioncontex.h"
 #include "entryhub/entryhub.h"
@@ -45,7 +46,6 @@
 #include "table/widget/tablewidgeto.h"
 #include "tree/model/treemodel.h"
 #include "tree/widget/treewidgeto.h"
-#include "workspace/headerinfo.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

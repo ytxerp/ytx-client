@@ -251,7 +251,7 @@ set(HEADERS
     workspace/workspacemodel.h
     workspace/workspacerole.h
     delegate/databaseroledelegate.h
-    workspace/headerinfo.h
+    component/headerinfo.h
     audit/auditrow.h
     audit/auditmodel.h
     audit/auditinfo.h
