@@ -616,18 +616,18 @@ void MainWindow::DelegateBalanceSheet(QTreeView* view) const
     const auto& info { sc_f_.info };
 
     auto* amount { new AmountR(sc_f_.section_config.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, string_const::kEightDigits, view) };
-    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kClosingBalance), amount);
-    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kOpeningBalance), amount);
-    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kChangeAmount), amount);
+    view->setItemDelegateForColumn(std::to_underlying(balance_sheet::RowField::kClosingBalance), amount);
+    view->setItemDelegateForColumn(std::to_underlying(balance_sheet::RowField::kOpeningBalance), amount);
+    view->setItemDelegateForColumn(std::to_underlying(balance_sheet::RowField::kChangeAmount), amount);
 
     auto* direction_rule { new BoolStringR(info.rule_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kDirectionRule), direction_rule);
+    view->setItemDelegateForColumn(std::to_underlying(balance_sheet::RowField::kDirectionRule), direction_rule);
 
     auto* kind { new IntStringR(info.kind_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kKind), kind);
+    view->setItemDelegateForColumn(std::to_underlying(balance_sheet::RowField::kKind), kind);
 
     auto* growth_rate { new PercentageDelegateR(view) };
-    view->setItemDelegateForColumn(std::to_underlying(BalanceSheetEnum::kChangeRate), growth_rate);
+    view->setItemDelegateForColumn(std::to_underlying(balance_sheet::RowField::kChangeRate), growth_rate);
 }
 
 void MainWindow::DelegateIncomeStatement(QTreeView* view) const

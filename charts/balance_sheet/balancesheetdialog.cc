@@ -10,7 +10,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-BalanceSheetDialog::BalanceSheetDialog(CTreeModel* tree_model, BalanceSheetModel* model, const QUuid& widget_id, QWidget* parent)
+BalanceSheetDialog::BalanceSheetDialog(CTreeModel* tree_model, balance_sheet::Model* model, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::BalanceSheetDialog)
     , widget_id_ { widget_id }

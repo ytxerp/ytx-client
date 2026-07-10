@@ -5,24 +5,26 @@
 #include "utils/nodeutils.h"
 #include "utils/templateutils.h"
 
-BalanceSheetModel::BalanceSheetModel(const QStringList& header, QObject* parent)
+namespace balance_sheet {
+
+Model::Model(const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
     , header_ { header }
 {
-    root_ = ResourcePool<BalanceSheetRow>::Instance().Allocate();
+    root_ = ResourcePool<Row>::Instance().Allocate();
     root_->kind = NodeKind::kBranch;
     root_->direction_rule = false;
     root_->name = QString();
     root_->id = QUuid();
 }
 
-BalanceSheetModel::~BalanceSheetModel()
+Model::~Model()
 {
-    ResourcePool<BalanceSheetRow>::Instance().Recycle(node_hash_);
-    ResourcePool<BalanceSheetRow>::Instance().Recycle(root_);
+    ResourcePool<Row>::Instance().Recycle(node_hash_);
+    ResourcePool<Row>::Instance().Recycle(root_);
 }
 
-QVariant BalanceSheetModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         return header_.at(section);
@@ -31,7 +33,7 @@ QVariant BalanceSheetModel::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-QModelIndex BalanceSheetModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return {};
@@ -51,7 +53,7 @@ QModelIndex BalanceSheetModel::index(int row, int column, const QModelIndex& par
     return createIndex(row, column, node);
 }
 
-QModelIndex BalanceSheetModel::parent(const QModelIndex& index) const
+QModelIndex Model::parent(const QModelIndex& index) const
 {
     // root_'s index is QModelIndex(), root_'s id == -1
     if (!index.isValid()) {
@@ -59,7 +61,7 @@ QModelIndex BalanceSheetModel::parent(const QModelIndex& index) const
         return {};
     }
 
-    auto* node { static_cast<BalanceSheetRow*>(index.internalPointer()) };
+    auto* node { static_cast<Row*>(index.internalPointer()) };
     if (!node) {
         qDebug() << Q_FUNC_INFO << "null node from internalPointer";
         return {};
@@ -96,15 +98,15 @@ QModelIndex BalanceSheetModel::parent(const QModelIndex& index) const
     return createIndex(row, 0, parent);
 }
 
-int BalanceSheetModel::rowCount(const QModelIndex& parent) const { return GetNodeByIndex(parent)->children.size(); }
+int Model::rowCount(const QModelIndex& parent) const { return GetNodeByIndex(parent)->children.size(); }
 
-int BalanceSheetModel::columnCount(const QModelIndex& parent) const
+int Model::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
     return header_.size();
 }
 
-QVariant BalanceSheetModel::data(const QModelIndex& index, int role) const
+QVariant Model::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -112,60 +114,60 @@ QVariant BalanceSheetModel::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* node { static_cast<BalanceSheetRow*>(index.internalPointer()) };
+    auto* node { static_cast<Row*>(index.internalPointer()) };
     Q_ASSERT(node != nullptr);
 
-    const BalanceSheetEnum column { index.column() };
+    const RowField column { index.column() };
 
     switch (column) {
-    case BalanceSheetEnum::kName:
+    case RowField::kName:
         return node->name;
-    case BalanceSheetEnum::kId:
+    case RowField::kId:
         return node->id;
-    case BalanceSheetEnum::kCode:
+    case RowField::kCode:
         return node->code;
-    case BalanceSheetEnum::kDescription:
+    case RowField::kDescription:
         return node->description;
-    case BalanceSheetEnum::kDirectionRule:
+    case RowField::kDirectionRule:
         return node->direction_rule;
-    case BalanceSheetEnum::kKind:
+    case RowField::kKind:
         return std::to_underlying(node->kind);
-    case BalanceSheetEnum::kClosingBalance:
+    case RowField::kClosingBalance:
         return node->closing_balance;
-    case BalanceSheetEnum::kOpeningBalance:
+    case RowField::kOpeningBalance:
         return node->opening_balance;
-    case BalanceSheetEnum::kChangeAmount:
+    case RowField::kChangeAmount:
         return node->change_amount;
-    case BalanceSheetEnum::kChangeRate:
+    case RowField::kChangeRate:
         return node->change_rate;
     }
 }
 
-void BalanceSheetModel::sort(int column, Qt::SortOrder order)
+void Model::sort(int column, Qt::SortOrder order)
 {
-    const BalanceSheetEnum e_column { column };
+    const RowField e_column { column };
 
-    auto Compare = [e_column, order](const BalanceSheetRow* lhs, const BalanceSheetRow* rhs) -> bool {
+    auto Compare = [e_column, order](const Row* lhs, const Row* rhs) -> bool {
         switch (e_column) {
-        case BalanceSheetEnum::kName:
-            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::name, order);
-        case BalanceSheetEnum::kCode:
-            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::code, order);
-        case BalanceSheetEnum::kDescription:
-            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::description, order);
-        case BalanceSheetEnum::kDirectionRule:
-            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::direction_rule, order);
-        case BalanceSheetEnum::kKind:
-            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::kind, order);
-        case BalanceSheetEnum::kClosingBalance:
-            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::closing_balance, order);
-        case BalanceSheetEnum::kOpeningBalance:
-            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::opening_balance, order);
-        case BalanceSheetEnum::kChangeAmount:
-            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::change_amount, order);
-        case BalanceSheetEnum::kChangeRate:
-            return utils::CompareMember(lhs, rhs, &BalanceSheetRow::change_rate, order);
-        case BalanceSheetEnum::kId:
+        case RowField::kName:
+            return utils::CompareMember(lhs, rhs, &Row::name, order);
+        case RowField::kCode:
+            return utils::CompareMember(lhs, rhs, &Row::code, order);
+        case RowField::kDescription:
+            return utils::CompareMember(lhs, rhs, &Row::description, order);
+        case RowField::kDirectionRule:
+            return utils::CompareMember(lhs, rhs, &Row::direction_rule, order);
+        case RowField::kKind:
+            return utils::CompareMember(lhs, rhs, &Row::kind, order);
+        case RowField::kClosingBalance:
+            return utils::CompareMember(lhs, rhs, &Row::closing_balance, order);
+        case RowField::kOpeningBalance:
+            return utils::CompareMember(lhs, rhs, &Row::opening_balance, order);
+        case RowField::kChangeAmount:
+            return utils::CompareMember(lhs, rhs, &Row::change_amount, order);
+        case RowField::kChangeRate:
+            return utils::CompareMember(lhs, rhs, &Row::change_rate, order);
+        case RowField::kId:
             return false;
         }
     };
@@ -175,7 +177,7 @@ void BalanceSheetModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void BalanceSheetModel::ResetModel(const QJsonArray& node_array, const QJsonArray& path_array)
+void Model::ResetModel(const QJsonArray& node_array, const QJsonArray& path_array)
 {
     if (node_array.isEmpty()) {
         qWarning() << Q_FUNC_INFO << "Received empty node array";
@@ -186,10 +188,10 @@ void BalanceSheetModel::ResetModel(const QJsonArray& node_array, const QJsonArra
     }
 
     // Build new hash outside the model reset lock
-    QHash<QUuid, BalanceSheetRow*> new_hash;
+    QHash<QUuid, Row*> new_hash;
     for (const QJsonValue& val : node_array) {
         const QJsonObject obj { val.toObject() };
-        BalanceSheetRow* node { ResourcePool<BalanceSheetRow>::Instance().Allocate() };
+        Row* node { ResourcePool<Row>::Instance().Allocate() };
         node->ReadJson(obj);
         new_hash.insert(node->id, node);
     }
@@ -197,25 +199,25 @@ void BalanceSheetModel::ResetModel(const QJsonArray& node_array, const QJsonArra
     beginResetModel();
 
     {
-        ResourcePool<BalanceSheetRow>::Instance().Recycle(node_hash_);
+        ResourcePool<Row>::Instance().Recycle(node_hash_);
         root_->children.clear();
         node_hash_ = std::move(new_hash);
         BuildHierarchy(path_array);
     }
 
-    sort(std::to_underlying(BalanceSheetEnum::kName), Qt::AscendingOrder);
+    sort(std::to_underlying(RowField::kName), Qt::AscendingOrder);
     endResetModel();
 }
 
-BalanceSheetRow* BalanceSheetModel::GetNodeByIndex(const QModelIndex& index) const
+Row* Model::GetNodeByIndex(const QModelIndex& index) const
 {
     if (index.isValid() && index.internalPointer())
-        return static_cast<BalanceSheetRow*>(index.internalPointer());
+        return static_cast<Row*>(index.internalPointer());
 
     return root_;
 }
 
-void BalanceSheetModel::BuildHierarchy(const QJsonArray& path_array)
+void Model::BuildHierarchy(const QJsonArray& path_array)
 {
     for (const QJsonValue& val : path_array) {
         const QJsonObject obj { val.toObject() };
@@ -223,8 +225,8 @@ void BalanceSheetModel::BuildHierarchy(const QJsonArray& path_array)
         const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
         const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
 
-        BalanceSheetRow* ancestor { node_hash_.value(ancestor_id, nullptr) };
-        BalanceSheetRow* descendant { node_hash_.value(descendant_id, nullptr) };
+        Row* ancestor { node_hash_.value(ancestor_id, nullptr) };
+        Row* descendant { node_hash_.value(descendant_id, nullptr) };
 
         assert(ancestor && "ancestor not found in node_hash_");
         assert(descendant && "descendant not found in node_hash_");
@@ -234,10 +236,11 @@ void BalanceSheetModel::BuildHierarchy(const QJsonArray& path_array)
     }
 
     // Attach nodes without parent to virtual root
-    for (BalanceSheetRow* node : std::as_const(node_hash_)) {
+    for (Row* node : std::as_const(node_hash_)) {
         if (!node->parent) {
             root_->children.emplaceBack(node);
             node->parent = root_;
         }
     }
+}
 }

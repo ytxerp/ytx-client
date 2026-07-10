@@ -8,14 +8,14 @@ void MainWindow::on_actionBalanceSheet_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    auto* model { new BalanceSheetModel(header_info_.balance_sheet, this) };
+    auto* model { new balance_sheet::Model(header_info_.balance_sheet, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* dialog { new BalanceSheetDialog(sc_f_.tree_model, model, widget_id, this) };
 
     {
         auto* view { dialog->View() };
-        InitTreeView(view, std::to_underlying(BalanceSheetEnum::kId), std::to_underlying(BalanceSheetEnum::kDescription));
+        InitTreeView(view, std::to_underlying(balance_sheet::RowField::kId), std::to_underlying(balance_sheet::RowField::kDescription));
         DelegateBalanceSheet(view);
     }
 

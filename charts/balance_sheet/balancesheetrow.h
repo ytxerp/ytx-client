@@ -30,7 +30,9 @@
 #include "enum/nodeenum.h"
 #include "utils/nodeutils.h"
 
-struct BalanceSheetRow final {
+namespace balance_sheet {
+
+struct Row final {
     QString name {};
     QUuid id {};
     QString code {};
@@ -44,10 +46,10 @@ struct BalanceSheetRow final {
     double change_amount {};
     double change_rate {};
 
-    BalanceSheetRow* parent {};
-    QList<BalanceSheetRow*> children {};
+    Row* parent {};
+    QList<Row*> children {};
 
-    inline void Reset() { *this = BalanceSheetRow {}; }
+    inline void Reset() { *this = Row {}; }
     inline void ReadJson(const QJsonObject& object)
     {
         if (const auto val = object.value(kName); val.isString())
@@ -71,5 +73,6 @@ struct BalanceSheetRow final {
         change_rate = utils::GrowthRate(closing_balance, opening_balance);
     }
 };
+}
 
 #endif // BALANCESHEETROW_H

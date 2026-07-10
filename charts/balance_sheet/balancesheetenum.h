@@ -20,7 +20,8 @@
 #ifndef BALANCESHEETENUM_H
 #define BALANCESHEETENUM_H
 
-enum class BalanceSheetEnum {
+namespace balance_sheet {
+enum class RowField {
     kName = 0,
     kId,
     kCode,
@@ -32,5 +33,6 @@ enum class BalanceSheetEnum {
     kChangeAmount,
     kChangeRate,
 };
+}
 
 #endif // BALANCESHEETENUM_H

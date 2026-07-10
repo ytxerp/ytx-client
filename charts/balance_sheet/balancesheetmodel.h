@@ -24,12 +24,14 @@
 
 #include "balancesheetrow.h"
 
-class BalanceSheetModel final : public QAbstractItemModel {
+namespace balance_sheet {
+
+class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit BalanceSheetModel(const QStringList& header, QObject* parent = nullptr);
-    ~BalanceSheetModel() override;
+    explicit Model(const QStringList& header, QObject* parent = nullptr);
+    ~Model() override;
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -47,13 +49,14 @@ public:
     void ResetModel(const QJsonArray& node_array, const QJsonArray& path_array);
 
 private:
-    BalanceSheetRow* GetNodeByIndex(const QModelIndex& index) const;
+    Row* GetNodeByIndex(const QModelIndex& index) const;
     void BuildHierarchy(const QJsonArray& path_array);
 
 private:
     const QStringList& header_;
-    BalanceSheetRow* root_ {};
-    QHash<QUuid, BalanceSheetRow*> node_hash_ {};
+    Row* root_ {};
+    QHash<QUuid, Row*> node_hash_ {};
 };
+}
 
 #endif // BALANCESHEETMODEL_H

@@ -36,11 +36,11 @@ class BalanceSheetDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit BalanceSheetDialog(CTreeModel* tree_model, BalanceSheetModel* model, const QUuid& widget_id, QWidget* parent = nullptr);
+    explicit BalanceSheetDialog(CTreeModel* tree_model, balance_sheet::Model* model, const QUuid& widget_id, QWidget* parent = nullptr);
     ~BalanceSheetDialog() override;
 
     QTreeView* View();
-    BalanceSheetModel* Model() { return model_; }
+    balance_sheet::Model* Model() { return model_; }
 
 private slots:
     void on_dateTimeEditEnd_dateChanged(const QDate& date);
@@ -59,7 +59,7 @@ private:
 
     const QUuid widget_id_ {};
 
-    BalanceSheetModel* model_ {};
+    balance_sheet::Model* model_ {};
     CTreeModel* tree_model_ {};
 
     QTimer* cooldown_timer_ { nullptr };
