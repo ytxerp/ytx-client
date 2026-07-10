@@ -7,14 +7,14 @@ void MainWindow::on_actionHeatInventory_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    auto* model { new InventoryHeatModel(header_info_.inventory_heat, this) };
+    auto* model { new inventory_heat::Model(header_info_.inventory_heat, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* dialog { new InventoryHeatDialog(model, widget_id, this) };
 
     {
         auto* view { dialog->View() };
-        InitTableView(view, -1, -1, std::to_underlying(InventoryHeatEnum::kPlaceholder));
+        InitTableView(view, -1, -1, std::to_underlying(inventory_heat::RowField::kPlaceholder));
         DelegateInventoryHeat(view);
     }
 

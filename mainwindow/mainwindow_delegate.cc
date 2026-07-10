@@ -590,13 +590,13 @@ void MainWindow::DelegatePeriodClose(QTableView* table_view) const
 void MainWindow::DelegateInventoryHeat(QTableView* table_view) const
 {
     auto* path { new SearchPathTableR(sc_i_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(InventoryHeatEnum::kInventoryNode), path);
+    table_view->setItemDelegateForColumn(std::to_underlying(inventory_heat::RowField::kInventoryNode), path);
 
     auto* quantity { new DoubleR(sc_i_.section_config.quantity_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(InventoryHeatEnum::kTotalQuantity), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(inventory_heat::RowField::kTotalQuantity), quantity);
 
     auto* score { new DoubleNoneDecimalR(string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(InventoryHeatEnum::kHeatScore), score);
+    table_view->setItemDelegateForColumn(std::to_underlying(inventory_heat::RowField::kHeatScore), score);
 }
 
 void MainWindow::DelegatePartnerHeat(QTableView* table_view) const

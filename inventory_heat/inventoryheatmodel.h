@@ -24,12 +24,14 @@
 
 #include "inventoryheatrow.h"
 
-class InventoryHeatModel final : public QAbstractItemModel {
+namespace inventory_heat {
+
+class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit InventoryHeatModel(const QStringList& header, QObject* parent = nullptr);
-    ~InventoryHeatModel() override;
+    explicit Model(const QStringList& header, QObject* parent = nullptr);
+    ~Model() override;
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -60,8 +62,9 @@ public:
     void ResetModel(const QJsonArray& array);
 
 private:
-    QList<InventoryHeatRow*> list_ {};
+    QList<Row*> list_ {};
     const QStringList& header_ {};
 };
+}
 
 #endif // INVENTORYHEATMODEL_H

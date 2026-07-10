@@ -33,11 +33,11 @@ class InventoryHeatDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit InventoryHeatDialog(InventoryHeatModel* model, const QUuid& widget_id, QWidget* parent = nullptr);
+    explicit InventoryHeatDialog(inventory_heat::Model* model, const QUuid& widget_id, QWidget* parent = nullptr);
     ~InventoryHeatDialog() override;
 
     QTableView* View();
-    InventoryHeatModel* Model() { return model_; }
+    inventory_heat::Model* Model() { return model_; }
 
 private slots:
     void on_pushButtonFetch_clicked();
@@ -56,7 +56,7 @@ private:
 
     QTimer* cooldown_timer_ { nullptr };
 
-    InventoryHeatModel* model_ {};
+    inventory_heat::Model* model_ {};
     const QUuid widget_id_ {};
 };
 

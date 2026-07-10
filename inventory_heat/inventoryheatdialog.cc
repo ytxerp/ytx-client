@@ -10,7 +10,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-InventoryHeatDialog::InventoryHeatDialog(InventoryHeatModel* model, const QUuid& widget_id, QWidget* parent)
+InventoryHeatDialog::InventoryHeatDialog(inventory_heat::Model* model, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::InventoryHeatDialog)
     , start_ { QDateTime(QDate::currentDate().addYears(-2), kStartTime) }

@@ -20,7 +20,8 @@
 #ifndef INVENTORYHEATENUM_H
 #define INVENTORYHEATENUM_H
 
-enum class InventoryHeatEnum : int {
+namespace inventory_heat {
+enum class RowField : int {
     kInventoryNode = 0,
     kPlaceholder,
     kOrderCount,
@@ -30,5 +31,6 @@ enum class InventoryHeatEnum : int {
     kTotalQuantity,
     kHeatScore,
 };
+}
 
 #endif // INVENTORYHEATENUM_H

@@ -23,7 +23,9 @@
 #include <QJsonObject>
 #include <QUuid>
 
-struct InventoryHeatRow final {
+namespace inventory_heat {
+
+struct Row final {
     QUuid inventory_node {};
     qint64 order_count {};
     qint64 partner_count {};
@@ -36,7 +38,7 @@ struct InventoryHeatRow final {
     void Reset();
 };
 
-inline void InventoryHeatRow::ReadJson(const QJsonObject& obj)
+inline void Row::ReadJson(const QJsonObject& obj)
 {
     if (const auto val = obj.value("inventory_node"); val.isString())
         inventory_node = QUuid::fromString(val.toString());
@@ -60,6 +62,7 @@ inline void InventoryHeatRow::ReadJson(const QJsonObject& obj)
         heat_score = val.toDouble();
 }
 
-inline void InventoryHeatRow::Reset() { *this = InventoryHeatRow {}; }
+inline void Row::Reset() { *this = Row {}; }
+}
 
 #endif // INVENTORYHEATROW_H

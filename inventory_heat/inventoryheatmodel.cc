@@ -6,15 +6,16 @@
 #include "inventoryheatenum.h"
 #include "utils/templateutils.h"
 
-InventoryHeatModel::InventoryHeatModel(const QStringList& header, QObject* parent)
+namespace inventory_heat {
+Model::Model(const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
     , header_ { header }
 {
 }
 
-InventoryHeatModel::~InventoryHeatModel() { ResourcePool<InventoryHeatRow>::Instance().Recycle(list_); }
+Model::~Model() { ResourcePool<Row>::Instance().Recycle(list_); }
 
-QVariant InventoryHeatModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return header_.at(section);
@@ -22,7 +23,7 @@ QVariant InventoryHeatModel::headerData(int section, Qt::Orientation orientation
     return QVariant();
 }
 
-QModelIndex InventoryHeatModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -30,7 +31,7 @@ QModelIndex InventoryHeatModel::index(int row, int column, const QModelIndex& pa
     return createIndex(row, column, list_.at(row));
 }
 
-QVariant InventoryHeatModel::data(const QModelIndex& index, int role) const
+QVariant Model::data(const QModelIndex& index, int role) const
 {
     // Basic validation to prevent out-of-bounds access
     if (!index.isValid() || index.row() >= list_.size()) {
@@ -42,52 +43,52 @@ QVariant InventoryHeatModel::data(const QModelIndex& index, int role) const
         return {};
     }
 
-    const InventoryHeatEnum column { index.column() };
-    auto* entry { static_cast<InventoryHeatRow*>(index.internalPointer()) };
+    const RowField column { index.column() };
+    auto* entry { static_cast<Row*>(index.internalPointer()) };
 
     switch (column) {
-    case InventoryHeatEnum::kInventoryNode:
+    case RowField::kInventoryNode:
         return entry->inventory_node.toString(QUuid::WithoutBraces);
-    case InventoryHeatEnum::kOrderCount:
+    case RowField::kOrderCount:
         return entry->order_count;
-    case InventoryHeatEnum::kPartnerCount:
+    case RowField::kPartnerCount:
         return entry->partner_count;
-    case InventoryHeatEnum::kActiveMonths:
+    case RowField::kActiveMonths:
         return entry->active_months;
-    case InventoryHeatEnum::kActiveDays:
+    case RowField::kActiveDays:
         return entry->active_days;
-    case InventoryHeatEnum::kTotalQuantity:
+    case RowField::kTotalQuantity:
         return entry->total_quantity;
-    case InventoryHeatEnum::kHeatScore:
+    case RowField::kHeatScore:
         return entry->heat_score;
-    case InventoryHeatEnum::kPlaceholder:
+    case RowField::kPlaceholder:
         return {};
     }
 }
 
-void InventoryHeatModel::sort(int column, Qt::SortOrder order)
+void Model::sort(int column, Qt::SortOrder order)
 {
     // Convert integer column to the structured enum using brace initialization
-    const InventoryHeatEnum e_column { column };
+    const RowField e_column { column };
 
     // Define a lambda for comparison based on the selected column and sort order
-    auto Compare = [order, e_column](const InventoryHeatRow* lhs, const InventoryHeatRow* rhs) -> bool {
+    auto Compare = [order, e_column](const Row* lhs, const Row* rhs) -> bool {
         switch (e_column) {
-        case InventoryHeatEnum::kInventoryNode:
-            return utils::CompareMember(lhs, rhs, &InventoryHeatRow::inventory_node, order);
-        case InventoryHeatEnum::kOrderCount:
-            return utils::CompareMember(lhs, rhs, &InventoryHeatRow::order_count, order);
-        case InventoryHeatEnum::kPartnerCount:
-            return utils::CompareMember(lhs, rhs, &InventoryHeatRow::partner_count, order);
-        case InventoryHeatEnum::kActiveMonths:
-            return utils::CompareMember(lhs, rhs, &InventoryHeatRow::active_months, order);
-        case InventoryHeatEnum::kActiveDays:
-            return utils::CompareMember(lhs, rhs, &InventoryHeatRow::active_days, order);
-        case InventoryHeatEnum::kTotalQuantity:
-            return utils::CompareMember(lhs, rhs, &InventoryHeatRow::total_quantity, order);
-        case InventoryHeatEnum::kHeatScore:
-            return utils::CompareMember(lhs, rhs, &InventoryHeatRow::heat_score, order);
-        case InventoryHeatEnum::kPlaceholder:
+        case RowField::kInventoryNode:
+            return utils::CompareMember(lhs, rhs, &Row::inventory_node, order);
+        case RowField::kOrderCount:
+            return utils::CompareMember(lhs, rhs, &Row::order_count, order);
+        case RowField::kPartnerCount:
+            return utils::CompareMember(lhs, rhs, &Row::partner_count, order);
+        case RowField::kActiveMonths:
+            return utils::CompareMember(lhs, rhs, &Row::active_months, order);
+        case RowField::kActiveDays:
+            return utils::CompareMember(lhs, rhs, &Row::active_days, order);
+        case RowField::kTotalQuantity:
+            return utils::CompareMember(lhs, rhs, &Row::total_quantity, order);
+        case RowField::kHeatScore:
+            return utils::CompareMember(lhs, rhs, &Row::heat_score, order);
+        case RowField::kPlaceholder:
             return false;
         }
         return false;
@@ -103,14 +104,14 @@ void InventoryHeatModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void InventoryHeatModel::ResetModel(const QJsonArray& array)
+void Model::ResetModel(const QJsonArray& array)
 {
     if (array.isEmpty()) {
         qWarning() << Q_FUNC_INFO << "Received empty member array";
     }
 
     // Parse outside the reset block
-    QList<InventoryHeatRow*> new_list {};
+    QList<Row*> new_list {};
     new_list.reserve(array.size());
 
     for (const auto& value : array) {
@@ -119,15 +120,16 @@ void InventoryHeatModel::ResetModel(const QJsonArray& array)
             continue;
         }
 
-        auto* member { ResourcePool<InventoryHeatRow>::Instance().Allocate() };
+        auto* member { ResourcePool<Row>::Instance().Allocate() };
         member->ReadJson(value.toObject());
         new_list.emplaceBack(member);
     }
 
     // Keep reset block as short as possible
     beginResetModel();
-    ResourcePool<InventoryHeatRow>::Instance().Recycle(list_);
+    ResourcePool<Row>::Instance().Recycle(list_);
     list_ = std::move(new_list);
-    sort(std::to_underlying(InventoryHeatEnum::kHeatScore), Qt::DescendingOrder);
+    sort(std::to_underlying(RowField::kHeatScore), Qt::DescendingOrder);
     endResetModel();
+}
 }
