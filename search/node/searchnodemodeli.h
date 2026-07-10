@@ -22,15 +22,18 @@
 
 #include "searchnodemodel.h"
 
-class SearchNodeModelI final : public SearchNodeModel {
+namespace search {
+
+class NodeModelI final : public NodeModel {
     Q_OBJECT
 
 public:
-    SearchNodeModelI(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
+    NodeModelI(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
 };
+}
 
 #endif // SEARCHNODEMODELI_H

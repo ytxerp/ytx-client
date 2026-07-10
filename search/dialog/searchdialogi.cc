@@ -3,7 +3,7 @@
 #include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 
-SearchDialogI::SearchDialogI(SectionContext* sc, SearchNodeModel* search_node, search::EntryModel* search_entry, QWidget* parent)
+SearchDialogI::SearchDialogI(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QWidget* parent)
     : SearchDialog(sc, search_node, search_entry, parent)
 {
     TreeViewDelegate(ui->searchViewNode);

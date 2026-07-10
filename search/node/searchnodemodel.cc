@@ -4,7 +4,9 @@
 
 #include "utils/tagutils.h"
 
-SearchNodeModel::SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
+namespace search {
+
+NodeModel::NodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
     , tree_model_ { tree_model }
@@ -13,7 +15,7 @@ SearchNodeModel::SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, con
 {
 }
 
-QModelIndex SearchNodeModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex NodeModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -21,25 +23,25 @@ QModelIndex SearchNodeModel::index(int row, int column, const QModelIndex& paren
     return createIndex(row, column, node_list_.at(row));
 }
 
-QModelIndex SearchNodeModel::parent(const QModelIndex& index) const
+QModelIndex NodeModel::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int SearchNodeModel::rowCount(const QModelIndex& parent) const
+int NodeModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return node_list_.size();
 }
 
-int SearchNodeModel::columnCount(const QModelIndex& parent) const
+int NodeModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return info_.node_header.size();
 }
 
-QVariant SearchNodeModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant NodeModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return info_.node_header.at(section);
@@ -47,7 +49,7 @@ QVariant SearchNodeModel::headerData(int section, Qt::Orientation orientation, i
     return QVariant();
 }
 
-void SearchNodeModel::Search(const QString& text)
+void NodeModel::Search(const QString& text)
 {
     // Prepare the result list (do not modify the model yet)
     QList<Node*> results {};
@@ -71,4 +73,5 @@ void SearchNodeModel::Search(const QString& text)
     beginResetModel();
     node_list_ = std::move(results); // Move results to avoid copying
     endResetModel();
+}
 }

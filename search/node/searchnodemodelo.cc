@@ -9,12 +9,14 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SearchNodeModelO::SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
-    : SearchNodeModel { info, tree_model, tag_hash, parent }
+namespace search {
+
+NodeModelO::NodeModelO(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
+    : NodeModel { info, tree_model, tag_hash, parent }
 {
 }
 
-void SearchNodeModelO::RNodeSearch(const QJsonObject& obj)
+void NodeModelO::RNodeSearch(const QJsonObject& obj)
 {
     // 1. Prepare temporary list to store nodes
     QList<Node*> temp_list {};
@@ -44,7 +46,7 @@ void SearchNodeModelO::RNodeSearch(const QJsonObject& obj)
     endResetModel();
 }
 
-QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
+QVariant NodeModelO::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -94,7 +96,7 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
     }
 }
 
-void SearchNodeModelO::sort(int column, Qt::SortOrder order)
+void NodeModelO::sort(int column, Qt::SortOrder order)
 {
     const NodeEnumO e_column { column };
 
@@ -148,7 +150,7 @@ void SearchNodeModelO::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SearchNodeModelO::Search(CString& text)
+void NodeModelO::Search(CString& text)
 {
     if (text.trimmed().isEmpty()) {
         ClearModel();
@@ -174,11 +176,12 @@ void SearchNodeModelO::Search(CString& text)
     ClearModel();
 }
 
-void SearchNodeModelO::ClearModel()
+void NodeModelO::ClearModel()
 {
     if (!node_list_.isEmpty()) {
         beginResetModel();
         NodePool::Instance().Recycle(node_list_, section_);
         endResetModel();
     }
+}
 }

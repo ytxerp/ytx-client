@@ -6,7 +6,7 @@
 #include "ui_searchdialog.h"
 
 SearchDialogO::SearchDialogO(
-    SectionContext* sc, SearchNodeModel* search_node, search::EntryModel* search_entry, CTreeModel* inventory, CTreeModel* partner, QWidget* parent)
+    SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, CTreeModel* inventory, CTreeModel* partner, QWidget* parent)
     : SearchDialog(sc, search_node, search_entry, parent)
     , inventory_ { inventory }
     , partner_ { partner }

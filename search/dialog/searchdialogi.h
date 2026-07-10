@@ -26,7 +26,7 @@ class SearchDialogI final : public SearchDialog {
     Q_OBJECT
 
 public:
-    SearchDialogI(SectionContext* sc, SearchNodeModel* search_node, search::EntryModel* search_entry, QWidget* parent = nullptr);
+    SearchDialogI(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QWidget* parent = nullptr);
 
 private slots:
     void REntryDoubleClicked(const QModelIndex& index) override;

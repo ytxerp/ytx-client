@@ -22,11 +22,13 @@
 
 #include "searchnodemodel.h"
 
-class SearchNodeModelO final : public SearchNodeModel {
+namespace search {
+
+class NodeModelO final : public NodeModel {
     Q_OBJECT
 
 public:
-    SearchNodeModelO(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
+    NodeModelO(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
 
 public slots:
     void RNodeSearch(const QJsonObject& obj) override;
@@ -40,5 +42,6 @@ public:
 private:
     void ClearModel();
 };
+}
 
 #endif // SEARCHNODEMODELO_H

@@ -48,7 +48,7 @@ class SearchDialog : public QDialog {
     Q_OBJECT
 
 protected:
-    SearchDialog(SectionContext* sc, SearchNodeModel* search_node, search::EntryModel* search_entry, QWidget* parent = nullptr);
+    SearchDialog(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QWidget* parent = nullptr);
     ~SearchDialog() override;
 
 signals:
@@ -81,7 +81,7 @@ protected:
 protected:
     Ui::SearchDialog* ui;
 
-    SearchNodeModel* search_node_ {};
+    search::NodeModel* search_node_ {};
     search::EntryModel* search_entry_ {};
     CTreeModel* tree_model_ {};
     QButtonGroup* content_group_ {};

@@ -26,37 +26,37 @@ void MainWindow::on_actionSearch_triggered()
     if (!section_settings_)
         return;
 
-    SearchNodeModel* node {};
+    search::NodeModel* node {};
     search::EntryModel* entry {};
     SearchDialog* dialog {};
 
     switch (start_) {
     case Section::kFinance:
-        node = new SearchNodeModelF(sc_->info, sc_->tree_model, sc_->tag_hash, this);
+        node = new search::NodeModelF(sc_->info, sc_->tree_model, sc_->tag_hash, this);
         entry = new search::EntryModelF(sc_->info, sc_->tag_hash, this);
         dialog = new SearchDialogF(sc_, node, entry, this);
         break;
     case Section::kInventory:
-        node = new SearchNodeModelI(sc_->info, sc_->tree_model, sc_->tag_hash, this);
+        node = new search::NodeModelI(sc_->info, sc_->tree_model, sc_->tag_hash, this);
         entry = new search::EntryModelI(sc_->info, sc_->tag_hash, this);
         dialog = new SearchDialogI(sc_, node, entry, this);
         break;
     case Section::kTask:
-        node = new SearchNodeModelT(sc_->info, sc_->tree_model, sc_->tag_hash, this);
+        node = new search::NodeModelT(sc_->info, sc_->tree_model, sc_->tag_hash, this);
         entry = new search::EntryModelT(sc_->info, sc_->tag_hash, this);
         dialog = new SearchDialogT(sc_, node, entry, this);
         break;
     case Section::kPartner:
-        node = new SearchNodeModelP(sc_->info, sc_->tree_model, sc_->tag_hash, this);
+        node = new search::NodeModelP(sc_->info, sc_->tree_model, sc_->tag_hash, this);
         entry = new search::EntryModelP(sc_->entry_hub, sc_->info, sc_->tag_hash, this);
         dialog = new SearchDialogP(sc_, node, entry, sc_i_.tree_model, this);
         break;
     case Section::kSale:
     case Section::kPurchase:
-        node = new SearchNodeModelO(sc_->info, sc_->tree_model, sc_->tag_hash, this);
+        node = new search::NodeModelO(sc_->info, sc_->tree_model, sc_->tag_hash, this);
         entry = new search::EntryModelO(sc_->info, sc_->tag_hash, this);
         dialog = new SearchDialogO(sc_, node, entry, sc_i_.tree_model, sc_p_.tree_model, this);
-        connect(WebSocket::Instance(), &WebSocket::SNodeSearch, node, &SearchNodeModel::RNodeSearch);
+        connect(WebSocket::Instance(), &WebSocket::SNodeSearch, node, &search::NodeModel::RNodeSearch);
         break;
     default:
         break;

@@ -29,16 +29,18 @@
 
 using utils::DerivedPtr;
 
-class SearchNodeModel : public QAbstractItemModel {
+namespace search {
+
+class NodeModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    ~SearchNodeModel() override { };
+    ~NodeModel() override { };
 
 public slots:
     virtual void RNodeSearch(const QJsonObject& obj) { Q_UNUSED(obj) }
 
 protected:
-    SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
+    NodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -58,5 +60,6 @@ protected:
     const Section section_ {};
     const QHash<QUuid, TagRow*>& tag_hash_ {};
 };
+}
 
 #endif // SEARCHNODEMODEL_H

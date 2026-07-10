@@ -1,11 +1,13 @@
 #include "searchnodemodelf.h"
 
-SearchNodeModelF::SearchNodeModelF(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
-    : SearchNodeModel { info, tree_model, tag_hash, parent }
+namespace search {
+
+NodeModelF::NodeModelF(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
+    : NodeModel { info, tree_model, tag_hash, parent }
 {
 }
 
-QVariant SearchNodeModelF::data(const QModelIndex& index, int role) const
+QVariant NodeModelF::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -45,7 +47,7 @@ QVariant SearchNodeModelF::data(const QModelIndex& index, int role) const
     }
 }
 
-void SearchNodeModelF::sort(int column, Qt::SortOrder order)
+void NodeModelF::sort(int column, Qt::SortOrder order)
 {
     const NodeEnumF e_column { column };
 
@@ -87,4 +89,5 @@ void SearchNodeModelF::sort(int column, Qt::SortOrder order)
     emit layoutAboutToBeChanged();
     std::sort(node_list_.begin(), node_list_.end(), Compare);
     emit layoutChanged();
+}
 }

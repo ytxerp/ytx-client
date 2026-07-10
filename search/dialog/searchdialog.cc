@@ -11,7 +11,7 @@
 #include "utils/nodeutils.h"
 #include "utils/templateutils.h"
 
-SearchDialog::SearchDialog(SectionContext* sc, SearchNodeModel* search_node, search::EntryModel* search_entry, QWidget* parent)
+SearchDialog::SearchDialog(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::SearchDialog)
     , search_node_ { search_node }
