@@ -277,7 +277,7 @@ void MainWindow::DeleteSettlement(SettlementPrimaryWidget* widget)
 
     auto* settlement { static_cast<SettlementPrimary*>(current_index.internalPointer()) };
 
-    if (settlement->status == SettlementStatus::kSettled) {
+    if (settlement->status == SettlementStatus::kReleased) {
         utils::ShowNotification(QMessageBox::Information, tr("Settlement Released"),
             tr("This settlement has already been released and cannot be deleted.\nYou need to recall it first before making changes."),
             time_const::kAutoCloseMs);

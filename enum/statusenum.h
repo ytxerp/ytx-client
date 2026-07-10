@@ -27,11 +27,11 @@
 #ifndef STATUSENUM_H
 #define STATUSENUM_H
 
-/** @brief Workflow status of a node. Just for Order section. */
+/** @brief Workflow status of an order node. */
 enum class NodeStatus { kDraft = 0, kReleased, kRecalled };
 
-/** @brief Settlement status of a settlement bill/order. */
-enum class SettlementStatus { kUnsettled = 0, kSettled };
+/** @brief Workflow status of a settlement bill. */
+enum class SettlementStatus { kDraft = 0, kReleased };
 
 /** @brief EntryStatus of an entry. */
 enum class EntryStatus { kUnmarked = 0, kMarked };

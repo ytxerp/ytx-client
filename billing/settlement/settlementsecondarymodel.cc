@@ -78,7 +78,7 @@ bool SettlementSecondaryModel::setData(const QModelIndex& index, const QVariant&
     if (!index.isValid() || index.column() != std::to_underlying(SettlementSecondaryEnum::kIsSettled) || role != Qt::EditRole)
         return false;
 
-    if (status_ == SettlementStatus::kSettled)
+    if (status_ == SettlementStatus::kReleased)
         return false;
 
     if (data(index, role) == value)
@@ -159,10 +159,10 @@ void SettlementSecondaryModel::ResetModel(const QJsonArray& array)
         list_.clear();
 
         for (auto* entry : std::as_const(list_cache_)) {
-            if (status_ == SettlementStatus::kSettled && entry->is_settled)
+            if (status_ == SettlementStatus::kReleased && entry->is_settled)
                 list_.emplaceBack(entry);
 
-            if (status_ == SettlementStatus::kUnsettled)
+            if (status_ == SettlementStatus::kDraft)
                 list_.emplaceBack(entry);
         }
 
@@ -180,11 +180,11 @@ void SettlementSecondaryModel::UpdateStatus(SettlementStatus status)
 
     beginResetModel();
 
-    if (status == SettlementStatus::kSettled) {
+    if (status == SettlementStatus::kReleased) {
         list_.erase(std::remove_if(list_.begin(), list_.end(), [](const SettlementSecondary* node) { return !node->is_settled; }), list_.end());
     }
 
-    if (status == SettlementStatus::kUnsettled) {
+    if (status == SettlementStatus::kDraft) {
         for (auto* node : std::as_const(list_cache_))
             node->is_settled = false;
 

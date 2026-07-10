@@ -68,7 +68,7 @@ void SettlementSecondaryWidget::InitData()
 
     ui->comboPartner->setReadOnly(settlement_.sync_state != SyncState::kCreating);
 
-    const bool is_settled { settlement_.status == SettlementStatus::kSettled };
+    const bool is_settled { settlement_.status == SettlementStatus::kReleased };
 
     LockWidget(is_settled);
 }
@@ -134,7 +134,7 @@ void SettlementSecondaryWidget::on_comboPartner_currentIndexChanged(int /*index*
         return;
 
     settlement_.amount = 0.0;
-    settlement_.status = SettlementStatus::kUnsettled;
+    settlement_.status = SettlementStatus::kDraft;
     settlement_.description.clear();
 
     ui->dSpinAmount->setValue(0.0);
@@ -149,7 +149,7 @@ void SettlementSecondaryWidget::on_comboPartner_currentIndexChanged(int /*index*
 void SettlementSecondaryWidget::on_pBtnRelease_clicked()
 {
     Q_ASSERT(!settlement_.partner_id.isNull());
-    Q_ASSERT(settlement_.status == SettlementStatus::kUnsettled);
+    Q_ASSERT(settlement_.status == SettlementStatus::kDraft);
 
     {
         if (!model_->HasPendingUpdate()) {
@@ -172,7 +172,7 @@ void SettlementSecondaryWidget::on_pBtnRelease_clicked()
         message.insert(kSettlementId, settlement_.id.toString(QUuid::WithoutBraces));
 
         if (settlement_.sync_state == SyncState::kSynced) {
-            pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kSettled));
+            pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kReleased));
             pending_update_.insert(kAmount, QString::number(settlement_.amount, 'f', numeric_const::kDecimalPlaces4));
             pending_update_.insert(kVersion, settlement_.version);
 
@@ -183,7 +183,7 @@ void SettlementSecondaryWidget::on_pBtnRelease_clicked()
         }
 
         if (settlement_.sync_state == SyncState::kCreating) {
-            settlement_.status = SettlementStatus::kSettled;
+            settlement_.status = SettlementStatus::kReleased;
             message.insert(kSettlement, settlement_.WriteJson());
             WebSocket::Instance()->SendMessage(WsKey::kSettlementInsert, message);
         }
@@ -194,7 +194,7 @@ void SettlementSecondaryWidget::on_pBtnRelease_clicked()
 
 void SettlementSecondaryWidget::on_pBtnRecall_clicked()
 {
-    Q_ASSERT(settlement_.status == SettlementStatus::kSettled);
+    Q_ASSERT(settlement_.status == SettlementStatus::kReleased);
 
     if (!ValidateSyncState())
         return;
@@ -205,7 +205,7 @@ void SettlementSecondaryWidget::on_pBtnRecall_clicked()
 
     model_->Finalize(message);
 
-    pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kUnsettled));
+    pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kDraft));
     pending_update_.insert(kVersion, settlement_.version);
 
     message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
@@ -231,10 +231,10 @@ void SettlementSecondaryWidget::RecallSucceeded(int version)
     settlement_.amount = 0.0;
 
     settlement_.version = version;
-    settlement_.status = SettlementStatus::kUnsettled;
+    settlement_.status = SettlementStatus::kDraft;
 
     settlement_.sync_state = SyncState::kSynced;
-    model_->UpdateStatus(SettlementStatus::kUnsettled);
+    model_->UpdateStatus(SettlementStatus::kDraft);
 
     LockWidget(false);
 }
@@ -242,10 +242,10 @@ void SettlementSecondaryWidget::RecallSucceeded(int version)
 void SettlementSecondaryWidget::UpdateSucceeded(int version)
 {
     settlement_.version = version;
-    settlement_.status = SettlementStatus::kSettled;
+    settlement_.status = SettlementStatus::kReleased;
 
     settlement_.sync_state = SyncState::kSynced;
-    model_->UpdateStatus(SettlementStatus::kSettled);
+    model_->UpdateStatus(SettlementStatus::kReleased);
 
     ui->tableView->clearSelection();
     LockWidget(true);
