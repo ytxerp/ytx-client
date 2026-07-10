@@ -3,9 +3,11 @@
 #include "component/constant.h"
 #include "component/constantint.h"
 
-void SettlementPrimary::Reset() { *this = SettlementPrimary {}; }
+namespace settlement {
 
-void SettlementPrimary::ReadJson(const QJsonObject& object)
+void PrimaryRow::Reset() { *this = PrimaryRow {}; }
+
+void PrimaryRow::ReadJson(const QJsonObject& object)
 {
     // Data loaded from server
     sync_state = SyncState::kSynced;
@@ -26,7 +28,7 @@ void SettlementPrimary::ReadJson(const QJsonObject& object)
         version = val.toInt();
 }
 
-QJsonObject SettlementPrimary::WriteJson() const
+QJsonObject PrimaryRow::WriteJson() const
 {
     QJsonObject obj {};
 
@@ -40,9 +42,9 @@ QJsonObject SettlementPrimary::WriteJson() const
     return obj;
 }
 
-void SettlementSecondary::Reset() { *this = SettlementSecondary {}; }
+void SecondaryRow::Reset() { *this = SecondaryRow {}; }
 
-void SettlementSecondary::ReadJson(const QJsonObject& object)
+void SecondaryRow::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());
@@ -56,4 +58,5 @@ void SettlementSecondary::ReadJson(const QJsonObject& object)
         amount = val.toString().toDouble();
     if (const auto val = object.value(kIsSettled); val.isBool())
         is_settled = val.toBool();
+}
 }

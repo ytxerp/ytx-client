@@ -24,11 +24,13 @@
 
 #include "settlement.h"
 
-class SettlementSecondaryModel final : public QAbstractItemModel {
+namespace settlement {
+
+class SecondaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SettlementSecondaryModel(const QStringList& header, SettlementStatus status, QObject* parent = nullptr);
-    ~SettlementSecondaryModel() override;
+    explicit SecondaryModel(const QStringList& header, SettlementStatus status, QObject* parent = nullptr);
+    ~SecondaryModel() override;
 
 signals:
     void SSyncAmount(double amount);
@@ -57,10 +59,12 @@ private:
 
     SettlementStatus status_ {};
 
-    QList<SettlementSecondary*> list_ {};
-    QList<SettlementSecondary*> list_cache_ {};
+    QList<SecondaryRow*> list_ {};
+    QList<SecondaryRow*> list_cache_ {};
 
     QSet<QUuid> pending_selected_ {};
 };
+
+}
 
 #endif // SETTLEMENTSECONDARYMODEL_H

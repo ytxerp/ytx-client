@@ -497,38 +497,38 @@ void MainWindow::DelegateStatementEntry(QTableView* table_view, CSectionConfig& 
 void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& config) const
 {
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kAmount), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(settlement::PrimaryField::kAmount), amount);
 
     auto* status { new StatusDelegate(QEvent::MouseButtonDblClick, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(settlement::PrimaryField::kStatus), status);
 
     auto* line { new Line(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kDescription), line);
+    table_view->setItemDelegateForColumn(std::to_underlying(settlement::PrimaryField::kDescription), line);
 
     auto* issued_time { new IssuedTime(datetime_format::kDashedDate, false, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(settlement::PrimaryField::kIssuedTime), issued_time);
 
     auto model { sc_p_.tree_model };
     const auto unit { start_ == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor };
 
     auto* filter_model { model->IncludeUnit(unit, table_view) };
     auto* node { new RhsNode(model, filter_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementPrimaryEnum::kPartner), node);
+    table_view->setItemDelegateForColumn(std::to_underlying(settlement::PrimaryField::kPartner), node);
 }
 
 void MainWindow::DelegateSettlementNode(QTableView* table_view, CSectionConfig& config) const
 {
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementSecondaryEnum::kAmount), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(settlement::SecondaryField::kAmount), amount);
 
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementSecondaryEnum::kEmployee), employee);
+    table_view->setItemDelegateForColumn(std::to_underlying(settlement::SecondaryField::kEmployee), employee);
 
     auto* status { new Bool(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementSecondaryEnum::kIsSettled), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(settlement::SecondaryField::kIsSettled), status);
 
     auto* issued_time { new IssuedTimeR(datetime_format::kDashedDate, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SettlementSecondaryEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(settlement::SecondaryField::kIssuedTime), issued_time);
 }
 
 void MainWindow::DelegateTag(QTableView* table_view) const

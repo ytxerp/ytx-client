@@ -20,7 +20,9 @@
 #ifndef SETTLEMENTENUM_H
 #define SETTLEMENTENUM_H
 
-enum class SettlementPrimaryEnum {
+namespace settlement {
+
+enum class PrimaryField {
     kId = 0,
     kVersion,
     kPartner,
@@ -30,7 +32,7 @@ enum class SettlementPrimaryEnum {
     kAmount,
 };
 
-enum class SettlementSecondaryEnum {
+enum class SecondaryField {
     kId = 0,
     kIssuedTime,
     kAmount,
@@ -38,5 +40,7 @@ enum class SettlementSecondaryEnum {
     kDescription,
     kEmployee,
 };
+
+}
 
 #endif // SETTLEMENTENUM_H

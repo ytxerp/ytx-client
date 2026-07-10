@@ -11,7 +11,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SettlementPrimaryWidget::SettlementPrimaryWidget(SettlementPrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent)
+SettlementPrimaryWidget::SettlementPrimaryWidget(settlement::PrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SettlementPrimaryWidget)
     , model_ { model }

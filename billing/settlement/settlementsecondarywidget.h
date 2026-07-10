@@ -41,12 +41,12 @@ signals:
     void SUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
 
 public:
-    explicit SettlementSecondaryWidget(TreeModel* tree_model_p, SettlementSecondaryModel* model, CSectionConfig& config, const SettlementPrimary& settlement,
-        CUuid& widget_id, CUuid& parent_widget_id, Section section, QWidget* parent = nullptr);
+    explicit SettlementSecondaryWidget(TreeModel* tree_model_p, settlement::SecondaryModel* model, CSectionConfig& config,
+        const settlement::PrimaryRow& settlement, CUuid& widget_id, CUuid& parent_widget_id, Section section, QWidget* parent = nullptr);
     ~SettlementSecondaryWidget() override;
 
     QTableView* View() const;
-    SettlementSecondaryModel* Model() const { return model_; }
+    settlement::SecondaryModel* Model() const { return model_; }
 
     void InsertSucceeded(int version);
     void RecallSucceeded(int version);
@@ -73,8 +73,8 @@ private:
 private:
     Ui::SettlementSecondaryWidget* ui;
 
-    SettlementPrimary settlement_ {};
-    SettlementSecondaryModel* model_ {};
+    settlement::PrimaryRow settlement_ {};
+    settlement::SecondaryModel* model_ {};
     CSectionConfig& config_ {};
 
     TreeModel* tree_model_p_ {};

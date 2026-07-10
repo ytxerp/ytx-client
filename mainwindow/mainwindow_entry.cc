@@ -22,12 +22,12 @@ void MainWindow::on_actionAppendEntry_triggered()
         if (widget) {
             const QUuid settlement_widget_id { widget->WidgetId() };
 
-            SettlementPrimary settlement {};
+            settlement::PrimaryRow settlement {};
 
             settlement.issued_time = QDateTime::currentDateTimeUtc();
             settlement.id = QUuid::createUuidV7();
 
-            SettlementItemTab(settlement_widget_id, settlement);
+            CreateSettlementSecondary(settlement_widget_id, settlement);
             return;
         }
     }

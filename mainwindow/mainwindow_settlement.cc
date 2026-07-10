@@ -14,7 +14,7 @@ void MainWindow::on_actionSettlement_triggered()
 
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new SettlementPrimaryModel(header_info_.settlement, start_, this) };
+    auto* model { new settlement::PrimaryModel(header_info_.settlement, start_, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new SettlementPrimaryWidget(model, widget_id, start_, this) };
@@ -30,28 +30,28 @@ void MainWindow::on_actionSettlement_triggered()
         auto* view { widget->View() };
 
         connect(view, &QTableView::doubleClicked, this, &MainWindow::RSettlementTableViewDoubleClicked);
-        InitTableView(view, std::to_underlying(SettlementPrimaryEnum::kId), std::to_underlying(SettlementPrimaryEnum::kVersion),
-            std::to_underlying(SettlementPrimaryEnum::kDescription));
+        InitTableView(view, std::to_underlying(settlement::PrimaryField::kId), std::to_underlying(settlement::PrimaryField::kVersion),
+            std::to_underlying(settlement::PrimaryField::kDescription));
         DelegateSettlement(view, sc_->section_config);
     }
 
     RegisterWidget(widget, widget_id, WidgetRole::kSettlement);
 }
 
-void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const SettlementPrimary& settlement)
+void MainWindow::CreateSettlementSecondary(const QUuid& primary_widget_id, const settlement::PrimaryRow& primary_row)
 {
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new SettlementSecondaryModel(header_info_.settlement_item, settlement.status, this) };
+    auto* model { new settlement::SecondaryModel(header_info_.settlement_item, primary_row.status, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new SettlementSecondaryWidget(sc_p_.tree_model, model, sc_->section_config, settlement, widget_id, parent_widget_id, start_, this) };
-    connect(model, &SettlementSecondaryModel::SSyncAmount, widget, &SettlementSecondaryWidget::RSyncAmount);
+    auto* widget { new SettlementSecondaryWidget(sc_p_.tree_model, model, sc_->section_config, primary_row, widget_id, primary_widget_id, start_, this) };
+    connect(model, &settlement::SecondaryModel::SSyncAmount, widget, &SettlementSecondaryWidget::RSyncAmount);
     connect(widget, &SettlementSecondaryWidget::SUpdatePartner, this, &MainWindow::RUpdatePartner);
 
     {
-        const QString name { sc_p_.tree_model->Name(settlement.partner_id) };
-        const QString label { settlement.sync_state == SyncState::kSynced ? QString("%1-%2").arg(tr("Settlement"), name) : tr("Settlement") };
+        const QString name { sc_p_.tree_model->Name(primary_row.partner_id) };
+        const QString label { primary_row.sync_state == SyncState::kSynced ? QString("%1-%2").arg(tr("Settlement"), name) : tr("Settlement") };
 
         const int tab_index { sc_->tab_widget->addTab(widget, label) };
         auto* tab_bar { sc_->tab_widget->tabBar() };
@@ -61,7 +61,7 @@ void MainWindow::SettlementItemTab(const QUuid& parent_widget_id, const Settleme
 
     {
         auto* view { widget->View() };
-        InitTableView(view, std::to_underlying(SettlementSecondaryEnum::kId), -1, std::to_underlying(SettlementSecondaryEnum::kDescription));
+        InitTableView(view, std::to_underlying(settlement::SecondaryField::kId), -1, std::to_underlying(settlement::SecondaryField::kDescription));
         DelegateSettlementNode(view, sc_->section_config);
     }
 
@@ -93,14 +93,14 @@ void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
     Q_ASSERT(qobject_cast<SettlementPrimaryWidget*>(current_widget));
     auto* settlement_widget { static_cast<SettlementPrimaryWidget*>(current_widget) };
 
-    if (index.column() != std::to_underlying(SettlementPrimaryEnum::kPartner))
+    if (index.column() != std::to_underlying(settlement::PrimaryField::kPartner))
         return;
 
-    auto* settlement { static_cast<SettlementPrimary*>(index.internalPointer()) };
+    auto* settlement { static_cast<settlement::PrimaryRow*>(index.internalPointer()) };
 
     const QUuid settlement_widget_id { settlement_widget->WidgetId() };
 
-    SettlementItemTab(settlement_widget_id, *settlement);
+    CreateSettlementSecondary(settlement_widget_id, *settlement);
 }
 
 void MainWindow::RAckSettlementItem(Section section, const QUuid& widget_id, const QJsonArray& array)
@@ -153,7 +153,7 @@ void MainWindow::RInsertSettlement(const QJsonObject& obj)
             auto* model { d_parent_widget->Model() };
 
             {
-                auto* settlement { ResourcePool<SettlementPrimary>::Instance().Allocate() };
+                auto* settlement { ResourcePool<settlement::PrimaryRow>::Instance().Allocate() };
                 settlement->ReadJson(settlement_obj);
 
                 model->InsertSucceeded(settlement);
@@ -163,7 +163,7 @@ void MainWindow::RInsertSettlement(const QJsonObject& obj)
                 auto* view { d_parent_widget->View() };
 
                 const int last_row { model->rowCount() - 1 };
-                const QModelIndex last_index { model->index(last_row, std::to_underlying(SettlementPrimaryEnum::kPartner)) };
+                const QModelIndex last_index { model->index(last_row, std::to_underlying(settlement::PrimaryField::kPartner)) };
 
                 view->setCurrentIndex(last_index);
                 view->selectionModel()->select(last_index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
@@ -275,7 +275,7 @@ void MainWindow::DeleteSettlement(SettlementPrimaryWidget* widget)
     if (!current_index.isValid())
         return;
 
-    auto* settlement { static_cast<SettlementPrimary*>(current_index.internalPointer()) };
+    auto* settlement { static_cast<settlement::PrimaryRow*>(current_index.internalPointer()) };
 
     if (settlement->status == SettlementStatus::kReleased) {
         utils::ShowNotification(QMessageBox::Information, tr("Settlement Released"),

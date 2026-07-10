@@ -7,8 +7,8 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SettlementSecondaryWidget::SettlementSecondaryWidget(TreeModel* tree_model_p, SettlementSecondaryModel* model, CSectionConfig& config,
-    const SettlementPrimary& settlement, CUuid& widget_id, CUuid& parent_widget_id, Section section, QWidget* parent)
+SettlementSecondaryWidget::SettlementSecondaryWidget(TreeModel* tree_model_p, settlement::SecondaryModel *model, CSectionConfig& config,
+    const settlement::PrimaryRow &settlement, CUuid& widget_id, CUuid& parent_widget_id, Section section, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SettlementSecondaryWidget)
     , settlement_ { settlement }

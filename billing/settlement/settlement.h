@@ -26,7 +26,9 @@
 #include "enum/stateenum.h"
 #include "enum/statusenum.h"
 
-struct SettlementPrimary final {
+namespace settlement {
+
+struct PrimaryRow final {
     QUuid id {};
     QUuid partner_id {};
     QDateTime issued_time {};
@@ -43,7 +45,7 @@ struct SettlementPrimary final {
     QJsonObject WriteJson() const;
 };
 
-struct SettlementSecondary final {
+struct SecondaryRow final {
     QUuid id {};
     QUuid employee_id {};
     QDateTime issued_time {};
@@ -54,5 +56,7 @@ struct SettlementSecondary final {
     void Reset();
     void ReadJson(const QJsonObject& object);
 };
+
+}
 
 #endif // SETTLEMENT_H

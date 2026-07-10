@@ -26,11 +26,13 @@
 #include "enum/section.h"
 #include "settlement.h"
 
-class SettlementPrimaryModel final : public QAbstractItemModel {
+namespace settlement {
+
+class PrimaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit SettlementPrimaryModel(const QStringList& header, Section section, QObject* parent = nullptr);
-    ~SettlementPrimaryModel() override;
+    explicit PrimaryModel(const QStringList& header, Section section, QObject* parent = nullptr);
+    ~PrimaryModel() override;
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -45,21 +47,23 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-    bool InsertSucceeded(SettlementPrimary* settlement);
+    bool InsertSucceeded(PrimaryRow* settlement);
     void RecallSucceeded(const QUuid& settlement_id, const QJsonObject& update);
     void UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update);
     void ResetModel(const QJsonArray& array);
 
-    SettlementPrimary* FindSettlement(const QUuid& settlement_id) const
+    PrimaryRow* FindSettlement(const QUuid& settlement_id) const
     {
-        auto it = std::ranges::find_if(list_, [&settlement_id](const SettlementPrimary* s) { return s && s->id == settlement_id; });
+        auto it = std::ranges::find_if(list_, [&settlement_id](const PrimaryRow* s) { return s && s->id == settlement_id; });
         return it != list_.end() ? *it : nullptr;
     }
 
 private:
     const QStringList& header_;
     const Section section_ {};
-    QList<SettlementPrimary*> list_ {};
+    QList<PrimaryRow*> list_ {};
 };
+
+}
 
 #endif // SETTLEMENTPRIMARYMODEL_H

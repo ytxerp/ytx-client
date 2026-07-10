@@ -8,16 +8,18 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SettlementPrimaryModel::SettlementPrimaryModel(const QStringList& header, Section section, QObject* parent)
+namespace settlement {
+
+PrimaryModel::PrimaryModel(const QStringList& header, Section section, QObject* parent)
     : QAbstractItemModel { parent }
     , header_ { header }
     , section_ { section }
 {
 }
 
-SettlementPrimaryModel::~SettlementPrimaryModel() { ResourcePool<SettlementPrimary>::Instance().Recycle(list_); }
+PrimaryModel::~PrimaryModel() { ResourcePool<PrimaryRow>::Instance().Recycle(list_); }
 
-QModelIndex SettlementPrimaryModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex PrimaryModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -25,51 +27,51 @@ QModelIndex SettlementPrimaryModel::index(int row, int column, const QModelIndex
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex SettlementPrimaryModel::parent(const QModelIndex& index) const
+QModelIndex PrimaryModel::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int SettlementPrimaryModel::rowCount(const QModelIndex& parent) const
+int PrimaryModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return list_.size();
 }
 
-int SettlementPrimaryModel::columnCount(const QModelIndex& parent) const
+int PrimaryModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return header_.size();
 }
 
-QVariant SettlementPrimaryModel::data(const QModelIndex& index, int role) const
+QVariant PrimaryModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    const SettlementPrimaryEnum column { index.column() };
-    auto* settlement { static_cast<SettlementPrimary*>(index.internalPointer()) };
+    const PrimaryField column { index.column() };
+    auto* settlement { static_cast<PrimaryRow*>(index.internalPointer()) };
 
     switch (column) {
-    case SettlementPrimaryEnum::kId:
+    case PrimaryField::kId:
         return settlement->id;
-    case SettlementPrimaryEnum::kVersion:
+    case PrimaryField::kVersion:
         return settlement->version;
-    case SettlementPrimaryEnum::kIssuedTime:
+    case PrimaryField::kIssuedTime:
         return settlement->issued_time;
-    case SettlementPrimaryEnum::kDescription:
+    case PrimaryField::kDescription:
         return settlement->description;
-    case SettlementPrimaryEnum::kStatus:
+    case PrimaryField::kStatus:
         return std::to_underlying(settlement->status);
-    case SettlementPrimaryEnum::kAmount:
+    case PrimaryField::kAmount:
         return settlement->amount;
-    case SettlementPrimaryEnum::kPartner:
+    case PrimaryField::kPartner:
         return settlement->partner_id;
     }
 }
 
-QVariant SettlementPrimaryModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant PrimaryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return header_.at(section);
@@ -77,24 +79,24 @@ QVariant SettlementPrimaryModel::headerData(int section, Qt::Orientation orienta
     return QVariant();
 }
 
-void SettlementPrimaryModel::sort(int column, Qt::SortOrder order)
+void PrimaryModel::sort(int column, Qt::SortOrder order)
 {
-    const SettlementPrimaryEnum e_column { column };
+    const PrimaryField e_column { column };
 
-    auto Compare = [e_column, order](const SettlementPrimary* lhs, const SettlementPrimary* rhs) -> bool {
+    auto Compare = [e_column, order](const PrimaryRow* lhs, const PrimaryRow* rhs) -> bool {
         switch (e_column) {
-        case SettlementPrimaryEnum::kPartner:
-            return utils::CompareMember(lhs, rhs, &SettlementPrimary::partner_id, order);
-        case SettlementPrimaryEnum::kIssuedTime:
-            return utils::CompareMember(lhs, rhs, &SettlementPrimary::issued_time, order);
-        case SettlementPrimaryEnum::kDescription:
-            return utils::CompareMember(lhs, rhs, &SettlementPrimary::description, order);
-        case SettlementPrimaryEnum::kStatus:
-            return utils::CompareMember(lhs, rhs, &SettlementPrimary::status, order);
-        case SettlementPrimaryEnum::kAmount:
-            return utils::CompareMember(lhs, rhs, &SettlementPrimary::amount, order);
-        case SettlementPrimaryEnum::kId:
-        case SettlementPrimaryEnum::kVersion:
+        case PrimaryField::kPartner:
+            return utils::CompareMember(lhs, rhs, &PrimaryRow::partner_id, order);
+        case PrimaryField::kIssuedTime:
+            return utils::CompareMember(lhs, rhs, &PrimaryRow::issued_time, order);
+        case PrimaryField::kDescription:
+            return utils::CompareMember(lhs, rhs, &PrimaryRow::description, order);
+        case PrimaryField::kStatus:
+            return utils::CompareMember(lhs, rhs, &PrimaryRow::status, order);
+        case PrimaryField::kAmount:
+            return utils::CompareMember(lhs, rhs, &PrimaryRow::amount, order);
+        case PrimaryField::kId:
+        case PrimaryField::kVersion:
             return false;
         }
     };
@@ -104,7 +106,7 @@ void SettlementPrimaryModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-bool SettlementPrimaryModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
+bool PrimaryModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     beginRemoveRows(parent, row, row);
     auto* settlement { list_.takeAt(row) };
@@ -113,11 +115,11 @@ bool SettlementPrimaryModel::removeRows(int row, int /*count*/, const QModelInde
     QJsonObject message { JsonGen::SettlementDelete(section_, settlement->id, settlement->version) };
     WebSocket::Instance()->SendMessage(WsKey::kSettlementDelete, message);
 
-    ResourcePool<SettlementPrimary>::Instance().Recycle(settlement);
+    ResourcePool<PrimaryRow>::Instance().Recycle(settlement);
     return true;
 }
 
-bool SettlementPrimaryModel::InsertSucceeded(SettlementPrimary* settlement)
+bool PrimaryModel::InsertSucceeded(PrimaryRow* settlement)
 {
     const int row { rowCount() };
 
@@ -128,7 +130,7 @@ bool SettlementPrimaryModel::InsertSucceeded(SettlementPrimary* settlement)
     return true;
 }
 
-void SettlementPrimaryModel::RecallSucceeded(const QUuid& settlement_id, const QJsonObject& update)
+void PrimaryModel::RecallSucceeded(const QUuid& settlement_id, const QJsonObject& update)
 {
     auto* settlement { FindSettlement(settlement_id) };
     Q_ASSERT_X(settlement != nullptr, "SettlementModel::RecallSettlement", "Settlement must exist for recalled operation");
@@ -140,7 +142,7 @@ void SettlementPrimaryModel::RecallSucceeded(const QUuid& settlement_id, const Q
     settlement->amount = 0.0;
 }
 
-void SettlementPrimaryModel::UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update)
+void PrimaryModel::UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update)
 {
     auto* settlement { FindSettlement(settlement_id) };
     Q_ASSERT_X(settlement != nullptr, "SettlementModel::RecallSettlement", "Settlement must exist for recalled operation");
@@ -151,11 +153,11 @@ void SettlementPrimaryModel::UpdateSucceeded(const QUuid& settlement_id, const Q
     settlement->ReadJson(update);
 }
 
-void SettlementPrimaryModel::ResetModel(const QJsonArray& array)
+void PrimaryModel::ResetModel(const QJsonArray& array)
 {
     beginResetModel();
 
-    ResourcePool<SettlementPrimary>::Instance().Recycle(list_);
+    ResourcePool<PrimaryRow>::Instance().Recycle(list_);
 
     for (const auto& value : array) {
         if (!value.isObject())
@@ -163,12 +165,13 @@ void SettlementPrimaryModel::ResetModel(const QJsonArray& array)
 
         const QJsonObject obj { value.toObject() };
 
-        auto* settlement { ResourcePool<SettlementPrimary>::Instance().Allocate() };
+        auto* settlement { ResourcePool<PrimaryRow>::Instance().Allocate() };
         settlement->ReadJson(obj);
 
         list_.emplaceBack(settlement);
     }
 
-    sort(static_cast<int>(SettlementPrimaryEnum::kIssuedTime), Qt::AscendingOrder);
+    sort(static_cast<int>(PrimaryField::kIssuedTime), Qt::AscendingOrder);
     endResetModel();
+}
 }

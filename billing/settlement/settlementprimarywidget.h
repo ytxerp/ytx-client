@@ -34,11 +34,11 @@ class SettlementPrimaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SettlementPrimaryWidget(SettlementPrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent = nullptr);
+    explicit SettlementPrimaryWidget(settlement::PrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent = nullptr);
     ~SettlementPrimaryWidget() override;
 
     QTableView* View() const;
-    SettlementPrimaryModel* Model() const { return model_; }
+    settlement::PrimaryModel* Model() const { return model_; }
     QUuid WidgetId() const { return widget_id_; }
 
 private slots:
@@ -52,7 +52,7 @@ private:
 
 private:
     Ui::SettlementPrimaryWidget* ui;
-    SettlementPrimaryModel* model_ {};
+    settlement::PrimaryModel* model_ {};
     QDateTime start_ {};
     QDateTime end_ {};
     QTimer* cooldown_timer_ { nullptr };
