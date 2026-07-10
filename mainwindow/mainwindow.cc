@@ -182,7 +182,7 @@ void MainWindow::ResetMainwindow()
     section_settings_.clear();
     audit_info_.user_hash.clear();
 
-    ui->actionWorkspaceMember->setVisible(false);
+    ui->actionWorkspaceManager->setVisible(false);
     ui->actionAuditLog->setVisible(false);
 
     utils::CloseWidgets(widget_hash_);

@@ -340,7 +340,7 @@
     <addaction name="actionExpireDate"/>
     <addaction name="separator"/>
     <addaction name="actionProfile"/>
-    <addaction name="actionWorkspaceMember"/>
+    <addaction name="actionWorkspaceManager"/>
     <addaction name="actionAuditLog"/>
    </widget>
    <widget class="QMenu" name="menuFinance">
@@ -665,12 +665,12 @@
     <string>Profile</string>
    </property>
   </action>
-  <action name="actionWorkspaceMember">
+  <action name="actionWorkspaceManager">
    <property name="text">
-    <string>Workspace Member</string>
+    <string>Workspace Manager</string>
    </property>
    <property name="toolTip">
-    <string>Workspace Member</string>
+    <string>Workspace Manager</string>
    </property>
   </action>
   <action name="actionAuditLog">

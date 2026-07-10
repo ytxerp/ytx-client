@@ -83,7 +83,7 @@ private slots:
     void on_actionReconnect_triggered();
 
     void on_actionProfile_triggered();
-    void on_actionWorkspaceMember_triggered();
+    void on_actionWorkspaceManager_triggered();
 
     void on_actionCheckUpdates_triggered();
 

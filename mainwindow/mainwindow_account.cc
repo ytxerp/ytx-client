@@ -50,7 +50,7 @@ void MainWindow::RAccountUsername(const QJsonObject& obj)
     utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), message, time_const::kAutoCloseMs);
 }
 
-void MainWindow::on_actionWorkspaceMember_triggered()
+void MainWindow::on_actionWorkspaceManager_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 

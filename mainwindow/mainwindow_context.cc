@@ -49,7 +49,7 @@ void MainWindow::SetLoginAction(bool enable) const
     ui->actionHeatInventory->setEnabled(enable);
     ui->actionHeatPartner->setEnabled(enable);
     ui->actionProfile->setEnabled(enable);
-    ui->actionWorkspaceMember->setEnabled(enable);
+    ui->actionWorkspaceManager->setEnabled(enable);
     ui->actionAuditLog->setEnabled(enable);
 }
 
