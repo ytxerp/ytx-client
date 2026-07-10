@@ -318,11 +318,7 @@ constexpr const char* WsMsgToString(WsKey msg)
 }
 
 namespace WsField {
-// TODO: rename JSON key to "mark_operation" to match the `MarkOperation`
-// semantics (see WsKey::kEntriesMark / server-side EntriesMark::mark).
-// Must be changed together with the server, otherwise (de)serialization
-// will break.
-inline const QString kMarkOperation { QStringLiteral("mark") };
+inline const QString kMarkOperation { QStringLiteral("mark_operation") };
 inline const QString kNodeUpdate { QStringLiteral("node_update") };
 inline const QString kDefaultUnit { QStringLiteral("default_unit") };
 inline const QString kDocumentDir { QStringLiteral("document_dir") };
