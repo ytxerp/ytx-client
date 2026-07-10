@@ -40,14 +40,13 @@ public:
     ~AuditDialog() override;
 
     QTableView* View();
-    audit_hub::AuditModel* Model() { return model_; }
+    audit_hub::Model* Model() { return model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
     void InitTimer();
 
     void on_dateTimeEditStart_dateChanged(const QDate& date);
-
     void on_dateTimeEditEnd_dateChanged(const QDate& date);
 
 private:
@@ -56,7 +55,7 @@ private:
 private:
     Ui::AuditDialog* ui;
     const audit_hub::AuditInfo& info_;
-    audit_hub::AuditModel* model_ {};
+    audit_hub::Model* model_ {};
 
     QDateTime start_ {};
     QDateTime end_ {};

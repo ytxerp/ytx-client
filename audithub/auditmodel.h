@@ -28,11 +28,11 @@
 
 namespace audit_hub {
 
-class AuditModel final : public QAbstractItemModel {
+class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit AuditModel(const AuditInfo& info, QObject* parent = nullptr);
+    explicit Model(const AuditInfo& info, QObject* parent = nullptr);
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -63,11 +63,11 @@ public:
 
 private:
     const QString& NodePath(const QHash<QUuid, QString>* leaf, const QHash<QUuid, QString>* branch, const QUuid& node_id) const;
-    QVariant ResolveNode(const AuditRow* row, const QUuid& node_id) const;
+    QVariant ResolveNode(const Row* row, const QUuid& node_id) const;
     static QString JsonValueToString(const QJsonValue& value);
 
 private:
-    QList<AuditRow*> list_ {};
+    QList<Row*> list_ {};
     const AuditInfo& info_; // owned by MainWindow, outlives model
 };
 }

@@ -22,9 +22,9 @@ void MainWindow::on_actionAuditLog_triggered()
         }
 
         auto* view { dialog->View() };
-        InitTableView(view, std::to_underlying(audit_hub::AuditField::kId), -1, std::to_underlying(audit_hub::AuditField::kAfter));
+        InitTableView(view, std::to_underlying(audit_hub::RowField::kId), -1, std::to_underlying(audit_hub::RowField::kAfter));
 
-        view->horizontalHeader()->setSectionResizeMode(std::to_underlying<>(audit_hub::AuditField::kBefore), QHeaderView::Interactive);
+        view->horizontalHeader()->setSectionResizeMode(std::to_underlying<>(audit_hub::RowField::kBefore), QHeaderView::Interactive);
 
         DelegateAuditLog(view);
     }
@@ -114,9 +114,9 @@ void MainWindow::InitAuditInfo()
     };
 
     audit_info_.level_hash = {
-        { std::to_underlying(AuditLevel::kInfo), tr("Info") },
-        { std::to_underlying(AuditLevel::kWarn), tr("Warn") },
-        { std::to_underlying(AuditLevel::kCritical), tr("Critical") },
+        { std::to_underlying(Level::kInfo), tr("Info") },
+        { std::to_underlying(Level::kWarn), tr("Warn") },
+        { std::to_underlying(Level::kCritical), tr("Critical") },
     };
 
     audit_info_.ws_key_hash = {

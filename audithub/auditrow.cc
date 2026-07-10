@@ -11,9 +11,9 @@ constexpr QLatin1StringView kBefore { "before" };
 constexpr QLatin1StringView kAfter { "after" };
 }
 
-void audit_hub::AuditRow::Reset() { *this = AuditRow {}; }
+void audit_hub::Row::Reset() { *this = Row {}; }
 
-void audit_hub::AuditRow::ReadJson(const QJsonObject& object)
+void audit_hub::Row::ReadJson(const QJsonObject& object)
 {
     using namespace audit_hub::keys;
 

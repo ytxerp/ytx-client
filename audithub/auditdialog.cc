@@ -13,7 +13,7 @@ AuditDialog::AuditDialog(const audit_hub::AuditInfo& info, CUuid& widget_id, QWi
     : QDialog(parent)
     , ui(new Ui::AuditDialog)
     , info_ { info }
-    , model_ { new audit_hub::AuditModel(info, this) }
+    , model_ { new audit_hub::Model(info, this) }
     , start_ { QDateTime(QDate::currentDate().addDays(-7), kStartTime) }
     , end_ { QDateTime(QDate::currentDate().addDays(1), kStartTime) }
     , widget_id_ { widget_id }

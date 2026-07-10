@@ -7,13 +7,13 @@
 
 namespace audit_hub {
 
-AuditModel::AuditModel(const AuditInfo& info, QObject* parent)
+Model::Model(const AuditInfo& info, QObject* parent)
     : QAbstractItemModel(parent)
     , info_ { info }
 {
 }
 
-QVariant AuditModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return info_.header.at(section);
@@ -21,7 +21,7 @@ QVariant AuditModel::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-QModelIndex AuditModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -29,75 +29,75 @@ QModelIndex AuditModel::index(int row, int column, const QModelIndex& parent) co
     return createIndex(row, column, list_.at(row));
 }
 
-QVariant AuditModel::data(const QModelIndex& index, int role) const
+QVariant Model::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    const AuditField column { index.column() };
-    const auto* row { static_cast<AuditRow*>(index.internalPointer()) };
+    const RowField column { index.column() };
+    const auto* row { static_cast<Row*>(index.internalPointer()) };
 
     switch (column) {
-    case AuditField::kTargetId:
+    case RowField::kTargetId:
         return row->target_id.toString(QUuid::WithoutBraces).left(12);
-    case AuditField::kUserId:
+    case RowField::kUserId:
         return info_.user_hash.value(row->user_id);
-    case AuditField::kCreatedTime:
+    case RowField::kCreatedTime:
         return row->created_time;
-    case AuditField::kCode:
+    case RowField::kCode:
         return row->code;
-    case AuditField::kBefore:
+    case RowField::kBefore:
         return JsonValueToString(row->before);
-    case AuditField::kAfter:
+    case RowField::kAfter:
         return JsonValueToString(row->after);
-    case AuditField::kId:
+    case RowField::kId:
         return row->id;
-    case AuditField::kSection:
+    case RowField::kSection:
         return info_.section_hash.value(row->section);
-    case AuditField::kOperation:
+    case RowField::kOperation:
         return info_.ws_key_hash.value(row->operation);
-    case AuditField::kLevel:
+    case RowField::kLevel:
         return info_.level_hash.value(row->level);
-    case AuditField::kTarget:
+    case RowField::kTarget:
         return info_.target_type_hash.value(row->target);
-    case AuditField::kLhsNode:
+    case RowField::kLhsNode:
         return ResolveNode(row, row->lhs_node);
-    case AuditField::kRhsNode:
+    case RowField::kRhsNode:
         return ResolveNode(row, row->rhs_node);
     }
 }
 
-void AuditModel::sort(int column, Qt::SortOrder order)
+void Model::sort(int column, Qt::SortOrder order)
 {
     // Convert integer column to the structured enum using brace initialization
-    const AuditField e_column { column };
+    const RowField e_column { column };
 
     // Define a lambda for comparison based on the selected column and sort order
-    auto Compare = [order, e_column](const AuditRow* lhs, const AuditRow* rhs) -> bool {
+    auto Compare = [order, e_column](const Row* lhs, const Row* rhs) -> bool {
         switch (e_column) {
-        case AuditField::kTargetId:
-            return utils::CompareMember(lhs, rhs, &AuditRow::target_id, order);
-        case AuditField::kUserId:
-            return utils::CompareMember(lhs, rhs, &AuditRow::user_id, order);
-        case AuditField::kLhsNode:
-            return utils::CompareMember(lhs, rhs, &AuditRow::lhs_node, order);
-        case AuditField::kRhsNode:
-            return utils::CompareMember(lhs, rhs, &AuditRow::rhs_node, order);
-        case AuditField::kCode:
-            return utils::CompareMember(lhs, rhs, &AuditRow::code, order);
-        case AuditField::kSection:
-            return utils::CompareMember(lhs, rhs, &AuditRow::section, order);
-        case AuditField::kOperation:
-            return utils::CompareMember(lhs, rhs, &AuditRow::operation, order);
-        case AuditField::kTarget:
-            return utils::CompareMember(lhs, rhs, &AuditRow::target, order);
-        case AuditField::kLevel:
-            return utils::CompareMember(lhs, rhs, &AuditRow::level, order);
-        case AuditField::kCreatedTime:
-            return utils::CompareMember(lhs, rhs, &AuditRow::created_time, order);
-        case AuditField::kId:
-        case AuditField::kBefore:
-        case AuditField::kAfter:
+        case RowField::kTargetId:
+            return utils::CompareMember(lhs, rhs, &Row::target_id, order);
+        case RowField::kUserId:
+            return utils::CompareMember(lhs, rhs, &Row::user_id, order);
+        case RowField::kLhsNode:
+            return utils::CompareMember(lhs, rhs, &Row::lhs_node, order);
+        case RowField::kRhsNode:
+            return utils::CompareMember(lhs, rhs, &Row::rhs_node, order);
+        case RowField::kCode:
+            return utils::CompareMember(lhs, rhs, &Row::code, order);
+        case RowField::kSection:
+            return utils::CompareMember(lhs, rhs, &Row::section, order);
+        case RowField::kOperation:
+            return utils::CompareMember(lhs, rhs, &Row::operation, order);
+        case RowField::kTarget:
+            return utils::CompareMember(lhs, rhs, &Row::target, order);
+        case RowField::kLevel:
+            return utils::CompareMember(lhs, rhs, &Row::level, order);
+        case RowField::kCreatedTime:
+            return utils::CompareMember(lhs, rhs, &Row::created_time, order);
+        case RowField::kId:
+        case RowField::kBefore:
+        case RowField::kAfter:
             return false;
         }
     };
@@ -112,14 +112,14 @@ void AuditModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void AuditModel::ResetModel(const QJsonArray& array)
+void Model::ResetModel(const QJsonArray& array)
 {
     if (array.isEmpty()) {
         qWarning() << "[AuditModel]" << "Received empty array";
     }
 
     // Parse outside the reset block
-    QList<AuditRow*> new_list {};
+    QList<Row*> new_list {};
     new_list.reserve(array.size());
 
     for (const auto& value : array) {
@@ -128,20 +128,20 @@ void AuditModel::ResetModel(const QJsonArray& array)
             continue;
         }
 
-        auto* entry { ResourcePool<AuditRow>::Instance().Allocate() };
+        auto* entry { ResourcePool<Row>::Instance().Allocate() };
         entry->ReadJson(value.toObject());
         new_list.emplaceBack(entry);
     }
 
     // Keep reset block as short as possible
     beginResetModel();
-    ResourcePool<AuditRow>::Instance().Recycle(list_);
+    ResourcePool<Row>::Instance().Recycle(list_);
     list_ = std::move(new_list);
-    sort(std::to_underlying(AuditField::kCreatedTime), Qt::AscendingOrder);
+    sort(std::to_underlying(RowField::kCreatedTime), Qt::AscendingOrder);
     endResetModel();
 }
 
-const QString& AuditModel::NodePath(const QHash<QUuid, QString>* leaf, const QHash<QUuid, QString>* branch, const QUuid& node_id) const
+const QString& Model::NodePath(const QHash<QUuid, QString>* leaf, const QHash<QUuid, QString>* branch, const QUuid& node_id) const
 {
     if (const auto it = leaf->constFind(node_id); it != leaf->constEnd())
         return it.value();
@@ -153,7 +153,7 @@ const QString& AuditModel::NodePath(const QHash<QUuid, QString>* leaf, const QHa
     return kEmpty;
 }
 
-QVariant AuditModel::ResolveNode(const AuditRow* row, const QUuid& node_id) const
+QVariant Model::ResolveNode(const Row* row, const QUuid& node_id) const
 {
     switch (static_cast<Section>(row->section)) {
     case Section::kFinance:
@@ -170,7 +170,7 @@ QVariant AuditModel::ResolveNode(const AuditRow* row, const QUuid& node_id) cons
     return QVariant();
 }
 
-QString AuditModel::JsonValueToString(const QJsonValue& value)
+QString Model::JsonValueToString(const QJsonValue& value)
 {
     switch (value.type()) {
     case QJsonValue::String:

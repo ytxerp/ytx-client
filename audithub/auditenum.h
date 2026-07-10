@@ -28,13 +28,13 @@ enum class TargetType {
     kSettlement = 2,
 };
 
-enum class AuditLevel {
+enum class Level {
     kInfo = 0,
     kWarn = 1,
     kCritical = 2,
 };
 
-enum class AuditField {
+enum class RowField {
     kId,
     kTargetId,
     kUserId,

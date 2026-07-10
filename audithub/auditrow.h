@@ -32,7 +32,7 @@ namespace audit_hub {
 //   2. Timestamps (8 bytes)
 //   3. Integers (4 bytes)
 //   4. Variable-length (TEXT / JSONB)
-struct AuditRow {
+struct Row {
     // -- 1. UUIDs ---------------------------------------------------------------
     QUuid id {}; // PRIMARY KEY — generated client-side before shipping
     QUuid target_id {}; // The entity being audited
