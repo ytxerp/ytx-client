@@ -42,7 +42,7 @@ QVariant InventoryHeatModel::data(const QModelIndex& index, int role) const
         return {};
     }
 
-    const auto column { static_cast<InventoryHeatEnum>(index.column()) };
+    const InventoryHeatEnum column { index.column() };
     auto* entry { static_cast<InventoryHeatRow*>(index.internalPointer()) };
 
     switch (column) {
@@ -66,8 +66,9 @@ QVariant InventoryHeatModel::data(const QModelIndex& index, int role) const
 }
 
 void InventoryHeatModel::sort(int column, Qt::SortOrder order)
-{ // Convert integer column to the structured enum using brace initialization
-    const InventoryHeatEnum e_column { static_cast<InventoryHeatEnum>(column) };
+{
+    // Convert integer column to the structured enum using brace initialization
+    const InventoryHeatEnum e_column { column };
 
     // Define a lambda for comparison based on the selected column and sort order
     auto Compare = [order, e_column](const InventoryHeatRow* lhs, const InventoryHeatRow* rhs) -> bool {
