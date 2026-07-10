@@ -7,24 +7,24 @@
 
 namespace database {
 
-enum Role {
-    FINANCE_READONLY = 0b01,
-    FINANCE_READWRITE = 0b11,
+enum class Role {
+    kFinanceReadonly = 0b01,
+    kFinanceReadwrite = 0b11,
 
-    TASK_READONLY = 0b01 << 2,
-    TASK_READWRITE = 0b11 << 2,
+    kTaskReadonly = 0b01 << 2,
+    kTaskReadwrite = 0b11 << 2,
 
-    INVENTORY_READONLY = 0b01 << 4,
-    INVENTORY_READWRITE = 0b11 << 4,
+    kInventoryReadonly = 0b01 << 4,
+    kInventoryReadwrite = 0b11 << 4,
 
-    PARTNER_READONLY = 0b01 << 6,
-    PARTNER_READWRITE = 0b11 << 6,
+    kPartnerReadonly = 0b01 << 6,
+    kPartnerReadwrite = 0b11 << 6,
 
-    SALE_READONLY = 0b01 << 8,
-    SALE_READWRITE = 0b11 << 8,
+    kSaleReadonly = 0b01 << 8,
+    kSaleReadwrite = 0b11 << 8,
 
-    PURCHASE_READONLY = 0b01 << 10,
-    PURCHASE_READWRITE = 0b11 << 10,
+    kPurchaseReadonly = 0b01 << 10,
+    kPurchaseReadwrite = 0b11 << 10,
 };
 
 Q_DECLARE_FLAGS(Roles, Role)

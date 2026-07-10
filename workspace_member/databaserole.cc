@@ -7,18 +7,18 @@ namespace database {
 std::span<const RoleItem> RoleItemList()
 {
     static const RoleItem list[] = {
-        { FINANCE_READONLY, QObject::tr("Finance R") },
-        { FINANCE_READWRITE, QObject::tr("Finance W") },
-        { TASK_READONLY, QObject::tr("Task R") },
-        { TASK_READWRITE, QObject::tr("Task W") },
-        { INVENTORY_READONLY, QObject::tr("Inventory R") },
-        { INVENTORY_READWRITE, QObject::tr("Inventory W") },
-        { PARTNER_READONLY, QObject::tr("Partner R") },
-        { PARTNER_READWRITE, QObject::tr("Partner W") },
-        { SALE_READONLY, QObject::tr("Sale R") },
-        { SALE_READWRITE, QObject::tr("Sale W") },
-        { PURCHASE_READONLY, QObject::tr("Purchase R") },
-        { PURCHASE_READWRITE, QObject::tr("Purchase W") },
+        { Role::kFinanceReadonly, QObject::tr("Finance R") },
+        { Role::kFinanceReadwrite, QObject::tr("Finance W") },
+        { Role::kTaskReadonly, QObject::tr("Task R") },
+        { Role::kTaskReadwrite, QObject::tr("Task W") },
+        { Role::kInventoryReadonly, QObject::tr("Inventory R") },
+        { Role::kInventoryReadwrite, QObject::tr("Inventory W") },
+        { Role::kPartnerReadonly, QObject::tr("Partner R") },
+        { Role::kPartnerReadwrite, QObject::tr("Partner W") },
+        { Role::kSaleReadonly, QObject::tr("Sale R") },
+        { Role::kSaleReadwrite, QObject::tr("Sale W") },
+        { Role::kPurchaseReadonly, QObject::tr("Purchase R") },
+        { Role::kPurchaseReadwrite, QObject::tr("Purchase W") },
     };
 
     return list;
@@ -40,12 +40,12 @@ QString RolesDisplay(Roles roles)
         }
     };
 
-    AppendRole(FINANCE_READONLY, FINANCE_READWRITE, QObject::tr("Finance R"), QObject::tr("Finance W"));
-    AppendRole(TASK_READONLY, TASK_READWRITE, QObject::tr("Task R"), QObject::tr("Task W"));
-    AppendRole(INVENTORY_READONLY, INVENTORY_READWRITE, QObject::tr("Inventory R"), QObject::tr("Inventory W"));
-    AppendRole(PARTNER_READONLY, PARTNER_READWRITE, QObject::tr("Partner R"), QObject::tr("Partner W"));
-    AppendRole(SALE_READONLY, SALE_READWRITE, QObject::tr("Sale R"), QObject::tr("Sale W"));
-    AppendRole(PURCHASE_READONLY, PURCHASE_READWRITE, QObject::tr("Purchase R"), QObject::tr("Purchase W"));
+    AppendRole(Role::kFinanceReadonly, Role::kFinanceReadwrite, QObject::tr("Finance R"), QObject::tr("Finance W"));
+    AppendRole(Role::kTaskReadonly, Role::kTaskReadwrite, QObject::tr("Task R"), QObject::tr("Task W"));
+    AppendRole(Role::kInventoryReadonly, Role::kInventoryReadwrite, QObject::tr("Inventory R"), QObject::tr("Inventory W"));
+    AppendRole(Role::kPartnerReadonly, Role::kPartnerReadwrite, QObject::tr("Partner R"), QObject::tr("Partner W"));
+    AppendRole(Role::kSaleReadonly, Role::kSaleReadwrite, QObject::tr("Sale R"), QObject::tr("Sale W"));
+    AppendRole(Role::kPurchaseReadonly, Role::kPurchaseReadwrite, QObject::tr("Purchase R"), QObject::tr("Purchase W"));
 
     return result.join(" | ");
 }
