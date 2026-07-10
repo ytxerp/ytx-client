@@ -7,21 +7,23 @@
 #include "utils/nodeutils.h"
 #include "utils/templateutils.h"
 
-IncomeStatementModel::IncomeStatementModel(const QStringList& header, QObject* parent)
+namespace income_statement {
+
+Model::Model(const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
     , header_ { header }
 {
     InitFixedNodes();
 }
 
-IncomeStatementModel::~IncomeStatementModel()
+Model::~Model()
 {
-    ResourcePool<IncomeStatementRow>::Instance().Recycle(node_hash_);
-    ResourcePool<IncomeStatementRow>::Instance().Recycle(root_);
-    ResourcePool<IncomeStatementRow>::Instance().Recycle(net_profit_);
+    ResourcePool<Row>::Instance().Recycle(node_hash_);
+    ResourcePool<Row>::Instance().Recycle(root_);
+    ResourcePool<Row>::Instance().Recycle(net_profit_);
 }
 
-QVariant IncomeStatementModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation != Qt::Horizontal) {
         return {};
@@ -32,20 +34,20 @@ QVariant IncomeStatementModel::headerData(int section, Qt::Orientation orientati
     }
 
     if (role == Qt::ToolTipRole) {
-        switch (static_cast<IncomeStatementEnum>(section)) {
-        case IncomeStatementEnum::kYoyFinalTotal:
-        case IncomeStatementEnum::kYoyGrowthRate:
+        switch (static_cast<RowField>(section)) {
+        case RowField::kYoyFinalTotal:
+        case RowField::kYoyGrowthRate:
             return yoy_tooltip_;
-        case IncomeStatementEnum::kMomFinalTotal:
-        case IncomeStatementEnum::kMomGrowthRate:
+        case RowField::kMomFinalTotal:
+        case RowField::kMomGrowthRate:
             return mom_tooltip_;
-        case IncomeStatementEnum::kName:
-        case IncomeStatementEnum::kId:
-        case IncomeStatementEnum::kCode:
-        case IncomeStatementEnum::kDescription:
-        case IncomeStatementEnum::kDirectionRule:
-        case IncomeStatementEnum::kKind:
-        case IncomeStatementEnum::kFinalTotal:
+        case RowField::kName:
+        case RowField::kId:
+        case RowField::kCode:
+        case RowField::kDescription:
+        case RowField::kDirectionRule:
+        case RowField::kKind:
+        case RowField::kFinalTotal:
             return {};
         }
     }
@@ -53,7 +55,7 @@ QVariant IncomeStatementModel::headerData(int section, Qt::Orientation orientati
     return {};
 }
 
-QModelIndex IncomeStatementModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return {};
@@ -73,7 +75,7 @@ QModelIndex IncomeStatementModel::index(int row, int column, const QModelIndex& 
     return createIndex(row, column, node);
 }
 
-QModelIndex IncomeStatementModel::parent(const QModelIndex& index) const
+QModelIndex Model::parent(const QModelIndex& index) const
 {
     // root_'s index is QModelIndex(), root_'s id == -1
     if (!index.isValid()) {
@@ -81,7 +83,7 @@ QModelIndex IncomeStatementModel::parent(const QModelIndex& index) const
         return {};
     }
 
-    auto* node { static_cast<IncomeStatementRow*>(index.internalPointer()) };
+    auto* node { static_cast<Row*>(index.internalPointer()) };
     if (!node) {
         qDebug() << Q_FUNC_INFO << "null node from internalPointer";
         return {};
@@ -118,15 +120,15 @@ QModelIndex IncomeStatementModel::parent(const QModelIndex& index) const
     return createIndex(row, 0, parent);
 }
 
-int IncomeStatementModel::rowCount(const QModelIndex& parent) const { return GetNodeByIndex(parent)->children.size(); }
+int Model::rowCount(const QModelIndex& parent) const { return GetNodeByIndex(parent)->children.size(); }
 
-int IncomeStatementModel::columnCount(const QModelIndex& parent) const
+int Model::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
     return header_.size();
 }
 
-QVariant IncomeStatementModel::data(const QModelIndex& index, int role) const
+QVariant Model::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -134,65 +136,65 @@ QVariant IncomeStatementModel::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* node { static_cast<IncomeStatementRow*>(index.internalPointer()) };
+    auto* node { static_cast<Row*>(index.internalPointer()) };
     Q_ASSERT(node != nullptr);
 
-    const IncomeStatementEnum column { index.column() };
+    const RowField column { index.column() };
 
     switch (column) {
-    case IncomeStatementEnum::kName:
+    case RowField::kName:
         return node->name;
-    case IncomeStatementEnum::kId:
+    case RowField::kId:
         return node->id;
-    case IncomeStatementEnum::kCode:
+    case RowField::kCode:
         return node->code;
-    case IncomeStatementEnum::kDescription:
+    case RowField::kDescription:
         return node->description;
-    case IncomeStatementEnum::kDirectionRule:
+    case RowField::kDirectionRule:
         return node->direction_rule;
-    case IncomeStatementEnum::kKind:
+    case RowField::kKind:
         return std::to_underlying(node->kind);
-    case IncomeStatementEnum::kFinalTotal:
+    case RowField::kFinalTotal:
         return node->final_total;
-    case IncomeStatementEnum::kYoyFinalTotal:
+    case RowField::kYoyFinalTotal:
         return node->yoy_final_total;
-    case IncomeStatementEnum::kMomFinalTotal:
+    case RowField::kMomFinalTotal:
         return node->mom_final_total;
-    case IncomeStatementEnum::kYoyGrowthRate:
+    case RowField::kYoyGrowthRate:
         return node->yoy_growth_rate;
-    case IncomeStatementEnum::kMomGrowthRate:
+    case RowField::kMomGrowthRate:
         return node->mom_growth_rate;
     }
 }
 
-void IncomeStatementModel::sort(int column, Qt::SortOrder order)
+void Model::sort(int column, Qt::SortOrder order)
 {
-    const IncomeStatementEnum e_column { column };
+    const RowField e_column { column };
 
-    auto Compare = [e_column, order](const IncomeStatementRow* lhs, const IncomeStatementRow* rhs) -> bool {
+    auto Compare = [e_column, order](const Row* lhs, const Row* rhs) -> bool {
         switch (e_column) {
-        case IncomeStatementEnum::kName:
-            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::name, order);
-        case IncomeStatementEnum::kCode:
-            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::code, order);
-        case IncomeStatementEnum::kDescription:
-            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::description, order);
-        case IncomeStatementEnum::kDirectionRule:
-            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::direction_rule, order);
-        case IncomeStatementEnum::kKind:
-            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::kind, order);
-        case IncomeStatementEnum::kFinalTotal:
-            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::final_total, order);
-        case IncomeStatementEnum::kId:
+        case RowField::kName:
+            return utils::CompareMember(lhs, rhs, &Row::name, order);
+        case RowField::kCode:
+            return utils::CompareMember(lhs, rhs, &Row::code, order);
+        case RowField::kDescription:
+            return utils::CompareMember(lhs, rhs, &Row::description, order);
+        case RowField::kDirectionRule:
+            return utils::CompareMember(lhs, rhs, &Row::direction_rule, order);
+        case RowField::kKind:
+            return utils::CompareMember(lhs, rhs, &Row::kind, order);
+        case RowField::kFinalTotal:
+            return utils::CompareMember(lhs, rhs, &Row::final_total, order);
+        case RowField::kId:
             return false;
-        case IncomeStatementEnum::kYoyFinalTotal:
-            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::yoy_final_total, order);
-        case IncomeStatementEnum::kMomFinalTotal:
-            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::mom_final_total, order);
-        case IncomeStatementEnum::kYoyGrowthRate:
-            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::yoy_growth_rate, order);
-        case IncomeStatementEnum::kMomGrowthRate:
-            return utils::CompareMember(lhs, rhs, &IncomeStatementRow::mom_growth_rate, order);
+        case RowField::kYoyFinalTotal:
+            return utils::CompareMember(lhs, rhs, &Row::yoy_final_total, order);
+        case RowField::kMomFinalTotal:
+            return utils::CompareMember(lhs, rhs, &Row::mom_final_total, order);
+        case RowField::kYoyGrowthRate:
+            return utils::CompareMember(lhs, rhs, &Row::yoy_growth_rate, order);
+        case RowField::kMomGrowthRate:
+            return utils::CompareMember(lhs, rhs, &Row::mom_growth_rate, order);
         }
     };
 
@@ -201,7 +203,7 @@ void IncomeStatementModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void IncomeStatementModel::ResetModel(
+void Model::ResetModel(
     const QJsonArray& node_array, const QJsonArray& path_array, double net_profit, double yoy_net_profit, double mom_net_profit)
 {
     if (node_array.isEmpty()) {
@@ -213,10 +215,10 @@ void IncomeStatementModel::ResetModel(
     }
 
     // Build new hash outside the model reset lock
-    QHash<QUuid, IncomeStatementRow*> new_hash;
+    QHash<QUuid, Row*> new_hash;
     for (const QJsonValue& val : node_array) {
         const QJsonObject obj { val.toObject() };
-        IncomeStatementRow* node { ResourcePool<IncomeStatementRow>::Instance().Allocate() };
+        Row* node { ResourcePool<Row>::Instance().Allocate() };
         node->ReadJson(obj);
         new_hash.insert(node->id, node);
     }
@@ -224,7 +226,7 @@ void IncomeStatementModel::ResetModel(
     beginResetModel();
 
     {
-        ResourcePool<IncomeStatementRow>::Instance().Recycle(node_hash_);
+        ResourcePool<Row>::Instance().Recycle(node_hash_);
         net_profit_->children.clear();
         node_hash_ = std::move(new_hash);
         BuildHierarchy(path_array);
@@ -236,27 +238,27 @@ void IncomeStatementModel::ResetModel(
         net_profit_->mom_growth_rate = utils::GrowthRate(net_profit, mom_net_profit);
     }
 
-    sort(std::to_underlying(IncomeStatementEnum::kName), Qt::AscendingOrder);
+    sort(std::to_underlying(RowField::kName), Qt::AscendingOrder);
     endResetModel();
 }
 
-void IncomeStatementModel::UpdateHeaderTooltip(const QString& yoy_tooltip, const QString& mom_tooltip)
+void Model::UpdateHeaderTooltip(const QString& yoy_tooltip, const QString& mom_tooltip)
 {
     yoy_tooltip_ = yoy_tooltip;
     mom_tooltip_ = mom_tooltip;
 
-    emit headerDataChanged(Qt::Horizontal, static_cast<int>(IncomeStatementEnum::kYoyFinalTotal), static_cast<int>(IncomeStatementEnum::kMomGrowthRate));
+    emit headerDataChanged(Qt::Horizontal, static_cast<int>(RowField::kYoyFinalTotal), static_cast<int>(RowField::kMomGrowthRate));
 }
 
-IncomeStatementRow* IncomeStatementModel::GetNodeByIndex(const QModelIndex& index) const
+Row* Model::GetNodeByIndex(const QModelIndex& index) const
 {
     if (index.isValid() && index.internalPointer())
-        return static_cast<IncomeStatementRow*>(index.internalPointer());
+        return static_cast<Row*>(index.internalPointer());
 
     return root_;
 }
 
-void IncomeStatementModel::BuildHierarchy(const QJsonArray& path_array)
+void Model::BuildHierarchy(const QJsonArray& path_array)
 {
     for (const QJsonValue& val : path_array) {
         const QJsonObject obj { val.toObject() };
@@ -264,8 +266,8 @@ void IncomeStatementModel::BuildHierarchy(const QJsonArray& path_array)
         const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
         const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
 
-        IncomeStatementRow* ancestor { node_hash_.value(ancestor_id, nullptr) };
-        IncomeStatementRow* descendant { node_hash_.value(descendant_id, nullptr) };
+        Row* ancestor { node_hash_.value(ancestor_id, nullptr) };
+        Row* descendant { node_hash_.value(descendant_id, nullptr) };
 
         assert(ancestor && "ancestor not found in node_hash_");
         assert(descendant && "descendant not found in node_hash_");
@@ -275,7 +277,7 @@ void IncomeStatementModel::BuildHierarchy(const QJsonArray& path_array)
     }
 
     // Attach nodes without parent to virtual root
-    for (IncomeStatementRow* node : std::as_const(node_hash_)) {
+    for (Row* node : std::as_const(node_hash_)) {
         if (!node->parent) {
             net_profit_->children.emplaceBack(node);
             node->parent = net_profit_;
@@ -283,7 +285,7 @@ void IncomeStatementModel::BuildHierarchy(const QJsonArray& path_array)
     }
 }
 
-void IncomeStatementModel::InitFixedNodes()
+void Model::InitFixedNodes()
 {
     root_ = CreateBranchNode(QString(), false);
     net_profit_ = CreateBranchNode(tr("Net Profit"), direction_rule::kDDCI);
@@ -292,9 +294,9 @@ void IncomeStatementModel::InitFixedNodes()
     net_profit_->parent = root_;
 }
 
-IncomeStatementRow* IncomeStatementModel::CreateBranchNode(const QString& name, bool direction_rule) const
+Row* Model::CreateBranchNode(const QString& name, bool direction_rule) const
 {
-    auto* node { ResourcePool<IncomeStatementRow>::Instance().Allocate() };
+    auto* node { ResourcePool<Row>::Instance().Allocate() };
 
     node->id = QUuid::createUuidV7();
     node->kind = NodeKind::kBranch;
@@ -303,4 +305,5 @@ IncomeStatementRow* IncomeStatementModel::CreateBranchNode(const QString& name, 
     node->direction_rule = direction_rule;
 
     return node;
+}
 }

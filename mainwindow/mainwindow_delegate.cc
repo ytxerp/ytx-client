@@ -635,19 +635,19 @@ void MainWindow::DelegateIncomeStatement(QTreeView* view) const
     const auto& info { sc_f_.info };
 
     auto* amount { new AmountR(sc_f_.section_config.amount_decimal, sc_f_.shared_config.default_unit, info.unit_symbol_map, string_const::kEightDigits, view) };
-    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kFinalTotal), amount);
-    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kYoyFinalTotal), amount);
-    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kMomFinalTotal), amount);
+    view->setItemDelegateForColumn(std::to_underlying(income_statement::RowField::kFinalTotal), amount);
+    view->setItemDelegateForColumn(std::to_underlying(income_statement::RowField::kYoyFinalTotal), amount);
+    view->setItemDelegateForColumn(std::to_underlying(income_statement::RowField::kMomFinalTotal), amount);
 
     auto* growth_rate { new PercentageDelegateR(view) };
-    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kYoyGrowthRate), growth_rate);
-    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kMomGrowthRate), growth_rate);
+    view->setItemDelegateForColumn(std::to_underlying(income_statement::RowField::kYoyGrowthRate), growth_rate);
+    view->setItemDelegateForColumn(std::to_underlying(income_statement::RowField::kMomGrowthRate), growth_rate);
 
     auto* direction_rule { new BoolStringR(info.rule_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kDirectionRule), direction_rule);
+    view->setItemDelegateForColumn(std::to_underlying(income_statement::RowField::kDirectionRule), direction_rule);
 
     auto* kind { new IntStringR(info.kind_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(IncomeStatementEnum::kKind), kind);
+    view->setItemDelegateForColumn(std::to_underlying(income_statement::RowField::kKind), kind);
 }
 
 void MainWindow::DelegateCashFlowStatement(QTreeView* view) const

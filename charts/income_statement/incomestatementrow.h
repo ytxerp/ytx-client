@@ -11,7 +11,9 @@
 #include "enum/nodeenum.h"
 #include "utils/nodeutils.h"
 
-struct IncomeStatementRow final {
+namespace income_statement {
+
+struct Row final {
     QString name {};
     QUuid id {};
     QString code {};
@@ -26,10 +28,10 @@ struct IncomeStatementRow final {
     double mom_final_total {};
     double mom_growth_rate {};
 
-    IncomeStatementRow* parent {};
-    QList<IncomeStatementRow*> children {};
+    Row* parent {};
+    QList<Row*> children {};
 
-    inline void Reset() { *this = IncomeStatementRow {}; }
+    inline void Reset() { *this = Row {}; }
     inline void ReadJson(const QJsonObject& object)
     {
         if (const auto val = object.value(kName); val.isString())
@@ -55,5 +57,6 @@ struct IncomeStatementRow final {
         mom_growth_rate = utils::GrowthRate(final_total, mom_final_total);
     }
 };
+}
 
 #endif // INCOMESTATEMENTROW_H

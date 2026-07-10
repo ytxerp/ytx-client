@@ -20,7 +20,9 @@
 #ifndef INCOMESTATEMENTENUM_H
 #define INCOMESTATEMENTENUM_H
 
-enum class IncomeStatementEnum {
+namespace income_statement {
+
+enum class RowField {
     kName = 0,
     kId,
     kCode,
@@ -33,5 +35,6 @@ enum class IncomeStatementEnum {
     kMomFinalTotal,
     kMomGrowthRate,
 };
+}
 
 #endif // INCOMESTATEMENTENUM_H

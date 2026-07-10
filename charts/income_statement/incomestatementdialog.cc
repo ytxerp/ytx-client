@@ -9,7 +9,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-IncomeStatementDialog::IncomeStatementDialog(CTreeModel* tree_model, IncomeStatementModel* model, const QUuid& widget_id, QWidget* parent)
+IncomeStatementDialog::IncomeStatementDialog(CTreeModel* tree_model, income_statement::Model* model, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::IncomeStatementDialog)
     , start_ { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime) }

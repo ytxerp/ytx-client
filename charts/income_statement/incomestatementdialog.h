@@ -34,11 +34,11 @@ class IncomeStatementDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit IncomeStatementDialog(CTreeModel* tree_model, IncomeStatementModel* model, const QUuid& widget_id, QWidget* parent = nullptr);
+    explicit IncomeStatementDialog(CTreeModel* tree_model, income_statement::Model* model, const QUuid& widget_id, QWidget* parent = nullptr);
     ~IncomeStatementDialog() override;
 
     QTreeView* View();
-    IncomeStatementModel* Model() { return model_; }
+    income_statement::Model* Model() { return model_; }
 
 private slots:
     void on_dateTimeEditEnd_dateChanged(const QDate& date);
@@ -56,7 +56,7 @@ private:
     QDateTime end_ {};
     const QUuid widget_id_ {};
 
-    IncomeStatementModel* model_ {};
+    income_statement::Model* model_ {};
     CTreeModel* tree_model_ {};
 
     QTimer* cooldown_timer_ { nullptr };

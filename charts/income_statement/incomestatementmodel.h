@@ -24,12 +24,14 @@
 
 #include "incomestatementrow.h"
 
-class IncomeStatementModel final : public QAbstractItemModel {
+namespace income_statement {
+
+class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit IncomeStatementModel(const QStringList& header, QObject* parent = nullptr);
-    ~IncomeStatementModel() override;
+    explicit Model(const QStringList& header, QObject* parent = nullptr);
+    ~Model() override;
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -48,19 +50,20 @@ public:
     void UpdateHeaderTooltip(const QString& yoy_tooltip, const QString& mom_tooltip);
 
 private:
-    IncomeStatementRow* GetNodeByIndex(const QModelIndex& index) const;
+    Row* GetNodeByIndex(const QModelIndex& index) const;
     void BuildHierarchy(const QJsonArray& path_array);
 
     void InitFixedNodes();
-    IncomeStatementRow* CreateBranchNode(const QString& name, bool direction_rule) const;
+    Row* CreateBranchNode(const QString& name, bool direction_rule) const;
 
 private:
     QStringList header_;
-    IncomeStatementRow* root_ {};
-    IncomeStatementRow* net_profit_ {};
-    QHash<QUuid, IncomeStatementRow*> node_hash_ {};
+    Row* root_ {};
+    Row* net_profit_ {};
+    QHash<QUuid, Row*> node_hash_ {};
     QString yoy_tooltip_ {};
     QString mom_tooltip_ {};
 };
+}
 
 #endif // INCOMESTATEMENTMODEL_H

@@ -8,14 +8,14 @@ void MainWindow::on_actionIncomeStatement_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    auto* model { new IncomeStatementModel(header_info_.income_statement, this) };
+    auto* model { new income_statement::Model(header_info_.income_statement, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* dialog { new IncomeStatementDialog(sc_f_.tree_model, model, widget_id, this) };
 
     {
         auto* view { dialog->View() };
-        InitTreeView(view, std::to_underlying(IncomeStatementEnum::kId), std::to_underlying(IncomeStatementEnum::kDescription));
+        InitTreeView(view, std::to_underlying(income_statement::RowField::kId), std::to_underlying(income_statement::RowField::kDescription));
         DelegateIncomeStatement(view);
     }
 
