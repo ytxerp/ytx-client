@@ -33,11 +33,11 @@ class PartnerHeatDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit PartnerHeatDialog(PartnerHeatModel* model, const QUuid& widget_id, QWidget* parent = nullptr);
+    explicit PartnerHeatDialog(partner_heat::Model* model, const QUuid& widget_id, QWidget* parent = nullptr);
     ~PartnerHeatDialog() override;
 
     QTableView* View();
-    PartnerHeatModel* Model() { return model_; }
+    partner_heat::Model* Model() { return model_; }
 
 private slots:
     void on_pushButtonFetch_clicked();
@@ -56,7 +56,7 @@ private:
 
     QTimer* cooldown_timer_ { nullptr };
 
-    PartnerHeatModel* model_ {};
+    partner_heat::Model* model_ {};
     const QUuid widget_id_ {};
 };
 

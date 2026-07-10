@@ -8,14 +8,14 @@ void MainWindow::on_actionHeatPartner_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    auto* model { new PartnerHeatModel(header_info_.partner_heat, this) };
+    auto* model { new partner_heat::Model(header_info_.partner_heat, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* dialog { new PartnerHeatDialog(model, widget_id, this) };
 
     {
         auto* view { dialog->View() };
-        InitTableView(view, -1, -1, std::to_underlying(PartnerHeatEnum::kPlaceholder));
+        InitTableView(view, -1, -1, std::to_underlying(partner_heat::RowField::kPlaceholder));
         DelegatePartnerHeat(view);
     }
 

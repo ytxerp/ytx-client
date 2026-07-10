@@ -12,7 +12,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-PartnerHeatDialog::PartnerHeatDialog(PartnerHeatModel* model, const QUuid& widget_id, QWidget* parent)
+PartnerHeatDialog::PartnerHeatDialog(partner_heat::Model* model, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::PartnerHeatDialog)
     , start_ { QDateTime(QDate::currentDate().addYears(-2), kStartTime) }

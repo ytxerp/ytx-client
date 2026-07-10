@@ -20,7 +20,8 @@
 #ifndef PARTNERHEATENUM_H
 #define PARTNERHEATENUM_H
 
-enum class PartnerHeatEnum : int {
+namespace partner_heat {
+enum class RowField : int {
     kPartnerNode = 0,
     kPlaceholder,
     kOrderCount,
@@ -30,5 +31,6 @@ enum class PartnerHeatEnum : int {
     kTotalQuantity,
     kHeatScore,
 };
+}
 
 #endif // PARTNERHEATENUM_H

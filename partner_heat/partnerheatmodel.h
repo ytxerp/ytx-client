@@ -24,12 +24,14 @@
 
 #include "partnerheatrow.h"
 
-class PartnerHeatModel final : public QAbstractItemModel {
+namespace partner_heat {
+
+class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit PartnerHeatModel(const QStringList& header, QObject* parent = nullptr);
-    ~PartnerHeatModel() override;
+    explicit Model(const QStringList& header, QObject* parent = nullptr);
+    ~Model() override;
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -60,8 +62,9 @@ public:
     void ResetModel(const QJsonArray& array);
 
 private:
-    QList<PartnerHeatRow*> list_ {};
+    QList<Row*> list_ {};
     const QStringList& header_ {};
 };
+}
 
 #endif // PARTNERHEATMODEL_H

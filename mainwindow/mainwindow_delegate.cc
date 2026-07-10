@@ -602,13 +602,13 @@ void MainWindow::DelegateInventoryHeat(QTableView* table_view) const
 void MainWindow::DelegatePartnerHeat(QTableView* table_view) const
 {
     auto* path { new SearchPathTableR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(PartnerHeatEnum::kPartnerNode), path);
+    table_view->setItemDelegateForColumn(std::to_underlying(partner_heat::RowField::kPartnerNode), path);
 
     auto* quantity { new DoubleR(sc_p_.section_config.quantity_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(PartnerHeatEnum::kTotalQuantity), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(partner_heat::RowField::kTotalQuantity), quantity);
 
     auto* score { new DoubleNoneDecimalR(string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(PartnerHeatEnum::kHeatScore), score);
+    table_view->setItemDelegateForColumn(std::to_underlying(partner_heat::RowField::kHeatScore), score);
 }
 
 void MainWindow::DelegateBalanceSheet(QTreeView* view) const
