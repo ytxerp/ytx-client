@@ -22,7 +22,7 @@
 
 #include <QUuid>
 
-#include "component/info.h"
+#include "component/sectioninfo.h"
 
 struct TableModelArg {
     CSectionInfo& info {};

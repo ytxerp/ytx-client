@@ -21,7 +21,7 @@
 #define TREEWIDGETF_H
 
 #include "component/config.h"
-#include "component/info.h"
+#include "component/sectioninfo.h"
 #include "tree/model/treemodel.h"
 #include "treewidget.h"
 

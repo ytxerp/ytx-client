@@ -24,7 +24,7 @@
 #include <QDialog>
 
 #include "component/config.h"
-#include "component/info.h"
+#include "component/sectioninfo.h"
 #include "component/using.h"
 #include "tree/itemmodel.h"
 #include "tree/model/treemodel.h"

@@ -20,7 +20,7 @@
 #ifndef ORDERREFERENCEMODELP_H
 #define ORDERREFERENCEMODELP_H
 
-#include "component/info.h"
+#include "component/sectioninfo.h"
 #include "reference/orderreferencemodel.h"
 #include "tree/model/treemodel.h"
 

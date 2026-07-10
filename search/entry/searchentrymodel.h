@@ -22,7 +22,7 @@
 
 #include <QAbstractItemModel>
 
-#include "component/info.h"
+#include "component/sectioninfo.h"
 #include "table/entry.h"
 #include "tag/tagrow.h"
 #include "utils/templateutils.h"

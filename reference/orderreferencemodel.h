@@ -22,7 +22,7 @@
 
 #include <QAbstractItemModel>
 
-#include "component/info.h"
+#include "component/sectioninfo.h"
 #include "orderreference.h"
 
 class OrderReferenceModel : public QAbstractItemModel {

@@ -99,7 +99,7 @@ set(HEADERS
     component/constantint.h
     component/constantstring.h
     component/constantwebsocket.h
-    component/info.h
+    component/sectioninfo.h
     component/sectioncontex.h
     component/signalblocker.h
     component/using.h

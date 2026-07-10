@@ -20,7 +20,7 @@
 #ifndef SALEREFERENCEMODELI_H
 #define SALEREFERENCEMODELI_H
 
-#include "component/info.h"
+#include "component/sectioninfo.h"
 #include "reference/orderreferencemodel.h"
 
 class SaleReferenceModelI final : public OrderReferenceModel {

@@ -47,7 +47,7 @@
 #include <QTimer>
 
 #include "component/constant.h"
-#include "component/info.h"
+#include "component/sectioninfo.h"
 #include "tree/itemmodel.h"
 #include "tree/node.h"
 #include "utils/templateutils.h"
