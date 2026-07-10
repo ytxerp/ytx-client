@@ -52,10 +52,7 @@ QVariant SettlementSecondaryModel::data(const QModelIndex& index, int role) cons
         return QVariant();
 
     const SettlementSecondaryEnum column { index.column() };
-
     auto* settlement_node { static_cast<SettlementSecondary*>(index.internalPointer()) };
-    if (!settlement_node)
-        return QVariant();
 
     switch (column) {
     case SettlementSecondaryEnum::kId:
@@ -85,8 +82,6 @@ bool SettlementSecondaryModel::setData(const QModelIndex& index, const QVariant&
         return false;
 
     auto* settlement_node { static_cast<SettlementSecondary*>(index.internalPointer()) };
-    if (!settlement_node)
-        return false;
 
     const bool is_selected { value.toBool() };
 

@@ -42,7 +42,7 @@ QVariant PartnerHeatModel::data(const QModelIndex& index, int role) const
         return {};
     }
 
-    const auto column { static_cast<PartnerHeatEnum>(index.column()) };
+    const PartnerHeatEnum column { index.column() };
     auto* entry { static_cast<PartnerHeatRow*>(index.internalPointer()) };
 
     switch (column) {
@@ -66,8 +66,9 @@ QVariant PartnerHeatModel::data(const QModelIndex& index, int role) const
 }
 
 void PartnerHeatModel::sort(int column, Qt::SortOrder order)
-{ // Convert integer column to the structured enum using brace initialization
-    const PartnerHeatEnum e_column { static_cast<PartnerHeatEnum>(column) };
+{
+    // Convert integer column to the structured enum using brace initialization
+    const PartnerHeatEnum e_column { column };
 
     // Define a lambda for comparison based on the selected column and sort order
     auto Compare = [order, e_column](const PartnerHeatRow* lhs, const PartnerHeatRow* rhs) -> bool {

@@ -34,9 +34,10 @@ QVariant AuditModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
+    const AuditField column { index.column() };
     const auto* row { static_cast<AuditRow*>(index.internalPointer()) };
 
-    switch (static_cast<AuditField>(index.column())) {
+    switch (column) {
     case AuditField::kTargetId:
         return row->target_id.toString(QUuid::WithoutBraces).left(12);
     case AuditField::kUserId:
@@ -69,7 +70,7 @@ QVariant AuditModel::data(const QModelIndex& index, int role) const
 void AuditModel::sort(int column, Qt::SortOrder order)
 {
     // Convert integer column to the structured enum using brace initialization
-    const auto e_column { static_cast<AuditField>(column) };
+    const AuditField e_column { column };
 
     // Define a lambda for comparison based on the selected column and sort order
     auto Compare = [order, e_column](const AuditRow* lhs, const AuditRow* rhs) -> bool {
