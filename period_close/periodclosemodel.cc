@@ -3,13 +3,15 @@
 #include "enum/entryenum.h"
 #include "utils/templateutils.h"
 
-PeriodCloseModel::PeriodCloseModel(CSectionInfo& info, QObject* parent)
+namespace period_close {
+
+Model::Model(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel(parent)
     , info_ { info }
 {
 }
 
-QVariant PeriodCloseModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return info_.full_entry_header.at(section);
@@ -17,7 +19,7 @@ QVariant PeriodCloseModel::headerData(int section, Qt::Orientation orientation, 
     return QVariant();
 }
 
-QModelIndex PeriodCloseModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -25,25 +27,25 @@ QModelIndex PeriodCloseModel::index(int row, int column, const QModelIndex& pare
     return createIndex(row, column, list_.at(row));
 }
 
-QModelIndex PeriodCloseModel::parent(const QModelIndex& index) const
+QModelIndex Model::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-int PeriodCloseModel::rowCount(const QModelIndex& parent) const
+int Model::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return list_.size();
 }
 
-int PeriodCloseModel::columnCount(const QModelIndex& parent) const
+int Model::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return info_.full_entry_header.size();
 }
 
-void PeriodCloseModel::sort(int column, Qt::SortOrder order)
+void Model::sort(int column, Qt::SortOrder order)
 {
     const FullEntryEnum e_column { column };
 
@@ -82,7 +84,7 @@ void PeriodCloseModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-QVariant PeriodCloseModel::data(const QModelIndex& index, int role) const
+QVariant Model::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -126,9 +128,10 @@ QVariant PeriodCloseModel::data(const QModelIndex& index, int role) const
     }
 }
 
-void PeriodCloseModel::ResetModel(const QList<Entry*>& list)
+void Model::ResetModel(const QList<Entry*>& list)
 {
     beginResetModel();
     list_ = list;
     endResetModel();
+}
 }

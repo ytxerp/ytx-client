@@ -25,11 +25,13 @@
 #include "component/info.h"
 #include "table/entry.h"
 
-class PeriodCloseModel final : public QAbstractItemModel {
+namespace period_close {
+
+class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit PeriodCloseModel(CSectionInfo& info, QObject* parent = nullptr);
+    explicit Model(CSectionInfo& info, QObject* parent = nullptr);
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -51,5 +53,6 @@ private:
     CSectionInfo& info_;
     QList<Entry*> list_ {};
 };
+}
 
 #endif // PERIODCLOSEMODEL_H

@@ -10,7 +10,7 @@ void MainWindow::on_actionPeriodClose_triggered()
     static QPointer<PeriodCloseDialog> dialog {};
 
     if (!dialog) {
-        auto* table_model { new PeriodCloseModel(sc_f_.info, this) };
+        auto* table_model { new period_close::Model(sc_f_.info, this) };
 
         dialog = new PeriodCloseDialog(Section::kFinance, sc_f_.tree_model, table_model, this);
         utils::ManageDialog(sc_f_.widget_hash, dialog);

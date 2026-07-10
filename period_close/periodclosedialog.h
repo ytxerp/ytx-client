@@ -33,7 +33,7 @@ class PeriodCloseDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit PeriodCloseDialog(Section section, CTreeModel* tree_model, PeriodCloseModel* table_model, QWidget* parent = nullptr);
+    explicit PeriodCloseDialog(Section section, CTreeModel* tree_model, period_close::Model* table_model, QWidget* parent = nullptr);
     ~PeriodCloseDialog() override;
 
     QTableView* View();
@@ -54,7 +54,7 @@ private:
     const Section section_;
 
     CTreeModel* tree_model_ {};
-    PeriodCloseModel* table_model_ {};
+    period_close::Model* table_model_ {};
 
     QUuid summary_node_id_ {};
     QSet<Node*> closing_leaf_node_ {};

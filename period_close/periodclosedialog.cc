@@ -10,7 +10,7 @@
 #include "utils/nodeutils.h"
 #include "websocket/websocket.h"
 
-PeriodCloseDialog::PeriodCloseDialog(Section section, CTreeModel* tree_model, PeriodCloseModel* table_model, QWidget* parent)
+PeriodCloseDialog::PeriodCloseDialog(Section section, CTreeModel* tree_model, period_close::Model* table_model, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::PeriodCloseDialog)
     , section_ { section }
