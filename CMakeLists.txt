@@ -211,7 +211,7 @@ set(HEADERS
     table/widget/tablewidget.h
     table/widget/tablewidgetfipt.h
     table/widget/tablewidgeto.h
-    tag/tag.h
+    tag/tagrow.h
     tag/tagicon.h
     tag/tagmodel.h
     tree/excludeidfiltermodel.h

@@ -33,7 +33,7 @@ void TagDialog::on_pBtnInsert_clicked()
     const int row { idx.isValid() ? idx.row() + 1 : model_->rowCount() };
 
     if (model_->insertRows(row, 1)) {
-        const QModelIndex new_index { model_->index(row, std::to_underlying(TagEnum::kName)) };
+        const QModelIndex new_index { model_->index(row, std::to_underlying(TagRowField::kName)) };
         ui->tableView->setCurrentIndex(new_index);
         ui->tableView->edit(new_index);
     }
@@ -48,7 +48,7 @@ void TagDialog::on_pBtnDelete_clicked()
     if (!idx.isValid())
         return;
 
-    const auto* tag { static_cast<Tag*>(idx.internalPointer()) };
+    const auto* tag { static_cast<TagRow*>(idx.internalPointer()) };
     if (!tag)
         return;
 

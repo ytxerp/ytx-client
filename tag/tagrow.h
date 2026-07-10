@@ -17,8 +17,8 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TAG_H
-#define TAG_H
+#ifndef TAGROW_H
+#define TAGROW_H
 
 #include <QJsonObject>
 #include <QString>
@@ -27,7 +27,7 @@
 #include "component/constant.h"
 #include "enum/stateenum.h"
 
-struct Tag final {
+struct TagRow final {
     QUuid id {};
     int version {};
     QString name {};
@@ -41,9 +41,9 @@ struct Tag final {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void Tag::Reset() { *this = Tag {}; }
+inline void TagRow::Reset() { *this = TagRow {}; }
 
-inline QJsonObject Tag::WriteJson() const
+inline QJsonObject TagRow::WriteJson() const
 {
     QJsonObject obj {};
 
@@ -55,7 +55,7 @@ inline QJsonObject Tag::WriteJson() const
     return obj;
 }
 
-inline void Tag::ReadJson(const QJsonObject& object)
+inline void TagRow::ReadJson(const QJsonObject& object)
 {
     // Data loaded from server
     sync_state = SyncState::kSynced;
@@ -70,4 +70,4 @@ inline void Tag::ReadJson(const QJsonObject& object)
         version = val.toInt();
 }
 
-#endif // TAG_H
+#endif // TAGROW_H

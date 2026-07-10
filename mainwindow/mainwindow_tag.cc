@@ -27,7 +27,7 @@ void MainWindow::on_actionTags_triggered()
     dialog->SetModel(model);
 
     auto* view { dialog->View() };
-    InitTableView(view, std::to_underlying(TagEnum::kId), std::to_underlying(TagEnum::kVersion), std::to_underlying(TagEnum::kColor));
+    InitTableView(view, std::to_underlying(TagRowField::kId), std::to_underlying(TagRowField::kVersion), std::to_underlying(TagRowField::kColor));
     DelegateTag(view);
 
     dialog->show();
@@ -61,7 +61,7 @@ void MainWindow::RApplyTag(const QJsonObject& obj)
             continue;
         }
 
-        auto* tag { ResourcePool<Tag>::Instance().Allocate() };
+        auto* tag { ResourcePool<TagRow>::Instance().Allocate() };
         tag->ReadJson(tag_obj);
         tag->sync_state = SyncState::kSynced;
 
@@ -90,7 +90,7 @@ void MainWindow::RInsertTag(const QJsonObject& obj, bool is_same_session)
         return;
     }
 
-    Tag* tag {};
+    TagRow* tag {};
 
     if (is_same_session) {
         tag = inserting_tag_.take(id);
@@ -99,7 +99,7 @@ void MainWindow::RInsertTag(const QJsonObject& obj, bool is_same_session)
             return;
         }
     } else {
-        tag = ResourcePool<Tag>::Instance().Allocate();
+        tag = ResourcePool<TagRow>::Instance().Allocate();
     }
 
     tag->ReadJson(tag_obj);
@@ -156,7 +156,7 @@ void MainWindow::RDeleteTag(const QJsonObject& obj)
     auto* tag { sc->tag_hash.take(id) };
     if (tag) {
         sc->tag_icon_hash.remove(id);
-        ResourcePool<Tag>::Instance().Recycle(tag);
+        ResourcePool<TagRow>::Instance().Recycle(tag);
     } else {
         qWarning() << "RDeleteTag: tag not found";
     }
@@ -181,8 +181,8 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
     tag_menu->setIcon(ui->actionTags->icon());
 
     if (!tag_hash.isEmpty()) {
-        QList<Tag*> sorted_tags = tag_hash.values();
-        std::sort(sorted_tags.begin(), sorted_tags.end(), [](const Tag* a, const Tag* b) { return a->name < b->name; });
+        QList<TagRow*> sorted_tags = tag_hash.values();
+        std::sort(sorted_tags.begin(), sorted_tags.end(), [](const TagRow* a, const TagRow* b) { return a->name < b->name; });
 
         for (const auto* tag : std::as_const(sorted_tags)) {
             if (!tag || tag->id.isNull())
@@ -222,7 +222,7 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
     menu->exec(QCursor::pos());
 }
 
-void MainWindow::RInsertNodeTag(const Tag* tag, TreeModel* model, const Node* node)
+void MainWindow::RInsertNodeTag(const TagRow* tag, TreeModel* model, const Node* node)
 {
     qDebug() << "RInsertNodeTag";
     auto list { node->tag };
@@ -240,7 +240,7 @@ void MainWindow::RInsertNodeTag(const Tag* tag, TreeModel* model, const Node* no
     model->setData(tag_index, list);
 }
 
-void MainWindow::RRemoveNodeTag(const Tag* tag, TreeModel* model, const Node* node)
+void MainWindow::RRemoveNodeTag(const TagRow* tag, TreeModel* model, const Node* node)
 {
     qDebug() << "RRemoveNodeTag";
 
@@ -280,8 +280,8 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     auto* tag_menu = menu->addMenu(tr("Tags"));
 
     if (!tag_hash.isEmpty()) {
-        QList<Tag*> sorted_tags = tag_hash.values();
-        std::sort(sorted_tags.begin(), sorted_tags.end(), [](const Tag* a, const Tag* b) { return a->name < b->name; });
+        QList<TagRow*> sorted_tags = tag_hash.values();
+        std::sort(sorted_tags.begin(), sorted_tags.end(), [](const TagRow* a, const TagRow* b) { return a->name < b->name; });
 
         for (const auto* tag : std::as_const(sorted_tags)) {
             if (!tag || tag->id.isNull())
@@ -318,7 +318,7 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     menu->exec(QCursor::pos());
 }
 
-void MainWindow::UpdateTagIcon(SectionContext* sc, const Tag* tag)
+void MainWindow::UpdateTagIcon(SectionContext* sc, const TagRow* tag)
 {
     Q_ASSERT(sc);
     Q_ASSERT(tag);
@@ -335,7 +335,7 @@ void MainWindow::UpdateTagIcon(SectionContext* sc, const Tag* tag)
     sc->tag_icon_hash.insert(tag_id, icon);
 }
 
-QIcon MainWindow::GetTagIcon(SectionContext* sc, const Tag* tag, bool checked)
+QIcon MainWindow::GetTagIcon(SectionContext* sc, const TagRow* tag, bool checked)
 {
     Q_ASSERT(sc);
     Q_ASSERT(tag);
@@ -358,7 +358,7 @@ QIcon MainWindow::GetTagIcon(SectionContext* sc, const Tag* tag, bool checked)
     return checked ? it->icon_checked : it->icon;
 }
 
-void MainWindow::RInsertEntryTag(const Tag* tag, TableModel* model, const Entry* entry)
+void MainWindow::RInsertEntryTag(const TagRow* tag, TableModel* model, const Entry* entry)
 {
     qDebug() << "RInsertEntryTag";
     auto list { entry->tag };
@@ -376,7 +376,7 @@ void MainWindow::RInsertEntryTag(const Tag* tag, TableModel* model, const Entry*
     model->setData(tag_index, list);
 }
 
-void MainWindow::RRemoveEntryTag(const Tag* tag, TableModel* model, const Entry* entry)
+void MainWindow::RRemoveEntryTag(const TagRow* tag, TableModel* model, const Entry* entry)
 {
     qDebug() << "RRemoveEntryTag";
     auto list { entry->tag };

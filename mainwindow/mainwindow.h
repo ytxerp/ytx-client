@@ -139,8 +139,8 @@ private slots:
     void RAckStatementEntry(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
-    void RInsertNodeTag(const Tag* tag, TreeModel* model, const Node* node);
-    void RRemoveNodeTag(const Tag* tag, TreeModel* model, const Node* node);
+    void RInsertNodeTag(const TagRow* tag, TreeModel* model, const Node* node);
+    void RRemoveNodeTag(const TagRow* tag, TreeModel* model, const Node* node);
 
     void RTreeViewDoubleClicked(const QModelIndex& index);
     void RSettlementTableViewDoubleClicked(const QModelIndex& index);
@@ -177,11 +177,11 @@ private slots:
     void RInsertTag(const QJsonObject& obj, bool is_same_session);
     void RUpdateTag(const QJsonObject& obj);
     void RDeleteTag(const QJsonObject& obj);
-    inline void RInsertingTag(Tag* tag) { inserting_tag_.insert(tag->id, tag); }
+    inline void RInsertingTag(TagRow* tag) { inserting_tag_.insert(tag->id, tag); }
 
     void RTableViewCustomContextMenuRequested(const QPoint& pos);
-    void RInsertEntryTag(const Tag* tag, TableModel* model, const Entry* entry);
-    void RRemoveEntryTag(const Tag* tag, TableModel* model, const Entry* entry);
+    void RInsertEntryTag(const TagRow* tag, TableModel* model, const Entry* entry);
+    void RRemoveEntryTag(const TagRow* tag, TableModel* model, const Entry* entry);
 
     void RApplySharedConfig(const QJsonArray& arr);
     void RUpdateDocumentDir(Section section, const QString& document_dir);
@@ -319,9 +319,9 @@ private:
     void UpdateBranchNodeName(const QUuid& node_id);
     void UpdateMultiTabs(const QSet<QUuid>& nodes);
 
-    QIcon GetTagIcon(SectionContext* sc, const Tag* tag, bool checked);
+    QIcon GetTagIcon(SectionContext* sc, const TagRow* tag, bool checked);
 
-    void UpdateTagIcon(SectionContext* sc, const Tag* tag);
+    void UpdateTagIcon(SectionContext* sc, const TagRow* tag);
 
     inline bool IsTreeWidget(const QWidget* widget) { return widget && widget->inherits(kTreeWidget); }
     inline bool IsTreeWidgetO(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetO); }
@@ -344,7 +344,7 @@ private:
     QSystemTrayIcon* tray_icon_ {};
     QMenu* tray_menu_ {};
 
-    QHash<QUuid, Tag*> inserting_tag_ {};
+    QHash<QUuid, TagRow*> inserting_tag_ {};
 
     QTranslator qt_translator_ {};
     QTranslator ytx_translator_ {};

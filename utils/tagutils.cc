@@ -8,7 +8,7 @@
 
 #include "component/constantint.h"
 
-SearchQuery utils::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag*>& tag_hash)
+SearchQuery utils::ParseSearchQuery(const QString& input, const QHash<QUuid, TagRow*>& tag_hash)
 {
     SearchQuery query {};
 
@@ -29,7 +29,7 @@ SearchQuery utils::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag
 
         // Resolve tag name -> tag id
         for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
-            const Tag* tag = it.value();
+            const TagRow* tag = it.value();
             if (!tag)
                 continue;
 
@@ -47,7 +47,7 @@ SearchQuery utils::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag
     return query;
 }
 
-QIcon utils::CreateTagIcon(const Tag* tag, bool checked)
+QIcon utils::CreateTagIcon(const TagRow* tag, bool checked)
 {
     const qreal dpr { qApp->devicePixelRatio() };
     QPixmap pixmap(static_cast<int>(16 * dpr), static_cast<int>(16 * dpr));
@@ -73,7 +73,7 @@ QIcon utils::CreateTagIcon(const Tag* tag, bool checked)
     return icon;
 }
 
-QPixmap utils::CreateTagPixmap(const Tag* tag)
+QPixmap utils::CreateTagPixmap(const TagRow* tag)
 {
     const qreal dpr { qApp->devicePixelRatio() };
 

@@ -534,10 +534,10 @@ void MainWindow::DelegateSettlementNode(QTableView* table_view, CSectionConfig& 
 void MainWindow::DelegateTag(QTableView* table_view) const
 {
     auto* color { new Color(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(TagEnum::kColor), color);
+    table_view->setItemDelegateForColumn(std::to_underlying(TagRowField::kColor), color);
 
     auto* line { new Line(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(TagEnum::kName), line);
+    table_view->setItemDelegateForColumn(std::to_underlying(TagRowField::kName), line);
 }
 
 void MainWindow::DelegateWorkspaceMember(QTableView* table_view) const

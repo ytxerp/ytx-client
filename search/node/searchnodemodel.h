@@ -24,7 +24,7 @@
 
 #include "component/info.h"
 #include "component/using.h"
-#include "tag/tag.h"
+#include "tag/tagrow.h"
 #include "tree/model/treemodel.h"
 
 using utils::DerivedPtr;
@@ -38,7 +38,7 @@ public slots:
     virtual void RNodeSearch(const QJsonObject& obj) { Q_UNUSED(obj) }
 
 protected:
-    SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
+    SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -56,7 +56,7 @@ protected:
     CTreeModel* tree_model_ {};
     QList<Node*> node_list_ {};
     const Section section_ {};
-    const QHash<QUuid, Tag*>& tag_hash_ {};
+    const QHash<QUuid, TagRow*>& tag_hash_ {};
 };
 
 #endif // SEARCHNODEMODEL_H

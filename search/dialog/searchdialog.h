@@ -106,7 +106,7 @@ protected:
 
     CSectionConfig& config_;
     CSectionInfo& info_;
-    const QHash<QUuid, Tag*>& tag_hash_ {};
+    const QHash<QUuid, TagRow*>& tag_hash_ {};
     const QHash<QUuid, TagIcon>& tag_icon_hash_ {};
 };
 

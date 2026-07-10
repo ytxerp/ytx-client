@@ -5,7 +5,7 @@
 
 namespace search {
 
-EntryModelP::EntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+EntryModelP::EntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
     : EntryModel { info, tag_hash, parent }
     , entry_hub_p_ { static_cast<EntryHubP*>(entry_hub) }
 {

@@ -1,6 +1,6 @@
 #include "searchnodemodelp.h"
 
-SearchNodeModelP::SearchNodeModelP(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+SearchNodeModelP::SearchNodeModelP(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
     : SearchNodeModel { info, tree_model, tag_hash, parent }
 {
 }

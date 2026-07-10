@@ -27,7 +27,7 @@ namespace search {
 class EntryModelF final : public EntryModel {
     Q_OBJECT
 public:
-    explicit EntryModelF(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
+    explicit EntryModelF(CSectionInfo& info, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;

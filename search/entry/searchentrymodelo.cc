@@ -4,7 +4,7 @@
 #include "global/entrypool.h"
 
 namespace search {
-EntryModelO::EntryModelO(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+EntryModelO::EntryModelO(CSectionInfo& info, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
     : EntryModel { info, tag_hash, parent }
 {
 }

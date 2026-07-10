@@ -157,7 +157,7 @@ void utils::ResetSectionContext(SectionContext& sc)
     sc.section_config = SectionConfig {};
     sc.shared_config = SharedConfig {};
 
-    ResourcePool<Tag>::Instance().Recycle(sc.tag_hash);
+    ResourcePool<TagRow>::Instance().Recycle(sc.tag_hash);
     sc.tag_icon_hash.clear();
 }
 

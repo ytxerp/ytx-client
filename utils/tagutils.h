@@ -5,7 +5,7 @@
 #include <QString>
 #include <QUuid>
 
-#include "tag/tag.h"
+#include "tag/tagrow.h"
 
 struct SearchQuery {
     QString text {}; // Normal search text (without [tag])
@@ -14,10 +14,10 @@ struct SearchQuery {
 
 namespace utils {
 
-SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Tag*>& tag_hash);
+SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, TagRow*>& tag_hash);
 QColor GetContrastColor(const QColor& bg_color);
-QIcon CreateTagIcon(const Tag* tag, bool checked);
-QPixmap CreateTagPixmap(const Tag* tag);
+QIcon CreateTagIcon(const TagRow* tag, bool checked);
+QPixmap CreateTagPixmap(const TagRow* tag);
 
 }
 

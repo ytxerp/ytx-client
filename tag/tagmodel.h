@@ -5,16 +5,16 @@
 #include <QTimer>
 
 #include "enum/section.h"
-#include "tag.h"
+#include "tagrow.h"
 
 class TagModel final : public QAbstractItemModel {
     Q_OBJECT
 
 signals:
-    void SInsertingTag(Tag* tag);
+    void SInsertingTag(TagRow* tag);
 
 public:
-    explicit TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, const QStringList& header, QObject* parent = nullptr);
+    explicit TagModel(Section section, const QHash<QUuid, TagRow*>& tag_hash, const QStringList& header, QObject* parent = nullptr);
     ~TagModel() override;
 
     // Header:
@@ -52,20 +52,20 @@ public:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
 private:
-    bool UpdateName(Tag* tag, const QString& new_name);
-    bool UpdateColor(Tag* tag, const QString& new_color);
+    bool UpdateName(TagRow* tag, const QString& new_name);
+    bool UpdateColor(TagRow* tag, const QString& new_color);
 
     void RestartTimer(const QUuid& id);
     void FlushCaches();
 
-    void TryInsert(Tag* tag);
+    void TryInsert(TagRow* tag);
 
 private:
     const Section section_ {};
     const QStringList& header_;
 
     QSet<QString> names_ {};
-    QList<Tag*> tag_list_ {}; // non-owning
+    QList<TagRow*> tag_list_ {}; // non-owning
 
     QHash<QUuid, QJsonObject> pending_updates_ {};
     QHash<QUuid, QTimer*> pending_timers_ {};

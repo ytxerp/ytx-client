@@ -24,7 +24,7 @@
 
 #include "component/info.h"
 #include "table/entry.h"
-#include "tag/tag.h"
+#include "tag/tagrow.h"
 #include "utils/templateutils.h"
 
 using utils::DerivedPtr;
@@ -37,7 +37,7 @@ public:
     ~EntryModel() override { };
 
 protected:
-    explicit EntryModel(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent = nullptr);
+    explicit EntryModel(CSectionInfo& info, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
 
 public slots:
     void RSearchEntry(const EntryList& entry_list);
@@ -62,7 +62,7 @@ protected:
 protected:
     EntryList entry_list_ {};
     CSectionInfo& info_;
-    const QHash<QUuid, Tag*>& tag_hash_ {};
+    const QHash<QUuid, TagRow*>& tag_hash_ {};
 };
 }
 

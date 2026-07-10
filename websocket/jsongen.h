@@ -19,7 +19,7 @@
 
 #include "component/using.h"
 #include "enum/section.h"
-#include "tag/tag.h"
+#include "tag/tagrow.h"
 #include "tree/node.h"
 
 #ifndef JSONGEN_H
@@ -47,7 +47,7 @@ QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bo
 QJsonObject EntryMessage(Section section, CUuid& entry_id);
 
 QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update);
-QJsonObject TagInsert(Section section, const Tag* tag);
+QJsonObject TagInsert(Section section, const TagRow* tag);
 QJsonObject TagDelete(Section section, CUuid& tag_id);
 
 QJsonObject WorkspaceMemberUpdate(CUuid& id, CJsonObject& update);

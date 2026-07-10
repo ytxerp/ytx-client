@@ -6,7 +6,7 @@
 #include "websocket/websocket.h"
 
 namespace search {
-EntryModel::EntryModel(CSectionInfo& info, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+EntryModel::EntryModel(CSectionInfo& info, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
     , tag_hash_ { tag_hash }

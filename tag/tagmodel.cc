@@ -9,7 +9,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TagModel::TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, const QStringList& header, QObject* parent)
+TagModel::TagModel(Section section, const QHash<QUuid, TagRow*>& tag_hash, const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
     , section_ { section }
     , header_ { header }
@@ -19,7 +19,7 @@ TagModel::TagModel(Section section, const QHash<QUuid, Tag*>& tag_hash, const QS
         names_.insert(it.value()->name);
     }
 
-    std::sort(tag_list_.begin(), tag_list_.end(), [](const Tag* a, const Tag* b) { return a->name < b->name; });
+    std::sort(tag_list_.begin(), tag_list_.end(), [](const TagRow* a, const TagRow* b) { return a->name < b->name; });
 }
 
 TagModel::~TagModel() { FlushCaches(); }
@@ -48,17 +48,17 @@ QVariant TagModel::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    const TagEnum column { index.column() };
-    auto* tag { static_cast<Tag*>(index.internalPointer()) };
+    const TagRowField column { index.column() };
+    auto* tag { static_cast<TagRow*>(index.internalPointer()) };
 
     switch (column) {
-    case TagEnum::kId:
+    case TagRowField::kId:
         return tag->id;
-    case TagEnum::kName:
+    case TagRowField::kName:
         return tag->name;
-    case TagEnum::kColor:
+    case TagRowField::kColor:
         return tag->color;
-    case TagEnum::kVersion:
+    case TagRowField::kVersion:
         return tag->version;
     }
 }
@@ -71,18 +71,18 @@ bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role
     if (data(index, role) == value)
         return false;
 
-    const TagEnum column { index.column() };
-    auto* tag { static_cast<Tag*>(index.internalPointer()) };
+    const TagRowField column { index.column() };
+    auto* tag { static_cast<TagRow*>(index.internalPointer()) };
 
     switch (column) {
-    case TagEnum::kName:
+    case TagRowField::kName:
         UpdateName(tag, value.toString());
         break;
-    case TagEnum::kColor:
+    case TagRowField::kColor:
         UpdateColor(tag, value.toString());
         break;
-    case TagEnum::kId:
-    case TagEnum::kVersion:
+    case TagRowField::kId:
+    case TagRowField::kVersion:
         return false;
     }
 
@@ -92,16 +92,16 @@ bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role
 
 void TagModel::sort(int column, Qt::SortOrder order)
 {
-    const TagEnum e_column { column };
+    const TagRowField e_column { column };
 
-    auto Compare = [order, e_column](const Tag* lhs, const Tag* rhs) -> bool {
+    auto Compare = [order, e_column](const TagRow* lhs, const TagRow* rhs) -> bool {
         switch (e_column) {
-        case TagEnum::kName:
-            return utils::CompareMember(lhs, rhs, &Tag::name, order);
-        case TagEnum::kColor:
-            return utils::CompareMember(lhs, rhs, &Tag::color, order);
-        case TagEnum::kId:
-        case TagEnum::kVersion:
+        case TagRowField::kName:
+            return utils::CompareMember(lhs, rhs, &TagRow::name, order);
+        case TagRowField::kColor:
+            return utils::CompareMember(lhs, rhs, &TagRow::color, order);
+        case TagRowField::kId:
+        case TagRowField::kVersion:
             return false;
         }
     };
@@ -118,13 +118,13 @@ Qt::ItemFlags TagModel::flags(const QModelIndex& index) const
 
     Qt::ItemFlags flags { QAbstractItemModel::flags(index) };
 
-    switch (static_cast<TagEnum>(index.column())) {
-    case TagEnum::kName:
+    switch (static_cast<TagRowField>(index.column())) {
+    case TagRowField::kName:
         flags |= Qt::ItemIsEditable;
         break;
-    case TagEnum::kId:
-    case TagEnum::kColor:
-    case TagEnum::kVersion:
+    case TagRowField::kId:
+    case TagRowField::kColor:
+    case TagRowField::kVersion:
         flags &= ~Qt::ItemIsEditable;
         break;
     }
@@ -137,7 +137,7 @@ bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
     if (count != 1 || row < 0 || row > tag_list_.size())
         return false;
 
-    auto* tag { ResourcePool<Tag>::Instance().Allocate() };
+    auto* tag { ResourcePool<TagRow>::Instance().Allocate() };
 
     tag->id = QUuid::createUuidV7();
     tag->sync_state = SyncState::kCreating;
@@ -163,7 +163,7 @@ bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
     }
 
     // Capture the pointer and necessary values using {} initialization
-    Tag* tag { tag_list_.at(row) };
+    TagRow* tag { tag_list_.at(row) };
     const QUuid tag_id { tag->id };
     const QString tag_name { tag->name };
 
@@ -190,13 +190,13 @@ bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
         const QJsonObject message { JsonGen::TagDelete(section_, tag_id) };
         WebSocket::Instance()->SendMessage(WsKey::kTagDelete, message);
     } else {
-        ResourcePool<Tag>::Instance().Recycle(tag);
+        ResourcePool<TagRow>::Instance().Recycle(tag);
     }
 
     return true;
 }
 
-bool TagModel::UpdateName(Tag* tag, const QString& new_name)
+bool TagModel::UpdateName(TagRow* tag, const QString& new_name)
 {
     if (!tag)
         return false;
@@ -224,7 +224,7 @@ bool TagModel::UpdateName(Tag* tag, const QString& new_name)
     return true;
 }
 
-bool TagModel::UpdateColor(Tag* tag, const QString& new_color)
+bool TagModel::UpdateColor(TagRow* tag, const QString& new_color)
 {
     if (!tag || tag->color == new_color)
         return false;
@@ -301,7 +301,7 @@ void TagModel::FlushCaches()
     pending_updates_.clear();
 }
 
-void TagModel::TryInsert(Tag* tag)
+void TagModel::TryInsert(TagRow* tag)
 {
     if (!tag || tag->sync_state != SyncState::kCreating)
         return;

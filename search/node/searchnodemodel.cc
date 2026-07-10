@@ -4,7 +4,7 @@
 
 #include "utils/tagutils.h"
 
-SearchNodeModel::SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, Tag*>& tag_hash, QObject* parent)
+SearchNodeModel::SearchNodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
     , tree_model_ { tree_model }

@@ -443,7 +443,7 @@ QJsonObject WorkspaceMemberDelete(CUuid& id)
     return message;
 }
 
-QJsonObject TagInsert(Section section, const Tag* tag)
+QJsonObject TagInsert(Section section, const TagRow* tag)
 {
     QJsonObject message {};
 
