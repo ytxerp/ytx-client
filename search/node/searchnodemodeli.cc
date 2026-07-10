@@ -10,8 +10,8 @@ QVariant SearchNodeModelI::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* d_node { DerivedPtr<NodeI>(node_list_.at(index.row())) };
     const NodeEnumI column { index.column() };
+    auto* d_node { static_cast<NodeI*>(index.internalPointer()) };
 
     switch (column) {
     case NodeEnumI::kName:

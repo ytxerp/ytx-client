@@ -155,9 +155,8 @@ QVariant TableModelP::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* d_entry { static_cast<EntryP*>(index.internalPointer()) };
-
     const EntryEnumP column { index.column() };
+    auto* d_entry { static_cast<EntryP*>(index.internalPointer()) };
 
     switch (column) {
     case EntryEnumP::kId:

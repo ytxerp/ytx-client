@@ -20,7 +20,7 @@ QModelIndex StatementPrimaryModel::index(int row, int column, const QModelIndex&
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column);
+    return createIndex(row, column, list_.at(row));
 }
 
 QModelIndex StatementPrimaryModel::parent(const QModelIndex& index) const
@@ -47,7 +47,7 @@ QVariant StatementPrimaryModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     const StatementPrimaryEnum column { index.column() };
-    auto* statement { list_.at(index.row()) };
+    auto* statement { static_cast<StatementPrimary*>(index.internalPointer()) };
 
     switch (column) {
     case StatementPrimaryEnum::kPartner:

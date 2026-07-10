@@ -116,8 +116,8 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* d_entry { static_cast<EntryO*>(index.internalPointer()) };
     const EntryEnumO column { index.column() };
+    auto* d_entry { static_cast<EntryO*>(index.internalPointer()) };
 
     switch (column) {
     case EntryEnumO::kId:

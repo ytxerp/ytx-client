@@ -48,8 +48,8 @@ QVariant WorkspaceMemberModel::data(const QModelIndex& index, int role) const
         return {};
     }
 
-    const auto* member { member_list_.at(index.row()) };
-    const auto column { static_cast<WorkspaceMemberEnum>(index.column()) };
+    const WorkspaceMemberEnum column { index.column() };
+    auto* member { static_cast<WorkspaceMember*>(index.internalPointer()) };
 
     switch (column) {
     case WorkspaceMemberEnum::kId:
@@ -84,7 +84,7 @@ bool WorkspaceMemberModel::setData(const QModelIndex& index, const QVariant& val
     }
 
     // Get the member pointer using {} initialization
-    auto* member { member_list_.at(index.row()) };
+    auto* member { static_cast<WorkspaceMember*>(index.internalPointer()) };
     const QUuid id { member->id };
 
     if (id.isNull()) {
@@ -127,7 +127,7 @@ bool WorkspaceMemberModel::setData(const QModelIndex& index, const QVariant& val
 void WorkspaceMemberModel::sort(int column, Qt::SortOrder order)
 {
     // Convert integer column to the structured enum using brace initialization
-    const WorkspaceMemberEnum e_column { static_cast<WorkspaceMemberEnum>(column) };
+    const WorkspaceMemberEnum e_column { column };
 
     // Define a lambda for comparison based on the selected column and sort order
     auto Compare = [order, e_column](const WorkspaceMember* lhs, const WorkspaceMember* rhs) -> bool {
@@ -172,7 +172,7 @@ Qt::ItemFlags WorkspaceMemberModel::flags(const QModelIndex& index) const
     Qt::ItemFlags flags { QAbstractItemModel::flags(index) };
 
     // Convert column to enum for safe processing
-    const auto column { static_cast<WorkspaceMemberEnum>(index.column()) };
+    const WorkspaceMemberEnum column { index.column() };
 
     switch (column) {
     case WorkspaceMemberEnum::kWorkspaceRole:

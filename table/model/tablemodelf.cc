@@ -19,9 +19,8 @@ QVariant TableModelF::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* d_shadow { static_cast<EntryShadowF*>(index.internalPointer()) };
-
     const EntryEnumF column { index.column() };
+    auto* d_shadow { static_cast<EntryShadowF*>(index.internalPointer()) };
 
     switch (column) {
     case EntryEnumF::kId:

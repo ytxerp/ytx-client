@@ -23,7 +23,7 @@ QModelIndex StatementTertiaryModel::index(int row, int column, const QModelIndex
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column);
+    return createIndex(row, column, list_.at(row));
 }
 
 QModelIndex StatementTertiaryModel::parent(const QModelIndex& index) const
@@ -48,30 +48,30 @@ QVariant StatementTertiaryModel::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* entry { list_.at(index.row()) };
     const StatementTertiaryEnum column { index.column() };
+    auto* statement { static_cast<StatementTertiary*>(index.internalPointer()) };
 
     switch (column) {
     case StatementTertiaryEnum::kIssuedTime:
-        return entry->issued_time;
+        return statement->issued_time;
     case StatementTertiaryEnum::kInternalSku:
-        return entry->internal_sku;
+        return statement->internal_sku;
     case StatementTertiaryEnum::kExternalSku:
-        return PartnerInventoryRegistry::Instance().ExternalSku(partner_id_, entry->internal_sku);
+        return PartnerInventoryRegistry::Instance().ExternalSku(partner_id_, statement->internal_sku);
     case StatementTertiaryEnum::kCount:
-        return entry->count;
+        return statement->count;
     case StatementTertiaryEnum::kMeasure:
-        return entry->measure;
+        return statement->measure;
     case StatementTertiaryEnum::kUnitPrice:
-        return entry->unit_price;
+        return statement->unit_price;
     case StatementTertiaryEnum::kDescription:
-        return entry->description;
+        return statement->description;
     case StatementTertiaryEnum::kCode:
-        return entry->code;
+        return statement->code;
     case StatementTertiaryEnum::kAmount:
-        return entry->amount;
+        return statement->amount;
     case StatementTertiaryEnum::kStatus:
-        return entry->status;
+        return statement->status;
     }
 }
 
@@ -84,13 +84,11 @@ bool StatementTertiaryModel::setData(const QModelIndex& index, const QVariant& v
         return false;
 
     const StatementTertiaryEnum column { index.column() };
-    const int kRow { index.row() };
-
-    auto* entry { list_.at(kRow) };
+    auto* statement { static_cast<StatementTertiary*>(index.internalPointer()) };
 
     switch (column) {
     case StatementTertiaryEnum::kStatus:
-        entry->status = value.toInt();
+        statement->status = value.toInt();
         break;
     case StatementTertiaryEnum::kIssuedTime:
     case StatementTertiaryEnum::kAmount:

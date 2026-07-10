@@ -48,11 +48,8 @@ QVariant TagModel::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* tag { tag_list_.at(index.row()) };
-    if (tag->id.isNull())
-        return {};
-
     const TagEnum column { index.column() };
+    auto* tag { static_cast<Tag*>(index.internalPointer()) };
 
     switch (column) {
     case TagEnum::kId:
@@ -74,11 +71,10 @@ bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role
     if (data(index, role) == value)
         return false;
 
-    auto* tag { tag_list_.at(index.row()) };
-    if (tag->id.isNull())
-        return {};
+    const TagEnum column { index.column() };
+    auto* tag { static_cast<Tag*>(index.internalPointer()) };
 
-    switch (static_cast<TagEnum>(index.column())) {
+    switch (column) {
     case TagEnum::kName:
         UpdateName(tag, value.toString());
         break;

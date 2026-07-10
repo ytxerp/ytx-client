@@ -49,7 +49,7 @@ public:
 
 private:
     CSectionInfo& info_;
-    EntryList list_ {};
+    QList<Entry*> list_ {};
 };
 
 #endif // PERIODCLOSEMODEL_H

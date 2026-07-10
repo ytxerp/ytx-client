@@ -94,8 +94,8 @@ QVariant SearchEntryModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* entry { entry_list_.at(index.row()) };
     const FullEntryEnum column { index.column() };
+    auto* entry { static_cast<Entry*>(index.internalPointer()) };
 
     switch (column) {
     case FullEntryEnum::kId:

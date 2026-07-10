@@ -42,24 +42,24 @@ QVariant PartnerHeatModel::data(const QModelIndex& index, int role) const
         return {};
     }
 
-    const auto* member { list_.at(index.row()) };
     const auto column { static_cast<PartnerHeatEnum>(index.column()) };
+    auto* entry { static_cast<PartnerHeatRow*>(index.internalPointer()) };
 
     switch (column) {
     case PartnerHeatEnum::kPartnerNode:
-        return member->partner_node.toString(QUuid::WithoutBraces);
+        return entry->partner_node.toString(QUuid::WithoutBraces);
     case PartnerHeatEnum::kOrderCount:
-        return member->order_count;
+        return entry->order_count;
     case PartnerHeatEnum::kInventoryDiversity:
-        return member->inventory_diversity;
+        return entry->inventory_diversity;
     case PartnerHeatEnum::kActiveMonths:
-        return member->active_months;
+        return entry->active_months;
     case PartnerHeatEnum::kActiveDays:
-        return member->active_days;
+        return entry->active_days;
     case PartnerHeatEnum::kTotalQuantity:
-        return member->total_quantity;
+        return entry->total_quantity;
     case PartnerHeatEnum::kHeatScore:
-        return member->heat_score;
+        return entry->heat_score;
     case PartnerHeatEnum::kPlaceholder:
         return {};
     }

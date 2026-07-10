@@ -21,7 +21,7 @@ QModelIndex StatementSecondaryModel::index(int row, int column, const QModelInde
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column);
+    return createIndex(row, column, list_.at(row));
 }
 
 QModelIndex StatementSecondaryModel::parent(const QModelIndex& index) const
@@ -50,28 +50,28 @@ QVariant StatementSecondaryModel::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    auto* statement_primary { list_.at(index.row()) };
     const StatementSecondaryEnum column { index.column() };
+    auto* statement { static_cast<StatementSecondary*>(index.internalPointer()) };
 
     switch (column) {
     case StatementSecondaryEnum::kDescription:
-        return statement_primary->description;
+        return statement->description;
     case StatementSecondaryEnum::kCode:
-        return statement_primary->code;
+        return statement->code;
     case StatementSecondaryEnum::kEmployee:
-        return statement_primary->employee_id;
+        return statement->employee_id;
     case StatementSecondaryEnum::kIssuedTime:
-        return statement_primary->issued_time;
+        return statement->issued_time;
     case StatementSecondaryEnum::kCount:
-        return statement_primary->count;
+        return statement->count;
     case StatementSecondaryEnum::kMeasure:
-        return statement_primary->measure;
+        return statement->measure;
     case StatementSecondaryEnum::kStatus:
-        return statement_primary->status;
+        return statement->status;
     case StatementSecondaryEnum::kAmount:
-        return statement_primary->amount;
+        return statement->amount;
     case StatementSecondaryEnum::kSettlement:
-        return statement_primary->settlement;
+        return statement->settlement;
     }
 }
 
@@ -81,11 +81,11 @@ bool StatementSecondaryModel::setData(const QModelIndex& index, const QVariant& 
         return false;
 
     const StatementSecondaryEnum column { index.column() };
-    auto* node { list_.at(index.row()) };
+    auto* statement { static_cast<StatementSecondary*>(index.internalPointer()) };
 
     switch (column) {
     case StatementSecondaryEnum::kStatus:
-        node->status = value.toInt();
+        statement->status = value.toInt();
         break;
     case StatementSecondaryEnum::kIssuedTime:
     case StatementSecondaryEnum::kAmount:

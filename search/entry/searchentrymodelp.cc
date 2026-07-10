@@ -14,8 +14,8 @@ QVariant SearchEntryModelP::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* d_entry { DerivedPtr<EntryP>(entry_list_.at(index.row())) };
     const EntryEnumP column { index.column() };
+    auto* d_entry { static_cast<EntryP*>(index.internalPointer()) };
 
     switch (column) {
     case EntryEnumP::kId:

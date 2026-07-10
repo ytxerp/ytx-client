@@ -21,30 +21,30 @@ QVariant OrderReferenceModelP::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* sale_reference { list_.at(index.row()) };
     const SaleReferenceEnumP column { index.column() };
+    auto* entry { static_cast<OrderReference*>(index.internalPointer()) };
 
     switch (column) {
     case SaleReferenceEnumP::kIssuedTime:
-        return sale_reference->issued_time;
+        return entry->issued_time;
     case SaleReferenceEnumP::kInternalSku:
-        return sale_reference->node_id;
+        return entry->node_id;
     case SaleReferenceEnumP::kOrderId:
-        return sale_reference->order_id;
+        return entry->order_id;
     case SaleReferenceEnumP::kCount:
-        return sale_reference->count;
+        return entry->count;
     case SaleReferenceEnumP::kMeasure:
-        return sale_reference->measure;
+        return entry->measure;
     case SaleReferenceEnumP::kUnitPrice:
-        return sale_reference->unit_price;
+        return entry->unit_price;
     case SaleReferenceEnumP::kDescription:
-        return sale_reference->description;
+        return entry->description;
     case SaleReferenceEnumP::kInitial:
-        return sale_reference->initial;
+        return entry->initial;
     case SaleReferenceEnumP::kColor:
-        return tree_model_i_->Color(sale_reference->node_id);
+        return tree_model_i_->Color(entry->node_id);
     case SaleReferenceEnumP::kExternalSku:
-        return PartnerInventoryRegistry::Instance().ExternalSku(partner_id_, sale_reference->node_id);
+        return PartnerInventoryRegistry::Instance().ExternalSku(partner_id_, entry->node_id);
     }
 }
 

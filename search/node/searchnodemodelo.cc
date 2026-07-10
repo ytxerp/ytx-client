@@ -49,8 +49,8 @@ QVariant SearchNodeModelO::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* d_node { static_cast<NodeO*>(index.internalPointer()) };
     const NodeEnumO column { index.column() };
+    auto* d_node { static_cast<NodeO*>(index.internalPointer()) };
 
     switch (column) {
     case NodeEnumO::kName:

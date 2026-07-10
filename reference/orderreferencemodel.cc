@@ -17,7 +17,7 @@ QModelIndex OrderReferenceModel::index(int row, int column, const QModelIndex& p
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column);
+    return createIndex(row, column, list_.at(row));
 }
 
 QModelIndex OrderReferenceModel::parent(const QModelIndex& index) const

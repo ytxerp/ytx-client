@@ -20,7 +20,7 @@ QModelIndex CashFlowWrongModel::index(int row, int column, const QModelIndex& pa
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column);
+    return createIndex(row, column, list_.at(row));
 }
 
 QModelIndex CashFlowWrongModel::parent(const QModelIndex& index) const
@@ -81,8 +81,8 @@ QVariant CashFlowWrongModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* entry { list_.at(index.row()) };
     const CashFlowStatementWrongEnum column { index.column() };
+    auto* entry { static_cast<CashFlowStatementWrongRow*>(index.internalPointer()) };
 
     switch (column) {
     case CashFlowStatementWrongEnum::kId:

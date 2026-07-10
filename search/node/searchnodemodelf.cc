@@ -10,38 +10,36 @@ QVariant SearchNodeModelF::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* node { node_list_.at(index.row()) };
-    auto* d_node { DerivedPtr<NodeF>(node) };
-
     const NodeEnumF column { index.column() };
+    auto* d_node { static_cast<NodeF*>(index.internalPointer()) };
 
     switch (column) {
     case NodeEnumF::kName:
-        return node->name;
+        return d_node->name;
     case NodeEnumF::kVersion:
-        return node->version;
+        return d_node->version;
     case NodeEnumF::kId:
-        return node->id;
+        return d_node->id;
     case NodeEnumF::kTag:
-        return node->tag;
+        return d_node->tag;
     case NodeEnumF::kCode:
-        return node->code;
+        return d_node->code;
     case NodeEnumF::kColor:
-        return node->color;
+        return d_node->color;
     case NodeEnumF::kDescription:
-        return node->description;
+        return d_node->description;
     case NodeEnumF::kDirectionRule:
-        return node->direction_rule;
+        return d_node->direction_rule;
     case NodeEnumF::kKind:
-        return std::to_underlying(node->kind);
+        return std::to_underlying(d_node->kind);
     case NodeEnumF::kUnit:
-        return std::to_underlying(node->unit);
+        return std::to_underlying(d_node->unit);
     case NodeEnumF::kInitialTotal:
-        return node->initial_total;
+        return d_node->initial_total;
     case NodeEnumF::kFinalTotal:
-        return node->final_total;
+        return d_node->final_total;
     case NodeEnumF::kDocument:
-        return node->document;
+        return d_node->document;
     case NodeEnumF::kRoles:
         return static_cast<int>(d_node->roles);
     }

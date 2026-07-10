@@ -18,28 +18,26 @@ QVariant SaleReferenceModelI::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    auto* sale_reference { list_.at(index.row()) };
     const SaleReferenceEnumI column { index.column() };
+    auto* entry { static_cast<OrderReference*>(index.internalPointer()) };
 
     switch (column) {
     case SaleReferenceEnumI::kIssuedTime:
-        return sale_reference->issued_time;
+        return entry->issued_time;
     case SaleReferenceEnumI::kPartnerId:
-        return sale_reference->node_id;
+        return entry->node_id;
     case SaleReferenceEnumI::kOrderId:
-        return sale_reference->order_id;
+        return entry->order_id;
     case SaleReferenceEnumI::kCount:
-        return sale_reference->count;
+        return entry->count;
     case SaleReferenceEnumI::kMeasure:
-        return sale_reference->measure;
+        return entry->measure;
     case SaleReferenceEnumI::kUnitPrice:
-        return sale_reference->unit_price;
+        return entry->unit_price;
     case SaleReferenceEnumI::kDescription:
-        return sale_reference->description;
+        return entry->description;
     case SaleReferenceEnumI::kInitial:
-        return sale_reference->initial;
-    default:
-        return QVariant();
+        return entry->initial;
     }
 }
 
