@@ -71,5 +71,5 @@ void MainWindow::RCashFlowStatementAck(const QUuid& widget_id, const QJsonObject
     special_model->Rebuild(special_array);
 
     auto* wrong_model { d_widget->WrongModel() };
-    wrong_model->ResetModel(wrong_entry_array);
+    wrong_model->Rebuild(wrong_entry_array);
 }
