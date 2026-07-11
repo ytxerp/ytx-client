@@ -77,18 +77,42 @@ set(BRC "${CMAKE_CURRENT_SOURCE_DIR}/resource/resource.brc")
 # Auto-generated file lists
 
 set(HEADERS
+    audit/auditdialog.h
+    audit/auditenum.h
+    audit/auditinfo.h
+    audit/auditmodel.h
+    audit/auditrow.h
+    audit/audittextdelegate.h
+    audit/audittextdialog.h
     billing/settlement/settlement.h
-    billing/settlement/settlementsecondarymodel.h
-    billing/settlement/settlementsecondarywidget.h
+    billing/settlement/settlementenum.h
     billing/settlement/settlementprimarymodel.h
     billing/settlement/settlementprimarywidget.h
+    billing/settlement/settlementsecondarymodel.h
+    billing/settlement/settlementsecondarywidget.h
     billing/statement/statement.h
-    billing/statement/statementtertiarymodel.h
-    billing/statement/statementtertiarywidget.h
+    billing/statement/statementenum.h
     billing/statement/statementprimarymodel.h
+    billing/statement/statementprimarywidget.h
     billing/statement/statementsecondarymodel.h
     billing/statement/statementsecondarywidget.h
-    billing/statement/statementprimarywidget.h
+    billing/statement/statementtertiarymodel.h
+    billing/statement/statementtertiarywidget.h
+    charts/balance_sheet/balancesheetdialog.h
+    charts/balance_sheet/balancesheetenum.h
+    charts/balance_sheet/balancesheetmodel.h
+    charts/balance_sheet/balancesheetrow.h
+    charts/cash_flow_statement/cashflowcarriermodel.h
+    charts/cash_flow_statement/cashflowspecialmodel.h
+    charts/cash_flow_statement/cashflowstatementdialog.h
+    charts/cash_flow_statement/cashflowstatementenum.h
+    charts/cash_flow_statement/cashflowstatementmodel.h
+    charts/cash_flow_statement/cashflowstatementrow.h
+    charts/cash_flow_statement/cashflowwrongmodel.h
+    charts/income_statement/incomestatementdialog.h
+    charts/income_statement/incomestatementenum.h
+    charts/income_statement/incomestatementmodel.h
+    charts/income_statement/incomestatementrow.h
     component/arg/nodeinsertarg.h
     component/arg/orderwidgetarg.h
     component/arg/tablemodelarg.h
@@ -99,33 +123,42 @@ set(HEADERS
     component/constantint.h
     component/constantstring.h
     component/constantwebsocket.h
-    component/sectioninfo.h
+    component/headerinfo.h
     component/sectioncontex.h
+    component/sectioninfo.h
     component/signalblocker.h
     component/using.h
     component/widgetcontex.h
     delegate/bool.h
     delegate/boolstring.h
     delegate/color.h
+    delegate/databaseroledelegate.h
     delegate/document.h
     delegate/double.h
     delegate/filterunit.h
+    delegate/financeroledelegate.h
     delegate/int.h
+    delegate/intstringnonezero.h
     delegate/issuedtime.h
     delegate/line.h
     delegate/readonly/amountorderreferencer.h
     delegate/readonly/amountr.h
     delegate/readonly/boolcolorstringr.h
     delegate/readonly/boolstringr.h
+    delegate/readonly/cashflownamer.h
     delegate/readonly/colorr.h
     delegate/readonly/documentr.h
+    delegate/readonly/doublenonedecimalr.h
     delegate/readonly/doublenonezeror.h
     delegate/readonly/doubler.h
     delegate/readonly/financeforeignr.h
+    delegate/readonly/financerolesdelegater.h
+    delegate/readonly/intstringnonezeror.h
     delegate/readonly/intstringr.h
     delegate/readonly/issuedtimer.h
     delegate/readonly/nodenamer.h
     delegate/readonly/nodepathr.h
+    delegate/readonly/percentagedelegater.h
     delegate/readonly/statusr.h
     delegate/rhsnode.h
     delegate/search/searchpathtabler.h
@@ -147,7 +180,6 @@ set(HEADERS
     dialog/insertnode/insertnodep.h
     dialog/insertnode/insertnodetask.h
     dialog/preferences.h
-    tag/tagdialog.h
     dialog/userprofiledialog.h
     entryhub/entryhub.h
     entryhub/entryhubf.h
@@ -160,23 +192,34 @@ set(HEADERS
     enum/nodeenum.h
     enum/reference.h
     enum/section.h
-    billing/settlement/settlementenum.h
-    billing/statement/statementenum.h
     enum/stateenum.h
-    tag/tagenum.h
+    enum/statusenum.h
     global/collator.h
     global/concepts.h
     global/dailylogger.h
     global/entrypool.h
+    global/entryshadowpool.h
     global/exportexcel.h
     global/logininfo.h
+    global/masterdataregistry.h
     global/nodepool.h
+    global/partner_inventory_registry.h
     global/password_encryption.h
     global/printhub.h
     global/resourcepool.h
     global/tablesstation.h
     global/userprofile.h
+    inventory_heat/inventoryheatdialog.h
+    inventory_heat/inventoryheatenum.h
+    inventory_heat/inventoryheatmodel.h
+    inventory_heat/inventoryheatrow.h
     mainwindow/mainwindow.h
+    partner_heat/partnerheatdialog.h
+    partner_heat/partnerheatenum.h
+    partner_heat/partnerheatmodel.h
+    partner_heat/partnerheatrow.h
+    period_close/periodclosedialog.h
+    period_close/periodclosemodel.h
     reference/orderreference.h
     reference/orderreferencemodel.h
     reference/orderreferencemodelp.h
@@ -208,14 +251,18 @@ set(HEADERS
     table/model/tablemodelo.h
     table/model/tablemodelp.h
     table/model/tablemodelt.h
+    table/unitmodel.h
     table/widget/tablewidget.h
     table/widget/tablewidgetfipt.h
     table/widget/tablewidgeto.h
-    tag/tagrow.h
+    tag/tagdialog.h
+    tag/tagenum.h
     tag/tagicon.h
     tag/tagmodel.h
+    tag/tagrow.h
     tree/excludeidfiltermodel.h
     tree/excludeidunitfiltermodel.h
+    tree/finance_role.h
     tree/includeunitfiltermodel.h
     tree/itemmodel.h
     tree/model/treemodel.h
@@ -245,95 +292,70 @@ set(HEADERS
     widget/lineedit.h
     widget/spinbox.h
     widget/treeview.h
-    workspace/workspacemember.h
+    workspace/databaserole.h
     workspace/workspacedialog.h
     workspace/workspaceenum.h
+    workspace/workspacemember.h
     workspace/workspacemodel.h
     workspace/workspacerole.h
-    delegate/databaseroledelegate.h
-    component/headerinfo.h
-    audit/auditrow.h
-    audit/auditmodel.h
-    audit/auditinfo.h
-    audit/auditenum.h
-    audit/auditdialog.h
-    audit/audittextdelegate.h
-    audit/audittextdialog.h
-    period_close/periodclosedialog.h
-    workspace/databaserole.h
-    period_close/periodclosemodel.h
-    inventory_heat/inventoryheatdialog.h
-    inventory_heat/inventoryheatrow.h
-    inventory_heat/inventoryheatmodel.h
-    inventory_heat/inventoryheatenum.h
-    delegate/readonly/doublenonedecimalr.h
-    partner_heat/partnerheatrow.h
-    partner_heat/partnerheatmodel.h
-    partner_heat/partnerheatenum.h
-    partner_heat/partnerheatdialog.h
-    charts/balance_sheet/balancesheetdialog.h
-    charts/balance_sheet/balancesheetmodel.h
-    charts/balance_sheet/balancesheetrow.h
-    charts/balance_sheet/balancesheetenum.h
-    charts/income_statement/incomestatementdialog.h
-    charts/income_statement/incomestatementrow.h
-    charts/income_statement/incomestatementenum.h
-    charts/income_statement/incomestatementmodel.h
-    delegate/intstringnonezero.h
-    tree/finance_role.h
-    delegate/financeroledelegate.h
-    charts/cash_flow_statement/cashflowstatementdialog.h
-    charts/cash_flow_statement/cashflowstatementmodel.h
-    charts/cash_flow_statement/cashflowcarriermodel.h
-    charts/cash_flow_statement/cashflowspecialmodel.h
-    charts/cash_flow_statement/cashflowwrongmodel.h
-    charts/cash_flow_statement/cashflowstatementrow.h
-    charts/cash_flow_statement/cashflowstatementenum.h
-    delegate/readonly/intstringnonezeror.h
-    delegate/readonly/financerolesdelegater.h
-    delegate/readonly/cashflownamer.h
-    delegate/readonly/percentagedelegater.h
-    global/entryshadowpool.h
-    table/unitmodel.h
-    global/partner_inventory_registry.h
-    global/masterdataregistry.h
-    enum/statusenum.h
 )
 
 set(SOURCES
+    audit/auditdialog.cc
+    audit/auditmodel.cc
+    audit/auditrow.cc
+    audit/audittextdelegate.cc
+    audit/audittextdialog.cc
     billing/settlement/settlement.cc
-    billing/settlement/settlementsecondarymodel.cc
-    billing/settlement/settlementsecondarywidget.cc
     billing/settlement/settlementprimarymodel.cc
     billing/settlement/settlementprimarywidget.cc
-    billing/statement/statementtertiarymodel.cc
-    billing/statement/statementtertiarywidget.cc
+    billing/settlement/settlementsecondarymodel.cc
+    billing/settlement/settlementsecondarywidget.cc
     billing/statement/statementprimarymodel.cc
+    billing/statement/statementprimarywidget.cc
     billing/statement/statementsecondarymodel.cc
     billing/statement/statementsecondarywidget.cc
-    billing/statement/statementprimarywidget.cc
+    billing/statement/statementtertiarymodel.cc
+    billing/statement/statementtertiarywidget.cc
+    charts/balance_sheet/balancesheetdialog.cc
+    charts/balance_sheet/balancesheetmodel.cc
+    charts/cash_flow_statement/cashflowcarriermodel.cc
+    charts/cash_flow_statement/cashflowspecialmodel.cc
+    charts/cash_flow_statement/cashflowstatementdialog.cc
+    charts/cash_flow_statement/cashflowstatementmodel.cc
+    charts/cash_flow_statement/cashflowwrongmodel.cc
+    charts/income_statement/incomestatementdialog.cc
+    charts/income_statement/incomestatementmodel.cc
     delegate/bool.cc
     delegate/boolstring.cc
     delegate/color.cc
+    delegate/databaseroledelegate.cc
     delegate/document.cc
     delegate/double.cc
     delegate/filterunit.cc
+    delegate/financeroledelegate.cc
     delegate/int.cc
+    delegate/intstringnonezero.cc
     delegate/issuedtime.cc
     delegate/line.cc
     delegate/readonly/amountorderreferencer.cc
     delegate/readonly/amountr.cc
     delegate/readonly/boolcolorstringr.cc
     delegate/readonly/boolstringr.cc
+    delegate/readonly/cashflownamer.cc
     delegate/readonly/colorr.cc
     delegate/readonly/documentr.cc
+    delegate/readonly/doublenonedecimalr.cc
     delegate/readonly/doublenonezeror.cc
     delegate/readonly/doubler.cc
     delegate/readonly/financeforeignr.cc
+    delegate/readonly/financerolesdelegater.cc
+    delegate/readonly/intstringnonezeror.cc
     delegate/readonly/intstringr.cc
     delegate/readonly/issuedtimer.cc
     delegate/readonly/nodenamer.cc
     delegate/readonly/nodepathr.cc
+    delegate/readonly/percentagedelegater.cc
     delegate/readonly/statusr.cc
     delegate/rhsnode.cc
     delegate/search/searchpathtabler.cc
@@ -342,7 +364,6 @@ set(SOURCES
     delegate/styleditemdelegate.cc
     delegate/tagdelegate.cc
     delegate/workspaceroledelegate.cc
-    delegate/databaseroledelegate.cc
     dialog/about.cc
     dialog/authdialog.cc
     dialog/deletenode/exactmatchconfirmdialog.cc
@@ -356,7 +377,6 @@ set(SOURCES
     dialog/insertnode/insertnodep.cc
     dialog/insertnode/insertnodetask.cc
     dialog/preferences.cc
-    tag/tagdialog.cc
     dialog/userprofiledialog.cc
     entryhub/entryhub.cc
     entryhub/entryhubf.cc
@@ -367,29 +387,44 @@ set(SOURCES
     global/dailylogger.cc
     global/exportexcel.cc
     global/logininfo.cc
+    global/partner_inventory_registry.cc
     global/password_encryption.cc
     global/printhub.cc
     global/tablesstation.cc
+    inventory_heat/inventoryheatdialog.cc
+    inventory_heat/inventoryheatmodel.cc
     main.cc
     mainwindow/mainwindow.cc
     mainwindow/mainwindow_account.cc
+    mainwindow/mainwindow_audit.cc
     mainwindow/mainwindow_auth.cc
+    mainwindow/mainwindow_balance_sheet.cc
+    mainwindow/mainwindow_cash_flow_statement.cc
     mainwindow/mainwindow_connect.cc
     mainwindow/mainwindow_context.cc
     mainwindow/mainwindow_delegate.cc
     mainwindow/mainwindow_entry.cc
     mainwindow/mainwindow_global.cc
+    mainwindow/mainwindow_header.cc
+    mainwindow/mainwindow_income_statement.cc
+    mainwindow/mainwindow_inventory_heat.cc
     mainwindow/mainwindow_local.cc
     mainwindow/mainwindow_node.cc
     mainwindow/mainwindow_node_remove.cc
     mainwindow/mainwindow_order.cc
     mainwindow/mainwindow_order_reference.cc
+    mainwindow/mainwindow_partner_heat.cc
+    mainwindow/mainwindow_period_close.cc
     mainwindow/mainwindow_search.cc
     mainwindow/mainwindow_settlement.cc
     mainwindow/mainwindow_statement.cc
     mainwindow/mainwindow_tab_widget.cc
     mainwindow/mainwindow_tag.cc
     mainwindow/mainwindow_view.cc
+    partner_heat/partnerheatdialog.cc
+    partner_heat/partnerheatmodel.cc
+    period_close/periodclosedialog.cc
+    period_close/periodclosemodel.cc
     reference/orderreferencemodel.cc
     reference/orderreferencemodelp.cc
     reference/orderreferencewidget.cc
@@ -420,9 +455,12 @@ set(SOURCES
     table/model/tablemodelo.cc
     table/model/tablemodelp.cc
     table/model/tablemodelt.cc
+    table/unitmodel.cc
     table/widget/tablewidgetfipt.cc
     table/widget/tablewidgeto.cc
+    tag/tagdialog.cc
     tag/tagmodel.cc
+    tree/finance_role.cc
     tree/itemmodel.cc
     tree/model/treemodel.cc
     tree/model/treemodelf.cc
@@ -442,56 +480,23 @@ set(SOURCES
     websocket/websocket.cc
     widget/datetimeedit.cc
     widget/treeview.cc
+    workspace/databaserole.cc
     workspace/workspacedialog.cc
     workspace/workspacemodel.cc
-    audit/auditrow.cc
-    mainwindow/mainwindow_audit.cc
-    audit/auditmodel.cc
-    audit/auditdialog.cc
-    audit/audittextdelegate.cc
-    audit/audittextdialog.cc
-    mainwindow/mainwindow_period_close.cc
-    period_close/periodclosedialog.cc
-    period_close/periodclosemodel.cc
-    workspace/databaserole.cc
     workspace/workspacerole.cc
-    inventory_heat/inventoryheatdialog.cc
-    inventory_heat/inventoryheatmodel.cc
-    mainwindow/mainwindow_inventory_heat.cc
-    delegate/readonly/doublenonedecimalr.cc
-    mainwindow/mainwindow_partner_heat.cc
-    partner_heat/partnerheatmodel.cc
-    partner_heat/partnerheatdialog.cc
-    charts/balance_sheet/balancesheetdialog.cc
-    charts/balance_sheet/balancesheetmodel.cc
-    mainwindow/mainwindow_balance_sheet.cc
-    charts/income_statement/incomestatementdialog.cc
-    charts/income_statement/incomestatementmodel.cc
-    mainwindow/mainwindow_income_statement.cc
-    delegate/intstringnonezero.cc
-    tree/finance_role.cc
-    delegate/financeroledelegate.cc
-    charts/cash_flow_statement/cashflowstatementdialog.cc
-    charts/cash_flow_statement/cashflowstatementmodel.cc
-    charts/cash_flow_statement/cashflowspecialmodel.cc
-    charts/cash_flow_statement/cashflowcarriermodel.cc
-    charts/cash_flow_statement/cashflowwrongmodel.cc
-    mainwindow/mainwindow_cash_flow_statement.cc
-    delegate/readonly/intstringnonezeror.cc
-    delegate/readonly/financerolesdelegater.cc
-    delegate/readonly/cashflownamer.cc
-    mainwindow/mainwindow_header.cc
-    delegate/readonly/percentagedelegater.cc
-    table/unitmodel.cc
-    global/partner_inventory_registry.cc
 )
 
 set(UIS
-    billing/settlement/settlementsecondarywidget.ui
+    audit/auditdialog.ui
+    audit/audittextdialog.ui
     billing/settlement/settlementprimarywidget.ui
-    billing/statement/statementtertiarywidget.ui
-    billing/statement/statementsecondarywidget.ui
+    billing/settlement/settlementsecondarywidget.ui
     billing/statement/statementprimarywidget.ui
+    billing/statement/statementsecondarywidget.ui
+    billing/statement/statementtertiarywidget.ui
+    charts/balance_sheet/balancesheetdialog.ui
+    charts/cash_flow_statement/cashflowstatementdialog.ui
+    charts/income_statement/incomestatementdialog.ui
     dialog/about.ui
     dialog/authdialog.ui
     dialog/deletenode/exactmatchconfirmdialog.ui
@@ -505,26 +510,21 @@ set(UIS
     dialog/insertnode/insertnodep.ui
     dialog/insertnode/insertnodetask.ui
     dialog/preferences.ui
-    tag/tagdialog.ui
     dialog/userprofiledialog.ui
+    inventory_heat/inventoryheatdialog.ui
     mainwindow/mainwindow.ui
+    partner_heat/partnerheatdialog.ui
+    period_close/periodclosedialog.ui
     reference/orderreferencewidget.ui
     search/dialog/searchdialog.ui
     table/widget/tablewidgetfipt.ui
     table/widget/tablewidgeto.ui
+    tag/tagdialog.ui
     tree/widget/treewidgetf.ui
     tree/widget/treewidgetit.ui
     tree/widget/treewidgeto.ui
     tree/widget/treewidgetp.ui
     workspace/workspacedialog.ui
-    audit/auditdialog.ui
-    audit/audittextdialog.ui
-    period_close/periodclosedialog.ui
-    inventory_heat/inventoryheatdialog.ui
-    partner_heat/partnerheatdialog.ui
-    charts/balance_sheet/balancesheetdialog.ui
-    charts/income_statement/incomestatementdialog.ui
-    charts/cash_flow_statement/cashflowstatementdialog.ui
 )
 
 # ------------------------

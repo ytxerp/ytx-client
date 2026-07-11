@@ -1,66 +1,79 @@
 #!/usr/bin/env python3
 import os
+import re
 
-# Repository root directory
-ROOT_DIR = "/ytx-client"
-
-# Output file for CMake file lists
-OUTPUT_FILE = "./qt_file_lists.txt"
-
+# Repository root directory — script is run from the project root
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+# Target CMakeLists.txt to update in place
+CMAKE_FILE = os.path.join(ROOT_DIR, "CMakeLists.txt")
 # File extensions to scan
 SOURCE_EXTS = [".cc", ".cpp"]
 HEADER_EXTS = [".h", ".hpp"]
 UI_EXTS = [".ui"]
-
 # Directories to exclude from scanning
-EXCLUDE_DIRS = {"external"}
+EXCLUDE_DIRS = {"external", "build", ".git"}
 
-# Collected file paths
-sources = []
-headers = []
-uis = []
 
-for root, dirs, files in os.walk(ROOT_DIR):
-    # Skip excluded directories
-    dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
+def collect_files():
+    sources, headers, uis = [], [], []
+    for root, dirs, files in os.walk(ROOT_DIR):
+        dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
+        for file in files:
+            path = os.path.relpath(os.path.join(root, file), ROOT_DIR).replace("\\", "/")
+            ext = os.path.splitext(file)[1].lower()
+            if ext in SOURCE_EXTS:
+                sources.append(path)
+            elif ext in HEADER_EXTS:
+                headers.append(path)
+            elif ext in UI_EXTS:
+                uis.append(path)
+    sources.sort()
+    headers.sort()
+    uis.sort()
+    return sources, headers, uis
 
-    for file in files:
-        # Get relative path and normalize separators
-        path = os.path.relpath(os.path.join(root, file), ROOT_DIR).replace("\\", "/")
-        ext = os.path.splitext(file)[1].lower()
 
-        if ext in SOURCE_EXTS:
-            sources.append(path)
-        elif ext in HEADER_EXTS:
-            headers.append(path)
-        elif ext in UI_EXTS:
-            uis.append(path)
+def render_block(var_name, files):
+    lines = [f"set({var_name}"]
+    lines += [f"    {f}" for f in files]
+    lines.append(")")
+    return "\n".join(lines)
 
-# Sort for stable output and clean git diffs
-sources.sort()
-headers.sort()
-uis.sort()
 
-# Write results to output file
-with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-    f.write("# Auto-generated file lists for Qt project\n\n")
+def replace_block(content, var_name, new_block):
+    pattern = re.compile(rf"set\(\s*{var_name}\b.*?\n\)", re.DOTALL)
+    if not pattern.search(content):
+        raise RuntimeError(
+            f"Could not find 'set({var_name} ...)' block in {CMAKE_FILE}. "
+            f"Make sure it exists (even empty) before running this script."
+        )
+    return pattern.sub(new_block, content, count=1)
 
-    f.write("set(HEADERS\n")
-    for h in headers:
-        f.write(f"    {h}\n")
-    f.write(")\n\n")
 
-    f.write("set(SOURCES\n")
-    for s in sources:
-        f.write(f"    {s}\n")
-    f.write(")\n\n")
+def main():
+    if not os.path.isfile(CMAKE_FILE):
+        raise RuntimeError(
+            f"CMakeLists.txt not found at {CMAKE_FILE}. "
+            f"Run this script from the project root directory."
+        )
 
-    f.write("set(UIS\n")
-    for u in uis:
-        f.write(f"    {u}\n")
-    f.write(")\n\n")
+    sources, headers, uis = collect_files()
 
-print(
-    f"Done! Generated {OUTPUT_FILE} with "
-    f"{len(sources)} sources, {len(headers)} headers, {len(uis)} ui files."
-)
+    with open(CMAKE_FILE, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    content = replace_block(content, "HEADERS", render_block("HEADERS", headers))
+    content = replace_block(content, "SOURCES", render_block("SOURCES", sources))
+    content = replace_block(content, "UIS", render_block("UIS", uis))
+
+    with open(CMAKE_FILE, "w", encoding="utf-8") as f:
+        f.write(content)
+
+    print(
+        f"Updated {CMAKE_FILE}: "
+        f"{len(sources)} sources, {len(headers)} headers, {len(uis)} ui files."
+    )
+
+
+if __name__ == "__main__":
+    main()
