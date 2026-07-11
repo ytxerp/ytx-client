@@ -7,6 +7,7 @@ DateTimeEdit::DateTimeEdit(QWidget* parent)
 {
     setButtonSymbols(QAbstractSpinBox::NoButtons);
     setAlignment(Qt::AlignCenter);
+    setInputMethodHints(Qt::ImhDigitsOnly);
     setLocale(QLocale());
 }
 
