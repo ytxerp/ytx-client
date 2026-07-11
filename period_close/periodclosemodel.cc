@@ -128,7 +128,7 @@ QVariant Model::data(const QModelIndex& index, int role) const
     }
 }
 
-void Model::ResetModel(const QList<Entry*>& list)
+void Model::Rebuild(const QList<Entry*>& list)
 {
     beginResetModel();
     list_ = list;

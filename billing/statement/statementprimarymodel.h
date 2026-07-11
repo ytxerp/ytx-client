@@ -44,7 +44,7 @@ public:
 
     void sort(int column, Qt::SortOrder order) override;
 
-    void ResetModel(const QJsonArray& array);
+    void Rebuild(const QJsonArray& array);
 
 private:
     const QStringList& header_;

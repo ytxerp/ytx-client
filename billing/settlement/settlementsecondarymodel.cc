@@ -133,7 +133,7 @@ void SecondaryModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SecondaryModel::ResetModel(const QJsonArray& array)
+void SecondaryModel::Rebuild(const QJsonArray& array)
 {
     ResourcePool<SecondaryRow>::Instance().Recycle(list_cache_);
 

@@ -180,7 +180,7 @@ void PeriodCloseDialog::on_pushButtonPreview_clicked()
 
     {
         ConstructEntry(closing_leaf_node_, summary_node);
-        table_model_->ResetModel(entry_list_);
+        table_model_->Rebuild(entry_list_);
     }
 }
 
@@ -203,5 +203,5 @@ void PeriodCloseDialog::on_pushButtonCommit_clicked()
     WebSocket::Instance()->SendMessage(WsKey::kPeriodClose, message);
 
     ResetState();
-    table_model_->ResetModel({});
+    table_model_->Rebuild({});
 }

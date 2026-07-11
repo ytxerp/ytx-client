@@ -153,7 +153,7 @@ void PrimaryModel::UpdateSucceeded(const QUuid& settlement_id, const QJsonObject
     settlement->ReadJson(update);
 }
 
-void PrimaryModel::ResetModel(const QJsonArray& array)
+void PrimaryModel::Rebuild(const QJsonArray& array)
 {
     beginResetModel();
 

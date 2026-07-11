@@ -42,7 +42,7 @@ QVariant OrderReferenceModel::headerData(int section, Qt::Orientation orientatio
     return QVariant();
 }
 
-void OrderReferenceModel::ResetModel(const QJsonArray& array)
+void OrderReferenceModel::Rebuild(const QJsonArray& array)
 {
     beginResetModel();
 

@@ -47,7 +47,7 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
 public:
-    void ResetModel(const QList<Entry*>& list);
+    void Rebuild(const QList<Entry*>& list);
 
 private:
     CSectionInfo& info_;

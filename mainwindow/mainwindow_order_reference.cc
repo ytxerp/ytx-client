@@ -18,7 +18,7 @@ void MainWindow::RAckOrderReference(Section section, const QUuid& widget_id, con
     auto* d_widget { static_cast<OrderReferenceWidget*>(ptr) };
 
     auto* model { d_widget->Model() };
-    model->ResetModel(array);
+    model->Rebuild(array);
 }
 
 void MainWindow::ROrderReferencePrimary(const QUuid& node_id, int unit)

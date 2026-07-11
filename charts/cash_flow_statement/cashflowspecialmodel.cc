@@ -161,7 +161,7 @@ void SpecialModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SpecialModel::ResetModel(CJsonArray& special_array)
+void SpecialModel::Rebuild(CJsonArray& special_array)
 {
     const auto special_list { AddRowsList(special_array) };
 

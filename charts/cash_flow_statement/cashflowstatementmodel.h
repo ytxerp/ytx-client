@@ -47,7 +47,7 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
 
-    void ResetModel(CJsonArray& node_array);
+    void Rebuild(CJsonArray& node_array);
 
 private:
     Row* GetNodeByIndex(const QModelIndex& index) const;

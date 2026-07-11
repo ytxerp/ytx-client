@@ -109,7 +109,7 @@ void PrimaryModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void PrimaryModel::ResetModel(const QJsonArray& array)
+void PrimaryModel::Rebuild(const QJsonArray& array)
 {
     beginResetModel();
 

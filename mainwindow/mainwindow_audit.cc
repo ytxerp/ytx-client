@@ -65,7 +65,7 @@ void MainWindow::RAuditLogAck(const QUuid& widget_id, const QJsonArray& log_arra
         auto* d_widget { static_cast<AuditDialog*>(ptr) };
 
         auto* model { d_widget->Model() };
-        model->ResetModel(log_array);
+        model->Rebuild(log_array);
     }
 }
 

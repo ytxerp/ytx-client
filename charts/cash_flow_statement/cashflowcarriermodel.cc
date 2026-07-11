@@ -163,7 +163,7 @@ void CarrierModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void CarrierModel::ResetModel(CJsonArray& carrier_array, CJsonArray& counterpart_array)
+void CarrierModel::Rebuild(CJsonArray& carrier_array, CJsonArray& counterpart_array)
 {
     const auto carrier_list { AddRowsList(carrier_array) };
     const auto counterpart_list { AddRowsList(counterpart_array) };

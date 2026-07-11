@@ -46,7 +46,7 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
 
-    void ResetModel(const QJsonArray& node_array, const QJsonArray& path_array, double net_profit, double yoy_net_profit, double mom_net_profit);
+    void Rebuild(const QJsonArray& node_array, const QJsonArray& path_array, double net_profit, double yoy_net_profit, double mom_net_profit);
     void UpdateHeaderTooltip(const QString& yoy_tooltip, const QString& mom_tooltip);
 
 private:

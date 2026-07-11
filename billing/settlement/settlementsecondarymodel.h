@@ -49,7 +49,7 @@ public:
 
     void sort(int column, Qt::SortOrder order) override;
 
-    void ResetModel(const QJsonArray& array);
+    void Rebuild(const QJsonArray& array);
     void UpdateStatus(SettlementStatus status);
     void Finalize(QJsonObject& message);
     bool HasPendingUpdate() const { return !pending_selected_.isEmpty(); }

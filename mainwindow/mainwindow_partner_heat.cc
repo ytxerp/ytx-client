@@ -35,5 +35,5 @@ void MainWindow::RPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array
         return;
 
     auto* model { d_widget->Model() };
-    model->ResetModel(array);
+    model->Rebuild(array);
 }

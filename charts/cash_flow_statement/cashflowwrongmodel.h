@@ -44,7 +44,7 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    void ResetModel(CJsonArray& node_array);
+    void Rebuild(CJsonArray& node_array);
 
 private:
     QList<WrongRow*> AddRowsList(const CJsonArray& node_array);

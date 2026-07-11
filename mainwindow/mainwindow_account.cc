@@ -87,7 +87,7 @@ void MainWindow::RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& a
     auto* d_widget { static_cast<WorkspaceDialog*>(ptr) };
 
     auto* model { d_widget->Model() };
-    model->ResetModel(array);
+    model->Rebuild(array);
 }
 
 void MainWindow::RAccountRoleUpdate()

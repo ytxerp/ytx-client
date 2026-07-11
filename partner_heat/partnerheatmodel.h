@@ -59,7 +59,7 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
 
-    void ResetModel(const QJsonArray& array);
+    void Rebuild(const QJsonArray& array);
 
 private:
     QList<Row*> list_ {};

@@ -57,7 +57,7 @@ public:
     virtual void Search(const QString& text);
 
 protected:
-    void ClearModel();
+    void Reset();
 
 protected:
     EntryList entry_list_ {};

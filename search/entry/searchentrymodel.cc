@@ -58,7 +58,7 @@ void EntryModel::Search(const QString& text)
 {
     // 1. Handle empty search input: clear the model if it has data
     if (text.trimmed().isEmpty()) {
-        ClearModel();
+        Reset();
         return;
     }
 
@@ -78,10 +78,10 @@ void EntryModel::Search(const QString& text)
     }
 
     // 5.Both tags and text are empty → clear the model
-    ClearModel();
+    Reset();
 }
 
-void EntryModel::ClearModel()
+void EntryModel::Reset()
 {
     if (!entry_list_.isEmpty()) {
         beginResetModel();

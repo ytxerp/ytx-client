@@ -117,7 +117,7 @@ void MainWindow::RAckSettlementItem(Section section, const QUuid& widget_id, con
     auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
 
     auto* model { d_widget->Model() };
-    model->ResetModel(array);
+    model->Rebuild(array);
 }
 
 void MainWindow::RInsertSettlement(const QJsonObject& obj)
@@ -260,7 +260,7 @@ void MainWindow::RAckSettlement(Section section, const QUuid& widget_id, const Q
     auto* d_widget { static_cast<SettlementPrimaryWidget*>(ptr) };
 
     auto* model { d_widget->Model() };
-    model->ResetModel(array);
+    model->Rebuild(array);
 }
 
 void MainWindow::DeleteSettlement(SettlementPrimaryWidget* widget)

@@ -112,7 +112,7 @@ void Model::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void Model::ResetModel(const QJsonArray& array)
+void Model::Rebuild(const QJsonArray& array)
 {
     if (array.isEmpty()) {
         qWarning() << "[AuditModel]" << "Received empty array";

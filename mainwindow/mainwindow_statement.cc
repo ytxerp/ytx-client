@@ -40,7 +40,7 @@ void MainWindow::RAckStatement(Section section, const QUuid& widget_id, const QJ
     auto* d_widget { static_cast<StatementPrimaryWidget*>(widget.data()) };
 
     auto* model { d_widget->Model() };
-    model->ResetModel(array);
+    model->Rebuild(array);
 }
 
 void MainWindow::RAckStatementNode(Section section, const QUuid& widget_id, const QJsonArray& array)
@@ -54,7 +54,7 @@ void MainWindow::RAckStatementNode(Section section, const QUuid& widget_id, cons
     auto* d_widget { static_cast<StatementSecondaryWidget*>(widget.data()) };
 
     auto* model { d_widget->Model() };
-    model->ResetModel(array);
+    model->Rebuild(array);
 }
 
 void MainWindow::RAckStatementEntry(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total)
@@ -69,7 +69,7 @@ void MainWindow::RAckStatementEntry(Section section, const QUuid& widget_id, con
 
     auto* model { d_widget->Model() };
 
-    model->ResetModel(array);
+    model->Rebuild(array);
     d_widget->ResetTotal(total);
 }
 

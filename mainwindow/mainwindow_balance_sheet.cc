@@ -35,5 +35,5 @@ void MainWindow::RBalanceSheetAck(const QUuid& widget_id, const QJsonArray& node
         return;
 
     auto* model { d_widget->Model() };
-    model->ResetModel(node_array, path_array);
+    model->Rebuild(node_array, path_array);
 }

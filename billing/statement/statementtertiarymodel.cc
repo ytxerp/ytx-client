@@ -148,7 +148,7 @@ void TertiaryModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void TertiaryModel::ResetModel(const QJsonArray& array)
+void TertiaryModel::Rebuild(const QJsonArray& array)
 {
     beginResetModel();
 

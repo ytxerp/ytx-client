@@ -683,7 +683,7 @@ void TreeModel::Reset()
     FlushCaches();
 
     beginResetModel();
-    ResetTreeData();
+    ResetData();
     endResetModel();
 }
 
@@ -979,7 +979,7 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     beginResetModel();
 
     {
-        ResetTreeData();
+        ResetData();
     }
 
     {
@@ -1022,7 +1022,7 @@ void TreeModel::InitRoot()
     Q_ASSERT(root_ != nullptr);
 }
 
-void TreeModel::ResetTreeData()
+void TreeModel::ResetData()
 {
     NodePool::Instance().Recycle(node_hash_, section_);
 

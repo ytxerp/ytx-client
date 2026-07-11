@@ -62,13 +62,13 @@ void MainWindow::RCashFlowStatementAck(const QUuid& widget_id, const QJsonObject
     const QJsonArray wrong_entry_array { obj.value(cash_flow::kWrongEntryArray).toArray() };
 
     auto* model { d_widget->Model() };
-    model->ResetModel(node_array);
+    model->Rebuild(node_array);
 
     auto* carrier_model { d_widget->CarrierModel() };
-    carrier_model->ResetModel(carrier_array, counterpart_array);
+    carrier_model->Rebuild(carrier_array, counterpart_array);
 
     auto* special_model { d_widget->SpecialModel() };
-    special_model->ResetModel(special_array);
+    special_model->Rebuild(special_array);
 
     auto* wrong_model { d_widget->WrongModel() };
     wrong_model->ResetModel(wrong_entry_array);

@@ -234,7 +234,7 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
     return true;
 }
 
-void Model::ResetModel(const QJsonArray& array)
+void Model::Rebuild(const QJsonArray& array)
 {
     if (array.isEmpty()) {
         qWarning() << "[WorkspaceMemberModel]" << "Received empty member array";

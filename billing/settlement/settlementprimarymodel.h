@@ -50,7 +50,7 @@ public:
     bool InsertSucceeded(PrimaryRow* settlement);
     void RecallSucceeded(const QUuid& settlement_id, const QJsonObject& update);
     void UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update);
-    void ResetModel(const QJsonArray& array);
+    void Rebuild(const QJsonArray& array);
 
     PrimaryRow* FindSettlement(const QUuid& settlement_id) const
     {

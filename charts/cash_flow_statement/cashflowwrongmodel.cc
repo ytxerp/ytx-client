@@ -51,7 +51,7 @@ QVariant WrongModel::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-void WrongModel::ResetModel(CJsonArray& node_array)
+void WrongModel::Rebuild(CJsonArray& node_array)
 {
     const auto list { AddRowsList(node_array) };
 

@@ -45,7 +45,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     void sort(int column, Qt::SortOrder order) override;
-    void ResetModel(const QJsonArray& array);
+    void Rebuild(const QJsonArray& array);
 
 private:
     const QStringList& header_;

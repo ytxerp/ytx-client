@@ -53,5 +53,5 @@ void MainWindow::RIncomeStatementAck(const QUuid& widget_id, const QJsonObject& 
 
     auto* model { d_widget->Model() };
     model->UpdateHeaderTooltip(yoy_tooltip, mom_tooltip);
-    model->ResetModel(node_array, path_array, net_profit, yoy_net_profit, mom_net_profit);
+    model->Rebuild(node_array, path_array, net_profit, yoy_net_profit, mom_net_profit);
 }

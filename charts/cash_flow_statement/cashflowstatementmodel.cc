@@ -162,7 +162,7 @@ void Model::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void Model::ResetModel(CJsonArray& node_array)
+void Model::Rebuild(CJsonArray& node_array)
 {
     const auto node_list { AddRowsList(node_array) };
 

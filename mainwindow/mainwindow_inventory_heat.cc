@@ -34,5 +34,5 @@ void MainWindow::RInventoryHeatAck(const QUuid& widget_id, const QJsonArray& arr
         return;
 
     auto* model { d_widget->Model() };
-    model->ResetModel(array);
+    model->Rebuild(array);
 }

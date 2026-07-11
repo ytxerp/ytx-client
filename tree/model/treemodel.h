@@ -227,7 +227,7 @@ protected:
 
 private:
     void InitRoot();
-    void ResetTreeData();
+    void ResetData();
 
     QSet<QUuid> ExtractLeafIds(const Node* node) const;
     void SyncLeafModel(const QSet<QUuid>& leaf_ids) const;
