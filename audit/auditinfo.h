@@ -25,9 +25,9 @@
 #include <QString>
 #include <QUuid>
 
-namespace audit_hub {
+namespace audit {
 
-struct AuditInfo {
+struct Info {
     QHash<QUuid, QString> user_hash {}; // user_id, username
     QHash<int, QString> section_hash {};
     QHash<int, QString> ws_key_hash {};

@@ -2,7 +2,7 @@
 
 #include "component/constant.h"
 
-namespace audit_hub::keys {
+namespace audit::keys {
 constexpr QLatin1StringView kTargetId { "target_id" };
 constexpr QLatin1StringView kTargetType { "target_type" };
 constexpr QLatin1StringView kWsKey { "ws_key" };
@@ -11,11 +11,11 @@ constexpr QLatin1StringView kBefore { "before" };
 constexpr QLatin1StringView kAfter { "after" };
 }
 
-void audit_hub::Row::Reset() { *this = Row {}; }
+void audit::Row::Reset() { *this = Row {}; }
 
-void audit_hub::Row::ReadJson(const QJsonObject& object)
+void audit::Row::ReadJson(const QJsonObject& object)
 {
-    using namespace audit_hub::keys;
+    using namespace audit::keys;
 
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());

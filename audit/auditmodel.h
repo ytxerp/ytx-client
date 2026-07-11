@@ -26,13 +26,13 @@
 #include "auditinfo.h"
 #include "auditrow.h"
 
-namespace audit_hub {
+namespace audit {
 
 class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit Model(const AuditInfo& info, QObject* parent = nullptr);
+    explicit Model(const Info& info, QObject* parent = nullptr);
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -68,7 +68,7 @@ private:
 
 private:
     QList<Row*> list_ {};
-    const AuditInfo& info_; // owned by MainWindow, outlives model
+    const Info& info_; // owned by MainWindow, outlives model
 };
 }
 

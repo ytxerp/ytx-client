@@ -5,9 +5,9 @@
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
 
-namespace audit_hub {
+namespace audit {
 
-Model::Model(const AuditInfo& info, QObject* parent)
+Model::Model(const Info& info, QObject* parent)
     : QAbstractItemModel(parent)
     , info_ { info }
 {

@@ -335,7 +335,7 @@ private:
     QHash<QUuid, WidgetContext> widget_hash_ {};
 
     HeaderInfo header_info_ {};
-    audit_hub::AuditInfo audit_info_ {};
+    audit::Info audit_info_ {};
 
     Section start_ {};
     QLabel* connection_label_ {};

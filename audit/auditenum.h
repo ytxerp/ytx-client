@@ -20,7 +20,7 @@
 #ifndef AUDITENUM_H
 #define AUDITENUM_H
 
-namespace audit_hub {
+namespace audit {
 
 enum class TargetType {
     kNode = 0,

@@ -17,7 +17,7 @@ bool AuditTextDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, co
     if (event->type() == QEvent::MouseButtonDblClick) {
         const QString text { index.data().toString().trimmed() };
 
-        const QString title { index.column() == std::to_underlying(audit_hub::RowField::kBefore) ? QObject::tr("Before Change") : QObject::tr("After Change") };
+        const QString title { index.column() == std::to_underlying(audit::RowField::kBefore) ? QObject::tr("Before Change") : QObject::tr("After Change") };
 
         if ((text.startsWith('{') || text.startsWith('[')) && text != "{}" && text != "[]") {
             auto* dialog = new AuditTextDialog(text, title, const_cast<QWidget*>(option.widget));

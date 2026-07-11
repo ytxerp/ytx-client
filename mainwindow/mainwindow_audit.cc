@@ -22,9 +22,9 @@ void MainWindow::on_actionAuditLog_triggered()
         }
 
         auto* view { dialog->View() };
-        InitTableView(view, std::to_underlying(audit_hub::RowField::kId), -1, std::to_underlying(audit_hub::RowField::kAfter));
+        InitTableView(view, std::to_underlying(audit::RowField::kId), -1, std::to_underlying(audit::RowField::kAfter));
 
-        view->horizontalHeader()->setSectionResizeMode(std::to_underlying<>(audit_hub::RowField::kBefore), QHeaderView::Interactive);
+        view->horizontalHeader()->setSectionResizeMode(std::to_underlying<>(audit::RowField::kBefore), QHeaderView::Interactive);
 
         DelegateAuditLog(view);
     }
@@ -71,7 +71,7 @@ void MainWindow::RAuditLogAck(const QUuid& widget_id, const QJsonArray& log_arra
 
 void MainWindow::InitAuditInfo()
 {
-    using namespace audit_hub;
+    using namespace audit;
 
     audit_info_.header = {
         tr("ID"),

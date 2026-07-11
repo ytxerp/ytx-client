@@ -24,7 +24,7 @@
 #include <QJsonObject>
 #include <QUuid>
 
-namespace audit_hub {
+namespace audit {
 
 // Mirrors the server-side `audit` table exactly.
 // Field order follows the same memory-layout grouping as the schema:

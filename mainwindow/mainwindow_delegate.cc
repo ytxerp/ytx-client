@@ -555,11 +555,11 @@ void MainWindow::DelegateWorkspaceMember(QTableView* table_view) const
 void MainWindow::DelegateAuditLog(QTableView* table_view) const
 {
     auto* created_time { new IssuedTimeR(datetime_format::kDateTime, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(audit_hub::RowField::kCreatedTime), created_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kCreatedTime), created_time);
 
     auto* audit_text { new AuditTextDelegate(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(audit_hub::RowField::kBefore), audit_text);
-    table_view->setItemDelegateForColumn(std::to_underlying(audit_hub::RowField::kAfter), audit_text);
+    table_view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kBefore), audit_text);
+    table_view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kAfter), audit_text);
 }
 
 void MainWindow::DelegatePeriodClose(QTableView* table_view) const

@@ -36,11 +36,11 @@ class AuditDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit AuditDialog(const audit_hub::AuditInfo& info, CUuid& widget_id, QWidget* parent = nullptr);
+    explicit AuditDialog(const audit::Info& info, CUuid& widget_id, QWidget* parent = nullptr);
     ~AuditDialog() override;
 
     QTableView* View();
-    audit_hub::Model* Model() { return model_; }
+    audit::Model* Model() { return model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -54,8 +54,8 @@ private:
 
 private:
     Ui::AuditDialog* ui;
-    const audit_hub::AuditInfo& info_;
-    audit_hub::Model* model_ {};
+    const audit::Info& info_;
+    audit::Model* model_ {};
 
     QDateTime start_ {};
     QDateTime end_ {};
