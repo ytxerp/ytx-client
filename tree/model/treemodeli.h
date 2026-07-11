@@ -39,6 +39,7 @@ public:
 
 protected:
     QSet<QUuid>* UnitSet(NodeUnit unit) override;
+    void ResetUnitSet() override;
 
 private:
     QSet<QUuid> pos_set_ {}; // Set of all nodes that are position-unit

@@ -1032,17 +1032,9 @@ void TreeModel::ResetData()
 
     if (leaf_path_model_) {
         leaf_path_model_->Reset();
-
-        // NOTE: For Partner/Inventory sections, leaf_path_model_ must
-        // always contain an empty placeholder item (empty path + null
-        // QUuid) after being reset. Partner's external_sku and Order's employee
-        // fields are optional and may be left blank, and they rely on
-        // this placeholder to represent "no selection" in their
-        // dropdown UI. Without it, those fields would have no
-        // valid option to fall back to when the user leaves them empty.
-        if (section_ == Section::kInventory || section_ == Section::kPartner)
-            leaf_path_model_->AppendItem(QString(), QUuid());
     }
+
+    ResetUnitSet();
 }
 
 void TreeModel::BuildHierarchy(const QJsonArray& path_array)

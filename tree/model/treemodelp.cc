@@ -40,6 +40,20 @@ QSet<QUuid>* TreeModelP::UnitSet(NodeUnit unit)
     }
 }
 
+void TreeModelP::ResetUnitSet()
+{
+    cset_.clear();
+    vset_.clear();
+    eset_ = { QUuid() };
+
+    // NOTE: Order's employee field is optional and may be left blank.
+    // It relies on Partner's placeholder (empty path + null QUuid) in
+    // leaf_path_model_ to represent "no selection" in its dropdown UI.
+    // This mirrors eset_'s own null-QUuid placeholder above — both
+    // represent the same "no unit assigned" state.
+    leaf_path_model_->AppendItem(QString(), QUuid());
+}
+
 QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, double, double, double, double) const
 {
     QSet<QUuid> affected_ids {};

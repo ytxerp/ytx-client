@@ -201,11 +201,13 @@ protected:
 
     virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const;
     virtual void InitAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const;
+
     virtual QSet<QUuid>* UnitSet(NodeUnit unit)
     {
         Q_UNUSED(unit)
         return nullptr;
     }
+    virtual void ResetUnitSet() { }
 
     template <typename Field, typename T> const Field& Value(const QUuid& node_id, Field T::* member) const
     {
