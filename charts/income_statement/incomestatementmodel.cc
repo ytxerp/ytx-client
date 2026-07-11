@@ -203,8 +203,7 @@ void Model::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void Model::ResetModel(
-    const QJsonArray& node_array, const QJsonArray& path_array, double net_profit, double yoy_net_profit, double mom_net_profit)
+void Model::ResetModel(const QJsonArray& node_array, const QJsonArray& path_array, double net_profit, double yoy_net_profit, double mom_net_profit)
 {
     if (node_array.isEmpty()) {
         qWarning() << Q_FUNC_INFO << "Received empty node array";

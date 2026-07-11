@@ -13,8 +13,8 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementSecondaryWidget::StatementSecondaryWidget(statement::SecondaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start,
-    CDateTime& end, Section section, int unit, QWidget* parent)
+StatementSecondaryWidget::StatementSecondaryWidget(
+    statement::SecondaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementSecondaryWidget)
     , unit_ { unit }
