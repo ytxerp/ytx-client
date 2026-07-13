@@ -330,7 +330,7 @@ QString PrintHub::GetColumnText(int col, const Entry* entry, const MasterDataReg
     case 0:
         return master.InventoryPath(entry->rhs_node);
     case 1:
-        return master.InventoryName(partner.ExternalSku(node_o_->partner_id, entry->rhs_node));
+        return partner.ExternalSku(node_o_->partner_id, entry->rhs_node);
     case 2:
         return entry->description;
     case 3:

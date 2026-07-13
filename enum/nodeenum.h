@@ -59,9 +59,8 @@ enum class NodeUnit : int {
     TAction = 520, // Task Action
 
     // Inventory units, 600–699
-    IInternal = 600, // Inventory Internal
+    IItem = 600, // Inventory Item
     IPosition = 610, // Inventory Position
-    IExternal = 620, // Inventory External
 
     // Partner units, 700–799
     PCustomer = 700, // Partner Customer
@@ -120,12 +119,10 @@ inline const char* kUnitCode(NodeUnit c)
         return "SRC";
 
     // Inventory units
-    case NodeUnit::IInternal:
-        return "INT";
+    case NodeUnit::IItem:
+        return "ITM";
     case NodeUnit::IPosition:
         return "POS";
-    case NodeUnit::IExternal:
-        return "EXT";
 
     // Partner units
     case NodeUnit::PCustomer:
@@ -191,12 +188,10 @@ inline const char* kUnitSymbol(NodeUnit c)
         return "→";
 
     // Inventory units
-    case NodeUnit::IInternal:
+    case NodeUnit::IItem:
         return "▣";
     case NodeUnit::IPosition:
         return "⌖";
-    case NodeUnit::IExternal:
-        return "⇄";
 
     // Partner units
     case NodeUnit::PCustomer:

@@ -43,8 +43,7 @@ protected:
 
 private:
     QSet<QUuid> pos_set_ {}; // Set of all nodes that are position-unit
-    QSet<QUuid> int_set_ {}; // Set of all nodes that are internal-unit
-    QSet<QUuid> ext_set_ { QUuid() }; // Set of all nodes that are external-unit
+    QSet<QUuid> itm_set_ {}; // Set of all nodes that are item-unit
 };
 
 #endif // TREEMODELI_H

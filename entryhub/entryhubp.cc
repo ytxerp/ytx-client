@@ -37,18 +37,6 @@ void EntryHubP::ReplaceInternalInventoryRef(const QUuid& old_item_id, const QUui
     PartnerInventoryRegistry::Instance().ReplaceInternalSku(old_item_id, new_item_id);
 }
 
-void EntryHubP::ReplaceExternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id)
-{
-    for (auto* entry : std::as_const(entry_cache_)) {
-        auto* d_entry = static_cast<EntryP*>(entry);
-
-        if (d_entry->external_sku == old_item_id)
-            d_entry->external_sku = new_item_id;
-    }
-
-    PartnerInventoryRegistry::Instance().ReplaceExternalSku(old_item_id, new_item_id);
-}
-
 void EntryHubP::SearchDescription(QList<Entry*>& entry_list, CString& text) const
 {
     entry_list.reserve(entry_cache_.size() / 2);

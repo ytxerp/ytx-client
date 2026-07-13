@@ -13,10 +13,8 @@ QSet<QUuid>* TreeModelI::UnitSet(NodeUnit unit)
     switch (unit) {
     case NodeUnit::IPosition:
         return &pos_set_;
-    case NodeUnit::IInternal:
-        return &int_set_;
-    case NodeUnit::IExternal:
-        return &ext_set_;
+    case NodeUnit::IItem:
+        return &itm_set_;
     default:
         return nullptr;
     }
@@ -25,16 +23,7 @@ QSet<QUuid>* TreeModelI::UnitSet(NodeUnit unit)
 void TreeModelI::ResetUnitSet()
 {
     pos_set_.clear();
-    int_set_.clear();
-    ext_set_ = { QUuid() };
-
-    // NOTE: Partner's external_sku field is optional and may be left
-    // blank. It relies on Inventory's placeholder (empty path + null QUuid) in
-    // leaf_path_model_ to represent "no selection" in the dropdown UI.
-    // Without it, the field would have no valid option to fall back to
-    // when left empty. This mirrors ext_set_'s own null-QUuid placeholder
-    // above — both represent the same "no unit assigned" state.
-    leaf_path_model_->AppendItem(QString(), QUuid());
+    itm_set_.clear();
 }
 
 void TreeModelI::sort(int column, Qt::SortOrder order)

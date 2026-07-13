@@ -1,16 +1,5 @@
 #include "partner_inventory_registry.h"
 
-void PartnerInventoryRegistry::ReplaceExternalSku(const QUuid& old_id, const QUuid& new_id)
-{
-    if (old_id.isNull() || new_id.isNull())
-        return;
-
-    for (auto& value : map_) {
-        if (value.external_sku == old_id)
-            value.external_sku = new_id;
-    }
-}
-
 void PartnerInventoryRegistry::ReplaceInternalSku(const QUuid& old_id, const QUuid& new_id)
 {
     if (old_id.isNull() || new_id.isNull())

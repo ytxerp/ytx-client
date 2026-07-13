@@ -28,7 +28,7 @@ void MainWindow::ROrderReferencePrimary(const QUuid& node_id, int unit)
 
     switch (start_) {
     case Section::kInventory:
-        allowed = (node_unit == NodeUnit::IInternal);
+        allowed = (node_unit == NodeUnit::IItem);
         break;
     case Section::kPartner:
         allowed = (node_unit == NodeUnit::PCustomer || node_unit == NodeUnit::PVendor);

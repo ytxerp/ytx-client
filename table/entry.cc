@@ -76,7 +76,7 @@ void EntryP::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kRhsNode); val.isString())
         rhs_node = QUuid(val.toString());
     if (const auto val = object.value(kExternalSku); val.isString())
-        external_sku = QUuid(val.toString());
+        external_sku = val.toString();
     if (const auto val = object.value(kDescription); val.isString())
         description = val.toString();
     if (const auto val = object.value(kStatus); val.isDouble())
@@ -101,13 +101,13 @@ QJsonObject EntryP::WriteJson() const
     obj.insert(kCode, code);
     obj.insert(kLhsNode, lhs_node.toString(QUuid::WithoutBraces));
     obj.insert(kDescription, description);
+    obj.insert(kExternalSku, external_sku);
     obj.insert(kStatus, status);
     obj.insert(kRhsNode, rhs_node.toString(QUuid::WithoutBraces));
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kDocument, utils::WriteStringList(document));
 
     obj.insert(kUnitPrice, QString::number(unit_price, 'f', numeric_const::kDecimalPlaces8));
-    obj.insert(kExternalSku, external_sku.toString(QUuid::WithoutBraces));
     return obj;
 }
 

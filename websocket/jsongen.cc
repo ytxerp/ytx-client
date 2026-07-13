@@ -115,8 +115,7 @@ QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id)
     message.insert(kResult, false);
     message.insert(kOldNodeId, old_id.toString(QUuid::WithoutBraces));
     message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
-    message.insert(node_ref::kPartnerInt, false);
-    message.insert(node_ref::kPartnerExt, false);
+    message.insert(node_ref::kPartner, false);
     return message;
 }
 

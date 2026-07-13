@@ -263,9 +263,8 @@ void MainWindow::InitContextInventory()
     info.path = kInventoryPath;
     info.entry = kInventoryEntry;
 
-    info.unit_map.insert(std::to_underlying(NodeUnit::IInternal), tr("INT", "Internal"));
+    info.unit_map.insert(std::to_underlying(NodeUnit::IItem), tr("ITM", "Item"));
     info.unit_map.insert(std::to_underlying(NodeUnit::IPosition), tr("POS", "Position"));
-    info.unit_map.insert(std::to_underlying(NodeUnit::IExternal), tr("EXT", "External"));
 
     info.rule_map.insert(direction_rule::kDDCI, kStrDDCI);
     info.rule_map.insert(direction_rule::kDICD, kStrDICD);

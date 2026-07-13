@@ -66,7 +66,7 @@ struct EntryF final : Entry {
 
 struct EntryP final : Entry {
     double unit_price {};
-    QUuid external_sku {};
+    QString external_sku {};
 
     void Reset() override;
     void ReadJson(const QJsonObject& object) override;

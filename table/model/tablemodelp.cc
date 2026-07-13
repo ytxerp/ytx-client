@@ -236,8 +236,8 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         entry::UpdateField(pending_updates_[id], entry, kStatus, value.toInt(), &Entry::status, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kExternalSku:
-        update_registry = entry::UpdateUuid(
-            pending_updates_[id], d_entry, kExternalSku, value.toUuid(), &EntryP::external_sku, [this, id, version]() { RestartTimer(id, version); });
+        update_registry = entry::UpdateField(
+            pending_updates_[id], d_entry, kExternalSku, value.toString(), &EntryP::external_sku, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kId:
     case EntryEnumP::kVersion:

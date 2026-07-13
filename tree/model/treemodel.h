@@ -173,7 +173,6 @@ public:
 
     QSortFilterProxyModel* ExcludeId(const QUuid& node_id, QObject* parent) const;
     QSortFilterProxyModel* IncludeUnit(NodeUnit unit, QObject* parent);
-    QSortFilterProxyModel* ExcludeIdUnit(const QUuid& node_id, NodeUnit unit, QObject* parent);
     QSortFilterProxyModel* ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent);
 
 protected:

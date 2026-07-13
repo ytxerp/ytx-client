@@ -43,7 +43,6 @@ public:
     void ApplyPartnerEntry(const QJsonArray& array);
 
     void ReplaceInternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id);
-    void ReplaceExternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id);
 };
 
 #endif // ENTRYHUBP_H

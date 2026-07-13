@@ -40,8 +40,6 @@ inline const QString kPurchase = QStringLiteral("purchase");
 
 // Referenced by partner entries
 inline const QString kPartner = QStringLiteral("partner");
-inline const QString kPartnerInt = QStringLiteral("partner_int");
-inline const QString kPartnerExt = QStringLiteral("partner_ext");
 
 // Indicates whether this order has been settled
 inline const QString kSettlement = QStringLiteral("settlement");

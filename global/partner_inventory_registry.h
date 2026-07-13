@@ -58,16 +58,16 @@ public:
         return it->unit_price;
     }
 
-    QUuid ExternalSku(const QUuid& partner_id, const QUuid& inventory_id) const
+    QString ExternalSku(const QUuid& partner_id, const QUuid& inventory_id) const
     {
         if (partner_id.isNull() || inventory_id.isNull())
-            return QUuid();
+            return QString();
 
         const auto it { map_.constFind({ partner_id, inventory_id }) };
-        return it == map_.constEnd() ? QUuid() : it->external_sku;
+        return it == map_.constEnd() ? QString() : it->external_sku;
     }
 
-    void Insert(const QUuid& partner_id, const QUuid& inventory_id, double unit_price, const QUuid& external_sku)
+    void Insert(const QUuid& partner_id, const QUuid& inventory_id, double unit_price, const QString& external_sku)
     {
         if (partner_id.isNull() || inventory_id.isNull())
             return;
@@ -83,7 +83,6 @@ public:
         map_.remove({ partner_id, inventory_id });
     }
 
-    void ReplaceExternalSku(const QUuid& old_id, const QUuid& new_id);
     void ReplaceInternalSku(const QUuid& old_id, const QUuid& new_id);
     void Reset() { map_.clear(); }
 
@@ -98,7 +97,7 @@ private:
 
     struct Value {
         double unit_price { 0.0 };
-        QUuid external_sku {};
+        QString external_sku {};
     };
 
 private:

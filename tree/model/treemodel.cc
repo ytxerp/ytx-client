@@ -741,14 +741,6 @@ QSortFilterProxyModel* TreeModel::IncludeUnit(NodeUnit unit, QObject* parent)
     return model;
 }
 
-QSortFilterProxyModel* TreeModel::ExcludeIdUnit(const QUuid& node_id, NodeUnit unit, QObject* parent)
-{
-    auto* set { UnitSet(unit) };
-    auto* model { new ExcludeIdUnitFilterModel(node_id, set, parent) };
-    model->setSourceModel(leaf_path_model_);
-    return model;
-}
-
 QSortFilterProxyModel* TreeModel::ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent)
 {
     auto* set { UnitSet(unit) };

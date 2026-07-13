@@ -271,7 +271,7 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kStatus), status);
 
-    QSortFilterProxyModel* filter_model { tree_model->ExcludeIdUnit(node_id, NodeUnit::IExternal, table_view) };
+    QSortFilterProxyModel* filter_model { tree_model->ExcludeId(node_id, table_view) };
 
     auto* node { new RhsNode(tree_model, filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kRhsNode), node);
@@ -332,12 +332,7 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kCode), line);
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kDescription), line);
-
-    auto tree_model_i { sc_i_.tree_model };
-
-    auto* ext_filter_model { tree_model_i->IncludeUnit(NodeUnit::IExternal, table_view) };
-    auto* external_sku { new FilterUnit(tree_model_i, ext_filter_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kExternalSku), external_sku);
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kExternalSku), line);
 
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kDocument), document);
@@ -345,8 +340,9 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kStatus), status);
 
-    auto* int_filter_model { tree_model_i->IncludeUnit(NodeUnit::IInternal, table_view) };
-    auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
+    auto tree_model_i { sc_i_.tree_model };
+    auto* itm_filter_model { tree_model_i->IncludeUnit(NodeUnit::IItem, table_view) };
+    auto* internal_sku { new FilterUnit(tree_model_i, itm_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kRhsNode), internal_sku);
 
     auto* tag { new TagDelegate(sc_p_.tag_icon_hash, table_view) };
@@ -356,13 +352,10 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
 void MainWindow::TableDelegateO(QTableView* table_view, CSectionInfo& info, CSectionConfig& config) const
 {
     auto tree_model_i { sc_i_.tree_model };
-    auto* int_filter_model { tree_model_i->IncludeUnit(NodeUnit::IInternal, table_view) };
+    auto* itm_filter_model { tree_model_i->IncludeUnit(NodeUnit::IItem, table_view) };
 
-    auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
+    auto* internal_sku { new FilterUnit(tree_model_i, itm_filter_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kRhsNode), internal_sku);
-
-    auto* name_r { new NodeNameR(sc_i_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kExternalSku), name_r);
 
     auto* line { new Line(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kDescription), line);
@@ -421,9 +414,6 @@ void MainWindow::DelegateSaleReferenceP(QTableView* table_view, CSectionConfig& 
 
     auto* internal_sku { new NodePathR(sc_i_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kInternalSku), internal_sku);
-
-    auto* name_r { new NodeNameR(sc_i_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kExternalSku), name_r);
 
     auto* color { new ColorR(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kColor), color);
@@ -485,13 +475,10 @@ void MainWindow::DelegateStatementEntry(QTableView* table_view, CSectionConfig& 
 
     auto tree_model_i { sc_i_.tree_model };
 
-    auto* external_sku { new NodeNameR(tree_model_i, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kExternalSku), external_sku);
+    auto* itm_filter_model { tree_model_i->IncludeUnit(NodeUnit::IItem, table_view) };
+    auto* item { new FilterUnit(tree_model_i, itm_filter_model, table_view) };
 
-    auto* int_filter_model { tree_model_i->IncludeUnit(NodeUnit::IInternal, table_view) };
-    auto* internal_sku { new FilterUnit(tree_model_i, int_filter_model, table_view) };
-
-    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kInternalSku), internal_sku);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kInternalSku), item);
 }
 
 void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& config) const
