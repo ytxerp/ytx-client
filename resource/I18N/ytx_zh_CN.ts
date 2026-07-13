@@ -1015,31 +1015,31 @@
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="82"/>
         <location filename="../../mainwindow/mainwindow.ui" line="348"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="122"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="102"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="122"/>
         <source>Finance</source>
         <translation>财务</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="101"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="125"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="103"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="125"/>
         <source>Task</source>
         <translation>任务</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="114"/>
         <location filename="../../mainwindow/mainwindow.ui" line="358"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="124"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="104"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="124"/>
         <source>Inventory</source>
         <translation>存货</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="127"/>
         <location filename="../../mainwindow/mainwindow.ui" line="364"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="123"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="105"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="123"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="96"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="135"/>
         <source>Partner</source>
@@ -1047,15 +1047,15 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="143"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="126"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="106"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="126"/>
         <source>Sale</source>
         <translation>销售</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="159"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="127"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="107"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="127"/>
         <source>Purchase</source>
         <translation>采购</translation>
     </message>
@@ -1308,11 +1308,11 @@
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="542"/>
         <location filename="../../mainwindow/mainwindow.ui" line="545"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="113"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="115"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="23"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="54"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="80"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="113"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="115"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1374,7 +1374,7 @@
         <translation>财务版块已存在记录，无法更改基准币种。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="181"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="180"/>
         <source>Unsaved Data</source>
         <translation>未保存的数据</translation>
     </message>
@@ -1389,7 +1389,7 @@
         <translation>语言已更改，请重启应用程序以使更改生效。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="181"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="180"/>
         <source>This page contains unsaved data.
 
 Do you want to save before closing?</source>
@@ -2153,10 +2153,9 @@ You need to recall it first before making changes.</source>
         <translation>删除该条记录？&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 提示：可在首选项中关闭此确认提示。&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="266"/>
         <source>INT</source>
         <comment>Internal</comment>
-        <translation>内部</translation>
+        <translation type="vanished">内部</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_context.cc" line="267"/>
@@ -2165,78 +2164,83 @@ You need to recall it first before making changes.</source>
         <translation>位置</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="268"/>
         <source>EXT</source>
         <comment>External</comment>
-        <translation>外部</translation>
+        <translation type="vanished">外部</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="309"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="266"/>
+        <source>ITM</source>
+        <comment>Item</comment>
+        <translation>存货</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="308"/>
         <source>TGT</source>
         <comment>Target</comment>
         <translation>目标</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="310"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="309"/>
         <source>ACT</source>
         <comment>Action</comment>
         <translation>行为</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="311"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="310"/>
         <source>SRC</source>
         <comment>Source</comment>
         <translation>起源</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="350"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="349"/>
         <source>CUS</source>
         <comment>Customer</comment>
         <translation>客</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="351"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="350"/>
         <source>EMP</source>
         <comment>Employee</comment>
         <translation>职</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="352"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="351"/>
         <source>VEN</source>
         <comment>Vendor</comment>
         <translation>供</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="389"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="433"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="388"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="432"/>
         <source>RO</source>
         <comment>Return Order</comment>
         <translation>红</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="390"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="434"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="389"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="433"/>
         <source>FO</source>
         <comment>Forward Order</comment>
         <translation>正</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="392"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="436"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="391"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="435"/>
         <source>IMM</source>
         <comment>Immediate</comment>
         <translation>现</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="393"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="437"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="392"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="436"/>
         <source>MON</source>
         <comment>Monthly</comment>
         <translation>月</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="394"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="438"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="393"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="437"/>
         <source>PEND</source>
         <comment>Pending</comment>
         <translation>挂</translation>
@@ -2663,7 +2667,7 @@ You need to recall it first before making changes.</source>
     <message>
         <location filename="../../dialog/preferences.cc" line="185"/>
         <source>Base Currency</source>
-        <translation>基准单位</translation>
+        <translation>基准币种</translation>
     </message>
     <message>
         <location filename="../../dialog/preferences.ui" line="638"/>
@@ -3645,7 +3649,7 @@ You need to recall it first before making changes.</source>
 <context>
     <name>income_statement::Model</name>
     <message>
-        <location filename="../../charts/income_statement/incomestatementmodel.cc" line="291"/>
+        <location filename="../../charts/income_statement/incomestatementmodel.cc" line="290"/>
         <source>Net Profit</source>
         <translation>净利润</translation>
     </message>
