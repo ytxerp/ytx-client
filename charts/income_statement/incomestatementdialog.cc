@@ -96,9 +96,15 @@ void IncomeStatementDialog::on_pushButtonFetch_clicked()
     duration.insert(income_statement::kMonths, months);
     duration.insert(income_statement::kDays, days);
 
+    static const QString kDefaultTime = QDateTime::fromSecsSinceEpoch(0, QTimeZone::UTC).toString(Qt::ISODate);
+
     QJsonObject date_range {};
     date_range.insert(kStart, start_.toUTC().toString(Qt::ISODate));
     date_range.insert(kEnd, end_.toUTC().toString(Qt::ISODate));
+    date_range.insert(kYoyStart, kDefaultTime);
+    date_range.insert(kYoyEnd, kDefaultTime);
+    date_range.insert(kMomStart, kDefaultTime);
+    date_range.insert(kMomEnd, kDefaultTime);
 
     auto message { JsonGen::IncomeStatementAck(widget_id_, income_id, expense_id, level) };
 
