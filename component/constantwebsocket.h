@@ -161,145 +161,145 @@ constexpr const char* WsMsgToString(WsKey msg)
     switch (msg) {
     // --- Auth ---
     case WsKey::kLogin:
-        return "login";
+        return "kLogin";
     case WsKey::kRegister:
-        return "register";
+        return "kRegister";
     case WsKey::kLoginNotify:
-        return "login_notify";
+        return "kLoginNotify";
     case WsKey::kRegisterNotify:
-        return "register_notify";
+        return "kRegisterNotify";
 
-    // --- Config ---
+        // --- Config ---
     case WsKey::kSharedConfigApply:
-        return "shared_config_apply";
+        return "kSharedConfigApply";
     case WsKey::kPartnerEntryApply:
-        return "partner_entry_apply";
+        return "kPartnerEntryApply";
     case WsKey::kDefaultUnitUpdate:
-        return "default_unit_update";
+        return "kDefaultUnitUpdate";
     case WsKey::kDefaultUnitDeny:
-        return "default_unit_deny";
+        return "kDefaultUnitDeny";
     case WsKey::kDocumentDirUpdate:
-        return "document_dir_update";
+        return "kDocumentDirUpdate";
 
-    // --- Ack ---
+        // --- Ack ---
     case WsKey::kTreeAck:
-        return "tree_ack";
+        return "kTreeAck";
     case WsKey::kTableAck:
-        return "table_ack";
+        return "kTableAck";
     case WsKey::kOrderReferenceAck:
-        return "order_reference_ack";
+        return "kOrderReferenceAck";
     case WsKey::kStatementAck:
-        return "statement_ack";
+        return "kStatementAck";
     case WsKey::kStatementNodeAck:
-        return "statement_node_ack";
+        return "kStatementNodeAck";
     case WsKey::kStatementEntryAck:
-        return "statement_entry_ack";
+        return "kStatementEntryAck";
     case WsKey::kSettlementAck:
-        return "settlement_ack";
+        return "kSettlementAck";
     case WsKey::kSettlementItemAck:
-        return "settlement_item_ack";
+        return "kSettlementItemAck";
     case WsKey::kNodeAck:
-        return "node_ack";
+        return "kNodeAck";
 
-    // --- Settlement ---
+        // --- Settlement ---
     case WsKey::kSettlementInsert:
-        return "settlement_insert";
+        return "kSettlementInsert";
     case WsKey::kSettlementUpdate:
-        return "settlement_update";
+        return "kSettlementUpdate";
     case WsKey::kSettlementRecall:
-        return "settlement_recall";
+        return "kSettlementRecall";
     case WsKey::kSettlementDelete:
-        return "settlement_delete"; // no handler needed
+        return "kSettlementDelete"; // no handler needed
 
-    // --- Tree ---
+        // --- Tree ---
     case WsKey::kTreeApply:
-        return "tree_apply";
+        return "kTreeApply";
     case WsKey::kTreeSyncFinish:
-        return "tree_sync_finish";
+        return "kTreeSyncFinish";
     case WsKey::kNodeInsert:
-        return "node_insert";
+        return "kNodeInsert";
     case WsKey::kNodeUpdate:
-        return "node_update";
+        return "kNodeUpdate";
     case WsKey::kNodeNameSearch:
-        return "node_search";
+        return "kNodeNameSearch";
     case WsKey::kNodeNameUpdate:
-        return "node_name_update";
+        return "kNodeNameUpdate";
     case WsKey::kNodeDrag:
-        return "node_drag";
+        return "kNodeDrag";
     case WsKey::kLeafDelete:
-        return "leaf_delete";
+        return "kLeafDelete";
     case WsKey::kLeafDeleteP:
-        return "leaf_delete_p";
+        return "kLeafDeleteP";
     case WsKey::kLeafDeleteO:
-        return "leaf_delete_o";
+        return "kLeafDeleteO";
     case WsKey::kLeafReplace:
-        return "leaf_replace";
+        return "kLeafReplace";
     case WsKey::kBranchDelete:
-        return "branch_delete";
+        return "kBranchDelete";
     case WsKey::kNodeDirectionRuleUpdate:
-        return "node_direction_rule_update";
+        return "kNodeDirectionRuleUpdate";
 
-    // --- Leaf delete flow ---
+        // --- Leaf delete flow ---
     case WsKey::kLeafDeleteCheck:
-        return "leaf_delete_check";
+        return "kLeafDeleteCheck";
     case WsKey::kLeafDeleteDeny:
-        return "leaf_delete_deny";
+        return "kLeafDeleteDeny";
     case WsKey::kLeafDeleteAllow:
-        return "leaf_delete_allow";
+        return "kLeafDeleteAllow";
 
-    // --- Tag ---
+        // --- Tag ---
     case WsKey::kTagApply:
-        return "tag_apply";
+        return "kTagApply";
     case WsKey::kTagInsert:
-        return "tag_insert";
+        return "kTagInsert";
     case WsKey::kTagUpdate:
-        return "tag_update";
+        return "kTagUpdate";
     case WsKey::kTagDelete:
-        return "tag_delete";
+        return "kTagDelete";
 
-    // --- Entry ---
+        // --- Entry ---
     case WsKey::kEntryInsert:
-        return "entry_insert";
+        return "kEntryInsert";
     case WsKey::kEntryUpdate:
-        return "entry_update";
+        return "kEntryUpdate";
     case WsKey::kEntryDelete:
-        return "entry_delete";
+        return "kEntryDelete";
     case WsKey::kEntryDescriptionSearch:
-        return "entry_description_search";
+        return "kEntryDescriptionSearch";
     case WsKey::kEntryTagSearch:
-        return "entry_tag_search";
+        return "kEntryTagSearch";
     case WsKey::kEntriesMark:
-        return "kMarkEntries";
+        return "kEntriesMark";
     case WsKey::kEntryLinkedNodeUpdate:
-        return "entry_linked_node_update";
+        return "kEntryLinkedNodeUpdate";
     case WsKey::kEntryRateUpdate:
-        return "entry_rate_update";
+        return "kEntryRateUpdate";
     case WsKey::kEntryNumericUpdate:
-        return "entry_numeric_update";
+        return "kEntryNumericUpdate";
 
-    // --- Order ---
+        // --- Order ---
     case WsKey::kOrderInsertSave:
-        return "order_insert_save";
+        return "kOrderInsertSave";
     case WsKey::kOrderUpdateSave:
-        return "order_update_save";
+        return "kOrderUpdateSave";
     case WsKey::kOrderInsertRelease:
-        return "order_insert_release";
+        return "kOrderInsertRelease";
     case WsKey::kOrderUpdateRelease:
-        return "order_update_release";
+        return "kOrderUpdateRelease";
     case WsKey::kOrderRecall:
-        return "order_recall";
+        return "kOrderRecall";
 
-    // --- Misc ---
+        // --- Misc ---
     case WsKey::kOperationDeny:
-        return "operation_deny";
+        return "kOperationDeny";
 
-    // --- Profile ---
+        // --- Profile ---
     case WsKey::kAccountNameUpdate:
-        return "account_name_update";
+        return "kAccountNameUpdate";
     case WsKey::kAccountUsernameUpdate:
-        return "account_username_update";
+        return "kAccountUsernameUpdate";
 
-    // --- Workspace Member ---
+        // --- Workspace Member ---
     case WsKey::kWorkspaceMemberAck:
         return "kWorkspaceMemberAck";
     case WsKey::kWorkspaceMemberUpdate:
@@ -326,10 +326,30 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kIncomeStatementAck";
     case WsKey::kCashFlowStatementAck:
         return "kCashFlowStatementAck";
+
     case WsKey::kEntryDeletePartner:
         return "kEntryDeletePartner";
-    default:
-        return "unknown";
+    case WsKey::kEntryInsertPartner:
+        return "kEntryInsertPartner";
+
+        // --- Order delivery binding ---
+    case WsKey::kBindingRequest:
+        return "kBindingRequest";
+    case WsKey::kBindingRequestOutcome:
+        return "kBindingRequestOutcome";
+        // --- Order delivery ---
+    case WsKey::kOrderDeliver:
+        return "kOrderDeliver";
+    case WsKey::kOrderDeliverOutcome:
+        return "kOrderDeliverOutcome";
+    case WsKey::kOrderNotify:
+        return "kOrderNotify";
+    case WsKey::kOrderFetch:
+        return "kOrderFetch";
+    case WsKey::kOrderDetail:
+        return "kOrderDetail";
+    case WsKey::kOrderAccept:
+        return "kOrderAccept";
     }
 }
 
