@@ -107,9 +107,7 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& /*parent
     entry->sync_state = SyncState::kDeleting;
 
     QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
-    message.insert(kLhsTotal, QJsonObject());
-    message.insert(kRhsTotal, QJsonObject());
-    WebSocket::Instance()->SendMessage(WsKey::kEntryDelete, message);
+    WebSocket::Instance()->SendMessage(WsKey::kEntryDeletePartner, message);
     return true;
 }
 
@@ -137,10 +135,7 @@ bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
         entry->sync_state = SyncState::kSynced;
 
         message.insert(kEntry, entry->WriteJson());
-        message.insert(kLhsTotal, QJsonObject());
-        message.insert(kRhsTotal, QJsonObject());
-
-        WebSocket::Instance()->SendMessage(WsKey::kEntryInsert, message);
+        WebSocket::Instance()->SendMessage(WsKey::kEntryInsertPartner, message);
 
         emit STransferOneEntry(entry);
         return true;

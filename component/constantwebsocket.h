@@ -131,7 +131,7 @@ enum class WsKey : uint8_t {
     // --- Account Role ---
     kAccountRoleUpdate = 63,
     kAccountRoleDelete = 64,
-    // -- Audit Log ---
+    // --- Audit Log ---
     kAuditLogAck = 65,
     kNodeTagSearch = 66, // for order node
     kPeriodClose = 67,
@@ -140,6 +140,20 @@ enum class WsKey : uint8_t {
     kBalanceSheetAck = 70,
     kIncomeStatementAck = 71,
     kCashFlowStatementAck = 72,
+    // --- Order delivery binding ---
+    kBindingRequest = 73, // Client -> Server: request to establish a delivery binding with a partner
+    kBindingRequestOutcome = 74, // Server -> Client (requester): reports the outcome of a binding request
+    // --- Order delivery ---
+    kOrderDeliver = 75, // Client -> Server: request to deliver an order
+    kOrderDeliverOutcome = 76, // Server -> Client (sender): reports the outcome of an order delivery attempt
+    kOrderNotify = 77, // Server -> Client: notifies the receiver that new delivered orders are available
+    kOrderFetch = 78, // Client -> Server: fetch pending delivered orders
+    kOrderDetail = 79,
+    kOrderAccept = 80,
+    // --- Entry Partner ---
+    kEntryInsertPartner = 81,
+    kEntryDeletePartner = 82,
+
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -312,6 +326,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kIncomeStatementAck";
     case WsKey::kCashFlowStatementAck:
         return "kCashFlowStatementAck";
+    case WsKey::kEntryDeletePartner:
+        return "kEntryDeletePartner";
     default:
         return "unknown";
     }

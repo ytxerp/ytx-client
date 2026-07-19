@@ -233,6 +233,9 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kBalanceSheetAck] = [this](const QJsonObject& obj) { AckBalanceSheet(obj); };
     handler_obj_[WsKey::kIncomeStatementAck] = [this](const QJsonObject& obj) { AckIncomeStatement(obj); };
     handler_obj_[WsKey::kCashFlowStatementAck] = [this](const QJsonObject& obj) { AckCashFlowStatement(obj); };
+
+    handler_obj_[WsKey::kEntryDeletePartner] = [this](const QJsonObject& obj) { DeleteEntryPartner(obj); };
+    handler_obj_[WsKey::kEntryInsertPartner] = [this](const QJsonObject& obj) { InsertEntryPartner(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -981,6 +984,29 @@ void WebSocket::InsertEntry(const QJsonObject& obj)
     entry_hub->InsertEntry(entry);
 }
 
+void WebSocket::InsertEntryPartner(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const auto session_id { QUuid(obj[kSessionId].toString()) };
+
+    const QJsonObject entry { obj.value(kEntry).toObject() };
+
+    auto entry_hub { entry_hub_hash_.value(section) };
+    auto tree_model { tree_model_hash_.value(section) };
+
+    Q_ASSERT(entry_hub);
+    Q_ASSERT(tree_model);
+
+    if (session_id == session_id_) {
+        const QUuid id { entry.value(kId).toString() };
+        const int version { entry.value(kVersion).toInt() };
+        entry_hub->UpdateVersion(id, version);
+        return;
+    }
+
+    entry_hub->InsertEntry(entry);
+}
+
 void WebSocket::DeleteEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
@@ -1000,6 +1026,18 @@ void WebSocket::DeleteEntry(const QJsonObject& obj)
         const QJsonArray total_array { lhs_total, rhs_total };
         tree_model->SyncTotalArray(total_array);
     }
+
+    entry_hub->DeleteEntry(entry_id);
+}
+
+void WebSocket::DeleteEntryPartner(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
+
+    auto entry_hub { entry_hub_hash_.value(section) };
+
+    Q_ASSERT(entry_hub);
 
     entry_hub->DeleteEntry(entry_id);
 }
