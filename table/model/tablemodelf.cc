@@ -237,6 +237,8 @@ bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int 
         *shadow->sync_state = SyncState::kSynced;
 
         message.insert(kEntry, shadow->WriteJson());
+        message.insert(kLhsTotal, QJsonObject());
+        message.insert(kRhsTotal, QJsonObject());
         WebSocket::Instance()->SendMessage(WsKey::kEntryInsert, message);
 
         const double lhs_debit { *shadow->lhs_debit };
@@ -318,6 +320,8 @@ bool TableModelF::UpdateNumeric(EntryShadow* shadow, double value, int row, bool
     update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*shadow->lhs_credit, 'f', numeric_const::kDecimalPlaces8));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
+    message.insert(kLhsTotal, QJsonObject());
+    message.insert(kRhsTotal, QJsonObject());
 
     // Delta calculation follows the DICD rule (Debit - Credit).
     // After the delta is computed, both the node and the server
@@ -440,6 +444,8 @@ bool TableModelF::UpdateRate(EntryShadow* shadow, double value)
     update.insert(is_parallel ? kLhsRate : kRhsRate, QString::number(*shadow->lhs_rate, 'f', numeric_const::kDecimalPlaces8));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
+    message.insert(kLhsTotal, QJsonObject());
+    message.insert(kRhsTotal, QJsonObject());
     WebSocket::Instance()->SendMessage(WsKey::kEntryRateUpdate, message);
 
     const double rhs_initial_delta { *shadow->rhs_debit - *shadow->rhs_credit - (rhs_old_debit - rhs_old_credit) };
