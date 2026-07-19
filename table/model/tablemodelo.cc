@@ -40,13 +40,11 @@ void TableModelO::Finalize(QJsonObject& message)
 
     // deleted
     {
-        if (!pending_delete_.isEmpty()) {
-            QJsonArray deleted_entry_array {};
-            for (const auto& id : std::as_const(pending_delete_)) {
-                deleted_entry_array.append(id.toString(QUuid::WithoutBraces));
-            }
-            message.insert(kDeletedEntryArray, deleted_entry_array);
+        QJsonArray deleted_entry_array {};
+        for (const auto& id : std::as_const(pending_delete_)) {
+            deleted_entry_array.append(id.toString(QUuid::WithoutBraces));
         }
+        message.insert(kDeletedEntryArray, deleted_entry_array);
     }
 
     // insert and update
@@ -71,11 +69,8 @@ void TableModelO::Finalize(QJsonObject& message)
             entry->sync_state = SyncState::kSynced;
         }
 
-        if (!inserted_entry_array.isEmpty())
-            message.insert(kInsertedEntryArray, inserted_entry_array);
-
-        if (!updated_entry_array.isEmpty())
-            message.insert(kUpdatedEntryArray, updated_entry_array);
+        message.insert(kInsertedEntryArray, inserted_entry_array);
+        message.insert(kUpdatedEntryArray, updated_entry_array);
     }
 
     // clear
