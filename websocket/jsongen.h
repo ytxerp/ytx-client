@@ -25,6 +25,9 @@
 #ifndef JSONGEN_H
 #define JSONGEN_H
 
+// Only client-owned data is included in the request.
+// Server-owned fields are computed and filled by the server.
+
 namespace JsonGen {
 
 QJsonObject Login(CString& email, CString& password, CString& workspace);
