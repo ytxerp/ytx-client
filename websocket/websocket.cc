@@ -837,6 +837,9 @@ void WebSocket::UpdateEntry(const QJsonObject& obj)
 
 void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kLhsTotal));
+    Q_ASSERT(obj.contains(kRhsTotal));
+
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid entry_id { obj.value(kEntryId).toString() };
@@ -846,17 +849,11 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
 
-    QJsonObject lhs_total {};
-    QJsonObject rhs_total {};
+    const QJsonObject lhs_total { obj.value(kLhsTotal).toObject() };
+    const QJsonObject rhs_total { obj.value(kRhsTotal).toObject() };
 
-    const bool has_total { obj.contains(kLhsTotal) && obj.value(kLhsTotal).isObject() && obj.contains(kRhsTotal) && obj.value(kRhsTotal).isObject() };
-    if (has_total) {
-        lhs_total = obj.value(kLhsTotal).toObject();
-        rhs_total = obj.value(kRhsTotal).toObject();
-
-        const QJsonArray total_array { lhs_total, rhs_total };
-        tree_model->SyncTotalArray(total_array);
-    }
+    const QJsonArray total_array { lhs_total, rhs_total };
+    tree_model->SyncTotalArray(total_array);
 
     if (session_id == session_id_) {
         const int version { update.value(kVersion).toInt() };
@@ -869,6 +866,9 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
 
 void WebSocket::UpdateEntryRate(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kLhsTotal));
+    Q_ASSERT(obj.contains(kRhsTotal));
+
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
 
@@ -882,17 +882,11 @@ void WebSocket::UpdateEntryRate(const QJsonObject& obj)
     Q_ASSERT(entry_hub);
     Q_ASSERT(tree_model);
 
-    QJsonObject lhs_total {};
-    QJsonObject rhs_total {};
+    const QJsonObject lhs_total { obj.value(kLhsTotal).toObject() };
+    const QJsonObject rhs_total { obj.value(kRhsTotal).toObject() };
 
-    const bool has_total { obj.contains(kLhsTotal) && obj.value(kLhsTotal).isObject() && obj.contains(kRhsTotal) && obj.value(kRhsTotal).isObject() };
-    if (has_total) {
-        lhs_total = obj.value(kLhsTotal).toObject();
-        rhs_total = obj.value(kRhsTotal).toObject();
-
-        const QJsonArray total_array { lhs_total, rhs_total };
-        tree_model->SyncTotalArray(total_array);
-    }
+    const QJsonArray total_array { lhs_total, rhs_total };
+    tree_model->SyncTotalArray(total_array);
 
     if (session_id == session_id_) {
         const int version { update.value(kVersion).toInt() };
@@ -905,6 +899,9 @@ void WebSocket::UpdateEntryRate(const QJsonObject& obj)
 
 void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kLhsTotal));
+    Q_ASSERT(obj.contains(kRhsTotal));
+
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
 
@@ -917,17 +914,11 @@ void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)
     Q_ASSERT(entry_hub);
     Q_ASSERT(tree_model);
 
-    QJsonObject lhs_total {};
-    QJsonObject rhs_total {};
+    const QJsonObject lhs_total { obj.value(kLhsTotal).toObject() };
+    const QJsonObject rhs_total { obj.value(kRhsTotal).toObject() };
 
-    const bool has_total { obj.contains(kLhsTotal) && obj.value(kLhsTotal).isObject() && obj.contains(kRhsTotal) && obj.value(kRhsTotal).isObject() };
-    if (has_total) {
-        lhs_total = obj.value(kLhsTotal).toObject();
-        rhs_total = obj.value(kRhsTotal).toObject();
-
-        const QJsonArray total_array { lhs_total, rhs_total };
-        tree_model->SyncTotalArray(total_array);
-    }
+    const QJsonArray total_array { lhs_total, rhs_total };
+    tree_model->SyncTotalArray(total_array);
 
     if (session_id == session_id_) {
         const int version { update.value(kVersion).toInt() };
@@ -951,6 +942,9 @@ void WebSocket::SearchNode(const QJsonObject& obj) { emit SNodeSearch(obj); }
 
 void WebSocket::InsertEntry(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kLhsTotal));
+    Q_ASSERT(obj.contains(kRhsTotal));
+
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
 
@@ -962,17 +956,11 @@ void WebSocket::InsertEntry(const QJsonObject& obj)
     Q_ASSERT(entry_hub);
     Q_ASSERT(tree_model);
 
-    QJsonObject lhs_total {};
-    QJsonObject rhs_total {};
+    const QJsonObject lhs_total { obj.value(kLhsTotal).toObject() };
+    const QJsonObject rhs_total { obj.value(kRhsTotal).toObject() };
 
-    const bool has_total { obj.contains(kLhsTotal) && obj.value(kLhsTotal).isObject() && obj.contains(kRhsTotal) && obj.value(kRhsTotal).isObject() };
-    if (has_total) {
-        lhs_total = obj.value(kLhsTotal).toObject();
-        rhs_total = obj.value(kRhsTotal).toObject();
-
-        const QJsonArray total_array { lhs_total, rhs_total };
-        tree_model->SyncTotalArray(total_array);
-    }
+    const QJsonArray total_array { lhs_total, rhs_total };
+    tree_model->SyncTotalArray(total_array);
 
     if (session_id == session_id_) {
         const QUuid id { entry.value(kId).toString() };
@@ -1009,6 +997,9 @@ void WebSocket::InsertEntryPartner(const QJsonObject& obj)
 
 void WebSocket::DeleteEntry(const QJsonObject& obj)
 {
+    Q_ASSERT(obj.contains(kLhsTotal));
+    Q_ASSERT(obj.contains(kRhsTotal));
+
     const Section section { obj.value(kSection).toInt() };
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
 
@@ -1018,14 +1009,11 @@ void WebSocket::DeleteEntry(const QJsonObject& obj)
     Q_ASSERT(entry_hub);
     Q_ASSERT(tree_model);
 
-    const bool has_total { obj.contains(kLhsTotal) && obj.value(kLhsTotal).isObject() && obj.contains(kRhsTotal) && obj.value(kRhsTotal).isObject() };
-    if (has_total) {
-        const QJsonObject lhs_total { obj.value(kLhsTotal).toObject() };
-        const QJsonObject rhs_total { obj.value(kRhsTotal).toObject() };
+    const QJsonObject lhs_total { obj.value(kLhsTotal).toObject() };
+    const QJsonObject rhs_total { obj.value(kRhsTotal).toObject() };
 
-        const QJsonArray total_array { lhs_total, rhs_total };
-        tree_model->SyncTotalArray(total_array);
-    }
+    const QJsonArray total_array { lhs_total, rhs_total };
+    tree_model->SyncTotalArray(total_array);
 
     entry_hub->DeleteEntry(entry_id);
 }

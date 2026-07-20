@@ -44,12 +44,12 @@ void TreeModel::SyncTotalArray(const QJsonArray& total_array)
 
     QSet<QUuid> affected_ids {};
 
-    for (const auto& delta : total_array) {
-        const QJsonObject obj { delta.toObject() };
+    for (const auto& total : total_array) {
+        const QJsonObject obj { total.toObject() };
 
-        Q_ASSERT_X(obj.contains(kId), "TreeModel::UpdateDelta", "Missing kId in delta object");
-        Q_ASSERT_X(obj.contains(kInitialTotal), "TreeModel::UpdateDelta", "Missing kInitialDelta in delta object");
-        Q_ASSERT_X(obj.contains(kFinalTotal), "TreeModel::UpdateDelta", "Missing kFinalDelta in delta object");
+        Q_ASSERT_X(obj.contains(kId), "TreeModel::SyncTotalArray", "Missing kId in total object");
+        Q_ASSERT_X(obj.contains(kInitialTotal), "TreeModel::SyncTotalArray", "Missing kInitialTotal in total object");
+        Q_ASSERT_X(obj.contains(kFinalTotal), "TreeModel::SyncTotalArray", "Missing kFinalTotal in total object");
 
         const QUuid node_id { QUuid(obj.value(kId).toString()) };
         const double initial_total { obj.value(kInitialTotal).toString().toDouble() };
@@ -93,6 +93,9 @@ QSet<QUuid> TreeModel::UpdateTotal(const QUuid& node_id, double initial_total, d
 
     const double initial_delta { initial_total - node->initial_total };
     const double final_delta { final_total - node->final_total };
+
+    if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta))
+        return {};
 
     // Accumulate into the current node totals
     node->initial_total = initial_total;
