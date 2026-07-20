@@ -6,7 +6,6 @@
 #include "component/constantwebsocket.h"
 #include "global/nodepool.h"
 #include "tree/excludeidfiltermodel.h"
-#include "tree/excludeidunitfiltermodel.h"
 #include "tree/includeunitfiltermodel.h"
 #include "tree/replaceselffiltermodel.h"
 #include "utils/nodeutils.h"

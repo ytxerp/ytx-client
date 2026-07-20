@@ -261,7 +261,6 @@ set(HEADERS
     tag/tagmodel.h
     tag/tagrow.h
     tree/excludeidfiltermodel.h
-    tree/excludeidunitfiltermodel.h
     tree/finance_role.h
     tree/includeunitfiltermodel.h
     tree/itemmodel.h
