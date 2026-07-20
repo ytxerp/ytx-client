@@ -466,8 +466,6 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
     *shadow->sync_state = SyncState::kDeleting;
 
     QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
-    message.insert(kLhsTotal, QJsonObject());
-    message.insert(kRhsTotal, QJsonObject());
     WebSocket::Instance()->SendMessage(WsKey::kEntryDelete, message);
 
     return true;

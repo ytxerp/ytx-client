@@ -46,8 +46,6 @@ QJsonObject LeafDelete(Section section, CUuid& node_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kLinkedEntry, QJsonObject());
-    message.insert(kTotalArray, QJsonArray());
     return message;
 }
 
@@ -57,7 +55,6 @@ QJsonObject LeafDeleteP(Section section, CUuid& node_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kLinkedEntry, QJsonArray());
     return message;
 }
 
@@ -67,10 +64,6 @@ QJsonObject LeafDeleteO(Section section, CUuid& node_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kPartnerId, QUuid().toString(QUuid::WithoutBraces));
-    message.insert(kUnit, int {});
-    message.insert(kStatus, int {});
-    message.insert(kInitialTotal, QString());
     return message;
 }
 
@@ -99,11 +92,6 @@ QJsonObject LeafDeleteCheck(Section section, CUuid& node_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(node_ref::kInternal, false);
-    message.insert(node_ref::kSale, false);
-    message.insert(node_ref::kPartner, false);
-    message.insert(node_ref::kSettlement, false);
-    message.insert(node_ref::kPurchase, false);
     return message;
 }
 
@@ -112,10 +100,8 @@ QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id)
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSessionId, QString());
-    message.insert(kResult, false);
     message.insert(kOldNodeId, old_id.toString(QUuid::WithoutBraces));
     message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
-    message.insert(node_ref::kPartner, false);
     return message;
 }
 
@@ -125,7 +111,6 @@ QJsonObject TableAck(Section section, CUuid& node_id, CUuid& entry_id)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
-    message.insert(kEntryArray, QJsonArray());
     return message;
 }
 
@@ -145,8 +130,6 @@ QJsonObject TreeAck(Section section, const QDateTime& start, const QDateTime& en
     message.insert(kSection, std::to_underlying(section));
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kNodeArray, QJsonArray());
-    message.insert(kPathArray, QJsonArray());
     return message;
 }
 
@@ -161,7 +144,6 @@ QJsonObject InventoryHeadAck(Section section, CUuid& widget_id, const QDateTime&
     message.insert(section_heat::kMinOrderCount, moc);
     message.insert(section_heat::kMinPartnerCount, mpc);
     message.insert(section_heat::kMinActiveMonths, mam);
-    message.insert(kArray, QJsonArray());
     return message;
 }
 
@@ -195,7 +177,6 @@ QJsonObject EntryDescriptionSearch(Section section, CString& keyword)
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kKeyword, keyword);
-    message.insert(kEntryArray, QJsonArray());
     return message;
 }
 
@@ -203,7 +184,6 @@ QJsonObject EntryTagSearch(Section section, const QSet<QString>& tags)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kEntryArray, QJsonArray());
 
     // Convert QSet<QString> to QJsonArray
     QJsonArray tag_array {};
@@ -220,8 +200,6 @@ QJsonObject NodeAck(Section section, CUuid& node_id)
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kNode, QJsonObject());
-    message.insert(kAncestor, QUuid().toString(QUuid::WithoutBraces));
     return message;
 }
 
@@ -270,7 +248,6 @@ QJsonObject NodeNameSearch(Section section, CString& keyword)
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kKeyword, keyword);
-    message.insert(kNodeArray, QJsonArray());
     return message;
 }
 
@@ -315,7 +292,6 @@ QJsonObject OrderReferenceAck(Section section, CUuid& widget_id, CUuid& node_id,
     message.insert(kUnit, unit);
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kArray, QJsonArray());
 
     return message;
 }
@@ -329,7 +305,6 @@ QJsonObject StatementAck(Section section, CUuid& widget_id, int unit, const QDat
     message.insert(kUnit, unit);
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kArray, QJsonArray());
 
     return message;
 }
@@ -344,7 +319,6 @@ QJsonObject StatementNodeAck(Section section, CUuid& widget_id, CUuid& partner_i
     message.insert(kUnit, unit);
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kArray, QJsonArray());
 
     return message;
 }
@@ -359,8 +333,6 @@ QJsonObject StatementEntryAck(Section section, CUuid& widget_id, CUuid& partner_
     message.insert(kUnit, unit);
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kArray, QJsonArray());
-    message.insert(kTotal, QJsonObject());
 
     return message;
 }
@@ -373,7 +345,6 @@ QJsonObject SettlementAck(Section section, CUuid& widget_id, const QDateTime& st
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kArray, QJsonArray());
 
     return message;
 }
@@ -386,7 +357,6 @@ QJsonObject SettlementItemAck(Section section, CUuid& widget_id, CUuid& partner_
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
     message.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
-    message.insert(kArray, QJsonArray());
 
     return message;
 }
@@ -419,7 +389,6 @@ QJsonObject WorkspaceMemberAck(CUuid& widget_id, CString& workspace)
     message.insert(kSessionId, QString());
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kWorkspace, workspace);
-    message.insert(kMemberArray, QJsonArray());
     return message;
 }
 
@@ -485,8 +454,6 @@ QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace, const QDateTime& s
     QJsonObject message {};
     message.insert(kSessionId, QString());
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
-    message.insert(kLogArray, QJsonArray());
-    message.insert(kUserArray, QJsonArray());
     message.insert(kWorkspace, workspace);
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
@@ -497,7 +464,6 @@ QJsonObject NodeTagSearch(Section section, const QSet<QString>& tags)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kNodeArray, QJsonArray());
 
     // Convert QSet<QString> to QJsonArray
     QJsonArray tag_array {};
@@ -520,7 +486,6 @@ QJsonObject PartnerHeadAck(Section section, CUuid& widget_id, const QDateTime& s
     message.insert(section_heat::kMinOrderCount, moc);
     message.insert(section_heat::kMinInventoryDiversity, mid);
     message.insert(section_heat::kMinActiveMonths, mam);
-    message.insert(kArray, QJsonArray());
     return message;
 }
 
@@ -536,8 +501,6 @@ QJsonObject BalanceSheetAck(CUuid& widget_id, CUuid& asset, CUuid& liability, CU
     message.insert(balance_sheet::kLiabilityId, liability.toString(QUuid::WithoutBraces));
     message.insert(balance_sheet::kEquityId, equity.toString(QUuid::WithoutBraces));
     message.insert(kLevel, level);
-    message.insert(kNodeArray, QJsonArray());
-    message.insert(kPathArray, QJsonArray());
     return message;
 }
 
@@ -550,9 +513,6 @@ QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, 
     message.insert(income_statement::kIncomeId, income.toString(QUuid::WithoutBraces));
     message.insert(income_statement::kExpenseId, expense.toString(QUuid::WithoutBraces));
     message.insert(kLevel, level);
-    message.insert(kNodeArray, QJsonArray());
-    message.insert(kPathArray, QJsonArray());
-    message.insert(income_statement::kProfits, QJsonObject());
     return message;
 }
 
@@ -564,11 +524,6 @@ QJsonObject CashFlowStatementAck(CUuid& widget_id, const QDateTime& start, const
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kEnd, end.toString(Qt::ISODate));
     message.insert(kStart, start.toString(Qt::ISODate));
-    message.insert(kNodeArray, QJsonArray());
-    message.insert(cash_flow::kCounterPartArray, QJsonArray());
-    message.insert(cash_flow::kCarrierArray, QJsonArray());
-    message.insert(cash_flow::kSpecialArray, QJsonArray());
-    message.insert(cash_flow::kWrongEntryArray, QJsonArray());
 
     return message;
 }

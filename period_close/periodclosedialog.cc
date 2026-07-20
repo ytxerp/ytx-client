@@ -196,8 +196,6 @@ void PeriodCloseDialog::on_pushButtonCommit_clicked()
 
     message.insert(kSummaryTotal, summary_total);
     message.insert(kClosingLeafNode, BuildUuidArray(closing_leaf_node_));
-    message.insert(kEntryArray, QJsonArray());
-    message.insert(kTotalArray, QJsonArray());
     message.insert(kSection, std::to_underlying(section_));
 
     WebSocket::Instance()->SendMessage(WsKey::kPeriodClose, message);
