@@ -514,7 +514,6 @@ void TableWidgetO::SaveOrder()
 
     QJsonObject order_message {};
     order_message.insert(kSection, std::to_underlying(section_));
-    order_message.insert(kSessionId, QString());
 
     table_model_order_->Finalize(order_message);
 
@@ -547,7 +546,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
     QJsonObject order_message {};
     order_message.insert(kSection, std::to_underlying(section_));
-    order_message.insert(kSessionId, QString());
     table_model_order_->Finalize(order_message);
 
     if (tmp_node_->sync_state == SyncState::kSynced) {

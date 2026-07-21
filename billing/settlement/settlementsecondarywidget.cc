@@ -163,7 +163,6 @@ void SettlementSecondaryWidget::on_pBtnRelease_clicked()
     {
         QJsonObject message {};
         message.insert(kSection, std::to_underlying(section_));
-        message.insert(kSessionId, QString());
 
         model_->Finalize(message);
 
@@ -201,7 +200,6 @@ void SettlementSecondaryWidget::on_pBtnRecall_clicked()
 
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section_));
-    message.insert(kSessionId, QString());
 
     model_->Finalize(message);
 

@@ -20,7 +20,6 @@ QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id)
 
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kNode, node_json);
     message.insert(kPath, path_json);
 
@@ -35,7 +34,6 @@ QJsonObject NodeDrag(Section section, CUuid& node_id, CUuid& parent_id)
 
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kPath, path_json);
     return message;
 }
@@ -44,7 +42,6 @@ QJsonObject LeafDelete(Section section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     return message;
 }
@@ -53,7 +50,6 @@ QJsonObject LeafDeleteP(Section section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     return message;
 }
@@ -62,7 +58,6 @@ QJsonObject LeafDeleteO(Section section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     return message;
 }
@@ -71,7 +66,6 @@ QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kParentId, parent_id.toString(QUuid::WithoutBraces));
     return message;
@@ -90,7 +84,6 @@ QJsonObject LeafDeleteCheck(Section section, CUuid& node_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     return message;
 }
@@ -99,7 +92,6 @@ QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kOldNodeId, old_id.toString(QUuid::WithoutBraces));
     message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
     return message;
@@ -118,7 +110,6 @@ QJsonObject MarkEntries(Section section, CUuid& node_id, int operation)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(WsField::kMarkOperation, operation);
     return message;
@@ -137,7 +128,6 @@ QJsonObject InventoryHeadAck(Section section, CUuid& widget_id, const QDateTime&
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
@@ -151,7 +141,6 @@ QJsonObject DocumentDir(Section section, CString& document_dir)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(WsField::kDocumentDir, document_dir);
     return message;
 }
@@ -207,7 +196,6 @@ QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_ru
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kDirectionRule, direction_rule);
     return message;
@@ -218,7 +206,6 @@ QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update)
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
-    message.insert(kSessionId, QString());
     message.insert(kUpdate, update);
     return message;
 }
@@ -228,7 +215,6 @@ QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& update)
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kSessionId, QString());
     message.insert(kUpdate, update);
     return message;
 }
@@ -238,7 +224,6 @@ QJsonObject NodeName(Section section, CUuid& node_id, CString& name)
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kSessionId, QString());
     message.insert(kName, name);
     return message;
 }
@@ -255,7 +240,6 @@ QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(WsField::kNodeUpdate, update);
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     return message;
@@ -266,7 +250,6 @@ QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bo
     QJsonObject message {};
 
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kUpdate, update);
     message.insert(kIsParallel, is_parallel);
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
@@ -277,7 +260,6 @@ QJsonObject EntryMessage(Section section, CUuid& entry_id)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
     return message;
 }
@@ -376,7 +358,6 @@ QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kId, id.toString(QUuid::WithoutBraces));
     message.insert(kUpdate, update);
 
@@ -386,7 +367,6 @@ QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update)
 QJsonObject WorkspaceMemberAck(CUuid& widget_id, CString& workspace)
 {
     QJsonObject message {};
-    message.insert(kSessionId, QString());
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kWorkspace, workspace);
     return message;
@@ -395,7 +375,6 @@ QJsonObject WorkspaceMemberAck(CUuid& widget_id, CString& workspace)
 QJsonObject WorkspaceMemberUpdate(CUuid& id, CJsonObject& update)
 {
     QJsonObject message {};
-    message.insert(kSessionId, QString());
     message.insert(kId, id.toString(QUuid::WithoutBraces));
     message.insert(kUpdate, update);
     return message;
@@ -405,7 +384,6 @@ QJsonObject WorkspaceMemberDelete(CUuid& id)
 {
     QJsonObject message {};
 
-    message.insert(kSessionId, QString());
     message.insert(kId, id.toString(QUuid::WithoutBraces));
 
     return message;
@@ -416,7 +394,6 @@ QJsonObject TagInsert(Section section, const TagRow* tag)
     QJsonObject message {};
 
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kTag, tag->WriteJson());
 
     return message;
@@ -427,7 +404,6 @@ QJsonObject TagDelete(Section section, CUuid& tag_id)
     QJsonObject message {};
 
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kId, tag_id.toString(QUuid::WithoutBraces));
 
     return message;
@@ -452,7 +428,6 @@ QJsonObject AccountUsername(CString& email, CString& username)
 QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
-    message.insert(kSessionId, QString());
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kWorkspace, workspace);
     message.insert(kStart, start.toString(Qt::ISODate));
@@ -479,7 +454,6 @@ QJsonObject PartnerHeadAck(Section section, CUuid& widget_id, const QDateTime& s
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kSessionId, QString());
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
@@ -493,7 +467,6 @@ QJsonObject BalanceSheetAck(CUuid& widget_id, CUuid& asset, CUuid& liability, CU
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(Section::kFinance));
-    message.insert(kSessionId, QString());
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kStart, start.toString(Qt::ISODate));
     message.insert(kEnd, end.toString(Qt::ISODate));
@@ -508,7 +481,6 @@ QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, 
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(Section::kFinance));
-    message.insert(kSessionId, QString());
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(income_statement::kIncomeId, income.toString(QUuid::WithoutBraces));
     message.insert(income_statement::kExpenseId, expense.toString(QUuid::WithoutBraces));
@@ -520,7 +492,6 @@ QJsonObject CashFlowStatementAck(CUuid& widget_id, const QDateTime& start, const
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(Section::kFinance));
-    message.insert(kSessionId, QString());
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kEnd, end.toString(Qt::ISODate));
     message.insert(kStart, start.toString(Qt::ISODate));
