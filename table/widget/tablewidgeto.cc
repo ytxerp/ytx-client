@@ -194,7 +194,7 @@ void TableWidgetO::InitData(const NodeO* node)
 {
     {
         (node->direction_rule ? ui->rBtnRO : ui->rBtnFO)->setChecked(true);
-        ui->dateTimeEdit->setDateTime(node->issued_time.toLocalTime());
+        ui->dateTimeEdit->setDateTime(node->issued_time);
     }
 
     {
@@ -315,14 +315,13 @@ void TableWidgetO::on_comboEmployee_currentIndexChanged(int /*index*/)
 
 void TableWidgetO::on_dateTimeEdit_dateTimeChanged(const QDateTime& date_time)
 {
-    const QDateTime utc_time { date_time.toUTC() };
-    if (tmp_node_->issued_time == utc_time)
+    if (tmp_node_->issued_time == date_time)
         return;
 
-    tmp_node_->issued_time = utc_time;
+    tmp_node_->issued_time = date_time;
 
     if (tmp_node_->sync_state == SyncState::kSynced) {
-        pending_update_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
+        pending_update_.insert(kIssuedTime, date_time.toUTC().toString(Qt::ISODate));
     }
 
     has_pending_update_ = true;

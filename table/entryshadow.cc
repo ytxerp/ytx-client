@@ -38,7 +38,7 @@ QJsonObject EntryShadow::WriteJson() const
 {
     QJsonObject obj {};
     obj.insert(kId, id->toString(QUuid::WithoutBraces));
-    obj.insert(kIssuedTime, issued_time->toString(Qt::ISODate));
+    obj.insert(kIssuedTime, issued_time->toUTC().toString(Qt::ISODate));
     obj.insert(kCode, *code);
     obj.insert(kLhsNode, lhs_node->toString(QUuid::WithoutBraces));
     obj.insert(kDescription, *description);

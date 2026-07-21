@@ -62,7 +62,7 @@ void MainWindow::on_actionNewBranch_triggered()
     d_node->status = NodeStatus::kDraft; // Branch nodes are always draft
     node->parent = parent_node;
 
-    static_cast<NodeO*>(node)->issued_time = QDateTime::currentDateTimeUtc();
+    static_cast<NodeO*>(node)->issued_time = QDateTime::currentDateTime();
 
     auto parent_path { tree_model->Path(parent_id) };
     if (!parent_path.isEmpty())
@@ -161,7 +161,7 @@ void MainWindow::InsertNodeO(const QModelIndex& parent_index)
     node->direction_rule = parent_node->direction_rule;
     node->unit = parent_index.isValid() ? parent_node->unit : NodeUnit(sc_->shared_config.default_unit);
     node->parent = parent_node;
-    node->issued_time = QDateTime::currentDateTimeUtc();
+    node->issued_time = QDateTime::currentDateTime();
     node->code = utils::UuidToShortCode(node->id);
 
     const QUuid node_id { node->id };

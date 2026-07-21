@@ -57,7 +57,7 @@ void PeriodCloseDialog::ConstructEntry(const QSet<Node*>& closing_leaf_node, con
         return;
 
     entry_list_.reserve(closing_leaf_node.size());
-    const auto date_time { QDateTime::currentDateTimeUtc() };
+    const auto date_time { QDateTime::currentDateTime() };
 
     for (const Node* node : closing_leaf_node) {
         if (!node) {

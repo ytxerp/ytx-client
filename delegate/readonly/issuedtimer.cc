@@ -10,7 +10,7 @@ IssuedTimeR::IssuedTimeR(const QString& date_format, QObject* parent)
 
 void IssuedTimeR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const auto issued_time { index.data().toDateTime().toLocalTime() };
+    const auto issued_time { index.data().toDateTime() };
 
     PaintText(issued_time.toString(date_format_), painter, option, index, Qt::AlignCenter);
 }

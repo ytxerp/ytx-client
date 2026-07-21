@@ -17,7 +17,7 @@ void PrimaryRow::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kPartnerId); val.isString())
         partner_id = QUuid(val.toString());
     if (const auto val = object.value(kIssuedTime); val.isString())
-        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
     if (const auto val = object.value(kDescription); val.isString())
         description = val.toString();
     if (const auto val = object.value(kStatus); val.isDouble())
@@ -34,7 +34,7 @@ QJsonObject PrimaryRow::WriteJson() const
 
     obj.insert(kId, id.toString(QUuid::WithoutBraces));
     obj.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
-    obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
+    obj.insert(kIssuedTime, issued_time.toUTC().toString(Qt::ISODate));
     obj.insert(kDescription, description);
     obj.insert(kStatus, std::to_underlying(status));
     obj.insert(kAmount, QString::number(amount, 'f', numeric_const::kDecimalPlaces4));
@@ -51,7 +51,7 @@ void SecondaryRow::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kEmployeeId); val.isString())
         employee_id = QUuid(val.toString());
     if (const auto val = object.value(kIssuedTime); val.isString())
-        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
     if (const auto val = object.value(kDescription); val.isString())
         description = val.toString();
     if (const auto val = object.value(kAmount); val.isString())

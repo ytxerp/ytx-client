@@ -47,7 +47,7 @@ inline void OrderReference::Reset() { *this = OrderReference {}; }
 inline void OrderReference::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kIssuedTime); val.isString())
-        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
     if (const auto val = object.value(kNodeId); val.isString())
         node_id = QUuid(val.toString());
     if (const auto val = object.value(kOrderId); val.isString())

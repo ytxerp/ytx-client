@@ -237,7 +237,7 @@ bool UpdateShadowIssuedTime(QJsonObject& update, T* object, CString& field, cons
         return true;
     }
 
-    update.insert(field, value.toString(Qt::ISODate));
+    update.insert(field, value.toUTC().toString(Qt::ISODate));
 
     if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();
@@ -325,7 +325,7 @@ bool UpdateIssuedTime(QJsonObject& update, T* object, CString& field, const QDat
         return true;
     }
 
-    update.insert(field, value.toString(Qt::ISODate));
+    update.insert(field, value.toUTC().toString(Qt::ISODate));
 
     if constexpr (!std::is_same_v<std::decay_t<F>, std::nullptr_t>) {
         restart_timer();

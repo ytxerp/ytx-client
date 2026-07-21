@@ -23,7 +23,7 @@ void IssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) const
     if (cast_editor->hasFocus())
         return;
 
-    auto issued_time { index.data().toDateTime().toLocalTime() };
+    auto issued_time { index.data().toDateTime() };
 
     if (!issued_time.isValid())
         issued_time = (remember_last_ && last_issued_.isValid()) ? last_issued_ : QDateTime::currentDateTime();
@@ -34,7 +34,7 @@ void IssuedTime::setEditorData(QWidget* editor, const QModelIndex& index) const
 void IssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
     auto* cast_editor { static_cast<DateTimeEdit*>(editor) };
-    auto issued_time { cast_editor->dateTime().toUTC() };
+    auto issued_time { cast_editor->dateTime() };
 
     if (remember_last_)
         last_issued_ = issued_time;
@@ -44,7 +44,7 @@ void IssuedTime::setModelData(QWidget* editor, QAbstractItemModel* model, const 
 
 void IssuedTime::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    auto issued_time { index.data().toDateTime().toLocalTime() };
+    auto issued_time { index.data().toDateTime() };
     if (!issued_time.isValid())
         return QStyledItemDelegate::paint(painter, option, index);
 
@@ -53,6 +53,6 @@ void IssuedTime::paint(QPainter* painter, const QStyleOptionViewItem& option, co
 
 QSize IssuedTime::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    auto text { index.data().toDateTime().toLocalTime().toString(date_format_) };
+    auto text { index.data().toDateTime().toString(date_format_) };
     return CalculateTextSize(text, option);
 }

@@ -24,7 +24,7 @@ void MainWindow::on_actionAppendEntry_triggered()
 
             settlement::PrimaryRow settlement {};
 
-            settlement.issued_time = QDateTime::currentDateTimeUtc();
+            settlement.issued_time = QDateTime::currentDateTime();
             settlement.id = QUuid::createUuidV7();
 
             CreateSettlementSecondary(settlement_widget_id, settlement);

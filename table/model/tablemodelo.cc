@@ -334,7 +334,7 @@ bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
     auto* entry { EntryPool::Instance().Allocate(section_) };
     entry->id = QUuid::createUuidV7();
     entry->lhs_node = node_id_;
-    entry->issued_time = QDateTime::currentDateTimeUtc();
+    entry->issued_time = QDateTime::currentDateTime();
 
     beginInsertRows(parent, row, row);
     entry_list_.insert(row, entry);

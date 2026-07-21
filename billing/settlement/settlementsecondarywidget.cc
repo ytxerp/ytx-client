@@ -63,7 +63,7 @@ void SettlementSecondaryWidget::InitData()
     ui->comboPartner->setCurrentIndex(partner_index);
 
     ui->lineDescription->setText(settlement_.description);
-    ui->dateTimeEdit->setDateTime(settlement_.issued_time.toLocalTime());
+    ui->dateTimeEdit->setDateTime(settlement_.issued_time);
     ui->dSpinAmount->setValue(settlement_.amount);
 
     ui->comboPartner->setReadOnly(settlement_.sync_state != SyncState::kCreating);
@@ -106,14 +106,13 @@ bool SettlementSecondaryWidget::ValidateSyncState()
 
 void SettlementSecondaryWidget::on_dateTimeEdit_dateTimeChanged(const QDateTime& dateTime)
 {
-    const QDateTime utc_time { dateTime.toUTC() };
-    if (settlement_.issued_time == utc_time)
+    if (settlement_.issued_time == dateTime)
         return;
 
-    settlement_.issued_time = utc_time;
+    settlement_.issued_time = dateTime;
 
     if (settlement_.sync_state == SyncState::kSynced)
-        pending_update_.insert(kIssuedTime, utc_time.toString(Qt::ISODate));
+        pending_update_.insert(kIssuedTime, dateTime.toUTC().toString(Qt::ISODate));
 }
 
 void SettlementSecondaryWidget::on_lineDescription_textChanged(const QString& arg1)

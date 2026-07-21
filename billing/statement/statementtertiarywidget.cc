@@ -141,7 +141,7 @@ void StatementTertiaryWidget::InitTimer()
 void StatementTertiaryWidget::on_pBtnExport_clicked()
 {
     // Adjust end time (make the range inclusive) ---
-    const QDateTime adjust_end { end_.addSecs(-1).toLocalTime() };
+    const QDateTime adjust_end { end_.addMSecs(-1) };
 
     // Build default export file name ---
     QDir dir(QDir::homePath());

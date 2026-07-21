@@ -182,7 +182,7 @@ void PrintHub::DrawHeader(QPainter* painter)
     painter->save();
 
     DrawText(painter, QStringLiteral("partner"), MasterDataRegistry::Instance().PartnerName(node_o_->partner_id));
-    DrawText(painter, QStringLiteral("issued_time"), node_o_->issued_time.toLocalTime().toString(datetime_format::kDashedDate));
+    DrawText(painter, QStringLiteral("issued_time"), node_o_->issued_time.toString(datetime_format::kDashedDate));
     DrawText(painter, QStringLiteral("code"), node_o_->code);
 
     painter->restore();

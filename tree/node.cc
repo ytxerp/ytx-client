@@ -207,7 +207,7 @@ void NodeO::ReadJson(const QJsonObject& object)
         measure_total = val.toString().toDouble();
 
     if (const auto val = object.value(kIssuedTime); val.isString())
-        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
 
     if (const auto val = object.value(kIsSettled); val.isBool())
         is_settled = val.toBool();
@@ -233,7 +233,7 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kDiscountTotal, QString::number(discount_total, 'f', numeric_const::kDecimalPlaces4));
     obj.insert(kEmployeeId, employee_id.toString(QUuid::WithoutBraces));
     obj.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
-    obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
+    obj.insert(kIssuedTime, issued_time.toUTC().toString(Qt::ISODate));
     obj.insert(kCountTotal, QString::number(count_total, 'f', numeric_const::kDecimalPlaces8));
     obj.insert(kMeasureTotal, QString::number(measure_total, 'f', numeric_const::kDecimalPlaces8));
     obj.insert(kStatus, std::to_underlying(status));

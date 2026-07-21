@@ -17,7 +17,7 @@ void Entry::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());
     if (const auto val = object.value(kIssuedTime); val.isString())
-        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
     if (const auto val = object.value(kCode); val.isString())
         code = val.toString();
     if (const auto val = object.value(kLhsNode); val.isString())
@@ -68,7 +68,7 @@ void EntryP::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kId); val.isString())
         id = QUuid(val.toString());
     if (const auto val = object.value(kIssuedTime); val.isString())
-        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
     if (const auto val = object.value(kCode); val.isString())
         code = val.toString();
     if (const auto val = object.value(kLhsNode); val.isString())
@@ -97,7 +97,7 @@ QJsonObject EntryP::WriteJson() const
     QJsonObject obj {};
 
     obj.insert(kId, id.toString(QUuid::WithoutBraces));
-    obj.insert(kIssuedTime, issued_time.toString(Qt::ISODate));
+    obj.insert(kIssuedTime, issued_time.toUTC().toString(Qt::ISODate));
     obj.insert(kCode, code);
     obj.insert(kLhsNode, lhs_node.toString(QUuid::WithoutBraces));
     obj.insert(kDescription, description);

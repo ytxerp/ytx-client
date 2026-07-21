@@ -82,7 +82,7 @@ inline void SecondaryRow::Reset() { *this = SecondaryRow {}; }
 inline void SecondaryRow::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kIssuedTime); val.isString())
-        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
     if (const auto val = object.value(kCount); val.isString())
         count = val.toString().toDouble();
     if (const auto val = object.value(kMeasure); val.isString())
@@ -120,7 +120,7 @@ inline void TertiaryRow::Reset() { *this = TertiaryRow {}; }
 inline void TertiaryRow::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kIssuedTime); val.isString())
-        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+        issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
     if (const auto val = object.value(kInternalSku); val.isString())
         internal_sku = QUuid(val.toString());
     if (const auto val = object.value(kCount); val.isString())

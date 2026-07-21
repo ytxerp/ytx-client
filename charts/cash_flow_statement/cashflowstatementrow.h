@@ -85,7 +85,7 @@ struct WrongRow final {
         if (const auto val = object.value(kId); val.isString())
             id = QUuid(val.toString());
         if (const auto val = object.value(kIssuedTime); val.isString())
-            issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+            issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
         if (const auto val = object.value(kLhsNode); val.isString())
             lhs_node = QUuid(val.toString());
         if (const auto val = object.value(kDescription); val.isString())
