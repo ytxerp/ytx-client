@@ -183,23 +183,20 @@ void LeafDeleteDialog::DeleteNode()
             return;
 
         WsKey key {};
-        QJsonObject value {};
+        const QJsonObject value { JsonGen::LeafDelete(info_.section, node_id_) };
 
         switch (section_) {
         case Section::kSale:
         case Section::kPurchase:
             key = WsKey::kLeafDeleteO;
-            value = JsonGen::LeafDeleteO(info_.section, node_id_);
             break;
         case Section::kPartner:
             key = WsKey::kLeafDeleteP;
-            value = JsonGen::LeafDeleteP(info_.section, node_id_);
             break;
         case Section::kFinance:
         case Section::kTask:
         case Section::kInventory:
             key = WsKey::kLeafDelete;
-            value = JsonGen::LeafDelete(info_.section, node_id_);
             break;
         }
 

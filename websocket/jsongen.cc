@@ -46,22 +46,6 @@ QJsonObject LeafDelete(Section section, CUuid& node_id)
     return message;
 }
 
-QJsonObject LeafDeleteP(Section section, CUuid& node_id)
-{
-    QJsonObject message {};
-    message.insert(kSection, std::to_underlying(section));
-    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    return message;
-}
-
-QJsonObject LeafDeleteO(Section section, CUuid& node_id)
-{
-    QJsonObject message {};
-    message.insert(kSection, std::to_underlying(section));
-    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    return message;
-}
-
 QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id)
 {
     QJsonObject message {};
