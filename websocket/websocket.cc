@@ -609,7 +609,7 @@ void WebSocket::AckSettlementItem(const QJsonObject& obj)
 void WebSocket::AckWorkspaceMember(const QJsonObject& obj)
 {
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray array { obj.value(kMemberArray).toArray() };
+    const QJsonArray array { obj.value(kArray).toArray() };
 
     emit SWorkspaceMemberAck(widget_id, array);
 }
