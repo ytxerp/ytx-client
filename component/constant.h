@@ -143,7 +143,7 @@ inline const QString kLevel = QStringLiteral("level");
 
 // Message fields
 inline const QString kClosingLeafNode = QStringLiteral("closing_leaf_node");
-inline const QString kSummaryTotal = QStringLiteral("summary_total");
+inline const QString kSummaryNodeId = QStringLiteral("summary_node_id");
 
 // Tree & table columns
 inline const QString kCode = QStringLiteral("code");

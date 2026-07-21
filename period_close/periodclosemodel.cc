@@ -47,34 +47,39 @@ int Model::columnCount(const QModelIndex& parent) const
 
 void Model::sort(int column, Qt::SortOrder order)
 {
-    const FullEntryEnum e_column { column };
+    const FullEntryEnumF e_column { column };
 
     auto Compare = [e_column, order](const Entry* lhs, const Entry* rhs) -> bool {
+        auto* d_lhs { utils::DerivedPtr<EntryF>(lhs) };
+        auto* d_rhs { utils::DerivedPtr<EntryF>(rhs) };
+
         switch (e_column) {
-        case FullEntryEnum::kLhsNode:
+        case FullEntryEnumF::kLhsNode:
             return utils::CompareMember(lhs, rhs, &Entry::lhs_node, order);
-        case FullEntryEnum::kLhsRate:
+        case FullEntryEnumF::kLhsRate:
             return utils::CompareMember(lhs, rhs, &Entry::lhs_rate, order);
-        case FullEntryEnum::kLhsDebit:
+        case FullEntryEnumF::kLhsDebit:
             return utils::CompareMember(lhs, rhs, &Entry::lhs_debit, order);
-        case FullEntryEnum::kLhsCredit:
+        case FullEntryEnumF::kLhsCredit:
             return utils::CompareMember(lhs, rhs, &Entry::lhs_credit, order);
-        case FullEntryEnum::kRhsCredit:
+        case FullEntryEnumF::kRhsCredit:
             return utils::CompareMember(lhs, rhs, &Entry::rhs_credit, order);
-        case FullEntryEnum::kRhsDebit:
+        case FullEntryEnumF::kRhsDebit:
             return utils::CompareMember(lhs, rhs, &Entry::rhs_debit, order);
-        case FullEntryEnum::kRhsRate:
+        case FullEntryEnumF::kRhsRate:
             return utils::CompareMember(lhs, rhs, &Entry::rhs_rate, order);
-        case FullEntryEnum::kRhsNode:
+        case FullEntryEnumF::kRhsNode:
             return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
-        case FullEntryEnum::kId:
-        case FullEntryEnum::kVersion:
-        case FullEntryEnum::kIssuedTime:
-        case FullEntryEnum::kCode:
-        case FullEntryEnum::kDescription:
-        case FullEntryEnum::kDocument:
-        case FullEntryEnum::kTag:
-        case FullEntryEnum::kStatus:
+        case FullEntryEnumF::kCashKind:
+            return utils::CompareMember(d_lhs, d_rhs, &EntryF::cash_kind, order);
+        case FullEntryEnumF::kId:
+        case FullEntryEnumF::kVersion:
+        case FullEntryEnumF::kIssuedTime:
+        case FullEntryEnumF::kCode:
+        case FullEntryEnumF::kDescription:
+        case FullEntryEnumF::kDocument:
+        case FullEntryEnumF::kTag:
+        case FullEntryEnumF::kStatus:
             return false;
         }
     };
@@ -89,42 +94,44 @@ QVariant Model::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    const FullEntryEnum column { index.column() };
-    auto* entry { static_cast<Entry*>(index.internalPointer()) };
+    const FullEntryEnumF column { index.column() };
+    auto* entry { static_cast<EntryF*>(index.internalPointer()) };
 
     switch (column) {
-    case FullEntryEnum::kId:
+    case FullEntryEnumF::kId:
         return entry->id;
-    case FullEntryEnum::kVersion:
+    case FullEntryEnumF::kVersion:
         return entry->version;
-    case FullEntryEnum::kIssuedTime:
+    case FullEntryEnumF::kIssuedTime:
         return entry->issued_time;
-    case FullEntryEnum::kCode:
+    case FullEntryEnumF::kCode:
         return entry->code;
-    case FullEntryEnum::kTag:
+    case FullEntryEnumF::kTag:
         return entry->tag;
-    case FullEntryEnum::kLhsNode:
+    case FullEntryEnumF::kLhsNode:
         return entry->lhs_node;
-    case FullEntryEnum::kLhsRate:
+    case FullEntryEnumF::kLhsRate:
         return entry->lhs_rate;
-    case FullEntryEnum::kLhsDebit:
+    case FullEntryEnumF::kLhsDebit:
         return entry->lhs_debit;
-    case FullEntryEnum::kLhsCredit:
+    case FullEntryEnumF::kLhsCredit:
         return entry->lhs_credit;
-    case FullEntryEnum::kDescription:
+    case FullEntryEnumF::kDescription:
         return entry->description;
-    case FullEntryEnum::kDocument:
+    case FullEntryEnumF::kDocument:
         return entry->document;
-    case FullEntryEnum::kStatus:
+    case FullEntryEnumF::kStatus:
         return entry->status;
-    case FullEntryEnum::kRhsCredit:
+    case FullEntryEnumF::kRhsCredit:
         return entry->rhs_credit;
-    case FullEntryEnum::kRhsDebit:
+    case FullEntryEnumF::kRhsDebit:
         return entry->rhs_debit;
-    case FullEntryEnum::kRhsRate:
+    case FullEntryEnumF::kRhsRate:
         return entry->rhs_rate;
-    case FullEntryEnum::kRhsNode:
+    case FullEntryEnumF::kRhsNode:
         return entry->rhs_node;
+    case FullEntryEnumF::kCashKind:
+        return std::to_underlying(entry->cash_kind);
     }
 }
 

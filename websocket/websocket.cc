@@ -487,9 +487,7 @@ void WebSocket::PeriodClose(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const QJsonArray entry_array { obj.value(kEntryArray).toArray() };
     const QJsonArray total_array { obj.value(kTotalArray).toArray() };
-    const QJsonObject summary_total { obj.value(kSummaryTotal).toObject() };
-
-    const QUuid summary_node_id { summary_total.value(kId).toString() };
+    const QUuid summary_node_id { obj.value(kSummaryNodeId).toString() };
 
     {
         auto entry_hub { entry_hub_hash_.value(section) };

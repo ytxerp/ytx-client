@@ -554,24 +554,27 @@ void MainWindow::DelegatePeriodClose(QTableView* table_view) const
     const auto& section_config { sc_f_.section_config };
 
     auto* quantity = new DoubleNoneZeroR(section_config.quantity_decimal, string_const::kFourDigits, table_view);
-    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsDebit), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsDebit), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsCredit), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsCredit), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kLhsDebit), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kRhsDebit), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kLhsCredit), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kRhsCredit), quantity);
 
     auto* rate { new DoubleNoneZeroR(section_config.rate_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsRate), rate);
-    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsRate), rate);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kLhsRate), rate);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kRhsRate), rate);
 
     auto* path { new SearchPathTableR(sc_f_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kLhsNode), path);
-    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kRhsNode), path);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kLhsNode), path);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kRhsNode), path);
 
     auto* issued_time { new IssuedTimeR(section_config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kIssuedTime), issued_time);
 
     auto* status { new StatusR(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnum::kStatus), status);
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kStatus), status);
+
+    auto* cash_kind { new IntStringNoneZeroR(sc_f_.info.cash_kind_map, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kCashKind), cash_kind);
 }
 
 void MainWindow::DelegateInventoryHeat(QTableView* table_view) const

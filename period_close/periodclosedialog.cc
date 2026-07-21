@@ -191,10 +191,7 @@ void PeriodCloseDialog::on_pushButtonCommit_clicked()
 
     QJsonObject message {};
 
-    QJsonObject summary_total {};
-    summary_total.insert(kId, summary_node_id_.toString(QUuid::WithoutBraces));
-
-    message.insert(kSummaryTotal, summary_total);
+    message.insert(kSummaryNodeId, summary_node_id_.toString(QUuid::WithoutBraces));
     message.insert(kClosingLeafNode, BuildUuidArray(closing_leaf_node_));
     message.insert(kSection, std::to_underlying(section_));
 
