@@ -30,17 +30,15 @@ class TreeWidgetO;
 class TreeWidgetO final : public TreeWidget {
     Q_OBJECT
 
-public slots:
-    void on_start_dateChanged(const QDate& date);
-    void on_end_dateChanged(const QDate& date);
-
 public:
-    TreeWidgetO(Section section, TreeModel* model, const QDateTime& start, const QDateTime& end, QWidget* parent = nullptr);
+    TreeWidgetO(Section section, TreeModel* model, QWidget* parent = nullptr);
     ~TreeWidgetO() override;
 
     QTreeView* View() const override;
 
 private slots:
+    void on_start_dateChanged(const QDate& date);
+    void on_end_dateChanged(const QDate& date);
     void on_pBtnFetch_clicked();
     void InitTimer();
 

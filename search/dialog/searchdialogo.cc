@@ -26,6 +26,7 @@ void SearchDialogO::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kDirectionRule), direction_rule_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kKind), kind_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kTag), tag_);
+    view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time_);
 
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), check_);
 

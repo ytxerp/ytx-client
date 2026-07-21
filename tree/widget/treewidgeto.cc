@@ -4,16 +4,15 @@
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "ui_treewidgeto.h"
+#include "utils/nodeutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TreeWidgetO::TreeWidgetO(Section section, TreeModel* model, const QDateTime& start, const QDateTime& end, QWidget* parent)
+TreeWidgetO::TreeWidgetO(Section section, TreeModel* model, QWidget* parent)
     : TreeWidget(parent)
     , ui(new Ui::TreeWidgetO)
     , section_ { section }
     , model_ { model }
-    , start_ { start }
-    , end_ { end }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -22,11 +21,16 @@ TreeWidgetO::TreeWidgetO(Section section, TreeModel* model, const QDateTime& sta
     ui->start->setDisplayFormat(datetime_format::kDashedDate);
     ui->end->setDisplayFormat(datetime_format::kDashedDate);
 
+    std::tie(start_, end_) = utils::DefaultLocalRange();
+
     ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_.addDays(-1));
+    ui->end->setDateTime(end_.addMSecs(-1));
 
     ui->treeViewO->setModel(model);
     model->setParent(ui->treeViewO);
+
+    qDebug() << "init start" << start_;
+    qDebug() << "init end" << end_;
 }
 
 TreeWidgetO::~TreeWidgetO() { delete ui; }
@@ -60,10 +64,16 @@ void TreeWidgetO::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
+    qDebug() << "fetch start" << start_;
+    qDebug() << "fetch end" << end_;
+
     const auto message { JsonGen::TreeAck(section_, start_.toUTC(), end_.toUTC()) };
     WebSocket::Instance()->SendMessage(WsKey::kTreeAck, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
+
+    qDebug() << "fetch utc start" << start_.toUTC();
+    qDebug() << "fetch utc end" << end_.toUTC();
 }
 
 void TreeWidgetO::InitTimer()

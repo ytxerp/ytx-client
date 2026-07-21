@@ -339,6 +339,8 @@ template <TreeNode T, typename F> void SortSubtree(T* node, F&& compare)
 
 namespace utils {
 
+std::pair<QDateTime, QDateTime> DefaultLocalRange();
+
 inline std::tuple<int, int, int> ColorSortKey(const QString& color_name)
 {
     const QColor color(color_name);

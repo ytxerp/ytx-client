@@ -403,14 +403,10 @@ void MainWindow::InitContextSale()
     entry_hub = entry_hub_o;
     tree_model = tree_model_o;
 
-    const QDate today { QDate::currentDate() };
-    const QDateTime start_dt(today, kStartTime);
-    const QDateTime end_dt(today.addDays(1), kStartTime);
-
     WebSocket::Instance()->RegisterTreeModel(Section::kSale, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kSale, entry_hub);
 
-    tree_widget = new TreeWidgetO(Section::kSale, tree_model, start_dt, end_dt, this);
+    tree_widget = new TreeWidgetO(Section::kSale, tree_model, this);
     tree_view = tree_widget->View();
 
     sc_sale_.tab_widget = ui->tabWidgetSale;
@@ -447,14 +443,10 @@ void MainWindow::InitContextPurchase()
     entry_hub = entry_hub_o;
     tree_model = tree_model_o;
 
-    const QDate today { QDate::currentDate() };
-    const QDateTime start_dt(today, kStartTime);
-    const QDateTime end_dt(today.addDays(1), kStartTime);
-
     WebSocket::Instance()->RegisterTreeModel(Section::kPurchase, tree_model);
     WebSocket::Instance()->RegisterEntryHub(Section::kPurchase, entry_hub);
 
-    tree_widget = new TreeWidgetO(Section::kPurchase, tree_model, start_dt, end_dt, this);
+    tree_widget = new TreeWidgetO(Section::kPurchase, tree_model, this);
     tree_view = tree_widget->View();
 
     sc_purchase_.tab_widget = ui->tabWidgetPurchase;

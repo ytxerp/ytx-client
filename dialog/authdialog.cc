@@ -7,6 +7,7 @@
 #include "global/logininfo.h"
 #include "ui_authdialog.h"
 #include "utils/mainwindowutils.h"
+#include "utils/nodeutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -147,7 +148,15 @@ void AuthDialog::on_pushButtonLogin_clicked()
         return;
     }
 
-    WebSocket::Instance()->SendMessage(WsKey::kLogin, JsonGen::Login(email, password, workspace));
+    auto [start, end] = utils::DefaultLocalRange();
+
+    qDebug() << "login start" << start;
+    qDebug() << "login end" << end;
+
+    WebSocket::Instance()->SendMessage(WsKey::kLogin, JsonGen::Login(email, password, workspace, start.toUTC(), end.toUTC()));
+
+    qDebug() << "login utc start" << start.toUTC();
+    qDebug() << "login utc end" << end.toUTC();
 
     SyncLoginInfo();
     LoginInfo::Instance().WriteConfig(local_settings_);
