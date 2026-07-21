@@ -37,7 +37,7 @@ enum class Level {
 enum class RowField {
     kId,
     kTargetId,
-    kUserId,
+    kUsername,
     kLhsNode,
     kRhsNode,
     kCreatedTime,

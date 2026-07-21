@@ -28,7 +28,6 @@
 namespace audit {
 
 struct Info {
-    QHash<QUuid, QString> user_hash {}; // user_id, username
     QHash<int, QString> section_hash {};
     QHash<int, QString> ws_key_hash {};
     QHash<int, QString> level_hash {};

@@ -40,8 +40,8 @@ QVariant Model::data(const QModelIndex& index, int role) const
     switch (column) {
     case RowField::kTargetId:
         return row->target_id.toString(QUuid::WithoutBraces).left(12);
-    case RowField::kUserId:
-        return info_.user_hash.value(row->user_id);
+    case RowField::kUsername:
+        return row->username;
     case RowField::kCreatedTime:
         return row->created_time;
     case RowField::kCode:
@@ -77,8 +77,8 @@ void Model::sort(int column, Qt::SortOrder order)
         switch (e_column) {
         case RowField::kTargetId:
             return utils::CompareMember(lhs, rhs, &Row::target_id, order);
-        case RowField::kUserId:
-            return utils::CompareMember(lhs, rhs, &Row::user_id, order);
+        case RowField::kUsername:
+            return utils::CompareMember(lhs, rhs, &Row::username, order);
         case RowField::kLhsNode:
             return utils::CompareMember(lhs, rhs, &Row::lhs_node, order);
         case RowField::kRhsNode:

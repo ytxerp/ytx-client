@@ -34,39 +34,19 @@ void MainWindow::on_actionAuditLog_triggered()
     dialog->activateWindow();
 }
 
-void MainWindow::RAuditLogAck(const QUuid& widget_id, const QJsonArray& log_array, const QJsonArray& user_array)
+void MainWindow::RAuditLogAck(const QUuid& widget_id, const QJsonArray& log_array)
 {
     auto widget { widget_hash_.value(widget_id).widget };
     if (!widget)
         return;
 
-    {
-        // Populate user_hash first so model can resolve user_id -> username
-        auto& user_hash { audit_info_.user_hash };
-        user_hash.clear();
+    auto* ptr { widget.data() };
+    Q_ASSERT(qobject_cast<AuditDialog*>(ptr));
 
-        for (const auto& value : user_array) {
-            if (!value.isObject())
-                continue;
+    auto* d_widget { static_cast<AuditDialog*>(ptr) };
 
-            const auto obj { value.toObject() };
-            const auto id { QUuid(obj.value(kId).toString()) };
-            const auto username { obj.value(kUsername).toString() };
-
-            if (!id.isNull())
-                user_hash.emplace(id, username);
-        }
-    }
-
-    {
-        auto* ptr { widget.data() };
-        Q_ASSERT(qobject_cast<AuditDialog*>(ptr));
-
-        auto* d_widget { static_cast<AuditDialog*>(ptr) };
-
-        auto* model { d_widget->Model() };
-        model->Rebuild(log_array);
-    }
+    auto* model { d_widget->Model() };
+    model->Rebuild(log_array);
 }
 
 void MainWindow::InitAuditInfo()

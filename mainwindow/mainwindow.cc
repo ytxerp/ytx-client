@@ -180,7 +180,6 @@ void MainWindow::on_actionDelete_triggered()
 void MainWindow::ResetMainwindow()
 {
     section_settings_.clear();
-    audit_info_.user_hash.clear();
 
     ui->actionWorkspaceManager->setVisible(false);
     ui->actionAuditLog->setVisible(false);

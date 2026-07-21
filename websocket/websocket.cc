@@ -617,10 +617,9 @@ void WebSocket::AckWorkspaceMember(const QJsonObject& obj)
 void WebSocket::AckAuditLog(const QJsonObject& obj)
 {
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const QJsonArray log_array { obj.value(kLogArray).toArray() };
-    const QJsonArray user_array { obj.value(kUserArray).toArray() };
+    const QJsonArray array { obj.value(kArray).toArray() };
 
-    emit SAuditLogAck(widget_id, log_array, user_array);
+    emit SAuditLogAck(widget_id, array);
 }
 
 void WebSocket::AckInventoryHeat(const QJsonObject& obj)

@@ -36,7 +36,7 @@ struct Row {
     // -- 1. UUIDs ---------------------------------------------------------------
     QUuid id {}; // PRIMARY KEY — generated client-side before shipping
     QUuid target_id {}; // The entity being audited
-    QUuid user_id {}; // Who triggered the action
+    QString username {}; // Who triggered the action
     QUuid lhs_node {}; // Default: null UUID (00000000-…)
     QUuid rhs_node {}; // Default: null UUID (00000000-…)
 

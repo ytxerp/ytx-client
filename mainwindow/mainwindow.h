@@ -164,7 +164,7 @@ private slots:
     void RDenyLeafDelete(const QJsonObject& obj);
 
     void RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
-    void RAuditLogAck(const QUuid& widget_id, const QJsonArray& array, const QJsonArray& user_array);
+    void RAuditLogAck(const QUuid& widget_id, const QJsonArray& array);
     void RInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void RPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void RBalanceSheetAck(const QUuid& widget_id, const QJsonArray& node_array, const QJsonArray& path_array);

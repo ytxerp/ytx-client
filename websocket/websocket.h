@@ -91,7 +91,7 @@ signals:
     void SAccountName(const QString& name);
     void SAccountUsername(const QJsonObject& obj);
     void SWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array);
-    void SAuditLogAck(const QUuid& widget_id, const QJsonArray& array, const QJsonArray& user_array);
+    void SAuditLogAck(const QUuid& widget_id, const QJsonArray& array);
     void SAccountRoleUpdate();
     void SInventoryHeatAck(const QUuid& widget_id, const QJsonArray& array);
     void SPartnerHeatAck(const QUuid& widget_id, const QJsonArray& array);

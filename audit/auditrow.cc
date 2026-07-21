@@ -21,8 +21,8 @@ void audit::Row::ReadJson(const QJsonObject& object)
         id = QUuid(val.toString());
     if (const auto val = object.value(kTargetId); val.isString())
         target_id = QUuid(val.toString());
-    if (const auto val = object.value(kUserId); val.isString())
-        user_id = QUuid(val.toString());
+    if (const auto val = object.value(kUsername); val.isString())
+        username = val.toString();
     if (const auto val = object.value(kLhsNode); val.isString())
         lhs_node = QUuid(val.toString());
     if (const auto val = object.value(kRhsNode); val.isString())
