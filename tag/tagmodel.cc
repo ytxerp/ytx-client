@@ -58,8 +58,6 @@ QVariant TagModel::data(const QModelIndex& index, int role) const
         return tag->name;
     case TagRowField::kColor:
         return tag->color;
-    case TagRowField::kVersion:
-        return tag->version;
     }
 }
 
@@ -82,7 +80,6 @@ bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role
         UpdateColor(tag, value.toString());
         break;
     case TagRowField::kId:
-    case TagRowField::kVersion:
         return false;
     }
 
@@ -101,7 +98,6 @@ void TagModel::sort(int column, Qt::SortOrder order)
         case TagRowField::kColor:
             return utils::CompareMember(lhs, rhs, &TagRow::color, order);
         case TagRowField::kId:
-        case TagRowField::kVersion:
             return false;
         }
     };
@@ -124,7 +120,6 @@ Qt::ItemFlags TagModel::flags(const QModelIndex& index) const
         break;
     case TagRowField::kId:
     case TagRowField::kColor:
-    case TagRowField::kVersion:
         flags &= ~Qt::ItemIsEditable;
         break;
     }

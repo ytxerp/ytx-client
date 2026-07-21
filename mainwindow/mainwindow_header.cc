@@ -86,7 +86,6 @@ void MainWindow::InitHeader()
 
     header_info_.tag = {
         tr("ID"),
-        tr("Version"),
         tr("Name"),
         tr("Color"),
     };
