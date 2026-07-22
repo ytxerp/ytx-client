@@ -72,7 +72,7 @@ inline void Member::ReadJson(const QJsonObject& object)
         database_roles = database::Roles(val.toInt());
 
     if (const auto val = object.value(kCreatedTime); val.isString())
-        created_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+        created_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
 }
 }
 

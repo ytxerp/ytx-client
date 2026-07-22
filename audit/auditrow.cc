@@ -28,7 +28,7 @@ void audit::Row::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kRhsNode); val.isString())
         rhs_node = QUuid(val.toString());
     if (const auto val = object.value(kCreatedTime); val.isString())
-        created_time = QDateTime::fromString(val.toString(), Qt::ISODateWithMs);
+        created_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
     if (const auto val = object.value(kSection); val.isDouble())
         section = val.toInt();
     if (const auto val = object.value(kWsKey); val.isDouble())
