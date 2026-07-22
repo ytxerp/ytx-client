@@ -106,6 +106,7 @@ QJsonObject EntryP::WriteJson() const
     obj.insert(kRhsNode, rhs_node.toString(QUuid::WithoutBraces));
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kDocument, utils::WriteStringList(document));
+    obj.insert(kVersion, version);
 
     obj.insert(kUnitPrice, QString::number(unit_price, 'f', numeric_const::kDecimalPlaces8));
     return obj;
@@ -164,6 +165,7 @@ QJsonObject EntryO::WriteJson() const
     obj.insert(kFinal, QString::number(final, 'f', numeric_const::kDecimalPlaces4));
     obj.insert(kDiscount, QString::number(discount, 'f', numeric_const::kDecimalPlaces4));
     obj.insert(kTag, utils::WriteStringList(tag));
+    obj.insert(kVersion, version);
 
     return obj;
 }

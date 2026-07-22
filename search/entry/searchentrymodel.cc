@@ -101,8 +101,6 @@ QVariant EntryModel::data(const QModelIndex& index, int role) const
     switch (column) {
     case FullEntryEnum::kId:
         return entry->id;
-    case FullEntryEnum::kVersion:
-        return entry->version;
     case FullEntryEnum::kIssuedTime:
         return entry->issued_time;
     case FullEntryEnum::kCode:
@@ -169,7 +167,6 @@ void EntryModel::sort(int column, Qt::SortOrder order)
         case FullEntryEnum::kRhsNode:
             return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         case FullEntryEnum::kId:
-        case FullEntryEnum::kVersion:
             return false;
         }
     };

@@ -38,6 +38,7 @@ QJsonObject PrimaryRow::WriteJson() const
     obj.insert(kDescription, description);
     obj.insert(kStatus, std::to_underlying(status));
     obj.insert(kAmount, QString::number(amount, 'f', numeric_const::kDecimalPlaces4));
+    obj.insert(kVersion, version);
 
     return obj;
 }

@@ -21,7 +21,7 @@ void MainWindow::on_actionStatement_triggered()
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    InitTableView(view, -1, -1, std::to_underlying(statement::PrimaryField::kPlaceholder));
+    InitTableView(view, -1, std::to_underlying(statement::PrimaryField::kPlaceholder));
     DelegateStatement(view, sc_->section_config);
 
     connect(widget, &StatementPrimaryWidget::SStatementNode, this, &MainWindow::RStatementNode);
@@ -88,7 +88,7 @@ void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start,
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    InitTableView(view, -1, -1, std::to_underlying(statement::SecondaryField::kDescription));
+    InitTableView(view, -1, std::to_underlying(statement::SecondaryField::kDescription));
     DelegateStatementNode(view, sc_->section_config);
 
     connect(widget, &StatementSecondaryWidget::SStatementEntry, this, &MainWindow::RStatementEntry);
@@ -114,7 +114,7 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->View() };
-    InitTableView(view, -1, -1, std::to_underlying(statement::TertiaryField::kDescription));
+    InitTableView(view, -1, std::to_underlying(statement::TertiaryField::kDescription));
     DelegateStatementEntry(view, sc_->section_config);
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);

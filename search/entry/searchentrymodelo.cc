@@ -22,8 +22,6 @@ QVariant EntryModelO::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryEnumO::kId:
         return d_entry->id;
-    case EntryEnumO::kVersion:
-        return d_entry->version;
     case EntryEnumO::kLhsNode:
         return d_entry->lhs_node;
     case EntryEnumO::kUnitPrice:
@@ -83,7 +81,6 @@ void EntryModelO::sort(int column, Qt::SortOrder order)
         case EntryEnumO::kTag:
             return utils::CompareMember(lhs, rhs, &Entry::tag, order);
         case EntryEnumO::kId:
-        case EntryEnumO::kVersion:
         case EntryEnumO::kExternalSku:
             return false;
         }

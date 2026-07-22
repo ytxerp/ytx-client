@@ -22,8 +22,6 @@ QVariant EntryModelP::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryEnumP::kId:
         return d_entry->id;
-    case EntryEnumP::kVersion:
-        return d_entry->version;
     case EntryEnumP::kIssuedTime:
         return d_entry->issued_time;
     case EntryEnumP::kTag:
@@ -77,7 +75,6 @@ void EntryModelP::sort(int column, Qt::SortOrder order)
         case EntryEnumP::kRhsNode:
             return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         case EntryEnumP::kId:
-        case EntryEnumP::kVersion:
             return false;
         }
     };

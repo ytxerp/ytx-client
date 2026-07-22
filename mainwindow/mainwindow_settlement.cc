@@ -30,8 +30,7 @@ void MainWindow::on_actionSettlement_triggered()
         auto* view { widget->View() };
 
         connect(view, &QTableView::doubleClicked, this, &MainWindow::RSettlementTableViewDoubleClicked);
-        InitTableView(view, std::to_underlying(settlement::PrimaryField::kId), std::to_underlying(settlement::PrimaryField::kVersion),
-            std::to_underlying(settlement::PrimaryField::kDescription));
+        InitTableView(view, std::to_underlying(settlement::PrimaryField::kId), std::to_underlying(settlement::PrimaryField::kDescription));
         DelegateSettlement(view, sc_->section_config);
     }
 
@@ -61,7 +60,7 @@ void MainWindow::CreateSettlementSecondary(const QUuid& primary_widget_id, const
 
     {
         auto* view { widget->View() };
-        InitTableView(view, std::to_underlying(settlement::SecondaryField::kId), -1, std::to_underlying(settlement::SecondaryField::kDescription));
+        InitTableView(view, std::to_underlying(settlement::SecondaryField::kId), std::to_underlying(settlement::SecondaryField::kDescription));
         DelegateSettlementNode(view, sc_->section_config);
     }
 

@@ -15,7 +15,7 @@ void MainWindow::on_actionHeatPartner_triggered()
 
     {
         auto* view { dialog->View() };
-        InitTableView(view, -1, -1, std::to_underlying(partner_heat::RowField::kPlaceholder));
+        InitTableView(view, -1, std::to_underlying(partner_heat::RowField::kPlaceholder));
         DelegatePartnerHeat(view);
     }
 

@@ -22,8 +22,6 @@ QVariant NodeModelT::data(const QModelIndex& index, int role) const
         return d_node->name;
     case NodeEnumT::kId:
         return d_node->id;
-    case NodeEnumT::kVersion:
-        return d_node->version;
     case NodeEnumT::kTag:
         return d_node->tag;
     case NodeEnumT::kCode:
@@ -79,7 +77,6 @@ void NodeModelT::sort(int column, Qt::SortOrder order)
         case NodeEnumT::kFinalTotal:
             return utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumT::kId:
-        case NodeEnumT::kVersion:
             return false;
         }
     };

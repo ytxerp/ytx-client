@@ -22,7 +22,7 @@ void MainWindow::on_actionAuditLog_triggered()
         }
 
         auto* view { dialog->View() };
-        InitTableView(view, std::to_underlying(audit::RowField::kId), -1, std::to_underlying(audit::RowField::kAfter));
+        InitTableView(view, std::to_underlying(audit::RowField::kId), std::to_underlying(audit::RowField::kAfter));
 
         view->horizontalHeader()->setSectionResizeMode(std::to_underlying<>(audit::RowField::kBefore), QHeaderView::Interactive);
 

@@ -24,7 +24,6 @@ void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
 
     {
         view->setColumnHidden(std::to_underlying(NodeEnum::kId), kIsHidden);
-        view->setColumnHidden(std::to_underlying(NodeEnum::kVersion), kIsHidden);
     }
 }
 
@@ -44,7 +43,6 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
         view->setEditTriggers(QAbstractItemView::DoubleClicked);
 
         view->setColumnHidden(std::to_underlying(EntryEnum::kId), kIsHidden);
-        view->setColumnHidden(std::to_underlying(EntryEnum::kVersion), kIsHidden);
         view->setColumnHidden(std::to_underlying(EntryEnum::kLhsNode), kIsHidden);
     }
 
@@ -63,7 +61,7 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
     }
 }
 
-void MainWindow::InitTableView(QTableView* view, int id_column, int version_column, int stretch_column) const
+void MainWindow::InitTableView(QTableView* view, int id_column, int stretch_column) const
 {
     {
         view->setSortingEnabled(true);
@@ -73,9 +71,6 @@ void MainWindow::InitTableView(QTableView* view, int id_column, int version_colu
 
         if (id_column >= 0)
             view->setColumnHidden(id_column, kIsHidden);
-
-        if (version_column >= 0)
-            view->setColumnHidden(version_column, kIsHidden);
     }
 
     {

@@ -23,7 +23,6 @@
 namespace workspace {
 enum class MemberField : int {
     kId = 0,
-    kVersion,
     kEmail,
     kUsername,
     kName,

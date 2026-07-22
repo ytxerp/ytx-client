@@ -4,7 +4,6 @@ void MainWindow::InitHeader()
 {
     header_info_.workspace = {
         tr("ID"),
-        tr("Version"),
         tr("Email"),
         tr("Username"),
         tr("Name", "Person"),
@@ -130,7 +129,6 @@ void MainWindow::InitHeader()
     // Settlement
     header_info_.settlement = {
         tr("ID"),
-        tr("Version"),
         tr("Partner"),
         tr("Issued Time"),
         tr("Description"),
@@ -154,7 +152,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     finance.node_header = {
         tr("Name"),
         tr("ID"),
-        tr("Version"),
         tr("Code"),
         tr("Description"),
         tr("Tag"),
@@ -171,7 +168,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     inventory.node_header = {
         tr("Name"),
         tr("ID"),
-        tr("Version"),
         tr("Code"),
         tr("Description"),
         tr("Tag"),
@@ -189,7 +185,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     task.node_header = {
         tr("Name"),
         tr("ID"),
-        tr("Version"),
         tr("Code"),
         tr("Description"),
         tr("Tag"),
@@ -205,7 +200,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     partner.node_header = {
         tr("Name"),
         tr("ID"),
-        tr("Version"),
         tr("Code"),
         tr("Description"),
         tr("Tag"),
@@ -220,7 +214,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     sale.node_header = {
         tr("Name"),
         tr("ID"),
-        tr("Version"),
         tr("Issued Time"),
         tr("Employee"),
         tr("Status"),
@@ -242,7 +235,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     // Entry
     finance.entry_header = {
         tr("ID"),
-        tr("Version"),
         tr("LHS Node"),
         tr("Issued Time"),
         tr("FX Rate"),
@@ -260,7 +252,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     inventory.entry_header = {
         tr("ID"),
-        tr("Version"),
         tr("LHS Node"),
         tr("Issued Time"),
         tr("Unit Cost"),
@@ -277,7 +268,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     task.entry_header = {
         tr("ID"),
-        tr("Version"),
         tr("LHS Node"),
         tr("Issued Time"),
         tr("Unit Cost"),
@@ -294,7 +284,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     partner.entry_header = {
         tr("ID"),
-        tr("Version"),
         tr("LHS Node"),
         tr("Issued Time"),
         tr("Code"),
@@ -309,7 +298,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     sale.entry_header = {
         tr("ID"),
-        tr("Version"),
         tr("LHS Node"),
         tr("Internal SKU"),
         tr("Description"),
@@ -327,7 +315,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     // Full Entry
     finance.full_entry_header = {
         tr("ID"),
-        tr("Version"),
         tr("Issued Time"),
         tr("Code"),
         tr("LHS Node"),
@@ -347,7 +334,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     inventory.full_entry_header = {
         tr("ID"),
-        tr("Version"),
         tr("Issued Time"),
         tr("Code"),
         tr("LHS Node"),
@@ -366,7 +352,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     task.full_entry_header = {
         tr("ID"),
-        tr("Version"),
         tr("Issued Time"),
         tr("Code"),
         tr("LHS Node"),

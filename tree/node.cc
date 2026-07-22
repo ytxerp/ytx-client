@@ -60,6 +60,7 @@ QJsonObject Node::WriteJson() const
     obj.insert(kInitialTotal, QString::number(initial_total, 'f', numeric_const::kDecimalPlaces4));
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kDocument, utils::WriteStringList(document));
+    obj.insert(kVersion, version);
 
     // user_id, created_time, created_by, updated_time, updated_by, version
     // are managed by the server, not written to json
@@ -150,6 +151,7 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kColor, color);
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kDocument, utils::WriteStringList(document));
+    obj.insert(kVersion, version);
 
     return obj;
 }
@@ -238,6 +240,7 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kMeasureTotal, QString::number(measure_total, 'f', numeric_const::kDecimalPlaces8));
     obj.insert(kStatus, std::to_underlying(status));
     obj.insert(kTag, utils::WriteStringList(tag));
+    obj.insert(kVersion, version);
 
     return obj;
 }

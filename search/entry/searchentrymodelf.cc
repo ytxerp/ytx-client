@@ -19,8 +19,6 @@ QVariant EntryModelF::data(const QModelIndex& index, int role) const
     switch (column) {
     case FullEntryEnumF::kId:
         return d_entry->id;
-    case FullEntryEnumF::kVersion:
-        return d_entry->version;
     case FullEntryEnumF::kIssuedTime:
         return d_entry->issued_time;
     case FullEntryEnumF::kCode:
@@ -94,7 +92,6 @@ void EntryModelF::sort(int column, Qt::SortOrder order)
         case FullEntryEnumF::kCashKind:
             return utils::CompareMember(d_lhs, d_rhs, &EntryF::cash_kind, order);
         case FullEntryEnumF::kId:
-        case FullEntryEnumF::kVersion:
             return false;
         }
     };

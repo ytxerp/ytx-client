@@ -25,8 +25,6 @@ QVariant TableModelF::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryEnumF::kId:
         return *d_shadow->id;
-    case EntryEnumF::kVersion:
-        return *d_shadow->version;
     case EntryEnumF::kIssuedTime:
         return *d_shadow->issued_time;
     case EntryEnumF::kLhsNode:
@@ -121,7 +119,6 @@ bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int r
         break;
     }
     case EntryEnumF::kId:
-    case EntryEnumF::kVersion:
     case EntryEnumF::kLhsNode:
     case EntryEnumF::kBalance:
         return false;
@@ -165,7 +162,6 @@ void TableModelF::sort(int column, Qt::SortOrder order)
         case EntryEnumF::kCashKind:
             return utils::CompareShadowMember(d_lhs, d_rhs, &EntryShadowF::cash_kind, order);
         case EntryEnumF::kId:
-        case EntryEnumF::kVersion:
         case EntryEnumF::kLhsNode:
         case EntryEnumF::kBalance:
             return false;
@@ -194,7 +190,6 @@ Qt::ItemFlags TableModelF::flags(const QModelIndex& index) const
 
     switch (column) {
     case EntryEnumF::kId:
-    case EntryEnumF::kVersion:
     case EntryEnumF::kBalance:
     case EntryEnumF::kDocument:
     case EntryEnumF::kTag:

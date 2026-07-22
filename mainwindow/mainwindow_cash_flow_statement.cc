@@ -36,7 +36,7 @@ void MainWindow::on_actionCashFlowStatement_triggered()
         DelegateCashFlowStatement(special_view);
 
         auto* wrong_view { dialog->WrongView() };
-        InitTableView(wrong_view, std::to_underlying(cash_flow::WrongRowField::kId), -1, std::to_underlying(cash_flow::WrongRowField::kDescription));
+        InitTableView(wrong_view, std::to_underlying(cash_flow::WrongRowField::kId), std::to_underlying(cash_flow::WrongRowField::kDescription));
         DelegateCashFlowStatementWrong(wrong_view);
     }
 

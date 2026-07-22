@@ -298,7 +298,6 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
         case NodeEnumO::kTag:
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumO::kId:
-        case NodeEnumO::kVersion:
         case NodeEnumO::kIsSettled:
         case NodeEnumO::kSettlementId:
             return false;
@@ -331,8 +330,6 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return d_node->id;
     case NodeEnumO::kCode:
         return d_node->code;
-    case NodeEnumO::kVersion:
-        return d_node->version;
     case NodeEnumO::kDescription:
         return d_node->description;
     case NodeEnumO::kDirectionRule:
@@ -406,7 +403,6 @@ Qt::ItemFlags TreeModelO::flags(const QModelIndex& index) const
     case NodeEnumO::kCode:
     case NodeEnumO::kDescription:
     case NodeEnumO::kId:
-    case NodeEnumO::kVersion:
     case NodeEnumO::kIssuedTime:
     case NodeEnumO::kEmployeeId:
     case NodeEnumO::kStatus:

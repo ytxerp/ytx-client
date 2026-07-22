@@ -16,8 +16,7 @@ void MainWindow::on_actionPeriodClose_triggered()
         utils::ManageDialog(sc_f_.widget_hash, dialog);
 
         auto* view { dialog->View() };
-        InitTableView(
-            view, std::to_underlying(FullEntryEnumF::kId), std::to_underlying(FullEntryEnumF::kVersion), std::to_underlying(FullEntryEnumF::kDescription));
+        InitTableView(view, std::to_underlying(FullEntryEnumF::kId), std::to_underlying(FullEntryEnumF::kDescription));
         DelegatePeriodClose(view);
     }
 

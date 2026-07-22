@@ -14,7 +14,7 @@ void MainWindow::on_actionHeatInventory_triggered()
 
     {
         auto* view { dialog->View() };
-        InitTableView(view, -1, -1, std::to_underlying(inventory_heat::RowField::kPlaceholder));
+        InitTableView(view, -1, std::to_underlying(inventory_heat::RowField::kPlaceholder));
         DelegateInventoryHeat(view);
     }
 

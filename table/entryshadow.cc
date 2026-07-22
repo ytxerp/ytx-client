@@ -52,6 +52,7 @@ QJsonObject EntryShadow::WriteJson() const
     obj.insert(kRhsCredit, QString::number(*rhs_credit, 'f', numeric_const::kDecimalPlaces8));
     obj.insert(kTag, utils::WriteStringList(*tag));
     obj.insert(kDocument, utils::WriteStringList(*document));
+    obj.insert(kVersion, *version);
 
     return obj;
 }

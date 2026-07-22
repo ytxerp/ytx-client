@@ -29,8 +29,6 @@ QVariant TreeModelT::data(const QModelIndex& index, int role) const
         return d_node->name;
     case NodeEnumT::kId:
         return d_node->id;
-    case NodeEnumT::kVersion:
-        return d_node->version;
     case NodeEnumT::kCode:
         return d_node->code;
     case NodeEnumT::kDescription:
@@ -89,7 +87,6 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
         node::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kId:
-    case NodeEnumT::kVersion:
     case NodeEnumT::kName:
     case NodeEnumT::kKind:
     case NodeEnumT::kUnit:
@@ -134,7 +131,6 @@ void TreeModelT::sort(int column, Qt::SortOrder order)
         case NodeEnumT::kTag:
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumT::kId:
-        case NodeEnumT::kVersion:
             return false;
         }
     };
@@ -170,7 +166,6 @@ Qt::ItemFlags TreeModelT::flags(const QModelIndex& index) const
     case NodeEnumT::kKind:
     case NodeEnumT::kDocument:
     case NodeEnumT::kId:
-    case NodeEnumT::kVersion:
     case NodeEnumT::kDirectionRule:
         flags &= ~Qt::ItemIsEditable;
         break;

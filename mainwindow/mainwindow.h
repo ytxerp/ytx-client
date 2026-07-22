@@ -244,7 +244,7 @@ private:
     void DelegateCashFlowStatement(QTreeView* view) const;
     void DelegateCashFlowStatementWrong(QTableView* view) const;
 
-    void InitTableView(QTableView* view, int id_column, int version_column, int stretch_column) const;
+    void InitTableView(QTableView* view, int id_column, int stretch_column) const;
     void InitTreeView(QTreeView* view, int id_column, int stretch_column) const;
 
     void CreateSection(SectionContext& sc, CString& name);

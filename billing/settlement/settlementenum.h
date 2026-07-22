@@ -24,7 +24,6 @@ namespace settlement {
 
 enum class PrimaryField {
     kId = 0,
-    kVersion,
     kPartner,
     kIssuedTime,
     kDescription,

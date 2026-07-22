@@ -264,8 +264,6 @@ QVariant TableModel::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryEnum::kId:
         return *shadow->id;
-    case EntryEnum::kVersion:
-        return *shadow->version;
     case EntryEnum::kIssuedTime:
         return *shadow->issued_time;
     case EntryEnum::kLhsNode:
@@ -347,7 +345,6 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         UpdateNumeric(shadow, value.toDouble(), row, false);
         break;
     case EntryEnum::kId:
-    case EntryEnum::kVersion:
     case EntryEnum::kLhsNode:
     case EntryEnum::kBalance:
         return false;
@@ -386,7 +383,6 @@ void TableModel::sort(int column, Qt::SortOrder order)
         case EntryEnum::kCredit:
             return utils::CompareShadowMember(lhs, rhs, &EntryShadow::lhs_credit, order);
         case EntryEnum::kId:
-        case EntryEnum::kVersion:
         case EntryEnum::kLhsNode:
         case EntryEnum::kBalance:
             return false;
@@ -415,7 +411,6 @@ Qt::ItemFlags TableModel::flags(const QModelIndex& index) const
 
     switch (column) {
     case EntryEnum::kId:
-    case EntryEnum::kVersion:
     case EntryEnum::kBalance:
     case EntryEnum::kDocument:
     case EntryEnum::kTag:

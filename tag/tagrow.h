@@ -31,6 +31,7 @@ struct TagRow final {
     QUuid id {};
     QString name {};
     QString color {};
+    int version {};
 
     // sync_state is local only, not serialized
     SyncState sync_state { SyncState::kCreating };
@@ -49,6 +50,7 @@ inline QJsonObject TagRow::WriteJson() const
     obj.insert(kId, id.toString(QUuid::WithoutBraces));
     obj.insert(kName, name);
     obj.insert(kColor, color);
+    obj.insert(kVersion, version);
 
     // version is managed by the server, not written to json
     return obj;
@@ -65,6 +67,8 @@ inline void TagRow::ReadJson(const QJsonObject& object)
         name = val.toString();
     if (const auto val = object.value(kColor); val.isString())
         color = val.toString();
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
 }
 
 #endif // TAGROW_H

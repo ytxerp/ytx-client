@@ -161,8 +161,6 @@ QVariant TableModelP::data(const QModelIndex& index, int role) const
     switch (column) {
     case EntryEnumP::kId:
         return d_entry->id;
-    case EntryEnumP::kVersion:
-        return d_entry->version;
     case EntryEnumP::kLhsNode:
         return d_entry->lhs_node;
     case EntryEnumP::kIssuedTime:
@@ -240,7 +238,6 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
             pending_updates_[id], d_entry, kExternalSku, value.toString(), &EntryP::external_sku, [this, id, version]() { RestartTimer(id, version); });
         break;
     case EntryEnumP::kId:
-    case EntryEnumP::kVersion:
     case EntryEnumP::kLhsNode:
         return false;
     }
@@ -288,7 +285,6 @@ void TableModelP::sort(int column, Qt::SortOrder order)
         case EntryEnumP::kRhsNode:
             return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         case EntryEnumP::kId:
-        case EntryEnumP::kVersion:
         case EntryEnumP::kLhsNode:
             return false;
         }
@@ -314,7 +310,6 @@ Qt::ItemFlags TableModelP::flags(const QModelIndex& index) const
 
     switch (column) {
     case EntryEnumP::kId:
-    case EntryEnumP::kVersion:
     case EntryEnumP::kDocument:
     case EntryEnumP::kTag:
     case EntryEnumP::kStatus:
