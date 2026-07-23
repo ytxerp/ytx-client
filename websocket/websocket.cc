@@ -278,12 +278,19 @@ void WebSocket::SendMessage(WsKey key, const QJsonObject& value)
     }
 
     const QByteArray json { QJsonValue(value).toJson(QJsonValue::JsonFormat::Compact) };
-    QByteArray compressed { utils::ZstdCompress(json) };
+    const QByteArray compressed { utils::ZstdCompress(json) };
+    const uint16_t key_value { std::to_underlying(key) };
 
-    assert(std::to_underlying(key) <= 255);
-    compressed.prepend(static_cast<char>(std::to_underlying(key)));
+    QByteArray message {};
+    message.reserve(2 + compressed.size());
 
-    socket_.sendBinaryMessage(compressed);
+    // same as Rust u16::to_be_bytes()
+    message.append(static_cast<char>((key_value >> 8) & 0xff));
+    message.append(static_cast<char>(key_value & 0xff));
+
+    message.append(compressed);
+
+    socket_.sendBinaryMessage(message);
 }
 
 void WebSocket::HandleMessage(WsKey key, const QByteArray& payload)
@@ -325,12 +332,20 @@ void WebSocket::HandleMessage(WsKey key, const QByteArray& payload)
 
 void WebSocket::RBinaryMessageReceived(const QByteArray& data)
 {
-    Q_ASSERT(!data.isEmpty());
+    if (data.size() < 2) {
+        qWarning() << "[WS] Invalid binary message length";
+        return;
+    }
+
     timeout_timer_->start(time_const::kTimeoutThresholdMs);
 
-    const auto key { static_cast<WsKey>(static_cast<uint8_t>(data.at(0))) };
-    const QByteArray payload { utils::ZstdDecompress(data.sliced(1)) };
+    const uint16_t high { static_cast<uint8_t>(data.at(0)) };
+    const uint16_t low { static_cast<uint8_t>(data.at(1)) };
 
+    const auto key_value { static_cast<uint16_t>((high << 8) | low) };
+    const auto key { static_cast<WsKey>(key_value) };
+
+    const QByteArray payload { utils::ZstdDecompress(data.sliced(2)) };
     HandleMessage(key, payload);
 }
 

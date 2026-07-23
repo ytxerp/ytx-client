@@ -50,7 +50,7 @@
 //   - Key verb is suffix, handler function verb is prefix
 //     e.g. "node_insert" -> InsertNode(), "login_notify" -> NotifyLogin()
 // =============================================================
-enum class WsKey : uint8_t {
+enum class WsKey : uint16_t {
     // --- Auth ---
     kLogin = 1,
     kRegister = 2,
