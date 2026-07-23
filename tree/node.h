@@ -95,8 +95,6 @@ struct NodeO final : Node {
     QUuid partner_id {};
 
     // NOTE: is_settled and settlement_id are managed by the server
-    // - ReadJson: Updates from server
-    // - WriteJson: Should NOT be serialized (server sets default: false)
     bool is_settled {};
     QUuid settlement_id {};
 

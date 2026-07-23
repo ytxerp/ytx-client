@@ -242,5 +242,9 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kVersion, version);
 
+    // server will ignore these two values
+    obj.insert(kIsSettled, is_settled);
+    obj.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
+
     return obj;
 }

@@ -538,10 +538,15 @@ void WebSocket::AckTable(const QJsonObject& obj)
 void WebSocket::AckNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
+    const QUuid node_id(obj.value(kNodeId).toString());
+
+    if (!obj.contains(kNode)) {
+        qInfo() << "Order node no longer exists";
+        return;
+    }
 
     const QJsonObject leaf_obj { obj.value(kNode).toObject() };
     const QUuid ancestor { QUuid(obj.value(kAncestor).toString()) };
-    const auto node_id { QUuid(leaf_obj.value(kId).toString()) };
 
     auto tree_model { tree_model_hash_.value(section) };
     tree_model->InsertNode(ancestor, leaf_obj);
