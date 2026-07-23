@@ -153,7 +153,7 @@ enum class WsKey : uint8_t {
     // --- Entry Partner ---
     kInsertPartnerEntry = 81,
     kDeletePartnerEntry = 82,
-
+    kInsertPartnerNode = 83,
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -350,6 +350,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kOrderDetail";
     case WsKey::kOrderAccept:
         return "kOrderAccept";
+    case WsKey::kInsertPartnerNode:
+        return "kInsertPartnerNode";
     }
 }
 

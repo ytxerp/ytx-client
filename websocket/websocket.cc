@@ -236,6 +236,7 @@ void WebSocket::InitHandler()
 
     handler_obj_[WsKey::kDeletePartnerEntry] = [this](const QJsonObject& obj) { DeletePartnerEntry(obj); };
     handler_obj_[WsKey::kInsertPartnerEntry] = [this](const QJsonObject& obj) { InsertPartnerEntry(obj); };
+    handler_obj_[WsKey::kInsertPartnerNode] = [this](const QJsonObject& obj) { InsertNode(obj); };
 }
 
 void WebSocket::InitConnect()
