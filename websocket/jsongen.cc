@@ -214,7 +214,7 @@ QJsonObject NodeName(Section section, CUuid& node_id, CString& name)
     return message;
 }
 
-QJsonObject NodeNameSearch(Section section, CString& keyword)
+QJsonObject OrderNameSearch(Section section, CString& keyword)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
@@ -421,7 +421,7 @@ QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace, const QDateTime& s
     return message;
 }
 
-QJsonObject NodeTagSearch(Section section, const QSet<QString>& tags)
+QJsonObject OrderTagSearch(Section section, const QSet<QString>& tags)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));

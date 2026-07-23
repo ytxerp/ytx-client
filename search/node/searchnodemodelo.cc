@@ -16,7 +16,7 @@ NodeModelO::NodeModelO(CSectionInfo& info, CTreeModel* tree_model, const QHash<Q
 {
 }
 
-void NodeModelO::RNodeSearch(const QJsonObject& obj)
+void NodeModelO::ROrderSearch(const QJsonObject& obj)
 {
     // 1. Prepare temporary list to store nodes
     QList<Node*> temp_list {};
@@ -159,13 +159,13 @@ void NodeModelO::Search(CString& text)
 
     // Perform the search (tag search has higher priority)
     if (!query.tags.isEmpty()) {
-        WebSocket::Instance()->SendMessage(WsKey::kNodeTagSearch, JsonGen::NodeTagSearch(section_, query.tags));
+        WebSocket::Instance()->SendMessage(WsKey::kOrderTagSearch, JsonGen::OrderTagSearch(section_, query.tags));
         return;
     }
 
     // Send order partner name search request to server
     if (!query.text.isEmpty()) {
-        WebSocket::Instance()->SendMessage(WsKey::kNodeNameSearch, JsonGen::NodeNameSearch(section_, query.text));
+        WebSocket::Instance()->SendMessage(WsKey::kOrderNameSearch, JsonGen::OrderNameSearch(section_, query.text));
         return;
     }
 

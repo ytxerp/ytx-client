@@ -56,7 +56,7 @@ void MainWindow::on_actionSearch_triggered()
         node = new search::NodeModelO(sc_->info, sc_->tree_model, sc_->tag_hash, this);
         entry = new search::EntryModelO(sc_->info, sc_->tag_hash, this);
         dialog = new SearchDialogO(sc_, node, entry, sc_i_.tree_model, sc_p_.tree_model, this);
-        connect(WebSocket::Instance(), &WebSocket::SNodeSearch, node, &search::NodeModel::RNodeSearch);
+        connect(WebSocket::Instance(), &WebSocket::SOrderSearch, node, &search::NodeModel::ROrderSearch);
         break;
     default:
         break;

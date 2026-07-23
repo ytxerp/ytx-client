@@ -75,8 +75,8 @@ QJsonObject DefaultUnit(Section section, int unit);
 
 QJsonObject EntryDescriptionSearch(Section section, CString& keyword);
 QJsonObject EntryTagSearch(Section section, const QSet<QString>& tags);
-QJsonObject NodeNameSearch(Section section, CString& keyword);
-QJsonObject NodeTagSearch(Section section, const QSet<QString>& tags);
+QJsonObject OrderNameSearch(Section section, CString& keyword);
+QJsonObject OrderTagSearch(Section section, const QSet<QString>& tags);
 
 QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update);
 QJsonObject AccountName(CString& email, CString& name);

@@ -37,7 +37,7 @@ public:
     ~NodeModel() override { };
 
 public slots:
-    virtual void RNodeSearch(const QJsonObject& obj) { Q_UNUSED(obj) }
+    virtual void ROrderSearch(const QJsonObject& obj) { Q_UNUSED(obj) }
 
 protected:
     NodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);

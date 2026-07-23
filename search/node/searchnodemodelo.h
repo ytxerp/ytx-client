@@ -31,7 +31,7 @@ public:
     NodeModelO(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
 
 public slots:
-    void RNodeSearch(const QJsonObject& obj) override;
+    void ROrderSearch(const QJsonObject& obj) override;
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

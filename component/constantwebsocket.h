@@ -85,7 +85,7 @@ enum class WsKey : uint8_t {
     kTreeSyncFinish = 24,
     kNodeInsert = 25,
     kNodeUpdate = 26,
-    kNodeNameSearch = 27, // for order node
+    kOrderNameSearch = 27, // for order node
     kNodeNameUpdate = 28,
     kNodeDrag = 29,
     kLeafDelete = 30,
@@ -133,7 +133,7 @@ enum class WsKey : uint8_t {
     kAccountRoleDelete = 64,
     // --- Audit Log ---
     kAuditLogAck = 65,
-    kNodeTagSearch = 66, // for order node
+    kOrderTagSearch = 66, // for order node
     kPeriodClose = 67,
     kInventoryHeatAck = 68,
     kPartnerHeatAck = 69,
@@ -220,8 +220,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kNodeInsert";
     case WsKey::kNodeUpdate:
         return "kNodeUpdate";
-    case WsKey::kNodeNameSearch:
-        return "kNodeNameSearch";
+    case WsKey::kOrderNameSearch:
+        return "kOrderNameSearch";
     case WsKey::kNodeNameUpdate:
         return "kNodeNameUpdate";
     case WsKey::kNodeDrag:
@@ -312,8 +312,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kAccountRoleDelete";
     case WsKey::kAuditLogAck:
         return "kAuditLogAck";
-    case WsKey::kNodeTagSearch:
-        return "kNodeTagSearch";
+    case WsKey::kOrderTagSearch:
+        return "kOrderTagSearch";
     case WsKey::kPeriodClose:
         return "kPeriodClose";
     case WsKey::kInventoryHeatAck:

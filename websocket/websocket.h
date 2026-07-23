@@ -100,7 +100,7 @@ signals:
     void SCashFlowStatementAck(const QUuid& widget_id, const QJsonObject& obj);
 
     // send to SearchNodeModel
-    void SNodeSearch(const QJsonObject& obj);
+    void SOrderSearch(const QJsonObject& obj);
 
 private slots:
     void RConnected();
@@ -167,7 +167,7 @@ private:
     void AckCashFlowStatement(const QJsonObject& obj);
 
     void SearchEntry(const QJsonObject& obj);
-    void SearchNode(const QJsonObject& obj);
+    void SearchOrder(const QJsonObject& obj);
 
     void DenyLeafDelete(const QJsonObject& obj);
     void DenyDefaultUnit(const QJsonObject& obj);
