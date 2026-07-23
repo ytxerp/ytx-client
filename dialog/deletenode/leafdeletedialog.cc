@@ -188,10 +188,10 @@ void LeafDeleteDialog::DeleteNode()
         switch (section_) {
         case Section::kSale:
         case Section::kPurchase:
-            key = WsKey::kLeafDeleteO;
+            key = WsKey::kOrderLeafDelete;
             break;
         case Section::kPartner:
-            key = WsKey::kLeafDeleteP;
+            key = WsKey::kPartnerLeafDelete;
             break;
         case Section::kFinance:
         case Section::kTask:

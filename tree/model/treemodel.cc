@@ -757,7 +757,7 @@ void TreeModel::AckNode(const QUuid& node_id) const
         return;
 
     const auto message { JsonGen::NodeAck(section_, node_id) };
-    WebSocket::Instance()->SendMessage(WsKey::kNodeAck, message);
+    WebSocket::Instance()->SendMessage(WsKey::kOrderNodeAck, message);
 }
 
 void TreeModel::UnregisterPath(Node* node, Node* parent_node)

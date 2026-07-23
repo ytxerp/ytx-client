@@ -146,12 +146,12 @@ private:
     QSet<QUuid> ParseLinkedEntryP(const QJsonArray& arr) const;
 
 private:
-    void NotifyRegister(const QJsonObject& obj);
-    void NotifyLogin(const QJsonObject& obj);
+    void NotifyRegisterOutcome(const QJsonObject& obj);
+    void NotifyLoginOutcome(const QJsonObject& obj);
 
-    void AckTree(const QJsonObject& obj);
+    void AckOrderTree(const QJsonObject& obj);
     void AckTable(const QJsonObject& obj);
-    void AckNode(const QJsonObject& obj);
+    void AckOrderNode(const QJsonObject& obj);
     void AckOrderReference(const QJsonObject& obj);
     void AckStatement(const QJsonObject& obj);
     void AckStatementNode(const QJsonObject& obj);
@@ -185,8 +185,8 @@ private:
     void DragNode(const QJsonObject& obj);
     void ReplaceLeaf(const QJsonObject& obj);
     void DeleteLeaf(const QJsonObject& obj);
-    void DeleteLeafO(const QJsonObject& obj);
-    void DeleteLeafP(const QJsonObject& obj);
+    void DeleteOrderLeaf(const QJsonObject& obj);
+    void DeletePartnerLeaf(const QJsonObject& obj);
     void CommitDeleteNode(const QJsonObject& obj);
     void UpdateNodeDirectionRule(const QJsonObject& obj);
     void UpdateNodeName(const QJsonObject& obj);

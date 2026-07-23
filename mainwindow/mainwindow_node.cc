@@ -46,7 +46,7 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
         break;
     case Section::kPartner:
         dialog = new InsertNodeP(arg, this);
-        key = WsKey::kInsertPartnerNode;
+        key = WsKey::kPartnerNodeInsert;
         break;
     case Section::kInventory:
         dialog = new InsertNodeI(arg, sc_->section_config.rate_decimal, this);

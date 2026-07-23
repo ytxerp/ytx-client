@@ -52,108 +52,135 @@
 // =============================================================
 enum class WsKey : uint16_t {
     // --- Auth ---
-    kLogin = 1,
-    kRegister = 2,
-    kLoginNotify = 3,
-    kRegisterNotify = 4,
+    kLogin = 1000,
+    kLoginOutcome = 1001,
+
+    kRegister = 1010,
+    kRegisterOutcome = 1011,
+
     // --- Config ---
-    kSharedConfigApply = 5,
-    kPartnerEntryApply = 6,
-    kDefaultUnitUpdate = 7,
-    kDefaultUnitDeny = 8,
-    kDocumentDirUpdate = 9,
-    // --- Ack ---
-    kTreeAck = 10,
-    kTableAck = 11,
-    kOrderReferenceAck = 12,
-    kStatementAck = 13,
-    kStatementNodeAck = 14,
-    kStatementEntryAck = 15,
-    kSettlementAck = 16,
-    kSettlementItemAck = 17,
-    kNodeAck = 18,
-    // --- Settlement ---
-    kSettlementInsert = 19,
-    kSettlementUpdate = 20,
-    kSettlementRecall = 21,
-    // ⚠️ no handler needed
-    // server never emits this message
-    // recall already synchronizes client state
-    kSettlementDelete = 22,
-    // --- Tree ---
-    kTreeApply = 23,
-    kTreeSyncFinish = 24,
-    kNodeInsert = 25,
-    kNodeUpdate = 26,
-    kOrderNameSearch = 27, // for order node
-    kNodeNameUpdate = 28,
-    kNodeDrag = 29,
-    kLeafDelete = 30,
-    kLeafDeleteP = 31,
-    kLeafDeleteO = 32,
-    kLeafReplace = 33,
-    kBranchDelete = 34,
-    kNodeDirectionRuleUpdate = 35,
-    // --- Leaf delete flow ---
-    kLeafDeleteCheck = 36,
-    kLeafDeleteDeny = 37,
-    kLeafDeleteAllow = 38,
-    // --- Tag ---
-    kTagApply = 39,
-    kTagInsert = 40,
-    kTagUpdate = 41,
-    kTagDelete = 42,
-    // --- Entry ---
-    kEntryInsert = 43,
-    kEntryUpdate = 44,
-    kEntryDelete = 45,
-    kEntryDescriptionSearch = 46,
-    kEntryTagSearch = 47,
-    kEntriesMark = 48,
-    kEntryLinkedNodeUpdate = 49,
-    kEntryRateUpdate = 50,
-    kEntryNumericUpdate = 51,
-    // --- Order ---
-    kOrderInsertSave = 52,
-    kOrderUpdateSave = 53,
-    kOrderInsertRelease = 54,
-    kOrderUpdateRelease = 55,
-    kOrderRecall = 56,
-    // --- Misc ---
-    kOperationDeny = 57,
-    // --- Profile ---
-    kAccountNameUpdate = 58,
-    kAccountUsernameUpdate = 59,
-    // --- Workspace Member ---
-    kWorkspaceMemberAck = 60,
-    kWorkspaceMemberUpdate = 61,
-    kWorkspaceMemberDelete = 62,
-    // --- Account Role ---
-    kAccountRoleUpdate = 63,
-    kAccountRoleDelete = 64,
+    kDefaultUnitDeny = 1100,
+    kDefaultUnitUpdate = 1101,
+
+    kDocumentDirUpdate = 1110,
+
+    kPartnerEntryApply = 1120,
+    kSharedConfigApply = 1121,
+
     // --- Audit Log ---
-    kAuditLogAck = 65,
-    kOrderTagSearch = 66, // for order node
-    kPeriodClose = 67,
-    kInventoryHeatAck = 68,
-    kPartnerHeatAck = 69,
-    kBalanceSheetAck = 70,
-    kIncomeStatementAck = 71,
-    kCashFlowStatementAck = 72,
-    // --- Order delivery binding ---
-    kBindingRequest = 73, // Client -> Server: request to establish a delivery binding with a partner
-    kBindingRequestOutcome = 74, // Server -> Client (requester): reports the outcome of a binding request
-    // --- Order delivery ---
-    kOrderDeliver = 75, // Client -> Server: request to deliver an order
-    kOrderDeliverOutcome = 76, // Server -> Client (sender): reports the outcome of an order delivery attempt
-    kOrderNotify = 77, // Server -> Client: notifies the receiver that new delivered orders are available
-    kOrderFetch = 78, // Client -> Server: fetch pending delivered orders
-    kOrderDetail = 79,
-    kOrderAccept = 80,
-    // --- Entry Partner ---
-    kInsertPartnerEntry = 81,
-    kDeletePartnerEntry = 82,
-    kInsertPartnerNode = 83,
+    kAuditLogAck = 1200,
+
+    // --- Settlement ---
+    kSettlementAck = 1300,
+    kSettlementDelete = 1301,
+    kSettlementInsert = 1302,
+    kSettlementItemAck = 1303,
+    kSettlementRecall = 1304,
+    kSettlementUpdate = 1305,
+
+    // --- Tree ---
+    kLeafReplace = 1400,
+    kBranchDelete = 1401,
+    kLeafDelete = 1402,
+    kPartnerLeafDelete = 1403,
+    kOrderLeafDelete = 1404,
+
+    kLeafDeleteCheck = 1410,
+    kLeafDeleteAllow = 1411,
+    kLeafDeleteDeny = 1412,
+
+    kNodeDirectionRuleUpdate = 1420,
+    kNodeDrag = 1421,
+    kNodeInsert = 1422,
+    kNodeNameUpdate = 1423,
+    kNodeUpdate = 1424,
+
+    kTreeApply = 1430,
+    kTreeSyncFinish = 1431,
+
+    // --- Tag ---
+    kTagApply = 1500,
+    kTagDelete = 1501,
+    kTagInsert = 1502,
+    kTagUpdate = 1503,
+
+    // --- Entry ---
+    kTableAck = 1600,
+    kEntryInsert = 1601,
+    kEntryUpdate = 1602,
+    kEntryDelete = 1603,
+    kEntriesMark = 1604,
+    kEntryLinkedNodeUpdate = 1605,
+    kEntryRateUpdate = 1606,
+    kEntryNumericUpdate = 1607,
+
+    kEntryDescriptionSearch = 1610,
+    kEntryTagSearch = 1611,
+
+    // --- Misc ---
+    kOperationDeny = 1700,
+
+    // --- Profile ---
+    kAccountNameUpdate = 1800,
+    kAccountUsernameUpdate = 1801,
+
+    // --- Workspace Member / Role ---
+    kAccountRoleDelete = 1900,
+    kAccountRoleUpdate = 1901,
+
+    kWorkspaceMemberAck = 1910,
+    kWorkspaceMemberDelete = 1911,
+    kWorkspaceMemberUpdate = 1912,
+
+    // --- Statement ---
+    kStatementAck = 2000,
+    kStatementNodeAck = 2001,
+    kStatementEntryAck = 2002,
+
+    // --- Order Delivery ---
+    kBindingRequest = 2100,
+    kBindingRequestOutcome = 2101,
+
+    kOrderDeliver = 2112,
+    kOrderDeliverOutcome = 2113,
+    kOrderNotify = 2114,
+    kOrderFetch = 2115,
+    kOrderDetail = 2116,
+    kOrderAccept = 2117,
+
+    // --- Finance ---
+    kBalanceSheetAck = 2200,
+    kCashFlowStatementAck = 2201,
+    kIncomeStatementAck = 2202,
+
+    kPeriodClose = 2210,
+
+    // --- Task (2300-2399) ---
+    // reserved
+
+    // --- Inventory ---
+    kInventoryHeatAck = 2400,
+
+    // --- Partner ---
+    kPartnerEntryDelete = 2500,
+    kPartnerEntryInsert = 2501,
+    kPartnerNodeInsert = 2502,
+
+    kPartnerHeatAck = 2510,
+
+    // --- Order ---
+    kOrderInsertSave = 2600,
+    kOrderInsertRelease = 2601,
+    kOrderUpdateSave = 2602,
+    kOrderUpdateRelease = 2603,
+    kOrderRecall = 2604,
+
+    kOrderNameSearch = 2610,
+    kOrderTagSearch = 2611,
+
+    kOrderNodeAck = 2620,
+    kOrderTreeAck = 2621,
+    kOrderReferenceAck = 2622,
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -164,10 +191,10 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kLogin";
     case WsKey::kRegister:
         return "kRegister";
-    case WsKey::kLoginNotify:
-        return "kLoginNotify";
-    case WsKey::kRegisterNotify:
-        return "kRegisterNotify";
+    case WsKey::kLoginOutcome:
+        return "kLoginOutcome";
+    case WsKey::kRegisterOutcome:
+        return "kRegisterOutcome";
 
         // --- Config ---
     case WsKey::kSharedConfigApply:
@@ -182,8 +209,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kDocumentDirUpdate";
 
         // --- Ack ---
-    case WsKey::kTreeAck:
-        return "kTreeAck";
+    case WsKey::kOrderTreeAck:
+        return "kOrderTreeAck";
     case WsKey::kTableAck:
         return "kTableAck";
     case WsKey::kOrderReferenceAck:
@@ -198,8 +225,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kSettlementAck";
     case WsKey::kSettlementItemAck:
         return "kSettlementItemAck";
-    case WsKey::kNodeAck:
-        return "kNodeAck";
+    case WsKey::kOrderNodeAck:
+        return "kOrderNodeAck";
 
         // --- Settlement ---
     case WsKey::kSettlementInsert:
@@ -228,10 +255,10 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kNodeDrag";
     case WsKey::kLeafDelete:
         return "kLeafDelete";
-    case WsKey::kLeafDeleteP:
-        return "kLeafDeleteP";
-    case WsKey::kLeafDeleteO:
-        return "kLeafDeleteO";
+    case WsKey::kPartnerLeafDelete:
+        return "kLeafDeletePartner";
+    case WsKey::kOrderLeafDelete:
+        return "kLeafDeleteOrder";
     case WsKey::kLeafReplace:
         return "kLeafReplace";
     case WsKey::kBranchDelete:
@@ -327,10 +354,10 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kCashFlowStatementAck:
         return "kCashFlowStatementAck";
 
-    case WsKey::kDeletePartnerEntry:
-        return "kDeletePartnerEntry";
-    case WsKey::kInsertPartnerEntry:
-        return "kInsertPartnerEntry";
+    case WsKey::kPartnerEntryDelete:
+        return "kPartnerEntryDelete";
+    case WsKey::kPartnerEntryInsert:
+        return "kPartnerEntryInsert";
 
         // --- Order delivery binding ---
     case WsKey::kBindingRequest:
@@ -350,8 +377,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kOrderDetail";
     case WsKey::kOrderAccept:
         return "kOrderAccept";
-    case WsKey::kInsertPartnerNode:
-        return "kInsertPartnerNode";
+    case WsKey::kPartnerNodeInsert:
+        return "kPartnerNodeInsert";
     }
 }
 

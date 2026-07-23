@@ -161,8 +161,8 @@ void WebSocket::RErrorOccurred(QAbstractSocket::SocketError error)
 
 void WebSocket::InitHandler()
 {
-    handler_obj_[WsKey::kLoginNotify] = [this](const QJsonObject& obj) { NotifyLogin(obj); };
-    handler_obj_[WsKey::kRegisterNotify] = [this](const QJsonObject& obj) { NotifyRegister(obj); };
+    handler_obj_[WsKey::kLoginOutcome] = [this](const QJsonObject& obj) { NotifyLoginOutcome(obj); };
+    handler_obj_[WsKey::kRegisterOutcome] = [this](const QJsonObject& obj) { NotifyRegisterOutcome(obj); };
     handler_arr_[WsKey::kSharedConfigApply] = [this](const QJsonArray& arr) { ApplySharedConfig(arr); };
     handler_arr_[WsKey::kPartnerEntryApply] = [this](const QJsonArray& arr) { ApplyPartnerEntry(arr); };
 
@@ -170,7 +170,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kDefaultUnitDeny] = [this](const QJsonObject& obj) { DenyDefaultUnit(obj); };
     handler_obj_[WsKey::kDocumentDirUpdate] = [this](const QJsonObject& obj) { UpdateDocumentDir(obj); };
 
-    handler_obj_[WsKey::kTreeAck] = [this](const QJsonObject& obj) { AckTree(obj); };
+    handler_obj_[WsKey::kOrderTreeAck] = [this](const QJsonObject& obj) { AckOrderTree(obj); };
     handler_obj_[WsKey::kTableAck] = [this](const QJsonObject& obj) { AckTable(obj); };
     handler_obj_[WsKey::kOrderReferenceAck] = [this](const QJsonObject& obj) { AckOrderReference(obj); };
     handler_obj_[WsKey::kStatementAck] = [this](const QJsonObject& obj) { AckStatement(obj); };
@@ -191,10 +191,10 @@ void WebSocket::InitHandler()
 
     handler_obj_[WsKey::kTreeSyncFinish] = [this](const QJsonObject& /*obj*/) { FinishTreeSync(); };
     handler_obj_[WsKey::kNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
-    handler_obj_[WsKey::kNodeAck] = [this](const QJsonObject& obj) { AckNode(obj); };
+    handler_obj_[WsKey::kOrderNodeAck] = [this](const QJsonObject& obj) { AckOrderNode(obj); };
     handler_obj_[WsKey::kLeafDelete] = [this](const QJsonObject& obj) { DeleteLeaf(obj); };
-    handler_obj_[WsKey::kLeafDeleteP] = [this](const QJsonObject& obj) { DeleteLeafP(obj); };
-    handler_obj_[WsKey::kLeafDeleteO] = [this](const QJsonObject& obj) { DeleteLeafO(obj); };
+    handler_obj_[WsKey::kPartnerLeafDelete] = [this](const QJsonObject& obj) { DeletePartnerLeaf(obj); };
+    handler_obj_[WsKey::kOrderLeafDelete] = [this](const QJsonObject& obj) { DeleteOrderLeaf(obj); };
     handler_obj_[WsKey::kBranchDelete] = [this](const QJsonObject& obj) { CommitDeleteNode(obj); };
     handler_obj_[WsKey::kLeafReplace] = [this](const QJsonObject& obj) { ReplaceLeaf(obj); };
     handler_obj_[WsKey::kNodeUpdate] = [this](const QJsonObject& obj) { UpdateNode(obj); };
@@ -234,9 +234,9 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kIncomeStatementAck] = [this](const QJsonObject& obj) { AckIncomeStatement(obj); };
     handler_obj_[WsKey::kCashFlowStatementAck] = [this](const QJsonObject& obj) { AckCashFlowStatement(obj); };
 
-    handler_obj_[WsKey::kDeletePartnerEntry] = [this](const QJsonObject& obj) { DeletePartnerEntry(obj); };
-    handler_obj_[WsKey::kInsertPartnerEntry] = [this](const QJsonObject& obj) { InsertPartnerEntry(obj); };
-    handler_obj_[WsKey::kInsertPartnerNode] = [this](const QJsonObject& obj) { InsertNode(obj); };
+    handler_obj_[WsKey::kPartnerEntryDelete] = [this](const QJsonObject& obj) { DeletePartnerEntry(obj); };
+    handler_obj_[WsKey::kPartnerEntryInsert] = [this](const QJsonObject& obj) { InsertPartnerEntry(obj); };
+    handler_obj_[WsKey::kPartnerNodeInsert] = [this](const QJsonObject& obj) { InsertNode(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -349,7 +349,7 @@ void WebSocket::RBinaryMessageReceived(const QByteArray& data)
     HandleMessage(key, payload);
 }
 
-void WebSocket::NotifyLogin(const QJsonObject& obj)
+void WebSocket::NotifyLoginOutcome(const QJsonObject& obj)
 {
     Q_ASSERT(obj.contains(kResult));
     Q_ASSERT(obj.contains(kCode));
@@ -384,7 +384,7 @@ void WebSocket::DenyOperation() { emit SOperationDeny(); }
 
 void WebSocket::FinishTreeSync() { emit STreeSyncFinish(); }
 
-void WebSocket::NotifyRegister(const QJsonObject& obj)
+void WebSocket::NotifyRegisterOutcome(const QJsonObject& obj)
 {
     Q_ASSERT(obj.contains(kResult));
     Q_ASSERT(obj.contains(kCode));
@@ -523,7 +523,7 @@ void WebSocket::ApplyPartnerEntry(const QJsonArray& arr)
     entry_hub->ApplyPartnerEntry(arr);
 }
 
-void WebSocket::AckTree(const QJsonObject& obj)
+void WebSocket::AckOrderTree(const QJsonObject& obj)
 {
     Q_ASSERT(obj.contains(kSection));
 
@@ -551,7 +551,7 @@ void WebSocket::AckTable(const QJsonObject& obj)
         emit SEntrySelect(node_id, entry_id);
 }
 
-void WebSocket::AckNode(const QJsonObject& obj)
+void WebSocket::AckOrderNode(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid node_id(obj.value(kNodeId).toString());
@@ -741,7 +741,7 @@ void WebSocket::DeleteLeaf(const QJsonObject& obj)
     tree_model->DeleteNode(node_id);
 }
 
-void WebSocket::DeleteLeafO(const QJsonObject& obj)
+void WebSocket::DeleteOrderLeaf(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
@@ -764,7 +764,7 @@ void WebSocket::DeleteLeafO(const QJsonObject& obj)
     tree_model->DeleteNode(node_id);
 }
 
-void WebSocket::DeleteLeafP(const QJsonObject& obj)
+void WebSocket::DeletePartnerLeaf(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
