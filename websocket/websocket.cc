@@ -234,8 +234,8 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kIncomeStatementAck] = [this](const QJsonObject& obj) { AckIncomeStatement(obj); };
     handler_obj_[WsKey::kCashFlowStatementAck] = [this](const QJsonObject& obj) { AckCashFlowStatement(obj); };
 
-    handler_obj_[WsKey::kEntryDeletePartner] = [this](const QJsonObject& obj) { DeleteEntryPartner(obj); };
-    handler_obj_[WsKey::kEntryInsertPartner] = [this](const QJsonObject& obj) { InsertEntryPartner(obj); };
+    handler_obj_[WsKey::kDeletePartnerEntry] = [this](const QJsonObject& obj) { DeletePartnerEntry(obj); };
+    handler_obj_[WsKey::kInsertPartnerEntry] = [this](const QJsonObject& obj) { InsertPartnerEntry(obj); };
 }
 
 void WebSocket::InitConnect()
@@ -974,7 +974,7 @@ void WebSocket::InsertEntry(const QJsonObject& obj)
     entry_hub->InsertEntry(entry);
 }
 
-void WebSocket::InsertEntryPartner(const QJsonObject& obj)
+void WebSocket::InsertPartnerEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
@@ -1020,7 +1020,7 @@ void WebSocket::DeleteEntry(const QJsonObject& obj)
     entry_hub->DeleteEntry(entry_id);
 }
 
-void WebSocket::DeleteEntryPartner(const QJsonObject& obj)
+void WebSocket::DeletePartnerEntry(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };

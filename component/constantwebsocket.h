@@ -151,8 +151,8 @@ enum class WsKey : uint8_t {
     kOrderDetail = 79,
     kOrderAccept = 80,
     // --- Entry Partner ---
-    kEntryInsertPartner = 81,
-    kEntryDeletePartner = 82,
+    kInsertPartnerEntry = 81,
+    kDeletePartnerEntry = 82,
 
 };
 
@@ -327,10 +327,10 @@ constexpr const char* WsMsgToString(WsKey msg)
     case WsKey::kCashFlowStatementAck:
         return "kCashFlowStatementAck";
 
-    case WsKey::kEntryDeletePartner:
-        return "kEntryDeletePartner";
-    case WsKey::kEntryInsertPartner:
-        return "kEntryInsertPartner";
+    case WsKey::kDeletePartnerEntry:
+        return "kDeletePartnerEntry";
+    case WsKey::kInsertPartnerEntry:
+        return "kInsertPartnerEntry";
 
         // --- Order delivery binding ---
     case WsKey::kBindingRequest:
