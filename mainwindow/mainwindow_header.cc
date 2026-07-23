@@ -228,8 +228,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Gross Total"),
         tr("Discount Total"),
         tr("Net Total"),
-        tr("Is Settled"),
-        tr("Settlement ID"),
     };
 
     // Entry

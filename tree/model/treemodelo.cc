@@ -298,8 +298,6 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
         case NodeEnumO::kTag:
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumO::kId:
-        case NodeEnumO::kIsSettled:
-        case NodeEnumO::kSettlementId:
             return false;
         }
     };
@@ -354,10 +352,6 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
         return d_node->initial_total;
     case NodeEnumO::kFinalTotal:
         return d_node->final_total;
-    case NodeEnumO::kIsSettled:
-        return d_node->is_settled;
-    case NodeEnumO::kSettlementId:
-        return d_node->settlement_id;
     case NodeEnumO::kTag:
         return d_node->tag;
     }
@@ -415,8 +409,6 @@ Qt::ItemFlags TreeModelO::flags(const QModelIndex& index) const
     case NodeEnumO::kInitialTotal:
     case NodeEnumO::kDiscountTotal:
     case NodeEnumO::kFinalTotal:
-    case NodeEnumO::kIsSettled:
-    case NodeEnumO::kSettlementId:
         flags &= ~Qt::ItemIsEditable;
         break;
     }

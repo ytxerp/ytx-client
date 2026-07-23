@@ -117,15 +117,7 @@ void SearchDialog::InitDelegate()
     tag_ = new TagDelegate(tag_icon_hash_, this);
 }
 
-void SearchDialog::HideTreeColumn(QTableView* view)
-{
-    view->setColumnHidden(std::to_underlying(NodeEnum::kId), kIsHidden);
-
-    if (info_.section == Section::kSale || info_.section == Section::kPurchase) {
-        view->setColumnHidden(std::to_underlying(NodeEnumO::kIsSettled), kIsHidden);
-        view->setColumnHidden(std::to_underlying(NodeEnumO::kSettlementId), kIsHidden);
-    }
-}
+void SearchDialog::HideTreeColumn(QTableView* view) { view->setColumnHidden(std::to_underlying(NodeEnum::kId), kIsHidden); }
 
 void SearchDialog::HideTableColumn(QTableView* view)
 {

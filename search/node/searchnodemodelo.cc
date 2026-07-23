@@ -85,10 +85,6 @@ QVariant NodeModelO::data(const QModelIndex& index, int role) const
         return d_node->initial_total;
     case NodeEnumO::kFinalTotal:
         return d_node->final_total;
-    case NodeEnumO::kIsSettled:
-        return d_node->is_settled;
-    case NodeEnumO::kSettlementId:
-        return d_node->settlement_id;
     case NodeEnumO::kTag:
         return d_node->tag;
     }
@@ -136,8 +132,6 @@ void NodeModelO::sort(int column, Qt::SortOrder order)
         case NodeEnumO::kTag:
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumO::kId:
-        case NodeEnumO::kIsSettled:
-        case NodeEnumO::kSettlementId:
             return false;
         }
     };

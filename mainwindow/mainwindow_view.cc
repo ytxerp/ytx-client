@@ -17,11 +17,6 @@ void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
         header->setDefaultAlignment(Qt::AlignCenter);
     }
 
-    if (section == Section::kSale || section == Section::kPurchase) {
-        view->setColumnHidden(std::to_underlying(NodeEnumO::kSettlementId), kIsHidden);
-        view->setColumnHidden(std::to_underlying(NodeEnumO::kIsSettled), kIsHidden);
-    }
-
     {
         view->setColumnHidden(std::to_underlying(NodeEnum::kId), kIsHidden);
     }
