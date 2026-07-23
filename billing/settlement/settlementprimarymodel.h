@@ -48,7 +48,7 @@ public:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
     bool InsertSucceeded(PrimaryRow* settlement);
-    void RecallSucceeded(const QUuid& settlement_id, const QJsonObject& update);
+    void RecallSucceeded(const QUuid& settlement_id, int version);
     void UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update);
     void Rebuild(const QJsonArray& array);
 

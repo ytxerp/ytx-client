@@ -127,7 +127,7 @@ bool PrimaryModel::InsertSucceeded(PrimaryRow* settlement)
     return true;
 }
 
-void PrimaryModel::RecallSucceeded(const QUuid& settlement_id, const QJsonObject& update)
+void PrimaryModel::RecallSucceeded(const QUuid& settlement_id, int version)
 {
     auto* settlement { FindSettlement(settlement_id) };
     Q_ASSERT_X(settlement != nullptr, "SettlementModel::RecallSettlement", "Settlement must exist for recalled operation");
@@ -135,8 +135,9 @@ void PrimaryModel::RecallSucceeded(const QUuid& settlement_id, const QJsonObject
     if (!settlement)
         return;
 
-    settlement->ReadJson(update);
+    settlement->version = version;
     settlement->amount = 0.0;
+    settlement->status = SettlementStatus::kDraft;
 }
 
 void PrimaryModel::UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update)

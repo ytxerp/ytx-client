@@ -177,8 +177,8 @@ void MainWindow::RRecallSettlement(const QJsonObject& obj)
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
-    const QJsonObject settlement { obj.value(kSettlement).toObject() };
-    const int version { settlement.value(kVersion).toInt() };
+    const QJsonObject update { obj.value(kUpdate).toObject() };
+    const int version { update.value(kVersion).toInt() };
 
     auto* sc { GetSectionContex(section) };
 
@@ -203,7 +203,7 @@ void MainWindow::RRecallSettlement(const QJsonObject& obj)
             auto* d_parent_widget { static_cast<SettlementPrimaryWidget*>(ptr) };
 
             auto* model { d_parent_widget->Model() };
-            model->RecallSucceeded(settlement_id, settlement);
+            model->RecallSucceeded(settlement_id, version);
         }
     }
 }

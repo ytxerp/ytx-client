@@ -174,7 +174,7 @@ void SettlementSecondaryWidget::on_pBtnRelease_clicked()
             pending_update_.insert(kAmount, QString::number(settlement_.amount, 'f', numeric_const::kDecimalPlaces4));
             pending_update_.insert(kVersion, settlement_.version);
 
-            message.insert(kSettlement, pending_update_);
+            message.insert(kUpdate, pending_update_);
 
             WebSocket::Instance()->SendMessage(WsKey::kSettlementUpdate, message);
             pending_update_ = QJsonObject();
@@ -202,13 +202,14 @@ void SettlementSecondaryWidget::on_pBtnRecall_clicked()
 
     model_->Finalize(message);
 
-    pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kDraft));
     pending_update_.insert(kVersion, settlement_.version);
+    pending_update_.insert(kAmount, settlement_.amount);
+    pending_update_.insert(kPartnerId, settlement_.partner_id.toString(QUuid::WithoutBraces));
 
     message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
     message.insert(kParentWidgetId, parent_widget_id_.toString(QUuid::WithoutBraces));
     message.insert(kSettlementId, settlement_.id.toString(QUuid::WithoutBraces));
-    message.insert(kSettlement, pending_update_);
+    message.insert(kUpdate, pending_update_);
 
     WebSocket::Instance()->SendMessage(WsKey::kSettlementRecall, message);
     pending_update_ = QJsonObject();

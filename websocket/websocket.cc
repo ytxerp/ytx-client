@@ -1227,7 +1227,7 @@ void WebSocket::UpdateSettlement(const QJsonObject& obj)
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
     const QJsonArray selected_array { obj.value(kSettlementItemSelected).toArray() };
-    const auto settlement { obj.value(kSettlement).toObject() };
+    const auto update { obj.value(kUpdate).toObject() };
 
     auto* base_model { tree_model_hash_.value(section).data() };
 
@@ -1253,8 +1253,8 @@ void WebSocket::UpdateSettlement(const QJsonObject& obj)
         auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
         Q_ASSERT(partner_model != nullptr);
 
-        const auto partner_id { QUuid(settlement.value(kPartnerId).toString()) };
-        const double initial_delta { settlement.value(kAmount).toString().toDouble() };
+        const auto partner_id { QUuid(update.value(kPartnerId).toString()) };
+        const double initial_delta { update.value(kAmount).toString().toDouble() };
 
         partner_model->RUpdateAmount(partner_id, -initial_delta);
     }
@@ -1265,7 +1265,7 @@ void WebSocket::RecallSettlement(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
-    const auto settlement { obj.value(kSettlement).toObject() };
+    const auto update { obj.value(kUpdate).toObject() };
 
     auto* base_model { tree_model_hash_.value(section).data() };
 
@@ -1284,8 +1284,8 @@ void WebSocket::RecallSettlement(const QJsonObject& obj)
         auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
         Q_ASSERT(partner_model != nullptr);
 
-        const auto partner_id { QUuid(settlement.value(kPartnerId).toString()) };
-        const double initial_delta { settlement.value(kAmount).toString().toDouble() };
+        const auto partner_id { QUuid(update.value(kPartnerId).toString()) };
+        const double initial_delta { update.value(kAmount).toString().toDouble() };
 
         partner_model->RUpdateAmount(partner_id, initial_delta);
     }
