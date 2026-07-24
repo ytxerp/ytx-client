@@ -256,6 +256,7 @@ void TableWidgetO::LockWidgets(NodeStatus value)
     ui->pBtnSave->setEnabled(!is_released);
     ui->pBtnRelease->setEnabled(!is_released && tmp_node_->unit != NodeUnit::OPending);
     ui->pBtnRecall->setEnabled(is_released);
+    ui->pushButtonDelete->setEnabled(!is_released);
 }
 
 void TableWidgetO::InitUiValue()
@@ -420,7 +421,8 @@ void TableWidgetO::on_pBtnPreview_clicked()
 bool TableWidgetO::PreparePrint()
 {
     if (ui->comboTemplate->currentIndex() == -1) {
-        utils::ShowNotification(QMessageBox::Warning, tr("No Template"), tr("No printable template was found."), time_const::kAutoCloseMs);
+        utils::ShowMessage(
+            QMessageBox::Warning, tr("Required Information Missing"), tr("Please select a printable template before continuing."), time_const::kAutoCloseMs);
         return false;
     }
 
@@ -460,8 +462,11 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
 
     if (tmp_node_->is_settled || !tmp_node_->settlement_id.isNull()) {
-        utils::ShowNotification(
-            QMessageBox::Information, tr("Order Settled"), tr("This order has already been settled and cannot be operated."), time_const::kAutoCloseMs);
+        utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"),
+            tr("This order has already been settled and cannot be recalled.\n"
+               "Settled orders cannot be modified."),
+            time_const::kAutoCloseMs);
+
         return;
     }
 
@@ -478,8 +483,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
 bool TableWidgetO::ValidatePartner()
 {
     if (tmp_node_->partner_id.isNull()) {
-        utils::ShowNotification(
-            QMessageBox::Warning, tr("Partner Required"), tr("Please select a partner before performing this action."), time_const::kAutoCloseMs);
+        utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"), tr("A partner must be selected before continuing."), time_const::kAutoCloseMs);
         return false;
     }
 
@@ -490,8 +494,8 @@ bool TableWidgetO::ValidatePartner()
 bool TableWidgetO::ValidateSyncState()
 {
     if (tmp_node_->sync_state == SyncState::kUpdating) {
-        utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
-            tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), time_const::kAutoCloseMs);
+        utils::ShowMessage(
+            QMessageBox::Information, tr("Operation Rejected"), tr("The data is being updated. Please refresh and try again."), time_const::kAutoCloseMs);
         return false;
     }
 
@@ -575,6 +579,21 @@ void TableWidgetO::on_pBtnRelease_clicked()
 void TableWidgetO::on_comboTemplate_currentIndexChanged(int /*index*/)
 {
     if (!PrintHub::Instance().LoadTemplate(ui->comboTemplate->currentData().toString())) {
-        utils::ShowNotification(QMessageBox::Warning, tr("Load Failed"), tr("Failed to load the print template."), time_const::kAutoCloseMs);
+        utils::ShowMessage(QMessageBox::Warning, tr("Operation Failed"), tr("Failed to load the print template."), time_const::kAutoCloseMs);
     }
+}
+
+void TableWidgetO::on_pushButtonDelete_clicked()
+{
+    if (tmp_node_->status == NodeStatus::kReleased) {
+        utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"),
+            tr("This order has been released and cannot be deleted.\n"
+               "Please recall it before deleting."),
+            time_const::kAutoCloseMs);
+
+        return;
+    }
+
+    const QJsonObject value { JsonGen::LeafDelete(section_, node_id_) };
+    WebSocket::Instance()->SendMessage(WsKey::kOrderLeafDelete, value);
 }

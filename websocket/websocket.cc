@@ -745,21 +745,9 @@ void WebSocket::DeleteOrderLeaf(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
-    const int unit { obj.value(kUnit).toInt() };
-    const int status { obj.value(kStatus).toInt() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
-
-    if (NodeUnit(unit) == NodeUnit::OMonthly && NodeStatus(status) == NodeStatus::kReleased) {
-        auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
-        Q_ASSERT(partner_model != nullptr);
-
-        const auto partner_id { QUuid(obj.value(kPartnerId).toString()) };
-        const auto initial_total { obj.value(kInitialTotal).toString().toDouble() };
-
-        partner_model->RUpdateAmount(partner_id, -initial_total);
-    }
 
     tree_model->DeleteNode(node_id);
 }

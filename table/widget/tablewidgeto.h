@@ -97,6 +97,7 @@ private slots:
     void on_pBtnSave_clicked();
     void on_pBtnRecall_clicked();
     void on_pBtnRelease_clicked();
+    void on_pushButtonDelete_clicked();
 
 private:
     void InitWidget();

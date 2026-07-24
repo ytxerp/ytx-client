@@ -273,12 +273,26 @@
          </widget>
         </item>
         <item>
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="pBtnRecall">
           <property name="focusPolicy">
            <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="text">
            <string>Recall</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButtonDelete">
+          <property name="text">
+           <string>Delete</string>
           </property>
          </widget>
         </item>
