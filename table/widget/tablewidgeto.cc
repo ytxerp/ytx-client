@@ -515,6 +515,8 @@ void TableWidgetO::SaveOrder()
     if (!HasPendingUpdate())
         return;
 
+    Q_ASSERT(tmp_node_->status != NodeStatus::kReleased);
+
     QJsonObject order_message {};
     order_message.insert(kSection, std::to_underlying(section_));
 
@@ -522,7 +524,9 @@ void TableWidgetO::SaveOrder()
 
     if (tmp_node_->sync_state == SyncState::kSynced) {
         BuildNodeUpdate(order_message);
-        WebSocket::Instance()->SendMessage(WsKey::kOrderUpdateSave, order_message);
+
+        const auto key { tmp_node_->status == NodeStatus::kUnreleased ? WsKey::kUnreleasedOrderSave : WsKey::kRecalledOrderSave };
+        WebSocket::Instance()->SendMessage(key, order_message);
 
         pending_update_ = QJsonObject();
     }
@@ -547,6 +551,8 @@ void TableWidgetO::on_pBtnRelease_clicked()
     if (!ValidateSyncState())
         return;
 
+    Q_ASSERT(tmp_node_->status != NodeStatus::kReleased);
+
     QJsonObject order_message {};
     order_message.insert(kSection, std::to_underlying(section_));
     table_model_order_->Finalize(order_message);
@@ -556,7 +562,8 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
         BuildNodeUpdate(order_message);
 
-        WebSocket::Instance()->SendMessage(WsKey::kOrderUpdateRelease, order_message);
+        const auto key { tmp_node_->status == NodeStatus::kUnreleased ? WsKey::kUnreleasedOrderRelease : WsKey::kRecalledOrderRelease };
+        WebSocket::Instance()->SendMessage(key, order_message);
 
         pending_update_ = QJsonObject();
     }

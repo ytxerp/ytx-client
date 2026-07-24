@@ -171,9 +171,11 @@ enum class WsKey : uint16_t {
     // --- Order ---
     kOrderInsertSave = 2600,
     kOrderInsertRelease = 2601,
-    kOrderUpdateSave = 2602,
-    kOrderUpdateRelease = 2603,
+    kUnreleasedOrderSave = 2602,
+    kUnreleasedOrderRelease = 2603,
     kOrderRecall = 2604,
+    kRecalledOrderSave = 2605,
+    kRecalledOrderRelease = 2606,
 
     kOrderNameSearch = 2610,
     kOrderTagSearch = 2611,
@@ -307,14 +309,18 @@ constexpr const char* WsMsgToString(WsKey msg)
         // --- Order ---
     case WsKey::kOrderInsertSave:
         return "kOrderInsertSave";
-    case WsKey::kOrderUpdateSave:
-        return "kOrderUpdateSave";
+    case WsKey::kUnreleasedOrderSave:
+        return "kUnreleasedOrderSave";
     case WsKey::kOrderInsertRelease:
         return "kOrderInsertRelease";
-    case WsKey::kOrderUpdateRelease:
-        return "kOrderUpdateRelease";
+    case WsKey::kUnreleasedOrderRelease:
+        return "kUnreleasedOrderRelease";
     case WsKey::kOrderRecall:
         return "kOrderRecall";
+    case WsKey::kRecalledOrderSave:
+        return "kRecalledOrderSave";
+    case WsKey::kRecalledOrderRelease:
+        return "kRecalledOrderRelease";
 
         // --- Misc ---
     case WsKey::kOperationDeny:
