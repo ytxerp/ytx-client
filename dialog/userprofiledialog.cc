@@ -43,7 +43,7 @@ void UserProfileDialog::EditUsernameFinished()
     // Validate username format
     static const QRegularExpression kUsernameRegex("^[a-z][a-z0-9_]{2,31}$");
     if (!kUsernameRegex.match(username).hasMatch() || username.contains("__") || username.endsWith('_')) {
-        utils::ShowNotification(QMessageBox::Warning, tr("Invalid Username"),
+        utils::ShowMessage(QMessageBox::Warning, tr("Invalid Input"),
             tr("Username must be 3-32 characters, start with a letter, and contain only lowercase letters, digits, or underscores. No consecutive or trailing "
                "underscores."),
             time_const::kAutoCloseMs);

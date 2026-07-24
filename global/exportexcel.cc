@@ -24,12 +24,12 @@ void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuid& pa
         watcher->deleteLater();
 
         if (ok) {
-            utils::ShowNotification(
-                QMessageBox::Information, QObject::tr("Export Completed"), QObject::tr("Export completed successfully."), time_const::kAutoCloseMs);
+            utils::ShowMessage(
+                QMessageBox::Information, QObject::tr("Export Completed"), QObject::tr("The export completed successfully."), time_const::kAutoCloseMs);
         } else {
             QFile::remove(path);
-            utils::ShowNotification(
-                QMessageBox::Critical, QObject::tr("Export Failed"), QObject::tr("Export failed. The file has been deleted."), time_const::kAutoCloseMs);
+            utils::ShowMessage(QMessageBox::Critical, QObject::tr("Operation Failed"),
+                QObject::tr("The export failed. The incomplete file has been removed."), time_const::kAutoCloseMs);
         }
     });
 

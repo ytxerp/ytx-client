@@ -94,8 +94,8 @@ void SettlementSecondaryWidget::LockWidget(bool is_settled)
 bool SettlementSecondaryWidget::ValidateSyncState()
 {
     if (settlement_.sync_state == SyncState::kUpdating) {
-        utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
-            tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), time_const::kAutoCloseMs);
+        utils::ShowMessage(
+            QMessageBox::Information, tr("Data Outdated"), tr("The data has changed. Please refresh and try again."), time_const::kAutoCloseMs);
         return false;
     }
 

@@ -27,7 +27,7 @@ bool utils::PrepareNewFile(QString& file_path, CString& suffix)
     return true;
 }
 
-void utils::ShowNotification(QMessageBox::Icon icon, CString& title, CString& text, int duration_ms, QMessageBox::StandardButtons buttons, QWidget* parent)
+void utils::ShowMessage(QMessageBox::Icon icon, CString& title, CString& text, int duration_ms, QMessageBox::StandardButtons buttons, QWidget* parent)
 {
     assert(duration_ms >= 0);
 
@@ -41,7 +41,7 @@ void utils::ShowNotification(QMessageBox::Icon icon, CString& title, CString& te
     box->show();
 }
 
-QMessageBox* utils::CreateMessageBox(QMessageBox::Icon icon, CString& title, CString& text, bool modal, QMessageBox::StandardButtons buttons, QWidget* parent)
+QMessageBox* utils::CreateMessage(QMessageBox::Icon icon, CString& title, CString& text, bool modal, QMessageBox::StandardButtons buttons, QWidget* parent)
 {
     auto* box { new QMessageBox(icon, title, text, buttons, parent) };
     box->setAttribute(Qt::WA_DeleteOnClose);

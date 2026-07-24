@@ -176,9 +176,9 @@ void MainWindow::tabWidget_tabCloseRequestedO(int index)
 
     auto* widget { qobject_cast<TableWidgetO*>(wc.widget.data()) };
     if (widget && widget->HasPendingUpdate()) {
-        auto* dlg
-            = utils::CreateMessageBox(QMessageBox::Warning, tr("Unsaved Data"), tr("This page contains unsaved data.\n\nDo you want to save before closing?"),
-                true, QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, this);
+        auto* dlg = utils::CreateMessage(QMessageBox::Warning, tr("Unsaved Changes"),
+            tr("This page contains unsaved changes.\n\nDo you want to save them before closing?"), true,
+            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, this);
 
         dlg->setDefaultButton(QMessageBox::Cancel);
 

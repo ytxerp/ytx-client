@@ -89,7 +89,7 @@ void MainWindow::RLocateNode(Section section, const QUuid& node_id)
 
 void MainWindow::RMessage(QMessageBox::Icon icon, const QString& message)
 {
-    utils::ShowNotification(icon, tr("Constraint Violation"), message, time_const::kAutoCloseMs, QMessageBox::NoButton, this);
+    utils::ShowMessage(icon, tr("Constraint Violation"), message, time_const::kAutoCloseMs, QMessageBox::NoButton, this);
 }
 
 void MainWindow::EditNameFIPT()

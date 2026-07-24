@@ -70,8 +70,8 @@ void MainWindow::UpdateAppConfig(CAppConfig& app)
     }
 
     if (app_config_.language != app.language) {
-        utils::ShowNotification(QMessageBox::Information, tr("Language Changed"),
-            tr("The language has been changed. Please restart the application for the changes to take effect."), time_const::kAutoCloseMs);
+        utils::ShowMessage(QMessageBox::Information, tr("Language Changed"),
+            tr("The language has been changed. Please restart the application to apply the changes."), time_const::kAutoCloseMs);
     }
 
     app_config_ = app;

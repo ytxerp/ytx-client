@@ -677,14 +677,14 @@ void MainWindow::on_actionCheckUpdates_triggered()
         reply->deleteLater();
 
         if (reply->error() != QNetworkReply::NoError) {
-            utils::ShowNotification(QMessageBox::Warning, tr("Update Check"), tr("Failed to check updates."), time_const::kAutoCloseMs);
+            utils::ShowMessage(QMessageBox::Warning, tr("Update Check"), tr("Failed to check updates."), time_const::kAutoCloseMs);
             return;
         }
 
         const QByteArray data { reply->readAll() };
         QJsonDocument doc { QJsonDocument::fromJson(data) };
         if (!doc.isObject()) {
-            utils::ShowNotification(QMessageBox::Warning, tr("Update Check"), tr("Invalid update information received."), time_const::kAutoCloseMs);
+            utils::ShowMessage(QMessageBox::Warning, tr("Update Check"), tr("Invalid update information received."), time_const::kAutoCloseMs);
             return;
         }
 
@@ -696,8 +696,8 @@ void MainWindow::on_actionCheckUpdates_triggered()
             = is_chinese ? "https://gitee.com/ytxerp/ytx-client/releases/latest" : "https://github.com/ytxerp/ytx-client/releases/latest";
 
         if (utils::CompareVersion(latest_tag, QCoreApplication::applicationVersion()) > 0) {
-            auto* dlg = utils::CreateMessageBox(QMessageBox::Information, tr("Update Available"),
-                tr("A new version %1 is available!\n\nDownload now?").arg(latest_tag), true, QMessageBox::Yes | QMessageBox::No, this);
+            auto* dlg = utils::CreateMessage(QMessageBox::Information, tr("Update Available"),
+                tr("A new version %1 is available.\n\nWould you like to download it now?").arg(latest_tag), true, QMessageBox::Yes | QMessageBox::No, this);
 
             dlg->setDefaultButton(QMessageBox::Yes);
 
@@ -709,7 +709,7 @@ void MainWindow::on_actionCheckUpdates_triggered()
 
             dlg->show();
         } else {
-            utils::ShowNotification(QMessageBox::Information, tr("No Update"), tr("You are using the latest version."), time_const::kAutoCloseMs);
+            utils::ShowMessage(QMessageBox::Information, tr("No Update"), tr("You are using the latest version."), time_const::kAutoCloseMs);
         }
     });
 }

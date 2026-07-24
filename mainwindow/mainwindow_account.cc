@@ -32,22 +32,31 @@ void MainWindow::RAccountUsername(const QJsonObject& obj)
 {
     const auto code { static_cast<AccountUsernameOutcome>(obj[kCode].toInt()) };
 
+    QString title {};
     QString message {};
+
     switch (code) {
     case AccountUsernameOutcome::kSuccess:
         return;
+
     case AccountUsernameOutcome::kInvalidFormat:
-        message = tr("Username format is invalid. Use 3-32 lowercase letters, digits, or underscores. No consecutive or trailing underscores.");
+        title = tr("Invalid Input");
+        message = tr("Username must be 3-32 characters, start with a letter, and contain only lowercase letters, digits, or underscores. No consecutive or "
+                     "trailing underscores.");
         break;
+
     case AccountUsernameOutcome::kAlreadyExists:
+        title = tr("Operation Rejected");
         message = tr("This username is already taken. Please choose another one.");
         break;
+
     case AccountUsernameOutcome::kUserNotFound:
-        message = tr("User account was not found.");
+        title = tr("Not Found");
+        message = tr("The user account could not be found.");
         break;
     }
 
-    utils::ShowNotification(QMessageBox::Warning, tr("Update Failed"), message, time_const::kAutoCloseMs);
+    utils::ShowMessage(QMessageBox::Warning, title, message, time_const::kAutoCloseMs);
 }
 
 void MainWindow::on_actionWorkspaceManager_triggered()
@@ -91,6 +100,6 @@ void MainWindow::RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& a
 
 void MainWindow::RAccountRoleUpdate()
 {
-    utils::ShowNotification(QMessageBox::Information, tr("Role Updated"),
-        tr("Your account role has been updated. Please restart the application to enable new permissions."), time_const::kAutoCloseMs);
+    utils::ShowMessage(QMessageBox::Information, tr("Role Updated"),
+        tr("Your account role has been updated. Please log in again to apply the new permissions."), time_const::kAutoCloseMs);
 }

@@ -68,8 +68,8 @@ void MainWindow::DeleteEntry(TableWidget* widget)
         return;
 
     if (app_config_.delete_confirm) {
-        auto* msg_box { utils::CreateMessageBox(QMessageBox::Warning, tr("Delete Entry"),
-            tr("Delete this entry?"
+        auto* msg_box { utils::CreateMessage(QMessageBox::Warning, tr("Confirm Delete"),
+            tr("Are you sure you want to delete this entry?"
                "<br><br>"
                "<span style='color:#d32f2f; font-weight:bold;'>"
                "⚠️ This action is permanent and cannot be undone."

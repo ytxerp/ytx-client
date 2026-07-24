@@ -132,7 +132,7 @@ void MainWindow::RSaveOrder(Section section, const QUuid& node_id, int version)
 
 void MainWindow::RDenyOperation()
 {
-    utils::ShowNotification(QMessageBox::Information, tr("Invalid Operation"),
+    utils::ShowMessage(QMessageBox::Information, tr("Invalid Operation"),
         tr("The operation you attempted is invalid because your local data is outdated. Please refresh and try again."), time_const::kAutoCloseMs);
 }
 
