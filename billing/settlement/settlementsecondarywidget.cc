@@ -133,7 +133,7 @@ void SettlementSecondaryWidget::on_comboPartner_currentIndexChanged(int /*index*
         return;
 
     settlement_.amount = 0.0;
-    settlement_.status = SettlementStatus::kDraft;
+    settlement_.status = SettlementStatus::kRecalled;
     settlement_.description.clear();
 
     ui->dSpinAmount->setValue(0.0);
@@ -148,7 +148,7 @@ void SettlementSecondaryWidget::on_comboPartner_currentIndexChanged(int /*index*
 void SettlementSecondaryWidget::on_pBtnRelease_clicked()
 {
     Q_ASSERT(!settlement_.partner_id.isNull());
-    Q_ASSERT(settlement_.status == SettlementStatus::kDraft);
+    Q_ASSERT(settlement_.status == SettlementStatus::kRecalled);
 
     {
         if (!model_->HasPendingUpdate()) {
@@ -229,10 +229,10 @@ void SettlementSecondaryWidget::RecallSucceeded(int version)
     settlement_.amount = 0.0;
 
     settlement_.version = version;
-    settlement_.status = SettlementStatus::kDraft;
+    settlement_.status = SettlementStatus::kRecalled;
 
     settlement_.sync_state = SyncState::kSynced;
-    model_->UpdateStatus(SettlementStatus::kDraft);
+    model_->UpdateStatus(SettlementStatus::kRecalled);
 
     LockWidget(false);
 }

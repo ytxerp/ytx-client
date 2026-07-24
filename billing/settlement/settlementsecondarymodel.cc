@@ -159,7 +159,7 @@ void SecondaryModel::Rebuild(const QJsonArray& array)
             if (status_ == SettlementStatus::kReleased && entry->is_settled)
                 list_.emplaceBack(entry);
 
-            if (status_ == SettlementStatus::kDraft)
+            if (status_ == SettlementStatus::kRecalled)
                 list_.emplaceBack(entry);
         }
 
@@ -181,7 +181,7 @@ void SecondaryModel::UpdateStatus(SettlementStatus status)
         list_.erase(std::remove_if(list_.begin(), list_.end(), [](const SecondaryRow* node) { return !node->is_settled; }), list_.end());
     }
 
-    if (status == SettlementStatus::kDraft) {
+    if (status == SettlementStatus::kRecalled) {
         for (auto* node : std::as_const(list_cache_))
             node->is_settled = false;
 

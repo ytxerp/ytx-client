@@ -137,7 +137,7 @@ void PrimaryModel::RecallSucceeded(const QUuid& settlement_id, int version)
 
     settlement->version = version;
     settlement->amount = 0.0;
-    settlement->status = SettlementStatus::kDraft;
+    settlement->status = SettlementStatus::kRecalled;
 }
 
 void PrimaryModel::UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update)

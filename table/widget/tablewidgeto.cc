@@ -237,14 +237,14 @@ void TableWidgetO::InitData(const NodeO* node)
 
 void TableWidgetO::LockWidgets(NodeStatus value)
 {
-    const bool is_draft { value == NodeStatus::kDraft };
+    const bool is_unreleased { value == NodeStatus::kUnreleased };
     const bool is_released { value == NodeStatus::kReleased };
 
-    ui->comboPartner->setReadOnly(!is_draft);
+    ui->comboPartner->setReadOnly(!is_unreleased);
     ui->comboEmployee->setReadOnly(is_released);
 
-    ui->rBtnRO->setEnabled(is_draft);
-    ui->rBtnFO->setEnabled(is_draft);
+    ui->rBtnRO->setEnabled(is_unreleased);
+    ui->rBtnFO->setEnabled(is_unreleased);
 
     ui->rBtnIS->setEnabled(!is_released);
     ui->rBtnMS->setEnabled(!is_released);
@@ -344,7 +344,7 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 
 void TableWidgetO::RRuleGroupClicked(int id)
 {
-    if (tmp_node_->status != NodeStatus::kDraft)
+    if (tmp_node_->status != NodeStatus::kUnreleased)
         return;
 
     tmp_node_->direction_rule = static_cast<bool>(id);
@@ -528,7 +528,7 @@ void TableWidgetO::SaveOrder()
     }
 
     if (tmp_node_->sync_state == SyncState::kCreating) {
-        tmp_node_->status = NodeStatus::kDraft; // Same as default
+        tmp_node_->status = NodeStatus::kUnreleased; // Same as default
 
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(WsKey::kOrderInsertSave, order_message);
