@@ -123,11 +123,11 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(WsKey::kEntryNumericUpdate), tr("Numeric Update") },
         // --- Order ---
         { std::to_underlying(WsKey::kOrderInsertSave), tr("Insert Save") },
-        { std::to_underlying(WsKey::kUnreleasedOrderSave), tr("Unreleased Save") },
+        { std::to_underlying(WsKey::kUnreleasedOrderSave), tr("Save") },
         { std::to_underlying(WsKey::kOrderInsertRelease), tr("Insert Release") },
-        { std::to_underlying(WsKey::kUnreleasedOrderRelease), tr("Unreleased Release") },
-        { std::to_underlying(WsKey::kRecalledOrderRelease), tr("Recalled Release") },
-        { std::to_underlying(WsKey::kRecalledOrderSave), tr("Recalled Save") },
+        { std::to_underlying(WsKey::kUnreleasedOrderRelease), tr("Release") },
+        { std::to_underlying(WsKey::kRecalledOrderRelease), tr("Release") },
+        { std::to_underlying(WsKey::kRecalledOrderSave), tr("Save") },
         { std::to_underlying(WsKey::kOrderRecall), tr("Recall") },
         // --- Period Close ---
         { std::to_underlying(WsKey::kPeriodClose), tr("Period Close") },

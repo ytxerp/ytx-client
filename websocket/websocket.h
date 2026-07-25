@@ -200,7 +200,8 @@ private:
 
     void PeriodClose(const QJsonObject& obj);
 
-    void UpdateOrder(const QJsonObject& obj, bool is_released);
+    void ReleaseOrder(const QJsonObject& obj);
+    void SaveOrder(const QJsonObject& obj);
     void InsertOrder(const QJsonObject& obj, bool is_released);
     void RecallOrder(const QJsonObject& obj);
 
