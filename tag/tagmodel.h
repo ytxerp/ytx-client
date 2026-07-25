@@ -11,7 +11,7 @@ class TagModel final : public QAbstractItemModel {
     Q_OBJECT
 
 signals:
-    void SInsertingTag(TagRow* tag);
+    void SInsertLocalTag(Section section, TagRow* tag);
 
 public:
     explicit TagModel(Section section, const QHash<QUuid, TagRow*>& tag_hash, const QStringList& header, QObject* parent = nullptr);
@@ -64,7 +64,6 @@ private:
     const Section section_ {};
     const QStringList& header_;
 
-    QSet<QString> names_ {};
     QList<TagRow*> tag_list_ {}; // non-owning
 
     QHash<QUuid, QJsonObject> pending_updates_ {};

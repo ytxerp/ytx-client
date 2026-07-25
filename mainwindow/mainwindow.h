@@ -174,10 +174,10 @@ private slots:
     void RAccountRoleUpdate();
 
     void RApplyTag(const QJsonObject& obj);
-    void RInsertTag(const QJsonObject& obj, bool is_same_session);
+    void RInsertTag(const QJsonObject& obj);
+    void RInsertLocalTag(Section section, TagRow* tag);
     void RUpdateTag(const QJsonObject& obj);
     void RDeleteTag(const QJsonObject& obj);
-    inline void RInsertingTag(TagRow* tag) { inserting_tag_.insert(tag->id, tag); }
 
     void RTableViewCustomContextMenuRequested(const QPoint& pos);
     void RInsertEntryTag(const TagRow* tag, TableModel* model, const Entry* entry);
@@ -343,8 +343,6 @@ private:
 
     QSystemTrayIcon* tray_icon_ {};
     QMenu* tray_menu_ {};
-
-    QHash<QUuid, TagRow*> inserting_tag_ {};
 
     QTranslator qt_translator_ {};
     QTranslator ytx_translator_ {};

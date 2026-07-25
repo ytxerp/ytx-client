@@ -18,7 +18,7 @@ void MainWindow::on_actionTags_triggered()
     qInfo() << Q_FUNC_INFO;
 
     auto* model { new TagModel(start_, sc_->tag_hash, header_info_.tag, this) };
-    connect(model, &TagModel::SInsertingTag, this, &MainWindow::RInsertingTag);
+    connect(model, &TagModel::SInsertLocalTag, this, &MainWindow::RInsertLocalTag);
 
     auto* dialog { new TagDialog(this) };
 
@@ -70,7 +70,17 @@ void MainWindow::RApplyTag(const QJsonObject& obj)
     }
 }
 
-void MainWindow::RInsertTag(const QJsonObject& obj, bool is_same_session)
+void MainWindow::RInsertLocalTag(Section section, TagRow* tag)
+{
+    auto* sc { GetSectionContex(section) };
+    Q_ASSERT(sc);
+    Q_ASSERT(tag);
+
+    sc->tag_hash.insert(tag->id, tag);
+    UpdateTagIcon(sc, tag);
+}
+
+void MainWindow::RInsertTag(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
 
@@ -86,24 +96,18 @@ void MainWindow::RInsertTag(const QJsonObject& obj, bool is_same_session)
     const QUuid id { tag_obj.value(kId).toString() };
 
     if (id.isNull()) {
-        qWarning() << "RInsertTag: tag id is null";
+        qWarning() << "RInsertRemoteTag: tag id is null";
         return;
     }
 
-    TagRow* tag {};
-
-    if (is_same_session) {
-        tag = inserting_tag_.take(id);
-        if (!tag) {
-            qWarning() << "RInsertTag: pending tag not found" << id;
-            return;
-        }
-    } else {
-        tag = ResourcePool<TagRow>::Instance().Allocate();
+    if (sc->tag_hash.contains(id)) {
+        qWarning() << "RInsertRemoteTag: duplicate tag id:" << id;
+        return;
     }
 
+    TagRow* tag { ResourcePool<TagRow>::Instance().Allocate() };
+
     tag->ReadJson(tag_obj);
-    tag->sync_state = SyncState::kSynced;
     sc->tag_hash.insert(tag->id, tag);
     UpdateTagIcon(sc, tag);
 }

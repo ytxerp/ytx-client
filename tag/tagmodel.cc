@@ -16,7 +16,6 @@ TagModel::TagModel(Section section, const QHash<QUuid, TagRow*>& tag_hash, const
 {
     for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
         tag_list_.append(it.value());
-        names_.insert(it.value()->name);
     }
 
     std::sort(tag_list_.begin(), tag_list_.end(), [](const TagRow* a, const TagRow* b) { return a->name < b->name; });
@@ -142,9 +141,7 @@ bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
     tag->color = color.name(QColor::HexArgb);
 
     beginInsertRows(parent, row, row);
-
     tag_list_.insert(row, tag);
-
     endInsertRows();
 
     return true;
@@ -160,7 +157,6 @@ bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
     // Capture the pointer and necessary values using {} initialization
     TagRow* tag { tag_list_.at(row) };
     const QUuid tag_id { tag->id };
-    const QString tag_name { tag->name };
 
     // Clean up the pending timer first (Safety)
     // Prevent the timer from firing after the tag is recycled.
@@ -176,7 +172,6 @@ bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
 
     // Remove from all internal containers
     tag_list_.removeAt(row);
-    names_.remove(tag_name);
 
     endRemoveRows();
 
@@ -201,19 +196,20 @@ bool TagModel::UpdateName(TagRow* tag, const QString& new_name)
     if (old_name == new_name || new_name.isEmpty())
         return false;
 
-    if (names_.contains(new_name))
-        return false;
-
     tag->name = new_name;
 
-    names_.insert(new_name);
-    names_.remove(old_name);
-
-    if (tag->sync_state == SyncState::kCreating) {
+    switch (tag->sync_state) {
+    case SyncState::kCreating:
         TryInsert(tag);
-    } else if (tag->sync_state == SyncState::kSynced) {
+        return true;
+    case SyncState::kSynced:
         pending_updates_[tag->id].insert(kName, new_name);
         RestartTimer(tag->id);
+        break;
+    case SyncState::kError:
+    case SyncState::kUpdating:
+    case SyncState::kDeleting:
+        break;
     }
 
     return true;
@@ -301,10 +297,10 @@ void TagModel::TryInsert(TagRow* tag)
     if (!tag || tag->sync_state != SyncState::kCreating)
         return;
 
-    tag->sync_state = SyncState::kUpdating;
+    tag->sync_state = SyncState::kSynced;
 
     const QJsonObject message { JsonGen::TagInsert(section_, tag) };
     WebSocket::Instance()->SendMessage(WsKey::kTagInsert, message);
 
-    emit SInsertingTag(tag);
+    emit SInsertLocalTag(section_, tag);
 }

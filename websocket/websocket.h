@@ -67,7 +67,7 @@ signals:
     void SDefaultUnitDeny(const QString& section);
 
     void STagApply(const QJsonObject& obj);
-    void STagInsert(const QJsonObject& obj, bool is_same_session);
+    void STagInsert(const QJsonObject& obj);
     void STagUpdate(const QJsonObject& obj);
     void STagDelete(const QJsonObject& obj);
 
