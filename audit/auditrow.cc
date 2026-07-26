@@ -38,7 +38,7 @@ void audit::Row::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kLevel); val.isDouble())
         level = val.toInt();
     if (const auto val = object.value(kTargetCode); val.isString())
-        code = val.toString();
+        target_code = val.toString();
     if (const auto val = object.value(kBefore); !val.isUndefined())
         before = val;
     if (const auto val = object.value(kAfter); !val.isUndefined())

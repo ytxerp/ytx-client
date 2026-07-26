@@ -53,7 +53,7 @@ enum class RowField {
     kCreatedTime,
     kSection,
     kTargetType,
-    kCode,
+    kTargetCode,
     kTargetOperation,
     kTargetField,
     kLevel,

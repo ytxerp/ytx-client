@@ -61,7 +61,7 @@ void MainWindow::InitAuditInfo()
         tr("Issued Time"),
         tr("Section"),
         tr("Target Type"),
-        tr("Code"),
+        tr("Target Code"),
         tr("Target Operation"),
         tr("Target Field"),
         tr("Level"),

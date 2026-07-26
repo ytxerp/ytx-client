@@ -44,8 +44,8 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return row->username;
     case RowField::kCreatedTime:
         return row->created_time;
-    case RowField::kCode:
-        return row->code;
+    case RowField::kTargetCode:
+        return row->target_code;
     case RowField::kBefore:
         return JsonValueToString(row->before);
     case RowField::kAfter:
@@ -85,8 +85,8 @@ void Model::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Row::lhs_node, order);
         case RowField::kRhsNode:
             return utils::CompareMember(lhs, rhs, &Row::rhs_node, order);
-        case RowField::kCode:
-            return utils::CompareMember(lhs, rhs, &Row::code, order);
+        case RowField::kTargetCode:
+            return utils::CompareMember(lhs, rhs, &Row::target_code, order);
         case RowField::kSection:
             return utils::CompareMember(lhs, rhs, &Row::section, order);
         case RowField::kTargetOperation:

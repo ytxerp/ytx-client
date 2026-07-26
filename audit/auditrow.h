@@ -51,7 +51,7 @@ struct Row {
     int target_field {};
 
     // -- 4. Variable-length -----------------------------------------------------
-    QString code {}; // Default: ""
+    QString target_code {}; // Default: ""
     QJsonValue before {}; // State before the action — maps to JSONB
     QJsonValue after {}; // State after the action  — maps to JSONB
 
