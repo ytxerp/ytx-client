@@ -45,9 +45,10 @@ struct Row {
 
     // -- 3. Integers ------------------------------------------------------------
     int section {}; // Audit section category
-    int operation {}; // Workspace key
-    int target {}; // Discriminator for the audited entity type
+    int target_operation {}; // Workspace key
+    int target_type {}; // Discriminator for the audited entity type
     int level {}; // Default: 0
+    int target_field {};
 
     // -- 4. Variable-length -----------------------------------------------------
     QString code {}; // Default: ""

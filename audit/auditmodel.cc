@@ -54,16 +54,18 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return row->id;
     case RowField::kSection:
         return info_.section_hash.value(row->section);
-    case RowField::kOperation:
-        return info_.ws_key_hash.value(row->operation);
+    case RowField::kTargetOperation:
+        return info_.target_operation_hash.value(row->target_operation);
     case RowField::kLevel:
         return info_.level_hash.value(row->level);
-    case RowField::kTarget:
-        return info_.target_type_hash.value(row->target);
+    case RowField::kTargetType:
+        return info_.target_type_hash.value(row->target_type);
     case RowField::kLhsNode:
         return ResolveNode(row, row->lhs_node);
     case RowField::kRhsNode:
         return ResolveNode(row, row->rhs_node);
+    case RowField::kTargetField:
+        return info_.target_field_hash.value(row->target_field);
     }
 }
 
@@ -87,14 +89,16 @@ void Model::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Row::code, order);
         case RowField::kSection:
             return utils::CompareMember(lhs, rhs, &Row::section, order);
-        case RowField::kOperation:
-            return utils::CompareMember(lhs, rhs, &Row::operation, order);
-        case RowField::kTarget:
-            return utils::CompareMember(lhs, rhs, &Row::target, order);
+        case RowField::kTargetOperation:
+            return utils::CompareMember(lhs, rhs, &Row::target_operation, order);
+        case RowField::kTargetType:
+            return utils::CompareMember(lhs, rhs, &Row::target_type, order);
         case RowField::kLevel:
             return utils::CompareMember(lhs, rhs, &Row::level, order);
         case RowField::kCreatedTime:
             return utils::CompareMember(lhs, rhs, &Row::created_time, order);
+        case RowField::kTargetField:
+            return utils::CompareMember(lhs, rhs, &Row::target_field, order);
         case RowField::kId:
         case RowField::kBefore:
         case RowField::kAfter:

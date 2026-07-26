@@ -28,6 +28,16 @@ enum class TargetType {
     kSettlement = 2,
 };
 
+enum class Operation {
+    kInsert = 0,
+    kUpdate,
+    kDelete,
+    kRecall,
+    kRelease,
+    kMove,
+    kReplace,
+};
+
 enum class Level {
     kInfo = 0,
     kWarn = 1,
@@ -42,12 +52,30 @@ enum class RowField {
     kRhsNode,
     kCreatedTime,
     kSection,
-    kTarget,
+    kTargetType,
     kCode,
-    kOperation,
+    kTargetOperation,
+    kTargetField,
     kLevel,
     kBefore,
     kAfter,
+};
+
+enum class TargetField {
+    kNone = 0,
+
+    // --- Node ---
+    kName = 1,
+    kDirectionRule = 2,
+
+    // --- Entry ---
+    kNumeric = 3,
+    kRate = 4,
+    kLinkedNode = 5,
+
+    // --- Common ---
+    kStatus = 6,
+    kContent = 7,
 };
 
 }

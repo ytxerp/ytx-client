@@ -140,6 +140,7 @@ inline const QString kCAmount = QStringLiteral("camount");
 inline const QString kCBalance = QStringLiteral("cbalance");
 inline const QString kCSettlement = QStringLiteral("csettlement");
 inline const QString kLevel = QStringLiteral("level");
+inline const QString kTargetField = QStringLiteral("target_field");
 
 // Message fields
 inline const QString kClosingLeafNode = QStringLiteral("closing_leaf_node");

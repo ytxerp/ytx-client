@@ -5,7 +5,7 @@
 namespace audit::keys {
 constexpr QLatin1StringView kTargetId { "target_id" };
 constexpr QLatin1StringView kTargetType { "target_type" };
-constexpr QLatin1StringView kWsKey { "ws_key" };
+constexpr QLatin1StringView kTargetOperation { "target_operation" };
 constexpr QLatin1StringView kTargetCode { "target_code" };
 constexpr QLatin1StringView kBefore { "before" };
 constexpr QLatin1StringView kAfter { "after" };
@@ -31,10 +31,10 @@ void audit::Row::ReadJson(const QJsonObject& object)
         created_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
     if (const auto val = object.value(kSection); val.isDouble())
         section = val.toInt();
-    if (const auto val = object.value(kWsKey); val.isDouble())
-        operation = val.toInt();
+    if (const auto val = object.value(kTargetOperation); val.isDouble())
+        target_operation = val.toInt();
     if (const auto val = object.value(kTargetType); val.isDouble())
-        target = val.toInt();
+        target_type = val.toInt();
     if (const auto val = object.value(kLevel); val.isDouble())
         level = val.toInt();
     if (const auto val = object.value(kTargetCode); val.isString())
@@ -43,4 +43,6 @@ void audit::Row::ReadJson(const QJsonObject& object)
         before = val;
     if (const auto val = object.value(kAfter); !val.isUndefined())
         after = val;
+    if (const auto val = object.value(kTargetField); val.isDouble())
+        target_field = val.toInt();
 }

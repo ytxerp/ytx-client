@@ -1,6 +1,5 @@
 #include "audit/auditdialog.h"
 #include "audit/auditenum.h"
-#include "component/constantwebsocket.h"
 #include "mainwindow.h"
 #include "websocket/jsongen.h"
 
@@ -61,9 +60,10 @@ void MainWindow::InitAuditInfo()
         tr("RHS Node"),
         tr("Issued Time"),
         tr("Section"),
-        tr("Target"),
+        tr("Target Type"),
         tr("Code"),
-        tr("Operation"),
+        tr("Target Operation"),
+        tr("Target Field"),
         tr("Level"),
         tr("Before Change"),
         tr("After Change"),
@@ -99,37 +99,24 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(Level::kCritical), tr("Critical") },
     };
 
-    audit_info_.ws_key_hash = {
-        // --- Settlement ---
-        { std::to_underlying(WsKey::kSettlementInsert), tr("Insert") },
-        { std::to_underlying(WsKey::kSettlementUpdate), tr("Update") },
-        { std::to_underlying(WsKey::kSettlementRecall), tr("Recall") },
-        // --- Tree ---
-        { std::to_underlying(WsKey::kNodeUpdate), tr("Update") },
-        { std::to_underlying(WsKey::kNodeNameUpdate), tr("Name Update") },
-        { std::to_underlying(WsKey::kNodeDrag), tr("Drag") },
-        { std::to_underlying(WsKey::kLeafDelete), tr("Delete") },
-        { std::to_underlying(WsKey::kOrderLeafDelete), tr("Delete") },
-        { std::to_underlying(WsKey::kLeafReplace), tr("Replace") },
-        { std::to_underlying(WsKey::kNodeDirectionRuleUpdate), tr("Direction Rule Update") },
-        // --- Entry ---
-        { std::to_underlying(WsKey::kEntryInsert), tr("Insert") },
-        { std::to_underlying(WsKey::kPartnerEntryInsert), tr("Insert") },
-        { std::to_underlying(WsKey::kEntryUpdate), tr("Update") },
-        { std::to_underlying(WsKey::kEntryDelete), tr("Delete") },
-        { std::to_underlying(WsKey::kPartnerEntryDelete), tr("Delete") },
-        { std::to_underlying(WsKey::kEntryLinkedNodeUpdate), tr("Linked Node Update") },
-        { std::to_underlying(WsKey::kEntryRateUpdate), tr("Rate Update") },
-        { std::to_underlying(WsKey::kEntryNumericUpdate), tr("Numeric Update") },
-        // --- Order ---
-        { std::to_underlying(WsKey::kOrderInsertSave), tr("Insert Save") },
-        { std::to_underlying(WsKey::kUnreleasedOrderSave), tr("Save") },
-        { std::to_underlying(WsKey::kOrderInsertRelease), tr("Insert Release") },
-        { std::to_underlying(WsKey::kUnreleasedOrderRelease), tr("Release") },
-        { std::to_underlying(WsKey::kRecalledOrderRelease), tr("Release") },
-        { std::to_underlying(WsKey::kRecalledOrderSave), tr("Save") },
-        { std::to_underlying(WsKey::kOrderRecall), tr("Recall") },
-        // --- Period Close ---
-        { std::to_underlying(WsKey::kPeriodClose), tr("Period Close") },
+    audit_info_.target_operation_hash = {
+        { std::to_underlying(Operation::kInsert), tr("Insert") },
+        { std::to_underlying(Operation::kUpdate), tr("Update") },
+        { std::to_underlying(Operation::kDelete), tr("Delete") },
+        { std::to_underlying(Operation::kRecall), tr("Recall") },
+        { std::to_underlying(Operation::kRelease), tr("Release") },
+        { std::to_underlying(Operation::kMove), tr("Move") },
+        { std::to_underlying(Operation::kReplace), tr("Replace") },
+    };
+
+    audit_info_.target_field_hash = {
+        { std::to_underlying(TargetField::kNone), QString() },
+        { std::to_underlying(TargetField::kName), tr("Name") },
+        { std::to_underlying(TargetField::kDirectionRule), tr("Direction Rule") },
+        { std::to_underlying(TargetField::kNumeric), tr("Numeric") },
+        { std::to_underlying(TargetField::kRate), tr("Rate") },
+        { std::to_underlying(TargetField::kLinkedNode), tr("Linked Node") },
+        { std::to_underlying(TargetField::kContent), tr("Content") },
+        { std::to_underlying(TargetField::kStatus), tr("Status") },
     };
 }
