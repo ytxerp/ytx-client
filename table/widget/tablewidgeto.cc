@@ -461,7 +461,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
     if (!ValidateSyncState())
         return;
 
-    if (tmp_node_->is_settled || !tmp_node_->settlement_id.isNull()) {
+    if (!tmp_node_->settlement_id.isNull()) {
         utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"),
             tr("This order has already been settled and cannot be recalled.\n"
                "Settled orders cannot be modified."),

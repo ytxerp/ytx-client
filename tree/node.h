@@ -94,8 +94,7 @@ struct NodeO final : Node {
     QUuid employee_id {};
     QUuid partner_id {};
 
-    // NOTE: is_settled and settlement_id are managed by the server
-    bool is_settled {};
+    // NOTE: settlement_id are managed by the server
     QUuid settlement_id {};
 
     QDateTime issued_time {};

@@ -211,8 +211,6 @@ void NodeO::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kIssuedTime); val.isString())
         issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
 
-    if (const auto val = object.value(kIsSettled); val.isBool())
-        is_settled = val.toBool();
     if (const auto val = object.value(kDirectionRule); val.isBool())
         direction_rule = val.toBool();
 
@@ -243,7 +241,6 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kVersion, version);
 
     // server will ignore these two values
-    obj.insert(kIsSettled, is_settled);
     obj.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
 
     return obj;
