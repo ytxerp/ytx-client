@@ -17,20 +17,26 @@ void MainWindow::on_actionTags_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    auto* model { new TagModel(start_, sc_->tag_hash, header_info_.tag, this) };
-    connect(model, &TagModel::SInsertLocalTag, this, &MainWindow::RInsertLocalTag);
+    static QPointer<TagDialog> dialog {};
 
-    auto* dialog { new TagDialog(this) };
+    if (!dialog) {
+        auto* model { new TagModel(start_, sc_->tag_hash, header_info_.tag, this) };
+        connect(model, &TagModel::SInsertLocalTag, this, &MainWindow::RInsertLocalTag);
 
-    utils::ManageDialog(sc_->widget_hash, dialog);
+        dialog = new TagDialog(this);
 
-    dialog->SetModel(model);
+        utils::ManageDialog(sc_->widget_hash, dialog);
 
-    auto* view { dialog->View() };
-    InitTableView(view, std::to_underlying(TagRowField::kId), std::to_underlying(TagRowField::kColor));
-    DelegateTag(view);
+        dialog->SetModel(model);
+
+        auto* view { dialog->View() };
+        InitTableView(view, std::to_underlying(TagRowField::kId), std::to_underlying(TagRowField::kColor));
+        DelegateTag(view);
+    }
 
     dialog->show();
+    dialog->raise();
+    dialog->activateWindow();
 }
 
 void MainWindow::RApplyTag(const QJsonObject& obj)
