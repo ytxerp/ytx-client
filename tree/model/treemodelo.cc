@@ -367,11 +367,10 @@ bool TreeModelO::setData(const QModelIndex& index, const QVariant& value, int ro
 
     const NodeEnumO column { index.column() };
     const QUuid id { node->id };
-    const int version { node->version };
 
     switch (column) {
     case NodeEnumO::kTag:
-        node::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this, version]() { RestartTimer(id, version); });
+        node::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this, node]() { RestartTimer(id, node); });
         break;
     default:
         return false;

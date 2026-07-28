@@ -69,7 +69,6 @@ bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int r
     auto* entry { shadow->entry };
 
     const QUuid id { *shadow->id };
-    const int version { *shadow->version };
 
     switch (column) {
     case EntryEnumF::kIssuedTime:
@@ -114,7 +113,7 @@ bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int r
 
         *d_shadow->cash_kind = cash_kind;
         pending_updates_[id].insert(kCashKind, raw);
-        RestartTimer(id, version);
+        RestartTimer(id, entry);
         break;
     }
     case EntryEnumF::kId:
