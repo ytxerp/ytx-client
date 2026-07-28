@@ -160,11 +160,11 @@ bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
 
     // Clean up the pending timer first (Safety)
     // Prevent the timer from firing after the tag is recycled.
-    if (pending_timers_.contains(tag_id)) {
-        auto* timer { pending_timers_.take(tag_id) };
+    if (auto* timer { pending_timers_.take(tag_id) }) {
         timer->stop();
         timer->deleteLater();
     }
+
     pending_updates_.remove(tag_id);
 
     // Notify views that rows are about to be removed

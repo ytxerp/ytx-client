@@ -206,8 +206,7 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
     // IMPORTANT: Clean up the pending timer if it exists
     // If a timer is running for this member, it must be stopped and removed
     // to prevent it from firing and accessing a recycled object.
-    if (pending_timers_.contains(member_id)) {
-        auto* timer { pending_timers_.take(member_id) };
+    if (auto* timer { pending_timers_.take(member_id) }) {
         timer->stop();
         timer->deleteLater();
     }
