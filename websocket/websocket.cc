@@ -440,11 +440,14 @@ void WebSocket::UpdateNode(const QJsonObject& obj)
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
+    const int version { update.value(kVersion).toInt() };
 
     auto tree_model { tree_model_hash_.value(section) };
     Q_ASSERT(tree_model != nullptr);
 
-    if (session_id != session_id_)
+    if (session_id == session_id_)
+        tree_model->UpdateVersion(node_id, version);
+    else
         tree_model->SyncNode(node_id, update);
 }
 

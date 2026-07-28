@@ -123,6 +123,9 @@ public:
 
     void SyncNode(const QUuid& node_id, const QJsonObject& update);
 
+    // Just for order tag update
+    void UpdateVersion(const QUuid& node_id, int version);
+
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
     void DragNode(const QUuid& ancestor, const QUuid& descendant);
 

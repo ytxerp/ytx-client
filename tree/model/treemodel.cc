@@ -252,6 +252,15 @@ void TreeModel::UpdateDirectionRulePassive(const QUuid& node_id, bool direction_
     EmitDataChanged(row, row, column, column, index.parent());
 }
 
+void TreeModel::UpdateVersion(const QUuid& node_id, int version)
+{
+    auto* node { GetNode(node_id) };
+    if (!node)
+        return;
+
+    node->version = version;
+}
+
 void TreeModel::UpdateDirectionRuleLocal(Node* node, bool value, const QModelIndex& index)
 {
     node->InvertTotal();

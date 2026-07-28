@@ -139,24 +139,18 @@ void TableModel::AccumulateBalance(int start)
 
 void TableModel::RestartTimer(const QUuid& id, int version)
 {
-    // Try to retrieve the existing timer using {} initialization
     QTimer* timer { pending_timers_.value(id, nullptr) };
 
     if (!timer) {
-        // Create and configure a new timer if it does not exist
         timer = new QTimer { this };
         timer->setSingleShot(true);
 
         connect(timer, &QTimer::timeout, this, [this, id, version]() {
-            // Manage lifecycle by taking the timer from the hash
             auto* expired_timer { pending_timers_.take(id) };
-
-            // Retrieve and remove the pending update content in one go
             auto update { pending_updates_.take(id) };
-            update.insert(kVersion, version);
 
-            // Only send the message if there are actual changes
             if (!update.isEmpty()) {
+                update.insert(kVersion, version);
                 const QJsonObject message { JsonGen::EntryUpdate(section_, id, update) };
                 WebSocket::Instance()->SendMessage(WsKey::kEntryUpdate, message);
             }
@@ -169,7 +163,6 @@ void TableModel::RestartTimer(const QUuid& id, int version)
         pending_timers_[id] = timer;
     }
 
-    // Start or restart the timer
     timer->start(time_const::kAutoCloseMs);
 }
 
