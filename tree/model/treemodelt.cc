@@ -69,22 +69,22 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case NodeEnumT::kCode:
-        node::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        node::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this, node]() { RestartTimer(id, node); });
         break;
     case NodeEnumT::kDescription:
-        node::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        node::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this, node]() { RestartTimer(id, node); });
         break;
     case NodeEnumT::kTag:
-        node::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
+        node::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this, node]() { RestartTimer(id, node); });
         break;
     case NodeEnumT::kDirectionRule:
         UpdateDirectionRuleActive(node, value.toBool(), index);
         break;
     case NodeEnumT::kColor:
-        node::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
+        node::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this, node]() { RestartTimer(id, node); });
         break;
     case NodeEnumT::kDocument:
-        node::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
+        node::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this, node]() { RestartTimer(id, node); });
         break;
     case NodeEnumT::kId:
     case NodeEnumT::kName:

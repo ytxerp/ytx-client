@@ -112,7 +112,7 @@ protected:
     }
 
     void AccumulateBalance(int start);
-    void RestartTimer(const QUuid& id, int version);
+    void RestartTimer(const QUuid& id, Entry* entry);
     double CalculateBalance(EntryShadow* shadow) const
     {
         return (direction_rule_ == direction_rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit);

@@ -137,7 +137,7 @@ void TableModel::AccumulateBalance(int start)
     EmitDataChanged(start, rowCount() - 1, balance_column, balance_column);
 }
 
-void TableModel::RestartTimer(const QUuid& id, int version)
+void TableModel::RestartTimer(const QUuid& id, Entry* entry)
 {
     QTimer* timer { pending_timers_.value(id, nullptr) };
 
@@ -145,12 +145,12 @@ void TableModel::RestartTimer(const QUuid& id, int version)
         timer = new QTimer { this };
         timer->setSingleShot(true);
 
-        connect(timer, &QTimer::timeout, this, [this, id, version]() {
+        connect(timer, &QTimer::timeout, this, [this, id, entry]() {
             auto* expired_timer { pending_timers_.take(id) };
             auto update { pending_updates_.take(id) };
 
             if (!update.isEmpty()) {
-                update.insert(kVersion, version);
+                update.insert(kVersion, entry->version);
                 const QJsonObject message { JsonGen::EntryUpdate(section_, id, update) };
                 WebSocket::Instance()->SendMessage(WsKey::kEntryUpdate, message);
             }
@@ -296,34 +296,32 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         return false;
 
     auto* shadow { static_cast<EntryShadow*>(index.internalPointer()) };
+    auto* entry { shadow->entry };
 
     const QUuid id { *shadow->id };
-    const int version { *shadow->version };
 
     switch (column) {
     case EntryEnum::kIssuedTime:
         entry::UpdateShadowIssuedTime(
-            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [this, id, version]() { RestartTimer(id, version); });
+            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [this, id, entry]() { RestartTimer(id, entry); });
         break;
     case EntryEnum::kCode:
-        entry::UpdateShadowField(
-            pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [this, id, version]() { RestartTimer(id, version); });
+        entry::UpdateShadowField(pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [this, id, entry]() { RestartTimer(id, entry); });
         break;
     case EntryEnum::kStatus:
-        entry::UpdateShadowField(
-            pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [this, id, version]() { RestartTimer(id, version); });
+        entry::UpdateShadowField(pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [this, id, entry]() { RestartTimer(id, entry); });
         break;
     case EntryEnum::kDescription:
         entry::UpdateShadowField(
-            pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [this, id, version]() { RestartTimer(id, version); });
+            pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [this, id, entry]() { RestartTimer(id, entry); });
         break;
     case EntryEnum::kDocument:
         entry::UpdateShadowStringList(
-            pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [this, id, version]() { RestartTimer(id, version); });
+            pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [this, id, entry]() { RestartTimer(id, entry); });
         break;
     case EntryEnum::kTag:
         entry::UpdateShadowStringList(
-            pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [this, id, version]() { RestartTimer(id, version); });
+            pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [this, id, entry]() { RestartTimer(id, entry); });
         break;
     case EntryEnum::kLhsRate:
         UpdateRate(shadow, value.toDouble());
@@ -435,6 +433,7 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
         return true;
 
     const auto entry_id { *shadow->id };
+    const int version { *shadow->version };
 
     CancelPendingUpdate(entry_id);
 
@@ -454,6 +453,7 @@ bool TableModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
     *shadow->sync_state = SyncState::kDeleting;
 
     QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
+    message.insert(kVersion, version);
     WebSocket::Instance()->SendMessage(WsKey::kEntryDelete, message);
 
     return true;

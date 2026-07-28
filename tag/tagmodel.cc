@@ -204,7 +204,7 @@ bool TagModel::UpdateName(TagRow* tag, const QString& new_name)
         return true;
     case SyncState::kSynced:
         pending_updates_[tag->id].insert(kName, new_name);
-        RestartTimer(tag->id);
+        RestartTimer(tag->id, tag);
         break;
     case SyncState::kError:
     case SyncState::kUpdating:
@@ -226,13 +226,13 @@ bool TagModel::UpdateColor(TagRow* tag, const QString& new_color)
         TryInsert(tag);
     } else if (tag->sync_state == SyncState::kSynced) {
         pending_updates_[tag->id].insert(kColor, new_color);
-        RestartTimer(tag->id);
+        RestartTimer(tag->id, tag);
     }
 
     return true;
 }
 
-void TagModel::RestartTimer(const QUuid& id)
+void TagModel::RestartTimer(const QUuid& id, TagRow* tag)
 {
     // Try to retrieve the existing timer
     QTimer* timer { pending_timers_.value(id, nullptr) };
@@ -242,20 +242,17 @@ void TagModel::RestartTimer(const QUuid& id)
         timer = new QTimer { this };
         timer->setSingleShot(true);
 
-        connect(timer, &QTimer::timeout, this, [this, id]() {
-            // Manage lifecycle by taking the timer from the hash
+        connect(timer, &QTimer::timeout, this, [this, id, tag]() {
             auto* expired_timer { pending_timers_.take(id) };
+            auto update { pending_updates_.take(id) };
 
-            // Retrieve and remove the pending update content in one go
-            const auto update { pending_updates_.take(id) };
-
-            // Only send the message if there are actual changes
             if (!update.isEmpty()) {
+                update.insert(kVersion, tag->version);
+
                 const QJsonObject message { JsonGen::TagUpdate(section_, id, update) };
                 WebSocket::Instance()->SendMessage(WsKey::kTagUpdate, message);
             }
 
-            // Always clear the update flag
             pending_updates_.remove(id);
 
             if (expired_timer) {

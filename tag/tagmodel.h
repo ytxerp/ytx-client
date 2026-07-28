@@ -55,7 +55,7 @@ private:
     bool UpdateName(TagRow* tag, const QString& new_name);
     bool UpdateColor(TagRow* tag, const QString& new_color);
 
-    void RestartTimer(const QUuid& id);
+    void RestartTimer(const QUuid& id, TagRow* tag);
     void FlushCaches();
 
     void TryInsert(TagRow* tag);
@@ -64,7 +64,8 @@ private:
     const Section section_ {};
     const QStringList& header_;
 
-    QList<TagRow*> tag_list_ {}; // non-owning
+    // non-owning pointers, owned by tag_hash
+    QList<TagRow*> tag_list_ {};
 
     QHash<QUuid, QJsonObject> pending_updates_ {};
     QHash<QUuid, QTimer*> pending_timers_ {};

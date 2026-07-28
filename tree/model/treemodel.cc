@@ -901,7 +901,7 @@ void TreeModel::RefreshAffectedTotal(const QSet<QUuid>& affected_ids)
     }
 }
 
-void TreeModel::RestartTimer(const QUuid& id)
+void TreeModel::RestartTimer(const QUuid& id, Node* node)
 {
     QTimer* timer { pending_timers_.value(id, nullptr) };
 
@@ -909,11 +909,13 @@ void TreeModel::RestartTimer(const QUuid& id)
         timer = new QTimer(this);
         timer->setSingleShot(true);
 
-        connect(timer, &QTimer::timeout, this, [this, id]() {
+        connect(timer, &QTimer::timeout, this, [this, id, node]() {
             auto* expired_timer { pending_timers_.take(id) };
-            const auto update { pending_updates_.take(id) };
+            auto update { pending_updates_.take(id) };
 
             if (!update.isEmpty()) {
+                update.insert(kVersion, node->version);
+
                 const auto message { JsonGen::NodeUpdate(section_, id, update) };
                 WebSocket::Instance()->SendMessage(WsKey::kNodeUpdate, message);
             }

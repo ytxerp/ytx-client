@@ -69,22 +69,22 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
 
     switch (column) {
     case NodeEnumF::kCode:
-        node::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
+        node::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this, node]() { RestartTimer(id, node); });
         break;
     case NodeEnumF::kDescription:
-        node::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
+        node::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this, node]() { RestartTimer(id, node); });
         break;
     case NodeEnumF::kColor:
-        node::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
+        node::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this, node]() { RestartTimer(id, node); });
         break;
     case NodeEnumF::kTag:
-        node::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
+        node::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this, node]() { RestartTimer(id, node); });
         break;
     case NodeEnumF::kDirectionRule:
         UpdateDirectionRuleActive(node, value.toBool(), index);
         break;
     case NodeEnumF::kDocument:
-        node::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
+        node::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this, node]() { RestartTimer(id, node); });
         break;
     case NodeEnumF::kRoles: {
         const int raw { value.toInt() };
@@ -92,7 +92,7 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
 
         d_node->roles = roles;
         pending_updates_[id].insert(kRoles, raw);
-        RestartTimer(id);
+        RestartTimer(id, node);
         break;
     }
     case NodeEnumF::kId:

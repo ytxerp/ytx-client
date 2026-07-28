@@ -115,7 +115,7 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
     }
 
     // Mark as pending update and restart the debounce timer
-    RestartTimer(id);
+    RestartTimer(id, member);
 
     // Notify views about the data change
     emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
@@ -258,27 +258,28 @@ void Model::Rebuild(const QJsonArray& array)
     endResetModel();
 }
 
-void Model::RestartTimer(const QUuid& id)
+void Model::RestartTimer(const QUuid& id, Member* member)
 {
-    // Try to retrieve the existing timer
     QTimer* timer { pending_timers_.value(id, nullptr) };
 
     if (!timer) {
-        // Create and configure a new timer if it does not exist
         timer = new QTimer { this };
         timer->setSingleShot(true);
 
-        connect(timer, &QTimer::timeout, this, [this, id]() {
-            // Manage lifecycle by taking the timer from the hash
+        connect(timer, &QTimer::timeout, this, [this, id, member]() {
             auto* expired_timer { pending_timers_.take(id) };
+            auto update { pending_updates_.take(id) };
 
-            // Retrieve and remove the pending update content in one go
-            const auto update { pending_updates_.take(id) };
-
-            // Only send the message if there are actual changes
             if (!update.isEmpty()) {
+                const int version { member->version };
+                update.insert(kVersion, version);
+
                 const QJsonObject message { JsonGen::WorkspaceMemberUpdate(id, update) };
                 WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberUpdate, message);
+
+                // WorkspaceMember version is only a sync marker,
+                // not used for optimistic locking.
+                member->version = version + 1;
             }
 
             if (expired_timer) {

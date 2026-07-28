@@ -49,7 +49,7 @@ public:
     void Rebuild(const QJsonArray& array);
 
 private:
-    void RestartTimer(const QUuid& id);
+    void RestartTimer(const QUuid& id, Member* member);
     void FlushCaches();
 
 private:
