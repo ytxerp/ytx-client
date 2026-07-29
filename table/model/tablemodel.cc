@@ -296,9 +296,7 @@ bool TableModel::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int r
 
     QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
 
-    if (old_node.isNull()) {
-        *shadow->sync_state = SyncState::kSynced;
-
+    if (*shadow->sync_state == SyncState::kCreating) {
         message.insert(kEntry, shadow->WriteJson());
         WebSocket::Instance()->SendMessage(WsKey::kEntryInsert, message);
 
@@ -315,7 +313,7 @@ bool TableModel::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int r
         emit STransferOneEntry(entry);
     }
 
-    if (!old_node.isNull()) {
+    if (*shadow->sync_state == SyncState::kSynced) {
         const auto input_side { ToLinkedNodeInputSide(shadow->binding_mode) };
         const auto field { input_side == InputSide::kLhs ? kLhsNode : kRhsNode };
 

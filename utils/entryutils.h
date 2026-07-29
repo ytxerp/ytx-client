@@ -28,6 +28,7 @@
 #include "component/using.h"
 #include "enum/entryenum.h"
 #include "enum/section.h"
+#include "enum/stateenum.h"
 
 namespace utils {
 
@@ -233,7 +234,7 @@ bool UpdateShadowIssuedTime(QJsonObject& update, T* object, CString& field, cons
 
     *member_ptr = value;
 
-    if (!object->rhs_node || object->rhs_node->isNull()) {
+    if (*object->sync_state == SyncState::kCreating) {
         return true;
     }
 
@@ -263,8 +264,7 @@ bool UpdateShadowStringList(QJsonObject& update, T* object, CString& field, cons
 
     *member_ptr = value;
 
-    // If rhs_node is invalid, skip updating
-    if (!object->rhs_node || object->rhs_node->isNull()) {
+    if (*object->sync_state == SyncState::kCreating) {
         return true;
     }
 
@@ -294,8 +294,7 @@ bool UpdateShadowField(QJsonObject& update, T* object, CString& field, const Fie
 
     *member_ptr = value;
 
-    // If rhs_node is invalid, skip updating
-    if (!object->rhs_node || object->rhs_node->isNull()) {
+    if (*object->sync_state == SyncState::kCreating) {
         return true;
     }
 
@@ -320,8 +319,7 @@ bool UpdateIssuedTime(QJsonObject& update, T* object, CString& field, const QDat
 
     current_value = value;
 
-    // If rhs_node is null, update local value only and skip JSON update
-    if (object->rhs_node.isNull()) {
+    if (object->sync_state == SyncState::kCreating) {
         return true;
     }
 
@@ -346,8 +344,7 @@ bool UpdateStringList(QJsonObject& update, T* object, CString& field, const QStr
 
     current_value = value;
 
-    // If rhs_node is null, update local value only and skip JSON update
-    if (object->rhs_node.isNull()) {
+    if (object->sync_state == SyncState::kCreating) {
         return true;
     }
 
@@ -372,8 +369,7 @@ bool UpdateField(QJsonObject& update, T* object, CString& field, const Field& va
 
     current_value = value;
 
-    // If rhs_node is null, update local value only and skip JSON update
-    if (object->rhs_node.isNull()) {
+    if (object->sync_state == SyncState::kCreating) {
         return true;
     }
 
@@ -398,8 +394,7 @@ bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& v
 
     current_value = value;
 
-    // If rhs_node is null, update local value only and skip JSON update
-    if (object->rhs_node.isNull()) {
+    if (object->sync_state == SyncState::kCreating) {
         return true;
     }
 
@@ -424,8 +419,7 @@ bool UpdateUuid(QJsonObject& update, T* object, CString& field, const QUuid& val
 
     current_value = value;
 
-    // If rhs_node is null, update local value only and skip JSON update
-    if (object->rhs_node.isNull()) {
+    if (object->sync_state == SyncState::kCreating) {
         return true;
     }
 

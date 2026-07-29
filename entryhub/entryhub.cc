@@ -76,8 +76,11 @@ void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update)
 void EntryHub::UpdateVersion(const QUuid& id, int version)
 {
     auto it = entry_cache_.find(id);
-    if (it != entry_cache_.end())
-        it.value()->version = version;
+    if (it != entry_cache_.end()) {
+        auto* entry { it.value() };
+        entry->sync_state = SyncState::kSynced;
+        entry->version = version;
+    }
 }
 
 void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, InputSide input_side)

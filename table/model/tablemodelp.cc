@@ -135,9 +135,7 @@ bool TableModelP::UpdateInternalSku(Entry* entry, const QUuid& value, int row)
 
     QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
 
-    if (old_node.isNull()) {
-        entry->sync_state = SyncState::kSynced;
-
+    if (entry->sync_state == SyncState::kCreating) {
         message.insert(kEntry, entry->WriteJson());
         WebSocket::Instance()->SendMessage(WsKey::kPartnerEntryInsert, message);
 
