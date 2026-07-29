@@ -74,4 +74,11 @@ void About::IniDialog()
     connect(ui->textBrowser, &QTextBrowser::anchorClicked, this, [](const QUrl& url) {
         About::OpenResourceHtml(url.toString()); // static function call
     });
+
+    const QString config_location { QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) };
+    ui->labelConfig->setText(config_location);
+    ui->labelConfig->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    ui->labelConfig->setToolTip(config_location);
+
+    connect(ui->pushButtonOpenConfig, &QPushButton::clicked, this, [config_location]() { QDesktopServices::openUrl(QUrl::fromLocalFile(config_location)); });
 }
