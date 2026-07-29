@@ -89,6 +89,13 @@ public:
 protected:
     virtual bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit);
     virtual bool UpdateRate(EntryShadow* shadow, double value);
+    virtual bool UpdateInternalSku(Entry* entry, const QUuid& value, int row)
+    {
+        Q_UNUSED(entry)
+        Q_UNUSED(value)
+        Q_UNUSED(row)
+        return false;
+    }
 
     bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row);
     void AccumulateBalance(int start);

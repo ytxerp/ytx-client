@@ -49,7 +49,7 @@ public:
     Entry* GetEntry(const QModelIndex& index) const override { return entry_list_.at(index.row()); }
 
 protected:
-    bool UpdateInternalSku(EntryP* entry, const QUuid& value);
+    bool UpdateInternalSku(Entry* entry, const QUuid& value, int row) override;
 
 private:
     QSet<QUuid> internal_sku_set_ {};

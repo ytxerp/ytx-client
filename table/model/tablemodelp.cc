@@ -113,8 +113,10 @@ bool TableModelP::removeRows(int row, int /*count*/, const QModelIndex& /*parent
     return true;
 }
 
-bool TableModelP::UpdateInternalSku(EntryP* entry, const QUuid& value)
+bool TableModelP::UpdateInternalSku(Entry* entry, const QUuid& value, int row)
 {
+    Q_UNUSED(row)
+
     if (value.isNull())
         return false;
 
@@ -221,7 +223,7 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         entry::UpdateStringList(pending_updates_[id], entry, kTag, value.toStringList(), &Entry::tag, [this, id, entry]() { RestartTimer(id, entry); });
         break;
     case EntryEnumP::kRhsNode:
-        insert_registry = UpdateInternalSku(d_entry, value.toUuid());
+        insert_registry = UpdateInternalSku(entry, value.toUuid(), -1);
         break;
     case EntryEnumP::kUnitPrice:
         update_registry = entry::UpdateDouble(

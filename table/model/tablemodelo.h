@@ -109,10 +109,10 @@ public:
     void SetNode(const NodeO* node) { d_node_ = node; }
 
 private:
-    bool UpdateInternalSku(EntryO* entry, int row, const QUuid& value);
-    bool UpdateUnitPrice(EntryO* entry, int row, double value);
-    bool UpdateUnitDiscount(EntryO* entry, int row, double value);
-    bool UpdateMeasure(EntryO* entry, int row, double value);
+    bool UpdateInternalSku(Entry* entry, const QUuid& value, int row) override;
+    bool UpdateUnitPrice(EntryO* entry, double value, int row);
+    bool UpdateUnitDiscount(EntryO* entry, double value, int row);
+    bool UpdateMeasure(EntryO* entry, double value, int row);
     bool UpdateCount(EntryO* entry, double value);
     bool UpdateDescription(EntryO* entry, const QString& value);
     bool UpdateTag(EntryO* entry, const QStringList& value);

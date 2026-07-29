@@ -158,7 +158,8 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     const EntryEnumO column { index.column() };
     const int row { index.row() };
 
-    auto* d_entry { static_cast<EntryO*>(index.internalPointer()) };
+    auto* entry { static_cast<Entry*>(index.internalPointer()) };
+    auto* d_entry { static_cast<EntryO*>(entry) };
 
     const double old_count { d_entry->count };
     const double old_measure { d_entry->measure };
@@ -176,19 +177,19 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
         UpdateDescription(d_entry, value.toString());
         break;
     case EntryEnumO::kRhsNode:
-        unit_price_changed = UpdateInternalSku(d_entry, row, value.toUuid());
+        unit_price_changed = UpdateInternalSku(entry, value.toUuid(), row);
         break;
     case EntryEnumO::kUnitPrice:
-        unit_price_changed = UpdateUnitPrice(d_entry, row, value.toDouble());
+        unit_price_changed = UpdateUnitPrice(d_entry, value.toDouble(), row);
         break;
     case EntryEnumO::kMeasure:
-        measure_changed = UpdateMeasure(d_entry, row, value.toDouble());
+        measure_changed = UpdateMeasure(d_entry, value.toDouble(), row);
         break;
     case EntryEnumO::kCount:
         count_changed = UpdateCount(d_entry, value.toDouble());
         break;
     case EntryEnumO::kUnitDiscount:
-        unit_discount_changed = UpdateUnitDiscount(d_entry, row, value.toDouble());
+        unit_discount_changed = UpdateUnitDiscount(d_entry, value.toDouble(), row);
         break;
     case EntryEnumO::kTag:
         UpdateTag(d_entry, value.toStringList());
@@ -377,29 +378,31 @@ bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 /// @brief Update entry by internal product ID (rhs_node)
 /// @note Responsibility: Handle insertion and update, not deletion
 /// @note rhs_node must be valid, external_sku is auto-filled
-bool TableModelO::UpdateInternalSku(EntryO* entry, int row, const QUuid& value)
+bool TableModelO::UpdateInternalSku(Entry* entry, const QUuid& value, int row)
 {
     if (value.isNull())
         return false;
 
-    auto old_rhs_node { entry->rhs_node };
+    auto* d_entry { static_cast<EntryO*>(entry) };
+
+    auto old_rhs_node { d_entry->rhs_node };
     if (old_rhs_node == value)
         return false;
 
-    const double old_unit_price { entry->unit_price };
+    const double old_unit_price { d_entry->unit_price };
 
-    entry->rhs_node = value;
+    d_entry->rhs_node = value;
 
     const auto unit_price { PartnerInventoryRegistry::Instance().UnitPrice(d_node_->partner_id, value) };
-    entry->unit_price = unit_price.value_or(MasterDataRegistry::Instance().InventoryUnitPrice(value));
+    d_entry->unit_price = unit_price.value_or(MasterDataRegistry::Instance().InventoryUnitPrice(value));
 
-    const bool price_changed { FloatChanged(old_unit_price, entry->unit_price) };
+    const bool price_changed { FloatChanged(old_unit_price, d_entry->unit_price) };
 
     if (price_changed)
-        RecalculateAmount(entry);
+        RecalculateAmount(d_entry);
 
-    if (entry->sync_state == SyncState::kSynced)
-        entry->sync_state = SyncState::kUpdating;
+    if (d_entry->sync_state == SyncState::kSynced)
+        d_entry->sync_state = SyncState::kUpdating;
 
     const auto& registry { PartnerInventoryRegistry::Instance() };
 
@@ -414,7 +417,7 @@ bool TableModelO::UpdateInternalSku(EntryO* entry, int row, const QUuid& value)
     return price_changed;
 }
 
-bool TableModelO::UpdateUnitPrice(EntryO* entry, int row, double value)
+bool TableModelO::UpdateUnitPrice(EntryO* entry, double value, int row)
 {
     if (FloatEqual(entry->unit_price, value))
         return false;
@@ -431,7 +434,7 @@ bool TableModelO::UpdateUnitPrice(EntryO* entry, int row, double value)
     return true;
 }
 
-bool TableModelO::UpdateUnitDiscount(EntryO* entry, int row, double value)
+bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value, int row)
 {
     if (FloatEqual(entry->unit_discount, value))
         return false;
@@ -447,7 +450,7 @@ bool TableModelO::UpdateUnitDiscount(EntryO* entry, int row, double value)
     return true;
 }
 
-bool TableModelO::UpdateMeasure(EntryO* entry, int row, double value)
+bool TableModelO::UpdateMeasure(EntryO* entry, double value, int row)
 {
     if (FloatEqual(entry->measure, value))
         return false;
