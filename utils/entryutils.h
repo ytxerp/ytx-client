@@ -389,7 +389,7 @@ bool UpdateDouble(QJsonObject& update, T* object, CString& field, const Field& v
 
     Field& current_value { object->*member };
 
-    if (FloatEqual(current_value, value))
+    if (qFuzzyCompare(current_value, value))
         return false;
 
     current_value = value;

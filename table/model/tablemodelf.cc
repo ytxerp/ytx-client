@@ -223,7 +223,7 @@ bool TableModelF::UpdateNumeric(EntryShadow* shadow, double value, int row, Nume
     // Old value on the side currently being edited (debit or credit).
     // If it hasn't actually changed, there's nothing to update.
     const double old_value { side == NumericSide::kDebit ? lhs_old_debit : lhs_old_credit };
-    if (FloatEqual(old_value, value))
+    if (qFuzzyCompare(old_value, value))
         return false;
 
     // "base" is the old value on the opposite side (the one not being edited).
@@ -259,17 +259,15 @@ bool TableModelF::UpdateNumeric(EntryShadow* shadow, double value, int row, Nume
     update.insert(input_side == InputSide::kLhs ? kLhsCredit : kRhsCredit, QString::number(*shadow->lhs_credit, 'f', numeric_const::kDecimalPlaces8));
 
     QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, input_side) };
+    WebSocket::Instance()->SendMessage(WsKey::kEntryNumericUpdate, message);
 
     // Delta calculation follows the DICD rule (Debit - Credit).
     // After the delta is computed, both the node and the server
     // will adjust the delta value according to the node's direction rule
     // (DICD → unchanged, DDCI → inverted).
     const double lhs_initial_delta { *shadow->lhs_debit - *shadow->lhs_credit - (lhs_old_debit - lhs_old_credit) };
-    const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
 
-    WebSocket::Instance()->SendMessage(WsKey::kEntryNumericUpdate, message);
-
-    if (has_leaf_delta) {
+    if (!qFuzzyIsNull(lhs_initial_delta)) {
         AccumulateBalance(row);
         EmitDataChanged(row, row, std::to_underlying(EntryEnumF::kBalance), std::to_underlying(EntryEnumF::kBalance));
 
@@ -355,11 +353,14 @@ bool LeafModelF::UpdateCredit(EntryShadow* shadow, double value, int row)
 
 bool TableModelF::UpdateRate(EntryShadow* shadow, double value)
 {
-    const double old_rate { *shadow->lhs_rate };
-    if (FloatEqual(old_rate, value) || value <= 0)
+    if (value <= 0)
         return false;
 
-    const double proportion { value / old_rate };
+    const double old_value { *shadow->lhs_rate };
+    if (qFuzzyCompare(old_value, value))
+        return false;
+
+    const double proportion { value / old_value };
 
     *shadow->lhs_rate = value;
 
@@ -384,9 +385,8 @@ bool TableModelF::UpdateRate(EntryShadow* shadow, double value)
     WebSocket::Instance()->SendMessage(WsKey::kEntryRateUpdate, message);
 
     const double rhs_initial_delta { *shadow->rhs_debit - *shadow->rhs_credit - (rhs_old_debit - rhs_old_credit) };
-    const bool has_leaf_delta { std::abs(rhs_initial_delta) > kTolerance };
 
-    if (has_leaf_delta) {
+    if (!qFuzzyIsNull(rhs_initial_delta)) {
         const QUuid rhs_id { *shadow->rhs_node };
         emit SUpdateBalance(rhs_id, *shadow->id);
     }

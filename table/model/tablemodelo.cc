@@ -396,7 +396,7 @@ bool TableModelO::UpdateInternalSku(Entry* entry, const QUuid& value, int row)
     const auto unit_price { PartnerInventoryRegistry::Instance().UnitPrice(d_node_->partner_id, value) };
     d_entry->unit_price = unit_price.value_or(MasterDataRegistry::Instance().InventoryUnitPrice(value));
 
-    const bool price_changed { FloatChanged(old_unit_price, d_entry->unit_price) };
+    const bool price_changed { !qFuzzyIsNull(old_unit_price - d_entry->unit_price) };
 
     if (price_changed)
         RecalculateAmount(d_entry);
@@ -419,7 +419,7 @@ bool TableModelO::UpdateInternalSku(Entry* entry, const QUuid& value, int row)
 
 bool TableModelO::UpdateUnitPrice(EntryO* entry, double value, int row)
 {
-    if (FloatEqual(entry->unit_price, value))
+    if (qFuzzyCompare(entry->unit_price, value))
         return false;
 
     entry->initial = entry->measure * value;
@@ -436,7 +436,7 @@ bool TableModelO::UpdateUnitPrice(EntryO* entry, double value, int row)
 
 bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value, int row)
 {
-    if (FloatEqual(entry->unit_discount, value))
+    if (qFuzzyCompare(entry->unit_discount, value))
         return false;
 
     entry->discount = entry->measure * value;
@@ -452,7 +452,7 @@ bool TableModelO::UpdateUnitDiscount(EntryO* entry, double value, int row)
 
 bool TableModelO::UpdateMeasure(EntryO* entry, double value, int row)
 {
-    if (FloatEqual(entry->measure, value))
+    if (qFuzzyCompare(entry->measure, value))
         return false;
 
     entry->initial = entry->unit_price * value;
@@ -470,7 +470,7 @@ bool TableModelO::UpdateMeasure(EntryO* entry, double value, int row)
 
 bool TableModelO::UpdateCount(EntryO* entry, double value)
 {
-    if (FloatEqual(entry->count, value))
+    if (qFuzzyCompare(entry->count, value))
         return false;
 
     entry->count = value;

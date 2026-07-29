@@ -197,7 +197,7 @@ bool TableModel::UpdateNumeric(EntryShadow* shadow, double value, int row, Numer
     // Old value on the side currently being edited (debit or credit).
     // If it hasn't actually changed, there's nothing to update.
     const double old_value { side == NumericSide::kDebit ? lhs_old_debit : lhs_old_credit };
-    if (FloatEqual(old_value, value))
+    if (qFuzzyCompare(old_value, value))
         return false;
 
     // "base" is the old value on the opposite side (the one not being edited).
@@ -245,9 +245,8 @@ bool TableModel::UpdateNumeric(EntryShadow* shadow, double value, int row, Numer
     // therefore its delta is the opposite of LHS delta.
     // This ensures overall balance (LHS + RHS = 0).
     const double lhs_initial_delta { *shadow->lhs_debit - *shadow->lhs_credit - (lhs_old_debit - lhs_old_credit) };
-    const bool has_leaf_delta { std::abs(lhs_initial_delta) > kTolerance };
 
-    if (has_leaf_delta) {
+    if (!qFuzzyIsNull(lhs_initial_delta)) {
         AccumulateBalance(row);
         const int balance_column { entry::BalanceColumn(section_) };
         EmitDataChanged(row, row, balance_column, balance_column);
@@ -259,8 +258,11 @@ bool TableModel::UpdateNumeric(EntryShadow* shadow, double value, int row, Numer
 
 bool TableModel::UpdateRate(EntryShadow* shadow, double value)
 {
-    const double old_unit_cost { *shadow->lhs_rate };
-    if (FloatEqual(old_unit_cost, value) || value < 0)
+    if (value < 0)
+        return false;
+
+    const double old_value { *shadow->lhs_rate };
+    if (qFuzzyCompare(old_value, value))
         return false;
 
     *shadow->lhs_rate = value;
@@ -303,8 +305,7 @@ bool TableModel::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int r
         const double lhs_debit { *shadow->lhs_debit };
         const double lhs_credit { *shadow->lhs_credit };
 
-        const bool has_leaf_delta { std::abs(lhs_debit - lhs_credit) > kTolerance };
-        if (has_leaf_delta) {
+        if (!qFuzzyIsNull(lhs_debit - lhs_credit)) {
             AccumulateBalance(row);
             const int balance_column { entry::BalanceColumn(section_) };
             EmitDataChanged(row, row, balance_column, balance_column);
