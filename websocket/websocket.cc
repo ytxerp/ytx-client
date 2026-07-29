@@ -15,9 +15,6 @@
 #include "websocket/jsongen.h"
 #include "workspace/databaserole.h"
 
-constexpr auto kReleasePort = "7749";
-constexpr auto kDebugPort = "7750";
-
 WebSocket::WebSocket(QObject* parent)
     : QObject(parent)
 {
@@ -52,12 +49,8 @@ void WebSocket::ReadConfig(const QSharedPointer<QSettings>& local_settings)
 {
     local_settings->beginGroup(kServer);
     const QString host { local_settings->value(kHost, "ytxerp.cc").toString() };
-    QString port { local_settings->value(kPort, kReleasePort).toString() };
+    const QString port { local_settings->value(kPort, "443").toString() };
     local_settings->endGroup();
-
-#ifdef QT_DEBUG
-    port = kDebugPort;
-#endif
 
     QString scheme {};
 
