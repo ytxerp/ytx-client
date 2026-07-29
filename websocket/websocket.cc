@@ -855,7 +855,7 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const auto session_id { QUuid(obj[kSessionId].toString()) };
     const QUuid entry_id { obj.value(kEntryId).toString() };
-    const bool is_parallel { obj.value(kIsParallel).toBool() };
+    const InputSide input_side { obj.value(kInputSide).toInt() };
     const QJsonObject update { obj.value(kUpdate).toObject() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
@@ -873,7 +873,7 @@ void WebSocket::UpdateEntryLinkedNode(const QJsonObject& obj)
         return;
     }
 
-    entry_hub->UpdateEntryLinkedNode(entry_id, update, is_parallel);
+    entry_hub->UpdateEntryLinkedNode(entry_id, update, input_side);
 }
 
 void WebSocket::UpdateEntryRate(const QJsonObject& obj)
@@ -886,7 +886,7 @@ void WebSocket::UpdateEntryRate(const QJsonObject& obj)
 
     const auto entry_id { QUuid(obj.value(kEntryId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
-    const bool is_parallel { obj.value(kIsParallel).toBool() };
+    const InputSide input_side { obj.value(kInputSide).toInt() };
 
     auto entry_hub { entry_hub_hash_.value(section) };
     auto tree_model { tree_model_hash_.value(section) };
@@ -906,7 +906,7 @@ void WebSocket::UpdateEntryRate(const QJsonObject& obj)
         return;
     }
 
-    entry_hub->UpdateEntryRate(entry_id, update, is_parallel);
+    entry_hub->UpdateEntryRate(entry_id, update, input_side);
 }
 
 void WebSocket::UpdateEntryNumeric(const QJsonObject& obj)

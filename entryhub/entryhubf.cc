@@ -8,7 +8,7 @@ EntryHubF::EntryHubF(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool is_parallel)
+void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, InputSide input_side)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
@@ -19,18 +19,22 @@ void EntryHubF::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update
         const int version { update.value(kVersion).toInt() };
         d_entry->version = version;
 
-        if (is_parallel) {
+        switch (input_side) {
+        case InputSide::kLhs:
             d_entry->lhs_rate = update[kLhsRate].toString().toDouble();
             d_entry->rhs_debit = update[kRhsDebit].toString().toDouble();
             d_entry->rhs_credit = update[kRhsCredit].toString().toDouble();
             rhs_id = d_entry->rhs_node;
             lhs_id = d_entry->lhs_node;
-        } else {
+            break;
+
+        case InputSide::kRhs:
             d_entry->rhs_rate = update[kRhsRate].toString().toDouble();
             d_entry->lhs_debit = update[kLhsDebit].toString().toDouble();
             d_entry->lhs_credit = update[kLhsCredit].toString().toDouble();
             rhs_id = d_entry->lhs_node;
             lhs_id = d_entry->rhs_node;
+            break;
         }
 
         const int lhs_rate { std::to_underlying(EntryEnum::kLhsRate) };

@@ -6,7 +6,7 @@
 
 void EntryShadow::Reset() { *this = EntryShadow {}; }
 
-void EntryShadow::BindEntry(Entry* base, bool parallel)
+void EntryShadow::BindEntry(Entry* base, BindingMode mode)
 {
     entry = base;
 
@@ -18,20 +18,37 @@ void EntryShadow::BindEntry(Entry* base, bool parallel)
     tag = &base->tag;
     status = &base->status;
     sync_state = &base->sync_state;
-
-    is_parallel = parallel;
-
-    lhs_node = parallel ? &base->lhs_node : &base->rhs_node;
-    rhs_node = parallel ? &base->rhs_node : &base->lhs_node;
-    lhs_rate = parallel ? &base->lhs_rate : &base->rhs_rate;
-    lhs_debit = parallel ? &base->lhs_debit : &base->rhs_debit;
-    lhs_credit = parallel ? &base->lhs_credit : &base->rhs_credit;
-
-    rhs_rate = parallel ? &base->rhs_rate : &base->lhs_rate;
-    rhs_debit = parallel ? &base->rhs_debit : &base->lhs_debit;
-    rhs_credit = parallel ? &base->rhs_credit : &base->lhs_credit;
-
     version = &base->version;
+
+    binding_mode = mode;
+
+    switch (mode) {
+    case BindingMode::kParallel:
+        lhs_node = &base->lhs_node;
+        rhs_node = &base->rhs_node;
+
+        lhs_rate = &base->lhs_rate;
+        lhs_debit = &base->lhs_debit;
+        lhs_credit = &base->lhs_credit;
+
+        rhs_rate = &base->rhs_rate;
+        rhs_debit = &base->rhs_debit;
+        rhs_credit = &base->rhs_credit;
+        break;
+
+    case BindingMode::kCross:
+        lhs_node = &base->rhs_node;
+        rhs_node = &base->lhs_node;
+
+        lhs_rate = &base->rhs_rate;
+        lhs_debit = &base->rhs_debit;
+        lhs_credit = &base->rhs_credit;
+
+        rhs_rate = &base->lhs_rate;
+        rhs_debit = &base->lhs_debit;
+        rhs_credit = &base->lhs_credit;
+        break;
+    }
 }
 
 QJsonObject EntryShadow::WriteJson() const
@@ -57,9 +74,9 @@ QJsonObject EntryShadow::WriteJson() const
     return obj;
 }
 
-void EntryShadowF::BindEntry(Entry* base, bool parallel)
+void EntryShadowF::BindEntry(Entry* base, BindingMode mode)
 {
-    EntryShadow::BindEntry(base, parallel);
+    EntryShadow::BindEntry(base, mode);
     cash_kind = &(static_cast<EntryF*>(base)->cash_kind);
 }
 

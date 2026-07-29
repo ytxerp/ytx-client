@@ -297,6 +297,7 @@ set(HEADERS
     workspace/workspacemember.h
     workspace/workspacemodel.h
     workspace/workspacerole.h
+    enum/bindingmode.h
 )
 
 set(SOURCES

@@ -22,6 +22,7 @@
 
 #include <QJsonObject>
 
+#include "enum/bindingmode.h"
 #include "table/entry.h"
 
 struct EntryShadow {
@@ -50,14 +51,14 @@ struct EntryShadow {
     Entry* entry {};
 
     // Binding mode:
-    // • Parallel binding: shadow.lhs_node → entry.lhs_node, shadow.rhs_node → entry.rhs_node
-    // • Cross binding:    shadow.lhs_node → entry.rhs_node, shadow.rhs_node → entry.lhs_node
-    bool is_parallel {};
+    // • kParallel binding: shadow.lhs_node → entry.lhs_node, shadow.rhs_node → entry.rhs_node
+    // • kCross binding:    shadow.lhs_node → entry.rhs_node, shadow.rhs_node → entry.lhs_node
+    BindingMode binding_mode { BindingMode::kParallel };
 
     virtual ~EntryShadow() = default;
 
     // BindEntry connects the shadow to a concrete Entry instance.
-    virtual void BindEntry(Entry* base, bool parallel);
+    virtual void BindEntry(Entry* base, BindingMode mode);
 
     // Reset clears all bound pointers and restores the shadow to default values.
     virtual void Reset();
@@ -69,7 +70,7 @@ struct EntryShadow {
 struct EntryShadowF final : EntryShadow {
     finance::CashKind* cash_kind {};
 
-    void BindEntry(Entry* base, bool parallel) override;
+    void BindEntry(Entry* base, BindingMode mode) override;
     void Reset() override;
     QJsonObject WriteJson() const override;
 };

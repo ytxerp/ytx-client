@@ -231,13 +231,13 @@ QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update)
     return message;
 }
 
-QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bool is_parallel)
+QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, InputSide side)
 {
     QJsonObject message {};
 
     message.insert(kSection, std::to_underlying(section));
     message.insert(kUpdate, update);
-    message.insert(kIsParallel, is_parallel);
+    message.insert(kInputSide, std::to_underlying(side));
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
     return message;
 }

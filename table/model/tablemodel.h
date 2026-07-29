@@ -87,30 +87,10 @@ public:
     void FlushCaches();
 
 protected:
-    virtual bool UpdateNumeric(EntryShadow* entry_shadow, double value, int row, bool is_debit)
-    {
-        Q_UNUSED(entry_shadow)
-        Q_UNUSED(value)
-        Q_UNUSED(is_debit)
-        Q_UNUSED(row)
-        return false;
-    }
+    virtual bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit);
+    virtual bool UpdateRate(EntryShadow* shadow, double value);
 
-    virtual bool UpdateRate(EntryShadow* entry_shadow, double value)
-    {
-        Q_UNUSED(entry_shadow)
-        Q_UNUSED(value)
-        return false;
-    }
-
-    virtual bool UpdateLinkedNode(EntryShadow* entry_shadow, const QUuid& value, int row)
-    {
-        Q_UNUSED(entry_shadow)
-        Q_UNUSED(value)
-        Q_UNUSED(row)
-        return false;
-    }
-
+    bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row);
     void AccumulateBalance(int start);
     void RestartTimer(const QUuid& id, Entry* entry);
     double CalculateBalance(EntryShadow* shadow) const

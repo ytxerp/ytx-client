@@ -37,7 +37,6 @@ public:
 protected:
     bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit) override;
     bool UpdateRate(EntryShadow* shadow, double value) override;
-    bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row) override;
 };
 
 #endif // TABLEMODELF_H

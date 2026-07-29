@@ -8,7 +8,7 @@ EntryHubT::EntryHubT(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubT::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool /*is_parallel*/)
+void EntryHubT::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, InputSide /*input_side*/)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {

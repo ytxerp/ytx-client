@@ -210,65 +210,6 @@ Qt::ItemFlags TableModelF::flags(const QModelIndex& index) const
     return flags;
 }
 
-bool TableModelF::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row)
-{
-    if (value.isNull())
-        return false;
-
-    const QUuid old_node { *shadow->rhs_node };
-    if (old_node == value)
-        return false;
-
-    *shadow->rhs_node = value;
-
-    const QUuid entry_id { *shadow->id };
-    auto* entry { shadow->entry };
-
-    QJsonObject message { JsonGen::EntryMessage(section_, entry_id) };
-
-    if (old_node.isNull()) {
-        *shadow->sync_state = SyncState::kSynced;
-
-        message.insert(kEntry, shadow->WriteJson());
-        WebSocket::Instance()->SendMessage(WsKey::kEntryInsert, message);
-
-        const double lhs_debit { *shadow->lhs_debit };
-        const double lhs_credit { *shadow->lhs_credit };
-
-        const bool has_leaf_delta { std::abs(lhs_debit - lhs_credit) > kTolerance };
-        if (has_leaf_delta) {
-            AccumulateBalance(row);
-            EmitDataChanged(row, row, std::to_underlying(EntryEnumF::kBalance), std::to_underlying(EntryEnumF::kBalance));
-        }
-
-        emit STransferOneEntry(entry);
-    }
-
-    if (!old_node.isNull()) {
-        // Indicates whether the EntryShadow's lhs_node corresponds to the Entry's lhs_node.
-        // If true, the node is not collapsed; if false, it has been collapsed and flipped.
-        const bool is_parallel { shadow->is_parallel };
-        // If true, the EntryShadow corresponds to the left-side node in the Postgres table,
-        // so we need to update the right-side node (kRhsNode).
-        // If false, it means the entry is collapsed (lhs and rhs flipped), so update the left-side node (kLhsNode).
-        const auto field { is_parallel ? kRhsNode : kLhsNode };
-
-        QJsonObject update {};
-        update.insert(field, value.toString(QUuid::WithoutBraces));
-        update.insert(kVersion, *shadow->version);
-
-        message.insert(kUpdate, update);
-        message.insert(kIsParallel, is_parallel);
-
-        WebSocket::Instance()->SendMessage(WsKey::kEntryLinkedNodeUpdate, message);
-
-        emit SDetachOneEntry(old_node, entry_id);
-    }
-
-    emit SAttachOneEntry(value, entry);
-    return true;
-}
-
 bool TableModelF::UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit)
 {
     const double lhs_old_debit { *shadow->lhs_debit };
@@ -303,14 +244,14 @@ bool TableModelF::UpdateNumeric(EntryShadow* shadow, double value, int row, bool
     const QUuid entry_id { *shadow->id };
     const QUuid rhs_id { *shadow->rhs_node };
 
+    const auto input_side { ToValueInputSide(shadow->binding_mode) };
     QJsonObject update {};
-    const bool is_parallel { shadow->is_parallel };
 
     update.insert(kVersion, *shadow->version);
-    update.insert(is_parallel ? kLhsDebit : kRhsDebit, QString::number(*shadow->lhs_debit, 'f', numeric_const::kDecimalPlaces8));
-    update.insert(is_parallel ? kLhsCredit : kRhsCredit, QString::number(*shadow->lhs_credit, 'f', numeric_const::kDecimalPlaces8));
+    update.insert(input_side == InputSide::kLhs ? kLhsDebit : kRhsDebit, QString::number(*shadow->lhs_debit, 'f', numeric_const::kDecimalPlaces8));
+    update.insert(input_side == InputSide::kLhs ? kLhsCredit : kRhsCredit, QString::number(*shadow->lhs_credit, 'f', numeric_const::kDecimalPlaces8));
 
-    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
+    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, input_side) };
 
     // Delta calculation follows the DICD rule (Debit - Credit).
     // After the delta is computed, both the node and the server
@@ -426,13 +367,13 @@ bool TableModelF::UpdateRate(EntryShadow* shadow, double value)
 
     const QUuid entry_id { *shadow->id };
 
+    const auto input_side { ToValueInputSide(shadow->binding_mode) };
+
     QJsonObject update {};
     update.insert(kVersion, *shadow->version);
+    update.insert(input_side == InputSide::kLhs ? kLhsRate : kRhsRate, QString::number(*shadow->lhs_rate, 'f', numeric_const::kDecimalPlaces8));
 
-    const bool is_parallel { shadow->is_parallel };
-    update.insert(is_parallel ? kLhsRate : kRhsRate, QString::number(*shadow->lhs_rate, 'f', numeric_const::kDecimalPlaces8));
-
-    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, is_parallel) };
+    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, input_side) };
     WebSocket::Instance()->SendMessage(WsKey::kEntryRateUpdate, message);
 
     const double rhs_initial_delta { *shadow->rhs_debit - *shadow->rhs_credit - (rhs_old_debit - rhs_old_credit) };

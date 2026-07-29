@@ -18,6 +18,7 @@
  */
 
 #include "component/using.h"
+#include "enum/bindingmode.h"
 #include "enum/section.h"
 #include "tag/tagrow.h"
 #include "tree/node.h"
@@ -44,7 +45,7 @@ QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id);
 
 QJsonObject MarkEntries(Section section, CUuid& node_id, int operation);
 QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update);
-QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, bool is_parallel);
+QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, InputSide side);
 QJsonObject EntryMessage(Section section, CUuid& entry_id);
 
 QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update);

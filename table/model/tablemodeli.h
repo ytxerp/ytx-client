@@ -28,11 +28,6 @@ class TableModelI final : public TableModel {
 public:
     explicit TableModelI(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelI() override = default;
-
-protected:
-    bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit) override;
-    bool UpdateRate(EntryShadow* shadow, double value) override;
-    bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row) override;
 };
 
 #endif // TABLEMODELI_H

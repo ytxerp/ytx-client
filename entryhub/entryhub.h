@@ -24,6 +24,7 @@
 #include <QObject>
 
 #include "component/sectioninfo.h"
+#include "enum/bindingmode.h"
 #include "enum/entryenum.h"
 #include "table/entry.h"
 
@@ -65,7 +66,7 @@ public:
     virtual void UpdateEntry(const QUuid& id, const QJsonObject& update);
 
     void UpdateVersion(const QUuid& id, int version);
-    void UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, bool is_parallel);
+    void UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, InputSide input_side);
 
     void AckTable(const QUuid& node_id, const QJsonArray& array);
     void SearchEntry(const QJsonArray& array);
@@ -75,11 +76,11 @@ public:
 
     void DeleteDoubleLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
 
-    virtual void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool is_parallel)
+    virtual void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, InputSide input_side)
     {
         Q_UNUSED(entry_id);
         Q_UNUSED(update);
-        Q_UNUSED(is_parallel);
+        Q_UNUSED(input_side);
     }
 
     virtual void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update)

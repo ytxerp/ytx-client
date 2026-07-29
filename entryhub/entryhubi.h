@@ -27,7 +27,7 @@ public:
     explicit EntryHubI(CSectionInfo& info, QObject* parent = nullptr);
 
 public:
-    void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, bool is_parallel) override;
+    void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, InputSide input_side) override;
     void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update) override;
 
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);

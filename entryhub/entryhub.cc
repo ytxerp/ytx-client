@@ -80,11 +80,11 @@ void EntryHub::UpdateVersion(const QUuid& id, int version)
         it.value()->version = version;
 }
 
-void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, bool is_parallel)
+void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, InputSide input_side)
 {
     Entry* entry {};
 
-    const auto field { is_parallel ? kRhsNode : kLhsNode };
+    const auto field { input_side == InputSide::kRhs ? kRhsNode : kLhsNode };
     const QUuid new_node_id { update.value(field).toString() };
 
     auto it = entry_cache_.constFind(id);
@@ -94,13 +94,21 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
         const int version { update.value(kVersion).toInt() };
         entry->version = version;
 
-        const QUuid old_node_id { is_parallel ? entry->rhs_node : entry->lhs_node };
-        const QUuid lhs_node { is_parallel ? entry->lhs_node : entry->rhs_node };
+        QUuid old_node_id {};
+        QUuid lhs_node {};
 
-        if (is_parallel) {
+        switch (input_side) {
+        case InputSide::kRhs:
+            old_node_id = entry->rhs_node;
+            lhs_node = entry->lhs_node;
             entry->rhs_node = new_node_id;
-        } else {
+            break;
+
+        case InputSide::kLhs:
+            old_node_id = entry->lhs_node;
+            lhs_node = entry->rhs_node;
             entry->lhs_node = new_node_id;
+            break;
         }
 
         const int linked_node_column { entry::LinkedNodeColumn(section_) };
