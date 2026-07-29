@@ -9,9 +9,18 @@
         <translation>关于 YTX</translation>
     </message>
     <message>
-        <location filename="../../dialog/about.ui" line="20"/>
         <source>Close</source>
-        <translation>关闭</translation>
+        <translation type="vanished">关闭</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/about.ui" line="23"/>
+        <source>Config Folder</source>
+        <translation>配置目录</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/about.ui" line="56"/>
+        <source>Open</source>
+        <translation>打开</translation>
     </message>
     <message>
         <location filename="../../dialog/about.cc" line="65"/>
@@ -2072,14 +2081,14 @@ Would you like to download it now?</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="184"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="284"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="190"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="290"/>
         <source>Tags</source>
         <translation>标签</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="214"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="313"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="220"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="319"/>
         <source>Manage...</source>
         <translation>管理...</translation>
     </message>
