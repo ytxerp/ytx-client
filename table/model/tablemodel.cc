@@ -189,24 +189,31 @@ void TableModel::FlushCaches()
     pending_updates_.clear();
 }
 
-bool TableModel::UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit)
+bool TableModel::UpdateNumeric(EntryShadow* shadow, double value, int row, NumericSide side)
 {
     const double lhs_old_debit { *shadow->lhs_debit };
     const double lhs_old_credit { *shadow->lhs_credit };
 
-    const double old_value { is_debit ? lhs_old_debit : lhs_old_credit };
+    // Old value on the side currently being edited (debit or credit).
+    // If it hasn't actually changed, there's nothing to update.
+    const double old_value { side == NumericSide::kDebit ? lhs_old_debit : lhs_old_credit };
     if (FloatEqual(old_value, value))
         return false;
 
-    // Base represents the opposite side (used to compute the new diff)
-    const double base { is_debit ? lhs_old_credit : lhs_old_debit };
+    // "base" is the old value on the opposite side (the one not being edited).
+    // Since debit and credit are mutually exclusive at any given time (only one
+    // side holds a non-zero value), base represents the current balance sitting
+    // on the other side, which the new value will be netted against.
+    const double base { side == NumericSide::kDebit ? lhs_old_credit : lhs_old_debit };
+
+    // Remaining amount after offsetting the opposite side.
+    // The sign determines whether the balance belongs to debit or credit;
+    // the magnitude is stored in the corresponding side.
     const double diff { std::abs(value - base) };
+    const bool debit_side { (side == NumericSide::kDebit && value > base) || (side == NumericSide::kCredit && value <= base) };
 
-    // Determine which side (debit/credit) should hold the new value
-    const bool to_debit { (is_debit && value > base) || (!is_debit && value <= base) };
-
-    *shadow->lhs_debit = to_debit ? diff : 0.0;
-    *shadow->lhs_credit = to_debit ? 0.0 : diff;
+    *shadow->lhs_debit = debit_side ? diff : 0.0;
+    *shadow->lhs_credit = debit_side ? 0.0 : diff;
 
     // Mirror to RHS (Debit ↔ Credit)
     *shadow->rhs_debit = *shadow->lhs_credit;
@@ -470,10 +477,10 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
         UpdateLinkedNode(shadow, value.toUuid(), row);
         break;
     case EntryEnum::kDebit:
-        UpdateNumeric(shadow, value.toDouble(), row, true);
+        UpdateNumeric(shadow, value.toDouble(), row, NumericSide::kDebit);
         break;
     case EntryEnum::kCredit:
-        UpdateNumeric(shadow, value.toDouble(), row, false);
+        UpdateNumeric(shadow, value.toDouble(), row, NumericSide::kCredit);
         break;
     case EntryEnum::kId:
     case EntryEnum::kLhsNode:

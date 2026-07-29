@@ -23,6 +23,8 @@
 /** @brief Operation */
 enum class MarkOperation { kClear = 0, kSelect, kToggle };
 
+enum class NumericSide { kDebit, kCredit };
+
 // defining entry column
 enum class EntryEnum {
     // --- Hidden ---

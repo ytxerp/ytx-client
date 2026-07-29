@@ -35,7 +35,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
 protected:
-    bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit) override;
+    bool UpdateNumeric(EntryShadow* shadow, double value, int row, NumericSide side) override;
     bool UpdateRate(EntryShadow* shadow, double value) override;
 };
 

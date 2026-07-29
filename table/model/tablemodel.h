@@ -87,7 +87,7 @@ public:
     void FlushCaches();
 
 protected:
-    virtual bool UpdateNumeric(EntryShadow* shadow, double value, int row, bool is_debit);
+    virtual bool UpdateNumeric(EntryShadow* shadow, double value, int row, NumericSide side);
     virtual bool UpdateRate(EntryShadow* shadow, double value);
     virtual bool UpdateInternalSku(Entry* entry, const QUuid& value, int row)
     {
