@@ -1,9 +1,8 @@
 #include "searchpathtreer.h"
 
-SearchPathTreeR::SearchPathTreeR(CTreeModel* model, int column, QObject* parent)
+SearchPathTreeR::SearchPathTreeR(CTreeModel* model, QObject* parent)
     : StyledItemDelegate { parent }
     , model_ { model }
-    , column_ { column }
 {
 }
 
@@ -14,4 +13,8 @@ void SearchPathTreeR::paint(QPainter* painter, const QStyleOptionViewItem& optio
 
 QSize SearchPathTreeR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const { return CalculateTextSize(GetPath(index), option); }
 
-QString SearchPathTreeR::GetPath(const QModelIndex& index) const { return model_->Path(index.siblingAtColumn(column_).data().toUuid()); }
+QString SearchPathTreeR::GetPath(const QModelIndex& index) const
+{
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    return model_->Path(node->id);
+}

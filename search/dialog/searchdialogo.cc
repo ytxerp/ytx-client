@@ -68,7 +68,9 @@ void SearchDialogO::REntryDoubleClicked(const QModelIndex& index)
 
 void SearchDialogO::RNodeDoubleClicked(const QModelIndex& index)
 {
-    auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+
+    auto node_id { node->id };
 
     if (tree_model_->Contains(node_id))
         emit SNodeLocation(info_.section, node_id);

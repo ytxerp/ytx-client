@@ -27,7 +27,7 @@
 
 class SearchPathTreeR final : public StyledItemDelegate {
 public:
-    SearchPathTreeR(CTreeModel* model, int column, QObject* parent = nullptr);
+    SearchPathTreeR(CTreeModel* model, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
@@ -36,7 +36,6 @@ private:
 
 private:
     CTreeModel* model_ {};
-    int column_ {};
 };
 
 #endif // SEARCHPATHTREER_H

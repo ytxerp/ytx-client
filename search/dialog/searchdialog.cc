@@ -107,7 +107,7 @@ void SearchDialog::InitDelegate()
     unit_ = new IntStringR(info_.unit_map, this);
     direction_rule_ = new BoolStringR(info_.rule_map, this);
     kind_ = new IntStringR(info_.kind_map, this);
-    tree_path_ = new SearchPathTreeR(tree_model_, std::to_underlying(NodeEnum::kId), this);
+    tree_path_ = new SearchPathTreeR(tree_model_, this);
     check_ = new StatusR(this);
     color_ = new ColorR(this);
     table_path_ = new SearchPathTableR(tree_model_, this);
@@ -165,7 +165,9 @@ void SearchDialog::RSearchEntry()
 
 void SearchDialog::RNodeDoubleClicked(const QModelIndex& index)
 {
-    auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+
+    auto node_id { node->id };
     if (node_id.isNull())
         return;
 

@@ -534,17 +534,8 @@ void MainWindow::on_actionAppendNode_triggered()
     if (!index.isValid())
         return;
 
-    const int kind_column { node::KindColumn(start_) };
-    const QModelIndex kind_index { index.siblingAtColumn(kind_column) };
-
-    // Check if the sibling index is valid
-    if (!kind_index.isValid()) {
-        qWarning() << "Invalid kind column:" << kind_column;
-        return;
-    }
-
-    const int kind { kind_index.data().toInt() };
-    if (kind != std::to_underlying(NodeKind::kBranch)) {
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    if (node->kind != NodeKind::kBranch) {
         return;
     }
 
