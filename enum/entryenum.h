@@ -28,7 +28,6 @@ enum class NumericSide { kDebit, kCredit };
 // defining entry column
 enum class EntryEnum {
     // --- Hidden ---
-    kId = 0,
     kLhsNode,
     // --- Visible ---
     kIssuedTime,
@@ -46,7 +45,6 @@ enum class EntryEnum {
 
 enum class EntryEnumF {
     // --- Hidden ---
-    kId = 0,
     kLhsNode,
     // --- Visible ---
     kIssuedTime,
@@ -66,7 +64,6 @@ enum class EntryEnumF {
 // FullEntryEnumP is same as EntryEnumP
 enum class EntryEnumP {
     // --- Hidden ---
-    kId = 0,
     kLhsNode,
     // --- Visible ---
     kIssuedTime,
@@ -83,7 +80,6 @@ enum class EntryEnumP {
 // FullEntryEnumO is same as EntryEnumO
 enum class EntryEnumO {
     // --- Hidden ---
-    kId = 0,
     kLhsNode,
     // --- Visible ---
     kRhsNode,
@@ -100,7 +96,6 @@ enum class EntryEnumO {
 };
 
 enum class FullEntryEnum {
-    kId = 0,
     kIssuedTime,
     kCode,
     kLhsNode,
@@ -118,7 +113,6 @@ enum class FullEntryEnum {
 };
 
 enum class FullEntryEnumF {
-    kId = 0,
     kIssuedTime,
     kCode,
     kLhsNode,

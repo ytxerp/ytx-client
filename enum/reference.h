@@ -22,7 +22,6 @@
 
 enum class SaleReferenceEnumI {
     kIssuedTime = 0,
-    kOrderId,
     kPartnerId,
     kCount,
     kMeasure,
@@ -33,7 +32,6 @@ enum class SaleReferenceEnumI {
 
 enum class SaleReferenceEnumP {
     kIssuedTime = 0,
-    kOrderId,
     kInternalSku,
     kColor,
     kExternalSku,

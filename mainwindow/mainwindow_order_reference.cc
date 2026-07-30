@@ -21,17 +21,16 @@ void MainWindow::RAckOrderReference(Section section, const QUuid& widget_id, con
     model->Rebuild(array);
 }
 
-void MainWindow::ROrderReferencePrimary(const QUuid& node_id, int unit)
+void MainWindow::ROrderReferencePrimary(const QUuid& node_id, NodeUnit unit)
 {
     bool allowed { false };
-    const NodeUnit node_unit { unit };
 
     switch (start_) {
     case Section::kInventory:
-        allowed = (node_unit == NodeUnit::IItem);
+        allowed = (unit == NodeUnit::IItem);
         break;
     case Section::kPartner:
-        allowed = (node_unit == NodeUnit::PCustomer || node_unit == NodeUnit::PVendor);
+        allowed = (unit == NodeUnit::PCustomer || unit == NodeUnit::PVendor);
         break;
     case Section::kFinance:
     case Section::kSale:
@@ -47,7 +46,7 @@ void MainWindow::ROrderReferencePrimary(const QUuid& node_id, int unit)
     CreateSaleReference(node_id, unit);
 }
 
-void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
+void MainWindow::CreateSaleReference(const QUuid& node_id, NodeUnit unit)
 {
     Q_ASSERT(sc_ && sc_->tree_model);
 
@@ -90,11 +89,11 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, int unit)
     {
         switch (section) {
         case Section::kInventory:
-            InitTableView(view, std::to_underlying(SaleReferenceEnumI::kOrderId), std::to_underlying(SaleReferenceEnumI::kDescription));
+            InitTableView(view, std::to_underlying(SaleReferenceEnumI::kDescription));
             DelegateSaleReferenceI(view, sc_i_.section_config);
             break;
         case Section::kPartner:
-            InitTableView(view, std::to_underlying(SaleReferenceEnumP::kOrderId), std::to_underlying(SaleReferenceEnumP::kDescription));
+            InitTableView(view, std::to_underlying(SaleReferenceEnumP::kDescription));
             DelegateSaleReferenceP(view, sc_p_.section_config);
             break;
         case Section::kSale:

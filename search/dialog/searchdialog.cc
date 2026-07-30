@@ -121,8 +121,6 @@ void SearchDialog::HideTreeColumn(QTableView* view) { view->setColumnHidden(std:
 
 void SearchDialog::HideTableColumn(QTableView* view)
 {
-    view->setColumnHidden(std::to_underlying(EntryEnum::kId), kIsHidden);
-
     if (info_.section == Section::kSale || info_.section == Section::kPurchase) {
         view->setColumnHidden(std::to_underlying(EntryEnumO::kExternalSku), kIsHidden);
         view->setColumnHidden(std::to_underlying(EntryEnumO::kLhsNode), kIsHidden);
@@ -172,6 +170,20 @@ void SearchDialog::RNodeDoubleClicked(const QModelIndex& index)
         return;
 
     emit SNodeLocation(info_.section, node_id);
+}
+
+void SearchDialog::REntryDoubleClicked(const QModelIndex& index)
+{
+    auto* entry { static_cast<Entry*>(index.internalPointer()) };
+
+    auto lhs_id { entry->lhs_node };
+    auto rhs_id { entry->rhs_node };
+    auto entry_id { entry->id };
+
+    if (lhs_id.isNull() || rhs_id.isNull() || entry_id.isNull())
+        return;
+
+    emit SEntryLocation(entry_id, lhs_id, rhs_id);
 }
 
 void SearchDialog::RContentGroup(int id)

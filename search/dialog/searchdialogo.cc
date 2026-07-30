@@ -55,8 +55,10 @@ void SearchDialogO::TableViewDelegate(QTableView* view)
 
 void SearchDialogO::REntryDoubleClicked(const QModelIndex& index)
 {
-    auto lhs_id { index.siblingAtColumn(std::to_underlying(EntryEnumO::kLhsNode)).data().toUuid() };
-    auto entry_id { index.siblingAtColumn(std::to_underlying(EntryEnumO::kId)).data().toUuid() };
+    auto* entry { static_cast<Entry*>(index.internalPointer()) };
+
+    auto lhs_id { entry->lhs_node };
+    auto entry_id { entry->id };
 
     if (lhs_id.isNull() || entry_id.isNull())
         return;

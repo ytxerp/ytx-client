@@ -115,8 +115,6 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
     auto* d_entry { static_cast<EntryO*>(index.internalPointer()) };
 
     switch (column) {
-    case EntryEnumO::kId:
-        return d_entry->id;
     case EntryEnumO::kLhsNode:
         return d_entry->lhs_node;
     case EntryEnumO::kRhsNode:
@@ -194,7 +192,6 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     case EntryEnumO::kTag:
         UpdateTag(d_entry, value.toStringList());
         break;
-    case EntryEnumO::kId:
     case EntryEnumO::kLhsNode:
     case EntryEnumO::kExternalSku:
     case EntryEnumO::kInitial:
@@ -267,7 +264,6 @@ void TableModelO::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(d_lhs, d_rhs, &EntryO::discount, order);
         case EntryEnumO::kTag:
             return utils::CompareMember(lhs, rhs, &EntryP::tag, order);
-        case EntryEnumO::kId:
         case EntryEnumO::kLhsNode:
         case EntryEnumO::kExternalSku:
             return false;
@@ -288,7 +284,6 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
     const EntryEnumO column { index.column() };
 
     switch (column) {
-    case EntryEnumO::kId:
     case EntryEnumO::kLhsNode:
     case EntryEnumO::kInitial:
     case EntryEnumO::kDiscount:

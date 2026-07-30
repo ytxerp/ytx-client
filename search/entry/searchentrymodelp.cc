@@ -20,8 +20,6 @@ QVariant EntryModelP::data(const QModelIndex& index, int role) const
     auto* d_entry { static_cast<EntryP*>(index.internalPointer()) };
 
     switch (column) {
-    case EntryEnumP::kId:
-        return d_entry->id;
     case EntryEnumP::kIssuedTime:
         return d_entry->issued_time;
     case EntryEnumP::kTag:
@@ -74,8 +72,6 @@ void EntryModelP::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(d_lhs, d_rhs, &EntryP::unit_price, order);
         case EntryEnumP::kRhsNode:
             return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
-        case EntryEnumP::kId:
-            return false;
         }
     };
 

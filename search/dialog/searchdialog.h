@@ -61,7 +61,7 @@ private slots:
     void RSearchEntry();
 
     virtual void RNodeDoubleClicked(const QModelIndex& index);
-    virtual void REntryDoubleClicked(const QModelIndex& index) = 0;
+    virtual void REntryDoubleClicked(const QModelIndex& index);
 
 protected:
     void IniDialog();

@@ -30,9 +30,6 @@ class SearchDialogF final : public SearchDialog {
 public:
     SearchDialogF(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QWidget* parent = nullptr);
 
-private slots:
-    void REntryDoubleClicked(const QModelIndex& index) override;
-
 private:
     void TreeViewDelegate(QTableView* view) override;
     void TableViewDelegate(QTableView* view) override;

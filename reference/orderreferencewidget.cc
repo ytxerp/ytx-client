@@ -8,7 +8,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-OrderReferenceWidget::OrderReferenceWidget(OrderReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, int node_unit, QWidget* parent)
+OrderReferenceWidget::OrderReferenceWidget(OrderReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, NodeUnit node_unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::OrderReferenceWidget)
     , start_ { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) }

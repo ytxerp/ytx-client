@@ -1,6 +1,5 @@
 #include "searchdialogi.h"
 
-#include "enum/entryenum.h"
 #include "ui_searchdialog.h"
 
 SearchDialogI::SearchDialogI(SectionContext* sc, search::NodeModel* search_node, search::EntryModel* search_entry, QWidget* parent)
@@ -23,16 +22,4 @@ void SearchDialogI::TreeViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kCommission), quantity_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kTag), tag_);
     view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kDocument), document_);
-}
-
-void SearchDialogI::REntryDoubleClicked(const QModelIndex& index)
-{
-    auto lhs_id { index.siblingAtColumn(std::to_underlying(FullEntryEnum::kLhsNode)).data().toUuid() };
-    auto rhs_id { index.siblingAtColumn(std::to_underlying(FullEntryEnum::kRhsNode)).data().toUuid() };
-    auto entry_id { index.siblingAtColumn(std::to_underlying(FullEntryEnum::kId)).data().toUuid() };
-
-    if (lhs_id.isNull() || rhs_id.isNull() || entry_id.isNull())
-        return;
-
-    emit SEntryLocation(entry_id, lhs_id, rhs_id);
 }

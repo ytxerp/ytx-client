@@ -37,7 +37,6 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
         view->setSelectionBehavior(QAbstractItemView::SelectRows);
         view->setEditTriggers(QAbstractItemView::DoubleClicked);
 
-        view->setColumnHidden(std::to_underlying(EntryEnum::kId), kIsHidden);
         view->setColumnHidden(std::to_underlying(EntryEnum::kLhsNode), kIsHidden);
     }
 
@@ -56,16 +55,13 @@ void MainWindow::SetTableView(QTableView* view, Section section, int stretch_col
     }
 }
 
-void MainWindow::InitTableView(QTableView* view, int id_column, int stretch_column) const
+void MainWindow::InitTableView(QTableView* view, int stretch_column) const
 {
     {
         view->setSortingEnabled(true);
         view->setAlternatingRowColors(true);
         view->setSelectionMode(QAbstractItemView::SingleSelection);
         view->setSelectionBehavior(QAbstractItemView::SelectRows);
-
-        if (id_column >= 0)
-            view->setColumnHidden(id_column, kIsHidden);
     }
 
     {

@@ -5,7 +5,6 @@
 #include "ui_mainwindow.h"
 #include "utils/entryutils.h"
 #include "utils/mainwindowutils.h"
-#include "utils/nodeutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -25,32 +24,22 @@ void MainWindow::RTreeViewDoubleClicked(const QModelIndex& index)
 {
     qInfo() << Q_FUNC_INFO;
 
-    {
-        if (index.column() != std::to_underlying(NodeEnum::kName))
-            return;
-    }
+    if (index.column() != std::to_underlying(NodeEnum::kName))
+        return;
 
-    {
-        const int kind_column { node::KindColumn(start_) };
-        const NodeKind kind { index.siblingAtColumn(kind_column).data().toInt() };
-        if (kind == NodeKind::kBranch)
-            return;
-    }
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    Q_ASSERT(node);
 
-    {
-        const int unit_column { node::UnitColumn(start_) };
-        const int unit { index.siblingAtColumn(unit_column).data().toInt() };
+    if (!node)
+        return;
 
-        if (start_ == Section::kPartner && unit == std::to_underlying(NodeUnit::PEmployee))
-            return;
-    }
+    if (node->kind == NodeKind::kBranch)
+        return;
 
-    {
-        const auto node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
-        Q_ASSERT(!node_id.isNull());
+    if (node->unit == NodeUnit::PEmployee)
+        return;
 
-        ShowLeafWidget(node_id);
-    }
+    ShowLeafWidget(node->id);
 }
 
 // ShowLeafWidget - Show leaf widget (create and scroll as needed)
@@ -224,8 +213,8 @@ void MainWindow::on_actionJumpEntry_triggered()
     if (IsSingleEntry(start_))
         return;
 
-    const auto entry_id { index.sibling(row, std::to_underlying(EntryEnum::kId)).data().toUuid() };
-    ShowLeafWidget(linked_node_id, entry_id);
+    auto* entry { leaf_widget->Model()->GetEntry(index) };
+    ShowLeafWidget(linked_node_id, entry->id);
 }
 
 void MainWindow::RUpdateName(const QUuid& node_id, const QString& name, bool branch)

@@ -26,8 +26,6 @@ QVariant SaleReferenceModelI::data(const QModelIndex& index, int role) const
         return entry->issued_time;
     case SaleReferenceEnumI::kPartnerId:
         return entry->node_id;
-    case SaleReferenceEnumI::kOrderId:
-        return entry->order_id;
     case SaleReferenceEnumI::kCount:
         return entry->count;
     case SaleReferenceEnumI::kMeasure:
@@ -64,8 +62,6 @@ void SaleReferenceModelI::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &OrderReference::description, order);
         case SaleReferenceEnumI::kInitial:
             return utils::CompareMember(lhs, rhs, &OrderReference::initial, order);
-        case SaleReferenceEnumI::kOrderId:
-            return false;
         }
     };
 

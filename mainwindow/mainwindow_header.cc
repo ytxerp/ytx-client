@@ -240,7 +240,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     // Entry
     finance.entry_header = {
-        tr("ID"),
         tr("LHS Node"),
         tr("Issued Time"),
         tr("FX Rate"),
@@ -257,7 +256,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     };
 
     inventory.entry_header = {
-        tr("ID"),
         tr("LHS Node"),
         tr("Issued Time"),
         tr("Unit Cost"),
@@ -273,7 +271,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     };
 
     task.entry_header = {
-        tr("ID"),
         tr("LHS Node"),
         tr("Issued Time"),
         tr("Unit Cost"),
@@ -289,7 +286,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     };
 
     partner.entry_header = {
-        tr("ID"),
         tr("LHS Node"),
         tr("Issued Time"),
         tr("Code"),
@@ -303,7 +299,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     };
 
     sale.entry_header = {
-        tr("ID"),
         tr("LHS Node"),
         tr("Internal SKU"),
         tr("Description"),
@@ -320,7 +315,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     // Full Entry
     finance.full_entry_header = {
-        tr("ID"),
         tr("Issued Time"),
         tr("Code"),
         tr("LHS Node"),
@@ -339,7 +333,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     };
 
     inventory.full_entry_header = {
-        tr("ID"),
         tr("Issued Time"),
         tr("Code"),
         tr("LHS Node"),
@@ -357,7 +350,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     };
 
     task.full_entry_header = {
-        tr("ID"),
         tr("Issued Time"),
         tr("Code"),
         tr("LHS Node"),
@@ -380,7 +372,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     // SaleReference
     inventory.node_referenced_header = {
         tr("Issued Time"),
-        tr("LHS Node"),
         tr("Customer"),
         tr("Count"),
         tr("Measure"),
@@ -391,7 +382,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     partner.node_referenced_header = {
         tr("Issued Time"),
-        tr("LHS Node"),
         tr("Internal SKU"),
         tr("Color"),
         tr("External SKU"),

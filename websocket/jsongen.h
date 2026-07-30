@@ -60,7 +60,7 @@ QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace, const QDateTime& s
 QJsonObject TreeAck(Section section, const QDateTime& start, const QDateTime& end);
 QJsonObject TableAck(Section section, CUuid& node_id, CUuid& entry_id = {});
 QJsonObject NodeAck(Section section, CUuid& node_id);
-QJsonObject OrderReferenceAck(Section section, CUuid& widget_id, CUuid& node_id, int unit, const QDateTime& start, const QDateTime& end);
+QJsonObject OrderReferenceAck(Section section, CUuid& widget_id, CUuid& node_id, NodeUnit unit, const QDateTime& start, const QDateTime& end);
 QJsonObject StatementAck(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end);
 QJsonObject StatementNodeAck(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 QJsonObject StatementEntryAck(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);

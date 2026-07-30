@@ -72,7 +72,6 @@ void Model::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
         case FullEntryEnumF::kCashKind:
             return utils::CompareMember(d_lhs, d_rhs, &EntryF::cash_kind, order);
-        case FullEntryEnumF::kId:
         case FullEntryEnumF::kIssuedTime:
         case FullEntryEnumF::kCode:
         case FullEntryEnumF::kDescription:
@@ -97,8 +96,6 @@ QVariant Model::data(const QModelIndex& index, int role) const
     auto* entry { static_cast<EntryF*>(index.internalPointer()) };
 
     switch (column) {
-    case FullEntryEnumF::kId:
-        return entry->id;
     case FullEntryEnumF::kIssuedTime:
         return entry->issued_time;
     case FullEntryEnumF::kCode:

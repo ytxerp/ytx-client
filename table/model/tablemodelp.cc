@@ -161,8 +161,6 @@ QVariant TableModelP::data(const QModelIndex& index, int role) const
     auto* d_entry { static_cast<EntryP*>(index.internalPointer()) };
 
     switch (column) {
-    case EntryEnumP::kId:
-        return d_entry->id;
     case EntryEnumP::kLhsNode:
         return d_entry->lhs_node;
     case EntryEnumP::kIssuedTime:
@@ -237,7 +235,6 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
         update_registry = entry::UpdateField(
             pending_updates_[id], d_entry, kExternalSku, value.toString(), &EntryP::external_sku, [this, id, entry]() { RestartTimer(id, entry); });
         break;
-    case EntryEnumP::kId:
     case EntryEnumP::kLhsNode:
         return false;
     }
@@ -284,7 +281,6 @@ void TableModelP::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(d_lhs, d_rhs, &EntryP::external_sku, order);
         case EntryEnumP::kRhsNode:
             return utils::CompareMember(lhs, rhs, &Entry::rhs_node, order);
-        case EntryEnumP::kId:
         case EntryEnumP::kLhsNode:
             return false;
         }
@@ -309,7 +305,6 @@ Qt::ItemFlags TableModelP::flags(const QModelIndex& index) const
     const EntryEnumP column { index.column() };
 
     switch (column) {
-    case EntryEnumP::kId:
     case EntryEnumP::kDocument:
     case EntryEnumP::kTag:
     case EntryEnumP::kStatus:

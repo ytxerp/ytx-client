@@ -25,6 +25,7 @@
 #include <QUuid>
 
 #include "component/using.h"
+#include "enum/nodeenum.h"
 #include "enum/section.h"
 #include "reference/orderreferencemodel.h"
 
@@ -36,7 +37,7 @@ class OrderReferenceWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    OrderReferenceWidget(OrderReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, int node_unit, QWidget* parent = nullptr);
+    OrderReferenceWidget(OrderReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, NodeUnit node_unit, QWidget* parent = nullptr);
     ~OrderReferenceWidget() override;
 
     QTableView* View() const;
@@ -61,7 +62,7 @@ private:
 
     const QUuid node_id_ {};
     const QUuid widget_id_ {};
-    const int node_unit_ {};
+    const NodeUnit node_unit_ {};
     const Section section_ {};
 };
 

@@ -22,13 +22,14 @@
 
 #include "component/using.h"
 #include "delegate/styleditemdelegate.h"
+#include "enum/nodeenum.h"
 #include "enum/section.h"
 
 class AmountOrderReferenceR final : public StyledItemDelegate {
     Q_OBJECT
 
 signals:
-    void SOrderReferencePrimary(const QUuid& node_id, int unit);
+    void SOrderReferencePrimary(const QUuid& node_id, NodeUnit unit);
 
 public:
     AmountOrderReferenceR(Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, CString& placeholder, QObject* parent = nullptr);

@@ -29,8 +29,6 @@ QVariant OrderReferenceModelP::data(const QModelIndex& index, int role) const
         return entry->issued_time;
     case SaleReferenceEnumP::kInternalSku:
         return entry->node_id;
-    case SaleReferenceEnumP::kOrderId:
-        return entry->order_id;
     case SaleReferenceEnumP::kCount:
         return entry->count;
     case SaleReferenceEnumP::kMeasure:
@@ -71,7 +69,6 @@ void OrderReferenceModelP::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &OrderReference::description, order);
         case SaleReferenceEnumP::kInitial:
             return utils::CompareMember(lhs, rhs, &OrderReference::initial, order);
-        case SaleReferenceEnumP::kOrderId:
         case SaleReferenceEnumP::kExternalSku:
         case SaleReferenceEnumP::kColor:
             return false;

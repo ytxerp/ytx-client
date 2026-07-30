@@ -47,15 +47,3 @@ void SearchDialogF::TableViewDelegate(QTableView* view)
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kTag), tag_);
     view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kCashKind), cash_kind_);
 }
-
-void SearchDialogF::REntryDoubleClicked(const QModelIndex& index)
-{
-    auto lhs_id { index.siblingAtColumn(std::to_underlying(FullEntryEnumF::kLhsNode)).data().toUuid() };
-    auto rhs_id { index.siblingAtColumn(std::to_underlying(FullEntryEnumF::kRhsNode)).data().toUuid() };
-    auto entry_id { index.siblingAtColumn(std::to_underlying(FullEntryEnumF::kId)).data().toUuid() };
-
-    if (lhs_id.isNull() || rhs_id.isNull() || entry_id.isNull())
-        return;
-
-    emit SEntryLocation(entry_id, lhs_id, rhs_id);
-}

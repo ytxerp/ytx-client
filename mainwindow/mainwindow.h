@@ -132,7 +132,7 @@ private slots:
     void RFlushCaches();
 
     void RAckOrderReference(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void ROrderReferencePrimary(const QUuid& node_id, int unit);
+    void ROrderReferencePrimary(const QUuid& node_id, NodeUnit unit);
 
     void RAckStatement(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RAckStatementNode(Section section, const QUuid& widget_id, const QJsonArray& array);
@@ -224,7 +224,7 @@ private:
     void TableConnectP(TableModel* table_model) const;
     void TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const;
 
-    void CreateSaleReference(const QUuid& node_id, int unit);
+    void CreateSaleReference(const QUuid& node_id, NodeUnit unit);
     void DelegateSaleReferenceI(QTableView* table_view, CSectionConfig& config) const;
     void DelegateSaleReferenceP(QTableView* table_view, CSectionConfig& config) const;
 
@@ -245,7 +245,7 @@ private:
     void DelegateCashFlowStatementWrong(QTableView* view) const;
     void DelegateCashFlowStatementCarrier(QTreeView* view) const;
 
-    void InitTableView(QTableView* view, int id_column, int stretch_column) const;
+    void InitTableView(QTableView* view, int stretch_column) const;
     void InitTreeView(QTreeView* view, int id_column, int stretch_column) const;
 
     void CreateSection(SectionContext& sc, CString& name);

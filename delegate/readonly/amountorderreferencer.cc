@@ -3,7 +3,7 @@
 #include <QMouseEvent>
 
 #include "enum/nodeenum.h"
-#include "utils/nodeutils.h"
+#include "tree/node.h"
 
 AmountOrderReferenceR::AmountOrderReferenceR(
     Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, CString& placeholder, QObject* parent)
@@ -38,16 +38,10 @@ QString AmountOrderReferenceR::Format(const QModelIndex& index) const
 
 bool AmountOrderReferenceR::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
 {
-    const int kind_column { node::KindColumn(section_) };
-    const int unit_column { node::UnitColumn(section_) };
+    auto* node { static_cast<Node*>(index.internalPointer()) };
 
-    const bool is_leaf { index.siblingAtColumn(kind_column).data().toInt() == std::to_underlying(NodeKind::kLeaf) };
-
-    const QUuid node_id { index.siblingAtColumn(std::to_underlying(NodeEnum::kId)).data().toUuid() };
-    const int unit { index.siblingAtColumn(unit_column).data().toInt() };
-
-    if (is_leaf && event->type() == QEvent::MouseButtonDblClick && option.rect.contains(static_cast<QMouseEvent*>(event)->pos()))
-        emit SOrderReferencePrimary(node_id, unit);
+    if (node->kind == NodeKind::kLeaf && event->type() == QEvent::MouseButtonDblClick && option.rect.contains(static_cast<QMouseEvent*>(event)->pos()))
+        emit SOrderReferencePrimary(node->id, node->unit);
 
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
