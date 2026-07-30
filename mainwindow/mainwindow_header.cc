@@ -143,8 +143,7 @@ void MainWindow::InitHeader()
     };
 
     // Settlement
-    header_info_.settlement = {
-        tr("ID"),
+    header_info_.settlement_primary = {
         tr("Partner"),
         tr("Issued Time"),
         tr("Description"),
@@ -152,8 +151,7 @@ void MainWindow::InitHeader()
         tr("Amount"),
     };
 
-    header_info_.settlement_item = {
-        tr("ID"),
+    header_info_.settlement_secondary = {
         tr("Issued Time"),
         tr("Amount"),
         tr("Status"),

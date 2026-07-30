@@ -30,8 +30,8 @@ struct HeaderInfo {
     QStringList statement {};
     QStringList statement_node {};
     QStringList statement_entry {};
-    QStringList settlement {};
-    QStringList settlement_item {};
+    QStringList settlement_primary {};
+    QStringList settlement_secondary {};
     QStringList partner_heat {};
     QStringList balance_sheet {};
     QStringList income_statement {};

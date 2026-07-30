@@ -23,7 +23,6 @@
 namespace settlement {
 
 enum class PrimaryField {
-    kId = 0,
     kPartner,
     kIssuedTime,
     kDescription,
@@ -32,7 +31,6 @@ enum class PrimaryField {
 };
 
 enum class SecondaryField {
-    kId = 0,
     kIssuedTime,
     kAmount,
     kIsSettled,

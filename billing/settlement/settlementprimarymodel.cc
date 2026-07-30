@@ -54,8 +54,6 @@ QVariant PrimaryModel::data(const QModelIndex& index, int role) const
     auto* settlement { static_cast<PrimaryRow*>(index.internalPointer()) };
 
     switch (column) {
-    case PrimaryField::kId:
-        return settlement->id;
     case PrimaryField::kIssuedTime:
         return settlement->issued_time;
     case PrimaryField::kDescription:
@@ -93,8 +91,6 @@ void PrimaryModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &PrimaryRow::status, order);
         case PrimaryField::kAmount:
             return utils::CompareMember(lhs, rhs, &PrimaryRow::amount, order);
-        case PrimaryField::kId:
-            return false;
         }
     };
 

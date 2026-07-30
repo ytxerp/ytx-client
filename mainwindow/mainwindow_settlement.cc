@@ -14,7 +14,7 @@ void MainWindow::on_actionSettlement_triggered()
 
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new settlement::PrimaryModel(header_info_.settlement, start_, this) };
+    auto* model { new settlement::PrimaryModel(header_info_.settlement_primary, start_, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new SettlementPrimaryWidget(model, widget_id, start_, this) };
@@ -30,7 +30,7 @@ void MainWindow::on_actionSettlement_triggered()
         auto* view { widget->View() };
 
         connect(view, &QTableView::doubleClicked, this, &MainWindow::RSettlementTableViewDoubleClicked);
-        InitTableView(view, std::to_underlying(settlement::PrimaryField::kId), std::to_underlying(settlement::PrimaryField::kDescription));
+        InitTableView(view, -1, std::to_underlying(settlement::PrimaryField::kDescription));
         DelegateSettlement(view, sc_->section_config);
     }
 
@@ -41,7 +41,7 @@ void MainWindow::CreateSettlementSecondary(const QUuid& primary_widget_id, const
 {
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new settlement::SecondaryModel(header_info_.settlement_item, primary_row.status, this) };
+    auto* model { new settlement::SecondaryModel(header_info_.settlement_secondary, primary_row.status, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new SettlementSecondaryWidget(sc_p_.tree_model, model, sc_->section_config, primary_row, widget_id, primary_widget_id, start_, this) };
@@ -60,7 +60,7 @@ void MainWindow::CreateSettlementSecondary(const QUuid& primary_widget_id, const
 
     {
         auto* view { widget->View() };
-        InitTableView(view, std::to_underlying(settlement::SecondaryField::kId), std::to_underlying(settlement::SecondaryField::kDescription));
+        InitTableView(view, -1, std::to_underlying(settlement::SecondaryField::kDescription));
         DelegateSettlementNode(view, sc_->section_config);
     }
 

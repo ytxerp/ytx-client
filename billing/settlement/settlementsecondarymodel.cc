@@ -57,8 +57,6 @@ QVariant SecondaryModel::data(const QModelIndex& index, int role) const
     auto* settlement_node { static_cast<SecondaryRow*>(index.internalPointer()) };
 
     switch (column) {
-    case SecondaryField::kId:
-        return settlement_node->id;
     case SecondaryField::kIssuedTime:
         return settlement_node->issued_time;
     case SecondaryField::kDescription:
@@ -123,8 +121,6 @@ void SecondaryModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &SecondaryRow::amount, order);
         case SecondaryField::kIsSettled:
             return utils::CompareMember(lhs, rhs, &SecondaryRow::is_settled, order);
-        case SecondaryField::kId:
-            return false;
         }
     };
 
