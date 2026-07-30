@@ -51,8 +51,6 @@ QVariant TagModel::data(const QModelIndex& index, int role) const
     auto* tag { static_cast<TagRow*>(index.internalPointer()) };
 
     switch (column) {
-    case TagRowField::kId:
-        return tag->id;
     case TagRowField::kName:
         return tag->name;
     case TagRowField::kColor:
@@ -78,8 +76,6 @@ bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role
     case TagRowField::kColor:
         UpdateColor(tag, value.toString());
         break;
-    case TagRowField::kId:
-        return false;
     }
 
     emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
@@ -96,8 +92,6 @@ void TagModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &TagRow::name, order);
         case TagRowField::kColor:
             return utils::CompareMember(lhs, rhs, &TagRow::color, order);
-        case TagRowField::kId:
-            return false;
         }
     };
 
@@ -117,7 +111,6 @@ Qt::ItemFlags TagModel::flags(const QModelIndex& index) const
     case TagRowField::kName:
         flags |= Qt::ItemIsEditable;
         break;
-    case TagRowField::kId:
     case TagRowField::kColor:
         flags &= ~Qt::ItemIsEditable;
         break;

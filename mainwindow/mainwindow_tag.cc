@@ -30,7 +30,7 @@ void MainWindow::on_actionTags_triggered()
         dialog->SetModel(model);
 
         auto* view { dialog->View() };
-        InitTableView(view, std::to_underlying(TagRowField::kId), std::to_underlying(TagRowField::kColor));
+        InitTableView(view, -1, std::to_underlying(TagRowField::kColor));
         DelegateTag(view);
     }
 

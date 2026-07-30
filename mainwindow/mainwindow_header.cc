@@ -96,7 +96,6 @@ void MainWindow::InitHeader()
     };
 
     header_info_.tag = {
-        tr("ID"),
         tr("Name"),
         tr("Color"),
     };
