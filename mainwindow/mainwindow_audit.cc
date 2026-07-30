@@ -100,13 +100,13 @@ void MainWindow::InitAuditInfo()
     };
 
     audit_info_.target_operation_hash = {
-        { std::to_underlying(Operation::kInsert), tr("Insert") },
-        { std::to_underlying(Operation::kUpdate), tr("Update") },
-        { std::to_underlying(Operation::kDelete), tr("Delete") },
-        { std::to_underlying(Operation::kRecall), tr("Recall") },
-        { std::to_underlying(Operation::kRelease), tr("Release") },
-        { std::to_underlying(Operation::kMove), tr("Move") },
-        { std::to_underlying(Operation::kReplace), tr("Replace") },
+        { std::to_underlying(TargetOperation::kInsert), tr("Insert") },
+        { std::to_underlying(TargetOperation::kUpdate), tr("Update") },
+        { std::to_underlying(TargetOperation::kDelete), tr("Delete") },
+        { std::to_underlying(TargetOperation::kRecall), tr("Recall") },
+        { std::to_underlying(TargetOperation::kRelease), tr("Release") },
+        { std::to_underlying(TargetOperation::kMove), tr("Move") },
+        { std::to_underlying(TargetOperation::kReplace), tr("Replace") },
     };
 
     audit_info_.target_field_hash = {

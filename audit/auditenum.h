@@ -28,7 +28,7 @@ enum class TargetType {
     kSettlement = 2,
 };
 
-enum class Operation {
+enum class TargetOperation {
     kInsert = 0,
     kUpdate,
     kDelete,
