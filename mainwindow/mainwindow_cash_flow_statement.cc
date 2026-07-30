@@ -23,20 +23,20 @@ void MainWindow::on_actionCashFlowStatement_triggered()
 
     {
         auto* view { dialog->View() };
-        InitTreeView(view, std::to_underlying(cash_flow::RowField::kId), std::to_underlying(cash_flow::RowField::kDescription));
+        InitTreeView(view, -1, std::to_underlying(cash_flow::RowField::kDescription));
         DelegateCashFlowStatement(view);
 
         auto* carrier_view { dialog->CarrierView() };
-        InitTreeView(carrier_view, std::to_underlying(cash_flow::RowField::kId), std::to_underlying(cash_flow::RowField::kDescription));
-        DelegateCashFlowStatement(carrier_view);
+        InitTreeView(carrier_view, -1, std::to_underlying(cash_flow::RowField::kDescription));
+        DelegateCashFlowStatementCarrier(carrier_view);
         carrier_view->setColumnHidden(std::to_underlying(cash_flow::RowField::kFinalTotal), kIsHidden);
 
         auto* special_view { dialog->SpecialView() };
-        InitTreeView(special_view, std::to_underlying(cash_flow::RowField::kId), std::to_underlying(cash_flow::RowField::kDescription));
+        InitTreeView(special_view, -1, std::to_underlying(cash_flow::RowField::kDescription));
         DelegateCashFlowStatement(special_view);
 
         auto* wrong_view { dialog->WrongView() };
-        InitTableView(wrong_view, std::to_underlying(cash_flow::WrongRowField::kId), std::to_underlying(cash_flow::WrongRowField::kDescription));
+        InitTableView(wrong_view, -1, std::to_underlying(cash_flow::WrongRowField::kDescription));
         DelegateCashFlowStatementWrong(wrong_view);
     }
 

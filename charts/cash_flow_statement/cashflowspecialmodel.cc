@@ -122,8 +122,6 @@ QVariant SpecialModel::data(const QModelIndex& index, int role) const
     switch (column) {
     case RowField::kName:
         return node->name;
-    case RowField::kId:
-        return node->id;
     case RowField::kCode:
         return node->code;
     case RowField::kDescription:
@@ -151,8 +149,6 @@ void SpecialModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Row::direction_rule, order);
         case RowField::kFinalTotal:
             return utils::CompareMember(lhs, rhs, &Row::final_total, order);
-        case RowField::kId:
-            return false;
         }
     };
 

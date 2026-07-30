@@ -1,9 +1,10 @@
 #include "cashflownamer.h"
 
-CashFlowNameR::CashFlowNameR(CTreeModel* model, int column, QObject* parent)
+#include "charts/cash_flow_statement/cashflowstatementrow.h"
+
+CashFlowNameR::CashFlowNameR(CTreeModel* model, QObject* parent)
     : StyledItemDelegate { parent }
     , model_ { model }
-    , column_ { column }
 {
 }
 
@@ -16,6 +17,12 @@ QSize CashFlowNameR::sizeHint(const QStyleOptionViewItem& option, const QModelIn
 
 QString CashFlowNameR::GetPath(const QModelIndex& index) const
 {
-    const auto name { index.data().toString() };
-    return name.isEmpty() ? model_->Path(index.siblingAtColumn(column_).data().toUuid()) : name;
+    const QString name { index.data().toString() };
+
+    if (!name.isEmpty()) {
+        return name;
+    }
+
+    const auto* row { static_cast<const cash_flow::Row*>(index.internalPointer()) };
+    return model_->Path(row->id);
 }

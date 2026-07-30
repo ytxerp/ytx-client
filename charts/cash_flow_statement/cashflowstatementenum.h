@@ -24,7 +24,6 @@ namespace cash_flow {
 
 enum class RowField {
     kName = 0,
-    kId,
     kCode,
     kDescription,
     kDirectionRule,
@@ -32,7 +31,6 @@ enum class RowField {
 };
 
 enum class WrongRowField {
-    kId = 0,
     kIssuedTime,
     kLhsNode,
     kLhsDebit,

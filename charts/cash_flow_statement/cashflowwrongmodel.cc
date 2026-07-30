@@ -87,8 +87,6 @@ QVariant WrongModel::data(const QModelIndex& index, int role) const
     auto* entry { static_cast<WrongRow*>(index.internalPointer()) };
 
     switch (column) {
-    case WrongRowField::kId:
-        return entry->id;
     case WrongRowField::kIssuedTime:
         return entry->issued_time;
     case WrongRowField::kLhsNode:
@@ -134,8 +132,6 @@ void WrongModel::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &WrongRow::rhs_node, order);
         case WrongRowField::kCashKind:
             return utils::CompareMember(lhs, rhs, &WrongRow::cash_kind, order);
-        case WrongRowField::kId:
-            return false;
         }
     };
 

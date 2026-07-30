@@ -30,7 +30,6 @@ void MainWindow::InitHeader()
 
     header_info_.cash_flow_statement = {
         tr("Name"),
-        tr("ID"),
         tr("Code"),
         tr("Description"),
         tr("Direction Rule"),
@@ -38,7 +37,6 @@ void MainWindow::InitHeader()
     };
 
     header_info_.cash_flow_statement_wrong = {
-        tr("ID"),
         tr("Issued Time"),
         tr("LHS Node"),
         tr("LHS Debit"),

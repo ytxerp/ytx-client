@@ -27,7 +27,7 @@
 
 class CashFlowNameR final : public StyledItemDelegate {
 public:
-    CashFlowNameR(CTreeModel* model, int column, QObject* parent = nullptr);
+    CashFlowNameR(CTreeModel* model, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
@@ -36,7 +36,6 @@ private:
 
 private:
     CTreeModel* model_ {};
-    const int column_ {};
 };
 
 #endif // CASHFLOWNAMER_H
