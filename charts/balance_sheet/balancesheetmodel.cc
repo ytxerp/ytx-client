@@ -201,7 +201,7 @@ void Model::Rebuild(const QJsonArray& node_array, const QJsonArray& path_array)
         BuildHierarchy(path_array);
     }
 
-    sort(std::to_underlying(RowField::kName), Qt::AscendingOrder);
+    sort(std::to_underlying(RowField::kClosingBalance), Qt::DescendingOrder);
     endResetModel();
 }
 

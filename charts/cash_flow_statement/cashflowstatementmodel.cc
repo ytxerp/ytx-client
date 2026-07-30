@@ -180,7 +180,7 @@ void Model::Rebuild(CJsonArray& node_array)
         UpdateAncestorTotal(node, node->final_total);
     }
 
-    sort(std::to_underlying(RowField::kName), Qt::AscendingOrder);
+    sort(std::to_underlying(RowField::kFinalTotal), Qt::DescendingOrder);
     endResetModel();
 }
 

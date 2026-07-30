@@ -232,7 +232,7 @@ void Model::Rebuild(const QJsonArray& node_array, const QJsonArray& path_array, 
         net_profit_->mom_growth_rate = utils::GrowthRate(net_profit, mom_net_profit);
     }
 
-    sort(std::to_underlying(RowField::kName), Qt::AscendingOrder);
+    sort(std::to_underlying(RowField::kFinalTotal), Qt::DescendingOrder);
     endResetModel();
 }
 

@@ -172,7 +172,7 @@ void SpecialModel::Rebuild(CJsonArray& special_array)
 
     BuildCounterPartHierarchy();
 
-    sort(std::to_underlying(RowField::kName), Qt::AscendingOrder);
+    sort(std::to_underlying(RowField::kFinalTotal), Qt::DescendingOrder);
     endResetModel();
 }
 
