@@ -253,7 +253,7 @@ private:
     void EditNameFIPT();
     void EditNameO();
 
-    void SetTreeView(QTreeView* view, CSectionInfo& info) const;
+    void SetTreeView(QTreeView* view, Section section) const;
     void SetTreeHeader(QTreeView* view, Section section);
 
     void TreeDelegateF(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const;

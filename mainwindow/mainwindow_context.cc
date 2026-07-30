@@ -72,7 +72,7 @@ void MainWindow::CreateSection(SectionContext& sc, CString& name)
     const auto& info { sc.info };
     const auto& section { info.section };
 
-    SetTreeView(view, info);
+    SetTreeView(view, section);
 
     auto* tab_bar = tab_widget->tabBar();
     const int index { tab_widget->addTab(tree_widget, name) };

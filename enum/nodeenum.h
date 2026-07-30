@@ -214,12 +214,10 @@ inline const char* kUnitSymbol(NodeUnit c)
 // defining node column
 enum class NodeEnum {
     kName = 0,
-    kId,
 };
 
 enum class NodeEnumF {
     kName = 0,
-    kId,
     kCode,
     kDescription,
     kTag,
@@ -235,7 +233,6 @@ enum class NodeEnumF {
 
 enum class NodeEnumI {
     kName = 0,
-    kId,
     kCode,
     kDescription,
     kTag,
@@ -252,7 +249,6 @@ enum class NodeEnumI {
 
 enum class NodeEnumT {
     kName = 0,
-    kId,
     kCode,
     kDescription,
     kTag,
@@ -267,7 +263,6 @@ enum class NodeEnumT {
 
 enum class NodeEnumP {
     kName = 0,
-    kId,
     kCode,
     kDescription,
     kTag,
@@ -281,7 +276,6 @@ enum class NodeEnumP {
 
 enum class NodeEnumO {
     kName = 0,
-    kId,
     kIssuedTime,
     kEmployeeId,
     kStatus,

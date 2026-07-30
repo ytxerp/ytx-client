@@ -5,21 +5,13 @@
 #include "utils/nodeutils.h"
 #include "utils/templateutils.h"
 
-void MainWindow::SetTreeView(QTreeView* view, CSectionInfo& info) const
+void MainWindow::SetTreeView(QTreeView* view, Section section) const
 {
-    const auto section { info.section };
+    auto* header { view->header() };
 
-    {
-        auto* header { view->header() };
-
-        ResizeColumn(header, node::DescriptionColumn(section));
-        header->setStretchLastSection(false);
-        header->setDefaultAlignment(Qt::AlignCenter);
-    }
-
-    {
-        view->setColumnHidden(std::to_underlying(NodeEnum::kId), kIsHidden);
-    }
+    ResizeColumn(header, node::DescriptionColumn(section));
+    header->setStretchLastSection(false);
+    header->setDefaultAlignment(Qt::AlignCenter);
 }
 
 void MainWindow::SetTreeHeader(QTreeView* view, Section section)

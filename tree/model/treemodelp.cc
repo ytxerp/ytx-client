@@ -130,8 +130,6 @@ void TreeModelP::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
-        case NodeEnumP::kId:
-            return false;
         }
     };
 
@@ -156,8 +154,6 @@ QVariant TreeModelP::data(const QModelIndex& index, int role) const
     switch (column) {
     case NodeEnumP::kName:
         return d_node->name;
-    case NodeEnumP::kId:
-        return d_node->id;
     case NodeEnumP::kCode:
         return d_node->code;
     case NodeEnumP::kDescription:
@@ -215,7 +211,6 @@ bool TreeModelP::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumP::kDocument:
         node::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this, node]() { RestartTimer(id, node); });
         break;
-    case NodeEnumP::kId:
     case NodeEnumP::kName:
     case NodeEnumP::kKind:
     case NodeEnumP::kUnit:
@@ -251,7 +246,6 @@ Qt::ItemFlags TreeModelP::flags(const QModelIndex& index) const
     case NodeEnumP::kTag:
     case NodeEnumP::kDocument:
     case NodeEnumP::kKind:
-    case NodeEnumP::kId:
         flags &= ~Qt::ItemIsEditable;
         break;
     case NodeEnumP::kPaymentTerm:

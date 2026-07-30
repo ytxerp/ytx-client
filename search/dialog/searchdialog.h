@@ -75,7 +75,6 @@ protected:
     void ResizeTableColumn(QHeaderView* header);
     void IniContentGroup();
     void InitDelegate();
-    void HideTreeColumn(QTableView* view);
     void HideTableColumn(QTableView* view);
 
 protected:

@@ -295,8 +295,6 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumO::kTag:
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
-        case NodeEnumO::kId:
-            return false;
         }
     };
 
@@ -322,8 +320,6 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
     switch (column) {
     case NodeEnumO::kName:
         return is_branch ? d_node->name : MasterDataRegistry::Instance().PartnerName(d_node->partner_id);
-    case NodeEnumO::kId:
-        return d_node->id;
     case NodeEnumO::kCode:
         return d_node->code;
     case NodeEnumO::kDescription:
@@ -394,7 +390,6 @@ Qt::ItemFlags TreeModelO::flags(const QModelIndex& index) const
         break;
     case NodeEnumO::kCode:
     case NodeEnumO::kDescription:
-    case NodeEnumO::kId:
     case NodeEnumO::kIssuedTime:
     case NodeEnumO::kEmployeeId:
     case NodeEnumO::kStatus:

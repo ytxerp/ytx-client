@@ -25,8 +25,6 @@ QVariant TreeModelF::data(const QModelIndex& index, int role) const
     switch (column) {
     case NodeEnumF::kName:
         return node->name;
-    case NodeEnumF::kId:
-        return node->id;
     case NodeEnumF::kCode:
         return node->code;
     case NodeEnumF::kDescription:
@@ -95,7 +93,6 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
         RestartTimer(id, node);
         break;
     }
-    case NodeEnumF::kId:
     case NodeEnumF::kName:
     case NodeEnumF::kKind:
     case NodeEnumF::kUnit:
@@ -141,8 +138,6 @@ void TreeModelF::sort(int column, Qt::SortOrder order)
             return (order == Qt::AscendingOrder) ? (lhs->document.size() < rhs->document.size()) : (lhs->document.size() > rhs->document.size());
         case NodeEnumF::kRoles:
             return utils::CompareMember(d_lhs, d_rhs, &NodeF::roles, order);
-        case NodeEnumF::kId:
-            return false;
         }
     };
 
@@ -176,7 +171,6 @@ Qt::ItemFlags TreeModelF::flags(const QModelIndex& index) const
     case NodeEnumF::kTag:
     case NodeEnumF::kDocument:
     case NodeEnumF::kUnit:
-    case NodeEnumF::kId:
     case NodeEnumF::kDirectionRule:
         flags &= ~Qt::ItemIsEditable;
         break;

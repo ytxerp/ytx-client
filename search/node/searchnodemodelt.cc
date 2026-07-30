@@ -20,8 +20,6 @@ QVariant NodeModelT::data(const QModelIndex& index, int role) const
     switch (column) {
     case NodeEnumT::kName:
         return d_node->name;
-    case NodeEnumT::kId:
-        return d_node->id;
     case NodeEnumT::kTag:
         return d_node->tag;
     case NodeEnumT::kCode:
@@ -76,8 +74,6 @@ void NodeModelT::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumT::kFinalTotal:
             return utils::CompareMember(lhs, rhs, &Node::final_total, order);
-        case NodeEnumT::kId:
-            return false;
         }
     };
 

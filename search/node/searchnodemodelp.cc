@@ -18,8 +18,6 @@ QVariant NodeModelP::data(const QModelIndex& index, int role) const
     switch (column) {
     case NodeEnumP::kName:
         return d_node->name;
-    case NodeEnumP::kId:
-        return d_node->id;
     case NodeEnumP::kTag:
         return d_node->tag;
     case NodeEnumP::kCode:
@@ -70,8 +68,6 @@ void NodeModelP::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
-        case NodeEnumP::kId:
-            return false;
         }
     };
 

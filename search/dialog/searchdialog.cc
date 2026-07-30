@@ -42,7 +42,6 @@ SearchDialog::SearchDialog(SectionContext* sc, search::NodeModel* search_node, s
     IniConnect();
     IniDialog();
     HideTableColumn(ui->searchViewEntry);
-    HideTreeColumn(ui->searchViewNode);
 }
 
 SearchDialog::~SearchDialog() { delete ui; }
@@ -116,8 +115,6 @@ void SearchDialog::InitDelegate()
     int_ = new Int(0, 36500, this);
     tag_ = new TagDelegate(tag_icon_hash_, this);
 }
-
-void SearchDialog::HideTreeColumn(QTableView* view) { view->setColumnHidden(std::to_underlying(NodeEnum::kId), kIsHidden); }
 
 void SearchDialog::HideTableColumn(QTableView* view)
 {

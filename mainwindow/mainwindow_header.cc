@@ -159,7 +159,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
     // Node
     finance.node_header = {
         tr("Name"),
-        tr("ID"),
         tr("Code"),
         tr("Description"),
         tr("Tag"),
@@ -175,7 +174,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     inventory.node_header = {
         tr("Name"),
-        tr("ID"),
         tr("Code"),
         tr("Description"),
         tr("Tag"),
@@ -192,7 +190,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     task.node_header = {
         tr("Name"),
-        tr("ID"),
         tr("Code"),
         tr("Description"),
         tr("Tag"),
@@ -207,7 +204,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     partner.node_header = {
         tr("Name"),
-        tr("ID"),
         tr("Code"),
         tr("Description"),
         tr("Tag"),
@@ -221,7 +217,6 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
 
     sale.node_header = {
         tr("Name"),
-        tr("ID"),
         tr("Issued Time"),
         tr("Employee"),
         tr("Status"),

@@ -57,8 +57,6 @@ QVariant NodeModelO::data(const QModelIndex& index, int role) const
     switch (column) {
     case NodeEnumO::kName:
         return MasterDataRegistry::Instance().PartnerName(d_node->partner_id);
-    case NodeEnumO::kId:
-        return d_node->id;
     case NodeEnumO::kDescription:
         return d_node->description;
     case NodeEnumO::kCode:
@@ -131,8 +129,6 @@ void NodeModelO::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::final_total, order);
         case NodeEnumO::kTag:
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
-        case NodeEnumO::kId:
-            return false;
         }
     };
 

@@ -463,8 +463,8 @@ QMimeData* TreeModel::mimeData(const QModelIndexList& indexes) const
     auto first_index { indexes.first() };
 
     if (first_index.isValid()) {
-        const QUuid id { first_index.sibling(first_index.row(), std::to_underlying(NodeEnum::kId)).data().toUuid() };
-        mime_data->setData(kYTX, id.toRfc4122());
+        auto* node { static_cast<Node*>(first_index.internalPointer()) };
+        mime_data->setData(kYTX, node->id.toRfc4122());
     }
 
     return mime_data;

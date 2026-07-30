@@ -61,8 +61,6 @@ void TreeModelI::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::tag, order);
         case NodeEnumI::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
-        case NodeEnumI::kId:
-            return false;
         }
     };
 
@@ -87,8 +85,6 @@ QVariant TreeModelI::data(const QModelIndex& index, int role) const
     switch (column) {
     case NodeEnumI::kName:
         return d_node->name;
-    case NodeEnumI::kId:
-        return d_node->id;
     case NodeEnumI::kCode:
         return d_node->code;
     case NodeEnumI::kTag:
@@ -158,7 +154,6 @@ bool TreeModelI::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumI::kDocument:
         node::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this, node]() { RestartTimer(id, node); });
         break;
-    case NodeEnumI::kId:
     case NodeEnumI::kName:
     case NodeEnumI::kKind:
     case NodeEnumI::kUnit:
@@ -196,7 +191,6 @@ Qt::ItemFlags TreeModelI::flags(const QModelIndex& index) const
     case NodeEnumI::kKind:
     case NodeEnumI::kUnit:
     case NodeEnumI::kDocument:
-    case NodeEnumI::kId:
     case NodeEnumI::kDirectionRule:
         flags &= ~Qt::ItemIsEditable;
         break;
