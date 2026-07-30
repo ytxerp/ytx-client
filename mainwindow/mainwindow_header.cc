@@ -19,7 +19,6 @@ void MainWindow::InitHeader()
     };
 
     header_info_.workspace = {
-        tr("ID"),
         tr("Email"),
         tr("Username"),
         tr("Name", "Person"),
