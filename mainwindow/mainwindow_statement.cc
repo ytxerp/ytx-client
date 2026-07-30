@@ -10,7 +10,7 @@ void MainWindow::on_actionStatement_triggered()
 
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new statement::PrimaryModel(header_info_.statement, this) };
+    auto* model { new statement::PrimaryModel(header_info_.statement_primary, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new StatementPrimaryWidget(model, widget_id, start_, this) };
@@ -75,7 +75,7 @@ void MainWindow::RAckStatementEntry(Section section, const QUuid& widget_id, con
 
 void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
 {
-    auto* model { new statement::SecondaryModel(header_info_.statement_node, partner_id, this) };
+    auto* model { new statement::SecondaryModel(header_info_.statement_secondary, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new StatementSecondaryWidget(model, widget_id, partner_id, start, end, start_, unit, this) };
@@ -101,7 +101,7 @@ void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start
     auto tree_model_p { sc_p_.tree_model };
     const QString partner_name { tree_model_p->Name(partner_id) };
 
-    auto* model { new statement::TertiaryModel(header_info_.statement_entry, partner_id, this) };
+    auto* model { new statement::TertiaryModel(header_info_.statement_tertiary, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
     auto* widget { new StatementTertiaryWidget(model, widget_id, partner_id, start, end, partner_name, app_config_.company_name, start_, unit, this) };

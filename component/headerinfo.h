@@ -27,9 +27,9 @@ struct HeaderInfo {
     QStringList workspace {};
     QStringList inventory_heat {};
     QStringList tag {};
-    QStringList statement {};
-    QStringList statement_node {};
-    QStringList statement_entry {};
+    QStringList statement_primary {};
+    QStringList statement_secondary {};
+    QStringList statement_tertiary {};
     QStringList settlement_primary {};
     QStringList settlement_secondary {};
     QStringList partner_heat {};

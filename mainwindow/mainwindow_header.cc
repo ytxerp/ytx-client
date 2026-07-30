@@ -106,7 +106,7 @@ void MainWindow::InitHeader()
     };
 
     // Statement
-    header_info_.statement = {
+    header_info_.statement_primary = {
         tr("Partner"),
         tr("Previous Balance"),
         tr("Current Count"),
@@ -117,7 +117,7 @@ void MainWindow::InitHeader()
         tr("Current Balance"),
     };
 
-    header_info_.statement_node = {
+    header_info_.statement_secondary = {
         tr("Issued Time"),
         tr("Code"),
         tr("Count"),
@@ -129,7 +129,7 @@ void MainWindow::InitHeader()
         tr("Settlement"),
     };
 
-    header_info_.statement_entry = {
+    header_info_.statement_tertiary = {
         tr("Issued Time"),
         tr("Code"),
         tr("Internal SKU"),
