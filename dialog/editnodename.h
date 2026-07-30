@@ -42,9 +42,9 @@ public:
     QString GetName() const;
 
 private:
-    void IniDialog(CString& name);
-    void IniConnect();
-    void IniData(CString& name);
+    void InitDialog(CString& name);
+    void InitConnect();
+    void InitData(CString& name);
 
 private:
     Ui::EditNodeName* ui;

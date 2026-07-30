@@ -73,18 +73,17 @@ private slots:
     void on_chkBoxDeleteConfirm_checkStateChanged(const Qt::CheckState& arg1);
 
 private:
-    void IniDialog(UnitModel* unit_model, Section section);
-    static void IniCombo(QComboBox* combo, CStringList& list);
+    void InitDialog(UnitModel* unit_model, Section section);
+    void InitData();
+    void InitConnect();
+    void InitStringList();
+    void InitText(Section section);
 
-    void IniConnect();
-    void IniStringList();
-    void ResizeLine(QLineEdit* line, CString& text);
-    void IniText(Section section);
-
-    void IniData();
-    static void IniDataCombo(QComboBox* combo, const QUuid& value);
-    static void IniDataCombo(QComboBox* combo, int value);
-    static void IniDataCombo(QComboBox* combo, CString& string);
+    static void ResizeLine(QLineEdit* line, CString& text);
+    static void InitCombo(QComboBox* combo, CStringList& list);
+    static void InitComboData(QComboBox* combo, const QUuid& value);
+    static void InitComboData(QComboBox* combo, int value);
+    static void InitComboData(QComboBox* combo, CString& string);
 
 private:
     Ui::Preferences* ui;

@@ -39,8 +39,8 @@ public:
     QString GetName() const;
 
 private:
-    void IniDialog(CString& name);
-    void IniData(CString& name);
+    void InitDialog(CString& name);
+    void InitData(CString& name);
 
 private:
     Ui::EditNodeNameO* ui;

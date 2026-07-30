@@ -12,14 +12,14 @@ EditNodeName::EditNodeName(CString& name, CString& parent_path, const QSet<QStri
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    IniDialog(name);
-    IniConnect();
-    IniData(name);
+    InitDialog(name);
+    InitConnect();
+    InitData(name);
 }
 
 EditNodeName::~EditNodeName() { delete ui; }
 
-void EditNodeName::IniDialog(CString& name)
+void EditNodeName::InitDialog(CString& name)
 {
     ui->lineName->setFocus();
     ui->lineName->setValidator(&LineEdit::kInputValidator);
@@ -28,9 +28,9 @@ void EditNodeName::IniDialog(CString& name)
     this->setFixedSize(400, 300);
 }
 
-void EditNodeName::IniConnect() { connect(ui->lineName, &QLineEdit::textEdited, this, &EditNodeName::RNameEdited); }
+void EditNodeName::InitConnect() { connect(ui->lineName, &QLineEdit::textEdited, this, &EditNodeName::RNameEdited); }
 
-void EditNodeName::IniData(CString& name)
+void EditNodeName::InitData(CString& name)
 {
     ui->lineName->setText(name);
     ui->pBtnOk->setEnabled(false);

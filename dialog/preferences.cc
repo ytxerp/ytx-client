@@ -23,16 +23,16 @@ Preferences::Preferences(CTreeModel* model, CSectionInfo& info, CAppConfig& app,
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    IniStringList();
-    IniDialog(info.unit_model, info.section);
-    IniConnect();
-    IniData();
-    IniText(info.section);
+    InitStringList();
+    InitDialog(info.unit_model, info.section);
+    InitConnect();
+    InitData();
+    InitText(info.section);
 }
 
 Preferences::~Preferences() { delete ui; }
 
-void Preferences::IniDialog(UnitModel* unit_model, Section section)
+void Preferences::InitDialog(UnitModel* unit_model, Section section)
 {
     ui->listWidget->setCurrentRow(0);
     ui->stackedWidget->setCurrentIndex(0);
@@ -41,10 +41,10 @@ void Preferences::IniDialog(UnitModel* unit_model, Section section)
     this->setWindowTitle(tr("Preferences"));
     this->setMinimumSize(800, 600);
 
-    IniCombo(ui->comboDateFormat, date_format_list_);
-    IniCombo(ui->comboLanguage, language_list_);
-    IniCombo(ui->comboSeparator, separator_list_);
-    IniCombo(ui->comboTheme, theme_list_);
+    InitCombo(ui->comboDateFormat, date_format_list_);
+    InitCombo(ui->comboLanguage, language_list_);
+    InitCombo(ui->comboSeparator, separator_list_);
+    InitCombo(ui->comboTheme, theme_list_);
 
     ui->comboDefaultUnit->setModel(unit_model);
 
@@ -69,26 +69,26 @@ void Preferences::IniDialog(UnitModel* unit_model, Section section)
     }
 }
 
-void Preferences::IniCombo(QComboBox* combo, CStringList& list) { combo->addItems(list); }
+void Preferences::InitCombo(QComboBox* combo, CStringList& list) { combo->addItems(list); }
 
-void Preferences::IniConnect() { connect(ui->pBtnOk, &QPushButton::clicked, this, &Preferences::on_pBtnApply_clicked); }
+void Preferences::InitConnect() { connect(ui->pBtnOk, &QPushButton::clicked, this, &Preferences::on_pBtnApply_clicked); }
 
-void Preferences::IniData()
+void Preferences::InitData()
 {
-    IniDataCombo(ui->comboTheme, app_.theme);
-    IniDataCombo(ui->comboLanguage, app_.language);
-    IniDataCombo(ui->comboSeparator, app_.separator);
-    IniDataCombo(ui->comboPrinter, app_.printer);
+    InitComboData(ui->comboTheme, app_.theme);
+    InitComboData(ui->comboLanguage, app_.language);
+    InitComboData(ui->comboSeparator, app_.separator);
+    InitComboData(ui->comboPrinter, app_.printer);
 
     ui->lineCompanyName->setText(app_.company_name);
     ui->chkBoxDeleteConfirm->setChecked(app_.delete_confirm);
 
-    IniDataCombo(ui->comboDateFormat, section_.date_format);
+    InitComboData(ui->comboDateFormat, section_.date_format);
     ui->spinAmountDecimal->setValue(section_.amount_decimal);
     ui->spinRateDecimal->setValue(section_.rate_decimal);
     ui->spinQuantityDecimal->setValue(section_.quantity_decimal);
 
-    IniDataCombo(ui->comboDefaultUnit, shared_.default_unit);
+    InitComboData(ui->comboDefaultUnit, shared_.default_unit);
     ui->pBtnDocumentDir->setText(shared_.document_dir);
 
     if (is_enable_status_) {
@@ -98,14 +98,14 @@ void Preferences::IniData()
         ui->comboDynamicLhs->setModel(path_model_);
         ui->comboDynamicRhs->setModel(path_model_);
 
-        IniCombo(ui->comboOperation, operation_list_);
+        InitCombo(ui->comboOperation, operation_list_);
 
         ui->lineStatic->setText(section_.static_label);
-        IniDataCombo(ui->comboStatic, section_.static_node);
+        InitComboData(ui->comboStatic, section_.static_node);
         ui->lineDynamic->setText(section_.dynamic_label);
-        IniDataCombo(ui->comboDynamicLhs, section_.dynamic_node_lhs);
-        IniDataCombo(ui->comboOperation, section_.operation);
-        IniDataCombo(ui->comboDynamicRhs, section_.dynamic_node_rhs);
+        InitComboData(ui->comboDynamicLhs, section_.dynamic_node_lhs);
+        InitComboData(ui->comboOperation, section_.operation);
+        InitComboData(ui->comboDynamicRhs, section_.dynamic_node_rhs);
     }
 
     ui->spinAmountDecimal->setMaximum(numeric_const::kDecimalPlaces4);
@@ -116,25 +116,25 @@ void Preferences::IniData()
     ResizeLine(ui->lineDynamic, section_.dynamic_label);
 }
 
-void Preferences::IniDataCombo(QComboBox* combo, const QUuid& value)
+void Preferences::InitComboData(QComboBox* combo, const QUuid& value)
 {
     int item_index { combo->findData(value) };
     combo->setCurrentIndex(item_index);
 }
 
-void Preferences::IniDataCombo(QComboBox* combo, int value)
+void Preferences::InitComboData(QComboBox* combo, int value)
 {
     int item_index { combo->findData(value) };
     combo->setCurrentIndex(item_index);
 }
 
-void Preferences::IniDataCombo(QComboBox* combo, CString& string)
+void Preferences::InitComboData(QComboBox* combo, CString& string)
 {
     int item_index { combo->findText(string) };
     combo->setCurrentIndex(item_index);
 }
 
-void Preferences::IniStringList()
+void Preferences::InitStringList()
 {
     language_list_.emplaceBack(kEnUS);
     language_list_.emplaceBack(kZhCN);
@@ -178,7 +178,7 @@ void Preferences::on_pBtnResetDocumentDir_clicked()
 
 void Preferences::ResizeLine(QLineEdit* line, CString& text) { line->setMinimumWidth(QFontMetrics(line->font()).horizontalAdvance(text) + 8); }
 
-void Preferences::IniText(Section section)
+void Preferences::InitText(Section section)
 {
     if (section == Section::kFinance) {
         ui->labelRateDecimal->setText(tr("FXRate Decimal"));
