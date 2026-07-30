@@ -23,7 +23,6 @@
 #include <QQueue>
 
 #include "component/constantbool.h"
-#include "component/constantdouble.h"
 #include "component/constantint.h"
 #include "component/using.h"
 #include "enum/nodeenum.h"
@@ -41,44 +40,6 @@ template <typename T>
 concept HasColor = requires(T node) { node.color; };
 
 namespace node {
-
-constexpr int KindColumn(Section section)
-{
-    switch (section) {
-    case Section::kFinance:
-        return std::to_underlying(NodeEnumF::kKind);
-    case Section::kTask:
-        return std::to_underlying(NodeEnumT::kKind);
-    case Section::kPartner:
-        return std::to_underlying(NodeEnumP::kKind);
-    case Section::kInventory:
-        return std::to_underlying(NodeEnumI::kKind);
-    case Section::kSale:
-    case Section::kPurchase:
-        return std::to_underlying(NodeEnumO::kKind);
-    }
-
-    Q_UNREACHABLE();
-}
-
-constexpr int UnitColumn(Section section)
-{
-    switch (section) {
-    case Section::kFinance:
-        return std::to_underlying(NodeEnumF::kUnit);
-    case Section::kTask:
-        return std::to_underlying(NodeEnumT::kUnit);
-    case Section::kPartner:
-        return std::to_underlying(NodeEnumP::kUnit);
-    case Section::kInventory:
-        return std::to_underlying(NodeEnumI::kUnit);
-    case Section::kSale:
-    case Section::kPurchase:
-        return std::to_underlying(NodeEnumO::kUnit);
-    }
-
-    Q_UNREACHABLE();
-}
 
 constexpr int DirectionRuleColumn(Section section)
 {

@@ -23,7 +23,6 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include "component/constantdouble.h"
 #include "component/constantint.h"
 #include "component/using.h"
 #include "enum/entryenum.h"
