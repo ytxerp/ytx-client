@@ -23,6 +23,7 @@
 #include <QApplication>
 #include <QComboBox>
 #include <QCompleter>
+#include <QLineEdit>
 #include <QWheelEvent>
 
 class ComboBox final : public QComboBox {
@@ -39,6 +40,8 @@ public:
 
         setCompleter(completer);
         setSizeAdjustPolicy(QComboBox::AdjustToContents);
+
+        connect(lineEdit(), &QLineEdit::editingFinished, this, &ComboBox::validateCurrentText);
     }
 
     void setReadOnly(bool read_only) { read_only_ = read_only; }
@@ -83,6 +86,23 @@ protected:
         }
 
         QComboBox::keyPressEvent(event);
+    }
+
+private slots:
+    void validateCurrentText()
+    {
+        const QString typed { currentText() };
+        const int idx { findText(typed, Qt::MatchExactly) };
+
+        if (idx == -1) {
+            setStyleSheet("QComboBox { border: 1px solid #CB4B16; }");
+            const QSignalBlocker blocker(this);
+            setCurrentIndex(-1);
+            lineEdit()->setText(typed);
+        } else {
+            setStyleSheet("");
+            setCurrentIndex(idx);
+        }
     }
 
 private:
