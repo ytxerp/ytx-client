@@ -43,13 +43,13 @@ public:
 
 private slots:
     void on_pBtnFetch_clicked();
-    void InitTimer();
 
     void on_dateTimeEditStart_dateChanged(const QDate& date);
     void on_dateTimeEditEnd_dateChanged(const QDate& date);
 
 private:
     void InitDialog();
+    void InitTimer();
 
 private:
     Ui::AuditDialog* ui;

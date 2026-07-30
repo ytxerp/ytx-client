@@ -34,17 +34,13 @@ class Model final : public QAbstractItemModel {
 public:
     explicit Model(const Info& info, const QStringList& header, QObject* parent = nullptr);
 
-    // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-
-    // Basic functionality:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex& index) const override
     {
         Q_UNUSED(index)
         return QModelIndex();
     }
-
     int rowCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent)
@@ -55,7 +51,6 @@ public:
         Q_UNUSED(parent)
         return header_.size();
     }
-
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     void sort(int column, Qt::SortOrder order) override;
 
