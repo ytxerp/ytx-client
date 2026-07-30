@@ -15,7 +15,7 @@ void MainWindow::on_actionIncomeStatement_triggered()
 
     {
         auto* view { dialog->View() };
-        InitTreeView(view, std::to_underlying(income_statement::RowField::kId), std::to_underlying(income_statement::RowField::kDescription));
+        InitTreeView(view, -1, std::to_underlying(income_statement::RowField::kDescription));
         DelegateIncomeStatement(view);
     }
 

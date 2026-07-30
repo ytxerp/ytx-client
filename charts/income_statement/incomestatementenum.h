@@ -24,7 +24,6 @@ namespace income_statement {
 
 enum class RowField {
     kName = 0,
-    kId,
     kCode,
     kDescription,
     kDirectionRule,

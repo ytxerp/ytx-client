@@ -42,7 +42,6 @@ QVariant Model::headerData(int section, Qt::Orientation orientation, int role) c
         case RowField::kMomGrowthRate:
             return mom_tooltip_;
         case RowField::kName:
-        case RowField::kId:
         case RowField::kCode:
         case RowField::kDescription:
         case RowField::kDirectionRule:
@@ -144,8 +143,6 @@ QVariant Model::data(const QModelIndex& index, int role) const
     switch (column) {
     case RowField::kName:
         return node->name;
-    case RowField::kId:
-        return node->id;
     case RowField::kCode:
         return node->code;
     case RowField::kDescription:
@@ -185,8 +182,6 @@ void Model::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Row::kind, order);
         case RowField::kFinalTotal:
             return utils::CompareMember(lhs, rhs, &Row::final_total, order);
-        case RowField::kId:
-            return false;
         case RowField::kYoyFinalTotal:
             return utils::CompareMember(lhs, rhs, &Row::yoy_final_total, order);
         case RowField::kMomFinalTotal:
