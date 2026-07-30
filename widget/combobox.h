@@ -91,18 +91,8 @@ protected:
 private slots:
     void validateCurrentText()
     {
-        const QString typed { currentText() };
-        const int idx { findText(typed, Qt::MatchExactly) };
-
-        if (idx == -1) {
-            setStyleSheet("QComboBox { border: 1px solid #CB4B16; }");
-            const QSignalBlocker blocker(this);
-            setCurrentIndex(-1);
-            lineEdit()->setText(typed);
-        } else {
-            setStyleSheet("");
-            setCurrentIndex(idx);
-        }
+        const bool valid = findText(currentText(), Qt::MatchExactly) != -1;
+        setStyleSheet(valid ? "" : "QComboBox { border: 1px solid #CB4B16; }");
     }
 
 private:
