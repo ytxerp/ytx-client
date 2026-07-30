@@ -122,8 +122,6 @@ QVariant Model::data(const QModelIndex& index, int role) const
     switch (column) {
     case RowField::kName:
         return node->name;
-    case RowField::kId:
-        return node->id;
     case RowField::kCode:
         return node->code;
     case RowField::kDescription:
@@ -167,8 +165,6 @@ void Model::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Row::change_amount, order);
         case RowField::kChangeRate:
             return utils::CompareMember(lhs, rhs, &Row::change_rate, order);
-        case RowField::kId:
-            return false;
         }
     };
 

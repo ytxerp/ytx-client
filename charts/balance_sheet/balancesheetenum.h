@@ -23,7 +23,6 @@
 namespace balance_sheet {
 enum class RowField {
     kName = 0,
-    kId,
     kCode,
     kDescription,
     kDirectionRule,

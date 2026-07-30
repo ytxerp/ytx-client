@@ -15,7 +15,7 @@ void MainWindow::on_actionBalanceSheet_triggered()
 
     {
         auto* view { dialog->View() };
-        InitTreeView(view, std::to_underlying(balance_sheet::RowField::kId), std::to_underlying(balance_sheet::RowField::kDescription));
+        InitTreeView(view, -1, std::to_underlying(balance_sheet::RowField::kDescription));
         DelegateBalanceSheet(view);
     }
 

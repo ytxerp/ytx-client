@@ -52,7 +52,6 @@ void MainWindow::InitHeader()
 
     header_info_.balance_sheet = {
         tr("Name"),
-        tr("ID"),
         tr("Code"),
         tr("Description"),
         tr("Direction Rule"),
