@@ -37,6 +37,7 @@ struct HeaderInfo {
     QStringList income_statement {};
     QStringList cash_flow_statement {};
     QStringList cash_flow_statement_wrong {};
+    QStringList audit {};
 };
 
 #endif // HEADERINFO_H

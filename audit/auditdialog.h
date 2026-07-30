@@ -24,7 +24,6 @@
 #include <QTableView>
 #include <QTimer>
 
-#include "auditinfo.h"
 #include "auditmodel.h"
 #include "component/using.h"
 
@@ -36,7 +35,7 @@ class AuditDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit AuditDialog(const audit::Info& info, CUuid& widget_id, QWidget* parent = nullptr);
+    explicit AuditDialog(audit::Model* model, CUuid& widget_id, QWidget* parent = nullptr);
     ~AuditDialog() override;
 
     QTableView* View();
@@ -54,7 +53,6 @@ private:
 
 private:
     Ui::AuditDialog* ui;
-    const audit::Info& info_;
     audit::Model* model_ {};
 
     QDateTime start_ {};

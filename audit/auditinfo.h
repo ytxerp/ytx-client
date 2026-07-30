@@ -42,8 +42,6 @@ struct Info {
     const QHash<QUuid, QString>* p_branch_path {};
     const QHash<QUuid, QString>* t_leaf_path {};
     const QHash<QUuid, QString>* t_branch_path {};
-
-    QStringList header {};
 };
 
 }

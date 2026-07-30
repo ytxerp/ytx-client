@@ -32,7 +32,7 @@ class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit Model(const Info& info, QObject* parent = nullptr);
+    explicit Model(const Info& info, const QStringList& header, QObject* parent = nullptr);
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -53,7 +53,7 @@ public:
     int columnCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent)
-        return info_.header.size();
+        return header_.size();
     }
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -68,7 +68,10 @@ private:
 
 private:
     QList<Row*> list_ {};
-    const Info& info_; // owned by MainWindow, outlives model
+
+    // owned by MainWindow, outlives model
+    const Info& info_;
+    const QStringList& header_;
 };
 }
 

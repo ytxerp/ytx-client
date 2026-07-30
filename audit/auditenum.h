@@ -45,7 +45,6 @@ enum class Level {
 };
 
 enum class RowField {
-    kId,
     kTargetId,
     kUsername,
     kLhsNode,

@@ -2,6 +2,22 @@
 
 void MainWindow::InitHeader()
 {
+    header_info_.audit = {
+        tr("Target ID"),
+        tr("User"),
+        tr("LHS Node"),
+        tr("RHS Node"),
+        tr("Issued Time"),
+        tr("Section"),
+        tr("Target Type"),
+        tr("Target Code"),
+        tr("Target Operation"),
+        tr("Target Field"),
+        tr("Level"),
+        tr("Before Change"),
+        tr("After Change"),
+    };
+
     header_info_.workspace = {
         tr("ID"),
         tr("Email"),

@@ -7,16 +7,17 @@
 
 namespace audit {
 
-Model::Model(const Info& info, QObject* parent)
+Model::Model(const Info& info, const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
     , info_ { info }
+    , header_ { header }
 {
 }
 
 QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.header.at(section);
+        return header_.at(section);
 
     return QVariant();
 }
@@ -50,8 +51,6 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return JsonValueToString(row->before);
     case RowField::kAfter:
         return JsonValueToString(row->after);
-    case RowField::kId:
-        return row->id;
     case RowField::kSection:
         return info_.section_hash.value(row->section);
     case RowField::kTargetOperation:
@@ -99,7 +98,6 @@ void Model::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Row::created_time, order);
         case RowField::kTargetField:
             return utils::CompareMember(lhs, rhs, &Row::target_field, order);
-        case RowField::kId:
         case RowField::kBefore:
         case RowField::kAfter:
             return false;

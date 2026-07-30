@@ -9,11 +9,10 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-AuditDialog::AuditDialog(const audit::Info& info, CUuid& widget_id, QWidget* parent)
+AuditDialog::AuditDialog(audit::Model* model, CUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::AuditDialog)
-    , info_ { info }
-    , model_ { new audit::Model(info, this) }
+    , model_ { model }
     , start_ { QDateTime(QDate::currentDate().addDays(-7), kStartTime) }
     , end_ { QDateTime(QDate::currentDate().addDays(1), kStartTime) }
     , widget_id_ { widget_id }

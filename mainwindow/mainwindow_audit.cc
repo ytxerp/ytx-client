@@ -11,8 +11,9 @@ void MainWindow::on_actionAuditLog_triggered()
 
     if (!dialog) {
         const QUuid widget_id { QUuid::createUuidV7() };
+        audit::Model* model { new audit::Model(audit_info_, header_info_.audit, this) };
 
-        dialog = new AuditDialog(audit_info_, widget_id, this);
+        dialog = new AuditDialog(model, widget_id, this);
 
         {
             dialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -21,7 +22,7 @@ void MainWindow::on_actionAuditLog_triggered()
         }
 
         auto* view { dialog->View() };
-        InitTableView(view, std::to_underlying(audit::RowField::kId), std::to_underlying(audit::RowField::kAfter));
+        InitTableView(view, -1, std::to_underlying(audit::RowField::kAfter));
 
         view->horizontalHeader()->setSectionResizeMode(std::to_underlying<>(audit::RowField::kBefore), QHeaderView::Interactive);
 
@@ -51,23 +52,6 @@ void MainWindow::RAuditLogAck(const QUuid& widget_id, const QJsonArray& log_arra
 void MainWindow::InitAuditInfo()
 {
     using namespace audit;
-
-    audit_info_.header = {
-        tr("ID"),
-        tr("Target ID"),
-        tr("User"),
-        tr("LHS Node"),
-        tr("RHS Node"),
-        tr("Issued Time"),
-        tr("Section"),
-        tr("Target Type"),
-        tr("Target Code"),
-        tr("Target Operation"),
-        tr("Target Field"),
-        tr("Level"),
-        tr("Before Change"),
-        tr("After Change"),
-    };
 
     audit_info_.f_leaf_path = sc_f_.tree_model->LeafPath();
     audit_info_.f_branch_path = sc_f_.tree_model->BranchPath();
