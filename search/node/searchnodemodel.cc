@@ -20,7 +20,7 @@ QModelIndex NodeModel::index(int row, int column, const QModelIndex& parent) con
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column, node_list_.at(row));
+    return createIndex(row, column, list_.at(row));
 }
 
 QModelIndex NodeModel::parent(const QModelIndex& index) const
@@ -32,7 +32,7 @@ QModelIndex NodeModel::parent(const QModelIndex& index) const
 int NodeModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return node_list_.size();
+    return list_.size();
 }
 
 int NodeModel::columnCount(const QModelIndex& parent) const
@@ -71,7 +71,7 @@ void NodeModel::Search(const QString& text)
 
     // Update the model in one step
     beginResetModel();
-    node_list_ = std::move(results); // Move results to avoid copying
+    list_ = std::move(results); // Move results to avoid copying
     endResetModel();
 }
 }

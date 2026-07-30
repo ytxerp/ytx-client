@@ -30,7 +30,7 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent)
-        return tag_list_.size();
+        return list_.size();
     }
     int columnCount(const QModelIndex& parent = QModelIndex()) const override
     {
@@ -65,7 +65,7 @@ private:
     const QStringList& header_;
 
     // non-owning pointers, owned by tag_hash
-    QList<TagRow*> tag_list_ {};
+    QList<TagRow*> list_ {};
 
     QHash<QUuid, QJsonObject> pending_updates_ {};
     QHash<QUuid, QTimer*> pending_timers_ {};

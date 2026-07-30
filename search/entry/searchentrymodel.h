@@ -40,7 +40,7 @@ protected:
     explicit EntryModel(CSectionInfo& info, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
 
 public slots:
-    void RSearchEntry(const EntryList& entry_list);
+    void RSearchEntry(const EntryList& list);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -60,7 +60,7 @@ protected:
     void Reset();
 
 protected:
-    EntryList entry_list_ {};
+    EntryList list_ {};
     CSectionInfo& info_;
     const QHash<QUuid, TagRow*>& tag_hash_ {};
 };

@@ -56,7 +56,7 @@ public:
 protected:
     CSectionInfo& info_;
     CTreeModel* tree_model_ {};
-    QList<Node*> node_list_ {};
+    QList<Node*> list_ {};
     const Section section_ {};
     const QHash<QUuid, TagRow*>& tag_hash_ {};
 };

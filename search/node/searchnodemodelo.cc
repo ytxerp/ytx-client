@@ -36,12 +36,12 @@ void NodeModelO::ROrderSearch(const QJsonObject& obj)
     beginResetModel();
 
     // Recycle old nodes
-    if (!node_list_.isEmpty()) {
-        NodePool::Instance().Recycle(node_list_, section_);
+    if (!list_.isEmpty()) {
+        NodePool::Instance().Recycle(list_, section_);
     }
 
     // Move new nodes into model
-    node_list_ = std::move(temp_list);
+    list_ = std::move(temp_list);
 
     endResetModel();
 }
@@ -133,7 +133,7 @@ void NodeModelO::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(node_list_.begin(), node_list_.end(), Compare);
+    std::ranges::sort(list_, Compare);
     emit layoutChanged();
 }
 
@@ -165,9 +165,9 @@ void NodeModelO::Search(CString& text)
 
 void NodeModelO::ClearModel()
 {
-    if (!node_list_.isEmpty()) {
+    if (!list_.isEmpty()) {
         beginResetModel();
-        NodePool::Instance().Recycle(node_list_, section_);
+        NodePool::Instance().Recycle(list_, section_);
         endResetModel();
     }
 }

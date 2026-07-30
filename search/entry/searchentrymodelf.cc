@@ -93,7 +93,7 @@ void EntryModelF::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(entry_list_.begin(), entry_list_.end(), Compare);
+    std::ranges::sort(list_, Compare);
     emit layoutChanged();
 }
 }

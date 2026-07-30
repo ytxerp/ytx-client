@@ -147,7 +147,7 @@ void Model::sort(int column, Qt::SortOrder order)
     emit layoutAboutToBeChanged();
 
     // Perform the sort on the underlying data list
-    std::sort(list_.begin(), list_.end(), Compare);
+    std::ranges::sort(list_, Compare);
 
     // Notify the view that the layout has been updated
     emit layoutChanged();

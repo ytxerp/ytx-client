@@ -72,7 +72,7 @@ void NodeModelP::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(node_list_.begin(), node_list_.end(), Compare);
+    std::ranges::sort(list_, Compare);
     emit layoutChanged();
 }
 }

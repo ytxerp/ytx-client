@@ -13,10 +13,10 @@ EntryModel::EntryModel(CSectionInfo& info, const QHash<QUuid, TagRow*>& tag_hash
 {
 }
 
-void EntryModel::RSearchEntry(const EntryList& entry_list)
+void EntryModel::RSearchEntry(const EntryList& list)
 {
     beginResetModel();
-    entry_list_ = entry_list;
+    list_ = list;
     endResetModel();
 }
 
@@ -25,7 +25,7 @@ QModelIndex EntryModel::index(int row, int column, const QModelIndex& parent) co
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column, entry_list_.at(row));
+    return createIndex(row, column, list_.at(row));
 }
 
 QModelIndex EntryModel::parent(const QModelIndex& index) const
@@ -37,7 +37,7 @@ QModelIndex EntryModel::parent(const QModelIndex& index) const
 int EntryModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return entry_list_.size();
+    return list_.size();
 }
 
 int EntryModel::columnCount(const QModelIndex& parent) const
@@ -83,9 +83,9 @@ void EntryModel::Search(const QString& text)
 
 void EntryModel::Reset()
 {
-    if (!entry_list_.isEmpty()) {
+    if (!list_.isEmpty()) {
         beginResetModel();
-        entry_list_.clear();
+        list_.clear();
         endResetModel();
     }
 }
@@ -168,7 +168,7 @@ void EntryModel::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(entry_list_.begin(), entry_list_.end(), Compare);
+    std::ranges::sort(list_, Compare);
     emit layoutChanged();
 }
 }

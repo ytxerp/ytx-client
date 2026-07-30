@@ -138,7 +138,7 @@ void SecondaryModel::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(list_.begin(), list_.end(), Compare);
+    std::ranges::sort(list_, Compare);
     emit layoutChanged();
 }
 

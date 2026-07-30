@@ -15,10 +15,10 @@ TagModel::TagModel(Section section, const QHash<QUuid, TagRow*>& tag_hash, const
     , header_ { header }
 {
     for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
-        tag_list_.append(it.value());
+        list_.append(it.value());
     }
 
-    std::sort(tag_list_.begin(), tag_list_.end(), [](const TagRow* a, const TagRow* b) { return a->name < b->name; });
+    std::sort(list_.begin(), list_.end(), [](const TagRow* a, const TagRow* b) { return a->name < b->name; });
 }
 
 TagModel::~TagModel() { FlushCaches(); }
@@ -36,7 +36,7 @@ QModelIndex TagModel::index(int row, int column, const QModelIndex& parent) cons
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column, tag_list_.at(row));
+    return createIndex(row, column, list_.at(row));
 }
 
 QVariant TagModel::data(const QModelIndex& index, int role) const
@@ -96,7 +96,7 @@ void TagModel::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(tag_list_.begin(), tag_list_.end(), Compare);
+    std::ranges::sort(list_, Compare);
     emit layoutChanged();
 }
 
@@ -121,7 +121,7 @@ Qt::ItemFlags TagModel::flags(const QModelIndex& index) const
 
 bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
 {
-    if (count != 1 || row < 0 || row > tag_list_.size())
+    if (count != 1 || row < 0 || row > list_.size())
         return false;
 
     auto* tag { ResourcePool<TagRow>::Instance().Allocate() };
@@ -134,7 +134,7 @@ bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
     tag->color = color.name(QColor::HexArgb);
 
     beginInsertRows(parent, row, row);
-    tag_list_.insert(row, tag);
+    list_.insert(row, tag);
     endInsertRows();
 
     return true;
@@ -143,12 +143,12 @@ bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
 bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
 {
     // Basic validation
-    if (count != 1 || row < 0 || row >= tag_list_.size()) {
+    if (count != 1 || row < 0 || row >= list_.size()) {
         return false;
     }
 
     // Capture the pointer and necessary values using {} initialization
-    TagRow* tag { tag_list_.at(row) };
+    TagRow* tag { list_.at(row) };
     const QUuid tag_id { tag->id };
 
     // Clean up the pending timer first (Safety)
@@ -164,7 +164,7 @@ bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
     beginRemoveRows(parent, row, row);
 
     // Remove from all internal containers
-    tag_list_.removeAt(row);
+    list_.removeAt(row);
 
     endRemoveRows();
 

@@ -76,7 +76,7 @@ void EntryModelP::sort(int column, Qt::SortOrder order)
     };
 
     emit layoutAboutToBeChanged();
-    std::sort(entry_list_.begin(), entry_list_.end(), Compare);
+    std::ranges::sort(list_, Compare);
     emit layoutChanged();
 }
 
@@ -100,7 +100,7 @@ void EntryModelP::Search(const QString& text)
 
     // 2. Update the model in one step
     beginResetModel();
-    entry_list_ = std::move(results); // Move results to avoid copying
+    list_ = std::move(results); // Move results to avoid copying
     endResetModel();
 }
 }
