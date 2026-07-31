@@ -9,6 +9,7 @@
 #include "tree/includeunitfiltermodel.h"
 #include "tree/replaceselffiltermodel.h"
 #include "utils/nodeutils.h"
+#include "utils/pathutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -981,26 +982,44 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     const QJsonArray node_array { data.value(kNodeArray).toArray() };
     const QJsonArray path_array { data.value(kPathArray).toArray() };
 
+    if (node_array.isEmpty()) {
+        qDebug() << Q_FUNC_INFO << "Received empty node array";
+    }
+
+    if (path_array.isEmpty()) {
+        qDebug() << Q_FUNC_INFO << "Received empty path array";
+    }
+
+    QHash<QUuid, Node*> new_hash {};
+
+    {
+        new_hash.reserve(node_array.size());
+
+        for (const auto& value : node_array) {
+            if (!value.isObject()) {
+                qWarning() << Q_FUNC_INFO << "Invalid node, expected object:" << value;
+                continue;
+            }
+
+            auto* node { NodePool::Instance().Allocate(section_) };
+            node->ReadJson(value.toObject());
+
+            new_hash.insert(node->id, node);
+        }
+
+        const auto paths { path::Parse(path_array) };
+        path::BuildHierarchy(new_hash, paths);
+    }
+
     beginResetModel();
 
-    {
-        ResetData();
-    }
+    ResetData();
 
-    {
-        for (const QJsonValue& val : node_array) {
-            const QJsonObject obj { val.toObject() };
-            auto* node { NodePool::Instance().Allocate(section_) };
-            node->ReadJson(obj);
-            node_hash_.insert(node->id, node);
-        }
-    }
+    node_hash_ = std::move(new_hash);
+    path::AttachRootNodes(node_hash_, root_);
 
-    {
-        BuildHierarchy(path_array);
-        InitTreeData();
-        sort(std::to_underlying(NodeEnum::kName), Qt::AscendingOrder);
-    }
+    InitTreeData();
+    sort(std::to_underlying(NodeEnum::kName), Qt::AscendingOrder);
 
     endResetModel();
 
@@ -1040,33 +1059,6 @@ void TreeModel::ResetData()
     }
 
     ResetUnitSet();
-}
-
-void TreeModel::BuildHierarchy(const QJsonArray& path_array)
-{
-    for (const QJsonValue& val : path_array) {
-        const QJsonObject obj { val.toObject() };
-
-        const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
-        const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
-
-        Node* ancestor { node_hash_.value(ancestor_id, nullptr) };
-        Node* descendant { node_hash_.value(descendant_id, nullptr) };
-
-        assert(ancestor && "ancestor not found in node_hash_");
-        assert(descendant && "descendant not found in node_hash_");
-
-        ancestor->children.emplaceBack(descendant);
-        descendant->parent = ancestor;
-    }
-
-    // Attach nodes without parent to virtual root
-    for (Node* node : std::as_const(node_hash_)) {
-        if (!node->parent) {
-            root_->children.emplaceBack(node);
-            node->parent = root_;
-        }
-    }
 }
 
 void TreeModel::RegisterPath(Node* node)

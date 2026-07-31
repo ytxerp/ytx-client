@@ -161,7 +161,7 @@ void Model::sort(int column, Qt::SortOrder order)
 void Model::Rebuild(const QJsonArray& node_array)
 {
     if (node_array.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "Received empty node array";
+        qDebug() << Q_FUNC_INFO << "Received empty node array";
     }
 
     QList<Row*> new_list {};

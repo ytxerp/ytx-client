@@ -16,10 +16,8 @@ struct Dto {
 
 QList<Dto> Parse(const QJsonArray& array);
 
-template <typename Row> void BuildHierarchy(const QHash<QUuid, Row*>& node_hash, Row* root, const QList<Dto>& paths)
+template <typename Row> void BuildHierarchy(const QHash<QUuid, Row*>& node_hash, const QList<Dto>& paths)
 {
-    Q_ASSERT_X(root != nullptr, Q_FUNC_INFO, "Root node cannot be null");
-
     for (const auto& path : paths) {
         auto* ancestor = node_hash.value(path.ancestor_id, nullptr);
         auto* descendant = node_hash.value(path.descendant_id, nullptr);
@@ -33,6 +31,11 @@ template <typename Row> void BuildHierarchy(const QHash<QUuid, Row*>& node_hash,
         ancestor->children.emplaceBack(descendant);
         descendant->parent = ancestor;
     }
+}
+
+template <typename Row> void AttachRootNodes(const QHash<QUuid, Row*>& node_hash, Row* root)
+{
+    Q_ASSERT_X(root != nullptr, Q_FUNC_INFO, "Root node cannot be null");
 
     // Attach nodes without parent to the virtual root.
     for (auto* node : std::as_const(node_hash)) {

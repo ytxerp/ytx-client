@@ -51,7 +51,6 @@ public:
 
 private:
     Row* GetNodeByIndex(const QModelIndex& index) const;
-    void BuildHierarchy(const QJsonArray& path_array);
 
     void InitFixedNodes();
     Row* CreateBranchNode(const QString& name, bool direction_rule) const;

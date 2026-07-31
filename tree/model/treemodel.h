@@ -179,8 +179,6 @@ public:
     QSortFilterProxyModel* ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent);
 
 protected:
-    void BuildHierarchy(const QJsonArray& path_array);
-
     void RestartTimer(const QUuid& id, Node* node);
     void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent);
 

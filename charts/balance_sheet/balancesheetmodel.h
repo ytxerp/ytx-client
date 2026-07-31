@@ -50,7 +50,6 @@ public:
 
 private:
     Row* GetNodeByIndex(const QModelIndex& index) const;
-    void BuildHierarchy(const QJsonArray& path_array);
 
 private:
     const QStringList& header_;

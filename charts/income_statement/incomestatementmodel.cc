@@ -5,6 +5,7 @@
 #include "global/resourcepool.h"
 #include "incomestatementenum.h"
 #include "utils/nodeutils.h"
+#include "utils/pathutils.h"
 #include "utils/templateutils.h"
 
 namespace income_statement {
@@ -201,20 +202,33 @@ void Model::sort(int column, Qt::SortOrder order)
 void Model::Rebuild(const QJsonArray& node_array, const QJsonArray& path_array, double net_profit, double yoy_net_profit, double mom_net_profit)
 {
     if (node_array.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "Received empty node array";
+        qDebug() << Q_FUNC_INFO << "Received empty node array";
     }
 
     if (path_array.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "Received empty path array";
+        qDebug() << Q_FUNC_INFO << "Received empty path array";
     }
 
     // Build new hash outside the model reset lock
-    QHash<QUuid, Row*> new_hash;
-    for (const QJsonValue& val : node_array) {
-        const QJsonObject obj { val.toObject() };
-        Row* node { ResourcePool<Row>::Instance().Allocate() };
-        node->ReadJson(obj);
-        new_hash.insert(node->id, node);
+    QHash<QUuid, Row*> new_hash {};
+
+    {
+        new_hash.reserve(node_array.size());
+
+        for (const auto& value : node_array) {
+            if (!value.isObject()) {
+                qWarning() << Q_FUNC_INFO << "Invalid node, expected object:" << value;
+                continue;
+            }
+
+            auto* node { ResourcePool<Row>::Instance().Allocate() };
+            node->ReadJson(value.toObject());
+
+            new_hash.insert(node->id, node);
+        }
+
+        const auto paths { path::Parse(path_array) };
+        path::BuildHierarchy(new_hash, paths);
     }
 
     beginResetModel();
@@ -222,8 +236,10 @@ void Model::Rebuild(const QJsonArray& node_array, const QJsonArray& path_array, 
     {
         ResourcePool<Row>::Instance().Recycle(node_hash_);
         net_profit_->children.clear();
+
         node_hash_ = std::move(new_hash);
-        BuildHierarchy(path_array);
+        path::AttachRootNodes(node_hash_, net_profit_);
+
         net_profit_->final_total = net_profit;
         net_profit_->yoy_final_total = yoy_net_profit;
         net_profit_->mom_final_total = mom_net_profit;
@@ -250,33 +266,6 @@ Row* Model::GetNodeByIndex(const QModelIndex& index) const
         return static_cast<Row*>(index.internalPointer());
 
     return root_;
-}
-
-void Model::BuildHierarchy(const QJsonArray& path_array)
-{
-    for (const QJsonValue& val : path_array) {
-        const QJsonObject obj { val.toObject() };
-
-        const QUuid ancestor_id { QUuid(obj.value(kAncestor).toString()) };
-        const QUuid descendant_id { QUuid(obj.value(kDescendant).toString()) };
-
-        Row* ancestor { node_hash_.value(ancestor_id, nullptr) };
-        Row* descendant { node_hash_.value(descendant_id, nullptr) };
-
-        assert(ancestor && "ancestor not found in node_hash_");
-        assert(descendant && "descendant not found in node_hash_");
-
-        ancestor->children.emplaceBack(descendant);
-        descendant->parent = ancestor;
-    }
-
-    // Attach nodes without parent to virtual root
-    for (Row* node : std::as_const(node_hash_)) {
-        if (!node->parent) {
-            net_profit_->children.emplaceBack(node);
-            node->parent = net_profit_;
-        }
-    }
 }
 
 void Model::InitFixedNodes()

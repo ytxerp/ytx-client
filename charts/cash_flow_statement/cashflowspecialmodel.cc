@@ -160,7 +160,7 @@ void SpecialModel::sort(int column, Qt::SortOrder order)
 void SpecialModel::Rebuild(const QJsonArray& special_array)
 {
     if (special_array.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "Received empty special array";
+        qDebug() << Q_FUNC_INFO << "Received empty special array";
     }
 
     QList<Row*> new_list {};
