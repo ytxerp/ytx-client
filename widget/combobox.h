@@ -40,8 +40,6 @@ public:
 
         setCompleter(completer);
         setSizeAdjustPolicy(QComboBox::AdjustToContents);
-
-        connect(lineEdit(), &QLineEdit::editingFinished, this, &ComboBox::validateCurrentText);
     }
 
     void setReadOnly(bool read_only) { read_only_ = read_only; }
@@ -86,13 +84,6 @@ protected:
         }
 
         QComboBox::keyPressEvent(event);
-    }
-
-private slots:
-    void validateCurrentText()
-    {
-        const bool valid = findText(currentText(), Qt::MatchExactly) != -1;
-        setStyleSheet(valid ? "" : "QComboBox { border: 1px solid #CB4B16; }");
     }
 
 private:
