@@ -219,7 +219,7 @@ QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, double initial_delta, do
 
 void TreeModelF::InitAncestorTotal(Node* node, double initial_delta, double final_delta, double, double, double) const
 {
-    if (!node || node == root_ || !node->parent || node->parent == root_)
+    if (!node || !node->parent)
         return;
 
     if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta))
@@ -228,7 +228,7 @@ void TreeModelF::InitAncestorTotal(Node* node, double initial_delta, double fina
     const auto unit { node->unit };
     const bool direction_rule { node->direction_rule };
 
-    for (Node* current = node->parent; current && current != root_; current = current->parent) {
+    for (Node* current = node->parent; current; current = current->parent) {
         const int multiplier { current->direction_rule == direction_rule ? 1 : -1 };
 
         current->final_total += multiplier * final_delta;

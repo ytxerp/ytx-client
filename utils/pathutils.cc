@@ -33,3 +33,35 @@ void path::Dto::ReadJson(const QJsonObject& object)
     Q_ASSERT_X(!ancestor_id.isNull(), Q_FUNC_INFO, "Invalid ancestor id");
     Q_ASSERT_X(!descendant_id.isNull(), Q_FUNC_INFO, "Invalid descendant id");
 }
+
+QString path::Build(const Node* node, const QString& separator)
+{
+    Q_ASSERT(node != nullptr);
+
+    QStringList tmp {};
+
+    while (node) {
+        tmp.prepend(node->name);
+        node = node->parent;
+    }
+
+    return tmp.join(separator);
+}
+
+QString path::Build(const Node* node, const Node* root, const QString& separator)
+{
+    Q_ASSERT(node != nullptr);
+    Q_ASSERT(root != nullptr);
+
+    if (node == root)
+        return {};
+
+    QStringList tmp {};
+
+    while (node && node != root) {
+        tmp.prepend(node->name);
+        node = node->parent;
+    }
+
+    return tmp.join(separator);
+}

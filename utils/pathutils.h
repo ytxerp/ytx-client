@@ -5,6 +5,8 @@
 #include <QJsonObject>
 #include <QUuid>
 
+#include "tree/node.h"
+
 namespace path {
 
 struct Dto {
@@ -15,6 +17,9 @@ struct Dto {
 };
 
 QList<Dto> Parse(const QJsonArray& array);
+
+QString Build(const Node* node, const QString& separator);
+QString Build(const Node* node, const Node* root, const QString& separator);
 
 template <typename Row> void BuildHierarchy(const QHash<QUuid, Row*>& node_hash, const QList<Dto>& paths)
 {

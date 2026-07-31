@@ -185,14 +185,13 @@ protected:
     void UpdateDirectionRuleActive(Node* node, bool value, const QModelIndex& index);
 
     void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
-
-    QString BuildPath(const Node* node) const;
     void RefreshPath(const Node* node);
 
     virtual void RegisterPath(Node* node);
     virtual void UnregisterPath(Node* node, Node* parent_node);
 
-    virtual void InitTreeData();
+    virtual void InitLeafData();
+    virtual void InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path);
     virtual void AfterNodeInserted(Node* node)
     {
         Q_UNUSED(node);

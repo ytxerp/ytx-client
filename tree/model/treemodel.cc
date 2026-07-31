@@ -1,5 +1,6 @@
 #include "treemodel.h"
 
+#include <QElapsedTimer>
 #include <QJsonArray>
 #include <QQueue>
 
@@ -159,23 +160,6 @@ void TreeModel::SyncLeafModel(const QSet<QUuid>& leaf_ids) const
     }
 }
 
-QString TreeModel::BuildPath(const Node* node) const
-{
-    Q_ASSERT(node != nullptr);
-
-    if (node == root_)
-        return QString();
-
-    QStringList tmp {};
-
-    while (node && node != root_) {
-        tmp.prepend(node->name);
-        node = node->parent;
-    }
-
-    return tmp.join(separator_);
-}
-
 void TreeModel::RefreshPath(const Node* node)
 {
     QQueue<const Node*> queue {};
@@ -183,7 +167,7 @@ void TreeModel::RefreshPath(const Node* node)
 
     while (!queue.isEmpty()) {
         const auto* current { queue.dequeue() };
-        const auto path { BuildPath(current) };
+        const auto path { path::Build(current, root_, separator_) };
         const NodeKind kind { current->kind };
 
         switch (kind) {
@@ -198,6 +182,22 @@ void TreeModel::RefreshPath(const Node* node)
             break;
         }
     }
+}
+
+void TreeModel::InitLeafData()
+{
+    for (auto it = leaf_path_.cbegin(); it != leaf_path_.cend(); ++it) {
+        const auto node_id { it.key() };
+
+        leaf_path_model_->AppendItem(it.value(), node_id);
+
+        auto* node { node_hash_.value(node_id, nullptr) };
+        Q_ASSERT(node);
+
+        UnitSetInsert(node_id, node->unit);
+    }
+
+    leaf_path_model_->sort(0);
 }
 
 void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
@@ -807,17 +807,23 @@ void TreeModel::UnregisterPath(Node* node, Node* parent_node)
     }
 }
 
-void TreeModel::InitTreeData()
+void TreeModel::InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path)
 {
-    for (auto* node : std::as_const(node_hash_)) {
-        RegisterPath(node);
+    for (auto* node : node_hash) {
+        const QString path { path::Build(node, separator_) };
 
-        if (node->kind == NodeKind::kLeaf) {
+        switch (node->kind) {
+        case NodeKind::kBranch:
+            branch_path.insert(node->id, path);
+            break;
+
+        case NodeKind::kLeaf:
+            leaf_path.insert(node->id, path);
+
             InitAncestorTotal(node, node->initial_total, node->final_total);
+            break;
         }
     }
-
-    leaf_path_model_->sort(0);
 }
 
 Node* TreeModel::GetNodeByIndex(const QModelIndex& index) const
@@ -867,7 +873,7 @@ QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, dou
 
 void TreeModel::InitAncestorTotal(Node* node, double initial_delta, double final_delta, double, double, double) const
 {
-    if (!node || node == root_ || !node->parent || node->parent == root_)
+    if (!node || !node->parent)
         return;
 
     if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta))
@@ -878,7 +884,7 @@ void TreeModel::InitAncestorTotal(Node* node, double initial_delta, double final
 
     // - If the ancestor has the same direction rule as the leaf, add the delta.
     // - If the ancestor has the opposite direction rule, subtract the delta.
-    for (Node* current = node->parent; current && current != root_; current = current->parent) {
+    for (Node* current = node->parent; current; current = current->parent) {
         if (current->unit != unit)
             continue;
 
@@ -979,6 +985,11 @@ void TreeModel::EmitDataChanged(int start_row, int end_row, int start_column, in
 
 void TreeModel::ApplyTree(const QJsonObject& data)
 {
+#ifndef NDEBUG
+    QElapsedTimer timer {};
+    timer.start();
+#endif
+
     const QJsonArray node_array { data.value(kNodeArray).toArray() };
     const QJsonArray path_array { data.value(kPathArray).toArray() };
 
@@ -991,6 +1002,8 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     }
 
     QHash<QUuid, Node*> new_hash {};
+    QHash<QUuid, QString> new_leaf_path {};
+    QHash<QUuid, QString> new_branch_path {};
 
     {
         new_hash.reserve(node_array.size());
@@ -1009,19 +1022,34 @@ void TreeModel::ApplyTree(const QJsonObject& data)
 
         const auto paths { path::Parse(path_array) };
         path::BuildHierarchy(new_hash, paths);
+
+        InitHashData(new_hash, new_leaf_path, new_branch_path);
     }
+
+#ifndef NDEBUG
+    qDebug() << "nodes:" << new_hash.size() << "leaf paths:" << new_leaf_path.size() << "branch paths:" << new_branch_path.size();
+    qDebug() << Q_FUNC_INFO << "Build data elapsed:" << timer.elapsed() << "ms";
+    timer.restart();
+#endif
 
     beginResetModel();
 
     ResetData();
 
     node_hash_ = std::move(new_hash);
+    leaf_path_ = std::move(new_leaf_path);
+    branch_path_ = std::move(new_branch_path);
+
     path::AttachRootNodes(node_hash_, root_);
 
-    InitTreeData();
+    InitLeafData();
     sort(std::to_underlying(NodeEnum::kName), Qt::AscendingOrder);
 
     endResetModel();
+
+#ifndef NDEBUG
+    qDebug() << Q_FUNC_INFO << "Reset model elapsed:" << timer.elapsed() << "ms";
+#endif
 
     emit SInitStatus();
 }
@@ -1071,7 +1099,7 @@ void TreeModel::RegisterPath(Node* node)
     // registration time. Ancestor totals only need to be adjusted when a
     // node with actual data is removed (see UnregisterPath).
 
-    CString path { BuildPath(node) };
+    const auto path { path::Build(node, root_, separator_) };
     const NodeKind kind { node->kind };
 
     switch (kind) {

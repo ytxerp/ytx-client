@@ -4,6 +4,7 @@
 
 #include "global/masterdataregistry.h"
 #include "utils/nodeutils.h"
+#include "utils/pathutils.h"
 #include "websocket/jsongen.h"
 
 TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, QObject* parent)
@@ -127,7 +128,7 @@ void TreeModelO::RegisterPath(Node* node)
     if (kind != NodeKind::kBranch)
         return;
 
-    CString path { BuildPath(node) };
+    const auto path { path::Build(node, root_, separator_) };
     branch_path_.insert(node->id, path);
 }
 
@@ -204,7 +205,7 @@ QSet<QUuid> TreeModelO::UpdateAncestorTotal(
 
 void TreeModelO::InitAncestorTotal(Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta) const
 {
-    if (!node || node == root_ || !node->parent || node->parent == root_)
+    if (!node || !node->parent)
         return;
 
     if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta) && qFuzzyIsNull(count_delta) && qFuzzyIsNull(measure_delta) && qFuzzyIsNull(discount_delta))
@@ -212,7 +213,7 @@ void TreeModelO::InitAncestorTotal(Node* node, double initial_delta, double fina
 
     const auto unit { node->unit };
 
-    for (Node* current = node->parent; current && current != root_; current = current->parent) {
+    for (Node* current = node->parent; current; current = current->parent) {
         if (current->unit != unit)
             continue;
 
@@ -226,15 +227,20 @@ void TreeModelO::InitAncestorTotal(Node* node, double initial_delta, double fina
     }
 }
 
-void TreeModelO::InitTreeData()
+void TreeModelO::InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& /*leaf_path*/, QHash<QUuid, QString>& branch_path)
 {
-    for (auto* node : std::as_const(node_hash_)) {
-        auto* d_node { DerivedPtr<NodeO>(node) };
-
-        RegisterPath(node);
-
-        if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kReleased)
-            InitAncestorTotal(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
+    for (auto* node : node_hash) {
+        switch (node->kind) {
+        case NodeKind::kBranch:
+            branch_path.insert(node->id, path::Build(node, separator_));
+            break;
+        case NodeKind::kLeaf: {
+            auto* d_node { DerivedPtr<NodeO>(node) };
+            if (d_node->status == NodeStatus::kReleased)
+                InitAncestorTotal(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
+            break;
+        }
+        }
     }
 }
 
