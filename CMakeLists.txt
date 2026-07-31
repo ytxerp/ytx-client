@@ -298,6 +298,7 @@ set(HEADERS
     workspace/workspacemodel.h
     workspace/workspacerole.h
     enum/bindingmode.h
+    utils/pathutils.h
 )
 
 set(SOURCES
@@ -484,6 +485,7 @@ set(SOURCES
     workspace/workspacedialog.cc
     workspace/workspacemodel.cc
     workspace/workspacerole.cc
+    utils/pathutils.cc
 )
 
 set(UIS
