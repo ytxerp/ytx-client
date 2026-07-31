@@ -131,37 +131,47 @@ void SecondaryModel::sort(int column, Qt::SortOrder order)
 
 void SecondaryModel::Rebuild(const QJsonArray& array)
 {
-    ResourcePool<SecondaryRow>::Instance().Recycle(list_cache_);
+    if (array.isEmpty()) {
+        qWarning() << Q_FUNC_INFO << "Received empty array";
+    }
+
+    QList<SecondaryRow*> new_cache {};
+    new_cache.reserve(array.size());
 
     for (const auto& value : array) {
-        if (!value.isObject())
+        if (!value.isObject()) {
+            qWarning() << Q_FUNC_INFO << "Invalid data, expected object:" << value;
             continue;
-
-        const QJsonObject obj { value.toObject() };
-
-        auto* settlement { ResourcePool<SecondaryRow>::Instance().Allocate() };
-
-        settlement->ReadJson(obj);
-
-        list_cache_.emplaceBack(settlement);
-    }
-
-    {
-        beginResetModel();
-
-        list_.clear();
-
-        for (auto* entry : std::as_const(list_cache_)) {
-            if (status_ == SettlementStatus::kReleased && entry->is_settled)
-                list_.emplaceBack(entry);
-
-            if (status_ == SettlementStatus::kRecalled)
-                list_.emplaceBack(entry);
         }
 
-        sort(std::to_underlying(SecondaryField::kIssuedTime), Qt::AscendingOrder);
-        endResetModel();
+        auto* settlement { ResourcePool<SecondaryRow>::Instance().Allocate() };
+        settlement->ReadJson(value.toObject());
+
+        new_cache.emplaceBack(settlement);
     }
+
+    beginResetModel();
+
+    ResourcePool<SecondaryRow>::Instance().Recycle(list_cache_);
+    list_cache_ = std::move(new_cache);
+
+    list_.clear();
+
+    for (auto* entry : std::as_const(list_cache_)) {
+        switch (status_) {
+        case SettlementStatus::kReleased:
+            if (entry->is_settled)
+                list_.emplaceBack(entry);
+            break;
+        case SettlementStatus::kRecalled:
+            list_.emplaceBack(entry);
+            break;
+        }
+    }
+
+    sort(std::to_underlying(SecondaryField::kIssuedTime), Qt::AscendingOrder);
+
+    endResetModel();
 }
 
 void SecondaryModel::UpdateStatus(SettlementStatus status)

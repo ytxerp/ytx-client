@@ -54,8 +54,6 @@ private:
     Row* CreateBranchNode(const QString& name, finance::Roles roles, bool direction_rule) const;
 
     void InitFixedNodes();
-    QList<Row*> AddRowsList(const CJsonArray& node_array);
-
     void BuildCounterPartHierarchy() const;
 
 private:
@@ -63,7 +61,7 @@ private:
     Row* root_ {};
     Row* special_ {};
 
-    QList<Row*> special_list_ {};
+    QList<Row*> list_ {};
 };
 }
 

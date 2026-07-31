@@ -21,7 +21,7 @@ SpecialModel::~SpecialModel()
 {
     ResourcePool<Row>::Instance().Recycle(root_);
     ResourcePool<Row>::Instance().Recycle(special_);
-    ResourcePool<Row>::Instance().Recycle(special_list_);
+    ResourcePool<Row>::Instance().Recycle(list_);
 }
 
 QVariant SpecialModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -157,22 +157,39 @@ void SpecialModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void SpecialModel::Rebuild(CJsonArray& special_array)
+void SpecialModel::Rebuild(const QJsonArray& special_array)
 {
-    const auto special_list { AddRowsList(special_array) };
+    if (special_array.isEmpty()) {
+        qWarning() << Q_FUNC_INFO << "Received empty special array";
+    }
+
+    QList<Row*> new_list {};
+    new_list.reserve(special_array.size());
+
+    for (const auto& value : special_array) {
+        if (!value.isObject()) {
+            qWarning() << Q_FUNC_INFO << "Invalid data, expected object:" << value;
+            continue;
+        }
+
+        auto* node { ResourcePool<Row>::Instance().Allocate() };
+        node->ReadJson(value.toObject());
+
+        new_list.emplaceBack(node);
+    }
 
     beginResetModel();
 
-    {
-        ResourcePool<Row>::Instance().Recycle(special_list_);
-        special_->children.clear();
-    }
+    ResourcePool<Row>::Instance().Recycle(list_);
 
-    special_list_ = special_list;
+    special_->children.clear();
+
+    list_ = std::move(new_list);
 
     BuildCounterPartHierarchy();
 
     sort(std::to_underlying(RowField::kFinalTotal), Qt::DescendingOrder);
+
     endResetModel();
 }
 
@@ -195,27 +212,9 @@ void SpecialModel::InitFixedNodes()
     }
 }
 
-QList<Row*> SpecialModel::AddRowsList(const CJsonArray& node_array)
-{
-    if (node_array.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "Received empty node array";
-    }
-
-    QList<Row*> list {};
-
-    for (const QJsonValue& val : node_array) {
-        const QJsonObject obj { val.toObject() };
-        auto* node { ResourcePool<Row>::Instance().Allocate() };
-        node->ReadJson(obj);
-        list.emplaceBack(node);
-    }
-
-    return list;
-}
-
 void SpecialModel::BuildCounterPartHierarchy() const
 {
-    for (auto* node : std::as_const(special_list_)) {
+    for (auto* node : std::as_const(list_)) {
         node->parent = special_;
         special_->children.emplaceBack(node);
 

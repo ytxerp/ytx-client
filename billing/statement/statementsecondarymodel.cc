@@ -144,23 +144,32 @@ void SecondaryModel::sort(int column, Qt::SortOrder order)
 
 void SecondaryModel::Rebuild(const QJsonArray& array)
 {
+    if (array.isEmpty()) {
+        qWarning() << Q_FUNC_INFO << "Received empty array";
+    }
+
+    QList<SecondaryRow*> new_list {};
+    new_list.reserve(array.size());
+
+    for (const auto& value : array) {
+        if (!value.isObject()) {
+            qWarning() << Q_FUNC_INFO << "Invalid data, expected object:" << value;
+            continue;
+        }
+
+        auto* statement { ResourcePool<SecondaryRow>::Instance().Allocate() };
+        statement->ReadJson(value.toObject());
+
+        new_list.emplaceBack(statement);
+    }
+
     beginResetModel();
 
     ResourcePool<SecondaryRow>::Instance().Recycle(list_);
-
-    for (const auto& value : array) {
-        if (!value.isObject())
-            continue;
-
-        const QJsonObject obj { value.toObject() };
-
-        auto* statement_primary { ResourcePool<SecondaryRow>::Instance().Allocate() };
-        statement_primary->ReadJson(obj);
-
-        list_.emplaceBack(statement_primary);
-    }
+    list_ = std::move(new_list);
 
     sort(std::to_underlying(SecondaryField::kIssuedTime), Qt::AscendingOrder);
+
     endResetModel();
 }
 }

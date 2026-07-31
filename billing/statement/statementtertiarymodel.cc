@@ -150,23 +150,32 @@ void TertiaryModel::sort(int column, Qt::SortOrder order)
 
 void TertiaryModel::Rebuild(const QJsonArray& array)
 {
+    if (array.isEmpty()) {
+        qWarning() << Q_FUNC_INFO << "Received empty array";
+    }
+
+    QList<TertiaryRow*> new_list {};
+    new_list.reserve(array.size());
+
+    for (const auto& value : array) {
+        if (!value.isObject()) {
+            qWarning() << Q_FUNC_INFO << "Invalid data, expected object:" << value;
+            continue;
+        }
+
+        auto* statement { ResourcePool<TertiaryRow>::Instance().Allocate() };
+        statement->ReadJson(value.toObject());
+
+        new_list.emplaceBack(statement);
+    }
+
     beginResetModel();
 
     ResourcePool<TertiaryRow>::Instance().Recycle(list_);
-
-    for (const auto& value : array) {
-        if (!value.isObject())
-            continue;
-
-        const QJsonObject obj { value.toObject() };
-
-        auto* statement_secondary { ResourcePool<TertiaryRow>::Instance().Allocate() };
-        statement_secondary->ReadJson(obj);
-
-        list_.emplaceBack(statement_secondary);
-    }
+    list_ = std::move(new_list);
 
     sort(std::to_underlying(TertiaryField::kIssuedTime), Qt::AscendingOrder);
+
     endResetModel();
 }
 

@@ -54,7 +54,6 @@ private:
     Row* CreateBranchNode(const QString& name, finance::CashKind cash_kind, bool direction_rule) const;
 
     void InitFixedNodes();
-    QList<Row*> AddRowsList(const CJsonArray& node_array);
 
     void BuildHierarchy() const;
 

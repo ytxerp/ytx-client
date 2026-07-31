@@ -44,21 +44,29 @@ QVariant OrderReferenceModel::headerData(int section, Qt::Orientation orientatio
 
 void OrderReferenceModel::Rebuild(const QJsonArray& array)
 {
+    if (array.isEmpty()) {
+        qWarning() << Q_FUNC_INFO << "Received empty array";
+    }
+
+    QList<OrderReference*> new_list {};
+    new_list.reserve(array.size());
+
+    for (const auto& value : array) {
+        if (!value.isObject()) {
+            qWarning() << Q_FUNC_INFO << "Invalid data, expected object:" << value;
+            continue;
+        }
+
+        auto* reference { ResourcePool<OrderReference>::Instance().Allocate() };
+        reference->ReadJson(value.toObject());
+
+        new_list.emplaceBack(reference);
+    }
+
     beginResetModel();
 
     ResourcePool<OrderReference>::Instance().Recycle(list_);
-
-    for (const auto& value : array) {
-        if (!value.isObject())
-            continue;
-
-        const QJsonObject obj { value.toObject() };
-
-        auto* reference { ResourcePool<OrderReference>::Instance().Allocate() };
-        reference->ReadJson(obj);
-
-        list_.emplaceBack(reference);
-    }
+    list_ = std::move(new_list);
 
     endResetModel();
 }

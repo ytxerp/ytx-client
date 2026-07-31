@@ -111,23 +111,32 @@ void PrimaryModel::sort(int column, Qt::SortOrder order)
 
 void PrimaryModel::Rebuild(const QJsonArray& array)
 {
+    if (array.isEmpty()) {
+        qWarning() << Q_FUNC_INFO << "Received empty array";
+    }
+
+    QList<PrimaryRow*> new_list {};
+    new_list.reserve(array.size());
+
+    for (const auto& value : array) {
+        if (!value.isObject()) {
+            qWarning() << Q_FUNC_INFO << "Invalid data, expected object:" << value;
+            continue;
+        }
+
+        auto* statement { ResourcePool<PrimaryRow>::Instance().Allocate() };
+        statement->ReadJson(value.toObject());
+
+        new_list.emplaceBack(statement);
+    }
+
     beginResetModel();
 
     ResourcePool<PrimaryRow>::Instance().Recycle(list_);
-
-    for (const auto& value : array) {
-        if (!value.isObject())
-            continue;
-
-        const QJsonObject obj { value.toObject() };
-
-        auto* statement { ResourcePool<PrimaryRow>::Instance().Allocate() };
-        statement->ReadJson(obj);
-
-        list_.emplaceBack(statement);
-    }
+    list_ = std::move(new_list);
 
     sort(std::to_underlying(PrimaryField::kPartner), Qt::AscendingOrder);
+
     endResetModel();
 }
 

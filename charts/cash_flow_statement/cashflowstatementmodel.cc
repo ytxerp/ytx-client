@@ -158,21 +158,36 @@ void Model::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void Model::Rebuild(CJsonArray& node_array)
+void Model::Rebuild(const QJsonArray& node_array)
 {
-    const auto node_list { AddRowsList(node_array) };
+    if (node_array.isEmpty()) {
+        qWarning() << Q_FUNC_INFO << "Received empty node array";
+    }
+
+    QList<Row*> new_list {};
+    new_list.reserve(node_array.size());
+
+    for (const auto& value : node_array) {
+        if (!value.isObject()) {
+            qWarning() << Q_FUNC_INFO << "Invalid data, expected object:" << value;
+            continue;
+        }
+
+        auto* node { ResourcePool<Row>::Instance().Allocate() };
+        node->ReadJson(value.toObject());
+
+        new_list.emplaceBack(node);
+    }
 
     beginResetModel();
 
-    {
-        ResourcePool<Row>::Instance().Recycle(node_list_);
+    ResourcePool<Row>::Instance().Recycle(node_list_);
 
-        for (auto* node : std::as_const(second_level_nodes_)) {
-            node->children.clear();
-        }
+    for (auto* node : std::as_const(second_level_nodes_)) {
+        node->children.clear();
     }
 
-    node_list_ = node_list;
+    node_list_ = std::move(new_list);
 
     BuildHierarchy();
 
@@ -243,24 +258,6 @@ void Model::InitFixedNodes()
         second_level_nodes_.emplaceBack(financing_in_);
         second_level_nodes_.emplaceBack(financing_out_);
     }
-}
-
-QList<Row*> Model::AddRowsList(const CJsonArray& node_array)
-{
-    if (node_array.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "Received empty node array";
-    }
-
-    QList<Row*> list {};
-
-    for (const QJsonValue& val : node_array) {
-        const QJsonObject obj { val.toObject() };
-        auto* node { ResourcePool<Row>::Instance().Allocate() };
-        node->ReadJson(obj);
-        list.emplaceBack(node);
-    }
-
-    return list;
 }
 
 void Model::BuildHierarchy() const
