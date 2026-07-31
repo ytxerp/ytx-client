@@ -117,7 +117,7 @@ void Model::sort(int column, Qt::SortOrder order)
 void Model::Rebuild(const QJsonArray& array)
 {
     if (array.isEmpty()) {
-        qWarning() << "[AuditModel]" << "Received empty array";
+        qWarning() << Q_FUNC_INFO << "Received empty array";
     }
 
     // Parse outside the reset block
@@ -126,7 +126,7 @@ void Model::Rebuild(const QJsonArray& array)
 
     for (const auto& value : array) {
         if (!value.isObject()) {
-            qWarning() << "[AuditModel]" << "Invalid data, expected object:" << value;
+            qWarning() << Q_FUNC_INFO << "Invalid data, expected object:" << value;
             continue;
         }
 
