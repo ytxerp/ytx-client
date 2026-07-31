@@ -1285,7 +1285,7 @@ void WebSocket::UpdateSettlement(const QJsonObject& obj)
         auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
         Q_ASSERT(partner_model != nullptr);
 
-        const auto partner_id { QUuid(update.value(kPartnerId).toString()) };
+        const auto partner_id { QUuid(obj.value(kPartnerId).toString()) };
         const double initial_delta { update.value(kAmount).toString().toDouble() };
 
         partner_model->RUpdateAmount(partner_id, -initial_delta);
@@ -1316,7 +1316,7 @@ void WebSocket::RecallSettlement(const QJsonObject& obj)
         auto* partner_model { static_cast<TreeModelP*>(tree_model_hash_.value(Section::kPartner).data()) };
         Q_ASSERT(partner_model != nullptr);
 
-        const auto partner_id { QUuid(update.value(kPartnerId).toString()) };
+        const auto partner_id { QUuid(obj.value(kPartnerId).toString()) };
         const double initial_delta { update.value(kAmount).toString().toDouble() };
 
         partner_model->RUpdateAmount(partner_id, initial_delta);

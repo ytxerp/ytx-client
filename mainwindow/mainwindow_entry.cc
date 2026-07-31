@@ -20,14 +20,12 @@ void MainWindow::on_actionAppendEntry_triggered()
     {
         auto* widget { qobject_cast<SettlementPrimaryWidget*>(sc_->tab_widget->currentWidget()) };
         if (widget) {
-            const QUuid settlement_widget_id { widget->WidgetId() };
-
             settlement::PrimaryRow settlement {};
 
             settlement.issued_time = QDateTime::currentDateTime();
             settlement.id = QUuid::createUuidV7();
 
-            CreateSettlementSecondary(settlement_widget_id, settlement);
+            CreateSettlementSecondary(settlement, widget->Model());
             return;
         }
     }

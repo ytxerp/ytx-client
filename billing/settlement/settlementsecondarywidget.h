@@ -39,10 +39,12 @@ class SettlementSecondaryWidget final : public QWidget {
 
 signals:
     void SUpdatePartner(const QUuid& widget_id, const QUuid& partner_id);
+    void SInsertPrimaryRow(const settlement::PrimaryRow& row);
+    void SUpdatePrimaryRow(const settlement::PrimaryRow& row);
 
 public:
     explicit SettlementSecondaryWidget(TreeModel* tree_model_p, settlement::SecondaryModel* model, CSectionConfig& config,
-        const settlement::PrimaryRow& settlement, CUuid& widget_id, CUuid& parent_widget_id, Section section, QWidget* parent = nullptr);
+        const settlement::PrimaryRow& settlement, CUuid& widget_id, Section section, QWidget* parent = nullptr);
     ~SettlementSecondaryWidget() override;
 
     QTableView* View() const;
@@ -81,7 +83,6 @@ private:
     QJsonObject pending_update_ {};
 
     const QUuid widget_id_ {};
-    const QUuid parent_widget_id_ {};
     const Section section_ {};
 };
 

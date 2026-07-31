@@ -3,7 +3,7 @@
 #include "billing/settlement/settlementprimarywidget.h"
 #include "billing/settlement/settlementsecondarymodel.h"
 #include "billing/settlement/settlementsecondarywidget.h"
-#include "global/resourcepool.h"
+#include "component/constantint.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 #include "utils/templateutils.h"
@@ -37,16 +37,18 @@ void MainWindow::on_actionSettlement_triggered()
     RegisterWidget(widget, widget_id, WidgetRole::kSettlement);
 }
 
-void MainWindow::CreateSettlementSecondary(const QUuid& primary_widget_id, const settlement::PrimaryRow& primary_row)
+void MainWindow::CreateSettlementSecondary(const settlement::PrimaryRow& primary_row, settlement::PrimaryModel* primary_model)
 {
     Q_ASSERT(IsOrderSection(start_));
 
     auto* model { new settlement::SecondaryModel(header_info_.settlement_secondary, primary_row.status, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new SettlementSecondaryWidget(sc_p_.tree_model, model, sc_->section_config, primary_row, widget_id, primary_widget_id, start_, this) };
+    auto* widget { new SettlementSecondaryWidget(sc_p_.tree_model, model, sc_->section_config, primary_row, widget_id, start_, this) };
     connect(model, &settlement::SecondaryModel::SSyncAmount, widget, &SettlementSecondaryWidget::RSyncAmount);
     connect(widget, &SettlementSecondaryWidget::SUpdatePartner, this, &MainWindow::RUpdatePartner);
+    connect(widget, &SettlementSecondaryWidget::SInsertPrimaryRow, primary_model, &settlement::PrimaryModel::RInsertePrimaryRow);
+    connect(widget, &SettlementSecondaryWidget::SUpdatePrimaryRow, primary_model, &settlement::PrimaryModel::RUpdatePrimaryRow);
 
     {
         const QString name { sc_p_.tree_model->Name(primary_row.partner_id) };
@@ -96,10 +98,9 @@ void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
         return;
 
     auto* settlement { static_cast<settlement::PrimaryRow*>(index.internalPointer()) };
+    auto* primary_model { settlement_widget->Model() };
 
-    const QUuid settlement_widget_id { settlement_widget->WidgetId() };
-
-    CreateSettlementSecondary(settlement_widget_id, *settlement);
+    CreateSettlementSecondary(*settlement, primary_model);
 }
 
 void MainWindow::RAckSettlementItem(Section section, const QUuid& widget_id, const QJsonArray& array)
@@ -123,51 +124,19 @@ void MainWindow::RInsertSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
     const QJsonObject settlement_obj { obj.value(kSettlement).toObject() };
     const int version { settlement_obj.value(kVersion).toInt() };
 
     auto* sc { GetSectionContex(section) };
 
-    {
-        auto widget { sc->widget_hash.value(widget_id).widget };
-        if (widget) {
-            auto* ptr { widget.data() };
+    auto widget { sc->widget_hash.value(widget_id).widget };
+    if (widget) {
+        auto* ptr { widget.data() };
 
-            Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
-            auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
+        Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
+        auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
 
-            d_widget->InsertSucceeded(version);
-        }
-    }
-
-    {
-        auto parent_widget { sc->widget_hash.value(parent_widget_id).widget };
-        if (parent_widget) {
-            auto* ptr { parent_widget.data() };
-
-            Q_ASSERT(qobject_cast<SettlementPrimaryWidget*>(ptr));
-            auto* d_parent_widget { static_cast<SettlementPrimaryWidget*>(ptr) };
-
-            auto* model { d_parent_widget->Model() };
-
-            {
-                auto* settlement { ResourcePool<settlement::PrimaryRow>::Instance().Allocate() };
-                settlement->ReadJson(settlement_obj);
-
-                model->InsertSucceeded(settlement);
-            }
-
-            {
-                auto* view { d_parent_widget->View() };
-
-                const int last_row { model->rowCount() - 1 };
-                const QModelIndex last_index { model->index(last_row, std::to_underlying(settlement::PrimaryField::kPartner)) };
-
-                view->setCurrentIndex(last_index);
-                view->selectionModel()->select(last_index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-            }
-        }
+        d_widget->InsertSucceeded(version);
     }
 }
 
@@ -175,36 +144,19 @@ void MainWindow::RRecallSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
-    const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
     const int version { update.value(kVersion).toInt() };
 
     auto* sc { GetSectionContex(section) };
 
-    {
-        auto widget { sc->widget_hash.value(widget_id).widget };
-        if (widget) {
-            auto* ptr { widget.data() };
+    auto widget { sc->widget_hash.value(widget_id).widget };
+    if (widget) {
+        auto* ptr { widget.data() };
 
-            Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
-            auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
+        Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
+        auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
 
-            d_widget->RecallSucceeded(version);
-        }
-    }
-
-    {
-        auto parent_widget { sc->widget_hash.value(parent_widget_id).widget };
-        if (parent_widget) {
-            auto* ptr { parent_widget.data() };
-
-            Q_ASSERT(qobject_cast<SettlementPrimaryWidget*>(ptr));
-            auto* d_parent_widget { static_cast<SettlementPrimaryWidget*>(ptr) };
-
-            auto* model { d_parent_widget->Model() };
-            model->RecallSucceeded(settlement_id, version);
-        }
+        d_widget->RecallSucceeded(version);
     }
 }
 
@@ -213,35 +165,19 @@ void MainWindow::RUpdateSettlement(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const QJsonObject settlement { obj.value(kSettlement).toObject() };
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
-    const auto parent_widget_id { QUuid(obj.value(kParentWidgetId).toString()) };
-    const QUuid settlement_id { QUuid(obj.value(kSettlementId).toString()) };
-    const int version { settlement.value(kVersion).toInt() };
+    const QJsonObject update { obj.value(kUpdate).toObject() };
+    const int version { update.value(kVersion).toInt() };
 
     auto* sc { GetSectionContex(section) };
 
-    {
-        auto widget { sc->widget_hash.value(widget_id).widget };
-        if (widget) {
-            auto* ptr { widget.data() };
+    auto widget { sc->widget_hash.value(widget_id).widget };
+    if (widget) {
+        auto* ptr { widget.data() };
 
-            Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
-            auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
+        Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
+        auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
 
-            d_widget->UpdateSucceeded(version);
-        }
-    }
-
-    {
-        auto parent_widget { sc->widget_hash.value(parent_widget_id).widget };
-        if (parent_widget) {
-            auto* ptr { parent_widget.data() };
-
-            Q_ASSERT(qobject_cast<SettlementPrimaryWidget*>(ptr));
-            auto* d_parent_widget { static_cast<SettlementPrimaryWidget*>(ptr) };
-
-            auto* model { d_parent_widget->Model() };
-            model->UpdateSucceeded(settlement_id, settlement);
-        }
+        d_widget->UpdateSucceeded(version);
     }
 }
 

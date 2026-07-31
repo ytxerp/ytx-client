@@ -34,6 +34,10 @@ public:
     explicit PrimaryModel(const QStringList& header, Section section, QObject* parent = nullptr);
     ~PrimaryModel() override;
 
+public slots:
+    void RInsertePrimaryRow(const settlement::PrimaryRow& row);
+    void RUpdatePrimaryRow(const settlement::PrimaryRow& row);
+
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex& index) const override;
@@ -47,15 +51,17 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-    bool InsertSucceeded(PrimaryRow* settlement);
-    void RecallSucceeded(const QUuid& settlement_id, int version);
-    void UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update);
     void Rebuild(const QJsonArray& array);
 
-    PrimaryRow* FindSettlement(const QUuid& settlement_id) const
+private:
+    std::optional<int> FindSettlementRow(const QUuid& settlement_id)
     {
-        auto it = std::ranges::find_if(list_, [&settlement_id](const PrimaryRow* s) { return s && s->id == settlement_id; });
-        return it != list_.end() ? *it : nullptr;
+        for (int i = 0; i < list_.size(); ++i) {
+            if (auto* s = list_[i]; s && s->id == settlement_id)
+                return i;
+        }
+
+        return std::nullopt;
     }
 
 private:

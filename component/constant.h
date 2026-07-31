@@ -173,7 +173,6 @@ inline const QString kNodeId = QStringLiteral("node_id");
 inline const QString kParentId = QStringLiteral("parent_id");
 inline const QString kOrderId = QStringLiteral("order_id");
 inline const QString kWidgetId = QStringLiteral("widget_id");
-inline const QString kParentWidgetId = QStringLiteral("parent_widget_id");
 inline const QString kOldNodeId = QStringLiteral("old_node_id");
 inline const QString kNewNodeId = QStringLiteral("new_node_id");
 inline const QString kExpireTime = QStringLiteral("expire_time");

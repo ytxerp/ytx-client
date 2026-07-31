@@ -19,6 +19,40 @@ PrimaryModel::PrimaryModel(const QStringList& header, Section section, QObject* 
 
 PrimaryModel::~PrimaryModel() { ResourcePool<PrimaryRow>::Instance().Recycle(list_); }
 
+void PrimaryModel::RInsertePrimaryRow(const PrimaryRow& row)
+{
+    auto* settlement { ResourcePool<settlement::PrimaryRow>::Instance().Allocate() };
+    *settlement = row;
+
+    const int count { rowCount() };
+
+    beginInsertRows(QModelIndex(), count, count);
+    list_.emplaceBack(settlement);
+    endInsertRows();
+}
+
+void PrimaryModel::RUpdatePrimaryRow(const PrimaryRow& row)
+{
+    const auto row_index { FindSettlementRow(row.id) };
+
+    if (!row_index)
+        return;
+
+    auto* settlement { list_[*row_index] };
+
+    Q_ASSERT(settlement != nullptr);
+    Q_ASSERT_X(settlement->partner_id == row.partner_id, "PrimaryModel::RUpdatedPrimaryRow", "Partner id cannot be changed during update");
+
+    if (settlement->partner_id != row.partner_id) {
+        qWarning() << Q_FUNC_INFO << "Invalid settlement update: partner id mismatch.";
+        return;
+    }
+
+    *settlement = row;
+
+    emit dataChanged(index(*row_index, std::to_underlying(PrimaryField::kIssuedTime)), index(*row_index, std::to_underlying(PrimaryField::kAmount)));
+}
+
 QModelIndex PrimaryModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
@@ -112,60 +146,32 @@ bool PrimaryModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
     return true;
 }
 
-bool PrimaryModel::InsertSucceeded(PrimaryRow* settlement)
-{
-    const int row { rowCount() };
-
-    beginInsertRows(QModelIndex(), row, row);
-    list_.emplaceBack(settlement);
-    endInsertRows();
-
-    return true;
-}
-
-void PrimaryModel::RecallSucceeded(const QUuid& settlement_id, int version)
-{
-    auto* settlement { FindSettlement(settlement_id) };
-    Q_ASSERT_X(settlement != nullptr, "SettlementModel::RecallSettlement", "Settlement must exist for recalled operation");
-
-    if (!settlement)
-        return;
-
-    settlement->version = version;
-    settlement->amount = 0.0;
-    settlement->status = SettlementStatus::kRecalled;
-}
-
-void PrimaryModel::UpdateSucceeded(const QUuid& settlement_id, const QJsonObject& update)
-{
-    auto* settlement { FindSettlement(settlement_id) };
-    Q_ASSERT_X(settlement != nullptr, "SettlementModel::RecallSettlement", "Settlement must exist for recalled operation");
-
-    if (!settlement)
-        return;
-
-    settlement->ReadJson(update);
-}
-
 void PrimaryModel::Rebuild(const QJsonArray& array)
 {
+    if (array.isEmpty()) {
+        qWarning() << Q_FUNC_INFO << "Received empty array";
+    }
+
+    QList<PrimaryRow*> new_list {};
+    new_list.reserve(array.size());
+
+    for (const auto& value : array) {
+        if (!value.isObject()) {
+            qWarning() << Q_FUNC_INFO << "Invalid data, expected object:" << value;
+            continue;
+        }
+
+        auto* settlement { ResourcePool<PrimaryRow>::Instance().Allocate() };
+        settlement->ReadJson(value.toObject());
+        new_list.emplaceBack(settlement);
+    }
+
     beginResetModel();
 
     ResourcePool<PrimaryRow>::Instance().Recycle(list_);
+    list_ = std::move(new_list);
+    sort(std::to_underlying(PrimaryField::kIssuedTime), Qt::AscendingOrder);
 
-    for (const auto& value : array) {
-        if (!value.isObject())
-            continue;
-
-        const QJsonObject obj { value.toObject() };
-
-        auto* settlement { ResourcePool<PrimaryRow>::Instance().Allocate() };
-        settlement->ReadJson(obj);
-
-        list_.emplaceBack(settlement);
-    }
-
-    sort(static_cast<int>(PrimaryField::kIssuedTime), Qt::AscendingOrder);
     endResetModel();
 }
 }

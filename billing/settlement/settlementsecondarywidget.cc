@@ -8,7 +8,7 @@
 #include "websocket/websocket.h"
 
 SettlementSecondaryWidget::SettlementSecondaryWidget(TreeModel* tree_model_p, settlement::SecondaryModel* model, CSectionConfig& config,
-    const settlement::PrimaryRow& settlement, CUuid& widget_id, CUuid& parent_widget_id, Section section, QWidget* parent)
+    const settlement::PrimaryRow& settlement, CUuid& widget_id, Section section, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SettlementSecondaryWidget)
     , settlement_ { settlement }
@@ -16,7 +16,6 @@ SettlementSecondaryWidget::SettlementSecondaryWidget(TreeModel* tree_model_p, se
     , config_ { config }
     , tree_model_p_ { tree_model_p }
     , widget_id_ { widget_id }
-    , parent_widget_id_ { parent_widget_id }
     , section_ { section }
 {
     ui->setupUi(this);
@@ -94,8 +93,7 @@ void SettlementSecondaryWidget::LockWidget(bool is_settled)
 bool SettlementSecondaryWidget::ValidateSyncState()
 {
     if (settlement_.sync_state == SyncState::kUpdating) {
-        utils::ShowMessage(
-            QMessageBox::Information, tr("Data Outdated"), tr("The data has changed. Please refresh and try again."), time_const::kAutoCloseMs);
+        utils::ShowMessage(QMessageBox::Information, tr("Data Outdated"), tr("The data has changed. Please refresh and try again."), time_const::kAutoCloseMs);
         return false;
     }
 
@@ -166,14 +164,14 @@ void SettlementSecondaryWidget::on_pBtnRelease_clicked()
         model_->Finalize(message);
 
         message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
-        message.insert(kParentWidgetId, parent_widget_id_.toString(QUuid::WithoutBraces));
-        message.insert(kSettlementId, settlement_.id.toString(QUuid::WithoutBraces));
 
         if (settlement_.sync_state == SyncState::kSynced) {
             pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kReleased));
             pending_update_.insert(kAmount, QString::number(settlement_.amount, 'f', numeric_const::kDecimalPlaces4));
             pending_update_.insert(kVersion, settlement_.version);
 
+            message.insert(kPartnerId, settlement_.partner_id.toString(QUuid::WithoutBraces));
+            message.insert(kSettlementId, settlement_.id.toString(QUuid::WithoutBraces));
             message.insert(kUpdate, pending_update_);
 
             WebSocket::Instance()->SendMessage(WsKey::kSettlementUpdate, message);
@@ -204,10 +202,9 @@ void SettlementSecondaryWidget::on_pBtnRecall_clicked()
 
     pending_update_.insert(kVersion, settlement_.version);
     pending_update_.insert(kAmount, settlement_.amount);
-    pending_update_.insert(kPartnerId, settlement_.partner_id.toString(QUuid::WithoutBraces));
 
+    message.insert(kPartnerId, settlement_.partner_id.toString(QUuid::WithoutBraces));
     message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
-    message.insert(kParentWidgetId, parent_widget_id_.toString(QUuid::WithoutBraces));
     message.insert(kSettlementId, settlement_.id.toString(QUuid::WithoutBraces));
     message.insert(kUpdate, pending_update_);
 
@@ -221,6 +218,8 @@ void SettlementSecondaryWidget::InsertSucceeded(int version)
 {
     ui->comboPartner->setEnabled(false);
     UpdateSucceeded(version);
+
+    emit SInsertPrimaryRow(settlement_);
 }
 
 void SettlementSecondaryWidget::RecallSucceeded(int version)
@@ -235,6 +234,7 @@ void SettlementSecondaryWidget::RecallSucceeded(int version)
     model_->UpdateStatus(SettlementStatus::kRecalled);
 
     LockWidget(false);
+    emit SUpdatePrimaryRow(settlement_);
 }
 
 void SettlementSecondaryWidget::UpdateSucceeded(int version)
@@ -247,4 +247,5 @@ void SettlementSecondaryWidget::UpdateSucceeded(int version)
 
     ui->tableView->clearSelection();
     LockWidget(true);
+    emit SUpdatePrimaryRow(settlement_);
 }

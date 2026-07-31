@@ -39,7 +39,6 @@ public:
 
     QTableView* View() const;
     settlement::PrimaryModel* Model() const { return model_; }
-    QUuid WidgetId() const { return widget_id_; }
 
 private slots:
     void on_pBtnFetch_clicked();
