@@ -135,7 +135,7 @@ void PrimaryModel::Rebuild(const QJsonArray& array)
     ResourcePool<PrimaryRow>::Instance().Recycle(list_);
     list_ = std::move(new_list);
 
-    sort(std::to_underlying(PrimaryField::kPartner), Qt::AscendingOrder);
+    sort(std::to_underlying(PrimaryField::kCBalance), Qt::DescendingOrder);
 
     endResetModel();
 }
