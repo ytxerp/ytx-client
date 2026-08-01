@@ -91,6 +91,7 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(TargetOperation::kRelease), tr("Release") },
         { std::to_underlying(TargetOperation::kMove), tr("Move") },
         { std::to_underlying(TargetOperation::kReplace), tr("Replace") },
+        { std::to_underlying(TargetOperation::kPeriodClose), tr("Period Close") },
     };
 
     audit_info_.target_field_hash = {

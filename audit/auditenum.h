@@ -36,6 +36,7 @@ enum class TargetOperation {
     kRelease,
     kMove,
     kReplace,
+    kPeriodClose,
 };
 
 enum class Level {
