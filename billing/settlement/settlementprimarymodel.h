@@ -56,7 +56,7 @@ public:
 private:
     std::optional<int> FindSettlementRow(const QUuid& settlement_id)
     {
-        for (int i = 0; i < list_.size(); ++i) {
+        for (int i = 0; i != list_.size(); ++i) {
             if (auto* s = list_[i]; s && s->id == settlement_id)
                 return i;
         }

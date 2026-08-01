@@ -149,7 +149,7 @@ bool PrimaryModel::removeRows(int row, int /*count*/, const QModelIndex& parent)
 void PrimaryModel::Rebuild(const QJsonArray& array)
 {
     if (array.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "Received empty array";
+        qDebug() << Q_FUNC_INFO << "Received empty array";
     }
 
     QList<PrimaryRow*> new_list {};

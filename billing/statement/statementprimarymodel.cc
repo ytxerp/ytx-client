@@ -112,7 +112,7 @@ void PrimaryModel::sort(int column, Qt::SortOrder order)
 void PrimaryModel::Rebuild(const QJsonArray& array)
 {
     if (array.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "Received empty array";
+        qDebug() << Q_FUNC_INFO << "Received empty array";
     }
 
     QList<PrimaryRow*> new_list {};

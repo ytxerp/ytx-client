@@ -117,7 +117,7 @@ void Model::sort(int column, Qt::SortOrder order)
 void Model::Rebuild(const QJsonArray& array)
 {
     if (array.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "Received empty array";
+        qDebug() << Q_FUNC_INFO << "Received empty array";
     }
 
     // Parse outside the reset block
