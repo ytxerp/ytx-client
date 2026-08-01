@@ -1,6 +1,5 @@
 #include "treemodel.h"
 
-#include <QElapsedTimer>
 #include <QJsonArray>
 #include <QQueue>
 
@@ -16,9 +15,9 @@
 
 TreeModel::TreeModel(CSectionInfo& info, CString& separator, QObject* parent)
     : QAbstractItemModel(parent)
-    , separator_ { separator }
     , section_ { info.section }
-    , node_header_ { info.node_header }
+    , separator_ { separator }
+    , header_ { info.node_header }
 {
     InitRoot();
 }
@@ -695,7 +694,7 @@ void TreeModel::Reset()
     FlushCaches();
 
     beginResetModel();
-    ResetData();
+    ClearTree();
     endResetModel();
 }
 
@@ -985,11 +984,6 @@ void TreeModel::EmitDataChanged(int start_row, int end_row, int start_column, in
 
 void TreeModel::ApplyTree(const QJsonObject& data)
 {
-#ifndef NDEBUG
-    QElapsedTimer timer {};
-    timer.start();
-#endif
-
     const QJsonArray node_array { data.value(kNodeArray).toArray() };
     const QJsonArray path_array { data.value(kPathArray).toArray() };
 
@@ -1026,15 +1020,11 @@ void TreeModel::ApplyTree(const QJsonObject& data)
         InitHashData(new_hash, new_leaf_path, new_branch_path);
     }
 
-#ifndef NDEBUG
     qDebug() << "nodes:" << new_hash.size() << "leaf paths:" << new_leaf_path.size() << "branch paths:" << new_branch_path.size();
-    qDebug() << Q_FUNC_INFO << "Build data elapsed:" << timer.elapsed() << "ms";
-    timer.restart();
-#endif
 
     beginResetModel();
 
-    ResetData();
+    ClearTree();
 
     node_hash_ = std::move(new_hash);
     leaf_path_ = std::move(new_leaf_path);
@@ -1046,10 +1036,6 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     sort(std::to_underlying(NodeEnum::kName), Qt::AscendingOrder);
 
     endResetModel();
-
-#ifndef NDEBUG
-    qDebug() << Q_FUNC_INFO << "Reset model elapsed:" << timer.elapsed() << "ms";
-#endif
 
     emit SInitStatus();
 }
@@ -1074,7 +1060,7 @@ void TreeModel::InitRoot()
     Q_ASSERT(root_ != nullptr);
 }
 
-void TreeModel::ResetData()
+void TreeModel::ClearTree()
 {
     NodePool::Instance().Recycle(node_hash_, section_);
 

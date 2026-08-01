@@ -103,13 +103,13 @@ public:
     int columnCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent);
-        return node_header_.size();
+        return header_.size();
     }
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override
     {
         if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-            return node_header_.at(section);
+            return header_.at(section);
         }
 
         return QVariant();
@@ -228,7 +228,7 @@ protected:
 
 private:
     void InitRoot();
-    void ResetData();
+    void ClearTree();
 
     QSet<QUuid> ExtractLeafIds(const Node* node) const;
     void SyncLeafModel(const QSet<QUuid>& leaf_ids) const;
@@ -259,10 +259,10 @@ protected:
     QHash<QUuid, QString> branch_path_ {};
 
     ItemModel* leaf_path_model_ {};
-    CString& separator_;
 
     const Section section_ {};
-    const QStringList& node_header_ {};
+    const QString& separator_;
+    const QStringList& header_ {};
 
     QHash<QUuid, QTimer*> pending_timers_ {};
     QHash<QUuid, QJsonObject> pending_updates_ {};
