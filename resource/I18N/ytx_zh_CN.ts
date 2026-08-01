@@ -1258,6 +1258,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="683"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="94"/>
         <source>Period Close</source>
         <translation>结转</translation>
     </message>
@@ -1317,8 +1318,8 @@
         <location filename="../../mainwindow/mainwindow_audit.cc" line="77"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="123"/>
         <location filename="../../mainwindow/mainwindow_settlement.cc" line="23"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="53"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="79"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="55"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="81"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1405,7 +1406,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="584"/>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="98"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="99"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="31"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="51"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="63"/>
@@ -1434,7 +1435,7 @@
         <location filename="../../mainwindow/mainwindow_account.cc" line="49"/>
         <location filename="../../mainwindow/mainwindow_global.cc" line="49"/>
         <location filename="../../mainwindow/mainwindow_node_remove.cc" line="26"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="280"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="216"/>
         <source>Operation Rejected</source>
         <translation>操作已拒绝</translation>
     </message>
@@ -1496,7 +1497,7 @@
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="99"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="100"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="34"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="54"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="66"/>
@@ -1752,7 +1753,7 @@
         <translation>金额</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="104"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="105"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="121"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="135"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="144"/>
@@ -1873,7 +1874,7 @@
         <translation>汇率</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="102"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="103"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="247"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="262"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="277"/>
@@ -2293,17 +2294,17 @@ Would you like to download it now?</source>
         <translation>撤回</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="100"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="101"/>
         <source>Numeric</source>
         <translation>数值</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="101"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="102"/>
         <source>Rate</source>
         <translation>比率</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_audit.cc" line="103"/>
+        <location filename="../../mainwindow/mainwindow_audit.cc" line="104"/>
         <source>Content</source>
         <translation>内容</translation>
     </message>
@@ -2333,13 +2334,13 @@ Would you like to download it now?</source>
         <translation>操作无效</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_entry.cc" line="71"/>
+        <location filename="../../mainwindow/mainwindow_entry.cc" line="69"/>
         <location filename="../../mainwindow/mainwindow_node_remove.cc" line="79"/>
         <source>Confirm Delete</source>
         <translation>删除确认</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_entry.cc" line="72"/>
+        <location filename="../../mainwindow/mainwindow_entry.cc" line="70"/>
         <source>Are you sure you want to delete this entry?&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 Tip: You can disable this confirmation in Preferences.&lt;/i&gt;</source>
         <translation>确定要删除该记录吗？&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作为永久删除，无法撤销。&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 提示：您可以在“首选项”中关闭此提示。&lt;/i&gt;</translation>
     </message>
@@ -2361,7 +2362,7 @@ Please recall it before deleting.</source>
         <translation>分支“%1”将被永久删除，其直系子节点将提升到同一级别。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="281"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="217"/>
         <source>The released settlement cannot be deleted.
 Please recall it first and try again.</source>
         <translation>已发布的结算单无法删除。
@@ -2456,20 +2457,36 @@ Do you want to save them before closing?</source>
         <translation>提交</translation>
     </message>
     <message>
-        <location filename="../../period_close/periodclosedialog.cc" line="144"/>
-        <location filename="../../period_close/periodclosedialog.cc" line="149"/>
+        <location filename="../../period_close/periodclosedialog.cc" line="105"/>
+        <location filename="../../period_close/periodclosedialog.cc" line="126"/>
+        <location filename="../../period_close/periodclosedialog.cc" line="131"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../period_close/periodclosedialog.cc" line="144"/>
+        <location filename="../../period_close/periodclosedialog.cc" line="105"/>
+        <source>Please select both the closing node and the summary node.</source>
+        <translation>请选择结转节点和汇总节点后再继续。</translation>
+    </message>
+    <message>
+        <location filename="../../period_close/periodclosedialog.cc" line="126"/>
         <source>Closing and summary nodes must be different.</source>
         <translation>结转和汇总节点必须不同。</translation>
     </message>
     <message>
-        <location filename="../../period_close/periodclosedialog.cc" line="149"/>
+        <location filename="../../period_close/periodclosedialog.cc" line="131"/>
         <source>Closing and summary nodes must not have ancestor-descendant relationships.</source>
         <translation>结转和汇总节点之间不得存在祖先-后代关系。</translation>
+    </message>
+    <message>
+        <location filename="../../period_close/periodclosedialog.cc" line="176"/>
+        <source>Information</source>
+        <translation>提示</translation>
+    </message>
+    <message>
+        <location filename="../../period_close/periodclosedialog.cc" line="176"/>
+        <source>The preview is empty. Nothing to submit.</source>
+        <translation>预览结果为空，没有可提交的结转内容。</translation>
     </message>
 </context>
 <context>
@@ -3197,12 +3214,12 @@ Do you want to save them before closing?</source>
         <translation>发布</translation>
     </message>
     <message>
-        <location filename="../../billing/settlement/settlementsecondarywidget.cc" line="98"/>
+        <location filename="../../billing/settlement/settlementsecondarywidget.cc" line="96"/>
         <source>Data Outdated</source>
         <translation>数据已过期</translation>
     </message>
     <message>
-        <location filename="../../billing/settlement/settlementsecondarywidget.cc" line="98"/>
+        <location filename="../../billing/settlement/settlementsecondarywidget.cc" line="96"/>
         <source>The data has changed. Please refresh and try again.</source>
         <translation>数据已发生变化，请刷新后重试。</translation>
     </message>
@@ -3546,31 +3563,31 @@ Please recall it before deleting.</source>
 <context>
     <name>cash_flow::Model</name>
     <message>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="199"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="214"/>
         <source>Operating</source>
         <translation>经营活动</translation>
     </message>
     <message>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="200"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="215"/>
         <source>Investing</source>
         <translation>投资活动</translation>
     </message>
     <message>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="201"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="216"/>
         <source>Financing</source>
         <translation>筹资活动</translation>
     </message>
     <message>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="220"/>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="222"/>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="224"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="235"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="237"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="239"/>
         <source>Inflows</source>
         <translation>流入</translation>
     </message>
     <message>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="221"/>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="223"/>
-        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="225"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="236"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="238"/>
+        <location filename="../../charts/cash_flow_statement/cashflowstatementmodel.cc" line="240"/>
         <source>Outflows</source>
         <translation>流出</translation>
     </message>
@@ -3578,7 +3595,7 @@ Please recall it before deleting.</source>
 <context>
     <name>cash_flow::SpecialModel</name>
     <message>
-        <location filename="../../charts/cash_flow_statement/cashflowspecialmodel.cc" line="190"/>
+        <location filename="../../charts/cash_flow_statement/cashflowspecialmodel.cc" line="207"/>
         <source>Special</source>
         <translation>特殊项目</translation>
     </message>
@@ -3586,7 +3603,7 @@ Please recall it before deleting.</source>
 <context>
     <name>income_statement::Model</name>
     <message>
-        <location filename="../../charts/income_statement/incomestatementmodel.cc" line="285"/>
+        <location filename="../../charts/income_statement/incomestatementmodel.cc" line="274"/>
         <source>Net Profit</source>
         <translation>净利润</translation>
     </message>
