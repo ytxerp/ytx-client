@@ -31,9 +31,6 @@ public:
     TreeModelO(CSectionInfo& info, CString& separator, QObject* parent = nullptr);
     ~TreeModelO() override = default;
 
-public slots:
-    void RNodeStatus(const QUuid& node_id, NodeStatus value);
-
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
@@ -47,6 +44,7 @@ public:
     void RecallSettlement(const QUuid& settlement_id);
 
     QUuid Partner(QUuid node_id) const { return Value(node_id, &NodeO::partner_id); };
+    void HandleStatusChanged(const QUuid& node_id, NodeStatus value);
 
 protected:
     void RegisterNode(Node* node) override;

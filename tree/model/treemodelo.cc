@@ -12,7 +12,7 @@ TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, QObject* parent)
 {
 }
 
-void TreeModelO::RNodeStatus(const QUuid& node_id, NodeStatus value)
+void TreeModelO::HandleStatusChanged(const QUuid& node_id, NodeStatus value)
 {
     auto* d_node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
     if (!d_node)
