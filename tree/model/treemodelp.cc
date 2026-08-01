@@ -8,7 +8,7 @@ TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, QObject* parent)
     leaf_path_model_ = new ItemModel(this);
 }
 
-void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)
+void TreeModelP::UpdateAmount(const QUuid& node_id, double initial_delta)
 {
     Q_ASSERT(!node_id.isNull());
 
@@ -22,7 +22,11 @@ void TreeModelP::RUpdateAmount(const QUuid& node_id, double initial_delta)
     node->initial_total += initial_delta;
     node->version += 1;
 
-    const auto& affected_ids { UpdateAncestorTotal(node, initial_delta) };
+    const node::Delta delta {
+        .initial = initial_delta,
+    };
+
+    const auto& affected_ids { UpdateAncestorTotal(node, delta) };
     RefreshAffectedTotal(affected_ids);
 }
 
@@ -54,7 +58,7 @@ void TreeModelP::ResetUnitSet()
     leaf_path_model_->AppendItem(QString(), QUuid());
 }
 
-QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, double, double, double, double) const
+QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, const node::Delta& delta) const
 {
     QSet<QUuid> affected_ids {};
 
@@ -66,7 +70,7 @@ QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, do
     if (!node->parent || node->parent == root_)
         return affected_ids;
 
-    if (qFuzzyIsNull(initial_delta))
+    if (qFuzzyIsNull(delta.initial))
         return affected_ids;
 
     const auto unit { node->unit };
@@ -75,7 +79,7 @@ QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, do
         if (current->unit != unit)
             continue;
 
-        current->initial_total += initial_delta;
+        current->initial_total += delta.initial;
 
         affected_ids.insert(current->id);
     }
@@ -83,12 +87,12 @@ QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, double initial_delta, do
     return affected_ids;
 }
 
-void TreeModelP::InitAncestorTotal(Node* node, double initial_delta, double, double, double, double) const
+void TreeModelP::InitAncestorTotal(Node* node, const node::Delta& delta) const
 {
     if (!node || node == root_ || !node->parent || node->parent == root_)
         return;
 
-    if (qFuzzyIsNull(initial_delta))
+    if (qFuzzyIsNull(delta.initial))
         return;
 
     const auto unit { node->unit };
@@ -97,7 +101,7 @@ void TreeModelP::InitAncestorTotal(Node* node, double initial_delta, double, dou
         if (current->unit != unit)
             continue;
 
-        current->initial_total += initial_delta;
+        current->initial_total += delta.initial;
     }
 }
 

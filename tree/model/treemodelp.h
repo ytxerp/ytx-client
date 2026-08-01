@@ -29,21 +29,20 @@ public:
     TreeModelP(CSectionInfo& info, CString& separator, QObject* parent = nullptr);
     ~TreeModelP() override = default;
 
-public slots:
-    void RUpdateAmount(const QUuid& node_id, double initial_delta);
-
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
+    void UpdateAmount(const QUuid& node_id, double initial_delta);
+
 protected:
     QSet<QUuid>* UnitSet(NodeUnit unit) override;
     void ResetUnitSet() override;
 
-    QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double = 0.0, double = 0.0, double = 0.0, double = 0.0) const override;
-    void InitAncestorTotal(Node* node, double initial_delta, double = 0.0, double = 0.0, double = 0.0, double = 0.0) const override;
+    QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const override;
+    void InitAncestorTotal(Node* node, const node::Delta& delta) const override;
 
 private:
     QSet<QUuid> cset_ {}; // Set of all nodes that are customer unit

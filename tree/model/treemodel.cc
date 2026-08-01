@@ -56,7 +56,7 @@ void TreeModel::SyncTotalArray(const QJsonArray& total_array)
         const double initial_total { obj.value(kInitialTotal).toString().toDouble() };
         const double final_total { obj.value(kFinalTotal).toString().toDouble() };
 
-        const auto ids { UpdateTotal(node_id, initial_total, final_total) };
+        const auto ids { SyncTotal(node_id, initial_total, final_total) };
         affected_ids.unite(ids);
     }
 
@@ -86,16 +86,18 @@ void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
     AfterNodeInserted(node);
 }
 
-QSet<QUuid> TreeModel::UpdateTotal(const QUuid& node_id, double initial_total, double final_total)
+QSet<QUuid> TreeModel::SyncTotal(const QUuid& node_id, double initial_total, double final_total)
 {
     auto* node = GetNode(node_id);
     if (!node)
         return {};
 
-    const double initial_delta { initial_total - node->initial_total };
-    const double final_delta { final_total - node->final_total };
+    const node::Delta delta {
+        .initial = initial_total - node->initial_total,
+        .final = final_total - node->final_total,
+    };
 
-    if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta))
+    if (delta.IsNull())
         return {};
 
     // Accumulate into the current node totals
@@ -103,7 +105,7 @@ QSet<QUuid> TreeModel::UpdateTotal(const QUuid& node_id, double initial_total, d
     node->final_total = final_total;
 
     // Propagate adjusted deltas to ancestor nodes
-    const auto affected_ids { UpdateAncestorTotal(node, initial_delta, final_delta) };
+    const auto affected_ids { UpdateAncestorTotal(node, delta) };
 
     emit SSyncValue();
 
@@ -288,13 +290,16 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
         return;
 
     const int multiplier { old_node->direction_rule == new_node->direction_rule ? 1 : -1 };
-    const double initial_delta { multiplier * old_node->initial_total };
-    const double final_delta { multiplier * old_node->final_total };
 
-    new_node->initial_total += initial_delta;
-    new_node->final_total += final_delta;
+    const node::Delta delta {
+        .initial = multiplier * old_node->initial_total,
+        .final = multiplier * old_node->final_total,
+    };
 
-    const auto affected_ids { UpdateAncestorTotal(new_node, initial_delta, final_delta) };
+    new_node->initial_total += delta.initial;
+    new_node->final_total += delta.final;
+
+    const auto affected_ids { UpdateAncestorTotal(new_node, delta) };
     RefreshAffectedTotal(affected_ids);
 
     DeleteNode(old_node_id);
@@ -605,12 +610,22 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int cou
         return false;
     }
 
-    const auto affected_ids_source { UpdateAncestorTotal(node, -node->initial_total, -node->final_total) };
+    const node::Delta delta_source {
+        .initial = -node->initial_total,
+        .final = -node->final_total,
+    };
+
+    const auto affected_ids_source { UpdateAncestorTotal(node, delta_source) };
 
     destination_parent->children.insert(destinationChild, node);
     node->parent = destination_parent;
 
-    auto affected_ids_destination { UpdateAncestorTotal(node, node->initial_total, node->final_total) };
+    const node::Delta delta_destination {
+        .initial = node->initial_total,
+        .final = node->final_total,
+    };
+
+    auto affected_ids_destination { UpdateAncestorTotal(node, delta_destination) };
     endMoveRows();
 
     RefreshAffectedTotal(affected_ids_destination.unite(affected_ids_source));
@@ -797,7 +812,12 @@ void TreeModel::UnregisterPath(Node* node, Node* parent_node)
         leaf_path_.remove(node_id);
         leaf_path_model_->RemoveItem(node_id);
 
-        auto affected_ids { UpdateAncestorTotal(node, -node->initial_total, -node->final_total) };
+        const node::Delta delta {
+            .initial = -node->initial_total,
+            .final = -node->final_total,
+        };
+
+        auto affected_ids { UpdateAncestorTotal(node, delta) };
         affected_ids.remove(node_id);
 
         RefreshAffectedTotal(affected_ids);
@@ -819,7 +839,12 @@ void TreeModel::InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, 
         case NodeKind::kLeaf:
             leaf_path.insert(node->id, path);
 
-            InitAncestorTotal(node, node->initial_total, node->final_total);
+            const node::Delta delta {
+                .initial = node->initial_total,
+                .final = node->final_total,
+            };
+
+            InitAncestorTotal(node, delta);
             break;
         }
     }
@@ -833,7 +858,7 @@ Node* TreeModel::GetNodeByIndex(const QModelIndex& index) const
     return root_;
 }
 
-QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, double final_delta, double, double, double) const
+QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, const node::Delta& delta) const
 {
     QSet<QUuid> affected_ids {};
 
@@ -845,7 +870,7 @@ QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, dou
     if (!node->parent || node->parent == root_)
         return affected_ids;
 
-    if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta))
+    if (delta.IsNull())
         return affected_ids;
 
     const auto unit { node->unit };
@@ -861,8 +886,8 @@ QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, dou
 
         const int multiplier { current->direction_rule == direction_rule ? 1 : -1 };
 
-        current->final_total += multiplier * final_delta;
-        current->initial_total += multiplier * initial_delta;
+        current->final_total += multiplier * delta.final;
+        current->initial_total += multiplier * delta.initial;
 
         affected_ids.insert(current->id);
     }
@@ -870,12 +895,12 @@ QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, double initial_delta, dou
     return affected_ids;
 }
 
-void TreeModel::InitAncestorTotal(Node* node, double initial_delta, double final_delta, double, double, double) const
+void TreeModel::InitAncestorTotal(Node* node, const node::Delta& delta) const
 {
     if (!node || !node->parent)
         return;
 
-    if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta))
+    if (delta.IsNull())
         return;
 
     const auto unit { node->unit };
@@ -889,8 +914,8 @@ void TreeModel::InitAncestorTotal(Node* node, double initial_delta, double final
 
         const int multiplier { current->direction_rule == direction_rule ? 1 : -1 };
 
-        current->final_total += multiplier * final_delta;
-        current->initial_total += multiplier * initial_delta;
+        current->final_total += multiplier * delta.final;
+        current->initial_total += multiplier * delta.initial;
     }
 }
 

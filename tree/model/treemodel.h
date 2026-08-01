@@ -50,6 +50,7 @@
 #include "component/sectioninfo.h"
 #include "tree/itemmodel.h"
 #include "tree/node.h"
+#include "utils/delta.h"
 #include "utils/templateutils.h"
 
 using utils::DerivedPtr;
@@ -198,8 +199,8 @@ protected:
         leaf_path_model_->sort(0);
     }
 
-    virtual QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const;
-    virtual void InitAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const;
+    virtual QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const;
+    virtual void InitAncestorTotal(Node* node, const node::Delta& delta) const;
 
     virtual QSet<QUuid>* UnitSet(NodeUnit unit)
     {
@@ -233,7 +234,7 @@ private:
     QSet<QUuid> ExtractLeafIds(const Node* node) const;
     void SyncLeafModel(const QSet<QUuid>& leaf_ids) const;
 
-    QSet<QUuid> UpdateTotal(const QUuid& node_id, double initial_total, double final_total);
+    QSet<QUuid> SyncTotal(const QUuid& node_id, double initial_total, double final_total);
 
     void UpdateDirectionRuleLocal(Node* node, bool value, const QModelIndex& index);
 

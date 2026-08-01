@@ -56,11 +56,8 @@ protected:
     void InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path) override;
     void AfterNodeInserted(Node* node) override;
 
-    QSet<QUuid> UpdateAncestorTotal(
-        Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta) const override;
-
-    void InitAncestorTotal(
-        Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta) const override;
+    QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const override;
+    void InitAncestorTotal(Node* node, const node::Delta& delta) const override;
 };
 
 #endif // TREEMODELO_H

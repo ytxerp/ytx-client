@@ -299,6 +299,7 @@ set(HEADERS
     workspace/workspacerole.h
     enum/bindingmode.h
     utils/pathutils.h
+    utils/delta.h
 )
 
 set(SOURCES

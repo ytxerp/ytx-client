@@ -184,7 +184,7 @@ Qt::ItemFlags TreeModelF::flags(const QModelIndex& index) const
     return flags;
 }
 
-QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, double initial_delta, double final_delta, double, double, double) const
+QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, const node::Delta& delta) const
 {
     QSet<QUuid> affected_ids {};
 
@@ -196,7 +196,7 @@ QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, double initial_delta, do
     if (!node->parent || node->parent == root_)
         return affected_ids;
 
-    if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta))
+    if (delta.IsNull())
         return affected_ids;
 
     const auto unit { node->unit };
@@ -205,10 +205,10 @@ QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, double initial_delta, do
     for (Node* current = node->parent; current && current != root_; current = current->parent) {
         const int multiplier { current->direction_rule == rule ? 1 : -1 };
 
-        current->final_total += multiplier * final_delta;
+        current->final_total += multiplier * delta.final;
 
         if (current->unit == unit) {
-            current->initial_total += multiplier * initial_delta;
+            current->initial_total += multiplier * delta.initial;
         }
 
         affected_ids.insert(current->id);
@@ -217,12 +217,12 @@ QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, double initial_delta, do
     return affected_ids;
 }
 
-void TreeModelF::InitAncestorTotal(Node* node, double initial_delta, double final_delta, double, double, double) const
+void TreeModelF::InitAncestorTotal(Node* node, const node::Delta& delta) const
 {
     if (!node || !node->parent)
         return;
 
-    if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta))
+    if (delta.IsNull())
         return;
 
     const auto unit { node->unit };
@@ -231,10 +231,10 @@ void TreeModelF::InitAncestorTotal(Node* node, double initial_delta, double fina
     for (Node* current = node->parent; current; current = current->parent) {
         const int multiplier { current->direction_rule == direction_rule ? 1 : -1 };
 
-        current->final_total += multiplier * final_delta;
+        current->final_total += multiplier * delta.final;
 
         if (current->unit == unit) {
-            current->initial_total += multiplier * initial_delta;
+            current->initial_total += multiplier * delta.initial;
         }
     }
 }

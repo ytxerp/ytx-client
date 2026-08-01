@@ -20,8 +20,15 @@ void TreeModelO::RNodeStatus(const QUuid& node_id, NodeStatus value)
 
     const int coefficient { value == NodeStatus::kReleased ? 1 : -1 };
 
-    const auto affected_ids { UpdateAncestorTotal(d_node, coefficient * d_node->initial_total, coefficient * d_node->final_total,
-        coefficient * d_node->count_total, coefficient * d_node->measure_total, coefficient * d_node->discount_total) };
+    const node::Delta delta {
+        .initial = coefficient * d_node->initial_total,
+        .final = coefficient * d_node->final_total,
+        .count = coefficient * d_node->count_total,
+        .measure = coefficient * d_node->measure_total,
+        .discount = coefficient * d_node->discount_total,
+    };
+
+    const auto affected_ids { UpdateAncestorTotal(d_node, delta) };
 
     RefreshAffectedTotal(affected_ids);
 }
@@ -157,8 +164,15 @@ void TreeModelO::UnregisterPath(Node* node, Node* parent_node)
     } break;
     case NodeKind::kLeaf: {
         if (d_node->status == NodeStatus::kReleased) {
-            auto affected_ids { UpdateAncestorTotal(
-                node, -d_node->initial_total, -d_node->final_total, -d_node->count_total, -d_node->measure_total, -d_node->discount_total) };
+            const node::Delta delta {
+                .initial = -d_node->initial_total,
+                .final = -d_node->final_total,
+                .count = -d_node->count_total,
+                .measure = -d_node->measure_total,
+                .discount = -d_node->discount_total,
+            };
+
+            auto affected_ids { UpdateAncestorTotal(node, delta) };
 
             affected_ids.remove(node_id);
             RefreshAffectedTotal(affected_ids);
@@ -167,8 +181,7 @@ void TreeModelO::UnregisterPath(Node* node, Node* parent_node)
     }
 }
 
-QSet<QUuid> TreeModelO::UpdateAncestorTotal(
-    Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta) const
+QSet<QUuid> TreeModelO::UpdateAncestorTotal(Node* node, const node::Delta& delta) const
 {
     QSet<QUuid> affected_ids {};
 
@@ -180,7 +193,7 @@ QSet<QUuid> TreeModelO::UpdateAncestorTotal(
     if (!node->parent || node->parent == root_)
         return affected_ids;
 
-    if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta) && qFuzzyIsNull(count_delta) && qFuzzyIsNull(measure_delta) && qFuzzyIsNull(discount_delta))
+    if (delta.IsNull())
         return affected_ids;
 
     const auto unit { node->unit };
@@ -191,11 +204,11 @@ QSet<QUuid> TreeModelO::UpdateAncestorTotal(
 
         auto* d_node { DerivedPtr<NodeO>(current) };
 
-        d_node->count_total += count_delta;
-        d_node->measure_total += measure_delta;
-        d_node->discount_total += discount_delta;
-        d_node->initial_total += initial_delta;
-        d_node->final_total += final_delta;
+        d_node->initial_total += delta.initial;
+        d_node->final_total += delta.final;
+        d_node->count_total += delta.count;
+        d_node->measure_total += delta.measure;
+        d_node->discount_total += delta.discount;
 
         affected_ids.insert(current->id);
     }
@@ -203,12 +216,12 @@ QSet<QUuid> TreeModelO::UpdateAncestorTotal(
     return affected_ids;
 }
 
-void TreeModelO::InitAncestorTotal(Node* node, double initial_delta, double final_delta, double count_delta, double measure_delta, double discount_delta) const
+void TreeModelO::InitAncestorTotal(Node* node, const node::Delta& delta) const
 {
     if (!node || !node->parent)
         return;
 
-    if (qFuzzyIsNull(initial_delta) && qFuzzyIsNull(final_delta) && qFuzzyIsNull(count_delta) && qFuzzyIsNull(measure_delta) && qFuzzyIsNull(discount_delta))
+    if (delta.IsNull())
         return;
 
     const auto unit { node->unit };
@@ -219,11 +232,11 @@ void TreeModelO::InitAncestorTotal(Node* node, double initial_delta, double fina
 
         auto* d_node { DerivedPtr<NodeO>(current) };
 
-        d_node->count_total += count_delta;
-        d_node->measure_total += measure_delta;
-        d_node->discount_total += discount_delta;
-        d_node->initial_total += initial_delta;
-        d_node->final_total += final_delta;
+        d_node->initial_total += delta.initial;
+        d_node->final_total += delta.final;
+        d_node->count_total += delta.count;
+        d_node->measure_total += delta.measure;
+        d_node->discount_total += delta.discount;
     }
 }
 
@@ -236,8 +249,18 @@ void TreeModelO::InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid,
             break;
         case NodeKind::kLeaf: {
             auto* d_node { DerivedPtr<NodeO>(node) };
-            if (d_node->status == NodeStatus::kReleased)
-                InitAncestorTotal(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total);
+            if (d_node->status == NodeStatus::kReleased) {
+                const node::Delta delta {
+                    .initial = d_node->initial_total,
+                    .final = d_node->final_total,
+                    .count = d_node->count_total,
+                    .measure = d_node->measure_total,
+                    .discount = d_node->discount_total,
+                };
+
+                InitAncestorTotal(node, delta);
+            }
+
             break;
         }
         }
@@ -249,12 +272,20 @@ void TreeModelO::AfterNodeInserted(Node* node)
     auto* d_node { DerivedPtr<NodeO>(node) };
 
     if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kReleased) {
-        auto ids { UpdateAncestorTotal(node, d_node->initial_total, d_node->final_total, d_node->count_total, d_node->measure_total, d_node->discount_total) };
+        const node::Delta delta {
+            .initial = d_node->initial_total,
+            .final = d_node->final_total,
+            .count = d_node->count_total,
+            .measure = d_node->measure_total,
+            .discount = d_node->discount_total,
+        };
+
+        auto ids { UpdateAncestorTotal(node, delta) };
+
         ids.remove(node->id);
         RefreshAffectedTotal(ids);
     }
 }
-
 void TreeModelO::sort(int column, Qt::SortOrder order)
 {
     const NodeEnumO e_column { column };
@@ -445,16 +476,30 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
     const bool update_ancestor { node->kind == NodeKind::kBranch || node->status == NodeStatus::kReleased };
 
     if (update_ancestor) {
-        affected_ids_source
-            = UpdateAncestorTotal(node, -node->initial_total, -node->final_total, -node->count_total, -node->measure_total, -node->discount_total);
+        const node::Delta delta {
+            .initial = -node->initial_total,
+            .final = -node->final_total,
+            .count = -node->count_total,
+            .measure = -node->measure_total,
+            .discount = -node->discount_total,
+        };
+
+        affected_ids_source = UpdateAncestorTotal(node, delta);
     }
 
     destination_parent->children.insert(destinationChild, node);
     node->parent = destination_parent;
 
     if (update_ancestor) {
-        affected_ids_destination
-            = UpdateAncestorTotal(node, node->initial_total, node->final_total, node->count_total, node->measure_total, node->discount_total);
+        const node::Delta delta {
+            .initial = node->initial_total,
+            .final = node->final_total,
+            .count = node->count_total,
+            .measure = node->measure_total,
+            .discount = node->discount_total,
+        };
+
+        affected_ids_destination = UpdateAncestorTotal(node, delta);
     }
 
     endMoveRows();

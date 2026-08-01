@@ -36,8 +36,8 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
 protected:
-    QSet<QUuid> UpdateAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const override;
-    void InitAncestorTotal(Node* node, double initial_delta, double final_delta, double = 0.0, double = 0.0, double = 0.0) const override;
+    QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const override;
+    void InitAncestorTotal(Node* node, const node::Delta& delta) const override;
 };
 
 #endif // TREEMODELF_H
