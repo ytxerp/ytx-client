@@ -27,7 +27,7 @@ void TreeModelP::UpdateAmount(const QUuid& node_id, double initial_delta)
     };
 
     const auto& affected_ids { UpdateAncestorTotal(node, delta) };
-    RefreshAffectedTotal(affected_ids);
+    EmitNumericChanged(affected_ids);
 }
 
 QSet<QUuid>* TreeModelP::UnitSet(NodeUnit unit)

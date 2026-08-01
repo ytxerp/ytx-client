@@ -181,18 +181,18 @@ public:
 
 protected:
     void RestartTimer(const QUuid& id, Node* node);
+
+    void EmitNumericChanged(const QSet<QUuid>& ids);
     void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent);
 
     void UpdateDirectionRuleActive(Node* node, bool value, const QModelIndex& index);
+    void UpdateSubtreePath(const Node* node);
 
-    void RefreshAffectedTotal(const QSet<QUuid>& affected_ids);
-    void RefreshPath(const Node* node);
-
-    virtual void RegisterPath(Node* node);
-    virtual void UnregisterPath(Node* node, Node* parent_node);
+    virtual void RegisterNode(Node* node);
+    virtual void UnregisterNode(Node* node, Node* parent_node);
 
     virtual void InitLeafData();
-    virtual void InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path);
+    virtual void InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path);
 
     virtual QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const;
     virtual void InitAncestorTotal(Node* node, const node::Delta& delta) const;

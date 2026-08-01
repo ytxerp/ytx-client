@@ -49,11 +49,11 @@ public:
     QUuid Partner(QUuid node_id) const { return Value(node_id, &NodeO::partner_id); };
 
 protected:
-    void RegisterPath(Node* node) override;
-    void UnregisterPath(Node* node, Node* parent_node) override;
+    void RegisterNode(Node* node) override;
+    void UnregisterNode(Node* node, Node* parent_node) override;
 
     void InitLeafData() override { };
-    void InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path) override;
+    void InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path) override;
 
     QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const override;
     void InitAncestorTotal(Node* node, const node::Delta& delta) const override;

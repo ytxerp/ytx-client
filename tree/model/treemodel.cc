@@ -60,7 +60,7 @@ void TreeModel::SyncTotalArray(const QJsonArray& total_array)
         affected_ids.unite(ids);
     }
 
-    RefreshAffectedTotal(affected_ids);
+    EmitNumericChanged(affected_ids);
 }
 
 void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
@@ -82,7 +82,7 @@ void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
     endInsertRows();
 
     node_hash_.insert(node->id, node);
-    RegisterPath(node);
+    RegisterNode(node);
 }
 
 QSet<QUuid> TreeModel::SyncTotal(const QUuid& node_id, double initial_total, double final_total)
@@ -160,7 +160,7 @@ void TreeModel::SyncLeafModel(const QSet<QUuid>& leaf_ids) const
     }
 }
 
-void TreeModel::RefreshPath(const Node* node)
+void TreeModel::UpdateSubtreePath(const Node* node)
 {
     QQueue<const Node*> queue {};
     queue.enqueue(node);
@@ -299,7 +299,7 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     new_node->final_total += delta.final;
 
     const auto affected_ids { UpdateAncestorTotal(new_node, delta) };
-    RefreshAffectedTotal(affected_ids);
+    EmitNumericChanged(affected_ids);
 
     DeleteNode(old_node_id);
 }
@@ -319,7 +319,7 @@ void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
 
     node->name = name;
 
-    RefreshPath(node);
+    UpdateSubtreePath(node);
     const auto leaf_ids { ExtractLeafIds(node) };
     SyncLeafModel(leaf_ids);
 
@@ -503,7 +503,7 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex& parent)
     parent_node->children.removeOne(node);
     endRemoveRows();
 
-    UnregisterPath(node, parent_node);
+    UnregisterNode(node, parent_node);
 
     if (node->kind == NodeKind::kLeaf) {
         emit SInitStatus();
@@ -627,9 +627,9 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int cou
     auto affected_ids_destination { UpdateAncestorTotal(node, delta_destination) };
     endMoveRows();
 
-    RefreshAffectedTotal(affected_ids_destination.unite(affected_ids_source));
+    EmitNumericChanged(affected_ids_destination.unite(affected_ids_source));
 
-    RefreshPath(node);
+    UpdateSubtreePath(node);
     const auto leaf_ids { ExtractLeafIds(node) };
     SyncLeafModel(leaf_ids);
 
@@ -783,7 +783,7 @@ void TreeModel::AckNode(const QUuid& node_id) const
     WebSocket::Instance()->SendMessage(WsKey::kOrderNodeAck, message);
 }
 
-void TreeModel::InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path)
+void TreeModel::InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path)
 {
     for (auto* node : node_hash) {
         const QString path { path::Build(node, separator_) };
@@ -876,9 +876,9 @@ void TreeModel::InitAncestorTotal(Node* node, const node::Delta& delta) const
     }
 }
 
-void TreeModel::RefreshAffectedTotal(const QSet<QUuid>& affected_ids)
+void TreeModel::EmitNumericChanged(const QSet<QUuid>& ids)
 {
-    for (const QUuid& id : affected_ids) {
+    for (const QUuid& id : ids) {
         const QModelIndex index = GetIndex(id);
         if (!index.isValid())
             continue;
@@ -999,7 +999,7 @@ void TreeModel::ApplyTree(const QJsonObject& data)
         const auto paths { path::Parse(path_array) };
         path::BuildHierarchy(new_hash, paths);
 
-        InitHashData(new_hash, new_leaf_path, new_branch_path);
+        InitTreeData(new_hash, new_leaf_path, new_branch_path);
     }
 
     qDebug() << "nodes:" << new_hash.size() << "leaf paths:" << new_leaf_path.size() << "branch paths:" << new_branch_path.size();
@@ -1057,7 +1057,7 @@ void TreeModel::ClearTree()
     ResetUnitSet();
 }
 
-void TreeModel::RegisterPath(Node* node)
+void TreeModel::RegisterNode(Node* node)
 {
     // NOTE: Unlike UnregisterPath, RegisterPath does not call
     // UpdateAncestorTotal here. Newly inserted nodes in this section
@@ -1082,7 +1082,7 @@ void TreeModel::RegisterPath(Node* node)
     }
 }
 
-void TreeModel::UnregisterPath(Node* node, Node* parent_node)
+void TreeModel::UnregisterNode(Node* node, Node* parent_node)
 {
     // NOTE: A leaf node being removed may already carry real data
     // (initial_total/final_total), so its contribution must be reversed
@@ -1099,7 +1099,7 @@ void TreeModel::UnregisterPath(Node* node, Node* parent_node)
             parent_node->children.emplace_back(child);
         }
 
-        RefreshPath(node);
+        UpdateSubtreePath(node);
         const auto leaf_ids { ExtractLeafIds(node) };
         SyncLeafModel(leaf_ids);
 
@@ -1118,7 +1118,7 @@ void TreeModel::UnregisterPath(Node* node, Node* parent_node)
         auto affected_ids { UpdateAncestorTotal(node, delta) };
         affected_ids.remove(node_id);
 
-        RefreshAffectedTotal(affected_ids);
+        EmitNumericChanged(affected_ids);
         UnitSetRemove(node_id, node->unit);
     } break;
     }

@@ -30,7 +30,7 @@ void TreeModelO::RNodeStatus(const QUuid& node_id, NodeStatus value)
 
     const auto affected_ids { UpdateAncestorTotal(d_node, delta) };
 
-    RefreshAffectedTotal(affected_ids);
+    EmitNumericChanged(affected_ids);
 }
 
 void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
@@ -47,7 +47,7 @@ void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
         return;
 
     node->name = name;
-    RefreshPath(node);
+    UpdateSubtreePath(node);
 
     const int column { std::to_underlying(NodeEnumO::kName) };
     const int row { index.row() };
@@ -115,7 +115,7 @@ void TreeModelO::RecallSettlement(const QUuid& settlement_id)
     }
 }
 
-void TreeModelO::RegisterPath(Node* node)
+void TreeModelO::RegisterNode(Node* node)
 {
     const NodeKind kind { node->kind };
 
@@ -139,7 +139,7 @@ void TreeModelO::RegisterPath(Node* node)
             auto affected_ids { UpdateAncestorTotal(node, delta) };
 
             affected_ids.remove(node->id);
-            RefreshAffectedTotal(affected_ids);
+            EmitNumericChanged(affected_ids);
         }
 
         break;
@@ -147,7 +147,7 @@ void TreeModelO::RegisterPath(Node* node)
     }
 }
 
-void TreeModelO::UnregisterPath(Node* node, Node* parent_node)
+void TreeModelO::UnregisterNode(Node* node, Node* parent_node)
 {
     const auto node_id { node->id };
     auto* d_node { DerivedPtr<NodeO>(node) };
@@ -160,7 +160,7 @@ void TreeModelO::UnregisterPath(Node* node, Node* parent_node)
             parent_node->children.emplace_back(child);
         }
 
-        RefreshPath(node);
+        UpdateSubtreePath(node);
 
         branch_path_.remove(node_id);
     } break;
@@ -177,7 +177,7 @@ void TreeModelO::UnregisterPath(Node* node, Node* parent_node)
             auto affected_ids { UpdateAncestorTotal(node, delta) };
 
             affected_ids.remove(node_id);
-            RefreshAffectedTotal(affected_ids);
+            EmitNumericChanged(affected_ids);
         }
     } break;
     }
@@ -242,7 +242,7 @@ void TreeModelO::InitAncestorTotal(Node* node, const node::Delta& delta) const
     }
 }
 
-void TreeModelO::InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& /*leaf_path*/, QHash<QUuid, QString>& branch_path)
+void TreeModelO::InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& /*leaf_path*/, QHash<QUuid, QString>& branch_path)
 {
     for (auto* node : node_hash) {
         switch (node->kind) {
@@ -487,7 +487,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
 
     endMoveRows();
 
-    RefreshAffectedTotal(affected_ids_destination.unite(affected_ids_source));
+    EmitNumericChanged(affected_ids_destination.unite(affected_ids_source));
 
     return true;
 }
