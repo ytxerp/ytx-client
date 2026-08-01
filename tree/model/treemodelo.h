@@ -54,7 +54,6 @@ protected:
 
     void InitLeafData() override { };
     void InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path) override;
-    void AfterNodeInserted(Node* node) override;
 
     QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const override;
     void InitAncestorTotal(Node* node, const node::Delta& delta) const override;

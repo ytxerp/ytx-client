@@ -117,36 +117,38 @@ void TreeModelO::RecallSettlement(const QUuid& settlement_id)
 
 void TreeModelO::RegisterPath(Node* node)
 {
-    // NOTE 1: In this section (Sale/Purchase), only branch nodes have a
-    // meaningful hierarchical path. Leaf nodes (orders) are displayed by
-    // their partner name rather than a path, so there is no leaf_path_
-    // entry to register here — unlike TreeModel::RegisterPath, which
-    // handles both branch and leaf kinds.
-    //
-    // NOTE 2: RegisterPath is also called inside the initialization loop
-    // (see InitTreeData / HandleNode), which iterates over every node in
-    // node_hash_ in an arbitrary order. At that point ancestor totals are
-    // separately initialized via InitAncestorTotal, so RegisterPath must
-    // remain a pure "register into path index" operation and must NOT
-    // trigger UpdateAncestorTotal here — doing so during initialization
-    // could double-count totals or update ancestors that haven't been
-    // fully linked/registered yet.
     const NodeKind kind { node->kind };
-    if (kind != NodeKind::kBranch)
-        return;
 
-    const auto path { path::Build(node, root_, separator_) };
-    branch_path_.insert(node->id, path);
+    switch (kind) {
+    case NodeKind::kBranch:
+        branch_path_.insert(node->id, path::Build(node, root_, separator_));
+        break;
+
+    case NodeKind::kLeaf: {
+        auto* d_node { DerivedPtr<NodeO>(node) };
+
+        if (d_node->status == NodeStatus::kReleased) {
+            const node::Delta delta {
+                .initial = d_node->initial_total,
+                .final = d_node->final_total,
+                .count = d_node->count_total,
+                .measure = d_node->measure_total,
+                .discount = d_node->discount_total,
+            };
+
+            auto affected_ids { UpdateAncestorTotal(node, delta) };
+
+            affected_ids.remove(node->id);
+            RefreshAffectedTotal(affected_ids);
+        }
+
+        break;
+    }
+    }
 }
 
 void TreeModelO::UnregisterPath(Node* node, Node* parent_node)
 {
-    // NOTE: Unlike RegisterPath, UnregisterPath is only called when a node
-    // is actually being removed from the live tree (not during batch
-    // initialization), so it is safe here to reverse the node's
-    // contribution to ancestor totals via UpdateAncestorTotal (using
-    // negated deltas) before removing it from the path index.
-
     const auto node_id { node->id };
     auto* d_node { DerivedPtr<NodeO>(node) };
     const NodeKind kind { d_node->kind };
@@ -267,25 +269,6 @@ void TreeModelO::InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid,
     }
 }
 
-void TreeModelO::AfterNodeInserted(Node* node)
-{
-    auto* d_node { DerivedPtr<NodeO>(node) };
-
-    if (d_node->kind == NodeKind::kLeaf && d_node->status == NodeStatus::kReleased) {
-        const node::Delta delta {
-            .initial = d_node->initial_total,
-            .final = d_node->final_total,
-            .count = d_node->count_total,
-            .measure = d_node->measure_total,
-            .discount = d_node->discount_total,
-        };
-
-        auto ids { UpdateAncestorTotal(node, delta) };
-
-        ids.remove(node->id);
-        RefreshAffectedTotal(ids);
-    }
-}
 void TreeModelO::sort(int column, Qt::SortOrder order)
 {
     const NodeEnumO e_column { column };

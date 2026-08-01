@@ -83,7 +83,6 @@ void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
 
     node_hash_.insert(node->id, node);
     RegisterPath(node);
-    AfterNodeInserted(node);
 }
 
 QSet<QUuid> TreeModel::SyncTotal(const QUuid& node_id, double initial_total, double final_total)
@@ -784,48 +783,6 @@ void TreeModel::AckNode(const QUuid& node_id) const
     WebSocket::Instance()->SendMessage(WsKey::kOrderNodeAck, message);
 }
 
-void TreeModel::UnregisterPath(Node* node, Node* parent_node)
-{
-    // NOTE: A leaf node being removed may already carry real data
-    // (initial_total/final_total), so its contribution must be reversed
-    // from all ancestors via UpdateAncestorTotal (negated deltas) before
-    // the node is dropped from the path index.
-
-    const auto node_id { node->id };
-    const NodeKind kind { node->kind };
-
-    switch (kind) {
-    case NodeKind::kBranch: {
-        for (auto* child : std::as_const(node->children)) {
-            child->parent = parent_node;
-            parent_node->children.emplace_back(child);
-        }
-
-        RefreshPath(node);
-        const auto leaf_ids { ExtractLeafIds(node) };
-        SyncLeafModel(leaf_ids);
-
-        branch_path_.remove(node_id);
-        emit SUpdateName(node_id, node->name, true);
-    } break;
-    case NodeKind::kLeaf: {
-        leaf_path_.remove(node_id);
-        leaf_path_model_->RemoveItem(node_id);
-
-        const node::Delta delta {
-            .initial = -node->initial_total,
-            .final = -node->final_total,
-        };
-
-        auto affected_ids { UpdateAncestorTotal(node, delta) };
-        affected_ids.remove(node_id);
-
-        RefreshAffectedTotal(affected_ids);
-        UnitSetRemove(node_id, node->unit);
-    } break;
-    }
-}
-
 void TreeModel::InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path)
 {
     for (auto* node : node_hash) {
@@ -1122,5 +1079,47 @@ void TreeModel::RegisterPath(Node* node)
         leaf_path_model_->AppendItem(path, node->id);
         UnitSetInsert(node->id, node->unit);
         break;
+    }
+}
+
+void TreeModel::UnregisterPath(Node* node, Node* parent_node)
+{
+    // NOTE: A leaf node being removed may already carry real data
+    // (initial_total/final_total), so its contribution must be reversed
+    // from all ancestors via UpdateAncestorTotal (negated deltas) before
+    // the node is dropped from the path index.
+
+    const auto node_id { node->id };
+    const NodeKind kind { node->kind };
+
+    switch (kind) {
+    case NodeKind::kBranch: {
+        for (auto* child : std::as_const(node->children)) {
+            child->parent = parent_node;
+            parent_node->children.emplace_back(child);
+        }
+
+        RefreshPath(node);
+        const auto leaf_ids { ExtractLeafIds(node) };
+        SyncLeafModel(leaf_ids);
+
+        branch_path_.remove(node_id);
+        emit SUpdateName(node_id, node->name, true);
+    } break;
+    case NodeKind::kLeaf: {
+        leaf_path_.remove(node_id);
+        leaf_path_model_->RemoveItem(node_id);
+
+        const node::Delta delta {
+            .initial = -node->initial_total,
+            .final = -node->final_total,
+        };
+
+        auto affected_ids { UpdateAncestorTotal(node, delta) };
+        affected_ids.remove(node_id);
+
+        RefreshAffectedTotal(affected_ids);
+        UnitSetRemove(node_id, node->unit);
+    } break;
     }
 }

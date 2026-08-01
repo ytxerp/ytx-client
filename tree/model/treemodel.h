@@ -193,11 +193,6 @@ protected:
 
     virtual void InitLeafData();
     virtual void InitHashData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path);
-    virtual void AfterNodeInserted(Node* node)
-    {
-        Q_UNUSED(node);
-        leaf_path_model_->sort(0);
-    }
 
     virtual QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const;
     virtual void InitAncestorTotal(Node* node, const node::Delta& delta) const;
