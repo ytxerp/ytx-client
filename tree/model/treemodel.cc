@@ -104,11 +104,12 @@ QSet<QUuid> TreeModel::SyncTotal(const QUuid& node_id, double initial_total, dou
     node->final_total = final_total;
 
     // Propagate adjusted deltas to ancestor nodes
-    const auto affected_ids { UpdateAncestorTotal(node, delta) };
+    auto ids { UpdateAncestorTotal(node, delta) };
+    ids.insert(node_id);
 
     emit SSyncValue();
 
-    return affected_ids;
+    return ids;
 }
 
 QSet<QUuid> TreeModel::ExtractLeafIds(const Node* node) const
@@ -298,8 +299,10 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     new_node->initial_total += delta.initial;
     new_node->final_total += delta.final;
 
-    const auto affected_ids { UpdateAncestorTotal(new_node, delta) };
-    EmitNumericChanged(affected_ids);
+    auto ids { UpdateAncestorTotal(new_node, delta) };
+    ids.insert(new_node_id);
+
+    EmitNumericChanged(ids);
 
     DeleteNode(old_node_id);
 }
@@ -614,7 +617,7 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int cou
         .final = -node->final_total,
     };
 
-    const auto affected_ids_source { UpdateAncestorTotal(node, delta_source) };
+    const auto ids_source { UpdateAncestorTotal(node, delta_source) };
 
     destination_parent->children.insert(destinationChild, node);
     node->parent = destination_parent;
@@ -624,10 +627,10 @@ bool TreeModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int cou
         .final = node->final_total,
     };
 
-    auto affected_ids_destination { UpdateAncestorTotal(node, delta_destination) };
+    auto ids_destination { UpdateAncestorTotal(node, delta_destination) };
     endMoveRows();
 
-    EmitNumericChanged(affected_ids_destination.unite(affected_ids_source));
+    EmitNumericChanged(ids_destination.unite(ids_source));
 
     UpdateSubtreePath(node);
     const auto leaf_ids { ExtractLeafIds(node) };
@@ -821,8 +824,6 @@ QSet<QUuid> TreeModel::UpdateAncestorTotal(Node* node, const node::Delta& delta)
 
     if (!node || node == root_)
         return affected_ids;
-
-    affected_ids.insert(node->id);
 
     if (!node->parent || node->parent == root_)
         return affected_ids;
@@ -1115,10 +1116,9 @@ void TreeModel::UnregisterNode(Node* node, Node* parent_node)
             .final = -node->final_total,
         };
 
-        auto affected_ids { UpdateAncestorTotal(node, delta) };
-        affected_ids.remove(node_id);
+        const auto ids { UpdateAncestorTotal(node, delta) };
 
-        EmitNumericChanged(affected_ids);
+        EmitNumericChanged(ids);
         UnitSetRemove(node_id, node->unit);
     } break;
     }

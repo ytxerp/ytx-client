@@ -28,9 +28,9 @@ void TreeModelO::RNodeStatus(const QUuid& node_id, NodeStatus value)
         .discount = coefficient * d_node->discount_total,
     };
 
-    const auto affected_ids { UpdateAncestorTotal(d_node, delta) };
+    const auto ids { UpdateAncestorTotal(d_node, delta) };
 
-    EmitNumericChanged(affected_ids);
+    EmitNumericChanged(ids);
 }
 
 void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
@@ -136,9 +136,7 @@ void TreeModelO::RegisterNode(Node* node)
                 .discount = d_node->discount_total,
             };
 
-            auto affected_ids { UpdateAncestorTotal(node, delta) };
-
-            affected_ids.remove(node->id);
+            const auto affected_ids { UpdateAncestorTotal(node, delta) };
             EmitNumericChanged(affected_ids);
         }
 
@@ -174,9 +172,7 @@ void TreeModelO::UnregisterNode(Node* node, Node* parent_node)
                 .discount = -d_node->discount_total,
             };
 
-            auto affected_ids { UpdateAncestorTotal(node, delta) };
-
-            affected_ids.remove(node_id);
+            const auto affected_ids { UpdateAncestorTotal(node, delta) };
             EmitNumericChanged(affected_ids);
         }
     } break;
@@ -189,8 +185,6 @@ QSet<QUuid> TreeModelO::UpdateAncestorTotal(Node* node, const node::Delta& delta
 
     if (!node || node == root_)
         return affected_ids;
-
-    affected_ids.insert(node->id);
 
     if (!node->parent || node->parent == root_)
         return affected_ids;
@@ -445,8 +439,8 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
     Q_ASSERT_X(sourceRow >= 0 && sourceRow < source_parent->children.size(), "TreeModel::moveRows", "Source row is out of bounds");
     Q_ASSERT_X(destinationChild >= 0 && destinationChild <= destination_parent->children.size(), "TreeModel::moveRows", "Destination child is out of bounds");
 
-    QSet<QUuid> affected_ids_source {};
-    QSet<QUuid> affected_ids_destination {};
+    QSet<QUuid> ids_source {};
+    QSet<QUuid> ids_destination {};
 
     if (!beginMoveRows(sourceParent, sourceRow, sourceRow, destinationParent, destinationChild)) {
         qWarning() << "moveRows: beginMoveRows failed - invalid move operation";
@@ -467,7 +461,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
             .discount = -node->discount_total,
         };
 
-        affected_ids_source = UpdateAncestorTotal(node, delta);
+        ids_source = UpdateAncestorTotal(node, delta);
     }
 
     destination_parent->children.insert(destinationChild, node);
@@ -482,12 +476,12 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
             .discount = node->discount_total,
         };
 
-        affected_ids_destination = UpdateAncestorTotal(node, delta);
+        ids_destination = UpdateAncestorTotal(node, delta);
     }
 
     endMoveRows();
 
-    EmitNumericChanged(affected_ids_destination.unite(affected_ids_source));
+    EmitNumericChanged(ids_destination.unite(ids_source));
 
     return true;
 }

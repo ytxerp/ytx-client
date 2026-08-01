@@ -191,8 +191,6 @@ QSet<QUuid> TreeModelF::UpdateAncestorTotal(Node* node, const node::Delta& delta
     if (!node || node == root_)
         return affected_ids;
 
-    affected_ids.insert(node->id);
-
     if (!node->parent || node->parent == root_)
         return affected_ids;
 
