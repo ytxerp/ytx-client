@@ -44,10 +44,7 @@ private slots:
 
 private:
     void InitDialog();
-    void ConstructEntry(const QSet<Node*>& closing_leaf_node, const Node* summary_node);
-    void ResetState();
-
-    QJsonArray BuildUuidArray(const QSet<Node*>& set);
+    void ConstructEntry(const QSet<const Node*>& closing_leaf_node, const Node* summary_node);
 
 private:
     Ui::PeriodCloseDialog* ui;
@@ -57,7 +54,7 @@ private:
     period_close::Model* table_model_ {};
 
     QUuid summary_node_id_ {};
-    QSet<Node*> closing_leaf_node_ {};
+    QUuid closing_node_id_ {};
 
     QList<Entry*> entry_list_ {};
 };

@@ -51,7 +51,7 @@ void PeriodCloseDialog::InitDialog()
     }
 }
 
-void PeriodCloseDialog::ConstructEntry(const QSet<Node*>& closing_leaf_node, const Node* summary_node)
+void PeriodCloseDialog::ConstructEntry(const QSet<const Node*>& closing_leaf_node, const Node* summary_node)
 {
     if (!summary_node || closing_leaf_node.isEmpty())
         return;
@@ -99,46 +99,28 @@ void PeriodCloseDialog::ConstructEntry(const QSet<Node*>& closing_leaf_node, con
     }
 }
 
-void PeriodCloseDialog::ResetState()
-{
-    closing_leaf_node_.clear();
-    EntryPool::Instance().Recycle(entry_list_, section_);
-}
-
-QJsonArray PeriodCloseDialog::BuildUuidArray(const QSet<Node*>& set)
-{
-    QJsonArray array {};
-
-    for (const auto* node : set) {
-        if (!node) {
-            qWarning() << Q_FUNC_INFO << "Null node* encountered";
-            continue;
-        }
-
-        if (node->id.isNull()) {
-            qWarning() << Q_FUNC_INFO << "Node with null UUID encountered";
-            continue;
-        }
-
-        array.append(node->id.toString(QUuid::WithoutBraces));
-    }
-
-    return array;
-}
-
 void PeriodCloseDialog::on_pushButtonPreview_clicked()
 {
-    if (ui->comboBoxClosing->currentIndex() == -1 || ui->comboBoxSummary->currentIndex() == -1)
+    if (ui->comboBoxClosing->currentIndex() == -1 || ui->comboBoxSummary->currentIndex() == -1) {
+        QMessageBox::warning(this, tr("Warning"), tr("Please select both the closing node and the summary node."));
         return;
+    }
 
-    const auto closing_node_id { ui->comboBoxClosing->currentData().toUuid() };
+    closing_node_id_ = ui->comboBoxClosing->currentData().toUuid();
     summary_node_id_ = ui->comboBoxSummary->currentData().toUuid();
 
-    auto* closing_node { tree_model_->GetNode(closing_node_id) };
-    auto* summary_node { tree_model_->GetNode(summary_node_id_) };
-
-    if (!closing_node || !summary_node)
+    if (closing_node_id_.isNull() || summary_node_id_.isNull()) {
+        qWarning() << Q_FUNC_INFO << "Invalid node id:" << closing_node_id_ << summary_node_id_;
         return;
+    }
+
+    const auto* closing_node { tree_model_->GetNode(closing_node_id_) };
+    const auto* summary_node { tree_model_->GetNode(summary_node_id_) };
+
+    if (!closing_node || !summary_node) {
+        qWarning() << Q_FUNC_INFO << "Failed to find node:" << closing_node_id_ << summary_node_id_;
+        return;
+    }
 
     if (closing_node == summary_node) {
         QMessageBox::warning(this, tr("Warning"), tr("Closing and summary nodes must be different."));
@@ -150,14 +132,15 @@ void PeriodCloseDialog::on_pushButtonPreview_clicked()
         return;
     }
 
-    ResetState();
+    QSet<const Node*> closing_leaf_node {};
+    EntryPool::Instance().Recycle(entry_list_, section_);
 
     {
-        QQueue<Node*> queue {};
+        QQueue<const Node*> queue {};
         queue.enqueue(closing_node);
 
         while (!queue.isEmpty()) {
-            Node* current { queue.dequeue() };
+            const Node* current { queue.dequeue() };
 
             if (!current) {
                 qWarning() << "Null node current";
@@ -166,7 +149,7 @@ void PeriodCloseDialog::on_pushButtonPreview_clicked()
 
             if (current->kind == NodeKind::kLeaf) {
                 if (!qFuzzyIsNull(current->final_total)) {
-                    closing_leaf_node_.insert(current);
+                    closing_leaf_node.insert(current);
                 }
 
                 continue;
@@ -179,24 +162,29 @@ void PeriodCloseDialog::on_pushButtonPreview_clicked()
     }
 
     {
-        ConstructEntry(closing_leaf_node_, summary_node);
+        ConstructEntry(closing_leaf_node, summary_node);
         table_model_->Rebuild(entry_list_);
     }
 }
 
 void PeriodCloseDialog::on_pushButtonCommit_clicked()
 {
-    if (summary_node_id_.isNull() || closing_leaf_node_.isEmpty())
+    if (summary_node_id_.isNull() || closing_node_id_.isNull())
         return;
+
+    if (table_model_->IsEmpty()) {
+        QMessageBox::information(this, tr("Information"), tr("The preview is empty. Nothing to submit."));
+        return;
+    }
 
     QJsonObject message {};
 
     message.insert(kSummaryNodeId, summary_node_id_.toString(QUuid::WithoutBraces));
-    message.insert(kClosingLeafNode, BuildUuidArray(closing_leaf_node_));
+    message.insert(kClosingNodeId, closing_node_id_.toString(QUuid::WithoutBraces));
     message.insert(kSection, std::to_underlying(section_));
 
     WebSocket::Instance()->SendMessage(WsKey::kPeriodClose, message);
 
-    ResetState();
     table_model_->Rebuild({});
+    EntryPool::Instance().Recycle(entry_list_, section_);
 }

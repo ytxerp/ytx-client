@@ -48,6 +48,7 @@ public:
 
 public:
     void Rebuild(const QList<Entry*>& list);
+    bool IsEmpty() const { return list_.isEmpty(); }
 
 private:
     CSectionInfo& info_;
