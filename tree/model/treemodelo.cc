@@ -117,6 +117,12 @@ void TreeModelO::RecallSettlement(const QUuid& settlement_id)
 
 void TreeModelO::RegisterNode(Node* node)
 {
+    // NOTE: In this section (Sale/Purchase), only branch nodes have a
+    // meaningful hierarchical path. Leaf nodes (orders) are displayed by
+    // their partner name rather than a path, so there is no leaf_path_
+    // entry to register here — unlike TreeModel::RegisterPath, which
+    // handles both branch and leaf kinds.
+
     const NodeKind kind { node->kind };
 
     switch (kind) {
