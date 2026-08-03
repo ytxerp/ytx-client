@@ -73,7 +73,7 @@ void StatementTertiaryWidget::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::StatementEntryAck(section_, widget_id_, partner_id_, unit_, start_.toUTC(), end_.toUTC()) };
+    const auto message { JsonGen::StatementTertiary(section_, widget_id_, partner_id_, unit_, start_.toUTC(), end_.toUTC()) };
     WebSocket::Instance()->SendMessage(WsKey::kStatementTertiary, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);

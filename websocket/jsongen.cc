@@ -264,7 +264,7 @@ QJsonObject OrderReferenceAck(Section section, CUuid& widget_id, CUuid& node_id,
     return message;
 }
 
-QJsonObject StatementAck(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject StatementPrimary(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 
@@ -277,7 +277,7 @@ QJsonObject StatementAck(Section section, CUuid& widget_id, int unit, const QDat
     return message;
 }
 
-QJsonObject StatementNodeAck(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject StatementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 
@@ -291,7 +291,7 @@ QJsonObject StatementNodeAck(Section section, CUuid& widget_id, CUuid& partner_i
     return message;
 }
 
-QJsonObject StatementEntryAck(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject StatementTertiary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 

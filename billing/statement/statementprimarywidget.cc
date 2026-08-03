@@ -65,7 +65,7 @@ void StatementPrimaryWidget::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::StatementAck(section_, widget_id_, unit_, start_.toUTC(), end_.toUTC()) };
+    const auto message { JsonGen::StatementPrimary(section_, widget_id_, unit_, start_.toUTC(), end_.toUTC()) };
     WebSocket::Instance()->SendMessage(WsKey::kStatementPrimary, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
