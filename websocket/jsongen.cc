@@ -305,7 +305,7 @@ QJsonObject StatementEntryAck(Section section, CUuid& widget_id, CUuid& partner_
     return message;
 }
 
-QJsonObject SettlementAck(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end)
+QJsonObject SettlementPrimary(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 
@@ -317,7 +317,7 @@ QJsonObject SettlementAck(Section section, CUuid& widget_id, const QDateTime& st
     return message;
 }
 
-QJsonObject SettlementItemAck(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id)
+QJsonObject SettlementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id)
 {
     QJsonObject message {};
 

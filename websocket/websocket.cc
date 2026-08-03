@@ -176,8 +176,8 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kStatementPrimary] = [this](const QJsonObject& obj) { OnStatementPrimary(obj); };
     handler_obj_[WsKey::kStatementSecondary] = [this](const QJsonObject& obj) { OnStatementSecondary(obj); };
     handler_obj_[WsKey::kStatementTertiary] = [this](const QJsonObject& obj) { OnStatementTertiary(obj); };
-    handler_obj_[WsKey::kSettlementAck] = [this](const QJsonObject& obj) { AckSettlement(obj); };
-    handler_obj_[WsKey::kSettlementItemAck] = [this](const QJsonObject& obj) { AckSettlementItem(obj); };
+    handler_obj_[WsKey::kSettlementPrimary] = [this](const QJsonObject& obj) { OnSettlementPrimary(obj); };
+    handler_obj_[WsKey::kSettlementSecondary] = [this](const QJsonObject& obj) { OnSettlementSecondary(obj); };
     handler_obj_[WsKey::kSettlementInsert] = [this](const QJsonObject& obj) { InsertSettlement(obj); };
     handler_obj_[WsKey::kSettlementUpdate] = [this](const QJsonObject& obj) { UpdateSettlement(obj); };
     handler_obj_[WsKey::kSettlementRecall] = [this](const QJsonObject& obj) { RecallSettlement(obj); };
@@ -613,22 +613,22 @@ void WebSocket::OnStatementTertiary(const QJsonObject& obj)
     emit SStatementTertiary(section, widget_id, array, total);
 }
 
-void WebSocket::AckSettlement(const QJsonObject& obj)
+void WebSocket::OnSettlementPrimary(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonArray array { obj.value(kArray).toArray() };
 
-    emit SSettlementAck(section, widget_id, array);
+    emit SSettlementPrimary(section, widget_id, array);
 }
 
-void WebSocket::AckSettlementItem(const QJsonObject& obj)
+void WebSocket::OnSettlementSecondary(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonArray array { obj.value(kArray).toArray() };
 
-    emit SSettlementItemAck(section, widget_id, array);
+    emit SSettlementSecondary(section, widget_id, array);
 }
 
 void WebSocket::AckWorkspaceMember(const QJsonObject& obj)

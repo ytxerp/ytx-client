@@ -453,8 +453,8 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SStatementPrimary, this, &MainWindow::RStatementPrimary);
     connect(WebSocket::Instance(), &WebSocket::SStatementSecondary, this, &MainWindow::RStatemetSecondary);
     connect(WebSocket::Instance(), &WebSocket::SStatementTertiary, this, &MainWindow::RStatementTertiary);
-    connect(WebSocket::Instance(), &WebSocket::SSettlementAck, this, &MainWindow::RAckSettlement);
-    connect(WebSocket::Instance(), &WebSocket::SSettlementItemAck, this, &MainWindow::RAckSettlementItem);
+    connect(WebSocket::Instance(), &WebSocket::SSettlementPrimary, this, &MainWindow::RSettlementPrimary);
+    connect(WebSocket::Instance(), &WebSocket::SSettlementSecondary, this, &MainWindow::RSettlementSecondary);
     connect(WebSocket::Instance(), &WebSocket::SSettlementInsert, this, &MainWindow::RInsertSettlement);
     connect(WebSocket::Instance(), &WebSocket::SSettlementRecall, this, &MainWindow::RRecallSettlement);
     connect(WebSocket::Instance(), &WebSocket::SSettlementUpdate, this, &MainWindow::RUpdateSettlement);

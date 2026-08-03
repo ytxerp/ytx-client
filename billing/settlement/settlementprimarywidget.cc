@@ -62,8 +62,8 @@ void SettlementPrimaryWidget::on_pBtnFetch_clicked()
 
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::SettlementAck(section_, widget_id_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance()->SendMessage(WsKey::kSettlementAck, message);
+    const auto message { JsonGen::SettlementPrimary(section_, widget_id_, start_.toUTC(), end_.toUTC()) };
+    WebSocket::Instance()->SendMessage(WsKey::kSettlementPrimary, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }

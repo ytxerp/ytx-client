@@ -71,10 +71,10 @@ enum class WsKey : uint16_t {
     kAuditLogAck = 1200,
 
     // --- Settlement ---
-    kSettlementAck = 1300,
+    kSettlementPrimary = 1300,
     kSettlementDelete = 1301,
     kSettlementInsert = 1302,
-    kSettlementItemAck = 1303,
+    kSettlementSecondary = 1303,
     kSettlementRecall = 1304,
     kSettlementUpdate = 1305,
 
@@ -223,10 +223,10 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kStatementSecondary";
     case WsKey::kStatementTertiary:
         return "kStatementTertiary";
-    case WsKey::kSettlementAck:
-        return "kSettlementAck";
-    case WsKey::kSettlementItemAck:
-        return "kSettlementItemAck";
+    case WsKey::kSettlementPrimary:
+        return "kSettlementPrimary";
+    case WsKey::kSettlementSecondary:
+        return "kSettlementSecondary";
     case WsKey::kOrderNodeAck:
         return "kOrderNodeAck";
 

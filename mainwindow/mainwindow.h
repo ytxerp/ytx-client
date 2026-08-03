@@ -150,8 +150,8 @@ private slots:
     void RShowSecondaryStatement(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
     void RShowTertiaryStatement(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
 
-    void RAckSettlement(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RAckSettlementItem(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RSettlementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RSettlementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RInsertSettlement(const QJsonObject& obj);
     void RRecallSettlement(const QJsonObject& obj);
     void RUpdateSettlement(const QJsonObject& obj);

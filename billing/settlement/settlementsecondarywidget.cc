@@ -77,8 +77,8 @@ void SettlementSecondaryWidget::FetchNode()
     if (settlement_.partner_id.isNull())
         return;
 
-    const auto message { JsonGen::SettlementItemAck(section_, widget_id_, settlement_.partner_id, settlement_.id) };
-    WebSocket::Instance()->SendMessage(WsKey::kSettlementItemAck, message);
+    const auto message { JsonGen::SettlementSecondary(section_, widget_id_, settlement_.partner_id, settlement_.id) };
+    WebSocket::Instance()->SendMessage(WsKey::kSettlementSecondary, message);
 }
 
 void SettlementSecondaryWidget::LockWidget(bool is_settled)

@@ -64,8 +64,8 @@ QJsonObject OrderReferenceAck(Section section, CUuid& widget_id, CUuid& node_id,
 QJsonObject StatementAck(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end);
 QJsonObject StatementNodeAck(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 QJsonObject StatementEntryAck(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
-QJsonObject SettlementAck(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end);
-QJsonObject SettlementItemAck(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id);
+QJsonObject SettlementPrimary(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end);
+QJsonObject SettlementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id);
 QJsonObject SettlementDelete(Section section, CUuid& settlement_id, int version);
 
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule);

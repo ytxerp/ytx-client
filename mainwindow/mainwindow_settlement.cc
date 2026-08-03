@@ -103,7 +103,7 @@ void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
     CreateSettlementSecondary(*settlement, primary_model);
 }
 
-void MainWindow::RAckSettlementItem(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RSettlementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -181,7 +181,7 @@ void MainWindow::RUpdateSettlement(const QJsonObject& obj)
     }
 }
 
-void MainWindow::RAckSettlement(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RSettlementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 

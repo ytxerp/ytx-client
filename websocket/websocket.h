@@ -76,8 +76,8 @@ signals:
     void SStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
-    void SSettlementAck(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SSettlementItemAck(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SSettlementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SSettlementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SSettlementInsert(const QJsonObject& obj);
     void SSettlementRecall(const QJsonObject& obj);
     void SSettlementUpdate(const QJsonObject& obj);
@@ -156,8 +156,8 @@ private:
     void OnStatementPrimary(const QJsonObject& obj);
     void OnStatementSecondary(const QJsonObject& obj);
     void OnStatementTertiary(const QJsonObject& obj);
-    void AckSettlement(const QJsonObject& obj);
-    void AckSettlementItem(const QJsonObject& obj);
+    void OnSettlementPrimary(const QJsonObject& obj);
+    void OnSettlementSecondary(const QJsonObject& obj);
     void AckWorkspaceMember(const QJsonObject& obj);
     void AckAuditLog(const QJsonObject& obj);
     void AckInventoryHeat(const QJsonObject& obj);
