@@ -71,7 +71,7 @@ void StatementSecondaryWidget::on_pBtnFetch_clicked()
     ui->pBtnFetch->setEnabled(false);
 
     const auto message { JsonGen::StatementNodeAck(section_, widget_id_, partner_id_, unit_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance()->SendMessage(WsKey::kStatementNodeAck, message);
+    WebSocket::Instance()->SendMessage(WsKey::kStatementSecondary, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }
@@ -138,6 +138,6 @@ void StatementSecondaryWidget::InitTimer()
 void StatementSecondaryWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
     if (index.column() == std::to_underlying(statement::SecondaryField::kIssuedTime)) {
-        emit SStatementEntry(partner_id_, start_, end_, unit_);
+        emit SShowTertiaryStatement(partner_id_, start_, end_, unit_);
     }
 }

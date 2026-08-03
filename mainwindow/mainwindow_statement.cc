@@ -24,12 +24,12 @@ void MainWindow::on_actionStatement_triggered()
     InitTableView(view, std::to_underlying(statement::PrimaryField::kPlaceholder));
     DelegateStatement(view, sc_->section_config);
 
-    connect(widget, &StatementPrimaryWidget::SStatementNode, this, &MainWindow::RStatementNode);
+    connect(widget, &StatementPrimaryWidget::SShowSecondaryStatement, this, &MainWindow::RShowSecondaryStatement);
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
 }
 
-void MainWindow::RAckStatement(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -43,7 +43,7 @@ void MainWindow::RAckStatement(Section section, const QUuid& widget_id, const QJ
     model->Rebuild(array);
 }
 
-void MainWindow::RAckStatementNode(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::RStatemetSecondary(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -57,7 +57,7 @@ void MainWindow::RAckStatementNode(Section section, const QUuid& widget_id, cons
     model->Rebuild(array);
 }
 
-void MainWindow::RAckStatementEntry(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total)
+void MainWindow::RStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -73,7 +73,7 @@ void MainWindow::RAckStatementEntry(Section section, const QUuid& widget_id, con
     d_widget->ResetTotal(total);
 }
 
-void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
+void MainWindow::RShowSecondaryStatement(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
 {
     auto* model { new statement::SecondaryModel(header_info_.statement_secondary, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
@@ -91,12 +91,12 @@ void MainWindow::RStatementNode(const QUuid& partner_id, const QDateTime& start,
     InitTableView(view, std::to_underlying(statement::SecondaryField::kDescription));
     DelegateStatementNode(view, sc_->section_config);
 
-    connect(widget, &StatementSecondaryWidget::SStatementEntry, this, &MainWindow::RStatementEntry);
+    connect(widget, &StatementSecondaryWidget::SShowTertiaryStatement, this, &MainWindow::RShowTertiaryStatement);
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
 }
 
-void MainWindow::RStatementEntry(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
+void MainWindow::RShowTertiaryStatement(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
 {
     auto tree_model_p { sc_p_.tree_model };
     const QString partner_name { tree_model_p->Name(partner_id) };

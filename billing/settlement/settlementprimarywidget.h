@@ -46,7 +46,7 @@ private slots:
     void on_end_dateChanged(const QDate& date);
 
 private:
-    void IniWidget();
+    void InitWidget();
     void InitTimer();
 
 private:

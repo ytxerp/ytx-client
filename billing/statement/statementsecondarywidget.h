@@ -36,7 +36,7 @@ class StatementSecondaryWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SStatementEntry(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
+    void SShowTertiaryStatement(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
 
 public:
     StatementSecondaryWidget(statement::SecondaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, Section section, int unit,

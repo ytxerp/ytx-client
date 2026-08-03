@@ -134,9 +134,9 @@ private slots:
     void RAckOrderReference(Section section, const QUuid& widget_id, const QJsonArray& array);
     void ROrderReferencePrimary(const QUuid& node_id, NodeUnit unit);
 
-    void RAckStatement(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RAckStatementNode(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RAckStatementEntry(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
+    void RStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RStatemetSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void RStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
     void RInsertNodeTag(const TagRow* tag, TreeModel* model, const Node* node);
@@ -147,8 +147,8 @@ private slots:
 
     void RSectionGroup(int id);
 
-    void RStatementNode(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
-    void RStatementEntry(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
+    void RShowSecondaryStatement(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
+    void RShowTertiaryStatement(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
 
     void RAckSettlement(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RAckSettlementItem(Section section, const QUuid& widget_id, const QJsonArray& array);

@@ -26,7 +26,7 @@ SettlementPrimaryWidget::SettlementPrimaryWidget(settlement::PrimaryModel* model
     ui->tableView->setModel(model);
     model->setParent(ui->tableView);
 
-    IniWidget();
+    InitWidget();
     InitTimer();
 
     QTimer::singleShot(0, this, &SettlementPrimaryWidget::on_pBtnFetch_clicked);
@@ -68,7 +68,7 @@ void SettlementPrimaryWidget::on_pBtnFetch_clicked()
     cooldown_timer_->start(time_const::kCooldownMs);
 }
 
-void SettlementPrimaryWidget::IniWidget()
+void SettlementPrimaryWidget::InitWidget()
 {
     ui->start->setDisplayFormat(datetime_format::kDashedDate);
     ui->end->setDisplayFormat(datetime_format::kDashedDate);

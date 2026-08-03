@@ -36,7 +36,7 @@ class StatementPrimaryWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SStatementNode(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
+    void SShowSecondaryStatement(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
 
 public:
     StatementPrimaryWidget(statement::PrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent = nullptr);

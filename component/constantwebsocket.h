@@ -133,9 +133,9 @@ enum class WsKey : uint16_t {
     kWorkspaceMemberUpdate = 1912,
 
     // --- Statement ---
-    kStatementAck = 2000,
-    kStatementNodeAck = 2001,
-    kStatementEntryAck = 2002,
+    kStatementPrimary = 2000,
+    kStatementSecondary = 2001,
+    kStatementTertiary = 2002,
 
     // --- Order Delivery ---
     kBindingRequest = 2100,
@@ -217,12 +217,12 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kTableAck";
     case WsKey::kOrderReferenceAck:
         return "kOrderReferenceAck";
-    case WsKey::kStatementAck:
-        return "kStatementAck";
-    case WsKey::kStatementNodeAck:
-        return "kStatementNodeAck";
-    case WsKey::kStatementEntryAck:
-        return "kStatementEntryAck";
+    case WsKey::kStatementPrimary:
+        return "kStatementPrimary";
+    case WsKey::kStatementSecondary:
+        return "kStatementSecondary";
+    case WsKey::kStatementTertiary:
+        return "kStatementTertiary";
     case WsKey::kSettlementAck:
         return "kSettlementAck";
     case WsKey::kSettlementItemAck:

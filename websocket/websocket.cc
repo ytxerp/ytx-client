@@ -173,9 +173,9 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kOrderTreeAck] = [this](const QJsonObject& obj) { AckOrderTree(obj); };
     handler_obj_[WsKey::kTableAck] = [this](const QJsonObject& obj) { AckTable(obj); };
     handler_obj_[WsKey::kOrderReferenceAck] = [this](const QJsonObject& obj) { AckOrderReference(obj); };
-    handler_obj_[WsKey::kStatementAck] = [this](const QJsonObject& obj) { AckStatement(obj); };
-    handler_obj_[WsKey::kStatementNodeAck] = [this](const QJsonObject& obj) { AckStatementNode(obj); };
-    handler_obj_[WsKey::kStatementEntryAck] = [this](const QJsonObject& obj) { AckStatementEntry(obj); };
+    handler_obj_[WsKey::kStatementPrimary] = [this](const QJsonObject& obj) { OnStatementPrimary(obj); };
+    handler_obj_[WsKey::kStatementSecondary] = [this](const QJsonObject& obj) { OnStatementSecondary(obj); };
+    handler_obj_[WsKey::kStatementTertiary] = [this](const QJsonObject& obj) { OnStatementTertiary(obj); };
     handler_obj_[WsKey::kSettlementAck] = [this](const QJsonObject& obj) { AckSettlement(obj); };
     handler_obj_[WsKey::kSettlementItemAck] = [this](const QJsonObject& obj) { AckSettlementItem(obj); };
     handler_obj_[WsKey::kSettlementInsert] = [this](const QJsonObject& obj) { InsertSettlement(obj); };
@@ -585,32 +585,32 @@ void WebSocket::AckOrderReference(const QJsonObject& obj)
     emit SOrderReferenceAck(section, widget_id, array);
 }
 
-void WebSocket::AckStatement(const QJsonObject& obj)
+void WebSocket::OnStatementPrimary(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonArray array { obj.value(kArray).toArray() };
 
-    emit SStatementAck(section, widget_id, array);
+    emit SStatementPrimary(section, widget_id, array);
 }
 
-void WebSocket::AckStatementNode(const QJsonObject& obj)
+void WebSocket::OnStatementSecondary(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonArray array { obj.value(kArray).toArray() };
 
-    emit SStatementNodeAck(section, widget_id, array);
+    emit SStatementSecondary(section, widget_id, array);
 }
 
-void WebSocket::AckStatementEntry(const QJsonObject& obj)
+void WebSocket::OnStatementTertiary(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonArray array { obj.value(kArray).toArray() };
     const QJsonObject total { obj.value(kTotal).toObject() };
 
-    emit SStatementEntryAck(section, widget_id, array, total);
+    emit SStatementTertiary(section, widget_id, array, total);
 }
 
 void WebSocket::AckSettlement(const QJsonObject& obj)

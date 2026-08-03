@@ -73,9 +73,9 @@ signals:
 
     void SReplaceResult(bool result);
     void SOrderReferenceAck(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SStatementAck(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SStatementNodeAck(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SStatementEntryAck(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
+    void SStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SStatementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
     void SSettlementAck(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SSettlementItemAck(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SSettlementInsert(const QJsonObject& obj);
@@ -153,9 +153,9 @@ private:
     void AckTable(const QJsonObject& obj);
     void AckOrderNode(const QJsonObject& obj);
     void AckOrderReference(const QJsonObject& obj);
-    void AckStatement(const QJsonObject& obj);
-    void AckStatementNode(const QJsonObject& obj);
-    void AckStatementEntry(const QJsonObject& obj);
+    void OnStatementPrimary(const QJsonObject& obj);
+    void OnStatementSecondary(const QJsonObject& obj);
+    void OnStatementTertiary(const QJsonObject& obj);
     void AckSettlement(const QJsonObject& obj);
     void AckSettlementItem(const QJsonObject& obj);
     void AckWorkspaceMember(const QJsonObject& obj);

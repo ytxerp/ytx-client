@@ -66,7 +66,7 @@ void StatementPrimaryWidget::on_pBtnFetch_clicked()
     ui->pBtnFetch->setEnabled(false);
 
     const auto message { JsonGen::StatementAck(section_, widget_id_, unit_, start_.toUTC(), end_.toUTC()) };
-    WebSocket::Instance()->SendMessage(WsKey::kStatementAck, message);
+    WebSocket::Instance()->SendMessage(WsKey::kStatementPrimary, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }
@@ -139,6 +139,6 @@ void StatementPrimaryWidget::on_tableView_doubleClicked(const QModelIndex& index
 {
     if (index.column() == std::to_underlying(statement::PrimaryField::kPartner)) {
         const auto partner { index.siblingAtColumn(std::to_underlying(statement::PrimaryField::kPartner)).data().toUuid() };
-        emit SStatementNode(partner, start_, end_, unit_);
+        emit SShowSecondaryStatement(partner, start_, end_, unit_);
     }
 }
