@@ -72,7 +72,7 @@ signals:
     void STagDelete(const QJsonObject& obj);
 
     void SReplaceResult(bool result);
-    void SOrderReferenceAck(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SOrderReference(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
@@ -152,7 +152,7 @@ private:
     void AckOrderTree(const QJsonObject& obj);
     void AckTable(const QJsonObject& obj);
     void AckOrderNode(const QJsonObject& obj);
-    void AckOrderReference(const QJsonObject& obj);
+    void OnOrderReference(const QJsonObject& obj);
     void OnStatementPrimary(const QJsonObject& obj);
     void OnStatementSecondary(const QJsonObject& obj);
     void OnStatementTertiary(const QJsonObject& obj);

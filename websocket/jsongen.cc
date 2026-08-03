@@ -250,7 +250,7 @@ QJsonObject EntryMessage(Section section, CUuid& entry_id)
     return message;
 }
 
-QJsonObject OrderReferenceAck(Section section, CUuid& widget_id, CUuid& node_id, NodeUnit unit, const QDateTime& start, const QDateTime& end)
+QJsonObject OrderReference(Section section, CUuid& widget_id, CUuid& node_id, NodeUnit unit, const QDateTime& start, const QDateTime& end)
 {
     QJsonObject message {};
 

@@ -131,7 +131,7 @@ private slots:
     void RFreeWidget(Section section, const QUuid& node_id);
     void RFlushCaches();
 
-    void RAckOrderReference(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void ROrderReference(Section section, const QUuid& widget_id, const QJsonArray& array);
     void ROrderReferencePrimary(const QUuid& node_id, NodeUnit unit);
 
     void RStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);

@@ -449,7 +449,7 @@ void MainWindow::SetUniqueConnection() const
     connect(WebSocket::Instance(), &WebSocket::SLoginDeny, this, &MainWindow::RDenyLogin);
     connect(WebSocket::Instance(), &WebSocket::SRemoteHostClosed, this, &MainWindow::RRemoteHostClosed);
     connect(WebSocket::Instance(), &WebSocket::SEntrySelect, this, &MainWindow::RSelectEntry);
-    connect(WebSocket::Instance(), &WebSocket::SOrderReferenceAck, this, &MainWindow::RAckOrderReference);
+    connect(WebSocket::Instance(), &WebSocket::SOrderReference, this, &MainWindow::ROrderReference);
     connect(WebSocket::Instance(), &WebSocket::SStatementPrimary, this, &MainWindow::RStatementPrimary);
     connect(WebSocket::Instance(), &WebSocket::SStatementSecondary, this, &MainWindow::RStatemetSecondary);
     connect(WebSocket::Instance(), &WebSocket::SStatementTertiary, this, &MainWindow::RStatementTertiary);

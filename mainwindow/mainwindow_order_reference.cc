@@ -4,7 +4,7 @@
 #include "reference/orderreferencewidget.h"
 #include "reference/salereferencemodeli.h"
 
-void MainWindow::RAckOrderReference(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::ROrderReference(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
