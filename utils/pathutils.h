@@ -9,7 +9,7 @@
 
 namespace path {
 
-struct Dto {
+struct Dto final {
     QUuid ancestor_id {};
     QUuid descendant_id {};
 

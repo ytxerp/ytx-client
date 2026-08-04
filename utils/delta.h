@@ -5,7 +5,7 @@
 
 namespace node {
 
-struct Delta {
+struct Delta final {
     double initial {};
     double final {};
 

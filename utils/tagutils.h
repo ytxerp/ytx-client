@@ -7,7 +7,7 @@
 
 #include "tag/tagrow.h"
 
-struct SearchQuery {
+struct SearchQuery final {
     QString text {}; // Normal search text (without [tag])
     QSet<QString> tags {}; // Tag names or tag IDs (depending on your mapping)
 };
