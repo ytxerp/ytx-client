@@ -1,6 +1,5 @@
 #include "auditdialog.h"
 
-#include "component/constant.h"
 #include "component/constantint.h"
 #include "component/constantstring.h"
 #include "component/signalblocker.h"
@@ -13,8 +12,7 @@ AuditDialog::AuditDialog(audit::Model* model, CUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::AuditDialog)
     , model_ { model }
-    , start_ { QDateTime(QDate::currentDate().addDays(-7), kStartTime) }
-    , end_ { QDateTime(QDate::currentDate().addDays(1), kStartTime) }
+    , range_ { DefaultRange() }
     , widget_id_ { widget_id }
 {
     ui->setupUi(this);
@@ -39,9 +37,19 @@ void AuditDialog::on_pBtnFetch_clicked()
         return;
     }
 
+    if (!range_.IsValid()) {
+        return;
+    }
+
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::AuditLogAck(widget_id_, LoginInfo::Instance().Workspace(), start_.toUTC(), end_.toUTC()) };
+    qDebug() << Q_FUNC_INFO << "DateRange:" << range_.ToString();
+
+    const auto query_range { range_.ToQueryRange() };
+
+    qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
+
+    const auto message { JsonGen::AuditLogAck(widget_id_, LoginInfo::Instance().Workspace(), query_range) };
     WebSocket::Instance()->SendMessage(WsKey::kAuditLogAck, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
@@ -54,31 +62,31 @@ void AuditDialog::InitTimer()
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
 }
 
-void AuditDialog::on_dateTimeEditStart_dateChanged(const QDate& date)
+void AuditDialog::on_dateEditStart_dateChanged(const QDate& date)
 {
-    const bool valid { date < end_.date() };
-    start_ = QDateTime(date, kStartTime);
+    const bool valid { date <= range_.end };
+    range_.start = date;
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
 }
 
-void AuditDialog::on_dateTimeEditEnd_dateChanged(const QDate& date)
+void AuditDialog::on_dateEditEnd_dateChanged(const QDate& date)
 {
-    const bool valid { date >= start_.date() };
+    const bool valid { date >= range_.start };
+    range_.end = date;
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
-    end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
 void AuditDialog::InitDialog()
 {
-    ui->dateTimeEditStart->setDisplayFormat(datetime_format::kDashedDate);
-    ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDashedDate);
+    ui->dateEditStart->setDisplayFormat(datetime_format::kDashedDate);
+    ui->dateEditEnd->setDisplayFormat(datetime_format::kDashedDate);
 
     ui->pBtnFetch->setFocus();
 
-    ui->dateTimeEditStart->setDateTime(start_);
-    ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
+    ui->dateEditStart->setDate(range_.start);
+    ui->dateEditEnd->setDate(range_.end);
 }

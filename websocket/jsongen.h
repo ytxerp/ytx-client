@@ -22,6 +22,7 @@
 #include "enum/section.h"
 #include "tag/tagrow.h"
 #include "tree/node.h"
+#include "utils/daterange.h"
 
 #ifndef JSONGEN_H
 #define JSONGEN_H
@@ -55,7 +56,7 @@ QJsonObject TagDelete(Section section, CUuid& tag_id);
 QJsonObject WorkspaceMemberUpdate(CUuid& id, CJsonObject& update);
 QJsonObject WorkspaceMemberDelete(CUuid& id);
 QJsonObject WorkspaceMemberAck(CUuid& widget_id, CString& workspace);
-QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace, const QDateTime& start, const QDateTime& end);
+QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace, const utils::DateTimeRange& range);
 
 QJsonObject TreeAck(Section section, const QDateTime& start, const QDateTime& end);
 QJsonObject TableAck(Section section, CUuid& node_id, CUuid& entry_id = {});

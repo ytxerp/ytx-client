@@ -26,6 +26,7 @@
 
 #include "auditmodel.h"
 #include "component/using.h"
+#include "utils/daterange.h"
 
 namespace Ui {
 class AuditDialog;
@@ -44,19 +45,23 @@ public:
 private slots:
     void on_pBtnFetch_clicked();
 
-    void on_dateTimeEditStart_dateChanged(const QDate& date);
-    void on_dateTimeEditEnd_dateChanged(const QDate& date);
+    void on_dateEditStart_dateChanged(const QDate& date);
+    void on_dateEditEnd_dateChanged(const QDate& date);
 
 private:
     void InitDialog();
     void InitTimer();
+    static utils::DateRange DefaultRange()
+    {
+        const auto today { QDate::currentDate() };
+        return { today.addDays(-7), today };
+    }
 
 private:
     Ui::AuditDialog* ui;
     audit::Model* model_ {};
 
-    QDateTime start_ {};
-    QDateTime end_ {};
+    utils::DateRange range_ {};
     QTimer* cooldown_timer_ { nullptr };
 
     const QUuid widget_id_ {};

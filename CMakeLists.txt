@@ -309,6 +309,8 @@ set(HEADERS
     enum/bindingmode.h
     utils/pathutils.h
     utils/delta.h
+    utils/daterange.h
+    widget/dateedit.h
 )
 
 set(SOURCES
@@ -496,6 +498,7 @@ set(SOURCES
     workspace/workspacemodel.cc
     workspace/workspacerole.cc
     utils/pathutils.cc
+    widget/dateedit.cpp
 )
 
 set(UIS

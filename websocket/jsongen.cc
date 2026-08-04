@@ -411,13 +411,13 @@ QJsonObject AccountUsername(CString& email, CString& username)
     return message;
 }
 
-QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace, const QDateTime& start, const QDateTime& end)
+QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kWorkspace, workspace);
-    message.insert(kStart, start.toString(Qt::ISODate));
-    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kStart, range.start.toString(Qt::ISODate));
+    message.insert(kEnd, range.end.toString(Qt::ISODate));
     return message;
 }
 
