@@ -1,10 +1,26 @@
 cmake_minimum_required(VERSION 3.30.5)
+
+# ------------------------
+# Modern CMake policies
+# ------------------------
+if(POLICY CMP0156)
+    cmake_policy(SET CMP0156 NEW)
+endif()
+
+if(POLICY CMP0175)
+    cmake_policy(SET CMP0175 NEW)
+endif()
+
 project(YTX VERSION 0.4.1 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
 # ------------------------
 # Qt setup
 # ------------------------
-set(QT_MODULES
+find_package(Qt6 REQUIRED COMPONENTS
     Widgets
     Gui
     Concurrent
@@ -12,15 +28,8 @@ set(QT_MODULES
     WebSockets
     LinguistTools
 )
-find_package(Qt6 REQUIRED COMPONENTS ${QT_MODULES})
 
 qt_standard_project_setup(REQUIRES 6.9)
-
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(QT_FORCE_CMP0156_TO_VALUE NEW)
 
 if(CLANG_TIDY_EXE)
     # Will automatically use .clang-tidy config
@@ -541,7 +550,7 @@ if(APPLE)
         PROPERTIES MACOSX_PACKAGE_LOCATION "Resources"
     )
 
-    qt6_add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${ICON_MAC})
+    qt_add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${ICON_MAC})
 
     configure_file(
         "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist"
@@ -582,7 +591,7 @@ elseif(WIN32)
     )
 
     set(INFO_RC "${CMAKE_CURRENT_BINARY_DIR}/Info.rc")
-    qt6_add_executable(${PROJECT_NAME} WIN32 ${INFO_RC})
+    qt_add_executable(${PROJECT_NAME} WIN32 ${INFO_RC})
 
     add_custom_command(
         TARGET ${PROJECT_NAME}
@@ -598,7 +607,7 @@ elseif(WIN32)
 
     # Linux or other platforms
 else()
-    qt6_add_executable(${PROJECT_NAME})
+    qt_add_executable(${PROJECT_NAME})
 endif()
 
 # ------------------------
@@ -612,7 +621,7 @@ endif()
 # into the TS file. 3. Open the TS file in Qt Linguist and add translations. 4. In Qt Linguist,
 # choose: File -> Release -> This will generate the corresponding .qm file. 5. Use the .qm file in
 # your application (via QTranslator).
-qt6_add_translations(${PROJECT_NAME} TS_FILES resource/I18N/ytx_zh_CN.ts)
+qt_add_translations(${PROJECT_NAME} TS_FILES resource/I18N/ytx_zh_CN.ts)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCES} ${HEADERS} ${UIS} ${BRC})
@@ -671,7 +680,6 @@ target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE
         Qt6::Widgets
-        Qt6::Gui
         Qt6::Concurrent
         Qt6::PrintSupport
         Qt6::WebSockets
@@ -685,7 +693,7 @@ target_link_libraries(
 # Option to enable AddressSanitizer
 # -----------------------------
 # ENABLE_ASAN: ON  -> Enable ASan for Debug builds OFF -> Disable ASan
-option(ENABLE_ASAN "Enable AddressSanitizer" ON)
+option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
 
 # -----------------------------
 # Configure AddressSanitizer for Debug builds
@@ -702,12 +710,20 @@ if(ENABLE_ASAN AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU"))
     # Add compile flags for Debug builds
     target_compile_options(
         ${PROJECT_NAME}
-        PRIVATE $<$<CONFIG:Debug>:-fsanitize=address -fno-omit-frame-pointer -g>
+        PRIVATE
+            $<$<CONFIG:Debug>:
+                -fsanitize=address
+                -fno-omit-frame-pointer
+                -g
+            >
     )
 
     # Add link flags for Debug builds
     target_link_options(
         ${PROJECT_NAME}
-        PRIVATE $<$<CONFIG:Debug>:-fsanitize=address>
+        PRIVATE
+            $<$<CONFIG:Debug>:
+                -fsanitize=address
+            >
     )
 endif()
