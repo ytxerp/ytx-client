@@ -1,6 +1,5 @@
 #include "statementprimarywidget.h"
 
-#include "component/constant.h"
 #include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
@@ -15,10 +14,10 @@ StatementPrimaryWidget::StatementPrimaryWidget(statement::PrimaryModel* model, C
     : QWidget(parent)
     , ui(new Ui::StatementPrimaryWidget)
     , unit_ { std::to_underlying(NodeUnit::OMonthly) }
+    , range_ { DefaultRange() }
     , model_ { model }
     , section_ { section }
     , widget_id_ { widget_id }
-
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -41,8 +40,8 @@ QTableView* StatementPrimaryWidget::View() const { return ui->tableView; }
 
 void StatementPrimaryWidget::on_start_dateChanged(const QDate& date)
 {
-    const bool valid { date < end_.date() };
-    start_ = QDateTime(date, kStartTime);
+    const bool valid { date <= range_.end };
+    range_.start = date;
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
@@ -50,11 +49,11 @@ void StatementPrimaryWidget::on_start_dateChanged(const QDate& date)
 
 void StatementPrimaryWidget::on_end_dateChanged(const QDate& date)
 {
-    const bool valid { date >= start_.date() };
+    const bool valid { date >= range_.start };
+    range_.end = date;
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
-    end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
 void StatementPrimaryWidget::on_pBtnFetch_clicked()
@@ -63,9 +62,19 @@ void StatementPrimaryWidget::on_pBtnFetch_clicked()
         return;
     }
 
+    if (!range_.IsValid()) {
+        return;
+    }
+
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::StatementPrimary(section_, widget_id_, unit_, start_.toUTC(), end_.toUTC()) };
+    qDebug() << Q_FUNC_INFO << "DateRange:" << range_.ToString();
+
+    const auto query_range { range_.ToQueryRange() };
+
+    qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
+
+    const auto message { JsonGen::StatementPrimary(section_, widget_id_, unit_, query_range) };
     WebSocket::Instance()->SendMessage(WsKey::kStatementPrimary, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
@@ -74,7 +83,7 @@ void StatementPrimaryWidget::on_pBtnFetch_clicked()
 void StatementPrimaryWidget::RUnitGroupClicked(int id)
 {
     cooldown_timer_->stop();
-    ui->pBtnFetch->setEnabled(start_ <= end_);
+    ui->pBtnFetch->setEnabled(range_.IsValid());
 
     unit_ = id;
 }
@@ -110,18 +119,13 @@ void StatementPrimaryWidget::IniUnit(int unit)
 
 void StatementPrimaryWidget::IniWidget()
 {
-    start_ = QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime);
-
-    const QDate first_of_next_month { QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1).addMonths(1) };
-    end_ = QDateTime(first_of_next_month, kStartTime);
-
     ui->start->setDisplayFormat(datetime_format::kDashedDate);
     ui->end->setDisplayFormat(datetime_format::kDashedDate);
 
     ui->pBtnFetch->setFocus();
 
-    ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_.addDays(-1));
+    ui->start->setDate(range_.start);
+    ui->end->setDate(range_.end);
 
     utils::SetRadioButton(ui->rBtnIS, QKeySequence(Qt::CTRL | Qt::Key_1));
     utils::SetRadioButton(ui->rBtnMS, QKeySequence(Qt::CTRL | Qt::Key_2));
@@ -139,6 +143,6 @@ void StatementPrimaryWidget::on_tableView_doubleClicked(const QModelIndex& index
 {
     if (index.column() == std::to_underlying(statement::PrimaryField::kPartner)) {
         const auto partner { index.siblingAtColumn(std::to_underlying(statement::PrimaryField::kPartner)).data().toUuid() };
-        emit SShowSecondaryStatement(partner, start_, end_, unit_);
+        emit SShowSecondaryStatement(partner, range_, unit_);
     }
 }

@@ -14,13 +14,12 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementTertiaryWidget::StatementTertiaryWidget(statement::TertiaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end,
+StatementTertiaryWidget::StatementTertiaryWidget(statement::TertiaryModel* model, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range,
     CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementTertiaryWidget)
     , unit_ { unit }
-    , start_ { start }
-    , end_ { end }
+    , range_ { range }
     , model_ { model }
     , partner_name_ { partner_name }
     , company_name_ { company_name }
@@ -49,8 +48,8 @@ QTableView* StatementTertiaryWidget::View() const { return ui->tableView; }
 
 void StatementTertiaryWidget::on_start_dateChanged(const QDate& date)
 {
-    const bool valid { date < end_.date() };
-    start_ = QDateTime(date, kStartTime);
+    const bool valid { date <= range_.end };
+    range_.start = date;
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
@@ -58,11 +57,11 @@ void StatementTertiaryWidget::on_start_dateChanged(const QDate& date)
 
 void StatementTertiaryWidget::on_end_dateChanged(const QDate& date)
 {
-    const bool valid { date >= start_.date() };
+    const bool valid { date >= range_.start };
+    range_.end = date;
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
-    end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
 void StatementTertiaryWidget::on_pBtnFetch_clicked()
@@ -71,9 +70,19 @@ void StatementTertiaryWidget::on_pBtnFetch_clicked()
         return;
     }
 
+    if (!range_.IsValid()) {
+        return;
+    }
+
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::StatementTertiary(section_, widget_id_, partner_id_, unit_, start_.toUTC(), end_.toUTC()) };
+    qDebug() << Q_FUNC_INFO << "DateRange:" << range_.ToString();
+
+    const auto query_range { range_.ToQueryRange() };
+
+    qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
+
+    const auto message { JsonGen::StatementTertiary(section_, widget_id_, partner_id_, unit_, query_range) };
     WebSocket::Instance()->SendMessage(WsKey::kStatementTertiary, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
@@ -82,7 +91,7 @@ void StatementTertiaryWidget::on_pBtnFetch_clicked()
 void StatementTertiaryWidget::RUnitGroupClicked(int id)
 {
     cooldown_timer_->stop();
-    ui->pBtnFetch->setEnabled(start_ <= end_);
+    ui->pBtnFetch->setEnabled(range_.IsValid());
 
     unit_ = id;
 }
@@ -123,8 +132,8 @@ void StatementTertiaryWidget::IniWidget()
 
     ui->pBtnFetch->setFocus();
 
-    ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_.addDays(-1));
+    ui->start->setDate(range_.start);
+    ui->end->setDate(range_.end);
 
     utils::SetRadioButton(ui->rBtnIS, QKeySequence(Qt::CTRL | Qt::Key_1));
     utils::SetRadioButton(ui->rBtnMS, QKeySequence(Qt::CTRL | Qt::Key_2));
@@ -140,12 +149,10 @@ void StatementTertiaryWidget::InitTimer()
 
 void StatementTertiaryWidget::on_pBtnExport_clicked()
 {
-    // Adjust end time (make the range inclusive) ---
-    const QDateTime adjust_end { end_.addMSecs(-1) };
-
     // Build default export file name ---
     QDir dir(QDir::homePath());
-    const QString file_name { QString("%1-%2-%3.xlsx").arg(company_name_, partner_name_, adjust_end.toString(datetime_format::kYearMonth)) };
+    const QString file_name { QStringLiteral("%1-%2-%3-%4.xlsx")
+            .arg(company_name_, partner_name_, range_.start.toString(datetime_format::kCompactDate), range_.end.toString(datetime_format::kCompactDate)) };
     const QString full_path { dir.filePath(file_name) };
 
     QString destination { QFileDialog::getSaveFileName(nullptr, tr("Export Excel"), full_path, "*.xlsx") };
@@ -157,5 +164,5 @@ void StatementTertiaryWidget::on_pBtnExport_clicked()
     auto& list { model_->EntryList() };
     const QString unit_string { node::UnitString(NodeUnit(unit_)) };
 
-    ExportExcel::Instance().StatementAsync(destination, partner_name_, partner_id_, unit_string, start_, adjust_end, total_, list);
+    ExportExcel::Instance().StatementAsync(destination, partner_name_, partner_id_, unit_string, range_, total_, list);
 }

@@ -27,6 +27,7 @@
 #include "component/using.h"
 #include "enum/section.h"
 #include "statementprimarymodel.h"
+#include "utils/daterange.h"
 
 namespace Ui {
 class StatementPrimaryWidget;
@@ -36,7 +37,7 @@ class StatementPrimaryWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SShowSecondaryStatement(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
+    void SShowSecondaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit);
 
 public:
     StatementPrimaryWidget(statement::PrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent = nullptr);
@@ -59,19 +60,27 @@ private:
     void IniUnit(int unit);
     void IniWidget();
     void InitTimer();
+    static utils::DateRange DefaultRange()
+    {
+        const auto today { QDate::currentDate() };
+
+        const QDate start { today.year(), today.month(), 1 };
+        const QDate end { today.year(), today.month(), today.daysInMonth() };
+
+        return { start, end };
+    }
 
 private:
     Ui::StatementPrimaryWidget* ui;
     int unit_ {};
-    QDateTime start_ {};
-    QDateTime end_ {};
+    utils::DateRange range_ {};
+
     statement::PrimaryModel* model_ {};
     QTimer* cooldown_timer_ { nullptr };
+    QButtonGroup* unit_group_ {};
 
     const Section section_ {};
     const QUuid widget_id_ {};
-
-    QButtonGroup* unit_group_ {};
 };
 
 #endif // STATEMENTPRIMARYWIDGET_H

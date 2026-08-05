@@ -22,6 +22,7 @@
 
 #include "billing/statement/statement.h"
 #include "component/using.h"
+#include "utils/daterange.h"
 
 class ExportExcel {
 public:
@@ -31,7 +32,7 @@ public:
         return instance;
     }
 
-    void StatementAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start, CDateTime& end, CJsonObject& total,
+    void StatementAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, CJsonObject& total,
         statement::CTertiaryList& list);
 
     ExportExcel(const ExportExcel&) = delete;
@@ -43,7 +44,7 @@ private:
     ExportExcel() = default;
     ~ExportExcel() = default;
 
-    static bool Statement(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start, CDateTime& end, CJsonObject& total,
+    static bool Statement(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, CJsonObject& total,
         statement::CTertiaryList& list);
 };
 

@@ -27,6 +27,7 @@
 #include "component/using.h"
 #include "enum/section.h"
 #include "statementsecondarymodel.h"
+#include "utils/daterange.h"
 
 namespace Ui {
 class StatementSecondaryWidget;
@@ -36,10 +37,10 @@ class StatementSecondaryWidget final : public QWidget {
     Q_OBJECT
 
 signals:
-    void SShowTertiaryStatement(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit);
+    void SShowTertiaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit);
 
 public:
-    StatementSecondaryWidget(statement::SecondaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, Section section, int unit,
+    StatementSecondaryWidget(statement::SecondaryModel* model, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, Section section, int unit,
         QWidget* parent = nullptr);
     ~StatementSecondaryWidget() override;
 
@@ -64,13 +65,12 @@ private:
 private:
     Ui::StatementSecondaryWidget* ui;
     int unit_ {};
-    QDateTime start_ {};
-    QDateTime end_ {};
+    utils::DateRange range_ {};
 
     statement::SecondaryModel* model_ {};
     QTimer* cooldown_timer_ { nullptr };
-
     QButtonGroup* unit_group_ {};
+
     const Section section_ {};
     const QUuid widget_id_ {};
     CUuid partner_id_ {};

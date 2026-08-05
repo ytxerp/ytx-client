@@ -62,9 +62,9 @@ QJsonObject TreeAck(Section section, const QDateTime& start, const QDateTime& en
 QJsonObject TableAck(Section section, CUuid& node_id, CUuid& entry_id = {});
 QJsonObject NodeAck(Section section, CUuid& node_id);
 QJsonObject OrderReference(Section section, CUuid& widget_id, CUuid& node_id, NodeUnit unit, const QDateTime& start, const QDateTime& end);
-QJsonObject StatementPrimary(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end);
-QJsonObject StatementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
-QJsonObject StatementTertiary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
+QJsonObject StatementPrimary(Section section, CUuid& widget_id, int unit, const utils::DateTimeRange& range);
+QJsonObject StatementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const utils::DateTimeRange& range);
+QJsonObject StatementTertiary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const utils::DateTimeRange& range);
 QJsonObject SettlementPrimary(Section section, CUuid& widget_id, const utils::DateTimeRange& range);
 QJsonObject SettlementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id);
 QJsonObject SettlementDelete(Section section, CUuid& settlement_id, int version);

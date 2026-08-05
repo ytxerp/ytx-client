@@ -73,12 +73,12 @@ void MainWindow::RStatementTertiary(Section section, const QUuid& widget_id, con
     d_widget->ResetTotal(total);
 }
 
-void MainWindow::RShowSecondaryStatement(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
+void MainWindow::RShowSecondaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit)
 {
     auto* model { new statement::SecondaryModel(header_info_.statement_secondary, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementSecondaryWidget(model, widget_id, partner_id, start, end, start_, unit, this) };
+    auto* widget { new StatementSecondaryWidget(model, widget_id, partner_id, range, start_, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement"), sc_p_.tree_model->Name(partner_id)) };
 
@@ -96,7 +96,7 @@ void MainWindow::RShowSecondaryStatement(const QUuid& partner_id, const QDateTim
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
 }
 
-void MainWindow::RShowTertiaryStatement(const QUuid& partner_id, const QDateTime& start, const QDateTime& end, int unit)
+void MainWindow::RShowTertiaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit)
 {
     auto tree_model_p { sc_p_.tree_model };
     const QString partner_name { tree_model_p->Name(partner_id) };
@@ -104,7 +104,7 @@ void MainWindow::RShowTertiaryStatement(const QUuid& partner_id, const QDateTime
     auto* model { new statement::TertiaryModel(header_info_.statement_tertiary, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementTertiaryWidget(model, widget_id, partner_id, start, end, partner_name, app_config_.company_name, start_, unit, this) };
+    auto* widget { new StatementTertiaryWidget(model, widget_id, partner_id, range, partner_name, app_config_.company_name, start_, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement Detail"), partner_name) };
 

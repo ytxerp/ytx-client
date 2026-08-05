@@ -96,6 +96,7 @@ inline const QString kWrongEntryArray = QStringLiteral("wrong_entry_array");
 namespace datetime_format {
 inline const QString kDateTime = QStringLiteral("yyyy-MM-dd HH:mm");
 inline const QString kYearMonth = QStringLiteral("yyyyMM");
+inline const QString kCompactDate = QStringLiteral("yyyyMMdd");
 
 inline const QString kDashedDate = QStringLiteral("yyyy-MM-dd");
 inline const QString kSlashedDate = QStringLiteral("yyyy/MM/dd");

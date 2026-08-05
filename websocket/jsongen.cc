@@ -264,20 +264,20 @@ QJsonObject OrderReference(Section section, CUuid& widget_id, CUuid& node_id, No
     return message;
 }
 
-QJsonObject StatementPrimary(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject StatementPrimary(Section section, CUuid& widget_id, int unit, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
 
     message.insert(kSection, std::to_underlying(section));
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kUnit, unit);
-    message.insert(kStart, start.toString(Qt::ISODate));
-    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kStart, range.start.toString(Qt::ISODate));
+    message.insert(kEnd, range.end.toString(Qt::ISODate));
 
     return message;
 }
 
-QJsonObject StatementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject StatementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
 
@@ -285,13 +285,13 @@ QJsonObject StatementSecondary(Section section, CUuid& widget_id, CUuid& partner
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
     message.insert(kUnit, unit);
-    message.insert(kStart, start.toString(Qt::ISODate));
-    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kStart, range.start.toString(Qt::ISODate));
+    message.insert(kEnd, range.end.toString(Qt::ISODate));
 
     return message;
 }
 
-QJsonObject StatementTertiary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end)
+QJsonObject StatementTertiary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
 
@@ -299,8 +299,8 @@ QJsonObject StatementTertiary(Section section, CUuid& widget_id, CUuid& partner_
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kPartnerId, partner_id.toString(QUuid::WithoutBraces));
     message.insert(kUnit, unit);
-    message.insert(kStart, start.toString(Qt::ISODate));
-    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kStart, range.start.toString(Qt::ISODate));
+    message.insert(kEnd, range.end.toString(Qt::ISODate));
 
     return message;
 }

@@ -13,10 +13,10 @@
 #include "global/partner_inventory_registry.h"
 #include "utils/mainwindowutils.h"
 
-void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start, CDateTime& end,
+void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range,
     CJsonObject& total, statement::CTertiaryList& list)
 {
-    auto future = QtConcurrent::run([=]() -> bool { return Statement(path, partner_name, partner_id, unit_string, start, end, total, list); });
+    auto future = QtConcurrent::run([=]() -> bool { return Statement(path, partner_name, partner_id, unit_string, range, total, list); });
 
     auto* watcher = new QFutureWatcher<bool>();
     QObject::connect(watcher, &QFutureWatcher<bool>::finished, [watcher, path]() {
@@ -28,15 +28,15 @@ void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuid& pa
                 QMessageBox::Information, QObject::tr("Export Completed"), QObject::tr("The export completed successfully."), time_const::kAutoCloseMs);
         } else {
             QFile::remove(path);
-            utils::ShowMessage(QMessageBox::Critical, QObject::tr("Operation Failed"),
-                QObject::tr("The export failed. The incomplete file has been removed."), time_const::kAutoCloseMs);
+            utils::ShowMessage(QMessageBox::Critical, QObject::tr("Operation Failed"), QObject::tr("The export failed. The incomplete file has been removed."),
+                time_const::kAutoCloseMs);
         }
     });
 
     watcher->setFuture(future);
 }
 
-bool ExportExcel::Statement(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, CDateTime& start, CDateTime& end, CJsonObject& total,
+bool ExportExcel::Statement(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, CJsonObject& total,
     statement::CTertiaryList& list)
 {
     // Extract totals
@@ -67,8 +67,8 @@ bool ExportExcel::Statement(CString& path, CString& partner_name, CUuid& partner
     sheet->Write(start_row, 3, unit_string);
 
     sheet->Write(start_row + 2, 1, QObject::tr("Period"));
-    sheet->Write(start_row + 2, 2, start.toString(datetime_format::kDashedDate));
-    sheet->Write(start_row + 2, 3, end.toString(datetime_format::kDashedDate));
+    sheet->Write(start_row + 2, 2, range.start.toString(datetime_format::kDashedDate));
+    sheet->Write(start_row + 2, 3, range.end.toString(datetime_format::kDashedDate));
 
     sheet->Write(start_row + 3, 1, QObject::tr("Previous Balance"));
     sheet->Write(start_row + 3, 3, pbalance);

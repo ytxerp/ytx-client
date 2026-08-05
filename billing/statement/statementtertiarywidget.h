@@ -27,6 +27,7 @@
 #include "component/using.h"
 #include "enum/section.h"
 #include "statementtertiarymodel.h"
+#include "utils/daterange.h"
 
 namespace Ui {
 class StatementTertiaryWidget;
@@ -36,7 +37,7 @@ class StatementTertiaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    StatementTertiaryWidget(statement::TertiaryModel* model, CUuid& widget_id, CUuid& partner_id, CDateTime& start, CDateTime& end, CString& partner_name,
+    StatementTertiaryWidget(statement::TertiaryModel* model, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, CString& partner_name,
         CString& company_name, Section section, int unit, QWidget* parent = nullptr);
     ~StatementTertiaryWidget() override;
 
@@ -63,8 +64,7 @@ private:
 private:
     Ui::StatementTertiaryWidget* ui;
     int unit_ {};
-    QDateTime start_ {};
-    QDateTime end_ {};
+    utils::DateRange range_ {};
     statement::TertiaryModel* model_ {};
 
     QJsonObject total_ {};
