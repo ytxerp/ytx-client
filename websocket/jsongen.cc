@@ -101,12 +101,12 @@ QJsonObject MarkEntries(Section section, CUuid& node_id, int operation)
     return message;
 }
 
-QJsonObject TreeAck(Section section, const QDateTime& start, const QDateTime& end)
+QJsonObject TreeAck(Section section, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
-    message.insert(kStart, start.toString(Qt::ISODate));
-    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kStart, range.start.toString(Qt::ISODate));
+    message.insert(kEnd, range.end.toString(Qt::ISODate));
     return message;
 }
 

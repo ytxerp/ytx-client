@@ -22,6 +22,7 @@
 
 #include "tree/model/treemodel.h"
 #include "treewidget.h"
+#include "utils/daterange.h"
 
 namespace Ui {
 class TreeWidgetO;
@@ -40,15 +41,22 @@ private slots:
     void on_start_dateChanged(const QDate& date);
     void on_end_dateChanged(const QDate& date);
     void on_pBtnFetch_clicked();
+
+private:
+    void InitWidget();
     void InitTimer();
+    static utils::DateRange DefaultRange()
+    {
+        const auto today { QDate::currentDate() };
+        return { today, today };
+    }
 
 private:
     Ui::TreeWidgetO* ui;
     Section section_ {};
     TreeModel* model_ {};
 
-    QDateTime start_ {};
-    QDateTime end_ {};
+    utils::DateRange range_ {};
 
     QTimer* cooldown_timer_ { nullptr };
 };

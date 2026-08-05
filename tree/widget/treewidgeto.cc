@@ -4,7 +4,6 @@
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "ui_treewidgeto.h"
-#include "utils/nodeutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -13,24 +12,16 @@ TreeWidgetO::TreeWidgetO(Section section, TreeModel* model, QWidget* parent)
     , ui(new Ui::TreeWidgetO)
     , section_ { section }
     , model_ { model }
+    , range_ { DefaultRange() }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
+
+    InitWidget();
     InitTimer();
-
-    ui->start->setDisplayFormat(datetime_format::kDashedDate);
-    ui->end->setDisplayFormat(datetime_format::kDashedDate);
-
-    std::tie(start_, end_) = utils::DefaultLocalRange();
-
-    ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_.addMSecs(-1));
 
     ui->treeViewO->setModel(model);
     model->setParent(ui->treeViewO);
-
-    qDebug() << "init start" << start_;
-    qDebug() << "init end" << end_;
 }
 
 TreeWidgetO::~TreeWidgetO() { delete ui; }
@@ -39,8 +30,8 @@ QTreeView* TreeWidgetO::View() const { return ui->treeViewO; }
 
 void TreeWidgetO::on_start_dateChanged(const QDate& date)
 {
-    const bool valid { date < end_.date() };
-    start_ = QDateTime(date, kStartTime);
+    const bool valid { date <= range_.end };
+    range_.start = date;
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
@@ -48,12 +39,11 @@ void TreeWidgetO::on_start_dateChanged(const QDate& date)
 
 void TreeWidgetO::on_end_dateChanged(const QDate& date)
 {
-    const bool valid { date >= start_.date() };
+    const bool valid { date >= range_.start };
+    range_.end = date;
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
-
-    end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
 void TreeWidgetO::on_pBtnFetch_clicked()
@@ -62,18 +52,31 @@ void TreeWidgetO::on_pBtnFetch_clicked()
         return;
     }
 
+    if (!range_.IsValid()) {
+        return;
+    }
+
     ui->pBtnFetch->setEnabled(false);
 
-    qDebug() << "fetch start" << start_;
-    qDebug() << "fetch end" << end_;
+    qDebug() << Q_FUNC_INFO << "DateRange:" << range_.ToString();
 
-    const auto message { JsonGen::TreeAck(section_, start_.toUTC(), end_.toUTC()) };
+    const auto query_range { range_.ToQueryRange() };
+
+    qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
+
+    const auto message { JsonGen::TreeAck(section_, query_range) };
     WebSocket::Instance()->SendMessage(WsKey::kOrderTreeAck, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
+}
 
-    qDebug() << "fetch utc start" << start_.toUTC();
-    qDebug() << "fetch utc end" << end_.toUTC();
+void TreeWidgetO::InitWidget()
+{
+    ui->start->setDisplayFormat(datetime_format::kDashedDate);
+    ui->end->setDisplayFormat(datetime_format::kDashedDate);
+
+    ui->start->setDate(range_.start);
+    ui->end->setDate(range_.end);
 }
 
 void TreeWidgetO::InitTimer()
