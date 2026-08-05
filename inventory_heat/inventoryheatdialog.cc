@@ -2,7 +2,6 @@
 
 #include <QTimer>
 
-#include "component/constant.h"
 #include "component/constantint.h"
 #include "component/constantstring.h"
 #include "component/signalblocker.h"
@@ -13,8 +12,7 @@
 InventoryHeatDialog::InventoryHeatDialog(inventory_heat::Model* model, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::InventoryHeatDialog)
-    , start_ { QDateTime(QDate::currentDate().addYears(-2), kStartTime) }
-    , end_ { QDateTime(QDate::currentDate().addDays(1), kStartTime) }
+    , range_ { DefaultRange() }
     , model_ { model }
     , widget_id_ { widget_id }
 {
@@ -36,10 +34,10 @@ QTableView* InventoryHeatDialog::View() { return ui->tableView; }
 
 void InventoryHeatDialog::InitDialog()
 {
-    ui->dateTimeEditStart->setDisplayFormat(datetime_format::kDashedDate);
-    ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDashedDate);
-    ui->dateTimeEditStart->setDateTime(start_);
-    ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
+    ui->dateEditStart->setDisplayFormat(datetime_format::kDashedDate);
+    ui->dateEditEnd->setDisplayFormat(datetime_format::kDashedDate);
+    ui->dateEditStart->setDate(range_.start);
+    ui->dateEditEnd->setDate(range_.end);
     ui->radioButtonSale->setChecked(true);
     ui->spinBoxMinOrderCount->setRange(1, INT_MAX);
     ui->spinBoxMinPartnerCount->setRange(1, INT_MAX);
@@ -61,34 +59,43 @@ void InventoryHeatDialog::on_pushButtonFetch_clicked()
         return;
     }
 
+    if (!range_.IsValid()) {
+        return;
+    }
+
     ui->pushButtonFetch->setEnabled(false);
+
+    qDebug() << Q_FUNC_INFO << "DateRange:" << range_.ToString();
+
+    const auto query_range { range_.ToQueryRange() };
+
+    qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
     const Section section { ui->radioButtonSale->isChecked() ? Section::kSale : Section::kPurchase };
     const int moc { ui->spinBoxMinOrderCount->value() };
     const int mpc { ui->spinBoxMinPartnerCount->value() };
     const int mam { ui->spinBoxMinActiveMonths->value() };
 
-    const auto message { JsonGen::InventoryHeadAck(section, widget_id_, start_.toUTC(), end_.toUTC(), moc, mpc, mam) };
+    const auto message { JsonGen::InventoryHeadAck(section, widget_id_, query_range, moc, mpc, mam) };
     WebSocket::Instance()->SendMessage(WsKey::kInventoryHeatAck, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }
 
-void InventoryHeatDialog::on_dateTimeEditStart_dateChanged(const QDate& date)
+void InventoryHeatDialog::on_dateEditStart_dateChanged(const QDate& date)
 {
-    const bool valid { date < end_.date() };
-    start_ = QDateTime(date, kStartTime);
+    const bool valid { date <= range_.end };
+    range_.start = date;
 
     cooldown_timer_->stop();
     ui->pushButtonFetch->setEnabled(valid);
 }
 
-void InventoryHeatDialog::on_dateTimeEditEnd_dateChanged(const QDate& date)
+void InventoryHeatDialog::on_dateEditEnd_dateChanged(const QDate& date)
 {
-    const bool valid { date >= start_.date() };
+    const bool valid { date >= range_.start };
+    range_.end = date;
 
     cooldown_timer_->stop();
     ui->pushButtonFetch->setEnabled(valid);
-
-    end_ = QDateTime(date.addDays(1), kStartTime);
 }

@@ -110,13 +110,13 @@ QJsonObject TreeAck(Section section, const QDateTime& start, const QDateTime& en
     return message;
 }
 
-QJsonObject InventoryHeadAck(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end, int moc, int mpc, int mam)
+QJsonObject InventoryHeadAck(Section section, CUuid& widget_id, const utils::DateTimeRange& range, int moc, int mpc, int mam)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
-    message.insert(kStart, start.toString(Qt::ISODate));
-    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kStart, range.start.toString(Qt::ISODate));
+    message.insert(kEnd, range.end.toString(Qt::ISODate));
     message.insert(section_heat::kMinOrderCount, moc);
     message.insert(section_heat::kMinPartnerCount, mpc);
     message.insert(section_heat::kMinActiveMonths, mam);

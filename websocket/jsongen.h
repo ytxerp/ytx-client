@@ -84,7 +84,7 @@ QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update);
 QJsonObject AccountName(CString& email, CString& name);
 QJsonObject AccountUsername(CString& email, CString& username);
 
-QJsonObject InventoryHeadAck(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end, int moc, int mpc, int mam);
+QJsonObject InventoryHeadAck(Section section, CUuid& widget_id, const utils::DateTimeRange& range, int moc, int mpc, int mam);
 QJsonObject PartnerHeadAck(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end, int moc, int mid, int mam);
 QJsonObject BalanceSheetAck(CUuid& widget_id, CUuid& asset, CUuid& liability, CUuid& equity, const utils::DateTimeRange& range, int level);
 QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, const utils::DateTimeRange& range, int level);
