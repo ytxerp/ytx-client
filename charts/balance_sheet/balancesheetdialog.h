@@ -27,6 +27,7 @@
 
 #include "balancesheetmodel.h"
 #include "tree/model/treemodel.h"
+#include "utils/daterange.h"
 
 namespace Ui {
 class BalanceSheetDialog;
@@ -43,19 +44,23 @@ public:
     balance_sheet::Model* Model() { return model_; }
 
 private slots:
-    void on_dateTimeEditEnd_dateChanged(const QDate& date);
+    void on_dateEditEnd_dateChanged(const QDate& date);
     void on_pushButtonFetch_clicked();
-    void on_dateTimeEditStart_dateChanged(const QDate& date);
+    void on_dateEditStart_dateChanged(const QDate& date);
 
 private:
     void InitDialog();
     void InitTimer();
+    static utils::DateRange DefaultRange()
+    {
+        const auto today { QDate::currentDate() };
+        return { QDate(today.year(), today.month(), 1), today };
+    }
 
 private:
     Ui::BalanceSheetDialog* ui;
 
-    QDateTime start_ {};
-    QDateTime end_ {};
+    utils::DateRange range_ {};
 
     const QUuid widget_id_ {};
 

@@ -3,7 +3,6 @@
 #include <QMessageBox>
 #include <QUuid>
 
-#include "component/constant.h"
 #include "component/constantstring.h"
 #include "component/signalblocker.h"
 #include "ui_balancesheetdialog.h"
@@ -13,17 +12,13 @@
 BalanceSheetDialog::BalanceSheetDialog(CTreeModel* tree_model, balance_sheet::Model* model, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::BalanceSheetDialog)
+    , range_ { DefaultRange() }
     , widget_id_ { widget_id }
     , model_ { model }
     , tree_model_ { tree_model }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
-
-    const QDate today = QDate::currentDate();
-
-    start_ = QDateTime(QDate(today.year(), today.month(), 1), kStartTime);
-    end_ = QDateTime(today.addDays(1), kStartTime);
 
     InitTimer();
     InitDialog();
@@ -50,11 +45,11 @@ void BalanceSheetDialog::InitDialog()
         ui->comboBoxLiability->setCurrentIndex(-1);
     }
 
-    ui->dateTimeEditStart->setDisplayFormat(datetime_format::kDashedDate);
-    ui->dateTimeEditStart->setDateTime(start_);
+    ui->dateEditStart->setDisplayFormat(datetime_format::kDashedDate);
+    ui->dateEditEnd->setDisplayFormat(datetime_format::kDashedDate);
 
-    ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDashedDate);
-    ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
+    ui->dateEditStart->setDate(range_.start);
+    ui->dateEditEnd->setDate(range_.end);
 
     ui->comboBoxAsset->setFocus();
 }
@@ -66,16 +61,31 @@ void BalanceSheetDialog::InitTimer()
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pushButtonFetch->setEnabled(true); });
 }
 
-void BalanceSheetDialog::on_dateTimeEditEnd_dateChanged(const QDate& date)
+void BalanceSheetDialog::on_dateEditStart_dateChanged(const QDate& date)
 {
+    const bool valid { date <= range_.end };
+    range_.start = date;
+
     cooldown_timer_->stop();
-    ui->pushButtonFetch->setEnabled(true);
-    end_ = QDateTime(date.addDays(1), kStartTime);
+    ui->pushButtonFetch->setEnabled(valid);
+}
+
+void BalanceSheetDialog::on_dateEditEnd_dateChanged(const QDate& date)
+{
+    const bool valid { date >= range_.start };
+    range_.end = date;
+
+    cooldown_timer_->stop();
+    ui->pushButtonFetch->setEnabled(valid);
 }
 
 void BalanceSheetDialog::on_pushButtonFetch_clicked()
 {
     if (!ui->pushButtonFetch->isEnabled()) {
+        return;
+    }
+
+    if (!range_.IsValid()) {
         return;
     }
 
@@ -116,20 +126,17 @@ void BalanceSheetDialog::on_pushButtonFetch_clicked()
 
     ui->pushButtonFetch->setEnabled(false);
 
+    qDebug() << Q_FUNC_INFO << "DateRange:" << range_.ToString();
+
+    const auto query_range { range_.ToQueryRange() };
+
+    qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
+
     const int level { ui->spinBoxLevel->value() };
 
-    const auto message { JsonGen::BalanceSheetAck(widget_id_, asset_id, liability_id, equity_id, start_.toUTC(), end_.toUTC(), level) };
+    const auto message { JsonGen::BalanceSheetAck(widget_id_, asset_id, liability_id, equity_id, query_range, level) };
 
     WebSocket::Instance()->SendMessage(WsKey::kBalanceSheetAck, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
-}
-
-void BalanceSheetDialog::on_dateTimeEditStart_dateChanged(const QDate& date)
-{
-    const bool valid { date < end_.date() };
-    start_ = QDateTime(date, kStartTime);
-
-    cooldown_timer_->stop();
-    ui->pushButtonFetch->setEnabled(valid);
 }
