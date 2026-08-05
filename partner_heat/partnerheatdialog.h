@@ -24,6 +24,7 @@
 #include <QTableView>
 
 #include "partnerheatmodel.h"
+#include "utils/daterange.h"
 
 namespace Ui {
 class PartnerHeatDialog;
@@ -41,19 +42,22 @@ public:
 
 private slots:
     void on_pushButtonFetch_clicked();
-    void on_dateTimeEditStart_dateChanged(const QDate& date);
-    void on_dateTimeEditEnd_dateChanged(const QDate& date);
+    void on_dateEditStart_dateChanged(const QDate& date);
+    void on_dateEditEnd_dateChanged(const QDate& date);
 
 private:
     void InitDialog();
     void InitTimer();
+    static utils::DateRange DefaultRange()
+    {
+        const auto today { QDate::currentDate() };
+        return { today.addYears(-2), today };
+    }
 
 private:
     Ui::PartnerHeatDialog* ui;
 
-    QDateTime start_ {};
-    QDateTime end_ {};
-
+    utils::DateRange range_ {};
     QTimer* cooldown_timer_ { nullptr };
 
     partner_heat::Model* model_ {};
