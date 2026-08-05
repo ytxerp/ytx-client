@@ -71,7 +71,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="DateTimeEdit" name="dateTimeEditStart">
+       <widget class="DateEdit" name="dateEditStart">
         <property name="calendarPopup">
          <bool>true</bool>
         </property>
@@ -85,7 +85,7 @@
        </widget>
       </item>
       <item>
-       <widget class="DateTimeEdit" name="dateTimeEditEnd">
+       <widget class="DateEdit" name="dateEditEnd">
         <property name="calendarPopup">
          <bool>true</bool>
         </property>
@@ -111,9 +111,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>DateTimeEdit</class>
-   <extends>QDateTimeEdit</extends>
-   <header location="global">widget/datetimeedit.h</header>
+   <class>DateEdit</class>
+   <extends>QDateEdit</extends>
+   <header location="global">widget/dateedit.h</header>
   </customwidget>
   <customwidget>
    <class>ComboBox</class>
@@ -130,8 +130,8 @@
   <tabstop>comboBoxIncome</tabstop>
   <tabstop>comboBoxExpense</tabstop>
   <tabstop>spinBoxLevel</tabstop>
-  <tabstop>dateTimeEditStart</tabstop>
-  <tabstop>dateTimeEditEnd</tabstop>
+  <tabstop>dateEditStart</tabstop>
+  <tabstop>dateEditEnd</tabstop>
   <tabstop>pushButtonFetch</tabstop>
   <tabstop>treeView</tabstop>
  </tabstops>

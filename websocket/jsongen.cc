@@ -463,13 +463,18 @@ QJsonObject BalanceSheetAck(CUuid& widget_id, CUuid& asset, CUuid& liability, CU
     return message;
 }
 
-QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, int level)
+QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, const utils::DateTimeRange& range, int level)
 {
+    QJsonObject date_range {};
+    date_range.insert(kStart, range.start.toUTC().toString(Qt::ISODate));
+    date_range.insert(kEnd, range.end.toUTC().toString(Qt::ISODate));
+
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(Section::kFinance));
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(income_statement::kIncomeId, income.toString(QUuid::WithoutBraces));
     message.insert(income_statement::kExpenseId, expense.toString(QUuid::WithoutBraces));
+    message.insert(income_statement::kDateRange, date_range);
     message.insert(kLevel, level);
     return message;
 }

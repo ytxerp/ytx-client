@@ -12,8 +12,7 @@
 IncomeStatementDialog::IncomeStatementDialog(CTreeModel* tree_model, income_statement::Model* model, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::IncomeStatementDialog)
-    , start_ { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime) }
-    , end_ { QDateTime(QDate::currentDate().addDays(1), kStartTime) }
+    , range_ { DefaultRange() }
     , widget_id_ { widget_id }
     , model_ { model }
     , tree_model_ { tree_model }
@@ -32,19 +31,31 @@ IncomeStatementDialog::~IncomeStatementDialog() { delete ui; }
 
 QTreeView* IncomeStatementDialog::View() { return ui->treeView; }
 
-void IncomeStatementDialog::on_dateTimeEditEnd_dateChanged(const QDate& date)
+void IncomeStatementDialog::on_dateEditStart_dateChanged(const QDate& date)
 {
-    const bool valid { date >= start_.date() };
+    const bool valid { date <= range_.end };
+    range_.start = date;
 
     cooldown_timer_->stop();
     ui->pushButtonFetch->setEnabled(valid);
+}
 
-    end_ = QDateTime(date.addDays(1), kStartTime);
+void IncomeStatementDialog::on_dateEditEnd_dateChanged(const QDate& date)
+{
+    const bool valid { date >= range_.start };
+    range_.end = date;
+
+    cooldown_timer_->stop();
+    ui->pushButtonFetch->setEnabled(valid);
 }
 
 void IncomeStatementDialog::on_pushButtonFetch_clicked()
 {
     if (!ui->pushButtonFetch->isEnabled()) {
+        return;
+    }
+
+    if (!range_.IsValid()) {
         return;
     }
 
@@ -84,33 +95,13 @@ void IncomeStatementDialog::on_pushButtonFetch_clicked()
 
     const int level { ui->spinBoxLevel->value() };
 
-    const auto start_date { ui->dateTimeEditStart->dateTime().date() };
-    const auto end_date { ui->dateTimeEditEnd->dateTime().date() };
+    qDebug() << Q_FUNC_INFO << "DateRange:" << range_.ToString();
 
-    const int years { end_date.year() - start_date.year() + 1 };
-    const int months { (end_date.year() - start_date.year()) * 12 + end_date.month() - start_date.month() + 1 };
-    const int days { static_cast<int>(start_date.daysTo(end_date) + 1) };
+    const auto query_range { range_.ToQueryRange() };
 
-    QJsonObject duration {};
-    duration.insert(income_statement::kYears, years);
-    duration.insert(income_statement::kMonths, months);
-    duration.insert(income_statement::kDays, days);
+    qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
-    static const QString kDefaultTime = QDateTime::fromSecsSinceEpoch(0, QTimeZone::UTC).toString(Qt::ISODate);
-
-    QJsonObject date_range {};
-    date_range.insert(kStart, start_.toUTC().toString(Qt::ISODate));
-    date_range.insert(kEnd, end_.toUTC().toString(Qt::ISODate));
-    date_range.insert(kYoyStart, kDefaultTime);
-    date_range.insert(kYoyEnd, kDefaultTime);
-    date_range.insert(kMomStart, kDefaultTime);
-    date_range.insert(kMomEnd, kDefaultTime);
-
-    auto message { JsonGen::IncomeStatementAck(widget_id_, income_id, expense_id, level) };
-
-    message.insert(income_statement::kDuration, duration);
-    message.insert(income_statement::kDateRange, date_range);
-
+    const auto message { JsonGen::IncomeStatementAck(widget_id_, income_id, expense_id, query_range, level) };
     WebSocket::Instance()->SendMessage(WsKey::kIncomeStatementAck, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
@@ -128,10 +119,10 @@ void IncomeStatementDialog::InitDialog()
         ui->comboBoxExpense->setCurrentIndex(-1);
     }
 
-    ui->dateTimeEditStart->setDisplayFormat(datetime_format::kDashedDate);
-    ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDashedDate);
-    ui->dateTimeEditStart->setDateTime(start_);
-    ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
+    ui->dateEditStart->setDisplayFormat(datetime_format::kDashedDate);
+    ui->dateEditEnd->setDisplayFormat(datetime_format::kDashedDate);
+    ui->dateEditStart->setDate(range_.start);
+    ui->dateEditEnd->setDate(range_.end);
 
     ui->comboBoxIncome->setFocus();
 }
@@ -141,13 +132,4 @@ void IncomeStatementDialog::InitTimer()
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pushButtonFetch->setEnabled(true); });
-}
-
-void IncomeStatementDialog::on_dateTimeEditStart_dateChanged(const QDate& date)
-{
-    const bool valid { date < end_.date() };
-    start_ = QDateTime(date, kStartTime);
-
-    cooldown_timer_->stop();
-    ui->pushButtonFetch->setEnabled(valid);
 }
