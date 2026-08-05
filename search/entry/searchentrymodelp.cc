@@ -5,7 +5,7 @@
 
 namespace search {
 
-EntryModelP::EntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
+EntryModelP::EntryModelP(EntryHub* entry_hub, CSectionInfo& info, const QHash<QUuid, tag::Row*>& tag_hash, QObject* parent)
     : EntryModel { info, tag_hash, parent }
     , entry_hub_p_ { static_cast<EntryHubP*>(entry_hub) }
 {
@@ -87,7 +87,7 @@ void EntryModelP::Search(const QString& text)
 
     if (!text.isEmpty()) {
         // Parse search input into text and tag set
-        const SearchQuery query { utils::ParseSearchQuery(text, tag_hash_) };
+        const auto query { tag::ParseSearchQuery(text, tag_hash_) };
 
         if (!query.tags.isEmpty()) {
             // Tag search has higher priority

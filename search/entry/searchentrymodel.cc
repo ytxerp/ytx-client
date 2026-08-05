@@ -6,7 +6,7 @@
 #include "websocket/websocket.h"
 
 namespace search {
-EntryModel::EntryModel(CSectionInfo& info, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
+EntryModel::EntryModel(CSectionInfo& info, const QHash<QUuid, tag::Row*>& tag_hash, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
     , tag_hash_ { tag_hash }
@@ -63,7 +63,7 @@ void EntryModel::Search(const QString& text)
     }
 
     // 2. Parse the search input into text and tag set
-    const SearchQuery query { utils::ParseSearchQuery(text, tag_hash_) };
+    const auto query { tag::ParseSearchQuery(text, tag_hash_) };
 
     // 3. Perform the search (tag search has higher priority)
     if (!query.tags.isEmpty()) {

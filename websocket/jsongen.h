@@ -50,7 +50,7 @@ QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, In
 QJsonObject EntryMessage(Section section, CUuid& entry_id);
 
 QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update);
-QJsonObject TagInsert(Section section, const TagRow* tag);
+QJsonObject TagInsert(Section section, const tag::Row* tag);
 QJsonObject TagDelete(Section section, CUuid& tag_id);
 
 QJsonObject WorkspaceMemberUpdate(CUuid& id, CJsonObject& update);

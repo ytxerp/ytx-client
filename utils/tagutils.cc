@@ -8,7 +8,9 @@
 
 #include "component/constantint.h"
 
-SearchQuery utils::ParseSearchQuery(const QString& input, const QHash<QUuid, TagRow*>& tag_hash)
+namespace tag {
+
+SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Row*>& tag_hash)
 {
     SearchQuery query {};
 
@@ -29,7 +31,7 @@ SearchQuery utils::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag
 
         // Resolve tag name -> tag id
         for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
-            const TagRow* tag = it.value();
+            const Row* tag = it.value();
             if (!tag)
                 continue;
 
@@ -47,7 +49,7 @@ SearchQuery utils::ParseSearchQuery(const QString& input, const QHash<QUuid, Tag
     return query;
 }
 
-QIcon utils::CreateTagIcon(const TagRow* tag, bool checked)
+QIcon CreateTagIcon(const Row* tag, bool checked)
 {
     const qreal dpr { qApp->devicePixelRatio() };
     QPixmap pixmap(static_cast<int>(16 * dpr), static_cast<int>(16 * dpr));
@@ -73,7 +75,7 @@ QIcon utils::CreateTagIcon(const TagRow* tag, bool checked)
     return icon;
 }
 
-QPixmap utils::CreateTagPixmap(const TagRow* tag)
+QPixmap CreateTagPixmap(const Row* tag)
 {
     const qreal dpr { qApp->devicePixelRatio() };
 
@@ -105,14 +107,15 @@ QPixmap utils::CreateTagPixmap(const TagRow* tag)
     painter.drawRoundedRect(background_rect, ui_const::kCornerRadius, ui_const::kCornerRadius);
 
     // Draw text
-    painter.setPen(utils::GetContrastColor(tag->color));
+    painter.setPen(GetContrastColor(tag->color));
     painter.drawText(background_rect, Qt::AlignCenter, tag->name);
 
     return pixmap;
 }
 
-QColor utils::GetContrastColor(const QColor& bg_color)
+QColor GetContrastColor(const QColor& bg_color)
 {
     const int brightness { (bg_color.red() * 299 + bg_color.green() * 587 + bg_color.blue() * 114) / 1000 };
     return brightness > 128 ? Qt::black : Qt::white;
+}
 }

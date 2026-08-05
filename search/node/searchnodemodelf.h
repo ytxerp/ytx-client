@@ -27,7 +27,7 @@ namespace search {
 class NodeModelF final : public NodeModel {
     Q_OBJECT
 public:
-    NodeModelF(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
+    NodeModelF(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, tag::Row*>& tag_hash, QObject* parent = nullptr);
 
 public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

@@ -7,15 +7,17 @@
 #include "enum/section.h"
 #include "tagrow.h"
 
-class TagModel final : public QAbstractItemModel {
+namespace tag {
+
+class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 signals:
-    void SInsertLocalTag(Section section, TagRow* tag);
+    void SInsertLocalTag(Section section, Row* tag);
 
 public:
-    explicit TagModel(Section section, const QHash<QUuid, TagRow*>& tag_hash, const QStringList& header, QObject* parent = nullptr);
-    ~TagModel() override;
+    explicit Model(Section section, const QHash<QUuid, Row*>& tag_hash, const QStringList& header, QObject* parent = nullptr);
+    ~Model() override;
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -52,23 +54,24 @@ public:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
 private:
-    bool UpdateName(TagRow* tag, const QString& new_name);
-    bool UpdateColor(TagRow* tag, const QString& new_color);
+    bool UpdateName(Row* tag, const QString& new_name);
+    bool UpdateColor(Row* tag, const QString& new_color);
 
-    void RestartTimer(const QUuid& id, TagRow* tag);
+    void RestartTimer(const QUuid& id, Row* tag);
     void FlushCaches();
 
-    void TryInsert(TagRow* tag);
+    void TryInsert(Row* tag);
 
 private:
     const Section section_ {};
     const QStringList& header_;
 
     // non-owning pointers, owned by tag_hash
-    QList<TagRow*> list_ {};
+    QList<Row*> list_ {};
 
     QHash<QUuid, QJsonObject> pending_updates_ {};
     QHash<QUuid, QTimer*> pending_timers_ {};
 };
+}
 
 #endif // TAGMODEL_H

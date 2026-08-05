@@ -22,10 +22,14 @@
 
 #include <QIcon>
 
-struct TagIcon final {
+namespace tag {
+
+struct Icon final {
     QIcon icon {};
     QIcon icon_checked {};
     QPixmap pixmap {};
 };
+
+}
 
 #endif // TAGICON_H

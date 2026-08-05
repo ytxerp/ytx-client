@@ -9,7 +9,9 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-TagModel::TagModel(Section section, const QHash<QUuid, TagRow*>& tag_hash, const QStringList& header, QObject* parent)
+namespace tag {
+
+Model::Model(Section section, const QHash<QUuid, Row*>& tag_hash, const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
     , section_ { section }
     , header_ { header }
@@ -18,12 +20,12 @@ TagModel::TagModel(Section section, const QHash<QUuid, TagRow*>& tag_hash, const
         list_.append(it.value());
     }
 
-    std::sort(list_.begin(), list_.end(), [](const TagRow* a, const TagRow* b) { return a->name < b->name; });
+    std::sort(list_.begin(), list_.end(), [](const Row* a, const Row* b) { return a->name < b->name; });
 }
 
-TagModel::~TagModel() { FlushCaches(); }
+Model::~Model() { FlushCaches(); }
 
-QVariant TagModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return header_.at(section);
@@ -31,7 +33,7 @@ QVariant TagModel::headerData(int section, Qt::Orientation orientation, int role
     return QVariant();
 }
 
-QModelIndex TagModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
@@ -39,7 +41,7 @@ QModelIndex TagModel::index(int row, int column, const QModelIndex& parent) cons
     return createIndex(row, column, list_.at(row));
 }
 
-QVariant TagModel::data(const QModelIndex& index, int role) const
+QVariant Model::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -47,18 +49,18 @@ QVariant TagModel::data(const QModelIndex& index, int role) const
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    const TagRowField column { index.column() };
-    auto* tag { static_cast<TagRow*>(index.internalPointer()) };
+    const RowField column { index.column() };
+    auto* tag { static_cast<Row*>(index.internalPointer()) };
 
     switch (column) {
-    case TagRowField::kName:
+    case RowField::kName:
         return tag->name;
-    case TagRowField::kColor:
+    case RowField::kColor:
         return tag->color;
     }
 }
 
-bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid() || role != Qt::EditRole)
         return false;
@@ -66,14 +68,14 @@ bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role
     if (data(index, role) == value)
         return false;
 
-    const TagRowField column { index.column() };
-    auto* tag { static_cast<TagRow*>(index.internalPointer()) };
+    const RowField column { index.column() };
+    auto* tag { static_cast<Row*>(index.internalPointer()) };
 
     switch (column) {
-    case TagRowField::kName:
+    case RowField::kName:
         UpdateName(tag, value.toString());
         break;
-    case TagRowField::kColor:
+    case RowField::kColor:
         UpdateColor(tag, value.toString());
         break;
     }
@@ -82,16 +84,16 @@ bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role
     return true;
 }
 
-void TagModel::sort(int column, Qt::SortOrder order)
+void Model::sort(int column, Qt::SortOrder order)
 {
-    const TagRowField e_column { column };
+    const RowField e_column { column };
 
-    auto Compare = [order, e_column](const TagRow* lhs, const TagRow* rhs) -> bool {
+    auto Compare = [order, e_column](const Row* lhs, const Row* rhs) -> bool {
         switch (e_column) {
-        case TagRowField::kName:
-            return utils::CompareMember(lhs, rhs, &TagRow::name, order);
-        case TagRowField::kColor:
-            return utils::CompareMember(lhs, rhs, &TagRow::color, order);
+        case RowField::kName:
+            return utils::CompareMember(lhs, rhs, &Row::name, order);
+        case RowField::kColor:
+            return utils::CompareMember(lhs, rhs, &Row::color, order);
         }
     };
 
@@ -100,18 +102,18 @@ void TagModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-Qt::ItemFlags TagModel::flags(const QModelIndex& index) const
+Qt::ItemFlags Model::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
 
     Qt::ItemFlags flags { QAbstractItemModel::flags(index) };
 
-    switch (static_cast<TagRowField>(index.column())) {
-    case TagRowField::kName:
+    switch (static_cast<RowField>(index.column())) {
+    case RowField::kName:
         flags |= Qt::ItemIsEditable;
         break;
-    case TagRowField::kColor:
+    case RowField::kColor:
         flags &= ~Qt::ItemIsEditable;
         break;
     }
@@ -119,12 +121,12 @@ Qt::ItemFlags TagModel::flags(const QModelIndex& index) const
     return flags;
 }
 
-bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
+bool Model::insertRows(int row, int count, const QModelIndex& parent)
 {
     if (count != 1 || row < 0 || row > list_.size())
         return false;
 
-    auto* tag { ResourcePool<TagRow>::Instance().Allocate() };
+    auto* tag { ResourcePool<Row>::Instance().Allocate() };
 
     tag->id = QUuid::createUuidV7();
     tag->sync_state = SyncState::kCreating;
@@ -140,7 +142,7 @@ bool TagModel::insertRows(int row, int count, const QModelIndex& parent)
     return true;
 }
 
-bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
+bool Model::removeRows(int row, int count, const QModelIndex& parent)
 {
     // Basic validation
     if (count != 1 || row < 0 || row >= list_.size()) {
@@ -148,7 +150,7 @@ bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
     }
 
     // Capture the pointer and necessary values using {} initialization
-    TagRow* tag { list_.at(row) };
+    Row* tag { list_.at(row) };
     const QUuid tag_id { tag->id };
 
     // Clean up the pending timer first (Safety)
@@ -173,13 +175,13 @@ bool TagModel::removeRows(int row, int count, const QModelIndex& parent)
         const QJsonObject message { JsonGen::TagDelete(section_, tag_id) };
         WebSocket::Instance()->SendMessage(WsKey::kTagDelete, message);
     } else {
-        ResourcePool<TagRow>::Instance().Recycle(tag);
+        ResourcePool<Row>::Instance().Recycle(tag);
     }
 
     return true;
 }
 
-bool TagModel::UpdateName(TagRow* tag, const QString& new_name)
+bool Model::UpdateName(Row* tag, const QString& new_name)
 {
     if (!tag)
         return false;
@@ -208,7 +210,7 @@ bool TagModel::UpdateName(TagRow* tag, const QString& new_name)
     return true;
 }
 
-bool TagModel::UpdateColor(TagRow* tag, const QString& new_color)
+bool Model::UpdateColor(Row* tag, const QString& new_color)
 {
     if (!tag || tag->color == new_color)
         return false;
@@ -225,7 +227,7 @@ bool TagModel::UpdateColor(TagRow* tag, const QString& new_color)
     return true;
 }
 
-void TagModel::RestartTimer(const QUuid& id, TagRow* tag)
+void Model::RestartTimer(const QUuid& id, Row* tag)
 {
     // Try to retrieve the existing timer
     QTimer* timer { pending_timers_.value(id, nullptr) };
@@ -260,7 +262,7 @@ void TagModel::RestartTimer(const QUuid& id, TagRow* tag)
     timer->start(time_const::kAutoCloseMs);
 }
 
-void TagModel::FlushCaches()
+void Model::FlushCaches()
 {
     if (pending_updates_.isEmpty())
         return;
@@ -282,7 +284,7 @@ void TagModel::FlushCaches()
     pending_updates_.clear();
 }
 
-void TagModel::TryInsert(TagRow* tag)
+void Model::TryInsert(Row* tag)
 {
     if (!tag || tag->sync_state != SyncState::kCreating)
         return;
@@ -293,4 +295,5 @@ void TagModel::TryInsert(TagRow* tag)
     WebSocket::Instance()->SendMessage(WsKey::kTagInsert, message);
 
     emit SInsertLocalTag(section_, tag);
+}
 }

@@ -28,7 +28,7 @@ class NodeModelO final : public NodeModel {
     Q_OBJECT
 
 public:
-    NodeModelO(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
+    NodeModelO(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, tag::Row*>& tag_hash, QObject* parent = nullptr);
 
 public slots:
     void ROrderSearch(const QJsonObject& obj) override;

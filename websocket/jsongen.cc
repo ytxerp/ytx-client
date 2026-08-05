@@ -375,7 +375,7 @@ QJsonObject WorkspaceMemberDelete(CUuid& id)
     return message;
 }
 
-QJsonObject TagInsert(Section section, const TagRow* tag)
+QJsonObject TagInsert(Section section, const tag::Row* tag)
 {
     QJsonObject message {};
 

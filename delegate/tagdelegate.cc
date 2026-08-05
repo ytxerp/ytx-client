@@ -5,7 +5,7 @@
 #include <QPainter>
 #include <QUuid>
 
-TagDelegate::TagDelegate(const QHash<QUuid, TagIcon>& tag_icon_hash, QObject* parent)
+TagDelegate::TagDelegate(const QHash<QUuid, tag::Icon>& tag_icon_hash, QObject* parent)
     : StyledItemDelegate { parent }
     , tag_icon_hash_ { tag_icon_hash }
 {

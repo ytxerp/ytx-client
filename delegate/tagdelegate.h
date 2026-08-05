@@ -25,12 +25,12 @@
 
 class TagDelegate final : public StyledItemDelegate {
 public:
-    explicit TagDelegate(const QHash<QUuid, TagIcon>& tag_icon_hash, QObject* parent = nullptr);
+    explicit TagDelegate(const QHash<QUuid, tag::Icon>& tag_icon_hash, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    const QHash<QUuid, TagIcon>& tag_icon_hash_ {};
+    const QHash<QUuid, tag::Icon>& tag_icon_hash_ {};
 };
 
 #endif // TAGDELEGATE_H

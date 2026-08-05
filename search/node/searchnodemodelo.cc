@@ -11,7 +11,7 @@
 
 namespace search {
 
-NodeModelO::NodeModelO(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
+NodeModelO::NodeModelO(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, tag::Row*>& tag_hash, QObject* parent)
     : NodeModel { info, tree_model, tag_hash, parent }
 {
 }
@@ -145,7 +145,7 @@ void NodeModelO::Search(CString& text)
     }
 
     // Parse search input into text and tag set
-    const SearchQuery query { utils::ParseSearchQuery(text, tag_hash_) };
+    const auto query { tag::ParseSearchQuery(text, tag_hash_) };
 
     // Perform the search (tag search has higher priority)
     if (!query.tags.isEmpty()) {

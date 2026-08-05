@@ -27,7 +27,9 @@
 #include "component/constant.h"
 #include "enum/stateenum.h"
 
-struct TagRow final {
+namespace tag {
+
+struct Row final {
     QUuid id {};
     QString name {};
     QString color {};
@@ -41,9 +43,9 @@ struct TagRow final {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void TagRow::Reset() { *this = TagRow {}; }
+inline void Row::Reset() { *this = Row {}; }
 
-inline QJsonObject TagRow::WriteJson() const
+inline QJsonObject Row::WriteJson() const
 {
     QJsonObject obj {};
 
@@ -56,7 +58,7 @@ inline QJsonObject TagRow::WriteJson() const
     return obj;
 }
 
-inline void TagRow::ReadJson(const QJsonObject& object)
+inline void Row::ReadJson(const QJsonObject& object)
 {
     // Data loaded from server
     sync_state = SyncState::kSynced;
@@ -70,5 +72,5 @@ inline void TagRow::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kVersion); val.isDouble())
         version = val.toInt();
 }
-
+}
 #endif // TAGROW_H

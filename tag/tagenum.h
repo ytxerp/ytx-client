@@ -20,6 +20,10 @@
 #ifndef TAGENUM_H
 #define TAGENUM_H
 
-enum class TagRowField : int { kName, kColor };
+namespace tag {
+
+enum class RowField : int { kName, kColor };
+
+}
 
 #endif // TAGENUM_H

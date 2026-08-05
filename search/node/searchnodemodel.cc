@@ -6,7 +6,7 @@
 
 namespace search {
 
-NodeModel::NodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent)
+NodeModel::NodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, tag::Row*>& tag_hash, QObject* parent)
     : QAbstractItemModel { parent }
     , info_ { info }
     , tree_model_ { tree_model }
@@ -58,7 +58,7 @@ void NodeModel::Search(const QString& text)
 
     if (!trimmed.isEmpty()) {
         // Parse search input into text and tag set
-        const SearchQuery query { utils::ParseSearchQuery(trimmed, tag_hash_) };
+        const auto query { tag::ParseSearchQuery(trimmed, tag_hash_) };
 
         if (!query.tags.isEmpty()) {
             // Tag search has higher priority

@@ -40,7 +40,7 @@ public slots:
     virtual void ROrderSearch(const QJsonObject& obj) { Q_UNUSED(obj) }
 
 protected:
-    NodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, TagRow*>& tag_hash, QObject* parent = nullptr);
+    NodeModel(CSectionInfo& info, CTreeModel* tree_model, const QHash<QUuid, tag::Row*>& tag_hash, QObject* parent = nullptr);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -58,7 +58,7 @@ protected:
     CTreeModel* tree_model_ {};
     QList<Node*> list_ {};
     const Section section_ {};
-    const QHash<QUuid, TagRow*>& tag_hash_ {};
+    const QHash<QUuid, tag::Row*>& tag_hash_ {};
 };
 }
 

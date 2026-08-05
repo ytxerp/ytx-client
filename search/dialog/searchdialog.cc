@@ -19,7 +19,6 @@ SearchDialog::SearchDialog(SectionContext* sc, search::NodeModel* search_node, s
     , tree_model_ { sc->tree_model }
     , config_ { sc->section_config }
     , info_ { sc->info }
-    , tag_hash_ { sc->tag_hash }
     , tag_icon_hash_ { sc->tag_icon_hash }
 {
     ui->setupUi(this);
