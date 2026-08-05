@@ -15,11 +15,7 @@ Model::Model(const QStringList& header, QObject* parent)
 {
 }
 
-Model::~Model()
-{
-    qDebug() << "~WorkspaceMemberModel() FlushCaches";
-    FlushCaches();
-}
+Model::~Model() { FlushCaches(); }
 
 QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -224,7 +220,7 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
 void Model::Rebuild(const QJsonArray& array)
 {
     if (array.isEmpty()) {
-        qWarning() << "[WorkspaceMemberModel]" << "Received empty member array";
+        qDebug() << Q_FUNC_INFO << "Received empty member array";
     }
 
     // Parse outside the reset block
@@ -233,7 +229,7 @@ void Model::Rebuild(const QJsonArray& array)
 
     for (const auto& value : array) {
         if (!value.isObject()) {
-            qWarning() << "[WorkspaceMemberModel]" << "Invalid member data, expected object:" << value;
+            qWarning() << Q_FUNC_INFO << "Invalid member data, expected object:" << value;
             continue;
         }
 

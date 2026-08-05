@@ -125,7 +125,7 @@ MainWindow::~MainWindow()
 void MainWindow::FocusTabWidget(const QUuid& node_id) const
 {
     auto widget { qobject_cast<TableWidget*>(sc_->widget_hash.value(node_id).widget) };
-    Q_ASSERT_X(widget, "MainWindow::FocusTableWidget", "Table widget not found for node_id");
+    Q_ASSERT_X(widget, Q_FUNC_INFO, "Table widget not found for node_id");
 
     sc_->tab_widget->setCurrentWidget(widget);
     widget->activateWindow();
@@ -657,6 +657,8 @@ void MainWindow::RSectionGroup(int id)
 
 void MainWindow::on_actionCheckUpdates_triggered()
 {
+    qInfo() << Q_FUNC_INFO;
+
     const QString url { "https://api.github.com/repos/ytxerp/ytx-client/releases/latest" };
 
     QNetworkRequest request(url);

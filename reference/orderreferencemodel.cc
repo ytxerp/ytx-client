@@ -45,7 +45,7 @@ QVariant OrderReferenceModel::headerData(int section, Qt::Orientation orientatio
 void OrderReferenceModel::Rebuild(const QJsonArray& array)
 {
     if (array.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "Received empty array";
+        qDebug() << Q_FUNC_INFO << "Received empty array";
     }
 
     QList<OrderReference*> new_list {};
