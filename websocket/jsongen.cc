@@ -474,13 +474,13 @@ QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, 
     return message;
 }
 
-QJsonObject CashFlowStatementAck(CUuid& widget_id, const QDateTime& start, const QDateTime& end)
+QJsonObject CashFlowStatementAck(CUuid& widget_id, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(Section::kFinance));
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
-    message.insert(kEnd, end.toString(Qt::ISODate));
-    message.insert(kStart, start.toString(Qt::ISODate));
+    message.insert(kStart, range.start.toString(Qt::ISODate));
+    message.insert(kEnd, range.end.toString(Qt::ISODate));
 
     return message;
 }

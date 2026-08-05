@@ -88,7 +88,7 @@ QJsonObject InventoryHeadAck(Section section, CUuid& widget_id, const QDateTime&
 QJsonObject PartnerHeadAck(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end, int moc, int mid, int mam);
 QJsonObject BalanceSheetAck(CUuid& widget_id, CUuid& asset, CUuid& liability, CUuid& equity, const utils::DateTimeRange& range, int level);
 QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, int level);
-QJsonObject CashFlowStatementAck(CUuid& widget_id, const QDateTime& start, const QDateTime& end);
+QJsonObject CashFlowStatementAck(CUuid& widget_id, const utils::DateTimeRange& range);
 
 }
 

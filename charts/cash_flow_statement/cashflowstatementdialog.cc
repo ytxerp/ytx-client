@@ -1,6 +1,5 @@
 #include "cashflowstatementdialog.h"
 
-#include "component/constant.h"
 #include "component/constantint.h"
 #include "component/constantstring.h"
 #include "component/constantwebsocket.h"
@@ -13,8 +12,7 @@ CashFlowStatementDialog::CashFlowStatementDialog(cash_flow::Model* model, cash_f
     cash_flow::WrongModel* wrong, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::CashFlowStatementDialog)
-    , start_ { QDateTime(QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1), kStartTime) }
-    , end_ { QDateTime(QDate::currentDate().addDays(1), kStartTime) }
+    , range_ { DefaultRange() }
     , widget_id_ { widget_id }
     , model_ { model }
     , carrier_ { carrier }
@@ -52,20 +50,19 @@ QTreeView* CashFlowStatementDialog::SpecialView() { return ui->treeViewSpecial; 
 
 QTableView* CashFlowStatementDialog::WrongView() { return ui->tableView; }
 
-void CashFlowStatementDialog::on_dateTimeEditEnd_dateChanged(const QDate& date)
+void CashFlowStatementDialog::on_dateEditStart_dateChanged(const QDate& date)
 {
-    const bool valid { date >= start_.date() };
+    const bool valid { date <= range_.end };
+    range_.start = date;
 
     cooldown_timer_->stop();
     ui->pushButtonFetch->setEnabled(valid);
-
-    end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
-void CashFlowStatementDialog::on_dateTimeEditStart_dateChanged(const QDate& date)
+void CashFlowStatementDialog::on_dateEditEnd_dateChanged(const QDate& date)
 {
-    const bool valid { date < end_.date() };
-    start_ = QDateTime(date, kStartTime);
+    const bool valid { date >= range_.start };
+    range_.end = date;
 
     cooldown_timer_->stop();
     ui->pushButtonFetch->setEnabled(valid);
@@ -77,7 +74,17 @@ void CashFlowStatementDialog::on_pushButtonFetch_clicked()
         return;
     }
 
-    const auto message { JsonGen::CashFlowStatementAck(widget_id_, start_.toUTC(), end_.toUTC()) };
+    if (!range_.IsValid()) {
+        return;
+    }
+
+    qDebug() << Q_FUNC_INFO << "DateRange:" << range_.ToString();
+
+    const auto query_range { range_.ToQueryRange() };
+
+    qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
+
+    const auto message { JsonGen::CashFlowStatementAck(widget_id_, query_range) };
 
     WebSocket::Instance()->SendMessage(WsKey::kCashFlowStatementAck, message);
 
@@ -88,10 +95,10 @@ void CashFlowStatementDialog::on_pushButtonFetch_clicked()
 
 void CashFlowStatementDialog::InitDialog()
 {
-    ui->dateTimeEditStart->setDisplayFormat(datetime_format::kDashedDate);
-    ui->dateTimeEditEnd->setDisplayFormat(datetime_format::kDashedDate);
-    ui->dateTimeEditStart->setDateTime(start_);
-    ui->dateTimeEditEnd->setDateTime(end_.addDays(-1));
+    ui->dateEditStart->setDisplayFormat(datetime_format::kDashedDate);
+    ui->dateEditEnd->setDisplayFormat(datetime_format::kDashedDate);
+    ui->dateEditStart->setDate(range_.start);
+    ui->dateEditEnd->setDate(range_.end);
 
     ui->pushButtonFetch->setFocus();
 
