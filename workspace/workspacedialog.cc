@@ -1,5 +1,6 @@
 #include "workspacedialog.h"
 
+#include "component/signalblocker.h"
 #include "ui_workspacedialog.h"
 
 WorkspaceDialog::WorkspaceDialog(const QStringList& header, QWidget* parent)
@@ -7,6 +8,8 @@ WorkspaceDialog::WorkspaceDialog(const QStringList& header, QWidget* parent)
     , ui(new Ui::WorkspaceDialog)
 {
     ui->setupUi(this);
+    SignalBlocker blocker(this);
+
     InitDialog(header);
 }
 

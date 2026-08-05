@@ -33,10 +33,9 @@ class TagDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit TagDialog(QWidget* parent = nullptr);
+    explicit TagDialog(tag::Model* model, QWidget* parent = nullptr);
     ~TagDialog() override;
 
-    void SetModel(tag::Model* model);
     QTableView* View();
 
 private slots:
@@ -45,8 +44,6 @@ private slots:
 
 private:
     Ui::TagDialog* ui;
-
-private:
     tag::Model* model_ {};
 };
 

@@ -1,26 +1,25 @@
 #include "tagdialog.h"
 
+#include "component/signalblocker.h"
 #include "dialog/deletenode/exactmatchconfirmdialog.h"
 #include "tagenum.h"
 #include "ui_tagdialog.h"
 
-TagDialog::TagDialog(QWidget* parent)
+TagDialog::TagDialog(tag::Model* model, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::TagDialog)
+    , model_ { model }
 {
     ui->setupUi(this);
+    SignalBlocker blocker(this);
+
+    ui->tableView->setModel(model);
+    model->setParent(ui->tableView);
+
     setMinimumSize(400, 300);
 }
 
 TagDialog::~TagDialog() { delete ui; }
-
-void TagDialog::SetModel(tag::Model* model)
-{
-    model_ = model;
-
-    ui->tableView->setModel(model);
-    model->setParent(ui->tableView);
-}
 
 QTableView* TagDialog::View() { return ui->tableView; }
 

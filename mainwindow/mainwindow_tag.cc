@@ -23,11 +23,9 @@ void MainWindow::on_actionTags_triggered()
         auto* model { new tag::Model(start_, sc_->tag_hash, header_info_.tag, this) };
         connect(model, &tag::Model::SInsertLocalTag, this, &MainWindow::RInsertLocalTag);
 
-        dialog = new TagDialog(this);
+        dialog = new TagDialog(model, this);
 
         utils::ManageDialog(sc_->widget_hash, dialog);
-
-        dialog->SetModel(model);
 
         auto* view { dialog->View() };
         InitTableView(view, std::to_underlying(tag::RowField::kColor));
