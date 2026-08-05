@@ -15,13 +15,3 @@ bool node::IsDescendant(const Node* descendant, const Node* ancestor)
 
     return descendant == ancestor;
 }
-
-std::pair<QDateTime, QDateTime> utils::DefaultLocalRange()
-{
-    const QDate today { QDate::currentDate() };
-
-    const QDateTime start { today, kStartTime, QTimeZone::LocalTime };
-    const QDateTime end { today.addDays(1), kStartTime, QTimeZone::LocalTime };
-
-    return { start, end };
-}

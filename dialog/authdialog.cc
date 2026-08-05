@@ -7,7 +7,6 @@
 #include "global/logininfo.h"
 #include "ui_authdialog.h"
 #include "utils/mainwindowutils.h"
-#include "utils/nodeutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -148,15 +147,16 @@ void AuthDialog::on_pushButtonLogin_clicked()
         return;
     }
 
-    auto [start, end] = utils::DefaultLocalRange();
+    const auto today { QDate::currentDate() };
+    const utils::DateRange range { today, today };
 
-    qDebug() << "login start" << start;
-    qDebug() << "login end" << end;
+    qDebug() << Q_FUNC_INFO << "DateRange:" << range.ToString();
 
-    WebSocket::Instance()->SendMessage(WsKey::kLogin, JsonGen::Login(email, password, workspace, start.toUTC(), end.toUTC()));
+    const auto query_range { range.ToQueryRange() };
 
-    qDebug() << "login utc start" << start.toUTC();
-    qDebug() << "login utc end" << end.toUTC();
+    qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
+
+    WebSocket::Instance()->SendMessage(WsKey::kLogin, JsonGen::Login(email, password, workspace, query_range));
 
     SyncLoginInfo();
     LoginInfo::Instance().WriteConfig(local_settings_);
