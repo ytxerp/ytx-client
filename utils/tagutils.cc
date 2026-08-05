@@ -20,29 +20,33 @@ SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Row*>& tag
 
     static const QRegularExpression tag_regex { R"(\[([^\]]+)\])" };
 
-    QRegularExpressionMatchIterator match_it { tag_regex.globalMatch(cleaned) };
+    // Collect tag names from input.
+    QSet<QString> tag_names {};
 
-    while (match_it.hasNext()) {
-        const QRegularExpressionMatch match = match_it.next();
-        const QString tag_name = match.captured(1).trimmed();
+    const auto match_it { tag_regex.globalMatch(cleaned) };
 
-        if (tag_name.isEmpty())
-            continue;
+    for (auto it = match_it; it.hasNext();) {
+        const auto match { it.next() };
+        const QString name { match.captured(1).simplified() };
 
-        // Resolve tag name -> tag ids
-        for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
-            const Row* tag = it.value();
-            if (!tag)
-                continue;
-
-            if (tag->name.compare(tag_name, Qt::CaseInsensitive) == 0) {
-                query.tags.insert(it.key().toString(QUuid::WithoutBraces));
-                break;
-            }
+        if (!name.isEmpty()) {
+            tag_names.insert(name);
         }
     }
 
-    // Remove all [xxx] from trimmed
+    // Match tags by name.
+    for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
+        const Row* tag = it.value();
+
+        if (!tag)
+            continue;
+
+        if (tag_names.contains(tag->name)) {
+            query.tags.insert(it.key().toString(QUuid::WithoutBraces));
+        }
+    }
+
+    // Remove all tag expressions from text.
     cleaned.remove(tag_regex);
     query.text = cleaned.trimmed();
 

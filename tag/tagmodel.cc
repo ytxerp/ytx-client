@@ -17,7 +17,13 @@ Model::Model(Section section, const QHash<QUuid, Row*>& tag_hash, const QStringL
     , header_ { header }
 {
     for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
-        list_.append(it.value());
+        Row* tag { it.value() };
+
+        if (!tag)
+            continue;
+
+        names_.insert(tag->name);
+        list_.append(tag);
     }
 
     std::sort(list_.begin(), list_.end(), [](const Row* a, const Row* b) { return a->name < b->name; });
@@ -152,6 +158,7 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
     // Capture the pointer and necessary values using {} initialization
     Row* tag { list_.at(row) };
     const QUuid tag_id { tag->id };
+    const QString tag_name { tag->name };
 
     // Clean up the pending timer first (Safety)
     // Prevent the timer from firing after the tag is recycled.
@@ -161,11 +168,11 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
     }
 
     pending_updates_.remove(tag_id);
+    names_.remove(tag_name);
 
     // Notify views that rows are about to be removed
     beginRemoveRows(parent, row, row);
 
-    // Remove from all internal containers
     list_.removeAt(row);
 
     endRemoveRows();
@@ -181,15 +188,24 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
     return true;
 }
 
-bool Model::UpdateName(Row* tag, const QString& new_name)
+bool Model::UpdateName(Row* tag, const QString& name)
 {
     if (!tag)
         return false;
 
-    const QString old_name { tag->name };
-
-    if (old_name == new_name || new_name.isEmpty())
+    const QString new_name { name.simplified() };
+    if (new_name.isEmpty())
         return false;
+
+    const QString old_name { tag->name };
+    if (old_name == new_name)
+        return true;
+
+    if (names_.contains(new_name))
+        return false;
+
+    names_.remove(old_name);
+    names_.insert(new_name);
 
     tag->name = new_name;
 

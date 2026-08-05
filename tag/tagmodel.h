@@ -13,7 +13,7 @@ class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 signals:
-    void SInsertLocalTag(Section section, Row* tag);
+    void SInsertLocalTag(Section section, tag::Row* tag);
 
 public:
     explicit Model(Section section, const QHash<QUuid, Row*>& tag_hash, const QStringList& header, QObject* parent = nullptr);
@@ -68,6 +68,7 @@ private:
 
     // non-owning pointers, owned by tag_hash
     QList<Row*> list_ {};
+    QSet<QString> names_ {};
 
     QHash<QUuid, QJsonObject> pending_updates_ {};
     QHash<QUuid, QTimer*> pending_timers_ {};
