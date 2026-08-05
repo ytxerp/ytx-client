@@ -16,8 +16,8 @@ struct SearchQuery final {
 
 SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Row*>& tag_hash);
 QColor GetContrastColor(const QColor& bg_color);
-QIcon CreateTagIcon(const Row* tag, bool checked);
-QPixmap CreateTagPixmap(const Row* tag);
+QIcon CreateIcon(const Row* tag, bool checked);
+QPixmap CreatePixmap(const Row* tag);
 
 }
 

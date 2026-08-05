@@ -338,9 +338,9 @@ void MainWindow::UpdateTagIcon(SectionContext* sc, const tag::Row* tag)
         return;
 
     tag::Icon icon {};
-    icon.pixmap = tag::CreateTagPixmap(tag);
-    icon.icon = tag::CreateTagIcon(tag, /*checked=*/false);
-    icon.icon_checked = tag::CreateTagIcon(tag, /*checked=*/true);
+    icon.pixmap = tag::CreatePixmap(tag);
+    icon.icon = tag::CreateIcon(tag, /*checked=*/false);
+    icon.icon_checked = tag::CreateIcon(tag, /*checked=*/true);
 
     sc->tag_icon_hash.insert(tag_id, icon);
 }
@@ -358,9 +358,9 @@ QIcon MainWindow::GetTagIcon(SectionContext* sc, const tag::Row* tag, bool check
     auto it = sc->tag_icon_hash.find(tag_id);
     if (it == sc->tag_icon_hash.end()) {
         tag::Icon icon {};
-        icon.pixmap = tag::CreateTagPixmap(tag);
-        icon.icon = tag::CreateTagIcon(tag, false);
-        icon.icon_checked = tag::CreateTagIcon(tag, true);
+        icon.pixmap = tag::CreatePixmap(tag);
+        icon.icon = tag::CreateIcon(tag, false);
+        icon.icon_checked = tag::CreateIcon(tag, true);
 
         it = sc->tag_icon_hash.insert(tag_id, icon);
     }

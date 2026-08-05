@@ -29,7 +29,7 @@ SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Row*>& tag
         if (tag_name.isEmpty())
             continue;
 
-        // Resolve tag name -> tag id
+        // Resolve tag name -> tag ids
         for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
             const Row* tag = it.value();
             if (!tag)
@@ -49,7 +49,7 @@ SearchQuery ParseSearchQuery(const QString& input, const QHash<QUuid, Row*>& tag
     return query;
 }
 
-QIcon CreateTagIcon(const Row* tag, bool checked)
+QIcon CreateIcon(const Row* tag, bool checked)
 {
     const qreal dpr { qApp->devicePixelRatio() };
     QPixmap pixmap(static_cast<int>(16 * dpr), static_cast<int>(16 * dpr));
@@ -75,7 +75,7 @@ QIcon CreateTagIcon(const Row* tag, bool checked)
     return icon;
 }
 
-QPixmap CreateTagPixmap(const Row* tag)
+QPixmap CreatePixmap(const Row* tag)
 {
     const qreal dpr { qApp->devicePixelRatio() };
 
