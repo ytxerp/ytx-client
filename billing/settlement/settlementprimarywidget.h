@@ -25,6 +25,7 @@
 
 #include "component/using.h"
 #include "settlementprimarymodel.h"
+#include "utils/daterange.h"
 
 namespace Ui {
 class SettlementPrimaryWidget;
@@ -48,12 +49,16 @@ private slots:
 private:
     void InitWidget();
     void InitTimer();
+    static utils::DateRange DefaultRange()
+    {
+        const int year { QDate::currentDate().year() };
+        return { QDate(year - 1, 1, 1), QDate(year, 12, 31) };
+    }
 
 private:
     Ui::SettlementPrimaryWidget* ui;
     settlement::PrimaryModel* model_ {};
-    QDateTime start_ {};
-    QDateTime end_ {};
+    utils::DateRange range_ {};
     QTimer* cooldown_timer_ { nullptr };
 
     const Section section_ {};

@@ -3,7 +3,6 @@
 #include <QJsonArray>
 #include <QTimer>
 
-#include "component/constant.h"
 #include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
@@ -15,8 +14,7 @@ SettlementPrimaryWidget::SettlementPrimaryWidget(settlement::PrimaryModel* model
     : QWidget(parent)
     , ui(new Ui::SettlementPrimaryWidget)
     , model_ { model }
-    , start_ { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) }
-    , end_ { QDateTime(QDate(QDate::currentDate().year() + 1, 1, 1), kStartTime) }
+    , range_ { DefaultRange() }
     , section_ { section }
     , widget_id_ { widget_id }
 {
@@ -38,8 +36,8 @@ QTableView* SettlementPrimaryWidget::View() const { return ui->tableView; }
 
 void SettlementPrimaryWidget::on_start_dateChanged(const QDate& date)
 {
-    const bool valid { date < end_.date() };
-    start_ = QDateTime(date, kStartTime);
+    const bool valid { date <= range_.end };
+    range_.start = date;
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
@@ -47,11 +45,11 @@ void SettlementPrimaryWidget::on_start_dateChanged(const QDate& date)
 
 void SettlementPrimaryWidget::on_end_dateChanged(const QDate& date)
 {
-    const bool valid { date >= start_.date() };
+    const bool valid { date >= range_.start };
+    range_.end = date;
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
-    end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
 void SettlementPrimaryWidget::on_pBtnFetch_clicked()
@@ -60,9 +58,19 @@ void SettlementPrimaryWidget::on_pBtnFetch_clicked()
         return;
     }
 
+    if (!range_.IsValid()) {
+        return;
+    }
+
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::SettlementPrimary(section_, widget_id_, start_.toUTC(), end_.toUTC()) };
+    qDebug() << Q_FUNC_INFO << "DateRange:" << range_.ToString();
+
+    const auto query_range { range_.ToQueryRange() };
+
+    qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
+
+    const auto message { JsonGen::SettlementPrimary(section_, widget_id_, query_range) };
     WebSocket::Instance()->SendMessage(WsKey::kSettlementPrimary, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
@@ -75,8 +83,8 @@ void SettlementPrimaryWidget::InitWidget()
 
     ui->pBtnFetch->setFocus();
 
-    ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_.addDays(-1));
+    ui->start->setDate(range_.start);
+    ui->end->setDate(range_.end);
 }
 
 void SettlementPrimaryWidget::InitTimer()

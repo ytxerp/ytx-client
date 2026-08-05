@@ -65,7 +65,7 @@ QJsonObject OrderReference(Section section, CUuid& widget_id, CUuid& node_id, No
 QJsonObject StatementPrimary(Section section, CUuid& widget_id, int unit, const QDateTime& start, const QDateTime& end);
 QJsonObject StatementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
 QJsonObject StatementTertiary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const QDateTime& start, const QDateTime& end);
-QJsonObject SettlementPrimary(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end);
+QJsonObject SettlementPrimary(Section section, CUuid& widget_id, const utils::DateTimeRange& range);
 QJsonObject SettlementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id);
 QJsonObject SettlementDelete(Section section, CUuid& settlement_id, int version);
 

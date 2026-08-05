@@ -305,14 +305,14 @@ QJsonObject StatementTertiary(Section section, CUuid& widget_id, CUuid& partner_
     return message;
 }
 
-QJsonObject SettlementPrimary(Section section, CUuid& widget_id, const QDateTime& start, const QDateTime& end)
+QJsonObject SettlementPrimary(Section section, CUuid& widget_id, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
 
     message.insert(kSection, std::to_underlying(section));
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
-    message.insert(kStart, start.toString(Qt::ISODate));
-    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kStart, range.start.toString(Qt::ISODate));
+    message.insert(kEnd, range.end.toString(Qt::ISODate));
 
     return message;
 }
