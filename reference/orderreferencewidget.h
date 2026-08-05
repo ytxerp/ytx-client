@@ -28,6 +28,7 @@
 #include "enum/nodeenum.h"
 #include "enum/section.h"
 #include "reference/orderreferencemodel.h"
+#include "utils/daterange.h"
 
 namespace Ui {
 class OrderReferenceWidget;
@@ -49,13 +50,19 @@ private slots:
     void on_end_dateChanged(const QDate& date);
 
 private:
-    void IniWidget();
+    void InitWidget();
     void InitTimer();
+    static utils::DateRange DefaultRange()
+    {
+        const auto today { QDate::currentDate() };
+        const int year { today.year() };
+
+        return { QDate(year - 1, 1, 1), today };
+    }
 
 private:
     Ui::OrderReferenceWidget* ui;
-    QDateTime start_ {};
-    QDateTime end_ {};
+    utils::DateRange range_ {};
     OrderReferenceModel* model_ {};
 
     QTimer* cooldown_timer_ { nullptr };

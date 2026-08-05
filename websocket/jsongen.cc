@@ -250,7 +250,7 @@ QJsonObject EntryMessage(Section section, CUuid& entry_id)
     return message;
 }
 
-QJsonObject OrderReference(Section section, CUuid& widget_id, CUuid& node_id, NodeUnit unit, const QDateTime& start, const QDateTime& end)
+QJsonObject OrderReference(Section section, CUuid& widget_id, CUuid& node_id, NodeUnit unit, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
 
@@ -258,8 +258,8 @@ QJsonObject OrderReference(Section section, CUuid& widget_id, CUuid& node_id, No
     message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kUnit, std::to_underlying(unit));
-    message.insert(kStart, start.toString(Qt::ISODate));
-    message.insert(kEnd, end.toString(Qt::ISODate));
+    message.insert(kStart, range.start.toString(Qt::ISODate));
+    message.insert(kEnd, range.end.toString(Qt::ISODate));
 
     return message;
 }

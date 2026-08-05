@@ -1,6 +1,5 @@
 #include "orderreferencewidget.h"
 
-#include "component/constant.h"
 #include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
@@ -11,8 +10,7 @@
 OrderReferenceWidget::OrderReferenceWidget(OrderReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, NodeUnit node_unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::OrderReferenceWidget)
-    , start_ { QDateTime(QDate(QDate::currentDate().year() - 1, 1, 1), kStartTime) }
-    , end_ { QDateTime(QDate(QDate::currentDate().year() + 1, 1, 1), kStartTime) }
+    , range_ { DefaultRange() }
     , model_ { model }
     , node_id_ { node_id }
     , widget_id_ { widget_id }
@@ -25,7 +23,7 @@ OrderReferenceWidget::OrderReferenceWidget(OrderReferenceModel* model, Section s
     ui->tableView->setModel(model);
     model->setParent(ui->tableView);
 
-    IniWidget();
+    InitWidget();
     InitTimer();
 
     QTimer::singleShot(0, this, &OrderReferenceWidget::on_pBtnFetch_clicked);
@@ -37,8 +35,8 @@ QTableView* OrderReferenceWidget::View() const { return ui->tableView; }
 
 void OrderReferenceWidget::on_start_dateChanged(const QDate& date)
 {
-    const bool valid { date < end_.date() };
-    start_ = QDateTime(date, kStartTime);
+    const bool valid { date <= range_.end };
+    range_.start = date;
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
@@ -46,11 +44,11 @@ void OrderReferenceWidget::on_start_dateChanged(const QDate& date)
 
 void OrderReferenceWidget::on_end_dateChanged(const QDate& date)
 {
-    const bool valid { date >= start_.date() };
+    const bool valid { date >= range_.start };
+    range_.end = date;
 
     cooldown_timer_->stop();
     ui->pBtnFetch->setEnabled(valid);
-    end_ = QDateTime(date.addDays(1), kStartTime);
 }
 
 void OrderReferenceWidget::on_pBtnFetch_clicked()
@@ -59,20 +57,30 @@ void OrderReferenceWidget::on_pBtnFetch_clicked()
         return;
     }
 
+    if (!range_.IsValid()) {
+        return;
+    }
+
     ui->pBtnFetch->setEnabled(false);
 
-    const auto message { JsonGen::OrderReference(section_, widget_id_, node_id_, node_unit_, start_.toUTC(), end_.toUTC()) };
+    qDebug() << Q_FUNC_INFO << "DateRange:" << range_.ToString();
+
+    const auto query_range { range_.ToQueryRange() };
+
+    qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
+
+    const auto message { JsonGen::OrderReference(section_, widget_id_, node_id_, node_unit_, query_range) };
     WebSocket::Instance()->SendMessage(WsKey::kOrderReference, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }
 
-void OrderReferenceWidget::IniWidget()
+void OrderReferenceWidget::InitWidget()
 {
     ui->start->setDisplayFormat(datetime_format::kDashedDate);
     ui->end->setDisplayFormat(datetime_format::kDashedDate);
-    ui->start->setDateTime(start_);
-    ui->end->setDateTime(end_.addDays(-1));
+    ui->start->setDate(range_.start);
+    ui->end->setDate(range_.end);
 
     ui->pBtnFetch->setFocus();
 }
