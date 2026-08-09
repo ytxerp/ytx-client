@@ -141,7 +141,6 @@ set(HEADERS
     delegate/bool.h
     delegate/boolstring.h
     delegate/color.h
-    delegate/databaseroledelegate.h
     delegate/document.h
     delegate/double.h
     delegate/filterunit.h
@@ -172,6 +171,7 @@ set(HEADERS
     delegate/rhsnode.h
     delegate/search/searchpathtabler.h
     delegate/search/searchpathtreer.h
+    delegate/sectionpermissionsdelegate.h
     delegate/statusdelegate.h
     delegate/styleditemdelegate.h
     delegate/tagdelegate.h
@@ -305,7 +305,7 @@ set(HEADERS
     widget/lineedit.h
     widget/spinbox.h
     widget/treeview.h
-    workspace/databaserole.h
+    workspace/sectionpermissions.h
     workspace/workspacedialog.h
     workspace/workspaceenum.h
     workspace/workspacemember.h
@@ -342,7 +342,6 @@ set(SOURCES
     delegate/bool.cc
     delegate/boolstring.cc
     delegate/color.cc
-    delegate/databaseroledelegate.cc
     delegate/document.cc
     delegate/double.cc
     delegate/filterunit.cc
@@ -373,6 +372,7 @@ set(SOURCES
     delegate/rhsnode.cc
     delegate/search/searchpathtabler.cc
     delegate/search/searchpathtreer.cc
+    delegate/sectionpermissionsdelegate.cc
     delegate/statusdelegate.cc
     delegate/styleditemdelegate.cc
     delegate/tagdelegate.cc
@@ -495,7 +495,7 @@ set(SOURCES
     widget/dateedit.cpp
     widget/datetimeedit.cc
     widget/treeview.cc
-    workspace/databaserole.cc
+    workspace/sectionpermissions.cc
     workspace/workspacedialog.cc
     workspace/workspacemodel.cc
     workspace/workspacerole.cc

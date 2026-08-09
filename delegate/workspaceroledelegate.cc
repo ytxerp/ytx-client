@@ -12,7 +12,7 @@ QWidget* WorkspaceRoleDelegate::createEditor(QWidget* parent, const QStyleOption
 {
     auto* editor { new ComboBox(parent) };
 
-    const auto current_role { static_cast<int>(UserProfile::Instance().GetWorkspaceRole()) };
+    const auto current_role { static_cast<int>(UserProfile::Instance().WorkspaceRole()) };
 
     for (const auto& [key, value] : workspace::RoleItemList()) {
         if (key < current_role)

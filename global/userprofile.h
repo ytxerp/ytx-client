@@ -22,7 +22,7 @@
 
 #include <QString>
 
-#include "workspace/databaserole.h"
+#include "workspace/sectionpermissions.h"
 #include "workspace/workspacerole.h"
 
 class UserProfile {
@@ -35,19 +35,19 @@ public:
 
     const QString& Username() const { return username_; }
     const QString& Name() const { return name_; }
-    workspace::Role GetWorkspaceRole() const { return workspacer_role_; }
-    database::Roles GetDatabaseRoles() const { return database_roles_; }
+    workspace::Role WorkspaceRole() const { return role_; }
+    section::Permissions SectionPermissions() const { return permissions_; }
 
     void SetUsername(const QString& value) { username_ = value; }
     void SetName(const QString& value) { name_ = value; }
-    void SetWorkspaceRole(workspace::Role value) { workspacer_role_ = value; }
-    void SetDatabaseRoles(database::Roles value) { database_roles_ = value; }
+    void SetWorkspaceRole(workspace::Role value) { role_ = value; }
+    void SetSectionPermissions(section::Permissions value) { permissions_ = value; }
 
     void Reset()
     {
         username_.clear();
         name_.clear();
-        workspacer_role_ = workspace::Role::kGuest;
+        role_ = workspace::Role::kGuest;
     }
 
     UserProfile(const UserProfile&) = delete;
@@ -62,8 +62,8 @@ private:
 private:
     QString username_ {};
     QString name_ {};
-    workspace::Role workspacer_role_ { workspace::Role::kGuest };
-    database::Roles database_roles_ {};
+    workspace::Role role_ { workspace::Role::kGuest };
+    section::Permissions permissions_ {};
 };
 
 #endif // USERPROFILE_H

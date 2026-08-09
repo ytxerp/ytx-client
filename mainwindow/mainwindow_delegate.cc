@@ -10,7 +10,6 @@
 #include "delegate/bool.h"
 #include "delegate/boolstring.h"
 #include "delegate/color.h"
-#include "delegate/databaseroledelegate.h"
 #include "delegate/document.h"
 #include "delegate/double.h"
 #include "delegate/filterunit.h"
@@ -38,6 +37,7 @@
 #include "delegate/readonly/statusr.h"
 #include "delegate/rhsnode.h"
 #include "delegate/search/searchpathtabler.h"
+#include "delegate/sectionpermissionsdelegate.h"
 #include "delegate/statusdelegate.h"
 #include "delegate/tagdelegate.h"
 #include "delegate/workspaceroledelegate.h"
@@ -535,8 +535,8 @@ void MainWindow::DelegateWorkspaceMember(QTableView* table_view) const
     auto* workspace_role { new WorkspaceRoleDelegate(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kWorkspaceRole), workspace_role);
 
-    auto* database_role { new DatabaseRoleDelegate(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kDatabaseRole), database_role);
+    auto* database_role { new SectionPermissionsDelegate(table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kSectionPermissions), database_role);
 }
 
 void MainWindow::DelegateAuditLog(QTableView* table_view) const

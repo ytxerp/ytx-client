@@ -23,7 +23,7 @@ void MainWindow::InitHeader()
         tr("Username"),
         tr("Name", "Person"),
         tr("Workspace Role"),
-        tr("Database Roles"),
+        tr("Section Permissions"),
         tr("Issued Time"),
     };
 

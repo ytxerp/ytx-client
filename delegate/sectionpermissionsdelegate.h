@@ -17,14 +17,14 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DATABASEROLEDELEGATE_H
-#define DATABASEROLEDELEGATE_H
+#ifndef SECTIONPERMISSIONSDELEGATE_H
+#define SECTIONPERMISSIONSDELEGATE_H
 
 #include "styleditemdelegate.h"
 
-class DatabaseRoleDelegate final : public StyledItemDelegate {
+class SectionPermissionsDelegate final : public StyledItemDelegate {
 public:
-    explicit DatabaseRoleDelegate(QObject* parent = nullptr);
+    explicit SectionPermissionsDelegate(QObject* parent = nullptr);
 
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
@@ -33,4 +33,4 @@ public:
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
 
-#endif // DATABASEROLEDELEGATE_H
+#endif // SECTIONPERMISSIONSDELEGATE_H

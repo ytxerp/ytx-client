@@ -13,7 +13,7 @@
 #include "tree/model/treemodelp.h"
 #include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
-#include "workspace/databaserole.h"
+#include "workspace/sectionpermissions.h"
 
 WebSocket::WebSocket(QObject* parent)
     : QObject(parent)
@@ -367,14 +367,14 @@ void WebSocket::NotifyLoginOutcome(const QJsonObject& obj)
 
         const auto username { obj[kUsername].toString() };
         const auto name { obj[kName].toString() };
-        const auto workspace_role { static_cast<workspace::Role>(obj[kWorkspaceRole].toInt()) };
-        const database::Roles database_roles { obj[kDatabaseRoles].toInt() };
+        const auto role { static_cast<workspace::Role>(obj[kWorkspaceRole].toInt()) };
+        const section::Permissions permissions { obj[kDatabaseRoles].toInt() };
 
         UserProfile& profile { UserProfile::Instance() };
         profile.SetUsername(username);
         profile.SetName(name);
-        profile.SetWorkspaceRole(workspace_role);
-        profile.SetDatabaseRoles(database_roles);
+        profile.SetWorkspaceRole(role);
+        profile.SetSectionPermissions(permissions);
 
         emit SLoginAllow(name, expire_date);
     } else {

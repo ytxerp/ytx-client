@@ -57,8 +57,8 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return member->name;
     case MemberField::kWorkspaceRole:
         return static_cast<int>(member->workspace_role);
-    case MemberField::kDatabaseRole:
-        return static_cast<int>(member->database_roles);
+    case MemberField::kSectionPermissions:
+        return static_cast<int>(member->section_permissions);
     case MemberField::kCreatedTime:
         return member->created_time;
     }
@@ -93,9 +93,9 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
         pending_updates_[id].insert(kWorkspaceRole, raw);
         break;
     }
-    case MemberField::kDatabaseRole: {
+    case MemberField::kSectionPermissions: {
         const int raw { value.toInt() };
-        member->database_roles = static_cast<database::Roles>(raw);
+        member->section_permissions = static_cast<section::Permissions>(raw);
         pending_updates_[id].insert(kDatabaseRoles, raw);
         break;
     }
@@ -132,8 +132,8 @@ void Model::sort(int column, Qt::SortOrder order)
         case MemberField::kWorkspaceRole:
             // Sorting by the underlying integer value of the enum
             return utils::CompareMember(lhs, rhs, &Member::workspace_role, order);
-        case MemberField::kDatabaseRole:
-            return utils::CompareMember(lhs, rhs, &Member::database_roles, order);
+        case MemberField::kSectionPermissions:
+            return utils::CompareMember(lhs, rhs, &Member::section_permissions, order);
         case MemberField::kCreatedTime:
             return utils::CompareMember(lhs, rhs, &Member::created_time, order);
         }
@@ -164,7 +164,7 @@ Qt::ItemFlags Model::flags(const QModelIndex& index) const
 
     switch (column) {
     case MemberField::kWorkspaceRole:
-    case MemberField::kDatabaseRole:
+    case MemberField::kSectionPermissions:
         // Enable editing for specific roles
         flags |= Qt::ItemIsEditable;
         break;

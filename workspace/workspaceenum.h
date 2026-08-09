@@ -26,7 +26,7 @@ enum class MemberField : int {
     kUsername,
     kName,
     kWorkspaceRole,
-    kDatabaseRole,
+    kSectionPermissions,
     kCreatedTime,
 };
 }

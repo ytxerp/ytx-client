@@ -25,7 +25,7 @@
 #include <QUuid>
 
 #include "component/constant.h"
-#include "databaserole.h"
+#include "sectionpermissions.h"
 #include "workspacerole.h"
 
 namespace workspace {
@@ -39,7 +39,7 @@ struct Member final {
     QString name {};
 
     Role workspace_role { Role::kGuest };
-    database::Roles database_roles {};
+    section::Permissions section_permissions {};
     QDateTime created_time {};
 
     void Reset();
@@ -69,7 +69,7 @@ inline void Member::ReadJson(const QJsonObject& object)
         workspace_role = static_cast<workspace::Role>(val.toInt());
 
     if (const auto val = object.value(kDatabaseRoles); val.isDouble())
-        database_roles = database::Roles(val.toInt());
+        section_permissions = section::Permissions(val.toInt());
 
     if (const auto val = object.value(kCreatedTime); val.isString())
         created_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();

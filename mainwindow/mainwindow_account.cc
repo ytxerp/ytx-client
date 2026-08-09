@@ -74,7 +74,7 @@ void MainWindow::on_actionWorkspaceManager_triggered()
         WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberAck, message);
 
         auto* view { dialog->View() };
-        InitTableView(view, std::to_underlying(workspace::MemberField::kDatabaseRole));
+        InitTableView(view, std::to_underlying(workspace::MemberField::kSectionPermissions));
         DelegateWorkspaceMember(view);
     }
 
