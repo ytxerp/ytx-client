@@ -3492,37 +3492,42 @@ Please recall it before deleting.</source>
         <translation>邮箱</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.ui" line="35"/>
+        <location filename="../../dialog/userprofiledialog.ui" line="39"/>
         <source>Username</source>
         <translation>用户名</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.ui" line="45"/>
+        <location filename="../../dialog/userprofiledialog.ui" line="49"/>
         <source>Name</source>
         <comment>Person</comment>
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.ui" line="55"/>
+        <location filename="../../dialog/userprofiledialog.ui" line="59"/>
         <source>Section Permissions</source>
         <translation>版块权限</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/userprofiledialog.ui" line="73"/>
+        <source>Workspace Role</source>
+        <translation>工区角色</translation>
     </message>
     <message>
         <source>Roles</source>
         <translation type="vanished">权限</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.ui" line="86"/>
+        <location filename="../../dialog/userprofiledialog.ui" line="104"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.cc" line="46"/>
+        <location filename="../../dialog/userprofiledialog.cc" line="48"/>
         <source>Invalid Input</source>
         <translation>输入无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.cc" line="47"/>
+        <location filename="../../dialog/userprofiledialog.cc" line="49"/>
         <source>Username must be 3-32 characters, start with a letter, and contain only lowercase letters, digits, or underscores. No consecutive or trailing underscores.</source>
         <translation>用户名须为3-32位，以字母开头，只能包含小写字母、数字或下划线，不允许连续或结尾使用下划线。</translation>
     </message>
