@@ -1,28 +1,25 @@
 #include "workspacerole.h"
 
 namespace workspace {
-std::span<const RoleItem> RoleItemList()
+std::span<const RoleItem> RoleItems()
 {
     static const RoleItem list[] = {
-        { static_cast<int>(Role::kGuest), QObject::tr("Guest") },
-        { static_cast<int>(Role::kMember), QObject::tr("Member") },
-        { static_cast<int>(Role::kAdmin), QObject::tr("Admin") },
-        { static_cast<int>(Role::kOwner), QObject::tr("Owner") },
+        { Role::kGuest, QObject::tr("Guest") },
+        { Role::kMember, QObject::tr("Member") },
+        { Role::kAdmin, QObject::tr("Admin") },
+        { Role::kOwner, QObject::tr("Owner") },
     };
 
     return list;
 }
 
-QHash<int, QString> RoleHash()
+QString RoleDisplay(Role role)
 {
-    static const QHash<int, QString> hash = []() {
-        QHash<int, QString> h {};
-        for (const auto& item : RoleItemList())
-            h.insert(item.role, item.text);
-        return h;
-    }();
+    for (const auto& item : RoleItems()) {
+        if (item.role == role)
+            return item.text;
+    }
 
-    return hash;
+    return {};
 }
-
 }

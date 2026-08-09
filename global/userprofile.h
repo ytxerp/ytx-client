@@ -48,6 +48,7 @@ public:
         username_.clear();
         name_.clear();
         role_ = workspace::Role::kGuest;
+        permissions_ = {};
     }
 
     UserProfile(const UserProfile&) = delete;

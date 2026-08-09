@@ -34,12 +34,14 @@ enum class Role {
 };
 
 struct RoleItem {
-    int role {};
+    Role role {};
     QString text {};
 };
 
-std::span<const RoleItem> RoleItemList();
-QHash<int, QString> RoleHash();
+std::span<const RoleItem> RoleItems();
+QString RoleDisplay(Role role);
+
+constexpr bool CanAssignRole(Role current, Role target) { return static_cast<int>(target) < static_cast<int>(current); }
 }
 
 #endif // WORKSPACEROLE_H

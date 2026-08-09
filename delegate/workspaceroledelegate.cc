@@ -12,11 +12,12 @@ QWidget* WorkspaceRoleDelegate::createEditor(QWidget* parent, const QStyleOption
 {
     auto* editor { new ComboBox(parent) };
 
-    const auto current_role { static_cast<int>(UserProfile::Instance().WorkspaceRole()) };
+    const auto current_role { UserProfile::Instance().WorkspaceRole() };
 
-    for (const auto& [key, value] : workspace::RoleItemList()) {
-        if (key < current_role)
-            editor->addItem(value, key);
+    for (const auto& item : workspace::RoleItems()) {
+        if (workspace::CanAssignRole(current_role, item.role)) {
+            editor->addItem(item.text, static_cast<int>(item.role));
+        }
     }
 
     return editor;
@@ -43,17 +44,19 @@ void WorkspaceRoleDelegate::setModelData(QWidget* editor, QAbstractItemModel* mo
 
 void WorkspaceRoleDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const int key { index.data().toInt() };
-    if (!workspace::RoleHash().contains(key))
+    const auto role { static_cast<workspace::Role>(index.data().toInt()) };
+    const QString text { workspace::RoleDisplay(role) };
+
+    if (text.isEmpty())
         return PaintEmpty(painter, option, index);
 
-    const QString text { workspace::RoleHash().value(key) };
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }
 
 QSize WorkspaceRoleDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const int key { index.data().toInt() };
-    const QString text { workspace::RoleHash().value(key) };
+    const auto role { static_cast<workspace::Role>(index.data().toInt()) };
+    const QString text { workspace::RoleDisplay(role) };
+
     return CalculateTextSize(text, option);
 }
