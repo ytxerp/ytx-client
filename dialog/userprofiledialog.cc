@@ -1,5 +1,6 @@
 #include "userprofiledialog.h"
 
+#include "component/signalblocker.h"
 #include "global/logininfo.h"
 #include "global/userprofile.h"
 #include "ui_userprofiledialog.h"
@@ -12,6 +13,8 @@ UserProfileDialog::UserProfileDialog(QWidget* parent)
     , ui(new Ui::UserProfileDialog)
 {
     ui->setupUi(this);
+    SignalBlocker blocker(this);
+
     InitDialog();
 }
 
@@ -23,12 +26,11 @@ void UserProfileDialog::InitDialog()
     const auto& login_info { LoginInfo::Instance() };
 
     ui->lineEditEmail->setText(login_info.Email());
-    ui->lineEditEmail->setReadOnly(true);
-
     ui->lineEditUsername->setText(profile.Username());
     ui->lineEditName->setText(profile.Name());
 
     ui->lineEditSectionPermissions->setText(section::PermissionsDisplay(profile.SectionPermissions()));
+    ui->lineEditWorkspaceRole->setText(workspace::RoleDisplay(profile.WorkspaceRole()));
 
     ui->pushButtonSave->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
 }
