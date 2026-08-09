@@ -282,7 +282,7 @@ void MainWindow::RFlushCaches()
     }
 
     if (auto* leaf_widget { qobject_cast<TableWidget*>(widget) }) {
-        leaf_widget->Model()->FlushCaches();
+        leaf_widget->Model()->FlushTimers();
     }
 
     FlushCaches(sc_f_);
@@ -315,7 +315,7 @@ void MainWindow::FlushCaches(SectionContext& sc)
         if (auto* table_widget = qobject_cast<TableWidget*>(wc.widget)) {
             // Flush caches of the model if it exists
             if (auto* model = table_widget->Model())
-                model->FlushCaches();
+                model->FlushTimers();
         }
     }
 }

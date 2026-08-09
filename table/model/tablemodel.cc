@@ -18,7 +18,7 @@ TableModel::TableModel(CTableModelArg& arg, QObject* parent)
 
 TableModel::~TableModel()
 {
-    FlushCaches();
+    FlushTimers();
     EntryShadowPool::Instance().Recycle(shadow_list_, section_);
 }
 
@@ -138,55 +138,44 @@ void TableModel::AccumulateBalance(int start)
     EmitDataChanged(start, rowCount() - 1, balance_column, balance_column);
 }
 
-void TableModel::RestartTimer(const QUuid& id, Entry* entry)
+void TableModel::RestartTimer(const QUuid& id)
 {
-    QTimer* timer { pending_timers_.value(id, nullptr) };
+    auto& update { pending_updates_[id] };
 
-    if (!timer) {
-        timer = new QTimer { this };
-        timer->setSingleShot(true);
-
-        connect(timer, &QTimer::timeout, this, [this, id, entry]() {
-            auto* expired_timer { pending_timers_.take(id) };
-            auto update { pending_updates_.take(id) };
-
-            if (!update.isEmpty()) {
-                update.insert(kVersion, entry->version);
-                const QJsonObject message { JsonGen::EntryUpdate(section_, id, update) };
-                WebSocket::Instance()->SendMessage(WsKey::kEntryUpdate, message);
-            }
-
-            if (expired_timer) {
-                expired_timer->deleteLater();
-            }
-        });
-
-        pending_timers_[id] = timer;
+    if (!update.timer) {
+        update.timer = new QTimer { this };
+        update.timer->setSingleShot(true);
+        connect(update.timer, &QTimer::timeout, this, [this, id]() { FlushTimer(id); });
     }
 
-    timer->start(time_const::kAutoCloseMs);
+    update.timer->start(time_const::kAutoCloseMs);
 }
 
-void TableModel::FlushCaches()
+void TableModel::FlushTimer(const QUuid& id)
 {
-    if (pending_updates_.isEmpty())
-        return;
+    auto update { pending_updates_.take(id) };
 
-    for (auto* timer : std::as_const(pending_timers_)) {
-        timer->stop();
-        timer->deleteLater();
+    if (update.entry && !update.changes.isEmpty()) {
+        const int version { update.entry->version };
+        update.changes.insert(kVersion, version);
+
+        const QJsonObject message { JsonGen::EntryUpdate(section_, id, update.changes) };
+        WebSocket::Instance()->SendMessage(WsKey::kEntryUpdate, message);
     }
 
-    pending_timers_.clear();
-
-    for (auto it = pending_updates_.cbegin(); it != pending_updates_.cend(); ++it) {
-        if (!it.value().isEmpty()) {
-            const auto message { JsonGen::EntryUpdate(section_, it.key(), it.value()) };
-            WebSocket::Instance()->SendMessage(WsKey::kEntryUpdate, message);
-        }
+    if (update.timer) {
+        update.timer->stop();
+        update.timer->deleteLater();
     }
+}
 
-    pending_updates_.clear();
+void TableModel::FlushTimers()
+{
+    const auto ids { pending_updates_.keys() };
+
+    for (const auto& id : ids) {
+        FlushTimer(id);
+    }
 }
 
 bool TableModel::UpdateNumeric(EntryShadow* shadow, double value, int row, NumericSide side)
@@ -433,39 +422,37 @@ bool TableModel::setData(const QModelIndex& index, const QVariant& value, int ro
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    const EntryEnum column { index.column() };
-    const int row { index.row() };
-
     if (data(index, role) == value)
         return false;
 
     auto* shadow { static_cast<EntryShadow*>(index.internalPointer()) };
-    auto* entry { shadow->entry };
 
     const QUuid id { *shadow->id };
+    auto& update { pending_updates_[id] };
+    update.entry = shadow->entry;
+    auto& changes { update.changes };
+
+    const EntryEnum column { index.column() };
+    const int row { index.row() };
 
     switch (column) {
     case EntryEnum::kIssuedTime:
-        entry::UpdateShadowIssuedTime(
-            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateShadowIssuedTime(changes, shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnum::kCode:
-        entry::UpdateShadowField(pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateShadowField(changes, shadow, kCode, value.toString(), &EntryShadow::code, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnum::kStatus:
-        entry::UpdateShadowField(pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateShadowField(changes, shadow, kStatus, value.toInt(), &EntryShadow::status, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnum::kDescription:
-        entry::UpdateShadowField(
-            pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateShadowField(changes, shadow, kDescription, value.toString(), &EntryShadow::description, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnum::kDocument:
-        entry::UpdateShadowStringList(
-            pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateShadowStringList(changes, shadow, kDocument, value.toStringList(), &EntryShadow::document, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnum::kTag:
-        entry::UpdateShadowStringList(
-            pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateShadowStringList(changes, shadow, kTag, value.toStringList(), &EntryShadow::tag, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnum::kLhsRate:
         UpdateRate(shadow, value.toDouble());
@@ -625,14 +612,12 @@ void TableModel::EmitDataChanged(int start_row, int end_row, int start_column, i
 
 void TableModel::CancelPendingUpdate(const QUuid& entry_id)
 {
-    // IMPORTANT: Clean up the pending timer first.
-    // This prevents the timer from firing and trying to update a deleted entry.
-    if (auto* timer { pending_timers_.take(entry_id) }) {
+    // Remove pending update to prevent delayed flush after deletion
+    // Stop its timer to avoid accessing recycled member.
+    if (auto* timer = pending_updates_.take(entry_id).timer; timer) {
         timer->stop();
         timer->deleteLater();
     }
-
-    pending_updates_.remove(entry_id);
 }
 
 void TableModel::RDeleteMultiEntries(const QSet<QUuid>& entry_id_set)

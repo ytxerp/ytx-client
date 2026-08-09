@@ -84,7 +84,7 @@ public:
     virtual Entry* GetEntry(const QModelIndex& index) const { return shadow_list_.at(index.row())->entry; }
 
     void MarkEntries(MarkOperation operation);
-    void FlushCaches();
+    void FlushTimers();
 
 protected:
     virtual bool UpdateNumeric(EntryShadow* shadow, double value, int row, NumericSide side);
@@ -99,7 +99,8 @@ protected:
 
     bool UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int row);
     void AccumulateBalance(int start);
-    void RestartTimer(const QUuid& id, Entry* entry);
+    void RestartTimer(const QUuid& id);
+    void FlushTimer(const QUuid& id);
     double CalculateBalance(EntryShadow* shadow) const
     {
         return (direction_rule_ == direction_rule::kDICD ? 1 : -1) * (*shadow->lhs_debit - *shadow->lhs_credit);
@@ -115,9 +116,7 @@ protected:
     const Section section_ {};
 
     QList<EntryShadow*> shadow_list_ {};
-
-    QHash<QUuid, QJsonObject> pending_updates_ {};
-    QHash<QUuid, QTimer*> pending_timers_ {};
+    QHash<QUuid, PendingEntryUpdate> pending_updates_ {};
 };
 
 #endif // TABLEMODEL_H

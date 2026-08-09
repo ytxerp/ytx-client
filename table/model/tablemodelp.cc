@@ -143,8 +143,8 @@ bool TableModelP::UpdateInternalSku(Entry* entry, const QUuid& value, int row)
         return true;
     }
 
-    pending_updates_[entry_id].insert(kRhsNode, value.toString(QUuid::WithoutBraces));
-    RestartTimer(entry_id, entry);
+    pending_updates_[entry_id].changes.insert(kRhsNode, value.toString(QUuid::WithoutBraces));
+    RestartTimer(entry_id);
 
     return true;
 }
@@ -192,8 +192,6 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
     if (data(index, role) == value)
         return false;
 
-    const EntryEnumP column { index.column() };
-
     auto* entry { static_cast<Entry*>(index.internalPointer()) };
     auto* d_entry { static_cast<EntryP*>(entry) };
 
@@ -201,39 +199,41 @@ bool TableModelP::setData(const QModelIndex& index, const QVariant& value, int r
     bool update_registry { false };
 
     const QUuid id { entry->id };
+    auto& update { pending_updates_[id] };
+    update.entry = entry;
+    auto& changes { update.changes };
+
     const QUuid old_rhs_node { entry->rhs_node };
+
+    const EntryEnumP column { index.column() };
 
     switch (column) {
     case EntryEnumP::kIssuedTime:
-        entry::UpdateIssuedTime(
-            pending_updates_[id], entry, kIssuedTime, value.toDateTime(), &Entry::issued_time, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateIssuedTime(changes, entry, kIssuedTime, value.toDateTime(), &Entry::issued_time, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumP::kCode:
-        entry::UpdateField(pending_updates_[id], entry, kCode, value.toString(), &Entry::code, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateField(changes, entry, kCode, value.toString(), &Entry::code, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumP::kDocument:
-        entry::UpdateStringList(
-            pending_updates_[id], entry, kDocument, value.toStringList(), &Entry::document, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateStringList(changes, entry, kDocument, value.toStringList(), &Entry::document, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumP::kTag:
-        entry::UpdateStringList(pending_updates_[id], entry, kTag, value.toStringList(), &Entry::tag, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateStringList(changes, entry, kTag, value.toStringList(), &Entry::tag, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumP::kRhsNode:
         insert_registry = UpdateInternalSku(entry, value.toUuid(), -1);
         break;
     case EntryEnumP::kUnitPrice:
-        update_registry = entry::UpdateDouble(
-            pending_updates_[id], d_entry, kUnitPrice, value.toDouble(), &EntryP::unit_price, [this, id, entry]() { RestartTimer(id, entry); });
+        update_registry = entry::UpdateDouble(changes, d_entry, kUnitPrice, value.toDouble(), &EntryP::unit_price, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumP::kDescription:
-        entry::UpdateField(pending_updates_[id], entry, kDescription, value.toString(), &Entry::description, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateField(changes, entry, kDescription, value.toString(), &Entry::description, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumP::kStatus:
-        entry::UpdateField(pending_updates_[id], entry, kStatus, value.toInt(), &Entry::status, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateField(changes, entry, kStatus, value.toInt(), &Entry::status, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumP::kExternalSku:
-        update_registry = entry::UpdateField(
-            pending_updates_[id], d_entry, kExternalSku, value.toString(), &EntryP::external_sku, [this, id, entry]() { RestartTimer(id, entry); });
+        update_registry = entry::UpdateField(changes, d_entry, kExternalSku, value.toString(), &EntryP::external_sku, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumP::kLhsNode:
         return false;

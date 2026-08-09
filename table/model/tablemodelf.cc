@@ -57,39 +57,37 @@ bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int r
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    const EntryEnumF column { index.column() };
-    const int row { index.row() };
-
     if (data(index, role) == value)
         return false;
 
     auto* shadow { static_cast<EntryShadow*>(index.internalPointer()) };
-    auto* entry { shadow->entry };
 
     const QUuid id { *shadow->id };
+    auto& update { pending_updates_[id] };
+    update.entry = shadow->entry;
+    auto& changes { update.changes };
+
+    const EntryEnumF column { index.column() };
+    const int row { index.row() };
 
     switch (column) {
     case EntryEnumF::kIssuedTime:
-        entry::UpdateShadowIssuedTime(
-            pending_updates_[id], shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateShadowIssuedTime(changes, shadow, kIssuedTime, value.toDateTime(), &EntryShadow::issued_time, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumF::kCode:
-        entry::UpdateShadowField(pending_updates_[id], shadow, kCode, value.toString(), &EntryShadow::code, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateShadowField(changes, shadow, kCode, value.toString(), &EntryShadow::code, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumF::kStatus:
-        entry::UpdateShadowField(pending_updates_[id], shadow, kStatus, value.toInt(), &EntryShadow::status, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateShadowField(changes, shadow, kStatus, value.toInt(), &EntryShadow::status, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumF::kDescription:
-        entry::UpdateShadowField(
-            pending_updates_[id], shadow, kDescription, value.toString(), &EntryShadow::description, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateShadowField(changes, shadow, kDescription, value.toString(), &EntryShadow::description, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumF::kDocument:
-        entry::UpdateShadowStringList(
-            pending_updates_[id], shadow, kDocument, value.toStringList(), &EntryShadow::document, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateShadowStringList(changes, shadow, kDocument, value.toStringList(), &EntryShadow::document, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumF::kTag:
-        entry::UpdateShadowStringList(
-            pending_updates_[id], shadow, kTag, value.toStringList(), &EntryShadow::tag, [this, id, entry]() { RestartTimer(id, entry); });
+        entry::UpdateShadowStringList(changes, shadow, kTag, value.toStringList(), &EntryShadow::tag, [this, id]() { RestartTimer(id); });
         break;
     case EntryEnumF::kLhsRate:
         UpdateRate(shadow, value.toDouble());
@@ -110,8 +108,8 @@ bool TableModelF::setData(const QModelIndex& index, const QVariant& value, int r
         const auto cash_kind { static_cast<finance::CashKind>(raw) };
 
         *d_shadow->cash_kind = cash_kind;
-        pending_updates_[id].insert(kCashKind, raw);
-        RestartTimer(id, entry);
+        changes.insert(kCashKind, raw);
+        RestartTimer(id);
         break;
     }
     case EntryEnumF::kLhsNode:
