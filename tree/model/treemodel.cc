@@ -24,7 +24,7 @@ TreeModel::TreeModel(CSectionInfo& info, CString& separator, QObject* parent)
 
 TreeModel::~TreeModel()
 {
-    FlushCaches();
+    FlushTimers();
     NodePool::Instance().Recycle(root_, section_);
     NodePool::Instance().Recycle(node_hash_, section_);
 }
@@ -494,13 +494,12 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex& parent)
 
     const auto node_id { node->id };
 
-    // IMPORTANT: Clean up the pending timer first
-    // This prevents the timer from firing and trying to update a deleted node.
-    if (auto* timer { pending_timers_.take(node_id) }) {
+    // Remove pending update to prevent delayed flush after deletion
+    // Stop its timer to avoid accessing recycled member.
+    if (auto* timer = pending_updates_.take(node_id).timer; timer) {
         timer->stop();
         timer->deleteLater();
     }
-    pending_updates_.remove(node_id);
 
     beginRemoveRows(parent, row, row);
     parent_node->children.removeOne(node);
@@ -708,7 +707,7 @@ void TreeModel::SearchTag(QList<Node*>& node_list, const QSet<QString>& tag_set)
 
 void TreeModel::Reset()
 {
-    FlushCaches();
+    FlushTimers();
 
     beginResetModel();
     ClearTree();
@@ -890,56 +889,44 @@ void TreeModel::EmitNumericChanged(const QSet<QUuid>& ids)
     }
 }
 
-void TreeModel::RestartTimer(const QUuid& id, Node* node)
+void TreeModel::RestartTimer(const QUuid& id)
 {
-    QTimer* timer { pending_timers_.value(id, nullptr) };
+    auto& update { pending_updates_[id] };
 
-    if (!timer) {
-        timer = new QTimer(this);
-        timer->setSingleShot(true);
-
-        connect(timer, &QTimer::timeout, this, [this, id, node]() {
-            auto* expired_timer { pending_timers_.take(id) };
-            auto update { pending_updates_.take(id) };
-
-            if (!update.isEmpty()) {
-                update.insert(kVersion, node->version);
-
-                const auto message { JsonGen::NodeUpdate(section_, id, update) };
-                WebSocket::Instance()->SendMessage(WsKey::kNodeUpdate, message);
-            }
-
-            if (expired_timer) {
-                expired_timer->deleteLater();
-            }
-        });
-
-        pending_timers_[id] = timer;
+    if (!update.timer) {
+        update.timer = new QTimer { this };
+        update.timer->setSingleShot(true);
+        connect(update.timer, &QTimer::timeout, this, [this, id]() { FlushTimer(id); });
     }
 
-    timer->start(time_const::kAutoCloseMs);
+    update.timer->start(time_const::kAutoCloseMs);
 }
 
-void TreeModel::FlushCaches()
+void TreeModel::FlushTimer(const QUuid& id)
 {
-    if (pending_updates_.isEmpty())
-        return;
+    auto update { pending_updates_.take(id) };
 
-    for (auto* timer : std::as_const(pending_timers_)) {
-        timer->stop();
-        timer->deleteLater();
+    if (update.node && !update.changes.isEmpty()) {
+        const int version { update.node->version };
+        update.changes.insert(kVersion, version);
+
+        const QJsonObject message { JsonGen::NodeUpdate(section_, id, update.changes) };
+        WebSocket::Instance()->SendMessage(WsKey::kNodeUpdate, message);
     }
 
-    pending_timers_.clear();
-
-    for (auto it = pending_updates_.cbegin(); it != pending_updates_.cend(); ++it) {
-        if (!it.value().isEmpty()) {
-            const auto message { JsonGen::NodeUpdate(section_, it.key(), it.value()) };
-            WebSocket::Instance()->SendMessage(WsKey::kNodeUpdate, message);
-        }
+    if (update.timer) {
+        update.timer->stop();
+        update.timer->deleteLater();
     }
+}
 
-    pending_updates_.clear();
+void TreeModel::FlushTimers()
+{
+    const auto ids { pending_updates_.keys() };
+
+    for (const auto& id : ids) {
+        FlushTimer(id);
+    }
 }
 
 void TreeModel::EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent)

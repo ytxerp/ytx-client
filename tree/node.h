@@ -21,6 +21,7 @@
 #define NODE_H
 
 #include <QJsonObject>
+#include <QTimer>
 #include <QUuid>
 
 #include "enum/nodeenum.h"
@@ -108,6 +109,12 @@ struct NodeO final : Node {
 
     void ReadJson(const QJsonObject& object) override;
     QJsonObject WriteJson() const override;
+};
+
+struct PendingNodeUpdate {
+    QTimer* timer {};
+    Node* node {};
+    QJsonObject changes {};
 };
 
 using NodeHash = QHash<QUuid, Node*>;

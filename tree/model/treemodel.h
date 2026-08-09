@@ -160,7 +160,7 @@ public:
     void SearchTag(QList<Node*>& node_list, const QSet<QString>& tag_set) const;
 
     void Reset();
-    void FlushCaches();
+    void FlushTimers();
 
     inline bool Contains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
     inline Node* GetNode(const QUuid& node_id) const
@@ -180,7 +180,8 @@ public:
     QSortFilterProxyModel* ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent);
 
 protected:
-    void RestartTimer(const QUuid& id, Node* node);
+    void RestartTimer(const QUuid& id);
+    void FlushTimer(const QUuid& id);
 
     void EmitNumericChanged(const QSet<QUuid>& ids);
     void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent);
@@ -260,8 +261,7 @@ protected:
     const QString& separator_;
     const QStringList& header_ {};
 
-    QHash<QUuid, QTimer*> pending_timers_ {};
-    QHash<QUuid, QJsonObject> pending_updates_ {};
+    QHash<QUuid, PendingNodeUpdate> pending_updates_ {};
 };
 
 using CTreeModel = const TreeModel;

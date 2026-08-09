@@ -381,12 +381,16 @@ bool TreeModelO::setData(const QModelIndex& index, const QVariant& value, int ro
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
 
-    const NodeEnumO column { index.column() };
     const QUuid id { node->id };
+    auto& update { pending_updates_[id] };
+    update.node = node;
+    auto& changes { update.changes };
+
+    const NodeEnumO column { index.column() };
 
     switch (column) {
     case NodeEnumO::kTag:
-        node::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateStringList(changes, node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
         break;
     default:
         return false;

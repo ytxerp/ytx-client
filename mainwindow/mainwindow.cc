@@ -278,7 +278,7 @@ void MainWindow::RFlushCaches()
     auto* widget { sc_->tab_widget->currentWidget() };
 
     if (qobject_cast<TreeWidget*>(widget)) {
-        sc_->tree_model->FlushCaches();
+        sc_->tree_model->FlushTimers();
     }
 
     if (auto* leaf_widget { qobject_cast<TableWidget*>(widget) }) {
@@ -297,7 +297,7 @@ void MainWindow::FlushCaches(SectionContext& sc)
 {
     // First, flush the caches of the tree model
     if (sc.tree_model)
-        sc.tree_model->FlushCaches();
+        sc.tree_model->FlushTimers();
 
     // Iterate through all views in the view_hash
     for (auto it = sc.widget_hash.begin(); it != sc.widget_hash.end(); ++it) {

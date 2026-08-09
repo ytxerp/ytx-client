@@ -59,38 +59,42 @@ bool TreeModelF::setData(const QModelIndex& index, const QVariant& value, int ro
         return false;
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
-    auto* d_node { static_cast<NodeF*>(node) };
     Q_ASSERT(node != nullptr);
 
-    const NodeEnumF column { index.column() };
     const QUuid id { node->id };
+    auto& update { pending_updates_[id] };
+    update.node = node;
+    auto& changes { update.changes };
+
+    const NodeEnumF column { index.column() };
 
     switch (column) {
     case NodeEnumF::kCode:
-        node::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateField(changes, node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kDescription:
-        node::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateField(changes, node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kColor:
-        node::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateField(changes, node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kTag:
-        node::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateStringList(changes, node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kDirectionRule:
         UpdateDirectionRuleActive(node, value.toBool(), index);
         break;
     case NodeEnumF::kDocument:
-        node::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateStringList(changes, node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumF::kRoles: {
+        auto* d_node { static_cast<NodeF*>(node) };
         const int raw { value.toInt() };
         const auto roles { static_cast<finance::Roles>(raw) };
 
         d_node->roles = roles;
-        pending_updates_[id].insert(kRoles, raw);
-        RestartTimer(id, node);
+        changes.insert(kRoles, raw);
+        RestartTimer(id);
         break;
     }
     case NodeEnumF::kName:

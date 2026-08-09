@@ -193,27 +193,31 @@ bool TreeModelP::setData(const QModelIndex& index, const QVariant& value, int ro
     Q_ASSERT(node != nullptr);
     Q_ASSERT(d_node != nullptr);
 
-    const NodeEnumP column { index.column() };
     const QUuid id { node->id };
+    auto& update { pending_updates_[id] };
+    update.node = node;
+    auto& changes { update.changes };
+
+    const NodeEnumP column { index.column() };
 
     switch (column) {
     case NodeEnumP::kCode:
-        node::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateField(changes, node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kTag:
-        node::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateStringList(changes, node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kDescription:
-        node::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateField(changes, node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kPaymentTerm:
-        node::UpdateField(pending_updates_[id], d_node, kPaymentTerm, value.toInt(), &NodeP::payment_term, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateField(changes, d_node, kPaymentTerm, value.toInt(), &NodeP::payment_term, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kColor:
-        node::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateField(changes, node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kDocument:
-        node::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateStringList(changes, node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kName:
     case NodeEnumP::kKind:

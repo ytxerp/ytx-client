@@ -61,28 +61,31 @@ bool TreeModelT::setData(const QModelIndex& index, const QVariant& value, int ro
     auto* node { static_cast<Node*>(index.internalPointer()) };
     Q_ASSERT(node != nullptr);
 
-    const NodeEnumT column { index.column() };
-
     const QUuid id { node->id };
+    auto& update { pending_updates_[id] };
+    update.node = node;
+    auto& changes { update.changes };
+
+    const NodeEnumT column { index.column() };
 
     switch (column) {
     case NodeEnumT::kCode:
-        node::UpdateField(pending_updates_[id], node, kCode, value.toString(), &Node::code, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateField(changes, node, kCode, value.toString(), &Node::code, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDescription:
-        node::UpdateField(pending_updates_[id], node, kDescription, value.toString(), &Node::description, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateField(changes, node, kDescription, value.toString(), &Node::description, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kTag:
-        node::UpdateStringList(pending_updates_[id], node, kTag, value.toStringList(), &Node::tag, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateStringList(changes, node, kTag, value.toStringList(), &Node::tag, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDirectionRule:
         UpdateDirectionRuleActive(node, value.toBool(), index);
         break;
     case NodeEnumT::kColor:
-        node::UpdateField(pending_updates_[id], node, kColor, value.toString(), &Node::color, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateField(changes, node, kColor, value.toString(), &Node::color, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kDocument:
-        node::UpdateStringList(pending_updates_[id], node, kDocument, value.toStringList(), &Node::document, [id, this, node]() { RestartTimer(id, node); });
+        node::UpdateStringList(changes, node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumT::kName:
     case NodeEnumT::kKind:
