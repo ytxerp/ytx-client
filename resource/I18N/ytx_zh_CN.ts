@@ -123,39 +123,39 @@
         <translation>工区</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="46"/>
+        <location filename="../../dialog/authdialog.cc" line="45"/>
         <source>Login Failed</source>
         <translation>登录失败</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="130"/>
+        <location filename="../../dialog/authdialog.cc" line="129"/>
         <source>Registration Failed</source>
         <translation>注册失败</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="96"/>
+        <location filename="../../dialog/authdialog.cc" line="95"/>
         <source>Registration Successful</source>
         <translation>注册成功</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="50"/>
-        <location filename="../../dialog/authdialog.cc" line="103"/>
+        <location filename="../../dialog/authdialog.cc" line="49"/>
+        <location filename="../../dialog/authdialog.cc" line="102"/>
         <source>Please enter your email.</source>
         <translation>请输入您的邮箱。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="53"/>
-        <location filename="../../dialog/authdialog.cc" line="106"/>
+        <location filename="../../dialog/authdialog.cc" line="52"/>
+        <location filename="../../dialog/authdialog.cc" line="105"/>
         <source>Please enter your password.</source>
         <translation>请输入您的密码。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="68"/>
+        <location filename="../../dialog/authdialog.cc" line="67"/>
         <source>Access Pending</source>
         <translation>权限申请</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="147"/>
+        <location filename="../../dialog/authdialog.cc" line="146"/>
         <source>Invalid Workspace</source>
         <translation>工区无效</translation>
     </message>
@@ -184,12 +184,12 @@
         <translation>两次输入的密码不一致。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="147"/>
+        <location filename="../../dialog/authdialog.cc" line="146"/>
         <source>Workspace cannot be empty</source>
         <translation>工区不能为空</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="69"/>
+        <location filename="../../dialog/authdialog.cc" line="68"/>
         <source>Your request to join workspace %1 is awaiting approval.</source>
         <translation>您加入 %1 的申请正在等待审批。</translation>
     </message>
@@ -220,64 +220,64 @@
         <translation>邮箱无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="109"/>
+        <location filename="../../dialog/authdialog.cc" line="108"/>
         <location filename="../../dialog/authdialog.cc" line="285"/>
         <source>Please enter a valid email address.</source>
         <translation>请输入有效的邮箱地址。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="56"/>
+        <location filename="../../dialog/authdialog.cc" line="55"/>
         <source>No account found for this email.</source>
         <translation>未找到该邮箱对应的账号。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="59"/>
+        <location filename="../../dialog/authdialog.cc" line="58"/>
         <source>Incorrect password. Please try again.</source>
         <translation>密码错误，请重试。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="62"/>
+        <location filename="../../dialog/authdialog.cc" line="61"/>
         <source>Workspace not found. Please check the name and try again.</source>
         <translation>工区不存在，请检查名称后重试。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="65"/>
+        <location filename="../../dialog/authdialog.cc" line="64"/>
         <source>This workspace&apos;s subscription has expired.</source>
         <translation>该工区的订阅已到期。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="72"/>
+        <location filename="../../dialog/authdialog.cc" line="71"/>
         <source>You&apos;re already logged in.</source>
         <translation>您已登录。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="75"/>
-        <location filename="../../dialog/authdialog.cc" line="115"/>
+        <location filename="../../dialog/authdialog.cc" line="74"/>
+        <location filename="../../dialog/authdialog.cc" line="114"/>
         <source>Something went wrong on our end. Please try again later.</source>
         <translation>服务器出现问题，请稍后重试。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="80"/>
+        <location filename="../../dialog/authdialog.cc" line="79"/>
         <source>Unable to sign in. Please contact support for help.</source>
         <translation>登录失败，请联系客服获取帮助。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="96"/>
+        <location filename="../../dialog/authdialog.cc" line="95"/>
         <source>Your account has been created. Welcome aboard!</source>
         <translation>账号已创建，欢迎加入！</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="112"/>
+        <location filename="../../dialog/authdialog.cc" line="111"/>
         <source>This email is already registered. Try signing in instead.</source>
         <translation>该邮箱已注册，请直接登录。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="120"/>
+        <location filename="../../dialog/authdialog.cc" line="119"/>
         <source>Failed to generate a username. Please try again.</source>
         <translation>用户名生成失败，请重试。</translation>
     </message>
     <message>
-        <location filename="../../dialog/authdialog.cc" line="123"/>
+        <location filename="../../dialog/authdialog.cc" line="122"/>
         <source>Unable to register. Please contact support for help.</source>
         <translation>注册失败，请联系客服获取帮助。</translation>
     </message>
@@ -354,24 +354,24 @@
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="91"/>
-        <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="102"/>
+        <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="101"/>
         <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="112"/>
+        <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="122"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="91"/>
+        <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="101"/>
         <source>Asset, liability, and equity nodes must be different.</source>
         <translation>资产、负债和所有者权益节点必须不同。</translation>
     </message>
     <message>
-        <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="102"/>
+        <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="112"/>
         <source>Selected balance sheet node no longer exists.</source>
         <translation>所选的资产负债表节点已不存在。</translation>
     </message>
     <message>
-        <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="112"/>
+        <location filename="../../charts/balance_sheet/balancesheetdialog.cc" line="122"/>
         <source>Asset, liability, and equity nodes must not have ancestor-descendant relationships.</source>
         <translation>资产、负债和所有者权益节点之间不得存在祖先-后代关系。</translation>
     </message>
@@ -544,24 +544,24 @@
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../../charts/income_statement/incomestatementdialog.cc" line="59"/>
-        <location filename="../../charts/income_statement/incomestatementdialog.cc" line="69"/>
-        <location filename="../../charts/income_statement/incomestatementdialog.cc" line="78"/>
+        <location filename="../../charts/income_statement/incomestatementdialog.cc" line="70"/>
+        <location filename="../../charts/income_statement/incomestatementdialog.cc" line="80"/>
+        <location filename="../../charts/income_statement/incomestatementdialog.cc" line="89"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../charts/income_statement/incomestatementdialog.cc" line="59"/>
+        <location filename="../../charts/income_statement/incomestatementdialog.cc" line="70"/>
         <source>Income and expense nodes must be different.</source>
         <translation>收入和支出节点必须不同。</translation>
     </message>
     <message>
-        <location filename="../../charts/income_statement/incomestatementdialog.cc" line="69"/>
+        <location filename="../../charts/income_statement/incomestatementdialog.cc" line="80"/>
         <source>Selected income statement node no longer exists.</source>
         <translation>所选利润表节点不再存在。</translation>
     </message>
     <message>
-        <location filename="../../charts/income_statement/incomestatementdialog.cc" line="78"/>
+        <location filename="../../charts/income_statement/incomestatementdialog.cc" line="89"/>
         <source>Income and expense nodes must not have ancestor-descendant relationships.</source>
         <translation>收入和支出节点不能存在祖先-后代关系。</translation>
     </message>
@@ -1462,7 +1462,7 @@
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="25"/>
         <source>Workspace Role</source>
-        <translation>工作区角色</translation>
+        <translation>工区角色</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="164"/>
@@ -1524,6 +1524,11 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="172"/>
         <source>Local Total</source>
         <translation>本币</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="26"/>
+        <source>Section Permissions</source>
+        <translation>版块权限</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="69"/>
@@ -2000,9 +2005,8 @@
         <translation>用户名</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="26"/>
         <source>Database Roles</source>
-        <translation>数据库角色</translation>
+        <translation type="vanished">数据库角色</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="167"/>
@@ -2032,28 +2036,28 @@
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="671"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="678"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="673"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="680"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="671"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="673"/>
         <source>Failed to check updates.</source>
         <translation>检查更新失败。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="678"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="680"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="690"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="692"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="691"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="693"/>
         <source>A new version %1 is available.
 
 Would you like to download it now?</source>
@@ -2062,12 +2066,12 @@ Would you like to download it now?</source>
 是否立即下载？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="703"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="705"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="703"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="705"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -2082,14 +2086,14 @@ Would you like to download it now?</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="190"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="290"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="188"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="288"/>
         <source>Tags</source>
         <translation>标签</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="220"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="319"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="218"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="317"/>
         <source>Manage...</source>
         <translation>管理...</translation>
     </message>
@@ -2660,7 +2664,7 @@ Do you want to save them before closing?</source>
         <translation>操作失败</translation>
     </message>
     <message>
-        <location filename="../../global/exportexcel.cc" line="32"/>
+        <location filename="../../global/exportexcel.cc" line="31"/>
         <source>The export failed. The incomplete file has been removed.</source>
         <translation>导出失败，已删除不完整的文件。</translation>
     </message>
@@ -2775,74 +2779,74 @@ Do you want to save them before closing?</source>
         <translation>正</translation>
     </message>
     <message>
-        <location filename="../../workspace/databaserole.cc" line="10"/>
-        <location filename="../../workspace/databaserole.cc" line="43"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="10"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="43"/>
         <source>Finance R</source>
         <translation>财务 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace/databaserole.cc" line="11"/>
-        <location filename="../../workspace/databaserole.cc" line="43"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="11"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="43"/>
         <source>Finance W</source>
         <translation>财务 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace/databaserole.cc" line="12"/>
-        <location filename="../../workspace/databaserole.cc" line="44"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="12"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="44"/>
         <source>Task R</source>
         <translation>任务 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace/databaserole.cc" line="13"/>
-        <location filename="../../workspace/databaserole.cc" line="44"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="13"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="44"/>
         <source>Task W</source>
         <translation>任务 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace/databaserole.cc" line="14"/>
-        <location filename="../../workspace/databaserole.cc" line="45"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="14"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="45"/>
         <source>Inventory R</source>
         <translation>存货 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace/databaserole.cc" line="15"/>
-        <location filename="../../workspace/databaserole.cc" line="45"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="15"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="45"/>
         <source>Inventory W</source>
         <translation>存货 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace/databaserole.cc" line="16"/>
-        <location filename="../../workspace/databaserole.cc" line="46"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="16"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="46"/>
         <source>Partner R</source>
         <translation>合作 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace/databaserole.cc" line="17"/>
-        <location filename="../../workspace/databaserole.cc" line="46"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="17"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="46"/>
         <source>Partner W</source>
         <translation>合作 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace/databaserole.cc" line="18"/>
-        <location filename="../../workspace/databaserole.cc" line="47"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="18"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="47"/>
         <source>Sale R</source>
         <translation>销售 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace/databaserole.cc" line="19"/>
-        <location filename="../../workspace/databaserole.cc" line="47"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="19"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="47"/>
         <source>Sale W</source>
         <translation>销售 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace/databaserole.cc" line="20"/>
-        <location filename="../../workspace/databaserole.cc" line="48"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="20"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="48"/>
         <source>Purchase R</source>
         <translation>采购 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace/databaserole.cc" line="21"/>
-        <location filename="../../workspace/databaserole.cc" line="48"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="21"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="48"/>
         <source>Purchase W</source>
         <translation>采购 读写</translation>
     </message>
@@ -3173,12 +3177,12 @@ Do you want to save them before closing?</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../search/dialog/searchdialog.cc" line="58"/>
+        <location filename="../../search/dialog/searchdialog.cc" line="57"/>
         <source>Partner Name or [Tag]</source>
         <translation>合作名称或[标签]</translation>
     </message>
     <message>
-        <location filename="../../search/dialog/searchdialog.cc" line="61"/>
+        <location filename="../../search/dialog/searchdialog.cc" line="60"/>
         <source>Search</source>
         <translation>搜索</translation>
     </message>
@@ -3298,7 +3302,7 @@ Do you want to save them before closing?</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../../billing/statement/statementtertiarywidget.cc" line="151"/>
+        <location filename="../../billing/statement/statementtertiarywidget.cc" line="158"/>
         <source>Export Excel</source>
         <translation>导出 Excel</translation>
     </message>
@@ -3457,12 +3461,12 @@ Please recall it before deleting.</source>
     </message>
     <message>
         <location filename="../../tag/tagdialog.ui" line="64"/>
-        <location filename="../../tag/tagdialog.cc" line="65"/>
+        <location filename="../../tag/tagdialog.cc" line="64"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../../tag/tagdialog.cc" line="60"/>
+        <location filename="../../tag/tagdialog.cc" line="59"/>
         <source>Delete tag &lt;b&gt;%1&lt;/b&gt;?&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ Permanent deletion! Cannot be undone!&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;Note: Tag references in nodes and entries will be preserved but no longer displayed.&lt;/i&gt;</source>
         <translation>删除标签 &lt;b&gt;%1&lt;/b&gt;？&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;&lt;br&gt;⚠️ 永久删除！无法撤销！&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;注意：节点和记录中的标签引用将被保留，但不再显示。&lt;/i&gt;</translation>
     </message>
@@ -3500,8 +3504,12 @@ Please recall it before deleting.</source>
     </message>
     <message>
         <location filename="../../dialog/userprofiledialog.ui" line="55"/>
+        <source>Section Permissions</source>
+        <translation>版块权限</translation>
+    </message>
+    <message>
         <source>Roles</source>
-        <translation>权限</translation>
+        <translation type="vanished">权限</translation>
     </message>
     <message>
         <location filename="../../dialog/userprofiledialog.ui" line="86"/>
