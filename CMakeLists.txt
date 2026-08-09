@@ -197,6 +197,7 @@ set(HEADERS
     entryhub/entryhubp.h
     entryhub/entryhubt.h
     enum/authenum.h
+    enum/bindingmode.h
     enum/entryenum.h
     enum/nodeenum.h
     enum/reference.h
@@ -286,15 +287,19 @@ set(HEADERS
     tree/widget/treewidgetit.h
     tree/widget/treewidgeto.h
     tree/widget/treewidgetp.h
+    utils/daterange.h
+    utils/delta.h
     utils/entryutils.h
     utils/mainutils.h
     utils/mainwindowutils.h
     utils/nodeutils.h
+    utils/pathutils.h
     utils/tagutils.h
     utils/templateutils.h
     websocket/jsongen.h
     websocket/websocket.h
     widget/combobox.h
+    widget/dateedit.h
     widget/datetimeedit.h
     widget/doublespinbox.h
     widget/lineedit.h
@@ -306,11 +311,6 @@ set(HEADERS
     workspace/workspacemember.h
     workspace/workspacemodel.h
     workspace/workspacerole.h
-    enum/bindingmode.h
-    utils/pathutils.h
-    utils/delta.h
-    utils/daterange.h
-    widget/dateedit.h
 )
 
 set(SOURCES
@@ -488,17 +488,17 @@ set(SOURCES
     tree/widget/treewidgetp.cc
     utils/mainwindowutils.cc
     utils/nodeutils.cc
+    utils/pathutils.cc
     utils/tagutils.cc
     websocket/jsongen.cc
     websocket/websocket.cc
+    widget/dateedit.cpp
     widget/datetimeedit.cc
     widget/treeview.cc
     workspace/databaserole.cc
     workspace/workspacedialog.cc
     workspace/workspacemodel.cc
     workspace/workspacerole.cc
-    utils/pathutils.cc
-    widget/dateedit.cpp
 )
 
 set(UIS
