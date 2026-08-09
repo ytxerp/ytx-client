@@ -96,7 +96,7 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
     case MemberField::kSectionPermissions: {
         const int raw { value.toInt() };
         member->section_permissions = static_cast<section::Permissions>(raw);
-        pending_updates_[id].insert(kDatabaseRoles, raw);
+        pending_updates_[id].insert(kSectionPermissions, raw);
         break;
     }
     case MemberField::kEmail:

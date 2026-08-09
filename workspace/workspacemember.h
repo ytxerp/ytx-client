@@ -68,7 +68,7 @@ inline void Member::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kWorkspaceRole); val.isDouble())
         workspace_role = static_cast<workspace::Role>(val.toInt());
 
-    if (const auto val = object.value(kDatabaseRoles); val.isDouble())
+    if (const auto val = object.value(kSectionPermissions); val.isDouble())
         section_permissions = section::Permissions(val.toInt());
 
     if (const auto val = object.value(kCreatedTime); val.isString())
