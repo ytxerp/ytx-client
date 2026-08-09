@@ -29,7 +29,7 @@ Model::Model(Section section, const QHash<QUuid, Row*>& tag_hash, const QStringL
     std::sort(list_.begin(), list_.end(), [](const Row* a, const Row* b) { return a->name < b->name; });
 }
 
-Model::~Model() { FlushCaches(); }
+Model::~Model() { FlushTimers(); }
 
 QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -74,8 +74,13 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
     if (data(index, role) == value)
         return false;
 
-    const RowField column { index.column() };
     auto* tag { static_cast<Row*>(index.internalPointer()) };
+    if (!tag)
+        return false;
+
+    pending_updates_[tag->id].tag = tag;
+
+    const RowField column { index.column() };
 
     switch (column) {
     case RowField::kName:
@@ -160,9 +165,9 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
     const QUuid tag_id { tag->id };
     const QString tag_name { tag->name };
 
-    // Clean up the pending timer first (Safety)
-    // Prevent the timer from firing after the tag is recycled.
-    if (auto* timer { pending_timers_.take(tag_id) }) {
+    // Remove pending update to prevent delayed flush after deletion
+    // Stop its timer to avoid accessing recycled member.
+    if (auto* timer = pending_updates_.take(tag_id).timer; timer) {
         timer->stop();
         timer->deleteLater();
     }
@@ -190,9 +195,6 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
 
 bool Model::UpdateName(Row* tag, const QString& name)
 {
-    if (!tag)
-        return false;
-
     const QString new_name { name.simplified() };
     if (new_name.isEmpty())
         return false;
@@ -209,103 +211,78 @@ bool Model::UpdateName(Row* tag, const QString& name)
 
     tag->name = new_name;
 
-    switch (tag->sync_state) {
-    case SyncState::kCreating:
+    if (tag->sync_state == SyncState::kCreating) {
         TryInsert(tag);
         return true;
-    case SyncState::kSynced:
-        pending_updates_[tag->id].insert(kName, new_name);
-        RestartTimer(tag->id, tag);
-        break;
-    case SyncState::kError:
-    case SyncState::kUpdating:
-    case SyncState::kDeleting:
-        break;
     }
+
+    pending_updates_[tag->id].changes.insert(kName, new_name);
+    RestartTimer(tag->id);
 
     return true;
 }
 
 bool Model::UpdateColor(Row* tag, const QString& new_color)
 {
-    if (!tag || tag->color == new_color)
-        return false;
-
     tag->color = new_color;
 
-    if (tag->sync_state == SyncState::kCreating && !tag->name.isEmpty()) {
-        TryInsert(tag);
-    } else if (tag->sync_state == SyncState::kSynced) {
-        pending_updates_[tag->id].insert(kColor, new_color);
-        RestartTimer(tag->id, tag);
+    if (tag->sync_state == SyncState::kCreating) {
+        return true;
     }
+
+    pending_updates_[tag->id].changes.insert(kColor, new_color);
+    RestartTimer(tag->id);
 
     return true;
 }
 
-void Model::RestartTimer(const QUuid& id, Row* tag)
+void Model::RestartTimer(const QUuid& id)
 {
-    // Try to retrieve the existing timer
-    QTimer* timer { pending_timers_.value(id, nullptr) };
+    auto& update { pending_updates_[id] };
 
-    if (!timer) {
-        // Create and configure a new timer if it does not exist
-        timer = new QTimer { this };
-        timer->setSingleShot(true);
-
-        connect(timer, &QTimer::timeout, this, [this, id, tag]() {
-            auto* expired_timer { pending_timers_.take(id) };
-            auto update { pending_updates_.take(id) };
-
-            if (!update.isEmpty()) {
-                update.insert(kVersion, tag->version);
-
-                const QJsonObject message { JsonGen::TagUpdate(section_, id, update) };
-                WebSocket::Instance()->SendMessage(WsKey::kTagUpdate, message);
-            }
-
-            pending_updates_.remove(id);
-
-            if (expired_timer) {
-                expired_timer->deleteLater();
-            }
-        });
-
-        pending_timers_[id] = timer;
+    if (!update.timer) {
+        update.timer = new QTimer { this };
+        update.timer->setSingleShot(true);
+        connect(update.timer, &QTimer::timeout, this, [this, id]() { FlushTimer(id); });
     }
 
-    // Start or restart the timer
-    timer->start(time_const::kAutoCloseMs);
+    update.timer->start(time_const::kAutoCloseMs);
 }
 
-void Model::FlushCaches()
+void Model::FlushTimer(const QUuid& id)
 {
-    if (pending_updates_.isEmpty())
-        return;
+    auto update { pending_updates_.take(id) };
 
-    for (auto* timer : std::as_const(pending_timers_)) {
-        timer->stop();
-        timer->deleteLater();
+    if (update.tag && !update.changes.isEmpty()) {
+        const int version { update.tag->version };
+        update.changes.insert(kVersion, version);
+
+        const QJsonObject message { JsonGen::TagUpdate(section_, id, update.changes) };
+        WebSocket::Instance()->SendMessage(WsKey::kTagUpdate, message);
     }
 
-    pending_timers_.clear();
-
-    for (auto it = pending_updates_.cbegin(); it != pending_updates_.cend(); ++it) {
-        if (!it.value().isEmpty()) {
-            const QJsonObject message { JsonGen::TagUpdate(section_, it.key(), it.value()) };
-            WebSocket::Instance()->SendMessage(WsKey::kTagUpdate, message);
-        }
+    if (update.timer) {
+        update.timer->stop();
+        update.timer->deleteLater();
     }
+}
 
-    pending_updates_.clear();
+void Model::FlushTimers()
+{
+    const auto ids { pending_updates_.keys() };
+
+    for (const auto& id : ids) {
+        FlushTimer(id);
+    }
 }
 
 void Model::TryInsert(Row* tag)
 {
-    if (!tag || tag->sync_state != SyncState::kCreating)
+    if (tag->sync_state != SyncState::kCreating)
         return;
 
     tag->sync_state = SyncState::kSynced;
+    tag->version = 1;
 
     const QJsonObject message { JsonGen::TagInsert(section_, tag) };
     WebSocket::Instance()->SendMessage(WsKey::kTagInsert, message);

@@ -22,6 +22,7 @@
 
 #include <QJsonObject>
 #include <QString>
+#include <QTimer>
 #include <QUuid>
 
 #include "component/constant.h"
@@ -41,6 +42,12 @@ struct Row final {
     void Reset();
     QJsonObject WriteJson() const;
     void ReadJson(const QJsonObject& object);
+};
+
+struct PendingUpdate {
+    QTimer* timer {};
+    Row* tag {};
+    QJsonObject changes {};
 };
 
 inline void Row::Reset() { *this = Row {}; }

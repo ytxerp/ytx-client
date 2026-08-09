@@ -67,7 +67,6 @@ void MainWindow::RApplyTag(const QJsonObject& obj)
 
         auto* tag { ResourcePool<tag::Row>::Instance().Allocate() };
         tag->ReadJson(tag_obj);
-        tag->sync_state = SyncState::kSynced;
 
         sc->tag_hash.insert(id, tag);
         UpdateTagIcon(sc, tag);

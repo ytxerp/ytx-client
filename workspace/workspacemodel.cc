@@ -15,7 +15,7 @@ Model::Model(const QStringList& header, QObject* parent)
 {
 }
 
-Model::~Model() { FlushCaches(); }
+Model::~Model() { FlushTimers(); }
 
 QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -84,19 +84,23 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
         return false;
     }
 
+    auto& update { pending_updates_[id] };
+    update.member = member;
+    auto& changes { update.changes };
+
     // Handle updates based on the column index
     // Assuming MemberColumn is your enum for WorkspaceMember columns
     switch (static_cast<MemberField>(index.column())) {
     case MemberField::kWorkspaceRole: {
         const int raw { value.toInt() };
         member->workspace_role = static_cast<workspace::Role>(raw);
-        pending_updates_[id].insert(kWorkspaceRole, raw);
+        changes.insert(kWorkspaceRole, raw);
         break;
     }
     case MemberField::kSectionPermissions: {
         const int raw { value.toInt() };
         member->section_permissions = static_cast<section::Permissions>(raw);
-        pending_updates_[id].insert(kSectionPermissions, raw);
+        changes.insert(kSectionPermissions, raw);
         break;
     }
     case MemberField::kEmail:
@@ -108,7 +112,7 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
     }
 
     // Mark as pending update and restart the debounce timer
-    RestartTimer(id, member);
+    RestartTimer(id);
 
     // Notify views about the data change
     emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
@@ -192,15 +196,12 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
     auto* member { list_.at(row) };
     const QUuid member_id { member->id };
 
-    // IMPORTANT: Clean up the pending timer if it exists
-    // If a timer is running for this member, it must be stopped and removed
-    // to prevent it from firing and accessing a recycled object.
-    if (auto* timer { pending_timers_.take(member_id) }) {
+    // Remove pending update to prevent delayed flush after deletion
+    // Stop its timer to avoid accessing recycled member.
+    if (auto* timer = pending_updates_.take(member_id).timer; timer) {
         timer->stop();
         timer->deleteLater();
     }
-
-    pending_updates_.remove(member_id);
 
     // Notify views that rows are about to be removed
     beginRemoveRows(parent, row, row);
@@ -246,61 +247,46 @@ void Model::Rebuild(const QJsonArray& array)
     endResetModel();
 }
 
-void Model::RestartTimer(const QUuid& id, Member* member)
+void Model::RestartTimer(const QUuid& id)
 {
-    QTimer* timer { pending_timers_.value(id, nullptr) };
+    auto& update { pending_updates_[id] };
 
-    if (!timer) {
-        timer = new QTimer { this };
-        timer->setSingleShot(true);
-
-        connect(timer, &QTimer::timeout, this, [this, id, member]() {
-            auto* expired_timer { pending_timers_.take(id) };
-            auto update { pending_updates_.take(id) };
-
-            if (!update.isEmpty()) {
-                const int version { member->version };
-                update.insert(kVersion, version);
-
-                const QJsonObject message { JsonGen::WorkspaceMemberUpdate(id, update) };
-                WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberUpdate, message);
-
-                // WorkspaceMember version is only a sync marker,
-                // not used for optimistic locking.
-                member->version = version + 1;
-            }
-
-            if (expired_timer) {
-                expired_timer->deleteLater();
-            }
-        });
-
-        pending_timers_[id] = timer;
+    if (!update.timer) {
+        update.timer = new QTimer { this };
+        update.timer->setSingleShot(true);
+        connect(update.timer, &QTimer::timeout, this, [this, id]() { FlushTimer(id); });
     }
 
-    // Start or restart the timer
-    timer->start(time_const::kAutoCloseMs);
+    update.timer->start(time_const::kAutoCloseMs);
 }
 
-void Model::FlushCaches()
+void Model::FlushTimer(const QUuid& id)
 {
-    if (pending_updates_.isEmpty())
-        return;
+    auto update { pending_updates_.take(id) };
 
-    for (auto* timer : std::as_const(pending_timers_)) {
-        timer->stop();
-        timer->deleteLater();
+    if (update.member && !update.changes.isEmpty()) {
+        const int version { update.member->version };
+        update.changes.insert(kVersion, version);
+
+        const QJsonObject message { JsonGen::WorkspaceMemberUpdate(id, update.changes) };
+        WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberUpdate, message);
+
+        update.member->version = version + 1;
     }
 
-    pending_timers_.clear();
-
-    for (auto it = pending_updates_.cbegin(); it != pending_updates_.cend(); ++it) {
-        if (!it.value().isEmpty()) {
-            const QJsonObject message { JsonGen::WorkspaceMemberUpdate(it.key(), it.value()) };
-            WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberUpdate, message);
-        }
+    if (update.timer) {
+        update.timer->stop();
+        update.timer->deleteLater();
     }
-
-    pending_updates_.clear();
 }
+
+void Model::FlushTimers()
+{
+    const auto ids { pending_updates_.keys() };
+
+    for (const auto& id : ids) {
+        FlushTimer(id);
+    }
+}
+
 }

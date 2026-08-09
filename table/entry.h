@@ -22,6 +22,7 @@
 
 #include <QDateTime>
 #include <QJsonObject>
+#include <QTimer>
 #include <QUuid>
 
 #include "enum/stateenum.h"
@@ -86,6 +87,12 @@ struct EntryO final : Entry {
     void Reset() override;
     void ReadJson(const QJsonObject& object) override;
     QJsonObject WriteJson() const override;
+};
+
+struct PendingEntryUpdate {
+    QTimer* timer {};
+    Entry* entry {};
+    QJsonObject changes {};
 };
 
 using EntryList = QList<Entry*>;

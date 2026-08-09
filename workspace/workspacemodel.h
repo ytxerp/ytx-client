@@ -49,15 +49,15 @@ public:
     void Rebuild(const QJsonArray& array);
 
 private:
-    void RestartTimer(const QUuid& id, Member* member);
-    void FlushCaches();
+    void RestartTimer(const QUuid& id);
+    void FlushTimer(const QUuid& id);
+    void FlushTimers();
 
 private:
     QList<Member*> list_ {};
     const QStringList& header_ {};
 
-    QHash<QUuid, QJsonObject> pending_updates_ {};
-    QHash<QUuid, QTimer*> pending_timers_ {};
+    QHash<QUuid, PendingUpdate> pending_updates_ {};
 };
 }
 

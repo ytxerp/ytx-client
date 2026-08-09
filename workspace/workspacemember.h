@@ -22,6 +22,7 @@
 
 #include <QJsonObject>
 #include <QString>
+#include <QTimer>
 #include <QUuid>
 
 #include "component/constant.h"
@@ -74,6 +75,13 @@ inline void Member::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kCreatedTime); val.isString())
         created_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
 }
+
+struct PendingUpdate {
+    QTimer* timer {};
+    Member* member {};
+    QJsonObject changes {};
+};
+
 }
 
 #endif // WORKSPACEMEMBER_H

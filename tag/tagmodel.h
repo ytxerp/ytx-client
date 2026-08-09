@@ -57,8 +57,9 @@ private:
     bool UpdateName(Row* tag, const QString& new_name);
     bool UpdateColor(Row* tag, const QString& new_color);
 
-    void RestartTimer(const QUuid& id, Row* tag);
-    void FlushCaches();
+    void RestartTimer(const QUuid& id);
+    void FlushTimer(const QUuid& id);
+    void FlushTimers();
 
     void TryInsert(Row* tag);
 
@@ -70,8 +71,7 @@ private:
     QList<Row*> list_ {};
     QSet<QString> names_ {};
 
-    QHash<QUuid, QJsonObject> pending_updates_ {};
-    QHash<QUuid, QTimer*> pending_timers_ {};
+    QHash<QUuid, PendingUpdate> pending_updates_ {};
 };
 }
 
