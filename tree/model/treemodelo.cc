@@ -35,15 +35,15 @@ void TreeModelO::HandleStatusChanged(const QUuid& node_id, NodeStatus value)
 
 void TreeModelO::ApplyName(const QUuid& node_id, const QString& name, int version)
 {
-    auto* node = GetNode(node_id);
+    const auto index { GetIndex(node_id) };
+    if (!index.isValid())
+        return;
+
+    auto* node { static_cast<Node*>(index.internalPointer()) };
     if (!node)
         return;
 
     if (node->kind != NodeKind::kBranch)
-        return;
-
-    const auto index { GetIndex(node_id) };
-    if (!index.isValid())
         return;
 
     node->name = name;

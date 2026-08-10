@@ -29,7 +29,7 @@ TreeModel::~TreeModel()
     NodePool::Instance().Recycle(node_hash_, section_);
 }
 
-void TreeModel::DeleteNode(const QUuid& node_id)
+void TreeModel::ApplyDelete(const QUuid& node_id)
 {
     if (!node_hash_.contains(node_id))
         return;
@@ -63,7 +63,7 @@ void TreeModel::SyncTotalArray(const QJsonArray& total_array)
     EmitNumericChanged(affected_ids);
 }
 
-void TreeModel::InsertNode(const QUuid& ancestor, const QJsonObject& data)
+void TreeModel::ApplyNode(const QUuid& ancestor, const QJsonObject& data)
 {
     Node* parent { node_hash_.value(ancestor) };
     if (!parent)
@@ -200,24 +200,22 @@ void TreeModel::InitLeafData()
     }
 }
 
-void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
+void TreeModel::ApplyUpdate(const QUuid& node_id, const QJsonObject& update)
 {
     if (update.isEmpty()) {
-        qInfo().noquote() << "SyncNode ignored: empty data for node" << node_id.toString(QUuid::WithoutBraces);
+        qDebug() << Q_FUNC_INFO << "Update is empty";
         return;
     }
-
-    auto* node = GetNode(node_id);
-    if (!node) {
-        qInfo().noquote() << "SyncNode ignored: node not found in local node_hash_, id =" << node_id.toString(QUuid::WithoutBraces);
-        return;
-    }
-
-    node->ReadJson(update);
 
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
         return;
+
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    if (!node)
+        return;
+
+    node->ReadJson(update);
 
     const int row { index.row() };
     const auto [start, end] = node::CacheColumnRange(section_);
@@ -266,7 +264,7 @@ void TreeModel::ApplyDirectionRule(const QUuid& node_id, bool direction_rule, in
     emit SSyncValue();
 }
 
-void TreeModel::UpdateVersion(const QUuid& node_id, int version)
+void TreeModel::SyncVersion(const QUuid& node_id, int version)
 {
     auto* node { GetNode(node_id) };
     if (!node)
@@ -275,7 +273,7 @@ void TreeModel::UpdateVersion(const QUuid& node_id, int version)
     node->version = version;
 }
 
-void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
+void TreeModel::ApplyReplace(const QUuid& old_node_id, const QUuid& new_node_id)
 {
     auto* old_node { GetNode(old_node_id) };
     auto* new_node { GetNode(new_node_id) };
@@ -298,17 +296,17 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
 
     EmitNumericChanged(ids);
 
-    DeleteNode(old_node_id);
+    ApplyDelete(old_node_id);
 }
 
 void TreeModel::ApplyName(const QUuid& node_id, const QString& name, int version)
 {
-    auto* node = GetNode(node_id);
-    if (!node)
-        return;
-
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
+        return;
+
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    if (!node)
         return;
 
     if (node->name == name)
@@ -322,13 +320,13 @@ void TreeModel::ApplyName(const QUuid& node_id, const QString& name, int version
     SyncLeafModel(leaf_ids);
 
     const int column { std::to_underlying(NodeEnum::kName) };
-    const int row { GetIndex(node_id).row() };
+    const int row { index.row() };
 
     EmitDataChanged(row, row, column, column, index.parent());
     emit SUpdateName(node->id, node->name, node->kind == NodeKind::kBranch);
 }
 
-void TreeModel::DragNode(const QUuid& ancestor, const QUuid& descendant)
+void TreeModel::ApplyDrag(const QUuid& ancestor, const QUuid& descendant)
 {
     // Get the node to be moved
     auto* node { GetNode(descendant) };

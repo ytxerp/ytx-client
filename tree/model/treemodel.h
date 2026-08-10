@@ -17,26 +17,6 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// -----------------------------Naming convention------------------------------
-// Active / Passive / Local
-//
-// *Active   - Triggered by a local user action. Validates the change,
-//             sends the update to the remote peer via WebSocket, then
-//             applies the change locally (via the *Local counterpart).
-//
-// *Passive  - Triggered by an incoming remote message (e.g. WebSocket
-//             callback). Applies the change locally only; must NOT send
-//             another network message, to avoid update loops.
-//
-// *Local    - Shared implementation that actually mutates local state
-//             (model data, emits signals, refreshes UI). Contains no
-//             network I/O. Called by both *Active and *Passive.
-//
-// Rule of thumb: UI-triggered code paths call *Active; network-callback
-// code paths call *Passive. Neither should call *Local directly unless
-// they are implementing one of the two entry points above.
-// ---------------------------------------------------------------------------
-
 #ifndef TREEMODEL_H
 #define TREEMODEL_H
 
@@ -79,7 +59,6 @@ signals:
 
 public:
     // Qt's
-    // Default implementations
     QModelIndex parent(const QModelIndex& index) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -116,29 +95,22 @@ public:
         return QVariant();
     }
 
-    // WebSocket functions
-
+    // WebSocket's
     void ApplyTree(const QJsonObject& data);
+    void ApplyNode(const QUuid& ancestor, const QJsonObject& data);
 
-    void InsertNode(const QUuid& ancestor, const QJsonObject& data);
-
-    void SyncNode(const QUuid& node_id, const QJsonObject& update);
-
-    // Just for order tag update
-    void UpdateVersion(const QUuid& node_id, int version);
-
-    void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
-    void DragNode(const QUuid& ancestor, const QUuid& descendant);
-
-    void ApplyDirectionRule(const QUuid& node_id, bool direction_rule, int version);
     void SyncTotalArray(const QJsonArray& total_array);
+    void SyncVersion(const QUuid& node_id, int version);
 
-    void DeleteNode(const QUuid& node_id);
+    void ApplyReplace(const QUuid& old_node_id, const QUuid& new_node_id);
+    void ApplyDrag(const QUuid& ancestor, const QUuid& descendant);
+    void ApplyDirectionRule(const QUuid& node_id, bool direction_rule, int version);
+    void ApplyDelete(const QUuid& node_id);
+    void ApplyUpdate(const QUuid& node_id, const QJsonObject& update);
 
     virtual void ApplyName(const QUuid& node_id, const QString& name, int version);
 
     // Ytx's
-    // Default implementations
     double InitialTotal(QUuid node_id) const { return Value(node_id, &Node::initial_total); }
     double FinalTotal(QUuid node_id) const { return Value(node_id, &Node::final_total); }
     NodeUnit Unit(QUuid node_id) const { return Value(node_id, &Node::unit); }
