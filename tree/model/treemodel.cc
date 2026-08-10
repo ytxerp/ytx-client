@@ -891,15 +891,15 @@ void TreeModel::EmitNumericChanged(const QSet<QUuid>& ids)
 
 void TreeModel::RestartTimer(const QUuid& id)
 {
-    auto& update { pending_updates_[id] };
+    auto*& timer { pending_updates_[id].timer };
 
-    if (!update.timer) {
-        update.timer = new QTimer { this };
-        update.timer->setSingleShot(true);
-        connect(update.timer, &QTimer::timeout, this, [this, id]() { FlushTimer(id); });
+    if (!timer) {
+        timer = new QTimer { this };
+        timer->setSingleShot(true);
+        connect(timer, &QTimer::timeout, this, [this, id]() { FlushTimer(id); });
     }
 
-    update.timer->start(time_const::kAutoCloseMs);
+    timer->start(time_const::kAutoCloseMs);
 }
 
 void TreeModel::FlushTimer(const QUuid& id)
