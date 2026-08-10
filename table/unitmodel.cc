@@ -1,7 +1,5 @@
 #include "unitmodel.h"
 
-#include "utils/templateutils.h"
-
 UnitModel::UnitModel(QObject* parent)
     : QAbstractItemModel { parent }
 {
@@ -32,30 +30,9 @@ QVariant UnitModel::data(const QModelIndex& index, int role) const
         return item.display;
 
     case Qt::UserRole:
-        return item.user;
+        return item.id;
 
     default:
         return {};
     }
-}
-
-void UnitModel::sort(int column, Qt::SortOrder order)
-{
-    if (column != 0) {
-        return;
-    }
-
-    const auto compare = [order](const Item& lhs, const Item& rhs) { return utils::CompareString(lhs.display, rhs.display, order); };
-
-    emit layoutAboutToBeChanged();
-    std::ranges::sort(list_, compare);
-    emit layoutChanged();
-}
-
-void UnitModel::AppendItem(const QString& display, int user)
-{
-    const long long row { list_.size() };
-    beginInsertRows(QModelIndex(), row, row);
-    list_.emplace_back(Item { display, user });
-    endInsertRows();
 }

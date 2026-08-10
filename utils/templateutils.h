@@ -96,17 +96,6 @@ template <typename Derived, typename Base> const Derived* DerivedPtr(const Base*
     return static_cast<const Derived*>(base);
 }
 
-template <MapType T> UnitModel* CreateUnitModel(const T& map, QObject* parent)
-{
-    auto* model { new UnitModel(parent) };
-
-    for (auto it = map.constBegin(); it != map.constEnd(); ++it) {
-        model->AppendItem(it.value(), it.key());
-    }
-
-    return model;
-}
-
 template <InheritQAbstractItemView T> void SetupVerticalHeader(T* view, int row_height)
 {
     if (!view)

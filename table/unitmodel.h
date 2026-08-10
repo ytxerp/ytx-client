@@ -32,7 +32,6 @@ public:
 
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
 
     QModelIndex parent(const QModelIndex&) const override { return {}; }
     int rowCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : list_.size(); }
@@ -42,12 +41,27 @@ public:
         return 1;
     }
 
-    void AppendItem(const QString& display, int user);
+    void Rebuild(const QMap<int, QString>& map)
+    {
+        QList<Item> new_list {};
+        new_list.reserve(map.size());
+
+        for (auto it = map.cbegin(); it != map.cend(); ++it) {
+            new_list.emplace_back(Item {
+                .display = it.value(),
+                .id = it.key(),
+            });
+        }
+
+        beginResetModel();
+        list_ = std::move(new_list);
+        endResetModel();
+    }
 
 protected:
     struct Item {
         QString display {};
-        int user {};
+        int id {};
     };
 
 private:
