@@ -49,7 +49,7 @@ public:
         for (auto it = map.cbegin(); it != map.cend(); ++it) {
             new_list.emplace_back(Item {
                 .display = it.value(),
-                .id = it.key(),
+                .unit = it.key(),
             });
         }
 
@@ -61,7 +61,7 @@ public:
 protected:
     struct Item {
         QString display {};
-        int id {};
+        int unit {};
     };
 
 private:

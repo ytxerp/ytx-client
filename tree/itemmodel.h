@@ -56,13 +56,9 @@ public:
 protected:
     struct Item {
         QString display {};
-        QUuid user {};
+        QUuid id {};
 
-        void Reset()
-        {
-            display = {};
-            user = {};
-        };
+        void Reset() { *this = Item {}; };
     };
 
 private:

@@ -35,7 +35,7 @@ QVariant ItemModel::data(const QModelIndex& index, int role) const
         return item->display;
 
     case Qt::UserRole:
-        return item->user;
+        return item->id;
 
     default:
         return {};
@@ -58,7 +58,7 @@ void ItemModel::AppendItem(const QString& display, const QUuid& id)
     auto* item { ResourcePool<Item>::Instance().Allocate() };
 
     item->display = display;
-    item->user = id;
+    item->id = id;
 
     auto it = std::lower_bound(list_.cbegin(), list_.cend(), item,
         [](const Item* lhs, const Item* rhs) { return utils::CompareString(lhs->display, rhs->display, Qt::AscendingOrder); });
@@ -76,7 +76,7 @@ bool ItemModel::RemoveItem(const QUuid& id)
     for (int row = 0; row != list_.size(); ++row) {
         auto* item { list_.at(row) };
 
-        if (item->user != id)
+        if (item->id != id)
             continue;
 
         beginRemoveRows({}, row, row);
@@ -135,11 +135,11 @@ void ItemModel::Rebuild(const QHash<QUuid, QString>& leaf_path)
     for (auto it = leaf_path.cbegin(); it != leaf_path.cend(); ++it) {
         auto* item { ResourcePool<Item>::Instance().Allocate() };
 
-        item->user = it.key();
+        item->id = it.key();
         item->display = it.value();
 
         new_list.append(item);
-        new_hash.insert(item->user, item);
+        new_hash.insert(item->id, item);
     }
 
     std::ranges::sort(new_list, [](const Item* lhs, const Item* rhs) { return utils::CompareString(lhs->display, rhs->display, Qt::AscendingOrder); });

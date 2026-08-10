@@ -30,7 +30,7 @@ QVariant UnitModel::data(const QModelIndex& index, int role) const
         return item.display;
 
     case Qt::UserRole:
-        return item.id;
+        return item.unit;
 
     default:
         return {};
