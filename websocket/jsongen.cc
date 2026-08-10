@@ -178,12 +178,13 @@ QJsonObject NodeAck(Section section, CUuid& node_id)
     return message;
 }
 
-QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule)
+QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule, int version)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kDirectionRule, direction_rule);
+    message.insert(kVersion, version);
     return message;
 }
 
@@ -205,12 +206,13 @@ QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& update)
     return message;
 }
 
-QJsonObject NodeName(Section section, CUuid& node_id, CString& name)
+QJsonObject NodeName(Section section, CUuid& node_id, CString& name, int version)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kName, name);
+    message.insert(kVersion, version);
     return message;
 }
 

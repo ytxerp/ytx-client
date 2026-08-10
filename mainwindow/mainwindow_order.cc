@@ -26,7 +26,7 @@ void MainWindow::EditNameO()
     dialog->setWindowModality(Qt::WindowModal);
 
     connect(dialog, &QDialog::accepted, this, [this, dialog, node]() {
-        const auto message { JsonGen::NodeName(start_, node->id, dialog->GetName()) };
+        const auto message { JsonGen::NodeName(start_, node->id, dialog->GetName(), node->version) };
         WebSocket::Instance()->SendMessage(WsKey::kNodeNameUpdate, message);
     });
 

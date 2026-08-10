@@ -120,8 +120,8 @@ void MainWindow::EditNameFIPT()
     utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setWindowModality(Qt::WindowModal);
 
-    connect(dialog, &QDialog::accepted, this, [this, node_id, dialog]() {
-        const auto message { JsonGen::NodeName(start_, node_id, dialog->GetName()) };
+    connect(dialog, &QDialog::accepted, this, [this, node_id, dialog, node]() {
+        const auto message { JsonGen::NodeName(start_, node_id, dialog->GetName(), node->version) };
         WebSocket::Instance()->SendMessage(WsKey::kNodeNameUpdate, message);
     });
 

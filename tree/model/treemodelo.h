@@ -38,7 +38,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
     bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent, int destinationChild) override;
 
-    void UpdateName(const QUuid& node_id, const QString& name) override;
+    void ApplyName(const QUuid& node_id, const QString& name, int version) override;
 
     void InsertSettlement(const QSet<QUuid>& settled_set, const QUuid& settlement_id);
     void RecallSettlement(const QUuid& settlement_id);

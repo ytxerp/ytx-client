@@ -224,33 +224,46 @@ void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
     EmitDataChanged(row, row, start, end, index.parent());
 }
 
-void TreeModel::UpdateDirectionRuleActive(Node* node, bool value, const QModelIndex& index)
+void TreeModel::RequestDirectionRule(Node* node, bool value)
 {
     if (node->direction_rule == value)
         return;
 
-    QJsonObject message { JsonGen::NodeDirectionRule(section_, node->id, value) };
+    QJsonObject message { JsonGen::NodeDirectionRule(section_, node->id, value, node->version) };
     WebSocket::Instance()->SendMessage(WsKey::kNodeDirectionRuleUpdate, message);
-
-    UpdateDirectionRuleLocal(node, value, index);
 }
 
-void TreeModel::UpdateDirectionRulePassive(const QUuid& node_id, bool direction_rule)
+void TreeModel::ApplyDirectionRule(const QUuid& node_id, bool direction_rule, int version)
 {
     const auto index { GetIndex(node_id) };
     if (!index.isValid())
         return;
 
-    auto* node { GetNode(node_id) };
+    auto* node { static_cast<Node*>(index.internalPointer()) };
     if (!node)
         return;
 
+    node->InvertTotal();
+    node->direction_rule = direction_rule;
+    node->version = version;
+
     const int row { index.row() };
 
-    UpdateDirectionRuleLocal(node, direction_rule, index);
+    {
+        const auto [start_col, end_col] = node::NumericColumnRange(section_);
+        EmitDataChanged(row, row, start_col, end_col, index.parent());
+    }
 
-    const int column { node::DirectionRuleColumn(section_) };
-    EmitDataChanged(row, row, column, column, index.parent());
+    {
+        const int column { node::DirectionRuleColumn(section_) };
+        EmitDataChanged(row, row, column, column, index.parent());
+    }
+
+    if (node->kind == NodeKind::kLeaf) {
+        emit SDirectionRule(node_id, node->direction_rule);
+    }
+
+    emit SSyncValue();
 }
 
 void TreeModel::UpdateVersion(const QUuid& node_id, int version)
@@ -260,24 +273,6 @@ void TreeModel::UpdateVersion(const QUuid& node_id, int version)
         return;
 
     node->version = version;
-}
-
-void TreeModel::UpdateDirectionRuleLocal(Node* node, bool value, const QModelIndex& index)
-{
-    node->InvertTotal();
-    node->direction_rule = value;
-
-    const QUuid node_id { node->id };
-
-    if (node->kind == NodeKind::kLeaf) {
-        emit SDirectionRule(node_id, node->direction_rule);
-    }
-
-    const int row { index.row() };
-    const auto [start_col, end_col] = node::NumericColumnRange(section_);
-
-    EmitDataChanged(row, row, start_col, end_col, index.parent());
-    emit SSyncValue();
 }
 
 void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
@@ -306,7 +301,7 @@ void TreeModel::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
     DeleteNode(old_node_id);
 }
 
-void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
+void TreeModel::ApplyName(const QUuid& node_id, const QString& name, int version)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -320,6 +315,7 @@ void TreeModel::UpdateName(const QUuid& node_id, const QString& name)
         return;
 
     node->name = name;
+    node->version = version;
 
     UpdateSubtreePath(node);
     const auto leaf_ids { ExtractLeafIds(node) };

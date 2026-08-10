@@ -33,7 +33,7 @@ void TreeModelO::HandleStatusChanged(const QUuid& node_id, NodeStatus value)
     EmitNumericChanged(ids);
 }
 
-void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
+void TreeModelO::ApplyName(const QUuid& node_id, const QString& name, int version)
 {
     auto* node = GetNode(node_id);
     if (!node)
@@ -47,6 +47,8 @@ void TreeModelO::UpdateName(const QUuid& node_id, const QString& name)
         return;
 
     node->name = name;
+    node->version = version;
+
     UpdateSubtreePath(node);
 
     const int column { std::to_underlying(NodeEnumO::kName) };

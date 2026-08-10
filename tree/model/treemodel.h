@@ -130,12 +130,12 @@ public:
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
     void DragNode(const QUuid& ancestor, const QUuid& descendant);
 
-    void UpdateDirectionRulePassive(const QUuid& node_id, bool direction_rule);
+    void ApplyDirectionRule(const QUuid& node_id, bool direction_rule, int version);
     void SyncTotalArray(const QJsonArray& total_array);
 
     void DeleteNode(const QUuid& node_id);
 
-    virtual void UpdateName(const QUuid& node_id, const QString& name);
+    virtual void ApplyName(const QUuid& node_id, const QString& name, int version);
 
     // Ytx's
     // Default implementations
@@ -186,7 +186,7 @@ protected:
     void EmitNumericChanged(const QSet<QUuid>& ids);
     void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent);
 
-    void UpdateDirectionRuleActive(Node* node, bool value, const QModelIndex& index);
+    void RequestDirectionRule(Node* node, bool value);
     void UpdateSubtreePath(const Node* node);
 
     virtual void RegisterNode(Node* node);
@@ -232,8 +232,6 @@ private:
 
     QSet<QUuid> SyncTotal(const QUuid& node_id, double initial_total, double final_total);
 
-    void UpdateDirectionRuleLocal(Node* node, bool value, const QModelIndex& index);
-
     void UnitSetRemove(const QUuid& node_id, NodeUnit unit)
     {
         if (auto* set = UnitSet(unit)) {
@@ -259,7 +257,7 @@ protected:
 
     const Section section_ {};
     const QString& separator_;
-    const QStringList& header_ {};
+    const QStringList& header_;
 
     QHash<QUuid, PendingNodeUpdate> pending_updates_ {};
 };

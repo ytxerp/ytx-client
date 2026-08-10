@@ -438,10 +438,12 @@ void WebSocket::UpdateNode(const QJsonObject& obj)
     auto tree_model { tree_model_hash_.value(section) };
     Q_ASSERT(tree_model != nullptr);
 
-    if (session_id == session_id_)
+    if (session_id == session_id_) {
         tree_model->UpdateVersion(node_id, version);
-    else
-        tree_model->SyncNode(node_id, update);
+        return;
+    }
+
+    tree_model->SyncNode(node_id, update);
 }
 
 void WebSocket::DragNode(const QJsonObject& obj)
@@ -1045,27 +1047,27 @@ void WebSocket::DeletePartnerEntry(const QJsonObject& obj)
 void WebSocket::UpdateNodeDirectionRule(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    const auto session_id { QUuid(obj[kSessionId].toString()) };
-    const bool direction_rule { obj.value(kDirectionRule).toBool() };
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+    const bool direction_rule { obj.value(kDirectionRule).toBool() };
+    const int version { obj.value(kVersion).toInt() };
 
     auto tree_model { tree_model_hash_.value(section) };
+    Q_ASSERT(tree_model);
 
-    if (session_id != session_id_) {
-        tree_model->UpdateDirectionRulePassive(node_id, direction_rule);
-    }
+    tree_model->ApplyDirectionRule(node_id, direction_rule, version);
 }
 
 void WebSocket::UpdateNodeName(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-
     const auto node_id { QUuid(obj.value(kNodeId).toString()) };
     const auto name { obj.value(kName).toString() };
+    const int version { obj.value(kVersion).toInt() };
 
     auto tree_model { tree_model_hash_.value(section) };
+    Q_ASSERT(tree_model);
 
-    tree_model->UpdateName(node_id, name);
+    tree_model->ApplyName(node_id, name, version);
 }
 
 void WebSocket::UpdateAccountName(const QJsonObject& obj)
