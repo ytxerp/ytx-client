@@ -248,7 +248,7 @@ void Model::Rebuild(const QJsonArray& node_array, const QJsonArray& path_array, 
         net_profit_->mom_growth_rate = utils::GrowthRate(net_profit, mom_net_profit);
     }
 
-    sort(std::to_underlying(RowField::kFinalTotal), Qt::DescendingOrder);
+    node::SortSubtree(net_profit_, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &Row::final_total, Qt::DescendingOrder); });
     endResetModel();
 }
 

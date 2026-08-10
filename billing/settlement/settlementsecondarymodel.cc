@@ -150,6 +150,9 @@ void SecondaryModel::Rebuild(const QJsonArray& array)
         new_cache.emplaceBack(settlement);
     }
 
+    std::ranges::sort(
+        new_cache, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &SecondaryRow::issued_time, Qt::AscendingOrder); });
+
     beginResetModel();
 
     ResourcePool<SecondaryRow>::Instance().Recycle(list_cache_);
@@ -168,8 +171,6 @@ void SecondaryModel::Rebuild(const QJsonArray& array)
             break;
         }
     }
-
-    sort(std::to_underlying(SecondaryField::kIssuedTime), Qt::AscendingOrder);
 
     endResetModel();
 }

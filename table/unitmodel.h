@@ -35,7 +35,7 @@ public:
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
 
     QModelIndex parent(const QModelIndex&) const override { return {}; }
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : items_.size(); }
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : list_.size(); }
     int columnCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent);
@@ -51,7 +51,7 @@ protected:
     };
 
 private:
-    QList<Item> items_ {};
+    QList<Item> list_ {};
 };
 
 #endif // UNITMODEL_H

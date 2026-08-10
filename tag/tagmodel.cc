@@ -26,7 +26,7 @@ Model::Model(Section section, const QHash<QUuid, Row*>& tag_hash, const QStringL
         list_.append(tag);
     }
 
-    std::sort(list_.begin(), list_.end(), [](const Row* a, const Row* b) { return a->name < b->name; });
+    std::sort(list_.begin(), list_.end(), [](const Row* lhs, const Row* rhs) { return utils::CompareString(lhs->name, rhs->name, Qt::AscendingOrder); });
 }
 
 Model::~Model() { FlushTimers(); }

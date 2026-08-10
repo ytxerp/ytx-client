@@ -3,6 +3,7 @@
 #include <QJsonArray>
 
 #include "global/resourcepool.h"
+#include "utils/templateutils.h"
 
 OrderReferenceModel::OrderReferenceModel(CSectionInfo& info, QObject* parent)
     : QAbstractItemModel { parent }
@@ -62,6 +63,9 @@ void OrderReferenceModel::Rebuild(const QJsonArray& array)
 
         new_list.emplaceBack(reference);
     }
+
+    std::ranges::sort(
+        new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &OrderReference::issued_time, Qt::DescendingOrder); });
 
     beginResetModel();
 

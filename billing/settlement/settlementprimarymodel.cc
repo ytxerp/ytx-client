@@ -166,11 +166,12 @@ void PrimaryModel::Rebuild(const QJsonArray& array)
         new_list.emplaceBack(settlement);
     }
 
+    std::ranges::sort(new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &PrimaryRow::issued_time, Qt::AscendingOrder); });
+
     beginResetModel();
 
     ResourcePool<PrimaryRow>::Instance().Recycle(list_);
     list_ = std::move(new_list);
-    sort(std::to_underlying(PrimaryField::kIssuedTime), Qt::AscendingOrder);
 
     endResetModel();
 }

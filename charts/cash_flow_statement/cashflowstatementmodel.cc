@@ -190,12 +190,12 @@ void Model::Rebuild(const QJsonArray& node_array)
     node_list_ = std::move(new_list);
 
     BuildHierarchy();
+    node::SortSubtree(root_, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &Row::name, Qt::AscendingOrder); });
 
     for (auto* node : std::as_const(node_list_)) {
         UpdateAncestorTotal(node, node->final_total);
     }
 
-    sort(std::to_underlying(RowField::kFinalTotal), Qt::DescendingOrder);
     endResetModel();
 }
 

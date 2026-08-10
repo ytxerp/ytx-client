@@ -211,9 +211,10 @@ void Model::Rebuild(const QJsonArray& node_array, const QJsonArray& path_array)
     root_->children.clear();
 
     node_hash_ = std::move(new_hash);
-    path::AttachRootNodes(node_hash_, root_);
 
-    sort(std::to_underlying(RowField::kClosingBalance), Qt::DescendingOrder);
+    path::AttachRootNodes(node_hash_, root_);
+    node::SortSubtree(root_, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &Row::closing_balance, Qt::DescendingOrder); });
+
     endResetModel();
 }
 

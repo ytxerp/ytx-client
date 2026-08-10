@@ -1000,9 +1000,9 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     branch_path_ = std::move(new_branch_path);
 
     path::AttachRootNodes(node_hash_, root_);
+    node::SortSubtree(root_, [](const Node* lhs, const Node* rhs) { return utils::CompareString(lhs->name, rhs->name, Qt::AscendingOrder); });
 
     InitLeafData();
-    sort(std::to_underlying(NodeEnum::kName), Qt::AscendingOrder);
 
     endResetModel();
 

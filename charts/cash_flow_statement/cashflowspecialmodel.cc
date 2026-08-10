@@ -181,14 +181,12 @@ void SpecialModel::Rebuild(const QJsonArray& special_array)
     beginResetModel();
 
     ResourcePool<Row>::Instance().Recycle(list_);
-
     special_->children.clear();
 
     list_ = std::move(new_list);
 
     BuildCounterPartHierarchy();
-
-    sort(std::to_underlying(RowField::kFinalTotal), Qt::DescendingOrder);
+    node::SortSubtree(special_, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &Row::name, Qt::AscendingOrder); });
 
     endResetModel();
 }

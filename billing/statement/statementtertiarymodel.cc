@@ -169,12 +169,12 @@ void TertiaryModel::Rebuild(const QJsonArray& array)
         new_list.emplaceBack(statement);
     }
 
+    std::ranges::sort(new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &TertiaryRow::issued_time, Qt::AscendingOrder); });
+
     beginResetModel();
 
     ResourcePool<TertiaryRow>::Instance().Recycle(list_);
     list_ = std::move(new_list);
-
-    sort(std::to_underlying(TertiaryField::kIssuedTime), Qt::AscendingOrder);
 
     endResetModel();
 }

@@ -1,5 +1,7 @@
 #include "unitmodel.h"
 
+#include "utils/templateutils.h"
+
 UnitModel::UnitModel(QObject* parent)
     : QAbstractItemModel { parent }
 {
@@ -19,10 +21,10 @@ QVariant UnitModel::data(const QModelIndex& index, int role) const
         return {};
 
     const int row { index.row() };
-    if (row < 0 || row >= items_.size())
+    if (row < 0 || row >= list_.size())
         return {};
 
-    const Item& item { items_[row] };
+    const Item& item { list_[row] };
 
     switch (role) {
     case Qt::DisplayRole:
@@ -43,18 +45,17 @@ void UnitModel::sort(int column, Qt::SortOrder order)
         return;
     }
 
-    const auto compare
-        = [order](const Item& lhs, const Item& rhs) { return (order == Qt::AscendingOrder) ? (lhs.display < rhs.display) : (lhs.display > rhs.display); };
+    const auto compare = [order](const Item& lhs, const Item& rhs) { return utils::CompareString(lhs.display, rhs.display, order); };
 
     emit layoutAboutToBeChanged();
-    std::ranges::sort(items_, compare);
+    std::ranges::sort(list_, compare);
     emit layoutChanged();
 }
 
 void UnitModel::AppendItem(const QString& display, int user)
 {
-    const long long row { items_.size() };
+    const long long row { list_.size() };
     beginInsertRows(QModelIndex(), row, row);
-    items_.emplace_back(Item { display, user });
+    list_.emplace_back(Item { display, user });
     endInsertRows();
 }

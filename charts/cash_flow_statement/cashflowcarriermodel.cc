@@ -183,7 +183,8 @@ void CarrierModel::Rebuild(CJsonArray& carrier_array, CJsonArray& counterpart_ar
     BuildCarrierHierarchy();
     BuildCounterPartHierarchy();
 
-    sort(std::to_underlying(RowField::kName), Qt::AscendingOrder);
+    node::SortSubtree(root_, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &Row::name, Qt::AscendingOrder); });
+
     endResetModel();
 }
 

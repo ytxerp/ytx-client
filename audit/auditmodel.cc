@@ -135,11 +135,14 @@ void Model::Rebuild(const QJsonArray& array)
         new_list.emplaceBack(entry);
     }
 
+    std::ranges::sort(new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &Row::created_time, Qt::AscendingOrder); });
+
     // Keep reset block as short as possible
     beginResetModel();
+
     ResourcePool<Row>::Instance().Recycle(list_);
     list_ = std::move(new_list);
-    sort(std::to_underlying(RowField::kCreatedTime), Qt::AscendingOrder);
+
     endResetModel();
 }
 
