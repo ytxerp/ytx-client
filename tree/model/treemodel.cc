@@ -149,16 +149,17 @@ void TreeModel::SyncLeafModel(const QSet<QUuid>& leaf_ids) const
         return;
 
     for (const QUuid& id : leaf_ids) {
-        const int row { leaf_path_model_->FindRow(id) };
-        if (row == -1)
-            continue;
+        const QString value { leaf_path_.value(id) };
 
-        const QString value { leaf_path_.value(id, QString {}) };
-        if (!value.isEmpty()) {
-            const QModelIndex index { leaf_path_model_->index(row, 0) };
-            leaf_path_model_->setData(index, value, Qt::EditRole);
+        if (value.isEmpty()) {
+            qWarning() << Q_FUNC_INFO << "Missing leaf path";
+            continue;
         }
+
+        leaf_model_->SetDisplay(id, value);
     }
+
+    leaf_model_->sort(0);
 }
 
 void TreeModel::UpdateSubtreePath(const Node* node)
@@ -187,18 +188,16 @@ void TreeModel::UpdateSubtreePath(const Node* node)
 
 void TreeModel::InitLeafData()
 {
+    leaf_model_->Rebuild(leaf_path_);
+
     for (auto it = leaf_path_.cbegin(); it != leaf_path_.cend(); ++it) {
         const auto node_id { it.key() };
-
-        leaf_path_model_->AppendItem(it.value(), node_id);
 
         auto* node { node_hash_.value(node_id, nullptr) };
         Q_ASSERT(node);
 
         UnitSetInsert(node_id, node->unit);
     }
-
-    leaf_path_model_->sort(0);
 }
 
 void TreeModel::SyncNode(const QUuid& node_id, const QJsonObject& update)
@@ -644,13 +643,13 @@ ItemModel* TreeModel::PathModel(QWidget* parent) const
 {
     auto* model { new ItemModel(parent) };
 
-    for (const auto& [id, path] : leaf_path_.asKeyValueRange())
-        model->AppendItem(path, id);
+    QHash<QUuid, QString> paths {};
+    paths.reserve(leaf_path_.size() + branch_path_.size());
 
-    for (const auto& [id, path] : branch_path_.asKeyValueRange())
-        model->AppendItem(path, id);
+    paths.insert(leaf_path_);
+    paths.insert(branch_path_);
 
-    model->sort(0);
+    model->Rebuild(paths);
 
     return model;
 }
@@ -671,7 +670,7 @@ void TreeModel::UpdateSeparator(CString& old_separator, CString& new_separator)
     update_path_separator(leaf_path_);
     update_path_separator(branch_path_);
 
-    leaf_path_model_->UpdateSeparator(old_separator, new_separator);
+    leaf_model_->SetSeparator(old_separator, new_separator);
 }
 
 void TreeModel::SearchName(QList<Node*>& node_list, CString& name) const
@@ -756,7 +755,7 @@ QString TreeModel::Path(const QUuid& node_id) const
 QSortFilterProxyModel* TreeModel::ExcludeId(const QUuid& node_id, QObject* parent) const
 {
     auto* model { new ExcludeIdFilterModel(node_id, parent) };
-    model->setSourceModel(leaf_path_model_);
+    model->setSourceModel(leaf_model_);
     return model;
 }
 
@@ -764,7 +763,7 @@ QSortFilterProxyModel* TreeModel::IncludeUnit(NodeUnit unit, QObject* parent)
 {
     auto* set { UnitSet(unit) };
     auto* model { new IncludeUnitFilterModel(set, parent) };
-    model->setSourceModel(leaf_path_model_);
+    model->setSourceModel(leaf_model_);
     return model;
 }
 
@@ -772,7 +771,7 @@ QSortFilterProxyModel* TreeModel::ReplaceSelf(const QUuid& node_id, NodeUnit uni
 {
     auto* set { UnitSet(unit) };
     auto* model { new ReplaceSelfFilterModel(node_id, set, parent) };
-    model->setSourceModel(leaf_path_model_);
+    model->setSourceModel(leaf_model_);
     return model;
 }
 
@@ -1038,8 +1037,8 @@ void TreeModel::ClearTree()
     leaf_path_.clear();
     branch_path_.clear();
 
-    if (leaf_path_model_) {
-        leaf_path_model_->Reset();
+    if (leaf_model_) {
+        leaf_model_->Reset();
     }
 
     ResetUnitSet();
@@ -1064,7 +1063,7 @@ void TreeModel::RegisterNode(Node* node)
         break;
     case NodeKind::kLeaf:
         leaf_path_.insert(node->id, path);
-        leaf_path_model_->AppendItem(path, node->id);
+        leaf_model_->AppendItem(path, node->id);
         UnitSetInsert(node->id, node->unit);
         break;
     }
@@ -1096,7 +1095,7 @@ void TreeModel::UnregisterNode(Node* node, Node* parent_node)
     } break;
     case NodeKind::kLeaf: {
         leaf_path_.remove(node_id);
-        leaf_path_model_->RemoveItem(node_id);
+        leaf_model_->RemoveItem(node_id);
 
         const node::Delta delta {
             .initial = -node->initial_total,

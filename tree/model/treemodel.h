@@ -147,7 +147,7 @@ public:
     QString Color(QUuid node_id) const { return Value(node_id, &Node::color); }
     QString Path(const QUuid& node_id) const;
 
-    inline ItemModel* LeafModel() const { return leaf_path_model_; }
+    inline ItemModel* LeafModel() const { return leaf_model_; }
     inline CUuidString* LeafPath() const { return &leaf_path_; }
     inline CUuidString* BranchPath() const { return &branch_path_; }
 
@@ -255,7 +255,7 @@ protected:
     QHash<QUuid, QString> leaf_path_ {};
     QHash<QUuid, QString> branch_path_ {};
 
-    ItemModel* leaf_path_model_ {};
+    ItemModel* leaf_model_ {};
 
     const Section section_ {};
     const QString& separator_;

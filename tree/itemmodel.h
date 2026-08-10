@@ -28,14 +28,14 @@ class ItemModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
     explicit ItemModel(QObject* parent = nullptr);
+    ~ItemModel() override;
 
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
 
     QModelIndex parent(const QModelIndex&) const override { return {}; }
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : items_.size(); }
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : list_.size(); }
     int columnCount(const QModelIndex& parent = QModelIndex()) const override
     {
         Q_UNUSED(parent);
@@ -44,25 +44,30 @@ public:
 
     Qt::ItemFlags flags(const QModelIndex& index) const override { return index.isValid() ? (Qt::ItemIsEnabled | Qt::ItemIsSelectable) : Qt::NoItemFlags; }
 
-    bool removeRows(int row, int count = 1, const QModelIndex& parent = QModelIndex()) override;
-
     void AppendItem(const QString& display, const QUuid& id);
     bool RemoveItem(const QUuid& id);
 
-    void UpdateSeparator(const QString& old_separator, const QString& new_separator);
+    void SetSeparator(const QString& old_separator, const QString& new_separator);
+    void SetDisplay(const QUuid& id, const QString& display);
 
-    int FindRow(const QUuid& id) const;
-
+    void Rebuild(const QHash<QUuid, QString>& leaf_path);
     void Reset();
 
 protected:
     struct Item {
         QString display {};
         QUuid user {};
+
+        void Reset()
+        {
+            display = {};
+            user = {};
+        };
     };
 
 private:
-    QList<Item> items_ {};
+    QList<Item*> list_ {};
+    QHash<QUuid, Item*> hash_ {};
 };
 
 #endif // ITEMMODEL_H

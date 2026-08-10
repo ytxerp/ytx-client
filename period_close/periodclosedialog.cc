@@ -44,7 +44,6 @@ void PeriodCloseDialog::InitDialog()
 
     {
         auto* leaf_model { tree_model_->LeafModel() };
-        leaf_model->sort(0);
 
         ui->comboBoxSummary->setModel(leaf_model);
         ui->comboBoxSummary->setCurrentIndex(-1);

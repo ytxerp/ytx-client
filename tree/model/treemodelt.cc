@@ -8,7 +8,7 @@
 TreeModelT::TreeModelT(CSectionInfo& info, CString& separator, QObject* parent)
     : TreeModel(info, separator, parent)
 {
-    leaf_path_model_ = new ItemModel(this);
+    leaf_model_ = new ItemModel(this);
 }
 
 QVariant TreeModelT::data(const QModelIndex& index, int role) const

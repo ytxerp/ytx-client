@@ -1,16 +1,21 @@
 #include "itemmodel.h"
 
+#include "global/resourcepool.h"
+#include "utils/templateutils.h"
+
 ItemModel::ItemModel(QObject* parent)
     : QAbstractItemModel { parent }
 {
 }
+
+ItemModel::~ItemModel() { ResourcePool<Item>::Instance().Recycle(list_); }
 
 QModelIndex ItemModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
 
-    return createIndex(row, column);
+    return createIndex(row, column, list_.at(row));
 }
 
 QVariant ItemModel::data(const QModelIndex& index, int role) const
@@ -19,46 +24,22 @@ QVariant ItemModel::data(const QModelIndex& index, int role) const
         return {};
 
     const int row { index.row() };
-    if (row < 0 || row >= items_.size())
+    if (row < 0 || row >= list_.size())
         return {};
 
-    const Item& item { items_[row] };
+    const Item* item { list_[row] };
 
     switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
-        return item.display;
+        return item->display;
 
     case Qt::UserRole:
-        return item.user;
+        return item->user;
 
     default:
         return {};
     }
-}
-
-bool ItemModel::setData(const QModelIndex& index, const QVariant& value, int role)
-{
-    if (!index.isValid() || index.column() != 0)
-        return false;
-
-    if (role != Qt::EditRole)
-        return false;
-
-    const int row { index.row() };
-    if (row < 0 || row >= items_.size())
-        return false;
-
-    Item& item { items_[row] };
-
-    const QString new_value { value.toString() };
-    if (item.display == new_value)
-        return false;
-
-    item.display = new_value;
-
-    emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
-    return true;
 }
 
 void ItemModel::sort(int column, Qt::SortOrder order)
@@ -67,46 +48,48 @@ void ItemModel::sort(int column, Qt::SortOrder order)
         return;
     }
 
-    const auto compare
-        = [order](const Item& lhs, const Item& rhs) { return (order == Qt::AscendingOrder) ? (lhs.display < rhs.display) : (lhs.display > rhs.display); };
-
     emit layoutAboutToBeChanged();
-    std::ranges::sort(items_, compare);
+    std::ranges::sort(list_, [order](const Item* lhs, const Item* rhs) { return utils::CompareString(lhs->display, rhs->display, order); });
     emit layoutChanged();
-}
-
-bool ItemModel::removeRows(int row, int count, const QModelIndex& parent)
-{
-    if (parent.isValid())
-        return false;
-
-    if (count != 1)
-        return false;
-
-    if (row < 0 || row >= items_.size())
-        return false;
-
-    beginRemoveRows(parent, row, row);
-
-    items_.removeAt(row);
-
-    endRemoveRows();
-
-    return true;
 }
 
 void ItemModel::AppendItem(const QString& display, const QUuid& id)
 {
-    const long long row { items_.size() };
+    auto* item { ResourcePool<Item>::Instance().Allocate() };
+
+    item->display = display;
+    item->user = id;
+
+    auto it = std::lower_bound(list_.cbegin(), list_.cend(), item,
+        [](const Item* lhs, const Item* rhs) { return utils::CompareString(lhs->display, rhs->display, Qt::AscendingOrder); });
+
+    const int row { static_cast<int>(it - list_.cbegin()) };
+
     beginInsertRows(QModelIndex(), row, row);
-    items_.emplace_back(Item { display, id });
+    list_.emplace_back(item);
+    hash_.insert(id, item);
     endInsertRows();
 }
 
 bool ItemModel::RemoveItem(const QUuid& id)
 {
-    if (const int row { FindRow(id) }; row != -1)
-        return removeRows(row);
+    for (int row = 0; row != list_.size(); ++row) {
+        auto* item { list_.at(row) };
+
+        if (item->user != id)
+            continue;
+
+        beginRemoveRows({}, row, row);
+
+        list_.removeAt(row);
+        hash_.remove(id);
+
+        endRemoveRows();
+
+        ResourcePool<Item>::Instance().Recycle(item);
+
+        return true;
+    }
 
     return false;
 }
@@ -114,11 +97,12 @@ bool ItemModel::RemoveItem(const QUuid& id)
 void ItemModel::Reset()
 {
     beginResetModel();
-    items_.clear();
+    ResourcePool<Item>::Instance().Recycle(list_);
+    hash_.clear();
     endResetModel();
 }
 
-void ItemModel::UpdateSeparator(const QString& old_separator, const QString& new_separator)
+void ItemModel::SetSeparator(const QString& old_separator, const QString& new_separator)
 {
     Q_ASSERT(!new_separator.isEmpty());
     Q_ASSERT(!old_separator.isEmpty());
@@ -126,23 +110,47 @@ void ItemModel::UpdateSeparator(const QString& old_separator, const QString& new
     if (old_separator == new_separator)
         return;
 
-    for (auto& item : items_) {
-        item.display.replace(old_separator, new_separator);
-    }
-
-    if (!items_.empty()) {
-        const QModelIndex top { index(0, 0) };
-        const QModelIndex bottom { index(rowCount() - 1, 0) };
-        emit dataChanged(top, bottom, { Qt::DisplayRole, Qt::EditRole });
+    for (auto* item : std::as_const(list_)) {
+        item->display.replace(old_separator, new_separator);
     }
 }
 
-int ItemModel::FindRow(const QUuid& id) const
+void ItemModel::SetDisplay(const QUuid& id, const QString& display)
 {
-    for (int row = 0; row != items_.size(); ++row) {
-        if (items_[row].user == id)
-            return row;
+    auto* item { hash_.value(id, nullptr) };
+    if (!item || item->display == display)
+        return;
+
+    item->display = display;
+}
+
+void ItemModel::Rebuild(const QHash<QUuid, QString>& leaf_path)
+{
+    QList<Item*> new_list {};
+    QHash<QUuid, Item*> new_hash {};
+
+    new_list.reserve(leaf_path.size());
+    new_hash.reserve(leaf_path.size());
+
+    for (auto it = leaf_path.cbegin(); it != leaf_path.cend(); ++it) {
+        auto* item { ResourcePool<Item>::Instance().Allocate() };
+
+        item->user = it.key();
+        item->display = it.value();
+
+        new_list.append(item);
+        new_hash.insert(item->user, item);
     }
 
-    return -1;
+    std::ranges::sort(new_list, [](const Item* lhs, const Item* rhs) { return utils::CompareString(lhs->display, rhs->display, Qt::AscendingOrder); });
+
+    beginResetModel();
+
+    ResourcePool<Item>::Instance().Recycle(list_);
+    hash_.clear();
+
+    list_ = std::move(new_list);
+    hash_ = std::move(new_hash);
+
+    endResetModel();
 }

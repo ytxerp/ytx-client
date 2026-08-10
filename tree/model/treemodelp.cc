@@ -5,7 +5,7 @@
 TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, QObject* parent)
     : TreeModel(info, separator, parent)
 {
-    leaf_path_model_ = new ItemModel(this);
+    leaf_model_ = new ItemModel(this);
 }
 
 void TreeModelP::UpdateAmount(const QUuid& node_id, double initial_delta)
@@ -57,7 +57,7 @@ void TreeModelP::ResetUnitSet()
     // leaf_path_model_ to represent "no selection" in its dropdown UI.
     // This mirrors eset_'s own null-QUuid placeholder above — both
     // represent the same "no unit assigned" state.
-    leaf_path_model_->AppendItem(QString(), QUuid());
+    leaf_model_->AppendItem(QString(), QUuid());
 }
 
 QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, const node::Delta& delta) const
