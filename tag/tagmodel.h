@@ -16,7 +16,7 @@ signals:
     void SInsertLocalTag(Section section, tag::Row* tag);
 
 public:
-    explicit Model(Section section, const QHash<QUuid, Row*>& tag_hash, const QStringList& header, QObject* parent = nullptr);
+    explicit Model(Section section, const QStringList& header, QObject* parent = nullptr);
     ~Model() override;
 
     // Header:
@@ -44,7 +44,7 @@ public:
 
     // Editable:
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
-    void sort(int column, Qt::SortOrder order) override;
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     // Add data:
@@ -52,6 +52,8 @@ public:
 
     // Remove data:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+
+    void Rebuild(const QHash<QUuid, Row*>& tag_hash);
 
 private:
     bool UpdateName(Row* tag, const QString& new_name);

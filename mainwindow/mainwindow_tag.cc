@@ -20,7 +20,7 @@ void MainWindow::on_actionTags_triggered()
     static QPointer<TagDialog> dialog {};
 
     if (!dialog) {
-        auto* model { new tag::Model(start_, sc_->tag_hash, header_info_.tag, this) };
+        auto* model { new tag::Model(start_, header_info_.tag, this) };
         connect(model, &tag::Model::SInsertLocalTag, this, &MainWindow::RInsertLocalTag);
 
         dialog = new TagDialog(model, this);
@@ -30,6 +30,11 @@ void MainWindow::on_actionTags_triggered()
         auto* view { dialog->View() };
         InitTableView(view, std::to_underlying(tag::RowField::kColor));
         DelegateTag(view);
+
+        // Most models are populated asynchronously after receiving data from the server.
+        // Tags are a special case: data is already available locally, so rebuild after
+        // view initialization to avoid the view's sorting state overriding the initial order.
+        model->Rebuild(sc_->tag_hash);
     }
 
     dialog->show();
@@ -188,10 +193,10 @@ void MainWindow::RTreeViewCustomContextMenuRequested(const QPoint& pos)
     tag_menu->setIcon(ui->actionTags->icon());
 
     if (!tag_hash.isEmpty()) {
-        QList<tag::Row*> sorted_tags = tag_hash.values();
-        std::sort(sorted_tags.begin(), sorted_tags.end(), [](const tag::Row* a, const tag::Row* b) { return a->name < b->name; });
+        QList<tag::Row*> list = tag_hash.values();
+        std::ranges::sort(list, [](const auto* lhs, const auto* rhs) { return utils::CompareString(lhs->name, rhs->name, Qt::AscendingOrder); });
 
-        for (const auto* tag : std::as_const(sorted_tags)) {
+        for (const auto* tag : std::as_const(list)) {
             if (!tag || tag->id.isNull())
                 continue;
 
@@ -287,10 +292,10 @@ void MainWindow::RTableViewCustomContextMenuRequested(const QPoint& pos)
     auto* tag_menu = menu->addMenu(tr("Tags"));
 
     if (!tag_hash.isEmpty()) {
-        QList<tag::Row*> sorted_tags = tag_hash.values();
-        std::sort(sorted_tags.begin(), sorted_tags.end(), [](const tag::Row* a, const tag::Row* b) { return a->name < b->name; });
+        QList<tag::Row*> list = tag_hash.values();
+        std::ranges::sort(list, [](const auto* lhs, const auto* rhs) { return utils::CompareString(lhs->name, rhs->name, Qt::AscendingOrder); });
 
-        for (const auto* tag : std::as_const(sorted_tags)) {
+        for (const auto* tag : std::as_const(list)) {
             if (!tag || tag->id.isNull())
                 continue;
 

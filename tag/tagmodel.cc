@@ -11,22 +11,11 @@
 
 namespace tag {
 
-Model::Model(Section section, const QHash<QUuid, Row*>& tag_hash, const QStringList& header, QObject* parent)
+Model::Model(Section section, const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
     , section_ { section }
     , header_ { header }
 {
-    for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
-        Row* tag { it.value() };
-
-        if (!tag)
-            continue;
-
-        names_.insert(tag->name);
-        list_.append(tag);
-    }
-
-    std::sort(list_.begin(), list_.end(), [](const Row* lhs, const Row* rhs) { return utils::CompareString(lhs->name, rhs->name, Qt::AscendingOrder); });
 }
 
 Model::~Model() { FlushTimers(); }
@@ -191,6 +180,35 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
     }
 
     return true;
+}
+
+void Model::Rebuild(const QHash<QUuid, Row*>& tag_hash)
+{
+    QList<Row*> new_list {};
+    QSet<QString> new_names {};
+
+    new_list.reserve(tag_hash.size());
+    new_names.reserve(tag_hash.size());
+
+    for (auto it = tag_hash.cbegin(); it != tag_hash.cend(); ++it) {
+        Row* tag { it.value() };
+
+        if (!tag) {
+            continue;
+        }
+
+        new_list.append(tag);
+        new_names.insert(tag->name);
+    }
+
+    std::ranges::sort(new_list, [](const Row* lhs, const Row* rhs) { return utils::CompareString(lhs->name, rhs->name, Qt::AscendingOrder); });
+
+    beginResetModel();
+
+    list_ = std::move(new_list);
+    names_ = std::move(new_names);
+
+    endResetModel();
 }
 
 bool Model::UpdateName(Row* tag, const QString& name)
