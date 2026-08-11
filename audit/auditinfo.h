@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AUDITINFO_H
-#define AUDITINFO_H
+#pragma once
 
 #include <QHash>
 #include <QList>
@@ -45,5 +44,3 @@ struct Info {
 };
 
 }
-
-#endif // AUDITINFO_H

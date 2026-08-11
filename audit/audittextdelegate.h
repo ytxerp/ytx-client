@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AUDITTEXTDELEGATE_H
-#define AUDITTEXTDELEGATE_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 
@@ -28,5 +27,3 @@ public:
     bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
-
-#endif // AUDITTEXTDELEGATE_H

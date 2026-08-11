@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AUDITTEXTDIALOG_H
-#define AUDITTEXTDIALOG_H
+#pragma once
 
 #include <QDialog>
 
@@ -39,5 +38,3 @@ private:
 private:
     Ui::AuditTextDialog* ui;
 };
-
-#endif // AUDITTEXTDIALOG_H

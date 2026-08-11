@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AUDITROW_H
-#define AUDITROW_H
+#pragma once
 
 #include <QDateTime>
 #include <QJsonObject>
@@ -59,5 +58,3 @@ struct Row {
     void ReadJson(const QJsonObject& object);
 };
 }
-
-#endif // AUDITROW_H

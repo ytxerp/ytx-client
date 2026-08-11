@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AUDITENUM_H
-#define AUDITENUM_H
+#pragma once
 
 namespace audit {
 
@@ -79,5 +78,3 @@ enum class TargetField {
 };
 
 }
-
-#endif // AUDITENUM_H

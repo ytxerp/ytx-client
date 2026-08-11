@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AUDITMODEL_H
-#define AUDITMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 #include <QJsonArray>
@@ -69,5 +68,3 @@ private:
     const QStringList& header_;
 };
 }
-
-#endif // AUDITMODEL_H

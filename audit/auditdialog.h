@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AUDITDIALOG_H
-#define AUDITDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include <QTableView>
@@ -66,5 +65,3 @@ private:
 
     const QUuid widget_id_ {};
 };
-
-#endif // AUDITDIALOG_H
