@@ -381,42 +381,42 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionInfo& info, CSec
 void MainWindow::DelegateSalesHistoryI(QTableView* table_view, CSectionConfig& config) const
 {
     auto* price { new DoubleNoneZeroR(config.rate_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesColumnI::kUnitPrice), price);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesFieldI::kUnitPrice), price);
 
     auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesColumnI::kCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesColumnI::kMeasure), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesFieldI::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesFieldI::kMeasure), quantity);
 
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesColumnI::kInitial), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesFieldI::kInitial), amount);
 
     auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesColumnI::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesFieldI::kIssuedTime), issued_time);
 
     auto* name { new NodeNameR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesColumnI::kPartnerId), name);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesFieldI::kPartnerId), name);
 }
 
 void MainWindow::DelegateOrderHistoryP(QTableView* table_view, CSectionConfig& config) const
 {
     auto* price { new DoubleNoneZeroR(config.rate_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kUnitPrice), price);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderFieldP::kUnitPrice), price);
 
     auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kMeasure), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderFieldP::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderFieldP::kMeasure), quantity);
 
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kInitial), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderFieldP::kInitial), amount);
 
     auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderFieldP::kIssuedTime), issued_time);
 
     auto* internal_sku { new NodePathR(sc_i_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kInternalSku), internal_sku);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderFieldP::kInternalSku), internal_sku);
 
     auto* color { new ColorR(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kColor), color);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderFieldP::kColor), color);
 }
 
 void MainWindow::DelegateStatement(QTableView* table_view, CSectionConfig& config) const

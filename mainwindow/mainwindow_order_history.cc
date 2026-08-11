@@ -84,11 +84,11 @@ void MainWindow::RShowOrderHistoryWidget(const QUuid& node_id, NodeUnit unit)
     {
         switch (section) {
         case Section::kInventory:
-            InitTableView(view, std::to_underlying(history::SalesColumnI::kDescription));
+            InitTableView(view, std::to_underlying(history::SalesFieldI::kDescription));
             DelegateSalesHistoryI(view, sc_i_.section_config);
             break;
         case Section::kPartner:
-            InitTableView(view, std::to_underlying(history::OrderColumnP::kDescription));
+            InitTableView(view, std::to_underlying(history::OrderFieldP::kDescription));
             DelegateOrderHistoryP(view, sc_p_.section_config);
             break;
         case Section::kSale:

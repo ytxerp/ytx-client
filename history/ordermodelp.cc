@@ -23,27 +23,27 @@ QVariant OrderModelP::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    const OrderColumnP column { index.column() };
+    const OrderFieldP column { index.column() };
     auto* entry { static_cast<OrderRow*>(index.internalPointer()) };
 
     switch (column) {
-    case OrderColumnP::kIssuedTime:
+    case OrderFieldP::kIssuedTime:
         return entry->issued_time;
-    case OrderColumnP::kInternalSku:
+    case OrderFieldP::kInternalSku:
         return entry->node_id;
-    case OrderColumnP::kCount:
+    case OrderFieldP::kCount:
         return entry->count;
-    case OrderColumnP::kMeasure:
+    case OrderFieldP::kMeasure:
         return entry->measure;
-    case OrderColumnP::kUnitPrice:
+    case OrderFieldP::kUnitPrice:
         return entry->unit_price;
-    case OrderColumnP::kDescription:
+    case OrderFieldP::kDescription:
         return entry->description;
-    case OrderColumnP::kInitial:
+    case OrderFieldP::kInitial:
         return entry->initial;
-    case OrderColumnP::kColor:
+    case OrderFieldP::kColor:
         return tree_model_i_->Color(entry->node_id);
-    case OrderColumnP::kExternalSku:
+    case OrderFieldP::kExternalSku:
         return PartnerInventoryRegistry::Instance().ExternalSku(partner_id_, entry->node_id);
     }
 }
@@ -53,26 +53,26 @@ void OrderModelP::sort(int column, Qt::SortOrder order)
     if (column <= -1 || column >= info_.node_referenced_header.size() - 1)
         return;
 
-    const OrderColumnP e_column { column };
+    const OrderFieldP e_column { column };
 
     auto Compare = [e_column, order](const OrderRow* lhs, const OrderRow* rhs) -> bool {
         switch (e_column) {
-        case OrderColumnP::kIssuedTime:
+        case OrderFieldP::kIssuedTime:
             return utils::CompareMember(lhs, rhs, &OrderRow::issued_time, order);
-        case OrderColumnP::kInternalSku:
+        case OrderFieldP::kInternalSku:
             return utils::CompareMember(lhs, rhs, &OrderRow::node_id, order);
-        case OrderColumnP::kUnitPrice:
+        case OrderFieldP::kUnitPrice:
             return utils::CompareMember(lhs, rhs, &OrderRow::unit_price, order);
-        case OrderColumnP::kCount:
+        case OrderFieldP::kCount:
             return utils::CompareMember(lhs, rhs, &OrderRow::count, order);
-        case OrderColumnP::kMeasure:
+        case OrderFieldP::kMeasure:
             return utils::CompareMember(lhs, rhs, &OrderRow::measure, order);
-        case OrderColumnP::kDescription:
+        case OrderFieldP::kDescription:
             return utils::CompareMember(lhs, rhs, &OrderRow::description, order);
-        case OrderColumnP::kInitial:
+        case OrderFieldP::kInitial:
             return utils::CompareMember(lhs, rhs, &OrderRow::initial, order);
-        case OrderColumnP::kExternalSku:
-        case OrderColumnP::kColor:
+        case OrderFieldP::kExternalSku:
+        case OrderFieldP::kColor:
             return false;
         }
     };

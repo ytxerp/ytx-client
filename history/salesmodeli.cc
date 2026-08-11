@@ -20,23 +20,23 @@ QVariant SalesModelI::data(const QModelIndex& index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    const SalesColumnI column { index.column() };
+    const SalesFieldI column { index.column() };
     auto* entry { static_cast<OrderRow*>(index.internalPointer()) };
 
     switch (column) {
-    case SalesColumnI::kIssuedTime:
+    case SalesFieldI::kIssuedTime:
         return entry->issued_time;
-    case SalesColumnI::kPartnerId:
+    case SalesFieldI::kPartnerId:
         return entry->node_id;
-    case SalesColumnI::kCount:
+    case SalesFieldI::kCount:
         return entry->count;
-    case SalesColumnI::kMeasure:
+    case SalesFieldI::kMeasure:
         return entry->measure;
-    case SalesColumnI::kUnitPrice:
+    case SalesFieldI::kUnitPrice:
         return entry->unit_price;
-    case SalesColumnI::kDescription:
+    case SalesFieldI::kDescription:
         return entry->description;
-    case SalesColumnI::kInitial:
+    case SalesFieldI::kInitial:
         return entry->initial;
     }
 }
@@ -46,23 +46,23 @@ void SalesModelI::sort(int column, Qt::SortOrder order)
     if (column <= -1 || column >= info_.node_referenced_header.size() - 1)
         return;
 
-    const SalesColumnI e_column { column };
+    const SalesFieldI e_column { column };
 
     auto Compare = [e_column, order](const OrderRow* lhs, const OrderRow* rhs) -> bool {
         switch (e_column) {
-        case SalesColumnI::kIssuedTime:
+        case SalesFieldI::kIssuedTime:
             return utils::CompareMember(lhs, rhs, &OrderRow::issued_time, order);
-        case SalesColumnI::kPartnerId:
+        case SalesFieldI::kPartnerId:
             return utils::CompareMember(lhs, rhs, &OrderRow::node_id, order);
-        case SalesColumnI::kUnitPrice:
+        case SalesFieldI::kUnitPrice:
             return utils::CompareMember(lhs, rhs, &OrderRow::unit_price, order);
-        case SalesColumnI::kCount:
+        case SalesFieldI::kCount:
             return utils::CompareMember(lhs, rhs, &OrderRow::count, order);
-        case SalesColumnI::kMeasure:
+        case SalesFieldI::kMeasure:
             return utils::CompareMember(lhs, rhs, &OrderRow::measure, order);
-        case SalesColumnI::kDescription:
+        case SalesFieldI::kDescription:
             return utils::CompareMember(lhs, rhs, &OrderRow::description, order);
-        case SalesColumnI::kInitial:
+        case SalesFieldI::kInitial:
             return utils::CompareMember(lhs, rhs, &OrderRow::initial, order);
         }
     };

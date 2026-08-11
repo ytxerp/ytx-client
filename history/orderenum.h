@@ -21,7 +21,7 @@
 
 namespace history {
 
-enum class SalesColumnI {
+enum class SalesFieldI {
     kIssuedTime = 0,
     kPartnerId,
     kCount,
@@ -31,7 +31,7 @@ enum class SalesColumnI {
     kInitial,
 };
 
-enum class OrderColumnP {
+enum class OrderFieldP {
     kIssuedTime = 0,
     kInternalSku,
     kColor,
