@@ -24,8 +24,7 @@
 // (see StateEnum.h), which are transient client-side runtime state only
 // and must never be persisted.
 
-#ifndef STATUSENUM_H
-#define STATUSENUM_H
+#pragma once
 
 /** @brief Workflow status of an order node. */
 enum class NodeStatus { kUnreleased = 0, kReleased, kRecalled };
@@ -35,5 +34,3 @@ enum class SettlementStatus { kRecalled = 0, kReleased };
 
 /** @brief EntryStatus of an entry. */
 enum class EntryStatus { kUnmarked = 0, kMarked };
-
-#endif // STATUSENUM_H

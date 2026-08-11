@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHENTRYMODELI_H
-#define SEARCHENTRYMODELI_H
+#pragma once
 
 #include "searchentrymodel.h"
 
@@ -29,5 +28,3 @@ public:
     explicit EntryModelI(CSectionInfo& info, const QHash<QUuid, tag::Row*>& tag_hash, QObject* parent = nullptr);
 };
 }
-
-#endif // SEARCHENTRYMODELI_H

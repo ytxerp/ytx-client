@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHDIALOGF_H
-#define SEARCHDIALOGF_H
+#pragma once
 
 #include "delegate/readonly/financerolesdelegater.h"
 #include "delegate/readonly/intstringnonezeror.h"
@@ -38,5 +37,3 @@ private:
     IntStringNoneZeroR* cash_kind_ {};
     FinanceRolesDelegateR* roles_ {};
 };
-
-#endif // SEARCHDIALOGF_H

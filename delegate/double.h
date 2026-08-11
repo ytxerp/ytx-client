@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOUBLE_H
-#define DOUBLE_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 
@@ -37,5 +36,3 @@ private:
     double min_ {};
     CString& placeholder_;
 };
-
-#endif // DOUBLE_H

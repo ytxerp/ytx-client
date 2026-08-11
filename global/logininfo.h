@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LOGININFO_H
-#define LOGININFO_H
+#pragma once
 
 #include <QSettings>
 #include <QSharedPointer>
@@ -61,5 +60,3 @@ private:
 
     const QByteArray machine_key_ {};
 };
-
-#endif // LOGININFO_H

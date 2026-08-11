@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOCUMENT_H
-#define DOCUMENT_H
+#pragma once
 
 #include "component/using.h"
 #include "delegate/styleditemdelegate.h"
@@ -35,5 +34,3 @@ public:
 private:
     CString& document_path_ {};
 };
-
-#endif // DOCUMENT_H

@@ -69,8 +69,7 @@
  * per-entry retry logic.
  */
 
-#ifndef TABLEMODELO_H
-#define TABLEMODELO_H
+#pragma once
 
 #include "tablemodel.h"
 #include "tree/node.h"
@@ -128,5 +127,3 @@ private:
 
     QSet<QUuid> pending_delete_ {};
 };
-
-#endif // TABLEMODELO_H

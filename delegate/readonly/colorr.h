@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef COLORR_H
-#define COLORR_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 
@@ -27,5 +26,3 @@ public:
     explicit ColorR(QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
-
-#endif // COLORR_H

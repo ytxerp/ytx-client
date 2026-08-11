@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DATERANGE_H
-#define DATERANGE_H
+#pragma once
 
 #include <QDateTime>
 
@@ -53,5 +52,3 @@ struct DateRange final {
 };
 
 }
-
-#endif // DATERANGE_H

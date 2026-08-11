@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef BOOLCOLORSTRINGR_H
-#define BOOLCOLORSTRINGR_H
+#pragma once
 
 #include <QEvent>
 
@@ -34,5 +33,3 @@ private:
     CString true_color_ {};
     CString false_color_ {};
 };
-
-#endif // BOOLCOLORSTRINGR_H

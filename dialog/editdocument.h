@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef EDITDOCUMENT_H
-#define EDITDOCUMENT_H
+#pragma once
 
 #include <QDialog>
 #include <QStringListModel>
@@ -52,5 +51,3 @@ private:
     QStringListModel* list_model_ {};
     CString& document_path_ {};
 };
-
-#endif // EDITDOCUMENT_H

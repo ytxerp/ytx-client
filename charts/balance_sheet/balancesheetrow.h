@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef BALANCESHEETROW_H
-#define BALANCESHEETROW_H
+#pragma once
 
 #include <QJsonObject>
 #include <QList>
@@ -74,5 +73,3 @@ struct Row final {
     }
 };
 }
-
-#endif // BALANCESHEETROW_H

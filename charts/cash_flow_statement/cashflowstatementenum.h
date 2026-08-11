@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CASHFLOWSTATEMENTENUM_H
-#define CASHFLOWSTATEMENTENUM_H
+#pragma once
 
 namespace cash_flow {
 
@@ -42,5 +41,3 @@ enum class WrongRowField {
     kRhsNode,
 };
 }
-
-#endif // CASHFLOWSTATEMENTENUM_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHNODEMODEL_H
-#define SEARCHNODEMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -61,5 +60,3 @@ protected:
     const QHash<QUuid, tag::Row*>& tag_hash_ {};
 };
 }
-
-#endif // SEARCHNODEMODEL_H

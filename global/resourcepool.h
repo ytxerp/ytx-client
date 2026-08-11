@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef RESOURCEPOOL_H
-#define RESOURCEPOOL_H
+#pragma once
 
 #include <QMutex>
 #include <deque>
@@ -126,5 +125,3 @@ template <Resettable T> void ResourcePool<T>::Expand(qsizetype size)
 }
 
 template <Resettable T> ResourcePool<T>::~ResourcePool() { }
-
-#endif // RESOURCEPOOL_H

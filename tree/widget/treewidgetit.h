@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEWIDGETIT_H
-#define TREEWIDGETIT_H
+#pragma once
 
 #include "component/config.h"
 #include "tree/model/treemodel.h"
@@ -55,5 +54,3 @@ private:
 
     CSectionConfig& config_ {};
 };
-
-#endif // TREEWIDGETIT_H

@@ -1,5 +1,4 @@
-#ifndef PATHUTILS_H
-#define PATHUTILS_H
+#pragma once
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -52,5 +51,3 @@ template <typename Row> void AttachRootNodes(const QHash<QUuid, Row*>& node_hash
 }
 
 } // namespace path
-
-#endif // PATHUTILS_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTPRIMARYWIDGET_H
-#define SETTLEMENTPRIMARYWIDGET_H
+#pragma once
 
 #include <QDateTime>
 #include <QTableView>
@@ -66,5 +65,3 @@ private:
 };
 
 inline const char* kSettlementPrimaryWidget = "SettlementPrimaryWidget";
-
-#endif // SETTLEMENTPRIMARYWIDGET_H

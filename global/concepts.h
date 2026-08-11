@@ -17,12 +17,9 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CONCEPTS_H
-#define CONCEPTS_H
+#pragma once
 
 #include <ranges>
 
 template <typename Container>
 concept Iterable = std::ranges::input_range<Container>;
-
-#endif // CONCEPTS_H

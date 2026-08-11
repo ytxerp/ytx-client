@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PERIODCLOSEDIALOG_H
-#define PERIODCLOSEDIALOG_H
+#pragma once
 
 #include <QDialog>
 
@@ -58,5 +57,3 @@ private:
 
     QList<Entry*> entry_list_ {};
 };
-
-#endif // PERIODCLOSEDIALOG_H

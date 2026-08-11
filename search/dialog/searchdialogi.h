@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHDIALOGI_H
-#define SEARCHDIALOGI_H
+#pragma once
 
 #include "searchdialog.h"
 
@@ -31,5 +30,3 @@ public:
 private:
     void TreeViewDelegate(QTableView* view) override;
 };
-
-#endif // SEARCHDIALOGI_H

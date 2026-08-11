@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef FINANCEFOREIGNR_H
-#define FINANCEFOREIGNR_H
+#pragma once
 
 // read only
 
@@ -40,5 +39,3 @@ private:
     CIntString& unit_symbol_map_;
     CString& placeholder_;
 };
-
-#endif // FINANCEFOREIGNR_H

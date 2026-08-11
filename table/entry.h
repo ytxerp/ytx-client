@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRY_H
-#define ENTRY_H
+#pragma once
 
 #include <QDateTime>
 #include <QJsonObject>
@@ -96,5 +95,3 @@ struct PendingEntryUpdate {
 };
 
 using EntryList = QList<Entry*>;
-
-#endif // ENTRY_H

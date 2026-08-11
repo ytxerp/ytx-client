@@ -1,5 +1,4 @@
-#ifndef MAINUTILS_H
-#define MAINUTILS_H
+#pragma once
 
 #include <QtCore/qlibraryinfo.h>
 
@@ -60,5 +59,3 @@ inline void SetAppIcon(QApplication& app)
 #endif
 }
 } // namespace MainUtils
-
-#endif // MAINUTILS_H

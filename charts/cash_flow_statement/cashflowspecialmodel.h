@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CASHFLOWSPECIALMODEL_H
-#define CASHFLOWSPECIALMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -64,5 +63,3 @@ private:
     QList<Row*> list_ {};
 };
 }
-
-#endif // CASHFLOWSPECIALMODEL_H

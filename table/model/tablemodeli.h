@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLEMODELI_H
-#define TABLEMODELI_H
+#pragma once
 
 #include "tablemodel.h"
 
@@ -29,5 +28,3 @@ public:
     explicit TableModelI(CTableModelArg& arg, QObject* parent = nullptr);
     ~TableModelI() override = default;
 };
-
-#endif // TABLEMODELI_H

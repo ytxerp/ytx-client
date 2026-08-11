@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INCLUDEUNITFILTERMODEL_H
-#define INCLUDEUNITFILTERMODEL_H
+#pragma once
 
 #include <QSortFilterProxyModel>
 #include <QUuid>
@@ -43,5 +42,3 @@ protected:
 private:
     const QSet<QUuid>* set_ {};
 };
-
-#endif // INCLUDEUNITFILTERMODEL_H

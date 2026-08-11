@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INVENTORYHEATMODEL_H
-#define INVENTORYHEATMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -66,5 +65,3 @@ private:
     const QStringList& header_ {};
 };
 }
-
-#endif // INVENTORYHEATMODEL_H

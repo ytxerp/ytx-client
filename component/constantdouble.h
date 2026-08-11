@@ -17,12 +17,9 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CONSTANTDOUBLE_H
-#define CONSTANTDOUBLE_H
+#pragma once
 
 #include <limits>
 
 inline constexpr double kDoubleMax = std::numeric_limits<double>::max();
 inline constexpr double kDoubleLowest = std::numeric_limits<double>::lowest();
-
-#endif // CONSTANTDOUBLE_H

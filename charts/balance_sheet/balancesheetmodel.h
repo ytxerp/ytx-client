@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef BALANCESHEETMODEL_H
-#define BALANCESHEETMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -57,5 +56,3 @@ private:
     QHash<QUuid, Row*> node_hash_ {};
 };
 }
-
-#endif // BALANCESHEETMODEL_H

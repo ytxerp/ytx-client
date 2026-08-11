@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef WORKSPACEROLE_H
-#define WORKSPACEROLE_H
+#pragma once
 
 #include <QHash>
 #include <QObject>
@@ -43,5 +42,3 @@ QString RoleDisplay(Role role);
 
 constexpr bool CanAssignRole(Role current, Role target) { return static_cast<int>(target) < static_cast<int>(current); }
 }
-
-#endif // WORKSPACEROLE_H

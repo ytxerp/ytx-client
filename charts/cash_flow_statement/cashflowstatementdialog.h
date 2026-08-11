@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CASHFLOWSTATEMENTDIALOG_H
-#define CASHFLOWSTATEMENTDIALOG_H
+#pragma once
 
 #include <QDateTime>
 #include <QDialog>
@@ -82,5 +81,3 @@ private:
 
     QTimer* cooldown_timer_ { nullptr };
 };
-
-#endif // CASHFLOWSTATEMENTDIALOG_H

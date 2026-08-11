@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ISSUEDTIMER_H
-#define ISSUEDTIMER_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 
@@ -31,5 +30,3 @@ public:
 private:
     const QString& date_format_ {};
 };
-
-#endif // ISSUEDTIMER_H

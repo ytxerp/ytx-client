@@ -1,5 +1,4 @@
-#ifndef CASHFLOWSTATEMENTROW_H
-#define CASHFLOWSTATEMENTROW_H
+#pragma once
 
 /*
  * Copyright (C) 2023 YTX
@@ -105,5 +104,3 @@ struct WrongRow final {
     }
 };
 }
-
-#endif // CASHFLOWSTATEMENTROW_H

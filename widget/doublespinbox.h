@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOUBLESPINBOX_H
-#define DOUBLESPINBOX_H
+#pragma once
 
 #include <QDoubleSpinBox>
 #include <QKeyEvent>
@@ -49,5 +48,3 @@ protected:
         QDoubleSpinBox::keyPressEvent(event);
     }
 };
-
-#endif // DOUBLESPINBOX_H

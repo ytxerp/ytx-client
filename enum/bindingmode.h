@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef BINDINGMODE_H
-#define BINDINGMODE_H
+#pragma once
 
 enum class BindingMode {
     kParallel,
@@ -54,5 +53,3 @@ constexpr InputSide ToLinkedNodeInputSide(BindingMode mode)
         return InputSide::kLhs;
     }
 }
-
-#endif // BINDINGMODE_H

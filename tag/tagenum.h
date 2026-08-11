@@ -17,13 +17,10 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TAGENUM_H
-#define TAGENUM_H
+#pragma once
 
 namespace tag {
 
 enum class RowField : int { kName, kColor };
 
 }
-
-#endif // TAGENUM_H

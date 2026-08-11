@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef BALANCESHEETDIALOG_H
-#define BALANCESHEETDIALOG_H
+#pragma once
 
 #include <QDateTime>
 #include <QDialog>
@@ -69,5 +68,3 @@ private:
 
     QTimer* cooldown_timer_ { nullptr };
 };
-
-#endif // BALANCESHEETDIALOG_H

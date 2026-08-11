@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DATEEDIT_H
-#define DATEEDIT_H
+#pragma once
 
 #include <QDateEdit>
 
@@ -37,5 +36,3 @@ private:
     static bool AdjustDate(QDate& date, int days = 0, int months = 0, int years = 0);
     static bool SetToCurrentDate(QDate& date);
 };
-
-#endif // DATEEDIT_H

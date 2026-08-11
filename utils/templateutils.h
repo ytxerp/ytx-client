@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TEMPLATEUTILS_H
-#define TEMPLATEUTILS_H
+#pragma once
 
 #include <QAbstractItemView>
 #include <QHeaderView>
@@ -139,5 +138,3 @@ void ReadConfig(Widget* widget, Function setter, const QSharedPointer<QSettings>
 }
 
 }
-
-#endif // TEMPLATEUTILS_H

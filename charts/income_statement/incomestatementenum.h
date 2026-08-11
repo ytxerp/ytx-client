@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INCOMESTATEMENTENUM_H
-#define INCOMESTATEMENTENUM_H
+#pragma once
 
 namespace income_statement {
 
@@ -35,5 +34,3 @@ enum class RowField {
     kMomGrowthRate,
 };
 }
-
-#endif // INCOMESTATEMENTENUM_H

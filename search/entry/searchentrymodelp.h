@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHENTRYMODELP_H
-#define SEARCHENTRYMODELP_H
+#pragma once
 
 #include "entryhub/entryhubp.h"
 #include "searchentrymodel.h"
@@ -40,5 +39,3 @@ private:
     EntryHubP* entry_hub_p_ {};
 };
 }
-
-#endif // SEARCHENTRYMODELP_H

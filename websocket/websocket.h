@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef WEBSOCKET_H
-#define WEBSOCKET_H
+#pragma once
 
 #include <QObject>
 #include <QPointer>
@@ -237,5 +236,3 @@ private:
     QHash<Section, QPointer<TreeModel>> tree_model_hash_ {};
     QHash<Section, QPointer<EntryHub>> entry_hub_hash_ {};
 };
-
-#endif // WEBSOCKET_H

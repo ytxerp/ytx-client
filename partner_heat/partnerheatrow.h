@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PARTNERHEATROW_H
-#define PARTNERHEATROW_H
+#pragma once
 
 #include <QJsonObject>
 #include <QUuid>
@@ -64,5 +63,3 @@ inline void Row::ReadJson(const QJsonObject& obj)
 
 inline void Row::Reset() { *this = Row {}; }
 }
-
-#endif // PARTNERHEATROW_H

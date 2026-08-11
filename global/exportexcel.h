@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef EXPORTEXCEL_H
-#define EXPORTEXCEL_H
+#pragma once
 
 #include "billing/statement/statement.h"
 #include "component/using.h"
@@ -47,5 +46,3 @@ private:
     static bool Statement(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, CJsonObject& total,
         statement::CTertiaryList& list);
 };
-
-#endif // EXPORTEXCEL_H

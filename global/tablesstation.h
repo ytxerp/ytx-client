@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLESSTATION_H
-#define TABLESSTATION_H
+#pragma once
 
 #include "table/model/tablemodel.h"
 
@@ -84,5 +83,3 @@ private:
 private:
     QHash<QUuid, const TableModel*> model_hash_ {};
 };
-
-#endif // TABLESSTATION_H

@@ -1,5 +1,4 @@
-#ifndef INCOMESTATEMENTROW_H
-#define INCOMESTATEMENTROW_H
+#pragma once
 
 #include <QJsonObject>
 #include <QList>
@@ -58,5 +57,3 @@ struct Row final {
     }
 };
 }
-
-#endif // INCOMESTATEMENTROW_H

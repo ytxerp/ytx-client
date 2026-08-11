@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef BOOLSTRING_H
-#define BOOLSTRING_H
+#pragma once
 
 #include <QEvent>
 
@@ -34,5 +33,3 @@ private:
     CBoolString& map_;
     QEvent::Type type_ {};
 };
-
-#endif // BOOLSTRING_H

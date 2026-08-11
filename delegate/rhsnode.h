@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef RHSNODE_H
-#define RHSNODE_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 #include "tree/model/treemodel.h"
@@ -37,5 +36,3 @@ private:
     CTreeModel* tree_model_ {};
     QSortFilterProxyModel* filter_model_ {};
 };
-
-#endif // RHSNODE_H

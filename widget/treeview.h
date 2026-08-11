@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEVIEW_H
-#define TREEVIEW_H
+#pragma once
 
 #include <QTreeView>
 
@@ -31,5 +30,3 @@ public:
 protected:
     void dropEvent(QDropEvent* event) override;
 };
-
-#endif // TREEVIEW_H

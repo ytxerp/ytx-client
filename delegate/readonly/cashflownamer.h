@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CASHFLOWNAMER_H
-#define CASHFLOWNAMER_H
+#pragma once
 
 // read only
 
@@ -37,5 +36,3 @@ private:
 private:
     CTreeModel* model_ {};
 };
-
-#endif // CASHFLOWNAMER_H

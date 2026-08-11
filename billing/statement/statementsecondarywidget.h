@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTSECONDARYWIDGET_H
-#define STATEMENTSECONDARYWIDGET_H
+#pragma once
 
 #include <QButtonGroup>
 #include <QDateTime>
@@ -75,5 +74,3 @@ private:
     const QUuid widget_id_ {};
     CUuid partner_id_ {};
 };
-
-#endif // STATEMENTSECONDARYWIDGET_H

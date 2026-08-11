@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef EDITNODENAME_H
-#define EDITNODENAME_H
+#pragma once
 
 #include <QDialog>
 
@@ -51,5 +50,3 @@ private:
     CString parent_path_ {};
     const QSet<QString> name_set_ {};
 };
-
-#endif // EDITNODENAME_H

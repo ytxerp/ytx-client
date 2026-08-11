@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TAGROW_H
-#define TAGROW_H
+#pragma once
 
 #include <QJsonObject>
 #include <QString>
@@ -80,4 +79,3 @@ inline void Row::ReadJson(const QJsonObject& object)
         version = val.toInt();
 }
 }
-#endif // TAGROW_H

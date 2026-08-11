@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PRINTHUB_H
-#define PRINTHUB_H
+#pragma once
 
 #include <QPrinter>
 #include <QSettings>
@@ -111,5 +110,3 @@ private:
     int row_height_ {};
     QList<int> column_widths_ {};
 };
-
-#endif // PRINTHUB_H

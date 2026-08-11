@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INVENTORYHEATDIALOG_H
-#define INVENTORYHEATDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include <QTableView>
@@ -64,5 +63,3 @@ private:
     inventory_heat::Model* model_ {};
     const QUuid widget_id_ {};
 };
-
-#endif // INVENTORYHEATDIALOG_H

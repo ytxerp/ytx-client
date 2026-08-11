@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CONSTANTWEBSOCKET_H
-#define CONSTANTWEBSOCKET_H
+#pragma once
 
 #include <QString>
 
@@ -396,5 +395,3 @@ inline const QString kDocumentDir { QStringLiteral("document_dir") };
 inline const QString kKey { QStringLiteral("key") };
 inline const QString kValue { QStringLiteral("value") };
 }
-
-#endif // CONSTANTWEBSOCKET_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLEMODELF_H
-#define TABLEMODELF_H
+#pragma once
 
 #include "tablemodel.h"
 
@@ -38,5 +37,3 @@ protected:
     bool UpdateNumeric(EntryShadow* shadow, double value, int row, NumericSide side) override;
     bool UpdateRate(EntryShadow* shadow, double value) override;
 };
-
-#endif // TABLEMODELF_H

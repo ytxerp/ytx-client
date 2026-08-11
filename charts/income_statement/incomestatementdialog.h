@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INCOMESTATEMENTDIALOG_H
-#define INCOMESTATEMENTDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include <QTreeView>
@@ -66,5 +65,3 @@ private:
 
     QTimer* cooldown_timer_ { nullptr };
 };
-
-#endif // INCOMESTATEMENTDIALOG_H

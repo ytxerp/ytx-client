@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef EDITNODENAMEO_H
-#define EDITNODENAMEO_H
+#pragma once
 
 #include <QDialog>
 
@@ -45,5 +44,3 @@ private:
 private:
     Ui::EditNodeNameO* ui;
 };
-
-#endif // EDITNODENAMEO_H

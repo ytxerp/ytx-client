@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PARTNERHEATENUM_H
-#define PARTNERHEATENUM_H
+#pragma once
 
 namespace partner_heat {
 enum class RowField : int {
@@ -32,5 +31,3 @@ enum class RowField : int {
     kHeatScore,
 };
 }
-
-#endif // PARTNERHEATENUM_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CONSTVALUE_H
-#define CONSTVALUE_H
+#pragma once
 
 #include <QString>
 #include <QTime>
@@ -267,5 +266,3 @@ inline const QString kTask = QStringLiteral("task");
 inline const QString kTaskNode = QStringLiteral("task_node");
 inline const QString kTaskPath = QStringLiteral("task_path");
 inline const QString kTaskEntry = QStringLiteral("task_entry");
-
-#endif // CONSTVALUE_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef COLOR_H
-#define COLOR_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 
@@ -28,5 +27,3 @@ public:
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
 };
-
-#endif // COLOR_H

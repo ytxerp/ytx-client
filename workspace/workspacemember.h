@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef WORKSPACEMEMBER_H
-#define WORKSPACEMEMBER_H
+#pragma once
 
 #include <QJsonObject>
 #include <QString>
@@ -83,5 +82,3 @@ struct PendingUpdate {
 };
 
 }
-
-#endif // WORKSPACEMEMBER_H

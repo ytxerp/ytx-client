@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef WIDGETCONTEX_H
-#define WIDGETCONTEX_H
+#pragma once
 
 #include <QPointer>
 #include <QUuid>
@@ -39,5 +38,3 @@ struct WidgetContext {
     QUuid id {};
     WidgetRole role {};
 };
-
-#endif // WIDGETCONTEX_H

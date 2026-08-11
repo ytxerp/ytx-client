@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTTERTIARYMODEL_H
-#define STATEMENTTERTIARYMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -59,5 +58,3 @@ private:
     const QUuid partner_id_ {};
 };
 }
-
-#endif // STATEMENTTERTIARYMODEL_H

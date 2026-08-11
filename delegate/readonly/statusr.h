@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATUSR_H
-#define STATUSR_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 
@@ -27,5 +26,3 @@ public:
     explicit StatusR(QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
-
-#endif // STATUSR_H

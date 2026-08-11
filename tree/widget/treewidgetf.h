@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEWIDGETF_H
-#define TREEWIDGETF_H
+#pragma once
 
 #include "component/config.h"
 #include "component/sectioninfo.h"
@@ -58,5 +57,3 @@ private:
     CSectionConfig& section_ {};
     CSharedConfig& shared_ {};
 };
-
-#endif // TREEWIDGETF_H

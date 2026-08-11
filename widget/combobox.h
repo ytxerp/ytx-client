@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef COMBOBOX_H
-#define COMBOBOX_H
+#pragma once
 
 #include <QApplication>
 #include <QComboBox>
@@ -89,5 +88,3 @@ protected:
 private:
     bool read_only_ { false };
 };
-
-#endif // COMBOBOX_H

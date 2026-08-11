@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEMODELI_H
-#define TREEMODELI_H
+#pragma once
 
 #include "tree/model/treemodel.h"
 
@@ -45,5 +44,3 @@ private:
     QSet<QUuid> pos_set_ {}; // Set of all nodes that are position-unit
     QSet<QUuid> itm_set_ {}; // Set of all nodes that are item-unit
 };
-
-#endif // TREEMODELI_H

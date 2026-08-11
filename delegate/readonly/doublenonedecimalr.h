@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOUBLENONEDECIMALR_H
-#define DOUBLENONEDECIMALR_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 
@@ -31,5 +30,3 @@ public:
 private:
     CString& placeholder_;
 };
-
-#endif // DOUBLENONEDECIMALR_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENT_H
-#define SETTLEMENT_H
+#pragma once
 
 #include <QJsonObject>
 #include <QUuid>
@@ -58,5 +57,3 @@ struct SecondaryRow final {
 };
 
 }
-
-#endif // SETTLEMENT_H

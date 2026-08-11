@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef NODE_H
-#define NODE_H
+#pragma once
 
 #include <QJsonObject>
 #include <QTimer>
@@ -122,5 +121,3 @@ using CNodeHash = const QHash<QUuid, Node*>;
 using NodeList = QList<Node*>;
 
 using NodeListO = QList<NodeO*>;
-
-#endif // NODE_H

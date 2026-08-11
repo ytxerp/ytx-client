@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STYLEDITEMDELEGATE_H
-#define STYLEDITEMDELEGATE_H
+#pragma once
 
 #include <QLocale>
 #include <QStyledItemDelegate>
@@ -45,5 +44,3 @@ protected:
 protected:
     static const QLocale locale_;
 };
-
-#endif // STYLEDITEMDELEGATE_H

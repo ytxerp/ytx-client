@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INSERTNODEI_H
-#define INSERTNODEI_H
+#pragma once
 
 #include <QButtonGroup>
 #include <QDialog>
@@ -67,5 +66,3 @@ private:
     CString parent_path_ {};
     const QSet<QString> name_set_ {};
 };
-
-#endif // INSERTNODEI_H

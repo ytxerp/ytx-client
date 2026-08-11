@@ -1,5 +1,4 @@
-#ifndef TAGUTILS_H
-#define TAGUTILS_H
+#pragma once
 
 #include <QColor>
 #include <QString>
@@ -20,5 +19,3 @@ QIcon CreateIcon(const Row* tag, bool checked);
 QPixmap CreatePixmap(const Row* tag);
 
 }
-
-#endif // TAGUTILS_H

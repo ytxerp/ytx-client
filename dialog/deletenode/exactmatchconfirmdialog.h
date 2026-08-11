@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef EXACTMATCHCONFIRMDIALOG_H
-#define EXACTMATCHCONFIRMDIALOG_H
+#pragma once
 
 #include <QDialog>
 
@@ -41,5 +40,3 @@ private:
 private:
     Ui::ExactMatchConfirmDialog* ui;
 };
-
-#endif // EXACTMATCHCONFIRMDIALOG_H

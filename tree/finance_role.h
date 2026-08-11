@@ -1,5 +1,4 @@
-#ifndef FINANCE_ROLE_H
-#define FINANCE_ROLE_H
+#pragma once
 
 #include <QFlags>
 #include <QString>
@@ -128,5 +127,3 @@ std::span<const RoleItem> RoleItemList();
 QString RolesDisplay(Roles roles);
 
 }
-
-#endif // FINANCE_ROLE_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef NODEENUM_H
-#define NODEENUM_H
+#pragma once
 
 /** @brief Kind of node in a tree structure. */
 enum class NodeKind { kLeaf = 0, kBranch };
@@ -291,5 +290,3 @@ enum class NodeEnumO {
     kDiscountTotal,
     kFinalTotal,
 };
-
-#endif // NODEENUM_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QActionGroup>
 #include <QLabel>
@@ -365,4 +364,3 @@ private:
     SectionContext sc_sale_ {};
     SectionContext sc_purchase_ {};
 };
-#endif // MAINWINDOW_H

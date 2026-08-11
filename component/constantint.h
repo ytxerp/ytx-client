@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CONSTANTINT_H
-#define CONSTANTINT_H
+#pragma once
 
 #include <QtCore/qtypes.h>
 
@@ -53,5 +52,3 @@ inline constexpr qsizetype kMaxSize = 1000;
 namespace zstd_const {
 inline constexpr qsizetype kCompressThreshold { 256 };
 }
-
-#endif // CONSTANTINT_H

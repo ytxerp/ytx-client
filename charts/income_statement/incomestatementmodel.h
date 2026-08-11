@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INCOMESTATEMENTMODEL_H
-#define INCOMESTATEMENTMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -64,5 +63,3 @@ private:
     QString mom_tooltip_ {};
 };
 }
-
-#endif // INCOMESTATEMENTMODEL_H

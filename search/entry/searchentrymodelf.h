@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHENTRYMODELF_H
-#define SEARCHENTRYMODELF_H
+#pragma once
 
 #include "searchentrymodel.h"
 
@@ -33,5 +32,3 @@ public:
     void sort(int column, Qt::SortOrder order) override;
 };
 }
-
-#endif // SEARCHENTRYMODELF_H

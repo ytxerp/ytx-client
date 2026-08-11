@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef REPLACESELFFILTERMODEL_H
-#define REPLACESELFFILTERMODEL_H
+#pragma once
 
 #include <QSortFilterProxyModel>
 #include <QUuid>
@@ -45,5 +44,3 @@ private:
     const QSet<QUuid>* set_ {};
     const QUuid node_id_ {};
 };
-
-#endif // REPLACESELFFILTERMODEL_H

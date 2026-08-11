@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef WORKSPACEMEMBERENUM_H
-#define WORKSPACEMEMBERENUM_H
+#pragma once
 
 namespace workspace {
 enum class MemberField : int {
@@ -30,4 +29,3 @@ enum class MemberField : int {
     kCreatedTime,
 };
 }
-#endif // WORKSPACEMEMBERENUM_H

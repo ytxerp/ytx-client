@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef WORKSPACEROLEDELEGATE_H
-#define WORKSPACEROLEDELEGATE_H
+#pragma once
 
 #include "styleditemdelegate.h"
 
@@ -32,5 +31,3 @@ public:
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
-
-#endif // WORKSPACEROLEDELEGATE_H

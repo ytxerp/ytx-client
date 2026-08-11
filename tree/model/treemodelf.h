@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEMODELF_H
-#define TREEMODELF_H
+#pragma once
 
 #include "tree/model/treemodel.h"
 
@@ -39,5 +38,3 @@ protected:
     QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const override;
     void InitAncestorTotal(Node* node, const node::Delta& delta) const override;
 };
-
-#endif // TREEMODELF_H

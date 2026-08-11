@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INSERTNODEBRANCH_H
-#define INSERTNODEBRANCH_H
+#pragma once
 
 #include <QButtonGroup>
 #include <QDialog>
@@ -59,5 +58,3 @@ private:
     CString parent_path_ {};
     const QSet<QString> name_set_ {};
 };
-
-#endif // INSERTNODEBRANCH_H

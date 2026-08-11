@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEMODELP_H
-#define TREEMODELP_H
+#pragma once
 
 #include "tree/model/treemodel.h"
 
@@ -49,5 +48,3 @@ private:
     QSet<QUuid> vset_ {}; // Set of all nodes that are vendor unit
     QSet<QUuid> eset_ { QUuid() }; // Set of all nodes that are employee unit
 };
-
-#endif // TREEMODELP_H

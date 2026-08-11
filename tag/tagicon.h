@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TAGICON_H
-#define TAGICON_H
+#pragma once
 
 #include <QIcon>
 
@@ -31,5 +30,3 @@ struct Icon final {
 };
 
 }
-
-#endif // TAGICON_H

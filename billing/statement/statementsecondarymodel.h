@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTSECONDARYMODEL_H
-#define STATEMENTSECONDARYMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -54,5 +53,3 @@ private:
     QList<SecondaryRow*> list_ {};
 };
 }
-
-#endif // STATEMENTSECONDARYMODEL_H

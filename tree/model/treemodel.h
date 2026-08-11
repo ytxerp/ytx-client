@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEMODEL_H
-#define TREEMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 #include <QMessageBox>
@@ -235,5 +234,3 @@ protected:
 };
 
 using CTreeModel = const TreeModel;
-
-#endif // TREEMODEL_H

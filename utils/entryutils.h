@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYUTILS_H
-#define ENTRYUTILS_H
+#pragma once
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -431,5 +430,3 @@ bool UpdateUuid(QJsonObject& update, T* object, CString& field, const QUuid& val
     return true;
 }
 }
-
-#endif // ENTRYUTILS_H

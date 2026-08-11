@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TAGDIALOG_H
-#define TAGDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include <QTableView>
@@ -46,5 +45,3 @@ private:
     Ui::TagDialog* ui;
     tag::Model* model_ {};
 };
-
-#endif // TAGDIALOG_H

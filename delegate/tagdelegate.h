@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TAGDELEGATE_H
-#define TAGDELEGATE_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 #include "tag/tagicon.h"
@@ -32,5 +31,3 @@ public:
 private:
     const QHash<QUuid, tag::Icon>& tag_icon_hash_ {};
 };
-
-#endif // TAGDELEGATE_H

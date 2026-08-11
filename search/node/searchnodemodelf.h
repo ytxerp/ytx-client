@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHNODEMODELF_H
-#define SEARCHNODEMODELF_H
+#pragma once
 
 #include "searchnodemodel.h"
 
@@ -34,5 +33,3 @@ public:
     void sort(int column, Qt::SortOrder order) override;
 };
 }
-
-#endif // SEARCHNODEMODELF_H

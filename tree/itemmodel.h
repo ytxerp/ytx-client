@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ITEMMODEL_H
-#define ITEMMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 #include <QString>
@@ -65,5 +64,3 @@ private:
     QList<Item*> list_ {};
     QHash<QUuid, Item*> hash_ {};
 };
-
-#endif // ITEMMODEL_H

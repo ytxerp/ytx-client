@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTTERTIARYWIDGET_H
-#define STATEMENTTERTIARYWIDGET_H
+#pragma once
 
 #include <QButtonGroup>
 #include <QDateTime>
@@ -79,5 +78,3 @@ private:
 };
 
 inline const char* kStatementEntryWidget = "StatementEntryWidget";
-
-#endif // STATEMENTTERTIARYWIDGET_H

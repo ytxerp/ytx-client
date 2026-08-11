@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEMODELO_H
-#define TREEMODELO_H
+#pragma once
 
 #include <QDate>
 
@@ -56,5 +55,3 @@ protected:
     QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const override;
     void InitAncestorTotal(Node* node, const node::Delta& delta) const override;
 };
-
-#endif // TREEMODELO_H

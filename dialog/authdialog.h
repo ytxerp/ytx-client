@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AUTHDIALOG_H
-#define AUTHDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include <QLineEdit>
@@ -65,5 +64,3 @@ private:
     Ui::AuthDialog* ui;
     QSharedPointer<QSettings> local_settings_ {};
 };
-
-#endif // AUTHDIALOG_H

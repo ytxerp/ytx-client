@@ -1,5 +1,4 @@
-#ifndef MODEL_H
-#define MODEL_H
+#pragma once
 
 #include <QtCore/qglobal.h>
 
@@ -17,5 +16,3 @@ struct Delta final {
 };
 
 }
-
-#endif // MODEL_H

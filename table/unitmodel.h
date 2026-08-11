@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef UNITMODEL_H
-#define UNITMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 #include <QString>
@@ -67,5 +66,3 @@ protected:
 private:
     QList<Item> list_ {};
 };
-
-#endif // UNITMODEL_H

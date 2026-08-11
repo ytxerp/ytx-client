@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PERCENTAGEDELEGATER_H
-#define PERCENTAGEDELEGATER_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 
@@ -28,5 +27,3 @@ public:
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
-
-#endif // PERCENTAGEDELEGATER_H

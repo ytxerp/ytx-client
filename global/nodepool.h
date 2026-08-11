@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef NODEPOOL_H
-#define NODEPOOL_H
+#pragma once
 
 #include <QMutex>
 #include <array>
@@ -177,5 +176,3 @@ template <Iterable Container> inline void NodePool::Recycle(Container& container
 
     container.clear();
 }
-
-#endif // NODEPOOL_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHNODEMODELO_H
-#define SEARCHNODEMODELO_H
+#pragma once
 
 #include "searchnodemodel.h"
 
@@ -43,5 +42,3 @@ private:
     void ClearModel();
 };
 }
-
-#endif // SEARCHNODEMODELO_H

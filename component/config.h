@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
 #include <QString>
 #include <QUuid>
@@ -82,5 +81,3 @@ struct SectionConfig {
 using CAppConfig = const AppConfig;
 using CSharedConfig = const SharedConfig;
 using CSectionConfig = const SectionConfig;
-
-#endif // CONFIG_H

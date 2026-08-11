@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef USERPROFILE_H
-#define USERPROFILE_H
+#pragma once
 
 #include <QString>
 
@@ -66,5 +65,3 @@ private:
     workspace::Role role_ { workspace::Role::kGuest };
     section::Permissions permissions_ {};
 };
-
-#endif // USERPROFILE_H

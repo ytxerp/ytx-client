@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef BALANCESHEETENUM_H
-#define BALANCESHEETENUM_H
+#pragma once
 
 namespace balance_sheet {
 enum class RowField {
@@ -33,5 +32,3 @@ enum class RowField {
     kChangeRate,
 };
 }
-
-#endif // BALANCESHEETENUM_H

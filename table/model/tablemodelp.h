@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLEMODELP_H
-#define TABLEMODELP_H
+#pragma once
 
 #include "tablemodel.h"
 
@@ -55,5 +54,3 @@ private:
     QSet<QUuid> internal_sku_set_ {};
     QList<Entry*> entry_list_ {};
 };
-
-#endif // TABLEMODELP_H

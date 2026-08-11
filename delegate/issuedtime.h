@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ISSUEDTIME_H
-#define ISSUEDTIME_H
+#pragma once
 
 #include <QDateTimeEdit>
 
@@ -38,5 +37,3 @@ private:
     mutable QDateTime last_issued_ {};
     const bool remember_last_ {};
 };
-
-#endif // ISSUEDTIME_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INSERTNODETASK_H
-#define INSERTNODETASK_H
+#pragma once
 
 #include <QButtonGroup>
 #include <QDialog>
@@ -65,5 +64,3 @@ private:
     CString parent_path_ {};
     const QSet<QString> name_set_ {};
 };
-
-#endif // INSERTNODETASK_H

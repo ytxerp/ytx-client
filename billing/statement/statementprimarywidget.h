@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTPRIMARYWIDGET_H
-#define STATEMENTPRIMARYWIDGET_H
+#pragma once
 
 #include <QButtonGroup>
 #include <QDateTime>
@@ -82,5 +81,3 @@ private:
     const Section section_ {};
     const QUuid widget_id_ {};
 };
-
-#endif // STATEMENTPRIMARYWIDGET_H

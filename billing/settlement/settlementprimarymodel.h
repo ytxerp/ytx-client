@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTPRIMARYMODEL_H
-#define SETTLEMENTPRIMARYMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 #include <QJsonObject>
@@ -71,5 +70,3 @@ private:
 };
 
 }
-
-#endif // SETTLEMENTPRIMARYMODEL_H

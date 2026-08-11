@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHDIALOGP_H
-#define SEARCHDIALOGP_H
+#pragma once
 
 #include "searchdialog.h"
 
@@ -38,5 +37,3 @@ private:
 private:
     CTreeModel* inventory_ {};
 };
-
-#endif // SEARCHDIALOGP_H

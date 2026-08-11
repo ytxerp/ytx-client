@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLEMODELARG_H
-#define TABLEMODELARG_H
+#pragma once
 
 #include <QUuid>
 
@@ -31,5 +30,3 @@ struct TableModelArg {
 };
 
 using CTableModelArg = const TableModelArg;
-
-#endif // TABLEMODELARG_H

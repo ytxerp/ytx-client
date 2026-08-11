@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef EXCLUDEIDFILTERMODEL_H
-#define EXCLUDEIDFILTERMODEL_H
+#pragma once
 
 #include <QSortFilterProxyModel>
 #include <QUuid>
@@ -43,5 +42,3 @@ protected:
 private:
     const QUuid node_id_ {};
 };
-
-#endif // EXCLUDEIDFILTERMODEL_H

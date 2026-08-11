@@ -1,5 +1,4 @@
-#ifndef WORKSPACEMEMBERMODEL_H
-#define WORKSPACEMEMBERMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 #include <QTimer>
@@ -60,5 +59,3 @@ private:
     QHash<QUuid, PendingUpdate> pending_updates_ {};
 };
 }
-
-#endif // WORKSPACEMEMBERMODEL_H

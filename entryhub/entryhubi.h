@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYHUBI_H
-#define ENTRYHUBI_H
+#pragma once
 
 #include "entryhub.h"
 
@@ -32,5 +31,3 @@ public:
 
     void ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id);
 };
-
-#endif // ENTRYHUBI_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef HEADERINFO_H
-#define HEADERINFO_H
+#pragma once
 
 #include <QList>
 #include <QString>
@@ -39,5 +38,3 @@ struct HeaderInfo {
     QStringList cash_flow_statement_wrong {};
     QStringList audit {};
 };
-
-#endif // HEADERINFO_H

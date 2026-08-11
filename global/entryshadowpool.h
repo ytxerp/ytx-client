@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYSHADOWPOOL_H
-#define ENTRYSHADOWPOOL_H
+#pragma once
 
 #include <QMutex>
 #include <array>
@@ -168,5 +167,3 @@ template <Iterable Container> inline void EntryShadowPool::Recycle(Container& co
 
     container.clear();
 }
-
-#endif // ENTRYSHADOWPOOL_H

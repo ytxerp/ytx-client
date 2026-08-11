@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LEAFDELETEDIALOG_H
-#define LEAFDELETEDIALOG_H
+#pragma once
 
 #include <QButtonGroup>
 #include <QDialog>
@@ -70,5 +69,3 @@ private:
     TreeModel* model_ {};
     CSectionInfo& info_ {};
 };
-
-#endif // LEAFDELETEDIALOG_H

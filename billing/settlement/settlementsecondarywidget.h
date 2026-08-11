@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTSECONDARYWIDGET_H
-#define SETTLEMENTSECONDARYWIDGET_H
+#pragma once
 
 #include <QTableView>
 #include <QWidget>
@@ -85,5 +84,3 @@ private:
     const QUuid widget_id_ {};
     const Section section_ {};
 };
-
-#endif // SETTLEMENTSECONDARYWIDGET_H

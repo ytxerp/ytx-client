@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEWIDGET_H
-#define TREEWIDGET_H
+#pragma once
 
 #include <QDoubleSpinBox>
 #include <QTreeView>
@@ -75,5 +74,3 @@ protected:
 };
 
 inline const char* kTreeWidget = "TreeWidget";
-
-#endif // TREEWIDGET_H

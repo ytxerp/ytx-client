@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTENUM_H
-#define STATEMENTENUM_H
+#pragma once
 
 namespace statement {
 
@@ -60,5 +59,3 @@ enum class TertiaryField {
 };
 
 }
-
-#endif // STATEMENTENUM_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CONSTANTSTRING_H
-#define CONSTANTSTRING_H
+#pragma once
 
 #include <QString>
 
@@ -102,5 +101,3 @@ inline const QString kDashedDate = QStringLiteral("yyyy-MM-dd");
 inline const QString kSlashedDate = QStringLiteral("yyyy/MM/dd");
 inline const QString kDottedDate = QStringLiteral("yyyy.MM.dd");
 }
-
-#endif // CONSTANTSTRING_H

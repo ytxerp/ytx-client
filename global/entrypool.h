@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYPOOL_H
-#define ENTRYPOOL_H
+#pragma once
 
 #include <QMutex>
 #include <array>
@@ -171,5 +170,3 @@ template <Iterable Container> inline void EntryPool::Recycle(Container& containe
 
     container.clear();
 }
-
-#endif // ENTRYPOOL_H

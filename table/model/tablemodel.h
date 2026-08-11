@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLEMODEL_H
-#define TABLEMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 #include <QTimer>
@@ -118,5 +117,3 @@ protected:
     QList<EntryShadow*> shadow_list_ {};
     QHash<QUuid, PendingEntryUpdate> pending_updates_ {};
 };
-
-#endif // TABLEMODEL_H

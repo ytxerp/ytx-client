@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AUTHENUM_H
-#define AUTHENUM_H
+#pragma once
 
 enum class RegisterOutcome {
     Success = 0,
@@ -49,5 +48,3 @@ enum class AccountUsernameOutcome {
     kAlreadyExists = 2,
     kUserNotFound = 3,
 };
-
-#endif // AUTHENUM_H

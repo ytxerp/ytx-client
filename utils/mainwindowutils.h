@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MAINWINDOWUTILS_H
-#define MAINWINDOWUTILS_H
+#pragma once
 
 #include <QLabel>
 #include <QMessageBox>
@@ -239,5 +238,3 @@ inline QSet<QUuid> ReadTab(QSharedPointer<QSettings> settings, CString& section,
 #endif
 
 };
-
-#endif // MAINWINDOWUTILS_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PARTNER_INVENTORY_REGISTRY_H
-#define PARTNER_INVENTORY_REGISTRY_H
+#pragma once
 
 #include <QHash>
 #include <QUuid>
@@ -103,5 +102,3 @@ private:
 private:
     QHash<std::pair<QUuid, QUuid>, Value> map_ {};
 };
-
-#endif // PARTNER_INVENTORY_REGISTRY_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLEWIDGETO_H
-#define TABLEWIDGETO_H
+#pragma once
 
 #include <QButtonGroup>
 
@@ -136,5 +135,3 @@ private:
 };
 
 inline const char* kTableWidgetO = "TableWidgetO";
-
-#endif // TABLEWIDGETO_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef USING_H
-#define USING_H
+#pragma once
 
 #include <QDialog>
 #include <QHash>
@@ -37,5 +36,3 @@ using CStringList = const QStringList;
 using CDateTime = const QDateTime;
 using CJsonArray = const QJsonArray;
 using CJsonObject = const QJsonObject;
-
-#endif // USING_H

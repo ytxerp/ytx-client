@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INTSTRINGNONEZERO_H
-#define INTSTRINGNONEZERO_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 #include "table/unitmodel.h"
@@ -36,5 +35,3 @@ private:
     UnitModel* model_ {};
     CIntString& map_;
 };
-
-#endif // INTSTRINGNONEZERO_H

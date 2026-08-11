@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef LINEEDIT_H
-#define LINEEDIT_H
+#pragma once
 
 #include <QDateTime>
 #include <QKeyEvent>
@@ -56,5 +55,3 @@ protected:
         QLineEdit::keyPressEvent(event);
     }
 };
-
-#endif // LINEEDIT_H

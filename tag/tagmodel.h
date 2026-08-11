@@ -1,5 +1,4 @@
-#ifndef TAGMODEL_H
-#define TAGMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 #include <QTimer>
@@ -76,5 +75,3 @@ private:
     QHash<QUuid, PendingUpdate> pending_updates_ {};
 };
 }
-
-#endif // TAGMODEL_H

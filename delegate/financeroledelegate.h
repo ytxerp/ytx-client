@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef FINANCEROLEDELEGATE_H
-#define FINANCEROLEDELEGATE_H
+#pragma once
 
 #include "styleditemdelegate.h"
 #include "tree/finance_role.h"
@@ -36,5 +35,3 @@ public:
 private:
     std::span<const finance::RoleItem> roles_ {};
 };
-
-#endif // FINANCEROLEDELEGATE_H

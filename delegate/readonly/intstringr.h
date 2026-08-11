@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INTSTRINGR_H
-#define INTSTRINGR_H
+#pragma once
 
 #include "component/using.h"
 #include "delegate/styleditemdelegate.h"
@@ -32,5 +31,3 @@ public:
 private:
     CIntString& map_;
 };
-
-#endif // INTSTRINGR_H

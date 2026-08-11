@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTENUM_H
-#define SETTLEMENTENUM_H
+#pragma once
 
 namespace settlement {
 
@@ -39,5 +38,3 @@ enum class SecondaryField {
 };
 
 }
-
-#endif // SETTLEMENTENUM_H

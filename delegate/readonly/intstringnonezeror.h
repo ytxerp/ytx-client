@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INTSTRINGNONEZEROR_H
-#define INTSTRINGNONEZEROR_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 
@@ -30,5 +29,3 @@ public:
 private:
     CIntString& map_;
 };
-
-#endif // INTSTRINGNONEZEROR_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AMOUNTR_H
-#define AMOUNTR_H
+#pragma once
 
 #include "component/using.h"
 #include "delegate/styleditemdelegate.h"
@@ -38,5 +37,3 @@ private:
     CIntString& unit_symbol_map_;
     CString& placeholder_;
 };
-
-#endif // AMOUNTR_H

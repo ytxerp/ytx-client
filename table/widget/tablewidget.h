@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLEWIDGET_H
-#define TABLEWIDGET_H
+#pragma once
 
 #include <QPointer>
 #include <QTableView>
@@ -41,5 +40,3 @@ protected:
     {
     }
 };
-
-#endif // TABLEWIDGET_H

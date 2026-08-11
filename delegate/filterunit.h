@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef FILTERUNIT_H
-#define FILTERUNIT_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -38,5 +37,3 @@ private:
     CTreeModel* tree_model_ {};
     QSortFilterProxyModel* filter_model_ {};
 };
-
-#endif // FILTERUNIT_H

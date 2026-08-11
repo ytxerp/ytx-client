@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PERIODCLOSEMODEL_H
-#define PERIODCLOSEMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -55,5 +54,3 @@ private:
     QList<Entry*> list_ {};
 };
 }
-
-#endif // PERIODCLOSEMODEL_H

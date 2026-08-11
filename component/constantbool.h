@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CONSTANTBOOL_H
-#define CONSTANTBOOL_H
+#pragma once
 
 // Boolean constants
 inline constexpr bool kIsHidden = true;
@@ -35,5 +34,3 @@ inline constexpr bool kDICD = false;
 inline constexpr bool kFO = false;
 
 }
-
-#endif // CONSTANTBOOL_H

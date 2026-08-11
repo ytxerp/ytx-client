@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ORDERWIDGETARG_H
-#define ORDERWIDGETARG_H
+#pragma once
 
 #include "component/config.h"
 #include "table/model/tablemodel.h"
@@ -33,5 +32,3 @@ struct OrderWidgetArg {
 };
 
 using COrderWidgetArg = const OrderWidgetArg;
-
-#endif // ORDERWIDGETARG_H

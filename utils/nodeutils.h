@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef NODEUTILS_H
-#define NODEUTILS_H
+#pragma once
 
 #include <QQueue>
 
@@ -340,5 +339,3 @@ template <HasColor T> inline bool CompareColor(const T* lhs, const T* rhs, Qt::S
 }
 
 };
-
-#endif // NODEUTILS_H

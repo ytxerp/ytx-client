@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MASTERDATAREGISTRY_H
-#define MASTERDATAREGISTRY_H
+#pragma once
 
 #include "enum/section.h"
 #include "tree/model/treemodel.h"
@@ -78,5 +77,3 @@ private:
 private:
     QHash<Section, QPointer<TreeModel>> tree_model_hash_ {};
 };
-
-#endif // MASTERDATAREGISTRY_H

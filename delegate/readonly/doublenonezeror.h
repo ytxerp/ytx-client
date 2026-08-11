@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DOUBLENONEZEROR_H
-#define DOUBLENONEZEROR_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 
@@ -32,5 +31,3 @@ private:
     const int& decimal_;
     CString& placeholder_;
 };
-
-#endif // DOUBLENONEZEROR_H

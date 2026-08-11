@@ -30,8 +30,7 @@
 // and/or serialized via ReadJson/WriteJson. Keep this distinction consistent
 // when adding new enums.
 
-#ifndef STATEENUM_H
-#define STATEENUM_H
+#pragma once
 
 enum class ConnectionState {
     Connecting,
@@ -52,5 +51,3 @@ enum class SyncState {
     kDeleting,
     kError,
 };
-
-#endif // STATEENUM_H

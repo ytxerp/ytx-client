@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHDIALOG_H
-#define SEARCHDIALOG_H
+#pragma once
 
 #include <QButtonGroup>
 #include <QDialog>
@@ -107,5 +106,3 @@ protected:
     CSectionInfo& info_;
     const QHash<QUuid, tag::Icon>& tag_icon_hash_ {};
 };
-
-#endif // SEARCHDIALOG_H

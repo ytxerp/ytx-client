@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef WORKSPACEDIALOG_H
-#define WORKSPACEDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include <QTableView>
@@ -49,5 +48,3 @@ private:
     Ui::WorkspaceDialog* ui;
     workspace::Model* model_ {};
 };
-
-#endif // WORKSPACEDIALOG_H

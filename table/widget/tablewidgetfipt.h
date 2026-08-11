@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TABLEWIDGETFIPT_H
-#define TABLEWIDGETFIPT_H
+#pragma once
 
 #include <QTableView>
 
@@ -45,5 +44,3 @@ private:
 };
 
 inline const char* kTableWidgetFIPT = "TableWidgetFIPT";
-
-#endif // TABLEWIDGETFIPT_H

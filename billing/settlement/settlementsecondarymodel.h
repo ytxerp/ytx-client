@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTLEMENTSECONDARYMODEL_H
-#define SETTLEMENTSECONDARYMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -66,5 +65,3 @@ private:
 };
 
 }
-
-#endif // SETTLEMENTSECONDARYMODEL_H

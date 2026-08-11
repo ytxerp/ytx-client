@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PREFERENCES_H
-#define PREFERENCES_H
+#pragma once
 
 #include <QComboBox>
 #include <QDialog>
@@ -103,5 +102,3 @@ private:
 
     bool is_enable_status_ { false };
 };
-
-#endif // PREFERENCES_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYENUM_H
-#define ENTRYENUM_H
+#pragma once
 
 /** @brief Operation */
 enum class MarkOperation { kClear = 0, kSelect, kToggle };
@@ -129,5 +128,3 @@ enum class FullEntryEnumF {
     kRhsRate,
     kRhsNode,
 };
-
-#endif // ENTRYENUM_H

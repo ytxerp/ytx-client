@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef USERPROFILEDIALOG_H
-#define USERPROFILEDIALOG_H
+#pragma once
 
 #include <QDialog>
 
@@ -44,5 +43,3 @@ private:
 private:
     Ui::UserProfileDialog* ui;
 };
-
-#endif // USERPROFILEDIALOG_H

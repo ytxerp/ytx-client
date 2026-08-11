@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef COLLATOR_H
-#define COLLATOR_H
+#pragma once
 
 #include <QCollator>
 #include <QLocale>
@@ -47,5 +46,3 @@ public:
     Collator(Collator&&) = delete;
     Collator& operator=(Collator&&) = delete;
 };
-
-#endif // COLLATOR_H

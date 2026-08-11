@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DAILYLOGGER_H
-#define DAILYLOGGER_H
+#pragma once
 
 #include <QDateTime>
 #include <QFile>
@@ -52,5 +51,3 @@ private:
     bool is_released_ { false };
     QDate current_date_ {};
 };
-
-#endif // DAILYLOGGER_H

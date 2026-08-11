@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SPINBOX_H
-#define SPINBOX_H
+#pragma once
 
 #include <QSpinBox>
 #include <QWheelEvent>
@@ -37,5 +36,3 @@ public:
 protected:
     void wheelEvent(QWheelEvent* event) override { event->ignore(); }
 };
-
-#endif // SPINBOX_H

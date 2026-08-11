@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INVENTORYHEATENUM_H
-#define INVENTORYHEATENUM_H
+#pragma once
 
 namespace inventory_heat {
 enum class RowField : int {
@@ -32,5 +31,3 @@ enum class RowField : int {
     kHeatScore,
 };
 }
-
-#endif // INVENTORYHEATENUM_H

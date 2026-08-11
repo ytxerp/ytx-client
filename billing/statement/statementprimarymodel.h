@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENTPRIMARYMODEL_H
-#define STATEMENTPRIMARYMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -52,5 +51,3 @@ private:
 };
 
 }
-
-#endif // STATEMENTPRIMARYMODEL_H

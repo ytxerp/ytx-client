@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SECTION_H
-#define SECTION_H
+#pragma once
 
 #include <array>
 
@@ -128,5 +127,3 @@ inline const QHash<QString, Section> kStringSection {
     { kSale, Section::kSale },
     { kPurchase, Section::kPurchase },
 };
-
-#endif // SECTION_H

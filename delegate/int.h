@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INT_H
-#define INT_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 
@@ -35,5 +34,3 @@ private:
     int max_ {};
     int min_ {};
 };
-
-#endif // INT_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PARTNERHEATDIALOG_H
-#define PARTNERHEATDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include <QTableView>
@@ -63,5 +62,3 @@ private:
     partner_heat::Model* model_ {};
     const QUuid widget_id_ {};
 };
-
-#endif // PARTNERHEATDIALOG_H

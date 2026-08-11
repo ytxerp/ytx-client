@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYHUBT_H
-#define ENTRYHUBT_H
+#pragma once
 
 #include "entryhub.h"
 
@@ -30,5 +29,3 @@ public:
     void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, InputSide input_side) override;
     void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update) override;
 };
-
-#endif // ENTRYHUBT_H

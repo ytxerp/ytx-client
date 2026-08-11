@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SIGNALBLOCKER_H
-#define SIGNALBLOCKER_H
+#pragma once
 
 #include <QWidget>
 
@@ -53,5 +52,3 @@ public:
 private:
     std::vector<QWidget*> blocked_list_ {};
 };
-
-#endif // SIGNALBLOCKER_H

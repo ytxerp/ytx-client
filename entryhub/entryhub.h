@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYHUB_H
-#define ENTRYHUB_H
+#pragma once
 
 #include <QJsonObject>
 #include <QObject>
@@ -100,5 +99,3 @@ protected:
 
     CSectionInfo& info_;
 };
-
-#endif // ENTRYHUB_H

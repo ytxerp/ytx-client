@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef BOOL_H
-#define BOOL_H
+#pragma once
 
 #include <QEvent>
 
@@ -33,5 +32,3 @@ public:
 private:
     QEvent::Type type_ {};
 };
-
-#endif // BOOL_H

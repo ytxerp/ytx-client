@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef NODEINSERTARG_H
-#define NODEINSERTARG_H
+#pragma once
 
 #include "table/unitmodel.h"
 #include "tree/node.h"
@@ -31,5 +30,3 @@ struct NodeInsertArg {
 };
 
 using CNodeInsertArg = const NodeInsertArg;
-
-#endif // NODEINSERTARG_H

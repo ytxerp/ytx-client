@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ABOUT_H
-#define ABOUT_H
+#pragma once
 
 #include <QDialog>
 
@@ -42,5 +41,3 @@ private:
 private:
     Ui::About* ui;
 };
-
-#endif // ABOUT_H

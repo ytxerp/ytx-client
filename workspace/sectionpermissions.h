@@ -1,5 +1,4 @@
-#ifndef SECTION_PERMISSION_H
-#define SECTION_PERMISSION_H
+#pragma once
 
 #include <QFlags>
 #include <QString>
@@ -38,5 +37,3 @@ struct PermissionItem {
 std::span<const PermissionItem> PermissionItems();
 QString PermissionsDisplay(Permissions permissions);
 }
-
-#endif // SECTION_PERMISSION_H

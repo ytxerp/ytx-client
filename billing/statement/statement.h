@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STATEMENT_H
-#define STATEMENT_H
+#pragma once
 
 #include <QDateTime>
 #include <QJsonObject>
@@ -140,5 +139,3 @@ inline void TertiaryRow::ReadJson(const QJsonObject& object)
 using CTertiaryList = const QList<TertiaryRow*>;
 
 }
-
-#endif // STATEMENT_H

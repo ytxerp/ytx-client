@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYHUBP_H
-#define ENTRYHUBP_H
+#pragma once
 
 #include "component/using.h"
 #include "entryhub.h"
@@ -44,5 +43,3 @@ public:
 
     void ReplaceInternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id);
 };
-
-#endif // ENTRYHUBP_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEWIDGETO_H
-#define TREEWIDGETO_H
+#pragma once
 
 #include "tree/model/treemodel.h"
 #include "treewidget.h"
@@ -62,5 +61,3 @@ private:
 };
 
 inline const char* kTreeWidgetO = "TreeWidgetO";
-
-#endif // TREEWIDGETO_H

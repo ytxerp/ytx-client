@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SECTIONCONTEX_H
-#define SECTIONCONTEX_H
+#pragma once
 
 #include "component/config.h"
 #include "entryhub/entryhub.h"
@@ -44,5 +43,3 @@ struct SectionContext {
     QHash<QUuid, tag::Row*> tag_hash {};
     QHash<QUuid, tag::Icon> tag_icon_hash {};
 };
-
-#endif // SECTIONCONTEX_H

@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SEARCHPATHTREER_H
-#define SEARCHPATHTREER_H
+#pragma once
 
 // read only
 
@@ -37,5 +36,3 @@ private:
 private:
     CTreeModel* model_ {};
 };
-
-#endif // SEARCHPATHTREER_H

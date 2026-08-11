@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TREEMODELT_H
-#define TREEMODELT_H
+#pragma once
 
 #include "treemodel.h"
 
@@ -35,5 +34,3 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 };
-
-#endif // TREEMODELT_H

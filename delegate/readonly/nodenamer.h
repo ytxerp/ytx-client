@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef NODENAMER_H
-#define NODENAMER_H
+#pragma once
 
 #include "delegate/styleditemdelegate.h"
 #include "tree/model/treemodel.h"
@@ -32,5 +31,3 @@ public:
 private:
     CTreeModel* tree_model_ {};
 };
-
-#endif // NODENAMER_H

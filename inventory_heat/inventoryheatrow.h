@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INVENTORYHEATROW_H
-#define INVENTORYHEATROW_H
+#pragma once
 
 #include <QJsonObject>
 #include <QUuid>
@@ -64,5 +63,3 @@ inline void Row::ReadJson(const QJsonObject& obj)
 
 inline void Row::Reset() { *this = Row {}; }
 }
-
-#endif // INVENTORYHEATROW_H

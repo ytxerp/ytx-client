@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef CASHFLOWWRONGMODEL_H
-#define CASHFLOWWRONGMODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 
@@ -54,5 +53,3 @@ private:
     QList<WrongRow*> list_ {};
 };
 }
-
-#endif // CASHFLOWWRONGMODEL_H

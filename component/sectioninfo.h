@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef INFO_H
-#define INFO_H
+#pragma once
 
 #include <QMap>
 #include <QPointer>
@@ -51,5 +50,3 @@ struct SectionInfo {
 };
 
 using CSectionInfo = const SectionInfo;
-
-#endif // INFO_H

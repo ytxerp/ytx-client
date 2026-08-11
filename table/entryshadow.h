@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENTRYSHADOW_H
-#define ENTRYSHADOW_H
+#pragma once
 
 #include <QJsonObject>
 
@@ -76,5 +75,3 @@ struct EntryShadowF final : EntryShadow {
 };
 
 using EntryShadowList = QList<EntryShadow*>;
-
-#endif // ENTRYSHADOW_H
