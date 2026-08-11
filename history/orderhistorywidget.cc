@@ -1,15 +1,15 @@
-#include "orderreferencewidget.h"
+#include "orderhistorywidget.h"
 
 #include "component/constantstring.h"
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
-#include "ui_orderreferencewidget.h"
+#include "ui_orderhistorywidget.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-OrderReferenceWidget::OrderReferenceWidget(OrderReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, NodeUnit node_unit, QWidget* parent)
+OrderHistoryWidget::OrderHistoryWidget(history::OrderModel* model, Section section, CUuid& widget_id, CUuid& node_id, NodeUnit node_unit, QWidget* parent)
     : QWidget(parent)
-    , ui(new Ui::OrderReferenceWidget)
+    , ui(new Ui::OrderHistoryWidget)
     , range_ { DefaultRange() }
     , model_ { model }
     , node_id_ { node_id }
@@ -26,14 +26,14 @@ OrderReferenceWidget::OrderReferenceWidget(OrderReferenceModel* model, Section s
     InitWidget();
     InitTimer();
 
-    QTimer::singleShot(0, this, &OrderReferenceWidget::on_pBtnFetch_clicked);
+    QTimer::singleShot(0, this, &OrderHistoryWidget::on_pBtnFetch_clicked);
 }
 
-OrderReferenceWidget::~OrderReferenceWidget() { delete ui; }
+OrderHistoryWidget::~OrderHistoryWidget() { delete ui; }
 
-QTableView* OrderReferenceWidget::View() const { return ui->tableView; }
+QTableView* OrderHistoryWidget::View() const { return ui->tableView; }
 
-void OrderReferenceWidget::on_start_dateChanged(const QDate& date)
+void OrderHistoryWidget::on_start_dateChanged(const QDate& date)
 {
     const bool valid { date <= range_.end };
     range_.start = date;
@@ -42,7 +42,7 @@ void OrderReferenceWidget::on_start_dateChanged(const QDate& date)
     ui->pBtnFetch->setEnabled(valid);
 }
 
-void OrderReferenceWidget::on_end_dateChanged(const QDate& date)
+void OrderHistoryWidget::on_end_dateChanged(const QDate& date)
 {
     const bool valid { date >= range_.start };
     range_.end = date;
@@ -51,7 +51,7 @@ void OrderReferenceWidget::on_end_dateChanged(const QDate& date)
     ui->pBtnFetch->setEnabled(valid);
 }
 
-void OrderReferenceWidget::on_pBtnFetch_clicked()
+void OrderHistoryWidget::on_pBtnFetch_clicked()
 {
     if (!ui->pBtnFetch->isEnabled()) {
         return;
@@ -69,13 +69,13 @@ void OrderReferenceWidget::on_pBtnFetch_clicked()
 
     qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
-    const auto message { JsonGen::OrderReference(section_, widget_id_, node_id_, node_unit_, query_range) };
-    WebSocket::Instance()->SendMessage(WsKey::kOrderReference, message);
+    const auto message { JsonGen::OrderHistory(section_, widget_id_, node_id_, node_unit_, query_range) };
+    WebSocket::Instance()->SendMessage(WsKey::kOrderHistory, message);
 
     cooldown_timer_->start(time_const::kCooldownMs);
 }
 
-void OrderReferenceWidget::InitWidget()
+void OrderHistoryWidget::InitWidget()
 {
     ui->start->setDisplayFormat(datetime_format::kDashedDate);
     ui->end->setDisplayFormat(datetime_format::kDashedDate);
@@ -85,7 +85,7 @@ void OrderReferenceWidget::InitWidget()
     ui->pBtnFetch->setFocus();
 }
 
-void OrderReferenceWidget::InitTimer()
+void OrderHistoryWidget::InitTimer()
 {
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);

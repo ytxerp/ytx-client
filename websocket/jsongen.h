@@ -61,7 +61,7 @@ QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace, const utils::DateT
 QJsonObject TreeAck(Section section, const utils::DateTimeRange& range);
 QJsonObject TableAck(Section section, CUuid& node_id, CUuid& entry_id = {});
 QJsonObject NodeAck(Section section, CUuid& node_id);
-QJsonObject OrderReference(Section section, CUuid& widget_id, CUuid& node_id, NodeUnit unit, const utils::DateTimeRange& range);
+QJsonObject OrderHistory(Section section, CUuid& widget_id, CUuid& node_id, NodeUnit unit, const utils::DateTimeRange& range);
 QJsonObject StatementPrimary(Section section, CUuid& widget_id, int unit, const utils::DateTimeRange& range);
 QJsonObject StatementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const utils::DateTimeRange& range);
 QJsonObject StatementTertiary(Section section, CUuid& widget_id, CUuid& partner_id, int unit, const utils::DateTimeRange& range);

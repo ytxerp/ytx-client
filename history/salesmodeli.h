@@ -17,29 +17,22 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef REFERENCE_H
-#define REFERENCE_H
+#pragma once
 
-enum class SaleReferenceEnumI {
-    kIssuedTime = 0,
-    kPartnerId,
-    kCount,
-    kMeasure,
-    kUnitPrice,
-    kDescription,
-    kInitial,
+#include "component/sectioninfo.h"
+#include "ordermodel.h"
+
+namespace history {
+
+class SalesModelI final : public OrderModel {
+    Q_OBJECT
+
+public:
+    explicit SalesModelI(CSectionInfo& info, QObject* parent = nullptr);
+    ~SalesModelI() override;
+
+public:
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    void sort(int column, Qt::SortOrder order) override;
 };
-
-enum class SaleReferenceEnumP {
-    kIssuedTime = 0,
-    kInternalSku,
-    kColor,
-    kExternalSku,
-    kCount,
-    kMeasure,
-    kUnitPrice,
-    kDescription,
-    kInitial,
-};
-
-#endif // REFERENCE_H
+}

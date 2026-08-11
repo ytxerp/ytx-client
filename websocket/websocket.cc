@@ -172,7 +172,7 @@ void WebSocket::InitHandler()
 
     handler_obj_[WsKey::kOrderTreeAck] = [this](const QJsonObject& obj) { AckOrderTree(obj); };
     handler_obj_[WsKey::kTableAck] = [this](const QJsonObject& obj) { AckTable(obj); };
-    handler_obj_[WsKey::kOrderReference] = [this](const QJsonObject& obj) { OnOrderReference(obj); };
+    handler_obj_[WsKey::kOrderHistory] = [this](const QJsonObject& obj) { OnOrderHistory(obj); };
     handler_obj_[WsKey::kStatementPrimary] = [this](const QJsonObject& obj) { OnStatementPrimary(obj); };
     handler_obj_[WsKey::kStatementSecondary] = [this](const QJsonObject& obj) { OnStatementSecondary(obj); };
     handler_obj_[WsKey::kStatementTertiary] = [this](const QJsonObject& obj) { OnStatementTertiary(obj); };
@@ -578,13 +578,13 @@ void WebSocket::AckOrderNode(const QJsonObject& obj)
     emit SNodeLocate(section, node_id);
 }
 
-void WebSocket::OnOrderReference(const QJsonObject& obj)
+void WebSocket::OnOrderHistory(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonArray array { obj.value(kArray).toArray() };
 
-    emit SOrderReference(section, widget_id, array);
+    emit SOrderHistory(section, widget_id, array);
 }
 
 void WebSocket::OnStatementPrimary(const QJsonObject& obj)

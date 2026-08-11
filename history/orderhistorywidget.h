@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ORDERREFERENCEWIDGET_H
-#define ORDERREFERENCEWIDGET_H
+#pragma once
 
 #include <QDateTime>
 #include <QTableView>
@@ -27,22 +26,22 @@
 #include "component/using.h"
 #include "enum/nodeenum.h"
 #include "enum/section.h"
-#include "reference/orderreferencemodel.h"
+#include "ordermodel.h"
 #include "utils/daterange.h"
 
 namespace Ui {
-class OrderReferenceWidget;
+class OrderHistoryWidget;
 }
 
-class OrderReferenceWidget final : public QWidget {
+class OrderHistoryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    OrderReferenceWidget(OrderReferenceModel* model, Section section, CUuid& widget_id, CUuid& node_id, NodeUnit node_unit, QWidget* parent = nullptr);
-    ~OrderReferenceWidget() override;
+    OrderHistoryWidget(history::OrderModel* model, Section section, CUuid& widget_id, CUuid& node_id, NodeUnit node_unit, QWidget* parent = nullptr);
+    ~OrderHistoryWidget() override;
 
     QTableView* View() const;
-    OrderReferenceModel* Model() const { return model_; }
+    history::OrderModel* Model() const { return model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -61,9 +60,9 @@ private:
     }
 
 private:
-    Ui::OrderReferenceWidget* ui;
+    Ui::OrderHistoryWidget* ui;
     utils::DateRange range_ {};
-    OrderReferenceModel* model_ {};
+    history::OrderModel* model_ {};
 
     QTimer* cooldown_timer_ { nullptr };
 
@@ -72,5 +71,3 @@ private:
     const NodeUnit node_unit_ {};
     const Section section_ {};
 };
-
-#endif // ORDERREFERENCEWIDGET_H

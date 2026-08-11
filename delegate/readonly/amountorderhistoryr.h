@@ -17,22 +17,22 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AMOUNTORDERREFERENCER_H
-#define AMOUNTORDERREFERENCER_H
+#ifndef AMOUNTORDERHISTORYR_H
+#define AMOUNTORDERHISTORYR_H
 
 #include "component/using.h"
 #include "delegate/styleditemdelegate.h"
 #include "enum/nodeenum.h"
 #include "enum/section.h"
 
-class AmountOrderReferenceR final : public StyledItemDelegate {
+class AmountOrderHistoryR final : public StyledItemDelegate {
     Q_OBJECT
 
 signals:
-    void SOrderReferencePrimary(const QUuid& node_id, NodeUnit unit);
+    void SShowOrderHistoryWidget(const QUuid& node_id, NodeUnit unit);
 
 public:
-    AmountOrderReferenceR(Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, CString& placeholder, QObject* parent = nullptr);
+    AmountOrderHistoryR(Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, CString& placeholder, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
@@ -48,4 +48,4 @@ private:
     CString& placeholder_;
 };
 
-#endif // AMOUNTORDERREFERENCER_H
+#endif // AMOUNTORDERHISTORYR_H

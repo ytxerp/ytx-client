@@ -149,7 +149,7 @@ set(HEADERS
     delegate/intstringnonezero.h
     delegate/issuedtime.h
     delegate/line.h
-    delegate/readonly/amountorderreferencer.h
+    delegate/readonly/amountorderhistoryr.h
     delegate/readonly/amountr.h
     delegate/readonly/boolcolorstringr.h
     delegate/readonly/boolstringr.h
@@ -200,7 +200,6 @@ set(HEADERS
     enum/bindingmode.h
     enum/entryenum.h
     enum/nodeenum.h
-    enum/reference.h
     enum/section.h
     enum/stateenum.h
     enum/statusenum.h
@@ -219,6 +218,12 @@ set(HEADERS
     global/resourcepool.h
     global/tablesstation.h
     global/userprofile.h
+    history/orderenum.h
+    history/orderhistorywidget.h
+    history/ordermodel.h
+    history/ordermodelp.h
+    history/orderrow.h
+    history/salesmodeli.h
     inventory_heat/inventoryheatdialog.h
     inventory_heat/inventoryheatenum.h
     inventory_heat/inventoryheatmodel.h
@@ -230,11 +235,6 @@ set(HEADERS
     partner_heat/partnerheatrow.h
     period_close/periodclosedialog.h
     period_close/periodclosemodel.h
-    reference/orderreference.h
-    reference/orderreferencemodel.h
-    reference/orderreferencemodelp.h
-    reference/orderreferencewidget.h
-    reference/salereferencemodeli.h
     search/dialog/searchdialog.h
     search/dialog/searchdialogf.h
     search/dialog/searchdialogi.h
@@ -350,7 +350,7 @@ set(SOURCES
     delegate/intstringnonezero.cc
     delegate/issuedtime.cc
     delegate/line.cc
-    delegate/readonly/amountorderreferencer.cc
+    delegate/readonly/amountorderhistoryr.cc
     delegate/readonly/amountr.cc
     delegate/readonly/boolcolorstringr.cc
     delegate/readonly/boolstringr.cc
@@ -404,6 +404,10 @@ set(SOURCES
     global/password_encryption.cc
     global/printhub.cc
     global/tablesstation.cc
+    history/orderhistorywidget.cc
+    history/ordermodel.cc
+    history/ordermodelp.cc
+    history/salesmodeli.cc
     inventory_heat/inventoryheatdialog.cc
     inventory_heat/inventoryheatmodel.cc
     main.cc
@@ -425,7 +429,7 @@ set(SOURCES
     mainwindow/mainwindow_node.cc
     mainwindow/mainwindow_node_remove.cc
     mainwindow/mainwindow_order.cc
-    mainwindow/mainwindow_order_reference.cc
+    mainwindow/mainwindow_order_history.cc
     mainwindow/mainwindow_partner_heat.cc
     mainwindow/mainwindow_period_close.cc
     mainwindow/mainwindow_search.cc
@@ -438,10 +442,6 @@ set(SOURCES
     partner_heat/partnerheatmodel.cc
     period_close/periodclosedialog.cc
     period_close/periodclosemodel.cc
-    reference/orderreferencemodel.cc
-    reference/orderreferencemodelp.cc
-    reference/orderreferencewidget.cc
-    reference/salereferencemodeli.cc
     search/dialog/searchdialog.cc
     search/dialog/searchdialogf.cc
     search/dialog/searchdialogi.cc
@@ -526,11 +526,11 @@ set(UIS
     dialog/insertnode/insertnodetask.ui
     dialog/preferences.ui
     dialog/userprofiledialog.ui
+    history/orderhistorywidget.ui
     inventory_heat/inventoryheatdialog.ui
     mainwindow/mainwindow.ui
     partner_heat/partnerheatdialog.ui
     period_close/periodclosedialog.ui
-    reference/orderreferencewidget.ui
     search/dialog/searchdialog.ui
     table/widget/tablewidgetfipt.ui
     table/widget/tablewidgeto.ui

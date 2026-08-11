@@ -18,7 +18,7 @@
 #include "delegate/intstringnonezero.h"
 #include "delegate/issuedtime.h"
 #include "delegate/line.h"
-#include "delegate/readonly/amountorderreferencer.h"
+#include "delegate/readonly/amountorderhistoryr.h"
 #include "delegate/readonly/amountr.h"
 #include "delegate/readonly/boolcolorstringr.h"
 #include "delegate/readonly/boolstringr.h"
@@ -41,7 +41,7 @@
 #include "delegate/statusdelegate.h"
 #include "delegate/tagdelegate.h"
 #include "delegate/workspaceroledelegate.h"
-#include "enum/reference.h"
+#include "history/orderenum.h"
 #include "inventory_heat/inventoryheatenum.h"
 #include "mainwindow.h"
 #include "partner_heat/partnerheatenum.h"
@@ -132,10 +132,10 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* quantity { new DoubleR(section.quantity_decimal, string_const::kEightDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kInitialTotal), quantity);
 
-    auto* amount { new AmountOrderReferenceR(
+    auto* amount { new AmountOrderHistoryR(
         info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, string_const::kEightDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kFinalTotal), amount);
-    connect(amount, &AmountOrderReferenceR::SOrderReferencePrimary, this, &MainWindow::ROrderReferencePrimary);
+    connect(amount, &AmountOrderHistoryR::SShowOrderHistoryWidget, this, &MainWindow::RShowOrderHistoryWidget);
 
     auto* unit_price { new Double(section.rate_decimal, 0.0, kDoubleMax, string_const::kFourDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumI::kUnitPrice), unit_price);
@@ -166,10 +166,10 @@ void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* kind { new IntStringR(info.kind_map, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kKind), kind);
 
-    auto* amount { new AmountOrderReferenceR(
+    auto* amount { new AmountOrderHistoryR(
         info.section, section.amount_decimal, sc_f_.shared_config.default_unit, sc_f_.info.unit_symbol_map, string_const::kEightDigits, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kInitialTotal), amount);
-    connect(amount, &AmountOrderReferenceR::SOrderReferencePrimary, this, &MainWindow::ROrderReferencePrimary);
+    connect(amount, &AmountOrderHistoryR::SShowOrderHistoryWidget, this, &MainWindow::RShowOrderHistoryWidget);
 
     auto* payment_term { new Int(0, 36500, tree_view) }; // one hundred years
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kPaymentTerm), payment_term);
@@ -378,45 +378,45 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionInfo& info, CSec
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kTag), tag);
 }
 
-void MainWindow::DelegateSaleReferenceI(QTableView* table_view, CSectionConfig& config) const
+void MainWindow::DelegateSalesHistoryI(QTableView* table_view, CSectionConfig& config) const
 {
     auto* price { new DoubleNoneZeroR(config.rate_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumI::kUnitPrice), price);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesColumnI::kUnitPrice), price);
 
     auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumI::kCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumI::kMeasure), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesColumnI::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesColumnI::kMeasure), quantity);
 
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumI::kInitial), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesColumnI::kInitial), amount);
 
     auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumI::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesColumnI::kIssuedTime), issued_time);
 
     auto* name { new NodeNameR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumI::kPartnerId), name);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::SalesColumnI::kPartnerId), name);
 }
 
-void MainWindow::DelegateSaleReferenceP(QTableView* table_view, CSectionConfig& config) const
+void MainWindow::DelegateOrderHistoryP(QTableView* table_view, CSectionConfig& config) const
 {
     auto* price { new DoubleNoneZeroR(config.rate_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kUnitPrice), price);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kUnitPrice), price);
 
     auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kMeasure), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kMeasure), quantity);
 
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kInitial), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kInitial), amount);
 
     auto* issued_time { new IssuedTimeR(config.date_format, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kIssuedTime), issued_time);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kIssuedTime), issued_time);
 
     auto* internal_sku { new NodePathR(sc_i_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kInternalSku), internal_sku);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kInternalSku), internal_sku);
 
     auto* color { new ColorR(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(SaleReferenceEnumP::kColor), color);
+    table_view->setItemDelegateForColumn(std::to_underlying(history::OrderColumnP::kColor), color);
 }
 
 void MainWindow::DelegateStatement(QTableView* table_view, CSectionConfig& config) const

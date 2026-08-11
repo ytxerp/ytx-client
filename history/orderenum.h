@@ -17,27 +17,30 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef WIDGETCONTEX_H
-#define WIDGETCONTEX_H
+#pragma once
 
-#include <QPointer>
-#include <QUuid>
-#include <QWidget>
+namespace history {
 
-enum class WidgetRole {
-    kNodeTabFIT,
-    kNodeTabO,
-    kNodeTabP,
-    kDialog,
-    kSettlement,
-    kStatement,
-    kOrderHistory,
+enum class SalesColumnI {
+    kIssuedTime = 0,
+    kPartnerId,
+    kCount,
+    kMeasure,
+    kUnitPrice,
+    kDescription,
+    kInitial,
 };
 
-struct WidgetContext {
-    QPointer<QWidget> widget {};
-    QUuid id {};
-    WidgetRole role {};
+enum class OrderColumnP {
+    kIssuedTime = 0,
+    kInternalSku,
+    kColor,
+    kExternalSku,
+    kCount,
+    kMeasure,
+    kUnitPrice,
+    kDescription,
+    kInitial,
 };
 
-#endif // WIDGETCONTEX_H
+}

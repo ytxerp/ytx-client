@@ -1,11 +1,11 @@
-#include "amountorderreferencer.h"
+#include "amountorderhistoryr.h"
 
 #include <QMouseEvent>
 
 #include "enum/nodeenum.h"
 #include "tree/node.h"
 
-AmountOrderReferenceR::AmountOrderReferenceR(
+AmountOrderHistoryR::AmountOrderHistoryR(
     Section section, const int& decimal, const int& unit, CIntString& unit_symbol_map, CString& placeholder, QObject* parent)
     : StyledItemDelegate { parent }
     , decimal_ { decimal }
@@ -16,19 +16,19 @@ AmountOrderReferenceR::AmountOrderReferenceR(
 {
 }
 
-void AmountOrderReferenceR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void AmountOrderHistoryR::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     PaintText(Format(index), painter, option, index, Qt::AlignRight | Qt::AlignVCenter);
 }
 
-QSize AmountOrderReferenceR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+QSize AmountOrderHistoryR::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     const QString text { Format(index) };
     const QString& str { text.size() > placeholder_.size() ? text : placeholder_ };
     return CalculateTextSize(str, option);
 }
 
-QString AmountOrderReferenceR::Format(const QModelIndex& index) const
+QString AmountOrderHistoryR::Format(const QModelIndex& index) const
 {
     auto it { unit_symbol_map_.constFind(unit_) };
     auto symbol { (it != unit_symbol_map_.constEnd()) ? it.value() : QString() };
@@ -36,12 +36,12 @@ QString AmountOrderReferenceR::Format(const QModelIndex& index) const
     return symbol + locale_.toString(index.data().toDouble(), 'f', decimal_);
 }
 
-bool AmountOrderReferenceR::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
+bool AmountOrderHistoryR::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
 {
     auto* node { static_cast<Node*>(index.internalPointer()) };
 
     if (node->kind == NodeKind::kLeaf && event->type() == QEvent::MouseButtonDblClick && option.rect.contains(static_cast<QMouseEvent*>(event)->pos()))
-        emit SOrderReferencePrimary(node->id, node->unit);
+        emit SShowOrderHistoryWidget(node->id, node->unit);
 
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }

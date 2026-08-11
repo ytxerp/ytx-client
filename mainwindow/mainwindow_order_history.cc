@@ -1,10 +1,10 @@
-#include "enum/reference.h"
+#include "history/orderenum.h"
+#include "history/orderhistorywidget.h"
+#include "history/ordermodelp.h"
+#include "history/salesmodeli.h"
 #include "mainwindow.h"
-#include "reference/orderreferencemodelp.h"
-#include "reference/orderreferencewidget.h"
-#include "reference/salereferencemodeli.h"
 
-void MainWindow::ROrderReference(Section section, const QUuid& widget_id, const QJsonArray& array)
+void MainWindow::ROrderHistory(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -14,14 +14,14 @@ void MainWindow::ROrderReference(Section section, const QUuid& widget_id, const 
 
     auto* ptr { widget.data() };
 
-    Q_ASSERT(qobject_cast<OrderReferenceWidget*>(ptr));
-    auto* d_widget { static_cast<OrderReferenceWidget*>(ptr) };
+    Q_ASSERT(qobject_cast<OrderHistoryWidget*>(ptr));
+    auto* d_widget { static_cast<OrderHistoryWidget*>(ptr) };
 
     auto* model { d_widget->Model() };
     model->Rebuild(array);
 }
 
-void MainWindow::ROrderReferencePrimary(const QUuid& node_id, NodeUnit unit)
+void MainWindow::RShowOrderHistoryWidget(const QUuid& node_id, NodeUnit unit)
 {
     bool allowed { false };
 
@@ -43,11 +43,6 @@ void MainWindow::ROrderReferencePrimary(const QUuid& node_id, NodeUnit unit)
     if (!allowed)
         return;
 
-    CreateSaleReference(node_id, unit);
-}
-
-void MainWindow::CreateSaleReference(const QUuid& node_id, NodeUnit unit)
-{
     Q_ASSERT(sc_ && sc_->tree_model);
 
     auto tree_model { sc_->tree_model };
@@ -59,15 +54,15 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, NodeUnit unit)
     const QUuid widget_id { QUuid::createUuidV7() };
 
     // The widget will take ownership of the model
-    OrderReferenceModel* model {};
+    history::OrderModel* model {};
 
     {
         switch (section) {
         case Section::kInventory:
-            model = new SaleReferenceModelI(info, nullptr);
+            model = new history::SalesModelI(info, nullptr);
             break;
         case Section::kPartner:
-            model = new OrderReferenceModelP(info, node_id, sc_i_.tree_model, nullptr);
+            model = new history::OrderModelP(info, node_id, sc_i_.tree_model, nullptr);
             break;
         case Section::kSale:
         case Section::kPurchase:
@@ -77,7 +72,7 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, NodeUnit unit)
         }
     }
 
-    auto* widget { new OrderReferenceWidget(model, section, widget_id, node_id, unit, this) };
+    auto* widget { new OrderHistoryWidget(model, section, widget_id, node_id, unit, this) };
 
     const int tab_index { sc_->tab_widget->addTab(widget, title) };
     auto* tab_bar { sc_->tab_widget->tabBar() };
@@ -89,12 +84,12 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, NodeUnit unit)
     {
         switch (section) {
         case Section::kInventory:
-            InitTableView(view, std::to_underlying(SaleReferenceEnumI::kDescription));
-            DelegateSaleReferenceI(view, sc_i_.section_config);
+            InitTableView(view, std::to_underlying(history::SalesColumnI::kDescription));
+            DelegateSalesHistoryI(view, sc_i_.section_config);
             break;
         case Section::kPartner:
-            InitTableView(view, std::to_underlying(SaleReferenceEnumP::kDescription));
-            DelegateSaleReferenceP(view, sc_p_.section_config);
+            InitTableView(view, std::to_underlying(history::OrderColumnP::kDescription));
+            DelegateOrderHistoryP(view, sc_p_.section_config);
             break;
         case Section::kSale:
         case Section::kPurchase:
@@ -104,5 +99,5 @@ void MainWindow::CreateSaleReference(const QUuid& node_id, NodeUnit unit)
         }
     }
 
-    RegisterWidget(widget, widget_id, WidgetRole::kSaleReference);
+    RegisterWidget(widget, widget_id, WidgetRole::kOrderHistory);
 }

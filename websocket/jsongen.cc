@@ -252,7 +252,7 @@ QJsonObject EntryMessage(Section section, CUuid& entry_id)
     return message;
 }
 
-QJsonObject OrderReference(Section section, CUuid& widget_id, CUuid& node_id, NodeUnit unit, const utils::DateTimeRange& range)
+QJsonObject OrderHistory(Section section, CUuid& widget_id, CUuid& node_id, NodeUnit unit, const utils::DateTimeRange& range)
 {
     QJsonObject message {};
 

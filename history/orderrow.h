@@ -17,8 +17,7 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ORDERREFERENCE_H
-#define ORDERREFERENCE_H
+#pragma once
 
 #include <QDateTime>
 #include <QJsonObject>
@@ -28,7 +27,9 @@
 
 #include "component/constant.h"
 
-struct OrderReference final {
+namespace history {
+
+struct OrderRow final {
     QDateTime issued_time {};
     QUuid order_id {};
     QUuid node_id {}; // partner or inventory id
@@ -42,9 +43,9 @@ struct OrderReference final {
     void ReadJson(const QJsonObject& object);
 };
 
-inline void OrderReference::Reset() { *this = OrderReference {}; }
+inline void OrderRow::Reset() { *this = OrderRow {}; }
 
-inline void OrderReference::ReadJson(const QJsonObject& object)
+inline void OrderRow::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kIssuedTime); val.isString())
         issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
@@ -63,5 +64,4 @@ inline void OrderReference::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kUnitPrice); val.isString())
         unit_price = val.toString().toDouble();
 }
-
-#endif // ORDERREFERENCE_H
+}
