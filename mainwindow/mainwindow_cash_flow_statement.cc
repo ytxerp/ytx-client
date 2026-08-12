@@ -1,10 +1,10 @@
 #include <QJsonArray>
 
-#include "charts/cash_flow_statement/cashflowcarriermodel.h"
-#include "charts/cash_flow_statement/cashflowspecialmodel.h"
-#include "charts/cash_flow_statement/cashflowstatementdialog.h"
-#include "charts/cash_flow_statement/cashflowstatementenum.h"
 #include "component/constantstring.h"
+#include "dashboard/cash_flow_statement/cashflowcarriermodel.h"
+#include "dashboard/cash_flow_statement/cashflowspecialmodel.h"
+#include "dashboard/cash_flow_statement/cashflowstatementdialog.h"
+#include "dashboard/cash_flow_statement/cashflowstatementenum.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 

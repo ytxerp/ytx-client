@@ -1,6 +1,6 @@
-#include "charts/balance_sheet/balancesheetdialog.h"
-#include "charts/balance_sheet/balancesheetenum.h"
-#include "charts/balance_sheet/balancesheetmodel.h"
+#include "dashboard/balance_sheet/balancesheetdialog.h"
+#include "dashboard/balance_sheet/balancesheetenum.h"
+#include "dashboard/balance_sheet/balancesheetmodel.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 

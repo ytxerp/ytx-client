@@ -3,7 +3,6 @@
 #include <QMessageBox>
 #include <QUuid>
 
-#include "component/constant.h"
 #include "component/signalblocker.h"
 #include "ui_incomestatementdialog.h"
 #include "websocket/jsongen.h"

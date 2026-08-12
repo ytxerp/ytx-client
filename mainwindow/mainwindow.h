@@ -31,14 +31,14 @@
 #include <QTranslator>
 
 #include "audit/auditinfo.h"
-#include "billing/settlement/settlement.h"
-#include "billing/settlement/settlementprimarywidget.h"
-#include "billing/statement/statementtertiarywidget.h"
 #include "component/config.h"
 #include "component/headerinfo.h"
 #include "component/sectioncontex.h"
 #include "component/sectioninfo.h"
 #include "entryhub/entryhub.h"
+#include "finance/settlement/settlement.h"
+#include "finance/settlement/settlementprimarywidget.h"
+#include "finance/statement/statementtertiarywidget.h"
 #include "table/model/tablemodel.h"
 #include "table/model/tablemodelo.h"
 #include "table/widget/tablewidgetfipt.h"

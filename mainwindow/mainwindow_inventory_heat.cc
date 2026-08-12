@@ -1,5 +1,5 @@
-#include "inventory_heat/inventoryheatdialog.h"
-#include "inventory_heat/inventoryheatenum.h"
+#include "dashboard/inventory_heat/inventoryheatdialog.h"
+#include "dashboard/inventory_heat/inventoryheatenum.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 

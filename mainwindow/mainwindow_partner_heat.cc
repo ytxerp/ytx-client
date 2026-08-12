@@ -1,7 +1,7 @@
+#include "dashboard/partner_heat/partnerheatdialog.h"
+#include "dashboard/partner_heat/partnerheatenum.h"
+#include "dashboard/partner_heat/partnerheatmodel.h"
 #include "mainwindow.h"
-#include "partner_heat/partnerheatdialog.h"
-#include "partner_heat/partnerheatenum.h"
-#include "partner_heat/partnerheatmodel.h"
 #include "utils/mainwindowutils.h"
 
 void MainWindow::on_actionHeatPartner_triggered()

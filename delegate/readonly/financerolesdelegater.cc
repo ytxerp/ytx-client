@@ -1,6 +1,6 @@
 #include "financerolesdelegater.h"
 
-#include "tree/finance_role.h"
+#include "finance/finance_role.h"
 
 FinanceRolesDelegateR::FinanceRolesDelegateR(QObject* parent)
     : StyledItemDelegate { parent }

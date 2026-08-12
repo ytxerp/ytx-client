@@ -25,7 +25,7 @@
 #include <QUuid>
 
 #include "enum/stateenum.h"
-#include "tree/finance_role.h"
+#include "finance/finance_role.h"
 
 struct Entry {
     QUuid id {};

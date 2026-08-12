@@ -1,6 +1,6 @@
+#include "finance/period_close/periodclosedialog.h"
+#include "finance/period_close/periodclosemodel.h"
 #include "mainwindow.h"
-#include "period_close/periodclosedialog.h"
-#include "period_close/periodclosemodel.h"
 #include "utils/mainwindowutils.h"
 
 void MainWindow::on_actionPeriodClose_triggered()

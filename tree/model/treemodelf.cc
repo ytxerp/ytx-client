@@ -1,6 +1,6 @@
 #include "treemodelf.h"
 
-#include "tree/finance_role.h"
+#include "finance/finance_role.h"
 #include "utils/nodeutils.h"
 
 TreeModelF::TreeModelF(CSectionInfo& info, CString& separator, QObject* parent)

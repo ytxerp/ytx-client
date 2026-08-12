@@ -1,6 +1,6 @@
-#include "charts/income_statement/incomestatementdialog.h"
-#include "charts/income_statement/incomestatementenum.h"
-#include "charts/income_statement/incomestatementmodel.h"
+#include "dashboard/income_statement/incomestatementdialog.h"
+#include "dashboard/income_statement/incomestatementenum.h"
+#include "dashboard/income_statement/incomestatementmodel.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 

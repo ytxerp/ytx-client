@@ -22,7 +22,7 @@
 #include <QDialog>
 #include <QTreeView>
 
-#include "charts/income_statement/incomestatementmodel.h"
+#include "incomestatementmodel.h"
 #include "tree/model/treemodel.h"
 #include "utils/daterange.h"
 

@@ -19,8 +19,8 @@
 
 #pragma once
 
+#include "finance/finance_role.h"
 #include "styleditemdelegate.h"
-#include "tree/finance_role.h"
 
 class FinanceRoleDelegate final : public StyledItemDelegate {
 public:

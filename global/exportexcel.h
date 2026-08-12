@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "billing/statement/statement.h"
 #include "component/using.h"
+#include "finance/statement/statement.h"
 #include "utils/daterange.h"
 
 class ExportExcel {

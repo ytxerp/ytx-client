@@ -1,7 +1,7 @@
-#include "billing/statement/statementenum.h"
-#include "billing/statement/statementprimarywidget.h"
-#include "billing/statement/statementsecondarywidget.h"
-#include "billing/statement/statementtertiarywidget.h"
+#include "finance/statement/statementenum.h"
+#include "finance/statement/statementprimarywidget.h"
+#include "finance/statement/statementsecondarywidget.h"
+#include "finance/statement/statementtertiarywidget.h"
 #include "mainwindow.h"
 
 void MainWindow::on_actionStatement_triggered()

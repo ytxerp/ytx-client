@@ -25,7 +25,7 @@
 #include <QUuid>
 
 #include "component/constant.h"
-#include "tree/finance_role.h"
+#include "finance/finance_role.h"
 
 namespace cash_flow {
 

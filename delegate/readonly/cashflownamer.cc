@@ -1,6 +1,6 @@
 #include "cashflownamer.h"
 
-#include "charts/cash_flow_statement/cashflowstatementrow.h"
+#include "dashboard/cash_flow_statement/cashflowstatementrow.h"
 
 CashFlowNameR::CashFlowNameR(CTreeModel* model, QObject* parent)
     : StyledItemDelegate { parent }

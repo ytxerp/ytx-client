@@ -26,7 +26,7 @@
 #include "enum/nodeenum.h"
 #include "enum/stateenum.h"
 #include "enum/statusenum.h"
-#include "tree/finance_role.h"
+#include "finance/finance_role.h"
 
 struct Node {
     QString name {};
