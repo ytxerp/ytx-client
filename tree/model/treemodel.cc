@@ -950,14 +950,6 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     const QJsonArray node_array { data.value(kNodeArray).toArray() };
     const QJsonArray path_array { data.value(kPathArray).toArray() };
 
-    if (node_array.isEmpty()) {
-        qDebug() << Q_FUNC_INFO << "Received empty node array";
-    }
-
-    if (path_array.isEmpty()) {
-        qDebug() << Q_FUNC_INFO << "Received empty path array";
-    }
-
     QHash<QUuid, Node*> new_hash {};
     QHash<QUuid, QString> new_leaf_path {};
     QHash<QUuid, QString> new_branch_path {};
@@ -983,7 +975,8 @@ void TreeModel::ApplyTree(const QJsonObject& data)
         InitTreeData(new_hash, new_leaf_path, new_branch_path);
     }
 
-    qDebug() << "nodes:" << new_hash.size() << "," << "leaf paths:" << new_leaf_path.size() << "," << "branch paths:" << new_branch_path.size();
+    qDebug() << kSectionString.value(section_) << "nodes:" << new_hash.size() << "," << "leaf paths:" << new_leaf_path.size() << ","
+             << "branch paths:" << new_branch_path.size();
 
     beginResetModel();
 

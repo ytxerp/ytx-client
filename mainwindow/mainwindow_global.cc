@@ -15,9 +15,9 @@ void MainWindow::RApplySharedConfig(const QJsonArray& arr)
         }
 
         const QJsonObject obj { val.toObject() };
-        const Section section { obj.value("section").toInt() };
-        const int default_unit { obj.value("default_unit").toInt() };
-        const QString document_dir { obj.value("document_dir").toString() };
+        const Section section { obj.value(kSection).toInt() };
+        const int default_unit { obj.value(WsField::kDefaultUnit).toInt() };
+        const QString document_dir { obj.value(WsField::kDocumentDir).toString() };
 
         auto* sc = GetSectionContex(section);
         if (!sc) {
