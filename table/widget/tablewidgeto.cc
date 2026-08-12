@@ -449,8 +449,7 @@ void TableWidgetO::BuildNodeUpdate(QJsonObject& order_message)
     if (pending_update_.contains(kUnit))
         pending_update_.insert(kFinalTotal, QString::number(tmp_node_->final_total, 'f', numeric_const::kDecimalPlaces4));
 
-    pending_update_.insert(kVersion, tmp_node_->version);
-
+    order_message.insert(kVersion, tmp_node_->version);
     order_message.insert(kNodeId, node_id_.toString(QUuid::WithoutBraces));
     order_message.insert(kPartnerId, tmp_node_->partner_id.toString(QUuid::WithoutBraces));
     order_message.insert(WsField::kNodeUpdate, pending_update_);
@@ -471,11 +470,10 @@ void TableWidgetO::on_pBtnRecall_clicked()
     }
 
     pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
-    pending_update_.insert(kVersion, tmp_node_->version);
 
     qDebug() << "on_pBtnRecall_clicked: tmp_node_ version" << tmp_node_->version;
 
-    WebSocket::Instance()->SendMessage(WsKey::kOrderRecall, JsonGen::OrderRecall(section_, node_id_, pending_update_));
+    WebSocket::Instance()->SendMessage(WsKey::kOrderRecall, JsonGen::OrderRecall(section_, node_id_, pending_update_, tmp_node_->version));
 
     MarkUpdating();
 }
@@ -601,6 +599,6 @@ void TableWidgetO::on_pushButtonDelete_clicked()
         return;
     }
 
-    const QJsonObject value { JsonGen::LeafDelete(section_, node_id_) };
+    const QJsonObject value { JsonGen::LeafDelete(section_, node_id_, tmp_node_->version) };
     WebSocket::Instance()->SendMessage(WsKey::kOrderLeafDelete, value);
 }

@@ -34,14 +34,12 @@ void MainWindow::DeleteNode()
 
     node->sync_state = SyncState::kDeleting;
 
-    const QUuid node_id { node->id };
-
     switch (NodeKind(node->kind)) {
     case NodeKind::kBranch:
-        DeleteBranch(node_id);
+        DeleteBranch(node);
         break;
     case NodeKind::kLeaf: {
-        const auto message { JsonGen::LeafDeleteCheck(sc_->info.section, node_id) };
+        const auto message { JsonGen::LeafDeleteCheck(sc_->info.section, node->id, node->version) };
         WebSocket::Instance()->SendMessage(WsKey::kLeafDeleteCheck, message);
         break;
     }
@@ -50,49 +48,54 @@ void MainWindow::DeleteNode()
 
 void MainWindow::RDenyLeafDelete(const QJsonObject& obj)
 {
-    Section section { obj.value(kSection).toInt() };
-    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+    const Section section { obj.value(kSection).toInt() };
+    const QUuid node_id { obj.value(kNodeId).toString() };
 
-    auto* section_contex = GetSectionContex(section);
-
+    auto* section_contex { GetSectionContex(section) };
     auto model { section_contex->tree_model };
-    const auto unit { model->Unit(node_id) };
+    auto* node { model->GetNode(node_id) };
 
-    auto* dialog { new LeafDeleteDialog(model, section_contex->info, obj, node_id, unit, this) };
+    if (!node || !node->IsValid())
+        return;
+
+    auto* dialog { new LeafDeleteDialog(model, section_contex->info, obj, node, this) };
 
     utils::ManageDialog(sc_->widget_hash, dialog);
     dialog->setWindowModality(Qt::WindowModal);
 
-    connect(dialog, &QDialog::rejected, this, [=] {
-        if (auto* node = model->GetNode(node_id))
-            node->sync_state = SyncState::kSynced;
-    });
-
+    connect(dialog, &QDialog::rejected, this, [=] { node->sync_state = SyncState::kSynced; });
     dialog->show();
 }
 
-void MainWindow::DeleteBranch(const QUuid& node_id)
+void MainWindow::DeleteBranch(Node* node)
 {
     auto tree_model { sc_->tree_model };
     Q_ASSERT(tree_model != nullptr);
 
+    if (!node || !node->IsValid())
+        return;
+
     auto* dlg = utils::CreateMessage(QMessageBox::Question, tr("Confirm Delete"),
-        tr("The branch \"%1\" will be permanently deleted. Its direct children will be promoted to the same level.").arg(tree_model->Path(node_id)), true,
+        tr("The branch \"%1\" will be permanently deleted. Its direct children will be promoted to the same level.").arg(tree_model->Path(node->id)), true,
         QMessageBox::Yes | QMessageBox::Cancel, this);
 
     dlg->setDefaultButton(QMessageBox::Cancel);
 
-    QObject::connect(dlg, &QMessageBox::finished, this, [this, node_id, tree_model](int ret) {
+    QObject::connect(dlg, &QMessageBox::finished, this, [this, node](int ret) {
         if (ret == QMessageBox::Yes) {
-            const QUuid parent_id { tree_model->GetNode(node_id)->parent->id };
-            const auto message { JsonGen::BranchDelete(sc_->info.section, node_id, parent_id) };
+            if (!node || !node->IsValid())
+                return;
+
+            const auto message { JsonGen::BranchDelete(sc_->info.section, node->id, node->parent->id, node->version) };
             WebSocket::Instance()->SendMessage(WsKey::kBranchDelete, message);
         }
     });
 
     connect(dlg, &QDialog::rejected, this, [=] {
-        if (auto* node = tree_model->GetNode(node_id))
-            node->sync_state = SyncState::kSynced;
+        if (!node || !node->IsValid())
+            return;
+
+        node->sync_state = SyncState::kSynced;
     });
 
     dlg->show();

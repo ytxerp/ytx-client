@@ -51,6 +51,8 @@ struct Node {
     Node* parent {};
     QList<Node*> children {};
 
+    bool IsValid() const { return !id.isNull(); }
+
     virtual void Reset();
     virtual void InvertTotal();
 

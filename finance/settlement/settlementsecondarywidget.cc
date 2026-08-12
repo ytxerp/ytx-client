@@ -160,17 +160,15 @@ void SettlementSecondaryWidget::on_pBtnRelease_clicked()
     {
         QJsonObject message {};
         message.insert(kSection, std::to_underlying(section_));
+        message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
 
         model_->Finalize(message);
-
-        message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
 
         if (settlement_.sync_state == SyncState::kSynced) {
             pending_update_.insert(kStatus, std::to_underlying(SettlementStatus::kReleased));
             pending_update_.insert(kAmount, QString::number(settlement_.amount, 'f', numeric_const::kDecimalPlaces4));
-            pending_update_.insert(kVersion, settlement_.version);
 
-            message.insert(kPartnerId, settlement_.partner_id.toString(QUuid::WithoutBraces));
+            message.insert(kVersion, settlement_.version);
             message.insert(kSettlementId, settlement_.id.toString(QUuid::WithoutBraces));
             message.insert(kUpdate, pending_update_);
 
@@ -196,17 +194,14 @@ void SettlementSecondaryWidget::on_pBtnRecall_clicked()
         return;
 
     QJsonObject message {};
-    message.insert(kSection, std::to_underlying(section_));
 
     model_->Finalize(message);
 
-    pending_update_.insert(kVersion, settlement_.version);
-    pending_update_.insert(kAmount, settlement_.amount);
-
-    message.insert(kPartnerId, settlement_.partner_id.toString(QUuid::WithoutBraces));
+    message.insert(kAmount, settlement_.amount);
     message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
     message.insert(kSettlementId, settlement_.id.toString(QUuid::WithoutBraces));
-    message.insert(kUpdate, pending_update_);
+    message.insert(kVersion, settlement_.version);
+    message.insert(kSection, std::to_underlying(section_));
 
     WebSocket::Instance()->SendMessage(WsKey::kSettlementRecall, message);
     pending_update_ = QJsonObject();

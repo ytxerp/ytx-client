@@ -38,22 +38,22 @@ QJsonObject Register(CString& email, CString& password);
 QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id);
 QJsonObject NodeDrag(Section section, CUuid& node_id, CUuid& parent_id);
 
-QJsonObject LeafDelete(Section section, CUuid& node_id);
-QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id);
+QJsonObject LeafDelete(Section section, CUuid& node_id, int version);
+QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id, int version);
 
-QJsonObject LeafDeleteCheck(Section section, CUuid& node_id);
-QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id);
+QJsonObject LeafDeleteCheck(Section section, CUuid& node_id, int version);
+QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, int version);
 
 QJsonObject MarkEntries(Section section, CUuid& node_id, int operation);
-QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update);
-QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, InputSide side);
+QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update, int version);
+QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, InputSide side, int version);
 QJsonObject EntryMessage(Section section, CUuid& entry_id);
 
-QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update);
+QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update, int version);
 QJsonObject TagInsert(Section section, const tag::Row* tag);
 QJsonObject TagDelete(Section section, CUuid& tag_id, int version);
 
-QJsonObject WorkspaceMemberUpdate(CUuid& id, CJsonObject& update);
+QJsonObject WorkspaceMemberUpdate(CUuid& id, CJsonObject& update, int version);
 QJsonObject WorkspaceMemberDelete(CUuid& id);
 QJsonObject WorkspaceMemberAck(CUuid& widget_id, CString& workspace);
 QJsonObject AuditLogAck(CUuid& widget_id, CString& workspace, const utils::DateTimeRange& range);
@@ -71,7 +71,7 @@ QJsonObject SettlementDelete(Section section, CUuid& settlement_id, int version)
 
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule, int version);
 QJsonObject NodeName(Section section, CUuid& node_id, CString& name, int version);
-QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& update);
+QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& update, int version);
 QJsonObject DocumentDir(Section section, CString& document_dir);
 QJsonObject DefaultUnit(Section section, int unit);
 
@@ -80,7 +80,7 @@ QJsonObject EntryTagSearch(Section section, const QSet<QString>& tags);
 QJsonObject OrderNameSearch(Section section, CString& keyword);
 QJsonObject OrderTagSearch(Section section, const QSet<QString>& tags);
 
-QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update);
+QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update, int version);
 QJsonObject AccountName(CString& email, CString& name);
 QJsonObject AccountUsername(CString& email, CString& username);
 

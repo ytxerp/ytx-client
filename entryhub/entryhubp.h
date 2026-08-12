@@ -31,7 +31,7 @@ public:
 public:
     void InsertEntry(const QJsonObject& data) override;
     void DeleteEntry(const QUuid& entry_id) override;
-    void UpdateEntry(const QUuid& id, const QJsonObject& update) override;
+    void UpdateEntry(const QUuid& id, const QJsonObject& update, int version) override;
 
     void PushEntry(const QUuid& node_id);
 

@@ -105,7 +105,7 @@ public:
     void ApplyDrag(const QUuid& ancestor, const QUuid& descendant);
     void ApplyDirectionRule(const QUuid& node_id, bool direction_rule, int version);
     void ApplyDelete(const QUuid& node_id);
-    void ApplyUpdate(const QUuid& node_id, const QJsonObject& update);
+    void ApplyUpdate(const QUuid& node_id, const QJsonObject& update, int version);
 
     virtual void ApplyName(const QUuid& node_id, const QString& name, int version);
 
@@ -152,7 +152,6 @@ public:
 
 protected:
     void RestartTimer(const QUuid& id);
-    void FlushTimer(const QUuid& id);
 
     void EmitNumericChanged(const QSet<QUuid>& ids);
     void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent);
@@ -197,6 +196,7 @@ protected:
 private:
     void InitRoot();
     void ClearTree();
+    void FlushTimer(const QUuid& id);
 
     QSet<QUuid> ExtractLeafIds(const Node* node) const;
     void SyncLeafModel(const QSet<QUuid>& leaf_ids) const;

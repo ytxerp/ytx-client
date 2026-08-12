@@ -247,11 +247,10 @@ bool TableModelF::UpdateNumeric(EntryShadow* shadow, double value, int row, Nume
     const auto input_side { ToValueInputSide(shadow->binding_mode) };
     QJsonObject update {};
 
-    update.insert(kVersion, *shadow->version);
     update.insert(input_side == InputSide::kLhs ? kLhsDebit : kRhsDebit, QString::number(*shadow->lhs_debit, 'f', numeric_const::kDecimalPlaces8));
     update.insert(input_side == InputSide::kLhs ? kLhsCredit : kRhsCredit, QString::number(*shadow->lhs_credit, 'f', numeric_const::kDecimalPlaces8));
 
-    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, input_side) };
+    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, input_side, *shadow->version) };
     WebSocket::Instance()->SendMessage(WsKey::kEntryNumericUpdate, message);
 
     // Delta calculation follows the DICD rule (Debit - Credit).
@@ -371,10 +370,9 @@ bool TableModelF::UpdateRate(EntryShadow* shadow, double value)
     const auto input_side { ToValueInputSide(shadow->binding_mode) };
 
     QJsonObject update {};
-    update.insert(kVersion, *shadow->version);
     update.insert(input_side == InputSide::kLhs ? kLhsRate : kRhsRate, QString::number(*shadow->lhs_rate, 'f', numeric_const::kDecimalPlaces8));
 
-    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, input_side) };
+    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, input_side, *shadow->version) };
     WebSocket::Instance()->SendMessage(WsKey::kEntryRateUpdate, message);
 
     const double rhs_initial_delta { *shadow->rhs_debit - *shadow->rhs_credit - (rhs_old_debit - rhs_old_credit) };

@@ -274,10 +274,7 @@ void Model::FlushTimer(const QUuid& id)
     auto update { pending_updates_.take(id) };
 
     if (update.tag && !update.changes.isEmpty()) {
-        const int version { update.tag->version };
-        update.changes.insert(kVersion, version);
-
-        const QJsonObject message { JsonGen::TagUpdate(section_, id, update.changes) };
+        const QJsonObject message { JsonGen::TagUpdate(section_, id, update.changes, update.tag->version) };
         WebSocket::Instance()->SendMessage(WsKey::kTagUpdate, message);
     }
 

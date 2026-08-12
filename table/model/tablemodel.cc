@@ -157,10 +157,7 @@ void TableModel::FlushTimer(const QUuid& id)
     auto update { pending_updates_.take(id) };
 
     if (update.entry && !update.changes.isEmpty()) {
-        const int version { update.entry->version };
-        update.changes.insert(kVersion, version);
-
-        const QJsonObject message { JsonGen::EntryUpdate(section_, id, update.changes) };
+        const QJsonObject message { JsonGen::EntryUpdate(section_, id, update.changes, update.entry->version) };
         WebSocket::Instance()->SendMessage(WsKey::kEntryUpdate, message);
     }
 
@@ -218,13 +215,12 @@ bool TableModel::UpdateNumeric(EntryShadow* shadow, double value, int row, Numer
     const auto input_side { ToValueInputSide(shadow->binding_mode) };
 
     QJsonObject update {};
-    update.insert(kVersion, *shadow->version);
     update.insert(input_side == InputSide::kLhs ? kLhsDebit : kRhsDebit, QString::number(*shadow->lhs_debit, 'f', numeric_const::kDecimalPlaces8));
     update.insert(input_side == InputSide::kLhs ? kLhsCredit : kRhsCredit, QString::number(*shadow->lhs_credit, 'f', numeric_const::kDecimalPlaces8));
     update.insert(input_side == InputSide::kLhs ? kRhsDebit : kLhsDebit, QString::number(*shadow->rhs_debit, 'f', numeric_const::kDecimalPlaces8));
     update.insert(input_side == InputSide::kLhs ? kRhsCredit : kLhsCredit, QString::number(*shadow->rhs_credit, 'f', numeric_const::kDecimalPlaces8));
 
-    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, input_side) };
+    QJsonObject message { JsonGen::EntryValue(section_, entry_id, update, input_side, *shadow->version) };
     WebSocket::Instance()->SendMessage(WsKey::kEntryNumericUpdate, message);
 
     // Delta calculation follows the DICD rule (Debit - Credit).
@@ -266,7 +262,7 @@ bool TableModel::UpdateRate(EntryShadow* shadow, double value)
     update.insert(kLhsRate, QString::number(value, 'f', numeric_const::kDecimalPlaces8));
     update.insert(kRhsRate, QString::number(value, 'f', numeric_const::kDecimalPlaces8));
 
-    QJsonObject message { JsonGen::EntryValue(section_, *shadow->id, update, ToValueInputSide(shadow->binding_mode)) };
+    QJsonObject message { JsonGen::EntryValue(section_, *shadow->id, update, ToValueInputSide(shadow->binding_mode), *shadow->version) };
     WebSocket::Instance()->SendMessage(WsKey::kEntryRateUpdate, message);
 
     return true;

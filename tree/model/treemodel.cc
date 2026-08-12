@@ -200,7 +200,7 @@ void TreeModel::InitLeafData()
     }
 }
 
-void TreeModel::ApplyUpdate(const QUuid& node_id, const QJsonObject& update)
+void TreeModel::ApplyUpdate(const QUuid& node_id, const QJsonObject& update, int version)
 {
     if (update.isEmpty()) {
         qDebug() << Q_FUNC_INFO << "Update is empty";
@@ -216,6 +216,7 @@ void TreeModel::ApplyUpdate(const QUuid& node_id, const QJsonObject& update)
         return;
 
     node->ReadJson(update);
+    node->version = version;
 
     const int row { index.row() };
     const auto [start, end] = node::CacheColumnRange(section_);
@@ -900,10 +901,7 @@ void TreeModel::FlushTimer(const QUuid& id)
     auto update { pending_updates_.take(id) };
 
     if (update.node && !update.changes.isEmpty()) {
-        const int version { update.node->version };
-        update.changes.insert(kVersion, version);
-
-        const QJsonObject message { JsonGen::NodeUpdate(section_, id, update.changes) };
+        const QJsonObject message { JsonGen::NodeUpdate(section_, id, update.changes, update.node->version) };
         WebSocket::Instance()->SendMessage(WsKey::kNodeUpdate, message);
     }
 

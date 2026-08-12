@@ -38,20 +38,22 @@ QJsonObject NodeDrag(Section section, CUuid& node_id, CUuid& parent_id)
     return message;
 }
 
-QJsonObject LeafDelete(Section section, CUuid& node_id)
+QJsonObject LeafDelete(Section section, CUuid& node_id, int version)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kVersion, version);
     return message;
 }
 
-QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id)
+QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id, int version)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kParentId, parent_id.toString(QUuid::WithoutBraces));
+    message.insert(kVersion, version);
     return message;
 }
 
@@ -66,20 +68,22 @@ QJsonObject Login(CString& email, CString& password, CString& workspace, const u
     return message;
 }
 
-QJsonObject LeafDeleteCheck(Section section, CUuid& node_id)
+QJsonObject LeafDeleteCheck(Section section, CUuid& node_id, int version)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kVersion, version);
     return message;
 }
 
-QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id)
+QJsonObject LeafReplace(Section section, CUuid& old_id, CUuid& new_id, int version)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kOldNodeId, old_id.toString(QUuid::WithoutBraces));
     message.insert(kNewNodeId, new_id.toString(QUuid::WithoutBraces));
+    message.insert(kVersion, version);
     return message;
 }
 
@@ -188,21 +192,23 @@ QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_ru
     return message;
 }
 
-QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update)
+QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update, int version)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
     message.insert(kUpdate, update);
+    message.insert(kVersion, version);
     return message;
 }
 
-QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& update)
+QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& update, int version)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
     message.insert(kUpdate, update);
+    message.insert(kVersion, version);
     return message;
 }
 
@@ -224,16 +230,17 @@ QJsonObject OrderNameSearch(Section section, CString& keyword)
     return message;
 }
 
-QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update)
+QJsonObject OrderRecall(Section section, CUuid& node_id, CJsonObject& update, int version)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(WsField::kNodeUpdate, update);
     message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kVersion, version);
     return message;
 }
 
-QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, InputSide side)
+QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, InputSide side, int version)
 {
     QJsonObject message {};
 
@@ -241,6 +248,7 @@ QJsonObject EntryValue(Section section, CUuid& entry_id, CJsonObject& update, In
     message.insert(kUpdate, update);
     message.insert(kInputSide, std::to_underlying(side));
     message.insert(kEntryId, entry_id.toString(QUuid::WithoutBraces));
+    message.insert(kVersion, version);
     return message;
 }
 
@@ -338,17 +346,16 @@ QJsonObject SettlementDelete(Section section, CUuid& settlement_id, int version)
     message.insert(kSection, std::to_underlying(section));
     message.insert(kSettlementId, settlement_id.toString(QUuid::WithoutBraces));
     message.insert(kVersion, version);
-
     return message;
 }
 
-QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update)
+QJsonObject TagUpdate(Section section, CUuid& id, CJsonObject& update, int version)
 {
     QJsonObject message {};
     message.insert(kSection, std::to_underlying(section));
     message.insert(kId, id.toString(QUuid::WithoutBraces));
     message.insert(kUpdate, update);
-
+    message.insert(kVersion, version);
     return message;
 }
 
@@ -360,11 +367,12 @@ QJsonObject WorkspaceMemberAck(CUuid& widget_id, CString& workspace)
     return message;
 }
 
-QJsonObject WorkspaceMemberUpdate(CUuid& id, CJsonObject& update)
+QJsonObject WorkspaceMemberUpdate(CUuid& id, CJsonObject& update, int version)
 {
     QJsonObject message {};
     message.insert(kId, id.toString(QUuid::WithoutBraces));
     message.insert(kUpdate, update);
+    message.insert(kVersion, version);
     return message;
 }
 

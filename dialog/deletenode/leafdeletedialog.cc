@@ -9,12 +9,12 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-LeafDeleteDialog::LeafDeleteDialog(TreeModel* model, CSectionInfo& info, CJsonObject& obj, const QUuid& node_id, NodeUnit unit, QWidget* parent)
+LeafDeleteDialog::LeafDeleteDialog(TreeModel* model, CSectionInfo& info, CJsonObject& obj, Node* node, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::LeafDeleteDialog)
-    , node_id_ { node_id }
-    , node_unit_ { unit }
+    , node_id_ { node->id }
     , section_ { info.section }
+    , node_ { node }
     , internal_ { obj.value(node_ref::kInternal).toBool() }
     , sale_ { obj.value(node_ref::kSale).toBool() }
     , purchase_ { obj.value(node_ref::kPurchase).toBool() }
@@ -118,14 +118,15 @@ void LeafDeleteDialog::ReplaceNode()
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, path]() {
-        if (!model_->Contains(node_id_))
-            return;
-
         if (model_->Path(node_id_) != path)
             return;
 
+        if (!node_ || !node_->IsValid())
+            return;
+
         const auto new_node_id { ui->comboBox->currentData().toUuid() };
-        const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id) };
+        const auto message { JsonGen::LeafReplace(info_.section, node_id_, new_node_id, node_->version) };
+
         WebSocket::Instance()->SendMessage(WsKey::kLeafReplace, message);
     });
 
@@ -176,14 +177,14 @@ void LeafDeleteDialog::DeleteNode()
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, path]() {
-        if (!model_->Contains(node_id_))
-            return;
-
         if (model_->Path(node_id_) != path)
             return;
 
+        if (!node_ || !node_->IsValid())
+            return;
+
         WsKey key {};
-        const QJsonObject value { JsonGen::LeafDelete(info_.section, node_id_) };
+        const QJsonObject value { JsonGen::LeafDelete(info_.section, node_id_, node_->version) };
 
         switch (section_) {
         case Section::kSale:
@@ -230,7 +231,7 @@ void LeafDeleteDialog::IniData(Section section)
     if (section != Section::kInventory)
         return;
 
-    auto* filter_model { model_->ReplaceSelf(node_id_, node_unit_, this) };
+    auto* filter_model { model_->ReplaceSelf(node_id_, node_->unit, this) };
 
     ui->comboBox->setModel(filter_model);
     ui->comboBox->setCurrentIndex(-1);

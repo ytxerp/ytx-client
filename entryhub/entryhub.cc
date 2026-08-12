@@ -58,13 +58,15 @@ void EntryHub::DeleteEntry(const QUuid& entry_id)
     EntryPool::Instance().Recycle(entry, section_);
 }
 
-void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update)
+void EntryHub::UpdateEntry(const QUuid& id, const QJsonObject& update, int version)
 {
     auto it = entry_cache_.constFind(id);
     if (it != entry_cache_.constEnd()) {
         auto* entry = it.value();
 
         entry->ReadJson(update);
+        entry->version = version;
+        entry->sync_state = SyncState::kSynced;
 
         const auto [start, end] = entry::CacheColumnRange(section_);
 

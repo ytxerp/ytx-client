@@ -147,7 +147,10 @@ void MainWindow::RUpdateTag(const QJsonObject& obj)
     auto* tag { it.value() };
 
     const QJsonObject update_obj { obj.value(kUpdate).toObject() };
+    const int version { obj.value(kVersion).toInt() };
+
     tag->ReadJson(update_obj);
+    tag->version = version;
 
     UpdateTagIcon(sc, tag);
 }

@@ -270,9 +270,8 @@ void Model::FlushTimer(const QUuid& id)
 
     if (update.member && !update.changes.isEmpty()) {
         const int version { update.member->version };
-        update.changes.insert(kVersion, version);
 
-        const QJsonObject message { JsonGen::WorkspaceMemberUpdate(id, update.changes) };
+        const QJsonObject message { JsonGen::WorkspaceMemberUpdate(id, update.changes, version) };
         WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberUpdate, message);
 
         update.member->version = version + 1;

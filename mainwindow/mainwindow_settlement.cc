@@ -145,7 +145,7 @@ void MainWindow::RRecallSettlement(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
-    const int version { update.value(kVersion).toInt() };
+    const int version { obj.value(kVersion).toInt() };
 
     auto* sc { GetSectionContex(section) };
 
@@ -166,7 +166,7 @@ void MainWindow::RUpdateSettlement(const QJsonObject& obj)
     const QJsonObject settlement { obj.value(kSettlement).toObject() };
     const auto widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonObject update { obj.value(kUpdate).toObject() };
-    const int version { update.value(kVersion).toInt() };
+    const int version { obj.value(kVersion).toInt() };
 
     auto* sc { GetSectionContex(section) };
 

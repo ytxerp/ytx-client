@@ -125,7 +125,7 @@ void EntryHubP::DeleteEntry(const QUuid& entry_id)
     EntryPool::Instance().Recycle(entry, section_);
 }
 
-void EntryHubP::UpdateEntry(const QUuid& id, const QJsonObject& update)
+void EntryHubP::UpdateEntry(const QUuid& id, const QJsonObject& update, int version)
 {
     auto it = entry_cache_.constFind(id);
     if (it == entry_cache_.constEnd()) {
@@ -137,6 +137,8 @@ void EntryHubP::UpdateEntry(const QUuid& id, const QJsonObject& update)
     const QUuid old_rhs_node { entry->rhs_node };
 
     entry->ReadJson(update);
+    entry->version = version;
+    entry->sync_state = SyncState::kSynced;
 
     {
         const bool update_map_value { update.contains(kUnitPrice) || update.contains(kExternalSku) };

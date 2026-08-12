@@ -272,7 +272,7 @@ private:
 
     void DeleteNode();
     void DeleteEntry(TableWidget* widget);
-    void DeleteBranch(const QUuid& node_id);
+    void DeleteBranch(Node* node);
     void DeleteSettlement(SettlementPrimaryWidget* widget);
 
     void UpdatePartnerReference(const SectionContext& sc, const QSet<QUuid>& partner_nodes, bool branch) const;

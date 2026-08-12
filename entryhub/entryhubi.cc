@@ -8,13 +8,12 @@ EntryHubI::EntryHubI(CSectionInfo& info, QObject* parent)
 {
 }
 
-void EntryHubI::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, InputSide /*input_side*/)
+void EntryHubI::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, InputSide /*input_side*/, int version)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
         auto* d_entry = static_cast<Entry*>(it.value());
 
-        const int version { update.value(kVersion).toInt() };
         d_entry->version = version;
 
         d_entry->lhs_rate = update[kLhsRate].toString().toDouble();
@@ -27,13 +26,12 @@ void EntryHubI::UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update
     }
 }
 
-void EntryHubI::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update)
+void EntryHubI::UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update, int version)
 {
     auto it = entry_cache_.constFind(entry_id);
     if (it != entry_cache_.constEnd()) {
         auto* d_entry = static_cast<Entry*>(it.value());
 
-        const int version { update.value(kVersion).toInt() };
         d_entry->version = version;
 
         d_entry->lhs_debit = update[kLhsDebit].toString().toDouble();
