@@ -153,6 +153,7 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
     Row* tag { list_.at(row) };
     const QUuid tag_id { tag->id };
     const QString tag_name { tag->name };
+    const int version { tag->version };
 
     // Remove pending update to prevent delayed flush after deletion
     // Stop its timer to avoid accessing recycled member.
@@ -173,7 +174,7 @@ bool Model::removeRows(int row, int count, const QModelIndex& parent)
 
     // Handle synchronization and network notification
     if (tag->sync_state == SyncState::kSynced) {
-        const QJsonObject message { JsonGen::TagDelete(section_, tag_id) };
+        const QJsonObject message { JsonGen::TagDelete(section_, tag_id, version) };
         WebSocket::Instance()->SendMessage(WsKey::kTagDelete, message);
     } else {
         ResourcePool<Row>::Instance().Recycle(tag);

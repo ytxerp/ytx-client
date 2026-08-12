@@ -387,12 +387,13 @@ QJsonObject TagInsert(Section section, const tag::Row* tag)
     return message;
 }
 
-QJsonObject TagDelete(Section section, CUuid& tag_id)
+QJsonObject TagDelete(Section section, CUuid& tag_id, int version)
 {
     QJsonObject message {};
 
     message.insert(kSection, std::to_underlying(section));
     message.insert(kId, tag_id.toString(QUuid::WithoutBraces));
+    message.insert(kVersion, version);
 
     return message;
 }
