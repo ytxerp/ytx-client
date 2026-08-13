@@ -9,7 +9,7 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-LeafDeleteDialog::LeafDeleteDialog(TreeModel* model, CSectionInfo& info, CJsonObject& obj, Node* node, QWidget* parent)
+LeafDeleteDialog::LeafDeleteDialog(CSectionInfo& info, CJsonObject& obj, TreeModel* model, Node* node, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::LeafDeleteDialog)
     , node_id_ { node->id }

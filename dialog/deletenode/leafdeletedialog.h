@@ -32,7 +32,7 @@ class LeafDeleteDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    LeafDeleteDialog(TreeModel* model, CSectionInfo& info, CJsonObject& obj, Node* node, QWidget* parent = nullptr);
+    LeafDeleteDialog(CSectionInfo& info, CJsonObject& obj, TreeModel* model, Node* node, QWidget* parent = nullptr);
     ~LeafDeleteDialog() override;
 
 private slots:
