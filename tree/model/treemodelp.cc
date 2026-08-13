@@ -29,7 +29,7 @@ void TreeModelP::UpdateAmount(const QUuid& node_id, double initial_delta)
     auto ids { UpdateAncestorTotal(node, delta) };
     ids.insert(node_id);
 
-    EmitNumericChanged(ids);
+    EmitColumnChanged(std::to_underlying(NodeEnumP::kInitialTotal), ids);
 }
 
 QSet<QUuid>* TreeModelP::UnitSet(NodeUnit unit)

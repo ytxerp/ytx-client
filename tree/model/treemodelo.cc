@@ -62,6 +62,8 @@ void TreeModelO::InsertSettlement(const QSet<QUuid>& settled_set, const QUuid& s
     if (settled_set.isEmpty() || settlement_id.isNull())
         return;
 
+    QSet<QUuid> affected_ids {};
+
     for (auto it = node_hash_.constBegin(); it != node_hash_.constEnd(); ++it) {
         auto* node = it.value();
         Q_ASSERT(node != nullptr);
@@ -76,21 +78,24 @@ void TreeModelO::InsertSettlement(const QSet<QUuid>& settled_set, const QUuid& s
         d_node->final_total = d_node->initial_total - d_node->discount_total;
         d_node->version += 1;
 
-        const auto index { GetIndex(node->id) };
-        if (!index.isValid())
-            continue;
+        const node::Delta delta {
+            .final = d_node->final_total,
+        };
 
-        const int column { std::to_underlying(NodeEnumO::kFinalTotal) };
-        const int row { index.row() };
-
-        EmitDataChanged(row, row, column, column, index.parent());
+        const auto ids { UpdateAncestorTotal(d_node, delta) };
+        affected_ids.unite(ids);
+        affected_ids.insert(d_node->id);
     }
+
+    EmitColumnChanged(std::to_underlying(NodeEnumO::kFinalTotal), affected_ids);
 }
 
 void TreeModelO::RecallSettlement(const QUuid& settlement_id)
 {
     if (settlement_id.isNull())
         return;
+
+    QSet<QUuid> affected_ids {};
 
     for (auto it = node_hash_.constBegin(); it != node_hash_.constEnd(); ++it) {
         auto* node = it.value();
@@ -102,19 +107,20 @@ void TreeModelO::RecallSettlement(const QUuid& settlement_id)
         if (d_node->settlement_id != settlement_id)
             continue;
 
+        const node::Delta delta {
+            .final = -d_node->final_total,
+        };
+
         d_node->settlement_id = QUuid();
         d_node->final_total = {};
         d_node->version += 1;
 
-        const auto index { GetIndex(d_node->id) };
-        if (!index.isValid())
-            continue;
-
-        const int column { std::to_underlying(NodeEnumO::kFinalTotal) };
-        const int row { index.row() };
-
-        EmitDataChanged(row, row, column, column, index.parent());
+        const auto ids { UpdateAncestorTotal(d_node, delta) };
+        affected_ids.unite(ids);
+        affected_ids.insert(d_node->id);
     }
+
+    EmitColumnChanged(std::to_underlying(NodeEnumO::kFinalTotal), affected_ids);
 }
 
 void TreeModelO::RegisterNode(Node* node)

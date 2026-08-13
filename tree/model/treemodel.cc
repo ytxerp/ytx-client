@@ -96,12 +96,12 @@ QSet<QUuid> TreeModel::SyncTotal(const QUuid& node_id, double initial_total, dou
         .final = final_total - node->final_total,
     };
 
-    if (delta.IsNull())
-        return {};
+    qDebug() << Q_FUNC_INFO << "whether delta is null:" << delta.IsNull();
 
     // Accumulate into the current node totals
     node->initial_total = initial_total;
     node->final_total = final_total;
+    node->version += 1;
 
     // Propagate adjusted deltas to ancestor nodes
     auto ids { UpdateAncestorTotal(node, delta) };
@@ -883,6 +883,39 @@ void TreeModel::EmitNumericChanged(const QSet<QUuid>& ids)
     }
 }
 
+void TreeModel::EmitColumnChanged(int column, const QSet<QUuid>& ids)
+{
+    for (const QUuid& id : ids) {
+        const QModelIndex index = GetIndex(id);
+        if (!index.isValid())
+            continue;
+
+        const int row { index.row() };
+
+        EmitDataChanged(row, row, column, column, index.parent());
+    }
+}
+
+void TreeModel::EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent)
+{
+    if (start_row < 0 || end_row >= rowCount(parent) || start_row > end_row) {
+        qDebug() << Q_FUNC_INFO << "invalid row range" << start_row << end_row << "rowCount" << rowCount(parent);
+        return;
+    }
+
+    if (start_column < 0 || end_column >= columnCount(parent) || start_column > end_column) {
+        qDebug() << Q_FUNC_INFO << "invalid column range" << start_column << end_column << "columnCount" << columnCount(parent);
+        return;
+    }
+
+    const QModelIndex top_left { index(start_row, start_column, parent) };
+    const QModelIndex bottom_right { index(end_row, end_column, parent) };
+
+    Q_ASSERT(top_left.parent() == bottom_right.parent());
+
+    emit dataChanged(top_left, bottom_right, QList<int> { Qt::DisplayRole, Qt::EditRole });
+}
+
 void TreeModel::RestartTimer(const QUuid& id)
 {
     auto*& timer { pending_updates_[id].timer };
@@ -918,29 +951,6 @@ void TreeModel::FlushTimers()
     for (const auto& id : ids) {
         FlushTimer(id);
     }
-}
-
-void TreeModel::EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent)
-{
-    // top_left and bottom_right must share the same parent, behavior is undefined otherwise
-    Q_ASSERT(!parent.isValid() || parent.model() == this);
-
-    if (start_row < 0 || end_row >= rowCount(parent) || start_row > end_row) {
-        qDebug() << "EmitDataChanged: invalid row range" << start_row << end_row << "rowCount" << rowCount(parent);
-        return;
-    }
-
-    if (start_column < 0 || end_column >= columnCount(parent) || start_column > end_column) {
-        qDebug() << "EmitDataChanged: invalid column range" << start_column << end_column << "columnCount" << columnCount(parent);
-        return;
-    }
-
-    const QModelIndex top_left { index(start_row, start_column, parent) };
-    const QModelIndex bottom_right { index(end_row, end_column, parent) };
-
-    Q_ASSERT(top_left.parent() == bottom_right.parent());
-
-    emit dataChanged(top_left, bottom_right, QList<int> { Qt::DisplayRole, Qt::EditRole });
 }
 
 void TreeModel::ApplyTree(const QJsonObject& data)

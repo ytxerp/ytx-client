@@ -154,6 +154,7 @@ protected:
     void RestartTimer(const QUuid& id);
 
     void EmitNumericChanged(const QSet<QUuid>& ids);
+    void EmitColumnChanged(int column, const QSet<QUuid>& ids);
     void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent);
 
     void RequestDirectionRule(Node* node, bool value);
