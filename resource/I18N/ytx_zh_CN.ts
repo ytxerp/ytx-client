@@ -909,7 +909,7 @@
     </message>
     <message>
         <location filename="../../dialog/deletenode/leafdeletedialog.ui" line="84"/>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="174"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="175"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
@@ -975,12 +975,12 @@
         <translation>该节点仍在使用中，你想要怎么处理？</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="163"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="164"/>
         <source>Delete &lt;b&gt;%1&lt;/b&gt; and all its entries.&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 Tip: Consider relocating entries before deleting.&lt;/i&gt;</source>
         <translation>删除 &lt;b&gt;%1&lt;/b&gt; 及其所有记录。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;💡 提示：建议在删除前将该节点下的记录迁移至其他节点。&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="146"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="147"/>
         <source>Delete this order and all its entries.&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;</source>
         <translation>删除该订单及其所有记录。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;</translation>
     </message>
@@ -990,27 +990,27 @@
         <translation>将 &lt;b&gt;%1&lt;/b&gt; 替换为 &lt;b&gt;%2&lt;/b&gt;。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="153"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="154"/>
         <source>Delete &lt;b&gt;%1&lt;/b&gt; and all its entries.&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ This action is permanent and cannot be undone.&lt;/span&gt;</source>
         <translation>删除 &lt;b&gt;%1&lt;/b&gt; 及其所有记录。&lt;br&gt;&lt;br&gt;&lt;span style=&apos;color:#d32f2f; font-weight:bold;&apos;&gt;⚠️ 此操作不可撤销，请谨慎操作。&lt;/span&gt;</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="223"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="224"/>
         <source>Delete %1</source>
         <translation>删除 %1</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="227"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="228"/>
         <source>The node has external references, so it can’t be deleted.</source>
         <translation>节点存在外部引用，无法删除。</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="256"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="257"/>
         <source>Operation Rejected</source>
         <translation>操作已拒绝</translation>
     </message>
     <message>
-        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="257"/>
+        <location filename="../../dialog/deletenode/leafdeletedialog.cc" line="258"/>
         <source>The node cannot be replaced because linked nodes or partner entries conflict with the new node.</source>
         <translation>由于自身分录或合作分录与新节点存在冲突，无法替换该节点。</translation>
     </message>
@@ -1313,9 +1313,9 @@
         <location filename="../../mainwindow/mainwindow.ui" line="545"/>
         <location filename="../../mainwindow/mainwindow_audit.cc" line="77"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="123"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="23"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="55"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="81"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="20"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="54"/>
+        <location filename="../../mainwindow/mainwindow_settlement.cc" line="80"/>
         <source>Settlement</source>
         <translation>结算</translation>
     </message>
@@ -1327,7 +1327,7 @@
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="589"/>
         <location filename="../../mainwindow/mainwindow.ui" line="592"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="200"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="195"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="59"/>
         <source>Workspace</source>
         <translation>工区</translation>
@@ -1344,7 +1344,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="619"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="394"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="389"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -1360,7 +1360,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="644"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="201"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="196"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="60"/>
         <source>Expire Date</source>
         <translation>期限</translation>
@@ -1431,7 +1431,6 @@
         <location filename="../../mainwindow/mainwindow_account.cc" line="49"/>
         <location filename="../../mainwindow/mainwindow_global.cc" line="49"/>
         <location filename="../../mainwindow/mainwindow_node_remove.cc" line="26"/>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="216"/>
         <source>Operation Rejected</source>
         <translation>操作已拒绝</translation>
     </message>
@@ -1991,7 +1990,7 @@
         <translation>客户</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="387"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="382"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
@@ -2019,7 +2018,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="581"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="199"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="194"/>
         <location filename="../../mainwindow/mainwindow_account.cc" line="29"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="58"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="24"/>
@@ -2028,28 +2027,28 @@
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="673"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="680"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="668"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="675"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="673"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="668"/>
         <source>Failed to check updates.</source>
         <translation>检查更新失败。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="680"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="675"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="692"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="687"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="693"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="688"/>
         <source>A new version %1 is available.
 
 Would you like to download it now?</source>
@@ -2058,12 +2057,12 @@ Would you like to download it now?</source>
 是否立即下载？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="705"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="700"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="705"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="700"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -2078,14 +2077,14 @@ Would you like to download it now?</source>
         <translation>本地数据已过期，请刷新后重试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="192"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="292"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="195"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="295"/>
         <source>Tags</source>
         <translation>标签</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="222"/>
-        <location filename="../../mainwindow/mainwindow_tag.cc" line="321"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="225"/>
+        <location filename="../../mainwindow/mainwindow_tag.cc" line="324"/>
         <source>Manage...</source>
         <translation>管理...</translation>
     </message>
@@ -2327,7 +2326,7 @@ Would you like to download it now?</source>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_entry.cc" line="69"/>
-        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="79"/>
+        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="78"/>
         <source>Confirm Delete</source>
         <translation>删除确认</translation>
     </message>
@@ -2349,24 +2348,23 @@ Please recall it before deleting.</source>
 请先撤回订单后再删除。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="80"/>
+        <location filename="../../mainwindow/mainwindow_node_remove.cc" line="79"/>
         <source>The branch &quot;%1&quot; will be permanently deleted. Its direct children will be promoted to the same level.</source>
         <translation>分支“%1”将被永久删除，其直系子节点将提升到同一级别。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_settlement.cc" line="217"/>
         <source>The released settlement cannot be deleted.
 Please recall it first and try again.</source>
-        <translation>已发布的结算单无法删除。
+        <translation type="vanished">已发布的结算单无法删除。
 请先撤回该结算单后再重试。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="168"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="167"/>
         <source>Unsaved Changes</source>
         <translation>未保存的更改</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="169"/>
+        <location filename="../../mainwindow/mainwindow_tab_widget.cc" line="168"/>
         <source>This page contains unsaved changes.
 
 Do you want to save them before closing?</source>
@@ -3178,9 +3176,31 @@ Do you want to save them before closing?</source>
 <context>
     <name>SettlementPrimaryWidget</name>
     <message>
-        <location filename="../../finance/settlement/settlementprimarywidget.ui" line="95"/>
+        <location filename="../../finance/settlement/settlementprimarywidget.ui" line="98"/>
+        <source>Delete</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <location filename="../../finance/settlement/settlementprimarywidget.ui" line="105"/>
+        <source>Insert</source>
+        <translation>新建</translation>
+    </message>
+    <message>
+        <location filename="../../finance/settlement/settlementprimarywidget.ui" line="119"/>
         <source>Fetch</source>
         <translation>刷新</translation>
+    </message>
+    <message>
+        <location filename="../../finance/settlement/settlementprimarywidget.cc" line="113"/>
+        <source>Operation Rejected</source>
+        <translation>操作已拒绝</translation>
+    </message>
+    <message>
+        <location filename="../../finance/settlement/settlementprimarywidget.cc" line="114"/>
+        <source>The released settlement cannot be deleted.
+Please recall it first and try again.</source>
+        <translation>已发布的结算单无法删除。
+请先撤回该结算单后再重试。</translation>
     </message>
 </context>
 <context>
@@ -3393,42 +3413,42 @@ Do you want to save them before closing?</source>
         <translation>请先选择可打印模板后再继续。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="465"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="486"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="498"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="596"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="464"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="484"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="496"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="594"/>
         <source>Operation Rejected</source>
         <translation>操作已拒绝</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="466"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="465"/>
         <source>This order has already been settled and cannot be recalled.
 Settled orders cannot be modified.</source>
         <translation>该订单已完成结算，无法撤回。
 已结算订单无法修改。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="486"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="484"/>
         <source>A partner must be selected before continuing.</source>
         <translation>请先选择合作单位后再继续。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="498"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="496"/>
         <source>The data is being updated. Please refresh and try again.</source>
         <translation>数据正在更新中，请刷新后再试。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="589"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="587"/>
         <source>Failed to load the print template.</source>
         <translation>打印模板加载失败。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="589"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="587"/>
         <source>Operation Failed</source>
         <translation>操作失败</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="597"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="595"/>
         <source>This order has been released and cannot be deleted.
 Please recall it before deleting.</source>
         <translation>该订单已发布，无法删除。
