@@ -37,7 +37,7 @@
 #include "component/sectioninfo.h"
 #include "entryhub/entryhub.h"
 #include "finance/settlement/settlement.h"
-#include "finance/settlement/settlementprimarywidget.h"
+#include "finance/settlement/settlementprimarymodel.h"
 #include "finance/statement/statementtertiarywidget.h"
 #include "table/model/tablemodel.h"
 #include "table/model/tablemodelo.h"
@@ -142,7 +142,8 @@ private slots:
     void RRemoveNodeTag(const tag::Row* tag, TreeModel* model, const Node* node);
 
     void RTreeViewDoubleClicked(const QModelIndex& index);
-    void RSettlementTableViewDoubleClicked(const QModelIndex& index);
+    void ROpenSettlementSecondaryWidget(const QModelIndex& index);
+    void RCreateSettlementSecondaryWidget(settlement::PrimaryModel* model);
 
     void RSectionGroup(int id);
 
@@ -273,7 +274,6 @@ private:
     void DeleteNode();
     void DeleteEntry(TableWidget* widget);
     void DeleteBranch(Node* node);
-    void DeleteSettlement(SettlementPrimaryWidget* widget);
 
     void UpdatePartnerReference(const SectionContext& sc, const QSet<QUuid>& partner_nodes, bool branch) const;
 
@@ -326,8 +326,7 @@ private:
     inline bool IsTreeWidgetO(const QWidget* widget) { return widget && widget->inherits(kTreeWidgetO); }
     inline bool IsTableWidgetFIPT(const QWidget* widget) { return widget && widget->inherits(kTableWidgetFIPT); }
     inline bool IsTableWidgetO(const QWidget* widget) { return widget && widget->inherits(kTableWidgetO); }
-    inline bool IsSettlementPrimaryWidget(const QWidget* widget) { return widget && widget->inherits(kSettlementPrimaryWidget); }
-    inline bool IsStatementEntryWidget(const QWidget* widget) { return widget && widget->inherits(kStatementEntryWidget); }
+    inline bool IsStatementTertiaryWidget(const QWidget* widget) { return widget && widget->inherits(kStatementTertiaryWidget); }
 
 private:
     Ui::MainWindow* ui {};

@@ -77,4 +77,4 @@ private:
     CUuid partner_id_ {};
 };
 
-inline const char* kStatementEntryWidget = "StatementEntryWidget";
+inline const char* kStatementTertiaryWidget = "StatementTertiaryWidget";

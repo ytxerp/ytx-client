@@ -161,11 +161,6 @@ void MainWindow::on_actionDelete_triggered()
 
     auto* widget { sc_->tab_widget->currentWidget() };
 
-    if (auto* d_widget { qobject_cast<SettlementPrimaryWidget*>(widget) }) {
-        DeleteSettlement(d_widget);
-        return;
-    }
-
     if (qobject_cast<TreeWidget*>(widget)) {
         DeleteNode();
         return;
@@ -259,7 +254,7 @@ void MainWindow::IniMarkGroup()
             return;
         }
 
-        if (IsStatementEntryWidget(widget)) {
+        if (IsStatementTertiaryWidget(widget)) {
             RStatementMarkEntries(operation);
         }
     });

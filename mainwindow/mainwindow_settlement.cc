@@ -1,12 +1,9 @@
-#include "component/constantint.h"
 #include "finance/settlement/settlementenum.h"
 #include "finance/settlement/settlementprimarymodel.h"
 #include "finance/settlement/settlementprimarywidget.h"
 #include "finance/settlement/settlementsecondarymodel.h"
 #include "finance/settlement/settlementsecondarywidget.h"
 #include "mainwindow.h"
-#include "utils/mainwindowutils.h"
-#include "utils/templateutils.h"
 
 void MainWindow::on_actionSettlement_triggered()
 {
@@ -29,7 +26,9 @@ void MainWindow::on_actionSettlement_triggered()
     {
         auto* view { widget->View() };
 
-        connect(view, &QTableView::doubleClicked, this, &MainWindow::RSettlementTableViewDoubleClicked);
+        connect(view, &QTableView::doubleClicked, this, &MainWindow::ROpenSettlementSecondaryWidget);
+        connect(widget, &SettlementPrimaryWidget::SCreateSettlementSecondaryWidget, this, &MainWindow::RCreateSettlementSecondaryWidget);
+
         InitTableView(view, std::to_underlying(settlement::PrimaryField::kDescription));
         DelegateSettlement(view, sc_->section_config);
     }
@@ -85,7 +84,7 @@ void MainWindow::RUpdatePartner(const QUuid& widget_id, const QUuid& partner_id)
     }
 }
 
-void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
+void MainWindow::ROpenSettlementSecondaryWidget(const QModelIndex& index)
 {
     qInfo() << Q_FUNC_INFO;
 
@@ -101,6 +100,16 @@ void MainWindow::RSettlementTableViewDoubleClicked(const QModelIndex& index)
     auto* primary_model { settlement_widget->Model() };
 
     CreateSettlementSecondary(*settlement, primary_model);
+}
+
+void MainWindow::RCreateSettlementSecondaryWidget(settlement::PrimaryModel* model)
+{
+    settlement::PrimaryRow settlement {};
+
+    settlement.issued_time = QDateTime::currentDateTime();
+    settlement.id = QUuid::createUuidV7();
+
+    CreateSettlementSecondary(settlement, model);
 }
 
 void MainWindow::RSettlementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array)
@@ -196,53 +205,4 @@ void MainWindow::RSettlementPrimary(Section section, const QUuid& widget_id, con
 
     auto* model { d_widget->Model() };
     model->Rebuild(array);
-}
-
-void MainWindow::DeleteSettlement(SettlementPrimaryWidget* widget)
-{
-    auto* view { widget->View() };
-    Q_ASSERT(view != nullptr);
-
-    if (!utils::HasSelection(view))
-        return;
-
-    const QModelIndex current_index { view->currentIndex() };
-    if (!current_index.isValid())
-        return;
-
-    auto* settlement { static_cast<settlement::PrimaryRow*>(current_index.internalPointer()) };
-
-    if (settlement->status == SettlementStatus::kReleased) {
-        utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"),
-            tr("The released settlement cannot be deleted.\n"
-               "Please recall it first and try again."),
-            time_const::kAutoCloseMs);
-        return;
-    }
-
-    auto* model { widget->Model() };
-    Q_ASSERT(model != nullptr);
-
-    const int current_row { current_index.row() };
-    if (!model->removeRows(current_row, 1)) {
-        qDebug() << "Failed to remove row:" << current_row;
-        return;
-    }
-
-    const int new_row_count { model->rowCount() };
-    if (new_row_count == 0)
-        return;
-
-    QModelIndex new_index {};
-    if (current_row < new_row_count) {
-        new_index = model->index(current_row, 0);
-    } else {
-        new_index = model->index(new_row_count - 1, 0);
-    }
-
-    if (new_index.isValid()) {
-        view->setCurrentIndex(new_index);
-        view->selectionModel()->select(new_index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-        view->closePersistentEditor(new_index);
-    }
 }

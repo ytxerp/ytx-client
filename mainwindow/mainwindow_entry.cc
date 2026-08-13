@@ -1,6 +1,5 @@
 #include "component/constantwebsocket.h"
 #include "entryhub/entryhubp.h"
-#include "finance/settlement/settlementprimarywidget.h"
 #include "global/tablesstation.h"
 #include "mainwindow.h"
 #include "table/model/tablemodelf.h"
@@ -17,39 +16,24 @@ void MainWindow::on_actionAppendEntry_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    {
-        auto* widget { qobject_cast<SettlementPrimaryWidget*>(sc_->tab_widget->currentWidget()) };
-        if (widget) {
-            settlement::PrimaryRow settlement {};
+    auto* widget { qobject_cast<TableWidget*>(sc_->tab_widget->currentWidget()) };
+    if (widget) {
+        auto* model { widget->Model() };
+        auto* view { widget->View() };
+        const auto current_idx { view->currentIndex() };
 
-            settlement.issued_time = QDateTime::currentDateTime();
-            settlement.id = QUuid::createUuidV7();
-
-            CreateSettlementSecondary(settlement, widget->Model());
+        const int new_row { current_idx.isValid() ? current_idx.row() + 1 : model->rowCount() };
+        if (!model->insertRows(new_row, 1))
             return;
-        }
-    }
 
-    {
-        auto* widget { qobject_cast<TableWidget*>(sc_->tab_widget->currentWidget()) };
-        if (widget) {
-            auto* model { widget->Model() };
-            auto* view { widget->View() };
-            const auto current_idx { view->currentIndex() };
+        const int issued_time_col { entry::IssuedTimeColumn(start_) };
+        const QModelIndex target_index { model->index(new_row, issued_time_col) };
 
-            const int new_row { current_idx.isValid() ? current_idx.row() + 1 : model->rowCount() };
-            if (!model->insertRows(new_row, 1))
-                return;
+        if (target_index.isValid()) {
+            view->setCurrentIndex(target_index);
+            view->scrollTo(target_index, QAbstractItemView::PositionAtCenter);
 
-            const int issued_time_col { entry::IssuedTimeColumn(start_) };
-            const QModelIndex target_index { model->index(new_row, issued_time_col) };
-
-            if (target_index.isValid()) {
-                view->setCurrentIndex(target_index);
-                view->scrollTo(target_index, QAbstractItemView::PositionAtCenter);
-
-                view->edit(target_index);
-            }
+            view->edit(target_index);
         }
     }
 }

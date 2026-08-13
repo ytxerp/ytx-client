@@ -40,8 +40,13 @@ public:
     QTableView* View() const;
     settlement::PrimaryModel* Model() const { return model_; }
 
+signals:
+    void SCreateSettlementSecondaryWidget(settlement::PrimaryModel* model);
+
 private slots:
     void on_pBtnFetch_clicked();
+    void on_pushButtonDelete_clicked();
+    void on_pushButtonInsert_clicked();
     void on_start_dateChanged(const QDate& date);
     void on_end_dateChanged(const QDate& date);
 
@@ -63,5 +68,3 @@ private:
     const Section section_ {};
     const QUuid widget_id_ {};
 };
-
-inline const char* kSettlementPrimaryWidget = "SettlementPrimaryWidget";

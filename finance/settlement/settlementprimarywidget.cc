@@ -7,6 +7,7 @@
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "ui_settlementprimarywidget.h"
+#include "utils/mainwindowutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
@@ -93,3 +94,30 @@ void SettlementPrimaryWidget::InitTimer()
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
 }
+
+void SettlementPrimaryWidget::on_pushButtonDelete_clicked()
+{
+    auto* view { ui->tableView };
+    Q_ASSERT(view != nullptr);
+
+    if (!utils::HasSelection(view))
+        return;
+
+    const QModelIndex index { view->currentIndex() };
+    if (!index.isValid())
+        return;
+
+    auto* settlement { static_cast<settlement::PrimaryRow*>(index.internalPointer()) };
+
+    if (settlement->status == SettlementStatus::kReleased) {
+        utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"),
+            tr("The released settlement cannot be deleted.\n"
+               "Please recall it first and try again."),
+            time_const::kAutoCloseMs);
+        return;
+    }
+
+    model_->removeRows(index.row(), 1);
+}
+
+void SettlementPrimaryWidget::on_pushButtonInsert_clicked() { emit SCreateSettlementSecondaryWidget(model_); }
