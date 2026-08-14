@@ -40,7 +40,7 @@ void TableModelP::RAppendEntries(const EntryList& entry_list)
     sort(std::to_underlying(EntryEnum::kIssuedTime), Qt::AscendingOrder);
 }
 
-void TableModelP::RDetachEntry(const QUuid& entry_id, const QUuid& extra_value)
+void TableModelP::RDetachEntry(const QUuid& entry_id, const QUuid& counter_node_id)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -51,7 +51,7 @@ void TableModelP::RDetachEntry(const QUuid& entry_id, const QUuid& extra_value)
     entry_list_.remove(row);
     endRemoveRows();
 
-    internal_sku_set_.remove(extra_value);
+    internal_sku_set_.remove(counter_node_id);
 }
 
 void TableModelP::RAttachEntry(Entry* entry)
@@ -139,7 +139,7 @@ bool TableModelP::UpdateInternalSku(Entry* entry, const QUuid& value, int row)
         message.insert(kEntry, entry->WriteJson());
         WebSocket::Instance()->SendMessage(WsKey::kPartnerEntryInsert, message);
 
-        emit STransferOneEntry(entry);
+        emit STransferEntry(entry);
         return true;
     }
 

@@ -47,11 +47,11 @@ signals:
     void SUpdateBalance(const QUuid& node_id, const QUuid& entry_id);
 
     // send to entryhub, FIPT
-    void STransferOneEntry(Entry* entry);
+    void STransferEntry(Entry* entry);
 
 public slots:
     virtual void RAppendEntries(const EntryList& entry_list);
-    virtual void RDetachEntry(const QUuid& entry_id, const QUuid& extra_value = {});
+    virtual void RDetachEntry(const QUuid& entry_id, const QUuid& counter_node_id = {});
     virtual void RAttachEntry(Entry* entry);
 
     void RDeleteEntries(const QSet<QUuid>& entry_id_set);

@@ -30,7 +30,7 @@ public:
 
 public slots:
     void RAppendEntries(const EntryList& entry_list) override;
-    void RDetachEntry(const QUuid& entry_id, const QUuid& extra_value) override;
+    void RDetachEntry(const QUuid& entry_id, const QUuid& counter_node_id) override;
     void RAttachEntry(Entry* entry) override;
 
 public:

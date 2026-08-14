@@ -40,7 +40,7 @@ void TableSStation::RAttachEntry(const QUuid& node_id, Entry* entry)
     emit SAttachEntry(entry);
 }
 
-void TableSStation::RDetachEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& extra_value)
+void TableSStation::RDetachEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& counter_node_id)
 {
     Q_ASSERT(!node_id.isNull());
     Q_ASSERT(!entry_id.isNull());
@@ -50,7 +50,7 @@ void TableSStation::RDetachEntry(const QUuid& node_id, const QUuid& entry_id, co
         return;
 
     connect(this, &TableSStation::SDetachEntry, model, &TableModel::RDetachEntry, Qt::SingleShotConnection);
-    emit SDetachEntry(entry_id, extra_value);
+    emit SDetachEntry(entry_id, counter_node_id);
 }
 
 void TableSStation::RUpdateBalance(const QUuid& node_id, const QUuid& entry_id)

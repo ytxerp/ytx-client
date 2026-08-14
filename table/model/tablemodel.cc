@@ -67,7 +67,7 @@ void TableModel::RAttachEntry(Entry* entry)
     EmitDataChanged(row, row, balance_column, balance_column);
 }
 
-void TableModel::RDetachEntry(const QUuid& entry_id, const QUuid& /*extra_value*/)
+void TableModel::RDetachEntry(const QUuid& entry_id, const QUuid& /*counter_node_id*/)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -297,7 +297,7 @@ bool TableModel::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int r
             EmitDataChanged(row, row, balance_column, balance_column);
         }
 
-        emit STransferOneEntry(entry);
+        emit STransferEntry(entry);
     }
 
     if (*shadow->sync_state == SyncState::kSynced) {

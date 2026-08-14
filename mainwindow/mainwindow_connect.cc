@@ -120,7 +120,7 @@ void MainWindow::TableConnectF(TableModel* table_model) const
     auto tree_model { sc_f_.tree_model };
     auto entry_hub { sc_f_.entry_hub };
 
-    connect(table_model, &TableModel::STransferOneEntry, entry_hub, &EntryHub::RTransferOneEntry);
+    connect(table_model, &TableModel::STransferEntry, entry_hub, &EntryHub::RTransferEntry);
 
     connect(table_model, &TableModel::SAttachEntry, TableSStation::Instance(), &TableSStation::RAttachEntry);
     connect(table_model, &TableModel::SDetachEntry, TableSStation::Instance(), &TableSStation::RDetachEntry);
@@ -132,7 +132,7 @@ void MainWindow::TableConnectI(TableModel* table_model) const
     auto tree_model { sc_i_.tree_model };
     auto entry_hub { sc_i_.entry_hub };
 
-    connect(table_model, &TableModel::STransferOneEntry, entry_hub, &EntryHub::RTransferOneEntry);
+    connect(table_model, &TableModel::STransferEntry, entry_hub, &EntryHub::RTransferEntry);
 
     connect(table_model, &TableModel::SAttachEntry, TableSStation::Instance(), &TableSStation::RAttachEntry);
     connect(table_model, &TableModel::SDetachEntry, TableSStation::Instance(), &TableSStation::RDetachEntry);
@@ -144,7 +144,7 @@ void MainWindow::TableConnectT(TableModel* table_model) const
     auto tree_model { sc_t_.tree_model };
     auto entry_hub { sc_t_.entry_hub };
 
-    connect(table_model, &TableModel::STransferOneEntry, entry_hub, &EntryHub::RTransferOneEntry);
+    connect(table_model, &TableModel::STransferEntry, entry_hub, &EntryHub::RTransferEntry);
 
     connect(table_model, &TableModel::SAttachEntry, TableSStation::Instance(), &TableSStation::RAttachEntry);
     connect(table_model, &TableModel::SDetachEntry, TableSStation::Instance(), &TableSStation::RDetachEntry);
@@ -153,7 +153,7 @@ void MainWindow::TableConnectT(TableModel* table_model) const
 
 void MainWindow::TableConnectP(TableModel* table_model) const
 {
-    connect(table_model, &TableModel::STransferOneEntry, sc_p_.entry_hub, &EntryHub::RTransferOneEntry);
+    connect(table_model, &TableModel::STransferEntry, sc_p_.entry_hub, &EntryHub::RTransferEntry);
 }
 
 void MainWindow::TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const

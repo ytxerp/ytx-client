@@ -43,7 +43,7 @@ signals:
     void SAppendEntries(const QUuid& node_id, const EntryList& entry_list);
 
     void SAttachEntry(const QUuid& node_id, Entry* entry);
-    void SDetachEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& extra_value = {});
+    void SDetachEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& counter_node_id = {});
 
     void SRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
     void SRefreshStatus(const QSet<QUuid>& affected_node);
@@ -55,7 +55,7 @@ signals:
 
 public slots:
     // receive from TableModel
-    void RTransferOneEntry(Entry* entry) { entry_cache_.insert(entry->id, entry); }
+    void RTransferEntry(Entry* entry) { entry_cache_.insert(entry->id, entry); }
 
 public:
     void Reset();
@@ -63,6 +63,8 @@ public:
     virtual void InsertEntry(const QJsonObject& data);
     virtual void DeleteEntry(const QUuid& entry_id);
     virtual void UpdateEntry(const QUuid& id, const QJsonObject& update, int version);
+    virtual void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, InputSide input_side, int version);
+    virtual void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update, int version);
 
     void UpdateVersion(const QUuid& id, int version);
     void UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update, InputSide input_side);
@@ -72,23 +74,7 @@ public:
     void PeriodClose(const QJsonArray& array);
 
     void MarkEntries(const QUuid& node_id, MarkOperation operation);
-
     void DeleteDoubleLeaf(const QHash<QUuid, QSet<QUuid>>& leaf_entry);
-
-    virtual void UpdateEntryRate(const QUuid& entry_id, const QJsonObject& update, InputSide input_side, int version)
-    {
-        Q_UNUSED(entry_id);
-        Q_UNUSED(update);
-        Q_UNUSED(input_side);
-        Q_UNUSED(version);
-    }
-
-    virtual void UpdateEntryNumeric(const QUuid& entry_id, const QJsonObject& update, int version)
-    {
-        Q_UNUSED(entry_id);
-        Q_UNUSED(update);
-        Q_UNUSED(version);
-    }
 
 protected:
     virtual EntryList ProcessEntryArray(const QJsonArray& array);
