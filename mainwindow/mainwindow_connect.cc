@@ -151,10 +151,7 @@ void MainWindow::TableConnectT(TableModel* table_model) const
     connect(table_model, &TableModel::SUpdateBalance, TableSStation::Instance(), &TableSStation::RUpdateBalance);
 }
 
-void MainWindow::TableConnectP(TableModel* table_model) const
-{
-    connect(table_model, &TableModel::STransferEntry, sc_p_.entry_hub, &EntryHub::RTransferEntry);
-}
+void MainWindow::TableConnectP(TableModel* table_model) const { connect(table_model, &TableModel::STransferEntry, sc_p_.entry_hub, &EntryHub::RTransferEntry); }
 
 void MainWindow::TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const
 {
