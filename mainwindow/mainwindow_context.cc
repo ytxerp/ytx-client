@@ -18,7 +18,6 @@
 #include "tree/widget/treewidgeto.h"
 #include "tree/widget/treewidgetp.h"
 #include "ui_mainwindow.h"
-#include "utils/templateutils.h"
 #include "websocket/websocket.h"
 
 void MainWindow::SetAction(bool enable) const
