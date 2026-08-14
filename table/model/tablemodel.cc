@@ -48,7 +48,7 @@ void TableModel::RRefreshField(const QUuid& entry_id, int start, int end)
     EmitDataChanged(row, row, start, end);
 }
 
-void TableModel::RAttachOneEntry(Entry* entry)
+void TableModel::RAttachEntry(Entry* entry)
 {
     auto* entry_shadow { EntryShadowPool::Instance().Allocate(section_) };
     const auto mode { node_id_ == entry->lhs_node ? BindingMode::kParallel : BindingMode::kCross };
@@ -67,7 +67,7 @@ void TableModel::RAttachOneEntry(Entry* entry)
     EmitDataChanged(row, row, balance_column, balance_column);
 }
 
-void TableModel::RDetachOneEntry(const QUuid& entry_id, const QUuid& /*extra_value*/)
+void TableModel::RDetachEntry(const QUuid& entry_id, const QUuid& /*extra_value*/)
 {
     auto idx { GetIndex(entry_id) };
     if (!idx.isValid())
@@ -313,10 +313,10 @@ bool TableModel::UpdateLinkedNode(EntryShadow* shadow, const QUuid& value, int r
 
         WebSocket::Instance()->SendMessage(WsKey::kEntryLinkedNodeUpdate, message);
 
-        emit SDetachOneEntry(old_node, entry_id);
+        emit SDetachEntry(old_node, entry_id);
     }
 
-    emit SAttachOneEntry(value, entry);
+    emit SAttachEntry(value, entry);
     return true;
 }
 
@@ -617,7 +617,7 @@ void TableModel::CancelPendingUpdate(const QUuid& entry_id)
     }
 }
 
-void TableModel::RDeleteMultiEntries(const QSet<QUuid>& entry_id_set)
+void TableModel::RDeleteEntries(const QSet<QUuid>& entry_id_set)
 {
     int min_row { std::numeric_limits<int>::max() };
 
@@ -637,7 +637,7 @@ void TableModel::RDeleteMultiEntries(const QSet<QUuid>& entry_id_set)
         AccumulateBalance(min_row);
 }
 
-void TableModel::RAppendMultiEntries(const EntryList& entry_list)
+void TableModel::RAppendEntries(const EntryList& entry_list)
 {
     EntryShadowList shadow_list {};
     shadow_list.reserve(entry_list.size());

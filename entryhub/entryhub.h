@@ -39,11 +39,11 @@ protected:
 signals:
     // send to LeafSStation
     void SDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash);
-    void SDeleteMultiEntries(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
-    void SAppendMultiEntries(const QUuid& node_id, const EntryList& entry_list);
+    void SDeleteEntries(const QUuid& node_id, const QSet<QUuid>& entry_id_set);
+    void SAppendEntries(const QUuid& node_id, const EntryList& entry_list);
 
-    void SAttachOneEntry(const QUuid& node_id, Entry* entry);
-    void SDetachOneEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& extra_value = {});
+    void SAttachEntry(const QUuid& node_id, Entry* entry);
+    void SDetachEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& extra_value = {});
 
     void SRefreshField(const QUuid& node_id, const QUuid& entry_id, int start, int end);
     void SRefreshStatus(const QSet<QUuid>& affected_node);

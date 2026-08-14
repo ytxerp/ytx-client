@@ -38,8 +38,8 @@ void EntryHub::InsertEntry(const QJsonObject& data)
 
     entry_cache_.insert(entry->id, entry);
 
-    emit SAttachOneEntry(entry->lhs_node, entry);
-    emit SAttachOneEntry(entry->rhs_node, entry);
+    emit SAttachEntry(entry->lhs_node, entry);
+    emit SAttachEntry(entry->rhs_node, entry);
 }
 
 void EntryHub::DeleteEntry(const QUuid& entry_id)
@@ -51,8 +51,8 @@ void EntryHub::DeleteEntry(const QUuid& entry_id)
 
     auto* entry = it.value();
 
-    emit SDetachOneEntry(entry->lhs_node, entry_id);
-    emit SDetachOneEntry(entry->rhs_node, entry_id);
+    emit SDetachEntry(entry->lhs_node, entry_id);
+    emit SDetachEntry(entry->rhs_node, entry_id);
 
     entry_cache_.erase(it);
     EntryPool::Instance().Recycle(entry, section_);
@@ -118,7 +118,7 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
 
         const int linked_node_column { entry::LinkedNodeColumn(section_) };
 
-        emit SDetachOneEntry(old_node_id, id);
+        emit SDetachEntry(old_node_id, id);
         emit SRefreshField(lhs_node, id, linked_node_column, linked_node_column);
     } else {
         entry = EntryPool::Instance().Allocate(section_);
@@ -126,7 +126,7 @@ void EntryHub::UpdateEntryLinkedNode(const QUuid& id, const QJsonObject& update,
         entry_cache_.insert(entry->id, entry);
     }
 
-    emit SAttachOneEntry(new_node_id, entry);
+    emit SAttachEntry(new_node_id, entry);
 }
 
 /**
@@ -222,7 +222,7 @@ void EntryHub::AckTable(const QUuid& node_id, const QJsonArray& array)
         return;
 
     const EntryList entry_list { ProcessEntryArray(array) };
-    emit SAppendMultiEntries(node_id, entry_list);
+    emit SAppendEntries(node_id, entry_list);
 }
 
 void EntryHub::SearchEntry(const QJsonArray& array)
@@ -236,7 +236,7 @@ void EntryHub::PeriodClose(const QJsonArray& array)
     const EntryList list { ProcessEntryArray(array) };
 
     for (auto* entry : list) {
-        emit SAttachOneEntry(entry->lhs_node, entry);
+        emit SAttachEntry(entry->lhs_node, entry);
     }
 }
 

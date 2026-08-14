@@ -15,7 +15,7 @@ TableModelO::TableModelO(CTableModelArg& arg, QObject* parent)
 
 TableModelO::~TableModelO() { EntryPool::Instance().Recycle(entry_list_, section_); }
 
-void TableModelO::RAppendMultiEntries(const EntryList& entry_list)
+void TableModelO::RAppendEntries(const EntryList& entry_list)
 {
     if (entry_list.isEmpty())
         return;

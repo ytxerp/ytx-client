@@ -27,7 +27,7 @@ void TableSStation::DeregisterModel(const QUuid& node_id)
     model_hash_.remove(node_id);
 }
 
-void TableSStation::RAttachOneEntry(const QUuid& node_id, Entry* entry)
+void TableSStation::RAttachEntry(const QUuid& node_id, Entry* entry)
 {
     Q_ASSERT(!node_id.isNull());
 
@@ -36,11 +36,11 @@ void TableSStation::RAttachOneEntry(const QUuid& node_id, Entry* entry)
     if (!model)
         return;
 
-    connect(this, &TableSStation::SAttachOneEntry, model, &TableModel::RAttachOneEntry, Qt::SingleShotConnection);
-    emit SAttachOneEntry(entry);
+    connect(this, &TableSStation::SAttachEntry, model, &TableModel::RAttachEntry, Qt::SingleShotConnection);
+    emit SAttachEntry(entry);
 }
 
-void TableSStation::RDetachOneEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& extra_value)
+void TableSStation::RDetachEntry(const QUuid& node_id, const QUuid& entry_id, const QUuid& extra_value)
 {
     Q_ASSERT(!node_id.isNull());
     Q_ASSERT(!entry_id.isNull());
@@ -49,8 +49,8 @@ void TableSStation::RDetachOneEntry(const QUuid& node_id, const QUuid& entry_id,
     if (!model)
         return;
 
-    connect(this, &TableSStation::SDetachOneEntry, model, &TableModel::RDetachOneEntry, Qt::SingleShotConnection);
-    emit SDetachOneEntry(entry_id, extra_value);
+    connect(this, &TableSStation::SDetachEntry, model, &TableModel::RDetachEntry, Qt::SingleShotConnection);
+    emit SDetachEntry(entry_id, extra_value);
 }
 
 void TableSStation::RUpdateBalance(const QUuid& node_id, const QUuid& entry_id)
@@ -66,7 +66,7 @@ void TableSStation::RUpdateBalance(const QUuid& node_id, const QUuid& entry_id)
     emit SUpdateBalance(entry_id);
 }
 
-void TableSStation::RAppendMultiEntries(const QUuid& node_id, const EntryList& entry_list)
+void TableSStation::RAppendEntries(const QUuid& node_id, const EntryList& entry_list)
 {
     Q_ASSERT(!node_id.isNull());
 
@@ -77,8 +77,8 @@ void TableSStation::RAppendMultiEntries(const QUuid& node_id, const EntryList& e
     if (!model)
         return;
 
-    connect(this, &TableSStation::SAppendMultiEntries, model, &TableModel::RAppendMultiEntries, Qt::SingleShotConnection);
-    emit SAppendMultiEntries(entry_list);
+    connect(this, &TableSStation::SAppendEntries, model, &TableModel::RAppendEntries, Qt::SingleShotConnection);
+    emit SAppendEntries(entry_list);
 }
 
 void TableSStation::RRefreshStatus(const QSet<QUuid>& affected_node)
@@ -132,18 +132,18 @@ void TableSStation::RDeleteEntryHash(const QHash<QUuid, QSet<QUuid>>& entry_hash
         if (!model)
             continue;
 
-        connect(this, &TableSStation::SDeleteMultiEntries, model, &TableModel::RDeleteMultiEntries, Qt::SingleShotConnection);
-        emit SDeleteMultiEntries(entry_id_set);
+        connect(this, &TableSStation::SDeleteEntries, model, &TableModel::RDeleteEntries, Qt::SingleShotConnection);
+        emit SDeleteEntries(entry_id_set);
     }
 }
 
-void TableSStation::RDeleteMultiEntries(const QUuid& node_id, const QSet<QUuid>& entry_id_set)
+void TableSStation::RDeleteEntries(const QUuid& node_id, const QSet<QUuid>& entry_id_set)
 {
     Q_ASSERT(!node_id.isNull());
 
     const auto* old_model { FindModel(node_id) };
     if (old_model) {
-        connect(this, &TableSStation::SDeleteMultiEntries, old_model, &TableModel::RDeleteMultiEntries, Qt::SingleShotConnection);
-        emit SDeleteMultiEntries(entry_id_set);
+        connect(this, &TableSStation::SDeleteEntries, old_model, &TableModel::RDeleteEntries, Qt::SingleShotConnection);
+        emit SDeleteEntries(entry_id_set);
     }
 }

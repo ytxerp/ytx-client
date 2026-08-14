@@ -13,7 +13,7 @@ EntryHubP::EntryHubP(CSectionInfo& info, QObject* parent)
 
 void EntryHubP::DeleteSingleLeaf(const QSet<QUuid>& leaf_entry)
 {
-    qInfo() << "EntryHubP::DeleteLeaf size:" << leaf_entry.size();
+    qInfo() << Q_FUNC_INFO << leaf_entry.size();
 
     for (const QUuid& entry_id : leaf_entry) {
         Entry* entry { entry_cache_.take(entry_id) };
@@ -78,7 +78,7 @@ void EntryHubP::PushEntry(const QUuid& node_id)
         }
     }
 
-    emit SAppendMultiEntries(node_id, entry_list);
+    emit SAppendEntries(node_id, entry_list);
 }
 
 void EntryHubP::ApplyPartnerEntry(const QJsonArray& array)
@@ -105,7 +105,7 @@ void EntryHubP::InsertEntry(const QJsonObject& data)
     entry_cache_.insert(entry->id, entry);
     PartnerInventoryRegistry::Instance().Insert(entry->lhs_node, entry->rhs_node, entry->unit_price, entry->external_sku);
 
-    emit SAttachOneEntry(entry->lhs_node, entry);
+    emit SAttachEntry(entry->lhs_node, entry);
 }
 
 void EntryHubP::DeleteEntry(const QUuid& entry_id)
@@ -119,7 +119,7 @@ void EntryHubP::DeleteEntry(const QUuid& entry_id)
 
     PartnerInventoryRegistry::Instance().Remove(entry->lhs_node, entry->rhs_node);
 
-    emit SDetachOneEntry(entry->lhs_node, entry_id, entry->rhs_node);
+    emit SDetachEntry(entry->lhs_node, entry_id, entry->rhs_node);
 
     entry_cache_.erase(it);
     EntryPool::Instance().Recycle(entry, section_);
@@ -156,18 +156,3 @@ void EntryHubP::UpdateEntry(const QUuid& id, const QJsonObject& update, int vers
     const auto [start, end] = entry::CacheColumnRange(section_);
     emit SRefreshField(entry->lhs_node, id, start, end);
 }
-
-#if 0
-std::optional<std::pair<QUuid, double>> EntryHubP::ResolveFromExternal(const QUuid& partner_id, const QUuid& external_sku) const
-{
-    for (const auto* trans : std::as_const(entry_cache_)) {
-        auto* d_trans = static_cast<const EntryP*>(trans);
-
-        if (d_trans->lhs_node == partner_id && d_trans->external_sku == external_sku) {
-            return std::make_pair(d_trans->rhs_node, d_trans->unit_price);
-        }
-    }
-
-    return std::nullopt;
-}
-#endif

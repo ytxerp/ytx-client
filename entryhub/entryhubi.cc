@@ -68,6 +68,6 @@ void EntryHubI::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
         }
     }
 
-    emit SDeleteMultiEntries(old_node_id, entry_id_set);
-    emit SAppendMultiEntries(new_node_id, entry_list);
+    emit SDeleteEntries(old_node_id, entry_id_set);
+    emit SAppendEntries(new_node_id, entry_list);
 }
