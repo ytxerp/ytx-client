@@ -71,9 +71,9 @@ int utils::CompareVersion(const QString& v1, const QString& v2)
     const QStringList parts1 { v1.split('.') };
     const QStringList parts2 { v2.split('.') };
 
-    const long long n { qMax(parts1.size(), parts2.size()) };
+    const qsizetype n { qMax(parts1.size(), parts2.size()) };
 
-    for (long long i = 0; i != n; ++i) {
+    for (qsizetype i = 0; i != n; ++i) {
         const int num1 { i < parts1.size() ? parts1[i].toInt() : 0 };
         const int num2 { i < parts2.size() ? parts2[i].toInt() : 0 };
 
