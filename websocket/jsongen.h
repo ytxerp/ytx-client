@@ -17,15 +17,14 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #include "component/using.h"
 #include "enum/bindingmode.h"
 #include "enum/section.h"
 #include "tag/tagrow.h"
 #include "tree/node.h"
 #include "utils/daterange.h"
-
-#ifndef JSONGEN_H
-#define JSONGEN_H
 
 // Only client-owned data is included in the request.
 // Server-owned fields are computed and filled by the server.
@@ -91,5 +90,3 @@ QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, 
 QJsonObject CashFlowStatementAck(CUuid& widget_id, const utils::DateTimeRange& range);
 
 }
-
-#endif // JSONGEN_H

@@ -17,11 +17,10 @@
  * along with YTX. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #include <QByteArray>
 #include <QString>
-
-#ifndef PASSWORD_ENCRYPTION_H
-#define PASSWORD_ENCRYPTION_H
 
 // Encrypted format:
 // Base64( nonce[12] | ciphertext[N] | tag[16] )
@@ -37,5 +36,3 @@ private:
     static constexpr int NONCE_SIZE = 12; // ChaCha20-Poly1305 nonce size
     static constexpr int TAG_SIZE = 16; // ChaCha20-Poly1305 tag size
 };
-
-#endif // PASSWORD_ENCRYPTION_H
