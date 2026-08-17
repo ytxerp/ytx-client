@@ -30,7 +30,7 @@ void MainWindow::on_actionSettlement_triggered()
         connect(widget, &SettlementPrimaryWidget::SCreateSettlementSecondaryWidget, this, &MainWindow::RCreateSettlementSecondaryWidget);
 
         InitTableView(view, std::to_underlying(settlement::PrimaryField::kDescription));
-        DelegateSettlement(view, sc_->section_config);
+        DelegateSettlementPrimary(view, sc_->section_config);
     }
 
     RegisterWidget(widget, widget_id, WidgetRole::kSettlement);
@@ -62,7 +62,7 @@ void MainWindow::CreateSettlementSecondary(const settlement::PrimaryRow& primary
     {
         auto* view { widget->View() };
         InitTableView(view, std::to_underlying(settlement::SecondaryField::kDescription));
-        DelegateSettlementNode(view, sc_->section_config);
+        DelegateSettlementSecondary(view, sc_->section_config);
     }
 
     RegisterWidget(widget, widget_id, WidgetRole::kSettlement);

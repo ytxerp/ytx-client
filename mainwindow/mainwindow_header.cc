@@ -209,7 +209,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Tag"),
         tr("Color"),
         tr("Document"),
-        tr("Active"),
+        tr("Status"),
         tr("Payment Term"),
         tr("Kind"),
         tr("Unit"),

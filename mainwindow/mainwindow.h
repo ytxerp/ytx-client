@@ -227,11 +227,11 @@ private:
     void DelegateSalesHistoryI(QTableView* table_view, CSectionConfig& config) const;
     void DelegateOrderHistoryP(QTableView* table_view, CSectionConfig& config) const;
 
-    void DelegateStatement(QTableView* table_view, CSectionConfig& config) const;
-    void DelegateStatementNode(QTableView* table_view, CSectionConfig& config) const;
-    void DelegateStatementEntry(QTableView* table_view, CSectionConfig& config) const;
-    void DelegateSettlement(QTableView* table_view, CSectionConfig& config) const;
-    void DelegateSettlementNode(QTableView* table_view, CSectionConfig& config) const;
+    void DelegateStatementPrimary(QTableView* table_view, CSectionConfig& config) const;
+    void DelegateStatementSecondary(QTableView* table_view, CSectionConfig& config) const;
+    void DelegateStatementTertiary(QTableView* table_view, CSectionConfig& config) const;
+    void DelegateSettlementPrimary(QTableView* table_view, CSectionConfig& config) const;
+    void DelegateSettlementSecondary(QTableView* table_view, CSectionConfig& config) const;
     void DelegateTag(QTableView* table_view) const;
     void DelegateWorkspaceMember(QTableView* table_view) const;
     void DelegateAuditLog(QTableView* table_view) const;

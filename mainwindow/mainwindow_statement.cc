@@ -22,7 +22,7 @@ void MainWindow::on_actionStatement_triggered()
 
     auto* view { widget->View() };
     InitTableView(view, std::to_underlying(statement::PrimaryField::kPlaceholder));
-    DelegateStatement(view, sc_->section_config);
+    DelegateStatementPrimary(view, sc_->section_config);
 
     connect(widget, &StatementPrimaryWidget::SShowSecondaryStatement, this, &MainWindow::RShowSecondaryStatement);
 
@@ -89,7 +89,7 @@ void MainWindow::RShowSecondaryStatement(const QUuid& partner_id, const utils::D
 
     auto* view { widget->View() };
     InitTableView(view, std::to_underlying(statement::SecondaryField::kDescription));
-    DelegateStatementNode(view, sc_->section_config);
+    DelegateStatementSecondary(view, sc_->section_config);
 
     connect(widget, &StatementSecondaryWidget::SShowTertiaryStatement, this, &MainWindow::RShowTertiaryStatement);
 
@@ -115,7 +115,7 @@ void MainWindow::RShowTertiaryStatement(const QUuid& partner_id, const utils::Da
 
     auto* view { widget->View() };
     InitTableView(view, std::to_underlying(statement::TertiaryField::kDescription));
-    DelegateStatementEntry(view, sc_->section_config);
+    DelegateStatementTertiary(view, sc_->section_config);
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
 }
