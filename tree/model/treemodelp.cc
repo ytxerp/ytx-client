@@ -45,12 +45,12 @@ void TreeModelP::ApplyActivation(const QUuid& node_id, int status, int version)
     if (!d_node)
         return;
 
-    const auto node_status { static_cast<PartnerNodeStatus>(status) };
+    const auto node_status { static_cast<PartnerStatus>(status) };
 
     d_node->status = node_status;
     d_node->version = version;
 
-    if (node_status != PartnerNodeStatus::kActive) {
+    if (node_status != PartnerStatus::kActive) {
         leaf_path_.remove(node_id);
         leaf_model_->RemoveItem(node_id);
         return;
@@ -148,7 +148,7 @@ void TreeModelP::InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid,
         case NodeKind::kLeaf:
             auto* d_node { static_cast<NodeP*>(node) };
 
-            if (d_node->status == PartnerNodeStatus::kActive)
+            if (d_node->status == PartnerStatus::kActive)
                 leaf_path.insert(node->id, path);
 
             const node::Delta delta {
@@ -163,7 +163,7 @@ void TreeModelP::InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid,
 
 void TreeModelP::RequestActivation(NodeP* node, int value)
 {
-    if (node->kind == NodeKind::kBranch || node->status == PartnerNodeStatus(value))
+    if (node->kind == NodeKind::kBranch || node->status == PartnerStatus(value))
         return;
 
     QJsonObject message { JsonGen::NodeActivation(section_, node->id, value, node->version) };

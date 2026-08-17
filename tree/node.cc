@@ -129,7 +129,7 @@ void NodeP::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kColor); val.isString())
         color = val.toString();
     if (const auto val = object.value(kStatus); val.isDouble())
-        status = static_cast<PartnerNodeStatus>(val.toInt());
+        status = static_cast<PartnerStatus>(val.toInt());
     if (const auto val = object.value(kVersion); val.isDouble())
         version = val.toInt();
 
@@ -196,7 +196,7 @@ void NodeO::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kUnit); val.isDouble())
         unit = static_cast<NodeUnit>(val.toInt());
     if (const auto val = object.value(kStatus); val.isDouble())
-        status = static_cast<NodeStatus>(val.toInt());
+        status = static_cast<OrderStatus>(val.toInt());
     if (const auto val = object.value(kVersion); val.isDouble())
         version = val.toInt();
 

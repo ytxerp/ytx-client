@@ -45,8 +45,8 @@ void TableWidgetO::ReleaseSucceeded(int version)
     qDebug() << "TableWidgetO::ReleaseSucceeded";
 
     MarkSynced(version);
-    LockWidgets(NodeStatus::kReleased);
-    tmp_node_->status = NodeStatus::kReleased;
+    LockWidgets(OrderStatus::kReleased);
+    tmp_node_->status = OrderStatus::kReleased;
 }
 
 void TableWidgetO::RecallSucceeded(int version)
@@ -54,8 +54,8 @@ void TableWidgetO::RecallSucceeded(int version)
     qDebug() << "TableWidgetO::RecallSucceeded";
 
     MarkSynced(version);
-    LockWidgets(NodeStatus::kRecalled);
-    tmp_node_->status = NodeStatus::kRecalled;
+    LockWidgets(OrderStatus::kRecalled);
+    tmp_node_->status = OrderStatus::kRecalled;
 }
 
 void TableWidgetO::SaveSucceeded(int version)
@@ -216,7 +216,7 @@ void TableWidgetO::InitData(const NodeO* node)
     }
 
     {
-        LockWidgets(NodeStatus(node->status));
+        LockWidgets(OrderStatus(node->status));
     }
 
     if (tmp_node_->sync_state == SyncState::kCreating)
@@ -235,10 +235,10 @@ void TableWidgetO::InitData(const NodeO* node)
     }
 }
 
-void TableWidgetO::LockWidgets(NodeStatus value)
+void TableWidgetO::LockWidgets(OrderStatus value)
 {
-    const bool is_unreleased { value == NodeStatus::kUnreleased };
-    const bool is_released { value == NodeStatus::kReleased };
+    const bool is_unreleased { value == OrderStatus::kUnreleased };
+    const bool is_released { value == OrderStatus::kReleased };
 
     ui->comboPartner->setReadOnly(!is_unreleased);
     ui->comboEmployee->setReadOnly(is_released);
@@ -344,7 +344,7 @@ void TableWidgetO::on_lineDescription_textChanged(const QString& arg1)
 
 void TableWidgetO::RRuleGroupClicked(int id)
 {
-    if (tmp_node_->status != NodeStatus::kUnreleased)
+    if (tmp_node_->status != OrderStatus::kUnreleased)
         return;
 
     tmp_node_->direction_rule = static_cast<bool>(id);
@@ -469,7 +469,7 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
     }
 
-    pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kRecalled));
+    pending_update_.insert(kStatus, std::to_underlying(OrderStatus::kRecalled));
 
     qDebug() << "on_pBtnRecall_clicked: tmp_node_ version" << tmp_node_->version;
 
@@ -513,7 +513,7 @@ void TableWidgetO::SaveOrder()
     if (!HasPendingUpdate())
         return;
 
-    Q_ASSERT(tmp_node_->status != NodeStatus::kReleased);
+    Q_ASSERT(tmp_node_->status != OrderStatus::kReleased);
 
     QJsonObject order_message {};
     order_message.insert(kSection, std::to_underlying(section_));
@@ -523,14 +523,14 @@ void TableWidgetO::SaveOrder()
     if (tmp_node_->sync_state == SyncState::kSynced) {
         BuildNodeUpdate(order_message);
 
-        const auto key { tmp_node_->status == NodeStatus::kUnreleased ? WsKey::kUnreleasedOrderSave : WsKey::kRecalledOrderSave };
+        const auto key { tmp_node_->status == OrderStatus::kUnreleased ? WsKey::kUnreleasedOrderSave : WsKey::kRecalledOrderSave };
         WebSocket::Instance()->SendMessage(key, order_message);
 
         pending_update_ = QJsonObject();
     }
 
     if (tmp_node_->sync_state == SyncState::kCreating) {
-        tmp_node_->status = NodeStatus::kUnreleased; // Same as default
+        tmp_node_->status = OrderStatus::kUnreleased; // Same as default
 
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(WsKey::kOrderInsertSave, order_message);
@@ -549,25 +549,25 @@ void TableWidgetO::on_pBtnRelease_clicked()
     if (!ValidateSyncState())
         return;
 
-    Q_ASSERT(tmp_node_->status != NodeStatus::kReleased);
+    Q_ASSERT(tmp_node_->status != OrderStatus::kReleased);
 
     QJsonObject order_message {};
     order_message.insert(kSection, std::to_underlying(section_));
     table_model_order_->Finalize(order_message);
 
     if (tmp_node_->sync_state == SyncState::kSynced) {
-        pending_update_.insert(kStatus, std::to_underlying(NodeStatus::kReleased));
+        pending_update_.insert(kStatus, std::to_underlying(OrderStatus::kReleased));
 
         BuildNodeUpdate(order_message);
 
-        const auto key { tmp_node_->status == NodeStatus::kUnreleased ? WsKey::kUnreleasedOrderRelease : WsKey::kRecalledOrderRelease };
+        const auto key { tmp_node_->status == OrderStatus::kUnreleased ? WsKey::kUnreleasedOrderRelease : WsKey::kRecalledOrderRelease };
         WebSocket::Instance()->SendMessage(key, order_message);
 
         pending_update_ = QJsonObject();
     }
 
     if (tmp_node_->sync_state == SyncState::kCreating) {
-        tmp_node_->status = NodeStatus::kReleased;
+        tmp_node_->status = OrderStatus::kReleased;
 
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(WsKey::kOrderInsertRelease, order_message);
@@ -590,7 +590,7 @@ void TableWidgetO::on_comboTemplate_currentIndexChanged(int /*index*/)
 
 void TableWidgetO::on_pushButtonDelete_clicked()
 {
-    if (tmp_node_->status == NodeStatus::kReleased) {
+    if (tmp_node_->status == OrderStatus::kReleased) {
         utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"),
             tr("This order has been released and cannot be deleted.\n"
                "Please recall it before deleting."),

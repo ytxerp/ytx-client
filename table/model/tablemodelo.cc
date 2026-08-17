@@ -146,7 +146,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    if (d_node_->status == NodeStatus::kReleased)
+    if (d_node_->status == OrderStatus::kReleased)
         return false;
 
     if (data(index, role) == value)
@@ -301,7 +301,7 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
         break;
     }
 
-    if (d_node_->status == NodeStatus::kReleased)
+    if (d_node_->status == OrderStatus::kReleased)
         flags &= ~Qt::ItemIsEditable;
 
     return flags;
@@ -318,7 +318,7 @@ QModelIndex TableModelO::index(int row, int column, const QModelIndex& parent) c
 bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 {
     Q_ASSERT(row >= 0 && row <= rowCount(parent));
-    if (d_node_->status == NodeStatus::kReleased)
+    if (d_node_->status == OrderStatus::kReleased)
         return false;
 
     auto* entry { EntryPool::Instance().Allocate(section_) };
@@ -336,7 +336,7 @@ bool TableModelO::insertRows(int row, int /*count*/, const QModelIndex& parent)
 bool TableModelO::removeRows(int row, int /*count*/, const QModelIndex& parent)
 {
     Q_ASSERT(row >= 0 && row <= rowCount(parent) - 1);
-    if (d_node_->status == NodeStatus::kReleased)
+    if (d_node_->status == OrderStatus::kReleased)
         return false;
 
     auto* d_entry = DerivedPtr<EntryO>(entry_list_.at(row));

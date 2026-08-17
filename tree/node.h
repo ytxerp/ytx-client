@@ -85,7 +85,7 @@ struct NodeT final : Node { };
 
 struct NodeP final : Node {
     int payment_term {};
-    PartnerNodeStatus status {};
+    PartnerStatus status {};
 
     void Reset() override;
 
@@ -104,7 +104,7 @@ struct NodeO final : Node {
     double count_total {};
     double measure_total {};
     double discount_total {};
-    NodeStatus status {};
+    OrderStatus status {};
 
     void Reset() override;
     void InvertTotal() override;

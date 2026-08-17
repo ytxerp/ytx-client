@@ -357,8 +357,8 @@ void MainWindow::InitContextPartner()
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
     // Reuse the finance cash-kind map here to avoid adding a dedicated status map.
-    info.cash_kind_map.insert(std::to_underlying(PartnerNodeStatus::kInactive), tr("Inactive"));
-    info.cash_kind_map.insert(std::to_underlying(PartnerNodeStatus::kActive), QString());
+    info.cash_kind_map.insert(std::to_underlying(PartnerStatus::kInactive), tr("Inactive"));
+    info.cash_kind_map.insert(std::to_underlying(PartnerStatus::kActive), QString());
 
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);

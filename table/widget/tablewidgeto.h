@@ -102,7 +102,7 @@ private:
     void InitWidget();
     void InitConnect();
     void InitData(const NodeO* node);
-    void LockWidgets(NodeStatus value);
+    void LockWidgets(OrderStatus value);
     void InitRuleGroup();
     void InitUnitGroup();
     void InitUiValue();

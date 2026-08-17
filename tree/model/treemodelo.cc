@@ -5,20 +5,19 @@
 #include "global/masterdataregistry.h"
 #include "utils/nodeutils.h"
 #include "utils/pathutils.h"
-#include "websocket/jsongen.h"
 
 TreeModelO::TreeModelO(CSectionInfo& info, CString& separator, QObject* parent)
     : TreeModel(info, separator, parent)
 {
 }
 
-void TreeModelO::HandleStatusChanged(const QUuid& node_id, NodeStatus value)
+void TreeModelO::HandleStatusChanged(const QUuid& node_id, OrderStatus value)
 {
     auto* d_node { DerivedPtr<NodeO>(node_hash_.value(node_id)) };
     if (!d_node)
         return;
 
-    const int coefficient { value == NodeStatus::kReleased ? 1 : -1 };
+    const int coefficient { value == OrderStatus::kReleased ? 1 : -1 };
 
     const node::Delta delta {
         .initial = coefficient * d_node->initial_total,
@@ -141,7 +140,7 @@ void TreeModelO::RegisterNode(Node* node)
     case NodeKind::kLeaf: {
         auto* d_node { DerivedPtr<NodeO>(node) };
 
-        if (d_node->status == NodeStatus::kReleased) {
+        if (d_node->status == OrderStatus::kReleased) {
             const node::Delta delta {
                 .initial = d_node->initial_total,
                 .final = d_node->final_total,
@@ -177,7 +176,7 @@ void TreeModelO::UnregisterNode(Node* node, Node* parent_node)
         branch_path_.remove(node_id);
     } break;
     case NodeKind::kLeaf: {
-        if (d_node->status == NodeStatus::kReleased) {
+        if (d_node->status == OrderStatus::kReleased) {
             const node::Delta delta {
                 .initial = -d_node->initial_total,
                 .final = -d_node->final_total,
@@ -259,7 +258,7 @@ void TreeModelO::InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid,
             break;
         case NodeKind::kLeaf: {
             auto* d_node { DerivedPtr<NodeO>(node) };
-            if (d_node->status == NodeStatus::kReleased) {
+            if (d_node->status == OrderStatus::kReleased) {
                 const node::Delta delta {
                     .initial = d_node->initial_total,
                     .final = d_node->final_total,
@@ -468,7 +467,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
     auto* node { DerivedPtr<NodeO>(source_parent->children.takeAt(sourceRow)) };
     Q_ASSERT(node);
 
-    const bool update_ancestor { node->kind == NodeKind::kBranch || node->status == NodeStatus::kReleased };
+    const bool update_ancestor { node->kind == NodeKind::kBranch || node->status == OrderStatus::kReleased };
 
     if (update_ancestor) {
         const node::Delta delta {

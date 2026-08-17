@@ -43,7 +43,7 @@ public:
     void RecallSettlement(const QUuid& settlement_id);
 
     QUuid Partner(QUuid node_id) const { return Value(node_id, &NodeO::partner_id); };
-    void HandleStatusChanged(const QUuid& node_id, NodeStatus value);
+    void HandleStatusChanged(const QUuid& node_id, OrderStatus value);
 
 protected:
     void RegisterNode(Node* node) override;

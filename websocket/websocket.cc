@@ -1112,7 +1112,7 @@ void WebSocket::ReleaseOrder(const QJsonObject& obj)
     }
 
     order_model->ApplyUpdate(node_id, node_update, version);
-    order_model->HandleStatusChanged(node_id, NodeStatus::kReleased);
+    order_model->HandleStatusChanged(node_id, OrderStatus::kReleased);
 }
 
 void WebSocket::SaveOrder(const QJsonObject& obj)
@@ -1175,7 +1175,7 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_released)
             partner_model->UpdateAmount(partner_id, initial_total);
         }
 
-        order_model->HandleStatusChanged(node_id, NodeStatus::kReleased);
+        order_model->HandleStatusChanged(node_id, OrderStatus::kReleased);
     }
 }
 
@@ -1211,7 +1211,7 @@ void WebSocket::RecallOrder(const QJsonObject& obj)
     }
 
     order_model->ApplyUpdate(node_id, node_update, version);
-    order_model->HandleStatusChanged(node_id, NodeStatus::kRecalled);
+    order_model->HandleStatusChanged(node_id, OrderStatus::kRecalled);
 }
 
 void WebSocket::InsertSettlement(const QJsonObject& obj)
