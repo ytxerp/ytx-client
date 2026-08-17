@@ -55,6 +55,9 @@ void ItemModel::sort(int column, Qt::SortOrder order)
 
 void ItemModel::AppendItem(const QString& display, const QUuid& id)
 {
+    if (hash_.contains(id))
+        return;
+
     auto* item { ResourcePool<Item>::Instance().Allocate() };
 
     item->display = display;

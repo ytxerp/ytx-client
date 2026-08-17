@@ -25,10 +25,13 @@
 
 class StatusDelegate final : public StyledItemDelegate {
 public:
-    explicit StatusDelegate(QEvent::Type type, QObject* parent = nullptr);
+    explicit StatusDelegate(QEvent::Type type, int inactive_status, int active_status, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
 
 private:
-    QEvent::Type type_ {};
+    const QEvent::Type type_ {};
+
+    const int inactive_status_ {};
+    const int active_status_ {};
 };

@@ -267,6 +267,7 @@ enum class NodeEnumP {
     kTag,
     kColor,
     kDocument,
+    kStatus,
     kPaymentTerm,
     kKind,
     kUnit,

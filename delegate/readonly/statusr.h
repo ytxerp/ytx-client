@@ -23,6 +23,9 @@
 
 class StatusR final : public StyledItemDelegate {
 public:
-    explicit StatusR(QObject* parent = nullptr);
+    explicit StatusR(int active_status, QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+
+private:
+    const int active_status_ {};
 };

@@ -192,6 +192,16 @@ QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_ru
     return message;
 }
 
+QJsonObject NodeActivation(Section section, CUuid& node_id, int status, int version)
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
+    message.insert(kStatus, status);
+    message.insert(kVersion, version);
+    return message;
+}
+
 QJsonObject EntryUpdate(Section section, CUuid& entry_id, CJsonObject& update, int version)
 {
     QJsonObject message {};

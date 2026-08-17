@@ -34,3 +34,6 @@ enum class SettlementStatus { kRecalled = 0, kReleased };
 
 /** @brief EntryStatus of an entry. */
 enum class EntryStatus { kUnmarked = 0, kMarked };
+
+/** @brief Activation status of a partner node. */
+enum class PartnerNodeStatus { kInactive = 0, kActive = 1 };

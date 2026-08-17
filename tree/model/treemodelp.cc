@@ -1,6 +1,9 @@
 #include "treemodelp.h"
 
 #include "utils/nodeutils.h"
+#include "utils/pathutils.h"
+#include "websocket/jsongen.h"
+#include "websocket/websocket.h"
 
 TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, QObject* parent)
     : TreeModel(info, separator, parent)
@@ -30,6 +33,33 @@ void TreeModelP::UpdateAmount(const QUuid& node_id, double initial_delta)
     ids.insert(node_id);
 
     EmitColumnChanged(std::to_underlying(NodeEnumP::kInitialTotal), ids);
+}
+
+void TreeModelP::ApplyActivation(const QUuid& node_id, int status, int version)
+{
+    const auto index { GetIndex(node_id) };
+    if (!index.isValid())
+        return;
+
+    auto* d_node { static_cast<NodeP*>(index.internalPointer()) };
+    if (!d_node)
+        return;
+
+    const auto node_status { static_cast<PartnerNodeStatus>(status) };
+
+    d_node->status = node_status;
+    d_node->version = version;
+
+    if (node_status != PartnerNodeStatus::kActive) {
+        leaf_path_.remove(node_id);
+        leaf_model_->RemoveItem(node_id);
+        return;
+    }
+
+    const QString path { path::Build(d_node, separator_) };
+
+    leaf_path_.insert(node_id, path);
+    leaf_model_->AppendItem(path, node_id);
 }
 
 QSet<QUuid>* TreeModelP::UnitSet(NodeUnit unit)
@@ -105,6 +135,41 @@ void TreeModelP::InitAncestorTotal(Node* node, const node::Delta& delta) const
     }
 }
 
+void TreeModelP::InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path)
+{
+    for (auto* node : node_hash) {
+        const QString path { path::Build(node, separator_) };
+
+        switch (node->kind) {
+        case NodeKind::kBranch:
+            branch_path.insert(node->id, path);
+            break;
+
+        case NodeKind::kLeaf:
+            auto* d_node { static_cast<NodeP*>(node) };
+
+            if (d_node->status == PartnerNodeStatus::kActive)
+                leaf_path.insert(node->id, path);
+
+            const node::Delta delta {
+                .initial = node->initial_total,
+            };
+
+            InitAncestorTotal(node, delta);
+            break;
+        }
+    }
+}
+
+void TreeModelP::RequestActivation(NodeP* node, int value)
+{
+    if (node->kind == NodeKind::kBranch || node->status == PartnerNodeStatus(value))
+        return;
+
+    QJsonObject message { JsonGen::NodeActivation(section_, node->id, value, node->version) };
+    WebSocket::Instance()->SendMessage(WsKey::kNodeActivation, message);
+}
+
 void TreeModelP::sort(int column, Qt::SortOrder order)
 {
     const NodeEnumP e_column { column };
@@ -124,6 +189,8 @@ void TreeModelP::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::kind, order);
         case NodeEnumP::kUnit:
             return utils::CompareMember(lhs, rhs, &Node::unit, order);
+        case NodeEnumP::kStatus:
+            return utils::CompareMember(d_lhs, d_rhs, &NodeP::status, order);
         case NodeEnumP::kPaymentTerm:
             return utils::CompareMember(d_lhs, d_rhs, &NodeP::payment_term, order);
         case NodeEnumP::kInitialTotal:
@@ -176,6 +243,8 @@ QVariant TreeModelP::data(const QModelIndex& index, int role) const
         return d_node->color;
     case NodeEnumP::kDocument:
         return d_node->document;
+    case NodeEnumP::kStatus:
+        return std::to_underlying(d_node->status);
     }
 }
 
@@ -219,6 +288,9 @@ bool TreeModelP::setData(const QModelIndex& index, const QVariant& value, int ro
     case NodeEnumP::kDocument:
         node::UpdateStringList(changes, node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
+    case NodeEnumP::kStatus:
+        RequestActivation(d_node, value.toInt());
+        break;
     case NodeEnumP::kName:
     case NodeEnumP::kKind:
     case NodeEnumP::kUnit:
@@ -255,6 +327,10 @@ Qt::ItemFlags TreeModelP::flags(const QModelIndex& index) const
     case NodeEnumP::kDocument:
     case NodeEnumP::kKind:
         flags &= ~Qt::ItemIsEditable;
+        break;
+    case NodeEnumP::kStatus:
+        if (node->kind == NodeKind::kLeaf)
+            flags |= Qt::ItemIsEditable;
         break;
     case NodeEnumP::kPaymentTerm:
     case NodeEnumP::kCode:

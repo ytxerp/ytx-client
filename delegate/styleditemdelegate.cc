@@ -61,7 +61,7 @@ void StyledItemDelegate::PaintColorText(
     style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, opt.widget);
 }
 
-void StyledItemDelegate::PaintCheckBox(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void StyledItemDelegate::PaintCheckBox(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, int active_status) const
 {
     QStyleOptionViewItem opt { option };
     initStyleOption(&opt, index);
@@ -74,24 +74,10 @@ void StyledItemDelegate::PaintCheckBox(QPainter* painter, const QStyleOptionView
 
     const int status { index.data().toInt() };
 
-    // Note:
-    // This function is shared by multiple models:
-    //   - In Entry models, 0 = EntryStatus::kUnmarked, 1 = EntryStatus::kMarked.
-    //   - In Node models, 0 = NodeStatus::kEditable, 1 = NodeStatus::kReviewed, 2 = NodeStatus::kVoided.
-    // We therefore use a raw int instead of binding to a single enum class.
-    switch (status) {
-    case 0:
-        check_box.state |= QStyle::State_Off;
-        break;
-    case 1:
-        check_box.state |= QStyle::State_On;
-        break;
-    // If more states are added later (e.g., Reviewed, Voided),
-    // they can be handled here explicitly.
-    default:
-        check_box.state |= QStyle::State_Off;
-        break;
-    }
+    // The active status is provided by the caller so this function can be
+    // shared across models with different status enums. A raw int is used
+    // to keep this function independent of any specific enum class.
+    check_box.state |= status == active_status ? QStyle::State_On : QStyle::State_Off;
 
     auto rect { style->subElementRect(QStyle::SE_CheckBoxIndicator, &opt, opt.widget) };
     rect.moveCenter(opt.rect.center());

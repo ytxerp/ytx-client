@@ -132,7 +132,6 @@ set(HEADERS
     dashboard/partner_heat/partnerheatenum.h
     dashboard/partner_heat/partnerheatmodel.h
     dashboard/partner_heat/partnerheatrow.h
-    delegate/bool.h
     delegate/boolstring.h
     delegate/color.h
     delegate/document.h
@@ -140,7 +139,7 @@ set(HEADERS
     delegate/filterunit.h
     delegate/financeroledelegate.h
     delegate/int.h
-    delegate/intstringnonezero.h
+    delegate/intstring.h
     delegate/issuedtime.h
     delegate/line.h
     delegate/readonly/amountorderhistoryr.h
@@ -332,7 +331,6 @@ set(SOURCES
     dashboard/inventory_heat/inventoryheatmodel.cc
     dashboard/partner_heat/partnerheatdialog.cc
     dashboard/partner_heat/partnerheatmodel.cc
-    delegate/bool.cc
     delegate/boolstring.cc
     delegate/color.cc
     delegate/document.cc
@@ -340,7 +338,7 @@ set(SOURCES
     delegate/filterunit.cc
     delegate/financeroledelegate.cc
     delegate/int.cc
-    delegate/intstringnonezero.cc
+    delegate/intstring.cc
     delegate/issuedtime.cc
     delegate/line.cc
     delegate/readonly/amountorderhistoryr.cc

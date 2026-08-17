@@ -35,6 +35,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     void UpdateAmount(const QUuid& node_id, double initial_delta);
+    void ApplyActivation(const QUuid& node_id, int status, int version);
 
 protected:
     QSet<QUuid>* UnitSet(NodeUnit unit) override;
@@ -42,6 +43,10 @@ protected:
 
     QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const override;
     void InitAncestorTotal(Node* node, const node::Delta& delta) const override;
+    void InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path) override;
+
+private:
+    void RequestActivation(NodeP* node, int value);
 
 private:
     QSet<QUuid> cset_ {}; // Set of all nodes that are customer unit

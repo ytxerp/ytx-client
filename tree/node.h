@@ -85,6 +85,7 @@ struct NodeT final : Node { };
 
 struct NodeP final : Node {
     int payment_term {};
+    PartnerNodeStatus status {};
 
     void Reset() override;
 

@@ -128,13 +128,15 @@ void NodeP::ReadJson(const QJsonObject& object)
         payment_term = val.toInt();
     if (const auto val = object.value(kColor); val.isString())
         color = val.toString();
+    if (const auto val = object.value(kStatus); val.isDouble())
+        status = static_cast<PartnerNodeStatus>(val.toInt());
+    if (const auto val = object.value(kVersion); val.isDouble())
+        version = val.toInt();
 
     if (object.value(kTag).isArray())
         tag = utils::ReadStringList(object, kTag);
     if (object.value(kDocument).isArray())
         document = utils::ReadStringList(object, kDocument);
-    if (const auto val = object.value(kVersion); val.isDouble())
-        version = val.toInt();
 }
 
 QJsonObject NodeP::WriteJson() const
@@ -152,6 +154,7 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kDocument, utils::WriteStringList(document));
     obj.insert(kVersion, version);
+    obj.insert(kStatus, std::to_underlying(status));
 
     return obj;
 }

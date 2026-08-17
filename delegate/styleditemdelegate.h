@@ -37,7 +37,7 @@ protected:
     void PaintText(CString& text, QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, Qt::Alignment alignment) const;
     void PaintColorText(
         CString& text, const QColor& color, QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, Qt::Alignment alignment) const;
-    void PaintCheckBox(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+    void PaintCheckBox(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, int active_status) const;
     void PaintEmpty(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
     void PaintColorRect(QPainter* painter, const QStyleOptionViewItem& option, const QString& color_string) const;
 

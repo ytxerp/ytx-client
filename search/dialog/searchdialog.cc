@@ -106,7 +106,7 @@ void SearchDialog::InitDelegate()
     direction_rule_ = new BoolStringR(info_.rule_map, this);
     kind_ = new IntStringR(info_.kind_map, this);
     tree_path_ = new SearchPathTreeR(tree_model_, this);
-    check_ = new StatusR(this);
+    check_ = new StatusR(std::to_underlying(EntryStatus::kMarked), this);
     color_ = new ColorR(this);
     table_path_ = new SearchPathTableR(tree_model_, this);
     issued_time_ = new IssuedTimeR(config_.date_format, this);

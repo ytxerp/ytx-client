@@ -31,5 +31,5 @@ public:
 
 private:
     CBoolString& map_;
-    QEvent::Type type_ {};
+    const QEvent::Type type_ {};
 };

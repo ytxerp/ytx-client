@@ -93,6 +93,7 @@ enum class WsKey : uint16_t {
     kNodeInsert = 1422,
     kNodeNameUpdate = 1423,
     kNodeUpdate = 1424,
+    kNodeActivation = 1425,
 
     kTreeApply = 1430,
     kTreeSyncFinish = 1431,
@@ -248,6 +249,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kNodeInsert";
     case WsKey::kNodeUpdate:
         return "kNodeUpdate";
+    case WsKey::kNodeActivation:
+        return "kNodeActivation";
     case WsKey::kOrderNameSearch:
         return "kOrderNameSearch";
     case WsKey::kNodeNameUpdate:

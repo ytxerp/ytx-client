@@ -7,7 +7,6 @@
 #include "dashboard/income_statement/incomestatementenum.h"
 #include "dashboard/inventory_heat/inventoryheatenum.h"
 #include "dashboard/partner_heat/partnerheatenum.h"
-#include "delegate/bool.h"
 #include "delegate/boolstring.h"
 #include "delegate/color.h"
 #include "delegate/document.h"
@@ -15,7 +14,7 @@
 #include "delegate/filterunit.h"
 #include "delegate/financeroledelegate.h"
 #include "delegate/int.h"
-#include "delegate/intstringnonezero.h"
+#include "delegate/intstring.h"
 #include "delegate/issuedtime.h"
 #include "delegate/line.h"
 #include "delegate/readonly/amountorderhistoryr.h"
@@ -153,6 +152,10 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
 
 void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {
+    // Reuse the finance cash-kind model and map here to avoid adding dedicated status resources.
+    auto* status { new IntString(info.cash_kind_model, info.cash_kind_map, tree_view) };
+    tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kStatus), status);
+
     auto* color { new Color(tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kColor), color);
 
@@ -207,7 +210,7 @@ void MainWindow::TreeDelegateO(QTreeView* tree_view, CSectionInfo& info, CSectio
     auto* issued_time { new IssuedTimeR(section.date_format, tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kIssuedTime), issued_time);
 
-    auto* status_r { new StatusR(tree_view) };
+    auto* status_r { new StatusR(std::to_underlying(NodeStatus::kReleased), tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumO::kStatus), status_r);
 
     const auto& sc { info.section == Section::kSale ? sc_sale_ : sc_purchase_ };
@@ -230,7 +233,8 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kDocument), document);
 
-    auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
+    auto* status { new StatusDelegate(
+        QEvent::MouseButtonRelease, std::to_underlying(EntryStatus::kUnmarked), std::to_underlying(EntryStatus::kMarked), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeId(node_id, table_view) };
@@ -249,7 +253,7 @@ void MainWindow::TableDelegateF(QTableView* table_view, TreeModel* tree_model, C
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kTag), tag);
 
     const auto& info { sc_f_.info };
-    auto* cash_kind { new IntStringNoneZero(info.cash_kind_model, info.cash_kind_map, table_view) };
+    auto* cash_kind { new IntString(info.cash_kind_model, info.cash_kind_map, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumF::kCashKind), cash_kind);
 }
 
@@ -268,7 +272,8 @@ void MainWindow::TableDelegateI(QTableView* table_view, TreeModel* tree_model, C
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDocument), document);
 
-    auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
+    auto* status { new StatusDelegate(
+        QEvent::MouseButtonRelease, std::to_underlying(EntryStatus::kUnmarked), std::to_underlying(EntryStatus::kMarked), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeId(node_id, table_view) };
@@ -302,7 +307,8 @@ void MainWindow::TableDelegateT(QTableView* table_view, TreeModel* tree_model, C
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kDocument), document);
 
-    auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
+    auto* status { new StatusDelegate(
+        QEvent::MouseButtonRelease, std::to_underlying(EntryStatus::kUnmarked), std::to_underlying(EntryStatus::kMarked), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnum::kStatus), status);
 
     QSortFilterProxyModel* filter_model { tree_model->ExcludeId(node_id, table_view) };
@@ -337,7 +343,8 @@ void MainWindow::TableDelegateP(QTableView* table_view, CSectionConfig& config) 
     auto* document { new Document(sc_->shared_config.document_dir, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kDocument), document);
 
-    auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
+    auto* status { new StatusDelegate(
+        QEvent::MouseButtonRelease, std::to_underlying(EntryStatus::kUnmarked), std::to_underlying(EntryStatus::kMarked), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumP::kStatus), status);
 
     auto tree_model_i { sc_i_.tree_model };
@@ -448,7 +455,8 @@ void MainWindow::DelegateStatementNode(QTableView* table_view, CSectionConfig& c
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kEmployee), employee);
 
-    auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
+    auto* status { new StatusDelegate(
+        QEvent::MouseButtonRelease, std::to_underlying(EntryStatus::kUnmarked), std::to_underlying(EntryStatus::kMarked), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kStatus), status);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
@@ -467,7 +475,8 @@ void MainWindow::DelegateStatementEntry(QTableView* table_view, CSectionConfig& 
     auto* unit_price { new DoubleNoneZeroR(config.rate_decimal, string_const::kFourDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kUnitPrice), unit_price);
 
-    auto* status { new StatusDelegate(QEvent::MouseButtonRelease, table_view) };
+    auto* status { new StatusDelegate(
+        QEvent::MouseButtonRelease, std::to_underlying(EntryStatus::kUnmarked), std::to_underlying(EntryStatus::kMarked), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kStatus), status);
 
     auto* issued_time { new IssuedTimeR(sc_sale_.section_config.date_format, table_view) };
@@ -486,7 +495,8 @@ void MainWindow::DelegateSettlement(QTableView* table_view, CSectionConfig& conf
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(settlement::PrimaryField::kAmount), amount);
 
-    auto* status { new StatusDelegate(QEvent::MouseButtonDblClick, table_view) };
+    auto* status { new StatusDelegate(
+        QEvent::MouseButtonDblClick, std::to_underlying(SettlementStatus::kRecalled), std::to_underlying(SettlementStatus::kReleased), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(settlement::PrimaryField::kStatus), status);
 
     auto* line { new Line(table_view) };
@@ -511,8 +521,8 @@ void MainWindow::DelegateSettlementNode(QTableView* table_view, CSectionConfig& 
     auto* employee { new NodeNameR(sc_p_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(settlement::SecondaryField::kEmployee), employee);
 
-    auto* status { new Bool(QEvent::MouseButtonRelease, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(settlement::SecondaryField::kIsSettled), status);
+    auto* status_r { new StatusR(std::to_underlying(SettlementStatus::kReleased), table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(settlement::SecondaryField::kIsSettled), status_r);
 
     auto* issued_time { new IssuedTimeR(datetime_format::kDashedDate, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(settlement::SecondaryField::kIssuedTime), issued_time);
@@ -570,7 +580,7 @@ void MainWindow::DelegatePeriodClose(QTableView* table_view) const
     auto* issued_time { new IssuedTimeR(section_config.date_format, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kIssuedTime), issued_time);
 
-    auto* status { new StatusR(table_view) };
+    auto* status { new StatusR(std::to_underlying(EntryStatus::kMarked), table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(FullEntryEnumF::kStatus), status);
 
     auto* cash_kind { new IntStringNoneZeroR(sc_f_.info.cash_kind_map, table_view) };

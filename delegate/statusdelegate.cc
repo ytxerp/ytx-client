@@ -2,20 +2,22 @@
 
 #include <QMouseEvent>
 
-#include "enum/statusenum.h"
-
-StatusDelegate::StatusDelegate(QEvent::Type type, QObject* parent)
+StatusDelegate::StatusDelegate(QEvent::Type type, int inactive_status, int active_status, QObject* parent)
     : StyledItemDelegate { parent }
     , type_ { type }
+    , inactive_status_ { inactive_status }
+    , active_status_ { active_status }
 {
 }
 
 void StatusDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    if (index.data().toInt() == std::to_underlying(EntryStatus::kUnmarked))
+    const int status { index.data().toInt() };
+
+    if (status != active_status_)
         return PaintEmpty(painter, option, index);
 
-    PaintCheckBox(painter, option, index);
+    PaintCheckBox(painter, option, index, active_status_);
 }
 
 bool StatusDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
@@ -29,28 +31,9 @@ bool StatusDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const
 
     const int status { index.data().toInt() };
 
-    // Note:
-    // Here, status = 0 represents a "base" state:
-    //   - For Entry tables, it corresponds to EntryStatus::kUnmarked.
-    //   - For Node tables, it corresponds to NodeStatus::kEditable.
-    // Since this delegate is shared across different models,
-    // we cannot bind it directly to a specific enum class,
-    // and must toggle the raw int value instead.
+    // Status values are provided externally to keep this delegate independent
+    // of any specific enum class. Unknown states are reset to inactive.
 
-    int next_status {};
-    switch (status) {
-    case 0:
-        next_status = 1;
-        break;
-    case 1:
-        next_status = 0;
-        break;
-    default:
-        // Future extension point:
-        // e.g. handle "2 = Voided" or other states
-        next_status = 0;
-        break;
-    }
-
+    const int next_status { status == inactive_status_ ? active_status_ : inactive_status_ };
     return model->setData(index, next_status, Qt::EditRole);
 }
