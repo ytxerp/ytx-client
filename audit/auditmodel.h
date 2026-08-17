@@ -56,7 +56,7 @@ public:
     void Rebuild(const QJsonArray& array);
 
 private:
-    const QString& NodePath(const QHash<QUuid, QString>* leaf, const QHash<QUuid, QString>* branch, const QUuid& node_id) const;
+    const QString NodePath(const QHash<QUuid, QString>* leaf, const QHash<QUuid, QString>* branch, const QUuid& node_id) const;
     QVariant ResolveNode(const Row* row, const QUuid& node_id) const;
     static QString JsonValueToString(const QJsonValue& value);
 

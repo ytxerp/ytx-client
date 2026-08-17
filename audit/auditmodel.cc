@@ -146,7 +146,7 @@ void Model::Rebuild(const QJsonArray& array)
     endResetModel();
 }
 
-const QString& Model::NodePath(const QHash<QUuid, QString>* leaf, const QHash<QUuid, QString>* branch, const QUuid& node_id) const
+const QString Model::NodePath(const QHash<QUuid, QString>* leaf, const QHash<QUuid, QString>* branch, const QUuid& node_id) const
 {
     if (const auto it = leaf->constFind(node_id); it != leaf->constEnd())
         return it.value();
