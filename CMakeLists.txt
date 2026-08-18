@@ -166,6 +166,7 @@ set(HEADERS
     delegate/search/searchpathtreer.h
     delegate/sectionpermissionsdelegate.h
     delegate/statusdelegate.h
+    delegate/statustestdelegate.h
     delegate/styleditemdelegate.h
     delegate/tagdelegate.h
     delegate/workspaceroledelegate.h
@@ -365,6 +366,7 @@ set(SOURCES
     delegate/search/searchpathtreer.cc
     delegate/sectionpermissionsdelegate.cc
     delegate/statusdelegate.cc
+    delegate/statustestdelegate.cc
     delegate/styleditemdelegate.cc
     delegate/tagdelegate.cc
     delegate/workspaceroledelegate.cc

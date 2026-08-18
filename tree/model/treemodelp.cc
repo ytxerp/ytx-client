@@ -35,33 +35,6 @@ void TreeModelP::UpdateAmount(const QUuid& node_id, double initial_delta)
     EmitColumnChanged(std::to_underlying(NodeEnumP::kInitialTotal), ids);
 }
 
-void TreeModelP::ApplyActivation(const QUuid& node_id, int status, int version)
-{
-    const auto index { GetIndex(node_id) };
-    if (!index.isValid())
-        return;
-
-    auto* d_node { static_cast<NodeP*>(index.internalPointer()) };
-    if (!d_node)
-        return;
-
-    const auto node_status { static_cast<PartnerStatus>(status) };
-
-    d_node->status = node_status;
-    d_node->version = version;
-
-    if (node_status != PartnerStatus::kActive) {
-        leaf_path_.remove(node_id);
-        leaf_model_->RemoveItem(node_id);
-        return;
-    }
-
-    const QString path { path::Build(d_node, separator_) };
-
-    leaf_path_.insert(node_id, path);
-    leaf_model_->AppendItem(path, node_id);
-}
-
 QSet<QUuid>* TreeModelP::UnitSet(NodeUnit unit)
 {
     switch (unit) {
@@ -135,41 +108,6 @@ void TreeModelP::InitAncestorTotal(Node* node, const node::Delta& delta) const
     }
 }
 
-void TreeModelP::InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path)
-{
-    for (auto* node : node_hash) {
-        const QString path { path::Build(node, separator_) };
-
-        switch (node->kind) {
-        case NodeKind::kBranch:
-            branch_path.insert(node->id, path);
-            break;
-
-        case NodeKind::kLeaf:
-            auto* d_node { static_cast<NodeP*>(node) };
-
-            if (d_node->status == PartnerStatus::kActive)
-                leaf_path.insert(node->id, path);
-
-            const node::Delta delta {
-                .initial = node->initial_total,
-            };
-
-            InitAncestorTotal(node, delta);
-            break;
-        }
-    }
-}
-
-void TreeModelP::RequestActivation(NodeP* node, int value)
-{
-    if (node->kind == NodeKind::kBranch || node->status == PartnerStatus(value))
-        return;
-
-    QJsonObject message { JsonGen::NodeActivation(section_, node->id, value, node->version) };
-    WebSocket::Instance()->SendMessage(WsKey::kNodeActivation, message);
-}
-
 void TreeModelP::sort(int column, Qt::SortOrder order)
 {
     const NodeEnumP e_column { column };
@@ -190,7 +128,7 @@ void TreeModelP::sort(int column, Qt::SortOrder order)
         case NodeEnumP::kUnit:
             return utils::CompareMember(lhs, rhs, &Node::unit, order);
         case NodeEnumP::kStatus:
-            return utils::CompareMember(d_lhs, d_rhs, &NodeP::status, order);
+            return utils::CompareMember(lhs, rhs, &Node::status, order);
         case NodeEnumP::kPaymentTerm:
             return utils::CompareMember(d_lhs, d_rhs, &NodeP::payment_term, order);
         case NodeEnumP::kInitialTotal:
@@ -289,7 +227,7 @@ bool TreeModelP::setData(const QModelIndex& index, const QVariant& value, int ro
         node::UpdateStringList(changes, node, kDocument, value.toStringList(), &Node::document, [id, this]() { RestartTimer(id); });
         break;
     case NodeEnumP::kStatus:
-        RequestActivation(d_node, value.toInt());
+        RequestStatus(node, value.toInt());
         break;
     case NodeEnumP::kName:
     case NodeEnumP::kKind:

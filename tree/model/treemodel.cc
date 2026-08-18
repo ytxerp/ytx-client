@@ -232,6 +232,15 @@ void TreeModel::RequestDirectionRule(Node* node, bool value)
     WebSocket::Instance()->SendMessage(WsKey::kNodeDirectionRuleUpdate, message);
 }
 
+void TreeModel::RequestStatus(Node* node, int value)
+{
+    if (node->kind == NodeKind::kBranch || node->status == NodeStatus(value))
+        return;
+
+    QJsonObject message { JsonGen::NodeStatus(section_, node->id, value, node->version) };
+    WebSocket::Instance()->SendMessage(WsKey::kNodeStatus, message);
+}
+
 void TreeModel::ApplyDirectionRule(const QUuid& node_id, bool direction_rule, int version)
 {
     const auto index { GetIndex(node_id) };
@@ -263,6 +272,40 @@ void TreeModel::ApplyDirectionRule(const QUuid& node_id, bool direction_rule, in
     }
 
     emit SSyncValue();
+}
+
+void TreeModel::ApplyStatus(const QUuid& node_id, int status, int version)
+{
+    const auto index { GetIndex(node_id) };
+    if (!index.isValid())
+        return;
+
+    auto* node { static_cast<Node*>(index.internalPointer()) };
+    if (!node)
+        return;
+
+    const auto node_status { static_cast<NodeStatus>(status) };
+
+    node->status = node_status;
+    node->version = version;
+
+    // Refresh the view first, as the following status check may return early.
+    {
+        const int row { index.row() };
+        const int column { node::StatusColumn(section_) };
+        EmitDataChanged(row, row, column, column, index.parent());
+    }
+
+    if (node_status != NodeStatus::kActive) {
+        leaf_path_.remove(node_id);
+        leaf_model_->RemoveItem(node_id);
+        return;
+    }
+
+    const QString path { path::Build(node, root_, separator_) };
+
+    leaf_path_.insert(node_id, path);
+    leaf_model_->AppendItem(path, node_id);
 }
 
 void TreeModel::SyncVersion(const QUuid& node_id, int version)
@@ -790,7 +833,8 @@ void TreeModel::InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, 
             break;
 
         case NodeKind::kLeaf:
-            leaf_path.insert(node->id, path);
+            if (node->status == NodeStatus::kActive)
+                leaf_path.insert(node->id, path);
 
             const node::Delta delta {
                 .initial = node->initial_total,

@@ -34,6 +34,7 @@ struct Node {
     QString code {};
     QString description {};
     NodeKind kind {};
+    NodeStatus status {};
     bool direction_rule {};
     NodeUnit unit {};
     QString color {};
@@ -85,7 +86,6 @@ struct NodeT final : Node { };
 
 struct NodeP final : Node {
     int payment_term {};
-    PartnerStatus status {};
 
     void Reset() override;
 

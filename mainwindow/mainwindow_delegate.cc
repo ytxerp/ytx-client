@@ -38,6 +38,7 @@
 #include "delegate/search/searchpathtabler.h"
 #include "delegate/sectionpermissionsdelegate.h"
 #include "delegate/statusdelegate.h"
+#include "delegate/statustestdelegate.h"
 #include "delegate/tagdelegate.h"
 #include "delegate/workspaceroledelegate.h"
 #include "finance/settlement/settlementenum.h"
@@ -152,8 +153,8 @@ void MainWindow::TreeDelegateI(QTreeView* tree_view, CSectionInfo& info, CSectio
 
 void MainWindow::TreeDelegateP(QTreeView* tree_view, CSectionInfo& info, CSectionConfig& section) const
 {
-    // Reuse the finance cash-kind model and map here to avoid adding dedicated status resources.
-    auto* status { new IntString(info.cash_kind_model, info.cash_kind_map, tree_view) };
+    auto* status { new StatusTextDelegate(
+        info.status_map, QEvent::MouseButtonDblClick, std::to_underlying(NodeStatus::kInactive), std::to_underlying(NodeStatus::kActive), tree_view) };
     tree_view->setItemDelegateForColumn(std::to_underlying(NodeEnumP::kStatus), status);
 
     auto* color { new Color(tree_view) };

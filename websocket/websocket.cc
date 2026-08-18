@@ -206,6 +206,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kEntryUpdate] = [this](const QJsonObject& obj) { UpdateEntry(obj); };
     handler_obj_[WsKey::kEntryDelete] = [this](const QJsonObject& obj) { DeleteEntry(obj); };
     handler_obj_[WsKey::kNodeDirectionRuleUpdate] = [this](const QJsonObject& obj) { UpdateNodeDirectionRule(obj); };
+    handler_obj_[WsKey::kNodeStatus] = [this](const QJsonObject& obj) { UpdateNodeStatus(obj); };
     handler_obj_[WsKey::kLeafDeleteDeny] = [this](const QJsonObject& obj) { DenyLeafDelete(obj); };
     handler_obj_[WsKey::kNodeDrag] = [this](const QJsonObject& obj) { DragNode(obj); };
     handler_obj_[WsKey::kEntriesMark] = [this](const QJsonObject& obj) { MarkEntries(obj); };
@@ -1055,6 +1056,19 @@ void WebSocket::UpdateNodeDirectionRule(const QJsonObject& obj)
     Q_ASSERT(tree_model);
 
     tree_model->ApplyDirectionRule(node_id, direction_rule, version);
+}
+
+void WebSocket::UpdateNodeStatus(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const auto node_id { QUuid(obj.value(kNodeId).toString()) };
+    const int status { obj.value(kStatus).toInt() };
+    const int version { obj.value(kVersion).toInt() };
+
+    auto tree_model { tree_model_hash_.value(section) };
+    Q_ASSERT(tree_model);
+
+    tree_model->ApplyStatus(node_id, status, version);
 }
 
 void WebSocket::UpdateNodeName(const QJsonObject& obj)

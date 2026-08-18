@@ -232,6 +232,9 @@ void MainWindow::InitContextFinance()
     info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kAdjustment), QObject::tr("Adjustment"));
     info.cash_kind_map.insert(std::to_underlying(finance::CashKind::kUnclassified), QObject::tr("Unclassified"));
 
+    info.status_map.insert(std::to_underlying(NodeStatus::kInactive), tr("Inactive"));
+    info.status_map.insert(std::to_underlying(NodeStatus::kActive), QString());
+
     info.cash_kind_model = new UnitModel(this);
     info.cash_kind_model->Rebuild(info.cash_kind_map);
 
@@ -272,6 +275,9 @@ void MainWindow::InitContextInventory()
 
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
+
+    info.status_map.insert(std::to_underlying(NodeStatus::kInactive), tr("Inactive"));
+    info.status_map.insert(std::to_underlying(NodeStatus::kActive), QString());
 
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);
@@ -317,6 +323,9 @@ void MainWindow::InitContextTask()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
+    info.status_map.insert(std::to_underlying(NodeStatus::kInactive), tr("Inactive"));
+    info.status_map.insert(std::to_underlying(NodeStatus::kActive), QString());
+
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);
 
@@ -356,16 +365,11 @@ void MainWindow::InitContextPartner()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    // Reuse the finance cash-kind map here to avoid adding a dedicated status map.
-    info.cash_kind_map.insert(std::to_underlying(PartnerStatus::kInactive), tr("Inactive"));
-    info.cash_kind_map.insert(std::to_underlying(PartnerStatus::kActive), QString());
+    info.status_map.insert(std::to_underlying(NodeStatus::kInactive), tr("Inactive"));
+    info.status_map.insert(std::to_underlying(NodeStatus::kActive), QString());
 
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);
-
-    // Reuse the finance cash-kind model here to avoid adding a dedicated status model.
-    info.cash_kind_model = new UnitModel(this);
-    info.cash_kind_model->Rebuild(info.cash_kind_map);
 
     entry_hub = new EntryHubP(info, this);
     tree_model = new TreeModelP(info, app_config_.separator, this);

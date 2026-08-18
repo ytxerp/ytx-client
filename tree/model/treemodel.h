@@ -104,6 +104,7 @@ public:
     void ApplyReplace(const QUuid& old_node_id, const QUuid& new_node_id);
     void ApplyDrag(const QUuid& ancestor, const QUuid& descendant);
     void ApplyDirectionRule(const QUuid& node_id, bool direction_rule, int version);
+    void ApplyStatus(const QUuid& node_id, int status, int version);
     void ApplyDelete(const QUuid& node_id);
     void ApplyUpdate(const QUuid& node_id, const QJsonObject& update, int version);
 
@@ -158,6 +159,7 @@ protected:
     void EmitDataChanged(int start_row, int end_row, int start_column, int end_column, const QModelIndex& parent);
 
     void RequestDirectionRule(Node* node, bool value);
+    void RequestStatus(Node* node, int value);
     void UpdateSubtreePath(const Node* node);
 
     virtual void RegisterNode(Node* node);

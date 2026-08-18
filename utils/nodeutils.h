@@ -59,6 +59,22 @@ constexpr int DirectionRuleColumn(Section section)
     Q_UNREACHABLE();
 }
 
+constexpr int StatusColumn(Section section)
+{
+    switch (section) {
+    case Section::kFinance:
+    case Section::kTask:
+    case Section::kInventory:
+    case Section::kSale:
+    case Section::kPurchase:
+        return -1;
+    case Section::kPartner:
+        return std::to_underlying(NodeEnumP::kStatus);
+    }
+
+    Q_UNREACHABLE();
+}
+
 constexpr int DescriptionColumn(Section section)
 {
     switch (section) {

@@ -43,6 +43,8 @@ void Node::ReadJson(const QJsonObject& object)
         tag = utils::ReadStringList(object, kTag);
     if (object.value(kDocument).isArray())
         document = utils::ReadStringList(object, kDocument);
+    if (const auto val = object.value(kStatus); val.isDouble())
+        status = static_cast<NodeStatus>(val.toInt());
 }
 
 QJsonObject Node::WriteJson() const
@@ -61,6 +63,7 @@ QJsonObject Node::WriteJson() const
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kDocument, utils::WriteStringList(document));
     obj.insert(kVersion, version);
+    obj.insert(kStatus, std::to_underlying(status));
 
     // user_id, created_time, created_by, updated_time, updated_by, version
     // are managed by the server, not written to json
