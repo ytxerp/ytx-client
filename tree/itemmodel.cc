@@ -69,7 +69,7 @@ void ItemModel::AppendItem(const QString& display, const QUuid& id)
     const int row { static_cast<int>(it - list_.cbegin()) };
 
     beginInsertRows(QModelIndex(), row, row);
-    list_.emplace_back(item);
+    list_.emplace(list_.cbegin() + row, item);
     hash_.insert(id, item);
     endInsertRows();
 }
