@@ -26,6 +26,9 @@
 
 #pragma once
 
+/** @brief Activation status of a node. */
+enum class NodeStatus { kInactive = 0, kActive = 1 };
+
 /** @brief Workflow status of an order node. */
 enum class OrderStatus { kUnreleased = 0, kReleased, kRecalled };
 
@@ -34,6 +37,3 @@ enum class SettlementStatus { kRecalled = 0, kReleased };
 
 /** @brief EntryStatus of an entry. */
 enum class EntryStatus { kUnmarked = 0, kMarked };
-
-/** @brief Activation status of a partner node. */
-enum class PartnerStatus { kInactive = 0, kActive = 1 };

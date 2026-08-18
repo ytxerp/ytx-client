@@ -22,7 +22,7 @@ void MainWindow::DeleteNode()
     if (start_ == Section::kSale || start_ == Section::kPurchase) {
         auto* d_node { static_cast<NodeO*>(node) };
 
-        if (d_node->status == OrderStatus::kReleased) {
+        if (d_node->order_status == OrderStatus::kReleased) {
             utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"),
                 tr("This order has been released and cannot be deleted.\n"
                    "Please recall it before deleting."),

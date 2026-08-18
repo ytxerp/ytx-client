@@ -104,7 +104,7 @@ struct NodeO final : Node {
     double count_total {};
     double measure_total {};
     double discount_total {};
-    OrderStatus status {};
+    OrderStatus order_status {};
 
     void Reset() override;
     void InvertTotal() override;

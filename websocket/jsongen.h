@@ -69,7 +69,7 @@ QJsonObject SettlementSecondary(Section section, CUuid& widget_id, CUuid& partne
 QJsonObject SettlementDelete(Section section, CUuid& settlement_id, int version);
 
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule, int version);
-QJsonObject NodeActivation(Section section, CUuid& node_id, int status, int version);
+QJsonObject NodeStatus(Section section, CUuid& node_id, int status, int version);
 QJsonObject NodeName(Section section, CUuid& node_id, CString& name, int version);
 QJsonObject NodeUpdate(Section section, CUuid& node_id, CJsonObject& update, int version);
 QJsonObject DocumentDir(Section section, CString& document_dir);

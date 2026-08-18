@@ -129,7 +129,7 @@ void NodeP::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kColor); val.isString())
         color = val.toString();
     if (const auto val = object.value(kStatus); val.isDouble())
-        status = static_cast<PartnerStatus>(val.toInt());
+        status = static_cast<NodeStatus>(val.toInt());
     if (const auto val = object.value(kVersion); val.isDouble())
         version = val.toInt();
 
@@ -196,7 +196,7 @@ void NodeO::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kUnit); val.isDouble())
         unit = static_cast<NodeUnit>(val.toInt());
     if (const auto val = object.value(kStatus); val.isDouble())
-        status = static_cast<OrderStatus>(val.toInt());
+        order_status = static_cast<OrderStatus>(val.toInt());
     if (const auto val = object.value(kVersion); val.isDouble())
         version = val.toInt();
 
@@ -239,7 +239,7 @@ QJsonObject NodeO::WriteJson() const
     obj.insert(kIssuedTime, issued_time.toUTC().toString(Qt::ISODate));
     obj.insert(kCountTotal, QString::number(count_total, 'f', numeric_const::kDecimalPlaces8));
     obj.insert(kMeasureTotal, QString::number(measure_total, 'f', numeric_const::kDecimalPlaces8));
-    obj.insert(kStatus, std::to_underlying(status));
+    obj.insert(kStatus, std::to_underlying(order_status));
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kVersion, version);
 

@@ -140,7 +140,7 @@ void TreeModelO::RegisterNode(Node* node)
     case NodeKind::kLeaf: {
         auto* d_node { DerivedPtr<NodeO>(node) };
 
-        if (d_node->status == OrderStatus::kReleased) {
+        if (d_node->order_status == OrderStatus::kReleased) {
             const node::Delta delta {
                 .initial = d_node->initial_total,
                 .final = d_node->final_total,
@@ -176,7 +176,7 @@ void TreeModelO::UnregisterNode(Node* node, Node* parent_node)
         branch_path_.remove(node_id);
     } break;
     case NodeKind::kLeaf: {
-        if (d_node->status == OrderStatus::kReleased) {
+        if (d_node->order_status == OrderStatus::kReleased) {
             const node::Delta delta {
                 .initial = -d_node->initial_total,
                 .final = -d_node->final_total,
@@ -258,7 +258,7 @@ void TreeModelO::InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid,
             break;
         case NodeKind::kLeaf: {
             auto* d_node { DerivedPtr<NodeO>(node) };
-            if (d_node->status == OrderStatus::kReleased) {
+            if (d_node->order_status == OrderStatus::kReleased) {
                 const node::Delta delta {
                     .initial = d_node->initial_total,
                     .final = d_node->final_total,
@@ -315,7 +315,7 @@ void TreeModelO::sort(int column, Qt::SortOrder order)
         case NodeEnumO::kDiscountTotal:
             return utils::CompareMember(d_lhs, d_rhs, &NodeO::discount_total, order);
         case NodeEnumO::kStatus:
-            return utils::CompareMember(d_lhs, d_rhs, &NodeO::status, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeO::order_status, order);
         case NodeEnumO::kInitialTotal:
             return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumO::kFinalTotal:
@@ -368,7 +368,7 @@ QVariant TreeModelO::data(const QModelIndex& index, int role) const
     case NodeEnumO::kDiscountTotal:
         return d_node->discount_total;
     case NodeEnumO::kStatus:
-        return std::to_underlying(d_node->status);
+        return std::to_underlying(d_node->order_status);
     case NodeEnumO::kInitialTotal:
         return d_node->initial_total;
     case NodeEnumO::kFinalTotal:
@@ -467,7 +467,7 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
     auto* node { DerivedPtr<NodeO>(source_parent->children.takeAt(sourceRow)) };
     Q_ASSERT(node);
 
-    const bool update_ancestor { node->kind == NodeKind::kBranch || node->status == OrderStatus::kReleased };
+    const bool update_ancestor { node->kind == NodeKind::kBranch || node->order_status == OrderStatus::kReleased };
 
     if (update_ancestor) {
         const node::Delta delta {

@@ -78,7 +78,7 @@ QVariant NodeModelO::data(const QModelIndex& index, int role) const
     case NodeEnumO::kDiscountTotal:
         return d_node->discount_total;
     case NodeEnumO::kStatus:
-        return std::to_underlying(d_node->status);
+        return std::to_underlying(d_node->order_status);
     case NodeEnumO::kInitialTotal:
         return d_node->initial_total;
     case NodeEnumO::kFinalTotal:
@@ -122,7 +122,7 @@ void NodeModelO::sort(int column, Qt::SortOrder order)
         case NodeEnumO::kDiscountTotal:
             return utils::CompareMember(d_lhs, d_rhs, &NodeO::discount_total, order);
         case NodeEnumO::kStatus:
-            return utils::CompareMember(d_lhs, d_rhs, &NodeO::status, order);
+            return utils::CompareMember(d_lhs, d_rhs, &NodeO::order_status, order);
         case NodeEnumO::kInitialTotal:
             return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumO::kFinalTotal:
