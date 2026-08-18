@@ -120,6 +120,21 @@ QPixmap CreatePixmap(const Row* tag)
 QColor GetContrastColor(const QColor& bg_color)
 {
     const int brightness { (bg_color.red() * 299 + bg_color.green() * 587 + bg_color.blue() * 114) / 1000 };
-    return brightness > 128 ? Qt::black : Qt::white;
+
+    // Base mix ratio
+    constexpr qreal kBaseMixRatio { 0.7 };
+    // The closer the brightness is to the threshold (128), the higher the mix ratio,
+    // to ensure sufficient contrast for borderline colors
+    const qreal distance_from_mid { std::abs(brightness - 128) / 128.0 };
+    const qreal mix_ratio { qBound(kBaseMixRatio, kBaseMixRatio + (1.0 - distance_from_mid) * 0.15, 0.95) };
+
+    // Target color: black text (0) on light backgrounds, white text (255) on dark backgrounds
+    const int target_channel_value { brightness > 128 ? 0 : 255 };
+
+    const int result_red { qBound(0, static_cast<int>(bg_color.red() * (1.0 - mix_ratio) + target_channel_value * mix_ratio), 255) };
+    const int result_green { qBound(0, static_cast<int>(bg_color.green() * (1.0 - mix_ratio) + target_channel_value * mix_ratio), 255) };
+    const int result_blue { qBound(0, static_cast<int>(bg_color.blue() * (1.0 - mix_ratio) + target_channel_value * mix_ratio), 255) };
+
+    return QColor(result_red, result_green, result_blue);
 }
 }

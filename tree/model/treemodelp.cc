@@ -1,9 +1,6 @@
 #include "treemodelp.h"
 
 #include "utils/nodeutils.h"
-#include "utils/pathutils.h"
-#include "websocket/jsongen.h"
-#include "websocket/websocket.h"
 
 TreeModelP::TreeModelP(CSectionInfo& info, CString& separator, QObject* parent)
     : TreeModel(info, separator, parent)
