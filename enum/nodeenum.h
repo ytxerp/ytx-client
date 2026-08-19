@@ -54,7 +54,7 @@ enum class NodeUnit : int {
 
     // Task units, 500–599
     TTarget = 500, // Task Target
-    TSource = 510, // Task Source
+    TOrigin = 510, // Task Origin
     TAction = 520, // Task Action
 
     // Inventory units, 600–699
@@ -114,8 +114,8 @@ inline const char* kUnitCode(NodeUnit c)
         return "TGT";
     case NodeUnit::TAction:
         return "ACT";
-    case NodeUnit::TSource:
-        return "SRC";
+    case NodeUnit::TOrigin:
+        return "ORG";
 
     // Inventory units
     case NodeUnit::IItem:
@@ -181,7 +181,7 @@ inline const char* kUnitSymbol(NodeUnit c)
     // Task units
     case NodeUnit::TTarget:
         return "◎";
-    case NodeUnit::TSource:
+    case NodeUnit::TOrigin:
         return "◉";
     case NodeUnit::TAction:
         return "→";

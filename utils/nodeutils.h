@@ -178,7 +178,7 @@ inline QString UnitString(NodeUnit unit)
     case NodeUnit::OImmediate:
         return QObject::tr("IMM");
     case NodeUnit::OPending:
-        return QObject::tr("PEN");
+        return QObject::tr("PEND");
     default:
         return QString();
     }

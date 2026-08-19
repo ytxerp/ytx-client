@@ -315,7 +315,7 @@ void MainWindow::InitContextTask()
 
     info.unit_map.insert(std::to_underlying(NodeUnit::TTarget), tr("TGT", "Target"));
     info.unit_map.insert(std::to_underlying(NodeUnit::TAction), tr("ACT", "Action"));
-    info.unit_map.insert(std::to_underlying(NodeUnit::TSource), tr("SRC", "Source"));
+    info.unit_map.insert(std::to_underlying(NodeUnit::TOrigin), tr("ORG", "Origin"));
 
     info.rule_map.insert(direction_rule::kDDCI, kStrDDCI);
     info.rule_map.insert(direction_rule::kDICD, kStrDICD);
