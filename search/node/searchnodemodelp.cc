@@ -36,6 +36,8 @@ QVariant NodeModelP::data(const QModelIndex& index, int role) const
         return d_node->payment_term;
     case NodeEnumP::kInitialTotal:
         return d_node->initial_total;
+    case NodeEnumP::kStatus:
+        return std::to_underlying(d_node->status);
     }
 }
 
@@ -68,6 +70,8 @@ void NodeModelP::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Node::initial_total, order);
         case NodeEnumP::kDocument:
             return (order == Qt::AscendingOrder) ? (d_lhs->document.size() < d_rhs->document.size()) : (d_lhs->document.size() > d_rhs->document.size());
+        case NodeEnumP::kStatus:
+            return utils::CompareMember(lhs, rhs, &Node::status, order);
         }
     };
 
