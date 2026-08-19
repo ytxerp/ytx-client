@@ -188,8 +188,30 @@ void TreeModelO::UnregisterNode(Node* node, Node* parent_node)
 
             const auto affected_ids { UpdateAncestorTotal(node, delta) };
             EmitNumericChanged(affected_ids);
+
+            emit SFreeWidget(section_, node_id);
         }
     } break;
+    }
+}
+
+void TreeModelO::UpdateSubtreePath(const Node* node)
+{
+    QQueue<const Node*> queue {};
+    queue.enqueue(node);
+
+    while (!queue.isEmpty()) {
+        const auto* current { queue.dequeue() };
+        const NodeKind kind { current->kind };
+
+        if (kind == NodeKind::kLeaf)
+            continue;
+
+        for (const auto* child : current->children)
+            queue.enqueue(child);
+
+        const auto path { path::Build(current, root_, separator_) };
+        branch_path_.insert(current->id, path);
     }
 }
 

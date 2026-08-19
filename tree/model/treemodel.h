@@ -160,12 +160,12 @@ protected:
 
     void RequestDirectionRule(Node* node, bool value);
     void RequestStatus(Node* node, int value);
-    void UpdateSubtreePath(const Node* node);
     void BuildTreeData(const QJsonObject& data, QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path);
 
     virtual void ClearTree();
     virtual void RegisterNode(Node* node);
     virtual void UnregisterNode(Node* node, Node* parent_node);
+    virtual void UpdateSubtreePath(const Node* node);
 
     virtual void InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path);
 

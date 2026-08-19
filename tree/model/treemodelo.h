@@ -49,6 +49,7 @@ public:
 protected:
     void RegisterNode(Node* node) override;
     void UnregisterNode(Node* node, Node* parent_node) override;
+    void UpdateSubtreePath(const Node* node) override;
 
     void InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path) override;
     void ClearTree() override;
