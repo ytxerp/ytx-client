@@ -38,7 +38,7 @@ public:
 
 protected:
     QSet<QUuid>* UnitSet(NodeUnit unit) override;
-    void ResetUnitSet() override;
+    void ClearUnitSet() override;
     void InitUnitSet() override;
 
     QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const override;

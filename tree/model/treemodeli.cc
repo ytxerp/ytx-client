@@ -20,7 +20,7 @@ QSet<QUuid>* TreeModelI::UnitSet(NodeUnit unit)
     }
 }
 
-void TreeModelI::ResetUnitSet()
+void TreeModelI::ClearUnitSet()
 {
     pos_set_.clear();
     itm_set_.clear();

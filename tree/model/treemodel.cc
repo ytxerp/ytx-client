@@ -1080,7 +1080,7 @@ void TreeModel::ClearTree()
     branch_path_.clear();
 
     leaf_model_->Reset();
-    ResetUnitSet();
+    ClearUnitSet();
 }
 
 void TreeModel::RegisterNode(Node* node)

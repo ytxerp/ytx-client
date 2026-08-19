@@ -46,7 +46,7 @@ QSet<QUuid>* TreeModelP::UnitSet(NodeUnit unit)
     }
 }
 
-void TreeModelP::ResetUnitSet()
+void TreeModelP::ClearUnitSet()
 {
     cset_.clear();
     vset_.clear();
