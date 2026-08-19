@@ -39,6 +39,7 @@ public:
 protected:
     QSet<QUuid>* UnitSet(NodeUnit unit) override;
     void ResetUnitSet() override;
+    void InitUnitSet() override;
 
     QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const override;
     void InitAncestorTotal(Node* node, const node::Delta& delta) const override;
@@ -46,5 +47,5 @@ protected:
 private:
     QSet<QUuid> cset_ {}; // Set of all nodes that are customer unit
     QSet<QUuid> vset_ {}; // Set of all nodes that are vendor unit
-    QSet<QUuid> eset_ { QUuid() }; // Set of all nodes that are employee unit
+    QSet<QUuid> eset_ {}; // Set of all nodes that are employee unit
 };

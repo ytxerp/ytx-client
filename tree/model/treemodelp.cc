@@ -50,13 +50,13 @@ void TreeModelP::ResetUnitSet()
 {
     cset_.clear();
     vset_.clear();
-    eset_ = { QUuid() };
+    eset_.clear();
+}
 
-    // NOTE: Order's employee field is optional and may be left blank.
-    // It relies on Partner's placeholder (empty path + null QUuid) in
-    // leaf_path_model_ to represent "no selection" in its dropdown UI.
-    // This mirrors eset_'s own null-QUuid placeholder above — both
-    // represent the same "no unit assigned" state.
+void TreeModelP::InitUnitSet()
+{
+    // Empty employee is a valid state for orders.
+    eset_.insert(QUuid());
     leaf_model_->AppendItem(QString(), QUuid());
 }
 

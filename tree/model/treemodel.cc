@@ -189,6 +189,7 @@ void TreeModel::UpdateSubtreePath(const Node* node)
 void TreeModel::InitLeafData()
 {
     leaf_model_->Rebuild(leaf_path_);
+    InitUnitSet();
 
     for (auto it = leaf_path_.cbegin(); it != leaf_path_.cend(); ++it) {
         const auto node_id { it.key() };
@@ -748,6 +749,7 @@ void TreeModel::Reset()
 
     beginResetModel();
     ClearTree();
+    InitUnitSet();
     endResetModel();
 }
 

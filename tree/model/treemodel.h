@@ -177,6 +177,7 @@ protected:
         return nullptr;
     }
     virtual void ResetUnitSet() { }
+    virtual void InitUnitSet() { }
 
     template <typename Field, typename T> const Field& Value(const QUuid& node_id, Field T::* member) const
     {
