@@ -1775,7 +1775,7 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="153"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="222"/>
         <source>Employee</source>
-        <translation>职员</translation>
+        <translation>员工</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="129"/>
@@ -2090,92 +2090,100 @@ Would you like to download it now?</source>
         <translation>管理...</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="268"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="271"/>
         <source>POS</source>
         <comment>Position</comment>
         <translation>位置</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="267"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="270"/>
         <source>ITM</source>
         <comment>Item</comment>
         <translation>存货</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="310"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="316"/>
         <source>TGT</source>
         <comment>Target</comment>
         <translation>目标</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="311"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="317"/>
         <source>ACT</source>
         <comment>Action</comment>
         <translation>行为</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="312"/>
         <source>SRC</source>
         <comment>Source</comment>
-        <translation>起源</translation>
+        <translation type="vanished">起源</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="352"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="361"/>
         <source>CUS</source>
         <comment>Customer</comment>
-        <translation>客</translation>
+        <translation>客户</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="353"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="362"/>
         <source>EMP</source>
         <comment>Employee</comment>
-        <translation>职</translation>
+        <translation>员工</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="354"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="363"/>
         <source>VEN</source>
         <comment>Vendor</comment>
-        <translation>供</translation>
+        <translation>供方</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="360"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="235"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="279"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="326"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="368"/>
         <source>Inactive</source>
         <translation>停用</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="400"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="441"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="318"/>
+        <source>ORG</source>
+        <comment>Origin</comment>
+        <translation>起源</translation>
+    </message>
+    <message>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="404"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="445"/>
         <source>RO</source>
         <comment>Return Order</comment>
         <translation>红</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="401"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="442"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="405"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="446"/>
         <source>FO</source>
         <comment>Forward Order</comment>
         <translation>正</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="403"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="444"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="407"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="448"/>
         <source>IMM</source>
         <comment>Immediate</comment>
-        <translation>现</translation>
+        <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="404"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="445"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="408"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="449"/>
         <source>MON</source>
         <comment>Monthly</comment>
-        <translation>月</translation>
+        <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="405"/>
-        <location filename="../../mainwindow/mainwindow_context.cc" line="446"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="409"/>
+        <location filename="../../mainwindow/mainwindow_context.cc" line="450"/>
         <source>PEND</source>
         <comment>Pending</comment>
-        <translation>挂</translation>
+        <translation>挂帐</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="6"/>
@@ -2740,27 +2748,31 @@ Do you want to save them before closing?</source>
         <translation>已登出</translation>
     </message>
     <message>
-        <location filename="../../utils/nodeutils.h" line="161"/>
+        <location filename="../../utils/nodeutils.h" line="177"/>
         <source>MON</source>
         <translation>月结</translation>
     </message>
     <message>
-        <location filename="../../utils/nodeutils.h" line="163"/>
+        <location filename="../../utils/nodeutils.h" line="179"/>
         <source>IMM</source>
         <translation>现结</translation>
     </message>
     <message>
-        <location filename="../../utils/nodeutils.h" line="165"/>
-        <source>PEN</source>
+        <location filename="../../utils/nodeutils.h" line="181"/>
+        <source>PEND</source>
         <translation>挂帐</translation>
     </message>
     <message>
-        <location filename="../../utils/nodeutils.h" line="171"/>
+        <source>PEN</source>
+        <translation type="vanished">挂帐</translation>
+    </message>
+    <message>
+        <location filename="../../utils/nodeutils.h" line="187"/>
         <source>RO</source>
         <translation>红</translation>
     </message>
     <message>
-        <location filename="../../utils/nodeutils.h" line="171"/>
+        <location filename="../../utils/nodeutils.h" line="187"/>
         <source>FO</source>
         <translation>正</translation>
     </message>
