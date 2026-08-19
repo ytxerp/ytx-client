@@ -1001,40 +1001,13 @@ void TreeModel::FlushTimers()
 
 void TreeModel::ApplyTree(const QJsonObject& data)
 {
-    const QJsonArray node_array { data.value(kNodeArray).toArray() };
-    const QJsonArray path_array { data.value(kPathArray).toArray() };
-
     QHash<QUuid, Node*> new_hash {};
     QHash<QUuid, QString> new_leaf_path {};
     QHash<QUuid, QString> new_branch_path {};
 
-    {
-        new_hash.reserve(node_array.size());
-
-        for (const auto& value : node_array) {
-            if (!value.isObject()) {
-                qWarning() << Q_FUNC_INFO << "Invalid node, expected object:" << value;
-                continue;
-            }
-
-            auto* node { NodePool::Instance().Allocate(section_) };
-            node->ReadJson(value.toObject());
-
-            new_hash.insert(node->id, node);
-        }
-
-        const auto paths { path::Parse(path_array) };
-        path::BuildHierarchy(new_hash, paths);
-
-        InitTreeData(new_hash, new_leaf_path, new_branch_path);
-    }
-
-    qDebug() << kSectionString.value(section_) << "nodes:" << new_hash.size() << "," << "leaf paths:" << new_leaf_path.size() << ","
-             << "branch paths:" << new_branch_path.size();
+    BuildTreeData(data, new_hash, new_leaf_path, new_branch_path);
 
     beginResetModel();
-
-    ClearTree();
 
     node_hash_ = std::move(new_hash);
     leaf_path_ = std::move(new_leaf_path);
@@ -1048,6 +1021,34 @@ void TreeModel::ApplyTree(const QJsonObject& data)
     endResetModel();
 
     emit SInitStatus();
+}
+
+void TreeModel::BuildTreeData(const QJsonObject& data, QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path)
+{
+    const QJsonArray node_array { data.value(kNodeArray).toArray() };
+    const QJsonArray path_array { data.value(kPathArray).toArray() };
+
+    node_hash.reserve(node_array.size());
+
+    for (const auto& value : node_array) {
+        if (!value.isObject()) {
+            qWarning() << Q_FUNC_INFO << "Invalid node, expected object:" << value;
+            continue;
+        }
+
+        auto* node { NodePool::Instance().Allocate(section_) };
+        node->ReadJson(value.toObject());
+
+        node_hash.insert(node->id, node);
+    }
+
+    const auto paths { path::Parse(path_array) };
+    path::BuildHierarchy(node_hash, paths);
+
+    InitTreeData(node_hash, leaf_path, branch_path);
+
+    qDebug() << kSectionString.value(section_) << "nodes:" << node_hash.size() << "," << "leaf paths:" << leaf_path.size() << ","
+             << "branch paths:" << branch_path.size();
 }
 
 // Initialize the root node.
@@ -1078,10 +1079,7 @@ void TreeModel::ClearTree()
     leaf_path_.clear();
     branch_path_.clear();
 
-    if (leaf_model_) {
-        leaf_model_->Reset();
-    }
-
+    leaf_model_->Reset();
     ResetUnitSet();
 }
 

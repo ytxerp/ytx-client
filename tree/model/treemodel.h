@@ -95,7 +95,7 @@ public:
     }
 
     // WebSocket's
-    void ApplyTree(const QJsonObject& data);
+    virtual void ApplyTree(const QJsonObject& data);
     void ApplyNode(const QUuid& ancestor, const QJsonObject& data);
 
     void SyncTotalArray(const QJsonArray& total_array);
@@ -161,11 +161,12 @@ protected:
     void RequestDirectionRule(Node* node, bool value);
     void RequestStatus(Node* node, int value);
     void UpdateSubtreePath(const Node* node);
+    void BuildTreeData(const QJsonObject& data, QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path);
 
+    virtual void ClearTree();
     virtual void RegisterNode(Node* node);
     virtual void UnregisterNode(Node* node, Node* parent_node);
 
-    virtual void InitLeafData();
     virtual void InitTreeData(const QHash<QUuid, Node*>& node_hash, QHash<QUuid, QString>& leaf_path, QHash<QUuid, QString>& branch_path);
 
     virtual QSet<QUuid> UpdateAncestorTotal(Node* node, const node::Delta& delta) const;
@@ -199,7 +200,7 @@ protected:
 
 private:
     void InitRoot();
-    void ClearTree();
+    void InitLeafData();
     void FlushTimer(const QUuid& id);
 
     QSet<QUuid> ExtractLeafIds(const Node* node) const;

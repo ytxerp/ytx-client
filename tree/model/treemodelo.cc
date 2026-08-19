@@ -3,6 +3,7 @@
 #include <QJsonArray>
 
 #include "global/masterdataregistry.h"
+#include "global/nodepool.h"
 #include "utils/nodeutils.h"
 #include "utils/pathutils.h"
 
@@ -501,4 +502,33 @@ bool TreeModelO::moveRows(const QModelIndex& sourceParent, int sourceRow, int co
     EmitNumericChanged(ids_destination.unite(ids_source));
 
     return true;
+}
+
+void TreeModelO::ApplyTree(const QJsonObject& data)
+{
+    QHash<QUuid, Node*> new_hash {};
+    QHash<QUuid, QString> new_leaf_path {};
+    QHash<QUuid, QString> new_branch_path {};
+
+    BuildTreeData(data, new_hash, new_leaf_path, new_branch_path);
+
+    beginResetModel();
+
+    ClearTree();
+
+    node_hash_ = std::move(new_hash);
+    branch_path_ = std::move(new_branch_path);
+
+    path::AttachRootNodes(node_hash_, root_);
+    node::SortSubtree(root_, [](const Node* lhs, const Node* rhs) { return utils::CompareString(lhs->name, rhs->name, Qt::AscendingOrder); });
+
+    endResetModel();
+}
+
+void TreeModelO::ClearTree()
+{
+    NodePool::Instance().Recycle(node_hash_, section_);
+
+    root_->children.clear();
+    branch_path_.clear();
 }
