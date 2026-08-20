@@ -533,42 +533,6 @@ QMimeData* TreeModel::mimeData(const QModelIndexList& indexes) const
     return mime_data;
 }
 
-bool TreeModel::removeRows(int row, int count, const QModelIndex& parent)
-{
-    if (row < 0 || row > rowCount(parent) - 1) {
-        qCritical() << "removeRows: row out of range";
-        return false;
-    }
-
-    if (count != 1) {
-        qCritical() << "removeRows: Only support removing one row, count =" << count;
-        return false;
-    }
-
-    auto* parent_node { GetNodeByIndex(parent) };
-    auto* node { parent_node->children.at(row) };
-
-    const auto node_id { node->id };
-
-    // Remove pending update to prevent delayed flush after deletion
-    // Stop its timer to avoid accessing recycled member.
-    if (auto* timer = pending_updates_.take(node_id).timer; timer) {
-        timer->stop();
-        timer->deleteLater();
-    }
-
-    beginRemoveRows(parent, row, row);
-    parent_node->children.removeOne(node);
-    endRemoveRows();
-
-    UnregisterNode(node, parent_node);
-
-    NodePool::Instance().Recycle(node, section_);
-    node_hash_.remove(node_id);
-
-    return true;
-}
-
 bool TreeModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
     if (!canDropMimeData(data, action, row, column, parent))
