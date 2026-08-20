@@ -40,16 +40,9 @@ QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
         return {};
 
     auto* parent_node { GetNodeByIndex(parent) };
-    if (!parent_node) {
-        qDebug() << "index: parent node not found";
-        return {};
-    }
-
     auto* node { parent_node->children.at(row) };
-    if (!node) {
-        qDebug() << "index: child node at row" << row << "is null";
-        return {};
-    }
+
+    Q_ASSERT(node);
 
     return createIndex(row, column, node);
 }
@@ -57,46 +50,27 @@ QModelIndex Model::index(int row, int column, const QModelIndex& parent) const
 QModelIndex Model::parent(const QModelIndex& index) const
 {
     // root_'s index is QModelIndex(), root_'s id == -1
-    if (!index.isValid()) {
-        qDebug() << Q_FUNC_INFO << "invalid index";
+    if (!index.isValid())
         return {};
-    }
 
     auto* node { static_cast<Row*>(index.internalPointer()) };
-    if (!node) {
-        qDebug() << Q_FUNC_INFO << "null node from internalPointer";
-        return {};
-    }
+    Q_ASSERT(node);
 
-    // CashFlowStatementRow has no parent or parent is root
     auto* parent { node->parent };
-    if (!parent) {
-        qDebug() << Q_FUNC_INFO << "node has no parent:" << node->name;
-        return {};
-    }
+    Q_ASSERT(parent);
 
-    if (parent == root_) {
+    if (parent == root_)
         return {};
-    }
 
     // Parent node should have a parent (grandparent)
     auto* grandparent { parent->parent };
-    if (!grandparent) {
-        qDebug() << Q_FUNC_INFO << "parent has no grandparent:" << parent->name;
-        return {};
-    }
+    Q_ASSERT(grandparent);
 
     // Find parent's row in grandparent's children
     const qsizetype row { grandparent->children.indexOf(parent) };
-    if (row < 0) {
-        qDebug() << Q_FUNC_INFO << "parent not found in grandparent children"
-                 << "parent =" << parent->name << "grandparent =" << grandparent->name << "child_count =" << grandparent->children.size();
+    Q_ASSERT(row >= 0);
 
-        Q_ASSERT(row >= 0);
-        return {};
-    }
-
-    return createIndex(row, 0, parent);
+    return createIndex(static_cast<int>(row), 0, parent);
 }
 
 int Model::rowCount(const QModelIndex& parent) const { return GetNodeByIndex(parent)->children.size(); }

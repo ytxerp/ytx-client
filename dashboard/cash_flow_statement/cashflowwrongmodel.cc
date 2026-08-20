@@ -5,7 +5,6 @@
 #include "cashflowstatementenum.h"
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
-#include "websocket/jsongen.h"
 
 namespace cash_flow {
 

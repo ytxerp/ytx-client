@@ -453,46 +453,27 @@ void TreeModel::ApplyDrag(const QUuid& ancestor, const QUuid& descendant)
 QModelIndex TreeModel::parent(const QModelIndex& index) const
 {
     // root_'s index is QModelIndex(), root_'s id == -1
-    if (!index.isValid()) {
-        qDebug() << Q_FUNC_INFO << "invalid index";
+    if (!index.isValid())
         return {};
-    }
 
     auto* node { static_cast<Node*>(index.internalPointer()) };
-    if (!node) {
-        qDebug() << Q_FUNC_INFO << "null node from internalPointer";
-        return {};
-    }
+    Q_ASSERT(node);
 
-    // Node has no parent or parent is root
     auto* parent { node->parent };
-    if (!parent) {
-        qDebug() << Q_FUNC_INFO << "node has no parent:" << node->name;
-        return {};
-    }
+    Q_ASSERT(parent);
 
-    if (parent == root_) {
+    if (parent == root_)
         return {};
-    }
 
     // Parent node should have a parent (grandparent)
     auto* grandparent { parent->parent };
-    if (!grandparent) {
-        qDebug() << Q_FUNC_INFO << "parent has no grandparent:" << parent->name;
-        return {};
-    }
+    Q_ASSERT(grandparent);
 
     // Find parent's row in grandparent's children
     const qsizetype row { grandparent->children.indexOf(parent) };
-    if (row < 0) {
-        qDebug() << Q_FUNC_INFO << "parent not found in grandparent children"
-                 << "parent =" << parent->name << "grandparent =" << grandparent->name << "child_count =" << grandparent->children.size();
+    Q_ASSERT(row >= 0);
 
-        Q_ASSERT(row >= 0);
-        return {};
-    }
-
-    return createIndex(row, 0, parent);
+    return createIndex(static_cast<int>(row), 0, parent);
 }
 
 QModelIndex TreeModel::index(int row, int column, const QModelIndex& parent) const
@@ -501,16 +482,9 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex& parent) con
         return {};
 
     auto* parent_node { GetNodeByIndex(parent) };
-    if (!parent_node) {
-        qDebug() << "index: parent node not found";
-        return {};
-    }
-
     auto* node { parent_node->children.at(row) };
-    if (!node) {
-        qDebug() << "index: child node at row" << row << "is null";
-        return {};
-    }
+
+    Q_ASSERT(node);
 
     return createIndex(row, column, node);
 }
@@ -732,30 +706,24 @@ void TreeModel::Reset()
 
 QModelIndex TreeModel::GetIndex(const QUuid& node_id) const
 {
-    // Return an invalid index if the node_id is null
     if (node_id.isNull())
-        return QModelIndex();
+        return {};
 
-    // Look up the node in the hash table
     Node* node { node_hash_.value(node_id, nullptr) };
     if (!node) {
-        qCritical() << "GetIndex: node_id not found in node_hash_";
-        return QModelIndex(); // Node not found → return invalid index
+        qCritical() << Q_FUNC_INFO << "node_id not found in node_hash_";
+        return {};
     }
 
-    // If the node has no parent, it is a root node → return invalid index
-    if (!node->parent)
-        return QModelIndex();
-
-    // Find the row of this node in its parent's children list
-    auto row { node->parent->children.indexOf(node) };
-    if (row == -1) {
-        qCritical() << "GetIndex: node not found in parent's children list";
-        return QModelIndex(); // Data inconsistency → return invalid index
+    if (!node->parent) {
+        qCritical() << Q_FUNC_INFO << "node is a root node";
+        return {};
     }
 
-    // Create and return the QModelIndex for this node (single column model)
-    return createIndex(row, 0, node);
+    const qsizetype row { node->parent->children.indexOf(node) };
+    Q_ASSERT(row >= 0);
+
+    return createIndex(static_cast<int>(row), 0, node);
 }
 
 QString TreeModel::Path(const QUuid& node_id) const
