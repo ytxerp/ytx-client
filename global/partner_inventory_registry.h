@@ -50,8 +50,8 @@ public:
         if (partner_id.isNull() || inventory_id.isNull())
             return std::nullopt;
 
-        const auto it { map_.constFind({ partner_id, inventory_id }) };
-        if (it == map_.constEnd())
+        const auto it { hash_.constFind({ partner_id, inventory_id }) };
+        if (it == hash_.constEnd())
             return std::nullopt;
 
         return it->unit_price;
@@ -62,8 +62,8 @@ public:
         if (partner_id.isNull() || inventory_id.isNull())
             return QString();
 
-        const auto it { map_.constFind({ partner_id, inventory_id }) };
-        return it == map_.constEnd() ? QString() : it->external_sku;
+        const auto it { hash_.constFind({ partner_id, inventory_id }) };
+        return it == hash_.constEnd() ? QString() : it->external_sku;
     }
 
     void Insert(const QUuid& partner_id, const QUuid& inventory_id, double unit_price, const QString& external_sku)
@@ -71,7 +71,7 @@ public:
         if (partner_id.isNull() || inventory_id.isNull())
             return;
 
-        map_.insert({ partner_id, inventory_id }, Value { unit_price, external_sku });
+        hash_.insert({ partner_id, inventory_id }, Value { unit_price, external_sku });
     }
 
     void Remove(const QUuid& partner_id, const QUuid& inventory_id)
@@ -79,11 +79,11 @@ public:
         if (partner_id.isNull() || inventory_id.isNull())
             return;
 
-        map_.remove({ partner_id, inventory_id });
+        hash_.remove({ partner_id, inventory_id });
     }
 
     void ReplaceInternalSku(const QUuid& old_id, const QUuid& new_id);
-    void Reset() { map_.clear(); }
+    void Reset() { hash_.clear(); }
 
     PartnerInventoryRegistry(const PartnerInventoryRegistry&) = delete;
     PartnerInventoryRegistry& operator=(const PartnerInventoryRegistry&) = delete;
@@ -100,5 +100,5 @@ private:
     };
 
 private:
-    QHash<std::pair<QUuid, QUuid>, Value> map_ {};
+    QHash<std::pair<QUuid, QUuid>, Value> hash_ {};
 };

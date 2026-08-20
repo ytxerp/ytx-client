@@ -5,10 +5,9 @@ void PartnerInventoryRegistry::ReplaceInternalSku(const QUuid& old_id, const QUu
     if (old_id.isNull() || new_id.isNull())
         return;
 
-    QVector<Value> values {};
-    QVector<std::pair<QUuid, QUuid>> keys {};
+    QHash<std::pair<QUuid, QUuid>, Value> pending {};
 
-    for (auto it = map_.begin(); it != map_.end();) {
+    for (auto it = hash_.begin(); it != hash_.end();) {
         if (it.key().second != old_id) {
             ++it;
             continue;
@@ -16,13 +15,9 @@ void PartnerInventoryRegistry::ReplaceInternalSku(const QUuid& old_id, const QUu
 
         auto key = it.key();
         key.second = new_id;
-
-        keys.push_back(key);
-        values.push_back(it.value());
-
-        it = map_.erase(it);
+        pending.insert(key, it.value());
+        it = hash_.erase(it);
     }
 
-    for (int i = 0; i < keys.size(); ++i)
-        map_.insert(keys[i], values[i]);
+    hash_.insert(pending);
 }
