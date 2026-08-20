@@ -31,11 +31,29 @@ TreeModel::~TreeModel()
 
 void TreeModel::ApplyDelete(const QUuid& node_id)
 {
-    if (!node_hash_.contains(node_id))
+    auto* node { node_hash_.value(node_id, nullptr) };
+    if (!node)
         return;
 
-    auto index { GetIndex(node_id) };
-    removeRows(index.row(), 1, index.parent());
+    const auto index { GetIndex(node_id) };
+    auto* parent_node { node->parent };
+    const int row { index.row() };
+
+    // Remove pending update to prevent delayed flush after deletion
+    // Stop its timer to avoid accessing recycled member.
+    if (auto* timer = pending_updates_.take(node_id).timer; timer) {
+        timer->stop();
+        timer->deleteLater();
+    }
+
+    beginRemoveRows(index.parent(), row, row);
+    parent_node->children.removeAt(row);
+    endRemoveRows();
+
+    UnregisterNode(node, parent_node);
+
+    NodePool::Instance().Recycle(node, section_);
+    node_hash_.remove(node_id);
 }
 
 void TreeModel::SyncTotalArray(const QJsonArray& total_array)
