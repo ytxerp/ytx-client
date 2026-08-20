@@ -28,10 +28,10 @@ void EntryHubP::DeleteSingleLeaf(const QSet<QUuid>& leaf_entry)
 void EntryHubP::ReplaceInternalInventoryRef(const QUuid& old_item_id, const QUuid& new_item_id)
 {
     for (auto* entry : std::as_const(entry_cache_)) {
-        auto* d_entry = static_cast<EntryP*>(entry);
-
-        if (d_entry->rhs_node == old_item_id)
-            d_entry->rhs_node = new_item_id;
+        if (entry->rhs_node == old_item_id) {
+            entry->rhs_node = new_item_id;
+            entry->version += 1;
+        }
     }
 
     PartnerInventoryRegistry::Instance().ReplaceInternalSku(old_item_id, new_item_id);

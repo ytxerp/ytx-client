@@ -17,12 +17,14 @@ void EntryHubI::ReplaceLeaf(const QUuid& old_node_id, const QUuid& new_node_id)
             entry_id_set.insert(entry->id);
             entry_list.emplaceBack(entry);
             entry->lhs_node = new_node_id;
+            entry->version += 1;
         }
 
         if (entry->rhs_node == old_node_id && entry->lhs_node != new_node_id) {
             entry_id_set.insert(entry->id);
             entry_list.emplaceBack(entry);
             entry->rhs_node = new_node_id;
+            entry->version += 1;
         }
     }
 
