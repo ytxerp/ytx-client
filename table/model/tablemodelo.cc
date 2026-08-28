@@ -6,7 +6,6 @@
 #include "global/entrypool.h"
 #include "global/masterdataregistry.h"
 #include "global/partner_inventory_registry.h"
-#include "websocket/jsongen.h"
 
 TableModelO::TableModelO(CTableModelArg& arg, QObject* parent)
     : TableModel { arg, parent }
@@ -138,6 +137,8 @@ QVariant TableModelO::data(const QModelIndex& index, int role) const
         return PartnerInventoryRegistry::Instance().ExternalSku(d_node_->partner_id, d_entry->rhs_node);
     case EntryEnumO::kTag:
         return d_entry->tag;
+    case EntryEnumO::kStatus:
+        return d_entry->status;
     }
 }
 
@@ -146,23 +147,30 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    if (d_node_->order_status == OrderStatus::kReleased)
-        return false;
-
     if (data(index, role) == value)
         return false;
 
     const EntryEnumO column { index.column() };
-    const int row { index.row() };
 
     auto* entry { static_cast<Entry*>(index.internalPointer()) };
-    auto* d_entry { static_cast<EntryO*>(entry) };
 
+    if (column == EntryEnumO::kStatus) {
+        entry->status = value.toInt();
+
+        emit dataChanged(index, index, { Qt::DisplayRole, Qt::EditRole });
+        return true;
+    }
+
+    if (d_node_->order_status == OrderStatus::kReleased)
+        return false;
+
+    auto* d_entry { static_cast<EntryO*>(entry) };
     const double old_count { d_entry->count };
     const double old_measure { d_entry->measure };
     const double old_discount { d_entry->discount };
     const double old_initial { d_entry->initial };
     const double old_final { d_entry->final };
+    const int row { index.row() };
 
     bool count_changed { false };
     bool measure_changed { false };
@@ -191,6 +199,7 @@ bool TableModelO::setData(const QModelIndex& index, const QVariant& value, int r
     case EntryEnumO::kTag:
         UpdateTag(d_entry, value.toStringList());
         break;
+    case EntryEnumO::kStatus:
     case EntryEnumO::kLhsNode:
     case EntryEnumO::kExternalSku:
     case EntryEnumO::kInitial:
@@ -263,6 +272,8 @@ void TableModelO::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(d_lhs, d_rhs, &EntryO::discount, order);
         case EntryEnumO::kTag:
             return utils::CompareMember(lhs, rhs, &EntryP::tag, order);
+        case EntryEnumO::kStatus:
+            return utils::CompareMember(lhs, rhs, &Entry::status, order);
         case EntryEnumO::kLhsNode:
         case EntryEnumO::kExternalSku:
             return false;
@@ -289,6 +300,7 @@ Qt::ItemFlags TableModelO::flags(const QModelIndex& index) const
     case EntryEnumO::kFinal:
     case EntryEnumO::kTag:
     case EntryEnumO::kExternalSku:
+    case EntryEnumO::kStatus:
         flags &= ~Qt::ItemIsEditable;
         break;
     case EntryEnumO::kRhsNode:

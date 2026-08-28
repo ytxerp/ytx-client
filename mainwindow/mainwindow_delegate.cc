@@ -384,6 +384,10 @@ void MainWindow::TableDelegateO(QTableView* table_view, CSectionInfo& info, CSec
     const auto& sc { info.section == Section::kSale ? sc_sale_ : sc_purchase_ };
     auto* tag { new TagDelegate(sc.tag_icon_hash, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kTag), tag);
+
+    auto* status { new StatusDelegate(
+        QEvent::MouseButtonRelease, std::to_underlying(EntryStatus::kUnmarked), std::to_underlying(EntryStatus::kMarked), table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(EntryEnumO::kStatus), status);
 }
 
 void MainWindow::DelegateSalesHistoryI(QTableView* table_view, CSectionConfig& config) const

@@ -299,6 +299,7 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Internal SKU"),
         tr("Description"),
         tr("Tag"),
+        tr("Status"),
         tr("Count"),
         tr("Measure"),
         tr("Unit Price"),
