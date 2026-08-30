@@ -12,7 +12,6 @@
 #include "tree/model/treemodelo.h"
 #include "tree/model/treemodelp.h"
 #include "utils/mainwindowutils.h"
-#include "websocket/jsongen.h"
 #include "workspace/sectionpermissions.h"
 
 WebSocket::WebSocket(QObject* parent)
@@ -611,9 +610,8 @@ void WebSocket::OnStatementTertiary(const QJsonObject& obj)
     const Section section { obj.value(kSection).toInt() };
     const QUuid widget_id { QUuid(obj.value(kWidgetId).toString()) };
     const QJsonArray array { obj.value(kArray).toArray() };
-    const QJsonObject total { obj.value(kTotal).toObject() };
 
-    emit SStatementTertiary(section, widget_id, array, total);
+    emit SStatementTertiary(section, widget_id, array);
 }
 
 void WebSocket::OnSettlementPrimary(const QJsonObject& obj)

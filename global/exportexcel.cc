@@ -13,10 +13,10 @@
 #include "global/partner_inventory_registry.h"
 #include "utils/mainwindowutils.h"
 
-void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range,
-    CJsonObject& total, statement::CTertiaryList& list)
+void ExportExcel::StatementAsync(
+    CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, statement::CTertiaryList& list)
 {
-    auto future = QtConcurrent::run([=]() -> bool { return Statement(path, partner_name, partner_id, unit_string, range, total, list); });
+    auto future = QtConcurrent::run([=]() -> bool { return Statement(path, partner_name, partner_id, unit_string, range, list); });
 
     auto* watcher = new QFutureWatcher<bool>();
     QObject::connect(watcher, &QFutureWatcher<bool>::finished, [watcher, path]() {
@@ -36,15 +36,9 @@ void ExportExcel::StatementAsync(CString& path, CString& partner_name, CUuid& pa
     watcher->setFuture(future);
 }
 
-bool ExportExcel::Statement(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, CJsonObject& total,
-    statement::CTertiaryList& list)
+bool ExportExcel::Statement(
+    CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, statement::CTertiaryList& list)
 {
-    // Extract totals
-    const double pbalance { total.value("pbalance").toString().toDouble() };
-    const double camount { total.value("camount").toString().toDouble() };
-    const double csettlement { total.value("csettlement").toString().toDouble() };
-    const double cbalance { total.value("cbalance").toString().toDouble() };
-
     // Create excel document
     yxlsx::Document d(path);
     auto book { d.GetWorkbook() };
@@ -66,21 +60,9 @@ bool ExportExcel::Statement(CString& path, CString& partner_name, CUuid& partner
     sheet->Write(start_row, 1, partner_name);
     sheet->Write(start_row, 3, unit_string);
 
-    sheet->Write(start_row + 2, 1, QObject::tr("Period"));
-    sheet->Write(start_row + 2, 2, range.start.toString(datetime_format::kDashedDate));
-    sheet->Write(start_row + 2, 3, range.end.toString(datetime_format::kDashedDate));
-
-    sheet->Write(start_row + 3, 1, QObject::tr("Previous Balance"));
-    sheet->Write(start_row + 3, 3, pbalance);
-
-    sheet->Write(start_row + 4, 1, QObject::tr("Current Amount"));
-    sheet->Write(start_row + 4, 3, camount);
-
-    sheet->Write(start_row + 5, 1, QObject::tr("Current Settlement"));
-    sheet->Write(start_row + 5, 3, csettlement);
-
-    sheet->Write(start_row + 6, 1, QObject::tr("Current Balance"));
-    sheet->Write(start_row + 6, 3, cbalance);
+    sheet->Write(start_row + 1, 1, QObject::tr("Period"));
+    sheet->Write(start_row + 1, 2, range.start.toString(datetime_format::kDashedDate));
+    sheet->Write(start_row + 1, 3, range.end.toString(datetime_format::kDashedDate));
 
     // ===========================
     // Table Header
@@ -88,14 +70,18 @@ bool ExportExcel::Statement(CString& path, CString& partner_name, CUuid& partner
     const QStringList header { QObject::tr("Date"), QObject::tr("Code"), QObject::tr("InternalSku"), QObject::tr("ExternalSku"), QObject::tr("Count"),
         QObject::tr("Measure"), QObject::tr("UnitPrice"), QObject::tr("Description"), QObject::tr("Amount") };
 
-    sheet->WriteRow(start_row + 8, 1, header);
+    sheet->WriteRow(start_row + 3, 1, header);
 
     // ===========================
     // Table Data
     // ===========================
-    int row { start_row + 9 };
+    int row { start_row + 4 };
     const auto& master { MasterDataRegistry::Instance() };
     const auto& partner { PartnerInventoryRegistry::Instance() };
+
+    double total_count {};
+    double total_measure {};
+    double total_amount {};
 
     for (const auto* entry : list) {
         const QUuid external_sku { partner.ExternalSku(partner_id, entry->internal_sku) };
@@ -104,7 +90,19 @@ bool ExportExcel::Statement(CString& path, CString& partner_name, CUuid& partner
             master.InventoryName(external_sku), entry->count, entry->measure, entry->unit_price, entry->description, entry->amount };
 
         sheet->WriteRow(row++, 1, line);
+
+        total_count += entry->count;
+        total_measure += entry->measure;
+        total_amount += entry->amount;
     }
+
+    // ===========================
+    // Write Total
+    // ===========================
+    sheet->Write(row + 1, 1, QObject::tr("Total"));
+    sheet->Write(row + 1, 5, total_count);
+    sheet->Write(row + 1, 6, total_measure);
+    sheet->Write(row + 1, 9, total_amount);
 
     return d.Save();
 }

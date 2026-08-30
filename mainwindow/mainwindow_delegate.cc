@@ -434,14 +434,11 @@ void MainWindow::DelegateOrderHistoryP(QTableView* table_view, CSectionConfig& c
 void MainWindow::DelegateStatementPrimary(QTableView* table_view, CSectionConfig& config) const
 {
     auto* quantity { new DoubleNoneZeroR(config.amount_decimal, string_const::kFourDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCCount), quantity);
-    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCMeasure), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kMeasure), quantity);
 
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCAmount), amount);
-    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCSettlement), amount);
-    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kPBalance), amount);
-    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCBalance), amount);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kAmount), amount);
 
     auto* name { new NodeNameR(sc_p_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kPartner), name);

@@ -29,12 +29,9 @@ namespace statement {
 
 struct PrimaryRow final {
     QUuid partner_id {};
-    double pbalance {};
-    double ccount {};
-    double cmeasure {};
-    double camount {};
-    double cbalance {};
-    double csettlement {};
+    double count {};
+    double measure {};
+    double amount {};
 
     void Reset();
     void ReadJson(const QJsonObject& object);
@@ -46,18 +43,12 @@ inline void PrimaryRow::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kPartnerId); val.isString())
         partner_id = QUuid(val.toString());
-    if (const auto val = object.value(kPBalance); val.isString())
-        pbalance = val.toString().toDouble();
-    if (const auto val = object.value(kCCount); val.isString())
-        ccount = val.toString().toDouble();
-    if (const auto val = object.value(kCMeasure); val.isString())
-        cmeasure = val.toString().toDouble();
-    if (const auto val = object.value(kCAmount); val.isString())
-        camount = val.toString().toDouble();
-    if (const auto val = object.value(kCBalance); val.isString())
-        cbalance = val.toString().toDouble();
-    if (const auto val = object.value(kCSettlement); val.isString())
-        csettlement = val.toString().toDouble();
+    if (const auto val = object.value(kCount); val.isString())
+        count = val.toString().toDouble();
+    if (const auto val = object.value(kMeasure); val.isString())
+        measure = val.toString().toDouble();
+    if (const auto val = object.value(kAmount); val.isString())
+        amount = val.toString().toDouble();
 }
 
 struct SecondaryRow final {

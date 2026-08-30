@@ -164,5 +164,5 @@ void StatementTertiaryWidget::on_pBtnExport_clicked()
     auto& list { model_->EntryList() };
     const QString unit_string { node::UnitString(NodeUnit(unit_)) };
 
-    ExportExcel::Instance().StatementAsync(destination, partner_name_, partner_id_, unit_string, range_, total_, list);
+    ExportExcel::Instance().StatementAsync(destination, partner_name_, partner_id_, unit_string, range_, list);
 }

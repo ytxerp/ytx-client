@@ -102,13 +102,10 @@ void MainWindow::InitHeader()
     // Statement
     header_info_.statement_primary = {
         tr("Partner"),
-        tr("Previous Balance"),
-        tr("Current Count"),
-        tr("Current Measure"),
-        tr("Current Amount"),
+        tr("Count"),
+        tr("Measure"),
+        tr("Amount"),
         tr("Description"),
-        tr("Current Settlement"),
-        tr("Current Balance"),
     };
 
     header_info_.statement_secondary = {

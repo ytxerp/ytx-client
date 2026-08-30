@@ -54,18 +54,12 @@ QVariant PrimaryModel::data(const QModelIndex& index, int role) const
     switch (column) {
     case PrimaryField::kPartner:
         return statement->partner_id;
-    case PrimaryField::kPBalance:
-        return statement->pbalance;
-    case PrimaryField::kCAmount:
-        return statement->camount;
-    case PrimaryField::kCSettlement:
-        return statement->csettlement;
-    case PrimaryField::kCBalance:
-        return statement->cbalance;
-    case PrimaryField::kCCount:
-        return statement->ccount;
-    case PrimaryField::kCMeasure:
-        return statement->cmeasure;
+    case PrimaryField::kAmount:
+        return statement->amount;
+    case PrimaryField::kCount:
+        return statement->count;
+    case PrimaryField::kMeasure:
+        return statement->measure;
     case PrimaryField::kPlaceholder:
         return QVariant();
     }
@@ -87,18 +81,12 @@ void PrimaryModel::sort(int column, Qt::SortOrder order)
         switch (e_column) {
         case PrimaryField::kPartner:
             return utils::CompareMember(lhs, rhs, &PrimaryRow::partner_id, order);
-        case PrimaryField::kPBalance:
-            return utils::CompareMember(lhs, rhs, &PrimaryRow::pbalance, order);
-        case PrimaryField::kCAmount:
-            return utils::CompareMember(lhs, rhs, &PrimaryRow::camount, order);
-        case PrimaryField::kCSettlement:
-            return utils::CompareMember(lhs, rhs, &PrimaryRow::csettlement, order);
-        case PrimaryField::kCBalance:
-            return utils::CompareMember(lhs, rhs, &PrimaryRow::cbalance, order);
-        case PrimaryField::kCCount:
-            return utils::CompareMember(lhs, rhs, &PrimaryRow::ccount, order);
-        case PrimaryField::kCMeasure:
-            return utils::CompareMember(lhs, rhs, &PrimaryRow::cmeasure, order);
+        case PrimaryField::kAmount:
+            return utils::CompareMember(lhs, rhs, &PrimaryRow::amount, order);
+        case PrimaryField::kCount:
+            return utils::CompareMember(lhs, rhs, &PrimaryRow::count, order);
+        case PrimaryField::kMeasure:
+            return utils::CompareMember(lhs, rhs, &PrimaryRow::measure, order);
         case PrimaryField::kPlaceholder:
             return false;
         }
@@ -130,7 +118,7 @@ void PrimaryModel::Rebuild(const QJsonArray& array)
         new_list.emplaceBack(statement);
     }
 
-    std::ranges::sort(new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &PrimaryRow::cbalance, Qt::DescendingOrder); });
+    std::ranges::sort(new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &PrimaryRow::amount, Qt::DescendingOrder); });
 
     beginResetModel();
 

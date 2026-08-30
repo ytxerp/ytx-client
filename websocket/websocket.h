@@ -74,7 +74,7 @@ signals:
     void SOrderHistory(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void SStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
+    void SStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SSettlementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SSettlementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SSettlementInsert(const QJsonObject& obj);

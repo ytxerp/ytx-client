@@ -135,7 +135,7 @@ private slots:
 
     void RStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RStatemetSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total);
+    void RStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array);
 
     void RTreeViewCustomContextMenuRequested(const QPoint& pos);
     void RInsertNodeTag(const tag::Row* tag, TreeModel* model, const Node* node);

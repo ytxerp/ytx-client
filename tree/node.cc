@@ -63,7 +63,8 @@ QJsonObject Node::WriteJson() const
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kDocument, utils::WriteStringList(document));
     obj.insert(kVersion, version);
-    obj.insert(kStatus, std::to_underlying(status));
+    // Status is initialized to 1 by the database.
+    // obj.insert(kStatus, std::to_underlying(status));
 
     // user_id, created_time, created_by, updated_time, updated_by, version
     // are managed by the server, not written to json
@@ -157,7 +158,8 @@ QJsonObject NodeP::WriteJson() const
     obj.insert(kTag, utils::WriteStringList(tag));
     obj.insert(kDocument, utils::WriteStringList(document));
     obj.insert(kVersion, version);
-    obj.insert(kStatus, std::to_underlying(status));
+    // Status is initialized to 1 by the database.
+    // obj.insert(kStatus, std::to_underlying(status));
 
     return obj;
 }

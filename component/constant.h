@@ -132,12 +132,6 @@ inline const QString kTotal = QStringLiteral("total");
 inline const QString kTotalArray = QStringLiteral("total_array");
 inline const QString kArray = QStringLiteral("array");
 
-inline const QString kPBalance = QStringLiteral("pbalance");
-inline const QString kCCount = QStringLiteral("ccount");
-inline const QString kCMeasure = QStringLiteral("cmeasure");
-inline const QString kCAmount = QStringLiteral("camount");
-inline const QString kCBalance = QStringLiteral("cbalance");
-inline const QString kCSettlement = QStringLiteral("csettlement");
 inline const QString kLevel = QStringLiteral("level");
 inline const QString kTargetField = QStringLiteral("target_field");
 

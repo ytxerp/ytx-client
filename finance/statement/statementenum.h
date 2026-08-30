@@ -24,13 +24,10 @@ namespace statement {
 // P:Previous, C:Current, Statement
 enum class PrimaryField {
     kPartner = 0,
-    kPBalance,
-    kCCount,
-    kCMeasure,
-    kCAmount,
+    kCount,
+    kMeasure,
+    kAmount,
     kPlaceholder,
-    kCSettlement,
-    kCBalance,
 };
 
 enum class SecondaryField {

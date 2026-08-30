@@ -31,8 +31,8 @@ public:
         return instance;
     }
 
-    void StatementAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, CJsonObject& total,
-        statement::CTertiaryList& list);
+    void StatementAsync(
+        CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, statement::CTertiaryList& list);
 
     ExportExcel(const ExportExcel&) = delete;
     ExportExcel& operator=(const ExportExcel&) = delete;
@@ -43,6 +43,6 @@ private:
     ExportExcel() = default;
     ~ExportExcel() = default;
 
-    static bool Statement(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, CJsonObject& total,
-        statement::CTertiaryList& list);
+    static bool Statement(
+        CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, statement::CTertiaryList& list);
 };

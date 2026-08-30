@@ -43,8 +43,6 @@ public:
     QTableView* View() const;
     statement::TertiaryModel* Model() const { return model_; }
 
-    void ResetTotal(const QJsonObject& total) { total_ = total; }
-
 private slots:
     void on_pBtnFetch_clicked();
     void on_start_dateChanged(const QDate& date);
@@ -66,7 +64,6 @@ private:
     utils::DateRange range_ {};
     statement::TertiaryModel* model_ {};
 
-    QJsonObject total_ {};
     const QString partner_name_ {};
     const QString company_name_ {};
 

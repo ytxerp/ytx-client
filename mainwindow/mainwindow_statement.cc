@@ -57,7 +57,7 @@ void MainWindow::RStatemetSecondary(Section section, const QUuid& widget_id, con
     model->Rebuild(array);
 }
 
-void MainWindow::RStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array, const QJsonObject& total)
+void MainWindow::RStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array)
 {
     auto* sc { GetSectionContex(section) };
 
@@ -70,7 +70,6 @@ void MainWindow::RStatementTertiary(Section section, const QUuid& widget_id, con
     auto* model { d_widget->Model() };
 
     model->Rebuild(array);
-    d_widget->ResetTotal(total);
 }
 
 void MainWindow::RShowSecondaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit)
