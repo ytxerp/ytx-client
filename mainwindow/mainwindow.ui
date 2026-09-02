@@ -407,6 +407,7 @@
    <addaction name="separator"/>
    <addaction name="actionStatement"/>
    <addaction name="actionSettlement"/>
+   <addaction name="actionSettlementView"/>
    <addaction name="separator"/>
   </widget>
   <action name="actionInsertNode">
@@ -706,6 +707,14 @@
   <action name="actionCashFlowStatement">
    <property name="text">
     <string>Cash Flow Statement</string>
+   </property>
+  </action>
+  <action name="actionSettlementView">
+   <property name="text">
+    <string>Settlement View</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
  </widget>

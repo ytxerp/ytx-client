@@ -206,6 +206,9 @@ set(HEADERS
     finance/settlement/settlementprimarywidget.h
     finance/settlement/settlementsecondarymodel.h
     finance/settlement/settlementsecondarywidget.h
+    finance/settlement_view/settlement_view.h
+    finance/settlement_view/settlement_view_model.h
+    finance/settlement_view/settlementviewwidget.h
     finance/statement/statement.h
     finance/statement/statementenum.h
     finance/statement/statementprimarymodel.h
@@ -398,6 +401,8 @@ set(SOURCES
     finance/settlement/settlementprimarywidget.cc
     finance/settlement/settlementsecondarymodel.cc
     finance/settlement/settlementsecondarywidget.cc
+    finance/settlement_view/settlement_view_model.cc
+    finance/settlement_view/settlementviewwidget.cc
     finance/statement/statementprimarymodel.cc
     finance/statement/statementprimarywidget.cc
     finance/statement/statementsecondarymodel.cc
@@ -439,6 +444,7 @@ set(SOURCES
     mainwindow/mainwindow_period_close.cc
     mainwindow/mainwindow_search.cc
     mainwindow/mainwindow_settlement.cc
+    mainwindow/mainwindow_settlement_view.cc
     mainwindow/mainwindow_statement.cc
     mainwindow/mainwindow_tab_widget.cc
     mainwindow/mainwindow_tag.cc
@@ -526,6 +532,7 @@ set(UIS
     finance/period_close/periodclosedialog.ui
     finance/settlement/settlementprimarywidget.ui
     finance/settlement/settlementsecondarywidget.ui
+    finance/settlement_view/settlementviewwidget.ui
     finance/statement/statementprimarywidget.ui
     finance/statement/statementsecondarywidget.ui
     finance/statement/statementtertiarywidget.ui

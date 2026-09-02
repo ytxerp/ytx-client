@@ -1,7 +1,5 @@
 #include "nodeutils.h"
 
-#include <QtCore/qtimezone.h>
-
 bool node::IsDescendant(const Node* descendant, const Node* ancestor)
 {
     Q_ASSERT(descendant != nullptr);

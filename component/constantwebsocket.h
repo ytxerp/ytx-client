@@ -76,6 +76,7 @@ enum class WsKey : uint16_t {
     kSettlementSecondary = 1303,
     kSettlementRecall = 1304,
     kSettlementUpdate = 1305,
+    kSettlementView = 1306,
 
     // --- Tree ---
     kLeafReplace = 1400,
@@ -239,6 +240,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kSettlementRecall";
     case WsKey::kSettlementDelete:
         return "kSettlementDelete"; // no handler needed
+    case WsKey::kSettlementView:
+        return "kSettlementView";
 
         // --- Tree ---
     case WsKey::kTreeApply:

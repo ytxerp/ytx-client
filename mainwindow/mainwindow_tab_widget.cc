@@ -111,6 +111,7 @@ void MainWindow::tabWidget_currentChanged()
 
     ui->actionStatement->setEnabled(is_order_section);
     ui->actionSettlement->setEnabled(is_order_section);
+    ui->actionSettlementView->setEnabled(is_order_section);
     ui->actionNewBranch->setEnabled(is_tree_o);
 
     ui->actionAppendEntry->setEnabled(is_table_fipt || is_table_o);

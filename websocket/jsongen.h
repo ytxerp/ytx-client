@@ -67,6 +67,7 @@ QJsonObject StatementTertiary(Section section, CUuid& widget_id, CUuid& partner_
 QJsonObject SettlementPrimary(Section section, CUuid& widget_id, const utils::DateTimeRange& range);
 QJsonObject SettlementSecondary(Section section, CUuid& widget_id, CUuid& partner_id, CUuid& settlement_id);
 QJsonObject SettlementDelete(Section section, CUuid& settlement_id, int version);
+QJsonObject SettlementView(Section section, CUuid& widget_id, const utils::DateTimeRange& range);
 
 QJsonObject NodeDirectionRule(Section section, CUuid& node_id, bool direction_rule, int version);
 QJsonObject NodeStatus(Section section, CUuid& node_id, int status, int version);

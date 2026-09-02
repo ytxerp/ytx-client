@@ -96,6 +96,7 @@ private slots:
     void on_actionBalanceSheet_triggered();
     void on_actionIncomeStatement_triggered();
     void on_actionCashFlowStatement_triggered();
+    void on_actionSettlementView_triggered();
 
     void tabWidget_currentChanged();
     void tabWidget_tabBarDoubleClicked(int index);

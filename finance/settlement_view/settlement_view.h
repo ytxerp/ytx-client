@@ -19,23 +19,37 @@
 
 #pragma once
 
-#include <QPointer>
+#include <QJsonArray>
+#include <QJsonObject>
 #include <QUuid>
-#include <QWidget>
 
-enum class WidgetRole {
-    kNodeTabFIT,
-    kNodeTabO,
-    kNodeTabP,
-    kDialog,
-    kSettlement,
-    kSettlementView,
-    kStatement,
-    kOrderHistory,
+#include "component/constant.h"
+
+namespace settlement_view {
+
+struct Row final {
+    QUuid partner_id {};
+    QList<double> values {};
+
+    void Reset() { *this = Row {}; }
+    void ReadJson(const QJsonObject& object);
 };
 
-struct WidgetContext {
-    QPointer<QWidget> widget {};
-    QUuid id {};
-    WidgetRole role {};
+struct Column final {
+    QString title {};
+    int value_index { -1 };
 };
+
+inline void Row::ReadJson(const QJsonObject& object)
+{
+    partner_id = QUuid { object.value(kPartnerId).toString() };
+
+    const auto array { object.value(kValues).toArray() };
+
+    values.reserve(array.size());
+
+    for (const auto& value : array)
+        values.append(value.toDouble());
+}
+
+}

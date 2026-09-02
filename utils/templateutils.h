@@ -26,7 +26,6 @@
 
 #include "component/using.h"
 #include "global/collator.h"
-#include "table/unitmodel.h"
 
 template <typename T>
 concept InheritQAbstractItemView = std::is_base_of_v<QAbstractItemView, T>;
@@ -61,6 +60,11 @@ inline bool CompareString(const QString& lhs, const QString& rhs, Qt::SortOrder 
     const int r = collator.compare(lhs, rhs);
 
     return (order == Qt::AscendingOrder) ? (r < 0) : (r > 0);
+}
+
+template <typename T> inline bool CompareValue(const T& lhs, const T& rhs, Qt::SortOrder order)
+{
+    return (order == Qt::AscendingOrder) ? (lhs < rhs) : (lhs > rhs);
 }
 
 template <typename Obj, typename T> inline bool CompareShadowMember(const Obj* lhs, const Obj* rhs, T* Obj::* member, Qt::SortOrder order)
