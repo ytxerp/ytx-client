@@ -44,6 +44,8 @@ QVariant EntryModelO::data(const QModelIndex& index, int role) const
         return d_entry->discount;
     case EntryEnumO::kFinal:
         return d_entry->final;
+    case EntryEnumO::kStatus:
+        return d_entry->status;
     }
 }
 
@@ -79,6 +81,7 @@ void EntryModelO::sort(int column, Qt::SortOrder order)
         case EntryEnumO::kTag:
             return utils::CompareMember(lhs, rhs, &Entry::tag, order);
         case EntryEnumO::kExternalSku:
+        case EntryEnumO::kStatus:
             return false;
         }
     };
