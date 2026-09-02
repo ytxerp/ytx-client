@@ -57,7 +57,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QDateEdit" name="start">
+       <widget class="DateEdit" name="start">
         <property name="frame">
          <bool>false</bool>
         </property>
@@ -67,7 +67,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QDateEdit" name="end">
+       <widget class="DateEdit" name="end">
         <property name="frame">
          <bool>false</bool>
         </property>
@@ -125,6 +125,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DateEdit</class>
+   <extends>QDateEdit</extends>
+   <header location="global">widget/dateedit.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>start</tabstop>
   <tabstop>end</tabstop>
