@@ -492,7 +492,7 @@ set(SOURCES
     utils/tagutils.cc
     websocket/jsongen.cc
     websocket/websocket.cc
-    widget/dateedit.cpp
+    widget/dateedit.cc
     widget/datetimeedit.cc
     widget/treeview.cc
     workspace/sectionpermissions.cc
