@@ -30,12 +30,6 @@ void TableModelO::RAppendEntries(const EntryList& entry_list)
 
 void TableModelO::Finalize(QJsonObject& message)
 {
-    {
-        // - Remove entries from entry_list_ that have no linked rhs_node (i.e., internal SKU not selected).
-        // - Mark them as deleted in deleted_entries_ and recycle the entry.
-        PurifyEntry();
-    }
-
     // deleted
     {
         QJsonArray deleted_entry_array {};
@@ -73,6 +67,18 @@ void TableModelO::Finalize(QJsonObject& message)
 
     // clear
     pending_delete_.clear();
+}
+
+bool TableModelO::HasZeroUnitPrice() const
+{
+    for (const Entry* entry : entry_list_) {
+        const auto* d_entry { static_cast<const EntryO*>(entry) };
+
+        if (qFuzzyIsNull(d_entry->unit_price))
+            return true;
+    }
+
+    return false;
 }
 
 bool TableModelO::HasPendingUpdate() const
@@ -534,7 +540,7 @@ void TableModelO::RecalculateAmount(EntryO* entry)
 // Purify newly inserted entries:
 // - Entries with null `rhs_node` (internal SKU not selected) are removed.
 // - The entry objects are recycled via EntryPool.
-void TableModelO::PurifyEntry()
+void TableModelO::Purify()
 {
     for (auto i = entry_list_.size() - 1; i >= 0; --i) {
         auto* entry { entry_list_[i] };

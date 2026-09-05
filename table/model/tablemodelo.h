@@ -103,7 +103,9 @@ public:
     QModelIndex GetIndex(const QUuid& entry_id) const override;
 
     const QList<Entry*>& GetEntryList() const { return entry_list_; }
+    void Purify();
     void Finalize(QJsonObject& message);
+    bool HasZeroUnitPrice() const;
     bool HasPendingUpdate() const;
     void SetNode(const NodeO* node) { d_node_ = node; }
 
@@ -117,8 +119,6 @@ private:
     bool UpdateTag(EntryO* entry, const QStringList& value);
 
     static void RecalculateAmount(EntryO* entry);
-
-    void PurifyEntry();
 
 private:
     const NodeO* d_node_ {};

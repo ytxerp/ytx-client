@@ -471,25 +471,25 @@ void TableWidgetO::on_pBtnRecall_clicked()
 
     pending_update_.insert(kStatus, std::to_underlying(OrderStatus::kRecalled));
 
-    qDebug() << "on_pBtnRecall_clicked: tmp_node_ version" << tmp_node_->version;
+    qDebug() << Q_FUNC_INFO << tmp_node_->version;
 
     WebSocket::Instance()->SendMessage(WsKey::kOrderRecall, JsonGen::OrderRecall(section_, node_id_, pending_update_, tmp_node_->version));
 
     MarkUpdating();
 }
 
-bool TableWidgetO::ValidatePartner()
+bool TableWidgetO::ValidatePartner() const
 {
     if (tmp_node_->partner_id.isNull()) {
         utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"), tr("A partner must be selected before continuing."), time_const::kAutoCloseMs);
         return false;
     }
 
-    qDebug() << "[ValidatePartner] Partner is set" << tree_model_partner_->Name(tmp_node_->partner_id);
+    qDebug() << Q_FUNC_INFO << tree_model_partner_->Name(tmp_node_->partner_id);
     return true;
 }
 
-bool TableWidgetO::ValidateSyncState()
+bool TableWidgetO::ValidateSyncState() const
 {
     if (tmp_node_->sync_state == SyncState::kUpdating) {
         utils::ShowMessage(
@@ -497,9 +497,20 @@ bool TableWidgetO::ValidateSyncState()
         return false;
     }
 
-    qDebug() << "[ValidateSyncState] Passed: sync_state =" << static_cast<int>(tmp_node_->sync_state);
+    qDebug() << Q_FUNC_INFO << static_cast<int>(tmp_node_->sync_state);
 
     return true;
+}
+
+bool TableWidgetO::ValidateUnitPrice() const
+{
+    if (!table_model_order_->HasZeroUnitPrice())
+        return true;
+
+    const auto result { QMessageBox::question(const_cast<TableWidgetO*>(this), tr("Operation Warning"),
+        tr("Some entries have a unit price of zero. Do you want to continue saving?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No) };
+
+    return result == QMessageBox::Yes;
 }
 
 void TableWidgetO::SaveOrder()
@@ -510,7 +521,12 @@ void TableWidgetO::SaveOrder()
     if (!ValidateSyncState())
         return;
 
+    table_model_order_->Purify();
+
     if (!HasPendingUpdate())
+        return;
+
+    if (!ValidateUnitPrice())
         return;
 
     Q_ASSERT(tmp_node_->order_status != OrderStatus::kReleased);
@@ -536,7 +552,7 @@ void TableWidgetO::SaveOrder()
         WebSocket::Instance()->SendMessage(WsKey::kOrderInsertSave, order_message);
     }
 
-    qInfo() << "SaveOrder: tmp_node_ version" << tmp_node_->version;
+    qInfo() << Q_FUNC_INFO << tmp_node_->version;
 
     MarkUpdating();
 }
@@ -547,6 +563,11 @@ void TableWidgetO::on_pBtnRelease_clicked()
         return;
 
     if (!ValidateSyncState())
+        return;
+
+    table_model_order_->Purify();
+
+    if (!ValidateUnitPrice())
         return;
 
     Q_ASSERT(tmp_node_->order_status != OrderStatus::kReleased);
@@ -576,7 +597,7 @@ void TableWidgetO::on_pBtnRelease_clicked()
         ui->rBtnFO->setEnabled(false);
     }
 
-    qInfo() << "on_pBtnRelease_clicked: tmp_node_ version" << tmp_node_->version;
+    qInfo() << Q_FUNC_INFO << tmp_node_->version;
 
     MarkUpdating();
 }

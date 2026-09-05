@@ -112,8 +112,9 @@ private:
     void BuildNodeInsert(QJsonObject& order_message);
     void BuildNodeUpdate(QJsonObject& order_message);
 
-    bool ValidatePartner();
-    bool ValidateSyncState();
+    bool ValidatePartner() const;
+    bool ValidateSyncState() const;
+    bool ValidateUnitPrice() const;
     void MarkSynced(int version);
     void MarkUpdating();
 
