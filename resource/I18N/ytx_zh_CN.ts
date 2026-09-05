@@ -1333,7 +1333,7 @@
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="590"/>
         <location filename="../../mainwindow/mainwindow.ui" line="593"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="194"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="197"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="58"/>
         <source>Workspace</source>
         <translation>工区</translation>
@@ -1350,7 +1350,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="620"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="388"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="391"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -1366,7 +1366,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="645"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="195"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="198"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="59"/>
         <source>Expire Date</source>
         <translation>期限</translation>
@@ -1608,22 +1608,6 @@
         <translation>颜色</translation>
     </message>
     <message>
-        <source>Previous Balance</source>
-        <translation type="vanished">期初余额</translation>
-    </message>
-    <message>
-        <source>Current Count</source>
-        <translation type="vanished">本期计数</translation>
-    </message>
-    <message>
-        <source>Current Measure</source>
-        <translation type="vanished">本期度量</translation>
-    </message>
-    <message>
-        <source>Current Amount</source>
-        <translation type="vanished">本期金额</translation>
-    </message>
-    <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="33"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="43"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="53"/>
@@ -1650,14 +1634,6 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="385"/>
         <source>Description</source>
         <translation>描述</translation>
-    </message>
-    <message>
-        <source>Current Settlement</source>
-        <translation type="vanished">本期结算</translation>
-    </message>
-    <message>
-        <source>Current Balance</source>
-        <translation type="vanished">期末余额</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="10"/>
@@ -1995,7 +1971,7 @@
         <translation>客户</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="381"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="384"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
@@ -2023,7 +1999,7 @@
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow.ui" line="582"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="193"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="196"/>
         <location filename="../../mainwindow/mainwindow_account.cc" line="29"/>
         <location filename="../../mainwindow/mainwindow_context.cc" line="57"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="24"/>
@@ -2032,28 +2008,28 @@
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="667"/>
-        <location filename="../../mainwindow/mainwindow.cc" line="674"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="670"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="677"/>
         <source>Update Check</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="667"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="670"/>
         <source>Failed to check updates.</source>
         <translation>检查更新失败。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="674"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="677"/>
         <source>Invalid update information received.</source>
         <translation>无效的更新信息。</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="686"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="689"/>
         <source>Update Available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="687"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="690"/>
         <source>A new version %1 is available.
 
 Would you like to download it now?</source>
@@ -2062,12 +2038,12 @@ Would you like to download it now?</source>
 是否立即下载？</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="699"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="702"/>
         <source>No Update</source>
         <translation>无需更新</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow.cc" line="699"/>
+        <location filename="../../mainwindow/mainwindow.cc" line="702"/>
         <source>You are using the latest version.</source>
         <translation>您使用的已经是最新版本。</translation>
     </message>
@@ -2116,11 +2092,6 @@ Would you like to download it now?</source>
         <source>ACT</source>
         <comment>Action</comment>
         <translation>行为</translation>
-    </message>
-    <message>
-        <source>SRC</source>
-        <comment>Source</comment>
-        <translation type="vanished">起源</translation>
     </message>
     <message>
         <location filename="../../mainwindow/mainwindow_context.cc" line="361"/>
@@ -2712,22 +2683,6 @@ Do you want to save them before closing?</source>
         <translation>日期</translation>
     </message>
     <message>
-        <source>Previous Balance</source>
-        <translation type="vanished">期初余额</translation>
-    </message>
-    <message>
-        <source>Current Amount</source>
-        <translation type="vanished">本期金额</translation>
-    </message>
-    <message>
-        <source>Current Settlement</source>
-        <translation type="vanished">本期结算</translation>
-    </message>
-    <message>
-        <source>Current Balance</source>
-        <translation type="vanished">期末余额</translation>
-    </message>
-    <message>
         <location filename="../../utils/mainwindowutils.cc" line="171"/>
         <source>Connecting to server...</source>
         <translation>正在连接服务器…</translation>
@@ -2766,10 +2721,6 @@ Do you want to save them before closing?</source>
         <location filename="../../utils/nodeutils.h" line="181"/>
         <source>PEND</source>
         <translation>挂帐</translation>
-    </message>
-    <message>
-        <source>PEN</source>
-        <translation type="vanished">挂帐</translation>
     </message>
     <message>
         <location filename="../../utils/nodeutils.h" line="187"/>
@@ -3446,7 +3397,7 @@ Please recall it first and try again.</source>
         <location filename="../../table/widget/tablewidgeto.cc" line="464"/>
         <location filename="../../table/widget/tablewidgeto.cc" line="484"/>
         <location filename="../../table/widget/tablewidgeto.cc" line="496"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="594"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="615"/>
         <source>Operation Rejected</source>
         <translation>操作已拒绝</translation>
     </message>
@@ -3468,17 +3419,27 @@ Settled orders cannot be modified.</source>
         <translation>数据正在更新中，请刷新后再试。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="587"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="510"/>
+        <source>Operation Warning</source>
+        <translation>操作警告</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="511"/>
+        <source>Some entries have a unit price of zero. Do you want to continue saving?</source>
+        <translation>部分记录的单价为零，是否继续保存？</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="608"/>
         <source>Failed to load the print template.</source>
         <translation>打印模板加载失败。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="587"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="608"/>
         <source>Operation Failed</source>
         <translation>操作失败</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="595"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="616"/>
         <source>This order has been released and cannot be deleted.
 Please recall it before deleting.</source>
         <translation>该订单已发布，无法删除。
