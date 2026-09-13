@@ -282,10 +282,10 @@ void MainWindow::RSyncPartner(const QUuid& parent_id, const QUuid& node_id, cons
     for (int index = 0; index != count; ++index) {
         if (tab_bar->tabData(index).toUuid() == node_id) {
             const QString partner_name { sc_p_.tree_model->Name(partner_id) };
+            const QString parent_path { sc_->tree_model->Path(parent_id) };
 
             tab_bar->setTabText(index, partner_name);
-            tab_bar->setTabToolTip(index, sc_->tree_model->Path(parent_id) + app_config_.separator + partner_name);
-
+            tab_bar->setTabToolTip(index, parent_path.isEmpty() ? partner_name : parent_path + app_config_.separator + partner_name);
             break;
         }
     }

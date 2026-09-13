@@ -93,6 +93,7 @@ void Preferences::InitData()
 
     if (is_enable_status_) {
         path_model_ = model_->PathModel(this);
+        path_model_->AppendItem(QString(), QUuid());
 
         ui->comboStatic->setModel(path_model_);
         ui->comboDynamicLhs->setModel(path_model_);
