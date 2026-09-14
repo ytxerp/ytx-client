@@ -1190,8 +1190,6 @@ void WebSocket::InsertOrder(const QJsonObject& obj, bool is_released)
 
             partner_model->UpdateAmount(partner_id, initial_total);
         }
-
-        order_model->HandleStatusChanged(node_id, OrderStatus::kReleased);
     }
 }
 
