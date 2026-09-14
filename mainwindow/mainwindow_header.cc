@@ -3,16 +3,15 @@
 void MainWindow::InitHeader()
 {
     header_info_.audit = {
-        tr("Target ID"),
+        tr("ID"),
         tr("User"),
         tr("LHS Node"),
         tr("RHS Node"),
         tr("Issued Time"),
-        tr("Target Type"),
-        tr("Target Code"),
-        tr("Target Operation"),
-        tr("Target Field"),
-        tr("Level"),
+        tr("Type"),
+        tr("Code"),
+        tr("Operation"),
+        tr("Field"),
         tr("Before Change"),
         tr("After Change"),
     };

@@ -38,12 +38,6 @@ enum class TargetOperation {
     kPeriodClose,
 };
 
-enum class Level {
-    kInfo = 0,
-    kWarn = 1,
-    kCritical = 2,
-};
-
 enum class RowField {
     kTargetId,
     kUsername,
@@ -54,7 +48,6 @@ enum class RowField {
     kTargetCode,
     kTargetOperation,
     kTargetField,
-    kLevel,
     kBefore,
     kAfter,
 };

@@ -81,12 +81,6 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(TargetType::kSettlement), tr("Settlement") },
     };
 
-    audit_info_.level_hash = {
-        { std::to_underlying(Level::kInfo), tr("Info") },
-        { std::to_underlying(Level::kWarn), tr("Warn") },
-        { std::to_underlying(Level::kCritical), tr("Critical") },
-    };
-
     audit_info_.target_operation_hash = {
         { std::to_underlying(TargetOperation::kInsert), tr("Insert") },
         { std::to_underlying(TargetOperation::kUpdate), tr("Update") },

@@ -29,7 +29,6 @@ namespace audit {
 struct Info {
     QHash<int, QString> section_hash {};
     QHash<int, QString> target_operation_hash {};
-    QHash<int, QString> level_hash {};
     QHash<int, QString> target_type_hash {};
     QHash<int, QString> target_field_hash {};
 };

@@ -56,8 +56,6 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return JsonValueToString(row->after);
     case RowField::kTargetOperation:
         return info_.target_operation_hash.value(row->target_operation);
-    case RowField::kLevel:
-        return info_.level_hash.value(row->level);
     case RowField::kTargetType:
         return info_.target_type_hash.value(row->target_type);
     case RowField::kLhsNode:
@@ -91,8 +89,6 @@ void Model::sort(int column, Qt::SortOrder order)
             return utils::CompareMember(lhs, rhs, &Row::target_operation, order);
         case RowField::kTargetType:
             return utils::CompareMember(lhs, rhs, &Row::target_type, order);
-        case RowField::kLevel:
-            return utils::CompareMember(lhs, rhs, &Row::level, order);
         case RowField::kCreatedTime:
             return utils::CompareMember(lhs, rhs, &Row::created_time, order);
         case RowField::kTargetField:

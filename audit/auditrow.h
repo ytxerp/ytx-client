@@ -45,7 +45,6 @@ struct Row {
     // -- 3. Integers ------------------------------------------------------------
     int target_operation {}; // Workspace key
     int target_type {}; // Discriminator for the audited entity type
-    int level {}; // Default: 0
     int target_field {};
 
     // -- 4. Variable-length -----------------------------------------------------
