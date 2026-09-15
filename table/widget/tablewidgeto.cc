@@ -427,10 +427,8 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
 
     if (!tmp_node_->settlement_id.isNull()) {
-        utils::ShowMessage(QMessageBox::Information, tr("Operation Rejected"),
-            tr("This order has already been settled and cannot be recalled.\n"
-               "Settled orders cannot be modified."),
-            time_const::kAutoCloseMs);
+        utils::ShowMessage(
+            QMessageBox::Information, tr("Operation Rejected"), tr("This order has already been settled and cannot be recalled."), time_const::kAutoCloseMs);
 
         return;
     }
