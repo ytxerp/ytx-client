@@ -85,11 +85,11 @@ enum class EntryEnumO {
     kCount,
     kMeasure,
     kUnitPrice,
+    kInitial,
     kStatus,
     kDescription,
     kTag,
     kExternalSku,
-    kInitial,
 };
 
 enum class FullEntryEnum {

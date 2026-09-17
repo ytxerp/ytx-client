@@ -291,11 +291,11 @@ void MainWindow::InitHeader(SectionInfo& finance, SectionInfo& inventory, Sectio
         tr("Count"),
         tr("Measure"),
         tr("Unit Price"),
+        tr("Gross"),
         tr("Status"),
         tr("Description"),
         tr("Tag"),
         tr("External SKU"),
-        tr("Gross"),
     };
 
     // Full Entry
