@@ -1474,7 +1474,7 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="251"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="266"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="280"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="296"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="297"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="311"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="328"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="345"/>
@@ -1645,7 +1645,7 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="250"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="265"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="279"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="295"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="296"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="309"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="327"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="344"/>
@@ -1763,7 +1763,7 @@
         <location filename="../../mainwindow/mainwindow_header.cc" line="253"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="268"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="282"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="294"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="295"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="313"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="330"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="347"/>
@@ -1798,7 +1798,7 @@
     <message>
         <location filename="../../mainwindow/mainwindow_header.cc" line="130"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="285"/>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="297"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="298"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="372"/>
         <source>External SKU</source>
         <translation>外部货号</translation>
@@ -1911,7 +1911,7 @@
         <translation type="vanished">单价优惠</translation>
     </message>
     <message>
-        <location filename="../../mainwindow/mainwindow_header.cc" line="298"/>
+        <location filename="../../mainwindow/mainwindow_header.cc" line="294"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="365"/>
         <location filename="../../mainwindow/mainwindow_header.cc" line="377"/>
         <source>Gross</source>
@@ -3406,52 +3406,56 @@ Please recall it first and try again.</source>
         <translation>请先选择可打印模板后再继续。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="430"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="450"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="462"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="581"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="431"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="448"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="460"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="579"/>
         <source>Operation Rejected</source>
         <translation>操作已拒绝</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="431"/>
         <source>This order has already been settled and cannot be recalled.
 Settled orders cannot be modified.</source>
-        <translation>该订单已完成结算，无法撤回。
+        <translation type="vanished">该订单已完成结算，无法撤回。
 已结算订单无法修改。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="450"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="431"/>
+        <source>This order has already been settled and cannot be recalled.</source>
+        <translation>该订单已完成结算，无法撤回。</translation>
+    </message>
+    <message>
+        <location filename="../../table/widget/tablewidgeto.cc" line="448"/>
         <source>A partner must be selected before continuing.</source>
         <translation>请先选择合作单位后再继续。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="462"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="460"/>
         <source>The data is being updated. Please refresh and try again.</source>
         <translation>数据正在更新中，请刷新后再试。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="476"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="474"/>
         <source>Operation Warning</source>
         <translation>操作警告</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="477"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="475"/>
         <source>Some entries have a unit price of zero. Do you want to continue saving?</source>
         <translation>部分记录的单价为零，是否继续保存？</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="574"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="572"/>
         <source>Failed to load the print template.</source>
         <translation>打印模板加载失败。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="574"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="572"/>
         <source>Operation Failed</source>
         <translation>操作失败</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="582"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="580"/>
         <source>This order has been released and cannot be deleted.
 Please recall it before deleting.</source>
         <translation>该订单已发布，无法删除。
