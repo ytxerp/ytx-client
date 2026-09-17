@@ -27,6 +27,7 @@
 
 #include "component/constant.h"
 #include "component/sectioninfo.h"
+#include "tree/includeunitfiltermodel.h"
 #include "tree/itemmodel.h"
 #include "tree/node.h"
 #include "utils/delta.h"
@@ -149,7 +150,7 @@ public:
     Node* GetNodeByIndex(const QModelIndex& index) const;
 
     QSortFilterProxyModel* ExcludeId(const QUuid& node_id, QObject* parent) const;
-    QSortFilterProxyModel* IncludeUnit(NodeUnit unit, QObject* parent);
+    QSortFilterProxyModel* IncludeUnit(NodeUnit unit);
     QSortFilterProxyModel* ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent);
 
 protected:
@@ -237,6 +238,7 @@ protected:
     const QStringList& header_;
 
     QHash<QUuid, PendingNodeUpdate> pending_updates_ {};
+    QHash<NodeUnit, IncludeUnitFilterModel*> unit_filter_models_ {};
 };
 
 using CTreeModel = const TreeModel;

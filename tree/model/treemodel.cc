@@ -6,7 +6,6 @@
 #include "component/constantwebsocket.h"
 #include "global/nodepool.h"
 #include "tree/excludeidfiltermodel.h"
-#include "tree/includeunitfiltermodel.h"
 #include "tree/replaceselffiltermodel.h"
 #include "utils/nodeutils.h"
 #include "utils/pathutils.h"
@@ -744,13 +743,20 @@ QSortFilterProxyModel* TreeModel::ExcludeId(const QUuid& node_id, QObject* paren
     return model;
 }
 
-QSortFilterProxyModel* TreeModel::IncludeUnit(NodeUnit unit, QObject* parent)
+QSortFilterProxyModel* TreeModel::IncludeUnit(NodeUnit unit)
 {
+    if (auto* model = unit_filter_models_.value(unit))
+        return model;
+
     auto* set { UnitSet(unit) };
-    auto* model { new IncludeUnitFilterModel(set, parent) };
+    auto* model { new IncludeUnitFilterModel(set, this) };
+
     model->setSourceModel(leaf_model_);
 
     connect(this, &TreeModel::SSyncFilterModel, model, &IncludeUnitFilterModel::RSyncFilterModel);
+
+    unit_filter_models_.insert(unit, model);
+
     return model;
 }
 

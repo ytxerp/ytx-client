@@ -44,7 +44,7 @@ void SettlementSecondaryWidget::RSyncAmount(double amount)
 
 void SettlementSecondaryWidget::InitWidget()
 {
-    auto* pmodel { tree_model_p_->IncludeUnit(section_ == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor, this) };
+    auto* pmodel { tree_model_p_->IncludeUnit(section_ == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor) };
     ui->comboPartner->setModel(pmodel);
     ui->comboPartner->setCurrentIndex(-1);
 

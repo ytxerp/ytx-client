@@ -114,11 +114,11 @@ void TableWidgetO::RSyncDeltaO(const QUuid& node_id, double initial_delta, doubl
 void TableWidgetO::InitWidget()
 {
     {
-        auto* pmodel { tree_model_partner_->IncludeUnit(section_ == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor, this) };
+        auto* pmodel { tree_model_partner_->IncludeUnit(section_ == Section::kSale ? NodeUnit::PCustomer : NodeUnit::PVendor) };
         ui->comboPartner->setModel(pmodel);
         ui->comboPartner->setCurrentIndex(-1);
 
-        auto* emodel { tree_model_partner_->IncludeUnit(NodeUnit::PEmployee, this) };
+        auto* emodel { tree_model_partner_->IncludeUnit(NodeUnit::PEmployee) };
         ui->comboEmployee->setModel(emodel);
         ui->comboEmployee->setCurrentIndex(-1);
     }
