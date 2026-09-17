@@ -30,6 +30,13 @@ public:
     {
     }
 
+public slots:
+    void RSyncFilterModel()
+    {
+        beginFilterChange();
+        endFilterChange(Direction::Rows);
+    }
+
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const override
     {

@@ -56,6 +56,8 @@ signals:
     void SSyncValue();
     void SInitStatus();
 
+    void SSyncFilterModel();
+
 public:
     // Qt's
     QModelIndex parent(const QModelIndex& index) const override;

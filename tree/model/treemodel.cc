@@ -749,6 +749,8 @@ QSortFilterProxyModel* TreeModel::IncludeUnit(NodeUnit unit, QObject* parent)
     auto* set { UnitSet(unit) };
     auto* model { new IncludeUnitFilterModel(set, parent) };
     model->setSourceModel(leaf_model_);
+
+    connect(this, &TreeModel::SSyncFilterModel, model, &IncludeUnitFilterModel::RSyncFilterModel);
     return model;
 }
 
@@ -1046,6 +1048,8 @@ void TreeModel::RegisterNode(Node* node)
         leaf_path_.insert(node->id, path);
         leaf_model_->AppendItem(path, node->id);
         UnitSetInsert(node->id, node->unit);
+
+        emit SSyncFilterModel();
         break;
     }
 }
@@ -1089,6 +1093,7 @@ void TreeModel::UnregisterNode(Node* node, Node* parent_node)
 
         emit SFreeWidget(section_, node_id);
         emit SInitStatus();
+        emit SSyncFilterModel();
     } break;
     }
 }
