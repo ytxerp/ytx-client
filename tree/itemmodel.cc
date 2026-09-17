@@ -53,7 +53,7 @@ void ItemModel::sort(int column, Qt::SortOrder order)
     emit layoutChanged();
 }
 
-void ItemModel::AppendItem(const QString& display, const QUuid& id)
+void ItemModel::AppendItem(const QUuid& id, const QString& display)
 {
     if (hash_.contains(id))
         return;

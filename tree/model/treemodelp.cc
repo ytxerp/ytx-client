@@ -57,7 +57,7 @@ void TreeModelP::InitUnitSet()
 {
     // Empty employee is a valid state for orders.
     eset_.insert(QUuid());
-    leaf_model_->AppendItem(QString(), QUuid());
+    leaf_model_->AppendItem(QUuid(), QString());
 }
 
 QSet<QUuid> TreeModelP::UpdateAncestorTotal(Node* node, const node::Delta& delta) const

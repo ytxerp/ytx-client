@@ -323,7 +323,7 @@ void TreeModel::ApplyStatus(const QUuid& node_id, int status, int version)
     const QString path { path::Build(node, root_, separator_) };
 
     leaf_path_.insert(node_id, path);
-    leaf_model_->AppendItem(path, node_id);
+    leaf_model_->AppendItem(node_id, path);
 }
 
 void TreeModel::SyncVersion(const QUuid& node_id, int version)
@@ -1042,18 +1042,19 @@ void TreeModel::RegisterNode(Node* node)
     // node with actual data is removed (see UnregisterPath).
 
     const auto path { path::Build(node, root_, separator_) };
-    const NodeKind kind { node->kind };
+    const auto node_id { node->id };
+    const auto node_unit { node->unit };
 
-    switch (kind) {
+    switch (node->kind) {
     case NodeKind::kBranch:
-        branch_path_.insert(node->id, path);
+        branch_path_.insert(node_id, path);
         break;
     case NodeKind::kLeaf:
-        leaf_path_.insert(node->id, path);
-        leaf_model_->AppendItem(path, node->id);
-        UnitSetInsert(node->id, node->unit);
+        leaf_path_.insert(node_id, path);
+        leaf_model_->AppendItem(node_id, path);
+        UnitSetInsert(node_id, node_unit);
 
-        SyncFilterModel(node->unit);
+        SyncFilterModel(node_unit);
         break;
     }
 }

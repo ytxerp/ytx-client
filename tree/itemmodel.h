@@ -43,7 +43,7 @@ public:
 
     Qt::ItemFlags flags(const QModelIndex& index) const override { return index.isValid() ? (Qt::ItemIsEnabled | Qt::ItemIsSelectable) : Qt::NoItemFlags; }
 
-    void AppendItem(const QString& display, const QUuid& id);
+    void AppendItem(const QUuid& id, const QString& display);
     bool RemoveItem(const QUuid& id);
 
     void SetSeparator(const QString& old_separator, const QString& new_separator);
