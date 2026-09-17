@@ -753,8 +753,6 @@ QSortFilterProxyModel* TreeModel::IncludeUnit(NodeUnit unit)
 
     model->setSourceModel(leaf_model_);
 
-    connect(this, &TreeModel::SSyncFilterModel, model, &IncludeUnitFilterModel::RSyncFilterModel);
-
     unit_filter_models_.insert(unit, model);
 
     return model;
@@ -1055,7 +1053,7 @@ void TreeModel::RegisterNode(Node* node)
         leaf_model_->AppendItem(path, node->id);
         UnitSetInsert(node->id, node->unit);
 
-        emit SSyncFilterModel();
+        SyncFilterModel(node->unit);
         break;
     }
 }
@@ -1068,9 +1066,9 @@ void TreeModel::UnregisterNode(Node* node, Node* parent_node)
     // the node is dropped from the path index.
 
     const auto node_id { node->id };
-    const NodeKind kind { node->kind };
+    const auto node_unit { node->unit };
 
-    switch (kind) {
+    switch (node->kind) {
     case NodeKind::kBranch: {
         for (auto* child : std::as_const(node->children)) {
             child->parent = parent_node;
@@ -1087,7 +1085,7 @@ void TreeModel::UnregisterNode(Node* node, Node* parent_node)
     case NodeKind::kLeaf: {
         leaf_path_.remove(node_id);
         leaf_model_->RemoveItem(node_id);
-        UnitSetRemove(node_id, node->unit);
+        UnitSetRemove(node_id, node_unit);
 
         const node::Delta delta {
             .initial = -node->initial_total,
@@ -1096,10 +1094,10 @@ void TreeModel::UnregisterNode(Node* node, Node* parent_node)
 
         const auto ids { UpdateAncestorTotal(node, delta) };
         EmitNumericChanged(ids);
+        SyncFilterModel(node_unit);
 
         emit SFreeWidget(section_, node_id);
         emit SInitStatus();
-        emit SSyncFilterModel();
     } break;
     }
 }

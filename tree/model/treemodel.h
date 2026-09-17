@@ -57,8 +57,6 @@ signals:
     void SSyncValue();
     void SInitStatus();
 
-    void SSyncFilterModel();
-
 public:
     // Qt's
     QModelIndex parent(const QModelIndex& index) const override;
@@ -153,6 +151,12 @@ public:
     QSortFilterProxyModel* IncludeUnit(NodeUnit unit);
     QSortFilterProxyModel* ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent);
 
+    void SyncFilterModels()
+    {
+        for (auto* model : std::as_const(unit_filter_models_))
+            model->SyncFilterModel();
+    }
+
 protected:
     void RestartTimer(const QUuid& id);
 
@@ -222,6 +226,12 @@ private:
         if (auto* set = UnitSet(unit)) {
             set->insert(node_id);
         }
+    }
+
+    void SyncFilterModel(NodeUnit unit)
+    {
+        if (auto* model = unit_filter_models_.value(unit))
+            model->SyncFilterModel();
     }
 
 protected:

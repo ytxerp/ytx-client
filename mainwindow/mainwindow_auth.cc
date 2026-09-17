@@ -152,5 +152,9 @@ void MainWindow::RDenyLogin()
 void MainWindow::RFinishTreeSync()
 {
     qDebug() << "RTreeSyncFinished";
+
+    sc_p_.tree_model->SyncFilterModels();
+    sc_i_.tree_model->SyncFilterModels();
+
     tabWidget_currentChanged();
 }

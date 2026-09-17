@@ -30,8 +30,7 @@ public:
     {
     }
 
-public slots:
-    void RSyncFilterModel()
+    void SyncFilterModel()
     {
         beginFilterChange();
         endFilterChange(Direction::Rows);
