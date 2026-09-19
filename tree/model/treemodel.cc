@@ -243,8 +243,10 @@ void TreeModel::ApplyUpdate(const QUuid& node_id, const QJsonObject& update, int
 
 void TreeModel::RequestDirectionRule(Node* node, bool value)
 {
-    if (node->direction_rule == value)
+    if (node->direction_rule == value || node->sync_state != SyncState::kSynced)
         return;
+
+    node->sync_state = SyncState::kUpdating;
 
     QJsonObject message { JsonGen::NodeDirectionRule(section_, node->id, value, node->version) };
     WebSocket::Instance()->SendMessage(WsKey::kNodeDirectionRuleUpdate, message);
@@ -252,8 +254,10 @@ void TreeModel::RequestDirectionRule(Node* node, bool value)
 
 void TreeModel::RequestStatus(Node* node, int value)
 {
-    if (node->kind == NodeKind::kBranch || node->status == NodeStatus(value))
+    if (node->kind == NodeKind::kBranch || node->sync_state != SyncState::kSynced || node->status == NodeStatus(value))
         return;
+
+    node->sync_state = SyncState::kUpdating;
 
     QJsonObject message { JsonGen::NodeStatus(section_, node->id, value, node->version) };
     WebSocket::Instance()->SendMessage(WsKey::kNodeStatus, message);
@@ -272,6 +276,7 @@ void TreeModel::ApplyDirectionRule(const QUuid& node_id, bool direction_rule, in
     node->InvertTotal();
     node->direction_rule = direction_rule;
     node->version = version;
+    node->sync_state = SyncState::kSynced;
 
     const int row { index.row() };
 
@@ -306,6 +311,7 @@ void TreeModel::ApplyStatus(const QUuid& node_id, int status, int version)
 
     node->status = node_status;
     node->version = version;
+    node->sync_state = SyncState::kSynced;
 
     // Refresh the view first, as the following status check may return early.
     {
