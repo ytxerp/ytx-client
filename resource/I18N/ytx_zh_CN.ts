@@ -2747,76 +2747,104 @@ Do you want to save them before closing?</source>
         <translation>正</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="10"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="43"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="14"/>
         <source>Finance R</source>
         <translation>财务 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="11"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="43"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="15"/>
         <source>Finance W</source>
         <translation>财务 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="12"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="44"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="17"/>
         <source>Task R</source>
         <translation>任务 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="13"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="44"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="18"/>
         <source>Task W</source>
         <translation>任务 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="14"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="45"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="20"/>
         <source>Inventory R</source>
         <translation>存货 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="15"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="45"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="21"/>
         <source>Inventory W</source>
         <translation>存货 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="16"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="46"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="23"/>
         <source>Partner R</source>
         <translation>合作 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="17"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="46"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="24"/>
         <source>Partner W</source>
         <translation>合作 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="18"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="47"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="26"/>
         <source>Sale R</source>
         <translation>销售 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="19"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="47"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="27"/>
         <source>Sale W</source>
         <translation>销售 读写</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="20"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="48"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="28"/>
+        <source>Sale Release</source>
+        <translation>销售 发布</translation>
+    </message>
+    <message>
+        <location filename="../../workspace/sectionpermissions.cc" line="29"/>
+        <source>Sale Unrelease</source>
+        <translation>销售 取消发布</translation>
+    </message>
+    <message>
+        <location filename="../../workspace/sectionpermissions.cc" line="30"/>
+        <source>Sale Settle</source>
+        <translation>销售 结算</translation>
+    </message>
+    <message>
+        <location filename="../../workspace/sectionpermissions.cc" line="31"/>
+        <source>Sale Unsettle</source>
+        <translation>销售 取消结算</translation>
+    </message>
+    <message>
+        <location filename="../../workspace/sectionpermissions.cc" line="33"/>
         <source>Purchase R</source>
         <translation>采购 只读</translation>
     </message>
     <message>
-        <location filename="../../workspace/sectionpermissions.cc" line="21"/>
-        <location filename="../../workspace/sectionpermissions.cc" line="48"/>
+        <location filename="../../workspace/sectionpermissions.cc" line="34"/>
         <source>Purchase W</source>
         <translation>采购 读写</translation>
+    </message>
+    <message>
+        <location filename="../../workspace/sectionpermissions.cc" line="35"/>
+        <source>Purchase Release</source>
+        <translation>采购 发布</translation>
+    </message>
+    <message>
+        <location filename="../../workspace/sectionpermissions.cc" line="36"/>
+        <source>Purchase Unrelease</source>
+        <translation>采购 取消发布</translation>
+    </message>
+    <message>
+        <location filename="../../workspace/sectionpermissions.cc" line="37"/>
+        <source>Purchase Settle</source>
+        <translation>采购 结算</translation>
+    </message>
+    <message>
+        <location filename="../../workspace/sectionpermissions.cc" line="38"/>
+        <source>Purchase Unsettle</source>
+        <translation>采购 取消结算</translation>
     </message>
     <message>
         <location filename="../../workspace/workspacerole.cc" line="7"/>
