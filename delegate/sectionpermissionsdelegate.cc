@@ -21,8 +21,6 @@ QWidget* SectionPermissionsDelegate::createEditor(QWidget* parent, const QStyleO
     UserProfile& profile { UserProfile::Instance() };
     const auto permissions { profile.SectionPermissions() };
 
-    qDebug() << "Profile permissions:" << static_cast<quint64>(permissions.toInt());
-
     for (const auto& item : section::PermissionItems()) {
         if ((permissions & item.permission) != item.permission) {
             continue;

@@ -371,9 +371,7 @@ void WebSocket::NotifyLoginOutcome(const QJsonObject& obj)
         const auto name { obj[kName].toString() };
         const workspace::Role role { obj[kWorkspaceRole].toInt() };
 
-        qDebug() << "Section permissions JSON:" << obj[kSectionPermissions];
         const auto value { obj[kSectionPermissions].toString().toULongLong() };
-        qDebug() << "Section permissions value:" << value;
 
         const auto permissions { section::Permissions::fromInt(value) };
 
