@@ -58,7 +58,7 @@ QVariant Model::data(const QModelIndex& index, int role) const
     case MemberField::kWorkspaceRole:
         return static_cast<int>(member->workspace_role);
     case MemberField::kSectionPermissions:
-        return static_cast<int>(member->section_permissions);
+        return static_cast<qulonglong>(member->section_permissions);
     case MemberField::kCreatedTime:
         return member->created_time;
     }
@@ -98,9 +98,9 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
         break;
     }
     case MemberField::kSectionPermissions: {
-        const int raw { value.toInt() };
-        member->section_permissions = static_cast<section::Permissions>(raw);
-        changes.insert(kSectionPermissions, raw);
+        const auto raw { value.toULongLong() };
+        member->section_permissions = section::Permissions::fromInt(raw);
+        changes.insert(kSectionPermissions, QString::number(raw));
         break;
     }
     case MemberField::kEmail:

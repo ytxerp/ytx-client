@@ -21,6 +21,8 @@ QWidget* SectionPermissionsDelegate::createEditor(QWidget* parent, const QStyleO
     UserProfile& profile { UserProfile::Instance() };
     const auto permissions { profile.SectionPermissions() };
 
+    qDebug() << "Profile permissions:" << static_cast<quint64>(permissions.toInt());
+
     for (const auto& item : section::PermissionItems()) {
         if ((permissions & item.permission) != item.permission) {
             continue;
@@ -42,16 +44,17 @@ void SectionPermissionsDelegate::setEditorData(QWidget* editor, const QModelInde
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
 
-    const int value { index.data().toInt() };
-    const section::Permissions permissions(value);
+    const auto value { index.data().toULongLong() };
+    const section::Permissions permissions { section::Permissions::fromInt(static_cast<section::Permissions::Int>(value)) };
 
     auto* model { qobject_cast<QStandardItemModel*>(cast_editor->model()) };
 
     for (int i = 0; i != model->rowCount(); ++i) {
         auto* item { model->item(i) };
 
-        const int permission { item->data(Qt::UserRole).toInt() };
-        const bool checked { static_cast<int>(permissions & permission) == permission };
+        const auto permission { item->data(Qt::UserRole).toULongLong() };
+        const bool checked { (value & permission) == permission };
+
         item->setCheckState(checked ? Qt::Checked : Qt::Unchecked);
     }
 
@@ -79,18 +82,23 @@ void SectionPermissionsDelegate::setModelData(QWidget* editor, QAbstractItemMode
 
 void SectionPermissionsDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const int value { index.data().toInt() };
+    const auto value { index.data().toULongLong() };
+
     if (value == 0)
         return PaintEmpty(painter, option, index);
 
-    const QString text { section::PermissionsDisplay(section::Permissions(value)) };
+    const auto permissions { section::Permissions::fromInt(static_cast<section::Permissions::Int>(value)) };
+
+    const QString text { section::PermissionsDisplay(permissions) };
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }
 
 QSize SectionPermissionsDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const int value { index.data().toInt() };
-    const QString text { section::PermissionsDisplay(section::Permissions(value)) };
+    const auto value { index.data().toULongLong() };
 
+    const auto permissions { section::Permissions::fromInt(static_cast<section::Permissions::Int>(value)) };
+
+    const QString text { section::PermissionsDisplay(permissions) };
     return CalculateTextSize(text, option);
 }
