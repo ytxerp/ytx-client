@@ -528,8 +528,23 @@ void MainWindow::DelegateWorkspaceMember(QTableView* table_view) const
     auto* workspace_role { new WorkspaceRoleDelegate(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kWorkspaceRole), workspace_role);
 
-    auto* database_role { new SectionPermissionsDelegate(table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kSectionPermissions), database_role);
+    auto* finance_permissions { new SectionPermissionsDelegate(Section::kFinance, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kFinancePermissions), finance_permissions);
+
+    auto* task_permissions { new SectionPermissionsDelegate(Section::kTask, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kTaskPermissions), task_permissions);
+
+    auto* inventory_permissions { new SectionPermissionsDelegate(Section::kInventory, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kInventoryPermissions), inventory_permissions);
+
+    auto* partner_permissions { new SectionPermissionsDelegate(Section::kPartner, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kPartnerPermissions), partner_permissions);
+
+    auto* sale_permissions { new SectionPermissionsDelegate(Section::kSale, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kSalePermissions), sale_permissions);
+
+    auto* purchase_permissions { new SectionPermissionsDelegate(Section::kPurchase, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(workspace::MemberField::kPurchasePermissions), purchase_permissions);
 }
 
 void MainWindow::DelegateAuditLog(QTableView* table_view) const

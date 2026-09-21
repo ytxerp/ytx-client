@@ -57,8 +57,18 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return member->name;
     case MemberField::kWorkspaceRole:
         return static_cast<int>(member->workspace_role);
-    case MemberField::kSectionPermissions:
-        return static_cast<qulonglong>(member->section_permissions);
+    case MemberField::kFinancePermissions:
+        return member->finance_permissions;
+    case MemberField::kTaskPermissions:
+        return member->task_permissions;
+    case MemberField::kInventoryPermissions:
+        return member->inventory_permissions;
+    case MemberField::kPartnerPermissions:
+        return member->partner_permissions;
+    case MemberField::kSalePermissions:
+        return member->sale_permissions;
+    case MemberField::kPurchasePermissions:
+        return member->purchase_permissions;
     case MemberField::kCreatedTime:
         return member->created_time;
     }
@@ -87,22 +97,39 @@ bool Model::setData(const QModelIndex& index, const QVariant& value, int role)
     auto& update { pending_updates_[id] };
     update.member = member;
     auto& changes { update.changes };
+    const int raw { value.toInt() };
 
     // Handle updates based on the column index
     // Assuming MemberColumn is your enum for WorkspaceMember columns
     switch (static_cast<MemberField>(index.column())) {
-    case MemberField::kWorkspaceRole: {
-        const int raw { value.toInt() };
+    case MemberField::kWorkspaceRole:
         member->workspace_role = static_cast<workspace::Role>(raw);
         changes.insert(kWorkspaceRole, raw);
         break;
-    }
-    case MemberField::kSectionPermissions: {
-        const auto raw { value.toULongLong() };
-        member->section_permissions = section::Permissions::fromInt(raw);
-        changes.insert(kSectionPermissions, QString::number(raw));
+    case MemberField::kFinancePermissions:
+        member->finance_permissions = raw;
+        changes.insert(kFinancePermissions, raw);
         break;
-    }
+    case MemberField::kTaskPermissions:
+        member->task_permissions = raw;
+        changes.insert(kTaskPermissions, raw);
+        break;
+    case MemberField::kInventoryPermissions:
+        member->inventory_permissions = raw;
+        changes.insert(kInventoryPermissions, raw);
+        break;
+    case MemberField::kPartnerPermissions:
+        member->partner_permissions = raw;
+        changes.insert(kPartnerPermissions, raw);
+        break;
+    case MemberField::kSalePermissions:
+        member->sale_permissions = raw;
+        changes.insert(kSalePermissions, raw);
+        break;
+    case MemberField::kPurchasePermissions:
+        member->purchase_permissions = raw;
+        changes.insert(kPurchasePermissions, raw);
+        break;
     case MemberField::kEmail:
     case MemberField::kUsername:
     case MemberField::kName:
@@ -136,8 +163,18 @@ void Model::sort(int column, Qt::SortOrder order)
         case MemberField::kWorkspaceRole:
             // Sorting by the underlying integer value of the enum
             return utils::CompareMember(lhs, rhs, &Member::workspace_role, order);
-        case MemberField::kSectionPermissions:
-            return utils::CompareMember(lhs, rhs, &Member::section_permissions, order);
+        case MemberField::kFinancePermissions:
+            return utils::CompareMember(lhs, rhs, &Member::finance_permissions, order);
+        case MemberField::kTaskPermissions:
+            return utils::CompareMember(lhs, rhs, &Member::task_permissions, order);
+        case MemberField::kInventoryPermissions:
+            return utils::CompareMember(lhs, rhs, &Member::inventory_permissions, order);
+        case MemberField::kPartnerPermissions:
+            return utils::CompareMember(lhs, rhs, &Member::partner_permissions, order);
+        case MemberField::kSalePermissions:
+            return utils::CompareMember(lhs, rhs, &Member::sale_permissions, order);
+        case MemberField::kPurchasePermissions:
+            return utils::CompareMember(lhs, rhs, &Member::purchase_permissions, order);
         case MemberField::kCreatedTime:
             return utils::CompareMember(lhs, rhs, &Member::created_time, order);
         }
@@ -168,7 +205,12 @@ Qt::ItemFlags Model::flags(const QModelIndex& index) const
 
     switch (column) {
     case MemberField::kWorkspaceRole:
-    case MemberField::kSectionPermissions:
+    case MemberField::kFinancePermissions:
+    case MemberField::kTaskPermissions:
+    case MemberField::kInventoryPermissions:
+    case MemberField::kPartnerPermissions:
+    case MemberField::kSalePermissions:
+    case MemberField::kPurchasePermissions:
         // Enable editing for specific roles
         flags |= Qt::ItemIsEditable;
         break;

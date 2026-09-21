@@ -161,7 +161,12 @@ inline const QString kAmount = QStringLiteral("amount");
 inline const QString kMeasureTotal = QStringLiteral("measure_total");
 inline const QString kUsername = QStringLiteral("username");
 inline const QString kWorkspaceRole = QStringLiteral("workspace_role");
-inline const QString kSectionPermissions = QStringLiteral("section_permissions");
+inline const QString kFinancePermissions = QStringLiteral("finance_permissions");
+inline const QString kTaskPermissions = QStringLiteral("task_permissions");
+inline const QString kInventoryPermissions = QStringLiteral("inventory_permissions");
+inline const QString kPartnerPermissions = QStringLiteral("partner_permissions");
+inline const QString kSalePermissions = QStringLiteral("sale_permissions");
+inline const QString kPurchasePermissions = QStringLiteral("purchase_permissions");
 inline const QString kRoles = QStringLiteral("roles");
 inline const QString kCashKind = QStringLiteral("cash_kind");
 

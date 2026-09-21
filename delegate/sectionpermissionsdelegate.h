@@ -19,15 +19,19 @@
 
 #pragma once
 
+#include "enum/section.h"
 #include "styleditemdelegate.h"
 
 class SectionPermissionsDelegate final : public StyledItemDelegate {
 public:
-    explicit SectionPermissionsDelegate(QObject* parent = nullptr);
+    explicit SectionPermissionsDelegate(Section section, QObject* parent = nullptr);
 
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     void setEditorData(QWidget* editor, const QModelIndex& index) const override;
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+
+private:
+    const Section section_ {};
 };

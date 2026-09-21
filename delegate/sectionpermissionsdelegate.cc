@@ -6,8 +6,9 @@
 #include "widget/combobox.h"
 #include "workspace/sectionpermissions.h"
 
-SectionPermissionsDelegate::SectionPermissionsDelegate(QObject* parent)
+SectionPermissionsDelegate::SectionPermissionsDelegate(Section section, QObject* parent)
     : StyledItemDelegate { parent }
+    , section_ { section }
 {
 }
 
@@ -19,9 +20,9 @@ QWidget* SectionPermissionsDelegate::createEditor(QWidget* parent, const QStyleO
     editor->setModel(model);
 
     UserProfile& profile { UserProfile::Instance() };
-    const auto permissions { profile.SectionPermissions() };
+    const int permissions { profile.SectionPermissions(section_) };
 
-    for (const auto& item : section::PermissionItems()) {
+    for (const auto& item : section::PermissionItems(section_)) {
         if ((permissions & item.permission) != item.permission) {
             continue;
         }
@@ -29,7 +30,7 @@ QWidget* SectionPermissionsDelegate::createEditor(QWidget* parent, const QStyleO
         auto* model_item { new QStandardItem(item.text) };
 
         model_item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
-        model_item->setData(static_cast<int>(item.permission), Qt::UserRole);
+        model_item->setData(item.permission, Qt::UserRole);
         model_item->setCheckState(Qt::Unchecked);
 
         model->appendRow(model_item);
@@ -42,22 +43,20 @@ void SectionPermissionsDelegate::setEditorData(QWidget* editor, const QModelInde
 {
     auto* cast_editor { static_cast<ComboBox*>(editor) };
 
-    const auto value { index.data().toULongLong() };
-    const section::Permissions permissions { section::Permissions::fromInt(static_cast<section::Permissions::Int>(value)) };
+    const int permissions { index.data().toInt() };
 
     auto* model { qobject_cast<QStandardItemModel*>(cast_editor->model()) };
 
     for (int i = 0; i != model->rowCount(); ++i) {
         auto* item { model->item(i) };
 
-        const auto permission { item->data(Qt::UserRole).toULongLong() };
-        const bool checked { (value & permission) == permission };
+        const int permission { item->data(Qt::UserRole).toInt() };
+        const bool checked { (permissions & permission) == permission };
 
         item->setCheckState(checked ? Qt::Checked : Qt::Unchecked);
     }
 
-    // Set line edit text to show all selected roles
-    cast_editor->setEditText(section::PermissionsDisplay(permissions));
+    cast_editor->setCurrentIndex(-1);
 }
 
 void SectionPermissionsDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
@@ -80,23 +79,19 @@ void SectionPermissionsDelegate::setModelData(QWidget* editor, QAbstractItemMode
 
 void SectionPermissionsDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const auto value { index.data().toULongLong() };
+    const int permissions { index.data().toInt() };
 
-    if (value == 0)
+    if (permissions == 0)
         return PaintEmpty(painter, option, index);
 
-    const auto permissions { section::Permissions::fromInt(static_cast<section::Permissions::Int>(value)) };
-
-    const QString text { section::PermissionsDisplay(permissions) };
+    const QString text { section::PermissionsDisplay(section_, permissions) };
     PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
 }
 
 QSize SectionPermissionsDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    const auto value { index.data().toULongLong() };
+    const int permissions { index.data().toInt() };
 
-    const auto permissions { section::Permissions::fromInt(static_cast<section::Permissions::Int>(value)) };
-
-    const QString text { section::PermissionsDisplay(permissions) };
+    const QString text { section::PermissionsDisplay(section_, permissions) };
     return CalculateTextSize(text, option);
 }

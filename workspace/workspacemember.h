@@ -25,7 +25,6 @@
 #include <QUuid>
 
 #include "component/constant.h"
-#include "sectionpermissions.h"
 #include "workspacerole.h"
 
 namespace workspace {
@@ -39,7 +38,12 @@ struct Member final {
     QString name {};
 
     Role workspace_role { Role::kGuest };
-    section::Permissions section_permissions {};
+    int finance_permissions {};
+    int task_permissions {};
+    int inventory_permissions {};
+    int partner_permissions {};
+    int sale_permissions {};
+    int purchase_permissions {};
     QDateTime created_time {};
 
     void Reset();
@@ -68,13 +72,28 @@ inline void Member::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kWorkspaceRole); val.isDouble())
         workspace_role = static_cast<workspace::Role>(val.toInt());
 
-    if (const auto val = object.value(kSectionPermissions); val.isString()) {
-        bool ok {};
-        const auto value { val.toString().toULongLong(&ok) };
+    if (const auto val = object.value(kFinancePermissions); val.isDouble()) {
+        finance_permissions = val.toInt();
+    }
 
-        if (ok) {
-            section_permissions = section::Permissions::fromInt(static_cast<section::Permissions::Int>(value));
-        }
+    if (const auto val = object.value(kTaskPermissions); val.isDouble()) {
+        task_permissions = val.toInt();
+    }
+
+    if (const auto val = object.value(kInventoryPermissions); val.isDouble()) {
+        inventory_permissions = val.toInt();
+    }
+
+    if (const auto val = object.value(kPartnerPermissions); val.isDouble()) {
+        partner_permissions = val.toInt();
+    }
+
+    if (const auto val = object.value(kSalePermissions); val.isDouble()) {
+        sale_permissions = val.toInt();
+    }
+
+    if (const auto val = object.value(kPurchasePermissions); val.isDouble()) {
+        purchase_permissions = val.toInt();
     }
 
     if (const auto val = object.value(kCreatedTime); val.isString())

@@ -25,7 +25,12 @@ enum class MemberField : int {
     kUsername,
     kName,
     kWorkspaceRole,
-    kSectionPermissions,
+    kFinancePermissions,
+    kTaskPermissions,
+    kInventoryPermissions,
+    kPartnerPermissions,
+    kSalePermissions,
+    kPurchasePermissions,
     kCreatedTime,
 };
 }

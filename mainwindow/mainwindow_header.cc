@@ -21,7 +21,12 @@ void MainWindow::InitHeader()
         tr("Username"),
         tr("Name", "Person"),
         tr("Workspace Role"),
-        tr("Section Permissions"),
+        tr("Finance"),
+        tr("Task"),
+        tr("Inventory"),
+        tr("Partner"),
+        tr("Sale"),
+        tr("Purchase"),
         tr("Issued Time"),
     };
 

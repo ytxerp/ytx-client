@@ -371,9 +371,14 @@ void WebSocket::NotifyLoginOutcome(const QJsonObject& obj)
         const auto name { obj[kName].toString() };
         const workspace::Role role { obj[kWorkspaceRole].toInt() };
 
-        const auto value { obj[kSectionPermissions].toString().toULongLong() };
-
-        const auto permissions { section::Permissions::fromInt(value) };
+        const section::Permissions permissions {
+            .finance = obj[kFinancePermissions].toInt(),
+            .task = obj[kTaskPermissions].toInt(),
+            .inventory = obj[kInventoryPermissions].toInt(),
+            .partner = obj[kPartnerPermissions].toInt(),
+            .sale = obj[kSalePermissions].toInt(),
+            .purchase = obj[kPurchasePermissions].toInt(),
+        };
 
         UserProfile& profile { UserProfile::Instance() };
         profile.SetUsername(username);

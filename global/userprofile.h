@@ -35,7 +35,27 @@ public:
     const QString& Username() const { return username_; }
     const QString& Name() const { return name_; }
     workspace::Role WorkspaceRole() const { return role_; }
+
     section::Permissions SectionPermissions() const { return permissions_; }
+    int SectionPermissions(Section section) const
+    {
+        switch (section) {
+        case Section::kFinance:
+            return permissions_.finance;
+        case Section::kTask:
+            return permissions_.task;
+        case Section::kInventory:
+            return permissions_.inventory;
+        case Section::kPartner:
+            return permissions_.partner;
+        case Section::kSale:
+            return permissions_.sale;
+        case Section::kPurchase:
+            return permissions_.purchase;
+        }
+
+        std::unreachable();
+    }
 
     void SetUsername(const QString& value) { username_ = value; }
     void SetName(const QString& value) { name_ = value; }
