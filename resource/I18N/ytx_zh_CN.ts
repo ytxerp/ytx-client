@@ -3131,15 +3131,23 @@ Do you want to save them before closing?</source>
         <translation>变更后</translation>
     </message>
     <message>
+        <source>R</source>
+        <translation type="vanished">只读</translation>
+    </message>
+    <message>
+        <source>W</source>
+        <translation type="vanished">读写</translation>
+    </message>
+    <message>
         <location filename="../../workspace/sectionpermissions.cc" line="10"/>
         <location filename="../../workspace/sectionpermissions.cc" line="15"/>
-        <source>R</source>
+        <source>Read Only</source>
         <translation>只读</translation>
     </message>
     <message>
         <location filename="../../workspace/sectionpermissions.cc" line="11"/>
         <location filename="../../workspace/sectionpermissions.cc" line="16"/>
-        <source>W</source>
+        <source>Read Write</source>
         <translation>读写</translation>
     </message>
     <message>
@@ -3589,27 +3597,56 @@ Please recall it before deleting.</source>
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.ui" line="59"/>
         <source>Section Permissions</source>
-        <translation>版块权限</translation>
+        <translation type="vanished">版块权限</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.ui" line="73"/>
+        <location filename="../../dialog/userprofiledialog.ui" line="59"/>
         <source>Workspace Role</source>
         <translation>工区角色</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.ui" line="104"/>
+        <location filename="../../dialog/userprofiledialog.ui" line="73"/>
+        <source>Finance Permissions</source>
+        <translation>财务权限</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/userprofiledialog.ui" line="87"/>
+        <source>Task Permissions</source>
+        <translation>任务权限</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/userprofiledialog.ui" line="101"/>
+        <source>Inventory Permissions</source>
+        <translation>存货权限</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/userprofiledialog.ui" line="115"/>
+        <source>Partner Permissions</source>
+        <translation>合作权限</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/userprofiledialog.ui" line="129"/>
+        <source>Sale Permissions</source>
+        <translation>销售权限</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/userprofiledialog.ui" line="143"/>
+        <source>Purchase Permissions</source>
+        <translation>采购权限</translation>
+    </message>
+    <message>
+        <location filename="../../dialog/userprofiledialog.ui" line="190"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.cc" line="48"/>
+        <location filename="../../dialog/userprofiledialog.cc" line="54"/>
         <source>Invalid Input</source>
         <translation>输入无效</translation>
     </message>
     <message>
-        <location filename="../../dialog/userprofiledialog.cc" line="49"/>
+        <location filename="../../dialog/userprofiledialog.cc" line="55"/>
         <source>Username must be 3-32 characters, start with a letter, and contain only lowercase letters, digits, or underscores. No consecutive or trailing underscores.</source>
         <translation>用户名须为3-32位，以字母开头，只能包含小写字母、数字或下划线，不允许连续或结尾使用下划线。</translation>
     </message>
