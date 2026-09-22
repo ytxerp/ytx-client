@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QFlags>
 #include <QString>
 #include <span>
 
