@@ -44,5 +44,4 @@ struct PermissionItem {
 
 std::span<const PermissionItem> PermissionItems(Section section);
 QString PermissionsDisplay(Section section, int permissions);
-QString PermissionsDisplay(const Permissions& permissions);
 }

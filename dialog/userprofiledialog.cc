@@ -29,8 +29,14 @@ void UserProfileDialog::InitDialog()
     ui->lineEditUsername->setText(profile.Username());
     ui->lineEditName->setText(profile.Name());
 
-    ui->lineEditSectionPermissions->setText(section::PermissionsDisplay(profile.SectionPermissions()));
     ui->lineEditWorkspaceRole->setText(workspace::RoleDisplay(profile.WorkspaceRole()));
+
+    ui->lineEditFinancePermissions->setText(section::PermissionsDisplay(Section::kFinance, profile.SectionPermissions(Section::kFinance)));
+    ui->lineEditTaskPermissions->setText(section::PermissionsDisplay(Section::kTask, profile.SectionPermissions(Section::kTask)));
+    ui->lineEditInventoryPermissions->setText(section::PermissionsDisplay(Section::kInventory, profile.SectionPermissions(Section::kInventory)));
+    ui->lineEditPartnerPermissions->setText(section::PermissionsDisplay(Section::kPartner, profile.SectionPermissions(Section::kPartner)));
+    ui->lineEditSalePermissions->setText(section::PermissionsDisplay(Section::kSale, profile.SectionPermissions(Section::kSale)));
+    ui->lineEditPurchasePermissions->setText(section::PermissionsDisplay(Section::kPurchase, profile.SectionPermissions(Section::kPurchase)));
 
     ui->pushButtonSave->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
 }

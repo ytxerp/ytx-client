@@ -36,7 +36,6 @@ public:
     const QString& Name() const { return name_; }
     workspace::Role WorkspaceRole() const { return role_; }
 
-    section::Permissions SectionPermissions() const { return permissions_; }
     int SectionPermissions(Section section) const
     {
         switch (section) {

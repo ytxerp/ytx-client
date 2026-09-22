@@ -7,13 +7,13 @@ namespace section {
 std::span<const PermissionItem> PermissionItems(Section section)
 {
     static const PermissionItem basic[] = {
-        { 0b01, QObject::tr("R") },
-        { 0b11, QObject::tr("W") },
+        { 0b01, QObject::tr("Read Only") },
+        { 0b11, QObject::tr("Read Write") },
     };
 
     static const PermissionItem order[] = {
-        { 0b01, QObject::tr("R") },
-        { 0b11, QObject::tr("W") },
+        { 0b01, QObject::tr("Read Only") },
+        { 0b11, QObject::tr("Read Write") },
         { 1 << 2, QObject::tr("Release") },
         { 1 << 3, QObject::tr("Unrelease") },
         { 1 << 4, QObject::tr("Settle") },
@@ -60,28 +60,6 @@ QString PermissionsDisplay(Section section, int permissions)
     }
 
     return result.join(QStringLiteral(" | "));
-}
-
-QString PermissionsDisplay(const Permissions& permissions)
-{
-    QStringList result {};
-
-    const auto append = [&](Section section, int value) {
-        const QString text { PermissionsDisplay(section, value) };
-
-        if (!text.isEmpty()) {
-            result.emplaceBack(QStringLiteral("%1: %2").arg(Display(section), text));
-        }
-    };
-
-    append(Section::kFinance, permissions.finance);
-    append(Section::kTask, permissions.task);
-    append(Section::kInventory, permissions.inventory);
-    append(Section::kPartner, permissions.partner);
-    append(Section::kSale, permissions.sale);
-    append(Section::kPurchase, permissions.purchase);
-
-    return result.join(QStringLiteral("; "));
 }
 
 }
