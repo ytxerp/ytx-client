@@ -299,6 +299,18 @@ QToolBar::handle {
     image: url(:/solarized_dark/solarized_dark/handle-2.png);
 }
 
+/* ==================== QLineEdit ==================== */
+
+QLineEdit#lineEditUsername,
+QLineEdit#lineEditName {
+    border: 1px solid rgba(230, 145, 55, 0.65);
+}
+
+QLineEdit#lineEditUsername:focus,
+QLineEdit#lineEditName:focus {
+    border: 1px solid rgb(230, 145, 55);
+}
+
 /* ==================== Tab Bar ==================== */
 QTabBar::tab {
     min-width: 60px;
