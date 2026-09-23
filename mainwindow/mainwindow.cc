@@ -589,10 +589,10 @@ void MainWindow::on_actionPreferences_triggered()
 
     auto model { sc_->tree_model };
 
-    auto* dialog { new Preferences(model, sc_->info, app_config_, sc_->shared_config, sc_->section_config, this) };
+    auto* dialog { new Preferences(model, sc_->info, app_config_, sc_->shared_config, sc_->section_config, nullptr) };
 
     utils::ManageDialog(widget_hash_, dialog);
-    dialog->setWindowModality(Qt::WindowModal);
+    dialog->setModal(true);
 
     connect(dialog, &Preferences::SUpdateConfig, this, &MainWindow::RUpdateConfig);
     dialog->show();

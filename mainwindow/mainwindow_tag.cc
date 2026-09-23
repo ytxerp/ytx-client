@@ -17,28 +17,24 @@ void MainWindow::on_actionTags_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    static QPointer<TagDialog> dialog {};
+    auto* model { new tag::Model(start_, header_info_.tag, this) };
+    connect(model, &tag::Model::SInsertLocalTag, this, &MainWindow::RInsertLocalTag);
 
-    if (!dialog) {
-        auto* model { new tag::Model(start_, header_info_.tag, this) };
-        connect(model, &tag::Model::SInsertLocalTag, this, &MainWindow::RInsertLocalTag);
+    auto* dialog { new TagDialog(model) };
 
-        dialog = new TagDialog(model);
-        utils::ManageDialog(sc_->widget_hash, dialog);
+    utils::ManageDialog(sc_->widget_hash, dialog);
+    dialog->setModal(true);
 
-        auto* view { dialog->View() };
-        InitTableView(view, std::to_underlying(tag::RowField::kColor));
-        DelegateTag(view);
+    auto* view { dialog->View() };
+    InitTableView(view, std::to_underlying(tag::RowField::kColor));
+    DelegateTag(view);
 
-        // Most models are populated asynchronously after receiving data from the server.
-        // Tags are a special case: data is already available locally, so rebuild after
-        // view initialization to avoid the view's sorting state overriding the initial order.
-        model->Rebuild(sc_->tag_hash);
-    }
+    // Most models are populated asynchronously after receiving data from the server.
+    // Tags are a special case: data is already available locally, so rebuild after
+    // view initialization to avoid the view's sorting state overriding the initial order.
+    model->Rebuild(sc_->tag_hash);
 
     dialog->show();
-    dialog->raise();
-    dialog->activateWindow();
 }
 
 void MainWindow::RApplyTag(const QJsonObject& obj)

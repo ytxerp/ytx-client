@@ -39,17 +39,17 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
 
     switch (start_) {
     case Section::kFinance:
-        dialog = new InsertNodeFinance(arg, this);
+        dialog = new InsertNodeFinance(arg, nullptr);
         break;
     case Section::kTask:
-        dialog = new InsertNodeTask(arg, this);
+        dialog = new InsertNodeTask(arg, nullptr);
         break;
     case Section::kPartner:
-        dialog = new InsertNodeP(arg, this);
+        dialog = new InsertNodeP(arg, nullptr);
         key = WsKey::kPartnerNodeInsert;
         break;
     case Section::kInventory:
-        dialog = new InsertNodeI(arg, sc_->section_config.rate_decimal, this);
+        dialog = new InsertNodeI(arg, sc_->section_config.rate_decimal, nullptr);
         break;
     case Section::kSale:
     case Section::kPurchase:
@@ -57,7 +57,7 @@ void MainWindow::InsertNodeFIPT(const QModelIndex& parent_index)
     }
 
     utils::ManageDialog(sc_->widget_hash, dialog);
-    dialog->setWindowModality(Qt::WindowModal);
+    dialog->setModal(true);
 
     connect(dialog, &QDialog::accepted, this, [this, node, parent_node, key]() {
         const auto message { JsonGen::NodeInsert(start_, node, parent_node->id) };
@@ -115,10 +115,10 @@ void MainWindow::EditNameFIPT()
     CString name { model->Name(node_id) };
     const auto children_name { ChildrenName(parent_node) };
 
-    auto* dialog { new EditNodeName(name, parent_path, children_name, this) };
+    auto* dialog { new EditNodeName(name, parent_path, children_name, nullptr) };
 
     utils::ManageDialog(sc_->widget_hash, dialog);
-    dialog->setWindowModality(Qt::WindowModal);
+    dialog->setModal(true);
 
     connect(dialog, &QDialog::accepted, this, [this, node_id, dialog, node]() {
         const auto message { JsonGen::NodeName(start_, node_id, dialog->GetName(), node->version) };

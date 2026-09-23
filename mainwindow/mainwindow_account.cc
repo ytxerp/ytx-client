@@ -14,16 +14,12 @@ void MainWindow::on_actionProfile_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    static QPointer<UserProfileDialog> dialog {};
+    auto* dialog { new UserProfileDialog() };
 
-    if (!dialog) {
-        dialog = new UserProfileDialog();
-        utils::ManageDialog(widget_hash_, dialog);
-    }
+    utils::ManageDialog(widget_hash_, dialog);
+    dialog->setModal(true);
 
     dialog->show();
-    dialog->raise();
-    dialog->activateWindow();
 }
 
 void MainWindow::RAccountName(const QString& name) { ui->actionName->setText(tr("Name", "Person") + ": " + name); }
@@ -63,24 +59,19 @@ void MainWindow::on_actionWorkspaceManager_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    static QPointer<WorkspaceDialog> dialog {};
+    auto* dialog { new WorkspaceDialog(header_info_.workspace) };
 
-    if (!dialog) {
-        dialog = new WorkspaceDialog(header_info_.workspace);
+    const auto widget_id { utils::ManageDialog(widget_hash_, dialog) };
+    dialog->setModal(true);
 
-        const auto widget_id { utils::ManageDialog(widget_hash_, dialog) };
-        const auto message { JsonGen::WorkspaceMemberAck(widget_id, LoginInfo::Instance().Workspace()) };
+    const auto message { JsonGen::WorkspaceMemberAck(widget_id, LoginInfo::Instance().Workspace()) };
+    WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberAck, message);
 
-        WebSocket::Instance()->SendMessage(WsKey::kWorkspaceMemberAck, message);
-
-        auto* view { dialog->View() };
-        InitTableView(view, std::to_underlying(workspace::MemberField::kWorkspaceRole));
-        DelegateWorkspaceMember(view);
-    }
+    auto* view { dialog->View() };
+    InitTableView(view, std::to_underlying(workspace::MemberField::kWorkspaceRole));
+    DelegateWorkspaceMember(view);
 
     dialog->show();
-    dialog->raise();
-    dialog->activateWindow();
 }
 
 void MainWindow::RWorkspaceMemberAck(const QUuid& widget_id, const QJsonArray& array)

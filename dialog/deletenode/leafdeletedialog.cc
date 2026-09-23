@@ -114,7 +114,6 @@ void LeafDeleteDialog::ReplaceNode()
             .arg(path, new_path) };
 
     auto* dlg { new ExactMatchConfirmDialog(info, tr("Replace"), this) };
-    dlg->setWindowModality(Qt::WindowModal);
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, path]() {
@@ -130,7 +129,7 @@ void LeafDeleteDialog::ReplaceNode()
         WebSocket::Instance()->SendMessage(WsKey::kLeafReplace, message);
     });
 
-    dlg->show();
+    dlg->open();
 }
 
 void LeafDeleteDialog::DeleteNode()
@@ -172,8 +171,7 @@ void LeafDeleteDialog::DeleteNode()
         break;
     }
 
-    auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), this) };
-    dlg->setWindowModality(Qt::WindowModal);
+    auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), nullptr) };
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, path]() {
@@ -205,7 +203,7 @@ void LeafDeleteDialog::DeleteNode()
         close();
     });
 
-    dlg->show();
+    dlg->open();
 }
 
 void LeafDeleteDialog::on_pBtnOk_clicked()

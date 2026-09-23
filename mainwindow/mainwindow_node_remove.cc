@@ -58,10 +58,10 @@ void MainWindow::RDenyLeafDelete(const QJsonObject& obj)
     if (!node || !node->IsValid())
         return;
 
-    auto* dialog { new LeafDeleteDialog(section_contex->info, obj, model, node, this) };
+    auto* dialog { new LeafDeleteDialog(section_contex->info, obj, model, node, nullptr) };
 
     utils::ManageDialog(sc_->widget_hash, dialog);
-    dialog->setWindowModality(Qt::WindowModal);
+    dialog->setModal(true);
 
     connect(dialog, &QDialog::rejected, this, [=] { node->sync_state = SyncState::kSynced; });
     dialog->show();

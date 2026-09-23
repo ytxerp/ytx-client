@@ -62,8 +62,7 @@ void TagDialog::on_pBtnDelete_clicked()
             .arg(tag->name) };
 
     auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), this) };
-    dlg->setWindowModality(Qt::WindowModal);
     dlg->setAttribute(Qt::WA_DeleteOnClose);
     connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, idx]() { model_->removeRows(idx.row(), 1); });
-    dlg->show();
+    dlg->open();
 }

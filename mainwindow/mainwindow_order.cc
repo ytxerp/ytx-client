@@ -20,10 +20,10 @@ void MainWindow::EditNameO()
 
     auto model { sc_->tree_model };
 
-    auto* dialog { new EditNodeNameO(node->name, this) };
+    auto* dialog { new EditNodeNameO(node->name, nullptr) };
 
     utils::ManageDialog(sc_->widget_hash, dialog);
-    dialog->setWindowModality(Qt::WindowModal);
+    dialog->setModal(true);
 
     connect(dialog, &QDialog::accepted, this, [this, dialog, node]() {
         const auto message { JsonGen::NodeName(start_, node->id, dialog->GetName(), node->version) };
@@ -70,10 +70,10 @@ void MainWindow::on_actionNewBranch_triggered()
 
     const auto children_name { ChildrenName(parent_node) };
 
-    auto* dialog { new InsertNodeBranch(node, unit_model, parent_path, children_name, this) };
+    auto* dialog { new InsertNodeBranch(node, unit_model, parent_path, children_name, nullptr) };
 
     utils::ManageDialog(sc_->widget_hash, dialog);
-    dialog->setWindowModality(Qt::WindowModal);
+    dialog->setModal(true);
 
     connect(dialog, &QDialog::accepted, this, [this, node]() {
         const auto message { JsonGen::NodeInsert(start_, node, node->parent->id) };
