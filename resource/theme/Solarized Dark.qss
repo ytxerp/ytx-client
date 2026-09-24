@@ -301,13 +301,13 @@ QToolBar::handle {
 
 /* ==================== QLineEdit ==================== */
 
-QLineEdit#lineEditUsername,
-QLineEdit#lineEditName {
+QLineEdit#lineEditProfileUsername,
+QLineEdit#lineEditProfileName {
     border: 1px solid rgba(230, 145, 55, 0.65);
 }
 
-QLineEdit#lineEditUsername:focus,
-QLineEdit#lineEditName:focus {
+QLineEdit#lineEditProfileUsername:focus,
+QLineEdit#lineEditProfileName:focus {
     border: 1px solid rgb(230, 145, 55);
 }
 

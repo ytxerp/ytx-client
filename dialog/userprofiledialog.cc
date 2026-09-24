@@ -26,8 +26,8 @@ void UserProfileDialog::InitDialog()
     const auto& login_info { LoginInfo::Instance() };
 
     ui->lineEditEmail->setText(login_info.Email());
-    ui->lineEditUsername->setText(profile.Username());
-    ui->lineEditName->setText(profile.Name());
+    ui->lineEditProfileUsername->setText(profile.Username());
+    ui->lineEditProfileName->setText(profile.Name());
 
     ui->lineEditWorkspaceRole->setText(workspace::RoleDisplay(profile.WorkspaceRole()));
 
@@ -43,7 +43,7 @@ void UserProfileDialog::InitDialog()
 
 void UserProfileDialog::EditUsernameFinished()
 {
-    const auto username { ui->lineEditUsername->text().trimmed() };
+    const auto username { ui->lineEditProfileUsername->text().trimmed() };
     if (username == UserProfile::Instance().Username() || username.isEmpty()) {
         return;
     }
@@ -66,7 +66,7 @@ void UserProfileDialog::EditUsernameFinished()
 
 void UserProfileDialog::EditNameFinished()
 {
-    const auto name { ui->lineEditName->text().trimmed() };
+    const auto name { ui->lineEditProfileName->text().trimmed() };
     if (name == UserProfile::Instance().Name()) {
         return;
     }
