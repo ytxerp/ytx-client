@@ -42,41 +42,58 @@ QTableView* TableWidgetO::View() const { return ui->tableViewO; }
 
 void TableWidgetO::ReleaseSucceeded(int version)
 {
-    qDebug() << "TableWidgetO::ReleaseSucceeded";
+    qDebug() << Q_FUNC_INFO;
 
-    MarkSynced(version);
+    SyncSucceeded(version);
+    ui->rBtnRO->setEnabled(false);
+    ui->rBtnFO->setEnabled(false);
     LockWidgets(OrderStatus::kReleased);
     tmp_node_->order_status = OrderStatus::kReleased;
 }
 
 void TableWidgetO::RecallSucceeded(int version)
 {
-    qDebug() << "TableWidgetO::RecallSucceeded";
+    qDebug() << Q_FUNC_INFO;
 
-    MarkSynced(version);
+    SyncSucceeded(version);
     LockWidgets(OrderStatus::kRecalled);
     tmp_node_->order_status = OrderStatus::kRecalled;
 }
 
 void TableWidgetO::SaveSucceeded(int version)
 {
-    qDebug() << "TableWidgetO::SaveSucceeded";
-    MarkSynced(version);
+    qDebug() << Q_FUNC_INFO;
+
+    SyncSucceeded(version);
 }
 
-void TableWidgetO::MarkSynced(int version)
+void TableWidgetO::PermissionDenied()
+{
+    qDebug() << Q_FUNC_INFO;
+
+    tmp_node_->sync_state = SyncState::kSynced;
+    SetUpdating(false);
+}
+
+void TableWidgetO::SyncSucceeded(int version)
 {
     ui->pBtnPrint->setFocus();
 
+    table_model_order_->SyncSucceeded();
+
+    has_pending_update_ = false;
+    pending_update_ = QJsonObject();
+
     tmp_node_->version = version;
     tmp_node_->sync_state = SyncState::kSynced;
+
+    SetUpdating(false);
 }
 
-void TableWidgetO::MarkUpdating()
+void TableWidgetO::SetUpdating(bool updating)
 {
-    tmp_node_->sync_state = SyncState::kUpdating;
-    has_pending_update_ = false;
-    ui->tableViewO->clearSelection();
+    ui->tableViewO->setEnabled(!updating);
+    ui->groupBoxView->setEnabled(!updating);
 }
 
 bool TableWidgetO::HasPendingUpdate() const
@@ -433,13 +450,15 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
     }
 
+    SetUpdating(true);
+
     pending_update_.insert(kStatus, std::to_underlying(OrderStatus::kRecalled));
 
     qDebug() << Q_FUNC_INFO << tmp_node_->version;
 
     WebSocket::Instance()->SendMessage(WsKey::kOrderRecall, JsonGen::OrderRecall(section_, node_id_, pending_update_, tmp_node_->version));
 
-    MarkUpdating();
+    tmp_node_->sync_state = SyncState::kUpdating;
 }
 
 bool TableWidgetO::ValidatePartner() const
@@ -493,6 +512,8 @@ void TableWidgetO::SaveOrder()
     if (!ValidateUnitPrice())
         return;
 
+    SetUpdating(true);
+
     Q_ASSERT(tmp_node_->order_status != OrderStatus::kReleased);
 
     QJsonObject order_message {};
@@ -505,8 +526,6 @@ void TableWidgetO::SaveOrder()
 
         const auto key { tmp_node_->order_status == OrderStatus::kUnreleased ? WsKey::kUnreleasedOrderSave : WsKey::kRecalledOrderSave };
         WebSocket::Instance()->SendMessage(key, order_message);
-
-        pending_update_ = QJsonObject();
     }
 
     if (tmp_node_->sync_state == SyncState::kCreating) {
@@ -518,7 +537,7 @@ void TableWidgetO::SaveOrder()
 
     qInfo() << Q_FUNC_INFO << tmp_node_->version;
 
-    MarkUpdating();
+    tmp_node_->sync_state = SyncState::kUpdating;
 }
 
 void TableWidgetO::on_pBtnRelease_clicked()
@@ -534,6 +553,8 @@ void TableWidgetO::on_pBtnRelease_clicked()
     if (!ValidateUnitPrice())
         return;
 
+    SetUpdating(true);
+
     Q_ASSERT(tmp_node_->order_status != OrderStatus::kReleased);
 
     QJsonObject order_message {};
@@ -547,8 +568,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
         const auto key { tmp_node_->order_status == OrderStatus::kUnreleased ? WsKey::kUnreleasedOrderRelease : WsKey::kRecalledOrderRelease };
         WebSocket::Instance()->SendMessage(key, order_message);
-
-        pending_update_ = QJsonObject();
     }
 
     if (tmp_node_->sync_state == SyncState::kCreating) {
@@ -556,14 +575,11 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
         BuildNodeInsert(order_message);
         WebSocket::Instance()->SendMessage(WsKey::kOrderInsertRelease, order_message);
-
-        ui->rBtnRO->setEnabled(false);
-        ui->rBtnFO->setEnabled(false);
     }
 
     qInfo() << Q_FUNC_INFO << tmp_node_->version;
 
-    MarkUpdating();
+    tmp_node_->sync_state = SyncState::kUpdating;
 }
 
 void TableWidgetO::on_comboTemplate_currentIndexChanged(int /*index*/)

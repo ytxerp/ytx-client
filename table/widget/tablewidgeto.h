@@ -74,6 +74,7 @@ public:
     void ReleaseSucceeded(int version);
     void RecallSucceeded(int version);
     void SaveSucceeded(int version);
+    void PermissionDenied();
 
     bool HasPendingUpdate() const;
     void SaveOrder();
@@ -115,8 +116,8 @@ private:
     bool ValidatePartner() const;
     bool ValidateSyncState() const;
     bool ValidateUnitPrice() const;
-    void MarkSynced(int version);
-    void MarkUpdating();
+    void SyncSucceeded(int version);
+    void SetUpdating(bool updating);
 
 private:
     Ui::TableWidgetO* ui;

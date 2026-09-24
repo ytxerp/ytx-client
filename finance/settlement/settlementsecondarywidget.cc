@@ -195,8 +195,6 @@ void SettlementSecondaryWidget::on_pBtnRecall_clicked()
 
     QJsonObject message {};
 
-    model_->Finalize(message);
-
     message.insert(kAmount, settlement_.amount);
     message.insert(kWidgetId, widget_id_.toString(QUuid::WithoutBraces));
     message.insert(kSettlementId, settlement_.id.toString(QUuid::WithoutBraces));
@@ -204,7 +202,6 @@ void SettlementSecondaryWidget::on_pBtnRecall_clicked()
     message.insert(kSection, std::to_underlying(section_));
 
     WebSocket::Instance()->SendMessage(WsKey::kSettlementRecall, message);
-    pending_update_ = QJsonObject();
 
     settlement_.sync_state = SyncState::kUpdating;
 }
@@ -244,3 +241,5 @@ void SettlementSecondaryWidget::UpdateSucceeded(int version)
     LockWidget(true);
     emit SUpdatePrimaryRow(settlement_);
 }
+
+void SettlementSecondaryWidget::PermissionDenied() { settlement_.sync_state = SyncState::kSynced; }

@@ -86,6 +86,8 @@ signals:
     void SOrderSave(Section section, const QUuid& node_id, int version);
     void SOperationDeny();
     void SPermissionDeny();
+    void SOrderPermissionDeny(Section section, const QUuid& widget_id);
+    void SSettlementPermissionDeny(Section section, const QUuid& widget_id);
     void SNodeSelect(Section section, const QUuid& node_id);
     void SNodeLocate(Section section, const QUuid& node_id);
     void STreeSyncFinish();
@@ -175,6 +177,8 @@ private:
     void DenyOperation();
     void OnPermissionDeny();
     void FinishTreeSync();
+    void OnOrderPermissionDeny(const QJsonObject& obj);
+    void OnSettlementPermissionDeny(const QJsonObject& obj);
 
 private:
     void ApplySharedConfig(const QJsonArray& arr);

@@ -57,16 +57,11 @@ void TableModelO::Finalize(QJsonObject& message)
             case SyncState::kError:
                 break;
             }
-
-            entry->sync_state = SyncState::kSynced;
         }
 
         message.insert(kInsertedEntryArray, inserted_entry_array);
         message.insert(kUpdatedEntryArray, updated_entry_array);
     }
-
-    // clear
-    pending_delete_.clear();
 }
 
 bool TableModelO::HasZeroUnitPrice() const
@@ -463,4 +458,23 @@ void TableModelO::Purify()
         EntryPool::Instance().Recycle(entry_list_.takeAt(i), section_);
         endRemoveRows();
     }
+}
+
+void TableModelO::SyncSucceeded()
+{
+    for (auto* entry : std::as_const(entry_list_)) {
+        switch (entry->sync_state) {
+        case SyncState::kCreating:
+        case SyncState::kUpdating:
+            entry->sync_state = SyncState::kSynced;
+            break;
+
+        case SyncState::kSynced:
+        case SyncState::kDeleting:
+        case SyncState::kError:
+            break;
+        }
+    }
+
+    pending_delete_.clear();
 }

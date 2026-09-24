@@ -105,6 +105,7 @@ public:
     const QList<Entry*>& GetEntryList() const { return entry_list_; }
     void Purify();
     void Finalize(QJsonObject& message);
+    void SyncSucceeded();
     bool HasZeroUnitPrice() const;
     bool HasPendingUpdate() const;
     void SetNode(const NodeO* node) { d_node_ = node; }

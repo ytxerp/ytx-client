@@ -163,6 +163,8 @@ private slots:
     void RSaveOrder(Section section, const QUuid& node_id, int version);
     void RDenyOperation();
     void RPermissionDeny();
+    void ROrderPermissionDeny(Section section, const QUuid& widget_id);
+    void RSettlementPermissionDeny(Section section, const QUuid& widget_id);
 
     void RDenyLeafDelete(const QJsonObject& obj);
 

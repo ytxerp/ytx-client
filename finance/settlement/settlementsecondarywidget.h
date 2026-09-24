@@ -52,6 +52,7 @@ public:
     void InsertSucceeded(int version);
     void RecallSucceeded(int version);
     void UpdateSucceeded(int version);
+    void PermissionDenied();
 
 public slots:
     void RSyncAmount(double amount);

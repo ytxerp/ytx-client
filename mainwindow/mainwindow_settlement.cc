@@ -129,6 +129,23 @@ void MainWindow::RSettlementSecondary(Section section, const QUuid& widget_id, c
     model->Rebuild(array);
 }
 
+void MainWindow::RSettlementPermissionDeny(Section section, const QUuid& widget_id)
+{
+    auto* sc { GetSectionContex(section) };
+
+    auto widget { sc->widget_hash.value(widget_id).widget };
+    if (widget)
+        return;
+
+    auto* ptr { widget.data() };
+
+    Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
+    auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
+
+    d_widget->PermissionDenied();
+    RPermissionDeny();
+}
+
 void MainWindow::RInsertSettlement(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };

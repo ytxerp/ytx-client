@@ -142,6 +142,22 @@ void MainWindow::RPermissionDeny()
         QMessageBox::Information, tr("Permission Denied"), tr("You do not have permission to perform this operation."), time_const::kAutoCloseMs);
 }
 
+void MainWindow::ROrderPermissionDeny(Section section, const QUuid& widget_id)
+{
+    auto* sc { GetSectionContex(section) };
+
+    auto widget { sc->widget_hash.value(widget_id).widget };
+    if (!widget)
+        return;
+
+    Q_ASSERT(qobject_cast<TableWidgetO*>(widget.data()));
+    auto* d_widget { static_cast<TableWidgetO*>(widget.data()) };
+
+    d_widget->PermissionDenied();
+
+    RPermissionDeny();
+}
+
 void MainWindow::RSelectNode(Section section, const QUuid& node_id)
 {
     auto* sc { GetSectionContex(section) };
