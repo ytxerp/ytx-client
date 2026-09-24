@@ -45,6 +45,7 @@ void TableWidgetO::ReleaseSucceeded(int version)
     qDebug() << Q_FUNC_INFO;
 
     SyncSucceeded(version);
+
     ui->rBtnRO->setEnabled(false);
     ui->rBtnFO->setEnabled(false);
     LockWidgets(OrderStatus::kReleased);
@@ -72,7 +73,6 @@ void TableWidgetO::PermissionDenied()
     qDebug() << Q_FUNC_INFO;
 
     tmp_node_->sync_state = SyncState::kSynced;
-    SetUpdating(false);
 }
 
 void TableWidgetO::SyncSucceeded(int version)
@@ -86,14 +86,6 @@ void TableWidgetO::SyncSucceeded(int version)
 
     tmp_node_->version = version;
     tmp_node_->sync_state = SyncState::kSynced;
-
-    SetUpdating(false);
-}
-
-void TableWidgetO::SetUpdating(bool updating)
-{
-    ui->tableViewO->setEnabled(!updating);
-    ui->groupBoxView->setEnabled(!updating);
 }
 
 bool TableWidgetO::HasPendingUpdate() const
@@ -450,8 +442,6 @@ void TableWidgetO::on_pBtnRecall_clicked()
         return;
     }
 
-    SetUpdating(true);
-
     pending_update_.insert(kStatus, std::to_underlying(OrderStatus::kRecalled));
 
     qDebug() << Q_FUNC_INFO << tmp_node_->version;
@@ -512,8 +502,6 @@ void TableWidgetO::SaveOrder()
     if (!ValidateUnitPrice())
         return;
 
-    SetUpdating(true);
-
     Q_ASSERT(tmp_node_->order_status != OrderStatus::kReleased);
 
     QJsonObject order_message {};
@@ -552,8 +540,6 @@ void TableWidgetO::on_pBtnRelease_clicked()
 
     if (!ValidateUnitPrice())
         return;
-
-    SetUpdating(true);
 
     Q_ASSERT(tmp_node_->order_status != OrderStatus::kReleased);
 

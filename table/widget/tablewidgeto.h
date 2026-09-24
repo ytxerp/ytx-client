@@ -117,7 +117,6 @@ private:
     bool ValidateSyncState() const;
     bool ValidateUnitPrice() const;
     void SyncSucceeded(int version);
-    void SetUpdating(bool updating);
 
 private:
     Ui::TableWidgetO* ui;

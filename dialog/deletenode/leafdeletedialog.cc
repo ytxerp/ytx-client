@@ -171,7 +171,7 @@ void LeafDeleteDialog::DeleteNode()
         break;
     }
 
-    auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), nullptr) };
+    auto* dlg { new ExactMatchConfirmDialog(info, tr("Delete"), this) };
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(dlg, &ExactMatchConfirmDialog::accepted, this, [this, path]() {
