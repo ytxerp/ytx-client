@@ -134,7 +134,7 @@ void MainWindow::RSettlementPermissionDeny(Section section, const QUuid& widget_
     auto* sc { GetSectionContex(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
-    if (widget)
+    if (!widget)
         return;
 
     auto* ptr { widget.data() };
@@ -156,14 +156,15 @@ void MainWindow::RInsertSettlement(const QJsonObject& obj)
     auto* sc { GetSectionContex(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
-    if (widget) {
-        auto* ptr { widget.data() };
+    if (!widget)
+        return;
 
-        Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
-        auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
+    auto* ptr { widget.data() };
 
-        d_widget->InsertSucceeded(version);
-    }
+    Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
+    auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
+
+    d_widget->InsertSucceeded(version);
 }
 
 void MainWindow::RRecallSettlement(const QJsonObject& obj)
@@ -176,14 +177,15 @@ void MainWindow::RRecallSettlement(const QJsonObject& obj)
     auto* sc { GetSectionContex(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
-    if (widget) {
-        auto* ptr { widget.data() };
+    if (!widget)
+        return;
 
-        Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
-        auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
+    auto* ptr { widget.data() };
 
-        d_widget->RecallSucceeded(version);
-    }
+    Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
+    auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
+
+    d_widget->RecallSucceeded(version);
 }
 
 void MainWindow::RUpdateSettlement(const QJsonObject& obj)
@@ -197,14 +199,15 @@ void MainWindow::RUpdateSettlement(const QJsonObject& obj)
     auto* sc { GetSectionContex(section) };
 
     auto widget { sc->widget_hash.value(widget_id).widget };
-    if (widget) {
-        auto* ptr { widget.data() };
+    if (!widget)
+        return;
 
-        Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
-        auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
+    auto* ptr { widget.data() };
 
-        d_widget->UpdateSucceeded(version);
-    }
+    Q_ASSERT(qobject_cast<SettlementSecondaryWidget*>(ptr));
+    auto* d_widget { static_cast<SettlementSecondaryWidget*>(ptr) };
+
+    d_widget->UpdateSucceeded(version);
 }
 
 void MainWindow::RSettlementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array)
