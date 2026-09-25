@@ -179,6 +179,7 @@ private:
     void FinishTreeSync();
     void OnOrderPermissionDeny(const QJsonObject& obj);
     void OnSettlementPermissionDeny(const QJsonObject& obj);
+    void OnNodePermissionDeny(const QJsonObject& obj);
 
 private:
     void ApplySharedConfig(const QJsonArray& arr);

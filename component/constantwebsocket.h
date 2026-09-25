@@ -123,6 +123,7 @@ enum class WsKey : uint16_t {
     kPermissionDeny = 1710,
     kOrderPermissionDeny = 1720,
     kSettlementPermissionDeny = 1730,
+    kNodePermissionDeny = 1740,
 
     // --- Profile ---
     kAccountNameUpdate = 1800,
@@ -339,6 +340,8 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kOrderPermissionDeny";
     case WsKey::kSettlementPermissionDeny:
         return "kSettlementPermissionDeny";
+    case WsKey::kNodePermissionDeny:
+        return "kNodePermissionDeny";
 
         // --- Profile ---
     case WsKey::kAccountNameUpdate:

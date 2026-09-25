@@ -133,6 +133,7 @@ public:
 
     void Reset();
     void FlushTimers();
+    void PermissionDenied(const QUuid& node_id);
 
     inline bool Contains(const QUuid& node_id) const { return node_hash_.contains(node_id); }
     inline Node* GetNode(const QUuid& node_id) const

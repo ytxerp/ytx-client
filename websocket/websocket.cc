@@ -185,6 +185,7 @@ void WebSocket::InitHandler()
     handler_obj_[WsKey::kPermissionDeny] = [this](const QJsonObject& /*obj*/) { OnPermissionDeny(); };
     handler_obj_[WsKey::kOrderPermissionDeny] = [this](const QJsonObject& obj) { OnOrderPermissionDeny(obj); };
     handler_obj_[WsKey::kSettlementPermissionDeny] = [this](const QJsonObject& obj) { OnSettlementPermissionDeny(obj); };
+    handler_obj_[WsKey::kNodePermissionDeny] = [this](const QJsonObject& obj) { OnNodePermissionDeny(obj); };
     handler_obj_[WsKey::kTreeApply] = [this](const QJsonObject& obj) { ApplyTree(obj); };
 
     handler_obj_[WsKey::kTagApply] = [this](const QJsonObject& obj) { ApplyTag(obj); };
@@ -403,7 +404,7 @@ void WebSocket::FinishTreeSync() { emit STreeSyncFinish(); }
 void WebSocket::OnOrderPermissionDeny(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    const QUuid widget_id { obj.value(kWidgetId).toString() };
+    const QUuid widget_id { obj.value(kId).toString() };
 
     emit SOrderPermissionDeny(section, widget_id);
 }
@@ -411,9 +412,20 @@ void WebSocket::OnOrderPermissionDeny(const QJsonObject& obj)
 void WebSocket::OnSettlementPermissionDeny(const QJsonObject& obj)
 {
     const Section section { obj.value(kSection).toInt() };
-    const QUuid widget_id { obj.value(kWidgetId).toString() };
+    const QUuid widget_id { obj.value(kId).toString() };
 
     emit SSettlementPermissionDeny(section, widget_id);
+}
+
+void WebSocket::OnNodePermissionDeny(const QJsonObject& obj)
+{
+    const Section section { obj.value(kSection).toInt() };
+    const QUuid node_id { obj.value(kId).toString() };
+
+    auto tree_model { tree_model_hash_.value(section) };
+    Q_ASSERT(tree_model != nullptr);
+
+    tree_model->PermissionDenied(node_id);
 }
 
 void WebSocket::NotifyRegisterOutcome(const QJsonObject& obj)

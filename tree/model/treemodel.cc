@@ -956,6 +956,15 @@ void TreeModel::FlushTimers()
     }
 }
 
+void TreeModel::PermissionDenied(const QUuid& node_id)
+{
+    auto* node { node_hash_.value(node_id, nullptr) };
+    if (!node)
+        return;
+
+    node->sync_state = SyncState::kSynced;
+}
+
 void TreeModel::ApplyTree(const QJsonObject& data)
 {
     QHash<QUuid, Node*> new_hash {};
