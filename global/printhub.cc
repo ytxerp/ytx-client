@@ -313,10 +313,10 @@ qreal PrintHub::DrawHeader(QPainter* painter, qreal y, qreal page_width)
 
     qreal left_y { y };
     qreal right_y { y };
-    qreal title_bottom { y }; // 新增：单独记录标题占用的高度
+    qreal title_bottom { y };
 
     if (header_config_.show_partner) {
-        const QString text { QStringLiteral("客户：") + MasterDataRegistry::Instance().PartnerName(node_o_->partner_id) };
+        const QString text { QObject::tr("Customer: ") + MasterDataRegistry::Instance().PartnerName(node_o_->partner_id) };
         painter->drawText(QRectF(left, left_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter, text);
         left_y += line_height;
     }
@@ -334,31 +334,30 @@ qreal PrintHub::DrawHeader(QPainter* painter, qreal y, qreal page_width)
 
         painter->restore();
 
-        title_bottom = y + title_height; // 修复点：记下标题实际占用的高度
+        title_bottom = y + title_height;
     }
 
     if (header_config_.show_code) {
         painter->drawText(
-            QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter, QStringLiteral("单号：") + node_o_->code);
+            QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter, QObject::tr("Code: ") + node_o_->code);
         right_y += line_height;
     }
 
     if (header_config_.show_issued_time) {
         painter->drawText(QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter,
-            QStringLiteral("日期：") + node_o_->issued_time.toString(datetime_format::kDashedDate));
+            QObject::tr("Date: ") + node_o_->issued_time.toString(datetime_format::kDashedDate));
         right_y += line_height;
     }
 
     if (header_config_.show_settlement) {
         const QString settlement { node::UnitString(NodeUnit(node_o_->unit)) };
         painter->drawText(
-            QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter, QStringLiteral("结算：") + settlement);
+            QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter, QObject::tr("Settlement: ") + settlement);
         right_y += line_height;
     }
 
     painter->restore();
 
-    // 修复点：三列（含标题）取最大值，不再遗漏标题高度
     return std::max({ left_y, right_y, title_bottom }) + 6;
 }
 
