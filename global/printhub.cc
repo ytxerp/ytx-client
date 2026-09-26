@@ -83,267 +83,691 @@ bool PrintHub::LoadTemplate(const QString& template_name)
     if (template_name.isEmpty())
         return false;
 
-    if (template_name == current_template_) {
+    if (template_name == current_template_)
         return true;
-    }
 
-    page_values_.clear();
-    field_position_.clear();
-    column_widths_.clear();
-    row_height_ = 30;
-
-    // Page settings
     QSettings settings(template_name, QSettings::IniFormat);
+
     if (settings.status() != QSettings::NoError) {
-        qDebug() << "Failed to load template:" << template_name;
+        qWarning() << "Failed to load print template:" << template_name;
         return false;
     }
 
-    {
-        settings.beginGroup(QStringLiteral("page"));
+    ReadPageConfig(settings);
+    ReadCompanyConfig(settings);
+    ReadHeaderConfig(settings);
+    ReadTableConfig(settings);
+    ReadTotalConfig(settings);
+    ReadRemarkConfig(settings);
+    ReadFooterConfig(settings);
 
-        page_values_[QStringLiteral("page_size")] = settings.value(QStringLiteral("page_size"), QStringLiteral("A5"));
-        page_values_[QStringLiteral("orientation")] = settings.value(QStringLiteral("orientation"), QStringLiteral("Portrait"));
-        page_values_[QStringLiteral("font_size")] = settings.value(QStringLiteral("font_size"), 12);
-
-        settings.endGroup();
-    }
-
-    static const QList<QString> header_fields { QStringLiteral("partner"), QStringLiteral("issued_time"), QStringLiteral("code") };
-    static const QList<QString> table_fields { QStringLiteral("left_top"), QStringLiteral("rows_columns") };
-    static const QList<QString> footer_fields { QStringLiteral("employee"), QStringLiteral("unit"), QStringLiteral("initial_total"),
-        QStringLiteral("initial_total_upper"), QStringLiteral("page_info") };
-
-    // Read fields for header section
-    for (const QString& field : header_fields) {
-        ReadFieldPosition(settings, QStringLiteral("header"), field);
-    }
-
-    // Read fields for table section
-    for (const QString& field : table_fields) {
-        ReadFieldPosition(settings, QStringLiteral("table"), field);
-    }
-
-    {
-        settings.beginGroup(QStringLiteral("table"));
-        row_height_ = settings.value(QStringLiteral("row_height")).toInt();
-
-        const auto col_string { settings.value(QStringLiteral("column_widths")).toStringList() };
-        column_widths_.reserve(col_string.size());
-
-        std::ranges::transform(col_string, std::back_inserter(column_widths_), [](const auto& s) { return s.toInt(); });
-        settings.endGroup();
-    }
-
-    // Read fields for footer section
-    for (const QString& field : footer_fields) {
-        ReadFieldPosition(settings, QStringLiteral("footer"), field);
+    if (table_config_.columns.size() != table_config_.column_widths.size()) {
+        qWarning() << "Print template column count does not match column width count:" << table_config_.columns.size() << table_config_.column_widths.size();
+        return false;
     }
 
     current_template_ = template_name;
     return true;
 }
 
-void PrintHub::RenderAllPages(QPrinter* printer)
+void PrintHub::ReadPageConfig(QSettings& settings)
 {
-    // Fetch configuration values for rows and columns
-    const int rows { GetFieldX(QStringLiteral("rows_columns")) };
-    if (rows == 0)
-        return;
+    settings.beginGroup(QStringLiteral("page"));
 
-    // Calculate total pages required based on the total rows and rows per page
-    const long long total_pages { (entry_list_.size() + rows - 1) / rows }; // Ceiling division to determine total pages
+    page_config_.page_size = settings.value(QStringLiteral("page_size"), QStringLiteral("A5")).toString();
 
-    QPainter painter(printer);
-    painter.setPen(QPen(Qt::black, 0));
+    page_config_.orientation = settings.value(QStringLiteral("orientation"), QStringLiteral("landscape")).toString();
 
-    // Start rendering each page
-    for (long long page_num = 0; page_num != total_pages; ++page_num) {
-        // Begin a new page
-        if (page_num != 0) {
-            printer->newPage();
-        }
+    page_config_.font_size = settings.value(QStringLiteral("font_size"), 12).toInt();
 
-        // Draw header (e.g., title, date, etc.)
-        DrawHeader(&painter);
+    page_config_.margin_left = settings.value(QStringLiteral("margin_left"), 20).toInt();
 
-        // Draw content on the page
-        const long long start_index { page_num * rows };
-        const long long end_index { qMin((page_num + 1) * rows, entry_list_.size()) };
-        DrawTable(&painter, start_index, end_index);
+    page_config_.margin_right = settings.value(QStringLiteral("margin_right"), 20).toInt();
 
-        // Draw footer (e.g., page number, etc.)
-        DrawFooter(&painter, page_num + 1, total_pages);
-    }
+    page_config_.margin_top = settings.value(QStringLiteral("margin_top"), 15).toInt();
+
+    page_config_.margin_bottom = settings.value(QStringLiteral("margin_bottom"), 15).toInt();
+
+    settings.endGroup();
 }
 
-void PrintHub::DrawHeader(QPainter* painter)
+void PrintHub::ReadCompanyConfig(QSettings& settings)
+{
+    settings.beginGroup(QStringLiteral("company"));
+
+    company_config_.show_logo = settings.value(QStringLiteral("show_logo"), true).toBool();
+
+    company_config_.logo = settings.value(QStringLiteral("logo")).toString();
+
+    company_config_.show_name = settings.value(QStringLiteral("show_name"), true).toBool();
+
+    company_config_.name = settings.value(QStringLiteral("name")).toString();
+
+    company_config_.show_address = settings.value(QStringLiteral("show_address"), true).toBool();
+
+    company_config_.address = settings.value(QStringLiteral("address")).toString();
+
+    company_config_.show_phone = settings.value(QStringLiteral("show_phone"), true).toBool();
+
+    company_config_.phone = settings.value(QStringLiteral("phone")).toString();
+
+    settings.endGroup();
+}
+
+void PrintHub::ReadHeaderConfig(QSettings& settings)
+{
+    settings.beginGroup(QStringLiteral("header"));
+
+    header_config_.show_title = settings.value(QStringLiteral("show_title"), true).toBool();
+
+    header_config_.title = settings.value(QStringLiteral("title")).toString();
+
+    header_config_.show_partner = settings.value(QStringLiteral("show_partner"), true).toBool();
+
+    header_config_.show_code = settings.value(QStringLiteral("show_code"), true).toBool();
+
+    header_config_.show_issued_time = settings.value(QStringLiteral("show_issued_time"), true).toBool();
+
+    header_config_.show_settlement = settings.value(QStringLiteral("show_settlement"), true).toBool();
+
+    settings.endGroup();
+}
+
+void PrintHub::ReadTableConfig(QSettings& settings)
+{
+    settings.beginGroup(QStringLiteral("table"));
+
+    table_config_.show_border = settings.value(QStringLiteral("show_border"), true).toBool();
+
+    table_config_.show_header = settings.value(QStringLiteral("show_header"), true).toBool();
+
+    table_config_.row_height = settings.value(QStringLiteral("row_height"), 30).toInt();
+
+    table_config_.columns = settings.value(QStringLiteral("columns")).toStringList();
+
+    const auto widths = settings.value(QStringLiteral("column_widths")).toStringList();
+
+    table_config_.column_widths.clear();
+    table_config_.column_widths.reserve(widths.size());
+
+    std::ranges::transform(widths, std::back_inserter(table_config_.column_widths), [](const QString& value) { return value.toInt(); });
+
+    settings.endGroup();
+
+    settings.beginGroup(QStringLiteral("column_titles"));
+
+    table_config_.column_titles.clear();
+
+    for (const auto& column : std::as_const(table_config_.columns)) {
+        table_config_.column_titles.insert(column, settings.value(column, column).toString());
+    }
+
+    settings.endGroup();
+}
+
+void PrintHub::ReadTotalConfig(QSettings& settings)
+{
+    settings.beginGroup(QStringLiteral("total"));
+
+    total_config_.enabled = settings.value(QStringLiteral("enabled"), true).toBool();
+
+    total_config_.show_title = settings.value(QStringLiteral("show_title"), true).toBool();
+
+    total_config_.title = settings.value(QStringLiteral("title")).toString();
+
+    total_config_.show_upper = settings.value(QStringLiteral("show_upper"), true).toBool();
+
+    total_config_.show_amount = settings.value(QStringLiteral("show_amount"), true).toBool();
+
+    settings.endGroup();
+}
+
+void PrintHub::ReadRemarkConfig(QSettings& settings)
+{
+    settings.beginGroup(QStringLiteral("remark"));
+
+    remark_config_.enabled = settings.value(QStringLiteral("enabled"), true).toBool();
+
+    remark_config_.show_title = settings.value(QStringLiteral("show_title"), true).toBool();
+
+    remark_config_.title = settings.value(QStringLiteral("title")).toString();
+
+    remark_config_.text = settings.value(QStringLiteral("text")).toString();
+
+    remark_config_.padding = settings.value(QStringLiteral("padding"), 6).toInt();
+
+    remark_config_.show_border = settings.value(QStringLiteral("show_border"), true).toBool();
+
+    settings.endGroup();
+}
+
+void PrintHub::ReadFooterConfig(QSettings& settings)
+{
+    settings.beginGroup(QStringLiteral("footer"));
+
+    footer_config_.show_employee = settings.value(QStringLiteral("show_employee"), true).toBool();
+
+    footer_config_.employee_title = settings.value(QStringLiteral("employee_title")).toString();
+
+    footer_config_.show_page_info = settings.value(QStringLiteral("show_page_info"), true).toBool();
+
+    settings.endGroup();
+}
+
+qreal PrintHub::DrawCompany(QPainter* painter, qreal y, qreal page_width)
 {
     painter->save();
 
-    DrawText(painter, QStringLiteral("partner"), MasterDataRegistry::Instance().PartnerName(node_o_->partner_id));
-    DrawText(painter, QStringLiteral("issued_time"), node_o_->issued_time.toString(datetime_format::kDashedDate));
-    DrawText(painter, QStringLiteral("code"), node_o_->code);
+    const qreal left { static_cast<qreal>(page_config_.margin_left) };
+    const qreal width { page_width - page_config_.margin_left - page_config_.margin_right };
+
+    const QFont original_font { painter->font() };
+    const qreal line_height { QFontMetricsF(original_font).height() };
+
+    if (company_config_.show_logo && !company_config_.logo.trimmed().isEmpty()) {
+        // Logo drawing can be added here.
+        // y += logoHeight + spacing;
+    }
+
+    if (company_config_.show_name && !company_config_.name.trimmed().isEmpty()) {
+        QFont font { original_font };
+        font.setBold(true);
+        font.setPointSize(original_font.pointSize() + 2);
+        painter->setFont(font);
+
+        const QFontMetricsF fm(font);
+        const qreal height { fm.height() };
+
+        painter->drawText(QRectF(left, y, width, height), Qt::AlignCenter, company_config_.name);
+
+        y += height + 2;
+        painter->setFont(original_font);
+    }
+
+    if (company_config_.show_address && !company_config_.address.trimmed().isEmpty()) {
+        painter->drawText(QRectF(left, y, width, line_height), Qt::AlignCenter, company_config_.address);
+
+        y += line_height;
+    }
+
+    if (company_config_.show_phone && !company_config_.phone.trimmed().isEmpty()) {
+        painter->drawText(QRectF(left, y, width, line_height), Qt::AlignCenter, company_config_.phone);
+
+        y += line_height;
+    }
 
     painter->restore();
+
+    return y;
 }
 
-/*!
- * \brief Draw table rows with auto-fit text (shrink to fit cell width)
- *
- * Table columns (left to right):
- * 0: Internal Sku    - Internal product SKU/code
- * 1: External Sku    - Customer/external product SKU/code
- * 2: Description     - Product description
- * 3: Count           - Quantity count
- * 4: Measure         - Unit of measure
- * 5: Unit Price      - Price per unit
- * 6: Amount          - Total amount (Count × Unit Price)
- *
- * \param painter Painter object for drawing
- * \param start_index Start index in entry_list_
- * \param end_index End index in entry_list_ (exclusive)
- *
- * \note Text automatically shrinks to fit column width (min font size: 1pt)
- * \note Numbers are right-aligned, text is left-aligned
- */
-void PrintHub::DrawTable(QPainter* painter, long long start_index, long long end_index)
+qreal PrintHub::DrawHeader(QPainter* painter, qreal y, qreal page_width)
 {
     painter->save();
 
-    const int columns { GetFieldY(QStringLiteral("rows_columns"), 0) };
-    const int left { GetFieldX(QStringLiteral("left_top"), 0) };
-    const int top { GetFieldY(QStringLiteral("left_top"), 0) };
+    const qreal left { static_cast<qreal>(page_config_.margin_left) };
+    const qreal width { page_width - page_config_.margin_left - page_config_.margin_right };
 
-    const QFont original_font { painter->font() }; // Save original font
-    const QFontMetrics fm(original_font);
-    const int max_font_size { original_font.pointSize() };
-    const int padding { 4 }; // Cell padding
+    const qreal line_height { QFontMetricsF(painter->font()).height() + 4 };
+    const qreal column_width { width / 3.0 };
+
+    qreal left_y { y };
+    qreal right_y { y };
+    qreal title_bottom { y }; // 新增：单独记录标题占用的高度
+
+    if (header_config_.show_partner) {
+        const QString text { QStringLiteral("客户：") + MasterDataRegistry::Instance().PartnerName(node_o_->partner_id) };
+        painter->drawText(QRectF(left, left_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter, text);
+        left_y += line_height;
+    }
+
+    if (header_config_.show_title && !header_config_.title.trimmed().isEmpty()) {
+        QFont font { painter->font() };
+        font.setBold(true);
+        font.setPointSize(font.pointSize() + 2);
+
+        painter->save();
+        painter->setFont(font);
+
+        const qreal title_height { line_height * 2 };
+        painter->drawText(QRectF(left + column_width, y, column_width, title_height), Qt::AlignCenter, header_config_.title);
+
+        painter->restore();
+
+        title_bottom = y + title_height; // 修复点：记下标题实际占用的高度
+    }
+
+    if (header_config_.show_code) {
+        painter->drawText(
+            QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter, QStringLiteral("单号：") + node_o_->code);
+        right_y += line_height;
+    }
+
+    if (header_config_.show_issued_time) {
+        painter->drawText(QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter,
+            QStringLiteral("日期：") + node_o_->issued_time.toString(datetime_format::kDashedDate));
+        right_y += line_height;
+    }
+
+    if (header_config_.show_settlement) {
+        const QString settlement { node::UnitString(NodeUnit(node_o_->unit)) };
+        painter->drawText(
+            QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter, QStringLiteral("结算：") + settlement);
+        right_y += line_height;
+    }
+
+    painter->restore();
+
+    // 修复点：三列（含标题）取最大值，不再遗漏标题高度
+    return std::max({ left_y, right_y, title_bottom }) + 6;
+}
+
+qreal PrintHub::DrawTable(QPainter* painter, qreal y, qreal page_width, qsizetype start_index, qsizetype end_index)
+{
+    painter->save();
+
+    const qreal left { static_cast<qreal>(page_config_.margin_left) };
+    const qreal available_width { page_width - page_config_.margin_left - page_config_.margin_right };
+
+    const auto widths { CalculateColumnWidths(available_width) };
+
+    if (widths.size() != table_config_.columns.size()) {
+        painter->restore();
+        return y;
+    }
+
+    const QFont original_font { painter->font() };
+    constexpr qreal padding { 4.0 };
+
+    auto draw_cell = [&](const QRectF& rect, const QString& text, Qt::Alignment alignment, bool bold = false) {
+        painter->save();
+
+        if (table_config_.show_border)
+            painter->drawRect(rect);
+
+        QFont font { original_font };
+        font.setBold(bold);
+        painter->setFont(font);
+
+        painter->drawText(rect.adjusted(padding, 0, -padding, 0), static_cast<int>(alignment | Qt::AlignVCenter), text);
+
+        painter->restore();
+    };
+
+    // Column header
+    if (table_config_.show_header) {
+        qreal x { left };
+
+        for (qsizetype col = 0; col < table_config_.columns.size(); ++col) {
+            const auto& column { table_config_.columns.at(col) };
+
+            const QRectF rect { x, y, widths.at(col), static_cast<qreal>(table_config_.row_height) };
+
+            draw_cell(rect, table_config_.column_titles.value(column, column), Qt::AlignCenter, true);
+
+            x += widths.at(col);
+        }
+
+        y += table_config_.row_height;
+    }
 
     const auto& master { MasterDataRegistry::Instance() };
     const auto& partner { PartnerInventoryRegistry::Instance() };
 
-    for (int row = 0; row != end_index - start_index; ++row) {
-        const auto* entry { entry_list_.at(start_index + row) };
-        int x { left };
+    for (qsizetype row = start_index; row < end_index; ++row) {
+        const auto* entry { entry_list_.at(row) };
 
-        for (int col = 0; col != columns; ++col) {
-            const int col_width { column_widths_.at(col) };
-            if (col_width <= 0) {
-                continue;
-            }
+        qreal x { left };
 
-            const QRect cell_rect(x, top + row * row_height_, col_width, row_height_);
-            const QString text { GetColumnText(col, entry, master, partner) };
-            const int text_width { fm.horizontalAdvance(text) };
-            const int available_width { col_width - padding * 2 };
+        for (qsizetype col = 0; col < table_config_.columns.size(); ++col) {
+            const auto& column { table_config_.columns.at(col) };
 
-            // Find and apply best font size
-            if (text_width > available_width) {
-                // Reset to original font for each cell
-                QFont font { original_font };
-                const int best_size { FindBestFontSize(painter, text, available_width, max_font_size) };
+            const QString text { GetColumnText(column, entry, master, partner) };
 
-                font.setPointSize(best_size);
-                painter->setFont(font);
+            const QRectF rect { x, y, widths.at(col), static_cast<qreal>(table_config_.row_height) };
 
-                qDebug() << "Shrink font:"
-                         << "Text=" << text << "ColWidth=" << col_width << "TextWidth=" << text_width << "BestSize=" << best_size;
-            } else {
-                painter->setFont(original_font);
+            Qt::Alignment alignment { Qt::AlignLeft };
 
-                qDebug() << "Use original font:"
-                         << "Text=" << text << "ColWidth=" << col_width << "TextWidth=" << text_width;
-            }
+            if (IsNumber(text))
+                alignment = Qt::AlignRight;
 
-            // Determine alignment
-            Qt::Alignment align { Qt::AlignVCenter };
-            align |= IsNumber(text) ? Qt::AlignRight : Qt::AlignLeft;
+            draw_cell(rect, text, alignment);
 
-            painter->drawText(cell_rect, static_cast<int>(align), text);
-
-            x += col_width;
+            x += widths.at(col);
         }
+
+        y += table_config_.row_height;
     }
 
-    // Restore original painter
     painter->restore();
+
+    return y;
 }
 
-void PrintHub::DrawFooter(QPainter* painter, int page_num, int total_pages)
+qreal PrintHub::MeasureCompanyHeight(const QFont& base_font) const
+{
+    qreal height { 0.0 };
+    const qreal line_height { QFontMetricsF(base_font).height() };
+
+    if (company_config_.show_name && !company_config_.name.trimmed().isEmpty()) {
+        QFont font { base_font };
+        font.setBold(true);
+        font.setPointSize(base_font.pointSize() + 2);
+        height += QFontMetricsF(font).height() + 2;
+    }
+
+    if (company_config_.show_address && !company_config_.address.trimmed().isEmpty())
+        height += line_height;
+
+    if (company_config_.show_phone && !company_config_.phone.trimmed().isEmpty())
+        height += line_height;
+
+    return height;
+}
+
+qreal PrintHub::MeasureHeaderHeight(const QFont& base_font) const
+{
+    const qreal line_height { QFontMetricsF(base_font).height() + 4 };
+
+    qreal left_h { 0.0 };
+    qreal right_h { 0.0 };
+    qreal title_h { 0.0 };
+
+    if (header_config_.show_partner)
+        left_h += line_height;
+
+    if (header_config_.show_code)
+        right_h += line_height;
+    if (header_config_.show_issued_time)
+        right_h += line_height;
+    if (header_config_.show_settlement)
+        right_h += line_height;
+
+    if (header_config_.show_title && !header_config_.title.trimmed().isEmpty())
+        title_h = line_height * 2;
+
+    return std::max({ left_h, right_h, title_h }) + 6;
+}
+
+qreal PrintHub::MeasureRemarkHeight(const QFont& base_font, qreal page_width) const
+{
+    if (!remark_config_.enabled || remark_config_.text.trimmed().isEmpty())
+        return 0.0;
+
+    const qreal width { page_width - page_config_.margin_left - page_config_.margin_right };
+    const qreal text_width { width - remark_config_.padding * 2 };
+
+    QString text {};
+    if (remark_config_.show_title && !remark_config_.title.trimmed().isEmpty()) {
+        text += remark_config_.title;
+        text += '\n';
+    }
+    text += remark_config_.text;
+
+    const QFontMetricsF fm(base_font);
+    const QRectF bounds { fm.boundingRect(QRectF(0, 0, text_width, 10000), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, text) };
+
+    return bounds.height() + remark_config_.padding * 2;
+}
+
+qreal PrintHub::MeasureFooterHeight(const QFont& base_font) const
+{
+    if (!footer_config_.show_employee && !footer_config_.show_page_info)
+        return 0.0;
+
+    return QFontMetricsF(base_font).height() + 6;
+}
+
+qreal PrintHub::DrawTotal(QPainter* painter, qreal y, qreal page_width)
+{
+    if (!total_config_.enabled)
+        return y;
+
+    painter->save();
+
+    const qreal left { static_cast<qreal>(page_config_.margin_left) };
+    const qreal width { page_width - page_config_.margin_left - page_config_.margin_right };
+
+    const qreal height { static_cast<qreal>(table_config_.row_height) };
+
+    const QString amount { QString::number(node_o_->initial_total, 'f', section_config_->amount_decimal) };
+
+    QStringList parts {};
+
+    if (total_config_.show_title && !total_config_.title.trimmed().isEmpty()) {
+        parts.append(total_config_.title);
+    }
+
+    if (total_config_.show_upper) {
+        parts.append(QStringLiteral("大写：") + NumberToChineseUpper(node_o_->initial_total));
+    }
+
+    if (total_config_.show_amount)
+        parts.append(QStringLiteral("¥") + amount);
+
+    if (!parts.isEmpty()) {
+        const QRectF rect { left, y, width, height };
+
+        if (table_config_.show_border)
+            painter->drawRect(rect);
+
+        QFont font { painter->font() };
+        font.setBold(true);
+        painter->setFont(font);
+
+        painter->drawText(rect.adjusted(4, 0, -4, 0), Qt::AlignRight | Qt::AlignVCenter, parts.join(QStringLiteral("    ")));
+
+        y += height;
+    }
+
+    painter->restore();
+
+    return y;
+}
+
+qreal PrintHub::DrawRemark(QPainter* painter, qreal y, qreal page_width)
+{
+    if (!remark_config_.enabled || remark_config_.text.trimmed().isEmpty()) {
+        return y;
+    }
+
+    painter->save();
+
+    const qreal left { static_cast<qreal>(page_config_.margin_left) };
+    const qreal width { page_width - page_config_.margin_left - page_config_.margin_right };
+
+    QString text {};
+
+    if (remark_config_.show_title && !remark_config_.title.trimmed().isEmpty()) {
+        text += remark_config_.title;
+        text += '\n';
+    }
+
+    text += remark_config_.text;
+
+    const qreal text_width { width - remark_config_.padding * 2 };
+
+    const QFontMetricsF fm { painter->font() };
+
+    const QRectF text_bounds { fm.boundingRect(QRectF(0, 0, text_width, 10000), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, text) };
+
+    const qreal height { text_bounds.height() + remark_config_.padding * 2 };
+
+    const QRectF rect { left, y, width, height };
+
+    if (remark_config_.show_border)
+        painter->drawRect(rect);
+
+    painter->drawText(rect.adjusted(remark_config_.padding, remark_config_.padding, -remark_config_.padding, -remark_config_.padding),
+        Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, text);
+
+    painter->restore();
+
+    return y + height;
+}
+
+qreal PrintHub::DrawFooter(QPainter* painter, qreal y, qreal page_width, int page_num, int total_pages)
 {
     painter->save();
 
-    DrawText(painter, QStringLiteral("employee"), MasterDataRegistry::Instance().PartnerName(node_o_->employee_id));
+    const qreal left { static_cast<qreal>(page_config_.margin_left) };
+    const qreal width { page_width - page_config_.margin_left - page_config_.margin_right };
 
-    // unit, direction_rule
-    {
-        const QString text { node::UnitString(NodeUnit(node_o_->unit)) + "/" + node::DirectionRuleString(node_o_->direction_rule) };
-        DrawText(painter, QStringLiteral("unit"), text);
-    }
+    const qreal line_height { QFontMetricsF(painter->font()).height() + 6 };
 
-    const QString amount_str { QString::number(node_o_->initial_total, 'f', section_config_->amount_decimal) };
+    if (footer_config_.show_employee) {
+        const QString employee { MasterDataRegistry::Instance().PartnerName(node_o_->employee_id) };
 
-    DrawText(painter, QStringLiteral("initial_total"), amount_str);
-    DrawText(painter, QStringLiteral("initial_total_upper"), QStringLiteral("大写：") + NumberToChineseUpper(amount_str.toDouble()));
-    DrawText(painter, QStringLiteral("page_info"), QString::asprintf("%d/%d", page_num, total_pages));
-
-    painter->restore();
-}
-
-int PrintHub::FindBestFontSize(QPainter* painter, const QString& text, int max_width, int max_font, int min_font)
-{
-    // Binary search boundaries
-    int low { min_font };
-    int high { max_font };
-    int best { min_font }; // Best font size found so far
-
-    // Copy current painter font
-    QFont font { painter->font() };
-
-    // Perform binary search to find the largest font size that fits
-    while (low <= high) {
-        const int mid { (low + high) / 2 }; // Middle font size to test
-        font.setPointSize(mid);
-
-        const QFontMetrics fm { font };
-        const int text_width { fm.horizontalAdvance(text) }; // Width of text in current font
-
-        if (text_width <= max_width) {
-            // Current font fits, try a larger size
-            best = mid;
-            low = mid + 1;
-        } else {
-            // Too wide, try a smaller size
-            high = mid - 1;
+        if (!employee.isEmpty()) {
+            painter->drawText(QRectF(left, y, width / 2, line_height), Qt::AlignLeft | Qt::AlignVCenter, footer_config_.employee_title + employee);
         }
     }
 
-    return best; // Return the largest font size that fits
+    if (footer_config_.show_page_info) {
+        painter->drawText(
+            QRectF(left + width / 2, y, width / 2, line_height), Qt::AlignRight | Qt::AlignVCenter, QStringLiteral("%1/%2").arg(page_num).arg(total_pages));
+    }
+
+    painter->restore();
+
+    return y + line_height;
 }
 
-QString PrintHub::GetColumnText(int col, const Entry* entry, const MasterDataRegistry& master, const PartnerInventoryRegistry& partner) const
+void PrintHub::RenderAllPages(QPrinter* printer)
+{
+    if (!node_o_)
+        return;
+
+    QPainter painter(printer);
+    painter.setPen(QPen(Qt::black, 0));
+
+    QFont font { painter.font() };
+    font.setPointSize(page_config_.font_size);
+    painter.setFont(font);
+
+    const QRectF page_rect { printer->pageLayout().paintRectPixels(printer->resolution()) };
+    const qreal page_width { page_rect.width() };
+    const qreal page_height { page_rect.height() };
+
+    const qreal top_margin { static_cast<qreal>(page_config_.margin_top) };
+    const qreal bottom_margin { static_cast<qreal>(page_config_.margin_bottom) };
+
+    const qreal footer_height { MeasureFooterHeight(font) };
+    const qreal content_bottom_limit { page_height - bottom_margin - footer_height };
+
+    const auto widths { CalculateColumnWidths(page_width - page_config_.margin_left - page_config_.margin_right) };
+    if (!table_config_.columns.isEmpty() && widths.size() != table_config_.columns.size()) {
+        qWarning() << "Print aborted: column width configuration is invalid.";
+        return;
+    }
+
+    const qreal row_h { static_cast<qreal>(table_config_.row_height) };
+    const qreal table_header_h { table_config_.show_header ? row_h : 0.0 };
+    const qsizetype total_rows { entry_list_.size() };
+
+    // ---- 第一步：纯计算 ----
+    // 公司信息 + 抬头现在每页都重复，所以每页表格起始位置固定不变
+    const qreal company_h { MeasureCompanyHeight(font) };
+    const qreal header_h { MeasureHeaderHeight(font) };
+    const qreal table_top_per_page { top_margin + company_h + header_h };
+
+    auto RowsCapacity = [&](qreal table_top) -> qsizetype {
+        const qreal avail { content_bottom_limit - table_top - table_header_h };
+        if (avail <= 0 || row_h <= 0)
+            return 0;
+        return static_cast<qsizetype>(avail / row_h);
+    };
+
+    const qsizetype cap { std::max<qsizetype>(RowsCapacity(table_top_per_page), 1) };
+
+    int total_pages { total_rows > 0 ? static_cast<int>((total_rows + cap - 1) / cap) : 1 };
+
+    // 合计+备注能否挤进最后一页表格之后
+    const qreal summary_h { (total_config_.enabled ? row_h : 0.0) + MeasureRemarkHeight(font, page_width) };
+
+    qsizetype last_page_rows { total_rows % cap };
+    if (total_rows > 0 && last_page_rows == 0)
+        last_page_rows = cap; // 整除时最后一页仍是满的
+
+    const qreal last_page_table_bottom { table_top_per_page + table_header_h + last_page_rows * row_h };
+    const bool summary_needs_new_page { last_page_table_bottom + summary_h > content_bottom_limit };
+    if (summary_needs_new_page)
+        total_pages += 1;
+
+    // ---- 第二步：正式绘制，每页都重复公司信息 + 抬头 ----
+    qsizetype start_index { 0 };
+    int page_num { 1 };
+
+    while (true) {
+        qreal y { top_margin };
+        y = DrawCompany(&painter, y, page_width);
+        y = DrawHeader(&painter, y, page_width);
+
+        const qsizetype end_index { std::min(start_index + cap, total_rows) };
+
+        qreal cur_y { DrawTable(&painter, y, page_width, start_index, end_index) };
+
+        const bool is_last_row_page { end_index >= total_rows };
+
+        if (is_last_row_page && !summary_needs_new_page) {
+            cur_y = DrawTotal(&painter, cur_y, page_width);
+            DrawRemark(&painter, cur_y, page_width);
+
+            DrawFooter(&painter, content_bottom_limit, page_width, page_num, total_pages);
+
+            break;
+        }
+
+        DrawFooter(&painter, content_bottom_limit, page_width, page_num, total_pages);
+
+        if (is_last_row_page && summary_needs_new_page) {
+            printer->newPage();
+            page_num++;
+
+            qreal y2 { top_margin };
+            y2 = DrawCompany(&painter, y2, page_width);
+            y2 = DrawHeader(&painter, y2, page_width);
+            y2 = DrawTotal(&painter, y2, page_width);
+
+            DrawRemark(&painter, y2, page_width);
+
+            DrawFooter(&painter, content_bottom_limit, page_width, page_num, total_pages);
+
+            break;
+        }
+
+        printer->newPage();
+        page_num++;
+        start_index = end_index;
+    }
+}
+
+QString PrintHub::GetColumnText(const QString& column, const Entry* entry, const MasterDataRegistry& master, const PartnerInventoryRegistry& partner) const
 {
     const auto* d_entry { static_cast<const EntryO*>(entry) };
 
-    switch (col) {
-    case 0:
+    if (column == QStringLiteral("internal_sku"))
         return master.InventoryPath(entry->rhs_node);
-    case 1:
+
+    if (column == QStringLiteral("external_sku"))
         return partner.ExternalSku(node_o_->partner_id, entry->rhs_node);
-    case 2:
+
+    if (column == QStringLiteral("description"))
         return entry->description;
-    case 3:
+
+    if (column == QStringLiteral("count"))
         return QString::number(d_entry->count, 'f', section_config_->quantity_decimal);
-    case 4:
+
+    if (column == QStringLiteral("measure"))
         return QString::number(d_entry->measure, 'f', section_config_->quantity_decimal);
-    case 5:
+
+    if (column == QStringLiteral("unit_price"))
         return QString::number(d_entry->unit_price, 'f', section_config_->rate_decimal);
-    case 6:
+
+    if (column == QStringLiteral("amount"))
         return QString::number(d_entry->initial, 'f', section_config_->amount_decimal);
-    default:
-        return {};
-    }
+
+    return {};
 }
 
 QString PrintHub::NumberToChineseUpper(double value)
@@ -479,70 +903,41 @@ QString PrintHub::ConvertSection(int section, const QStringList& digits)
     return result;
 }
 
-void PrintHub::DrawText(QPainter* painter, const QString& field, const QString& text)
-{
-    const auto& opt_pos { field_position_.value(field) };
-    if (!opt_pos.has_value()) {
-        qDebug() << "Field not found in config:" << field;
-        return;
-    }
-
-    const FieldPosition& pos { *opt_pos };
-    if (pos.x == 0 && pos.y == 0) {
-        return;
-    }
-
-    qDebug() << "Drawing field:" << field << "at position:" << pos.x << "," << pos.y << "text:" << text;
-    painter->drawText(pos.x, pos.y, text);
-}
-
 void PrintHub::ApplyConfig(QPrinter* printer)
 {
     QPageLayout layout { printer->pageLayout() };
 
-    const QString orientation { page_values_.value(QStringLiteral("orientation")).toString().toLower() };
-    const QString page_size { page_values_.value(QStringLiteral("page_size")).toString().toLower() };
+    layout.setOrientation(
+        page_config_.orientation.compare(QStringLiteral("landscape"), Qt::CaseInsensitive) == 0 ? QPageLayout::Landscape : QPageLayout::Portrait);
 
-    layout.setOrientation(orientation == QStringLiteral("landscape") ? QPageLayout::Landscape : QPageLayout::Portrait);
-    layout.setPageSize(QPageSize(page_size == QStringLiteral("a4") ? QPageSize::A4 : QPageSize::A5));
+    layout.setPageSize(QPageSize(page_config_.page_size.compare(QStringLiteral("A4"), Qt::CaseInsensitive) == 0 ? QPageSize::A4 : QPageSize::A5));
 
     printer->setPageLayout(layout);
 }
 
-void PrintHub::ReadFieldPosition(QSettings& settings, const QString& group, const QString& field)
+QList<qreal> PrintHub::CalculateColumnWidths(qreal available_width) const
 {
-    settings.beginGroup(group);
+    QList<qreal> result {};
 
-    // Check if the key exists in settings
-    if (!settings.contains(field)) {
-        qWarning() << "Position setting not found, group:" << group << "field:" << field;
-        field_position_[field] = std::nullopt;
-        settings.endGroup();
-        return;
-    }
+    if (table_config_.column_widths.isEmpty())
+        return result;
 
-    // Read the position value from the settings
-    const auto position { settings.value(field).value<QVariantList>() };
-    if (position.size() != 2) {
-        qWarning() << "Non valid position value for field_group:" << group << "field:" << field;
-        field_position_[field] = std::nullopt;
-        settings.endGroup();
-        return;
-    }
+    const auto total = std::accumulate(table_config_.column_widths.cbegin(), table_config_.column_widths.cend(), 0.0);
 
-    // Try to convert the position parts to integers
-    bool x_ok {};
-    bool y_ok {};
-    const int x { position[0].toInt(&x_ok) };
-    const int y { position[1].toInt(&y_ok) };
+    if (total <= 0.0)
+        return result;
 
-    // Only store if both x and y are valid integers
-    if (x_ok && y_ok) {
-        field_position_[field] = FieldPosition(x, y);
-    } else {
-        qWarning() << "Invalid position coordinates, group:" << group << "field:" << field << "value:" << position;
-        field_position_[field] = std::nullopt;
-    }
+    result.reserve(table_config_.column_widths.size());
 
-    settings.endGroup();
+    for (const auto width : table_config_.column_widths)
+        result.append(available_width * width / total);
+
+    return result;
+}
+
+bool PrintHub::IsNumber(const QString& text)
+{
+    bool ok {};
+    text.toDouble(&ok);
+    return ok;
 }
