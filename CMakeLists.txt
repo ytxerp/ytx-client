@@ -230,6 +230,7 @@ set(HEADERS
     global/nodepool.h
     global/partner_inventory_registry.h
     global/password_encryption.h
+    global/printfull.h
     global/printhub.h
     global/resourcepool.h
     global/tablesstation.h
@@ -418,6 +419,7 @@ set(SOURCES
     global/logininfo.cc
     global/partner_inventory_registry.cc
     global/password_encryption.cc
+    global/printfull.cc
     global/printhub.cc
     global/tablesstation.cc
     history/orderhistorywidget.cc
