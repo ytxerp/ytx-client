@@ -1,7 +1,9 @@
 #include "printfull.h"
+
 #include <QtGui/qpainter.h>
 
 #include "component/constantstring.h"
+#include "printhub.h"
 #include "utils/nodeutils.h"
 
 void PrintFull::ReadCompanyConfig(QSettings& settings)
@@ -317,7 +319,7 @@ qreal PrintFull::DrawTable(QPainter* painter, qreal y, qreal page_width, qsizety
 
             Qt::Alignment alignment { Qt::AlignLeft };
 
-            if (IsNumber(text))
+            if (PrintHub::IsNumber(text))
                 alignment = Qt::AlignRight;
 
             draw_cell(rect, text, alignment);
@@ -428,7 +430,7 @@ qreal PrintFull::DrawTotal(QPainter* painter, qreal y, qreal page_width)
     }
 
     if (total_config_.show_upper) {
-        parts.append(QObject::tr("Uppercase: ") + NumberToChineseUpper(node_o_->initial_total));
+        parts.append(QObject::tr("Uppercase: ") + PrintHub::NumberToChineseUpper(node_o_->initial_total));
     }
 
     if (total_config_.show_amount)
@@ -659,139 +661,6 @@ QString PrintFull::GetColumnText(const QString& column, const Entry* entry, cons
     return {};
 }
 
-QString PrintFull::NumberToChineseUpper(double value)
-{
-    // Handle negative values
-    if (value < 0) {
-        return "负" + NumberToChineseUpper(-value);
-    }
-
-    // Check if amount is too large
-    if (value >= 1e15) {
-        return "金额过大";
-    }
-
-    // Static constants initialized once
-    static const QStringList digits { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖" };
-    static const QStringList big_units { "", "万", "亿", "兆" };
-    static const QRegularExpression multi_zero("零{2,}");
-    static const QRegularExpression zero_before_unit("零([万亿兆])");
-    static const QRegularExpression trailing_zero("零+$");
-
-    // Separate integer and decimal parts
-    const qint64 integer { static_cast<qint64>(value) };
-    const int fraction { qRound((value - static_cast<double>(integer)) * 100) };
-
-    QString result {};
-    result.reserve(64);
-
-    // Convert integer part
-    if (integer == 0) {
-        result = "零元";
-    } else {
-        QString temp {};
-        temp.reserve(48);
-
-        qint64 remaining { integer };
-        int section_idx { 0 };
-        bool need_zero { false }; // Flag to indicate if zero should be prepended
-
-        while (remaining > 0) {
-            const int section { static_cast<int>(remaining % 10000) };
-            remaining /= 10000;
-
-            if (section > 0) {
-                QString section_str { ConvertSection(section, digits) };
-
-                // Prepend zero if previous sections were empty
-                if (need_zero) {
-                    section_str = "零" + section_str;
-                }
-
-                section_str += big_units[section_idx];
-                temp = section_str + temp;
-                need_zero = false;
-            } else if (!temp.isEmpty()) {
-                // Current section is zero but has following content
-                need_zero = true;
-            }
-
-            section_idx++;
-        }
-
-        // Clean up redundant zeros
-        temp.replace(multi_zero, "零");
-        temp.replace(zero_before_unit, "\\1");
-        temp.remove(trailing_zero);
-
-        result = temp + "元";
-    }
-
-    // Convert decimal part (jiao and fen)
-    if (fraction == 0) {
-        result += "整";
-    } else {
-        const int jiao { fraction / 10 };
-        const int fen { fraction % 10 };
-
-        if (jiao > 0) {
-            result += digits[jiao] + "角";
-            if (fen > 0) {
-                result += digits[fen] + "分";
-            }
-        } else {
-            // Zero jiao but non-zero fen requires explicit zero
-            result += "零" + digits[fen] + "分";
-        }
-    }
-
-    return result;
-}
-
-QString PrintFull::ConvertSection(int section, const QStringList& digits)
-{
-    if (section == 0 || section > 9999) {
-        return QString();
-    }
-
-    QString result {};
-    result.reserve(16);
-
-    // Extract individual digits
-    const int qian { section / 1000 }; // Thousands digit
-    const int bai { (section / 100) % 10 }; // Hundreds digit
-    const int shi { (section / 10) % 10 }; // Tens digit
-    const int ge { section % 10 }; // Ones digit
-
-    // Process thousands place
-    if (qian > 0) {
-        result += digits[qian] + "仟";
-    }
-
-    // Process hundreds place
-    if (bai > 0) {
-        result += digits[bai] + "佰";
-    } else if (qian > 0 && (shi > 0 || ge > 0)) {
-        // Zero in hundreds but has higher and lower non-zero digits
-        result += "零";
-    }
-
-    // Process tens place
-    if (shi > 0) {
-        result += digits[shi] + "拾";
-    } else if (bai > 0 && ge > 0) {
-        // Zero in tens but has higher and lower non-zero digits
-        result += "零";
-    }
-
-    // Process ones place
-    if (ge > 0) {
-        result += digits[ge];
-    }
-
-    return result;
-}
-
 QList<qreal> PrintFull::CalculateColumnWidths(qreal available_width) const
 {
     QList<qreal> result {};
@@ -810,13 +679,6 @@ QList<qreal> PrintFull::CalculateColumnWidths(qreal available_width) const
         result.append(available_width * width / total);
 
     return result;
-}
-
-bool PrintFull::IsNumber(const QString& text)
-{
-    bool ok {};
-    text.toDouble(&ok);
-    return ok;
 }
 
 bool PrintFull::LoadTemplate(QSettings& settings)

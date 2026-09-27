@@ -47,6 +47,10 @@ public:
     void Preview();
     void Print();
 
+    static bool IsNumber(const QString& text);
+    static QString NumberToChineseUpper(double value);
+    static int FindBestFontSize(QPainter* painter, const QString& text, int max_width, int max_font, int min_font = 1);
+
 private:
     enum class PrintMode {
         kFull,
@@ -71,6 +75,7 @@ private:
     void ApplyConfig(QPrinter* printer);
 
     void ReadPageConfig(QSettings& settings);
+    static QString ConvertSection(int section, const QStringList& digits);
 
 private:
     PageConfig page_config_ {};

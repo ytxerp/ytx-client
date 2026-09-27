@@ -139,12 +139,7 @@ private:
     qreal DrawFooter(QPainter* painter, qreal y, qreal page_width, int page_num, int total_pages);
 
     QString GetColumnText(const QString& column, const Entry* entry, const MasterDataRegistry& master, const PartnerInventoryRegistry& partner) const;
-
     QList<qreal> CalculateColumnWidths(qreal available_width) const;
-
-    static bool IsNumber(const QString& text);
-    static QString NumberToChineseUpper(double value);
-    static QString ConvertSection(int section, const QStringList& digits);
 
 private:
     LayoutConfig layout_config_ {};
