@@ -216,7 +216,7 @@ qreal PrintFull::DrawHeader(QPainter* painter, qreal y, qreal page_width)
     if (header_config_.show_title && !header_config_.title.trimmed().isEmpty()) {
         QFont font { painter->font() };
         font.setBold(true);
-        font.setPointSize(font.pointSize() + 2);
+        font.setPointSize(font.pointSize() + 6);
 
         painter->save();
         painter->setFont(font);
