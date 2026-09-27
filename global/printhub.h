@@ -48,6 +48,11 @@ public:
     void Print();
 
 private:
+    enum class PrintMode {
+        kFull,
+        kOverlay,
+    };
+
     struct PageConfig {
         QString page_size { "A5" };
         QString orientation { "landscape" };
@@ -58,6 +63,8 @@ private:
         int margin_right { 20 };
         int margin_top { 15 };
         int margin_bottom { 15 };
+
+        PrintMode print_mode { PrintMode::kFull };
     };
 
     struct CompanyConfig {
