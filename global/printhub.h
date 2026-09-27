@@ -23,6 +23,7 @@
 #include <QSettings>
 
 #include "component/config.h"
+#include "global/printoverlay.h"
 #include "printfull.h"
 #include "table/entry.h"
 
@@ -76,6 +77,7 @@ private:
     QMap<QString, QString> template_map_ {};
 
     PrintFull full_ {};
+    PrintOverlay overlay_ {};
 
     CAppConfig* app_config_ {};
     CSectionConfig* section_config_ {};

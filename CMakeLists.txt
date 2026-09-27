@@ -232,6 +232,7 @@ set(HEADERS
     global/password_encryption.h
     global/printfull.h
     global/printhub.h
+    global/printoverlay.h
     global/resourcepool.h
     global/tablesstation.h
     global/userprofile.h
@@ -421,6 +422,7 @@ set(SOURCES
     global/password_encryption.cc
     global/printfull.cc
     global/printhub.cc
+    global/printoverlay.cc
     global/tablesstation.cc
     history/orderhistorywidget.cc
     history/ordermodel.cc

@@ -1,14 +1,5 @@
 #include "printfull.h"
-
-#include <QCoreApplication>
-#include <QDir>
-#include <QFile>
-#include <QFont>
-#include <QPainter>
-#include <QPrintDialog>
-#include <QPrintPreviewDialog>
-#include <QPrinterInfo>
-#include <QVariant>
+#include <QtGui/qpainter.h>
 
 #include "component/constantstring.h"
 #include "utils/nodeutils.h"

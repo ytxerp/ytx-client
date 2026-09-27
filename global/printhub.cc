@@ -1,14 +1,10 @@
 #include "printhub.h"
 
-#include <QCoreApplication>
-#include <QDir>
-#include <QFile>
-#include <QFont>
-#include <QPainter>
-#include <QPrintDialog>
-#include <QPrintPreviewDialog>
-#include <QPrinterInfo>
-#include <QVariant>
+#include <QtCore/qdir.h>
+#include <QtPrintSupport/qprintdialog.h>
+#include <QtPrintSupport/qprinterinfo.h>
+#include <QtPrintSupport/qprintpreviewdialog.h>
+#include <QtWidgets/qapplication.h>
 
 void PrintHub::SetValue(const NodeO* node_o, const QList<Entry*>& entry_list)
 {
@@ -47,6 +43,19 @@ void PrintHub::Print()
     }
 
     RenderAllPages(&printer);
+}
+
+void PrintHub::RenderAllPages(QPrinter* printer)
+{
+    switch (page_config_.print_mode) {
+    case PrintMode::kFull:
+        full_.Render(printer, node_o_, entry_list_, section_config_);
+        break;
+
+    case PrintMode::kOverlay:
+        overlay_.Render(printer, node_o_, entry_list_, section_config_);
+        break;
+    }
 }
 
 void PrintHub::ScanTemplate()
@@ -89,8 +98,13 @@ bool PrintHub::LoadTemplate(const QString& template_name)
 
     ReadPageConfig(settings);
 
-    if (!full_.LoadTemplate(settings))
-        return false;
+    switch (page_config_.print_mode) {
+    case PrintMode::kFull:
+        return full_.LoadTemplate(settings);
+
+    case PrintMode::kOverlay:
+        return overlay_.LoadTemplate(settings);
+    }
 
     return true;
 }
@@ -102,6 +116,10 @@ void PrintHub::ReadPageConfig(QSettings& settings)
     page_config_.page_size = settings.value(QStringLiteral("page_size"), QStringLiteral("A5")).toString();
 
     page_config_.orientation = settings.value(QStringLiteral("orientation"), QStringLiteral("landscape")).toString();
+
+    const QString mode { settings.value(QStringLiteral("mode"), QStringLiteral("full")).toString() };
+
+    page_config_.print_mode = mode.compare(QStringLiteral("overlay"), Qt::CaseInsensitive) == 0 ? PrintMode::kOverlay : PrintMode::kFull;
 
     settings.endGroup();
 }

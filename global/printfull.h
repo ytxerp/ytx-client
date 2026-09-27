@@ -26,6 +26,7 @@
 #include "global/masterdataregistry.h"
 #include "global/partner_inventory_registry.h"
 #include "table/entry.h"
+#include "tree/node.h"
 
 class PrintFull {
 public:
