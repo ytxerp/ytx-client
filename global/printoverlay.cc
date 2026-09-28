@@ -39,9 +39,25 @@ bool PrintOverlay::LoadTemplate(QSettings& settings)
     row_height_ = settings.value(QStringLiteral("row_height"), 30).toInt();
 
     columns_ = settings.value(QStringLiteral("columns")).toStringList();
-    const auto widths { settings.value(QStringLiteral("column_widths")).toStringList() };
+    for (QString& column : columns_)
+        column = column.trimmed();
+
+    const QStringList widths { settings.value(QStringLiteral("column_widths")).toStringList() };
     column_widths_.reserve(widths.size());
-    std::ranges::transform(widths, std::back_inserter(column_widths_), [](const QString& value) { return value.toInt(); });
+
+    bool widths_valid { true };
+    for (const QString& value : widths) {
+        bool ok {};
+        const int width { value.trimmed().toInt(&ok) };
+
+        if (!ok) {
+            qWarning() << "Invalid column width value:" << value;
+            widths_valid = false;
+            break;
+        }
+
+        column_widths_.emplaceBack(width);
+    }
 
     settings.endGroup();
 
@@ -55,6 +71,10 @@ bool PrintOverlay::LoadTemplate(QSettings& settings)
     ReadFieldPosition(settings, QStringLiteral("page_info"));
 
     settings.endGroup();
+
+    if (!widths_valid) {
+        return false;
+    }
 
     if (rows_ <= 0 || row_height_ <= 0) {
         qWarning() << "Invalid overlay table configuration:"
@@ -170,14 +190,8 @@ void PrintOverlay::DrawTable(QPainter* painter, long long start_index, long long
 
                 font.setPointSize(best_size);
                 painter->setFont(font);
-
-                qDebug() << "Shrink font:"
-                         << "Text=" << text << "ColWidth=" << col_width << "TextWidth=" << text_width << "BestSize=" << best_size;
             } else {
                 painter->setFont(original_font);
-
-                qDebug() << "Use original font:"
-                         << "Text=" << text << "ColWidth=" << col_width << "TextWidth=" << text_width;
             }
 
             Qt::Alignment align { Qt::AlignVCenter };
@@ -277,10 +291,10 @@ void PrintOverlay::ReadFieldPosition(QSettings& settings, const QString& field)
         return;
     }
 
-    const auto position { settings.value(field).value<QVariantList>() };
+    const QStringList position { settings.value(field).toStringList() };
 
     if (position.size() != 2) {
-        qWarning() << "Invalid position value, field:" << field;
+        qWarning() << "Invalid position value, field:" << field << "value:" << position;
         field_position_[field] = std::nullopt;
         return;
     }
@@ -288,14 +302,13 @@ void PrintOverlay::ReadFieldPosition(QSettings& settings, const QString& field)
     bool x_ok {};
     bool y_ok {};
 
-    const int x { position[0].toInt(&x_ok) };
-    const int y { position[1].toInt(&y_ok) };
+    const int x { position.at(0).trimmed().toInt(&x_ok) };
+    const int y { position.at(1).trimmed().toInt(&y_ok) };
 
     if (x_ok && y_ok) {
         field_position_[field] = FieldPosition { x, y };
     } else {
         qWarning() << "Invalid position coordinates, field:" << field << "value:" << position;
-
         field_position_[field] = std::nullopt;
     }
 }
