@@ -9,41 +9,67 @@
 bool PrintOverlay::LoadTemplate(QSettings& settings)
 {
     field_position_.clear();
+    columns_.clear();
     column_widths_.clear();
 
     font_size_ = 12;
+    rows_ = 7;
     row_height_ = 30;
 
+    // Page
     settings.beginGroup(QStringLiteral("page"));
     font_size_ = settings.value(QStringLiteral("font_size"), 12).toInt();
     settings.endGroup();
 
-    settings.beginGroup(QStringLiteral("overlay"));
+    // Header
+    settings.beginGroup(QStringLiteral("header"));
 
-    static const QList<QString> fields { QStringLiteral("header_partner"), QStringLiteral("header_issued_time"), QStringLiteral("header_code"),
+    ReadFieldPosition(settings, QStringLiteral("partner"));
+    ReadFieldPosition(settings, QStringLiteral("issued_time"));
+    ReadFieldPosition(settings, QStringLiteral("code"));
 
-        QStringLiteral("table_left_top"), QStringLiteral("table_rows_columns"),
+    settings.endGroup();
 
-        QStringLiteral("footer_employee"), QStringLiteral("footer_unit"), QStringLiteral("footer_initial_total"), QStringLiteral("footer_initial_total_upper"),
-        QStringLiteral("footer_page_info") };
+    // Table
+    settings.beginGroup(QStringLiteral("table"));
 
-    for (const auto& field : fields)
-        ReadFieldPosition(settings, field);
+    ReadFieldPosition(settings, QStringLiteral("left_top"));
 
-    row_height_ = settings.value(QStringLiteral("table_row_height"), 30).toInt();
+    rows_ = settings.value(QStringLiteral("rows"), 7).toInt();
+    row_height_ = settings.value(QStringLiteral("row_height"), 30).toInt();
 
-    const auto widths { settings.value(QStringLiteral("table_column_widths")).toStringList() };
-
+    columns_ = settings.value(QStringLiteral("columns")).toStringList();
+    const auto widths { settings.value(QStringLiteral("column_widths")).toStringList() };
     column_widths_.reserve(widths.size());
-
     std::ranges::transform(widths, std::back_inserter(column_widths_), [](const QString& value) { return value.toInt(); });
 
     settings.endGroup();
 
-    const int columns { GetFieldY(QStringLiteral("table_rows_columns")) };
+    // Footer
+    settings.beginGroup(QStringLiteral("footer"));
 
-    if (columns <= 0 || column_widths_.size() != columns) {
-        qWarning() << "Overlay column count does not match column widths:" << columns << column_widths_.size();
+    ReadFieldPosition(settings, QStringLiteral("employee"));
+    ReadFieldPosition(settings, QStringLiteral("unit"));
+    ReadFieldPosition(settings, QStringLiteral("initial_total"));
+    ReadFieldPosition(settings, QStringLiteral("initial_total_upper"));
+    ReadFieldPosition(settings, QStringLiteral("page_info"));
+
+    settings.endGroup();
+
+    if (rows_ <= 0 || row_height_ <= 0) {
+        qWarning() << "Invalid overlay table configuration:"
+                   << "rows:" << rows_ << "row_height:" << row_height_;
+        return false;
+    }
+
+    if (columns_.isEmpty() || columns_.size() != column_widths_.size()) {
+        qWarning() << "Overlay column configuration mismatch:"
+                   << "columns:" << columns_.size() << "widths:" << column_widths_.size();
+        return false;
+    }
+
+    if (std::ranges::any_of(column_widths_, [](int width) { return width <= 0; })) {
+        qWarning() << "Overlay column width must be greater than 0";
         return false;
     }
 
@@ -61,13 +87,7 @@ void PrintOverlay::Render(QPrinter* printer, const NodeO* node_o, const QList<En
 
 void PrintOverlay::RenderAllPages(QPrinter* printer)
 {
-    // Fetch configuration values for rows and columns
-    const int rows { GetFieldX(QStringLiteral("table_rows_columns")) };
-    if (rows <= 0)
-        return;
-
-    // Calculate total pages required based on the total rows and rows per page
-    const long long total_pages { (entry_list_->size() + rows - 1) / rows }; // Ceiling division to determine total pages
+    const long long total_pages { (entry_list_->size() + rows_ - 1) / rows_ };
 
     QPainter painter(printer);
     painter.setPen(QPen(Qt::black, 0));
@@ -76,22 +96,17 @@ void PrintOverlay::RenderAllPages(QPrinter* printer)
     font.setPointSize(font_size_);
     painter.setFont(font);
 
-    // Start rendering each page
     for (long long page_num = 0; page_num != total_pages; ++page_num) {
-        // Begin a new page
         if (page_num != 0) {
             printer->newPage();
         }
 
-        // Draw header (e.g., title, date, etc.)
         DrawHeader(&painter);
 
-        // Draw content on the page
-        const long long start_index { page_num * rows };
-        const long long end_index { qMin((page_num + 1) * rows, entry_list_->size()) };
-        DrawTable(&painter, start_index, end_index);
+        const long long start_index { page_num * rows_ };
+        const long long end_index { qMin((page_num + 1) * rows_, entry_list_->size()) };
 
-        // Draw footer (e.g., page number, etc.)
+        DrawTable(&painter, start_index, end_index);
         DrawFooter(&painter, page_num + 1, total_pages);
     }
 }
@@ -100,9 +115,9 @@ void PrintOverlay::DrawHeader(QPainter* painter)
 {
     painter->save();
 
-    DrawText(painter, QStringLiteral("header_partner"), MasterDataRegistry::Instance().PartnerName(node_o_->partner_id));
-    DrawText(painter, QStringLiteral("header_issued_time"), node_o_->issued_time.toString(datetime_format::kDashedDate));
-    DrawText(painter, QStringLiteral("header_code"), node_o_->code);
+    DrawText(painter, QStringLiteral("partner"), MasterDataRegistry::Instance().PartnerName(node_o_->partner_id));
+    DrawText(painter, QStringLiteral("issued_time"), node_o_->issued_time.toString(datetime_format::kDashedDate));
+    DrawText(painter, QStringLiteral("code"), node_o_->code);
 
     painter->restore();
 }
@@ -110,14 +125,7 @@ void PrintOverlay::DrawHeader(QPainter* painter)
 /*!
  * \brief Draw table rows with auto-fit text (shrink to fit cell width)
  *
- * Table columns (left to right):
- * 0: Internal Sku    - Internal product SKU/code
- * 1: External Sku    - Customer/external product SKU/code
- * 2: Description     - Product description
- * 3: Count           - Quantity count
- * 4: Measure         - Unit of measure
- * 5: Unit Price      - Price per unit
- * 6: Amount          - Total amount (Count × Unit Price)
+ * Table columns and their order are defined by the template configuration.
  *
  * \param painter Painter object for drawing
  * \param start_index Start index in entry_list_
@@ -130,38 +138,35 @@ void PrintOverlay::DrawTable(QPainter* painter, long long start_index, long long
 {
     painter->save();
 
-    const int columns { GetFieldY(QStringLiteral("table_rows_columns")) };
-    const int left { GetFieldX(QStringLiteral("table_left_top")) };
-    const int top { GetFieldY(QStringLiteral("table_left_top")) };
+    const int left { GetFieldX(QStringLiteral("left_top")) };
+    const int top { GetFieldY(QStringLiteral("left_top")) };
 
-    const QFont original_font { painter->font() }; // Save original font
-    const QFontMetrics fm(original_font);
+    const QFont original_font { painter->font() };
+    const QFontMetrics fm { original_font };
     const int max_font_size { original_font.pointSize() };
-    const int padding { 4 }; // Cell padding
+    const int padding { 4 };
 
     const auto& master { MasterDataRegistry::Instance() };
     const auto& partner { PartnerInventoryRegistry::Instance() };
 
-    for (int row = 0; row != end_index - start_index; ++row) {
+    for (long long row = 0; row != end_index - start_index; ++row) {
         const auto* entry { entry_list_->at(start_index + row) };
         int x { left };
 
-        for (int col = 0; col != columns; ++col) {
+        for (qsizetype col = 0; col != columns_.size(); ++col) {
             const int col_width { column_widths_.at(col) };
-            if (col_width <= 0) {
-                continue;
-            }
 
-            const QRect cell_rect(x, top + row * row_height_, col_width, row_height_);
-            const QString text { GetColumnText(col, entry, master, partner) };
+            const QRect cell_rect { x, top + static_cast<int>(row) * row_height_, col_width, row_height_ };
+
+            const QString text { GetColumnText(columns_.at(col), entry, master, partner) };
+
             const int text_width { fm.horizontalAdvance(text) };
-            const int available_width { col_width - padding * 2 };
+            const int available_width { qMax(1, col_width - padding * 2) };
 
-            // Find and apply best font size
             if (text_width > available_width) {
-                // Reset to original font for each cell
                 QFont font { original_font };
-                const int best_size { PrintHub::FindBestFontSize(painter, text, available_width, max_font_size) };
+
+                const int best_size { PrintHub::FindBestFontSize(font, text, available_width, max_font_size) };
 
                 font.setPointSize(best_size);
                 painter->setFont(font);
@@ -175,7 +180,6 @@ void PrintOverlay::DrawTable(QPainter* painter, long long start_index, long long
                          << "Text=" << text << "ColWidth=" << col_width << "TextWidth=" << text_width;
             }
 
-            // Determine alignment
             Qt::Alignment align { Qt::AlignVCenter };
             align |= PrintHub::IsNumber(text) ? Qt::AlignRight : Qt::AlignLeft;
 
@@ -185,7 +189,6 @@ void PrintOverlay::DrawTable(QPainter* painter, long long start_index, long long
         }
     }
 
-    // Restore original painter
     painter->restore();
 }
 
@@ -193,45 +196,60 @@ void PrintOverlay::DrawFooter(QPainter* painter, int page_num, int total_pages)
 {
     painter->save();
 
-    DrawText(painter, QStringLiteral("footer_employee"), MasterDataRegistry::Instance().PartnerName(node_o_->employee_id));
+    DrawText(painter, QStringLiteral("employee"), MasterDataRegistry::Instance().PartnerName(node_o_->employee_id));
 
     // unit, direction_rule
     {
-        const QString text { node::UnitString(NodeUnit(node_o_->unit)) + "/" + node::DirectionRuleString(node_o_->direction_rule) };
-        DrawText(painter, QStringLiteral("footer_unit"), text);
+        painter->save();
+
+        QFont font { painter->font() };
+        font.setBold(true);
+        font.setPointSize(font.pointSize() + 2);
+
+        painter->setFont(font);
+
+        const QString text { node::UnitString(NodeUnit(node_o_->unit)) + "/" + PrintHub::DirectionRuleString(node_o_->direction_rule) };
+
+        DrawText(painter, QStringLiteral("unit"), text);
+
+        painter->restore();
     }
 
     const QString amount_str { QString::number(node_o_->initial_total, 'f', section_config_->amount_decimal) };
 
-    DrawText(painter, QStringLiteral("footer_initial_total"), amount_str);
-    DrawText(painter, QStringLiteral("footer_initial_total_upper"), QStringLiteral("大写：") + PrintHub::NumberToChineseUpper(amount_str.toDouble()));
-    DrawText(painter, QStringLiteral("footer_page_info"), QString::asprintf("%d/%d", page_num, total_pages));
+    DrawText(painter, QStringLiteral("initial_total"), amount_str);
+    DrawText(painter, QStringLiteral("initial_total_upper"), QObject::tr("Uppercase: ") + PrintHub::NumberToChineseUpper(amount_str.toDouble()));
+    DrawText(painter, QStringLiteral("page_info"), QString::asprintf("%d/%d", page_num, total_pages));
 
     painter->restore();
 }
 
-QString PrintOverlay::GetColumnText(int col, const Entry* entry, const MasterDataRegistry& master, const PartnerInventoryRegistry& partner) const
+QString PrintOverlay::GetColumnText(const QString& column, const Entry* entry, const MasterDataRegistry& master, const PartnerInventoryRegistry& partner) const
 {
+    if (column == QStringLiteral("internal_sku"))
+        return master.InventoryPath(entry->rhs_node);
+
+    if (column == QStringLiteral("external_sku"))
+        return partner.ExternalSku(node_o_->partner_id, entry->rhs_node);
+
+    if (column == QStringLiteral("description"))
+        return entry->description;
+
     const auto* d_entry { static_cast<const EntryO*>(entry) };
 
-    switch (col) {
-    case 0:
-        return master.InventoryPath(entry->rhs_node);
-    case 1:
-        return partner.ExternalSku(node_o_->partner_id, entry->rhs_node);
-    case 2:
-        return entry->description;
-    case 3:
+    if (column == QStringLiteral("count"))
         return QString::number(d_entry->count, 'f', section_config_->quantity_decimal);
-    case 4:
+
+    if (column == QStringLiteral("measure"))
         return QString::number(d_entry->measure, 'f', section_config_->quantity_decimal);
-    case 5:
+
+    if (column == QStringLiteral("unit_price"))
         return QString::number(d_entry->unit_price, 'f', section_config_->rate_decimal);
-    case 6:
+
+    if (column == QStringLiteral("amount"))
         return QString::number(d_entry->initial, 'f', section_config_->amount_decimal);
-    default:
-        return {};
-    }
+
+    return {};
 }
 
 void PrintOverlay::DrawText(QPainter* painter, const QString& field, const QString& text)

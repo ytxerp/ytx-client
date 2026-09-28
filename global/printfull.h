@@ -66,6 +66,7 @@ private:
     struct HeaderConfig {
         bool show_title { true };
         QString title {};
+        QString return_title {};
 
         bool show_partner { true };
         bool show_code { true };

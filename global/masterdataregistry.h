@@ -65,6 +65,14 @@ public:
         return {};
     }
 
+    NodeUnit PartnerUnit(const QUuid& id) const
+    {
+        if (auto model = tree_model_hash_.value(Section::kPartner))
+            return model->Unit(id);
+
+        return {};
+    }
+
     MasterDataRegistry(const MasterDataRegistry&) = delete;
     MasterDataRegistry& operator=(const MasterDataRegistry&) = delete;
     MasterDataRegistry(MasterDataRegistry&&) = delete;

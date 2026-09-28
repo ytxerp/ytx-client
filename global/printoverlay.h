@@ -50,7 +50,7 @@ private:
     void DrawTable(QPainter* painter, long long start_index, long long end_index);
     void DrawFooter(QPainter* painter, int page_num, int total_pages);
 
-    QString GetColumnText(int col, const Entry* entry, const MasterDataRegistry& master, const PartnerInventoryRegistry& partner) const;
+    QString GetColumnText(const QString& column, const Entry* entry, const MasterDataRegistry& master, const PartnerInventoryRegistry& partner) const;
 
     void DrawText(QPainter* painter, const QString& field, const QString& text);
 
@@ -70,9 +70,13 @@ private:
 
 private:
     int font_size_ { 12 };
-    int row_height_ { 30 };
 
     QHash<QString, std::optional<FieldPosition>> field_position_ {};
+
+    int rows_ { 7 };
+    int row_height_ { 30 };
+
+    QStringList columns_ {};
     QList<int> column_widths_ {};
 
     const NodeO* node_o_ {};

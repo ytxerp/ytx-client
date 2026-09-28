@@ -143,35 +143,31 @@ QString PrintHub::NumberToChineseUpper(double value)
     return result;
 }
 
-int PrintHub::FindBestFontSize(QPainter* painter, const QString& text, int max_width, int max_font, int min_font)
+int PrintHub::FindBestFontSize(const QFont& base_font, const QString& text, int max_width, int max_font, int min_font)
 {
-    // Binary search boundaries
     int low { min_font };
     int high { max_font };
-    int best { min_font }; // Best font size found so far
+    int best { min_font };
 
-    // Copy current painter font
-    QFont font { painter->font() };
+    QFont font { base_font };
 
-    // Perform binary search to find the largest font size that fits
     while (low <= high) {
-        const int mid { (low + high) / 2 }; // Middle font size to test
+        const int mid { (low + high) / 2 };
+
         font.setPointSize(mid);
 
         const QFontMetrics fm { font };
-        const int text_width { fm.horizontalAdvance(text) }; // Width of text in current font
+        const int text_width { fm.horizontalAdvance(text) };
 
         if (text_width <= max_width) {
-            // Current font fits, try a larger size
             best = mid;
             low = mid + 1;
         } else {
-            // Too wide, try a smaller size
             high = mid - 1;
         }
     }
 
-    return best; // Return the largest font size that fits
+    return best;
 }
 
 QString PrintHub::ConvertSection(int section, const QStringList& digits)

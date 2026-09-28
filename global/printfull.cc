@@ -37,6 +37,8 @@ void PrintFull::ReadHeaderConfig(QSettings& settings)
 
     header_config_.title = settings.value(QStringLiteral("title")).toString();
 
+    header_config_.return_title = settings.value(QStringLiteral("return_title")).toString();
+
     header_config_.show_partner = settings.value(QStringLiteral("show_partner"), true).toBool();
 
     header_config_.show_code = settings.value(QStringLiteral("show_code"), true).toBool();
@@ -154,7 +156,6 @@ qreal PrintFull::DrawCompany(QPainter* painter, qreal y, qreal page_width)
     const qreal width { page_width - layout_config_.margin_left - layout_config_.margin_right };
 
     const QFont original_font { painter->font() };
-    const qreal line_height { QFontMetricsF(original_font).height() };
 
     if (company_config_.show_logo && !company_config_.logo.trimmed().isEmpty()) {
         // Logo drawing can be added here.
@@ -164,28 +165,36 @@ qreal PrintFull::DrawCompany(QPainter* painter, qreal y, qreal page_width)
     if (company_config_.show_name && !company_config_.name.trimmed().isEmpty()) {
         QFont font { original_font };
         font.setBold(true);
-        font.setPointSize(original_font.pointSize() + 2);
+        font.setPointSize(original_font.pointSize() + 8);
+
         painter->setFont(font);
 
-        const QFontMetricsF fm(font);
+        const QFontMetricsF fm { font };
         const qreal height { fm.height() };
 
         painter->drawText(QRectF(left, y, width, height), Qt::AlignCenter, company_config_.name);
 
         y += height + 2;
-        painter->setFont(original_font);
     }
 
-    if (company_config_.show_address && !company_config_.address.trimmed().isEmpty()) {
-        painter->drawText(QRectF(left, y, width, line_height), Qt::AlignCenter, company_config_.address);
+    QFont info_font { original_font };
+    info_font.setPointSize(qMax(1, original_font.pointSize() - 2));
 
-        y += line_height;
+    painter->setFont(info_font);
+
+    const QFontMetricsF info_fm { info_font };
+    const qreal info_height { info_fm.height() };
+
+    if (company_config_.show_address && !company_config_.address.trimmed().isEmpty()) {
+        painter->drawText(QRectF(left, y, width, info_height), Qt::AlignCenter, company_config_.address);
+
+        y += info_height;
     }
 
     if (company_config_.show_phone && !company_config_.phone.trimmed().isEmpty()) {
-        painter->drawText(QRectF(left, y, width, line_height), Qt::AlignCenter, company_config_.phone);
+        painter->drawText(QRectF(left, y, width, info_height), Qt::AlignCenter, company_config_.phone);
 
-        y += line_height;
+        y += info_height;
     }
 
     painter->restore();
@@ -207,13 +216,34 @@ qreal PrintFull::DrawHeader(QPainter* painter, qreal y, qreal page_width)
     qreal right_y { y };
     qreal title_bottom { y };
 
+    // Partner
     if (header_config_.show_partner) {
-        const QString text { QObject::tr("Customer: ") + MasterDataRegistry::Instance().PartnerName(node_o_->partner_id) };
+        const auto& master { MasterDataRegistry::Instance() };
+        const auto partner_unit { master.PartnerUnit(node_o_->partner_id) };
+        const QString partner_name { master.PartnerName(node_o_->partner_id) };
+
+        const QString partner_title { partner_unit == NodeUnit::PCustomer ? QObject::tr("Customer: ", "Print") : QObject::tr("Supplier: ", "Print") };
+
+        const QString text { partner_title + partner_name };
+
         painter->drawText(QRectF(left, left_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter, text);
+
         left_y += line_height;
     }
 
-    if (header_config_.show_title && !header_config_.title.trimmed().isEmpty()) {
+    // Settlement
+    if (header_config_.show_settlement) {
+        const QString settlement { node::UnitString(NodeUnit(node_o_->unit)) };
+
+        painter->drawText(QRectF(left, left_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter, QObject::tr("Settlement: ") + settlement);
+
+        left_y += line_height;
+    }
+
+    // Title
+    const QString& title { node_o_->direction_rule == direction_rule::kRO ? header_config_.return_title : header_config_.title };
+
+    if (header_config_.show_title && !title.trimmed().isEmpty()) {
         QFont font { painter->font() };
         font.setBold(true);
         font.setPointSize(font.pointSize() + 6);
@@ -222,29 +252,27 @@ qreal PrintFull::DrawHeader(QPainter* painter, qreal y, qreal page_width)
         painter->setFont(font);
 
         const qreal title_height { line_height * 2 };
-        painter->drawText(QRectF(left + column_width, y, column_width, title_height), Qt::AlignCenter, header_config_.title);
+
+        painter->drawText(QRectF(left + column_width, y, column_width, title_height), Qt::AlignHCenter | Qt::AlignTop, title);
 
         painter->restore();
 
         title_bottom = y + title_height;
     }
 
+    // Date
+    if (header_config_.show_issued_time) {
+        painter->drawText(QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignRight | Qt::AlignVCenter,
+            QObject::tr("Date: ") + node_o_->issued_time.toString(datetime_format::kDashedDate));
+
+        right_y += line_height;
+    }
+
+    // Code
     if (header_config_.show_code) {
         painter->drawText(
-            QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter, QObject::tr("Code: ") + node_o_->code);
-        right_y += line_height;
-    }
+            QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignRight | Qt::AlignVCenter, QObject::tr("Code: ") + node_o_->code);
 
-    if (header_config_.show_issued_time) {
-        painter->drawText(QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter,
-            QObject::tr("Date: ") + node_o_->issued_time.toString(datetime_format::kDashedDate));
-        right_y += line_height;
-    }
-
-    if (header_config_.show_settlement) {
-        const QString settlement { node::UnitString(NodeUnit(node_o_->unit)) };
-        painter->drawText(
-            QRectF(left + column_width * 2, right_y, column_width, line_height), Qt::AlignLeft | Qt::AlignVCenter, QObject::tr("Settlement: ") + settlement);
         right_y += line_height;
     }
 
@@ -278,10 +306,19 @@ qreal PrintFull::DrawTable(QPainter* painter, qreal y, qreal page_width, qsizety
 
         QFont font { original_font };
         font.setBold(bold);
+
+        const qreal available_width { qMax<qreal>(1.0, rect.width() - padding * 2) };
+
+        const QFontMetricsF fm { font };
+
+        if (fm.horizontalAdvance(text) > available_width) {
+            const int best_size { PrintHub::FindBestFontSize(font, text, static_cast<int>(available_width), font.pointSize()) };
+
+            font.setPointSize(best_size);
+        }
+
         painter->setFont(font);
-
         painter->drawText(rect.adjusted(padding, 0, -padding, 0), static_cast<int>(alignment | Qt::AlignVCenter), text);
-
         painter->restore();
     };
 
@@ -385,17 +422,24 @@ qreal PrintFull::MeasureRemarkHeight(const QFont& base_font, qreal page_width) c
     if (!remark_config_.enabled || remark_config_.text.trimmed().isEmpty())
         return 0.0;
 
+    QFont font { base_font };
+    font.setPointSize(qMax(1, font.pointSize() - 2));
+
     const qreal width { page_width - layout_config_.margin_left - layout_config_.margin_right };
+
     const qreal text_width { width - remark_config_.padding * 2 };
 
     QString text {};
+
     if (remark_config_.show_title && !remark_config_.title.trimmed().isEmpty()) {
         text += remark_config_.title;
         text += '\n';
     }
+
     text += remark_config_.text;
 
-    const QFontMetricsF fm(base_font);
+    const QFontMetricsF fm { font };
+
     const QRectF bounds { fm.boundingRect(QRectF(0, 0, text_width, 10000), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, text) };
 
     return bounds.height() + remark_config_.padding * 2;
@@ -463,6 +507,10 @@ qreal PrintFull::DrawRemark(QPainter* painter, qreal y, qreal page_width)
     }
 
     painter->save();
+
+    QFont font { painter->font() };
+    font.setPointSize(qMax(1, font.pointSize() - 2));
+    painter->setFont(font);
 
     const qreal left { static_cast<qreal>(layout_config_.margin_left) };
     const qreal width { page_width - layout_config_.margin_left - layout_config_.margin_right };
@@ -537,106 +585,113 @@ void PrintFull::RenderAllPages(QPrinter* printer)
     painter.setFont(font);
 
     const QRectF page_rect { printer->pageLayout().paintRectPixels(printer->resolution()) };
+
     const qreal page_width { page_rect.width() };
     const qreal page_height { page_rect.height() };
 
     const qreal top_margin { static_cast<qreal>(layout_config_.margin_top) };
+
     const qreal bottom_margin { static_cast<qreal>(layout_config_.margin_bottom) };
 
-    const qreal footer_height { MeasureFooterHeight(font) };
-    const qreal content_bottom_limit { page_height - bottom_margin - footer_height };
-
     const auto widths { CalculateColumnWidths(page_width - layout_config_.margin_left - layout_config_.margin_right) };
+
     if (!table_config_.columns.isEmpty() && widths.size() != table_config_.columns.size()) {
         qWarning() << "Print aborted: column width configuration is invalid.";
         return;
     }
 
     const qreal row_h { static_cast<qreal>(table_config_.row_height) };
+
     const qreal table_header_h { table_config_.show_header ? row_h : 0.0 };
+
     const qsizetype total_rows { entry_list_->size() };
 
-    // ---- 第一步：纯计算 ----
-    // 公司信息 + 抬头现在每页都重复，所以每页表格起始位置固定不变
+    // ========================================================
+    // Layout measurement
+    // ========================================================
+
     const qreal company_h { MeasureCompanyHeight(font) };
+
     const qreal header_h { MeasureHeaderHeight(font) };
-    const qreal table_top_per_page { top_margin + company_h + header_h };
 
-    auto RowsCapacity = [&](qreal table_top) -> qsizetype {
-        const qreal avail { content_bottom_limit - table_top - table_header_h };
-        if (avail <= 0 || row_h <= 0)
-            return 0;
-        return static_cast<qsizetype>(avail / row_h);
-    };
+    const qreal footer_h { MeasureFooterHeight(font) };
 
-    const qsizetype cap { std::max<qsizetype>(RowsCapacity(table_top_per_page), 1) };
+    const qreal summary_h { (total_config_.enabled ? row_h : 0.0) + MeasureRemarkHeight(font, page_width) + footer_h };
 
-    int total_pages { total_rows > 0 ? static_cast<int>((total_rows + cap - 1) / cap) : 1 };
+    const qreal table_top { top_margin + company_h + header_h };
 
-    // 合计+备注能否挤进最后一页表格之后
-    const qreal summary_h { (total_config_.enabled ? row_h : 0.0) + MeasureRemarkHeight(font, page_width) };
+    const qreal page_bottom { page_height - bottom_margin };
 
-    qsizetype last_page_rows { total_rows % cap };
-    if (total_rows > 0 && last_page_rows == 0)
-        last_page_rows = cap; // 整除时最后一页仍是满的
+    const qreal normal_available { page_bottom - table_top - table_header_h };
 
-    const qreal last_page_table_bottom { table_top_per_page + table_header_h + last_page_rows * row_h };
-    const bool summary_needs_new_page { last_page_table_bottom + summary_h > content_bottom_limit };
-    if (summary_needs_new_page)
-        total_pages += 1;
+    const qsizetype normal_capacity { std::max<qsizetype>(static_cast<qsizetype>(normal_available / row_h), 1) };
 
-    // ---- 第二步：正式绘制，每页都重复公司信息 + 抬头 ----
+    const qreal final_available { page_bottom - table_top - table_header_h - summary_h };
+
+    const qsizetype final_capacity { std::max<qsizetype>(static_cast<qsizetype>(final_available / row_h), 0) };
+
+    // ========================================================
+    // Calculate total pages
+    // ========================================================
+
+    int total_pages { 1 };
+
+    if (total_rows > final_capacity) {
+        const qsizetype rows_before_final { total_rows - final_capacity };
+
+        const int normal_pages { static_cast<int>((rows_before_final + normal_capacity - 1) / normal_capacity) };
+
+        total_pages = normal_pages + 1;
+    }
+
+    // ========================================================
+    // Render
+    // ========================================================
+
     qsizetype start_index { 0 };
-    int page_num { 1 };
 
-    while (true) {
+    for (int page_num = 1; page_num <= total_pages; ++page_num) {
+        if (page_num != 1)
+            printer->newPage();
+
         qreal y { top_margin };
+
         y = DrawCompany(&painter, y, page_width);
+
         y = DrawHeader(&painter, y, page_width);
 
-        const qsizetype end_index { std::min(start_index + cap, total_rows) };
+        const bool is_last_page { page_num == total_pages };
+
+        qsizetype rows_this_page {};
+
+        if (is_last_page) {
+            rows_this_page = total_rows - start_index;
+        } else {
+            const qsizetype remaining { total_rows - start_index };
+
+            const qsizetype must_keep_for_final { final_capacity };
+
+            rows_this_page = std::min(normal_capacity, std::max<qsizetype>(remaining - must_keep_for_final, 0));
+        }
+
+        const qsizetype end_index { start_index + rows_this_page };
 
         qreal cur_y { DrawTable(&painter, y, page_width, start_index, end_index) };
 
-        const bool is_last_row_page { end_index >= total_rows };
-
-        if (is_last_row_page && !summary_needs_new_page) {
+        if (is_last_page) {
             cur_y = DrawTotal(&painter, cur_y, page_width);
-            DrawRemark(&painter, cur_y, page_width);
 
-            DrawFooter(&painter, content_bottom_limit, page_width, page_num, total_pages);
+            cur_y = DrawRemark(&painter, cur_y, page_width);
 
-            break;
+            DrawFooter(&painter, cur_y, page_width, page_num, total_pages);
         }
 
-        DrawFooter(&painter, content_bottom_limit, page_width, page_num, total_pages);
-
-        if (is_last_row_page && summary_needs_new_page) {
-            printer->newPage();
-            page_num++;
-
-            qreal y2 { top_margin };
-            y2 = DrawCompany(&painter, y2, page_width);
-            y2 = DrawHeader(&painter, y2, page_width);
-            y2 = DrawTotal(&painter, y2, page_width);
-
-            DrawRemark(&painter, y2, page_width);
-
-            DrawFooter(&painter, content_bottom_limit, page_width, page_num, total_pages);
-
-            break;
-        }
-
-        printer->newPage();
-        page_num++;
         start_index = end_index;
     }
 }
 
 QString PrintFull::GetColumnText(const QString& column, const Entry* entry, const MasterDataRegistry& master, const PartnerInventoryRegistry& partner) const
 {
-    const auto* d_entry { static_cast<const EntryO*>(entry) };
-
     if (column == QStringLiteral("internal_sku"))
         return master.InventoryPath(entry->rhs_node);
 
@@ -645,6 +700,8 @@ QString PrintFull::GetColumnText(const QString& column, const Entry* entry, cons
 
     if (column == QStringLiteral("description"))
         return entry->description;
+
+    const auto* d_entry { static_cast<const EntryO*>(entry) };
 
     if (column == QStringLiteral("count"))
         return QString::number(d_entry->count, 'f', section_config_->quantity_decimal);

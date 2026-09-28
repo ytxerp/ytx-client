@@ -23,6 +23,7 @@
 #include <QSettings>
 
 #include "component/config.h"
+#include "component/constantbool.h"
 #include "global/printoverlay.h"
 #include "printfull.h"
 #include "table/entry.h"
@@ -49,7 +50,11 @@ public:
 
     static bool IsNumber(const QString& text);
     static QString NumberToChineseUpper(double value);
-    static int FindBestFontSize(QPainter* painter, const QString& text, int max_width, int max_font, int min_font = 1);
+    static int FindBestFontSize(const QFont& base_font, const QString& text, int max_width, int max_font, int min_font = 1);
+    static QString DirectionRuleString(bool direction_rule)
+    {
+        return direction_rule == direction_rule::kRO ? QObject::tr("Return", "Print") : QObject::tr("Sale", "Print");
+    }
 
 private:
     enum class PrintMode {
