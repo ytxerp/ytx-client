@@ -3195,6 +3195,51 @@ Do you want to save them before closing?</source>
         <source>Purchase</source>
         <translation>采购</translation>
     </message>
+    <message>
+        <location filename="../../global/printfull.cc" line="225"/>
+        <source>Customer: </source>
+        <comment>Print</comment>
+        <translation>客户: </translation>
+    </message>
+    <message>
+        <location filename="../../global/printfull.cc" line="225"/>
+        <source>Supplier: </source>
+        <comment>Print</comment>
+        <translation>供应商: </translation>
+    </message>
+    <message>
+        <location filename="../../global/printfull.cc" line="274"/>
+        <source>Code: </source>
+        <translation>编号: </translation>
+    </message>
+    <message>
+        <location filename="../../global/printfull.cc" line="266"/>
+        <source>Date: </source>
+        <translation>日期: </translation>
+    </message>
+    <message>
+        <location filename="../../global/printfull.cc" line="238"/>
+        <source>Settlement: </source>
+        <translation>结算: </translation>
+    </message>
+    <message>
+        <location filename="../../global/printfull.cc" line="477"/>
+        <location filename="../../global/printoverlay.cc" line="221"/>
+        <source>Uppercase: </source>
+        <translation>大写: </translation>
+    </message>
+    <message>
+        <location filename="../../global/printhub.h" line="56"/>
+        <source>Return</source>
+        <comment>Print</comment>
+        <translation>退回</translation>
+    </message>
+    <message>
+        <location filename="../../global/printhub.h" line="56"/>
+        <source>Sale</source>
+        <comment>Print</comment>
+        <translation>销售</translation>
+    </message>
 </context>
 <context>
     <name>SearchDialog</name>
@@ -3475,20 +3520,20 @@ Please recall it first and try again.</source>
         <translation>发布</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="411"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="403"/>
         <source>Required Information Missing</source>
         <translation>缺少必填信息</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="411"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="403"/>
         <source>Please select a printable template before continuing.</source>
         <translation>请先选择可打印模板后再继续。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="448"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="467"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="479"/>
-        <location filename="../../table/widget/tablewidgeto.cc" line="595"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="440"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="457"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="469"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="581"/>
         <source>Operation Rejected</source>
         <translation>操作已拒绝</translation>
     </message>
@@ -3499,42 +3544,42 @@ Settled orders cannot be modified.</source>
 已结算订单无法修改。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="448"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="440"/>
         <source>This order has already been settled and cannot be recalled.</source>
         <translation>该订单已完成结算，无法撤回。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="467"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="457"/>
         <source>A partner must be selected before continuing.</source>
         <translation>请先选择合作单位后再继续。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="479"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="469"/>
         <source>The data is being updated. Please refresh and try again.</source>
         <translation>数据正在更新中，请刷新后再试。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="493"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="483"/>
         <source>Operation Warning</source>
         <translation>操作警告</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="494"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="484"/>
         <source>Some entries have a unit price of zero. Do you want to continue saving?</source>
         <translation>部分记录的单价为零，是否继续保存？</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="588"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="574"/>
         <source>Failed to load the print template.</source>
         <translation>打印模板加载失败。</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="588"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="574"/>
         <source>Operation Failed</source>
         <translation>操作失败</translation>
     </message>
     <message>
-        <location filename="../../table/widget/tablewidgeto.cc" line="596"/>
+        <location filename="../../table/widget/tablewidgeto.cc" line="582"/>
         <source>This order has been released and cannot be deleted.
 Please recall it before deleting.</source>
         <translation>该订单已发布，无法删除。
