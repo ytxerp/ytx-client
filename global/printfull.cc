@@ -375,20 +375,25 @@ qreal PrintFull::DrawTable(QPainter* painter, qreal y, qreal page_width, qsizety
 qreal PrintFull::MeasureCompanyHeight(const QFont& base_font) const
 {
     qreal height { 0.0 };
-    const qreal line_height { QFontMetricsF(base_font).height() };
 
     if (company_config_.show_name && !company_config_.name.trimmed().isEmpty()) {
         QFont font { base_font };
         font.setBold(true);
-        font.setPointSize(base_font.pointSize() + 2);
+        font.setPointSize(base_font.pointSize() + 8);
+
         height += QFontMetricsF(font).height() + 2;
     }
 
+    QFont info_font { base_font };
+    info_font.setPointSize(qMax(1, base_font.pointSize() - 2));
+
+    const qreal info_height { QFontMetricsF(info_font).height() };
+
     if (company_config_.show_address && !company_config_.address.trimmed().isEmpty())
-        height += line_height;
+        height += info_height;
 
     if (company_config_.show_phone && !company_config_.phone.trimmed().isEmpty())
-        height += line_height;
+        height += info_height;
 
     return height;
 }
@@ -404,14 +409,18 @@ qreal PrintFull::MeasureHeaderHeight(const QFont& base_font) const
     if (header_config_.show_partner)
         left_h += line_height;
 
-    if (header_config_.show_code)
-        right_h += line_height;
+    if (header_config_.show_settlement)
+        left_h += line_height;
+
     if (header_config_.show_issued_time)
         right_h += line_height;
-    if (header_config_.show_settlement)
+
+    if (header_config_.show_code)
         right_h += line_height;
 
-    if (header_config_.show_title && !header_config_.title.trimmed().isEmpty())
+    const QString& title { node_o_->direction_rule == direction_rule::kRO ? header_config_.return_title : header_config_.title };
+
+    if (header_config_.show_title && !title.trimmed().isEmpty())
         title_h = line_height * 2;
 
     return std::max({ left_h, right_h, title_h }) + 6;
@@ -545,7 +554,7 @@ qreal PrintFull::DrawRemark(QPainter* painter, qreal y, qreal page_width)
     return y + height;
 }
 
-qreal PrintFull::DrawFooter(QPainter* painter, qreal y, qreal page_width, int page_num, int total_pages)
+qreal PrintFull::DrawFooter(QPainter* painter, qreal y, qreal page_width, int page_num, int total_pages, bool is_last_page)
 {
     painter->save();
 
@@ -554,7 +563,8 @@ qreal PrintFull::DrawFooter(QPainter* painter, qreal y, qreal page_width, int pa
 
     const qreal line_height { QFontMetricsF(painter->font()).height() + 6 };
 
-    if (footer_config_.show_employee) {
+    // Employee only appears on the last page
+    if (is_last_page && footer_config_.show_employee) {
         const QString employee { MasterDataRegistry::Instance().PartnerName(node_o_->employee_id) };
 
         if (!employee.isEmpty()) {
@@ -574,7 +584,7 @@ qreal PrintFull::DrawFooter(QPainter* painter, qreal y, qreal page_width, int pa
 
 void PrintFull::RenderAllPages(QPrinter* printer)
 {
-    if (!node_o_)
+    if (!printer || !node_o_ || !section_config_)
         return;
 
     QPainter painter(printer);
@@ -587,6 +597,7 @@ void PrintFull::RenderAllPages(QPrinter* printer)
     const QRectF page_rect { printer->pageLayout().paintRectPixels(printer->resolution()) };
 
     const qreal page_width { page_rect.width() };
+
     const qreal page_height { page_rect.height() };
 
     const qreal top_margin { static_cast<qreal>(layout_config_.margin_top) };
@@ -616,17 +627,32 @@ void PrintFull::RenderAllPages(QPrinter* printer)
 
     const qreal footer_h { MeasureFooterHeight(font) };
 
-    const qreal summary_h { (total_config_.enabled ? row_h : 0.0) + MeasureRemarkHeight(font, page_width) + footer_h };
+    const qreal remark_h { MeasureRemarkHeight(font, page_width) };
+
+    // Total + Remark
+    // Footer is reserved separately on every page.
+    const qreal summary_h { (total_config_.enabled ? row_h : 0.0) + remark_h };
 
     const qreal table_top { top_margin + company_h + header_h };
 
     const qreal page_bottom { page_height - bottom_margin };
 
-    const qreal normal_available { page_bottom - table_top - table_header_h };
+    // Footer is fixed at the bottom of every page.
+    const qreal footer_y { page_bottom - footer_h };
+
+    // ========================================================
+    // Row capacity
+    // ========================================================
+
+    // Normal pages:
+    // reserve space for footer/page info.
+    const qreal normal_available { footer_y - table_top - table_header_h };
 
     const qsizetype normal_capacity { std::max<qsizetype>(static_cast<qsizetype>(normal_available / row_h), 1) };
 
-    const qreal final_available { page_bottom - table_top - table_header_h - summary_h };
+    // Final page:
+    // reserve space for Total + Remark + Footer.
+    const qreal final_available { footer_y - table_top - table_header_h - summary_h };
 
     const qsizetype final_capacity { std::max<qsizetype>(static_cast<qsizetype>(final_available / row_h), 0) };
 
@@ -665,10 +691,13 @@ void PrintFull::RenderAllPages(QPrinter* printer)
         qsizetype rows_this_page {};
 
         if (is_last_page) {
+            // All remaining rows belong to the final page.
             rows_this_page = total_rows - start_index;
         } else {
             const qsizetype remaining { total_rows - start_index };
 
+            // Keep enough rows for the final page so that
+            // Total + Remark do not occupy a page alone.
             const qsizetype must_keep_for_final { final_capacity };
 
             rows_this_page = std::min(normal_capacity, std::max<qsizetype>(remaining - must_keep_for_final, 0));
@@ -678,13 +707,16 @@ void PrintFull::RenderAllPages(QPrinter* printer)
 
         qreal cur_y { DrawTable(&painter, y, page_width, start_index, end_index) };
 
+        // Total and Remark only appear on the final page.
         if (is_last_page) {
             cur_y = DrawTotal(&painter, cur_y, page_width);
 
             cur_y = DrawRemark(&painter, cur_y, page_width);
-
-            DrawFooter(&painter, cur_y, page_width, page_num, total_pages);
         }
+
+        // Footer appears on every page.
+        // Employee is controlled by is_last_page inside DrawFooter().
+        DrawFooter(&painter, footer_y, page_width, page_num, total_pages, is_last_page);
 
         start_index = end_index;
     }
@@ -748,9 +780,18 @@ bool PrintFull::LoadTemplate(QSettings& settings)
     ReadRemarkConfig(settings);
     ReadFooterConfig(settings);
 
-    if (table_config_.columns.size() != table_config_.column_widths.size()) {
-        qWarning() << "Print template column count does not match column width count:" << table_config_.columns.size() << table_config_.column_widths.size();
+    if (layout_config_.font_size <= 0 || table_config_.row_height <= 0) {
+        qWarning() << "Invalid full print layout configuration.";
+        return false;
+    }
 
+    if (table_config_.columns.isEmpty() || table_config_.columns.size() != table_config_.column_widths.size()) {
+        qWarning() << "Print template column configuration is invalid.";
+        return false;
+    }
+
+    if (std::ranges::any_of(table_config_.column_widths, [](int width) { return width <= 0; })) {
+        qWarning() << "Print template column width must be greater than 0.";
         return false;
     }
 

@@ -137,7 +137,7 @@ private:
     qreal DrawTotal(QPainter* painter, qreal y, qreal page_width);
     qreal DrawRemark(QPainter* painter, qreal y, qreal page_width);
 
-    qreal DrawFooter(QPainter* painter, qreal y, qreal page_width, int page_num, int total_pages);
+    qreal DrawFooter(QPainter* painter, qreal y, qreal page_width, int page_num, int total_pages, bool is_last_page);
 
     QString GetColumnText(const QString& column, const Entry* entry, const MasterDataRegistry& master, const PartnerInventoryRegistry& partner) const;
     QList<qreal> CalculateColumnWidths(qreal available_width) const;
