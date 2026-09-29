@@ -14,18 +14,22 @@ bool PrintOverlay::LoadTemplate(QSettings& settings)
 
     font_size_ = 12;
     rows_ = 7;
-    row_height_ = 30;
+    row_height_ = 0.8;
 
     // Page
     settings.beginGroup(QStringLiteral("page"));
+
     font_size_ = settings.value(QStringLiteral("font_size"), 12).toInt();
+
     settings.endGroup();
 
     // Header
     settings.beginGroup(QStringLiteral("header"));
 
     ReadFieldPosition(settings, QStringLiteral("partner"));
+
     ReadFieldPosition(settings, QStringLiteral("issued_time"));
+
     ReadFieldPosition(settings, QStringLiteral("code"));
 
     settings.endGroup();
@@ -36,22 +40,28 @@ bool PrintOverlay::LoadTemplate(QSettings& settings)
     ReadFieldPosition(settings, QStringLiteral("left_top"));
 
     rows_ = settings.value(QStringLiteral("rows"), 7).toInt();
-    row_height_ = settings.value(QStringLiteral("row_height"), 30).toInt();
+
+    row_height_ = settings.value(QStringLiteral("row_height"), 0.8).toDouble();
 
     columns_ = settings.value(QStringLiteral("columns")).toStringList();
+
     for (QString& column : columns_)
         column = column.trimmed();
 
     const QStringList widths { settings.value(QStringLiteral("column_widths")).toStringList() };
+
     column_widths_.reserve(widths.size());
 
     bool widths_valid { true };
+
     for (const QString& value : widths) {
         bool ok {};
-        const int width { value.trimmed().toInt(&ok) };
+
+        const qreal width { value.trimmed().toDouble(&ok) };
 
         if (!ok) {
             qWarning() << "Invalid column width value:" << value;
+
             widths_valid = false;
             break;
         }
@@ -65,31 +75,37 @@ bool PrintOverlay::LoadTemplate(QSettings& settings)
     settings.beginGroup(QStringLiteral("footer"));
 
     ReadFieldPosition(settings, QStringLiteral("employee"));
+
     ReadFieldPosition(settings, QStringLiteral("unit"));
+
     ReadFieldPosition(settings, QStringLiteral("initial_total"));
+
     ReadFieldPosition(settings, QStringLiteral("initial_total_upper"));
+
     ReadFieldPosition(settings, QStringLiteral("page_info"));
 
     settings.endGroup();
 
-    if (!widths_valid) {
+    if (!widths_valid)
         return false;
-    }
 
-    if (rows_ <= 0 || row_height_ <= 0) {
+    if (rows_ <= 0 || row_height_ <= 0.0) {
         qWarning() << "Invalid overlay table configuration:"
                    << "rows:" << rows_ << "row_height:" << row_height_;
+
         return false;
     }
 
     if (columns_.isEmpty() || columns_.size() != column_widths_.size()) {
         qWarning() << "Overlay column configuration mismatch:"
                    << "columns:" << columns_.size() << "widths:" << column_widths_.size();
+
         return false;
     }
 
-    if (std::ranges::any_of(column_widths_, [](int width) { return width <= 0; })) {
+    if (std::ranges::any_of(column_widths_, [](qreal width) { return width <= 0.0; })) {
         qWarning() << "Overlay column width must be greater than 0";
+
         return false;
     }
 
@@ -98,6 +114,10 @@ bool PrintOverlay::LoadTemplate(QSettings& settings)
 
 void PrintOverlay::Render(QPrinter* printer, const NodeO* node_o, const QList<Entry*>& entry_list, const CSectionConfig* section_config)
 {
+    if (!printer || !node_o || !section_config)
+        return;
+
+    printer_ = printer;
     node_o_ = node_o;
     entry_list_ = &entry_list;
     section_config_ = section_config;
@@ -107,9 +127,12 @@ void PrintOverlay::Render(QPrinter* printer, const NodeO* node_o, const QList<En
 
 void PrintOverlay::RenderAllPages(QPrinter* printer)
 {
-    const long long total_pages { (entry_list_->size() + rows_ - 1) / rows_ };
+    const long long total_pages { qMax<long long>(1, (entry_list_->size() + rows_ - 1) / rows_) };
 
     QPainter painter(printer);
+    if (!painter.isActive())
+        return;
+
     painter.setPen(QPen(Qt::black, 0));
 
     QFont font { painter.font() };
@@ -158,35 +181,45 @@ void PrintOverlay::DrawTable(QPainter* painter, long long start_index, long long
 {
     painter->save();
 
-    const int left { GetFieldX(QStringLiteral("left_top")) };
-    const int top { GetFieldY(QStringLiteral("left_top")) };
+    const qreal left { CmToPixel(GetFieldX(QStringLiteral("left_top"))) };
+
+    const qreal top { CmToPixel(GetFieldY(QStringLiteral("left_top"))) };
+
+    const qreal row_height { CmToPixel(row_height_) };
 
     const QFont original_font { painter->font() };
-    const QFontMetrics fm { original_font };
+
+    const QFontMetricsF fm { original_font, painter->device() };
+
     const int max_font_size { original_font.pointSize() };
-    const int padding { 4 };
+
+    constexpr qreal kPaddingCm { 0.1 };
+    const qreal padding { CmToPixel(kPaddingCm) };
 
     const auto& master { MasterDataRegistry::Instance() };
+
     const auto& partner { PartnerInventoryRegistry::Instance() };
 
     for (long long row = 0; row != end_index - start_index; ++row) {
         const auto* entry { entry_list_->at(start_index + row) };
-        int x { left };
+
+        qreal x { left };
 
         for (qsizetype col = 0; col != columns_.size(); ++col) {
-            const int col_width { column_widths_.at(col) };
+            const qreal col_width { CmToPixel(column_widths_.at(col)) };
 
-            const QRect cell_rect { x, top + static_cast<int>(row) * row_height_, col_width, row_height_ };
+            const QRectF cell_rect { x, top + static_cast<qreal>(row) * row_height, col_width, row_height };
 
             const QString text { GetColumnText(columns_.at(col), entry, master, partner) };
 
-            const int text_width { fm.horizontalAdvance(text) };
-            const int available_width { qMax(1, col_width - padding * 2) };
+            const qreal text_width { fm.horizontalAdvance(text) };
+
+            const qreal available_width { qMax<qreal>(1.0, col_width - padding * 2) };
 
             if (text_width > available_width) {
                 QFont font { original_font };
 
-                const int best_size { PrintHub::FindBestFontSize(font, text, available_width, max_font_size) };
+                const int best_size { PrintHub::FindBestFontSize(font, painter->device(), text, static_cast<int>(available_width), max_font_size) };
 
                 font.setPointSize(best_size);
                 painter->setFont(font);
@@ -195,9 +228,10 @@ void PrintOverlay::DrawTable(QPainter* painter, long long start_index, long long
             }
 
             Qt::Alignment align { Qt::AlignVCenter };
+
             align |= PrintHub::IsNumber(text) ? Qt::AlignRight : Qt::AlignLeft;
 
-            painter->drawText(cell_rect, static_cast<int>(align), text);
+            painter->drawText(cell_rect.adjusted(padding, 0, -padding, 0), static_cast<int>(align), text);
 
             x += col_width;
         }
@@ -269,25 +303,33 @@ QString PrintOverlay::GetColumnText(const QString& column, const Entry* entry, c
 void PrintOverlay::DrawText(QPainter* painter, const QString& field, const QString& text)
 {
     const auto& opt_pos { field_position_.value(field) };
+
     if (!opt_pos.has_value()) {
         qDebug() << "Field not found in config:" << field;
+
         return;
     }
 
     const FieldPosition& pos { *opt_pos };
-    if (pos.x == 0 && pos.y == 0) {
+
+    if (qFuzzyIsNull(pos.x) && qFuzzyIsNull(pos.y)) {
         return;
     }
 
-    qDebug() << "Drawing field:" << field << "at position:" << pos.x << "," << pos.y << "text:" << text;
-    painter->drawText(pos.x, pos.y, text);
+    const qreal x { CmToPixel(pos.x) };
+
+    const qreal y { CmToPixel(pos.y) };
+
+    painter->drawText(QPointF(x, y), text);
 }
 
 void PrintOverlay::ReadFieldPosition(QSettings& settings, const QString& field)
 {
     if (!settings.contains(field)) {
         qWarning() << "Position setting not found, field:" << field;
+
         field_position_[field] = std::nullopt;
+
         return;
     }
 
@@ -295,20 +337,24 @@ void PrintOverlay::ReadFieldPosition(QSettings& settings, const QString& field)
 
     if (position.size() != 2) {
         qWarning() << "Invalid position value, field:" << field << "value:" << position;
+
         field_position_[field] = std::nullopt;
+
         return;
     }
 
     bool x_ok {};
     bool y_ok {};
 
-    const int x { position.at(0).trimmed().toInt(&x_ok) };
-    const int y { position.at(1).trimmed().toInt(&y_ok) };
+    const qreal x { position.at(0).trimmed().toDouble(&x_ok) };
+
+    const qreal y { position.at(1).trimmed().toDouble(&y_ok) };
 
     if (x_ok && y_ok) {
         field_position_[field] = FieldPosition { x, y };
     } else {
         qWarning() << "Invalid position coordinates, field:" << field << "value:" << position;
+
         field_position_[field] = std::nullopt;
     }
 }

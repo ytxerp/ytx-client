@@ -143,7 +143,7 @@ QString PrintHub::NumberToChineseUpper(double value)
     return result;
 }
 
-int PrintHub::FindBestFontSize(const QFont& base_font, const QString& text, int max_width, int max_font, int min_font)
+int PrintHub::FindBestFontSize(const QFont& base_font, const QPaintDevice* device, const QString& text, int max_width, int max_font, int min_font)
 {
     int low { min_font };
     int high { max_font };
@@ -152,14 +152,13 @@ int PrintHub::FindBestFontSize(const QFont& base_font, const QString& text, int 
     QFont font { base_font };
 
     while (low <= high) {
-        const int mid { (low + high) / 2 };
+        const int mid { low + (high - low) / 2 };
 
         font.setPointSize(mid);
 
-        const QFontMetrics fm { font };
-        const int text_width { fm.horizontalAdvance(text) };
+        const QFontMetricsF fm { font, device };
 
-        if (text_width <= max_width) {
+        if (fm.horizontalAdvance(text) <= max_width) {
             best = mid;
             low = mid + 1;
         } else {

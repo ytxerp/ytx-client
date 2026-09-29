@@ -309,10 +309,10 @@ qreal PrintFull::DrawTable(QPainter* painter, qreal y, qreal page_width, qsizety
 
         const qreal available_width { qMax<qreal>(1.0, rect.width() - padding * 2) };
 
-        const QFontMetricsF fm { font };
+        const QFontMetricsF fm { font, painter->device() };
 
         if (fm.horizontalAdvance(text) > available_width) {
-            const int best_size { PrintHub::FindBestFontSize(font, text, static_cast<int>(available_width), font.pointSize()) };
+            const int best_size { PrintHub::FindBestFontSize(font, painter->device(), text, static_cast<int>(available_width), font.pointSize()) };
 
             font.setPointSize(best_size);
         }

@@ -28,18 +28,20 @@
 #include "table/entry.h"
 
 struct FieldPosition {
-    int x {};
-    int y {};
+    qreal x {};
+    qreal y {};
 };
 
 class PrintOverlay {
 public:
     PrintOverlay() = default;
     ~PrintOverlay() = default;
+
     PrintOverlay(const PrintOverlay&) = delete;
     PrintOverlay& operator=(const PrintOverlay&) = delete;
 
     bool LoadTemplate(QSettings& settings);
+
     void Render(QPrinter* printer, const NodeO* node_o, const QList<Entry*>& entry_list, const CSectionConfig* section_config);
 
 private:
@@ -48,23 +50,30 @@ private:
 
     void DrawHeader(QPainter* painter);
     void DrawTable(QPainter* painter, long long start_index, long long end_index);
+
     void DrawFooter(QPainter* painter, int page_num, int total_pages);
 
     QString GetColumnText(const QString& column, const Entry* entry, const MasterDataRegistry& master, const PartnerInventoryRegistry& partner) const;
 
     void DrawText(QPainter* painter, const QString& field, const QString& text);
 
-    int GetFieldX(const QString& field, int default_x = 0) const
+    qreal CmToPixel(qreal cm) const { return cm / 2.54 * printer_->resolution(); }
+
+    qreal GetFieldX(const QString& field, qreal default_x = 0.0) const
     {
-        if (auto it = field_position_.constFind(field); it != field_position_.constEnd() && it.value().has_value())
+        if (auto it = field_position_.constFind(field); it != field_position_.constEnd() && it.value().has_value()) {
             return it.value()->x;
+        }
+
         return default_x;
     }
 
-    int GetFieldY(const QString& field, int default_y = 0) const
+    qreal GetFieldY(const QString& field, qreal default_y = 0.0) const
     {
-        if (auto it = field_position_.constFind(field); it != field_position_.constEnd() && it.value().has_value())
+        if (auto it = field_position_.constFind(field); it != field_position_.constEnd() && it.value().has_value()) {
             return it.value()->y;
+        }
+
         return default_y;
     }
 
@@ -74,10 +83,16 @@ private:
     QHash<QString, std::optional<FieldPosition>> field_position_ {};
 
     int rows_ { 7 };
-    int row_height_ { 30 };
+
+    // cm
+    qreal row_height_ { 0.8 };
 
     QStringList columns_ {};
-    QList<int> column_widths_ {};
+
+    // cm
+    QList<qreal> column_widths_ {};
+
+    QPrinter* printer_ {};
 
     const NodeO* node_o_ {};
     const QList<Entry*>* entry_list_ {};
