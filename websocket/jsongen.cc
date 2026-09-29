@@ -57,7 +57,7 @@ QJsonObject BranchDelete(Section section, CUuid& node_id, CUuid& parent_id, int 
     return message;
 }
 
-QJsonObject Login(CString& email, CString& password, CString& workspace, const utils::DateTimeRange& range)
+QJsonObject Login(CString& email, CString& password, CString& workspace, const utils::DateTimeRange& range, int utc_offset)
 {
     QJsonObject message {};
     message.insert(kEmail, email);
@@ -65,6 +65,7 @@ QJsonObject Login(CString& email, CString& password, CString& workspace, const u
     message.insert(kWorkspace, workspace);
     message.insert(kStart, range.start.toString(Qt::ISODate));
     message.insert(kEnd, range.end.toString(Qt::ISODate));
+    message.insert(kUtcOffset, utc_offset);
     return message;
 }
 

@@ -156,7 +156,9 @@ void AuthDialog::on_pushButtonLogin_clicked()
 
     qDebug() << Q_FUNC_INFO << "QueryRange:" << query_range.ToString();
 
-    WebSocket::Instance()->SendMessage(WsKey::kLogin, JsonGen::Login(email, password, workspace, query_range));
+    const int utc_offset { QDateTime::currentDateTime().offsetFromUtc() };
+
+    WebSocket::Instance()->SendMessage(WsKey::kLogin, JsonGen::Login(email, password, workspace, query_range, utc_offset));
 
     SyncLoginInfo();
     LoginInfo::Instance().WriteConfig(local_settings_);

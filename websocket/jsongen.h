@@ -31,7 +31,7 @@
 
 namespace JsonGen {
 
-QJsonObject Login(CString& email, CString& password, CString& workspace, const utils::DateTimeRange& range);
+QJsonObject Login(CString& email, CString& password, CString& workspace, const utils::DateTimeRange& range, int utc_offset);
 QJsonObject Register(CString& email, CString& password);
 
 QJsonObject NodeInsert(Section section, const Node* node, CUuid& parent_id);

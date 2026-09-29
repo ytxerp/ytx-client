@@ -61,6 +61,7 @@ inline const QString kInputSide = QStringLiteral("input_side");
 inline const QString kSplitter = QStringLiteral("splitter");
 inline const QString kStart = QStringLiteral("start");
 inline const QString kEnd = QStringLiteral("end");
+inline const QString kUtcOffset = QStringLiteral("utc_offset");
 inline const QString kYoyStart = QStringLiteral("yoy_start");
 inline const QString kYoyEnd = QStringLiteral("yoy_end");
 inline const QString kMomStart = QStringLiteral("mom_start");
