@@ -214,9 +214,6 @@ inline const QString kDiscount = QStringLiteral("discount");
 inline const QString kUnitDiscount = QStringLiteral("unit_discount");
 inline const QString kDiscountTotal = QStringLiteral("discount_total");
 
-// Crockford Base32 alphabet (excludes I, L, O, U to avoid confusion)
-inline constexpr char kBase32Crockford[] = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
-
 inline const QString kPasswordRemembered = QStringLiteral("password_remembered");
 
 inline const QString kIssuedTime = QStringLiteral("issued_time");
