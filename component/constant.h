@@ -182,7 +182,6 @@ inline const QString kWidgetId = QStringLiteral("widget_id");
 inline const QString kOldNodeId = QStringLiteral("old_node_id");
 inline const QString kNewNodeId = QStringLiteral("new_node_id");
 inline const QString kExpireTime = QStringLiteral("expire_time");
-inline const QString kSettled = QStringLiteral("settled");
 inline const QString kSettlement = QStringLiteral("settlement");
 inline const QString kSettlementId = QStringLiteral("settlement_id");
 inline const QString kIsSettled = QStringLiteral("is_settled");

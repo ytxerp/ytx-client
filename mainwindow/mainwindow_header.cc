@@ -10,7 +10,6 @@ void MainWindow::InitHeader()
         tr("Direction"),
         tr("Unit"),
         tr("Status"),
-        tr("Settlement"),
         QString(),
         tr("Count"),
         tr("Measure"),

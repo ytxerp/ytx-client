@@ -412,12 +412,9 @@ void MainWindow::InitContextSale()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.settlement_status_map.insert(false, tr("Unsettled"));
-    info.settlement_status_map.insert(true, tr("Settled"));
-
-    info.status_map.insert(std::to_underlying(OrderStatus::kUnreleased), tr("Unreleased"));
-    info.status_map.insert(std::to_underlying(OrderStatus::kReleased), tr("Released"));
-    info.status_map.insert(std::to_underlying(OrderStatus::kRecalled), tr("Recalled"));
+    info.status_map.insert(std::to_underlying(OrderStatus::kUnreleased), tr("Unreleased", "Filter"));
+    info.status_map.insert(std::to_underlying(OrderStatus::kReleased), tr("Released", "Filter"));
+    info.status_map.insert(std::to_underlying(OrderStatus::kRecalled), tr("Recalled", "Filter"));
 
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);
@@ -460,12 +457,9 @@ void MainWindow::InitContextPurchase()
     info.kind_map.insert(std::to_underlying(NodeKind::kBranch), kBranchKind);
     info.kind_map.insert(std::to_underlying(NodeKind::kLeaf), kLeafKind);
 
-    info.settlement_status_map.insert(false, tr("Unsettled"));
-    info.settlement_status_map.insert(true, tr("Settled"));
-
-    info.status_map.insert(std::to_underlying(OrderStatus::kUnreleased), tr("Unreleased"));
-    info.status_map.insert(std::to_underlying(OrderStatus::kReleased), tr("Released"));
-    info.status_map.insert(std::to_underlying(OrderStatus::kRecalled), tr("Recalled"));
+    info.status_map.insert(std::to_underlying(OrderStatus::kUnreleased), tr("Unreleased", "Filter"));
+    info.status_map.insert(std::to_underlying(OrderStatus::kReleased), tr("Released", "Filter"));
+    info.status_map.insert(std::to_underlying(OrderStatus::kRecalled), tr("Recalled", "Filter"));
 
     info.unit_model = new UnitModel(this);
     info.unit_model->Rebuild(info.unit_map);

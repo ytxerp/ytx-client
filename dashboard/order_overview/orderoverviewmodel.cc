@@ -70,8 +70,6 @@ QVariant Model::data(const QModelIndex& index, int role) const
         return row->inventory;
     case RowField::kDirectionRule:
         return row->direction_rule;
-    case RowField::kSettled:
-        return row->settled;
     case RowField::kCount:
         return row->count;
     case RowField::kMeasure:

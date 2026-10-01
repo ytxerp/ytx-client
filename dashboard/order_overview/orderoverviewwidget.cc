@@ -53,7 +53,9 @@ void OrderOverviewWidget::InitFilterView()
 
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     view->horizontalHeader()->setSectionsMovable(true);
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 
     const int height { view->horizontalHeader()->sizeHint().height() + view->verticalHeader()->defaultSectionSize() + view->frameWidth() * 2 };
 

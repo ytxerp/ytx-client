@@ -72,6 +72,7 @@ signals:
 
     void SReplaceResult(bool result);
     void SOrderHistory(Section section, const QUuid& widget_id, const QJsonArray& array);
+    void SOrderOverview(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatementSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void SStatementTertiary(Section section, const QUuid& widget_id, const QJsonArray& array);
@@ -156,6 +157,7 @@ private:
     void AckTable(const QJsonObject& obj);
     void AckOrderNode(const QJsonObject& obj);
     void OnOrderHistory(const QJsonObject& obj);
+    void OnOrderOverview(const QJsonObject& obj);
     void OnStatementPrimary(const QJsonObject& obj);
     void OnStatementSecondary(const QJsonObject& obj);
     void OnStatementTertiary(const QJsonObject& obj);

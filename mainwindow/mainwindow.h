@@ -133,6 +133,7 @@ private slots:
 
     void ROrderHistory(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RShowOrderHistoryWidget(const QUuid& node_id, NodeUnit unit);
+    void ROrderOverview(Section section, const QUuid& widget_id, const QJsonArray& array);
 
     void RStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
     void RStatemetSecondary(Section section, const QUuid& widget_id, const QJsonArray& array);

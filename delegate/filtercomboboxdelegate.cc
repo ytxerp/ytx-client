@@ -34,3 +34,19 @@ void FilterComboBoxDelegate::setModelData(QWidget* editor, QAbstractItemModel* m
 
     model->setData(index, combo->currentData(), Qt::EditRole);
 }
+
+void FilterComboBoxDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    QString text {};
+
+    const QVariant value { index.data(Qt::EditRole) };
+
+    for (const auto& [item_value, item_text] : items_) {
+        if (item_value == value) {
+            text = item_text;
+            break;
+        }
+    }
+
+    PaintText(text, painter, option, index, Qt::AlignLeft | Qt::AlignVCenter);
+}

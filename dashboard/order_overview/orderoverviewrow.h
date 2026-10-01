@@ -37,7 +37,6 @@ enum class RowField : int {
     kDirectionRule,
     kUnit,
     kStatus,
-    kSettled,
     kPlaceholder,
     kCount,
     kMeasure,
@@ -51,7 +50,6 @@ struct Row final {
     QString code {};
     QString inventory {};
     bool direction_rule {};
-    bool settled {};
     double count {};
     double measure {};
     double unit_price {};
@@ -95,9 +93,6 @@ struct Row final {
 
         if (const auto val = object.value(kStatus); val.isDouble())
             status = static_cast<OrderStatus>(val.toInt());
-
-        if (const auto val = object.value(kSettled); val.isBool())
-            settled = val.toBool();
     }
 };
 

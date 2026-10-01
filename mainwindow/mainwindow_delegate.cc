@@ -684,9 +684,6 @@ void MainWindow::DelegateOrderFilterview(QTableView* view, const SectionInfo& in
     auto* direction_rule { new FilterComboBoxDelegate(info.rule_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kDirectionRule), direction_rule);
 
-    auto* settled { new FilterComboBoxDelegate(info.settlement_status_map, view) };
-    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kSettled), settled);
-
     auto* unit { new FilterComboBoxDelegate(info.unit_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kUnit), unit);
 
@@ -696,14 +693,26 @@ void MainWindow::DelegateOrderFilterview(QTableView* view, const SectionInfo& in
 
 void MainWindow::DelegateOrderOverview(QTableView* view) const
 {
-    auto* quantity { new DoubleR(sc_->section_config.quantity_decimal, string_const::kEightDigits, view) };
+    auto* direction_rule { new BoolStringR(sc_->info.rule_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kDirectionRule), direction_rule);
+
+    auto* unit { new IntStringR(sc_->info.unit_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kUnit), unit);
+
+    auto* status { new IntStringR(sc_->info.status_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kStatus), status);
+
+    auto* issued_time { new IssuedTimeR(sc_->section_config.date_format, view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kIssuedTime), issued_time);
+
+    auto* quantity { new DoubleNoneZeroR(sc_->section_config.quantity_decimal, string_const::kEightDigits, view) };
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kCount), quantity);
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kMeasure), quantity);
 
-    auto* price { new DoubleR(sc_->section_config.rate_decimal, string_const::kEightDigits, view) };
+    auto* price { new DoubleNoneZeroR(sc_->section_config.rate_decimal, string_const::kEightDigits, view) };
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kUnitPrice), price);
 
-    auto* amount { new DoubleR(sc_->section_config.amount_decimal, string_const::kEightDigits, view) };
+    auto* amount { new DoubleNoneZeroR(sc_->section_config.amount_decimal, string_const::kEightDigits, view) };
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kAmount), amount);
 }
 

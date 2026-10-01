@@ -32,3 +32,20 @@ void MainWindow::on_actionOrderOverview_triggered()
 
     RegisterWidget(widget, widget_id, WidgetRole::kOrderOverview);
 }
+
+void MainWindow::ROrderOverview(Section section, const QUuid& widget_id, const QJsonArray& array)
+{
+    auto* sc { GetSectionContex(section) };
+
+    auto widget { sc->widget_hash.value(widget_id).widget };
+    if (!widget)
+        return;
+
+    auto* ptr { widget.data() };
+
+    Q_ASSERT(qobject_cast<OrderOverviewWidget*>(ptr));
+    auto* d_widget { static_cast<OrderOverviewWidget*>(ptr) };
+
+    auto* model { d_widget->OverviewModel() };
+    model->Rebuild(array);
+}
