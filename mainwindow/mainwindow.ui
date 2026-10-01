@@ -365,11 +365,21 @@
     </property>
     <addaction name="actionHeatPartner"/>
    </widget>
+   <widget class="QMenu" name="menuOrder">
+    <property name="title">
+     <string>Order</string>
+    </property>
+    <addaction name="actionStatement"/>
+    <addaction name="actionSettlement"/>
+    <addaction name="actionSettlementView"/>
+    <addaction name="actionOrderOverview"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuFinance"/>
    <addaction name="menuInventory"/>
    <addaction name="menuPartner"/>
+   <addaction name="menuOrder"/>
    <addaction name="menuAccount"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -404,10 +414,6 @@
    <addaction name="actionMarkAll"/>
    <addaction name="actionMarkToggle"/>
    <addaction name="actionMarkNone"/>
-   <addaction name="separator"/>
-   <addaction name="actionStatement"/>
-   <addaction name="actionSettlement"/>
-   <addaction name="actionSettlementView"/>
    <addaction name="separator"/>
   </widget>
   <action name="actionInsertNode">
@@ -712,6 +718,14 @@
   <action name="actionSettlementView">
    <property name="text">
     <string>Settlement View</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionOrderOverview">
+   <property name="text">
+    <string>Overview</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

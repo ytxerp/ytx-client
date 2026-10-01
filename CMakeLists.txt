@@ -128,6 +128,9 @@ set(HEADERS
     dashboard/inventory_heat/inventoryheatenum.h
     dashboard/inventory_heat/inventoryheatmodel.h
     dashboard/inventory_heat/inventoryheatrow.h
+    dashboard/order_overview/orderoverviewmodel.h
+    dashboard/order_overview/orderoverviewrow.h
+    dashboard/order_overview/orderoverviewwidget.h
     dashboard/partner_heat/partnerheatdialog.h
     dashboard/partner_heat/partnerheatenum.h
     dashboard/partner_heat/partnerheatmodel.h
@@ -136,6 +139,8 @@ set(HEADERS
     delegate/color.h
     delegate/document.h
     delegate/double.h
+    delegate/filtercomboboxdelegate.h
+    delegate/filterlineeditdelegate.h
     delegate/filterunit.h
     delegate/financeroledelegate.h
     delegate/int.h
@@ -269,6 +274,8 @@ set(HEADERS
     table/model/tablemodelo.h
     table/model/tablemodelp.h
     table/model/tablemodelt.h
+    table/tablefiltermodel.h
+    table/tablefilterproxymodel.h
     table/unitmodel.h
     table/widget/tablewidget.h
     table/widget/tablewidgetfipt.h
@@ -337,12 +344,16 @@ set(SOURCES
     dashboard/income_statement/incomestatementmodel.cc
     dashboard/inventory_heat/inventoryheatdialog.cc
     dashboard/inventory_heat/inventoryheatmodel.cc
+    dashboard/order_overview/orderoverviewmodel.cc
+    dashboard/order_overview/orderoverviewwidget.cc
     dashboard/partner_heat/partnerheatdialog.cc
     dashboard/partner_heat/partnerheatmodel.cc
     delegate/boolstring.cc
     delegate/color.cc
     delegate/document.cc
     delegate/double.cc
+    delegate/filtercomboboxdelegate.cc
+    delegate/filterlineeditdelegate.cc
     delegate/filterunit.cc
     delegate/financeroledelegate.cc
     delegate/int.cc
@@ -448,6 +459,7 @@ set(SOURCES
     mainwindow/mainwindow_node_remove.cc
     mainwindow/mainwindow_order.cc
     mainwindow/mainwindow_order_history.cc
+    mainwindow/mainwindow_order_overview.cc
     mainwindow/mainwindow_partner_heat.cc
     mainwindow/mainwindow_period_close.cc
     mainwindow/mainwindow_search.cc
@@ -483,6 +495,8 @@ set(SOURCES
     table/model/tablemodelo.cc
     table/model/tablemodelp.cc
     table/model/tablemodelt.cc
+    table/tablefiltermodel.cc
+    table/tablefilterproxymodel.cc
     table/unitmodel.cc
     table/widget/tablewidgetfipt.cc
     table/widget/tablewidgeto.cc
@@ -522,6 +536,7 @@ set(UIS
     dashboard/cash_flow_statement/cashflowstatementdialog.ui
     dashboard/income_statement/incomestatementdialog.ui
     dashboard/inventory_heat/inventoryheatdialog.ui
+    dashboard/order_overview/orderoverviewwidget.ui
     dashboard/partner_heat/partnerheatdialog.ui
     dialog/about.ui
     dialog/authdialog.ui

@@ -2,6 +2,23 @@
 
 void MainWindow::InitHeader()
 {
+    header_info_.order_overview = {
+        tr("Issued Time"),
+        tr("Partner"),
+        tr("Code"),
+        tr("Inventory"),
+        tr("Direction"),
+        tr("Unit"),
+        tr("Status"),
+        tr("Settlement"),
+        QString(),
+        tr("Count"),
+        tr("Measure"),
+        tr("Unit Price"),
+        tr("Amount"),
+
+    };
+
     header_info_.audit = {
         tr("ID"),
         tr("User"),

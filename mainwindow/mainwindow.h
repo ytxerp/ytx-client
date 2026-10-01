@@ -194,6 +194,8 @@ private slots:
     void RDenyDefaultUnit(const QString& section);
     void RSelectEntry(const QUuid& node_id, const QUuid& entry_id);
 
+    void on_actionOrderOverview_triggered();
+
 private:
     void SetTabWidget(QTabWidget* tab_widget);
     void ResetMainwindow();
@@ -248,6 +250,8 @@ private:
     void DelegateCashFlowStatement(QTreeView* view) const;
     void DelegateCashFlowStatementWrong(QTableView* view) const;
     void DelegateCashFlowStatementCarrier(QTreeView* view) const;
+    void DelegateOrderFilterview(QTableView* view, const SectionInfo& info) const;
+    void DelegateOrderOverview(QTableView* view) const;
 
     void InitTableView(QTableView* view, int stretch_column) const;
     void InitTreeView(QTreeView* view, int id_column, int stretch_column) const;

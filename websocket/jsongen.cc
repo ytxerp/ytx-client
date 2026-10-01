@@ -525,4 +525,14 @@ QJsonObject SettlementView(Section section, CUuid& widget_id, const utils::DateT
     return message;
 }
 
+QJsonObject OrderOverviewAck(Section section, CUuid& widget_id, const utils::DateTimeRange& range)
+{
+    QJsonObject message {};
+    message.insert(kSection, std::to_underlying(section));
+    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
+    message.insert(kStart, range.start.toString(Qt::ISODate));
+    message.insert(kEnd, range.end.toString(Qt::ISODate));
+    return message;
+}
+
 }

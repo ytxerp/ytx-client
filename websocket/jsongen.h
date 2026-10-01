@@ -90,5 +90,6 @@ QJsonObject PartnerHeadAck(Section section, CUuid& widget_id, const utils::DateT
 QJsonObject BalanceSheetAck(CUuid& widget_id, CUuid& asset, CUuid& liability, CUuid& equity, const utils::DateTimeRange& range, int level);
 QJsonObject IncomeStatementAck(CUuid& widget_id, CUuid& income, CUuid& expense, const utils::DateTimeRange& range, int level);
 QJsonObject CashFlowStatementAck(CUuid& widget_id, const utils::DateTimeRange& range);
+QJsonObject OrderOverviewAck(Section section, CUuid& widget_id, const utils::DateTimeRange& range);
 
 }

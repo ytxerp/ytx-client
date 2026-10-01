@@ -6,11 +6,14 @@
 #include "dashboard/cash_flow_statement/cashflowstatementenum.h"
 #include "dashboard/income_statement/incomestatementenum.h"
 #include "dashboard/inventory_heat/inventoryheatenum.h"
+#include "dashboard/order_overview/orderoverviewrow.h"
 #include "dashboard/partner_heat/partnerheatenum.h"
 #include "delegate/boolstring.h"
 #include "delegate/color.h"
 #include "delegate/document.h"
 #include "delegate/double.h"
+#include "delegate/filtercomboboxdelegate.h"
+#include "delegate/filterlineeditdelegate.h"
 #include "delegate/filterunit.h"
 #include "delegate/financeroledelegate.h"
 #include "delegate/intstring.h"
@@ -668,6 +671,40 @@ void MainWindow::DelegateCashFlowStatementCarrier(QTreeView* view) const
 
     auto* name { new CashFlowNameR(sc_f_.tree_model, view) };
     view->setItemDelegateForColumn(std::to_underlying(cash_flow::RowField::kName), name);
+}
+
+void MainWindow::DelegateOrderFilterview(QTableView* view, const SectionInfo& info) const
+{
+    auto* text { new FilterLineEditDelegate(view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kPartner), text);
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kCode), text);
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kInventory), text);
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kIssuedTime), text);
+
+    auto* direction_rule { new FilterComboBoxDelegate(info.rule_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kDirectionRule), direction_rule);
+
+    auto* settled { new FilterComboBoxDelegate(info.settlement_status_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kSettled), settled);
+
+    auto* unit { new FilterComboBoxDelegate(info.unit_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kUnit), unit);
+
+    auto* status { new FilterComboBoxDelegate(info.status_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kStatus), status);
+}
+
+void MainWindow::DelegateOrderOverview(QTableView* view) const
+{
+    auto* quantity { new DoubleR(sc_->section_config.quantity_decimal, string_const::kEightDigits, view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kCount), quantity);
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kMeasure), quantity);
+
+    auto* price { new DoubleR(sc_->section_config.rate_decimal, string_const::kEightDigits, view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kUnitPrice), price);
+
+    auto* amount { new DoubleR(sc_->section_config.amount_decimal, string_const::kEightDigits, view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kAmount), amount);
 }
 
 void MainWindow::DelegateCashFlowStatementWrong(QTableView* view) const
