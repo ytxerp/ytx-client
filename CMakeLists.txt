@@ -147,7 +147,6 @@ set(HEADERS
     delegate/intstring.h
     delegate/issuedtime.h
     delegate/line.h
-    delegate/readonly/amountorderhistoryr.h
     delegate/readonly/amountr.h
     delegate/readonly/boolcolorstringr.h
     delegate/readonly/boolstringr.h
@@ -241,12 +240,6 @@ set(HEADERS
     global/resourcepool.h
     global/tablesstation.h
     global/userprofile.h
-    history/orderenum.h
-    history/orderhistorywidget.h
-    history/ordermodel.h
-    history/ordermodelp.h
-    history/orderrow.h
-    history/salesmodeli.h
     mainwindow/mainwindow.h
     search/dialog/searchdialog.h
     search/dialog/searchdialogf.h
@@ -360,7 +353,6 @@ set(SOURCES
     delegate/intstring.cc
     delegate/issuedtime.cc
     delegate/line.cc
-    delegate/readonly/amountorderhistoryr.cc
     delegate/readonly/amountr.cc
     delegate/readonly/boolcolorstringr.cc
     delegate/readonly/boolstringr.cc
@@ -435,10 +427,6 @@ set(SOURCES
     global/printhub.cc
     global/printoverlay.cc
     global/tablesstation.cc
-    history/orderhistorywidget.cc
-    history/ordermodel.cc
-    history/ordermodelp.cc
-    history/salesmodeli.cc
     main.cc
     mainwindow/mainwindow.cc
     mainwindow/mainwindow_account.cc
@@ -458,7 +446,6 @@ set(SOURCES
     mainwindow/mainwindow_node.cc
     mainwindow/mainwindow_node_remove.cc
     mainwindow/mainwindow_order.cc
-    mainwindow/mainwindow_order_history.cc
     mainwindow/mainwindow_order_overview.cc
     mainwindow/mainwindow_partner_heat.cc
     mainwindow/mainwindow_period_close.cc
@@ -559,7 +546,6 @@ set(UIS
     finance/statement/statementprimarywidget.ui
     finance/statement/statementsecondarywidget.ui
     finance/statement/statementtertiarywidget.ui
-    history/orderhistorywidget.ui
     mainwindow/mainwindow.ui
     search/dialog/searchdialog.ui
     table/widget/tablewidgetfipt.ui

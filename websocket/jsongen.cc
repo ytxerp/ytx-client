@@ -271,20 +271,6 @@ QJsonObject EntryMessage(Section section, CUuid& entry_id)
     return message;
 }
 
-QJsonObject OrderHistory(Section section, CUuid& widget_id, CUuid& node_id, NodeUnit unit, const utils::DateTimeRange& range)
-{
-    QJsonObject message {};
-
-    message.insert(kSection, std::to_underlying(section));
-    message.insert(kWidgetId, widget_id.toString(QUuid::WithoutBraces));
-    message.insert(kNodeId, node_id.toString(QUuid::WithoutBraces));
-    message.insert(kUnit, std::to_underlying(unit));
-    message.insert(kStart, range.start.toString(Qt::ISODate));
-    message.insert(kEnd, range.end.toString(Qt::ISODate));
-
-    return message;
-}
-
 QJsonObject StatementPrimary(Section section, CUuid& widget_id, int unit, const utils::DateTimeRange& range)
 {
     QJsonObject message {};

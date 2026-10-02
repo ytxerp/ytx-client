@@ -131,8 +131,6 @@ private slots:
     void RFreeWidget(Section section, const QUuid& node_id);
     void RFlushCaches();
 
-    void ROrderHistory(Section section, const QUuid& widget_id, const QJsonArray& array);
-    void RShowOrderHistoryWidget(const QUuid& node_id, NodeUnit unit);
     void ROrderOverview(Section section, const QUuid& widget_id, const QJsonArray& array);
 
     void RStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
@@ -231,9 +229,6 @@ private:
     void TableConnectT(TableModel* table_model) const;
     void TableConnectP(TableModel* table_model) const;
     void TableConnectO(TableModelO* table_model_o, TableWidgetO* widget) const;
-
-    void DelegateSalesHistoryI(QTableView* table_view, CSectionConfig& config) const;
-    void DelegateOrderHistoryP(QTableView* table_view, CSectionConfig& config) const;
 
     void DelegateStatementPrimary(QTableView* table_view, CSectionConfig& config) const;
     void DelegateStatementSecondary(QTableView* table_view, CSectionConfig& config) const;

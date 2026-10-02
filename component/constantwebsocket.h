@@ -187,8 +187,7 @@ enum class WsKey : uint16_t {
 
     kOrderNodeAck = 2620,
     kOrderTreeAck = 2621,
-    kOrderHistory = 2622,
-    kOrderOverview = 2623,
+    kOrderOverview = 2622,
 };
 
 constexpr const char* WsMsgToString(WsKey msg)
@@ -221,8 +220,6 @@ constexpr const char* WsMsgToString(WsKey msg)
         return "kOrderTreeAck";
     case WsKey::kTableAck:
         return "kTableAck";
-    case WsKey::kOrderHistory:
-        return "kOrderHistory";
     case WsKey::kStatementPrimary:
         return "kStatementPrimary";
     case WsKey::kStatementSecondary:
