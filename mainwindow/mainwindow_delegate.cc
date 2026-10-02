@@ -625,7 +625,7 @@ void MainWindow::DelegateCashFlowStatementCarrier(QTreeView* view) const
     view->setItemDelegateForColumn(std::to_underlying(cash_flow::RowField::kName), name);
 }
 
-void MainWindow::DelegateOrderFilterview(QTableView* view, const SectionInfo& info) const
+void MainWindow::DelegateOrderFilterView(QTableView* view, const SectionInfo& info) const
 {
     auto* text { new FilterLineEditDelegate(view) };
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kPartner), text);
@@ -666,6 +666,28 @@ void MainWindow::DelegateOrderOverview(QTableView* view) const
 
     auto* amount { new DoubleNoneZeroR(sc_->section_config.amount_decimal, string_const::kEightDigits, view) };
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kAmount), amount);
+}
+
+void MainWindow::DelegateAuditFilterView(QTableView* view) const
+{
+    auto* text { new FilterLineEditDelegate(view) };
+    view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kTargetId), text);
+    view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kUsername), text);
+    view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kLhsNodeName), text);
+    view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kRhsNodeName), text);
+    view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kCreatedTime), text);
+    view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kTargetCode), text);
+    view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kBefore), text);
+    view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kAfter), text);
+
+    auto* type { new FilterComboBoxDelegate(audit_info_.target_type_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kTargetType), type);
+
+    auto* operation { new FilterComboBoxDelegate(audit_info_.target_operation_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kTargetOperation), operation);
+
+    auto* field { new FilterComboBoxDelegate(audit_info_.target_field_map, view) };
+    view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kTargetField), field);
 }
 
 void MainWindow::DelegateCashFlowStatementWrong(QTableView* view) const

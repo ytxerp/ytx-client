@@ -17,16 +17,14 @@ void audit::Row::ReadJson(const QJsonObject& object)
 {
     using namespace audit::keys;
 
-    if (const auto val = object.value(kId); val.isString())
-        id = QUuid(val.toString());
     if (const auto val = object.value(kTargetId); val.isString())
-        target_id = QUuid(val.toString());
+        target_id = val.toString();
     if (const auto val = object.value(kUsername); val.isString())
         username = val.toString();
-    if (const auto val = object.value(kLhsNode); val.isString())
-        lhs_node = QUuid(val.toString());
-    if (const auto val = object.value(kRhsNode); val.isString())
-        rhs_node = QUuid(val.toString());
+    if (const auto val = object.value(kLhsNodeName); val.isString())
+        lhs_node = val.toString();
+    if (const auto val = object.value(kRhsNodeName); val.isString())
+        rhs_node = val.toString();
     if (const auto val = object.value(kCreatedTime); val.isString())
         created_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
     if (const auto val = object.value(kTargetOperation); val.isDouble())

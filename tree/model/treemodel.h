@@ -121,7 +121,6 @@ public:
 
     inline ItemModel* LeafModel() const { return leaf_model_; }
     inline CUuidString& LeafPath() const { return leaf_path_; }
-    inline CUuidString& BranchPath() const { return branch_path_; }
 
     ItemModel* PathModel(QWidget* parent) const;
 

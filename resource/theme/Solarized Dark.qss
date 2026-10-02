@@ -478,7 +478,7 @@ QScrollBar::down-arrow:vertical {
     height: 8px;
 }
 
-QTableView#tableViewOverview QScrollBar::sub-line:vertical {
+QTableView#tableViewData QScrollBar::sub-line:vertical {
     border-top: 1px solid #657B83;
 }
 

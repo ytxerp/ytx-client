@@ -1,5 +1,6 @@
 #include "auditdialog.h"
 
+#include "audit/auditenum.h"
 #include "component/constantint.h"
 #include "component/constantstring.h"
 #include "component/signalblocker.h"
@@ -8,31 +9,31 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-AuditDialog::AuditDialog(audit::Model* model, CUuid& widget_id, CString& title, Section section, QWidget* parent)
+AuditDialog::AuditDialog(const audit::Info& info, const QStringList& header, CUuid& widget_id, Section section, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::AuditDialog)
-    , model_ { model }
     , section_ { section }
+    , info_ { info }
     , range_ { DefaultRange() }
     , widget_id_ { widget_id }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    ui->tableView->setModel(model_);
-    model_->setParent(ui->tableView);
-
-    InitDialog();
     InitTimer();
+    InitDialog();
+    InitModel(header);
 
-    setWindowTitle(tr("Audit") + QStringLiteral(" - ") + title);
+    setWindowTitle(tr("Audit") + QStringLiteral(" - ") + info.section_map.value(std::to_underlying(section)));
 
     QTimer::singleShot(0, this, &AuditDialog::on_pBtnFetch_clicked);
 }
 
 AuditDialog::~AuditDialog() { delete ui; }
 
-QTableView* AuditDialog::View() { return ui->tableView; }
+QTableView* AuditDialog::DataView() { return ui->tableViewData; }
+
+QTableView* AuditDialog::FilterView() const { return ui->tableViewFilter; }
 
 void AuditDialog::on_pBtnFetch_clicked()
 {
@@ -63,6 +64,24 @@ void AuditDialog::InitTimer()
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
+}
+
+void AuditDialog::InitModel(const QStringList& header)
+{
+    data_model_ = new audit::Model(info_, header, this);
+    filter_model_ = new TableFilterModel(header, std::to_underlying(audit::RowField::kPlaceholder), this);
+    filter_proxy_ = new TableFilterProxyModel(this);
+
+    filter_proxy_->setSourceModel(data_model_);
+
+    ui->tableViewData->setModel(filter_proxy_);
+    ui->tableViewFilter->setModel(filter_model_);
+
+    connect(filter_model_, &TableFilterModel::SFilterChanged, filter_proxy_, &TableFilterProxyModel::RFilterChanged);
+    connect(filter_model_, &TableFilterModel::SFiltersCleared, filter_proxy_, &TableFilterProxyModel::RFiltersCleared);
+    connect(filter_model_, &TableFilterModel::SSortRequested, filter_proxy_, &TableFilterProxyModel::RSortRequested);
+
+    ui->tableViewFilter->setSortingEnabled(true);
 }
 
 void AuditDialog::on_dateEditStart_dateChanged(const QDate& date)

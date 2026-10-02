@@ -19,18 +19,18 @@
 
 #pragma once
 
-#include <QHash>
 #include <QList>
+#include <QMap>
 #include <QString>
 #include <QUuid>
 
 namespace audit {
 
 struct Info {
-    QHash<int, QString> section_hash {};
-    QHash<int, QString> target_operation_hash {};
-    QHash<int, QString> target_type_hash {};
-    QHash<int, QString> target_field_hash {};
+    QMap<int, QString> section_map {};
+    QMap<int, QString> target_operation_map {};
+    QMap<int, QString> target_type_map {};
+    QMap<int, QString> target_field_map {};
 };
 
 }

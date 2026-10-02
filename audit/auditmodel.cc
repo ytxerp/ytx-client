@@ -1,18 +1,14 @@
 #include "auditmodel.h"
 
 #include "auditenum.h"
-#include "enum/section.h"
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
 
 namespace audit {
 
-Model::Model(const Info& info, const QStringList& header, CUuidString& leaf, CUuidString& branch, Section section, QObject* parent)
+Model::Model(const Info& info, const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
-    , section_ { section }
     , info_ { info }
-    , leaf_path_ { leaf }
-    , branch_path_ { branch }
     , header_ { header }
 {
 }
@@ -43,7 +39,7 @@ QVariant Model::data(const QModelIndex& index, int role) const
 
     switch (column) {
     case RowField::kTargetId:
-        return row->target_id.toString(QUuid::WithoutBraces).left(12);
+        return row->target_id;
     case RowField::kUsername:
         return row->username;
     case RowField::kCreatedTime:
@@ -55,58 +51,18 @@ QVariant Model::data(const QModelIndex& index, int role) const
     case RowField::kAfter:
         return JsonValueToString(row->after);
     case RowField::kTargetOperation:
-        return info_.target_operation_hash.value(row->target_operation);
+        return info_.target_operation_map.value(row->target_operation);
     case RowField::kTargetType:
-        return info_.target_type_hash.value(row->target_type);
-    case RowField::kLhsNode:
-        return NodePath(row->lhs_node);
-    case RowField::kRhsNode:
-        return NodePath(row->rhs_node);
+        return info_.target_type_map.value(row->target_type);
+    case RowField::kLhsNodeName:
+        return row->lhs_node;
+    case RowField::kRhsNodeName:
+        return row->rhs_node;
     case RowField::kTargetField:
-        return info_.target_field_hash.value(row->target_field);
+        return info_.target_field_map.value(row->target_field);
+    case RowField::kPlaceholder:
+        return QVariant();
     }
-}
-
-void Model::sort(int column, Qt::SortOrder order)
-{
-    // Convert integer column to the structured enum using brace initialization
-    const RowField e_column { column };
-
-    // Define a lambda for comparison based on the selected column and sort order
-    auto Compare = [order, e_column](const Row* lhs, const Row* rhs) -> bool {
-        switch (e_column) {
-        case RowField::kTargetId:
-            return utils::CompareMember(lhs, rhs, &Row::target_id, order);
-        case RowField::kUsername:
-            return utils::CompareMember(lhs, rhs, &Row::username, order);
-        case RowField::kLhsNode:
-            return utils::CompareMember(lhs, rhs, &Row::lhs_node, order);
-        case RowField::kRhsNode:
-            return utils::CompareMember(lhs, rhs, &Row::rhs_node, order);
-        case RowField::kTargetCode:
-            return utils::CompareMember(lhs, rhs, &Row::target_code, order);
-        case RowField::kTargetOperation:
-            return utils::CompareMember(lhs, rhs, &Row::target_operation, order);
-        case RowField::kTargetType:
-            return utils::CompareMember(lhs, rhs, &Row::target_type, order);
-        case RowField::kCreatedTime:
-            return utils::CompareMember(lhs, rhs, &Row::created_time, order);
-        case RowField::kTargetField:
-            return utils::CompareMember(lhs, rhs, &Row::target_field, order);
-        case RowField::kBefore:
-        case RowField::kAfter:
-            return false;
-        }
-    };
-
-    // Notify the view that the layout is about to change
-    emit layoutAboutToBeChanged();
-
-    // Perform the sort on the underlying data list
-    std::ranges::sort(list_, Compare);
-
-    // Notify the view that the layout has been updated
-    emit layoutChanged();
 }
 
 void Model::Rebuild(const QJsonArray& array)
@@ -136,18 +92,6 @@ void Model::Rebuild(const QJsonArray& array)
     list_ = std::move(new_list);
 
     endResetModel();
-}
-
-const QString Model::NodePath(const QUuid& node_id) const
-{
-    if (const auto it = leaf_path_.constFind(node_id); it != leaf_path_.constEnd())
-        return it.value();
-
-    if (const auto it = branch_path_.constFind(node_id); it != branch_path_.constEnd())
-        return it.value();
-
-    static const QString kEmpty {};
-    return kEmpty;
 }
 
 QString Model::JsonValueToString(const QJsonValue& value)

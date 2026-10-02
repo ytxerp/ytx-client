@@ -33,11 +33,10 @@ namespace audit {
 //   4. Variable-length (TEXT / JSONB)
 struct Row {
     // -- 1. UUIDs ---------------------------------------------------------------
-    QUuid id {}; // PRIMARY KEY — generated client-side before shipping
-    QUuid target_id {}; // The entity being audited
+    QString target_id {}; // The entity being audited
     QString username {}; // Who triggered the action
-    QUuid lhs_node {}; // Default: null UUID (00000000-…)
-    QUuid rhs_node {}; // Default: null UUID (00000000-…)
+    QString lhs_node {}; // Default: null UUID (00000000-…)
+    QString rhs_node {}; // Default: null UUID (00000000-…)
 
     // -- 2. Timestamp -----------------------------------------------------------
     QDateTime created_time {}; // UTC — maps to TIMESTAMPTZ

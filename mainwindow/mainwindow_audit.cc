@@ -9,38 +9,21 @@ void MainWindow::on_actionAuditLog_triggered()
 
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    TreeModel* tree_model {};
+    auto* dialog { new AuditDialog(audit_info_, header_info_.audit, widget_id, start_) };
 
-    switch (start_) {
-    case Section::kFinance:
-        tree_model = sc_f_.tree_model;
-        break;
-    case Section::kTask:
-        tree_model = sc_t_.tree_model;
-        break;
-    case Section::kInventory:
-        tree_model = sc_i_.tree_model;
-        break;
-    case Section::kPartner:
-    case Section::kSale:
-    case Section::kPurchase:
-        tree_model = sc_p_.tree_model;
-        break;
-    }
+    auto* data_view { dialog->DataView() };
+    auto* filter_view { dialog->FilterView() };
 
-    Q_ASSERT(tree_model);
-
-    audit::Model* model { new audit::Model(audit_info_, header_info_.audit, tree_model->LeafPath(), tree_model->BranchPath(), start_, this) };
-
-    auto* dialog { new AuditDialog(model, widget_id, audit_info_.section_hash.value(std::to_underlying(start_)), start_) };
+    InitFilterView(filter_view, data_view);
 
     {
-        auto* view { dialog->View() };
-        InitTableView(view, std::to_underlying(audit::RowField::kAfter));
+        InitTableView(data_view, std::to_underlying(audit::RowField::kPlaceholder));
+        DelegateAuditLog(data_view);
+        data_view->horizontalHeader()->hide();
+    }
 
-        view->horizontalHeader()->setSectionResizeMode(std::to_underlying<>(audit::RowField::kBefore), QHeaderView::Interactive);
-
-        DelegateAuditLog(view);
+    {
+        DelegateAuditFilterView(filter_view);
     }
 
     utils::ManageDialog(widget_hash_, dialog, widget_id);
@@ -58,7 +41,7 @@ void MainWindow::RAuditLogAck(const QUuid& widget_id, const QJsonArray& log_arra
 
     auto* d_widget { static_cast<AuditDialog*>(ptr) };
 
-    auto* model { d_widget->Model() };
+    auto* model { d_widget->DataModel() };
     model->Rebuild(log_array);
 }
 
@@ -66,7 +49,7 @@ void MainWindow::InitAuditInfo()
 {
     using namespace audit;
 
-    audit_info_.section_hash = {
+    audit_info_.section_map = {
         { std::to_underlying(Section::kFinance), tr("Finance") },
         { std::to_underlying(Section::kTask), tr("Task") },
         { std::to_underlying(Section::kInventory), tr("Inventory") },
@@ -75,25 +58,25 @@ void MainWindow::InitAuditInfo()
         { std::to_underlying(Section::kPurchase), tr("Purchase") },
     };
 
-    audit_info_.target_type_hash = {
+    audit_info_.target_type_map = {
         { std::to_underlying(TargetType::kNode), tr("Node") },
         { std::to_underlying(TargetType::kEntry), tr("Entry") },
         { std::to_underlying(TargetType::kSettlement), tr("Settlement") },
     };
 
-    audit_info_.target_operation_hash = {
+    audit_info_.target_operation_map = {
         { std::to_underlying(TargetOperation::kInsert), tr("Insert") },
         { std::to_underlying(TargetOperation::kUpdate), tr("Update") },
         { std::to_underlying(TargetOperation::kDelete), tr("Delete") },
-        { std::to_underlying(TargetOperation::kRecall), tr("Recall") },
-        { std::to_underlying(TargetOperation::kRelease), tr("Release") },
         { std::to_underlying(TargetOperation::kMove), tr("Move") },
         { std::to_underlying(TargetOperation::kReplace), tr("Replace") },
+        { std::to_underlying(TargetOperation::kRelease), tr("Release") },
+        { std::to_underlying(TargetOperation::kRecall), tr("Recall") },
         { std::to_underlying(TargetOperation::kPeriodClose), tr("Period Close") },
     };
 
-    audit_info_.target_field_hash = {
-        { std::to_underlying(TargetField::kNone), QString() },
+    audit_info_.target_field_map = {
+        { std::to_underlying(TargetField::kNone), tr("None") },
         { std::to_underlying(TargetField::kName), tr("Name") },
         { std::to_underlying(TargetField::kDirectionRule), tr("Direction Rule") },
         { std::to_underlying(TargetField::kNumeric), tr("Numeric") },

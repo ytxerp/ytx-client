@@ -31,23 +31,24 @@ enum class TargetOperation {
     kInsert = 0,
     kUpdate,
     kDelete,
-    kRecall,
-    kRelease,
     kMove,
     kReplace,
+    kRelease,
+    kRecall,
     kPeriodClose,
 };
 
 enum class RowField {
     kTargetId,
     kUsername,
-    kLhsNode,
-    kRhsNode,
+    kLhsNodeName,
+    kRhsNodeName,
     kCreatedTime,
     kTargetType,
     kTargetCode,
     kTargetOperation,
     kTargetField,
+    kPlaceholder,
     kBefore,
     kAfter,
 };

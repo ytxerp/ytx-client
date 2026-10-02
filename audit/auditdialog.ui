@@ -14,11 +14,11 @@
    <string>Audit</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="verticalSpacing">
+   <property name="spacing">
     <number>0</number>
    </property>
-   <item row="1" column="0">
-    <widget class="QTableView" name="tableView">
+   <item row="2" column="0">
+    <widget class="QTableView" name="tableViewData">
      <property name="frameShadow">
       <enum>QFrame::Shadow::Raised</enum>
      </property>
@@ -76,6 +76,9 @@
      </layout>
     </widget>
    </item>
+   <item row="1" column="0">
+    <widget class="QTableView" name="tableViewFilter"/>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -89,7 +92,7 @@
   <tabstop>dateEditStart</tabstop>
   <tabstop>dateEditEnd</tabstop>
   <tabstop>pBtnFetch</tabstop>
-  <tabstop>tableView</tabstop>
+  <tabstop>tableViewData</tabstop>
  </tabstops>
  <resources/>
  <connections/>

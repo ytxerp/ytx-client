@@ -26,6 +26,8 @@
 #include "auditmodel.h"
 #include "component/using.h"
 #include "enum/section.h"
+#include "table/tablefiltermodel.h"
+#include "table/tablefilterproxymodel.h"
 #include "utils/daterange.h"
 
 namespace Ui {
@@ -36,11 +38,12 @@ class AuditDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit AuditDialog(audit::Model* model, CUuid& widget_id, CString& title, Section seciton, QWidget* parent = nullptr);
+    explicit AuditDialog(const audit::Info& info, const QStringList& header, CUuid& widget_id, Section seciton, QWidget* parent = nullptr);
     ~AuditDialog() override;
 
-    QTableView* View();
-    audit::Model* Model() { return model_; }
+    QTableView* DataView();
+    QTableView* FilterView() const;
+    audit::Model* DataModel() { return data_model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -51,6 +54,7 @@ private slots:
 private:
     void InitDialog();
     void InitTimer();
+    void InitModel(const QStringList& header);
     static utils::DateRange DefaultRange()
     {
         const auto today { QDate::currentDate() };
@@ -59,11 +63,14 @@ private:
 
 private:
     Ui::AuditDialog* ui;
-    audit::Model* model_ {};
+    audit::Model* data_model_ {};
     const Section section_ {};
+    const audit::Info& info_ {};
 
     utils::DateRange range_ {};
     QTimer* cooldown_timer_ { nullptr };
 
     const QUuid widget_id_ {};
+    TableFilterModel* filter_model_ {};
+    TableFilterProxyModel* filter_proxy_ {};
 };
