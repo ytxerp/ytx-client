@@ -131,6 +131,7 @@ private slots:
     void RFreeWidget(Section section, const QUuid& node_id);
     void RFlushCaches();
 
+    void InitFilterView(QTableView* filter_view, QTableView* data_view) const;
     void ROrderOverview(Section section, const QUuid& widget_id, const QJsonArray& array);
 
     void RStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);

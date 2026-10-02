@@ -1,6 +1,5 @@
 #include "orderoverviewwidget.h"
 
-#include <QScrollBar>
 #include <QTimer>
 
 #include "component/constantint.h"
@@ -24,8 +23,6 @@ OrderOverviewWidget::OrderOverviewWidget(const QStringList& header, const QUuid 
     InitTimer();
     InitWidget();
     InitModel(header);
-    InitFilterView();
-    InitViewSync();
 
     QTimer::singleShot(0, this, &OrderOverviewWidget::on_pBtnFetch_clicked);
 }
@@ -44,24 +41,6 @@ void OrderOverviewWidget::InitWidget()
     ui->end->setDate(range_.end);
 }
 
-void OrderOverviewWidget::InitFilterView()
-{
-    auto* view { ui->tableViewFilter };
-
-    view->verticalHeader()->setDefaultSectionSize(ui_const::kRowHeight);
-    view->verticalHeader()->hide();
-
-    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    view->horizontalHeader()->setSectionsMovable(true);
-    view->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-
-    const int height { view->horizontalHeader()->sizeHint().height() + view->verticalHeader()->defaultSectionSize() + view->frameWidth() * 2 };
-
-    view->setFixedHeight(height);
-}
-
 void OrderOverviewWidget::InitModel(const QStringList& header)
 {
     overview_model_ = new order_overview::Model(header, this);
@@ -78,30 +57,6 @@ void OrderOverviewWidget::InitModel(const QStringList& header)
     connect(filter_model_, &TableFilterModel::SSortRequested, filter_proxy_, &TableFilterProxyModel::RSortRequested);
 
     ui->tableViewFilter->setSortingEnabled(true);
-}
-
-void OrderOverviewWidget::InitViewSync()
-{
-    auto* overview_view { ui->tableViewOverview };
-    auto* filter_view { ui->tableViewFilter };
-
-    connect(overview_view->horizontalHeader(), &QHeaderView::sectionResized, filter_view,
-        [filter_view](int logical_index, int, int new_size) { filter_view->setColumnWidth(logical_index, new_size); });
-
-    connect(overview_view->horizontalScrollBar(), &QScrollBar::valueChanged, filter_view->horizontalScrollBar(), &QScrollBar::setValue);
-
-    connect(filter_view->horizontalHeader(), &QHeaderView::sectionMoved, overview_view, [overview_view](int logical_index, int, int new_visual_index) {
-        auto* header { overview_view->horizontalHeader() };
-        const int current_visual_index { header->visualIndex(logical_index) };
-
-        if (current_visual_index != new_visual_index)
-            header->moveSection(current_visual_index, new_visual_index);
-    });
-
-    const int column_count { overview_view->model()->columnCount() };
-
-    for (int column = 0; column != column_count; ++column)
-        filter_view->setColumnWidth(column, overview_view->columnWidth(column));
 }
 
 void OrderOverviewWidget::InitTimer()

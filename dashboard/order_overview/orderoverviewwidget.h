@@ -50,14 +50,12 @@ private slots:
 
 private:
     void InitWidget();
-    void InitFilterView();
     void InitModel(const QStringList& header);
-    void InitViewSync();
     void InitTimer();
     static utils::DateRange DefaultRange()
     {
         const auto today { QDate::currentDate() };
-        return { QDate(today.year(), today.month(), 1), today };
+        return { QDate(today.year(), 1, 1), today };
     }
 
 private:

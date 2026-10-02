@@ -1,3 +1,6 @@
+#include <QScrollBar>
+
+#include "component/constantint.h"
 #include "dashboard/order_overview/orderoverviewwidget.h"
 #include "mainwindow.h"
 
@@ -18,16 +21,19 @@ void MainWindow::on_actionOrderOverview_triggered()
         tab_bar->setTabData(tab_index, widget_id);
     }
 
+    auto* data_view { widget->OverviewView() };
+    auto* filter_view { widget->FilterView() };
+
+    InitFilterView(filter_view, data_view);
+
     {
-        auto* view { widget->OverviewView() };
-        InitTableView(view, std::to_underlying(order_overview::RowField::kPlaceholder));
-        DelegateOrderOverview(view);
-        view->horizontalHeader()->hide();
+        InitTableView(data_view, std::to_underlying(order_overview::RowField::kPlaceholder));
+        DelegateOrderOverview(data_view);
+        data_view->horizontalHeader()->hide();
     }
 
     {
-        auto* view { widget->FilterView() };
-        DelegateOrderFilterview(view, sc_->info);
+        DelegateOrderFilterview(filter_view, sc_->info);
     }
 
     RegisterWidget(widget, widget_id, WidgetRole::kOrderOverview);
@@ -48,4 +54,42 @@ void MainWindow::ROrderOverview(Section section, const QUuid& widget_id, const Q
 
     auto* model { d_widget->OverviewModel() };
     model->Rebuild(array);
+}
+
+void MainWindow::InitFilterView(QTableView* filter_view, QTableView* data_view) const
+{
+    auto* filter_header { filter_view->horizontalHeader() };
+    auto* data_header { data_view->horizontalHeader() };
+
+    auto* filter_scrollbar { filter_view->horizontalScrollBar() };
+    auto* data_scrollbar { data_view->horizontalScrollBar() };
+
+    {
+        filter_view->verticalHeader()->setDefaultSectionSize(ui_const::kRowHeight);
+        filter_view->verticalHeader()->hide();
+
+        filter_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        filter_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+        filter_header->setSectionsMovable(true);
+        filter_header->setSectionResizeMode(QHeaderView::Fixed);
+
+        const int height { filter_header->sizeHint().height() + filter_view->verticalHeader()->defaultSectionSize() + filter_view->frameWidth() * 2 };
+
+        filter_view->setFixedHeight(height);
+    }
+
+    {
+        connect(data_header, &QHeaderView::sectionResized, filter_view,
+            [filter_view](int logical_index, int, int new_size) { filter_view->setColumnWidth(logical_index, new_size); });
+
+        connect(data_scrollbar, &QScrollBar::valueChanged, filter_scrollbar, &QScrollBar::setValue);
+
+        connect(filter_header, &QHeaderView::sectionMoved, data_view, [data_header](int logical_index, int, int new_visual_index) {
+            const int current_visual_index { data_header->visualIndex(logical_index) };
+
+            if (current_visual_index != new_visual_index)
+                data_header->moveSection(current_visual_index, new_visual_index);
+        });
+    }
 }
