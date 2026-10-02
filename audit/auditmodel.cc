@@ -6,9 +6,8 @@
 
 namespace audit {
 
-Model::Model(const Info& info, const QStringList& header, QObject* parent)
+Model::Model(const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
-    , info_ { info }
     , header_ { header }
 {
 }

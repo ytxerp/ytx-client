@@ -22,7 +22,6 @@
 #include <QAbstractItemModel>
 #include <QJsonArray>
 
-#include "auditinfo.h"
 #include "auditrow.h"
 
 namespace audit {
@@ -31,7 +30,7 @@ class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit Model(const Info& info, const QStringList& header, QObject* parent = nullptr);
+    explicit Model(const QStringList& header, QObject* parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
@@ -59,8 +58,6 @@ private:
 
 private:
     QList<Row*> list_ {};
-
-    const Info& info_;
     const QStringList& header_;
 };
 }

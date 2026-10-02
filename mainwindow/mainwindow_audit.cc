@@ -9,7 +9,8 @@ void MainWindow::on_actionAuditLog_triggered()
 
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* dialog { new AuditDialog(audit_info_, header_info_.audit, widget_id, start_) };
+    const QString title { tr("Audit") + QStringLiteral(" - ") + audit_info_.section_map.value(std::to_underlying(start_)) };
+    auto* dialog { new AuditDialog(title, header_info_.audit, widget_id, start_) };
 
     auto* data_view { dialog->DataView() };
     auto* filter_view { dialog->FilterView() };

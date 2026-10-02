@@ -9,11 +9,10 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-AuditDialog::AuditDialog(const audit::Info& info, const QStringList& header, CUuid& widget_id, Section section, QWidget* parent)
+AuditDialog::AuditDialog(const QString& title, const QStringList& header, CUuid& widget_id, Section section, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::AuditDialog)
     , section_ { section }
-    , info_ { info }
     , range_ { DefaultRange() }
     , widget_id_ { widget_id }
 {
@@ -24,7 +23,7 @@ AuditDialog::AuditDialog(const audit::Info& info, const QStringList& header, CUu
     InitDialog();
     InitModel(header);
 
-    setWindowTitle(tr("Audit") + QStringLiteral(" - ") + info.section_map.value(std::to_underlying(section)));
+    setWindowTitle(title);
 
     QTimer::singleShot(0, this, &AuditDialog::on_pBtnFetch_clicked);
 }
@@ -68,7 +67,7 @@ void AuditDialog::InitTimer()
 
 void AuditDialog::InitModel(const QStringList& header)
 {
-    data_model_ = new audit::Model(info_, header, this);
+    data_model_ = new audit::Model(header, this);
     filter_model_ = new TableFilterModel(header, std::to_underlying(audit::RowField::kPlaceholder), this);
     filter_proxy_ = new TableFilterProxyModel(this);
 

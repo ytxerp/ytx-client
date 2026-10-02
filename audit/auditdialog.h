@@ -38,7 +38,7 @@ class AuditDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit AuditDialog(const audit::Info& info, const QStringList& header, CUuid& widget_id, Section seciton, QWidget* parent = nullptr);
+    explicit AuditDialog(const QString& title, const QStringList& header, CUuid& widget_id, Section seciton, QWidget* parent = nullptr);
     ~AuditDialog() override;
 
     QTableView* DataView();
@@ -65,7 +65,6 @@ private:
     Ui::AuditDialog* ui;
     audit::Model* data_model_ {};
     const Section section_ {};
-    const audit::Info& info_ {};
 
     utils::DateRange range_ {};
     QTimer* cooldown_timer_ { nullptr };
