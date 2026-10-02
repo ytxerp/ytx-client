@@ -21,7 +21,7 @@ void MainWindow::on_actionOrderOverview_triggered()
         tab_bar->setTabData(tab_index, widget_id);
     }
 
-    auto* data_view { widget->OverviewView() };
+    auto* data_view { widget->DataView() };
     auto* filter_view { widget->FilterView() };
 
     InitFilterView(filter_view, data_view);
@@ -33,7 +33,7 @@ void MainWindow::on_actionOrderOverview_triggered()
     }
 
     {
-        DelegateOrderFilterview(filter_view, sc_->info);
+        DelegateOrderFilterView(filter_view, sc_->info);
     }
 
     RegisterWidget(widget, widget_id, WidgetRole::kOrderOverview);
@@ -52,7 +52,7 @@ void MainWindow::ROrderOverview(Section section, const QUuid& widget_id, const Q
     Q_ASSERT(qobject_cast<OrderOverviewWidget*>(ptr));
     auto* d_widget { static_cast<OrderOverviewWidget*>(ptr) };
 
-    auto* model { d_widget->OverviewModel() };
+    auto* model { d_widget->DataModel() };
     model->Rebuild(array);
 }
 

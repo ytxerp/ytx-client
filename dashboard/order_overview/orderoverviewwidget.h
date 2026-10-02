@@ -39,9 +39,9 @@ public:
     explicit OrderOverviewWidget(const QStringList& header, const QUuid widget_id, const Section section, QWidget* parent = nullptr);
     ~OrderOverviewWidget() override;
 
-    QTableView* OverviewView() const;
+    QTableView* DataView() const;
     QTableView* FilterView() const;
-    order_overview::Model* OverviewModel() const { return overview_model_; }
+    order_overview::Model* DataModel() const { return data_model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -62,7 +62,7 @@ private:
     Ui::OrderOverviewWidget* ui;
     utils::DateRange range_ {};
 
-    order_overview::Model* overview_model_ {};
+    order_overview::Model* data_model_ {};
     TableFilterModel* filter_model_ {};
     TableFilterProxyModel* filter_proxy_ {};
 

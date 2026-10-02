@@ -76,7 +76,7 @@ QGroupBox#groupBoxView, QTableView#tableViewFilter
     border-bottom: none;
 }
 
-QGroupBox#groupBoxUnderView, QTableView#tableViewOverview{
+QGroupBox#groupBoxUnderView, QTableView#tableViewData{
     border-top: none;
 }
 

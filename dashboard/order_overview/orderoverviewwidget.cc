@@ -29,7 +29,7 @@ OrderOverviewWidget::OrderOverviewWidget(const QStringList& header, const QUuid 
 
 OrderOverviewWidget::~OrderOverviewWidget() { delete ui; }
 
-QTableView* OrderOverviewWidget::OverviewView() const { return ui->tableViewOverview; }
+QTableView* OrderOverviewWidget::DataView() const { return ui->tableViewData; }
 
 QTableView* OrderOverviewWidget::FilterView() const { return ui->tableViewFilter; }
 
@@ -43,13 +43,13 @@ void OrderOverviewWidget::InitWidget()
 
 void OrderOverviewWidget::InitModel(const QStringList& header)
 {
-    overview_model_ = new order_overview::Model(header, this);
+    data_model_ = new order_overview::Model(header, this);
     filter_model_ = new TableFilterModel(header, std::to_underlying(order_overview::RowField::kPlaceholder), this);
     filter_proxy_ = new TableFilterProxyModel(this);
 
-    filter_proxy_->setSourceModel(overview_model_);
+    filter_proxy_->setSourceModel(data_model_);
 
-    ui->tableViewOverview->setModel(filter_proxy_);
+    ui->tableViewData->setModel(filter_proxy_);
     ui->tableViewFilter->setModel(filter_model_);
 
     connect(filter_model_, &TableFilterModel::SFilterChanged, filter_proxy_, &TableFilterProxyModel::RFilterChanged);

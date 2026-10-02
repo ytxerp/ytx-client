@@ -103,7 +103,7 @@
     <widget class="QTableView" name="tableViewFilter"/>
    </item>
    <item row="2" column="0">
-    <widget class="QTableView" name="tableViewOverview"/>
+    <widget class="QTableView" name="tableViewData"/>
    </item>
   </layout>
  </widget>

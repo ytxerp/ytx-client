@@ -247,7 +247,7 @@ private:
     void DelegateCashFlowStatement(QTreeView* view) const;
     void DelegateCashFlowStatementWrong(QTableView* view) const;
     void DelegateCashFlowStatementCarrier(QTreeView* view) const;
-    void DelegateOrderFilterview(QTableView* view, const SectionInfo& info) const;
+    void DelegateOrderFilterView(QTableView* view, const SectionInfo& info) const;
     void DelegateOrderOverview(QTableView* view) const;
 
     void InitTableView(QTableView* view, int stretch_column) const;
