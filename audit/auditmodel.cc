@@ -51,15 +51,15 @@ QVariant Model::data(const QModelIndex& index, int role) const
     case RowField::kAfter:
         return JsonValueToString(row->after);
     case RowField::kTargetOperation:
-        return info_.target_operation_map.value(row->target_operation);
+        return row->target_operation;
     case RowField::kTargetType:
-        return info_.target_type_map.value(row->target_type);
+        return row->target_type;
     case RowField::kLhsNodeName:
         return row->lhs_node;
     case RowField::kRhsNodeName:
         return row->rhs_node;
     case RowField::kTargetField:
-        return info_.target_field_map.value(row->target_field);
+        return row->target_field;
     case RowField::kPlaceholder:
         return QVariant();
     }

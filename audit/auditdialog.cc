@@ -112,3 +112,12 @@ void AuditDialog::InitDialog()
     ui->dateEditStart->setDate(range_.start);
     ui->dateEditEnd->setDate(range_.end);
 }
+
+void AuditDialog::on_pushButton_clicked()
+{
+    filter_model_->ClearFilters();
+
+    auto* view { ui->tableViewFilter };
+    view->clearSelection();
+    view->setCurrentIndex({});
+}

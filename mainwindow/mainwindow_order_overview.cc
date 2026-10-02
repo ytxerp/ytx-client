@@ -73,10 +73,6 @@ void MainWindow::InitFilterView(QTableView* filter_view, QTableView* data_view) 
 
         filter_header->setSectionsMovable(true);
         filter_header->setSectionResizeMode(QHeaderView::Fixed);
-
-        const int height { filter_header->sizeHint().height() + filter_view->verticalHeader()->defaultSectionSize() + filter_view->frameWidth() * 2 };
-
-        filter_view->setFixedHeight(height);
     }
 
     {
@@ -92,4 +88,10 @@ void MainWindow::InitFilterView(QTableView* filter_view, QTableView* data_view) 
                 data_header->moveSection(current_visual_index, new_visual_index);
         });
     }
+
+    QTimer::singleShot(0, filter_view, [filter_view] {
+        auto* header { filter_view->horizontalHeader() };
+        const int extra { filter_view->height() - header->height() - filter_view->viewport()->height() };
+        filter_view->setFixedHeight(header->height() + filter_view->rowHeight(0) + extra);
+    });
 }

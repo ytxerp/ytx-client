@@ -29,13 +29,13 @@ enum class TargetType {
 
 enum class TargetOperation {
     kInsert = 0,
-    kUpdate,
-    kDelete,
-    kMove,
-    kReplace,
-    kRelease,
-    kRecall,
-    kPeriodClose,
+    kUpdate = 1,
+    kDelete = 2,
+    kMove = 3,
+    kReplace = 4,
+    kRelease = 5,
+    kRecall = 6,
+    kPeriodClose = 7,
 };
 
 enum class RowField {
@@ -44,8 +44,8 @@ enum class RowField {
     kLhsNodeName,
     kRhsNodeName,
     kCreatedTime,
-    kTargetType,
     kTargetCode,
+    kTargetType,
     kTargetOperation,
     kTargetField,
     kPlaceholder,

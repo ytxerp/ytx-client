@@ -510,6 +510,15 @@ void MainWindow::DelegateAuditLog(QTableView* table_view) const
     auto* audit_text { new AuditTextDelegate(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kBefore), audit_text);
     table_view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kAfter), audit_text);
+
+    auto* field { new IntStringR(audit_info_.target_field_map, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kTargetField), field);
+
+    auto* operation { new IntStringR(audit_info_.target_operation_map, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kTargetOperation), operation);
+
+    auto* type { new IntStringR(audit_info_.target_type_map, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kTargetType), type);
 }
 
 void MainWindow::DelegatePeriodClose(QTableView* table_view) const

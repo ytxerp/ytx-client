@@ -1,7 +1,5 @@
 #include "tablefiltermodel.h"
 
-#include "dashboard/order_overview/orderoverviewrow.h"
-
 TableFilterModel::TableFilterModel(const QStringList& header, int ignored_column, QObject* parent)
     : QAbstractItemModel(parent)
     , header_ { header }

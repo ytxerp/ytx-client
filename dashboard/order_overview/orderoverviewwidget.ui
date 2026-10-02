@@ -77,6 +77,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pBtnFetch">
+        <property name="text">
+         <string>Fetch</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
@@ -90,9 +97,9 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pBtnFetch">
+       <widget class="QPushButton" name="pushButton">
         <property name="text">
-         <string>Fetch</string>
+         <string>Clear</string>
         </property>
        </widget>
       </item>

@@ -47,6 +47,7 @@ private slots:
     void on_pBtnFetch_clicked();
     void on_end_dateChanged(const QDate& date);
     void on_start_dateChanged(const QDate& date);
+    void on_pushButton_clicked();
 
 private:
     void InitWidget();
