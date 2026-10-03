@@ -19,13 +19,11 @@
 
 #pragma once
 
-#include <QDateTime>
 #include <QJsonObject>
 #include <QString>
 
 #include "component/constant.h"
-#include "enum/nodeenum.h"
-#include "enum/statusenum.h"
+#include "component/constantstring.h"
 
 namespace order_overview {
 
@@ -45,7 +43,7 @@ enum class RowField : int {
 };
 
 struct Row final {
-    QDateTime issued_time {};
+    QString issued_time {};
     QString partner {};
     QString code {};
     QString inventory {};
@@ -54,15 +52,15 @@ struct Row final {
     double measure {};
     double unit_price {};
     double amount {};
-    NodeUnit unit {};
-    OrderStatus status {};
+    int unit {};
+    int status {};
 
     inline void Reset() { *this = Row {}; }
 
     inline void ReadJson(const QJsonObject& object)
     {
         if (const auto val = object.value(kIssuedTime); val.isString())
-            issued_time = QDateTime::fromString(val.toString(), Qt::ISODate);
+            issued_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime().toString(datetime_format::kDateTime);
 
         if (const auto val = object.value(kPartner); val.isString())
             partner = val.toString();
@@ -89,10 +87,10 @@ struct Row final {
             amount = val.toString().toDouble();
 
         if (const auto val = object.value(kUnit); val.isDouble())
-            unit = static_cast<NodeUnit>(val.toInt());
+            unit = val.toInt();
 
         if (const auto val = object.value(kStatus); val.isDouble())
-            status = static_cast<OrderStatus>(val.toInt());
+            status = val.toInt();
     }
 };
 

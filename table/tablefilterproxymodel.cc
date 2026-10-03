@@ -2,13 +2,33 @@
 
 void TableFilterProxyModel::RFilterChanged(int column, const QVariant& value)
 {
-    if (column < 0 || filters_.value(column) == value)
+    if (column < 0)
+        return;
+
+    std::optional<Filter> filter {};
+
+    switch (value.userType()) {
+    case QMetaType::Int:
+        filter = Filter { value.toInt() };
+        break;
+    case QMetaType::QString:
+        if (const auto text { value.toString() }; !text.isEmpty())
+            filter = Filter { text };
+        break;
+    default:
+        break;
+    }
+
+    const auto it { filters_.constFind(column) };
+
+    // No change: the column already has an equal filter, or has none and the new value is empty
+    if (it == filters_.cend() ? !filter.has_value() : (filter && *it == *filter))
         return;
 
     beginFilterChange();
 
-    if (value.isValid())
-        filters_.insert(column, value);
+    if (filter)
+        filters_.insert(column, *filter);
     else
         filters_.remove(column);
 
@@ -37,6 +57,7 @@ bool TableFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex& 
         return true;
 
     const int column_count { source->columnCount(source_parent) };
+    const int role { filterRole() };
 
     for (auto it = filters_.cbegin(); it != filters_.cend(); ++it) {
         const int column { it.key() };
@@ -44,9 +65,7 @@ bool TableFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex& 
         if (column >= column_count)
             continue;
 
-        const auto index { source->index(source_row, column, source_parent) };
-
-        if (!Match(index.data(filterRole()), it.value()))
+        if (!Match(source->index(source_row, column, source_parent).data(role), it.value()))
             return false;
     }
 

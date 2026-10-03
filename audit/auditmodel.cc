@@ -54,9 +54,9 @@ QVariant Model::data(const QModelIndex& index, int role) const
     case RowField::kTargetType:
         return row->target_type;
     case RowField::kLhsNodeName:
-        return row->lhs_node;
+        return row->lhs_node_name;
     case RowField::kRhsNodeName:
-        return row->rhs_node;
+        return row->rhs_node_name;
     case RowField::kTargetField:
         return row->target_field;
     case RowField::kPlaceholder:

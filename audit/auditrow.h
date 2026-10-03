@@ -25,21 +25,14 @@
 
 namespace audit {
 
-// Mirrors the server-side `audit` table exactly.
-// Field order follows the same memory-layout grouping as the schema:
-//   1. UUIDs (16 bytes each)
-//   2. Timestamps (8 bytes)
-//   3. Integers (4 bytes)
-//   4. Variable-length (TEXT / JSONB)
 struct Row {
-    // -- 1. UUIDs ---------------------------------------------------------------
-    QString target_id {}; // The entity being audited
-    QString username {}; // Who triggered the action
-    QString lhs_node {}; // Default: null UUID (00000000-…)
-    QString rhs_node {}; // Default: null UUID (00000000-…)
+    QString target_id {};
+    QString username {};
+    QString lhs_node_name {};
+    QString rhs_node_name {};
 
     // -- 2. Timestamp -----------------------------------------------------------
-    QDateTime created_time {}; // UTC — maps to TIMESTAMPTZ
+    QString created_time {}; // UTC — maps to TIMESTAMPTZ
 
     // -- 3. Integers ------------------------------------------------------------
     int target_operation {}; // Workspace key

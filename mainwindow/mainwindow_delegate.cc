@@ -504,9 +504,6 @@ void MainWindow::DelegateWorkspaceMember(QTableView* table_view) const
 
 void MainWindow::DelegateAuditLog(QTableView* table_view) const
 {
-    auto* created_time { new IssuedTimeR(datetime_format::kDateTime, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kCreatedTime), created_time);
-
     auto* audit_text { new AuditTextDelegate(table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kBefore), audit_text);
     table_view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kAfter), audit_text);
@@ -662,9 +659,6 @@ void MainWindow::DelegateOrderOverview(QTableView* view) const
 
     auto* status { new IntStringR(sc_->info.status_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kStatus), status);
-
-    auto* issued_time { new IssuedTimeR(sc_->section_config.date_format, view) };
-    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kIssuedTime), issued_time);
 
     auto* quantity { new DoubleNoneZeroR(sc_->section_config.quantity_decimal, string_const::kEightDigits, view) };
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kCount), quantity);

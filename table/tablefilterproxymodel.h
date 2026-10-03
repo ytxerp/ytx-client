@@ -19,11 +19,8 @@
 
 #pragma once
 
-#include <QDateTime>
 #include <QHash>
 #include <QSortFilterProxyModel>
-
-#include "component/constantstring.h"
 
 class TableFilterProxyModel final : public QSortFilterProxyModel {
     Q_OBJECT
@@ -47,25 +44,16 @@ protected:
     bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const override;
 
 private:
-    static bool Match(const QVariant& data, const QVariant& filter)
+    using Filter = std::variant<int, QString>;
+
+    static bool Match(const QVariant& data, const Filter& filter)
     {
-        if (filter.userType() != QMetaType::QString)
-            return data == filter;
+        if (const auto* number { std::get_if<int>(&filter) })
+            return data.toInt() == *number;
 
-        QString text {};
-
-        switch (data.userType()) {
-        case QMetaType::QDateTime:
-            text = data.toDateTime().toString(datetime_format::kDashedDate);
-            break;
-        default:
-            text = data.toString();
-            break;
-        }
-
-        return text.contains(filter.toString(), Qt::CaseInsensitive);
+        return data.toString().contains(*std::get_if<QString>(&filter), Qt::CaseInsensitive);
     }
 
 private:
-    QHash<int, QVariant> filters_ {};
+    QHash<int, Filter> filters_ {};
 };

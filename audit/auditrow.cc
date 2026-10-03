@@ -1,6 +1,7 @@
 #include "auditrow.h"
 
 #include "component/constant.h"
+#include "component/constantstring.h"
 
 namespace audit::keys {
 constexpr QLatin1StringView kTargetId { "target_id" };
@@ -22,11 +23,11 @@ void audit::Row::ReadJson(const QJsonObject& object)
     if (const auto val = object.value(kUsername); val.isString())
         username = val.toString();
     if (const auto val = object.value(kLhsNodeName); val.isString())
-        lhs_node = val.toString();
+        lhs_node_name = val.toString();
     if (const auto val = object.value(kRhsNodeName); val.isString())
-        rhs_node = val.toString();
+        rhs_node_name = val.toString();
     if (const auto val = object.value(kCreatedTime); val.isString())
-        created_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime();
+        created_time = QDateTime::fromString(val.toString(), Qt::ISODate).toLocalTime().toString(datetime_format::kDateTime);
     if (const auto val = object.value(kTargetOperation); val.isDouble())
         target_operation = val.toInt();
     if (const auto val = object.value(kTargetType); val.isDouble())

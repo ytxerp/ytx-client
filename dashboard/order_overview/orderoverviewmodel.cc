@@ -79,9 +79,9 @@ QVariant Model::data(const QModelIndex& index, int role) const
     case RowField::kAmount:
         return row->amount;
     case RowField::kUnit:
-        return std::to_underlying(row->unit);
+        return row->unit;
     case RowField::kStatus:
-        return std::to_underlying(row->status);
+        return row->status;
     case RowField::kPlaceholder:
         return QVariant();
     }
