@@ -513,6 +513,14 @@
     </message>
 </context>
 <context>
+    <name>FilterDoubleDelegate</name>
+    <message>
+        <location filename="../../delegate/filterdoubledelegate.cc" line="16"/>
+        <source>Filter</source>
+        <translation>过滤</translation>
+    </message>
+</context>
+<context>
     <name>FilterLineEditDelegate</name>
     <message>
         <location filename="../../delegate/filterlineeditdelegate.cc" line="12"/>
