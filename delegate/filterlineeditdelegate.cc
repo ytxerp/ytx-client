@@ -10,7 +10,6 @@ QWidget* FilterLineEditDelegate::createEditor(QWidget* parent, const QStyleOptio
     auto* editor { new QLineEdit(parent) };
 
     editor->setPlaceholderText(tr("Filter"));
-    editor->setClearButtonEnabled(true);
 
     auto* self { const_cast<FilterLineEditDelegate*>(this) };
 

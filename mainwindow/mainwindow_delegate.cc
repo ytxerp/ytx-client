@@ -13,6 +13,7 @@
 #include "delegate/document.h"
 #include "delegate/double.h"
 #include "delegate/filtercomboboxdelegate.h"
+#include "delegate/filterdoubledelegate.h"
 #include "delegate/filterlineeditdelegate.h"
 #include "delegate/filterunit.h"
 #include "delegate/financeroledelegate.h"
@@ -638,6 +639,13 @@ void MainWindow::DelegateOrderFilterView(QTableView* view, const SectionInfo& in
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kCode), text);
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kInventory), text);
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kIssuedTime), text);
+
+    // Numeric columns: right-aligned, digits and '.' only
+    auto* number { new FilterDoubleDelegate(view) };
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kCount), number);
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kMeasure), number);
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kUnitPrice), number);
+    view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kAmount), number);
 
     auto* direction_rule { new FilterComboBoxDelegate(info.rule_map, view) };
     view->setItemDelegateForColumn(std::to_underlying(order_overview::RowField::kDirectionRule), direction_rule);

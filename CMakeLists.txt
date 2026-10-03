@@ -140,6 +140,7 @@ set(HEADERS
     delegate/document.h
     delegate/double.h
     delegate/filtercomboboxdelegate.h
+    delegate/filterdoubledelegate.h
     delegate/filterlineeditdelegate.h
     delegate/filterunit.h
     delegate/financeroledelegate.h
@@ -346,6 +347,7 @@ set(SOURCES
     delegate/document.cc
     delegate/double.cc
     delegate/filtercomboboxdelegate.cc
+    delegate/filterdoubledelegate.cc
     delegate/filterlineeditdelegate.cc
     delegate/filterunit.cc
     delegate/financeroledelegate.cc
