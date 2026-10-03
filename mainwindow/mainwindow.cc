@@ -497,6 +497,7 @@ void MainWindow::SetIcon() const
     ui->actionQuit->setIcon(QIcon(":/solarized_dark/solarized_dark/quit.png"));
     ui->actionTags->setIcon(QIcon(":/solarized_dark/solarized_dark/tag.png"));
     ui->actionSettlementView->setIcon(QIcon(":/solarized_dark/solarized_dark/settlement_view.png"));
+    ui->actionOrderOverview->setIcon(QIcon(":/solarized_dark/solarized_dark/order_overview.png"));
 }
 
 void MainWindow::on_actionInsertNode_triggered()
