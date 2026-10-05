@@ -1,9 +1,9 @@
-#include "finance/settlement/settlementenum.h"
-#include "finance/settlement/settlementprimarymodel.h"
-#include "finance/settlement/settlementprimarywidget.h"
-#include "finance/settlement/settlementsecondarymodel.h"
-#include "finance/settlement/settlementsecondarywidget.h"
 #include "mainwindow.h"
+#include "order/settlement/settlementenum.h"
+#include "order/settlement/settlementprimarymodel.h"
+#include "order/settlement/settlementprimarywidget.h"
+#include "order/settlement/settlementsecondarymodel.h"
+#include "order/settlement/settlementsecondarywidget.h"
 
 void MainWindow::on_actionSettlement_triggered()
 {

@@ -1,8 +1,8 @@
-#include "finance/statement/statementenum.h"
-#include "finance/statement/statementprimarywidget.h"
-#include "finance/statement/statementsecondarywidget.h"
-#include "finance/statement/statementtertiarywidget.h"
 #include "mainwindow.h"
+#include "order/statement/statementenum.h"
+#include "order/statement/statementprimarywidget.h"
+#include "order/statement/statementsecondarywidget.h"
+#include "order/statement/statementtertiarywidget.h"
 
 void MainWindow::on_actionStatement_triggered()
 {

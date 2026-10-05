@@ -141,8 +141,12 @@ void StatementPrimaryWidget::InitTimer()
 
 void StatementPrimaryWidget::on_tableView_doubleClicked(const QModelIndex& index)
 {
-    if (index.column() == std::to_underlying(statement::PrimaryField::kPartner)) {
-        const auto partner { index.siblingAtColumn(std::to_underlying(statement::PrimaryField::kPartner)).data().toUuid() };
-        emit SShowSecondaryStatement(partner, range_, unit_);
-    }
+    if (index.column() != std::to_underlying(statement::PrimaryField::kPartnerName))
+        return;
+
+    const auto* row { static_cast<const statement::PrimaryRow*>(index.internalPointer()) };
+    if (!row)
+        return;
+
+    emit SShowSecondaryStatement(row->partner_id, range_, unit_);
 }

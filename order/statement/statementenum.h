@@ -23,7 +23,7 @@ namespace statement {
 
 // P:Previous, C:Current, Statement
 enum class PrimaryField {
-    kPartner = 0,
+    kPartnerName = 0,
     kCount,
     kMeasure,
     kAmount,

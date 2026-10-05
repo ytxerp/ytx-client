@@ -1,5 +1,5 @@
-#include "finance/settlement_view/settlementviewwidget.h"
 #include "mainwindow.h"
+#include "order/settlement_view/settlementviewwidget.h"
 
 void MainWindow::on_actionSettlementView_triggered()
 {

@@ -37,6 +37,7 @@ struct PrimaryRow final {
     RowType type { RowType::kData };
 
     QUuid partner_id {};
+    QString partner_name {};
     double count {};
     double measure {};
     double amount {};
@@ -53,6 +54,8 @@ inline void PrimaryRow::ReadJson(const QJsonObject& object)
 {
     if (const auto val = object.value(kPartnerId); val.isString())
         partner_id = QUuid(val.toString());
+    if (const auto val = object.value(kPartnerName); val.isString())
+        partner_name = val.toString();
     if (const auto val = object.value(kCount); val.isString())
         count = val.toString().toDouble();
     if (const auto val = object.value(kMeasure); val.isString())

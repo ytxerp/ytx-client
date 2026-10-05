@@ -44,9 +44,9 @@
 #include "delegate/statustestdelegate.h"
 #include "delegate/tagdelegate.h"
 #include "delegate/workspaceroledelegate.h"
-#include "finance/settlement/settlementenum.h"
-#include "finance/statement/statementenum.h"
 #include "mainwindow.h"
+#include "order/settlement/settlementenum.h"
+#include "order/statement/statementenum.h"
 #include "tag/tagenum.h"
 #include "workspace/workspaceenum.h"
 
@@ -390,7 +390,7 @@ void MainWindow::DelegateStatementPrimary(QTableView* table_view, CSectionConfig
     table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kAmount), amount);
 
     auto* name { new NodeNameTotalR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kPartner), name);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kPartnerName), name);
 }
 
 void MainWindow::DelegateStatementSecondary(QTableView* table_view, CSectionConfig& config) const

@@ -207,23 +207,6 @@ set(HEADERS
     finance/finance_role.h
     finance/period_close/periodclosedialog.h
     finance/period_close/periodclosemodel.h
-    finance/settlement/settlement.h
-    finance/settlement/settlementenum.h
-    finance/settlement/settlementprimarymodel.h
-    finance/settlement/settlementprimarywidget.h
-    finance/settlement/settlementsecondarymodel.h
-    finance/settlement/settlementsecondarywidget.h
-    finance/settlement_view/settlement_view.h
-    finance/settlement_view/settlement_view_model.h
-    finance/settlement_view/settlementviewwidget.h
-    finance/statement/statement.h
-    finance/statement/statementenum.h
-    finance/statement/statementprimarymodel.h
-    finance/statement/statementprimarywidget.h
-    finance/statement/statementsecondarymodel.h
-    finance/statement/statementsecondarywidget.h
-    finance/statement/statementtertiarymodel.h
-    finance/statement/statementtertiarywidget.h
     global/collator.h
     global/concepts.h
     global/dailylogger.h
@@ -242,6 +225,23 @@ set(HEADERS
     global/tablesstation.h
     global/userprofile.h
     mainwindow/mainwindow.h
+    order/settlement/settlement.h
+    order/settlement/settlementenum.h
+    order/settlement/settlementprimarymodel.h
+    order/settlement/settlementprimarywidget.h
+    order/settlement/settlementsecondarymodel.h
+    order/settlement/settlementsecondarywidget.h
+    order/settlement_view/settlement_view.h
+    order/settlement_view/settlement_view_model.h
+    order/settlement_view/settlementviewwidget.h
+    order/statement/statement.h
+    order/statement/statementenum.h
+    order/statement/statementprimarymodel.h
+    order/statement/statementprimarywidget.h
+    order/statement/statementsecondarymodel.h
+    order/statement/statementsecondarywidget.h
+    order/statement/statementtertiarymodel.h
+    order/statement/statementtertiarywidget.h
     search/dialog/searchdialog.h
     search/dialog/searchdialogf.h
     search/dialog/searchdialogi.h
@@ -407,19 +407,6 @@ set(SOURCES
     finance/finance_role.cc
     finance/period_close/periodclosedialog.cc
     finance/period_close/periodclosemodel.cc
-    finance/settlement/settlement.cc
-    finance/settlement/settlementprimarymodel.cc
-    finance/settlement/settlementprimarywidget.cc
-    finance/settlement/settlementsecondarymodel.cc
-    finance/settlement/settlementsecondarywidget.cc
-    finance/settlement_view/settlement_view_model.cc
-    finance/settlement_view/settlementviewwidget.cc
-    finance/statement/statementprimarymodel.cc
-    finance/statement/statementprimarywidget.cc
-    finance/statement/statementsecondarymodel.cc
-    finance/statement/statementsecondarywidget.cc
-    finance/statement/statementtertiarymodel.cc
-    finance/statement/statementtertiarywidget.cc
     global/dailylogger.cc
     global/exportexcel.cc
     global/logininfo.cc
@@ -458,6 +445,19 @@ set(SOURCES
     mainwindow/mainwindow_tab_widget.cc
     mainwindow/mainwindow_tag.cc
     mainwindow/mainwindow_view.cc
+    order/settlement/settlement.cc
+    order/settlement/settlementprimarymodel.cc
+    order/settlement/settlementprimarywidget.cc
+    order/settlement/settlementsecondarymodel.cc
+    order/settlement/settlementsecondarywidget.cc
+    order/settlement_view/settlement_view_model.cc
+    order/settlement_view/settlementviewwidget.cc
+    order/statement/statementprimarymodel.cc
+    order/statement/statementprimarywidget.cc
+    order/statement/statementsecondarymodel.cc
+    order/statement/statementsecondarywidget.cc
+    order/statement/statementtertiarymodel.cc
+    order/statement/statementtertiarywidget.cc
     search/dialog/searchdialog.cc
     search/dialog/searchdialogf.cc
     search/dialog/searchdialogi.cc
@@ -542,13 +542,13 @@ set(UIS
     dialog/preferences.ui
     dialog/userprofiledialog.ui
     finance/period_close/periodclosedialog.ui
-    finance/settlement/settlementprimarywidget.ui
-    finance/settlement/settlementsecondarywidget.ui
-    finance/settlement_view/settlementviewwidget.ui
-    finance/statement/statementprimarywidget.ui
-    finance/statement/statementsecondarywidget.ui
-    finance/statement/statementtertiarywidget.ui
     mainwindow/mainwindow.ui
+    order/settlement/settlementprimarywidget.ui
+    order/settlement/settlementsecondarywidget.ui
+    order/settlement_view/settlementviewwidget.ui
+    order/statement/statementprimarywidget.ui
+    order/statement/statementsecondarywidget.ui
+    order/statement/statementtertiarywidget.ui
     search/dialog/searchdialog.ui
     table/widget/tablewidgetfipt.ui
     table/widget/tablewidgeto.ui

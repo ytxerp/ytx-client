@@ -54,11 +54,11 @@ QVariant PrimaryModel::data(const QModelIndex& index, int role) const
     if (statement->type == RowType::kSpacer)
         return {};
 
-    if (statement->type == RowType::kTotal && column == PrimaryField::kPartner)
+    if (statement->type == RowType::kTotal && column == PrimaryField::kPartnerName)
         return tr("Total");
 
     switch (column) {
-    case PrimaryField::kPartner:
+    case PrimaryField::kPartnerName:
         return statement->partner_id;
     case PrimaryField::kAmount:
         return statement->amount;
@@ -88,7 +88,7 @@ void PrimaryModel::sort(int column, Qt::SortOrder order)
 
     auto Compare = [e_column, order](const PrimaryRow* lhs, const PrimaryRow* rhs) -> bool {
         switch (e_column) {
-        case PrimaryField::kPartner:
+        case PrimaryField::kPartnerName:
             return utils::CompareMember(lhs, rhs, &PrimaryRow::partner_id, order);
         case PrimaryField::kAmount:
             return utils::CompareMember(lhs, rhs, &PrimaryRow::amount, order);

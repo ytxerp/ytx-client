@@ -210,6 +210,7 @@ inline const QString kFinalTotal = QStringLiteral("final_total");
 
 inline const QString kPartnerId = QStringLiteral("partner_id");
 inline const QString kEmployeeId = QStringLiteral("employee_id");
+inline const QString kPartnerName = QStringLiteral("partner_name");
 
 inline const QString kDiscount = QStringLiteral("discount");
 inline const QString kUnitDiscount = QStringLiteral("unit_discount");
