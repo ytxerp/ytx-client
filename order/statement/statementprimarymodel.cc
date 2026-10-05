@@ -59,7 +59,7 @@ QVariant PrimaryModel::data(const QModelIndex& index, int role) const
 
     switch (column) {
     case PrimaryField::kPartnerName:
-        return statement->partner_id;
+        return statement->partner_name;
     case PrimaryField::kAmount:
         return statement->amount;
     case PrimaryField::kCount:
@@ -89,7 +89,7 @@ void PrimaryModel::sort(int column, Qt::SortOrder order)
     auto Compare = [e_column, order](const PrimaryRow* lhs, const PrimaryRow* rhs) -> bool {
         switch (e_column) {
         case PrimaryField::kPartnerName:
-            return utils::CompareMember(lhs, rhs, &PrimaryRow::partner_id, order);
+            return utils::CompareMember(lhs, rhs, &PrimaryRow::partner_name, order);
         case PrimaryField::kAmount:
             return utils::CompareMember(lhs, rhs, &PrimaryRow::amount, order);
         case PrimaryField::kCount:

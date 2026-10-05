@@ -388,9 +388,6 @@ void MainWindow::DelegateStatementPrimary(QTableView* table_view, CSectionConfig
 
     auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kAmount), amount);
-
-    auto* name { new NodeNameTotalR(sc_p_.tree_model, table_view) };
-    table_view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kPartnerName), name);
 }
 
 void MainWindow::DelegateStatementSecondary(QTableView* table_view, CSectionConfig& config) const
