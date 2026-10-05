@@ -29,7 +29,13 @@
    <property name="spacing">
     <number>0</number>
    </property>
-   <item row="0" column="0">
+   <item row="2" column="0">
+    <widget class="QTableView" name="tableViewFilter"/>
+   </item>
+   <item row="3" column="0">
+    <widget class="QTableView" name="tableViewData"/>
+   </item>
+   <item row="1" column="0">
     <widget class="QGroupBox" name="groupBoxView">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -77,6 +83,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButtonClear">
+        <property name="text">
+         <string>Clear</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer_3">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
@@ -120,9 +133,6 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QTableView" name="tableView"/>
-   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -139,7 +149,7 @@
   <tabstop>rBtnMS</tabstop>
   <tabstop>rBtnPEND</tabstop>
   <tabstop>pBtnFetch</tabstop>
-  <tabstop>tableView</tabstop>
+  <tabstop>tableViewData</tabstop>
  </tabstops>
  <resources/>
  <connections/>

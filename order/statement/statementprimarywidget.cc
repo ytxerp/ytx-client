@@ -10,24 +10,21 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementPrimaryWidget::StatementPrimaryWidget(statement::PrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent)
+StatementPrimaryWidget::StatementPrimaryWidget(const QStringList& header, CUuid& widget_id, Section section, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementPrimaryWidget)
     , unit_ { std::to_underlying(NodeUnit::OMonthly) }
     , range_ { DefaultRange() }
-    , model_ { model }
     , section_ { section }
     , widget_id_ { widget_id }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    ui->tableView->setModel(model);
-    model->setParent(ui->tableView);
-
     IniUnitGroup();
     IniWidget();
     InitTimer();
+    InitModel(header);
     IniUnit(unit_);
     IniConnect();
 
@@ -36,7 +33,9 @@ StatementPrimaryWidget::StatementPrimaryWidget(statement::PrimaryModel* model, C
 
 StatementPrimaryWidget::~StatementPrimaryWidget() { delete ui; }
 
-QTableView* StatementPrimaryWidget::View() const { return ui->tableView; }
+QTableView* StatementPrimaryWidget::DataView() const { return ui->tableViewData; }
+
+QTableView* StatementPrimaryWidget::FilterView() const { return ui->tableViewFilter; }
 
 void StatementPrimaryWidget::on_start_dateChanged(const QDate& date)
 {
@@ -139,14 +138,45 @@ void StatementPrimaryWidget::InitTimer()
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
 }
 
-void StatementPrimaryWidget::on_tableView_doubleClicked(const QModelIndex& index)
+void StatementPrimaryWidget::InitModel(const QStringList& header)
+{
+    data_model_ = new statement::PrimaryModel(header, this);
+    filter_model_ = new TableFilterModel(header, std::to_underlying(statement::PrimaryField::kPlaceholder), this);
+    filter_proxy_ = new TableFilterProxyModel(this);
+
+    filter_proxy_->setSourceModel(data_model_);
+
+    ui->tableViewData->setModel(filter_proxy_);
+    ui->tableViewFilter->setModel(filter_model_);
+
+    connect(filter_model_, &TableFilterModel::SFilterChanged, filter_proxy_, &TableFilterProxyModel::RFilterChanged);
+    connect(filter_model_, &TableFilterModel::SFiltersCleared, filter_proxy_, &TableFilterProxyModel::RFiltersCleared);
+    connect(filter_model_, &TableFilterModel::SSortRequested, filter_proxy_, &TableFilterProxyModel::RSortRequested);
+
+    ui->tableViewFilter->setSortingEnabled(true);
+}
+
+void StatementPrimaryWidget::on_tableViewData_doubleClicked(const QModelIndex& index)
 {
     if (index.column() != std::to_underlying(statement::PrimaryField::kPartnerName))
         return;
 
-    const auto* row { static_cast<const statement::PrimaryRow*>(index.internalPointer()) };
+    const auto source_index { filter_proxy_->mapToSource(index) };
+    if (!source_index.isValid())
+        return;
+
+    const auto* row { static_cast<const statement::PrimaryRow*>(source_index.internalPointer()) };
     if (!row)
         return;
 
     emit SShowSecondaryStatement(row->partner_id, range_, unit_);
+}
+
+void StatementPrimaryWidget::on_pushButtonClear_clicked()
+{
+    filter_model_->ClearFilters();
+
+    auto* view { ui->tableViewFilter };
+    view->clearSelection();
+    view->setCurrentIndex({});
 }

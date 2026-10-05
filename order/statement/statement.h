@@ -34,8 +34,6 @@ enum class RowType {
 };
 
 struct PrimaryRow final {
-    RowType type { RowType::kData };
-
     QUuid partner_id {};
     QString partner_name {};
     double count {};

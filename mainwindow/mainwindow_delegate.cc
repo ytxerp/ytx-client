@@ -698,6 +698,17 @@ void MainWindow::DelegateAuditFilterView(QTableView* view) const
     view->setItemDelegateForColumn(std::to_underlying(audit::RowField::kTargetField), field);
 }
 
+void MainWindow::DelegateStatementFilterView(QTableView* view) const
+{
+    auto* text { new FilterLineEditDelegate(view) };
+    view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kPartnerName), text);
+
+    auto* number { new FilterDoubleDelegate(view) };
+    view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kCount), number);
+    view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kMeasure), number);
+    view->setItemDelegateForColumn(std::to_underlying(statement::PrimaryField::kAmount), number);
+}
+
 void MainWindow::DelegateCashFlowStatementWrong(QTableView* view) const
 {
     const auto& config { sc_f_.section_config };

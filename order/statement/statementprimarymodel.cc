@@ -51,12 +51,6 @@ QVariant PrimaryModel::data(const QModelIndex& index, int role) const
     const PrimaryField column { index.column() };
     const auto* statement { static_cast<PrimaryRow*>(index.internalPointer()) };
 
-    if (statement->type == RowType::kSpacer)
-        return {};
-
-    if (statement->type == RowType::kTotal && column == PrimaryField::kPartnerName)
-        return tr("Total");
-
     switch (column) {
     case PrimaryField::kPartnerName:
         return statement->partner_name;
@@ -116,10 +110,7 @@ void PrimaryModel::Rebuild(const QJsonArray& array)
     }
 
     QList<PrimaryRow*> new_list {};
-    new_list.reserve(array.size() + 2);
-
-    auto* total { ResourcePool<PrimaryRow>::Instance().Allocate() };
-    total->type = RowType::kTotal;
+    new_list.reserve(array.size());
 
     for (const auto& value : array) {
         Q_ASSERT(value.isObject());
@@ -127,21 +118,10 @@ void PrimaryModel::Rebuild(const QJsonArray& array)
         auto* statement { ResourcePool<PrimaryRow>::Instance().Allocate() };
         statement->ReadJson(value.toObject());
 
-        total->Accumulate(*statement);
         new_list.emplaceBack(statement);
     }
 
-    if (!new_list.isEmpty()) {
-        std::ranges::sort(new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &PrimaryRow::amount, Qt::DescendingOrder); });
-
-        auto* spacer { ResourcePool<PrimaryRow>::Instance().Allocate() };
-        spacer->type = RowType::kSpacer;
-
-        new_list.emplaceBack(spacer);
-        new_list.emplaceBack(total);
-    } else {
-        ResourcePool<PrimaryRow>::Instance().Recycle(total);
-    }
+    std::ranges::sort(new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &PrimaryRow::amount, Qt::DescendingOrder); });
 
     beginResetModel();
 

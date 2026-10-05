@@ -10,21 +10,31 @@ void MainWindow::on_actionStatement_triggered()
 
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new statement::PrimaryModel(header_info_.statement_primary, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementPrimaryWidget(model, widget_id, start_, this) };
+    auto* widget { new StatementPrimaryWidget(header_info_.statement_primary, widget_id, start_, this) };
 
     const int tab_index { sc_->tab_widget->addTab(widget, tr("Statement")) };
     auto* tab_bar { sc_->tab_widget->tabBar() };
 
     tab_bar->setTabData(tab_index, widget_id);
 
-    auto* view { widget->View() };
-    InitTableView(view, std::to_underlying(statement::PrimaryField::kPlaceholder));
-    DelegateStatementPrimary(view, sc_->section_config);
+    auto* data_view { widget->DataView() };
+    auto* filter_view { widget->FilterView() };
 
-    connect(widget, &StatementPrimaryWidget::SShowSecondaryStatement, this, &MainWindow::RShowSecondaryStatement);
+    InitFilterView(filter_view, data_view);
+
+    {
+        InitTableView(data_view, std::to_underlying(statement::PrimaryField::kPlaceholder));
+        DelegateStatementPrimary(data_view, sc_->section_config);
+        data_view->horizontalHeader()->hide();
+
+        connect(widget, &StatementPrimaryWidget::SShowSecondaryStatement, this, &MainWindow::RShowSecondaryStatement);
+    }
+
+    {
+        DelegateStatementFilterView(filter_view);
+    }
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
 }
@@ -39,7 +49,7 @@ void MainWindow::RStatementPrimary(Section section, const QUuid& widget_id, cons
 
     auto* d_widget { static_cast<StatementPrimaryWidget*>(widget.data()) };
 
-    auto* model { d_widget->Model() };
+    auto* model { d_widget->DataModel() };
     model->Rebuild(array);
 }
 

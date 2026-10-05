@@ -250,6 +250,7 @@ private:
     void DelegateOrderFilterView(QTableView* view, const SectionInfo& info) const;
     void DelegateOrderOverview(QTableView* view) const;
     void DelegateAuditFilterView(QTableView* view) const;
+    void DelegateStatementFilterView(QTableView* view) const;
 
     void InitTableView(QTableView* view, int stretch_column) const;
     void InitTreeView(QTreeView* view, int id_column, int stretch_column) const;

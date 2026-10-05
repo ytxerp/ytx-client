@@ -26,6 +26,8 @@
 #include "component/using.h"
 #include "enum/section.h"
 #include "statementprimarymodel.h"
+#include "table/tablefiltermodel.h"
+#include "table/tablefilterproxymodel.h"
 #include "utils/daterange.h"
 
 namespace Ui {
@@ -39,19 +41,22 @@ signals:
     void SShowSecondaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit);
 
 public:
-    StatementPrimaryWidget(statement::PrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent = nullptr);
+    StatementPrimaryWidget(const QStringList& header, CUuid& widget_id, Section section, QWidget* parent = nullptr);
     ~StatementPrimaryWidget() override;
 
-    QTableView* View() const;
-    statement::PrimaryModel* Model() const { return model_; }
+    QTableView* DataView() const;
+    QTableView* FilterView() const;
+    statement::PrimaryModel* DataModel() const { return data_model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
-    void on_tableView_doubleClicked(const QModelIndex& index);
+    void on_tableViewData_doubleClicked(const QModelIndex& index);
     void on_start_dateChanged(const QDate& date);
     void on_end_dateChanged(const QDate& date);
 
     void RUnitGroupClicked(int id);
+
+    void on_pushButtonClear_clicked();
 
 private:
     void IniUnitGroup();
@@ -59,6 +64,7 @@ private:
     void IniUnit(int unit);
     void IniWidget();
     void InitTimer();
+    void InitModel(const QStringList& header);
     static utils::DateRange DefaultRange()
     {
         const auto today { QDate::currentDate() };
@@ -74,7 +80,10 @@ private:
     int unit_ {};
     utils::DateRange range_ {};
 
-    statement::PrimaryModel* model_ {};
+    statement::PrimaryModel* data_model_ {};
+    TableFilterModel* filter_model_ {};
+    TableFilterProxyModel* filter_proxy_ {};
+
     QTimer* cooldown_timer_ { nullptr };
     QButtonGroup* unit_group_ {};
 
