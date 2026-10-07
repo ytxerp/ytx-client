@@ -161,8 +161,9 @@ void StatementTertiaryWidget::on_pBtnExport_clicked()
     if (!utils::PrepareNewFile(destination, kDotSuffixXLSX))
         return;
 
-    auto& list { model_->EntryList() };
+    const auto list { model_->EntryList() };
+    const auto header { model_->Header() };
     const QString unit_string { node::UnitString(NodeUnit(unit_)) };
 
-    ExportExcel::Instance().StatementAsync(destination, partner_name_, partner_id_, unit_string, range_, list);
+    ExportExcel::Instance().StatementTertiaryAsync(destination, partner_name_, partner_id_, unit_string, range_, header, list);
 }

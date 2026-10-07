@@ -49,7 +49,8 @@ public:
     void Rebuild(const QJsonArray& array);
     void MarkEntries(MarkOperation operation);
 
-    const QList<TertiaryRow*>& EntryList() const { return list_; }
+    const QStringList& Header() const { return header_; }
+    QList<TertiaryRow> EntryList() const;
 
 private:
     const QStringList& header_;

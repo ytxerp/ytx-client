@@ -42,8 +42,6 @@ struct PrimaryRow final {
 
     void Reset();
     void ReadJson(const QJsonObject& object);
-
-    void Accumulate(const PrimaryRow& other);
 };
 
 inline void PrimaryRow::Reset() { *this = PrimaryRow {}; }
@@ -60,13 +58,6 @@ inline void PrimaryRow::ReadJson(const QJsonObject& object)
         measure = val.toString().toDouble();
     if (const auto val = object.value(kAmount); val.isString())
         amount = val.toString().toDouble();
-}
-
-inline void PrimaryRow::Accumulate(const PrimaryRow& other)
-{
-    count += other.count;
-    measure += other.measure;
-    amount += other.amount;
 }
 
 struct SecondaryRow final {

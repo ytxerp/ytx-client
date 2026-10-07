@@ -229,4 +229,15 @@ void TertiaryModel::MarkEntries(MarkOperation operation)
 
     emit dataChanged(top_left, bottom_right, QList<int> { Qt::DisplayRole, Qt::EditRole });
 }
+
+QList<TertiaryRow> TertiaryModel::EntryList() const
+{
+    QList<TertiaryRow> entries {};
+    entries.reserve(list_.size());
+
+    for (const auto* entry : list_)
+        entries.emplaceBack(*entry);
+
+    return entries;
+}
 }

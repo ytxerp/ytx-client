@@ -11,12 +11,13 @@
 #include "document.h"
 #include "global/masterdataregistry.h"
 #include "global/partner_inventory_registry.h"
+#include "order/statement/statementenum.h"
 #include "utils/mainwindowutils.h"
 
-void ExportExcel::StatementAsync(
-    CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, statement::CTertiaryList& list)
+void ExportExcel::StatementTertiaryAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range,
+    CStringList& header, const QList<statement::TertiaryRow>& list)
 {
-    auto future = QtConcurrent::run([=]() -> bool { return Statement(path, partner_name, partner_id, unit_string, range, list); });
+    auto future = QtConcurrent::run([=]() -> bool { return StatementTertiary(path, partner_name, partner_id, unit_string, range, header, list); });
 
     auto* watcher = new QFutureWatcher<bool>();
     QObject::connect(watcher, &QFutureWatcher<bool>::finished, [watcher, path]() {
@@ -36,8 +37,8 @@ void ExportExcel::StatementAsync(
     watcher->setFuture(future);
 }
 
-bool ExportExcel::Statement(
-    CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range, statement::CTertiaryList& list)
+bool ExportExcel::StatementTertiary(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range,
+    CStringList& header, const QList<statement::TertiaryRow>& list)
 {
     // Create excel document
     yxlsx::Document d(path);
@@ -67,9 +68,6 @@ bool ExportExcel::Statement(
     // ===========================
     // Table Header
     // ===========================
-    const QStringList header { QObject::tr("Date"), QObject::tr("Code"), QObject::tr("InternalSku"), QObject::tr("ExternalSku"), QObject::tr("Count"),
-        QObject::tr("Measure"), QObject::tr("UnitPrice"), QObject::tr("Description"), QObject::tr("Amount") };
-
     sheet->WriteRow(start_row + 3, 1, header);
 
     // ===========================
@@ -79,30 +77,54 @@ bool ExportExcel::Statement(
     const auto& master { MasterDataRegistry::Instance() };
     const auto& partner { PartnerInventoryRegistry::Instance() };
 
-    double total_count {};
-    double total_measure {};
-    double total_amount {};
+    for (const auto& entry : list) {
+        const QUuid external_sku { partner.ExternalSku(partner_id, entry.internal_sku) };
 
-    for (const auto* entry : list) {
-        const QUuid external_sku { partner.ExternalSku(partner_id, entry->internal_sku) };
+        QVariantList line {};
+        line.reserve(header.size());
 
-        QVariantList line { entry->issued_time.toString(datetime_format::kDashedDate), entry->code, master.InventoryPath(entry->internal_sku),
-            master.InventoryName(external_sku), entry->count, entry->measure, entry->unit_price, entry->description, entry->amount };
+        for (int column { 0 }; column != header.size(); ++column) {
+            switch (static_cast<statement::TertiaryField>(column)) {
+            case statement::TertiaryField::kIssuedTime:
+                line.append(entry.issued_time.toString(datetime_format::kDashedDate));
+                break;
+            case statement::TertiaryField::kCode:
+                line.append(entry.code);
+                break;
+            case statement::TertiaryField::kInternalSku:
+                line.append(master.InventoryPath(entry.internal_sku));
+                break;
+            case statement::TertiaryField::kExternalSku:
+                line.append(master.InventoryName(external_sku));
+                break;
+            case statement::TertiaryField::kCount:
+                line.append(entry.count);
+                break;
+            case statement::TertiaryField::kMeasure:
+                line.append(entry.measure);
+                break;
+            case statement::TertiaryField::kUnitPrice:
+                line.append(entry.unit_price);
+                break;
+            case statement::TertiaryField::kDescription:
+                line.append(entry.description);
+                break;
+            case statement::TertiaryField::kAmount:
+                line.append(entry.amount);
+                break;
+            case statement::TertiaryField::kStatus:
+            default:
+                break;
+            }
+        }
 
         sheet->WriteRow(row++, 1, line);
-
-        total_count += entry->count;
-        total_measure += entry->measure;
-        total_amount += entry->amount;
     }
 
     // ===========================
     // Write Total
     // ===========================
     sheet->Write(row + 1, 1, QObject::tr("Total"));
-    sheet->Write(row + 1, 5, total_count);
-    sheet->Write(row + 1, 6, total_measure);
-    sheet->Write(row + 1, 9, total_amount);
 
     return d.Save();
 }
