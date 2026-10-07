@@ -28,7 +28,7 @@ namespace statement {
 class SecondaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    SecondaryModel(const QStringList& header, const QUuid& partner_id, QObject* parent = nullptr);
+    SecondaryModel(const QStringList& header, QObject* parent = nullptr);
     ~SecondaryModel() override;
 
 public:
@@ -48,8 +48,6 @@ public:
 
 private:
     const QStringList& header_;
-    const QUuid partner_id_ {};
-
     QList<SecondaryRow*> list_ {};
 };
 }

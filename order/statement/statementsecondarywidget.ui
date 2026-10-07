@@ -123,6 +123,9 @@
    <item row="1" column="0">
     <widget class="QTableView" name="tableView"/>
    </item>
+   <item row="2" column="0">
+    <widget class="QTableView" name="tableViewSummary"/>
+   </item>
   </layout>
  </widget>
  <customwidgets>

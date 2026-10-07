@@ -8,10 +8,9 @@
 #include "utils/templateutils.h"
 
 namespace statement {
-SecondaryModel::SecondaryModel(const QStringList& header, const QUuid& partner_id, QObject* parent)
+SecondaryModel::SecondaryModel(const QStringList& header, QObject* parent)
     : QAbstractItemModel { parent }
     , header_ { header }
-    , partner_id_ { partner_id }
 {
 }
 
@@ -53,12 +52,6 @@ QVariant SecondaryModel::data(const QModelIndex& index, int role) const
 
     const SecondaryField column { index.column() };
     const auto* statement { static_cast<SecondaryRow*>(index.internalPointer()) };
-
-    if (statement->type == RowType::kSpacer)
-        return {};
-
-    if (statement->type == RowType::kTotal && column == SecondaryField::kIssuedTime)
-        return tr("Total");
 
     switch (column) {
     case SecondaryField::kDescription:
@@ -156,10 +149,7 @@ void SecondaryModel::Rebuild(const QJsonArray& array)
     }
 
     QList<SecondaryRow*> new_list {};
-    new_list.reserve(array.size() + 2);
-
-    auto* total { ResourcePool<SecondaryRow>::Instance().Allocate() };
-    total->type = RowType::kTotal;
+    new_list.reserve(array.size());
 
     for (const auto& value : array) {
         Q_ASSERT(value.isObject());
@@ -167,22 +157,11 @@ void SecondaryModel::Rebuild(const QJsonArray& array)
         auto* statement { ResourcePool<SecondaryRow>::Instance().Allocate() };
         statement->ReadJson(value.toObject());
 
-        total->Accumulate(*statement);
         new_list.emplaceBack(statement);
     }
 
-    if (!new_list.isEmpty()) {
-        std::ranges::sort(
-            new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &SecondaryRow::issued_time, Qt::AscendingOrder); });
-
-        auto* spacer { ResourcePool<SecondaryRow>::Instance().Allocate() };
-        spacer->type = RowType::kSpacer;
-
-        new_list.emplaceBack(spacer);
-        new_list.emplaceBack(total);
-    } else {
-        ResourcePool<SecondaryRow>::Instance().Recycle(total);
-    }
+    std::ranges::sort(
+        new_list, [](const auto* lhs, const auto* rhs) { return utils::CompareMember(lhs, rhs, &SecondaryRow::issued_time, Qt::AscendingOrder); });
 
     beginResetModel();
 

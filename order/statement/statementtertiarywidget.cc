@@ -14,13 +14,12 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-StatementTertiaryWidget::StatementTertiaryWidget(statement::TertiaryModel* model, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range,
-    CString& partner_name, CString& company_name, Section section, int unit, QWidget* parent)
+StatementTertiaryWidget::StatementTertiaryWidget(CStringList& header, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, CString& partner_name,
+    CString& company_name, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementTertiaryWidget)
     , unit_ { unit }
     , range_ { range }
-    , model_ { model }
     , partner_name_ { partner_name }
     , company_name_ { company_name }
     , section_ { section }
@@ -30,12 +29,10 @@ StatementTertiaryWidget::StatementTertiaryWidget(statement::TertiaryModel* model
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    ui->tableView->setModel(model);
-    model->setParent(ui->tableView);
-
     IniUnitGroup();
     IniWidget();
     InitTimer();
+    InitModel(header, partner_id);
     IniUnit(unit);
     IniConnect();
 
@@ -44,7 +41,7 @@ StatementTertiaryWidget::StatementTertiaryWidget(statement::TertiaryModel* model
 
 StatementTertiaryWidget::~StatementTertiaryWidget() { delete ui; }
 
-QTableView* StatementTertiaryWidget::View() const { return ui->tableView; }
+QTableView* StatementTertiaryWidget::DataView() const { return ui->tableView; }
 
 void StatementTertiaryWidget::on_start_dateChanged(const QDate& date)
 {
@@ -147,6 +144,13 @@ void StatementTertiaryWidget::InitTimer()
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
 }
 
+void StatementTertiaryWidget::InitModel(const QStringList& header, CUuid& partner_id)
+{
+    data_model_ = new statement::TertiaryModel(header, partner_id, this);
+
+    ui->tableView->setModel(data_model_);
+}
+
 void StatementTertiaryWidget::on_pBtnExport_clicked()
 {
     // Build default export file name ---
@@ -161,8 +165,8 @@ void StatementTertiaryWidget::on_pBtnExport_clicked()
     if (!utils::PrepareNewFile(destination, kDotSuffixXLSX))
         return;
 
-    const auto list { model_->EntryList() };
-    const auto header { model_->Header() };
+    const auto list { data_model_->EntryList() };
+    const auto header { data_model_->Header() };
     const QString unit_string { node::UnitString(NodeUnit(unit_)) };
 
     ExportExcel::Instance().StatementTertiaryAsync(destination, partner_name_, partner_id_, unit_string, range_, header, list);

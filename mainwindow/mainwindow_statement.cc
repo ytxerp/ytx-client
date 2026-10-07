@@ -63,7 +63,7 @@ void MainWindow::RStatemetSecondary(Section section, const QUuid& widget_id, con
 
     auto* d_widget { static_cast<StatementSecondaryWidget*>(widget.data()) };
 
-    auto* model { d_widget->Model() };
+    auto* model { d_widget->DataModel() };
     model->Rebuild(array);
 }
 
@@ -77,17 +77,16 @@ void MainWindow::RStatementTertiary(Section section, const QUuid& widget_id, con
 
     auto* d_widget { static_cast<StatementTertiaryWidget*>(widget.data()) };
 
-    auto* model { d_widget->Model() };
+    auto* model { d_widget->DataModel() };
 
     model->Rebuild(array);
 }
 
 void MainWindow::RShowSecondaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit)
 {
-    auto* model { new statement::SecondaryModel(header_info_.statement_secondary, partner_id, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementSecondaryWidget(model, widget_id, partner_id, range, start_, unit, this) };
+    auto* widget { new StatementSecondaryWidget(header_info_.statement_secondary, widget_id, partner_id, range, start_, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement"), sc_p_.tree_model->Name(partner_id)) };
 
@@ -96,7 +95,7 @@ void MainWindow::RShowSecondaryStatement(const QUuid& partner_id, const utils::D
 
     tab_bar->setTabData(tab_index, widget_id);
 
-    auto* view { widget->View() };
+    auto* view { widget->DataView() };
     InitTableView(view, std::to_underlying(statement::SecondaryField::kDescription));
     DelegateStatementSecondary(view, sc_->section_config);
 
@@ -107,13 +106,11 @@ void MainWindow::RShowSecondaryStatement(const QUuid& partner_id, const utils::D
 
 void MainWindow::RShowTertiaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit)
 {
-    auto tree_model_p { sc_p_.tree_model };
-    const QString partner_name { tree_model_p->Name(partner_id) };
-
-    auto* model { new statement::TertiaryModel(header_info_.statement_tertiary, partner_id, this) };
+    const QString partner_name { sc_p_.tree_model->Name(partner_id) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementTertiaryWidget(model, widget_id, partner_id, range, partner_name, app_config_.company_name, start_, unit, this) };
+    auto* widget { new StatementTertiaryWidget(
+        header_info_.statement_tertiary, widget_id, partner_id, range, partner_name, app_config_.company_name, start_, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement Detail"), partner_name) };
 
@@ -122,7 +119,7 @@ void MainWindow::RShowTertiaryStatement(const QUuid& partner_id, const utils::Da
 
     tab_bar->setTabData(tab_index, widget_id);
 
-    auto* view { widget->View() };
+    auto* view { widget->DataView() };
     InitTableView(view, std::to_underlying(statement::TertiaryField::kDescription));
     DelegateStatementTertiary(view, sc_->section_config);
 
@@ -136,6 +133,6 @@ void MainWindow::RStatementMarkEntries(MarkOperation operation)
     Q_ASSERT(qobject_cast<StatementTertiaryWidget*>(current_widget));
     auto* widget { static_cast<StatementTertiaryWidget*>(current_widget) };
 
-    auto* model { widget->Model() };
+    auto* model { widget->DataModel() };
     model->MarkEntries(operation);
 }

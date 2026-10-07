@@ -36,12 +36,12 @@ class StatementTertiaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    StatementTertiaryWidget(statement::TertiaryModel* model, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, CString& partner_name,
+    StatementTertiaryWidget(CStringList& header, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, CString& partner_name,
         CString& company_name, Section section, int unit, QWidget* parent = nullptr);
     ~StatementTertiaryWidget() override;
 
-    QTableView* View() const;
-    statement::TertiaryModel* Model() const { return model_; }
+    QTableView* DataView() const;
+    statement::TertiaryModel* DataModel() const { return data_model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -57,12 +57,13 @@ private:
     void IniUnit(int unit);
     void IniWidget();
     void InitTimer();
+    void InitModel(const QStringList& header, CUuid& partner_id);
 
 private:
     Ui::StatementTertiaryWidget* ui;
     int unit_ {};
     utils::DateRange range_ {};
-    statement::TertiaryModel* model_ {};
+    statement::TertiaryModel* data_model_ {};
 
     const QString partner_name_ {};
     const QString company_name_ {};

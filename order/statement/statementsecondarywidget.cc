@@ -13,12 +13,11 @@
 #include "websocket/websocket.h"
 
 StatementSecondaryWidget::StatementSecondaryWidget(
-    statement::SecondaryModel* model, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, Section section, int unit, QWidget* parent)
+    CStringList& header, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementSecondaryWidget)
     , unit_ { unit }
     , range_ { range }
-    , model_ { model }
     , section_ { section }
     , widget_id_ { widget_id }
     , partner_id_ { partner_id }
@@ -26,12 +25,10 @@ StatementSecondaryWidget::StatementSecondaryWidget(
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    ui->tableView->setModel(model);
-    model->setParent(ui->tableView);
-
     IniUnitGroup();
     IniWidget();
     InitTimer();
+    InitModel(header);
     IniUnit(unit);
     IniConnect();
 
@@ -40,7 +37,7 @@ StatementSecondaryWidget::StatementSecondaryWidget(
 
 StatementSecondaryWidget::~StatementSecondaryWidget() { delete ui; }
 
-QTableView* StatementSecondaryWidget::View() const { return ui->tableView; }
+QTableView* StatementSecondaryWidget::DataView() const { return ui->tableView; }
 
 void StatementSecondaryWidget::on_start_dateChanged(const QDate& date)
 {
@@ -141,6 +138,13 @@ void StatementSecondaryWidget::InitTimer()
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
+}
+
+void StatementSecondaryWidget::InitModel(const QStringList& header)
+{
+    data_model_ = new statement::SecondaryModel(header, this);
+
+    ui->tableView->setModel(data_model_);
 }
 
 void StatementSecondaryWidget::on_tableView_doubleClicked(const QModelIndex& index)

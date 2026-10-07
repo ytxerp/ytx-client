@@ -27,12 +27,6 @@
 
 namespace statement {
 
-enum class RowType {
-    kData,
-    kSpacer,
-    kTotal,
-};
-
 struct PrimaryRow final {
     QUuid partner_id {};
     QString partner_name {};
@@ -61,8 +55,6 @@ inline void PrimaryRow::ReadJson(const QJsonObject& object)
 }
 
 struct SecondaryRow final {
-    RowType type { RowType::kData };
-
     QDateTime issued_time {};
     QString code {};
     double count {};
@@ -107,8 +99,6 @@ inline void SecondaryRow::Accumulate(const SecondaryRow& other)
 }
 
 struct TertiaryRow final {
-    RowType type { RowType::kData };
-
     QDateTime issued_time {};
     QString code {};
     QUuid internal_sku {};

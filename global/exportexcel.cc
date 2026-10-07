@@ -113,6 +113,8 @@ bool ExportExcel::StatementTertiary(CString& path, CString& partner_name, CUuid&
                 line.append(entry.amount);
                 break;
             case statement::TertiaryField::kStatus:
+                line.append(entry.status);
+                break;
             default:
                 break;
             }

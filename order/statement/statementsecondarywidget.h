@@ -39,12 +39,12 @@ signals:
     void SShowTertiaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit);
 
 public:
-    StatementSecondaryWidget(statement::SecondaryModel* model, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, Section section, int unit,
-        QWidget* parent = nullptr);
+    StatementSecondaryWidget(
+        CStringList& header, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, Section section, int unit, QWidget* parent = nullptr);
     ~StatementSecondaryWidget() override;
 
-    QTableView* View() const;
-    statement::SecondaryModel* Model() const { return model_; }
+    QTableView* DataView() const;
+    statement::SecondaryModel* DataModel() const { return data_model_; }
 
 private slots:
     void on_pBtnFetch_clicked();
@@ -60,13 +60,14 @@ private:
     void IniUnit(int unit);
     void IniWidget();
     void InitTimer();
+    void InitModel(const QStringList& header);
 
 private:
     Ui::StatementSecondaryWidget* ui;
     int unit_ {};
     utils::DateRange range_ {};
 
-    statement::SecondaryModel* model_ {};
+    statement::SecondaryModel* data_model_ {};
     QTimer* cooldown_timer_ { nullptr };
     QButtonGroup* unit_group_ {};
 
