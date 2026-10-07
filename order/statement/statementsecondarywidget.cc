@@ -1,5 +1,7 @@
 #include "statementsecondarywidget.h"
 
+#include <QDir>
+#include <QFileDialog>
 #include <QTimer>
 
 #include "component/constantstring.h"
@@ -9,11 +11,12 @@
 #include "statementenum.h"
 #include "ui_statementsecondarywidget.h"
 #include "utils/mainwindowutils.h"
+#include "utils/nodeutils.h"
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
 StatementSecondaryWidget::StatementSecondaryWidget(
-    CStringList& header, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, Section section, int unit, QWidget* parent)
+    CStringList& header, CUuid& widget_id, CUuid& partner_id, CString& partner_name, const utils::DateRange& range, Section section, int unit, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::StatementSecondaryWidget)
     , unit_ { unit }
@@ -21,6 +24,7 @@ StatementSecondaryWidget::StatementSecondaryWidget(
     , section_ { section }
     , widget_id_ { widget_id }
     , partner_id_ { partner_id }
+    , partner_name_ { partner_name }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
@@ -152,4 +156,23 @@ void StatementSecondaryWidget::on_tableView_doubleClicked(const QModelIndex& ind
     if (index.column() == std::to_underlying(statement::SecondaryField::kIssuedTime)) {
         emit SShowTertiaryStatement(partner_id_, range_, unit_);
     }
+}
+
+void StatementSecondaryWidget::on_pushButtonExport_clicked()
+{
+    // Build default export file name ---
+    QDir dir(QDir::homePath());
+    const QString file_name { QStringLiteral("%1-%2-%3.xlsx")
+            .arg(partner_name_, range_.start.toString(datetime_format::kCompactDate), range_.end.toString(datetime_format::kCompactDate)) };
+    const QString full_path { dir.filePath(file_name) };
+
+    QString destination { QFileDialog::getSaveFileName(nullptr, tr("Export Excel"), full_path, "*.xlsx") };
+
+    // Prepare the file (remove if exists)
+    if (!utils::PrepareNewFile(destination, kDotSuffixXLSX))
+        return;
+
+    const auto list { data_model_->EntryList() };
+    const auto header { data_model_->Header() };
+    const QString unit_string { node::UnitString(NodeUnit(unit_)) };
 }

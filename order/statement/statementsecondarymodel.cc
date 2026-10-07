@@ -170,4 +170,15 @@ void SecondaryModel::Rebuild(const QJsonArray& array)
 
     endResetModel();
 }
+
+QList<SecondaryRow> SecondaryModel::EntryList() const
+{
+    QList<SecondaryRow> entries {};
+    entries.reserve(list_.size());
+
+    for (const auto* entry : list_)
+        entries.emplaceBack(*entry);
+
+    return entries;
+}
 }

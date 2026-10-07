@@ -39,8 +39,8 @@ signals:
     void SShowTertiaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit);
 
 public:
-    StatementSecondaryWidget(
-        CStringList& header, CUuid& widget_id, CUuid& partner_id, const utils::DateRange& range, Section section, int unit, QWidget* parent = nullptr);
+    StatementSecondaryWidget(CStringList& header, CUuid& widget_id, CUuid& partner_id, CString& partner_name, const utils::DateRange& range, Section section,
+        int unit, QWidget* parent = nullptr);
     ~StatementSecondaryWidget() override;
 
     QTableView* DataView() const;
@@ -51,6 +51,7 @@ private slots:
     void on_tableView_doubleClicked(const QModelIndex& index);
     void on_start_dateChanged(const QDate& date);
     void on_end_dateChanged(const QDate& date);
+    void on_pushButtonExport_clicked();
 
     void RUnitGroupClicked(int id);
 
@@ -74,4 +75,5 @@ private:
     const Section section_ {};
     const QUuid widget_id_ {};
     CUuid partner_id_ {};
+    CString partner_name_ {};
 };

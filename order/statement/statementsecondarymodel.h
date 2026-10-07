@@ -46,6 +46,9 @@ public:
     void sort(int column, Qt::SortOrder order) override;
     void Rebuild(const QJsonArray& array);
 
+    const QStringList& Header() const { return header_; }
+    QList<SecondaryRow> EntryList() const;
+
 private:
     const QStringList& header_;
     QList<SecondaryRow*> list_ {};

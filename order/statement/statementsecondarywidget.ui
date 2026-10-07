@@ -111,6 +111,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButtonExport">
+        <property name="text">
+         <string>Export</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pBtnFetch">
         <property name="text">
          <string>Fetch</string>

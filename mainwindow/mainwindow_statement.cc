@@ -84,9 +84,10 @@ void MainWindow::RStatementTertiary(Section section, const QUuid& widget_id, con
 
 void MainWindow::RShowSecondaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit)
 {
+    const QString partner_name { sc_p_.tree_model->Name(partner_id) };
     const QUuid widget_id { QUuid::createUuidV7() };
 
-    auto* widget { new StatementSecondaryWidget(header_info_.statement_secondary, widget_id, partner_id, range, start_, unit, this) };
+    auto* widget { new StatementSecondaryWidget(header_info_.statement_secondary, widget_id, partner_id, partner_name, range, start_, unit, this) };
 
     const QString title { QString("%1-%2").arg(tr("Statement"), sc_p_.tree_model->Name(partner_id)) };
 
