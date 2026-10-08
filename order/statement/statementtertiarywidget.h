@@ -26,6 +26,7 @@
 #include "component/using.h"
 #include "enum/section.h"
 #include "statementtertiarymodel.h"
+#include "table/tablesummarymodel.h"
 #include "utils/daterange.h"
 
 namespace Ui {
@@ -41,6 +42,7 @@ public:
     ~StatementTertiaryWidget() override;
 
     QTableView* DataView() const;
+    QTableView* SummaryView() const;
     statement::TertiaryModel* DataModel() const { return data_model_; }
 
 private slots:
@@ -63,7 +65,9 @@ private:
     Ui::StatementTertiaryWidget* ui;
     int unit_ {};
     utils::DateRange range_ {};
+
     statement::TertiaryModel* data_model_ {};
+    TableSummaryModel* summary_model_ {};
 
     const QString partner_name_ {};
     const QString company_name_ {};

@@ -131,7 +131,6 @@ private slots:
     void RFreeWidget(Section section, const QUuid& node_id);
     void RFlushCaches();
 
-    void InitFilterView(QTableView* filter_view, QTableView* data_view) const;
     void ROrderOverview(Section section, const QUuid& widget_id, const QJsonArray& array);
 
     void RStatementPrimary(Section section, const QUuid& widget_id, const QJsonArray& array);
@@ -233,7 +232,9 @@ private:
 
     void DelegateStatementPrimary(QTableView* table_view, CSectionConfig& config) const;
     void DelegateStatementSecondary(QTableView* table_view, CSectionConfig& config) const;
+    void DelegateStatementSecondarySummary(QTableView* table_view, CSectionConfig& config) const;
     void DelegateStatementTertiary(QTableView* table_view, CSectionConfig& config) const;
+    void DelegateStatementTertiarySummary(QTableView* table_view, CSectionConfig& config) const;
     void DelegateSettlementPrimary(QTableView* table_view, CSectionConfig& config) const;
     void DelegateSettlementSecondary(QTableView* table_view, CSectionConfig& config) const;
     void DelegateTag(QTableView* table_view) const;
@@ -254,6 +255,8 @@ private:
 
     void InitTableView(QTableView* view, int stretch_column) const;
     void InitTreeView(QTreeView* view, int id_column, int stretch_column) const;
+    void InitFilterView(QTableView* filter_view, QTableView* data_view) const;
+    void InitSummaryView(QTableView* summary_view, QTableView* data_view) const;
 
     void CreateSection(SectionContext& sc, CString& name);
 

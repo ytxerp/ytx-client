@@ -151,12 +151,15 @@ void SecondaryModel::Rebuild(const QJsonArray& array)
     QList<SecondaryRow*> new_list {};
     new_list.reserve(array.size());
 
+    SecondaryRow summary {};
+
     for (const auto& value : array) {
         Q_ASSERT(value.isObject());
 
         auto* statement { ResourcePool<SecondaryRow>::Instance().Allocate() };
         statement->ReadJson(value.toObject());
 
+        summary.Accumulate(*statement);
         new_list.emplaceBack(statement);
     }
 
@@ -169,6 +172,8 @@ void SecondaryModel::Rebuild(const QJsonArray& array)
     list_ = std::move(new_list);
 
     endResetModel();
+
+    emit SSummaryChanged(summary.SummaryValues());
 }
 
 QList<SecondaryRow> SecondaryModel::EntryList() const

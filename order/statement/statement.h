@@ -69,6 +69,7 @@ struct SecondaryRow final {
     void ReadJson(const QJsonObject& object);
 
     void Accumulate(const SecondaryRow& other);
+    QList<QVariant> SummaryValues() const;
 };
 
 inline void SecondaryRow::Reset() { *this = SecondaryRow {}; }
@@ -98,6 +99,20 @@ inline void SecondaryRow::Accumulate(const SecondaryRow& other)
     amount += other.amount;
 }
 
+inline QList<QVariant> SecondaryRow::SummaryValues() const
+{
+    return {
+        {}, // kIssuedTime
+        {}, // kCode
+        count, // kCount
+        measure, // kMeasure
+        amount, // kAmount
+        {}, // kDescription
+        {}, // kStatus
+        {}, // kEmployee
+    };
+}
+
 struct TertiaryRow final {
     QDateTime issued_time {};
     QString code {};
@@ -113,6 +128,7 @@ struct TertiaryRow final {
     void Reset();
     void ReadJson(const QJsonObject& object);
     void Accumulate(const TertiaryRow& other);
+    QList<QVariant> SummaryValues() const;
 };
 
 inline void TertiaryRow::Reset() { *this = TertiaryRow {}; }
@@ -142,6 +158,22 @@ inline void TertiaryRow::Accumulate(const TertiaryRow& other)
     count += other.count;
     measure += other.measure;
     amount += other.amount;
+}
+
+inline QList<QVariant> TertiaryRow::SummaryValues() const
+{
+    return {
+        {}, // kIssuedTime
+        {}, // kCode
+        {}, // kInternalSku
+        count, // kCount
+        measure, // kMeasure
+        {}, // kUnitPrice
+        amount, // kAmount
+        {}, // kDescription
+        {}, // kStatus
+        {}, // kExternalSku
+    };
 }
 
 using CTertiaryList = const QList<TertiaryRow*>;

@@ -270,6 +270,7 @@ set(HEADERS
     table/model/tablemodelt.h
     table/tablefiltermodel.h
     table/tablefilterproxymodel.h
+    table/tablesummarymodel.h
     table/unitmodel.h
     table/widget/tablewidget.h
     table/widget/tablewidgetfipt.h
@@ -486,6 +487,7 @@ set(SOURCES
     table/model/tablemodelt.cc
     table/tablefiltermodel.cc
     table/tablefilterproxymodel.cc
+    table/tablesummarymodel.cc
     table/unitmodel.cc
     table/widget/tablewidgetfipt.cc
     table/widget/tablewidgeto.cc

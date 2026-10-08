@@ -27,9 +27,13 @@ namespace statement {
 
 class SecondaryModel final : public QAbstractItemModel {
     Q_OBJECT
+
 public:
     SecondaryModel(const QStringList& header, QObject* parent = nullptr);
     ~SecondaryModel() override;
+
+signals:
+    void SSummaryChanged(const QList<QVariant>& values);
 
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;

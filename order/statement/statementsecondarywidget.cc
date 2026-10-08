@@ -43,6 +43,8 @@ StatementSecondaryWidget::~StatementSecondaryWidget() { delete ui; }
 
 QTableView* StatementSecondaryWidget::DataView() const { return ui->tableView; }
 
+QTableView* StatementSecondaryWidget::SummaryView() const { return ui->tableViewSummary; }
+
 void StatementSecondaryWidget::on_start_dateChanged(const QDate& date)
 {
     const bool valid { date <= range_.end };
@@ -147,8 +149,12 @@ void StatementSecondaryWidget::InitTimer()
 void StatementSecondaryWidget::InitModel(const QStringList& header)
 {
     data_model_ = new statement::SecondaryModel(header, this);
+    summary_model_ = new TableSummaryModel(header, this);
 
     ui->tableView->setModel(data_model_);
+    ui->tableViewSummary->setModel(summary_model_);
+
+    connect(data_model_, &statement::SecondaryModel::SSummaryChanged, summary_model_, &TableSummaryModel::RSummaryChanged);
 }
 
 void StatementSecondaryWidget::on_tableView_doubleClicked(const QModelIndex& index)

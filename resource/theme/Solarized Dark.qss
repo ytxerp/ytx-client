@@ -71,12 +71,12 @@ QDoubleSpinBox#dspin_box_static_ {
 }
 
 /* Specific border removals */
-QGroupBox#groupBoxView, QTableView#tableViewFilter
+QGroupBox#groupBoxView, QTableView#tableViewFilter, QTableView#tableViewSummary
 {
     border-bottom: none;
 }
 
-QGroupBox#groupBoxUnderView, QTableView#tableViewData
+QGroupBox#groupBoxUnderView, QTableView#tableViewData, QTableView#tableViewSummary
 {
     border-top: none;
 }

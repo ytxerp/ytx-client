@@ -1,3 +1,6 @@
+#include <QScrollBar>
+
+#include "component/constantint.h"
 #include "mainwindow.h"
 #include "order/statement/statementenum.h"
 #include "order/statement/statementprimarywidget.h"
@@ -97,12 +100,55 @@ void MainWindow::RShowSecondaryStatement(const QUuid& partner_id, const utils::D
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->DataView() };
+    auto* summary_view { widget->SummaryView() };
+
     InitTableView(view, std::to_underlying(statement::SecondaryField::kDescription));
+    InitSummaryView(summary_view, view);
+
     DelegateStatementSecondary(view, sc_->section_config);
+    DelegateStatementSecondarySummary(summary_view, sc_->section_config);
 
     connect(widget, &StatementSecondaryWidget::SShowTertiaryStatement, this, &MainWindow::RShowTertiaryStatement);
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
+}
+
+void MainWindow::InitSummaryView(QTableView* summary_view, QTableView* data_view) const
+{
+    summary_view->verticalHeader()->hide();
+    summary_view->horizontalHeader()->hide();
+
+    summary_view->setFocusPolicy(Qt::NoFocus);
+    summary_view->verticalHeader()->setDefaultSectionSize(ui_const::kRowHeight);
+
+    summary_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    summary_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    auto* data_header { data_view->horizontalHeader() };
+    auto* summary_header { summary_view->horizontalHeader() };
+
+    summary_header->setSectionsMovable(false);
+    summary_header->setSectionResizeMode(QHeaderView::Fixed);
+
+    connect(data_header, &QHeaderView::sectionResized, summary_header,
+        [summary_header](int logical_index, int, int new_size) { summary_header->resizeSection(logical_index, new_size); });
+
+    connect(data_view->horizontalScrollBar(), &QScrollBar::valueChanged, summary_view,
+        [summary_view](int value) { summary_view->horizontalScrollBar()->setValue(value); });
+
+    connect(data_header, &QHeaderView::sectionMoved, summary_header, [summary_header](int logical_index, int, int new_visual_index) {
+        const int current_visual_index { summary_header->visualIndex(logical_index) };
+
+        if (current_visual_index != new_visual_index)
+            summary_header->moveSection(current_visual_index, new_visual_index);
+    });
+
+    QTimer::singleShot(0, summary_view, [summary_view] {
+        auto* header { summary_view->horizontalHeader() };
+        const int extra { summary_view->height() - header->height() - summary_view->viewport()->height() };
+
+        summary_view->setFixedHeight(header->height() + summary_view->rowHeight(0) + extra);
+    });
 }
 
 void MainWindow::RShowTertiaryStatement(const QUuid& partner_id, const utils::DateRange& range, int unit)
@@ -121,8 +167,13 @@ void MainWindow::RShowTertiaryStatement(const QUuid& partner_id, const utils::Da
     tab_bar->setTabData(tab_index, widget_id);
 
     auto* view { widget->DataView() };
+    auto* summary_view { widget->SummaryView() };
+
     InitTableView(view, std::to_underlying(statement::TertiaryField::kDescription));
+    InitSummaryView(summary_view, view);
+
     DelegateStatementTertiary(view, sc_->section_config);
+    DelegateStatementTertiarySummary(summary_view, sc_->section_config);
 
     RegisterWidget(widget, widget_id, WidgetRole::kStatement);
 }

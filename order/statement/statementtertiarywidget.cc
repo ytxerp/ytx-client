@@ -43,6 +43,8 @@ StatementTertiaryWidget::~StatementTertiaryWidget() { delete ui; }
 
 QTableView* StatementTertiaryWidget::DataView() const { return ui->tableView; }
 
+QTableView* StatementTertiaryWidget::SummaryView() const { return ui->tableViewSummary; }
+
 void StatementTertiaryWidget::on_start_dateChanged(const QDate& date)
 {
     const bool valid { date <= range_.end };
@@ -147,8 +149,12 @@ void StatementTertiaryWidget::InitTimer()
 void StatementTertiaryWidget::InitModel(const QStringList& header, CUuid& partner_id)
 {
     data_model_ = new statement::TertiaryModel(header, partner_id, this);
+    summary_model_ = new TableSummaryModel(header, this);
 
     ui->tableView->setModel(data_model_);
+    ui->tableViewSummary->setModel(summary_model_);
+
+    connect(data_model_, &statement::TertiaryModel::SSummaryChanged, summary_model_, &TableSummaryModel::RSummaryChanged);
 }
 
 void StatementTertiaryWidget::on_pBtnExport_clicked()

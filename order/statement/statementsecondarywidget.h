@@ -26,6 +26,7 @@
 #include "component/using.h"
 #include "enum/section.h"
 #include "statementsecondarymodel.h"
+#include "table/tablesummarymodel.h"
 #include "utils/daterange.h"
 
 namespace Ui {
@@ -44,6 +45,7 @@ public:
     ~StatementSecondaryWidget() override;
 
     QTableView* DataView() const;
+    QTableView* SummaryView() const;
     statement::SecondaryModel* DataModel() const { return data_model_; }
 
 private slots:
@@ -69,6 +71,8 @@ private:
     utils::DateRange range_ {};
 
     statement::SecondaryModel* data_model_ {};
+    TableSummaryModel* summary_model_ {};
+
     QTimer* cooldown_timer_ { nullptr };
     QButtonGroup* unit_group_ {};
 

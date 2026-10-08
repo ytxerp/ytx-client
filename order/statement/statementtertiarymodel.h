@@ -33,6 +33,9 @@ public:
     explicit TertiaryModel(const QStringList& header, CUuid& partner_id, QObject* parent = nullptr);
     ~TertiaryModel() override;
 
+signals:
+    void SSummaryChanged(const QList<QVariant>& values);
+
 public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex& index) const override;

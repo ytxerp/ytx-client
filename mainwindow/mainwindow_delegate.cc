@@ -410,6 +410,16 @@ void MainWindow::DelegateStatementSecondary(QTableView* table_view, CSectionConf
     table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kIssuedTime), issued_time);
 }
 
+void MainWindow::DelegateStatementSecondarySummary(QTableView* table_view, CSectionConfig& config) const
+{
+    auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kMeasure), quantity);
+
+    auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::SecondaryField::kAmount), amount);
+}
+
 void MainWindow::DelegateStatementTertiary(QTableView* table_view, CSectionConfig& config) const
 {
     auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
@@ -431,6 +441,16 @@ void MainWindow::DelegateStatementTertiary(QTableView* table_view, CSectionConfi
 
     auto* node_path { new NodePathR(sc_i_.tree_model, table_view) };
     table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kInternalSku), node_path);
+}
+
+void MainWindow::DelegateStatementTertiarySummary(QTableView* table_view, CSectionConfig& config) const
+{
+    auto* quantity { new DoubleNoneZeroR(config.quantity_decimal, string_const::kFourDigits, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kCount), quantity);
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kMeasure), quantity);
+
+    auto* amount { new DoubleNoneZeroR(config.amount_decimal, string_const::kEightDigits, table_view) };
+    table_view->setItemDelegateForColumn(std::to_underlying(statement::TertiaryField::kAmount), amount);
 }
 
 void MainWindow::DelegateSettlementPrimary(QTableView* table_view, CSectionConfig& config) const

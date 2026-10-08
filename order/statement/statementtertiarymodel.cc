@@ -163,12 +163,15 @@ void TertiaryModel::Rebuild(const QJsonArray& array)
     QList<TertiaryRow*> new_list {};
     new_list.reserve(array.size());
 
+    TertiaryRow summary {};
+
     for (const auto& value : array) {
         Q_ASSERT(value.isObject());
 
         auto* statement { ResourcePool<TertiaryRow>::Instance().Allocate() };
         statement->ReadJson(value.toObject());
 
+        summary.Accumulate(*statement);
         new_list.emplaceBack(statement);
     }
 
@@ -180,6 +183,8 @@ void TertiaryModel::Rebuild(const QJsonArray& array)
     list_ = std::move(new_list);
 
     endResetModel();
+
+    emit SSummaryChanged(summary.SummaryValues());
 }
 
 void TertiaryModel::MarkEntries(MarkOperation operation)

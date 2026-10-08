@@ -31,6 +31,7 @@ enum class PrimaryField {
 };
 
 enum class SecondaryField {
+    // Keep the order in sync with the table header and SecondaryRow::SummaryValues().
     kIssuedTime = 0,
     kCode,
     kCount,
@@ -42,6 +43,7 @@ enum class SecondaryField {
 };
 
 enum class TertiaryField {
+    // Keep the order in sync with the table header and TertiaryRow::SummaryValues().
     kIssuedTime = 0,
     kCode,
     kInternalSku,
