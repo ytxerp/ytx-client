@@ -34,8 +34,7 @@ public:
     void StatementTertiaryAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range,
         CStringList& header, const QList<statement::TertiaryRow>& list, const QList<QVariant>& summary);
 
-    void StatementSecondaryAsync(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, CStringList& header,
-        const QList<statement::SecondaryRow>& list, const QList<QVariant>& summary);
+    void StatementSecondaryAsync(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
 
     ExportExcel(const ExportExcel&) = delete;
     ExportExcel& operator=(const ExportExcel&) = delete;
@@ -49,6 +48,5 @@ private:
     static bool StatementTertiary(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range,
         CStringList& header, const QList<statement::TertiaryRow>& list, const QList<QVariant>& summary);
 
-    static bool StatementSecondary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, CStringList& header,
-        const QList<statement::SecondaryRow>& list, const QList<QVariant>& summary);
+    static bool StatementSecondary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
 };

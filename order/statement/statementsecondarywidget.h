@@ -64,6 +64,7 @@ private:
     void IniWidget();
     void InitTimer();
     void InitModel(const QStringList& header);
+    QList<QVariantList> BuildExportLines(CStringList& header, const QList<statement::SecondaryRow>& list, const QList<QVariant>& summary);
 
 private:
     Ui::StatementSecondaryWidget* ui;

@@ -37,10 +37,10 @@ void ExportExcel::StatementTertiaryAsync(CString& path, CString& partner_name, C
     watcher->setFuture(future);
 }
 
-void ExportExcel::StatementSecondaryAsync(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, CStringList& header,
-    const QList<statement::SecondaryRow>& list, const QList<QVariant>& summary)
+void ExportExcel::StatementSecondaryAsync(
+    CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines)
 {
-    auto future = QtConcurrent::run([=]() -> bool { return StatementSecondary(path, partner_name, unit_string, range, header, list, summary); });
+    auto future = QtConcurrent::run([=]() -> bool { return StatementSecondary(path, partner_name, unit_string, range, lines); });
 
     auto* watcher = new QFutureWatcher<bool>();
     QObject::connect(watcher, &QFutureWatcher<bool>::finished, [watcher, path]() {
@@ -136,6 +136,7 @@ bool ExportExcel::StatementTertiary(CString& path, CString& partner_name, CUuid&
                 line.append(entry.amount);
                 break;
             case statement::TertiaryField::kStatus:
+                line.append(QVariant {});
                 break;
             }
         }
@@ -151,8 +152,8 @@ bool ExportExcel::StatementTertiary(CString& path, CString& partner_name, CUuid&
     return d.Save();
 }
 
-bool ExportExcel::StatementSecondary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, CStringList& header,
-    const QList<statement::SecondaryRow>& list, const QList<QVariant>& summary)
+bool ExportExcel::StatementSecondary(
+    CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines)
 {
     // Create excel document
     yxlsx::Document d(path);
@@ -179,57 +180,9 @@ bool ExportExcel::StatementSecondary(CString& path, CString& partner_name, CStri
     sheet->Write(start_row + 1, 2, range.start.toString(datetime_format::kDashedDate));
     sheet->Write(start_row + 1, 3, range.end.toString(datetime_format::kDashedDate));
 
-    // ===========================
-    // Table Header
-    // ===========================
-    sheet->WriteRow(start_row + 3, 1, header);
-
-    // ===========================
-    // Table Data
-    // ===========================
-    int row { start_row + 4 };
-
-    for (const auto& entry : list) {
-        QVariantList line {};
-        line.reserve(header.size());
-
-        for (int column { 0 }; column != header.size(); ++column) {
-            switch (static_cast<statement::SecondaryField>(column)) {
-            case statement::SecondaryField::kIssuedTime:
-                line.append(entry.issued_time.toString(datetime_format::kDashedDate));
-                break;
-            case statement::SecondaryField::kCode:
-                line.append(entry.code);
-                break;
-            case statement::SecondaryField::kCount:
-                line.append(entry.count);
-                break;
-            case statement::SecondaryField::kMeasure:
-                line.append(entry.measure);
-                break;
-            case statement::SecondaryField::kAmount:
-                line.append(entry.amount);
-                break;
-            case statement::SecondaryField::kDescription:
-                line.append(entry.description);
-                break;
-            case statement::SecondaryField::kStatus:
-            case statement::SecondaryField::kEmployee:
-                break;
-            }
-        }
-
+    int row { start_row + 3 };
+    for (const auto& line : lines)
         sheet->WriteRow(row++, 1, line);
-    }
-
-    // ===========================
-    // Write Total
-    // ===========================
-    sheet->WriteRow(row + 1, 1, summary);
-
-    qDebug() << "Secondary row:" << row;
-    qDebug() << "Secondary summary size:" << summary.size();
-    qDebug() << "Secondary summary:" << summary;
 
     return d.Save();
 }

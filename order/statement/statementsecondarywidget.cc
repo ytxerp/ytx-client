@@ -181,8 +181,70 @@ void StatementSecondaryWidget::on_pushButtonExport_clicked()
 
     const auto list { data_model_->EntryList() };
     const auto header { data_model_->Header() };
-    const QString unit_string { node::UnitString(NodeUnit(unit_)) };
     const auto summary { summary_model_->Values() };
+    const QString unit_string { node::UnitString(NodeUnit(unit_)) };
 
-    ExportExcel::Instance().StatementSecondaryAsync(destination, partner_name_, unit_string, range_, header, list, summary);
+    const auto lines { BuildExportLines(header, list, summary) };
+
+    ExportExcel::Instance().StatementSecondaryAsync(destination, partner_name_, unit_string, range_, lines);
+}
+
+QList<QVariantList> StatementSecondaryWidget::BuildExportLines(CStringList& header, const QList<statement::SecondaryRow>& list, const QList<QVariant>& summary)
+{
+    const int column_count { static_cast<int>(header.size()) };
+
+    Q_ASSERT(summary.size() == column_count);
+
+    QList<QVariantList> lines {};
+    lines.reserve(list.size() + 3);
+
+    // Header row (CStringList -> QVariantList)
+    QVariantList header_line {};
+    header_line.reserve(column_count);
+
+    for (const auto& title : header)
+        header_line.append(title);
+
+    lines.append(std::move(header_line));
+
+    for (const auto& entry : list) {
+        QVariantList line {};
+        line.reserve(column_count);
+
+        for (int column { 0 }; column != column_count; ++column) {
+            switch (static_cast<statement::SecondaryField>(column)) {
+            case statement::SecondaryField::kIssuedTime:
+                line.append(entry.issued_time.toString(datetime_format::kDashedDate));
+                break;
+            case statement::SecondaryField::kCode:
+                line.append(entry.code);
+                break;
+            case statement::SecondaryField::kCount:
+                line.append(entry.count);
+                break;
+            case statement::SecondaryField::kMeasure:
+                line.append(entry.measure);
+                break;
+            case statement::SecondaryField::kAmount:
+                line.append(entry.amount);
+                break;
+            case statement::SecondaryField::kDescription:
+                line.append(entry.description);
+                break;
+            case statement::SecondaryField::kStatus:
+                line.append(QVariant {});
+                break;
+            case statement::SecondaryField::kEmployee:
+                line.append(QVariant {});
+                break;
+            }
+        }
+
+        lines.append(std::move(line));
+    }
+
+    lines.append(QVariantList(column_count)); // spacer row: all empty cells
+    lines.append(summary); // total row
+
+    return lines;
 }
