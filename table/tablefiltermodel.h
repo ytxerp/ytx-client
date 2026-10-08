@@ -19,8 +19,7 @@
 
 #pragma once
 
-#include <QAbstractTableModel>
-#include <QPointer>
+#include <QAbstractItemModel>
 
 class TableFilterModel final : public QAbstractItemModel {
     Q_OBJECT
