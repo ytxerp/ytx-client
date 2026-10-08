@@ -38,7 +38,7 @@ public:
     QModelIndex parent(const QModelIndex& index) const override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    QList<QVariant> Values() const;
+    QList<QVariant> Values() const { return values_; }
 
 private:
     const QStringList& header_ {};

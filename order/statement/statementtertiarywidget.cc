@@ -174,6 +174,7 @@ void StatementTertiaryWidget::on_pBtnExport_clicked()
     const auto list { data_model_->EntryList() };
     const auto header { data_model_->Header() };
     const QString unit_string { node::UnitString(NodeUnit(unit_)) };
+    const auto summary { summary_model_->Values() };
 
-    ExportExcel::Instance().StatementTertiaryAsync(destination, partner_name_, partner_id_, unit_string, range_, header, list);
+    ExportExcel::Instance().StatementTertiaryAsync(destination, partner_name_, partner_id_, unit_string, range_, header, list, summary);
 }

@@ -8,6 +8,7 @@
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "enum/nodeenum.h"
+#include "global/exportexcel.h"
 #include "statementenum.h"
 #include "ui_statementsecondarywidget.h"
 #include "utils/mainwindowutils.h"
@@ -181,4 +182,7 @@ void StatementSecondaryWidget::on_pushButtonExport_clicked()
     const auto list { data_model_->EntryList() };
     const auto header { data_model_->Header() };
     const QString unit_string { node::UnitString(NodeUnit(unit_)) };
+    const auto summary { summary_model_->Values() };
+
+    ExportExcel::Instance().StatementSecondaryAsync(destination, partner_name_, unit_string, range_, header, list, summary);
 }
