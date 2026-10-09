@@ -1,8 +1,6 @@
 #include <QJsonArray>
 
 #include "component/constantstring.h"
-#include "dashboard/cash_flow_statement/cashflowcarriermodel.h"
-#include "dashboard/cash_flow_statement/cashflowspecialmodel.h"
 #include "dashboard/cash_flow_statement/cashflowstatementdialog.h"
 #include "dashboard/cash_flow_statement/cashflowstatementenum.h"
 #include "mainwindow.h"
@@ -12,14 +10,8 @@ void MainWindow::on_actionCashFlowStatement_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    auto* model { new cash_flow::Model(header_info_.cash_flow_statement, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
-
-    auto* carrier_model { new cash_flow::CarrierModel(header_info_.cash_flow_statement, this) };
-    auto* special_model { new cash_flow::SpecialModel(header_info_.cash_flow_statement, this) };
-    auto* wrong_model { new cash_flow::WrongModel(header_info_.cash_flow_statement_wrong, this) };
-
-    auto* dialog { new CashFlowStatementDialog(model, carrier_model, special_model, wrong_model, widget_id) };
+    auto* dialog { new CashFlowStatementDialog(header_info_, widget_id) };
 
     {
         auto* view { dialog->View() };

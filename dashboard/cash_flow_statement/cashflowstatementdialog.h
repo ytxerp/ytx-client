@@ -30,6 +30,7 @@
 #include "cashflowspecialmodel.h"
 #include "cashflowstatementmodel.h"
 #include "cashflowwrongmodel.h"
+#include "component/headerinfo.h"
 #include "utils/daterange.h"
 
 namespace Ui {
@@ -40,8 +41,7 @@ class CashFlowStatementDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit CashFlowStatementDialog(cash_flow::Model* model, cash_flow::CarrierModel* carrier, cash_flow::SpecialModel* special, cash_flow::WrongModel* wrong,
-        const QUuid& widget_id, QWidget* parent = nullptr);
+    explicit CashFlowStatementDialog(const HeaderInfo& header_info, const QUuid& widget_id, QWidget* parent = nullptr);
     ~CashFlowStatementDialog() override;
 
     QTreeView* View();
@@ -62,6 +62,7 @@ private slots:
 private:
     void InitDialog();
     void InitTimer();
+    void InitModel(const HeaderInfo& header_info);
     static utils::DateRange DefaultRange()
     {
         const auto today { QDate::currentDate() };

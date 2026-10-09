@@ -8,34 +8,18 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-CashFlowStatementDialog::CashFlowStatementDialog(cash_flow::Model* model, cash_flow::CarrierModel* carrier, cash_flow::SpecialModel* special,
-    cash_flow::WrongModel* wrong, const QUuid& widget_id, QWidget* parent)
+CashFlowStatementDialog::CashFlowStatementDialog(const HeaderInfo& header_info, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::CashFlowStatementDialog)
     , range_ { DefaultRange() }
     , widget_id_ { widget_id }
-    , model_ { model }
-    , carrier_ { carrier }
-    , special_ { special }
-    , wrong_ { wrong }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
     InitTimer();
     InitDialog();
-
-    ui->treeView->setModel(model);
-    model->setParent(ui->treeView);
-
-    ui->treeViewCarrier->setModel(carrier);
-    carrier->setParent(ui->treeViewCarrier);
-
-    ui->treeViewSpecial->setModel(special);
-    special->setParent(ui->treeViewSpecial);
-
-    ui->tableView->setModel(wrong);
-    wrong->setParent(ui->tableView);
+    InitModel(header_info);
 
     QTimer::singleShot(0, this, &::CashFlowStatementDialog::on_pushButtonFetch_clicked);
 }
@@ -112,4 +96,17 @@ void CashFlowStatementDialog::InitTimer()
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pushButtonFetch->setEnabled(true); });
+}
+
+void CashFlowStatementDialog::InitModel(const HeaderInfo& header_info)
+{
+    model_ = new cash_flow::Model(header_info.cash_flow_statement, this);
+    carrier_ = new cash_flow::CarrierModel(header_info.cash_flow_statement, this);
+    special_ = new cash_flow::SpecialModel(header_info.cash_flow_statement, this);
+    wrong_ = new cash_flow::WrongModel(header_info.cash_flow_statement_wrong, this);
+
+    ui->treeView->setModel(model_);
+    ui->treeViewCarrier->setModel(carrier_);
+    ui->treeViewSpecial->setModel(special_);
+    ui->tableView->setModel(wrong_);
 }
