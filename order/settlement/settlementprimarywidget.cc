@@ -11,10 +11,9 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-SettlementPrimaryWidget::SettlementPrimaryWidget(settlement::PrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent)
+SettlementPrimaryWidget::SettlementPrimaryWidget(Section section, const QStringList& header, CUuid& widget_id, QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::SettlementPrimaryWidget)
-    , model_ { model }
     , range_ { DefaultRange() }
     , section_ { section }
     , widget_id_ { widget_id }
@@ -22,11 +21,9 @@ SettlementPrimaryWidget::SettlementPrimaryWidget(settlement::PrimaryModel* model
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    ui->tableView->setModel(model);
-    model->setParent(ui->tableView);
-
     InitWidget();
     InitTimer();
+    InitModel(section, header);
 
     QTimer::singleShot(0, this, &SettlementPrimaryWidget::on_pBtnFetch_clicked);
 }
@@ -93,6 +90,12 @@ void SettlementPrimaryWidget::InitTimer()
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pBtnFetch->setEnabled(true); });
+}
+
+void SettlementPrimaryWidget::InitModel(Section section, const QStringList& header)
+{
+    model_ = new settlement::PrimaryModel(section, header, this);
+    ui->tableView->setModel(model_);
 }
 
 void SettlementPrimaryWidget::on_pushButtonDelete_clicked()

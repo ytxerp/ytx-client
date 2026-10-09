@@ -34,7 +34,7 @@ class SettlementPrimaryWidget final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SettlementPrimaryWidget(settlement::PrimaryModel* model, CUuid& widget_id, Section section, QWidget* parent = nullptr);
+    explicit SettlementPrimaryWidget(Section section, const QStringList& header, CUuid& widget_id, QWidget* parent = nullptr);
     ~SettlementPrimaryWidget() override;
 
     QTableView* View() const;
@@ -53,6 +53,8 @@ private slots:
 private:
     void InitWidget();
     void InitTimer();
+    void InitModel(Section section, const QStringList& header);
+
     static utils::DateRange DefaultRange()
     {
         const int year { QDate::currentDate().year() };

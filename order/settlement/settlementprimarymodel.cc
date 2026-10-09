@@ -10,7 +10,7 @@
 
 namespace settlement {
 
-PrimaryModel::PrimaryModel(const QStringList& header, Section section, QObject* parent)
+PrimaryModel::PrimaryModel(Section section, const QStringList& header, QObject* parent)
     : QAbstractItemModel { parent }
     , header_ { header }
     , section_ { section }

@@ -11,10 +11,8 @@ void MainWindow::on_actionSettlement_triggered()
 
     Q_ASSERT(IsOrderSection(start_));
 
-    auto* model { new settlement::PrimaryModel(header_info_.settlement_primary, start_, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
-
-    auto* widget { new SettlementPrimaryWidget(model, widget_id, start_, this) };
+    auto* widget { new SettlementPrimaryWidget(start_, header_info_.settlement_primary, widget_id, this) };
 
     {
         const int tab_index { sc_->tab_widget->addTab(widget, tr("Settlement")) };

@@ -30,7 +30,7 @@ namespace settlement {
 class PrimaryModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit PrimaryModel(const QStringList& header, Section section, QObject* parent = nullptr);
+    explicit PrimaryModel(Section section, const QStringList& header, QObject* parent = nullptr);
     ~PrimaryModel() override;
 
 public slots:
