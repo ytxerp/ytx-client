@@ -11,11 +11,10 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-PartnerHeatDialog::PartnerHeatDialog(partner_heat::Model* model, const QUuid& widget_id, QWidget* parent)
+PartnerHeatDialog::PartnerHeatDialog(const QStringList& header, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::PartnerHeatDialog)
     , range_ { DefaultRange() }
-    , model_ { model }
     , widget_id_ { widget_id }
 {
     ui->setupUi(this);
@@ -23,9 +22,7 @@ PartnerHeatDialog::PartnerHeatDialog(partner_heat::Model* model, const QUuid& wi
 
     InitTimer();
     InitDialog();
-
-    ui->tableView->setModel(model);
-    model->setParent(ui->tableView);
+    InitModel(header);
 
     QTimer::singleShot(0, this, &PartnerHeatDialog::on_pushButtonFetch_clicked);
 }
@@ -53,6 +50,12 @@ void PartnerHeatDialog::InitTimer()
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pushButtonFetch->setEnabled(true); });
+}
+
+void PartnerHeatDialog::InitModel(const QStringList& header)
+{
+    model_ = new partner_heat::Model(header, this);
+    ui->tableView->setModel(model_);
 }
 
 void PartnerHeatDialog::on_pushButtonFetch_clicked()

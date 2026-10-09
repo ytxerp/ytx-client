@@ -8,10 +8,8 @@ void MainWindow::on_actionHeatPartner_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    auto* model { new partner_heat::Model(header_info_.partner_heat, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
-
-    auto* dialog { new PartnerHeatDialog(model, widget_id) };
+    auto* dialog { new PartnerHeatDialog(header_info_.partner_heat, widget_id) };
 
     {
         auto* view { dialog->View() };
@@ -20,7 +18,6 @@ void MainWindow::on_actionHeatPartner_triggered()
     }
 
     utils::ManageDialog(sc_p_.widget_hash, dialog, widget_id);
-
     dialog->show();
 }
 

@@ -33,7 +33,7 @@ class PartnerHeatDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit PartnerHeatDialog(partner_heat::Model* model, const QUuid& widget_id, QWidget* parent = nullptr);
+    explicit PartnerHeatDialog(const QStringList& header, const QUuid& widget_id, QWidget* parent = nullptr);
     ~PartnerHeatDialog() override;
 
     QTableView* View();
@@ -47,6 +47,8 @@ private slots:
 private:
     void InitDialog();
     void InitTimer();
+    void InitModel(const QStringList& header);
+
     static utils::DateRange DefaultRange()
     {
         const auto today { QDate::currentDate() };
