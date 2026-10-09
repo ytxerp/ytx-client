@@ -8,12 +8,11 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-IncomeStatementDialog::IncomeStatementDialog(CTreeModel* tree_model, income_statement::Model* model, const QUuid& widget_id, QWidget* parent)
+IncomeStatementDialog::IncomeStatementDialog(CTreeModel* tree_model, const QStringList& header, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::IncomeStatementDialog)
     , range_ { DefaultRange() }
     , widget_id_ { widget_id }
-    , model_ { model }
     , tree_model_ { tree_model }
 {
     ui->setupUi(this);
@@ -21,9 +20,7 @@ IncomeStatementDialog::IncomeStatementDialog(CTreeModel* tree_model, income_stat
 
     InitTimer();
     InitDialog();
-
-    ui->treeView->setModel(model);
-    model->setParent(ui->treeView);
+    InitModel(header);
 }
 
 IncomeStatementDialog::~IncomeStatementDialog() { delete ui; }
@@ -131,4 +128,10 @@ void IncomeStatementDialog::InitTimer()
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pushButtonFetch->setEnabled(true); });
+}
+
+void IncomeStatementDialog::InitModel(const QStringList& header)
+{
+    model_ = new income_statement::Model(header, this);
+    ui->treeView->setModel(model_);
 }

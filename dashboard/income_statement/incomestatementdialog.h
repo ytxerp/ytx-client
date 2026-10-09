@@ -34,7 +34,7 @@ class IncomeStatementDialog final : public QDialog {
     Q_OBJECT
 
 public:
-    explicit IncomeStatementDialog(CTreeModel* tree_model, income_statement::Model* model, const QUuid& widget_id, QWidget* parent = nullptr);
+    explicit IncomeStatementDialog(CTreeModel* tree_model, const QStringList& header, const QUuid& widget_id, QWidget* parent = nullptr);
     ~IncomeStatementDialog() override;
 
     QTreeView* View();
@@ -48,6 +48,8 @@ private slots:
 private:
     void InitDialog();
     void InitTimer();
+    void InitModel(const QStringList& header);
+
     static utils::DateRange DefaultRange()
     {
         const auto today { QDate::currentDate() };

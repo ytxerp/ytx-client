@@ -33,7 +33,6 @@ void MainWindow::on_actionCashFlowStatement_triggered()
     }
 
     utils::ManageDialog(sc_f_.widget_hash, dialog, widget_id);
-
     dialog->show();
 }
 

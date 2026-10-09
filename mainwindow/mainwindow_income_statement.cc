@@ -1,6 +1,5 @@
 #include "dashboard/income_statement/incomestatementdialog.h"
 #include "dashboard/income_statement/incomestatementenum.h"
-#include "dashboard/income_statement/incomestatementmodel.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 
@@ -8,10 +7,8 @@ void MainWindow::on_actionIncomeStatement_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    auto* model { new income_statement::Model(header_info_.income_statement, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
-
-    auto* dialog { new IncomeStatementDialog(sc_f_.tree_model, model, widget_id) };
+    auto* dialog { new IncomeStatementDialog(sc_f_.tree_model, header_info_.income_statement, widget_id) };
 
     {
         auto* view { dialog->View() };
@@ -20,7 +17,6 @@ void MainWindow::on_actionIncomeStatement_triggered()
     }
 
     utils::ManageDialog(sc_f_.widget_hash, dialog, widget_id);
-
     dialog->show();
 }
 
