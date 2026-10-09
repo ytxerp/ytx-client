@@ -10,20 +10,17 @@
 #include "utils/nodeutils.h"
 #include "websocket/websocket.h"
 
-PeriodCloseDialog::PeriodCloseDialog(Section section, CTreeModel* tree_model, period_close::Model* table_model, QWidget* parent)
+PeriodCloseDialog::PeriodCloseDialog(CTreeModel* tree_model, const QStringList& header, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::PeriodCloseDialog)
-    , section_ { section }
+    , section_ { Section::kFinance }
     , tree_model_ { tree_model }
-    , table_model_ { table_model }
 {
     ui->setupUi(this);
     SignalBlocker blocker(this);
 
-    ui->tableView->setModel(table_model);
-    table_model->setParent(ui->tableView);
-
     InitDialog();
+    InitModel(header);
 }
 
 PeriodCloseDialog::~PeriodCloseDialog()
@@ -48,6 +45,12 @@ void PeriodCloseDialog::InitDialog()
         ui->comboBoxSummary->setModel(leaf_model);
         ui->comboBoxSummary->setCurrentIndex(-1);
     }
+}
+
+void PeriodCloseDialog::InitModel(const QStringList& header)
+{
+    table_model_ = new period_close::Model(header, this);
+    ui->tableView->setModel(table_model_);
 }
 
 void PeriodCloseDialog::ConstructEntry(const QSet<const Node*>& closing_leaf_node, const Node* summary_node)

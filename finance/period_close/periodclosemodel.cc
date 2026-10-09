@@ -5,16 +5,16 @@
 
 namespace period_close {
 
-Model::Model(CSectionInfo& info, QObject* parent)
+Model::Model(const QStringList& header, QObject* parent)
     : QAbstractItemModel(parent)
-    , info_ { info }
+    , header_ { header }
 {
 }
 
 QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return info_.full_entry_header.at(section);
+        return header_.at(section);
 
     return QVariant();
 }
@@ -42,7 +42,7 @@ int Model::rowCount(const QModelIndex& parent) const
 int Model::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return info_.full_entry_header.size();
+    return header_.size();
 }
 
 void Model::sort(int column, Qt::SortOrder order)

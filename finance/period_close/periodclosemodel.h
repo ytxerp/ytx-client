@@ -21,7 +21,6 @@
 
 #include <QAbstractItemModel>
 
-#include "component/sectioninfo.h"
 #include "table/entry.h"
 
 namespace period_close {
@@ -30,7 +29,7 @@ class Model final : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit Model(CSectionInfo& info, QObject* parent = nullptr);
+    explicit Model(const QStringList& header, QObject* parent = nullptr);
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -50,7 +49,7 @@ public:
     bool IsEmpty() const { return list_.isEmpty(); }
 
 private:
-    CSectionInfo& info_;
+    const QStringList& header_ {};
     QList<Entry*> list_ {};
 };
 }
