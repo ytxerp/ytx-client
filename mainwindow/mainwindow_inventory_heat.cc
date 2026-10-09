@@ -7,10 +7,8 @@ void MainWindow::on_actionHeatInventory_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    auto* model { new inventory_heat::Model(header_info_.inventory_heat, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
-
-    auto* dialog { new InventoryHeatDialog(model, widget_id) };
+    auto* dialog { new InventoryHeatDialog(header_info_.inventory_heat, widget_id) };
 
     {
         auto* view { dialog->View() };
@@ -19,7 +17,6 @@ void MainWindow::on_actionHeatInventory_triggered()
     }
 
     utils::ManageDialog(sc_i_.widget_hash, dialog, widget_id);
-
     dialog->show();
 }
 

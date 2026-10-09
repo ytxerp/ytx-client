@@ -9,11 +9,10 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-InventoryHeatDialog::InventoryHeatDialog(inventory_heat::Model* model, const QUuid& widget_id, QWidget* parent)
+InventoryHeatDialog::InventoryHeatDialog(const QStringList& header, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::InventoryHeatDialog)
     , range_ { DefaultRange() }
-    , model_ { model }
     , widget_id_ { widget_id }
 {
     ui->setupUi(this);
@@ -21,9 +20,7 @@ InventoryHeatDialog::InventoryHeatDialog(inventory_heat::Model* model, const QUu
 
     InitTimer();
     InitDialog();
-
-    ui->tableView->setModel(model);
-    model->setParent(ui->tableView);
+    InitModel(header);
 
     QTimer::singleShot(0, this, &InventoryHeatDialog::on_pushButtonFetch_clicked);
 }
@@ -51,6 +48,12 @@ void InventoryHeatDialog::InitTimer()
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pushButtonFetch->setEnabled(true); });
+}
+
+void InventoryHeatDialog::InitModel(const QStringList& header)
+{
+    model_ = new inventory_heat::Model(header, this);
+    ui->tableView->setModel(model_);
 }
 
 void InventoryHeatDialog::on_pushButtonFetch_clicked()
