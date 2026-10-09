@@ -60,6 +60,7 @@ private:
     void IniWidget();
     void InitTimer();
     void InitModel(const QStringList& header, CUuid& partner_id);
+    QList<QVariantList> BuildExportLines(CStringList& header, const QList<statement::TertiaryRow>& list, const QList<QVariant>& summary);
 
 private:
     Ui::StatementTertiaryWidget* ui;

@@ -20,7 +20,6 @@
 #pragma once
 
 #include "component/using.h"
-#include "order/statement/statement.h"
 #include "utils/daterange.h"
 
 class ExportExcel {
@@ -31,9 +30,7 @@ public:
         return instance;
     }
 
-    void StatementTertiaryAsync(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range,
-        CStringList& header, const QList<statement::TertiaryRow>& list, const QList<QVariant>& summary);
-
+    void StatementTertiaryAsync(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
     void StatementSecondaryAsync(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
 
     ExportExcel(const ExportExcel&) = delete;
@@ -45,8 +42,6 @@ private:
     ExportExcel() = default;
     ~ExportExcel() = default;
 
-    static bool StatementTertiary(CString& path, CString& partner_name, CUuid& partner_id, CString& unit_string, const utils::DateRange& range,
-        CStringList& header, const QList<statement::TertiaryRow>& list, const QList<QVariant>& summary);
-
+    static bool StatementTertiary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
     static bool StatementSecondary(CString& path, CString& partner_name, CString& unit_string, const utils::DateRange& range, const QList<QVariantList>& lines);
 };

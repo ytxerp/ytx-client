@@ -8,6 +8,9 @@
 #include "component/constantwebsocket.h"
 #include "component/signalblocker.h"
 #include "global/exportexcel.h"
+#include "global/masterdataregistry.h"
+#include "global/partner_inventory_registry.h"
+#include "statementenum.h"
 #include "ui_statementtertiarywidget.h"
 #include "utils/mainwindowutils.h"
 #include "utils/nodeutils.h"
@@ -173,8 +176,88 @@ void StatementTertiaryWidget::on_pBtnExport_clicked()
 
     const auto list { data_model_->EntryList() };
     const auto header { data_model_->Header() };
-    const QString unit_string { node::UnitString(NodeUnit(unit_)) };
     const auto summary { summary_model_->Values() };
+    const QString unit_string { node::UnitString(NodeUnit(unit_)) };
 
-    ExportExcel::Instance().StatementTertiaryAsync(destination, partner_name_, partner_id_, unit_string, range_, header, list, summary);
+    const auto lines { BuildExportLines(header, list, summary) };
+
+    ExportExcel::Instance().StatementTertiaryAsync(destination, partner_name_, unit_string, range_, lines);
+}
+
+QList<QVariantList> StatementTertiaryWidget::BuildExportLines(CStringList& header, const QList<statement::TertiaryRow>& list, const QList<QVariant>& summary)
+{
+    const int column_count { static_cast<int>(header.size()) };
+
+    Q_ASSERT(summary.size() == column_count);
+
+    QList<QVariantList> lines {};
+    lines.reserve(list.size() + 3);
+
+    // ===========================
+    // Table Header
+    // ===========================
+    QVariantList header_line {};
+    header_line.reserve(column_count);
+
+    for (const auto& title : header)
+        header_line.append(title);
+
+    lines.append(std::move(header_line));
+
+    // ===========================
+    // Table Data
+    // ===========================
+
+    const auto& master { MasterDataRegistry::Instance() };
+    const auto& partner { PartnerInventoryRegistry::Instance() };
+
+    for (const auto& entry : list) {
+        QVariantList line {};
+        line.reserve(column_count);
+
+        for (int column {}; column != column_count; ++column) {
+            switch (static_cast<statement::TertiaryField>(column)) {
+            case statement::TertiaryField::kIssuedTime:
+                line.append(entry.issued_time.toString(datetime_format::kDashedDate));
+                break;
+            case statement::TertiaryField::kCode:
+                line.append(entry.code);
+                break;
+            case statement::TertiaryField::kInternalSku:
+                line.append(master.InventoryPath(entry.internal_sku));
+                break;
+            case statement::TertiaryField::kCount:
+                line.append(entry.count);
+                break;
+            case statement::TertiaryField::kMeasure:
+                line.append(entry.measure);
+                break;
+            case statement::TertiaryField::kUnitPrice:
+                line.append(entry.unit_price);
+                break;
+            case statement::TertiaryField::kAmount:
+                line.append(entry.amount);
+                break;
+            case statement::TertiaryField::kDescription:
+                line.append(entry.description);
+                break;
+            case statement::TertiaryField::kStatus:
+                line.append(QVariant {});
+                break;
+            case statement::TertiaryField::kExternalSku:
+                line.append(partner.ExternalSku(partner_id_, entry.internal_sku));
+                break;
+            }
+        }
+
+        lines.append(std::move(line));
+    }
+
+    // ===========================
+    // Empty Row + Summary
+    // ===========================
+    lines.append(QVariantList(column_count)); // spacer row: all empty cells
+    lines.append(summary);
+
+    return lines;
 }
