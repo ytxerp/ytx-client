@@ -9,12 +9,11 @@
 #include "websocket/jsongen.h"
 #include "websocket/websocket.h"
 
-BalanceSheetDialog::BalanceSheetDialog(CTreeModel* tree_model, balance_sheet::Model* model, const QUuid& widget_id, QWidget* parent)
+BalanceSheetDialog::BalanceSheetDialog(CTreeModel* tree_model, const QStringList& header, const QUuid& widget_id, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::BalanceSheetDialog)
     , range_ { DefaultRange() }
     , widget_id_ { widget_id }
-    , model_ { model }
     , tree_model_ { tree_model }
 {
     ui->setupUi(this);
@@ -22,9 +21,7 @@ BalanceSheetDialog::BalanceSheetDialog(CTreeModel* tree_model, balance_sheet::Mo
 
     InitTimer();
     InitDialog();
-
-    ui->treeView->setModel(model);
-    model->setParent(ui->treeView);
+    InitModel(header);
 }
 
 BalanceSheetDialog::~BalanceSheetDialog() { delete ui; }
@@ -59,6 +56,12 @@ void BalanceSheetDialog::InitTimer()
     cooldown_timer_ = new QTimer(this);
     cooldown_timer_->setSingleShot(true);
     connect(cooldown_timer_, &QTimer::timeout, this, [this]() { ui->pushButtonFetch->setEnabled(true); });
+}
+
+void BalanceSheetDialog::InitModel(const QStringList& header)
+{
+    model_ = new balance_sheet::Model(header, this);
+    ui->treeView->setModel(model_);
 }
 
 void BalanceSheetDialog::on_dateEditStart_dateChanged(const QDate& date)

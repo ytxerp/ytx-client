@@ -1,6 +1,5 @@
 #include "dashboard/balance_sheet/balancesheetdialog.h"
 #include "dashboard/balance_sheet/balancesheetenum.h"
-#include "dashboard/balance_sheet/balancesheetmodel.h"
 #include "mainwindow.h"
 #include "utils/mainwindowutils.h"
 
@@ -8,10 +7,8 @@ void MainWindow::on_actionBalanceSheet_triggered()
 {
     qInfo() << Q_FUNC_INFO;
 
-    auto* model { new balance_sheet::Model(header_info_.balance_sheet, this) };
     const QUuid widget_id { QUuid::createUuidV7() };
-
-    auto* dialog { new BalanceSheetDialog(sc_f_.tree_model, model, widget_id) };
+    auto* dialog { new BalanceSheetDialog(sc_f_.tree_model, header_info_.balance_sheet, widget_id) };
 
     {
         auto* view { dialog->View() };
