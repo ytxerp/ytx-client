@@ -44,7 +44,7 @@ void OrderOverviewWidget::InitWidget()
 void OrderOverviewWidget::InitModel(const QStringList& header)
 {
     data_model_ = new order_overview::Model(header, this);
-    filter_model_ = new TableFilterModel(header, std::to_underlying(order_overview::RowField::kPlaceholder), this);
+    filter_model_ = new FilterInputModel(header, std::to_underlying(order_overview::RowField::kPlaceholder), this);
     filter_proxy_ = new TableFilterProxyModel(this);
 
     filter_proxy_->setSourceModel(data_model_);
@@ -52,9 +52,9 @@ void OrderOverviewWidget::InitModel(const QStringList& header)
     ui->tableViewData->setModel(filter_proxy_);
     ui->tableViewFilter->setModel(filter_model_);
 
-    connect(filter_model_, &TableFilterModel::SFilterChanged, filter_proxy_, &TableFilterProxyModel::RFilterChanged);
-    connect(filter_model_, &TableFilterModel::SFiltersCleared, filter_proxy_, &TableFilterProxyModel::RFiltersCleared);
-    connect(filter_model_, &TableFilterModel::SSortRequested, filter_proxy_, &TableFilterProxyModel::RSortRequested);
+    connect(filter_model_, &FilterInputModel::SFilterChanged, filter_proxy_, &TableFilterProxyModel::RFilterChanged);
+    connect(filter_model_, &FilterInputModel::SFiltersCleared, filter_proxy_, &TableFilterProxyModel::RFiltersCleared);
+    connect(filter_model_, &FilterInputModel::SSortRequested, filter_proxy_, &TableFilterProxyModel::RSortRequested);
 
     ui->tableViewFilter->setSortingEnabled(true);
 }

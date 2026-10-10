@@ -19,9 +19,9 @@
 
 #pragma once
 
-#include <QAbstractItemModel>
+#include <QAbstractTableModel>
 
-class TableFilterModel final : public QAbstractItemModel {
+class FilterInputModel final : public QAbstractTableModel {
     Q_OBJECT
 
 signals:
@@ -30,7 +30,7 @@ signals:
     void SSortRequested(int column, Qt::SortOrder order);
 
 public:
-    explicit TableFilterModel(const QStringList& header, int ignored_column, QObject* parent = nullptr);
+    explicit FilterInputModel(const QStringList& header, int ignored_column, QObject* parent = nullptr);
 
     int rowCount(const QModelIndex& parent = {}) const override;
     int columnCount(const QModelIndex& parent = {}) const override;
@@ -38,16 +38,13 @@ public:
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
-
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
-    QModelIndex parent(const QModelIndex& index) const override;
     void sort(int column, Qt::SortOrder order) override;
 
     QVariant Filter(int column) const;
     void ClearFilters();
 
 private:
-    const QStringList& header_ {};
+    const QStringList header_ {};
     QHash<int, QVariant> filters_ {};
     const int ignored_column_ {};
 };

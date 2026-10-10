@@ -24,7 +24,7 @@
 
 #include "dashboard/order_overview/orderoverviewmodel.h"
 #include "enum/section.h"
-#include "table/tablefiltermodel.h"
+#include "table/filterinputmodel.h"
 #include "table/tablefilterproxymodel.h"
 #include "utils/daterange.h"
 
@@ -64,7 +64,7 @@ private:
     utils::DateRange range_ {};
 
     order_overview::Model* data_model_ {};
-    TableFilterModel* filter_model_ {};
+    FilterInputModel* filter_model_ {};
     TableFilterProxyModel* filter_proxy_ {};
 
     QTimer* cooldown_timer_ { nullptr };

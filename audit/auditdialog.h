@@ -26,7 +26,7 @@
 #include "auditmodel.h"
 #include "component/using.h"
 #include "enum/section.h"
-#include "table/tablefiltermodel.h"
+#include "table/filterinputmodel.h"
 #include "table/tablefilterproxymodel.h"
 #include "utils/daterange.h"
 
@@ -70,6 +70,6 @@ private:
     QTimer* cooldown_timer_ { nullptr };
 
     const QUuid widget_id_ {};
-    TableFilterModel* filter_model_ {};
+    FilterInputModel* filter_model_ {};
     TableFilterProxyModel* filter_proxy_ {};
 };

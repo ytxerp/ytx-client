@@ -51,8 +51,7 @@ private:
         if (const auto* number { std::get_if<int>(&filter) })
             return data.toInt() == *number;
 
-        const auto& keyword { *std::get_if<QString>(&filter) };
-        return data.toString().contains(keyword, Qt::CaseInsensitive);
+        return data.toString().contains(std::get<QString>(filter), Qt::CaseInsensitive);
     }
 
 private:

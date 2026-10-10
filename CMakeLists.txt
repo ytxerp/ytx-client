@@ -262,13 +262,13 @@ set(HEADERS
     search/node/searchnodemodelt.h
     table/entry.h
     table/entryshadow.h
+    table/filterinputmodel.h
     table/model/tablemodel.h
     table/model/tablemodelf.h
     table/model/tablemodeli.h
     table/model/tablemodelo.h
     table/model/tablemodelp.h
     table/model/tablemodelt.h
-    table/tablefiltermodel.h
     table/tablefilterproxymodel.h
     table/tablesummarymodel.h
     table/unitmodel.h
@@ -479,13 +479,13 @@ set(SOURCES
     search/node/searchnodemodelt.cc
     table/entry.cc
     table/entryshadow.cc
+    table/filterinputmodel.cc
     table/model/tablemodel.cc
     table/model/tablemodelf.cc
     table/model/tablemodeli.cc
     table/model/tablemodelo.cc
     table/model/tablemodelp.cc
     table/model/tablemodelt.cc
-    table/tablefiltermodel.cc
     table/tablefilterproxymodel.cc
     table/tablesummarymodel.cc
     table/unitmodel.cc
