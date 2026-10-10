@@ -22,13 +22,18 @@
 #include <QSortFilterProxyModel>
 #include <QUuid>
 
-class ReplaceSelfFilterModel final : public QSortFilterProxyModel {
+class IncludeSetFilterModel final : public QSortFilterProxyModel {
 public:
-    explicit ReplaceSelfFilterModel(const QUuid& node_id, const QSet<QUuid>* set, QObject* parent = nullptr)
+    explicit IncludeSetFilterModel(const QSet<QUuid>* set, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }
         , set_ { set }
-        , node_id_ { node_id }
     {
+    }
+
+    void Refresh()
+    {
+        beginFilterChange();
+        endFilterChange(Direction::Rows);
     }
 
 protected:
@@ -37,10 +42,9 @@ protected:
         const QModelIndex index { sourceModel()->index(source_row, 0, source_parent) };
         const QUuid id { index.data(Qt::UserRole).toUuid() };
 
-        return set_->contains(id) && id != node_id_;
+        return set_->contains(id);
     }
 
 private:
     const QSet<QUuid>* set_ {};
-    const QUuid node_id_ {};
 };

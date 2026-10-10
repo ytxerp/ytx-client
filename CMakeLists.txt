@@ -281,7 +281,8 @@ set(HEADERS
     tag/tagmodel.h
     tag/tagrow.h
     tree/excludeidfiltermodel.h
-    tree/includeunitfiltermodel.h
+    tree/includesetexcludeonefiltermodel.h
+    tree/includesetfiltermodel.h
     tree/itemmodel.h
     tree/model/treemodel.h
     tree/model/treemodelf.h
@@ -290,7 +291,6 @@ set(HEADERS
     tree/model/treemodelp.h
     tree/model/treemodelt.h
     tree/node.h
-    tree/replaceselffiltermodel.h
     tree/widget/treewidget.h
     tree/widget/treewidgetf.h
     tree/widget/treewidgetit.h

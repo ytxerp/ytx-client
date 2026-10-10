@@ -22,18 +22,13 @@
 #include <QSortFilterProxyModel>
 #include <QUuid>
 
-class IncludeUnitFilterModel final : public QSortFilterProxyModel {
+class IncludeSetExcludeOneFilterModel final : public QSortFilterProxyModel {
 public:
-    explicit IncludeUnitFilterModel(const QSet<QUuid>* set, QObject* parent = nullptr)
+    explicit IncludeSetExcludeOneFilterModel(const QSet<QUuid>* set, const QUuid& excluded_id, QObject* parent = nullptr)
         : QSortFilterProxyModel { parent }
         , set_ { set }
+        , excluded_id_ { excluded_id }
     {
-    }
-
-    void SyncFilterModel()
-    {
-        beginFilterChange();
-        endFilterChange(Direction::Rows);
     }
 
 protected:
@@ -42,9 +37,10 @@ protected:
         const QModelIndex index { sourceModel()->index(source_row, 0, source_parent) };
         const QUuid id { index.data(Qt::UserRole).toUuid() };
 
-        return set_->contains(id);
+        return set_->contains(id) && id != excluded_id_;
     }
 
 private:
     const QSet<QUuid>* set_ {};
+    const QUuid excluded_id_ {};
 };

@@ -27,7 +27,7 @@
 
 #include "component/constant.h"
 #include "component/sectioninfo.h"
-#include "tree/includeunitfiltermodel.h"
+#include "tree/includesetfiltermodel.h"
 #include "tree/itemmodel.h"
 #include "tree/node.h"
 #include "utils/delta.h"
@@ -154,7 +154,7 @@ public:
     void SyncFilterModels()
     {
         for (auto* model : std::as_const(unit_filter_models_))
-            model->SyncFilterModel();
+            model->Refresh();
     }
 
 protected:
@@ -231,7 +231,7 @@ private:
     void SyncFilterModel(NodeUnit unit)
     {
         if (auto* model = unit_filter_models_.value(unit))
-            model->SyncFilterModel();
+            model->Refresh();
     }
 
 protected:
@@ -248,7 +248,7 @@ protected:
     const QStringList& header_;
 
     QHash<QUuid, PendingNodeUpdate> pending_updates_ {};
-    QHash<NodeUnit, IncludeUnitFilterModel*> unit_filter_models_ {};
+    QHash<NodeUnit, IncludeSetFilterModel*> unit_filter_models_ {};
 };
 
 using CTreeModel = const TreeModel;

@@ -6,7 +6,7 @@
 #include "component/constantwebsocket.h"
 #include "global/nodepool.h"
 #include "tree/excludeidfiltermodel.h"
-#include "tree/replaceselffiltermodel.h"
+#include "tree/includesetexcludeonefiltermodel.h"
 #include "utils/nodeutils.h"
 #include "utils/pathutils.h"
 #include "websocket/jsongen.h"
@@ -755,7 +755,7 @@ QSortFilterProxyModel* TreeModel::IncludeUnit(NodeUnit unit)
         return model;
 
     auto* set { UnitSet(unit) };
-    auto* model { new IncludeUnitFilterModel(set, this) };
+    auto* model { new IncludeSetFilterModel(set, this) };
 
     model->setSourceModel(leaf_model_);
 
@@ -767,7 +767,7 @@ QSortFilterProxyModel* TreeModel::IncludeUnit(NodeUnit unit)
 QSortFilterProxyModel* TreeModel::ReplaceSelf(const QUuid& node_id, NodeUnit unit, QObject* parent)
 {
     auto* set { UnitSet(unit) };
-    auto* model { new ReplaceSelfFilterModel(node_id, set, parent) };
+    auto* model { new IncludeSetExcludeOneFilterModel(set, node_id, parent) };
     model->setSourceModel(leaf_model_);
     return model;
 }
