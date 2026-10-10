@@ -176,7 +176,7 @@ void TreeModel::SyncLeafModel(const QSet<QUuid>& leaf_ids) const
         leaf_model_->SetDisplay(id, value);
     }
 
-    leaf_model_->sort(0);
+    leaf_model_->sort(0, Qt::AscendingOrder);
 }
 
 void TreeModel::UpdateSubtreePath(const Node* node)

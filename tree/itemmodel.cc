@@ -1,5 +1,7 @@
 #include "itemmodel.h"
 
+#include <algorithm>
+
 #include "global/resourcepool.h"
 #include "utils/templateutils.h"
 
@@ -44,9 +46,8 @@ QVariant ItemModel::data(const QModelIndex& index, int role) const
 
 void ItemModel::sort(int column, Qt::SortOrder order)
 {
-    if (column != 0) {
+    if (column != 0)
         return;
-    }
 
     emit layoutAboutToBeChanged();
     std::ranges::sort(list_, [order](const Item* lhs, const Item* rhs) { return utils::CompareString(lhs->display, rhs->display, order); });
@@ -116,6 +117,8 @@ void ItemModel::SetSeparator(const QString& old_separator, const QString& new_se
     for (auto* item : std::as_const(list_)) {
         item->display.replace(old_separator, new_separator);
     }
+
+    sort(0, Qt::AscendingOrder);
 }
 
 void ItemModel::SetDisplay(const QUuid& id, const QString& display)
