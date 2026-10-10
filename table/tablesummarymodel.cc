@@ -1,18 +1,20 @@
 #include "tablesummarymodel.h"
 
 TableSummaryModel::TableSummaryModel(const QStringList& header, QObject* parent)
-    : QAbstractItemModel(parent)
+    : QAbstractTableModel(parent)
     , header_ { header }
 {
 }
 
 void TableSummaryModel::RSummaryChanged(const QList<QVariant>& values)
 {
-    beginResetModel();
+    if (values_ == values)
+        return;
 
     values_ = values;
 
-    endResetModel();
+    if (const int columns { columnCount() }; columns > 0)
+        emit dataChanged(index(0, 0), index(0, columns - 1), { Qt::DisplayRole });
 }
 
 QVariant TableSummaryModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -21,20 +23,6 @@ QVariant TableSummaryModel::headerData(int section, Qt::Orientation orientation,
         return header_.at(section);
 
     return QVariant();
-}
-
-QModelIndex TableSummaryModel::index(int row, int column, const QModelIndex& parent) const
-{
-    if (!hasIndex(row, column, parent))
-        return QModelIndex();
-
-    return createIndex(row, column);
-}
-
-QModelIndex TableSummaryModel::parent(const QModelIndex& index) const
-{
-    Q_UNUSED(index)
-    return QModelIndex();
 }
 
 int TableSummaryModel::rowCount(const QModelIndex& parent) const { return parent.isValid() ? 0 : 1; }
@@ -55,4 +43,10 @@ QVariant TableSummaryModel::data(const QModelIndex& index, int role) const
     return values_.at(index.column());
 }
 
-Qt::ItemFlags TableSummaryModel::flags(const QModelIndex& index) const { return index.isValid() ? Qt::ItemIsEnabled | Qt::ItemIsSelectable : Qt::NoItemFlags; }
+Qt::ItemFlags TableSummaryModel::flags(const QModelIndex& index) const
+{
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    return QAbstractTableModel::flags(index) & ~Qt::ItemIsEditable;
+}
