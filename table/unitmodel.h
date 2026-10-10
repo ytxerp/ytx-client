@@ -19,26 +19,18 @@
 
 #pragma once
 
-#include <QAbstractItemModel>
-#include <QString>
-#include <QUuid>
+#include <QAbstractTableModel>
+#include <QMap>
 
-class UnitModel final : public QAbstractItemModel {
+class UnitModel final : public QAbstractTableModel {
     Q_OBJECT
 
 public:
     explicit UnitModel(QObject* parent = nullptr);
 
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-
-    QModelIndex parent(const QModelIndex&) const override { return {}; }
     int rowCount(const QModelIndex& parent = QModelIndex()) const override { return parent.isValid() ? 0 : list_.size(); }
-    int columnCount(const QModelIndex& parent = QModelIndex()) const override
-    {
-        Q_UNUSED(parent);
-        return 1;
-    }
+    int columnCount(const QModelIndex& parent = {}) const override { return parent.isValid() ? 0 : 1; }
 
     void Rebuild(const QMap<int, QString>& map)
     {
@@ -57,7 +49,7 @@ public:
         endResetModel();
     }
 
-protected:
+private:
     struct Item {
         QString display {};
         int unit {};

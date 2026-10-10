@@ -1,16 +1,8 @@
 #include "unitmodel.h"
 
 UnitModel::UnitModel(QObject* parent)
-    : QAbstractItemModel { parent }
+    : QAbstractTableModel { parent }
 {
-}
-
-QModelIndex UnitModel::index(int row, int column, const QModelIndex& parent) const
-{
-    if (!hasIndex(row, column, parent))
-        return QModelIndex();
-
-    return createIndex(row, column);
 }
 
 QVariant UnitModel::data(const QModelIndex& index, int role) const
@@ -28,10 +20,8 @@ QVariant UnitModel::data(const QModelIndex& index, int role) const
     case Qt::DisplayRole:
     case Qt::EditRole:
         return item.display;
-
     case Qt::UserRole:
         return item.unit;
-
     default:
         return {};
     }
